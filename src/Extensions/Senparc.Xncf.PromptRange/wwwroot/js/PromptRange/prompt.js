@@ -3551,6 +3551,129 @@ var app = new Vue({
             
             this.map3dRenderer.domElement.addEventListener('click', onMouseClick)
             this.map3dClickHandler = onMouseClick
+            
+            // **添加鼠标移动事件：显示节点信息tooltip**
+            let hoveredNode = null  // 当前悬停的节点
+            
+            // 创建tooltip元素
+            const createTooltip = () => {
+                let tooltip = document.getElementById('map3d-tooltip')
+                if (!tooltip) {
+                    tooltip = document.createElement('div')
+                    tooltip.id = 'map3d-tooltip'
+                    tooltip.style.cssText = `
+                        position: fixed;
+                        background: rgba(0, 0, 0, 0.85);
+                        color: white;
+                        padding: 12px 16px;
+                        border-radius: 8px;
+                        font-size: 14px;
+                        pointer-events: none;
+                        z-index: 10000;
+                        display: none;
+                        max-width: 300px;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                        border: 1px solid rgba(255,255,255,0.2);
+                        line-height: 1.6;
+                    `
+                    document.body.appendChild(tooltip)
+                }
+                return tooltip
+            }
+            
+            const tooltip = createTooltip()
+            
+            const onMouseMove = (event) => {
+                const rect = this.map3dRenderer.domElement.getBoundingClientRect()
+                mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+                mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
+                
+                raycaster.setFromCamera(mouse, this.map3dCamera)
+                const intersects = raycaster.intersectObjects(
+                    this.map3dNodes.map(n => n.mesh).filter(m => m && m.visible),
+                    false
+                )
+                
+                if (intersects.length > 0) {
+                    const intersectedMesh = intersects[0].object
+                    const nodeData = this.map3dNodes.find(n => n.mesh === intersectedMesh)
+                    
+                    if (nodeData) {
+                        // 如果是新的节点，更新tooltip
+                        if (hoveredNode !== nodeData) {
+                            hoveredNode = nodeData
+                            
+                            // 构建tooltip内容
+                            let tooltipContent = ''
+                            const node = nodeData.node
+                            
+                            if (node.type === 'range') {
+                                // 靶场信息
+                                tooltipContent = `
+                                    <div style="font-weight: bold; margin-bottom: 8px; color: #4ecdc4;">📦 靶场</div>
+                                    <div>${node.name}</div>
+                                    ${node.prompts && node.prompts.length > 0 ? `<div style="margin-top: 4px; color: #aaa;">包含 ${node.prompts.length} 个结果</div>` : ''}
+                                `
+                            } else if (node.type === 'tactic') {
+                                // Tactic 信息
+                                const tacticNumber = nodeData.key.replace('T', '')
+                                tooltipContent = `
+                                    <div style="font-weight: bold; margin-bottom: 8px; color: #95e1d3;">🎯 战术节点</div>
+                                    <div>编号: T${tacticNumber}</div>
+                                    ${node.prompts && node.prompts.length > 0 ? `<div style="margin-top: 4px; color: #aaa;">${node.prompts.length} 个结果</div>` : ''}
+                                `
+                            } else if (node.type === 'aiming') {
+                                // Aiming 信息（包含评分）
+                                const aimingNumber = nodeData.key.match(/-A(\d+)$/)?.[1] || nodeData.key
+                                tooltipContent = `
+                                    <div style="font-weight: bold; margin-bottom: 8px; color: #a8e6cf;">🎲 瞄准点</div>
+                                    <div>编号: A${aimingNumber}</div>
+                                `
+                                
+                                // 显示评分信息
+                                if (node.prompts && node.prompts.length > 0) {
+                                    const prompt = node.prompts[0]
+                                    tooltipContent += `<div style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 8px;">`
+                                    
+                                    if (prompt.evalScore !== null && prompt.evalScore !== undefined) {
+                                        tooltipContent += `<div>📊 评分: <span style="color: #ffd93d; font-weight: bold;">${prompt.evalScore.toFixed(2)}</span></div>`
+                                    }
+                                    
+                                    if (prompt.humanScore !== null && prompt.humanScore !== undefined) {
+                                        tooltipContent += `<div>👤 人工: <span style="color: #6bcf7f;">${prompt.humanScore}</span></div>`
+                                    }
+                                    
+                                    if (prompt.robotScore !== null && prompt.robotScore !== undefined) {
+                                        tooltipContent += `<div>🤖 机器: <span style="color: #7fb3d5;">${prompt.robotScore.toFixed(2)}</span></div>`
+                                    }
+                                    
+                                    tooltipContent += `</div>`
+                                }
+                            }
+                            
+                            tooltip.innerHTML = tooltipContent
+                        }
+                        
+                        // 更新tooltip位置
+                        tooltip.style.display = 'block'
+                        tooltip.style.left = (event.clientX + 15) + 'px'
+                        tooltip.style.top = (event.clientY + 15) + 'px'
+                        
+                        // 改变鼠标样式
+                        this.map3dRenderer.domElement.style.cursor = 'pointer'
+                    }
+                } else {
+                    // 没有悬停在任何节点上
+                    if (hoveredNode) {
+                        hoveredNode = null
+                        tooltip.style.display = 'none'
+                        this.map3dRenderer.domElement.style.cursor = 'default'
+                    }
+                }
+            }
+            
+            this.map3dRenderer.domElement.addEventListener('mousemove', onMouseMove)
+            this.map3dMouseMoveHandler = onMouseMove
         },
         
         // 创建连接线（在所有节点位置确定后调用）- 动态绑定版本
@@ -4239,6 +4362,18 @@ var app = new Vue({
             if (this.map3dRenderer && this.map3dRenderer.domElement && this.map3dClickHandler) {
                 this.map3dRenderer.domElement.removeEventListener('click', this.map3dClickHandler)
                 this.map3dClickHandler = null
+            }
+            
+            // **移除鼠标移动事件**
+            if (this.map3dRenderer && this.map3dRenderer.domElement && this.map3dMouseMoveHandler) {
+                this.map3dRenderer.domElement.removeEventListener('mousemove', this.map3dMouseMoveHandler)
+                this.map3dMouseMoveHandler = null
+            }
+            
+            // **移除tooltip元素**
+            const tooltip = document.getElementById('map3d-tooltip')
+            if (tooltip) {
+                tooltip.remove()
             }
             
             // 停止动画循环
