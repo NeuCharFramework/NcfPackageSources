@@ -3782,21 +3782,18 @@ var app = new Vue({
                                 fullPath: nodeData.node.fullPath
                             })
                             
-                            // 设置选中的靶道
-                            this.promptid = promptId
-                            
-                            // 获取靶道详情
-                            this.getPromptetail(promptId, true, true)
-                            
-                            // 关闭3D导图浮窗
+                            // **关闭3D导图浮窗（先关闭，避免与确认对话框冲突）**
                             this.mapDialogVisible = false
                             
-                            // 显示成功提示
-                            this.$message({
-                                message: `已选中靶道：${nodeData.node.fullPath}`,
-                                type: 'success',
-                                duration: 2000
-                            })
+                            // **复用原有的靶道切换逻辑（包括保存草稿提示）**
+                            // 直接设置 promptid，会自动触发 el-select 的 @change 事件
+                            // 从而调用 promptChangeHandel(promptId, 'promptid')
+                            // 该函数会自动处理：
+                            // 1. 检查 pageChange 状态
+                            // 2. 如果有修改，弹出"是否保存为草稿"确认框
+                            // 3. 根据用户选择保存或不保存
+                            // 4. 调用 getPromptetail 获取靶道详情
+                            this.promptid = promptId
                         }
                     }
                 }
