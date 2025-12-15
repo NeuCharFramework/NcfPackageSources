@@ -2889,14 +2889,26 @@ var app = new Vue({
                         return // 不在这里处理 Aiming 节点
                     }
                     
-                    // 检查子节点是否全是 Aiming 类型
-                    const hasAimingChildren = node.children && Object.keys(node.children).length > 0 &&
-                        Object.values(node.children).every(child => child.type === 'aiming')
+                    // **新逻辑：分离 Aiming 子节点和 Tactic 子节点**
+                    // 任何T节点都可能同时有A节点和T子节点
+                    let aimingChildren = {}
+                    let tacticChildren = {}
                     
-                    // 计算子树的节点数量，用于分配垂直空间
+                    if (node.children && Object.keys(node.children).length > 0) {
+                        Object.keys(node.children).forEach(childKey => {
+                            const child = node.children[childKey]
+                            if (child.type === 'aiming') {
+                                aimingChildren[childKey] = child
+                            } else {
+                                tacticChildren[childKey] = child
+                            }
+                        })
+                    }
+                    
+                    // 计算子树的节点数量，用于分配垂直空间（只计算Tactic子节点）
                     let nodeCount = 1
-                    if (isExpanded && node.children && Object.keys(node.children).length > 0 && !hasAimingChildren) {
-                        nodeCount += this.countTreeNodes(node.children)
+                    if (isExpanded && Object.keys(tacticChildren).length > 0) {
+                        nodeCount += this.countTreeNodes(tacticChildren)
                     }
                     
                     // 根据节点数量动态调整间距（实现平衡布局）
@@ -3172,15 +3184,15 @@ var app = new Vue({
                     let childMinX = x
                     let childMaxX = x
                     
-                    if (isExpanded && node.children && Object.keys(node.children).length > 0) {
-                        if (hasAimingChildren) {
-                            // Aiming 节点：水平排列（垂直于 Tactic）
-                            // 先保存当前节点的引用，稍后会更新 Aiming 的 parentPosition
-                            const currentParentNodeData = this.map3dNodes[this.map3dNodes.length - 1]
-                            
-                            const aimingKeys = Object.keys(node.children)
-                            const aimingSpacing = 8 // Aiming 节点之间的 Z 轴间距
-                            const totalAimingWidth = (aimingKeys.length - 1) * aimingSpacing
+                    // **1. 先处理 Aiming 子节点（在Z轴延伸，面向镜头）**
+                    if (isExpanded && Object.keys(aimingChildren).length > 0) {
+                        // Aiming 节点：Z轴排列（面向镜头方向延伸）
+                        // 先保存当前节点的引用，稍后会更新 Aiming 的 parentPosition
+                        const currentParentNodeData = this.map3dNodes[this.map3dNodes.length - 1]
+                        
+                        const aimingKeys = Object.keys(aimingChildren)
+                        const aimingSpacing = 8 // Aiming 节点之间的 Z 轴间距
+                        const totalAimingWidth = (aimingKeys.length - 1) * aimingSpacing
                             
                             // **修复：使用父节点的 fullPath 生成稳定的唯一Z轴偏移**
                             // 这样即使重新展开，同一个父节点的 A 节点也会在相同位置
@@ -3201,11 +3213,21 @@ var app = new Vue({
                             const aimingNodesData = [] // 保存 Aiming 节点数据，稍后更新 parentPosition
                             
                             aimingKeys.forEach((aimingKey, aimingIndex) => {
-                                const aimingNode = node.children[aimingKey]
-                                // **横向布局：X轴主轴，Y轴深度，Z轴分布**
+                                const aimingNode = aimingChildren[aimingKey]
+                                // **新布局：A节点在Z轴延伸（面向镜头方向）**
+                                // X和Y保持与父T节点相同，只在Z轴上变化
                                 const aimingX = x // 与父节点同一水平位置
-                                const aimingY = -(depth + 1) * 20 // Y轴向下一层
-                                const aimingZ = startZ + aimingIndex * aimingSpacing
+                                const aimingY = y // 与父节点同一深度（不向下一层）
+                                const aimingZ = startZ + aimingIndex * aimingSpacing // Z轴延伸
+                                
+                                console.log('🎯 创建Aiming节点:', {
+                                    key: aimingKey,
+                                    parentKey: key,
+                                    parentPos: { x, y, z },
+                                    aimingPos: { x: aimingX, y: aimingY, z: aimingZ },
+                                    aimingIndex,
+                                    totalAiming: aimingKeys.length
+                                })
                                 
                                 // 检查是否有当前编辑的靶道
                                 const aimingHasCurrent = aimingNode.prompts && aimingNode.prompts.some(p => p.isCurrent)
@@ -3518,77 +3540,99 @@ var app = new Vue({
                             // 更新当前节点数据中记录的子节点引用
                             if (currentParentNodeData) {
                                 aimingKeys.forEach(aimingKey => {
-                                    const aimingChild = node.children[aimingKey]
+                                    const aimingChild = aimingChildren[aimingKey]
                                     const aimingChildData = this.map3dNodes.find(n => n.node === aimingChild)
                                     if (aimingChildData) {
                                         currentParentNodeData.childrenMeshes.push(aimingChildData.mesh)
                                         currentParentNodeData.childrenMeshes.push(aimingChildData.sprite)
+                                        if (aimingChildData.glowMesh) {
+                                            currentParentNodeData.childrenMeshes.push(aimingChildData.glowMesh)
+                                        }
                                     }
                                 })
                             }
-                            
-                        } else {
-                            // **横向布局：普通子节点水平排列**
-                            const childStartX = currentYOffset + nodeSpacing
-                            const childResult = renderNode(node.children, { x, y, z }, depth + 1, childStartX, nodeSpacing)
-                            currentYOffset = childResult.yOffset  // 仍使用 yOffset 变量名，但实际是 X 轴
-                            totalHeight += childResult.height
-                            childMinX = childResult.minY  // 变量名保持，但实际是 X 轴
-                            childMaxX = childResult.maxY  // 变量名保持，但实际是 X 轴
-                            
-                            // **横向布局：将父节点调整到子树的水平中点**
-                            const subtreeMiddleX = (childMinX + childMaxX) / 2
-                            const oldX = x
-                            x = subtreeMiddleX
-                            
-                            // 更新已创建的mesh位置
-                            mesh.position.x = x
-                            if (glowMesh) {
-                                glowMesh.position.x = x
+                    }
+                    
+                    // **2. 再处理 Tactic 子节点（继续在Y轴向下）**
+                    if (isExpanded && Object.keys(tacticChildren).length > 0) {
+                        // **横向布局：Tactic子节点水平排列（X轴主轴）**
+                        const childStartX = currentYOffset + nodeSpacing
+                        const childResult = renderNode(tacticChildren, { x, y, z }, depth + 1, childStartX, nodeSpacing)
+                        currentYOffset = childResult.yOffset  // 仍使用 yOffset 变量名，但实际是 X 轴
+                        totalHeight += childResult.height
+                        childMinX = childResult.minY  // 变量名保持，但实际是 X 轴
+                        childMaxX = childResult.maxY  // 变量名保持，但实际是 X 轴
+                        
+                        // **横向布局：将父节点调整到子树的水平中点**
+                        const subtreeMiddleX = (childMinX + childMaxX) / 2
+                        const oldX = x
+                        x = subtreeMiddleX
+                        
+                        // 更新已创建的mesh位置
+                        mesh.position.x = x
+                        if (glowMesh) {
+                            glowMesh.position.x = x
+                        }
+                        sprite.position.x = x
+                        
+                        // 更新 map3dNodes 中的位置记录
+                        const currentNodeData = this.map3dNodes[this.map3dNodes.length - 1]
+                        if (currentNodeData) {
+                            currentNodeData.position.x = x
+                            // 保持原有的 parentPosition（如果有的话）
+                            if (parentPosition) {
+                                currentNodeData.parentPosition = parentPosition
                             }
-                            sprite.position.x = x
-                            
-                            // 更新 map3dNodes 中的位置记录
-                            const currentNodeData = this.map3dNodes[this.map3dNodes.length - 1]
-                            if (currentNodeData) {
-                                currentNodeData.position.x = x
-                                // 保持原有的 parentPosition（如果有的话）
-                                if (parentPosition) {
-                                    currentNodeData.parentPosition = parentPosition
-                                }
-                            }
-                            
-                            // **关键修复：使用调整后的父节点位置，更新所有子节点的 parentPosition**
-                            // 这必须在父节点位置调整之后执行
-                            const finalParentPosition = { x, y, z }
-                            Object.keys(node.children).forEach(childKey => {
-                                const childNode = node.children[childKey]
-                                // 递归更新所有后代节点的 parentPosition
-                                const updateDescendantParentPositions = (searchNode, searchKey, newParentPos) => {
-                                    const childNodeData = this.map3dNodes.find(n => n.node === searchNode && n.key === searchKey)
-                                    if (childNodeData) {
-                                        childNodeData.parentPosition = newParentPos
-                                    }
-                                }
-                                updateDescendantParentPositions(childNode, childKey, finalParentPosition)
-                            })
-                            
-                            // 记录子节点引用（用于快速更新可见性）
-                            const nodeData = this.map3dNodes[this.map3dNodes.length - 1]
-                            Object.keys(node.children).forEach(childKey => {
-                                const childNode = node.children[childKey]
-                                const childNodeData = this.map3dNodes.find(n => n.node === childNode)
+                        }
+                        
+                        // **关键修复：使用调整后的父节点位置，更新所有Tactic子节点的 parentPosition**
+                        // 这必须在父节点位置调整之后执行
+                        const finalParentPosition = { x, y, z }
+                        Object.keys(tacticChildren).forEach(childKey => {
+                            const childNode = tacticChildren[childKey]
+                            // 递归更新所有后代节点的 parentPosition
+                            const updateDescendantParentPositions = (searchNode, searchKey, newParentPos) => {
+                                const childNodeData = this.map3dNodes.find(n => n.node === searchNode && n.key === searchKey)
                                 if (childNodeData) {
-                                    nodeData.childrenMeshes.push(childNodeData.mesh)
-                                    nodeData.childrenMeshes.push(childNodeData.sprite)
-                                    if (childNodeData.glowMesh) {
-                                        nodeData.childrenMeshes.push(childNodeData.glowMesh)
+                                    childNodeData.parentPosition = newParentPos
+                                }
+                            }
+                            updateDescendantParentPositions(childNode, childKey, finalParentPosition)
+                        })
+                        
+                        // 同时更新Aiming子节点的parentPosition（如果有的话）
+                        if (Object.keys(aimingChildren).length > 0) {
+                            Object.keys(aimingChildren).forEach(aimingKey => {
+                                const aimingChild = aimingChildren[aimingKey]
+                                const aimingChildData = this.map3dNodes.find(n => n.node === aimingChild)
+                                if (aimingChildData) {
+                                    aimingChildData.parentPosition = finalParentPosition
+                                    // 同时更新Aiming节点的X位置（跟随父节点调整）
+                                    aimingChildData.mesh.position.x = x
+                                    aimingChildData.sprite.position.x = x
+                                    if (aimingChildData.glowMesh) {
+                                        aimingChildData.glowMesh.position.x = x
                                     }
+                                    aimingChildData.position.x = x
                                 }
                             })
                         }
-                    } else {
-                        // 没有子节点，更新 Y 偏移
+                        
+                        // 记录子节点引用（用于快速更新可见性）
+                        const nodeData = this.map3dNodes[this.map3dNodes.length - 1]
+                        Object.keys(tacticChildren).forEach(childKey => {
+                            const childNode = tacticChildren[childKey]
+                            const childNodeData = this.map3dNodes.find(n => n.node === childNode)
+                            if (childNodeData) {
+                                nodeData.childrenMeshes.push(childNodeData.mesh)
+                                nodeData.childrenMeshes.push(childNodeData.sprite)
+                                if (childNodeData.glowMesh) {
+                                    nodeData.childrenMeshes.push(childNodeData.glowMesh)
+                                }
+                            }
+                        })
+                    } else if (Object.keys(aimingChildren).length === 0) {
+                        // 既没有Tactic子节点，也没有Aiming子节点，更新Y偏移
                         currentYOffset += nodeSpacing
                     }
                     
@@ -3612,14 +3656,21 @@ var app = new Vue({
                     const node = nodeData[key]
                     const isExpanded = node.expanded !== false
                     
-                    // 检查子节点是否全是 Aiming 类型
-                    const hasAimingChildren = node.children && Object.keys(node.children).length > 0 &&
-                        Object.values(node.children).every(child => child.type === 'aiming')
+                    // **新逻辑：分离 Aiming 和 Tactic 子节点**
+                    let tacticChildren = {}
+                    if (node.children && Object.keys(node.children).length > 0) {
+                        Object.keys(node.children).forEach(childKey => {
+                            const child = node.children[childKey]
+                            if (child.type !== 'aiming') {
+                                tacticChildren[childKey] = child
+                            }
+                        })
+                    }
                     
                     let nodeCount = 1
-                    // 如果子节点是 Aiming，不计入 nodeCount（因为 Aiming 水平排列）
-                    if (isExpanded && node.children && Object.keys(node.children).length > 0 && !hasAimingChildren) {
-                        nodeCount += this.countTreeNodes(node.children)
+                    // 只计算Tactic子节点（Aiming在Z轴，不占用Y轴空间）
+                    if (isExpanded && Object.keys(tacticChildren).length > 0) {
+                        nodeCount += this.countTreeNodes(tacticChildren)
                     }
                     
                     // 使用与 renderNode 相同的间距计算
@@ -3628,9 +3679,9 @@ var app = new Vue({
                     
                     height += nodeSpacing
                     
-                    // 只有非 Aiming 子节点才递归计算高度
-                    if (isExpanded && node.children && Object.keys(node.children).length > 0 && !hasAimingChildren) {
-                        height += tempRenderForHeight(node.children, depth + 1)
+                    // 只递归计算Tactic子节点的高度
+                    if (isExpanded && Object.keys(tacticChildren).length > 0) {
+                        height += tempRenderForHeight(tacticChildren, depth + 1)
                     }
                 })
                 
@@ -3664,32 +3715,89 @@ var app = new Vue({
             // **横向布局：重新计算树的范围和摄像机位置**
             const treeWidth = actualMaxY - actualMinY  // 水平宽度（X轴）
             const treeDepth = maxDepth * 20            // 深度（Y轴）
+            
+            // **计算Z轴范围（Aiming节点的分布）**
+            let minZ = 0
+            let maxZ = 0
+            this.map3dNodes.forEach(nodeData => {
+                if (nodeData.node.type === 'aiming') {
+                    minZ = Math.min(minZ, nodeData.position.z)
+                    maxZ = Math.max(maxZ, nodeData.position.z)
+                }
+            })
+            const treeZSpan = maxZ - minZ
+            
             const treeCenterX = (actualMaxY + actualMinY) / 2
             const treeCenterY = -treeDepth / 2  // 向下展开，中心点在负Y
+            const treeCenterZ = (maxZ + minZ) / 2  // Z轴中心（Aiming节点的中心）
             
             // 调整相机初始位置，确保能看到整个树
             const treeCenter = {
                 x: treeCenterX,
                 y: treeCenterY,
-                z: 0
+                z: treeCenterZ
             }
             
-            // 根据树的大小计算合适的相机距离
-            const maxDimension = Math.max(treeWidth, treeDepth)
-            const cameraDistance = maxDimension * 1.5 // 1.5倍的距离确保全景可见
+            // **优化相机距离计算：使用更智能的算法**
+            // 考虑3个维度，但给予不同的权重
+            const effectiveWidth = treeWidth
+            const effectiveDepth = treeDepth
+            const effectiveZSpan = treeZSpan
+            
+            // 使用包围盒对角线长度作为基准
+            const boundingBoxDiagonal = Math.sqrt(
+                effectiveWidth * effectiveWidth + 
+                effectiveDepth * effectiveDepth + 
+                effectiveZSpan * effectiveZSpan
+            )
+            
+            // 根据节点密度调整距离系数
+            const nodeCount = this.map3dNodes.length
+            let distanceMultiplier = 1.2  // 基础系数
+            
+            // 节点越多，距离系数稍微减小（避免拉太远）
+            if (nodeCount > 100) {
+                distanceMultiplier = 1.0
+            } else if (nodeCount > 50) {
+                distanceMultiplier = 1.1
+            } else if (nodeCount < 20) {
+                distanceMultiplier = 1.3
+            }
+            
+            const cameraDistance = boundingBoxDiagonal * distanceMultiplier
+            
+            console.log('📷 相机距离计算:', {
+                treeWidth,
+                treeDepth,
+                treeZSpan,
+                boundingBoxDiagonal: boundingBoxDiagonal.toFixed(2),
+                nodeCount,
+                distanceMultiplier,
+                finalDistance: cameraDistance.toFixed(2)
+            })
             
             // 在所有节点位置确定后，统一创建连接线
             this.createConnectionLines()
             
             if (this.map3dControls) {
                 this.map3dControls.target.set(treeCenter.x, treeCenter.y, treeCenter.z)
-                // 相机位置：斜45度角，距离根据树的大小动态调整
+                
+                // **优化相机位置：从右前上方观察**
+                // 这样可以同时看清楚：
+                // - X轴的T节点排列
+                // - Y轴的深度层级
+                // - Z轴的A节点分布
                 this.map3dCamera.position.set(
-                    treeCenter.x + cameraDistance * 0.5,
-                    treeCenter.y + cameraDistance * 0.3,
-                    treeCenter.z + cameraDistance
+                    treeCenter.x + cameraDistance * 0.4,   // X轴：稍微偏右
+                    treeCenter.y + cameraDistance * 0.5,   // Y轴：从上方看（更高）
+                    treeCenter.z + cameraDistance * 0.8    // Z轴：从前方看
                 )
                 this.map3dControls.update()
+                
+                console.log('📷 相机位置已设置:', {
+                    target: treeCenter,
+                    position: this.map3dCamera.position
+                })
             }
             
             // 启动入场动画
@@ -4518,17 +4626,17 @@ var app = new Vue({
                             const parentOffset = (hashCode(parentData.node.fullPath || parentData.key) % 100) / 10
                             const correctZ = -totalAimingWidth / 2 + parentOffset + aimingIndex * aimingSpacing
                             
-                            // **横向布局：Aiming 节点的坐标重新计算**
+                            // **新布局：Aiming 节点的坐标重新计算**
                             // X 轴：与父节点相同（Aiming 节点在同一水平位置）
                             const correctX = parentData.mesh.position.x
-                            // Y 轴：父节点深度向下一层
-                            const correctY = parentData.mesh.position.y - 20
+                            // Y 轴：与父节点相同（Aiming不向下一层，在Z轴延伸）
+                            const correctY = parentData.mesh.position.y
                             
                             // 使用重新计算的正确位置（X, Y, Z 都重新计算）
                             childData._targetPosition = {
                                 x: correctX,  // 与父节点相同的 X
-                                y: correctY,  // 父节点 Y - 20（向下一层）
-                                z: correctZ   // 基于父节点 hash 的唯一 Z
+                                y: correctY,  // 与父节点相同的 Y（不向下）
+                                z: correctZ   // 基于父节点 hash 的唯一 Z（在Z轴延伸）
                             }
                         } else {
                             childData._targetPosition = { ...childData.position }
