@@ -3147,14 +3147,76 @@ var app = new Vue({
                                 // 检查是否有当前编辑的靶道
                                 const aimingHasCurrent = aimingNode.prompts && aimingNode.prompts.some(p => p.isCurrent)
                                 
-                                // 创建 Aiming 几何体：小圆球
-                                const aimingGeometry = new THREE.SphereGeometry(1.5, 24, 24)
+                                // **根据评分改变大小和颜色**
+                                let sphereSize = 1.5  // 默认大小
+                                let sphereColor = 0xa8e6cf  // 默认颜色（浅绿）
+                                let emissiveColor = 0x003333
+                                let emissiveIntensity = 0.05
+                                
+                                // 如果有评分数据，根据评分调整
+                                if (aimingNode.prompts && aimingNode.prompts.length > 0) {
+                                    const promptId = aimingNode.prompts[0].id
+                                    const fullPromptData = this.promptOpt.find(p => 
+                                        (p.idkey || p.value) == promptId
+                                    )
+                                    
+                                    if (fullPromptData && fullPromptData.finalScore !== undefined && 
+                                        fullPromptData.finalScore !== null && 
+                                        fullPromptData.finalScore !== -1 && 
+                                        fullPromptData.finalScore !== '-1') {
+                                        
+                                        const score = fullPromptData.finalScore
+                                        
+                                        // 根据评分等级设置大小和颜色
+                                        if (score >= 8) {
+                                            // 8-10分：优秀 - 最大、亮绿色
+                                            sphereSize = 2.2
+                                            sphereColor = 0x00d4aa  // 亮绿色
+                                            emissiveColor = 0x00ffcc
+                                            emissiveIntensity = 0.4
+                                        } else if (score >= 6) {
+                                            // 6-8分：良好 - 较大、绿色
+                                            sphereSize = 1.9
+                                            sphereColor = 0x52c41a  // 绿色
+                                            emissiveColor = 0x66ff66
+                                            emissiveIntensity = 0.3
+                                        } else if (score >= 4) {
+                                            // 4-6分：中等 - 正常、橙色
+                                            sphereSize = 1.6
+                                            sphereColor = 0xfaad14  // 橙色
+                                            emissiveColor = 0xffcc00
+                                            emissiveIntensity = 0.2
+                                        } else if (score >= 2) {
+                                            // 2-4分：较低 - 较小、浅红色
+                                            sphereSize = 1.3
+                                            sphereColor = 0xff7875  // 浅红色
+                                            emissiveColor = 0xff6666
+                                            emissiveIntensity = 0.15
+                                        } else {
+                                            // 0-2分：差 - 最小、红色
+                                            sphereSize = 1.0
+                                            sphereColor = 0xf5222d  // 红色
+                                            emissiveColor = 0xff3333
+                                            emissiveIntensity = 0.1
+                                        }
+                                    }
+                                }
+                                
+                                // 如果是当前选中的节点，覆盖为黄色高亮
+                                if (aimingHasCurrent) {
+                                    sphereColor = 0xffd93d
+                                    emissiveColor = 0xffaa00
+                                    emissiveIntensity = 0.7
+                                }
+                                
+                                // 创建 Aiming 几何体：小圆球（大小由评分决定）
+                                const aimingGeometry = new THREE.SphereGeometry(sphereSize, 24, 24)
                                 const aimingMaterial = new THREE.MeshStandardMaterial({ 
-                                    color: aimingHasCurrent ? 0xffd93d : 0xa8e6cf,
+                                    color: sphereColor,
                                     metalness: 0.4,
                                     roughness: 0.5,
-                                    emissive: aimingHasCurrent ? 0xffaa00 : 0x003333,
-                                    emissiveIntensity: aimingHasCurrent ? 0.7 : 0.05
+                                    emissive: emissiveColor,
+                                    emissiveIntensity: emissiveIntensity
                                 })
                                 
                                 const aimingMesh = new THREE.Mesh(aimingGeometry, aimingMaterial)
@@ -3642,24 +3704,87 @@ var app = new Vue({
                                     <div>编号: A${aimingNumber}</div>
                                 `
                                 
-                                // 显示评分信息
+                                // **从promptOpt获取完整的评分数据**
                                 if (node.prompts && node.prompts.length > 0) {
-                                    const prompt = node.prompts[0]
-                                    tooltipContent += `<div style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 8px;">`
+                                    const promptId = node.prompts[0].id
+                                    // 从 promptOpt 中查找完整数据
+                                    const fullPromptData = this.promptOpt.find(p => 
+                                        (p.idkey || p.value) == promptId
+                                    )
                                     
-                                    if (prompt.evalScore !== null && prompt.evalScore !== undefined) {
-                                        tooltipContent += `<div>📊 评分: <span style="color: #ffd93d; font-weight: bold;">${prompt.evalScore.toFixed(2)}</span></div>`
+                                    if (fullPromptData) {
+                                        // 获取最终评分
+                                        let finalScore = null
+                                        if (fullPromptData.finalScore !== undefined && 
+                                            fullPromptData.finalScore !== null && 
+                                            fullPromptData.finalScore !== -1 && 
+                                            fullPromptData.finalScore !== '-1') {
+                                            finalScore = fullPromptData.finalScore
+                                        }
+                                        
+                                        // 如果有评分数据，显示评分区域
+                                        if (finalScore !== null || 
+                                            fullPromptData.humanScore > -1 || 
+                                            fullPromptData.robotScore > -1) {
+                                            
+                                            tooltipContent += `<div style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 8px;">`
+                                            
+                                            // **显示最终评分（大号、醒目）**
+                                            if (finalScore !== null) {
+                                                // 根据评分等级使用不同颜色和大小
+                                                let scoreColor = '#999'
+                                                let scoreSize = '20px'
+                                                let scoreEmoji = '📊'
+                                                let scoreBadge = ''
+                                                
+                                                if (finalScore >= 8) {
+                                                    scoreColor = '#00d4aa'  // 优秀：亮绿色
+                                                    scoreSize = '24px'
+                                                    scoreEmoji = '🏆'
+                                                    scoreBadge = '<span style="background: #00d4aa; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">优秀</span>'
+                                                } else if (finalScore >= 6) {
+                                                    scoreColor = '#52c41a'  // 良好：绿色
+                                                    scoreSize = '22px'
+                                                    scoreEmoji = '✨'
+                                                    scoreBadge = '<span style="background: #52c41a; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">良好</span>'
+                                                } else if (finalScore >= 4) {
+                                                    scoreColor = '#faad14'  // 中等：橙色
+                                                    scoreSize = '20px'
+                                                    scoreEmoji = '📊'
+                                                    scoreBadge = '<span style="background: #faad14; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">中等</span>'
+                                                } else if (finalScore >= 2) {
+                                                    scoreColor = '#ff7875'  // 较低：浅红色
+                                                    scoreSize = '18px'
+                                                    scoreEmoji = '⚠️'
+                                                    scoreBadge = '<span style="background: #ff7875; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">较低</span>'
+                                                } else {
+                                                    scoreColor = '#f5222d'  // 差：红色
+                                                    scoreSize = '18px'
+                                                    scoreEmoji = '❌'
+                                                    scoreBadge = '<span style="background: #f5222d; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">需改进</span>'
+                                                }
+                                                
+                                                tooltipContent += `
+                                                    <div style="margin-bottom: 8px;">
+                                                        ${scoreEmoji} <span style="color: ${scoreColor}; font-weight: bold; font-size: ${scoreSize};">${finalScore.toFixed(1)}</span>
+                                                        <span style="color: #888; font-size: 12px;"> / 10</span>
+                                                        ${scoreBadge}
+                                                    </div>
+                                                `
+                                            }
+                                            
+                                            // **显示详细评分**
+                                            if (fullPromptData.humanScore > -1) {
+                                                tooltipContent += `<div style="font-size: 12px; color: #ccc; margin-top: 4px;">👤 人工: <span style="color: #6bcf7f;">${fullPromptData.humanScore}</span></div>`
+                                            }
+                                            
+                                            if (fullPromptData.robotScore > -1) {
+                                                tooltipContent += `<div style="font-size: 12px; color: #ccc; margin-top: 4px;">🤖 机器: <span style="color: #7fb3d5;">${fullPromptData.robotScore.toFixed(1)}</span></div>`
+                                            }
+                                            
+                                            tooltipContent += `</div>`
+                                        }
                                     }
-                                    
-                                    if (prompt.humanScore !== null && prompt.humanScore !== undefined) {
-                                        tooltipContent += `<div>👤 人工: <span style="color: #6bcf7f;">${prompt.humanScore}</span></div>`
-                                    }
-                                    
-                                    if (prompt.robotScore !== null && prompt.robotScore !== undefined) {
-                                        tooltipContent += `<div>🤖 机器: <span style="color: #7fb3d5;">${prompt.robotScore.toFixed(2)}</span></div>`
-                                    }
-                                    
-                                    tooltipContent += `</div>`
                                 }
                             }
                             
