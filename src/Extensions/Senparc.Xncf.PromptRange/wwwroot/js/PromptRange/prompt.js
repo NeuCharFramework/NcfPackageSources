@@ -7606,29 +7606,33 @@ var app = new Vue({
         },
         
         // 辅助方法：根据ID获取名称
-        getTargetRangeName(id) {
-            if (!this.promptFieldOpt || !id) return '未知靶场';
-            const range = this.promptFieldOpt.find(item => item.value === id);
-            return range ? range.label : '未知靶场';
+        getTargetRangeName: function(id) {
+            // 使用 NameHelper 工具类
+            return window.PromptRangeUtils.NameHelper.getName(
+                this.promptFieldOpt, id, '未知靶场'
+            );
         },
         
-        getTargetLaneName(id) {
-            if (!this.promptOpt || !id) return '未知靶道';
-            // 从promptOpt中查找对应的靶道
-            const lane = this.promptOpt.find(item => item.idkey === id);
-            return lane ? (lane.nickName || lane.label) : '未知靶道';
+        getTargetLaneName: function(id) {
+            // 从promptOpt中查找对应的靶道（使用自定义字段名 idkey）
+            var lane = window.PromptRangeUtils.NameHelper.getOption(
+                this.promptOpt, id, 'idkey'
+            );
+            return lane ? (lane.nickName || lane.label || '未知靶道') : '未知靶道';
         },
         
-        getTacticalName(id) {
-            if (!this.tacticalOpt || !id) return '未知战术';
-            const tactical = this.tacticalOpt.find(item => item.value === id);
-            return tactical ? tactical.label : '未知战术';
+        getTacticalName: function(id) {
+            // 使用 NameHelper 工具类
+            return window.PromptRangeUtils.NameHelper.getName(
+                this.tacticalOpt, id, '未知战术'
+            );
         },
         
-        getModelName(id) {
-            if (!this.modelOpt || !id) return '未知模型';
-            const model = this.modelOpt.find(item => item.value === id);
-            return model ? model.label : '未知模型';
+        getModelName: function(id) {
+            // 使用 NameHelper 工具类
+            return window.PromptRangeUtils.NameHelper.getName(
+                this.modelOpt, id, '未知模型'
+            );
         },
     }
 });
