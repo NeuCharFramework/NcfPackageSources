@@ -3191,43 +3191,33 @@ var app = new Vue({
                         const currentParentNodeData = this.map3dNodes[this.map3dNodes.length - 1]
                         
                         const aimingKeys = Object.keys(aimingChildren)
-                        const aimingSpacing = 8 // Aiming 节点之间的 Z 轴间距
-                        const totalAimingWidth = (aimingKeys.length - 1) * aimingSpacing
-                            
-                            // **修复：使用父节点的 fullPath 生成稳定的唯一Z轴偏移**
-                            // 这样即使重新展开，同一个父节点的 A 节点也会在相同位置
-                            const hashCode = (str) => {
-                                let hash = 0
-                                for (let i = 0; i < str.length; i++) {
-                                    const char = str.charCodeAt(i)
-                                    hash = ((hash << 5) - hash) + char
-                                    hash = hash & hash // Convert to 32bit integer
-                                }
-                                return Math.abs(hash)
-                            }
-                            
-                            // 使用 fullPath 生成稳定的偏移值（范围 0-10）
-                            const parentOffset = (hashCode(node.fullPath || key) % 100) / 10
-                            let startZ = -totalAimingWidth / 2 + parentOffset // 加入父节点唯一偏移
-                            
-                            const aimingNodesData = [] // 保存 Aiming 节点数据，稍后更新 parentPosition
-                            
-                            aimingKeys.forEach((aimingKey, aimingIndex) => {
-                                const aimingNode = aimingChildren[aimingKey]
-                                // **新布局：A节点在Z轴延伸（面向镜头方向）**
-                                // X和Y保持与父T节点相同，只在Z轴上变化
-                                const aimingX = x // 与父节点同一水平位置
-                                const aimingY = y // 与父节点同一深度（不向下一层）
-                                const aimingZ = startZ + aimingIndex * aimingSpacing // Z轴延伸
+                        const aimingSpacing = 16 // Aiming 节点之间的 Z 轴间距（增加1倍：8 -> 16）
+                        
+                        // **新策略：A节点从父T节点位置开始，向摄像机方向（+Z）依次排列**
+                        // A1 在最靠近 T 的位置，A2 在 A1 前面，A3 在 A2 前面...
+                        // 不再使用中心对称或 hash 偏移
+                        
+                        const aimingNodesData = [] // 保存 Aiming 节点数据，稍后更新 parentPosition
+                        
+                        aimingKeys.forEach((aimingKey, aimingIndex) => {
+                            const aimingNode = aimingChildren[aimingKey]
+                            // **新布局：A节点在Z轴朝向摄像机方向依次排列**
+                            // X和Y保持与父T节点相同，只在Z轴上递增
+                            const aimingX = x // 与父节点同一水平位置
+                            const aimingY = y // 与父节点同一深度（不向下一层）
+                            // Z轴：从T节点位置开始，每个A节点增加 aimingSpacing
+                            // A1: z + aimingSpacing, A2: z + 2*aimingSpacing, ...
+                            const aimingZ = z + (aimingIndex + 1) * aimingSpacing
                                 
-                                console.log('🎯 创建Aiming节点:', {
-                                    key: aimingKey,
-                                    parentKey: key,
-                                    parentPos: { x, y, z },
-                                    aimingPos: { x: aimingX, y: aimingY, z: aimingZ },
-                                    aimingIndex,
-                                    totalAiming: aimingKeys.length
-                                })
+                            console.log('🎯 创建Aiming节点:', {
+                                key: aimingKey,
+                                parentKey: key,
+                                parentPos: { x, y, z },
+                                aimingPos: { x: aimingX, y: aimingY, z: aimingZ },
+                                aimingIndex,
+                                totalAiming: aimingKeys.length,
+                                strategy: `A${aimingIndex + 1} 在 T 前方 ${(aimingIndex + 1) * aimingSpacing} 单位（朝向摄像机）`
+                            })
                                 
                                 // 检查是否有当前编辑的靶道
                                 const aimingHasCurrent = aimingNode.prompts && aimingNode.prompts.some(p => p.isCurrent)
@@ -4609,22 +4599,12 @@ var app = new Vue({
                         const aimingIndex = aimingKeys.indexOf(childData.key)
                         
                         if (aimingIndex !== -1) {
-                            const aimingSpacing = 8
-                            const totalAimingWidth = (aimingKeys.length - 1) * aimingSpacing
+                            const aimingSpacing = 16 // 与创建时保持一致（增加1倍）
                             
-                            // 使用相同的 hashCode 函数生成稳定的偏移
-                            const hashCode = (str) => {
-                                let hash = 0
-                                for (let i = 0; i < str.length; i++) {
-                                    const char = str.charCodeAt(i)
-                                    hash = ((hash << 5) - hash) + char
-                                    hash = hash & hash
-                                }
-                                return Math.abs(hash)
-                            }
-                            
-                            const parentOffset = (hashCode(parentData.node.fullPath || parentData.key) % 100) / 10
-                            const correctZ = -totalAimingWidth / 2 + parentOffset + aimingIndex * aimingSpacing
+                            // **新策略：A节点从父节点位置开始，向摄像机方向（+Z）依次排列**
+                            // A1: parentZ + aimingSpacing, A2: parentZ + 2*aimingSpacing, ...
+                            const parentZ = parentData.mesh.position.z
+                            const correctZ = parentZ + (aimingIndex + 1) * aimingSpacing
                             
                             // **新布局：Aiming 节点的坐标重新计算**
                             // X 轴：与父节点相同（Aiming 节点在同一水平位置）
@@ -4636,7 +4616,7 @@ var app = new Vue({
                             childData._targetPosition = {
                                 x: correctX,  // 与父节点相同的 X
                                 y: correctY,  // 与父节点相同的 Y（不向下）
-                                z: correctZ   // 基于父节点 hash 的唯一 Z（在Z轴延伸）
+                                z: correctZ   // 从父节点向摄像机方向延伸
                             }
                         } else {
                             childData._targetPosition = { ...childData.position }
