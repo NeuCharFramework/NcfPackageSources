@@ -3260,10 +3260,22 @@ var app = new Vue({
                                     if (score !== null && this.scoreStatistics) {
                                         // **根据相对排名设置大小和颜色**
                                         const percentile = this.scoreStatistics.getPercentileRank(score)
-                                        console.log('✅ 使用评分:', score, '排名百分位:', percentile.toFixed(1) + '%')
+                                        const allScores = this.scoreStatistics.scores
+                                        const rank = allScores.filter(s => s > score).length + 1
+                                        const isFirst = rank === 1
                                         
+                                        console.log('✅ 使用评分:', score, '排名:', rank, '百分位:', percentile.toFixed(1) + '%', isFirst ? '🥇第一名!' : '')
+                                        
+                                        // **特殊处理：排名第一的节点**
+                                        if (isFirst) {
+                                            // 第一名 - 特大、金色
+                                            sphereSize = 2.5
+                                            sphereColor = 0xffd700  // 金色
+                                            emissiveColor = 0xffaa00
+                                            emissiveIntensity = 0.6
+                                        }
                                         // 根据排名百分位分级（Top 20%, 20-40%, 40-60%, 60-80%, Bottom 20%）
-                                        if (percentile >= 80) {
+                                        else if (percentile >= 80) {
                                             // Top 20% - 最大、亮绿色
                                             sphereSize = 2.2
                                             sphereColor = 0x00d4aa
@@ -3327,6 +3339,27 @@ var app = new Vue({
                                 aimingMesh.castShadow = true
                                 aimingMesh.receiveShadow = true
                                 aimingMesh.scale.set(0.1, 0.1, 0.1)
+                                
+                                // **为第一名添加特殊发光效果**
+                                let aimingGlowMesh = null
+                                if (score !== null && this.scoreStatistics) {
+                                    const allScores = this.scoreStatistics.scores
+                                    const rank = allScores.filter(s => s > score).length + 1
+                                    if (rank === 1) {
+                                        // 创建金色发光外壳
+                                        const aimingGlowGeometry = new THREE.SphereGeometry(sphereSize * 1.3, 24, 24)
+                                        const aimingGlowMaterial = new THREE.MeshBasicMaterial({
+                                            color: 0xffd700,  // 金色
+                                            transparent: true,
+                                            opacity: 0.3,
+                                            side: THREE.BackSide
+                                        })
+                                        aimingGlowMesh = new THREE.Mesh(aimingGlowGeometry, aimingGlowMaterial)
+                                        aimingGlowMesh.position.copy(aimingMesh.position)
+                                        aimingGlowMesh.scale.set(0.1, 0.1, 0.1)
+                                        this.map3dScene.add(aimingGlowMesh)
+                                    }
+                                }
                                 
                                 // 创建 Aiming 文字标签（更大的文字，动态宽度）
                                 const aimingCanvas = document.createElement('canvas')
@@ -3435,7 +3468,7 @@ var app = new Vue({
                                 const aimingNodeData = { 
                                     mesh: aimingMesh, 
                                     sprite: aimingSprite, 
-                                    glowMesh: null,
+                                    glowMesh: aimingGlowMesh,  // 保存发光效果（第一名会有）
                                     node: aimingNode, 
                                     key: aimingKey, 
                                     depth: depth + 1, 
@@ -3861,11 +3894,19 @@ var app = new Vue({
                                                     const allScores = this.scoreStatistics.scores
                                                     const rank = allScores.filter(s => s > finalScore).length + 1
                                                     const total = allScores.length
+                                                    const isFirst = rank === 1
                                                     
                                                     rankText = `排名: ${rank}/${total}`
                                                     
+                                                    // **特殊处理：排名第一**
+                                                    if (isFirst) {
+                                                        scoreColor = '#ffd700'  // 金色
+                                                        scoreSize = '26px'
+                                                        scoreEmoji = '🥇'
+                                                        rankBadge = '<span style="background: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #ffd700 100%); color: #000; padding: 3px 8px; border-radius: 4px; font-size: 11px; margin-left: 6px; font-weight: bold; box-shadow: 0 2px 8px rgba(255,215,0,0.4);">👑 第一名</span>'
+                                                    }
                                                     // 根据排名百分位分级
-                                                    if (percentile >= 80) {
+                                                    else if (percentile >= 80) {
                                                         // Top 20%
                                                         scoreColor = '#00d4aa'
                                                         scoreSize = '24px'
