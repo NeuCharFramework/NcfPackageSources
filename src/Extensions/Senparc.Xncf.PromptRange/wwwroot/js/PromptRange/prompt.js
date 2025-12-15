@@ -3118,10 +3118,21 @@ var app = new Vue({
                             const aimingSpacing = 8 // Aiming 节点之间的 Z 轴间距
                             const totalAimingWidth = (aimingKeys.length - 1) * aimingSpacing
                             
-                            // **修复：使用父节点的位置生成唯一的Z轴偏移，避免不同父节点的A节点重叠**
-                            // 使用当前节点的X位置（原Y）的哈希值来生成唯一偏移
-                            const parentOffset = (currentYOffset % 100) / 10 // 基于父节点位置的唯一偏移
-                            let startZ = -totalAimingWidth / 2 + parentOffset // 加入父节点偏移
+                            // **修复：使用父节点的 fullPath 生成稳定的唯一Z轴偏移**
+                            // 这样即使重新展开，同一个父节点的 A 节点也会在相同位置
+                            const hashCode = (str) => {
+                                let hash = 0
+                                for (let i = 0; i < str.length; i++) {
+                                    const char = str.charCodeAt(i)
+                                    hash = ((hash << 5) - hash) + char
+                                    hash = hash & hash // Convert to 32bit integer
+                                }
+                                return Math.abs(hash)
+                            }
+                            
+                            // 使用 fullPath 生成稳定的偏移值（范围 0-10）
+                            const parentOffset = (hashCode(node.fullPath || key) % 100) / 10
+                            let startZ = -totalAimingWidth / 2 + parentOffset // 加入父节点唯一偏移
                             
                             const aimingNodesData = [] // 保存 Aiming 节点数据，稍后更新 parentPosition
                             
@@ -3893,7 +3904,8 @@ var app = new Vue({
             }
             
             // 弹出动画：从父节点位置开始，缩放+位移到目标位置
-            const animationDuration = 350
+            // **缩短单个节点动画时间，让多米诺效果更明显**
+            const animationDuration = 250  // 从 350ms 减少到 250ms
             const startTime = Date.now()
             
             // **修复：保存每个子节点的目标位置和它的直接父节点位置**
@@ -3938,8 +3950,8 @@ var app = new Vue({
                 const easeProgress = 1 + c3 * Math.pow(progress - 1, 3) + c1 * Math.pow(progress - 1, 2)
                 
                 childNodes.forEach((childData, index) => {
-                    // **增加延迟，产生更明显的顺序动画效果，降低CPU压力**
-                    const delay = index * 50  // 从 20ms 增加到 50ms
+                    // **大幅增加延迟，产生明显的多米诺骨牌效果**
+                    const delay = index * 80  // 从 50ms 增加到 80ms，让每个节点间隔更明显
                     const nodeProgress = Math.max(0, Math.min(1, (elapsed - delay) / animationDuration))
                     
                     // **如果动画还没开始（nodeProgress === 0），隐藏节点**
@@ -4070,7 +4082,8 @@ var app = new Vue({
             }
             
             // 吸入动画：从当前位置缩放+位移到父节点位置，然后隐藏
-            const animationDuration = 300
+            // **缩短单个节点动画时间，让多米诺效果更明显**
+            const animationDuration = 200  // 从 300ms 减少到 200ms
             const startTime = Date.now()
             
             // 保存每个子节点的起始位置
@@ -4090,8 +4103,8 @@ var app = new Vue({
                 const easeProgress = progress * progress * progress
                 
                 childNodes.forEach((childData, index) => {
-                    // **增加反向延迟（后面的节点先消失），产生顺序动画效果**
-                    const delay = (childNodes.length - index) * 35  // 从 15ms 增加到 35ms
+                    // **大幅增加反向延迟，产生明显的反向多米诺骨牌效果**
+                    const delay = (childNodes.length - index) * 60  // 从 35ms 增加到 60ms
                     const nodeProgress = Math.max(0, Math.min(1, (elapsed - delay) / animationDuration))
                     const nodeEase = nodeProgress * nodeProgress * nodeProgress
                     
