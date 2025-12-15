@@ -32,7 +32,6 @@
                             <div class="d-flex align-center">
                                 <img src="~/image/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon" />
                                 <div class="titleContent">选择靶场</div>
-                                <el-button type="info" size="mini" icon="el-icon-s-data" @@click="openMapDialog" style="margin-left: 10px;">导图</el-button>
                             </div>
                             <div>
                                 <el-button type="primary" size="mini" @@click="expectedPluginOpen">导出 plugins</el-button>
@@ -60,10 +59,13 @@
                     </div>
 
                     <div class="w-100">
-                        <div class="d-flex align-center" style="gap: 5px;margin-bottom: 5px">
-                            <img src="~/image/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon" />
-                            <div class="titleContent d-flex justify-content-between  align-center w-100">
-                                <span>选择靶道</span>
+                        <div class="d-flex align-center justify-content-between" style="gap: 5px;margin-bottom: 5px">
+                            <div class="d-flex align-center" style="gap: 5px;">
+                                <img src="~/image/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon" />
+                                <div class="titleContent">选择靶道</div>
+                            </div>
+                            <div class="d-flex align-center" style="gap: 5px;">
+                                <el-button type="info" size="mini" icon="el-icon-s-data" @@click="openMapDialog">导图</el-button>
                                 <i class="el-icon-document-copy" style="font-size: 1.3rem;cursor: pointer" @@click="copyInfo"></i>
                             </div>
                         </div>
