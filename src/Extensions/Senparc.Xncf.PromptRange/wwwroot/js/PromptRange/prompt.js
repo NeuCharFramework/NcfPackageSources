@@ -2777,6 +2777,7 @@ var app = new Vue({
             return maxHeight
         },
         
+        // @deprecated 不再使用：由于A节点在Z轴延伸，T节点间距已改为固定值
         // 计算子树的节点数量（用于平衡布局）
         countTreeNodes(nodeData) {
             if (!nodeData || typeof nodeData !== 'object') return 0
@@ -2905,20 +2906,14 @@ var app = new Vue({
                         })
                     }
                     
-                    // 计算子树的节点数量，用于分配垂直空间（只计算Tactic子节点）
-                    let nodeCount = 1
-                    if (isExpanded && Object.keys(tacticChildren).length > 0) {
-                        nodeCount += this.countTreeNodes(tacticChildren)
-                    }
-                    
-                    // 根据节点数量动态调整间距（实现平衡布局）
-                    const baseSpacing = 12
-                    const nodeSpacing = Math.max(baseSpacing, nodeCount * 3)
+                    // **简化间距计算：由于A节点在Z轴，不再需要考虑子节点数量**
+                    // 使用固定间距即可，保持布局简洁清晰
+                    const nodeSpacing = 15  // 固定间距（适中，不会太挤也不会太松散）
                     
                     // **横向布局：X轴为主轴（水平排列），Y轴为深度（层级向下），Z轴为Aiming分布**
                     let x = currentYOffset  // X轴为主轴（水平位置）
                     const y = -depth * 20   // Y轴为深度（负值向下展开）
-                    const z = 0
+                    const z = 0             // T节点统一在 Z=0 平面，A节点向 +Z 延伸
                     
                     // 检查是否有当前编辑的靶道
                     const hasCurrent = node.prompts && node.prompts.some(p => p.isCurrent)
@@ -3657,16 +3652,8 @@ var app = new Vue({
                         })
                     }
                     
-                    let nodeCount = 1
-                    // 只计算Tactic子节点（Aiming在Z轴，不占用Y轴空间）
-                    if (isExpanded && Object.keys(tacticChildren).length > 0) {
-                        nodeCount += this.countTreeNodes(tacticChildren)
-                    }
-                    
-                    // 使用与 renderNode 相同的间距计算
-                    const baseSpacing = 12
-                    const nodeSpacing = Math.max(baseSpacing, nodeCount * 3)
-                    
+                    // **简化间距计算：使用固定间距**
+                    const nodeSpacing = 15  // 与 renderNode 保持一致
                     height += nodeSpacing
                     
                     // 只递归计算Tactic子节点的高度
