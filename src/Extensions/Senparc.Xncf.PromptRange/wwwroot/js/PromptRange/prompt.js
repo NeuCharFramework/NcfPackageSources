@@ -3589,14 +3589,26 @@ var app = new Vue({
                 mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
                 
                 raycaster.setFromCamera(mouse, this.map3dCamera)
-                const intersects = raycaster.intersectObjects(
-                    this.map3dNodes.map(n => n.mesh).filter(m => m && m.visible),
-                    false
-                )
+                
+                // **同时检测mesh和sprite（文字标签）**
+                const detectableObjects = []
+                this.map3dNodes.forEach(n => {
+                    if (n.mesh && n.mesh.visible) {
+                        detectableObjects.push(n.mesh)
+                    }
+                    if (n.sprite && n.sprite.visible) {
+                        detectableObjects.push(n.sprite)
+                    }
+                })
+                
+                const intersects = raycaster.intersectObjects(detectableObjects, false)
                 
                 if (intersects.length > 0) {
-                    const intersectedMesh = intersects[0].object
-                    const nodeData = this.map3dNodes.find(n => n.mesh === intersectedMesh)
+                    const intersectedObject = intersects[0].object
+                    // 根据相交的对象（mesh或sprite）查找对应的nodeData
+                    const nodeData = this.map3dNodes.find(n => 
+                        n.mesh === intersectedObject || n.sprite === intersectedObject
+                    )
                     
                     if (nodeData) {
                         // 如果是新的节点，更新tooltip
