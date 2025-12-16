@@ -3142,7 +3142,9 @@ var app = new Vue({
                     this.map3dScene.add(mesh)
                     this.map3dScene.add(sprite)
                     
-                    this.map3dNodes.push({ 
+                    // **关键修复：使用 Object.freeze 防止 Vue 响应式监听导致栈溢出**
+                    // Three.js 对象不应该被 Vue 监听，否则会导致性能问题和循环引用
+                    const nodeData = {
                         mesh, 
                         sprite, 
                         glowMesh,
@@ -3151,13 +3153,20 @@ var app = new Vue({
                         depth, 
                         isExpanded, 
                         position: { x, y, z }, 
-                        parentPosition: parentPosition, // 保存父节点位置，用于后续创建连接线
-                        childrenMeshes: [], 
+                        parentPosition: parentPosition,
+                        childrenMeshes: [],  // 这个数组可能会很大，不需要响应式
                         line: null, 
                         dot: null,
-                        animationProgress: 0, // 动画进度 0-1
-                        hasCurrent: hasCurrent // 保存是否有当前选中
-                    })
+                        animationProgress: 0,
+                        hasCurrent: hasCurrent
+                    }
+                    
+                    // 冻结 Three.js 相关对象，防止 Vue 添加响应式 getter/setter
+                    Object.freeze(mesh)
+                    Object.freeze(sprite)
+                    if (glowMesh) Object.freeze(glowMesh)
+                    
+                    this.map3dNodes.push(nodeData)
                     
                     // 存储节点引用以便快速查找
                     if (!this.map3dNodeMap) {
@@ -3472,16 +3481,21 @@ var app = new Vue({
                                 this.map3dScene.add(aimingMesh)
                                 this.map3dScene.add(aimingSprite)
                                 
+                                // 冻结 Three.js 对象，防止 Vue 响应式监听导致栈溢出
+                                Object.freeze(aimingMesh)
+                                Object.freeze(aimingSprite)
+                                if (aimingGlowMesh) Object.freeze(aimingGlowMesh)
+                                
                                 const aimingNodeData = { 
                                     mesh: aimingMesh, 
                                     sprite: aimingSprite, 
-                                    glowMesh: aimingGlowMesh,  // 保存发光效果（第一名会有）
+                                    glowMesh: aimingGlowMesh,
                                     node: aimingNode, 
                                     key: aimingKey, 
                                     depth: depth + 1, 
                                     isExpanded: true, 
                                     position: { x: aimingX, y: aimingY, z: aimingZ }, 
-                                    parentPosition: { x, y, z }, // 使用当前父T节点的位置
+                                    parentPosition: { x, y, z },
                                     childrenMeshes: [], 
                                     line: null, 
                                     dot: null,
