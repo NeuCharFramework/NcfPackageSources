@@ -813,10 +813,10 @@ var app = new Vue({
             
             // 普通模式，需要验证表单
             // 注意：第一次打靶时（没有promptid），不需要验证"战术"字段，因为会自动创建T1-A1靶道
-            // 先检查"测试模式"字段是否已选择
+            // 先检查"打靶测试"字段是否已选择
             if (!this.tacticalForm.chatMode) {
                 this.$message({
-                    message: '请选择测试模式',
+                    message: '请选择打靶测试模式',
                     type: 'warning',
                     duration: 3000
                 })
