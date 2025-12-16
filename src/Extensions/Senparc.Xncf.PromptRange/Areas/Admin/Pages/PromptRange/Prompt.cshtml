@@ -727,7 +727,8 @@
                 </div>
             </el-form-item>
             @* 对话模式下的对话输入区域 *@
-            <el-form-item v-if="tacticalForm.chatMode === '对话模式'" label="对话输入" prop="chatInput">
+            @* 注意：不使用 prop="chatInput"，因为这是条件显示的字段，resetFields 可能会出错 *@
+            <el-form-item v-if="tacticalForm.chatMode === '对话模式'" label="对话输入">
                 <el-input 
                     v-model="tacticalChatInput" 
                     type="textarea" 

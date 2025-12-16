@@ -2533,7 +2533,9 @@ var app = new Vue({
             this.continueChatPromptResultId = null
             this.continueChatHistory = []
             if (this.$refs.tacticalForm) {
-                this.$refs.tacticalForm.resetFields();
+                // 使用 clearValidate 清除验证状态，而不是 resetFields
+                // 因为某些字段可能是条件显示的（v-if），resetFields 可能会出错
+                this.$refs.tacticalForm.clearValidate();
             }
         },
         
