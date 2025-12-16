@@ -7277,13 +7277,9 @@ var app = new Vue({
             processedRemainingText = processedRemainingText.replace(/\n/g, '<br>');
             result += processedRemainingText;
             
-            // 清理 span 标签前后的空白字符（但不移除 BR 标签，因为 BR 是用户输入的换行）
-            // 这可以防止 white-space: pre-wrap 导致 span 单独成行
-            // 1. 清理 span 标签前的空白字符（空格、制表符等），但保留 BR 标签
-            result = result.replace(/([ \t]+)(<span class="var-highlight[^"]*">)/gi, '$2');
-            // 2. 清理 span 标签后的空白字符（空格、制表符等），但保留 BR 标签
-            result = result.replace(/(<\/span>)([ \t]+)/gi, '$1');
-            // 注意：不再移除 BR 标签，因为 BR 是用户输入的换行，应该保留
+            // 注意：不再清理 span 标签前后的空白字符（空格、制表符等）
+            // 因为用户可能在 span 前后输入空格，这些空格应该保留
+            // 清理函数 cleanupHighlightBrTags 会处理多余的空白文本节点
             
             console.log('[generateHighlightHTML] Final HTML (first 200 chars):', result.substring(0, 200));
             
@@ -7688,66 +7684,44 @@ var app = new Vue({
             console.log('[cleanupHighlightBrTags] Found', highlightSpans.length, 'highlight spans');
             
             highlightSpans.forEach(span => {
-                // 清理 span 前面的空白文本节点（但不移除 BR 标签，因为 BR 是用户输入的换行）
+                // 清理 span 前面的空白文本节点
+                // 只移除完全空白的文本节点（不包含任何可见字符），保留包含用户输入空格的文本节点
                 let prevSibling = span.previousSibling;
                 while (prevSibling) {
                     if (prevSibling.nodeType === Node.TEXT_NODE) {
-                        // 检查文本节点是否只包含空白字符（空格、换行、制表符等）
                         const textContent = prevSibling.textContent;
-                        if (!textContent || /^[\s\n\r\t\u00A0]*$/.test(textContent)) {
-                            // 只包含空白字符（包括不间断空格），移除
+                        // 只移除完全空白的文本节点（只包含空白字符且长度为0，或者是浏览器自动添加的空白）
+                        // 保留包含用户输入空格的文本节点（即使只有空格，也应该保留，因为用户可能有意输入空格）
+                        if (!textContent || textContent.length === 0) {
+                            // 完全空的文本节点，移除
                             const toRemove = prevSibling;
                             prevSibling = prevSibling.previousSibling;
                             toRemove.remove();
                         } else {
-                            // 有非空白内容，但可能末尾有空白字符，需要清理末尾的空白
-                            // 移除末尾的所有空白字符（包括换行符）
-                            const trimmed = textContent.replace(/[\s\n\r\t\u00A0]+$/, '');
-                            if (trimmed !== textContent) {
-                                if (trimmed) {
-                                    prevSibling.textContent = trimmed;
-                                } else {
-                                    // 如果全部是空白，移除节点
-                                    const toRemove = prevSibling;
-                                    prevSibling = prevSibling.previousSibling;
-                                    toRemove.remove();
-                                    continue;
-                                }
-                            }
+                            // 有内容的文本节点，保留（包括只包含空格的节点，因为用户可能有意输入空格）
                             break;
                         }
                     } else {
-                        // 其他类型的节点，停止清理
+                        // 其他类型的节点（包括 BR 标签），停止清理
                         break;
                     }
                 }
                 
-                // 清理 span 后面的空白文本节点（但不移除 BR 标签，因为 BR 是用户输入的换行）
+                // 清理 span 后面的空白文本节点
+                // 只移除完全空白的文本节点，保留包含用户输入空格的文本节点
                 let nextSibling = span.nextSibling;
                 while (nextSibling) {
                     if (nextSibling.nodeType === Node.TEXT_NODE) {
-                        // 检查文本节点是否只包含空白字符（空格、换行、制表符等）
                         const textContent = nextSibling.textContent;
-                        if (!textContent || /^[\s\n\r\t\u00A0]*$/.test(textContent)) {
-                            // 只包含空白字符（包括不间断空格），移除
+                        // 只移除完全空白的文本节点
+                        // 保留包含用户输入空格的文本节点
+                        if (!textContent || textContent.length === 0) {
+                            // 完全空的文本节点，移除
                             const toRemove = nextSibling;
                             nextSibling = nextSibling.nextSibling;
                             toRemove.remove();
                         } else {
-                            // 有非空白内容，但可能开头有空白字符，需要清理开头的空白
-                            // 移除开头的所有空白字符（包括换行符），但保留文本内容
-                            const trimmed = textContent.replace(/^[\s\n\r\t\u00A0]+/, '');
-                            if (trimmed !== textContent) {
-                                if (trimmed) {
-                                    nextSibling.textContent = trimmed;
-                                } else {
-                                    // 如果全部是空白，移除节点
-                                    const toRemove = nextSibling;
-                                    nextSibling = nextSibling.nextSibling;
-                                    toRemove.remove();
-                                    continue;
-                                }
-                            }
+                            // 有内容的文本节点，保留（包括只包含空格的节点，因为用户可能有意输入空格）
                             break;
                         }
                     } else {
