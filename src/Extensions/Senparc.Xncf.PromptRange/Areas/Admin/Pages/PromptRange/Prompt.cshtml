@@ -612,7 +612,7 @@
     <el-dialog 
         :title="continueChatMode ? '继续聊天' : (promptid ? '战术选择' : '打靶模式')" 
         :visible.sync="tacticalFormVisible" 
-        :width="continueChatMode ? '80%' : '50%'"
+        :width="continueChatMode ? '80%' : '65%'"
         :close-on-click-modal="false"
         center 
         @@close="tacticalFormCloseDialog">
@@ -637,24 +637,21 @@
                 <el-radio-group v-model="tacticalForm.tactics">
                     <el-radio label="创建顶级战术">
                         <div class="d-f-startr-start-title">创建顶级战术</div>
-                        @*<div class="d-f-startr-start-img">
-
-                        </div>*@
                         <div class="d-f-startr-start-nowrap" style="margin-top:7px;">
-                            <span>示例：</span>
-                            <div>
-                                <div>T1</div>
-                                <div>T2 (new)</div>
+                            <span style="color: #606266;">将创建：</span>
+                            <div style="margin-left: 8px;">
+                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">当前：{{ currentTacticalInfo.tactic }}</div>
+                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.topTactic }} <span style="color: #67C23A; font-size: 12px;">(新)</span></div>
                             </div>
                         </div>
                     </el-radio>
                     <el-radio label="创建平行战术">
                         <div>创建平行战术</div>
                         <div class="d-f-startr-start-nowrap" style="margin-top:7px;">
-                            <span>示例：</span>
-                            <div class="d-c-startr-start-nowrap">
-                                <div>T1.2.3</div>
-                                <div>T1.2.4 (new)</div>
+                            <span style="color: #606266;">将创建：</span>
+                            <div class="d-c-startr-start-nowrap" style="margin-left: 8px;">
+                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">当前：{{ currentTacticalInfo.tactic }}</div>
+                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.parallelTactic }} <span style="color: #67C23A; font-size: 12px;">(新)</span></div>
                             </div>
                         </div>
                     </el-radio>
@@ -662,20 +659,20 @@
                     <el-radio label="创建子战术">
                         <div>创建子战术</div>
                         <div class="d-f-startr-start-nowrap" style="margin-top:7px;">
-                            <span>示例：</span>
-                            <div class="d-c-startr-start-nowrap">
-                                <div>T1.2.3</div>
-                                <div>T1.2.3.1 (new)</div>
+                            <span style="color: #606266;">将创建：</span>
+                            <div class="d-c-startr-start-nowrap" style="margin-left: 8px;">
+                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">当前：{{ currentTacticalInfo.tactic }}</div>
+                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.subTactic }} <span style="color: #67C23A; font-size: 12px;">(新)</span></div>
                             </div>
                         </div>
                     </el-radio>
                     <el-radio label="重新瞄准">
                         <div>重新瞄准</div>
                         <div class="d-f-startr-start-nowrap" style="margin-top:7px;">
-                            <span>示例：</span>
-                            <div class="d-c-startr-start-nowrap">
-                                <div>T1.2.3-A1</div>
-                                <div>T1.2.3-A2 (new)</div>
+                            <span style="color: #606266;">将创建：</span>
+                            <div class="d-c-startr-start-nowrap" style="margin-left: 8px;">
+                                <div v-if="currentTacticalInfo.fullTactical !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">当前：{{ currentTacticalInfo.fullTactical }}</div>
+                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.newAiming }} <span style="color: #67C23A; font-size: 12px;">(新)</span></div>
                             </div>
                         </div>
                     </el-radio>

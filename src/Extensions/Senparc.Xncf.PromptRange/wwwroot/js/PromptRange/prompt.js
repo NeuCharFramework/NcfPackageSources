@@ -370,6 +370,93 @@ var app = new Vue({
             return this.comparePromptAId === this.comparePromptBId;
         },
         
+        // 获取当前战术编号（用于显示）
+        currentTacticalInfo() {
+            if (!this.promptDetail || !this.promptDetail.fullVersion) {
+                return {
+                    tactic: '--',
+                    fullTactical: '--'
+                };
+            }
+            
+            // 解析当前版本号：格式为 RangeName-T1.2.3-A1
+            const versionParts = this.promptDetail.fullVersion.split('-');
+            if (versionParts.length < 3) {
+                return {
+                    tactic: '--',
+                    fullTactical: '--'
+                };
+            }
+            
+            const tacticalPart = versionParts[2]; // T1.2.3-A1
+            const aimingPart = tacticalPart ? tacticalPart.split('-A') : [];
+            const tacticStr = aimingPart[0] || tacticalPart; // T1.2.3
+            
+            return {
+                tactic: tacticStr,
+                fullTactical: tacticalPart
+            };
+        },
+        
+        // 计算下一个战术编号（用于战术选择弹窗的动态提示）
+        nextTacticalNumbers() {
+            if (!this.promptDetail || !this.promptDetail.fullVersion) {
+                return {
+                    topTactic: 'T1',
+                    parallelTactic: 'T1.2.4',
+                    subTactic: 'T1.2.3.1',
+                    newAiming: 'T1.2.3-A2'
+                };
+            }
+            
+            // 解析当前版本号：格式为 RangeName-T1.2.3-A1
+            const versionParts = this.promptDetail.fullVersion.split('-');
+            if (versionParts.length < 3) {
+                return {
+                    topTactic: 'T1',
+                    parallelTactic: 'T1.2.4',
+                    subTactic: 'T1.2.3.1',
+                    newAiming: 'T1.2.3-A2'
+                };
+            }
+            
+            const tacticalPart = versionParts[2]; // T1.2.3-A1
+            const aimingPart = tacticalPart ? tacticalPart.split('-A') : [];
+            const tacticStr = aimingPart[0] || tacticalPart; // T1.2.3
+            const currentAiming = aimingPart[1] ? parseInt(aimingPart[1]) : 1;
+            
+            // 解析战术编号：T1.2.3 -> [1, 2, 3]
+            const tacticNumbers = tacticStr.replace(/^T/, '').split('.').map(n => parseInt(n));
+            
+            // 1. 创建顶级战术：当前顶级编号+1
+            // 例如：当前是T1.2.3，下一个顶级战术是T2（假设当前最大的是T1）
+            // 注意：这里只是预测，实际编号需要后端查询数据库确定
+            const currentTopTactic = tacticNumbers[0] || 1;
+            const nextTopTactic = currentTopTactic + 1;
+            
+            // 2. 创建平行战术：同父级下，最后一个编号+1
+            // 例如：T1.2.3 -> T1.2.4
+            const nextParallelTactic = [...tacticNumbers];
+            if (nextParallelTactic.length > 0) {
+                nextParallelTactic[nextParallelTactic.length - 1] = nextParallelTactic[nextParallelTactic.length - 1] + 1;
+            }
+            
+            // 3. 创建子战术：当前战术下添加 .1
+            // 例如：T1.2.3 -> T1.2.3.1
+            const nextSubTactic = [...tacticNumbers, 1];
+            
+            // 4. 重新瞄准：当前瞄准编号+1
+            // 例如：T1.2.3-A1 -> T1.2.3-A2
+            const nextAiming = currentAiming + 1;
+            
+            return {
+                topTactic: `T${nextTopTactic}`,
+                parallelTactic: `T${nextParallelTactic.join('.')}`,
+                subTactic: `T${nextSubTactic.join('.')}`,
+                newAiming: `${tacticStr}-A${nextAiming}`
+            };
+        },
+        
         // 检测Prompt中的变量
         detectedVariables() {
             if (!this.content) return [];
@@ -7231,15 +7318,13 @@ var app = new Vue({
                 // 添加匹配前的文本（HTML转义并处理换行）
                 const beforeText = text.substring(lastIndex, offset);
                 // 处理换行：将换行符替换为 <br>
-                // 移除 span 标签前的尾随空白字符（空格、制表符等），但保留换行符转换为 <br>
+                // 注意：不再移除 span 标签前的尾随空白字符，因为用户可能有意输入空格
                 let processedBeforeText = beforeText
                     .replace(/&/g, '&amp;')
                     .replace(/</g, '&lt;')
                     .replace(/>/g, '&gt;');
                 
-                // 移除尾随空白字符（但保留换行符，因为需要转换为 <br>）
-                processedBeforeText = processedBeforeText.replace(/[ \t]+$/, '');
-                // 将换行符替换为 <br>
+                // 将换行符替换为 <br>（保留所有空格和制表符，因为用户可能有意输入）
                 processedBeforeText = processedBeforeText.replace(/\n/g, '<br>');
                 result += processedBeforeText;
                 
