@@ -322,6 +322,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.MySql
                     b.Property<decimal>("RobotScore")
                         .HasColumnType("decimal(65,30)");
 
+                    b.Property<string>("SystemMessage")
+                        .HasColumnType("longtext");
+
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
 

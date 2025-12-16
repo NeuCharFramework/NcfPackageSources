@@ -322,6 +322,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Oracle
                     b.Property<decimal>("RobotScore")
                         .HasColumnType("DECIMAL(18, 2)");
 
+                    b.Property<string>("SystemMessage")
+                        .HasColumnType("NVARCHAR2(2000)");
+
                     b.Property<int>("TenantId")
                         .HasColumnType("NUMBER(10)");
 

@@ -309,6 +309,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
                     b.Property<decimal>("RobotScore")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("SystemMessage")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("TenantId")
                         .HasColumnType("INTEGER");
 

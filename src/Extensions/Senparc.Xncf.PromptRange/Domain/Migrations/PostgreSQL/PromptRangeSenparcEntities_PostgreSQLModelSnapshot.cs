@@ -322,6 +322,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL
                     b.Property<decimal>("RobotScore")
                         .HasColumnType("numeric");
 
+                    b.Property<string>("SystemMessage")
+                        .HasColumnType("text");
+
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");
 

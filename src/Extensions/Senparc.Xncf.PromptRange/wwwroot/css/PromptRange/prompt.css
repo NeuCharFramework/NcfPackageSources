@@ -3076,5 +3076,46 @@ think::before {
     margin: 8px 0;
 }
 
+/* 修复对话框滚动条问题 */
+.tacticalFormBox {
+    /* 确保表单内容不会导致对话框超出视口 */
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+/* 确保对话框主体不会超出视口 */
+.el-dialog {
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+}
+
+.el-dialog__body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    /* 移除可能导致滚动条的 margin-bottom */
+    margin-bottom: 0;
+}
+
+.el-dialog__footer {
+    flex-shrink: 0;
+    padding: 10px 20px;
+    border-top: 1px solid #e4e7ed;
+    /* 移除可能导致滚动条的 margin-bottom */
+    margin-bottom: 0;
+}
+
+/* 继续聊天对话框的特殊样式 */
+.el-dialog[aria-label*="继续聊天"] .el-dialog__body {
+    max-height: calc(90vh - 120px);
+    overflow-y: auto;
+}
+
+.el-dialog[aria-label*="继续聊天"] .el-dialog__body .tacticalFormBox {
+    max-height: none;
+    overflow-y: visible;
+}
+
 
 
