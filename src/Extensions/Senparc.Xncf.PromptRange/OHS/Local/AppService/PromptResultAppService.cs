@@ -254,13 +254,24 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     var promptResult = await _promptResultService.GetObjectAsync(p => p.Id == promptResultId)
                         ?? throw new NcfExceptionBase($"未找到 ID 为 {promptResultId} 的 PromptResult");
                     
-                    // 获取 PromptItem
-                    var promptItem = await _promptItemService.GetAsync(promptResult.PromptItemId);
+                    // 优先使用保存的 SystemMessage，如果没有则使用当前的 Prompt 内容
+                    string promptContent;
+                    if (!string.IsNullOrWhiteSpace(promptResult.SystemMessage))
+                    {
+                        // 使用保存的 SystemMessage（已完成参数替换）
+                        promptContent = promptResult.SystemMessage;
+                    }
+                    else
+                    {
+                        // 降级方案：如果没有保存的 SystemMessage，使用当前的 Prompt 内容
+                        var promptItem = await _promptItemService.GetAsync(promptResult.PromptItemId);
+                        promptContent = promptItem.Content ?? string.Empty;
+                    }
                     
                     return new PromptResult_ChatHistoryWithPromptResponse
                     {
                         ChatHistory = chatHistory,
-                        PromptContent = promptItem.Content ?? string.Empty
+                        PromptContent = promptContent
                     };
                 });
         }
