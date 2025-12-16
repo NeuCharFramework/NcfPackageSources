@@ -478,6 +478,9 @@ var app = new Vue({
                 editor.innerHTML = html;
             }
         });
+        
+        // 初始化代码块复制功能
+        this.initCodeCopyButtons();
       
     },
     beforeDestroy() {
@@ -918,6 +921,11 @@ var app = new Vue({
                     // 刷新对话历史显示
                     this.$forceUpdate()
                     
+                    // 添加代码块复制按钮
+                    this.$nextTick(() => {
+                        this.addCopyButtonsToCodeBlocks();
+                    });
+                    
                     // 滚动到底部显示最新消息
                     this.$nextTick(() => {
                         const container = document.getElementById('chatHistoryContainer')
@@ -1148,6 +1156,12 @@ var app = new Vue({
                             }
                             return item
                         })
+                        
+                        // 添加代码块复制按钮
+                        this.$nextTick(() => {
+                            this.addCopyButtonsToCodeBlocks();
+                        });
+                        
                         //提交数据后，选择正确的靶场和靶道
                         this.getFieldList().then(() => {
 
@@ -2504,6 +2518,8 @@ var app = new Vue({
                         if (container) {
                             container.scrollTop = container.scrollHeight
                         }
+                        // 添加代码块复制按钮
+                        this.addCopyButtonsToCodeBlocks();
                     })
                 } else {
                     this.$message({
@@ -5264,6 +5280,11 @@ var app = new Vue({
                     }
                     return item
                 })
+                
+                // 添加代码块复制按钮
+                this.$nextTick(() => {
+                    this.addCopyButtonsToCodeBlocks();
+                });
             } else {
                 app.$message({
                     message: res.data.errorMessage || res.data.data || 'Error',
@@ -6221,6 +6242,144 @@ var app = new Vue({
             } catch (err) {
                 console.error('Oops, unable to copy', err);
             }  
+        },
+        
+        /**
+         * 初始化代码块复制按钮
+         * 为所有 <pre><code> 代码块添加复制按钮
+         */
+        initCodeCopyButtons() {
+            const self = this;
+            
+            // 使用 MutationObserver 监听 DOM 变化,自动为新增的代码块添加复制按钮
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.addedNodes.length) {
+                        self.addCopyButtonsToCodeBlocks();
+                    }
+                });
+            });
+            
+            // 监听输出区域和对话历史区域
+            const outputArea = document.querySelector('.outputArea_contentBox');
+            const chatArea = document.querySelector('.chat-history-container');
+            
+            if (outputArea) {
+                observer.observe(outputArea, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+            
+            if (chatArea) {
+                observer.observe(chatArea, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+            
+            // 初始添加
+            this.addCopyButtonsToCodeBlocks();
+        },
+        
+        /**
+         * 为所有代码块添加复制按钮
+         */
+        addCopyButtonsToCodeBlocks() {
+            const self = this;
+            
+            // 查找所有代码块 (输出区域 + 对话历史区域)
+            const codeBlocks = document.querySelectorAll(
+                '.contentRow pre:not(.copy-btn-added), .chat-message-content pre:not(.copy-btn-added)'
+            );
+            
+            codeBlocks.forEach((pre) => {
+                // 标记已添加,避免重复
+                pre.classList.add('copy-btn-added');
+                
+                // 创建复制按钮
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'code-copy-btn';
+                copyBtn.innerHTML = '<i class="el-icon-document-copy"></i> Copy';
+                copyBtn.title = '复制代码';
+                
+                // 绑定点击事件
+                copyBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // 获取代码内容
+                    const codeElement = pre.querySelector('code') || pre;
+                    const code = codeElement.textContent || codeElement.innerText;
+                    
+                    // 使用 CopyHelper 复制
+                    if (window.PromptRangeUtils && window.PromptRangeUtils.CopyHelper) {
+                        const success = window.PromptRangeUtils.CopyHelper.copyToClipboard(
+                            code, 
+                            '代码复制成功', 
+                            '代码复制失败',
+                            true
+                        );
+                        
+                        if (success) {
+                            // 显示复制成功状态
+                            copyBtn.classList.add('copied');
+                            copyBtn.innerHTML = '<i class="el-icon-check"></i> Copied!';
+                            
+                            // 2秒后恢复
+                            setTimeout(() => {
+                                copyBtn.classList.remove('copied');
+                                copyBtn.innerHTML = '<i class="el-icon-document-copy"></i> Copy';
+                            }, 2000);
+                        }
+                    } else {
+                        // 降级方案:使用传统方法
+                        self.fallbackCopyCode(code, copyBtn);
+                    }
+                });
+                
+                // 将按钮添加到 pre 元素中
+                pre.appendChild(copyBtn);
+            });
+        },
+        
+        /**
+         * 降级复制代码方法
+         * @param {string} code - 要复制的代码
+         * @param {HTMLElement} button - 复制按钮元素
+         */
+        fallbackCopyCode(code, button) {
+            try {
+                const textarea = document.createElement('textarea');
+                textarea.value = code;
+                textarea.style.position = 'fixed';
+                textarea.style.top = '0';
+                textarea.style.left = '-9999px';
+                textarea.setAttribute('readonly', '');
+                document.body.appendChild(textarea);
+                
+                textarea.select();
+                textarea.setSelectionRange(0, textarea.value.length);
+                
+                const success = document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                if (success) {
+                    this.$message.success('代码复制成功');
+                    button.classList.add('copied');
+                    button.innerHTML = '<i class="el-icon-check"></i> Copied!';
+                    
+                    setTimeout(() => {
+                        button.classList.remove('copied');
+                        button.innerHTML = '<i class="el-icon-document-copy"></i> Copy';
+                    }, 2000);
+                } else {
+                    this.$message.error('代码复制失败');
+                }
+            } catch (err) {
+                console.error('Copy failed:', err);
+                this.$message.error('代码复制失败');
+            }
         },
         // 自定义滚动条缩略图相关方法
         handleResultScroll(event) {

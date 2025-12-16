@@ -1421,10 +1421,62 @@
             border: 1px solid #e1e4e8;
             border-radius: 6px;
             padding: 16px;
+            padding-top: 40px; /* 为复制按钮留出空间 */
             margin: 12px 0;
             overflow-x: auto;
             line-height: 1.45;
             position: relative;
+        }
+        
+        /* 代码块复制按钮 */
+        .code-copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 4px 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            opacity: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        /* 输出区域的复制按钮需要避开右侧滚动条缩略图 (140px + 8px margin) */
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow .code-copy-btn {
+            right: 160px;
+        }
+        
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow pre:hover .code-copy-btn,
+        .chat-message-content pre:hover .code-copy-btn {
+            opacity: 1;
+        }
+        
+        .code-copy-btn:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .code-copy-btn:active {
+            transform: translateY(0);
+        }
+        
+        .code-copy-btn.copied {
+            background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+        }
+        
+        .code-copy-btn i {
+            font-size: 14px;
         }
 
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow pre code {
@@ -2774,14 +2826,27 @@ think::before {
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 6px;
     padding: 12px;
+    padding-top: 40px; /* 为复制按钮留出空间 */
     overflow-x: auto;
     margin: 8px 0;
     line-height: 1.45;
+    position: relative;
 }
 
 .chat-message-user .chat-message-content pre {
     background-color: rgba(255, 255, 255, 0.15);
     border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* 用户消息中的复制按钮特殊样式 */
+.chat-message-user .code-copy-btn {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.chat-message-user .code-copy-btn:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.3) 100%);
+    border-color: rgba(255, 255, 255, 0.7);
 }
 
 .chat-message-content pre code {
