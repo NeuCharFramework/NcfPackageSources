@@ -88,28 +88,37 @@
 .tacticalFormBox .el-radio-group {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-start;
-    gap: 15px 0px;
+    gap: 20px 30px;
+    width: 100%;
 }
 
     .tacticalFormBox .el-radio-group .el-radio {
         display: flex;
+        flex-direction: column;
         flex-wrap: nowrap;
-        align-items: center;
+        align-items: flex-start;
         justify-content: flex-start;
+        min-width: 200px;
+        max-width: 280px;
+        padding: 10px 14px;
+        margin-right: 0;
+        box-sizing: border-box;
     }
 .d-f-startr-start-title{
-    position:relative;
+    font-weight: 500;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    width: 100%;
 }
 .d-f-startr-start-nowrap {
-    position:absolute;
-    top:10px;
-
     display: flex;
     flex-wrap: nowrap;
     align-items: flex-start;
     justify-content: flex-start;
+    width: 100%;
+    margin-top: 7px;
 }
 .d-f-startr-start-img{
     width:200px;
@@ -1415,6 +1424,249 @@
             border-bottom: none;
         }
 
+        /* Markdown 代码块样式 */
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow pre {
+            background-color: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 16px;
+            padding-top: 40px; /* 为复制按钮留出空间 */
+            margin: 12px 0;
+            overflow-x: auto;
+            line-height: 1.45;
+            position: relative;
+        }
+        
+        /* 代码块复制按钮 */
+        .code-copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 4px 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            opacity: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        /* 输出区域的复制按钮需要避开右侧滚动条缩略图 (140px + 8px margin) */
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow .code-copy-btn {
+            right: 160px;
+        }
+        
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow pre:hover .code-copy-btn,
+        .chat-message-content pre:hover .code-copy-btn {
+            opacity: 1;
+        }
+        
+        .code-copy-btn:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .code-copy-btn:active {
+            transform: translateY(0);
+        }
+        
+        .code-copy-btn.copied {
+            background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+        }
+        
+        .code-copy-btn i {
+            font-size: 14px;
+        }
+
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow pre code {
+            display: block;
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin: 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', 'SFMono-Regular', monospace;
+            font-size: 13px;
+            color: #24292e;
+            line-height: 1.6;
+            white-space: pre;
+            overflow-x: auto;
+            word-wrap: normal;
+        }
+
+        /* 行内代码样式 */
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow code {
+            background-color: rgba(175, 184, 193, 0.2);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', 'SFMono-Regular', monospace;
+            font-size: 13px;
+            color: #e83e8c;
+        }
+
+        /* 代码块滚动条样式 */
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow pre::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow pre::-webkit-scrollbar-track {
+            background: #e1e4e8;
+            border-radius: 4px;
+        }
+
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow pre::-webkit-scrollbar-thumb {
+            background: #959da5;
+            border-radius: 4px;
+        }
+
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow pre::-webkit-scrollbar-thumb:hover {
+            background: #6a737d;
+        }
+
+        /* Markdown 标题样式 */
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow h1,
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow h2,
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow h3,
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow h4,
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow h5,
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow h6 {
+            margin: 16px 0 8px 0;
+            font-weight: 600;
+            line-height: 1.25;
+            border-bottom: 1px solid #eaecef;
+            padding-bottom: 8px;
+        }
+
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow h1 {
+            font-size: 24px;
+        }
+
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow h2 {
+            font-size: 20px;
+        }
+
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow h3 {
+            font-size: 18px;
+            border-bottom: none;
+        }
+
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow h4 {
+            font-size: 16px;
+            border-bottom: none;
+        }
+
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow h5,
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow h6 {
+            font-size: 14px;
+            border-bottom: none;
+        }
+
+        /* Markdown 引用块样式 */
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow blockquote {
+            padding: 8px 16px;
+            margin: 12px 0;
+            color: #6a737d;
+            border-left: 4px solid #dfe2e5;
+            background-color: #f6f8fa;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow blockquote p {
+            margin: 0;
+        }
+
+        /* Markdown 段落间距 */
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow p {
+            margin: 8px 0;
+        }
+
+        /* Markdown 水平分割线 */
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow hr {
+            height: 2px;
+            padding: 0;
+            margin: 16px 0;
+            background-color: #e1e4e8;
+            border: 0;
+        }
+
+        /* Markdown 链接样式 */
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow a:hover {
+            text-decoration: underline;
+        }
+
+        /* SystemMessage 折叠面板样式 */
+        .tacticalFormBox .el-collapse {
+            border: 1px solid #e4e7ed;
+            border-radius: 4px;
+        }
+        
+        .tacticalFormBox .el-collapse-item__header {
+            padding: 12px 15px;
+            background-color: #f5f7fa;
+            font-weight: 600;
+            color: #303133;
+        }
+        
+        .tacticalFormBox .el-collapse-item__header:hover {
+            background-color: #ecf5ff;
+        }
+        
+        .tacticalFormBox .el-collapse-item__content {
+            padding: 0;
+        }
+        
+        .tacticalFormBox .el-collapse-item__wrap {
+            border-bottom: none;
+        }
+        
+        /* SystemMessage 内容区域样式 */
+        .system-message-content {
+            background-color: #f5f7fa;
+            padding: 12px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', 'SFMono-Regular', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 300px;
+            overflow-y: auto;
+            color: #303133;
+            border: 1px solid #e4e7ed;
+        }
+        
+        .system-message-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .system-message-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        .system-message-content::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+        
+        .system-message-content::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .operateRow {
             margin-top: 5px;
             margin-right: 160px; /* 为右侧滚动条预留空间 */
@@ -2621,28 +2873,86 @@ think::before {
     margin-bottom: 0;
 }
 
+/* 行内代码样式 */
 .chat-message-content code {
     background-color: rgba(0, 0, 0, 0.1);
-    padding: 2px 4px;
+    padding: 2px 6px;
     border-radius: 3px;
-    font-family: 'Courier New', monospace;
+    font-family: 'Consolas', 'Monaco', 'Courier New', 'SFMono-Regular', monospace;
     font-size: 13px;
+    color: #e83e8c;
 }
 
 .chat-message-user .chat-message-content code {
     background-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
 }
 
+/* 代码块样式 */
 .chat-message-content pre {
-    background-color: rgba(0, 0, 0, 0.05);
-    padding: 12px;
+    background-color: #f6f8fa;
+    border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 6px;
+    padding: 12px;
+    padding-top: 40px; /* 为复制按钮留出空间 */
     overflow-x: auto;
     margin: 8px 0;
+    line-height: 1.45;
+    position: relative;
 }
 
 .chat-message-user .chat-message-content pre {
     background-color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* 用户消息中的复制按钮特殊样式 */
+.chat-message-user .code-copy-btn {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.chat-message-user .code-copy-btn:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.3) 100%);
+    border-color: rgba(255, 255, 255, 0.7);
+}
+
+.chat-message-content pre code {
+    display: block;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font-family: 'Consolas', 'Monaco', 'Courier New', 'SFMono-Regular', monospace;
+    font-size: 13px;
+    color: #24292e;
+    line-height: 1.6;
+    white-space: pre;
+    overflow-x: auto;
+    word-wrap: normal;
+}
+
+.chat-message-user .chat-message-content pre code {
+    color: #ffffff;
+}
+
+/* 代码块滚动条样式 */
+.chat-message-content pre::-webkit-scrollbar {
+    height: 8px;
+}
+
+.chat-message-content pre::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+.chat-message-content pre::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+.chat-message-content pre::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5);
 }
 
 .chat-message-content ul,
@@ -2773,6 +3083,47 @@ think::before {
     height: auto;
     border-radius: 4px;
     margin: 8px 0;
+}
+
+/* 修复对话框滚动条问题 */
+.tacticalFormBox {
+    /* 确保表单内容不会导致对话框超出视口 */
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+/* 确保对话框主体不会超出视口 */
+.el-dialog {
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+}
+
+.el-dialog__body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    /* 移除可能导致滚动条的 margin-bottom */
+    margin-bottom: 0;
+}
+
+.el-dialog__footer {
+    flex-shrink: 0;
+    padding: 10px 20px;
+    border-top: 1px solid #e4e7ed;
+    /* 移除可能导致滚动条的 margin-bottom */
+    margin-bottom: 0;
+}
+
+/* 继续聊天对话框的特殊样式 */
+.el-dialog[aria-label*="继续聊天"] .el-dialog__body {
+    max-height: calc(90vh - 120px);
+    overflow-y: auto;
+}
+
+.el-dialog[aria-label*="继续聊天"] .el-dialog__body .tacticalFormBox {
+    max-height: none;
+    overflow-y: visible;
 }
 
 

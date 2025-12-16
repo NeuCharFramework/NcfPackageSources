@@ -99,5 +99,11 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         /// 打靶模式：Chat（聊天模式）或 Single（单次测试模式），可为空（兼容旧数据）
         /// </summary>
         public ResultMode? Mode { get; set; }
+
+        /// <summary>
+        /// SystemMessage（Prompt 内容，完成参数替换后的最终内容）
+        /// 用于对话模式，确保即使 Prompt 内容或参数变化，也能追溯历史使用的 SystemMessage
+        /// </summary>
+        public string SystemMessage { get; set; }
     }
 }

@@ -89,6 +89,24 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             //string completionPrompt = $@"请根据提示输出对应内容:
             //{promptItem.Content}";
             string completionPrompt = $@"{promptItem.Content}";
+            
+            // 生成替换参数后的 SystemMessage（用于保存到数据库）
+            // 如果 Prompt 内容包含参数占位符（如 {{$variableName}}），进行参数替换
+            string systemMessage = completionPrompt;
+            if (!string.IsNullOrWhiteSpace(promptItem.VariableDictJson) && 
+                !string.IsNullOrWhiteSpace(promptItem.Prefix) && 
+                !string.IsNullOrWhiteSpace(promptItem.Suffix))
+            {
+                // 读取参数并替换 Prompt 内容中的占位符
+                var variableDict = (promptItem.VariableDictJson ?? "{}").GetObject<Dictionary<string, string>>();
+                foreach (var (key, value) in variableDict)
+                {
+                    // 替换格式：{Prefix}{key}{Suffix} -> value
+                    // 例如：{{$variableName}} -> actualValue
+                    string placeholder = $"{promptItem.Prefix}{key}{promptItem.Suffix}";
+                    systemMessage = systemMessage.Replace(placeholder, value ?? string.Empty);
+                }
+            }
 
             // 从数据库中获取模型信息
             var model = promptItem.AIModelDto;
@@ -165,12 +183,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var isChatMode = userMessage != null;
             var resultMode = isChatMode ? ResultMode.Chat : ResultMode.Single;
 
+            // 如果是聊天模式，保存 SystemMessage；否则为 null
             var promptResult = new PromptResult(
                 promptItem.ModelId, aiResult.OutputString, SystemTime.DiffTotalMS(dt1),
                 -1, -1, -1, TestType.Text,
                 promptCostToken, resultCostToken, promptCostToken + resultCostToken,
                 promptItem.FullVersion, promptItem.Id,
-                resultMode);
+                resultMode,
+                isChatMode ? systemMessage : null); // 只在聊天模式时保存 SystemMessage
 
             await base.SaveObjectAsync(promptResult);
 
@@ -246,7 +266,33 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 StopSequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>(),
             };
 
-            string completionPrompt = $@"{promptItem.Content}";
+            // 优先使用保存的 SystemMessage，如果没有则使用当前的 Prompt 内容
+            // 这样可以确保即使 Prompt 内容或参数变化，继续对话时也使用最初保存的 SystemMessage
+            string completionPrompt;
+            if (!string.IsNullOrWhiteSpace(promptResult.SystemMessage))
+            {
+                // 使用保存的 SystemMessage（已完成参数替换）
+                completionPrompt = promptResult.SystemMessage;
+            }
+            else
+            {
+                // 降级方案：如果没有保存的 SystemMessage，使用当前的 Prompt 内容
+                // 这种情况可能发生在旧数据或 Single 模式的数据中
+                completionPrompt = $@"{promptItem.Content}";
+                
+                // 如果 Prompt 内容包含参数占位符，进行参数替换
+                if (!string.IsNullOrWhiteSpace(promptItem.VariableDictJson) && 
+                    !string.IsNullOrWhiteSpace(promptItem.Prefix) && 
+                    !string.IsNullOrWhiteSpace(promptItem.Suffix))
+                {
+                    var variableDict = (promptItem.VariableDictJson ?? "{}").GetObject<Dictionary<string, string>>();
+                    foreach (var (key, value) in variableDict)
+                    {
+                        string placeholder = $"{promptItem.Prefix}{key}{promptItem.Suffix}";
+                        completionPrompt = completionPrompt.Replace(placeholder, value ?? string.Empty);
+                    }
+                }
+            }
 
             // 从数据库中获取模型信息
             var model = promptItem.AIModelDto;

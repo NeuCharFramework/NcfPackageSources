@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.PromptRange.Models;
 
@@ -11,9 +12,11 @@ using Senparc.Xncf.PromptRange.Models;
 namespace Senparc.Xncf.PromptRange.Domain.Migrations.Dm
 {
     [DbContext(typeof(PromptRangeSenparcEntities_Dm))]
-    partial class PromptRangeSenparcEntities_DmModelSnapshot : ModelSnapshot
+    [Migration("20251216182159_Add_PromptResult_SystemMessage")]
+    partial class Add_PromptResult_SystemMessage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

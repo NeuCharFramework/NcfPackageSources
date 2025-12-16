@@ -146,6 +146,8 @@ var app = new Vue({
             continueChatMode: false, // 是否处于继续聊天模式
             continueChatPromptResultId: null, // 继续聊天的 PromptResult ID
             continueChatHistory: [], // 继续聊天的历史记录
+            continueChatSystemMessage: '', // 继续聊天时使用的 SystemMessage（Prompt）
+            systemMessageCollapse: [], // SystemMessage 折叠面板状态
             // 导图相关状态
             mapDialogVisible: false, // 导图对话框显示状态
             map3dScene: null, // three.js 场景
@@ -368,6 +370,150 @@ var app = new Vue({
             return this.comparePromptAId === this.comparePromptBId;
         },
         
+        // 获取当前战术编号（用于显示）
+        currentTacticalInfo() {
+            if (!this.promptDetail || !this.promptDetail.fullVersion) {
+                return {
+                    tactic: '--',
+                    fullTactical: '--'
+                };
+            }
+            
+            // 解析当前版本号：格式为 RangeName-T{Tactic}-A{Aiming}
+            // 例如：2023.12.14.1-T1.2.3-A1
+            const versionParts = this.promptDetail.fullVersion.split('-');
+            if (versionParts.length < 2) {
+                return {
+                    tactic: '--',
+                    fullTactical: '--'
+                };
+            }
+            
+            // versionParts[0] = RangeName (例如：2023.12.14.1)
+            // versionParts[1] = T{Tactic} (例如：T1.2.3)
+            // versionParts[2] = A{Aiming} (例如：A1，可选)
+            const tacticPart = versionParts[1] || ''; // T1.2.3
+            const aimingPart = versionParts[2] || ''; // A1
+            
+            return {
+                tactic: tacticPart || '--',
+                fullTactical: aimingPart ? `${tacticPart}-${aimingPart}` : tacticPart || '--'
+            };
+        },
+        
+        // 计算下一个战术编号（用于战术选择弹窗的动态提示）
+        nextTacticalNumbers() {
+            if (!this.promptDetail || !this.promptDetail.fullVersion) {
+                return {
+                    topTactic: 'T1',
+                    parallelTactic: 'T1.2.4',
+                    subTactic: 'T1.2.3.1',
+                    newAiming: 'T1.2.3-A2'
+                };
+            }
+            
+            // 解析当前版本号：格式为 RangeName-T{Tactic}-A{Aiming}
+            // 例如：2023.12.14.1-T1.2.3-A1
+            const versionParts = this.promptDetail.fullVersion.split('-');
+            if (versionParts.length < 2) {
+                return {
+                    topTactic: 'T1',
+                    parallelTactic: 'T1.2.4',
+                    subTactic: 'T1.2.3.1',
+                    newAiming: 'T1.2.3-A2'
+                };
+            }
+            
+            // versionParts[0] = RangeName
+            // versionParts[1] = T{Tactic} (例如：T1.2.3)
+            // versionParts[2] = A{Aiming} (例如：A1，可选)
+            let tacticPart = versionParts[1] || ''; // T1.2.3
+            let aimingPart = versionParts[2] || 'A1'; // A1
+            
+            // 检查战术部分是否以 T 开头，如果不是，可能是格式错误
+            if (!tacticPart.startsWith('T')) {
+                // 如果版本号格式不对，返回默认值
+                return {
+                    topTactic: 'T1',
+                    parallelTactic: 'T1.2.4',
+                    subTactic: 'T1.2.3.1',
+                    newAiming: 'T1.2.3-A2'
+                };
+            }
+            
+            // 提取瞄准编号：A1 -> 1
+            const currentAiming = aimingPart.replace(/^A/, '');
+            const aimingNumber = parseInt(currentAiming) || 1;
+            
+            // 解析战术编号：T1.2.3 -> [1, 2, 3]
+            // 移除开头的 T，然后按 . 分割并转换为数字
+            const tacticStr = tacticPart.replace(/^T/, ''); // 1.2.3
+            if (!tacticStr || tacticStr.length === 0) {
+                // 如果无法解析战术编号，返回默认值
+                return {
+                    topTactic: 'T1',
+                    parallelTactic: 'T1.2.4',
+                    subTactic: 'T1.2.3.1',
+                    newAiming: 'T1.2.3-A2'
+                };
+            }
+            
+            // 解析战术编号数组
+            const tacticNumbers = [];
+            const parts = tacticStr.split('.');
+            for (let i = 0; i < parts.length; i++) {
+                const num = parseInt(parts[i]);
+                if (isNaN(num)) {
+                    // 如果任何部分无法解析为数字，返回默认值
+                    return {
+                        topTactic: 'T1',
+                        parallelTactic: 'T1.2.4',
+                        subTactic: 'T1.2.3.1',
+                        newAiming: 'T1.2.3-A2'
+                    };
+                }
+                tacticNumbers.push(num);
+            }
+            
+            if (tacticNumbers.length === 0) {
+                // 如果解析失败，返回默认值
+                return {
+                    topTactic: 'T1',
+                    parallelTactic: 'T1.2.4',
+                    subTactic: 'T1.2.3.1',
+                    newAiming: 'T1.2.3-A2'
+                };
+            }
+            
+            // 1. 创建顶级战术：当前顶级编号+1
+            // 例如：当前是T1.2.3，下一个顶级战术是T2
+            // 注意：这里只是预测，实际编号需要后端查询数据库确定
+            const currentTopTactic = tacticNumbers[0] || 1;
+            const nextTopTactic = currentTopTactic + 1;
+            
+            // 2. 创建平行战术：同父级下，最后一个编号+1
+            // 例如：T1.2.3 -> T1.2.4
+            const nextParallelTactic = [...tacticNumbers];
+            if (nextParallelTactic.length > 0) {
+                nextParallelTactic[nextParallelTactic.length - 1] = nextParallelTactic[nextParallelTactic.length - 1] + 1;
+            }
+            
+            // 3. 创建子战术：当前战术下添加 .1
+            // 例如：T1.2.3 -> T1.2.3.1
+            const nextSubTactic = [...tacticNumbers, 1];
+            
+            // 4. 重新瞄准：当前瞄准编号+1
+            // 例如：T1.2.3-A1 -> T1.2.3-A2
+            const nextAiming = aimingNumber + 1;
+            
+            return {
+                topTactic: `T${nextTopTactic}`,
+                parallelTactic: `T${nextParallelTactic.join('.')}`,
+                subTactic: `T${nextSubTactic.join('.')}`,
+                newAiming: `${tacticPart}-A${nextAiming}`
+            };
+        },
+        
         // 检测Prompt中的变量
         detectedVariables() {
             if (!this.content) return [];
@@ -478,6 +624,9 @@ var app = new Vue({
                 editor.innerHTML = html;
             }
         });
+        
+        // 初始化代码块复制功能
+        this.initCodeCopyButtons();
       
     },
     beforeDestroy() {
@@ -793,7 +942,7 @@ var app = new Vue({
             };
         },
         // 战术选择 dialog 提交
-        tacticalFormSubmitBtn() {
+        async tacticalFormSubmitBtn() {
             // 如果是继续聊天模式，直接处理，不需要验证战术字段
             if (this.continueChatMode && this.continueChatPromptResultId) {
                 // 检查是否有输入内容
@@ -812,33 +961,48 @@ var app = new Vue({
             }
             
             // 普通模式，需要验证表单
-            this.$refs.tacticalForm.validate(async (valid) => {
-                if (valid) {
-                    // 如果选择对话模式，需要检查是否有输入内容
-                    if (this.tacticalForm.chatMode === '对话模式') {
-                        // 检查是否有输入内容
-                        if (!this.tacticalChatInput || !this.tacticalChatInput.trim()) {
-                            this.$message({
-                                message: '请输入对话内容',
-                                type: 'warning',
-                                duration: 3000
-                            })
-                            return
-                        }
-                        
-                        // 执行打靶，将输入内容作为 userMessage 传递
-                        await this.executeTargetShootWithChatMessage(this.tacticalChatInput.trim())
-                        // 清空对话输入
-                        this.tacticalChatInput = ''
-                        return
-                    }
-                    
-                    // 直接测试模式，继续原有流程
-                    await this.executeTargetShoot()
-                } else {
-                    return false;
+            // 注意：第一次打靶时（没有promptid），不需要验证"战术"字段，因为会自动创建T1-A1靶道
+            // 先检查"打靶测试"字段是否已选择
+            if (!this.tacticalForm.chatMode) {
+                this.$message({
+                    message: '请选择打靶测试模式',
+                    type: 'warning',
+                    duration: 3000
+                })
+                return
+            }
+            
+            // 如果有 promptid，需要验证"战术"字段
+            if (this.promptid && !this.tacticalForm.tactics) {
+                this.$message({
+                    message: '请选择战术',
+                    type: 'warning',
+                    duration: 3000
+                })
+                return
+            }
+            
+            // 如果选择对话模式，需要检查是否有输入内容
+            if (this.tacticalForm.chatMode === '对话模式') {
+                // 检查是否有输入内容
+                if (!this.tacticalChatInput || !this.tacticalChatInput.trim()) {
+                    this.$message({
+                        message: '请输入对话内容',
+                        type: 'warning',
+                        duration: 3000
+                    })
+                    return
                 }
-            });
+                
+                // 执行打靶，将输入内容作为 userMessage 传递
+                await this.executeTargetShootWithChatMessage(this.tacticalChatInput.trim())
+                // 清空对话输入
+                this.tacticalChatInput = ''
+                return
+            }
+            
+            // 直接测试模式，继续原有流程
+            await this.executeTargetShoot();
         },
         
         // 继续聊天提交
@@ -903,6 +1067,11 @@ var app = new Vue({
                     // 刷新对话历史显示
                     this.$forceUpdate()
                     
+                    // 添加代码块复制按钮
+                    this.$nextTick(() => {
+                        this.addCopyButtonsToCodeBlocks();
+                    });
+                    
                     // 滚动到底部显示最新消息
                     this.$nextTick(() => {
                         const container = document.getElementById('chatHistoryContainer')
@@ -965,6 +1134,13 @@ var app = new Vue({
             }
 
             if (isDraft && !_isPromptDraft && this.promptOpt.length !== 0) {
+                this.tacticalFormVisible = true
+                return
+            }
+            
+            // 弹窗逻辑3，第一次打靶时（没有promptid）也要弹窗，让用户选择对话模式或直接测试模式
+            // 注意：第一次打靶时不传递promptid，让后端创建新的靶道（T1-A1）
+            if (!this.promptid && !isDraft) {
                 this.tacticalFormVisible = true
                 return
             }
@@ -1126,6 +1302,12 @@ var app = new Vue({
                             }
                             return item
                         })
+                        
+                        // 添加代码块复制按钮
+                        this.$nextTick(() => {
+                            this.addCopyButtonsToCodeBlocks();
+                        });
+                        
                         //提交数据后，选择正确的靶场和靶道
                         this.getFieldList().then(() => {
 
@@ -2465,12 +2647,13 @@ var app = new Vue({
         // 继续聊天：加载历史记录并打开战术选择弹窗
         async continueChat(promptResultId, resultIndex) {
             try {
-                // 加载对话历史记录
-                const res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistory?promptResultId=${promptResultId}`)
+                // 使用新的 API 同时获取对话历史和 Prompt 内容
+                const res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistoryWithPrompt?promptResultId=${promptResultId}`)
                 if (res.data.success) {
                     this.continueChatMode = true
                     this.continueChatPromptResultId = promptResultId
-                    this.continueChatHistory = res.data.data || []
+                    this.continueChatHistory = res.data.data.chatHistory || []
+                    this.continueChatSystemMessage = res.data.data.promptContent || ''
                     
                     // 打开战术选择弹窗，锁定为对话模式
                     this.tacticalForm.chatMode = '对话模式'
@@ -2482,18 +2665,57 @@ var app = new Vue({
                         if (container) {
                             container.scrollTop = container.scrollHeight
                         }
+                        // 添加代码块复制按钮
+                        this.addCopyButtonsToCodeBlocks();
                     })
                 } else {
-                    this.$message({
-                        message: res.data.errorMessage || '加载对话历史失败',
-                        type: 'error'
-                    })
+                    // 降级方案：如果新 API 失败，使用旧的 API
+                    const fallbackRes = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistory?promptResultId=${promptResultId}`)
+                    if (fallbackRes.data.success) {
+                        this.continueChatMode = true
+                        this.continueChatPromptResultId = promptResultId
+                        this.continueChatHistory = fallbackRes.data.data || []
+                        // 尝试从 outputList 获取 Prompt 内容
+                        const resultItem = this.outputList.find(item => item.id === promptResultId)
+                        if (resultItem && resultItem.promptId && this.promptDetail && this.promptDetail.id === resultItem.promptId) {
+                            this.continueChatSystemMessage = this.promptDetail.promptContent || this.content || ''
+                        } else {
+                            this.continueChatSystemMessage = this.content || ''
+                        }
+                        
+                        this.tacticalForm.chatMode = '对话模式'
+                        this.tacticalFormVisible = true
+                        
+                        this.$nextTick(() => {
+                            const container = document.getElementById('chatHistoryContainer')
+                            if (container) {
+                                container.scrollTop = container.scrollHeight
+                            }
+                            this.addCopyButtonsToCodeBlocks();
+                        })
+                    } else {
+                        this.$message({
+                            message: fallbackRes.data.errorMessage || '加载对话历史失败',
+                            type: 'error'
+                        })
+                    }
                 }
             } catch (error) {
                 this.$message({
                     message: '加载对话历史失败：' + (error.message || '未知错误'),
                     type: 'error'
                 })
+            }
+        },
+        
+        // 处理对话输入框的键盘事件（快捷键支持）
+        handleChatInputKeydown(e) {
+            // Ctrl+Enter (Windows/Linux) 或 Cmd+Enter (Mac)
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault()
+                e.stopPropagation()
+                // 触发提交
+                this.tacticalFormSubmitBtn()
             }
         },
         
@@ -2510,8 +2732,12 @@ var app = new Vue({
             this.continueChatMode = false
             this.continueChatPromptResultId = null
             this.continueChatHistory = []
+            this.continueChatSystemMessage = ''
+            this.systemMessageCollapse = []
             if (this.$refs.tacticalForm) {
-                this.$refs.tacticalForm.resetFields();
+                // 使用 clearValidate 清除验证状态，而不是 resetFields
+                // 因为某些字段可能是条件显示的（v-if），resetFields 可能会出错
+                this.$refs.tacticalForm.clearValidate();
             }
         },
         
@@ -2524,6 +2750,17 @@ var app = new Vue({
                 })
                 return
             }
+            
+            // 检查当前靶场是否有靶道数据
+            if (!this.promptOpt || this.promptOpt.length === 0) {
+                this.$message({
+                    message: '当前靶场还没有进行过打靶，请打靶后再来看吧！',
+                    type: 'info',
+                    duration: 3000
+                })
+                return
+            }
+            
             this.mapDialogVisible = true
             this.$nextTick(() => {
                 this.initMap3D()
@@ -2945,8 +3182,9 @@ var app = new Vue({
                             })
                         }
                     } else if (node.type === 'tactic') {
-                        // 靶道：圆球（优化：降低精度以提高性能）
-                        geometry = new THREE.SphereGeometry(2.5, 24, 24)
+                        // 靶道（Tactic）：圆柱体（代表路径/通道）
+                        // CylinderGeometry(radiusTop, radiusBottom, height, radialSegments)
+                        geometry = new THREE.CylinderGeometry(2, 2, 4, 32)
                         material = new THREE.MeshStandardMaterial({ 
                             color: hasCurrent ? 0xffd93d : 0x95e1d3,
                             metalness: 0.5,
@@ -2957,7 +3195,7 @@ var app = new Vue({
                         
                         // 添加发光效果（当前选中时）
                         if (hasCurrent) {
-                            glowGeometry = new THREE.SphereGeometry(2.8, 24, 24)
+                            glowGeometry = new THREE.CylinderGeometry(2.3, 2.3, 4.3, 32)
                             glowMaterial = new THREE.MeshBasicMaterial({
                                 color: 0xffd93d,
                                 transparent: true,
@@ -2974,6 +3212,12 @@ var app = new Vue({
                     const mesh = new THREE.Mesh(geometry, material)
                     // 初始位置设置为目标位置（后续用于动画）
                     mesh.position.set(x, y, z)
+                    
+                    // 如果是圆柱体（tactic节点），需要旋转90度使其竖立
+                    if (node.type === 'tactic') {
+                        mesh.rotation.x = Math.PI / 2  // 绕X轴旋转90度
+                    }
+                    
                     mesh.userData = { 
                         node, 
                         key, 
@@ -2993,6 +3237,12 @@ var app = new Vue({
                     if (glowGeometry && glowMaterial) {
                         glowMesh = new THREE.Mesh(glowGeometry, glowMaterial)
                         glowMesh.position.set(x, y, z)
+                        
+                        // 如果是圆柱体（tactic节点），发光效果也需要旋转
+                        if (node.type === 'tactic') {
+                            glowMesh.rotation.x = Math.PI / 2
+                        }
+                        
                         glowMesh.scale.set(0.1, 0.1, 0.1)
                         this.map3dScene.add(glowMesh)
                     }
@@ -3085,19 +3335,17 @@ var app = new Vue({
                     
                     let mainTextY = canvas.height / 2
                     
-                    // 如果有类型前缀（T），在上方显示类型标识
+                    // 如果有类型前缀（T），T 和数字在同一行显示
                     if (labelPrefix === 'T') {
-                        // 类型标识 T（更大字体）
-                        context.fillStyle = hasCurrent ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0.9)'
-                        context.font = `bold ${prefixFontSize}px 'Arial Black', Arial, sans-serif`
-                        context.fillText(labelPrefix, canvas.width / 2, canvas.height / 2 - 100)  // 从 -60 改为 -100
+                        // 组合文本：T + 数字
+                        const combinedText = `T${labelText}`
                         
-                        // 主要数字（更大字体）
+                        // 使用统一的大字体显示
                         context.fillStyle = '#ffffff'
                         context.font = `bold ${mainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
-                        context.fillText(labelText, canvas.width / 2, canvas.height / 2 + 60)  // 从 +40 改为 +60
+                        context.fillText(combinedText, canvas.width / 2, canvas.height / 2)
                         
-                        mainTextY = canvas.height / 2 + 60
+                        mainTextY = canvas.height / 2
                     } else {
                         // 靶场名称（更大字体）
                         context.fillStyle = '#ffffff'
@@ -3125,8 +3373,9 @@ var app = new Vue({
                         opacity: 0 // 初始透明，用于渐入动画
                     })
                     const sprite = new THREE.Sprite(spriteMaterial)
-                    // **横向布局：标签在节点下方（Y轴负方向）**
-                    sprite.position.set(x, y - (node.type === 'range' ? 5 : 4), z)
+                    // **横向布局：标签在节点下方（Y轴负方向），Z轴稍微向前避免被遮挡**
+                    const labelZOffset = 3  // Z轴向前偏移，避免被节点遮挡
+                    sprite.position.set(x, y - (node.type === 'range' ? 5 : 4), z + labelZOffset)
                     // 动态设置 sprite 尺寸（根据画布宽度，字体加大后标签也要更大）
                     const spriteWidth = (canvas.width / 1024) * 18  // 从 12 增加到 18
                     const spriteHeight = (canvas.height / 256) * 4.5  // 从 3 增加到 4.5
@@ -3142,7 +3391,15 @@ var app = new Vue({
                     this.map3dScene.add(mesh)
                     this.map3dScene.add(sprite)
                     
-                    this.map3dNodes.push({ 
+                    // **关键修复：使用 Object.freeze 防止 Vue 响应式监听导致栈溢出**
+                    // Three.js 对象不应该被 Vue 监听，否则会导致性能问题和循环引用
+                    
+                    // 冻结 Three.js 相关对象，防止 Vue 添加响应式 getter/setter
+                    Object.freeze(mesh)
+                    Object.freeze(sprite)
+                    if (glowMesh) Object.freeze(glowMesh)
+                    
+                    const createdNodeData = {
                         mesh, 
                         sprite, 
                         glowMesh,
@@ -3151,13 +3408,15 @@ var app = new Vue({
                         depth, 
                         isExpanded, 
                         position: { x, y, z }, 
-                        parentPosition: parentPosition, // 保存父节点位置，用于后续创建连接线
-                        childrenMeshes: [], 
+                        parentPosition: parentPosition,
+                        childrenMeshes: [],  // 这个数组可能会很大，不需要响应式
                         line: null, 
                         dot: null,
-                        animationProgress: 0, // 动画进度 0-1
-                        hasCurrent: hasCurrent // 保存是否有当前选中
-                    })
+                        animationProgress: 0,
+                        hasCurrent: hasCurrent
+                    }
+                    
+                    this.map3dNodes.push(createdNodeData)
                     
                     // 存储节点引用以便快速查找
                     if (!this.map3dNodeMap) {
@@ -3380,9 +3639,12 @@ var app = new Vue({
                                 const aimingPrefixFontSize = aimingHasCurrent ? 180 : 160  // 从 90/80 加大到 180/160
                                 const aimingMainFontSize = aimingHasCurrent ? 280 : 240   // 从 140/120 加大到 280/240
                                 
-                                // 预计算文字宽度
+                                // 组合文本（用于宽度计算）
+                                const aimingCombinedText = `A${aimingLabelText}`
+                                
+                                // 预计算文字宽度（使用组合后的文本）
                                 aimingContext.font = `bold ${aimingMainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
-                                const textWidth = aimingContext.measureText(aimingLabelText).width
+                                const textWidth = aimingContext.measureText(aimingCombinedText).width
                                 
                                 const aimingPadding = 50  // 从 30 增加到 50
                                 const aimingBorderRadius = 30  // 从 20 增加到 30
@@ -3428,23 +3690,18 @@ var app = new Vue({
                                 drawRoundedRect(aimingPadding, aimingPadding, aimingCanvas.width - aimingPadding * 2, (aimingCanvas.height - aimingPadding * 2) / 2, aimingBorderRadius)
                                 aimingContext.fill()
                                 
-                                // 绘制文字（更大的字体）
+                                // 绘制文字（A 和数字在同一行，已在上面定义 aimingCombinedText）
                                 aimingContext.textAlign = 'center'
                                 aimingContext.textBaseline = 'middle'
                                 aimingContext.shadowColor = 'rgba(0, 0, 0, 0.8)'
-                                aimingContext.shadowBlur = 20  // 从 10 增加到 20
-                                aimingContext.shadowOffsetX = 5  // 从 3 增加到 5
-                                aimingContext.shadowOffsetY = 5  // 从 3 增加到 5
+                                aimingContext.shadowBlur = 20
+                                aimingContext.shadowOffsetX = 5
+                                aimingContext.shadowOffsetY = 5
                                 
-                                // 类型标识 'A'（更大字体）
-                                aimingContext.fillStyle = aimingHasCurrent ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0.9)'
-                                aimingContext.font = `bold ${aimingPrefixFontSize}px 'Arial Black', Arial, sans-serif`
-                                aimingContext.fillText('A', aimingCanvas.width / 2, aimingCanvas.height / 2 - 100)  // 从 -60 改为 -100
-                                
-                                // 主要数字（更大字体）
+                                // 使用统一的大字体显示（组合文本已在前面定义）
                                 aimingContext.fillStyle = '#ffffff'
                                 aimingContext.font = `bold ${aimingMainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
-                                aimingContext.fillText(aimingLabelText, aimingCanvas.width / 2, aimingCanvas.height / 2 + 60)  // 从 +40 改为 +60
+                                aimingContext.fillText(aimingCombinedText, aimingCanvas.width / 2, aimingCanvas.height / 2)
                                 
                                 // 创建 sprite
                                 const aimingTexture = new THREE.CanvasTexture(aimingCanvas)
@@ -3455,8 +3712,9 @@ var app = new Vue({
                                     opacity: 0
                                 })
                                 const aimingSprite = new THREE.Sprite(aimingSpriteMaterial)
-                                // **横向布局：标签在节点下方**
-                                aimingSprite.position.set(aimingX, aimingY - 4, aimingZ)
+                                // **横向布局：标签在节点下方，Z轴稍微向前避免被球遮挡**
+                                const aimingLabelZOffset = 3  // Z轴向前偏移
+                                aimingSprite.position.set(aimingX, aimingY - 4, aimingZ + aimingLabelZOffset)
                                 // 动态设置 sprite 尺寸（根据画布宽度，字体加大后标签也要更大）
                                 const spriteWidth = (aimingCanvas.width / 1024) * 18  // 从 12 增加到 18
                                 const spriteHeight = (aimingCanvas.height / 256) * 4.5  // 从 3 增加到 4.5
@@ -3472,16 +3730,21 @@ var app = new Vue({
                                 this.map3dScene.add(aimingMesh)
                                 this.map3dScene.add(aimingSprite)
                                 
+                                // 冻结 Three.js 对象，防止 Vue 响应式监听导致栈溢出
+                                Object.freeze(aimingMesh)
+                                Object.freeze(aimingSprite)
+                                if (aimingGlowMesh) Object.freeze(aimingGlowMesh)
+                                
                                 const aimingNodeData = { 
                                     mesh: aimingMesh, 
                                     sprite: aimingSprite, 
-                                    glowMesh: aimingGlowMesh,  // 保存发光效果（第一名会有）
+                                    glowMesh: aimingGlowMesh,
                                     node: aimingNode, 
                                     key: aimingKey, 
                                     depth: depth + 1, 
                                     isExpanded: true, 
                                     position: { x: aimingX, y: aimingY, z: aimingZ }, 
-                                    parentPosition: { x, y, z }, // 使用当前父T节点的位置
+                                    parentPosition: { x, y, z },
                                     childrenMeshes: [], 
                                     line: null, 
                                     dot: null,
@@ -5214,6 +5477,11 @@ var app = new Vue({
                     }
                     return item
                 })
+                
+                // 添加代码块复制按钮
+                this.$nextTick(() => {
+                    this.addCopyButtonsToCodeBlocks();
+                });
             } else {
                 app.$message({
                     message: res.data.errorMessage || res.data.data || 'Error',
@@ -6172,6 +6440,144 @@ var app = new Vue({
                 console.error('Oops, unable to copy', err);
             }  
         },
+        
+        /**
+         * 初始化代码块复制按钮
+         * 为所有 <pre><code> 代码块添加复制按钮
+         */
+        initCodeCopyButtons() {
+            const self = this;
+            
+            // 使用 MutationObserver 监听 DOM 变化,自动为新增的代码块添加复制按钮
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.addedNodes.length) {
+                        self.addCopyButtonsToCodeBlocks();
+                    }
+                });
+            });
+            
+            // 监听输出区域和对话历史区域
+            const outputArea = document.querySelector('.outputArea_contentBox');
+            const chatArea = document.querySelector('.chat-history-container');
+            
+            if (outputArea) {
+                observer.observe(outputArea, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+            
+            if (chatArea) {
+                observer.observe(chatArea, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+            
+            // 初始添加
+            this.addCopyButtonsToCodeBlocks();
+        },
+        
+        /**
+         * 为所有代码块添加复制按钮
+         */
+        addCopyButtonsToCodeBlocks() {
+            const self = this;
+            
+            // 查找所有代码块 (输出区域 + 对话历史区域)
+            const codeBlocks = document.querySelectorAll(
+                '.contentRow pre:not(.copy-btn-added), .chat-message-content pre:not(.copy-btn-added)'
+            );
+            
+            codeBlocks.forEach((pre) => {
+                // 标记已添加,避免重复
+                pre.classList.add('copy-btn-added');
+                
+                // 创建复制按钮
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'code-copy-btn';
+                copyBtn.innerHTML = '<i class="el-icon-document-copy"></i> Copy';
+                copyBtn.title = '复制代码';
+                
+                // 绑定点击事件
+                copyBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // 获取代码内容
+                    const codeElement = pre.querySelector('code') || pre;
+                    const code = codeElement.textContent || codeElement.innerText;
+                    
+                    // 使用 CopyHelper 复制
+                    if (window.PromptRangeUtils && window.PromptRangeUtils.CopyHelper) {
+                        const success = window.PromptRangeUtils.CopyHelper.copyToClipboard(
+                            code, 
+                            '代码复制成功', 
+                            '代码复制失败',
+                            true
+                        );
+                        
+                        if (success) {
+                            // 显示复制成功状态
+                            copyBtn.classList.add('copied');
+                            copyBtn.innerHTML = '<i class="el-icon-check"></i> Copied!';
+                            
+                            // 2秒后恢复
+                            setTimeout(() => {
+                                copyBtn.classList.remove('copied');
+                                copyBtn.innerHTML = '<i class="el-icon-document-copy"></i> Copy';
+                            }, 2000);
+                        }
+                    } else {
+                        // 降级方案:使用传统方法
+                        self.fallbackCopyCode(code, copyBtn);
+                    }
+                });
+                
+                // 将按钮添加到 pre 元素中
+                pre.appendChild(copyBtn);
+            });
+        },
+        
+        /**
+         * 降级复制代码方法
+         * @param {string} code - 要复制的代码
+         * @param {HTMLElement} button - 复制按钮元素
+         */
+        fallbackCopyCode(code, button) {
+            try {
+                const textarea = document.createElement('textarea');
+                textarea.value = code;
+                textarea.style.position = 'fixed';
+                textarea.style.top = '0';
+                textarea.style.left = '-9999px';
+                textarea.setAttribute('readonly', '');
+                document.body.appendChild(textarea);
+                
+                textarea.select();
+                textarea.setSelectionRange(0, textarea.value.length);
+                
+                const success = document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                if (success) {
+                    this.$message.success('代码复制成功');
+                    button.classList.add('copied');
+                    button.innerHTML = '<i class="el-icon-check"></i> Copied!';
+                    
+                    setTimeout(() => {
+                        button.classList.remove('copied');
+                        button.innerHTML = '<i class="el-icon-document-copy"></i> Copy';
+                    }, 2000);
+                } else {
+                    this.$message.error('代码复制失败');
+                }
+            } catch (err) {
+                console.error('Copy failed:', err);
+                this.$message.error('代码复制失败');
+            }
+        },
         // 自定义滚动条缩略图相关方法
         handleResultScroll(event) {
             const el = event.target;
@@ -6969,15 +7375,13 @@ var app = new Vue({
                 // 添加匹配前的文本（HTML转义并处理换行）
                 const beforeText = text.substring(lastIndex, offset);
                 // 处理换行：将换行符替换为 <br>
-                // 移除 span 标签前的尾随空白字符（空格、制表符等），但保留换行符转换为 <br>
+                // 注意：不再移除 span 标签前的尾随空白字符，因为用户可能有意输入空格
                 let processedBeforeText = beforeText
                     .replace(/&/g, '&amp;')
                     .replace(/</g, '&lt;')
                     .replace(/>/g, '&gt;');
                 
-                // 移除尾随空白字符（但保留换行符，因为需要转换为 <br>）
-                processedBeforeText = processedBeforeText.replace(/[ \t]+$/, '');
-                // 将换行符替换为 <br>
+                // 将换行符替换为 <br>（保留所有空格和制表符，因为用户可能有意输入）
                 processedBeforeText = processedBeforeText.replace(/\n/g, '<br>');
                 result += processedBeforeText;
                 
@@ -7015,13 +7419,9 @@ var app = new Vue({
             processedRemainingText = processedRemainingText.replace(/\n/g, '<br>');
             result += processedRemainingText;
             
-            // 清理 span 标签前后的空白字符（但不移除 BR 标签，因为 BR 是用户输入的换行）
-            // 这可以防止 white-space: pre-wrap 导致 span 单独成行
-            // 1. 清理 span 标签前的空白字符（空格、制表符等），但保留 BR 标签
-            result = result.replace(/([ \t]+)(<span class="var-highlight[^"]*">)/gi, '$2');
-            // 2. 清理 span 标签后的空白字符（空格、制表符等），但保留 BR 标签
-            result = result.replace(/(<\/span>)([ \t]+)/gi, '$1');
-            // 注意：不再移除 BR 标签，因为 BR 是用户输入的换行，应该保留
+            // 注意：不再清理 span 标签前后的空白字符（空格、制表符等）
+            // 因为用户可能在 span 前后输入空格，这些空格应该保留
+            // 清理函数 cleanupHighlightBrTags 会处理多余的空白文本节点
             
             console.log('[generateHighlightHTML] Final HTML (first 200 chars):', result.substring(0, 200));
             
@@ -7426,66 +7826,44 @@ var app = new Vue({
             console.log('[cleanupHighlightBrTags] Found', highlightSpans.length, 'highlight spans');
             
             highlightSpans.forEach(span => {
-                // 清理 span 前面的空白文本节点（但不移除 BR 标签，因为 BR 是用户输入的换行）
+                // 清理 span 前面的空白文本节点
+                // 只移除完全空白的文本节点（不包含任何可见字符），保留包含用户输入空格的文本节点
                 let prevSibling = span.previousSibling;
                 while (prevSibling) {
                     if (prevSibling.nodeType === Node.TEXT_NODE) {
-                        // 检查文本节点是否只包含空白字符（空格、换行、制表符等）
                         const textContent = prevSibling.textContent;
-                        if (!textContent || /^[\s\n\r\t\u00A0]*$/.test(textContent)) {
-                            // 只包含空白字符（包括不间断空格），移除
+                        // 只移除完全空白的文本节点（只包含空白字符且长度为0，或者是浏览器自动添加的空白）
+                        // 保留包含用户输入空格的文本节点（即使只有空格，也应该保留，因为用户可能有意输入空格）
+                        if (!textContent || textContent.length === 0) {
+                            // 完全空的文本节点，移除
                             const toRemove = prevSibling;
                             prevSibling = prevSibling.previousSibling;
                             toRemove.remove();
                         } else {
-                            // 有非空白内容，但可能末尾有空白字符，需要清理末尾的空白
-                            // 移除末尾的所有空白字符（包括换行符）
-                            const trimmed = textContent.replace(/[\s\n\r\t\u00A0]+$/, '');
-                            if (trimmed !== textContent) {
-                                if (trimmed) {
-                                    prevSibling.textContent = trimmed;
-                                } else {
-                                    // 如果全部是空白，移除节点
-                                    const toRemove = prevSibling;
-                                    prevSibling = prevSibling.previousSibling;
-                                    toRemove.remove();
-                                    continue;
-                                }
-                            }
+                            // 有内容的文本节点，保留（包括只包含空格的节点，因为用户可能有意输入空格）
                             break;
                         }
                     } else {
-                        // 其他类型的节点，停止清理
+                        // 其他类型的节点（包括 BR 标签），停止清理
                         break;
                     }
                 }
                 
-                // 清理 span 后面的空白文本节点（但不移除 BR 标签，因为 BR 是用户输入的换行）
+                // 清理 span 后面的空白文本节点
+                // 只移除完全空白的文本节点，保留包含用户输入空格的文本节点
                 let nextSibling = span.nextSibling;
                 while (nextSibling) {
                     if (nextSibling.nodeType === Node.TEXT_NODE) {
-                        // 检查文本节点是否只包含空白字符（空格、换行、制表符等）
                         const textContent = nextSibling.textContent;
-                        if (!textContent || /^[\s\n\r\t\u00A0]*$/.test(textContent)) {
-                            // 只包含空白字符（包括不间断空格），移除
+                        // 只移除完全空白的文本节点
+                        // 保留包含用户输入空格的文本节点
+                        if (!textContent || textContent.length === 0) {
+                            // 完全空的文本节点，移除
                             const toRemove = nextSibling;
                             nextSibling = nextSibling.nextSibling;
                             toRemove.remove();
                         } else {
-                            // 有非空白内容，但可能开头有空白字符，需要清理开头的空白
-                            // 移除开头的所有空白字符（包括换行符），但保留文本内容
-                            const trimmed = textContent.replace(/^[\s\n\r\t\u00A0]+/, '');
-                            if (trimmed !== textContent) {
-                                if (trimmed) {
-                                    nextSibling.textContent = trimmed;
-                                } else {
-                                    // 如果全部是空白，移除节点
-                                    const toRemove = nextSibling;
-                                    nextSibling = nextSibling.nextSibling;
-                                    toRemove.remove();
-                                    continue;
-                                }
-                            }
+                            // 有内容的文本节点，保留（包括只包含空格的节点，因为用户可能有意输入空格）
                             break;
                         }
                     } else {

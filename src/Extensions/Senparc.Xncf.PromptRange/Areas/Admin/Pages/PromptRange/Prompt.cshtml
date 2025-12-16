@@ -65,7 +65,10 @@
                                 <div class="titleContent">选择靶道</div>
                             </div>
                             <div class="d-flex align-center" style="gap: 5px;">
-                                <el-button type="info" size="mini" icon="el-icon-s-data" @@click="openMapDialog">导图</el-button>
+                                <el-button type="primary" size="mini" icon="el-icon-s-data" @@click="openMapDialog" 
+                                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; font-weight: bold;">
+                                    导图
+                                </el-button>
                                 <i class="el-icon-document-copy" style="font-size: 1.3rem;cursor: pointer" @@click="copyInfo"></i>
                             </div>
                         </div>
@@ -607,63 +610,73 @@
     </el-drawer>
     @*战术选择 dialog*@
     <el-dialog 
-        :title="continueChatMode ? '继续聊天' : '战术选择'" 
+        :title="continueChatMode ? '继续聊天' : (promptid ? '战术选择' : '打靶模式')" 
         :visible.sync="tacticalFormVisible" 
-        :width="continueChatMode ? '80%' : '50%'"
+        :width="continueChatMode ? '80%' : '65%'"
         :close-on-click-modal="false"
         center 
         @@close="tacticalFormCloseDialog">
-        <el-form ref="tacticalForm" :model="tacticalForm" :rules="rules" label-width="70px" label-position="left" class="tacticalFormBox">
-            @* 继续聊天模式下不显示战术选择 *@
-            <el-form-item v-if="!continueChatMode" label="战术" prop="tactics">
+        <el-form ref="tacticalForm" :model="tacticalForm" :rules="rules" :label-width="continueChatMode ? '120px' : '100px'" label-position="left" class="tacticalFormBox">
+            @* 继续聊天模式下显示 SystemMessage（Prompt）在最上方 *@
+            <el-form-item v-if="continueChatMode" label="System Message">
+                <el-collapse v-model="systemMessageCollapse">
+                    <el-collapse-item name="systemMessage">
+                        <template slot="title">
+                            <i :class="systemMessageCollapse.includes('systemMessage') ? 'el-icon-arrow-up' : 'el-icon-arrow-down'" style="margin-right: 8px;"></i>
+                            <span style="font-weight: 600;">System Message (Prompt)</span>
+                            <span style="margin-left: 8px; font-size: 12px; color: #909399;">(点击{{ systemMessageCollapse.includes('systemMessage') ? '收起' : '展开' }}查看当前对话使用的 Prompt)</span>
+                        </template>
+                        <div class="system-message-content">{{ continueChatSystemMessage || '加载中...' }}</div>
+                    </el-collapse-item>
+                </el-collapse>
+            </el-form-item>
+            @* 继续聊天模式下不显示战术选择，第一次打靶时（没有promptid）也不显示战术选择 *@
+            <el-form-item v-if="!continueChatMode && promptid" label="战术" prop="tactics">
                 <el-radio-group v-model="tacticalForm.tactics">
                     <el-radio label="创建顶级战术">
                         <div class="d-f-startr-start-title">创建顶级战术</div>
-                        @*<div class="d-f-startr-start-img">
-
-                        </div>*@
-                        <div class="d-f-startr-start-nowrap" style="margin-top:7px;">
-                            <span>示例：</span>
-                            <div>
-                                <div>T1</div>
-                                <div>T2 (new)</div>
+                        <div class="d-f-startr-start-nowrap">
+                            <span style="color: #606266;">将创建：</span>
+                            <div style="margin-left: 8px;">
+                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">当前：{{ currentTacticalInfo.tactic }}</div>
+                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.topTactic }} <span style="color: #67C23A; font-size: 12px;">(新)</span></div>
                             </div>
                         </div>
                     </el-radio>
                     <el-radio label="创建平行战术">
-                        <div>创建平行战术</div>
-                        <div class="d-f-startr-start-nowrap" style="margin-top:7px;">
-                            <span>示例：</span>
-                            <div class="d-c-startr-start-nowrap">
-                                <div>T1.2.3</div>
-                                <div>T1.2.4 (new)</div>
+                        <div class="d-f-startr-start-title">创建平行战术</div>
+                        <div class="d-f-startr-start-nowrap">
+                            <span style="color: #606266;">将创建：</span>
+                            <div class="d-c-startr-start-nowrap" style="margin-left: 8px;">
+                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">当前：{{ currentTacticalInfo.tactic }}</div>
+                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.parallelTactic }} <span style="color: #67C23A; font-size: 12px;">(新)</span></div>
                             </div>
                         </div>
                     </el-radio>
 
                     <el-radio label="创建子战术">
-                        <div>创建子战术</div>
-                        <div class="d-f-startr-start-nowrap" style="margin-top:7px;">
-                            <span>示例：</span>
-                            <div class="d-c-startr-start-nowrap">
-                                <div>T1.2.3</div>
-                                <div>T1.2.3.1 (new)</div>
+                        <div class="d-f-startr-start-title">创建子战术</div>
+                        <div class="d-f-startr-start-nowrap">
+                            <span style="color: #606266;">将创建：</span>
+                            <div class="d-c-startr-start-nowrap" style="margin-left: 8px;">
+                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">当前：{{ currentTacticalInfo.tactic }}</div>
+                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.subTactic }} <span style="color: #67C23A; font-size: 12px;">(新)</span></div>
                             </div>
                         </div>
                     </el-radio>
                     <el-radio label="重新瞄准">
-                        <div>重新瞄准</div>
-                        <div class="d-f-startr-start-nowrap" style="margin-top:7px;">
-                            <span>示例：</span>
-                            <div class="d-c-startr-start-nowrap">
-                                <div>T1.2.3-A1</div>
-                                <div>T1.2.3-A2 (new)</div>
+                        <div class="d-f-startr-start-title">重新瞄准</div>
+                        <div class="d-f-startr-start-nowrap">
+                            <span style="color: #606266;">将创建：</span>
+                            <div class="d-c-startr-start-nowrap" style="margin-left: 8px;">
+                                <div v-if="currentTacticalInfo.fullTactical !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">当前：{{ currentTacticalInfo.fullTactical }}</div>
+                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.newAiming }} <span style="color: #67C23A; font-size: 12px;">(新)</span></div>
                             </div>
                         </div>
                     </el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item v-if="!continueChatMode" label="测试模式" prop="chatMode">
+            <el-form-item v-if="!continueChatMode" label="打靶模式" prop="chatMode">
                 <el-radio-group v-model="tacticalForm.chatMode" :disabled="continueChatMode">
                     <el-radio label="对话模式">
                         <div>对话模式</div>
@@ -726,24 +739,28 @@
                     </div>
                 </div>
             </el-form-item>
+            
             @* 对话模式下的对话输入区域 *@
-            <el-form-item v-if="tacticalForm.chatMode === '对话模式'" label="对话输入" prop="chatInput">
+            @* 注意：不使用 prop="chatInput"，因为这是条件显示的字段，resetFields 可能会出错 *@
+            <el-form-item v-if="tacticalForm.chatMode === '对话模式'" label="对话输入">
                 <el-input 
                     v-model="tacticalChatInput" 
                     type="textarea" 
                     :rows="6"
-                    :placeholder="continueChatMode ? '请输入您的下一句话...' : '请输入您的问题...'"
-                    :disabled="!promptid">
+                    ref="tacticalChatInput"
+                    @@keydown.native="handleChatInputKeydown"
+                    :placeholder="continueChatMode ? '请输入您的下一句话... (Ctrl+Enter / Cmd+Enter 发送)' : '请输入您的问题... (Ctrl+Enter / Cmd+Enter 发送)'">
                 </el-input>
                 <div style="margin-top: 8px; font-size: 12px; color: #909399;">
                     {{ continueChatMode ? '输入内容将追加到现有对话中' : '输入内容将作为 userMessage 参数传递到后端接口' }}
+                    <span style="margin-left: 8px; color: #909399;">快捷键：Ctrl+Enter (Windows) / Cmd+Enter (Mac)</span>
                 </div>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button size="mini" @@click="tacticalFormVisible = false">取 消</el-button>
             @* v-loading="tacticalFormSubmitLoading" *@
-            <el-button type="primary" size="mini" @@click="tacticalFormSubmitBtn">确 定</el-button>
+            <el-button type="primary" size="mini" @@click="tacticalFormSubmitBtn">发 射</el-button>
         </div>
     </el-dialog>
     @*导图 dialog*@

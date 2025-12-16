@@ -85,6 +85,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         /// </summary>
         public ResultMode? Mode { get; private set; }
 
+        /// <summary>
+        /// SystemMessage（Prompt 内容，完成参数替换后的最终内容）
+        /// 用于对话模式，确保即使 Prompt 内容或参数变化，也能追溯历史使用的 SystemMessage
+        /// </summary>
+        public string SystemMessage { get; private set; }
+
         private PromptResult()
         {
         }
@@ -103,6 +109,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
             PromptItemVersion = dto.PromptItemVersion;
             PromptItemId = dto.PromptItemId;
             Mode = dto.Mode;
+            SystemMessage = dto.SystemMessage;
         }
 
 
@@ -111,7 +118,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
             int robotScore, int humanScore, int finalScore, // 分数
             TestType testType, int promptCostToken,
             int resultCostToken, int totalCostToken, string promptItemVersion, int promptItemId,
-            ResultMode? mode = null)
+            ResultMode? mode = null, string systemMessage = null)
         {
             LlmModelId = llmModelId;
             ResultString = resultString;
@@ -125,6 +132,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
             PromptItemVersion = promptItemVersion;
             PromptItemId = promptItemId;
             Mode = mode;
+            SystemMessage = systemMessage;
         }
 
 
