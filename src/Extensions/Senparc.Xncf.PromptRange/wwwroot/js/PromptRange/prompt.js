@@ -793,7 +793,7 @@ var app = new Vue({
             };
         },
         // 战术选择 dialog 提交
-        tacticalFormSubmitBtn() {
+        async tacticalFormSubmitBtn() {
             // 如果是继续聊天模式，直接处理，不需要验证战术字段
             if (this.continueChatMode && this.continueChatPromptResultId) {
                 // 检查是否有输入内容
@@ -812,33 +812,48 @@ var app = new Vue({
             }
             
             // 普通模式，需要验证表单
-            this.$refs.tacticalForm.validate(async (valid) => {
-                if (valid) {
-                    // 如果选择对话模式，需要检查是否有输入内容
-                    if (this.tacticalForm.chatMode === '对话模式') {
-                        // 检查是否有输入内容
-                        if (!this.tacticalChatInput || !this.tacticalChatInput.trim()) {
-                            this.$message({
-                                message: '请输入对话内容',
-                                type: 'warning',
-                                duration: 3000
-                            })
-                            return
-                        }
-                        
-                        // 执行打靶，将输入内容作为 userMessage 传递
-                        await this.executeTargetShootWithChatMessage(this.tacticalChatInput.trim())
-                        // 清空对话输入
-                        this.tacticalChatInput = ''
-                        return
-                    }
-                    
-                    // 直接测试模式，继续原有流程
-                    await this.executeTargetShoot()
-                } else {
-                    return false;
+            // 注意：第一次打靶时（没有promptid），不需要验证"战术"字段，因为会自动创建T1-A1靶道
+            // 先检查"测试模式"字段是否已选择
+            if (!this.tacticalForm.chatMode) {
+                this.$message({
+                    message: '请选择测试模式',
+                    type: 'warning',
+                    duration: 3000
+                })
+                return
+            }
+            
+            // 如果有 promptid，需要验证"战术"字段
+            if (this.promptid && !this.tacticalForm.tactics) {
+                this.$message({
+                    message: '请选择战术',
+                    type: 'warning',
+                    duration: 3000
+                })
+                return
+            }
+            
+            // 如果选择对话模式，需要检查是否有输入内容
+            if (this.tacticalForm.chatMode === '对话模式') {
+                // 检查是否有输入内容
+                if (!this.tacticalChatInput || !this.tacticalChatInput.trim()) {
+                    this.$message({
+                        message: '请输入对话内容',
+                        type: 'warning',
+                        duration: 3000
+                    })
+                    return
                 }
-            });
+                
+                // 执行打靶，将输入内容作为 userMessage 传递
+                await this.executeTargetShootWithChatMessage(this.tacticalChatInput.trim())
+                // 清空对话输入
+                this.tacticalChatInput = ''
+                return
+            }
+            
+            // 直接测试模式，继续原有流程
+            await this.executeTargetShoot();
         },
         
         // 继续聊天提交
@@ -965,6 +980,13 @@ var app = new Vue({
             }
 
             if (isDraft && !_isPromptDraft && this.promptOpt.length !== 0) {
+                this.tacticalFormVisible = true
+                return
+            }
+            
+            // 弹窗逻辑3，第一次打靶时（没有promptid）也要弹窗，让用户选择对话模式或直接测试模式
+            // 注意：第一次打靶时不传递promptid，让后端创建新的靶道（T1-A1）
+            if (!this.promptid && !isDraft) {
                 this.tacticalFormVisible = true
                 return
             }

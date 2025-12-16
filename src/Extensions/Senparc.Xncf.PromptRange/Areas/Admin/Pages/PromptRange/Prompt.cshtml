@@ -614,8 +614,8 @@
         center 
         @@close="tacticalFormCloseDialog">
         <el-form ref="tacticalForm" :model="tacticalForm" :rules="rules" label-width="70px" label-position="left" class="tacticalFormBox">
-            @* 继续聊天模式下不显示战术选择 *@
-            <el-form-item v-if="!continueChatMode" label="战术" prop="tactics">
+            @* 继续聊天模式下不显示战术选择，第一次打靶时（没有promptid）也不显示战术选择 *@
+            <el-form-item v-if="!continueChatMode && promptid" label="战术" prop="tactics">
                 <el-radio-group v-model="tacticalForm.tactics">
                     <el-radio label="创建顶级战术">
                         <div class="d-f-startr-start-title">创建顶级战术</div>
