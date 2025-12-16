@@ -379,22 +379,25 @@ var app = new Vue({
                 };
             }
             
-            // 解析当前版本号：格式为 RangeName-T1.2.3-A1
+            // 解析当前版本号：格式为 RangeName-T{Tactic}-A{Aiming}
+            // 例如：2023.12.14.1-T1.2.3-A1
             const versionParts = this.promptDetail.fullVersion.split('-');
-            if (versionParts.length < 3) {
+            if (versionParts.length < 2) {
                 return {
                     tactic: '--',
                     fullTactical: '--'
                 };
             }
             
-            const tacticalPart = versionParts[2]; // T1.2.3-A1
-            const aimingPart = tacticalPart ? tacticalPart.split('-A') : [];
-            const tacticStr = aimingPart[0] || tacticalPart; // T1.2.3
+            // versionParts[0] = RangeName (例如：2023.12.14.1)
+            // versionParts[1] = T{Tactic} (例如：T1.2.3)
+            // versionParts[2] = A{Aiming} (例如：A1，可选)
+            const tacticPart = versionParts[1] || ''; // T1.2.3
+            const aimingPart = versionParts[2] || ''; // A1
             
             return {
-                tactic: tacticStr,
-                fullTactical: tacticalPart
+                tactic: tacticPart || '--',
+                fullTactical: aimingPart ? `${tacticPart}-${aimingPart}` : tacticPart || '--'
             };
         },
         
@@ -409,9 +412,10 @@ var app = new Vue({
                 };
             }
             
-            // 解析当前版本号：格式为 RangeName-T1.2.3-A1
+            // 解析当前版本号：格式为 RangeName-T{Tactic}-A{Aiming}
+            // 例如：2023.12.14.1-T1.2.3-A1
             const versionParts = this.promptDetail.fullVersion.split('-');
-            if (versionParts.length < 3) {
+            if (versionParts.length < 2) {
                 return {
                     topTactic: 'T1',
                     parallelTactic: 'T1.2.4',
@@ -420,16 +424,69 @@ var app = new Vue({
                 };
             }
             
-            const tacticalPart = versionParts[2]; // T1.2.3-A1
-            const aimingPart = tacticalPart ? tacticalPart.split('-A') : [];
-            const tacticStr = aimingPart[0] || tacticalPart; // T1.2.3
-            const currentAiming = aimingPart[1] ? parseInt(aimingPart[1]) : 1;
+            // versionParts[0] = RangeName
+            // versionParts[1] = T{Tactic} (例如：T1.2.3)
+            // versionParts[2] = A{Aiming} (例如：A1，可选)
+            let tacticPart = versionParts[1] || ''; // T1.2.3
+            let aimingPart = versionParts[2] || 'A1'; // A1
+            
+            // 检查战术部分是否以 T 开头，如果不是，可能是格式错误
+            if (!tacticPart.startsWith('T')) {
+                // 如果版本号格式不对，返回默认值
+                return {
+                    topTactic: 'T1',
+                    parallelTactic: 'T1.2.4',
+                    subTactic: 'T1.2.3.1',
+                    newAiming: 'T1.2.3-A2'
+                };
+            }
+            
+            // 提取瞄准编号：A1 -> 1
+            const currentAiming = aimingPart.replace(/^A/, '');
+            const aimingNumber = parseInt(currentAiming) || 1;
             
             // 解析战术编号：T1.2.3 -> [1, 2, 3]
-            const tacticNumbers = tacticStr.replace(/^T/, '').split('.').map(n => parseInt(n));
+            // 移除开头的 T，然后按 . 分割并转换为数字
+            const tacticStr = tacticPart.replace(/^T/, ''); // 1.2.3
+            if (!tacticStr || tacticStr.length === 0) {
+                // 如果无法解析战术编号，返回默认值
+                return {
+                    topTactic: 'T1',
+                    parallelTactic: 'T1.2.4',
+                    subTactic: 'T1.2.3.1',
+                    newAiming: 'T1.2.3-A2'
+                };
+            }
+            
+            // 解析战术编号数组
+            const tacticNumbers = [];
+            const parts = tacticStr.split('.');
+            for (let i = 0; i < parts.length; i++) {
+                const num = parseInt(parts[i]);
+                if (isNaN(num)) {
+                    // 如果任何部分无法解析为数字，返回默认值
+                    return {
+                        topTactic: 'T1',
+                        parallelTactic: 'T1.2.4',
+                        subTactic: 'T1.2.3.1',
+                        newAiming: 'T1.2.3-A2'
+                    };
+                }
+                tacticNumbers.push(num);
+            }
+            
+            if (tacticNumbers.length === 0) {
+                // 如果解析失败，返回默认值
+                return {
+                    topTactic: 'T1',
+                    parallelTactic: 'T1.2.4',
+                    subTactic: 'T1.2.3.1',
+                    newAiming: 'T1.2.3-A2'
+                };
+            }
             
             // 1. 创建顶级战术：当前顶级编号+1
-            // 例如：当前是T1.2.3，下一个顶级战术是T2（假设当前最大的是T1）
+            // 例如：当前是T1.2.3，下一个顶级战术是T2
             // 注意：这里只是预测，实际编号需要后端查询数据库确定
             const currentTopTactic = tacticNumbers[0] || 1;
             const nextTopTactic = currentTopTactic + 1;
@@ -447,13 +504,13 @@ var app = new Vue({
             
             // 4. 重新瞄准：当前瞄准编号+1
             // 例如：T1.2.3-A1 -> T1.2.3-A2
-            const nextAiming = currentAiming + 1;
+            const nextAiming = aimingNumber + 1;
             
             return {
                 topTactic: `T${nextTopTactic}`,
                 parallelTactic: `T${nextParallelTactic.join('.')}`,
                 subTactic: `T${nextSubTactic.join('.')}`,
-                newAiming: `${tacticStr}-A${nextAiming}`
+                newAiming: `${tacticPart}-A${nextAiming}`
             };
         },
         
