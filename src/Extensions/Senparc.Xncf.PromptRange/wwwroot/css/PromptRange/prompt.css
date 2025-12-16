@@ -88,28 +88,37 @@
 .tacticalFormBox .el-radio-group {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-start;
-    gap: 15px 0px;
+    gap: 20px 30px;
+    width: 100%;
 }
 
     .tacticalFormBox .el-radio-group .el-radio {
         display: flex;
+        flex-direction: column;
         flex-wrap: nowrap;
-        align-items: center;
+        align-items: flex-start;
         justify-content: flex-start;
+        min-width: 200px;
+        max-width: 280px;
+        padding: 10px 14px;
+        margin-right: 0;
+        box-sizing: border-box;
     }
 .d-f-startr-start-title{
-    position:relative;
+    font-weight: 500;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    width: 100%;
 }
 .d-f-startr-start-nowrap {
-    position:absolute;
-    top:10px;
-
     display: flex;
     flex-wrap: nowrap;
     align-items: flex-start;
     justify-content: flex-start;
+    width: 100%;
+    margin-top: 7px;
 }
 .d-f-startr-start-img{
     width:200px;
