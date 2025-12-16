@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -233,6 +233,35 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 async (response, logger) =>
                 {
                     return await _promptResultChatService.GetByPromptResultIdAsync(promptResultId);
+                });
+        }
+
+        /// <summary>
+        /// 根据 PromptResultId 获取对话历史和 Prompt 内容
+        /// </summary>
+        /// <param name="promptResultId">PromptResult 的 ID</param>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<PromptResult_ChatHistoryWithPromptResponse>> GetChatHistoryWithPrompt(int promptResultId)
+        {
+            return await this.GetResponseAsync<PromptResult_ChatHistoryWithPromptResponse>(
+                async (response, logger) =>
+                {
+                    // 获取对话历史
+                    var chatHistory = await _promptResultChatService.GetByPromptResultIdAsync(promptResultId);
+                    
+                    // 获取 PromptResult
+                    var promptResult = await _promptResultService.GetObjectAsync(p => p.Id == promptResultId)
+                        ?? throw new NcfExceptionBase($"未找到 ID 为 {promptResultId} 的 PromptResult");
+                    
+                    // 获取 PromptItem
+                    var promptItem = await _promptItemService.GetAsync(promptResult.PromptItemId);
+                    
+                    return new PromptResult_ChatHistoryWithPromptResponse
+                    {
+                        ChatHistory = chatHistory,
+                        PromptContent = promptItem.Content ?? string.Empty
+                    };
                 });
         }
 

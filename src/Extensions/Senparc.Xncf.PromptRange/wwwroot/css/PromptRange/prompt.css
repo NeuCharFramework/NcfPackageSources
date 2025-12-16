@@ -1599,6 +1599,65 @@
             text-decoration: underline;
         }
 
+        /* SystemMessage 折叠面板样式 */
+        .tacticalFormBox .el-collapse {
+            border: 1px solid #e4e7ed;
+            border-radius: 4px;
+        }
+        
+        .tacticalFormBox .el-collapse-item__header {
+            padding: 12px 15px;
+            background-color: #f5f7fa;
+            font-weight: 600;
+            color: #303133;
+        }
+        
+        .tacticalFormBox .el-collapse-item__header:hover {
+            background-color: #ecf5ff;
+        }
+        
+        .tacticalFormBox .el-collapse-item__content {
+            padding: 0;
+        }
+        
+        .tacticalFormBox .el-collapse-item__wrap {
+            border-bottom: none;
+        }
+        
+        /* SystemMessage 内容区域样式 */
+        .system-message-content {
+            background-color: #f5f7fa;
+            padding: 12px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', 'SFMono-Regular', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 300px;
+            overflow-y: auto;
+            color: #303133;
+            border: 1px solid #e4e7ed;
+        }
+        
+        .system-message-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .system-message-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        .system-message-content::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+        
+        .system-message-content::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .operateRow {
             margin-top: 5px;
             margin-right: 160px; /* 为右侧滚动条预留空间 */

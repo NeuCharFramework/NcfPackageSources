@@ -146,6 +146,8 @@ var app = new Vue({
             continueChatMode: false, // 是否处于继续聊天模式
             continueChatPromptResultId: null, // 继续聊天的 PromptResult ID
             continueChatHistory: [], // 继续聊天的历史记录
+            continueChatSystemMessage: '', // 继续聊天时使用的 SystemMessage（Prompt）
+            systemMessageCollapse: [], // SystemMessage 折叠面板状态
             // 导图相关状态
             mapDialogVisible: false, // 导图对话框显示状态
             map3dScene: null, // three.js 场景
@@ -2501,12 +2503,13 @@ var app = new Vue({
         // 继续聊天：加载历史记录并打开战术选择弹窗
         async continueChat(promptResultId, resultIndex) {
             try {
-                // 加载对话历史记录
-                const res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistory?promptResultId=${promptResultId}`)
+                // 使用新的 API 同时获取对话历史和 Prompt 内容
+                const res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistoryWithPrompt?promptResultId=${promptResultId}`)
                 if (res.data.success) {
                     this.continueChatMode = true
                     this.continueChatPromptResultId = promptResultId
-                    this.continueChatHistory = res.data.data || []
+                    this.continueChatHistory = res.data.data.chatHistory || []
+                    this.continueChatSystemMessage = res.data.data.promptContent || ''
                     
                     // 打开战术选择弹窗，锁定为对话模式
                     this.tacticalForm.chatMode = '对话模式'
@@ -2522,16 +2525,53 @@ var app = new Vue({
                         this.addCopyButtonsToCodeBlocks();
                     })
                 } else {
-                    this.$message({
-                        message: res.data.errorMessage || '加载对话历史失败',
-                        type: 'error'
-                    })
+                    // 降级方案：如果新 API 失败，使用旧的 API
+                    const fallbackRes = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistory?promptResultId=${promptResultId}`)
+                    if (fallbackRes.data.success) {
+                        this.continueChatMode = true
+                        this.continueChatPromptResultId = promptResultId
+                        this.continueChatHistory = fallbackRes.data.data || []
+                        // 尝试从 outputList 获取 Prompt 内容
+                        const resultItem = this.outputList.find(item => item.id === promptResultId)
+                        if (resultItem && resultItem.promptId && this.promptDetail && this.promptDetail.id === resultItem.promptId) {
+                            this.continueChatSystemMessage = this.promptDetail.promptContent || this.content || ''
+                        } else {
+                            this.continueChatSystemMessage = this.content || ''
+                        }
+                        
+                        this.tacticalForm.chatMode = '对话模式'
+                        this.tacticalFormVisible = true
+                        
+                        this.$nextTick(() => {
+                            const container = document.getElementById('chatHistoryContainer')
+                            if (container) {
+                                container.scrollTop = container.scrollHeight
+                            }
+                            this.addCopyButtonsToCodeBlocks();
+                        })
+                    } else {
+                        this.$message({
+                            message: fallbackRes.data.errorMessage || '加载对话历史失败',
+                            type: 'error'
+                        })
+                    }
                 }
             } catch (error) {
                 this.$message({
                     message: '加载对话历史失败：' + (error.message || '未知错误'),
                     type: 'error'
                 })
+            }
+        },
+        
+        // 处理对话输入框的键盘事件（快捷键支持）
+        handleChatInputKeydown(e) {
+            // Ctrl+Enter (Windows/Linux) 或 Cmd+Enter (Mac)
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault()
+                e.stopPropagation()
+                // 触发提交
+                this.tacticalFormSubmitBtn()
             }
         },
         
@@ -2548,6 +2588,8 @@ var app = new Vue({
             this.continueChatMode = false
             this.continueChatPromptResultId = null
             this.continueChatHistory = []
+            this.continueChatSystemMessage = ''
+            this.systemMessageCollapse = []
             if (this.$refs.tacticalForm) {
                 // 使用 clearValidate 清除验证状态，而不是 resetFields
                 // 因为某些字段可能是条件显示的（v-if），resetFields 可能会出错
