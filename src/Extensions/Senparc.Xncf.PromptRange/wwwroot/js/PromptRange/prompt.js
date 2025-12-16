@@ -2548,6 +2548,17 @@ var app = new Vue({
                 })
                 return
             }
+            
+            // 检查当前靶场是否有靶道数据
+            if (!this.promptOpt || this.promptOpt.length === 0) {
+                this.$message({
+                    message: '当前靶场还没有进行过打靶，请打靶后再来看吧！',
+                    type: 'info',
+                    duration: 3000
+                })
+                return
+            }
+            
             this.mapDialogVisible = true
             this.$nextTick(() => {
                 this.initMap3D()
@@ -3168,7 +3179,13 @@ var app = new Vue({
                     
                     // **关键修复：使用 Object.freeze 防止 Vue 响应式监听导致栈溢出**
                     // Three.js 对象不应该被 Vue 监听，否则会导致性能问题和循环引用
-                    const nodeData = {
+                    
+                    // 冻结 Three.js 相关对象，防止 Vue 添加响应式 getter/setter
+                    Object.freeze(mesh)
+                    Object.freeze(sprite)
+                    if (glowMesh) Object.freeze(glowMesh)
+                    
+                    const createdNodeData = {
                         mesh, 
                         sprite, 
                         glowMesh,
@@ -3185,12 +3202,7 @@ var app = new Vue({
                         hasCurrent: hasCurrent
                     }
                     
-                    // 冻结 Three.js 相关对象，防止 Vue 添加响应式 getter/setter
-                    Object.freeze(mesh)
-                    Object.freeze(sprite)
-                    if (glowMesh) Object.freeze(glowMesh)
-                    
-                    this.map3dNodes.push(nodeData)
+                    this.map3dNodes.push(createdNodeData)
                     
                     // 存储节点引用以便快速查找
                     if (!this.map3dNodeMap) {
