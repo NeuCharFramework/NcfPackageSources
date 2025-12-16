@@ -2996,8 +2996,9 @@ var app = new Vue({
                             })
                         }
                     } else if (node.type === 'tactic') {
-                        // 靶道：圆球（优化：降低精度以提高性能）
-                        geometry = new THREE.SphereGeometry(2.5, 24, 24)
+                        // 靶道（Tactic）：圆柱体（代表路径/通道）
+                        // CylinderGeometry(radiusTop, radiusBottom, height, radialSegments)
+                        geometry = new THREE.CylinderGeometry(2, 2, 4, 32)
                         material = new THREE.MeshStandardMaterial({ 
                             color: hasCurrent ? 0xffd93d : 0x95e1d3,
                             metalness: 0.5,
@@ -3008,7 +3009,7 @@ var app = new Vue({
                         
                         // 添加发光效果（当前选中时）
                         if (hasCurrent) {
-                            glowGeometry = new THREE.SphereGeometry(2.8, 24, 24)
+                            glowGeometry = new THREE.CylinderGeometry(2.3, 2.3, 4.3, 32)
                             glowMaterial = new THREE.MeshBasicMaterial({
                                 color: 0xffd93d,
                                 transparent: true,
@@ -3025,6 +3026,12 @@ var app = new Vue({
                     const mesh = new THREE.Mesh(geometry, material)
                     // 初始位置设置为目标位置（后续用于动画）
                     mesh.position.set(x, y, z)
+                    
+                    // 如果是圆柱体（tactic节点），需要旋转90度使其竖立
+                    if (node.type === 'tactic') {
+                        mesh.rotation.x = Math.PI / 2  // 绕X轴旋转90度
+                    }
+                    
                     mesh.userData = { 
                         node, 
                         key, 
@@ -3044,6 +3051,12 @@ var app = new Vue({
                     if (glowGeometry && glowMaterial) {
                         glowMesh = new THREE.Mesh(glowGeometry, glowMaterial)
                         glowMesh.position.set(x, y, z)
+                        
+                        // 如果是圆柱体（tactic节点），发光效果也需要旋转
+                        if (node.type === 'tactic') {
+                            glowMesh.rotation.x = Math.PI / 2
+                        }
+                        
                         glowMesh.scale.set(0.1, 0.1, 0.1)
                         this.map3dScene.add(glowMesh)
                     }
@@ -3136,19 +3149,17 @@ var app = new Vue({
                     
                     let mainTextY = canvas.height / 2
                     
-                    // 如果有类型前缀（T），在上方显示类型标识
+                    // 如果有类型前缀（T），T 和数字在同一行显示
                     if (labelPrefix === 'T') {
-                        // 类型标识 T（更大字体）
-                        context.fillStyle = hasCurrent ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0.9)'
-                        context.font = `bold ${prefixFontSize}px 'Arial Black', Arial, sans-serif`
-                        context.fillText(labelPrefix, canvas.width / 2, canvas.height / 2 - 100)  // 从 -60 改为 -100
+                        // 组合文本：T + 数字
+                        const combinedText = `T${labelText}`
                         
-                        // 主要数字（更大字体）
+                        // 使用统一的大字体显示
                         context.fillStyle = '#ffffff'
                         context.font = `bold ${mainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
-                        context.fillText(labelText, canvas.width / 2, canvas.height / 2 + 60)  // 从 +40 改为 +60
+                        context.fillText(combinedText, canvas.width / 2, canvas.height / 2)
                         
-                        mainTextY = canvas.height / 2 + 60
+                        mainTextY = canvas.height / 2
                     } else {
                         // 靶场名称（更大字体）
                         context.fillStyle = '#ffffff'
@@ -3176,8 +3187,9 @@ var app = new Vue({
                         opacity: 0 // 初始透明，用于渐入动画
                     })
                     const sprite = new THREE.Sprite(spriteMaterial)
-                    // **横向布局：标签在节点下方（Y轴负方向）**
-                    sprite.position.set(x, y - (node.type === 'range' ? 5 : 4), z)
+                    // **横向布局：标签在节点下方（Y轴负方向），Z轴稍微向前避免被遮挡**
+                    const labelZOffset = 3  // Z轴向前偏移，避免被节点遮挡
+                    sprite.position.set(x, y - (node.type === 'range' ? 5 : 4), z + labelZOffset)
                     // 动态设置 sprite 尺寸（根据画布宽度，字体加大后标签也要更大）
                     const spriteWidth = (canvas.width / 1024) * 18  // 从 12 增加到 18
                     const spriteHeight = (canvas.height / 256) * 4.5  // 从 3 增加到 4.5
@@ -3441,9 +3453,12 @@ var app = new Vue({
                                 const aimingPrefixFontSize = aimingHasCurrent ? 180 : 160  // 从 90/80 加大到 180/160
                                 const aimingMainFontSize = aimingHasCurrent ? 280 : 240   // 从 140/120 加大到 280/240
                                 
-                                // 预计算文字宽度
+                                // 组合文本（用于宽度计算）
+                                const aimingCombinedText = `A${aimingLabelText}`
+                                
+                                // 预计算文字宽度（使用组合后的文本）
                                 aimingContext.font = `bold ${aimingMainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
-                                const textWidth = aimingContext.measureText(aimingLabelText).width
+                                const textWidth = aimingContext.measureText(aimingCombinedText).width
                                 
                                 const aimingPadding = 50  // 从 30 增加到 50
                                 const aimingBorderRadius = 30  // 从 20 增加到 30
@@ -3489,23 +3504,18 @@ var app = new Vue({
                                 drawRoundedRect(aimingPadding, aimingPadding, aimingCanvas.width - aimingPadding * 2, (aimingCanvas.height - aimingPadding * 2) / 2, aimingBorderRadius)
                                 aimingContext.fill()
                                 
-                                // 绘制文字（更大的字体）
+                                // 绘制文字（A 和数字在同一行，已在上面定义 aimingCombinedText）
                                 aimingContext.textAlign = 'center'
                                 aimingContext.textBaseline = 'middle'
                                 aimingContext.shadowColor = 'rgba(0, 0, 0, 0.8)'
-                                aimingContext.shadowBlur = 20  // 从 10 增加到 20
-                                aimingContext.shadowOffsetX = 5  // 从 3 增加到 5
-                                aimingContext.shadowOffsetY = 5  // 从 3 增加到 5
+                                aimingContext.shadowBlur = 20
+                                aimingContext.shadowOffsetX = 5
+                                aimingContext.shadowOffsetY = 5
                                 
-                                // 类型标识 'A'（更大字体）
-                                aimingContext.fillStyle = aimingHasCurrent ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0.9)'
-                                aimingContext.font = `bold ${aimingPrefixFontSize}px 'Arial Black', Arial, sans-serif`
-                                aimingContext.fillText('A', aimingCanvas.width / 2, aimingCanvas.height / 2 - 100)  // 从 -60 改为 -100
-                                
-                                // 主要数字（更大字体）
+                                // 使用统一的大字体显示（组合文本已在前面定义）
                                 aimingContext.fillStyle = '#ffffff'
                                 aimingContext.font = `bold ${aimingMainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
-                                aimingContext.fillText(aimingLabelText, aimingCanvas.width / 2, aimingCanvas.height / 2 + 60)  // 从 +40 改为 +60
+                                aimingContext.fillText(aimingCombinedText, aimingCanvas.width / 2, aimingCanvas.height / 2)
                                 
                                 // 创建 sprite
                                 const aimingTexture = new THREE.CanvasTexture(aimingCanvas)
@@ -3516,8 +3526,9 @@ var app = new Vue({
                                     opacity: 0
                                 })
                                 const aimingSprite = new THREE.Sprite(aimingSpriteMaterial)
-                                // **横向布局：标签在节点下方**
-                                aimingSprite.position.set(aimingX, aimingY - 4, aimingZ)
+                                // **横向布局：标签在节点下方，Z轴稍微向前避免被球遮挡**
+                                const aimingLabelZOffset = 3  // Z轴向前偏移
+                                aimingSprite.position.set(aimingX, aimingY - 4, aimingZ + aimingLabelZOffset)
                                 // 动态设置 sprite 尺寸（根据画布宽度，字体加大后标签也要更大）
                                 const spriteWidth = (aimingCanvas.width / 1024) * 18  // 从 12 增加到 18
                                 const spriteHeight = (aimingCanvas.height / 256) * 4.5  // 从 3 增加到 4.5
