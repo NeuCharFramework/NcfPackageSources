@@ -8,6 +8,9 @@ using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.Dto;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
+using Senparc.Ncf.Core.Models;
 
 namespace Senparc.Xncf.FileManager.Domain.Services
 {
@@ -18,18 +21,12 @@ namespace Senparc.Xncf.FileManager.Domain.Services
         /// </summary>
         private readonly string _baseFilePath;
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="repo">文件仓储接口</param>
-        /// <param name="serviceProvider">服务提供者</param>
         public NcfFileService(IRepositoryBase<NcfFile> repo, IServiceProvider serviceProvider)
             : base(repo, serviceProvider)
         {
             try
             {
                 _baseFilePath = Path.Combine(Senparc.CO2NET.Config.RootDirectoryPath, "App_Data", "NcfFiles");
-                // 尝试添加目录
                 Senparc.CO2NET.Helpers.FileHelper.TryCreateDirectory(_baseFilePath);
             }
             catch (Exception ex)
@@ -38,116 +35,29 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             }
         }
 
-        /// <summary>
-        /// 上传文件
-        /// </summary>
-        /// <param name="file">上传的文件</param>
-        /// <param name="description">文件描述</param>
-        /// <returns>文件信息DTO</returns>
-        public async Task<NcfFileDto> UploadFile(IFormFile file, string description = null)
+        // 列表（支持按文件夹过滤）
+        public async Task<PagedList<NcfFileDto>> GetFilesAsync(int page, int pageSize, int? folderId)
         {
-            // 确保目录存在
+            var result = (await GetObjectListAsync(page, pageSize, z => z.FolderId == folderId, z => z.Id, OrderingType.Descending, null))
+                .ToDtoPagedList<NcfFile, NcfFileDto>(this);
+            return result;
+        }
+
+        public async Task<NcfFile> UploadFileAsync(IFormFile file, int? folderId = null)
+        {
             var datePath = Path.Combine(DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString("00"));
             var fullPath = Path.Combine(_baseFilePath, datePath);
             Directory.CreateDirectory(fullPath);
 
-            // 生成存储文件名
             var storageFileName = Guid.NewGuid().ToString("N");
             var fileExtension = Path.GetExtension(file.FileName).ToLower();
 
-            // 保存文件
             var physicalPath = Path.Combine(fullPath, storageFileName + fileExtension);
             using (var stream = new FileStream(physicalPath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
 
-            // 创建数据库记录
-            var ncfFile = new NcfFile
-            {
-                FileName = file.FileName,
-                StorageFileName = storageFileName,
-                FilePath = Path.Combine(datePath),
-                FileSize = file.Length,
-                FileExtension = fileExtension,
-                FileType = GetFileType(fileExtension),
-                Description = description,
-                UploadTime = DateTime.Now
-            };
-
-            await base.SaveObjectAsync(ncfFile).ConfigureAwait(false);
-
-            return Mapper.Map<NcfFileDto>(ncfFile);
-        }
-
-        /// <summary>
-        /// 获取文件字节数组
-        /// </summary>
-        /// <param name="id">文件ID</param>
-        /// <returns>文件字节数组</returns>
-        public async Task<(byte[] FileBytes, string FileName)> GetFileBytes(int id)
-        {
-            var file = await GetObjectAsync(z => z.Id == id);
-            if (file == null)
-            {
-                return (new byte[0], "文件不存在！");
-            }
-
-            var fileName = file.StorageFileName + file.FileExtension;
-
-            var fullPath = Path.Combine(_baseFilePath, file.FilePath, fileName);
-            if (!File.Exists(fullPath))
-            {
-                return (new byte[0], "文件不存在！");
-            }
-
-            var bytes = await File.ReadAllBytesAsync(fullPath);
-
-            return (bytes, fileName);
-        }
-
-        /// <summary>
-        /// 根据文件扩展名获取文件类型
-        /// </summary>
-        /// <param name="extension">文件扩展名</param>
-        /// <returns>文件类型枚举</returns>
-        private FileType GetFileType(string extension)
-        {
-            return extension.ToLower() switch
-            {
-                ".txt" or ".log" => FileType.Text,
-                ".doc" or ".docx" => FileType.Word,
-                ".ppt" or ".pptx" => FileType.PowerPoint,
-                ".xls" or ".xlsx" => FileType.Excel,
-                ".cs" or ".js" or ".html" or ".css" or ".xml" or ".json" => FileType.Code,
-                _ => FileType.Other,
-            };
-        }
-
-        /// <summary>
-        /// 异步上传文件
-        /// </summary>
-        /// <param name="file">上传的文件</param>
-        /// <returns>文件实体</returns>
-        public async Task<NcfFile> UploadFileAsync(IFormFile file)
-        {
-            // 确保目录存在
-            var datePath = Path.Combine(DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString("00"));
-            var fullPath = Path.Combine(_baseFilePath, datePath);
-            Directory.CreateDirectory(fullPath);
-
-            // 生成存储文件名
-            var storageFileName = Guid.NewGuid().ToString("N");
-            var fileExtension = Path.GetExtension(file.FileName).ToLower();
-
-            // 保存文件
-            var physicalPath = Path.Combine(fullPath, storageFileName + fileExtension);
-            using (var stream = new FileStream(physicalPath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            // 创建数据库记录
             var ncfFile = new NcfFile
             {
                 FileName = file.FileName,
@@ -156,16 +66,14 @@ namespace Senparc.Xncf.FileManager.Domain.Services
                 FileSize = file.Length,
                 FileExtension = fileExtension,
                 FileType = GetFileType(fileExtension),
-                UploadTime = DateTime.Now
+                UploadTime = DateTime.Now,
+                FolderId = folderId
             };
 
             await SaveObjectAsync(ncfFile);
             return ncfFile;
         }
 
-        /// <summary>
-        /// Updates the note/description of a file
-        /// </summary>
         public async Task UpdateFileNoteAsync(int id, string note)
         {
             var file = await GetObjectAsync(z => z.Id == id);
@@ -176,9 +84,6 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             }
         }
 
-        /// <summary>
-        /// Deletes a file from storage and database
-        /// </summary>
         public async Task DeleteFileAsync(int id)
         {
             var file = await GetObjectAsync(z => z.Id == id);
@@ -191,6 +96,38 @@ namespace Senparc.Xncf.FileManager.Domain.Services
                 }
                 await DeleteObjectAsync(file);
             }
+        }
+
+        public async Task<(byte[] FileBytes, string FileName)> GetFileBytes(int id)
+        {
+            var file = await GetObjectAsync(z => z.Id == id);
+            if (file == null)
+            {
+                return (new byte[0], "文件不存在！");
+            }
+
+            var fileName = file.StorageFileName + file.FileExtension;
+            var fullPath = Path.Combine(_baseFilePath, file.FilePath, fileName);
+            if (!System.IO.File.Exists(fullPath))
+            {
+                return (new byte[0], "文件不存在！");
+            }
+
+            var bytes = await System.IO.File.ReadAllBytesAsync(fullPath);
+            return (bytes, fileName);
+        }
+
+        private FileType GetFileType(string extension)
+        {
+            return extension.ToLower() switch
+            {
+                ".txt" or ".log" => FileType.Text,
+                ".doc" or ".docx" => FileType.Word,
+                ".ppt" or ".pptx" => FileType.PowerPoint,
+                ".xls" or ".xlsx" => FileType.Excel,
+                ".cs" or ".js" or ".html" or ".css" or ".xml" or ".json" => FileType.Code,
+                _ => FileType.Other,
+            };
         }
     }
 }

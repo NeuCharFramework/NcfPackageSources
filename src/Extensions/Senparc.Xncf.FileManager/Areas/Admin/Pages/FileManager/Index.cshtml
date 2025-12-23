@@ -14,66 +14,92 @@
 @section style{
     <style>
         .hidden {display:none;}
+        .layout { display:flex; gap:16px; }
+        .folder-panel { width:260px; }
+        .content-panel { flex:1; }
     </style>
 }
 
-<div>
-    <div class="filter-container">
-        <el-button type="primary" icon="el-icon-upload" size="small" @@click="showUploadDialog">上传文件</el-button>
+<div class="layout">
+    <!-- 文件夹侧边栏 -->
+    <div class="folder-panel">
+        <el-card shadow="never">
+            <div slot="header" class="clearfix">
+                <span>文件夹</span>
+                <el-button style="float: right; padding: 3px 6px" type="text" @@click="showCreateFolderDialog">新建</el-button>
+            </div>
+            <el-menu :default-active="String(currentFolderId ?? 'root')" class="el-menu-vertical-demo">
+                <el-menu-item index="root" @@click="enterFolder(null)">
+                    <i class="el-icon-folder"></i>
+                    <span slot="title">根目录</span>
+                </el-menu-item>
+                <el-menu-item v-for="f in folders" :key="f.id" :index="String(f.id)" @@click="enterFolder(f.id)">
+                    <i class="el-icon-folder"></i>
+                    <span slot="title">{{f.name}}</span>
+                </el-menu-item>
+            </el-menu>
+        </el-card>
     </div>
 
-    <el-table :data="tableData" v-loading="tableLoading" border>
-        <el-table-column prop="id" label="表Id" width="auto" class-name="hidden"></el-table-column>
-        <el-table-column prop="fileName" label="文件名" width="auto"></el-table-column>
-        <el-table-column prop="fileSize" label="大小" width="120">
-            <template slot-scope="scope">
-                {{ formatFileSize(scope.row.fileSize) }}
-            </template>
-        </el-table-column>
-        <el-table-column prop="fileType" label="类型" width="100">
-            <template slot-scope="scope">
-                <span v-if="scope.row.fileType===1">文本</span>
-                <span v-else-if="scope.row.fileType===2">Word</span>
-                <span v-else-if="scope.row.fileType===3">PowerPoint</span>
-                <span v-else-if="scope.row.fileType===4">Excel</span>
-                <span v-else-if="scope.row.fileType===5">代码</span>
-                <span v-else>其他</span>
-            </template>
-        </el-table-column>
-        <el-table-column prop="description" label="备注" width="auto">
-            <template slot-scope="scope">
-                <el-input v-model="scope.row.description" 
-                         @@blur="handleNoteChange(scope.row)"
-                         size="small">
-                </el-input>
-            </template>
-        </el-table-column>
-        <el-table-column prop="uploadTime" label="上传时间" width="180">
-            <template slot-scope="scope">
-                {{ dateFormatter(scope.row.uploadTime) }}
-            </template>
-        </el-table-column>
-        <el-table-column label="操作" width="200">
-            <template slot-scope="scope">
-                <el-button type="primary" size="mini" @@click="downloadFile(scope.row)">下载</el-button>
-                <el-button type="danger" size="mini" @@click="deleteFile(scope.row)">删除</el-button>
-            </template>
-        </el-table-column>
-    </el-table>
+    <div class="content-panel">
+        <div class="filter-container">
+            <el-button type="primary" icon="el-icon-upload" size="small" @@click="showUploadDialog">上传文件</el-button>
+            <el-button size="small" @@click="refreshFolders">刷新文件夹</el-button>
+        </div>
 
-    <div class="pagination-container">
-        <el-pagination
-            @@current-change="handleCurrentChange"
-            @@size-change="handleSizeChange"
-            :current-page="page.page"
-            :page-sizes="[10, 20, 30, 40]"
-            :page-size="page.size"
-            layout="sizes, prev, pager, next"
-            :total="total">
-        </el-pagination>
+        <el-table :data="tableData" v-loading="tableLoading" border>
+            <el-table-column prop="id" label="表Id" width="auto" class-name="hidden"></el-table-column>
+            <el-table-column prop="fileName" label="文件名" width="auto"></el-table-column>
+            <el-table-column prop="fileSize" label="大小" width="120">
+                <template slot-scope="scope">
+                    {{ formatFileSize(scope.row.fileSize) }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="fileType" label="类型" width="100">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.fileType===1">文本</span>
+                    <span v-else-if="scope.row.fileType===2">Word</span>
+                    <span v-else-if="scope.row.fileType===3">PowerPoint</span>
+                    <span v-else-if="scope.row.fileType===4">Excel</span>
+                    <span v-else-if="scope.row.fileType===5">代码</span>
+                    <span v-else>其他</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="description" label="备注" width="auto">
+                <template slot-scope="scope">
+                    <el-input v-model="scope.row.description" 
+                             @@blur="handleNoteChange(scope.row)"
+                             size="small">
+                    </el-input>
+                </template>
+            </el-table-column>
+            <el-table-column prop="uploadTime" label="上传时间" width="180">
+                <template slot-scope="scope">
+                    {{ dateFormatter(scope.row.uploadTime) }}
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" width="220">
+                <template slot-scope="scope">
+                    <el-button type="primary" size="mini" @@click="downloadFile(scope.row)">下载</el-button>
+                    <el-button type="danger" size="mini" @@click="deleteFile(scope.row)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <div class="pagination-container">
+            <el-pagination
+                @@current-change="handleCurrentChange"
+                @@size-change="handleSizeChange"
+                :current-page="page.page"
+                :page-sizes="[10, 20, 30, 40]"
+                :page-size="page.size"
+                layout="sizes, prev, pager, next"
+                :total="total">
+            </el-pagination>
+        </div>
     </div>
 
-    <!-- 添加上传对话框 -->
+    <!-- 上传对话框 -->
     <el-dialog title="上传文件" :visible.sync="uploadDialog.visible" width="500px">
         <el-upload
             class="upload-demo"
@@ -92,6 +118,9 @@
             <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
             <div slot="tip" class="el-upload__tip">可以选择多个文件同时上传</div>
         </el-upload>
+        <div style="margin-top:8px;">
+            <el-alert type="info" show-icon title="上传到：" :description="currentFolderId? ('文件夹 #'+currentFolderId) : '根目录'" ></el-alert>
+        </div>
         
         <div v-for="(file, index) in uploadDialog.fileList" :key="file.uid" style="margin-top: 10px;">
             <el-input
@@ -105,6 +134,22 @@
         <span slot="footer" class="dialog-footer">
             <el-button @@click="cancelUpload">取 消</el-button>
             <el-button type="primary" @@click="submitUpload" :loading="uploadDialog.uploading">确 定</el-button>
+        </span>
+    </el-dialog>
+
+    <!-- 新建文件夹对话框 -->
+    <el-dialog title="新建文件夹" :visible.sync="createFolderDialog.visible" width="420px">
+        <el-form :model="createFolderDialog.form" label-width="80px">
+            <el-form-item label="名称">
+                <el-input v-model="createFolderDialog.form.name" placeholder="请输入文件夹名称"></el-input>
+            </el-form-item>
+            <el-form-item label="备注">
+                <el-input type="textarea" v-model="createFolderDialog.form.description" placeholder="备注（可选）" rows="3"></el-input>
+            </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+            <el-button @@click="createFolderDialog.visible=false">取 消</el-button>
+            <el-button type="primary" @@click="submitCreateFolder" :loading="createFolderDialog.loading">确 定</el-button>
         </span>
     </el-dialog>
 </div>
@@ -122,15 +167,23 @@
                         size: 10
                     },
                     total: 0,
+                    currentFolderId: null,
+                    folders: [],
                     uploadDialog: {
                         visible: false,
                         fileList: [],
                         uploading: false
+                    },
+                    createFolderDialog: {
+                        visible: false,
+                        loading: false,
+                        form: { name: '', description: '' }
                     }
                 }
             },
             created() {
-                this.getList()
+                this.refreshFolders();
+                this.getList();
             },
             methods: {
                 dateFormatter(date) {
@@ -148,7 +201,7 @@
                 async getList() {
                     this.tableLoading = true
                     try {
-                        const res = await axios.get(`/Admin/FileManager/Index?handler=List&page=${this.page.page}&pageSize=${this.page.size}`)
+                        const res = await axios.get(`/Admin/FileManager/Index?handler=List&page=${this.page.page}&pageSize=${this.page.size}` + (this.currentFolderId!=null?`&folderId=${this.currentFolderId}`:''))
                         this.tableData = res.data.data
                         this.total = res.data.data.totalCount
                     } finally {
@@ -161,7 +214,22 @@
                 },
                 handleSizeChange(val) {
                     this.page.size = val
+                    this.page.page = 1
                     this.getList()
+                },
+                async refreshFolders(){
+                    try{
+                        const res = await axios.get(`/Admin/FileManager/Index?handler=Folders` + (this.currentFolderId!=null?`&parentId=${this.currentFolderId}`:''))
+                        this.folders = res.data.data || res.data
+                    }catch(e){
+                        console.error(e)
+                    }
+                },
+                enterFolder(id){
+                    this.currentFolderId = id
+                    this.page.page = 1
+                    this.getList()
+                    this.refreshFolders()
                 },
                 handleUploadSuccess(response, file, fileList) {
                     // 由于我们使用手动上传，这个方法可以留空
@@ -194,7 +262,6 @@
                     }
                 },
                 downloadFile(row) {
-                    debugger
                     window.open(`/Admin/FileManager/Index?handler=Download&id=${row.id}`)
                 },
                 showUploadDialog() {
@@ -202,21 +269,16 @@
                     this.uploadDialog.fileList = [];
                 },
                 handleFileChange(file, fileList) {
-                    // 为每个文件添加描述字段
                     if (!file.description) {
                         this.$set(file, 'description', '');
                     }
                     this.uploadDialog.fileList = fileList;
                 },
-                handleProgress(){
-
-                },
+                handleProgress(){},
                 beforeUpload(file) {
-                    // 返回 false 阻止自动上传，改为手动上传
                     return false;
                 },
                 async submitUpload() {
-                    console.log("@Model.UpFileUrl")
                     if (this.uploadDialog.fileList.length === 0) {
                         this.$message.warning('请选择要上传的文件');
                         return;
@@ -229,6 +291,9 @@
                             formData.append('files', file.raw);
                             formData.append('descriptions', file.description || '');
                         });
+                        if(this.currentFolderId!=null){
+                            formData.append('folderId', this.currentFolderId);
+                        }
 
                         const response = await axios.post("@Model.UpFileUrl", 
                             formData,
@@ -250,6 +315,34 @@
                 },
                 cancelUpload() {
                     this.uploadDialog.visible = false;
+                },
+                showCreateFolderDialog(){
+                    this.createFolderDialog.visible = true
+                    this.createFolderDialog.form = { name:'', description:'' }
+                },
+                async submitCreateFolder(){
+                    if(!this.createFolderDialog.form.name){
+                        this.$message.warning('请输入文件夹名称')
+                        return
+                    }
+                    this.createFolderDialog.loading = true
+                    try{
+                        const form = new FormData()
+                        form.append('name', this.createFolderDialog.form.name)
+                        form.append('description', this.createFolderDialog.form.description || '')
+                        if(this.currentFolderId!=null){
+                            form.append('parentId', this.currentFolderId)
+                        }
+                        await axios.post('/Admin/FileManager/Index?handler=CreateFolder', form)
+                        this.$message.success('创建成功')
+                        this.createFolderDialog.visible = false
+                        this.refreshFolders()
+                    }catch(e){
+                        console.error(e)
+                        this.$message.error('创建失败')
+                    }finally{
+                        this.createFolderDialog.loading = false
+                    }
                 }
             }
         })
