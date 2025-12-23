@@ -617,19 +617,6 @@
         center 
         @@close="tacticalFormCloseDialog">
         <el-form ref="tacticalForm" :model="tacticalForm" :rules="rules" :label-width="continueChatMode ? '120px' : '100px'" label-position="left" class="tacticalFormBox">
-            @* 继续聊天模式下显示 SystemMessage（Prompt）在最上方 *@
-            <el-form-item v-if="continueChatMode" label="System Message">
-                <el-collapse v-model="systemMessageCollapse">
-                    <el-collapse-item name="systemMessage">
-                        <template slot="title">
-                            <i :class="systemMessageCollapse.includes('systemMessage') ? 'el-icon-arrow-up' : 'el-icon-arrow-down'" style="margin-right: 8px;"></i>
-                            <span style="font-weight: 600;">System Message (Prompt)</span>
-                            <span style="margin-left: 8px; font-size: 12px; color: #909399;">(点击{{ systemMessageCollapse.includes('systemMessage') ? '收起' : '展开' }}查看当前对话使用的 Prompt)</span>
-                        </template>
-                        <div class="system-message-content">{{ continueChatSystemMessage || '加载中...' }}</div>
-                    </el-collapse-item>
-                </el-collapse>
-            </el-form-item>
             @* 继续聊天模式下不显示战术选择，第一次打靶时（没有promptid）也不显示战术选择 *@
             <el-form-item v-if="!continueChatMode && promptid" label="战术" prop="tactics">
                 <el-radio-group v-model="tacticalForm.tactics">
@@ -694,6 +681,19 @@
             @* 继续聊天模式下的历史记录显示 *@
             <el-form-item v-if="continueChatMode" label="对话历史">
                 <div class="chat-history-container" id="chatHistoryContainer" @@scroll="handleChatHistoryScroll">
+                    @* System Message 显示在对话历史顶部 *@
+                    <div v-if="continueChatMode" class="system-message-in-chat-history">
+                        <el-collapse v-model="systemMessageCollapse">
+                            <el-collapse-item name="systemMessage">
+                                <template slot="title">
+                                    <i :class="systemMessageCollapse.includes('systemMessage') ? 'el-icon-arrow-up' : 'el-icon-arrow-down'" style="margin-right: 8px;"></i>
+                                    <span style="font-weight: 600;">System Message (Prompt)</span>
+                                    <span style="margin-left: 8px; font-size: 12px; color: #909399;">(点击{{ systemMessageCollapse.includes('systemMessage') ? '收起' : '展开' }}查看当前对话使用的 Prompt)</span>
+                                </template>
+                                <div class="system-message-content">{{ continueChatSystemMessage || '加载中...' }}</div>
+                            </el-collapse-item>
+                        </el-collapse>
+                    </div>
                     <div v-if="continueChatHistory.length === 0" class="chat-empty-tip">
                         <i class="el-icon-chat-line-round"></i>
                         <span>暂无对话记录</span>
