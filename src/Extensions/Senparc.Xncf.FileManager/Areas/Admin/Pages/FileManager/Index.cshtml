@@ -327,13 +327,11 @@
                     }
                     this.createFolderDialog.loading = true
                     try{
-                        const form = new FormData()
-                        form.append('name', this.createFolderDialog.form.name)
-                        form.append('description', this.createFolderDialog.form.description || '')
-                        if(this.currentFolderId!=null){
-                            form.append('parentId', this.currentFolderId)
-                        }
-                        await axios.post('/Admin/FileManager/Index?handler=CreateFolder', form)
+                        await axios.post('/Admin/FileManager/Index?handler=CreateFolder', {
+                            name: this.createFolderDialog.form.name,
+                            description: this.createFolderDialog.form.description || '',
+                            parentId: this.currentFolderId
+                        })
                         this.$message.success('创建成功')
                         this.createFolderDialog.visible = false
                         this.refreshFolders()

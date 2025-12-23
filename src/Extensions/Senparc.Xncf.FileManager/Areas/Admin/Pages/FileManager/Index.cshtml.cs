@@ -11,9 +11,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
 {
+    [IgnoreAntiforgeryToken]
     public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {
         private readonly NcfFileService _fileService;
@@ -109,10 +111,29 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
             return File(fileInfo.FileBytes, "application/octet-stream", fileInfo.FileName);
         }
 
-        // Folder handlers
-        public async Task<IActionResult> OnPostCreateFolderAsync(string name, int? parentId, string description)
+        public record CreateFolderRequest
         {
-            var folder = await _folderService.CreateFolderAsync(name, parentId, description);
+            [Required]
+            public string Name { get; init; }
+
+            public int? ParentId { get; init; }
+
+            public string Description { get; init; }
+        }
+
+        // Folder handlers
+        public async Task<IActionResult> OnPostCreateFolderAsync([FromBody] CreateFolderRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState
+                    .Where(kv => kv.Value?.Errors?.Count > 0)
+                    .Select(kv => new { Field = kv.Key, Errors = kv.Value.Errors.Select(e => e.ErrorMessage).ToArray() })
+                    .ToArray();
+                return BadRequest(new { message = "ModelState invalid", errors });
+            }
+
+            var folder = await _folderService.CreateFolderAsync(request.Name, request.ParentId, request.Description);
             return Ok(folder);
         }
 
