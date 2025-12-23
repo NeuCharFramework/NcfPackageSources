@@ -17,6 +17,7 @@
         .layout { display:flex; gap:16px; }
         .folder-panel { width:260px; }
         .content-panel { flex:1; }
+        .folder-breadcrumb { margin: 6px 0 12px; }
     </style>
 }
 
@@ -28,23 +29,40 @@
                 <span>文件夹</span>
                 <el-button style="float: right; padding: 3px 6px" type="text" @@click="showCreateFolderDialog">新建</el-button>
             </div>
-            <el-menu :default-active="String(currentFolderId ?? 'root')" class="el-menu-vertical-demo">
-                <el-menu-item index="root" @@click="enterFolder(null)">
+
+            <el-tree
+                ref="folderTree"
+                :data="folderTree"
+                :props="folderTreeProps"
+                node-key="id"
+                lazy
+                :load="loadFolderChildren"
+                highlight-current
+                :expand-on-click-node="false"
+                @@node-click="onFolderNodeClick">
+                <span class="custom-tree-node" slot-scope="{ node, data }">
                     <i class="el-icon-folder"></i>
-                    <span slot="title">根目录</span>
-                </el-menu-item>
-                <el-menu-item v-for="f in folders" :key="f.id" :index="String(f.id)" @@click="enterFolder(f.id)">
-                    <i class="el-icon-folder"></i>
-                    <span slot="title">{{f.name}}</span>
-                </el-menu-item>
-            </el-menu>
+                    <span style="margin-left:6px;">{{ data.name }}</span>
+                </span>
+            </el-tree>
         </el-card>
     </div>
 
     <div class="content-panel">
         <div class="filter-container">
             <el-button type="primary" icon="el-icon-upload" size="small" @@click="showUploadDialog">上传文件</el-button>
-            <el-button size="small" @@click="refreshFolders">刷新文件夹</el-button>
+            <el-button size="small" @@click="reloadFolderTree">刷新文件夹</el-button>
+        </div>
+
+        <div class="folder-breadcrumb">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item>
+                    <a href="javascript:void(0)" @@click="enterFolder(null)">根目录</a>
+                </el-breadcrumb-item>
+                <el-breadcrumb-item v-for="p in folderPath" :key="p.id">
+                    <a href="javascript:void(0)" @@click="enterFolder(p.id)">{{p.name}}</a>
+                </el-breadcrumb-item>
+            </el-breadcrumb>
         </div>
 
         <el-table :data="tableData" v-loading="tableLoading" border>
@@ -168,7 +186,13 @@
                     },
                     total: 0,
                     currentFolderId: null,
-                    folders: [],
+                    folderPath: [],
+                    folderTree: [{ id: null, name: '根目录', hasChildren: true }],
+                    folderTreeProps: {
+                        label: 'name',
+                        children: 'children',
+                        isLeaf: (data, node) => data && data.hasChildren === false
+                    },
                     uploadDialog: {
                         visible: false,
                         fileList: [],
@@ -182,7 +206,6 @@
                 }
             },
             created() {
-                this.refreshFolders();
                 this.getList();
             },
             methods: {
@@ -217,25 +240,66 @@
                     this.page.page = 1
                     this.getList()
                 },
-                async refreshFolders(){
+                async loadFolderChildren(node, resolve){
                     try{
-                        const res = await axios.get(`/Admin/FileManager/Index?handler=Folders` + (this.currentFolderId!=null?`&parentId=${this.currentFolderId}`:''))
-                        this.folders = res.data.data || res.data
+                        // 根节点：parentId 传 null
+                        const parentId = node.level === 0 ? null : node.data.id
+                        const res = await axios.get(`/Admin/FileManager/Index?handler=Folders` + (parentId!=null?`&parentId=${parentId}`:''))
+                        const list = res.data.data || res.data || []
+                        // el-tree lazy load 需要 children 数组
+                        resolve((list || []).map(f => ({
+                            id: f.id,
+                            name: f.name,
+                            description: f.description,
+                            parentId: f.parentId,
+                            // 默认认为可能还有子节点，用户展开时再加载；如后端能提供 hasChildren 可替换
+                            hasChildren: true
+                        })))
                     }catch(e){
                         console.error(e)
+                        resolve([])
                     }
                 },
-                enterFolder(id){
+                onFolderNodeClick(data, node){
+                    // 根目录
+                    if(data.id === null){
+                        this.enterFolder(null)
+                        return
+                    }
+                    this.enterFolder(data.id)
+                },
+                async enterFolder(id){
                     this.currentFolderId = id
                     this.page.page = 1
-                    this.getList()
-                    this.refreshFolders()
+                    await this.getList()
+                    await this.buildFolderPath(id)
                 },
-                handleUploadSuccess(response, file, fileList) {
-                    // 由于我们使用手动上传，这个方法可以留空
+                async buildFolderPath(id){
+                    // 由于当前接口只提供 children 列表，这里先做最小实现：只展示当前节点 (如果需要完整路径，建议新增后端 handler=FolderPath)
+                    if(id == null){
+                        this.folderPath = []
+                        return
+                    }
+                    // 尝试从树中查找节点信息
+                    const node = this.$refs.folderTree?.getNode(id)
+                    if(!node){
+                        this.folderPath = []
+                        return
+                    }
+                    const path = []
+                    let cur = node
+                    while(cur && cur.data && cur.data.id !== null){
+                        path.unshift({ id: cur.data.id, name: cur.data.name })
+                        cur = cur.parent
+                    }
+                    this.folderPath = path
                 },
-                handleUploadError(err, file, fileList) {
-                    this.$message.error('上传失败：' + err.message);
+                reloadFolderTree(){
+                    // 重置树，强制重新加载
+                    this.folderTree = [{ id: null, name: '根目录', hasChildren: true }]
+                    this.$nextTick(()=>{
+                        this.$refs.folderTree && this.$refs.folderTree.store && this.$refs.folderTree.store.setCurrentKey(this.currentFolderId)
+                    })
                 },
                 async handleNoteChange(row) {
                     try {
@@ -249,7 +313,6 @@
                     }
                 },
                 async deleteFile(row) {
-
                     try {
                         await this.$confirm('确认删除该文件?', '提示', {
                             type: 'warning'
@@ -295,7 +358,7 @@
                             formData.append('folderId', this.currentFolderId);
                         }
 
-                        const response = await axios.post("@Model.UpFileUrl", 
+                        await axios.post("@Model.UpFileUrl", 
                             formData,
                             {
                                 headers: {
@@ -334,14 +397,21 @@
                         })
                         this.$message.success('创建成功')
                         this.createFolderDialog.visible = false
-                        this.refreshFolders()
+                        this.reloadFolderTree()
                     }catch(e){
                         console.error(e)
                         this.$message.error('创建失败')
                     }finally{
                         this.createFolderDialog.loading = false
                     }
-                }
+                },
+                handleUploadSuccess(response, file, fileList) {
+                    // 使用手动上传时通常不会触发，但保留以避免模板引用报错
+                },
+                handleUploadError(err, file, fileList) {
+                    const msg = err && err.message ? err.message : (err ? String(err) : '')
+                    this.$message.error('上传失败：' + msg)
+                },
             }
         })
     </script>
