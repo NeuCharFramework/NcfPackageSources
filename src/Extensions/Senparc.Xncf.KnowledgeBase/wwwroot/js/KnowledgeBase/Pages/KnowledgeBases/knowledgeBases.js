@@ -345,7 +345,7 @@ new Vue({
         keyword = that.keyword;
       }
 
-      await service.get(`/Admin/KnowledgeBases/Index?handler=KnowledgeBases&pageIndex=${pageIndex}&pageSize=${pageSize}&keyword=${keyword}&orderField=${orderField}`).then(res => {// 使用 map 转换为目标格式的对象数组
+      await service.get(`/Admin/KnowledgeBase/Index?handler=KnowledgeBases&pageIndex=${pageIndex}&pageSize=${pageSize}&keyword=${keyword}&orderField=${orderField}`).then(res => {// 使用 map 转换为目标格式的对象数组
         that.filterTableHeader.embeddingModelId = res.data.data.list.map(z => ({
           text: z.embeddingModelId,
           value: z.embeddingModelId
@@ -374,7 +374,7 @@ new Vue({
     async getCategoryList() {
       let that = this
       //获取分类列表数据
-      await service.get('/Admin/KnowledgeBases/Index?handler=KnowledgeBasesCategory').then(res => {
+      await service.get('/Admin/KnowledgeBase/Index?handler=KnowledgeBasesCategory').then(res => {
         that.categoryData = res.data.data.list;
         log('categoryData', res, 2);
       });
@@ -531,7 +531,7 @@ new Vue({
             Content: that.dialog.data.content
           };
           console.log('add-' + JSON.stringify(data));
-          service.post("/Admin/KnowledgeBases/Edit?handler=Save", data).then(res => {
+          service.post("/Admin/KnowledgeBase/Edit?handler=Save", data).then(res => {
             debugger
             if (res.data.success) {
               that.getList();
@@ -551,7 +551,7 @@ new Vue({
     handleDelete(index, row) {
       let that = this
       let ids = [row.id];
-      service.post("/Admin/KnowledgeBases/edit?handler=Delete", ids).then(res => {
+      service.post("/Admin/KnowledgeBase/edit?handler=Delete", ids).then(res => {
         if (res.data.success) {
           that.getList();
           that.$notify({
