@@ -28,12 +28,16 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
             KnowledgeBasesId = knowledgeBasesDetailDto.KnowledgeBasesId;
             ContentType = knowledgeBasesDetailDto.ContentType;
             Content = knowledgeBasesDetailDto.Content;
+            FileName = knowledgeBasesDetailDto.FileName;
+            ChunkIndex = knowledgeBasesDetailDto.ChunkIndex;
         }
         public void Update(KnowledgeBasesDetailDto knowledgeBasesDetailDto)
         {
             KnowledgeBasesId = knowledgeBasesDetailDto.KnowledgeBasesId;
             ContentType = knowledgeBasesDetailDto.ContentType;
             Content = knowledgeBasesDetailDto.Content;
+            FileName = knowledgeBasesDetailDto.FileName;
+            ChunkIndex = knowledgeBasesDetailDto.ChunkIndex;
         }
         /// <summary>
         /// 知识库Id
@@ -47,6 +51,27 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
         /// 内容
         /// </summary>
         public string Content { get; set; }
+        
+        /// <summary>
+        /// 源文件名称
+        /// </summary>
+        [MaxLength(500)]
+        public string FileName { get; set; }
+        
+        /// <summary>
+        /// 文本切片索引
+        /// </summary>
+        public int ChunkIndex { get; set; }
+        
+        /// <summary>
+        /// 是否已向量化
+        /// </summary>
+        public bool IsEmbedded { get; set; }
+        
+        /// <summary>
+        /// 向量化时间
+        /// </summary>
+        public DateTime? EmbeddedTime { get; set; }
 
     }
 }

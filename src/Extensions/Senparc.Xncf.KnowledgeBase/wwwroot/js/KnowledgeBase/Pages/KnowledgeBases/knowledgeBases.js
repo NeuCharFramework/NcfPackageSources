@@ -648,30 +648,62 @@ new Vue({
       console.log('submit!');
     },
     handleEmbeddingBtn(btnType, item) {
-      debugger
+      const that = this;
       if (btnType === 'embedding') {
-        //开始向量化数据
-        serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBasesAppService/Xncf.KnowledgeBase_KnowledgeBasesAppService.EmbeddingKnowledgeBase'
-        let dataTemp = {
-          id:item?.id ?? ''
-        }
-
-        if (!serviceURL) return
-        try {
-          service.post(serviceURL, dataTemp).then(res => {
-            debugger
-            that.$notify({
-              title: "Success",
-              message: "成功",
-              type: "success",
-              duration: 2000
-            });
-            that.visible.drawerGroup = false;
+        // 确认对话框
+        this.$confirm(`确认对知识库 "${item.name}" 进行向量化处理吗？`, '向量化确认', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          // 显示加载提示
+          const loading = this.$loading({
+            lock: true,
+            text: '正在进行向量化处理，请稍候...',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
           });
-        } catch (err) {
-          console.error('Request Error:', err);
-          this.isGetGroupAgent = false
-        }
+
+          //开始向量化数据
+          const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBasesAppService/Xncf.KnowledgeBase_KnowledgeBasesAppService.EmbeddingKnowledgeBase';
+          const dataTemp = {
+            id: item?.id ?? ''
+          };
+
+          service.post(serviceURL, dataTemp).then(res => {
+            loading.close();
+            
+            if (res.success) {
+              // 显示详细结果
+              const message = res.data || '向量化成功！';
+              that.$notify({
+                title: "向量化成功",
+                message: message,
+                type: "success",
+                duration: 5000,
+                dangerouslyUseHTMLString: true
+              });
+            } else {
+              that.$notify({
+                title: "向量化失败",
+                message: res.message || '向量化处理失败',
+                type: "error",
+                duration: 5000
+              });
+            }
+          }).catch(err => {
+            loading.close();
+            console.error('Embedding Error:', err);
+            that.$notify({
+              title: "错误",
+              message: err.message || '向量化处理出错，请检查配置',
+              type: "error",
+              duration: 5000
+            });
+          });
+        }).catch(() => {
+          // 用户取消
+        });
       }
     },
     // Dailog|抽屉 打开 按钮

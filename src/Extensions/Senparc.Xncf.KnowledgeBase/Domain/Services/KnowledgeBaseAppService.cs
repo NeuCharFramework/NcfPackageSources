@@ -93,6 +93,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             var chunks = SplitText(content, 500, 100); // 默认 chunk size 500, overlap 100
 
             // 4. 保存切片到 KnowledgeBasesDetail
+            int chunkIndex = 0;
             foreach (var chunk in chunks)
             {
                 var detailDto = new KnowledgeBasesDetailDto
@@ -100,14 +101,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                     KnowledgeBasesId = knowledgeBaseId,
                     Content = chunk,
                     ContentType = 0, // 0: Text
-                    // 暂时将文件名记录在 Remark 中，方便调试
-                    // 注意：KnowledgeBasesDetailDto 可能没有 Remark 字段，需要检查 Entity
+                    FileName = file.FileName, // 记录源文件名
+                    ChunkIndex = chunkIndex++  // 记录切片索引
                 };
                 
-                // 创建实体并保存
-                // 由于 Dto 可能不完整，直接使用 Service 的 CreateOrUpdateAsync
-                // 但 Service 的 CreateOrUpdateAsync 也是基于 Dto 的。
-                // 我们先检查一下 Dto 定义，如果不行就直接操作 Entity 或者扩展 Dto
                 await _knowledgeBasesDetailService.CreateOrUpdateAsync(detailDto);
             }
 
@@ -116,27 +113,97 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
 
         /// <summary>
         /// 对知识库进行向量化（Embedding）
-        /// 注意：当前为第一阶段，仅完成文本切片存储，Embedding 功能待第二阶段实现
         /// </summary>
         /// <param name="knowledgeBaseId"></param>
         /// <returns></returns>
         public async Task<string> EmbeddingKnowledgeBaseAsync(string knowledgeBaseId)
         {
-            // TODO: 第二阶段实现
-            // 1. 获取该知识库下所有未向量化的 KnowledgeBasesDetail
-            // 2. 调用 AIKernel 生成 Embedding
-            // 3. 存储到向量数据库
-            
             var knowledgeBase = await _knowledgeBasesService.GetObjectAsync(z => z.Id == knowledgeBaseId);
             if (knowledgeBase == null)
             {
                 throw new NcfExceptionBase($"Knowledge Base with ID {knowledgeBaseId} not found.");
             }
 
-            // 获取该知识库的所有切片
-            var details = await _knowledgeBasesDetailService.GetFullListAsync(z => z.KnowledgeBasesId == knowledgeBaseId);
+            // 1. 检查配置
+            if (knowledgeBase.EmbeddingModelId <= 0)
+            {
+                throw new NcfExceptionBase($"知识库 '{knowledgeBase.Name}' 未配置 Embedding 模型，请先在'配置'中选择模型。");
+            }
+
+            // 2. 获取AI Model配置
+            var aiModelService = _serviceProvider.GetService<Senparc.Xncf.AIKernel.Domain.Services.AIModelService>();
+            var aiModel = await aiModelService.GetObjectAsync(z => z.Id == knowledgeBase.EmbeddingModelId);
+            if (aiModel == null)
+            {
+                throw new NcfExceptionBase($"Embedding 模型 ID {knowledgeBase.EmbeddingModelId} 不存在。");
+            }
+
+            var aiModelDto = new Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto.AIModelDto(aiModel);
+            var senparcAiSetting = aiModelService.BuildSenparcAiSetting(aiModelDto);
+
+            // 3. 获取待向量化的文本切片（未向量化的数据）
+            var details = await _knowledgeBasesDetailService.GetFullListAsync(z => 
+                z.KnowledgeBasesId == knowledgeBaseId && !z.IsEmbedded);
             
-            return $"知识库 '{knowledgeBase.Name}' 包含 {details.Count()} 个文本切片，Embedding 功能将在第二阶段实现。";
+            if (!details.Any())
+            {
+                return $"知识库 '{knowledgeBase.Name}' 没有待向量化的文本切片。";
+            }
+
+            // 4. 初始化 SemanticAiHandler
+            var semanticAiHandler = _serviceProvider.GetService<Senparc.AI.Kernel.Handlers.SemanticAiHandler>();
+            if (semanticAiHandler == null)
+            {
+                throw new NcfExceptionBase("SemanticAiHandler 服务未注册。");
+            }
+
+            // 5. 构建 IWantToRun (Embedding 模式)
+            var iWantToRunEmbedding = semanticAiHandler.IWantTo(senparcAiSetting)
+                .ConfigModel(Senparc.AI.ConfigModel.TextEmbedding, $"KnowledgeBase_{knowledgeBaseId}")
+                .BuildKernel();
+
+            // 6. 批量生成 Embeddings 并存储
+            int processedCount = 0;
+            int successCount = 0;
+            int failCount = 0;
+            string collectionName = $"KB_{knowledgeBaseId}";
+
+            foreach (var detail in details)
+            {
+                try
+                {
+                    processedCount++;
+                    
+                    // 生成 Embedding 向量
+                    await iWantToRunEmbedding.MemorySaveAsync(
+                        modelName: senparcAiSetting.ModelName.Embedding,
+                        azureDeployName: senparcAiSetting.DeploymentName,
+                        memoryCollectionName: collectionName,
+                        text: detail.Content,
+                        key: detail.Id.ToString(),
+                        description: $"文档: {detail.FileName}, 切片索引: {detail.ChunkIndex}"
+                    );
+
+                    // 更新数据库标记为已向量化
+                    detail.IsEmbedded = true;
+                    detail.EmbeddedTime = DateTime.Now;
+                    await _knowledgeBasesDetailService.SaveObjectAsync(detail);
+                    
+                    successCount++;
+                }
+                catch (Exception ex)
+                {
+                    failCount++;
+                    // 记录错误但继续处理其他切片
+                    Console.WriteLine($"向量化失败 - Detail ID: {detail.Id}, Error: {ex.Message}");
+                }
+            }
+
+            return $"知识库 '{knowledgeBase.Name}' 向量化完成！\n" +
+                   $"总计: {processedCount} 个切片\n" +
+                   $"成功: {successCount}\n" +
+                   $"失败: {failCount}\n" +
+                   $"集合名称: {collectionName}";
         }
 
         /// <summary>

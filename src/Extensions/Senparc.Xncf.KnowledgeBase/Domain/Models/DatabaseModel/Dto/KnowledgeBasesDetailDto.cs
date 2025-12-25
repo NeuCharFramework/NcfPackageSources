@@ -13,12 +13,14 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
         {
         }
 
-        public KnowledgeBasesDetailDto(string id,string knowledgeBasesId,int contentType,string content)
+        public KnowledgeBasesDetailDto(string id,string knowledgeBasesId,int contentType,string content, string fileName = "", int chunkIndex = 0)
         {
             Id = id;
             KnowledgeBasesId = knowledgeBasesId;
             ContentType = contentType;
             Content = content;
+            FileName = fileName;
+            ChunkIndex = chunkIndex;
         }
 
         public string Id { get; set; }
@@ -35,6 +37,17 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
         /// 内容
         /// </summary>
         public string Content { get; set; }
+        
+        /// <summary>
+        /// 源文件名称
+        /// </summary>
+        [MaxLength(500)]
+        public string FileName { get; set; }
+        
+        /// <summary>
+        /// 文本切片索引
+        /// </summary>
+        public int ChunkIndex { get; set; }
 
     }
 }
