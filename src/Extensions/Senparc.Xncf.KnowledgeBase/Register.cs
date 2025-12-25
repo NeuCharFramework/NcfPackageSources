@@ -15,6 +15,7 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
+using Senparc.Xncf.KnowledgeBase.Domain.Services;
 
 namespace Senparc.Xncf.KnowledgeBase
 {
@@ -79,6 +80,7 @@ namespace Senparc.Xncf.KnowledgeBase
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<ColorAppService>();
+            services.AddScoped<KnowledgeBaseAppService>();
             services.AddAutoMapper(z =>
             {
                 z.CreateMap<Color, ColorDto>().ReverseMap();

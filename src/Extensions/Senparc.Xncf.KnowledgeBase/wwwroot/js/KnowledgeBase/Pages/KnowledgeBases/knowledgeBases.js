@@ -450,34 +450,39 @@ new Vue({
       let serviceURL = ''
       // 组 新增|编辑
       if (saveType === 'drawerGroup') {
-        serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBasesAppService/Xncf.KnowledgeBase_KnowledgeBasesAppService.SetKnowledgeBaseDetail'
-      }
-      if (!serviceURL) return
-      try {
-        service.post(serviceURL, serviceForm).then(res => {
-          debugger
-          that.$notify({
-            title: "Success",
-            message: "成功",
-            type: "success",
-            duration: 2000
+        // 调用新的批量导入文件 API
+        serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBasesAppService/Xncf.KnowledgeBase_KnowledgeBasesAppService.ImportFilesToKnowledgeBase'
+        
+        // 从表单中提取选中的文件 ID 列表
+        const selectedFiles = serviceForm.files || [];
+        const fileIds = selectedFiles.map(file => file.id);
+        
+        // 构建请求数据
+        const requestData = {
+          knowledgeBaseId: serviceForm.knowledgeBasesId,
+          fileIds: fileIds
+        };
+        
+        try {
+          service.post(serviceURL, requestData).then(res => {
+            debugger
+            that.$notify({
+              title: "Success",
+              message: "文件导入成功",
+              type: "success",
+              duration: 2000
+            });
+            that.visible.drawerGroup = false;
           });
-          that.visible.drawerGroup = false;
-
-          //if (res.data.success) {
-          //  //that.getList();
-          //  that.$notify({
-          //    title: "Success",
-          //    message: "成功",
-          //    type: "success",
-          //    duration: 2000
-          //  });
-          //  that.visible.drawerGroup = false;
-          //}
-        });
-      } catch (err) {
-        console.error('Request Error:', err);
-        this.isGetGroupAgent = false
+        } catch (err) {
+          console.error('Request Error:', err);
+          that.$notify({
+            title: "Error",
+            message: "文件导入失败: " + err.message,
+            type: "error",
+            duration: 3000
+          });
+        }
       }
     },
     selectEmbeddingModel() {
