@@ -1,35 +1,46 @@
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.VectorData;
+using Senparc.AI;
+using Senparc.AI.Entities.Keys;
+using Senparc.AI.Kernel;
+using Senparc.AI.Kernel.Handlers;
+using Senparc.CO2NET;
+using Senparc.CO2NET.Extensions;
+using Senparc.Ncf.Core.Exceptions;
+using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AIKernel.Domain.Services;
+using Senparc.Xncf.FileManager.Domain.Services;
+using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel;
+using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
+using Senparc.Xncf.KnowledgeBase.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Senparc.CO2NET;
-using Senparc.CO2NET.Extensions;
-using Senparc.Ncf.Core.Exceptions;
-using Senparc.Xncf.FileManager.Domain.Services;
-using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel;
-using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
-using Senparc.Xncf.KnowledgeBase.Services;
 
 namespace Senparc.Xncf.KnowledgeBase.Domain.Services
 {
-    public class KnowledgeBaseAppService
+    public class KnowledgeBaseService
     {
         private readonly KnowledgeBasesService _knowledgeBasesService;
         private readonly KnowledgeBasesDetailService _knowledgeBasesDetailService;
         private readonly NcfFileService _ncfFileService;
+        private readonly AIModelService _aIModelService;
         private readonly IServiceProvider _serviceProvider;
 
-        public KnowledgeBaseAppService(
+        public KnowledgeBaseService(
             KnowledgeBasesService knowledgeBasesService,
             KnowledgeBasesDetailService knowledgeBasesDetailService,
             NcfFileService ncfFileService,
+            AIModelService aIModelService,
             IServiceProvider serviceProvider)
         {
             _knowledgeBasesService = knowledgeBasesService;
             _knowledgeBasesDetailService = knowledgeBasesDetailService;
             _ncfFileService = ncfFileService;
+            _aIModelService = aIModelService;
             _serviceProvider = serviceProvider;
         }
 
@@ -39,7 +50,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         /// <param name="knowledgeBaseId"></param>
         /// <param name="fileIds"></param>
         /// <returns>总切片数</returns>
-        public async Task<int> AddFilesToKnowledgeBaseAsync(string knowledgeBaseId, List<int> fileIds)
+        public async Task<int> AddFilesToKnowledgeBaseAsync(int knowledgeBaseId, List<int> fileIds)
         {
             int totalChunks = 0;
             foreach (var fileId in fileIds)
@@ -56,7 +67,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         /// <param name="knowledgeBaseId"></param>
         /// <param name="fileId"></param>
         /// <returns>切片数</returns>
-        public async Task<int> AddFileToKnowledgeBaseAsync(string knowledgeBaseId, int fileId)
+        public async Task<int> AddFileToKnowledgeBaseAsync(int knowledgeBaseId, int fileId)
         {
             // 1. 获取文件信息
             var file = await _ncfFileService.GetObjectAsync(z => z.Id == fileId);
@@ -67,7 +78,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
 
             // 2. 读取文件内容
             // 构造物理路径: App_Data/NcfFiles/{Year}/{Month}/{StorageName}{Ext}
-            var baseFilePath = Path.Combine(Config.RootDirectoryPath, "App_Data", "NcfFiles");
+            var baseFilePath = Path.Combine(Senparc.CO2NET.Config.RootDirectoryPath, "App_Data", "NcfFiles");
             var fullPath = Path.Combine(baseFilePath, file.FilePath, file.StorageFileName + file.FileExtension);
 
             if (!File.Exists(fullPath))
@@ -116,7 +127,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         /// </summary>
         /// <param name="knowledgeBaseId"></param>
         /// <returns></returns>
-        public async Task<string> EmbeddingKnowledgeBaseAsync(string knowledgeBaseId)
+        public async Task<string> EmbeddingKnowledgeBaseAsync(int knowledgeBaseId)
         {
             var knowledgeBase = await _knowledgeBasesService.GetObjectAsync(z => z.Id == knowledgeBaseId);
             if (knowledgeBase == null)
@@ -150,17 +161,31 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                 return $"知识库 '{knowledgeBase.Name}' 没有待向量化的文本切片。";
             }
 
-            // 4. 初始化 SemanticAiHandler
-            var semanticAiHandler = _serviceProvider.GetService<Senparc.AI.Kernel.Handlers.SemanticAiHandler>();
-            if (semanticAiHandler == null)
+            var embeddingAiModel = await this._aIModelService.GetObjectAsync(z => z.Id == knowledgeBase.EmbeddingModelId);
+            if (embeddingAiModel == null)
             {
-                throw new NcfExceptionBase("SemanticAiHandler 服务未注册。");
+                throw new NcfExceptionBase($"Embedding 模型 AIKernel 模型未找到：{knowledgeBase.EmbeddingModelId}。");
             }
+            var embeddingAiModelDto = this._aIModelService.Mapper.Map<AIModelDto>(embeddingAiModel);
+
+            var embeddingAiSetting = this._aIModelService.BuildSenparcAiSetting(embeddingAiModelDto);
+
+            // 4. 初始化 SemanticAiHandler
+            var embeddingAiHandler = new SemanticAiHandler(embeddingAiSetting);
+            
+            //_serviceProvider.GetService<SemanticAiHandler>();
+            //if (semanticAiHandler == null)
+            //{
+            //    throw new NcfExceptionBase("SemanticAiHandler 服务未注册。");
+            //}
 
             // 5. 构建 IWantToRun (Embedding 模式)
-            var iWantToRunEmbedding = semanticAiHandler.IWantTo(senparcAiSetting)
-                .ConfigModel(Senparc.AI.ConfigModel.TextEmbedding, $"KnowledgeBase_{knowledgeBaseId}")
-                .BuildKernel();
+
+            var iWantToRunEmbedding = embeddingAiHandler
+                 .IWantTo()
+                 .ConfigModel(ConfigModel.TextEmbedding, $"NcfKnowledgeBase_{embeddingAiModel.Id}")
+                 .ConfigVectorStore(embeddingAiSetting.VectorDB)
+            .BuildKernel();
 
             // 6. 批量生成 Embeddings 并存储
             int processedCount = 0;
@@ -173,16 +198,31 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                 try
                 {
                     processedCount++;
-                    
+
                     // 生成 Embedding 向量
-                    await iWantToRunEmbedding.MemorySaveAsync(
-                        modelName: senparcAiSetting.ModelName.Embedding,
-                        azureDeployName: senparcAiSetting.DeploymentName,
-                        memoryCollectionName: collectionName,
-                        text: detail.Content,
-                        key: detail.Id.ToString(),
-                        description: $"文档: {detail.FileName}, 切片索引: {detail.ChunkIndex}"
-                    );
+
+                    var vectorName = $"senparc-ncf-rag-{knowledgeBase.Name}";
+                    var vectorCollection = iWantToRunEmbedding.GetVectorCollection<ulong, Record>(embeddingAiSetting.VectorDB, vectorName);
+                    await vectorCollection.EnsureCollectionExistsAsync();
+
+                    var record = new Record()
+                    {
+                        Id = (ulong)detail.Id,
+                        Name = vectorName + "-paragraph-" + processedCount,
+                        Description = $"文档: {detail.FileName}, 切片索引: {detail.ChunkIndex}",//detail.Content,
+                        DescriptionEmbedding = await iWantToRunEmbedding.SemanticKernelHelper.GetEmbeddingAsync(embeddingAiModel.DeploymentName, detail.Content),
+                        Tags = new[] { processedCount.ToString() }
+                    };
+                    await vectorCollection.UpsertAsync(record);
+
+                    //await iWantToRunEmbedding.MemorySaveAsync(
+                    //    modelName: senparcAiSetting.ModelName.Embedding,
+                    //    azureDeployName: senparcAiSetting.DeploymentName,
+                    //    memoryCollectionName: collectionName,
+                    //    text: detail.Content,
+                    //    key: detail.Id.ToString(),
+                    //    description: $"文档: {detail.FileName}, 切片索引: {detail.ChunkIndex}"
+                    //);
 
                     // 更新数据库标记为已向量化
                     detail.IsEmbedded = true;
@@ -232,5 +272,23 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
 
             return chunks;
         }
+    }
+
+    public class Record
+    {
+        [VectorStoreKey]
+        public ulong Id { get; set; }
+
+        [VectorStoreData(IsIndexed = true)]
+        public string Name { get; set; }
+
+        [VectorStoreData(IsFullTextIndexed = true)]
+        public string Description { get; set; }
+
+        [VectorStoreVector(Dimensions: 1536 /*根据模型调整，例如 text-embedding-ada-002 为 1536，Large 为 3072*/, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
+        public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
+
+        [VectorStoreData(IsIndexed = true)]
+        public string[] Tags { get; set; }
     }
 }

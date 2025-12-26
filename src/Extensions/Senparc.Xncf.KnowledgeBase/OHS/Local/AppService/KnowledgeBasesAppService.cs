@@ -24,12 +24,12 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
     {
         private readonly KnowledgeBasesService knowledgeBasesService;
         private readonly KnowledgeBasesDetailService knowledgeBasesDetailService;
-        private readonly KnowledgeBaseAppService knowledgeBaseAppService;
+        private readonly Domain.Services.KnowledgeBaseService knowledgeBaseAppService;
 
         public KnowledgeBasesAppService(IServiceProvider serviceProvider, 
             KnowledgeBasesService knowledgeBasesService,
             KnowledgeBasesDetailService knowledgeBasesDetailService,
-            KnowledgeBaseAppService knowledgeBaseAppService) : base(serviceProvider)
+            Domain.Services.KnowledgeBaseService knowledgeBaseAppService) : base(serviceProvider)
         {
             this.knowledgeBasesService = knowledgeBasesService;
             this.knowledgeBasesDetailService = knowledgeBasesDetailService;
@@ -100,11 +100,11 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         {
             return await this.GetResponseAsync<bool>(async (response, logger) =>
             {
-                logger.Append($"开始对知识库 ID: {request.id} 进行向量化处理...");
+                logger.Append($"开始对知识库 ID: {request.Id} 进行向量化处理...");
                 
                 try
                 {
-                    var result = await knowledgeBaseAppService.EmbeddingKnowledgeBaseAsync(request.id);
+                    var result = await knowledgeBaseAppService.EmbeddingKnowledgeBaseAsync(request.Id);
                     logger.Append(result);
                     return true;
                 }

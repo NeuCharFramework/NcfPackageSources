@@ -13,11 +13,10 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(KnowledgeBasesDetail))]//必须添加前缀，防止全系统中发生冲突
     [Serializable]
-    public class KnowledgeBasesDetail : EntityBase<string>
+    public class KnowledgeBasesDetail : EntityBase<int>
     {
         public KnowledgeBasesDetail()
         {
-            Id = Guid.NewGuid().ToString();
             AddTime = DateTime.Now;
             this.LastUpdateTime = AddTime;
             AdminRemark = string.Empty;
@@ -42,7 +41,7 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
         /// <summary>
         /// 知识库Id
         /// </summary>
-        public string KnowledgeBasesId { get; set; }
+        public int KnowledgeBasesId { get; set; }
         /// <summary>
         /// 内容类型
         /// </summary>

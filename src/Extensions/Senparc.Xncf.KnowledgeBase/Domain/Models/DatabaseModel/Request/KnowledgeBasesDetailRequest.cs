@@ -12,7 +12,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Request
         /// <summary>
         /// 知识库Id
         /// </summary>
-        public string KnowledgeBasesId { get; set; }
+        public int KnowledgeBasesId { get; set; }
         /// <summary>
         /// 内容类型
         /// </summary>

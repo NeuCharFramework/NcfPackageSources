@@ -12,15 +12,15 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Request
         /// <summary>
         /// 训练模型Id
         /// </summary>
-        public string EmbeddingModelId { get; set; }
+        public int EmbeddingModelId { get; set; }
         /// <summary>
         /// 向量数据库Id
         /// </summary>
-        public string VectorDBId { get; set; }
+        public int VectorDBId { get; set; }
         /// <summary>
         /// 对话模型Id
         /// </summary>
-        public string ChatModelId { get; set; }
+        public int ChatModelId { get; set; }
         /// <summary>
         /// 名称
         /// </summary>

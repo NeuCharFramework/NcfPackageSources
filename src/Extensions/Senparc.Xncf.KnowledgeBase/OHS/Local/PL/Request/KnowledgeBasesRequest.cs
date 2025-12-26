@@ -8,6 +8,6 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Request
 {
     public class KnowledgeBasesRequest
     {
-        public string id { get; set; }
+        public int Id { get; set; }
     }
 }

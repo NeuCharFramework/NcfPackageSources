@@ -39,11 +39,11 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBases
             return Ok(true);
         }
 
-        public async Task<IActionResult> OnPostDeleteAsync([FromBody] string[] ids)
+        public async Task<IActionResult> OnPostDeleteAsync([FromBody] int[] ids)
         {
             var entity = await _knowledgeBasesService.GetFullListAsync(_ => ids.Contains(_.Id));
             await _knowledgeBasesService.DeleteAllAsync(entity);
-            IEnumerable<string> unDeleteIds = ids.Except(entity.Select(_ => _.Id));
+            IEnumerable<int> unDeleteIds = ids.Except(entity.Select(_ => _.Id));
             return Ok(unDeleteIds);
         }
     }
