@@ -13,7 +13,7 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
         {
         }
 
-        public KnowledgeBasesDetailDto(int id,int knowledgeBasesId,int contentType,string content, string fileName = "", int chunkIndex = 0)
+        public KnowledgeBasesDetailDto(int id, int knowledgeBasesId, int contentType, string content, string fileName = "", int chunkIndex = 0)
         {
             Id = id;
             KnowledgeBasesId = knowledgeBasesId;
@@ -27,7 +27,6 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
         /// <summary>
         /// 知识库Id
         /// </summary>
-        [MaxLength(50)]
         public int KnowledgeBasesId { get; set; }
         /// <summary>
         /// 内容类型

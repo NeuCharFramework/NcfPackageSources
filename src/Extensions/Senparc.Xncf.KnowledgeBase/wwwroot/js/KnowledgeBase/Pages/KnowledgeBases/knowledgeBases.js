@@ -533,11 +533,12 @@ new Vue({
           console.log('保存知识库数据：' + JSON.stringify(data));
           service.post("/Admin/KnowledgeBase/Edit?handler=Save", data).then(res => {
             console.log('保存响应：', res);
-            if (res.data === true || (res.success && res.data)) {
+            // res.data 是后端返回的对象：{success: true, data: true, msg: "保存成功"}
+            if (res.data && res.data.success && res.data.data === true) {
               that.getList();
               that.$notify({
                 title: "成功",
-                message: "知识库保存成功",
+                message: res.data.msg || "知识库保存成功",
                 type: "success",
                 duration: 2000
               });
@@ -546,7 +547,7 @@ new Vue({
             } else {
               that.$notify({
                 title: "失败",
-                message: res.msg || "保存失败，请检查数据",
+                message: (res.data && res.data.msg) || "保存失败，请检查数据",
                 type: "error",
                 duration: 3000
               });
