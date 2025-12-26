@@ -381,48 +381,48 @@ new Vue({
     },
     // 编辑 // 新增知识库管理 // 增加下一级
     handleEdit(index, row, flag) {
-      debugger
-      let that = this
+      let that = this;
       that.dialog.visible = true;
-      //获取分类列表数据
-      //that.getCategoryList();
+      
       if (flag === 'add') {
-        // 新增
+        // 新增 - 初始化空数据
         that.dialog.title = '新增知识库管理';
+        that.dialog.data = {
+          id: 0,
+          embeddingModelId: 0,
+          vectorDBId: 0,
+          chatModelId: 0,
+          name: '',
+          content: ''
+        };
+        that.selectDefaultEmbeddingModel = [];
+        that.selectDefaultVectorDB = [];
+        that.selectDefaultChatModel = [];
         that.dialogImageUrl = '';
-        //that.$refs['bodyEditor'].editor.setData('');
         return;
       }
-      // 编辑
-      let { id, embeddingModelId, vectorDBId, chatModelId, name,content } = row;
+      
+      // 编辑 - 使用现有数据
+      let { id, embeddingModelId, vectorDBId, chatModelId, name, content } = row;
       that.dialog.data = {
-        id, embeddingModelId, vectorDBId, chatModelId, name,content
+        id: id || 0,
+        embeddingModelId: embeddingModelId || 0,
+        vectorDBId: vectorDBId || 0,
+        chatModelId: chatModelId || 0,
+        name: name || '',
+        content: content || ''
       };
-      if (that.dialog.data.embeddingModelId != undefined) {
-        that.selectDefaultEmbeddingModel[0] = parseInt(that.dialog.data.embeddingModelId);
+      
+      // 设置下拉框默认值
+      if (that.dialog.data.embeddingModelId) {
+        that.selectDefaultEmbeddingModel = [parseInt(that.dialog.data.embeddingModelId)];
       }
-      if (that.dialog.data.vectorDBId != undefined) {
-        that.selectDefaultVectorDB[0] = parseInt(that.dialog.data.vectorDBId);
+      if (that.dialog.data.vectorDBId) {
+        that.selectDefaultVectorDB = [parseInt(that.dialog.data.vectorDBId)];
       }
-      if (that.dialog.data.chatModelId != undefined) {
-        that.selectDefaultChatModel[0] = parseInt(that.dialog.data.chatModelId);
+      if (that.dialog.data.chatModelId) {
+        that.selectDefaultChatModel = [parseInt(that.dialog.data.chatModelId)];
       }
-      //if (cover != '' && cover != undefined)
-      //{
-      //    that.dialogImageUrl = cover;
-      //}
-      //if (body != '' && body != undefined)
-      //{
-      //    that.editorData = this.$refs['bodyEditor'].editor.setData(body);
-      //}
-      //if (that.editorData == '')
-      //{
-      //    that.editorData = this.$refs['bodyEditor'].editor.setData(body);
-      //}
-      // dialog中父级菜单 做递归显示
-      //let x = [];
-      //that.recursionFunc(row, that.chatModelData, x);
-      //that.dialog.data.chatModelId = x;
 
       if (flag === 'edit') {
         that.dialog.title = '编辑知识库管理';
@@ -523,26 +523,44 @@ new Vue({
         if (valid) {
           that.dialog.updateLoading = true;
           let data = {
-            Id: that.dialog.data.id,
-            EmbeddingModelId: that.dialog.data.embeddingModelId.toString(),
-            VectorDBId: that.dialog.data.vectorDBId.toString(),
-            ChatModelId: that.dialog.data.chatModelId.toString(),
-            Name: that.dialog.data.name,
-            Content: that.dialog.data.content
+            id: that.dialog.data.id || 0,
+            embeddingModelId: parseInt(that.dialog.data.embeddingModelId) || 0,
+            vectorDBId: parseInt(that.dialog.data.vectorDBId) || 0,
+            chatModelId: parseInt(that.dialog.data.chatModelId) || 0,
+            name: that.dialog.data.name,
+            content: that.dialog.data.content || ''
           };
-          console.log('add-' + JSON.stringify(data));
+          console.log('保存知识库数据：' + JSON.stringify(data));
           service.post("/Admin/KnowledgeBase/Edit?handler=Save", data).then(res => {
-            debugger
-            if (res.data.success) {
+            console.log('保存响应：', res);
+            if (res.data === true || (res.success && res.data)) {
               that.getList();
               that.$notify({
-                title: "Success",
-                message: "成功",
+                title: "成功",
+                message: "知识库保存成功",
                 type: "success",
                 duration: 2000
               });
               that.dialog.visible = false;
+              that.dialog.updateLoading = false;
+            } else {
+              that.$notify({
+                title: "失败",
+                message: res.msg || "保存失败，请检查数据",
+                type: "error",
+                duration: 3000
+              });
+              that.dialog.updateLoading = false;
             }
+          }).catch(err => {
+            console.error('保存错误：', err);
+            that.$notify({
+              title: "错误",
+              message: "保存出错：" + (err.message || err),
+              type: "error",
+              duration: 3000
+            });
+            that.dialog.updateLoading = false;
           });
         }
       });

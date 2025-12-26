@@ -31,12 +31,25 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBases
         /// <returns></returns>
         public async Task<IActionResult> OnPostSaveAsync([FromBody] KnowledgeBasesDto knowledgeBasesDto)
         {
-            if (knowledgeBasesDto == null)
+            try
             {
-                return Ok(false);
+                if (knowledgeBasesDto == null)
+                {
+                    SenparcTrace.SendCustomLog("KnowledgeBase Save", "接收到的 DTO 为 null");
+                    return Ok(new { success = false, msg = "数据为空" });
+                }
+
+                SenparcTrace.SendCustomLog("KnowledgeBase Save", $"接收数据：Id={knowledgeBasesDto.Id}, Name={knowledgeBasesDto.Name}");
+
+                await _knowledgeBasesService.CreateOrUpdateAsync(knowledgeBasesDto);
+                
+                return Ok(new { success = true, data = true, msg = "保存成功" });
             }
-            await _knowledgeBasesService.CreateOrUpdateAsync(knowledgeBasesDto);
-            return Ok(true);
+            catch (Exception ex)
+            {
+                SenparcTrace.SendCustomLog("KnowledgeBase Save Error", ex.ToString());
+                return Ok(new { success = false, msg = ex.Message });
+            }
         }
 
         public async Task<IActionResult> OnPostDeleteAsync([FromBody] int[] ids)
