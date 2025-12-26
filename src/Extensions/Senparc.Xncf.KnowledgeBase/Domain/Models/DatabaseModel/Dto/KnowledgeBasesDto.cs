@@ -27,17 +27,14 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
         /// <summary>
         /// 训练模型Id
         /// </summary>
-        [MaxLength(50)]
         public int EmbeddingModelId { get; set; }
         /// <summary>
         /// 向量数据库Id
         /// </summary>
-        [MaxLength(50)]
         public int VectorDBId { get; set; }
         /// <summary>
         /// 对话模型Id
         /// </summary>
-        [MaxLength(50)]
         public int ChatModelId { get; set; }
         /// <summary>
         /// 名称
