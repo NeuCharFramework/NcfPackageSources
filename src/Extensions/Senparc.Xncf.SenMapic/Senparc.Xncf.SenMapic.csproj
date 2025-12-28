@@ -36,7 +36,6 @@
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
     <EmbeddedResource Include="wwwroot\**\*" />
     <PackageReference Include="ModelContextProtocol" Version="0.2.0-preview.3" />
