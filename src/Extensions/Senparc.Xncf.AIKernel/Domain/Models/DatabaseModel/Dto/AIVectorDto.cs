@@ -39,7 +39,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
         /// <summary>
         /// 向量数据库的类型（必须）, 例如：Memory, HardDisk, Redis, Mulivs, Chroma, PostgreSQL, Sqlite, SqlServer, Default
         /// </summary>
-        public VectorDB.VectorDBType VectorDBType { get; set; }
+        public VectorDBType VectorDBType { get; set; }
 
         /// <summary>
         /// Note（可选）

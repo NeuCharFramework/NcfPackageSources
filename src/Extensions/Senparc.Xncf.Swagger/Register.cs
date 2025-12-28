@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi;
 using Senparc.CO2NET;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.WebApi;
@@ -90,7 +91,7 @@ namespace Senparc.Xncf.Swagger
                     //    options.UseLowerCaseApiName = Senparc.CO2NET.Config.SenparcSetting.UseLowerCaseApiName ?? false;
                     //});
                 }
-         
+
 
                 #endregion
 
@@ -121,32 +122,42 @@ namespace Senparc.Xncf.Swagger
                     ConfigurationHelper.CustsomSwaggerOptions.AddSwaggerGenAction = c =>
                                {
                                    // Add JWT Bearer Authentication
-                                   c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                                   c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                                    {
                                        Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
                                        Name = "Authorization",
-                                       In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-                                       Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+                                       In = ParameterLocation.Header,
+                                       Type = SecuritySchemeType.ApiKey,
                                        Scheme = "Bearer"
                                    });
 
-                                   c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement()
-                                   {
-                                       {
-                                           new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-                                           {
-                                               Reference = new Microsoft.OpenApi.Models.OpenApiReference
-                                               {
-                                                   Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                                                   Id = "Bearer"
-                                               },
-                                               Scheme = "oauth2",
-                                               Name = "Bearer",
-                                               In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-                                           },
-                                           new List<string>()
-                                       }
-                                   });
+                                   c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+                                    {
+                                        {
+                                            new OpenApiSecuritySchemeReference("Bearer", document),
+                                            new List<string>()
+                                        }
+                                    });
+
+                                   //c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                                   //{
+                                       
+                                   //    {
+                                   //        new OpenApiSecurityScheme
+                                   //        {
+                                   //             Reference = new OpenApiReference
+                                   //            {
+                                   //                Type = ReferenceType.SecurityScheme,
+                                   //                Id = "Bearer"
+                                   //            },
+
+                                   //            Scheme = "oauth2",
+                                   //            Name = "Bearer",
+                                   //            In = ParameterLocation.Header,
+                                   //        },
+                                   //        new List<string>()
+                                   //    }
+                                   //});
 
                                    var xmlList = Directory.GetFiles(AppContext.BaseDirectory, "*.xml", SearchOption.AllDirectories);
                                    foreach (var xml in xmlList)
@@ -155,14 +166,14 @@ namespace Senparc.Xncf.Swagger
                                    }
                                };
                     ConfigurationHelper.CustsomSwaggerOptions.UseSwaggerAction = c => { };
-                    ConfigurationHelper.CustsomSwaggerOptions.UseSwaggerUIAction = c => 
+                    ConfigurationHelper.CustsomSwaggerOptions.UseSwaggerUIAction = c =>
                     {
                         c.DefaultModelExpandDepth(2);
                         c.DefaultModelRendering(Swashbuckle.AspNetCore.SwaggerUI.ModelRendering.Model);
                         c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
                         c.EnableDeepLinking();
                         c.DisplayOperationId();
-                        
+
                         // Configure JWT token input
                         c.InjectJavascript("/swagger-custom/swagger-custom-script.js");
                     };
@@ -176,36 +187,36 @@ namespace Senparc.Xncf.Swagger
             return base.AddXncfModule(services, configuration, env);
         }
 
-    public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
-    {
-        // Add authentication middleware for Swagger UI
-        app.UseWhen(context => context.Request.Path.StartsWithSegments("/swagger"), appBuilder =>
+        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
-            appBuilder.Use(async (context, next) =>
+            // Add authentication middleware for Swagger UI
+            app.UseWhen(context => context.Request.Path.StartsWithSegments("/swagger"), appBuilder =>
             {
-                var isAuthenticated = context.User?.Identity?.IsAuthenticated ?? false;
-                
-                // 检查 Cookie 认证
-                if (!isAuthenticated)
+                appBuilder.Use(async (context, next) =>
                 {
-                    // 检查是否有有效的 JWT Token
-                    var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
-                    if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+                    var isAuthenticated = context.User?.Identity?.IsAuthenticated ?? false;
+
+                    // 检查 Cookie 认证
+                    if (!isAuthenticated)
                     {
-                        // 既没有 Cookie 认证也没有有效的 JWT，重定向到登录页
-                        var returnUrl = Uri.EscapeDataString(context.Request.Path + context.Request.QueryString);
-                        context.Response.Redirect($"/Admin/Login?returnUrl={returnUrl}");
-                        return;
+                        // 检查是否有有效的 JWT Token
+                        var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+                        if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+                        {
+                            // 既没有 Cookie 认证也没有有效的 JWT，重定向到登录页
+                            var returnUrl = Uri.EscapeDataString(context.Request.Path + context.Request.QueryString);
+                            context.Response.Redirect($"/Admin/Login?returnUrl={returnUrl}");
+                            return;
+                        }
                     }
-                }
 
-                await next();
+                    await next();
+                });
             });
-        });
 
-        app.UseSwaggerCustom();
-        return base.UseXncfModule(app, registerService);
-    }
+            app.UseSwaggerCustom();
+            return base.UseXncfModule(app, registerService);
+        }
 
     }
 }

@@ -89,7 +89,7 @@
     <Content Remove="wwwroot\js\Admin\PromptRange\index.js" />
     <Content Remove="wwwroot\js\Admin\PromptRange\model.js" />
     <Content Remove="wwwroot\js\admin\promptrange\prompt.js" />
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
     <PackageReference Include="Senparc.Ncf.XncfBase" Version="0.21.11-preview1" />
     <PackageReference Include="Senparc.Xncf.AIKernel" Version="0.9.7-preview1" />
