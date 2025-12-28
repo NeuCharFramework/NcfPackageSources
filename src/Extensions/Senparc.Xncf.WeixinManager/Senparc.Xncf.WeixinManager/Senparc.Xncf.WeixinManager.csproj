@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <!--<RazorLangVersion>3.0</RazorLangVersion>-->
-    <Version>0.21.3-preview</Version>
+    <Version>0.21.3.1-preview</Version>
     <!--<GenerateProgramFile>false</GenerateProgramFile>-->
     <!--https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1511#issuecomment-696682962-->
     <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
@@ -63,7 +63,7 @@
 		[2025-08-19] v0.21.1-preview.1 fix: Set ApiBind DefaultRequestMethod to GET
 
 				[2025-11-01] update basic libraries, including Senparc.AI
-		</PackageReleaseNotes>
+</PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>

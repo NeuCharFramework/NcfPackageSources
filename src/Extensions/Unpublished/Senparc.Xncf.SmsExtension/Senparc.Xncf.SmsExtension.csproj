@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>0.11.11-preview.1</Version>
+    <Version>0.11.11.2-preview</Version>
     <AssemblyName>Senparc.Xncf.SmsExtension</AssemblyName>
     <RootNamespace>Senparc.Xncf.SmsExtension</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -24,7 +24,7 @@
 			[2025-06-20] v0.11.9-preview1 Add MCP functions in XncfRegisterBase class
 
 				[2025-11-01] update basic libraries, including Senparc.AI
-		</PackageReleaseNotes>
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

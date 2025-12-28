@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.4.14-pre-alpha</Version>
+    <Version>0.4.14.1-pre-alpha</Version>
     <AssemblyName>Senparc.Xncf.DynamicData</AssemblyName>
     <RootNamespace>Senparc.Xncf.DynamicData</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -38,7 +38,7 @@
 			[2025-06-20] v0.4.12-pre-alpha Add MCP functions in XncfRegisterBase class
 
 				[2025-11-01] update basic libraries, including Senparc.AI
-		</PackageReleaseNotes>
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
