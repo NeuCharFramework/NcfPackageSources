@@ -167,7 +167,7 @@
       这样编译器只会使用 Generator 注入内存的那一份，
       从而解决“二义性”报错，同时保留磁盘文件供你参考。
     -->
-		<Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
+		<!--<Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />-->
 	</ItemGroup>
 	<!-- 清理生成的文件 -->
 	<!--<Target Name="CleanGeneratedFiles" BeforeTargets="Clean">
