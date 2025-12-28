@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.12.10.2-preview</Version>
+    <Version>0.12.10.4-preview</Version>
     <Nullable>enable</Nullable>
     <AssemblyName>Senparc.Ncf.Database.PostgreSQL</AssemblyName>
     <RootNamespace>Senparc.Ncf.Database.PostgreSQL</RootNamespace>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.0.11111.16 d18.0
+VisualStudioVersion = 18.0.11111.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 Basic", "01 Basic", "{20618121-91AE-4EFE-9899-ABCB0ADACE86}"
 EndProject
@@ -3923,7 +3923,6 @@ Global
 		{BEF554DB-DD6D-4379-B9E8-C33DFEA6735C}.NcfDebugForPromptRange|x86.ActiveCfg = Debug|Any CPU
 		{BEF554DB-DD6D-4379-B9E8-C33DFEA6735C}.NcfDebugForPromptRange|x86.Build.0 = Debug|Any CPU
 		{BEF554DB-DD6D-4379-B9E8-C33DFEA6735C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BEF554DB-DD6D-4379-B9E8-C33DFEA6735C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BEF554DB-DD6D-4379-B9E8-C33DFEA6735C}.Release|ARM64.ActiveCfg = Release|Any CPU
 		{BEF554DB-DD6D-4379-B9E8-C33DFEA6735C}.Release|ARM64.Build.0 = Release|Any CPU
 		{BEF554DB-DD6D-4379-B9E8-C33DFEA6735C}.Release|x64.ActiveCfg = Release|Any CPU

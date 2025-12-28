@@ -21,7 +21,6 @@
 		<EmbeddedResource Remove="Areas\Admin\Pages\Dto\**" />
 
 		<None Remove="Areas\Admin\Pages\Dto\**" />
-		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.10" />
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
 	</ItemGroup>
 
