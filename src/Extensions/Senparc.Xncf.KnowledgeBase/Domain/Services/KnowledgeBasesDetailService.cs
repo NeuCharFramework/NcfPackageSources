@@ -28,7 +28,7 @@ namespace Senparc.Xncf.KnowledgeBase.Services
         public async Task CreateOrUpdateAsync(KnowledgeBasesDetailDto dto)
         {
             KnowledgeBasesDetail knowledgeBasesDetail;
-            if (String.IsNullOrEmpty(dto.Id))
+            if (dto.Id == 0)
             {
                 knowledgeBasesDetail = new KnowledgeBasesDetail(dto);
             }

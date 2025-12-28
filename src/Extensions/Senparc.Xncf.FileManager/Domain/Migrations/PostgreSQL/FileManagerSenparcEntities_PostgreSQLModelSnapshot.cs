@@ -108,6 +108,9 @@ namespace Senparc.Xncf.FileManager.Domain.Migrations.PostgreSQL
                     b.Property<bool>("Flag")
                         .HasColumnType("boolean");
 
+                    b.Property<int?>("FolderId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("timestamp without time zone");
 
@@ -128,6 +131,54 @@ namespace Senparc.Xncf.FileManager.Domain.Migrations.PostgreSQL
                     b.HasKey("Id");
 
                     b.ToTable("NcfFiles");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.NcfFolder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NcfFolders");
                 });
 #pragma warning restore 612, 618
         }

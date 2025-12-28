@@ -67,8 +67,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Dm
 
             modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBases", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("NVARCHAR2(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("TIMESTAMP");
@@ -77,14 +79,14 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Dm
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
-                    b.Property<string>("ChatModelId")
-                        .HasColumnType("NVARCHAR2(32767)");
+                    b.Property<int>("ChatModelId")
+                        .HasColumnType("INT");
 
                     b.Property<string>("Content")
                         .HasColumnType("NVARCHAR2(32767)");
 
-                    b.Property<string>("EmbeddingModelId")
-                        .HasColumnType("NVARCHAR2(32767)");
+                    b.Property<int>("EmbeddingModelId")
+                        .HasColumnType("INT");
 
                     b.Property<bool>("Flag")
                         .HasColumnType("BIT");
@@ -102,8 +104,8 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Dm
                     b.Property<int>("TenantId")
                         .HasColumnType("INT");
 
-                    b.Property<string>("VectorDBId")
-                        .HasColumnType("NVARCHAR2(32767)");
+                    b.Property<int>("VectorDBId")
+                        .HasColumnType("INT");
 
                     b.HasKey("Id");
 
@@ -112,8 +114,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Dm
 
             modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBasesDetail", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("NVARCHAR2(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("TIMESTAMP");
@@ -122,17 +126,30 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Dm
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
+                    b.Property<int>("ChunkIndex")
+                        .HasColumnType("INT");
+
                     b.Property<string>("Content")
                         .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<int>("ContentType")
                         .HasColumnType("INT");
 
+                    b.Property<DateTime?>("EmbeddedTime")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("FileName")
+                        .HasMaxLength(500)
+                        .HasColumnType("NVARCHAR2(500)");
+
                     b.Property<bool>("Flag")
                         .HasColumnType("BIT");
 
-                    b.Property<string>("KnowledgeBasesId")
-                        .HasColumnType("NVARCHAR2(32767)");
+                    b.Property<bool>("IsEmbedded")
+                        .HasColumnType("BIT");
+
+                    b.Property<int>("KnowledgeBasesId")
+                        .HasColumnType("INT");
 
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TIMESTAMP");

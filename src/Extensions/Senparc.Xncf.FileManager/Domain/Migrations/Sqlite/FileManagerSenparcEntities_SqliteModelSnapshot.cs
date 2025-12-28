@@ -99,6 +99,9 @@ namespace Senparc.Xncf.FileManager.Domain.Migrations.Sqlite
                     b.Property<bool>("Flag")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("FolderId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TEXT");
 
@@ -119,6 +122,52 @@ namespace Senparc.Xncf.FileManager.Domain.Migrations.Sqlite
                     b.HasKey("Id");
 
                     b.ToTable("NcfFiles");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.NcfFolder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NcfFolders");
                 });
 #pragma warning restore 612, 618
         }

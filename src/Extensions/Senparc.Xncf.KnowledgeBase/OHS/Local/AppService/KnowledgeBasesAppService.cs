@@ -24,11 +24,16 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
     {
         private readonly KnowledgeBasesService knowledgeBasesService;
         private readonly KnowledgeBasesDetailService knowledgeBasesDetailService;
+        private readonly Domain.Services.KnowledgeBaseService knowledgeBaseService;
 
-        public KnowledgeBasesAppService(IServiceProvider serviceProvider, KnowledgeBasesService knowledgeBasesService,KnowledgeBasesDetailService knowledgeBasesDetailService) : base(serviceProvider)
+        public KnowledgeBasesAppService(IServiceProvider serviceProvider, 
+            KnowledgeBasesService knowledgeBasesService,
+            KnowledgeBasesDetailService knowledgeBasesDetailService,
+            Domain.Services.KnowledgeBaseService knowledgeBaseService) : base(serviceProvider)
         {
             this.knowledgeBasesService = knowledgeBasesService;
             this.knowledgeBasesDetailService = knowledgeBasesDetailService;
+            this.knowledgeBaseService = knowledgeBaseService;
         }
 
         /// <summary>
@@ -95,27 +100,57 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         {
             return await this.GetResponseAsync<bool>(async (response, logger) =>
             {
-                //设置查询条件
-                //var seh = new SenparcExpressionHelper<KnowledgeBases>();
-                //seh.ValueCompare.AndAlso(true,x => x.Id.Equals(request.id));
-                //var where = seh.BuildWhereExpression();
-                ////TODO:封装到 Service 中
-                //var lstRecords = await knowledgeBasesService.GetObjectListAsync(1,10,where,"AddTime Desc");
+                logger.Append($"开始对知识库 ID: {request.Id} 进行向量化处理...");
+                System.Console.WriteLine($"开始对知识库 ID: {request.Id} 进行向量化处理...");
+                try
+                {
+                    var result = await knowledgeBaseService.EmbeddingKnowledgeBaseAsync(request.Id);
+                    logger.Append(result);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    logger.Append($"向量化处理失败：{ex.Message}");
+                    System.Console.WriteLine(ex.Message);
+                
+                    throw;
+                }
+            });
+        }
 
+        /// <summary>
+        /// 批量导入文件到知识库
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<bool>> ImportFilesToKnowledgeBase(plRequest.ImportFilesRequest request)
+        {
+            return await this.GetResponseAsync<bool>(async (response, logger) =>
+            {
+                logger.Append($"开始导入文件到知识库 ID: {request.knowledgeBaseId}");
+                logger.Append($"文件数量: {request.fileIds?.Count ?? 0}");
+                
+                try
+                {
+                    if (request.fileIds == null || request.fileIds.Count == 0)
+                    {
+                        logger.Append("警告：未选择任何文件");
+                        return false;
+                    }
 
-                var sehDetail = new SenparcExpressionHelper<KnowledgeBasesDetail>();
-                sehDetail.ValueCompare.AndAlso(true, x => x.KnowledgeBasesId.Equals(request.id));
-                var whereDetail = sehDetail.BuildWhereExpression();
-                var lstDetails = await knowledgeBasesDetailService.GetObjectListAsync(1, 10, whereDetail, "AddTime Desc");
-
-                //Embedding
-
-
-                logger.Append($"KnowledgeBases 新增成功！");
-
-                logger.Append($"KnowledgeBases 详情添加成功！");
-
-                return true;
+                    var totalChunks = await knowledgeBaseService.AddFilesToKnowledgeBaseAsync(
+                        request.knowledgeBaseId, 
+                        request.fileIds);
+                    
+                    logger.Append($"成功！共生成 {totalChunks} 个文本切片");
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    logger.Append($"导入失败：{ex.Message}");
+                    throw;
+                }
             });
         }
     }

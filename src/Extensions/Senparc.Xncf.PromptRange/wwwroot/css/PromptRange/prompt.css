@@ -2728,6 +2728,77 @@ think::before {
     background: #888;
 }
 
+/* System Message 在对话历史容器内的样式 */
+.system-message-in-chat-history {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #E4E7ED;
+}
+
+.system-message-in-chat-history .el-collapse {
+    border: none;
+}
+
+.system-message-in-chat-history .el-collapse-item {
+    border: none;
+}
+
+.system-message-in-chat-history .el-collapse-item__header {
+    background-color: #F5F7FA;
+    border: 1px solid #E4E7ED;
+    border-radius: 6px;
+    padding: 10px 15px;
+    font-size: 14px;
+    color: #303133;
+    transition: all 0.3s;
+}
+
+.system-message-in-chat-history .el-collapse-item__header:hover {
+    background-color: #EBEEF5;
+}
+
+.system-message-in-chat-history .el-collapse-item__wrap {
+    border: none;
+    background-color: transparent;
+}
+
+.system-message-in-chat-history .el-collapse-item__content {
+    padding: 12px 0 0 0;
+}
+
+.system-message-in-chat-history .system-message-content {
+    background-color: #F5F7FA;
+    padding: 12px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', 'SFMono-Regular', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 300px;
+    overflow-y: auto;
+    color: #303133;
+    border: 1px solid #E4E7ED;
+}
+
+.system-message-in-chat-history .system-message-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.system-message-in-chat-history .system-message-content::-webkit-scrollbar-track {
+    background: #F1F1F1;
+    border-radius: 4px;
+}
+
+.system-message-in-chat-history .system-message-content::-webkit-scrollbar-thumb {
+    background: #C1C1C1;
+    border-radius: 4px;
+}
+
+.system-message-in-chat-history .system-message-content::-webkit-scrollbar-thumb:hover {
+    background: #A8A8A8;
+}
+
 /* 空状态提示 */
 .chat-empty-tip {
     display: flex;

@@ -69,8 +69,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.PostgreSQL
 
             modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBases", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("timestamp without time zone");
@@ -79,14 +82,14 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.PostgreSQL
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
 
-                    b.Property<string>("ChatModelId")
-                        .HasColumnType("text");
+                    b.Property<int>("ChatModelId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Content")
                         .HasColumnType("text");
 
-                    b.Property<string>("EmbeddingModelId")
-                        .HasColumnType("text");
+                    b.Property<int>("EmbeddingModelId")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("Flag")
                         .HasColumnType("boolean");
@@ -104,8 +107,8 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.PostgreSQL
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("VectorDBId")
-                        .HasColumnType("text");
+                    b.Property<int>("VectorDBId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -114,8 +117,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.PostgreSQL
 
             modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBasesDetail", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("timestamp without time zone");
@@ -124,17 +130,30 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.PostgreSQL
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
 
+                    b.Property<int>("ChunkIndex")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Content")
                         .HasColumnType("text");
 
                     b.Property<int>("ContentType")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime?>("EmbeddedTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("FileName")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
                     b.Property<bool>("Flag")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("KnowledgeBasesId")
-                        .HasColumnType("text");
+                    b.Property<bool>("IsEmbedded")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("KnowledgeBasesId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("timestamp without time zone");

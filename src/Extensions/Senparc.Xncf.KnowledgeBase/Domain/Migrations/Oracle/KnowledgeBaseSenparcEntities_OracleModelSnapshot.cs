@@ -69,8 +69,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Oracle
 
             modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBases", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("NVARCHAR2(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("TIMESTAMP(7)");
@@ -79,14 +82,14 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Oracle
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
-                    b.Property<string>("ChatModelId")
-                        .HasColumnType("NVARCHAR2(2000)");
+                    b.Property<int>("ChatModelId")
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Content")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<string>("EmbeddingModelId")
-                        .HasColumnType("NVARCHAR2(2000)");
+                    b.Property<int>("EmbeddingModelId")
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<bool>("Flag")
                         .HasColumnType("NUMBER(1)");
@@ -104,8 +107,8 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Oracle
                     b.Property<int>("TenantId")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<string>("VectorDBId")
-                        .HasColumnType("NVARCHAR2(2000)");
+                    b.Property<int>("VectorDBId")
+                        .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
 
@@ -114,8 +117,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Oracle
 
             modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBasesDetail", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("NVARCHAR2(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("TIMESTAMP(7)");
@@ -124,17 +130,30 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Oracle
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
+                    b.Property<int>("ChunkIndex")
+                        .HasColumnType("NUMBER(10)");
+
                     b.Property<string>("Content")
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<int>("ContentType")
                         .HasColumnType("NUMBER(10)");
 
+                    b.Property<DateTime?>("EmbeddedTime")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("FileName")
+                        .HasMaxLength(500)
+                        .HasColumnType("NVARCHAR2(500)");
+
                     b.Property<bool>("Flag")
                         .HasColumnType("NUMBER(1)");
 
-                    b.Property<string>("KnowledgeBasesId")
-                        .HasColumnType("NVARCHAR2(2000)");
+                    b.Property<bool>("IsEmbedded")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<int>("KnowledgeBasesId")
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TIMESTAMP(7)");

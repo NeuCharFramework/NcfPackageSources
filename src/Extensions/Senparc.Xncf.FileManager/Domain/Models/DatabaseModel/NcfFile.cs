@@ -31,6 +31,8 @@ namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel
         public string Description { get; set; } // 文件描述
 
         public DateTime UploadTime { get; set; } // 上传时间
+
+        public int? FolderId { get; set; } // 所属文件夹，可为空表示根目录
     }
 
     public enum FileType
@@ -42,4 +44,20 @@ namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel
         Code = 4,
         Other = 999
     }
-} 
+
+    // 新增文件夹实体
+    [Table(name: "NcfFolders")]
+    public class NcfFolder : EntityBase<int>
+    {
+        [Required]
+        [MaxLength(200)]
+        public string Name { get; set; }
+
+        public int? ParentId { get; set; } // 父级文件夹，null 为根
+
+        [MaxLength(500)]
+        public string Description { get; set; }
+
+        public DateTime CreateTime { get; set; } = DateTime.UtcNow;
+    }
+}

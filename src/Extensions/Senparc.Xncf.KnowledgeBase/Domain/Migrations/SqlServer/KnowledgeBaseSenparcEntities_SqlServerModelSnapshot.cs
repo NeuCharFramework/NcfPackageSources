@@ -69,8 +69,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.SqlServer
 
             modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBases", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("datetime2");
@@ -79,14 +82,14 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.SqlServer
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<string>("ChatModelId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ChatModelId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EmbeddingModelId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("EmbeddingModelId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("Flag")
                         .HasColumnType("bit");
@@ -104,8 +107,8 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.SqlServer
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
 
-                    b.Property<string>("VectorDBId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("VectorDBId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -114,8 +117,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.SqlServer
 
             modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBasesDetail", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("datetime2");
@@ -124,17 +130,30 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.SqlServer
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
+                    b.Property<int>("ChunkIndex")
+                        .HasColumnType("int");
+
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ContentType")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("EmbeddedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FileName")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<bool>("Flag")
                         .HasColumnType("bit");
 
-                    b.Property<string>("KnowledgeBasesId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsEmbedded")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("KnowledgeBasesId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("datetime2");

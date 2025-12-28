@@ -13,7 +13,7 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
         {
         }
 
-        public KnowledgeBasesDto(string id,string embeddingModelId,string vectorDBId,string chatModelId,string name,string content)
+        public KnowledgeBasesDto(int id, int embeddingModelId, int vectorDBId, int chatModelId, string name, string content)
         {
             Id = id;
             EmbeddingModelId = embeddingModelId;
@@ -23,22 +23,19 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
             Content = content;
         }
 
-        public string Id { get; set; }
+        public int Id { get; set; }
         /// <summary>
         /// 训练模型Id
         /// </summary>
-        [MaxLength(50)]
-        public string EmbeddingModelId { get; set; }
+        public int EmbeddingModelId { get; set; }
         /// <summary>
         /// 向量数据库Id
         /// </summary>
-        [MaxLength(50)]
-        public string VectorDBId { get; set; }
+        public int VectorDBId { get; set; }
         /// <summary>
         /// 对话模型Id
         /// </summary>
-        [MaxLength(50)]
-        public string ChatModelId { get; set; }
+        public int ChatModelId { get; set; }
         /// <summary>
         /// 名称
         /// </summary>

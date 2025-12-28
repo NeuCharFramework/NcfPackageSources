@@ -345,7 +345,7 @@ new Vue({
         keyword = that.keyword;
       }
 
-      await service.get(`/Admin/KnowledgeBases/Index?handler=KnowledgeBases&pageIndex=${pageIndex}&pageSize=${pageSize}&keyword=${keyword}&orderField=${orderField}`).then(res => {// 使用 map 转换为目标格式的对象数组
+      await service.get(`/Admin/KnowledgeBase/Index?handler=KnowledgeBases&pageIndex=${pageIndex}&pageSize=${pageSize}&keyword=${keyword}&orderField=${orderField}`).then(res => {// 使用 map 转换为目标格式的对象数组
         that.filterTableHeader.embeddingModelId = res.data.data.list.map(z => ({
           text: z.embeddingModelId,
           value: z.embeddingModelId
@@ -374,55 +374,55 @@ new Vue({
     async getCategoryList() {
       let that = this
       //获取分类列表数据
-      await service.get('/Admin/KnowledgeBases/Index?handler=KnowledgeBasesCategory').then(res => {
+      await service.get('/Admin/KnowledgeBase/Index?handler=KnowledgeBasesCategory').then(res => {
         that.categoryData = res.data.data.list;
         log('categoryData', res, 2);
       });
     },
     // 编辑 // 新增知识库管理 // 增加下一级
     handleEdit(index, row, flag) {
-      debugger
-      let that = this
+      let that = this;
       that.dialog.visible = true;
-      //获取分类列表数据
-      //that.getCategoryList();
+      
       if (flag === 'add') {
-        // 新增
+        // 新增 - 初始化空数据
         that.dialog.title = '新增知识库管理';
+        that.dialog.data = {
+          id: 0,
+          embeddingModelId: 0,
+          vectorDBId: 0,
+          chatModelId: 0,
+          name: '',
+          content: ''
+        };
+        that.selectDefaultEmbeddingModel = [];
+        that.selectDefaultVectorDB = [];
+        that.selectDefaultChatModel = [];
         that.dialogImageUrl = '';
-        //that.$refs['bodyEditor'].editor.setData('');
         return;
       }
-      // 编辑
-      let { id, embeddingModelId, vectorDBId, chatModelId, name,content } = row;
+      
+      // 编辑 - 使用现有数据
+      let { id, embeddingModelId, vectorDBId, chatModelId, name, content } = row;
       that.dialog.data = {
-        id, embeddingModelId, vectorDBId, chatModelId, name,content
+        id: id || 0,
+        embeddingModelId: embeddingModelId || 0,
+        vectorDBId: vectorDBId || 0,
+        chatModelId: chatModelId || 0,
+        name: name || '',
+        content: content || ''
       };
-      if (that.dialog.data.embeddingModelId != undefined) {
-        that.selectDefaultEmbeddingModel[0] = parseInt(that.dialog.data.embeddingModelId);
+      
+      // 设置下拉框默认值
+      if (that.dialog.data.embeddingModelId) {
+        that.selectDefaultEmbeddingModel = [parseInt(that.dialog.data.embeddingModelId)];
       }
-      if (that.dialog.data.vectorDBId != undefined) {
-        that.selectDefaultVectorDB[0] = parseInt(that.dialog.data.vectorDBId);
+      if (that.dialog.data.vectorDBId) {
+        that.selectDefaultVectorDB = [parseInt(that.dialog.data.vectorDBId)];
       }
-      if (that.dialog.data.chatModelId != undefined) {
-        that.selectDefaultChatModel[0] = parseInt(that.dialog.data.chatModelId);
+      if (that.dialog.data.chatModelId) {
+        that.selectDefaultChatModel = [parseInt(that.dialog.data.chatModelId)];
       }
-      //if (cover != '' && cover != undefined)
-      //{
-      //    that.dialogImageUrl = cover;
-      //}
-      //if (body != '' && body != undefined)
-      //{
-      //    that.editorData = this.$refs['bodyEditor'].editor.setData(body);
-      //}
-      //if (that.editorData == '')
-      //{
-      //    that.editorData = this.$refs['bodyEditor'].editor.setData(body);
-      //}
-      // dialog中父级菜单 做递归显示
-      //let x = [];
-      //that.recursionFunc(row, that.chatModelData, x);
-      //that.dialog.data.chatModelId = x;
 
       if (flag === 'edit') {
         that.dialog.title = '编辑知识库管理';
@@ -450,34 +450,39 @@ new Vue({
       let serviceURL = ''
       // 组 新增|编辑
       if (saveType === 'drawerGroup') {
-        serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBasesAppService/Xncf.KnowledgeBase_KnowledgeBasesAppService.SetKnowledgeBaseDetail'
-      }
-      if (!serviceURL) return
-      try {
-        service.post(serviceURL, serviceForm).then(res => {
-          debugger
-          that.$notify({
-            title: "Success",
-            message: "成功",
-            type: "success",
-            duration: 2000
+        // 调用新的批量导入文件 API
+        serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBasesAppService/Xncf.KnowledgeBase_KnowledgeBasesAppService.ImportFilesToKnowledgeBase'
+        
+        // 从表单中提取选中的文件 ID 列表
+        const selectedFiles = serviceForm.files || [];
+        const fileIds = selectedFiles.map(file => file.id);
+        
+        // 构建请求数据
+        const requestData = {
+          knowledgeBaseId: serviceForm.knowledgeBasesId,
+          fileIds: fileIds
+        };
+        
+        try {
+          service.post(serviceURL, requestData).then(res => {
+            debugger
+            that.$notify({
+              title: "Success",
+              message: "文件导入成功",
+              type: "success",
+              duration: 2000
+            });
+            that.visible.drawerGroup = false;
           });
-          that.visible.drawerGroup = false;
-
-          //if (res.data.success) {
-          //  //that.getList();
-          //  that.$notify({
-          //    title: "Success",
-          //    message: "成功",
-          //    type: "success",
-          //    duration: 2000
-          //  });
-          //  that.visible.drawerGroup = false;
-          //}
-        });
-      } catch (err) {
-        console.error('Request Error:', err);
-        this.isGetGroupAgent = false
+        } catch (err) {
+          console.error('Request Error:', err);
+          that.$notify({
+            title: "Error",
+            message: "文件导入失败: " + err.message,
+            type: "error",
+            duration: 3000
+          });
+        }
       }
     },
     selectEmbeddingModel() {
@@ -518,26 +523,45 @@ new Vue({
         if (valid) {
           that.dialog.updateLoading = true;
           let data = {
-            Id: that.dialog.data.id,
-            EmbeddingModelId: that.dialog.data.embeddingModelId.toString(),
-            VectorDBId: that.dialog.data.vectorDBId.toString(),
-            ChatModelId: that.dialog.data.chatModelId.toString(),
-            Name: that.dialog.data.name,
-            Content: that.dialog.data.content
+            id: that.dialog.data.id || 0,
+            embeddingModelId: parseInt(that.dialog.data.embeddingModelId) || 0,
+            vectorDBId: parseInt(that.dialog.data.vectorDBId) || 0,
+            chatModelId: parseInt(that.dialog.data.chatModelId) || 0,
+            name: that.dialog.data.name,
+            content: that.dialog.data.content || ''
           };
-          console.log('add-' + JSON.stringify(data));
-          service.post("/Admin/KnowledgeBases/Edit?handler=Save", data).then(res => {
-            debugger
-            if (res.data.success) {
+          console.log('保存知识库数据：' + JSON.stringify(data));
+          service.post("/Admin/KnowledgeBase/Edit?handler=Save", data).then(res => {
+            console.log('保存响应：', res);
+            // res.data 是后端返回的对象：{success: true, data: true, msg: "保存成功"}
+            if (res.data && res.data.success && res.data.data === true) {
               that.getList();
               that.$notify({
-                title: "Success",
-                message: "成功",
+                title: "成功",
+                message: res.data.msg || "知识库保存成功",
                 type: "success",
                 duration: 2000
               });
               that.dialog.visible = false;
+              that.dialog.updateLoading = false;
+            } else {
+              that.$notify({
+                title: "失败",
+                message: (res.data && res.data.msg) || "保存失败，请检查数据",
+                type: "error",
+                duration: 3000
+              });
+              that.dialog.updateLoading = false;
             }
+          }).catch(err => {
+            console.error('保存错误：', err);
+            that.$notify({
+              title: "错误",
+              message: "保存出错：" + (err.message || err),
+              type: "error",
+              duration: 3000
+            });
+            that.dialog.updateLoading = false;
           });
         }
       });
@@ -546,7 +570,7 @@ new Vue({
     handleDelete(index, row) {
       let that = this
       let ids = [row.id];
-      service.post("/Admin/KnowledgeBases/edit?handler=Delete", ids).then(res => {
+      service.post("/Admin/KnowledgeBase/edit?handler=Delete", ids).then(res => {
         if (res.data.success) {
           that.getList();
           that.$notify({
@@ -643,30 +667,62 @@ new Vue({
       console.log('submit!');
     },
     handleEmbeddingBtn(btnType, item) {
-      debugger
+      const that = this;
       if (btnType === 'embedding') {
-        //开始向量化数据
-        serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBasesAppService/Xncf.KnowledgeBase_KnowledgeBasesAppService.EmbeddingKnowledgeBase'
-        let dataTemp = {
-          id:item?.id ?? ''
-        }
-
-        if (!serviceURL) return
-        try {
-          service.post(serviceURL, dataTemp).then(res => {
-            debugger
-            that.$notify({
-              title: "Success",
-              message: "成功",
-              type: "success",
-              duration: 2000
-            });
-            that.visible.drawerGroup = false;
+        // 确认对话框
+        this.$confirm(`确认对知识库 "${item.name}" 进行向量化处理吗？`, '向量化确认', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          // 显示加载提示
+          const loading = this.$loading({
+            lock: true,
+            text: '正在进行向量化处理，请稍候...',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
           });
-        } catch (err) {
-          console.error('Request Error:', err);
-          this.isGetGroupAgent = false
-        }
+
+          //开始向量化数据
+          const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBasesAppService/Xncf.KnowledgeBase_KnowledgeBasesAppService.EmbeddingKnowledgeBase';
+          const dataTemp = {
+            id: item?.id ?? ''
+          };
+
+          service.post(serviceURL, dataTemp).then(res => {
+            loading.close();
+            
+            if (res.success) {
+              // 显示详细结果
+              const message = res.data || '向量化成功！';
+              that.$notify({
+                title: "向量化成功",
+                message: message,
+                type: "success",
+                duration: 5000,
+                dangerouslyUseHTMLString: true
+              });
+            } else {
+              that.$notify({
+                title: "向量化失败",
+                message: res.message || '向量化处理失败',
+                type: "error",
+                duration: 5000
+              });
+            }
+          }).catch(err => {
+            loading.close();
+            console.error('Embedding Error:', err);
+            that.$notify({
+              title: "错误",
+              message: err.message || '向量化处理出错，请检查配置',
+              type: "error",
+              duration: 5000
+            });
+          });
+        }).catch(() => {
+          // 用户取消
+        });
       }
     },
     // Dailog|抽屉 打开 按钮

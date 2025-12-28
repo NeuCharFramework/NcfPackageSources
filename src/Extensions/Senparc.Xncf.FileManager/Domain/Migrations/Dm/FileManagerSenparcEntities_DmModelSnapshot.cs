@@ -64,6 +64,118 @@ namespace Senparc.Xncf.FileManager.Domain.Migrations.Dm
 
                     b.ToTable("Senparc_FileManager_Color");
                 });
+
+            modelBuilder.Entity("Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.NcfFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<string>("FileExtension")
+                        .HasMaxLength(100)
+                        .HasColumnType("NVARCHAR2(100)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("NVARCHAR2(250)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(32767)");
+
+                    b.Property<long>("FileSize")
+                        .HasColumnType("BIGINT");
+
+                    b.Property<int>("FileType")
+                        .HasColumnType("INT");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("BIT");
+
+                    b.Property<int?>("FolderId")
+                        .HasColumnType("INT");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<string>("StorageFileName")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(32767)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INT");
+
+                    b.Property<DateTime>("UploadTime")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NcfFiles");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.NcfFolder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("NVARCHAR2(500)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("BIT");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("NVARCHAR2(200)");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("INT");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NcfFolders");
+                });
 #pragma warning restore 612, 618
         }
     }
