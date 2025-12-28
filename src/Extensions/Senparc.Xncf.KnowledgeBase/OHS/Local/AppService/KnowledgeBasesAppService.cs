@@ -24,16 +24,16 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
     {
         private readonly KnowledgeBasesService knowledgeBasesService;
         private readonly KnowledgeBasesDetailService knowledgeBasesDetailService;
-        private readonly Domain.Services.KnowledgeBaseService knowledgeBaseAppService;
+        private readonly Domain.Services.KnowledgeBaseService knowledgeBaseService;
 
         public KnowledgeBasesAppService(IServiceProvider serviceProvider, 
             KnowledgeBasesService knowledgeBasesService,
             KnowledgeBasesDetailService knowledgeBasesDetailService,
-            Domain.Services.KnowledgeBaseService knowledgeBaseAppService) : base(serviceProvider)
+            Domain.Services.KnowledgeBaseService knowledgeBaseService) : base(serviceProvider)
         {
             this.knowledgeBasesService = knowledgeBasesService;
             this.knowledgeBasesDetailService = knowledgeBasesDetailService;
-            this.knowledgeBaseAppService = knowledgeBaseAppService;
+            this.knowledgeBaseService = knowledgeBaseService;
         }
 
         /// <summary>
@@ -101,16 +101,18 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
             return await this.GetResponseAsync<bool>(async (response, logger) =>
             {
                 logger.Append($"开始对知识库 ID: {request.Id} 进行向量化处理...");
-                
+                System.Console.WriteLine($"开始对知识库 ID: {request.Id} 进行向量化处理...");
                 try
                 {
-                    var result = await knowledgeBaseAppService.EmbeddingKnowledgeBaseAsync(request.Id);
+                    var result = await knowledgeBaseService.EmbeddingKnowledgeBaseAsync(request.Id);
                     logger.Append(result);
                     return true;
                 }
                 catch (Exception ex)
                 {
                     logger.Append($"向量化处理失败：{ex.Message}");
+                    System.Console.WriteLine(ex.Message);
+                
                     throw;
                 }
             });
