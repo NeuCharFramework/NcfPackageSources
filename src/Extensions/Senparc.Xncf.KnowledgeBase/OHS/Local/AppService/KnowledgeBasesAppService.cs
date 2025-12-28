@@ -139,7 +139,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
                         return false;
                     }
 
-                    var totalChunks = await knowledgeBaseAppService.AddFilesToKnowledgeBaseAsync(
+                    var totalChunks = await knowledgeBaseService.AddFilesToKnowledgeBaseAsync(
                         request.knowledgeBaseId, 
                         request.fileIds);
                     
