@@ -6996,30 +6996,18 @@ var app = new Vue({
             return score !== null && score !== undefined && score > -1;
         },
         
-        // 获取前缀（从variablesJson解析或返回空）
+        // 获取前缀（直接从 prefix 字段获取）
         getPromptPrefix(side) {
             const prompt = side === 'A' ? this.comparePromptA : this.comparePromptB;
-            if (!prompt || !prompt.variablesJson) return '';
-            
-            try {
-                const vars = JSON.parse(prompt.variablesJson);
-                return vars.prefix || '';
-            } catch (e) {
-                return '';
-            }
+            if (!prompt) return '';
+            return prompt.prefix || '';
         },
         
-        // 获取后缀（从variablesJson解析或返回空）
+        // 获取后缀（直接从 suffix 字段获取）
         getPromptSuffix(side) {
             const prompt = side === 'A' ? this.comparePromptA : this.comparePromptB;
-            if (!prompt || !prompt.variablesJson) return '';
-            
-            try {
-                const vars = JSON.parse(prompt.variablesJson);
-                return vars.suffix || '';
-            } catch (e) {
-                return '';
-            }
+            if (!prompt) return '';
+            return prompt.suffix || '';
         },
         
         // 跳转到指定的Prompt（完全模拟手动点击靶道选择的行为）
@@ -7172,8 +7160,8 @@ var app = new Vue({
         
         // 生成Git风格的变量配置差异HTML
         getVariablesDiffHtml(side) {
-            const varsA = this.comparePromptA?.variablesJson || '{}';
-            const varsB = this.comparePromptB?.variablesJson || '{}';
+            const varsA = this.comparePromptA?.variableDictJson || '{}';
+            const varsB = this.comparePromptB?.variableDictJson || '{}';
             
             // 格式化JSON以便对比
             let formattedA = varsA;

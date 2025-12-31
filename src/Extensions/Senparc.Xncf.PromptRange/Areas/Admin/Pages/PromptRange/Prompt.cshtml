@@ -1229,7 +1229,7 @@
                 </div>
                 
                 @* 变量列表对比（Git diff风格） *@
-                <div class="compare-diff-container" v-if="comparePromptA.variablesJson || comparePromptB.variablesJson">
+                <div class="compare-diff-container" v-if="comparePromptA.variableDictJson || comparePromptB.variableDictJson">
                     <div class="compare-columns">
                         <div class="compare-diff-column">
                             <div class="diff-column-header">Prompt A - 变量配置</div>
@@ -1239,9 +1239,9 @@
                         </div>
                         <div class="compare-diff-column">
                             <div class="diff-column-header">Prompt B - 变量配置
-                                <span class="diff-badge" v-if="hasFieldDiff(comparePromptA.variablesJson, comparePromptB.variablesJson)">有差异</span>
+                                <span class="diff-badge" v-if="hasFieldDiff(comparePromptA.variableDictJson, comparePromptB.variableDictJson)">有差异</span>
                             </div>
-                            <div class="diff-code-block" :class="{'has-content-diff': hasFieldDiff(comparePromptA.variablesJson, comparePromptB.variablesJson)}">
+                            <div class="diff-code-block" :class="{'has-content-diff': hasFieldDiff(comparePromptA.variableDictJson, comparePromptB.variableDictJson)}">
                                 <pre v-html="getVariablesDiffHtml('B')"></pre>
                             </div>
                         </div>

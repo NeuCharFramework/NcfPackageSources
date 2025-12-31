@@ -73,7 +73,6 @@
 			[2025-06-26] v0.35.2-preview.9 Finish new AI code generation template
 			[2025-06-27] v0.35.3-preview.9 Add dynamic XNCF Template dynamic generator
 			[2025-06-28] v0.35.3-preview.10 Add dynamic XNCF Template dynamic generator, support for dotnet CLI and Visual Studio together
-
 			[2025-11-01] update basic libraries, including Senparc.AI
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
