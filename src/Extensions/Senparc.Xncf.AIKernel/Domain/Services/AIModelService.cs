@@ -77,7 +77,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <exception cref="NcfExceptionBase"></exception>
         public SenparcAiSetting BuildSenparcAiSetting(AIModelDto aiModel)
         {
-            var aiSettings = new SenparcAiSetting
+            SenparcAiSetting aiSettings = new SenparcAiSetting
             {
                 AiPlatform = aiModel.AiPlatform
             };
