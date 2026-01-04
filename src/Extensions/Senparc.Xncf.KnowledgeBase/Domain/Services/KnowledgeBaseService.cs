@@ -10,6 +10,8 @@ using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Repository;
+using Senparc.Ncf.Service;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.FileManager.Domain.Services;
@@ -27,26 +29,51 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Senparc.Xncf.KnowledgeBase.Domain.Services
 {
-    public class KnowledgeBaseService
+    public class KnowledgeBaseService : ServiceBase<Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBase>
     {
-        private readonly KnowledgeBasesService _knowledgeBasesService;
-        private readonly KnowledgeBasesDetailService _knowledgeBasesDetailService;
+        private readonly KnowledgeBaseItemService _knowledgeBasesDetailService;
         private readonly NcfFileService _ncfFileService;
         private readonly AIModelService _aIModelService;
         private readonly IServiceProvider _serviceProvider;
 
         public KnowledgeBaseService(
-            KnowledgeBasesService knowledgeBasesService,
-            KnowledgeBasesDetailService knowledgeBasesDetailService,
+            RepositoryBase<KnowledgeBase.Models.DatabaseModel.KnowledgeBase> repo,
+            KnowledgeBaseItemService knowledgeBasesDetailService,
             NcfFileService ncfFileService,
             AIModelService aIModelService,
             IServiceProvider serviceProvider)
+            : base(repo, serviceProvider)
         {
-            _knowledgeBasesService = knowledgeBasesService;
             _knowledgeBasesDetailService = knowledgeBasesDetailService;
             _ncfFileService = ncfFileService;
             _aIModelService = aIModelService;
             _serviceProvider = serviceProvider;
+        }
+
+        public async Task<IEnumerable<KnowledgeBasesDto>> GetKnowledgeBasesList(int PageIndex, int PageSize)
+        {
+            List<KnowledgeBasesDto> selectListItems = null;
+            List<KnowledgeBase.Models.DatabaseModel.KnowledgeBase> knowledgeBases = 
+                (await GetFullListAsync(_ => true).ConfigureAwait(false))
+                .OrderByDescending(_ => _.AddTime)
+                .ToList();
+            selectListItems = this.Mapper.Map<List<KnowledgeBasesDto>>(knowledgeBases);
+            return selectListItems;
+        }
+
+        public async Task CreateOrUpdateAsync(KnowledgeBasesDto dto)
+        {
+            KnowledgeBase.Models.DatabaseModel.KnowledgeBase knowledgeBases;
+            if (dto.Id == 0)
+            {
+                knowledgeBases = new KnowledgeBase.Models.DatabaseModel.KnowledgeBase(dto);
+            }
+            else
+            {
+                knowledgeBases = await GetObjectAsync(_ => _.Id == dto.Id);
+                knowledgeBases.Update(dto);
+            }
+            await SaveObjectAsync(knowledgeBases);
         }
 
         /// <summary>
@@ -112,7 +139,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             int chunkIndex = 0;
             foreach (var chunk in chunks)
             {
-                var detailDto = new KnowledgeBasesDetailDto
+                var detailDto = new KnowledgeBasesDetalDto
                 {
                     KnowledgeBasesId = knowledgeBaseId,
                     Content = chunk,
@@ -134,7 +161,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         /// <returns></returns>
         public async Task<string> EmbeddingKnowledgeBaseAsync(int knowledgeBaseId)
         {
-            var knowledgeBase = await _knowledgeBasesService.GetObjectAsync(z => z.Id == knowledgeBaseId);
+            var knowledgeBase = await base.GetObjectAsync(z => z.Id == knowledgeBaseId);
             if (knowledgeBase == null)
             {
                 throw new NcfExceptionBase($"Knowledge Base with ID {knowledgeBaseId} not found.");
@@ -200,7 +227,6 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                 SenparcTrace.SendCustomLog("知识库", $"知识库 '{knowledgeBase.Name}' 没有待向量化的文本切片。现在开始切片");
 
                 //从关联的文件中获取内容进行切片
-            
 
                 var text = knowledgeBase.Content;
 

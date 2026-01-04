@@ -11,16 +11,16 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
     /// <summary>
     /// KnowledgeBases 实体类
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(KnowledgeBases))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(KnowledgeBase))]//必须添加前缀，防止全系统中发生冲突
     [Serializable]
-    public class KnowledgeBases : EntityBase<int>
+    public class KnowledgeBase : EntityBase<int>
     {
-        public KnowledgeBases()
+        public KnowledgeBase()
         {
             AddTime = DateTime.Now;
             this.LastUpdateTime = AddTime;
         }
-        public KnowledgeBases(KnowledgeBasesDto knowledgeBasesDto) : this()
+        public KnowledgeBase(KnowledgeBasesDto knowledgeBasesDto) : this()
         {
             EmbeddingModelId = knowledgeBasesDto.EmbeddingModelId;
             VectorDBId = knowledgeBasesDto.VectorDBId;

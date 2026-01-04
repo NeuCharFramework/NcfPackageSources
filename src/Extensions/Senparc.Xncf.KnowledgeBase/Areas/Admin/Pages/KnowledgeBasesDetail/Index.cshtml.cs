@@ -16,14 +16,14 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBasesDetail
 {
     public class IndexModel : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {
-        private readonly KnowledgeBasesDetailService _knowledgeBasesDetailService;
+        private readonly KnowledgeBaseItemService _knowledgeBasesDetailService;
         private readonly IServiceProvider _serviceProvider;
-        public KnowledgeBasesDetailDto knowledgeBasesDetailDto { get; set; }
+        public KnowledgeBasesDetalDto knowledgeBasesDetailDto { get; set; }
         public string Token { get; set; }
         public string UpFileUrl { get; set; }
         public string BaseUrl { get; set; }
 
-        public IndexModel(Lazy<XncfModuleService> xncfModuleService, KnowledgeBasesDetailService knowledgeBasesDetailService, IServiceProvider serviceProvider) : base(xncfModuleService)
+        public IndexModel(Lazy<XncfModuleService> xncfModuleService, KnowledgeBaseItemService knowledgeBasesDetailService, IServiceProvider serviceProvider) : base(xncfModuleService)
         {
             CurrentMenu = "KnowledgeBasesDetail";
             this._knowledgeBasesDetailService = knowledgeBasesDetailService;
@@ -32,7 +32,7 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBasesDetail
 
         [BindProperty(SupportsGet = true)]
         public int PageIndex { get; set; } = 1;
-        public PagedList<Models.DatabaseModel.KnowledgeBasesDetail> KnowledgeBasesDetail { get; set; }
+        public PagedList<Models.DatabaseModel.KnowledgeBaseItem> KnowledgeBasesDetail { get; set; }
 
         public Task OnGetAsync()
         {
@@ -43,7 +43,7 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBasesDetail
 
         public async Task<IActionResult> OnGetKnowledgeBasesDetailAsync(string keyword, string orderField, int pageIndex, int pageSize)
         {
-            var seh = new SenparcExpressionHelper<Models.DatabaseModel.KnowledgeBasesDetail>();
+            var seh = new SenparcExpressionHelper<Models.DatabaseModel.KnowledgeBaseItem>();
             //seh.ValueCompare.AndAlso(!string.IsNullOrEmpty(keyword), _ => _.Name.Contains(keyword));
             var where = seh.BuildWhereExpression();
             var response = await _knowledgeBasesDetailService.GetObjectListAsync(pageIndex, pageSize, where, orderField);

@@ -7,13 +7,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
 {
-    public class KnowledgeBasesDetailDto : DtoBase
+    public class KnowledgeBasesDetalDto : DtoBase<int>
     {
-        public KnowledgeBasesDetailDto()
+        public KnowledgeBasesDetalDto()
         {
         }
 
-        public KnowledgeBasesDetailDto(int id, int knowledgeBasesId, int contentType, string content, string fileName = "", int chunkIndex = 0)
+        public KnowledgeBasesDetalDto(int id, int knowledgeBasesId, ContentType contentType, string content, string fileName = "", int chunkIndex = 0)
         {
             Id = id;
             KnowledgeBasesId = knowledgeBasesId;
@@ -23,7 +23,6 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
             ChunkIndex = chunkIndex;
         }
 
-        public int Id { get; set; }
         /// <summary>
         /// 知识库Id
         /// </summary>
@@ -31,7 +30,10 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
         /// <summary>
         /// 内容类型
         /// </summary>
-        public int ContentType { get; set; }
+        public ContentType ContentType { get; set; }
+
+        public int? NcfFileId { get; set; }
+
         /// <summary>
         /// 内容
         /// </summary>

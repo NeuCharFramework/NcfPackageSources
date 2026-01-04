@@ -14,8 +14,8 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBasesDetail
 {
     public class EditModel : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {
-        private readonly KnowledgeBasesDetailService _knowledgeBasesDetailService;
-        public EditModel(KnowledgeBasesDetailService knowledgeBasesDetailService,Lazy<XncfModuleService> xncfModuleService) : base(xncfModuleService)
+        private readonly KnowledgeBaseItemService _knowledgeBasesDetailService;
+        public EditModel(KnowledgeBaseItemService knowledgeBasesDetailService,Lazy<XncfModuleService> xncfModuleService) : base(xncfModuleService)
         {
             CurrentMenu = "KnowledgeBasesDetail";
             _knowledgeBasesDetailService = knowledgeBasesDetailService;
@@ -23,13 +23,13 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBasesDetail
 
         [BindProperty(SupportsGet = true)]
         public string Id { get; set; }
-        public KnowledgeBasesDetailDto KnowledgeBasesDetailDto { get; set; }
+        public KnowledgeBasesDetalDto KnowledgeBasesDetailDto { get; set; }
 
         /// <summary>
         /// Handler=Save
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> OnPostSaveAsync([FromBody] KnowledgeBasesDetailDto knowledgeBasesDetailDto)
+        public async Task<IActionResult> OnPostSaveAsync([FromBody] KnowledgeBasesDetalDto knowledgeBasesDetailDto)
         {
             if (knowledgeBasesDetailDto == null)
             {

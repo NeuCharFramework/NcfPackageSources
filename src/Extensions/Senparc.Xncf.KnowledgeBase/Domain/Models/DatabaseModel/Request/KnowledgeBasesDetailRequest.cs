@@ -1,3 +1,4 @@
+using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,7 +17,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Request
         /// <summary>
         /// 内容类型
         /// </summary>
-        public int ContentType { get; set; }
+        public ContentType ContentType { get; set; }
         /// <summary>
         /// 内容
         /// </summary>

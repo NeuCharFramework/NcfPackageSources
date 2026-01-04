@@ -22,13 +22,13 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
 {
     public class KnowledgeBasesAppService : AppServiceBase
     {
-        private readonly KnowledgeBasesService knowledgeBasesService;
-        private readonly KnowledgeBasesDetailService knowledgeBasesDetailService;
+        private readonly KnowledgeBaseService knowledgeBasesService;
+        private readonly KnowledgeBaseItemService knowledgeBasesDetailService;
         private readonly Domain.Services.KnowledgeBaseService knowledgeBaseService;
 
-        public KnowledgeBasesAppService(IServiceProvider serviceProvider, 
-            KnowledgeBasesService knowledgeBasesService,
-            KnowledgeBasesDetailService knowledgeBasesDetailService,
+        public KnowledgeBasesAppService(IServiceProvider serviceProvider,
+            KnowledgeBaseService knowledgeBasesService,
+            KnowledgeBaseItemService knowledgeBasesDetailService,
             Domain.Services.KnowledgeBaseService knowledgeBaseService) : base(serviceProvider)
         {
             this.knowledgeBasesService = knowledgeBasesService;
@@ -71,7 +71,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
             return await this.GetResponseAsync<bool>(async (response, logger) =>
             {
 
-                KnowledgeBasesDetailDto knowledgeBasesDetailDto = new KnowledgeBasesDetailDto()
+                KnowledgeBasesDetalDto knowledgeBasesDetailDto = new KnowledgeBasesDetalDto()
                 {
                     KnowledgeBasesId = request.KnowledgeBasesId,
                     ContentType = request.ContentType,
