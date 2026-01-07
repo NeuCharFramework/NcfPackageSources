@@ -77,7 +77,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
             //扫描当前解决方案包含的所有领域项目
-            var newItems = FunctionHelper.LoadXncfProjects(true, "Senparc.Areas.Admin");
+            var newItems = FunctionHelper.LoadXncfProjects(true, null,"Senparc.Areas.Admin");
             newItems.ForEach(z => InjectDomain.Items.Add(z));
 
             //载入 AI 模型
