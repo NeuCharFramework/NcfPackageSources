@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.1.7.4-preview</Version>
+    <Version>0.1.8-preview.1</Version>
     <AssemblyName>Senparc.Xncf.KnowledgeBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.KnowledgeBase</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -18,11 +18,11 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v0.1 创世
-			[2025-07-27] v0.1.5-preview1s update Knowledge Base
-
-				[2025-11-01] update basic libraries, including Senparc.AI
-</PackageReleaseNotes>
+		v0.1 创世
+		[2025-07-27] v0.1.5-preview1s update Knowledge Base
+		[2025-11-01] update basic libraries, including Senparc.AI
+		[2025-01-07] v0.1.8-preview.1 Reset all database migrations
+	</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
