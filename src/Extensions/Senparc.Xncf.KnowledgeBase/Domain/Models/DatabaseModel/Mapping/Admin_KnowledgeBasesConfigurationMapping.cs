@@ -6,9 +6,9 @@ using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel;
 namespace Senparc.Xncf.KnowledgeBase.Models
 {
     [XncfAutoConfigurationMapping]
-    public class Admin_KnowledgeBasesConfigurationMapping : ConfigurationMappingWithIdBase<KnowledgeBases, int>
+    public class Admin_KnowledgeBasesConfigurationMapping : ConfigurationMappingWithIdBase<DatabaseModel.KnowledgeBase, int>
     {
-        public override void Configure(EntityTypeBuilder<KnowledgeBases> builder)
+        public override void Configure(EntityTypeBuilder<DatabaseModel.KnowledgeBase> builder)
         {
             
         }

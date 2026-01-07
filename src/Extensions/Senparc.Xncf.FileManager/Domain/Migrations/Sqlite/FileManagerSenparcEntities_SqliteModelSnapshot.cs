@@ -121,7 +121,7 @@ namespace Senparc.Xncf.FileManager.Domain.Migrations.Sqlite
 
                     b.HasKey("Id");
 
-                    b.ToTable("NcfFiles");
+                    b.ToTable("Senparc_FileManager_NcfFile");
                 });
 
             modelBuilder.Entity("Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.NcfFolder", b =>
@@ -167,7 +167,7 @@ namespace Senparc.Xncf.FileManager.Domain.Migrations.Sqlite
 
                     b.HasKey("Id");
 
-                    b.ToTable("NcfFolders");
+                    b.ToTable("Senparc_FileManager_NcfFolder");
                 });
 #pragma warning restore 612, 618
         }

@@ -141,12 +141,13 @@ namespace Senparc.Ncf.XncfBase.Functions
         /// （扫描当前解决方案包含的所有领域项目）
         /// </summary>
         /// <param name="mustHaveXncfModule">当前解决方案是否必须包含 XNCF 项目</param>
+        /// <param name="rootDir">查找 XNCF 模块根目录，如果留 null，则使用 <code>System.IO.Directory.GetCurrentDirectory()</code>获取，并且查找 .sln 所在文件夹</param>
         /// <param name="additionalProjects">除了标准的 XNCF 以外额外的项目</param>
-        public static List<SelectionItem> LoadXncfProjects(bool mustHaveXncfModule = false, params string[] additionalProjects)
+        public static List<SelectionItem> LoadXncfProjects(bool mustHaveXncfModule = false, string rootDir = null, params string[] additionalProjects)
         {
             var selectList = new List<SelectionItem>();
 
-            var currentDir = System.IO.Directory.GetCurrentDirectory();
+            var currentDir = rootDir ?? System.IO.Directory.GetCurrentDirectory();
 
             while (currentDir != null)
             {

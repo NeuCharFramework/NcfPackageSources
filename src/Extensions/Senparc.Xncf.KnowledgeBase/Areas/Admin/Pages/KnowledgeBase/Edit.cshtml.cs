@@ -9,13 +9,14 @@ using Senparc.CO2NET.Trace;
 using Senparc.CO2NET.Extensions;
 using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
 using Senparc.Xncf.KnowledgeBase.Services;
+using Senparc.Xncf.KnowledgeBase.Domain.Services;
 
 namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBases
 {
     public class EditModel : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {
-        private readonly KnowledgeBasesService _knowledgeBasesService;
-        public EditModel(KnowledgeBasesService knowledgeBasesService,Lazy<XncfModuleService> xncfModuleService) : base(xncfModuleService)
+        private readonly KnowledgeBaseService _knowledgeBasesService;
+        public EditModel(KnowledgeBaseService knowledgeBasesService,Lazy<XncfModuleService> xncfModuleService) : base(xncfModuleService)
         {
             CurrentMenu = "KnowledgeBases";
             _knowledgeBasesService = knowledgeBasesService;
