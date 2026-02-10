@@ -20,11 +20,3 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         public string UserMessage { get; set; }
     }
 }
-
-
-
-
-
-
-
-
