@@ -61,11 +61,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
 
         public async Task CreateOrUpdateAsync(KnowledgeBase_InsertDto dto)
         {
-            KnowledgeBase.Models.DatabaseModel.KnowledgeBase knowledgeBases;
+            KnowledgeBase.Models.DatabaseModel.KnowledgeBase knowledgeBase;
             if (dto.Id == 0)
             {
                 //新增
-                knowledgeBases = new KnowledgeBase.Models.DatabaseModel.KnowledgeBase(dto);
+                knowledgeBase = new KnowledgeBase.Models.DatabaseModel.KnowledgeBase(dto);
 
                 //增加文件
                var ncfFiles = await _ncfFileService.GetFullListAsync(_ => dto.NcfFileIds.Contains(_.Id));
@@ -79,24 +79,26 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
 
                         var kbItem = new KnowledgeBaseItem
                         {
-                            KnowledgeBasesId = knowledgeBases.Id,
+                            KnowledgeBasesId = knowledgeBase.Id,
                             ContentType = ContentType.TextFile, // 0: Text
                             Content = content,
                             FileName = item.FileName
                         };
+                        knowledgeBaseItems.Add(kbItem);
+                        await _knowledgeBaseDetailService.SaveObjectAsync(kbItem);
                     }
-                    await _knowledgeBaseDetailService.SaveObjectListAsync(knowledgeBaseItems);
+                    //await _knowledgeBaseDetailService.SaveObjectListAsync(knowledgeBaseItems);
                 }
             }
             else
             {
                 //编辑
-                knowledgeBases = await GetObjectAsync(_ => _.Id == dto.Id);
-                knowledgeBases.Update(dto);
+                knowledgeBase = await GetObjectAsync(_ => _.Id == dto.Id);
+                knowledgeBase.Update(dto);
 
 
             }
-            await SaveObjectAsync(knowledgeBases);
+            await SaveObjectAsync(knowledgeBase);
         }
 
         /// <summary>

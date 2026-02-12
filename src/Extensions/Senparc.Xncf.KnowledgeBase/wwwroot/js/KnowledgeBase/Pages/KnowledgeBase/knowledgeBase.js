@@ -1,898 +1,899 @@
 new Vue({
-  el: "#app",
-  data() {
-    var validateCode = (rule, value, callback) => {
-      callback();
-    };
-    return {
-      defaultMSG: null,
-      editorData: '',
-      elSize: 'medium', // el 组件尺寸大小 默认为空  medium、small、mini
-      // 显隐 visible
-      visible: {
-        drawerGroup: false, // 组 新增|编辑
-      },
-      form:
-      {
-        content: ''
-      },
-      config:
-      {
-        initialFrameHeight: 500
-      },
-      //分页参数
-      paginationQuery:
-      {
-        total: 5
-      },
-      //分页接口传参
-      listQuery: {
-        pageIndex: 1,
-        pageSize: 20,
-        keyword: '',
-        orderField: ''
-      },
-      selectDefaultEmbeddingModel: [],
-      embeddingModelData: [],
-      selectDefaultVectorDB: [],
-      vectorDBData: [],
-      selectDefaultChatModel: [],
-      chatModelData: [],
-      page: {
-        page: 1,
-        size: 10
-      },
-      filterTableHeader: {
-        embeddingModelId: [],
-        vectorDBId: [],
-        chatModelId: [],
-        name: []
-      },
-      colData: [
-        { title: "Embedding模型Id", istrue: false },
-        { title: "向量数据库Id", istrue: false },
-        { title: "对话模型Id", istrue: false },
-        { title: "名称", istrue: true },
-        { title: "内容", istrue: true },
-      ],
-      checkBoxGroup: [
-        "Embedding模型Id", "向量数据库Id", "对话模型Id", "名称", "内容"
-      ],
-      checkedColumns: [],
-      contentTypeData: [
-        { value: 1, label: '输入' },
-        { value: 2, label: '文件' },
-        { value: 3, label: '采集外部数据' }
-      ],
-      keyword: '',
-      multipleSelection: '',
-      radio: '',
-      props: { multiple: true },
-      // 表格数据
-      tableData: [],
-      uid: '',
-      fileList: [],
-      sizeForm: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      },
-      size: 'mini',
-      dialogImageUrl: '',
-      dialogVisible: false,
-      dialog:
-      {
-        title: '新增知识库管理',
-        visible: false,
-        data:
-        {
-          id: '', embeddingModelId: '', vectorDBId: '', chatModelId: '', name: '', content: ''
-        },
-        rules:
-        {
-          name:
-            [
-              { required: true, message: "知识库管理名称为必填项", trigger: "blur" }
-            ]
-        },
-        updateLoading: false,
-        disabled: false,
-        checkStrictly: true // 是否严格的遵守父子节点不互相关联
-      },
-      detailDialog:
-      {
-        title: '知识库管理详情',
-        visible: false,
-        data:
-        {
-          id: '', embeddingModelId: '', vectorDBId: '', chatModelId: '', name: '', content: ''
-        },
-        rules:
-        {
-          name:
-            [
-              { required: true, message: "知识库管理名称为必填项", trigger: "blur" }
-            ]
-        },
-        updateLoading: false,
-        disabled: false,
-        checkStrictly: true // 是否严格的遵守父子节点不互相关联
-      },
-      // 组 新增|编辑
-      groupForm: {
-        contentType: '', // 内容类型
-        files: [], // 文件列表
-        content: '', // 内容
-        knowledgeBasesId: '' //知识库ID
-      },
-      groupFormRules: {
-        name: [
-          { required: true, message: '请填写', trigger: 'blur' },
-        ],
-        members: [
-          { required: true, message: '请填写', trigger: 'change' },
-        ],
-        adminAgentTemplateId: [
-          { required: true, message: '请填写', trigger: 'change' },
-        ],
-        enterAgentTemplateId: [
-          { required: true, message: '请选择', trigger: 'change' },
-        ],
-        // description: [
-        //     { required: true, message: '请填写', trigger: 'blur' },
-        // ],
-      },
-      // 组 新增|编辑 智能体
-      groupAgentQueryList: {
-        pageIndex: 0,
-        pageSize: 0,
-        filter: '', // 筛选文本
-        timeSort: false, // 默认降序
-        proce: false, // 进行中
-        stop: false, // 停用
-        stand: false, // 待命
-      },
-      groupAgentList: [], // 组新增时的智能体列表
-      // 组 新增|编辑 智能体
-      fileQueryList: {
-        pageIndex: 0,
-        pageSize: 0,
-        filter: '', // 筛选文本
-        timeSort: false, // 默认降序
-        proce: false, // 进行中
-        stop: false, // 停用
-        stand: false, // 待命
-      },
-      fileList: [], // 组新增时的智能体列表
-    }
-  },
-  created: function () {
-    let that = this
-    that.getList();
-    that.getEmbeddingModelList();
-    that.getVectorDBList();
-    that.getChatModelList();
-    debugger
-    // 获取文件数据
-    that.getFileListData('file');
-
-    //TODO:初始化设置选中的字段
-    that.checkedColumns = that.colData.filter(item => item.istrue).map(item => item.title);
-    console.log(`that.checkedColumns --- ${JSON.stringify(that.checkedColumns)}`)
-  },
-  watch:
-  {
-    'dialog.visible': function (val, old) {
-      // 关闭dialog，清空
-      if (!val) {
-        this.dialog.data = {
-          id: '', embeddingModelId: '', vectorDBId: '', chatModelId: '', name: '', content: ''
+    el: "#app",
+    data() {
+        var validateCode = (rule, value, callback) => {
+            callback();
         };
-        this.dialog.updateLoading = false;
-        this.dialog.disabled = false;
-      }
-    },
-    'checkedColumns': function (val) {
-      //debugger
-      console.log(val);
-      let arr = this.checkBoxGroup.filter(i => !val.includes(i));
-      this.colData.filter(i => {
-        if (arr.indexOf(i.title) != -1) {
-          i.istrue = false;
-        } else {
-          i.istrue = true;
+        return {
+            defaultMSG: null,
+            editorData: '',
+            elSize: 'medium', // el 组件尺寸大小 默认为空  medium、small、mini
+            // 显隐 visible
+            visible: {
+                drawerGroup: false, // 组 新增|编辑
+            },
+            form:
+            {
+                content: ''
+            },
+            config:
+            {
+                initialFrameHeight: 500
+            },
+            //分页参数
+            paginationQuery:
+            {
+                total: 5
+            },
+            //分页接口传参
+            listQuery: {
+                pageIndex: 1,
+                pageSize: 20,
+                keyword: '',
+                orderField: ''
+            },
+            selectDefaultEmbeddingModel: [],
+            embeddingModelData: [],
+            selectDefaultVectorDB: [],
+            vectorDBData: [],
+            selectDefaultChatModel: [],
+            chatModelData: [],
+            page: {
+                page: 1,
+                size: 10,
+                modelCount: 999
+            },
+            filterTableHeader: {
+                embeddingModelId: [],
+                vectorDBId: [],
+                chatModelId: [],
+                name: []
+            },
+            colData: [
+                { title: "Embedding模型Id", istrue: false },
+                { title: "向量数据库Id", istrue: false },
+                { title: "对话模型Id", istrue: false },
+                { title: "名称", istrue: true },
+                { title: "内容", istrue: true },
+            ],
+            checkBoxGroup: [
+                "Embedding模型Id", "向量数据库Id", "对话模型Id", "名称", "内容"
+            ],
+            checkedColumns: [],
+            contentTypeData: [
+                { value: 1, label: '输入' },
+                { value: 2, label: '文件' },
+                { value: 3, label: '采集外部数据' }
+            ],
+            keyword: '',
+            multipleSelection: '',
+            radio: '',
+            props: { multiple: true },
+            // 表格数据
+            tableData: [],
+            uid: '',
+            fileList: [],
+            sizeForm: {
+                name: '',
+                region: '',
+                date1: '',
+                date2: '',
+                delivery: false,
+                type: [],
+                resource: '',
+                desc: ''
+            },
+            size: 'mini',
+            dialogImageUrl: '',
+            dialogVisible: false,
+            dialog:
+            {
+                title: '新增知识库管理',
+                visible: false,
+                data:
+                {
+                    id: '', embeddingModelId: '', vectorDBId: '', chatModelId: '', name: '', content: ''
+                },
+                rules:
+                {
+                    name:
+                        [
+                            { required: true, message: "知识库管理名称为必填项", trigger: "blur" }
+                        ]
+                },
+                updateLoading: false,
+                disabled: false,
+                checkStrictly: true // 是否严格的遵守父子节点不互相关联
+            },
+            detailDialog:
+            {
+                title: '知识库管理详情',
+                visible: false,
+                data:
+                {
+                    id: '', embeddingModelId: '', vectorDBId: '', chatModelId: '', name: '', content: ''
+                },
+                rules:
+                {
+                    name:
+                        [
+                            { required: true, message: "知识库管理名称为必填项", trigger: "blur" }
+                        ]
+                },
+                updateLoading: false,
+                disabled: false,
+                checkStrictly: true // 是否严格的遵守父子节点不互相关联
+            },
+            // 组 新增|编辑
+            groupForm: {
+                contentType: '', // 内容类型
+                files: [], // 文件列表
+                content: '', // 内容
+                knowledgeBasesId: '' //知识库ID
+            },
+            groupFormRules: {
+                name: [
+                    { required: true, message: '请填写', trigger: 'blur' },
+                ],
+                members: [
+                    { required: true, message: '请填写', trigger: 'change' },
+                ],
+                adminAgentTemplateId: [
+                    { required: true, message: '请填写', trigger: 'change' },
+                ],
+                enterAgentTemplateId: [
+                    { required: true, message: '请选择', trigger: 'change' },
+                ],
+                // description: [
+                //     { required: true, message: '请填写', trigger: 'blur' },
+                // ],
+            },
+            // 组 新增|编辑 智能体
+            groupAgentQueryList: {
+                pageIndex: 0,
+                pageSize: 0,
+                filter: '', // 筛选文本
+                timeSort: false, // 默认降序
+                proce: false, // 进行中
+                stop: false, // 停用
+                stand: false, // 待命
+            },
+            groupAgentList: [], // 组新增时的智能体列表
+            // 组 新增|编辑 智能体
+            fileQueryList: {
+                pageIndex: 0,
+                pageSize: 0,
+                filter: '', // 筛选文本
+                timeSort: false, // 默认降序
+                proce: false, // 进行中
+                stop: false, // 停用
+                stand: false, // 待命
+            },
+            fileList: [], // 组新增时的智能体列表
         }
-      });
-      this.reload = Math.random()
-    }
-  },
-  methods:
-  {
-    handleChange(value) {
-      console.log(value);
     },
-    handleRemove(file, fileList) {
-      log(file, fileList, 2);
-    },
-    handlePictureCardPreview(file) {
-      let that = this
-      that.dialogImageUrl = file.url;
-      that.dialogVisible = true;
-    },
-    uploadSuccess(res, file, fileList) {
-      let that = this;
-      // 上传成功
-      that.fileList = fileList;
-      debugger
-      if (res.stateCode == 0) {
-        that.$notify({
-          title: '成功',
-          message: '恭喜你，上传成功',
-          type: 'success'
-        });
-        // 清空文件列表（关键）
-        that.$refs.uploadRef.clearFiles();
-      } else {
-        that.$notify.error({
-          title: '失败',
-          message: '上传失败，请重新上传'
-        });
-      }
-    },
-    uploadError() {
-      let that = this;
-      that.$notify.error({
-        title: '失败',
-        message: '上传失败，请重新上传'
-      });
-    },
-    async getEmbeddingModelList() {
-      debugger
-      let that = this
-      let param = {
-        page: that.page.page,
-        size: that.page.size,
-      }
-      await axios.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetPagedListAsync', param)
-        .then(res => {
-          console.log(res)
-          that.embeddingModelData = res.data.data.data;
-        })
+    created: function () {
+        let that = this
+        that.getList();
+        that.getEmbeddingModelList();
+        that.getVectorDBList();
+        that.getChatModelList();
+        debugger
+        // 获取文件数据
+        that.getFileListData('file');
 
+        //TODO:初始化设置选中的字段
+        that.checkedColumns = that.colData.filter(item => item.istrue).map(item => item.title);
+        console.log(`that.checkedColumns --- ${JSON.stringify(that.checkedColumns)}`)
     },
-    async getVectorDBList() {
-      let that = this
-      let param = {
-        page: that.page.page,
-        size: that.page.size,
-      }
-      await axios.post('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.GetPagedListAsync', param)
-        .then(res => {
-          console.log(res)
-          that.vectorDBData = res.data.data.data;
-        })
+    watch:
+    {
+        'dialog.visible': function (val, old) {
+            // 关闭dialog，清空
+            if (!val) {
+                this.dialog.data = {
+                    id: '', embeddingModelId: '', vectorDBId: '', chatModelId: '', name: '', content: ''
+                };
+                this.dialog.updateLoading = false;
+                this.dialog.disabled = false;
+            }
+        },
+        'checkedColumns': function (val) {
+            //debugger
+            console.log(val);
+            let arr = this.checkBoxGroup.filter(i => !val.includes(i));
+            this.colData.filter(i => {
+                if (arr.indexOf(i.title) != -1) {
+                    i.istrue = false;
+                } else {
+                    i.istrue = true;
+                }
+            });
+            this.reload = Math.random()
+        }
     },
-    async getChatModelList() {
-      let that = this
-      let param = {
-        page: that.page.page,
-        size: that.page.size,
-      }
-      await axios.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetPagedListAsync', param)
-        .then(res => {
-          console.log(res)
-          that.chatModelData = res.data.data.data;
-        })
-    },
-    // 获取 文件 数据
-    async getFileListData(listType, page = 0) {
-      const queryList = {}
-      if (listType === 'file') {
-        this.fileQueryList.pageIndex = page ?? 1
-        Object.assign(queryList, this.fileQueryList)
-      }
-      // 接口对接
-      await axios.get(`/api/Senparc.Xncf.FileManager/FileTemplateAppService/Xncf.FileManager_FileTemplateAppService.GetList?${getInterfaceQueryStr(queryList)}`)
-        .then(res => {
-          debugger
-          const data = res?.data ?? {}
-          if (data.success) {
-            const fileData = data?.data?.list ?? []
-            if (listType === 'file') {
-              this.$set(this, 'fileList', fileData)
-              // 确保更新数据时 不会清空选中
-              this.$nextTick(() => {
-                this.isGetGroupAgent = false
-              })
-              // 组成员table 初始选中
-              if (this.visible.drawerGroup && this.groupForm.files.length > 0) {
-                // this.toggleSelection()
-                this.$nextTick(() => {
-                  // this.groupAgentTotal = agentData.length
-                  const filterList = fileData.filter(i => {
-                    return this.groupForm.files.findIndex(item => item.id === i.id) !== -1
-                  })
-                  this.toggleSelection(filterList)
+    methods:
+    {
+        handleChange(value) {
+            console.log(value);
+        },
+        handleRemove(file, fileList) {
+            log(file, fileList, 2);
+        },
+        handlePictureCardPreview(file) {
+            let that = this
+            that.dialogImageUrl = file.url;
+            that.dialogVisible = true;
+        },
+        uploadSuccess(res, file, fileList) {
+            let that = this;
+            // 上传成功
+            that.fileList = fileList;
+            debugger
+            if (res.stateCode == 0) {
+                that.$notify({
+                    title: '成功',
+                    message: '恭喜你，上传成功',
+                    type: 'success'
+                });
+                // 清空文件列表（关键）
+                that.$refs.uploadRef.clearFiles();
+            } else {
+                that.$notify.error({
+                    title: '失败',
+                    message: '上传失败，请重新上传'
+                });
+            }
+        },
+        uploadError() {
+            let that = this;
+            that.$notify.error({
+                title: '失败',
+                message: '上传失败，请重新上传'
+            });
+        },
+        async getEmbeddingModelList() {
+            debugger
+            let that = this
+            let param = {
+                page: that.page.page,
+                size: that.page.modelCount,
+            }
+            await axios.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetPagedListAsync', param)
+                .then(res => {
+                    console.log(res)
+                    that.embeddingModelData = res.data.data.data;
                 })
 
-              }
+        },
+        async getVectorDBList() {
+            let that = this
+            let param = {
+                page: that.page.page,
+                size: that.page.modelCount,
             }
-          } else {
-            app.$message({
-              message: data.errorMessage || data.data || 'Error',
-              type: 'error',
-              duration: 5 * 1000
-            })
-            this.isGetGroupAgent = false
-          }
-        }).catch((err) => {
-          console.log('err', err)
-          this.isGetGroupAgent = false
-        })
-    },
-    // 获取列表
-    async getList() {
-      let that = this
-      //that.uid = resizeUrl().uid
-      let { pageIndex, pageSize, keyword, orderField } = that.listQuery;
-      if (orderField == '' || orderField == undefined) {
-        orderField = 'AddTime Desc';
-      }
-      if (that.keyword != '' && that.keyword != undefined) {
-        keyword = that.keyword;
-      }
-
-      await service.get(`/Admin/KnowledgeBase/Index?handler=KnowledgeBases&pageIndex=${pageIndex}&pageSize=${pageSize}&keyword=${keyword}&orderField=${orderField}`).then(res => {// 使用 map 转换为目标格式的对象数组
-        that.filterTableHeader.embeddingModelId = res.data.data.list.map(z => ({
-          text: z.embeddingModelId,
-          value: z.embeddingModelId
-        }));
-        that.filterTableHeader.vectorDBId = res.data.data.list.map(z => ({
-          text: z.vectorDBId,
-          value: z.vectorDBId
-        }));
-        that.filterTableHeader.chatModelId = res.data.data.list.map(z => ({
-          text: z.chatModelId,
-          value: z.chatModelId
-        }));
-        that.filterTableHeader.name = res.data.data.list.map(z => ({
-          text: z.name,
-          value: z.name
-        }));
-        that.filterTableHeader.content = res.data.data.list.map(z => ({
-          text: z.content,
-          value: z.content
-        }));
-
-        that.tableData = res.data.data.list;
-        that.paginationQuery.total = res.data.data.totalCount;
-      });
-    },
-    async getCategoryList() {
-      let that = this
-      //获取分类列表数据
-      await service.get('/Admin/KnowledgeBase/Index?handler=KnowledgeBasesCategory').then(res => {
-        that.categoryData = res.data.data.list;
-        log('categoryData', res, 2);
-      });
-    },
-    // 编辑 // 新增知识库管理 // 增加下一级
-    handleEdit(index, row, flag) {
-      let that = this;
-      that.dialog.visible = true;
-
-      if (flag === 'add') {
-        // 新增 - 初始化空数据
-        that.dialog.title = '新增知识库管理';
-        that.dialog.data = {
-          id: 0,
-          embeddingModelId: 0,
-          vectorDBId: 0,
-          chatModelId: 0,
-          name: '',
-          content: ''
-        };
-        that.selectDefaultEmbeddingModel = [];
-        that.selectDefaultVectorDB = [];
-        that.selectDefaultChatModel = [];
-        that.dialogImageUrl = '';
-        return;
-      }
-
-      // 编辑 - 使用现有数据
-      let { id, embeddingModelId, vectorDBId, chatModelId, name, content } = row;
-      that.dialog.data = {
-        id: id || 0,
-        embeddingModelId: embeddingModelId || 0,
-        vectorDBId: vectorDBId || 0,
-        chatModelId: chatModelId || 0,
-        name: name || '',
-        content: content || ''
-      };
-
-      // 设置下拉框默认值
-      if (that.dialog.data.embeddingModelId) {
-        that.selectDefaultEmbeddingModel = [parseInt(that.dialog.data.embeddingModelId)];
-      }
-      if (that.dialog.data.vectorDBId) {
-        that.selectDefaultVectorDB = [parseInt(that.dialog.data.vectorDBId)];
-      }
-      if (that.dialog.data.chatModelId) {
-        that.selectDefaultChatModel = [parseInt(that.dialog.data.chatModelId)];
-      }
-
-      if (flag === 'edit') {
-        that.dialog.title = '编辑知识库管理';
-      }
-    },
-    // 设置父级菜单默认显示 递归
-    recursionFunc(row, source, dest) {
-      if (row.chatModelId === null) {
-        return;
-      }
-      for (let i in source) {
-        let ele = source[i];
-        if (row.chatModelId === ele.id) {
-          this.recursionFunc(ele, this.chatModelData, dest);
-          dest.push(ele.id);
-        }
-        else {
-          this.recursionFunc(row, ele.children, dest);
-        }
-      }
-    },
-    // 保存 submitForm 数据
-    async saveSubmitFormData(saveType, serviceForm = {}) {
-      debugger
-      let serviceURL = ''
-      // 组 新增|编辑
-      if (saveType === 'drawerGroup') {
-        // 调用新的批量导入文件 API
-        serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.ImportFilesToKnowledgeBase'
-
-        // 从表单中提取选中的文件 ID 列表
-        const selectedFiles = serviceForm.files || [];
-        const fileIds = selectedFiles.map(file => file.id);
-
-        // 构建请求数据
-        const requestData = {
-          knowledgeBaseId: serviceForm.knowledgeBasesId,
-          fileIds: fileIds
-        };
-
-        try {
-          service.post(serviceURL, requestData).then(res => {
-            debugger
-            that.$notify({
-              title: "Success",
-              message: "文件导入成功",
-              type: "success",
-              duration: 2000
-            });
-            that.visible.drawerGroup = false;
-          });
-        } catch (err) {
-          console.error('Request Error:', err);
-          that.$notify({
-            title: "Error",
-            message: "文件导入失败: " + err.message,
-            type: "error",
-            duration: 3000
-          });
-        }
-      }
-    },
-    selectEmbeddingModel() {
-      let that = this
-      for (let i = 0; i < that.embeddingModelData.length; i++) {
-        if (that.selectDefaultEmbeddingModel[0] == that.embeddingModelData[i].id) {
-          that.dialog.data.embeddingModelId = that.embeddingModelData[i].id;
-          //that.dialog.data.columnName = that.devicesData[i].name;
-        }
-      }
-    },
-    selectVectorDB() {
-      let that = this
-      for (let i = 0; i < that.vectorDBData.length; i++) {
-        if (that.selectDefaultVectorDB[0] == that.vectorDBData[i].id) {
-          that.dialog.data.vectorDBId = that.vectorDBData[i].id;
-          //that.dialog.data.columnName = that.devicesData[i].name;
-        }
-      }
-    },
-    selectChatModel() {
-      let that = this
-      for (let i = 0; i < that.chatModelData.length; i++) {
-        if (that.selectDefaultChatModel[0] == that.chatModelData[i].id) {
-          that.dialog.data.chatModelId = that.chatModelData[i].id;
-          //that.dialog.data.columnName = that.devicesData[i].name;
-        }
-      }
-    },
-    // 更新新增、编辑
-    updateData() {
-      let that = this
-      that.dialog.updateLoading = true;
-      that.$refs['dataForm'].validate(valid => {
-        //that.editorData = that.$refs['bodyEditor'].editor.getData()
-        //that.dialog.data.body = that.$refs['bodyEditor'].editor.getData();
-        debugger
-        console.log(`filelist -- ${JSON.stringify(that.fileList)}`)
-
-        // 遍历fileList，提取response.data并用逗号连接
-        let files = that.fileList
-          .map(item => parseInt(item.response?.data))
-          .filter(data => data !== undefined && data !== null);
-          //.join(',');
-
-        // 表单校验
-        if (valid) {
-          that.dialog.updateLoading = true;
-          let data = {
-            id: that.dialog.data.id || 0,
-            embeddingModelId: parseInt(that.dialog.data.embeddingModelId) || 0,
-            vectorDBId: parseInt(that.dialog.data.vectorDBId) || 0,
-            chatModelId: parseInt(that.dialog.data.chatModelId) || 0,
-            name: that.dialog.data.name,
-            content: that.dialog.data.content || '',
-            NcfFileIds: files
-          };
-          console.log('保存知识库数据：' + JSON.stringify(data));
-          service.post("/Admin/KnowledgeBase/Edit?handler=Save", data).then(res => {
-            console.log('保存响应：', res);
-            // res.data 是后端返回的对象：{success: true, data: true, msg: "保存成功"}
-            if (res.data && res.data.success && res.data.data === true) {
-              that.getList();
-              that.$notify({
-                title: "成功",
-                message: res.data.msg || "知识库保存成功",
-                type: "success",
-                duration: 2000
-              });
-              that.dialog.visible = false;
-              that.dialog.updateLoading = false;
-            } else {
-              that.$notify({
-                title: "失败",
-                message: (res.data && res.data.msg) || "保存失败，请检查数据",
-                type: "error",
-                duration: 3000
-              });
-              that.dialog.updateLoading = false;
+            await axios.post('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.GetPagedListAsync', param)
+                .then(res => {
+                    console.log(res)
+                    that.vectorDBData = res.data.data.data;
+                })
+        },
+        async getChatModelList() {
+            let that = this
+            let param = {
+                page: that.page.page,
+                size: that.page.modelCount,
             }
-          }).catch(err => {
-            console.error('保存错误：', err);
-            that.$notify({
-              title: "错误",
-              message: "保存出错：" + (err.message || err),
-              type: "error",
-              duration: 3000
-            });
-            that.dialog.updateLoading = false;
-          });
-        }
-      });
-    },
-    // 删除
-    handleDelete(index, row) {
-      let that = this
-      let ids = [row.id];
-      service.post("/Admin/KnowledgeBase/edit?handler=Delete", ids).then(res => {
-        if (res.data.success) {
-          that.getList();
-          that.$notify({
-            title: "Success",
-            message: "删除成功",
-            type: "success",
-            duration: 2000
-          });
-        }
-      });
-    },
-    handleSelectionChange(val) {
-      let that = this
-      that.multipleSelection = val;
-      console.log(`that.multipleSelection----${JSON.stringify(that.multipleSelection)}`);
-      if (that.multipleSelection.length == 1) {
-        //that.newsId = that.multipleSelection[0].id;
-        //that.dialogVote.data.newsId = that.multipleSelection[0].id;
-        //console.log(`that.newsId----${that.newsId}`);
-      }
-    },
-    handleDbClick(row, column, event) {
-      let that = this
-      //that.multipleSelection = val;
-      console.log(`row----${JSON.stringify(row)}`);
-      console.log(`column----${JSON.stringify(column)}`);
-      console.log(`event----${JSON.stringify(event)}`);
-      //if (that.multipleSelection.length == 1) {
-      //  //that.newsId = that.multipleSelection[0].id;
-      //  //that.dialogVote.data.newsId = that.multipleSelection[0].id;
-      //  //console.log(`that.newsId----${that.newsId}`);
-      //}
-      that.detailDialog.visible = true;
-    },
-    // 筛选输入变化
-    handleFilterChange(value, filterType) {
-      console.log('handleFilterChange', filterType, value)
-      if (filterType === 'groupAgent') {
-        this.groupAgentQueryList.filter = value
-        this.getAgentListData('groupAgent', 1)
-      }
-    },
-    getCurrentRow(row) {
-      let that = this
-      //获取选中数据
-      //that.templateSelection = row;
-      that.multipleSelection = row;
-      log('multipleSelection', row, 2)
-      //that.newsId = that.multipleSelection.id;
-      //that.dialogVote.data.newsId = that.multipleSelection.id;
-    },
-    filterTag(value, row) {
-      return row.tag === value;
-    },
-    filterHandler(value, row, column) {
-      const property = column['property'];
-      return row[property] === value;
-    },
-    handleSearch() {
-      let that = this
-      that.getList();
-    },
-    resetCondition() {
-      let that = this
-      that.keyword = '';
-    },
-    setRecommendFormat(row, column, cellValue, index) {
-      if (cellValue) {
-        return "Y";
-      }
-      return "N";
-    },
-    setBodyFormat(row, column, cellValue, index) {
-      if (cellValue == undefined) {
-        return '-';
-      }
-      else {
-        return cellValue.substring(0, 16);
-      }
-    },
-
-    setContentFormat(row, column, cellValue, index) {
-      if (cellValue == undefined) {
-        return '-';
-      }
-      else {
-        return cellValue.replace(/<[^>]+>/gim, '').replace(/\[(\w+)[^\]]*](.*?)\[\/\1]/g, '$2 ').substring(0, 16);
-      }
-    },
-    handleClick() {
-
-    },
-    onSubmit() {
-      console.log('submit!');
-    },
-    handleEmbeddingBtn(btnType, item) {
-      const that = this;
-      if (btnType === 'embedding') {
-        // 确认对话框
-        this.$confirm(`确认对知识库 "${item.name}" 进行向量化处理吗？`, '向量化确认', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          // 显示加载提示
-          const loading = this.$loading({
-            lock: true,
-            text: '正在进行向量化处理，请稍候...',
-            spinner: 'el-icon-loading',
-            background: 'rgba(0, 0, 0, 0.7)'
-          });
-
-          //开始向量化数据
-          const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.EmbeddingKnowledgeBase';
-          const dataTemp = {
-            id: item?.id ?? ''
-          };
-
-          service.post(serviceURL, dataTemp).then(res => {
-            loading.close();
-
-            if (res.success) {
-              // 显示详细结果
-              const message = res.data || '向量化成功！';
-              that.$notify({
-                title: "向量化成功",
-                message: message,
-                type: "success",
-                duration: 5000,
-                dangerouslyUseHTMLString: true
-              });
-            } else {
-              that.$notify({
-                title: "向量化失败",
-                message: res.message || '向量化处理失败',
-                type: "error",
-                duration: 5000
-              });
+            await axios.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetPagedListAsync', param)
+                .then(res => {
+                    console.log(res)
+                    that.chatModelData = res.data.data.data;
+                })
+        },
+        // 获取 文件 数据
+        async getFileListData(listType, page = 0) {
+            const queryList = {}
+            if (listType === 'file') {
+                this.fileQueryList.pageIndex = page ?? 1
+                Object.assign(queryList, this.fileQueryList)
             }
-          }).catch(err => {
-            loading.close();
-            console.error('Embedding Error:', err);
-            that.$notify({
-              title: "错误",
-              message: err.message || '向量化处理出错，请检查配置',
-              type: "error",
-              duration: 5000
+            // 接口对接
+            await axios.get(`/api/Senparc.Xncf.FileManager/FileTemplateAppService/Xncf.FileManager_FileTemplateAppService.GetList?${getInterfaceQueryStr(queryList)}`)
+                .then(res => {
+                    debugger
+                    const data = res?.data ?? {}
+                    if (data.success) {
+                        const fileData = data?.data?.list ?? []
+                        if (listType === 'file') {
+                            this.$set(this, 'fileList', fileData)
+                            // 确保更新数据时 不会清空选中
+                            this.$nextTick(() => {
+                                this.isGetGroupAgent = false
+                            })
+                            // 组成员table 初始选中
+                            if (this.visible.drawerGroup && this.groupForm.files.length > 0) {
+                                // this.toggleSelection()
+                                this.$nextTick(() => {
+                                    // this.groupAgentTotal = agentData.length
+                                    const filterList = fileData.filter(i => {
+                                        return this.groupForm.files.findIndex(item => item.id === i.id) !== -1
+                                    })
+                                    this.toggleSelection(filterList)
+                                })
+
+                            }
+                        }
+                    } else {
+                        app.$message({
+                            message: data.errorMessage || data.data || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                        this.isGetGroupAgent = false
+                    }
+                }).catch((err) => {
+                    console.log('err', err)
+                    this.isGetGroupAgent = false
+                })
+        },
+        // 获取列表
+        async getList() {
+            let that = this
+            //that.uid = resizeUrl().uid
+            let { pageIndex, pageSize, keyword, orderField } = that.listQuery;
+            if (orderField == '' || orderField == undefined) {
+                orderField = 'AddTime Desc';
+            }
+            if (that.keyword != '' && that.keyword != undefined) {
+                keyword = that.keyword;
+            }
+
+            await service.get(`/Admin/KnowledgeBase/Index?handler=KnowledgeBases&pageIndex=${pageIndex}&pageSize=${pageSize}&keyword=${keyword}&orderField=${orderField}`).then(res => {// 使用 map 转换为目标格式的对象数组
+                that.filterTableHeader.embeddingModelId = res.data.data.list.map(z => ({
+                    text: z.embeddingModelId,
+                    value: z.embeddingModelId
+                }));
+                that.filterTableHeader.vectorDBId = res.data.data.list.map(z => ({
+                    text: z.vectorDBId,
+                    value: z.vectorDBId
+                }));
+                that.filterTableHeader.chatModelId = res.data.data.list.map(z => ({
+                    text: z.chatModelId,
+                    value: z.chatModelId
+                }));
+                that.filterTableHeader.name = res.data.data.list.map(z => ({
+                    text: z.name,
+                    value: z.name
+                }));
+                that.filterTableHeader.content = res.data.data.list.map(z => ({
+                    text: z.content,
+                    value: z.content
+                }));
+
+                that.tableData = res.data.data.list;
+                that.paginationQuery.total = res.data.data.totalCount;
             });
-          });
-        }).catch(() => {
-          // 用户取消
-        });
-      }
-    },
-    // Dailog|抽屉 打开 按钮
-    handleElVisibleOpenBtn(btnType, item) {
-      let visibleKey = btnType
-      if (btnType === 'drawerGroup') {
-        //this.getAgentListData('groupAgent')
-        visibleKey = 'drawerGroup'
-        //设置
-        this.groupForm.knowledgeBasesId = item?.id ?? ''
-      }
-      //新建文件
-      if (btnType === 'dialogFile') {
-        visibleKey = 'dialogFile'
-      }
-      this.visible[visibleKey] = true
-    },
-    // Dailog|抽屉 关闭 按钮
-    handleElVisibleClose(btnType) {
-      // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          let refName = '', formName = ''
-          // 组
-          if (btnType === 'drawerGroup') {
-            refName = 'groupELForm'
-            formName = 'groupForm'
-            this.visible[btnType] = false
+        },
+        async getCategoryList() {
+            let that = this
+            //获取分类列表数据
+            await service.get('/Admin/KnowledgeBase/Index?handler=KnowledgeBasesCategory').then(res => {
+                that.categoryData = res.data.data.list;
+                log('categoryData', res, 2);
+            });
+        },
+        // 编辑 // 新增知识库管理 // 增加下一级
+        handleEdit(index, row, flag) {
+            let that = this;
+            that.dialog.visible = true;
 
-            //// 重置 组获取智能体query
-            //this.$set(this, 'groupAgentQueryList', this.$options.data().groupAgentQueryList)
-            //this.groupAgentList = []
-          }
+            if (flag === 'add') {
+                // 新增 - 初始化空数据
+                that.dialog.title = '新增知识库管理';
+                that.dialog.data = {
+                    id: 0,
+                    embeddingModelId: 0,
+                    vectorDBId: 0,
+                    chatModelId: 0,
+                    name: '',
+                    content: ''
+                };
+                that.selectDefaultEmbeddingModel = [];
+                that.selectDefaultVectorDB = [];
+                that.selectDefaultChatModel = [];
+                that.dialogImageUrl = '';
+                return;
+            }
 
-          if (formName) {
-            this.$set(this, `${formName}`, this.$options.data()[formName])
-            // Object.assign(this[formName],this.$options.data()[formName])
-          }
-          if (refName) {
-            this.$refs[refName].resetFields();
-          }
-          this.$nextTick(() => {
-            this.visible[btnType] = false
-          })
-          // 清理 Function Calls 数据
-          if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) {
-            this.functionCallTags = []
-            this.functionCallInputVisible = false
-            this.functionCallInputValue = ''
-          }
-        })
-        .catch(_ => { });
-    },
-    // Dailog|抽屉 提交 按钮
-    handleElVisibleSubmit(btnType) {
-      // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
-      let refName = '', formName = ''
-      // 组
-      if (btnType === 'drawerGroup') {
-        refName = 'groupELForm'
-        formName = 'groupForm'
-      }
-      if (!refName) return
-      this.$refs[refName].validate((valid) => {
-        if (valid) {
-          debugger
-          const submitForm = this[formName] ?? {}
-          //提交数据给后端
-          this.saveSubmitFormData(btnType, submitForm)
-          debugger
-          // this.visible[btnType] = false
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
-    },
-    // 组 新增|编辑 智能体 成员取消选中
-    groupMembersCancel(item, index) {
-      this.groupForm.members.splice(index, 1);
-      const findIndex = this.groupAgentList.findIndex(i => item.id === i.id)
-      if (findIndex !== -1) {
-        this.toggleSelection([this.groupAgentList[findIndex]])
-      }
-    },
-    // 编辑 Dailog|抽屉 按钮 
-    async handleEditDrawerOpenBtn(btnType, item) {
-      // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
-      //console.log('handleEditDrawerOpenBtn', btnType, item);
-      let formName = ''
-      // 智能体
-      if (['dialogGroupAgent'].includes(btnType)) {
-        formName = 'agentForm'
-      }
+            // 编辑 - 使用现有数据
+            let { id, embeddingModelId, vectorDBId, chatModelId, name, content } = row;
+            that.dialog.data = {
+                id: id || 0,
+                embeddingModelId: embeddingModelId || 0,
+                vectorDBId: vectorDBId || 0,
+                chatModelId: chatModelId || 0,
+                name: name || '',
+                content: content || ''
+            };
 
-      if (formName) {
-        if (btnType === 'drawerAgent' && item) {
-          console.log('item', item);
-          // 创建一个新的对象来存储表单数据
-          const formData = item.agentTemplateDto ? { ...item.agentTemplateDto } : { ...item };
-          console.log('formData', formData);
+            // 设置下拉框默认值
+            if (that.dialog.data.embeddingModelId) {
+                that.selectDefaultEmbeddingModel = [parseInt(that.dialog.data.embeddingModelId)];
+            }
+            if (that.dialog.data.vectorDBId) {
+                that.selectDefaultVectorDB = [parseInt(that.dialog.data.vectorDBId)];
+            }
+            if (that.dialog.data.chatModelId) {
+                that.selectDefaultChatModel = [parseInt(that.dialog.data.chatModelId)];
+            }
 
-          // 确保 functionCallNames 被正确初始化
-          this.functionCallTags = formData.functionCallNames ? formData.functionCallNames.split(',').filter(Boolean) : [];
-
-          // 将数据赋值给表单
-          Object.assign(this[formName], formData);
-
-          // 打印日志以便调试
-          console.log('Loaded form data:', formData);
-          console.log('functionCallTags:', this.functionCallTags);
-
-        } else if (btnType === 'drawerGroup') {
-          if (item.chatGroupDto) {
-            Object.assign(this[formName], {
-              ...item.chatGroupDto,
-              members: item.agentTemplateDtoList || item.chatGroupMembers || []
-            })
-          } else {
-            await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${item.id}`)
-              .then(res => {
-                const data = res?.data ?? {}
-                if (data.success) {
-                  const groupDetail = data?.data ?? {}
-                  Object.assign(this[formName], {
-                    ...groupDetail.chatGroupDto,
-                    members: groupDetail.agentTemplateDtoList || groupDetail.chatGroupMembers || []
-                  })
+            if (flag === 'edit') {
+                that.dialog.title = '编辑知识库管理';
+            }
+        },
+        // 设置父级菜单默认显示 递归
+        recursionFunc(row, source, dest) {
+            if (row.chatModelId === null) {
+                return;
+            }
+            for (let i in source) {
+                let ele = source[i];
+                if (row.chatModelId === ele.id) {
+                    this.recursionFunc(ele, this.chatModelData, dest);
+                    dest.push(ele.id);
                 }
-              })
-          }
-          // // 获取 全部智能体数据
-          // this.getAgentListData('groupAgent')
-        } else if (btnType === 'drawerTaskStart') {
-          Object.assign(this[formName], {
-            ...item
-            // groupName: item?.name ?? ''
-          })
-        } else {
-          Object.assign(this[formName], item)
-        }
-        // 回显 表单值
-        // this.$set(this, `${formName}`, deepClone(item))
-        // 打开 抽屉
-        this.handleElVisibleOpenBtn(btnType)
-      }
-    },
-    // 组 新增|编辑 智能体table 切换table 选中
-    toggleSelection(rows) {
-      if (rows) {
-        rows.forEach(row => {
-          this.$refs?.groupAgentTable?.toggleRowSelection(row);
-        });
-      } else {
-        this.$refs?.groupAgentTable?.clearSelection();
-      }
-    },
-  }
+                else {
+                    this.recursionFunc(row, ele.children, dest);
+                }
+            }
+        },
+        // 保存 submitForm 数据
+        async saveSubmitFormData(saveType, serviceForm = {}) {
+            debugger
+            let serviceURL = ''
+            // 组 新增|编辑
+            if (saveType === 'drawerGroup') {
+                // 调用新的批量导入文件 API
+                serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.ImportFilesToKnowledgeBase'
+
+                // 从表单中提取选中的文件 ID 列表
+                const selectedFiles = serviceForm.files || [];
+                const fileIds = selectedFiles.map(file => file.id);
+
+                // 构建请求数据
+                const requestData = {
+                    knowledgeBaseId: serviceForm.knowledgeBasesId,
+                    fileIds: fileIds
+                };
+
+                try {
+                    service.post(serviceURL, requestData).then(res => {
+                        debugger
+                        that.$notify({
+                            title: "Success",
+                            message: "文件导入成功",
+                            type: "success",
+                            duration: 2000
+                        });
+                        that.visible.drawerGroup = false;
+                    });
+                } catch (err) {
+                    console.error('Request Error:', err);
+                    that.$notify({
+                        title: "Error",
+                        message: "文件导入失败: " + err.message,
+                        type: "error",
+                        duration: 3000
+                    });
+                }
+            }
+        },
+        selectEmbeddingModel() {
+            let that = this
+            for (let i = 0; i < that.embeddingModelData.length; i++) {
+                if (that.selectDefaultEmbeddingModel[0] == that.embeddingModelData[i].id) {
+                    that.dialog.data.embeddingModelId = that.embeddingModelData[i].id;
+                    //that.dialog.data.columnName = that.devicesData[i].name;
+                }
+            }
+        },
+        selectVectorDB() {
+            let that = this
+            for (let i = 0; i < that.vectorDBData.length; i++) {
+                if (that.selectDefaultVectorDB[0] == that.vectorDBData[i].id) {
+                    that.dialog.data.vectorDBId = that.vectorDBData[i].id;
+                    //that.dialog.data.columnName = that.devicesData[i].name;
+                }
+            }
+        },
+        selectChatModel() {
+            let that = this
+            for (let i = 0; i < that.chatModelData.length; i++) {
+                if (that.selectDefaultChatModel[0] == that.chatModelData[i].id) {
+                    that.dialog.data.chatModelId = that.chatModelData[i].id;
+                    //that.dialog.data.columnName = that.devicesData[i].name;
+                }
+            }
+        },
+        // 更新新增、编辑
+        updateData() {
+            let that = this
+            that.dialog.updateLoading = true;
+            that.$refs['dataForm'].validate(valid => {
+                //that.editorData = that.$refs['bodyEditor'].editor.getData()
+                //that.dialog.data.body = that.$refs['bodyEditor'].editor.getData();
+                debugger
+                console.log(`filelist -- ${JSON.stringify(that.fileList)}`)
+
+                // 遍历fileList，提取response.data并用逗号连接
+                let files = that.fileList
+                    .map(item => parseInt(item.response?.data))
+                    .filter(data => data !== undefined && data !== null);
+                //.join(',');
+
+                // 表单校验
+                if (valid) {
+                    that.dialog.updateLoading = true;
+                    let data = {
+                        id: that.dialog.data.id || 0,
+                        embeddingModelId: parseInt(that.dialog.data.embeddingModelId) || 0,
+                        vectorDBId: parseInt(that.dialog.data.vectorDBId) || 0,
+                        chatModelId: parseInt(that.dialog.data.chatModelId) || 0,
+                        name: that.dialog.data.name,
+                        content: that.dialog.data.content || '',
+                        NcfFileIds: files
+                    };
+                    console.log('保存知识库数据：' + JSON.stringify(data));
+                    service.post("/Admin/KnowledgeBase/Edit?handler=Save", data).then(res => {
+                        console.log('保存响应：', res);
+                        // res.data 是后端返回的对象：{success: true, data: true, msg: "保存成功"}
+                        if (res.data && res.data.success && res.data.data === true) {
+                            that.getList();
+                            that.$notify({
+                                title: "成功",
+                                message: res.data.msg || "知识库保存成功",
+                                type: "success",
+                                duration: 2000
+                            });
+                            that.dialog.visible = false;
+                            that.dialog.updateLoading = false;
+                        } else {
+                            that.$notify({
+                                title: "失败",
+                                message: (res.data && res.data.msg) || "保存失败，请检查数据",
+                                type: "error",
+                                duration: 3000
+                            });
+                            that.dialog.updateLoading = false;
+                        }
+                    }).catch(err => {
+                        console.error('保存错误：', err);
+                        that.$notify({
+                            title: "错误",
+                            message: "保存出错：" + (err.message || err),
+                            type: "error",
+                            duration: 3000
+                        });
+                        that.dialog.updateLoading = false;
+                    });
+                }
+            });
+        },
+        // 删除
+        handleDelete(index, row) {
+            let that = this
+            let ids = [row.id];
+            service.post("/Admin/KnowledgeBase/edit?handler=Delete", ids).then(res => {
+                if (res.data.success) {
+                    that.getList();
+                    that.$notify({
+                        title: "Success",
+                        message: "删除成功",
+                        type: "success",
+                        duration: 2000
+                    });
+                }
+            });
+        },
+        handleSelectionChange(val) {
+            let that = this
+            that.multipleSelection = val;
+            console.log(`that.multipleSelection----${JSON.stringify(that.multipleSelection)}`);
+            if (that.multipleSelection.length == 1) {
+                //that.newsId = that.multipleSelection[0].id;
+                //that.dialogVote.data.newsId = that.multipleSelection[0].id;
+                //console.log(`that.newsId----${that.newsId}`);
+            }
+        },
+        handleDbClick(row, column, event) {
+            let that = this
+            //that.multipleSelection = val;
+            console.log(`row----${JSON.stringify(row)}`);
+            console.log(`column----${JSON.stringify(column)}`);
+            console.log(`event----${JSON.stringify(event)}`);
+            //if (that.multipleSelection.length == 1) {
+            //  //that.newsId = that.multipleSelection[0].id;
+            //  //that.dialogVote.data.newsId = that.multipleSelection[0].id;
+            //  //console.log(`that.newsId----${that.newsId}`);
+            //}
+            that.detailDialog.visible = true;
+        },
+        // 筛选输入变化
+        handleFilterChange(value, filterType) {
+            console.log('handleFilterChange', filterType, value)
+            if (filterType === 'groupAgent') {
+                this.groupAgentQueryList.filter = value
+                this.getAgentListData('groupAgent', 1)
+            }
+        },
+        getCurrentRow(row) {
+            let that = this
+            //获取选中数据
+            //that.templateSelection = row;
+            that.multipleSelection = row;
+            log('multipleSelection', row, 2)
+            //that.newsId = that.multipleSelection.id;
+            //that.dialogVote.data.newsId = that.multipleSelection.id;
+        },
+        filterTag(value, row) {
+            return row.tag === value;
+        },
+        filterHandler(value, row, column) {
+            const property = column['property'];
+            return row[property] === value;
+        },
+        handleSearch() {
+            let that = this
+            that.getList();
+        },
+        resetCondition() {
+            let that = this
+            that.keyword = '';
+        },
+        setRecommendFormat(row, column, cellValue, index) {
+            if (cellValue) {
+                return "Y";
+            }
+            return "N";
+        },
+        setBodyFormat(row, column, cellValue, index) {
+            if (cellValue == undefined) {
+                return '-';
+            }
+            else {
+                return cellValue.substring(0, 16);
+            }
+        },
+
+        setContentFormat(row, column, cellValue, index) {
+            if (cellValue == undefined) {
+                return '-';
+            }
+            else {
+                return cellValue.replace(/<[^>]+>/gim, '').replace(/\[(\w+)[^\]]*](.*?)\[\/\1]/g, '$2 ').substring(0, 16);
+            }
+        },
+        handleClick() {
+
+        },
+        onSubmit() {
+            console.log('submit!');
+        },
+        handleEmbeddingBtn(btnType, item) {
+            const that = this;
+            if (btnType === 'embedding') {
+                // 确认对话框
+                this.$confirm(`确认对知识库 "${item.name}" 进行向量化处理吗？`, '向量化确认', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    // 显示加载提示
+                    const loading = this.$loading({
+                        lock: true,
+                        text: '正在进行向量化处理，请稍候...',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
+
+                    //开始向量化数据
+                    const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.EmbeddingKnowledgeBase';
+                    const dataTemp = {
+                        id: item?.id ?? ''
+                    };
+
+                    service.post(serviceURL, dataTemp).then(res => {
+                        loading.close();
+
+                        if (res.success) {
+                            // 显示详细结果
+                            const message = res.data || '向量化成功！';
+                            that.$notify({
+                                title: "向量化成功",
+                                message: message,
+                                type: "success",
+                                duration: 5000,
+                                dangerouslyUseHTMLString: true
+                            });
+                        } else {
+                            that.$notify({
+                                title: "向量化失败",
+                                message: res.message || '向量化处理失败',
+                                type: "error",
+                                duration: 5000
+                            });
+                        }
+                    }).catch(err => {
+                        loading.close();
+                        console.error('Embedding Error:', err);
+                        that.$notify({
+                            title: "错误",
+                            message: err.message || '向量化处理出错，请检查配置',
+                            type: "error",
+                            duration: 5000
+                        });
+                    });
+                }).catch(() => {
+                    // 用户取消
+                });
+            }
+        },
+        // Dailog|抽屉 打开 按钮
+        handleElVisibleOpenBtn(btnType, item) {
+            let visibleKey = btnType
+            if (btnType === 'drawerGroup') {
+                //this.getAgentListData('groupAgent')
+                visibleKey = 'drawerGroup'
+                //设置
+                this.groupForm.knowledgeBasesId = item?.id ?? ''
+            }
+            //新建文件
+            if (btnType === 'dialogFile') {
+                visibleKey = 'dialogFile'
+            }
+            this.visible[visibleKey] = true
+        },
+        // Dailog|抽屉 关闭 按钮
+        handleElVisibleClose(btnType) {
+            // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
+            this.$confirm('确认关闭？')
+                .then(_ => {
+                    let refName = '', formName = ''
+                    // 组
+                    if (btnType === 'drawerGroup') {
+                        refName = 'groupELForm'
+                        formName = 'groupForm'
+                        this.visible[btnType] = false
+
+                        //// 重置 组获取智能体query
+                        //this.$set(this, 'groupAgentQueryList', this.$options.data().groupAgentQueryList)
+                        //this.groupAgentList = []
+                    }
+
+                    if (formName) {
+                        this.$set(this, `${formName}`, this.$options.data()[formName])
+                        // Object.assign(this[formName],this.$options.data()[formName])
+                    }
+                    if (refName) {
+                        this.$refs[refName].resetFields();
+                    }
+                    this.$nextTick(() => {
+                        this.visible[btnType] = false
+                    })
+                    // 清理 Function Calls 数据
+                    if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) {
+                        this.functionCallTags = []
+                        this.functionCallInputVisible = false
+                        this.functionCallInputValue = ''
+                    }
+                })
+                .catch(_ => { });
+        },
+        // Dailog|抽屉 提交 按钮
+        handleElVisibleSubmit(btnType) {
+            // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
+            let refName = '', formName = ''
+            // 组
+            if (btnType === 'drawerGroup') {
+                refName = 'groupELForm'
+                formName = 'groupForm'
+            }
+            if (!refName) return
+            this.$refs[refName].validate((valid) => {
+                if (valid) {
+                    debugger
+                    const submitForm = this[formName] ?? {}
+                    //提交数据给后端
+                    this.saveSubmitFormData(btnType, submitForm)
+                    debugger
+                    // this.visible[btnType] = false
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+        },
+        // 组 新增|编辑 智能体 成员取消选中
+        groupMembersCancel(item, index) {
+            this.groupForm.members.splice(index, 1);
+            const findIndex = this.groupAgentList.findIndex(i => item.id === i.id)
+            if (findIndex !== -1) {
+                this.toggleSelection([this.groupAgentList[findIndex]])
+            }
+        },
+        // 编辑 Dailog|抽屉 按钮 
+        async handleEditDrawerOpenBtn(btnType, item) {
+            // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
+            //console.log('handleEditDrawerOpenBtn', btnType, item);
+            let formName = ''
+            // 智能体
+            if (['dialogGroupAgent'].includes(btnType)) {
+                formName = 'agentForm'
+            }
+
+            if (formName) {
+                if (btnType === 'drawerAgent' && item) {
+                    console.log('item', item);
+                    // 创建一个新的对象来存储表单数据
+                    const formData = item.agentTemplateDto ? { ...item.agentTemplateDto } : { ...item };
+                    console.log('formData', formData);
+
+                    // 确保 functionCallNames 被正确初始化
+                    this.functionCallTags = formData.functionCallNames ? formData.functionCallNames.split(',').filter(Boolean) : [];
+
+                    // 将数据赋值给表单
+                    Object.assign(this[formName], formData);
+
+                    // 打印日志以便调试
+                    console.log('Loaded form data:', formData);
+                    console.log('functionCallTags:', this.functionCallTags);
+
+                } else if (btnType === 'drawerGroup') {
+                    if (item.chatGroupDto) {
+                        Object.assign(this[formName], {
+                            ...item.chatGroupDto,
+                            members: item.agentTemplateDtoList || item.chatGroupMembers || []
+                        })
+                    } else {
+                        await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${item.id}`)
+                            .then(res => {
+                                const data = res?.data ?? {}
+                                if (data.success) {
+                                    const groupDetail = data?.data ?? {}
+                                    Object.assign(this[formName], {
+                                        ...groupDetail.chatGroupDto,
+                                        members: groupDetail.agentTemplateDtoList || groupDetail.chatGroupMembers || []
+                                    })
+                                }
+                            })
+                    }
+                    // // 获取 全部智能体数据
+                    // this.getAgentListData('groupAgent')
+                } else if (btnType === 'drawerTaskStart') {
+                    Object.assign(this[formName], {
+                        ...item
+                        // groupName: item?.name ?? ''
+                    })
+                } else {
+                    Object.assign(this[formName], item)
+                }
+                // 回显 表单值
+                // this.$set(this, `${formName}`, deepClone(item))
+                // 打开 抽屉
+                this.handleElVisibleOpenBtn(btnType)
+            }
+        },
+        // 组 新增|编辑 智能体table 切换table 选中
+        toggleSelection(rows) {
+            if (rows) {
+                rows.forEach(row => {
+                    this.$refs?.groupAgentTable?.toggleRowSelection(row);
+                });
+            } else {
+                this.$refs?.groupAgentTable?.clearSelection();
+            }
+        },
+    }
 });
 
 
@@ -902,34 +903,34 @@ new Vue({
 * @param {Object} queryObj // 原地址
 */
 function getInterfaceQueryStr(queryObj) {
-  if (!queryObj) return ''
-  // 将对象转换为 URL 参数字符串
-  return Object.entries(queryObj)
-    .filter(([key, value]) => {
-      // 过滤掉空值
-      // console.log('value', typeof value)
-      if (typeof value === 'string') {
-        return value !== ''
-      } else if (typeof value === 'object' && value instanceof Array) {
-        return value.length > 0
-      } else if (typeof value === 'number') {
-        return true
-      } else {
-        // if(typeof value === 'undefined')
-        return false
-      }
-    })
-    .map(
-      ([key, value]) => {
-        if (Array.isArray(value)) {
-          let str = ""
-          for (let index in value) {
-            str += `${index > 0 ? '&' : ''}${encodeURIComponent(key)}=${encodeURIComponent(value[index])}`
-          }
-          return str
-        }
-        return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
-      }
-    )
-    .join('&')
+    if (!queryObj) return ''
+    // 将对象转换为 URL 参数字符串
+    return Object.entries(queryObj)
+        .filter(([key, value]) => {
+            // 过滤掉空值
+            // console.log('value', typeof value)
+            if (typeof value === 'string') {
+                return value !== ''
+            } else if (typeof value === 'object' && value instanceof Array) {
+                return value.length > 0
+            } else if (typeof value === 'number') {
+                return true
+            } else {
+                // if(typeof value === 'undefined')
+                return false
+            }
+        })
+        .map(
+            ([key, value]) => {
+                if (Array.isArray(value)) {
+                    let str = ""
+                    for (let index in value) {
+                        str += `${index > 0 ? '&' : ''}${encodeURIComponent(key)}=${encodeURIComponent(value[index])}`
+                    }
+                    return str
+                }
+                return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+            }
+        )
+        .join('&')
 }

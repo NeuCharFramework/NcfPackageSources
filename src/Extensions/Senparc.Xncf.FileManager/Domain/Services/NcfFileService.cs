@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
 using Senparc.Ncf.Core.Models;
+using Senparc.CO2NET.Trace;
 
 namespace Senparc.Xncf.FileManager.Domain.Services
 {
@@ -70,7 +71,16 @@ namespace Senparc.Xncf.FileManager.Domain.Services
                 FolderId = folderId
             };
 
-            await SaveObjectAsync(ncfFile);
+            try
+            {
+                await SaveObjectAsync(ncfFile);
+
+            }
+            catch (Exception ex)
+            {
+                SenparcTrace.BaseExceptionLog(ex);
+                throw;
+            }
             return ncfFile;
         }
 
