@@ -26,14 +26,10 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
 {
     public class CommonService : AppServiceBase
     {
-        private readonly IWebHostEnvironment webHostEnvironment;
-        private readonly IOptionsMonitor<StaticResourceSetting> staticResourceSetting;
         private readonly NcfFileService ncfFileService;
 
-        public CommonService(IServiceProvider serviceProvider, IWebHostEnvironment webHostEnvironment, IOptionsMonitor<StaticResourceSetting> staticResourceSetting,NcfFileService ncfFileService) : base(serviceProvider)
+        public CommonService(IServiceProvider serviceProvider, NcfFileService ncfFileService) : base(serviceProvider)
         {
-            this.webHostEnvironment = webHostEnvironment;
-            this.staticResourceSetting = staticResourceSetting;
             this.ncfFileService = ncfFileService;
         }
 
@@ -48,7 +44,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
             return await this.GetResponseAsync<AppResponseBase<string>, string>(async (response, logger) =>
             {
                 var result = await ncfFileService.UploadFileAsync(file);
-                return result.FilePath;
+                return result.Id.ToString();
             });
         }
 

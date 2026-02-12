@@ -519,6 +519,15 @@ new Vue({
       that.$refs['dataForm'].validate(valid => {
         //that.editorData = that.$refs['bodyEditor'].editor.getData()
         //that.dialog.data.body = that.$refs['bodyEditor'].editor.getData();
+        debugger
+        console.log(`filelist -- ${JSON.stringify(that.fileList)}`)
+
+        // 遍历fileList，提取response.data并用逗号连接
+        let files = that.fileList
+          .map(item => item.response?.data)
+          .filter(data => data !== undefined && data !== null)
+          .join(',');
+
         // 表单校验
         if (valid) {
           that.dialog.updateLoading = true;
@@ -528,7 +537,8 @@ new Vue({
             vectorDBId: parseInt(that.dialog.data.vectorDBId) || 0,
             chatModelId: parseInt(that.dialog.data.chatModelId) || 0,
             name: that.dialog.data.name,
-            content: that.dialog.data.content || ''
+            content: files || ''
+            //content: that.dialog.data.content || ''
           };
           console.log('保存知识库数据：' + JSON.stringify(data));
           service.post("/Admin/KnowledgeBase/Edit?handler=Save", data).then(res => {
