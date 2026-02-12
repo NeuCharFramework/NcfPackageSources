@@ -51,7 +51,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         public async Task<IEnumerable<KnowledgeBaseDto>> GetKnowledgeBasesList(int PageIndex, int PageSize)
         {
             List<KnowledgeBaseDto> selectListItems = null;
-            List<KnowledgeBase.Models.DatabaseModel.KnowledgeBase> knowledgeBases = 
+            List<KnowledgeBase.Models.DatabaseModel.KnowledgeBase> knowledgeBases =
                 (await GetFullListAsync(_ => true).ConfigureAwait(false))
                 .OrderByDescending(_ => _.AddTime)
                 .ToList();
@@ -67,8 +67,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                 //新增
                 knowledgeBase = new KnowledgeBase.Models.DatabaseModel.KnowledgeBase(dto);
 
+                await SaveObjectAsync(knowledgeBase);
+
                 //增加文件
-               var ncfFiles = await _ncfFileService.GetFullListAsync(_ => dto.NcfFileIds.Contains(_.Id));
+                var ncfFiles = await _ncfFileService.GetFullListAsync(_ => dto.NcfFileIds.Contains(_.Id));
                 if (ncfFiles != null && ncfFiles.Any())
                 {
                     var knowledgeBaseItems = new List<KnowledgeBaseItem>();
@@ -96,9 +98,9 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                 knowledgeBase = await GetObjectAsync(_ => _.Id == dto.Id);
                 knowledgeBase.Update(dto);
 
+                await SaveObjectAsync(knowledgeBase);
 
             }
-            await SaveObjectAsync(knowledgeBase);
         }
 
         /// <summary>
@@ -247,13 +249,17 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             string collectionName = $"KB_{knowledgeBaseId}";
 
             //进行切片
-            if (!details.Any())
+            foreach (var detail in details)
             {
-                SenparcTrace.SendCustomLog("知识库", $"知识库 '{knowledgeBase.Name}' 没有待向量化的文本切片。现在开始切片");
+                //SenparcTrace.SendCustomLog("知识库", $"知识库 '{knowledgeBase.Name}' 没有待向量化的文本切片。现在开始切片");
 
-                //从关联的文件中获取内容进行切片
+                //从关联的文件中获取内容进行切片   //TODO: 判断 ContentType 来决定如何处理不同类型的内容
+                var text = detail.Content;//knowledgeBase.Content;
 
-                var text = knowledgeBase.Content;
+                if (text.IsNullOrEmpty())
+                {
+                    continue;
+                }
 
                 List<string> paragraphs = new List<string>();
 #pragma warning disable SKEXP0050 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
@@ -270,22 +276,29 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                     var dt = SystemTime.Now;
                     var vectorCollection = iWantToRunEmbedding.GetVectorCollection<ulong, Record>(embeddingAiSetting.VectorDB, vectorName);
                     await vectorCollection.EnsureCollectionExistsAsync();
-                    paragraphs.ForEach(async paragraph =>
+                    foreach (var paragraph in paragraphs)
                     {
-                        var currentI = i++;
-
-                        var record = new Record()
+                        try
                         {
-                            Id = (ulong)i,
-                            Name = vectorName + "-paragraph-" + i,
-                            Description = paragraph,
-                            DescriptionEmbedding = await iWantToRunEmbedding.SemanticKernelHelper.GetEmbeddingAsync(embeddingModelName, paragraph),
-                            Tags = new[] { i.ToString() }
-                        };
+                            var currentI = i++;
+                            var descriptionEmbedding = await iWantToRunEmbedding.SemanticKernelHelper.GetEmbeddingAsync(embeddingModelName, paragraph);
+                            var record = new Record()
+                            {
+                                Id = (ulong)i,
+                                Name = vectorName + "-paragraph-" + i,
+                                Description = paragraph,
+                                DescriptionEmbedding = descriptionEmbedding,
+                                Tags = new[] { i.ToString() }
+                            };
 
-
-                        await vectorCollection.UpsertAsync(record);
-                    });
+                            await vectorCollection.UpsertAsync(record);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw;
+                        }
+                     
+                    }
 
                     //测试
                     ReadOnlyMemory<float> searchVector = await iWantToRunEmbedding.SemanticKernelHelper.GetEmbeddingAsync(embeddingModelName, "什么是NCF？");
