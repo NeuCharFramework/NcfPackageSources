@@ -38,7 +38,8 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBase
         public Task OnGetAsync()
         {
             BaseUrl = $"{Request.Scheme}://{Request.Host.Value}";
-            UpFileUrl = $"{BaseUrl}/api/v1/common/upload";
+            //UpFileUrl = $"{BaseUrl}/api/Senparc.Xncf.KnowledgeBase/CommonService/Xncf.KnowledgeBase_CommonService.UploadAsync";
+            UpFileUrl = $"{BaseUrl}/api/Senparc.Xncf.KnowledgeBase/CommonService/Xncf.KnowledgeBase_CommonService.UploadAsync";
             return Task.CompletedTask;
         }
 

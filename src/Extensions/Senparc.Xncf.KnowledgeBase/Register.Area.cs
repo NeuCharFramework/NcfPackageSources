@@ -1,16 +1,18 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Areas;
 using Senparc.Ncf.Core.Config;
-using System;
 using Senparc.Ncf.XncfBase;
+using Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Config;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.FileProviders;
-using Senparc.CO2NET.RegisterServices;
 using System.Reflection;
 
 namespace Senparc.Xncf.KnowledgeBase
@@ -41,9 +43,40 @@ namespace Senparc.Xncf.KnowledgeBase
 
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
+
+            //var staticResourceSetting = app.ApplicationServices.GetService<IOptionsMonitor<StaticResourceSetting>>();
+
+            ////静态资源允许跨域
+            //var path = Path.Combine(Directory.GetCurrentDirectory(), staticResourceSetting.CurrentValue.RootDir);
+            //if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+            //var fileOptions = new StaticFileOptions()
+            //{
+            //    FileProvider = new PhysicalFileProvider(path),
+            //    RequestPath = staticResourceSetting.CurrentValue.RequestPath,
+            //    OnPrepareResponse = (x) =>//验证静态资源授权
+            //    {
+            //        //var token = x.Context.Request.Query["token"];
+            //        //if (string.IsNullOrWhiteSpace(token))
+            //        //    token = x.Context.Request.Headers["token"];
+            //        //try
+            //        //{
+            //        //    x.Context.RequestServices.GetService<SysKeyService>().ValidToken(token).GetAwaiter().GetResult();
+            //        //}
+            //        //catch (Exception ex)
+            //        //{
+            //        //    x.Context.Response.StatusCode = StatusCodes.Status404NotFound;
+            //        //    x.Context.Response.WriteAsync(ex.Message);
+            //        //}
+            //        //new StatusCodes().Status401Unauthorized
+            //        //x.Context.Response.Headers.Add("Access-Control-Allow-Origin", "*");//允许跨域，Core已做处理
+            //    }
+            //};
+            //app.UseStaticFiles(fileOptions);
+
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
+                FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot"),
+                //RequestPath = staticResourceSetting.CurrentValue.RequestPath,
             });
 
             return base.UseXncfModule(app, registerService);
