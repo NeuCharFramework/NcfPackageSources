@@ -384,7 +384,14 @@ new Vue({
     // 编辑 // 新增知识库管理 // 增加下一级
     handleEdit(index, row, flag) {
       let that = this;
-      that.dialog.visible = true;
+      //销毁
+      that.dialog.visible = false;
+      //清空文件列表
+      that.fileList = [];
+      //重建
+      that.$nextTick(() => {
+        that.dialog.visible = true;
+      });
 
       if (flag === 'add') {
         // 新增 - 初始化空数据
@@ -401,6 +408,7 @@ new Vue({
         that.selectDefaultVectorDB = [];
         that.selectDefaultChatModel = [];
         that.dialogImageUrl = '';
+        
         return;
       }
 
