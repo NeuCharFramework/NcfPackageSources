@@ -20,13 +20,13 @@ using plRequest = Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Request;
 
 namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
 {
-    public class KnowledgeBasesAppService : AppServiceBase
+    public class KnowledgeBaseAppService : AppServiceBase
     {
         private readonly KnowledgeBaseService knowledgeBasesService;
         private readonly KnowledgeBaseItemService knowledgeBasesDetailService;
         private readonly Domain.Services.KnowledgeBaseService knowledgeBaseService;
 
-        public KnowledgeBasesAppService(IServiceProvider serviceProvider,
+        public KnowledgeBaseAppService(IServiceProvider serviceProvider,
             KnowledgeBaseService knowledgeBasesService,
             KnowledgeBaseItemService knowledgeBasesDetailService,
             Domain.Services.KnowledgeBaseService knowledgeBaseService) : base(serviceProvider)
@@ -42,11 +42,11 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         /// <param name="request">请求记录Dto模型</param>
         /// <returns></returns>
         [ApiBind("AutoMate", ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<AppResponseBase<bool>> CreateOrUpdateAsync(KnowledgeBasesRequest request)
+        public async Task<AppResponseBase<bool>> CreateOrUpdateAsync(KnowledgeBaseRequest request)
         {
             return await this.GetResponseAsync<AppResponseBase<bool>, bool>(async (response, logger) =>
             {
-                KnowledgeBasesDto dto = new KnowledgeBasesDto()
+                KnowledgeBaseDto dto = new KnowledgeBaseDto()
                 {
                     EmbeddingModelId = request.EmbeddingModelId,
                     VectorDBId = request.VectorDBId,
@@ -66,12 +66,12 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         /// <param name="memberAgentTemplateIds">成员 AgentTemplate ID</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<AppResponseBase<bool>> SetKnowledgeBaseDetail(KnowledgeBasesDetailRequest request)
+        public async Task<AppResponseBase<bool>> SetKnowledgeBaseDetail(KnowledgeBaseItemRequest request)
         {
             return await this.GetResponseAsync<bool>(async (response, logger) =>
             {
 
-                KnowledgeBasesDetalDto knowledgeBasesDetailDto = new KnowledgeBasesDetalDto()
+                KnowledgeBaseItemDto knowledgeBasesDetailDto = new KnowledgeBaseItemDto()
                 {
                     KnowledgeBasesId = request.KnowledgeBasesId,
                     ContentType = request.ContentType,

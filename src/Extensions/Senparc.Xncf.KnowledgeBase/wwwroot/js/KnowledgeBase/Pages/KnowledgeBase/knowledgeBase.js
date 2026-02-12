@@ -271,9 +271,9 @@ new Vue({
       }
       await axios.post('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.GetPagedListAsync', param)
         .then(res => {
-        console.log(res)
-        that.vectorDBData = res.data.data.data;
-      })
+          console.log(res)
+          that.vectorDBData = res.data.data.data;
+        })
     },
     async getChatModelList() {
       let that = this
@@ -285,7 +285,7 @@ new Vue({
         .then(res => {
           console.log(res)
           that.chatModelData = res.data.data.data;
-      })
+        })
     },
     // 获取 文件 数据
     async getFileListData(listType, page = 0) {
@@ -383,7 +383,7 @@ new Vue({
     handleEdit(index, row, flag) {
       let that = this;
       that.dialog.visible = true;
-      
+
       if (flag === 'add') {
         // 新增 - 初始化空数据
         that.dialog.title = '新增知识库管理';
@@ -401,7 +401,7 @@ new Vue({
         that.dialogImageUrl = '';
         return;
       }
-      
+
       // 编辑 - 使用现有数据
       let { id, embeddingModelId, vectorDBId, chatModelId, name, content } = row;
       that.dialog.data = {
@@ -412,7 +412,7 @@ new Vue({
         name: name || '',
         content: content || ''
       };
-      
+
       // 设置下拉框默认值
       if (that.dialog.data.embeddingModelId) {
         that.selectDefaultEmbeddingModel = [parseInt(that.dialog.data.embeddingModelId)];
@@ -452,17 +452,17 @@ new Vue({
       if (saveType === 'drawerGroup') {
         // 调用新的批量导入文件 API
         serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBasesAppService/Xncf.KnowledgeBase_KnowledgeBasesAppService.ImportFilesToKnowledgeBase'
-        
+
         // 从表单中提取选中的文件 ID 列表
         const selectedFiles = serviceForm.files || [];
         const fileIds = selectedFiles.map(file => file.id);
-        
+
         // 构建请求数据
         const requestData = {
           knowledgeBaseId: serviceForm.knowledgeBasesId,
           fileIds: fileIds
         };
-        
+
         try {
           service.post(serviceURL, requestData).then(res => {
             debugger
@@ -691,7 +691,7 @@ new Vue({
 
           service.post(serviceURL, dataTemp).then(res => {
             loading.close();
-            
+
             if (res.success) {
               // 显示详细结果
               const message = res.data || '向量化成功！';
@@ -726,7 +726,7 @@ new Vue({
       }
     },
     // Dailog|抽屉 打开 按钮
-    handleElVisibleOpenBtn(btnType,item) {
+    handleElVisibleOpenBtn(btnType, item) {
       let visibleKey = btnType
       if (btnType === 'drawerGroup') {
         //this.getAgentListData('groupAgent')
@@ -756,7 +756,7 @@ new Vue({
             //this.$set(this, 'groupAgentQueryList', this.$options.data().groupAgentQueryList)
             //this.groupAgentList = []
           }
-          
+
           if (formName) {
             this.$set(this, `${formName}`, this.$options.data()[formName])
             // Object.assign(this[formName],this.$options.data()[formName])
@@ -817,7 +817,7 @@ new Vue({
       if (['dialogGroupAgent'].includes(btnType)) {
         formName = 'agentForm'
       }
-      
+
       if (formName) {
         if (btnType === 'drawerAgent' && item) {
           console.log('item', item);
@@ -881,7 +881,7 @@ new Vue({
       }
     },
   }
-}); 
+});
 
 
 

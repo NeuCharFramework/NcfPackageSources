@@ -50,18 +50,18 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             _serviceProvider = serviceProvider;
         }
 
-        public async Task<IEnumerable<KnowledgeBasesDto>> GetKnowledgeBasesList(int PageIndex, int PageSize)
+        public async Task<IEnumerable<KnowledgeBaseDto>> GetKnowledgeBasesList(int PageIndex, int PageSize)
         {
-            List<KnowledgeBasesDto> selectListItems = null;
+            List<KnowledgeBaseDto> selectListItems = null;
             List<KnowledgeBase.Models.DatabaseModel.KnowledgeBase> knowledgeBases = 
                 (await GetFullListAsync(_ => true).ConfigureAwait(false))
                 .OrderByDescending(_ => _.AddTime)
                 .ToList();
-            selectListItems = this.Mapper.Map<List<KnowledgeBasesDto>>(knowledgeBases);
+            selectListItems = this.Mapper.Map<List<KnowledgeBaseDto>>(knowledgeBases);
             return selectListItems;
         }
 
-        public async Task CreateOrUpdateAsync(KnowledgeBasesDto dto)
+        public async Task CreateOrUpdateAsync(KnowledgeBaseDto dto)
         {
             KnowledgeBase.Models.DatabaseModel.KnowledgeBase knowledgeBases;
             if (dto.Id == 0)
@@ -139,7 +139,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             int chunkIndex = 0;
             foreach (var chunk in chunks)
             {
-                var detailDto = new KnowledgeBasesDetalDto
+                var detailDto = new KnowledgeBaseItemDto
                 {
                     KnowledgeBasesId = knowledgeBaseId,
                     Content = chunk,

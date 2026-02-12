@@ -23,8 +23,9 @@ namespace Senparc.Xncf.KnowledgeBase
         public string HomeUrl => "/Admin/KnowledgeBase/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
-new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/Index"),"知识库管理","fa fa-bookmark-o"),		};
+            new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
+            new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/Index"),"知识库管理","fa fa-bookmark-o"),
+        };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {

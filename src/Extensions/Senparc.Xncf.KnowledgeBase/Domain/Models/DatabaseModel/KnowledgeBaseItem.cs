@@ -22,21 +22,21 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
             AdminRemark = string.Empty;
             Remark = string.Empty;
         }
-        public KnowledgeBaseItem(KnowledgeBasesDetalDto knowledgeBasesDetailDto) : this()
+        public KnowledgeBaseItem(KnowledgeBaseItemDto knowledgeBaseItemDto) : this()
         {
-            KnowledgeBasesId = knowledgeBasesDetailDto.KnowledgeBasesId;
-            ContentType = knowledgeBasesDetailDto.ContentType;
-            Content = knowledgeBasesDetailDto.Content;
-            FileName = knowledgeBasesDetailDto.FileName;
-            ChunkIndex = knowledgeBasesDetailDto.ChunkIndex;
+            KnowledgeBasesId = knowledgeBaseItemDto.KnowledgeBasesId;
+            ContentType = knowledgeBaseItemDto.ContentType;
+            Content = knowledgeBaseItemDto.Content;
+            FileName = knowledgeBaseItemDto.FileName;
+            ChunkIndex = knowledgeBaseItemDto.ChunkIndex;
         }
-        public void Update(KnowledgeBasesDetalDto knowledgeBasesDetailDto)
+        public void Update(KnowledgeBaseItemDto knowledgeBaseItemDto)
         {
-            KnowledgeBasesId = knowledgeBasesDetailDto.KnowledgeBasesId;
-            ContentType = knowledgeBasesDetailDto.ContentType;
-            Content = knowledgeBasesDetailDto.Content;
-            FileName = knowledgeBasesDetailDto.FileName;
-            ChunkIndex = knowledgeBasesDetailDto.ChunkIndex;
+            KnowledgeBasesId = knowledgeBaseItemDto.KnowledgeBasesId;
+            ContentType = knowledgeBaseItemDto.ContentType;
+            Content = knowledgeBaseItemDto.Content;
+            FileName = knowledgeBaseItemDto.FileName;
+            ChunkIndex = knowledgeBaseItemDto.ChunkIndex;
         }
         /// <summary>
         /// 知识库Id

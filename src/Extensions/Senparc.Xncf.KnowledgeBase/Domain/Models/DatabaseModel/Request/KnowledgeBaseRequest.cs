@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Request
 {
-    public class KnowledgeBasesRequest
+    public class KnowledgeBaseRequest
     {
         /// <summary>
         /// 训练模型Id

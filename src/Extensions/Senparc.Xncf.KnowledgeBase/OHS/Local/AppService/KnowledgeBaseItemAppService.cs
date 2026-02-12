@@ -17,10 +17,10 @@ using Senparc.Xncf.KnowledgeBase.Services;
 
 namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
 {
-    public class KnowledgeBasesDetailAppService : AppServiceBase
+    public class KnowledgeBaseItemAppService : AppServiceBase
     {
         private readonly KnowledgeBaseItemService knowledgeBasesDetailService;
-        public KnowledgeBasesDetailAppService(IServiceProvider serviceProvider, KnowledgeBaseItemService knowledgeBasesDetailService) : base(serviceProvider)
+        public KnowledgeBaseItemAppService(IServiceProvider serviceProvider, KnowledgeBaseItemService knowledgeBasesDetailService) : base(serviceProvider)
         {
             this.knowledgeBasesDetailService = knowledgeBasesDetailService;
         }
@@ -31,11 +31,11 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         /// <param name="request">请求记录Dto模型</param>
         /// <returns></returns>
         [ApiBind("AutoMate", ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<AppResponseBase<bool>> CreateOrUpdateAsync(KnowledgeBasesDetailRequest request)
+        public async Task<AppResponseBase<bool>> CreateOrUpdateAsync(KnowledgeBaseItemRequest request)
         {
             return await this.GetResponseAsync<AppResponseBase<bool>, bool>(async (response, logger) =>
             {
-                KnowledgeBasesDetalDto dto = new KnowledgeBasesDetalDto()
+                KnowledgeBaseItemDto dto = new KnowledgeBaseItemDto()
                 {
                     KnowledgeBasesId = request.KnowledgeBasesId,
                     ContentType = request.ContentType,

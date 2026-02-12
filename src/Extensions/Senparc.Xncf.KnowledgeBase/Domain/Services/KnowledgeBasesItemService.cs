@@ -17,15 +17,15 @@ namespace Senparc.Xncf.KnowledgeBase.Services
         }
 
         //TODO: 更多业务方法可以写到这里
-        public async Task<IEnumerable<KnowledgeBasesDetalDto>> GetKnowledgeBasesDetailList(int PageIndex, int PageSize)
+        public async Task<IEnumerable<KnowledgeBaseItemDto>> GetKnowledgeBasesDetailList(int PageIndex, int PageSize)
         {
-            List<KnowledgeBasesDetalDto> selectListItems = null;
+            List<KnowledgeBaseItemDto> selectListItems = null;
             List<KnowledgeBaseItem> knowledgeBasesDetail = (await GetFullListAsync(_ => true).ConfigureAwait(false)).OrderByDescending(_ => _.AddTime).ToList();
-            selectListItems = this.Mapper.Map<List<KnowledgeBasesDetalDto>>(knowledgeBasesDetail);
+            selectListItems = this.Mapper.Map<List<KnowledgeBaseItemDto>>(knowledgeBasesDetail);
             return selectListItems;
         }
 
-        public async Task CreateOrUpdateAsync(KnowledgeBasesDetalDto dto)
+        public async Task CreateOrUpdateAsync(KnowledgeBaseItemDto dto)
         {
             KnowledgeBaseItem knowledgeBasesDetail;
             if (dto.Id == 0)

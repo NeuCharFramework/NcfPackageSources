@@ -7,13 +7,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
 {
-    public class KnowledgeBasesDetalDto : DtoBase<int>
+    public class KnowledgeBaseItemDto : DtoBase<int>
     {
-        public KnowledgeBasesDetalDto()
+        public KnowledgeBaseItemDto()
         {
         }
 
-        public KnowledgeBasesDetalDto(int id, int knowledgeBasesId, ContentType contentType, string content, string fileName = "", int chunkIndex = 0)
+        public KnowledgeBaseItemDto(int id, int knowledgeBasesId, ContentType contentType, string content, string fileName = "", int chunkIndex = 0)
         {
             Id = id;
             KnowledgeBasesId = knowledgeBasesId;
