@@ -228,13 +228,15 @@ new Vue({
       let that = this;
       // 上传成功
       that.fileList = fileList;
-      if (res.code == 200) {
+      debugger
+      if (res.stateCode == 0) {
         that.$notify({
           title: '成功',
           message: '恭喜你，上传成功',
           type: 'success'
         });
-        that.dialog.data.cover = res.data;
+        // 清空文件列表（关键）
+        that.$refs.uploadRef.clearFiles();
       } else {
         that.$notify.error({
           title: '失败',
@@ -524,9 +526,9 @@ new Vue({
 
         // 遍历fileList，提取response.data并用逗号连接
         let files = that.fileList
-          .map(item => item.response?.data)
-          .filter(data => data !== undefined && data !== null)
-          .join(',');
+          .map(item => parseInt(item.response?.data))
+          .filter(data => data !== undefined && data !== null);
+          //.join(',');
 
         // 表单校验
         if (valid) {
@@ -537,8 +539,8 @@ new Vue({
             vectorDBId: parseInt(that.dialog.data.vectorDBId) || 0,
             chatModelId: parseInt(that.dialog.data.chatModelId) || 0,
             name: that.dialog.data.name,
-            content: files || ''
-            //content: that.dialog.data.content || ''
+            content: that.dialog.data.content || '',
+            NcfFileIds: files
           };
           console.log('保存知识库数据：' + JSON.stringify(data));
           service.post("/Admin/KnowledgeBase/Edit?handler=Save", data).then(res => {
