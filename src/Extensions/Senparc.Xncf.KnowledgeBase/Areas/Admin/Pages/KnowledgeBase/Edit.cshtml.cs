@@ -30,7 +30,7 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBase
         /// Handler=Save
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> OnPostSaveAsync([FromBody] KnowledgeBaseDto knowledgeBaseDto)
+        public async Task<IActionResult> OnPostSaveAsync([FromBody] KnowledgeBase_InsertDto knowledgeBaseDto)
         {
             try
             {

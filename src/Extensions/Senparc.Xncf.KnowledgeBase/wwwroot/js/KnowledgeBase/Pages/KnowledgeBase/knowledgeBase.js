@@ -451,7 +451,7 @@ new Vue({
       // 组 新增|编辑
       if (saveType === 'drawerGroup') {
         // 调用新的批量导入文件 API
-        serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBasesAppService/Xncf.KnowledgeBase_KnowledgeBasesAppService.ImportFilesToKnowledgeBase'
+        serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.ImportFilesToKnowledgeBase'
 
         // 从表单中提取选中的文件 ID 列表
         const selectedFiles = serviceForm.files || [];
@@ -694,7 +694,7 @@ new Vue({
           });
 
           //开始向量化数据
-          const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBasesAppService/Xncf.KnowledgeBase_KnowledgeBasesAppService.EmbeddingKnowledgeBase';
+          const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.EmbeddingKnowledgeBase';
           const dataTemp = {
             id: item?.id ?? ''
           };

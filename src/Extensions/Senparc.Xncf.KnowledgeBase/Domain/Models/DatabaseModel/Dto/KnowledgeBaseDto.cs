@@ -47,4 +47,9 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
         public string Content { get; set; }
 
     }
+
+    public class KnowledgeBase_InsertDto : KnowledgeBaseDto
+    {
+        public List<int> NcfFileIds { get; set; } = new List<int>();
+    }
 }

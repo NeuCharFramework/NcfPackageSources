@@ -46,7 +46,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         {
             return await this.GetResponseAsync<AppResponseBase<bool>, bool>(async (response, logger) =>
             {
-                KnowledgeBaseDto dto = new KnowledgeBaseDto()
+                KnowledgeBase_InsertDto dto = new KnowledgeBase_InsertDto()
                 {
                     EmbeddingModelId = request.EmbeddingModelId,
                     VectorDBId = request.VectorDBId,
