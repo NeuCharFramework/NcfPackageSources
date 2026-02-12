@@ -19,10 +19,3 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         public string PromptContent { get; set; }
     }
 }
-
-
-
-
-
-
-

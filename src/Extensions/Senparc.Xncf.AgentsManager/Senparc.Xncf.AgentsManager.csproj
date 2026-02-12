@@ -73,7 +73,7 @@
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
     <PackageReference Include="Senparc.AI.Agents" Version="0.6.0-preivew.1" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
-    <PackageReference Include="Senparc.Weixin.Work" Version="3.30.1" />
+    <PackageReference Include="Senparc.Weixin.Work" Version="3.30.2" />
   </ItemGroup>
   <!--<ItemGroup>
 		<PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.15.2-preview1" />
