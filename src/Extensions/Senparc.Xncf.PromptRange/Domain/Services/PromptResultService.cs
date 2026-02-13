@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,6 +24,9 @@ using Senparc.Xncf.AIKernel.Models;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Senparc.CO2NET.Cache;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
@@ -33,19 +36,22 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         private readonly PromptItemService _promptItemService;
         private readonly PromptRangeService _promptRangeService;
         private readonly LlModelService _llModelService;
+        private readonly PromptResultChatService _promptResultChatService;
 
         public PromptResultService(
             IRepositoryBase<PromptResult> repo,
             IServiceProvider serviceProvider,
             PromptItemService promptItemService,
             PromptRangeService promptRangeService,
-            LlModelService llModelService
+            LlModelService llModelService,
+            PromptResultChatService promptResultChatService
             ) : base(repo,
             serviceProvider)
         {
             _promptItemService = promptItemService;
             _promptRangeService = promptRangeService;
             _llModelService = llModelService;
+            _promptResultChatService = promptResultChatService;
         }
 
 
@@ -66,7 +72,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return dtoList;
         }
 
-        public async Task<PromptResultDto> SenparcGenerateResultAsync(PromptItemDto promptItem)
+        public async Task<PromptResultDto> SenparcGenerateResultAsync(PromptItemDto promptItem, string userMessage = null, List<ChatMessageDto> chatHistory = null)
         {
             //定义 AI 接口调用参数和 Token 限制等
             var promptParameter = new PromptConfigParameter()
@@ -83,6 +89,24 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             //string completionPrompt = $@"请根据提示输出对应内容:
             //{promptItem.Content}";
             string completionPrompt = $@"{promptItem.Content}";
+            
+            // 生成替换参数后的 SystemMessage（用于保存到数据库）
+            // 如果 Prompt 内容包含参数占位符（如 {{$variableName}}），进行参数替换
+            string systemMessage = completionPrompt;
+            if (!string.IsNullOrWhiteSpace(promptItem.VariableDictJson) && 
+                !string.IsNullOrWhiteSpace(promptItem.Prefix) && 
+                !string.IsNullOrWhiteSpace(promptItem.Suffix))
+            {
+                // 读取参数并替换 Prompt 内容中的占位符
+                var variableDict = (promptItem.VariableDictJson ?? "{}").GetObject<Dictionary<string, string>>();
+                foreach (var (key, value) in variableDict)
+                {
+                    // 替换格式：{Prefix}{key}{Suffix} -> value
+                    // 例如：{{$variableName}} -> actualValue
+                    string placeholder = $"{promptItem.Prefix}{key}{promptItem.Suffix}";
+                    systemMessage = systemMessage.Replace(placeholder, value ?? string.Empty);
+                }
+            }
 
             // 从数据库中获取模型信息
             var model = promptItem.AIModelDto;
@@ -94,13 +118,25 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             // 创建 AI Handler 处理器（也可以通过工厂依赖注入）
             var handler = new SemanticAiHandler(aiSettings);
-            var iWantToRun =
-                handler.IWantTo(aiSettings)
-                    // todo 替换为真实用户名，可能需要从NeuChar获取？
-                    .ConfigModel(configModel, "SenparcGenerateResult")
-                    .BuildKernel()
-                    .CreateFunctionFromPrompt(completionPrompt, promptParameter)
-                    .iWantToRun;
+
+
+            IWantToRun iWantToRun =
+            userMessage != null
+                ? handler.ChatConfig(promptParameter,
+                                            userId: "Jeffrey",
+                                            maxHistoryStore: 20,
+                                            chatSystemMessage: completionPrompt,
+                                            senparcAiSetting: aiSettings,
+                                            kernelBuilderAction: kh =>
+                                                { }
+                                                )
+                : handler.IWantTo(aiSettings)
+                        // todo 替换为真实用户名，可能需要从NeuChar获取？
+                        .ConfigModel(configModel, "SenparcGenerateResult")
+                        .BuildKernel()
+                        .CreateFunctionFromPrompt(completionPrompt, promptParameter)
+                        .iWantToRun;
+
             var aiArguments = iWantToRun.CreateNewArguments().arguments;
             //aiArguments["input"] = promptItem.Content;
 
@@ -123,11 +159,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
 
             #endregion
-
-            var aiRequest = iWantToRun.CreateRequest(aiArguments, true);
+            SenparcAiResult aiResult = null;
             var dt1 = SystemTime.Now;
-
-            var result = await iWantToRun.RunAsync(aiRequest);
+            if (userMessage != null)
+            {
+                aiResult = await handler.ChatAsync(iWantToRun, userMessage);
+            }
+            else
+            {
+                var aiRequest = iWantToRun.CreateRequest(aiArguments, true);
+                aiResult = await iWantToRun.RunAsync(aiRequest);
+            }
 
             // todo 计算token消耗
             // 简单计算
@@ -137,13 +179,38 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var promptCostToken = 0;
             var resultCostToken = 0;
 
+            // 判断是否为聊天模式
+            var isChatMode = userMessage != null;
+            var resultMode = isChatMode ? ResultMode.Chat : ResultMode.Single;
+
+            // 如果是聊天模式，保存 SystemMessage；否则为 null
             var promptResult = new PromptResult(
-                promptItem.ModelId, result.Output, SystemTime.DiffTotalMS(dt1),
+                promptItem.ModelId, aiResult.OutputString, SystemTime.DiffTotalMS(dt1),
                 -1, -1, -1, TestType.Text,
                 promptCostToken, resultCostToken, promptCostToken + resultCostToken,
-                promptItem.FullVersion, promptItem.Id);
+                promptItem.FullVersion, promptItem.Id,
+                resultMode,
+                isChatMode ? systemMessage : null); // 只在聊天模式时保存 SystemMessage
 
             await base.SaveObjectAsync(promptResult);
+
+            // 如果是聊天模式，保存对话记录
+            if (isChatMode && !string.IsNullOrWhiteSpace(userMessage) && !string.IsNullOrWhiteSpace(aiResult.OutputString))
+            {
+                var chatMessages = new List<ChatMessageDto>();
+
+                // 如果有历史记录，先添加历史记录
+                if (chatHistory != null && chatHistory.Count > 0)
+                {
+                    chatMessages.AddRange(chatHistory);
+                }
+
+                // 添加当前对话（用户消息和 AI 响应）
+                chatMessages.Add(new ChatMessageDto { Role = "user", Content = userMessage });
+                chatMessages.Add(new ChatMessageDto { Role = "assistant", Content = aiResult.OutputString });
+
+                await _promptResultChatService.AddChatMessagesAsync(promptResult.Id, chatMessages);
+            }
 
             // 有期望结果， 进行自动打分
             if (promptItem.isAIGrade && !string.IsNullOrWhiteSpace(promptItem.ExpectedResultsJson))
@@ -154,6 +221,144 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return this.Mapper.Map<PromptResultDto>(promptResult);
         }
 
+        /// <summary>
+        /// 继续聊天：在现有 PromptResult 中追加对话记录，不创建新的 PromptResult
+        /// </summary>
+        /// <param name="promptResultId">现有的 PromptResult ID</param>
+        /// <param name="userMessage">用户消息</param>
+        /// <returns>返回新追加的对话记录（用户消息和 AI 回复）</returns>
+        public async Task<List<PromptResultChatDto>> ContinueChatAsync(int promptResultId, string userMessage)
+        {
+            if (string.IsNullOrWhiteSpace(userMessage))
+            {
+                throw new NcfExceptionBase("用户消息不能为空");
+            }
+
+            // 获取现有的 PromptResult
+            var promptResult = await this.GetObjectAsync(p => p.Id == promptResultId)
+                ?? throw new NcfExceptionBase($"未找到 ID 为 {promptResultId} 的 PromptResult");
+
+            // 验证是否为聊天模式
+            if (promptResult.Mode != ResultMode.Chat)
+            {
+                throw new NcfExceptionBase("只有聊天模式的 PromptResult 才能继续聊天");
+            }
+
+            // 获取 PromptItem
+            var promptItem = await _promptItemService.GetAsync(promptResult.PromptItemId);
+
+            // 获取历史对话记录
+            var chatHistory = await _promptResultChatService.GetByPromptResultIdAsync(promptResultId);
+            // var chatHistoryForAI = chatHistory.Select(c => new ChatMessageDto
+            // {
+            //     Role = c.RoleType == ChatRoleType.User ? "user" : "assistant",
+            //     Content = c.Content
+            // }).ToList();
+
+            // 定义 AI 接口调用参数
+            var promptParameter = new PromptConfigParameter()
+            {
+                MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 200,
+                Temperature = promptItem.Temperature,
+                TopP = promptItem.TopP,
+                FrequencyPenalty = promptItem.FrequencyPenalty,
+                PresencePenalty = promptItem.PresencePenalty,
+                StopSequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>(),
+            };
+
+            // 优先使用保存的 SystemMessage，如果没有则使用当前的 Prompt 内容
+            // 这样可以确保即使 Prompt 内容或参数变化，继续对话时也使用最初保存的 SystemMessage
+            string completionPrompt;
+            if (!string.IsNullOrWhiteSpace(promptResult.SystemMessage))
+            {
+                // 使用保存的 SystemMessage（已完成参数替换）
+                completionPrompt = promptResult.SystemMessage;
+            }
+            else
+            {
+                // 降级方案：如果没有保存的 SystemMessage，使用当前的 Prompt 内容
+                // 这种情况可能发生在旧数据或 Single 模式的数据中
+                completionPrompt = $@"{promptItem.Content}";
+                
+                // 如果 Prompt 内容包含参数占位符，进行参数替换
+                if (!string.IsNullOrWhiteSpace(promptItem.VariableDictJson) && 
+                    !string.IsNullOrWhiteSpace(promptItem.Prefix) && 
+                    !string.IsNullOrWhiteSpace(promptItem.Suffix))
+                {
+                    var variableDict = (promptItem.VariableDictJson ?? "{}").GetObject<Dictionary<string, string>>();
+                    foreach (var (key, value) in variableDict)
+                    {
+                        string placeholder = $"{promptItem.Prefix}{key}{promptItem.Suffix}";
+                        completionPrompt = completionPrompt.Replace(placeholder, value ?? string.Empty);
+                    }
+                }
+            }
+
+            // 从数据库中获取模型信息
+            var model = promptItem.AIModelDto;
+            // 构建生成AI设置
+            SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
+
+            ConfigModel configModel = _llModelService.ConvertToConfigModel(model.ConfigModelType);
+
+            // 创建 AI Handler 处理器
+            var handler = new SemanticAiHandler(aiSettings);
+
+            var hisgoryArgName = "history";
+
+            // 使用 ChatConfig，使用基于 promptResultId 的唯一 userId
+            IWantToRun iWantToRun = handler.ChatConfig(promptParameter,
+                userId: $"PromptResult_{promptResultId}",
+                maxHistoryStore: 20,
+                chatSystemMessage: completionPrompt,
+                senparcAiSetting: aiSettings,
+                hisgoryArgName: hisgoryArgName,
+                kernelBuilderAction: kh => { }
+                );
+
+            // 获取历史记录并添加到 KernelArguments
+            var chatHistoryFromKernel = iWantToRun.StoredAiArguments.KernelArguments[hisgoryArgName] as ChatHistory;
+
+            if (chatHistoryFromKernel != null)
+            {
+                foreach (var c in chatHistory)
+                {
+                    switch (c.RoleType)
+                    {
+                        case ChatRoleType.User:
+                            chatHistoryFromKernel.AddUserMessage(c.Content);
+                            break;
+                        case ChatRoleType.Assistant:
+                            chatHistoryFromKernel.AddAssistantMessage(c.Content);
+                            break;
+                    }
+                }
+
+                iWantToRun.StoredAiArguments.KernelArguments[hisgoryArgName] = chatHistoryFromKernel;
+            }
+
+            // 调用 AI 接口
+            var dt1 = SystemTime.Now;
+            var aiResult = await handler.ChatAsync(iWantToRun, userMessage,historyArgName:hisgoryArgName);
+            var costTime = SystemTime.DiffTotalMS(dt1);
+
+            // 追加新的对话记录到 PromptResultChat
+            var newChatMessages = new List<ChatMessageDto>
+            {
+                new ChatMessageDto { Role = "user", Content = userMessage },
+                new ChatMessageDto { Role = "assistant", Content = aiResult.OutputString }
+            };
+
+            // 添加新的对话记录（会自动从现有最大序号+1开始）
+            var newChatDtos = await _promptResultChatService.AddChatMessagesAsync(promptResultId, newChatMessages);
+
+            // 更新 PromptResult 的 ResultString（追加新的回复）
+            // 注意：由于 ResultString 是 private set，我们需要通过反射或者添加一个更新方法
+            // 这里我们暂时不更新 ResultString，因为对话记录已经保存在 PromptResultChat 中了
+            // 如果需要更新，可以添加一个 UpdateResultString 方法
+
+            return newChatDtos;
+        }
 
         public async Task<PromptResult> ManualScoreAsync(int id, decimal score)
         {

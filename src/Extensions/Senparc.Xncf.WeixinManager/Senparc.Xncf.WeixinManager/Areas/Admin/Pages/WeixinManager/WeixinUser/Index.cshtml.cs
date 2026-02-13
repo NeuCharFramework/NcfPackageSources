@@ -49,7 +49,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
             //    var mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == mpId);
             //    if (mpAccount == null)
             //    {
-            //        return RenderError("¹«ÖÚºÅÅäÖÃ²»´æÔÚ£º" + mpId);
+            //        return RenderError("å…¬ä¼—å·é…ç½®ä¸å­˜åœ¨ï¼š" + mpId);
             //    }
             //    MpAccountDto = _mpAccountService.Mapper.Map<MpAccountDto>(mpAccount);
             //}
@@ -81,7 +81,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
                     var mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == mpId);
                     if (mpAccount == null)
                     {
-                        return RenderError("¹«ÖÚºÅÅäÖÃ²»´æÔÚ£º" + mpId);
+                        return RenderError("å…¬ä¼—å·é…ç½®ä¸å­˜åœ¨ï¼š" + mpId);
                     }
                     mpAccountDto = _mpAccountService.Mapper.Map<MpAccountDto>(mpAccount);
                 }
@@ -140,11 +140,11 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
         public enum SyncType
         {
             /// <summary>
-            /// Ö»Ôö¼ÓÎ´Ìí¼ÓµÄÓÃ»§
+            /// åªæ·»åŠ æœªæ·»åŠ çš„ç”¨æˆ·
             /// </summary>
             add,
             /// <summary>
-            /// Ôö¼ÓÎ´Ìí¼ÓµÄÓÃ»§£¬Í¬Ê±¸üĞÂËùÓĞĞÅÏ¢£¨Ê±¼ä»á½Ï³¤£©
+            /// æ·»åŠ æœªæ·»åŠ çš„ç”¨æˆ·ï¼ŒåŒæ—¶æ›´æ–°æ‰€æœ‰ä¿¡æ¯ï¼ˆæ—¶é—´è¾ƒé•¿ï¼‰
             /// </summary>
             all
         }
@@ -154,15 +154,15 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
             var mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == mpId);
             if (mpAccount == null)
             {
-                return RenderError("¹«ÖÚºÅÅäÖÃ²»´æÔÚ£º" + mpId);
+                return RenderError("å…¬ä¼—å·é…ç½®ä¸å­˜åœ¨ï¼š" + mpId);
             }
 
-            SenparcTrace.SendCustomLog("¿ªÊ¼¹«ÖÚºÅÓÃ»§Í¬²½", mpAccount.Name);
+            SenparcTrace.SendCustomLog("å¼€å§‹å…¬ä¼—å·ç”¨æˆ·åŒæ­¥", mpAccount.Name);
             //List<WeixinUserDto> weixinUserDtos = new List<WeixinUserDto>();
             string lastOpenId = null;
             List<string> openIds = new List<string>()
             {
-                //"olPjZjsbk4WzEbbGDkWWHuwhpg1M"//²âÊÔID
+                //"olPjZjsbk4WzEbbGDkWWHuwhpg1M"//æµ‹è¯•ID
                 //"oxRg0uLsnpHjb8o93uVnwMK_WAVw"
             };
             while (true)
@@ -170,7 +170,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
                 var result = await Senparc.Weixin.MP.AdvancedAPIs.UserApi.GetAsync(mpAccount.AppId, lastOpenId);
                 if (result.data != null)
                 {
-                    SenparcTrace.SendCustomLog("»ñÈ¡µ½OpenId", $"{result.data.openid.Count} ¸ö");
+                    SenparcTrace.SendCustomLog("è·å–åˆ°OpenId", $"{result.data.openid.Count} ä¸ª");
                     openIds.AddRange(result.data.openid);
                 }
 
@@ -181,22 +181,22 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
                 lastOpenId = result.next_openid;
             }
 
-            //¸üĞÂTag
+            //åŒæ­¥Tag
             var weixinTagDto = new UserTag_CreateOrUpdateDto();
             var allDbUserTags = await _userTagService.GetFullListAsync(z => z.MpAccountId == mpId);
-            SenparcTrace.SendCustomLog("µ±Ç°ÒÑ¾­´æ´¢UserTags", $"{allDbUserTags.Count} ¸ö\r\n{string.Join(",", allDbUserTags.Select(z => z.Name).ToArray())}");
+            SenparcTrace.SendCustomLog("å½“å‰å·²ç»å­˜å‚¨UserTags", $"{allDbUserTags.Count} ä¸ª\r\n{string.Join(",", allDbUserTags.Select(z => z.Name).ToArray())}");
 
             var tagInfo = await Senparc.Weixin.MP.AdvancedAPIs.UserTagApi.GetAsync(mpAccount.AppId);
-            SenparcTrace.SendCustomLog("Î¢ĞÅÕËºÅ´æ´¢UerTag", $"{tagInfo.tags.Count} ¸ö\r\n{string.Join(",", tagInfo.tags.Select(z => z.name).ToArray())}");
+            SenparcTrace.SendCustomLog("å¾®ä¿¡å…¬ä¼—å·å­˜å‚¨UerTag", $"{tagInfo.tags.Count} ä¸ª\r\n{string.Join(",", tagInfo.tags.Select(z => z.name).ToArray())}");
 
-            //Ìí¼Ó»ò¸üĞÂ UserTag
+            //æ·»åŠ æˆ–æ›´æ–° UserTag
             foreach (var tag in tagInfo.tags)
             {
                 var dbUserTag = allDbUserTags.FirstOrDefault(z => z.TagId == tag.id);
 
                 UserTag_CreateOrUpdateDto tagDto;
                 tagDto = dbUserTag == null
-                //? _userTagService.Mapper.Map<UserTag_CreateOrUpdateDto>(tag)//´´½¨ĞÂtag
+                //? _userTagService.Mapper.Map<UserTag_CreateOrUpdateDto>(tag)//ç›´æ¥ç”¨tag
                 ? new UserTag_CreateOrUpdateDto()
                 {
                     Count = tag.count,
@@ -204,17 +204,17 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
                     Name = tag.name,
                     MpAccountId = mpId
                 }
-                : _userTagService.Mapper.Map<UserTag_CreateOrUpdateDto>(dbUserTag)//´ÓÊı¾İ¿â»ñÈ¡
+                : _userTagService.Mapper.Map<UserTag_CreateOrUpdateDto>(dbUserTag)//ä»æ•°æ®åº“è·å–
                     ;
 
                 tagDto.MpAccountId = mpId;
-                tagDto.TagId = tag.id;//Ãû³Æ²»Ò»ÖÂ£¬ÊÖ¶¯Ìî³ä
+                tagDto.TagId = tag.id;//åç§°ä¸ä¸€æ ·ï¼Œæ‰‹åŠ¨æ›´æ–°
 
                 var changed = false;
 
                 if (dbUserTag == null)
                 {
-                    SenparcTrace.SendCustomLog("ĞÂÔöUserTag", $"TagId({tagDto.TagId}):{tagDto.Name}");
+                    SenparcTrace.SendCustomLog("æ–°å¢UserTag", $"TagId({tagDto.TagId}):{tagDto.Name}");
                     dbUserTag = _userTagService.Mapper.Map<UserTag>(tagDto);
                     //await _userTagService.SaveObjectAsync(dbUserTag);
                     allDbUserTags.Add(dbUserTag);
@@ -222,7 +222,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
                 }
                 else
                 {
-                    SenparcTrace.SendCustomLog("¸üĞÂUserTag", $"{tagDto.TagId}:{tagDto.Name}");
+                    SenparcTrace.SendCustomLog("æ›´æ–°UserTag", $"{tagDto.TagId}:{tagDto.Name}");
                     changed = dbUserTag.Update(tagDto);
                 }
 
@@ -232,7 +232,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
                 }
             }
 
-            //¼ì²âÉ¾³ıµÄ Tag
+            //ç§»é™¤åˆ é™¤çš„ Tag
             var tobeRemoveTags = allDbUserTags.Where(z => !tagInfo.tags.Exists(t => t.name == z.Name));
             if (tobeRemoveTags.Count() > 0)
             {
@@ -246,8 +246,8 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
             ConcurrentBag<Domain.Models.DatabaseModel.WeixinUser> newWeixinUsers = new ConcurrentBag<Domain.Models.DatabaseModel.WeixinUser>();
 
             ConcurrentDictionary<int, Task> tasks = new ConcurrentDictionary<int, Task>();
-            var maxThreadsCount = 300;//×î´óÀ­È¡Ïß³ÌÊı
-            SenparcTrace.SendCustomLog("¿ªÊ¼Í¬²½ÓÃ»§ĞÅÏ¢", $"¹² {openIds.Count} ¸ö");
+            var maxThreadsCount = 300;//æœ€å¤§å¹¶å‘çº¿ç¨‹æ•°
+            SenparcTrace.SendCustomLog("å¼€å§‹åŒæ­¥ç”¨æˆ·ä¿¡æ¯", $"å…± {openIds.Count} ä¸ª");
             for (int i = 0; i < openIds.Count; i++)
             {
                 var index = i;
@@ -257,42 +257,42 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
                     var weixinUser = allUsers.FirstOrDefault(z => z.OpenId == openId);
                     if (weixinUser == null || syncType == SyncType.all)
                     {
-                        //ĞèÒªĞÂÔö»ò³¢ÊÔ¸üĞÂÓÃ»§
+                        //éœ€è¦æ›´æ–°ï¼Œè·å–ç”¨æˆ·ä¿¡æ¯
                         var user = await Senparc.Weixin.MP.AdvancedAPIs.UserApi.InfoAsync(mpAccount.AppId, openId);
                         var weixinUserDto = _weixinUserService.Mapper.Map<WeixinUser_UpdateFromApiDto>(user);
                         weixinUserDto.MpAccountId = mpId;
                         if (weixinUser != null)
                         {
-                            //²é¿´ÒÑÓĞÏî¸üĞÂ£¬Á½¸öÊı¾İ½øĞĞ¶Ô±È
+                            //æŸ¥çœ‹æ˜¯å¦æœ‰æ›´æ–°ï¼Œå¯¹æ•°æ®è¿›è¡Œå¯¹æ¯”
                             var newApiWeixinUserJson = weixinUserDto.ToJson(false, new Newtonsoft.Json.JsonSerializerSettings() { ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore });
                             var oldDbWeixinUserDto = _weixinUserService.Mapper.Map<WeixinUser_UpdateFromApiDto>(weixinUser);
                             oldDbWeixinUserDto.Tagid_List = weixinUser.UserTags_WeixinUsers.Select(z => z.UserTag.TagId).ToArray();
                             var oldDbWeixinUserJson = oldDbWeixinUserDto.ToJson(false, new Newtonsoft.Json.JsonSerializerSettings() { ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore });
                             if (newApiWeixinUserJson != oldDbWeixinUserJson)
                             {
-                                SenparcTrace.SendCustomLog("WeixinUserJson ¸üĞÂ", $"¾É£º{oldDbWeixinUserJson}\r\nĞÂ£º{newApiWeixinUserJson}");
+                                SenparcTrace.SendCustomLog("WeixinUserJson å˜æ›´", $"æ—§ï¼š{oldDbWeixinUserJson}\r\næ–°ï¼š{newApiWeixinUserJson}");
                                 _weixinUserService.Mapper.Map(weixinUserDto, weixinUser);
 
-                                //SenparcTrace.SendCustomLog("weixinUser ÊµÌåĞÅÏ¢", $"{weixinUser.ToJson(false, new Newtonsoft.Json.JsonSerializerSettings() { ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore })}");
+                                //SenparcTrace.SendCustomLog("weixinUser å®ä½“ä¿¡æ¯", $"{weixinUser.ToJson(false, new Newtonsoft.Json.JsonSerializerSettings() { ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore })}");
                                 weixinUser.UpdateTime();
-                                allToSaveWeixinUsers.Add(weixinUser);//¸üĞÂ
+                                allToSaveWeixinUsers.Add(weixinUser);//æ›´æ–°
                             }
 
-                            //Ìí¼Ó»òÉ¾³ı¸öÈËµÄ Tag
+                            //æ·»åŠ æˆ–åˆ é™¤ä¸ªäººçš„ Tag
                             foreach (var weixinTagId in user.tagid_list)
                             {
                                 var userTag = allDbUserTags.FirstOrDefault(z => z.TagId == weixinTagId);
                                 if (userTag == null)
                                 {
-                                    SenparcTrace.SendCustomLog("Æ¥Åäµ½Î´Í¬²½µÄ TagId", "TagId£º" + weixinTagId);//Õı³£Çé¿ö²»»á´æÔÚ
+                                    SenparcTrace.SendCustomLog("åŒ¹é…åˆ°æœªåŒæ­¥çš„ TagId", "TagIdï¼š" + weixinTagId);//è¿™ç§æƒ…å†µåº”è¯¥å¾ˆå°‘
                                 }
 
-                                //²éÕÒÎ´Ìí¼ÓµÄTag
+                                //æ·»åŠ æœªæ·»åŠ çš„Tag
                                 var userTags_WeixinUsers = weixinUser.UserTags_WeixinUsers
                                                     .FirstOrDefault(z => /*z.WeixinUserId == weixinUser.Id &&*/ z.UserTagId == userTag.Id);
                                 if (userTags_WeixinUsers == null)
                                 {
-                                    SenparcTrace.SendCustomLog("´´½¨ĞÂTag¹ØÁª", $"WeixinUser£º{weixinUser.NickName} -> TagName£º{userTag.Name}");
+                                    SenparcTrace.SendCustomLog("å‘ç°æ–°Tagå…³ç³»", $"WeixinUserï¼š{weixinUser.NickName} -> TagNameï¼š{userTag.Name}");
 
                                     var userTag_Weixinuser = new UserTag_WeixinUser(userTag.Id, weixinUser.Id);
                                     userTag_Weixinuser.UpdateTime();
@@ -300,7 +300,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
                                 }
                             }
 
-                            //²éÕÒĞèÒªÉ¾³ıµÄTag
+                            //å¤„ç†éœ€è¦åˆ é™¤çš„Tag
                             var tobeRemoveTagList = weixinUser.UserTags_WeixinUsers.Where(z =>
                                 {
                                     var dbUserTag = allDbUserTags.FirstOrDefault(t => t.Id == z.UserTagId);
@@ -309,19 +309,19 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
 
                             foreach (var userTags_WeixinUsers in tobeRemoveTagList)
                             {
-                                SenparcTrace.SendCustomLog("É¾³ıTag¹ØÁª", $"WeixinUser£º{weixinUser.NickName} -> UserTag.Id£º{userTags_WeixinUsers.UserTagId}");
+                                SenparcTrace.SendCustomLog("åˆ é™¤Tagå…³ç³»", $"WeixinUserï¼š{weixinUser.NickName} -> UserTag.Idï¼š{userTags_WeixinUsers.UserTagId}");
                                 weixinUser.UserTags_WeixinUsers.Remove(userTags_WeixinUsers);
                             }
                         }
                         else
                         {
-                            weixinUser = _weixinUserService.Mapper.Map<Domain.Models.DatabaseModel.WeixinUser>(weixinUserDto);//ĞÂÔö
+                            weixinUser = _weixinUserService.Mapper.Map<Domain.Models.DatabaseModel.WeixinUser>(weixinUserDto);//æ–°å¢
                             weixinUser.UpdateTime();
                             newWeixinUsers.Add(weixinUser);
                             allToSaveWeixinUsers.Add(weixinUser);
                         }
 
-                        //TODO:¸üĞÂgroupĞÅÏ¢
+                        //TODO:æ›´æ–°groupä¿¡æ¯
 
 
                     }
@@ -331,19 +331,19 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
 
                 if (index % maxThreadsCount == 0 || index == openIds.Count - 1)
                 {
-                    //Ö»ÔÊĞíN¸öÏß³Ì£¬·ñÔòµÈ´ı
+                    //åªå¼€å¯Nä¸ªçº¿ç¨‹ï¼Œç­‰å¾…
                     Task.WaitAll(tasks.Values.ToArray());
-                    //¼ÇÂ¼Òì³£
+                    //è®°å½•å¼‚å¸¸
                     foreach (var item in tasks.Values.Where(z => z.Exception != null))
                     {
                         SenparcTrace.BaseExceptionLog(item.Exception);
                     }
-                    //Çå³ıÒÑÍê³ÉµÄÏß³Ì
+                    //æ¸…ç©ºå·²å®Œæˆçš„çº¿ç¨‹
                     tasks.Clear();
                 }
             }
 
-            SenparcTrace.SendCustomLog("±£´æÓÃ»§ĞÅÏ¢", $"{allToSaveWeixinUsers.Count} ¸ö");
+            SenparcTrace.SendCustomLog("ä¿å­˜ç”¨æˆ·ä¿¡æ¯", $"{allToSaveWeixinUsers.Count} ä¸ª");
             try
             {
                 var saveWeixinusers = allToSaveWeixinUsers.OrderBy(z => z.Subscribe_Time);
@@ -355,7 +355,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
                 SenparcTrace.BaseExceptionLog(ex.InnerException);
             }
 
-            //base.SetMessager(Ncf.Core.Enums.MessageType.success, "¸üĞÂ³É¹¦£¡");
+            //base.SetMessager(Ncf.Core.Enums.MessageType.success, "æ›´æ–°æˆåŠŸï¼");
             //return RedirectToPage("./Index", new { uid = Uid, mpId = mpId });
             return Ok(new { uid = Uid, mpId });
         }

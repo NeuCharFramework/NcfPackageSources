@@ -7,7 +7,7 @@ namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel
 {
     //[Table(Register.DATABASE_PREFIX + nameof(NcfFile))]//必须添加前缀，防止全系统中发生冲突
 
-    [Table(name: "NcfFiles")]
+    [Table(Register.DATABASE_PREFIX + nameof(NcfFile))]//必须添加前缀，防止全系统中发生冲突
     public class NcfFile : EntityBase<int>
     {
         [Required]
@@ -31,6 +31,8 @@ namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel
         public string Description { get; set; } // 文件描述
 
         public DateTime UploadTime { get; set; } // 上传时间
+
+        public int? FolderId { get; set; } // 所属文件夹，可为空表示根目录
     }
 
     public enum FileType
@@ -42,4 +44,5 @@ namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel
         Code = 4,
         Other = 999
     }
-} 
+
+}

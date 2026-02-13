@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model Senparc.Xncf.PromptRange.Areas.Admin.Pages.PromptRange.PromptModel
 @{
     ViewData["Title"] = "PromptRange Prompt";
@@ -59,10 +59,16 @@
                     </div>
 
                     <div class="w-100">
-                        <div class="d-flex align-center" style="gap: 5px;margin-bottom: 5px">
-                            <img src="~/image/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon" />
-                            <div class="titleContent d-flex justify-content-between  align-center w-100">
-                                <span>选择靶道</span>
+                        <div class="d-flex align-center justify-content-between" style="gap: 5px;margin-bottom: 5px">
+                            <div class="d-flex align-center" style="gap: 5px;">
+                                <img src="~/image/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon" />
+                                <div class="titleContent">选择靶道</div>
+                            </div>
+                            <div class="d-flex align-center" style="gap: 5px;">
+                                <el-button type="primary" size="mini" icon="el-icon-s-data" @@click="openMapDialog" 
+                                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; font-weight: bold;">
+                                    导图
+                                </el-button>
                                 <i class="el-icon-document-copy" style="font-size: 1.3rem;cursor: pointer" @@click="copyInfo"></i>
                             </div>
                         </div>
@@ -228,14 +234,13 @@
                         <div class="promptInput prompt-rich-editor"
                              contenteditable="true"
                              ref="promptEditor"
-                             @@focus="onEditorFocus"
-                             @@input="onEditorInput"
-                             @@keyup="onEditorKeyup"
+                             @@input="handleEditorInput"
+                             @@paste="handlePaste"
+                             @@keydown="handleKeyDown"
+                             @@blur="applyHighlight"
                              @@compositionstart="isComposing = true"
-                             @@compositionend="onCompositionEnd"
-                             @@blur="onEditorBlur"
-                             @@paste="onEditorPaste"
-                             :data-placeholder="content ? '' : '请输入内容'">
+                             @@compositionend="isComposing = false"
+                             :data-placeholder="content ? '' : '请输入Prompt内容'">
                         </div>
                             
                             @* 变量提示卡片 *@
@@ -303,10 +308,10 @@
                             <el-form ref="promptParamForm" :model="promptParamForm" :rules="rules" label-width="70px" label-position="left">
                                 <div class="formItem">
                                     <el-form-item label="前缀" prop="prefix">
-                                        <el-input size="mini" v-model="promptParamForm.prefix" autocomplete="off" placeholder="如：{$"></el-input>
+                                        <el-input size="mini" v-model="promptParamForm.prefix" autocomplete="off" placeholder="如：{{$"></el-input>
                                     </el-form-item>
                                     <el-form-item label="后缀" prop="suffix">
-                                        <el-input size="mini" v-model="promptParamForm.suffix" autocomplete="off" placeholder="如：}"></el-input>
+                                        <el-input size="mini" v-model="promptParamForm.suffix" autocomplete="off" placeholder="如：}}"></el-input>
                                     </el-form-item>
                                 </div>
                                 @* 变量名 变量值 *@
@@ -451,6 +456,10 @@
                         <div class="operateRow_item" @@click="app.showRatingView(index,'2')">
                             <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon" />
                             <span :class="checkUseRed(index,item,'humanScore')">手动评分: {{item.humanScore>-1 ? item.humanScore.toFixed(1) : '--'}}</span>
+                        </div>
+                        <div class="operateRow_item" v-if="item.mode === 2 || item.mode === 'Chat'" @@click="app.continueChat(item.id, index)" style="cursor: pointer; color: #409EFF;">
+                            <i class="el-icon-chat-line-round"></i>
+                            <span>继续聊天</span>
                         </div>
                     </div>
                     <div v-if="item.isScoreView" class="scoreRow">
@@ -600,62 +609,169 @@
         </div>
     </el-drawer>
     @*战术选择 dialog*@
-    <el-dialog title="战术选择" :visible.sync="tacticalFormVisible" center @@close="tacticalFormCloseDialog">
-        <el-form ref="tacticalForm" :model="tacticalForm" :rules="rules" label-width="70px" label-position="left" class="tacticalFormBox">
-            <el-form-item label="战术" prop="tactics">
+    <el-dialog 
+        :title="continueChatMode ? '继续聊天' : (promptid ? '战术选择' : '打靶模式')" 
+        :visible.sync="tacticalFormVisible" 
+        :width="continueChatMode ? '80%' : '65%'"
+        :close-on-click-modal="false"
+        center 
+        @@close="tacticalFormCloseDialog">
+        <el-form ref="tacticalForm" :model="tacticalForm" :rules="rules" :label-width="continueChatMode ? '120px' : '100px'" label-position="left" class="tacticalFormBox">
+            @* 继续聊天模式下不显示战术选择，第一次打靶时（没有promptid）也不显示战术选择 *@
+            <el-form-item v-if="!continueChatMode && promptid" label="战术" prop="tactics">
                 <el-radio-group v-model="tacticalForm.tactics">
                     <el-radio label="创建顶级战术">
                         <div class="d-f-startr-start-title">创建顶级战术</div>
-                        @*<div class="d-f-startr-start-img">
-
-                        </div>*@
-                        <div class="d-f-startr-start-nowrap" style="margin-top:7px;">
-                            <span>示例：</span>
-                            <div>
-                                <div>T1</div>
-                                <div>T2 (new)</div>
+                        <div class="d-f-startr-start-nowrap">
+                            <span style="color: #606266;">将创建：</span>
+                            <div style="margin-left: 8px;">
+                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">当前：{{ currentTacticalInfo.tactic }}</div>
+                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.topTactic }} <span style="color: #67C23A; font-size: 12px;">(新)</span></div>
                             </div>
                         </div>
                     </el-radio>
                     <el-radio label="创建平行战术">
-                        <div>创建平行战术</div>
-                        <div class="d-f-startr-start-nowrap" style="margin-top:7px;">
-                            <span>示例：</span>
-                            <div class="d-c-startr-start-nowrap">
-                                <div>T1.2.3</div>
-                                <div>T1.2.4 (new)</div>
+                        <div class="d-f-startr-start-title">创建平行战术</div>
+                        <div class="d-f-startr-start-nowrap">
+                            <span style="color: #606266;">将创建：</span>
+                            <div class="d-c-startr-start-nowrap" style="margin-left: 8px;">
+                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">当前：{{ currentTacticalInfo.tactic }}</div>
+                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.parallelTactic }} <span style="color: #67C23A; font-size: 12px;">(新)</span></div>
                             </div>
                         </div>
                     </el-radio>
 
                     <el-radio label="创建子战术">
-                        <div>创建子战术</div>
-                        <div class="d-f-startr-start-nowrap" style="margin-top:7px;">
-                            <span>示例：</span>
-                            <div class="d-c-startr-start-nowrap">
-                                <div>T1.2.3</div>
-                                <div>T1.2.3.1 (new)</div>
+                        <div class="d-f-startr-start-title">创建子战术</div>
+                        <div class="d-f-startr-start-nowrap">
+                            <span style="color: #606266;">将创建：</span>
+                            <div class="d-c-startr-start-nowrap" style="margin-left: 8px;">
+                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">当前：{{ currentTacticalInfo.tactic }}</div>
+                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.subTactic }} <span style="color: #67C23A; font-size: 12px;">(新)</span></div>
                             </div>
                         </div>
                     </el-radio>
                     <el-radio label="重新瞄准">
-                        <div>重新瞄准</div>
-                        <div class="d-f-startr-start-nowrap" style="margin-top:7px;">
-                            <span>示例：</span>
-                            <div class="d-c-startr-start-nowrap">
-                                <div>T1.2.3-A1</div>
-                                <div>T1.2.3-A2 (new)</div>
+                        <div class="d-f-startr-start-title">重新瞄准</div>
+                        <div class="d-f-startr-start-nowrap">
+                            <span style="color: #606266;">将创建：</span>
+                            <div class="d-c-startr-start-nowrap" style="margin-left: 8px;">
+                                <div v-if="currentTacticalInfo.fullTactical !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">当前：{{ currentTacticalInfo.fullTactical }}</div>
+                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.newAiming }} <span style="color: #67C23A; font-size: 12px;">(新)</span></div>
                             </div>
                         </div>
                     </el-radio>
                 </el-radio-group>
             </el-form-item>
+            <el-form-item v-if="!continueChatMode" label="打靶模式" prop="chatMode">
+                <el-radio-group v-model="tacticalForm.chatMode" :disabled="continueChatMode">
+                    <el-radio label="对话模式">
+                        <div>对话模式</div>
+                        <div style="margin-top:5px; font-size:12px; color:#909399;">以对话方式输入，输入后进行打靶</div>
+                    </el-radio>
+                    <el-radio label="直接测试">
+                        <div>直接测试</div>
+                        <div style="margin-top:5px; font-size:12px; color:#909399;">直接使用当前的 Prompt 进行测试</div>
+                    </el-radio>
+                </el-radio-group>
+                <div v-if="continueChatMode" style="margin-top: 8px; font-size: 12px; color: #E6A23C;">
+                    <i class="el-icon-lock"></i> 继续聊天模式已锁定为对话模式
+                </div>
+            </el-form-item>
+            @* 继续聊天模式下的历史记录显示 *@
+            <el-form-item v-if="continueChatMode" label="对话历史">
+                <div class="chat-history-container" id="chatHistoryContainer" @@scroll="handleChatHistoryScroll">
+                    @* System Message 显示在对话历史顶部 *@
+                    <div v-if="continueChatMode" class="system-message-in-chat-history">
+                        <el-collapse v-model="systemMessageCollapse">
+                            <el-collapse-item name="systemMessage">
+                                <template slot="title">
+                                    <i :class="systemMessageCollapse.includes('systemMessage') ? 'el-icon-arrow-up' : 'el-icon-arrow-down'" style="margin-right: 8px;"></i>
+                                    <span style="font-weight: 600;">System Message (Prompt)</span>
+                                    <span style="margin-left: 8px; font-size: 12px; color: #909399;">(点击{{ systemMessageCollapse.includes('systemMessage') ? '收起' : '展开' }}查看当前对话使用的 Prompt)</span>
+                                </template>
+                                <div class="system-message-content">{{ continueChatSystemMessage || '加载中...' }}</div>
+                            </el-collapse-item>
+                        </el-collapse>
+                    </div>
+                    <div v-if="continueChatHistory.length === 0" class="chat-empty-tip">
+                        <i class="el-icon-chat-line-round"></i>
+                        <span>暂无对话记录</span>
+                    </div>
+                    <div v-for="(msg, idx) in continueChatHistory" :key="msg.id || `temp-${idx}`" class="chat-message-item" :class="{'chat-message-user': msg.roleType === 1, 'chat-message-assistant': msg.roleType === 2}">
+                        <div class="chat-message-avatar">
+                            <i :class="msg.roleType === 1 ? 'el-icon-user' : 'el-icon-service'"></i>
+                        </div>
+                        <div class="chat-message-content-wrapper">
+                            <div class="chat-message-header">
+                                <span class="chat-message-role">{{ msg.roleType === 1 ? '用户' : '助手' }}</span>
+                                <span class="chat-message-sequence">#{{ msg.sequence }}</span>
+                                <span class="chat-message-time">{{ formatChatTime(msg.addTime) }}</span>
+                            </div>
+                            <div class="chat-message-content" v-html="formatChatContent(msg.content)">
+                            </div>
+                            @* 只有助手消息才显示反馈按钮，并且必须有有效的 ID *@
+                            <div v-if="msg.roleType === 2 && msg.id && msg.id > 0" class="chat-message-feedback">
+                                <el-button 
+                                    :type="msg.userFeedback === true ? 'success' : 'text'" 
+                                    :icon="msg.userFeedback === true ? 'el-icon-check' : 'el-icon-thumb'" 
+                                    size="mini"
+                                    @@click="toggleChatFeedback(msg.id, true)"
+                                    title="点赞">
+                                    <span v-if="msg.userFeedback === true">已点赞</span>
+                                    <span v-else>点赞</span>
+                                </el-button>
+                                <el-button 
+                                    :type="msg.userFeedback === false ? 'danger' : 'text'" 
+                                    :icon="msg.userFeedback === false ? 'el-icon-close' : 'el-icon-remove-outline'" 
+                                    size="mini"
+                                    @@click="toggleChatFeedback(msg.id, false)"
+                                    title="点踩">
+                                    <span v-if="msg.userFeedback === false">已点踩</span>
+                                    <span v-else>点踩</span>
+                                </el-button>
+                            </div>
+                            @* 如果没有有效 ID，显示提示 *@
+                            <div v-if="msg.roleType === 2 && (!msg.id || msg.id === 0)" class="chat-message-feedback" style="color: #909399; font-size: 12px;">
+                                <i class="el-icon-loading"></i> 正在保存...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </el-form-item>
+            
+            @* 对话模式下的对话输入区域 *@
+            @* 注意：不使用 prop="chatInput"，因为这是条件显示的字段，resetFields 可能会出错 *@
+            <el-form-item v-if="tacticalForm.chatMode === '对话模式'" label="对话输入">
+                <el-input 
+                    v-model="tacticalChatInput" 
+                    type="textarea" 
+                    :rows="6"
+                    ref="tacticalChatInput"
+                    @@keydown.native="handleChatInputKeydown"
+                    :placeholder="continueChatMode ? '请输入您的下一句话... (Ctrl+Enter / Cmd+Enter 发送)' : '请输入您的问题... (Ctrl+Enter / Cmd+Enter 发送)'">
+                </el-input>
+                <div style="margin-top: 8px; font-size: 12px; color: #909399;">
+                    {{ continueChatMode ? '输入内容将追加到现有对话中' : '输入内容将作为 userMessage 参数传递到后端接口' }}
+                    <span style="margin-left: 8px; color: #909399;">快捷键：Ctrl+Enter (Windows) / Cmd+Enter (Mac)</span>
+                </div>
+            </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button size="mini" @@click="tacticalFormVisible = false">取 消</el-button>
             @* v-loading="tacticalFormSubmitLoading" *@
-            <el-button type="primary" size="mini" @@click="tacticalFormSubmitBtn">确 定</el-button>
+            <el-button type="primary" size="mini" @@click="tacticalFormSubmitBtn">发 射</el-button>
         </div>
+    </el-dialog>
+    @*导图 dialog*@
+    <el-dialog 
+        title="3D 结构导图" 
+        :visible.sync="mapDialogVisible" 
+        width="90%"
+        :close-on-click-modal="false"
+        center 
+        @@close="mapDialogClose">
+        <div id="map3dContainer" style="width: 100%; height: 600px; background: #1a1a1a;"></div>
     </el-dialog>
     @*新增模型 dialog*@
     <el-dialog title="新增模型" :visible.sync="modelFormVisible" center @@close="modelFormCloseDialog">
@@ -1113,7 +1229,7 @@
                 </div>
                 
                 @* 变量列表对比（Git diff风格） *@
-                <div class="compare-diff-container" v-if="comparePromptA.variablesJson || comparePromptB.variablesJson">
+                <div class="compare-diff-container" v-if="comparePromptA.variableDictJson || comparePromptB.variableDictJson">
                     <div class="compare-columns">
                         <div class="compare-diff-column">
                             <div class="diff-column-header">Prompt A - 变量配置</div>
@@ -1123,9 +1239,9 @@
                         </div>
                         <div class="compare-diff-column">
                             <div class="diff-column-header">Prompt B - 变量配置
-                                <span class="diff-badge" v-if="hasFieldDiff(comparePromptA.variablesJson, comparePromptB.variablesJson)">有差异</span>
+                                <span class="diff-badge" v-if="hasFieldDiff(comparePromptA.variableDictJson, comparePromptB.variableDictJson)">有差异</span>
                             </div>
-                            <div class="diff-code-block" :class="{'has-content-diff': hasFieldDiff(comparePromptA.variablesJson, comparePromptB.variablesJson)}">
+                            <div class="diff-code-block" :class="{'has-content-diff': hasFieldDiff(comparePromptA.variableDictJson, comparePromptB.variableDictJson)}">
                                 <pre v-html="getVariablesDiffHtml('B')"></pre>
                             </div>
                         </div>
@@ -1148,6 +1264,7 @@
             <el-button @@click="compareDialogVisible = false">关闭</el-button>
         </div>
     </el-dialog>
+    
 </div>
 
 
@@ -1165,9 +1282,21 @@
     <script src="~/js/PromptRange/lib/jszip.min.js"></script>
     <script src="~/js/PromptRange/lib/fileSave.min.js"></script>
     <script src="~/js/PromptRange/lib/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/diff@5.1.0/dist/diff.min.js"></script>
+    <script src="~/js/PromptRange/lib/diff.min.js"></script>
     <script src="~/js/PromptRange/echarts/echarts.min.js"></script>
     <script src="~/js/PromptRange/echarts/echarts-gl.min.js"></script>
+    <script src="~/js/PromptRange/lib/three.min.js"></script>
+    <script src="~/js/PromptRange/lib/OrbitControls.js"></script>
     <script src="~/js/PromptRange/axios.js"></script>
+    
+    @* PromptRange 工具类库 - 必须在 prompt.js 之前加载 *@
+    <script src="~/js/PromptRange/utils/htmlHelper.js"></script>
+    <script src="~/js/PromptRange/utils/dateHelper.js"></script>
+    <script src="~/js/PromptRange/utils/nameHelper.js"></script>
+    <script src="~/js/PromptRange/utils/storageHelper.js"></script>
+    <script src="~/js/PromptRange/utils/copyHelper.js"></script>
+    @* ApiHelper 暂不使用，项目已有 servicePR (axios) *@
+    @* <script src="~/js/PromptRange/utils/apiHelper.js"></script> *@
+    
     <script src="~/js/PromptRange/prompt.js"></script>
 }

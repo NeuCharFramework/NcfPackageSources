@@ -60,10 +60,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Sqlite
                     b.ToTable("Senparc_KnowledgeBase_Color");
                 });
 
-            modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBases", b =>
+            modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBase", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("TEXT");
@@ -72,14 +73,14 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Sqlite
                         .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ChatModelId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("ChatModelId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Content")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("EmbeddingModelId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("EmbeddingModelId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("Flag")
                         .HasColumnType("INTEGER");
@@ -97,18 +98,19 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Sqlite
                     b.Property<int>("TenantId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("VectorDBId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("VectorDBId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Senparc_KnowledgeBase_KnowledgeBases");
+                    b.ToTable("Senparc_KnowledgeBase_KnowledgeBase");
                 });
 
-            modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBasesDetail", b =>
+            modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBaseItem", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("TEXT");
@@ -117,17 +119,30 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Sqlite
                         .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("ChunkIndex")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Content")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ContentType")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime?>("EmbeddedTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FileName")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("Flag")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("KnowledgeBasesId")
-                        .HasColumnType("TEXT");
+                    b.Property<bool>("IsEmbedded")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("KnowledgeBasesId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TEXT");
@@ -141,7 +156,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Sqlite
 
                     b.HasKey("Id");
 
-                    b.ToTable("Senparc_KnowledgeBase_KnowledgeBasesDetail");
+                    b.ToTable("Senparc_KnowledgeBase_KnowledgeBaseItem");
                 });
 #pragma warning restore 612, 618
         }

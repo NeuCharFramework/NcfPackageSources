@@ -17,6 +17,8 @@ namespace Senparc.Xncf.FileManager.Models
 
         public DbSet<NcfFile> NcfFiles { get; set; }
 
+        public DbSet<NcfFolder> NcfFolders { get; set; }
+
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }
 

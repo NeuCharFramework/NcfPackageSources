@@ -8,7 +8,7 @@
 
 ## 📦 文件说明
 
-### `3-quick-clean-webview2.bat` ⭐ 推荐使用
+### `quick-clean-webview2.bat` ⭐ 推荐使用
 - **用途**: 批处理启动器，自动以正确的权限运行清理脚本
 - **使用方法**: 右键点击 → "以管理员身份运行"
 - **优点**: 简单方便，一键清理
@@ -24,7 +24,7 @@
 
 ### 最简单的方法（推荐）
 
-1. 找到 `3-quick-clean-webview2.bat`
+1. 找到 `quick-clean-webview2.bat`
 2. **右键点击** → 选择 **"以管理员身份运行"**
 3. 阅读提示，按任意键继续
 4. 等待清理完成
@@ -112,7 +112,7 @@ cd Y:\...\publish-self-contained\win-arm64-final
 
 1. **清理 WebView2**
    ```
-   右键 "3-quick-clean-webview2.bat" → "以管理员身份运行"
+   右键 "quick-clean-webview2.bat" → "以管理员身份运行"
    ```
 
 2. **启动应用**（普通 PowerShell）

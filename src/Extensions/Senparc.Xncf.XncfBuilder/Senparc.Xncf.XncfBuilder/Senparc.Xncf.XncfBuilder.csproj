@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.35.5-preview</Version>
+    <Version>0.35.7-preview.1</Version>
     <LangVersion>latest</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -73,9 +73,9 @@
 			[2025-06-26] v0.35.2-preview.9 Finish new AI code generation template
 			[2025-06-27] v0.35.3-preview.9 Add dynamic XNCF Template dynamic generator
 			[2025-06-28] v0.35.3-preview.10 Add dynamic XNCF Template dynamic generator, support for dotnet CLI and Visual Studio together
-
-				[2025-11-01] update basic libraries, including Senparc.AI
-		</PackageReleaseNotes>
+			[2025-11-01] update basic libraries, including Senparc.AI
+			[2026-01-07] v0.35.6-preview.1 Add NcfSourcePackage project path to DatabaseMigrationRequest loading method
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <!-- Visual Studio 特定设置 -->
@@ -100,11 +100,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="ACL\**" />
+    <Compile Remove="Generated\**" />
     <EmbeddedResource Remove="ACL\**" />
+    <EmbeddedResource Remove="Generated\**" />
     <None Remove="ACL\**" />
+    <None Remove="Generated\**" />
     <!-- 排除生成的文件，避免重复编译 -->
     <!-- 仅在 dotnet build 中排除物理文件，Visual Studio 中保留以确保兼容性 -->
-    <Compile Remove="Generated\**\*.cs" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
@@ -154,13 +156,19 @@
   </ItemGroup>
   <ItemGroup>
     <!-- Source Generator 引用 - 混合方式确保在所有环境下都工作 -->
-    <ProjectReference Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    <!--<ProjectReference Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />-->
+    <ProjectReference Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <!-- Visual Studio 使用 DLL 引用确保稳定性 -->
     <Analyzer Condition="'$(BuildingInsideVisualStudio)' == 'true' and '$(Configuration)' == 'Release'" Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/bin/Release/netstandard2.0/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.dll" />
     <Analyzer Condition="'$(BuildingInsideVisualStudio)' == 'true' and '$(Configuration)' == 'Debug'" Include="../Senparc.Xncf.XncfBuilder.DynamicContentGenerator/bin/Debug/netstandard2.0/Senparc.Xncf.XncfBuilder.DynamicContentGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Generated\Senparc.Xncf.XncfBuilder.DynamicContentGenerator\MultiFileCodeGenerator\" />
+    <!-- 
+      核心配置：从编译输入中排除磁盘上的生成文件。
+      这样编译器只会使用 Generator 注入内存的那一份，
+      从而解决“二义性”报错，同时保留磁盘文件供你参考。
+    -->
+    <!--<Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />-->
   </ItemGroup>
   <!-- 清理生成的文件 -->
   <!--<Target Name="CleanGeneratedFiles" BeforeTargets="Clean">

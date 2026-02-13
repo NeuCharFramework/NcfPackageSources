@@ -17,7 +17,6 @@ var app = new Vue({
             content: '',// prompt 输入内容
             remarks: '', // prompt 输入的备注
             isComposing: false, // 是否正在使用输入法（IME composition）
-            isUserEditing: false, // 是否正在编辑（避免watch content时重新渲染）
             numsOfResults: 1, // prompt 的连发次数(发射次数) 1-10
             numsOfResultsOpt: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // prompt 的连发次数(发射次数) 1-10
             // 参数设置 视图配置列表
@@ -138,8 +137,31 @@ var app = new Vue({
             tacticalFormVisible: false,
             tacticalFormSubmitLoading: false,
             tacticalForm: {
-                tactics: '重新瞄准'
+                tactics: '重新瞄准',
+                chatMode: '对话模式' // 对话模式/直接测试，默认对话模式
             },
+            // 战术选择弹窗中的对话输入
+            tacticalChatInput: '', // 对话模式下的用户输入内容
+            // 继续聊天相关状态
+            continueChatMode: false, // 是否处于继续聊天模式
+            continueChatPromptResultId: null, // 继续聊天的 PromptResult ID
+            continueChatHistory: [], // 继续聊天的历史记录
+            continueChatSystemMessage: '', // 继续聊天时使用的 SystemMessage（Prompt）
+            systemMessageCollapse: [], // SystemMessage 折叠面板状态
+            // 导图相关状态
+            mapDialogVisible: false, // 导图对话框显示状态
+            map3dScene: null, // three.js 场景
+            map3dCamera: null, // three.js 相机
+            map3dRenderer: null, // three.js 渲染器
+            map3dControls: null, // 相机控制器
+            map3dNodes: [], // 3D 节点数组
+            map3dTreeData: null, // 树状结构数据
+            map3dClickHandler: null, // 点击事件处理器
+            map3dAnimationId: null, // 动画ID
+            map3dNeedsAnimationUpdate: false, // 是否需要更新动画
+            map3dNodeMap: new Map(), // 节点映射，用于快速查找
+            map3dLastAnimationTime: 0, // 上次动画更新时间（用于节流）
+            map3dCurrentNodes: [], // 缓存当前选中的节点（性能优化）
             // 靶场
             fieldFormVisible: false,
             fieldFormSubmitLoading: false,
@@ -348,6 +370,150 @@ var app = new Vue({
             return this.comparePromptAId === this.comparePromptBId;
         },
         
+        // 获取当前战术编号（用于显示）
+        currentTacticalInfo() {
+            if (!this.promptDetail || !this.promptDetail.fullVersion) {
+                return {
+                    tactic: '--',
+                    fullTactical: '--'
+                };
+            }
+            
+            // 解析当前版本号：格式为 RangeName-T{Tactic}-A{Aiming}
+            // 例如：2023.12.14.1-T1.2.3-A1
+            const versionParts = this.promptDetail.fullVersion.split('-');
+            if (versionParts.length < 2) {
+                return {
+                    tactic: '--',
+                    fullTactical: '--'
+                };
+            }
+            
+            // versionParts[0] = RangeName (例如：2023.12.14.1)
+            // versionParts[1] = T{Tactic} (例如：T1.2.3)
+            // versionParts[2] = A{Aiming} (例如：A1，可选)
+            const tacticPart = versionParts[1] || ''; // T1.2.3
+            const aimingPart = versionParts[2] || ''; // A1
+            
+            return {
+                tactic: tacticPart || '--',
+                fullTactical: aimingPart ? `${tacticPart}-${aimingPart}` : tacticPart || '--'
+            };
+        },
+        
+        // 计算下一个战术编号（用于战术选择弹窗的动态提示）
+        nextTacticalNumbers() {
+            if (!this.promptDetail || !this.promptDetail.fullVersion) {
+                return {
+                    topTactic: 'T1',
+                    parallelTactic: 'T1.2.4',
+                    subTactic: 'T1.2.3.1',
+                    newAiming: 'T1.2.3-A2'
+                };
+            }
+            
+            // 解析当前版本号：格式为 RangeName-T{Tactic}-A{Aiming}
+            // 例如：2023.12.14.1-T1.2.3-A1
+            const versionParts = this.promptDetail.fullVersion.split('-');
+            if (versionParts.length < 2) {
+                return {
+                    topTactic: 'T1',
+                    parallelTactic: 'T1.2.4',
+                    subTactic: 'T1.2.3.1',
+                    newAiming: 'T1.2.3-A2'
+                };
+            }
+            
+            // versionParts[0] = RangeName
+            // versionParts[1] = T{Tactic} (例如：T1.2.3)
+            // versionParts[2] = A{Aiming} (例如：A1，可选)
+            let tacticPart = versionParts[1] || ''; // T1.2.3
+            let aimingPart = versionParts[2] || 'A1'; // A1
+            
+            // 检查战术部分是否以 T 开头，如果不是，可能是格式错误
+            if (!tacticPart.startsWith('T')) {
+                // 如果版本号格式不对，返回默认值
+                return {
+                    topTactic: 'T1',
+                    parallelTactic: 'T1.2.4',
+                    subTactic: 'T1.2.3.1',
+                    newAiming: 'T1.2.3-A2'
+                };
+            }
+            
+            // 提取瞄准编号：A1 -> 1
+            const currentAiming = aimingPart.replace(/^A/, '');
+            const aimingNumber = parseInt(currentAiming) || 1;
+            
+            // 解析战术编号：T1.2.3 -> [1, 2, 3]
+            // 移除开头的 T，然后按 . 分割并转换为数字
+            const tacticStr = tacticPart.replace(/^T/, ''); // 1.2.3
+            if (!tacticStr || tacticStr.length === 0) {
+                // 如果无法解析战术编号，返回默认值
+                return {
+                    topTactic: 'T1',
+                    parallelTactic: 'T1.2.4',
+                    subTactic: 'T1.2.3.1',
+                    newAiming: 'T1.2.3-A2'
+                };
+            }
+            
+            // 解析战术编号数组
+            const tacticNumbers = [];
+            const parts = tacticStr.split('.');
+            for (let i = 0; i < parts.length; i++) {
+                const num = parseInt(parts[i]);
+                if (isNaN(num)) {
+                    // 如果任何部分无法解析为数字，返回默认值
+                    return {
+                        topTactic: 'T1',
+                        parallelTactic: 'T1.2.4',
+                        subTactic: 'T1.2.3.1',
+                        newAiming: 'T1.2.3-A2'
+                    };
+                }
+                tacticNumbers.push(num);
+            }
+            
+            if (tacticNumbers.length === 0) {
+                // 如果解析失败，返回默认值
+                return {
+                    topTactic: 'T1',
+                    parallelTactic: 'T1.2.4',
+                    subTactic: 'T1.2.3.1',
+                    newAiming: 'T1.2.3-A2'
+                };
+            }
+            
+            // 1. 创建顶级战术：当前顶级编号+1
+            // 例如：当前是T1.2.3，下一个顶级战术是T2
+            // 注意：这里只是预测，实际编号需要后端查询数据库确定
+            const currentTopTactic = tacticNumbers[0] || 1;
+            const nextTopTactic = currentTopTactic + 1;
+            
+            // 2. 创建平行战术：同父级下，最后一个编号+1
+            // 例如：T1.2.3 -> T1.2.4
+            const nextParallelTactic = [...tacticNumbers];
+            if (nextParallelTactic.length > 0) {
+                nextParallelTactic[nextParallelTactic.length - 1] = nextParallelTactic[nextParallelTactic.length - 1] + 1;
+            }
+            
+            // 3. 创建子战术：当前战术下添加 .1
+            // 例如：T1.2.3 -> T1.2.3.1
+            const nextSubTactic = [...tacticNumbers, 1];
+            
+            // 4. 重新瞄准：当前瞄准编号+1
+            // 例如：T1.2.3-A1 -> T1.2.3-A2
+            const nextAiming = aimingNumber + 1;
+            
+            return {
+                topTactic: `T${nextTopTactic}`,
+                parallelTactic: `T${nextParallelTactic.join('.')}`,
+                subTactic: `T${nextSubTactic.join('.')}`,
+                newAiming: `${tacticPart}-A${nextAiming}`
+            };
+        },
+        
         // 检测Prompt中的变量
         detectedVariables() {
             if (!this.content) return [];
@@ -390,80 +556,6 @@ var app = new Vue({
             }
             
             return variables;
-        },
-        
-        // 生成带高亮的HTML内容
-        highlightedHTML() {
-            if (!this.content) return '';
-            
-            const prefix = this.promptParamForm.prefix || '';
-            const suffix = this.promptParamForm.suffix || '';
-            const variableList = this.promptParamForm.variableList || [];
-            
-            // 如果没有设置前缀和后缀，直接返回纯文本（转义HTML，保留换行）
-            if (!prefix || !suffix) {
-                return this.escapeHtml(this.content).replace(/\n/g, '<br>');
-            }
-            
-            // 转义前缀和后缀用于正则表达式
-            const escapedPrefix = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const escapedSuffix = suffix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            
-            // 构建正则表达式，使用全局标志
-            const regex = new RegExp(`(${escapedPrefix}\\w+${escapedSuffix})`, 'g');
-            
-            // 获取所有已定义的变量名
-            const definedVarNames = variableList.map(v => v.name).filter(n => n);
-            
-            // 逐行处理内容
-            const lines = this.content.split('\n');
-            const processedLines = lines.map(line => {
-                // 先转义整行HTML
-                let escapedLine = this.escapeHtml(line);
-                
-                // 创建一个数组来存储处理后的片段
-                let lastIndex = 0;
-                let result = '';
-                let match;
-                
-                // 重新创建正则（因为有g标志，需要重置lastIndex）
-                const lineRegex = new RegExp(`(${escapedPrefix}\\w+${escapedSuffix})`, 'g');
-                
-                // 在转义后的文本中查找匹配
-                while ((match = lineRegex.exec(escapedLine)) !== null) {
-                    // 添加匹配前的文本
-                    result += escapedLine.substring(lastIndex, match.index);
-                    
-                    // 提取变量名（去掉前缀和后缀）
-                    const fullMatch = match[1];
-                    const varName = fullMatch.substring(prefix.length, fullMatch.length - suffix.length);
-                    
-                    // 判断是否已定义
-                    const isDefined = definedVarNames.includes(varName);
-                    const className = isDefined ? 'var-highlight defined' : 'var-highlight undefined';
-                    const title = isDefined ? `已定义: ${varName}` : `未定义: ${varName}`;
-                    
-                    // 添加高亮的span（使用内联样式确保不换行）
-                    result += `<span class="${className}" title="${title}" style="display:inline;">${fullMatch}</span>`;
-                    
-                    lastIndex = lineRegex.lastIndex;
-                }
-                
-                // 添加剩余的文本
-                result += escapedLine.substring(lastIndex);
-                
-                return result;
-            });
-            
-            // 用<br>连接各行
-            const finalHTML = processedLines.join('<br>');
-            
-            // 调试：打印生成的HTML（仅在开发环境）
-            if (window.location.hostname === 'localhost' || window.location.hostname.includes('127.0.0.1')) {
-                console.log('[highlightedHTML] Generated HTML:', finalHTML.substring(0, 300));
-            }
-            
-            return finalHTML;
         }
     },
     watch: {
@@ -477,26 +569,17 @@ var app = new Vue({
             this.$refs.versionTree.filter(val);
         },
         
-        // 监听content外部变化（如加载数据）
+        // 监听content外部变化（如加载数据时更新编辑器）
         content(newVal, oldVal) {
-            // 只处理外部赋值（比如加载数据），不处理用户编辑
-            if (this.isUserEditing) {
-                // 用户正在编辑，不重新渲染HTML
-                return;
-            }
+            const editor = this.$refs.promptEditor;
+            if (!editor || this.isComposing) return;
             
-            // 外部赋值，更新编辑器
-            if (newVal !== oldVal && this.$refs.promptEditor && !this.isComposing) {
+            const currentText = editor.innerText || '';
+            // 如果编辑器内容与content不一致（外部赋值），更新编辑器
+            if (currentText !== newVal && newVal !== oldVal) {
                 this.$nextTick(() => {
-                    const editor = this.$refs.promptEditor;
-                    if (!editor) return;
-                    
-                    const currentText = this.getPlainText(editor);
-                    
-                    // 如果编辑器内容与content不一致（外部赋值），更新编辑器
-                    if (currentText !== newVal) {
-                        editor.innerHTML = this.highlightedHTML;
-                    }
+                    const html = this.generateHighlightHTML(newVal);
+                    editor.innerHTML = html;
                 });
             }
         }
@@ -537,9 +620,13 @@ var app = new Vue({
         this.$nextTick(() => {
             const editor = this.$refs.promptEditor;
             if (editor && this.content) {
-                editor.innerHTML = this.highlightedHTML;
+                const html = this.generateHighlightHTML(this.content);
+                editor.innerHTML = html;
             }
         });
+        
+        // 初始化代码块复制功能
+        this.initCodeCopyButtons();
       
     },
     beforeDestroy() {
@@ -855,152 +942,165 @@ var app = new Vue({
             };
         },
         // 战术选择 dialog 提交
-        tacticalFormSubmitBtn() {
-            this.$refs.tacticalForm.validate(async (valid) => {
-                if (valid) {
-                    this.tacticalFormSubmitLoading = true
-                    let _postData = {
-                        //promptid: this.promptid,// 选择靶场
-                        modelid: this.modelid,// 选择模型
-                        content: this.content,// prompt 输入内容
-                        note: this.remarks, // prompt 输入的备注
-                        numsOfResults: 1,
-                        isDraft: this.sendBtnText === '保存草稿',
-                        suffix: this.promptParamForm.suffix,
-                        prefix: this.promptParamForm.prefix
+        async tacticalFormSubmitBtn() {
+            // 如果是继续聊天模式，直接处理，不需要验证战术字段
+            if (this.continueChatMode && this.continueChatPromptResultId) {
+                // 检查是否有输入内容
+                if (!this.tacticalChatInput || !this.tacticalChatInput.trim()) {
+                    this.$message({
+                        message: '请输入对话内容',
+                        type: 'warning',
+                        duration: 3000
+                    })
+                    return
+                }
+                
+                // 调用继续聊天 API
+                this.continueChatSubmit(this.continueChatPromptResultId, this.tacticalChatInput.trim())
+                return
+            }
+            
+            // 普通模式，需要验证表单
+            // 注意：第一次打靶时（没有promptid），不需要验证"战术"字段，因为会自动创建T1-A1靶道
+            // 先检查"打靶测试"字段是否已选择
+            if (!this.tacticalForm.chatMode) {
+                this.$message({
+                    message: '请选择打靶测试模式',
+                    type: 'warning',
+                    duration: 3000
+                })
+                return
+            }
+            
+            // 如果有 promptid，需要验证"战术"字段
+            if (this.promptid && !this.tacticalForm.tactics) {
+                this.$message({
+                    message: '请选择战术',
+                    type: 'warning',
+                    duration: 3000
+                })
+                return
+            }
+            
+            // 如果选择对话模式，需要检查是否有输入内容
+            if (this.tacticalForm.chatMode === '对话模式') {
+                // 检查是否有输入内容
+                if (!this.tacticalChatInput || !this.tacticalChatInput.trim()) {
+                    this.$message({
+                        message: '请输入对话内容',
+                        type: 'warning',
+                        duration: 3000
+                    })
+                    return
+                }
+                
+                // 执行打靶，将输入内容作为 userMessage 传递
+                await this.executeTargetShootWithChatMessage(this.tacticalChatInput.trim())
+                // 清空对话输入
+                this.tacticalChatInput = ''
+                return
+            }
+            
+            // 直接测试模式，继续原有流程
+            await this.executeTargetShoot();
+        },
+        
+        // 继续聊天提交
+        async continueChatSubmit(promptResultId, userMessage) {
+            this.tacticalFormSubmitLoading = true
+            try {
+                const res = await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.ContinueChat`, {
+                    promptResultId: promptResultId,
+                    userMessage: userMessage || ''
+                })
+                
+                if (res.data.success) {
+                    const newChatMessages = res.data.data || []
+                    
+                    // 验证新消息是否有有效的 ID
+                    const invalidMessages = newChatMessages.filter(msg => {
+                        const msgId = typeof msg.id === 'string' ? parseInt(msg.id, 10) : msg.id
+                        return !msgId || msgId === 0 || isNaN(msgId)
+                    })
+                    
+                    if (invalidMessages.length > 0) {
+                        console.error('错误：部分消息没有有效的 ID，重新加载历史记录以确保获取正确的 ID', invalidMessages)
+                        // 如果消息没有 ID，重新加载历史记录以确保获取正确的 ID
+                        const reloadRes = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistory?promptResultId=${promptResultId}`)
+                        if (reloadRes.data.success) {
+                            this.continueChatHistory = reloadRes.data.data || []
+                            console.log('重新加载后的历史记录:', this.continueChatHistory)
+                            
+                            // 验证重新加载后的记录是否都有有效的 ID
+                            const stillInvalid = this.continueChatHistory.filter(msg => {
+                                const msgId = typeof msg.id === 'string' ? parseInt(msg.id, 10) : msg.id
+                                return !msgId || msgId === 0 || isNaN(msgId)
+                            })
+                            if (stillInvalid.length > 0) {
+                                console.error('严重错误：重新加载后仍有消息 ID 无效:', stillInvalid)
+                            }
+                        }
+                    } else {
+                        // 追加新的对话记录到历史记录
+                        console.log('追加新消息到历史记录:', newChatMessages.map(m => ({ id: m.id, roleType: m.roleType, sequence: m.sequence })))
+                        this.continueChatHistory.push(...newChatMessages)
+                        console.log('更新后的历史记录（最后5条）:', this.continueChatHistory.slice(-5).map(m => ({ id: m.id, idType: typeof m.id, roleType: m.roleType, sequence: m.sequence })))
                     }
-                    // ai评分标准
-                    _postData.isAIGrade = this.isAIGrade
-                    if (this.aiScoreForm.resultList.length > 0) {
-                        let _list = this.aiScoreForm.resultList.map(item => item.value)
-                        _list = _list.filter(item => item)
-                        if (_list.length > 0) {
-                            _postData.expectedResultsJson = JSON.stringify(_list)
+                    
+                    // 找到对应的输出项并更新
+                    const resultIndex = this.outputList.findIndex(item => item.id === promptResultId)
+                    if (resultIndex !== -1) {
+                        const resultItem = this.outputList[resultIndex]
+                        
+                        // 更新显示：将最新的 AI 回复追加到 ResultString
+                        const latestAssistantMessage = this.continueChatHistory.find(msg => msg.roleType === 2 && msg.sequence === Math.max(...this.continueChatHistory.map(m => m.sequence)))
+                        if (latestAssistantMessage) {
+                            // 追加到现有的 ResultString（格式化为对话形式）
+                            const currentResult = resultItem.resultString || ''
+                            const separator = currentResult ? '\n\n---\n\n' : ''
+                            const newContent = `**用户**: ${userMessage}\n\n**助手**: ${latestAssistantMessage.content}`
+                            resultItem.resultString = currentResult + separator + newContent
+                            resultItem.resultStringHtml = marked.parse(resultItem.resultString)
                         }
                     }
                     
-                    if (this.promptParamForm.variableList.length > 0) {
-                        _postData.variableDictJson = this.convertData(this.promptParamForm.variableList)
-                    }
-                    if (this.promptid) {
-                        _postData.id = this.promptid
-                        //创建顶级战术，创建平行战术，创建子战术，重新瞄准
-                        if (this.tacticalForm.tactics === '创建顶级战术') {
-                            _postData.isTopTactic = true // prompt 新建分支
-                        }
-                        if (this.tacticalForm.tactics === '创建平行战术') {
-                            _postData.isNewTactic = true // prompt 新建分支
-                        }
-                        if (this.tacticalForm.tactics === '创建子战术') {
-                            _postData.isNewSubTactic = true // prompt 新建子分支
-                        }
-                        if (this.tacticalForm.tactics === '重新瞄准') {
-                            _postData.isNewAiming = true // prompt 内容变化
-                        }
-                    }
-                    // id: null, // 
-                    this.parameterViewList.forEach(item => {
-                        // todo 单独处理
-                        if (item.formField === 'stopSequences') {
-                            _postData[item.formField] = item.value ? JSON.stringify(item.value.split(',')) : ''
-                        } else if (item.formField === 'maxToken') {
-                            _postData[item.formField] = item.value ? Number(item.value) : 0
-                        } else {
-                            _postData[item.formField] = item.value
+                    // 刷新对话历史显示
+                    this.$forceUpdate()
+                    
+                    // 添加代码块复制按钮
+                    this.$nextTick(() => {
+                        this.addCopyButtonsToCodeBlocks();
+                    });
+                    
+                    // 滚动到底部显示最新消息
+                    this.$nextTick(() => {
+                        const container = document.getElementById('chatHistoryContainer')
+                        if (container) {
+                            container.scrollTop = container.scrollHeight
                         }
                     })
-
-                    // 要提交this.promptField
-                    _postData['rangeId'] = this.promptField
-                    let res = await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData)
-                    // console.log('testHandel res ', res.data)
-                    this.tacticalFormSubmitLoading = false
-                    if (res.data.success) {
-                        this.pageChange = false
-                        // 关闭dialog
-                        this.tacticalFormVisible = false
-                        let {
-                            promptResultList = [],
-                            fullVersion = '',
-                            id,
-                            evalAvgScore = -1,
-                            evalMaxScore = -1
-                        } = res.data.data || {}
-
-                        // 拷贝数据
-                        let copyResultData = JSON.parse(JSON.stringify(res.data.data))
-                        delete copyResultData.promptResultList
-                        let vArr = copyResultData.fullVersion.split('-')
-                        copyResultData.promptFieldStr = vArr[0] || ''
-                        copyResultData.promptStr = vArr[1] || ''
-                        copyResultData.tacticsStr = vArr[2] || ''
-                        this.promptDetail = copyResultData
-                        this.sendBtns = [
-                            {
-                                text: '连发'
-                            },
-                            {
-                                text: '保存草稿'
-                            }
-                        ]
-                        this.sendBtnText = '连发'
-                        // 平均分 
-                        this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1;
-                        // 最高分
-                        this.outputMaxDeci = evalMaxScore > -1 ? evalMaxScore : -1;
-                        // 输出列表
-                        this.outputList = promptResultList.map(item => {
-                            if (item) {
-                                item.promptId = id
-                                item.version = fullVersion
-                                item.scoreType = '1' // 1 ai、2手动 
-                                item.isScoreView = false // 是否显示评分视图
-                                item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
-
-                                //使用 MarkDown 格式，对输出结果进行展示
-                                item.resultStringHtml = marked.parse(item.resultString);
-
-                                item.scoreVal = 0 // 手动评分
-                                // ai评分预期结果
-                                item.alResultList = [{
-                                    id: 1,
-                                    label: '预期结果1',
-                                    value: ''
-                                }, {
-                                    id: 2,
-                                    label: '预期结果2',
-                                    value: ''
-                                }, {
-                                    id: 3,
-                                    label: '预期结果3',
-                                    value: ''
-                                }]
-                            }
-                            return item
-                        })
-                        //console.log('选择正确的靶场')
-                        //提交数据后，选择正确的靶场和靶道
-                        this.getFieldList().then(() => {
-                            this.getPromptOptData(id)
-                            // 获取分数趋势图表数据
-                            this.getScoringTrendData()
-                        })
-
-                        if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
-                            //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
-                            this.dealRapicFireHandel(this.numsOfResults - 1, id)
-                        }
-                    } else {
-                        app.$message({
-                            message: res.data.errorMessage || res.data.data || 'Error',
-                            type: 'error',
-                            duration: 5 * 1000
-                        });
-                    }
+                    
+                    // 清空输入框，但保持弹窗打开以便继续对话
+                    this.tacticalChatInput = ''
+                    this.$message({
+                        message: '对话已追加',
+                        type: 'success',
+                        duration: 2000
+                    })
                 } else {
-                    return false;
+                    this.$message({
+                        message: res.data.errorMessage || '继续聊天失败',
+                        type: 'error'
+                    })
                 }
-            });
+            } catch (error) {
+                this.$message({
+                    message: '继续聊天失败：' + (error.message || '未知错误'),
+                    type: 'error'
+                })
+            } finally {
+                this.tacticalFormSubmitLoading = false
+            }
         },
         /*
         * 打靶 事件
@@ -1034,6 +1134,13 @@ var app = new Vue({
             }
 
             if (isDraft && !_isPromptDraft && this.promptOpt.length !== 0) {
+                this.tacticalFormVisible = true
+                return
+            }
+            
+            // 弹窗逻辑3，第一次打靶时（没有promptid）也要弹窗，让用户选择对话模式或直接测试模式
+            // 注意：第一次打靶时不传递promptid，让后端创建新的靶道（T1-A1）
+            if (!this.promptid && !isDraft) {
                 this.tacticalFormVisible = true
                 return
             }
@@ -1195,6 +1302,12 @@ var app = new Vue({
                             }
                             return item
                         })
+                        
+                        // 添加代码块复制按钮
+                        this.$nextTick(() => {
+                            this.addCopyButtonsToCodeBlocks();
+                        });
+                        
                         //提交数据后，选择正确的靶场和靶道
                         this.getFieldList().then(() => {
 
@@ -1247,9 +1360,17 @@ var app = new Vue({
             }
             this.targetShootLoading = true
             this.dodgersLoading = true
+            
+            // 注意：现在后端会自动根据第一个 PromptResult 来判断类型
+            // 如果第一个结果是 Chat 模式，后端会从对话记录中获取 userMessage
+            // 所以前端不需要传递 userMessage，后端会自动处理
+            // 但为了兼容性，如果前端有保存的 userMessage，仍然可以传递
+            
             let promises = [];
             for (let i = 0; i < howmany; i++) {
-                promises.push(this.rapidFireHandel(id));
+                // 后端会自动判断第一个结果的模式，不需要前端传递 userMessage
+                // 但如果前端有保存的 userMessage，可以传递以保持一致性
+                promises.push(this.rapidFireHandel(id, this._lastUserMessage || null));
             }
             await Promise.all(promises)
             // 从新获取靶场列表
@@ -1857,6 +1978,138 @@ var app = new Vue({
                 date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
             return YY + MM + DD + ' ' + hh + mm + ss;
         },
+        // 格式化聊天时间（更简洁的格式）
+        formatChatTime(d) {
+            if (!d) return ''
+            var date = new Date(d)
+            var now = new Date()
+            var diff = now - date
+            var minutes = Math.floor(diff / 60000)
+            var hours = Math.floor(minutes / 60)
+            var days = Math.floor(hours / 24)
+            
+            if (minutes < 1) return '刚刚'
+            if (minutes < 60) return minutes + '分钟前'
+            if (hours < 24) return hours + '小时前'
+            if (days < 7) return days + '天前'
+            
+            // 超过7天显示具体日期
+            var hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
+            var mm = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes())
+            var MM = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+            var DD = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+            return MM + DD + ' ' + hh + mm
+        },
+        // 格式化聊天内容（支持markdown）
+        formatChatContent(content) {
+            if (!content) return ''
+            // 使用marked解析markdown
+            return marked.parse(content)
+        },
+        // 切换聊天反馈（Like/Unlike）
+        async toggleChatFeedback(chatId, feedback) {
+            // 防止重复点击：如果正在处理，直接返回
+            if (this._isUpdatingFeedback) {
+                return
+            }
+            this._isUpdatingFeedback = true
+            
+            try {
+                // 验证 chatId 是否有效
+                if (!chatId || chatId === 0 || chatId === '0') {
+                    console.error('无效的 chatId:', chatId, '类型:', typeof chatId)
+                    console.error('当前历史记录:', this.continueChatHistory)
+                    this.$message({
+                        message: '对话记录ID无效，请刷新页面后重试',
+                        type: 'error'
+                    })
+                    return
+                }
+                
+                // 确保 chatId 是数字类型
+                const numericChatId = typeof chatId === 'string' ? parseInt(chatId, 10) : chatId
+                if (isNaN(numericChatId) || numericChatId <= 0) {
+                    console.error('无效的 chatId（转换后）:', numericChatId, '原始值:', chatId)
+                    this.$message({
+                        message: '对话记录ID无效，请刷新页面后重试',
+                        type: 'error'
+                    })
+                    return
+                }
+                
+                // 找到当前消息（同时检查 id 和 numericChatId）
+                const msgIndex = this.continueChatHistory.findIndex(msg => {
+                    const msgId = typeof msg.id === 'string' ? parseInt(msg.id, 10) : msg.id
+                    return msgId === numericChatId || msg.id === numericChatId || msg.id === chatId
+                })
+                
+                if (msgIndex === -1) {
+                    console.error('未找到对应的对话记录')
+                    console.error('查找的 chatId:', numericChatId, '原始 chatId:', chatId)
+                    console.error('历史记录中的所有 ID:', this.continueChatHistory.map(m => ({ id: m.id, idType: typeof m.id, roleType: m.roleType, sequence: m.sequence })))
+                    this.$message({
+                        message: '未找到对应的对话记录，请刷新页面后重试',
+                        type: 'error'
+                    })
+                    return
+                }
+                
+                const currentMsg = this.continueChatHistory[msgIndex]
+                console.log('找到的消息:', currentMsg)
+                
+                // 验证消息 ID 是否有效
+                const msgId = typeof currentMsg.id === 'string' ? parseInt(currentMsg.id, 10) : currentMsg.id
+                if (!msgId || msgId === 0 || isNaN(msgId)) {
+                    console.error('消息 ID 无效:', currentMsg.id, '类型:', typeof currentMsg.id)
+                    this.$message({
+                        message: '消息ID无效，请刷新页面后重试',
+                        type: 'error'
+                    })
+                    return
+                }
+                
+                // 如果点击的是当前已选中的反馈，则取消反馈（设为null）
+                const newFeedback = currentMsg.userFeedback === feedback ? null : feedback
+                
+                // 调用API更新反馈（使用有效的消息 ID）
+                // 注意：使用 Request DTO 格式，属性名需要首字母大写
+                const res = await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.UpdateChatFeedback`, {
+                    ChatId: msgId,
+                    Feedback: newFeedback
+                })
+                
+                if (res.data.success) {
+                    // 更新本地数据
+                    this.continueChatHistory[msgIndex].userFeedback = newFeedback
+                    this.$forceUpdate()
+                    
+                    this.$message({
+                        message: newFeedback === null ? '已取消反馈' : (newFeedback ? '已点赞' : '已点踩'),
+                        type: 'success',
+                        duration: 1500
+                    })
+                } else {
+                    this.$message({
+                        message: res.data.errorMessage || '更新反馈失败',
+                        type: 'error'
+                    })
+                }
+            } catch (error) {
+                console.error('更新反馈失败:', error)
+                this.$message({
+                    message: '更新反馈失败：' + (error.message || '未知错误'),
+                    type: 'error'
+                })
+            } finally {
+                // 重置标志，允许下次点击
+                this._isUpdatingFeedback = false
+            }
+        },
+        // 处理对话历史滚动
+        handleChatHistoryScroll(event) {
+            // 可以在这里添加滚动相关的逻辑，比如显示滚动位置等
+            // 目前暂时不需要特殊处理
+        },
         // 输出 分数趋势图初始化
         chartInitialization() {
             let scoreChart = document.getElementById('promptPage_scoreChart');
@@ -2391,13 +2644,2660 @@ var app = new Vue({
 
         },
 
+        // 继续聊天：加载历史记录并打开战术选择弹窗
+        async continueChat(promptResultId, resultIndex) {
+            try {
+                // 使用新的 API 同时获取对话历史和 Prompt 内容
+                const res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistoryWithPrompt?promptResultId=${promptResultId}`)
+                if (res.data.success) {
+                    this.continueChatMode = true
+                    this.continueChatPromptResultId = promptResultId
+                    this.continueChatHistory = res.data.data.chatHistory || []
+                    this.continueChatSystemMessage = res.data.data.promptContent || ''
+                    
+                    // 打开战术选择弹窗，锁定为对话模式
+                    this.tacticalForm.chatMode = '对话模式'
+                    this.tacticalFormVisible = true
+                    
+                    // 滚动到底部显示最新消息
+                    this.$nextTick(() => {
+                        const container = document.getElementById('chatHistoryContainer')
+                        if (container) {
+                            container.scrollTop = container.scrollHeight
+                        }
+                        // 添加代码块复制按钮
+                        this.addCopyButtonsToCodeBlocks();
+                    })
+                } else {
+                    // 降级方案：如果新 API 失败，使用旧的 API
+                    const fallbackRes = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistory?promptResultId=${promptResultId}`)
+                    if (fallbackRes.data.success) {
+                        this.continueChatMode = true
+                        this.continueChatPromptResultId = promptResultId
+                        this.continueChatHistory = fallbackRes.data.data || []
+                        // 尝试从 outputList 获取 Prompt 内容
+                        const resultItem = this.outputList.find(item => item.id === promptResultId)
+                        if (resultItem && resultItem.promptId && this.promptDetail && this.promptDetail.id === resultItem.promptId) {
+                            this.continueChatSystemMessage = this.promptDetail.promptContent || this.content || ''
+                        } else {
+                            this.continueChatSystemMessage = this.content || ''
+                        }
+                        
+                        this.tacticalForm.chatMode = '对话模式'
+                        this.tacticalFormVisible = true
+                        
+                        this.$nextTick(() => {
+                            const container = document.getElementById('chatHistoryContainer')
+                            if (container) {
+                                container.scrollTop = container.scrollHeight
+                            }
+                            this.addCopyButtonsToCodeBlocks();
+                        })
+                    } else {
+                        this.$message({
+                            message: fallbackRes.data.errorMessage || '加载对话历史失败',
+                            type: 'error'
+                        })
+                    }
+                }
+            } catch (error) {
+                this.$message({
+                    message: '加载对话历史失败：' + (error.message || '未知错误'),
+                    type: 'error'
+                })
+            }
+        },
+        
+        // 处理对话输入框的键盘事件（快捷键支持）
+        handleChatInputKeydown(e) {
+            // Ctrl+Enter (Windows/Linux) 或 Cmd+Enter (Mac)
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault()
+                e.stopPropagation()
+                // 触发提交
+                this.tacticalFormSubmitBtn()
+            }
+        },
+        
         // 战术选择 关闭弹出
         // 战术选择 dialog 关闭
         tacticalFormCloseDialog() {
             this.tacticalForm = {
-                tactics: '重新瞄准'
+                tactics: '重新瞄准',
+                chatMode: '对话模式' // 重置为默认值
             }
-            this.$refs.tacticalForm.resetFields();
+            // 清空对话输入
+            this.tacticalChatInput = ''
+            // 重置继续聊天状态
+            this.continueChatMode = false
+            this.continueChatPromptResultId = null
+            this.continueChatHistory = []
+            this.continueChatSystemMessage = ''
+            this.systemMessageCollapse = []
+            if (this.$refs.tacticalForm) {
+                // 使用 clearValidate 清除验证状态，而不是 resetFields
+                // 因为某些字段可能是条件显示的（v-if），resetFields 可能会出错
+                this.$refs.tacticalForm.clearValidate();
+            }
+        },
+        
+        // 打开导图对话框
+        openMapDialog() {
+            if (!this.promptField) {
+                this.$message({
+                    message: '请先选择靶场',
+                    type: 'warning'
+                })
+                return
+            }
+            
+            // 检查当前靶场是否有靶道数据
+            if (!this.promptOpt || this.promptOpt.length === 0) {
+                this.$message({
+                    message: '当前靶场还没有进行过打靶，请打靶后再来看吧！',
+                    type: 'info',
+                    duration: 3000
+                })
+                return
+            }
+            
+            this.mapDialogVisible = true
+            this.$nextTick(() => {
+                this.initMap3D()
+            })
+        },
+        
+        // 关闭导图对话框
+        mapDialogClose() {
+            this.destroyMap3D()
+        },
+        
+        // 初始化 3D 导图
+        initMap3D() {
+            const container = document.getElementById('map3dContainer')
+            if (!container) return
+            
+            // 构建树状结构数据
+            this.buildTreeData()
+            
+            // 确保 THREE 已加载
+            if (typeof THREE === 'undefined' && typeof window.THREE !== 'undefined') {
+                window.THREE = window.THREE
+            }
+            
+            if (typeof THREE === 'undefined') {
+                this.$message({
+                    message: 'THREE.js 未加载，请刷新页面重试',
+                    type: 'error'
+                })
+                this.mapDialogVisible = false
+                return
+            }
+            
+            // 创建场景（使用渐变背景）
+            this.map3dScene = new THREE.Scene()
+            // 创建渐变背景
+            const gradientTexture = this.createGradientBackground()
+            this.map3dScene.background = gradientTexture
+            
+            // 禁用雾化效果，确保远处节点清晰可见
+            this.map3dScene.fog = null
+            
+            // 创建相机（增大远裁剪面，确保所有节点都可见）
+            const width = container.clientWidth
+            const height = container.clientHeight
+            // 参数：视场角(75度), 宽高比, 近裁剪面(0.1), 远裁剪面(5000 - 增大以支持更远的节点)
+            this.map3dCamera = new THREE.PerspectiveCamera(75, width / height, 0.1, 5000)
+            this.map3dCamera.position.set(0, 0, 50)
+            
+            // 创建渲染器（禁用对数深度缓冲，提高远处物体的清晰度）
+            this.map3dRenderer = new THREE.WebGLRenderer({ 
+                antialias: true,
+                logarithmicDepthBuffer: false,
+                precision: 'highp' // 使用高精度，提高渲染质量
+            })
+            this.map3dRenderer.setSize(width, height)
+            // 设置像素比，在高DPI屏幕上更清晰
+            this.map3dRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+            container.appendChild(this.map3dRenderer.domElement)
+            
+            // 添加控制器（使用本地化的 OrbitControls）
+            if (typeof THREE.OrbitControls !== 'undefined') {
+                this.map3dControls = new THREE.OrbitControls(this.map3dCamera, this.map3dRenderer.domElement)
+                
+                // 启用阻尼效果，使旋转更平滑
+                this.map3dControls.enableDamping = true
+                this.map3dControls.dampingFactor = 0.05
+                
+                // 启用缩放（增大最大距离，支持更远的视角）
+                this.map3dControls.enableZoom = true
+                this.map3dControls.zoomSpeed = 1.2
+                this.map3dControls.minDistance = 10
+                this.map3dControls.maxDistance = 500 // 从 200 增加到 500
+                
+                // 启用旋转
+                this.map3dControls.enableRotate = true
+                this.map3dControls.rotateSpeed = 0.8
+                
+                // 启用平移
+                this.map3dControls.enablePan = true
+                this.map3dControls.panSpeed = 0.8
+                this.map3dControls.screenSpacePanning = true
+                
+                // 设置初始相机位置，使其能看到整个场景
+                this.map3dCamera.position.set(30, 30, 50)
+                this.map3dControls.target.set(0, 0, 0)
+                this.map3dControls.update()
+            } else {
+                console.warn('OrbitControls 未找到，3D 场景将无法通过鼠标控制')
+            }
+            
+            // 添加更丰富的光源系统（增强远处物体的照明）
+            // 环境光 - 提供基础照明（增强亮度以照亮远处节点）
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6) // 从 0.4 增加到 0.6
+            this.map3dScene.add(ambientLight)
+            
+            // 主方向光 - 模拟太阳光（无衰减，照亮所有节点）
+            const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.8)
+            directionalLight1.position.set(20, 20, 20)
+            directionalLight1.castShadow = false
+            this.map3dScene.add(directionalLight1)
+            
+            // 辅助方向光 - 补充照明（从另一侧照亮）
+            const directionalLight2 = new THREE.DirectionalLight(0x88ccff, 0.5) // 从 0.4 增加到 0.5
+            directionalLight2.position.set(-20, 10, -20)
+            this.map3dScene.add(directionalLight2)
+            
+            // 第三方向光 - 从前方照亮远处节点
+            const directionalLight3 = new THREE.DirectionalLight(0xffffff, 0.4)
+            directionalLight3.position.set(0, 0, 50)
+            this.map3dScene.add(directionalLight3)
+            
+            // 点光源 - 增加层次感（无衰减距离限制）
+            const pointLight = new THREE.PointLight(0xffffff, 0.6, 0) // distance=0 表示无限距离
+            pointLight.position.set(0, 20, 0)
+            this.map3dScene.add(pointLight)
+            
+            // 渲染节点
+            this.renderTreeNodes()
+            
+            // 开始动画循环
+            this.animateMap3D()
+            
+            // 处理窗口大小变化
+            window.addEventListener('resize', this.handleMap3DResize)
+        },
+        
+        // 构建树状结构数据
+        buildTreeData() {
+            if (!this.promptOpt || this.promptOpt.length === 0) {
+                this.map3dTreeData = null
+                return
+            }
+            
+            const tree = {}
+            const currentPromptId = this.promptid
+            
+            // 解析每个靶道的 FullVersion
+            this.promptOpt.forEach(prompt => {
+                const fullVersion = prompt.fullVersion || prompt.label
+                if (!fullVersion) return
+                
+                // 解析格式：2023.12.14.1-T1.1-A123
+                const parts = fullVersion.split('-')
+                if (parts.length < 2) return
+                
+                const rangeName = parts[0] // 2023.12.14.1
+                const tacticPart = parts[1] // T1.1
+                const aimingPart = parts[2] || '' // A123
+                
+                // 获取或创建 RangeName 根节点
+                if (!tree[rangeName]) {
+                    tree[rangeName] = {
+                        type: 'range',
+                        name: rangeName,
+                        fullPath: rangeName,
+                        children: {},
+                        prompts: [],
+                        expanded: true
+                    }
+                }
+                
+                const rangeNode = tree[rangeName]
+                
+                // 解析 Tactic（每个.是一层）
+                const tacticParts = tacticPart.replace('T', '').split('.')
+                let currentNode = rangeNode.children
+                let lastTacticNode = null
+                
+                tacticParts.forEach((part, index) => {
+                    const key = `T${tacticParts.slice(0, index + 1).join('.')}`
+                    
+                    if (!currentNode[key]) {
+                        // 修复 parentPath：应该包含完整的路径前缀
+                        const parentFullPath = index > 0 
+                            ? `${rangeName}-T${tacticParts.slice(0, index).join('.')}` // 例如: "Range1-T2.1"
+                            : rangeName // 例如: "Range1"
+                        
+                        currentNode[key] = {
+                            type: 'tactic',
+                            name: part,
+                            fullPath: `${rangeName}-${key}`,
+                            parentPath: parentFullPath,
+                            children: {},
+                            prompts: [],
+                            expanded: true
+                        }
+                    }
+                    lastTacticNode = currentNode[key]
+                    currentNode = currentNode[key].children
+                })
+                
+                // 确保 lastTacticNode 存在
+                if (!lastTacticNode) {
+                    console.warn('无法找到 Tactic 节点:', tacticPart)
+                    return
+                }
+                
+                // 添加 Aiming（特殊层）- 修复：使用唯一的key避免共享
+                if (aimingPart) {
+                    // 使用完整路径作为key，确保每个Aiming节点都是独立的
+                    const aimingKey = `${tacticPart}-${aimingPart}` // 例如: "T1.1-A1", "T1.2-A1"
+                    if (!lastTacticNode.children[aimingKey]) {
+                        lastTacticNode.children[aimingKey] = {
+                            type: 'aiming',
+                            name: aimingPart.replace('A', ''), // 显示名称去掉A
+                            fullPath: `${rangeName}-${tacticPart}-${aimingPart}`,
+                            parentPath: `${rangeName}-${tacticPart}`,
+                            children: {},
+                            prompts: [],
+                            expanded: true
+                        }
+                    }
+                    lastTacticNode.children[aimingKey].prompts.push({
+                        id: prompt.idkey || prompt.value,
+                        fullVersion: fullVersion,
+                        nickName: prompt.nickName,
+                        isCurrent: (prompt.idkey || prompt.value) == currentPromptId
+                    })
+                } else {
+                    // 如果没有 Aiming，直接添加到最后一个 Tactic 节点
+                    lastTacticNode.prompts.push({
+                        id: prompt.idkey || prompt.value,
+                        fullVersion: fullVersion,
+                        nickName: prompt.nickName,
+                        isCurrent: (prompt.idkey || prompt.value) == currentPromptId
+                    })
+                }
+            })
+            
+            this.map3dTreeData = tree
+        },
+        
+        // 计算树的高度（用于平衡布局）
+        calculateTreeHeight(nodeData) {
+            if (!nodeData || typeof nodeData !== 'object') return 0
+            
+            let maxHeight = 0
+            Object.keys(nodeData).forEach(key => {
+                const node = nodeData[key]
+                const isExpanded = node.expanded !== false
+                
+                if (isExpanded && node.children && Object.keys(node.children).length > 0) {
+                    const childHeight = this.calculateTreeHeight(node.children)
+                    maxHeight = Math.max(maxHeight, 1 + childHeight)
+                } else {
+                    maxHeight = Math.max(maxHeight, 1)
+                }
+            })
+            
+            return maxHeight
+        },
+        
+        // @deprecated 不再使用：由于A节点在Z轴延伸，T节点间距已改为固定值
+        // 计算子树的节点数量（用于平衡布局）
+        countTreeNodes(nodeData) {
+            if (!nodeData || typeof nodeData !== 'object') return 0
+            
+            let count = 0
+            Object.keys(nodeData).forEach(key => {
+                const node = nodeData[key]
+                count++ // 当前节点
+                
+                const isExpanded = node.expanded !== false
+                if (isExpanded && node.children && Object.keys(node.children).length > 0) {
+                    count += this.countTreeNodes(node.children)
+                }
+            })
+            
+            return count
+        },
+        
+        // **计算所有评分的统计信息（用于排名）**
+        calculateScoreStatistics() {
+            const scores = []
+            
+            // 遍历所有 promptOpt 收集评分
+            if (this.promptOpt && this.promptOpt.length > 0) {
+                this.promptOpt.forEach(prompt => {
+                    let score = null
+                    
+                    // 优先使用 evalMaxScore
+                    if (prompt.evalMaxScore !== undefined && 
+                        prompt.evalMaxScore !== null && 
+                        prompt.evalMaxScore !== -1 && 
+                        prompt.evalMaxScore !== '-1') {
+                        score = prompt.evalMaxScore
+                    }
+                    // 如果没有，使用 evalAvgScore
+                    else if (prompt.evalAvgScore !== undefined && 
+                             prompt.evalAvgScore !== null && 
+                             prompt.evalAvgScore !== -1 && 
+                             prompt.evalAvgScore !== '-1') {
+                        score = prompt.evalAvgScore
+                    }
+                    
+                    if (score !== null) {
+                        scores.push(score)
+                    }
+                })
+            }
+            
+            if (scores.length === 0) {
+                return null
+            }
+            
+            // 排序（从大到小）
+            scores.sort((a, b) => b - a)
+            
+            const result = {
+                scores: scores,
+                min: Math.min(...scores),
+                max: Math.max(...scores),
+                count: scores.length,
+                // 计算百分位点（用于分级）
+                getPercentileRank: (score) => {
+                    // 返回该分数在所有分数中的排名百分比（0-100）
+                    const rank = scores.filter(s => s > score).length
+                    return ((scores.length - rank) / scores.length) * 100
+                }
+            }
+            
+            console.log('📊 评分统计:', {
+                总数: result.count,
+                最高分: result.max,
+                最低分: result.min,
+                分数列表: scores.slice(0, 10) // 只显示前10个
+            })
+            
+            return result
+        },
+        
+        // 渲染树节点（优化版：动态平衡布局 + 动画效果）
+        renderTreeNodes() {
+            if (!this.map3dTreeData) return
+            
+            // **计算评分统计信息**
+            this.scoreStatistics = this.calculateScoreStatistics()
+            
+            this.map3dNodes = []
+            // 初始化节点映射
+            if (!this.map3dNodeMap) {
+                this.map3dNodeMap = new Map()
+            }
+            const raycaster = new THREE.Raycaster()
+            const mouse = new THREE.Vector2()
+            
+            // **全新渲染逻辑：简化的固定间距布局**
+            // currentX: 当前X轴位置（全局计数器，每个节点递增）
+            let currentX = 0
+            
+            const renderNode = (nodeData, parentPosition, depth) => {
+                if (!nodeData || typeof nodeData !== 'object') return
+                
+                const keys = Object.keys(nodeData)
+                
+                keys.forEach((key, index) => {
+                    const node = nodeData[key]
+                    const isExpanded = node.expanded !== false // 默认展开
+                    
+                    // **重要：跳过 Aiming 类型节点，它们会在父节点处理时被创建**
+                    if (node.type === 'aiming') {
+                        return // 不在这里处理 Aiming 节点
+                    }
+                    
+                    // **新逻辑：分离 Aiming 子节点和 Tactic 子节点**
+                    // 任何T节点都可能同时有A节点和T子节点
+                    let aimingChildren = {}
+                    let tacticChildren = {}
+                    
+                    if (node.children && Object.keys(node.children).length > 0) {
+                        Object.keys(node.children).forEach(childKey => {
+                            const child = node.children[childKey]
+                            if (child.type === 'aiming') {
+                                aimingChildren[childKey] = child
+                            } else {
+                                tacticChildren[childKey] = child
+                            }
+                        })
+                    }
+                    
+                    // **全新简化布局：固定间距，顺序排列**
+                    const nodeSpacing = 15  // 固定间距
+                    
+                    // 当前节点位置
+                    const x = currentX  // X轴位置（全局计数器）
+                    const y = -depth * 20   // Y轴深度（层级向下）
+                    const z = 0             // T节点统一在 Z=0 平面
+                    
+                    // 递增X轴位置（为下一个同级节点预留）
+                    currentX += nodeSpacing
+                    
+                    console.log(`📍 创建T节点: ${key}, 位置(${x}, ${y}, ${z}), depth=${depth}`)
+                    
+                    // 检查是否有当前编辑的靶道
+                    const hasCurrent = node.prompts && node.prompts.some(p => p.isCurrent)
+                    
+                    // 创建几何体（只为 Range 和 Tactic 创建，Aiming 在专门的地方创建）
+                    let geometry, material, glowGeometry, glowMaterial
+                    if (node.type === 'range') {
+                        // 靶场：方块（使用更平滑的圆角效果）
+                        geometry = new THREE.BoxGeometry(5, 5, 5)
+                        material = new THREE.MeshStandardMaterial({ 
+                            color: hasCurrent ? 0xff6b6b : 0x4ecdc4,
+                            metalness: 0.3,
+                            roughness: 0.4,
+                            emissive: hasCurrent ? 0xff3333 : 0x004444,
+                            emissiveIntensity: hasCurrent ? 0.8 : 0.1
+                        })
+                        
+                        // 添加发光效果（当前选中时）
+                        if (hasCurrent) {
+                            glowGeometry = new THREE.BoxGeometry(5.5, 5.5, 5.5)
+                            glowMaterial = new THREE.MeshBasicMaterial({
+                                color: 0xff6b6b,
+                                transparent: true,
+                                opacity: 0.3,
+                                side: THREE.BackSide
+                            })
+                        }
+                    } else if (node.type === 'tactic') {
+                        // 靶道（Tactic）：圆柱体（代表路径/通道）
+                        // CylinderGeometry(radiusTop, radiusBottom, height, radialSegments)
+                        geometry = new THREE.CylinderGeometry(2, 2, 4, 32)
+                        material = new THREE.MeshStandardMaterial({ 
+                            color: hasCurrent ? 0xffd93d : 0x95e1d3,
+                            metalness: 0.5,
+                            roughness: 0.3,
+                            emissive: hasCurrent ? 0xffaa00 : 0x004444,
+                            emissiveIntensity: hasCurrent ? 0.9 : 0.1
+                        })
+                        
+                        // 添加发光效果（当前选中时）
+                        if (hasCurrent) {
+                            glowGeometry = new THREE.CylinderGeometry(2.3, 2.3, 4.3, 32)
+                            glowMaterial = new THREE.MeshBasicMaterial({
+                                color: 0xffd93d,
+                                transparent: true,
+                                opacity: 0.4,
+                                side: THREE.BackSide
+                            })
+                        }
+                    } else {
+                        // 不应该到达这里，因为 Aiming 节点已经在上面被 return 了
+                        console.error('意外的节点类型:', node.type, key)
+                        return
+                    }
+                    
+                    const mesh = new THREE.Mesh(geometry, material)
+                    // 初始位置设置为目标位置（后续用于动画）
+                    mesh.position.set(x, y, z)
+                    
+                    // 如果是圆柱体（tactic节点），需要旋转90度使其竖立
+                    if (node.type === 'tactic') {
+                        mesh.rotation.x = Math.PI / 2  // 绕X轴旋转90度
+                    }
+                    
+                    mesh.userData = { 
+                        node, 
+                        key, 
+                        depth, 
+                        type: node.type,
+                        targetPosition: { x, y, z },
+                        initialScale: 0.1 // 用于展开动画
+                    }
+                    mesh.castShadow = true
+                    mesh.receiveShadow = true
+                    
+                    // 如果是新创建的节点，从小到大的展开动画
+                    mesh.scale.set(0.1, 0.1, 0.1)
+                    
+                    // 添加发光效果
+                    let glowMesh = null
+                    if (glowGeometry && glowMaterial) {
+                        glowMesh = new THREE.Mesh(glowGeometry, glowMaterial)
+                        glowMesh.position.set(x, y, z)
+                        
+                        // 如果是圆柱体（tactic节点），发光效果也需要旋转
+                        if (node.type === 'tactic') {
+                            glowMesh.rotation.x = Math.PI / 2
+                        }
+                        
+                        glowMesh.scale.set(0.1, 0.1, 0.1)
+                        this.map3dScene.add(glowMesh)
+                    }
+                    
+                    // 准备标签文字（提前计算，用于动态宽度）
+                    let labelPrefix = ''
+                    let labelText = node.name
+                    
+                    if (node.type === 'tactic') {
+                        labelPrefix = 'T'
+                        const tacticMatch = key.match(/^T(.+)$/)
+                        if (tacticMatch) {
+                            labelText = tacticMatch[1]
+                        } else {
+                            labelText = node.name
+                        }
+                    } else if (node.type === 'range') {
+                        labelText = node.name.length > 15 ? node.name.substring(0, 15) + '...' : node.name
+                    }
+                    
+                    // 创建文字标签（更大的文字，动态宽度）
+                    const canvas = document.createElement('canvas')
+                    const context = canvas.getContext('2d')
+                    
+                    // 根据文字内容和类型动态计算画布大小（再次加大一倍）
+                    const prefixFontSize = hasCurrent ? 180 : 160  // 从 90/80 加大到 180/160
+                    const mainFontSize = hasCurrent ? 280 : 240   // 从 140/120 加大到 280/240
+                    const rangeFontSize = hasCurrent ? 220 : 190   // 从 110/95 加大到 220/190
+                    
+                    // 预计算文字宽度
+                    if (labelPrefix === 'T') {
+                        context.font = `bold ${mainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
+                    } else {
+                        context.font = `bold ${rangeFontSize}px 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif`
+                    }
+                    const textWidth = context.measureText(labelText).width
+                    
+                    const padding = 50  // 从 30 增加到 50
+                    const borderRadius = 30  // 从 20 增加到 30
+                    
+                    // 动态设置画布大小（字体加大后，画布也要更大）
+                    canvas.width = Math.max(800, textWidth + padding * 4)
+                    canvas.height = 512  // 从 256 增加到 512
+                    
+                    // 绘制圆角矩形（兼容性处理）
+                    const drawRoundedRect = (x, y, width, height, radius) => {
+                        context.beginPath()
+                        context.moveTo(x + radius, y)
+                        context.lineTo(x + width - radius, y)
+                        context.quadraticCurveTo(x + width, y, x + width, y + radius)
+                        context.lineTo(x + width, y + height - radius)
+                        context.quadraticCurveTo(x + width, y + height, x + width - radius, y + height)
+                        context.lineTo(x + radius, y + height)
+                        context.quadraticCurveTo(x, y + height, x, y + height - radius)
+                        context.lineTo(x, y + radius)
+                        context.quadraticCurveTo(x, y, x + radius, y)
+                        context.closePath()
+                    }
+                    
+                    // 玻璃效果：半透明白色背景
+                    context.fillStyle = hasCurrent 
+                        ? 'rgba(255, 107, 107, 0.25)'  // 当前选中：淡红色玻璃
+                        : 'rgba(255, 255, 255, 0.15)'  // 普通：半透明白色玻璃
+                    drawRoundedRect(padding, padding, canvas.width - padding * 2, canvas.height - padding * 2, borderRadius)
+                    context.fill()
+                    
+                    // 玻璃边框（增强玻璃效果）
+                    context.strokeStyle = hasCurrent 
+                        ? 'rgba(255, 150, 150, 0.6)'   // 当前选中：红色边框
+                        : 'rgba(255, 255, 255, 0.3)'   // 普通：白色边框
+                    context.lineWidth = 3
+                    drawRoundedRect(padding, padding, canvas.width - padding * 2, canvas.height - padding * 2, borderRadius)
+                    context.stroke()
+                    
+                    // 添加高光效果（模拟玻璃反光）
+                    const highlightGradient = context.createLinearGradient(0, padding, 0, canvas.height / 2)
+                    highlightGradient.addColorStop(0, 'rgba(255, 255, 255, 0.4)')
+                    highlightGradient.addColorStop(1, 'rgba(255, 255, 255, 0)')
+                    context.fillStyle = highlightGradient
+                    drawRoundedRect(padding, padding, canvas.width - padding * 2, (canvas.height - padding * 2) / 2, borderRadius)
+                    context.fill()
+                    
+                    // 绘制文字（带阴影增强可读性，更大字体）
+                    context.textAlign = 'center'
+                    context.textBaseline = 'middle'
+                    context.shadowColor = 'rgba(0, 0, 0, 0.8)'
+                    context.shadowBlur = 20  // 从 10 增加到 20
+                    context.shadowOffsetX = 5  // 从 3 增加到 5
+                    context.shadowOffsetY = 5  // 从 3 增加到 5
+                    
+                    let mainTextY = canvas.height / 2
+                    
+                    // 如果有类型前缀（T），T 和数字在同一行显示
+                    if (labelPrefix === 'T') {
+                        // 组合文本：T + 数字
+                        const combinedText = `T${labelText}`
+                        
+                        // 使用统一的大字体显示
+                        context.fillStyle = '#ffffff'
+                        context.font = `bold ${mainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
+                        context.fillText(combinedText, canvas.width / 2, canvas.height / 2)
+                        
+                        mainTextY = canvas.height / 2
+                    } else {
+                        // 靶场名称（更大字体）
+                        context.fillStyle = '#ffffff'
+                        context.font = `bold ${rangeFontSize}px 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif`
+                        context.fillText(labelText, canvas.width / 2, canvas.height / 2)
+                        
+                        mainTextY = canvas.height / 2
+                    }
+                    
+                    // 如果有提示信息，显示在下方
+                    if (node.prompts && node.prompts.length > 0) {
+                        context.font = `bold ${hasCurrent ? 110 : 96}px Arial`  // 从 55/48 加大到 110/96
+                        context.fillStyle = 'rgba(255, 255, 255, 0.85)'
+                        context.shadowBlur = 12
+                        const promptText = `${node.prompts.length} 个结果`
+                        context.fillText(promptText, canvas.width / 2, mainTextY + 120)  // 从 +70 改为 +120
+                    }
+                    
+                    const texture = new THREE.CanvasTexture(canvas)
+                    texture.needsUpdate = true
+                    const spriteMaterial = new THREE.SpriteMaterial({ 
+                        map: texture, 
+                        transparent: true,
+                        alphaTest: 0.1,
+                        opacity: 0 // 初始透明，用于渐入动画
+                    })
+                    const sprite = new THREE.Sprite(spriteMaterial)
+                    // **横向布局：标签在节点下方（Y轴负方向），Z轴稍微向前避免被遮挡**
+                    const labelZOffset = 3  // Z轴向前偏移，避免被节点遮挡
+                    sprite.position.set(x, y - (node.type === 'range' ? 5 : 4), z + labelZOffset)
+                    // 动态设置 sprite 尺寸（根据画布宽度，字体加大后标签也要更大）
+                    const spriteWidth = (canvas.width / 1024) * 18  // 从 12 增加到 18
+                    const spriteHeight = (canvas.height / 256) * 4.5  // 从 3 增加到 4.5
+                    sprite.scale.set(spriteWidth, spriteHeight, 1)
+                    sprite.userData = { 
+                        node, 
+                        key, 
+                        depth, 
+                        type: node.type,
+                        targetOpacity: 1
+                    }
+                    
+                    this.map3dScene.add(mesh)
+                    this.map3dScene.add(sprite)
+                    
+                    // **关键修复：使用 Object.freeze 防止 Vue 响应式监听导致栈溢出**
+                    // Three.js 对象不应该被 Vue 监听，否则会导致性能问题和循环引用
+                    
+                    // 冻结 Three.js 相关对象，防止 Vue 添加响应式 getter/setter
+                    Object.freeze(mesh)
+                    Object.freeze(sprite)
+                    if (glowMesh) Object.freeze(glowMesh)
+                    
+                    const createdNodeData = {
+                        mesh, 
+                        sprite, 
+                        glowMesh,
+                        node, 
+                        key, 
+                        depth, 
+                        isExpanded, 
+                        position: { x, y, z }, 
+                        parentPosition: parentPosition,
+                        childrenMeshes: [],  // 这个数组可能会很大，不需要响应式
+                        line: null, 
+                        dot: null,
+                        animationProgress: 0,
+                        hasCurrent: hasCurrent
+                    }
+                    
+                    this.map3dNodes.push(createdNodeData)
+                    
+                    // 存储节点引用以便快速查找
+                    if (!this.map3dNodeMap) {
+                        this.map3dNodeMap = new Map()
+                    }
+                    this.map3dNodeMap.set(node.fullPath, { 
+                        mesh, 
+                        sprite, 
+                        glowMesh,
+                        node, 
+                        key, 
+                        childrenMeshes: [], 
+                        line: null, 
+                        dot: null 
+                    })
+                    
+                    // 先不添加连接线，稍后统一处理（避免在位置调整前创建线条）
+                    let line = null
+                    let dot = null
+                    
+                    // **1. 先处理 Aiming 子节点（在Z轴延伸，面向镜头）**
+                    if (isExpanded && Object.keys(aimingChildren).length > 0) {
+                        // Aiming 节点：Z轴排列（面向镜头方向延伸）
+                        // 先保存当前节点的引用，稍后会更新 Aiming 的 parentPosition
+                        const currentParentNodeData = this.map3dNodes[this.map3dNodes.length - 1]
+                        
+                        const aimingKeys = Object.keys(aimingChildren)
+                        const aimingSpacing = 16 // Aiming 节点之间的 Z 轴间距（增加1倍：8 -> 16）
+                        
+                        // **新策略：A节点从父T节点位置开始，向摄像机方向（+Z）依次排列**
+                        // A1 在最靠近 T 的位置，A2 在 A1 前面，A3 在 A2 前面...
+                        // 不再使用中心对称或 hash 偏移
+                        
+                        const aimingNodesData = [] // 保存 Aiming 节点数据，稍后更新 parentPosition
+                        
+                        aimingKeys.forEach((aimingKey, aimingIndex) => {
+                            const aimingNode = aimingChildren[aimingKey]
+                            // **新布局：A节点在Z轴朝向摄像机方向依次排列**
+                            // X和Y保持与父T节点相同，只在Z轴上递增
+                            const aimingX = x // 与父节点同一水平位置
+                            const aimingY = y // 与父节点同一深度（不向下一层）
+                            // Z轴：从T节点位置开始，每个A节点增加 aimingSpacing
+                            // A1: z + aimingSpacing, A2: z + 2*aimingSpacing, ...
+                            const aimingZ = z + (aimingIndex + 1) * aimingSpacing
+                                
+                            console.log('🎯 创建Aiming节点:', {
+                                key: aimingKey,
+                                parentKey: key,
+                                parentPos: { x, y, z },
+                                aimingPos: { x: aimingX, y: aimingY, z: aimingZ },
+                                aimingIndex,
+                                totalAiming: aimingKeys.length,
+                                strategy: `A${aimingIndex + 1} 在 T 前方 ${(aimingIndex + 1) * aimingSpacing} 单位（朝向摄像机）`
+                            })
+                                
+                                // 检查是否有当前编辑的靶道
+                                const aimingHasCurrent = aimingNode.prompts && aimingNode.prompts.some(p => p.isCurrent)
+                                
+                                // **根据评分改变大小和颜色**
+                                let sphereSize = 1.5  // 默认大小
+                                let sphereColor = 0xa8e6cf  // 默认颜色（浅绿）
+                                let emissiveColor = 0x003333
+                                let emissiveIntensity = 0.05
+                                let score = null  // **提升到外层作用域，供后续发光效果使用**
+                                
+                                // 如果有评分数据，根据评分调整
+                                if (aimingNode.prompts && aimingNode.prompts.length > 0) {
+                                    const promptId = aimingNode.prompts[0].id
+                                    const fullPromptData = this.promptOpt.find(p => 
+                                        (p.idkey || p.value) == promptId
+                                    )
+                                    
+                                    // **调试：查看数据结构**
+                                    console.log('🔍 Aiming节点评分数据检查:', {
+                                        promptId,
+                                        fullPromptData,
+                                        evalMaxScore: fullPromptData?.evalMaxScore,
+                                        finalScore: fullPromptData?.finalScore
+                                    })
+                                    
+                                    // **优先使用 evalMaxScore（最高分）作为评分**
+                                    // score 已在外层定义，直接赋值
+                                    if (fullPromptData) {
+                                        // 先尝试 finalScore
+                                        if (fullPromptData.finalScore !== undefined && 
+                                            fullPromptData.finalScore !== null && 
+                                            fullPromptData.finalScore !== -1 && 
+                                            fullPromptData.finalScore !== '-1') {
+                                            score = fullPromptData.finalScore
+                                        }
+                                        // 如果没有 finalScore，使用 evalMaxScore
+                                        else if (fullPromptData.evalMaxScore !== undefined && 
+                                                 fullPromptData.evalMaxScore !== null && 
+                                                 fullPromptData.evalMaxScore !== -1 && 
+                                                 fullPromptData.evalMaxScore !== '-1') {
+                                            score = fullPromptData.evalMaxScore
+                                        }
+                                        // 如果没有 evalMaxScore，使用 evalAvgScore
+                                        else if (fullPromptData.evalAvgScore !== undefined && 
+                                                 fullPromptData.evalAvgScore !== null && 
+                                                 fullPromptData.evalAvgScore !== -1 && 
+                                                 fullPromptData.evalAvgScore !== '-1') {
+                                            score = fullPromptData.evalAvgScore
+                                        }
+                                    }
+                                    
+                                    if (score !== null && this.scoreStatistics) {
+                                        // **根据相对排名设置大小和颜色**
+                                        const percentile = this.scoreStatistics.getPercentileRank(score)
+                                        const allScores = this.scoreStatistics.scores
+                                        const rank = allScores.filter(s => s > score).length + 1
+                                        const isFirst = rank === 1
+                                        
+                                        console.log('✅ 使用评分:', score, '排名:', rank, '百分位:', percentile.toFixed(1) + '%', isFirst ? '🥇第一名!' : '')
+                                        
+                                        // **特殊处理：排名第一的节点**
+                                        if (isFirst) {
+                                            // 第一名 - 特大、紫色（区别于黄色高亮）
+                                            sphereSize = 2.5
+                                            sphereColor = 0xb24df5  // 紫色（与黄色区分明显）
+                                            emissiveColor = 0xff00ff  // 紫红色发光
+                                            emissiveIntensity = 0.6
+                                        }
+                                        // 根据排名百分位分级（Top 20%, 20-40%, 40-60%, 60-80%, Bottom 20%）
+                                        else if (percentile >= 80) {
+                                            // Top 20% - 最大、亮绿色
+                                            sphereSize = 2.2
+                                            sphereColor = 0x00d4aa
+                                            emissiveColor = 0x00ffcc
+                                            emissiveIntensity = 0.4
+                                        } else if (percentile >= 60) {
+                                            // 20-40% - 较大、绿色
+                                            sphereSize = 1.9
+                                            sphereColor = 0x52c41a
+                                            emissiveColor = 0x66ff66
+                                            emissiveIntensity = 0.3
+                                        } else if (percentile >= 40) {
+                                            // 40-60% - 正常、橙色
+                                            sphereSize = 1.6
+                                            sphereColor = 0xfaad14
+                                            emissiveColor = 0xffcc00
+                                            emissiveIntensity = 0.2
+                                        } else if (percentile >= 20) {
+                                            // 60-80% - 较小、浅红色
+                                            sphereSize = 1.3
+                                            sphereColor = 0xff7875
+                                            emissiveColor = 0xff6666
+                                            emissiveIntensity = 0.15
+                                        } else {
+                                            // Bottom 20% - 最小、红色
+                                            sphereSize = 1.0
+                                            sphereColor = 0xf5222d
+                                            emissiveColor = 0xff3333
+                                            emissiveIntensity = 0.1
+                                        }
+                                    }
+                                }
+                                
+                                // 如果是当前选中的节点，覆盖为黄色高亮
+                                if (aimingHasCurrent) {
+                                    sphereColor = 0xffd93d
+                                    emissiveColor = 0xffaa00
+                                    emissiveIntensity = 0.7
+                                }
+                                
+                                // 创建 Aiming 几何体：小圆球（大小由评分决定）
+                                const aimingGeometry = new THREE.SphereGeometry(sphereSize, 24, 24)
+                                const aimingMaterial = new THREE.MeshStandardMaterial({ 
+                                    color: sphereColor,
+                                    metalness: 0.4,
+                                    roughness: 0.5,
+                                    emissive: emissiveColor,
+                                    emissiveIntensity: emissiveIntensity
+                                })
+                                
+                                const aimingMesh = new THREE.Mesh(aimingGeometry, aimingMaterial)
+                                aimingMesh.position.set(aimingX, aimingY, aimingZ)
+                                aimingMesh.userData = { 
+                                    node: aimingNode, 
+                                    key: aimingKey, 
+                                    depth: depth + 1, 
+                                    type: aimingNode.type,
+                                    targetPosition: { x: aimingX, y: aimingY, z: aimingZ },
+                                    initialScale: 0.1
+                                }
+                                aimingMesh.castShadow = true
+                                aimingMesh.receiveShadow = true
+                                aimingMesh.scale.set(0.1, 0.1, 0.1)
+                                
+                                // **为第一名添加特殊发光效果**
+                                let aimingGlowMesh = null
+                                if (score !== null && this.scoreStatistics) {
+                                    const allScores = this.scoreStatistics.scores
+                                    const rank = allScores.filter(s => s > score).length + 1
+                                    if (rank === 1) {
+                                        // 创建紫色发光外壳（与黄色高亮区分）
+                                        const aimingGlowGeometry = new THREE.SphereGeometry(sphereSize * 1.3, 24, 24)
+                                        const aimingGlowMaterial = new THREE.MeshBasicMaterial({
+                                            color: 0xb24df5,  // 紫色
+                                            transparent: true,
+                                            opacity: 0.35,
+                                            side: THREE.BackSide
+                                        })
+                                        aimingGlowMesh = new THREE.Mesh(aimingGlowGeometry, aimingGlowMaterial)
+                                        aimingGlowMesh.position.copy(aimingMesh.position)
+                                        aimingGlowMesh.scale.set(0.1, 0.1, 0.1)
+                                        this.map3dScene.add(aimingGlowMesh)
+                                    }
+                                }
+                                
+                                // 创建 Aiming 文字标签（更大的文字，动态宽度）
+                                const aimingCanvas = document.createElement('canvas')
+                                const aimingContext = aimingCanvas.getContext('2d')
+                                
+                                // 提取 Aiming 数字（提前，用于计算宽度）
+                                const aimingMatch = aimingKey.match(/-A(\d+)$/)
+                                const aimingLabelText = aimingMatch ? aimingMatch[1] : aimingNode.name
+                                
+                                // 根据文字内容动态计算画布大小（再次加大一倍）
+                                const aimingPrefixFontSize = aimingHasCurrent ? 180 : 160  // 从 90/80 加大到 180/160
+                                const aimingMainFontSize = aimingHasCurrent ? 280 : 240   // 从 140/120 加大到 280/240
+                                
+                                // 组合文本（用于宽度计算）
+                                const aimingCombinedText = `A${aimingLabelText}`
+                                
+                                // 预计算文字宽度（使用组合后的文本）
+                                aimingContext.font = `bold ${aimingMainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
+                                const textWidth = aimingContext.measureText(aimingCombinedText).width
+                                
+                                const aimingPadding = 50  // 从 30 增加到 50
+                                const aimingBorderRadius = 30  // 从 20 增加到 30
+                                
+                                // 动态设置画布大小（根据文字内容，字体加大后画布也要更大）
+                                aimingCanvas.width = Math.max(800, textWidth + aimingPadding * 4)
+                                aimingCanvas.height = 512  // 从 256 增加到 512
+                                
+                                const drawRoundedRect = (x, y, width, height, radius) => {
+                                    aimingContext.beginPath()
+                                    aimingContext.moveTo(x + radius, y)
+                                    aimingContext.lineTo(x + width - radius, y)
+                                    aimingContext.quadraticCurveTo(x + width, y, x + width, y + radius)
+                                    aimingContext.lineTo(x + width, y + height - radius)
+                                    aimingContext.quadraticCurveTo(x + width, y + height, x + width - radius, y + height)
+                                    aimingContext.lineTo(x + radius, y + height)
+                                    aimingContext.quadraticCurveTo(x, y + height, x, y + height - radius)
+                                    aimingContext.lineTo(x, y + radius)
+                                    aimingContext.quadraticCurveTo(x, y, x + radius, y)
+                                    aimingContext.closePath()
+                                }
+                                
+                                // 玻璃效果背景
+                                aimingContext.fillStyle = aimingHasCurrent 
+                                    ? 'rgba(255, 107, 107, 0.25)' 
+                                    : 'rgba(255, 255, 255, 0.15)'
+                                drawRoundedRect(aimingPadding, aimingPadding, aimingCanvas.width - aimingPadding * 2, aimingCanvas.height - aimingPadding * 2, aimingBorderRadius)
+                                aimingContext.fill()
+                                
+                                // 玻璃边框
+                                aimingContext.strokeStyle = aimingHasCurrent 
+                                    ? 'rgba(255, 150, 150, 0.6)' 
+                                    : 'rgba(255, 255, 255, 0.3)'
+                                aimingContext.lineWidth = 3
+                                drawRoundedRect(aimingPadding, aimingPadding, aimingCanvas.width - aimingPadding * 2, aimingCanvas.height - aimingPadding * 2, aimingBorderRadius)
+                                aimingContext.stroke()
+                                
+                                // 高光效果
+                                const aimingHighlightGradient = aimingContext.createLinearGradient(0, aimingPadding, 0, aimingCanvas.height / 2)
+                                aimingHighlightGradient.addColorStop(0, 'rgba(255, 255, 255, 0.4)')
+                                aimingHighlightGradient.addColorStop(1, 'rgba(255, 255, 255, 0)')
+                                aimingContext.fillStyle = aimingHighlightGradient
+                                drawRoundedRect(aimingPadding, aimingPadding, aimingCanvas.width - aimingPadding * 2, (aimingCanvas.height - aimingPadding * 2) / 2, aimingBorderRadius)
+                                aimingContext.fill()
+                                
+                                // 绘制文字（A 和数字在同一行，已在上面定义 aimingCombinedText）
+                                aimingContext.textAlign = 'center'
+                                aimingContext.textBaseline = 'middle'
+                                aimingContext.shadowColor = 'rgba(0, 0, 0, 0.8)'
+                                aimingContext.shadowBlur = 20
+                                aimingContext.shadowOffsetX = 5
+                                aimingContext.shadowOffsetY = 5
+                                
+                                // 使用统一的大字体显示（组合文本已在前面定义）
+                                aimingContext.fillStyle = '#ffffff'
+                                aimingContext.font = `bold ${aimingMainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
+                                aimingContext.fillText(aimingCombinedText, aimingCanvas.width / 2, aimingCanvas.height / 2)
+                                
+                                // 创建 sprite
+                                const aimingTexture = new THREE.CanvasTexture(aimingCanvas)
+                                const aimingSpriteMaterial = new THREE.SpriteMaterial({ 
+                                    map: aimingTexture, 
+                                    transparent: true,
+                                    alphaTest: 0.1,
+                                    opacity: 0
+                                })
+                                const aimingSprite = new THREE.Sprite(aimingSpriteMaterial)
+                                // **横向布局：标签在节点下方，Z轴稍微向前避免被球遮挡**
+                                const aimingLabelZOffset = 3  // Z轴向前偏移
+                                aimingSprite.position.set(aimingX, aimingY - 4, aimingZ + aimingLabelZOffset)
+                                // 动态设置 sprite 尺寸（根据画布宽度，字体加大后标签也要更大）
+                                const spriteWidth = (aimingCanvas.width / 1024) * 18  // 从 12 增加到 18
+                                const spriteHeight = (aimingCanvas.height / 256) * 4.5  // 从 3 增加到 4.5
+                                aimingSprite.scale.set(spriteWidth, spriteHeight, 1)
+                                aimingSprite.userData = { 
+                                    node: aimingNode, 
+                                    key: aimingKey, 
+                                    depth: depth + 1, 
+                                    type: aimingNode.type,
+                                    targetOpacity: 1
+                                }
+                                
+                                this.map3dScene.add(aimingMesh)
+                                this.map3dScene.add(aimingSprite)
+                                
+                                // 冻结 Three.js 对象，防止 Vue 响应式监听导致栈溢出
+                                Object.freeze(aimingMesh)
+                                Object.freeze(aimingSprite)
+                                if (aimingGlowMesh) Object.freeze(aimingGlowMesh)
+                                
+                                const aimingNodeData = { 
+                                    mesh: aimingMesh, 
+                                    sprite: aimingSprite, 
+                                    glowMesh: aimingGlowMesh,
+                                    node: aimingNode, 
+                                    key: aimingKey, 
+                                    depth: depth + 1, 
+                                    isExpanded: true, 
+                                    position: { x: aimingX, y: aimingY, z: aimingZ }, 
+                                    parentPosition: { x, y, z },
+                                    childrenMeshes: [], 
+                                    line: null, 
+                                    dot: null,
+                                    animationProgress: 0,
+                                    hasCurrent: aimingHasCurrent
+                                }
+                                
+                                this.map3dNodes.push(aimingNodeData)
+                                aimingNodesData.push(aimingNodeData)
+                                
+                                if (!this.map3dNodeMap) {
+                                    this.map3dNodeMap = new Map()
+                                }
+                                this.map3dNodeMap.set(aimingNode.fullPath, { 
+                                    mesh: aimingMesh, 
+                                    sprite: aimingSprite, 
+                                    glowMesh: null,
+                                    node: aimingNode, 
+                                    key: aimingKey, 
+                                    childrenMeshes: [], 
+                                    line: null, 
+                                    dot: null 
+                                })
+                            })
+                            
+                            // 更新当前节点数据中记录的子节点引用
+                            if (currentParentNodeData) {
+                                aimingKeys.forEach(aimingKey => {
+                                    const aimingChild = aimingChildren[aimingKey]
+                                    const aimingChildData = this.map3dNodes.find(n => n.node === aimingChild)
+                                    if (aimingChildData) {
+                                        currentParentNodeData.childrenMeshes.push(aimingChildData.mesh)
+                                        currentParentNodeData.childrenMeshes.push(aimingChildData.sprite)
+                                        if (aimingChildData.glowMesh) {
+                                            currentParentNodeData.childrenMeshes.push(aimingChildData.glowMesh)
+                                        }
+                                    }
+                                })
+                            }
+                    }
+                    
+                    // **2. 再处理 Tactic 子节点（继续在Y轴向下，递归调用）**
+                    if (isExpanded && Object.keys(tacticChildren).length > 0) {
+                        // 简单递归渲染子节点，currentX 会自动累加
+                        renderNode(tacticChildren, { x, y, z }, depth + 1)
+                        
+                        // 记录子节点引用（用于快速更新可见性）
+                        const currentNodeData = this.map3dNodes.find(n => n.key === key && n.depth === depth)
+                        if (currentNodeData) {
+                            Object.keys(tacticChildren).forEach(childKey => {
+                                const childNode = tacticChildren[childKey]
+                                const childNodeData = this.map3dNodes.find(n => n.node === childNode)
+                                if (childNodeData) {
+                                    currentNodeData.childrenMeshes.push(childNodeData.mesh)
+                                    currentNodeData.childrenMeshes.push(childNodeData.sprite)
+                                    if (childNodeData.glowMesh) {
+                                        currentNodeData.childrenMeshes.push(childNodeData.glowMesh)
+                                    }
+                                }
+                            })
+                        }
+                    }
+                })
+            }
+            
+            // **直接渲染所有根节点**
+            currentX = 0  // 重置X轴起点
+            Object.keys(this.map3dTreeData).forEach(key => {
+                renderNode({ [key]: this.map3dTreeData[key] }, null, 0)
+            })
+            
+            // **特殊处理：将Range节点移动到其子节点的水平中点**
+            const rangeNodes = this.map3dNodes.filter(n => n.node.type === 'range')
+            rangeNodes.forEach(rangeNodeData => {
+                // 找到这个Range的所有子T节点
+                const childTacticNodes = this.map3dNodes.filter(n => 
+                    n.depth === 1 && n.parentPosition && 
+                    Math.abs(n.parentPosition.y - rangeNodeData.position.y) < 1
+                )
+                
+                if (childTacticNodes.length > 0) {
+                    // 计算子节点的X轴范围
+                    const childXPositions = childTacticNodes.map(n => n.position.x)
+                    const minX = Math.min(...childXPositions)
+                    const maxX = Math.max(...childXPositions)
+                    const centerX = (minX + maxX) / 2
+                    
+                    // 移动Range节点到中点
+                    rangeNodeData.mesh.position.x = centerX
+                    if (rangeNodeData.glowMesh) {
+                        rangeNodeData.glowMesh.position.x = centerX
+                    }
+                    rangeNodeData.sprite.position.x = centerX
+                    rangeNodeData.position.x = centerX
+                    
+                    console.log(`📦 调整Range节点 ${rangeNodeData.key} 到中点: ${centerX} (子节点范围: ${minX} ~ ${maxX})`)
+                    
+                    // 同时更新该Range的所有子节点的parentPosition
+                    childTacticNodes.forEach(childData => {
+                        childData.parentPosition = {
+                            x: centerX,
+                            y: rangeNodeData.position.y,
+                            z: rangeNodeData.position.z
+                        }
+                    })
+                }
+            })
+            
+            // **计算树的实际范围**
+            let maxDepth = 0
+            let minX = Infinity
+            let maxX = -Infinity
+            let minZ = 0
+            let maxZ = 0
+            
+            this.map3dNodes.forEach(nodeData => {
+                maxDepth = Math.max(maxDepth, nodeData.depth)
+                
+                // 计算X轴范围（只计算T节点，不包括A节点）
+                if (nodeData.node.type !== 'aiming') {
+                    minX = Math.min(minX, nodeData.position.x)
+                    maxX = Math.max(maxX, nodeData.position.x)
+                }
+                
+                // 计算Z轴范围（只计算A节点）
+                if (nodeData.node.type === 'aiming') {
+                    minZ = Math.min(minZ, nodeData.position.z)
+                    maxZ = Math.max(maxZ, nodeData.position.z)
+                }
+            })
+            
+            const treeWidth = maxX - minX  // 水平宽度（X轴）
+            const treeDepth = maxDepth * 20  // 深度（Y轴）
+            const treeZSpan = maxZ - minZ  // Z轴跨度（A节点）
+            
+            const treeCenterX = (maxX + minX) / 2
+            const treeCenterY = -treeDepth / 2  // 向下展开，中心点在负Y
+            const treeCenterZ = (maxZ + minZ) / 2  // Z轴中心（Aiming节点的中心）
+            
+            console.log('📐 树的范围计算:', {
+                treeWidth: treeWidth.toFixed(2),
+                treeDepth: treeDepth.toFixed(2),
+                treeZSpan: treeZSpan.toFixed(2),
+                xRange: `${minX.toFixed(2)} ~ ${maxX.toFixed(2)}`,
+                yRange: `0 ~ ${(-maxDepth * 20).toFixed(2)}`,
+                zRange: `${minZ.toFixed(2)} ~ ${maxZ.toFixed(2)}`
+            })
+            
+            // 调整相机初始位置，确保能看到整个树
+            const treeCenter = {
+                x: treeCenterX,
+                y: treeCenterY,
+                z: treeCenterZ
+            }
+            
+            // **优化相机距离计算：使用更智能的算法**
+            // 考虑3个维度，但给予不同的权重
+            const effectiveWidth = treeWidth
+            const effectiveDepth = treeDepth
+            const effectiveZSpan = treeZSpan
+            
+            // 使用包围盒对角线长度作为基准
+            const boundingBoxDiagonal = Math.sqrt(
+                effectiveWidth * effectiveWidth + 
+                effectiveDepth * effectiveDepth + 
+                effectiveZSpan * effectiveZSpan
+            )
+            
+            // 根据节点密度调整距离系数
+            const nodeCount = this.map3dNodes.length
+            let distanceMultiplier = 1.2  // 基础系数
+            
+            // 节点越多，距离系数稍微减小（避免拉太远）
+            if (nodeCount > 100) {
+                distanceMultiplier = 1.0
+            } else if (nodeCount > 50) {
+                distanceMultiplier = 1.1
+            } else if (nodeCount < 20) {
+                distanceMultiplier = 1.3
+            }
+            
+            const cameraDistance = boundingBoxDiagonal * distanceMultiplier
+            
+            console.log('📷 相机距离计算:', {
+                treeWidth,
+                treeDepth,
+                treeZSpan,
+                boundingBoxDiagonal: boundingBoxDiagonal.toFixed(2),
+                nodeCount,
+                distanceMultiplier,
+                finalDistance: cameraDistance.toFixed(2)
+            })
+            
+            // 在所有节点位置确定后，统一创建连接线
+            this.createConnectionLines()
+            
+            if (this.map3dControls) {
+                this.map3dControls.target.set(treeCenter.x, treeCenter.y, treeCenter.z)
+                
+                // **优化相机位置：从右前上方观察**
+                // 这样可以同时看清楚：
+                // - X轴的T节点排列
+                // - Y轴的深度层级
+                // - Z轴的A节点分布
+                this.map3dCamera.position.set(
+                    treeCenter.x + cameraDistance * 0.4,   // X轴：稍微偏右
+                    treeCenter.y + cameraDistance * 0.5,   // Y轴：从上方看（更高）
+                    treeCenter.z + cameraDistance * 0.8    // Z轴：从前方看
+                )
+                this.map3dControls.update()
+                
+                console.log('📷 相机位置已设置:', {
+                    target: treeCenter,
+                    position: this.map3dCamera.position
+                })
+            }
+            
+            // 启动入场动画
+            this.startNodeAnimations()
+            
+            // 添加点击事件（简化版：吸入/弹出效果）
+            let isAnimating = false // 标记是否正在执行动画
+            
+            const onMouseClick = (event) => {
+                // 如果正在执行动画，忽略点击
+                if (isAnimating) {
+                    return
+                }
+                
+                const rect = this.map3dRenderer.domElement.getBoundingClientRect()
+                mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+                mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
+                
+                raycaster.setFromCamera(mouse, this.map3dCamera)
+                const intersects = raycaster.intersectObjects(this.map3dNodes.map(n => n.mesh))
+                
+                if (intersects.length > 0) {
+                    const clickedMesh = intersects[0].object
+                    const nodeData = this.map3dNodes.find(n => n.mesh === clickedMesh)
+                    
+                    // 只处理有子节点的节点
+                    if (nodeData && nodeData.node.children && Object.keys(nodeData.node.children).length > 0) {
+                        // 切换展开/收拢状态
+                        const wasExpanded = nodeData.node.expanded !== false
+                        nodeData.node.expanded = !wasExpanded
+                        
+                        // 设置动画标记
+                        isAnimating = true
+                        
+                        // 执行动画
+                        if (nodeData.node.expanded) {
+                            // 展开：弹出动画
+                            this.animateNodesPopOut(nodeData, () => {
+                                isAnimating = false
+                            })
+                        } else {
+                            // 收拢：吸入动画
+                            this.animateNodesSuckIn(nodeData, () => {
+                                isAnimating = false
+                            })
+                        }
+                    }
+                }
+            }
+            
+            this.map3dRenderer.domElement.addEventListener('click', onMouseClick)
+            this.map3dClickHandler = onMouseClick
+            
+            // **添加双击事件：选中Aiming节点对应的靶道**
+            const onMouseDoubleClick = (event) => {
+                const rect = this.map3dRenderer.domElement.getBoundingClientRect()
+                mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+                mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
+                
+                raycaster.setFromCamera(mouse, this.map3dCamera)
+                
+                // 检测mesh和sprite
+                const detectableObjects = []
+                this.map3dNodes.forEach(n => {
+                    if (n.mesh && n.mesh.visible) {
+                        detectableObjects.push(n.mesh)
+                    }
+                    if (n.sprite && n.sprite.visible) {
+                        detectableObjects.push(n.sprite)
+                    }
+                })
+                
+                const intersects = raycaster.intersectObjects(detectableObjects, false)
+                
+                if (intersects.length > 0) {
+                    const intersectedObject = intersects[0].object
+                    const nodeData = this.map3dNodes.find(n => 
+                        n.mesh === intersectedObject || n.sprite === intersectedObject
+                    )
+                    
+                    // 只处理Aiming节点
+                    if (nodeData && nodeData.node.type === 'aiming') {
+                        // 获取该Aiming节点对应的promptId
+                        if (nodeData.node.prompts && nodeData.node.prompts.length > 0) {
+                            const promptId = nodeData.node.prompts[0].id
+                            
+                            console.log('🎯 双击Aiming节点，选中靶道:', {
+                                nodeKey: nodeData.key,
+                                promptId: promptId,
+                                fullPath: nodeData.node.fullPath
+                            })
+                            
+                            // **关闭3D导图浮窗（先关闭，避免与确认对话框冲突）**
+                            this.mapDialogVisible = false
+                            
+                            // **复用原有的靶道切换逻辑（包括保存草稿提示）**
+                            // 注意：程序化设置 v-model 不会触发 @change 事件
+                            // 需要手动调用 promptChangeHandel 函数来触发完整逻辑
+                            // 该函数会自动处理：
+                            // 1. 检查 pageChange 状态
+                            // 2. 如果有修改，弹出"是否保存为草稿"确认框
+                            // 3. 根据用户选择保存或不保存
+                            // 4. 调用 getPromptetail 获取靶道详情
+                            
+                            // 保存旧值（用于change检测）
+                            const oldPromptId = this.promptid
+                            
+                            // 设置新值
+                            this.promptid = promptId
+                            
+                            // 手动触发change处理逻辑
+                            this.promptChangeHandel(promptId, 'promptid', oldPromptId)
+                        }
+                    }
+                }
+            }
+            
+            this.map3dRenderer.domElement.addEventListener('dblclick', onMouseDoubleClick)
+            this.map3dDoubleClickHandler = onMouseDoubleClick
+            
+            // **添加鼠标移动事件：显示节点信息tooltip + 边缘高光**
+            let hoveredNode = null  // 当前悬停的节点
+            let currentHighlightMesh = null  // 当前的高光外壳
+            
+            // 创建tooltip元素
+            const createTooltip = () => {
+                let tooltip = document.getElementById('map3d-tooltip')
+                if (!tooltip) {
+                    tooltip = document.createElement('div')
+                    tooltip.id = 'map3d-tooltip'
+                    tooltip.style.cssText = `
+                        position: fixed;
+                        background: rgba(0, 0, 0, 0.85);
+                        color: white;
+                        padding: 12px 16px;
+                        border-radius: 8px;
+                        font-size: 14px;
+                        pointer-events: none;
+                        z-index: 10000;
+                        display: none;
+                        max-width: 300px;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                        border: 1px solid rgba(255,255,255,0.2);
+                        line-height: 1.6;
+                    `
+                    document.body.appendChild(tooltip)
+                }
+                return tooltip
+            }
+            
+            const tooltip = createTooltip()
+            
+            const onMouseMove = (event) => {
+                const rect = this.map3dRenderer.domElement.getBoundingClientRect()
+                mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+                mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
+                
+                raycaster.setFromCamera(mouse, this.map3dCamera)
+                
+                // **同时检测mesh和sprite（文字标签）**
+                const detectableObjects = []
+                this.map3dNodes.forEach(n => {
+                    if (n.mesh && n.mesh.visible) {
+                        detectableObjects.push(n.mesh)
+                    }
+                    if (n.sprite && n.sprite.visible) {
+                        detectableObjects.push(n.sprite)
+                    }
+                })
+                
+                const intersects = raycaster.intersectObjects(detectableObjects, false)
+                
+                if (intersects.length > 0) {
+                    const intersectedObject = intersects[0].object
+                    // 根据相交的对象（mesh或sprite）查找对应的nodeData
+                    const nodeData = this.map3dNodes.find(n => 
+                        n.mesh === intersectedObject || n.sprite === intersectedObject
+                    )
+                    
+                    if (nodeData) {
+                        // 如果是新的节点，更新tooltip和高光
+                        if (hoveredNode !== nodeData) {
+                            // **移除之前的高光**
+                            if (currentHighlightMesh) {
+                                this.map3dScene.remove(currentHighlightMesh)
+                                if (currentHighlightMesh.geometry) currentHighlightMesh.geometry.dispose()
+                                if (currentHighlightMesh.material) currentHighlightMesh.material.dispose()
+                                currentHighlightMesh = null
+                            }
+                            
+                            hoveredNode = nodeData
+                            
+                            // **添加边缘高光效果**
+                            if (nodeData.mesh && nodeData.mesh.visible) {
+                                let highlightGeometry, highlightSize
+                                
+                                // 根据节点类型创建不同形状的高光
+                                if (nodeData.node.type === 'range') {
+                                    // 方块：使用稍大的方块作为边缘
+                                    highlightSize = 5.3  // 原大小是5
+                                    highlightGeometry = new THREE.BoxGeometry(highlightSize, highlightSize, highlightSize)
+                                } else {
+                                    // 圆球：使用稍大的球体作为边缘
+                                    const originalScale = nodeData.mesh.scale.x
+                                    const originalGeometry = nodeData.mesh.geometry
+                                    if (originalGeometry && originalGeometry.parameters && originalGeometry.parameters.radius) {
+                                        highlightSize = originalGeometry.parameters.radius * 1.15 * originalScale  // 放大15%
+                                    } else {
+                                        highlightSize = 2.5 * 1.15 * originalScale  // 默认大小
+                                    }
+                                    highlightGeometry = new THREE.SphereGeometry(highlightSize, 32, 32)
+                                }
+                                
+                                // 创建高光材质（边缘发光效果）
+                                const highlightMaterial = new THREE.MeshBasicMaterial({
+                                    color: 0xffffff,  // 白色
+                                    transparent: true,
+                                    opacity: 0.3,
+                                    side: THREE.BackSide,  // 只显示背面，形成边缘效果
+                                    depthWrite: false
+                                })
+                                
+                                currentHighlightMesh = new THREE.Mesh(highlightGeometry, highlightMaterial)
+                                currentHighlightMesh.position.copy(nodeData.mesh.position)
+                                currentHighlightMesh.scale.copy(nodeData.mesh.scale)
+                                this.map3dScene.add(currentHighlightMesh)
+                            }
+                            
+                            // 构建tooltip内容
+                            let tooltipContent = ''
+                            const node = nodeData.node
+                            
+                            if (node.type === 'range') {
+                                // 靶场信息
+                                tooltipContent = `
+                                    <div style="font-weight: bold; margin-bottom: 8px; color: #4ecdc4;">📦 靶场</div>
+                                    <div>${node.name}</div>
+                                    ${node.prompts && node.prompts.length > 0 ? `<div style="margin-top: 4px; color: #aaa;">包含 ${node.prompts.length} 个结果</div>` : ''}
+                                `
+                            } else if (node.type === 'tactic') {
+                                // Tactic 信息
+                                const tacticNumber = nodeData.key.replace('T', '')
+                                tooltipContent = `
+                                    <div style="font-weight: bold; margin-bottom: 8px; color: #95e1d3;">🎯 战术节点</div>
+                                    <div>编号: T${tacticNumber}</div>
+                                    ${node.prompts && node.prompts.length > 0 ? `<div style="margin-top: 4px; color: #aaa;">${node.prompts.length} 个结果</div>` : ''}
+                                `
+                            } else if (node.type === 'aiming') {
+                                // Aiming 信息（包含评分）
+                                const aimingNumber = nodeData.key.match(/-A(\d+)$/)?.[1] || nodeData.key
+                                tooltipContent = `
+                                    <div style="font-weight: bold; margin-bottom: 8px; color: #a8e6cf;">🎲 瞄准点</div>
+                                    <div>编号: A${aimingNumber}</div>
+                                `
+                                
+                                // **从promptOpt获取完整的评分数据**
+                                if (node.prompts && node.prompts.length > 0) {
+                                    const promptId = node.prompts[0].id
+                                    // 从 promptOpt 中查找完整数据
+                                    const fullPromptData = this.promptOpt.find(p => 
+                                        (p.idkey || p.value) == promptId
+                                    )
+                                    
+                                    console.log('🔍 Tooltip评分数据检查:', {
+                                        promptId,
+                                        fullPromptData,
+                                        evalMaxScore: fullPromptData?.evalMaxScore,
+                                        evalAvgScore: fullPromptData?.evalAvgScore
+                                    })
+                                    
+                                    if (fullPromptData) {
+                                        // **获取最终评分：优先使用 evalMaxScore（最高分）**
+                                        let finalScore = null
+                                        
+                                        // 先尝试 finalScore
+                                        if (fullPromptData.finalScore !== undefined && 
+                                            fullPromptData.finalScore !== null && 
+                                            fullPromptData.finalScore !== -1 && 
+                                            fullPromptData.finalScore !== '-1') {
+                                            finalScore = fullPromptData.finalScore
+                                        }
+                                        // 如果没有 finalScore，使用 evalMaxScore
+                                        else if (fullPromptData.evalMaxScore !== undefined && 
+                                                 fullPromptData.evalMaxScore !== null && 
+                                                 fullPromptData.evalMaxScore !== -1 && 
+                                                 fullPromptData.evalMaxScore !== '-1') {
+                                            finalScore = fullPromptData.evalMaxScore
+                                        }
+                                        // 如果没有 evalMaxScore，使用 evalAvgScore
+                                        else if (fullPromptData.evalAvgScore !== undefined && 
+                                                 fullPromptData.evalAvgScore !== null && 
+                                                 fullPromptData.evalAvgScore !== -1 && 
+                                                 fullPromptData.evalAvgScore !== '-1') {
+                                            finalScore = fullPromptData.evalAvgScore
+                                        }
+                                        
+                                        console.log('✅ Tooltip使用评分:', finalScore)
+                                        
+                                        // 如果有评分数据，显示评分区域
+                                        if (finalScore !== null) {
+                                            
+                                            tooltipContent += `<div style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 8px;">`
+                                            
+                                            // **显示最终评分（大号、醒目）+ 排名**
+                                            if (finalScore !== null) {
+                                                // **根据相对排名设置颜色和大小**
+                                                let scoreColor = '#999'
+                                                let scoreSize = '20px'
+                                                let scoreEmoji = '📊'
+                                                let rankBadge = ''
+                                                let rankText = ''
+                                                
+                                                if (this.scoreStatistics) {
+                                                    const percentile = this.scoreStatistics.getPercentileRank(finalScore)
+                                                    const allScores = this.scoreStatistics.scores
+                                                    const rank = allScores.filter(s => s > finalScore).length + 1
+                                                    const total = allScores.length
+                                                    const isFirst = rank === 1
+                                                    
+                                                    rankText = `排名: ${rank}/${total}`
+                                                    
+                                                    // **特殊处理：排名第一**
+                                                    if (isFirst) {
+                                                        scoreColor = '#b24df5'  // 紫色（与黄色高亮区分）
+                                                        scoreSize = '26px'
+                                                        scoreEmoji = '🥇'
+                                                        rankBadge = '<span style="background: linear-gradient(135deg, #b24df5 0%, #da6aff 50%, #b24df5 100%); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 11px; margin-left: 6px; font-weight: bold; box-shadow: 0 2px 8px rgba(178,77,245,0.5);">👑 第一名</span>'
+                                                    }
+                                                    // 根据排名百分位分级
+                                                    else if (percentile >= 80) {
+                                                        // Top 20%
+                                                        scoreColor = '#00d4aa'
+                                                        scoreSize = '24px'
+                                                        scoreEmoji = '🏆'
+                                                        rankBadge = '<span style="background: #00d4aa; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">Top 20%</span>'
+                                                    } else if (percentile >= 60) {
+                                                        // 20-40%
+                                                        scoreColor = '#52c41a'
+                                                        scoreSize = '22px'
+                                                        scoreEmoji = '✨'
+                                                        rankBadge = '<span style="background: #52c41a; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">Top 40%</span>'
+                                                    } else if (percentile >= 40) {
+                                                        // 40-60%
+                                                        scoreColor = '#faad14'
+                                                        scoreSize = '20px'
+                                                        scoreEmoji = '📊'
+                                                        rankBadge = '<span style="background: #faad14; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">中游</span>'
+                                                    } else if (percentile >= 20) {
+                                                        // 60-80%
+                                                        scoreColor = '#ff7875'
+                                                        scoreSize = '18px'
+                                                        scoreEmoji = '📉'
+                                                        rankBadge = '<span style="background: #ff7875; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">靠后</span>'
+                                                    } else {
+                                                        // Bottom 20%
+                                                        scoreColor = '#f5222d'
+                                                        scoreSize = '18px'
+                                                        scoreEmoji = '📊'
+                                                        rankBadge = '<span style="background: #f5222d; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">Bottom 20%</span>'
+                                                    }
+                                                }
+                                                
+                                                tooltipContent += `
+                                                    <div style="margin-bottom: 8px;">
+                                                        ${scoreEmoji} <span style="color: ${scoreColor}; font-weight: bold; font-size: ${scoreSize};">${finalScore.toFixed(1)}</span>
+                                                        <span style="color: #888; font-size: 12px;"> / 10</span>
+                                                        ${rankBadge}
+                                                    </div>
+                                                `
+                                                
+                                                // 显示排名信息
+                                                if (rankText) {
+                                                    tooltipContent += `<div style="font-size: 12px; color: #aaa; margin-bottom: 8px;">${rankText}</div>`
+                                                }
+                                            }
+                                            
+                                            // **显示详细评分**
+                                            // 显示平均分
+                                            if (fullPromptData.evalAvgScore !== undefined && 
+                                                fullPromptData.evalAvgScore !== null && 
+                                                fullPromptData.evalAvgScore !== -1 && 
+                                                fullPromptData.evalAvgScore !== '-1') {
+                                                tooltipContent += `<div style="font-size: 12px; color: #ccc; margin-top: 4px;">📊 平均分: <span style="color: #95e1d3;">${fullPromptData.evalAvgScore.toFixed(1)}</span></div>`
+                                            }
+                                            
+                                            // 显示最高分（如果不是用作主评分）
+                                            if (fullPromptData.evalMaxScore !== undefined && 
+                                                fullPromptData.evalMaxScore !== null && 
+                                                fullPromptData.evalMaxScore !== -1 && 
+                                                fullPromptData.evalMaxScore !== '-1' &&
+                                                finalScore !== fullPromptData.evalMaxScore) {
+                                                tooltipContent += `<div style="font-size: 12px; color: #ccc; margin-top: 4px;">⭐ 最高分: <span style="color: #ffd93d;">${fullPromptData.evalMaxScore.toFixed(1)}</span></div>`
+                                            }
+                                            
+                                            tooltipContent += `</div>`
+                                        }
+                                    }
+                                }
+                                
+                                // **添加双击提示（仅Aiming节点）**
+                                tooltipContent += `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 11px; color: #999;">💡 双击可快速选中此靶道</div>`
+                            }
+                            
+                            tooltip.innerHTML = tooltipContent
+                        }
+                        
+                        // 更新tooltip位置
+                        tooltip.style.display = 'block'
+                        tooltip.style.left = (event.clientX + 15) + 'px'
+                        tooltip.style.top = (event.clientY + 15) + 'px'
+                        
+                        // 改变鼠标样式
+                        this.map3dRenderer.domElement.style.cursor = 'pointer'
+                    }
+                } else {
+                    // 没有悬停在任何节点上
+                    if (hoveredNode) {
+                        hoveredNode = null
+                        tooltip.style.display = 'none'
+                        this.map3dRenderer.domElement.style.cursor = 'default'
+                        
+                        // **移除高光效果**
+                        if (currentHighlightMesh) {
+                            this.map3dScene.remove(currentHighlightMesh)
+                            if (currentHighlightMesh.geometry) currentHighlightMesh.geometry.dispose()
+                            if (currentHighlightMesh.material) currentHighlightMesh.material.dispose()
+                            currentHighlightMesh = null
+                        }
+                    }
+                }
+            }
+            
+            this.map3dRenderer.domElement.addEventListener('mousemove', onMouseMove)
+            this.map3dMouseMoveHandler = onMouseMove
+        },
+        
+        // 创建连接线（在所有节点位置确定后调用）- 动态绑定版本
+        createConnectionLines() {
+            if (!this.map3dNodes || !this.map3dScene) return
+            
+            this.map3dNodes.forEach(nodeData => {
+                // 如果已经有连接线，先清理
+                if (nodeData.line) {
+                    this.map3dScene.remove(nodeData.line)
+                    if (nodeData.line.geometry) nodeData.line.geometry.dispose()
+                    if (nodeData.line.material) nodeData.line.material.dispose()
+                    nodeData.line = null
+                }
+                if (nodeData.dot) {
+                    this.map3dScene.remove(nodeData.dot)
+                    if (nodeData.dot.geometry) nodeData.dot.geometry.dispose()
+                    if (nodeData.dot.material) nodeData.dot.material.dispose()
+                    nodeData.dot = null
+                }
+                
+                // 通过 parentPath 找到父节点
+                if (nodeData.node.parentPath) {
+                    const parentNodeData = this.map3dNodes.find(n => {
+                        if (!n.node.fullPath) return false
+                        return n.node.fullPath === nodeData.node.parentPath
+                    })
+                    
+                    if (parentNodeData && parentNodeData.mesh) {
+                        // **保存父节点引用，用于动态更新**
+                        nodeData.parentNodeData = parentNodeData
+                        
+                        const hasCurrent = nodeData.hasCurrent
+                        
+                        // **使用明亮的白色或接近白色的颜色**
+                        let lineColor = 0xffffff  // 默认白色
+                        
+                        if (hasCurrent) {
+                            lineColor = 0xffd93d  // 当前节点使用黄色
+                        }
+                        
+                        // 使用 Line 而不是 Cylinder，这样可以动态更新端点
+                        // 创建线条几何体（两个点）
+                        const lineGeometry = new THREE.BufferGeometry()
+                        const positions = new Float32Array(6) // 2 个点 × 3 个坐标
+                        lineGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+                        
+                        // 使用 LineBasicMaterial 代替圆柱体
+                        const lineMaterial = new THREE.LineBasicMaterial({
+                            color: lineColor,
+                            linewidth: 2,
+                            transparent: true,
+                            opacity: 0 // 初始透明，用于渐入动画
+                        })
+                        
+                        const line = new THREE.Line(lineGeometry, lineMaterial)
+                        this.map3dScene.add(line)
+                        nodeData.line = line
+                        nodeData.lineColor = lineColor
+                        
+                        // 添加连接点（小圆球）- 也会动态跟随，使用明亮颜色
+                        const dotGeometry = new THREE.SphereGeometry(0.3, 8, 8)
+                        const dotMaterial = new THREE.MeshStandardMaterial({ 
+                            color: 0xffffff,  // 使用白色
+                            emissive: hasCurrent ? 0xffd93d : 0xffffff,  // 发光颜色
+                            emissiveIntensity: hasCurrent ? 0.5 : 0.2,
+                            metalness: 0.3,
+                            roughness: 0.5,
+                            transparent: true,
+                            opacity: 0 // 初始透明
+                        })
+                        const dot = new THREE.Mesh(dotGeometry, dotMaterial)
+                        this.map3dScene.add(dot)
+                        nodeData.dot = dot
+                        
+                        // **立即更新一次连接线位置**
+                        this.updateConnectionLine(nodeData)
+                    } else {
+                        // 调试：记录找不到父节点的情况
+                        console.warn('找不到父节点:', {
+                            fullPath: nodeData.node.fullPath,
+                            parentPath: nodeData.node.parentPath,
+                            nodeType: nodeData.node.type,
+                            key: nodeData.key
+                        })
+                        
+                        // 尝试输出所有节点的 fullPath，帮助调试
+                        if (nodeData.node.type === 'aiming') {
+                            console.log('所有节点的 fullPath:', this.map3dNodes.map(n => n.node.fullPath))
+                        }
+                    }
+                }
+            })
+        },
+        
+        // 更新单个连接线的位置（动态绑定到节点位置）
+        updateConnectionLine(nodeData) {
+            if (!nodeData.line || !nodeData.parentNodeData) return
+            
+            const parentPosition = nodeData.parentNodeData.mesh.position
+            const currentPosition = nodeData.mesh.position
+            
+            // 更新线条的端点位置
+            const positions = nodeData.line.geometry.attributes.position.array
+            positions[0] = parentPosition.x
+            positions[1] = parentPosition.y
+            positions[2] = parentPosition.z
+            positions[3] = currentPosition.x
+            positions[4] = currentPosition.y
+            positions[5] = currentPosition.z
+            nodeData.line.geometry.attributes.position.needsUpdate = true
+            
+            // 更新连接点位置
+            if (nodeData.dot) {
+                nodeData.dot.position.set(currentPosition.x, currentPosition.y, currentPosition.z)
+            }
+        },
+        
+        // 更新所有连接线的位置
+        updateAllConnectionLines() {
+            if (!this.map3dNodes) return
+            
+            this.map3dNodes.forEach(nodeData => {
+                if (nodeData.line && nodeData.parentNodeData) {
+                    this.updateConnectionLine(nodeData)
+                }
+            })
+        },
+        
+        // 启动节点入场动画
+        startNodeAnimations() {
+            if (!this.map3dNodes || this.map3dNodes.length === 0) return
+            
+            const animationDuration = 500 // 动画持续时间(ms)
+            const startTime = Date.now()
+            
+            const animate = () => {
+                const elapsed = Date.now() - startTime
+                const progress = Math.min(elapsed / animationDuration, 1)
+                
+                // 使用缓动函数（easeOutCubic）
+                const easeProgress = 1 - Math.pow(1 - progress, 3)
+                
+                this.map3dNodes.forEach((nodeData, index) => {
+                    // 延迟每个节点的动画开始时间，创建波浪效果
+                    const delay = index * 20 // 每个节点延迟20ms
+                    const nodeProgress = Math.max(0, Math.min(1, (elapsed - delay) / animationDuration))
+                    const nodeEaseProgress = 1 - Math.pow(1 - nodeProgress, 3)
+                    
+                    // 缩放动画：从 0.1 到 1
+                    const scale = 0.1 + nodeEaseProgress * 0.9
+                    nodeData.mesh.scale.set(scale, scale, scale)
+                    
+                    if (nodeData.glowMesh) {
+                        nodeData.glowMesh.scale.set(scale, scale, scale)
+                    }
+                    
+                    // 透明度动画
+                    if (nodeData.sprite && nodeData.sprite.material) {
+                        nodeData.sprite.material.opacity = nodeEaseProgress
+                    }
+                    
+                    if (nodeData.line && nodeData.line.material) {
+                        nodeData.line.material.opacity = nodeEaseProgress * 0.6
+                    }
+                    
+                    if (nodeData.dot && nodeData.dot.material) {
+                        nodeData.dot.material.opacity = nodeEaseProgress
+                    }
+                    
+                    nodeData.animationProgress = nodeEaseProgress
+                })
+                
+                // **关键：在动画过程中更新连接线位置**
+                this.updateAllConnectionLines()
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animate)
+                } else {
+                    // 动画完成后，确保所有节点都完全可见
+                    this.map3dNodes.forEach((nodeData) => {
+                        nodeData.mesh.scale.set(1, 1, 1)
+                        nodeData.mesh.visible = true
+                        
+                        if (nodeData.glowMesh) {
+                            nodeData.glowMesh.scale.set(1, 1, 1)
+                            nodeData.glowMesh.visible = true
+                        }
+                        
+                        if (nodeData.sprite) {
+                            nodeData.sprite.visible = true
+                            if (nodeData.sprite.material) {
+                                nodeData.sprite.material.opacity = 1
+                            }
+                        }
+                        
+                        if (nodeData.line) {
+                            nodeData.line.visible = true
+                            if (nodeData.line.material) {
+                                nodeData.line.material.opacity = 0.6
+                            }
+                        }
+                        
+                        if (nodeData.dot) {
+                            nodeData.dot.visible = true
+                            if (nodeData.dot.material) {
+                                nodeData.dot.material.opacity = 1
+                            }
+                        }
+                        
+                        nodeData.animationProgress = 1
+                    })
+                }
+            }
+            
+            animate()
+        },
+        
+        // 创建渐变背景
+        createGradientBackground() {
+            const canvas = document.createElement('canvas')
+            canvas.width = 256
+            canvas.height = 256
+            const context = canvas.getContext('2d')
+            
+            // 创建径向渐变
+            const gradient = context.createRadialGradient(128, 128, 0, 128, 128, 128)
+            gradient.addColorStop(0, '#1a1a2e')
+            gradient.addColorStop(0.5, '#16213e')
+            gradient.addColorStop(1, '#0f3460')
+            
+            context.fillStyle = gradient
+            context.fillRect(0, 0, 256, 256)
+            
+            const texture = new THREE.CanvasTexture(canvas)
+            texture.needsUpdate = true
+            return texture
+        },
+        
+        // 清空 3D 场景
+        clearMap3DScene() {
+            if (!this.map3dScene) return
+            
+            // 移除所有对象
+            while(this.map3dScene.children.length > 0) {
+                const obj = this.map3dScene.children[0]
+                if (obj.geometry) obj.geometry.dispose()
+                if (obj.material) {
+                    if (Array.isArray(obj.material)) {
+                        obj.material.forEach(m => {
+                            if (m.map) m.map.dispose()
+                            m.dispose()
+                        })
+                    } else {
+                        if (obj.material.map) obj.material.map.dispose()
+                        obj.material.dispose()
+                    }
+                }
+                this.map3dScene.remove(obj)
+            }
+            
+            this.map3dNodes = []
+        },
+        
+        // 动画循环（优化版：减少不必要的计算和渲染）
+        animateMap3D() {
+            if (!this.map3dRenderer || !this.map3dScene || !this.map3dCamera) return
+            
+            this.map3dAnimationId = requestAnimationFrame(() => this.animateMap3D())
+            
+            // 跟踪是否需要渲染
+            let needsRender = false
+            
+            // 更新控制器（启用阻尼时需要每帧更新）
+            if (this.map3dControls) {
+                // update() 返回 true 表示相机位置发生了变化
+                const controlsChanged = this.map3dControls.update()
+                if (controlsChanged) {
+                    needsRender = true
+                }
+            }
+            
+            // 优化：大幅减少动画更新频率，避免 CPU 占用过高
+            if (!this.map3dLastAnimationTime) {
+                this.map3dLastAnimationTime = Date.now()
+                this.map3dCurrentNodes = [] // 缓存当前选中的节点
+            }
+            
+            const now = Date.now()
+            // 每 200ms 更新一次动画（降低频率从100ms到200ms）
+            if (now - this.map3dLastAnimationTime > 200) {
+                this.map3dLastAnimationTime = now
+                
+                // 第一次时，找出所有当前选中的节点并缓存
+                if (!this.map3dCurrentNodes || this.map3dCurrentNodes.length === 0) {
+                    if (this.map3dNodes && this.map3dNodes.length > 0) {
+                        this.map3dCurrentNodes = this.map3dNodes.filter(({ node }) => 
+                            node.prompts && node.prompts.some(p => p.isCurrent)
+                        )
+                    }
+                }
+                
+                // **更新连接线位置（确保始终跟随节点）**
+                this.updateAllConnectionLines()
+                
+                // 只更新缓存的当前选中节点，避免遍历所有节点
+                if (this.map3dCurrentNodes && this.map3dCurrentNodes.length > 0) {
+                    const time = now * 0.001
+                    this.map3dCurrentNodes.forEach(({ mesh }) => {
+                        const scale = 1 + Math.sin(time * 2) * 0.05
+                        mesh.scale.set(scale, scale, scale)
+                    })
+                    needsRender = true
+                }
+            }
+            
+            // 只在需要时渲染，避免无效渲染
+            if (needsRender) {
+                this.map3dRenderer.render(this.map3dScene, this.map3dCamera)
+            }
+        },
+        
+        // 弹出动画（展开子节点）
+        animateNodesPopOut(parentNodeData, onComplete) {
+            if (!this.map3dScene || !this.map3dNodes) return
+            
+            // **递归收集所有应该显示的子节点**
+            // 如果子节点本身是展开状态（expanded !== false），则递归收集它的子节点
+            const childNodes = []
+            
+            const collectChildren = (parentNode) => {
+                if (!parentNode.children || Object.keys(parentNode.children).length === 0) return
+                
+                Object.keys(parentNode.children).forEach(childKey => {
+                    const childNode = parentNode.children[childKey]
+                    const childNodeData = this.map3dNodes.find(n => n.node === childNode && n.key === childKey)
+                    if (childNodeData) {
+                        childNodes.push(childNodeData)
+                        
+                        // **关键修复：如果这个子节点是展开状态，递归收集它的子节点**
+                        // 这样可以一次性展开所有层级
+                        if (childNode.expanded !== false) {
+                            collectChildren(childNode)
+                        }
+                    }
+                })
+            }
+            
+            collectChildren(parentNodeData.node)
+            
+            if (childNodes.length === 0) {
+                if (onComplete) onComplete()
+                return
+            }
+            
+            // 弹出动画：从父节点位置开始，缩放+位移到目标位置
+            // **缩短单个节点动画时间，让多米诺效果更明显**
+            const animationDuration = 250  // 从 350ms 减少到 250ms
+            const startTime = Date.now()
+            
+            // **修复：保存每个子节点的目标位置和它的直接父节点位置**
+            childNodes.forEach(childData => {
+                // **关键修复：对于 Aiming 节点，重新计算 Z 轴位置**
+                if (childData.node.type === 'aiming') {
+                    // 找到父节点
+                    const parentData = this.map3dNodes.find(n => 
+                        n.node.fullPath === childData.node.parentPath
+                    )
+                    
+                    if (parentData && parentData.node.children) {
+                        // 重新计算 Aiming 节点的 Z 轴偏移
+                        const aimingKeys = Object.keys(parentData.node.children).filter(k => 
+                            parentData.node.children[k].type === 'aiming'
+                        )
+                        const aimingIndex = aimingKeys.indexOf(childData.key)
+                        
+                        if (aimingIndex !== -1) {
+                            const aimingSpacing = 16 // 与创建时保持一致（增加1倍）
+                            
+                            // **新策略：A节点从父节点位置开始，向摄像机方向（+Z）依次排列**
+                            // A1: parentZ + aimingSpacing, A2: parentZ + 2*aimingSpacing, ...
+                            const parentZ = parentData.mesh.position.z
+                            const correctZ = parentZ + (aimingIndex + 1) * aimingSpacing
+                            
+                            // **新布局：Aiming 节点的坐标重新计算**
+                            // X 轴：与父节点相同（Aiming 节点在同一水平位置）
+                            const correctX = parentData.mesh.position.x
+                            // Y 轴：与父节点相同（Aiming不向下一层，在Z轴延伸）
+                            const correctY = parentData.mesh.position.y
+                            
+                            // 使用重新计算的正确位置（X, Y, Z 都重新计算）
+                            childData._targetPosition = {
+                                x: correctX,  // 与父节点相同的 X
+                                y: correctY,  // 与父节点相同的 Y（不向下）
+                                z: correctZ   // 从父节点向摄像机方向延伸
+                            }
+                        } else {
+                            childData._targetPosition = { ...childData.position }
+                        }
+                    } else {
+                        childData._targetPosition = { ...childData.position }
+                    }
+                } else {
+                    // 非 Aiming 节点：使用保存的原始位置
+                    childData._targetPosition = { ...childData.position }
+                }
+                
+                // **关键修复：找到这个节点的直接父节点位置**
+                // 而不是使用最顶层的 parentNodeData
+                if (childData.parentNodeData && childData.parentNodeData.mesh) {
+                    // 如果有 parentNodeData（来自连接线逻辑），使用它
+                    childData._parentPosition = {
+                        x: childData.parentNodeData.mesh.position.x,
+                        y: childData.parentNodeData.mesh.position.y,
+                        z: childData.parentNodeData.mesh.position.z
+                    }
+                } else {
+                    // 否则，尝试查找直接父节点
+                    const directParentData = this.map3dNodes.find(n => 
+                        n.node.fullPath === childData.node.parentPath
+                    )
+                    if (directParentData && directParentData.mesh) {
+                        childData._parentPosition = {
+                            x: directParentData.mesh.position.x,
+                            y: directParentData.mesh.position.y,
+                            z: directParentData.mesh.position.z
+                        }
+                    } else {
+                        // 如果找不到，使用最顶层的父节点（兜底）
+                        childData._parentPosition = { ...parentNodeData.position }
+                    }
+                }
+            })
+            
+            const animate = () => {
+                const elapsed = Date.now() - startTime
+                const progress = Math.min(elapsed / animationDuration, 1)
+                
+                // 使用 easeOutBack 缓动（轻微弹出效果）
+                const c1 = 1.70158
+                const c3 = c1 + 1
+                const easeProgress = 1 + c3 * Math.pow(progress - 1, 3) + c1 * Math.pow(progress - 1, 2)
+                
+                childNodes.forEach((childData, index) => {
+                    // **大幅增加延迟，产生明显的多米诺骨牌效果**
+                    const delay = index * 80  // 从 50ms 增加到 80ms，让每个节点间隔更明显
+                    const nodeProgress = Math.max(0, Math.min(1, (elapsed - delay) / animationDuration))
+                    
+                    // **如果动画还没开始（nodeProgress === 0），隐藏节点**
+                    if (nodeProgress === 0) {
+                        childData.mesh.visible = false
+                        if (childData.glowMesh) childData.glowMesh.visible = false
+                        if (childData.sprite) childData.sprite.visible = false
+                        if (childData.line) childData.line.visible = false
+                        if (childData.dot) childData.dot.visible = false
+                        return
+                    }
+                    
+                    const nodeEase = 1 + c3 * Math.pow(nodeProgress - 1, 3) + c1 * Math.pow(nodeProgress - 1, 2)
+                    
+                    // 从父节点位置插值到目标位置
+                    const x = childData._parentPosition.x + (childData._targetPosition.x - childData._parentPosition.x) * nodeEase
+                    const y = childData._parentPosition.y + (childData._targetPosition.y - childData._parentPosition.y) * nodeEase
+                    const z = childData._parentPosition.z + (childData._targetPosition.z - childData._parentPosition.z) * nodeEase
+                    
+                    // 缩放：从0.1放大到1
+                    const scale = 0.1 + nodeEase * 0.9
+                    
+                    // 更新节点位置和缩放
+                    childData.mesh.position.set(x, y, z)
+                    childData.mesh.scale.set(scale, scale, scale)
+                    childData.mesh.visible = true
+                    
+                    if (childData.glowMesh) {
+                        childData.glowMesh.position.set(x, y, z)
+                        childData.glowMesh.scale.set(scale, scale, scale)
+                        childData.glowMesh.visible = true
+                    }
+                    
+                    if (childData.sprite) {
+                        childData.sprite.position.set(x, y + (childData.node.type === 'range' ? 5 : 4), z)
+                        childData.sprite.visible = true
+                        if (childData.sprite.material) {
+                            childData.sprite.material.opacity = nodeEase
+                        }
+                    }
+                    
+                    if (childData.line && childData.line.material) {
+                        childData.line.visible = true
+                        childData.line.material.opacity = nodeEase * 0.8
+                    }
+                    
+                    if (childData.dot && childData.dot.material) {
+                        childData.dot.visible = true
+                        childData.dot.material.opacity = nodeEase
+                    }
+                })
+                
+                // 更新连接线
+                this.updateAllConnectionLines()
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animate)
+                } else {
+                    // **动画完成，恢复正常位置并确保完全可见**
+                    childNodes.forEach(childData => {
+                        // 恢复位置
+                        childData.mesh.position.set(childData._targetPosition.x, childData._targetPosition.y, childData._targetPosition.z)
+                        childData.mesh.scale.set(1, 1, 1)
+                        childData.mesh.visible = true
+                        
+                        if (childData.glowMesh) {
+                            childData.glowMesh.position.set(childData._targetPosition.x, childData._targetPosition.y, childData._targetPosition.z)
+                            childData.glowMesh.scale.set(1, 1, 1)
+                            childData.glowMesh.visible = true
+                        }
+                        
+                        if (childData.sprite) {
+                            const spriteY = childData._targetPosition.y + (childData.node.type === 'range' ? 5 : 4)
+                            childData.sprite.position.set(childData._targetPosition.x, spriteY, childData._targetPosition.z)
+                            childData.sprite.visible = true
+                            if (childData.sprite.material) {
+                                childData.sprite.material.opacity = 1
+                            }
+                        }
+                        
+                        if (childData.line) {
+                            childData.line.visible = true
+                            if (childData.line.material) {
+                                childData.line.material.opacity = 0.8
+                            }
+                        }
+                        
+                        if (childData.dot) {
+                            childData.dot.visible = true
+                            if (childData.dot.material) {
+                                childData.dot.material.opacity = 1
+                            }
+                        }
+                    })
+                    this.updateAllConnectionLines()
+                    if (onComplete) onComplete()
+                }
+            }
+            
+            animate()
+        },
+        
+        // 吸入动画（收起子节点）
+        animateNodesSuckIn(parentNodeData, onComplete) {
+            if (!this.map3dScene || !this.map3dNodes) return
+            
+            // 收集所有直接子节点
+            const childNodes = []
+            const collectChildren = (node) => {
+                if (!node.children || Object.keys(node.children).length === 0) return
+                
+                Object.keys(node.children).forEach(childKey => {
+                    const childNode = node.children[childKey]
+                    const childNodeData = this.map3dNodes.find(n => n.node === childNode && n.key === childKey)
+                    if (childNodeData) {
+                        childNodes.push(childNodeData)
+                        // 递归收集所有子节点
+                        collectChildren(childNode)
+                    }
+                })
+            }
+            
+            collectChildren(parentNodeData.node)
+            
+            if (childNodes.length === 0) {
+                if (onComplete) onComplete()
+                return
+            }
+            
+            // 吸入动画：从当前位置缩放+位移到父节点位置，然后隐藏
+            // **缩短单个节点动画时间，让多米诺效果更明显**
+            const animationDuration = 200  // 从 300ms 减少到 200ms
+            const startTime = Date.now()
+            
+            // 保存每个子节点的起始位置
+            childNodes.forEach(childData => {
+                childData._startPosition = {
+                    x: childData.mesh.position.x,
+                    y: childData.mesh.position.y,
+                    z: childData.mesh.position.z
+                }
+            })
+            
+            const animate = () => {
+                const elapsed = Date.now() - startTime
+                const progress = Math.min(elapsed / animationDuration, 1)
+                
+                // 使用 easeInCubic 缓动（加速吸入）
+                const easeProgress = progress * progress * progress
+                
+                childNodes.forEach((childData, index) => {
+                    // **大幅增加反向延迟，产生明显的反向多米诺骨牌效果**
+                    const delay = (childNodes.length - index) * 60  // 从 35ms 增加到 60ms
+                    const nodeProgress = Math.max(0, Math.min(1, (elapsed - delay) / animationDuration))
+                    const nodeEase = nodeProgress * nodeProgress * nodeProgress
+                    
+                    // 从当前位置插值到父节点位置
+                    const x = childData._startPosition.x + (parentNodeData.position.x - childData._startPosition.x) * nodeEase
+                    const y = childData._startPosition.y + (parentNodeData.position.y - childData._startPosition.y) * nodeEase
+                    const z = childData._startPosition.z + (parentNodeData.position.z - childData._startPosition.z) * nodeEase
+                    
+                    // 缩放：从1缩小到0.1
+                    const scale = 1 - nodeEase * 0.9
+                    const opacity = 1 - nodeEase
+                    
+                    // 更新节点位置和缩放
+                    childData.mesh.position.set(x, y, z)
+                    childData.mesh.scale.set(scale, scale, scale)
+                    
+                    if (childData.glowMesh) {
+                        childData.glowMesh.position.set(x, y, z)
+                        childData.glowMesh.scale.set(scale, scale, scale)
+                    }
+                    
+                    if (childData.sprite) {
+                        childData.sprite.position.set(x, y + (childData.node.type === 'range' ? 5 : 4), z)
+                        if (childData.sprite.material) {
+                            childData.sprite.material.opacity = opacity
+                        }
+                    }
+                    
+                    if (childData.line && childData.line.material) {
+                        childData.line.material.opacity = opacity * 0.8
+                    }
+                    
+                    if (childData.dot && childData.dot.material) {
+                        childData.dot.material.opacity = opacity
+                    }
+                })
+                
+                // 更新连接线
+                this.updateAllConnectionLines()
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animate)
+                } else {
+                    // 动画完成，完全隐藏所有节点
+                    childNodes.forEach(childData => {
+                        childData.mesh.visible = false
+                        if (childData.glowMesh) childData.glowMesh.visible = false
+                        if (childData.sprite) childData.sprite.visible = false
+                        if (childData.line) childData.line.visible = false
+                        if (childData.dot) childData.dot.visible = false
+                    })
+                    if (onComplete) onComplete()
+                }
+            }
+            
+            animate()
+        },
+        
+        // 处理窗口大小变化
+        handleMap3DResize() {
+            const container = document.getElementById('map3dContainer')
+            if (!container || !this.map3dCamera || !this.map3dRenderer) return
+            
+            const width = container.clientWidth
+            const height = container.clientHeight
+            
+            this.map3dCamera.aspect = width / height
+            this.map3dCamera.updateProjectionMatrix()
+            this.map3dRenderer.setSize(width, height)
+        },
+        
+        // 销毁 3D 场景
+        destroyMap3D() {
+            window.removeEventListener('resize', this.handleMap3DResize)
+            
+            // 移除点击事件
+            if (this.map3dRenderer && this.map3dRenderer.domElement && this.map3dClickHandler) {
+                this.map3dRenderer.domElement.removeEventListener('click', this.map3dClickHandler)
+                this.map3dClickHandler = null
+            }
+            
+            // **移除双击事件**
+            if (this.map3dRenderer && this.map3dRenderer.domElement && this.map3dDoubleClickHandler) {
+                this.map3dRenderer.domElement.removeEventListener('dblclick', this.map3dDoubleClickHandler)
+                this.map3dDoubleClickHandler = null
+            }
+            
+            // **移除鼠标移动事件**
+            if (this.map3dRenderer && this.map3dRenderer.domElement && this.map3dMouseMoveHandler) {
+                this.map3dRenderer.domElement.removeEventListener('mousemove', this.map3dMouseMoveHandler)
+                this.map3dMouseMoveHandler = null
+            }
+            
+            // **移除tooltip元素**
+            const tooltip = document.getElementById('map3d-tooltip')
+            if (tooltip) {
+                tooltip.remove()
+            }
+            
+            // 停止动画循环
+            if (this.map3dAnimationId) {
+                cancelAnimationFrame(this.map3dAnimationId)
+                this.map3dAnimationId = null
+            }
+            
+            // 销毁控制器
+            if (this.map3dControls) {
+                this.map3dControls.dispose()
+                this.map3dControls = null
+            }
+            
+            // 清空场景
+            this.clearMap3DScene()
+            
+            // 清空节点映射
+            if (this.map3dNodeMap) {
+                this.map3dNodeMap.clear()
+                this.map3dNodeMap = null
+            }
+            
+            // 清理缓存的当前节点
+            this.map3dCurrentNodes = []
+            
+            if (this.map3dRenderer && this.map3dRenderer.domElement) {
+                const container = document.getElementById('map3dContainer')
+                if (container && container.contains(this.map3dRenderer.domElement)) {
+                    container.removeChild(this.map3dRenderer.domElement)
+                }
+                this.map3dRenderer.dispose()
+            }
+            
+            this.map3dScene = null
+            this.map3dCamera = null
+            this.map3dRenderer = null
+            this.map3dNodes = []
+        },
+        
+        // 关闭对话输入弹窗
+        // 执行打靶的核心逻辑（提取出来供对话模式和直接测试模式复用）
+        async executeTargetShoot() {
+            await this.executeTargetShootWithChatMessage(null)
+        },
+        
+        // 执行打靶的核心逻辑（支持对话模式，userMessage 为 null 时表示直接测试模式）
+        async executeTargetShootWithChatMessage(userMessage) {
+            this.tacticalFormSubmitLoading = true
+            
+            // 保存 userMessage，用于后续连发时保持 Chat 模式
+            this._lastUserMessage = userMessage || null
+            
+            let _postData = {
+                modelid: this.modelid,
+                content: this.content,
+                note: this.remarks,
+                numsOfResults: 1,
+                isDraft: this.sendBtnText === '保存草稿',
+                suffix: this.promptParamForm.suffix,
+                prefix: this.promptParamForm.prefix
+            }
+            
+            // 如果提供了 userMessage，添加到请求数据中
+            if (userMessage) {
+                _postData.userMessage = userMessage
+            }
+            
+            // 如果是继续聊天模式，传递历史记录
+            if (this.continueChatMode && this.continueChatHistory.length > 0) {
+                _postData.chatHistory = this.continueChatHistory.map(msg => ({
+                    role: msg.roleType === 1 ? 'user' : 'assistant',
+                    content: msg.content
+                }))
+            }
+            
+            // ai评分标准
+            _postData.isAIGrade = this.isAIGrade
+            if (this.aiScoreForm.resultList.length > 0) {
+                let _list = this.aiScoreForm.resultList.map(item => item.value)
+                _list = _list.filter(item => item)
+                if (_list.length > 0) {
+                    _postData.expectedResultsJson = JSON.stringify(_list)
+                }
+            }
+            
+            if (this.promptParamForm.variableList.length > 0) {
+                _postData.variableDictJson = this.convertData(this.promptParamForm.variableList)
+            }
+            if (this.promptid) {
+                _postData.id = this.promptid
+                //创建顶级战术，创建平行战术，创建子战术，重新瞄准
+                if (this.tacticalForm.tactics === '创建顶级战术') {
+                    _postData.isTopTactic = true
+                }
+                if (this.tacticalForm.tactics === '创建平行战术') {
+                    _postData.isNewTactic = true
+                }
+                if (this.tacticalForm.tactics === '创建子战术') {
+                    _postData.isNewSubTactic = true
+                }
+                if (this.tacticalForm.tactics === '重新瞄准') {
+                    _postData.isNewAiming = true
+                }
+            }
+            
+            this.parameterViewList.forEach(item => {
+                if (item.formField === 'stopSequences') {
+                    _postData[item.formField] = item.value ? JSON.stringify(item.value.split(',')) : ''
+                } else if (item.formField === 'maxToken') {
+                    _postData[item.formField] = item.value ? Number(item.value) : 0
+                } else {
+                    _postData[item.formField] = item.value
+                }
+            })
+
+            _postData['rangeId'] = this.promptField
+            let res = await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData)
+            this.tacticalFormSubmitLoading = false
+            
+            if (res.data.success) {
+                this.pageChange = false
+                this.tacticalFormVisible = false
+                let {
+                    promptResultList = [],
+                    fullVersion = '',
+                    id,
+                    evalAvgScore = -1,
+                    evalMaxScore = -1
+                } = res.data.data || {}
+
+                let copyResultData = JSON.parse(JSON.stringify(res.data.data))
+                delete copyResultData.promptResultList
+                let vArr = copyResultData.fullVersion.split('-')
+                copyResultData.promptFieldStr = vArr[0] || ''
+                copyResultData.promptStr = vArr[1] || ''
+                copyResultData.tacticsStr = vArr[2] || ''
+                this.promptDetail = copyResultData
+                this.sendBtns = [
+                    {
+                        text: '连发'
+                    },
+                    {
+                        text: '保存草稿'
+                    }
+                ]
+                this.sendBtnText = '连发'
+                this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1
+                this.outputMaxDeci = evalMaxScore > -1 ? evalMaxScore : -1
+                this.outputList = promptResultList.map(item => {
+                    if (item) {
+                        item.promptId = id
+                        item.version = fullVersion
+                        item.scoreType = '1'
+                        item.isScoreView = false
+                        item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
+                        item.resultStringHtml = marked.parse(item.resultString)
+                        item.scoreVal = 0
+                        item.alResultList = [{
+                            id: 1,
+                            label: '预期结果1',
+                            value: ''
+                        }, {
+                            id: 2,
+                            label: '预期结果2',
+                            value: ''
+                        }, {
+                            id: 3,
+                            label: '预期结果3',
+                            value: ''
+                        }]
+                        // 确保 mode 字段正确设置（后端返回的是枚举值 1 或 2）
+                        if (item.mode === undefined || item.mode === null) {
+                            item.mode = null // 兼容旧数据
+                        }
+                    }
+                    return item
+                })
+                
+                // 检查第一个结果的模式，如果不是 Chat 模式，清空保存的 userMessage
+                if (promptResultList.length > 0) {
+                    const firstResult = promptResultList[0]
+                    if (firstResult.mode !== 2 && firstResult.mode !== 'Chat') {
+                        // 如果不是 Chat 模式，清空保存的 userMessage
+                        this._lastUserMessage = null
+                    }
+                }
+                
+                // 重置继续聊天状态
+                this.continueChatMode = false
+                this.continueChatPromptResultId = null
+                this.continueChatHistory = []
+                
+                this.getFieldList().then(() => {
+                    this.getPromptOptData(id)
+                    this.getScoringTrendData()
+                })
+
+                if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
+                    this.dealRapicFireHandel(this.numsOfResults - 1, id)
+                }
+            } else {
+                this.$message({
+                    message: res.data.errorMessage || res.data.data || 'Error',
+                    type: 'error',
+                    duration: 5 * 1000
+                })
+            }
         },
         checkUseRed(index,item, which) {
             if (item.finalScore === -1 || item.finalScore === '-1') return '';
@@ -2577,6 +5477,11 @@ var app = new Vue({
                     }
                     return item
                 })
+                
+                // 添加代码块复制按钮
+                this.$nextTick(() => {
+                    this.addCopyButtonsToCodeBlocks();
+                });
             } else {
                 app.$message({
                     message: res.data.errorMessage || res.data.data || 'Error',
@@ -2716,11 +5621,16 @@ var app = new Vue({
             })
             return JSON.stringify(res)
         },
-        async rapidFireHandel(id) {
+        async rapidFireHandel(id, userMessage = null) {
             const promptItemId = id || this.promptid
             const numsOfResults = 1
+            const params = { promptItemId, numsOfResults }
+            // 如果提供了 userMessage，添加到参数中（用于保持 Chat 模式）
+            if (userMessage) {
+                params.userMessage = userMessage
+            }
             return await servicePR.get('/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GenerateWithItemId',
-                { params: { promptItemId, numsOfResults } }).then(res => {
+                { params }).then(res => {
                     //console.log('testHandel res ', res.data)
                     if (!res.data.success) {
                         app.$message({
@@ -3530,6 +6440,144 @@ var app = new Vue({
                 console.error('Oops, unable to copy', err);
             }  
         },
+        
+        /**
+         * 初始化代码块复制按钮
+         * 为所有 <pre><code> 代码块添加复制按钮
+         */
+        initCodeCopyButtons() {
+            const self = this;
+            
+            // 使用 MutationObserver 监听 DOM 变化,自动为新增的代码块添加复制按钮
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.addedNodes.length) {
+                        self.addCopyButtonsToCodeBlocks();
+                    }
+                });
+            });
+            
+            // 监听输出区域和对话历史区域
+            const outputArea = document.querySelector('.outputArea_contentBox');
+            const chatArea = document.querySelector('.chat-history-container');
+            
+            if (outputArea) {
+                observer.observe(outputArea, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+            
+            if (chatArea) {
+                observer.observe(chatArea, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+            
+            // 初始添加
+            this.addCopyButtonsToCodeBlocks();
+        },
+        
+        /**
+         * 为所有代码块添加复制按钮
+         */
+        addCopyButtonsToCodeBlocks() {
+            const self = this;
+            
+            // 查找所有代码块 (输出区域 + 对话历史区域)
+            const codeBlocks = document.querySelectorAll(
+                '.contentRow pre:not(.copy-btn-added), .chat-message-content pre:not(.copy-btn-added)'
+            );
+            
+            codeBlocks.forEach((pre) => {
+                // 标记已添加,避免重复
+                pre.classList.add('copy-btn-added');
+                
+                // 创建复制按钮
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'code-copy-btn';
+                copyBtn.innerHTML = '<i class="el-icon-document-copy"></i> Copy';
+                copyBtn.title = '复制代码';
+                
+                // 绑定点击事件
+                copyBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // 获取代码内容
+                    const codeElement = pre.querySelector('code') || pre;
+                    const code = codeElement.textContent || codeElement.innerText;
+                    
+                    // 使用 CopyHelper 复制
+                    if (window.PromptRangeUtils && window.PromptRangeUtils.CopyHelper) {
+                        const success = window.PromptRangeUtils.CopyHelper.copyToClipboard(
+                            code, 
+                            '代码复制成功', 
+                            '代码复制失败',
+                            true
+                        );
+                        
+                        if (success) {
+                            // 显示复制成功状态
+                            copyBtn.classList.add('copied');
+                            copyBtn.innerHTML = '<i class="el-icon-check"></i> Copied!';
+                            
+                            // 2秒后恢复
+                            setTimeout(() => {
+                                copyBtn.classList.remove('copied');
+                                copyBtn.innerHTML = '<i class="el-icon-document-copy"></i> Copy';
+                            }, 2000);
+                        }
+                    } else {
+                        // 降级方案:使用传统方法
+                        self.fallbackCopyCode(code, copyBtn);
+                    }
+                });
+                
+                // 将按钮添加到 pre 元素中
+                pre.appendChild(copyBtn);
+            });
+        },
+        
+        /**
+         * 降级复制代码方法
+         * @param {string} code - 要复制的代码
+         * @param {HTMLElement} button - 复制按钮元素
+         */
+        fallbackCopyCode(code, button) {
+            try {
+                const textarea = document.createElement('textarea');
+                textarea.value = code;
+                textarea.style.position = 'fixed';
+                textarea.style.top = '0';
+                textarea.style.left = '-9999px';
+                textarea.setAttribute('readonly', '');
+                document.body.appendChild(textarea);
+                
+                textarea.select();
+                textarea.setSelectionRange(0, textarea.value.length);
+                
+                const success = document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                if (success) {
+                    this.$message.success('代码复制成功');
+                    button.classList.add('copied');
+                    button.innerHTML = '<i class="el-icon-check"></i> Copied!';
+                    
+                    setTimeout(() => {
+                        button.classList.remove('copied');
+                        button.innerHTML = '<i class="el-icon-document-copy"></i> Copy';
+                    }, 2000);
+                } else {
+                    this.$message.error('代码复制失败');
+                }
+            } catch (err) {
+                console.error('Copy failed:', err);
+                this.$message.error('代码复制失败');
+            }
+        },
         // 自定义滚动条缩略图相关方法
         handleResultScroll(event) {
             const el = event.target;
@@ -3948,30 +6996,18 @@ var app = new Vue({
             return score !== null && score !== undefined && score > -1;
         },
         
-        // 获取前缀（从variablesJson解析或返回空）
+        // 获取前缀（直接从 prefix 字段获取）
         getPromptPrefix(side) {
             const prompt = side === 'A' ? this.comparePromptA : this.comparePromptB;
-            if (!prompt || !prompt.variablesJson) return '';
-            
-            try {
-                const vars = JSON.parse(prompt.variablesJson);
-                return vars.prefix || '';
-            } catch (e) {
-                return '';
-            }
+            if (!prompt) return '';
+            return prompt.prefix || '';
         },
         
-        // 获取后缀（从variablesJson解析或返回空）
+        // 获取后缀（直接从 suffix 字段获取）
         getPromptSuffix(side) {
             const prompt = side === 'A' ? this.comparePromptA : this.comparePromptB;
-            if (!prompt || !prompt.variablesJson) return '';
-            
-            try {
-                const vars = JSON.parse(prompt.variablesJson);
-                return vars.suffix || '';
-            } catch (e) {
-                return '';
-            }
+            if (!prompt) return '';
+            return prompt.suffix || '';
         },
         
         // 跳转到指定的Prompt（完全模拟手动点击靶道选择的行为）
@@ -4124,8 +7160,8 @@ var app = new Vue({
         
         // 生成Git风格的变量配置差异HTML
         getVariablesDiffHtml(side) {
-            const varsA = this.comparePromptA?.variablesJson || '{}';
-            const varsB = this.comparePromptB?.variablesJson || '{}';
+            const varsA = this.comparePromptA?.variableDictJson || '{}';
+            const varsB = this.comparePromptB?.variableDictJson || '{}';
             
             // 格式化JSON以便对比
             let formattedA = varsA;
@@ -4256,223 +7292,711 @@ var app = new Vue({
             return div.innerHTML;
         },
         
-        // ========== contenteditable编辑器方法 ==========
+        // ========== contenteditable编辑器方法（简洁版）==========
         
-        // 编辑器聚焦事件
-        onEditorFocus() {
-            this.isUserEditing = true;
-        },
-        
-        // 编辑器输入事件
-        onEditorInput(e) {
-            // 如果正在使用输入法，不处理
-            if (this.isComposing) return;
-            
+        // 获取编辑器中的纯文本
+        getEditorText() {
             const editor = this.$refs.promptEditor;
-            if (!editor) return;
-            
-            this.isUserEditing = true;
-            this.content = this.getPlainText(editor);
-            
-            // 使用防抖延迟更新高亮（避免打断输入）
-            if (this._highlightTimer) clearTimeout(this._highlightTimer);
-            this._highlightTimer = setTimeout(() => {
-                this.updateHighlightWithCaret();
-            }, 1500);  // 延长到1.5秒
+            if (!editor) return '';
+            return editor.innerText || '';
         },
         
-        // 编辑器按键松开事件
-        onEditorKeyup(e) {
-            // 如果正在使用输入法，不处理
-            if (this.isComposing) return;
+        // 生成带高亮的HTML
+        generateHighlightHTML(text) {
+            if (!text) return '';
             
-            // 使用防抖延迟高亮更新（1秒后更新，避免打断输入）
-            if (this._highlightTimer) clearTimeout(this._highlightTimer);
-            this._highlightTimer = setTimeout(() => {
-                this.updateHighlightWithCaret();
-            }, 1000);
-        },
-        
-        // 输入法结束事件
-        onCompositionEnd(e) {
-            this.isComposing = false;
-            const editor = this.$refs.promptEditor;
-            if (!editor) return;
+            // 获取前缀和后缀（从当前编辑的prompt参数）
+            const prefix = this.promptParamForm.prefix || '';
+            const suffix = this.promptParamForm.suffix || '';
             
-            this.isUserEditing = true;
-            this.content = this.getPlainText(editor);
+            // 调试日志
+            console.log('[generateHighlightHTML] prefix:', prefix, 'suffix:', suffix);
+            console.log('[generateHighlightHTML] variableList:', this.promptParamForm.variableList);
             
-            // 输入法结束后延迟更新高亮
-            setTimeout(() => {
-                this.updateHighlightWithCaret();
-            }, 100);
-        },
-        
-        // 编辑器失焦事件
-        onEditorBlur() {
-            // 清除定时器
-            if (this._highlightTimer) {
-                clearTimeout(this._highlightTimer);
-                this._highlightTimer = null;
+            if (!prefix || !suffix) {
+                // 没有前缀后缀，直接返回转义的HTML
+                console.log('[generateHighlightHTML] No prefix/suffix, returning plain text');
+                return text
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/\n/g, '<br>');
             }
             
-            this.isUserEditing = false;
-            const editor = this.$refs.promptEditor;
-            if (editor) {
-                this.content = this.getPlainText(editor);
-                // 失焦时更新高亮
-                this.updateHighlightWithCaret();
-            }
-            
-            this.promptChangeHandel(this.content, 'content');
-        },
-        
-        // 更新高亮并保存/恢复光标位置
-        updateHighlightWithCaret() {
-            const editor = this.$refs.promptEditor;
-            if (!editor) return;
-            
-            // 保存光标位置
-            const sel = window.getSelection();
-            let charOffset = 0;
-            if (sel.rangeCount > 0) {
-                const range = sel.getRangeAt(0);
-                const preCaretRange = range.cloneRange();
-                preCaretRange.selectNodeContents(editor);
-                preCaretRange.setEnd(range.endContainer, range.endOffset);
-                charOffset = preCaretRange.toString().length;
-            }
-            
-            // 重新渲染高亮HTML
-            editor.innerHTML = this.highlightedHTML;
-            
-            // 恢复光标位置
-            this.$nextTick(() => {
-                this.restoreCaret(editor, charOffset);
-                // 重新聚焦编辑器（如果之前有焦点）
-                if (this.isUserEditing && document.activeElement !== editor) {
-                    editor.focus();
-                }
-            });
-        },
-        
-        // 编辑器粘贴事件（只粘贴纯文本）
-        onEditorPaste(e) {
-            e.preventDefault();
-            const text = (e.clipboardData || window.clipboardData).getData('text/plain');
-            document.execCommand('insertText', false, text);
-        },
-        
-        // 从contenteditable元素提取纯文本
-        getPlainText(element) {
-            let text = '';
-            const blockElements = ['DIV', 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
-            
-            for (let i = 0; i < element.childNodes.length; i++) {
-                const node = element.childNodes[i];
-                
-                if (node.nodeType === Node.TEXT_NODE) {
-                    text += node.textContent;
-                } else if (node.nodeName === 'BR') {
-                    text += '\n';
-                } else if (node.nodeType === Node.ELEMENT_NODE) {
-                    // 块级元素前面（如果不是第一个元素）添加换行
-                    if (blockElements.includes(node.nodeName) && i > 0) {
-                        text += '\n';
+            // 获取所有已定义的变量名（不带前后缀）
+            const definedVarNames = new Set();
+            if (this.promptParamForm.variableList && this.promptParamForm.variableList.length > 0) {
+                this.promptParamForm.variableList.forEach(v => {
+                    if (v.name) {
+                        definedVarNames.add(v.name);
                     }
-                    
-                    // 递归处理子节点
-                    text += this.getPlainText(node);
-                }
+                });
             }
-            return text;
+            
+            console.log('[generateHighlightHTML] definedVarNames:', Array.from(definedVarNames));
+            
+            // 转义正则特殊字符
+            const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const escapedPrefix = escapeRegex(prefix);
+            const escapedSuffix = escapeRegex(suffix);
+            
+            // 构建正则：匹配 {{$varName}}，使用非贪婪匹配
+            // 例如：prefix={{$, suffix=}}, 正则为：\{\{\$(.+?)\}\}
+            const regex = new RegExp(`${escapedPrefix}(.+?)${escapedSuffix}`, 'g');
+            
+            console.log('[generateHighlightHTML] regex:', regex);
+            
+            let result = '';
+            let lastIndex = 0;
+            let matchCount = 0;
+            let match;
+            
+            // 使用 exec 逐个匹配
+            while ((match = regex.exec(text)) !== null) {
+                matchCount++;
+                const fullMatch = match[0];  // 完整匹配，如 {{$prefix}}
+                const varName = match[1];     // 捕获组，如 prefix
+                const offset = match.index;
+                
+                console.log(`[generateHighlightHTML] Match ${matchCount}:`, fullMatch, 'varName:', varName, 'offset:', offset);
+                
+                // 添加匹配前的文本（HTML转义并处理换行）
+                const beforeText = text.substring(lastIndex, offset);
+                // 处理换行：将换行符替换为 <br>
+                // 注意：不再移除 span 标签前的尾随空白字符，因为用户可能有意输入空格
+                let processedBeforeText = beforeText
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+                
+                // 将换行符替换为 <br>（保留所有空格和制表符，因为用户可能有意输入）
+                processedBeforeText = processedBeforeText.replace(/\n/g, '<br>');
+                result += processedBeforeText;
+                
+                // 判断变量是否已定义
+                const isDefined = definedVarNames.has(varName);
+                const className = isDefined ? 'var-highlight defined' : 'var-highlight undefined';
+                
+                console.log(`[generateHighlightHTML] varName "${varName}" isDefined:`, isDefined);
+                
+                // 添加高亮的变量（HTML转义，但不包含换行）
+                const escapedMatch = fullMatch
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+                // 确保 span 标签前后没有空白字符，直接拼接（不在 HTML 字符串中添加换行或空格）
+                result += `<span class="${className}">${escapedMatch}</span>`;
+                
+                lastIndex = offset + fullMatch.length;
+            }
+            
+            console.log('[generateHighlightHTML] Total matches:', matchCount);
+            
+            // 添加剩余文本（HTML转义并处理换行）
+            const remainingText = text.substring(lastIndex);
+            // 如果剩余文本开头有空白字符（空格、制表符等），先移除，避免在 span 后面产生空白
+            // 但保留换行符，因为需要转换为 <br>
+            let processedRemainingText = remainingText
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+            
+            // 移除开头的空白字符（但保留换行符）
+            processedRemainingText = processedRemainingText.replace(/^[ \t]+/, '');
+            // 将换行符替换为 <br>
+            processedRemainingText = processedRemainingText.replace(/\n/g, '<br>');
+            result += processedRemainingText;
+            
+            // 注意：不再清理 span 标签前后的空白字符（空格、制表符等）
+            // 因为用户可能在 span 前后输入空格，这些空格应该保留
+            // 清理函数 cleanupHighlightBrTags 会处理多余的空白文本节点
+            
+            console.log('[generateHighlightHTML] Final HTML (first 200 chars):', result.substring(0, 200));
+            
+            return result;
         },
         
-        // 恢复光标位置
-        restoreCaret(element, charOffset) {
-            const range = document.createRange();
-            const sel = window.getSelection();
-            let currentOffset = 0;
-            let found = false;
-            const blockElements = ['DIV', 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
+        // 转义正则表达式特殊字符
+        escapeRegex(str) {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        },
+        
+        // 保存光标位置（返回字符偏移量，基于纯文本）
+        // 使用与 restoreCaretPosition 完全相同的遍历逻辑，确保一致性
+        saveCaretPosition() {
+            const editor = this.$refs.promptEditor;
+            if (!editor) return 0;
             
-            const findPosition = (node, parentIndex = 0) => {
+            const sel = window.getSelection();
+            if (sel.rangeCount === 0) return 0;
+            
+            const range = sel.getRangeAt(0);
+            const targetContainer = range.startContainer;
+            const targetOffset = range.startOffset;
+            
+            let charCount = 0;
+            let found = false;
+            
+            // 使用与 restoreCaretPosition 完全相同的遍历逻辑
+            const walkNodes = (node) => {
                 if (found) return;
                 
-                for (let i = 0; i < node.childNodes.length; i++) {
-                    if (found) return;
-                    
-                    const child = node.childNodes[i];
-                    
-                    if (child.nodeType === Node.TEXT_NODE) {
-                        const nextOffset = currentOffset + child.length;
-                        if (charOffset >= currentOffset && charOffset <= nextOffset) {
-                            range.setStart(child, charOffset - currentOffset);
-                            range.collapse(true);
+                if (node.nodeType === Node.TEXT_NODE) {
+                    if (node === targetContainer) {
+                        // 找到了目标文本节点，加上偏移量
+                        charCount += targetOffset;
+                        found = true;
+                        return;
+                    }
+                    // 不是目标节点，加上整个节点的长度
+                    const nodeLength = node.textContent ? node.textContent.length : 0;
+                    charCount += nodeLength;
+                } else if (node.nodeName === 'BR') {
+                    // 检查光标是否在这个 BR 标签之后
+                    // 如果 targetContainer 是 BR 的父节点，且 targetOffset 指向这个 BR 之后
+                    if (targetContainer.nodeType === Node.ELEMENT_NODE && 
+                        targetContainer === node.parentNode &&
+                        targetOffset > 0) {
+                        // 检查 targetOffset 是否指向这个 BR 之后
+                        const brIndex = Array.from(targetContainer.childNodes).indexOf(node);
+                        if (targetOffset === brIndex + 1) {
+                            // 光标在这个 BR 标签之后
+                            charCount += 1;
                             found = true;
                             return;
                         }
-                        currentOffset = nextOffset;
-                    } else if (child.nodeName === 'BR') {
-                        // BR算作一个换行符
-                        if (charOffset === currentOffset) {
-                            range.setStartBefore(child);
-                            range.collapse(true);
-                            found = true;
-                            return;
+                    }
+                    // BR 标签算作一个字符（换行符）
+                    charCount += 1;
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    // 检查光标是否在这个元素节点的子节点之间
+                    if (node === targetContainer && targetOffset > 0) {
+                        // 光标在这个节点的子节点之间
+                        // 使用与 restoreCaretPosition 完全相同的遍历逻辑计算字符数
+                        for (let i = 0; i < targetOffset && i < node.childNodes.length; i++) {
+                            const childNode = node.childNodes[i];
+                            // 递归遍历子节点，使用相同的逻辑
+                            const countChildNodes = (child) => {
+                                if (child.nodeType === Node.TEXT_NODE) {
+                                    return child.textContent ? child.textContent.length : 0;
+                                } else if (child.nodeName === 'BR') {
+                                    return 1;
+                                } else if (child.nodeType === Node.ELEMENT_NODE) {
+                                    let count = 0;
+                                    for (let j = 0; j < child.childNodes.length; j++) {
+                                        count += countChildNodes(child.childNodes[j]);
+                                    }
+                                    return count;
+                                }
+                                return 0;
+                            };
+                            charCount += countChildNodes(childNode);
                         }
-                        currentOffset += 1;
-                    } else if (child.nodeType === Node.ELEMENT_NODE) {
-                        // 块级元素算作换行（如果不是第一个元素）
-                        if (blockElements.includes(child.nodeName) && i > 0) {
-                            if (charOffset === currentOffset) {
-                                range.setStartBefore(child);
-                                range.collapse(true);
-                                found = true;
-                                return;
-                            }
-                            currentOffset += 1;
-                        }
-                        
-                        // 递归处理子节点
-                        findPosition(child, i);
+                        found = true;
+                        return;
+                    }
+                    // 对于元素节点，递归遍历子节点
+                    for (let i = 0; i < node.childNodes.length; i++) {
+                        walkNodes(node.childNodes[i]);
+                        if (found) return;
                     }
                 }
             };
             
-            findPosition(element);
+            walkNodes(editor);
+            
+            console.log('[saveCaretPosition] Calculated position:', charCount, 'targetContainer:', targetContainer.nodeName, 'targetOffset:', targetOffset);
+            
+            return charCount;
+        },
+        
+        // 恢复光标位置（基于纯文本偏移量）
+        // 使用与 saveCaretPosition 完全相同的遍历逻辑，确保一致性
+        restoreCaretPosition(offset) {
+            const editor = this.$refs.promptEditor;
+            if (!editor) return;
+            
+            const sel = window.getSelection();
+            if (!sel) return;
+            
+            const range = document.createRange();
+            let charCount = 0;
+            let found = false;
+            
+            // 使用与 saveCaretPosition 完全相同的遍历逻辑
+            const walkNodes = (node) => {
+                if (found) return;
+                
+                if (node.nodeType === Node.TEXT_NODE) {
+                    const nodeText = node.textContent || '';
+                    const nodeLength = nodeText.length;
+                    const nextCharCount = charCount + nodeLength;
+                    
+                    if (offset >= charCount && offset <= nextCharCount) {
+                        // 光标在这个文本节点内
+                        const positionInNode = Math.min(offset - charCount, nodeLength);
+                        range.setStart(node, positionInNode);
+                        range.collapse(true);
+                        found = true;
+                        return;
+                    }
+                    charCount = nextCharCount;
+                } else if (node.nodeName === 'BR') {
+                    // BR 标签算作一个字符（换行符）
+                    const nextCharCount = charCount + 1;
+                    if (offset === charCount) {
+                        // 光标在 BR 标签之前
+                        range.setStartBefore(node);
+                        range.collapse(true);
+                        found = true;
+                        return;
+                    } else if (offset === nextCharCount) {
+                        // 光标在 BR 标签之后
+                        range.setStartAfter(node);
+                        range.collapse(true);
+                        found = true;
+                        return;
+                    }
+                    charCount = nextCharCount;
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    // 对于元素节点，递归遍历子节点
+                    // 注意：span 等内联元素不影响字符计数，只计算其内部的文本
+                    for (let i = 0; i < node.childNodes.length; i++) {
+                        walkNodes(node.childNodes[i]);
+                        if (found) return;
+                    }
+                }
+            };
+            
+            walkNodes(editor);
+            
+            console.log('[restoreCaretPosition] Looking for position:', offset, 'found:', found, 'charCount:', charCount);
             
             if (found) {
-                sel.removeAllRanges();
-                sel.addRange(range);
+                try {
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                    console.log('[restoreCaretPosition] Successfully restored to position:', offset);
+                } catch (e) {
+                    console.warn('[restoreCaretPosition] Failed to restore caret position:', e);
+                    // Fallback: 放在末尾
+                    try {
+                        range.selectNodeContents(editor);
+                        range.collapse(false);
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                    } catch (e2) {
+                        console.warn('[restoreCaretPosition] Fallback also failed:', e2);
+                    }
+                }
+            } else {
+                // 如果找不到精确位置，尝试将光标放在末尾
+                console.warn('[restoreCaretPosition] Could not find position', offset, ', placing at end');
+                try {
+                    range.selectNodeContents(editor);
+                    range.collapse(false); // 折叠到末尾
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                } catch (e) {
+                    console.warn('[restoreCaretPosition] Failed to place caret at end:', e);
+                }
             }
         },
         
+        // 处理粘贴事件
+        handlePaste(e) {
+            const editor = this.$refs.promptEditor;
+            if (!editor) return;
+            
+            // 标记正在粘贴
+            this._isPasting = true;
+            
+            // 清除之前的防抖定时器
+            if (this._highlightTimer) clearTimeout(this._highlightTimer);
+            
+            // 在粘贴前保存光标位置（使用与 saveCaretPosition 相同的方法）
+            const sel = window.getSelection();
+            let pasteStartPos = 0;
+            
+            if (sel.rangeCount > 0) {
+                // 使用与 saveCaretPosition 相同的遍历方法来计算位置
+                const range = sel.getRangeAt(0);
+                const targetContainer = range.startContainer;
+                const targetOffset = range.startOffset;
+                
+                let charCount = 0;
+                let found = false;
+                
+                // 使用与 saveCaretPosition 完全相同的遍历逻辑
+                const walkNodes = (node) => {
+                    if (found) return;
+                    
+                    if (node.nodeType === Node.TEXT_NODE) {
+                        if (node === targetContainer) {
+                            charCount += targetOffset;
+                            found = true;
+                            return;
+                        }
+                        const nodeLength = node.textContent ? node.textContent.length : 0;
+                        charCount += nodeLength;
+                    } else if (node.nodeName === 'BR') {
+                        if (targetContainer.nodeType === Node.ELEMENT_NODE && 
+                            targetContainer === node.parentNode &&
+                            targetOffset > 0) {
+                            const brIndex = Array.from(targetContainer.childNodes).indexOf(node);
+                            if (targetOffset === brIndex + 1) {
+                                charCount += 1;
+                                found = true;
+                                return;
+                            }
+                        }
+                        charCount += 1;
+                    } else if (node.nodeType === Node.ELEMENT_NODE) {
+                        if (node === targetContainer && targetOffset > 0) {
+                            for (let i = 0; i < targetOffset && i < node.childNodes.length; i++) {
+                                const childNode = node.childNodes[i];
+                                const countChildNodes = (child) => {
+                                    if (child.nodeType === Node.TEXT_NODE) {
+                                        return child.textContent ? child.textContent.length : 0;
+                                    } else if (child.nodeName === 'BR') {
+                                        return 1;
+                                    } else if (child.nodeType === Node.ELEMENT_NODE) {
+                                        let count = 0;
+                                        for (let j = 0; j < child.childNodes.length; j++) {
+                                            count += countChildNodes(child.childNodes[j]);
+                                        }
+                                        return count;
+                                    }
+                                    return 0;
+                                };
+                                charCount += countChildNodes(childNode);
+                            }
+                            found = true;
+                            return;
+                        }
+                        for (let i = 0; i < node.childNodes.length; i++) {
+                            walkNodes(node.childNodes[i]);
+                            if (found) return;
+                        }
+                    }
+                };
+                
+                walkNodes(editor);
+                pasteStartPos = charCount;
+                console.log('[handlePaste] Saved paste start position:', pasteStartPos);
+            }
+            
+            // 获取粘贴的纯文本内容
+            const pasteData = e.clipboardData ? e.clipboardData.getData('text/plain') : '';
+            const pasteTextLength = pasteData.length;
+            
+            console.log('[handlePaste] Paste data length:', pasteTextLength, 'pasteStartPos:', pasteStartPos);
+            
+            // 等待粘贴内容插入完成后再处理
+            // 使用 requestAnimationFrame 确保粘贴操作完全完成
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    this._isPasting = false;
+                    
+                    // 计算粘贴后的光标位置：粘贴开始位置 + 粘贴文本长度
+                    const newCaretPos = pasteStartPos + pasteTextLength;
+                    
+                    console.log('[handlePaste] Calculated new caret position:', newCaretPos);
+                    
+                    const text = this.getEditorText();
+                    
+                    // 检查内容是否真的发生了变化
+                    const contentChanged = text !== this.content;
+                    
+                    // 更新 content
+                    this.content = text;
+                    
+                    // 如果内容真的发生了变化，触发状态更新（从"连发"切换到"打靶"）
+                    if (contentChanged) {
+                        this.promptChangeHandel(text, 'content');
+                    }
+                    
+                    // 应用高亮，并传入预期的光标位置
+                    this.applyHighlightWithCaretPos(newCaretPos);
+                }, 10);
+            });
+        },
+        
+        // 处理键盘按键事件（特别是回车键）
+        handleKeyDown(e) {
+            // 如果是回车键，需要特殊处理
+            if (e.key === 'Enter' || e.keyCode === 13) {
+                const editor = this.$refs.promptEditor;
+                if (!editor) return;
+                
+                // 标记正在输入回车
+                this._isEntering = true;
+                
+                // 清除之前的防抖定时器
+                if (this._highlightTimer) clearTimeout(this._highlightTimer);
+                
+                // 在回车键插入 BR 标签之前，保存当前光标位置
+                const sel = window.getSelection();
+                let enterStartPos = 0;
+                
+                if (sel.rangeCount > 0) {
+                    // 使用与 saveCaretPosition 相同的方法计算位置
+                    enterStartPos = this.saveCaretPosition();
+                    console.log('[handleKeyDown] Enter key pressed, saved position before BR insertion:', enterStartPos);
+                }
+                
+                // 等待回车键插入 BR 标签完成后再处理
+                requestAnimationFrame(() => {
+                    setTimeout(() => {
+                        this._isEntering = false;
+                        
+                        // 回车后，光标应该在 BR 标签之后，位置应该是 enterStartPos + 1
+                        const newCaretPos = enterStartPos + 1;
+                        
+                        console.log('[handleKeyDown] After Enter, calculated new caret position:', newCaretPos);
+                        
+                        const text = this.getEditorText();
+                        
+                        // 检查内容是否真的发生了变化
+                        const contentChanged = text !== this.content;
+                        
+                        // 更新 content
+                        this.content = text;
+                        
+                        // 如果内容真的发生了变化，触发状态更新（从"连发"切换到"打靶"）
+                        if (contentChanged) {
+                            this.promptChangeHandel(text, 'content');
+                        }
+                        
+                        // 使用 applyHighlightWithCaretPos 来应用高亮并恢复光标位置
+                        this.applyHighlightWithCaretPos(newCaretPos);
+                    }, 10);
+                });
+            }
+        },
+        
+        // 用户输入时（立即更新高亮，使用短防抖优化性能）
+        handleEditorInput(e) {
+            if (this.isComposing) return;  // IME输入中不处理
+            if (this._isPasting) return;   // 粘贴操作中不处理，由 handlePaste 处理
+            if (this._isEntering) return;  // 回车操作中不处理，由 handleKeyDown 处理
+            
+            const text = this.getEditorText();
+            
+            // 检查内容是否真的发生了变化
+            const contentChanged = text !== this.content;
+            
+            // 更新 content
+            this.content = text;
+            
+            // 如果内容真的发生了变化，触发状态更新（从"连发"切换到"打靶"）
+            if (contentChanged) {
+                this.promptChangeHandel(text, 'content');
+            }
+            
+            // 使用较短的防抖时间（150ms）来平衡性能和响应性
+            // 这样用户输入、删除、剪切等操作时，高亮会立即更新
+            if (this._highlightTimer) clearTimeout(this._highlightTimer);
+            this._highlightTimer = setTimeout(() => {
+                this.applyHighlight();
+            }, 150);
+        },
+        
+        // 清理 var-highlight span 周围多余的 <br> 标签和空白文本节点，并规范化 DOM
+        cleanupHighlightBrTags(editor) {
+            if (!editor) return;
+            
+            console.log('[cleanupHighlightBrTags] Starting cleanup...');
+            
+            // 查找所有 var-highlight span 标签（使用 Array.from 创建副本，避免动态查询问题）
+            const highlightSpans = Array.from(editor.querySelectorAll('.var-highlight'));
+            
+            console.log('[cleanupHighlightBrTags] Found', highlightSpans.length, 'highlight spans');
+            
+            highlightSpans.forEach(span => {
+                // 清理 span 前面的空白文本节点
+                // 只移除完全空白的文本节点（不包含任何可见字符），保留包含用户输入空格的文本节点
+                let prevSibling = span.previousSibling;
+                while (prevSibling) {
+                    if (prevSibling.nodeType === Node.TEXT_NODE) {
+                        const textContent = prevSibling.textContent;
+                        // 只移除完全空白的文本节点（只包含空白字符且长度为0，或者是浏览器自动添加的空白）
+                        // 保留包含用户输入空格的文本节点（即使只有空格，也应该保留，因为用户可能有意输入空格）
+                        if (!textContent || textContent.length === 0) {
+                            // 完全空的文本节点，移除
+                            const toRemove = prevSibling;
+                            prevSibling = prevSibling.previousSibling;
+                            toRemove.remove();
+                        } else {
+                            // 有内容的文本节点，保留（包括只包含空格的节点，因为用户可能有意输入空格）
+                            break;
+                        }
+                    } else {
+                        // 其他类型的节点（包括 BR 标签），停止清理
+                        break;
+                    }
+                }
+                
+                // 清理 span 后面的空白文本节点
+                // 只移除完全空白的文本节点，保留包含用户输入空格的文本节点
+                let nextSibling = span.nextSibling;
+                while (nextSibling) {
+                    if (nextSibling.nodeType === Node.TEXT_NODE) {
+                        const textContent = nextSibling.textContent;
+                        // 只移除完全空白的文本节点
+                        // 保留包含用户输入空格的文本节点
+                        if (!textContent || textContent.length === 0) {
+                            // 完全空的文本节点，移除
+                            const toRemove = nextSibling;
+                            nextSibling = nextSibling.nextSibling;
+                            toRemove.remove();
+                        } else {
+                            // 有内容的文本节点，保留（包括只包含空格的节点，因为用户可能有意输入空格）
+                            break;
+                        }
+                    } else {
+                        // 遇到非文本节点（包括 BR 标签），停止清理
+                        // BR 标签是用户输入的换行，不应该被移除
+                        break;
+                    }
+                }
+            });
+            
+            // 规范化 DOM：合并相邻的文本节点
+            // 这可以确保 span 标签紧贴文本节点，没有中间的空白文本节点
+            editor.normalize();
+            
+            console.log('[cleanupHighlightBrTags] Cleanup completed. Editor innerHTML (first 300 chars):', editor.innerHTML.substring(0, 300));
+        },
+        
+        // 应用高亮（使用指定的光标位置，用于粘贴等操作）
+        applyHighlightWithCaretPos(expectedCaretPos) {
+            const editor = this.$refs.promptEditor;
+            if (!editor) return;
+            
+            // 获取当前文本
+            const text = this.getEditorText();
+            
+            // 同步 content（但不触发状态变化，因为状态变化应该在 handleEditorInput、handlePaste、handleKeyDown 中处理）
+            // 这里只负责高亮显示
+            this.content = text;
+            
+            // 生成高亮HTML
+            const html = this.generateHighlightHTML(text);
+            
+            // 更新HTML
+            editor.innerHTML = html;
+            
+            // 使用 requestAnimationFrame 确保 DOM 完全更新后再清理和恢复光标
+            requestAnimationFrame(() => {
+                // 清理多余的 <br> 标签和空白文本节点
+                this.cleanupHighlightBrTags(editor);
+                
+                // 使用 $nextTick 确保清理完成后再恢复光标
+                this.$nextTick(() => {
+                    // 使用 innerText 来计算文本长度，确保与 saveCaretPosition 一致
+                    const currentText = editor.innerText || '';
+                    const currentTextLength = currentText.length;
+                    const targetPos = Math.min(expectedCaretPos, currentTextLength);
+                    console.log('[applyHighlightWithCaretPos] Restoring caret position:', targetPos, 'expected:', expectedCaretPos, 'current text length:', currentTextLength);
+                    this.restoreCaretPosition(targetPos);
+                });
+            });
+            
+            // 注意：不再在这里调用 promptChangeHandel
+            // 内容变化的状态更新应该在 handleEditorInput、handlePaste、handleKeyDown 等实际输入事件中处理
+            // 这里只负责高亮显示
+        },
+        
+        // 应用高亮（保存光标位置）
+        applyHighlight() {
+            const editor = this.$refs.promptEditor;
+            if (!editor) return;
+            
+            // 检查编辑器是否有焦点
+            const hasFocus = document.activeElement === editor;
+            
+            // 获取当前文本（在保存光标位置之前获取，确保文本一致性）
+            const text = this.getEditorText();
+            
+            // 同步 content（但不触发状态变化，因为状态变化应该在 handleEditorInput 中处理）
+            // 这里只负责高亮显示
+            this.content = text;
+            
+            // 只有在编辑器有焦点时才保存光标位置
+            // 使用基于文本内容的方法，而不是 DOM 遍历，确保与恢复时一致
+            let caretPos = 0;
+            if (hasFocus) {
+                const sel = window.getSelection();
+                if (sel.rangeCount > 0) {
+                    const range = sel.getRangeAt(0);
+                    // 创建一个从编辑器开始到光标位置的 range
+                    const preCaretRange = range.cloneRange();
+                    preCaretRange.selectNodeContents(editor);
+                    preCaretRange.setEnd(range.startContainer, range.startOffset);
+                    // 使用 textContent 来计算位置（不包括 BR 标签，BR 标签会在遍历时单独计算）
+                    // 但我们需要考虑 BR 标签，所以使用遍历 DOM 的方法
+                    caretPos = this.saveCaretPosition();
+                }
+                console.log('[applyHighlight] Saved caret position:', caretPos, 'text length:', text.length);
+            }
+            
+            // 生成高亮HTML
+            const html = this.generateHighlightHTML(text);
+            
+            // 更新HTML
+            editor.innerHTML = html;
+            
+            // 使用 requestAnimationFrame 确保 DOM 完全更新后再清理和恢复光标
+            requestAnimationFrame(() => {
+                // 清理多余的 <br> 标签和空白文本节点
+                this.cleanupHighlightBrTags(editor);
+                
+                // 只有在编辑器有焦点时才恢复光标位置
+                if (hasFocus && caretPos > 0) {
+                    // 使用 $nextTick 确保清理完成后再恢复光标
+                    this.$nextTick(() => {
+                        // 恢复光标位置（使用相同的遍历逻辑）
+                        console.log('[applyHighlight] Restoring caret position:', caretPos);
+                        this.restoreCaretPosition(caretPos);
+                    });
+                }
+            });
+            
+            // 注意：不再在这里调用 promptChangeHandel
+            // 内容变化的状态更新应该在 handleEditorInput、handlePaste、handleKeyDown 等实际输入事件中处理
+            // 这里只负责高亮显示，避免在 blur 时误触发状态变化
+        },
+        
         // 辅助方法：根据ID获取名称
-        getTargetRangeName(id) {
-            if (!this.promptFieldOpt || !id) return '未知靶场';
-            const range = this.promptFieldOpt.find(item => item.value === id);
-            return range ? range.label : '未知靶场';
+        getTargetRangeName: function(id) {
+            // 使用 NameHelper 工具类
+            return window.PromptRangeUtils.NameHelper.getName(
+                this.promptFieldOpt, id, '未知靶场'
+            );
         },
         
-        getTargetLaneName(id) {
-            if (!this.promptOpt || !id) return '未知靶道';
-            // 从promptOpt中查找对应的靶道
-            const lane = this.promptOpt.find(item => item.idkey === id);
-            return lane ? (lane.nickName || lane.label) : '未知靶道';
+        getTargetLaneName: function(id) {
+            // 从promptOpt中查找对应的靶道（使用自定义字段名 idkey）
+            var lane = window.PromptRangeUtils.NameHelper.getOption(
+                this.promptOpt, id, 'idkey'
+            );
+            return lane ? (lane.nickName || lane.label || '未知靶道') : '未知靶道';
         },
         
-        getTacticalName(id) {
-            if (!this.tacticalOpt || !id) return '未知战术';
-            const tactical = this.tacticalOpt.find(item => item.value === id);
-            return tactical ? tactical.label : '未知战术';
+        getTacticalName: function(id) {
+            // 使用 NameHelper 工具类
+            return window.PromptRangeUtils.NameHelper.getName(
+                this.tacticalOpt, id, '未知战术'
+            );
         },
         
-        getModelName(id) {
-            if (!this.modelOpt || !id) return '未知模型';
-            const model = this.modelOpt.find(item => item.value === id);
-            return model ? model.label : '未知模型';
-        }
+        getModelName: function(id) {
+            // 使用 NameHelper 工具类
+            return window.PromptRangeUtils.NameHelper.getName(
+                this.modelOpt, id, '未知模型'
+            );
+        },
     }
 });
 

@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Senparc.CO2NET.WebApi;
 using Senparc.Xncf.Swagger.Filters;
 using Senparc.Xncf.Swagger.Utils;

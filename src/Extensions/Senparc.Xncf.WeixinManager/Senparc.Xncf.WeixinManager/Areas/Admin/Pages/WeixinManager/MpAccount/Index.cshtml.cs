@@ -29,7 +29,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
             var result = await _mpAccountService.GetObjectListAsync(pageIndex, pageCount, z => true, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
             MpAccountDtos = new PagedList<MpAccountDto>(result.Select(z => _mpAccountService.Mapper.Map<MpAccountDto>(z)).ToList(), result.PageIndex, result.PageCount, result.TotalCount);
 
-            //²âÊÔ£¬½«ÓÃ»§¼ÓÈëÄ³¸ö×é
+            //ï¿½ï¿½ï¿½Ô£ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Ä³ï¿½ï¿½ï¿½ï¿½
             //await Senparc.Weixin.MP.AdvancedAPIs.UserTagApi.BatchTaggingAsync(MpAccountDtos[0].AppId, 2, new System.Collections.Generic.List<string> { "oxRg0uLsnpHjb8o93uVnwMK_WAVw" });
         }
 
@@ -43,7 +43,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
             var result = await _mpAccountService.GetObjectListAsync(pageIndex, pageSize, z => true, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
             var mpAccountDtos = new PagedList<MpAccountDto>(result.Select(z => _mpAccountService.Mapper.Map<MpAccountDto>(z)).ToList(), result.PageIndex, result.PageCount, result.TotalCount);
             return Ok(new { mpAccountDtos.TotalCount, pageIndex, pageSize, list = mpAccountDtos.AsEnumerable() });
-            //²âÊÔ£¬½«ÓÃ»§¼ÓÈëÄ³¸ö×é
+            //ï¿½ï¿½ï¿½Ô£ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Ä³ï¿½ï¿½ï¿½ï¿½
             //await Senparc.Weixin.MP.AdvancedAPIs.UserTagApi.BatchTaggingAsync(MpAccountDtos[0].AppId, 2, new System.Collections.Generic.List<string> { "oxRg0uLsnpHjb8o93uVnwMK_WAVw" });
         }
 
@@ -55,7 +55,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
                 if (mpAccount != null)
                 {
                     await _mpAccountService.DeleteObjectAsync(mpAccount);
-                    await AccessTokenContainer.RemoveFromCacheAsync(mpAccount.AppId);//Çå³ý×¢²á×´Ì¬
+                    await AccessTokenContainer.RemoveFromCacheAsync(mpAccount.AppId);//ï¿½ï¿½ï¿½×¢ï¿½ï¿½×´Ì¬
                 }
             }
             return Ok(new { Uid });

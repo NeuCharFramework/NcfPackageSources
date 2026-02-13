@@ -33,7 +33,7 @@
 	<ItemGroup>
 		<!--<FrameworkReference Include="Microsoft.AspNetCore.App" />-->
 
-		<PackageReference Include="Dapr.AspNetCore" Version="1.12.0" />
+		<PackageReference Include="Dapr.AspNetCore" Version="1.17.0-rc01" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
@@ -72,7 +72,7 @@
 		<EmbeddedResource Remove="Domain\Models\DatabaseModel\Mapping\**" />
 		<None Remove="Domain\Dto\**" />
 		<None Remove="Domain\Models\DatabaseModel\Mapping\**" />-->
-		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">

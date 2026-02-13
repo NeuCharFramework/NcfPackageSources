@@ -108,6 +108,9 @@ namespace Senparc.Xncf.FileManager.Domain.Migrations.Oracle
                     b.Property<bool>("Flag")
                         .HasColumnType("NUMBER(1)");
 
+                    b.Property<int?>("FolderId")
+                        .HasColumnType("NUMBER(10)");
+
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TIMESTAMP(7)");
 
@@ -127,7 +130,55 @@ namespace Senparc.Xncf.FileManager.Domain.Migrations.Oracle
 
                     b.HasKey("Id");
 
-                    b.ToTable("NcfFiles");
+                    b.ToTable("Senparc_FileManager_NcfFile");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.NcfFolder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("NVARCHAR2(500)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("NVARCHAR2(200)");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Senparc_FileManager_NcfFolder");
                 });
 #pragma warning restore 612, 618
         }
