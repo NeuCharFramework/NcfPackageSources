@@ -41,36 +41,48 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
         /// <summary>
         /// 知识库Id
         /// </summary>
-        public int KnowledgeBasesId { get; set; }
+        public int KnowledgeBasesId { get; private set; }
         /// <summary>
         /// 内容类型
         /// </summary>
-        public ContentType ContentType { get; set; }
+        public ContentType ContentType { get; private set; }
         /// <summary>
         /// 内容
         /// </summary>
-        public string Content { get; set; }
+        public string Content { get; private set; }
 
         /// <summary>
         /// 源文件名称
         /// </summary>
         [MaxLength(500)]
-        public string FileName { get; set; }
+        public string FileName { get; private set; }
 
         /// <summary>
         /// 文本切片索引总数
         /// </summary>
-        public int ChunkIndex { get; set; }
+        public int ChunkIndex { get; private set; }
 
         /// <summary>
         /// 是否已向量化
         /// </summary>
-        public bool IsEmbedded { get; set; }
+        public bool IsEmbedded { get; private set; }
 
         /// <summary>
         /// 向量化时间
         /// </summary>
-        public DateTime? EmbeddedTime { get; set; }
+        public DateTime? EmbeddedTime { get; private set; }
+
+
+        /// <summary>
+        /// 向量化成功后调用，更新状态和时间戳
+        /// </summary>
+        public void EmbeddingSuccessed(int totalChunkIndex)
+        {
+            this.ChunkIndex = totalChunkIndex;
+            this.IsEmbedded = true;
+            this.EmbeddedTime = DateTime.Now;
+        }
+
 
     }
 

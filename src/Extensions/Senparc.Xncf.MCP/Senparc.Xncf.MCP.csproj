@@ -33,8 +33,8 @@
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.AI" Version="9.10.1" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
+    <PackageReference Include="Microsoft.Extensions.AI" Version="10.2.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
     <EmbeddedResource Include="wwwroot\**\*" />
     <PackageReference Include="ModelContextProtocol" Version="0.2.0-preview.3" />
     <PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.2.0-preview.3" />

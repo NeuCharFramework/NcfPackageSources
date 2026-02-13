@@ -84,7 +84,7 @@
   <ItemGroup>
     <EmbeddedResource Include="wwwroot\**\*" />
     <EmbeddedResource Include="App_Data\ApiDocXml\*" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
   </ItemGroup>
   <ItemGroup>
     <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />-->
@@ -95,7 +95,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>-->
-    <PackageReference Include="Senparc.AI.Kernel" Version="0.26.0-preview.1" />
+    <PackageReference Include="Senparc.AI.Kernel" Version="0.26.1-preview.1" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
     <!--<PackageReference Include="Senparc.Weixin.All" Version="2025.10.24" />-->
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.1" />-->

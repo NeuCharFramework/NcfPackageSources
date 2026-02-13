@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -62,11 +63,13 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         public async Task CreateOrUpdateAsync(KnowledgeBase_InsertDto dto)
         {
             KnowledgeBase.Models.DatabaseModel.KnowledgeBase knowledgeBase;
+
+            var vectorService = base.ServiceProvider.GetService<AIVectorService>();
+     
             if (dto.Id == 0)
             {
                 //新增
                 knowledgeBase = new KnowledgeBase.Models.DatabaseModel.KnowledgeBase(dto);
-
                 await SaveObjectAsync(knowledgeBase);
 
                 //增加文件
@@ -79,13 +82,8 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                         var fileBytesResult = await _ncfFileService.GetFileBytes(item.Id);
                         var content = Encoding.UTF8.GetString(fileBytesResult.FileBytes);
 
-                        var kbItem = new KnowledgeBaseItem
-                        {
-                            KnowledgeBasesId = knowledgeBase.Id,
-                            ContentType = ContentType.TextFile, // 0: Text
-                            Content = content,
-                            FileName = item.FileName
-                        };
+                        var knowledgeBaseItemDto = new KnowledgeBaseItemDto(0, knowledgeBase.Id, ContentType.TextFile, content, item.FileName);
+                        var kbItem = new KnowledgeBaseItem(knowledgeBaseItemDto);
                         knowledgeBaseItems.Add(kbItem);
                         await _knowledgeBaseDetailService.SaveObjectAsync(kbItem);
                     }
@@ -185,8 +183,9 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         /// 对知识库进行向量化（Embedding）
         /// </summary>
         /// <param name="knowledgeBaseId"></param>
+        /// <param name="tags">当前 Embedding 记录的 Tag</param>
         /// <returns></returns>
-        public async Task<string> EmbeddingKnowledgeBaseAsync(int knowledgeBaseId)
+        public async Task<string> EmbeddingKnowledgeBaseAsync(int knowledgeBaseId, params string[] tags)
         {
             var knowledgeBase = await base.GetObjectAsync(z => z.Id == knowledgeBaseId);
             if (knowledgeBase == null)
@@ -202,14 +201,22 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
 
             // 2. 获取AI Model配置
             var aiModelService = _serviceProvider.GetService<AIModelService>();
+            var aiVectorService = _serviceProvider.GetService<AIVectorService>();
             var aiModel = await aiModelService.GetObjectAsync(z => z.Id == knowledgeBase.EmbeddingModelId);
             if (aiModel == null)
             {
                 throw new NcfExceptionBase($"Embedding 模型 ID {knowledgeBase.EmbeddingModelId} 不存在。");
             }
 
+            var aiVector = await aiVectorService.GetObjectAsync(z => z.Id == knowledgeBase.VectorDBId);
+            if (aiVector == null)
+            {
+                throw new NcfExceptionBase($"Embedding 向量库 ID {knowledgeBase.VectorDBId} 不存在。");
+            }
+
             var aiModelDto = new AIModelDto(aiModel);
-            var senparcAiSetting = aiModelService.BuildSenparcAiSetting(aiModelDto);
+            var aiVectorDto = new AIVectorDto(aiVector);
+            //var senparcAiSetting = aiModelService.BuildSenparcAiSetting(aiModelDto, aiVectorDto);
 
             // 3. 获取待向量化的文本切片（未向量化的数据）
             var details = await _knowledgeBaseDetailService.GetFullListAsync(z =>
@@ -222,7 +229,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             }
             var embeddingAiModelDto = this._aIModelService.Mapper.Map<AIModelDto>(embeddingAiModel);
 
-            var embeddingAiSetting = this._aIModelService.BuildSenparcAiSetting(embeddingAiModelDto);
+            var embeddingAiSetting = this._aIModelService.BuildSenparcAiSetting(embeddingAiModelDto, aiVectorDto);
             //TODO:改成动态
             var embeddingModelName = embeddingAiSetting.AzureOpenAIKeys.ModelName.Embedding;
             // 4. 初始化 SemanticAiHandler
@@ -246,7 +253,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             int processedCount = 0;
             int successCount = 0;
             int failCount = 0;
-            string collectionName = $"KB_{knowledgeBaseId}";
+            string collectionName = $"{knowledgeBase.Name.Replace(" ", "_")}";
 
             //进行切片
             foreach (var detail in details)
@@ -272,7 +279,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             MemoryStore:
                 try
                 {
-                    var i = 0;
+                    var chunkIndex = 0;
                     var dt = SystemTime.Now;
                     var vectorCollection = iWantToRunEmbedding.GetVectorCollection<ulong, Record>(embeddingAiSetting.VectorDB, vectorName);
                     await vectorCollection.EnsureCollectionExistsAsync();
@@ -280,15 +287,15 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                     {
                         try
                         {
-                            var currentI = i++;
+                            var currentIndex = chunkIndex++;
                             var descriptionEmbedding = await iWantToRunEmbedding.SemanticKernelHelper.GetEmbeddingAsync(embeddingModelName, paragraph);
                             var record = new Record()
                             {
-                                Id = (ulong)i,
-                                Name = vectorName + "-paragraph-" + i,
+                                Id = (ulong)chunkIndex,
+                                Name = vectorName + "-paragraph-" + chunkIndex,
                                 Description = paragraph,
                                 DescriptionEmbedding = descriptionEmbedding,
-                                Tags = new[] { i.ToString() }
+                                Tags = tags ?? Array.Empty<string>()
                             };
 
                             await vectorCollection.UpsertAsync(record);
@@ -297,17 +304,20 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                         {
                             throw;
                         }
-                     
+
                     }
 
                     //测试
-                    ReadOnlyMemory<float> searchVector = await iWantToRunEmbedding.SemanticKernelHelper.GetEmbeddingAsync(embeddingModelName, "什么是NCF？");
+                    //ReadOnlyMemory<float> searchVector = await iWantToRunEmbedding.SemanticKernelHelper.GetEmbeddingAsync(embeddingModelName, "什么是NCF？");
 
-                    var vectorResult = vectorCollection.SearchAsync(searchVector, 3);
-                    await foreach (var item in vectorResult)
-                    {
-                        Console.WriteLine($"得到结果：{item.Record.ToJson(true)}");
-                    }
+                    //var vectorResult = vectorCollection.SearchAsync(searchVector, 3);
+                    //await foreach (var item in vectorResult)
+                    //{
+                    //    Console.WriteLine($"得到结果：{item.Record.ToJson(true)}");
+                    //}
+
+                    detail.EmbeddingSuccessed(chunkIndex);
+                    await _knowledgeBaseDetailService.SaveObjectAsync(detail);
                 }
                 catch (Exception ex)
                 {
@@ -326,6 +336,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             ////iWantToRunChat
             //var result = await embeddingAiHandler.ChatAsync(iWantToRunEmbedding, "");
             //await Console.Out.WriteLineAsync(result.OutputString);
+
 
             return $"知识库 '{knowledgeBase.Name}' 向量化完成！\n" +
                    $"总计: {processedCount} 个切片\n" +
