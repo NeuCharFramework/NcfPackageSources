@@ -65,7 +65,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             KnowledgeBase.Models.DatabaseModel.KnowledgeBase knowledgeBase;
 
             var vectorService = base.ServiceProvider.GetService<AIVectorService>();
-     
+
             if (dto.Id == 0)
             {
                 //新增
@@ -275,7 +275,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                          256);
 #pragma warning restore SKEXP0050 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
 
-                var vectorName = $"{knowledgeBase.Name}-{knowledgeBase.Id}";
+                var vectorName = collectionName; //$"{knowledgeBase.Name}-{knowledgeBase.Id}";
             MemoryStore:
                 try
                 {
@@ -283,19 +283,34 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                     var dt = SystemTime.Now;
                     var vectorCollection = iWantToRunEmbedding.GetVectorCollection<ulong, Record>(embeddingAiSetting.VectorDB, vectorName);
                     await vectorCollection.EnsureCollectionExistsAsync();
+
+                    var fileName = detail.FileName;
+                    List<string> tagList = new List<string>();
+                    if (tags != null && tags.Length > 0)
+                    {
+                        tagList.AddRange(tags);
+                    }
+
+                    if (!fileName.IsNullOrEmpty())
+                    {
+                        tagList.Add(Path.GetFileNameWithoutExtension(fileName));
+                    }
+
                     foreach (var paragraph in paragraphs)
                     {
                         try
                         {
                             var currentIndex = chunkIndex++;
                             var descriptionEmbedding = await iWantToRunEmbedding.SemanticKernelHelper.GetEmbeddingAsync(embeddingModelName, paragraph);
+
+
                             var record = new Record()
                             {
                                 Id = (ulong)chunkIndex,
                                 Name = vectorName + "-paragraph-" + chunkIndex,
                                 Description = paragraph,
                                 DescriptionEmbedding = descriptionEmbedding,
-                                Tags = tags ?? Array.Empty<string>()
+                                Tags = tagList.ToArray()
                             };
 
                             await vectorCollection.UpsertAsync(record);
