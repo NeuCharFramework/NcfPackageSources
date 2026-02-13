@@ -75,12 +75,14 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <param name="aiModel"></param>
         /// <returns></returns>
         /// <exception cref="NcfExceptionBase"></exception>
-        public SenparcAiSetting BuildSenparcAiSetting(AIModelDto aiModel)
+        public SenparcAiSetting BuildSenparcAiSetting(AIModelDto aiModel, AIVectorDto aIVectorDto = null)
         {
-            var aiSettings = new SenparcAiSetting
+            SenparcAiSetting aiSettings = new SenparcAiSetting
             {
                 AiPlatform = aiModel.AiPlatform
             };
+
+            #region AI Model
 
             Func<ModelName> GetModelName = () =>
             {
@@ -179,7 +181,18 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 default:
                     throw new NcfExceptionBase($"Senparc.Xncf.AIKernel 暂时不支持 {aiSettings.AiPlatform} 类型");
             }
+            #endregion
 
+            #region VectorDB
+            if (aIVectorDto != null)
+            {
+                aiSettings.VectorDB = new AI.Interfaces.VectorDB()
+                {
+                    Type = aIVectorDto.VectorDBType,
+                    ConnectionString = aIVectorDto.ConnectionString
+                };
+            }
+            #endregion
 
             return aiSettings;
         }
@@ -190,7 +203,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <param name="senparcAiSetting"></param>
         /// <param name="prompt"></param>
         /// <returns></returns>
-        public async Task<SenparcKernelAiResult<string>> RunModelsync(SenparcAiSetting senparcAiSetting, string prompt, string systemMessage, string promptTemplate, PromptConfigParameter promptConfigParameter=null)
+        public async Task<SenparcKernelAiResult<string>> RunModelsync(SenparcAiSetting senparcAiSetting, string prompt, string systemMessage, string promptTemplate, PromptConfigParameter promptConfigParameter = null)
         {
             if (senparcAiSetting == null)
             {

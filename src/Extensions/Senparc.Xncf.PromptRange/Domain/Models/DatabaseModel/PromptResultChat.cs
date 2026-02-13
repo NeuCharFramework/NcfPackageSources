@@ -124,10 +124,3 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         Assistant = 2
     }
 }
-
-
-
-
-
-
-

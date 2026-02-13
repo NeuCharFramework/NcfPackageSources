@@ -90,8 +90,14 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                     }
 
                     //添加当前解决方案的项目选项
-                    var projectList = FunctionHelper.LoadXncfProjects(false,"Senparc.Areas.Admin");
-                    projectList.ForEach(z => ProjectPath.Items.Add(z));
+                    var projectList = FunctionHelper.LoadXncfProjects(false, null, "Senparc.Areas.Admin");
+                    projectList.OrderBy(z=>z.Value).ToList().ForEach(z => ProjectPath.Items.Add(z));
+
+                    //添加 NcfPackageSource 项目的解决方案的项目选项
+                    var sourceRootDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..", "..", "..", "src");
+                    Console.WriteLine("查找 Source 项目源文件根目录：" + sourceRootDir);
+                    var sourceProjectList = FunctionHelper.LoadXncfProjects(false, sourceRootDir, "Senparc.Areas.Admin");
+                    sourceProjectList.OrderBy(z => z.Value).ToList().ForEach(z => ProjectPath.Items.Add(z));
                 }
             }
             catch

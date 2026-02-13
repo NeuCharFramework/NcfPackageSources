@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.12.22.3-preview</Version>
+    <Version>0.12.23-preview.1</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -64,7 +64,7 @@
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.AI.Kernel" Version="0.26.0-preview.1" />
+    <PackageReference Include="Senparc.AI.Kernel" Version="0.26.1-preview.1" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
@@ -102,7 +102,7 @@
     <Content Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <EmbeddedResource Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <None Remove="Domain\Models\DatabaseModel\Mapping\**" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.10" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
     <PackageReference Include="Senparc.NeuChar.App" Version="1.5.6" />
   </ItemGroup>
   <ItemGroup>

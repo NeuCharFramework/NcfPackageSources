@@ -28,7 +28,7 @@ namespace Senparc.Xncf.KnowledgeBase
 
         public override string Uid => "CEAFC442-EE03-42EA-AD54-E607AD0C03A9";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.1.8";//必须填写版本号
+        public override string Version => "0.1.10";//必须填写版本号
 
         public override string MenuName => "AI 知识库";
 
@@ -89,6 +89,8 @@ namespace Senparc.Xncf.KnowledgeBase
         }
     }
 }
+
+
 
 
 

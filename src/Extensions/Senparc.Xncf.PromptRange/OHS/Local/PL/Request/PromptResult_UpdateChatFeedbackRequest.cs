@@ -19,10 +19,3 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         public bool? Feedback { get; set; }
     }
 }
-
-
-
-
-
-
-

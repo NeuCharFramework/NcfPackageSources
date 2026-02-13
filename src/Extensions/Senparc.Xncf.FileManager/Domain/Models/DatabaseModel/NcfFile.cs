@@ -7,7 +7,7 @@ namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel
 {
     //[Table(Register.DATABASE_PREFIX + nameof(NcfFile))]//必须添加前缀，防止全系统中发生冲突
 
-    [Table(name: "NcfFiles")]
+    [Table(Register.DATABASE_PREFIX + nameof(NcfFile))]//必须添加前缀，防止全系统中发生冲突
     public class NcfFile : EntityBase<int>
     {
         [Required]
@@ -45,19 +45,4 @@ namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel
         Other = 999
     }
 
-    // 新增文件夹实体
-    [Table(name: "NcfFolders")]
-    public class NcfFolder : EntityBase<int>
-    {
-        [Required]
-        [MaxLength(200)]
-        public string Name { get; set; }
-
-        public int? ParentId { get; set; } // 父级文件夹，null 为根
-
-        [MaxLength(500)]
-        public string Description { get; set; }
-
-        public DateTime CreateTime { get; set; } = DateTime.UtcNow;
-    }
 }

@@ -67,7 +67,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.SqlServer
                     b.ToTable("Senparc_KnowledgeBase_Color");
                 });
 
-            modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBases", b =>
+            modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBase", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -112,10 +112,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.SqlServer
 
                     b.HasKey("Id");
 
-                    b.ToTable("Senparc_KnowledgeBase_KnowledgeBases");
+                    b.ToTable("Senparc_KnowledgeBase_KnowledgeBase");
                 });
 
-            modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBasesDetail", b =>
+            modelBuilder.Entity("Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.KnowledgeBaseItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -167,7 +167,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.SqlServer
 
                     b.HasKey("Id");
 
-                    b.ToTable("Senparc_KnowledgeBase_KnowledgeBasesDetail");
+                    b.ToTable("Senparc_KnowledgeBase_KnowledgeBaseItem");
                 });
 #pragma warning restore 612, 618
         }

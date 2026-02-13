@@ -11,42 +11,41 @@ using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Utility;
 using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
 using Senparc.Xncf.KnowledgeBase.Services;
+using Senparc.Xncf.KnowledgeBase.Domain.Services;
 
-namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBases
+namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBase
 {
     public class IndexModel : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {
-        private readonly KnowledgeBasesService _knowledgeBasesService;
+        private readonly KnowledgeBaseService _knowledgeBaseService;
         private readonly IServiceProvider _serviceProvider;
-        public KnowledgeBasesDto knowledgeBasesDto { get; set; }
+        public KnowledgeBaseDto knowledgeBaseDto { get; set; }
         public string Token { get; set; }
         public string UpFileUrl { get; set; }
         public string BaseUrl { get; set; }
 
-        public IndexModel(Lazy<XncfModuleService> xncfModuleService, KnowledgeBasesService knowledgeBasesService, IServiceProvider serviceProvider) : base(xncfModuleService)
+        public IndexModel(Lazy<XncfModuleService> xncfModuleService, KnowledgeBaseService knowledgeBaseService, IServiceProvider serviceProvider) : base(xncfModuleService)
         {
-            CurrentMenu = "KnowledgeBases";
-            this._knowledgeBasesService = knowledgeBasesService;
+            CurrentMenu = "KnowledgeBase";
+            this._knowledgeBaseService = knowledgeBaseService;
             this._serviceProvider = serviceProvider;
         }
 
         [BindProperty(SupportsGet = true)]
         public int PageIndex { get; set; } = 1;
-        public PagedList<Models.DatabaseModel.KnowledgeBases> KnowledgeBases { get; set; }
+        public PagedList<Models.DatabaseModel.KnowledgeBase> KnowledgeBase { get; set; }
 
         public Task OnGetAsync()
         {
-            BaseUrl = $"{Request.Scheme}://{Request.Host.Value}";
-            UpFileUrl = $"{BaseUrl}/api/v1/common/upload";
             return Task.CompletedTask;
         }
 
         public async Task<IActionResult> OnGetKnowledgeBasesAsync(string keyword, string orderField, int pageIndex, int pageSize)
         {
-            var seh = new SenparcExpressionHelper<Models.DatabaseModel.KnowledgeBases>();
+            var seh = new SenparcExpressionHelper<Models.DatabaseModel.KnowledgeBase>();
             //seh.ValueCompare.AndAlso(!string.IsNullOrEmpty(keyword), _ => _.Name.Contains(keyword));
             var where = seh.BuildWhereExpression();
-            var response = await _knowledgeBasesService.GetObjectListAsync(pageIndex, pageSize, where, orderField);
+            var response = await _knowledgeBaseService.GetObjectListAsync(pageIndex, pageSize, where, orderField);
             return Ok(new
                     {
                         response.TotalCount,

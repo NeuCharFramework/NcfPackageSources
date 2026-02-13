@@ -13,8 +13,8 @@ namespace Senparc.Xncf.KnowledgeBase.Models
         }
 
         public DbSet<Color> Colors { get; set; }
-        public DbSet<KnowledgeBases> KnowledgeBases { get; set; }
-        public DbSet<KnowledgeBasesDetail> KnowledgeBasesDetails { get; set; }
+        public DbSet<DatabaseModel.KnowledgeBase> KnowledgeBases { get; set; }
+        public DbSet<KnowledgeBaseItem> KnowledgeBasesItems { get; set; }
 
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }

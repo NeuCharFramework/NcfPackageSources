@@ -1,12 +1,12 @@
 @page
-@model Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBases.IndexModel
+@model Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBase.IndexModel
 @{
     ViewData["Title"] = "知识库管理列表页面";
     Layout = "_Layout_Vue";
 }
 
 @section Style {
-    <link href="~/css/KnowledgeBase/KnowledgeBases/KnowledgeBases.css" rel="stylesheet" />
+    <link href="~/css/KnowledgeBase/KnowledgeBase/KnowledgeBase.css" rel="stylesheet" />
 }
 
 @section breadcrumbs {
@@ -20,13 +20,6 @@
         <el-row class="filter-condition" :gutter="8">
             <el-col :span="2"></el-col>
             <el-col :span="5"><el-input v-model="keyword" placeholder="请输入关键字" size="mini"></el-input></el-col>
-
-            <el-col :span="5"><el-input v-model="keyword" placeholder="请输入关键字" size="mini"></el-input></el-col>
-
-            <el-col :span="5"><el-input v-model="keyword" placeholder="请输入关键字" size="mini"></el-input></el-col>
-
-            <el-col :span="5"><el-input v-model="keyword" placeholder="请输入关键字" size="mini"></el-input></el-col>
-
             <el-col :span="2" class="operator_button">
                 <el-button type="primary" size="mini" @@click="handleSearch()">查询</el-button>
                 <el-button type="primary" size="mini" @@click="resetCondition()">重置</el-button>
@@ -154,9 +147,9 @@
                 </el-form-item>
 
                 <el-upload class="upload-demo"
-                           ref="upload"
-                           action="#"
-                           :auto-upload="false"
+                           ref="uploadRef"
+                           action="/api/Senparc.Xncf.KnowledgeBase/CommonService/Xncf.KnowledgeBase_CommonService.UploadAsync"
+                           :auto-upload="true"
                            :multiple="true"
                            :show-file-list="true"
                            :on-success="uploadSuccess"
@@ -255,5 +248,5 @@
 </div>
 @section scripts
 {
-    <script src="~/js/KnowledgeBase/Pages/KnowledgeBases/knowledgeBases.js"></script>
+    <script src="~/js/KnowledgeBase/Pages/KnowledgeBase/knowledgeBase.js"></script>
 }
