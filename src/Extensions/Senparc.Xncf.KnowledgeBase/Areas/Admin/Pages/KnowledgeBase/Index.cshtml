@@ -145,22 +145,6 @@
                 <el-form-item label="内容" prop="content">
                     <el-input type="textarea" size="mini" v-model="dialog.data.content" clearable placeholder="请输入内容" />
                 </el-form-item>
-
-                <el-upload class="upload-demo"
-                           ref="uploadRef"
-                           action="/api/Senparc.Xncf.KnowledgeBase/CommonService/Xncf.KnowledgeBase_CommonService.UploadAsync"
-                           :auto-upload="true"
-                           :multiple="true"
-                           :show-file-list="true"
-                           :on-success="uploadSuccess"
-                           :on-error="uploadError"
-                           @* :on-change="handleFileChange" *@
-                           @* :on-progress="handleProgress" *@
-                           @* :before-upload="beforeUpload" *@
-                           :file-list="fileList">
-                    <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
-                    <div slot="tip" class="el-upload__tip">可以选择多个文件同时上传</div>
-                </el-upload>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button size="mini" @@click="dialog.visible=false">取消</el-button>
@@ -190,15 +174,14 @@
                             <div class="groupFMB">
                                 <div class="df-wn flex-ac flex-jsb" style="gap: 10px;margin-bottom: 10px;">
                                     <div class="df-wn flex-ac" style="gap: 10px;">
-                                        <el-input v-model="groupAgentQueryList.filter" size="small"
-                                                  placeholder="请填写" style="width:auto;"></el-input>
+                                        <el-input v-model="fileQueryList.filter" size="small"
+                                                  placeholder="文件名称" style="width:auto;"></el-input>
                                         <el-button size="small" icon="el-icon-search"
-                                                   @@click="handleFilterChange(groupAgentQueryList.filter,'groupAgent')">搜索</el-button>
+                                                   @@click="handleConfigFileSearch">搜索</el-button>
                                         <div class="groupFMB_filter_addBtn" @@click="handleElVisibleOpenBtn('dialogFile')">
                                             新建文件
                                         </div>
                                     </div>
-                                    
                                 </div>
                                 <div class="df-wn flex-as flex-js" style="gap: 10px;margin-bottom: 10px;">
                                     <span class="groupFMB_ma_label">已选择:</span>
@@ -215,18 +198,25 @@
                                 </div>
                                 <el-table ref="groupAgentTable" key="groupAgentTable" :data="fileList" max-height="447"
                                           style="width: 100%;margin-bottom: 10px;border: 1px solid rgba(229, 229, 229, 1);"
-                                          @@selection-change="handleSelectionChange">
+                                          @@selection-change="handleConfigFileSelectionChange">
                                     <el-table-column type="selection" width="30"></el-table-column>
                                     <el-table-column prop="fileName" label="文件名" width="130"
                                                      show-overflow-tooltip></el-table-column>
                                     <el-table-column prop="fileSize" label="文件大小" width="100">
                                     </el-table-column>
-                                    <el-table-column prop="description" label="描述" min-width="100">
+                                    <el-table-column label="上传时间" width="150" align="center">
+                                        <template slot-scope="scope">
+                                            {{ formaTableTime(scope.row.uploadTime) }}
+                                        </template>
                                     </el-table-column>
-                                    <el-table-column fixed="right" label="操作" width="100">
+                              @*       <el-table-column prop="description" label="描述" min-width="100">
+                                    </el-table-column> *@
+                                    <el-table-column fixed="right" label="操作" width="180">
                                         <template slot-scope="{ row }">
                                             <el-button type="primary" size="small"
                                                        @@click="handleEditDrawerOpenBtn('dialogGroupAgent',row)">编辑</el-button>
+                                            <el-button type="danger" size="small"
+                                                       @@click="handleConfigFileDelete(row)">删除</el-button>
                                         </template>
                                     </el-table-column>
                                 </el-table>
@@ -244,6 +234,29 @@
                 </div>
             </div>
         </el-drawer>
+
+        @* 配置页内「新建文件」上传弹框：选择文件后调用上传接口写入 FileManage，保存时与知识库关联 *@
+        <el-dialog title="新建文件"
+                   :visible.sync="visible.dialogFile"
+                   width="480px"
+                   :close-on-click-modal="false"
+                   @@close="handleDialogFileClose">
+            <el-upload class="upload-demo"
+                       ref="configUploadRef"
+                       action="/api/Senparc.Xncf.KnowledgeBase/CommonService/Xncf.KnowledgeBase_CommonService.UploadAsync"
+                       :auto-upload="true"
+                       :multiple="true"
+                       :show-file-list="true"
+                       :on-success="configUploadSuccess"
+                       :on-error="configUploadError"
+                       :file-list="configUploadFileList">
+                <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
+                <div slot="tip" class="el-upload__tip">选择文件后将上传至文件管理，并可在下方文件列表中勾选后与当前知识库关联</div>
+            </el-upload>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="mini" @@click="visible.dialogFile = false">关闭</el-button>
+            </div>
+        </el-dialog>
     </div>
 </div>
 @section scripts

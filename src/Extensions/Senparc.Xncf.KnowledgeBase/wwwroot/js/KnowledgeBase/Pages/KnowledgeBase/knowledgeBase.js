@@ -11,7 +11,9 @@ new Vue({
             // 显隐 visible
             visible: {
                 drawerGroup: false, // 组 新增|编辑
+                dialogFile: false,   // 配置抽屉内「新建文件」上传弹框
             },
+            configUploadFileList: [], // 新建文件弹框内的上传列表（仅展示用，关闭时清空）
             form:
             {
                 content: ''
@@ -252,6 +254,37 @@ new Vue({
                 message: '上传失败，请重新上传'
             });
         },
+        // 配置抽屉「新建文件」弹框：上传成功后将文件写入 FileManage，并加入当前已选列表、刷新文件列表并勾选新文件
+        async configUploadSuccess(res, file, fileList) {
+            const that = this;
+            const ok = (res && (res.stateCode === 0 || res.success === true));
+            const fileId = res && res.data != null ? res.data : null;
+            if (ok && fileId != null) {
+                const id = typeof fileId === 'number' ? fileId : parseInt(fileId, 10);
+                if (!isNaN(id)) {
+                    that.groupForm.files = that.groupForm.files || [];
+                    that.groupForm.files.push({ id: id, name: file.name || file.fileName || '' });
+                }
+                await that.getFileListData('file');
+                that.$nextTick(() => {
+                    const row = that.fileList.find(i => i.id === id);
+                    if (row) that.toggleSelection(that.groupForm.files.map(f => that.fileList.find(i => i.id === f.id)).filter(Boolean));
+                });
+                that.$notify({ title: '成功', message: '文件已上传至文件管理', type: 'success' });
+            } else {
+                that.$notify.error({ title: '失败', message: (res && res.errorMessage) || '上传失败，请重试' });
+            }
+            that.$nextTick(() => {
+                if (that.$refs.configUploadRef) that.$refs.configUploadRef.clearFiles();
+            });
+        },
+        configUploadError() {
+            this.$notify.error({ title: '失败', message: '上传失败，请重新上传' });
+        },
+        handleDialogFileClose() {
+            this.configUploadFileList = [];
+            if (this.$refs.configUploadRef) this.$refs.configUploadRef.clearFiles();
+        },
         async getEmbeddingModelList() {
             //debugger
             let that = this
@@ -382,14 +415,10 @@ new Vue({
                 log('categoryData', res, 2);
             });
         },
-        // 编辑 // 新增知识库管理 // 增加下一级
+        // 编辑 // 新增知识库管理（文件在配置中上传，此处不再使用文件列表）
         handleEdit(index, row, flag) {
             let that = this;
-            //销毁
             that.dialog.visible = false;
-            //清空文件列表
-            that.fileList = [];
-            //重建
             that.$nextTick(() => {
                 that.dialog.visible = true;
             });
@@ -454,44 +483,37 @@ new Vue({
                 }
             }
         },
-        // 保存 submitForm 数据
+        // 保存 submitForm 数据（配置抽屉确认：将选中的文件与知识库关联并写入 KnowledgeBaseItem）
         async saveSubmitFormData(saveType, serviceForm = {}) {
-            //debugger
-            let serviceURL = ''
-            // 组 新增|编辑
+            const that = this;
             if (saveType === 'drawerGroup') {
-                // 调用新的批量导入文件 API
-                serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.ImportFilesToKnowledgeBase'
-
-                // 从表单中提取选中的文件 ID 列表
+                const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.ImportFilesToKnowledgeBase';
                 const selectedFiles = serviceForm.files || [];
-                const fileIds = selectedFiles.map(file => file.id);
+                const fileIds = selectedFiles.map(f => (typeof f.id === 'number' ? f.id : parseInt(f.id, 10))).filter(id => !isNaN(id));
 
-                // 构建请求数据
+                if (fileIds.length === 0) {
+                    that.$notify({ title: '提示', message: '请至少选择一个文件后再保存', type: 'warning', duration: 2000 });
+                    return;
+                }
+
                 const requestData = {
-                    knowledgeBaseId: serviceForm.knowledgeBasesId,
+                    knowledgeBaseId: parseInt(serviceForm.knowledgeBasesId, 10),
                     fileIds: fileIds
                 };
 
                 try {
-                    service.post(serviceURL, requestData).then(res => {
-                        //debugger
-                        that.$notify({
-                            title: "Success",
-                            message: "文件导入成功",
-                            type: "success",
-                            duration: 2000
-                        });
+                    const res = await service.post(serviceURL, requestData);
+                    const success = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)));
+                    if (success) {
+                        that.$notify({ title: '成功', message: '文件已关联到知识库并写入条目', type: 'success', duration: 2000 });
                         that.visible.drawerGroup = false;
-                    });
+                        that.getList();
+                    } else {
+                        that.$notify({ title: '失败', message: (res && res.message) || (res && res.data && res.data.errorMessage) || '文件导入失败', type: 'error', duration: 3000 });
+                    }
                 } catch (err) {
                     console.error('Request Error:', err);
-                    that.$notify({
-                        title: "Error",
-                        message: "文件导入失败: " + err.message,
-                        type: "error",
-                        duration: 3000
-                    });
+                    that.$notify({ title: '错误', message: '文件导入失败: ' + (err.message || err), type: 'error', duration: 3000 });
                 }
             }
         },
@@ -522,25 +544,12 @@ new Vue({
                 }
             }
         },
-        // 更新新增、编辑
+        // 更新新增、编辑（文件改为在「配置」中上传并关联，此处不再传文件）
         updateData() {
-            let that = this
+            let that = this;
             that.dialog.updateLoading = true;
             that.$refs['dataForm'].validate(valid => {
-                //that.editorData = that.$refs['bodyEditor'].editor.getData()
-                //that.dialog.data.body = that.$refs['bodyEditor'].editor.getData();
-                //debugger
-                console.log(`filelist -- ${JSON.stringify(that.fileList)}`)
-
-                // 遍历fileList，提取response.data并用逗号连接
-                let files = that.fileList
-                    .map(item => parseInt(item.response?.data))
-                    .filter(data => data !== undefined && data !== null);
-                //.join(',');
-
-                // 表单校验
                 if (valid) {
-                    that.dialog.updateLoading = true;
                     let data = {
                         id: that.dialog.data.id || 0,
                         embeddingModelId: parseInt(that.dialog.data.embeddingModelId) || 0,
@@ -548,7 +557,7 @@ new Vue({
                         chatModelId: parseInt(that.dialog.data.chatModelId) || 0,
                         name: that.dialog.data.name,
                         content: that.dialog.data.content || '',
-                        NcfFileIds: files
+                        NcfFileIds: []
                     };
                     console.log('保存知识库数据：' + JSON.stringify(data));
                     service.post("/Admin/KnowledgeBase/Edit?handler=Save", data).then(res => {
@@ -613,6 +622,13 @@ new Vue({
                 //console.log(`that.newsId----${that.newsId}`);
             }
         },
+        // 配置抽屉内「文件列表」表格勾选变化：同步到 groupForm.files，保存时用于关联知识库
+        handleConfigFileSelectionChange(val) {
+            this.groupForm.files = (val || []).map(r => ({
+                id: r.id,
+                name: r.fileName != null ? r.fileName : (r.name || '')
+            }));
+        },
         handleDbClick(row, column, event) {
             let that = this
             //that.multipleSelection = val;
@@ -633,6 +649,33 @@ new Vue({
                 this.groupAgentQueryList.filter = value
                 this.getAgentListData('groupAgent', 1)
             }
+        },
+        // 配置页文件列表：按文件名称搜索（调用接口过滤）
+        handleConfigFileSearch() {
+            this.getFileListData('file')
+        },
+        // 配置页文件列表：删除文件（删除数据库与物理文件，并刷新列表与已选）
+        handleConfigFileDelete(row) {
+            const that = this
+            that.$confirm(`确认删除文件「${row.fileName || row.name}」吗？删除后数据库与物理文件均会移除。`, '删除确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                const url = '/api/Senparc.Xncf.FileManager/FileTemplateAppService/Xncf.FileManager_FileTemplateAppService.DeleteFile'
+                service.post(url, { id: row.id }).then(res => {
+                    const ok = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)))
+                    if (ok) {
+                        that.$notify({ title: '成功', message: '文件已删除', type: 'success' })
+                        that.groupForm.files = (that.groupForm.files || []).filter(f => f.id !== row.id)
+                        that.getFileListData('file')
+                    } else {
+                        that.$notify({ title: '失败', message: (res && res.message) || (res && res.data && res.data.errorMessage) || '删除失败', type: 'error' })
+                    }
+                }).catch(err => {
+                    that.$notify({ title: '错误', message: '删除失败: ' + (err.message || err), type: 'error' })
+                })
+            }).catch(() => {})
         },
         getCurrentRow(row) {
             let that = this
@@ -750,12 +793,11 @@ new Vue({
         handleElVisibleOpenBtn(btnType, item) {
             let visibleKey = btnType
             if (btnType === 'drawerGroup') {
-                //this.getAgentListData('groupAgent')
                 visibleKey = 'drawerGroup'
-                //设置
                 this.groupForm.knowledgeBasesId = item?.id ?? ''
+                // 打开配置抽屉时刷新文件列表，保证数据最新
+                this.getFileListData('file')
             }
-            //新建文件
             if (btnType === 'dialogFile') {
                 visibleKey = 'dialogFile'
             }
@@ -821,13 +863,18 @@ new Vue({
                 }
             });
         },
-        // 组 新增|编辑 智能体 成员取消选中
+        // 配置抽屉「已选择」文件列表中移除某一项，并同步表格勾选
         groupMembersCancel(item, index) {
-            this.groupForm.members.splice(index, 1);
-            const findIndex = this.groupAgentList.findIndex(i => item.id === i.id)
-            if (findIndex !== -1) {
-                this.toggleSelection([this.groupAgentList[findIndex]])
-            }
+            this.groupForm.files.splice(index, 1);
+            this.$nextTick(() => {
+                const tbl = this.$refs.groupAgentTable;
+                if (!tbl) return;
+                tbl.clearSelection();
+                this.groupForm.files.forEach(f => {
+                    const row = this.fileList.find(i => i.id === f.id);
+                    if (row) tbl.toggleRowSelection(row, true);
+                });
+            });
         },
         // 编辑 Dailog|抽屉 按钮 
         async handleEditDrawerOpenBtn(btnType, item) {

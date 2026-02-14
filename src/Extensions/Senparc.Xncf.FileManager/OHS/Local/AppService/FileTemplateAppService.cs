@@ -1,4 +1,4 @@
-﻿using Senparc.CO2NET;
+using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
@@ -97,6 +97,19 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
                     List = listDto
                 };
                 return result;
+            });
+        }
+
+        /// <summary>
+        /// 删除文件（同时删除数据库记录与物理文件）
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<bool>> DeleteFile(DeleteFileRequest request)
+        {
+            return await this.GetResponseAsync<bool>(async (response, logger) =>
+            {
+                await fileService.DeleteFileAsync(request.Id);
+                return true;
             });
         }
     }
