@@ -178,7 +178,7 @@ new Vue({
         that.getEmbeddingModelList();
         that.getVectorDBList();
         that.getChatModelList();
-        debugger
+        //debugger
         // 获取文件数据
         that.getFileListData('file');
 
@@ -229,7 +229,7 @@ new Vue({
             let that = this;
             // 上传成功
             that.fileList = fileList;
-            debugger
+            //debugger
             if (res.stateCode == 0) {
                 that.$notify({
                     title: '成功',
@@ -253,7 +253,7 @@ new Vue({
             });
         },
         async getEmbeddingModelList() {
-            debugger
+            //debugger
             let that = this
             let param = {
                 page: that.page.page,
@@ -300,7 +300,7 @@ new Vue({
             // 接口对接
             await axios.get(`/api/Senparc.Xncf.FileManager/FileTemplateAppService/Xncf.FileManager_FileTemplateAppService.GetList?${getInterfaceQueryStr(queryList)}`)
                 .then(res => {
-                    debugger
+                    //debugger
                     const data = res?.data ?? {}
                     if (data.success) {
                         const fileData = data?.data?.list ?? []
@@ -456,7 +456,7 @@ new Vue({
         },
         // 保存 submitForm 数据
         async saveSubmitFormData(saveType, serviceForm = {}) {
-            debugger
+            //debugger
             let serviceURL = ''
             // 组 新增|编辑
             if (saveType === 'drawerGroup') {
@@ -475,7 +475,7 @@ new Vue({
 
                 try {
                     service.post(serviceURL, requestData).then(res => {
-                        debugger
+                        //debugger
                         that.$notify({
                             title: "Success",
                             message: "文件导入成功",
@@ -529,7 +529,7 @@ new Vue({
             that.$refs['dataForm'].validate(valid => {
                 //that.editorData = that.$refs['bodyEditor'].editor.getData()
                 //that.dialog.data.body = that.$refs['bodyEditor'].editor.getData();
-                debugger
+                //debugger
                 console.log(`filelist -- ${JSON.stringify(that.fileList)}`)
 
                 // 遍历fileList，提取response.data并用逗号连接
@@ -552,9 +552,10 @@ new Vue({
                     };
                     console.log('保存知识库数据：' + JSON.stringify(data));
                     service.post("/Admin/KnowledgeBase/Edit?handler=Save", data).then(res => {
-                        console.log('保存响应：', res);
+                      console.log('保存响应：', res);
+                        debugger
                         // res.data 是后端返回的对象：{success: true, data: true, msg: "保存成功"}
-                        if (res.data && res.data.success && res.data.data === true) {
+                        if (res.data && res.data.data.success && res.data.data.data === true) {
                             that.getList();
                             that.$notify({
                                 title: "成功",
@@ -808,11 +809,11 @@ new Vue({
             if (!refName) return
             this.$refs[refName].validate((valid) => {
                 if (valid) {
-                    debugger
+                    //debugger
                     const submitForm = this[formName] ?? {}
                     //提交数据给后端
                     this.saveSubmitFormData(btnType, submitForm)
-                    debugger
+                    //debugger
                     // this.visible[btnType] = false
                 } else {
                     console.log('error submit!!');
