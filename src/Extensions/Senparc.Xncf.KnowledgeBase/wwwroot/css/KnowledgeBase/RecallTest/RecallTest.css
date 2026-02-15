@@ -1,0 +1,68 @@
+.recall-test-page {
+    padding: 0;
+}
+
+.recall-test-page .admin-role {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.recall-test-card {
+    margin-bottom: 16px;
+}
+
+.recall-test-card .clearfix::after {
+    content: '';
+    display: table;
+    clear: both;
+}
+
+.recall-test-card .box-card .el-card__header {
+    padding: 12px 20px;
+    font-weight: 600;
+}
+
+.recall-test-card .el-radio-group {
+    margin-bottom: 0;
+}
+
+.attr-tag-list {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #ebeef5;
+}
+
+.attr-tag-list .list-block {
+    margin-bottom: 8px;
+}
+
+.attr-tag-list .list-block:last-child {
+    margin-bottom: 0;
+}
+
+.attr-tag-list .list-label {
+    display: inline-block;
+    min-width: 80px;
+    color: #606266;
+    font-size: 13px;
+}
+
+.attr-tag-list .el-tag {
+    margin-right: 8px;
+    margin-bottom: 4px;
+}
+
+.recall-test-page .empty-result {
+    text-align: center;
+    color: #909399;
+    padding: 24px 0;
+    font-size: 14px;
+}
+
+.recall-test-page .el-dialog .danger {
+    color: #f56c6c;
+}
+
+.recall-test-page .el-dialog .el-form-item {
+    margin-bottom: 12px;
+}

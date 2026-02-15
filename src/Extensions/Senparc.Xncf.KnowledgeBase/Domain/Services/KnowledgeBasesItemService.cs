@@ -25,6 +25,15 @@ namespace Senparc.Xncf.KnowledgeBase.Services
             return selectListItems;
         }
 
+        /// <summary>
+        /// 根据知识库ID获取关联的 KnowledgeBaseItem 列表（用于配置页回显）
+        /// </summary>
+        public async Task<IEnumerable<KnowledgeBaseItemDto>> GetListByKnowledgeBaseIdAsync(int knowledgeBaseId)
+        {
+            var list = await GetFullListAsync(_ => _.KnowledgeBasesId == knowledgeBaseId).ConfigureAwait(false);
+            return Mapper.Map<List<KnowledgeBaseItemDto>>(list.OrderBy(_ => _.ChunkIndex).ThenBy(_ => _.AddTime));
+        }
+
         public async Task CreateOrUpdateAsync(KnowledgeBaseItemDto dto)
         {
             KnowledgeBaseItem knowledgeBasesDetail;
