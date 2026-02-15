@@ -169,6 +169,7 @@ new Vue({
             },
             fileListTotal: 0, // 文件列表总条数，用于分页
             fileList: [], // 配置页文件列表
+            fileNamesToSelect: [], // 打开配置时待选中的文件名（从 KnowledgeBaseItem 回显用）
         }
     },
     created: function () {
@@ -364,6 +365,52 @@ new Vue({
             this.fileQueryList.pageIndex = 1
             this.getFileListData('file')
         },
+        // 打开配置时：根据当前知识库拉取 KnowledgeBaseItem 关联项，回填文件选中或内容
+        async loadConfigKnowledgeBaseItems(knowledgeBaseId) {
+            const that = this
+            if (!knowledgeBaseId) {
+                that.getFileListData('file')
+                return
+            }
+            const url = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseItemAppService/Xncf.KnowledgeBase_KnowledgeBaseItemAppService.GetListByKnowledgeBaseId'
+            try {
+                const res = await axios.get(`${url}?knowledgeBaseId=${knowledgeBaseId}`)
+                const data = res?.data ?? {}
+                const list = (data.success && data.data) ? (Array.isArray(data.data) ? data.data : []) : []
+                if (list.length === 0) {
+                    that.getFileListData('file')
+                    return
+                }
+                const hasFileType = list.some(i => i.contentType === 100 || i.contentType === 200 || i.contentType === 300 || i.contentType === 400)
+                if (hasFileType) {
+                    const fileNames = [...new Set(list.filter(i => i.fileName).map(i => i.fileName))]
+                    that.groupForm.contentType = 2
+                    that.groupForm.files = []
+                    that.fileNamesToSelect = fileNames
+                    that.fileQueryList.pageSize = 9999
+                    that.fileQueryList.pageIndex = 1
+                    await that.getFileListData('file')
+                    that.$nextTick(() => {
+                        if (that.fileNamesToSelect.length && that.fileList.length) {
+                            const matched = that.fileList.filter(f => that.fileNamesToSelect.includes(f.fileName))
+                            that.groupForm.files = matched.map(f => ({ id: f.id, name: f.fileName }))
+                            that.toggleSelection(matched)
+                        }
+                        that.fileNamesToSelect = []
+                        that.fileQueryList.pageSize = 10
+                        that.getFileListData('file')
+                    })
+                } else {
+                    that.groupForm.contentType = (list.length && list[0].contentType === 0) ? 1 : 1
+                    that.groupForm.content = list.map(i => i.content).filter(Boolean).join('\n\n') || ''
+                    that.groupForm.files = []
+                    that.getFileListData('file')
+                }
+            } catch (e) {
+                console.error(e)
+                that.getFileListData('file')
+            }
+        },
         // 获取列表
         async getList() {
             let that = this
@@ -478,37 +525,46 @@ new Vue({
                 }
             }
         },
-        // 保存 submitForm 数据（配置抽屉确认：将选中的文件与知识库关联并写入 KnowledgeBaseItem）
+        // 保存 submitForm 数据（配置抽屉确认：内容类型为文件时导入选中文件，否则不校验文件）
         async saveSubmitFormData(saveType, serviceForm = {}) {
             const that = this;
             if (saveType === 'drawerGroup') {
-                const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.ImportFilesToKnowledgeBase';
-                const selectedFiles = serviceForm.files || [];
-                const fileIds = selectedFiles.map(f => (typeof f.id === 'number' ? f.id : parseInt(f.id, 10))).filter(id => !isNaN(id));
+                const contentType = serviceForm.contentType;
+                const isFileType = contentType === 2; // 2=文件
 
-                if (fileIds.length === 0) {
-                    that.$notify({ title: '提示', message: '请至少选择一个文件后再保存', type: 'warning', duration: 2000 });
-                    return;
-                }
+                if (isFileType) {
+                    const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.ImportFilesToKnowledgeBase';
+                    const selectedFiles = serviceForm.files || [];
+                    const fileIds = selectedFiles.map(f => (typeof f.id === 'number' ? f.id : parseInt(f.id, 10))).filter(id => !isNaN(id));
 
-                const requestData = {
-                    knowledgeBaseId: parseInt(serviceForm.knowledgeBasesId, 10),
-                    fileIds: fileIds
-                };
-
-                try {
-                    const res = await service.post(serviceURL, requestData);
-                    const success = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)));
-                    if (success) {
-                        that.$notify({ title: '成功', message: '文件已关联到知识库并写入条目', type: 'success', duration: 2000 });
-                        that.visible.drawerGroup = false;
-                        that.getList();
-                    } else {
-                        that.$notify({ title: '失败', message: (res && res.message) || (res && res.data && res.data.errorMessage) || '文件导入失败', type: 'error', duration: 3000 });
+                    if (fileIds.length === 0) {
+                        that.$notify({ title: '提示', message: '请至少选择一个文件后再保存', type: 'warning', duration: 2000 });
+                        return;
                     }
-                } catch (err) {
-                    console.error('Request Error:', err);
-                    that.$notify({ title: '错误', message: '文件导入失败: ' + (err.message || err), type: 'error', duration: 3000 });
+
+                    const requestData = {
+                        knowledgeBaseId: parseInt(serviceForm.knowledgeBasesId, 10),
+                        fileIds: fileIds
+                    };
+
+                    try {
+                        const res = await service.post(serviceURL, requestData);
+                        const success = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)));
+                        if (success) {
+                            that.$notify({ title: '成功', message: '文件已关联到知识库并写入条目', type: 'success', duration: 2000 });
+                            that.visible.drawerGroup = false;
+                            that.getList();
+                        } else {
+                            that.$notify({ title: '失败', message: (res && res.message) || (res && res.data && res.data.errorMessage) || '文件导入失败', type: 'error', duration: 3000 });
+                        }
+                    } catch (err) {
+                        console.error('Request Error:', err);
+                        that.$notify({ title: '错误', message: '文件导入失败: ' + (err.message || err), type: 'error', duration: 3000 });
+                    }
+                } else {
+                    // 内容类型为「输入」或「采集外部数据」时，不校验文件，直接关闭
+                    that.$notify({ title: '成功', message: '已保存', type: 'success', duration: 2000 });
+                    that.visible.drawerGroup = false;
                 }
             }
         },
@@ -822,12 +878,16 @@ new Vue({
         },
         // Dailog|抽屉 打开 按钮
         handleElVisibleOpenBtn(btnType, item) {
+            const that = this
             let visibleKey = btnType
             if (btnType === 'drawerGroup') {
                 visibleKey = 'drawerGroup'
-                this.groupForm.knowledgeBasesId = item?.id ?? ''
-                this.fileQueryList.pageIndex = 1
-                this.getFileListData('file')
+                that.groupForm.knowledgeBasesId = item?.id ?? ''
+                that.fileQueryList.pageIndex = 1
+                that.fileNamesToSelect = []
+                that.visible[visibleKey] = true
+                that.loadConfigKnowledgeBaseItems(item?.id)
+                return
             }
             if (btnType === 'dialogFile') {
                 visibleKey = 'dialogFile'
