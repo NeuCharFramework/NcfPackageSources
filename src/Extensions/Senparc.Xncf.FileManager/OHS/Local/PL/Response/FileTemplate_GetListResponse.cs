@@ -1,4 +1,4 @@
-﻿using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.Dto;
 using System;
@@ -12,5 +12,7 @@ namespace Senparc.Xncf.FileManager.OHS.Local.PL.Response
     public class FileTemplate_GetListResponse
     {
         public PagedList<NcfFileDto> List { get; set; }
+        public int TotalCount { get; set; }
+        public int PageIndex { get; set; }
     }
 }

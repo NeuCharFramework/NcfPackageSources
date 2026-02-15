@@ -178,9 +178,14 @@
                                                   placeholder="文件名称" style="width:auto;"></el-input>
                                         <el-button size="small" icon="el-icon-search"
                                                    @@click="handleConfigFileSearch">搜索</el-button>
-                                        <div class="groupFMB_filter_addBtn" @@click="handleElVisibleOpenBtn('dialogFile')">
-                                            新建文件
-                                        </div>
+                                    </div>
+                                </div>
+                                <div class="df-wn flex-ac flex-jsb" style="gap: 10px;margin-bottom: 10px;">
+                                    <div class="df-wn flex-ac" style="gap: 10px;">
+                                        <el-button size="small" type="primary" icon="el-icon-upload2"
+                                                   @@click="handleElVisibleOpenBtn('dialogFile')">上传文件</el-button>
+                                        <el-button size="small" type="danger" icon="el-icon-delete"
+                                                   @@click="handleConfigFileBatchDelete">批量删除</el-button>
                                     </div>
                                 </div>
                                 <div class="df-wn flex-as flex-js" style="gap: 10px;margin-bottom: 10px;">
@@ -196,11 +201,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <el-table ref="groupAgentTable" key="groupAgentTable" :data="fileList" max-height="447"
+                                <el-table ref="groupAgentTable" key="groupAgentTable" :data="fileList" max-height="380"
                                           style="width: 100%;margin-bottom: 10px;border: 1px solid rgba(229, 229, 229, 1);"
                                           @@selection-change="handleConfigFileSelectionChange">
                                     <el-table-column type="selection" width="30"></el-table-column>
-                                    <el-table-column prop="fileName" label="文件名" width="130"
+                                    <el-table-column prop="fileName" label="文件名" width="180"
                                                      show-overflow-tooltip></el-table-column>
                                     <el-table-column prop="fileSize" label="文件大小" width="100">
                                     </el-table-column>
@@ -211,15 +216,26 @@
                                     </el-table-column>
                               @*       <el-table-column prop="description" label="描述" min-width="100">
                                     </el-table-column> *@
-                                    <el-table-column fixed="right" label="操作" width="180">
+                                    <el-table-column fixed="right" label="操作" width="130">
                                         <template slot-scope="{ row }">
-                                            <el-button type="primary" size="small"
-                                                       @@click="handleEditDrawerOpenBtn('dialogGroupAgent',row)">编辑</el-button>
+                                            @* <el-button type="primary" size="small"
+                                                       @@click="handleEditDrawerOpenBtn('dialogGroupAgent',row)">编辑</el-button> *@
                                             <el-button type="danger" size="small"
                                                        @@click="handleConfigFileDelete(row)">删除</el-button>
                                         </template>
                                     </el-table-column>
                                 </el-table>
+                                <div class="df-wn flex-ac flex-jsb" style="margin-top:10px;flex-wrap:wrap;gap:8px;">
+                                    <span class="el-pagination__total" style="margin-right:12px;">当前选中 {{ groupForm.files.length }} 行</span>
+                                    <el-pagination :current-page.sync="fileQueryList.pageIndex"
+                                                   :page-size="fileQueryList.pageSize"
+                                                   :page-sizes="[10, 20, 50]"
+                                                   :total="fileListTotal"
+                                                   layout="total, sizes, prev, pager, next, jumper"
+                                                   @@size-change="handleConfigFileSizeChange"
+                                                   @@current-change="handleConfigFilePageChange">
+                                    </el-pagination>
+                                </div>
                             </div>
                         </el-form-item>
                         <el-form-item label="内容">

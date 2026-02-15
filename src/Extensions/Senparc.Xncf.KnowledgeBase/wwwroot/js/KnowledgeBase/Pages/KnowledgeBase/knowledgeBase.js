@@ -161,17 +161,14 @@ new Vue({
                 stand: false, // 待命
             },
             groupAgentList: [], // 组新增时的智能体列表
-            // 组 新增|编辑 智能体
+            // 配置页文件列表查询与分页
             fileQueryList: {
-                pageIndex: 0,
-                pageSize: 0,
-                filter: '', // 筛选文本
-                timeSort: false, // 默认降序
-                proce: false, // 进行中
-                stop: false, // 停用
-                stand: false, // 待命
+                pageIndex: 1,
+                pageSize: 10,
+                filter: '', // 文件名称筛选
             },
-            fileList: [], // 组新增时的智能体列表
+            fileListTotal: 0, // 文件列表总条数，用于分页
+            fileList: [], // 配置页文件列表
         }
     },
     created: function () {
@@ -323,51 +320,49 @@ new Vue({
                     that.chatModelData = res.data.data.data;
                 })
         },
-        // 获取 文件 数据
-        async getFileListData(listType, page = 0) {
+        // 获取 文件 数据（支持分页与筛选）
+        async getFileListData(listType, page) {
+            const that = this
+            if (listType === 'file') {
+                if (page != null) that.fileQueryList.pageIndex = page
+            }
             const queryList = {}
             if (listType === 'file') {
-                this.fileQueryList.pageIndex = page ?? 1
-                Object.assign(queryList, this.fileQueryList)
+                Object.assign(queryList, that.fileQueryList)
             }
-            // 接口对接
             await axios.get(`/api/Senparc.Xncf.FileManager/FileTemplateAppService/Xncf.FileManager_FileTemplateAppService.GetList?${getInterfaceQueryStr(queryList)}`)
                 .then(res => {
-                    //debugger
                     const data = res?.data ?? {}
                     if (data.success) {
-                        const fileData = data?.data?.list ?? []
+                        const payload = data?.data ?? {}
+                        const fileData = payload.list ?? []
                         if (listType === 'file') {
-                            this.$set(this, 'fileList', fileData)
-                            // 确保更新数据时 不会清空选中
-                            this.$nextTick(() => {
-                                this.isGetGroupAgent = false
+                            that.$set(that, 'fileList', fileData)
+                            that.fileListTotal = payload.totalCount ?? 0
+                            that.$nextTick(() => {
+                                if (that.visible.drawerGroup && that.groupForm.files.length > 0) {
+                                    const filterList = fileData.filter(i => that.groupForm.files.some(item => item.id === i.id))
+                                    that.toggleSelection(filterList)
+                                }
                             })
-                            // 组成员table 初始选中
-                            if (this.visible.drawerGroup && this.groupForm.files.length > 0) {
-                                // this.toggleSelection()
-                                this.$nextTick(() => {
-                                    // this.groupAgentTotal = agentData.length
-                                    const filterList = fileData.filter(i => {
-                                        return this.groupForm.files.findIndex(item => item.id === i.id) !== -1
-                                    })
-                                    this.toggleSelection(filterList)
-                                })
-
-                            }
                         }
                     } else {
-                        app.$message({
-                            message: data.errorMessage || data.data || 'Error',
-                            type: 'error',
-                            duration: 5 * 1000
-                        })
-                        this.isGetGroupAgent = false
+                        app.$message({ message: data.errorMessage || data.data || 'Error', type: 'error', duration: 5 * 1000 })
                     }
                 }).catch((err) => {
                     console.log('err', err)
-                    this.isGetGroupAgent = false
                 })
+        },
+        // 配置页文件列表：页码变化（首页/上一页/下一页/尾页/跳转）
+        handleConfigFilePageChange(page) {
+            this.fileQueryList.pageIndex = page
+            this.getFileListData('file')
+        },
+        // 配置页文件列表：每页条数变化
+        handleConfigFileSizeChange(size) {
+            this.fileQueryList.pageSize = size
+            this.fileQueryList.pageIndex = 1
+            this.getFileListData('file')
         },
         // 获取列表
         async getList() {
@@ -650,8 +645,9 @@ new Vue({
                 this.getAgentListData('groupAgent', 1)
             }
         },
-        // 配置页文件列表：按文件名称搜索（调用接口过滤）
+        // 配置页文件列表：按文件名称搜索（调用接口过滤，并回到第一页）
         handleConfigFileSearch() {
+            this.fileQueryList.pageIndex = 1
             this.getFileListData('file')
         },
         // 配置页文件列表：删除文件（删除数据库与物理文件，并刷新列表与已选）
@@ -662,20 +658,55 @@ new Vue({
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                const url = '/api/Senparc.Xncf.FileManager/FileTemplateAppService/Xncf.FileManager_FileTemplateAppService.DeleteFile'
-                service.post(url, { id: row.id }).then(res => {
-                    const ok = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)))
+                that.doDeleteFileById(row.id).then(ok => {
                     if (ok) {
-                        that.$notify({ title: '成功', message: '文件已删除', type: 'success' })
                         that.groupForm.files = (that.groupForm.files || []).filter(f => f.id !== row.id)
                         that.getFileListData('file')
-                    } else {
-                        that.$notify({ title: '失败', message: (res && res.message) || (res && res.data && res.data.errorMessage) || '删除失败', type: 'error' })
                     }
-                }).catch(err => {
-                    that.$notify({ title: '错误', message: '删除失败: ' + (err.message || err), type: 'error' })
                 })
             }).catch(() => {})
+        },
+        // 配置页文件列表：批量删除（删除当前选中的多行，并同步数据库与物理文件）
+        handleConfigFileBatchDelete() {
+            const that = this
+            const selected = (that.groupForm.files || []).slice()
+            if (selected.length === 0) {
+                that.$message.warning('请先勾选需要删除的文件')
+                return
+            }
+            that.$confirm(`确认删除已选中的 ${selected.length} 个文件吗？删除后数据库与物理文件均会移除。`, '批量删除确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                const deleteUrl = '/api/Senparc.Xncf.FileManager/FileTemplateAppService/Xncf.FileManager_FileTemplateAppService.DeleteFile'
+                const promises = selected.map(f => service.post(deleteUrl, { id: f.id }).then(res => {
+                    const ok = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)))
+                    return !!ok
+                }).catch(() => false))
+                Promise.all(promises).then(results => {
+                    const successCount = results.filter(Boolean).length
+                    that.groupForm.files = []
+                    that.getFileListData('file')
+                    that.$notify({
+                        title: successCount === selected.length ? '成功' : '部分完成',
+                        message: `已删除 ${successCount}/${selected.length} 个文件`,
+                        type: successCount === selected.length ? 'success' : 'warning'
+                    })
+                })
+            }).catch(() => {})
+        },
+        doDeleteFileById(id) {
+            const url = '/api/Senparc.Xncf.FileManager/FileTemplateAppService/Xncf.FileManager_FileTemplateAppService.DeleteFile'
+            return service.post(url, { id: id }).then(res => {
+                const ok = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)))
+                if (ok) this.$notify({ title: '成功', message: '文件已删除', type: 'success' })
+                else this.$notify({ title: '失败', message: (res && res.data && res.data.errorMessage) || '删除失败', type: 'error' })
+                return ok
+            }).catch(err => {
+                this.$notify({ title: '错误', message: '删除失败: ' + (err.message || err), type: 'error' })
+                return false
+            })
         },
         getCurrentRow(row) {
             let that = this
@@ -795,7 +826,7 @@ new Vue({
             if (btnType === 'drawerGroup') {
                 visibleKey = 'drawerGroup'
                 this.groupForm.knowledgeBasesId = item?.id ?? ''
-                // 打开配置抽屉时刷新文件列表，保证数据最新
+                this.fileQueryList.pageIndex = 1
                 this.getFileListData('file')
             }
             if (btnType === 'dialogFile') {

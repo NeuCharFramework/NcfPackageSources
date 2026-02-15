@@ -94,7 +94,9 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
 
                 var result = new FileTemplate_GetListResponse()
                 {
-                    List = listDto
+                    List = listDto,
+                    TotalCount = listDto.TotalCount,
+                    PageIndex = listDto.PageIndex
                 };
                 return result;
             });
