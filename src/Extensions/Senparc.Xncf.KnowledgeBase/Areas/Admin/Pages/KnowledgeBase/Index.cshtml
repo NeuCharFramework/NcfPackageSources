@@ -205,11 +205,11 @@
                                           style="width: 100%;margin-bottom: 10px;border: 1px solid rgba(229, 229, 229, 1);"
                                           @@selection-change="handleConfigFileSelectionChange">
                                     <el-table-column type="selection" width="30"></el-table-column>
-                                    <el-table-column prop="fileName" label="文件名" width="180"
+                                    <el-table-column prop="fileName" label="文件名" width="200"
                                                      show-overflow-tooltip></el-table-column>
                                     <el-table-column prop="fileSize" label="文件大小" width="100">
                                     </el-table-column>
-                                    <el-table-column label="上传时间" width="150" align="center">
+                                    <el-table-column label="上传时间" width="110" align="center">
                                         <template slot-scope="scope">
                                             {{ formaTableTime(scope.row.uploadTime) }}
                                         </template>
@@ -229,7 +229,7 @@
                                     <span class="el-pagination__total" style="margin-right:12px;">当前选中 {{ groupForm.files.length }} 行</span>
                                     <el-pagination :current-page.sync="fileQueryList.pageIndex"
                                                    :page-size="fileQueryList.pageSize"
-                                                   :page-sizes="[10, 20, 50]"
+                                                   :page-sizes="[10, 20, 50,100]"
                                                    :total="fileListTotal"
                                                    layout="total, sizes, prev, pager, next, jumper"
                                                    @@size-change="handleConfigFileSizeChange"
