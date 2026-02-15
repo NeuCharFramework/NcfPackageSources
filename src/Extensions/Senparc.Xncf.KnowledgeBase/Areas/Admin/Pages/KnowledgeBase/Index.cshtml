@@ -166,11 +166,11 @@
                     <el-form v-if="visible.drawerGroup" ref="groupELForm" :model="groupForm" :rules="groupFormRules"
                              :size="elSize" label-position="left" label-width="130px" class="drawerForm-container">
                         <el-form-item label="内容类型">
-                            <el-select size="mini" v-model="groupForm.contentType" placeholder="请输入内容类型">
+                            <el-select size="mini" v-model="groupForm.contentType" placeholder="请选择内容类型">
                                 <el-option v-for="item in contentTypeData" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="文件列表" prop="files">
+                        <el-form-item v-if="groupForm.contentType === 2" label="文件列表" prop="files">
                             <div class="groupFMB">
                                 <div class="df-wn flex-ac flex-jsb" style="gap: 10px;margin-bottom: 10px;">
                                     <div class="df-wn flex-ac" style="gap: 10px;">
@@ -209,7 +209,7 @@
                                                      show-overflow-tooltip></el-table-column>
                                     <el-table-column prop="fileSize" label="文件大小" width="100">
                                     </el-table-column>
-                                    <el-table-column label="上传时间" width="110" align="center">
+                                    <el-table-column label="上传时间" width="130" align="center">
                                         <template slot-scope="scope">
                                             {{ formaTableTime(scope.row.uploadTime) }}
                                         </template>
@@ -238,7 +238,7 @@
                                 </div>
                             </div>
                         </el-form-item>
-                        <el-form-item label="内容">
+                        <el-form-item v-if="groupForm.contentType === 1 || groupForm.contentType === 3" label="内容">
                             <el-input type="textarea" v-model="groupForm.content" :rows="4" placeholder="请填写"></el-input>
                         </el-form-item>
                     </el-form>

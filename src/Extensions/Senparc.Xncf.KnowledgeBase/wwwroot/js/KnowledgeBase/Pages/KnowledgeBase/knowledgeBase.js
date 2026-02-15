@@ -126,9 +126,9 @@ new Vue({
                 disabled: false,
                 checkStrictly: true // 是否严格的遵守父子节点不互相关联
             },
-            // 组 新增|编辑
+            // 组 新增|编辑（内容类型：1=输入 2=文件 3=采集外部数据，默认文件）
             groupForm: {
-                contentType: '', // 内容类型
+                contentType: 2, // 内容类型，默认「文件」
                 files: [], // 文件列表
                 content: '', // 内容
                 knowledgeBasesId: '' //知识库ID
