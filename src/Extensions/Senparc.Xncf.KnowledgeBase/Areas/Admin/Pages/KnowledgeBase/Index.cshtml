@@ -273,6 +273,32 @@
                 <el-button size="mini" @@click="visible.dialogFile = false">关闭</el-button>
             </div>
         </el-dialog>
+
+        @* 向量化进度弹窗 *@
+        <el-dialog title="向量化进度"
+                   :visible.sync="visible.embeddingProgress"
+                   width="420px"
+                   :close-on-click-modal="false"
+                   :close-on-press-escape="false"
+                   :show-close="false">
+            <div class="embedding-progress-body">
+                <el-progress :percentage="embeddingProgressPercent" :status="embeddingProgressStatus"></el-progress>
+                <p class="embedding-progress-text">{{ embeddingProgressText }}</p>
+            </div>
+        </el-dialog>
+
+        @* 向量化结果展示弹窗 *@
+        <el-dialog title="向量化结果"
+                   :visible.sync="visible.embeddingResult"
+                   width="560px"
+                   @@close="embeddingResultText = ''">
+            <div class="embedding-result-body">
+                <pre class="embedding-result-pre">{{ embeddingResultText }}</pre>
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" size="small" @@click="visible.embeddingResult = false; getList()">确定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </div>
 @section scripts

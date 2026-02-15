@@ -12,7 +12,14 @@ new Vue({
             visible: {
                 drawerGroup: false, // 组 新增|编辑
                 dialogFile: false,   // 配置抽屉内「新建文件」上传弹框
+                embeddingProgress: false,  // 向量化进度弹窗
+                embeddingResult: false,    // 向量化结果展示弹窗
             },
+            embeddingProgressPercent: 0,
+            embeddingProgressStatus: '',   // '' | success | exception
+            embeddingProgressText: '正在准备...',
+            embeddingResultText: '',
+            _embeddingTimer: null,
             configUploadFileList: [], // 新建文件弹框内的上传列表（仅展示用，关闭时清空）
             form:
             {
@@ -820,60 +827,78 @@ new Vue({
         handleEmbeddingBtn(btnType, item) {
             const that = this;
             if (btnType === 'embedding') {
-                // 确认对话框
                 this.$confirm(`确认对知识库 "${item.name}" 进行向量化处理吗？`, '向量化确认', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    // 显示加载提示
-                    const loading = this.$loading({
-                        lock: true,
-                        text: '正在进行向量化处理，请稍候...',
-                        spinner: 'el-icon-loading',
-                        background: 'rgba(0, 0, 0, 0.7)'
-                    });
+                    that.embeddingProgressPercent = 0;
+                    that.embeddingProgressStatus = '';
+                    that.embeddingProgressText = '正在准备...';
+                    that.visible.embeddingProgress = true;
 
-                    //开始向量化数据
+                    var progressVal = 0;
+                    that._embeddingTimer = setInterval(function () {
+                        progressVal += Math.random() * 8 + 4;
+                        if (progressVal > 90) progressVal = 90;
+                        that.embeddingProgressPercent = Math.floor(progressVal);
+                        that.embeddingProgressText = '正在向量化处理中... ' + that.embeddingProgressPercent + '%';
+                    }, 400);
+
                     const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.EmbeddingKnowledgeBase';
-                    const dataTemp = {
-                        id: item?.id ?? ''
-                    };
+                    const dataTemp = { id: item?.id ?? '' };
 
                     service.post(serviceURL, dataTemp).then(res => {
-                        loading.close();
+                        if (that._embeddingTimer) {
+                            clearInterval(that._embeddingTimer);
+                            that._embeddingTimer = null;
+                        }
+                        that.embeddingProgressPercent = 100;
+                        that.embeddingProgressStatus = 'success';
+                        that.embeddingProgressText = '向量化完成';
 
-                        if (res.success) {
-                            // 显示详细结果
-                            const message = res.data || '向量化成功！';
-                            that.$notify({
-                                title: "向量化成功",
-                                message: message,
-                                type: "success",
-                                duration: 5000,
-                                dangerouslyUseHTMLString: true
-                            });
+                        var body = res && res.data;
+                        var success = body && (body.success === true);
+                        var resultMessage = (body && body.data != null) ? (typeof body.data === 'string' ? body.data : (body.data.data != null ? body.data.data : '')) : '';
+                        if (success && resultMessage) {
+                            setTimeout(function () {
+                                that.visible.embeddingProgress = false;
+                                that.embeddingResultText = resultMessage;
+                                that.visible.embeddingResult = true;
+                            }, 400);
+                        } else if (success) {
+                            setTimeout(function () {
+                                that.visible.embeddingProgress = false;
+                                that.embeddingResultText = '知识库「' + (item.name || '') + '」向量化已完成。';
+                                that.visible.embeddingResult = true;
+                            }, 400);
                         } else {
-                            that.$notify({
-                                title: "向量化失败",
-                                message: res.message || '向量化处理失败',
-                                type: "error",
-                                duration: 5000
-                            });
+                            that.embeddingProgressStatus = 'exception';
+                            that.embeddingProgressText = (res && res.errorMessage) || (res && res.message) || '向量化失败';
+                            setTimeout(function () {
+                                that.visible.embeddingProgress = false;
+                                that.$notify({ title: '向量化失败', message: that.embeddingProgressText, type: 'error', duration: 5000 });
+                            }, 800);
                         }
                     }).catch(err => {
-                        loading.close();
-                        console.error('Embedding Error:', err);
-                        that.$notify({
-                            title: "错误",
-                            message: err.message || '向量化处理出错，请检查配置',
-                            type: "error",
-                            duration: 5000
-                        });
+                        if (that._embeddingTimer) {
+                            clearInterval(that._embeddingTimer);
+                            that._embeddingTimer = null;
+                        }
+                        that.embeddingProgressStatus = 'exception';
+                        that.embeddingProgressPercent = Math.max(that.embeddingProgressPercent, 50);
+                        that.embeddingProgressText = '处理出错：' + (err.message || err);
+                        setTimeout(function () {
+                            that.visible.embeddingProgress = false;
+                            that.$notify({
+                                title: '错误',
+                                message: err.message || '向量化处理出错，请检查配置',
+                                type: 'error',
+                                duration: 5000
+                            });
+                        }, 800);
                     });
-                }).catch(() => {
-                    // 用户取消
-                });
+                }).catch(function () {});
             }
         },
         // Dailog|抽屉 打开 按钮
