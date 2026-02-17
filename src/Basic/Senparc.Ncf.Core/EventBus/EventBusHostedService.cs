@@ -1,12 +1,13 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.Ncf.Core.EventBus;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Senparc.Ncf.Shared.Abstractions.Events;
 
-namespace Senparc.NCF.Core.EventBus
+namespace Senparc.Ncf.Core.EventBus
 {
     /// <summary>
     /// 后台消息泵：负责从 Channel 读取事件并分发给 Handler

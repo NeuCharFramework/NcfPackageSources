@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using Senparc.Ncf.Shared.Abstractions.Events; 
 
-namespace Senparc.NCF.Core.EventBus
+namespace Senparc.Ncf.Core.EventBus
 {
     /// <summary>
     /// 基于内存 Channel 的事件总线实现
