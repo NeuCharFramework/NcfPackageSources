@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using Senparc.NCF.Core.EventBus;
 using System.Reflection;
 using System.Linq;
 using Senparc.Ncf.Shared.Abstractions.Events;

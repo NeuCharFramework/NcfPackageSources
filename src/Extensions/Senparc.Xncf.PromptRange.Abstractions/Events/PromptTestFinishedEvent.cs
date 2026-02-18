@@ -1,5 +1,4 @@
-using Senparc.Ncf.Core.Events; // 假设 IIntegrationEvent 在这里
-using Senparc.Ncf.Shared.Abstractions.Models; // 如果 ActionType 是通用的，放 Shared；如果是私有的，放这里
+using Senparc.Ncf.Shared.Abstractions.Events;
 
 namespace Senparc.Xncf.PromptRange.Abstractions.Events
 {
@@ -15,5 +14,5 @@ namespace Senparc.Xncf.PromptRange.Abstractions.Events
         double Temperature
     ) : IntegrationEvent;
 
-    
+
 }

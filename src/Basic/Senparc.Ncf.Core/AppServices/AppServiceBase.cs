@@ -2,6 +2,7 @@
 using System;
 using System.Threading;
 
+#nullable enable
 namespace Senparc.Ncf.Core.AppServices
 {
     public interface IAppService

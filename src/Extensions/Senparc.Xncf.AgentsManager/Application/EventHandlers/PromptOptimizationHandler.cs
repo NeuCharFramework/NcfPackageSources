@@ -1,7 +1,7 @@
 using Senparc.Xncf.PromptRange.Abstractions.Events; // 引用 PromptRange 的事件
-using Senparc.Ncf.Core.EventBus; // 引用 EventBus 接口
 using System.Threading.Tasks;
 using System.Threading;
+using Senparc.Ncf.Shared.Abstractions.Events;
 
 namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
 {
