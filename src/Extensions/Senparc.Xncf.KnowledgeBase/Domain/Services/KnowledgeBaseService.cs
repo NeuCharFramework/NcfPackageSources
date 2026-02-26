@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Text;
+using OllamaSharp.Models;
 using Senparc.AI;
 using Senparc.AI.Entities.Keys;
 using Senparc.AI.Kernel;
@@ -17,6 +18,7 @@ using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.FileManager.Domain.Services;
 using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel;
 using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
+using Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Response;
 using Senparc.Xncf.KnowledgeBase.Services;
 using System;
 using System.Collections.Generic;
@@ -219,8 +221,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             //var senparcAiSetting = aiModelService.BuildSenparcAiSetting(aiModelDto, aiVectorDto);
 
             // 3. 获取待向量化的文本切片（未向量化的数据）
+            //var details = await _knowledgeBaseDetailService.GetFullListAsync(z =>
+                //z.KnowledgeBasesId == knowledgeBaseId && !z.IsEmbedded);
+
             var details = await _knowledgeBaseDetailService.GetFullListAsync(z =>
-                z.KnowledgeBasesId == knowledgeBaseId && !z.IsEmbedded);
+                z.KnowledgeBasesId == knowledgeBaseId);
 
             var embeddingAiModel = await this._aIModelService.GetObjectAsync(z => z.Id == knowledgeBase.EmbeddingModelId);
             if (embeddingAiModel == null)
@@ -255,9 +260,13 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             int failCount = 0;
             string collectionName = $"{knowledgeBase.Name.Replace(" ", "_")}";
 
+            var chunkIndex = 0;
+
             //进行切片
             foreach (var detail in details)
             {
+                processedCount++;
+
                 //SenparcTrace.SendCustomLog("知识库", $"知识库 '{knowledgeBase.Name}' 没有待向量化的文本切片。现在开始切片");
 
                 //从关联的文件中获取内容进行切片   //TODO: 判断 ContentType 来决定如何处理不同类型的内容
@@ -279,7 +288,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             MemoryStore:
                 try
                 {
-                    var chunkIndex = 0;
+                    
                     var dt = SystemTime.Now;
                     var vectorCollection = iWantToRunEmbedding.GetVectorCollection<ulong, Record>(embeddingAiSetting.VectorDB, vectorName);
                     await vectorCollection.EnsureCollectionExistsAsync();
@@ -332,6 +341,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                     //}
 
                     detail.EmbeddingSuccessed(chunkIndex);
+                    successCount++;
                     await _knowledgeBaseDetailService.SaveObjectAsync(detail);
                 }
                 catch (Exception ex)
@@ -342,6 +352,9 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                     {
                         Console.WriteLine($"等待冷却 {match.Value} 秒");
                     }
+                    //错误计数自增
+                    failCount++;
+
                     goto MemoryStore;
                 }
             }
@@ -359,6 +372,110 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                    $"失败: {failCount}\n" +
                    $"集合名称: {collectionName}";
         }
+
+        /// <summary>
+        /// 召回测试（Embedding）
+        /// </summary>
+        /// <param name="knowledgeBaseId"></param>
+        /// <param name="tags">当前 Embedding 记录的 Tag</param>
+        /// <returns></returns>
+        public async Task<List<RecallTestResponse>> RecallTestAsync(int knowledgeBaseId,string content)
+        {
+            List<RecallTestResponse> lstRecallTest = new List<RecallTestResponse>();
+
+            var knowledgeBase = await base.GetObjectAsync(z => z.Id == knowledgeBaseId);
+            if (knowledgeBase == null)
+            {
+                throw new NcfExceptionBase($"Knowledge Base with ID {knowledgeBaseId} not found.");
+            }
+
+            // 1. 检查配置
+            if (knowledgeBase.EmbeddingModelId <= 0)
+            {
+                throw new NcfExceptionBase($"知识库 '{knowledgeBase.Name}' 未配置 Embedding 模型，请先在'配置'中选择模型。");
+            }
+
+            // 2. 获取AI Model配置
+            var aiModelService = _serviceProvider.GetService<AIModelService>();
+            var aiVectorService = _serviceProvider.GetService<AIVectorService>();
+            var aiModel = await aiModelService.GetObjectAsync(z => z.Id == knowledgeBase.EmbeddingModelId);
+            if (aiModel == null)
+            {
+                throw new NcfExceptionBase($"Embedding 模型 ID {knowledgeBase.EmbeddingModelId} 不存在。");
+            }
+
+            var aiVector = await aiVectorService.GetObjectAsync(z => z.Id == knowledgeBase.VectorDBId);
+            if (aiVector == null)
+            {
+                throw new NcfExceptionBase($"Embedding 向量库 ID {knowledgeBase.VectorDBId} 不存在。");
+            }
+
+            var aiModelDto = new AIModelDto(aiModel);
+            var aiVectorDto = new AIVectorDto(aiVector);
+
+            var embeddingAiModel = await this._aIModelService.GetObjectAsync(z => z.Id == knowledgeBase.EmbeddingModelId);
+            if (embeddingAiModel == null)
+            {
+                throw new NcfExceptionBase($"Embedding 模型 AIKernel 模型未找到：{knowledgeBase.EmbeddingModelId}。");
+            }
+            var embeddingAiModelDto = this._aIModelService.Mapper.Map<AIModelDto>(embeddingAiModel);
+
+            var embeddingAiSetting = this._aIModelService.BuildSenparcAiSetting(embeddingAiModelDto, aiVectorDto);
+            //TODO:改成动态
+            var embeddingModelName = embeddingAiSetting.AzureOpenAIKeys.ModelName.Embedding;
+            // 4. 初始化 SemanticAiHandler
+            var embeddingAiHandler = new SemanticAiHandler(embeddingAiSetting);
+
+            // 5. 构建 IWantToRun (Embedding 模式)
+
+            var iWantToRunEmbedding = embeddingAiHandler
+                 .IWantTo()
+                 .ConfigModel(ConfigModel.TextEmbedding, $"NcfKnowledgeBase_{embeddingAiModel.Id}")
+                 .ConfigVectorStore(embeddingAiSetting.VectorDB)
+            .BuildKernel();
+
+            string collectionName = $"{knowledgeBase.Name.Replace(" ", "_")}";
+            var vectorName = collectionName; //$"{knowledgeBase.Name}-{knowledgeBase.Id}";
+        MemoryStore:
+            try
+            {
+
+                var dt = SystemTime.Now;
+                var vectorCollection = iWantToRunEmbedding.GetVectorCollection<ulong, Record>(embeddingAiSetting.VectorDB, vectorName);
+                await vectorCollection.EnsureCollectionExistsAsync();
+
+                //测试
+                ReadOnlyMemory<float> searchVector = await iWantToRunEmbedding.SemanticKernelHelper.GetEmbeddingAsync(embeddingModelName, content);
+
+                var vectorResult = vectorCollection.SearchAsync(searchVector, 3);
+                await foreach (var item in vectorResult)
+                {
+                    Console.WriteLine($"得到结果：{item.Record.ToJson(true)}");
+                    RecallTestResponse recallTest = new RecallTestResponse()
+                    {
+                        Score = item.Score.ToString(),
+                        Content = item.Record.Description,
+                        RecallTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                    };
+                    lstRecallTest.Add(recallTest);
+                }
+            }
+            catch (Exception ex)
+            {
+                string pattern = @"retry after (\d+) seconds";
+                Match match = Regex.Match(ex.Message, pattern);
+                if (match.Success)
+                {
+                    Console.WriteLine($"等待冷却 {match.Value} 秒");
+                }
+
+                goto MemoryStore;
+            }
+
+
+            return lstRecallTest;
+        }
+
 
         /// <summary>
         /// 简单的文本切片算法
