@@ -94,72 +94,85 @@
                           @@current-change="handlePageChange">
             </el-pagination>
         </div>
-        <!--编辑、新增-->
+        <!-- 新增 / 编辑 知识库弹框 -->
         <el-dialog :title="dialog.title"
                    :visible.sync="dialog.visible"
                    :close-on-click-modal="false"
-                   width="600px">
+                   width="560px"
+                   custom-class="kb-form-dialog"
+                   class="kb-form-dialog-scope">
             <el-form ref="dataForm"
                      :rules="dialog.rules"
                      :model="dialog.data"
                      :disabled="dialog.disabled"
-                     size="mini"
-                     label-position="left"
-                     label-width="150px"
-                     style="max-width: 600px; margin-left:50px;">
-                <el-form-item label="名称" prop="name">
-                    <el-input size="mini" v-model="dialog.data.name" clearable placeholder="请输入名称" />
+                     size="small"
+                     label-position="top"
+                     class="kb-form-dialog__form">
+                <el-form-item label="名称" prop="name" class="kb-form-item">
+                    <el-input v-model="dialog.data.name" clearable placeholder="请输入知识库名称" maxlength="100" show-word-limit />
                 </el-form-item>
 
-                <el-form-item label="选择Embedding模型">
-                    <el-cascader v-model="selectDefaultEmbeddingModel"
-                                 :options="embeddingModelData"
-                                 @@change="selectEmbeddingModel"
-                                 clearable
-                                 filterable
-                                 :props="{label:'alias',value:'id'}">
-                    </el-cascader>
-                </el-form-item>
+                <div class="kb-form-group">
+                    <div class="kb-form-group__title">模型与向量库</div>
+                    <el-form-item label="Embedding 模型" class="kb-form-item">
+                        <el-cascader v-model="selectDefaultEmbeddingModel"
+                                     :options="embeddingModelData"
+                                     @@change="selectEmbeddingModel"
+                                     clearable
+                                     filterable
+                                     placeholder="请选择 Embedding 模型"
+                                     style="width:100%;"
+                                     :props="{label:'alias',value:'id'}">
+                        </el-cascader>
+                    </el-form-item>
+                    <el-form-item label="Embedding模型Id" prop="embeddingModelId" class="hidden">
+                        <el-input v-model="dialog.data.embeddingModelId" clearable />
+                    </el-form-item>
 
-                <el-form-item label="Embedding模型Id" prop="embeddingModelId" class="hidden">
-                    <el-input size="mini" v-model="dialog.data.embeddingModelId" clearable placeholder="请输入Embedding模型Id" />
-                </el-form-item>
+                    <el-form-item label="向量数据库" class="kb-form-item">
+                        <el-cascader v-model="selectDefaultVectorDB"
+                                     :options="vectorDBData"
+                                     @@change="selectVectorDB"
+                                     clearable
+                                     filterable
+                                     placeholder="请选择向量数据库"
+                                     style="width:100%;"
+                                     :props="{label:'alias',value:'id'}">
+                        </el-cascader>
+                    </el-form-item>
+                    <el-form-item label="向量数据库Id" prop="vectorDBId" class="hidden">
+                        <el-input v-model="dialog.data.vectorDBId" clearable />
+                    </el-form-item>
 
-                <el-form-item label="选择向量数据库">
-                    <el-cascader v-model="selectDefaultVectorDB"
-                                 :options="vectorDBData"
-                                 @@change="selectVectorDB"
-                                 clearable
-                                 filterable
-                                 :props="{label:'alias',value:'id'}">
-                    </el-cascader>
-                </el-form-item>
+                    <el-form-item label="对话模型" class="kb-form-item">
+                        <el-cascader v-model="selectDefaultChatModel"
+                                     :options="chatModelData"
+                                     @@change="selectChatModel"
+                                     clearable
+                                     filterable
+                                     placeholder="请选择对话模型"
+                                     style="width:100%;"
+                                     :props="{label:'alias',value:'id'}">
+                        </el-cascader>
+                    </el-form-item>
+                    <el-form-item label="对话模型Id" prop="chatModelId" class="hidden">
+                        <el-input v-model="dialog.data.chatModelId" clearable />
+                    </el-form-item>
+                </div>
 
-                <el-form-item label="向量数据库Id" prop="vectorDBId" class="hidden">
-                    <el-input size="mini" v-model="dialog.data.vectorDBId" clearable placeholder="请输入向量数据库Id" />
-                </el-form-item>
-
-                <el-form-item label="选择对话模型">
-                    <el-cascader v-model="selectDefaultChatModel"
-                                 :options="chatModelData"
-                                 @@change="selectChatModel"
-                                 clearable
-                                 filterable
-                                 :props="{label:'alias',value:'id'}">
-                    </el-cascader>
-                </el-form-item>
-
-                <el-form-item label="对话模型Id" prop="chatModelId" class="hidden">
-                    <el-input size="mini" v-model="dialog.data.chatModelId" clearable placeholder="请输入对话模型Id" />
-                </el-form-item>
-
-                <el-form-item label="内容" prop="content">
-                    <el-input type="textarea" size="mini" v-model="dialog.data.content" clearable placeholder="请输入内容" />
+                <el-form-item label="内容" prop="content" class="kb-form-item">
+                    <el-input type="textarea"
+                              v-model="dialog.data.content"
+                              clearable
+                              placeholder="请输入内容（选填）"
+                              :rows="4"
+                              maxlength="500"
+                              show-word-limit />
                 </el-form-item>
             </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button size="mini" @@click="dialog.visible=false">取消</el-button>
-                <el-button size="mini" :loading="dialog.updateLoading" :disabled="dialog.disabled" type="primary" @@click="updateData">确认</el-button>
+            <div slot="footer" class="kb-form-dialog__footer">
+                <el-button @@click="dialog.visible=false">取消</el-button>
+                <el-button :loading="dialog.updateLoading" :disabled="dialog.disabled" type="primary" @@click="updateData">确认</el-button>
             </div>
         </el-dialog>
 
