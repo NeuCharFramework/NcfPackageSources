@@ -43,7 +43,8 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
                 System.Console.WriteLine($"开始召回测试: {request.Content} ...");
                 try
                 {
-                    var result = await knowledgeBaseService.RecallTestAsync(request.Id,request.Content);
+                    var topK = request.TopK <= 0 ? 5 : Math.Min(20, Math.Max(1, request.TopK));
+                    var result = await knowledgeBaseService.RecallTestAsync(request.Id, request.Content, topK);
                     //logger.Append(result);
                     return result;
                 }

@@ -13,8 +13,10 @@ new Vue({
         attrDialog: false,
         attrForm: false,
         tagDialog: false,
-        tagForm: false
+        tagForm: false,
+        searchSettingsDrawer: false
       },
+      topK: 5,
       attrForm: { id: null, name: '' },
       tagForm: { id: null, name: '' },
       recallLoading: false,
@@ -51,6 +53,13 @@ new Vue({
     },
     onKbSelectVisibleChange(visible) {
       if (visible && this.knowledgeBaseList.length === 0) this.loadKnowledgeBaseList();
+    },
+    openSearchSettingsDrawer() {
+      this.visible.searchSettingsDrawer = true;
+    },
+    saveSearchSettings() {
+      this.visible.searchSettingsDrawer = false;
+      this.$message.success('检索设置已保存');
     },
     openAttrDialog() {
       this.visible.attrDialog = true;
@@ -160,10 +169,8 @@ new Vue({
         String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0') + ':' + String(now.getSeconds()).padStart(2, '0');
 
       const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/RecallTestAppService/Xncf.KnowledgeBase_RecallTestAppService.RecallTest';
-      const dataTemp = { id: kbId, content: that.recallContent };
-      debugger
+      const dataTemp = { id: kbId, content: that.recallContent, topK: that.topK };
       service.post(serviceURL, dataTemp).then(res => {
-        debugger
         var body = res && res.data && res.data.data;
         if (body && Array.isArray(body) && body.length > 0) {
           that.recallResults = body.map(function (b, i) {

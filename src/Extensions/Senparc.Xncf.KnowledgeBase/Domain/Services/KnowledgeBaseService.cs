@@ -379,7 +379,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         /// <param name="knowledgeBaseId"></param>
         /// <param name="tags">当前 Embedding 记录的 Tag</param>
         /// <returns></returns>
-        public async Task<List<RecallTestResponse>> RecallTestAsync(int knowledgeBaseId,string content)
+        public async Task<List<RecallTestResponse>> RecallTestAsync(int knowledgeBaseId, string content, int topK = 5)
         {
             List<RecallTestResponse> lstRecallTest = new List<RecallTestResponse>();
 
@@ -447,7 +447,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                 //测试
                 ReadOnlyMemory<float> searchVector = await iWantToRunEmbedding.SemanticKernelHelper.GetEmbeddingAsync(embeddingModelName, content);
 
-                var vectorResult = vectorCollection.SearchAsync(searchVector, 3);
+                var vectorResult = vectorCollection.SearchAsync(searchVector, topK);
                 await foreach (var item in vectorResult)
                 {
                     Console.WriteLine($"得到结果：{item.Record.ToJson(true)}");

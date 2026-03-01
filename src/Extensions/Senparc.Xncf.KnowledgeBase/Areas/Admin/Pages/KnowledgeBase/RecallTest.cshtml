@@ -42,7 +42,7 @@
                 <div class="source-text-box">
                 <div class="source-text-header">
                     <span class="source-text-label">源文本</span>
-                    <el-button type="text" size="small" class="inverted-index-btn" icon="el-icon-document">倒排索引</el-button>
+                    <el-button type="text" size="small" class="inverted-index-btn" icon="el-icon-document" @@click="openSearchSettingsDrawer">倒排索引</el-button>
                 </div>
                 <div class="source-text-area-wrap">
                     <el-input type="textarea"
@@ -70,6 +70,7 @@
 
         <div class="recall-test-right">
             <div class="recall-result-title">{{ recallResults.length }} 个召回段落</div>
+            <div class="recall-cards-wrap">
             <div class="recall-cards">
                 <div v-for="(item, index) in recallResults" :key="index" class="recall-card">
                     <div class="recall-card-label">{{ item.chunkName || ('Chunk-' + String(index + 1).padStart(2, '0')) }} {{ item.charCount || (item.content ? item.content.length : 0) }} 字符</div>
@@ -85,9 +86,43 @@
                 </div>
             </div>
             <div v-if="recallResults.length === 0" class="empty-result">暂无召回结果，请选择知识库、输入源文本并点击「测试」</div>
+            </div>
         </div>
         </div>
     </div>
+
+    @* 检索设置抽屉：点击倒排索引打开，可设置 Top K 并传给召回接口 *@
+    <el-drawer title="检索设置"
+               :visible.sync="visible.searchSettingsDrawer"
+               direction="rtl"
+               size="380px"
+               :with-header="true"
+               custom-class="search-settings-drawer">
+        <div class="search-settings-body">
+            <p class="search-settings-desc">了解更多关于检索方法。</p>
+            <div class="search-settings-item">
+                <div class="search-settings-label">检索方法</div>
+                <div class="search-method-display"><i class="el-icon-document"></i> 倒排索引</div>
+                <p class="search-method-tip">倒排索引是一种用于高效检索的结构。按术语组织，每个术语指向包含它的文档或网页。</p>
+            </div>
+            <div class="search-settings-item">
+                <div class="search-settings-label">
+                    Top K
+                    <el-tooltip content="召回返回的片段数量" placement="top">
+                        <i class="el-icon-question"></i>
+                    </el-tooltip>
+                </div>
+                <div class="topk-row">
+                    <el-slider v-model="topK" :min="1" :max="20" :step="1" show-stops style="flex:1;margin-right:16px;"></el-slider>
+                    <el-input-number v-model="topK" :min="1" :max="20" :step="1" size="small" controls-position="right" style="width:100px;"></el-input-number>
+                </div>
+            </div>
+        </div>
+        <div class="search-settings-footer">
+            <el-button size="small" @@click="visible.searchSettingsDrawer = false">取消</el-button>
+            <el-button size="small" type="primary" @@click="saveSearchSettings">保存</el-button>
+        </div>
+    </el-drawer>
 
     <el-dialog title="属性管理" :visible.sync="visible.attrDialog" width="500px" @@close="closeAttrDialog">
         <el-button size="small" type="primary" @@click="addAttr" style="margin-bottom:10px">+ 新增属性</el-button>
