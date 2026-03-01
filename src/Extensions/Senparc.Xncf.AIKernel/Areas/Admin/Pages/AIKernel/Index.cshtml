@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model Senparc.Xncf.AIKernel.Areas.AIKernel.Pages.Index
 @{
     ViewData["Title"] = "AIKernel 首页";
@@ -15,13 +15,32 @@
     <el-breadcrumb-item>首页</el-breadcrumb-item>
 }
 
-<div>
-    <div class="filter-container">
-        <el-button type="primary" icon="el-icon-plus" size="small" @@click="addModel">添加</el-button>
-        <el-button type="primary" icon="el-icon-plus" size="small" @@click="addNeuCharModel">导入 NeuCharAI 云端模型算力</el-button>
-    </div>
+<div class="aikernel-index-page">
+    <div class="aikernel-main">
+        @* 查询区：按名称(别名)查询 *@
+        <div class="aikernel-query-section">
+            <div class="aikernel-query-row">
+                <label class="aikernel-query-label">名称</label>
+                <el-input v-model="keyword"
+                          placeholder="请输入模型名称/别名关键字"
+                          size="small"
+                          clearable
+                          class="aikernel-query-input"
+                          @@keyup.enter.native="handleSearch()"></el-input>
+                <el-button type="primary" size="small" icon="el-icon-search" @@click="handleSearch()">查询</el-button>
+                <el-button size="small" icon="el-icon-refresh-left" @@click="resetCondition()">重置</el-button>
+            </div>
+        </div>
 
-    <el-table :data="tableData" v-loading="tableLoading" border>
+        @* 工具栏 *@
+        <div class="aikernel-toolbar">
+            <el-button type="primary" size="small" icon="el-icon-plus" @@click="addModel">添加</el-button>
+            <el-button type="primary" size="small" icon="el-icon-upload2" plain @@click="addNeuCharModel">导入 NeuCharAI 云端模型算力</el-button>
+        </div>
+
+        @* 表格区域 *@
+        <div class="aikernel-table-wrap">
+        <el-table :data="tableData" v-loading="tableLoading" border size="small">
         @* alias *@
         <el-table-column prop="alias" label="别名" width="auto"></el-table-column>
         <el-table-column prop="modelId" label="模型名称" width="auto"></el-table-column>
@@ -76,26 +95,27 @@
             </template>
         </el-table-column>
         @* 操作 *@
-        <el-table-column label="操作" width="auto">
+        <el-table-column label="操作" align="center" fixed="right" width="180">
             <template slot-scope="scope">
-                <el-button type="primary" size="mini" @@click="editModel(scope.row)">编辑</el-button>
-                <el-button type="danger" size="mini" @@click="deleteModel(scope.row)">删除</el-button>
+                <el-button type="primary" size="mini" plain @@click="editModel(scope.row)">编辑</el-button>
+                <el-button type="danger" size="mini" plain @@click="deleteModel(scope.row)">删除</el-button>
             </template>
         </el-table-column>
     </el-table>
-    <div class="pagination-container">
-        <el-pagination @@current-change="handleCurrentChange"
-                       @@size-change="handleSizeChange"
-                       :current-page="page.page"
-                       :page-sizes="[10, 20, 30, 40]"
-                       :page-size="page.size"
-                       layout="sizes, prev, next, jumper"
-                       :total="total"
-                       background
-                       style="margin-top: 20px">
-        </el-pagination>
     </div>
 
+        @* 分页：首页、上一页、下一页、尾页、跳转、每页 5/10/15/20/50/100 条，默认 10 *@
+        <div class="aikernel-pagination-wrap">
+            <el-pagination :current-page.sync="page.page"
+                           :page-sizes="[5, 10, 15, 20, 50, 100]"
+                           :page-size.sync="page.size"
+                           :total="total"
+                           layout="total, sizes, prev, pager, next, jumper"
+                           @@size-change="handlePageSizeChange"
+                           @@current-change="handlePageChange">
+            </el-pagination>
+        </div>
+    </div>
 
     @* dialog for 添加模型 *@
     <el-dialog title="添加模型" :visible.sync="addFormDialogVisible" width="50%" :close-on-click-modal="false">
