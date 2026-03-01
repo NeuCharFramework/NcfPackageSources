@@ -40,69 +40,72 @@
                 </div>
 
                 <div class="source-text-box">
-                <div class="source-text-header">
-                    <span class="source-text-label">源文本</span>
-                    <el-button type="text" size="small" class="inverted-index-btn" icon="el-icon-document" @@click="openSearchSettingsDrawer">倒排索引</el-button>
-                </div>
-                <div class="source-text-area-wrap">
-                    <el-input type="textarea"
-                              v-model="recallContent"
-                              :maxlength="200"
-                              :rows="10"
-                              placeholder="请输入查询文本"
-                              class="source-textarea"></el-input>
-                    <div class="source-text-footer">
-                        <span class="char-count">{{ recallContent.length }}/200</span>
-                        <el-button type="primary" class="test-btn" @@click="doRecall" :loading="recallLoading" icon="el-icon-video-play">测试</el-button>
+                    <div class="source-text-header">
+                        <span class="source-text-label">源文本</span>
+                        <el-button type="text" size="small" class="inverted-index-btn" icon="el-icon-document" @@click="openSearchSettingsDrawer">倒排索引</el-button>
+                    </div>
+                    <div class="source-text-area-wrap">
+                        <el-input type="textarea"
+                                  v-model="recallContent"
+                                  :maxlength="200"
+                                  :rows="10"
+                                  placeholder="请输入查询文本"
+                                  class="source-textarea"></el-input>
+                        <div class="source-text-footer">
+                            <span class="char-count">{{ recallContent.length }}/200</span>
+                            <el-button type="primary" class="test-btn" @@click="doRecall" :loading="recallLoading" icon="el-icon-video-play">测试</el-button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="records-section">
-                <div class="records-title">记录</div>
-                <div class="records-table-wrap">
-                    <el-table :data="recordPageList"
-                              size="small"
-                              border
-                              class="records-table"
-                              :height="recordTableHeight">
-                        <el-table-column prop="queryContent" label="查询内容" min-width="100" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="dataSource" label="数据源" width="120" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="time" label="时间↓" width="140" align="center"></el-table-column>
-                    </el-table>
+                <div class="records-section">
+                    <div class="records-title">记录</div>
+                    <div class="records-table-wrap">
+                        <el-table :data="recordPageList"
+                                  size="small"
+                                  border
+                                  class="records-table"
+                                  :height="recordTableHeight">
+                            <el-table-column prop="queryContent" label="查询内容" min-width="100" show-overflow-tooltip></el-table-column>
+                            <el-table-column label="召回率" min-width="100" show-overflow-tooltip>
+                                <template slot-scope="scope">{{ scope.row.score != null && scope.row.score !== '' ? scope.row.score : '—' }}</template>
+                            </el-table-column>
+                            <el-table-column prop="dataSource" label="数据源" width="120" show-overflow-tooltip></el-table-column>
+                            <el-table-column prop="time" label="时间↓" width="140" align="center"></el-table-column>
+                        </el-table>
+                    </div>
+                    <el-pagination class="records-pagination"
+                                   :current-page.sync="recordPage"
+                                   :page-sizes="[5, 10, 15, 20]"
+                                   :page-size.sync="recordPageSize"
+                                   :total="recordTotal"
+                                   layout="total, sizes, prev, pager, next, jumper"
+                                   @@size-change="handleRecordSizeChange"
+                                   @@current-change="handleRecordPageChange">
+                    </el-pagination>
                 </div>
-                <el-pagination class="records-pagination"
-                               :current-page.sync="recordPage"
-                               :page-sizes="[5, 10, 15, 20]"
-                               :page-size.sync="recordPageSize"
-                               :total="recordTotal"
-                               layout="total, sizes, prev, pager, next, jumper"
-                               @@size-change="handleRecordSizeChange"
-                               @@current-change="handleRecordPageChange">
-                </el-pagination>
             </div>
-        </div>
 
-        <div class="recall-test-right">
-            <div class="recall-result-title">{{ recallResults.length }} 个召回段落</div>
-            <div class="recall-cards-wrap">
-            <div class="recall-cards">
-                <div v-for="(item, index) in recallResults" :key="index" class="recall-card">
-                    <div class="recall-card-label">{{ item.chunkName || ('Chunk-' + String(index + 1).padStart(2, '0')) }} {{ item.charCount || (item.content ? item.content.length : 0) }} 字符</div>
-                    <div class="recall-card-content">{{ item.content }}</div>
-                    @* <div v-if="item.tags && item.tags.length" class="recall-card-tags">
+            <div class="recall-test-right">
+                <div class="recall-result-title">{{ recallResults.length }} 个召回段落</div>
+                <div class="recall-cards-wrap">
+                    <div class="recall-cards">
+                        <div v-for="(item, index) in recallResults" :key="index" class="recall-card">
+                            <div class="recall-card-label">{{ item.chunkName || ('Chunk-' + String(index + 1).padStart(2, '0')) }} {{ item.charCount || (item.content ? item.content.length : 0) }} 字符</div>
+                            <div class="recall-card-content">{{ item.content }}</div>
+                            @* <div v-if="item.tags && item.tags.length" class="recall-card-tags">
                         <span v-for="(tag, ti) in item.tags" :key="ti" class="recall-tag">#{{ tag }}</span>
                     </div>
                     <div class="recall-card-source">
                         <i class="el-icon-document"></i>
                         <span>{{ item.sourceFile || '—' }}</span>
                     </div> *@
-                    <el-button type="text" size="small" class="recall-card-open" @@click="openParagraphDetail(item, index)">打开 <i class="el-icon-right"></i></el-button>
+                            <el-button type="text" size="small" class="recall-card-open" @@click="openParagraphDetail(item, index)">打开 <i class="el-icon-right"></i></el-button>
+                        </div>
+                    </div>
+                    <div v-if="recallResults.length === 0" class="empty-result">暂无召回结果，请选择知识库、输入源文本并点击「测试」</div>
                 </div>
             </div>
-            <div v-if="recallResults.length === 0" class="empty-result">暂无召回结果，请选择知识库、输入源文本并点击「测试」</div>
-            </div>
-        </div>
         </div>
     </div>
 

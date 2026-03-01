@@ -5,6 +5,7 @@ new Vue({
       knowledgeBaseList: [],
       selectedKnowledgeBaseId: null,
       recallContent: '',
+      score: '',
       attributeList: [{ id: 1, name: '类型' }, { id: 2, name: '来源' }],
       tagList: [{ id: 1, name: '重要' }, { id: 2, name: '待审核' }],
       selectedAttrs: [],
@@ -24,7 +25,7 @@ new Vue({
       recallLoading: false,
       recallResults: [],
       recordList: [
-        { queryContent: '演示', dataSource: 'Retrieval Test', time: '2026-03-01 17:13' },
+        { queryContent: '演示', score:'0', dataSource: 'Retrieval Test', time: '2026-03-01 17:13' },
       ],
       recordPage: 1,
       recordPageSize: 5,
@@ -206,7 +207,9 @@ new Vue({
       const dataTemp = { id: kbId, content: that.recallContent, topK: that.topK };
       service.post(serviceURL, dataTemp).then(res => {
         var body = res && res.data && res.data.data;
+        var recordScore = '';
         if (body && Array.isArray(body) && body.length > 0) {
+          recordScore = body[0].score != null && body[0].score !== '' ? String(body[0].score) : (body[0].Score != null && body[0].Score !== '' ? String(body[0].Score) : '');
           that.recallResults = body.map(function (b, i) {
             var content = b.content || '';
             var tags = b.tags || [];
@@ -217,16 +220,16 @@ new Vue({
               content: content,
               tags: tags,
               sourceFile: b.sourceFile || b.fileName || '—',
-              score: b.score,
+              score: b.score != null ? b.score : (b.Score != null ? b.Score : ''),
               recallTime: b.recallTime
             };
           });
           var kbName = (that.knowledgeBaseList.find(function (k) { return k.id === kbId; }) || {}).name || 'Retrieval Test';
-          that.recordList.unshift({ queryContent: that.recallContent, dataSource: kbName, time: timeStr });
+          that.recordList.unshift({ queryContent: that.recallContent, score: recordScore, dataSource: kbName, time: timeStr });
         } else {
           that.recallResults = [];
           var kbName = (that.knowledgeBaseList.find(function (k) { return k.id === kbId; }) || {}).name || 'Retrieval Test';
-          that.recordList.unshift({ queryContent: that.recallContent, dataSource: kbName, time: timeStr });
+          that.recordList.unshift({ queryContent: that.recallContent, score: recordScore, dataSource: kbName, time: timeStr });
         }
         that.recallLoading = false;
         that.$message.success('召回完成');
