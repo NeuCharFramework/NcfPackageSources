@@ -29,6 +29,9 @@ new Vue({
         { queryContent: '放假', dataSource: 'Retrieval Test', time: '2026-02-15 23:41' },
         { queryContent: '米立科技', dataSource: 'Retrieval Test', time: '2026-02-15 23:40' }
       ],
+      recordPage: 1,
+      recordPageSize: 5,
+      recordTableHeight: 220,
       _attrId: 10,
       _tagId: 10
     };
@@ -47,6 +50,19 @@ new Vue({
     },
     paragraphDetailTags() {
       return (this.paragraphDetailItem && this.paragraphDetailItem.tags) ? this.paragraphDetailItem.tags : [];
+    },
+    recordTotal() {
+      return this.recordList.length;
+    },
+    recordPageList() {
+      var start = (this.recordPage - 1) * this.recordPageSize;
+      return this.recordList.slice(start, start + this.recordPageSize);
+    }
+  },
+  watch: {
+    recordList() {
+      var maxPage = Math.max(1, Math.ceil(this.recordTotal / this.recordPageSize));
+      if (this.recordPage > maxPage) this.recordPage = maxPage;
     }
   },
   created() {
@@ -74,6 +90,13 @@ new Vue({
     openParagraphDetail(item, index) {
       this.paragraphDetailItem = { ...item, _index: index };
       this.visible.paragraphDetailDialog = true;
+    },
+    handleRecordSizeChange(val) {
+      this.recordPageSize = val;
+      this.recordPage = 1;
+    },
+    handleRecordPageChange(val) {
+      this.recordPage = val;
     },
     openAttrDialog() {
       this.visible.attrDialog = true;

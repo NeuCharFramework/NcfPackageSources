@@ -125,6 +125,23 @@
     color: #303133;
 }
 
+.records-table-wrap {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+.records-section .records-table .el-table__body-wrapper {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.records-pagination {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
 .recall-result-title {
     font-size: 14px;
     font-weight: 600;

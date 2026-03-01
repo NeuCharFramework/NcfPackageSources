@@ -60,11 +60,26 @@
 
             <div class="records-section">
                 <div class="records-title">记录</div>
-                <el-table :data="recordList" size="small" border style="width:100%">
-                    <el-table-column prop="queryContent" label="查询内容" min-width="120" show-overflow-tooltip></el-table-column>
-                    <el-table-column prop="dataSource" label="数据源" width="140"></el-table-column>
-                    <el-table-column prop="time" label="时间↓" width="160" align="center"></el-table-column>
-                </el-table>
+                <div class="records-table-wrap">
+                    <el-table :data="recordPageList"
+                              size="small"
+                              border
+                              class="records-table"
+                              :height="recordTableHeight">
+                        <el-table-column prop="queryContent" label="查询内容" min-width="100" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="dataSource" label="数据源" width="120" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="time" label="时间↓" width="140" align="center"></el-table-column>
+                    </el-table>
+                </div>
+                <el-pagination class="records-pagination"
+                               :current-page.sync="recordPage"
+                               :page-sizes="[5, 10, 15, 20]"
+                               :page-size.sync="recordPageSize"
+                               :total="recordTotal"
+                               layout="total, sizes, prev, pager, next, jumper"
+                               @@size-change="handleRecordSizeChange"
+                               @@current-change="handleRecordPageChange">
+                </el-pagination>
             </div>
         </div>
 
