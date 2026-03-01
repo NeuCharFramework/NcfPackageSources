@@ -1,4 +1,4 @@
-﻿
+
 [v-cloak] {
     display: none;
 }
@@ -17,8 +17,10 @@ a {
     text-decoration: none;
 }
 
-body {
+html, body {
+    height: 100%;
     margin: 0;
+    overflow: hidden;
 }
 
 img {
@@ -33,12 +35,54 @@ li {
 
 #app {
     height: 100%;
+    overflow: hidden;
 }
 
 .app-wrapper {
     position: relative;
     height: 100%;
     width: 100%;
+    overflow: hidden;
+}
+
+/* 最外层不出现横向/纵向滚动条，仅主内容区内部滚动 */
+.app-wrapper .el-container {
+    overflow: hidden;
+    display: flex;
+}
+
+.app-wrapper .el-container .el-aside {
+    flex-shrink: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-wrapper .el-container .el-aside .el-scrollbar {
+    flex: 1;
+    min-height: 0;
+}
+
+.app-wrapper .el-container .el-aside .el-scrollbar .scrollbar-wrapper {
+    height: 100% !important;
+}
+
+.app-wrapper .el-container > .el-container {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-wrapper .el-header {
+    flex-shrink: 0;
+}
+
+.app-wrapper .el-footer {
+    flex-shrink: 0;
 }
 
 .footer {
@@ -51,10 +95,18 @@ li {
         color: #23527c;
     }
 
-.el-main
-{
-    background-color: #e3e3e3;
-    height: 730px;
+.app-wrapper .el-main {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: rgba(0,21,41,0.08);
+    -webkit-overflow-scrolling: touch;
+}
+
+.app-wrapper .el-main .ifram-wrapper {
+    min-height: 100%;
+    box-sizing: border-box;
 }
 
 /*侧边栏*/
