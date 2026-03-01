@@ -80,3 +80,72 @@
     flex-wrap: nowrap;
     white-space: nowrap;
 }
+
+/* 弹框通用（添加/编辑/导入 NeuCharAI） */
+.aikernel-form-dialog .el-dialog__header {
+    padding: 18px 24px 14px;
+    border-bottom: 1px solid #ebeef5;
+}
+
+.aikernel-form-dialog .el-dialog__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #303133;
+}
+
+.aikernel-form-dialog .el-dialog__body {
+    padding: 24px 24px 20px;
+}
+
+.aikernel-dialog-form .el-form-item {
+    margin-bottom: 18px;
+}
+
+.aikernel-dialog-form .el-form-item__label {
+    font-size: 13px;
+    color: #606266;
+    line-height: 1.4;
+    padding-bottom: 6px;
+}
+
+.aikernel-dialog-form .el-form-item__content .el-input,
+.aikernel-dialog-form .el-form-item__content .el-select {
+    width: 100%;
+}
+
+.aikernel-dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 14px 24px 18px;
+    border-top: 1px solid #ebeef5;
+}
+
+.aikernel-dialog-footer .el-button {
+    min-width: 80px;
+}
+
+/* 导入 NeuCharAI 说明 */
+.aikernel-neuchar-tip {
+    font-size: 13px;
+    color: #606266;
+    line-height: 1.6;
+    padding: 12px 14px;
+    background: #f4f4f5;
+    border-radius: 4px;
+    margin-top: 8px;
+}
+
+.aikernel-neuchar-tip i {
+    margin-right: 6px;
+    color: #909399;
+}
+
+.aikernel-neuchar-tip a {
+    color: #409eff;
+    text-decoration: none;
+}
+
+.aikernel-neuchar-tip a:hover {
+    text-decoration: underline;
+}

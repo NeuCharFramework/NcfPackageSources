@@ -106,6 +106,14 @@ var app = new Vue({
             }
         }
     },
+    watch: {
+        'addForm.aiPlatform'(val) {
+            if (val === '512') this.addForm.endpoint = this.addForm.endpoint || 'https://api.deepseek.com';
+        },
+        'editForm.aiPlatform'(val) {
+            if (val === '512') this.editForm.endpoint = this.editForm.endpoint || 'https://api.deepseek.com';
+        }
+    },
     mounted() {
         //wait page load  
         setTimeout(async () => {
