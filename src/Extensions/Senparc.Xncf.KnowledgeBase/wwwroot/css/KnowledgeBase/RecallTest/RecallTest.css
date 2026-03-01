@@ -1,11 +1,12 @@
 .recall-test-page {
-    padding: 24px 20px;
+    padding: 24px 16px;
     min-height: 500px;
     background: #f0f2f5;
 }
 
 .recall-test-wrap {
-    max-width: 1200px;
+    max-width: none;
+/*    width: 100%;*/
     margin: 0 auto;
     background: #fff;
     border-radius: 4px;
@@ -38,7 +39,7 @@
 }
 
 .recall-test-left {
-    flex: 0 0 420px;
+    flex: 0 0 500px;
     min-width: 0;
 }
 
@@ -139,7 +140,12 @@
     margin-top: 12px;
     display: flex;
     justify-content: flex-start;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+}
+
+.records-pagination .el-pagination {
+    flex-wrap: nowrap;
+    white-space: nowrap;
 }
 
 .recall-result-title {

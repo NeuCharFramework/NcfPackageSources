@@ -90,13 +90,13 @@
                 <div v-for="(item, index) in recallResults" :key="index" class="recall-card">
                     <div class="recall-card-label">{{ item.chunkName || ('Chunk-' + String(index + 1).padStart(2, '0')) }} {{ item.charCount || (item.content ? item.content.length : 0) }} 字符</div>
                     <div class="recall-card-content">{{ item.content }}</div>
-                    <div v-if="item.tags && item.tags.length" class="recall-card-tags">
+                    @* <div v-if="item.tags && item.tags.length" class="recall-card-tags">
                         <span v-for="(tag, ti) in item.tags" :key="ti" class="recall-tag">#{{ tag }}</span>
                     </div>
                     <div class="recall-card-source">
                         <i class="el-icon-document"></i>
                         <span>{{ item.sourceFile || '—' }}</span>
-                    </div>
+                    </div> *@
                     <el-button type="text" size="small" class="recall-card-open" @@click="openParagraphDetail(item, index)">打开 <i class="el-icon-right"></i></el-button>
                 </div>
             </div>
@@ -147,10 +147,10 @@
                @@close="paragraphDetailItem = null">
         <template v-if="paragraphDetailItem">
             <div class="paragraph-detail-chunk">{{ paragraphDetailChunkName }}</div>
-            <div class="paragraph-detail-source">
+            @* <div class="paragraph-detail-source">
                 <i class="el-icon-document"></i>
                 <span>{{ paragraphDetailItem.sourceFile || '—' }}</span>
-            </div>
+            </div> *@
             <div class="paragraph-detail-title" v-if="paragraphDetailItem.title">{{ paragraphDetailItem.title }}</div>
             <div class="paragraph-detail-content">{{ paragraphDetailItem.content || '—' }}</div>
             <div class="paragraph-detail-keywords" v-if="paragraphDetailTags.length">

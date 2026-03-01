@@ -24,10 +24,7 @@ new Vue({
       recallLoading: false,
       recallResults: [],
       recordList: [
-        { queryContent: '放假', dataSource: 'Retrieval Test', time: '2026-03-01 17:13' },
-        { queryContent: '放假', dataSource: 'Retrieval Test', time: '2026-02-24 23:06' },
-        { queryContent: '放假', dataSource: 'Retrieval Test', time: '2026-02-15 23:41' },
-        { queryContent: '米立科技', dataSource: 'Retrieval Test', time: '2026-02-15 23:40' }
+        { queryContent: '演示', dataSource: 'Retrieval Test', time: '2026-03-01 17:13' },
       ],
       recordPage: 1,
       recordPageSize: 5,
@@ -227,11 +224,7 @@ new Vue({
           var kbName = (that.knowledgeBaseList.find(function (k) { return k.id === kbId; }) || {}).name || 'Retrieval Test';
           that.recordList.unshift({ queryContent: that.recallContent, dataSource: kbName, time: timeStr });
         } else {
-          that.recallResults = [
-            { chunkName: 'Chunk-01', charCount: 36, content: '山西米立信息技术有限公司** 关于2026年春节放假安排的通知', tags: ['安排', '2026', '通知', '春节', '信息技术', '米立', '有限公司', '放假', '山西'], sourceFile: '2026年春节放假通知-v1.0.2.txt' },
-            { chunkName: 'Chunk-03', charCount: 55, content: '根据国务院办公厅关于2026年部分节假日安排的通知精神,结合公司实际情况,现将2026年春节放假安排通知如下:', tags: ['安排', '2026', '通知', '春节', '节假日', '通知精神', '现将', '国务院', '放假', '结合'], sourceFile: '2026年春节放假通知-v1.0.2.txt' },
-            { chunkName: 'Chunk-04', charCount: 95, content: '一、放假时间** 2026年2月15日(星期日,农历腊月二十八)至2月23日(星期一,农历正月初七),共放假9天。...', tags: ['星期日', '2026', '星期六', '15', '23', '农历', '14', '放假', '28', '正月初七'], sourceFile: '2026年春节放假通知-v1.0.2.txt' }
-          ];
+          that.recallResults = [];
           var kbName = (that.knowledgeBaseList.find(function (k) { return k.id === kbId; }) || {}).name || 'Retrieval Test';
           that.recordList.unshift({ queryContent: that.recallContent, dataSource: kbName, time: timeStr });
         }
