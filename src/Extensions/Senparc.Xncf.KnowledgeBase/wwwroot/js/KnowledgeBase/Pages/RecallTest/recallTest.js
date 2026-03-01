@@ -14,8 +14,10 @@ new Vue({
         attrForm: false,
         tagDialog: false,
         tagForm: false,
-        searchSettingsDrawer: false
+        searchSettingsDrawer: false,
+        paragraphDetailDialog: false
       },
+      paragraphDetailItem: null,
       topK: 5,
       attrForm: { id: null, name: '' },
       tagForm: { id: null, name: '' },
@@ -37,6 +39,14 @@ new Vue({
     },
     selectedTagNames() {
       return this.selectedTags.map(id => (this.tagList.find(t => t.id === id) || {}).name).filter(Boolean);
+    },
+    paragraphDetailChunkName() {
+      if (!this.paragraphDetailItem) return '';
+      var idx = this.paragraphDetailItem._index != null ? this.paragraphDetailItem._index + 1 : 1;
+      return this.paragraphDetailItem.chunkName || ('分段-' + String(idx).padStart(2, '0'));
+    },
+    paragraphDetailTags() {
+      return (this.paragraphDetailItem && this.paragraphDetailItem.tags) ? this.paragraphDetailItem.tags : [];
     }
   },
   created() {
@@ -60,6 +70,10 @@ new Vue({
     saveSearchSettings() {
       this.visible.searchSettingsDrawer = false;
       this.$message.success('检索设置已保存');
+    },
+    openParagraphDetail(item, index) {
+      this.paragraphDetailItem = { ...item, _index: index };
+      this.visible.paragraphDetailDialog = true;
     },
     openAttrDialog() {
       this.visible.attrDialog = true;

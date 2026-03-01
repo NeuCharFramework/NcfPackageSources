@@ -82,7 +82,7 @@
                         <i class="el-icon-document"></i>
                         <span>{{ item.sourceFile || '—' }}</span>
                     </div>
-                    <el-button type="text" size="small" class="recall-card-open">打开 <i class="el-icon-right"></i></el-button>
+                    <el-button type="text" size="small" class="recall-card-open" @@click="openParagraphDetail(item, index)">打开 <i class="el-icon-right"></i></el-button>
                 </div>
             </div>
             <div v-if="recallResults.length === 0" class="empty-result">暂无召回结果，请选择知识库、输入源文本并点击「测试」</div>
@@ -123,6 +123,29 @@
             <el-button size="small" type="primary" @@click="saveSearchSettings">保存</el-button>
         </div>
     </el-drawer>
+
+    @* 段落详情弹框：点击召回片段「打开」显示 *@
+    <el-dialog title="段落详情"
+               :visible.sync="visible.paragraphDetailDialog"
+               width="560px"
+               custom-class="paragraph-detail-dialog"
+               @@close="paragraphDetailItem = null">
+        <template v-if="paragraphDetailItem">
+            <div class="paragraph-detail-chunk">{{ paragraphDetailChunkName }}</div>
+            <div class="paragraph-detail-source">
+                <i class="el-icon-document"></i>
+                <span>{{ paragraphDetailItem.sourceFile || '—' }}</span>
+            </div>
+            <div class="paragraph-detail-title" v-if="paragraphDetailItem.title">{{ paragraphDetailItem.title }}</div>
+            <div class="paragraph-detail-content">{{ paragraphDetailItem.content || '—' }}</div>
+            <div class="paragraph-detail-keywords" v-if="paragraphDetailTags.length">
+                <span class="paragraph-detail-keywords-label">关键词</span>
+                <div class="paragraph-detail-tags">
+                    <span v-for="(tag, ti) in paragraphDetailTags" :key="ti" class="recall-tag">#{{ tag }}</span>
+                </div>
+            </div>
+        </template>
+    </el-dialog>
 
     <el-dialog title="属性管理" :visible.sync="visible.attrDialog" width="500px" @@close="closeAttrDialog">
         <el-button size="small" type="primary" @@click="addAttr" style="margin-bottom:10px">+ 新增属性</el-button>
