@@ -5,7 +5,7 @@ var app = new Vue({
             keyword: '',
             page: {
                 page: 1,
-                size: 10
+                size: 8
             },
             tableLoading: true,
             tableData: [],

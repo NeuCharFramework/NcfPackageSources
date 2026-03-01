@@ -56,10 +56,16 @@
 
 .aikernel-toolbar .el-button { margin: 0; }
 
-/* 表格 */
+/* 表格：限制高度，超出显示纵向滚动条，内容控制在页面内 */
 .aikernel-table-wrap {
     margin-bottom: 16px;
+    max-height: calc(100vh - 280px);
+    overflow-y: auto;
     overflow-x: auto;
+}
+
+.aikernel-table-wrap .el-table {
+    margin-bottom: 0;
 }
 
 .aikernel-table-wrap .el-table th {
