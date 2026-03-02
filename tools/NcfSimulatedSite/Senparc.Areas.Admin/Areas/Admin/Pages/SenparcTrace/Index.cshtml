@@ -1,41 +1,73 @@
-﻿@page
+@page
 @model Senparc.Areas.Admin.Areas.Admin.Pages.SenparcTrace_IndexModel
 @{
     ViewData["Title"] = "SenparcTrace 日志";
     Layout = "_Layout_Vue";
 }
+
+@section Style{
+    <link href="~/css/Admin/SenparcTrace/Index.css" rel="stylesheet" />
+}
+
 @section breadcrumbs {
     <el-breadcrumb-item>系统管理</el-breadcrumb-item>
     <el-breadcrumb-item>SenparcTrace 日志</el-breadcrumb-item>
 }
 
 <div>
-    <el-table :data="tableData"
-              border
-              style="width: 100%">
-        <el-table-column align="center"
-                         label="编号"
-                         width="120">
-            <template slot-scope="scope">
-                {{ scope.row.no}}
-            </template>
-        </el-table-column>
-        <el-table-column align="center"
-                         label="日期">
-            <template slot-scope="scope">
-                <a :href="'/Admin/SenparcTrace/DateLog?date=' + scope.row.text">
-                    {{ scope.row.text }}
-                </a>
-            </template>
-        </el-table-column>
-    </el-table>
-    <pagination :total="searchData.total"
-                :page.sync="searchData.pageIndex"
-                :limit.sync="searchData.pageSize"
-                @@pagination="fetchData"></pagination>
+    <div class="senparctrace-page">
+        <div class="senparctrace-main">
+            @* 查询区：按日志日期/名称关键字查询 *@
+            <div class="senparctrace-query-section">
+                <div class="senparctrace-query-row">
+                    <label class="senparctrace-query-label">日志名称</label>
+                    <el-input v-model="searchData.keyword"
+                              placeholder="请输入日志日期或名称关键字"
+                              size="small"
+                              clearable
+                              class="senparctrace-query-input"
+                              @@keyup.enter.native="handleSearch()"></el-input>
+                    <el-button type="primary" size="small" icon="el-icon-search" @@click="handleSearch()">查询</el-button>
+                    <el-button size="small" icon="el-icon-refresh-left" @@click="resetCondition()">重置</el-button>
+                </div>
+            </div>
+
+            @* 表格区域 *@
+            <div class="senparctrace-table-wrap">
+                <el-table :data="tableData"
+                          border
+                          size="small"
+                          style="width: 100%">
+                    <el-table-column align="center"
+                                     label="编号"
+                                     width="120">
+                        <template slot-scope="scope">
+                            {{ scope.row.no}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center"
+                                     label="日志名称">
+                        <template slot-scope="scope">
+                            <a :href="'/Admin/SenparcTrace/DateLog?date=' + scope.row.text">
+                                {{ scope.row.text }}
+                            </a>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+
+            @* 分页：首页、上一页、下一页、尾页、跳转、每页条数 5/10/15/20/50/100，默认 10 *@
+            <div class="senparctrace-pagination-wrap">
+                <pagination :total="searchData.total"
+                            :page.sync="searchData.pageIndex"
+                            :limit.sync="searchData.pageSize"
+                            :page-sizes="[5, 10, 15, 20, 50, 100]"
+                            @@pagination="fetchData"></pagination>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section scripts{
     <script src="~/js/Admin/Pages/SenparcTrace/Index.js"></script>
 }
-

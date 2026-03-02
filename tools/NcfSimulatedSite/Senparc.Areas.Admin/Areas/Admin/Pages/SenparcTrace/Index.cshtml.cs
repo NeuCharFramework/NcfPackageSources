@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Senparc.Areas.Admin.SenparcTraceManager;
 using Senparc.Ncf.AreaBase.Admin.Filters;
+using System.Linq;
 
 namespace Senparc.Areas.Admin.Areas.Admin.Pages
 {
@@ -20,10 +21,23 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             //DateList = SenparcTraceHelper.GetLogDate();
         }
 
-        public IActionResult OnGetList(int pageIndex = 1, int pageSize = 10)
+        public IActionResult OnGetList(string keyword, int pageIndex = 1, int pageSize = 10)
         {
-            var dateList = SenparcTraceHelper.GetLogDate();
-            return Ok(new { dateList.Count, pageIndex, List = dateList.Skip((pageIndex - 1) * pageSize) });
+            var dateList = SenparcTraceHelper.GetLogDate() ?? new System.Collections.Generic.List<string>();
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                dateList = dateList
+                    .Where(z => z != null && z.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
+                    .ToList();
+            }
+
+            var count = dateList.Count;
+            var list = dateList
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return Ok(new { count, pageIndex, list });
         }
     }
 }
