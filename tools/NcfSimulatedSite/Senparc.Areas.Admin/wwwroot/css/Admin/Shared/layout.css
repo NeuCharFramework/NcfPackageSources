@@ -47,6 +47,7 @@ li {
 
 /* 最外层不出现横向/纵向滚动条，仅主内容区内部滚动 */
 .app-wrapper .el-container {
+    height: 100vh;
     overflow: hidden;
     display: flex;
 }
