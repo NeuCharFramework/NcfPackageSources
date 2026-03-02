@@ -1,4 +1,4 @@
-﻿.menu-icons-grid{
+.menu-icons-grid{
     position:relative;
     display:grid;
     grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
@@ -23,6 +23,87 @@
         font-size: 16px;
         margin-top: 10px;
     }
+
+/* 页面整体 */
+.menu-index-page {
+    padding: 20px 24px;
+    background: #f0f2f5;
+    min-height: 100%;
+    box-sizing: border-box;
+}
+
+.menu-main {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+/* 查询区 */
+.menu-query-section {
+    margin-bottom: 20px;
+    padding: 16px 18px;
+    background: #fafbfc;
+    border: 1px solid #e8eaec;
+    border-radius: 6px;
+}
+
+.menu-query-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.menu-query-label {
+    flex: 0 0 auto;
+    font-size: 14px;
+    color: #606266;
+    margin: 0;
+}
+
+.menu-query-input {
+    width: 260px;
+}
+
+.menu-query-row .el-button {
+    margin-left: 0;
+}
+
+/* 工具栏 */
+.menu-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.menu-toolbar .el-button {
+    margin: 0;
+}
+
+/* 表格区域 */
+.menu-table-wrap {
+    margin-bottom: 16px;
+}
+
+.menu-table-wrap .el-table {
+    margin-bottom: 0;
+}
+
+.menu-table-wrap .el-table th {
+    background: #f5f7fa;
+    color: #303133;
+    font-weight: 600;
+}
+
+/* 分页区域 */
+.menu-pagination-wrap {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 12px;
+    border-top: 1px solid #ebeef5;
+}
 
 /* 树形菜单固定行样式 */
 .sticky-parent {

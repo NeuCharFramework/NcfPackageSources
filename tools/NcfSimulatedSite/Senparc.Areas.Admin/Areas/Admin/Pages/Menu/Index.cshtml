@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model Senparc.Areas.Admin.Areas.Admin.Pages.MenuIndexModel
 @{
     ViewData["Title"] = "菜单管理"; Layout = "_Layout_Vue";
@@ -11,12 +11,37 @@
     <el-breadcrumb-item>菜单列表</el-breadcrumb-item>
 }
 <div>
-    <div class="admin-role">
-        <div class="filter-container">
-            <el-button class="filter-item" type="primary" icon="el-icon-plus" @@click="handleEdit('','','add')">增加菜单</el-button>
-        </div>
+    <div class="menu-index-page">
+        <div class="menu-main">
+            @* 查询区：按菜单名称关键字查询 *@
+            <div class="menu-query-section">
+                <div class="menu-query-row">
+                    <label class="menu-query-label">菜单名称</label>
+                    <el-input v-model="keyword"
+                              placeholder="请输入菜单名称关键字"
+                              size="small"
+                              clearable
+                              class="menu-query-input"
+                              @@keyup.enter.native="handleSearch()"></el-input>
+                    <el-button type="primary" size="small" icon="el-icon-search" @@click="handleSearch()">查询</el-button>
+                    <el-button size="small" icon="el-icon-refresh-left" @@click="resetCondition()">重置</el-button>
+                </div>
+            </div>
+
+            @* 工具栏 *@
+            <div class="menu-toolbar">
+                <el-button class="filter-item"
+                           type="primary"
+                           icon="el-icon-plus"
+                           size="small"
+                           @@click="handleEdit('','','add')">增加菜单</el-button>
+            </div>
+
+            @* 表格区域 *@
+            <div class="menu-table-wrap">
         <el-table :data="tableData"
-                  style="width: 100%;margin-bottom: 20px;"
+                  style="width: 100%;"
+                  size="small"
                   row-key="id"
                   border
                   default-expand-all
@@ -40,7 +65,7 @@
                     {{formaTableTime(scope.row.addTime)}}
                 </template>
             </el-table-column>
-            <el-table-column label="操作" align="center">
+            <el-table-column label="操作" align="center" fixed="right" width="260">
                 <template slot-scope="scope">
                     <el-button size="mini"
                                type="primary"
@@ -55,6 +80,17 @@
                 </template>
             </el-table-column>
         </el-table>
+            </div>
+
+            @* 分页：首页、上一页、下一页、尾页、跳转、每页条数 5/10/15/20/50/100，默认 10 *@
+            <div class="menu-pagination-wrap">
+                <pagination :total="paginationQuery.total"
+                            :page.sync="listQuery.pageIndex"
+                            :limit.sync="listQuery.pageSize"
+                            :page-sizes="[5, 10, 15, 20, 50, 100]"
+                            @@pagination="getList"></pagination>
+            </div>
+
         <!--编辑、新增 -->
         <el-dialog :title="dialog.title" :visible.sync="dialog.visible" :close-on-click-modal="false">
             <el-form ref="dataForm"
