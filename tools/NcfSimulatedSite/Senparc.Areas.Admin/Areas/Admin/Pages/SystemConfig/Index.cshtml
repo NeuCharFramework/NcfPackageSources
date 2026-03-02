@@ -1,4 +1,4 @@
-﻿@page "{handler?}"
+@page "{handler?}"
 @addTagHelper *, Senparc.Areas.Admin
 @model Senparc.Areas.Admin.Areas.Admin.Pages.SystemConfig_IndexModel
 @{
@@ -15,57 +15,57 @@
     <el-breadcrumb-item>系统信息</el-breadcrumb-item>
 }
 <div>
-    <div class="admin-systemconfig-info">
-        <h2 class="system-info">基础信息</h2>
-
-        <el-table :data="tableData"
-                  border
-                  style="width: 100%">
-            <el-table-column align="center"
-                             label="系统名称">
-                <template slot-scope="scope">
-                    {{ scope.row.systemName}}
-                </template>
-            </el-table-column>
-            <el-table-column align="center"
-                             label="模块发布模式">
-                <template slot-scope="scope">
-                    {{ scope.row.hideModuleManager }}
-                </template>
-            </el-table-column>
-            <el-table-column label="操作" align="center">
-                <template slot-scope="scope">
-                    <el-button size="mini"
+    <div class="systemconfig-page">
+        <div class="systemconfig-main" v-loading="loading">
+            <div class="systemconfig-header">
+                <div class="systemconfig-header-text">
+                    <h2 class="systemconfig-title">基础信息</h2>
+                    <p class="systemconfig-subtitle">系统的基础配置，仅管理员可编辑。</p>
+                </div>
+                <div class="systemconfig-header-actions">
+                    <el-button v-if="!isEditing"
+                               size="small"
                                type="primary"
+                               icon="el-icon-edit"
                                v-has="['admin-edit']"
-                               @@click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        @*<pagination :total="paginationQuery.total"
-            :page.sync="listQuery.pageIndex"
-            :limit.sync="listQuery.pageSize"
-            @@pagination="getList"></pagination>*@
-        <!--编辑、新增 -->
-        <el-dialog :title="dialog.title" :visible.sync="dialog.visible" :close-on-click-modal="false">
-            <el-form ref="dataForm"
-                     :rules="dialog.rules"
-                     :model="dialog.data"
-                     label-position="left"
-                     label-width="100px"
-                     style="max-width: 400px; margin-left:50px;">
-                @*<p class="username-tip" v-if="dialog.title==='编辑管理员'">不建议修改用户名！</p>*@
-                <el-form-item label="系统名称" prop="systemName">
-                    <el-input v-model="dialog.data.systemName" clearable placeholder="请输入系统名称" />
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @@click="dialog.visible = false">取 消</el-button>
-                <el-button :loading="dialog.updateLoading" type="primary" @@click="updateData">确 认</el-button>
+                               @@click="startEdit">编辑</el-button>
+                    <div v-else class="systemconfig-edit-actions">
+                        <el-button size="small" @@click="cancelEdit">取消</el-button>
+                        <el-button size="small"
+                                   type="primary"
+                                   :loading="saving"
+                                   @@click="saveConfig">保存</el-button>
+                    </div>
+                </div>
             </div>
-        </el-dialog>
-    </div>
 
+            <el-form ref="configForm"
+                     :model="form"
+                     :rules="rules"
+                     label-position="top"
+                     size="small"
+                     class="systemconfig-form">
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="系统名称" prop="systemName">
+                            <el-input v-model="form.systemName"
+                                      :disabled="!isEditing"
+                                      placeholder="请输入系统名称"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="模块发布模式">
+                            <div class="systemconfig-field-readonly">
+                                <el-tag size="small" type="info">
+                                    {{ form.hideModuleManager ? '隐藏模块管理（仅运行已发布模块）' : '显示模块管理（允许管理模块）' }}
+                                </el-tag>
+                            </div>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+        </div>
+    </div>
 </div>
 @section scripts{
     <script src="~/js/Admin/Pages/SystemConfig/Index.js"></script>

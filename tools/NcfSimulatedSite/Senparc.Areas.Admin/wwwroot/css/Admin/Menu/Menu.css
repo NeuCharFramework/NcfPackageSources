@@ -105,6 +105,60 @@
     border-top: 1px solid #ebeef5;
 }
 
+/* 弹框样式：新增/编辑/增加下一级菜单 */
+.menu-form-dialog .el-dialog__header {
+    padding: 18px 24px 14px;
+    border-bottom: 1px solid #ebeef5;
+}
+
+.menu-form-dialog .el-dialog__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #303133;
+}
+
+.menu-form-dialog .el-dialog__body {
+    padding: 24px 24px 20px;
+}
+
+.menu-dialog-form .menu-form-item {
+    margin-bottom: 18px;
+}
+
+.menu-dialog-form .el-form-item__label {
+    font-size: 13px;
+    color: #606266;
+    line-height: 1.4;
+    padding-bottom: 6px;
+}
+
+.menu-dialog-form .el-form-item__content .el-input,
+.menu-dialog-form .el-form-item__content .el-textarea,
+.menu-dialog-form .el-form-item__content .el-cascader {
+    width: 100%;
+}
+
+.menu-dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 14px 24px 18px;
+    border-top: 1px solid #ebeef5;
+}
+
+.menu-dialog-footer .el-button {
+    min-width: 80px;
+}
+
+.menu-dialog-footer .el-button + .el-button {
+    margin-left: 12px;
+}
+
+.menu-icon-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
 /* 树形菜单固定行样式 */
 .sticky-parent {
     position: relative;

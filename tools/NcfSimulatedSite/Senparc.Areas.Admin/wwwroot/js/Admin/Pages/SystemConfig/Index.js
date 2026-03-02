@@ -1,108 +1,88 @@
-﻿var app = new Vue({
+var app = new Vue({
     el: "#app",
     data() {
         return {
-            //分页参数
-            paginationQuery: {
-                total: 5
+            loading: false,
+            saving: false,
+            isEditing: false,
+            form: {
+                id: 0,
+                systemName: '',
+                hideModuleManager: false
             },
-            //分页接口传参（只会有一个）
-            listQuery: {
-                pageIndex: 1,
-                pageSize: 20,
-            },
-            tableData: [],
-            tenantData: {},
-            dialog: {
-                title: '编辑系统信息',
-                visible: false,
-                data: {
-                    id: 0,
-                    systemName: '',
-                },
-                rules: {
-                    systemName: [
-                        { required: true, message: "用户名为必填项", trigger: "blur" }
-                    ]
-                }
-            },
-            updateLoading: false,
-            updateLoadingSet: false, // 确认loading按钮
+            rules: {
+                systemName: [
+                    { required: true, message: "系统名称为必填项", trigger: "blur" }
+                ]
+            }
         };
     },
     created: function () {
-        this.getList();
-    },
-    computed: {
-    },
-    watch: {
-        'dialog.visible': function (val, old) {
-            // 关闭dialog，清空
-            if (!val) {
-                this.dialog.data = {
-                    id: 0,
-                    systemName: ''
-                };
-                this.dialog.updateLoading = false;
-                this.$refs['dataForm'].resetFields();
-            }
-        }
+        this.getConfig();
     },
     methods: {
-        // 获取数据
-        getList() {
-            let { pageIndex, pageSize } = this.listQuery;
-            service.get(`/Admin/SystemConfig/index?handler=List&&pageIndex=${pageIndex}&pageSize=${pageSize}`).then(res => {
-                this.tableData = res.data.data.list;
-                this.paginationQuery.total = res.data.data.totalCount;
-            });
-        },
-        // 编辑
-        handleEdit(index, row) {
-            this.dialog.visible = true;
-            if (row) {
-                // 编辑
-                let { systemName, id } = row;
-                this.dialog.data = {
-                    systemName, id
-                };
-                this.dialog = Object.assign({}, this.dialog);
-            }
-        },
-        // 更新新增编辑
-        updateData() {
-            this.$refs['dataForm'].validate(valid => {
-                // 表单校验
-                if (valid) {
-                    this.dialog.updateLoading = true;
-                    let data = {
-                        Id: this.dialog.data.id,
-                        SystemName: this.dialog.data.systemName,
+        // 获取系统配置（仅一条）
+        getConfig() {
+            this.loading = true;
+            service.get(`/Admin/SystemConfig/index?handler=List&pageIndex=1&pageSize=1`).then(res => {
+                const list = res.data.data.list || [];
+                if (list.length > 0) {
+                    const row = list[0];
+                    this.form = {
+                        id: row.id,
+                        systemName: row.systemName,
+                        hideModuleManager: row.hideModuleManager
                     };
-                    service.post("/Admin/SystemConfig/Edit?handler=Save", data).then(res => {
-                        if (res.data.success) {
-                            this.getList();
-                            this.$notify({
-                                title: "Success",
-                                message: "更新成功！",
-                                type: "success",
-                                duration: 2000
-                            });
-                            this.dialog.visible = false;
-                            this.dialog.updateLoading = false;
-                        } else {
-                            this.$notify({
-                                title: "Faild",
-                                message: "更新失败：" + res.data.msg,
-                                type: "success",
-                                duration: 2000
-                            });
-                        }
-                    }).catch(error => {
-                        this.dialog.updateLoading = false;
-                    });
                 }
+            }).finally(() => {
+                this.loading = false;
             });
         },
+        // 开始编辑
+        startEdit() {
+            this.isEditing = true;
+        },
+        // 取消编辑，恢复数据
+        cancelEdit() {
+            this.isEditing = false;
+            if (this.$refs.configForm) {
+                this.$refs.configForm.clearValidate();
+            }
+            this.getConfig();
+        },
+        // 保存配置
+        saveConfig() {
+            this.$refs.configForm.validate(valid => {
+                if (!valid) {
+                    return;
+                }
+                this.saving = true;
+                const data = {
+                    Id: this.form.id,
+                    SystemName: this.form.systemName
+                };
+                service.post("/Admin/SystemConfig/Edit?handler=Save", data).then(res => {
+                    if (res.data.success) {
+                        this.$notify({
+                            title: "Success",
+                            message: "更新成功！",
+                            type: "success",
+                            duration: 2000
+                        });
+                        this.isEditing = false;
+                        this.getConfig();
+                    } else {
+                        this.$notify({
+                            title: "Failed",
+                            message: "更新失败：" + (res.data.msg || ''),
+                            type: "error",
+                            duration: 2000
+                        });
+                    }
+                }).finally(() => {
+                    this.saving = false;
+                });
+            });
+        }
     }
 });

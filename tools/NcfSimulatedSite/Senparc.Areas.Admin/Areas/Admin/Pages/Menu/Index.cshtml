@@ -91,55 +91,61 @@
                             @@pagination="getList"></pagination>
             </div>
 
-        <!--编辑、新增 -->
-        <el-dialog :title="dialog.title" :visible.sync="dialog.visible" :close-on-click-modal="false">
+        <!--编辑、新增 / 增加下一级菜单 -->
+        <el-dialog :title="dialog.title"
+                   :visible.sync="dialog.visible"
+                   :close-on-click-modal="false"
+                   width="600px"
+                   custom-class="menu-form-dialog">
             <el-form ref="dataForm"
                      :rules="dialog.rules"
                      :model="dialog.data"
                      :disabled="dialog.disabled"
-                     label-position="left"
-                     label-width="100px"
-                     style="max-width: 400px; margin-left:50px;">
-                <el-form-item label="菜单名称" prop="menuName">
-                    <el-input v-model="dialog.data.menuName" clearable placeholder="" />
+                     label-position="top"
+                     size="small"
+                     class="menu-dialog-form">
+                <el-form-item label="菜单名称" prop="menuName" class="menu-form-item">
+                    <el-input v-model="dialog.data.menuName" clearable placeholder="请输入菜单名称" />
                 </el-form-item>
-                <el-form-item label="父级菜单">
+                <el-form-item label="父级菜单" class="menu-form-item">
                     <el-cascader v-model="dialog.data.parentId"
                                  :options="tableData"
                                  clearable
                                  :props="{ checkStrictly: dialog.checkStrictly,label: 'menuName',value:'id'}">
                     </el-cascader>
                 </el-form-item>
-                <el-form-item label="排序">
-                    <el-input type="number" v-model="dialog.data.sort" clearable placeholder="" />
+                <el-form-item label="排序" class="menu-form-item">
+                    <el-input type="number" v-model="dialog.data.sort" clearable placeholder="请输入排序值（数字越小越靠前）" />
                 </el-form-item>
-                <el-form-item label="类型" prop="menuType">
+                <el-form-item label="类型" prop="menuType" class="menu-form-item">
                     <el-radio-group v-model="dialog.data.menuType">
                         <el-radio :label="1">菜单</el-radio>
                         <el-radio :label="2">页面</el-radio>
                         <el-radio :label="3">按钮</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="路径">
-                    <el-input v-model="dialog.data.url" clearable placeholder="" />
+                <el-form-item label="路径" class="menu-form-item">
+                    <el-input v-model="dialog.data.url" clearable placeholder="请输入菜单路径（可选）" />
                 </el-form-item>
-                <el-form-item label="操作代码" prop="resourceCode">
-                    <el-input v-model="dialog.data.resourceCode" clearable placeholder="" />
+                <el-form-item label="操作代码" prop="resourceCode" class="menu-form-item">
+                    <el-input v-model="dialog.data.resourceCode" clearable placeholder="按钮类型时必填，用于权限控制" />
                 </el-form-item>
-                <el-form-item label="是否锁定">
+                <el-form-item label="是否锁定" class="menu-form-item">
                     <el-switch v-model="dialog.data.isLocked"></el-switch>
                 </el-form-item>
-                <el-form-item label="是否显示">
+                <el-form-item label="是否显示" class="menu-form-item">
                     <el-switch v-model="dialog.data.visible"></el-switch>
                 </el-form-item>
-                <el-form-item label="图标">
-                    <i v-if="dialog.data.icon" :class="'fa '+dialog.data.icon"></i>
-                    <el-button @@click="dialogIcon.visible=true" plain style="margin-left:15px;">选择图标</el-button>
+                <el-form-item label="图标" class="menu-form-item">
+                    <div class="menu-icon-row">
+                        <i v-if="dialog.data.icon" :class="'fa '+dialog.data.icon"></i>
+                        <el-button @@click="dialogIcon.visible=true" plain>选择图标</el-button>
+                    </div>
                 </el-form-item>
             </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @@click="dialog.visible = false">取 消</el-button>
-                <el-button :loading="dialog.updateLoading" :disabled="dialog.disabled" type="primary" @@click="updateData">确 认</el-button>
+            <div slot="footer" class="menu-dialog-footer">
+                <el-button @@click="dialog.visible = false">取消</el-button>
+                <el-button :loading="dialog.updateLoading" :disabled="dialog.disabled" type="primary" @@click="updateData">确认</el-button>
             </div>
         </el-dialog>
         <!--选择图标-->
