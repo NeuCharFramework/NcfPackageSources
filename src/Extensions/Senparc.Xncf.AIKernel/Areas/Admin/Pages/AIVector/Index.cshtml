@@ -97,12 +97,21 @@
 
 
     @* dialog for 添加向量数据库 *@
-    <el-dialog title="添加向量数据库" :visible.sync="addFormDialogVisible" width="50%" :close-on-click-modal="false">
-        <el-form :model="addForm" label-width="120px" :rules="addRules" ref="addForm">
-            <el-form-item label="别名" prop="alias">
-                <el-input v-model="addForm.alias"></el-input>
+    <el-dialog title="添加向量数据库"
+               :visible.sync="addFormDialogVisible"
+               width="560px"
+               :close-on-click-modal="false"
+               custom-class="aivector-form-dialog">
+        <el-form :model="addForm"
+                 :rules="addRules"
+                 ref="addForm"
+                 label-position="top"
+                 size="small"
+                 class="aivector-dialog-form">
+            <el-form-item label="别名" prop="alias" class="aivector-form-item">
+                <el-input v-model="addForm.alias" placeholder="请输入别名" clearable></el-input>
             </el-form-item>
-            <el-form-item label="向量数据库类型" prop="vectorDBType">
+            <el-form-item label="向量数据库类型" prop="vectorDBType" class="aivector-form-item">
                 <el-select v-model="addForm.vectorDBType" placeholder="请选择">
                     <el-option label="Memory" value="0"></el-option>
                     <el-option label="HardDisk" value="1"></el-option>
@@ -113,40 +122,39 @@
                     <el-option label="Sqlite" value="6"></el-option>
                     <el-option label="SqlServer" value="7"></el-option>
                     <el-option label="Qdrant" value="8"></el-option>
-                    @* <el-option label="Milvus" value="9"></el-option>
-                    <el-option label="MongoDB" value="10"></el-option>
-                    <el-option label="Pinecon" value="11"></el-option>
-                    <el-option label="Postgres" value="12"></el-option>
-                    <el-option label="Qdrant" value="13"></el-option>
-                    <el-option label="Redis" value="14"></el-option>
-                    <el-option label="SqlServer" value="15"></el-option>
-                    <el-option label="SQLite" value="16"></el-option>
-                    <el-option label="VolatileInMemory" value="17"></el-option>
-                    <el-option label="Weaviate" value="18"></el-option> *@
                 </el-select>
             </el-form-item>
-            <el-form-item label="名称" prop="name">
-                <el-input v-model="addForm.name"></el-input>
+            <el-form-item label="名称" prop="name" class="aivector-form-item">
+                <el-input v-model="addForm.name" placeholder="请输入向量数据库名称" clearable></el-input>
             </el-form-item>
-            <el-form-item label="连接字符串" prop="connectionString">
-                <el-input v-model="addForm.connectionString"></el-input>
+            <el-form-item label="连接字符串" prop="connectionString" class="aivector-form-item">
+                <el-input v-model="addForm.connectionString" type="textarea" :rows="3" placeholder="请输入连接字符串"></el-input>
             </el-form-item>
-            <el-form-item label="备注" prop="note">
-                <el-input v-model="addForm.note"></el-input>
+            <el-form-item label="备注" prop="note" class="aivector-form-item">
+                <el-input v-model="addForm.note" type="textarea" :rows="3" placeholder="请输入备注（选填）"></el-input>
             </el-form-item>
         </el-form>
-        <span slot="footer" class="dialog-footer">
-            <el-button @@click="addFormDialogVisible = false">取 消</el-button>
-            <el-button type="primary" @@click="addModelSubmit">确 定</el-button>
-        </span>
+        <div slot="footer" class="aivector-dialog-footer">
+            <el-button @@click="addFormDialogVisible = false">取消</el-button>
+            <el-button type="primary" @@click="addModelSubmit">确定</el-button>
+        </div>
     </el-dialog>
     @* dialog for 编辑向量数据库 *@
-    <el-dialog title="编辑向量数据库" :visible.sync="editFormDialogVisible" width="50%" :close-on-click-modal="false">
-        <el-form :model="editForm" label-width="120px" :rules="editRules" ref="editForm">
-            <el-form-item label="别名" prop="alias">
-                <el-input v-model="editForm.alias"></el-input>
+    <el-dialog title="编辑向量数据库"
+               :visible.sync="editFormDialogVisible"
+               width="560px"
+               :close-on-click-modal="false"
+               custom-class="aivector-form-dialog">
+        <el-form :model="editForm"
+                 :rules="editRules"
+                 ref="editForm"
+                 label-position="top"
+                 size="small"
+                 class="aivector-dialog-form">
+            <el-form-item label="别名" prop="alias" class="aivector-form-item">
+                <el-input v-model="editForm.alias" placeholder="请输入别名" clearable></el-input>
             </el-form-item>
-            <el-form-item label="向量数据库类型" prop="vectorDBType">
+            <el-form-item label="向量数据库类型" prop="vectorDBType" class="aivector-form-item">
                 <el-select v-model="editForm.vectorDBType" placeholder="请选择">
                     <el-option label="Memory" value="0"></el-option>
                     <el-option label="HardDisk" value="1"></el-option>
@@ -157,37 +165,25 @@
                     <el-option label="Sqlite" value="6"></el-option>
                     <el-option label="SqlServer" value="7"></el-option>
                     <el-option label="Qdrant" value="8"></el-option>
-                    @* <el-option label="Milvus" value="9"></el-option>
-                    <el-option label="MongoDB" value="10"></el-option>
-                    <el-option label="Pinecon" value="11"></el-option>
-                    <el-option label="Postgres" value="12"></el-option>
-                    <el-option label="Qdrant" value="13"></el-option>
-                    <el-option label="Redis" value="14"></el-option>
-                    <el-option label="SqlServer" value="15"></el-option>
-                    <el-option label="SQLite" value="16"></el-option>
-                    <el-option label="VolatileInMemory" value="17"></el-option>
-                    <el-option label="Weaviate" value="18"></el-option> *@
                 </el-select>
             </el-form-item>
-
-            <el-form-item label="名称" prop="name">
-                <el-input v-model="editForm.name"></el-input>
+            <el-form-item label="名称" prop="name" class="aivector-form-item">
+                <el-input v-model="editForm.name" placeholder="请输入向量数据库名称" clearable></el-input>
             </el-form-item>
-            <el-form-item label="连接字符串" prop="connectionString">
-                <el-input v-model="editForm.connectionString"></el-input>
+            <el-form-item label="连接字符串" prop="connectionString" class="aivector-form-item">
+                <el-input v-model="editForm.connectionString" type="textarea" :rows="3" placeholder="请输入连接字符串"></el-input>
             </el-form-item>
-            <el-form-item label="备注" prop="note">
-                <el-input v-model="editForm.note"></el-input>
+            <el-form-item label="备注" prop="note" class="aivector-form-item">
+                <el-input v-model="editForm.note" type="textarea" :rows="3" placeholder="请输入备注（选填）"></el-input>
             </el-form-item>
-            <el-form-item label="显示" prop="show">
-                @* use switch *@
+            <el-form-item label="显示" prop="show" class="aivector-form-item">
                 <el-switch v-model="editForm.show"></el-switch>
             </el-form-item>
         </el-form>
-        <span slot="footer" class="dialog-footer">
-            <el-button @@click="editFormDialogVisible = false">取 消</el-button>
-            <el-button type="primary" @@click="editModelSubmit">确 定</el-button>
-        </span>
+        <div slot="footer" class="aivector-dialog-footer">
+            <el-button @@click="editFormDialogVisible = false">取消</el-button>
+            <el-button type="primary" @@click="editModelSubmit">确定</el-button>
+        </div>
     </el-dialog>
 
 </div>
