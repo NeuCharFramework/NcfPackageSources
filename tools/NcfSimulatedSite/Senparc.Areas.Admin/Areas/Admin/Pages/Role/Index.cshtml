@@ -1,20 +1,51 @@
-﻿@page
+@page
 @model Senparc.Areas.Admin.Areas.Admin.Pages.RoleIndexModel
 @{
     ViewData["Title"] = "角色管理"; Layout = "_Layout_Vue";
 }
+
+@section Style{
+    <link href="~/css/Admin/Role/Index.css" rel="stylesheet" />
+}
+
 @section breadcrumbs {
     <el-breadcrumb-item>系统管理</el-breadcrumb-item>
     <el-breadcrumb-item>角色列表</el-breadcrumb-item>
 }
 
 <div>
-    <div class="admin-role">
-        <div class="filter-container">
-            <el-button class="filter-item" v-has="['role-add']" type="primary" icon="el-icon-plus" @@click="handleEdit">增加</el-button>
-        </div>
+    <div class="role-index-page">
+        <div class="role-main">
+            @* 查询区：按角色名称关键字查询 *@
+            <div class="role-query-section">
+                <div class="role-query-row">
+                    <label class="role-query-label">角色名称</label>
+                    <el-input v-model="keyword"
+                              placeholder="请输入角色名称关键字"
+                              size="small"
+                              clearable
+                              class="role-query-input"
+                              @@keyup.enter.native="handleSearch()"></el-input>
+                    <el-button type="primary" size="small" icon="el-icon-search" @@click="handleSearch()">查询</el-button>
+                    <el-button size="small" icon="el-icon-refresh-left" @@click="resetCondition()">重置</el-button>
+                </div>
+            </div>
+
+            @* 工具栏 *@
+            <div class="role-toolbar">
+                <el-button class="filter-item"
+                           v-has="['role-add']"
+                           type="primary"
+                           icon="el-icon-plus"
+                           size="small"
+                           @@click="handleEdit">增加</el-button>
+            </div>
+
+            @* 表格区域 *@
+            <div class="role-table-wrap">
         <el-table :data="tableData"
                   border
+                  size="small"
                   style="width: 100%">
             <el-table-column align="center"
                              label="角色名称">
@@ -46,7 +77,7 @@
                     {{formaTableTime(scope.row.addTime)}}
                 </template>
             </el-table-column>
-            <el-table-column label="操作" align="center">
+            <el-table-column label="操作" align="center" fixed="right" width="260">
                 <template slot-scope="scope">
                     <el-button size="mini"
                                type="primary"
@@ -62,45 +93,67 @@
                 </template>
             </el-table-column>
         </el-table>
-        <pagination :total="paginationQuery.total"
-                    :page.sync="listQuery.pageIndex"
-                    :limit.sync="listQuery.pageSize"
-                    @@pagination="getList"></pagination>
+            </div>
+
+            @* 分页：首页、上一页、下一页、尾页、跳转、每页条数 5/10/15/20/50/100，默认 10 *@
+            <div class="role-pagination-wrap">
+                <pagination :total="paginationQuery.total"
+                            :page.sync="listQuery.pageIndex"
+                            :limit.sync="listQuery.pageSize"
+                            :page-sizes="[5, 10, 15, 20, 50, 100]"
+                            @@pagination="getList"></pagination>
+            </div>
         <!--编辑、新增 -->
-        <el-dialog :title="dialog.title" :visible.sync="dialog.visible" :close-on-click-modal="false">
+        <el-dialog :title="dialog.title"
+                   :visible.sync="dialog.visible"
+                   :close-on-click-modal="false"
+                   width="560px"
+                   custom-class="role-form-dialog">
             <el-form ref="dataForm"
                      :rules="dialog.rules"
                      :model="dialog.data"
-                     label-position="left"
-                     label-width="100px"
-                     style="max-width: 400px; margin-left:50px;">
-                <el-form-item label="角色名称" prop="roleName">
+                     label-position="top"
+                     size="small"
+                     class="role-dialog-form">
+                <el-form-item label="角色名称" prop="roleName" class="role-form-item">
                     <el-input v-model="dialog.data.roleName" clearable placeholder="请输入角色名称" />
                 </el-form-item>
-                <el-form-item label="角色代码" prop="roleCode">
+                <el-form-item label="角色代码" prop="roleCode" class="role-form-item">
                     <el-input v-model="dialog.data.roleCode" clearable placeholder="请输入角色代码" />
                 </el-form-item>
-                <el-form-item label="是否启用">
+                <el-form-item label="是否启用" class="role-form-item">
                     <el-switch v-model="dialog.data.enabled"></el-switch>
                 </el-form-item>
-                <el-form-item label="说明">
-                    <el-input v-model="dialog.data.remark" clearable placeholder="请输入说明" />
+                <el-form-item label="说明" class="role-form-item">
+                    <el-input v-model="dialog.data.remark" type="textarea" :rows="3" clearable placeholder="请输入说明" />
                 </el-form-item>
-                <el-form-item label="备注">
-                    <el-input v-model="dialog.data.adminRemark" clearable placeholder="请输入备注信息" />
+                <el-form-item label="备注" class="role-form-item">
+                    <el-input v-model="dialog.data.adminRemark" type="textarea" :rows="3" clearable placeholder="请输入备注信息" />
                 </el-form-item>
             </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @@click="dialog.visible = false">取 消</el-button>
-                <el-button :loading="dialog.updateLoading" type="primary" @@click="updateData">确 认</el-button>
+            <div slot="footer" class="role-dialog-footer">
+                <el-button @@click="dialog.visible = false">取消</el-button>
+                <el-button :loading="dialog.updateLoading" type="primary" @@click="updateData">确认</el-button>
             </div>
         </el-dialog>
         <!--授权 -->
-        <el-dialog :title="'为  '+au.title+'  角色授权'" :visible.sync="au.visible" :close-on-click-modal="false">
-            <el-tree :data="allMenu" ref="tree" show-checkbox :props="defaultProps" :default-expanded-keys="defaultExpandedKeys" :default-checked-keys="defaultCheckedKeys" node-key="id"></el-tree>
-            <div slot="footer" class="dialog-footer">
-                <el-button @@click="au.visible = false">取 消</el-button>
-                <el-button :loading="au.updateLoading" type="primary" @@click="auUpdateData">确 认</el-button>
+        <el-dialog :title="'为  '+au.title+'  角色授权'"
+                   :visible.sync="au.visible"
+                   :close-on-click-modal="false"
+                   width="600px"
+                   custom-class="role-form-dialog">
+            <div class="role-permission-body">
+                <el-tree :data="allMenu"
+                         ref="tree"
+                         show-checkbox
+                         :props="defaultProps"
+                         :default-expanded-keys="defaultExpandedKeys"
+                         :default-checked-keys="defaultCheckedKeys"
+                         node-key="id"></el-tree>
+            </div>
+            <div slot="footer" class="role-dialog-footer">
+                <el-button @@click="au.visible = false">取消</el-button>
+                <el-button :loading="au.updateLoading" type="primary" @@click="auUpdateData">确认</el-button>
             </div>
         </el-dialog>
     </div>
