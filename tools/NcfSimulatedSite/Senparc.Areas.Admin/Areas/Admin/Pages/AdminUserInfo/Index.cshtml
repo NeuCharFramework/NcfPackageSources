@@ -1,4 +1,4 @@
-﻿@page "{handler?}"
+@page "{handler?}"
 @model Senparc.Areas.Admin.Areas.Admin.Pages.AdminUserInfo_IndexModel
 @addTagHelper *, Senparc.Areas.Admin
 @{
@@ -12,12 +12,38 @@
     <el-breadcrumb-item>管理员列表</el-breadcrumb-item>
 }
 <div>
-    <div class="admin-user-info">
-        <div class="filter-container">
-            <el-button class="filter-item" v-has="['admin-add']" type="primary" icon="el-icon-plus" @@click="handleEdit">增加</el-button>
-        </div>
+    <div class="admin-user-info-page">
+        <div class="admin-user-info-main">
+            @* 查询区：按管理员名称关键字查询 *@
+            <div class="admin-user-query-section">
+                <div class="admin-user-query-row">
+                    <label class="admin-user-query-label">管理员名称</label>
+                    <el-input v-model="keyword"
+                              placeholder="请输入管理员名称关键字"
+                              size="small"
+                              clearable
+                              class="admin-user-query-input"
+                              @@keyup.enter.native="handleSearch()"></el-input>
+                    <el-button type="primary" size="small" icon="el-icon-search" @@click="handleSearch()">查询</el-button>
+                    <el-button size="small" icon="el-icon-refresh-left" @@click="resetCondition()">重置</el-button>
+                </div>
+            </div>
+
+            @* 工具栏 *@
+            <div class="admin-user-toolbar">
+                <el-button class="filter-item"
+                           v-has="['admin-add']"
+                           type="primary"
+                           icon="el-icon-plus"
+                           size="small"
+                           @@click="handleEdit">增加</el-button>
+            </div>
+
+            @* 表格区域 *@
+            <div class="admin-user-table-wrap">
         <el-table :data="tableData"
                   border
+                  size="small"
                   style="width: 100%">
             <el-table-column align="center"
                              label="id"
@@ -45,7 +71,7 @@
                     {{formaTableTime(scope.row.addTime)}}
                 </template>
             </el-table-column>
-            <el-table-column label="操作" align="center">
+            <el-table-column label="操作" align="center" fixed="right" width="260">
                 <template slot-scope="scope">
                     <el-button size="mini"
                                type="primary"
@@ -63,10 +89,16 @@
                 </template>
             </el-table-column>
         </el-table>
-        <pagination :total="paginationQuery.total"
-                    :page.sync="listQuery.pageIndex"
-                    :limit.sync="listQuery.pageSize"
-                    @@pagination="getList"></pagination>
+            </div>
+
+            @* 分页：首页、上一页、下一页、尾页、跳转、每页条数 5/10/15/20/50/100，默认 10 *@
+            <div class="admin-user-pagination-wrap">
+                <pagination :total="paginationQuery.total"
+                            :page.sync="listQuery.pageIndex"
+                            :limit.sync="listQuery.pageSize"
+                            :page-sizes="[5, 10, 15, 20, 50, 100]"
+                            @@pagination="getList"></pagination>
+            </div>
         <!--编辑、新增 -->
         <el-dialog :title="dialog.title" :visible.sync="dialog.visible" :close-on-click-modal="false">
             <el-form ref="dataForm"

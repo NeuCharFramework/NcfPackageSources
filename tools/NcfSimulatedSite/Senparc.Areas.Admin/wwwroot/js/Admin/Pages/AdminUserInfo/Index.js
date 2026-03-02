@@ -1,4 +1,4 @@
-﻿var app = new Vue({
+var app = new Vue({
     el: "#app",
     data() {
         //const validatePass = (rule, value, callback) => {
@@ -26,9 +26,10 @@
             //分页接口传参
             listQuery: {
                 pageIndex: 1,
-                pageSize: 20,
+                pageSize: 10,
                 adminUserInfoName: ''
             },
+            keyword: '',
             tableData: [],
             dialog: {
                 title: '新增管理员',
@@ -140,6 +141,20 @@
                 this.tableData = res.data.data.list;
                 this.paginationQuery.total = res.data.data.totalCount;
             });
+        },
+        // 查询
+        handleSearch() {
+            this.listQuery.pageIndex = 1;
+            this.listQuery.adminUserInfoName = this.keyword;
+            this.getList();
+        },
+        // 重置
+        resetCondition() {
+            this.keyword = '';
+            this.listQuery.adminUserInfoName = '';
+            this.listQuery.pageIndex = 1;
+            this.listQuery.pageSize = 10;
+            this.getList();
         },
         // 编辑
         handleEdit(index, row) {
