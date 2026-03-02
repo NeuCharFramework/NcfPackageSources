@@ -45,13 +45,12 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         protected virtual Expression<Func<AIVector, bool>> GetListWhere(AIVector_GetListRequest request)
         {
             SenparcExpressionHelper<AIVector> helper = new();
-            //helper.ValueCompare
-            //    .AndAlso(!request.Alias.IsNullOrWhiteSpace(), z => EF.Functions.Like(z.Alias, request.Alias))
-            //    .AndAlso(!request.DeploymentName.IsNullOrWhiteSpace(), z => EF.Functions.Like(z.DeploymentName, request.DeploymentName))
-            //    .AndAlso(!request.Endpoint.IsNullOrWhiteSpace(), z => EF.Functions.Like(z.Endpoint, request.Endpoint))
-            //    .AndAlso(!request.OrganizationId.IsNullOrWhiteSpace(), z => EF.Functions.Like(z.OrganizationId, request.OrganizationId))
-            //    .AndAlso(request.Show != null, z => z.Show == request.Show)
-            //    ;
+            helper.ValueCompare
+                .AndAlso(!request.Alias.IsNullOrWhiteSpace(), z => EF.Functions.Like(z.Alias, $"%{request.Alias}%"))
+                .AndAlso(!request.Name.IsNullOrWhiteSpace(), z => EF.Functions.Like(z.Name, $"%{request.Name}%"))
+                //.AndAlso(request.VectorDBType != 0, z => z.VectorDBType == request.VectorDBType)
+                .AndAlso(request.Show != null, z => z.Show == request.Show)
+                ;
             return helper.BuildWhereExpression();
         }
 

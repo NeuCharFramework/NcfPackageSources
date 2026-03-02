@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model Senparc.Xncf.AIKernel.Areas.AIVector.Pages.Index
 @{
     ViewData["Title"] = "AIVector 首页";
@@ -15,12 +15,31 @@
     <el-breadcrumb-item>首页</el-breadcrumb-item>
 }
 
-<div>
-    <div class="filter-container">
-        <el-button type="primary" icon="el-icon-plus" size="small" @@click="addVector">添加</el-button>
-    </div>
+<div class="aivector-index-page">
+    <div class="aivector-main">
+        @* 查询区：按向量数据库名称(关键字)查询 *@
+        <div class="aivector-query-section">
+            <div class="aivector-query-row">
+                <label class="aivector-query-label">向量数据库名称</label>
+                <el-input v-model="keyword"
+                          placeholder="请输入向量数据库名称关键字"
+                          size="small"
+                          clearable
+                          class="aivector-query-input"
+                          @@keyup.enter.native="handleSearch()"></el-input>
+                <el-button type="primary" size="small" icon="el-icon-search" @@click="handleSearch()">查询</el-button>
+                <el-button size="small" icon="el-icon-refresh-left" @@click="resetCondition()">重置</el-button>
+            </div>
+        </div>
 
-    <el-table :data="tableData" v-loading="tableLoading" border>
+        @* 工具栏 *@
+        <div class="aivector-toolbar">
+            <el-button type="primary" icon="el-icon-plus" size="small" @@click="addVector">添加</el-button>
+        </div>
+
+        @* 表格区域 *@
+        <div class="aivector-table-wrap">
+    <el-table :data="tableData" v-loading="tableLoading" border size="small">
         @* alias *@
         <el-table-column prop="alias" label="别名" width="auto"></el-table-column>
         <el-table-column prop="name" label="部署名称" width="auto"></el-table-column>
@@ -55,24 +74,25 @@
             </template>
         </el-table-column>
         @* 操作 *@
-        <el-table-column label="操作" width="auto">
+        <el-table-column label="操作" align="center" fixed="right" width="160">
             <template slot-scope="scope">
-                <el-button type="primary" size="mini" @@click="editModel(scope.row)">编辑</el-button>
-                <el-button type="danger" size="mini" @@click="deleteModel(scope.row)">删除</el-button>
+                <el-button type="primary" size="mini" plain @@click="editModel(scope.row)">编辑</el-button>
+                <el-button type="danger" size="mini" plain @@click="deleteModel(scope.row)">删除</el-button>
             </template>
         </el-table-column>
     </el-table>
-    <div class="pagination-container">
-        <el-pagination @@current-change="handleCurrentChange"
-                       @@size-change="handleSizeChange"
-                       :current-page="page.page"
-                       :page-sizes="[10, 20, 30, 40]"
-                       :page-size="page.size"
-                       layout="sizes, prev, next, jumper"
-                       :total="total"
-                       background
-                       style="margin-top: 20px">
-        </el-pagination>
+        </div>
+        @* 分页：首页、上一页、下一页、尾页、跳转、每页条数 5/10/15/20/50/100，默认 10 *@
+        <div class="aivector-pagination-wrap">
+            <el-pagination :current-page.sync="page.page"
+                           :page-sizes="[5, 10, 15, 20, 50, 100]"
+                           :page-size.sync="page.size"
+                           :total="total"
+                           layout="total, sizes, prev, pager, next, jumper"
+                           @@size-change="handleSizeChange"
+                           @@current-change="handleCurrentChange">
+            </el-pagination>
+        </div>
     </div>
 
 
