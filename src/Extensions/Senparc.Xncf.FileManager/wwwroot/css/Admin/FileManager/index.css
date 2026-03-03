@@ -1,9 +1,204 @@
-.filter-container {
-    padding-bottom: 10px;
+/* FileManager 左右布局 */
+.file-manager-layout {
+    display: flex;
+    gap: 0;
+    min-height: 560px;
+    background: #f5f7fa;
 }
 
-.pagination-container {
-    padding: 20px 0;
+/* 左侧文件夹面板 */
+.folder-panel {
+    width: 260px;
+    min-width: 260px;
+    background: #fff;
+    border-right: 1px solid #e4e7ed;
+    display: flex;
+    flex-direction: column;
+}
+
+.folder-panel-header {
+    padding: 16px;
+    border-bottom: 1px solid #ebeef5;
+}
+
+.folder-panel-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #303133;
+}
+
+.folder-search {
+    padding: 12px;
+    border-bottom: 1px solid #ebeef5;
+}
+
+.folder-search .el-input {
+    width: 100%;
+}
+
+.folder-tree-wrap {
+    flex: 1;
+    overflow: auto;
+    padding: 8px 0;
+}
+
+.folder-tree-wrap .custom-tree-node {
+    display: inline-flex;
+    align-items: center;
+}
+
+.folder-tree-wrap .tree-node-label {
+    margin-left: 6px;
+}
+
+.folder-panel-footer {
+    padding: 12px 16px;
+    border-top: 1px solid #ebeef5;
+}
+
+.btn-new-folder {
+    width: 100%;
+    text-align: left;
+    color: #409eff;
+}
+
+/* 右侧内容区 */
+.content-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: #fff;
+    margin: 0;
+    padding: 16px 20px;
+}
+
+/* 查询区与工具栏同一行 */
+.query-toolbar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.query-input {
+    width: 260px;
+}
+
+/* 搜索框内图标垂直居中 */
+.query-toolbar-row .el-input__prefix {
+    display: flex;
+    align-items: center;
+    left: 10px;
+}
+
+.query-toolbar-row .query-input-prefix {
+    margin: 0;
+    line-height: 1;
+}
+
+.toolbar-selection {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 8px;
+    padding-left: 12px;
+    border-left: 1px solid #dcdfe6;
+}
+
+/* 导航栏 */
+.nav-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #ebeef5;
+}
+
+.nav-back {
+    color: #606266;
+    font-size: 13px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.nav-back:hover {
+    color: #409eff;
+}
+
+.nav-breadcrumb {
+    flex: 1;
+    font-size: 13px;
+}
+
+.nav-copy {
+    cursor: pointer;
+    color: #909399;
+    font-size: 16px;
+}
+
+.nav-copy:hover {
+    color: #409eff;
+}
+
+/* 表格：行悬停时显示操作图标 */
+.file-table .el-table__row .row-actions {
+    visibility: hidden;
+}
+
+.file-table .el-table__row:hover .row-actions {
+    visibility: visible;
+}
+
+.file-table .col-row-actions {
+    padding: 8px 0;
+}
+
+.row-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.row-actions .action-icon,
+.row-actions .action-icon-wrap {
+    cursor: pointer;
+    color: #909399;
+    font-size: 16px;
+}
+
+.row-actions .action-icon:hover,
+.row-actions .action-icon-wrap:hover {
+    color: #409eff;
+}
+
+.file-icon {
+    margin-right: 8px;
+    color: #409eff;
+}
+
+/* 更新时间列不换行，单行完整显示 */
+.file-table .col-upload-time .cell {
+    white-space: nowrap;
+}
+
+.file-table .cell-upload-time {
+    white-space: nowrap;
+}
+
+/* 分页 */
+.pagination-wrap {
+    margin-top: 16px;
+    padding: 12px 0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* 对话框与上传 */
+.filter-container {
+    padding-bottom: 10px;
 }
 
 .el-upload-dragger {
@@ -16,4 +211,4 @@
 
 .el-dialog .el-upload {
     width: auto;
-} 
+}

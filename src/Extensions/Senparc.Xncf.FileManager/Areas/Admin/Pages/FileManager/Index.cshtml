@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model Senparc.Xncf.FileManager.Areas.FileManager.Pages.Index
 @{
     ViewData["Title"] = "FileManager 首页";
@@ -12,23 +12,21 @@
 }
 
 @section style{
+    <link rel="stylesheet" href="~/css/Admin/FileManager/index.css" asp-append-version="true" />
     <style>
-        .hidden {display:none;}
-        .layout { display:flex; gap:16px; }
-        .folder-panel { width:260px; }
-        .content-panel { flex:1; }
-        .folder-breadcrumb { margin: 6px 0 12px; }
+        .hidden { display: none; }
     </style>
 }
 
-<div class="layout">
-    <div class="folder-panel">
-        <el-card shadow="never">
-            <div slot="header" class="clearfix">
-                <span>文件夹</span>
-                <el-button style="float: right; padding: 3px 6px" type="text" @@click="showCreateFolderDialog">新建</el-button>
-            </div>
-
+<div class="file-manager-layout">
+    <aside class="folder-panel">
+        <div class="folder-panel-header">
+            <span class="folder-panel-title">文库</span>
+        </div>
+        <div class="folder-search">
+            <el-input v-model="folderKeyword" placeholder="搜索目录" size="small" prefix-icon="el-icon-search" clearable></el-input>
+        </div>
+        <div class="folder-tree-wrap">
             <el-tree
                 ref="folderTree"
                 :data="folderTree"
@@ -41,77 +39,106 @@
                 @@node-click="onFolderNodeClick">
                 <span class="custom-tree-node" slot-scope="{ node, data }">
                     <i class="el-icon-folder"></i>
-                    <span style="margin-left:6px;">{{ data.name }}</span>
+                    <span class="tree-node-label">{{ data.name }}</span>
                 </span>
             </el-tree>
-        </el-card>
-    </div>
+        </div>
+        <div class="folder-panel-footer">
+            <el-button type="text" class="btn-new-folder" @@click="showCreateFolderDialog"><i class="el-icon-plus"></i> 新建</el-button>
+        </div>
+    </aside>
 
-    <div class="content-panel">
-        <div class="filter-container">
-            <el-button type="primary" icon="el-icon-upload" size="small" @@click="showUploadDialog">上传文件</el-button>
-            <el-button size="small" @@click="reloadFolderTree">刷新文件夹</el-button>
+    <main class="content-panel">
+        <div class="query-toolbar-row">
+            <el-input v-model="keyword" placeholder="搜索文件/文件夹" size="small" class="query-input" clearable @@keyup.enter.native="doSearch">
+                <i slot="prefix" class="el-icon-search query-input-prefix"></i>
+            </el-input>
+            <el-button size="small" @@click="doSearch">查询</el-button>
+            <el-button size="small" @@click="keyword=''; doSearch();">重置</el-button>
+            <el-dropdown @@command="handleNewCommand">
+                <el-button size="small">新建 <i class="el-icon-arrow-down el-icon--right"></i></el-button>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item command="uploadFile">上传文件</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+            <el-dropdown @@command="handleUploadCommand">
+                <el-button type="primary" size="small">上传 <i class="el-icon-arrow-down el-icon--right"></i></el-button>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item command="uploadFile">上传文件</el-dropdown-item>
+                    <el-dropdown-item command="uploadFolder">上传文件夹</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+            <div v-show="multipleSelection.length > 0" class="toolbar-selection">
+                <el-button size="small" @@click="batchAddTag">添加标签</el-button>
+                <el-button size="small" @@click="batchDownload">下载</el-button>
+                <el-button size="small" @@click="batchCopyTo">复制到</el-button>
+                <el-button size="small" @@click="batchMoveTo">移动到</el-button>
+            </div>
         </div>
 
-        <div class="folder-breadcrumb">
-            <el-breadcrumb separator="/">
+        <div class="nav-bar">
+            <a href="javascript:void(0)" class="nav-back" @@click="goParent"><i class="el-icon-back"></i> 返回上一级</a>
+            <el-breadcrumb separator="/" class="nav-breadcrumb">
                 <el-breadcrumb-item>
                     <a href="javascript:void(0)" @@click="enterFolder(null)">根目录</a>
                 </el-breadcrumb-item>
-                <el-breadcrumb-item v-for="p in folderPath" :key="p.id">
-                    <a href="javascript:void(0)" @@click="enterFolder(p.id)">{{p.name}}</a>
+                <el-breadcrumb-item v-for="p in folderPath" :key="'p'+p.id">
+                    <a href="javascript:void(0)" @@click="enterFolder(p.id)">{{ p.name }}</a>
                 </el-breadcrumb-item>
             </el-breadcrumb>
+            <el-tooltip content="复制导航路径" placement="top">
+                <i class="nav-copy el-icon-document-copy" @@click="copyNavPath"></i>
+            </el-tooltip>
         </div>
 
-        <el-table :data="tableData" v-loading="tableLoading" border>
-            <el-table-column prop="id" label="表Id" width="auto" class-name="hidden"></el-table-column>
-            <el-table-column prop="fileName" label="文件名" width="auto"></el-table-column>
-            <el-table-column prop="fileSize" label="大小" width="120">
+        <el-table ref="fileTable" :data="filteredTableData" v-loading="tableLoading" border class="file-table" @@selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="45"></el-table-column>
+            <el-table-column prop="id" width="0" class-name="hidden"></el-table-column>
+            <el-table-column prop="fileName" label="文件名称" min-width="20">
                 <template slot-scope="scope">
-                    {{ formatFileSize(scope.row.fileSize) }}
+                    <i class="el-icon-document file-icon"></i>
+                    <span>{{ scope.row.fileName }}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="fileType" label="类型" width="100">
-                <template slot-scope="scope">
-                    <span v-if="scope.row.fileType===1">文本</span>
-                    <span v-else-if="scope.row.fileType===2">Word</span>
-                    <span v-else-if="scope.row.fileType===3">PowerPoint</span>
-                    <span v-else-if="scope.row.fileType===4">Excel</span>
-                    <span v-else-if="scope.row.fileType===5">代码</span>
-                    <span v-else>其他</span>
-                </template>
+            <el-table-column prop="updater" label="更新者" width="100">
+                <template slot-scope="scope">{{ scope.row.updaterDisplay || '—' }}</template>
             </el-table-column>
-            <el-table-column prop="description" label="备注" width="auto">
-                <template slot-scope="scope">
-                    <el-input v-model="scope.row.description" @@blur="handleNoteChange(scope.row)" size="small"></el-input>
-                </template>
+            <el-table-column prop="fileSize" label="大小" width="150" sortable>
+                <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
             </el-table-column>
-            <el-table-column prop="uploadTime" label="上传时间" width="180">
-                <template slot-scope="scope">
-                    {{ dateFormatter(scope.row.uploadTime) }}
-                </template>
+            <el-table-column prop="uploadTime" label="更新时间" width="190" class-name="col-upload-time">
+                <template slot-scope="scope"><span class="cell-upload-time">{{ dateFormatter(scope.row.uploadTime) }}</span></template>
             </el-table-column>
-            <el-table-column label="操作" width="220">
+            <el-table-column label="操作" width="140" align="center" class-name="col-row-actions">
                 <template slot-scope="scope">
-                    <el-button type="primary" size="mini" @@click="downloadFile(scope.row)">下载</el-button>
-                    <el-button type="danger" size="mini" @@click="deleteFile(scope.row)">删除</el-button>
+                    <span class="row-actions">
+                        <el-tooltip content="下载" placement="top"><i class="el-icon-download action-icon" @@click.stop="downloadFile(scope.row)"></i></el-tooltip>
+                        <el-tooltip content="权限管理" placement="top"><i class="el-icon-lock action-icon" @@click.stop="openPermission(scope.row)"></i></el-tooltip>
+                        <el-tooltip content="分享链接" placement="top"><i class="el-icon-share action-icon" @@click.stop="openShare(scope.row)"></i></el-tooltip>
+                        <el-dropdown trigger="click" @@command="(cmd)=> handleRowMore(cmd, scope.row)">
+                            <span class="action-icon-wrap"><i class="el-icon-more action-icon"></i></span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="editNote">编辑备注</el-dropdown-item>
+                                <el-dropdown-item command="delete" divided>删除</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </span>
                 </template>
             </el-table-column>
         </el-table>
 
-        <div class="pagination-container">
+        <div class="pagination-wrap">
             <el-pagination
                 @@current-change="handleCurrentChange"
                 @@size-change="handleSizeChange"
                 :current-page="page.page"
-                :page-sizes="[10, 20, 30, 40]"
+                :page-sizes="[5, 8, 10, 15, 20, 50, 100]"
                 :page-size="page.size"
-                layout="sizes, prev, pager, next"
+                layout="total, sizes, prev, pager, next, jumper"
                 :total="total">
             </el-pagination>
         </div>
-    </div>
+    </main>
 
     <el-dialog title="上传文件" :visible.sync="uploadDialog.visible" width="500px">
         <el-upload
@@ -160,6 +187,21 @@
             <el-button type="primary" @@click="submitCreateFolder" :loading="createFolderDialog.loading">确 定</el-button>
         </span>
     </el-dialog>
+
+    <el-dialog title="编辑备注" :visible.sync="editNoteDialog.visible" width="420px">
+        <el-form :model="editNoteDialog.form" label-width="80px">
+            <el-form-item label="文件名">
+                <span>{{ editNoteDialog.form.fileName }}</span>
+            </el-form-item>
+            <el-form-item label="备注">
+                <el-input type="textarea" v-model="editNoteDialog.form.note" placeholder="请输入备注" rows="3"></el-input>
+            </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+            <el-button @@click="editNoteDialog.visible=false">取 消</el-button>
+            <el-button type="primary" @@click="submitEditNote" :loading="editNoteDialog.loading">确 定</el-button>
+        </span>
+    </el-dialog>
 </div>
 
 @section scripts{
@@ -170,8 +212,10 @@
                 return {
                     tableData: [],
                     tableLoading: false,
-                    page: { page: 1, size: 10 },
+                    page: { page: 1, size: 8 },
                     total: 0,
+                    keyword: '',
+                    folderKeyword: '',
                     currentFolderId: null,
                     folderPath: [],
                     folderTree: [{ id: null, name: '根目录', hasChildren: true }],
@@ -180,9 +224,20 @@
                         children: 'children',
                         isLeaf: function (data) { return data && data.hasChildren === false; }
                     },
+                    multipleSelection: [],
                     uploadDialog: { visible: false, fileList: [], uploading: false },
-                    createFolderDialog: { visible: false, loading: false, form: { name: '', description: '' } }
+                    createFolderDialog: { visible: false, loading: false, form: { name: '', description: '' } },
+                    editNoteDialog: { visible: false, loading: false, form: { id: null, fileName: '', note: '' } }
                 };
+            },
+            computed: {
+                filteredTableData: function () {
+                    var k = (this.keyword || '').toLowerCase();
+                    if (!k) return this.tableData;
+                    return this.tableData.filter(function (row) {
+                        return (row.fileName || '').toLowerCase().indexOf(k) >= 0;
+                    });
+                }
             },
             created: function () {
                 this.getList();
@@ -208,10 +263,92 @@
                             url += '&folderId=' + this.currentFolderId;
                         }
                         var res = await axios.get(url);
-                        this.tableData = res.data.data;
-                        this.total = res.data.data.totalCount;
+                        var d = res.data.data || res.data;
+                        var list = [];
+                        if (Array.isArray(d)) {
+                            list = d;
+                        } else if (d && typeof d === 'object') {
+                            var keys = Object.keys(d).filter(function (k) {
+                                return k !== 'TotalCount' && k !== 'PageIndex' && k !== 'PageCount' && k !== 'SkipCount' && isNaN(Number(k)) === false;
+                            });
+                            keys.sort(function (a, b) { return Number(a) - Number(b); });
+                            list = keys.map(function (k) { return d[k]; });
+                        }
+                        this.tableData = list;
+                        this.total = (res.data.data && res.data.data.totalCount) || (d && (d.TotalCount !== undefined ? d.TotalCount : d.totalCount)) || (res.data.TotalCount) || (res.data.totalCount) || 0;
+                        this.tableData.forEach(function (row) {
+                            if (row.updaterDisplay === undefined) row.updaterDisplay = '—';
+                        });
                     } finally {
                         this.tableLoading = false;
+                    }
+                },
+                doSearch: function () {
+                    this.page.page = 1;
+                    this.getList();
+                },
+                handleSelectionChange: function (val) {
+                    this.multipleSelection = val || [];
+                },
+                handleNewCommand: function (cmd) {
+                    if (cmd === 'uploadFile') this.showUploadDialog();
+                },
+                handleUploadCommand: function (cmd) {
+                    if (cmd === 'uploadFile') this.showUploadDialog();
+                    else if (cmd === 'uploadFolder') this.$message.info('上传文件夹功能开发中');
+                },
+                batchAddTag: function () { this.$message.info('添加标签功能开发中'); },
+                batchDownload: function () {
+                    this.multipleSelection.forEach(function (row) {
+                        window.open('/Admin/FileManager/Index?handler=Download&id=' + row.id);
+                    });
+                },
+                batchCopyTo: function () { this.$message.info('复制到功能开发中'); },
+                batchMoveTo: function () { this.$message.info('移动到功能开发中'); },
+                goParent: function () {
+                    if (this.folderPath.length > 0) {
+                        var parent = this.folderPath.length === 1 ? null : this.folderPath[this.folderPath.length - 2].id;
+                        this.enterFolder(parent);
+                    } else {
+                        this.enterFolder(null);
+                    }
+                },
+                copyNavPath: function () {
+                    var path = '根目录';
+                    if (this.folderPath.length > 0) {
+                        path = this.folderPath.map(function (p) { return p.name; }).join(' / ');
+                    }
+                    var ta = document.createElement('textarea');
+                    ta.value = path;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    try {
+                        document.execCommand('copy');
+                        this.$message.success('已复制路径');
+                    } catch (e) { this.$message.error('复制失败'); }
+                    document.body.removeChild(ta);
+                },
+                openPermission: function (row) { this.$message.info('权限管理功能开发中'); },
+                openShare: function (row) { this.$message.info('分享链接功能开发中'); },
+                handleRowMore: function (cmd, row) {
+                    if (cmd === 'editNote') this.editNote(row);
+                    else if (cmd === 'delete') this.deleteFile(row);
+                },
+                editNote: function (row) {
+                    this.editNoteDialog.form = { id: row.id, fileName: row.fileName || '', note: row.description || '' };
+                    this.editNoteDialog.visible = true;
+                },
+                submitEditNote: async function () {
+                    this.editNoteDialog.loading = true;
+                    try {
+                        await axios.post('/Admin/FileManager/Index?handler=EditNote', { id: this.editNoteDialog.form.id, note: this.editNoteDialog.form.note });
+                        this.$message.success('更新成功');
+                        this.editNoteDialog.visible = false;
+                        this.getList();
+                    } catch (e) {
+                        this.$message.error('更新失败');
+                    } finally {
+                        this.editNoteDialog.loading = false;
                     }
                 },
                 handleCurrentChange: function (val) {
