@@ -51,17 +51,6 @@
     margin-left: 6px;
 }
 
-.folder-panel-footer {
-    padding: 12px 16px;
-    border-top: 1px solid #ebeef5;
-}
-
-.btn-new-folder {
-    width: 100%;
-    text-align: left;
-    color: #409eff;
-}
-
 /* 右侧内容区 */
 .content-panel {
     flex: 1;
@@ -105,6 +94,11 @@
     margin-left: 8px;
     padding-left: 12px;
     border-left: 1px solid #dcdfe6;
+}
+
+/* 新建下拉项中图标与文字间距 */
+.query-toolbar-row .el-dropdown-menu__item .el-icon-folder {
+    margin-right: 6px;
 }
 
 /* 导航栏 */
@@ -211,4 +205,82 @@
 
 .el-dialog .el-upload {
     width: auto;
+}
+
+/* ========== 新建文件夹 / 编辑备注 弹窗统一样式 ========== */
+.file-manager-dialog.el-dialog {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.file-manager-dialog .el-dialog__header {
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid #ebeef5;
+    background: #fafafa;
+}
+
+.file-manager-dialog .el-dialog__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #303133;
+}
+
+.file-manager-dialog .el-dialog__body {
+    padding: 24px 20px 20px;
+}
+
+.file-manager-dialog .dialog-body-inner {
+    min-height: 60px;
+}
+
+.file-manager-dialog .dialog-form .el-form-item {
+    margin-bottom: 20px;
+}
+
+.file-manager-dialog .dialog-form .el-form-item__label {
+    color: #606266;
+    line-height: 40px;
+    padding-right: 16px;
+}
+
+.file-manager-dialog .dialog-form .el-input__inner,
+.file-manager-dialog .dialog-form .el-textarea__inner {
+    border-radius: 4px;
+}
+
+.file-manager-dialog .dialog-form .el-textarea__inner {
+    padding: 10px 12px;
+    line-height: 1.6;
+    resize: vertical;
+    min-height: 88px;
+}
+
+.file-manager-dialog .el-dialog__footer {
+    padding: 12px 20px 16px;
+    border-top: 1px solid #ebeef5;
+    text-align: right;
+}
+
+.file-manager-dialog .dialog-footer .el-button {
+    min-width: 72px;
+}
+
+/* 编辑备注 - 文件名只读展示 */
+.dialog-edit-note .edit-note-filename {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #f5f7fa;
+    border-radius: 4px;
+    color: #606266;
+    font-size: 13px;
+    line-height: 1.5;
+    max-width: 100%;
+    word-break: break-all;
+}
+
+.dialog-edit-note .edit-note-filename .el-icon-document {
+    color: #909399;
+    flex-shrink: 0;
 }

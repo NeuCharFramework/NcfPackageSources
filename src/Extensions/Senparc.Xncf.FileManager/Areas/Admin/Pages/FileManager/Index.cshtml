@@ -43,9 +43,6 @@
                 </span>
             </el-tree>
         </div>
-        <div class="folder-panel-footer">
-            <el-button type="text" class="btn-new-folder" @@click="showCreateFolderDialog"><i class="el-icon-plus"></i> 新建</el-button>
-        </div>
     </aside>
 
     <main class="content-panel">
@@ -58,7 +55,7 @@
             <el-dropdown @@command="handleNewCommand">
                 <el-button size="small">新建 <i class="el-icon-arrow-down el-icon--right"></i></el-button>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="uploadFile">上传文件</el-dropdown-item>
+                    <el-dropdown-item command="createFolder"><i class="el-icon-folder"></i> 新建文件夹</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
             <el-dropdown @@command="handleUploadCommand">
@@ -173,30 +170,34 @@
         </span>
     </el-dialog>
 
-    <el-dialog title="新建文件夹" :visible.sync="createFolderDialog.visible" width="420px">
-        <el-form :model="createFolderDialog.form" label-width="80px">
-            <el-form-item label="名称">
-                <el-input v-model="createFolderDialog.form.name" placeholder="请输入文件夹名称"></el-input>
-            </el-form-item>
-            <el-form-item label="备注">
-                <el-input type="textarea" v-model="createFolderDialog.form.description" placeholder="备注（可选）" rows="3"></el-input>
-            </el-form-item>
-        </el-form>
+    <el-dialog title="新建文件夹" :visible.sync="createFolderDialog.visible" width="480px" class="file-manager-dialog dialog-create-folder" :close-on-click-modal="false">
+        <div class="dialog-body-inner">
+            <el-form :model="createFolderDialog.form" label-width="90px" label-position="right" class="dialog-form">
+                <el-form-item label="文件夹名称">
+                    <el-input v-model="createFolderDialog.form.name" placeholder="请输入文件夹名称" maxlength="200" show-word-limit clearable></el-input>
+                </el-form-item>
+                <el-form-item label="备注">
+                    <el-input type="textarea" v-model="createFolderDialog.form.description" placeholder="备注（可选）" :rows="4" maxlength="300" show-word-limit></el-input>
+                </el-form-item>
+            </el-form>
+        </div>
         <span slot="footer" class="dialog-footer">
             <el-button @@click="createFolderDialog.visible=false">取 消</el-button>
             <el-button type="primary" @@click="submitCreateFolder" :loading="createFolderDialog.loading">确 定</el-button>
         </span>
     </el-dialog>
 
-    <el-dialog title="编辑备注" :visible.sync="editNoteDialog.visible" width="420px">
-        <el-form :model="editNoteDialog.form" label-width="80px">
-            <el-form-item label="文件名">
-                <span>{{ editNoteDialog.form.fileName }}</span>
-            </el-form-item>
-            <el-form-item label="备注">
-                <el-input type="textarea" v-model="editNoteDialog.form.note" placeholder="请输入备注" rows="3"></el-input>
-            </el-form-item>
-        </el-form>
+    <el-dialog title="编辑备注" :visible.sync="editNoteDialog.visible" width="480px" class="file-manager-dialog dialog-edit-note" :close-on-click-modal="false">
+        <div class="dialog-body-inner">
+            <el-form :model="editNoteDialog.form" label-width="90px" label-position="right" class="dialog-form">
+                <el-form-item label="文件">
+                    <div class="edit-note-filename"><i class="el-icon-document"></i> {{ editNoteDialog.form.fileName || '—' }}</div>
+                </el-form-item>
+                <el-form-item label="备注">
+                    <el-input type="textarea" v-model="editNoteDialog.form.note" placeholder="请输入备注" :rows="4" maxlength="300" show-word-limit></el-input>
+                </el-form-item>
+            </el-form>
+        </div>
         <span slot="footer" class="dialog-footer">
             <el-button @@click="editNoteDialog.visible=false">取 消</el-button>
             <el-button type="primary" @@click="submitEditNote" :loading="editNoteDialog.loading">确 定</el-button>
@@ -291,7 +292,7 @@
                     this.multipleSelection = val || [];
                 },
                 handleNewCommand: function (cmd) {
-                    if (cmd === 'uploadFile') this.showUploadDialog();
+                    if (cmd === 'createFolder') this.showCreateFolderDialog();
                 },
                 handleUploadCommand: function (cmd) {
                     if (cmd === 'uploadFile') this.showUploadDialog();
