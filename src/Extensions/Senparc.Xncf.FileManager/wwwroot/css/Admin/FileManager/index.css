@@ -284,3 +284,111 @@
     color: #909399;
     flex-shrink: 0;
 }
+
+/* ========== 移动到 / 复制到 弹窗 ========== */
+.dialog-move-copy .el-dialog__body {
+    padding: 16px 20px 12px;
+}
+
+.dialog-move-copy .el-dialog__footer {
+    padding: 0;
+}
+
+.move-copy-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.move-copy-search {
+    flex-shrink: 0;
+}
+
+.move-copy-search-input {
+    width: 100%;
+}
+
+.move-copy-search .el-input__prefix {
+    display: flex;
+    align-items: center;
+}
+
+.move-copy-tree-wrap {
+    border: 1px solid #ebeef5;
+    border-radius: 4px;
+    padding: 12px;
+    min-height: 240px;
+    max-height: 320px;
+    overflow: auto;
+    background: #fafafa;
+}
+
+.dialog-move-copy .move-copy-tree-wrap .custom-tree-node {
+    display: inline-flex;
+    align-items: center;
+}
+
+.dialog-move-copy .move-copy-tree-wrap .tree-node-label {
+    margin-left: 6px;
+}
+
+.move-copy-current {
+    flex-shrink: 0;
+    padding: 10px 12px;
+    background: #f0f9ff;
+    border-radius: 4px;
+    border: 1px solid #d9ecff;
+    font-size: 13px;
+}
+
+.move-copy-current-label {
+    color: #606266;
+    margin-right: 6px;
+}
+
+.move-copy-current-value {
+    color: #303133;
+    font-weight: 500;
+}
+
+.move-copy-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 14px 20px 16px;
+    border-top: 1px solid #ebeef5;
+    background: #fafafa;
+}
+
+.move-copy-recent {
+    font-size: 13px;
+    color: #606266;
+}
+
+.move-copy-recent-label {
+    margin-right: 8px;
+}
+
+.move-copy-recent-path {
+    color: #303133;
+    margin-right: 8px;
+}
+
+.move-copy-use-recent {
+    padding: 0 4px;
+    font-size: 13px;
+}
+
+.move-copy-recent-empty {
+    color: #909399;
+}
+
+.move-copy-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.move-copy-actions .el-button {
+    min-width: 72px;
+}

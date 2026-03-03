@@ -66,7 +66,7 @@
                 </el-dropdown-menu>
             </el-dropdown>
             <div v-show="multipleSelection.length > 0" class="toolbar-selection">
-                <el-button size="small" @@click="batchAddTag">添加标签</el-button>
+                @* <el-button size="small" @@click="batchAddTag">添加标签</el-button> *@
                 <el-button size="small" @@click="batchDownload">下载</el-button>
                 <el-button size="small" @@click="batchCopyTo">复制到</el-button>
                 <el-button size="small" @@click="batchMoveTo">移动到</el-button>
@@ -110,7 +110,7 @@
                 <template slot-scope="scope">
                     <span class="row-actions">
                         <el-tooltip content="下载" placement="top"><i class="el-icon-download action-icon" @@click.stop="downloadFile(scope.row)"></i></el-tooltip>
-                        <el-tooltip content="权限管理" placement="top"><i class="el-icon-lock action-icon" @@click.stop="openPermission(scope.row)"></i></el-tooltip>
+                        @* <el-tooltip content="权限管理" placement="top"><i class="el-icon-lock action-icon" @@click.stop="openPermission(scope.row)"></i></el-tooltip> *@
                         <el-tooltip content="分享链接" placement="top"><i class="el-icon-share action-icon" @@click.stop="openShare(scope.row)"></i></el-tooltip>
                         <el-dropdown trigger="click" @@command="(cmd)=> handleRowMore(cmd, scope.row)">
                             <span class="action-icon-wrap"><i class="el-icon-more action-icon"></i></span>
@@ -203,6 +203,50 @@
             <el-button type="primary" @@click="submitEditNote" :loading="editNoteDialog.loading">确 定</el-button>
         </span>
     </el-dialog>
+
+    <el-dialog :title="moveCopyDialog.mode === 'move' ? '移动到指定位置' : '复制到指定位置'" :visible.sync="moveCopyDialog.visible" width="560px" class="file-manager-dialog dialog-move-copy" :close-on-click-modal="false" @@open="onMoveCopyDialogOpen">
+        <div class="dialog-body-inner move-copy-body">
+            <div class="move-copy-search">
+                <el-input v-model="moveCopyDialog.folderKeyword" placeholder="搜索目录" size="small" prefix-icon="el-icon-search" clearable class="move-copy-search-input"></el-input>
+            </div>
+            <div class="move-copy-tree-wrap">
+                <el-tree
+                    ref="moveCopyTree"
+                    :data="moveCopyDialog.treeData"
+                    :props="folderTreeProps"
+                    node-key="id"
+                    lazy
+                    :load="loadMoveCopyFolderChildren"
+                    highlight-current
+                    :expand-on-click-node="false"
+                    @@node-click="onMoveCopyFolderClick">
+                    <span class="custom-tree-node" slot-scope="{ node, data }">
+                        <i class="el-icon-folder"></i>
+                        <span class="tree-node-label">{{ data.name }}</span>
+                    </span>
+                </el-tree>
+            </div>
+            <div class="move-copy-current">
+                <span class="move-copy-current-label">当前选择：</span>
+                <span class="move-copy-current-value">{{ moveCopyDialog.selectedFolderName }}</span>
+            </div>
+        </div>
+        <div slot="footer" class="move-copy-footer">
+            <div class="move-copy-recent">
+                <span class="move-copy-recent-label">最近保存路径：</span>
+                <template v-if="moveCopyDialog.recentFolderName">
+                    <span class="move-copy-recent-path">{{ moveCopyDialog.recentFolderName }}</span>
+                    <el-button type="text" size="small" class="move-copy-use-recent" @@click="useRecentPath">使用该路径</el-button>
+                </template>
+                <span v-else class="move-copy-recent-empty">暂无</span>
+            </div>
+            <div class="move-copy-actions">
+                <el-button @@click="closeMoveCopyDialog">取 消</el-button>
+                <el-button v-if="moveCopyDialog.mode === 'move'" type="primary" @@click="confirmMoveCopy" :loading="moveCopyDialog.submitting">移动到这里</el-button>
+                <el-button v-else type="primary" @@click="confirmMoveCopy" :loading="moveCopyDialog.submitting">复制到这里</el-button>
+            </div>
+        </div>
+    </el-dialog>
 </div>
 
 @section scripts{
@@ -228,7 +272,18 @@
                     multipleSelection: [],
                     uploadDialog: { visible: false, fileList: [], uploading: false },
                     createFolderDialog: { visible: false, loading: false, form: { name: '', description: '' } },
-                    editNoteDialog: { visible: false, loading: false, form: { id: null, fileName: '', note: '' } }
+                    editNoteDialog: { visible: false, loading: false, form: { id: null, fileName: '', note: '' } },
+                    moveCopyDialog: {
+                        visible: false,
+                        mode: 'move',
+                        selectedFolderId: null,
+                        selectedFolderName: '根目录',
+                        treeData: [{ id: null, name: '根目录', hasChildren: true }],
+                        folderKeyword: '',
+                        recentFolderId: null,
+                        recentFolderName: '',
+                        submitting: false
+                    }
                 };
             },
             computed: {
@@ -304,8 +359,77 @@
                         window.open('/Admin/FileManager/Index?handler=Download&id=' + row.id);
                     });
                 },
-                batchCopyTo: function () { this.$message.info('复制到功能开发中'); },
-                batchMoveTo: function () { this.$message.info('移动到功能开发中'); },
+                batchCopyTo: function () { this.openMoveCopyDialog('copy'); },
+                batchMoveTo: function () { this.openMoveCopyDialog('move'); },
+                openMoveCopyDialog: function (mode) {
+                    this.moveCopyDialog.mode = mode;
+                    this.moveCopyDialog.visible = true;
+                    this.moveCopyDialog.selectedFolderId = null;
+                    this.moveCopyDialog.selectedFolderName = '根目录';
+                    this.moveCopyDialog.treeData = [{ id: null, name: '根目录', hasChildren: true }];
+                    this.moveCopyDialog.folderKeyword = '';
+                    this.moveCopyDialog.submitting = false;
+                },
+                closeMoveCopyDialog: function () {
+                    this.moveCopyDialog.visible = false;
+                },
+                onMoveCopyDialogOpen: function () {
+                    this.$nextTick(function () {
+                        if (this.$refs.moveCopyTree && typeof this.$refs.moveCopyTree.setCurrentKey === 'function') {
+                            this.$refs.moveCopyTree.setCurrentKey(null);
+                        }
+                    });
+                },
+                loadMoveCopyFolderChildren: async function (node, resolve) {
+                    var self = this;
+                    try {
+                        var parentId = node.level === 0 ? null : node.data.id;
+                        var url = '/Admin/FileManager/Index?handler=Folders';
+                        if (parentId != null) { url += '&parentId=' + parentId; }
+                        var res = await axios.get(url);
+                        var list = (res.data && res.data.data) ? res.data.data : (res.data || []);
+                        resolve((list || []).map(function (f) {
+                            return { id: f.id, name: f.name, description: f.description, parentId: f.parentId, hasChildren: true };
+                        }));
+                    } catch (e) {
+                        console.error(e);
+                        resolve([]);
+                    }
+                },
+                onMoveCopyFolderClick: function (data) {
+                    this.moveCopyDialog.selectedFolderId = data.id === null ? null : data.id;
+                    this.moveCopyDialog.selectedFolderName = data.name || '根目录';
+                },
+                useRecentPath: function () {
+                    if (!this.moveCopyDialog.recentFolderName) return;
+                    this.moveCopyDialog.selectedFolderId = this.moveCopyDialog.recentFolderId;
+                    this.moveCopyDialog.selectedFolderName = this.moveCopyDialog.recentFolderName;
+                    if (this.$refs.moveCopyTree && typeof this.$refs.moveCopyTree.setCurrentKey === 'function') {
+                        this.$refs.moveCopyTree.setCurrentKey(this.moveCopyDialog.recentFolderId);
+                    }
+                },
+                confirmMoveCopy: async function () {
+                    this.moveCopyDialog.submitting = true;
+                    try {
+                        var targetFolderId = this.moveCopyDialog.selectedFolderId;
+                        var ids = this.multipleSelection.map(function (r) { return r.id; });
+                        if (ids.length === 0) {
+                            this.$message.warning('请先选择要' + (this.moveCopyDialog.mode === 'move' ? '移动' : '复制') + '的文件');
+                            return;
+                        }
+                        var url = this.moveCopyDialog.mode === 'move' ? '/Admin/FileManager/Index?handler=Move' : '/Admin/FileManager/Index?handler=Copy';
+                        await axios.post(url, { fileIds: ids, targetFolderId: targetFolderId });
+                        this.$message.success(this.moveCopyDialog.mode === 'move' ? '移动成功' : '复制成功');
+                        this.moveCopyDialog.recentFolderId = targetFolderId;
+                        this.moveCopyDialog.recentFolderName = this.moveCopyDialog.selectedFolderName;
+                        this.moveCopyDialog.visible = false;
+                        this.getList();
+                    } catch (e) {
+                        this.$message.info(this.moveCopyDialog.mode === 'move' ? '移动功能开发中' : '复制功能开发中');
+                    } finally {
+                        this.moveCopyDialog.submitting = false;
+                    }
+                },
                 goParent: function () {
                     if (this.folderPath.length > 0) {
                         var parent = this.folderPath.length === 1 ? null : this.folderPath[this.folderPath.length - 2].id;
