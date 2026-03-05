@@ -22,6 +22,11 @@ namespace Senparc.Web
         {
             StartTime = SystemTime.Now.DateTime;
 
+             // 注册 EventBus
+            builder.Services.AddSingleton<Senparc.Ncf.Core.EventBus.InMemoryEventBus>();
+            builder.Services.AddSingleton<Senparc.Ncf.Shared.Abstractions.Events.IEventBus>(sp => sp.GetRequiredService<Senparc.Ncf.Core.EventBus.InMemoryEventBus>());
+            builder.Services.AddHostedService<Senparc.Ncf.Core.EventBus.EventBusHostedService>();
+
             //激活 Xncf 扩展引擎（必须）
             var logMsg = builder.StartWebEngine(new[] { "Senparc.Areas.Admin"});
             //如果不需要启用 Areas，可以只使用 services.StartEngine() 或 services.StartEngine() 方法

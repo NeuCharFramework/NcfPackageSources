@@ -4,6 +4,10 @@ var app = new Vue({
         return {
             isAIGrade: true,
             devHost: 'http://pr-felixj.frp.senparc.com',
+            // 优化功能
+            optimizeDialogVisible: false,
+            optimizeRequirement: '',
+            optimizing: false,
             pageChange: false, // 页面是否有变化
             isAvg: true, // 是否平均分 默认false 不平均
             // 配置 输入 ---start
@@ -2994,6 +2998,76 @@ var app = new Vue({
             this.map3dTreeData = tree
         },
         
+        // --- 优化功能 ---
+        openOptimizeDialog() {
+            if (!this.promptid) {
+                this.$message.warning('请先选择一个Prompt！');
+                return;
+            }
+            this.optimizeRequirement = '';
+            this.optimizeDialogVisible = true;
+        },
+        async executeOptimize() {
+            if (!this.promptid) {
+                this.$message.warning('请先选择一个Prompt！');
+                return;
+            }
+            
+            // 获取当前选择的 Prompt Code
+            let promptCode = '';
+            // 尝试从 promptOpt 中获取 (fullVersion)
+            const selectedPrompt = this.promptOpt.find(item => item.value === this.promptid);
+            if (selectedPrompt) {
+                // 如果 promptOpt 中有 fullVersion 字段
+                if (selectedPrompt.fullVersion) {
+                    promptCode = selectedPrompt.fullVersion;
+                } else if (selectedPrompt.label && selectedPrompt.label.includes('-T')) {
+                    // label 可能是 "2023.1.1.1-T1-A1" 格式
+                    promptCode = selectedPrompt.label; 
+                }
+            }
+            // 如果没找到，尝试从详情获取
+            if (!promptCode && this.promptDetail && this.promptDetail.fullVersion) {
+                promptCode = this.promptDetail.fullVersion;
+            }
+
+            if (!promptCode) {
+                 this.$message.error('无法获取当前Prompt的版本号(Prompt Code)');
+                 return;
+            }
+
+            this.optimizing = true;
+            try {
+                // 调用后端接口
+                const response = await servicePR.post('/api/Senparc.Xncf.AgentsManager/PromptOptimizationAppService/OptimizeAsync', {
+                    promptCode: promptCode,
+                    userRequirement: this.optimizeRequirement
+                });
+
+                // 处理响应
+                if (response.data && response.data.newPromptCode) {
+                    this.$message.success(`优化成功！新的 Prompt Code: ${response.data.newPromptCode}`);
+                    this.optimizeDialogVisible = false;
+                    // 刷新列表或跳转到新Prompt (可选)
+                    // this.getPromptList(this.promptField); // 刷新
+                } else if (response.data && response.data.success === false) {
+                     this.$message.error('优化失败: ' + (response.data.message || '未知原因'));
+                } else {
+                    // NCF 可能直接返回 data
+                   if (response.data.newPromptCode) {
+                      this.$message.success(`优化成功！newPromptCode: ${response.data.newPromptCode}`);
+                      this.optimizeDialogVisible = false;
+                   } else {
+                      this.$message.error('优化未返回有效结果');
+                   }
+                }
+            } catch (error) {
+                console.error('Optimize Error:', error);
+                this.$message.error('请求出错：' + (error.message || '未知错误'));
+            } finally {
+                this.optimizing = false;
+            }
+        },
         // 计算树的高度（用于平衡布局）
         calculateTreeHeight(nodeData) {
             if (!nodeData || typeof nodeData !== 'object') return 0

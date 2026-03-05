@@ -198,46 +198,50 @@ new Vue({
         return;
       }
       that.recallLoading = true;
-      that.recallResults = [];
-      const now = new Date();
-      const timeStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0') + ' ' +
-        String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0') + ':' + String(now.getSeconds()).padStart(2, '0');
+      setTimeout(function () {
+        const now = new Date();
+        const timeStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0') + ' ' +
+          String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0') + ':' + String(now.getSeconds()).padStart(2, '0');
+        debugger
+        const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/RecallTestAppService/Xncf.KnowledgeBase_RecallTestAppService.RecallTest';
+        const dataTemp = { id: 10, content: that.recallContent };
+        //const dataTemp = { id: item?.id ?? '' };
 
-      const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/RecallTestAppService/Xncf.KnowledgeBase_RecallTestAppService.RecallTest';
-      const dataTemp = { id: kbId, content: that.recallContent, topK: that.topK };
-      service.post(serviceURL, dataTemp).then(res => {
-        var body = res && res.data && res.data.data;
-        var recordScore = '';
-        if (body && Array.isArray(body) && body.length > 0) {
-          recordScore = body[0].score != null && body[0].score !== '' ? String(body[0].score) : (body[0].Score != null && body[0].Score !== '' ? String(body[0].Score) : '');
-          that.recallResults = body.map(function (b, i) {
-            var content = b.content || '';
-            var tags = b.tags || [];
-            if (typeof tags === 'string') tags = tags.split(/[,\s]+/).filter(Boolean);
-            return {
-              chunkName: b.chunkName || ('Chunk-' + String(i + 1).padStart(2, '0')),
-              charCount: content.length,
-              content: content,
-              tags: tags,
-              sourceFile: b.sourceFile || b.fileName || '—',
-              score: b.score != null ? b.score : (b.Score != null ? b.Score : ''),
-              recallTime: b.recallTime
-            };
-          });
-          var kbName = (that.knowledgeBaseList.find(function (k) { return k.id === kbId; }) || {}).name || 'Retrieval Test';
-          that.recordList.unshift({ queryContent: that.recallContent, score: recordScore, dataSource: kbName, time: timeStr });
-        } else {
-          that.recallResults = [];
-          var kbName = (that.knowledgeBaseList.find(function (k) { return k.id === kbId; }) || {}).name || 'Retrieval Test';
-          that.recordList.unshift({ queryContent: that.recallContent, score: recordScore, dataSource: kbName, time: timeStr });
-        }
-        that.recallLoading = false;
-        that.$message.success('召回完成');
-      }).catch(err => {
-        that.recallResults = [];
-        that.recallLoading = false;
-        that.$notify({ title: '错误', message: err.message || '召回失败，请检查配置', type: 'error', duration: 5000 });
-      });
+        service.post(serviceURL, dataTemp).then(res => {
+          debugger
+          var body = res && res.data.data;
+          if (body.length > 0) {
+            for (let i = 0; i < body.length; i++) {
+              let recallItem = {
+                score: body[i].score,
+                content: (body[i].content || '') + ' [召回示例1]',
+                recallTime: body[i].recallTime
+              }
+              that.recallResults.push(recallItem);
+            }
+
+            //that.recallResults = [
+            //  { score: '0.95', content: (that.recallContent || '') + ' [召回示例1]', recallTime: timeStr },
+            //  { score: '0.88', content: (that.recallContent || '') + ' [召回示例2]', recallTime: timeStr },
+            //  { score: '0.72', content: (that.recallContent || '') + ' [召回示例3]', recallTime: timeStr }
+            //];
+
+            that.recallLoading = false;
+            that.$message.success(that.evalMode === 'offline' ? '离线评估召回完成' : '在线评估召回完成');
+          }
+        }).catch(err => {
+          setTimeout(function () {
+            that.$notify({
+              title: '错误',
+              message: err.message || '向量化处理出错，请检查配置',
+              type: 'error',
+              duration: 5000
+            });
+          }, 800);
+        });
+
+        
+      }, 800);
     }
   }
 });

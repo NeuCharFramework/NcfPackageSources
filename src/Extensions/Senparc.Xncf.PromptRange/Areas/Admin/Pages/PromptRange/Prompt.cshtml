@@ -65,6 +65,10 @@
                                 <div class="titleContent">选择靶道</div>
                             </div>
                             <div class="d-flex align-center" style="gap: 5px;">
+                                <el-button type="primary" size="mini" icon="el-icon-magic-stick" @@click="openOptimizeDialog" 
+                                    style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); border: none; font-weight: bold; color: #333;">
+                                    优化
+                                </el-button>
                                 <el-button type="primary" size="mini" icon="el-icon-s-data" @@click="openMapDialog" 
                                     style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; font-weight: bold;">
                                     导图
@@ -1263,6 +1267,24 @@
         <div slot="footer" class="dialog-footer">
             <el-button @@click="compareDialogVisible = false">关闭</el-button>
         </div>
+    </el-dialog>
+
+    @* 优化Prompt弹窗 *@
+    <el-dialog title="AI 自动优化 Prompt" :visible.sync="optimizeDialogVisible" width="50%" :append-to-body="true">
+        <div class="optimize-dialog-content">
+            <el-alert title="说明" type="info" description="请输入您的优化需求，AI 将分析当前 Prompt 并尝试生成更好的版本。" show-icon :closable="false" style="margin-bottom: 20px;">
+            </el-alert>
+            <el-form label-position="top">
+                <el-form-item label="优化需求描述">
+                    <el-input type="textarea" :rows="4" placeholder="例如：让回答更具创造性，或者是减少幻觉..." v-model="optimizeRequirement">
+                    </el-input>
+                </el-form-item>
+            </el-form>
+        </div>
+        <span slot="footer" class="dialog-footer">
+            <el-button @@click="optimizeDialogVisible = false">取消</el-button>
+            <el-button type="primary" @@click="executeOptimize" :loading="optimizing">开始优化</el-button>
+        </span>
     </el-dialog>
     
 </div>

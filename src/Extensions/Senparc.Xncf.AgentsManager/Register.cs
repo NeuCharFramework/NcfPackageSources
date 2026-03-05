@@ -98,12 +98,14 @@ namespace Senparc.Xncf.AgentsManager
 
             //Service DI
             services.AddScoped<AgentsTemplateService>();
+            services.AddScoped<PromptOptimizationService>(); // 注册 PromptOptimizationService
             services.AddScoped<ChatGroupService>();
             services.AddScoped<ChatGroupHistoryService>();
             services.AddScoped<ChatTaskService>();
             services.AddScoped<ChatGroupMemberService>();
 
             //AI Plugins DI
+            services.AddScoped<PromptCatalyzerPlugin>();
             services.AddScoped<CrawlPlugin>();
             services.AddScoped<FormatorPlugin>();
             services.AddScoped<TranslatorPlugin>();
@@ -121,6 +123,7 @@ namespace Senparc.Xncf.AgentsManager
             });
 
             var aiPlugins = AIPluginHub.Instance;
+            aiPlugins.Add(typeof(PromptCatalyzerPlugin));
             aiPlugins.Add(typeof(CrawlPlugin));
             aiPlugins.Add(typeof(FormatorPlugin));
             aiPlugins.Add(typeof(TranslatorPlugin));
