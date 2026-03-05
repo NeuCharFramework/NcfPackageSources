@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 
-namespace Senparc.Xncf.PromptRange.Domain.EventHandlers
+namespace Senparc.Xncf.PromptRange.Application.EventHandlers
 {
     public class PromptInitRequestHandler : IIntegrationEventHandler<PromptInitRequestEvent>
     {

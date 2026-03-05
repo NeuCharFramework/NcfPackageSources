@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace Senparc.Xncf.PromptRange.Domain.EventHandlers
+namespace Senparc.Xncf.PromptRange.Application.EventHandlers
 {
     public class PromptOptimizationRequestHandler : IIntegrationEventHandler<PromptOptimizationRequestEvent>
     {

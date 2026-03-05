@@ -6,6 +6,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Senparc.Ncf.Shared.Abstractions.Events;
+using System.Collections.Generic;
 
 namespace Senparc.Ncf.Core.EventBus
 {
@@ -32,11 +33,35 @@ namespace Senparc.Ncf.Core.EventBus
         {
             _logger.LogInformation("Senparc NCF EventBus Service is starting.");
 
+            Console.WriteLine($"[{DateTime.Now.ToString("mm:ss.ffffff")}] Read Start");
+            var tasks = new List<Task>();
+            // 关键：限制最大并发数为 20（根据你的机器性能调整）
+            // 这个数字通常建议：数据库连接池大小 / 2
+            //using var semaphore = new SemaphoreSlim(10);
+
             await foreach (var @event in _eventBus.Reader.ReadAllAsync(stoppingToken))
             {
                 try
                 {
-                    await ProcessEvent(@event, stoppingToken);
+
+                    //var t = Task.Run(async () =>
+                    // {
+                    //     try
+                    //     {
+                             //var guid = Guid.NewGuid().ToString("N").Substring(0, 8);
+                             //Console.WriteLine($"[{DateTime.Now.ToString("mm:ss.ffffff")} {guid}] Received event: {@event.GetType().Name} (Id: {@event.Id})");
+
+                             //Console.WriteLine($"[{DateTime.Now.ToString("mm:ss.ffffff")} {guid}] Start Process");
+                             //await semaphore.WaitAsync(stoppingToken);
+                             ProcessEvent(@event, stoppingToken);
+                             //Console.WriteLine($"[{DateTime.Now.ToString("mm:ss.ffffff")} {guid}] End Process");
+                    //     }
+                    //     finally {
+                    //         // 2. 任务处理完（无论成功失败），释放信号量，让下一个事件进来
+                    //         //semaphore.Release();
+                    //     }
+                    // });
+                    //tasks.Add(t);
                 }
                 catch (Exception ex)
                 {
@@ -49,7 +74,7 @@ namespace Senparc.Ncf.Core.EventBus
         {
             // 创建 Scope 以支持 Scoped 服务注入（如 DbContext, Repository）
             using var scope = _serviceProvider.CreateScope();
-            
+
             // 动态查找：IIntegrationEventHandler<MyEvent>
             var handlerType = typeof(IIntegrationEventHandler<>).MakeGenericType(@event.GetType());
             var handlers = scope.ServiceProvider.GetServices(handlerType);
