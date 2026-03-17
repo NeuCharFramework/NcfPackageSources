@@ -75,7 +75,7 @@ namespace Senparc.Ncf.Core.Tests.EventBus
             var completedTask = await Task.WhenAny(tcs.Task, Task.Delay(10000));
 
             var dt4 = SystemTime.Now;
-
+            Console.WriteLine("Start Waiting");
             while (TestIntegrationEventHandler.Int < batchCount)
             {
 
@@ -128,11 +128,9 @@ namespace Senparc.Ncf.Core.Tests.EventBus
 
             public Task Handle(TestIntegrationEvent @event, CancellationToken cancellationToken)
             {
-
-
-                Console.WriteLine($"[{SystemTime.Now.ToString("mm:ss.ffffff")}] [ID:{@event.Index}] Handle Time: {SystemTime.DiffTotalMS(@event.DateTime)}");
+                Console.WriteLine($"[{SystemTime.Now.ToString("mm:ss.ffffff")}] [ID:{@event.Index}] Handle Start Time: {SystemTime.DiffTotalMS(@event.DateTime)}");
                 //_tcs.TrySetResult(@event.Message + " Senparc");
-                //_tcs.TrySetResult((89, @event.Message + " Senparc"));
+                _tcs.TrySetResult((89, @event.Message + " Senparc"));
                 //Console.WriteLine("Handle Time: " + SystemTime.DiffTotalMS(@event.DateTime));
                 Interlocked.Increment(ref Int); // 使用原子操作代替 lock
 

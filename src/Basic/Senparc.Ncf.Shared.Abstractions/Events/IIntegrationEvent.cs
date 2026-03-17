@@ -18,5 +18,13 @@ namespace Senparc.Ncf.Shared.Abstractions.Events
     {
         public Guid Id { get; } = Guid.NewGuid();
         public DateTime CreationDate { get; } = DateTime.UtcNow;
+
+        /// <summary>
+        /// 用于调试和日志记录的事件摘要信息
+        /// </summary>
+        public virtual string GetEventSummary()
+        {
+            return $"{GetType().Name}[{Id:N}]";
+        }
     }
 }

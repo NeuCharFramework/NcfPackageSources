@@ -8,6 +8,8 @@ using Senparc.Xncf.AgentsManager.Domain.Services;
 using System.Linq; 
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Service;
+using Microsoft.Extensions.Logging;
+using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
@@ -15,6 +17,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
     {
         private readonly IEventBus _eventBus;
         private readonly AgentsTemplateService _agentsTemplateService;
+        private readonly ChatGroupService _chatGroupService;
+        private readonly ChatGroupMemberService _chatGroupMemberService;
+        private readonly ILogger<PromptOptimizationService> _logger;
         
         // 用于存储挂起的请求：RequestId -> TCS
         private static readonly ConcurrentDictionary<string, TaskCompletionSource<PromptOptimizationResponseEvent>> _pendingRequests 
@@ -23,78 +28,220 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         private static readonly ConcurrentDictionary<string, TaskCompletionSource<PromptInitResponseEvent>> _pendingInitRequests 
             = new ConcurrentDictionary<string, TaskCompletionSource<PromptInitResponseEvent>>();
 
-        public PromptOptimizationService(IEventBus eventBus, AgentsTemplateService agentsTemplateService)
+        public PromptOptimizationService(
+            IEventBus eventBus, 
+            AgentsTemplateService agentsTemplateService,
+            ChatGroupService chatGroupService,
+            ChatGroupMemberService chatGroupMemberService,
+            ILogger<PromptOptimizationService> logger)
         {
             _eventBus = eventBus;
             _agentsTemplateService = agentsTemplateService;
+            _chatGroupService = chatGroupService;
+            _chatGroupMemberService = chatGroupMemberService;
+            _logger = logger;
         }
 
+        /// <summary>
+        /// 确保 PromptCatalyzer Agent 和相关资源已初始化
+        /// </summary>
         public async Task<PromptInitResponseEvent> EnsureInitializedAsync()
         {
+            _logger.LogInformation("Ensuring PromptCatalyzer Agent is initialized...");
+
+            // 1. 检查 Agent 是否已存在
             var agent = _agentsTemplateService.GetObject(z => z.Name == "PromptCatalyzer");
             if (agent != null)
             {
-                // Agent 已存在，假定 PromptRange 也就绪 (或者可以进一步检查 PromptCode)
-                return new PromptInitResponseEvent(Guid.Empty.ToString(), agent.SystemMessage /* Assuming PromptCode is stored here */, true, "Already initialized");
+                _logger.LogInformation("PromptCatalyzer Agent already exists with ID: {AgentId}", agent.Id);
+                return new PromptInitResponseEvent(
+                    Guid.Empty.ToString(), 
+                    agent.SystemMessage,  // SystemMessage 存储 PromptCode
+                    true, 
+                    "Already initialized");
             }
             
-            // Agent 不存在，开始初始化流程
+            // 2. Agent 不存在，开始初始化流程
             var requestId = Guid.NewGuid().ToString();
-            var tcs = new TaskCompletionSource<PromptInitResponseEvent>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var tcs = new TaskCompletionSource<PromptInitResponseEvent>(
+                TaskCreationOptions.RunContinuationsAsynchronously);
+            
             if (!_pendingInitRequests.TryAdd(requestId, tcs))
             {
-                 throw new NcfExceptionBase("Failed to register init request ID.");
+                throw new NcfExceptionBase("Failed to register init request ID.");
             }
             
-            var requestEvent = new PromptInitRequestEvent(requestId);
-            await _eventBus.PublishAsync(requestEvent);
-            
-            var response = await tcs.Task; // 等待 PromptRange 创建完成并返回 PromptCode
-            
-            // 创建 Agent
-            if (response.Success)
+            try
             {
-                // TODO: Store PromptCode: response.PromptCode into new Agent "PromptCatalyzer"
-                // var newAgent = new AgentTemplate { ... SystemMessage = response.PromptCode ... };
-                // await _agentsTemplateService.SaveObjectAsync(newAgent);
+                _logger.LogInformation("Publishing PromptInitRequestEvent with RequestId: {RequestId}", requestId);
                 
-                // TODO: Create ChatGroup "PromptCatalyzerEvents" and bind Agent
+                // 3. 发布初始化请求事件
+                var requestEvent = new PromptInitRequestEvent(requestId);
+                await _eventBus.PublishAsync(requestEvent);
+                
+                // 4. 等待 PromptRange 创建 Prompt 并返回 PromptCode（设置 2 分钟超时）
+                var timeoutTask = Task.Delay(TimeSpan.FromMinutes(2));
+                var completedTask = await Task.WhenAny(tcs.Task, timeoutTask);
+                
+                if (completedTask == timeoutTask)
+                {
+                    _pendingInitRequests.TryRemove(requestId, out _);
+                    throw new TimeoutException("PromptCatalyzer 初始化超时（2 分钟）");
+                }
+                
+                var response = await tcs.Task;
+                
+                if (!response.Success)
+                {
+                    throw new Exception($"Failed to initialize Prompt: {response.ErrorMessage}");
+                }
+                
+                _logger.LogInformation("Received PromptInitResponse with PromptCode: {PromptCode}", response.PromptCode);
+                
+                // 5. 创建 Agent
+                var newAgent = new AgentTemplate
+                {
+                    Name = "PromptCatalyzer",
+                    DisplayName = "Prompt 优化专家",
+                    Description = "自动优化 Prompt 内容和参数（Temperature 等）的 AI Agent",
+                    SystemMessage = response.PromptCode,  // 存储 PromptCode 用于后续调用
+                    IsActive = true,
+                    AddTime = DateTime.Now,
+                    LastUpdateTime = DateTime.Now,
+                    AdminRemark = "自动创建于 Prompt 优化功能初始化"
+                };
+                
+                await _agentsTemplateService.SaveObjectAsync(newAgent);
+                _logger.LogInformation("Successfully created PromptCatalyzer Agent with ID: {AgentId}, PromptCode: {PromptCode}", 
+                    newAgent.Id, response.PromptCode);
+                
+                // 6. 创建 ChatGroup
+                var chatGroup = new ChatGroup
+                {
+                    Name = "PromptCatalyzerChat",
+                    DisplayName = "Prompt 优化对话组",
+                    Description = "用于 Prompt 自动优化的专用对话组",
+                    IsActive = true,
+                    AddTime = DateTime.Now,
+                    LastUpdateTime = DateTime.Now,
+                    AdminRemark = "自动创建于 Prompt 优化功能初始化"
+                };
+                
+                await _chatGroupService.SaveObjectAsync(chatGroup);
+                _logger.LogInformation("Successfully created ChatGroup with ID: {ChatGroupId}", chatGroup.Id);
+                
+                // 7. 绑定 Agent 到 ChatGroup
+                var member = new ChatGroupMember
+                {
+                    ChatGroupId = chatGroup.Id,
+                    AgentTemplateId = newAgent.Id,
+                    IsActive = true,
+                    AddTime = DateTime.Now
+                };
+                
+                await _chatGroupMemberService.SaveObjectAsync(member);
+                _logger.LogInformation("Successfully bound PromptCatalyzer Agent to ChatGroup");
+                
+                return response;
             }
-            
-            return response;
+            catch (Exception ex)
+            {
+                _pendingInitRequests.TryRemove(requestId, out _);
+                _logger.LogError(ex, "Failed to initialize PromptCatalyzer");
+                throw;
+            }
         }
 
+        /// <summary>
+        /// 完成初始化请求（由 PromptInitResponseHandler 调用）
+        /// </summary>
         public void CompleteInitRequest(string requestId, PromptInitResponseEvent response)
         {
             if (_pendingInitRequests.TryRemove(requestId, out var tcs))
             {
                 tcs.TrySetResult(response);
+                _logger.LogDebug("Completed init request: {RequestId}", requestId);
+            }
+            else
+            {
+                _logger.LogWarning("Received PromptInitResponse for unknown RequestId: {RequestId}", requestId);
             }
         }
 
-        public async Task<PromptOptimizationResponseEvent> OptimizePromptAsync(string promptCode, string userRequirement)
+        /// <summary>
+        /// 优化指定的 Prompt（包括内容和参数）
+        /// </summary>
+        public async Task<PromptOptimizationResponseEvent> OptimizePromptAsync(
+            string promptCode, 
+            string promptContent,
+            string userRequirement,
+            OptimizationContext context)
         {
+            // 1. 确保 Agent 已初始化
+            await EnsureInitializedAsync();
+
             var requestId = Guid.NewGuid().ToString();
-            var tcs = new TaskCompletionSource<PromptOptimizationResponseEvent>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var tcs = new TaskCompletionSource<PromptOptimizationResponseEvent>(
+                TaskCreationOptions.RunContinuationsAsynchronously);
 
             if (!_pendingRequests.TryAdd(requestId, tcs))
             {
                 throw new InvalidOperationException("Failed to register request ID.");
             }
 
-            var requestEvent = new PromptOptimizationRequestEvent(requestId, promptCode, userRequirement);
-            await _eventBus.PublishAsync(requestEvent);
+            try
+            {
+                _logger.LogInformation(
+                    "Publishing PromptOptimizationRequestEvent: RequestId={RequestId}, PromptCode={PromptCode}",
+                    requestId, promptCode);
 
-            // 设置超时机制 (例如 5 分钟)
-            // 实际生产中建议使用 CancellationTokenSource 和 Task.WhenAny
-            return await tcs.Task; 
+                // 2. 发布优化请求事件
+                var requestEvent = new PromptOptimizationRequestEvent(
+                    requestId, 
+                    promptCode, 
+                    promptContent,
+                    userRequirement,
+                    context);
+                await _eventBus.PublishAsync(requestEvent);
+
+                // 3. 等待响应（设置 5 分钟超时，因为 AI 处理可能较慢）
+                var timeoutTask = Task.Delay(TimeSpan.FromMinutes(5));
+                var completedTask = await Task.WhenAny(tcs.Task, timeoutTask);
+
+                if (completedTask == timeoutTask)
+                {
+                    _pendingRequests.TryRemove(requestId, out _);
+                    throw new TimeoutException("Prompt 优化请求超时（5 分钟）");
+                }
+
+                var response = await tcs.Task;
+                _logger.LogInformation(
+                    "Received PromptOptimizationResponse: RequestId={RequestId}, NewPromptCode={NewPromptCode}, Score={Score}",
+                    requestId, response.NewPromptCode, response.Score);
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _pendingRequests.TryRemove(requestId, out _);
+                _logger.LogError(ex, "Failed to optimize Prompt: {PromptCode}", promptCode);
+                throw;
+            }
         }
 
+        /// <summary>
+        /// 完成优化请求（由 PromptOptimizationResponseHandler 调用）
+        /// </summary>
         public void CompleteRequest(string requestId, PromptOptimizationResponseEvent response)
         {
             if (_pendingRequests.TryRemove(requestId, out var tcs))
             {
                 tcs.TrySetResult(response);
+                _logger.LogDebug("Completed optimization request: {RequestId}", requestId);
+            }
+            else
+            {
+                _logger.LogWarning("Received PromptOptimizationResponse for unknown RequestId: {RequestId}", requestId);
             }
         }
     }
