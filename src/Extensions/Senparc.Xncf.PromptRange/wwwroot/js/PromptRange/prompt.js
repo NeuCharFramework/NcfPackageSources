@@ -3306,23 +3306,27 @@ var app = new Vue({
                 // 调用后端接口
                 const response = await servicePR.post('/api/Senparc.Xncf.AgentsManager/PromptOptimizationAppService/OptimizeAsync', requestData);
 
-                // 处理响应
-                if (response.data && response.data.newPromptCode) {
+                console.log('OptimizeAsync 完整响应:', response);
+
+                // NCF AppResponseBase 返回格式：{ success: true, data: { newPromptCode: "...", ... } }
+                if (response.data && response.data.success && response.data.data) {
+                    const optimizeResult = response.data.data;
+                    
                     // 构建详细的优化结果消息
                     let message = `✅ 优化成功！\n\n`;
-                    message += `🆕 新的 Prompt Code: ${response.data.newPromptCode}\n`;
-                    message += `📊 预测分数: ${response.data.score ? response.data.score.toFixed(1) : 'N/A'}\n`;
+                    message += `🆕 新的 Prompt Code: ${optimizeResult.newPromptCode}\n`;
+                    message += `📊 预测分数: ${optimizeResult.score ? optimizeResult.score.toFixed(1) : 'N/A'}\n`;
                     
                     // 显示参数变化
-                    if (response.data.parameters) {
+                    if (optimizeResult.parameters) {
                         message += `\n📋 优化后的参数:\n`;
-                        message += `  • Temperature: ${requestData.context.currentTemperature} → ${response.data.parameters.temperature}\n`;
-                        message += `  • TopP: ${requestData.context.currentTopP} → ${response.data.parameters.topP}\n`;
-                        message += `  • MaxTokens: ${requestData.context.currentMaxTokens} → ${response.data.parameters.maxTokens}\n`;
+                        message += `  • Temperature: ${requestData.context.currentTemperature} → ${optimizeResult.parameters.temperature}\n`;
+                        message += `  • TopP: ${requestData.context.currentTopP} → ${optimizeResult.parameters.topP}\n`;
+                        message += `  • MaxTokens: ${requestData.context.currentMaxTokens} → ${optimizeResult.parameters.maxTokens}\n`;
                     }
                     
-                    if (response.data.evaluationReason) {
-                        message += `\n💡 优化说明: ${response.data.evaluationReason}`;
+                    if (optimizeResult.evaluationReason) {
+                        message += `\n💡 优化说明: ${optimizeResult.evaluationReason}`;
                     }
 
                     this.$message({
@@ -3340,18 +3344,21 @@ var app = new Vue({
                     await this.getPromptList();
                     
                     // 可选：自动切换到新创建的 Prompt
-                    const newPrompt = this.promptOpt.find(p => p.label === response.data.newPromptCode || p.fullVersion === response.data.newPromptCode);
+                    const newPrompt = this.promptOpt.find(p => p.label === optimizeResult.newPromptCode || p.fullVersion === optimizeResult.newPromptCode);
                     if (newPrompt) {
                         this.promptid = newPrompt.value;
                         await this.promptChangeHandel(newPrompt.value, 'promptid');
                         this.$message.info('已自动切换到优化后的 Prompt');
                     }
                 } else {
-                    this.$message.error('优化失败：未返回有效的优化结果');
+                    const errorMsg = response.data?.errorMessage || '未返回有效的优化结果';
+                    this.$message.error('优化失败：' + errorMsg);
+                    console.error('优化失败，响应:', response.data);
                 }
             } catch (error) {
                 console.error('优化失败:', error);
-                const errorMsg = error.response?.data?.error || error.response?.data?.message || error.message;
+                console.error('完整错误对象:', error.response);
+                const errorMsg = error.response?.data?.errorMessage || error.response?.data?.message || error.message;
                 this.$message({
                     message: '❌ 优化失败: ' + errorMsg,
                     type: 'error',
