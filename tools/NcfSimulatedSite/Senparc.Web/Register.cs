@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
@@ -8,6 +8,7 @@ using Senparc.CO2NET.AspNet;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.AreasBase;
+using Senparc.Ncf.Core.EventBus;
 
 namespace Senparc.Web
 {
@@ -22,14 +23,41 @@ namespace Senparc.Web
         {
             StartTime = SystemTime.Now.DateTime;
 
-             // 注册 EventBus
-            builder.Services.AddSingleton<Senparc.Ncf.Core.EventBus.InMemoryEventBus>();
-            builder.Services.AddSingleton<Senparc.Ncf.Shared.Abstractions.Events.IEventBus>(sp => sp.GetRequiredService<Senparc.Ncf.Core.EventBus.InMemoryEventBus>());
-            builder.Services.AddHostedService<Senparc.Ncf.Core.EventBus.EventBusHostedService>();
-
             //激活 Xncf 扩展引擎（必须）
             var logMsg = builder.StartWebEngine(new[] { "Senparc.Areas.Admin"});
             //如果不需要启用 Areas，可以只使用 services.StartEngine() 或 services.StartEngine() 方法
+
+            Console.WriteLine("============ logMsg =============");
+            Console.WriteLine(logMsg);
+            Console.WriteLine("============ logMsg END =============");
+            
+            // 注册 EventBus 并自动扫描所有模块的 EventHandler
+            // 必须在 StartWebEngine 之后，确保所有模块程序集已加载
+            var assembliesToScan = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !a.IsDynamic && 
+                           (a.FullName.Contains("Senparc.Xncf.") || 
+                            a.FullName.Contains("Senparc.Areas.")))
+                .ToArray();
+            
+            Console.WriteLine($"EventBus 扫描程序集:");
+            foreach (var asm in assembliesToScan)
+            {
+                Console.WriteLine($"  - {asm.GetName().Name}");
+            }
+            
+            builder.Services.AddSenparcEventBus(
+                options =>
+                {
+                    options.MaxConcurrency = Math.Max(4, Environment.ProcessorCount * 2);
+                    options.EnableDuplicateDetection = true;
+                    options.RetryOnFailure = true;
+                    options.MaxRetryAttempts = 3;
+                    options.MaxEventChainDepth = 10;
+                    options.EnableCircularReferenceDetection = true;
+                },
+                assembliesToScan);
+            
+            Console.WriteLine($"EventBus 已注册，共扫描了 {assembliesToScan.Length} 个程序集");
 
             Console.WriteLine("============ logMsg =============");
             Console.WriteLine(logMsg);

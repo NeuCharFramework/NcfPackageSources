@@ -3009,7 +3009,13 @@ var app = new Vue({
         async checkPromptCatalyzerStatus() {
             try {
                 const response = await servicePR.get('/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/CheckStatus');
-                return response.data.isInitialized;
+                console.log('CheckStatus 完整响应:', response);
+                
+                // NCF AppResponseBase 返回格式：{ success: true, data: { isInitialized: true, ... } }
+                if (response.data && response.data.success && response.data.data) {
+                    return response.data.data.isInitialized;
+                }
+                return false;
             } catch (error) {
                 console.error('检查初始化状态失败:', error);
                 return false;
@@ -3021,19 +3027,29 @@ var app = new Vue({
             this.loadingModels = true;
             try {
                 const response = await servicePR.get('/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/GetAvailableModels');
-                this.availableModelsForInit = response.data.models || [];
+                console.log('GetAvailableModels 完整响应:', response);
                 
-                // 自动选择推荐的 Model
-                if (response.data.recommendedModelId) {
-                    this.selectedModelIdForInit = response.data.recommendedModelId;
-                } else if (this.availableModelsForInit.length > 0) {
-                    this.selectedModelIdForInit = this.availableModelsForInit[0].id;
+                // NCF AppResponseBase 返回格式：{ success: true, data: { models: [...], recommendedModelId: 1 } }
+                if (response.data && response.data.success) {
+                    this.availableModelsForInit = response.data.data.models || [];
+                    
+                    // 自动选择推荐的 Model
+                    if (response.data.data.recommendedModelId) {
+                        this.selectedModelIdForInit = response.data.data.recommendedModelId;
+                    } else if (this.availableModelsForInit.length > 0) {
+                        this.selectedModelIdForInit = this.availableModelsForInit[0].id;
+                    }
+                    
+                    console.log('加载到', this.availableModelsForInit.length, '个可用 Model');
+                } else {
+                    // 处理错误响应
+                    const errorMsg = response.data?.errorMessage || '获取模型列表失败';
+                    this.$message.error(errorMsg);
+                    console.error('获取模型失败:', errorMsg);
                 }
-                
-                console.log('加载到', this.availableModelsForInit.length, '个可用 Model');
             } catch (error) {
                 console.error('加载 AI Model 列表失败:', error);
-                this.$message.error('加载 AI Model 列表失败: ' + (error.response?.data?.error || error.message));
+                this.$message.error('加载 AI Model 列表失败: ' + (error.response?.data?.errorMessage || error.message));
             } finally {
                 this.loadingModels = false;
             }
@@ -3054,9 +3070,13 @@ var app = new Vue({
                     modelId: this.selectedModelIdForInit
                 });
 
-                if (response.data.success) {
+                console.log('Initialize 完整响应:', response);
+                
+                // NCF AppResponseBase 返回格式：{ success: true, data: { promptCode: "...", ... } }
+                if (response.data && response.data.success) {
+                    const initData = response.data.data || {};
                     this.$message({
-                        message: `✅ 初始化成功！已创建 PromptCatalyzer Agent，PromptCode: ${response.data.promptCode}`,
+                        message: `✅ 初始化成功！已创建 PromptCatalyzer Agent，PromptCode: ${initData.promptCode || '已创建'}`,
                         type: 'success',
                         duration: 6000,
                         showClose: true
@@ -3338,27 +3358,6 @@ var app = new Vue({
                     duration: 8000,
                     showClose: true
                 });
-            } finally {
-                this.optimizing = false;
-            }
-        },
-                    this.optimizeDialogVisible = false;
-                    // 刷新列表或跳转到新Prompt (可选)
-                    // this.getPromptList(this.promptField); // 刷新
-                } else if (response.data && response.data.success === false) {
-                     this.$message.error('优化失败: ' + (response.data.message || '未知原因'));
-                } else {
-                    // NCF 可能直接返回 data
-                   if (response.data.newPromptCode) {
-                      this.$message.success(`优化成功！newPromptCode: ${response.data.newPromptCode}`);
-                      this.optimizeDialogVisible = false;
-                   } else {
-                      this.$message.error('优化未返回有效结果');
-                   }
-                }
-            } catch (error) {
-                console.error('Optimize Error:', error);
-                this.$message.error('请求出错：' + (error.message || '未知错误'));
             } finally {
                 this.optimizing = false;
             }

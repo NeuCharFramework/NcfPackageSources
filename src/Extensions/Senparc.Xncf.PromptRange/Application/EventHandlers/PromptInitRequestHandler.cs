@@ -114,8 +114,13 @@ Always respond in JSON format with optimized content and parameters.",
                         FrequencyPenalty = 0,
                         PresencePenalty = 0,
                         StopSequences = null,
-                        IsDraft = true, // Start as draft
-                        Note = $"Auto-created for PromptCatalyzer initialization with Model ID: {modelId}"
+                        IsDraft = true,
+                        Note = $"Auto-created for PromptCatalyzer initialization with Model ID: {modelId}",
+                        // 确保所有字符串字段都有值，避免 null 导致数据库错误
+                        ExpectedResultsJson = string.Empty,
+                        Prefix = string.Empty,
+                        Suffix = string.Empty,
+                        VariableDictJson = string.Empty
                     };
 
                     var stringRequest = System.Text.Json.JsonSerializer.Serialize(request);
@@ -146,8 +151,21 @@ Always respond in JSON format with optimized content and parameters.",
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error handling PromptInitRequest");
-                var response = new PromptInitResponseEvent(@event.RequestId, null, false, ex.Message);
+                // 捕获完整的异常信息，包括 inner exception
+                var errorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    errorMessage += $" | Inner Exception: {ex.InnerException.Message}";
+                    
+                    // 如果还有更深层的 inner exception（例如 EF Core 的数据库错误）
+                    if (ex.InnerException.InnerException != null)
+                    {
+                        errorMessage += $" | Inner Inner Exception: {ex.InnerException.InnerException.Message}";
+                    }
+                }
+                
+                _logger.LogError(ex, "Error handling PromptInitRequest. Full error: {ErrorMessage}", errorMessage);
+                var response = new PromptInitResponseEvent(@event.RequestId, null, false, errorMessage);
                 
                 // 即使是错误响应，也需要继承事件链
                 await _eventBus.PublishDerivedAsync(response, @event);

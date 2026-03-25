@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
@@ -19,6 +19,11 @@ using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 {
+    /// <summary>
+    /// LLM 模型管理 AppService
+    /// TODO: 需要权限验证
+    /// </summary>
+    //[ApiAuthorize("AdminOnly")]
     public class LlmModelAppService : AppServiceBase
     {
         private readonly LlModelService _llModelService;

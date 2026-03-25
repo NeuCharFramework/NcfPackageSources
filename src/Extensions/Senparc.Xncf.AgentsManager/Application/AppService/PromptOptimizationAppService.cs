@@ -11,6 +11,11 @@ using Senparc.Ncf.Core.Exceptions;
 
 namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 {
+    /// <summary>
+    /// Prompt 优化 AppService
+    /// TODO: 需要权限验证
+    /// </summary>
+    //[ApiAuthorize("AdminOnly")]
     public class PromptOptimizationAppService : AppServiceBase
     {
         private readonly PromptOptimizationService _promptOptimizationService;

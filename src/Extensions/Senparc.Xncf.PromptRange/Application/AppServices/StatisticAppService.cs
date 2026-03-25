@@ -12,7 +12,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 {
     /// <summary>
     /// 用于传送统计数据的接口服务
+    /// TODO: 需要权限验证
     /// </summary>
+    //[ApiAuthorize("AdminOnly")]
     public class StatisticAppService : AppServiceBase
     {
         private readonly LlModelService _llModelService;

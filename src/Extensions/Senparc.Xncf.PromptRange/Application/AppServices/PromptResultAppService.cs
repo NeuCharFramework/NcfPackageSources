@@ -17,6 +17,11 @@ using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 {
+    /// <summary>
+    /// PromptResult 管理 AppService
+    /// TODO: 需要权限验证
+    /// </summary>
+    //[ApiAuthorize("AdminOnly")]
     public class PromptResultAppService : AppServiceBase
     {
         // private readonly RepositoryBase<PromptResult> _promptResultRepository;
