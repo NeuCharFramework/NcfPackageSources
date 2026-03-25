@@ -44,124 +44,158 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        /// 确保 PromptCatalyzer Agent 和相关资源已初始化
+        /// 确保 PromptCatalyzer Agent 和相关资源已初始化（细粒度检查）
         /// </summary>
         /// <param name="modelId">可选：用户指定的 AI Model ID</param>
         public async Task<PromptInitResponseEvent> EnsureInitializedAsync(int? modelId = null)
         {
-            _logger.LogInformation("========== EnsureInitializedAsync 开始 ==========");
+            _logger.LogInformation("========== EnsureInitializedAsync 开始（细粒度检查）==========");
             _logger.LogInformation("请求的 ModelId: {ModelId}", modelId);
 
             // === 步骤1：检查 Agent 是否已存在 ===
-            _logger.LogInformation("【步骤1/4】检查 PromptCatalyzer Agent 是否已存在...");
+            _logger.LogInformation("【步骤1/3】检查 PromptCatalyzer Agent 是否已存在...");
             var agent = _agentsTemplateService.GetObject(z => z.Name == "PromptCatalyzer");
+            
+            string promptCode = null;
+            bool agentCreated = false;
             
             if (agent != null)
             {
                 _logger.LogInformation("  ✅ Agent 已存在，ID: {AgentId}, PromptCode: {PromptCode}", 
                     agent.Id, agent.SystemMessage);
-                return new PromptInitResponseEvent(
-                    Guid.Empty.ToString(), 
-                    agent.SystemMessage,  // SystemMessage 存储 PromptCode
-                    true, 
-                    "Already initialized");
+                promptCode = agent.SystemMessage;  // Agent 的 SystemMessage 存储了 PromptCode
             }
-            
-            // === 步骤2：Agent 不存在，通过 EventBus 请求创建 PromptItem ===
-            _logger.LogInformation("【步骤2/4】Agent 不存在，开始初始化流程...");
-            
-            var requestId = Guid.NewGuid().ToString();
-            var tcs = new TaskCompletionSource<PromptInitResponseEvent>(
-                TaskCreationOptions.RunContinuationsAsynchronously);
-            
-            if (!_pendingInitRequests.TryAdd(requestId, tcs))
+            else
             {
-                throw new NcfExceptionBase("Failed to register init request ID.");
-            }
-            
-            try
-            {
-                _logger.LogInformation("  发布 PromptInitRequestEvent: RequestId={RequestId}, ModelId={ModelId}", 
-                    requestId, modelId);
+                // Agent 不存在，需要创建
+                _logger.LogInformation("  Agent 不存在，开始创建流程...");
                 
-                // 发布初始化请求事件（包含 ModelId）
-                var requestEvent = new PromptInitRequestEvent(requestId, modelId);
-                await _eventBus.PublishAsync(requestEvent);
+                // 通过 EventBus 请求创建 PromptItem
+                var requestId = Guid.NewGuid().ToString();
+                var tcs = new TaskCompletionSource<PromptInitResponseEvent>(
+                    TaskCreationOptions.RunContinuationsAsynchronously);
                 
-                _logger.LogInformation("  等待 PromptInitResponseEvent（最长2分钟）...");
+                if (!_pendingInitRequests.TryAdd(requestId, tcs))
+                {
+                    throw new NcfExceptionBase("Failed to register init request ID.");
+                }
                 
-                // 等待 PromptRange 创建 Prompt 并返回 PromptCode（设置 2 分钟超时）
-                var timeoutTask = Task.Delay(TimeSpan.FromMinutes(2));
-                var completedTask = await Task.WhenAny(tcs.Task, timeoutTask);
-                
-                if (completedTask == timeoutTask)
+                try
+                {
+                    _logger.LogInformation("  发布 PromptInitRequestEvent: RequestId={RequestId}, ModelId={ModelId}", 
+                        requestId, modelId);
+                    
+                    var requestEvent = new PromptInitRequestEvent(requestId, modelId);
+                    await _eventBus.PublishAsync(requestEvent);
+                    
+                    _logger.LogInformation("  等待 PromptInitResponseEvent（最长2分钟）...");
+                    
+                    var timeoutTask = Task.Delay(TimeSpan.FromMinutes(2));
+                    var completedTask = await Task.WhenAny(tcs.Task, timeoutTask);
+                    
+                    if (completedTask == timeoutTask)
+                    {
+                        _pendingInitRequests.TryRemove(requestId, out _);
+                        _logger.LogError("  ❌ 等待 PromptInitResponseEvent 超时（2分钟）");
+                        throw new TimeoutException("PromptCatalyzer 初始化超时（2 分钟）");
+                    }
+                    
+                    var response = await tcs.Task;
+                    _logger.LogInformation("  ✅ 收到 PromptInitResponseEvent: Success={Success}, PromptCode={PromptCode}", 
+                        response.Success, response.PromptCode);
+                    
+                    if (!response.Success)
+                    {
+                        throw new Exception($"Prompt 初始化失败: {response.ErrorMessage}");
+                    }
+                    
+                    if (string.IsNullOrEmpty(response.PromptCode))
+                    {
+                        throw new Exception("Prompt 初始化返回的 PromptCode 为空");
+                    }
+                    
+                    promptCode = response.PromptCode;
+                }
+                catch (Exception ex)
                 {
                     _pendingInitRequests.TryRemove(requestId, out _);
-                    _logger.LogError("  ❌ 等待 PromptInitResponseEvent 超时（2分钟）");
-                    throw new TimeoutException("PromptCatalyzer 初始化超时（2 分钟）");
+                    _logger.LogError(ex, "❌ EventBus 初始化失败");
+                    throw;
                 }
                 
-                var response = await tcs.Task;
-                _logger.LogInformation("  ✅ 收到 PromptInitResponseEvent: Success={Success}, PromptCode={PromptCode}, Message={Message}", 
-                    response.Success, response.PromptCode, response.ErrorMessage);
-                
-                if (!response.Success)
-                {
-                    throw new Exception($"Prompt 初始化失败: {response.ErrorMessage}");
-                }
-                
-                if (string.IsNullOrEmpty(response.PromptCode))
-                {
-                    throw new Exception("Prompt 初始化返回的 PromptCode 为空");
-                }
-                
-                // === 步骤3：创建 Agent ===
-                _logger.LogInformation("【步骤3/4】创建 PromptCatalyzer Agent...");
-                _logger.LogInformation("  PromptCode: {PromptCode}", response.PromptCode);
+                // 创建 Agent
+                _logger.LogInformation("【步骤2/3】创建 PromptCatalyzer Agent...");
+                _logger.LogInformation("  PromptCode: {PromptCode}", promptCode);
                 
                 var newAgent = new AgentTemplate(
                     name: "PromptCatalyzer",
-                    systemMessage: response.PromptCode,  // 存储 PromptCode 用于后续调用
+                    systemMessage: promptCode,
                     enable: true,
                     description: "自动优化 Prompt 内容和参数（Temperature 等）的 AI Agent",
-                    promptCode: response.PromptCode,
+                    promptCode: promptCode,
                     hookRobotType: HookRobotType.None,
                     hookRobotParameter: null,
                     avastar: null,
-                    functionCallNames: null,  // 暂不使用 function-calling，优化逻辑由 EventHandler 处理
+                    functionCallNames: null,
                     mcpEndpoints: null
                 );
                 
                 await _agentsTemplateService.SaveObjectAsync(newAgent);
-                _logger.LogInformation("  ✅ Agent 创建成功！AgentId: {AgentId}, PromptCode: {PromptCode}", 
-                    newAgent.Id, response.PromptCode);
+                _logger.LogInformation("  ✅ Agent 创建成功！AgentId: {AgentId}", newAgent.Id);
                 
-                // 6. 创建 ChatGroup（主持人、对接人都设为同一个 Agent）
-                _logger.LogInformation("【步骤4/4】创建 ChatGroup...");
+                agent = newAgent;
+                agentCreated = true;
+            }
+            
+            // === 步骤3：检查 ChatGroup 是否已存在（独立检查）===
+            _logger.LogInformation("【步骤3/3】检查 ChatGroup 是否已存在...");
+            var chatGroup = await _chatGroupService.GetObjectAsync(z => z.Name == "PromptCatalyzer-OptimizationGroup");
+            
+            if (chatGroup != null)
+            {
+                _logger.LogInformation("  ✅ ChatGroup 已存在，ID: {GroupId}, Admin={AdminId}, Enter={EnterId}", 
+                    chatGroup.Id, chatGroup.AdminAgentTemplateId, chatGroup.EnterAgentTemplateId);
                 
-                var chatGroup = new ChatGroup(
+                // 验证 ChatGroup 的 Agent 引用是否正确
+                if (chatGroup.AdminAgentTemplateId != agent.Id || chatGroup.EnterAgentTemplateId != agent.Id)
+                {
+                    _logger.LogWarning("  ⚠️  ChatGroup 的 Agent 引用不正确，需要修复");
+                    _logger.LogWarning("    当前 Admin={Current}, 应为 {Expected}", 
+                        chatGroup.AdminAgentTemplateId, agent.Id);
+                    _logger.LogWarning("    当前 Enter={Current}, 应为 {Expected}", 
+                        chatGroup.EnterAgentTemplateId, agent.Id);
+                    
+                    // TODO: 这里可以选择更新 ChatGroup 的 Agent 引用，或者提示用户手动处理
+                }
+            }
+            else
+            {
+                _logger.LogInformation("  ChatGroup 不存在，开始创建...");
+                _logger.LogInformation("  使用 Agent ID: {AgentId}", agent.Id);
+                
+                chatGroup = new ChatGroup(
                     name: "PromptCatalyzer-OptimizationGroup",
                     enable: true,
                     state: ChatGroupState.Running,
                     description: "PromptCatalyzer 专用优化群组，用于执行 Prompt 优化任务",
-                    adminAgentTemplateId: newAgent.Id,  // 主持人就是 PromptCatalyzer Agent
-                    enterAgentTemplateId: newAgent.Id   // 对接人也是 PromptCatalyzer Agent
+                    adminAgentTemplateId: agent.Id,
+                    enterAgentTemplateId: agent.Id
                 );
                 
                 await _chatGroupService.SaveObjectAsync(chatGroup);
                 _logger.LogInformation("  ✅ ChatGroup 创建成功！GroupId: {GroupId}, Name: {Name}", 
                     chatGroup.Id, chatGroup.Name);
-                
-                _logger.LogInformation("========== EnsureInitializedAsync 完成 ==========");
-                
-                return response;
             }
-            catch (Exception ex)
-            {
-                _pendingInitRequests.TryRemove(requestId, out _);
-                _logger.LogError(ex, "❌ EnsureInitializedAsync 失败");
-                throw;
-            }
+            
+            _logger.LogInformation("========== EnsureInitializedAsync 完成 ==========");
+            _logger.LogInformation("  最终状态：Agent={AgentId}, ChatGroup={GroupId}, Agent是否新创建={AgentCreated}", 
+                agent.Id, chatGroup.Id, agentCreated);
+            
+            return new PromptInitResponseEvent(
+                Guid.Empty.ToString(), 
+                promptCode ?? agent.SystemMessage,
+                true, 
+                "Initialized successfully");
         }
 
         /// <summary>

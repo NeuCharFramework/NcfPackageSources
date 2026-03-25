@@ -3086,7 +3086,7 @@ var app = new Vue({
                     
                     // 初始化成功后，刷新页面数据
                     console.log('初始化成功，刷新页面数据...');
-                    await this.getPromptFieldList();
+                    await this.getFieldList();
                     
                     // 继续执行优化
                     this.proceedWithOptimization();
@@ -3341,7 +3341,7 @@ var app = new Vue({
                     
                     // 刷新 Prompt 列表
                     console.log('优化完成，刷新 Prompt 列表...');
-                    await this.getPromptList();
+                    await this.getFieldList();
                     
                     // 可选：自动切换到新创建的 Prompt
                     const newPrompt = this.promptOpt.find(p => p.label === optimizeResult.newPromptCode || p.fullVersion === optimizeResult.newPromptCode);

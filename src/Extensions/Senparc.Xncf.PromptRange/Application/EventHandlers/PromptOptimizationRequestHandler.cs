@@ -144,6 +144,7 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
                 var originalItem = promptResult.PromptItem;
                 var newPromptItemRequest = new PromptItem_AddRequest
                 {
+                    Id = originalItem.Id,  // 🔥 关键：设置基础 PromptItem ID，用于版本号生成
                     RangeId = originalItem.RangeId,
                     ModelId = @event.Context.ModelId,
                     Content = optimizedContent,
@@ -157,7 +158,7 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
                     IsTopTactic = false,
                     IsNewTactic = false,
                     IsNewSubTactic = false,
-                    IsNewAiming = true,  // 新版本的 Aiming
+                    IsNewAiming = true,  // 基于当前 Tactic 创建新的 Aiming 版本
                     IsDraft = false,
                     Note = "🤖AI-Generated", // 标记 AI 生成
                     ExpectedResultsJson = originalItem.ExpectedResultsJson ?? string.Empty,
@@ -167,10 +168,14 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
                     isAIGrade = false
                 };
                 
+                _logger.LogInformation("  准备创建新版本：BaseId={BaseId}, RangeName={RangeName}, Tactic={Tactic}, 期望 Aiming+1",
+                    originalItem.Id, originalItem.RangeName, originalItem.Tactic);
+                
                 var newPromptItem = await _promptItemService.AddPromptItemAsync(newPromptItemRequest);
                 var newPromptCode = newPromptItem.FullVersion;
                 
-                _logger.LogInformation("  ✅ 新 PromptItem 创建成功！NewPromptCode: {NewPromptCode}", newPromptCode);
+                _logger.LogInformation("  ✅ 新 PromptItem 创建成功！NewPromptCode: {NewPromptCode}, ItemId: {ItemId}", 
+                    newPromptCode, newPromptItem.Id);
 
                 // 【步骤5/5】发布响应事件
                 _logger.LogInformation("【步骤5/5】发布优化响应...");
