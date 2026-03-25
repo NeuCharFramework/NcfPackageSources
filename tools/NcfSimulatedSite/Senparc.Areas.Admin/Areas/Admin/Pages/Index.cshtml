@@ -318,30 +318,50 @@
 
         .chat-entrance-input-wrapper {
             margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        .chat-entrance-input .el-input__inner {
+        .chat-entrance-input .el-textarea__inner {
             background: rgba(255, 255, 255, 0.95);
             border: none;
-            border-radius: 25px;
-            padding: 12px 20px;
+            border-radius: 15px;
+            padding: 15px 20px;
             font-size: 15px;
+            line-height: 1.6;
+            resize: none;
         }
 
-        .chat-entrance-input .el-input-group__append {
-            background: #5e72e4;
-            border: none;
-            border-radius: 0 25px 25px 0;
-        }
-
-            .chat-entrance-input .el-input-group__append .el-button {
-                color: #fff;
-                font-weight: 600;
+            .chat-entrance-input .el-textarea__inner:focus {
+                background: rgba(255, 255, 255, 1);
+                box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
             }
 
-                .chat-entrance-input .el-input-group__append .el-button:hover {
-                    background: #4c63d2;
-                }
+            .chat-entrance-input .el-textarea__inner::placeholder {
+                color: #999;
+                line-height: 1.6;
+            }
+
+        .chat-send-button {
+            align-self: flex-end;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            border: none;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+            .chat-send-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(94, 114, 228, 0.4);
+            }
+
+            .chat-send-button:active {
+                transform: translateY(0);
+            }
 
         .chat-entrance-tips {
             display: flex;
@@ -364,39 +384,43 @@
             background: rgba(255, 255, 255, 0.1);
             border: 2px dashed rgba(255, 255, 255, 0.3);
             border-radius: 10px;
-            min-height: 80px;
+            min-height: 100px;
+            padding: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
+            margin-top: 15px;
         }
 
             .chat-module-drop-zone.drag-over {
                 background: rgba(255, 255, 255, 0.2);
                 border-color: rgba(255, 255, 255, 0.8);
                 border-style: solid;
+                border-width: 3px;
             }
 
         .drop-zone-placeholder {
             text-align: center;
             opacity: 0.7;
+            color: #fff;
         }
 
             .drop-zone-placeholder .fa {
-                font-size: 24px;
-                margin-bottom: 5px;
+                font-size: 28px;
+                margin-bottom: 8px;
+                display: block;
             }
 
             .drop-zone-placeholder p {
                 margin: 0;
-                font-size: 13px;
+                font-size: 14px;
             }
 
         .selected-modules-list {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            padding: 15px;
             width: 100%;
         }
 
@@ -418,7 +442,19 @@
         .chat-module-drop-zone.highlight {
             background: rgba(255, 255, 255, 0.25);
             border-color: rgba(255, 255, 255, 0.9);
+            border-style: solid;
+            border-width: 3px;
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+            transform: scale(1.02);
+        }
+        
+        /* 拖拽时的鼠标样式 */
+        #xncf-modules-area .xncf-item[draggable="true"] {
+            cursor: grab;
+        }
+        
+        #xncf-modules-area .xncf-item[draggable="true"]:active {
+            cursor: grabbing;
         }
     </style>
 }
@@ -523,20 +559,25 @@
             
             <div class="chat-entrance-input-wrapper">
                 <el-input
+                    type="textarea"
                     v-model="chatInputText"
-                    placeholder="输入您的问题，例如：如何配置系统参数？"
-                    @@keyup.enter.native="startChatSession"
+                    placeholder="输入您的问题，例如：如何配置系统参数？&#10;&#10;提示：按 Ctrl+Enter 或 Cmd+Enter 发送消息"
+                    :rows="4"
+                    :autosize="{ minRows: 4, maxRows: 8 }"
+                    @@keydown.native="handleChatInputKeydown"
                     class="chat-entrance-input"
-                    clearable>
-                    <el-button 
-                        slot="append" 
-                        icon="el-icon-s-promotion" 
-                        @@click="startChatSession"
-                        :disabled="!chatInputText || chatInputText.trim().length === 0"
-                        :loading="isCreatingSession">
-                        开始对话
-                    </el-button>
+                    resize="none">
                 </el-input>
+                <el-button 
+                    type="primary"
+                    size="medium"
+                    icon="el-icon-s-promotion" 
+                    @@click="startChatSession"
+                    :disabled="!chatInputText || chatInputText.trim().length === 0"
+                    :loading="isCreatingSession"
+                    class="chat-send-button">
+                    开始对话
+                </el-button>
             </div>
 
             <div class="chat-entrance-tips">

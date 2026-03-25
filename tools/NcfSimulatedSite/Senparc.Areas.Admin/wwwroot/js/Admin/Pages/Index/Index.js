@@ -26,8 +26,7 @@ var app = new Vue({
     this.fetchTodayLogData();
     // 添加鼠标事件监听
     this.initializeHoverEffects();
-    // 初始化模块拖拽
-    this.initializeModuleDrag();
+    // 模块拖拽会在 getXncfOpening 完成后初始化
   },
   methods: {
     async fetchChartData() {
@@ -164,10 +163,17 @@ var app = new Vue({
       let xncfStatData = await service.get('/Admin/Index?handler=XncfStat');
       this.xncfStat = xncfStatData.data.data;
     },
-    //开放模块数据  
+    //开放模块数据
     async getXncfOpening() {
       let xncfOpeningList = await service.get('/Admin/Index?handler=XncfOpening');
       this.xncfOpeningList = xncfOpeningList.data.data;
+      
+      // 数据加载完成后，等待 DOM 渲染，然后初始化拖拽
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.initializeModuleDrag();
+        }, 100); // 延迟 100ms 确保 DOM 完全渲染
+      });
     },
     //点击打开模块
     navigateTo(uid) {
@@ -253,6 +259,15 @@ var app = new Vue({
 
     // AI 对话入口相关方法
 
+    handleChatInputKeydown(event) {
+      // 检测 Ctrl+Enter (Windows/Linux) 或 Cmd+Enter (Mac)
+      if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
+        this.startChatSession();
+      }
+      // 普通 Enter 允许换行，不做任何处理
+    },
+
     async startChatSession() {
       if (!this.chatInputText || this.chatInputText.trim().length === 0) {
         this.$message.warning('请输入对话内容');
@@ -288,19 +303,27 @@ var app = new Vue({
     },
 
     handleModuleDrop(event) {
+      event.preventDefault();
       this.isDragOver = false;
+      
+      console.log('检测到放下操作', event);
       
       try {
         const moduleDataStr = event.dataTransfer.getData('application/json');
+        console.log('接收到的数据:', moduleDataStr);
+        
         if (!moduleDataStr) {
           console.warn('未获取到模块数据');
+          this.$message.warning('拖放失败：未获取到模块数据');
           return;
         }
 
         const moduleData = JSON.parse(moduleDataStr);
+        console.log('解析后的模块数据:', moduleData);
         
         if (!moduleData.uid) {
           console.warn('模块数据不完整:', moduleData);
+          this.$message.warning('拖放失败：模块数据不完整');
           return;
         }
 
@@ -313,21 +336,26 @@ var app = new Vue({
             version: moduleData.version || ''
           });
           this.$message.success(`已添加模块: ${moduleData.name}`);
+          console.log('模块添加成功，当前选中模块:', this.selectedModules);
         } else {
           this.$message.info('该模块已添加');
         }
       } catch (error) {
         console.error('处理模块拖放失败:', error);
-        this.$message.error('添加模块失败');
+        this.$message.error('添加模块失败: ' + error.message);
       }
     },
 
     handleDragOver(event) {
+      event.preventDefault(); // 必须阻止默认行为，否则无法触发 drop 事件
+      event.dataTransfer.dropEffect = 'copy';
       this.isDragOver = true;
     },
 
     handleDragLeave(event) {
-      if (event.target.classList.contains('chat-module-drop-zone')) {
+      // 只有当鼠标真正离开拖放区域时才取消高亮
+      if (event.target.classList.contains('chat-module-drop-zone') ||
+          event.target.closest('.chat-module-drop-zone') === null) {
         this.isDragOver = false;
       }
     },
@@ -341,10 +369,19 @@ var app = new Vue({
     },
 
     initializeModuleDrag() {
+      // 确保在下一个 tick 中执行，让 Vue 完成渲染
       this.$nextTick(() => {
         const moduleCards = document.querySelectorAll('#xncf-modules-area .xncf-item');
         
-        moduleCards.forEach((card) => {
+        console.log('找到的模块卡片数量:', moduleCards.length);
+        
+        if (moduleCards.length === 0) {
+          console.warn('未找到模块卡片，将在 200ms 后重试');
+          setTimeout(() => this.initializeModuleDrag(), 200);
+          return;
+        }
+
+        moduleCards.forEach((card, index) => {
           card.setAttribute('draggable', 'true');
           card.style.cursor = 'move';
           
@@ -364,6 +401,8 @@ var app = new Vue({
               description: descElement?.textContent?.trim() || ''
             };
 
+            console.log('开始拖拽模块:', moduleData.name, moduleData);
+
             event.dataTransfer.setData('application/json', JSON.stringify(moduleData));
             event.dataTransfer.effectAllowed = 'copy';
             
@@ -373,6 +412,9 @@ var app = new Vue({
             const dropZone = document.querySelector('.chat-module-drop-zone');
             if (dropZone) {
               dropZone.classList.add('highlight');
+              console.log('拖放区域已高亮');
+            } else {
+              console.warn('未找到拖放区域');
             }
           });
           
@@ -386,6 +428,8 @@ var app = new Vue({
             }
           });
         });
+        
+        console.log('模块拖拽初始化完成，已绑定', moduleCards.length, '个模块');
       });
     }
   }
