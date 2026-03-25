@@ -49,13 +49,17 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         /// <param name="modelId">可选：用户指定的 AI Model ID</param>
         public async Task<PromptInitResponseEvent> EnsureInitializedAsync(int? modelId = null)
         {
-            _logger.LogInformation("Ensuring PromptCatalyzer Agent is initialized with ModelId: {ModelId}...", modelId);
+            _logger.LogInformation("========== EnsureInitializedAsync 开始 ==========");
+            _logger.LogInformation("请求的 ModelId: {ModelId}", modelId);
 
-            // 1. 检查 Agent 是否已存在
+            // === 步骤1：检查 Agent 是否已存在 ===
+            _logger.LogInformation("【步骤1/3】检查 PromptCatalyzer Agent 是否已存在...");
             var agent = _agentsTemplateService.GetObject(z => z.Name == "PromptCatalyzer");
+            
             if (agent != null)
             {
-                _logger.LogInformation("PromptCatalyzer Agent already exists with ID: {AgentId}", agent.Id);
+                _logger.LogInformation("  ✅ Agent 已存在，ID: {AgentId}, PromptCode: {PromptCode}", 
+                    agent.Id, agent.SystemMessage);
                 return new PromptInitResponseEvent(
                     Guid.Empty.ToString(), 
                     agent.SystemMessage,  // SystemMessage 存储 PromptCode
@@ -63,7 +67,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                     "Already initialized");
             }
             
-            // 2. Agent 不存在，开始初始化流程
+            // === 步骤2：Agent 不存在，通过 EventBus 请求创建 PromptItem ===
+            _logger.LogInformation("【步骤2/3】Agent 不存在，开始初始化流程...");
+            
             var requestId = Guid.NewGuid().ToString();
             var tcs = new TaskCompletionSource<PromptInitResponseEvent>(
                 TaskCreationOptions.RunContinuationsAsynchronously);
@@ -75,33 +81,44 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             
             try
             {
-                _logger.LogInformation("Publishing PromptInitRequestEvent with RequestId: {RequestId}, ModelId: {ModelId}", 
+                _logger.LogInformation("  发布 PromptInitRequestEvent: RequestId={RequestId}, ModelId={ModelId}", 
                     requestId, modelId);
                 
-                // 3. 发布初始化请求事件（包含 ModelId）
+                // 发布初始化请求事件（包含 ModelId）
                 var requestEvent = new PromptInitRequestEvent(requestId, modelId);
                 await _eventBus.PublishAsync(requestEvent);
                 
-                // 4. 等待 PromptRange 创建 Prompt 并返回 PromptCode（设置 2 分钟超时）
+                _logger.LogInformation("  等待 PromptInitResponseEvent（最长2分钟）...");
+                
+                // 等待 PromptRange 创建 Prompt 并返回 PromptCode（设置 2 分钟超时）
                 var timeoutTask = Task.Delay(TimeSpan.FromMinutes(2));
                 var completedTask = await Task.WhenAny(tcs.Task, timeoutTask);
                 
                 if (completedTask == timeoutTask)
                 {
                     _pendingInitRequests.TryRemove(requestId, out _);
+                    _logger.LogError("  ❌ 等待 PromptInitResponseEvent 超时（2分钟）");
                     throw new TimeoutException("PromptCatalyzer 初始化超时（2 分钟）");
                 }
                 
                 var response = await tcs.Task;
+                _logger.LogInformation("  ✅ 收到 PromptInitResponseEvent: Success={Success}, PromptCode={PromptCode}, Message={Message}", 
+                    response.Success, response.PromptCode, response.ErrorMessage);
                 
                 if (!response.Success)
                 {
-                    throw new Exception($"Failed to initialize Prompt: {response.ErrorMessage}");
+                    throw new Exception($"Prompt 初始化失败: {response.ErrorMessage}");
                 }
                 
-                _logger.LogInformation("Received PromptInitResponse with PromptCode: {PromptCode}", response.PromptCode);
+                if (string.IsNullOrEmpty(response.PromptCode))
+                {
+                    throw new Exception("Prompt 初始化返回的 PromptCode 为空");
+                }
                 
-                // 5. 创建 Agent using proper constructor
+                // === 步骤3：创建 Agent ===
+                _logger.LogInformation("【步骤3/3】创建 PromptCatalyzer Agent...");
+                _logger.LogInformation("  PromptCode: {PromptCode}", response.PromptCode);
+                
                 var newAgent = new AgentTemplate(
                     name: "PromptCatalyzer",
                     systemMessage: response.PromptCode,  // 存储 PromptCode 用于后续调用
@@ -116,8 +133,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 );
                 
                 await _agentsTemplateService.SaveObjectAsync(newAgent);
-                _logger.LogInformation("Successfully created PromptCatalyzer Agent with ID: {AgentId}, PromptCode: {PromptCode}", 
+                _logger.LogInformation("  ✅ Agent 创建成功！AgentId: {AgentId}, PromptCode: {PromptCode}", 
                     newAgent.Id, response.PromptCode);
+                
+                _logger.LogInformation("========== EnsureInitializedAsync 完成 ==========");
                 
                 // TODO: 6-7. 创建 ChatGroup 和绑定 Agent（暂时注释，需要完善 AgentTemplate ID 设置）
                 // 因为 ChatGroup 需要 adminAgentTemplateId 和 enterAgentTemplateId，这里需要更完善的逻辑
@@ -127,7 +146,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             catch (Exception ex)
             {
                 _pendingInitRequests.TryRemove(requestId, out _);
-                _logger.LogError(ex, "Failed to initialize PromptCatalyzer");
+                _logger.LogError(ex, "❌ EnsureInitializedAsync 失败");
                 throw;
             }
         }

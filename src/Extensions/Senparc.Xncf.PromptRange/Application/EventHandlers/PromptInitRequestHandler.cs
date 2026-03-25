@@ -36,34 +36,44 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
 
         public async Task Handle(PromptInitRequestEvent @event, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Received Prompt Init Request: RequestId={RequestId}, ModelId={ModelId}, Depth={Depth}, Chain={Chain}", 
+            _logger.LogInformation("========== 开始处理 Prompt Init Request ==========");
+            _logger.LogInformation("RequestId={RequestId}, ModelId={ModelId}, Depth={Depth}, Chain={Chain}", 
                 @event.RequestId, @event.ModelId, @event.Depth, @event.EventChain);
 
             try 
             {
-                // 1. Check if PromptRange "PromptCatalyzer" exists
+                // === 步骤1：确保 PromptRange "PromptCatalyzer" 存在 ===
+                _logger.LogInformation("【步骤1/4】检查 PromptRange 'PromptCatalyzer' 是否存在...");
                 var range = await _promptRangeService.GetObjectAsync(z => z.Alias == "PromptCatalyzer");
+                
                 if (range == null)
                 {
-                    _logger.LogInformation("Creating PromptCatalyzer Range...");
+                    _logger.LogInformation("  PromptRange 不存在，开始创建...");
                     var rangeDto = await _promptRangeService.AddAsync("PromptCatalyzer");
                     range = await _promptRangeService.GetObjectAsync(z => z.Id == rangeDto.Id);
+                    _logger.LogInformation("  ✅ PromptRange 创建成功，ID: {RangeId}, Alias: {Alias}", range.Id, range.Alias);
+                }
+                else
+                {
+                    _logger.LogInformation("  ✅ PromptRange 已存在，ID: {RangeId}, Alias: {Alias}", range.Id, range.Alias);
                 }
 
-                // 2. Determine which Model to use
+                // === 步骤2：确定使用哪个 AI Model ===
+                _logger.LogInformation("【步骤2/4】确定 AI Model...");
                 int modelId;
                 if (@event.ModelId.HasValue)
                 {
                     // User specified a Model
                     modelId = @event.ModelId.Value;
-                    _logger.LogInformation("Using user-specified Model ID: {ModelId}", modelId);
+                    _logger.LogInformation("  使用用户指定的 Model ID: {ModelId}", modelId);
                     
                     // Verify the model exists
                     var specifiedModel = await _aiModelService.GetObjectAsync(z => z.Id == modelId);
                     if (specifiedModel == null)
                     {
-                        throw new Exception($"Specified AI Model ID {modelId} not found");
+                        throw new Exception($"指定的 AI Model ID {modelId} 不存在");
                     }
+                    _logger.LogInformation("  ✅ Model 验证通过: {Alias} (ID: {ModelId})", specifiedModel.Alias, modelId);
                 }
                 else
                 {
@@ -74,25 +84,27 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
                     
                     if (model == null)
                     {
-                        throw new Exception("No AI Model found in AIKernel. Please configure a Chat model first.");
+                        throw new Exception("未找到可用的 AI Model，请先在 AIKernel 模块中配置 Chat 类型的 Model");
                     }
                     
                     modelId = model.Id;
-                    _logger.LogInformation("Using default Model: {Alias} (ID: {ModelId})", model.Alias, modelId);
+                    _logger.LogInformation("  ✅ 使用默认 Model: {Alias} (ID: {ModelId})", model.Alias, modelId);
                 }
 
-                // 3. Check if PromptItem exists in this range
+                // === 步骤3：确保 PromptItem 存在（容错处理）===
+                _logger.LogInformation("【步骤3/4】检查 PromptItem 是否存在于 Range {RangeId}...", range.Id);
                 var item = await _promptItemService.GetObjectAsync(z => z.RangeId == range.Id);
 
                 if (item == null)
                 {
-                    _logger.LogInformation("Creating default PromptItem with Model ID: {ModelId}...", modelId);
+                    _logger.LogInformation("  PromptItem 不存在，开始创建...");
+                    _logger.LogInformation("  Range.Id={RangeId}, Range.RangeName={RangeName}", range.Id, range.RangeName);
                     
-                    // Create default PromptItem
+                    // Create default PromptItem with all required fields
                     var request = new PromptItem_AddRequest
                     {
                         RangeId = range.Id,
-                        ModelId = modelId,  // Use selected or default model
+                        ModelId = modelId,
                         Content = @"You are an expert Prompt Engineer (PromptCatalyzer). 
 
 Your goal is to optimize the user's prompt and parameters to achieve better results.
@@ -107,6 +119,9 @@ Guidelines for optimization:
 
 Always respond in JSON format with optimized content and parameters.",
                         IsTopTactic = true,
+                        IsNewTactic = false,
+                        IsNewSubTactic = false,
+                        IsNewAiming = false,
                         NumsOfResults = 0,
                         MaxToken = 4000,
                         Temperature = 0.7f,
@@ -123,31 +138,74 @@ Always respond in JSON format with optimized content and parameters.",
                         VariableDictJson = string.Empty
                     };
 
-                    var stringRequest = System.Text.Json.JsonSerializer.Serialize(request);
-                    _logger.LogInformation("Creating default prompt item with request: {Request}", stringRequest);
+                    _logger.LogInformation("  准备创建 PromptItem，Request: {@Request}", new 
+                    {
+                        request.RangeId,
+                        request.ModelId,
+                        ContentLength = request.Content?.Length ?? 0,
+                        request.IsTopTactic,
+                        request.Temperature,
+                        request.TopP,
+                        request.MaxToken
+                    });
 
-                    await _promptItemService.AddPromptItemAsync(request);
-                    
-                    // Fetch again to get the generated item
-                    item = await _promptItemService.GetObjectAsync(z => z.RangeId == range.Id);
+                    try
+                    {
+                        var itemDto = await _promptItemService.AddPromptItemAsync(request);
+                        _logger.LogInformation("  ✅ PromptItem 创建成功，ID: {ItemId}, FullVersion: {FullVersion}", 
+                            itemDto.Id, itemDto.FullVersion);
+                        
+                        // Fetch the created item to ensure we have the correct FullVersion
+                        item = await _promptItemService.GetObjectAsync(z => z.Id == itemDto.Id);
+                        
+                        if (item == null)
+                        {
+                            throw new Exception($"PromptItem 创建后无法查询到，ItemId: {itemDto.Id}");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "  ❌ 创建 PromptItem 失败！详细错误: {ErrorMessage}", ex.Message);
+                        
+                        // 尝试再次查询，看看是否已经创建（可能是并发问题）
+                        item = await _promptItemService.GetObjectAsync(z => z.RangeId == range.Id);
+                        if (item != null)
+                        {
+                            _logger.LogWarning("  ⚠️ 创建失败但查询到了 PromptItem，可能是并发创建，继续使用 ID: {ItemId}", item.Id);
+                        }
+                        else
+                        {
+                            // 真的失败了，重新抛出异常
+                            throw;
+                        }
+                    }
                 }
+                else
+                {
+                    _logger.LogInformation("  ✅ PromptItem 已存在，ID: {ItemId}, FullVersion: {FullVersion}", 
+                        item.Id, item.FullVersion);
+                }
+                
+                // === 步骤4：返回成功响应 ===
+                _logger.LogInformation("【步骤4/4】准备返回 PromptInitResponse...");
                 
                 if (item == null)
                 {
-                     throw new Exception("Failed to create PromptItem.");
+                    throw new Exception("初始化流程完成，但 PromptItem 为 null（不应该发生）");
                 }
 
                 bool success = true;
-                string message = $"Initialized successfully with Model ID: {modelId}";
-                string promptCode = item.FullVersion; 
+                string message = $"初始化成功：Model ID: {modelId}, PromptCode: {item.FullVersion}";
+                string promptCode = item.FullVersion;
+                
+                _logger.LogInformation("  ✅ 初始化完成！PromptCode: {PromptCode}", promptCode);
 
                 var response = new PromptInitResponseEvent(@event.RequestId, promptCode, success, message);
                 
                 // 使用 PublishDerivedAsync 继承事件链信息（防止循环引用）
                 await _eventBus.PublishDerivedAsync(response, @event);
                 
-                _logger.LogInformation("Available Prompt Code: {PromptCode}, Model ID: {ModelId}", 
-                    promptCode, modelId);
+                _logger.LogInformation("========== Prompt Init Request 处理完成 ==========");
             }
             catch (Exception ex)
             {
