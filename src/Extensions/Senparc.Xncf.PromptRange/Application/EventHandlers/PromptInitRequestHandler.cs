@@ -130,7 +130,7 @@ Always respond in JSON format with optimized content and parameters.",
                         PresencePenalty = 0,
                         StopSequences = null,
                         IsDraft = true,
-                        Note = $"Auto-created for PromptCatalyzer initialization with Model ID: {modelId}",
+                        Note = "AI-Catalyzer", // 限制在 20 字符以内（数据库字段限制）
                         // 确保所有字符串字段都有值，避免 null 导致数据库错误
                         ExpectedResultsJson = string.Empty,
                         Prefix = string.Empty,
