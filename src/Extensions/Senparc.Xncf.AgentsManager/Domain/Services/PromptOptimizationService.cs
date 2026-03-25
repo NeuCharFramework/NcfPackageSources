@@ -53,7 +53,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             _logger.LogInformation("请求的 ModelId: {ModelId}", modelId);
 
             // === 步骤1：检查 Agent 是否已存在 ===
-            _logger.LogInformation("【步骤1/3】检查 PromptCatalyzer Agent 是否已存在...");
+            _logger.LogInformation("【步骤1/4】检查 PromptCatalyzer Agent 是否已存在...");
             var agent = _agentsTemplateService.GetObject(z => z.Name == "PromptCatalyzer");
             
             if (agent != null)
@@ -68,7 +68,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             }
             
             // === 步骤2：Agent 不存在，通过 EventBus 请求创建 PromptItem ===
-            _logger.LogInformation("【步骤2/3】Agent 不存在，开始初始化流程...");
+            _logger.LogInformation("【步骤2/4】Agent 不存在，开始初始化流程...");
             
             var requestId = Guid.NewGuid().ToString();
             var tcs = new TaskCompletionSource<PromptInitResponseEvent>(
@@ -116,7 +116,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 }
                 
                 // === 步骤3：创建 Agent ===
-                _logger.LogInformation("【步骤3/3】创建 PromptCatalyzer Agent...");
+                _logger.LogInformation("【步骤3/4】创建 PromptCatalyzer Agent...");
                 _logger.LogInformation("  PromptCode: {PromptCode}", response.PromptCode);
                 
                 var newAgent = new AgentTemplate(
@@ -128,7 +128,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                     hookRobotType: HookRobotType.None,
                     hookRobotParameter: null,
                     avastar: null,
-                    functionCallNames: null,
+                    functionCallNames: null,  // 暂不使用 function-calling，优化逻辑由 EventHandler 处理
                     mcpEndpoints: null
                 );
                 
@@ -136,10 +136,23 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 _logger.LogInformation("  ✅ Agent 创建成功！AgentId: {AgentId}, PromptCode: {PromptCode}", 
                     newAgent.Id, response.PromptCode);
                 
-                _logger.LogInformation("========== EnsureInitializedAsync 完成 ==========");
+                // 6. 创建 ChatGroup（主持人、对接人都设为同一个 Agent）
+                _logger.LogInformation("【步骤4/4】创建 ChatGroup...");
                 
-                // TODO: 6-7. 创建 ChatGroup 和绑定 Agent（暂时注释，需要完善 AgentTemplate ID 设置）
-                // 因为 ChatGroup 需要 adminAgentTemplateId 和 enterAgentTemplateId，这里需要更完善的逻辑
+                var chatGroup = new ChatGroup(
+                    name: "PromptCatalyzer-OptimizationGroup",
+                    enable: true,
+                    state: ChatGroupState.Running,
+                    description: "PromptCatalyzer 专用优化群组，用于执行 Prompt 优化任务",
+                    adminAgentTemplateId: newAgent.Id,  // 主持人就是 PromptCatalyzer Agent
+                    enterAgentTemplateId: newAgent.Id   // 对接人也是 PromptCatalyzer Agent
+                );
+                
+                await _chatGroupService.SaveObjectAsync(chatGroup);
+                _logger.LogInformation("  ✅ ChatGroup 创建成功！GroupId: {GroupId}, Name: {Name}", 
+                    chatGroup.Id, chatGroup.Name);
+                
+                _logger.LogInformation("========== EnsureInitializedAsync 完成 ==========");
                 
                 return response;
             }
