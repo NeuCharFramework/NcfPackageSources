@@ -9,7 +9,8 @@ using System.Linq;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Service;
 using Microsoft.Extensions.Logging;
-using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
+using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
+using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
@@ -45,9 +46,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         /// <summary>
         /// 确保 PromptCatalyzer Agent 和相关资源已初始化
         /// </summary>
-        public async Task<PromptInitResponseEvent> EnsureInitializedAsync()
+        /// <param name="modelId">可选：用户指定的 AI Model ID</param>
+        public async Task<PromptInitResponseEvent> EnsureInitializedAsync(int? modelId = null)
         {
-            _logger.LogInformation("Ensuring PromptCatalyzer Agent is initialized...");
+            _logger.LogInformation("Ensuring PromptCatalyzer Agent is initialized with ModelId: {ModelId}...", modelId);
 
             // 1. 检查 Agent 是否已存在
             var agent = _agentsTemplateService.GetObject(z => z.Name == "PromptCatalyzer");
@@ -73,10 +75,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             
             try
             {
-                _logger.LogInformation("Publishing PromptInitRequestEvent with RequestId: {RequestId}", requestId);
+                _logger.LogInformation("Publishing PromptInitRequestEvent with RequestId: {RequestId}, ModelId: {ModelId}", 
+                    requestId, modelId);
                 
-                // 3. 发布初始化请求事件
-                var requestEvent = new PromptInitRequestEvent(requestId);
+                // 3. 发布初始化请求事件（包含 ModelId）
+                var requestEvent = new PromptInitRequestEvent(requestId, modelId);
                 await _eventBus.PublishAsync(requestEvent);
                 
                 // 4. 等待 PromptRange 创建 Prompt 并返回 PromptCode（设置 2 分钟超时）
@@ -98,49 +101,26 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 
                 _logger.LogInformation("Received PromptInitResponse with PromptCode: {PromptCode}", response.PromptCode);
                 
-                // 5. 创建 Agent
-                var newAgent = new AgentTemplate
-                {
-                    Name = "PromptCatalyzer",
-                    DisplayName = "Prompt 优化专家",
-                    Description = "自动优化 Prompt 内容和参数（Temperature 等）的 AI Agent",
-                    SystemMessage = response.PromptCode,  // 存储 PromptCode 用于后续调用
-                    IsActive = true,
-                    AddTime = DateTime.Now,
-                    LastUpdateTime = DateTime.Now,
-                    AdminRemark = "自动创建于 Prompt 优化功能初始化"
-                };
+                // 5. 创建 Agent using proper constructor
+                var newAgent = new AgentTemplate(
+                    name: "PromptCatalyzer",
+                    systemMessage: response.PromptCode,  // 存储 PromptCode 用于后续调用
+                    enable: true,
+                    description: "自动优化 Prompt 内容和参数（Temperature 等）的 AI Agent",
+                    promptCode: response.PromptCode,
+                    hookRobotType: HookRobotType.None,
+                    hookRobotParameter: null,
+                    avastar: null,
+                    functionCallNames: null,
+                    mcpEndpoints: null
+                );
                 
                 await _agentsTemplateService.SaveObjectAsync(newAgent);
                 _logger.LogInformation("Successfully created PromptCatalyzer Agent with ID: {AgentId}, PromptCode: {PromptCode}", 
                     newAgent.Id, response.PromptCode);
                 
-                // 6. 创建 ChatGroup
-                var chatGroup = new ChatGroup
-                {
-                    Name = "PromptCatalyzerChat",
-                    DisplayName = "Prompt 优化对话组",
-                    Description = "用于 Prompt 自动优化的专用对话组",
-                    IsActive = true,
-                    AddTime = DateTime.Now,
-                    LastUpdateTime = DateTime.Now,
-                    AdminRemark = "自动创建于 Prompt 优化功能初始化"
-                };
-                
-                await _chatGroupService.SaveObjectAsync(chatGroup);
-                _logger.LogInformation("Successfully created ChatGroup with ID: {ChatGroupId}", chatGroup.Id);
-                
-                // 7. 绑定 Agent 到 ChatGroup
-                var member = new ChatGroupMember
-                {
-                    ChatGroupId = chatGroup.Id,
-                    AgentTemplateId = newAgent.Id,
-                    IsActive = true,
-                    AddTime = DateTime.Now
-                };
-                
-                await _chatGroupMemberService.SaveObjectAsync(member);
-                _logger.LogInformation("Successfully bound PromptCatalyzer Agent to ChatGroup");
+                // TODO: 6-7. 创建 ChatGroup 和绑定 Agent（暂时注释，需要完善 AgentTemplate ID 设置）
+                // 因为 ChatGroup 需要 adminAgentTemplateId 和 enterAgentTemplateId，这里需要更完善的逻辑
                 
                 return response;
             }

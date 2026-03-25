@@ -27,7 +27,7 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
 
         public async Task Handle(PromptOptimizationRequestEvent @event, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"收到 Prompt 优化请求: {@event.RequestId}, Target: {@event.PromptCode}");
+            _logger.LogInformation($"收到 Prompt 优化请求: {@event.RequestId}, Target: {@event.PromptCode}, Depth: {@event.Depth}, Chain: {@event.EventChain}");
 
             try
             {
@@ -43,21 +43,44 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
                 // 模拟生成的新 Code
                 string newPromptCode = $"{@event.PromptCode}-Opt-{DateTime.Now.Ticks % 1000}";
 
-                // 3. 发布响应事件
+                // 3. 发布响应事件（使用 PublishDerivedAsync 继承事件链）
                 var responseEvent = new PromptOptimizationResponseEvent(
                     @event.RequestId,
                     newPromptCode,
+                    newPromptContent,
+                    new OptimizedParameters(
+                        Temperature: @event.Context.CurrentTemperature,
+                        TopP: @event.Context.CurrentTopP,
+                        MaxTokens: @event.Context.CurrentMaxTokens,
+                        FrequencyPenalty: @event.Context.CurrentFrequencyPenalty,
+                        PresencePenalty: @event.Context.CurrentPresencePenalty
+                    ),
                     0.85, // 模拟预测分数
-                    "Optimization successful based on requirements."
+                    "Optimization successful based on requirements.",
+                    true,
+                    ""
                 );
 
-                await _eventBus.PublishAsync(responseEvent);
+                await _eventBus.PublishDerivedAsync(responseEvent, @event);
                 _logger.LogInformation($"Prompt 优化完成，已发布响应: {newPromptCode}");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Prompt 优化失败");
-                // 实际应该发布失败事件或包含错误信息的响应
+                
+                // 发布错误响应事件
+                var errorResponse = new PromptOptimizationResponseEvent(
+                    @event.RequestId,
+                    null,
+                    null,
+                    null,
+                    0,
+                    ex.Message,
+                    false,
+                    ex.Message
+                );
+                
+                await _eventBus.PublishDerivedAsync(errorResponse, @event);
             }
         }
     }

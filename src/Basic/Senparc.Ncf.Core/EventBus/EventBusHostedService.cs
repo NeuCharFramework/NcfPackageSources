@@ -37,9 +37,11 @@ namespace Senparc.Ncf.Core.EventBus
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _logger.LogInformation(
-                "Senparc NCF EventBus Service is starting with MaxConcurrency={MaxConcurrency}, EnableDuplicateDetection={EnableDuplicateDetection}", 
+                "Senparc NCF EventBus Service is starting with MaxConcurrency={MaxConcurrency}, EnableDuplicateDetection={EnableDuplicateDetection}, MaxEventChainDepth={MaxEventChainDepth}, EnableCircularReferenceDetection={EnableCircularReferenceDetection}", 
                 _options.MaxConcurrency, 
-                _options.EnableDuplicateDetection);
+                _options.EnableDuplicateDetection,
+                _options.MaxEventChainDepth,
+                _options.EnableCircularReferenceDetection);
 
             // 使用信号量控制并发度，防止过多任务同时执行导致资源耗尽
             using var semaphore = new SemaphoreSlim(_options.MaxConcurrency);
@@ -49,7 +51,7 @@ namespace Senparc.Ncf.Core.EventBus
             {
                 await foreach (var @event in _eventBus.Reader.ReadAllAsync(stoppingToken))
                 {
-                    // 防止重复处理检测
+                    // 1. 防止重复处理检测
                     if (_options.EnableDuplicateDetection)
                     {
                         if (!_eventBus.TryMarkEventAsProcessed(@event.Id))
@@ -58,6 +60,35 @@ namespace Senparc.Ncf.Core.EventBus
                                 "Duplicate event detected and skipped: {EventType} (Id: {EventId})",
                                 @event.GetType().Name,
                                 @event.Id);
+                            continue;
+                        }
+                    }
+                    
+                    // 2. 检查事件链深度（防止无限递归）
+                    if (@event.Depth >= _options.MaxEventChainDepth)
+                    {
+                        _logger.LogError(
+                            "Event chain depth limit exceeded: {EventType} (Id: {EventId}, Depth: {Depth}, Chain: {Chain})",
+                            @event.GetType().Name,
+                            @event.Id,
+                            @event.Depth,
+                            @event.EventChain);
+                        continue;
+                    }
+                    
+                    // 3. 检查循环引用（防止 A→B→A 循环模式）
+                    if (_options.EnableCircularReferenceDetection)
+                    {
+                        var currentEventType = @event.GetType().Name;
+                        if (!string.IsNullOrEmpty(@event.EventChain) && 
+                            @event.EventChain.Contains(currentEventType))
+                        {
+                            _logger.LogError(
+                                "Circular reference detected: {EventType} (Id: {EventId}, Chain: {Chain}→{CurrentType})",
+                                @event.GetType().Name,
+                                @event.Id,
+                                @event.EventChain,
+                                currentEventType);
                             continue;
                         }
                     }
@@ -76,9 +107,10 @@ namespace Senparc.Ncf.Core.EventBus
                         {
                             _logger.LogError(
                                 ex, 
-                                "Error processing event {EventType} (Id: {EventId})", 
+                                "Error processing event {EventType} (Id: {EventId}, Depth: {Depth})", 
                                 @event.GetType().Name, 
-                                @event.Id);
+                                @event.Id,
+                                @event.Depth);
                             
                             // 根据配置决定是否重试
                             if (_options.RetryOnFailure && _options.MaxRetryAttempts > 0)
@@ -130,16 +162,19 @@ namespace Senparc.Ncf.Core.EventBus
             if (!handlers.Any())
             {
                 _logger.LogWarning(
-                    "No handler found for event {EventType} (Id: {EventId})", 
+                    "No handler found for event {EventType} (Id: {EventId}, Depth: {Depth})", 
                     @event.GetType().Name, 
-                    @event.Id);
+                    @event.Id,
+                    @event.Depth);
                 return;
             }
 
             _logger.LogDebug(
-                "Processing event {EventType} (Id: {EventId}) with {HandlerCount} handler(s)",
+                "Processing event {EventType} (Id: {EventId}, Depth: {Depth}, Chain: {Chain}) with {HandlerCount} handler(s)",
                 @event.GetType().Name,
                 @event.Id,
+                @event.Depth,
+                @event.EventChain,
                 handlers.Count);
 
             foreach (var handler in handlers)
@@ -164,19 +199,22 @@ namespace Senparc.Ncf.Core.EventBus
                 {
                     _logger.LogError(
                         ex,
-                        "Handler {HandlerType} failed to process event {EventType} (Id: {EventId})",
+                        "Handler {HandlerType} failed to process event {EventType} (Id: {EventId}, Depth: {Depth}, Chain: {Chain})",
                         handler.GetType().Name,
                         @event.GetType().Name,
-                        @event.Id);
+                        @event.Id,
+                        @event.Depth,
+                        @event.EventChain);
                     throw; // 重新抛出异常，触发重试机制
                 }
             }
 
             var totalDuration = DateTime.UtcNow - startTime;
             _logger.LogInformation(
-                "Event {EventType} (Id: {EventId}) processed successfully in {Duration}ms",
+                "Event {EventType} (Id: {EventId}, Depth: {Depth}) processed successfully in {Duration}ms",
                 @event.GetType().Name,
                 @event.Id,
+                @event.Depth,
                 totalDuration.TotalMilliseconds);
         }
 
@@ -253,5 +291,15 @@ namespace Senparc.Ncf.Core.EventBus
         /// 最大重试次数
         /// </summary>
         public int MaxRetryAttempts { get; set; } = 3;
+        
+        /// <summary>
+        /// 最大事件链深度（防止无限循环）
+        /// </summary>
+        public int MaxEventChainDepth { get; set; } = 10;
+        
+        /// <summary>
+        /// 是否启用循环引用检测（检测事件类型链中的循环模式）
+        /// </summary>
+        public bool EnableCircularReferenceDetection { get; set; } = true;
     }
 }

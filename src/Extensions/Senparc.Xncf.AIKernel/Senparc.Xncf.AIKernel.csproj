@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.12.23-preview.1</Version>
+    <Version>0.12.24-preview.1</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -53,8 +53,7 @@
 			[2025-04-29] v0.12.17-preview1 Update CO2NET and AIKernel
 			[2025-05-18] v0.12.18-preview1 Update Installation
 			[2025-06-20] v0.12.20-preview Add MCP functions in XncfRegisterBase class
-
-				[2025-11-01] update basic libraries, including Senparc.AI
+			[2026-03-24] v0.12.24-preview.1 update Senparc.AI.Kernel to v0.28.0
 </PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
@@ -64,7 +63,7 @@
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.AI.Kernel" Version="0.26.1-preview.1" />
+    <PackageReference Include="Senparc.AI.Kernel" Version="0.28.0" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>

@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Reflection;
 using System.Linq;
 using Senparc.Ncf.Shared.Abstractions.Events;
@@ -24,8 +25,12 @@ namespace Senparc.Ncf.Core.EventBus
             configureOptions?.Invoke(options);
             services.AddSingleton(options);
 
-            // 2. 注册单例 EventBus (发布者用)
-            services.AddSingleton<InMemoryEventBus>();
+            // 2. 注册单例 EventBus (发布者用) - 使用工厂方法来支持 ILogger 注入
+            services.AddSingleton<InMemoryEventBus>(sp =>
+            {
+                var logger = sp.GetService<ILogger<InMemoryEventBus>>();
+                return new InMemoryEventBus(logger);
+            });
             services.AddSingleton<IEventBus>(sp => sp.GetRequiredService<InMemoryEventBus>());
 
             // 3. 注册后台托管服务 (消费者用)

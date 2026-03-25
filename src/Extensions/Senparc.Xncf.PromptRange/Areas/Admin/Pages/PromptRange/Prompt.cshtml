@@ -1286,6 +1286,84 @@
             <el-button type="primary" @@click="executeOptimize" :loading="optimizing">开始优化</el-button>
         </span>
     </el-dialog>
+
+    @* PromptCatalyzer 初始化对话框 *@
+    <el-dialog title="🚀 首次使用：初始化 Prompt 优化功能" 
+               :visible.sync="promptCatalyzerInitVisible" 
+               width="55%" 
+               :close-on-click-modal="false"
+               center>
+        <div class="init-dialog-content">
+            <el-alert title="欢迎使用 AI 自动优化功能！" 
+                      type="info" 
+                      show-icon 
+                      :closable="false" 
+                      style="margin-bottom: 20px;">
+                <template slot>
+                    <p style="margin: 5px 0;">首次使用需要初始化 <strong>PromptCatalyzer Agent</strong>。</p>
+                    <p style="margin: 5px 0;">请选择一个 AI Model 来驱动优化功能，系统将自动创建相关资源。</p>
+                </template>
+            </el-alert>
+            
+            <el-form label-position="top">
+                <el-form-item label="选择 AI Model" required>
+                    <el-select v-model="selectedModelIdForInit" 
+                               placeholder="请选择 AI Model" 
+                               style="width: 100%;"
+                               :loading="loadingModels"
+                               filterable>
+                        <el-option v-for="model in availableModelsForInit"
+                                   :key="model.id"
+                                   :label="model.alias"
+                                   :value="model.id">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 5px 0;">
+                                <span style="font-weight: 600; color: #303133;">{{ model.alias }}</span>
+                                <el-tag size="mini" type="info">{{ model.aiPlatform }}</el-tag>
+                            </div>
+                            <div style="font-size: 12px; color: #909399; margin-top: 4px; padding-left: 5px;">
+                                <span>{{ model.deploymentName }}</span>
+                                <span v-if="model.note" style="margin-left: 8px; color: #67C23A;">| {{ model.note }}</span>
+                            </div>
+                        </el-option>
+                    </el-select>
+                    <div style="margin-top: 10px; padding: 8px 12px; background-color: #f4f4f5; border-radius: 4px; font-size: 12px; color: #606266;">
+                        <i class="el-icon-info" style="color: #409EFF; margin-right: 4px;"></i>
+                        <strong>提示：</strong>选择的 Model 将用于创建 "PromptCatalyzer" 默认 Prompt，之后可以在优化时选择其他 Model。
+                    </div>
+                </el-form-item>
+                
+                <el-form-item label="默认参数预览" v-if="selectedModelIdForInit">
+                    <el-descriptions :column="2" border size="small">
+                        <el-descriptions-item label="Temperature" label-class-name="desc-label">
+                            <el-tag size="mini" type="success">0.7</el-tag>
+                        </el-descriptions-item>
+                        <el-descriptions-item label="TopP" label-class-name="desc-label">
+                            <el-tag size="mini" type="success">0.9</el-tag>
+                        </el-descriptions-item>
+                        <el-descriptions-item label="MaxTokens" label-class-name="desc-label">
+                            <el-tag size="mini" type="success">4000</el-tag>
+                        </el-descriptions-item>
+                        <el-descriptions-item label="FrequencyPenalty" label-class-name="desc-label">
+                            <el-tag size="mini" type="success">0</el-tag>
+                        </el-descriptions-item>
+                    </el-descriptions>
+                    <div style="margin-top: 8px; font-size: 12px; color: #909399; text-align: center;">
+                        ℹ️ 这些是初始参数，创建后可以在 PromptRange 中调整
+                    </div>
+                </el-form-item>
+            </el-form>
+        </div>
+        <span slot="footer" class="dialog-footer">
+            <el-button @@click="promptCatalyzerInitVisible = false" :disabled="initializing">取消</el-button>
+            <el-button type="primary" 
+                       @@click="executeInitialization" 
+                       :loading="initializing"
+                       :disabled="!selectedModelIdForInit">
+                <i class="el-icon-magic-stick" v-if="!initializing"></i>
+                {{ initializing ? '初始化中...' : '开始初始化' }}
+            </el-button>
+        </span>
+    </el-dialog>
     
 </div>
 

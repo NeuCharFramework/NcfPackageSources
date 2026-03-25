@@ -8,6 +8,12 @@ var app = new Vue({
             optimizeDialogVisible: false,
             optimizeRequirement: '',
             optimizing: false,
+            // PromptCatalyzer 初始化功能
+            promptCatalyzerInitVisible: false,      // 初始化对话框可见性
+            availableModelsForInit: [],             // 可用的 AI Model 列表
+            selectedModelIdForInit: null,           // 选中的 Model ID
+            loadingModels: false,                   // 加载 Model 列表的状态
+            initializing: false,                    // 正在初始化的状态
             pageChange: false, // 页面是否有变化
             isAvg: true, // 是否平均分 默认false 不平均
             // 配置 输入 ---start
@@ -2999,11 +3005,226 @@ var app = new Vue({
         },
         
         // --- 优化功能 ---
-        openOptimizeDialog() {
+        // 检查 PromptCatalyzer 是否已初始化
+        async checkPromptCatalyzerStatus() {
+            try {
+                const response = await servicePR.get('/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/CheckStatus');
+                return response.data.isInitialized;
+            } catch (error) {
+                console.error('检查初始化状态失败:', error);
+                return false;
+            }
+        },
+
+        // 获取可用的 AI Model 列表
+        async loadAvailableModels() {
+            this.loadingModels = true;
+            try {
+                const response = await servicePR.get('/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/GetAvailableModels');
+                this.availableModelsForInit = response.data.models || [];
+                
+                // 自动选择推荐的 Model
+                if (response.data.recommendedModelId) {
+                    this.selectedModelIdForInit = response.data.recommendedModelId;
+                } else if (this.availableModelsForInit.length > 0) {
+                    this.selectedModelIdForInit = this.availableModelsForInit[0].id;
+                }
+                
+                console.log('加载到', this.availableModelsForInit.length, '个可用 Model');
+            } catch (error) {
+                console.error('加载 AI Model 列表失败:', error);
+                this.$message.error('加载 AI Model 列表失败: ' + (error.response?.data?.error || error.message));
+            } finally {
+                this.loadingModels = false;
+            }
+        },
+
+        // 执行初始化
+        async executeInitialization() {
+            if (!this.selectedModelIdForInit) {
+                this.$message.warning('请选择一个 AI Model');
+                return;
+            }
+
+            this.initializing = true;
+            try {
+                console.log('开始初始化 PromptCatalyzer，使用 Model ID:', this.selectedModelIdForInit);
+                
+                const response = await servicePR.post('/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/Initialize', {
+                    modelId: this.selectedModelIdForInit
+                });
+
+                if (response.data.success) {
+                    this.$message({
+                        message: `✅ 初始化成功！已创建 PromptCatalyzer Agent，PromptCode: ${response.data.promptCode}`,
+                        type: 'success',
+                        duration: 6000,
+                        showClose: true
+                    });
+                    
+                    this.promptCatalyzerInitVisible = false;
+                    
+                    // 初始化成功后，刷新页面数据
+                    console.log('初始化成功，刷新页面数据...');
+                    await this.getPromptFieldList();
+                    
+                    // 继续执行优化
+                    this.proceedWithOptimization();
+                } else {
+                    this.$message.error('初始化失败: ' + (response.data.errorMessage || '未知错误'));
+                }
+            } catch (error) {
+                console.error('初始化失败:', error);
+                const errorMsg = error.response?.data?.error || error.response?.data?.message || error.message;
+                this.$message({
+                    message: '初始化失败: ' + errorMsg,
+                    type: 'error',
+                    duration: 8000,
+                    showClose: true
+                });
+            } finally {
+                this.initializing = false;
+            }
+        },
+
+        // 继续执行优化（初始化完成后）
+        proceedWithOptimization() {
+            // 重新打开优化对话框
+            this.optimizeRequirement = '';
+            this.optimizeDialogVisible = true;
+        },
+        
+        // ⭐ 新增：检查分数并提示优化
+        async checkScoreAndSuggestOptimization(resultData, scoreType) {
+            try {
+                // 获取最终分数
+                let finalScore = null;
+                if (resultData && typeof resultData === 'object') {
+                    finalScore = resultData.finalScore;
+                } else if (typeof resultData === 'number') {
+                    finalScore = resultData;
+                }
+                
+                // 如果无法获取分数，不提示
+                if (finalScore === null || finalScore === undefined || finalScore === -1) {
+                    console.log('无法获取有效分数，跳过优化提示');
+                    return;
+                }
+                
+                console.log(`${scoreType}完成，最终分数: ${finalScore}`);
+                
+                // 设置优化建议的阈值（分数低于6分时建议优化）
+                const optimizationThreshold = 6.0;
+                
+                if (finalScore < optimizationThreshold) {
+                    // 分数较低，提示用户是否需要优化
+                    this.$confirm(
+                        `当前 Prompt 的${scoreType}为 ${finalScore.toFixed(1)} 分（低于 ${optimizationThreshold} 分）。是否使用 AI 自动优化功能来改进 Prompt？`,
+                        '💡 建议优化',
+                        {
+                            confirmButtonText: '立即优化',
+                            cancelButtonText: '暂不优化',
+                            type: 'warning',
+                            center: true
+                        }
+                    ).then(async () => {
+                        // 用户确认优化
+                        console.log('用户确认进行优化');
+                        await this.openOptimizeDialog();
+                    }).catch(() => {
+                        // 用户取消
+                        console.log('用户取消优化');
+                    });
+                } else {
+                    // 分数较高，显示简单的成功消息
+                    console.log(`分数${finalScore.toFixed(1)}较高，无需提示优化`);
+                }
+            } catch (error) {
+                console.error('检查分数并提示优化时出错:', error);
+                // 不显示错误消息，避免影响用户体验
+            }
+        },
+        
+        // ⭐ 新增：根据 PromptItem 的平均分检查是否需要优化
+        async checkPromptAverageScoreAndSuggest() {
+            try {
+                // 获取当前选中的 Prompt 信息
+                if (!this.promptid) {
+                    return;
+                }
+                
+                const selectedPrompt = this.promptOpt.find(item => item.value === this.promptid);
+                if (!selectedPrompt || !selectedPrompt.evalAvgScore) {
+                    return;
+                }
+                
+                const avgScore = selectedPrompt.evalAvgScore;
+                
+                // 如果平均分数为 -1 或无效，不提示
+                if (avgScore === -1 || avgScore === null || avgScore === undefined) {
+                    console.log('当前 Prompt 尚无平均分数');
+                    return;
+                }
+                
+                console.log(`当前 Prompt 平均分数: ${avgScore}`);
+                
+                // 设置优化建议的阈值
+                const optimizationThreshold = 6.0;
+                
+                // 如果平均分低于阈值，且当前 Range 有多个测试结果，则提示优化
+                if (avgScore < optimizationThreshold) {
+                    // 使用 Notification 而不是 Confirm，避免阻塞用户操作
+                    this.$notify({
+                        title: '💡 优化建议',
+                        message: `当前 Prompt 的平均分为 ${avgScore.toFixed(1)} 分，建议使用 AI 自动优化功能来改进。点击"优化"按钮开始。`,
+                        type: 'warning',
+                        duration: 8000,
+                        position: 'bottom-right',
+                        showClose: true
+                    });
+                    
+                    console.log('平均分较低，已提示用户优化');
+                } else {
+                    console.log(`平均分 ${avgScore.toFixed(1)} 较高，无需提示优化`);
+                }
+            } catch (error) {
+                console.error('检查平均分并提示优化时出错:', error);
+            }
+        },
+
+        async openOptimizeDialog() {
             if (!this.promptid) {
                 this.$message.warning('请先选择一个Prompt！');
                 return;
             }
+            
+            // 检查是否已初始化
+            console.log('检查 PromptCatalyzer 初始化状态...');
+            const isInitialized = await this.checkPromptCatalyzerStatus();
+            
+            if (!isInitialized) {
+                // 未初始化，显示初始化对话框
+                this.$message({
+                    message: '🚀 首次使用需要初始化 PromptCatalyzer，正在加载可用的 AI Model...',
+                    type: 'info',
+                    duration: 3000
+                });
+                
+                // 加载可用 Model 列表
+                await this.loadAvailableModels();
+                
+                if (this.availableModelsForInit.length === 0) {
+                    this.$message.error('没有找到可用的 AI Model，请先在 AIKernel 模块中配置 Chat 类型的 Model');
+                    return;
+                }
+                
+                // 显示初始化对话框
+                this.promptCatalyzerInitVisible = true;
+                return;
+            }
+            
+            // 已初始化，直接打开优化对话框
+            console.log('PromptCatalyzer 已初始化，打开优化对话框');
             this.optimizeRequirement = '';
             this.optimizeDialogVisible = true;
         },
@@ -3015,38 +3236,112 @@ var app = new Vue({
             
             // 获取当前选择的 Prompt Code
             let promptCode = '';
-            // 尝试从 promptOpt 中获取 (fullVersion)
             const selectedPrompt = this.promptOpt.find(item => item.value === this.promptid);
             if (selectedPrompt) {
-                // 如果 promptOpt 中有 fullVersion 字段
                 if (selectedPrompt.fullVersion) {
                     promptCode = selectedPrompt.fullVersion;
                 } else if (selectedPrompt.label && selectedPrompt.label.includes('-T')) {
-                    // label 可能是 "2023.1.1.1-T1-A1" 格式
                     promptCode = selectedPrompt.label; 
                 }
             }
+            
             // 如果没找到，尝试从详情获取
             if (!promptCode && this.promptDetail && this.promptDetail.fullVersion) {
                 promptCode = this.promptDetail.fullVersion;
             }
 
             if (!promptCode) {
-                 this.$message.error('无法获取当前Prompt的版本号(Prompt Code)');
-                 return;
+                this.$message.error('无法获取当前Prompt的版本号(Prompt Code)');
+                return;
+            }
+
+            // 获取当前 Prompt 的详细信息（包括参数）
+            const promptDetail = this.promptDetail;
+            if (!promptDetail) {
+                this.$message.error('无法获取当前 Prompt 的详细信息');
+                return;
             }
 
             this.optimizing = true;
             try {
-                // 调用后端接口
-                const response = await servicePR.post('/api/Senparc.Xncf.AgentsManager/PromptOptimizationAppService/OptimizeAsync', {
+                console.log('开始优化 Prompt:', promptCode);
+                
+                // 构建请求参数（包含完整的上下文信息）
+                const requestData = {
                     promptCode: promptCode,
-                    userRequirement: this.optimizeRequirement
-                });
+                    promptContent: promptDetail.promptContent || this.content,
+                    userRequirement: this.optimizeRequirement || '提高 Prompt 的质量和效果',
+                    context: {
+                        modelId: this.modelid || promptDetail.modelId,
+                        currentTemperature: promptDetail.temperature || this.parameterViewList.find(p => p.formField === 'temperature')?.value || 0.7,
+                        currentTopP: promptDetail.topP || this.parameterViewList.find(p => p.formField === 'topP')?.value || 0.9,
+                        currentMaxTokens: promptDetail.maxToken || this.parameterViewList.find(p => p.formField === 'maxToken')?.value || 2000,
+                        currentFrequencyPenalty: promptDetail.frequencyPenalty || this.parameterViewList.find(p => p.formField === 'frequencyPenalty')?.value || 0,
+                        currentPresencePenalty: promptDetail.presencePenalty || this.parameterViewList.find(p => p.formField === 'presencePenalty')?.value || 0
+                    }
+                };
+
+                console.log('优化请求参数:', requestData);
+
+                // 调用后端接口
+                const response = await servicePR.post('/api/Senparc.Xncf.AgentsManager/PromptOptimizationAppService/OptimizeAsync', requestData);
 
                 // 处理响应
                 if (response.data && response.data.newPromptCode) {
-                    this.$message.success(`优化成功！新的 Prompt Code: ${response.data.newPromptCode}`);
+                    // 构建详细的优化结果消息
+                    let message = `✅ 优化成功！\n\n`;
+                    message += `🆕 新的 Prompt Code: ${response.data.newPromptCode}\n`;
+                    message += `📊 预测分数: ${response.data.score ? response.data.score.toFixed(1) : 'N/A'}\n`;
+                    
+                    // 显示参数变化
+                    if (response.data.parameters) {
+                        message += `\n📋 优化后的参数:\n`;
+                        message += `  • Temperature: ${requestData.context.currentTemperature} → ${response.data.parameters.temperature}\n`;
+                        message += `  • TopP: ${requestData.context.currentTopP} → ${response.data.parameters.topP}\n`;
+                        message += `  • MaxTokens: ${requestData.context.currentMaxTokens} → ${response.data.parameters.maxTokens}\n`;
+                    }
+                    
+                    if (response.data.evaluationReason) {
+                        message += `\n💡 优化说明: ${response.data.evaluationReason}`;
+                    }
+
+                    this.$message({
+                        message: message,
+                        type: 'success',
+                        duration: 10000,
+                        showClose: true,
+                        dangerouslyUseHTMLString: false
+                    });
+                    
+                    this.optimizeDialogVisible = false;
+                    
+                    // 刷新 Prompt 列表
+                    console.log('优化完成，刷新 Prompt 列表...');
+                    await this.getPromptList();
+                    
+                    // 可选：自动切换到新创建的 Prompt
+                    const newPrompt = this.promptOpt.find(p => p.label === response.data.newPromptCode || p.fullVersion === response.data.newPromptCode);
+                    if (newPrompt) {
+                        this.promptid = newPrompt.value;
+                        await this.promptChangeHandel(newPrompt.value, 'promptid');
+                        this.$message.info('已自动切换到优化后的 Prompt');
+                    }
+                } else {
+                    this.$message.error('优化失败：未返回有效的优化结果');
+                }
+            } catch (error) {
+                console.error('优化失败:', error);
+                const errorMsg = error.response?.data?.error || error.response?.data?.message || error.message;
+                this.$message({
+                    message: '❌ 优化失败: ' + errorMsg,
+                    type: 'error',
+                    duration: 8000,
+                    showClose: true
+                });
+            } finally {
+                this.optimizing = false;
+            }
+        },
                     this.optimizeDialogVisible = false;
                     // 刷新列表或跳转到新Prompt (可选)
                     // this.getPromptList(this.promptField); // 刷新
@@ -5580,6 +5875,9 @@ var app = new Vue({
                     this.$set(this.robotScoreLoadingMap, item.id, false)
                     // 重新获取图表
                     this.getScoringTrendData()
+                    
+                    // ⭐ 新增：检查分数并提示优化
+                    await this.checkScoreAndSuggestOptimization(res.data.data || item, 'AI评分');
                 } else {
                     // 清除AI评分加载状态
                     this.$set(this.robotScoreLoadingMap, item.id, false)
@@ -5603,6 +5901,9 @@ var app = new Vue({
                     this.getOutputList(item.promptId)
                     // 重新获取图表
                     this.getScoringTrendData()
+                    
+                    // ⭐ 新增：检查分数并提示优化
+                    await this.checkScoreAndSuggestOptimization(res.data.data || item, '手动评分');
                 } else {
                     app.$message({
                         message: res.data.errorMessage || res.data.data || 'Error',
@@ -6319,6 +6620,9 @@ var app = new Vue({
                             }
                         })
                     }
+                    
+                    // ⭐ 新增：检查平均分并提示优化
+                    await this.checkPromptAverageScoreAndSuggest();
                 }
 
 
