@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Service;
@@ -20,8 +20,15 @@ namespace Senparc.Areas.Admin.Pages
         //TODO:从其他模块获得
         private readonly XncfModuleServiceExtension _xncfModuleServiceEx = xncfModuleServiceEx;
 
+        /// <summary>
+        /// 当前用户ID（可选，用于前端获取）
+        /// </summary>
+        public int CurrentUserId { get; set; }
+
         public IActionResult OnGet()
         {
+            // 通过 AdminWorkContext 获取当前用户ID
+            CurrentUserId = AdminWorkContext?.AdminUserId ?? 0;
             return null;
             //return RedirectToPage("/Home/Index");
         }

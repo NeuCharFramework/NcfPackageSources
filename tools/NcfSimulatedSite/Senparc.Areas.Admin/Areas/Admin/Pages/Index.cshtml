@@ -1,4 +1,4 @@
-﻿@page
+@page
 
 @model Senparc.Areas.Admin.Pages.IndexModel
 @{
@@ -270,6 +270,156 @@
         .fade-animation {
             animation: fade 1.2s ease-in-out;
         }
+
+        /* AI 对话入口样式 */
+        #ai-chat-entrance .chat-entrance-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .chat-entrance-container {
+            color: #fff;
+        }
+
+        .chat-entrance-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chat-entrance-icon {
+            font-size: 50px;
+            margin-right: 20px;
+            opacity: 0.9;
+        }
+
+        .chat-entrance-content {
+            flex: 1;
+        }
+
+        .chat-entrance-title {
+            margin: 0 0 8px 0;
+            font-size: 24px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+            .chat-entrance-title .fa {
+                margin-right: 8px;
+            }
+
+        .chat-entrance-subtitle {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .chat-entrance-input-wrapper {
+            margin-bottom: 15px;
+        }
+
+        .chat-entrance-input .el-input__inner {
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 20px;
+            font-size: 15px;
+        }
+
+        .chat-entrance-input .el-input-group__append {
+            background: #5e72e4;
+            border: none;
+            border-radius: 0 25px 25px 0;
+        }
+
+            .chat-entrance-input .el-input-group__append .el-button {
+                color: #fff;
+                font-weight: 600;
+            }
+
+                .chat-entrance-input .el-input-group__append .el-button:hover {
+                    background: #4c63d2;
+                }
+
+        .chat-entrance-tips {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .tip-item {
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+            .tip-item .fa {
+                margin-right: 5px;
+            }
+
+        .chat-module-drop-zone {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+            .chat-module-drop-zone.drag-over {
+                background: rgba(255, 255, 255, 0.2);
+                border-color: rgba(255, 255, 255, 0.8);
+                border-style: solid;
+            }
+
+        .drop-zone-placeholder {
+            text-align: center;
+            opacity: 0.7;
+        }
+
+            .drop-zone-placeholder .fa {
+                font-size: 24px;
+                margin-bottom: 5px;
+            }
+
+            .drop-zone-placeholder p {
+                margin: 0;
+                font-size: 13px;
+            }
+
+        .selected-modules-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 15px;
+            width: 100%;
+        }
+
+        .module-tag {
+            font-size: 14px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+        }
+
+            .module-tag .fa {
+                margin-right: 5px;
+            }
+
+        #xncf-modules-area .xncf-item.dragging {
+            opacity: 0.5;
+        }
+
+        .chat-module-drop-zone.highlight {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+        }
     </style>
 }
 
@@ -353,6 +503,72 @@
             </el-row>
         </el-main>
     </el-container>
+</div>
+
+<!-- AI 对话入口 -->
+<div id="ai-chat-entrance" style="margin-top: 30px; margin-bottom: 30px;">
+    <el-card class="box-card chat-entrance-card">
+        <div class="chat-entrance-container">
+            <div class="chat-entrance-header">
+                <div class="chat-entrance-icon">
+                    <i class="fa fa-comments"></i>
+                </div>
+                <div class="chat-entrance-content">
+                    <h3 class="chat-entrance-title">
+                        <i class="fa fa-magic"></i> AI 智能助手
+                    </h3>
+                    <p class="chat-entrance-subtitle">向我提问，我将帮助您更高效地管理系统</p>
+                </div>
+            </div>
+            
+            <div class="chat-entrance-input-wrapper">
+                <el-input
+                    v-model="chatInputText"
+                    placeholder="输入您的问题，例如：如何配置系统参数？"
+                    @@keyup.enter.native="startChatSession"
+                    class="chat-entrance-input"
+                    clearable>
+                    <el-button 
+                        slot="append" 
+                        icon="el-icon-s-promotion" 
+                        @@click="startChatSession"
+                        :disabled="!chatInputText || chatInputText.trim().length === 0"
+                        :loading="isCreatingSession">
+                        开始对话
+                    </el-button>
+                </el-input>
+            </div>
+
+            <div class="chat-entrance-tips">
+                <span class="tip-item"><i class="fa fa-lightbulb-o"></i> 支持多轮对话</span>
+                <span class="tip-item"><i class="fa fa-cube"></i> 可拖拽模块进行上下文对话</span>
+                <span class="tip-item"><i class="fa fa-history"></i> 自动保存历史记录</span>
+            </div>
+
+            <!-- 拖放区域 -->
+            <div class="chat-module-drop-zone" 
+                 @@drop.prevent="handleModuleDrop"
+                 @@dragover.prevent="handleDragOver"
+                 @@dragleave="handleDragLeave"
+                 :class="{ 'drag-over': isDragOver }">
+                <div v-if="selectedModules.length === 0" class="drop-zone-placeholder">
+                    <i class="fa fa-arrow-down"></i>
+                    <p>将模块拖拽到此处以包含到对话上下文</p>
+                </div>
+                <div v-else class="selected-modules-list">
+                    <el-tag
+                        v-for="module in selectedModules"
+                        :key="module.uid"
+                        closable
+                        @@close="removeModule(module.uid)"
+                        type="info"
+                        class="module-tag">
+                        <i :class="module.icon"></i> {{module.name}}
+                    </el-tag>
+                </div>
+            </div>
+        </div>
+    </el-card>
 </div>
 
 <!-- 功能模块 -->

@@ -1,0 +1,171 @@
+@page
+@model Senparc.Areas.Admin.Pages.AdminChat.ChatModel
+@{
+    ViewData["Title"] = "AI 智能助手";
+    Layout = "_Layout_Vue";
+}
+
+@section style {
+    <link rel="stylesheet" href="~/css/Admin/Pages/AdminChat/Chat.css" />
+}
+
+<div id="admin-chat-app" class="admin-chat-container">
+    <el-container class="chat-main-container">
+        <!-- 左侧会话历史 -->
+        <el-aside width="280px" class="chat-sidebar">
+            <div class="sidebar-header">
+                <h3 class="sidebar-title">
+                    <i class="fa fa-comments"></i> 对话历史
+                </h3>
+                <el-button 
+                    type="primary" 
+                    size="small" 
+                    icon="el-icon-plus" 
+                    @@click="createNewSession">
+                    新对话
+                </el-button>
+            </div>
+            
+            <div class="session-list" v-loading="loadingSessions">
+                <div 
+                    v-for="session in sessionList" 
+                    :key="session.id"
+                    :class="['session-item', { 'active': currentSessionId === session.id }]"
+                    @@click="switchSession(session.id)">
+                    <div class="session-info">
+                        <div class="session-title">{{ session.title }}</div>
+                        <div class="session-time">{{ formatTime(session.lastMessageTime) }}</div>
+                    </div>
+                    <el-dropdown trigger="click" @@command="handleSessionCommand">
+                        <span class="session-actions" @@click.stop>
+                            <i class="el-icon-more"></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item :command="{action: 'delete', id: session.id}">
+                                <i class="fa fa-trash"></i> 删除
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
+                
+                <div v-if="sessionList.length === 0 && !loadingSessions" class="empty-sessions">
+                    <i class="fa fa-comments-o"></i>
+                    <p>暂无对话历史</p>
+                </div>
+            </div>
+        </el-aside>
+
+        <!-- 右侧对话窗口 -->
+        <el-main class="chat-content">
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <h3 class="chat-title">
+                        <i class="fa fa-magic"></i> {{ currentSessionTitle || 'AI 智能助手' }}
+                    </h3>
+                    <div class="chat-modules" v-if="currentSessionModules.length > 0">
+                        <el-tag 
+                            v-for="module in currentSessionModules" 
+                            :key="module.id"
+                            size="mini"
+                            type="info">
+                            <i class="fa fa-cube"></i> {{ module.moduleName }}
+                        </el-tag>
+                    </div>
+                </div>
+            </div>
+
+            <div class="messages-container" ref="messagesContainer" v-loading="loadingMessages">
+                <div 
+                    v-for="message in messageList" 
+                    :key="message.id"
+                    :class="['message-item', `message-${getRoleTypeClass(message.roleType)}`]">
+                    <div class="message-avatar">
+                        <i :class="getMessageIcon(message.roleType)"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-meta">
+                            <span class="message-role">{{ getRoleTypeName(message.roleType) }}</span>
+                            <span class="message-time">{{ formatTime(message.addTime) }}</span>
+                        </div>
+                        <div class="message-text" v-html="formatMessageContent(message.content)"></div>
+                        <div class="message-actions" v-if="message.roleType === 1">
+                            <el-button 
+                                type="text" 
+                                size="mini"
+                                :class="{ 'active': message.userFeedback === 1 }"
+                                @@click="setFeedback(message.id, 1)">
+                                <i class="fa fa-thumbs-up"></i>
+                            </el-button>
+                            <el-button 
+                                type="text" 
+                                size="mini"
+                                :class="{ 'active': message.userFeedback === 2 }"
+                                @@click="setFeedback(message.id, 2)">
+                                <i class="fa fa-thumbs-down"></i>
+                            </el-button>
+                        </div>
+                    </div>
+                </div>
+
+                <div v-if="messageList.length === 0 && !loadingMessages" class="empty-messages">
+                    <i class="fa fa-comment-o"></i>
+                    <p>开始您的对话吧</p>
+                </div>
+
+                <div v-if="isAIResponding" class="message-item message-assistant ai-thinking">
+                    <div class="message-avatar">
+                        <i class="fa fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-meta">
+                            <span class="message-role">AI 助手</span>
+                        </div>
+                        <div class="message-text">
+                            <span class="typing-indicator">
+                                <span></span><span></span><span></span>
+                            </span>
+                            正在思考中...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-container">
+                <el-input
+                    type="textarea"
+                    v-model="inputMessage"
+                    placeholder="输入您的问题..."
+                    :rows="3"
+                    :disabled="!currentSessionId || isSending"
+                    @@keydown.enter.ctrl.native="sendMessage"
+                    class="message-input">
+                </el-input>
+                <div class="input-actions">
+                    <span class="input-tip">
+                        <i class="fa fa-info-circle"></i> Ctrl + Enter 发送
+                    </span>
+                    <el-button 
+                        type="primary" 
+                        icon="el-icon-s-promotion"
+                        :loading="isSending"
+                        :disabled="!currentSessionId || !inputMessage || inputMessage.trim().length === 0"
+                        @@click="sendMessage">
+                        发送
+                    </el-button>
+                </div>
+            </div>
+        </el-main>
+    </el-container>
+</div>
+
+@section scripts {
+    <script>
+        window.INITIAL_DATA = {
+            sessionId: @(Model.SessionId),
+            initialMessage: '@Html.Raw(Model.InitialMessage?.Replace("'", "\\'").Replace("\n", "\\n"))',
+            currentUserId: @(Model.CurrentUserId),
+            moduleUids: '@Html.Raw(Model.ModuleUids)'
+        };
+    </script>
+    <script src="~/js/Admin/Pages/AdminChat/Chat.js"></script>
+}

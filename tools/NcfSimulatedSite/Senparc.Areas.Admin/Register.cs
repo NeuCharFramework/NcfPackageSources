@@ -57,7 +57,7 @@ namespace Senparc.Areas.Admin
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_AREAS_ADMIN_UID;// "00000000-0000-0001-0001-000000000001";
 
-        public override string Version => "0.4.0-beta4";
+        public override string Version => "0.5.0-beta4";
 
         public override string MenuName => "NCF 系统管理员后台";
 
@@ -133,6 +133,14 @@ namespace Senparc.Areas.Admin
 
             services.AddScoped<IAdminUserInfoRepository, AdminUserInfoRepository>();
             services.AddScoped<InstallerService>();
+
+            // 聊天功能相关服务注册
+            services.AddScoped<IAdminChatSessionRepository, AdminChatSessionRepository>();
+            services.AddScoped<IAdminChatMessageRepository, AdminChatMessageRepository>();
+            services.AddScoped<IAdminChatSessionModuleRepository, AdminChatSessionModuleRepository>();
+            services.AddScoped<AdminChatSessionService>();
+            services.AddScoped<AdminChatMessageService>();
+            services.AddScoped<AdminChatSessionModuleService>();
 
             return base.AddXncfModule(services, configuration, env);
         }
@@ -368,3 +376,4 @@ namespace Senparc.Areas.Admin
     }
 
 }
+

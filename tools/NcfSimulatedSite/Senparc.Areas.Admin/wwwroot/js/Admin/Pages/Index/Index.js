@@ -1,4 +1,4 @@
-﻿var app = new Vue({
+var app = new Vue({
   el: '#app',
   data() {
     return {
@@ -11,7 +11,12 @@
       todayLogData: [],
       // 添加动画控制变量
       shakeAllModules: false,
-      glowUpgradeableModules: false
+      glowUpgradeableModules: false,
+      // AI 对话入口相关
+      chatInputText: '',
+      isDragOver: false,
+      selectedModules: [],
+      isCreatingSession: false
     };
   },
   mounted() {
@@ -21,6 +26,8 @@
     this.fetchTodayLogData();
     // 添加鼠标事件监听
     this.initializeHoverEffects();
+    // 初始化模块拖拽
+    this.initializeModuleDrag();
   },
   methods: {
     async fetchChartData() {
@@ -241,6 +248,144 @@
             }, 1200); // 与动画持续时间匹配
           }, delay);
         }
+      });
+    },
+
+    // AI 对话入口相关方法
+
+    async startChatSession() {
+      if (!this.chatInputText || this.chatInputText.trim().length === 0) {
+        this.$message.warning('请输入对话内容');
+        return;
+      }
+
+      this.isCreatingSession = true;
+
+      try {
+        const requestData = {
+          initialMessage: this.chatInputText.trim(),
+          moduleUids: this.selectedModules.map(m => m.uid)
+        };
+
+        const response = await service.post('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.CreateSessionAsync', requestData);
+
+        if (response.data && response.data.success && response.data.data) {
+          const sessionId = response.data.data.sessionId;
+          const moduleUidsQuery = this.selectedModules.length > 0 
+            ? '&moduleUids=' + this.selectedModules.map(m => m.uid).join(',')
+            : '';
+          
+          window.location.href = `/Admin/AdminChat/Chat?sessionId=${sessionId}${moduleUidsQuery}`;
+        } else {
+          this.$message.error(response.data.errorMessage || '创建会话失败');
+        }
+      } catch (error) {
+        console.error('创建会话失败:', error);
+        this.$message.error('创建会话失败，请稍后重试');
+      } finally {
+        this.isCreatingSession = false;
+      }
+    },
+
+    handleModuleDrop(event) {
+      this.isDragOver = false;
+      
+      try {
+        const moduleDataStr = event.dataTransfer.getData('application/json');
+        if (!moduleDataStr) {
+          console.warn('未获取到模块数据');
+          return;
+        }
+
+        const moduleData = JSON.parse(moduleDataStr);
+        
+        if (!moduleData.uid) {
+          console.warn('模块数据不完整:', moduleData);
+          return;
+        }
+
+        const exists = this.selectedModules.some(m => m.uid === moduleData.uid);
+        if (!exists) {
+          this.selectedModules.push({
+            uid: moduleData.uid,
+            name: moduleData.name || '未知模块',
+            icon: moduleData.icon || 'fa fa-cube',
+            version: moduleData.version || ''
+          });
+          this.$message.success(`已添加模块: ${moduleData.name}`);
+        } else {
+          this.$message.info('该模块已添加');
+        }
+      } catch (error) {
+        console.error('处理模块拖放失败:', error);
+        this.$message.error('添加模块失败');
+      }
+    },
+
+    handleDragOver(event) {
+      this.isDragOver = true;
+    },
+
+    handleDragLeave(event) {
+      if (event.target.classList.contains('chat-module-drop-zone')) {
+        this.isDragOver = false;
+      }
+    },
+
+    removeModule(uid) {
+      this.selectedModules = this.selectedModules.filter(m => m.uid !== uid);
+    },
+
+    clearSelectedModules() {
+      this.selectedModules = [];
+    },
+
+    initializeModuleDrag() {
+      this.$nextTick(() => {
+        const moduleCards = document.querySelectorAll('#xncf-modules-area .xncf-item');
+        
+        moduleCards.forEach((card) => {
+          card.setAttribute('draggable', 'true');
+          card.style.cursor = 'move';
+          
+          card.addEventListener('dragstart', (event) => {
+            const cardElement = event.currentTarget;
+            const linkElement = cardElement.querySelector('a[href*="uid="]');
+            const headerElement = cardElement.querySelector('.el-card__header span:first-child');
+            const iconElement = cardElement.querySelector('.icon');
+            const versionElement = cardElement.querySelector('.version');
+            const descElement = cardElement.querySelector('.description');
+
+            const moduleData = {
+              uid: linkElement?.href?.match(/uid=([^&]+)/)?.[1] || '',
+              name: headerElement?.textContent?.trim() || '未知模块',
+              icon: iconElement?.className || 'fa fa-cube',
+              version: versionElement?.textContent?.trim() || '',
+              description: descElement?.textContent?.trim() || ''
+            };
+
+            event.dataTransfer.setData('application/json', JSON.stringify(moduleData));
+            event.dataTransfer.effectAllowed = 'copy';
+            
+            cardElement.style.opacity = '0.5';
+            cardElement.classList.add('dragging');
+            
+            const dropZone = document.querySelector('.chat-module-drop-zone');
+            if (dropZone) {
+              dropZone.classList.add('highlight');
+            }
+          });
+          
+          card.addEventListener('dragend', (event) => {
+            event.currentTarget.style.opacity = '1';
+            event.currentTarget.classList.remove('dragging');
+            
+            const dropZone = document.querySelector('.chat-module-drop-zone');
+            if (dropZone) {
+              dropZone.classList.remove('highlight');
+            }
+          });
+        });
       });
     }
   }
