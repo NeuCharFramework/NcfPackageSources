@@ -261,6 +261,7 @@ namespace Senparc.Areas.Admin
 
 
                 options.Conventions.AuthorizePage("/", "AdminOnly");//必须登录
+                options.Conventions.AuthorizePage("/AdminChat/Chat", "AdminOnly");//聊天页面必须登录
                 options.Conventions.AllowAnonymousToPage("/Login");//允许匿名
 
                 //更多：https://learn.microsoft.com/en-us/aspnet/core/security/authorization/razor-pages-authorization?view=aspnetcore-8.0
