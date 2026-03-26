@@ -3334,8 +3334,10 @@ var app = new Vue({
 
                     this.optimizeProgressText = 'Agent 已完成，正在刷新靶道并选中新版本…';
                     await this.getFieldList();
+                    // getFieldList 只更新靶场列表；靶道下拉 promptOpt 必须由 getPromptOptData 拉取，否则列表仍是旧的，会误判「未匹配到 Prompt Code」
+                    await this.getPromptOptData();
 
-                    const code = optimizeResult.newPromptCode;
+                    const code = optimizeResult.newPromptCode || optimizeResult.NewPromptCode;
                     const newPrompt = this.promptOpt.find(p =>
                         p.fullVersion === code ||
                         p.label === code ||
@@ -3390,9 +3392,10 @@ var app = new Vue({
                         }
                     }
 
-                    let message = `✅ 优化完成\n\n新 Prompt：${optimizeResult.newPromptCode}`;
-                    if (optimizeResult.evaluationReason) {
-                        message += `\n\n${optimizeResult.evaluationReason}`;
+                    let message = `✅ 优化完成\n\n新 Prompt：${code}`;
+                    const evalReason = optimizeResult.evaluationReason || optimizeResult.EvaluationReason;
+                    if (evalReason) {
+                        message += `\n\n${evalReason}`;
                     }
                     this.$message({ message, type: 'success', duration: 10000, showClose: true });
 
@@ -6522,10 +6525,11 @@ var app = new Vue({
         },
         // 获取靶道 下拉列表数据
         async getPromptOptData(id, isExpected) {
-            // find rangeName by id
-            let _find = this.promptFieldOpt.find(item => item.value === this.promptField)
+            // find rangeName by id（与 promptField 比较时统一为字符串，避免 el-select 存 string 而接口返回 number 导致找不到靶场）
+            const matchField = (v) => String(v) === String(this.promptField)
+            let _find = this.promptFieldOpt.find(item => matchField(item.value))
             if (isExpected) {
-                _find = this.promptFieldOpt.find(item => item.value === id)
+                _find = this.promptFieldOpt.find(item => String(item.value) === String(id))
             }
 
             const name = _find ? _find.rangeName : ''
