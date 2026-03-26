@@ -49,7 +49,9 @@ namespace Senparc.Xncf.PromptRange.Abstractions.Events
         float CurrentTopP,
         int CurrentMaxTokens,
         float CurrentFrequencyPenalty,
-        float CurrentPresencePenalty
+        float CurrentPresencePenalty,
+        bool AutoShootAfterOptimize = true,      // 🆕 创建后立即打靶（默认 true）
+        bool AutoAIGradeAfterShoot = false       // 🆕 打靶后 AI 评分（默认 false）
     );
 
     /// <summary>

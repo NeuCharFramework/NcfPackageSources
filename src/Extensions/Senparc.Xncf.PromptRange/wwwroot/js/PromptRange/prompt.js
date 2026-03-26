@@ -8,6 +8,8 @@ var app = new Vue({
             optimizeDialogVisible: false,
             optimizeRequirement: '',
             optimizing: false,
+            autoShootAfterOptimize: true,      // 🆕 创建后立即打靶（默认选中）
+            autoAIGradeAfterShoot: false,      // 🆕 打靶后 AI 评分（默认不选中）
             // PromptCatalyzer 初始化功能
             promptCatalyzerInitVisible: false,      // 初始化对话框可见性
             availableModelsForInit: [],             // 可用的 AI Model 列表
@@ -3297,7 +3299,10 @@ var app = new Vue({
                         currentTopP: promptDetail.topP || this.parameterViewList.find(p => p.formField === 'topP')?.value || 0.9,
                         currentMaxTokens: promptDetail.maxToken || this.parameterViewList.find(p => p.formField === 'maxToken')?.value || 2000,
                         currentFrequencyPenalty: promptDetail.frequencyPenalty || this.parameterViewList.find(p => p.formField === 'frequencyPenalty')?.value || 0,
-                        currentPresencePenalty: promptDetail.presencePenalty || this.parameterViewList.find(p => p.formField === 'presencePenalty')?.value || 0
+                        currentPresencePenalty: promptDetail.presencePenalty || this.parameterViewList.find(p => p.formField === 'presencePenalty')?.value || 0,
+                        // 🆕 新增：自动打靶和 AI 评分选项
+                        autoShootAfterOptimize: this.autoShootAfterOptimize,
+                        autoAIGradeAfterShoot: this.autoAIGradeAfterShoot
                     }
                 };
 

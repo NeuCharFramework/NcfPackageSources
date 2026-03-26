@@ -17,8 +17,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 {
     /// <summary>
     /// AdminChatAppService：管理后台聊天功能 API 服务
+    /// 支持 Cookie 和 JWT 两种认证方式
     /// </summary>
-    [BackendJwtAuthorize]
+    [AdminOrJwtAuthorize("AdminOnly")]
     public class AdminChatAppService : LocalAppServiceBase
     {
         private readonly AdminChatSessionService _sessionService;

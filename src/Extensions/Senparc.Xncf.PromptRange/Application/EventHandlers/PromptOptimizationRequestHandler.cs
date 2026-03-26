@@ -3,6 +3,7 @@ using Senparc.Ncf.Shared.Abstractions.Events;
 using Senparc.Xncf.PromptRange.Abstractions.Events;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -13,6 +14,7 @@ using Senparc.AI.Kernel.Handlers;
 using Microsoft.SemanticKernel;
 using System.Linq;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
+using Senparc.Ncf.Core.Enums;
 
 namespace Senparc.Xncf.PromptRange.Application.EventHandlers
 {
@@ -30,17 +32,20 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
     {
         private readonly PromptItemService _promptItemService;
         private readonly PromptRangeService _promptRangeService;
+        private readonly PromptResultService _promptResultService;  // 🆕 用于打靶
         private readonly IEventBus _eventBus;
         private readonly ILogger<PromptOptimizationRequestHandler> _logger;
 
         public PromptOptimizationRequestHandler(
             PromptItemService promptItemService,
             PromptRangeService promptRangeService,
+            PromptResultService promptResultService,  // 🆕 注入 PromptResultService
             IEventBus eventBus,
             ILogger<PromptOptimizationRequestHandler> logger)
         {
             _promptItemService = promptItemService;
             _promptRangeService = promptRangeService;
+            _promptResultService = promptResultService;  // 🆕
             _eventBus = eventBus;
             _logger = logger;
         }
@@ -126,7 +131,8 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
                 
                 // 简化的解析（实际应该用 System.Text.Json 严格解析）
                 // 这里为了鲁棒性，使用简单的字符串提取
-                var optimizedContent = ExtractJsonValue(aiResult, "optimizedContent") ?? @event.PromptContent;
+                var optimizedContentRaw = ExtractJsonValue(aiResult, "optimizedContent") ?? @event.PromptContent;
+                var optimizedContent = UnescapeJsonString(optimizedContentRaw); // 🔥 修复：处理 JSON 转义字符
                 var newTemperature = (float)ParseDouble(ExtractJsonValue(aiResult, "temperature"), @event.Context.CurrentTemperature);
                 var newTopP = (float)ParseDouble(ExtractJsonValue(aiResult, "topP"), @event.Context.CurrentTopP);
                 var newMaxTokens = ParseInt(ExtractJsonValue(aiResult, "maxTokens"), @event.Context.CurrentMaxTokens);
@@ -142,12 +148,18 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
                 _logger.LogInformation("【步骤4/5】创建新版本 PromptItem...");
                 
                 var originalItem = promptResult.PromptItem;
+                
+                // 🔥 修复1：智能选择 ModelId（基于历史评分）
+                var selectedModelId = await SelectBestModelIdAsync(originalItem.RangeName, @event.Context.ModelId);
+                _logger.LogInformation("  智能选择 ModelId: 原={Original}, 选择={Selected}", 
+                    @event.Context.ModelId, selectedModelId);
+                
                 var newPromptItemRequest = new PromptItem_AddRequest
                 {
-                    Id = originalItem.Id,  // 🔥 关键：设置基础 PromptItem ID，用于版本号生成
+                    Id = originalItem.Id,  // 关键：设置基础 PromptItem ID，用于版本号生成
                     RangeId = originalItem.RangeId,
-                    ModelId = @event.Context.ModelId,
-                    Content = optimizedContent,
+                    ModelId = selectedModelId,  // 🔥 使用智能选择的 ModelId
+                    Content = optimizedContent,  // 🔥 修复2：已处理转义字符
                     Temperature = newTemperature,
                     TopP = newTopP,
                     MaxToken = newMaxTokens,
@@ -176,6 +188,58 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
                 
                 _logger.LogInformation("  ✅ 新 PromptItem 创建成功！NewPromptCode: {NewPromptCode}, ItemId: {ItemId}", 
                     newPromptCode, newPromptItem.Id);
+
+                // 🆕 【步骤4.5/5】自动打靶和 AI 评分（如果选项开启）
+                int? shootResultId = null;
+                if (@event.Context.AutoShootAfterOptimize)
+                {
+                    _logger.LogInformation("【步骤4.5/5】开始自动打靶...");
+                    try
+                    {
+                        // 打靶：生成一次测试结果
+                        var shootResult = await _promptResultService.SenparcGenerateResultAsync(newPromptItem, userMessage: null, chatHistory: null);
+                        shootResultId = shootResult.Id;
+                        _logger.LogInformation("  ✅ 打靶成功！PromptResultId: {ResultId}, Output Length: {Length}",
+                            shootResult.Id, shootResult.ResultString?.Length ?? 0);
+
+                        // 如果还选择了 AI 评分
+                        if (@event.Context.AutoAIGradeAfterShoot)
+                        {
+                            _logger.LogInformation("  开始 AI 自动评分...");
+                            
+                            // 获取期望结果（从原 PromptItem 继承）
+                            var expectedResultsJson = originalItem.ExpectedResultsJson;
+                            if (!string.IsNullOrWhiteSpace(expectedResultsJson))
+                            {
+                                var expectedResults = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(expectedResultsJson);
+                                
+                                if (expectedResults != null && expectedResults.Count > 0)
+                                {
+                                    // 调用 AI 评分
+                                    await _promptResultService.RobotScoringAsync(shootResult.Id, isRefresh: false, expectedResultsJson);
+                                    
+                                    // 更新 PromptItem 的平均分和最高分
+                                    await _promptResultService.UpdateEvalScoreAsync(newPromptItem.Id);
+                                    
+                                    _logger.LogInformation("  ✅ AI 评分完成！");
+                                }
+                                else
+                                {
+                                    _logger.LogWarning("  ⚠️  期望结果列表为空，跳过 AI 评分");
+                                }
+                            }
+                            else
+                            {
+                                _logger.LogWarning("  ⚠️  未设置期望结果，跳过 AI 评分");
+                            }
+                        }
+                    }
+                    catch (Exception shootEx)
+                    {
+                        _logger.LogError(shootEx, "  ❌ 自动打靶或 AI 评分失败（不影响优化结果）");
+                        // 打靶失败不影响优化结果的返回
+                    }
+                }
 
                 // 【步骤5/5】发布响应事件
                 _logger.LogInformation("【步骤5/5】发布优化响应...");
@@ -258,6 +322,73 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
         {
             if (string.IsNullOrEmpty(value)) return defaultValue;
             return int.TryParse(value, out var result) ? result : defaultValue;
+        }
+        
+        /// <summary>
+        /// 🔥 修复1：智能选择 ModelId（基于历史评分）
+        /// </summary>
+        private async Task<int> SelectBestModelIdAsync(string rangeName, int currentModelId)
+        {
+            try
+            {
+                // 获取当前 Range 中所有已评分的 PromptItem
+                var scoredItems = await _promptItemService.GetFullListAsync(
+                    p => p.RangeName == rangeName && p.EvalAvgScore > 0,
+                    p => p.Id,
+                    OrderingType.Ascending
+                );
+                
+                if (scoredItems.Count == 0)
+                {
+                    _logger.LogInformation("    当前 Range 无历史评分，使用原 ModelId: {ModelId}", currentModelId);
+                    return currentModelId;
+                }
+                
+                // 统计每个 ModelId 的平均分
+                var modelScores = scoredItems
+                    .GroupBy(p => p.ModelId)
+                    .Select(g => new
+                    {
+                        ModelId = g.Key,
+                        AvgScore = g.Average(p => (double)p.EvalAvgScore),
+                        Count = g.Count()
+                    })
+                    .OrderByDescending(x => x.AvgScore)
+                    .ToList();
+                
+                _logger.LogInformation("    Range 中模型评分统计：{ModelScores}", 
+                    string.Join(", ", modelScores.Select(m => $"Model{m.ModelId}={m.AvgScore:F2}({m.Count}次)")));
+                
+                // 选择评分最高的模型
+                var bestModel = modelScores.First();
+                _logger.LogInformation("    最佳模型：Model{ModelId}，平均分={AvgScore:F2}", 
+                    bestModel.ModelId, bestModel.AvgScore);
+                
+                return bestModel.ModelId;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "智能选择 ModelId 失败，使用原 ModelId: {ModelId}", currentModelId);
+                return currentModelId;
+            }
+        }
+        
+        /// <summary>
+        /// 🔥 修复2：处理 JSON 转义字符（\n, \r, \t, \\, \", 等）
+        /// </summary>
+        private string UnescapeJsonString(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return value;
+            
+            // 注意：必须先处理 \\ 避免与其他转义冲突
+            return value
+                .Replace("\\\\", "\u0001")  // 临时标记，避免与后续替换冲突
+                .Replace("\\n", "\n")       // 换行符
+                .Replace("\\r", "\r")       // 回车符
+                .Replace("\\t", "\t")       // 制表符
+                .Replace("\\\"", "\"")      // 双引号
+                .Replace("\u0001", "\\");   // 恢复反斜杠
         }
     }
 }

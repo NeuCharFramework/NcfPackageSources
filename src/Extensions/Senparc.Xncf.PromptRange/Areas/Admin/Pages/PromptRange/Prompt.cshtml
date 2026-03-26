@@ -1279,6 +1279,22 @@
                     <el-input type="textarea" :rows="4" placeholder="例如：让回答更具创造性，或者是减少幻觉..." v-model="optimizeRequirement">
                     </el-input>
                 </el-form-item>
+                
+                @* 🆕 新增选项：自动打靶和 AI 评分 *@
+                <el-form-item label="优化后处理">
+                    <el-checkbox v-model="autoShootAfterOptimize" style="display: block; margin-bottom: 10px;">
+                        <span style="font-weight: 500;">创建后立即打靶</span>
+                        <el-tooltip content="优化完成后自动执行一次打靶测试，验证新 Prompt 的效果" placement="top">
+                            <i class="el-icon-question" style="color: #909399; margin-left: 5px;"></i>
+                        </el-tooltip>
+                    </el-checkbox>
+                    <el-checkbox v-model="autoAIGradeAfterShoot" :disabled="!autoShootAfterOptimize" style="margin-left: 20px;">
+                        <span style="font-weight: 500;">打靶后使用 AI 评分</span>
+                        <el-tooltip content="打靶完成后自动调用 AI 评分功能，快速获得质量反馈" placement="top">
+                            <i class="el-icon-question" style="color: #909399; margin-left: 5px;"></i>
+                        </el-tooltip>
+                    </el-checkbox>
+                </el-form-item>
             </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
