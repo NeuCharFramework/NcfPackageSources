@@ -18,17 +18,31 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
     /// </summary>
     public class PromptOptimizationPlugin
     {
+        private readonly PromptOptimizationAgentBridge _bridge;
         private readonly PromptItemService _promptItemService;
         private readonly PromptRangeService _promptRangeService;
         private readonly PromptResultService _promptResultService;
 
-        public PromptOptimizationPlugin()
+        public PromptOptimizationPlugin(PromptOptimizationAgentBridge bridge)
         {
-            // 使用 ServiceLocator 获取服务
+            _bridge = bridge;
             var serviceProvider = SenparcDI.GetServiceProvider();
             _promptItemService = serviceProvider.GetRequiredService<PromptItemService>();
             _promptRangeService = serviceProvider.GetRequiredService<PromptRangeService>();
             _promptResultService = serviceProvider.GetRequiredService<PromptResultService>();
+        }
+
+        private static string UnescapeJsonString(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return value;
+            return value
+                .Replace("\\\\", "\u0001")
+                .Replace("\\n", "\n")
+                .Replace("\\r", "\r")
+                .Replace("\\t", "\t")
+                .Replace("\\\"", "\"")
+                .Replace("\u0001", "\\");
         }
 
         /// <summary>
@@ -118,8 +132,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         /// <summary>
         /// 创建优化后的新 Prompt 版本
         /// </summary>
-        [KernelFunction, Description("Create a new optimized version of the prompt")]
+        [KernelFunction, Description("Create a new optimized version of the prompt. MUST pass optimizationRequestId exactly as given in the task.")]
         public async Task<string> CreateOptimizedPrompt(
+            [Description("The optimization REQUEST_ID from the task header (GUID string)")] string optimizationRequestId,
             [Description("Base prompt code to optimize from")] string basePromptCode,
             [Description("Optimized prompt content")] string optimizedContent,
             [Description("Recommended model ID (based on historical scores)")] int modelId,
@@ -127,11 +142,19 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
             [Description("Recommended topP (0.0-1.0)")] float topP,
             [Description("Recommended maxTokens")] int maxTokens,
             [Description("Recommended frequencyPenalty (-2.0 to 2.0)")] float frequencyPenalty,
-            [Description("Recommended presencePenalty (-2.0 to 2.0)")] float presencePenalty
+            [Description("Recommended presencePenalty (-2.0 to 2.0)")] float presencePenalty,
+            [Description("Brief summary of what you improved (for the user)")] string improvementSummary = null
         )
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(optimizationRequestId))
+                {
+                    return "Error: optimizationRequestId is required.";
+                }
+
+                var content = UnescapeJsonString(optimizedContent ?? "");
+
                 // 获取原始 PromptItem
                 var promptResult = await _promptItemService.GetWithVersionAsync(basePromptCode, isAvg: true);
                 if (promptResult == null || promptResult.PromptItem == null)
@@ -147,7 +170,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
                     Id = originalItem.Id,
                     RangeId = originalItem.RangeId,
                     ModelId = modelId,
-                    Content = optimizedContent,
+                    Content = content,
                     Temperature = temperature,
                     TopP = topP,
                     MaxToken = maxTokens,
@@ -170,7 +193,18 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 
                 var newPromptItem = await _promptItemService.AddPromptItemAsync(newPromptItemRequest);
 
-                return $"Success! New prompt created: {newPromptItem.FullVersion}";
+                _bridge.RecordCreatedPrompt(
+                    optimizationRequestId.Trim(),
+                    newPromptItem.FullVersion,
+                    newPromptItem.Content,
+                    temperature,
+                    topP,
+                    maxTokens,
+                    frequencyPenalty,
+                    presencePenalty,
+                    improvementSummary);
+
+                return $"Success! New prompt created: {newPromptItem.FullVersion}. The UI will refresh; do not call shoot/grade tools — the page runs them.";
             }
             catch (Exception ex)
             {
@@ -179,7 +213,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         }
 
         /// <summary>
-        /// 执行打靶测试
+        /// 可选：一般由 PromptRange 页面打靶；仅当任务明确要求时在 Agent 内调用
         /// </summary>
         [KernelFunction, Description("Execute a shoot test on the prompt")]
         public async Task<string> ExecuteShootTest(

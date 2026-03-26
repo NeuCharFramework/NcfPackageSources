@@ -11,6 +11,7 @@ using Senparc.Ncf.Service;
 using Microsoft.Extensions.Logging;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
+using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
@@ -64,6 +65,16 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 _logger.LogInformation("  ✅ Agent 已存在，ID: {AgentId}, PromptCode: {PromptCode}", 
                     agent.Id, agent.SystemMessage);
                 promptCode = agent.SystemMessage;  // Agent 的 SystemMessage 存储了 PromptCode
+
+                const string pluginTypeName = "Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins.PromptOptimizationPlugin";
+                if (string.IsNullOrWhiteSpace(agent.FunctionCallNames))
+                {
+                    var dto = _agentsTemplateService.Mapper.Map<AgentTemplateDto>(agent);
+                    dto.FunctionCallNames = pluginTypeName;
+                    agent.UpdateFromDto(dto);
+                    await _agentsTemplateService.SaveObjectAsync(agent);
+                    _logger.LogInformation("  🔧 已补全已有 Agent 的 FunctionCallNames（PromptOptimizationPlugin）");
+                }
             }
             else
             {
@@ -251,14 +262,14 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                     context);
                 await _eventBus.PublishAsync(requestEvent);
 
-                // 3. 等待响应（设置 5 分钟超时，因为 AI 处理可能较慢）
-                var timeoutTask = Task.Delay(TimeSpan.FromMinutes(5));
+                // 3. 等待响应（Agent 多轮对话可能较慢）
+                var timeoutTask = Task.Delay(TimeSpan.FromMinutes(15));
                 var completedTask = await Task.WhenAny(tcs.Task, timeoutTask);
 
                 if (completedTask == timeoutTask)
                 {
                     _pendingRequests.TryRemove(requestId, out _);
-                    throw new TimeoutException("Prompt 优化请求超时（5 分钟）");
+                    throw new TimeoutException("Prompt 优化请求超时（15 分钟）");
                 }
 
                 var response = await tcs.Task;

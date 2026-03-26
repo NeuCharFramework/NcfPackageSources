@@ -1,4 +1,4 @@
-﻿using AutoGen.Core;
+using AutoGen.Core;
 using AutoGen.SemanticKernel;
 using AutoGen.SemanticKernel.Extension;
 using Microsoft.Extensions.DependencyInjection;
@@ -257,13 +257,25 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     }
 
     /// <summary>
-    /// 在独立进程中运行 ChatGroup（UI 界面中进行）
+    /// 在独立进程中运行 ChatGroup（UI 界面中进行，不等待完成）
     /// </summary>
-    /// <returns></returns>
     public Task RunChatGroupInThread(ChatGroup_RunGroupRequest request)
     {
-        var task = Task.Factory.StartNew(async () =>
-        {
+        var task = RunChatGroupExecutionCoreAsync(request);
+        TaskList.Add(task);
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// 运行 ChatGroup 直至本轮对话结束（用于 Prompt 优化等需同步等待的场景）
+    /// </summary>
+    public Task RunChatGroupAwaitAsync(ChatGroup_RunGroupRequest request)
+    {
+        return RunChatGroupExecutionCoreAsync(request);
+    }
+
+    private async Task RunChatGroupExecutionCoreAsync(ChatGroup_RunGroupRequest request)
+    {
             //base.ServiceProvider = base._serviceProvider;
             var scope = Senparc.CO2NET.SenparcDI.GetServiceProvider(true).CreateScope(); //base.ServiceProvider.CreateScope();
             var services = scope.ServiceProvider;
@@ -723,10 +735,5 @@ Note: parameter From must be strictly equal to the name of the player spokespers
             {
                 scope.Dispose();
             }
-        });
-
-        TaskList.Add(task);
-
-        return Task.CompletedTask;
     }
 }

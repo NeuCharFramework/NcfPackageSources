@@ -8,6 +8,7 @@ var app = new Vue({
             optimizeDialogVisible: false,
             optimizeRequirement: '',
             optimizing: false,
+            optimizeProgressText: '',          // 优化弹窗内进度说明（Agent → 刷新 → 打靶 → 评分）
             autoShootAfterOptimize: true,      // 🆕 创建后立即打靶（默认选中）
             autoAIGradeAfterShoot: false,      // 🆕 打靶后 AI 评分（默认不选中）
             // PromptCatalyzer 初始化功能
@@ -3285,10 +3286,10 @@ var app = new Vue({
             }
 
             this.optimizing = true;
+            this.optimizeProgressText = 'Agent 正在推理并调用工具（可能需要数分钟，请勿关闭此窗口）…';
             try {
-                console.log('开始优化 Prompt:', promptCode);
+                console.log('开始优化 Prompt（Agent 主路径）:', promptCode);
                 
-                // 构建请求参数（包含完整的上下文信息）
                 const requestData = {
                     promptCode: promptCode,
                     promptContent: promptDetail.promptContent || this.content,
@@ -3300,69 +3301,95 @@ var app = new Vue({
                         currentMaxTokens: promptDetail.maxToken || this.parameterViewList.find(p => p.formField === 'maxToken')?.value || 2000,
                         currentFrequencyPenalty: promptDetail.frequencyPenalty || this.parameterViewList.find(p => p.formField === 'frequencyPenalty')?.value || 0,
                         currentPresencePenalty: promptDetail.presencePenalty || this.parameterViewList.find(p => p.formField === 'presencePenalty')?.value || 0,
-                        // 🆕 新增：自动打靶和 AI 评分选项
                         autoShootAfterOptimize: this.autoShootAfterOptimize,
                         autoAIGradeAfterShoot: this.autoAIGradeAfterShoot
                     }
                 };
 
-                console.log('优化请求参数:', requestData);
+                const response = await servicePR.post(
+                    '/api/Senparc.Xncf.AgentsManager/PromptOptimizationAppService/OptimizeAsync',
+                    requestData,
+                    { timeout: 900000 }
+                );
 
-                // 调用后端接口
-                const response = await servicePR.post('/api/Senparc.Xncf.AgentsManager/PromptOptimizationAppService/OptimizeAsync', requestData);
-
-                console.log('OptimizeAsync 完整响应:', response);
-
-                // NCF AppResponseBase 返回格式：{ success: true, data: { newPromptCode: "...", ... } }
                 if (response.data && response.data.success && response.data.data) {
                     const optimizeResult = response.data.data;
-                    
-                    // 构建详细的优化结果消息
-                    let message = `✅ 优化成功！\n\n`;
-                    message += `🆕 新的 Prompt Code: ${optimizeResult.newPromptCode}\n`;
-                    message += `📊 预测分数: ${optimizeResult.score ? optimizeResult.score.toFixed(1) : 'N/A'}\n`;
-                    
-                    // 显示参数变化
-                    if (optimizeResult.parameters) {
-                        message += `\n📋 优化后的参数:\n`;
-                        message += `  • Temperature: ${requestData.context.currentTemperature} → ${optimizeResult.parameters.temperature}\n`;
-                        message += `  • TopP: ${requestData.context.currentTopP} → ${optimizeResult.parameters.topP}\n`;
-                        message += `  • MaxTokens: ${requestData.context.currentMaxTokens} → ${optimizeResult.parameters.maxTokens}\n`;
-                    }
-                    
-                    if (optimizeResult.evaluationReason) {
-                        message += `\n💡 优化说明: ${optimizeResult.evaluationReason}`;
+                    if (!optimizeResult.success) {
+                        const err = optimizeResult.errorMessage || optimizeResult.evaluationReason || '优化未成功';
+                        this.$message.error('优化失败：' + err);
+                        return;
                     }
 
-                    this.$message({
-                        message: message,
-                        type: 'success',
-                        duration: 10000,
-                        showClose: true,
-                        dangerouslyUseHTMLString: false
-                    });
-                    
-                    this.optimizeDialogVisible = false;
-                    
-                    // 刷新 Prompt 列表
-                    console.log('优化完成，刷新 Prompt 列表...');
+                    this.optimizeProgressText = 'Agent 已完成，正在刷新靶道并选中新版本…';
                     await this.getFieldList();
-                    
-                    // 可选：自动切换到新创建的 Prompt
-                    const newPrompt = this.promptOpt.find(p => p.label === optimizeResult.newPromptCode || p.fullVersion === optimizeResult.newPromptCode);
-                    if (newPrompt) {
-                        this.promptid = newPrompt.value;
-                        await this.promptChangeHandel(newPrompt.value, 'promptid');
-                        this.$message.info('已自动切换到优化后的 Prompt');
+
+                    const code = optimizeResult.newPromptCode;
+                    const newPrompt = this.promptOpt.find(p =>
+                        p.fullVersion === code ||
+                        p.label === code ||
+                        (p.label && code && p.label.indexOf(code) >= 0));
+                    if (!newPrompt) {
+                        this.$message.warning('已创建新版本，但未在列表中匹配到 Prompt Code：' + code);
+                        this.optimizeDialogVisible = false;
+                        return;
                     }
+
+                    this.promptid = newPrompt.value;
+                    this.pageChange = false;
+                    await this.getPromptetail(this.promptid, true, true);
+
+                    const _fitem = this.promptOpt.find(item => item.value === this.promptid);
+                    if (_fitem) {
+                        if (_fitem.isDraft) {
+                            this.sendBtns = [{ text: '打靶' }, { text: '保存草稿' }];
+                            this.sendBtnText = '打靶';
+                        } else {
+                            this.sendBtns = [{ text: '连发' }, { text: '保存草稿' }];
+                            this.sendBtnText = '连发';
+                        }
+                    }
+
+                    if (this.autoShootAfterOptimize) {
+                        this.optimizeProgressText = '正在打靶（与手动打靶相同，可在主界面查看输出）…';
+                        await this.executeTargetShootWithChatMessage(null);
+                        await this.$nextTick();
+                    }
+
+                    if (this.autoShootAfterOptimize && this.autoAIGradeAfterShoot && this.outputList && this.outputList.length > 0) {
+                        const item = this.outputList[0];
+                        let filled = item.alResultList && item.alResultList.some(r => r && r.value);
+                        if (!filled && this.aiScoreForm.resultList && this.aiScoreForm.resultList.some(r => r && r.value)) {
+                            item.alResultList = this.aiScoreForm.resultList.map((x, idx) => ({
+                                id: idx + 1,
+                                label: '预期结果',
+                                value: x.value
+                            }));
+                            filled = true;
+                        }
+                        if (filled) {
+                            this.optimizeProgressText = '正在 AI 评分（与手动 AI 评分相同）…';
+                            item.scoreType = '1';
+                            this.$set(this.robotScoreLoadingMap, item.id, true);
+                            await this.saveManualScore(item, 0);
+                        } else {
+                            this.$message.warning('未配置预期结果，已跳过 AI 评分');
+                        }
+                    }
+
+                    let message = `✅ 优化完成\n\n新 Prompt：${optimizeResult.newPromptCode}`;
+                    if (optimizeResult.evaluationReason) {
+                        message += `\n\n${optimizeResult.evaluationReason}`;
+                    }
+                    this.$message({ message, type: 'success', duration: 10000, showClose: true });
+
+                    this.optimizeProgressText = '';
+                    this.optimizeDialogVisible = false;
                 } else {
                     const errorMsg = response.data?.errorMessage || '未返回有效的优化结果';
                     this.$message.error('优化失败：' + errorMsg);
-                    console.error('优化失败，响应:', response.data);
                 }
             } catch (error) {
                 console.error('优化失败:', error);
-                console.error('完整错误对象:', error.response);
                 const errorMsg = error.response?.data?.errorMessage || error.response?.data?.message || error.message;
                 this.$message({
                     message: '❌ 优化失败: ' + errorMsg,
@@ -3372,6 +3399,7 @@ var app = new Vue({
                 });
             } finally {
                 this.optimizing = false;
+                this.optimizeProgressText = '';
             }
         },
         // 计算树的高度（用于平衡布局）

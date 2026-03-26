@@ -1270,9 +1270,11 @@
     </el-dialog>
 
     @* 优化Prompt弹窗 *@
-    <el-dialog title="AI 自动优化 Prompt" :visible.sync="optimizeDialogVisible" width="50%" :append-to-body="true">
+    <el-dialog title="AI 自动优化 Prompt（Agent）" :visible.sync="optimizeDialogVisible" width="50%" :append-to-body="true" :close-on-click-modal="!optimizing">
         <div class="optimize-dialog-content">
-            <el-alert title="说明" type="info" description="请输入您的优化需求，AI 将分析当前 Prompt 并尝试生成更好的版本。" show-icon :closable="false" style="margin-bottom: 20px;">
+            <el-alert title="说明" type="info" description="优化由 Agents 模块中的 PromptCatalyzer 智能体通过多轮对话与工具调用完成；点击开始后请等待对话结束（可能需要数分钟），随后本页将自动选中新版本并可按需打靶、评分。" show-icon :closable="false" style="margin-bottom: 20px;">
+            </el-alert>
+            <el-alert v-if="optimizing && optimizeProgressText" :title="optimizeProgressText" type="warning" show-icon :closable="false" style="margin-bottom: 16px;">
             </el-alert>
             <el-form label-position="top">
                 <el-form-item label="优化需求描述">
@@ -1299,7 +1301,7 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @@click="optimizeDialogVisible = false">取消</el-button>
-            <el-button type="primary" @@click="executeOptimize" :loading="optimizing">开始优化</el-button>
+            <el-button type="primary" @@click="executeOptimize" :loading="optimizing" :disabled="optimizing">开始优化</el-button>
         </span>
     </el-dialog>
 
