@@ -1,6 +1,4 @@
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
-using Senparc.CO2NET;
 using Senparc.Xncf.PromptRange.Abstractions.Events;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
@@ -23,13 +21,16 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         private readonly PromptRangeService _promptRangeService;
         private readonly PromptResultService _promptResultService;
 
-        public PromptOptimizationPlugin(PromptOptimizationAgentBridge bridge)
+        public PromptOptimizationPlugin(
+            PromptOptimizationAgentBridge bridge,
+            PromptItemService promptItemService,
+            PromptRangeService promptRangeService,
+            PromptResultService promptResultService)
         {
             _bridge = bridge;
-            var serviceProvider = SenparcDI.GetServiceProvider();
-            _promptItemService = serviceProvider.GetRequiredService<PromptItemService>();
-            _promptRangeService = serviceProvider.GetRequiredService<PromptRangeService>();
-            _promptResultService = serviceProvider.GetRequiredService<PromptResultService>();
+            _promptItemService = promptItemService;
+            _promptRangeService = promptRangeService;
+            _promptResultService = promptResultService;
         }
 
         private static string UnescapeJsonString(string value)

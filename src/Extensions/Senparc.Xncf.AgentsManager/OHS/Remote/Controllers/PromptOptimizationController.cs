@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Xncf.AgentsManager.Domain.Services;
+using Senparc.Xncf.AgentsManager.OHS.Local.AppService;
 using Senparc.Xncf.PromptRange.Abstractions.Events;
 
 namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
@@ -77,12 +78,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
                     request.Context.CurrentTopP,
                     request.Context.CurrentMaxTokens);
 
-                // 🔥 关键修复：确保 Agent 和 ChatGroup 已初始化
-                _logger.LogInformation("  开始确保初始化状态...");
-                await _promptOptimizationService.EnsureInitializedAsync();
-                _logger.LogInformation("  ✅ 初始化状态确认完成");
-
-                // 调用优化服务
+                // 调用优化服务（内部已包含 EnsureInitializedAsync）
                 _logger.LogInformation("  开始调用 OptimizePromptAsync...");
                 var result = await _promptOptimizationService.OptimizePromptAsync(
                     request.PromptCode,
@@ -126,19 +122,4 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
             }
         }
     }
-
-    #region DTOs
-
-    /// <summary>
-    /// Prompt 优化请求 DTO
-    /// </summary>
-    public class PromptOptimizationRequestDto
-    {
-        public string PromptCode { get; set; }
-        public string PromptContent { get; set; }
-        public string UserRequirement { get; set; }
-        public OptimizationContext Context { get; set; }
-    }
-
-    #endregion
 }

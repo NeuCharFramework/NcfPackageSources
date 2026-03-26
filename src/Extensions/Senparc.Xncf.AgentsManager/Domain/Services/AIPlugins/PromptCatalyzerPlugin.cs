@@ -1,6 +1,4 @@
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
-using Senparc.CO2NET;
 using Senparc.Xncf.PromptRange.Abstractions.Events;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -11,12 +9,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
     {
         private readonly PromptOptimizationService _optimizationService;
 
-        public PromptCatalyzerPlugin()
+        public PromptCatalyzerPlugin(PromptOptimizationService optimizationService)
         {
-            // 尝试从 DI 容器获取服务，确保在调用时 ServiceProvider 已就绪
-            // 注意：Constructor 注入在 Kernel.Plugins.AddFromType<T>() 时可能需要 Kernel 自身配置了 DI
-            // 这里为了保险起见，使用 ServiceLocator 作为 backup
-            _optimizationService = Senparc.CO2NET.SenparcDI.GetServiceProvider().GetRequiredService<PromptOptimizationService>();
+            _optimizationService = optimizationService;
         }
 
         [KernelFunction, Description("Optimize the given prompt code based on user requirement")]
