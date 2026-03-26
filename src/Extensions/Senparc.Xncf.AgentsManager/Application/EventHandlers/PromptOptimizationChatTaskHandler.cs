@@ -171,8 +171,9 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
 1. 使用 GetPromptInfo 读取「{@event.PromptCode}」确认现状。
 2. 使用 AnalyzeModelScores 分析 Range「{rangeName}」内模型历史评分，选择合适 ModelId（无历史时可沿用 {@event.Context.ModelId}）。
 3. 根据用户需求改写 Prompt 正文与参数，准备最终 optimizedContent（多行文本须为真实换行，不要写字面量 \\n）。
-4. **必须**调用 CreateOptimizedPrompt（至少一次）。第一个参数 optimizationRequestId 可留空；务必传对 basePromptCode=""{@event.PromptCode}""。其余：optimizedContent、modelId、temperature、topP、maxTokens、frequencyPenalty、presencePenalty、improvementSummary。
+4. **必须且仅能**调用 CreateOptimizedPrompt **一次**（服务端会拒绝同一次任务内的重复调用，避免生成多条版本）。先完成分析与改写，再一次性传入最终 optimizedContent 与参数。第一个参数 optimizationRequestId 可留空；务必传对 basePromptCode=""{@event.PromptCode}""。其余：optimizedContent、modelId、temperature、topP、maxTokens、frequencyPenalty、presencePenalty、improvementSummary。
 5. **不要**调用 ExecuteShootTest / ExecuteAIGrade：打靶与 AI 评分将由 PromptRange 页面在用户可见流程中自动执行。
+6. 一旦 CreateOptimizedPrompt 成功返回，**本任务即结束**，勿再次优化或再次调用该工具。
 
 完成后用自然语言简要总结改动要点。";
         }

@@ -106,9 +106,39 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 
         private readonly ConcurrentDictionary<string, State> _states = new();
 
+        private static string NormalizeRequestKey(string requestId) =>
+            string.IsNullOrWhiteSpace(requestId) ? null : requestId.Trim();
+
         public void BeginRequest(string requestId)
         {
-            _states[requestId] = new State();
+            var key = NormalizeRequestKey(requestId);
+            if (key == null)
+            {
+                return;
+            }
+
+            _states[key] = new State();
+        }
+
+        /// <summary>
+        /// 当前请求是否已写入过新版本（用于拒绝同一次优化任务内重复调用 CreateOptimizedPrompt，避免产生多条 PromptItem）。
+        /// </summary>
+        public bool TryGetRecordedPromptCode(string requestId, out string fullVersion)
+        {
+            fullVersion = null;
+            var key = NormalizeRequestKey(requestId);
+            if (key == null || !_states.TryGetValue(key, out var state))
+            {
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(state.NewPromptCode))
+            {
+                return false;
+            }
+
+            fullVersion = state.NewPromptCode;
+            return true;
         }
 
         /// <summary>
@@ -125,10 +155,16 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             float presencePenalty,
             string evaluationReason = null)
         {
-            if (!_states.TryGetValue(requestId, out var state))
+            var key = NormalizeRequestKey(requestId);
+            if (key == null)
+            {
+                return;
+            }
+
+            if (!_states.TryGetValue(key, out var state))
             {
                 state = new State();
-                _states[requestId] = state;
+                _states[key] = state;
             }
 
             state.NewPromptCode = newPromptCode;
@@ -144,13 +180,14 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         public bool TryTakeResult(string requestId, out PromptOptimizationResponseEvent response)
         {
             response = null;
-            if (!_states.TryRemove(requestId, out var state) || string.IsNullOrWhiteSpace(state.NewPromptCode))
+            var key = NormalizeRequestKey(requestId);
+            if (key == null || !_states.TryRemove(key, out var state) || string.IsNullOrWhiteSpace(state.NewPromptCode))
             {
                 return false;
             }
 
             response = new PromptOptimizationResponseEvent(
-                requestId,
+                key,
                 state.NewPromptCode,
                 state.NewPromptContent,
                 new OptimizedParameters(
@@ -166,6 +203,13 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             return true;
         }
 
-        public void Remove(string requestId) => _states.TryRemove(requestId, out _);
+        public void Remove(string requestId)
+        {
+            var key = NormalizeRequestKey(requestId);
+            if (key != null)
+            {
+                _states.TryRemove(key, out _);
+            }
+        }
     }
 }

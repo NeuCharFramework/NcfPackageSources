@@ -135,7 +135,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         /// <summary>
         /// 创建优化后的新 Prompt 版本
         /// </summary>
-        [KernelFunction, Description("Create a new optimized version of the prompt. First parameter may be empty — server will use the active optimization request id.")]
+        [KernelFunction, Description("Create exactly ONE new version per optimization task. Call at most once — duplicate calls are rejected without creating rows. First parameter may be empty.")]
         public async Task<string> CreateOptimizedPrompt(
             [Description("Optional: REQUEST_ID from task; leave empty if unsure — server uses active correlation id")] string optimizationRequestId,
             [Description("Base prompt code to optimize from")] string basePromptCode,
@@ -160,6 +160,14 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
                 if (string.IsNullOrEmpty(rid))
                 {
                     return "Error: No active optimization request id (internal). Pass optimizationRequestId from the task or retry from PromptRange.";
+                }
+
+                if (_bridge.TryGetRecordedPromptCode(rid, out var existingCode))
+                {
+                    _logger.LogWarning(
+                        "CreateOptimizedPrompt skipped (duplicate): rid={Rid}, existing={Code}",
+                        rid, existingCode);
+                    return $"Skipped: this optimization request already created version {existingCode}. Do not call CreateOptimizedPrompt again — the task is complete.";
                 }
 
                 var content = UnescapeJsonString(optimizedContent ?? "");

@@ -109,19 +109,23 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
 
 ## Tools are mandatory for optimization tasks
 - You have function-calling (tools). When the user message is a Prompt optimization task, you MUST use the tools to read data and to persist the result.
-- You MUST call CreateOptimizedPrompt at least once with the final optimizedContent and parameters before you consider the task done. A chat-only or “here is the JSON” reply does NOT create a new version in the database.
+- You MUST call CreateOptimizedPrompt **exactly once** per task with the **final** optimizedContent and parameters. The server rejects duplicate calls for the same request. A chat-only or “here is the JSON” reply does NOT create a new version in the database.
 - Do not claim success or say the prompt was saved unless CreateOptimizedPrompt returned success.
 - optimizationRequestId can be left empty; the server binds the active request. basePromptCode must match the task.
 
 ## Typical workflow
 1) GetPromptInfo(promptCode) if you need the current definition.
 2) AnalyzeModelScores(rangeName) when choosing modelId (range name is the segment before the first “-T” in the prompt code).
-3) Improve the prompt text and parameters; then call CreateOptimizedPrompt with optimizedContent (use real newlines, not the two-character sequence \n), modelId, temperature, topP, maxTokens, frequencyPenalty, presencePenalty, improvementSummary.
+3) Improve the prompt text and parameters **in reasoning**; then call CreateOptimizedPrompt **once** with optimizedContent (use real newlines, not the two-character sequence \n), modelId, temperature, topP, maxTokens, frequencyPenalty, presencePenalty, improvementSummary.
 4) Do NOT call ExecuteShootTest or ExecuteAIGrade unless the user message explicitly asks you to; the UI runs shoot/grade separately.
 
 ## Quality
 - Make prompts clearer, more specific, and aligned with the user’s requirement; tune Temperature/TopP for factual vs creative needs.
-- After tools succeed, you may add a short natural-language summary for the user.",
+- For stable and consistent results, prefer lower temperature and balanced topP values.
+- After tools succeed, you may add a short natural-language summary for the user.
+
+## Additional rule
+- Once CreateOptimizedPrompt has succeeded for one prompt, the task ends immediately. Do not run additional optimizations or call CreateOptimizedPrompt again in the same task.",
                         IsTopTactic = true,
                         IsNewTactic = false,
                         IsNewSubTactic = false,
