@@ -22,6 +22,7 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
         private readonly ChatGroupService _chatGroupService;
         private readonly AgentsTemplateService _agentsTemplateService;
         private readonly PromptOptimizationAgentBridge _bridge;
+        private readonly PromptOptimizationKernelFallbackService _kernelFallback;
         private readonly IEventBus _eventBus;
         private readonly ILogger<PromptOptimizationChatTaskHandler> _logger;
 
@@ -29,12 +30,14 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
             ChatGroupService chatGroupService,
             AgentsTemplateService agentsTemplateService,
             PromptOptimizationAgentBridge bridge,
+            PromptOptimizationKernelFallbackService kernelFallback,
             IEventBus eventBus,
             ILogger<PromptOptimizationChatTaskHandler> logger)
         {
             _chatGroupService = chatGroupService;
             _agentsTemplateService = agentsTemplateService;
             _bridge = bridge;
+            _kernelFallback = kernelFallback;
             _eventBus = eventBus;
             _logger = logger;
         }
@@ -91,7 +94,8 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
                     Description = $"优化 Prompt: {@event.PromptCode}",
                     Personality = false,
                     HookPlatform = HookPlatform.None,
-                    HookParameter = null
+                    HookParameter = null,
+                    CorrelationId = @event.RequestId
                 };
 
                 try
@@ -112,8 +116,22 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
                 }
                 else
                 {
-                    await PublishFailureAsync(
-                        "Agent 对话已结束，但未检测到新版本：请确保调用了 CreateOptimizedPrompt，且第一个参数 optimizationRequestId 与任务中的 REQUEST_ID 完全一致。");
+                    _bridge.Remove(@event.RequestId);
+                    _logger.LogWarning("  Agent 未通过工具创建版本，尝试 Kernel 回退…");
+                    var fallbackResponse = await _kernelFallback.TryKernelFallbackAsync(@event, cancellationToken);
+                    if (fallbackResponse.Success)
+                    {
+                        await _eventBus.PublishDerivedAsync(fallbackResponse, @event);
+                        _logger.LogInformation("  ✅ Kernel 回退成功，NewPromptCode={Code}", fallbackResponse.NewPromptCode);
+                    }
+                    else
+                    {
+                        var detail = fallbackResponse.ErrorMessage ?? fallbackResponse.EvaluationReason;
+                        await PublishFailureAsync(
+                            string.IsNullOrWhiteSpace(detail)
+                                ? "Agent 对话已结束，但未创建新版本；Kernel 回退也失败。请在 Agents 模块查看该 ChatTask 的对话与工具记录；服务器日志关键字：PromptOptimizationChatTaskHandler、CreateOptimizedPrompt、PromptOptimizationKernelFallbackService。"
+                                : $"{detail}（若工具未调用，可对照 ChatTask 记录与上述日志关键字排查。）");
+                    }
                 }
             }
             catch (Exception ex)
@@ -129,7 +147,7 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
 
             return $@"# Prompt 优化任务（仅通过工具完成，勿编造结果）
 
-## 必须使用的 REQUEST_ID（调用 CreateOptimizedPrompt 时作为第一个参数 optimizationRequestId 原样传入）
+## 关联 REQUEST_ID（服务端已自动绑定；调用 CreateOptimizedPrompt 时第一个参数可留空）
 {@event.RequestId}
 
 ## 当前基准 Prompt Code
@@ -153,8 +171,7 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
 1. 使用 GetPromptInfo 读取「{@event.PromptCode}」确认现状。
 2. 使用 AnalyzeModelScores 分析 Range「{rangeName}」内模型历史评分，选择合适 ModelId（无历史时可沿用 {@event.Context.ModelId}）。
 3. 根据用户需求改写 Prompt 正文与参数，准备最终 optimizedContent（多行文本须为真实换行，不要写字面量 \\n）。
-4. **必须**调用 CreateOptimizedPrompt，参数顺序为：
-   optimizationRequestId=""{@event.RequestId}"", basePromptCode=""{@event.PromptCode}"", optimizedContent=..., modelId=..., temperature=..., topP=..., maxTokens=..., frequencyPenalty=..., presencePenalty=..., improvementSummary=简短说明
+4. **必须**调用 CreateOptimizedPrompt（至少一次）。第一个参数 optimizationRequestId 可留空；务必传对 basePromptCode=""{@event.PromptCode}""。其余：optimizedContent、modelId、temperature、topP、maxTokens、frequencyPenalty、presencePenalty、improvementSummary。
 5. **不要**调用 ExecuteShootTest / ExecuteAIGrade：打靶与 AI 评分将由 PromptRange 页面在用户可见流程中自动执行。
 
 完成后用自然语言简要总结改动要点。";

@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Senparc.CO2NET;
 using Senparc.Xncf.PromptRange.Abstractions.Events;
@@ -19,13 +20,15 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
     public class PromptOptimizationPlugin
     {
         private readonly PromptOptimizationAgentBridge _bridge;
+        private readonly ILogger<PromptOptimizationPlugin> _logger;
         private readonly PromptItemService _promptItemService;
         private readonly PromptRangeService _promptRangeService;
         private readonly PromptResultService _promptResultService;
 
-        public PromptOptimizationPlugin(PromptOptimizationAgentBridge bridge)
+        public PromptOptimizationPlugin(PromptOptimizationAgentBridge bridge, ILogger<PromptOptimizationPlugin> logger)
         {
             _bridge = bridge;
+            _logger = logger;
             var serviceProvider = SenparcDI.GetServiceProvider();
             _promptItemService = serviceProvider.GetRequiredService<PromptItemService>();
             _promptRangeService = serviceProvider.GetRequiredService<PromptRangeService>();
@@ -132,9 +135,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         /// <summary>
         /// 创建优化后的新 Prompt 版本
         /// </summary>
-        [KernelFunction, Description("Create a new optimized version of the prompt. MUST pass optimizationRequestId exactly as given in the task.")]
+        [KernelFunction, Description("Create a new optimized version of the prompt. First parameter may be empty — server will use the active optimization request id.")]
         public async Task<string> CreateOptimizedPrompt(
-            [Description("The optimization REQUEST_ID from the task header (GUID string)")] string optimizationRequestId,
+            [Description("Optional: REQUEST_ID from task; leave empty if unsure — server uses active correlation id")] string optimizationRequestId,
             [Description("Base prompt code to optimize from")] string basePromptCode,
             [Description("Optimized prompt content")] string optimizedContent,
             [Description("Recommended model ID (based on historical scores)")] int modelId,
@@ -148,9 +151,15 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(optimizationRequestId))
+                var activeId = PromptOptimizationAgentBridge.TryGetActiveRequestId()?.Trim();
+                var paramId = optimizationRequestId?.Trim();
+                var rid = !string.IsNullOrEmpty(activeId) ? activeId : paramId;
+                _logger.LogInformation(
+                    "CreateOptimizedPrompt: rid={Rid} (active={ActiveId}, param={ParamId}), basePromptCode={Code}",
+                    rid, activeId, paramId, basePromptCode);
+                if (string.IsNullOrEmpty(rid))
                 {
-                    return "Error: optimizationRequestId is required.";
+                    return "Error: No active optimization request id (internal). Pass optimizationRequestId from the task or retry from PromptRange.";
                 }
 
                 var content = UnescapeJsonString(optimizedContent ?? "");
@@ -194,7 +203,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
                 var newPromptItem = await _promptItemService.AddPromptItemAsync(newPromptItemRequest);
 
                 _bridge.RecordCreatedPrompt(
-                    optimizationRequestId.Trim(),
+                    rid,
                     newPromptItem.FullVersion,
                     newPromptItem.Content,
                     temperature,
@@ -208,6 +217,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "CreateOptimizedPrompt failed for basePromptCode={Code}", basePromptCode);
                 return $"Error creating optimized prompt: {ex.Message}";
             }
         }

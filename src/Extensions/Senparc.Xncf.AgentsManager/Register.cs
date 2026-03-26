@@ -99,6 +99,7 @@ namespace Senparc.Xncf.AgentsManager
             //Service DI
             services.AddScoped<AgentsTemplateService>();
             services.AddSingleton<PromptOptimizationAgentBridge>();
+            services.AddScoped<PromptOptimizationKernelFallbackService>();
             services.AddScoped<PromptOptimizationService>(); // 注册 PromptOptimizationService
             services.AddScoped<ChatGroupService>();
             services.AddScoped<ChatGroupHistoryService>();

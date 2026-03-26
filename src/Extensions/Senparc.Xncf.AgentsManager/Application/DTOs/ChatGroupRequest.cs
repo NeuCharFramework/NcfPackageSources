@@ -1,4 +1,4 @@
-﻿using Senparc.Ncf.XncfBase.FunctionRenders;
+using Senparc.Ncf.XncfBase.FunctionRenders;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -155,5 +155,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         /// 最大对话轮数
         /// </summary>
         public int ChatMaxRound { get; set; } = ChatGroupService.ChatMaxRound;
+
+        /// <summary>
+        /// 可选：业务关联 ID（例如 Prompt 优化的 RequestId），用于在执行上下文中关联工具调用
+        /// </summary>
+        public string CorrelationId { get; set; }
     }
 }

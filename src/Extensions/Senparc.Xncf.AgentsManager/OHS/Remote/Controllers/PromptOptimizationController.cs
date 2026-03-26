@@ -90,13 +90,23 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
                     request.UserRequirement ?? "提高 Prompt 的质量和效果",
                     request.Context);
 
-                _logger.LogInformation("  ✅ 优化完成！NewPromptCode: {NewPromptCode}, Score: {Score}", 
-                    result.NewPromptCode, result.Score);
+                if (result.Success)
+                {
+                    _logger.LogInformation("  ✅ 优化成功。NewPromptCode: {NewPromptCode}, Score: {Score}",
+                        result.NewPromptCode, result.Score);
+                }
+                else
+                {
+                    _logger.LogWarning("  优化未成功。NewPromptCode: {NewPromptCode}, Error: {Error}",
+                        result.NewPromptCode, result.ErrorMessage ?? result.EvaluationReason);
+                }
+
                 _logger.LogInformation("========== Prompt 优化请求处理完成 ==========");
 
                 return Ok(new AppResponseBase<PromptOptimizationResponseEvent>
                 {
-                    Success = true,
+                    Success = result.Success,
+                    ErrorMessage = result.Success ? null : (result.ErrorMessage ?? result.EvaluationReason),
                     Data = result
                 });
             }

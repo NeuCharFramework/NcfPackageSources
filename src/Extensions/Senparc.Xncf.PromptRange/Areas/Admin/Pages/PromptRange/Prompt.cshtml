@@ -1276,6 +1276,15 @@
             </el-alert>
             <el-alert v-if="optimizing && optimizeProgressText" :title="optimizeProgressText" type="warning" show-icon :closable="false" style="margin-bottom: 16px;">
             </el-alert>
+            <el-alert v-if="optimizeErrorText"
+                      title="优化失败"
+                      type="error"
+                      :description="optimizeErrorText"
+                      show-icon
+                      :closable="true"
+                      @@close="optimizeErrorText = ''"
+                      style="margin-bottom: 16px; white-space: pre-wrap;">
+            </el-alert>
             <el-form label-position="top">
                 <el-form-item label="优化需求描述">
                     <el-input type="textarea" :rows="4" placeholder="例如：让回答更具创造性，或者是减少幻觉..." v-model="optimizeRequirement">

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Concurrent;
+using System.Threading;
 using Senparc.Xncf.PromptRange.Abstractions.Events;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Services
@@ -8,6 +10,88 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
     /// </summary>
     public class PromptOptimizationAgentBridge
     {
+        /// <summary>
+        /// 当前正在执行的优化请求 ID（在 RunChatGroupExecutionCoreAsync 内设置，供 Plugin 在模型漏传参数时仍能关联）
+        /// </summary>
+        private static readonly AsyncLocal<string> ActiveOptimizationRequestId = new();
+
+        /// <summary>
+        /// 在 ChatGroup 执行期间挂起 RequestId；Dispose 时恢复外层（支持嵌套时恢复上一值）
+        /// </summary>
+        public static IDisposable BeginActiveRequestScope(string requestId)
+        {
+            if (string.IsNullOrWhiteSpace(requestId))
+            {
+                return NullScope.Instance;
+            }
+
+            var previous = ActiveOptimizationRequestId.Value;
+            ActiveOptimizationRequestId.Value = requestId.Trim();
+            return new ActiveRequestScope(previous);
+        }
+
+        /// <summary>
+        /// 优先 AsyncLocal（同异步流）；否则使用 RunChatGroup 设置的兜底关联（工具可能在未传播 ExecutionContext 的线程上执行）
+        /// </summary>
+        public static string TryGetActiveRequestId()
+        {
+            var local = ActiveOptimizationRequestId.Value;
+            if (!string.IsNullOrWhiteSpace(local))
+            {
+                return local;
+            }
+
+            lock (FallbackCorrelationLock)
+            {
+                return _fallbackCorrelationId;
+            }
+        }
+
+        private static readonly object FallbackCorrelationLock = new object();
+        private static string _fallbackCorrelationId;
+
+        public static void SetFallbackCorrelationId(string requestId)
+        {
+            if (string.IsNullOrWhiteSpace(requestId))
+            {
+                return;
+            }
+
+            lock (FallbackCorrelationLock)
+            {
+                _fallbackCorrelationId = requestId.Trim();
+            }
+        }
+
+        public static void ClearFallbackCorrelationId()
+        {
+            lock (FallbackCorrelationLock)
+            {
+                _fallbackCorrelationId = null;
+            }
+        }
+
+        private sealed class ActiveRequestScope : IDisposable
+        {
+            private readonly string _previous;
+            private bool _disposed;
+
+            public ActiveRequestScope(string previous) => _previous = previous;
+
+            public void Dispose()
+            {
+                if (_disposed) return;
+                _disposed = true;
+                ActiveOptimizationRequestId.Value = _previous;
+            }
+        }
+
+        private sealed class NullScope : IDisposable
+        {
+            public static readonly NullScope Instance = new NullScope();
+            public void Dispose() { }
+        }
+
         private sealed class State
         {
             public string NewPromptCode;

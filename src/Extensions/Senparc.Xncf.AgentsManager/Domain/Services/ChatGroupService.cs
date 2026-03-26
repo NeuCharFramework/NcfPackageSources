@@ -276,6 +276,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
     private async Task RunChatGroupExecutionCoreAsync(ChatGroup_RunGroupRequest request)
     {
+            IDisposable activeOptimizationScope = null;
+            if (!string.IsNullOrWhiteSpace(request.CorrelationId))
+            {
+                activeOptimizationScope = PromptOptimizationAgentBridge.BeginActiveRequestScope(request.CorrelationId);
+                PromptOptimizationAgentBridge.SetFallbackCorrelationId(request.CorrelationId);
+            }
+
             //base.ServiceProvider = base._serviceProvider;
             var scope = Senparc.CO2NET.SenparcDI.GetServiceProvider(true).CreateScope(); //base.ServiceProvider.CreateScope();
             var services = scope.ServiceProvider;
@@ -734,6 +741,11 @@ Note: parameter From must be strictly equal to the name of the player spokespers
             finally
             {
                 scope.Dispose();
+                activeOptimizationScope?.Dispose();
+                if (!string.IsNullOrWhiteSpace(request.CorrelationId))
+                {
+                    PromptOptimizationAgentBridge.ClearFallbackCorrelationId();
+                }
             }
     }
 }

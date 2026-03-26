@@ -9,6 +9,7 @@ var app = new Vue({
             optimizeRequirement: '',
             optimizing: false,
             optimizeProgressText: '',          // 优化弹窗内进度说明（Agent → 刷新 → 打靶 → 评分）
+            optimizeErrorText: '',             // 优化失败时保留在弹窗内供开发者查看
             autoShootAfterOptimize: true,      // 🆕 创建后立即打靶（默认选中）
             autoAIGradeAfterShoot: false,      // 🆕 打靶后 AI 评分（默认不选中）
             // PromptCatalyzer 初始化功能
@@ -3114,6 +3115,7 @@ var app = new Vue({
         proceedWithOptimization() {
             // 重新打开优化对话框
             this.optimizeRequirement = '';
+            this.optimizeErrorText = '';
             this.optimizeDialogVisible = true;
         },
         
@@ -3249,6 +3251,7 @@ var app = new Vue({
             // 已初始化，直接打开优化对话框
             console.log('PromptCatalyzer 已初始化，打开优化对话框');
             this.optimizeRequirement = '';
+            this.optimizeErrorText = '';
             this.optimizeDialogVisible = true;
         },
         async executeOptimize() {
@@ -3286,6 +3289,7 @@ var app = new Vue({
             }
 
             this.optimizing = true;
+            this.optimizeErrorText = '';
             this.optimizeProgressText = 'Agent 正在推理并调用工具（可能需要数分钟，请勿关闭此窗口）…';
             try {
                 console.log('开始优化 Prompt（Agent 主路径）:', promptCode);
@@ -3312,10 +3316,18 @@ var app = new Vue({
                     { timeout: 900000 }
                 );
 
+                if (response.data && response.data.success === false) {
+                    const topErr = response.data.errorMessage || response.data.message || '请求失败';
+                    this.optimizeErrorText = String(topErr);
+                    this.$message.error('优化失败：' + topErr);
+                    return;
+                }
+
                 if (response.data && response.data.success && response.data.data) {
                     const optimizeResult = response.data.data;
                     if (!optimizeResult.success) {
                         const err = optimizeResult.errorMessage || optimizeResult.evaluationReason || '优化未成功';
+                        this.optimizeErrorText = String(err);
                         this.$message.error('优化失败：' + err);
                         return;
                     }
@@ -3329,7 +3341,9 @@ var app = new Vue({
                         p.label === code ||
                         (p.label && code && p.label.indexOf(code) >= 0));
                     if (!newPrompt) {
-                        this.$message.warning('已创建新版本，但未在列表中匹配到 Prompt Code：' + code);
+                        const w = '已创建新版本，但未在列表中匹配到 Prompt Code：' + code;
+                        this.optimizeErrorText = w;
+                        this.$message.warning(w);
                         this.optimizeDialogVisible = false;
                         return;
                     }
@@ -3383,16 +3397,25 @@ var app = new Vue({
                     this.$message({ message, type: 'success', duration: 10000, showClose: true });
 
                     this.optimizeProgressText = '';
+                    this.optimizeErrorText = '';
                     this.optimizeDialogVisible = false;
                 } else {
                     const errorMsg = response.data?.errorMessage || '未返回有效的优化结果';
+                    this.optimizeErrorText = String(errorMsg);
                     this.$message.error('优化失败：' + errorMsg);
                 }
             } catch (error) {
                 console.error('优化失败:', error);
-                const errorMsg = error.response?.data?.errorMessage || error.response?.data?.message || error.message;
+                const resp = error.response?.data;
+                let detail = resp?.errorMessage || resp?.message || error.message || String(error);
+                if (resp && typeof resp === 'object' && !resp.errorMessage) {
+                    try {
+                        detail += '\n\n' + JSON.stringify(resp, null, 2);
+                    } catch (e) { /* ignore */ }
+                }
+                this.optimizeErrorText = detail;
                 this.$message({
-                    message: '❌ 优化失败: ' + errorMsg,
+                    message: '❌ 优化失败: ' + (resp?.errorMessage || resp?.message || error.message),
                     type: 'error',
                     duration: 8000,
                     showClose: true
