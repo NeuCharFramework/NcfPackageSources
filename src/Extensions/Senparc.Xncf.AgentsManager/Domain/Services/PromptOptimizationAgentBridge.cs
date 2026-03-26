@@ -102,6 +102,15 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             public float FrequencyPenalty;
             public float PresencePenalty;
             public string EvaluationReason = "";
+
+            // 0 = not started, 1 = creation already claimed; use Interlocked to avoid TOCTOU race
+            private int _creationStarted = 0;
+
+            /// <summary>
+            /// Returns true only for the first caller; subsequent callers get false (creation already in progress/done).
+            /// </summary>
+            public bool TryClaimCreation() =>
+                System.Threading.Interlocked.CompareExchange(ref _creationStarted, 1, 0) == 0;
         }
 
         private readonly ConcurrentDictionary<string, State> _states = new();
@@ -109,6 +118,15 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         public void BeginRequest(string requestId)
         {
             _states[requestId] = new State();
+        }
+
+        /// <summary>
+        /// 原子地标记"创建已开始"。只有第一个调用者获得 true（允许继续创建 DB 记录）；
+        /// 后续调用（重复触发）得到 false，插件应跳过 DB 写入。
+        /// </summary>
+        public bool TryClaimCreation(string requestId)
+        {
+            return _states.TryGetValue(requestId, out var state) && state.TryClaimCreation();
         }
 
         /// <summary>

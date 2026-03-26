@@ -162,6 +162,13 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
                     return "Error: No active optimization request id (internal). Pass optimizationRequestId from the task or retry from PromptRange.";
                 }
 
+                // 幂等保护（原子）：同一次优化请求只允许创建一条新 Prompt，防止 Agent 重复调用导致重复记录
+                if (!_bridge.TryClaimCreation(rid))
+                {
+                    _logger.LogWarning("CreateOptimizedPrompt: rid={Rid} 已被抢占，跳过重复调用", rid);
+                    return "A prompt version has already been created for this optimization request. Duplicate calls are ignored — please do not call CreateOptimizedPrompt more than once per task.";
+                }
+
                 var content = UnescapeJsonString(optimizedContent ?? "");
 
                 // 获取原始 PromptItem
