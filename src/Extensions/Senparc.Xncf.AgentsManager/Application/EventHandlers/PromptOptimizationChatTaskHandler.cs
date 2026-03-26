@@ -6,6 +6,7 @@ using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AgentsManager.OHS.Local.PL;  // 🔥 新增：用于 ChatGroup_RunGroupRequest
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -93,8 +94,42 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
                 _logger.LogInformation("  ✅ ChatTask 创建成功！TaskId: {TaskId}, Name: {Name}", 
                     chatTask.Id, chatTask.Name);
                 
-                // 注意：实际的 AI 优化逻辑由 PromptOptimizationRequestHandler 处理
-                // 这里只负责记录任务到 ChatTask 表
+                // 🔥 关键修复：启动 ChatTask，让 Agent 自主工作
+                _logger.LogInformation("【步骤3.5/3】启动 ChatTask，让 Agent 自主执行优化任务...");
+                
+                // 构建任务指令给 Agent
+                var agentCommand = BuildAgentCommand(@event);
+                
+                _logger.LogInformation("  Agent 任务指令：{Command}", agentCommand);
+                
+                // 启动 ChatGroup（异步执行，不阻塞）
+                var runGroupRequest = new ChatGroup_RunGroupRequest
+                {
+                    ChatGroupId = chatGroup.Id,
+                    AiModelId = aiModelId,
+                    PromptCommand = agentCommand,
+                    Name = chatTask.Name,
+                    Description = chatTask.Description,
+                    Personality = false,
+                    HookPlatform = HookPlatform.None,
+                    HookParameter = null
+                };
+                
+                // 🔥 异步启动 ChatTask（不等待完成，让 Agent 自主工作）
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await _chatGroupService.RunChatGroupInThread(runGroupRequest);
+                        _logger.LogInformation("  ✅ ChatTask 执行完成：TaskId={TaskId}", chatTask.Id);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "  ❌ ChatTask 执行失败：TaskId={TaskId}", chatTask.Id);
+                    }
+                });
+                
+                _logger.LogInformation("  ✅ ChatTask 已启动（异步执行中）");
                 
                 _logger.LogInformation("========== PromptOptimizationChatTaskHandler 完成 ==========");
             }
@@ -103,6 +138,45 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
                 _logger.LogError(ex, "❌ ChatTask 创建失败");
                 // 不抛出异常，避免影响主优化流程
             }
+        }
+        
+        /// <summary>
+        /// 构建给 Agent 的任务指令
+        /// </summary>
+        private string BuildAgentCommand(PromptOptimizationRequestEvent @event)
+        {
+            return $@"# Prompt 优化任务
+
+## 任务目标
+优化 Prompt: {@event.PromptCode}
+
+## 用户需求
+{@event.UserRequirement}
+
+## 当前信息
+- Prompt Code: {@event.PromptCode}
+- 当前 ModelId: {@event.Context.ModelId}
+- 当前 Temperature: {@event.Context.CurrentTemperature}
+- 当前 TopP: {@event.Context.CurrentTopP}
+- 当前 MaxTokens: {@event.Context.CurrentMaxTokens}
+
+## 执行步骤
+1. 调用 GetPromptInfo 获取当前 Prompt 的完整信息
+2. 调用 AnalyzeModelScores 分析当前 Range 中所有模型的历史评分，选择最佳 ModelId
+3. 根据分析结果和用户需求，思考如何优化 Prompt 内容和参数
+4. 调用 CreateOptimizedPrompt 创建优化后的新版本（使用分析得出的最佳 ModelId）
+5. {(@event.Context.AutoShootAfterOptimize ? "调用 ExecuteShootTest 对新版本执行打靶测试" : "不执行打靶")}
+6. {(@event.Context.AutoAIGradeAfterShoot ? "调用 ExecuteAIGrade 对打靶结果执行 AI 评分" : "不执行 AI 评分")}
+7. 总结优化结果，报告新的 Prompt Code 和评分
+
+## 可用的 Function Calls
+- GetPromptInfo(promptCode): 获取 Prompt 详细信息
+- AnalyzeModelScores(rangeName): 分析模型评分
+- CreateOptimizedPrompt(basePromptCode, optimizedContent, modelId, temperature, topP, maxTokens, frequencyPenalty, presencePenalty): 创建优化版本
+- ExecuteShootTest(promptCode): 执行打靶
+- ExecuteAIGrade(promptCode): 执行 AI 评分
+
+请按照步骤执行，每一步都要调用对应的 function，并详细记录推理过程。";
         }
     }
     

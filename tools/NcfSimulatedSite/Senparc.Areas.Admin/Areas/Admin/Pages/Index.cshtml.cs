@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;
 using Senparc.Ncf.Core.Models.DataBaseModel;
+using Senparc.Ncf.Core.WorkContext.Provider;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.XncfModuleManager.Domain.Services;
@@ -12,10 +13,14 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.Pages
 {
     [Ncf.AreaBase.Admin.Filters.IgnoreAuth]
-    public class IndexModel(IServiceProvider serviceProvider, XncfModuleServiceExtension xncfModuleServiceEx) 
+    public class IndexModel(
+        IServiceProvider serviceProvider,
+        XncfModuleServiceExtension xncfModuleServiceEx,
+        IAdminWorkContextProvider adminWorkContextProvider)
         : BaseAdminPageModel(serviceProvider)
     {
         private readonly IServiceProvider _serviceProvider = serviceProvider;
+        private readonly IAdminWorkContextProvider _adminWorkContextProvider = adminWorkContextProvider;
 
         //TODO:从其他模块获得
         private readonly XncfModuleServiceExtension _xncfModuleServiceEx = xncfModuleServiceEx;
@@ -27,8 +32,7 @@ namespace Senparc.Areas.Admin.Pages
 
         public IActionResult OnGet()
         {
-            // 通过 AdminWorkContext 获取当前用户ID
-            CurrentUserId = AdminWorkContext?.AdminUserId ?? 0;
+            CurrentUserId = _adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
             return null;
             //return RedirectToPage("/Home/Index");
         }

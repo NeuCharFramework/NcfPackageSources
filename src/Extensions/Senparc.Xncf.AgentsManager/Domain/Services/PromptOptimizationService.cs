@@ -136,12 +136,13 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                     hookRobotType: HookRobotType.None,
                     hookRobotParameter: null,
                     avastar: null,
-                    functionCallNames: null,
+                    functionCallNames: "Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins.PromptOptimizationPlugin",  // 🔥 关键：设置 function-calling
                     mcpEndpoints: null
                 );
                 
                 await _agentsTemplateService.SaveObjectAsync(newAgent);
-                _logger.LogInformation("  ✅ Agent 创建成功！AgentId: {AgentId}", newAgent.Id);
+                _logger.LogInformation("  ✅ Agent 创建成功！AgentId: {AgentId}, FunctionCallNames: {FunctionCallNames}", 
+                    newAgent.Id, newAgent.FunctionCallNames);
                 
                 agent = newAgent;
                 agentCreated = true;

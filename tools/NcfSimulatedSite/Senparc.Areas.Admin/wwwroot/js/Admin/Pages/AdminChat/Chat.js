@@ -1,5 +1,5 @@
 var chatApp = new Vue({
-  el: '#admin-chat-app',
+  el: '#app',
   data() {
     return {
       currentSessionId: 0,

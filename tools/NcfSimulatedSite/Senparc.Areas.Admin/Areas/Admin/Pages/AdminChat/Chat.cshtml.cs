@@ -1,20 +1,30 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Senparc.Areas.Admin.Domain.Services;
+using Senparc.Ncf.Core.WorkContext.Provider;
 using System;
 using System.Threading.Tasks;
 
 namespace Senparc.Areas.Admin.Pages.AdminChat
 {
-    [Ncf.AreaBase.Admin.Filters.AdminAuthorize]
+    /// <summary>
+    /// 与 SenparcTrace/Index 等页一致：<see cref="Ncf.AreaBase.Admin.Filters.IgnoreAuth"/> 跳过菜单 URL 校验；
+    /// 登录与 AdminOnly 由 <see cref="BaseAdminPageModel"/> 与 Cookie 中间件统一处理，不在此页写 Login 跳转。
+    /// </summary>
+    [Ncf.AreaBase.Admin.Filters.IgnoreAuth]
     public class ChatModel : BaseAdminPageModel
     {
         private readonly AdminChatSessionService _sessionService;
+        private readonly IAdminWorkContextProvider _adminWorkContextProvider;
 
-        public ChatModel(IServiceProvider serviceProvider, AdminChatSessionService sessionService) 
+        public ChatModel(
+            IServiceProvider serviceProvider,
+            AdminChatSessionService sessionService,
+            IAdminWorkContextProvider adminWorkContextProvider)
             : base(serviceProvider)
         {
             _sessionService = sessionService;
+            _adminWorkContextProvider = adminWorkContextProvider;
         }
 
         /// <summary>
@@ -42,20 +52,14 @@ namespace Senparc.Areas.Admin.Pages.AdminChat
 
         public async Task<IActionResult> OnGetAsync()
         {
-            // 通过 AdminWorkContext 获取当前用户ID
-            CurrentUserId = AdminWorkContext?.AdminUserId ?? 0;
-
-            if (CurrentUserId <= 0)
-            {
-                return RedirectToPage("/Admin/Login");
-            }
+            CurrentUserId = _adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
 
             if (SessionId > 0)
             {
                 var session = await _sessionService.GetSessionByIdAsync(SessionId, CurrentUserId);
                 if (session == null)
                 {
-                    return RedirectToPage("/Admin/Index");
+                    return RedirectToPage("../Index");
                 }
             }
 
