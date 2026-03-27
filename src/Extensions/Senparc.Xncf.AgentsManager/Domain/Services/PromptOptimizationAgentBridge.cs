@@ -271,5 +271,21 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 
             _states.TryRemove(key, out _);
         }
+
+        /// <summary>
+        /// 统一清理指定 requestId 的所有 Bridge 状态（_states + _versionInsertClaimed）。
+        /// 应在 ChatTaskHandler 的 finally 中调用，确保无论成功/失败都不留残余。
+        /// </summary>
+        public void CleanupRequest(string requestId)
+        {
+            var key = NormalizeRequestKey(requestId);
+            if (key == null)
+            {
+                return;
+            }
+
+            _states.TryRemove(key, out _);
+            _versionInsertClaimed.TryRemove(key, out _);
+        }
     }
 }

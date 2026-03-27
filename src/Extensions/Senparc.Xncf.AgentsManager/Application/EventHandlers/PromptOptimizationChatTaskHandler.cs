@@ -51,7 +51,7 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
 
             async Task PublishFailureAsync(string error)
             {
-                _bridge.Remove(@event.RequestId);
+                _bridge.CleanupRequest(@event.RequestId);
                 var err = new PromptOptimizationResponseEvent(
                     @event.RequestId,
                     null,
@@ -116,7 +116,7 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
                 }
                 else
                 {
-                    _bridge.Remove(@event.RequestId);
+
                     _logger.LogWarning("  Agent 未通过工具创建版本，尝试 Kernel 回退…");
                     var fallbackResponse = await _kernelFallback.TryKernelFallbackAsync(@event, cancellationToken);
                     if (fallbackResponse.Success)
@@ -138,6 +138,10 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
             {
                 _logger.LogError(ex, "PromptOptimizationChatTaskHandler 未处理异常");
                 await PublishFailureAsync(ex.Message);
+            }
+            finally
+            {
+                _bridge.CleanupRequest(@event.RequestId);
             }
         }
 

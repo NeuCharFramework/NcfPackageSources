@@ -3399,7 +3399,14 @@ var app = new Vue({
                     if (this.autoShootAfterOptimize) {
                         this.syncAiScoreFormFromPromptDetail();
                         this.optimizeProgressText = '正在打靶（与手动打靶相同，可在主界面查看输出）…';
-                        await this.executeTargetShootWithChatMessage(null);
+                        // 优化已创建新版本，打靶时用"连发"模式（不再创建新版本）
+                        const savedTactics = this.tacticalForm.tactics;
+                        this.tacticalForm.tactics = '连发';
+                        try {
+                            await this.executeTargetShootWithChatMessage(null);
+                        } finally {
+                            this.tacticalForm.tactics = savedTactics;
+                        }
                         await this.$nextTick();
                     }
 
