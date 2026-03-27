@@ -106,7 +106,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         [FunctionRender("启动 ChatGroup", "启动 ChatGroup", typeof(Register))]
-        public async Task<StringAppResponse> RunChatGroup(ChatGroup_RunChatGroupRequest request)
+Se        public async Task<StringAppResponse> RunChatGroup(ChatGroup_RunChatGroupRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {

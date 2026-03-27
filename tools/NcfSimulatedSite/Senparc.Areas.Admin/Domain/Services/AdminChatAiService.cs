@@ -12,7 +12,9 @@ using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.XncfBase;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -75,25 +77,95 @@ namespace Senparc.Areas.Admin.Domain.Services
 
             // 注册模块信息 Function Calling 插件
             iWantToRun.ImportPluginFromObject(modulePlugin, "ModuleAssistant");
+            var importedPluginNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "ModuleAssistant" };
 
             // 自动加载会话关联模块中的 FunctionRender（[#sym:FunctionRender]）插件对象
             var moduleUids = modules.Where(z => !z.XncfModuleUid.IsNullOrEmpty()).Select(z => z.XncfModuleUid).ToList();
-            var symbolPlugins = Senparc.Ncf.XncfBase.Register.FunctionRenderCollection
-                .ResolveSymbolPlugins(_serviceProvider, FunctionRenderSymbolHelper.FunctionRenderSymbolTag, moduleUids);
+            var functionRenderBags = moduleUids
+                .SelectMany(uid => Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.GetByModuleUid(uid))
+                .Where(z => z.MethodInfo != null && z.MethodInfo.DeclaringType != null)
+                .ToList();
 
-            foreach (var pluginItem in symbolPlugins)
+            var functionPluginGroups = functionRenderBags
+                .GroupBy(z => z.MethodInfo.DeclaringType)
+                .ToList();
+
+            var importedFunctionCount = 0;
+            var importedFunctionSignatures = new List<string>();
+
+            foreach (var pluginGroup in functionPluginGroups)
             {
                 try
                 {
-                    var plugin = pluginItem.Value;
-                    var pluginName = plugin.GetType().Name;
-                    iWantToRun.ImportPluginFromObject(plugin, pluginName);
+                    var pluginType = pluginGroup.Key;
+                    var plugin = _serviceProvider.GetService(pluginType) ?? Activator.CreateInstance(pluginType);
+                    if (plugin == null)
+                    {
+                        _logger.LogWarning("导入 FunctionRender 插件失败：{PluginType}，无法创建实例", pluginType.FullName);
+                        continue;
+                    }
+
+                    var pluginName = BuildFunctionPluginName(pluginType);
+                    var kernelFunctions = new List<KernelFunction>();
+
+                    foreach (var functionBag in pluginGroup.GroupBy(z => z.Key).Select(z => z.First()))
+                    {
+                        try
+                        {
+                            var options = new KernelFunctionFromMethodOptions
+                            {
+                                FunctionName = functionBag.MethodInfo.Name,
+                                Description = functionBag.FunctionRenderAttribute?.Description
+                            };
+
+                            var kernelFunction = KernelFunctionFactory.CreateFromMethod(functionBag.MethodInfo, plugin, options);
+                            kernelFunctions.Add(kernelFunction);
+                            importedFunctionSignatures.Add($"{pluginName}.{functionBag.MethodInfo.Name}({functionBag.FunctionRenderAttribute?.Description ?? "N/A"})");
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogWarning(ex,
+                                "导入 FunctionRender 方法失败：Plugin={PluginType}, Method={MethodName}",
+                                pluginType.FullName,
+                                functionBag.MethodInfo?.Name);
+                        }
+                    }
+
+                    if (kernelFunctions.Count == 0)
+                    {
+                        _logger.LogWarning("导入 FunctionRender 插件失败：{PluginType}，未生成任何可用 KernelFunction", pluginType.FullName);
+                        continue;
+                    }
+
+                    iWantToRun.Kernel.Plugins.AddFromFunctions(pluginName, kernelFunctions);
+                    importedPluginNames.Add(pluginName);
+                    importedFunctionCount += kernelFunctions.Count;
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogWarning(ex, "导入 FunctionRender 插件失败：{PluginKey}", pluginItem.Key);
+                    _logger.LogWarning(ex, "导入 FunctionRender 插件失败：{PluginType}", pluginGroup.Key?.FullName);
                 }
             }
+
+            if (importedFunctionCount == 0)
+            {
+                _logger.LogWarning(
+                    "AdminChat 未注入任何 FunctionRender 函数：SessionId={SessionId}, UserId={UserId}, ModuleCount={ModuleCount}, Modules={Modules}",
+                    sessionId,
+                    userId,
+                    moduleUids.Count,
+                    string.Join(",", moduleUids));
+            }
+
+            _logger.LogInformation(
+                "AdminChat FunctionCalling 插件加载完成：SessionId={SessionId}, UserId={UserId}, ModuleCount={ModuleCount}, Modules={Modules}, Plugins={Plugins}, Functions={Functions}, FunctionList={FunctionList}",
+                sessionId,
+                userId,
+                moduleUids.Count,
+                string.Join(",", moduleUids),
+                string.Join(",", importedPluginNames),
+                importedFunctionCount,
+                string.Join(" | ", importedFunctionSignatures));
 
             var prompt = BuildUserPrompt(messages, userMessage);
 
@@ -112,6 +184,31 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
 
             return (result, ResolveModelIdentifier(setting));
+        }
+
+        private static string BuildFunctionPluginName(Type pluginType)
+        {
+            var fullName = pluginType?.FullName ?? pluginType?.Name ?? "FunctionPlugin";
+            var normalized = fullName.Replace('.', '_').Replace('+', '_');
+
+            // OpenAI function name has max length 64, reserve space for method suffix and separators.
+            // Use deterministic short hash suffix to keep uniqueness across modules.
+            const int maxPluginNameLength = 36;
+            const int hashLength = 8;
+            var hash = ComputeShortHash(normalized, hashLength);
+
+            var prefixMaxLength = maxPluginNameLength - ("Xncf_".Length + 1 + hashLength);
+            var prefix = normalized.Length > prefixMaxLength ? normalized.Substring(0, prefixMaxLength) : normalized;
+
+            return $"Xncf_{prefix}_{hash}";
+        }
+
+        private static string ComputeShortHash(string input, int length)
+        {
+            using var sha256 = SHA256.Create();
+            var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(input ?? string.Empty));
+            var hex = BitConverter.ToString(bytes).Replace("-", string.Empty).ToLower(CultureInfo.InvariantCulture);
+            return hex.Length > length ? hex.Substring(0, length) : hex;
         }
 
         private static string BuildSystemMessage(List<AdminChatSessionModule> modules)
