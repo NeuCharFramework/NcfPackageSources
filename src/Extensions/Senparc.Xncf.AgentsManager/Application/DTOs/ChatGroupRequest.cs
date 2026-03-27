@@ -161,4 +161,31 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         /// </summary>
         public string CorrelationId { get; set; }
     }
+
+    /// <summary>
+    /// 删除对话请求
+    /// </summary>
+    public class ChatGroup_DeleteChatGroupRequest : FunctionAppRequestBase
+    {
+        [Description("选择要删除的对话||选择需要删除的对话（包括所有消息和任务）")]
+        public SelectionList ChatGroups { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>());
+
+        [Description("确认删除||勾选此项以确认删除此对话及其所有数据")]
+        public bool ConfirmDelete { get; set; }
+
+        public override async Task LoadData(IServiceProvider serviceProvider)
+        {
+            // 加载所有可用的 ChatGroup
+            var chatGroupService = serviceProvider.GetService<ChatGroupService>();
+            var chatGroups = await chatGroupService.GetFullListAsync(z => true, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
+
+            ChatGroups.Items = chatGroups.Select(z => new SelectionItem(
+                z.Id.ToString(),
+                z.Name,
+                $"{z.Description} (创建时间: {z.AddTime:yyyy-MM-dd HH:mm})"
+            )).ToList();
+
+            await base.LoadData(serviceProvider);
+        }
+    }
 }

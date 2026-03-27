@@ -8,9 +8,10 @@
 
 .chat-module-picker-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
+  flex-wrap: wrap;
   margin-bottom: 10px;
 }
 
@@ -24,6 +25,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  margin-left: auto;
 }
 
 .chat-module-selected-list {
@@ -31,6 +35,18 @@
   flex-wrap: wrap;
   gap: 8px;
   min-height: 30px;
+}
+
+@media screen and (max-width: 768px) {
+  .chat-module-picker-header {
+    align-items: stretch;
+  }
+
+  .chat-module-picker-actions {
+    width: 100%;
+    justify-content: flex-start;
+    margin-left: 0;
+  }
 }
 
 .chat-module-selected-empty {
