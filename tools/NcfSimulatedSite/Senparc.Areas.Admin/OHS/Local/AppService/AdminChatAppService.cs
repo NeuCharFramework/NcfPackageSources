@@ -279,6 +279,44 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// 批量删除消息
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
+        public async Task<StringAppResponse> DeleteMessagesAsync(int sessionId, string messageIds)
+        {
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            {
+                var userId = GetCurrentAdminUserInfoId();
+                if (userId <= 0)
+                {
+                    throw new NcfExceptionBase("用户未登录");
+                }
+
+                var session = await _sessionService.GetSessionByIdAsync(sessionId, userId);
+                if (session == null)
+                {
+                    throw new NcfExceptionBase("会话不存在或无权访问");
+                }
+
+                var parsedMessageIds = (messageIds ?? string.Empty)
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(id => int.TryParse(id, out var value) ? value : 0)
+                    .Where(id => id > 0)
+                    .Distinct()
+                    .ToList();
+
+                if (!parsedMessageIds.Any())
+                {
+                    throw new NcfExceptionBase("请至少选择一条消息");
+                }
+
+                var deletedCount = await _messageService.DeleteMessagesAsync(sessionId, parsedMessageIds);
+                logger.Append($"批量删除消息: SessionId={sessionId}, DeletedCount={deletedCount}");
+                return $"删除成功，共删除 {deletedCount} 条消息";
+            });
+        }
+
         #endregion
 
         #region 模块管理

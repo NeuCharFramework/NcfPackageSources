@@ -14,7 +14,9 @@ var chatApp = new Vue({
       isSending: false,
       isAIResponding: false,
       currentUserId: 0,
-      autoScrollEnabled: true
+      autoScrollEnabled: true,
+      isManageMode: false,
+      selectedMessageIds: []
     };
   },
   mounted() {
@@ -78,6 +80,8 @@ var chatApp = new Vue({
           this.currentSessionTitle = session.title;
           this.messageList = session.messages || [];
           this.currentSessionModules = session.modules || [];
+          this.clearMessageSelection();
+          this.isManageMode = false;
           
           this.$nextTick(() => {
             this.scrollToBottom();
@@ -192,6 +196,8 @@ var chatApp = new Vue({
       this.currentSessionId = sessionId;
       this.messageList = [];
       this.currentSessionModules = [];
+      this.clearMessageSelection();
+      this.isManageMode = false;
       await this.loadSessionDetail();
     },
 
@@ -202,6 +208,112 @@ var chatApp = new Vue({
       this.messageList = [];
       this.inputMessage = '';
       this.chatInputText = '';
+      this.clearMessageSelection();
+      this.isManageMode = false;
+    },
+
+    toggleManageMode() {
+      this.isManageMode = !this.isManageMode;
+      if (!this.isManageMode) {
+        this.clearMessageSelection();
+      }
+    },
+
+    isMessageSelected(messageId) {
+      return this.selectedMessageIds.includes(String(messageId));
+    },
+
+    toggleMessageSelection(messageId) {
+      const key = String(messageId);
+      const index = this.selectedMessageIds.indexOf(key);
+      if (index >= 0) {
+        this.selectedMessageIds.splice(index, 1);
+      } else {
+        this.selectedMessageIds.push(key);
+      }
+    },
+
+    toggleSelectAllMessages(checked) {
+      if (!checked) {
+        this.selectedMessageIds = [];
+        return;
+      }
+
+      this.selectedMessageIds = this.messageList.map((m) => String(m.id));
+    },
+
+    clearMessageSelection() {
+      this.selectedMessageIds = [];
+    },
+
+    async copySelectedMessages() {
+      const selectedSet = new Set(this.selectedMessageIds);
+      const selectedMessages = this.messageList.filter((m) => selectedSet.has(String(m.id)));
+      if (selectedMessages.length === 0) {
+        this.$message.warning('请先选择要复制的消息');
+        return;
+      }
+
+      const plainText = selectedMessages
+        .map((m) => `[${this.getRoleTypeName(m.roleType)}] ${m.content || ''}`)
+        .join('\n\n');
+
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(plainText);
+        } else {
+          const textarea = document.createElement('textarea');
+          textarea.value = plainText;
+          textarea.style.position = 'fixed';
+          textarea.style.opacity = '0';
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+        }
+
+        this.$message.success(`已复制 ${selectedMessages.length} 条消息`);
+      } catch (error) {
+        console.error('复制消息失败:', error);
+        this.$message.error('复制失败，请手动复制');
+      }
+    },
+
+    async deleteSelectedMessages() {
+      const selectedIds = this.selectedMessageIds
+        .map((id) => parseInt(id, 10))
+        .filter((id) => Number.isInteger(id) && id > 0);
+
+      if (selectedIds.length === 0) {
+        this.$message.warning('请先选择要删除的消息');
+        return;
+      }
+
+      try {
+        await this.$confirm(`确定删除选中的 ${selectedIds.length} 条消息吗？此操作不可撤销。`, '删除确认', {
+          confirmButtonText: '删除',
+          cancelButtonText: '取消',
+          type: 'warning'
+        });
+      } catch (error) {
+        return;
+      }
+
+      try {
+        const response = await service.delete(`/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.DeleteMessagesAsync?sessionId=${this.currentSessionId}&messageIds=${selectedIds.join(',')}`);
+
+        if (response.data && response.data.success) {
+          const selectedSet = new Set(selectedIds.map((id) => String(id)));
+          this.messageList = this.messageList.filter((m) => !selectedSet.has(String(m.id)));
+          this.clearMessageSelection();
+          this.$message.success(response.data.data || '删除成功');
+        } else {
+          this.$message.error((response.data && response.data.errorMessage) || '删除失败');
+        }
+      } catch (error) {
+        console.error('批量删除消息异常:', error);
+        this.$message.error('删除失败，请稍后重试');
+      }
     },
 
     async handleSessionCommand(command) {
@@ -272,6 +384,25 @@ var chatApp = new Vue({
         2: 'fa fa-info-circle'
       };
       return iconMap[roleType] || 'fa fa-user';
+    },
+
+    getModuleUid(module) {
+      return (module && (module.xncfModuleUid || module.uid)) || '';
+    },
+
+    resolveModuleDetail(module) {
+      const uid = this.getModuleUid(module);
+      const matched = this.availableModules.find((item) => item.uid === uid) || null;
+
+      return {
+        uid,
+        name: (module && (module.displayName || module.menuName || module.moduleName)) || (matched && matched.name) || uid || '未命名模块',
+        icon: (matched && matched.icon) || 'fa fa-cube',
+        description: (module && module.moduleDescription) || (matched && matched.description) || '暂无描述',
+        version: (module && module.moduleVersion) || (matched && matched.version) || '',
+        menus: (matched && matched.menus) || [],
+        functions: (matched && matched.functions) || []
+      };
     },
 
     formatTime(dateTimeStr) {

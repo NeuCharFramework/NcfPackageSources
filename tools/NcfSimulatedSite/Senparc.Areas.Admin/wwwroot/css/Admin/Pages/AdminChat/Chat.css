@@ -155,6 +155,19 @@
   gap: 10px;
 }
 
+.chat-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.chat-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .chat-title {
   margin: 0;
   font-size: 18px;
@@ -183,6 +196,25 @@
   margin-right: 4px;
 }
 
+.chat-module-tag-detail {
+  cursor: pointer;
+}
+
+.chat-module-detail-wrapper {
+  max-height: 420px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-module-detail-wrapper .module-selector-preview-subtitle {
+  margin-bottom: 8px;
+}
+
+.chat-module-detail-wrapper .module-selector-preview-body {
+  max-height: 340px;
+}
+
 /* ========== 消息列表区域 ========== */
 .messages-container {
   flex: 1;
@@ -191,11 +223,38 @@
   background: #f5f7fa;
 }
 
+.message-manage-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid #e4e7ed;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+}
+
+.message-manage-count {
+  color: #606266;
+  font-size: 13px;
+  margin-right: auto;
+}
+
 .message-item {
   display: flex;
   gap: 15px;
   margin-bottom: 25px;
   animation: messageSlideIn 0.3s ease;
+}
+
+.message-item.is-selected .message-text {
+  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+}
+
+.message-select {
+  display: flex;
+  align-items: flex-start;
+  padding-top: 10px;
 }
 
 @keyframes messageSlideIn {

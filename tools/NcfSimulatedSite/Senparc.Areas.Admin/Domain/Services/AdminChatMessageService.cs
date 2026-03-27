@@ -114,6 +114,29 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
+        /// 按消息ID批量删除会话消息（物理删除）
+        /// </summary>
+        public async Task<int> DeleteMessagesAsync(int sessionId, IEnumerable<int> messageIds)
+        {
+            var ids = (messageIds ?? Enumerable.Empty<int>()).Distinct().ToList();
+            if (!ids.Any())
+            {
+                return 0;
+            }
+
+            var messages = await base.GetFullListAsync(m => m.SessionId == sessionId && ids.Contains(m.Id));
+            var deletedCount = 0;
+
+            foreach (var message in messages)
+            {
+                await base.DeleteObjectAsync(message);
+                deletedCount++;
+            }
+
+            return deletedCount;
+        }
+
+        /// <summary>
         /// 获取会话的最后一条消息
         /// </summary>
         public async Task<AdminChatMessage> GetLastMessageAsync(int sessionId)

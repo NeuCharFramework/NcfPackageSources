@@ -65,29 +65,108 @@
         <el-main class="chat-content">
             <div class="chat-header" v-if="currentSessionId">
                 <div class="chat-header-info">
-                    <h3 class="chat-title">
-                        <i class="fa fa-magic"></i> {{ currentSessionTitle || 'AI 智能助手' }}
-                    </h3>
+                    <div class="chat-header-top">
+                        <h3 class="chat-title">
+                            <i class="fa fa-magic"></i> {{ currentSessionTitle || 'AI 智能助手' }}
+                        </h3>
+                        <div class="chat-header-actions">
+                            <el-button
+                                size="mini"
+                                :type="isManageMode ? 'default' : 'primary'"
+                                @@click="toggleManageMode">
+                                {{ isManageMode ? '完成' : '管理' }}
+                            </el-button>
+                        </div>
+                    </div>
                     <div class="chat-modules" v-if="currentSessionModules.length > 0">
-                        <el-tag 
-                            v-for="module in currentSessionModules" 
+                        <el-popover
+                            v-for="module in currentSessionModules"
                             :key="module.id"
-                            size="mini"
-                            type="info"
-                            :title="module.moduleDescription || module.xncfModuleUid">
-                            <i class="fa fa-cube"></i>
-                            {{ module.displayName || module.menuName || module.moduleName || module.xncfModuleUid }}
-                            <span v-if="module.moduleVersion"> v{{ module.moduleVersion }}</span>
-                        </el-tag>
+                            placement="bottom-start"
+                            width="420"
+                            trigger="hover"
+                            popper-class="chat-module-detail-popover">
+                            <div class="chat-module-detail-wrapper">
+                                <div class="module-selector-preview-title">
+                                    <i :class="[resolveModuleDetail(module).icon, 'selector-module-icon']"></i>
+                                    <span>{{ resolveModuleDetail(module).name }}</span>
+                                    <span class="selector-module-version" v-if="resolveModuleDetail(module).version">v{{ resolveModuleDetail(module).version }}</span>
+                                </div>
+                                <div class="module-selector-preview-subtitle">{{ resolveModuleDetail(module).description }}</div>
+
+                                <div class="module-selector-preview-body">
+                                    <div class="module-selector-preview-section" v-if="resolveModuleDetail(module).menus && resolveModuleDetail(module).menus.length > 0">
+                                        <div class="module-selector-preview-section-title">菜单层级</div>
+                                        <el-tree
+                                            :data="resolveModuleDetail(module).menus"
+                                            node-key="id"
+                                            :props="{ label: 'name', children: 'children' }"
+                                            default-expand-all
+                                            class="module-selector-menu-tree">
+                                            <span class="custom-tree-node" slot-scope="{ data }">
+                                                <a :href="data.url">{{ data.name }}</a>
+                                            </span>
+                                        </el-tree>
+                                    </div>
+
+                                    <div class="module-selector-preview-section" v-if="resolveModuleDetail(module).functions && resolveModuleDetail(module).functions.length > 0">
+                                        <div class="module-selector-preview-section-title">Functions</div>
+                                        <div class="module-selector-functions-list">
+                                            <div v-for="func in resolveModuleDetail(module).functions" :key="func.name" class="module-selector-function-item">
+                                                <div class="module-selector-function-name">{{ func.name }}</div>
+                                                <div class="module-selector-function-description">{{ func.description }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        class="module-selector-preview-empty"
+                                        v-if="(!resolveModuleDetail(module).menus || resolveModuleDetail(module).menus.length === 0) && (!resolveModuleDetail(module).functions || resolveModuleDetail(module).functions.length === 0)">
+                                        当前模块无可预览详情
+                                    </div>
+                                </div>
+                            </div>
+
+                            <el-tag
+                                slot="reference"
+                                size="mini"
+                                type="info"
+                                :title="module.moduleDescription || module.xncfModuleUid"
+                                class="chat-module-tag-detail">
+                                <i class="fa fa-cube"></i>
+                                {{ module.displayName || module.menuName || module.moduleName || module.xncfModuleUid }}
+                                <span v-if="module.moduleVersion"> v{{ module.moduleVersion }}</span>
+                            </el-tag>
+                        </el-popover>
                     </div>
                 </div>
             </div>
 
             <div class="messages-container" ref="messagesContainer" v-loading="loadingMessages" v-if="currentSessionId">
+                <div class="message-manage-toolbar" v-if="isManageMode">
+                    <el-checkbox
+                        :value="messageList.length > 0 && selectedMessageIds.length === messageList.length"
+                        :indeterminate="selectedMessageIds.length > 0 && selectedMessageIds.length < messageList.length"
+                        @@change="toggleSelectAllMessages">
+                        全选
+                    </el-checkbox>
+                    <span class="message-manage-count">已选 {{ selectedMessageIds.length }} 条</span>
+                    <el-button size="mini" @@click="copySelectedMessages" :disabled="selectedMessageIds.length === 0">复制</el-button>
+                    <el-button size="mini" @@click="clearMessageSelection" :disabled="selectedMessageIds.length === 0">清空选择</el-button>
+                    <el-button size="mini" type="danger" @@click="deleteSelectedMessages" :disabled="selectedMessageIds.length === 0">删除</el-button>
+                </div>
+
                 <div 
                     v-for="message in messageList" 
                     :key="message.id"
-                    :class="['message-item', `message-${getRoleTypeClass(message.roleType)}`]">
+                    :class="['message-item', `message-${getRoleTypeClass(message.roleType)}`, { 'is-selected': isManageMode && isMessageSelected(message.id) }]">
+                    <div class="message-select" v-if="isManageMode">
+                        <el-checkbox
+                            :value="isMessageSelected(message.id)"
+                            @@change="() => toggleMessageSelection(message.id)"
+                            @@click.native.stop>
+                        </el-checkbox>
+                    </div>
                     <div class="message-avatar">
                         <i :class="getMessageIcon(message.roleType)"></i>
                     </div>
@@ -97,7 +176,7 @@
                             <span class="message-time">{{ formatTime(message.addTime) }}</span>
                         </div>
                         <div class="message-text" v-html="formatMessageContent(message.content)"></div>
-                        <div class="message-actions" v-if="message.roleType === 1">
+                        <div class="message-actions" v-if="message.roleType === 1 && !isManageMode">
                             <el-button 
                                 type="text" 
                                 size="mini"
