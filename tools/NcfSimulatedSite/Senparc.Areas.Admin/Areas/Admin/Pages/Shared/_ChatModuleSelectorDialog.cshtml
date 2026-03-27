@@ -1,0 +1,93 @@
+<el-dialog
+    title="添加引用模块"
+    :visible.sync="moduleSelectorVisible"
+    width="960px"
+    class="chat-module-selector-dialog"
+    append-to-body>
+    <div class="module-selector-toolbar">
+        <div class="module-selector-toolbar-left">
+            <el-input
+                size="small"
+                clearable
+                v-model="moduleSearchKeyword"
+                placeholder="搜索模块名称 / 描述 / UID"
+                style="max-width: 320px;">
+            </el-input>
+            <el-checkbox
+                :indeterminate="moduleSelectionIndeterminate"
+                :value="isAllFilteredSelected"
+                @@change="handleSelectAllFiltered">
+                当前筛选结果全选
+            </el-checkbox>
+            <el-button size="mini" @@click="clearModuleSelectionInDialog">清空选择</el-button>
+        </div>
+        <div class="module-selector-toolbar-right">
+            已选 {{ selectedModuleUids.length }} / {{ filteredAvailableModules.length }}
+        </div>
+    </div>
+
+    <div class="module-selector-grid" v-loading="loadingModuleOptions">
+        <el-row :gutter="12" v-if="filteredAvailableModules.length > 0">
+            <el-col :span="8" v-for="item in filteredAvailableModules" :key="item.uid" class="selector-module-col">
+                <el-card
+                    class="selector-module-card"
+                    :class="{ 'is-selected': selectedModuleUids.includes(item.uid) }"
+                    shadow="hover"
+                    @@click.native="toggleModuleSelection(item.uid)">
+                    <div class="selector-module-card-header">
+                        <div class="selector-module-card-title">
+                            <el-checkbox
+                                :value="selectedModuleUids.includes(item.uid)"
+                                @@change="() => toggleModuleSelection(item.uid)"
+                                @@click.native.stop>
+                            </el-checkbox>
+                            <span class="selector-module-name" :title="item.name">{{ item.name }}</span>
+                        </div>
+                        <span class="selector-module-version" v-if="item.version">v{{ item.version }}</span>
+                    </div>
+
+                    <div class="selector-module-card-body">
+                        <i :class="[item.icon, 'selector-module-icon']"></i>
+                        <div class="selector-module-description" :title="item.description">{{ item.description }}</div>
+                    </div>
+
+                    <div class="selector-module-footer">
+                        <a :href="'/Admin/XncfModule/Start/?uid=' + item.uid">快速进入</a>
+                        <el-popover
+                            v-if="item.menus && item.menus.length > 0"
+                            placement="right"
+                            width="280"
+                            trigger="click"
+                            @@click.native.stop>
+                            <el-table
+                                :data="item.menus"
+                                row-key="id"
+                                :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+                                max-height="240"
+                                :show-header="false"
+                                size="mini">
+                                <el-table-column prop="name" label="菜单" width="260">
+                                    <template slot-scope="scope">
+                                        <a :href="scope.row.url">{{ scope.row.name }}</a>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                            <el-button slot="reference" size="mini" icon="el-icon-s-fold" @@click.stop>菜单</el-button>
+                        </el-popover>
+                        <span v-else class="selector-module-menu-empty">无菜单</span>
+                    </div>
+                </el-card>
+            </el-col>
+        </el-row>
+
+        <div v-else class="module-selector-empty">
+            <i class="el-icon-search"></i>
+            <p>没有匹配的模块</p>
+        </div>
+    </div>
+
+    <span slot="footer" class="dialog-footer">
+        <el-button @@click="moduleSelectorVisible = false">取消</el-button>
+        <el-button type="primary" @@click="applyModuleSelection">确认添加</el-button>
+    </span>
+</el-dialog>

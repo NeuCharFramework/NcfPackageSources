@@ -6,6 +6,7 @@
 }
 
 @section Style {
+    <link rel="stylesheet" href="~/css/Admin/Pages/AdminChat/ChatLauncher.css" />
     <link rel="stylesheet" href="~/css/Admin/Pages/AdminChat/Chat.css" />
 }
 
@@ -62,7 +63,7 @@
 
         <!-- 右侧对话窗口 -->
         <el-main class="chat-content">
-            <div class="chat-header">
+            <div class="chat-header" v-if="currentSessionId">
                 <div class="chat-header-info">
                     <h3 class="chat-title">
                         <i class="fa fa-magic"></i> {{ currentSessionTitle || 'AI 智能助手' }}
@@ -82,7 +83,7 @@
                 </div>
             </div>
 
-            <div class="messages-container" ref="messagesContainer" v-loading="loadingMessages">
+            <div class="messages-container" ref="messagesContainer" v-loading="loadingMessages" v-if="currentSessionId">
                 <div 
                     v-for="message in messageList" 
                     :key="message.id"
@@ -138,7 +139,7 @@
                 </div>
             </div>
 
-            <div class="input-container">
+            <div class="input-container" v-if="currentSessionId">
                 <el-input
                     type="textarea"
                     v-model="inputMessage"
@@ -162,11 +163,78 @@
                     </el-button>
                 </div>
             </div>
+
+            <div class="chat-empty-launcher" v-else>
+                <el-card class="box-card chat-entrance-card">
+                    <div class="chat-entrance-container">
+                        <div class="chat-entrance-header">
+                            <div class="chat-entrance-icon">
+                                <i class="fa fa-comments"></i>
+                            </div>
+                            <div class="chat-entrance-content">
+                                <h3 class="chat-entrance-title">
+                                    <i class="fa fa-magic"></i> AI 智能助手
+                                </h3>
+                                <p class="chat-entrance-subtitle">输入问题并选择引用模块，开始新的对话会话</p>
+                            </div>
+                        </div>
+
+                        <div class="chat-entrance-input-wrapper">
+                            <el-input
+                                type="textarea"
+                                v-model="chatInputText"
+                                placeholder="输入您的问题，例如：如何配置系统参数？&#10;&#10;提示：按 Ctrl+Enter 或 Cmd+Enter 发送消息"
+                                :rows="4"
+                                :autosize="{ minRows: 4, maxRows: 8 }"
+                                @@keydown.native="handleLauncherInputKeydown"
+                                class="chat-entrance-input"
+                                resize="none">
+                            </el-input>
+                            <el-button
+                                type="primary"
+                                size="medium"
+                                icon="el-icon-s-promotion"
+                                @@click="startChatSession"
+                                :disabled="!chatInputText || chatInputText.trim().length === 0"
+                                :loading="isCreatingSession"
+                                class="chat-send-button">
+                                开始对话
+                            </el-button>
+                        </div>
+
+                        <div class="chat-module-picker">
+                            <div class="chat-module-picker-header">
+                                <span class="chat-module-picker-title">引用模块（可选）</span>
+                                <div class="chat-module-picker-actions">
+                                    <el-button size="mini" type="primary" icon="el-icon-plus" @@click="openModuleSelector">添加引用模块</el-button>
+                                    <el-button size="mini" @@click="clearSelectedModules" v-if="selectedModules.length > 0">清空</el-button>
+                                </div>
+                            </div>
+
+                            <div v-if="selectedModules.length > 0" class="chat-module-selected-list">
+                                <el-tag
+                                    v-for="module in selectedModules"
+                                    :key="module.uid"
+                                    closable
+                                    @@close="removeModule(module.uid)"
+                                    type="info"
+                                    class="module-tag">
+                                    <i :class="module.icon"></i> {{module.name}}
+                                </el-tag>
+                            </div>
+                            <div v-else class="chat-module-selected-empty">点击“添加引用模块”可选择多个模块作为上下文</div>
+                        </div>
+
+                        @await Html.PartialAsync("~/Areas/Admin/Pages/Shared/_ChatModuleSelectorDialog.cshtml")
+                    </div>
+                </el-card>
+            </div>
         </el-main>
     </el-container>
 </div>
 
 @section scripts {
+    <script src="~/js/Admin/Pages/AdminChat/ChatLauncherMixin.js"></script>
     <script>
         window.INITIAL_DATA = {
             sessionId: @(Model.SessionId),

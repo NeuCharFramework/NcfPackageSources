@@ -1,5 +1,6 @@
 var chatApp = new Vue({
   el: '#app',
+  mixins: [window.ChatLauncherMixin],
   data() {
     return {
       currentSessionId: 0,
@@ -22,7 +23,12 @@ var chatApp = new Vue({
       this.currentUserId = window.INITIAL_DATA.currentUserId || 0;
       
       if (window.INITIAL_DATA.initialMessage) {
-        this.inputMessage = decodeURIComponent(window.INITIAL_DATA.initialMessage);
+        const initialMessage = decodeURIComponent(window.INITIAL_DATA.initialMessage);
+        if (this.currentSessionId > 0) {
+          this.inputMessage = initialMessage;
+        } else {
+          this.chatInputText = initialMessage;
+        }
       }
     }
 
@@ -167,7 +173,13 @@ var chatApp = new Vue({
     },
 
     async createNewSession() {
-      window.location.href = '/Admin/Index';
+      this.currentSessionId = 0;
+      this.currentSessionTitle = '';
+      this.currentSessionModules = [];
+      this.messageList = [];
+      this.inputMessage = '';
+      this.chatInputText = '';
+      this.selectedModules = [];
     },
 
     async handleSessionCommand(command) {

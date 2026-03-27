@@ -6,6 +6,7 @@
     Layout = "_Layout_Vue";
 }
 @section style {
+    <link rel="stylesheet" href="~/css/Admin/Pages/AdminChat/ChatLauncher.css" />
     <style>
         #home-header .el-main {
             padding: 20px 10px 0px 10px;
@@ -564,7 +565,7 @@
                     placeholder="输入您的问题，例如：如何配置系统参数？&#10;&#10;提示：按 Ctrl+Enter 或 Cmd+Enter 发送消息"
                     :rows="4"
                     :autosize="{ minRows: 4, maxRows: 8 }"
-                    @@keydown.native="handleChatInputKeydown"
+                    @@keydown.native="handleLauncherInputKeydown"
                     class="chat-entrance-input"
                     resize="none">
                 </el-input>
@@ -582,21 +583,20 @@
 
             <div class="chat-entrance-tips">
                 <span class="tip-item"><i class="fa fa-lightbulb-o"></i> 支持多轮对话</span>
-                <span class="tip-item"><i class="fa fa-cube"></i> 可拖拽模块进行上下文对话</span>
+                <span class="tip-item"><i class="fa fa-cube"></i> 可添加模块作为对话上下文</span>
                 <span class="tip-item"><i class="fa fa-history"></i> 自动保存历史记录</span>
             </div>
 
-            <!-- 拖放区域 -->
-            <div class="chat-module-drop-zone" 
-                 @@drop.prevent="handleModuleDrop"
-                 @@dragover.prevent="handleDragOver"
-                 @@dragleave="handleDragLeave"
-                 :class="{ 'drag-over': isDragOver }">
-                <div v-if="selectedModules.length === 0" class="drop-zone-placeholder">
-                    <i class="fa fa-arrow-down"></i>
-                    <p>将模块拖拽到此处以包含到对话上下文</p>
+            <div class="chat-module-picker">
+                <div class="chat-module-picker-header">
+                    <span class="chat-module-picker-title">引用模块（可选）</span>
+                    <div class="chat-module-picker-actions">
+                        <el-button size="mini" type="primary" icon="el-icon-plus" @@click="openModuleSelector">添加引用模块</el-button>
+                        <el-button size="mini" @@click="clearSelectedModules" v-if="selectedModules.length > 0">清空</el-button>
+                    </div>
                 </div>
-                <div v-else class="selected-modules-list">
+
+                <div v-if="selectedModules.length > 0" class="chat-module-selected-list">
                     <el-tag
                         v-for="module in selectedModules"
                         :key="module.uid"
@@ -607,7 +607,10 @@
                         <i :class="module.icon"></i> {{module.name}}
                     </el-tag>
                 </div>
+                <div v-else class="chat-module-selected-empty">点击“添加引用模块”可选择多个模块作为上下文</div>
             </div>
+
+            @await Html.PartialAsync("~/Areas/Admin/Pages/Shared/_ChatModuleSelectorDialog.cshtml")
         </div>
     </el-card>
 </div>
@@ -674,5 +677,6 @@
 
 @section scripts {
     <script src="~/lib/echarts/dist/echarts.js"></script>
+    <script src="~/js/Admin/Pages/AdminChat/ChatLauncherMixin.js"></script>
     <script src="~/js/Admin/Pages/Index/Index.js"></script>
 }

@@ -1,5 +1,6 @@
 var app = new Vue({
   el: '#app',
+  mixins: [window.ChatLauncherMixin],
   data() {
     return {
       isExpandAll: true,
@@ -11,12 +12,7 @@ var app = new Vue({
       todayLogData: [],
       // 添加动画控制变量
       shakeAllModules: false,
-      glowUpgradeableModules: false,
-      // AI 对话入口相关
-      chatInputText: '',
-      isDragOver: false,
-      selectedModules: [],
-      isCreatingSession: false
+      glowUpgradeableModules: false
     };
   },
   mounted() {
@@ -26,7 +22,6 @@ var app = new Vue({
     this.fetchTodayLogData();
     // 添加鼠标事件监听
     this.initializeHoverEffects();
-    // 模块拖拽会在 getXncfOpening 完成后初始化
   },
   methods: {
     async fetchChartData() {
@@ -167,13 +162,6 @@ var app = new Vue({
     async getXncfOpening() {
       let xncfOpeningList = await service.get('/Admin/Index?handler=XncfOpening');
       this.xncfOpeningList = xncfOpeningList.data.data;
-      
-      // 数据加载完成后，等待 DOM 渲染，然后初始化拖拽
-      this.$nextTick(() => {
-        setTimeout(() => {
-          this.initializeModuleDrag();
-        }, 100); // 延迟 100ms 确保 DOM 完全渲染
-      });
     },
     //点击打开模块
     navigateTo(uid) {
@@ -254,182 +242,7 @@ var app = new Vue({
             }, 1200); // 与动画持续时间匹配
           }, delay);
         }
-      });
-    },
-
-    // AI 对话入口相关方法
-
-    handleChatInputKeydown(event) {
-      // 检测 Ctrl+Enter (Windows/Linux) 或 Cmd+Enter (Mac)
-      if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
-        event.preventDefault();
-        this.startChatSession();
       }
-      // 普通 Enter 允许换行，不做任何处理
-    },
-
-    async startChatSession() {
-      if (!this.chatInputText || this.chatInputText.trim().length === 0) {
-        this.$message.warning('请输入对话内容');
-        return;
-      }
-
-      this.isCreatingSession = true;
-
-      try {
-        const requestData = {
-          initialMessage: this.chatInputText.trim(),
-          moduleUids: this.selectedModules.map(m => m.uid)
-        };
-
-        const response = await service.post('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.CreateSessionAsync', requestData);
-
-        if (response.data && response.data.success && response.data.data) {
-          const sessionId = response.data.data.sessionId;
-          const moduleUidsQuery = this.selectedModules.length > 0 
-            ? '&moduleUids=' + this.selectedModules.map(m => m.uid).join(',')
-            : '';
-          
-          window.location.href = `/Admin/AdminChat/Chat?sessionId=${sessionId}${moduleUidsQuery}`;
-        } else {
-          this.$message.error(response.data.errorMessage || '创建会话失败');
-        }
-      } catch (error) {
-        console.error('创建会话失败:', error);
-        this.$message.error('创建会话失败，请稍后重试');
-      } finally {
-        this.isCreatingSession = false;
-      }
-    },
-
-    handleModuleDrop(event) {
-      event.preventDefault();
-      this.isDragOver = false;
-      
-      console.log('检测到放下操作', event);
-      
-      try {
-        const moduleDataStr = event.dataTransfer.getData('application/json');
-        console.log('接收到的数据:', moduleDataStr);
-        
-        if (!moduleDataStr) {
-          console.warn('未获取到模块数据');
-          this.$message.warning('拖放失败：未获取到模块数据');
-          return;
-        }
-
-        const moduleData = JSON.parse(moduleDataStr);
-        console.log('解析后的模块数据:', moduleData);
-        
-        if (!moduleData.uid) {
-          console.warn('模块数据不完整:', moduleData);
-          this.$message.warning('拖放失败：模块数据不完整');
-          return;
-        }
-
-        const exists = this.selectedModules.some(m => m.uid === moduleData.uid);
-        if (!exists) {
-          this.selectedModules.push({
-            uid: moduleData.uid,
-            name: moduleData.name || '未知模块',
-            icon: moduleData.icon || 'fa fa-cube',
-            version: moduleData.version || ''
-          });
-          this.$message.success(`已添加模块: ${moduleData.name}`);
-          console.log('模块添加成功，当前选中模块:', this.selectedModules);
-        } else {
-          this.$message.info('该模块已添加');
-        }
-      } catch (error) {
-        console.error('处理模块拖放失败:', error);
-        this.$message.error('添加模块失败: ' + error.message);
-      }
-    },
-
-    handleDragOver(event) {
-      event.preventDefault(); // 必须阻止默认行为，否则无法触发 drop 事件
-      event.dataTransfer.dropEffect = 'copy';
-      this.isDragOver = true;
-    },
-
-    handleDragLeave(event) {
-      // 只有当鼠标真正离开拖放区域时才取消高亮
-      if (event.target.classList.contains('chat-module-drop-zone') ||
-          event.target.closest('.chat-module-drop-zone') === null) {
-        this.isDragOver = false;
-      }
-    },
-
-    removeModule(uid) {
-      this.selectedModules = this.selectedModules.filter(m => m.uid !== uid);
-    },
-
-    clearSelectedModules() {
-      this.selectedModules = [];
-    },
-
-    initializeModuleDrag() {
-      // 确保在下一个 tick 中执行，让 Vue 完成渲染
-      this.$nextTick(() => {
-        const moduleCards = document.querySelectorAll('#xncf-modules-area .xncf-item');
-        
-        console.log('找到的模块卡片数量:', moduleCards.length);
-        
-        if (moduleCards.length === 0) {
-          console.warn('未找到模块卡片，将在 200ms 后重试');
-          setTimeout(() => this.initializeModuleDrag(), 200);
-          return;
-        }
-
-        moduleCards.forEach((card, index) => {
-          card.setAttribute('draggable', 'true');
-          card.style.cursor = 'move';
-          
-          card.addEventListener('dragstart', (event) => {
-            const cardElement = event.currentTarget;
-            const linkElement = cardElement.querySelector('a[href*="uid="]');
-            const headerElement = cardElement.querySelector('.el-card__header span:first-child');
-            const iconElement = cardElement.querySelector('.icon');
-            const versionElement = cardElement.querySelector('.version');
-            const descElement = cardElement.querySelector('.description');
-
-            const moduleData = {
-              uid: linkElement?.href?.match(/uid=([^&]+)/)?.[1] || '',
-              name: headerElement?.textContent?.trim() || '未知模块',
-              icon: iconElement?.className || 'fa fa-cube',
-              version: versionElement?.textContent?.trim() || '',
-              description: descElement?.textContent?.trim() || ''
-            };
-
-            console.log('开始拖拽模块:', moduleData.name, moduleData);
-
-            event.dataTransfer.setData('application/json', JSON.stringify(moduleData));
-            event.dataTransfer.effectAllowed = 'copy';
-            
-            cardElement.style.opacity = '0.5';
-            cardElement.classList.add('dragging');
-            
-            const dropZone = document.querySelector('.chat-module-drop-zone');
-            if (dropZone) {
-              dropZone.classList.add('highlight');
-              console.log('拖放区域已高亮');
-            } else {
-              console.warn('未找到拖放区域');
-            }
-          });
-          
-          card.addEventListener('dragend', (event) => {
-            event.currentTarget.style.opacity = '1';
-            event.currentTarget.classList.remove('dragging');
-            
-            const dropZone = document.querySelector('.chat-module-drop-zone');
-            if (dropZone) {
-              dropZone.classList.remove('highlight');
-            }
-          });
-        });
-        
-        console.log('模块拖拽初始化完成，已绑定', moduleCards.length, '个模块');
       });
     }
   }
