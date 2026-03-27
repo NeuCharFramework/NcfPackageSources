@@ -20,7 +20,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             }
 
             var previous = ActiveOptimizationRequestId.Value;
-            ActiveOptimizationRequestId.Value = requestId.Trim();
+            ActiveOptimizationRequestId.Value = requestId.Trim().ToLowerInvariant();
             return new ActiveRequestScope(previous);
         }
 
@@ -50,7 +50,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 
             lock (FallbackCorrelationLock)
             {
-                _fallbackCorrelationId = requestId.Trim();
+                _fallbackCorrelationId = requestId.Trim().ToLowerInvariant();
             }
         }
 
@@ -103,8 +103,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         /// </summary>
         private readonly ConcurrentDictionary<string, byte> _versionInsertClaimed = new();
 
+        /// <summary>
+        /// 统一键格式，避免模型/客户端传入的 GUID 大小写与 <see cref="Guid.ToString"/> 不一致导致 _states 匹配失败（no registered session）。
+        /// </summary>
         private static string NormalizeRequestKey(string requestId) =>
-            string.IsNullOrWhiteSpace(requestId) ? null : requestId.Trim();
+            string.IsNullOrWhiteSpace(requestId) ? null : requestId.Trim().ToLowerInvariant();
 
         /// <summary>在调用 AddPromptItemAsync 之前调用；仅第一次返回 true。</summary>
         public bool TryClaimVersionInsert(string requestId)

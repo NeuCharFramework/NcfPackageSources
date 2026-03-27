@@ -3254,6 +3254,32 @@ var app = new Vue({
             this.optimizeErrorText = '';
             this.optimizeDialogVisible = true;
         },
+        /// 将当前靶道的预期结果同步到 aiScoreForm，避免「打靶后 AI 评分」仅依赖表单内存而遗漏详情里的 expectedResultsJson。
+        syncAiScoreFormFromPromptDetail() {
+            if (!this.promptDetail || !this.promptDetail.expectedResultsJson) {
+                return;
+            }
+            try {
+                const arr = JSON.parse(this.promptDetail.expectedResultsJson);
+                if (!Array.isArray(arr) || arr.length === 0) {
+                    return;
+                }
+                const hasValues = arr.some(x => x !== undefined && x !== null && String(x).trim() !== '');
+                if (!hasValues) {
+                    return;
+                }
+                const formHasValues = this.aiScoreForm.resultList && this.aiScoreForm.resultList.some(r => r && r.value);
+                if (!formHasValues) {
+                    this.aiScoreForm.resultList = arr.map((item, index) => ({
+                        id: index + 1,
+                        label: '预期结果',
+                        value: typeof item === 'string' ? item : String(item)
+                    }));
+                }
+            } catch (e) {
+                console.warn('syncAiScoreFormFromPromptDetail:', e);
+            }
+        },
         async executeOptimize() {
             if (this.optimizing) {
                 this.$message.warning('优化正在进行中，请勿重复点击');
@@ -3371,6 +3397,7 @@ var app = new Vue({
                     }
 
                     if (this.autoShootAfterOptimize) {
+                        this.syncAiScoreFormFromPromptDetail();
                         this.optimizeProgressText = '正在打靶（与手动打靶相同，可在主界面查看输出）…';
                         await this.executeTargetShootWithChatMessage(null);
                         await this.$nextTick();
@@ -3387,6 +3414,21 @@ var app = new Vue({
                             }));
                             filled = true;
                         }
+                        if (!filled && this.promptDetail && this.promptDetail.expectedResultsJson) {
+                            try {
+                                const arr = JSON.parse(this.promptDetail.expectedResultsJson);
+                                if (Array.isArray(arr) && arr.some(x => x !== undefined && x !== null && String(x).trim() !== '')) {
+                                    item.alResultList = arr.map((v, idx) => ({
+                                        id: idx + 1,
+                                        label: '预期结果',
+                                        value: typeof v === 'string' ? v : String(v)
+                                    }));
+                                    filled = true;
+                                }
+                            } catch (e) {
+                                console.warn('autoAIGrade expectedResultsJson:', e);
+                            }
+                        }
                         if (filled) {
                             this.optimizeProgressText = '正在 AI 评分（与手动 AI 评分相同）…';
                             item.scoreType = '1';
@@ -3395,6 +3437,8 @@ var app = new Vue({
                         } else {
                             this.$message.warning('未配置预期结果，已跳过 AI 评分');
                         }
+                    } else if (this.autoShootAfterOptimize && this.autoAIGradeAfterShoot && (!this.outputList || this.outputList.length === 0)) {
+                        this.$message.warning('自动打靶未返回输出记录，已跳过 AI 评分；可在主界面手动打靶后再评分');
                     }
 
                     let message = `✅ 优化完成\n\n新 Prompt：${code}`;

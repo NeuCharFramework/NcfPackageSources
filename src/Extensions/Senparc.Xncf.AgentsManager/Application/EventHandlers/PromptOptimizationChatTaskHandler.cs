@@ -8,7 +8,6 @@ using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AgentsManager.OHS.Local.PL;
 using System;
-using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -20,18 +19,10 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
     /// </summary>
     public class PromptOptimizationChatTaskHandler : IIntegrationEventHandler<PromptOptimizationRequestEvent>
     {
-        /// <summary>
-        /// 持久化已成功写入 PromptRange 后的响应。EventBus 在 Handler 抛错后会整段重跑；
-        /// 若错误发生在发布事件之后、或发布失败，重跑会再次执行 ChatGroup 并再插一条相同内容。
-        /// </summary>
-        private static readonly ConcurrentDictionary<string, PromptOptimizationResponseEvent> PersistedSuccessByRequestId =
-            new ConcurrentDictionary<string, PromptOptimizationResponseEvent>(StringComparer.Ordinal);
-
         private readonly ChatGroupService _chatGroupService;
         private readonly AgentsTemplateService _agentsTemplateService;
         private readonly PromptOptimizationAgentBridge _bridge;
         private readonly PromptOptimizationKernelFallbackService _kernelFallback;
-        private readonly PromptOptimizationService _optimizationService;
         private readonly IEventBus _eventBus;
         private readonly ILogger<PromptOptimizationChatTaskHandler> _logger;
 
@@ -40,7 +31,6 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
             AgentsTemplateService agentsTemplateService,
             PromptOptimizationAgentBridge bridge,
             PromptOptimizationKernelFallbackService kernelFallback,
-            PromptOptimizationService optimizationService,
             IEventBus eventBus,
             ILogger<PromptOptimizationChatTaskHandler> logger)
         {
@@ -48,7 +38,6 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
             _agentsTemplateService = agentsTemplateService;
             _bridge = bridge;
             _kernelFallback = kernelFallback;
-            _optimizationService = optimizationService;
             _eventBus = eventBus;
             _logger = logger;
         }
@@ -57,21 +46,6 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
         {
             _logger.LogInformation("========== PromptOptimizationChatTaskHandler（Agent 主路径）==========");
             _logger.LogInformation("  RequestId: {RequestId}", @event.RequestId);
-
-            if (PersistedSuccessByRequestId.TryGetValue(@event.RequestId, out var persistedSuccess))
-            {
-                _logger.LogWarning(
-                    "  检测到 RequestId={RequestId} 已有成功落库结果，跳过重复 ChatGroup（多为 EventBus 重试）；仅重发响应并完成等待。",
-                    @event.RequestId);
-                var replayOk = await PublishSuccessAndFinalizeAsync(persistedSuccess, @event, cancellationToken).ConfigureAwait(false);
-                if (replayOk)
-                {
-                    _logger.LogInformation("  ✅ 重试路径已重新发布成功响应，NewPromptCode={Code}", persistedSuccess.NewPromptCode);
-                    PersistedSuccessByRequestId.TryRemove(@event.RequestId, out _);
-                }
-
-                return;
-            }
 
             _bridge.BeginRequest(@event.RequestId);
 
@@ -137,19 +111,8 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
 
                 if (_bridge.TryTakeResult(@event.RequestId, out var successResponse))
                 {
-                    PersistedSuccessByRequestId[@event.RequestId] = successResponse;
-                    if (await PublishSuccessAndFinalizeAsync(successResponse, @event, cancellationToken).ConfigureAwait(false))
-                    {
-                        _logger.LogInformation("  ✅ 已发布优化成功响应，NewPromptCode={Code}", successResponse.NewPromptCode);
-                        PersistedSuccessByRequestId.TryRemove(@event.RequestId, out _);
-                    }
-                    else
-                    {
-                        _logger.LogWarning(
-                            "  ⚠️ 优化已成功落库但发布事件失败，已 CompleteRequest（RequestId={RequestId}），NewPromptCode={Code}",
-                            @event.RequestId,
-                            successResponse.NewPromptCode);
-                    }
+                    await _eventBus.PublishDerivedAsync(successResponse, @event);
+                    _logger.LogInformation("  ✅ 已发布优化成功响应，NewPromptCode={Code}", successResponse.NewPromptCode);
                 }
                 else
                 {
@@ -158,19 +121,8 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
                     var fallbackResponse = await _kernelFallback.TryKernelFallbackAsync(@event, cancellationToken);
                     if (fallbackResponse.Success)
                     {
-                        PersistedSuccessByRequestId[@event.RequestId] = fallbackResponse;
-                        if (await PublishSuccessAndFinalizeAsync(fallbackResponse, @event, cancellationToken).ConfigureAwait(false))
-                        {
-                            _logger.LogInformation("  ✅ Kernel 回退成功，NewPromptCode={Code}", fallbackResponse.NewPromptCode);
-                            PersistedSuccessByRequestId.TryRemove(@event.RequestId, out _);
-                        }
-                        else
-                        {
-                            _logger.LogWarning(
-                                "  ⚠️ Kernel 回退已落库但发布事件失败，已 CompleteRequest（RequestId={RequestId}），NewPromptCode={Code}",
-                                @event.RequestId,
-                                fallbackResponse.NewPromptCode);
-                        }
+                        await _eventBus.PublishDerivedAsync(fallbackResponse, @event);
+                        _logger.LogInformation("  ✅ Kernel 回退成功，NewPromptCode={Code}", fallbackResponse.NewPromptCode);
                     }
                     else
                     {
@@ -186,31 +138,6 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
             {
                 _logger.LogError(ex, "PromptOptimizationChatTaskHandler 未处理异常");
                 await PublishFailureAsync(ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 发布成功事件；若发布抛错则直接 CompleteRequest，避免 EventBus 重试再次跑 ChatGroup 重复插库。
-        /// 发布成功后从缓存移除，并依赖 <see cref="PromptOptimizationResponseHandler"/> 完成 CompleteRequest。
-        /// </summary>
-        private async Task<bool> PublishSuccessAndFinalizeAsync(
-            PromptOptimizationResponseEvent response,
-            PromptOptimizationRequestEvent parentEvent,
-            CancellationToken cancellationToken)
-        {
-            try
-            {
-                await _eventBus.PublishDerivedAsync(response, parentEvent).ConfigureAwait(false);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(
-                    ex,
-                    "发布 PromptOptimization 成功事件失败（RequestId={RequestId}），已直接 CompleteRequest，避免重试导致重复插入。",
-                    response.RequestId);
-                _optimizationService.CompleteRequest(response.RequestId, response);
-                return false;
             }
         }
 
