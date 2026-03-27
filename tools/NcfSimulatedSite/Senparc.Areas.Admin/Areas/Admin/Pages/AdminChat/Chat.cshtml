@@ -9,6 +9,11 @@
     <link rel="stylesheet" href="~/css/Admin/Pages/AdminChat/Chat.css" />
 }
 
+@section breadcrumbs {
+    <el-breadcrumb-item>AI 助手</el-breadcrumb-item>
+    <el-breadcrumb-item>对话</el-breadcrumb-item>
+}
+
 <div class="admin-chat-container">
     <el-container class="chat-main-container">
         <!-- 左侧会话历史 -->
@@ -140,12 +145,12 @@
                     placeholder="输入您的问题..."
                     :rows="3"
                     :disabled="!currentSessionId || isSending"
-                    @@keydown.enter.ctrl.native="sendMessage"
+                    @@keydown.native="handleChatInputKeydown"
                     class="message-input">
                 </el-input>
                 <div class="input-actions">
                     <span class="input-tip">
-                        <i class="fa fa-info-circle"></i> Ctrl + Enter 发送
+                        <i class="fa fa-info-circle"></i> Ctrl + Enter 或 Cmd + Enter 发送
                     </span>
                     <el-button 
                         type="primary" 

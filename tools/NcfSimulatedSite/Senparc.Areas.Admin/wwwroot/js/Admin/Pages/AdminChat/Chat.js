@@ -33,6 +33,15 @@ var chatApp = new Vue({
     }
   },
   methods: {
+    handleChatInputKeydown(event) {
+      // 保持与首页一致：Ctrl+Enter (Windows/Linux) 或 Cmd+Enter (Mac) 发送。
+      if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
+        this.sendMessage();
+      }
+      // 普通 Enter 保留换行行为。
+    },
+
     async loadSessionList() {
       this.loadingSessions = true;
       try {

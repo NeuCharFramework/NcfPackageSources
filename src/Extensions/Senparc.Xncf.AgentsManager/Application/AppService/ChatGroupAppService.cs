@@ -58,8 +58,6 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 //var agentsTemplateAdmin = await _agentsTemplateService.GetAgentTemplateAsync(adminId);
                 //var agentsTemplateEnterAgent = await _agentsTemplateService.GetAgentTemplateAsync(enterAgent);
 
-                SenparcAI_GetByVersionResponse promptResult;
-
                 //TODO:封装到 Service 中
                 ChatGroup chatGroup = null;
                 var chatGroupDto = new ChatGroupDto(request.Name, true, ChatGroupState.Unstart, request.Description, adminId, enterAgentId);
@@ -106,7 +104,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         [FunctionRender("启动 ChatGroup", "启动 ChatGroup", typeof(Register))]
-Se        public async Task<StringAppResponse> RunChatGroup(ChatGroup_RunChatGroupRequest request)
+        public async Task<StringAppResponse> RunChatGroup(ChatGroup_RunChatGroupRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
@@ -159,8 +157,6 @@ Se        public async Task<StringAppResponse> RunChatGroup(ChatGroup_RunChatGro
             {
                 //var agentsTemplateAdmin = await _agentsTemplateService.GetAgentTemplateAsync(adminId);
                 //var agentsTemplateEnterAgent = await _agentsTemplateService.GetAgentTemplateAsync(enterAgent);
-
-                SenparcAI_GetByVersionResponse promptResult;
 
                 //TODO:封装到 Service 中
                 ChatGroup chatGroup = null;
