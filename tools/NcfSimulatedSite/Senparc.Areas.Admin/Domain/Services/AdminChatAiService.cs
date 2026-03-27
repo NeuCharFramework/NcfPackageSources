@@ -1,10 +1,13 @@
 using Microsoft.Extensions.Logging;
+using Microsoft.SemanticKernel;
 using Senparc.AI;
 using Senparc.AI.Entities;
 using Senparc.AI.Kernel;
 using Senparc.AI.Kernel.Handlers;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
+using Senparc.Areas.Admin.Domain.Services.AIPlugins;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.XncfBase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,6 +59,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                 TopP = 0.9f
             };
 
+            var modulePlugin = new ModuleAssistantPlugin(modules);
+
             var iWantToRun = semanticAiHandler.ChatConfig(
                 promptParameter,
                 userId: $"AdminChat-{userId}-{sessionId}",
@@ -63,11 +68,19 @@ namespace Senparc.Areas.Admin.Domain.Services
                 chatSystemMessage: BuildSystemMessage(modules),
                 senparcAiSetting: setting);
 
-            var prompt = BuildUserPrompt(messages, userMessage);
-            var request = iWantToRun.CreateRequest(prompt);
-            var aiResult = await iWantToRun.RunAsync(request);
+            // 注册模块信息 Function Calling 插件
+            iWantToRun.ImportPluginFromObject(modulePlugin, "ModuleAssistant");
 
-            var result = aiResult?.OutputString?.Trim();
+            var prompt = BuildUserPrompt(messages, userMessage);
+
+            // 使用 FunctionChoiceBehavior.Auto() 让 AI 根据需要自动调用 ModuleAssistantPlugin 函数
+            var executionSettings = new PromptExecutionSettings
+            {
+                FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
+            };
+            var skResult = await iWantToRun.Kernel.InvokePromptAsync(prompt, new KernelArguments(executionSettings));
+
+            var result = skResult?.ToString()?.Trim();
             if (string.IsNullOrWhiteSpace(result))
             {
                 _logger.LogWarning("AI 返回空内容：SessionId={SessionId}, UserId={UserId}", sessionId, userId);
@@ -85,10 +98,13 @@ namespace Senparc.Areas.Admin.Domain.Services
 
             if (modules != null && modules.Any())
             {
-                sb.AppendLine("当前会话关联模块如下，可优先结合这些模块语境回答：");
+                sb.AppendLine("当前会话关联模块如下，可优先结合这些模块语境回答。如需深入了解模块详情、数据库结构或功能列表，可使用 ModuleAssistant 函数获取准确信息：");
                 foreach (var module in modules)
                 {
-                    sb.AppendLine($"- {module.ModuleName} (UID: {module.XncfModuleUid}, Version: {module.ModuleVersion})");
+                    sb.AppendLine($"- **{module.ModuleName}** (UID: {module.XncfModuleUid}, Version: {module.ModuleVersion})");
+                    var register = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == module.XncfModuleUid);
+                    if (register != null && !string.IsNullOrWhiteSpace(register.Description))
+                        sb.AppendLine($"  描述：{register.Description}");
                 }
             }
 
