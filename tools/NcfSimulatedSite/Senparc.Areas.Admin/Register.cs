@@ -141,6 +141,7 @@ namespace Senparc.Areas.Admin
             services.AddScoped<AdminChatSessionService>();
             services.AddScoped<AdminChatMessageService>();
             services.AddScoped<AdminChatSessionModuleService>();
+            services.AddScoped<AdminChatAiService>();
 
             return base.AddXncfModule(services, configuration, env);
         }

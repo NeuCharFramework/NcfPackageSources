@@ -25,16 +25,19 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         private readonly AdminChatSessionService _sessionService;
         private readonly AdminChatMessageService _messageService;
         private readonly AdminChatSessionModuleService _sessionModuleService;
+        private readonly AdminChatAiService _chatAiService;
 
         public AdminChatAppService(
             IServiceProvider serviceProvider,
             AdminChatSessionService sessionService,
             AdminChatMessageService messageService,
-            AdminChatSessionModuleService sessionModuleService) : base(serviceProvider)
+            AdminChatSessionModuleService sessionModuleService,
+            AdminChatAiService chatAiService) : base(serviceProvider)
         {
             _sessionService = sessionService;
             _messageService = messageService;
             _sessionModuleService = sessionModuleService;
+            _chatAiService = chatAiService;
         }
 
         #region 会话管理
@@ -76,12 +79,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                         ChatMessageRoleType.User,
                         request.InitialMessage);
 
-                    var aiResponse = await GenerateAIResponseAsync(session.Id, request.InitialMessage);
+                    var (aiResponse, modelIdentifier) = await _chatAiService.GenerateResponseAsync(session.Id, userId, request.InitialMessage);
                     await _messageService.AddMessageAsync(
                         session.Id,
                         ChatMessageRoleType.Assistant,
                         aiResponse,
-                        "placeholder-model");
+                        modelIdentifier);
                 }
 
                 logger.Append($"创建会话: SessionId={session.Id}, UserId={userId}");
@@ -208,13 +211,13 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 await _sessionService.UpdateLastMessageTimeAsync(request.SessionId);
 
-                var aiResponse = await GenerateAIResponseAsync(request.SessionId, request.Content);
+                var (aiResponse, modelIdentifier) = await _chatAiService.GenerateResponseAsync(request.SessionId, userId, request.Content);
 
                 var assistantMessage = await _messageService.AddMessageAsync(
                     request.SessionId,
                     ChatMessageRoleType.Assistant,
                     aiResponse,
-                    "placeholder-model");
+                    modelIdentifier);
 
                 logger.Append($"发送消息: SessionId={request.SessionId}, MessageId={userMessage.Id}");
 
@@ -339,23 +342,6 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         #endregion
 
         #region 私有辅助方法
-
-        /// <summary>
-        /// 生成 AI 响应（占位实现，实际应调用 AIKernel）
-        /// </summary>
-        private async Task<string> GenerateAIResponseAsync(int sessionId, string userMessage)
-        {
-            await Task.Delay(100);
-
-            var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
-            var moduleContext = modules.Any() 
-                ? $"\n\n[当前会话已加载模块: {string.Join(", ", modules.Select(m => m.ModuleName))}]" 
-                : "";
-
-            return $"这是一个占位响应。您的问题是：{userMessage}{moduleContext}\n\n" +
-                   $"实际实现时，这里将调用 AIKernel 模块进行智能回复。" +
-                   $"\n\n**提示**：请在此处集成 AIKernel 的 `GenerateResponseAsync` 方法，并传递会话上下文和模块信息。";
-        }
 
         #endregion
     }
