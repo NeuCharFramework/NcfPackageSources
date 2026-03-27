@@ -119,6 +119,15 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
                     ErrorMessage = $"优化请求超时: {ex.Message}"
                 });
             }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogWarning(ex, "Prompt 优化被拒绝: {Message}", ex.Message);
+                return Ok(new AppResponseBase<PromptOptimizationResponseEvent>
+                {
+                    Success = false,
+                    ErrorMessage = ex.Message
+                });
+            }
             catch (Exception ex)
             {
                 var errorMessage = ex.Message;

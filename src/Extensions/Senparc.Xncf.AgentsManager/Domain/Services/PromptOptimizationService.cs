@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
 using Senparc.Ncf.Core.EventBus;
 using Senparc.Ncf.Shared.Abstractions.Events;
@@ -29,6 +30,18 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             
         private static readonly ConcurrentDictionary<string, TaskCompletionSource<PromptInitResponseEvent>> _pendingInitRequests 
             = new ConcurrentDictionary<string, TaskCompletionSource<PromptInitResponseEvent>>();
+
+        /// <summary>
+        /// 同一靶道 + 需求 + 模型下禁止并发两次 HTTP 优化（双击会发两个 RequestId，各插一行且内容常相同）。
+        /// </summary>
+        private static readonly ConcurrentDictionary<string, SemaphoreSlim> _optimizeInFlightByPrompt = new();
+
+        private static string BuildOptimizeSingleFlightKey(string promptCode, string userRequirement, OptimizationContext context)
+        {
+            var req = userRequirement?.Trim() ?? string.Empty;
+            var mid = context?.ModelId ?? 0;
+            return $"{promptCode?.Trim() ?? ""}\u001F{req}\u001F{mid}";
+        }
 
         public PromptOptimizationService(
             IEventBus eventBus, 
@@ -238,52 +251,87 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             // 1. 确保 Agent 已初始化
             await EnsureInitializedAsync();
 
-            var requestId = Guid.NewGuid().ToString();
-            var tcs = new TaskCompletionSource<PromptOptimizationResponseEvent>(
-                TaskCreationOptions.RunContinuationsAsynchronously);
-
-            if (!_pendingRequests.TryAdd(requestId, tcs))
+            var flightKey = BuildOptimizeSingleFlightKey(promptCode, userRequirement, context);
+            var flightSem = _optimizeInFlightByPrompt.GetOrAdd(flightKey, _ => new SemaphoreSlim(1, 1));
+            if (!await flightSem.WaitAsync(TimeSpan.Zero).ConfigureAwait(false))
             {
-                throw new InvalidOperationException("Failed to register request ID.");
+                _logger.LogWarning(
+                    "OptimizePromptAsync rejected: another optimization in flight for key={FlightKey}",
+                    flightKey);
+                throw new InvalidOperationException("该 Prompt 已有优化任务正在执行，请勿重复提交（例如避免双击）。");
             }
 
             try
             {
-                _logger.LogInformation(
-                    "Publishing PromptOptimizationRequestEvent: RequestId={RequestId}, PromptCode={PromptCode}",
-                    requestId, promptCode);
+                var requestId = Guid.NewGuid().ToString();
+                var tcs = new TaskCompletionSource<PromptOptimizationResponseEvent>(
+                    TaskCreationOptions.RunContinuationsAsynchronously);
 
-                // 2. 发布优化请求事件
-                var requestEvent = new PromptOptimizationRequestEvent(
-                    requestId, 
-                    promptCode, 
-                    promptContent,
-                    userRequirement,
-                    context);
-                await _eventBus.PublishAsync(requestEvent);
-
-                // 3. 等待响应（Agent 多轮对话可能较慢）
-                var timeoutTask = Task.Delay(TimeSpan.FromMinutes(15));
-                var completedTask = await Task.WhenAny(tcs.Task, timeoutTask);
-
-                if (completedTask == timeoutTask)
+                if (!_pendingRequests.TryAdd(requestId, tcs))
                 {
-                    _pendingRequests.TryRemove(requestId, out _);
-                    throw new TimeoutException("Prompt 优化请求超时（15 分钟）");
+                    throw new InvalidOperationException("Failed to register request ID.");
                 }
 
-                var response = await tcs.Task;
-                _logger.LogInformation(
-                    "Received PromptOptimizationResponse: RequestId={RequestId}, NewPromptCode={NewPromptCode}, Score={Score}",
-                    requestId, response.NewPromptCode, response.Score);
+                try
+                {
+                    _logger.LogInformation(
+                        "Publishing PromptOptimizationRequestEvent: RequestId={RequestId}, PromptCode={PromptCode}",
+                        requestId, promptCode);
 
-                return response;
+                    // 2. 发布优化请求事件
+                    var requestEvent = new PromptOptimizationRequestEvent(
+                        requestId, 
+                        promptCode, 
+                        promptContent,
+                        userRequirement,
+                        context);
+                    await _eventBus.PublishAsync(requestEvent);
+
+                    // 3. 等待响应（Agent 多轮对话可能较慢）
+                    var timeoutTask = Task.Delay(TimeSpan.FromMinutes(15));
+                    var completedTask = await Task.WhenAny(tcs.Task, timeoutTask);
+
+                    if (completedTask == timeoutTask)
+                    {
+                        _pendingRequests.TryRemove(requestId, out _);
+                        throw new TimeoutException("Prompt 优化请求超时（15 分钟）");
+                    }
+
+                    var response = await tcs.Task;
+                    _logger.LogInformation(
+                        "Received PromptOptimizationResponse: RequestId={RequestId}, NewPromptCode={NewPromptCode}, Score={Score}",
+                        requestId, response.NewPromptCode, response.Score);
+                    return response;
+                }
+                catch (Exception ex)
+                {
+                    _pendingRequests.TryRemove(requestId, out _);
+                    _logger.LogError(ex, "Failed to optimize Prompt: {PromptCode}", promptCode);
+                    throw;
+                }
             }
-            catch (Exception ex)
+            finally
             {
-                _pendingRequests.TryRemove(requestId, out _);
-                _logger.LogError(ex, "Failed to optimize Prompt: {PromptCode}", promptCode);
-                throw;
+                try
+                {
+                    flightSem.Release();
+                }
+                catch (SemaphoreFullException)
+                {
+                    // ignore
+                }
+
+                if (_optimizeInFlightByPrompt.TryRemove(flightKey, out var removed) && removed != null)
+                {
+                    try
+                    {
+                        removed.Dispose();
+                    }
+                    catch
+                    {
+                        // ignore
+                    }
+                }
             }
         }
 

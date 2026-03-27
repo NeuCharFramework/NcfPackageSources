@@ -383,6 +383,12 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 memberCollection.Add((chatGroup.EnterAgentTemplateId, "Enter"));
             }
 
+            // 同一 AgentTemplate 只保留一条（避免 Admin/Enter/成员重复出现两次相同模型，并行工具调用产生重复副作用）
+            memberCollection = memberCollection
+                .GroupBy(m => m.AgentTemplateId)
+                .Select(g => g.First())
+                .ToList();
+
             var agentsTemplates = new List<AgentTemplateDto>();
             var agents = new List<SemanticKernelAgent>();
             List<MiddlewareAgent<SemanticKernelAgent>> agentsMiddlewares = new List<MiddlewareAgent<SemanticKernelAgent>>();

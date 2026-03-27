@@ -6,18 +6,12 @@ using Senparc.Xncf.PromptRange.Abstractions.Events;
 namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
     /// <summary>
-    /// 在 Agent 对话与 HTTP 优化请求之间传递结果（CreateOptimizedPrompt 写入，ChatTask Handler 读取后发布响应事件）
+    /// 在 Agent 对话与 HTTP 优化请求之间传递结果（CreateOptimizedPrompt 写入，Handler 读取后发布响应事件）。
     /// </summary>
     public class PromptOptimizationAgentBridge
     {
-        /// <summary>
-        /// 当前正在执行的优化请求 ID（在 RunChatGroupExecutionCoreAsync 内设置，供 Plugin 在模型漏传参数时仍能关联）
-        /// </summary>
         private static readonly AsyncLocal<string> ActiveOptimizationRequestId = new();
 
-        /// <summary>
-        /// 在 ChatGroup 执行期间挂起 RequestId；Dispose 时恢复外层（支持嵌套时恢复上一值）
-        /// </summary>
         public static IDisposable BeginActiveRequestScope(string requestId)
         {
             if (string.IsNullOrWhiteSpace(requestId))
@@ -30,9 +24,6 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             return new ActiveRequestScope(previous);
         }
 
-        /// <summary>
-        /// 优先 AsyncLocal（同异步流）；否则使用 RunChatGroup 设置的兜底关联（工具可能在未传播 ExecutionContext 的线程上执行）
-        /// </summary>
         public static string TryGetActiveRequestId()
         {
             var local = ActiveOptimizationRequestId.Value;
@@ -106,8 +97,31 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 
         private readonly ConcurrentDictionary<string, State> _states = new();
 
+        /// <summary>
+        /// 每个优化 RequestId 只允许一次 <see cref="PromptItemService.AddPromptItemAsync"/>（工具或 Kernel 回退谁先抢到谁写）。
+        /// 解决：工具已插入 DB 但 <see cref="RecordCreatedPrompt"/> 未写入 State → TryTakeResult 失败 → 回退再插一条（内容相同）。
+        /// </summary>
+        private readonly ConcurrentDictionary<string, byte> _versionInsertClaimed = new();
+
         private static string NormalizeRequestKey(string requestId) =>
             string.IsNullOrWhiteSpace(requestId) ? null : requestId.Trim();
+
+        /// <summary>在调用 AddPromptItemAsync 之前调用；仅第一次返回 true。</summary>
+        public bool TryClaimVersionInsert(string requestId)
+        {
+            var key = NormalizeRequestKey(requestId);
+            return key != null && _versionInsertClaimed.TryAdd(key, 0);
+        }
+
+        /// <summary>AddPromptItemAsync 失败时释放，允许 Kernel 回退重试写库。</summary>
+        public void ReleaseVersionInsertClaim(string requestId)
+        {
+            var key = NormalizeRequestKey(requestId);
+            if (key != null)
+            {
+                _versionInsertClaimed.TryRemove(key, out _);
+            }
+        }
 
         public void BeginRequest(string requestId)
         {
@@ -117,12 +131,44 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 return;
             }
 
-            _states[key] = new State();
+            _states.TryAdd(key, new State());
         }
 
         /// <summary>
-        /// 当前请求是否已写入过新版本（用于拒绝同一次优化任务内重复调用 CreateOptimizedPrompt，避免产生多条 PromptItem）。
+        /// 将模型传入的 optimizationRequestId 归一到 <see cref="BeginRequest"/> 已注册的 key（禁止瞎填 Guid 导致孤儿 State）。
         /// </summary>
+        public bool TryResolveRegisteredOptimizationKey(string candidateFromModel, out string registeredKey)
+        {
+            registeredKey = null;
+            var c = NormalizeRequestKey(candidateFromModel);
+            if (c != null && _states.ContainsKey(c))
+            {
+                registeredKey = c;
+                return true;
+            }
+
+            var active = NormalizeRequestKey(TryGetActiveRequestId());
+            if (active != null && _states.ContainsKey(active))
+            {
+                registeredKey = active;
+                return true;
+            }
+
+            string fb;
+            lock (FallbackCorrelationLock)
+            {
+                fb = NormalizeRequestKey(_fallbackCorrelationId);
+            }
+
+            if (fb != null && _states.ContainsKey(fb))
+            {
+                registeredKey = fb;
+                return true;
+            }
+
+            return false;
+        }
+
         public bool TryGetRecordedPromptCode(string requestId, out string fullVersion)
         {
             fullVersion = null;
@@ -141,9 +187,6 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             return true;
         }
 
-        /// <summary>
-        /// 由 PromptOptimizationPlugin.CreateOptimizedPrompt 在成功创建新版本后调用
-        /// </summary>
         public void RecordCreatedPrompt(
             string requestId,
             string newPromptCode,
@@ -163,8 +206,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 
             if (!_states.TryGetValue(key, out var state))
             {
-                state = new State();
-                _states[key] = state;
+                return;
             }
 
             state.NewPromptCode = newPromptCode;
@@ -181,10 +223,23 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         {
             response = null;
             var key = NormalizeRequestKey(requestId);
-            if (key == null || !_states.TryRemove(key, out var state) || string.IsNullOrWhiteSpace(state.NewPromptCode))
+            if (key == null)
             {
                 return false;
             }
+
+            if (!_states.TryGetValue(key, out var state))
+            {
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(state.NewPromptCode))
+            {
+                return false;
+            }
+
+            _states.TryRemove(key, out _);
+            _versionInsertClaimed.TryRemove(key, out _);
 
             response = new PromptOptimizationResponseEvent(
                 key,
@@ -206,10 +261,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         public void Remove(string requestId)
         {
             var key = NormalizeRequestKey(requestId);
-            if (key != null)
+            if (key == null)
             {
-                _states.TryRemove(key, out _);
+                return;
             }
+
+            _states.TryRemove(key, out _);
         }
     }
 }

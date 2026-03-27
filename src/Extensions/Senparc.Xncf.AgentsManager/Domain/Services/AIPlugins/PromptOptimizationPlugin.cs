@@ -153,14 +153,18 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
             {
                 var activeId = PromptOptimizationAgentBridge.TryGetActiveRequestId()?.Trim();
                 var paramId = optimizationRequestId?.Trim();
-                var rid = !string.IsNullOrEmpty(activeId) ? activeId : paramId;
+                var rawHint = !string.IsNullOrEmpty(activeId) ? activeId : paramId;
+                if (!_bridge.TryResolveRegisteredOptimizationKey(rawHint ?? string.Empty, out var rid))
+                {
+                    _logger.LogWarning(
+                        "CreateOptimizedPrompt: no registered session (active={ActiveId}, param={ParamId})",
+                        activeId, paramId);
+                    return "Error: optimizationRequestId does not match this session. Leave optimizationRequestId empty, or paste the REQUEST_ID from the task exactly. Do not invent a GUID.";
+                }
+
                 _logger.LogInformation(
                     "CreateOptimizedPrompt: rid={Rid} (active={ActiveId}, param={ParamId}), basePromptCode={Code}",
                     rid, activeId, paramId, basePromptCode);
-                if (string.IsNullOrEmpty(rid))
-                {
-                    return "Error: No active optimization request id (internal). Pass optimizationRequestId from the task or retry from PromptRange.";
-                }
 
                 if (_bridge.TryGetRecordedPromptCode(rid, out var existingCode))
                 {
@@ -172,7 +176,6 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 
                 var content = UnescapeJsonString(optimizedContent ?? "");
 
-                // 获取原始 PromptItem
                 var promptResult = await _promptItemService.GetWithVersionAsync(basePromptCode, isAvg: true);
                 if (promptResult == null || promptResult.PromptItem == null)
                 {
@@ -181,47 +184,60 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 
                 var originalItem = promptResult.PromptItem;
 
-                // 创建新版本请求
-                var newPromptItemRequest = new PromptItem_AddRequest
+                if (!_bridge.TryClaimVersionInsert(rid))
                 {
-                    Id = originalItem.Id,
-                    RangeId = originalItem.RangeId,
-                    ModelId = modelId,
-                    Content = content,
-                    Temperature = temperature,
-                    TopP = topP,
-                    MaxToken = maxTokens,
-                    FrequencyPenalty = frequencyPenalty,
-                    PresencePenalty = presencePenalty,
-                    StopSequences = originalItem.StopSequences,
-                    NumsOfResults = 1,
-                    IsTopTactic = false,
-                    IsNewTactic = false,
-                    IsNewSubTactic = false,
-                    IsNewAiming = true,
-                    IsDraft = false,
-                    Note = "🤖AI-Agent-Generated",
-                    ExpectedResultsJson = originalItem.ExpectedResultsJson ?? string.Empty,
-                    Prefix = originalItem.Prefix ?? string.Empty,
-                    Suffix = originalItem.Suffix ?? string.Empty,
-                    VariableDictJson = originalItem.VariableDictJson ?? string.Empty,
-                    isAIGrade = false
-                };
+                    _logger.LogWarning("CreateOptimizedPrompt: insert slot already taken rid={Rid}", rid);
+                    return "Skipped: a new version was already persisted for this optimization request (only one insert allowed).";
+                }
 
-                var newPromptItem = await _promptItemService.AddPromptItemAsync(newPromptItemRequest);
+                try
+                {
+                    var newPromptItemRequest = new PromptItem_AddRequest
+                    {
+                        Id = originalItem.Id,
+                        RangeId = originalItem.RangeId,
+                        ModelId = modelId,
+                        Content = content,
+                        Temperature = temperature,
+                        TopP = topP,
+                        MaxToken = maxTokens,
+                        FrequencyPenalty = frequencyPenalty,
+                        PresencePenalty = presencePenalty,
+                        StopSequences = originalItem.StopSequences,
+                        NumsOfResults = 1,
+                        IsTopTactic = false,
+                        IsNewTactic = false,
+                        IsNewSubTactic = false,
+                        IsNewAiming = true,
+                        IsDraft = false,
+                        Note = "🤖AI-Agent-Generated",
+                        ExpectedResultsJson = originalItem.ExpectedResultsJson ?? string.Empty,
+                        Prefix = originalItem.Prefix ?? string.Empty,
+                        Suffix = originalItem.Suffix ?? string.Empty,
+                        VariableDictJson = originalItem.VariableDictJson ?? string.Empty,
+                        isAIGrade = false
+                    };
 
-                _bridge.RecordCreatedPrompt(
-                    rid,
-                    newPromptItem.FullVersion,
-                    newPromptItem.Content,
-                    temperature,
-                    topP,
-                    maxTokens,
-                    frequencyPenalty,
-                    presencePenalty,
-                    improvementSummary);
+                    var newPromptItem = await _promptItemService.AddPromptItemAsync(newPromptItemRequest).ConfigureAwait(false);
 
-                return $"Success! New prompt created: {newPromptItem.FullVersion}. The UI will refresh; do not call shoot/grade tools — the page runs them.";
+                    _bridge.RecordCreatedPrompt(
+                        rid,
+                        newPromptItem.FullVersion,
+                        newPromptItem.Content,
+                        temperature,
+                        topP,
+                        maxTokens,
+                        frequencyPenalty,
+                        presencePenalty,
+                        improvementSummary);
+                    _logger.LogInformation("CreateOptimizedPrompt: persisted {FullVersion}", newPromptItem.FullVersion);
+                    return $"Success! New prompt created: {newPromptItem.FullVersion}. The UI will refresh; do not call shoot/grade tools — the page runs them.";
+                }
+                catch (Exception)
+                {
+                    _bridge.ReleaseVersionInsertClaim(rid);
+                    throw;
+                }
             }
             catch (Exception ex)
             {

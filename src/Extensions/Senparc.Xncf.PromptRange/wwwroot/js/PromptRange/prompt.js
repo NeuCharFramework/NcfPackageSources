@@ -3255,6 +3255,10 @@ var app = new Vue({
             this.optimizeDialogVisible = true;
         },
         async executeOptimize() {
+            if (this.optimizing) {
+                this.$message.warning('优化正在进行中，请勿重复点击');
+                return;
+            }
             if (!this.promptid) {
                 this.$message.warning('请先选择一个Prompt！');
                 return;
@@ -3288,6 +3292,7 @@ var app = new Vue({
                 return;
             }
 
+            // 尽早占位，避免校验通过后、发请求前的双击产生两次 HTTP 请求
             this.optimizing = true;
             this.optimizeErrorText = '';
             this.optimizeProgressText = 'Agent 正在推理并调用工具（可能需要数分钟，请勿关闭此窗口）…';

@@ -24,6 +24,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
     {
         private readonly PromptItemService _promptItemService;
         private readonly LlModelService _llModelService;
+        private readonly PromptOptimizationAgentBridge _bridge;
         private readonly ILogger<PromptOptimizationKernelFallbackService> _logger;
 
         private const string OptimizationPromptTemplate = @"You are a senior prompt engineer. Improve the baseline prompt according to the user requirement.
@@ -54,10 +55,12 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
         public PromptOptimizationKernelFallbackService(
             PromptItemService promptItemService,
             LlModelService llModelService,
+            PromptOptimizationAgentBridge bridge,
             ILogger<PromptOptimizationKernelFallbackService> logger)
         {
             _promptItemService = promptItemService;
             _llModelService = llModelService;
+            _bridge = bridge;
             _logger = logger;
         }
 
@@ -167,23 +170,43 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
                     isAIGrade = false
                 };
 
-                var newItem = await _promptItemService.AddPromptItemAsync(addRequest).ConfigureAwait(false);
-                _logger.LogInformation("Kernel fallback: created version {FullVersion} for RequestId={RequestId}",
-                    newItem.FullVersion, request.RequestId);
+                if (!_bridge.TryClaimVersionInsert(request.RequestId))
+                {
+                    _logger.LogWarning(
+                        "Kernel fallback: skip insert — version insert slot already taken (tool path likely wrote DB) RequestId={RequestId}",
+                        request.RequestId);
+                    return Fail(
+                        request.RequestId,
+                        "工具可能已写入新版本但未完成会话绑定；请刷新靶道列表。Kernel 回退未重复插入。");
+                }
 
-                var evalReason = string.IsNullOrWhiteSpace(reason)
-                    ? "Agent did not call CreateOptimizedPrompt; kernel fallback created a new version."
-                    : $"Agent did not call CreateOptimizedPrompt; kernel fallback: {reason}";
+                try
+                {
+                    var newItem = await _promptItemService.AddPromptItemAsync(addRequest).ConfigureAwait(false);
+                    _logger.LogInformation("Kernel fallback: created version {FullVersion} for RequestId={RequestId}",
+                        newItem.FullVersion, request.RequestId);
 
-                return new PromptOptimizationResponseEvent(
-                    request.RequestId,
-                    newItem.FullVersion,
-                    newItem.Content,
-                    new OptimizedParameters(temperature, topP, maxTokens, frequencyPenalty, presencePenalty),
-                    predictedScore,
-                    evalReason,
-                    true,
-                    null);
+                    var evalReason = string.IsNullOrWhiteSpace(reason)
+                        ? "Agent did not call CreateOptimizedPrompt; kernel fallback created a new version."
+                        : $"Agent did not call CreateOptimizedPrompt; kernel fallback: {reason}";
+
+                    _bridge.ReleaseVersionInsertClaim(request.RequestId);
+
+                    return new PromptOptimizationResponseEvent(
+                        request.RequestId,
+                        newItem.FullVersion,
+                        newItem.Content,
+                        new OptimizedParameters(temperature, topP, maxTokens, frequencyPenalty, presencePenalty),
+                        predictedScore,
+                        evalReason,
+                        true,
+                        null);
+                }
+                catch (Exception)
+                {
+                    _bridge.ReleaseVersionInsertClaim(request.RequestId);
+                    throw;
+                }
             }
             catch (Exception ex)
             {
