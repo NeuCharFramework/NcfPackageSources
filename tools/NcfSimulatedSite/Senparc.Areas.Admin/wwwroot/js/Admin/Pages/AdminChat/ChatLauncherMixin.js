@@ -1,10 +1,12 @@
 window.ChatLauncherMixin = {
   data() {
     return {
+      moduleStorageKey: 'ncf.admin.chat.selectedModuleUids',
       chatInputText: '',
       selectedModules: [],
       moduleSelectorVisible: false,
       moduleSearchKeyword: '',
+      activePreviewModuleUid: '',
       availableModules: [],
       selectedModuleUids: [],
       loadingModuleOptions: false,
@@ -26,6 +28,25 @@ window.ChatLauncherMixin = {
         );
       });
     },
+    sortedFilteredAvailableModules() {
+      const selectedUidSet = new Set(this.selectedModuleUids);
+      return this.filteredAvailableModules.slice().sort((a, b) => {
+        const aSelected = selectedUidSet.has(a.uid) ? 0 : 1;
+        const bSelected = selectedUidSet.has(b.uid) ? 0 : 1;
+        if (aSelected !== bSelected) {
+          return aSelected - bSelected;
+        }
+
+        return (a.name || '').localeCompare(b.name || '', 'zh-Hans-CN');
+      });
+    },
+    previewModule() {
+      if (!this.activePreviewModuleUid) {
+        return null;
+      }
+
+      return this.availableModules.find((item) => item.uid === this.activePreviewModuleUid) || null;
+    },
     isAllFilteredSelected() {
       if (this.filteredAvailableModules.length === 0) {
         return false;
@@ -42,7 +63,73 @@ window.ChatLauncherMixin = {
       return selectedCount > 0 && selectedCount < this.filteredAvailableModules.length;
     }
   },
+  mounted() {
+    this.restoreSelectedModuleUids();
+    this.ensureModuleOptionsLoaded(false);
+  },
+  watch: {
+    selectedModules: {
+      deep: true,
+      handler(value) {
+        const selectedUids = (value || []).map((item) => item.uid);
+        this.persistSelectedModuleUids(selectedUids);
+      }
+    },
+    sortedFilteredAvailableModules: {
+      deep: true,
+      handler() {
+        this.ensurePreviewModule();
+      }
+    }
+  },
   methods: {
+    persistSelectedModuleUids(uids) {
+      try {
+        localStorage.setItem(this.moduleStorageKey, JSON.stringify(uids || []));
+      } catch (error) {
+        console.warn('保存已选模块失败:', error);
+      }
+    },
+
+    restoreSelectedModuleUids() {
+      try {
+        const raw = localStorage.getItem(this.moduleStorageKey);
+        if (!raw) {
+          return;
+        }
+
+        const uids = JSON.parse(raw);
+        if (!Array.isArray(uids)) {
+          return;
+        }
+
+        this.selectedModuleUids = uids.filter((uid) => typeof uid === 'string' && uid.length > 0);
+      } catch (error) {
+        console.warn('读取已选模块失败:', error);
+      }
+    },
+
+    syncSelectedModulesFromUids() {
+      const uidSet = new Set(this.selectedModuleUids);
+      this.selectedModules = this.availableModules.filter((item) => uidSet.has(item.uid));
+    },
+
+    setPreviewModule(uid) {
+      this.activePreviewModuleUid = uid;
+    },
+
+    ensurePreviewModule() {
+      if (this.sortedFilteredAvailableModules.length === 0) {
+        this.activePreviewModuleUid = '';
+        return;
+      }
+
+      const exists = this.sortedFilteredAvailableModules.some((item) => item.uid === this.activePreviewModuleUid);
+      if (!exists) {
+        this.activePreviewModuleUid = this.sortedFilteredAvailableModules[0].uid;
+      }
+    },
+
     handleLauncherInputKeydown(event) {
       if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
@@ -57,7 +144,8 @@ window.ChatLauncherMixin = {
         icon: item.icon || 'fa fa-cube',
         description: item.description || '暂无描述',
         version: item.version || '',
-        menus: item.menus || []
+        menus: item.menus || [],
+        functions: item.functions || []
       };
     },
 
@@ -71,6 +159,8 @@ window.ChatLauncherMixin = {
         const response = await service.get('/Admin/Index?handler=XncfOpening');
         const moduleList = (response.data && response.data.data) ? response.data.data : [];
         this.availableModules = moduleList.map((item) => this.normalizeModuleItem(item));
+        this.syncSelectedModulesFromUids();
+        this.ensurePreviewModule();
       } catch (error) {
         console.error('加载模块列表失败:', error);
         this.$message.error('加载模块列表失败，请稍后重试');
@@ -82,6 +172,7 @@ window.ChatLauncherMixin = {
     async openModuleSelector() {
       await this.ensureModuleOptionsLoaded(false);
       this.selectedModuleUids = this.selectedModules.map((item) => item.uid);
+      this.ensurePreviewModule();
       this.moduleSelectorVisible = true;
     },
 

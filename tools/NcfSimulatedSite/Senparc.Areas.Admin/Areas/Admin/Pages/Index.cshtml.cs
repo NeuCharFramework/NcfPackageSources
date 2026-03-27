@@ -90,7 +90,7 @@ namespace Senparc.Areas.Admin.Pages
             {
                 var data = _xncfModuleServiceEx.Mapper.Map<XncfModuleDisplayDto>(z);
 
-                //TODO:去获取模块下的所有的菜单信息
+                //获取模块的菜单信息
                 IXncfRegister xncfRegister = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == data.Uid);
                 // if (xncfRegister == null)
                 // {
@@ -98,6 +98,24 @@ namespace Senparc.Areas.Admin.Pages
                 // }
                 data.Menus = (xncfRegister as Ncf.Core.Areas.IAreaRegister)?.AreaPageMenuItems ?? new List<Ncf.Core.Areas.AreaPageMenuItem>();
 
+                //获取模块的Functions信息
+                if (xncfRegister != null)
+                {
+                    var registerType = xncfRegister.GetType();
+                    var functionsByModule = Senparc.Ncf.XncfBase.Register.FunctionRenderCollection?.TryGetValue(registerType, out var funcs) == true ? funcs : null;
+                    if (functionsByModule != null && functionsByModule.Count > 0)
+                    {
+                        data.Functions = functionsByModule.Values.Select(f => new
+                        {
+                            f.FunctionRenderAttribute.Name,
+                            f.FunctionRenderAttribute.Description
+                        }).ToList();
+                    }
+                    else
+                    {
+                        data.Functions = new List<object>();
+                    }
+                }
 
                 //查找对应的更新版本
                 var register = updateXncfRegisters.FirstOrDefault(r => r.Uid == z.Uid);

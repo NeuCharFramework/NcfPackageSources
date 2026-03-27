@@ -110,6 +110,20 @@ var chatApp = new Vue({
       this.isSending = true;
       this.isAIResponding = true;
 
+      // 乐观渲染：立即显示“我”的消息，避免等待接口返回期间出现空白。
+      const tempMessageId = `temp-${Date.now()}`;
+      const tempUserMessage = {
+        id: tempMessageId,
+        roleType: 0,
+        content: messageContent,
+        addTime: new Date().toISOString(),
+        userFeedback: 0
+      };
+      this.messageList.push(tempUserMessage);
+      this.$nextTick(() => {
+        this.scrollToBottom();
+      });
+
       try {
         const requestData = {
           sessionId: this.currentSessionId,
@@ -120,9 +134,16 @@ var chatApp = new Vue({
         
         if (response.data && response.data.success && response.data.data) {
           const { userMessage, assistantMessage } = response.data.data;
-          
-          this.messageList.push(userMessage);
-          this.messageList.push(assistantMessage);
+
+                  const tempIndex = this.messageList.findIndex((item) => item.id === tempMessageId);
+                  if (tempIndex >= 0) {
+                    // 用服务端正式消息替换临时消息，确保时间、ID等数据准确。
+                    this.messageList.splice(tempIndex, 1, userMessage || tempUserMessage);
+                  }
+
+                  if (assistantMessage) {
+                    this.messageList.push(assistantMessage);
+                  }
           
           await this.loadSessionList();
           
@@ -132,11 +153,13 @@ var chatApp = new Vue({
         } else {
           console.error('发送消息失败:', response.data.errorMessage);
           this.$message.error(response.data.errorMessage || '发送消息失败');
+          this.messageList = this.messageList.filter((item) => item.id !== tempMessageId);
           this.inputMessage = messageContent;
         }
       } catch (error) {
         console.error('发送消息异常:', error);
         this.$message.error('发送消息失败，请稍后重试');
+        this.messageList = this.messageList.filter((item) => item.id !== tempMessageId);
         this.inputMessage = messageContent;
       } finally {
         this.isSending = false;
@@ -179,7 +202,6 @@ var chatApp = new Vue({
       this.messageList = [];
       this.inputMessage = '';
       this.chatInputText = '';
-      this.selectedModules = [];
     },
 
     async handleSessionCommand(command) {
