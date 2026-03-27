@@ -6,7 +6,9 @@ using Senparc.AI.Kernel;
 using Senparc.AI.Kernel.Handlers;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Areas.Admin.Domain.Services.AIPlugins;
+using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.XncfBase;
 using System;
 using System.Collections.Generic;
@@ -23,15 +25,18 @@ namespace Senparc.Areas.Admin.Domain.Services
     {
         private readonly AdminChatMessageService _messageService;
         private readonly AdminChatSessionModuleService _sessionModuleService;
+        private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<AdminChatAiService> _logger;
 
         public AdminChatAiService(
             AdminChatMessageService messageService,
             AdminChatSessionModuleService sessionModuleService,
+            IServiceProvider serviceProvider,
             ILogger<AdminChatAiService> logger)
         {
             _messageService = messageService;
             _sessionModuleService = sessionModuleService;
+            _serviceProvider = serviceProvider;
             _logger = logger;
         }
 
@@ -70,6 +75,25 @@ namespace Senparc.Areas.Admin.Domain.Services
 
             // 注册模块信息 Function Calling 插件
             iWantToRun.ImportPluginFromObject(modulePlugin, "ModuleAssistant");
+
+            // 自动加载会话关联模块中的 FunctionRender（[#sym:FunctionRender]）插件对象
+            var moduleUids = modules.Where(z => !z.XncfModuleUid.IsNullOrEmpty()).Select(z => z.XncfModuleUid).ToList();
+            var symbolPlugins = Senparc.Ncf.XncfBase.Register.FunctionRenderCollection
+                .ResolveSymbolPlugins(_serviceProvider, FunctionRenderSymbolHelper.FunctionRenderSymbolTag, moduleUids);
+
+            foreach (var pluginItem in symbolPlugins)
+            {
+                try
+                {
+                    var plugin = pluginItem.Value;
+                    var pluginName = plugin.GetType().Name;
+                    iWantToRun.ImportPluginFromObject(plugin, pluginName);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "导入 FunctionRender 插件失败：{PluginKey}", pluginItem.Key);
+                }
+            }
 
             var prompt = BuildUserPrompt(messages, userMessage);
 

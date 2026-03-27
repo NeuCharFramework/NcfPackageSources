@@ -29,6 +29,21 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
         public string ModuleVersion { get; set; }
 
         /// <summary>
+        /// 用于前端显示的模块名称（优先菜单名）
+        /// </summary>
+        public string DisplayName { get; set; }
+
+        /// <summary>
+        /// 菜单名称
+        /// </summary>
+        public string MenuName { get; set; }
+
+        /// <summary>
+        /// 模块简要说明
+        /// </summary>
+        public string ModuleDescription { get; set; }
+
+        /// <summary>
         /// 添加到会话的时间
         /// </summary>
         public DateTime AddedTime { get; set; }
@@ -54,6 +69,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
                 XncfModuleUid = entity.XncfModuleUid,
                 ModuleName = entity.ModuleName,
                 ModuleVersion = entity.ModuleVersion,
+                DisplayName = entity.ModuleName,
                 AddedTime = entity.AddedTime
             };
         }

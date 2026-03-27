@@ -67,8 +67,11 @@
                             v-for="module in currentSessionModules" 
                             :key="module.id"
                             size="mini"
-                            type="info">
-                            <i class="fa fa-cube"></i> {{ module.moduleName }}
+                            type="info"
+                            :title="module.moduleDescription || module.xncfModuleUid">
+                            <i class="fa fa-cube"></i>
+                            {{ module.displayName || module.menuName || module.moduleName || module.xncfModuleUid }}
+                            <span v-if="module.moduleVersion"> v{{ module.moduleVersion }}</span>
                         </el-tag>
                     </div>
                 </div>

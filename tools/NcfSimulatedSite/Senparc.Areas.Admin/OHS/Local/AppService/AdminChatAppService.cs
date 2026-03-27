@@ -67,7 +67,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     var modules = new List<(string uid, string name, string version)>();
                     foreach (var uid in request.ModuleUids)
                     {
-                        modules.Add((uid, uid, ""));
+                        var register = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == uid);
+                        modules.Add((uid, register?.Name ?? uid, register?.Version ?? ""));
                     }
                     await _sessionModuleService.AddModulesToSessionAsync(session.Id, modules);
                 }
@@ -146,7 +147,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 var sessionDto = AdminChatSessionDto.CreateFromEntity(session);
                 sessionDto.Messages = messages.Select(AdminChatMessageDto.CreateFromEntity).ToList();
-                sessionDto.Modules = modules.Select(AdminChatSessionModuleDto.CreateFromEntity).ToList();
+                sessionDto.Modules = modules.Select(z => MapModuleDtoWithRegisterInfo(AdminChatSessionModuleDto.CreateFromEntity(z))).ToList();
 
                 return new GetSessionDetailResponse
                 {
@@ -334,9 +335,34 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 return new GetSessionModulesResponse
                 {
-                    Modules = modules.Select(AdminChatSessionModuleDto.CreateFromEntity).ToList()
+                    Modules = modules.Select(z => MapModuleDtoWithRegisterInfo(AdminChatSessionModuleDto.CreateFromEntity(z))).ToList()
                 };
             });
+        }
+
+        private static AdminChatSessionModuleDto MapModuleDtoWithRegisterInfo(AdminChatSessionModuleDto dto)
+        {
+            if (dto == null)
+            {
+                return null;
+            }
+
+            var register = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == dto.XncfModuleUid);
+            if (register != null)
+            {
+                dto.ModuleName = string.IsNullOrWhiteSpace(dto.ModuleName) ? register.Name : dto.ModuleName;
+                dto.ModuleVersion = string.IsNullOrWhiteSpace(dto.ModuleVersion) ? register.Version : dto.ModuleVersion;
+                dto.MenuName = register.MenuName;
+                dto.ModuleDescription = register.Description;
+                dto.DisplayName = !string.IsNullOrWhiteSpace(register.MenuName) ? register.MenuName : register.Name;
+            }
+
+            if (string.IsNullOrWhiteSpace(dto.DisplayName))
+            {
+                dto.DisplayName = dto.ModuleName;
+            }
+
+            return dto;
         }
 
         #endregion
