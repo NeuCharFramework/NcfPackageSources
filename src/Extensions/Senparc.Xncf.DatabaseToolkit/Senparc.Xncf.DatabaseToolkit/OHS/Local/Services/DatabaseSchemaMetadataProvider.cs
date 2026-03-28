@@ -70,8 +70,11 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
             }
         }
 
+        // EntityBase 的完全限定类型名，避免强制引用 Senparc.Ncf.Core 程序集
+        private static readonly string EntityBaseTypeName = "Senparc.Ncf.Core.Models.EntityBase";
+
         /// <summary>
-        /// 从模块程序集中获取实体类
+        /// 从模块程序集中获取实体类（继承自 EntityBase 的非抽象类）
         /// </summary>
         private List<Type> GetEntityTypesFromModule(Assembly assembly)
         {
@@ -81,15 +84,11 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
             {
                 var types = assembly.GetTypes();
 
-                // 查找在 DatabaseModel 命名空间中的类
                 foreach (var type in types)
                 {
-                    if (type.Namespace != null &&
-                        (type.Namespace.Contains("DatabaseModel") || 
-                         type.Namespace.Contains("Models.DatabaseModel")) &&
-                        !type.IsAbstract &&
+                    if (!type.IsAbstract &&
                         !type.IsInterface &&
-                        HasId属性(type)) // 简单检查是否为实体（有 Id 属性）
+                        IsEntityBaseSubclass(type))
                     {
                         entityTypes.Add(type);
                     }
@@ -97,18 +96,29 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
             }
             catch
             {
-                // 忽略错误
+                // 忽略错误（如无法加载依赖项的程序集）
             }
 
             return entityTypes;
         }
 
         /// <summary>
-        /// 检查类型是否有 Id 属性（标识实体）
+        /// 判断类型是否继承自 Senparc.Ncf.Core.Models.EntityBase
         /// </summary>
-        private bool HasId属性(Type type)
+        private static bool IsEntityBaseSubclass(Type type)
         {
-            return type.GetProperty("Id") != null;
+            var current = type.BaseType;
+            while (current != null && current != typeof(object))
+            {
+                var fullName = current.FullName ?? string.Empty;
+                var baseName = current.IsGenericType
+                    ? (current.GetGenericTypeDefinition().FullName ?? string.Empty)
+                    : fullName;
+                if (baseName.StartsWith(EntityBaseTypeName, StringComparison.Ordinal))
+                    return true;
+                current = current.BaseType;
+            }
+            return false;
         }
 
         /// <summary>
@@ -233,6 +243,46 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
 
             var underlyingType = Nullable.GetUnderlyingType(type) ?? type;
             return filterableTypes.Contains(underlyingType);
+        }
+
+        /// <summary>
+        /// 将用户输入的模块名解析为缓存中的精确 key。
+        /// 支持：精确匹配、大小写不敏感匹配、后缀匹配（"AIKernel" → "Senparc.Xncf.AIKernel"）。
+        /// 返回 null 表示未找到。
+        /// </summary>
+        public string ResolveModuleName(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return null;
+
+            EnsureInitialized();
+
+            // 1. 精确匹配
+            if (_schemaCache.ContainsKey(input))
+                return input;
+
+            // 2. 大小写不敏感精确匹配
+            var caseInsensitive = _schemaCache.Keys
+                .FirstOrDefault(k => string.Equals(k, input, StringComparison.OrdinalIgnoreCase));
+            if (caseInsensitive != null)
+                return caseInsensitive;
+
+            // 3. 后缀匹配（如 "AIKernel" 匹配 "Senparc.Xncf.AIKernel"）
+            var suffix = _schemaCache.Keys
+                .Where(k => k.EndsWith("." + input, StringComparison.OrdinalIgnoreCase)
+                         || k.EndsWith("." + input, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            if (suffix.Count == 1)
+                return suffix[0];
+
+            // 4. 包含匹配（最宽松，仅在唯一匹配时使用）
+            var contains = _schemaCache.Keys
+                .Where(k => k.Contains(input, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            if (contains.Count == 1)
+                return contains[0];
+
+            return null;
         }
 
         /// <summary>

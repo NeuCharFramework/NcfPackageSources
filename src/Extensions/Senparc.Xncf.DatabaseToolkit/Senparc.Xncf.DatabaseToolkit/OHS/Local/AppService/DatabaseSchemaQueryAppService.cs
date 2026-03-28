@@ -43,11 +43,29 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                     if (!string.IsNullOrWhiteSpace(request.ModuleName) && !string.IsNullOrWhiteSpace(request.TableName))
                     {
                         logger.Append($"获取表详情: {request.ModuleName}.{request.TableName}");
-                        
-                        var schema = _metadataProvider.GetSchemaByTable(request.ModuleName, request.TableName);
+
+                        // 先尝试精确匹配，再尝试模糊匹配
+                        var resolvedModule = _metadataProvider.ResolveModuleName(request.ModuleName);
+                        if (resolvedModule == null)
+                        {
+                            var allModules = _metadataProvider.GetAllSchemas().Keys.OrderBy(k => k).ToList();
+                            var suggestions = allModules.Where(m =>
+                                m.Contains(request.ModuleName, StringComparison.OrdinalIgnoreCase)).ToList();
+                            var hint = suggestions.Count > 0
+                                ? $"\n可能匹配的模块: {string.Join(", ", suggestions)}"
+                                : $"\n所有可用模块: {string.Join(", ", allModules)}";
+                            return $"找不到模块: '{request.ModuleName}'{hint}";
+                        }
+
+                        var schema = _metadataProvider.GetSchemaByTable(resolvedModule, request.TableName);
                         if (schema == null)
                         {
-                            return $"找不到表: {request.ModuleName}.{request.TableName}";
+                            var availableTables = _metadataProvider.GetSchemasByModule(resolvedModule)
+                                .Select(s => s.TableName).OrderBy(t => t).ToList();
+                            var tableList = availableTables.Count > 0
+                                ? string.Join(", ", availableTables)
+                                : "（无可用表）";
+                            return $"在模块 '{resolvedModule}' 中找不到实体 '{request.TableName}'。\n可用实体: {tableList}";
                         }
 
                         var result = new
@@ -81,11 +99,23 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                     if (!string.IsNullOrWhiteSpace(request.ModuleName))
                     {
                         logger.Append($"获取模块 {request.ModuleName} 的所有表");
-                        
-                        var schemas = _metadataProvider.GetSchemasByModule(request.ModuleName);
+
+                        var resolvedModule = _metadataProvider.ResolveModuleName(request.ModuleName);
+                        if (resolvedModule == null)
+                        {
+                            var allModules = _metadataProvider.GetAllSchemas().Keys.OrderBy(k => k).ToList();
+                            var suggestions = allModules.Where(m =>
+                                m.Contains(request.ModuleName, StringComparison.OrdinalIgnoreCase)).ToList();
+                            var hint = suggestions.Count > 0
+                                ? $"\n可能匹配的模块: {string.Join(", ", suggestions)}"
+                                : $"\n所有可用模块: {string.Join(", ", allModules)}";
+                            return $"找不到模块: '{request.ModuleName}'{hint}";
+                        }
+
+                        var schemas = _metadataProvider.GetSchemasByModule(resolvedModule);
                         if (schemas.Count == 0)
                         {
-                            return $"模块 '{request.ModuleName}' 中没有可查询的表";
+                            return $"模块 '{resolvedModule}' 中没有可查询的表";
                         }
 
                         var result = new
