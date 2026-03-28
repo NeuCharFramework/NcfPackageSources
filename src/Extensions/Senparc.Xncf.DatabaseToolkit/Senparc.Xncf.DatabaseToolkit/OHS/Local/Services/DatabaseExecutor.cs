@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -98,19 +99,26 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
                 return new List<object>();
             }
 
-            var predicateType = typeof(Func<,>).MakeGenericType(entityType, typeof(bool));
+            // 构造 Expression<Func<T, bool>> 类型（而非 Func<T, bool>），与 GetFullListAsync 签名一致
+            var funcType = typeof(Func<,>).MakeGenericType(entityType, typeof(bool));
+            var expressionPredicateType = typeof(Expression<>).MakeGenericType(funcType);
+
             var alwaysTrueMethod = typeof(DatabaseExecutor)
                 .GetMethod(nameof(AlwaysTrue), BindingFlags.NonPublic | BindingFlags.Static)
                 ?.MakeGenericMethod(entityType);
             var predicate = alwaysTrueMethod?.Invoke(null, null);
 
-            var method = serviceType.GetMethod("GetFullListAsync", new[] { predicateType });
+            // 必须提供全部参数类型（包括可选参数），否则 GetMethod 无法定位到正确重载
+            var method = serviceType.GetMethod("GetFullListAsync",
+                new[] { expressionPredicateType, typeof(string), typeof(string[]) });
             if (method == null)
             {
                 return new List<object>();
             }
 
-            var task = method.Invoke(serviceInstance, new[] { predicate }) as Task;
+            // 调用时须传入全部参数（可选参数也必须明确提供）
+            var task = method.Invoke(serviceInstance,
+                new object[] { predicate, null, Array.Empty<string>() }) as Task;
             if (task == null)
             {
                 return new List<object>();
@@ -123,7 +131,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
             return result?.Cast<object>().ToList() ?? new List<object>();
         }
 
-        private static Func<T, bool> AlwaysTrue<T>()
+        private static Expression<Func<T, bool>> AlwaysTrue<T>()
         {
             return _ => true;
         }

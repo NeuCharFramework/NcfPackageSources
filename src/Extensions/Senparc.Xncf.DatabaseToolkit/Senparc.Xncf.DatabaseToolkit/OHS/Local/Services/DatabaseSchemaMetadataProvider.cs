@@ -1,7 +1,9 @@
+using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.DatabaseToolkit.OHS.Local.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -247,7 +249,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
 
         /// <summary>
         /// 将用户输入的模块名解析为缓存中的精确 key。
-        /// 支持：精确匹配、大小写不敏感匹配、后缀匹配（"AIKernel" → "Senparc.Xncf.AIKernel"）。
+        /// 匹配顺序：精确 → 大小写不敏感 → 后缀（"AIKernel"→"Senparc.Xncf.AIKernel"）
+        ///           → XncfRegisterManager.Name/MenuName → 包含（唯一时）
         /// 返回 null 表示未找到。
         /// </summary>
         public string ResolveModuleName(string input)
@@ -269,13 +272,29 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
 
             // 3. 后缀匹配（如 "AIKernel" 匹配 "Senparc.Xncf.AIKernel"）
             var suffix = _schemaCache.Keys
-                .Where(k => k.EndsWith("." + input, StringComparison.OrdinalIgnoreCase)
-                         || k.EndsWith("." + input, StringComparison.OrdinalIgnoreCase))
+                .Where(k => k.EndsWith("." + input, StringComparison.OrdinalIgnoreCase))
                 .ToList();
             if (suffix.Count == 1)
                 return suffix[0];
 
-            // 4. 包含匹配（最宽松，仅在唯一匹配时使用）
+            // 4. 通过 XncfRegisterManager.RegisterList 匹配 Name / MenuName
+            //    优先使用已注册模块的官方 Name 及人性化 MenuName 进行匹配
+            var registerMatches = XncfRegisterManager.RegisterList
+                .Where(r =>
+                    string.Equals(r.Name, input, StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(r.MenuName, input, StringComparison.OrdinalIgnoreCase) ||
+                    (r.Name?.Contains(input, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                    (r.MenuName?.Contains(input, StringComparison.OrdinalIgnoreCase) ?? false))
+                .ToList();
+
+            foreach (var register in registerMatches)
+            {
+                var assemblyName = register.GetType().Assembly.GetName().Name;
+                if (!string.IsNullOrEmpty(assemblyName) && _schemaCache.ContainsKey(assemblyName))
+                    return assemblyName;
+            }
+
+            // 5. 包含匹配（最宽松，仅在唯一匹配时使用）
             var contains = _schemaCache.Keys
                 .Where(k => k.Contains(input, StringComparison.OrdinalIgnoreCase))
                 .ToList();
@@ -283,6 +302,72 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
                 return contains[0];
 
             return null;
+        }
+
+        /// <summary>
+        /// 在已解析模块中模糊匹配实体名（表名）。
+        /// 匹配优先级（高→低）：精确 > 大小写不敏感 > 前缀/被包含 > 包含
+        /// 唯一最高分匹配时返回精确 TableName，否则返回 null。
+        /// </summary>
+        public string ResolveEntityName(string resolvedModuleName, string inputEntityName)
+        {
+            EnsureInitialized();
+            if (string.IsNullOrWhiteSpace(resolvedModuleName) || string.IsNullOrWhiteSpace(inputEntityName))
+                return null;
+
+            if (!_schemaCache.TryGetValue(resolvedModuleName, out var schemas))
+                return null;
+
+            var shortInput = GetShortTypeName(inputEntityName.Trim());
+            var fullInput = inputEntityName.Trim();
+
+            var scored = schemas
+                .Where(s => s.IsVisible)
+                .Select(s => (Schema: s, Score: ScoreEntityMatch(s, shortInput, fullInput)))
+                .Where(x => x.Score > 0)
+                .OrderByDescending(x => x.Score)
+                .ToList();
+
+            if (scored.Count == 0)
+                return null;
+
+            // 唯一最高分 → 返回；多个相同最高分 → 歧义，返回 null
+            if (scored.Count == 1 || scored[1].Score < scored[0].Score)
+                return scored[0].Schema.TableName;
+
+            return null;
+        }
+
+        /// <summary>
+        /// 对单个 schema 与输入实体名的匹配程度打分（0 = 不匹配）
+        /// </summary>
+        private static int ScoreEntityMatch(DatabaseSchemaMetadata schema, string shortInput, string fullInput)
+        {
+            var schemaShort = GetShortTypeName(schema.TableName ?? string.Empty);
+            var schemaFull = schema.EntityFullName ?? string.Empty;
+
+            // 精确匹配（短名）
+            if (string.Equals(schemaShort, shortInput, StringComparison.OrdinalIgnoreCase))
+                return 100;
+
+            // 精确匹配（全限定名）
+            if (string.Equals(schemaFull, fullInput, StringComparison.OrdinalIgnoreCase))
+                return 90;
+
+            // 前缀：schema名 以 input 开头，或 input 以 schema名 开头
+            if (schemaShort.StartsWith(shortInput, StringComparison.OrdinalIgnoreCase) ||
+                shortInput.StartsWith(schemaShort, StringComparison.OrdinalIgnoreCase))
+                return 60;
+
+            // 包含：schema名包含 input
+            if (schemaShort.Contains(shortInput, StringComparison.OrdinalIgnoreCase))
+                return 40;
+
+            // 包含：input 包含 schema名
+            if (shortInput.Contains(schemaShort, StringComparison.OrdinalIgnoreCase))
+                return 30;
+
+            return 0;
         }
 
         /// <summary>
@@ -319,6 +404,31 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
             }
 
             return new List<DatabaseSchemaDto>();
+        }
+
+        /// <summary>
+        /// 获取所有已知模块名称（缓存 key 列表），用于错误提示。
+        /// </summary>
+        public IReadOnlyList<string> GetAllModuleNames()
+        {
+            EnsureInitialized();
+            return _schemaCache.Keys.ToList().AsReadOnly();
+        }
+
+        /// <summary>
+        /// 获取指定模块下所有可见实体的短名称，用于错误提示。
+        /// </summary>
+        public IReadOnlyList<string> GetTableNames(string moduleName)
+        {
+            EnsureInitialized();
+            if (!_schemaCache.TryGetValue(moduleName, out var schemas))
+                return Array.Empty<string>();
+            return schemas
+                .Where(s => s.IsVisible)
+                .Select(s => GetShortTypeName(s.TableName ?? string.Empty))
+                .Where(n => !string.IsNullOrEmpty(n))
+                .ToList()
+                .AsReadOnly();
         }
 
         /// <summary>

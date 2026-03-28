@@ -49,18 +49,34 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                         return "模块名称和表名称不能为空";
                     }
 
-                    var schema = _metadataProvider.GetSchemaByTable(request.ModuleName, request.TableName);
-                    if (schema == null)
+                    // 模糊解析模块名
+                    var resolvedModule = _metadataProvider.ResolveModuleName(request.ModuleName);
+                    if (resolvedModule == null)
                     {
-                        return $"找不到表: {request.ModuleName}.{request.TableName}";
+                        var available = _metadataProvider.GetAllModuleNames();
+                        return $"找不到模块 '{request.ModuleName}'。可用模块：{string.Join(", ", available)}";
                     }
 
-                    logger.Append($"查询表 {request.ModuleName}.{request.TableName}");
+                    // 模糊解析实体名
+                    var resolvedTable = _metadataProvider.ResolveEntityName(resolvedModule, request.TableName);
+                    if (resolvedTable == null)
+                    {
+                        var available = _metadataProvider.GetTableNames(resolvedModule);
+                        return $"找不到表 '{request.TableName}'（模块 '{resolvedModule}'）。可用实体：{string.Join(", ", available)}";
+                    }
+
+                    var schema = _metadataProvider.GetSchemaByTable(resolvedModule, resolvedTable);
+                    if (schema == null)
+                    {
+                        return $"找不到表: {resolvedModule}.{resolvedTable}";
+                    }
+
+                    logger.Append($"查询表 {resolvedModule}.{resolvedTable}（原始输入: {request.ModuleName}.{request.TableName}）");
 
                     // 执行查询
                     var result = await _databaseExecutor.QueryRecordsAsync(
-                        request.ModuleName,
-                        request.TableName,
+                        resolvedModule,
+                        resolvedTable,
                         request.Filter,
                         request.PageNumber,
                         request.PageSize);
@@ -95,15 +111,31 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                         return "模块名称和表名称不能为空";
                     }
 
-                    var schema = _metadataProvider.GetSchemaByTable(request.ModuleName, request.TableName);
-                    if (schema == null)
+                    // 模糊解析模块名
+                    var resolvedModule = _metadataProvider.ResolveModuleName(request.ModuleName);
+                    if (resolvedModule == null)
                     {
-                        return $"找不到表: {request.ModuleName}.{request.TableName}";
+                        var available = _metadataProvider.GetAllModuleNames();
+                        return $"找不到模块 '{request.ModuleName}'。可用模块：{string.Join(", ", available)}";
                     }
 
-                    logger.Append($"获取 {request.ModuleName}.{request.TableName} 的统计信息");
+                    // 模糊解析实体名
+                    var resolvedTable = _metadataProvider.ResolveEntityName(resolvedModule, request.TableName);
+                    if (resolvedTable == null)
+                    {
+                        var available = _metadataProvider.GetTableNames(resolvedModule);
+                        return $"找不到表 '{request.TableName}'（模块 '{resolvedModule}'）。可用实体：{string.Join(", ", available)}";
+                    }
 
-                    var stats = await _databaseExecutor.GetTableStatisticsAsync(request.ModuleName, request.TableName);
+                    var schema = _metadataProvider.GetSchemaByTable(resolvedModule, resolvedTable);
+                    if (schema == null)
+                    {
+                        return $"找不到表: {resolvedModule}.{resolvedTable}";
+                    }
+
+                    logger.Append($"获取 {resolvedModule}.{resolvedTable} 的统计信息（原始输入: {request.ModuleName}.{request.TableName}）");
+
+                    var stats = await _databaseExecutor.GetTableStatisticsAsync(resolvedModule, resolvedTable);
 
                     return JsonSerializer.Serialize(stats, new JsonSerializerOptions 
                     { 

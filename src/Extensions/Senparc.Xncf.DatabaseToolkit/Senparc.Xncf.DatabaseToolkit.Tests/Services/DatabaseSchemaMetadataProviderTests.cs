@@ -8,13 +8,13 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
     // =====================
     // 测试用假实体类（继承 EntityBase<int>，会被扫描到）
     // =====================
-    internal class FakeTestEntity : EntityBase<int>
+    public class FakeTestEntity : EntityBase<int>
     {
         public string Name { get; set; } = string.Empty;
         public int Amount { get; set; }
     }
 
-    internal class AnotherFakeEntity : EntityBase<long>
+    public class AnotherFakeEntity : EntityBase<long>
     {
         public string Title { get; set; } = string.Empty;
     }
