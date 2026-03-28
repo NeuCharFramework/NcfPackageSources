@@ -19,6 +19,10 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
     {
         private readonly List<AdminChatSessionModule> _sessionModules;
 
+        /// <summary>
+        /// 初始化模块助手插件。
+        /// </summary>
+        /// <param name="sessionModules">当前会话关联模块列表。</param>
         public ModuleAssistantPlugin(List<AdminChatSessionModule> sessionModules)
         {
             _sessionModules = sessionModules ?? new List<AdminChatSessionModule>();

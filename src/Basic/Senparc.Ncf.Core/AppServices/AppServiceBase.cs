@@ -22,17 +22,17 @@ namespace Senparc.Ncf.Core.AppServices
             CancellationToken = new CancellationToken();
         }
 
-        public T GetService<T>()
+        public T? GetService<T>()
         {
             return ServiceProvider.GetService<T>();
         }
 
-        public T GetRequiredService<T>()
+        public T GetRequiredService<T>() where T : notnull
         {
             return ServiceProvider.GetRequiredService<T>();
         }
 
-        public T GetRequiredKeyedService<T>(object? serviceKey)
+        public T GetRequiredKeyedService<T>(object? serviceKey) where T : notnull
         {
             return ServiceProvider.GetRequiredKeyedService<T>(serviceKey);
         }

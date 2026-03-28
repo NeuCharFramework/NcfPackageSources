@@ -30,6 +30,13 @@ namespace Senparc.Areas.Admin.Domain.Services
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<AdminChatAiService> _logger;
 
+        /// <summary>
+        /// 初始化管理后台聊天 AI 服务。
+        /// </summary>
+        /// <param name="messageService">聊天消息服务。</param>
+        /// <param name="sessionModuleService">会话模块服务。</param>
+        /// <param name="serviceProvider">服务提供器。</param>
+        /// <param name="logger">日志记录器。</param>
         public AdminChatAiService(
             AdminChatMessageService messageService,
             AdminChatSessionModuleService sessionModuleService,
@@ -42,6 +49,13 @@ namespace Senparc.Areas.Admin.Domain.Services
             _logger = logger;
         }
 
+        /// <summary>
+        /// 生成 AI 回复内容并返回所使用的模型标识。
+        /// </summary>
+        /// <param name="sessionId">会话 Id。</param>
+        /// <param name="userId">用户 Id。</param>
+        /// <param name="userMessage">用户输入消息。</param>
+        /// <returns>返回回复文本与模型标识。</returns>
         public async Task<(string response, string modelIdentifier)> GenerateResponseAsync(int sessionId, int userId, string userMessage)
         {
             var setting = Senparc.AI.Config.SenparcAiSetting as SenparcAiSetting;
