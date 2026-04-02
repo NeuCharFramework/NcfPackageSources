@@ -5,6 +5,7 @@ using Senparc.Areas.Admin.Domain.Services;
 using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase;
@@ -62,16 +63,25 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 var session = await _sessionService.CreateSessionAsync(title, userId);
 
+                var moduleUidSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                 if (request.ModuleUids != null && request.ModuleUids.Any())
                 {
-                    var modules = new List<(string uid, string name, string version)>();
-                    foreach (var uid in request.ModuleUids)
+                    foreach (var uid in request.ModuleUids.Where(z => !string.IsNullOrWhiteSpace(z)))
                     {
-                        var register = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == uid);
-                        modules.Add((uid, register?.Name ?? uid, register?.Version ?? ""));
+                        moduleUidSet.Add(uid);
                     }
-                    await _sessionModuleService.AddModulesToSessionAsync(session.Id, modules);
                 }
+
+                moduleUidSet.Add(SiteConfig.SYSTEM_XNCF_MODULE_XNCF_MODULE_MANAGER_UID);
+
+                var modules = new List<(string uid, string name, string version)>();
+                foreach (var uid in moduleUidSet)
+                {
+                    var register = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == uid);
+                    modules.Add((uid, register?.Name ?? uid, register?.Version ?? ""));
+                }
+
+                await _sessionModuleService.AddModulesToSessionAsync(session.Id, modules);
 
                 if (!string.IsNullOrEmpty(request.InitialMessage))
                 {
