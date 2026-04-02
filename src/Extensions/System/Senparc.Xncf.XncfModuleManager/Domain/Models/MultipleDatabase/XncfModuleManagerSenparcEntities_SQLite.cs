@@ -20,15 +20,15 @@ namespace Senparc.Xncf.XncfModuleManager.Models
 
 
     /// <summary>
-    /// 设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
-    /// <para>1、切换至 Debug 模式</para>
-    /// <para>2、运行：PM> add-migration [更新名称] -c XncfModuleManagerSenparcEntities_Sqlite -o Domain/Migrations/Migrations.Sqlite </para>
+    /// Design-time DbContext creation (used only to create Code-First database migrations during development; not executed in production).
+    /// <para>1. Switch to Debug mode.</para>
+    /// <para>2. Run: PM> add-migration [MigrationName] -c XncfModuleManagerSenparcEntities_Sqlite -o Domain/Migrations/Migrations.Sqlite </para>
     /// </summary>
     public class SenparcDbContextFactory_Sqlite : SenparcDesignTimeDbContextFactoryBase<XncfModuleManagerSenparcEntities_Sqlite, Register>
     {
         protected override Action<IApplicationBuilder> AppAction => app =>
         {
-            //指定其他数据库
+            //Use another database
             app.UseNcfDatabase("Senparc.Ncf.Database.Sqlite", "Senparc.Ncf.Database.Sqlite", "SqliteMemoryDatabaseConfiguration");
         };
 
