@@ -1,62 +1,64 @@
-# 任务 1 完成总结：EventBus 高并发优化
+# Task 1 Completion Summary: EventBus High-Concurrency Optimization
 
-## ✅ 已完成的改进
+## ✅ Completed Improvements
 
-### 1. **高并发支持**
-- ✅ 重构 `EventBusHostedService`，支持并发事件处理
-- ✅ 使用 `SemaphoreSlim` 控制最大并发度（可配置）
-- ✅ 修改 `UnboundedChannelOptions.SingleReader = false`，支持多消费者
+### 1. High-concurrency support
+- ✅ Refactored EventBusHostedService to support concurrent event processing.
+- ✅ Added SemaphoreSlim to control maximum concurrency (configurable).
+- ✅ Updated UnboundedChannelOptions.SingleReader = false to support multiple consumers.
 
-### 2. **防止重复引用机制**
-- ✅ 在 `InMemoryEventBus` 中实现事件 ID 追踪
-- ✅ 使用 `ConcurrentDictionary<Guid, DateTime>` 记录已处理的事件
-- ✅ 滑动窗口机制（10 分钟过期自动清理）
-- ✅ 线程安全的重复检测
+### 2. Duplicate-reference prevention mechanism
+- ✅ Implemented event ID tracking in InMemoryEventBus.
+- ✅ Used ConcurrentDictionary<Guid, DateTime> to record processed events.
+- ✅ Added sliding-window cleanup (auto-expire after 10 minutes).
+- ✅ Ensured thread-safe duplicate detection.
 
-### 3. **失败重试机制**
-- ✅ 实现指数退避策略（1s, 2s, 4s...）
-- ✅ 可配置重试次数和是否启用重试
-- ✅ 详细的重试日志记录
+### 3. Failure retry mechanism
+- ✅ Implemented exponential backoff strategy (1s, 2s, 4s...).
+- ✅ Added configurable retry count and retry switch.
+- ✅ Added detailed retry logging.
 
-### 4. **配置选项**
-新增 `EventBusOptions` 类，支持：
+### 4. Configuration options
+Added EventBusOptions class with support for:
+
 ```csharp
 public class EventBusOptions
 {
-    public int MaxConcurrency { get; set; }              // 最大并发数
-    public bool EnableDuplicateDetection { get; set; }   // 启用重复检测
-    public bool RetryOnFailure { get; set; }             // 启用失败重试
-    public int MaxRetryAttempts { get; set; }            // 最大重试次数
+    public int MaxConcurrency { get; set; }              // Maximum concurrency
+    public bool EnableDuplicateDetection { get; set; }   // Enable duplicate detection
+    public bool RetryOnFailure { get; set; }             // Enable retry on failure
+    public int MaxRetryAttempts { get; set; }            // Maximum retry attempts
 }
 ```
 
-### 5. **性能监控**
-- ✅ 事件处理时间记录
-- ✅ Handler 执行时间记录
-- ✅ 重复事件告警
-- ✅ 详细的日志记录（支持 Debug/Information 级别）
+### 5. Performance monitoring
+- ✅ Event processing time tracking.
+- ✅ Handler execution time tracking.
+- ✅ Duplicate event warning logs.
+- ✅ Detailed logging (Debug/Information levels).
 
-## 📊 性能对比
+## 📊 Performance Comparison
 
-### 优化前（串行处理）
-- 10,000 个事件处理时间：~50-100 秒
-- 并发度：1（完全串行）
-- 吞吐量：~100-200 事件/秒
+### Before optimization (serial processing)
+- Time for 10,000 events: ~50-100 seconds
+- Concurrency: 1 (fully serial)
+- Throughput: ~100-200 events/second
 
-### 优化后（并发处理，MaxConcurrency = 20）
-- 10,000 个事件处理时间：~5-10 秒
-- 并发度：20（可配置）
-- 吞吐量：~1000-2000 事件/秒
-- **性能提升：10-20 倍**
+### After optimization (concurrent, MaxConcurrency = 20)
+- Time for 10,000 events: ~5-10 seconds
+- Concurrency: 20 (configurable)
+- Throughput: ~1000-2000 events/second
+- Performance improvement: 10-20x
 
-## 🎯 使用建议
+## 🎯 Usage Recommendations
 
-### 高并发场景配置
+### Configuration for high-concurrency scenarios
+
 ```csharp
 services.AddSenparcEventBus(
     options =>
     {
-        options.MaxConcurrency = Environment.ProcessorCount * 2;  // CPU 核心数 * 2
+        options.MaxConcurrency = Environment.ProcessorCount * 2;  // CPU core count * 2
         options.EnableDuplicateDetection = true;
         options.RetryOnFailure = true;
         options.MaxRetryAttempts = 3;
@@ -65,107 +67,113 @@ services.AddSenparcEventBus(
 );
 ```
 
-### 数据库密集型场景
+### Database-intensive scenarios
+
 ```csharp
-options.MaxConcurrency = 10;  // 数据库连接池大小 / 2
+options.MaxConcurrency = 10;  // Database connection pool size / 2
 ```
 
-### 外部 API 调用场景
+### External API call scenarios
+
 ```csharp
-options.MaxConcurrency = 50;  // 根据外部 API QPS 限制
+options.MaxConcurrency = 50;  // Based on external API QPS limit
 ```
 
-## 📝 重要变更
+## 📝 Important Changes
 
-### API 变更
+### API change
+
 ```csharp
-// 旧版本
+// Old version
 services.AddSenparcEventBus(typeof(Handler).Assembly);
 
-// 新版本（兼容旧版本）
+// New version (backward-compatible)
 services.AddSenparcEventBus(
-    options => { /* 可选配置 */ },
+    options => { /* optional configuration */ },
     typeof(Handler).Assembly
 );
 ```
 
-### 事件基类增强
+### IntegrationEvent base class enhancement
+
 ```csharp
 public abstract record IntegrationEvent : IIntegrationEvent
 {
     public Guid Id { get; } = Guid.NewGuid();
     public DateTime CreationDate { get; } = DateTime.UtcNow;
-    
-    // 新增：用于日志记录的摘要信息
+
+    // New: summary info for logging
     public virtual string GetEventSummary() => $"{GetType().Name}[{Id:N}]";
 }
 ```
 
-## ⚠️ 注意事项
+## ⚠️ Notes
 
-1. **事件顺序不保证**
-   - 并发处理会打乱事件顺序
-   - 如需严格顺序，设置 `MaxConcurrency = 1`
+1. Event order is not guaranteed.
+   - Concurrent processing may reorder events.
+   - For strict ordering, set MaxConcurrency = 1.
 
-2. **数据库连接池**
-   - 确保连接池大小 >= MaxConcurrency
-   - 建议：`MaxConcurrency = ConnectionPoolSize / 2`
+2. Database connection pool.
+   - Ensure connection pool size >= MaxConcurrency.
+   - Recommended: MaxConcurrency = ConnectionPoolSize / 2.
 
-3. **内存消耗**
-   - 重复检测会占用内存（每个事件 ~40 字节）
-   - 10 分钟窗口约占用：`40 * 事件数 * 10分钟` 字节
+3. Memory consumption.
+   - Duplicate detection uses memory (about 40 bytes per event).
+   - 10-minute window usage is approximately: 40 * eventCount * 10 minutes bytes.
 
-4. **事件幂等性**
-   - 尽管有重复检测，Handler 仍应设计为幂等
-   - 防止应用重启导致的重复处理
+4. Event idempotency.
+   - Even with duplicate detection, handlers should remain idempotent.
+   - This prevents duplicate side effects after app restart.
 
-## 📚 文档
+## 📚 Documentation
 
-详细文档已创建：
-- `/src/Basic/Senparc.Ncf.Core/EventBus/README.md`
+Detailed documentation has been created at:
+- /src/Basic/Senparc.Ncf.Core/EventBus/README.md
 
-## ✅ 测试建议
+## ✅ Testing Recommendations
 
-### 并发测试
+### Concurrency test
+
 ```csharp
 [TestMethod]
 public async Task EventBus_HighConcurrency_Test()
 {
     var eventCount = 10000;
     var startTime = DateTime.UtcNow;
-    
+
     for (int i = 0; i < eventCount; i++)
     {
         await _eventBus.PublishAsync(new TestEvent(i));
     }
-    
-    // 等待所有事件处理完成
+
+    // Wait until all events are processed
     await WaitForAllEventsProcessed();
-    
+
     var duration = DateTime.UtcNow - startTime;
-    Console.WriteLine($"处理 {eventCount} 个事件耗时: {duration.TotalSeconds}s");
-    Assert.IsTrue(duration.TotalSeconds < 20, "高并发性能不达标");
+    Console.WriteLine($"Processed {eventCount} events in: {duration.TotalSeconds}s");
+    Assert.IsTrue(duration.TotalSeconds < 20, "High-concurrency performance does not meet target");
 }
 ```
 
-### 重复检测测试
+### Duplicate detection test
+
 ```csharp
 [TestMethod]
 public async Task EventBus_DuplicateDetection_Test()
 {
     var @event = new TestEvent(1);
     var eventId = @event.Id;
-    
-    // 发布相同 ID 的事件两次
+
+    // Publish same ID event twice
     await _eventBus.PublishAsync(@event);
     await Task.Delay(100);
     await _eventBus.PublishAsync(@event);
-    
-    // 验证只处理了一次
+
+    // Verify it was processed only once
     Assert.AreEqual(1, _handlerCallCount);
 }
 ```
 
-## 🔄 下一步
+## 🔄 Next Step
 
-任务 2：检查 AgentsManager 和 PromptRange 的实现和集成
+Task 2: Inspect implementation and integration between AgentsManager and PromptRange.
