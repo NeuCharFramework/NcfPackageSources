@@ -57,7 +57,7 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
                         response.Data += logger.Append($"[Function: {function.Value.Key}]\r\n");
                         response.Data += logger.Append($"[内部方法: {function.Key}]\r\n");
 
-                        //response.Data = logger.Append($"名称：{function.Value.FunctionRenderAttribute.Name}\r\n");
+                        //response.Data = logger.Append($"Name: {function.Value.FunctionRenderAttribute.Name}\r\n");
 
                         try
                         {
