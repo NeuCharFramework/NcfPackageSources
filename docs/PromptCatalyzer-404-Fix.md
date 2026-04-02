@@ -1,111 +1,119 @@
-# 404 错误修复说明 - PromptCatalyzer API 端点
+# 404 Fix Notes - PromptCatalyzer API Endpoints
 
-## 🐛 问题描述
+## 🐛 Issue Description
 
-**错误信息**: 
+**Errors**:
+
 ```
 GET http://localhost:5000/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/CheckStatus 404 (Not Found)
 GET http://localhost:5000/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/GetAvailableModels 404 (Not Found)
 ```
 
-**原因**: 新创建的 `PromptCatalyzerInitAppService` 类使用了 `[ApiBind]` 特性，但由于 AgentsManager 项目的依赖配置问题，该特性无法正常工作，导致 API 端点未被注册。
+**Cause**: The newly created PromptCatalyzerInitAppService used the ApiBind attribute, but because of dependency configuration issues in the AgentsManager project, the attribute did not work correctly and the API endpoints were not registered.
 
-## 🔧 解决方案
+## 🔧 Solution
 
-### 1. 删除问题文件
-删除了有问题的 AppService 实现：
-- `src/Extensions/Senparc.Xncf.AgentsManager/Application/AppService/PromptCatalyzerInitAppService.cs`
+### 1. Remove problematic file
+Removed the problematic AppService implementation:
 
-### 2. 创建传统 API Controller
+- src/Extensions/Senparc.Xncf.AgentsManager/Application/AppService/PromptCatalyzerInitAppService.cs
 
-**新文件**: `src/Extensions/Senparc.Xncf.AgentsManager/OHS/Remote/Controllers/PromptCatalyzerInitController.cs`
+### 2. Create traditional API controller
 
-使用传统的 ASP.NET Core Web API Controller 方式：
+**New file**: src/Extensions/Senparc.Xncf.AgentsManager/OHS/Remote/Controllers/PromptCatalyzerInitController.cs
+
+Use the standard ASP.NET Core Web API Controller approach:
 
 ```csharp
 [ApiController]
 [Route("api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService")]
 public class PromptCatalyzerInitController : ControllerBase
 {
-    // 三个 API 端点：
+    // Three API endpoints:
     // GET  /api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/CheckStatus
-    // GET  /api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/GetAvailableModels  
+    // GET  /api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/GetAvailableModels
     // POST /api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/Initialize
 }
 ```
 
-### 3. API 端点详情
+### 3. Endpoint details
 
 #### CheckStatus (GET)
-- **路径**: `/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/CheckStatus`
-- **功能**: 检查 PromptCatalyzer Agent 是否已存在
-- **返回**: `AppResponseBase<PromptCatalyzerStatusDto>`
+- Path: /api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/CheckStatus
+- Purpose: Check whether PromptCatalyzer Agent already exists
+- Return type: AppResponseBase<PromptCatalyzerStatusDto>
 
 #### GetAvailableModels (GET)
-- **路径**: `/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/GetAvailableModels`
-- **功能**: 获取所有可用的 Chat 类型 AI Model
-- **返回**: `AppResponseBase<AvailableModelsDto>`
+- Path: /api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/GetAvailableModels
+- Purpose: Get all available AI models of chat type
+- Return type: AppResponseBase<AvailableModelsDto>
 
 #### Initialize (POST)
-- **路径**: `/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/Initialize`
-- **功能**: 初始化 PromptCatalyzer Agent 和相关 Prompt 资源
-- **参数**: `{ "modelId": 1 }`
-- **返回**: `AppResponseBase<InitializeResponseDto>`
+- Path: /api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/Initialize
+- Purpose: Initialize PromptCatalyzer Agent and related Prompt resources
+- Parameters: { "modelId": 1 }
+- Return type: AppResponseBase<InitializeResponseDto>
 
-### 4. 路由设计
+### 4. Routing design
 
-为了保持前端代码不变，Controller 的路由被设置为与原 AppService 相同的格式：
-- 使用 `[Route("api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService")]`
-- 方法使用相对路径如 `[HttpGet("CheckStatus")]`
+To keep frontend code unchanged, controller routes use the same format as the original AppService:
 
-## ✅ 编译验证
+- Base route: [Route("api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService")]
+- Method route style: [HttpGet("CheckStatus")], etc.
+
+## ✅ Build Verification
 
 ```bash
 dotnet build src/Extensions/Senparc.Xncf.AgentsManager/Senparc.Xncf.AgentsManager.csproj
-# 结果: ✅ 0 错误，10 个警告
+# Result: ✅ 0 errors, 10 warnings
 ```
 
-## 🚀 下一步操作
+## 🚀 Next Steps
 
-**必须重启应用程序**才能让新的 Controller 生效：
+Application restart is required for the new controller to take effect:
 
-1. **停止当前应用** (如果正在运行)
-2. **清理编译缓存** (可选但推荐):
-   ```bash
-   dotnet clean
-   ```
-3. **重新启动应用**:
-   ```bash
-   dotnet run --project tools/NcfSimulatedSite/Senparc.Web/Senparc.Web.csproj
-   ```
-4. **刷新浏览器页面** (Ctrl+Shift+R / Cmd+Shift+R)
-5. **测试"优化"按钮**
+1. Stop the current application (if running).
+2. Clean build cache (optional but recommended):
 
-## 📋 技术说明
+```bash
+dotnet clean
+```
 
-### 为什么使用 Controller 而不是 AppService?
+3. Restart application:
 
-1. **兼容性问题**: `[ApiBind]` 特性在 AgentsManager 项目中无法正常解析
-2. **依赖问题**: AgentsManager 使用 NuGet 包引用而非项目引用，可能导致类型解析问题
-3. **可靠性**: 传统 Controller 是 ASP.NET Core 的标准方式，更稳定可靠
+```bash
+dotnet run --project tools/NcfSimulatedSite/Senparc.Web/Senparc.Web.csproj
+```
 
-### Controller vs AppService 对比
+4. Hard refresh browser (Ctrl+Shift+R / Cmd+Shift+R).
+5. Re-test the Optimize button.
 
-| 特性 | AppService + [ApiBind] | Traditional Controller |
+## 📋 Technical Notes
+
+### Why use Controller instead of AppService?
+
+1. Compatibility issue: ApiBind could not be resolved correctly in AgentsManager.
+2. Dependency issue: AgentsManager uses NuGet package references instead of project references, which may affect type resolution.
+3. Reliability: Traditional Controller is standard ASP.NET Core implementation and is more stable.
+
+### Controller vs AppService
+
+| Capability | AppService + ApiBind | Traditional Controller |
 |------|------------------------|------------------------|
-| 路由注册 | 动态自动注册 | ASP.NET Core 自动扫描 |
-| 依赖要求 | Senparc.CO2NET.WebApi | 内置支持 |
-| 配置复杂度 | 低 | 低 |
-| 稳定性 | 依赖框架版本 | 高（标准实现） |
+| Route registration | Dynamic auto registration | ASP.NET Core auto discovery |
+| Dependency requirement | Senparc.CO2NET.WebApi | Built-in support |
+| Config complexity | Low | Low |
+| Stability | Framework-version dependent | High (standard implementation) |
 
-## 🔐 权限验证
+## 🔐 Authorization
 
-Controller 级别的权限验证将在下一步实施，通过：
-- `[Authorize]` 特性
-- 或自定义授权过滤器
+Controller-level authorization will be implemented in the next step using:
+
+- Authorize attribute
+- Or a custom authorization filter
 
 ---
 
-**修复时间**: 2026-03-24  
-**影响范围**: PromptCatalyzer 初始化功能  
-**状态**: ✅ 已修复，等待重启应用验证
+**Fix Time**: 2026-03-24  
+**Impact Scope**: PromptCatalyzer initialization workflow  
+**Status**: ✅ Fixed, pending verification after application restart
