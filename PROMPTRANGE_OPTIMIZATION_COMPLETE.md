@@ -1,127 +1,127 @@
-# PromptRange 自动优化功能 - 实施完成
+# PromptRange Auto-Optimization - Implementation Complete
 
-## 📌 快速导航
+## 📌 Quick Navigation
 
-完整的技术文档请查看: [`docs/PromptRange-Auto-Optimization-Guide.md`](./docs/PromptRange-Auto-Optimization-Guide.md)
-
----
-
-## ✅ 已完成的功能
-
-### 1. 智能初始化检测
-- 首次使用时自动检测 PromptCatalyzer 是否已初始化
-- 引导用户选择 AI Model 并自动创建所需资源
-- 支持多个 AI Model 选择（只显示 Chat 类型）
-
-### 2. 基于打分的自动优化建议
-
-#### 场景 A: 单次打分后的即时建议
-- **触发**: AI 评分或手动评分完成后
-- **条件**: 分数 < 6.0 分
-- **提示**: 弹出确认对话框，引导用户立即优化
-
-#### 场景 B: 切换 Prompt 时的平均分提示
-- **触发**: 切换到某个 Prompt 后
-- **条件**: 平均分 < 6.0 分
-- **提示**: 右下角通知（非阻塞式）
-
-### 3. 完整的优化工作流
-- 收集完整上下文（Prompt 内容、参数、用户需求）
-- 调用 AgentsManager 的 PromptCatalyzer 进行 AI 分析
-- 生成新的优化版本
-- 显示详细结果（参数对比、预测分数、优化说明）
-- 自动刷新列表并切换到新 Prompt
+For the full technical documentation, see: [docs/PromptRange-Auto-Optimization-Guide.md](./docs/PromptRange-Auto-Optimization-Guide.md)
 
 ---
 
-## 🚀 快速测试
+## ✅ Completed Features
 
-### 编译项目
+### 1. Smart initialization detection
+- Automatically checks whether PromptCatalyzer is initialized on first use.
+- Guides users to choose an AI model and automatically creates required resources.
+- Supports multiple AI model options (chat-type models only).
+
+### 2. Score-based auto-optimization suggestions
+
+#### Scenario A: Immediate suggestion after single score
+- Trigger: AI scoring or manual scoring completes.
+- Condition: Score < 6.0.
+- Prompt style: Confirmation dialog to guide immediate optimization.
+
+#### Scenario B: Average score suggestion when switching prompts
+- Trigger: User switches to a prompt.
+- Condition: Average score < 6.0.
+- Prompt style: Bottom-right notification (non-blocking).
+
+### 3. End-to-end optimization workflow
+- Collect complete context (prompt content, parameters, user requirements).
+- Call PromptCatalyzer in AgentsManager for AI analysis.
+- Generate a new optimized version.
+- Show detailed results (parameter comparison, predicted score, optimization notes).
+- Auto-refresh list and switch to the new prompt.
+
+---
+
+## 🚀 Quick Test
+
+### Build project
 ```bash
 dotnet build
 ```
 
-### 测试流程
-1. 打开 PromptRange 页面
-2. 选择一个 Prompt，点击"优化"按钮
-3. **首次使用**: 选择 AI Model → 初始化（30-60秒）→ 自动打开优化对话框
-4. **后续使用**: 直接打开优化对话框
-5. 输入优化需求 → 等待结果 → 查看优化后的 Prompt
+### Test flow
+1. Open the PromptRange page.
+2. Select a prompt and click the Optimize button.
+3. First use: choose AI model -> initialize (30-60s) -> optimization dialog opens automatically.
+4. Subsequent use: optimization dialog opens directly.
+5. Enter optimization requirements -> wait for result -> review optimized prompt.
 
-### 测试自动建议
-1. 对 PromptResult 进行打分
-2. 如果分数 < 6.0，会弹出优化建议
-3. 点击"立即优化"进入优化流程
-
----
-
-## 📁 新增/修改的文件
-
-### 新增
-- ✅ `src/Extensions/Senparc.Xncf.AgentsManager/Application/AppService/PromptCatalyzerInitAppService.cs`
-- ✅ `docs/PromptRange-Auto-Optimization-Guide.md`（详细技术文档）
-
-### 修改
-- ✅ `src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js`
-  - 新增 `checkScoreAndSuggestOptimization()` - 打分后优化建议
-  - 新增 `checkPromptAverageScoreAndSuggest()` - 平均分优化建议
-  - 更新 `saveManualScore()` - 集成优化建议
-  - 更新 `getPromptetail()` - 集成平均分检查
+### Test auto-suggestions
+1. Score a PromptResult.
+2. If score < 6.0, optimization suggestion dialog will pop up.
+3. Click Optimize Now to enter the optimization flow.
 
 ---
 
-## 🎯 核心改进
+## 📁 Added/Modified Files
 
-### 用户体验
-- **零门槛**: 首次使用自动引导初始化
-- **智能提示**: 基于数据的个性化建议
-- **非侵入**: 不阻塞正常操作流程
-- **全自动**: 从初始化到优化全程自动化
+### Added
+- ✅ src/Extensions/Senparc.Xncf.AgentsManager/Application/AppService/PromptCatalyzerInitAppService.cs
+- ✅ docs/PromptRange-Auto-Optimization-Guide.md (detailed technical documentation)
 
-### 技术实现
-- **EventBus 集成**: 使用高性能事件系统
-- **模块解耦**: AgentsManager 和 PromptRange 职责清晰
-- **错误处理**: 完善的异常捕获和用户提示
-- **日志完善**: 关键步骤均有日志记录
-
----
-
-## 📊 验收状态
-
-### 后端 API
-- [x] CheckStatus - 检查初始化状态
-- [x] GetAvailableModels - 获取可用模型
-- [x] Initialize - 执行初始化
-- [x] OptimizeAsync - 执行优化
-
-### 前端功能
-- [x] 初始化检测与引导
-- [x] Model 选择界面
-- [x] 优化对话框
-- [x] 打分后优化建议（确认框）
-- [x] 平均分优化建议（通知）
-- [x] 结果展示与自动切换
-
-### 编译测试
-- [x] AgentsManager 编译通过
-- [x] PromptRange 编译通过
-- [ ] 功能端到端测试（需用户运行应用测试）
+### Modified
+- ✅ src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js
+  - Added checkScoreAndSuggestOptimization() - post-score optimization suggestion
+  - Added checkPromptAverageScoreAndSuggest() - average-score suggestion
+  - Updated saveManualScore() - integrated optimization suggestions
+  - Updated getPromptetail() - integrated average-score check
 
 ---
 
-## 🎉 总结
+## 🎯 Core Improvements
 
-PromptRange 的 AI 自动优化功能已全面实现，包括：
+### User experience
+- Zero barrier: first-use initialization is fully guided.
+- Smart prompting: data-driven personalized suggestions.
+- Non-intrusive: does not block normal operations.
+- End-to-end automation: initialization through optimization is automated.
 
-1. **智能初始化**: 自动检测并引导创建所需资源
-2. **双重建议机制**: 单次打分 + 平均分两种触发方式
-3. **完整优化流程**: 从分析到创建新版本的全自动化
-4. **优秀的用户体验**: 友好提示、加载状态、详细结果展示
-
-**立即启动应用并测试！** 🚀
+### Technical implementation
+- EventBus integration: uses high-performance event system.
+- Module decoupling: clear responsibility split between AgentsManager and PromptRange.
+- Error handling: robust exception capture and user-facing feedback.
+- Logging: key workflow steps are fully logged.
 
 ---
 
-## 📞 需要帮助？
+## 📊 Acceptance Status
 
-查看详细文档: [`docs/PromptRange-Auto-Optimization-Guide.md`](./docs/PromptRange-Auto-Optimization-Guide.md)
+### Backend API
+- [x] CheckStatus - check initialization status
+- [x] GetAvailableModels - get available models
+- [x] Initialize - perform initialization
+- [x] OptimizeAsync - perform optimization
+
+### Frontend features
+- [x] Initialization detection and guided flow
+- [x] Model selection UI
+- [x] Optimization dialog
+- [x] Post-score optimization suggestion (confirmation dialog)
+- [x] Average-score optimization suggestion (notification)
+- [x] Result display and auto-switch
+
+### Build verification
+- [x] AgentsManager builds successfully
+- [x] PromptRange builds successfully
+- [ ] End-to-end functional testing (requires running app by user)
+
+---
+
+## 🎉 Summary
+
+The AI auto-optimization feature in PromptRange is now fully implemented, including:
+
+1. Smart initialization: automatically detects and guides required resource creation.
+2. Dual suggestion mechanism: triggered by single score and average score.
+3. Complete optimization flow: full automation from analysis to new version creation.
+4. Excellent user experience: friendly prompts, loading status, and detailed result display.
+
+Start the application and test now.
+
+---
+
+## 📞 Need Help?
+
+See detailed guide: [docs/PromptRange-Auto-Optimization-Guide.md](./docs/PromptRange-Auto-Optimization-Guide.md)
