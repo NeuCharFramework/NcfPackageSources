@@ -1,104 +1,108 @@
-# Admin Chat 认证配置说明
+# Admin Chat Authentication Configuration Guide
 
-## 认证方式兼容性
+## Authentication Compatibility
 
-`AdminChatAppService` 现在支持两种认证方式，只要其中一种通过即可访问 API：
+AdminChatAppService now supports two authentication methods. Access is allowed when either one succeeds.
 
-### 1. Cookie 认证（网页登录）
-- **认证方案**: `NcfAdminAuthorizeScheme`
-- **使用场景**: 通过管理后台登录页面（`/Admin/Login`）登录
-- **适用于**: 浏览器网页访问
+### 1. Cookie Authentication (Web Sign-in)
+- Authentication scheme: NcfAdminAuthorizeScheme
+- Usage scenario: Sign in through the admin login page (/Admin/Login)
+- Suitable for: Browser-based web access
 
-### 2. JWT 认证（API Token）
-- **认证方案**: `Bearer_Backend`
-- **使用场景**: API 客户端、移动端、第三方集成
-- **适用于**: 需要 Token 认证的场景
+### 2. JWT Authentication (API Token)
+- Authentication scheme: Bearer_Backend
+- Usage scenario: API clients, mobile apps, third-party integrations
+- Suitable for: Token-based API access
 
-## 问题修复历史
+## Issue Fix History
 
-### 问题1: "登录过期，即将跳转到登录页面"
-**原因**: `AdminChatAppService` 使用了 `[BackendJwtAuthorize]`，但用户使用 Cookie 登录
-**修复**: 改用 `[AdminOrJwtAuthorize]` 支持两种认证方式
+### Issue 1: Login expired, redirecting to login page
+**Cause**: AdminChatAppService used [BackendJwtAuthorize], but the user signed in with Cookie authentication.
+**Fix**: Switched to [AdminOrJwtAuthorize] to support both authentication methods.
 
-### 问题2: "跳转到 /Admin/Forbidden"
-**原因**: Chat 页面需要 "AdminOnly" Policy，但在 Register.cs 中未配置
-**修复**: 在 Register.cs 中添加 `options.Conventions.AuthorizePage("/AdminChat/Chat", "AdminOnly");`
+### Issue 2: Redirected to /Admin/Forbidden
+**Cause**: The Chat page requires the AdminOnly policy, but it was not configured in Register.cs.
+**Fix**: Added options.Conventions.AuthorizePage("/AdminChat/Chat", "AdminOnly"); in Register.cs.
 
-## 实现细节
+## Implementation Details
 
 ### AdminOrJwtAuthorizeAttribute
-新创建的认证属性，位于 `AdminOrJwtAuthorizeAttribute.cs`
+A newly introduced authorization attribute located in AdminOrJwtAuthorizeAttribute.cs.
 
 ```csharp
 [AdminOrJwtAuthorize("AdminOnly")]
 public class AdminChatAppService : LocalAppServiceBase
 {
-    // API 方法可以通过 Cookie 或 JWT 任一方式访问
-    // 同时要求用户具有 "AdminMember" Claim
+    // API methods can be accessed through either Cookie or JWT
+    // Users must also have the AdminMember claim
 }
 ```
 
-### Register.cs 配置
+### Register.cs Configuration
 ```csharp
-options.Conventions.AuthorizePage("/", "AdminOnly");                    // 首页
-options.Conventions.AuthorizePage("/AdminChat/Chat", "AdminOnly");      // 聊天页面
-options.Conventions.AllowAnonymousToPage("/Login");                     // 登录页允许匿名
+options.Conventions.AuthorizePage("/", "AdminOnly");                    // Home page
+options.Conventions.AuthorizePage("/AdminChat/Chat", "AdminOnly");      // Chat page
+options.Conventions.AllowAnonymousToPage("/Login");                     // Login page allows anonymous
 ```
 
-### Policy "AdminOnly" 定义
+### AdminOnly Policy Definition
 ```csharp
 options.AddPolicy("AdminOnly", policy =>
 {
-    policy.RequireClaim("AdminMember");  // 要求 "AdminMember" Claim
+    policy.RequireClaim("AdminMember");  // Requires AdminMember claim
 });
 ```
 
-### 登录时设置的 Claims
-在 `AdminUserInfoService.LoginAsync` 方法中：
+### Claims set during sign-in
+In AdminUserInfoService.LoginAsync:
+
 ```csharp
 var claims = new List<Claim>
 {
     new Claim(ClaimTypes.Name, userInfo.UserName),
     new Claim(ClaimTypes.NameIdentifier, userInfo.Id.ToString(), ClaimValueTypes.Integer),
-    new Claim("AdminMember", "", ClaimValueTypes.String)  // 关键 Claim
+    new Claim("AdminMember", "", ClaimValueTypes.String)  // Key claim
 };
 ```
 
-## 工作原理
+## How It Works
 
-### 认证流程
-1. 用户通过 `Login.cshtml` 登录
-2. 系统设置 Cookie 并添加 "AdminMember" Claim
-3. 访问 Chat 页面或 API 时，框架检查：
-   - 是否已认证（Cookie 或 JWT）
-   - 是否具有 "AdminMember" Claim
-4. 两个条件都满足，允许访问
+### Authentication flow
+1. User signs in through Login.cshtml.
+2. System sets Cookie and adds AdminMember claim.
+3. When visiting Chat page or API, framework checks:
+   - Is the user authenticated (Cookie or JWT)?
+   - Does the user have AdminMember claim?
+4. Access is granted only when both conditions are met.
 
-### ASP.NET Core 多认证方案
-`AuthenticationSchemes` 属性支持多个认证方案（用逗号分隔）：
+### Multiple authentication schemes in ASP.NET Core
+The AuthenticationSchemes property supports multiple schemes separated by commas:
+
 ```csharp
 AuthenticationSchemes = $"{SiteConfig.NcfAdminAuthorizeScheme},{JwtScheme}";
 ```
 
-当请求到达时：
-1. 框架会依次尝试配置的认证方案
-2. 只要**任何一个**认证方案成功，就允许访问
-3. 如果**所有**认证方案都失败，才会返回 401 Unauthorized
+When a request arrives:
+1. Framework tries configured schemes in order.
+2. Access is allowed when any one scheme succeeds.
+3. A 401 Unauthorized response is returned only when all schemes fail.
 
-## 使用示例
+## Usage Examples
 
-### Cookie 认证访问（当前场景）
+### Cookie-based access (current scenario)
+
 ```javascript
-// 用户通过 Login.cshtml 登录后，浏览器会自动携带 Cookie
+// After signing in via Login.cshtml, browser automatically includes Cookie
 axios.post('/api/AdminChat/CreateSessionAsync', data)
   .then(response => {
-    // Cookie 认证自动完成，无需额外操作
+    // Cookie authentication is automatic
   });
 ```
 
-### JWT 认证访问（未来扩展）
+### JWT-based access (future extension)
+
 ```javascript
-// 客户端需要先获取 JWT Token，然后在请求头中携带
+// Client first obtains JWT token, then sends it in Authorization header
 axios.post('/api/AdminChat/CreateSessionAsync', data, {
   headers: {
     'Authorization': 'Bearer ' + jwtToken
@@ -106,39 +110,38 @@ axios.post('/api/AdminChat/CreateSessionAsync', data, {
 });
 ```
 
-## 其他 AppService 认证对比
+## Authentication Comparison with Other AppServices
 
-| AppService | 认证属性 | 认证方式 | Policy |
+| AppService | Authorization Attribute | Auth Method | Policy |
 |------------|---------|---------|--------|
-| `AdminChatAppService` | `[AdminOrJwtAuthorize("AdminOnly")]` | Cookie **或** JWT | 需要 "AdminMember" Claim |
-| `AdminUserInfoAppService` | `[BackendJwtAuthorize]` | 仅 JWT | 无 |
-| `StatAppService` | `[AdminAuthorize("AdminOnly")]` | 仅 Cookie | 需要 "AdminMember" Claim |
-| `ModuleAppService` | `[BackendJwtAuthorize]` | 仅 JWT | 无 |
+| AdminChatAppService | [AdminOrJwtAuthorize("AdminOnly")] | Cookie or JWT | Requires AdminMember claim |
+| AdminUserInfoAppService | [BackendJwtAuthorize] | JWT only | None |
+| StatAppService | [AdminAuthorize("AdminOnly")] | Cookie only | Requires AdminMember claim |
+| ModuleAppService | [BackendJwtAuthorize] | JWT only | None |
 
-## 优势
+## Benefits
 
-1. **向后兼容**: 现有 Cookie 登录完全可用
-2. **未来扩展**: 支持 API Token 方式，便于移动端或第三方集成
-3. **灵活性高**: 不同客户端可以选择最适合的认证方式
-4. **安全性**: Policy 确保只有管理员可以访问
+1. Backward compatible: Existing Cookie sign-in works as-is.
+2. Future-ready: Supports API token flow for mobile and third-party integrations.
+3. Flexible: Different clients can choose the best authentication mode.
+4. Secure: Policy ensures only admins can access protected resources.
 
-## 测试建议
+## Test Recommendations
 
-### Cookie 认证测试
-1. 通过 `/Admin/Login` 登录管理后台
-2. 在首页输入框发送消息
-3. 应能正常跳转到聊天页面，不会出现 Forbidden 错误
+### Cookie authentication test
+1. Sign in to admin console via /Admin/Login.
+2. Send a message from the home page input box.
+3. It should navigate to Chat page normally without Forbidden errors.
 
-### JWT 认证测试（可选）
-1. 使用 Postman 或其他 API 工具
-2. 获取包含 "AdminMember" Claim 的 JWT Token
-3. 在请求头添加 `Authorization: Bearer {token}`
-4. 调用 `/api/AdminChat/CreateSessionAsync` 等接口
-5. 应能正常获取响应
+### JWT authentication test (optional)
+1. Use Postman or another API tool.
+2. Obtain a JWT token that includes AdminMember claim.
+3. Add Authorization: Bearer {token} in request headers.
+4. Call endpoints such as /api/AdminChat/CreateSessionAsync.
+5. Response should be returned successfully.
 
-## 注意事项
+## Notes
 
-- **Claim 要求**: 无论使用哪种认证方式，都必须包含 "AdminMember" Claim
-- **Razor Pages 路径配置**: 新增的 Razor Pages 需要在 Register.cs 中配置授权策略
-- **统一授权策略**: API 和页面使用相同的 "AdminOnly" Policy，保证安全性一致
-
+- Claim requirement: regardless of authentication mode, AdminMember claim is required.
+- Razor Pages path policy: newly added Razor Pages must be configured in Register.cs.
+- Unified authorization policy: API and page share the same AdminOnly policy for consistent security.
