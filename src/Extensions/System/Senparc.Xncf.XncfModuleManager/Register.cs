@@ -18,13 +18,13 @@ namespace Senparc.Xncf.XncfModuleManager
     [XncfOrder(5950)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
-        #region IXncfRegister 接口
+        #region IXncfRegister Interface
 
         public override string Name => "Senparc.Xncf.XncfModuleManager";
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_XNCF_MODULE_MANAGER_UID;// "00000000-0000-0000-0000-000000000004";
 
-        public override string Version => "0.1.2";//必须填写版本号
+        public override string Version => "0.1.2";//Version number is required
 
         public override string MenuName => "XNCF 模块管理核心";
 
@@ -37,7 +37,7 @@ namespace Senparc.Xncf.XncfModuleManager
             try
             {
                 Console.WriteLine($"执行 Xncf.XncfModuleManager.InstallOrUpdateAsync");
-                //安装或升级数据库
+                //Install or upgrade database
                 await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
                 Console.WriteLine($"执行 Xncf.XncfModuleManager.InstallOrUpdateAsync 完毕");
@@ -53,19 +53,19 @@ namespace Senparc.Xncf.XncfModuleManager
 
             //await InstallModulesAndMenusAsync(serviceProvider);
 
-            //TODO：DI注入注册时候，根据指定数据库进行绑定
+            //TODO: Bind by the specified database when registering DI injection
 
             //XncfModuleServiceExtension xncfModuleServiceExtension = serviceProvider.GetService<XncfModuleServiceExtension>();
             ////SenparcEntities senparcEntities = (SenparcEntities)xncfModuleServiceExtension.BaseData.BaseDB.BaseDataContext;
 
-            ////更新数据库（目前不使用 BasePoolEntities 存放数据库模型）
+            ////Update database (BasePoolEntities is not used for storing DB models currently)
             ////await base.MigrateDatabaseAsync<BasePoolEntities>(serviceProvider);
 
             //var systemModule = xncfModuleServiceExtension.GetObject(z => z.Uid == this.Uid);
             //if (systemModule == null)
             //{
-            //    //只在未安装的情况下进行安装，InstallModuleAsync会访问到此方法，不做判断可能会引发死循环。
-            //    //常规模块中请勿在此方法中自动安装模块！
+            //    //Install only when not installed. InstallModuleAsync calls this method; missing this check may cause an infinite loop.
+            //    //Do not auto-install modules in this method for regular modules.
             //    await xncfModuleServiceExtension.InstallModuleAsync(this.Uid).ConfigureAwait(false);
             //}
 
@@ -86,7 +86,7 @@ namespace Senparc.Xncf.XncfModuleManager
         }
 
         ///// <summary>
-        ///// 安装模块并设置菜单
+        ///// Install module and configure menu
         ///// </summary>
         ///// <param name="serviceProvider"></param>
         ///// <returns></returns>
@@ -96,8 +96,8 @@ namespace Senparc.Xncf.XncfModuleManager
         //    var systemModule = xncfModuleServiceExtension.GetObject(z => z.Uid == this.Uid);
         //    if (systemModule == null)
         //    {
-        //        //只在未安装的情况下进行安装，InstallModuleAsync会访问到此方法，不做判断可能会引发死循环。
-        //        //常规模块中请勿在此方法中自动安装模块！
+        //        //Install only when not installed. InstallModuleAsync calls this method; missing this check may cause an infinite loop.
+        //        //Do not auto-install modules in this method for regular modules.
         //        await xncfModuleServiceExtension.InstallModuleAsync(this.Uid).ConfigureAwait(false);
         //    }
 
