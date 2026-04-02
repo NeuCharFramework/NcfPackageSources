@@ -1,246 +1,247 @@
-# 模块拖拽功能 - 故障排查指南
+# Module Drag-and-Drop - Troubleshooting Guide
 
-## ✅ 已完成的修复
+## ✅ Fixes Already Completed
 
-### 1. 拖拽初始化时机调整
-**问题**: 模块列表是异步加载的，`mounted` 时可能还未渲染  
-**修复**: 将 `initializeModuleDrag()` 移到 `getXncfOpening()` 完成后调用
+### 1. Drag initialization timing adjustment
+**Issue**: Module list loads asynchronously, so items may not be rendered at mounted time.
+**Fix**: Move initializeModuleDrag() call to run after getXncfOpening() completes.
 
-### 2. 事件处理增强
-**问题**: `dragover` 事件没有阻止默认行为，导致 `drop` 事件无法触发  
-**修复**: 在 `handleDragOver()` 中添加 `event.preventDefault()` 和 `dropEffect`
+### 2. Event handling enhancement
+**Issue**: dragover did not prevent default behavior, so drop could not fire.
+**Fix**: Added event.preventDefault() and dropEffect in handleDragOver().
 
-### 3. 样式优化
-- 拖放区域高度增加到 100px
-- 添加更明显的拖拽提示
-- 增强拖拽时的视觉反馈（高亮、缩放、阴影）
-- 添加 cursor: grab/grabbing 样式
+### 3. Style optimization
+- Increased drop zone height to 100px.
+- Added more explicit drag-and-drop hints.
+- Enhanced drag visual feedback (highlight, scale, shadow).
+- Added cursor: grab/grabbing styles.
 
-### 4. 调试信息
-- 添加 console.log 输出，方便排查问题
-- 添加友好的错误提示消息
+### 4. Debug output
+- Added console.log output for easier troubleshooting.
+- Added user-friendly error messages.
 
 ---
 
-## 🔍 故障排查步骤
+## 🔍 Troubleshooting Steps
 
-### 步骤 1: 检查控制台日志
+### Step 1: Check console logs
 
-打开浏览器开发者工具（F12），查看 Console 标签页：
+Open browser dev tools (F12) and check Console:
 
-1. **页面加载时应该看到**:
+1. **Expected on page load**:
    ```
-   找到的模块卡片数量: X
-   模块拖拽初始化完成，已绑定 X 个模块
-   ```
-
-2. **如果看到**:
-   ```
-   找到的模块卡片数量: 0
-   未找到模块卡片，将在 200ms 后重试
-   ```
-   - 说明模块还未加载，会自动重试
-
-3. **拖拽模块时应该看到**:
-   ```
-   开始拖拽模块: [模块名称] {uid: "...", name: "..."}
-   拖放区域已高亮
+   Found module card count: X
+   Module drag initialization complete, bound X modules
    ```
 
-4. **放下模块时应该看到**:
+2. **If you see**:
    ```
-   检测到放下操作 DragEvent {...}
-   接收到的数据: {"uid":"...","name":"..."}
-   解析后的模块数据: {uid: "...", name: "..."}
-   模块添加成功，当前选中模块: [...]
+   Found module card count: 0
+   Module cards not found, retrying in 200ms
+   ```
+   - This means modules are still loading and retry will happen automatically.
+
+3. **Expected while dragging a module**:
+   ```
+   Drag start module: [module name] {uid: "...", name: "..."}
+   Drop zone highlighted
    ```
 
-### 步骤 2: 检查模块是否可拖拽
+4. **Expected when dropping module**:
+   ```
+   Drop operation detected DragEvent {...}
+   Received data: {"uid":"...","name":"..."}
+   Parsed module data: {uid: "...", name: "..."}
+   Module added successfully, current selected modules: [...]
+   ```
 
-在 Console 中运行：
+### Step 2: Verify module draggable state
+
+Run in Console:
 
 ```javascript
-// 检查模块数量
+// Check module count
 document.querySelectorAll('#xncf-modules-area .xncf-item').length
 
-// 检查模块的 draggable 属性
+// Check draggable attribute count
 document.querySelectorAll('#xncf-modules-area .xncf-item[draggable="true"]').length
 
-// 检查拖放区域
+// Check drop zone element
 document.querySelector('.chat-module-drop-zone')
 ```
 
-**预期结果**:
-- 第一行应该返回模块数量（如 8 或更多）
-- 第二行应该返回相同的数量
-- 第三行应该返回一个 HTMLDivElement
+**Expected**:
+- First line returns module count (for example, 8 or more).
+- Second line returns the same count.
+- Third line returns an HTMLDivElement.
 
-### 步骤 3: 手动测试拖拽
+### Step 3: Manual drag-and-drop test
 
-1. **打开页面**: `http://localhost:5000/Admin`
-2. **等待加载**: 确保模块列表完全加载（看到模块卡片）
-3. **尝试拖拽**:
-   - 鼠标悬停在任一模块卡片上
-   - 鼠标指针应该变为 "grab" 样式（抓手）
-   - 按住鼠标左键开始拖拽
-   - 模块卡片应该变半透明
-   - 拖放区域应该高亮显示
-4. **释放鼠标**:
-   - 在拖放区域内释放鼠标
-   - 应该看到消息提示："已添加模块: [模块名称]"
-   - 拖放区域显示选中的模块标签
+1. Open page: http://localhost:5000/Admin
+2. Wait for full load: ensure module cards are visible.
+3. Try drag:
+   - Hover over any module card.
+   - Cursor should become grab.
+   - Hold left mouse button to start dragging.
+   - Module card should become semi-transparent.
+   - Drop zone should highlight.
+4. Release mouse:
+   - Release inside drop zone.
+   - You should see message: Module added: [module name].
+   - Drop zone displays selected module tags.
 
 ---
 
-## 🐛 常见问题和解决方案
+## 🐛 Common Problems and Solutions
 
-### 问题 1: 模块卡片无法拖拽（鼠标指针不变）
+### Problem 1: Module cards cannot be dragged (cursor does not change)
 
-**可能原因**:
-- 拖拽初始化未执行
-- 模块列表未加载完成
+**Possible causes**:
+- Drag initialization did not run.
+- Module list has not finished loading.
 
-**解决方案**:
-1. 刷新页面（Ctrl+F5 强制刷新）
-2. 在 Console 中手动执行：
+**Solutions**:
+1. Refresh page (Ctrl+F5 hard refresh).
+2. Execute manually in Console:
    ```javascript
    app.initializeModuleDrag()
    ```
-3. 检查 Console 是否有错误信息
+3. Check Console for errors.
 
-### 问题 2: 可以拖拽，但无法放下
+### Problem 2: Drag works, but drop does not
 
-**可能原因**:
-- 拖放区域未正确绑定 drop 事件
-- dragover 事件未阻止默认行为
+**Possible causes**:
+- Drop zone is not correctly bound to drop event.
+- dragover does not prevent default behavior.
 
-**解决方案**:
-1. 检查拖放区域是否存在：
+**Solutions**:
+1. Check drop zone exists:
    ```javascript
    console.log(document.querySelector('.chat-module-drop-zone'))
    ```
-2. 检查 Vue 实例的方法：
+2. Check Vue instance methods:
    ```javascript
    console.log(typeof app.handleModuleDrop)
    console.log(typeof app.handleDragOver)
    ```
-3. 确认 Index.cshtml 中的事件绑定：
+3. Verify bindings in Index.cshtml:
    ```html
    @@drop.prevent="handleModuleDrop"
    @@dragover.prevent="handleDragOver"
    ```
 
-### 问题 3: 拖拽时拖放区域不高亮
+### Problem 3: Drop zone does not highlight while dragging
 
-**可能原因**:
-- CSS 选择器不正确
-- 类名添加失败
+**Possible causes**:
+- CSS selector is incorrect.
+- Class name was not added successfully.
 
-**解决方案**:
-1. 拖拽时在 Console 查看元素：
+**Solutions**:
+1. Check element class list while dragging:
    ```javascript
    document.querySelector('.chat-module-drop-zone').classList
    ```
-   应该包含 `highlight` 类
+   Should include highlight class.
 
-2. 检查样式是否加载：
+2. Check style loaded:
    ```javascript
    getComputedStyle(document.querySelector('.chat-module-drop-zone')).background
    ```
 
-### 问题 4: 控制台显示 "未找到模块数据"
+### Problem 4: Console shows Module data not found
 
-**可能原因**:
-- dataTransfer 数据传递失败
-- 浏览器安全限制
+**Possible causes**:
+- dataTransfer payload failed.
+- Browser security restrictions.
 
-**解决方案**:
-1. 检查浏览器版本（建议使用最新版 Chrome/Edge/Firefox）
-2. 检查是否有浏览器扩展干扰（尝试隐身模式）
-3. 手动测试 dataTransfer：
+**Solutions**:
+1. Check browser version (latest Chrome/Edge/Firefox recommended).
+2. Check extension interference (try Incognito mode).
+3. Manually test dataTransfer:
    ```javascript
-   // 在 dragstart 事件中添加断点，检查
+   // Add breakpoint in dragstart and verify
    event.dataTransfer.setData('text/plain', 'test')
    ```
 
 ---
 
-## 🔧 临时解决方案
+## 🔧 Temporary Workaround
 
-如果拖拽功能仍然不工作，可以使用点击选择作为临时方案：
+If drag-and-drop still fails, use click-to-select as fallback:
 
-### 修改方案：点击选择模块
+### Alternative: click to select module
 
-在 `Index.js` 的 `initializeModuleDrag()` 方法前添加：
+Add before initializeModuleDrag() in Index.js:
 
 ```javascript
 initializeModuleClick() {
   this.$nextTick(() => {
     const moduleCards = document.querySelectorAll('#xncf-modules-area .xncf-item');
-    
+
     moduleCards.forEach((card) => {
       const clickHandler = (event) => {
-        // 如果点击的是链接或按钮，不执行选择逻辑
-        if (event.target.tagName === 'A' || event.target.closest('a') || 
+        // If clicking links/buttons, skip selection logic
+        if (event.target.tagName === 'A' || event.target.closest('a') ||
             event.target.tagName === 'BUTTON' || event.target.closest('button')) {
           return;
         }
-        
+
         event.preventDefault();
         event.stopPropagation();
-        
+
         const linkElement = card.querySelector('a[href*="uid="]');
         const headerElement = card.querySelector('.el-card__header span:first-child');
         const iconElement = card.querySelector('.icon');
         const versionElement = card.querySelector('.version');
-        
+
         const moduleData = {
           uid: linkElement?.href?.match(/uid=([^&]+)/)?.[1] || '',
-          name: headerElement?.textContent?.trim() || '未知模块',
+          name: headerElement?.textContent?.trim() || 'Unknown Module',
           icon: iconElement?.className || 'fa fa-cube',
           version: versionElement?.textContent?.trim() || ''
         };
-        
+
         const exists = this.selectedModules.some(m => m.uid === moduleData.uid);
         if (!exists) {
           this.selectedModules.push(moduleData);
-          this.$message.success(`已添加模块: ${moduleData.name}`);
+          this.$message.success(`Module added: ${moduleData.name}`);
         } else {
-          this.$message.info('该模块已添加');
+          this.$message.info('Module already added');
         }
       };
-      
-      // 双击选择模块
+
+      // Double click to select module
       card.addEventListener('dblclick', clickHandler);
     });
   });
 }
 ```
 
-然后在 `getXncfOpening()` 中同时调用：
+Then call both in getXncfOpening():
+
 ```javascript
 this.initializeModuleDrag();
-this.initializeModuleClick(); // 添加点击选择作为备用
+this.initializeModuleClick(); // Add click selection as fallback
 ```
 
 ---
 
-## 📞 需要更多帮助？
+## 📞 Need More Help?
 
-如果以上方法都无法解决问题，请提供以下信息：
+If the issue still cannot be resolved, provide:
 
-1. 浏览器控制台的完整输出（Console 标签）
-2. 浏览器版本和类型
-3. 执行以下命令的输出：
+1. Full browser console output.
+2. Browser type and version.
+3. Output of the following commands:
    ```javascript
-   console.log('模块数量:', document.querySelectorAll('#xncf-modules-area .xncf-item').length);
-   console.log('可拖拽模块:', document.querySelectorAll('#xncf-modules-area .xncf-item[draggable]').length);
-   console.log('拖放区域:', document.querySelector('.chat-module-drop-zone'));
-   console.log('Vue 实例:', app);
+   console.log('Module count:', document.querySelectorAll('#xncf-modules-area .xncf-item').length);
+   console.log('Draggable modules:', document.querySelectorAll('#xncf-modules-area .xncf-item[draggable]').length);
+   console.log('Drop zone:', document.querySelector('.chat-module-drop-zone'));
+   console.log('Vue instance:', app);
    ```
 
 ---
 
-**文档创建日期**: 2026-03-25  
-**最后更新**: 2026-03-25  
-**版本**: v1.0
+**Document Created**: 2026-03-25
+**Last Updated**: 2026-03-25
+**Version**: v1.0
