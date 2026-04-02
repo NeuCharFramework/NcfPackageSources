@@ -1,8 +1,8 @@
-# EventBus 循环引用防护 - 快速参考
+# EventBus Circular Reference Protection - Quick Reference
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-### 1. 在 Handler 中发布派生事件
+### 1. Publish derived events in handlers
 
 ```csharp
 public class MyRequestHandler : IIntegrationEventHandler<MyRequestEvent>
@@ -11,169 +11,169 @@ public class MyRequestHandler : IIntegrationEventHandler<MyRequestEvent>
 
     public async Task Handle(MyRequestEvent @event, CancellationToken ct)
     {
-        // ... 处理业务逻辑 ...
-        
+        // ... handle business logic ...
+
         var response = new MyResponseEvent(result);
-        
-        // ⭐ 使用 PublishDerivedAsync（自动继承链信息）
+
+        // ⭐ Use PublishDerivedAsync (automatically carries event-chain metadata)
         await _eventBus.PublishDerivedAsync(response, @event);
     }
 }
 ```
 
-### 2. 配置防护选项
+### 2. Configure protection options
 
 ```csharp
 services.AddSenparcEventBus(options =>
 {
-    options.MaxEventChainDepth = 10;                      // 最大深度
-    options.EnableCircularReferenceDetection = true;      // 循环检测
-}, 
+    options.MaxEventChainDepth = 10;                      // Max depth
+    options.EnableCircularReferenceDetection = true;      // Circular detection
+},
 typeof(YourAssembly).Assembly);
 ```
 
 ---
 
-## 🛡️ 三层防护机制
+## 🛡️ Three-Layer Protection
 
-### 第一层: 深度限制
+### Layer 1: Depth limit
 ```
-检查时机: 运行时（处理事件前）
-检查逻辑: event.Depth >= MaxEventChainDepth
-处理方式: 丢弃事件 + 记录错误日志
-默认限制: 10 层
-```
-
-### 第二层: 循环检测
-```
-检查时机: 运行时（处理事件前）
-检查逻辑: event.EventChain.Contains(currentEventType)
-处理方式: 丢弃事件 + 记录错误日志
-检测模式: A→B→A, A→A
+Check time: Runtime (before event handling)
+Check logic: event.Depth >= MaxEventChainDepth
+Action: Drop event + log error
+Default limit: 10 levels
 ```
 
-### 第三层: 发布前预检
+### Layer 2: Circular detection
 ```
-检查时机: 发布时（PublishDerivedAsync）
-检查逻辑: parentEvent.HasCircularReference(newEventType)
-处理方式: 抛出 InvalidOperationException
-优势: 提前阻止，避免进入队列
+Check time: Runtime (before event handling)
+Check logic: event.EventChain.Contains(currentEventType)
+Action: Drop event + log error
+Patterns detected: A→B→A, A→A
+```
+
+### Layer 3: Pre-publish validation
+```
+Check time: Publish time (PublishDerivedAsync)
+Check logic: parentEvent.HasCircularReference(newEventType)
+Action: Throw InvalidOperationException
+Benefit: Stops invalid events before they enter queue
 ```
 
 ---
 
-## 📊 事件链示例
+## 📊 Event Chain Examples
 
-### 正常流程
+### Normal flow
 ```
 Request Event (Depth=0, Chain="")
   ↓
 Response Event (Depth=1, Chain="RequestEvent")
   ↓
-Complete (不再发布事件)
-✅ 安全
+Complete (no further event publishing)
+✅ Safe
 ```
 
-### 循环场景（被阻止）
+### Circular scenario (blocked)
 ```
 Event A (Depth=0, Chain="")
   ↓
 Event B (Depth=1, Chain="EventA")
   ↓
 Event A (Depth=2, Chain="EventA→EventB")
-  ❌ 检测到循环：EventA 已在链中
-  🛑 抛出异常或丢弃事件
+  ❌ Circular reference detected: EventA already exists in chain
+  🛑 Exception thrown or event dropped
 ```
 
-### 深度超限（被阻止）
+### Depth overflow (blocked)
 ```
 Event 1 (Depth=0)
   ↓
 Event 2 (Depth=1)
   ↓
-... (中间省略)
+... (omitted)
   ↓
 Event 10 (Depth=9)
   ↓
 Event 11 (Depth=10)
-  ❌ 深度超限
-  🛑 丢弃事件
+  ❌ Depth limit exceeded
+  🛑 Event dropped
 ```
 
 ---
 
-## 🔍 日志示例
+## 🔍 Log Examples
 
-### 正常处理
+### Normal processing
 ```
 [Information] Processing event MyRequestEvent (Id: xxx, Depth: 0, Chain: )
 [Debug] Publishing derived event: MyResponseEvent (ParentId: xxx, Depth: 1, Chain: MyRequestEvent)
 [Information] Event MyResponseEvent processed successfully in 15ms
 ```
 
-### 检测到循环
+### Circular reference detected
 ```
-[Error] Circular reference detected: MyRequestEvent 
+[Error] Circular reference detected: MyRequestEvent
         (Id: xxx, Chain: MyRequestEvent→MyResponseEvent→MyRequestEvent)
 ```
 
-### 深度超限
+### Depth limit exceeded
 ```
-[Error] Event chain depth limit exceeded: MyEvent 
+[Error] Event chain depth limit exceeded: MyEvent
         (Id: xxx, Depth: 10, Chain: Event1→Event2→...→Event10)
 ```
 
 ---
 
-## ✅ 检查清单
+## ✅ Checklist
 
-在实现 Handler 时，确保：
+When implementing handlers, ensure:
 
-- [ ] 事件定义继承自 `IntegrationEvent` 基类
-- [ ] 使用 `PublishDerivedAsync` 发布派生事件
-- [ ] 避免在响应 Handler 中发布请求事件
-- [ ] 配置了 `EnableCircularReferenceDetection = true`
-- [ ] 设置了合理的 `MaxEventChainDepth`（建议 10）
-- [ ] 添加了充分的日志记录
-- [ ] 编写了单元测试验证事件流
+- [ ] Event definitions inherit from IntegrationEvent base class
+- [ ] Use PublishDerivedAsync to publish derived events
+- [ ] Avoid publishing request events from response handlers
+- [ ] Configure EnableCircularReferenceDetection = true
+- [ ] Set a reasonable MaxEventChainDepth (recommended 10)
+- [ ] Add sufficient logging
+- [ ] Add unit tests to validate event flows
 
 ---
 
-## 🐛 常见问题
+## 🐛 Common Issues
 
 ### Q1: InvalidOperationException - Circular reference detected
 
-**原因**: 事件链中存在重复类型  
-**解决**: 检查日志中的 EventChain，避免循环依赖
+**Cause**: Duplicate event type exists in event chain.
+**Fix**: Inspect EventChain in logs and remove circular dependencies.
 
 ### Q2: Event chain depth limit exceeded
 
-**原因**: 事件嵌套层次过深  
-**解决**: 重构为更扁平的结构，或增加 MaxEventChainDepth
+**Cause**: Event nesting is too deep.
+**Fix**: Refactor to a flatter event architecture, or increase MaxEventChainDepth.
 
 ### Q3: ArgumentException - Event must inherit from IntegrationEvent
 
-**原因**: 事件类型未继承 IntegrationEvent 基类  
-**解决**: 修改事件定义为 `public record MyEvent(...) : IntegrationEvent`
+**Cause**: Event type does not inherit IntegrationEvent.
+**Fix**: Define event as public record MyEvent(...) : IntegrationEvent.
 
 ---
 
-## 📚 相关文档
+## 📚 Related Docs
 
-- **技术详细文档**: [EVENTBUS_CIRCULAR_REFERENCE_PROTECTION.md](./EVENTBUS_CIRCULAR_REFERENCE_PROTECTION.md)
-- **流程图和架构**: [EVENTBUS_FLOW_DIAGRAMS.md](./EVENTBUS_FLOW_DIAGRAMS.md)
-- **完整检查报告**: [EVENTBUS_COMPLETE_SUMMARY.md](./EVENTBUS_COMPLETE_SUMMARY.md)
-
----
-
-## 🎯 核心原则
-
-1. **安全第一**: 启用所有防护机制
-2. **性能优先**: 使用非阻塞 API
-3. **可观测性**: 记录详细日志
-4. **向后兼容**: 平滑升级无痛迁移
+- Technical details: [EVENTBUS_CIRCULAR_REFERENCE_PROTECTION.md](./EVENTBUS_CIRCULAR_REFERENCE_PROTECTION.md)
+- Flow diagrams and architecture: [EVENTBUS_FLOW_DIAGRAMS.md](./EVENTBUS_FLOW_DIAGRAMS.md)
+- Full inspection report: [EVENTBUS_COMPLETE_SUMMARY.md](./EVENTBUS_COMPLETE_SUMMARY.md)
 
 ---
 
-**版本**: 1.0  
-**更新**: 2026-03-24
+## 🎯 Core Principles
+
+1. Safety first: enable all protection mechanisms.
+2. Performance first: use non-blocking APIs.
+3. Observability: log detailed diagnostics.
+4. Backward compatibility: smooth upgrade with minimal migration cost.
+
+---
+
+**Version**: 1.0
+**Updated**: 2026-03-24
