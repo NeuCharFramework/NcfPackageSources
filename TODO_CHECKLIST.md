@@ -1,137 +1,137 @@
-# 🎯 Prompt 优化功能实施清单
+# 🎯 Prompt Optimization Implementation Checklist
 
-## 📋 准备工作
+## 📋 Preparation
 
-### Step 0: 确认依赖服务 ⏳
+### Step 0: Confirm dependency services ⏳
 
-**需要您提供的信息：**
+**Information needed from you:**
 
-1. **AI 调用服务**
-   - [ ] 确认项目中用于调用 AI 的服务类名
-   - [ ] 确认该服务的调用方法签名（如 `ChatAsync`, `CompletionAsync` 等）
-   - [ ] 确认如何在 Handler 中注入该服务
-   
-   **示例问题**：
+1. **AI invocation service**
+   - [ ] Confirm the service class name used for AI calls in the project.
+   - [ ] Confirm the method signature (for example, ChatAsync, CompletionAsync).
+   - [ ] Confirm how this service is injected into handlers.
+
+   **Example questions:**
    ```csharp
-   // 是这样的吗？
+   // Is it like this?
    public class AIKernelService
    {
        public Task<string> ChatAsync(string systemPrompt, string userMessage, ...);
    }
-   
-   // 还是这样？
+
+   // Or like this?
    public class ChatService
    {
        public Task<string> SendAsync(ChatRequest request);
    }
    ```
 
-2. **PromptItem 查询方法**
-   - [ ] 确认 `PromptItemService` 是否有通过 `FullVersion` 查询的方法
-   - [ ] 如果没有，我将帮您实现一个
+2. **PromptItem query method**
+   - [ ] Confirm whether PromptItemService has a query method by FullVersion.
+   - [ ] If not, I can help implement one.
 
-3. **测试环境**
-   - [ ] 确认有可用的 AI Model 配置
-   - [ ] 确认 AI API Key 已配置
-
----
-
-## 🔧 实施任务
-
-### Task 1: 更新 PromptOptimizationRequestHandler ⏳
-
-**文件**: `src/Extensions/Senparc.Xncf.PromptRange/Application/EventHandlers/PromptOptimizationRequestHandler.cs`
-
-**当前问题**：
-- 使用旧的事件格式（缺少 `NewPromptContent` 和 `Parameters`）
-- 只是模拟优化，没有真正调用 AI
-
-**需要实现**：
-1. [ ] 添加必要的服务依赖注入（AI 服务、PromptRangeService 等）
-2. [ ] 实现 `GetPromptItemByCode()` 方法来解析和查询 PromptItem
-3. [ ] 实现 `BuildOptimizationSystemPrompt()` 方法
-4. [ ] 实现 `BuildOptimizationUserInput()` 方法
-5. [ ] 调用 AI 服务进行优化
-6. [ ] 解析 AI 返回的 JSON（包含优化后的内容和参数）
-7. [ ] 创建新的 PromptItem
-8. [ ] 发布正确格式的响应事件
-
-**我将提供**：完整的实现代码模板（需要您填入 AI 服务调用部分）
+3. **Test environment**
+   - [ ] Confirm that an available AI model is configured.
+   - [ ] Confirm that the AI API key is configured.
 
 ---
 
-### Task 2: 更新前端 JavaScript ⏳
+## 🔧 Implementation Tasks
 
-**文件**: `src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js`
+### Task 1: Update PromptOptimizationRequestHandler ⏳
 
-**需要修改的方法**: `executeOptimize()` (约在第 3010 行)
+**File**: src/Extensions/Senparc.Xncf.PromptRange/Application/EventHandlers/PromptOptimizationRequestHandler.cs
 
-**需要实现**：
-1. [ ] 获取当前 Prompt 的完整信息（包括参数）
-2. [ ] 构建包含 `promptContent` 和 `context` 的请求对象
-3. [ ] 显示更详细的优化结果（包括参数变化）
-4. [ ] 刷新 Prompt 列表
-5. [ ] 可选：自动切换到新的 Prompt
+**Current issues:**
+- Uses old event format (missing NewPromptContent and Parameters).
+- Only simulates optimization; no real AI call.
 
-**我将提供**：完整的 JavaScript 代码
+**Required implementation:**
+1. [ ] Add required service dependency injection (AI service, PromptRangeService, etc.).
+2. [ ] Implement GetPromptItemByCode() for parsing and querying PromptItem.
+3. [ ] Implement BuildOptimizationSystemPrompt().
+4. [ ] Implement BuildOptimizationUserInput().
+5. [ ] Call AI service for optimization.
+6. [ ] Parse returned AI JSON (including optimized content and parameters).
+7. [ ] Create new PromptItem.
+8. [ ] Publish response event in the correct format.
 
----
-
-### Task 3: 测试和验证 ⏳
-
-**测试步骤**：
-1. [ ] 单元测试：测试 AI 优化逻辑
-2. [ ] 集成测试：测试完整流程
-3. [ ] 端到端测试：从前端点击到看到结果
-
-**验收标准**：
-- [ ] 首次调用时自动创建 "PromptCatalyzer" Agent
-- [ ] 能够调用 AI 优化 Prompt 内容
-- [ ] 能够优化参数（Temperature 等）
-- [ ] 创建新的 PromptItem 并返回 PromptCode
-- [ ] 前端显示优化结果
+**I will provide**: a full implementation template (you only need to fill in the AI service invocation part).
 
 ---
 
-## 📊 进度追踪
+### Task 2: Update frontend JavaScript ⏳
 
-| 任务 | 状态 | 完成时间 |
+**File**: src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js
+
+**Method to modify**: executeOptimize() (around line 3010)
+
+**Required implementation:**
+1. [ ] Get full prompt information (including parameters).
+2. [ ] Build request payload including promptContent and context.
+3. [ ] Show more detailed optimization result (including parameter changes).
+4. [ ] Refresh prompt list.
+5. [ ] Optional: auto-switch to the new prompt.
+
+**I will provide**: complete JavaScript code.
+
+---
+
+### Task 3: Testing and verification ⏳
+
+**Test steps:**
+1. [ ] Unit test: AI optimization logic.
+2. [ ] Integration test: full workflow.
+3. [ ] End-to-end test: click from frontend to result display.
+
+**Acceptance criteria:**
+- [ ] Auto-create PromptCatalyzer agent on first invocation.
+- [ ] Successfully call AI to optimize prompt content.
+- [ ] Successfully optimize parameters (for example, Temperature).
+- [ ] Create new PromptItem and return PromptCode.
+- [ ] Frontend displays optimization result correctly.
+
+---
+
+## 📊 Progress Tracking
+
+| Task | Status | Completion Time |
 |------|------|----------|
-| Step 0: 确认依赖 | ⏳ 等待中 | - |
-| Task 1: 更新 Handler | ⏳ 待开始 | - |
-| Task 2: 更新前端 | ⏳ 待开始 | - |
-| Task 3: 测试验证 | ⏳ 待开始 | - |
+| Step 0: Confirm dependencies | ⏳ Waiting | - |
+| Task 1: Update handler | ⏳ Not started | - |
+| Task 2: Update frontend | ⏳ Not started | - |
+| Task 3: Testing & verification | ⏳ Not started | - |
 
 ---
 
-## 🚀 开始行动
+## 🚀 Start Action
 
-**当前步骤**: Step 0 - 需要您提供 AI 服务的信息
+**Current step**: Step 0 - AI service information is required.
 
-**请您做的事**：
-1. 查看您的项目中 AI 调用服务的代码
-2. 回复以下信息：
-   - AI 服务的类名
-   - AI 服务的调用方法签名
-   - 如何注入该服务
+**What you need to do:**
+1. Check AI invocation service code in your project.
+2. Reply with the following:
+   - AI service class name
+   - AI service method signature
+   - Injection approach
 
-**示例回复**：
+**Example reply:**
 ```
-我的 AI 服务是 `Senparc.AI.Kernel.AIChatService`，
-调用方法是 `Task<string> ChatAsync(string prompt, ChatOptions options)`，
-通过构造函数注入。
+My AI service is Senparc.AI.Kernel.AIChatService,
+method signature is Task<string> ChatAsync(string prompt, ChatOptions options),
+injected via constructor.
 ```
 
-收到您的信息后，我将立即为您提供完整的实现代码！
+After receiving this info, I will provide a complete implementation immediately.
 
 ---
 
-## 📞 需要帮助？
+## 📞 Need Help?
 
-如果遇到任何问题，请随时告诉我：
-- AI 服务相关问题
-- 代码实现疑问
-- 测试过程中的错误
-- 任何其他问题
+If you run into any issue, tell me anytime:
+- AI service related questions
+- Implementation details
+- Test errors
+- Any other blockers
 
-我会逐步帮您解决！
+I will help you resolve them step by step.
