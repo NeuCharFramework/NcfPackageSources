@@ -16,14 +16,14 @@ namespace Senparc.Ncf.Core.Config
     public static partial class SiteConfig
     {
         /// <summary>
-        /// 网站物理路径
+        /// Website physical path
         /// </summary>
         public static string ApplicationPath { get; set; }
         public static string WebRootPath { get; set; }
 
         /// <summary>
-        /// 设置
-        /// <para>需要在系统启动时注入</para>
+        /// Settings
+        /// <para>Must be injected when system starts</para>
         /// </summary>
         public static SenparcCoreSetting SenparcCoreSetting { get; set; } = new SenparcCoreSetting();
         //{
@@ -36,23 +36,23 @@ namespace Senparc.Ncf.Core.Config
         //}
 
         /// <summary>
-        /// 是否处于Debug状态（人为手动定义）
+        /// Whether in Debug mode (manually defined)
         /// </summary>
         public static bool IsDebug => SenparcCoreSetting.IsDebug;
 
         /// <summary>
-        /// 是否是测试站
+        /// Whether this is a test site
         /// </summary>
         public static bool IsTestSite => SenparcCoreSetting.IsTestSite;
 
         public static Dictionary<string, int> _memcachedAddressesDic;
         public const string WEIXIN_FILTER_IGNORE = "senparcnofilter1";
-        public const string WEIXIN_OFFICIAL_AVATAR_KEY = "WXoDOkC8A"; //将取前8位
-        public const string WEIXIN_OFFICIAL_QR_CODE_KEY = "WX631IC8A"; //将取前8位
-        public const string WEIXIN_APP_TOKEN_KEY = "WEIXIN_APP_TOKEN_KEY_FOR_NCF"; //微信APP Token加密
-        public const long MIN_WEIXINUSERINFO_ID = 10000000000000; //最小自定义WeixinUserInfo的Id
-        public const decimal PROJECTDMANDDEPOSIT = 1000; //任务默认押金
-        public const string CERT_P12_ADDRESS = @"E:\";//微信支付数字证书存放地址
+        public const string WEIXIN_OFFICIAL_AVATAR_KEY = "WXoDOkC8A"; //Take first 8 chars
+        public const string WEIXIN_OFFICIAL_QR_CODE_KEY = "WX631IC8A"; //Take first 8 chars
+        public const string WEIXIN_APP_TOKEN_KEY = "WEIXIN_APP_TOKEN_KEY_FOR_NCF"; //WeChat APP Token encryption
+        public const long MIN_WEIXINUSERINFO_ID = 10000000000000; //Minimum custom WeixinUserInfo Id
+        public const decimal PROJECTDMANDDEPOSIT = 1000; //Default project deposit
+        public const string CERT_P12_ADDRESS = @"E:\";//Storage path for WeChat Pay certificate
 
         /* UID 建议格式： NCF公司ID-项目类型-保留字段(可随机)-内部类别1-内部类别2*/
         public const string SYSTEM_XNCF_TANENT_UID = "00000000-0000-0000-0000-000000000001";
@@ -67,15 +67,15 @@ namespace Senparc.Ncf.Core.Config
         public const string SYSTEM_XNCF_MODULE_AREAS_ADMIN_UID = "00000000-0000-0001-0001-000000000001";
         public const string SYSTEM_XNCF_MODULE_ACCOUNTS_UID = "00000000-0000-0001-0001-000000000002";
 
-        public const string TENANT_DEFAULT_NAME = "DEFAULT";//多租户 TenantName 默认值（不作为任何一个特殊租户）
+        public const string TENANT_DEFAULT_NAME = "DEFAULT";//Default multi-tenant TenantName (not treated as any special tenant)
 
         /// <summary>
-        /// 开发者收入比例
+        /// Developer income ratio
         /// </summary>
         public static readonly long DeveloperIncomRate = (long)0.5;
 
         /// <summary>
-        /// 缓存类型
+        /// Cache type
         /// </summary>
         public static CacheType CacheType
         {
@@ -90,38 +90,38 @@ namespace Senparc.Ncf.Core.Config
         public const string VERSION = "0.0.1";
         public static string SenparcConfigDirctory = "~/App_Data/Database/";
         public const string AntiForgeryTokenSalt = "SOUIDEA__SENPARC";
-        public const string WEIXIN_USER_AVATAR_KEY = "SENPARC_"; //将取前8位
+        public const string WEIXIN_USER_AVATAR_KEY = "SENPARC_"; //Take first 8 chars
         public const string DomainName = "https://ncf.senparc.com";
         public const string DefaultTemplate = "default";
-        public const int SMSSENDWAITSECONDS = 60; //手机验证持续时间
-        public const string DEFAULT_AVATAR = "/Content/Images/userinfonopic.png"; //默认头像
+        public const int SMSSENDWAITSECONDS = 60; //Phone verification duration
+        public const string DEFAULT_AVATAR = "/Content/Images/userinfonopic.png"; //Default avatar
 
         public const string DEFAULT_MEMCACHED_ADDRESS_1 = "192.168.184.91";
         public const int DEFAULT_MEMCACHED_PORT_1 = 11210;
 
         /// <summary>
-        /// WBS格式
+        /// WBS format
         /// </summary>
         public static readonly string WBSFormat = "000";
 
         /// <summary>
-        /// 用户在线不活动过期时间(分钟)
+        /// User online inactivity timeout (minutes)
         /// </summary>
         public static readonly int UserOnlineTimeoutMinutes = 10;
         /// <summary>
-        /// 最多免验证码尝试登录次数
+        /// Max login attempts without verification code
         /// </summary>
         public static readonly int TryLoginTimes = 1;
         /// <summary>
-        /// 最多免验证码尝试登录次数
+        /// Max user login attempts without verification code
         /// </summary>
         public static readonly int TryUserLoginTimes = 3;
         /// <summary>
-        /// 最大数据库备份文件个数
+        /// Maximum number of database backup files
         /// </summary>
         public static readonly int MaxBackupDatabaseCount = 200;
         /// <summary>
-        /// 是否是单元测试
+        /// Whether running unit test
         /// </summary>
         public static readonly bool IsUnitTest = false;
         ///// <summary>
@@ -132,7 +132,7 @@ namespace Senparc.Ncf.Core.Config
         private static bool _isInstalling = false;
 
         /// <summary>
-        /// 是否正在进行安装，如果是，则不抛出监测安装的异常
+        /// Whether installation is in progress; if true, installation-check exception is not thrown
         /// </summary>
         public static bool IsInstalling
         {
@@ -147,7 +147,7 @@ namespace Senparc.Ncf.Core.Config
         }
 
         /// <summary>
-        /// 检查安装完成状态文件是否存在
+        /// Check whether installation-finished status file exists
         /// </summary>
         /// <returns></returns>
         public static bool CheckInstallFinishedFileExisted()
@@ -157,7 +157,7 @@ namespace Senparc.Ncf.Core.Config
         }
 
         /// <summary>
-        /// 手动设置安装状态-结束
+        /// Manually set installation status to finished
         /// </summary>
         public static async void SetInstallFinished()
         {
@@ -167,33 +167,33 @@ namespace Senparc.Ncf.Core.Config
             {
                 var text = @$"After this file is successfully installed by the system, it should only be modified or removed when you need to reinstall the entire system! Please operate with caution!!
 
-此文件由系统成功安装后，仅在您需要全部重新安装系统时将其修改或移除！请谨慎操作！！";
+This file is created after successful system installation. Modify or remove it only when you need to reinstall the whole system. Please operate with caution!!";
                 await File.WriteAllTextAsync(filePath, text);
             }
         }
 
-        public static int PageViewCount { get; set; } //网站启动后前台页面浏览量
+        public static int PageViewCount { get; set; } //Frontend page views after site startup
 
 
         /// <summary>
-        /// 是否应有数据库模块载入
+        /// Whether database module should be loaded
         /// </summary>
         public static bool DatabaseXncfLoaded { get; set; }
 
         /// <summary>
-        /// 系统状态
+        /// System state
         /// </summary>
         public static NcfCoreState NcfCoreState { get; } = NcfCoreState.Instance;
 
-        //异步线程
-        public static Dictionary<string, Thread> AsynThread = new Dictionary<string, Thread>(); //后台运行线程
+        //Async threads
+        public static Dictionary<string, Thread> AsynThread = new Dictionary<string, Thread>(); //Background running threads
 
         /// <summary>
-        /// Admin 管理员的 Cookie 登录 Scheme
+        /// Cookie login scheme for Admin
         /// </summary>
         public readonly static string NcfAdminAuthorizeScheme = "NcfAdminAuthorizeScheme";
         /// <summary>
-        /// User 管理员的 Cookie 登录 Scheme
+        /// Cookie login scheme for User
         /// </summary>
         public readonly static string NcfUserAuthorizeScheme = "NcfUserAuthorizeScheme";
     }

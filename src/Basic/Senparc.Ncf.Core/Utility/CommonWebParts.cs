@@ -9,10 +9,10 @@ namespace Senparc.Ncf.Core.Utility
 {
     public static class CommonWebParts
     {
-        //#region 转换HTML代码 public static string exHTML(string ntext)
+        //#region Convert HTML code public static string exHTML(string ntext)
         /////// <summary>
-        /////// 转换HTML代码——TNT2
-        /////// 已实现：回车,空格
+        /////// Convert HTML code -- TNT2
+        /////// Implemented: newline, space
         /////// </summary>
         ////public static string exHTML(string ntext)
         ////{
@@ -21,8 +21,8 @@ namespace Senparc.Ncf.Core.Utility
         ////}
 
         ///// <summary>
-        ///// 转换HTML代码——TNT2
-        ///// 已实现：回车,空格
+        ///// Convert HTML code -- TNT2
+        ///// Implemented: newline, space
         ///// </summary>
         //public static string ExHTML(this string ntext)
         //{
@@ -38,7 +38,7 @@ namespace Senparc.Ncf.Core.Utility
         //#endregion
 
         /// <summary>
-        /// 删除所有HTML标记
+        /// Remove all HTML tags
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -51,9 +51,9 @@ namespace Senparc.Ncf.Core.Utility
 
 
         /// <summary>
-        /// 获取Form值，Handler用
+        /// Get Form value, for Handler usage
         /// </summary>
-        /// <param name="key">Form键</param>
+        /// <param name="key">Form key</param>
         /// <param name="context">HttpContext</param>
         /// <returns></returns>
         public static string GetFormValue(string key, HttpContext context)
@@ -63,48 +63,48 @@ namespace Senparc.Ncf.Core.Utility
 
 
         /// <summary>
-        /// 获取格式化后的文件名
+        /// Get formatted file name
         /// </summary>
-        /// <param name="fileFormat">文件格式（在Config.UpLoadFileFormat中）</param>
-        /// <param name="currentFileName">当前文件名（可以包含路径）</param>
+        /// <param name="fileFormat">File format (in Config.UpLoadFileFormat)</param>
+        /// <param name="currentFileName">Current file name (path can be included)</param>
         /// <returns></returns>
         public static string GetFormattedUpLoadFileName(string fileFormat, string currentFileName)
         {
             return string.Format(fileFormat, currentFileName, Path.GetExtension(currentFileName));
         }
 
-        #region 货币大小写转换
+        #region Currency uppercase conversion
         /// <summary>
-        /// 货币大小写转换
+        /// Currency uppercase conversion
         /// </summary>
-        /// <param name="num">货币金额</param>
+        /// <param name="num">Currency amount</param>
         /// <returns></returns>
         public static string CmycurD(decimal num)
         {
-            string str1 = "零壹贰叁肆伍陆柒捌玖"; //0-9所对应的汉字   
-            string str2 = "万仟佰拾亿仟佰拾万仟佰拾元角分"; //数字位所对应的汉字   
-            string str3 = ""; //从原num值中取出的值   
-            string str4 = ""; //数字的字符串形式   
-            string str5 = ""; //人民币大写金额形式   
-            int i; //循环变量   
-            int j; //num的值乘以100的字符串长度   
-            string ch1 = ""; //数字的汉语读法   
-            string ch2 = ""; //数字位的汉字读法   
-            int nzero = 0; //用来计算连续的零值是几个   
-            int temp; //从原num值中取出的值   
-            num = Math.Round(Math.Abs(num), 2); //将num取绝对值并四舍五入取2位小数   
-            str4 = ((long)(num * 100)).ToString(); //将num乘100并转换成字符串形式   
-            j = str4.Length; //找出最高位   
+            string str1 = "零壹贰叁肆伍陆柒捌玖"; //Chinese characters corresponding to 0-9
+            string str2 = "万仟佰拾亿仟佰拾万仟佰拾元角分"; //Chinese characters for digit places
+            string str3 = ""; //Value extracted from original num
+            string str4 = ""; //String representation of number
+            string str5 = ""; //Uppercase RMB amount format
+            int i; //Loop variable
+            int j; //Length of num*100 string
+            string ch1 = ""; //Chinese reading of digit
+            string ch2 = ""; //Chinese reading of digit place
+            int nzero = 0; //Count consecutive zero values
+            int temp; //Value extracted from original num
+            num = Math.Round(Math.Abs(num), 2); //Take absolute value and round to 2 decimals
+            str4 = ((long)(num * 100)).ToString(); //Multiply num by 100 and convert to string
+            j = str4.Length; //Find highest digit
             if (j > 15) { return "溢出"; }
-            str2 = str2.Substring(15 - j); //取出对应位数的str2的值。如：200.55,j为5所以str2=佰拾元角分   
-            //循环取出每一位需要转换的值   
+            str2 = str2.Substring(15 - j); //Extract corresponding part of str2, e.g. 200.55 -> j=5 -> str2=佰拾元角分
+            //Loop through digits to convert
             for (i = 0; i < j; i++)
             {
-                str3 = str4.Substring(i, 1); //取出需转换的某一位的值   
-                temp = Convert.ToInt32(str3); //转换为数字   
+                str3 = str4.Substring(i, 1); //Get one digit to convert
+                temp = Convert.ToInt32(str3); //Convert to number
                 if (i != (j - 3) && i != (j - 7) && i != (j - 11) && i != (j - 15))
                 {
-                    //当所取位数不为元、万、亿、万亿上的数字时   
+                    //When current digit place is not yuan/ten-thousand/hundred-million/trillion
                     if (str3 == "0")
                     {
                         ch1 = "";
@@ -129,7 +129,7 @@ namespace Senparc.Ncf.Core.Utility
                 }
                 else
                 {
-                    //该位是万亿，亿，万，元位等关键位   
+                    //Current place is a key place: trillion/hundred-million/ten-thousand/yuan
                     if (str3 != "0" && nzero != 0)
                     {
                         ch1 = "零" + str1.Substring(temp * 1, 1);
@@ -171,13 +171,13 @@ namespace Senparc.Ncf.Core.Utility
                 }
                 if (i == (j - 11) || i == (j - 3))
                 {
-                    //如果该位是亿位或元位，则必须写上   
+                    //If this place is hundred-million or yuan, it must be written
                     ch2 = str2.Substring(i, 1);
                 }
                 str5 = str5 + ch1 + ch2;
                 if (i == j - 1 && str3 == "0")
                 {
-                    //最后一位（分）为0时，加上&#8220;整&#8221;   
+                    //If the last digit (fen) is 0, append "整"
                     str5 = str5 + '整';
                 }
             }
@@ -189,9 +189,9 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 货币大小写转换
+        /// Currency uppercase conversion
         /// </summary>
-        /// <param name="numstr">货币金额</param>
+        /// <param name="numstr">Currency amount</param>
         /// <returns></returns>
         public static string CmycurD(string numstr)
         {
@@ -202,7 +202,7 @@ namespace Senparc.Ncf.Core.Utility
             }
             catch
             {
-                return "非数字形式！";
+                return "Non-numeric format!";
             }
         }
 
