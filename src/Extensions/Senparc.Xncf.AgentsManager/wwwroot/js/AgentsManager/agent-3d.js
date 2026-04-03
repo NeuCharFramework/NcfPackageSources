@@ -91,8 +91,6 @@
     this.targets = new Map();
     this.activeGroupId = null;
     this.lockedGroupId = null;
-    this.avatarTextureLoader = null;
-    this.avatarTextureCache = new Map();
     this.pointerClickHandler = null;
   }
 
@@ -127,7 +125,6 @@
 
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector2();
-    this.avatarTextureLoader = new THREE.TextureLoader();
 
     const ambient = new THREE.AmbientLight(0xffffff, 0.58);
     const key = new THREE.DirectionalLight(0xa9d2ff, 0.9);
@@ -193,7 +190,6 @@
     this.scene = null;
     this.agentById.clear();
     this.groupById.clear();
-    this.avatarTextureCache.clear();
   };
 
   AgentGraph3D.prototype.handleResize = function () {
@@ -219,10 +215,23 @@
       if (!target) {
         return;
       }
-      entry.mesh.position.lerp(target, 0.09);
-      if (entry.avatarSprite) {
-        entry.avatarSprite.position.set(entry.mesh.position.x, entry.mesh.position.y + 0.02, entry.mesh.position.z);
-      }
+
+      entry.baseY += (target.y - entry.baseY) * 0.15;
+      const movingDistance = Math.hypot(target.x - entry.mesh.position.x, target.z - entry.mesh.position.z);
+      const moving = movingDistance > 0.03;
+
+      entry.mesh.position.x += (target.x - entry.mesh.position.x) * 0.09;
+      entry.mesh.position.z += (target.z - entry.mesh.position.z) * 0.09;
+
+      entry.motionPhase += moving ? 0.36 : 0.08;
+      const hop = moving ? Math.abs(Math.sin(entry.motionPhase)) * 0.75 : 0;
+      entry.mesh.position.y = entry.baseY + hop;
+
+      const jelly = Math.sin(entry.motionPhase);
+      const stretchY = moving ? (1 + jelly * 0.18) : (1 + jelly * 0.05);
+      const squashXZ = moving ? (1 - jelly * 0.1) : (1 - jelly * 0.03);
+      entry.mesh.scale.set(squashXZ, stretchY, squashXZ);
+
       if (entry.pulseRing) {
         entry.pulseRing.position.set(entry.mesh.position.x, 0.25, entry.mesh.position.z);
         if (entry.isActive) {
@@ -258,18 +267,37 @@
       }
     });
 
+    this.linkObjects.forEach(function (line) {
+      if (line && line.userData && line.userData.flowDot) {
+        all.push(line.userData.flowDot);
+      }
+    });
+
     all.forEach(function (obj) {
       if (obj && obj.parent) {
         obj.parent.remove(obj);
       }
-      if (obj && obj.material && obj.material.map) {
-        obj.material.map.dispose();
-      }
-      if (obj && obj.material) {
-        obj.material.dispose();
-      }
-      if (obj && obj.geometry) {
-        obj.geometry.dispose();
+      if (obj && typeof obj.traverse === 'function') {
+        obj.traverse(function (node) {
+          if (node.material) {
+            if (Array.isArray(node.material)) {
+              node.material.forEach(function (mat) {
+                if (mat.map) {
+                  mat.map.dispose();
+                }
+                mat.dispose();
+              });
+            } else {
+              if (node.material.map) {
+                node.material.map.dispose();
+              }
+              node.material.dispose();
+            }
+          }
+          if (node.geometry) {
+            node.geometry.dispose();
+          }
+        });
       }
     });
 
@@ -338,9 +366,11 @@
 
     const activeGroupIds = new Set((this.currentSnapshot.collaborations || []).map(function (c) { return c.groupId; }));
     const activeAgentIds = new Set();
+    const activeLinkKeySet = new Set();
     (this.currentSnapshot.collaborations || []).forEach(function (col) {
       (col.agentIds || []).forEach(function (id) {
         activeAgentIds.add(id);
+        activeLinkKeySet.add(col.groupId + '-' + id);
       });
     });
     const agentGeom = new THREE.SphereGeometry(1.6, 22, 22);
@@ -393,6 +423,7 @@
       const sphere = new THREE.Mesh(agentGeom, mat);
       sphere.position.copy(target);
       sphere.userData = { type: 'agent', agentId: agent.id };
+      this.decorateCuteAgent(sphere, agent.enable);
       this.scene.add(sphere);
 
       const promptText = agent.promptCode ? agent.promptCode : '--';
@@ -412,19 +443,12 @@
         agent: agent,
         target: target,
         groupIds: memberGroupIds,
-        avatarSprite: null,
         pulseRing: null,
         isActive: activeAgentIds.has(agent.id) || agent.chattingCount > 0,
-        pulsePhase: (hashNumber(agent.id) % 100) / 10
+        pulsePhase: (hashNumber(agent.id) % 100) / 10,
+        motionPhase: (hashNumber(agent.id + '-motion') % 100) / 16,
+        baseY: target.y
       };
-
-      const avatarUrl = agent.avastar || '/images/AgentsManager/avatar/avatar1.png';
-      const avatarSprite = this.createAgentAvatarSprite(avatarUrl);
-      if (avatarSprite) {
-        avatarSprite.position.set(target.x, target.y + 0.02, target.z);
-        this.scene.add(avatarSprite);
-        entry.avatarSprite = avatarSprite;
-      }
 
       if (entry.isActive) {
         const ringGeometry = new THREE.RingGeometry(1.9, 2.25, 36);
@@ -479,7 +503,31 @@
         opacity: 0.5
       });
       const line = new THREE.Line(geometry, material);
-      line.userData = { groupId: link.groupId, agentId: link.agentId };
+      const activeKey = link.groupId + '-' + link.agentId;
+      line.userData = {
+        groupId: link.groupId,
+        agentId: link.agentId,
+        isActive: activeLinkKeySet.has(activeKey),
+        phase: (hashNumber(activeKey) % 100) / 10,
+        flowDot: null
+      };
+
+      if (line.userData.isActive) {
+        const dotGeometry = new THREE.SphereGeometry(0.22, 12, 12);
+        const dotMaterial = new THREE.MeshStandardMaterial({
+          color: 0x7be3ff,
+          emissive: 0x2eaad1,
+          emissiveIntensity: 0.65,
+          metalness: 0.1,
+          roughness: 0.25,
+          transparent: true,
+          opacity: 0.92
+        });
+        const flowDot = new THREE.Mesh(dotGeometry, dotMaterial);
+        this.scene.add(flowDot);
+        line.userData.flowDot = flowDot;
+      }
+
       this.scene.add(line);
       this.linkObjects.push(line);
     }.bind(this));
@@ -501,9 +549,24 @@
       positions[1] = groupNode.mesh.position.y + 7.8;
       positions[2] = groupNode.mesh.position.z;
       positions[3] = agentNode.mesh.position.x;
-      positions[4] = agentNode.mesh.position.y;
+      positions[4] = agentNode.mesh.position.y + 0.4;
       positions[5] = agentNode.mesh.position.z;
       line.geometry.attributes.position.needsUpdate = true;
+
+      if (line.userData.isActive) {
+        const elapsed = Date.now() * 0.0018 + line.userData.phase;
+        line.material.opacity = 0.45 + ((Math.sin(elapsed * 2.2) + 1) * 0.2);
+
+        const t = (elapsed % 1 + 1) % 1;
+        const x = positions[0] + (positions[3] - positions[0]) * t;
+        const y = positions[1] + (positions[4] - positions[1]) * t;
+        const z = positions[2] + (positions[5] - positions[2]) * t;
+
+        if (line.userData.flowDot) {
+          line.userData.flowDot.position.set(x, y, z);
+          line.userData.flowDot.material.opacity = 0.6 + ((Math.sin(elapsed * 3.1) + 1) * 0.2);
+        }
+      }
     }.bind(this));
   };
 
@@ -611,47 +674,70 @@
 
     this.linkObjects.forEach(function (line) {
       if (!activeGroup) {
-        line.material.opacity = 0.5;
+        if (!line.userData.isActive) {
+          line.material.opacity = 0.5;
+        }
       } else {
         line.material.opacity = line.userData.groupId === activeGroup ? 0.85 : 0.08;
+      }
+
+      if (line.userData.flowDot) {
+        line.userData.flowDot.visible = !activeGroup || line.userData.groupId === activeGroup;
       }
     });
   };
 
-  AgentGraph3D.prototype.createAgentAvatarSprite = function (avatarUrl) {
-    if (!this.avatarTextureLoader || !avatarUrl) {
-      return null;
-    }
+  AgentGraph3D.prototype.decorateCuteAgent = function (bodyMesh, enable) {
+    const accentColor = enable ? 0x8fe7ff : 0xa8b3bf;
 
-    const material = new THREE.SpriteMaterial({
-      transparent: true,
-      opacity: 0.92,
-      depthWrite: false
-    });
-    const sprite = new THREE.Sprite(material);
-    sprite.scale.set(2.35, 2.35, 1);
-
-    const cached = this.avatarTextureCache.get(avatarUrl);
-    if (cached) {
-      material.map = cached;
-      material.needsUpdate = true;
-      return sprite;
-    }
-
-    this.avatarTextureLoader.load(
-      avatarUrl,
-      function (texture) {
-        this.avatarTextureCache.set(avatarUrl, texture);
-        material.map = texture;
-        material.needsUpdate = true;
-      }.bind(this),
-      undefined,
-      function () {
-        material.opacity = 0;
-      }
+    const cap = new THREE.Mesh(
+      new THREE.SphereGeometry(1.0, 16, 16),
+      new THREE.MeshStandardMaterial({
+        color: accentColor,
+        transparent: true,
+        opacity: 0.55,
+        metalness: 0.05,
+        roughness: 0.25
+      })
     );
+    cap.position.set(0, 0.85, 0);
+    bodyMesh.add(cap);
 
-    return sprite;
+    const eyeGeometry = new THREE.SphereGeometry(0.12, 10, 10);
+    const eyeMaterial = new THREE.MeshBasicMaterial({ color: 0x10253c });
+
+    const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+    leftEye.position.set(-0.35, 0.28, 1.3);
+    const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+    rightEye.position.set(0.35, 0.28, 1.3);
+    bodyMesh.add(leftEye);
+    bodyMesh.add(rightEye);
+
+    const smile = new THREE.Mesh(
+      new THREE.TorusGeometry(0.22, 0.04, 8, 24, Math.PI),
+      new THREE.MeshBasicMaterial({ color: 0x153a57 })
+    );
+    smile.position.set(0, -0.08, 1.28);
+    smile.rotation.set(Math.PI * 0.05, 0, Math.PI);
+    bodyMesh.add(smile);
+
+    const antenna = new THREE.Mesh(
+      new THREE.SphereGeometry(0.14, 10, 10),
+      new THREE.MeshStandardMaterial({ color: 0xe7f9ff, emissive: 0x84dfff, emissiveIntensity: 0.35 })
+    );
+    antenna.position.set(0, 1.55, 0.2);
+    bodyMesh.add(antenna);
+
+    const footGeometry = new THREE.SphereGeometry(0.22, 12, 12);
+    const footMaterial = new THREE.MeshStandardMaterial({ color: 0xb8f1ff, roughness: 0.6, metalness: 0.02 });
+    const leftFoot = new THREE.Mesh(footGeometry, footMaterial);
+    leftFoot.scale.set(1.35, 0.7, 1.1);
+    leftFoot.position.set(-0.45, -1.35, 0.5);
+    const rightFoot = new THREE.Mesh(footGeometry, footMaterial);
+    rightFoot.scale.set(1.35, 0.7, 1.1);
+    rightFoot.position.set(0.45, -1.35, 0.5);
+    bodyMesh.add(leftFoot);
+    bodyMesh.add(rightFoot);
   };
 
   global.AgentGraph3D = AgentGraph3D;
