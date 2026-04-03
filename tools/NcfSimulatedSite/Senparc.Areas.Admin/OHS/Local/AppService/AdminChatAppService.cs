@@ -9,6 +9,7 @@ using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,18 +28,21 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         private readonly AdminChatMessageService _messageService;
         private readonly AdminChatSessionModuleService _sessionModuleService;
         private readonly AdminChatAiService _chatAiService;
+        private readonly IStringLocalizer<AdminResource> _localizer;
 
         public AdminChatAppService(
             IServiceProvider serviceProvider,
             AdminChatSessionService sessionService,
             AdminChatMessageService messageService,
             AdminChatSessionModuleService sessionModuleService,
-            AdminChatAiService chatAiService) : base(serviceProvider)
+            AdminChatAiService chatAiService,
+            IStringLocalizer<AdminResource> localizer) : base(serviceProvider)
         {
             _sessionService = sessionService;
             _messageService = messageService;
             _sessionModuleService = sessionModuleService;
             _chatAiService = chatAiService;
+            _localizer = localizer;
         }
 
         #region 会话管理
@@ -54,11 +58,11 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 var userId = GetCurrentAdminUserInfoId();
                 if (userId <= 0)
                 {
-                    throw new NcfExceptionBase("用户未登录");
+                    throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
                 }
 
                 var title = string.IsNullOrEmpty(request.InitialMessage) 
-                    ? "新对话" 
+                    ? _localizer["AdminChat.NewConversation"] 
                     : (request.InitialMessage.Length > 50 ? request.InitialMessage.Substring(0, 50) + "..." : request.InitialMessage);
 
                 var session = await _sessionService.CreateSessionAsync(title, userId);
@@ -119,7 +123,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 var userId = GetCurrentAdminUserInfoId();
                 if (userId <= 0)
                 {
-                    throw new NcfExceptionBase("用户未登录");
+                    throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
                 }
 
                 var (sessions, totalCount) = await _sessionService.GetUserActiveSessionsAsync(userId, pageIndex, pageSize);
@@ -143,13 +147,13 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 var userId = GetCurrentAdminUserInfoId();
                 if (userId <= 0)
                 {
-                    throw new NcfExceptionBase("用户未登录");
+                    throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
                 }
 
                 var session = await _sessionService.GetSessionByIdAsync(sessionId, userId);
                 if (session == null)
                 {
-                    throw new NcfExceptionBase("会话不存在或无权访问");
+                    throw new NcfExceptionBase(_localizer["AdminChat.SessionNotFoundOrForbidden"]);
                 }
 
                 var (messages, _) = await _messageService.GetSessionMessagesAsync(sessionId);
@@ -177,17 +181,17 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 var userId = GetCurrentAdminUserInfoId();
                 if (userId <= 0)
                 {
-                    throw new NcfExceptionBase("用户未登录");
+                    throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
                 }
 
                 var success = await _sessionService.DeleteSessionAsync(sessionId, userId);
                 if (!success)
                 {
-                    throw new NcfExceptionBase("会话不存在或无权删除");
+                    throw new NcfExceptionBase(_localizer["AdminChat.SessionNotFoundOrNoDeletePermission"]);
                 }
 
                 logger.Append($"删除会话: SessionId={sessionId}, UserId={userId}");
-                return "删除成功";
+                return _localizer["AdminChat.DeleteSessionSuccess"];
             });
         }
 
@@ -206,13 +210,13 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 var userId = GetCurrentAdminUserInfoId();
                 if (userId <= 0)
                 {
-                    throw new NcfExceptionBase("用户未登录");
+                    throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
                 }
 
                 var session = await _sessionService.GetSessionByIdAsync(request.SessionId, userId);
                 if (session == null)
                 {
-                    throw new NcfExceptionBase("会话不存在或无权访问");
+                    throw new NcfExceptionBase(_localizer["AdminChat.SessionNotFoundOrForbidden"]);
                 }
 
                 var userMessage = await _messageService.AddMessageAsync(
@@ -251,13 +255,13 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 var userId = GetCurrentAdminUserInfoId();
                 if (userId <= 0)
                 {
-                    throw new NcfExceptionBase("用户未登录");
+                    throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
                 }
 
                 var session = await _sessionService.GetSessionByIdAsync(sessionId, userId);
                 if (session == null)
                 {
-                    throw new NcfExceptionBase("会话不存在或无权访问");
+                    throw new NcfExceptionBase(_localizer["AdminChat.SessionNotFoundOrForbidden"]);
                 }
 
                 var (messages, totalCount) = await _messageService.GetSessionMessagesAsync(sessionId, pageIndex, pageSize);
@@ -281,11 +285,11 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 var success = await _messageService.SetMessageFeedbackAsync(messageId, feedback);
                 if (!success)
                 {
-                    throw new NcfExceptionBase("消息不存在");
+                    throw new NcfExceptionBase(_localizer["AdminChat.MessageNotFound"]);
                 }
 
                 logger.Append($"设置反馈: MessageId={messageId}, Feedback={feedback}");
-                return "反馈成功";
+                return _localizer["AdminChat.SetFeedbackSuccess"];
             });
         }
 
@@ -300,13 +304,13 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 var userId = GetCurrentAdminUserInfoId();
                 if (userId <= 0)
                 {
-                    throw new NcfExceptionBase("用户未登录");
+                    throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
                 }
 
                 var session = await _sessionService.GetSessionByIdAsync(sessionId, userId);
                 if (session == null)
                 {
-                    throw new NcfExceptionBase("会话不存在或无权访问");
+                    throw new NcfExceptionBase(_localizer["AdminChat.SessionNotFoundOrForbidden"]);
                 }
 
                 var parsedMessageIds = (messageIds ?? string.Empty)
@@ -318,12 +322,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 if (!parsedMessageIds.Any())
                 {
-                    throw new NcfExceptionBase("请至少选择一条消息");
+                    throw new NcfExceptionBase(_localizer["AdminChat.SelectAtLeastOneMessage"]);
                 }
 
                 var deletedCount = await _messageService.DeleteMessagesAsync(sessionId, parsedMessageIds);
                 logger.Append($"批量删除消息: SessionId={sessionId}, DeletedCount={deletedCount}");
-                return $"删除成功，共删除 {deletedCount} 条消息";
+                return _localizer["AdminChat.DeleteMessagesSuccess", deletedCount];
             });
         }
 
@@ -342,20 +346,20 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 var userId = GetCurrentAdminUserInfoId();
                 if (userId <= 0)
                 {
-                    throw new NcfExceptionBase("用户未登录");
+                    throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
                 }
 
                 var session = await _sessionService.GetSessionByIdAsync(request.SessionId, userId);
                 if (session == null)
                 {
-                    throw new NcfExceptionBase("会话不存在或无权访问");
+                    throw new NcfExceptionBase(_localizer["AdminChat.SessionNotFoundOrForbidden"]);
                 }
 
                 var modules = request.Modules.Select(m => (m.Uid, m.Name, m.Version ?? "")).ToList();
                 await _sessionModuleService.AddModulesToSessionAsync(request.SessionId, modules);
 
                 logger.Append($"添加模块: SessionId={request.SessionId}, Count={modules.Count}");
-                return "添加成功";
+                return _localizer["AdminChat.AddModulesSuccess"];
             });
         }
 
@@ -370,13 +374,13 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 var userId = GetCurrentAdminUserInfoId();
                 if (userId <= 0)
                 {
-                    throw new NcfExceptionBase("用户未登录");
+                    throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
                 }
 
                 var session = await _sessionService.GetSessionByIdAsync(sessionId, userId);
                 if (session == null)
                 {
-                    throw new NcfExceptionBase("会话不存在或无权访问");
+                    throw new NcfExceptionBase(_localizer["AdminChat.SessionNotFoundOrForbidden"]);
                 }
 
                 var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
