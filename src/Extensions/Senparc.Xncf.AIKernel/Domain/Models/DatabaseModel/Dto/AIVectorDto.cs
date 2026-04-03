@@ -11,49 +11,49 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
     public class AIVectorDto : DtoBase
     {
         /// <summary>
-        /// 主键 ID
+        /// primary key ID
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// 代号
+        /// code name
         /// </summary>
         public string Alias { get; set; }
 
 
         /// <summary>
-        /// 模型名称（必须）
+        ///Model name (required)
         /// </summary>
         public string VectorId { get; set; }
 
         /// <summary>
-        /// 名称
+        ///name
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 连接字符串
+        /// connection string
         /// </summary>
         public string ConnectionString { get; set; }
 
         /// <summary>
-        /// 向量数据库的类型（必须）, 例如：Memory, HardDisk, Redis, Mulivs, Chroma, PostgreSQL, Sqlite, SqlServer, Default
+        /// Type of vector database (required), for example: Memory, HardDisk, Redis, Mulivs, Chroma, PostgreSQL, Sqlite, SqlServer, Default
         /// </summary>
         public VectorDBType VectorDBType { get; set; }
 
         /// <summary>
-        /// Note（可选）
+        ///Note (optional)
         /// </summary>
         public string Note { get; set; }
 
         /// <summary>
-        /// 是否共享
+        /// Whether to share
         /// </summary>
         public bool IsShared { get; set; } = false;
 
 
         /// <summary>
-        /// 是否展示
+        /// Whether to display
         /// </summary>
         public bool Show { get; set; }
 

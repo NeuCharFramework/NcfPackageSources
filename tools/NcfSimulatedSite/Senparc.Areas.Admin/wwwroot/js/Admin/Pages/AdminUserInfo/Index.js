@@ -11,19 +11,19 @@
         //};
         //const validatePass2 = (rule, value, callback) => {
         //    if (value === '') {
-        //        callback(new Error('请再次输入密码'));
+        //        callback(new Error('Please enter password again'));
         //    } else if (value !== this.dialog.data.password) {
-        //        callback(new Error('两次输入密码不一致!'));
+        //        callback(new Error('The password entered twice is inconsistent!'));
         //    } else {
         //        callback();
         //    }
         //};
         return {
-            //分页参数
+            //Paging parameters
             paginationQuery: {
                 total: 5
             },
-            //分页接口传参
+            //Paging interface parameter passing
             listQuery: {
                 pageIndex: 1,
                 pageSize: 20,
@@ -50,15 +50,15 @@
                     //password2: [{ required: true, validator: validatePass2, trigger: "blur" }]
                 },
                 updateLoading: false,
-                visibleSet: false, // 设置角色dialog
-                updateLoadingSet: false, // 确认loading按钮
+                visibleSet: false, // Set role dialog
+                updateLoadingSet: false, // Confirm loading button
                 dialogSetData: [],
-                dialogSetSelected: [], //多选框
+                dialogSetSelected: [], //checkbox
                 setId: '',
                 setTitle: '',
                 passwordError:'',
                 password2Error: '',
-                isVerTrue:false // 密码校验是否通过
+                isVerTrue:false // Password verification passed?
             }
         };
     },
@@ -66,7 +66,7 @@
         this.getList();
     },
     computed: {
-        // 密码需要校验
+        // Password needs to be verified
         isVerPass() {
             if (this.dialog.title === '新增管理员') {
                 return true;
@@ -85,7 +85,7 @@
             this.checkPass();
         },
         'dialog.visible': function (val, old) {
-            // 关闭dialog，清空
+            // Close the dialog and clear it
             if (!val) {
                 this.dialog.data = {
                     id: 0,
@@ -104,7 +104,7 @@
         }
     },
     methods: {
-        // 再次校验密码
+        // Check password again
         checkPass() {
             if (this.isVerPass) {
                 if (this.dialog.data.password === '') {
@@ -133,7 +133,7 @@
                 }
             }
         },
-        // 获取数据
+        // Get data
         getList() {
             let { adminUserInfoName, pageIndex, pageSize } = this.listQuery;
             service.get(`/Admin/AdminUserInfo/index?handler=List&adminUserInfoName=${adminUserInfoName}&pageIndex=${pageIndex}&pageSize=${pageSize}`).then(res => {
@@ -141,11 +141,11 @@
                 this.paginationQuery.total = res.data.data.totalCount;
             });
         },
-        // 编辑
+        // edit
         handleEdit(index, row) {
             this.dialog.visible = true;
             if (row) {
-                // 编辑
+                // edit
                 let { userName, password, realName, phone, note, id } = row;
                 this.dialog.data = {
                     userName, realName, phone, note, id, password: '', password2: ''
@@ -153,18 +153,18 @@
                 this.dialog.title = '编辑管理员';
                 this.dialog = Object.assign({}, this.dialog);
             } else {
-                // 新增
+                // New
                 this.dialog.title = '新增管理员';
             }
         },
-        // 更新新增编辑
+        // Update new editor
         updateData() {
             this.$refs['dataForm'].validate(valid => {
-                // 表单校验
+                // form validation
                 if (valid) {
-                    // 需要校验
+                    // Need to verify
                     if (this.isVerPass) {
-                        // 校验不通过
+                        // Verification failed
                         if (!this.dialog.isVerTrue) {
                             console.log('不通过');
                             return false;
@@ -197,7 +197,7 @@
                 }
             });
         },
-        // 更新设置角色
+        // Update settings role
         updateDataSet() {
             this.dialog.updateLoadingSet = true;
             const data = { RoleIds: this.dialog.dialogSetSelected, AccountId: this.setId };
@@ -215,18 +215,18 @@
                 }
             });
         },
-        // 设置角色
+        // Set up roles
         async    handleSet(index, row) {
             this.dialog.dialogSetSelected = [];
             this.dialog.visibleSet = true;
             this.setId = row.id;
             this.dialog.setTitle = row.userName;
-            // 所有角色
+            // All roles
             const a = await service.get("/Admin/Role/edit?Handler=SelectItems");
             if (a.data.success) {
                 this.dialog.dialogSetData = a.data.data;
             }
-            // 已有角色
+            // Already have a role
             const b = await service.get(`/Admin/AdminUserInfo/AuthorizationPage?Handler=Detail&accountId=${this.setId}`);
             if (b.data.success) {
                 b.data.data.map(res => {
@@ -234,7 +234,7 @@
                 });
             }
         },
-        // 删除
+        // delete
         handleDelete(index, row) {
             let ids = [row.id];
             service.post("/Admin/AdminUserInfo/Index?handler=Delete", ids).then(res => {

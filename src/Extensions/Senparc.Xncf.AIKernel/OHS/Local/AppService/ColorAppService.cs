@@ -21,18 +21,18 @@
 
 
 //        /// <summary>
-//        /// 获取或初始化一个 ColorDto 对象
+//        /// Get or initialize a ColorDto object
 //        /// </summary>
 //        /// <returns></returns>
 //        public async Task<AppResponseBase<Color_GetOrInitColorResponse>> GetOrInitColorAsync()
 //        {
 //            return await this.GetResponseAsync<Color_GetOrInitColorResponse>(async (response, logger) =>
 //            {
-//                var dt1 = SystemTime.Now;//开始计时
+//                var dt1 = SystemTime.Now;//Start timing
 
-//                var colorDto = await _colorService.GetOrInitColor();//获取或初始化颜色参数
+//                var colorDto = await _colorService.GetOrInitColor();//Get or initialize color parameters
 
-//                var costMs = SystemTime.DiffTotalMS(dt1);//记录耗时
+//                var costMs = SystemTime.DiffTotalMS(dt1);//Record time consumption
 
 //                Color_GetOrInitColorResponse result = new(colorDto.Red, colorDto.Green, colorDto.Blue, costMs);
 

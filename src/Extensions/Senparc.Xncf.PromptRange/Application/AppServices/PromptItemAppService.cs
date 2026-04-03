@@ -21,8 +21,8 @@ using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 {
     /// <summary>
-    /// PromptItem 管理 AppService
-    /// TODO: 需要权限验证
+    ///PromptItem Management AppService
+    /// TODO: Permission verification required
     /// </summary>
     //[ApiAuthorize("AdminOnly")]
     public class PromptItemAppService : AppServiceBase
@@ -41,7 +41,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// Add方法用于添加一个新的PromptItem，并根据请求中的IsDraft字段决定是否立即生成结果
+        //The /Add method is used to add a new PromptItem and decide whether to generate the result immediately based on the IsDraft field in the request
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -52,20 +52,20 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<PromptItem_AddResponse>(
                 async (response, logger) =>
                 {
-                    // 新增promptItem
+                    // Add promptItem
                     var savedPromptItem = await _promptItemService.AddPromptItemAsync(request);
-                    // ?? throw new NcfExceptionBase("新增失败");
+                    // ?? throw new NcfExceptionBase("Add failed");
 
                     var promptItemResponseDto = new PromptItem_AddResponse(savedPromptItem);
 
-                    // 是否立即生成结果
+                    // Whether to generate results immediately
                     if (request.IsDraft)
                     {
                         return promptItemResponseDto;
                     }
 
-                    // 如果立即生成，就根据numsOfResults立即生成
-                    // 转换历史记录格式
+                    // If it is generated immediately, it will be generated immediately according to numsOfResults
+                    // Convert history format
                     List<Domain.Services.ChatMessageDto> chatHistory = null;
                     if (request.ChatHistory != null && request.ChatHistory.Count > 0)
                     {
@@ -76,38 +76,38 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         }).ToList();
                     }
                     
-                    // 连发时，如果第一个结果是 Chat 模式，后续结果也需要保持 Chat 模式
-                    // 获取第一个结果的模式，用于后续结果保持一致
+                    // When sending continuously, if the first result is in Chat mode, subsequent results also need to remain in Chat mode.
+                    // Get the pattern of the first result to keep subsequent results consistent
                     ResultMode? firstResultMode = null;
                     string firstUserMessage = request.UserMessage;
                     List<Domain.Services.ChatMessageDto> firstChatHistory = chatHistory;
                     
                     for (var i = 0; i < request.NumsOfResults; i++)
                     {
-                        // 如果是第一次生成，使用传入的参数
-                        // 如果是后续生成，且第一个结果是 Chat 模式，则保持 Chat 模式
+                        // If it is generated for the first time, use the parameters passed in
+                        // If it is a subsequent build and the first result is in Chat mode, stay in Chat mode
                         string currentUserMessage = null;
                         List<Domain.Services.ChatMessageDto> currentChatHistory = null;
                         
                         if (i == 0)
                         {
-                            // 第一次生成，使用传入的参数
+                            // The first generation, using the parameters passed in
                             currentUserMessage = request.UserMessage;
                             currentChatHistory = chatHistory;
                         }
                         else if (firstResultMode == ResultMode.Chat && !string.IsNullOrWhiteSpace(firstUserMessage))
                         {
-                            // 后续生成，且第一个结果是 Chat 模式，保持 Chat 模式
-                            // 使用相同的 userMessage，但不传递历史记录（每次都是独立的对话）
+                            // Subsequent generation, and the first result is in Chat mode, remains in Chat mode
+                            // Use the same userMessage but don't pass the history (a separate conversation each time)
                             currentUserMessage = firstUserMessage;
-                            currentChatHistory = null; // 连发时，每次都是独立的对话，不传递历史记录
+                            currentChatHistory = null; // When sending continuously, each session is an independent conversation, and no history records are transferred.
                         }
-                        // 如果第一个结果是 Single 模式，后续也使用 Single 模式（currentUserMessage 为 null）
+                        // If the first result is Single mode, subsequent Single modes are also used (currentUserMessage is null)
                         
-                        // 分别生成结果
+                        // Generate results separately
                         PromptResultDto promptResult = await _promptResultService.SenparcGenerateResultAsync(savedPromptItem, currentUserMessage, currentChatHistory);
                         
-                        // 记录第一个结果的模式
+                        // Pattern to record the first result
                         if (i == 0)
                         {
                             firstResultMode = promptResult.Mode;
@@ -126,9 +126,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
 
         /// <summary>
-        /// 列出 靶场名称 下所有的promptItem的id和name
+        /// List the ids and names of all promptItems under the shooting range name
         /// </summary>
-        /// <param name="rangeName">靶场名称（必须）</param>
+        /// <param name="rangeName">Range name (required)</param>
         /// <returns></returns>
         [ApiBind]
         public async Task<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>> GetIdAndName(string rangeName)
@@ -149,9 +149,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 根据靶场 ID, 查询其中所有的promptItem的id和name
+        /// Based on the shooting range ID, query the id and name of all promptItems in it
         /// </summary>
-        /// <param name="rangeId">靶场 ID（必须）</param>
+        /// <param name="rangeId">Range ID (required)</param>
         /// <returns></returns>
         public async Task<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>> GetIdAndName(int rangeId)
         {
@@ -170,7 +170,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
 
         /// <summary>
-        /// 列出所有的promptItem的RangeName
+        /// List the RangeName of all promptItems
         /// </summary>
         /// <returns></returns>
         // [ApiBind]
@@ -196,14 +196,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         // /// <summary>
-        // /// 根据ID，找到对应的promptItem的所有父级的信息
+        // /// Based on the ID, find the information of all parents of the corresponding promptItem
         // /// </summary>
         // /// <param name="promptItemId"></param>
         // /// <returns></returns>
         // [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         // public async Task<AppResponseBase<TacticTree_GetResponse>> FindItemHistory(int promptItemId)
         // {
-        //     // 根据promptItemId找到promptItem， 然后获取version
+        //     // Find promptItem based on promptItemId, and then get the version
         //     return await this.GetResponseAsync<TacticTree_GetResponse>(
         //         async (resp, logger) =>
         //         {
@@ -213,9 +213,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         // }
 
         /// <summary>
-        /// 根据主键 ID　获取 PromptItem 所有信息
+        /// Get all information of PromptItem based on primary key ID
         /// </summary>
-        /// <param name="id">主键 ID </param>
+        /// <param name="id">Primary key ID </param>
         /// <returns></returns>
         [ApiBind]
         public async Task<AppResponseBase<PromptItem_GetResponse>> Get(int id)
@@ -223,13 +223,13 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<PromptItem_GetResponse>(
                 async (response, logger) =>
                 {
-                    // 获取promptItem
+                    // Get promptItem
                     PromptItemDto promptItem = await _promptItemService.GetAsync(id);
 
-                    // 转换为 response
+                    // convert to response
                     var resp = new PromptItem_GetResponse(promptItem);
 
-                    // 获取所有对应的结果
+                    // Get all corresponding results
                     var resultList = await _promptResultService.GetFullListAsync(res => res.PromptItemId == promptItem.Id);
                     resp.PromptResultList.AddRange(resultList);
 
@@ -238,9 +238,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         // /// <summary>
-        // /// 根据 完整版号 获取 PromptItem 所有信息
+        // /// Get all the information of PromptItem based on the complete version number
         // /// </summary>
-        // /// <param name="fullVersion">完整版号</param>
+        // /// <param name="fullVersion">Full version number</param>
         // /// <returns></returns>
         // [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         // public async Task<AppResponseBase<PromptItem_GetResponse>> GetByVersion(string fullVersion)
@@ -260,9 +260,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         // }
 
         /// <summary>
-        /// 获取版本树
+        /// Get version tree
         /// </summary>
-        /// <param name="rangeName">靶场名称</param>
+        /// <param name="rangeName">Range name</param>
         /// <returns></returns>
         [ApiBind]
         public async Task<AppResponseBase<TacticTree_GetResponse>> GetTacticTree(string rangeName)
@@ -285,10 +285,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 var item = await _promptItemService.GetObjectAsync(p => p.Id == request.Id) 
                         ?? throw new Exception($"未找到 id 为 {request.Id} 的 PromptItem");
                 
-                // 根据 request 中的字段，对应修改
+                // According to the fields in the request, modify the corresponding
                 if (!string.IsNullOrWhiteSpace(request.NickName))
                 {
-                    //删除其他同名的 PromptItem
+                    //Delete other PromptItems with the same name
                     var sameNameItem = await _promptItemService.GetObjectAsync(z => z.RangeId == item.RangeId && z.NickName == request.NickName);
                     if (sameNameItem != null)
                     {
@@ -299,7 +299,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
                 if (request.NickName != null)
                 {
-                    //修改当前名称（如果是 ""，则清空）
+                    //Modify the current name (if it is "", clear it)
                     item.ModifyNickName(request.NickName == "" ? null : request.NickName);
                 }
 
@@ -332,7 +332,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 根据主键 ID　删除 PromptItem 所有信息
+        /// Delete all information of PromptItem based on primary key ID
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -350,7 +350,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
                 await _promptItemService.DeleteAllAsync(toDeleteItemList);
 
-                // 关联删除所有子战术
+                // Delete all sub-tactics associated with them
                 var toDeleteIdList = toDeleteItemList.Select(p => p.Id).ToList();
                 await _promptResultService.BatchDeleteWithItemId(toDeleteIdList);
 
@@ -359,7 +359,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 设置 AI 自动打分评分标准接口
+        ///Set AI automatic scoring standard interface
         /// </summary>
         /// <param name="promptItemId"></param>
         /// <param name="expectedResults"></param>
@@ -374,7 +374,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         // /// <summary>
-        // /// 根据靶场名（自动生成）获取靶场里最好的promptItem
+        // /// Get the best promptItem in the shooting range based on the shooting range name (automatically generated)
         // /// </summary>
         // /// <param name="rangeName"></param>
         // /// <param name="isAvg"></param>
@@ -387,7 +387,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         // }
 
         /// <summary>
-        /// 上传plugin接口
+        ///Upload plugin interface
         /// </summary>
         /// <param name="zipFile"></param>
         /// <returns></returns>
@@ -403,7 +403,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 导出靶场为 plugin
+        /// Export range as plugin
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -418,7 +418,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
 
         // /// <summary>
-        // /// 导出指定版本的靶道为 plugin
+        // /// Export the specified version of the target as plugin
         // /// </summary>
         // /// <param name="itemVersion"></param>
         // /// <returns></returns>
@@ -433,13 +433,13 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         {
             try
             {
-                // 验证目录是否存在
+                // Verify directory exists
                 if (!Directory.Exists(dirPath))
                 {
                     throw new NcfExceptionBase($"导出目录不存在: {dirPath}");
                 }
 
-                // 验证目录中是否有文件
+                // Verify that there is a file in the directory
                 var files = Directory.GetFiles(dirPath, "*", SearchOption.AllDirectories);
                 if (files.Length == 0)
                 {
@@ -457,7 +457,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     parentDir.FullName,
                     $"{DateTimeOffset.Now.ToLocalTime():yyyyMMddHHmmss}_ExportedPlugins.zip");
 
-                // 创建压缩文件
+                // Create compressed file
                 ZipFile.CreateFromDirectory(
                     dirPath,
                     filePath,
@@ -471,16 +471,16 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     var byteCnt = await fileStream.ReadAsync(buffer, 0, buffer.Length);
                 }
 
-                // 清理临时文件
+                // Clean temporary files
                 try
                 {
-                    // 删除 zip 文件
+                    // Delete zip file
                     if (File.Exists(filePath))
                     {
                         File.Delete(filePath);
                     }
                     
-                    // 清理临时文件夹
+                    // Clean temporary folder
                     if (Directory.Exists(dirPath))
                     {
                         Directory.Delete(dirPath, true);
@@ -488,7 +488,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 }
                 catch (Exception ex)
                 {
-                    // 清理失败不影响返回结果，只记录日志
+                    // Failure to clean up does not affect the returned results, only logs are recorded.
                     Console.WriteLine($"清理临时文件失败: {ex.Message}");
                 }
 
@@ -501,7 +501,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             }
             catch (Exception ex)
             {
-                // 确保在出错时也清理临时文件
+                // Make sure temporary files are also cleaned up on errors
                 try
                 {
                     if (Directory.Exists(dirPath))
@@ -511,7 +511,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 }
                 catch
                 {
-                    // 忽略清理错误
+                    // Ignore cleanup errors
                 }
 
                 throw new NcfExceptionBase($"导出 plugins 失败: {ex.Message}", ex);

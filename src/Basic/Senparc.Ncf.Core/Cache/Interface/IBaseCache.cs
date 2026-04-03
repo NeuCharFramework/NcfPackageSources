@@ -10,7 +10,7 @@ namespace Senparc.Ncf.Core.Cache
     {
         IBaseObjectCacheStrategy Cache { get; set; }
         /// <summary>
-        /// Data不能在Update()方法中调用，否则会引发循环调用。Update()方法中应该使用SetData()方法
+        ///Data cannot be called in the Update() method, otherwise it will cause a loop call. SetData() method should be used in Update() method
         /// </summary>
         DateTime CacheTime { get; set; }
         DateTime CacheTimeOut { get; set; }
@@ -33,7 +33,7 @@ namespace Senparc.Ncf.Core.Cache
 
 
         ///// <summary>
-        ///// 更新到缓存
+        ///// Update to cache
         ///// </summary>
         ///// <param name="key"></param>
         ///// <param name="obj"></param>

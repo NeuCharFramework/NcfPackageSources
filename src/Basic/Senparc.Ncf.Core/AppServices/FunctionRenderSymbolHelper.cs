@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 namespace Senparc.Ncf.Core.AppServices
 {
     /// <summary>
-    /// FunctionRender 符号辅助类，负责解析 [#sym:FunctionRender] 标记。
+    /// FunctionRender Symbol helper class responsible for parsing [#sym:FunctionRender] tags.
     /// </summary>
     public static class FunctionRenderSymbolHelper
     {
@@ -16,7 +16,7 @@ namespace Senparc.Ncf.Core.AppServices
         private static readonly Regex SymbolRegex = new Regex(@"\[#sym\s*:\s*(?<name>[A-Za-z0-9_\.\-]+)\s*\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         /// <summary>
-        /// 提取输入中的所有 sym 标记名称。
+        /// Extract all `sym` marker names from the input.
         /// </summary>
         public static IReadOnlyList<string> ExtractSymbolNames(string input)
         {
@@ -36,7 +36,7 @@ namespace Senparc.Ncf.Core.AppServices
         }
 
         /// <summary>
-        /// 判断输入是否包含指定 sym 标记。
+        /// Determine whether the input contains the specified sym tag.
         /// </summary>
         public static bool HasSymbol(string input, string symbolName)
         {
@@ -49,7 +49,7 @@ namespace Senparc.Ncf.Core.AppServices
         }
 
         /// <summary>
-        /// 判断输入是否包含 FunctionRender sym 标记。
+        /// Determines whether the input contains the FunctionRender sym tag.
         /// </summary>
         public static bool HasFunctionRenderSymbol(string input)
         {

@@ -22,50 +22,50 @@ define(function (require) {
         defaultOption: {
             zlevel: 0,
             z: 2,
-            // 默认全局居中
+            // Default global center
             center: ['50%', '50%'],
             legendHoverLink: true,
             radius: '75%',
             startAngle: 225,
             endAngle: -45,
             clockwise: true,
-            // 最小值
+            // minimum value
             min: 0,
-            // 最大值
+            // maximum value
             max: 100,
-            // 分割段数，默认为10
+            // Number of segments, default is 10
             splitNumber: 10,
-            // 坐标轴线
+            // Coordinate axis
             axisLine: {
-                // 默认显示，属性show控制显示与否
+                // Displayed by default, the attribute show controls whether to display or not.
                 show: true,
-                lineStyle: {       // 属性lineStyle控制线条样式
+                lineStyle: {       // The attribute lineStyle controls the line style
                     color: [[0.2, '#91c7ae'], [0.8, '#63869e'], [1, '#c23531']],
                     width: 30
                 }
             },
-            // 分隔线
+            // divider
             splitLine: {
-                // 默认显示，属性show控制显示与否
+                // Displayed by default, the attribute show controls whether to display or not.
                 show: true,
-                // 属性length控制线长
+                // The length attribute controls the line length
                 length: 30,
-                // 属性lineStyle（详见lineStyle）控制线条样式
+                // The attribute lineStyle (see lineStyle for details) controls the line style
                 lineStyle: {
                     color: '#eee',
                     width: 2,
                     type: 'solid'
                 }
             },
-            // 坐标轴小标记
+            // Axis small mark
             axisTick: {
-                // 属性show控制显示与否，默认不显示
+                // The attribute show controls whether to display or not. It is not displayed by default.
                 show: true,
-                // 每份split细分多少段
+                // How many segments are divided into each split?
                 splitNumber: 5,
-                // 属性length控制线长
+                // The length attribute controls the line length
                 length: 8,
-                // 属性lineStyle控制线条样式
+                // The attribute lineStyle controls the line style
                 lineStyle: {
                     color: '#eee',
                     width: 1,
@@ -75,7 +75,7 @@ define(function (require) {
             axisLabel: {
                 show: true,
                 // formatter: null,
-                textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                textStyle: {       // The remaining attributes use the global text style by default, see TEXTSTYLE for details.
                     color: 'auto'
                 }
             },
@@ -91,9 +91,9 @@ define(function (require) {
             },
             title: {
                 show: true,
-                // x, y，单位px
+                // x, y, unit px
                 offsetCenter: [0, '-40%'],
-                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                // The remaining attributes use the global text style by default, see TEXTSTYLE for details.
                 textStyle: {
                     color: '#333',
                     fontSize: 15
@@ -106,10 +106,10 @@ define(function (require) {
                 borderColor: '#ccc',
                 width: 100,
                 height: 40,
-                // x, y，单位px
+                // x, y, unit px
                 offsetCenter: [0, '40%'],
                 // formatter: null,
-                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                // The remaining attributes use the global text style by default, see TEXTSTYLE for details.
                 textStyle: {
                     color: 'auto',
                     fontSize: 30

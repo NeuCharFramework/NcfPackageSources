@@ -24,29 +24,29 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
         }
 
         /// <summary>
-        /// 知识库Id
+        ///Knowledge BaseId
         /// </summary>
         public int KnowledgeBasesId { get; set; }
         /// <summary>
-        /// 内容类型
+        /// content type
         /// </summary>
         public ContentType ContentType { get; set; }
 
         public int? NcfFileId { get; set; }
 
         /// <summary>
-        /// 内容
+        /// content
         /// </summary>
         public string Content { get; set; }
         
         /// <summary>
-        /// 源文件名称
+        /// source file name
         /// </summary>
         [MaxLength(500)]
         public string FileName { get; set; }
         
         /// <summary>
-        /// 文本切片索引
+        ///text slice index
         /// </summary>
         public int ChunkIndex { get; set; }
 

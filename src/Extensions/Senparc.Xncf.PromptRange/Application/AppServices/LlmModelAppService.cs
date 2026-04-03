@@ -20,8 +20,8 @@ using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 {
     /// <summary>
-    /// LLM 模型管理 AppService
-    /// TODO: 需要权限验证
+    /// LLM Model Management AppService
+    /// TODO: Permission verification required
     /// </summary>
     //[ApiAuthorize("AdminOnly")]
     public class LlmModelAppService : AppServiceBase
@@ -39,7 +39,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 添加模型
+        ///Add model
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -57,7 +57,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 编辑模型
+        ///edit model
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -75,7 +75,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取model
+        /// Get model
         /// </summary>
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
@@ -105,7 +105,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 模型删除
+        ///Model delete
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>

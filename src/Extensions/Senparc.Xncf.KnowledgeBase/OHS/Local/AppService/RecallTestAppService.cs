@@ -32,7 +32,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 召回测试
+        ///recall test
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<RecallTestResponse>>> RecallTest(plRequest.RecallTestRequest request)

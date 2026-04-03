@@ -7,28 +7,28 @@ using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
 namespace Template_OrgName.Xncf.Template_XncfName
 {
     /// <summary>
-    /// Color 实体类
+    /// Color entity class
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(Color))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(Color))]//The prefix must be added to prevent conflicts system-wide.
     [Serializable]
     public class Color : EntityBase<int>
     {
         /// <summary>
-        /// 颜色码，0-255
+        /// Color code, 0-255
         /// </summary>
         public int Red { get; private set; }
         /// <summary>
-        /// 颜色码，0-255
+        /// Color code, 0-255
         /// </summary>
         public int Green { get; private set; }
 
         /// <summary>
-        /// 颜色码，0-255
+        /// Color code, 0-255
         /// </summary>
         public int Blue { get; private set; }
 
         /// <summary>
-        /// 附加列，测试多次数据库 Migrate
+        /// Additional columns, test the database multiple times Migrate
         /// </summary>
         public string AdditionNote { get; private set; }
 
@@ -38,7 +38,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
         {
             if (red < 0 || green < 0 || blue < 0)
             {
-                Random();//随机
+                Random();//random
             }
             else
             {
@@ -62,7 +62,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
 
         public void Random()
         {
-            //随机产生颜色代码
+            //Randomly generate color codes
             var radom = new Random();
             Func<int> getRadomColorCode = () => radom.Next(0, 255);
             Red = getRadomColorCode();

@@ -14,8 +14,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 {
     /// <summary>
-    /// AI Agent 集成 AppService
-    /// 定义用于 AI Agent 与 Database Toolkit 交互的 Prompt 和系统
+    /// AI Agent integrated AppService
+    /// Define prompts and systems for AI Agent to interact with Database Toolkit
     /// </summary>
     public class AIAgentIntegrationAppService : AppServiceBase
     {
@@ -25,8 +25,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取 AI Agent 系统 Prompt
-        /// 返回配置给 AI Agent 的系统提示，定义其在与数据库交互时的行为
+        /// Get AI Agent system prompt
+        /// Returns the system prompt configured for the AI ​​Agent, defining its behavior when interacting with the database
         /// </summary>
         [FunctionRender("获取 AI Agent 系统提示", "获取配置给 AI Agent 的系统提示和角色定义", typeof(Register))]
         public async Task<AppResponseBase<string>> GetSystemPrompt()
@@ -121,8 +121,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取常见查询模板
-        /// 返回预定义的常见查询模板，帮助 AI Agent 快速生成正确的查询
+        /// Get common query templates
+        /// Returns predefined common query templates to help AI Agent quickly generate correct queries
         /// </summary>
         [FunctionRender("获取常见查询模板", "获取预定义的数据库查询模板和示例", typeof(Register))]
         public async Task<AppResponseBase<string>> GetCommonQueryTemplates()

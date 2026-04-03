@@ -81,7 +81,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         [Description("AI 模型||请选择运行此程序的外围 AI 模型")]
         public SelectionList AIModel { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>
         {
-            //new SelectionItem("Default","系统默认","通过系统默认配置的固定 AI 模型信息",true)
+            //new SelectionItem("Default","System Default","Fixed AI model information configured by system default",true)
         });
 
         [Description("个性化智能体||")]
@@ -103,7 +103,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
 
             ChatGroups.Items = chatGroups.Select(z => new SelectionItem(z.Id.ToString(), z.Name, z.Description)).ToList();
 
-            //载入 AI 模型
+            //Load AI model
             await BuildXncfRequestHelper.LoadAiModelData(serviceProvider, AIModel);
 
             await base.LoadData(serviceProvider);
@@ -113,7 +113,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
     public class ChatGroup_RunGroupRequest 
     {
         /// <summary>
-        /// 任务名称
+        /// task name
         /// </summary>
         public string Name { get; set; }
 
@@ -123,47 +123,47 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         public int ChatGroupId { get; set; }
 
         /// <summary>
-        /// 如果是 0 ，则使用系统默认配置
+        /// If 0, use system default configuration
         /// </summary>
         public int AiModelId { get; set; }
 
         /// <summary>
-        /// 发起对话的要求
+        /// Request to initiate a conversation
         /// </summary>
         public string PromptCommand { get; set; }
 
         /// <summary>
-        /// 说明
+        /// illustrate
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// 使用个性化智能体
+        /// Use personalized agents
         /// </summary>
         public bool Personality { get; set; }
 
         /// <summary>
-        /// 消息平台
+        ///message platform
         /// </summary>
         public HookPlatform HookPlatform { get; set; }
         /// <summary>
-        /// 消息平台参数
+        ///Message platform parameters
         /// </summary>
         public string HookParameter { get; set; }
 
         /// <summary>
-        /// 最大对话轮数
+        ///Maximum number of dialogue rounds
         /// </summary>
         public int ChatMaxRound { get; set; } = ChatGroupService.ChatMaxRound;
 
         /// <summary>
-        /// 可选：业务关联 ID（例如 Prompt 优化的 RequestId），用于在执行上下文中关联工具调用
+        /// Optional: Business correlation ID (e.g. Prompt-optimized RequestId), used to correlate tool calls in the execution context
         /// </summary>
         public string CorrelationId { get; set; }
     }
 
     /// <summary>
-    /// 删除对话请求
+    /// Delete conversation request
     /// </summary>
     public class ChatGroup_DeleteChatGroupRequest : FunctionAppRequestBase
     {
@@ -175,7 +175,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
 
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
-            // 加载所有可用的 ChatGroup
+            // Load all available ChatGroups
             var chatGroupService = serviceProvider.GetService<ChatGroupService>();
             var chatGroups = await chatGroupService.GetFullListAsync(z => true, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
 

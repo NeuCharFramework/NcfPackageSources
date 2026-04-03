@@ -386,10 +386,10 @@ namespace Senparc.Ncf.Core.Area
         //        //item.SetAttributeValue("MaxShopId", "100000");
 
         //        //Match city name
-        //        //var citys = codeList.Where(s => item.CityName.Contains(s.City.Replace("自治区", "").Replace("县", "").Replace("市", ""))).ToList();
+        //        //var cities = codeList.Where(s => item.CityName.Contains(s.City.Replace("autonomous region", "").Replace("county", "").Replace("city", ""))).ToList();
 
 
-        //        var citys = codeList.Where(s => item.Attribute("CityName").Value.Contains(s.City.Replace("自治区","")));
+        //        var cities = codeList.Where(s => item.Attribute("CityName").Value.Contains(s.City.Replace("Autonomous Region","")));
 
         //        if (citys.Count() != 0)
         //        {
@@ -401,7 +401,7 @@ namespace Senparc.Ncf.Core.Area
         //        {
         //            //City with no area code found
         //            System.Web.HttpContext.Current.Response.Write(
-        //                "省："+this.GetProvincesData().Single(p=>p.ID==int.Parse(item.Attribute("PID").Value)).ProvinceName+" ,市："+ item.Attribute("CityName").Value+"<br />");
+        //                "Province:"+this.GetProvincesData().Single(p=>p.ID==int.Parse(item.Attribute("PID").Value)).ProvinceName+", City: "+ item.Attribute("CityName").Value+"<br />");
         //        }
         //    }
         //    doc.Save(System.Web.HttpContext.Current.Server.MapPath(CITIES_XML_PATH+".bak"));
@@ -484,7 +484,7 @@ namespace Senparc.Ncf.Core.Area
         //        //TODO: ideally use singleton pattern
         //        XElement doc = this.GetXmlElement(CITIES_XML_PATH);//Get XML document
         //        string xmlFilePath = System.Web.HttpContext.Current.Server.MapPath(CITIES_XML_PATH);//Path
-        //        string backUpXmlFilePath = xmlFilePath + "." + DateTime.Now.ToString().Replace(":", "_") + ".更新MaxShopId（" + cityName + "）.bak";//Backup file path
+        //        string backUpXmlFilePath = xmlFilePath + "." + DateTime.Now.ToString().Replace(":", "_") + ".UpdateMaxShopId(" + cityName + ").bak";//Backup file path
 
         //        var cityData = (from c in doc.Elements() where c.Attribute("CityName").Value == cityName select c).Single();
         //        //int shopId = int.Parse(cityData.Attribute("MaxShopId").Value);
@@ -553,7 +553,7 @@ namespace Senparc.Ncf.Core.Area
         /// Parse area name from IP Country field
         /// </summary>
         /// <param name="ipCountry">ipCountry string from IP database</param>
-        /// <param name="areaNameList">Area level tokens, such as "省" "市" "区"</param>
+        /// <param name="areaNameList">Area level tokens, such as "province" "city" "district"</param>
         /// <param name="areaStartIndex">Cursor position to start searching</param>
         /// <returns></returns>
         private static string GetProvinceAreaNameFromIPCountry(string ipCountry, string[] areaNameList, ref int areaStartIndex)

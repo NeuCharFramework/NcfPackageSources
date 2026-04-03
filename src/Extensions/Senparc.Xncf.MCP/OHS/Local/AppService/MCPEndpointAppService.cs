@@ -14,8 +14,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.MCP.OHS.Local.AppService
 {
     /// <summary>
-    /// MCP Endpoint 管理 AppService
-    /// 提供 MCP 端点的增删改查以及测试功能
+    ///MCP Endpoint Management AppService
+    /// Provides the addition, deletion, modification, checking and testing functions of MCP endpoints
     /// </summary>
     public class MCPEndpointAppService : AppServiceBase
     {
@@ -28,7 +28,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取所有 MCP Endpoints
+        /// Get all MCP Endpoints
         /// </summary>
         public async Task<AppResponseBase<List<MCPEndpointDto>>> GetAllEndpoints()
         {
@@ -43,7 +43,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取所有已启用的 MCP Endpoints
+        /// Get all enabled MCP Endpoints
         /// </summary>
         public async Task<AppResponseBase<List<MCPEndpointDto>>> GetEnabledEndpoints()
         {
@@ -58,13 +58,13 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 创建/编辑 MCP Endpoint
+        ///Create/Edit MCP Endpoint
         /// </summary>
         public async Task<StringAppResponse> SaveEndpoint(MCPEndpointCreateOrEditRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                // 验证输入
+                // Validate input
                 if (string.IsNullOrWhiteSpace(request.Name))
                 {
                     return "端点名称不能为空";
@@ -75,7 +75,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                     return "端点地址不能为空";
                 }
 
-                // 检查名称是否已存在（编辑时除外）
+                // Check if the name already exists (except when editing)
                 if (request.Id == 0)
                 {
                     var existing = await _mcpEndpointService.GetEndpointByNameAsync(request.Name);
@@ -88,7 +88,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 MCPEndpoint endpoint;
                 if (request.Id > 0)
                 {
-                    // 编辑现有端点
+                    // Edit existing endpoint
                     endpoint = await _mcpEndpointService.GetObjectAsync(x => x.Id == request.Id);
                     if (endpoint == null)
                     {
@@ -97,11 +97,11 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 }
                 else
                 {
-                    // 创建新端点
+                    // Create new endpoint
                     endpoint = new MCPEndpoint();
                 }
 
-                // 更新属性
+                // Update properties
                 endpoint.Name = request.Name;
                 endpoint.Endpoint = request.Endpoint;
                 endpoint.EndpointType = request.EndpointType;
@@ -119,7 +119,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 删除 MCP Endpoint
+        /// Delete MCP Endpoint
         /// </summary>
         public async Task<StringAppResponse> DeleteEndpoint(MCPEndpointDeleteRequest request)
         {
@@ -144,7 +144,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 测试 MCP Endpoint
+        ///Test MCP Endpoint
         /// </summary>
         public async Task<StringAppResponse> TestEndpoint(MCPEndpointTestRequest request)
         {
@@ -204,7 +204,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 创建或编辑 MCP Endpoint 请求
+    ///Create or edit MCP Endpoint requests
     /// </summary>
     public class MCPEndpointCreateOrEditRequest
     {
@@ -246,7 +246,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 删除 MCP Endpoint 请求
+    /// Delete MCP Endpoint request
     /// </summary>
     public class MCPEndpointDeleteRequest
     {
@@ -255,7 +255,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 测试 MCP Endpoint 请求
+    ///Test MCP Endpoint request
     /// </summary>
     public class MCPEndpointTestRequest
     {

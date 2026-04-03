@@ -51,7 +51,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
             //var remoteResponse = await huggingFaceRemote.CompleteAsync(Input);
             // modelName: "gpt-4-32k"*/
             var _semanticAiHandler = new SemanticAiHandler(Senparc.AI.Config.SenparcAiSetting);
-            var setting = (SenparcAiSetting)Senparc.AI.Config.SenparcAiSetting;//也可以留空，将自动获取
+            var setting = (SenparcAiSetting)Senparc.AI.Config.SenparcAiSetting;//You can also leave it blank and it will be automatically obtained.
 
             var iWantToRun = _semanticAiHandler.ChatConfig(parameter,
                                 userId: "Jeffrey",

@@ -15,13 +15,13 @@ namespace System.Web.Mvc
 
             //bool wroteStartTag = false, wroteEndTag = false;
 
-            string startTag, endTag;//开始、结束标签
-            public string itemStartTag, itemEndTag;//单项开始、结束标签
+            string startTag, endTag;//start and end tags
+            public string itemStartTag, itemEndTag;//Individual start and end tags
             public StringBuilder body = new StringBuilder();
 
             public SingleRepeater(HttpContext context, RepeaterMode repeaterMode, object htmlAttributes)
             {
-                this._context = context;//目前没有用到，如果直接在这里用context.Response.Write输出则需要。
+                this._context = context;//It is not used currently. It is required if you use context.Response.Write to output directly here.
                 switch (repeaterMode)
                 {
                     case RepeaterMode.None:
@@ -50,7 +50,7 @@ namespace System.Web.Mvc
                         break;
                 }
 
-                //属性
+                //property
                 var setHash = htmlAttributes.ToAttributeList();
 
                 string attributeList = string.Empty;
@@ -92,14 +92,14 @@ namespace System.Web.Mvc
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="helper"></param>
-        /// <param name="dataSource">数据源</param>
-        /// <param name="header">第一个单项循环开始之前的内容</param>
-        /// <param name="itemTempletes">单项内容</param>
-        /// <param name="separatorTemplate">每次循环分隔内容（Table慎用）</param>
-        /// <param name="footer">最后一个单项循环结束之后的内容</param>
-        /// <param name="repeaterMode">repeater模式</param>
-        /// <param name="colCount">每行烈数（只在repeaterMode为Table时有效）</param>
-        /// <param name="htmlAttributes">标签属性</param>
+        /// <param name="dataSource">Data source</param>
+        /// <param name="header">Content before the start of the first single item loop</param>
+        /// <param name="itemTempletes">Single item content</param>
+        /// <param name="separatorTemplate">Separate content in each loop (use Table with caution)</param>
+        /// <param name="footer">Content after the end of the last single item loop</param>
+        /// <param name="repeaterMode">repeater mode</param>
+        /// <param name="colCount">Count of each row (only valid when repeaterMode is Table)</param>
+        /// <param name="htmlAttributes">Tag attributes</param>
         /// <returns></returns>
         public static string Repeater<T>(this HtmlHelper helper, IEnumerable<T> dataSource,
             string header, Expression<Func<T, int, string>> itemTempletes, Expression<Func<T, string>> separatorTemplate, string footer,
@@ -124,21 +124,21 @@ namespace System.Web.Mvc
 
                 int tableRow = 0;
 
-                /** 单项循环开始 **/
+                /** Single cycle starts **/
 
                 int dataCount = dataSource.Count();
                 int i = 0;
                 foreach (var item in dataSource)
                 {
 
-                    /* 仅适用Table */
+                    /* Applies only to Table */
                     if (repeaterMode == RepeaterMode.Table)
                     {
                         if (tableRow % colCount == 0)
-                            body.Append("<tr>");//添加行开始标记
+                            body.Append("<tr>");//Add line start tag
                     }
 
-                    body.Append(repeater.itemStartTag);//单项开头
+                    body.Append(repeater.itemStartTag);//Beginning with a single item
 
                     switch (repeaterMode)
                     {
@@ -146,21 +146,21 @@ namespace System.Web.Mvc
                         case RepeaterMode.Div:
                         case RepeaterMode.Ul:
                         case RepeaterMode.Table:
-                            body.Append(itemResult(item, i).ToString());//主体内容
+                            body.Append(itemResult(item, i).ToString());//Main content
                             break;
                     }
 
-                    body.Append(repeater.itemEndTag);//单项结尾
+                    body.Append(repeater.itemEndTag);//single ending
 
-                    /* 仅适用Table */
+                    /* Applies only to Table */
                     if (repeaterMode == RepeaterMode.Table)
                     {
                         tableRow++;
                         if (tableRow % colCount == 0)
-                            body.Append("</tr>");//添加行结束标记
+                            body.Append("</tr>");//Add end of line tag
                     }
 
-                    //添加分隔符
+                    //Add separator
                     if (i < dataCount - 1)
                     {
                         body.Append(separatorResult(item).ToString());
@@ -168,15 +168,15 @@ namespace System.Web.Mvc
 
                     i++;
                 }
-                /** 单项循环结束 **/
+                /** End of single cycle **/
 
 
-                //为Table添加结束标记
+                //Add closing tag to Table
                 if (repeaterMode == RepeaterMode.Table && tableRow % colCount != 0)
                 {
                     do
                     {
-                        body.Append(repeater.itemStartTag).Append(repeater.itemEndTag);//空白单元格
+                        body.Append(repeater.itemStartTag).Append(repeater.itemEndTag);//blank cell
                         tableRow++;
                     } while (tableRow % colCount != 0);
                     body.Append("</tr>");
@@ -200,7 +200,7 @@ namespace System.Web.Mvc
         public enum RepeaterMode
         {
             /// <summary>
-            /// 不自动加任何多于标记，等同于foreach。但header和footer仍然有效
+            /// Does not automatically add any more than tags, equivalent to foreach. But header and footer are still valid
             /// </summary>
             None = 0,
             Table,

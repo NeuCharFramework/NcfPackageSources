@@ -96,7 +96,7 @@ namespace Senparc.Ncf.Core.Utility
             str4 = ((long)(num * 100)).ToString(); //Multiply num by 100 and convert to string
             j = str4.Length; //Find highest digit
             if (j > 15) { return "溢出"; }
-            str2 = str2.Substring(15 - j); //Extract corresponding part of str2, e.g. 200.55 -> j=5 -> str2=佰拾元角分
+            str2 = str2.Substring(15 - j); //Extract corresponding part of str2, e.g. 200.55 -> j=5 -> str2=100 yuan angle minutes
             //Loop through digits to convert
             for (i = 0; i < j; i++)
             {
@@ -177,7 +177,7 @@ namespace Senparc.Ncf.Core.Utility
                 str5 = str5 + ch1 + ch2;
                 if (i == j - 1 && str3 == "0")
                 {
-                    //If the last digit (fen) is 0, append "整"
+                    //If the last digit (fen) is 0, append "whole"
                     str5 = str5 + '整';
                 }
             }

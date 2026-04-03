@@ -67,7 +67,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 
         /// <summary>
         /// Handler=Save
-        /// 新增、编辑租户
+        /// Add and edit tenants
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
@@ -103,7 +103,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 初始化租户
+        ///Initialize tenant
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
@@ -124,7 +124,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                     return Ok(false, "租户不存在");
                 }
 
-                //设置租户信息
+                //Set tenant information
                 ISenparcEntitiesDbContext senparcDB = _adminUserInfoService.BaseData.BaseDB.BaseDataContext as ISenparcEntitiesDbContext;
                 if (senparcDB == null)
                 {

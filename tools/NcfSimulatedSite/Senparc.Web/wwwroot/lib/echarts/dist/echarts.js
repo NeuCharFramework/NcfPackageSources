@@ -1515,7 +1515,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var componentsMap = this._componentsMap;
 	            var newCptTypes = [];
 
-	            // 如果不存在对应的 component model 则直接 merge
+	            // If there is no corresponding component model, merge directly
 	            each(newOption, function (componentOption, mainType) {
 	                if (componentOption == null) {
 	                    return;
@@ -1531,7 +1531,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            });
 
-	            // FIXME OPTION 同步是否要改回原来的
+	            // FIXME OPTION Do you want to change the synchronization back to the original one?
 	            ComponentModel.topologicalTravel(
 	                newCptTypes, ComponentModel.getAllClassMainTypes(), visitComponent, this
 	            );
@@ -1953,7 +1953,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    function mergeTheme(option, theme) {
 	        for (var name in theme) {
-	            // 如果有 component model 则把具体的 merge 逻辑交给该 model 处理
+	            // If there is a component model, the specific merge logic will be handed over to the model for processing.
 	            if (!ComponentModel.hasClass(name)) {
 	                if (typeof theme[name] === 'object') {
 	                    option[name] = !option[name]
@@ -2160,7 +2160,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 
 	    var Gradient = __webpack_require__(4);
-	    // 用于处理merge时无法遍历Date等对象的问题
+	    // Used to deal with the problem of being unable to traverse objects such as Date when merging
 	    var BUILTIN_OBJECT = {
 	        '[object Function]': 1,
 	        '[object RegExp]': 1,
@@ -2180,7 +2180,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    /**
 	     * @param {*} source
-	     * @return {*} 拷贝后的新对象
+      * @return {*} The new object after copying
 	     */
 	    function clone(source) {
 	        if (typeof source == 'object' && source !== null) {
@@ -2193,7 +2193,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            else if (
 	                !isBuildInObject(source)
-	                // 是否为 dom 对象
+	                // Whether it is a dom object
 	                && !isDom(source)
 	            ) {
 	                result = {};
@@ -2237,12 +2237,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    && !isBuildInObject(sourceProp)
 	                    && !isBuildInObject(targetProp)
 	                ) {
-	                    // 如果需要递归覆盖，就递归调用merge
+	                    // If recursive coverage is required, call merge recursively.
 	                    merge(targetProp, sourceProp, overwrite);
 	                }
 	                else if (overwrite || !(key in target)) {
-	                    // 否则只处理overwrite为true，或者在目标对象中没有此属性的情况
-	                    // NOTE，在 target[key] 不存在的时候也是直接覆盖
+	                    // Otherwise, only the case where overwrite is true or there is no such attribute in the target object is processed.
+	                    // NOTE, when target[key] does not exist, it will be overwritten directly.
 	                    target[key] = clone(source[key], true);
 	                }
 	            }
@@ -2310,7 +2310,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    /**
-	     * 查询数组中元素的index
+      * Query the index of the element in the array
 	     * @memberOf module:zrender/core/util
 	     */
 	    function indexOf(array, value) {
@@ -2328,11 +2328,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    /**
-	     * 构造类继承关系
+      * Construct class inheritance relationship
 	     *
 	     * @memberOf module:zrender/core/util
-	     * @param {Function} clazz 源类
-	     * @param {Function} baseClazz 基类
+      * @param {Function} clazz source class
+      * @param {Function} baseClazz base class
 	     */
 	    function inherits(clazz, baseClazz) {
 	        var clazzPrototype = clazz.prototype;
@@ -2374,7 +2374,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    /**
-	     * 数组或对象遍历
+      * Array or object traversal
 	     * @memberOf module:zrender/core/util
 	     * @param {Object|Array} obj
 	     * @param {Function} cb
@@ -2402,7 +2402,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    /**
-	     * 数组映射
+      * Array mapping
 	     * @memberOf module:zrender/core/util
 	     * @param {Array} obj
 	     * @param {Function} cb
@@ -2449,7 +2449,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    /**
-	     * 数组过滤
+      * Array filtering
 	     * @memberOf module:zrender/core/util
 	     * @param {Array} obj
 	     * @param {Function} cb
@@ -2475,7 +2475,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    /**
-	     * 数组项查找
+      * Search array items
 	     * @memberOf module:zrender/core/util
 	     * @param {Array} obj
 	     * @param {Function} cb
@@ -3086,7 +3086,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var numberUtil = __webpack_require__(7);
 
 	    /**
-	     * 每三位默认加,格式化
+      * Every three digits are added by default, formatted
 	     * @type {string|number} x
 	     */
 	    function addCommas(x) {
@@ -47141,7 +47141,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    return;
 	                }
 	                // FIXME
-	                // 应该使用统计的空判断？还是在list里进行空判断？
+	                // Should statistical null judgment be used? Or perform empty judgment in the list?
 	                var otherCoord = (value == null || isNaN(value) || value === '')
 	                    ? null
 	                    : linearMap(value, otherDataExtent, otherShadowExtent, true);
@@ -47360,7 +47360,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var labelTexts = ['', ''];
 
 	            // FIXME
-	            // date型，支持formatter，autoformatter（ec2 date.getAutoFormatter）
+	            // date type, supports formatter, autoformatter (ec2 date.getAutoFormatter)
 	            if (dataZoomModel.get('showDetail')) {
 	                var dataInterval;
 	                var axis;
@@ -47509,14 +47509,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var targetInfo = this.getTargetInfo();
 
 	            // FIXME
-	            // 判断是catesian还是polar
+	            // Determine whether it is catesian or polar
 	            var rect;
 	            if (targetInfo.cartesians.length) {
 	                rect = targetInfo.cartesians[0].model.coordinateSystem.getRect();
 	            }
 	            else { // Polar
 	                // FIXME
-	                // 暂时随便写的
+	                // Just writing casually for now
 	                var width = this.api.getWidth();
 	                var height = this.api.getHeight();
 	                rect = {
@@ -47534,7 +47534,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    function getOtherDim(thisDim) {
 	        // FIXME
-	        // 这个逻辑和getOtherAxis里一致，但是写在这里是否不好
+	        // This logic is consistent with getOtherAxis, but is it not good to write it here?
 	        return thisDim === 'x' ? 'y' : 'x';
 	    }
 
@@ -47554,35 +47554,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var RATE = '\0__throttleRate';
 
 	    /**
-	     * 频率控制 返回函数连续调用时，fn 执行频率限定为每多少时间执行一次
-	     * 例如常见效果：
+      * Frequency control When the return function is called continuously, the execution frequency of fn is limited to how many times it is executed.
+      * For example, common effects:
 	     * notifyWhenChangesStop
-	     *      频繁调用时，只保证最后一次执行
-	     *      配成：trailing：true；debounce：true 即可
+      * When called frequently, only the last execution is guaranteed.
+      * Match: trailing: true; debounce: true
 	     * notifyAtFixRate
-	     *      频繁调用时，按规律心跳执行
-	     *      配成：trailing：true；debounce：false 即可
-	     * 注意：
-	     *     根据model更新view的时候，可以使用throttle，
-	     *     但是根据view更新model的时候，避免使用这种延迟更新的方式。
-	     *     因为这可能导致model和server同步出现问题。
+      * When called frequently, execute according to regular heartbeat
+      * Match: trailing: true; debounce: false
+      * Notice:
+      * When updating the view based on the model, you can use throttle.
+      * But when updating the model based on the view, avoid using this delayed update method.
+      * Because this may cause synchronization problems between the model and the server.
 	     *
 	     * @public
-	     * @param {(Function|Array.<Function>)} fn 需要调用的函数
-	     *                                         如果fn为array，则表示可以对多个函数进行throttle。
-	     *                                         他们共享同一个timer。
-	     * @param {number} delay 延迟时间，单位毫秒
-	     * @param {bool} trailing 是否保证最后一次触发的执行
-	     *                        true：表示保证最后一次调用会触发执行。
-	     *                        但任何调用后不可能立即执行，总会delay。
-	     *                        false：表示不保证最后一次调用会触发执行。
-	     *                        但只要间隔大于delay，调用就会立即执行。
-	     * @param {bool} debounce 节流
-	     *                        true：表示：频繁调用（间隔小于delay）时，根本不执行
-	     *                        false：表示：频繁调用（间隔小于delay）时，按规律心跳执行
-	     * @return {(Function|Array.<Function>)} 实际调用函数。
-	     *                                       当输入的fn为array时，返回值也为array。
-	     *                                       每项是Function。
+      * @param {(Function|Array.<Function>)} fn The function to be called
+      * If fn is an array, it means that multiple functions can be throttled.
+      * They share the same timer.
+      * @param {number} delay delay time, in milliseconds
+      * @param {bool} whether trailing guarantees the execution of the last trigger
+      * true: Indicates that the last call is guaranteed to trigger execution.
+      * But it is impossible to execute immediately after any call, and there will always be a delay.
+      * false: Indicates that the last call is not guaranteed to trigger execution.
+      * But as long as the interval is greater than delay, the call will be executed immediately.
+      * @param {bool} debounce throttling
+      * true: means: when called frequently (the interval is less than delay), it will not be executed at all.
+      * false: means: when called frequently (interval less than delay), execute according to regular heartbeat
+      * @return {(Function|Array.<Function>)} actually calls the function.
+      * When the input fn is an array, the return value is also an array.
+      * Each item is Function.
 	     */
 	    lib.throttle = function (fn, delay, trailing, debounce) {
 
@@ -47659,7 +47659,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 
 	    /**
-	     * 按一定频率执行，最后一次调用总归会执行
+      * Executed at a certain frequency, the last call will always be executed
 	     *
 	     * @public
 	     */
@@ -47670,7 +47670,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 
 	    /**
-	     * 直到不频繁调用了才会执行，最后一次调用总归会执行
+      * It will not be executed until it is called infrequently. The last call will always be executed.
 	     *
 	     * @public
 	     */
@@ -47887,7 +47887,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }, this);
 
 	            // TODO
-	            // polar支持
+	            // polar support
 	        },
 
 	        /**
@@ -48754,22 +48754,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	            inverse: false,
 	            orient: 'vertical',        // 'horizontal' ¦ 'vertical'
 
-	            seriesIndex: null,        // 所控制的series indices，默认所有有value的series.
+	            seriesIndex: null,        // The series indices controlled are all series with value by default.
 	            backgroundColor: 'rgba(0,0,0,0)',
-	            borderColor: '#ccc',       // 值域边框颜色
+	            borderColor: '#ccc',       // Range border color
 	            contentColor: '#5793f3',
 	            inactiveColor: '#aaa',
-	            borderWidth: 0,            // 值域边框线宽，单位px，默认为0（无边框）
-	            padding: 5,                // 值域内边距，单位px，默认各方向内边距为5，
-	                                       // 接受数组分别设定上右下左边距，同css
+	            borderWidth: 0,            // Value field border line width, unit px, default is 0 (no border)
+	            padding: 5,                // The inner margin of the value range, in px. The default inner margin in each direction is 5.
+	                                       // Accept arrays to set the top, right, bottom and left margins respectively, same as css
 	            textGap: 10,               //
-	            precision: 0,              // 小数精度，默认为0，无小数点
-	            color: ['#bf444c', '#d88273', '#f6efa6'], //颜色（deprecated，兼容ec2，顺序同pieces，不同于inRange/outOfRange）
+	            precision: 0,              // Decimal precision, default is 0, no decimal point
+	            color: ['#bf444c', '#d88273', '#f6efa6'], //Color (deprecated, compatible with ec2, the order is the same as pieces, different from inRange/outOfRange)
 
 	            formatter: null,
-	            text: null,                // 文本，如['高', '低']，兼容ec2，text[0]对应高值，text[1]对应低值
+	            text: null,                // Text, such as ['high', 'low'], compatible with ec2, text[0] corresponds to high value, text[1] corresponds to low value
 	            textStyle: {
-	                color: '#333'          // 值域文字颜色
+	                color: '#333'          // Range text color
 	            }
 	        },
 
@@ -48921,10 +48921,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            allSeriesIndex && this.ecModel.eachSeries(function (seriesModel, index) {
 	                var data = seriesModel.getData();
 	                // FIXME
-	                // 只考虑了list，还没有考虑map等。
+	                // Only the list is considered, not the map, etc.
 
 	                // FIXME
-	                // 这里可能应该这么判断：data.dimensions中有超出其所属coordSystem的量。
+	                // This may be the judgment here: there is an amount in data.dimensions that exceeds the coordSystem to which it belongs.
 	                if (data.type === 'list') {
 	                    thisOption.seriesIndex.push(index);
 	                }
@@ -50580,8 +50580,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        categories: function () {
 	            var thisOption = this.option;
 	            zrUtil.each(thisOption.categories, function (cate) {
-	                // FIXME category模式也使用pieceList，但在visualMapping中不是使用pieceList。
-	                // 是否改一致。
+	                // FIXME category mode also uses pieceList, but pieceList is not used in visualMapping.
+	                // Whether to change it to be consistent.
 	                this._pieceList.push({
 	                    text: this.formatValueText(cate, true),
 	                    value: cate
@@ -51139,7 +51139,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var itemModel = mpData.getItemModel(idx);
 	                var symbolSize = itemModel.getShallow('symbolSize');
 	                if (typeof symbolSize === 'function') {
-	                    // FIXME 这里不兼容 ECharts 2.x，2.x 貌似参数是整个数据？
+	                    // FIXME This is not compatible with ECharts 2.x. It seems that the parameter in 2.x is the entire data?
 	                    symbolSize = symbolSize(
 	                        mpModel.getRawValue(idx), mpModel.getDataParams(idx)
 	                    );
@@ -52116,9 +52116,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	        defaultOption: {
 
-	            backgroundColor: 'rgba(0,0,0,0)',   // 时间轴背景颜色
-	            borderColor: '#ccc',               // 时间轴边框颜色
-	            borderWidth: 0,                    // 时间轴边框线宽，单位px，默认为0（无边框）
+	            backgroundColor: 'rgba(0,0,0,0)',   // Timeline background color
+	            borderColor: '#ccc',               // Timeline border color
+	            borderWidth: 0,                    // Timeline border line width, unit px, default is 0 (no border)
 
 	            orient: 'horizontal',              // 'vertical'
 	            inverse: false,
@@ -52135,7 +52135,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                width: 2,
 	                color: '#304654'
 	            },
-	            label: {                            // 文本标签
+	            label: {                            // text label
 	                position: 'auto',           // auto left right top bottom
 	                                            // When using number, label position is not
 	                                            // restricted by viewRect.
@@ -52145,13 +52145,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    interval: 'auto',
 	                    rotate: 0,
 	                    // formatter: null,
-	                    textStyle: {                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+	                    textStyle: {                // The remaining attributes use the global text style by default, see TEXTSTYLE for details.
 	                        color: '#304654'
 	                    }
 	                },
 	                emphasis: {
 	                    show: true,
-	                    textStyle: {                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+	                    textStyle: {                // The remaining attributes use the global text style by default, see TEXTSTYLE for details.
 	                        color: '#c23531'
 	                    }
 	                }
@@ -52235,11 +52235,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	        defaultOption: {
 
-	            zlevel: 0,                  // 一级层叠
-	            z: 4,                       // 二级层叠
+	            zlevel: 0,                  // One level cascading
+	            z: 4,                       // Second level stacking
 	            show: true,
 
-	            axisType: 'time',  // 模式是时间类型，支持 value, category
+	            axisType: 'time',  // The mode is a time type and supports value, category
 
 	            realtime: true,
 
@@ -52253,9 +52253,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            controlPosition: 'left',           // 'left' 'right' 'top' 'bottom' 'none'
 	            autoPlay: false,
-	            rewind: false,                     // 反向播放
+	            rewind: false,                     // Reverse playback
 	            loop: true,
-	            playInterval: 2000,                // 播放时间间隔，单位ms
+	            playInterval: 2000,                // Playback time interval, unit ms
 
 	            currentIndex: 0,
 
@@ -52555,7 +52555,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 
 	            // FIXME
-	            // 暂没有实现用户传入
+	            // User input is not implemented yet
 	            // var labelAlign = timelineModel.get('label.normal.textStyle.align');
 	            // var labelBaseline = timelineModel.get('label.normal.textStyle.baseline');
 	            var labelAlignMap = {

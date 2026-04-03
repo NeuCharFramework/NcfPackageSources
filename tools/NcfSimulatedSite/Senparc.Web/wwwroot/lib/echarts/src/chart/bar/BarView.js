@@ -68,7 +68,7 @@ define(function (require) {
             }
             data.diff(oldData)
                 .add(function (dataIndex) {
-                    // 空数据
+                    // empty data
                     if (!data.hasValue(dataIndex)) {
                         return;
                     }
@@ -82,7 +82,7 @@ define(function (require) {
                 })
                 .update(function (newIndex, oldIndex) {
                     var rect = oldData.getItemGraphicEl(oldIndex);
-                    // 空数据
+                    // empty data
                     if (!data.hasValue(newIndex)) {
                         group.remove(rect);
                         return;

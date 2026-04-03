@@ -9,12 +9,12 @@ namespace Senparc.Ncf.Core.AssembleScan
     public class AssembleScanItem
     {
         /// <summary>
-        /// 扫描是否结束
+        /// Is scanning finished?
         /// </summary>
         public bool ScanFinished { get; set; }
 
         /// <summary>
-        /// 扫描是否成功
+        ///Scan is successful
         /// </summary>
         public bool ScanSuccessed { get; set; }
 
@@ -27,7 +27,7 @@ namespace Senparc.Ncf.Core.AssembleScan
 
         private object _lock { get; set; } = new object();
         /// <summary>
-        /// 执行扫描
+        /// perform scan
         /// </summary>
         /// <param name="assembly"></param>
         public void Run(Assembly assembly)

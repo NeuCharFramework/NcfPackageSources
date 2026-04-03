@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Http;
-using Microsoft.OpenApi; // 核心模型所在
+using Microsoft.OpenApi; // where the core model is
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
@@ -35,9 +35,9 @@ namespace Senparc.Xncf.Swagger.Filters
                 var schema = mediaType.Schema;
                 if (schema == null) return;
 
-                // --- 注意：由于 Properties 是只读的，我们直接操作集合 ---
+                // --- Note: Since Properties is read-only, we operate the collection directly ---
 
-                // 1. 清理：移除 IFormFile 默认属性
+                // 1. Cleanup: Remove IFormFile default properties
                 foreach (var propName in FormFilePropertyNames)
                 {
                     if (schema.Properties.ContainsKey(propName))
@@ -46,7 +46,7 @@ namespace Senparc.Xncf.Swagger.Filters
                     }
                 }
 
-                // 2. 注入新属性
+                // 2. Inject new attributes
                 foreach (var fileParam in fileParameters)
                 {
                     var parameterName = fileParam.Name ?? "file";
@@ -59,14 +59,14 @@ namespace Senparc.Xncf.Swagger.Filters
                         Description = $"选择文件: {parameterName}"
                     };
 
-                    // 使用索引器：如果存在则覆盖，不存在则添加
-                    // 因为属性是只读的，所以不能用 schema.Properties = ...
+                    // Use indexer: overwrite if exists, add if not
+                    // Because properties are read-only, you cannot use schema.Properties = ...
                     schema.Properties[parameterName] = fileSchema;
 
-                    // 3. 处理必填项 (Required 也是只读的 ISet<string>)
-                    // 通常框架会预先初始化好这个集合，如果没初始化（即为 null），
-                    // 在这种只读设计下通常会提供一个构造函数或初始化方法。
-                    // 但绝大多数情况下，schema.Required 在此时已经被实例化了。
+                    // 3. Process required items (Required is also a read-only ISet<string>)
+                    // Usually the framework will pre-initialize this collection. If it is not initialized (that is, it is null),
+                    // In this read-only design, a constructor or initialization method is usually provided.
+                    // But in most cases, schema.Required has already been instantiated at this time.
                     if (schema.Required != null)
                     {
                         if (!schema.Required.Contains(parameterName))

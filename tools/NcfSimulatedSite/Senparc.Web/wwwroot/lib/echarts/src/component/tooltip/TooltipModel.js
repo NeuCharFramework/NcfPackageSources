@@ -11,70 +11,70 @@ define(function (require) {
 
             show: true,
 
-            // tooltip主体内容
+            // tooltip body content
             showContent: true,
 
-            // 触发类型，默认数据触发，见下图，可选为：'item' ¦ 'axis'
+            // Trigger type, default data trigger, see the figure below, optional: 'item' ¦ 'axis'
             trigger: 'item',
 
-            // 触发条件，支持 'click' | 'mousemove'
+            // Trigger condition, supports 'click' | 'mousemove'
             triggerOn: 'mousemove',
 
-            // 是否永远显示 content
+            // Whether to always display content
             alwaysShowContent: false,
 
-            // 位置 {Array} | {Function}
+            // Location {Array} | {Function}
             // position: null
 
-            // 内容格式器：{string}（Template） ¦ {Function}
+            // Content formatter: {string} (Template) ¦ {Function}
             // formatter: null
 
             showDelay: 0,
 
-            // 隐藏延迟，单位ms
+            // Hidden delay, unit ms
             hideDelay: 100,
 
-            // 动画变换时间，单位s
+            // Animation transformation time, unit s
             transitionDuration: 0.4,
 
             enterable: false,
 
-            // 提示背景颜色，默认为透明度为0.7的黑色
+            // Prompt background color, default is black with transparency of 0.7
             backgroundColor: 'rgba(50,50,50,0.7)',
 
-            // 提示边框颜色
+            // Prompt border color
             borderColor: '#333',
 
-            // 提示边框圆角，单位px，默认为4
+            // Prompt border rounded corners, unit px, default is 4
             borderRadius: 4,
 
-            // 提示边框线宽，单位px，默认为0（无边框）
+            // Prompt border line width, unit px, default is 0 (no border)
             borderWidth: 0,
 
-            // 提示内边距，单位px，默认各方向内边距为5，
-            // 接受数组分别设定上右下左边距，同css
+            // Prompt padding in px. The default padding in each direction is 5.
+            // Accept arrays to set the top, right, bottom and left margins respectively, same as css
             padding: 5,
 
             // Extra css text
             extraCssText: '',
 
-            // 坐标轴指示器，坐标轴触发有效
+            // Axis indicator, axis trigger is valid
             axisPointer: {
-                // 默认为直线
-                // 可选为：'line' | 'shadow' | 'cross'
+                // Default is straight line
+                // Optional: 'line' | 'shadow' | 'cross'
                 type: 'line',
 
-                // type 为 line 的时候有效，指定 tooltip line 所在的轴，可选
-                // 可选 'x' | 'y' | 'angle' | 'radius' | 'auto'
-                // 默认 'auto'，会选择类型为 cateogry 的轴，对于双数值轴，笛卡尔坐标系会默认选择 x 轴
-                // 极坐标系会默认选择 angle 轴
+                // Valid when type is line, specify the axis where the tooltip line is located, optional
+                // Optional 'x' | 'y' | 'angle' | 'radius' | 'auto'
+                // The default is 'auto', which will select the axis of type cateogry. For double value axes, the Cartesian coordinate system will select the x-axis by default.
+                // The polar coordinate system will select the angle axis by default.
                 axis: 'auto',
 
                 animation: true,
                 animationDurationUpdate: 200,
                 animationEasingUpdate: 'exponentialOut',
 
-                // 直线指示器样式设置
+                // Line indicator style settings
                 lineStyle: {
                     color: '#555',
                     width: 1,
@@ -90,7 +90,7 @@ define(function (require) {
                     textStyle: {}
                 },
 
-                // 阴影指示器样式设置
+                // Shadow indicator style settings
                 shadowStyle: {
                     color: 'rgba(150,150,150,0.3)'
                 }

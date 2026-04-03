@@ -8,37 +8,37 @@ using System;
 namespace Senparc.Xncf.Swagger.Utils
 {
     /// <summary>
-    /// Configuration帮助类
+    ///Configuration helper class
     /// </summary>
     public class ConfigurationHelper
     {
         /// <summary>
-        /// 全局配置
+        ///global configuration
         /// </summary>
         public static IConfiguration Configuration { get; set; }
 
         /// <summary>
-        /// Swagger模块的配置
+        ///Configuration of Swagger module
         /// </summary>
         public static IConfiguration SwaggerConfiguration { get; set; }
 
         /// <summary>
-        /// Swagger模块的自定义配置信息
+        /// Custom configuration information for Swagger module
         /// </summary>
         public static CustsomSwaggerOptions CustsomSwaggerOptions { get; set; }
 
         /// <summary>
-        /// 托管环境信息
+        /// Hosting environment information
         /// </summary>
         public static IHostEnvironment HostEnvironment { get; set; }
 
         /// <summary>
-        /// Web托管环境信息
+        ///Web hosting environment information
         /// </summary>
         public static IWebHostEnvironment WebHostEnvironment { get; set; }
 
         /// <summary>
-        /// 内部访问（项目根路径）
+        ///Internal access (project root path)
         /// </summary>
         public static string ContentRootPath
         {
@@ -49,7 +49,7 @@ namespace Senparc.Xncf.Swagger.Utils
         }
 
         /// <summary>
-        /// web外部访问（wwwroot）
+        ///web external access (wwwroot)
         /// </summary>
         public static string WebRootPath
         {
@@ -63,14 +63,14 @@ namespace Senparc.Xncf.Swagger.Utils
         }
 
         /// <summary>
-        /// Cookie认证名称
+        ///Cookie authentication name
         /// </summary>
         public static readonly string SWAGGER_ATUH_COOKIE = nameof(SWAGGER_ATUH_COOKIE);
 
         /// <summary>
-        /// 获取AppsettingsJson的值
+        /// Get the value of AppsettingsJson
         /// </summary>
-        /// <param name="key">键路径，如：ConnectionStrings:SQLServerConn</param>
+        /// <param name="key">Key path, such as: ConnectionStrings:SQLServerConn</param>
         /// <returns></returns>
         public static string GetValue(string key)
         {
@@ -78,10 +78,10 @@ namespace Senparc.Xncf.Swagger.Utils
         }
 
         /// <summary>
-        /// 获取AppsettingsJson的值
+        /// Get the value of AppsettingsJson
         /// </summary>
-        /// <typeparam name="T">类型</typeparam>
-        /// <param name="key">键路径</param>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="key">Key path</param>
         /// <returns></returns>
         public static T GetValue<T>(string key)
         {

@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging;
 namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
 {
     /// <summary>
-    /// Prompt 优化唯一执行路径：运行 ChatGroup 直至 Agent 对话结束，再由 Plugin 写入结果并发布响应事件
+    /// Prompt optimizes the only execution path: run the ChatGroup until the Agent conversation ends, and then the Plugin writes the results and publishes the response event
     /// </summary>
     public class PromptOptimizationChatTaskHandler : IIntegrationEventHandler<PromptOptimizationRequestEvent>
     {
@@ -184,7 +184,7 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
     }
 
     /// <summary>
-    /// 监听 PromptOptimizationResponseEvent，更新 ChatTask 状态
+    /// Listen to PromptOptimizationResponseEvent and update ChatTask status
     /// </summary>
     public class PromptOptimizationTaskCompletionHandler : IIntegrationEventHandler<PromptOptimizationResponseEvent>
     {

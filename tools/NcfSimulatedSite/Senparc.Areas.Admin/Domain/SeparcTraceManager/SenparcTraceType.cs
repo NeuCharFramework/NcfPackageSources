@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.SenparcTraceManager
 {
     /// <summary>
-    /// 消息类型
+    /// message type
     /// </summary>
     public enum SenparcTraceType
     {

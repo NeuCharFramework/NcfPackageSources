@@ -26,7 +26,7 @@
             <el-aside class="module-aside">
                 <div class="start-des">
                     <ul>
-                        @*模块信息 xncfModule*@
+                        @*Module information xncfModule*@
                         <li><span class="start-green"><i class="fa fa-map-marker fa-cubes"></i>&nbsp;{{data.xncfModule.name}}</span></li>
                         <li><i class="fa fa-map-marker fa-code-fork"></i>&nbsp;v{{data.xncfModule.version}}</li>
                         <li v-if="data.xncfModule.version!==data.xncfRegister.version">发现新版本:v{{data.xncfRegister.version}} <el-button size="mini" @@click="updataVersion"> <em class="fa fa-gift"></em>&nbsp;立即更新</el-button></li>
@@ -49,13 +49,13 @@
                                         </el-button>
                                     </span>
                                 </div>
-                                @*网页*@
+                                @*Web page*@
                                 <i v-if="item === 'IAreaRegister'" class="fa fa-map-marker fa-external-link"></i>
-                                @*数据库*@
+                                @*database*@
                                 <i v-if="item === 'IXncfDatabase'" class="fa fa-map-marker fa-database"></i>
-                                @*中间件*@
+                                @*middleware*@
                                 <i v-if="item === 'IXncfMiddleware'" class="fa fa-map-marker fa-plug"></i>
-                                @*线程 *@
+                                @*thread*@
                                 <i v-if="item === 'IXncfRazorRuntimeCompilation'" class="fa fa-map-marker fa-retweet"></i>
                             </el-tooltip>
                             <template v-if="data.xncfRegister.functionCount>0">
@@ -80,7 +80,7 @@
                         </li>
                     </ul>
                 </div>
-                @*更新记录*@
+                @*Update record*@
                 <div class="start-log">
                     <el-collapse>
                         <el-collapse-item title="更新记录" name="1">
@@ -188,7 +188,7 @@
             </el-main>
         </el-container>
     </el-container>
-    @*执行弹窗*@
+    @*Execute pop-up window*@
     <el-dialog width="60%" v-if="run.data.key" :title="run.data.key.name" :visible.sync="run.visible" class="run-dialog"  :close-on-click-modal="false">
         <h4><i class="fa fa-newspaper-o"></i>&nbsp;{{run.data.key.description}}</h4>
         <el-form :label-position="'left'" @@submit.native.prevent>
@@ -226,7 +226,7 @@
             </el-button>
         </div>
     </el-dialog>
-    @*运行结果*@
+    @*Running results*@
     <el-dialog :title="runResult.tit"
                :visible.sync="runResult.visible"
                :close-on-click-modal="false"
@@ -238,7 +238,7 @@
             <el-button type="primary" @@click="runResult.visible = false">关 闭</el-button>
         </span>
     </el-dialog>
-    @*查看线程*@
+    @*View thread*@
     <el-dialog title="查看线程"
                :visible.sync="thread.visible"
                width="60%">

@@ -10,7 +10,7 @@ define(function (require) {
             return a.y - b.y;
         });
 
-        // 压
+        // press
         function shiftDown(start, end, delta, dir) {
             for (var j = start; j < end; j++) {
                 list[j].y += delta;
@@ -26,7 +26,7 @@ define(function (require) {
             shiftUp(end - 1, delta / 2);
         }
 
-        // 弹
+        // bomb
         function shiftUp(end, delta) {
             for (var j = end; j >= 0; j--) {
                 list[j].y -= delta;
@@ -40,12 +40,12 @@ define(function (require) {
 
         function changeX(list, isDownList, cx, cy, r, dir) {
             var lastDeltaX = dir > 0
-                ? isDownList                // 右侧
-                    ? Number.MAX_VALUE      // 下
-                    : 0                     // 上
-                : isDownList                // 左侧
-                    ? Number.MAX_VALUE      // 下
-                    : 0;                    // 上
+                ? isDownList                // right side
+                    ? Number.MAX_VALUE      // Down
+                    : 0                     // superior
+                : isDownList                // left side
+                    ? Number.MAX_VALUE      // Down
+                    : 0;                    // superior
 
             for (var i = 0, l = list.length; i < l; i++) {
                 // Not change x for center label
@@ -62,11 +62,11 @@ define(function (require) {
                       )
                     : Math.abs(list[i].x - cx);
                 if (isDownList && deltaX >= lastDeltaX) {
-                    // 右下，左下
+                    // lower right, lower left
                     deltaX = lastDeltaX - 10;
                 }
                 if (!isDownList && deltaX <= lastDeltaX) {
-                    // 右上，左上
+                    // upper right, upper left
                     deltaX = lastDeltaX + 10;
                 }
 

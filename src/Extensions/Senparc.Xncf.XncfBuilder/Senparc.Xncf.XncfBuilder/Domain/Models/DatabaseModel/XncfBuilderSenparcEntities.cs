@@ -18,7 +18,7 @@ namespace Senparc.Xncf.XncfBuilder
 
         public DbSet<Config> Configs { get; set; }
 
-        //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
+        //DOT REMOVE OR MODIFY THIS LINE Do not remove or modify this LINE - Entities Point
 
     }
 }

@@ -26,9 +26,9 @@
 //        public async Task<ColorDto> GetOrInitColor()
 //        {
 //            var color = await base.GetObjectAsync(z => true);
-//            if (color == null)//如果是纯第一次安装，理论上不会有残留数据
+//            if (color == null)//If it is a pure first installation, theoretically there will be no residual data
 //            {
-//                //创建默认颜色
+//                //Create default color
 //                ColorDto colorDto = await this.CreateNewColor().ConfigureAwait(false);
 //                return colorDto;
 //            }
@@ -38,7 +38,7 @@
 
 //        public async Task<ColorDto> Brighten()
 //        {
-//            //TODO:异步方法需要添加排序功能
+//            //TODO: The asynchronous method needs to add sorting function
 //            var obj = this.GetObject(z => true, z => z.Id, OrderingType.Descending);
 //            obj.Brighten();
 //            await base.SaveObjectAsync(obj).ConfigureAwait(false);
@@ -47,7 +47,7 @@
 
 //        public async Task<ColorDto> Darken()
 //        {
-//            //TODO:异步方法需要添加排序功能
+//            //TODO: The asynchronous method needs to add sorting function
 //            var obj = this.GetObject(z => true, z => z.Id, OrderingType.Descending);
 //            obj.Darken();
 //            await base.SaveObjectAsync(obj).ConfigureAwait(false);
@@ -56,13 +56,13 @@
 
 //        public async Task<ColorDto> Random()
 //        {
-//            //TODO:异步方法需要添加排序功能
+//            //TODO: The asynchronous method needs to add sorting function
 //            var obj = this.GetObject(z => true, z => z.Id, OrderingType.Descending);
 //            obj.Random();
 //            await base.SaveObjectAsync(obj).ConfigureAwait(false);
 //            return base.Mapper.Map<ColorDto>(obj);
 //        }
 
-//        //TODO: 更多业务方法可以写到这里
+//        //TODO: More business methods can be written here
 //    }
 //}

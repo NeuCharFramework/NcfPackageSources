@@ -19,7 +19,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Extensions
     {
         public static async Task LoadPromptRangeItemSelection(IServiceProvider serviceProvider, SelectionList SystemMessagePromptCodeSelection)
         {
-            //载入 PromptRange
+            //Load PromptRange
             SystemMessagePromptCodeSelection.Items.Add(new SelectionItem()
             {
                 Value = "0",

@@ -24,9 +24,9 @@ namespace Senparc.Xncf.XncfBuilder
         {
             services.AddScoped<BuildXncf_BuildRequest>();
 
-            //services.AddScoped<XncfBuilderSenparcEntities_SqlServer>();//注意：此处不能直接这样自动配置数据库实体，基类中已经统一配置 implementationFactory
+            //services.AddScoped<XncfBuilderSenparcEntities_SqlServer>();//Note: The database entity cannot be automatically configured directly here. The implementationFactory has been configured uniformly in the base class.
 
-            //AutoMap映射
+            //AutoMap mapping
             base.AddAutoMapMapping(profile =>
             {
                 profile.CreateMap<Config, ConfigDto>();
@@ -38,7 +38,7 @@ namespace Senparc.Xncf.XncfBuilder
 
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //实现 [XncfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
+            //After implementing the [XncfAutoConfigurationMapping] feature, it can be executed automatically without adding it manually.
             //modelBuilder.ApplyConfiguration(new DbConfig_WeixinUserConfigurationMapping());
         }
     }

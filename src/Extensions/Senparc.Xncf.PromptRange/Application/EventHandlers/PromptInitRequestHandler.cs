@@ -42,7 +42,7 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
 
             try 
             {
-                // === 步骤1：确保 PromptRange "PromptCatalyzer" 存在 ===
+                // === Step 1: Make sure PromptRange "PromptCatalyzer" exists ===
                 _logger.LogInformation("【步骤1/4】检查 PromptRange 'PromptCatalyzer' 是否存在...");
                 var range = await _promptRangeService.GetObjectAsync(z => z.Alias == "PromptCatalyzer");
                 
@@ -58,7 +58,7 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
                     _logger.LogInformation("  ✅ PromptRange 已存在，ID: {RangeId}, Alias: {Alias}", range.Id, range.Alias);
                 }
 
-                // === 步骤2：确定使用哪个 AI Model ===
+                // === Step 2: Determine which AI Model to use ===
                 _logger.LogInformation("【步骤2/4】确定 AI Model...");
                 int modelId;
                 if (@event.ModelId.HasValue)
@@ -91,7 +91,7 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
                     _logger.LogInformation("  ✅ 使用默认 Model: {Alias} (ID: {ModelId})", model.Alias, modelId);
                 }
 
-                // === 步骤3：确保 PromptItem 存在（容错处理）===
+                // === Step 3: Ensure PromptItem exists (fault tolerance) ===
                 _logger.LogInformation("【步骤3/4】检查 PromptItem 是否存在于 Range {RangeId}...", range.Id);
                 var item = await _promptItemService.GetObjectAsync(z => z.RangeId == range.Id);
 
@@ -138,8 +138,8 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
                         PresencePenalty = 0,
                         StopSequences = null,
                         IsDraft = true,
-                        Note = "AI-Catalyzer", // 限制在 20 字符以内（数据库字段限制）
-                        // 确保所有字符串字段都有值，避免 null 导致数据库错误
+                        Note = "AI-Catalyzer", // Limited to 20 characters (database field limit)
+                        // Ensure all string fields have values ​​to avoid nulls causing database errors
                         ExpectedResultsJson = string.Empty,
                         Prefix = string.Empty,
                         Suffix = string.Empty,
@@ -175,7 +175,7 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
                     {
                         _logger.LogError(ex, "  ❌ 创建 PromptItem 失败！详细错误: {ErrorMessage}", ex.Message);
                         
-                        // 尝试再次查询，看看是否已经创建（可能是并发问题）
+                        // Try querying again to see if it has been created (maybe a concurrency issue)
                         item = await _promptItemService.GetObjectAsync(z => z.RangeId == range.Id);
                         if (item != null)
                         {
@@ -183,7 +183,7 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
                         }
                         else
                         {
-                            // 真的失败了，重新抛出异常
+                            // If it really fails, rethrow the exception
                             throw;
                         }
                     }
@@ -194,7 +194,7 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
                         item.Id, item.FullVersion);
                 }
                 
-                // === 步骤4：返回成功响应 ===
+                // === Step 4: Return successful response ===
                 _logger.LogInformation("【步骤4/4】准备返回 PromptInitResponse...");
                 
                 if (item == null)
@@ -210,20 +210,20 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
 
                 var response = new PromptInitResponseEvent(@event.RequestId, promptCode, success, message);
                 
-                // 使用 PublishDerivedAsync 继承事件链信息（防止循环引用）
+                // Use PublishDerivedAsync to inherit event chain information (prevent circular references)
                 await _eventBus.PublishDerivedAsync(response, @event);
                 
                 _logger.LogInformation("========== Prompt Init Request 处理完成 ==========");
             }
             catch (Exception ex)
             {
-                // 捕获完整的异常信息，包括 inner exception
+                // Capture complete exception information, including inner exception
                 var errorMessage = ex.Message;
                 if (ex.InnerException != null)
                 {
                     errorMessage += $" | Inner Exception: {ex.InnerException.Message}";
                     
-                    // 如果还有更深层的 inner exception（例如 EF Core 的数据库错误）
+                    // If there is a deeper inner exception (such as a database error in EF Core)
                     if (ex.InnerException.InnerException != null)
                     {
                         errorMessage += $" | Inner Inner Exception: {ex.InnerException.InnerException.Message}";
@@ -233,7 +233,7 @@ namespace Senparc.Xncf.PromptRange.Application.EventHandlers
                 _logger.LogError(ex, "Error handling PromptInitRequest. Full error: {ErrorMessage}", errorMessage);
                 var response = new PromptInitResponseEvent(@event.RequestId, null, false, errorMessage);
                 
-                // 即使是错误响应，也需要继承事件链
+                // Even error responses need to inherit the event chain
                 await _eventBus.PublishDerivedAsync(response, @event);
             }
         }

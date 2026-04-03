@@ -17,13 +17,13 @@ namespace Senparc.Xncf.SystemManager.Domain.Models
         public string ProvinceName { get; set; }
 
         /// <summary>
-        /// 地区代码
+        ///area code
         /// </summary>
         [DataMember]
         public string DivisionsCode { get; set; }
 
         /// <summary>
-        /// 缩写（去掉“省”“市”“自治区”等）
+        /// Abbreviation (remove "province", "city", "autonomous region", etc.)
         /// </summary>
         [DataMember]
         public string ShortName { get; set; }

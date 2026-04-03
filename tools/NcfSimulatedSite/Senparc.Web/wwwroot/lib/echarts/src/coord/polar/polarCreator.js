@@ -7,7 +7,7 @@ define(function (require) {
     var axisHelper = require('../../coord/axisHelper');
     var niceScaleExtent = axisHelper.niceScaleExtent;
 
-    // 依赖 PolarModel 做预处理
+    // Rely on PolarModel for preprocessing
     require('./PolarModel');
 
     /**

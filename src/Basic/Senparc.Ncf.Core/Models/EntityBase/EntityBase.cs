@@ -6,7 +6,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// 数据库实体基类
+    /// Database entity base class
     /// </summary>
     [Serializable]
     public partial class EntityBase : IEntityBase, IMultiTenancy
@@ -14,15 +14,15 @@ namespace Senparc.Ncf.Core.Models
         #region IEntityBase 接口
 
         /// <summary>
-        /// 是否软删除
+        /// Whether to soft delete
         /// </summary>
         public bool Flag { get; set; }
         /// <summary>
-        /// 添加时间
+        ///add time
         /// </summary>
         public DateTime AddTime { get; set; }
         /// <summary>
-        /// 上次更新时间
+        /// last updated time
         /// </summary>
         public DateTime LastUpdateTime { get; set; }
 
@@ -31,22 +31,22 @@ namespace Senparc.Ncf.Core.Models
         #region IMultiTenancy 接口
 
         /// <summary>
-        /// 租户 ID
-        /// <para>如果为-1，则本系统不启用多租户</para>
-        /// <para>如果为0，则为系统公共数据（特殊情况使用）</para>
+        ///Tenant ID
+        /// <para>If it is -1, multi-tenancy is not enabled in this system</para>
+        /// <para>If it is 0, it is system public data (used in special circumstances)</para>
         /// </summary>
         public int TenantId { get; set; }
 
         #endregion
 
         /// <summary>
-        /// 仅管理员备注
+        ///Admin comments only
         /// </summary>
         [MaxLength(300)]
         public string AdminRemark { get; set; }
 
         /// <summary>
-        /// 前台用户可见备注
+        /// Remarks visible to front-end users
         /// </summary>
         [MaxLength(300)]
         public string Remark { get; set; }
@@ -58,14 +58,14 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        /// 更新最后更新时间
+        ///Update last update time
         /// </summary>
         /// <param name="time"></param>
         protected void SetUpdateTime(DateTime? time = null)
         {
             if (AddTime == DateTime.MinValue)
             {
-                AddTime = SystemTime.Now.LocalDateTime;//通常在添加的时候发生
+                AddTime = SystemTime.Now.LocalDateTime;//Usually happens when adding
             }
             LastUpdateTime = time ?? SystemTime.Now.LocalDateTime;
         }
@@ -73,14 +73,14 @@ namespace Senparc.Ncf.Core.Models
     }
 
     /// <summary>
-    /// 带单一主键的数据库实体基类
+    /// Database entity base class with single primary key
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     [Serializable]
-    public partial class EntityBase<TKey> : EntityBase, IEntityBase<TKey>, IMultiTenancyEntityBase<TKey>/*默认支持多租户接口*/
+    public partial class EntityBase<TKey> : EntityBase, IEntityBase<TKey>, IMultiTenancyEntityBase<TKey>/*Supports multi-tenant interface by default*/
     {
         /// <summary>
-        /// 主键
+        /// primary key
         /// </summary>
         [Key]
         public TKey Id { get; set; }

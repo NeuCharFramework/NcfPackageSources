@@ -4,52 +4,52 @@ using System;
 namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 {
     /// <summary>
-    /// AdminChatSessionModuleDto：管理后台聊天会话-模块关联数据传输对象
+    ///AdminChatSessionModuleDto: Administers background chat session - module associated data transfer object
     /// </summary>
     public class AdminChatSessionModuleDto : DtoBase<int>
     {
         /// <summary>
-        /// 会话ID
+        /// session id
         /// </summary>
         public int SessionId { get; set; }
 
         /// <summary>
-        /// XNCF 模块唯一标识符
+        ///XNCF module unique identifier
         /// </summary>
         public string XncfModuleUid { get; set; }
 
         /// <summary>
-        /// 模块名称
+        /// module name
         /// </summary>
         public string ModuleName { get; set; }
 
         /// <summary>
-        /// 模块版本
+        ///module version
         /// </summary>
         public string ModuleVersion { get; set; }
 
         /// <summary>
-        /// 用于前端显示的模块名称（优先菜单名）
+        /// Module name used for front-end display (priority menu name)
         /// </summary>
         public string DisplayName { get; set; }
 
         /// <summary>
-        /// 菜单名称
+        ///menu name
         /// </summary>
         public string MenuName { get; set; }
 
         /// <summary>
-        /// 模块简要说明
+        ///Module brief description
         /// </summary>
         public string ModuleDescription { get; set; }
 
         /// <summary>
-        /// 添加到会话的时间
+        /// time added to session
         /// </summary>
         public DateTime AddedTime { get; set; }
 
         /// <summary>
-        /// 从实体映射到 DTO
+        /// Mapping from entities to DTOs
         /// </summary>
         public static AdminChatSessionModuleDto CreateFromEntity(AdminChatSessionModule entity)
         {
@@ -57,14 +57,14 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 
             return new AdminChatSessionModuleDto
             {
-                // 明确复制基类属性
+                // Explicitly copy base class properties
                 Id = entity.Id,
                 AddTime = entity.AddTime,
                 LastUpdateTime = entity.LastUpdateTime,
                 TenantId = entity.TenantId,
                 Flag = entity.Flag,
 
-                // 复制业务属性
+                // Copy business attributes
                 SessionId = entity.SessionId,
                 XncfModuleUid = entity.XncfModuleUid,
                 ModuleName = entity.ModuleName,

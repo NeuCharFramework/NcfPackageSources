@@ -29,7 +29,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Services.Tests
         [TestMethod]
         public async Task TryCreateTableAndColumnMetaFromEntityTest()
         {
-            //根据实体自动创建表和列
+            //Automatically create tables and columns based on entities
             ColumnTemplate columnTemplate = await _columnMetadataService.TryCreateTableAndColumnMetaFromEntityAsync<AdminUserInfo>();
             Assert.IsTrue(columnTemplate != null);
             Assert.IsTrue(columnTemplate.Count > 4);

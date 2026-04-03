@@ -8,7 +8,7 @@ namespace Senparc.Ncf.Core.Models
     public interface INcfDbData
     {
         /// <summary>
-        /// 强制手动更改DetectChange
+        /// Force manual change of DetectChange
         /// </summary>
         bool ManualDetectChangeObject { get; set; }
         DbContext BaseDataContext { get; }
@@ -16,12 +16,12 @@ namespace Senparc.Ncf.Core.Models
     }
 
     /// <summary>
-    /// NcfDbData，NCF 的数据库上下文封装，基础类
+    /// NcfDbData, NCF database context encapsulation, base class
     /// </summary>
     public abstract class NcfDbData : INcfDbData
     {
         /// <summary>
-        /// 强制手动更改DetectChange
+        /// Force manual change of DetectChange
         /// </summary>
         public virtual bool ManualDetectChangeObject { get; set; }
         public abstract DbContext BaseDataContext { get; }

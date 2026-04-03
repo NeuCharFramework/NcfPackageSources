@@ -8,7 +8,7 @@ namespace Senparc.Ncf.Core.Cache.Extensions
     public static class BaseCacheExtensions
     {
         /// <summary>
-        /// 获取所有缓存集合
+        /// Get all cache collections
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="baseCache"></param>
@@ -19,7 +19,7 @@ namespace Senparc.Ncf.Core.Cache.Extensions
         }
 
         /// <summary>
-        /// 【异步方法】获取所有缓存信息集合
+        /// [Async] Get all cache information collections
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="baseCache"></param>
@@ -30,7 +30,7 @@ namespace Senparc.Ncf.Core.Cache.Extensions
         }
 
         /// <summary>
-        /// 获取所有以key为前缀的缓存信息集合
+        /// Get all cache information collections prefixed by key
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="baseCache"></param>
@@ -42,7 +42,7 @@ namespace Senparc.Ncf.Core.Cache.Extensions
         }
 
         /// <summary>
-        /// 【异步方法】获取所有以key为前缀的缓存信息集合
+        /// [Async] Get all cache information collections prefixed by key
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="baseCache"></param>

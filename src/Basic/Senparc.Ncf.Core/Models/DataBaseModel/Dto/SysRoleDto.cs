@@ -11,19 +11,19 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public string Id { get; set; }
 
         /// <summary>
-        /// 角色名称
+        /// role name
         /// </summary>
         [MaxLength(50)]
         public string RoleName { get; set; }
 
         /// <summary>
-        /// 角色代码
+        ///role code
         /// </summary>
         [MaxLength(50)]
         public string RoleCode { get; set; }
 
         /// <summary>
-        /// 启用
+        ///enable
         /// </summary>
         public bool Enabled { get; set; }
     }

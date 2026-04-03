@@ -35,14 +35,14 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-        //     var crawTask = await _senMapicTaskService.CreateTaskAsync("爬虫任务"+SystemTime.Now.Ticks, 
+        //     var crawlTask ​​= await _senMapicTaskService.CreateTaskAsync("Crawler Task"+SystemTime.Now.Ticks, 
         //             request.Url, 5, 10, request.Deepth, request.PageNumber, true);
-        //    logger.Append("爬虫任务创建成功");
-        //    logger.Append("爬虫任务ID："+crawTask.Id);
-        //    logger.Append("爬虫任务名称："+crawTask.Name);
-        //    logger.Append("爬虫任务开始时间："+crawTask.StartTime);
-        //    logger.Append("爬虫任务结束时间："+crawTask.EndTime);
-        //    logger.Append("爬虫任务状态："+crawTask.Status);
+        //    logger.Append("Crawler task created successfully");
+        //    logger.Append("Crawler task ID:"+crawTask.Id);
+        //    logger.Append("Crawler task name:"+crawTask.Name);
+        //    logger.Append("Crawler task start time:"+crawTask.StartTime);
+        //    logger.Append("Crawler task end time:"+crawTask.EndTime);
+        //    logger.Append("Crawler task status:"+crawTask.Status);
            
         //      await _senMapicTaskService.StartTaskAsync(crawTask);
 
@@ -72,14 +72,14 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                /* 页面上点击“执行”后，将调用这里的方法
+                /* After clicking "Execute" on the page, the method here will be called
                   *
-                  * 参数说明：
-                  * response：已经初始化后的返回结果
-                  * logger：日志
+                  * Parameter description:
+                  * response: the return result after initialization
+                  * logger: log
                   * 
-                  * 如果直接对 response 的属性修改，则最终 return null，
-                  * 否则可以返回一个新的 response 对象，系统将自动覆盖原有对象
+                  * If the properties of response are modified directly, null will eventually be returned.
+                  * Otherwise, a new response object can be returned, and the system will automatically overwrite the original object.
                   */
 
                 double calcResult = request.Number1;

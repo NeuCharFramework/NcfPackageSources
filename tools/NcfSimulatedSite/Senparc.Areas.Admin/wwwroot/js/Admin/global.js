@@ -1,31 +1,31 @@
-﻿// 退出
+﻿// quit
 Vue.prototype.loginout = function () {
     window.location.href = '/Admin/Login?handler=Logout&ReturnUrl=' + escape(window.location.pathname + window.location.search);
 };
 
-// 格式化添加时间等 2020 - 06 - 19T09: 41: 51.1905692
+// Formatting to add time, etc. 2020-06-19T09: 41: 51.1905692
 function formaTableTime(value) {
     return value ? value.replace('T', '  ').substr(0, 17) : '暂无时间';
 }
 
 /**
- * 复制内容
- * @param {any} value 值 
- * @param {any} toastText 提示内容
+ * Copy content
+ * @param {any} value value 
+ * @param {any} toastText prompt content
  */
 function copyToClipboard(value, toastText) {
     $('#clipboardContainer').val(value);
     $('#clipboardContainer').select();
     toastText = toastText || '复制成功！请使用 Ctrl+V 组合键进行粘贴操作。';
     try {
-        document.execCommand("copy"); // 执行浏览器复制命令
+        document.execCommand("copy"); // Execute browser copy command
         base.swal.toast(toastText);
     } finally {
         //Execute Finally
     }
 }
 
-// 处理剪切url id
+// Handle cut url id
 function resizeUrl() {
     let url = window.location.href;
     let obj = {};
@@ -43,9 +43,9 @@ function resizeUrl() {
 }
 
 /**
- * 将数值四舍五入(保留2位小数)后格式化成金额形式
- * @param {any} num 数值(Number或者String)
- * @returns {any} 金额格式的字符串,如'1,234,567.45'
+ * Round the value (retaining 2 decimal places) and format it into an amount.
+ * @param {any} num value (Number or String)
+ * @returns {any} String in amount format, such as '1,234,567.45'
  */
 function formatCurrency(num) {
     num = num.toString().replace(/\$|\,/g, '');

@@ -23,7 +23,7 @@ namespace Senparc.Ncf.Core.Models
         public string TenPayAppId { get; private set; }
 
         /// <summary>
-        /// 是否隐藏模块管理
+        /// Whether to hide module management
         /// </summary>
         public bool? HideModuleManager { get; private set; }
 
@@ -48,7 +48,7 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        /// 更新
+        /// renew
         /// </summary>
         /// <param name="systemName"></param>
         /// <param name="mchId"></param>

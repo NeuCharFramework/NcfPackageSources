@@ -39,12 +39,12 @@ namespace Senparc.Ncf.Core.Cache
         //private ICacheStrategy _cache;
 
         /// <summary>
-        /// 缓存策略。
-        /// 请尽量不要再BaseCache以外调用这个对象的方法，尤其Cache的Key在DictionaryCache中是会被重新定义的
+        ///caching policy.
+        /// Please try not to call the method of this object outside BaseCache, especially the Key of Cache will be redefined in DictionaryCache
         /// </summary>
         public IBaseObjectCacheStrategy Cache { get; set; }
         /// <summary>
-        /// 超时时间，1400分钟为1天。
+        /// Timeout time, 1400 minutes is 1 day.
         /// </summary>
         public int TimeOut { get; set; }
 
@@ -63,14 +63,14 @@ namespace Senparc.Ncf.Core.Cache
             }
 
             Cache = CacheStrategyFactory.GetObjectCacheStrategyInstance();
-            this.CacheSetKey = cacheKey;//设置缓存集合键，必须提供
+            this.CacheSetKey = cacheKey;//Set cache collection key, required
         }
 
         #region Synchronous Methods
 
         /// <summary>
-        /// Data不能在Update()方法中调用，否则会引发循环调用。Update()方法中应该使用SetData()方法
-        /// Data只适用于简单类型，如果缓存类型为列表，则不适用
+        ///Data cannot be called in the Update() method, otherwise it will cause a loop call. SetData() method should be used in Update() method
+        ///Data only works with simple types, not applicable if the cache type is a list
         /// </summary>
         public virtual T Data
         {
@@ -97,7 +97,7 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        /// 设置整个缓存数据
+        ///Set the entire cache data
         /// </summary>
         /// <param name="value"></param>
         /// <param name="timeOut"></param>
@@ -131,9 +131,9 @@ namespace Senparc.Ncf.Core.Cache
 
         #region Asynchronous Methods
         /// <summary>
-        /// 获取全部缓存数据
-        /// Data不能在Update()方法中调用，否则会引发循环调用。Update()方法中应该使用SetData()方法
-        /// Data只适用于简单类型，如果缓存类型为列表，则不适用
+        /// Get all cached data
+        ///Data cannot be called in the Update() method, otherwise it will cause a loop call. SetData() method should be used in Update() method
+        ///Data only works with simple types, not applicable if the cache type is a list
         /// </summary>
         public virtual async Task<T> GetDataAsync()
         {
@@ -156,7 +156,7 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        /// 设置整个缓存数据
+        ///Set the entire cache data
         /// </summary>
         /// <param name="value"></param>
         /// <param name="timeOut"></param>

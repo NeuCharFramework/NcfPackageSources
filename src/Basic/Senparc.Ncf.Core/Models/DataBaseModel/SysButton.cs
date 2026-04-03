@@ -8,7 +8,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
     /// <summary>
-    /// 菜单对应的按钮
+    /// button corresponding to the menu
     /// </summary>
     [Table("SysButtons")]
     public class SysButton : EntityBase<string>
@@ -29,20 +29,20 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         }
 
         /// <summary>
-        /// 菜单id
+        /// menu id
         /// </summary>
         [MaxLength(150)]
         public string MenuId { get; set; }
 
         /// <summary>
-        /// 操作名称
+        /// operation name
         /// </summary>
         [MaxLength(150)]
         [Required]
         public string ButtonName { get; set; }
 
         /// <summary>
-        /// 操作标识
+        /// operation identifier
         /// </summary>
         [MaxLength(150)]
         public string OpearMark { get; set; }
@@ -56,7 +56,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         }
 
         /// <summary>
-        /// 按钮对应的请求地址
+        ///Request address corresponding to the button
         /// </summary>
         [MaxLength(500)]
         public string Url { get; set; }

@@ -5,7 +5,7 @@ namespace Senparc.Ncf.Service
     public static class AutoDetectChangeContextExtension
     {
        /// <summary>
-        /// 创建AutoDetectChangeContext的实例
+        /// Create an instance of AutoDetectChangeContext
        /// </summary>
        /// <param name="serviceData"></param>
        /// <returns></returns>
@@ -15,9 +15,9 @@ namespace Senparc.Ncf.Service
        }
 
        /// <summary>
-       /// 创建CloseAutoDetectChangeContext的实例
+       /// Create an instance of CloseAutoDetectChangeContext
        /// </summary>
-       /// <param name="wrap">AutoDetectChangeContextWrap实例</param>
+       /// <param name="wrap">AutoDetectChangeContextWrap instance</param>
        /// <returns></returns>
        public static CloseAutoDetectChangeContext InstanceCloseAutoDetectChangeContext(this AutoDetectChangeContextWrap wrap)
        {
@@ -25,9 +25,9 @@ namespace Senparc.Ncf.Service
        }
 
        /// <summary>
-       /// 创建CloseAutoDetectChangeContext的实例
+       /// Create an instance of CloseAutoDetectChangeContext
        /// </summary>
-       /// <param name="wrap">AutoDetectChangeContextWrap实例</param>
+       /// <param name="wrap">AutoDetectChangeContextWrap instance</param>
        /// <returns></wrap>
        public static void ForceDetectChange(this AutoDetectChangeContextWrap wrap, object entity)
        {

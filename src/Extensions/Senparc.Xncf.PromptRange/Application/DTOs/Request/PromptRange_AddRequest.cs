@@ -5,18 +5,18 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 public class PromptRange_AddRequest
 {
     /// <summary>
-    /// 靶场代号（用户自定义）
+    /// Shooting range code (user-defined)
     /// </summary>
     public string Alias { get; set; }
 
     /// <summary>
-    /// 靶场名称（来自版号生成）
+    /// Shooting range name (from version number generation)
     /// </summary>
     [Required]
     public string RangeName { get; set; }
 
     /// <summary>
-    /// 期望结果Json
+    ///Expected result Json
     /// </summary>
     public string ExpectedResultsJson { get; set; }
 }

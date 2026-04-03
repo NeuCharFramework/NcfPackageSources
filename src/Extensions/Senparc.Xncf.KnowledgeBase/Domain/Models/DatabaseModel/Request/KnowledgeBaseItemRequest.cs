@@ -11,15 +11,15 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Request
     public class KnowledgeBaseItemRequest
     {
         /// <summary>
-        /// 知识库Id
+        ///Knowledge BaseId
         /// </summary>
         public int KnowledgeBasesId { get; set; }
         /// <summary>
-        /// 内容类型
+        /// content type
         /// </summary>
         public ContentType ContentType { get; set; }
         /// <summary>
-        /// 内容
+        /// content
         /// </summary>
         public string Content { get; set; }
     }

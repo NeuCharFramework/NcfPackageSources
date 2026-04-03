@@ -20,12 +20,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         // public int Id { get; set; }
 
         /// <summary>
-        /// 模型名称
+        /// model name
         /// </summary>
         public string Alias { get; set; }
 
         /// <summary>
-        /// 用户名
+        /// username
         /// </summary>
         public string Developer => "admin";
 

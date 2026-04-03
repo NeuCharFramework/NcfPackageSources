@@ -11,16 +11,16 @@ using Microsoft.Extensions.Hosting;
 
 namespace Senparc.Xncf.DynamicData
 {
-    public partial class Register : IAreaRegister, //注册 XNCF 页面接口（按需选用）
-                                    IXncfRazorRuntimeCompilation  //赋能 RazorPage 运行时编译
+    public partial class Register : IAreaRegister, //Register XNCF page interface (optional on demand)
+                                    IXncfRazorRuntimeCompilation  //Enable RazorPage runtime compilation
     {
         #region IAreaRegister 接口
 
       //  public string HomeUrl => "/Admin/DynamicData/Index";
 
       //  public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-      //                   new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
-			 		//	 new AreaPageMenuItem(GetAreaUrl($"/Admin/DynamicData/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
+      //                   new AreaPageMenuItem(GetAreaHomeUrl(),"Home","fa fa-laptop"),
+			 		//  new AreaPageMenuItem(GetAreaUrl($"/Admin/DynamicData/DatabaseSample"),"Database Operation Example","fa fa-bookmark-o")
 			 		//};
 
         public string HomeUrl => "/Admin/DynamicData/";
@@ -34,7 +34,7 @@ namespace Senparc.Xncf.DynamicData
         {
             builder.AddRazorPagesOptions(options =>
             {
-                //此处可配置页面权限
+                //Page permissions can be configured here
             });
 
             SenparcTrace.SendCustomLog("DynamicData 启动", "完成 Area:Senparc.Xncf.DynamicData 注册");

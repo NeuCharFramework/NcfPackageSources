@@ -43,9 +43,9 @@ namespace Senparc.Xncf.MCP
 
         public override string Name => "Senparc.Xncf.MCP";
 
-        public override string Uid => "149d8021-1783-4fc9-97a8-f1a1ba60245b";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => "149d8021-1783-4fc9-97a8-f1a1ba60245b";//It must be globally unique and must be fixed after generation. It has been automatically generated and can also be modified by yourself.
 
-        public override string Version => "0.1.0";//必须填写版本号
+        public override string Version => "0.1.0";//Version number is required
 
         public override string MenuName => "MCP Manager";
 
@@ -57,21 +57,21 @@ namespace Senparc.Xncf.MCP
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //安装或升级版本时更新数据库
+            //Update database when installing or upgrading a version
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
-            //根据安装或更新不同条件执行逻辑
+            //Execute logic based on different conditions for installation or update
             switch (installOrUpdate)
             {
                 case InstallOrUpdate.Install:
-                    //新安装
+                    //New installation
                     #region 初始化数据库数据
                     var colorService = serviceProvider.GetService<ColorAppService>();
                     var colorResult = await colorService.GetOrInitColorAsync();
                     #endregion
                     break;
                 case InstallOrUpdate.Update:
-                    //更新
+                    //renew
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -85,9 +85,9 @@ namespace Senparc.Xncf.MCP
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
             MCPSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as MCPSenparcEntities;
 
-            //指定需要删除的数据实体
+            //Specify the data entity to be deleted
 
-            //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
+            //Note: As a demonstration, all tables created by this module are deleted when uninstalling the module. During actual operation, please operate with caution and sort the entities in the order of deletion!
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
@@ -154,11 +154,11 @@ namespace Senparc.Xncf.MCP
 
             if (app is IEndpointRouteBuilder endpoints)
             {
-                // Console.WriteLine("开始启用 MCP 服务（全局）");
+                // Console.WriteLine("Start enabling MCP service (global)");
                 // var routePattern = "mcp";
                 // endpoints.MapMcp(routePattern);
 
-                ////恢复首页
+                ////Restore home page
                 //var routeGroup = endpoints.MapGroup(routePattern);
                 //var routeEndpoints  = endpoints.DataSources.SelectMany(z=>z.Endpoints)
                 //    .OfType<RouteEndpoint>()
@@ -173,7 +173,7 @@ namespace Senparc.Xncf.MCP
             //    {
             //        var configuredToken = Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.McpAccessToken;
 
-            //        // 从请求头获取 Token
+            //        // Get Token from request header
 
             //        //if (string.IsNullOrEmpty(configuredToken))
             //        //{
@@ -202,7 +202,7 @@ namespace Senparc.Xncf.MCP
             //app.UseEndpoints(endpoints =>
             //{
             //    var serviceProvider = app.ApplicationServices;
-            //    //放置 NCF-MCP-Server SSE
+            //    //Place NCF-MCP-Server SSE
             //    IMcpServer? server = null;
             //    SseResponseStreamTransport? transport = null;
             //    var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
@@ -211,10 +211,10 @@ namespace Senparc.Xncf.MCP
             //    var routeGroup = endpoints.MapGroup("");
             //    routeGroup.MapGet("/ncf-mcp-sse", async (HttpContext context, HttpResponse response, CancellationToken requestAborted) =>
             //    {
-            //        // 获取配置的 Token
+            //        // Get the configured Token
             //        var configuredToken = Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.McpAccessToken;
 
-            //        // 从请求头获取 Token
+            //        // Get Token from request header
 
             //        if (string.IsNullOrEmpty(configuredToken))
             //        {

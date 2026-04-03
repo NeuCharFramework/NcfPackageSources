@@ -9,7 +9,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Entities
 {
     /// <summary>
-    /// 用于实现INotifyPropertyChanged
+    /// Used to implement INotifyPropertyChanged
     /// </summary>
     [Serializable]
     public abstract class BindableBase : INotifyPropertyChanged
@@ -25,11 +25,11 @@ namespace Senparc.Ncf.Core.Entities
                 eventHandler(this, new PropertyChangedEventArgs(propertyName));
             }
 
-            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));//需要VS2015+或新编译器支持
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));//Requires VS2015+ or new compiler support
         }
 
         /// <summary>
-        /// 设置属性
+        ///Set properties
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="storage"></param>

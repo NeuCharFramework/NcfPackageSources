@@ -13,7 +13,7 @@ namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.Dto
         public string Description { get; set; }
         public DateTime UploadTime { get; set; }
         
-        // 用于前端显示的属性
+        // Properties used for front-end display
         public string FileSizeDisplay => GetFileSizeDisplay();
         public string FileTypeDisplay => FileType.ToString();
 

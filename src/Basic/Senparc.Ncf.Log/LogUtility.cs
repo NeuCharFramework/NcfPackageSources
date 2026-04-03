@@ -21,7 +21,7 @@ namespace Senparc.Ncf.Log
 
 
         public static int Int { get; set; }
-        //新建的领域可以在这里继续添加
+        //New fields can be added here
 
         public static ILog GetLogger(string name)
         {
@@ -30,7 +30,7 @@ namespace Senparc.Ncf.Log
                 //var appenders = LogManager.GetRepository().GetAppenders();
                 //if (appenders.Count() == 0)
                 //{
-                //    //没有载入log成功
+                //    //No log loaded successfully
                 //    return log4net.LogManager.GetLogger(name);
                 //}
 

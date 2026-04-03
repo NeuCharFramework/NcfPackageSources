@@ -3,18 +3,18 @@ using System.ComponentModel.DataAnnotations;
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 {
     /// <summary>
-    /// 继续聊天请求
+    /// continue chat request
     /// </summary>
     public class PromptResult_ContinueChatRequest
     {
         /// <summary>
-        /// PromptResult 的 ID
+        ///PromptResult ID
         /// </summary>
         [Required]
         public int PromptResultId { get; set; }
 
         /// <summary>
-        /// 用户消息
+        ///user messages
         /// </summary>
         [Required]
         public string UserMessage { get; set; }

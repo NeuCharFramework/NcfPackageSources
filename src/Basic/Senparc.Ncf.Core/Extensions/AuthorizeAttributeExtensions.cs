@@ -3,7 +3,7 @@
 namespace Senparc.Ncf.Core.Extensions
 {
 
-    //TODO： 独立到各个模块中
+    //TODO: separate into each module
 
     public class UserAuthorizeAttribute : AuthorizeAttribute
     {

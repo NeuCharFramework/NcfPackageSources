@@ -9,7 +9,7 @@ using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.Mapping;
 
 namespace Senparc.Xncf.WeixinManager
 {
-    public partial class Register : IXncfDatabase  //注册 XNCF 模块数据库（按需选用）
+    public partial class Register : IXncfDatabase  //Register the XNCF module database (optional)
     {
         #region IXncfDatabase 接口
 
@@ -32,7 +32,7 @@ namespace Senparc.Xncf.WeixinManager
             //services.AddScoped<UserTag>();
             //services.AddScoped<UserTag_WeixinUser>();
 
-            //AutoMap映射不能在这里做，因为执行到此处时，相关过程已经执行完毕
+            //AutoMap mapping cannot be done here, because when the execution reaches here, the relevant process has already been executed.
             //base.AddAutoMapMapping(profile =>
             //{
             //});

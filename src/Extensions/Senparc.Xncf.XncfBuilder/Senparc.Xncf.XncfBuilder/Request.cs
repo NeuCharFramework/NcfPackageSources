@@ -12,7 +12,7 @@ namespace Senparc.Xncf.XncfBuilder
         public string? Path { get; set; }
         public string? Body { get; set; }
 
-        // 新增字段测试动态更新
+        // Add new fields to test dynamic updates
         public Dictionary<string, string>? Headers { get; set; }
         public DateTime Timestamp { get; set; } = DateTime.Now;
     }

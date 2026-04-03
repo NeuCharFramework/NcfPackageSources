@@ -10,22 +10,22 @@ namespace Senparc.Xncf.Tenant.Domain.DataBaseModel
     {
         public int Id { get; set; }
         /// <summary>
-        /// 全局唯一编号（自动分配）
+        /// Globally unique number (automatically assigned)
         /// </summary>
         [Required]
         public Guid Guid { get; set; }
         /// <summary>
-        /// 名称
+        ///name
         /// </summary>
         [Required]
         public string Name { get; set; }
         /// <summary>
-        /// 是否启用
+        /// Whether to enable
         /// </summary>
         [Required]
         public bool Enable { get; set; }
         /// <summary>
-        /// 匹配域名、URL、Head的参数
+        /// Match parameters of domain name, URL, and Head
         /// </summary>
         public string TenantKey { get; set; }
     }

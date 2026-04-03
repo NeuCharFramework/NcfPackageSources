@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Database.Sqlite
 {
     /// <summary>
-    /// SQLite 数据库配置
+    ///SQLite database configuration
     /// </summary>
     public class SqliteMemoryDatabaseConfiguration : DatabaseConfigurationBase<SqliteDbContextOptionsBuilder, SqliteOptionsExtension>
     {
@@ -31,11 +31,11 @@ namespace Senparc.Ncf.Database.Sqlite
         public override Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase =>
             (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
             {
-                //其他更多配置
+                //Other more configurations
 
                 connectionString = SqliteDatabaseConfiguration.GetLocalConnectionString(connectionString);
 
-                //执行 UseSqlite（必须）
+                //Execute UseSqlite (required)
                 //optionsBuilder.UseSqlite(CreateInMemoryDatabase(connectionString), actionBase);
 
                 optionsBuilder.UseSqlite(connectionString, actionBase);
@@ -44,7 +44,7 @@ namespace Senparc.Ncf.Database.Sqlite
 
         public override Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension => (builder, xncfDatabaseData) =>
         {
-            //更多数据库操作独立配置（非必须）
+            //More independent configuration of database operations (not required)
         };
 
 

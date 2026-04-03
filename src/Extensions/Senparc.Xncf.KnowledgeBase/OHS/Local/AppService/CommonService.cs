@@ -34,7 +34,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 上传
+        ///upload
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>

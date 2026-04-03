@@ -42,12 +42,12 @@ var chatApp = new Vue({
   },
   methods: {
     handleChatInputKeydown(event) {
-      // 保持与首页一致：Ctrl+Enter (Windows/Linux) 或 Cmd+Enter (Mac) 发送。
+      // Keep same as home page: Ctrl+Enter (Windows/Linux) or Cmd+Enter (Mac) Send.
       if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
         this.sendMessage();
       }
-      // 普通 Enter 保留换行行为。
+      // Normal Enter preserves newline behavior.
     },
 
     async loadSessionList() {
@@ -114,7 +114,7 @@ var chatApp = new Vue({
       this.isSending = true;
       this.isAIResponding = true;
 
-      // 乐观渲染：立即显示“我”的消息，避免等待接口返回期间出现空白。
+      // Optimistic rendering: Display "I" messages immediately to avoid blanks while waiting for the interface to return.
       const tempMessageId = `temp-${Date.now()}`;
       const tempUserMessage = {
         id: tempMessageId,
@@ -141,7 +141,7 @@ var chatApp = new Vue({
 
                   const tempIndex = this.messageList.findIndex((item) => item.id === tempMessageId);
                   if (tempIndex >= 0) {
-                    // 用服务端正式消息替换临时消息，确保时间、ID等数据准确。
+                    // Replace temporary messages with official messages from the server to ensure accuracy of time, ID and other data.
                     this.messageList.splice(tempIndex, 1, userMessage || tempUserMessage);
                   }
 

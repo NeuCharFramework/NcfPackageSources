@@ -6,7 +6,7 @@ namespace Senparc.Ncf.SMS
 {
 
     /// <summary>
-    /// 短信平台类型
+    /// SMS platform type
     /// </summary>
     public enum SmsPlatformType
     {
@@ -21,7 +21,7 @@ namespace Senparc.Ncf.SMS
 
 
     /// <summary>
-    /// 短信发送状态
+    /// SMS sending status
     /// </summary>
     public enum SmsResult
     {

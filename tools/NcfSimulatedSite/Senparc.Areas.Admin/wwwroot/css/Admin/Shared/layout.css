@@ -57,7 +57,7 @@ li {
     height: 730px;
 }
 
-/*侧边栏*/
+/*sidebar*/
 .el-aside-index {
     min-height: 100vh;
     transition: width 0.28s;
@@ -89,7 +89,7 @@ li {
 .el-menu {
     border: none;
 }
-/*顶部*/
+/*top*/
 .el-header {
     overflow: hidden;
     position: relative;
@@ -136,7 +136,7 @@ li {
 
 
 
-/*分页*/
+/*Pagination*/
 .pagination-container {
     background: #fff;
     padding: 32px 16px;
@@ -146,7 +146,7 @@ li {
         display: none;
     }
 
-/*顶部筛选组*/
+/*top filter group*/
 .filter-container {
     padding-bottom: 10px;
 }
@@ -161,7 +161,7 @@ li {
     cursor: none;
     pointer-events: none;
 }
-/*模块管理*/
+/*Module management*/
 .module-header {
     line-height: 60px;
     font-size: 20px;

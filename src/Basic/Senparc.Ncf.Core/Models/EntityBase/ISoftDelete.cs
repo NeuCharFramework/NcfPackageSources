@@ -5,12 +5,12 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// 数据库数据软删除接口
+    /// Database data soft deletion interface
     /// </summary>
     public interface ISoftDelete
     {
         /// <summary>
-        /// 是否软删除
+        /// Whether to soft delete
         /// </summary>
         bool Flag { get; set; }
     }

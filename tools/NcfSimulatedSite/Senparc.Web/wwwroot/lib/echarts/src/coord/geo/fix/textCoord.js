@@ -4,11 +4,11 @@ define(function (require) {
 
     var coordsOffsetMap = {
         '南海诸岛' : [32, 80],
-        // 全国
+        // Nationwide
         '广东': [0, -10],
         '香港': [10, 5],
         '澳门': [-10, 10],
-        //'北京': [-10, 0],
+        //'Beijing': [-10, 0],
         '天津': [5, 5]
     };
 

@@ -9,7 +9,7 @@ namespace Senparc.Xncf.Accounts.Domain.Models
 {
 
     /// <summary>
-    /// 用户信息
+    ///user information
     /// </summary>
     [Serializable]
     public partial class FullAccountBase : BaseFullEntity<Account>
@@ -26,7 +26,7 @@ namespace Senparc.Xncf.Accounts.Domain.Models
         public string LastOpenPageUrl { get; set; }
         public string LastActiveUserAgent { get; set; }
         ///// <summary>
-        ///// 最近一次活动的客户端设备信息
+        ///// Client device information for the most recent activity
         ///// </summary>
         //public IDevice LastActiveDevice
         //{
@@ -45,22 +45,22 @@ namespace Senparc.Xncf.Accounts.Domain.Models
         public bool IsLogined => Id > 0 && !UserName.IsNullOrEmpty() && (DateTime.Now - LastActiveTime).TotalMinutes < 2;
 
         /// <summary>
-        /// 强制退出登录
+        /// Force logout
         /// </summary>
         public bool ForceLogout { get; set; }
 
         /// <summary>
-        /// 未读消息数量
+        ///Number of unread messages
         /// </summary>
         public int UnReadMessageCount { get; set; }
 
         /// <summary>
-        /// 已经输入过验证码（如果需要加强验证，可以加上次输入验证码的时间以及token）
+        /// The verification code has been entered (if you need to strengthen verification, you can add the time when the verification code was entered last time and the token)
         /// </summary>
         public bool CheckCodePassed { get; set; }
 
         /// <summary>
-        /// 在线图标
+        /// online icon
         /// </summary>
         public string OnlineImg => $"/Content/Images/{(IsLogined ? "online" : "offline")}.png";
 
@@ -168,7 +168,7 @@ namespace Senparc.Xncf.Accounts.Domain.Models
         public string WeixinUnionId { get; set; }
 
         /// <summary>
-        /// 账户显示名称
+        ///Account display name
         /// </summary>
         public string DisplayName => NickName ?? UserName;
 

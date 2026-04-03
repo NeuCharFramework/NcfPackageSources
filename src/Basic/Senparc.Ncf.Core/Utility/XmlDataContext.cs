@@ -176,7 +176,7 @@ namespace Senparc.Ncf.Core.Utility
 
 
         ///// <summary>
-        ///// 重设密码
+        /////Reset password
         ///// </summary>
         //public List<ResetPasswordCode> ResetPasswordCodes
         //{
@@ -387,7 +387,7 @@ namespace Senparc.Ncf.Core.Utility
                 //XmlDataContext ctx = new XmlDataContext(_context);
                 //AutoSendEmail error = new AutoSendEmail
                 //{
-                //    Subject = "发送出错记录",
+                //    Subject = "Sending error record",
                 //    Body = e.Message + "\r\n" + e.StackTrace,
                 //    LastSendTime = DateTime.Now,
                 //    UserName = "System",
@@ -436,13 +436,13 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 仅保留指定项目
+        /// Keep only specified items
         /// </summary>
-        /// <param name="retainItemCount">保留不删除的项目数量</param>
+        /// <param name="retainItemCount">Number of items to retain without deletion</param>
         public void RetainItems<TEntity>(int retainItemCount) where TEntity : class, new()
         {
             string entityName = typeof(TEntity).Name;
-            XElement xml = this.GetXElement(GetXmlFullApplicationPath(entityName));//载入文档
+            XElement xml = this.GetXElement(GetXmlFullApplicationPath(entityName));//Load document
 
             var elements = xml.Elements(entityName);
             if (elements.Count() >= retainItemCount)
@@ -453,14 +453,14 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 尝试创建数据库
+        ///try to create database
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         public void TryCreateDataBase<TEntity>()
         {
             string entityName = typeof(TEntity).Name;
 
-            //判断文件是否存在，如果不存在则新建
+            //Determine whether the file exists, if not, create a new one
             var filePath = GetXmlFullApplicationPath(entityName);
             if (!File.Exists(filePath))
             {
@@ -474,7 +474,7 @@ namespace Senparc.Ncf.Core.Utility
     #region XML DataBase格式
 
     ///// <summary>
-    ///// 重设密码
+    /////Reset password
     ///// </summary>
     //public partial class ResetPasswordCode
     //{

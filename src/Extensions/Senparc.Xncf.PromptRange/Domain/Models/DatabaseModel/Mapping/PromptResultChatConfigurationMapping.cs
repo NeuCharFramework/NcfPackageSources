@@ -7,7 +7,7 @@ using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Mapping
 {
     /// <summary>
-    /// PromptResultChat 实体配置映射
+    ///PromptResultChat entity configuration mapping
     /// </summary>
     [XncfAutoConfigurationMapping]
     public class PromptResultChatConfigurationMapping : ConfigurationMappingWithIdBase<PromptResultChat, int>
@@ -16,18 +16,18 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Mapping
         {
             base.Configure(builder);
 
-            // 配置外键关系
+            // Configure foreign key relationships
             builder.HasOne<PromptResult>()
                 .WithMany()
                 .HasForeignKey(c => c.PromptResultId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // 配置索引
+            // Configure index
             builder.HasIndex(c => c.PromptResultId);
             builder.HasIndex(c => new { c.PromptResultId, c.Sequence });
 
-            // 配置字段长度和约束
-            // Content 字段不设置 MaxLength，使用数据库的 TEXT 类型以支持长文本
+            // Configure field lengths and constraints
+            // The Content field does not set MaxLength and uses the TEXT type of the database to support long text.
             builder.Property(c => c.Content)
                 .IsRequired();
 
@@ -36,9 +36,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Mapping
 
             builder.Property(c => c.RoleType)
                 .IsRequired()
-                .HasConversion<int>(); // 将枚举转换为 int 存储
+                .HasConversion<int>(); // Convert enum to int storage
 
-            // UserFeedback 和 UserScore 可以为 null，不需要额外配置
+            // UserFeedback and UserScore can be null and no additional configuration is required
         }
     }
 }

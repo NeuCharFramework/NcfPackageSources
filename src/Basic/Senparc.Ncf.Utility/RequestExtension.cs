@@ -49,7 +49,7 @@ namespace Senparc.Ncf.Utility
         //}
 
         ///// <summary>
-        ///// 通常是以/开头的完整路径
+        ///// Usually a full path starting with /
         ///// </summary>
         ///// <param name="request"></param>
         ///// <returns></returns>
@@ -62,7 +62,7 @@ namespace Senparc.Ncf.Utility
         //}
 
         ///// <summary>
-        ///// 获取来源页面
+        ///// Get the source page
         ///// </summary>
         ///// <param name="request"></param>
         ///// <returns></returns>
@@ -72,7 +72,7 @@ namespace Senparc.Ncf.Utility
         //}
 
         /// <summary>
-        /// 返回绝对地址
+        /// Returns the absolute address
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -90,7 +90,7 @@ namespace Senparc.Ncf.Utility
         }
 
         /// <summary>
-        /// 获取客户端信息
+        /// Get client information
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -101,7 +101,7 @@ namespace Senparc.Ncf.Utility
 
 
         /// <summary>
-        /// 获取客户端信息
+        /// Get client information
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -142,7 +142,7 @@ namespace Senparc.Ncf.Utility
 
 
         /// <summary>
-        /// 获取客户端地址（IP）
+        /// Get client address (IP)
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>

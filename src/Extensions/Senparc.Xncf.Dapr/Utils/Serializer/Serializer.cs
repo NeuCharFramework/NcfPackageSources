@@ -9,8 +9,8 @@ namespace Senparc.Xncf.Dapr.Utils.Serializer
         public static Lazy<JsonSerializerOptions> JsonSerializerOptions = new Lazy<JsonSerializerOptions>(() =>
         {
             var options = new JsonSerializerOptions();
-            options.PropertyNameCaseInsensitive = true;//忽略大小写
-            //基础类型处理通过客户端自定义重载
+            options.PropertyNameCaseInsensitive = true;//Ignore case
+            //Basic type handling through client-side custom overloading
             options.Converters.Add(new TextJsonConverter.DateTimeParse());
             options.Converters.Add(new TextJsonConverter.IntParse());
             options.Converters.Add(new TextJsonConverter.DoubleParse());
@@ -18,9 +18,9 @@ namespace Senparc.Xncf.Dapr.Utils.Serializer
             options.Converters.Add(new TextJsonConverter.FloatParse());
             options.Converters.Add(new TextJsonConverter.GuidParse());
             options.Converters.Add(new TextJsonConverter.BoolParse());
-            options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase; //响应驼峰命名
-            options.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;//中文乱码
-            options.AllowTrailingCommas = true;//允许数组末尾多余的逗号
+            options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase; //Respond to camelCase naming
+            options.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;//Chinese garbled characters
+            options.AllowTrailingCommas = true;//Allow extra commas at end of array
             return options;
         });
 
@@ -30,7 +30,7 @@ namespace Senparc.Xncf.Dapr.Utils.Serializer
         }
 
         /// <summary>
-        /// 序列化T为JSON字符串
+        /// Serialize T to JSON string
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="input"></param>
@@ -48,13 +48,13 @@ namespace Senparc.Xncf.Dapr.Utils.Serializer
             }
             catch (Exception e)
             {
-                _logger.LogError($"序列化对象失败：{e.Message}");
+                _logger.LogError($"Failed to serialize object:{e.Message}");
             }
             return default;
         }
 
         /// <summary>
-        /// 反序列化JSON字符串为T
+        /// Deserialize JSON string to T
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="input"></param>
@@ -69,13 +69,13 @@ namespace Senparc.Xncf.Dapr.Utils.Serializer
             }
             catch (Exception e)
             {
-                _logger.LogError($"反序化对象失败：{e.Message}，消息体：{input}");
+                _logger.LogError($"Deserializing object failed:{e.Message}，Message body:{input}");
             }
             return default;
         }
 
         /// <summary>
-        /// 序列化JSON字符串为object
+        /// Serialize JSON string to object
         /// </summary>
         /// <param name="type"></param>
         /// <param name="input"></param>
@@ -90,7 +90,7 @@ namespace Senparc.Xncf.Dapr.Utils.Serializer
             }
             catch (Exception e)
             {
-                _logger.LogError($"反序化对象失败：{e.Message}，消息体：{input}");
+                _logger.LogError($"Deserializing object failed:{e.Message}，Message body:{input}");
             }
             return default;
         }

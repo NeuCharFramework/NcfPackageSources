@@ -48,7 +48,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Services.Tests
             Assert.IsTrue(insertResult.Success);
             Assert.AreEqual(3, insertResult.SucessDataList.Count);
 
-            //插入第二条数据   TODO:
+            //Insert the second piece of data TODO:
             _tableDataService.SetData(data, dataDic2);
             insertResult = await _tableDataService.InsertDataAsync(data);
             Assert.IsTrue(insertResult.Success);

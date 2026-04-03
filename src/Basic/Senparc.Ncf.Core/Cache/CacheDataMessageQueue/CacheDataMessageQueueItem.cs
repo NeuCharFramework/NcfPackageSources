@@ -3,29 +3,29 @@
 namespace Senparc.Ncf.Core.Cache
 {
     /// <summary>
-    /// CacheDataMessageQueue消息列队项
+    ///CacheDataMessageQueue message queue entry
     /// </summary>
     public class CacheDataMessageQueueItem
     {
         /// <summary>
-        /// 列队项唯一标识
+        /// Unique identifier of queue item
         /// </summary>
         public string Key { get; set; }
         /// <summary>
-        /// 列队项目命中触发时执行的委托
+        /// Delegation executed when the queue item is hit and triggered
         /// </summary>
         public Action Action { get; set; }
         /// <summary>
-        /// 此实例对象的创建时间
+        /// The creation time of this instance object
         /// </summary>
         public DateTime AddTime { get; set; }
         /// <summary>
-        /// 项目说明（主要用于调试）
+        /// Item description (mainly for debugging)
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// 初始化SenparcMessageQueue消息列队项
+        /// Initialize SenparcMessageQueue message queue items
         /// </summary>
         /// <param name="key"></param>
         /// <param name="action"></param>

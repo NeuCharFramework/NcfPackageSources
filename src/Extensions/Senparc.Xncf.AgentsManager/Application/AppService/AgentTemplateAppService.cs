@@ -49,12 +49,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 try
                 {
-                    //检查 PromptCode 是否存在
+                    //Check if PromptCode exists
                     promptResult = await _promptItemService.GetWithVersionAsync(promptCode, isAvg: true);
                 }
                 catch (Exception ex)
                 {
-                    // Prompt Code不存在的时候，会抛出异常
+                    // When the Prompt Code does not exist, an exception will be thrown.
                     return ex.Message;
                 }
 
@@ -75,7 +75,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
 
         /// <summary>
-        /// 获取 AgentTemplate 的列表
+        /// Get the list of AgentTemplate
         /// </summary>
         /// <param name="pageSize"></param>
         /// <param name="pageIndex"></param>
@@ -104,7 +104,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取 PromptRange 的树状结构
+        /// Get the tree structure of PromptRange
         /// </summary>
         /// <returns></returns>
         [ApiBind]
@@ -118,7 +118,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 创建或更新 AgentTemplate
+        ///Create or update AgentTemplate
         /// </summary>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
@@ -143,7 +143,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取 AgentTemplate 的详情
+        /// Get details of AgentTemplate
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -165,7 +165,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取带状态的 AgentTemplate 的详情
+        /// Get the details of the stateful AgentTemplate
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -205,10 +205,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 启用或者停用 AgentTemplate
+        /// Enable or disable AgentTemplate
         /// </summary>
         /// <param name="id">AgentTemplate ID</param>
-        /// <param name="enable">是否启用</param>
+        /// <param name="enable">Whether to enable</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
         public async Task<AppResponseBase<string>> Enable(int id, bool enable)
@@ -231,7 +231,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取所有已注册的 AI Plugin 类型
+        /// Get all registered AI Plugin types
         /// </summary>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
@@ -245,11 +245,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 测试MCP连接
+        ///Test MCP connection
         /// </summary>
-        /// <param name="endpointName">Endpoint名称</param>
+        /// <param name="endpointName">Endpoint name</param>
         /// <param name="endpointUrl">Endpoint URL</param>
-        /// <returns>包含工具列表和连接状态的响应</returns>
+        /// <returns>Response containing tool list and connection status</returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         public async Task<AppResponseBase<McpConnectionTestResult>> TestMcpConnection(string endpointName, string endpointUrl)
         {
@@ -292,7 +292,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 catch (System.Text.Json.JsonException ex)
                 {
                     logger.Append($"解析工具列表时出错: {ex.Message}");
-                    // 创建一个假工具以显示错误信息
+                    // Create a fake tool to display error messages
                     mcpToolList.Add(new McpTool
                     {
                         Name = "解析错误",
@@ -313,64 +313,64 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
     }
 
     /// <summary>
-    /// MCP连接测试结果
+    ///MCP connection test results
     /// </summary>
     public class McpConnectionTestResult
     {
         /// <summary>
-        /// 连接是否成功
+        /// Whether the connection is successful
         /// </summary>
         public bool Success { get; set; }
 
         /// <summary>
-        /// HTTP状态码
+        ///HTTP status code
         /// </summary>
         public int Status { get; set; }
 
         /// <summary>
-        /// 状态消息
+        ///status message
         /// </summary>
         public string StatusMessage { get; set; }
 
         /// <summary>
-        /// 工具列表
+        /// Tool list
         /// </summary>
         public List<McpTool> Tools { get; set; } = new List<McpTool>();
     }
 
     /// <summary>
-    /// MCP工具信息
+    ///MCP tool information
     /// </summary>
     public class McpTool
     {
         /// <summary>
-        /// 工具名称
+        /// tool name
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 工具描述
+        /// tool description
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// 工具参数列表
+        /// Tool parameter list
         /// </summary>
         public List<McpToolParameter> Parameters { get; set; } = new List<McpToolParameter>();
     }
 
     /// <summary>
-    /// MCP工具参数
+    ///MCP tool parameters
     /// </summary>
     public class McpToolParameter
     {
         /// <summary>
-        /// 参数名称
+        /// parameter name
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 参数描述
+        /// Parameter description
         /// </summary>
         public string Description { get; set; }
     }

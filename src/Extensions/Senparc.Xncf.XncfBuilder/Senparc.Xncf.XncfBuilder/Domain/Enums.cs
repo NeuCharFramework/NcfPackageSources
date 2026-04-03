@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.XncfBuilder.Domain
 {
     /// <summary>
-    /// XncfBuilder 的 Prompt 类型
+    /// Prompt type of XncfBuilder
     /// </summary>
     public enum PromptBuildType
     {
         /// <summary>
-        /// 实体类
+        /// Entity class
         /// </summary>
         EntityClass,
         /// <summary>
-        /// 实体类 DTO
+        /// Entity class DTO
         /// </summary>
         EntityDtoClass,
         /// <summary>
-        /// 更新 SenparcEntities
+        ///Update SenparcEntities
         /// </summary>
         UpdateSenparcEntities,
         /// <summary>

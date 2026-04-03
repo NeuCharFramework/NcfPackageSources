@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Senparc.Xncf.WeixinManager
 {
-	public partial class Register : IXncfRazorRuntimeCompilation  //需要使用 RazorRuntimeCompilation，在开发环境下实时更新 Razor Page
+	public partial class Register : IXncfRazorRuntimeCompilation  //Need to use RazorRuntimeCompilation to update Razor Page in real time in the development environment
 	{
 		#region IXncfRazorRuntimeCompilation 接口
 

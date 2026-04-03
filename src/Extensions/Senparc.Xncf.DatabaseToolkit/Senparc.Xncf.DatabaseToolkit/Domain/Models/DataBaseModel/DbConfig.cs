@@ -7,19 +7,19 @@ using System.Text;
 
 namespace Senparc.Xncf.DatabaseToolkit
 {
-    [Table(Register.DATABASE_PREFIX + nameof(DbConfig))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(DbConfig))]//The prefix must be added to prevent conflicts system-wide.
     [Serializable]
     public class DbConfig : EntityBase<int>
     {
         /// <summary>
-        /// 备份间隔时间
+        /// backup interval
         /// </summary>
         [Required]
         public int BackupCycleMinutes { get; private set; }
 
 
         /// <summary>
-        /// 是否已经启用备份
+        /// Whether backup is enabled
         /// </summary>
         /// <returns></returns>
         internal bool IsAutoBackup()
@@ -33,13 +33,13 @@ namespace Senparc.Xncf.DatabaseToolkit
         }
 
         /// <summary>
-        /// 备份物理路径
+        ///Backup physical path
         /// </summary>
         [MaxLength(300)]
         public string BackupPath { get; private set; }
 
         /// <summary>
-        /// 上次备份时间
+        ///Last backup time
         /// </summary>
         public DateTime LastBackupTime { get; private set; }
 

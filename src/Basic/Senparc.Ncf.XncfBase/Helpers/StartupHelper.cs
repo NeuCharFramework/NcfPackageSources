@@ -8,7 +8,7 @@ namespace Senparc.Ncf.XncfBase.Helpers
     public class StartupHelper
     {
         /// <summary>
-        /// 获取模块版本号
+        /// Get module version number
         /// </summary>
         /// <typeparam name="TXncfDatabaseRegister"></typeparam>
         /// <returns></returns>

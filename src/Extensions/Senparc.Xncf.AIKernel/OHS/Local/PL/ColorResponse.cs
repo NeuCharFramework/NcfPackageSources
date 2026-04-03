@@ -9,19 +9,19 @@
 //    public class Color_GetOrInitColorResponse
 //    {
 //        /// <summary>
-//        /// 颜色码，0-255
+//        /// Color code, 0-255
 //        /// </summary>
 //        public int Red { get; private set; }
 //        /// <summary>
-//        /// 颜色码，0-255
+//        /// Color code, 0-255
 //        /// </summary>
 //        public int Green { get; private set; }
 //        /// <summary>
-//        /// 颜色码，0-255
+//        /// Color code, 0-255
 //        /// </summary>
 //        public int Blue { get; private set; }
 //        /// <summary>
-//        /// 花费时间
+//        /// Spend time
 //        /// </summary>
 //        public double CostMillionSeconds { get; set; }
 

@@ -11,24 +11,24 @@ namespace Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto
     public class TableMetadataDto : DtoBase<int>
     {
         /// <summary>  
-        /// 表格名称。  
+        /// table name.  
         /// </summary>  
         [Required]
         [MaxLength(255)]
         public string TableName { get; set; }
 
         /// <summary>  
-        /// 表格描述。  
+        ///Table description.  
         /// </summary>  
         public string Description { get; set; }
 
         /// <summary>  
-        /// 关联的列元数据集合。  
+        /// Associated column metadata collection.  
         /// </summary>  
         public ICollection<ColumnMetadataDto> ColumnMetadatas { get; set; }
 
         /// <summary>  
-        /// 关联的数据集合。  
+        /// Associated data collection.  
         /// </summary>  
         public ICollection<TableDataDto> TableDatas { get; set; }
 

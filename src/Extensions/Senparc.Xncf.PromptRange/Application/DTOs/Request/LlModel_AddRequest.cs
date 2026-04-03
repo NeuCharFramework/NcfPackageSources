@@ -5,22 +5,22 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
     public class LlModel_AddRequest
     {
         /// <summary>
-        /// 代号
+        /// code name
         /// </summary>
         public string Alias { get; set; }
 
         /// <summary>
-        /// 名称
+        ///name
         /// </summary>
         public string DeploymentName { get; set; }
 
         /// <summary>
-        /// Endpoint（必须）
+        ///Endpoint (required)
         /// </summary>
         public string Endpoint { get; set; }
 
         /// <summary>
-        /// 模型的类型（必须）, 例如：OpenAI,Azure OpenAI,HuggingFace
+        /// Model type (required), for example: OpenAI, Azure OpenAI, HuggingFace
         /// </summary>
         public AiPlatform ModelType { get; set; }
 

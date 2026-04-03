@@ -5,12 +5,12 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// 多租户接口
+    ///Multi-tenant interface
     /// </summary>
     public interface IMultiTenancy
     {
         /// <summary>
-        /// 租户Id
+        ///TenantId
         /// </summary>
         public int TenantId { get; set; }
     }

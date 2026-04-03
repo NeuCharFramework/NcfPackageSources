@@ -14,7 +14,7 @@ namespace Senparc.Areas.Admin.Domain.Dto
     public class PermissionRequestDto
     {
         /// <summary>
-        /// 角色Id
+        /// roleId
         /// </summary>
         [Required]
         [MaxLength]
@@ -30,14 +30,14 @@ namespace Senparc.Areas.Admin.Domain.Dto
         public bool IsMenu { get; set; }
 
         /// <summary>
-        /// 角色代码
+        ///role code
         /// </summary>
         //[Required]
         [MaxLength]
         public string RoleCode { get; set; }
 
         /// <summary>
-        /// 资源（按钮）代码
+        /// Resource (button) code
         /// </summary>
         //[Required]
         [MaxLength]
@@ -47,7 +47,7 @@ namespace Senparc.Areas.Admin.Domain.Dto
     public class SysRoleDetailDto
     {
         /// <summary>
-        /// 启用状态
+        /// enabled status
         /// </summary>
         public bool Enabled { get; set; }
 
@@ -57,12 +57,12 @@ namespace Senparc.Areas.Admin.Domain.Dto
         public string Id { get; set; }
 
         /// <summary>
-        /// 角色名称
+        /// role name
         /// </summary>
         public string RoleName { get; set; }
 
         /// <summary>
-        /// 角色代码
+        ///role code
         /// </summary>
         public string RoleCode { get; set; }
 
@@ -83,7 +83,7 @@ namespace Senparc.Areas.Admin.Domain.Dto
     public class SysRoleListDto
     {
         /// <summary>
-        /// 启用状态
+        /// enabled status
         /// </summary>
         public bool Enabled { get; set; }
 
@@ -93,12 +93,12 @@ namespace Senparc.Areas.Admin.Domain.Dto
         public string Id { get; set; }
 
         /// <summary>
-        /// 角色名称
+        /// role name
         /// </summary>
         public string RoleName { get; set; }
 
         /// <summary>
-        /// 角色代码
+        ///role code
         /// </summary>
         public string RoleCode { get; set; }
 

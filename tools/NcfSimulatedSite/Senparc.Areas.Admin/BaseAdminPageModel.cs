@@ -20,7 +20,7 @@ namespace Senparc.Areas.Admin
 
     }
 
-    //暂时取消权限验证
+    //Temporarily cancel permission verification
     [ServiceFilter(typeof(AuthenticationResultFilterAttribute))]
     [AdminAuthorize("AdminOnly")]
     public class BaseAdminPageModel : AdminPageModelBase, IBaseAdminPageModel
@@ -52,7 +52,7 @@ namespace Senparc.Areas.Admin
             //context
             if (!context.ModelState.IsValid)
             {
-                //全局模型验证
+                //Global model validation
                 var state = context.ModelState
                     .Where(_ => _.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
                     .Select(_ => new { _.Key, Errors = _.Value.Errors.Select(__ => __.ErrorMessage) });

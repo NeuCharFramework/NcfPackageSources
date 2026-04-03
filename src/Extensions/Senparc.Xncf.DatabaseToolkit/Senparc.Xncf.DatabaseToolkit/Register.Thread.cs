@@ -18,9 +18,9 @@ namespace Senparc.Xncf.DatabaseToolkit
     {
         public void ThreadConfig(XncfThreadBuilder xncfThreadBuilder)
         {
-            // TODO: 专门做数据库，负责定时项目的注册
+            // TODO: Specialize in database and responsible for registration of scheduled projects
 
-            //TOOD: 按照不同租户，需要区分
+            //TOOD: Different tenants need to be distinguished
             DateTime lastAlertTime = DateTime.MinValue;
 
             xncfThreadBuilder.AddThreadInfo(new Ncf.XncfBase.Threads.ThreadInfo(
@@ -30,19 +30,19 @@ namespace Senparc.Xncf.DatabaseToolkit
                 {
                     try
                     {
-                        //SenparcTrace.SendCustomLog("执行调试", "DatabaseToolkit.Register.ThreadConfig");
+                        //SenparcTrace.SendCustomLog("Execute debugging", "DatabaseToolkit.Register.ThreadConfig");
                         threadInfo.RecordStory("开始检测并备份");
 
                         using (var scope = app.ApplicationServices.CreateScope())
                         {
                             var serviceProvider = scope.ServiceProvider;
 
-                            //检测当前模块是否可用
+                            //Check whether the current module is available
                             XncfRegisterManager xncfRegisterManager = new XncfRegisterManager(serviceProvider);
                             var xncfIsValiable = await xncfRegisterManager.CheckXncfAvailable(this);
                             if (!xncfIsValiable)
                             {
-                                //同一时间内只提示一次
+                                //Only prompt once at the same time
                                 if (SystemTime.NowDiff(lastAlertTime) > TimeSpan.FromMinutes(10))
                                 {
                                     lastAlertTime = SystemTime.Now.DateTime;
@@ -56,9 +56,9 @@ namespace Senparc.Xncf.DatabaseToolkit
                                 return;
                             }
 
-                            //初始化数据库备份方法
+                            //Initialize database backup method
                             DatabaseBackupAppService backupDatabase = serviceProvider.GetService<DatabaseBackupAppService>();
-                            //初始化参数
+                            //Initialization parameters
                             var backupRequest = new DatabaseBackup_BackupRequest();
                             var dbConfigService = serviceProvider.GetService<ServiceBase<DbConfig>>();
                             var dbConfig = await dbConfigService.GetObjectAsync(z => true);
@@ -71,7 +71,7 @@ namespace Senparc.Xncf.DatabaseToolkit
                                     {
                                         backupRequest.Path = dbConfig.BackupPath;
                                         //await backupParam.LoadData(serviceProvider);
-                                        //threadInfo.RecordStory("完成备份设置数据载入");
+                                        //threadInfo.RecordStory("Complete loading of backup setting data");
                                     }
                                     else
                                     {
@@ -81,7 +81,7 @@ namespace Senparc.Xncf.DatabaseToolkit
                                 else
                                 {
                                     threadInfo.RecordStory("不需要备份，或没有设置备份周期/路径，已忽略本次备份计划");
-                                    stopBackup = true;//不需要备份，或没有设置，返回
+                                    stopBackup = true;//No backup required, or no settings, return
                                 }
                             }
                             catch (Exception ex)
@@ -89,7 +89,7 @@ namespace Senparc.Xncf.DatabaseToolkit
                                 threadInfo.RecordStory($@"遇到异常，可能未配置数据库，已忽略本次备份计划。如需启动，请更新此模块到最新版本。
 异常信息：{ex.Message}
 {ex.StackTrace}");
-                                stopBackup = true;//可能没有配置数据库，返回
+                                stopBackup = true;//There may be no configuration database, return
                             }
 
                             if (stopBackup)
@@ -98,7 +98,7 @@ namespace Senparc.Xncf.DatabaseToolkit
                             }
 
 
-                            //执行备份方法
+                            //Execute backup method
                             threadInfo.RecordStory("备份开始：" + backupRequest.Path);
                             var result = await backupDatabase.Backup(backupRequest);
                             if (result.Success == false)

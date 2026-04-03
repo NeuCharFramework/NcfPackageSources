@@ -50,7 +50,7 @@ namespace Senparc.Ncf.Core.Cache
         /// </summary>
         /// <param name="CACHE_KEY"></param>
         /// <param name="db"></param>
-        /// <param name="timeOut">单位：分钟。1440为一天。</param>
+        /// <param name="timeOut">Unit: minutes. 1440 is one day. </param>
         public BaseDictionaryCache(string CACHE_KEY, INcfDbData db, int timeOut)
             : base(CACHE_KEY, db, timeOut)
         {
@@ -64,13 +64,13 @@ namespace Senparc.Ncf.Core.Cache
         where TEntity : class/*, new()*/
     {
         /// <summary>
-        /// 获取缓存中最终的Key
+        /// Get the final Key in the cache
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
         protected string GetFinalCacheKey(TKey key)
         {
-            //TODO:判断Key类型
+            //TODO: Determine Key type
             TypeCode code = key == null ? TypeCode.DBNull : Type.GetTypeCode(key.GetType());
             string keyCode = null;
             switch (code)
@@ -95,7 +95,7 @@ namespace Senparc.Ncf.Core.Cache
                 default:
                     code = TypeCode.Object;
                     string keyStr = System.Text.Json.JsonSerializer.Serialize(key);
-                    keyCode = MD5.GetMD5Code(keyStr, "");//将对象序列化，然后拼接成字符串并转成MD5，确保唯一性。性能上可能会有一些损失，所以尽量不要太复杂的类型做Key
+                    keyCode = MD5.GetMD5Code(keyStr, "");//Serialize the object, then concatenate it into a string and convert it to MD5 to ensure uniqueness. There may be some loss in performance, so try not to use too complex types as keys.
                     break;
             }
 
@@ -107,7 +107,7 @@ namespace Senparc.Ncf.Core.Cache
             }
             else
             {
-                finalKey = $"{CacheKey}@@@{keyCode}";//有的缓存策略可能不允许:作为分隔符[LocalCache 存在问题]
+                finalKey = $"{CacheKey}@@@{keyCode}";//Some caching policies may not allow: as a delimiter [Problem with LocalCache]
             }
 
             return finalKey;
@@ -117,7 +117,7 @@ namespace Senparc.Ncf.Core.Cache
         //{
         //    using (var ms = new MemoryStream())
         //    {
-        //        //.NET 8.0 中已标记为过时且无法编译
+        //        // Marked obsolete and uncompilable in .NET 8.0
         //        new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter().Serialize(ms, value);
 
         //        return new ArraySegment<byte>(ms.GetBuffer(), 0, (int)ms.Length);
@@ -125,7 +125,7 @@ namespace Senparc.Ncf.Core.Cache
         //}
 
         ///// <summary>
-        ///// 获取指定Key下所有的子Key的Value
+        ///// Get the Value of all sub-Keys under the specified Key
         ///// </summary>
         ///// <param name="key">xxx*</param>
         ///// <returns></returns>
@@ -150,13 +150,13 @@ namespace Senparc.Ncf.Core.Cache
         /// </summary>
         /// <param name="CACHE_KEY"></param>
         /// <param name="db"></param>
-        /// <param name="timeOut">单位：分钟。1440为一天。</param>
+        /// <param name="timeOut">Unit: minutes. 1440 is one day. </param>
         public BaseDictionaryCache(string CACHE_KEY, INcfDbData db, int timeOut)
             : base(CACHE_KEY, db)
         {
             base.TimeOut = timeOut;
 
-            //强制初始化
+            //Force initialization
             //var load = base.Data;
             //var finalCacheKey = GetFinalCacheKey(key);
             //if (base.Cache.CheckExisted(finalCacheKey))
@@ -198,10 +198,10 @@ namespace Senparc.Ncf.Core.Cache
                 }
                 catch (Exception ex)
                 {
-                    //var msg = "System debug record cache a bug。发生错误：{0}。当前参数：base.Data：{1}（Count：{4}），key:{2}，obj：{3}。Null情况分别是：{4}，{5},{6}"
+                    //var msg = "System debug record cache a bug. Error occurred: {0}. Current parameters: base.Data: {1} (Count: {4}), key: {2}, obj: {3}. Null cases are: {4}, {5}, {6}"
                     //    .With(ex.Message, base.Data, key, obj, base.Data == null, key == null, obj == null, base.Data.Count);
 
-                    var msg = $"System debug record cache a bug。发生错误：{ex.Message}。再次访问base.Data=null：{base.Data == null}";//实际上这里base.Data还是为null
+                    var msg = $"System debug record cache a bug。发生错误：{ex.Message}。再次访问base.Data=null：{base.Data == null}";//In fact, base.Data here is still null.
                     LogUtility.SystemLogger.Debug(msg, ex);
                     throw new Exception(msg, ex);
                 }
@@ -292,10 +292,10 @@ namespace Senparc.Ncf.Core.Cache
                 }
                 catch (Exception ex)
                 {
-                    //var msg = "System debug record cache a bug。发生错误：{0}。当前参数：base.Data：{1}（Count：{4}），key:{2}，obj：{3}。Null情况分别是：{4}，{5},{6}"
+                    //var msg = "System debug record cache a bug. Error occurred: {0}. Current parameters: base.Data: {1} (Count: {4}), key: {2}, obj: {3}. Null cases are: {4}, {5}, {6}"
                     //    .With(ex.Message, base.Data, key, obj, base.Data == null, key == null, obj == null, base.Data.Count);
 
-                    var msg = $"System debug record cache a bug。发生错误：{ex.Message}。再次访问base.Data=null：{base.Data == null}";//实际上这里base.Data还是为null
+                    var msg = $"System debug record cache a bug。发生错误：{ex.Message}。再次访问base.Data=null：{base.Data == null}";//In fact, base.Data here is still null.
                     LogUtility.SystemLogger.Debug(msg, ex);
                     throw new Exception(msg, ex);
                 }

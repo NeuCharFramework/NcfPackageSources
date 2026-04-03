@@ -24,7 +24,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
         }
 
         /// <summary>
-        /// 更新 NeuChar 账号
+        ///Update NeuChar account
         /// </summary>
         /// <param name="neuCharAppKey"></param>
         /// <param name="neuCharAppSecret"></param>
@@ -39,7 +39,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
 
             if (!neuCharAppKey.IsNullOrEmpty() && !neuCharAppSecret.IsNullOrEmpty())
             {
-                //校验并获取 NeuCharDeveloperId
+                //Verify and obtain NeuCharDeveloperId
                 var passportUrl = $"{Senparc.NeuChar.App.AppStore.Config.DefaultDomainName}/App/Api/GetPassport";
                 //Console.WriteLine("passport:" + (passportUrl));
 
@@ -97,9 +97,9 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
             base.SaveObject(obj);
             LogUtility.WebLogger.InfoFormat("SystemConfig 被编辑：{0}", obj.ToJson());
 
-            //清除缓存
+            //clear cache
             var fullSystemConfigCache = _serviceProvider.GetService<FullSystemConfigCache>();
-            //示范同步缓存锁
+            //Demonstration of synchronized cache locks
             using (fullSystemConfigCache.Cache.BeginCacheLock(FullSystemConfigCache.CACHE_KEY, ""))
             {
                 fullSystemConfigCache.RemoveCache();
@@ -111,9 +111,9 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
             await base.SaveObjectAsync(obj);
             LogUtility.WebLogger.InfoFormat("SystemConfig 被编辑：{0}", obj.ToJson());
 
-            //清除缓存
+            //clear cache
             var fullSystemConfigCache = _serviceProvider.GetService<FullSystemConfigCache>();
-            //示范同步缓存锁
+            //Demonstration of synchronized cache locks
             using (await fullSystemConfigCache.Cache.BeginCacheLockAsync(FullSystemConfigCache.CACHE_KEY, ""))
             {
                 fullSystemConfigCache.RemoveCache();

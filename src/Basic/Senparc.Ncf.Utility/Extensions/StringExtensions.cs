@@ -24,7 +24,7 @@ namespace Senparc.Ncf.Core.Extensions
         //        if (!string.IsNullOrEmpty(item.Value))
         //        {
         //            result += string.Format("<meta name=\"{0}\" content=\"{1}\" />\r\n", item.Key.ToString(),
-        //                //helper.AttributeEncode(item.Value) //COCONET 此方法已失效
+        //                //helper.AttributeEncode(item.Value) //COCONET This method is invalid
         //                item.Value
         //                );
         //        }
@@ -88,7 +88,7 @@ namespace Senparc.Ncf.Core.Extensions
         //}
 
         ///// <summary>
-        ///// 把数据转换为Json格式
+        ///// Convert data to Json format
         ///// </summary>
         ///// <param name="data"></param>
         ///// <returns></returns>
@@ -105,7 +105,7 @@ namespace Senparc.Ncf.Core.Extensions
         //}
 
         ///// <summary>
-        ///// 把数据转换为Json格式（使用Newtonsoft.Json.dll）
+        ///// Convert data to Json format (using Newtonsoft.Json.dll)
         ///// </summary>
         ///// <param name="data"></param>
         ///// <returns></returns>
@@ -115,11 +115,11 @@ namespace Senparc.Ncf.Core.Extensions
         //}
 
         ///// <summary>
-        ///// 格式化成Json字符串
+        ///// Format into Json string
         ///// </summary>
-        ///// <param name="obj">需要格式化的对象</param>
-        ///// <param name="recursionDepth">指定序列化的深度</param>
-        ///// <returns>Json字符串</returns>
+        ///// <param name="obj">Object that needs to be formatted</param>
+        ///// <param name="recursionDepth">Specifies the serialization depth</param>
+        ///// <returns>Json string</returns>
         //public static string ToJson(this object obj, int recursionDepth)
         //{
         //    //JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -128,14 +128,14 @@ namespace Senparc.Ncf.Core.Extensions
 
         //    return Newtonsoft.Json.JsonConvert.SerializeObject(obj, new Newtonsoft.Json.JsonSerializerSettings()
         //    {
-        //        //TODO：设置recursionDepth  COCONET 
+        //        //TODO: Set recursionDepth COCONET 
         //    });
         //}
 
         #region 转换HTML代码 public static string exHTML(string ntext)
         ///// <summary>
-        ///// 转换HTML代码——TNT2
-        ///// 已实现：回车,空格
+        /////Convert HTML code——TNT2
+        ///// Implemented: carriage return, space
         ///// </summary>
         //public static string exHTML(string ntext)
         //{
@@ -144,8 +144,8 @@ namespace Senparc.Ncf.Core.Extensions
         //}
 
         /// <summary>
-        /// 转换HTML代码——TNT2
-        /// 已实现：回车,空格
+        /// Convert HTML code - TNT2
+        /// Implemented: carriage return, space
         /// </summary>
         public static HtmlString ExHTML(this string ntext)
         {
@@ -158,7 +158,7 @@ namespace Senparc.Ncf.Core.Extensions
         }
 
         /// <summary>
-        /// 删除所有HTML标记
+        /// Remove all HTML tags
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -182,7 +182,7 @@ namespace Senparc.Ncf.Core.Extensions
         //}
 
         /// <summary>
-        /// 根据布尔值，返回√或×
+        /// Returns √ or × based on Boolean value
         /// </summary>
         /// <param name="yesOrNo">true:√,false:×</param>
         /// <returns></returns>
@@ -201,15 +201,15 @@ namespace Senparc.Ncf.Core.Extensions
         }
 
         /// <summary>
-        /// 区字符串固定长度，其余的省略
+        /// area string is of fixed length, the rest is omitted
         /// 
-        /// 规则：
-        ///  1.如果startIndex大于字符串长度，则自动调整到取最后maxLangth长度。如果此时maxLangth长度比字符串长度还要大，那么startIndex回到0
-        ///  2.如果在startIndex基础上，取maxLangth长度大于比字符串长度,那么maxLangth自动取到可能的最大值，即从startIndex一直取到字符串末尾
-        ///  3.结果中，字符串只要有削减的地方，都以".."替代
+        /// rule:
+        /// 1. If startIndex is greater than the string length, it will automatically adjust to the last maxLangth length. If the maxLangth length is greater than the string length at this time, then startIndex returns to 0
+        /// 2. If the length of maxLangth is greater than the length of the string based on startIndex, then maxLangth will automatically take the maximum possible value, that is, from startIndex to the end of the string.
+        /// 3. In the result, wherever there is a cut in the string, it will be replaced with ".."
         /// </summary>
-        /// <param name="str">原字符串</param>
-        /// <param name="maxLangth">最长字符个数</param>
+        /// <param name="str">Original string</param>
+        /// <param name="maxLangth">The longest number of characters</param>
         /// <returns></returns>
         public static string SubString(this string str, int startIndex, int maxLangth)
         {
@@ -221,27 +221,27 @@ namespace Senparc.Ncf.Core.Extensions
             {
                 string substring = "";
 
-                //调整startIndex
-                if (startIndex > str.Length - 1)//如果startIndex大于字符串长度
+                //Adjust startIndex
+                if (startIndex > str.Length - 1)//If startIndex is greater than the string length
                 {
-                    startIndex = (str.Length - maxLangth > 0) ? str.Length - maxLangth : 0;//则自动调整到取最后maxLangth长度。如果此时maxLangth长度比字符串长度还要大，那么startIndex回到0
+                    startIndex = (str.Length - maxLangth > 0) ? str.Length - maxLangth : 0;//It will automatically adjust to the last maxLangth length. If the maxLangth length is greater than the string length at this time, then startIndex returns to 0
                 }
 
-                //调整maxLangth
-                if (startIndex + maxLangth > str.Length)//如果在startIndex基础上，取maxLangth长度大于比字符串长度
+                //Adjust maxLangth
+                if (startIndex + maxLangth > str.Length)//If based on startIndex, the maxLangth length is greater than the string length
                 {
-                    maxLangth = str.Length - startIndex;//那么maxLangth自动取到可能的最大值，即从startIndex一直取到字符串末尾
+                    maxLangth = str.Length - startIndex;//Then maxLangth automatically takes the maximum possible value, that is, from startIndex to the end of the string
                 }
-                //调整完成
+                //Adjustment completed
 
-                //加缩略符号
-                substring += (startIndex > 0) ? ".." : "";//如果开头削减，以".."替代
+                //Add abbreviation
+                substring += (startIndex > 0) ? ".." : "";//If the beginning is cut, replace it with ".."
 
-                //进行取定长字符串
+                //Get a fixed-length string
                 substring += str.Substring(startIndex, maxLangth);
 
-                //加缩略符号
-                substring += (str.Length - startIndex - maxLangth > 0) ? "..." : "";//如果结尾削减，以".."替代
+                //Add abbreviation
+                substring += (str.Length - startIndex - maxLangth > 0) ? "..." : "";//If the ending is cut, replace it with ".."
 
                 return substring;
             }
@@ -249,10 +249,10 @@ namespace Senparc.Ncf.Core.Extensions
 
 
         /// <summary>
-        /// 高亮关键字(红色)
+        /// Highlight keywords (red)
         /// </summary>
-        /// <param name="str">原始字符串</param>
-        /// <param name="keyword">关键字</param>
+        /// <param name="str">Original string</param>
+        /// <param name="keyword">Keyword</param>
         /// <returns></returns>
         public static string HighlightKeyword(this string str, string keyword)
         {
@@ -263,17 +263,17 @@ namespace Senparc.Ncf.Core.Extensions
 
             if (!keyword.IsNullOrEmpty())
             {
-                string replaceFormat = "<span class=\"red\">{0}</span>";//替换格式
+                string replaceFormat = "<span class=\"red\">{0}</span>";//Replacement format
                 str = Regex.Replace(str, string.Format(@"({0})", keyword), string.Format(replaceFormat, "$1"), RegexOptions.IgnoreCase);
             }
             return str;
         }
 
         /// <summary>
-        /// 隐藏IP段
+        /// Hide IP segment
         /// </summary>
         /// <param name="ip"></param>
-        /// <param name="hideNum">从后计隐藏几个区段</param>
+        /// <param name="hideNum">Hide several sections from the back</param>
         /// <returns></returns>
         public static string HideIP(this string ip, int hideNum)
         {
@@ -286,7 +286,7 @@ namespace Senparc.Ncf.Core.Extensions
         }
 
         /// <summary>
-        /// 隐藏IP段（只隐藏最后一个IP段）
+        /// Hide IP segment (only hide the last IP segment)
         /// </summary>
         /// <param name="ip"></param>
         /// <returns></returns>

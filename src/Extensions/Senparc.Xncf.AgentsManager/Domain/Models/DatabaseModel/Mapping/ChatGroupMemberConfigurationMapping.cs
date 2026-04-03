@@ -13,7 +13,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Mapping
         {
             base.Configure(builder);
 
-            //联合主键
+            //Union primary key
             //builder.HasKey(e => new { e.ChatGroupId, e.AgentTemplateId });
 
             //builder.HasOne(z => z.ChatGroup)

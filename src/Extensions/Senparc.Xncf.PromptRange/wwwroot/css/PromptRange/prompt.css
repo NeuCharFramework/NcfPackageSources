@@ -20,7 +20,7 @@
 }
 }
 
-/* 导出plugin操作按钮区域 */
+/* Export plugin action button area */
 .plugin-export-actions {
     display: flex;
     justify-content: space-between;
@@ -59,7 +59,7 @@
     margin: 0 2px;
 }
 
-/* 导出plugin树形选择器 */
+/* Export plugin tree selector */
 .expectedPluginTreeBox {
     width: 100%;
     max-height: 60vh;
@@ -75,12 +75,12 @@
     background-color: transparent;
 }
 
-/* 树节点悬停效果 */
+/* Tree node hover effect */
 .expectedPluginTreeBox .el-tree-node:hover > .el-tree-node__content {
     background-color: #f5f7fa;
 }
 
-/* 树节点选中效果 */
+/* Tree node selection effect */
 .expectedPluginTreeBox .el-tree-node.is-current > .el-tree-node__content {
     background-color: #e6f7ff;
 }
@@ -372,12 +372,12 @@
     flex-wrap: nowrap;
     /*align-items:flex-start;*/
     justify-content: flex-start;
-    gap: 0px; /* 移除gap，因为已经有8px的分隔条 */
+    gap: 0px; /* Remove the gap because there is already an 8px divider */
     position: relative;
     box-sizing: border-box;
-    height: calc(100vh - 150px); /* 使用视口高度，减去头部导航高度 */
-    min-width: 1200px; /* 确保有最小宽度，小于此宽度会出现横向滚动条 */
-    overflow-x: auto; /* 允许横向滚动，不隐藏内容 */
+    height: calc(100vh - 150px); /* Use viewport height, minus head navigation height */
+    min-width: 1200px; /* Make sure there is a minimum width, below which a horizontal scroll bar will appear */
+    overflow-x: auto; /* Allow horizontal scrolling without hiding content */
     overflow-y: hidden;
     /*min-width: 1240px;
     overflow: auto;
@@ -385,7 +385,7 @@
     background-color: #FFF;
     */
 }
-    /*空数据*/
+    /*empty data*/
     .promptPage .emptyDataArea {
         width: 100%;
         height: 100%;
@@ -397,7 +397,7 @@
         font-size: 14px;
     }
     
-    /* promptPage 横向滚动条样式 */
+    /* promptPage horizontal scroll bar style */
     .promptPage::-webkit-scrollbar {
         height: 8px;
     }
@@ -455,7 +455,7 @@
             }
 
 
-    /*卡片*/
+    /*card*/
     .promptPage .boxCard {
         padding: 10px;
         overflow: hidden;
@@ -467,7 +467,7 @@
 
 
 
-    /*标题行*/
+    /*title line*/
     .promptPage .titleRow {
         display: flex;
         flex-direction: row;
@@ -530,18 +530,18 @@
 
 
 
-    /*左侧模块*/
+    /*left module*/
     .promptPage > .promptPage_leftArea {
         flex-shrink: 0;
         flex-grow: 0;
-        width: 360px; /* 默认宽度，会被Vue的style覆盖 */
-        max-width: 600px; /* 允许用户拖动到更宽 */
+        width: 360px; /* The default width will be overridden by Vue's style */
+        max-width: 600px; /* Allow user to drag to wider */
         min-width: 280px;
         display: flex;
         flex-wrap: nowrap;
         flex-direction: column;
         gap: 12px;
-        transition: width 0.1s ease-out; /* 拖动时的平滑过渡 */
+        transition: width 0.1s ease-out; /* Smooth transition when dragging */
         position: relative;
         overflow: hidden;
     }
@@ -553,7 +553,7 @@
         opacity: 0;
         gap: 0px;
     }
-/*左侧模块 配置区域\输入prompt区域*/
+/*Left module configuration area\input prompt area*/
 .promptPage_leftArea > .configurineArea, .promptPage_leftArea > .inputPromptArea {
     display: flex;
     flex-direction: column;
@@ -564,7 +564,7 @@
     overflow-y: auto;
     overflow-x: hidden;
 }
-/*左侧模块 配置 行 区域*/
+/*Left module configuration row area*/
 .promptPage_leftArea .configurineAreaItem {
     display: flex;
     flex-direction: column;
@@ -572,7 +572,7 @@
     /*gap: 10px;*/
 }
 
-    /* 左侧按钮组紧凑布局 */
+    /* Compact layout of left button group */
     .promptPage_leftArea .configurineAreaItem .d-flex > div > div {
         display: flex;
         flex-wrap: wrap;
@@ -583,12 +583,12 @@
         padding: 5px 8px;
         font-size: 11px;
     }
-    /*左侧模块 配置 下拉选择 区域*/
+    /*Module configuration drop-down selection area on the left*/
     .promptPage_leftArea .configurineAreaItem > .selectRow {
         width: 100%;
     }
 
-/*左侧模块 配置 参数 内容 区域*/
+/*Left module configuration parameter content area*/
 .promptPage_leftArea .paramBox > .paramBox_contentBox {
     max-height: 700px;
     display: flex;
@@ -598,7 +598,7 @@
     overflow: hidden;
     transition: max-height 0.3s ease-in-out;
 }
-/*模型参数 展开折叠 设置*/
+/*Model Parameters Expand Collapse Settings*/
 .promptPage_leftArea .paramBox > .paramBox_contentBoxCollapse {
     max-height: 0 !important;
 }
@@ -685,10 +685,10 @@
                 height: 18px;
                 margin: 0;
             }
-/*输入prompt盒子*/
+/*Enter prompt box*/
 .entertarget > .promptContetnPmroparaBox {
     display: flex;
-    flex-direction: column; /* 改为纵向布局 */
+    flex-direction: column; /* Change to portrait layout */
     flex-wrap: nowrap;
     align-items: stretch;
     justify-content: flex-start;
@@ -716,7 +716,7 @@
         min-height: 0;
     }
 
-    /* 请求参数区域 - 在Prompt输入框下方 */
+    /* Request parameter area - below the Prompt input box */
     .entertarget > .promptContetnPmroparaBox > .leftItemBox > .promptParamSection {
         flex-shrink: 0;
         max-height: 300px;
@@ -730,7 +730,7 @@
         opacity: 0;
         overflow: hidden;
     }
-    /*输入prompt输入框盒子 内容*/
+    /*Enter prompt input box box content*/
     .entertarget > .promptContetnPmroparaBox .promptContentBox {
         display: flex;
         flex-direction: column;
@@ -742,7 +742,7 @@
 
         .entertarget > .promptContetnPmroparaBox .promptContentBox > .promptInput {
             flex: 1;
-            /* 移除 display: flex 和 flex-direction: column，因为它们会导致 contenteditable 内部的 inline 元素（如 var-highlight span）垂直排列 */
+            /* Remove display: flex and flex-direction: column as they cause inline elements (such as var-highlight spans) inside contenteditable to align vertically */
             /* display: flex; */
             /* flex-direction: column; */
             min-height: 0;
@@ -766,7 +766,7 @@
             resize: none;
         }
 
-        /* contenteditable富文本编辑器 */
+        /* contenteditable rich text editor */
         .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor {
             flex: 1;
             min-height: 300px;
@@ -789,13 +789,13 @@
             border-color: #409eff;
         }
 
-        /* placeholder效果 */
+        /* placeholder effect */
         .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor:empty:before {
             content: attr(data-placeholder);
             color: #C0C4CC;
         }
 
-        /* 高亮变量样式 - 强制内联显示 */
+        /* Highlight variable style - force display inline */
         .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor .var-highlight {
             display: inline !important;
             background: rgba(255, 235, 59, 0.3);
@@ -804,7 +804,7 @@
             margin: 0 !important;
             border: none !important;
             line-height: inherit !important;
-            /* 使用 normal 而不是 nowrap，这样可以完全覆盖父元素的 pre-wrap，忽略空白字符 */
+            /* Use normal instead of nowrap, which completely overrides the parent element's pre-wrap, ignoring whitespace characters */
             white-space: normal !important;
             vertical-align: baseline !important;
             float: none !important;
@@ -814,17 +814,17 @@
             height: auto !important;
             font-size: inherit !important;
             font-family: inherit !important;
-            /* 确保 span 标签前后没有空白导致的换行 */
+            /* Make sure there are no line breaks caused by whitespace before and after the span tag */
             word-spacing: 0 !important;
             letter-spacing: normal !important;
-            /* 防止因为空白字符导致的换行 */
+            /* Prevent line breaks caused by whitespace characters */
             unicode-bidi: embed !important;
-            /* 确保内容不会换行 */
+            /* Make sure content doesn't wrap */
             word-break: keep-all !important;
             overflow-wrap: normal !important;
         }
         
-        /* 确保 var-highlight span 前后的空白文本节点不会导致换行 */
+        /* Ensure that whitespace text nodes before and after the var-highlight span do not cause line breaks */
         .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor .var-highlight::before,
         .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor .var-highlight::after {
             content: none !important;
@@ -841,7 +841,7 @@
             color: inherit !important;
         }
         
-        /* 确保编辑器内的br正常工作 */
+        /* Make sure br within the editor is working properly */
         .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-rich-editor br {
             display: block;
             content: "";
@@ -849,7 +849,7 @@
             padding: 0;
         }
 
-        /* 变量提示卡片 */
+        /* Variable reminder card */
         .entertarget > .promptContetnPmroparaBox .promptContentBox > .prompt-variables-hint {
             flex-shrink: 0;
             padding: 8px 12px;
@@ -943,7 +943,7 @@
                 }
 
 
-    /*输入Prompt请求参数盒子 promptPmroparaBox */
+    /*Enter the Prompt request parameter box promptPmroparaBox */
     .entertarget .promptPmroparaBox {
         padding: 10px;
         display: flex;
@@ -981,13 +981,13 @@
             justify-content: center;
         }
 
-    /* 请求参数区域的标题行 */
+    /* The header line of the request parameters area */
     .entertarget .promptParamSection > .titleRow {
         flex-shrink: 0;
         margin-bottom: 8px;
     }
 
-    /* 请求参数盒子的滚动条样式 */
+    /* Scroll bar style of request parameter box */
     .entertarget .promptPmroparaBox::-webkit-scrollbar {
         width: 6px;
     }
@@ -1004,25 +1004,25 @@
     .entertarget .promptPmroparaBox::-webkit-scrollbar-thumb:hover {
         background: #888;
     }
-/*中间模块 - 输入Prompt*/
+/*Intermediate module - input prompt*/
 .promptPage > .promptPage_centerArea {
     flex-shrink: 0;
     flex-grow: 0;
-    width: 380px; /* 默认宽度，会被Vue的style覆盖 */
+    width: 380px; /* The default width will be overridden by Vue's style */
     min-width: 320px;
-    max-width: 800px; /* 允许用户拖动到更宽 */
+    max-width: 800px; /* Allow user to drag to wider */
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
     gap: 12px;
     height: 100%;
-    transition: width 0.1s ease-out; /* 拖动时的平滑过渡 */
+    transition: width 0.1s ease-out; /* Smooth transition when dragging */
 }
 
-/* 中间区域最大化状态 */
+/* Maximum state of the middle area */
 .promptPage > .promptPage_centerAreaMaximized {
-    flex: 1 1 auto !important; /* 占据所有可用空间 */
-    max-width: none !important; /* 取消最大宽度限制 */
+    flex: 1 1 auto !important; /* Take up all available space */
+    max-width: none !important; /* Remove maximum width limit */
     min-width: 350px;
 }
 
@@ -1034,9 +1034,9 @@
         height: 100%;
     }
 
-/*右侧模块 - 输出和分析*/
+/*Right module - output and analysis*/
 .promptPage > .promptPage_rightArea {
-    flex: 1 1 auto; /* 优先扩展，占据剩余空间 */
+    flex: 1 1 auto; /* Prioritize expansion and occupy the remaining space */
     min-width: 400px;
     display: flex;
     flex-wrap: nowrap;
@@ -1047,15 +1047,15 @@
     transition: all 0.3s ease;
 }
 
-/* 右侧区域最大化状态 */
+/* Right area maximized state */
 .promptPage > .promptPage_rightAreaMaximized {
-    flex: 1 1 auto !important; /* 占据所有可用空间 */
+    flex: 1 1 auto !important; /* Take up all available space */
     min-width: 400px;
 }
 
-/* 右侧区域隐藏状态（中间区域最大化时） */
+/* The right area is hidden (when the middle area is maximized) */
 .promptPage > .promptPage_rightAreaHidden {
-    flex: 0 0 0 !important; /* 不占用任何空间 */
+    flex: 0 0 0 !important; /* Does not take up any space */
     min-width: 0 !important;
     max-width: 0 !important;
     width: 0 !important;
@@ -1064,7 +1064,7 @@
     padding: 0;
     gap: 0;
 }
-/*右侧模块 输出区域*/
+/*Right module output area*/
 .promptPage_rightArea > .outputArea {
     flex: 1;
     /*min-height:169px;*/
@@ -1073,45 +1073,45 @@
     flex-wrap: nowrap;
     gap: 15px;
     overflow: hidden;
-    min-height: 0; /* 重要：允许flex收缩 */
-    position: relative; /* 为自定义滚动条定位 */
+    min-height: 0; /* Important: Allow flex to shrink */
+    position: relative; /* Positioning a custom scroll bar */
 }
-/* 定制滚动条样式 */
+/* Customize scroll bar style */
     .outputArea_contentBox::-webkit-scrollbar,
     .configurineArea::-webkit-scrollbar {
-        width: 8px; /* 滚动条的宽度 */
+        width: 8px; /* scroll bar width */
     }
 
     .outputArea_contentBox::-webkit-scrollbar-track,
     .configurineArea::-webkit-scrollbar-track {
-        background: transparent; /* 滚动条轨道的背景色 */
+        background: transparent; /* The background color of the scroll bar track */
     }
 
     .outputArea_contentBox::-webkit-scrollbar-thumb,
     .configurineArea::-webkit-scrollbar-thumb {
-        background: #DCDFE6; /* 滚动条滑块的背景色 */
-        border-radius: 4px; /* 滚动条滑块的圆角 */
+        background: #DCDFE6; /* The background color of the scrollbar slider */
+        border-radius: 4px; /* Rounded corners of scroll bar slider */
     }
 
         .outputArea_contentBox::-webkit-scrollbar-thumb:hover,
         .configurineArea::-webkit-scrollbar-thumb:hover {
-            background: #888; /* 鼠标悬停时滚动条滑块的背景色 */
+            background: #888; /* Background color of scrollbar slider on mouseover */
         }
 
-/* VSCode风格的自定义滚动条缩略图 */
+/* VSCode style custom scroll bar thumbnail */
 .custom-scrollbar-thumbnail {
     position: absolute;
-    right: 8px; /* 与滚动条对齐 */
-    top: 115px; /* 从内容区域开始，避免覆盖标题栏和最大化按钮 (boxCard padding 10px + promptVersion ~40px + gap 15px + titleRow 35px + gap 15px) */
+    right: 8px; /* Align with scrollbar */
+    top: 115px; /* Start with the content area and avoid covering the title bar and maximize button (boxCard padding 10px + promptVersion ~40px + gap 15px + titleRow 35px + gap 15px) */
     bottom: 0;
-    width: 140px; /* 增加宽度以容纳评分信息 */
-    background: rgba(255, 255, 255, 0.85); /* 增加透明度 */
+    width: 140px; /* Increase width to accommodate rating information */
+    background: rgba(255, 255, 255, 0.85); /* increase transparency */
     border-left: 1px solid rgba(224, 224, 224, 0.6);
     z-index: 1001;
     pointer-events: auto;
     box-shadow: -2px 0 8px rgba(0, 0, 0, 0.08);
     animation: slideInRight 0.2s ease-out;
-    backdrop-filter: blur(6px); /* 增强毛玻璃效果 */
+    backdrop-filter: blur(6px); /* Enhance frosted glass effect */
 }
 
 @keyframes slideInRight {
@@ -1167,7 +1167,7 @@
     z-index: 3;
 }
 
-/* 缩略图内容容器 */
+/* Thumbnail content container */
 .thumbnail-content {
     display: flex;
     flex-direction: column;
@@ -1176,7 +1176,7 @@
     z-index: 2;
 }
 
-/* 时间显示 */
+/* time display */
 .thumbnail-time {
     font-size: 9px;
     color: #666;
@@ -1194,7 +1194,7 @@
     font-weight: 600;
 }
 
-/* 评分显示 */
+/* Rating display */
 .thumbnail-score {
     font-size: 11px;
     font-weight: 600;
@@ -1208,7 +1208,7 @@
     font-weight: 700;
 }
 
-/* Excel风格数据条背景 */
+/* Excel style data bar background */
 .thumbnail-score-bar {
     position: absolute;
     left: 0;
@@ -1222,38 +1222,38 @@
     transition: width 0.3s ease;
 }
 
-/* 根据评分等级调整颜色 */
+/* Adjust colors based on rating scale */
 .thumbnail-score-bar.score-excellent {
     background: linear-gradient(90deg, 
         rgba(76, 175, 80, 0.2) 0%, 
-        rgba(76, 175, 80, 0.35) 100%); /* 绿色 - 优秀 8-10分 */
+        rgba(76, 175, 80, 0.35) 100%); /* Green - Excellent 8-10 points */
 }
 
 .thumbnail-score-bar.score-good {
     background: linear-gradient(90deg, 
         rgba(33, 150, 243, 0.2) 0%, 
-        rgba(33, 150, 243, 0.35) 100%); /* 蓝色 - 良好 6-8分 */
+        rgba(33, 150, 243, 0.35) 100%); /* Blue - Good 6-8 points */
 }
 
 .thumbnail-score-bar.score-medium {
     background: linear-gradient(90deg, 
         rgba(255, 193, 7, 0.2) 0%, 
-        rgba(255, 193, 7, 0.35) 100%); /* 黄色 - 中等 4-6分 */
+        rgba(255, 193, 7, 0.35) 100%); /* Yellow - medium 4-6 points */
 }
 
 .thumbnail-score-bar.score-low {
     background: linear-gradient(90deg, 
         rgba(255, 152, 0, 0.2) 0%, 
-        rgba(255, 152, 0, 0.35) 100%); /* 橙色 - 较低 2-4分 */
+        rgba(255, 152, 0, 0.35) 100%); /* Orange - lower 2-4 points */
 }
 
 .thumbnail-score-bar.score-poor {
     background: linear-gradient(90deg, 
         rgba(244, 67, 54, 0.2) 0%, 
-        rgba(244, 67, 54, 0.35) 100%); /* 红色 - 差 0-2分 */
+        rgba(244, 67, 54, 0.35) 100%); /* Red - 0-2 points worse */
 }
 
-/* 激活状态下的数据条颜色更深 */
+/* Data bars in active state are darker */
 .thumbnail-item-active .thumbnail-score-bar.score-excellent {
     background: linear-gradient(90deg, 
         rgba(76, 175, 80, 0.3) 0%, 
@@ -1284,7 +1284,7 @@
         rgba(244, 67, 54, 0.45) 100%);
 }
 
-/* 可视区域指示器 */
+/* Visible area indicator */
 .thumbnail-viewport {
     position: absolute;
     left: 2px;
@@ -1297,7 +1297,7 @@
     min-height: 20px;
 }
 
-/* 不需要调整内容宽度，滚动条悬浮显示 */
+/* No need to adjust the content width, the scroll bar is displayed in suspension */
 .promptPage_rightArea > .outputArea > .titleRow {
     justify-content: flex-start;
     gap: 30px;
@@ -1324,7 +1324,7 @@
         box-sizing: border-box;
         overflow-y: auto;
         overflow-x: hidden;
-        min-height: 0; /* 重要：允许flex收缩 */
+        min-height: 0; /* Important: Allow flex to shrink */
     }
 
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem {
@@ -1359,22 +1359,22 @@
             font-style: normal;
             font-weight: 400;
             line-height: normal;
-            white-space: normal;  /* 改为 normal，让 HTML 标签自然控制换行，避免多余空行 */
+            white-space: normal;  /* Change to normal to allow HTML tags to naturally control line breaks and avoid redundant blank lines. */
         }
 
-        /* Markdown 列表样式优化 */
+        /* Markdown list style optimization */
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow ul,
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow ol {
-            margin: 4px 0;           /* 减少上下间距，避免过多空行 */
-            padding-left: 24px;      /* 保持左侧缩进 */
+            margin: 4px 0;           /* Reduce the upper and lower spacing to avoid too many blank lines */
+            padding-left: 24px;      /* Keep left indented */
         }
 
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow li {
-            margin: 2px 0;           /* 减少列表项之间的间距 */
-            padding: 0;              /* 确保无额外 padding */
+            margin: 2px 0;           /* Reduce the spacing between list items */
+            padding: 0;              /* Make sure there is no additional padding */
         }
 
-        /* Markdown table 样式 */
+        /* Markdown table style */
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow table {
             width: 100%;
             border-collapse: collapse;
@@ -1424,20 +1424,20 @@
             border-bottom: none;
         }
 
-        /* Markdown 代码块样式 */
+        /* Markdown code block style */
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow pre {
             background-color: #f6f8fa;
             border: 1px solid #e1e4e8;
             border-radius: 6px;
             padding: 16px;
-            padding-top: 40px; /* 为复制按钮留出空间 */
+            padding-top: 40px; /* Leave space for copy button */
             margin: 12px 0;
             overflow-x: auto;
             line-height: 1.45;
             position: relative;
         }
         
-        /* 代码块复制按钮 */
+        /* Code block copy button */
         .code-copy-btn {
             position: absolute;
             top: 8px;
@@ -1460,7 +1460,7 @@
             gap: 4px;
         }
         
-        /* 输出区域的复制按钮需要避开右侧滚动条缩略图 (140px + 8px margin) */
+        /* The copy button in the output area needs to avoid the right scroll bar thumbnail (140px + 8px margin) */
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow .code-copy-btn {
             right: 160px;
         }
@@ -1503,7 +1503,7 @@
             word-wrap: normal;
         }
 
-        /* 行内代码样式 */
+        /* Inline code style */
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow code {
             background-color: rgba(175, 184, 193, 0.2);
             padding: 2px 6px;
@@ -1513,7 +1513,7 @@
             color: #e83e8c;
         }
 
-        /* 代码块滚动条样式 */
+        /* Code block scroll bar style */
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow pre::-webkit-scrollbar {
             height: 8px;
         }
@@ -1532,7 +1532,7 @@
             background: #6a737d;
         }
 
-        /* Markdown 标题样式 */
+        /* Markdown title style */
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow h1,
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow h2,
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow h3,
@@ -1570,7 +1570,7 @@
             border-bottom: none;
         }
 
-        /* Markdown 引用块样式 */
+        /* Markdown quote block style */
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow blockquote {
             padding: 8px 16px;
             margin: 12px 0;
@@ -1584,12 +1584,12 @@
             margin: 0;
         }
 
-        /* Markdown 段落间距 */
+        /* Markdown paragraph spacing */
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow p {
             margin: 8px 0;
         }
 
-        /* Markdown 水平分割线 */
+        /* Markdown horizontal dividing line */
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow hr {
             height: 2px;
             padding: 0;
@@ -1598,7 +1598,7 @@
             border: 0;
         }
 
-        /* Markdown 链接样式 */
+        /* Markdown link style */
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .contentRow a {
             color: #0366d6;
             text-decoration: none;
@@ -1608,7 +1608,7 @@
             text-decoration: underline;
         }
 
-        /* SystemMessage 折叠面板样式 */
+        /* SystemMessage accordion style */
         .tacticalFormBox .el-collapse {
             border: 1px solid #e4e7ed;
             border-radius: 4px;
@@ -1633,7 +1633,7 @@
             border-bottom: none;
         }
         
-        /* SystemMessage 内容区域样式 */
+        /* SystemMessage content area style */
         .system-message-content {
             background-color: #f5f7fa;
             padding: 12px;
@@ -1669,11 +1669,11 @@
 
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .operateRow {
             margin-top: 5px;
-            margin-right: 160px; /* 为右侧滚动条预留空间 */
+            margin-right: 160px; /* Reserve space for right scrollbar */
             display: flex;
-            flex-wrap: wrap; /* 允许换行，避免空间不足 */
+            flex-wrap: wrap; /* Allow line breaks to avoid running out of space */
             align-items: center;
-            justify-content: flex-start; /* 左对齐 */
+            justify-content: flex-start; /* left aligned */
             gap: 10px;
             color: #0083FF;
             font-size: 14px;
@@ -1689,7 +1689,7 @@
                 cursor: pointer;
             }
             
-                /* AI评分加载状态 */
+                /* AI rating loading status */
                 .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .operateRow > .operateRow_item .el-icon-loading {
                     color: #409EFF;
                     font-size: 14px;
@@ -1710,10 +1710,10 @@
             background-color: #FFF;
             position:absolute;
             bottom:10px;
-            left:0px; /* 改为左侧显示 */
+            left:0px; /* Change to display on the left */
             z-index:999999;
             width:350px;
-            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15); /* 添加阴影 */
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15); /* add shadow */
         
         }
 
@@ -1795,10 +1795,10 @@
                align-items:end;
             }
 
-/*右侧模块 分析区域*/
+/*Right module analysis area*/
 .promptPage_rightArea > .analysisArea {
-    flex: 0 0 auto; /* 不伸缩 */
-    height: 260px; /* 减小高度，留更多空间给输出区域 */
+    flex: 0 0 auto; /* Not scalable */
+    height: 260px; /* Reduce the height and leave more space for the output area */
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -1808,11 +1808,11 @@
 
     .promptPage_rightArea > .analysisArea > .echartsBox {
         width: 100%;
-        height: 200px; /* 调整图表高度 */
+        height: 200px; /* Adjust chart height */
         box-sizing: border-box;
     }
 
-/*版本记录 btn*/
+/*version record btn*/
 .promptPage > .versionBtn {
     position: fixed;
     right: 0;
@@ -1837,7 +1837,7 @@
     .promptPage > .versionBtn:hover {
         transform: scale(1.1);
     }
-/*版本记录 抽屉*/
+/*version record drawer*/
 .promptPage .versionDrawerArea {
     padding: 10px;
     position: relative;
@@ -1904,7 +1904,7 @@
             width: 15px;
             height: 10px;
         }
-/*tree 更多提示操作区域*/
+/*tree More prompt operation area*/
 .versionTreeMorePopover {
     padding: 0 !important;
 }
@@ -1937,7 +1937,7 @@
     align-items: flex-start;
     justify-content: space-between;
     line-height: 20px;
-    margin-right: 160px; /* 为右侧滚动条预留空间 */
+    margin-right: 160px; /* Reserve space for right scrollbar */
 }
 
     .promptResult_Item_Title .promptReultTimeArea {
@@ -2013,7 +2013,7 @@
     color: #606266;
 }
 
-/* 可拖动分隔条样式 */
+/* Draggable divider style */
 .resize-handle {
     width: 8px;
     flex-shrink: 0;
@@ -2022,10 +2022,10 @@
     background: transparent;
     transition: background-color 0.2s ease;
     z-index: 100;
-    user-select: none; /* 防止双击选中文本 */
+    user-select: none; /* Prevent double-clicking selected text */
 }
 
-/* 使用伪元素扩展可点击区域，不影响布局 */
+/* Use pseudo elements to expand the clickable area without affecting the layout */
 .resize-handle::after {
     content: '';
     position: absolute;
@@ -2044,7 +2044,7 @@
     background-color: rgba(64, 158, 255, 0.4);
 }
 
-/* 分隔条中间的指示线 */
+/* The indicator line in the middle of the divider */
 .resize-handle::before {
     content: '';
     position: absolute;
@@ -2070,7 +2070,7 @@
     width: 4px;
 }
 
-/* 双击还原时的闪烁动画 */
+/* Flashing animation when double-clicking to restore */
 @keyframes resetFlash {
     0%, 100% {
         background-color: rgba(64, 158, 255, 0.2);
@@ -2084,7 +2084,7 @@
     animation: resetFlash 0.6s ease;
 }
 
-/* 推理过程样式 */
+/* reasoning process style */
 think {
     display: block;
     background-color: #f5f5f5;
@@ -2106,16 +2106,16 @@ think::before {
     border-radius: 4px;
 }
 
-/* ========== Prompt 对比对话框样式（Git Diff 风格） ========== */
+/* ========== Prompt comparison dialog style (Git Diff style) ========== */
 
-/* 对话框主体 */
+/* Dialog body */
 .prompt-compare-dialog .el-dialog__body {
     padding: 15px 20px;
     max-height: 78vh;
     overflow-y: auto;
 }
 
-/* 选择器区域 - 紧凑横向布局 */
+/* Selector area - compact horizontal layout */
 .compare-selector {
     display: flex;
     flex-direction: row;
@@ -2148,7 +2148,7 @@ think::before {
     background-color: #ecf5ff;
 }
 
-/* 评分统计对比卡片 */
+/* Rating statistics comparison card */
 .compare-score-cards {
     display: flex;
     gap: 15px;
@@ -2237,12 +2237,12 @@ think::before {
     font-size: 20px;
 }
 
-/* 对比内容区域 */
+/* Compare content areas */
 .compare-content {
     margin-top: 0;
 }
 
-/* 紧凑型信息表格 */
+/* Compact information form */
 .compare-info-table,
 .compare-params-table {
     margin-bottom: 15px;
@@ -2316,7 +2316,7 @@ think::before {
     font-size: 12px;
 }
 
-/* Diff 区块样式 */
+/* Diff block style */
 .compare-diff-section {
     margin-bottom: 15px;
     background: #fff;
@@ -2335,7 +2335,7 @@ think::before {
     color: #303133;
 }
 
-/* Diff 容器（支持同步滚动） */
+/* Diff container (supports synchronous scrolling) */
 .compare-diff-container {
     display: flex;
     overflow-x: hidden;
@@ -2359,7 +2359,7 @@ think::before {
     border-right: none;
 }
 
-/* Diff 列头部 */
+/* Diff column header */
 .diff-column-header {
     padding: 10px 15px;
     background: #f5f7fa;
@@ -2382,7 +2382,7 @@ think::before {
     font-weight: normal;
 }
 
-/* Diff 代码块 */
+/* Diff code block */
 .diff-code-block {
     padding: 15px;
     background: #fafbfc;
@@ -2405,7 +2405,7 @@ think::before {
     color: #2c3e50;
 }
 
-/* Git风格差异高亮 */
+/* Git style difference highlighting */
 .diff-line {
     display: block;
     padding: 2px 8px;
@@ -2419,34 +2419,34 @@ think::before {
     opacity: 0.9;
 }
 
-/* 新增的内容（绿色） */
+/* New content (green) */
 .diff-added {
     background-color: #e6ffec;
     color: #22863a;
     border-left: 3px solid #34d058;
 }
 
-/* 删除的内容（红色） */
+/* Deleted content (red) */
 .diff-removed {
     background-color: #ffeef0;
     color: #d73a49;
     border-left: 3px solid #d73a49;
 }
 
-/* 修改的内容（黄色边框，用于行内差异） */
+/* Modified content (yellow border, for inline differences) */
 .diff-modified {
     background-color: #fff8e1;
     color: #2c3e50;
     border-left: 3px solid #ffa726;
 }
 
-/* 未修改的内容（灰色） */
+/* Unmodified content (gray) */
 .diff-unchanged {
     color: #6a737d;
     background-color: transparent;
 }
 
-/* 行内单词级别差异高亮 */
+/* Inline word level difference highlighting */
 .diff-word-removed {
     background-color: #fdb8c0;
     color: #b31d28;
@@ -2464,13 +2464,13 @@ think::before {
     font-weight: 600;
 }
 
-/* 空内容提示 */
+/* Empty content prompt */
 .diff-empty {
     color: #909399;
     font-style: italic;
 }
 
-/* Diff容器滚动条 */
+/* Diff container scroll bar */
 .compare-diff-container::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -2490,7 +2490,7 @@ think::before {
 }
 
 
-/* 请求参数表格特殊样式 */
+/* Request parameter form special style */
 .compare-params-table code {
     background: #f5f7fa;
     padding: 2px 6px;
@@ -2506,7 +2506,7 @@ think::before {
     word-break: break-all;
 }
 
-/* 空状态 */
+/* Empty state */
 .compare-empty-state {
     text-align: center;
     padding: 80px 20px;
@@ -2523,7 +2523,7 @@ think::before {
     margin: 0;
 }
 
-/* 空参数提示 */
+/* Empty parameter prompt */
 .compare-empty-params {
     text-align: center;
     padding: 30px 20px;
@@ -2544,13 +2544,13 @@ think::before {
     vertical-align: middle;
 }
 
-/* 对话框底部按钮 */
+/* Button at bottom of dialog box */
 .prompt-compare-dialog .dialog-footer {
     text-align: center;
     padding: 15px 0 0 0;
 }
 
-/* 响应式调整 */
+/* Responsive adjustments */
 @media (max-width: 1400px) {
     .compare-columns {
         gap: 20px;
@@ -2592,7 +2592,7 @@ think::before {
     }
 }
 
-/* ========== 模型选择器自定义显示 ========== */
+/* ========== Model selector custom display ========== */
 .model-select .el-select-dropdown__item {
     height: auto !important;
     min-height: auto !important;
@@ -2647,7 +2647,7 @@ think::before {
     word-wrap: break-word;
 }
 
-/* 选中状态 */
+/* selected state */
 .model-select .el-select-dropdown__item.selected .model-name {
     color: #409eff;
     font-weight: 600;
@@ -2663,7 +2663,7 @@ think::before {
     color: #66b1ff;
 }
 
-/* 悬停状态 */
+/* hover state */
 .model-select .el-select-dropdown__item:hover .model-name {
     color: #409eff;
 }
@@ -2677,7 +2677,7 @@ think::before {
     color: #66b1ff;
 }
 
-/* ========== 对比窗口版本号复制按钮 ========== */
+/* ========== Compare window version number copy button ========== */
 .copy-version-icon {
     margin-left: 8px;
     font-size: 14px;
@@ -2696,7 +2696,7 @@ think::before {
     transform: scale(0.95);
 }
 
-/* 继续聊天 - 对话历史容器 */
+/* Continue Chat - Conversation History Container */
 .chat-history-container {
     max-height: 500px;
     min-height: 300px;
@@ -2710,7 +2710,7 @@ think::before {
     position: relative;
 }
 
-/* 对话历史容器滚动条样式 */
+/* Conversation history container scroll bar style */
 .chat-history-container::-webkit-scrollbar {
     width: 8px;
 }
@@ -2728,7 +2728,7 @@ think::before {
     background: #888;
 }
 
-/* System Message 在对话历史容器内的样式 */
+/* System Message style within conversation history container */
 .system-message-in-chat-history {
     margin-bottom: 20px;
     padding-bottom: 20px;
@@ -2799,7 +2799,7 @@ think::before {
     background: #A8A8A8;
 }
 
-/* 空状态提示 */
+/* Empty status prompt */
 .chat-empty-tip {
     display: flex;
     flex-direction: column;
@@ -2816,7 +2816,7 @@ think::before {
     color: #C0C4CC;
 }
 
-/* 对话消息项 */
+/* Conversation message item */
 .chat-message-item {
     display: flex;
     margin-bottom: 20px;
@@ -2834,7 +2834,7 @@ think::before {
     }
 }
 
-/* 用户消息（右侧对齐） */
+/* User message (right aligned) */
 .chat-message-user {
     flex-direction: row-reverse;
 }
@@ -2853,7 +2853,7 @@ think::before {
     color: rgba(255, 255, 255, 0.9);
 }
 
-/* 助手消息（左侧对齐） */
+/* Assistant message (left aligned) */
 .chat-message-assistant {
     flex-direction: row;
 }
@@ -2865,7 +2865,7 @@ think::before {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* 消息头像 */
+/* Message avatar */
 .chat-message-avatar {
     width: 36px;
     height: 36px;
@@ -2888,7 +2888,7 @@ think::before {
     color: #FFFFFF;
 }
 
-/* 消息内容包装器 */
+/* Message content wrapper */
 .chat-message-content-wrapper {
     flex: 1;
     max-width: 75%;
@@ -2897,7 +2897,7 @@ think::before {
     position: relative;
 }
 
-/* 消息头部（角色、序号、时间） */
+/* Message header (role, serial number, time) */
 .chat-message-header {
     display: flex;
     align-items: center;
@@ -2927,12 +2927,12 @@ think::before {
     opacity: 0.7;
 }
 
-/* 消息内容 */
+/* Message content */
 .chat-message-content {
     line-height: 1.6;
     word-wrap: break-word;
-    /* 移除 white-space: pre-wrap; 因为 Markdown 已解析为 HTML，HTML 标签会自然控制换行 */
-    /* 保留此属性会导致 HTML 标签之间的换行符被保留，造成多余空行 */
+    /* Remove white-space: pre-wrap; because Markdown is parsed into HTML, and HTML tags will naturally control line wrapping */
+    /* Preserving this attribute will cause line breaks between HTML tags to be preserved, resulting in extra blank lines */
     font-size: 14px;
 }
 
@@ -2944,7 +2944,7 @@ think::before {
     margin-bottom: 0;
 }
 
-/* 行内代码样式 */
+/* Inline code style */
 .chat-message-content code {
     background-color: rgba(0, 0, 0, 0.1);
     padding: 2px 6px;
@@ -2959,13 +2959,13 @@ think::before {
     color: #ffffff;
 }
 
-/* 代码块样式 */
+/* code block style */
 .chat-message-content pre {
     background-color: #f6f8fa;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 6px;
     padding: 12px;
-    padding-top: 40px; /* 为复制按钮留出空间 */
+    padding-top: 40px; /* Leave space for copy button */
     overflow-x: auto;
     margin: 8px 0;
     line-height: 1.45;
@@ -2977,7 +2977,7 @@ think::before {
     border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* 用户消息中的复制按钮特殊样式 */
+/* Copy button special style in user messages */
 .chat-message-user .code-copy-btn {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
     border: 1px solid rgba(255, 255, 255, 0.5);
@@ -3007,7 +3007,7 @@ think::before {
     color: #ffffff;
 }
 
-/* 代码块滚动条样式 */
+/* Code block scroll bar style */
 .chat-message-content pre::-webkit-scrollbar {
     height: 8px;
 }
@@ -3028,13 +3028,13 @@ think::before {
 
 .chat-message-content ul,
 .chat-message-content ol {
-    margin: 4px 0;           /* 优化：减少上下间距，避免过多空行 */
-    padding-left: 24px;      /* 保持左侧缩进 */
+    margin: 4px 0;           /* Optimization: Reduce the upper and lower spacing to avoid too many blank lines */
+    padding-left: 24px;      /* Keep left indented */
 }
 
 .chat-message-content li {
-    margin: 2px 0;           /* 优化：减少列表项之间的间距 */
-    padding: 0;              /* 确保无额外 padding */
+    margin: 2px 0;           /* Optimization: reduce the spacing between list items */
+    padding: 0;              /* Make sure there is no additional padding */
 }
 
 .chat-message-content blockquote {
@@ -3048,7 +3048,7 @@ think::before {
     border-left-color: rgba(255, 255, 255, 0.4);
 }
 
-/* 消息反馈区域（只有助手消息显示） */
+/* Message feedback area (only assistant messages are displayed) */
 .chat-message-feedback {
     display: flex;
     gap: 8px;
@@ -3086,7 +3086,7 @@ think::before {
     color: #FFFFFF;
 }
 
-/* 优化对话消息的响应式设计 */
+/* Optimize the responsive design of conversation messages */
 @media (max-width: 768px) {
     .chat-message-content-wrapper {
         max-width: 85%;
@@ -3100,7 +3100,7 @@ think::before {
     }
 }
 
-/* 对话消息的hover效果 */
+/* Hover effect of conversation messages */
 .chat-message-feedback {
     opacity: 0.7;
     transition: opacity 0.2s;
@@ -3110,7 +3110,7 @@ think::before {
     opacity: 1;
 }
 
-/* 优化markdown内容在对话中的显示 */
+/* Optimize the display of markdown content in conversations */
 .chat-message-content h1,
 .chat-message-content h2,
 .chat-message-content h3 {
@@ -3156,14 +3156,14 @@ think::before {
     margin: 8px 0;
 }
 
-/* 修复对话框滚动条问题 */
+/* Fix dialog scroll bar issue */
 .tacticalFormBox {
-    /* 确保表单内容不会导致对话框超出视口 */
+    /* Ensure form content does not cause the dialog box to extend beyond the viewport */
     max-height: calc(100vh - 200px);
     overflow-y: auto;
 }
 
-/* 确保对话框主体不会超出视口 */
+/* Make sure the dialog body does not extend beyond the viewport */
 .el-dialog {
     display: flex;
     flex-direction: column;
@@ -3174,7 +3174,7 @@ think::before {
     flex: 1;
     overflow-y: auto;
     padding: 20px;
-    /* 移除可能导致滚动条的 margin-bottom */
+    /* Remove margin-bottom that may cause scrollbars */
     margin-bottom: 0;
 }
 
@@ -3182,11 +3182,11 @@ think::before {
     flex-shrink: 0;
     padding: 10px 20px;
     border-top: 1px solid #e4e7ed;
-    /* 移除可能导致滚动条的 margin-bottom */
+    /* Remove margin-bottom that may cause scrollbars */
     margin-bottom: 0;
 }
 
-/* 继续聊天对话框的特殊样式 */
+/* Special style for continue chat dialog */
 .el-dialog[aria-label*="继续聊天"] .el-dialog__body {
     max-height: calc(90vh - 120px);
     overflow-y: auto;

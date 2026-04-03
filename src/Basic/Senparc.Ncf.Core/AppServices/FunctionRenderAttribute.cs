@@ -8,19 +8,19 @@ namespace Senparc.Ncf.Core.AppServices
     public class FunctionRenderAttribute : Attribute
     {
         /// <summary>
-        /// 名称
+        ///name
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// 说明
+        /// illustrate
         /// </summary>
         public string Description { get; set; }
         /// <summary>
-        /// 分类到 XNCF 模块的 Regster 类型
+        /// Regster type classified to XNCF module
         /// </summary>
         public Type RegisterType { get; set; }
 
-        public FunctionRenderAttribute(string name, string description, Type registerType/*TODO：可提供系统模块的默认值*/)
+        public FunctionRenderAttribute(string name, string description, Type registerType/*TODO: Default values ​​for system modules can be provided*/)
         {
             Name = name;
             Description = description;

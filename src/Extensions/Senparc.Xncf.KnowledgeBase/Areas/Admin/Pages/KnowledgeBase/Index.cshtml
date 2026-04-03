@@ -31,7 +31,7 @@
                     <el-button class="filter-item" size="mini" type="primary" icon="el-icon-plus" @@click="handleEdit('','','add')">新增</el-button>
                 </el-col>
                 <el-col :span="1">
-                    <!-- 筛选按钮 -->
+                    <!-- filter button -->
                     <el-popover placement="bottom" title="筛选列" trigger="click" width="40">
                         <el-checkbox-group v-model="checkedColumns" size="mini">
                             <el-checkbox v-for="item in checkBoxGroup" :key="item" :label="item" :value="item"></el-checkbox>
@@ -83,7 +83,7 @@
                     :page.sync="listQuery.pageIndex"
                     :limit.sync="listQuery.pageSize"
                     @@pagination="getList"></pagination>
-        <!--编辑、新增-->
+        <!--Edit, add-->
         <el-dialog :title="dialog.title"
                    :visible.sync="dialog.visible"
                    :close-on-click-modal="false"
@@ -152,16 +152,16 @@
             </div>
         </el-dialog>
 
-        @* 抽屉 新增|编辑 知识库关联 *@
+        @* Drawer New|Edit Knowledge Base Association*@
         <el-drawer :visible.sync="visible.drawerGroup" direction="rtl" :with-header="false" :wrapper-closable="false"
                    :close-on-press-escape="false" size="960px">
             <div class="drawerRtl">
-                @* 内容中的头（包括标题和关闭图标） *@
+                @* Header within content (including title and close icon)*@
                 <div class="drawerRtl__header">
                     <div class="drawerRtl__header__title">{{ groupForm.id ? '编辑知识库关联' : '新增知识库关联' }} </div>
                     <div class="drawerRtl__header__close" @@click="handleElVisibleClose('drawerGroup')">&times;</div>
                 </div>
-                @* 内容中的主体内容 *@
+                @* body of content*@
                 <div class="drawerRtl__body">
                     <el-form v-if="visible.drawerGroup" ref="groupELForm" :model="groupForm" :rules="groupFormRules"
                              :size="elSize" label-position="left" label-width="130px" class="drawerForm-container">
@@ -214,12 +214,12 @@
                                             {{ formaTableTime(scope.row.uploadTime) }}
                                         </template>
                                     </el-table-column>
-                              @*       <el-table-column prop="description" label="描述" min-width="100">
+                              @*       <el-table-column prop="description" label="describe" min-width="100">
                                     </el-table-column> *@
                                     <el-table-column fixed="right" label="操作" width="130">
                                         <template slot-scope="{ row }">
                                             @* <el-button type="primary" size="small"
-                                                       @@click="handleEditDrawerOpenBtn('dialogGroupAgent',row)">编辑</el-button> *@
+                                                       @@click="handleEditDrawerOpenBtn('dialogGroupAgent',row)">edit</el-button> *@
                                             <el-button type="danger" size="small"
                                                        @@click="handleConfigFileDelete(row)">删除</el-button>
                                         </template>
@@ -243,7 +243,7 @@
                         </el-form-item>
                     </el-form>
                 </div>
-                @* 内容中固定的footer *@
+                @* Fixed footer in content*@
                 <div class="drawerRtl__footer text-right">
                     <el-button :size="elSize" @@click="handleElVisibleClose('drawerGroup')">取消</el-button>
                     <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerGroup')">确认</el-button>
@@ -251,7 +251,7 @@
             </div>
         </el-drawer>
 
-        @* 配置页内「新建文件」上传弹框：选择文件后调用上传接口写入 FileManage，保存时与知识库关联 *@
+        @* Configuration page「Create new file」Upload pop-up box: After selecting the file, call the upload interface to write to FileManage, and associate it with the knowledge base when saving.*@
         <el-dialog title="新建文件"
                    :visible.sync="visible.dialogFile"
                    width="480px"
@@ -274,7 +274,7 @@
             </div>
         </el-dialog>
 
-        @* 向量化进度弹窗 *@
+        @* Vectorized progress pop-up window*@
         <el-dialog title="向量化进度"
                    :visible.sync="visible.embeddingProgress"
                    width="420px"
@@ -287,7 +287,7 @@
             </div>
         </el-dialog>
 
-        @* 向量化结果展示弹窗 *@
+        @* Vectorization result display pop-up window*@
         <el-dialog title="向量化结果"
                    :visible.sync="visible.embeddingResult"
                    width="560px"

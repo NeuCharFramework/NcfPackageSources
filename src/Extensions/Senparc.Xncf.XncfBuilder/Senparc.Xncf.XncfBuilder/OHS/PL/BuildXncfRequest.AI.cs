@@ -25,7 +25,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             }
             catch (SenparcAiException ex)
             {
-                //Endpoint 可能未配置
+                //Endpoint may not be configured
 
                 aiModel.Items.Add(new SelectionItem("Default", $"系统默认（AiPlatform：{defaultSetting.AiPlatform}，Endpoint：未检测到，如需选择此选项，请先在 appsettings.json 中完成模型配置", "通过系统默认配置的固定 AI 模型信息", true));
             }
@@ -71,16 +71,16 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         [Description("AI 模型||当不使用 PromptRange 时，需要选择生成代码所使用的 AI 模型")]
         public SelectionList AIModel { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>
         {
-            //new SelectionItem("Default","系统默认","通过系统默认配置的固定 AI 模型信息",true)
+            //new SelectionItem("Default","System Default","Fixed AI model information configured by system default",true)
         });
 
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
-            //扫描当前解决方案包含的所有领域项目
+            //Scan all domain projects contained in the current solution
             var newItems = FunctionHelper.LoadXncfProjects(true, null,"Senparc.Areas.Admin");
             newItems.ForEach(z => InjectDomain.Items.Add(z));
 
-            //载入 AI 模型
+            //Load AI model
             await BuildXncfRequestHelper.LoadAiModelData(serviceProvider, AIModel);
 
             await base.LoadData(serviceProvider);
@@ -97,12 +97,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         [Description("AI 模型||请选择新建的靶场（Range）中所有靶道（Tactics）使用的 AI 模型")]
         public SelectionList AIModel { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>
         {
-            //new SelectionItem("Default","系统默认","通过系统默认配置的固定 AI 模型信息",true)
+            //new SelectionItem("Default","System Default","Fixed AI model information configured by system default",true)
         });
 
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
-            //载入 AI 模型
+            //Load AI model
             await BuildXncfRequestHelper.LoadAiModelData(serviceProvider, AIModel);
 
             await base.LoadData(serviceProvider);
@@ -111,17 +111,17 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
     //public class BuildXncf_CreateAppServiceRequest : FunctionAppRequestBase
     //{
-    //    [Description("领域||指定需要生成到的领域")]
+    //    [Description("Realm||Specify the domain to be generated")]
     //    public SelectionList InjectDomain { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
 
     //    [Required]
     //    [MaxLength(250)]
-    //    [Description("生成 AppService 及其方法的具体需求||请输入尽量完整的需求，也可以指定所需要的方法名称等")]
+    //    [Description("Specific requirements for generating AppService and its methods || Please enter as complete requirements as possible, and you can also specify the required method names, etc.")]
     //    public string Requirement { get; set; }
 
     //    public override async Task LoadData(IServiceProvider serviceProvider)
     //    {
-    //        //扫描当前解决方案包含的所有领域项目
+    //        //Scan all domain projects included in the current solution
     //        var newItems = FunctionHelper.LoadXncfProjects(true, "Senparc.Areas.Admin");
     //        newItems.ForEach(z => InjectDomain.Items.Add(z));
 

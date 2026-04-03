@@ -2,9 +2,9 @@ var app = new Vue({
     el: "#app",
     data() {
         return {
-            devHost: 'http://pr-felixj.frp.senparc.com', // 测试 地址
-            elSize: 'medium', // el 组件尺寸大小 默认为空  medium、small、mini
-            // 布局 数据 列表
+            devHost: 'http://pr-felixj.frp.senparc.com', // Test address
+            elSize: 'medium', // el component size defaults to empty medium, small, mini
+            // layout data list
             layoutList: [],
             listTotal:0,
             queryList: {
@@ -33,9 +33,9 @@ var app = new Vue({
         
     },
     methods: {
-        // 获取 layoutList 数据
+        // Get layoutList data
         getListData() {
-            // 模拟 数据
+            // simulated data
             const simulationData = []
             for (let i = 0; i < 10; i++) {
                 simulationData.push({
@@ -49,9 +49,9 @@ var app = new Vue({
             }
             this.layoutList = simulationData
             this.listTotal = simulationData.length
-            // todo 调用接口
+            // todo calling interface
         },
-        // 获取 状态样式名称
+        // Get status style name
         getStateClass(val) {
             let valFormatt = val ? val.toString() : val
             let className = ''
@@ -65,7 +65,7 @@ var app = new Vue({
             }
             return className
         },
-        // 获取 状态文本
+        // Get status text
         getStateText(val) {
             let valFormatt = val ? val.toString() : val
             let text = ''
@@ -79,17 +79,17 @@ var app = new Vue({
             }
             return text
         },
-        // 创建布局 
+        // Create layout 
         createLayout() {
-            // todo 跳转 ?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69
+            // todo jump ?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69
             window.open('/Admin/DynamicData/LayoutSet')
         },
-        // 复制布局
+        // Copy layout
         copyLayout(item) {
             if (!item) return
             item.operationVisible = false
-            // todo 调用接口
-            // <strong>这是 <i>HTML</i> 片段</strong>
+            // todo calling interface
+            // <strong>This is a <i>HTML</i> fragment</strong>
             this.$prompt('布局名称', '复制布局', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -103,23 +103,23 @@ var app = new Vue({
             }).catch(() => {
                 //this.$message({
                 //    type: 'info',
-                //    message: '取消输入'
+                //    message: 'Cancel input'
                 //});
             });
         },
-        // 查看布局
+        // View layout
         viewLayout(item) {
             if (!item) return
             item.operationVisible = false
-            // todo 调用接口
-            // todo 跳转 ?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69
+            // todo calling interface
+            // todo jump ?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69
             window.open('/Admin/DynamicData/LayoutSet')
         },
-        // 删除布局
+        // Delete layout
         deleteLayout(item) {
             if (!item) return
             item.operationVisible = false
-            // todo 调用接口
+            // todo calling interface
         }
     }
 });

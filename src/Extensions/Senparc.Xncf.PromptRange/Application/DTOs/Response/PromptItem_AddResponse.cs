@@ -9,12 +9,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
     public class PromptItem_AddResponse : BaseResponse
     {
         /// <summary>
-        /// 靶场　ID
+        ///shooting range ID
         /// </summary>
         public int RangeId { get; set; }
 
         /// <summary>
-        /// 昵称
+        /// Nick name
         /// </summary>
         public string NickName { get; set; }
 
@@ -22,7 +22,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 
 
         /// <summary>
-        /// 完整版本号
+        ///Full version number
         /// </summary>
         public string FullVersion { get; set; }
 
@@ -31,12 +31,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         public int ModelId { get; set; }
 
         /// <summary>
-        /// 最大 Token 数
+        ///Maximum number of Tokens
         /// </summary>
         public int MaxToken { get; set; }
 
         /// <summary>
-        /// 温度
+        /// temperature
         /// </summary>
         public float Temperature { get; set; }
 
@@ -46,14 +46,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         public float TopP { get; set; }
 
         /// <summary>
-        /// 频率惩罚
+        /// frequency penalty
         /// </summary>
         public float FrequencyPenalty { get; set; }
 
         public float PresencePenalty { get; private set; }
 
         /// <summary>
-        /// 停止序列（JSON 数组）
+        /// stop sequence (JSON array)
         /// </summary>
         public string StopSequences { get; set; }
 
@@ -74,17 +74,17 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         #region 打分相关
 
         /// <summary>
-        /// 评估参数, 平均分
+        /// evaluation parameters, average score
         /// </summary>
         public decimal EvalAvgScore { get; set; }
 
         /// <summary>
-        /// 评估参数
+        ///evaluation parameters
         /// </summary>
         public decimal EvalMaxScore { get; set; }
 
         /// <summary>
-        /// 期望结果Json
+        ///Expected result Json
         /// </summary>
         public string ExpectedResultsJson { get; set; }
 

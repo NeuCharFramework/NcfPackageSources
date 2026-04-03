@@ -29,13 +29,13 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// 服务调用
+        /// service call
         /// </summary>
-        /// <typeparam name="TResult">返回的数据类型</typeparam>
-        /// <param name="invokeType">请求类型</param>
-        /// <param name="serviceId">服务名称 (App-Id)</param>
-        /// <param name="methodName">方法路径</param>
-        /// <param name="data">请求数据</param>
+        /// <typeparam name="TResult">Returned data type</typeparam>
+        /// <param name="invokeType">Request type</param>
+        /// <param name="serviceId">Service name (App-Id)</param>
+        /// <param name="methodName">method path</param>
+        /// <param name="data">Request data</param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
         public async Task<TResult> InvokeMethodAsync<TResult>(InvokeType invokeType, string serviceId, string methodName, object? data = null)
@@ -61,11 +61,11 @@ namespace Senparc.Xncf.Dapr
             var response = await SendMessageAsync(request);
 
             if (response.StatusCode == HttpStatusCode.NotFound)
-                _logger.LogError("未提供的方法名称");
+                _logger.LogError("Unsupplied method name");
             else if (response.StatusCode == HttpStatusCode.Forbidden)
-                _logger.LogError("访问控制禁止调用");
+                _logger.LogError("Access control prohibits calls");
             else if (response.StatusCode == HttpStatusCode.InternalServerError)
-                _logger.LogError("请求失败");
+                _logger.LogError("Request failed");
 
             string json = await response.Content.ReadAsStringAsync();
             TResult result;
@@ -96,25 +96,25 @@ namespace Senparc.Xncf.Dapr
             await InvokeMethodAsync<TResult>(InvokeType.Delete, serviceId, methodName, data);
 
         /// <summary>
-        /// 发布事件
+        /// publish event
         /// </summary>
-        /// <param name="topicName">主题名称</param>
-        /// <param name="data">发布内容</param>
+        /// <param name="topicName">Topic name</param>
+        /// <param name="data">Post content</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task PublishEventAsync(string topicName, object data)
         {
             if(_options.PubSubName == null)
-                throw new Exception("没有配置全局PubSubName");
+                throw new Exception("No global PubSubName configured");
             await PublishEventAsync(_options.PubSubName, topicName, data);
         }
 
         /// <summary>
-        /// 发布事件
+        /// publish event
         /// </summary>
-        /// <param name="pubSubName">发布订阅组件名称</param>
-        /// <param name="topicName">主题名称</param>
-        /// <param name="data">发布数据</param>
+        /// <param name="pubSubName">Publish and subscribe component name</param>
+        /// <param name="topicName">Topic name</param>
+        /// <param name="data">publish data</param>
         /// <returns></returns>
         public async Task PublishEventAsync(string pubSubName, string topicName, object data)
         {
@@ -123,25 +123,25 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// 获取状态
+        /// Get status
         /// </summary>
-        /// <typeparam name="TResult">返回状态类型</typeparam>
-        /// <param name="key">缓存键</param>
+        /// <typeparam name="TResult">Return status type</typeparam>
+        /// <param name="key">cache key</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<TResult> GetStateAsync<TResult>(string key)
         {
             if (_options.StateStoreName == null)
-                throw new Exception("没有配置全局StateStoreName");
+                throw new Exception("Global StateStoreName is not configured");
             return await GetStateAsync<TResult>(_options.StateStoreName, key);
         }
 
         /// <summary>
-        /// 获取状态
+        /// Get status
         /// </summary>
-        /// <typeparam name="TResult">返回状态类型</typeparam>
-        /// <param name="stateStore">状态存储组件名称</param>
-        /// <param name="key">缓存键</param>
+        /// <typeparam name="TResult">Return status type</typeparam>
+        /// <param name="stateStore">State storage component name</param>
+        /// <param name="key">cache key</param>
         /// <returns></returns>
         public async Task<TResult> GetStateAsync<TResult>(string stateStore, string key)
         {
@@ -149,13 +149,13 @@ namespace Senparc.Xncf.Dapr
             var response = await SendMessageAsync(request);
 
             if (response.StatusCode == HttpStatusCode.OK)
-                _logger.LogInformation("获取状态成功");
+                _logger.LogInformation("Get status successfully");
             else if (response.StatusCode == HttpStatusCode.NoContent)
-                _logger.LogWarning("状态键不存在");
+                _logger.LogWarning("Status key does not exist");
             else if (response.StatusCode == HttpStatusCode.BadRequest)
-                _logger.LogError("状态存贮不存在或者配置错误");
+                _logger.LogError("The state store does not exist or is misconfigured.");
             else if (response.StatusCode == HttpStatusCode.InternalServerError)
-                _logger.LogError("状态获取失败");
+                _logger.LogError("Status acquisition failed");
 
             string json = await response.Content.ReadAsStringAsync();
             TResult result;
@@ -171,27 +171,27 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// 保存状态
+        /// save state
         /// </summary>
-        /// <typeparam name="TValue">状态类型</typeparam>
-        /// <param name="key">缓存键</param>
-        /// <param name="value">缓存数据</param>
+        /// <typeparam name="TValue">status type</typeparam>
+        /// <param name="key">cache key</param>
+        /// <param name="value">cache data</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task SetStateAsync<TValue>(string key, TValue value)
         {
             if (_options.StateStoreName == null)
-                throw new Exception("没有配置全局StateStoreName");
+                throw new Exception("Global StateStoreName is not configured");
             await SetStateAsync<TValue>(_options.StateStoreName, key, value);
         }
 
         /// <summary>
-        /// 保存状态
+        /// save state
         /// </summary>
-        /// <typeparam name="TValue">状态类型</typeparam>
-        /// <param name="stateStore">状态存储组件名称</param>
-        /// <param name="key">缓存键</param>
-        /// <param name="value">缓存数据</param>
+        /// <typeparam name="TValue">status type</typeparam>
+        /// <param name="stateStore">State storage component name</param>
+        /// <param name="key">cache key</param>
+        /// <param name="value">cache data</param>
         /// <returns></returns>
         public async Task SetStateAsync<TValue>(string stateStore, string key, TValue value)
         {
@@ -200,27 +200,27 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// 保存多个状态
+        /// Save multiple states
         /// </summary>
-        /// <typeparam name="TValue">状态类型</typeparam>
-        /// <param name="key">缓存键</param>
-        /// <param name="values">缓存数据</param>
+        /// <typeparam name="TValue">status type</typeparam>
+        /// <param name="key">cache key</param>
+        /// <param name="values">cache data</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task SetStatesAsync(IEnumerable<StateStore> values)
         {
             if (_options.StateStoreName == null)
-                throw new Exception("没有配置全局StateStoreName");
+                throw new Exception("Global StateStoreName is not configured");
             await SetStatesAsync(_options.StateStoreName, values);
         }
 
         /// <summary>
-        /// 保存多个状态
+        /// Save multiple states
         /// </summary>
-        /// <typeparam name="TValue">状态类型</typeparam>
-        /// <param name="stateStore">状态存储组件名称</param>
-        /// <param name="key">缓存键</param>
-        /// <param name="values">缓存数据</param>
+        /// <typeparam name="TValue">status type</typeparam>
+        /// <param name="stateStore">State storage component name</param>
+        /// <param name="key">cache key</param>
+        /// <param name="values">cache data</param>
         /// <returns></returns>
         public async Task SetStatesAsync(string stateStore, IEnumerable<StateStore> values)
         {
@@ -228,31 +228,31 @@ namespace Senparc.Xncf.Dapr
             var response = await SendMessageAsync(request);
 
             if (response.StatusCode == HttpStatusCode.NoContent)
-                _logger.LogInformation("状态保存成功");
+                _logger.LogInformation("Status saved successfully");
             else if (response.StatusCode == HttpStatusCode.BadRequest)
-                _logger.LogError("状态存储丢失或配置错误或请求格式错误");
+                _logger.LogError("The state store is missing or misconfigured or the request is malformed");
             else if(response.StatusCode == HttpStatusCode.InternalServerError)
-                _logger.LogError($"状态保存失败");
+                _logger.LogError($"State saving failed");
         }
 
         /// <summary>
-        /// 删除状态
+        /// delete status
         /// </summary>
-        /// <param name="key">缓存键</param>
+        /// <param name="key">cache key</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task DelStateAsync(string key)
         {
             if (_options.StateStoreName == null)
-                throw new Exception("没有配置全局StateStoreName");
+                throw new Exception("Global StateStoreName is not configured");
             await DelStateAsync(_options.StateStoreName, key);
         }
 
         /// <summary>
-        /// 删除状态
+        /// delete status
         /// </summary>
-        /// <param name="stateStore">状态存储组件名称</param>
-        /// <param name="key">缓存键</param>
+        /// <param name="stateStore">State storage component name</param>
+        /// <param name="key">cache key</param>
         /// <returns></returns>
         public async Task DelStateAsync(string stateStore, string key)
         {
@@ -260,15 +260,15 @@ namespace Senparc.Xncf.Dapr
             var response = await _httpClient.SendAsync(request);
 
             if (response.StatusCode == HttpStatusCode.NoContent)
-                _logger.LogInformation("状态删除成功");
+                _logger.LogInformation("Status deleted successfully");
             else if (response.StatusCode == HttpStatusCode.BadRequest)
-                _logger.LogError("状态存储丢失或配置错误");
+                _logger.LogError("The state store is missing or misconfigured");
             else if (response.StatusCode == HttpStatusCode.InternalServerError)
-                _logger.LogError($"状态删除失败");
+                _logger.LogError($"Status deletion failed");
         }
 
         /// <summary>
-        /// 确认Dapr Sidecar是否正常运行
+        /// Confirm whether Dapr Sidecar is running normally
         /// </summary>
         /// <returns></returns>
         public async Task<bool> HealthCheckAsync()
@@ -289,12 +289,12 @@ namespace Senparc.Xncf.Dapr
                         }
                         else
                         {
-                            _logger.LogWarning($"Dapr尚未准备就绪!");
+                            _logger.LogWarning($"DaprNot ready yet!");
                             await Task.Delay(100);
                         }                    }
                     catch (Exception e)
                     {
-                        _logger.LogError($"Dapr尚未准备就绪,{e.Message}");
+                        _logger.LogError($"DaprNot ready yet,{e.Message}");
                         break;
                     }
                 }
@@ -303,22 +303,22 @@ namespace Senparc.Xncf.Dapr
         }
 
         /// <summary>
-        /// 使用Http客户端发布消息
+        /// Post messages using Http client
         /// </summary>
-        /// <param name="message">Http请求消息</param>
-        /// <returns>Http返回消息</returns>
+        /// <param name="message">Httprequest message</param>
+        /// <returns>Httpreturn message</returns>
         private async Task<HttpResponseMessage> SendMessageAsync(HttpRequestMessage message)
         {
             return await _httpClient.SendAsync(message);
         }
 
         /// <summary>
-        /// 构建请求消息
+        /// Build request message
         /// </summary>
-        /// <param name="requestType">调用的Dapr API类型</param>
-        /// <param name="host">服务名称 (App-Id)</param>
-        /// <param name="path">资源路径</param>
-        /// <param name="data">承载数据</param>
+        /// <param name="requestType">Dapr API type called</param>
+        /// <param name="host">Service name (App-Id)</param>
+        /// <param name="path">Resource path</param>
+        /// <param name="data">Carrying data</param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
         private HttpRequestMessage BuildMessage(MessageType requestType, string host, string path, object? data = null)
@@ -328,7 +328,7 @@ namespace Senparc.Xncf.Dapr
             string url;
 
             HttpRequestMessage request;
-            //构建请求URL
+            //Build request URL
             switch (requestType)
             {
                 case MessageType.InvokePatch:
@@ -371,7 +371,7 @@ namespace Senparc.Xncf.Dapr
                 default:
                     throw new ArgumentException();
             }
-            //构建请求体
+            //Build request body
             if (data != null)
             {
                 //request.Content.Headers.ContentType = new MediaTypeHeaderValue($"application/json");

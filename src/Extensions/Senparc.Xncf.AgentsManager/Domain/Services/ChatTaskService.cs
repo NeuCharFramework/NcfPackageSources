@@ -18,7 +18,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        /// 获取缓存中记录正在运行的 ChatTask 的 Key
+        /// Get the Key of the running ChatTask recorded in the cache
         /// </summary>
         /// <param name="taskId"></param>
         /// <returns></returns>
@@ -31,7 +31,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         {
             var chatTask = new ChatTask(chatTaskDto);
 
-            //TODO:需要缓存，以便快速读取
+            //TODO: Need to cache for fast reading
 
             await base.SaveObjectAsync(chatTask);
 
@@ -44,13 +44,13 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             chatTask.ChangeStatus(status);
             await base.SaveObjectAsync(chatTask);
 
-            //TODO 检查是否所有任务已经完成，如果完成则设置 ChatGroup 状态为闲置状态
+            //TODO checks whether all tasks have been completed, and if completed, sets the ChatGroup status to idle.
         }
 
         /// <summary>
-        /// 关闭未完成的任务
+        ///Close unfinished tasks
         /// </summary>
-        /// <param name="beforeStartDateTime">只是筛选在此时间之前的未完成（Chatting 任务）</param>
+        /// <param name="beforeStartDateTime">Just filter unfinished (Chatting tasks) before this time</param>
         /// <returns></returns>
         public async Task CloseUnfinishedTasksAsync(DateTime beforeStartDateTime)
         {

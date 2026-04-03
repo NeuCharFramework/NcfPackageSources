@@ -18,7 +18,7 @@
 }
 
 <el-container style="height: 100%;flex-wrap: nowrap;gap: 20px;">
-    @* 侧边栏 *@
+    @* sidebar*@
     <div class="dataSheetSet-aside">
         <div class="aside_title">数据表</div>
         <div class="aside_list">
@@ -28,9 +28,9 @@
         </div>
         <div class="aside_newbtn" :class="{'aside_select':sheetSelectId === 0}" @@click="addDataTable"><i class="el-icon-plus"></i> 新增数据表</div>
     </div>
-    @* 详情内容 *@
+    @* Details*@
     <div class="dataSheetSet-main">
-        @* 共用按钮操作区域 *@
+        @* Shared button operation area*@
         <div class="main_header">
             <el-button type="primary" :size="elSize" :disabled="sheetBD" @@click="newFieldsAdd">新增字段</el-button>
             <el-button type="primary" :disabled="layoutBD" :size="elSize" @@click="createLayout">创建布局</el-button>
@@ -38,7 +38,7 @@
             <el-button :size="elSize" :disabled="sheetBD" @@click="exportDataSheet">导出</el-button>
         </div>
         <div class="main_content">
-            @* 新增|编辑 数据表单区域 :rules="sheetFormRules" *@
+            @* New|Edit data form area:rules="sheetFormRules" *@
             <el-form ref="sheetElForm" :inline="true" :model="sheetForm" :size="elSize" class="sheetForm-inline">
                 <el-form-item label="名称" prop="name">
                     <div v-if="sheetFormEidt" class="formValueText" :title="sheetForm.name">{{ sheetForm.name }}</div>
@@ -58,9 +58,9 @@
                     
                 </el-form-item>
             </el-form>
-            @* 数据表新增 空状态 提示 *@
+            @* Added empty status prompt to data table*@
             <div v-if="sheetBD" class="tips-dataSheet">提示：新增数据表之后才能新增字段</div>
-            @* 数据表字段 table *@
+            @* data table fields table*@
             <el-table v-else :data="tableFieldList" :size="elSize" border style="width: 100%">
                 <el-table-column prop="identificationId" label="ID" width="110"></el-table-column>
                 <el-table-column prop="name" label="字段名称" width="130"></el-table-column>
@@ -96,19 +96,19 @@
     </div>
 </el-container>
 
-@* 新增字段抽屉 *@
+@* Add new field drawer*@
 <el-drawer :visible.sync="newFieldDrawer"
            direction="rtl"
            :with-header="false"
            size="540px"
            :before-close="handleNewFieldDrawerClose">
     <div class="drawerRtl">
-            @* // 内容中的头（包括标题和关闭图标） *@
+            @* // Header within content (including title and close icon)*@
             <div class="drawerRtl__header">
             <div class="drawerRtl__header__title">新增字段</div>
             <div class="drawerRtl__header__close" @@click="resetNewField()">&times;</div>
             </div>
-            @* // 内容中的主体内容 *@
+            @* // body of content*@
         <div class="drawerRtl__body">
             <el-form ref="newFieldElForm" :model="newFieldForm" :rules="newFieldFormRules" :size="elSize" label-position="left" label-width="80px" class="newFieldForm-container">
                 <el-form-item label="名称" prop="name">
@@ -177,7 +177,7 @@
             </el-form>
 
             </div>
-            @* // 内容中固定的footer *@
+            @* // Fixed footer in content*@
             <div class="drawerRtl__footer text-right">
             <el-button :size="elSize" @@click="resetNewField()">取消</el-button>
             <el-button :size="elSize" type="primary" @@click="submitNewField">确认</el-button>

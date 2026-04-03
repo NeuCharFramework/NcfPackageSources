@@ -74,22 +74,22 @@ define(function(require) {
             inverse: false,
             orient: 'vertical',        // 'horizontal' ¦ 'vertical'
 
-            seriesIndex: null,        // 所控制的series indices，默认所有有value的series.
+            seriesIndex: null,        // The series indices controlled are all series with value by default.
             backgroundColor: 'rgba(0,0,0,0)',
-            borderColor: '#ccc',       // 值域边框颜色
+            borderColor: '#ccc',       // Range border color
             contentColor: '#5793f3',
             inactiveColor: '#aaa',
-            borderWidth: 0,            // 值域边框线宽，单位px，默认为0（无边框）
-            padding: 5,                // 值域内边距，单位px，默认各方向内边距为5，
-                                       // 接受数组分别设定上右下左边距，同css
+            borderWidth: 0,            // Value field border line width, unit px, default is 0 (no border)
+            padding: 5,                // The inner margin of the value range, in px. The default inner margin in each direction is 5.
+                                       // Accept arrays to set the top, right, bottom and left margins respectively, same as css
             textGap: 10,               //
-            precision: 0,              // 小数精度，默认为0，无小数点
-            color: ['#bf444c', '#d88273', '#f6efa6'], //颜色（deprecated，兼容ec2，顺序同pieces，不同于inRange/outOfRange）
+            precision: 0,              // Decimal precision, default is 0, no decimal point
+            color: ['#bf444c', '#d88273', '#f6efa6'], //Color (deprecated, compatible with ec2, the order is the same as pieces, different from inRange/outOfRange)
 
             formatter: null,
-            text: null,                // 文本，如['高', '低']，兼容ec2，text[0]对应高值，text[1]对应低值
+            text: null,                // Text, such as ['high', 'low'], compatible with ec2, text[0] corresponds to high value, text[1] corresponds to low value
             textStyle: {
-                color: '#333'          // 值域文字颜色
+                color: '#333'          // Range text color
             }
         },
 
@@ -241,10 +241,10 @@ define(function(require) {
             allSeriesIndex && this.ecModel.eachSeries(function (seriesModel, index) {
                 var data = seriesModel.getData();
                 // FIXME
-                // 只考虑了list，还没有考虑map等。
+                // Only the list is considered, not the map, etc.
 
                 // FIXME
-                // 这里可能应该这么判断：data.dimensions中有超出其所属coordSystem的量。
+                // This may be the judgment here: there is an amount in data.dimensions that exceeds the coordSystem to which it belongs.
                 if (data.type === 'list') {
                     thisOption.seriesIndex.push(index);
                 }

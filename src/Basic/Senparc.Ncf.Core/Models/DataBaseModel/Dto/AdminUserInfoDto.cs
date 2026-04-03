@@ -7,7 +7,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// AdminUserInfo 创建和更新
+    ///AdminUserInfo Create and Update
     /// </summary>
     public class AdminUserInfoDto : DtoBase
     {

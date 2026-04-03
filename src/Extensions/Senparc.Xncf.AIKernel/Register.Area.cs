@@ -16,8 +16,8 @@ using Senparc.AI;
 
 namespace Senparc.Xncf.AIKernel
 {
-    public partial class Register : IAreaRegister, //注册 XNCF 页面接口（按需选用）
-                                    IXncfRazorRuntimeCompilation  //赋能 RazorPage 运行时编译
+    public partial class Register : IAreaRegister, //Register XNCF page interface (optional on demand)
+                                    IXncfRazorRuntimeCompilation  //Enable RazorPage runtime compilation
     {
         #region IAreaRegister 接口
 
@@ -27,14 +27,14 @@ namespace Senparc.Xncf.AIKernel
 new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
 new AreaPageMenuItem(GetAreaUrl($"/Admin/AIVector/Index"),"向量数据库","fa fa-bookmark-o"),
 new AreaPageMenuItem(GetAreaUrl($"/Admin/Dashboard/Index"),"仪表盘","fa fa-dashboard")
-//new AreaPageMenuItem(GetAreaUrl($"/Admin/AIKernel/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
+//new AreaPageMenuItem(GetAreaUrl($"/Admin/AIKernel/DatabaseSample"),"Database Operation Example","fa fa-bookmark-o")
 };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             builder.AddRazorPagesOptions(options =>
             {
-                //此处可配置页面权限
+                //Page permissions can be configured here
             });
 
             SenparcTrace.SendCustomLog("AIKernel 启动", "完成 Area:Senparc.Xncf.AIKernel 注册");

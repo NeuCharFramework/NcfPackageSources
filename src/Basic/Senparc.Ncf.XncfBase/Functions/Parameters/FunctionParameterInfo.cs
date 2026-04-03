@@ -6,8 +6,8 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// 参数类型
-    /// <para>注意：请勿更改已经定义的顺序和值！</para>
+    /// parameter type
+    /// <para>Note: Do not change the defined order and values! </para>
     /// </summary>
     public enum ParameterType
     {
@@ -18,46 +18,46 @@ namespace Senparc.Ncf.XncfBase
     }
 
     /// <summary>
-    /// FunctionParameter 信息（供输出用）
+    ///FunctionParameter information (for output)
     /// </summary>
     public class FunctionParameterInfo
     {
         /// <summary>
-        /// 参数名称
+        /// parameter name
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// 标题（标签内容）
+        /// title (tag content)
         /// </summary>
         public string Title { get; set; }
         /// <summary>
-        /// 备注
+        /// Remark
         /// </summary>
         public string Description { get; set; }
         /// <summary>
-        /// 是否必须
+        /// is it necessary
         /// </summary>
         public bool IsRequired { get; set; }
         /// <summary>
-        /// 系统类型
+        /// system type
         /// </summary>
         public string SystemType { get; set; }
         /// <summary>
-        /// 最大长度（一般应用于字符串）
+        /// Maximum length (generally applied to strings)
         public int MaxLength { get; set; }
 
         /// <summary>
-        /// 参数类型
+        /// parameter type
         /// </summary>
         public ParameterType ParameterType { get; set; } = ParameterType.Text;
 
         /// <summary>
-        /// 文本值（当文本类型时使用）
+        /// Text value (used when text type)
         /// </summary>
         public object Value { get; set; }
 
         /// <summary>
-        /// 选项（当出现非文本内容时使用）
+        /// option (used when non-text content is present)
         /// </summary>
         public SelectionList SelectionList { get; set; }
 

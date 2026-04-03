@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Service.ServiceBase
 {
     /// <summary>
-    /// 默认事务策略,微软文档用法
+    ///Default transaction policy, Microsoft document usage
     /// <seealso cref="https://docs.microsoft.com/ef/core/miscellaneous/connection-resiliency"/>
     /// </summary>
     public class ResilientTransaction

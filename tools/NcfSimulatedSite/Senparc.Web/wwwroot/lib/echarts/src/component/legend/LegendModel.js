@@ -126,13 +126,13 @@ define(function(require) {
         },
 
         defaultOption: {
-            // 一级层叠
+            // One level cascading
             zlevel: 0,
-            // 二级层叠
+            // Second level stacking
             z: 4,
             show: true,
 
-            // 布局方式，默认为水平布局，可选为：
+            // Layout mode, the default is horizontal layout, optional:
             // 'horizontal' | 'vertical'
             orient: 'horizontal',
 
@@ -142,36 +142,36 @@ define(function(require) {
             top: 'top',
             // bottom: 'top',
 
-            // 水平对齐
+            // Align horizontally
             // 'auto' | 'left' | 'right'
-            // 默认为 'auto', 根据 x 的位置判断是左对齐还是右对齐
+            // The default is 'auto', which determines whether to align left or right based on the position of x
             align: 'auto',
 
             backgroundColor: 'rgba(0,0,0,0)',
-            // 图例边框颜色
+            // Legend border color
             borderColor: '#ccc',
-            // 图例边框线宽，单位px，默认为0（无边框）
+            // Legend border line width, unit px, default is 0 (no border)
             borderWidth: 0,
-            // 图例内边距，单位px，默认各方向内边距为5，
-            // 接受数组分别设定上右下左边距，同css
+            // Legend padding, unit px, default padding in all directions is 5.
+            // Accept arrays to set the top, right, bottom and left margins respectively, same as css
             padding: 5,
-            // 各个item之间的间隔，单位px，默认为10，
-            // 横向布局时为水平间隔，纵向布局时为纵向间隔
+            // The interval between each item, in px, the default is 10,
+            // Horizontal spacing is used for horizontal layout, and vertical spacing is used for vertical layout.
             itemGap: 10,
-            // 图例图形宽度
+            // Legend graphic width
             itemWidth: 25,
-            // 图例图形高度
+            // Legend graphic height
             itemHeight: 14,
             textStyle: {
-                // 图例文字颜色
+                // Legend text color
                 color: '#333'
             },
             // formatter: '',
-            // 选择模式，默认开启图例开关
+            // Select mode, the legend switch is turned on by default
             selectedMode: true
-            // 配置默认选中状态，可配合LEGEND.SELECTED事件做动态数据载入
+            // Configure the default selected state, which can be used with the LEGEND.SELECTED event for dynamic data loading
             // selected: null,
-            // 图例内容（详见legend.data，数组中每一项代表一个item
+            // Legend content (see legend.data for details, each item in the array represents an item
             // data: [],
         }
     });

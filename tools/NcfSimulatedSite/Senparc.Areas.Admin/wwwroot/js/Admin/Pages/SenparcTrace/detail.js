@@ -24,9 +24,9 @@
             timeRange: [],
             threadId: '',
             traceType: '',
-            exceptionStatus: '', // '': 全部, true: 是, false: 否
-            availableThreads: [], // 用于存储所有可用的线程ID
-            availableTypes: []    // 用于存储所有可用的类型
+            exceptionStatus: '', // '': all, true: yes, false: no
+            availableThreads: [], // Used to store all available thread IDs
+            availableTypes: []    // Used to store all available types
         },
         pickerOptions: {
             shortcuts: [{
@@ -90,7 +90,7 @@
             this.searchData.total = actualData.length;
             this.tableData = actualData;
             
-            // 初始化可用的筛选选项
+            // Initialize available filtering options
             const threads = new Set();
             const types = new Set();
             actualData.forEach(item => {
@@ -120,34 +120,34 @@
             var onlyException = this.toogleException;
             var skipCount = (this.searchData.pageIndex - 1) * this.searchData.pageSize;
             
-            // 应用所有筛选条件
+            // Apply all filters
             var dataSource = this.tableData.filter(item => {
-                // 异常筛选
+                // Exception filtering
                 if (onlyException && !item.isException) return false;
                 
-                // 关键字筛选
+                // Keyword filter
                 if (this.filterConditions.keyword) {
                     const keyword = this.filterConditions.keyword.toLowerCase();
                     const matchContent = (item.title + ' ' + item.resultStr).toLowerCase();
                     if (!matchContent.includes(keyword)) return false;
                 }
                 
-                // 时间区间筛选
+                // Time interval filter
                 if (this.filterConditions.timeRange && this.filterConditions.timeRange.length === 2) {
                     const itemDate = new Date(item.dateTime);
                     if (itemDate < this.filterConditions.timeRange[0] || 
                         itemDate > this.filterConditions.timeRange[1]) return false;
                 }
                 
-                // 线程筛选
+                // Thread filtering
                 if (this.filterConditions.threadId && 
                     item.threadId !== this.filterConditions.threadId) return false;
                 
-                // 类型筛选
+                // Type filter
                 if (this.filterConditions.traceType !== '' && 
                     item.weixinTraceType !== this.filterConditions.traceType) return false;
                 
-                // 异常状态筛选
+                // Exception status filtering
                 if (this.filterConditions.exceptionStatus !== '') {
                     if (this.filterConditions.exceptionStatus === 'true' && !item.isException) return false;
                     if (this.filterConditions.exceptionStatus === 'false' && item.isException) return false;
@@ -182,7 +182,7 @@
         rowKey(row) {
             return row.no;
         },
-        // 高亮显示关键字
+        // Highlight keywords
         highlightKeyword: function(content) {
             if (!this.filterConditions.keyword) return content;
             const keyword = this.filterConditions.keyword;

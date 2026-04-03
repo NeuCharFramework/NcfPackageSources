@@ -27,15 +27,15 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
     {
         //[BindProperty]
         //[FromBody]
-        //[Required(ErrorMessage = "请输入用户名")]
+        //[Required(ErrorMessage = "Please enter username")]
         //public string Name { get; set; }
 
         //[BindProperty]
         //[FromBody]
-        //[Required(ErrorMessage = "请输入密码")]
+        //[Required(ErrorMessage = "Please enter password")]
         //public string Password { get; set; }
 
-        //绑定参数
+        //Bind parameters
         //[BindProperty(SupportsGet = true)]
         //public string ReturnUrl { get; set; }
 
@@ -53,8 +53,8 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         public async Task<IActionResult> OnGetAsync(string ReturnUrl)
         {
             await Task.CompletedTask;
-            //是否已经登录
-            //var logined = await base.CheckLoginedAsync(AdminAuthorizeAttribute.AuthenticationScheme);//判断登录
+            //Have you logged in?
+            //var logined = await base.CheckLoginedAsync(AdminAuthorizeAttribute.AuthenticationScheme);//Determine login
 
             //if (logined)
             //{
@@ -79,13 +79,13 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         //    var userInfo = await _userInfoService.GetUserInfo(this.Name);
         //    if (userInfo == null)
         //    {
-        //        //errorMsg = "账号或密码错误！错误代码：101。";
-        //        ModelState.AddModelError(nameof(this.Password), "账号或密码错误！错误代码：101。");
+        //        //errorMsg = "Wrong account or password! Error code: 101.";
+        //        ModelState.AddModelError(nameof(this.Password), "Wrong account or password! Error code: 101.");
         //    }
         //    else if (_userInfoService.TryLogin(this.Name, this.Password, true) == null)
         //    {
-        //        //errorMsg = "账号或密码错误！错误代码：102。";
-        //        ModelState.AddModelError(nameof(this.Password), "账号或密码错误！错误代码：102。");
+        //        //errorMsg = "Wrong account or password! Error code: 102.";
+        //        ModelState.AddModelError(nameof(this.Password), "Wrong account or password! Error code: 102.");
         //    }
 
         //    if (!errorMsg.IsNullOrEmpty() || !ModelState.IsValid)
@@ -111,8 +111,8 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 return Ok(new { loginInDto.Name, loginInDto.Password });
             }
 
-            // 移除不必要的验证，因为ValidateTenant总是返回true
-            // 租户名称不是必填项，无需验证
+            // Remove unnecessary validation because ValidateTenant always returns true
+            // Tenant name is not required and does not require verification
 
             AdminUserInfo userInfo = null;
             string tenantKey = loginInDto.Tenant;
@@ -148,15 +148,15 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             {
                 SenparcTrace.SendCustomLog("登录失败", $"用户名：{loginInDto.Name}, 错误：账号或密码错误！101");
                 return Ok("pwd", false, "账号或密码错误！");
-                //ModelState.AddModelError(nameof(this.Password), "账号或密码错误！");
+                //ModelState.AddModelError(nameof(this.Password), "Wrong account or password!");
             }
 
             try
             {
-                //TODO 需要把 userInfo 获取过程封装到下面的方法中，统一处理账号锁定
+                //TODO needs to encapsulate the userInfo acquisition process into the following method to handle account locking in a unified manner
                 if (await _userInfoService.TryLoginAsync(userInfo, loginInDto.Password, true, tenantKey) == null)
                 {
-                    //ModelState.AddModelError(nameof(this.Password), "账号或密码错误！");
+                    //ModelState.AddModelError(nameof(this.Password), "Wrong account or password!");
                     SenparcTrace.SendCustomLog("登录失败", $"用户名：{loginInDto.Name}, 错误：账号或密码错误！102");
                     return Ok("pwd", false, "账号或密码错误！");
                 }
@@ -171,7 +171,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             catch (Exception ex)
             {
                 SenparcTrace.SendCustomLog("登录失败", $"用户名：{loginInDto.Name}, 错误：{ex.Message}");
-                //其他异常，不返回错误信息
+                //Other exceptions, no error message is returned
                 return Ok("pwd", false, "账号或密码错误！");
             }
         }
@@ -206,8 +206,8 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 
         public bool ValidateTenant()
         {
-            // 租户名称不是必填的，即使在多租户模式下也是可选的
-            // 直接返回true表示验证总是通过
+            // Tenant name is not required and is optional even in multi-tenant mode
+            // Directly returning true means that the verification always passes
             return true;
         }
     }

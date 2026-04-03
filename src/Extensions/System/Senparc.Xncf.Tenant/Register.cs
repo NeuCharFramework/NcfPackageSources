@@ -40,7 +40,7 @@ namespace Senparc.Xncf.Tenant
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_TANENT_UID;// "00000000-0000-0000-0000-000000000006";
 
-        public override string Version => "0.1";//必须填写版本号
+        public override string Version => "0.1";//Version number is required
 
         public override string MenuName => "多租户";
 
@@ -50,7 +50,7 @@ namespace Senparc.Xncf.Tenant
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //安装或升级数据库
+            //Install or upgrade database
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
             await base.InstallOrUpdateAsync(serviceProvider, installOrUpdate);
@@ -58,7 +58,7 @@ namespace Senparc.Xncf.Tenant
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            //TODO：应该提供一个 BeforeUninstall 方法，阻止卸载。
+            //TODO: A BeforeUninstall method should be provided to prevent uninstallation.
 
             await base.UninstallAsync(serviceProvider, unsinstallFunc);
         }
@@ -66,14 +66,14 @@ namespace Senparc.Xncf.Tenant
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
-            AddMultiTenant(services);//注册多租户（按需）
-            EntitySetKeys.TryLoadSetInfo(typeof(SenparcEntitiesMultiTenant));//注册多租户数据库的对象（按需）
-            //EntitySetKeys.TryLoadSetInfo(typeof(TenantSenparcEntities));//注册多租户数据库的对象（按需）
+            AddMultiTenant(services);//Register for multi-tenancy (on demand)
+            EntitySetKeys.TryLoadSetInfo(typeof(SenparcEntitiesMultiTenant));//Register objects for multi-tenant database (on demand)
+            //EntitySetKeys.TryLoadSetInfo(typeof(TenantSenparcEntities));//Register objects for multi-tenant databases (on demand)
             services.AddScoped<ITenantInfoDbData, TenantInfoDbData>();
             services.AddScoped<TenantInfoRepository>();
             services.AddScoped<IClientRepositoryBase<TenantInfo>, TenantInfoRepository>();
 
-            //引入当前系统
+            //Introduce current system
             services.AddAutoMapper(z => z.AddProfile<TenantInfoProfile>());
 
             return base.AddXncfModule(services, configuration, env);
@@ -83,7 +83,7 @@ namespace Senparc.Xncf.Tenant
         {
             #region 多租户
 
-            app.UseMiddleware<TenantMiddleware>();//如果不启用多租户功能，可以删除此配置
+            app.UseMiddleware<TenantMiddleware>();//This configuration can be removed if multi-tenancy is not enabled
 
             #endregion
             return base.UseXncfModule(app, registerService);
@@ -105,20 +105,20 @@ namespace Senparc.Xncf.Tenant
         //    {
         //        SiteConfig.IsInstalling = true;
 
-        //        //更新数据库
+        //        //update database
         //        var pendingMigs = await basePoolEntities.Database.GetPendingMigrationsAsync();
         //        if (pendingMigs.Count() > 0)
         //        {
-        //            basePoolEntities.ResetMigrate();//重置合并状态
+        //            basePoolEntities.ResetMigrate();//Reset merge status
 
         //            try
         //            {
         //                var script = basePoolEntities.Database.GenerateCreateScript();
         //                SenparcTrace.SendCustomLog("senparcEntities.Database.GenerateCreateScript", script);
 
-        //                basePoolEntities.Migrate();//进行合并
+        //                basePoolEntities.Migrate();//Merge
 
-        //                msg = "已成功合并";
+        //                msg = "Merge successfully";
         //            }
         //            catch (Exception ex)
         //            {
@@ -147,10 +147,10 @@ namespace Senparc.Xncf.Tenant
         //    using (var scope = serviceProvider.CreateScope())
         //    {
         //        var oldMultiTenant = SiteConfig.SenparcCoreSetting.EnableMultiTenant;
-        //        //暂时关闭多租户状态
+        //        //Temporarily close the multi-tenant state
         //        SiteConfig.SenparcCoreSetting.EnableMultiTenant = false;
 
-        //        var result = await GenerateCreateScript(serviceProvider);//尝试执行更新
+        //        var result = await GenerateCreateScript(serviceProvider);//Try to perform updates
         //        success = result.success;
         //        msg = result.msg;
 
@@ -164,7 +164,7 @@ namespace Senparc.Xncf.Tenant
 
 
         /// <summary>
-        /// 添加多租户
+        ///Add multi-tenancy
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
@@ -173,13 +173,13 @@ namespace Senparc.Xncf.Tenant
             services.AddScoped<TenantInfoDto>();
             services.AddScoped<TenantInfoDbData>();
 
-            //这个配置面相基类，不属于任何模块
+            //This configuration is based on the base class and does not belong to any module.
             Func<IServiceProvider, SenparcEntitiesMultiTenant> multiTenantImplementationFactory = s =>
             {
                 var multipleDatabasePool = MultipleDatabasePool.Instance;
                 return multipleDatabasePool.GetDbContext<SenparcEntitiesMultiTenant>(serviceProvider: s);
             };
-            services.AddScoped<SenparcEntitiesMultiTenant>(multiTenantImplementationFactory);//继承自 SenparcEntitiesMultiTenantBase
+            services.AddScoped<SenparcEntitiesMultiTenant>(multiTenantImplementationFactory);//Inherited from SenparcEntitiesMultiTenantBase
 
             return services;
         }

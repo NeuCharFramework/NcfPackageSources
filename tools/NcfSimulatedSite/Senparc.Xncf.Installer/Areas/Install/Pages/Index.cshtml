@@ -23,7 +23,7 @@
         {
             case 0:
                 <div id="install_start" class="center_content">
-                    <!-- 安装启动时 -->
+                    <!-- When installation starts -->
                     <div id="install_start_main">
                         <div class="logo">
                             <img src="~/images/logo-login-ncf.png" />
@@ -48,7 +48,7 @@
 
                         <p class="install_notice red">注意：安装完成后此页面将失效！</p>
                     </div>
-                    <!-- 展开高级选项时 -->
+                    <!-- When expanding advanced options -->
                     <div class="vertical-line" v-if="isExpanded">
                     </div>
                     <div id="install_start_expand" v-if="isExpanded">
@@ -78,7 +78,7 @@
                 </div>
                 break;
             case 1:
-                <!-- 安装成功时 -->
+                <!-- When the installation is successful -->
                 <div id="install_success">
                     <h2>NeuCharFramework<br />初始化安装成功！</h2>
                     <div id="install_success_info">

@@ -17,8 +17,8 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.OHS.Local.AppService
 {
     /// <summary>
-    /// AdminChatAppService：管理后台聊天功能 API 服务
-    /// 支持 Cookie 和 JWT 两种认证方式
+    ///AdminChatAppService: Manage background chat function API service
+    ///Supports two authentication methods: Cookie and JWT
     /// </summary>
     [AdminOrJwtAuthorize("AdminOnly")]
     public class AdminChatAppService : LocalAppServiceBase
@@ -44,7 +44,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         #region 会话管理
 
         /// <summary>
-        /// 创建新的聊天会话
+        ///Create new chat session
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<CreateSessionResponse>> CreateSessionAsync([FromBody] CreateChatSessionInputDto request)
@@ -109,7 +109,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取用户的会话列表
+        /// Get the user's session list
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetSessionListResponse>> GetSessionListAsync(int pageIndex = 1, int pageSize = 20)
@@ -133,7 +133,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取会话详情（包含消息和模块）
+        /// Get session details (including messages and modules)
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetSessionDetailResponse>> GetSessionDetailAsync(int sessionId)
@@ -167,7 +167,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 删除会话
+        ///delete session
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
         public async Task<StringAppResponse> DeleteSessionAsync(int sessionId)
@@ -196,7 +196,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         #region 消息管理
 
         /// <summary>
-        /// 发送消息
+        ///send message
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<SendMessageResponse>> SendMessageAsync([FromBody] ChatMessageInputDto request)
@@ -241,7 +241,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取会话的消息列表
+        /// Get the message list of the session
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetMessagesResponse>> GetMessagesAsync(int sessionId, int pageIndex = 0, int pageSize = 50)
@@ -271,7 +271,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 设置消息反馈
+        ///Set message feedback
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Put)]
         public async Task<StringAppResponse> SetMessageFeedbackAsync(int messageId, MessageFeedbackType feedback)
@@ -290,7 +290,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 批量删除消息
+        ///Delete messages in batches
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
         public async Task<StringAppResponse> DeleteMessagesAsync(int sessionId, string messageIds)
@@ -332,7 +332,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         #region 模块管理
 
         /// <summary>
-        /// 添加模块到会话
+        ///Add module to session
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> AddModulesToSessionAsync([FromBody] AddModulesRequest request)
@@ -360,7 +360,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取会话的模块列表
+        /// Get the module list of the session
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetSessionModulesResponse>> GetSessionModulesAsync(int sessionId)
@@ -423,7 +423,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     #region 请求和响应模型
 
     /// <summary>
-    /// 创建会话响应
+    ///Create session response
     /// </summary>
     public class CreateSessionResponse
     {
@@ -432,7 +432,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 获取会话列表响应
+    /// Get session list response
     /// </summary>
     public class GetSessionListResponse
     {
@@ -441,7 +441,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 获取会话详情响应
+    /// Get session details response
     /// </summary>
     public class GetSessionDetailResponse
     {
@@ -449,7 +449,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 发送消息响应
+    ///Send message response
     /// </summary>
     public class SendMessageResponse
     {
@@ -458,7 +458,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 获取消息列表响应
+    /// Get message list response
     /// </summary>
     public class GetMessagesResponse
     {
@@ -467,7 +467,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 添加模块到会话请求
+    /// Add module to session request
     /// </summary>
     public class AddModulesRequest
     {
@@ -476,7 +476,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 模块信息
+    ///module information
     /// </summary>
     public class ModuleInfo
     {
@@ -486,7 +486,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 获取会话模块列表响应
+    /// Get session module list response
     /// </summary>
     public class GetSessionModulesResponse
     {

@@ -12,13 +12,13 @@ namespace Senparc.Ncf.Core.AppServices
         string ErrorMessage { get; set; }
         object Data { get; set; }
         /// <summary>
-        /// 请求临时ID（用于调取日志）
+        /// Temporary request ID (used for log retrieval)
         /// </summary>
         string RequestTempId { get; }
     }
 
     /// <summary>
-    /// AppService 响应详细基础模型（一般提供给序列化 JSON 使用）
+    /// Base detailed response model for AppService (typically for JSON serialization)
     /// </summary>
     [Serializable]
     public class AppResponseBase : IAppResponse
@@ -28,7 +28,7 @@ namespace Senparc.Ncf.Core.AppServices
         public string ErrorMessage { get; set; }
         public object Data { get; set; }
         /// <summary>
-        /// 请求临时ID（用于调取日志）
+        /// Temporary request ID (used for log retrieval)
         /// </summary>
         public string RequestTempId { get; private set; }
 
@@ -59,7 +59,7 @@ namespace Senparc.Ncf.Core.AppServices
     }
 
     /// <summary>
-    /// AppService 响应详细基础模型（一般提供给序列化 JSON 使用）
+    /// Base detailed response model for AppService (typically for JSON serialization)
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [Serializable]

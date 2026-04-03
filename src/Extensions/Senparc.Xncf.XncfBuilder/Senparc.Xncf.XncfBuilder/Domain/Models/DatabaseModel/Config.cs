@@ -9,48 +9,48 @@ using System.Text;
 
 namespace Senparc.Xncf.XncfBuilder
 {
-    [Table(Register.DATABASE_PREFIX + nameof(Config))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(Config))]//The prefix must be added to prevent conflicts system-wide.
     [Serializable]
     [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     public class Config : EntityBase<int>
     {
         /// <summary>
-        /// Sln 文件路径
+        ///Sln file path
         /// </summary>
         [MaxLength(300)]
         public string SlnFilePath { get; private set; }
         /// <summary>
-        /// 组织名称
+        ///organization name
         /// </summary>
         [MaxLength(300)]
         public string OrgName { get; private set; }
 
         /// <summary>
-        /// 模块名称
+        /// module name
         /// </summary>
         [MaxLength(50)]
         public string XncfName { get; private set; }
 
         /// <summary>
-        /// 版本号
+        /// version number
         /// </summary>
         [MaxLength(100)]
         public string Version { get; private set; }
 
         /// <summary>
-        /// 菜单名称
+        ///menu name
         /// </summary>
         [MaxLength(100)]
         public string MenuName { get; private set; }
 
         /// <summary>
-        /// 图标
+        /// icon
         /// </summary>
         [MaxLength(100)]
         public string Icon { get; private set; }
 
         /// <summary>
-        /// 说明
+        /// illustrate
         /// </summary>
         [MaxLength(400)]
         public string Description { get; private set; }

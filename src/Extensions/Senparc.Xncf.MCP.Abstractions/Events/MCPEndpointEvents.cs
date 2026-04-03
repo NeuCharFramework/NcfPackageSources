@@ -5,18 +5,18 @@ using System.Collections.Generic;
 namespace Senparc.Xncf.MCP.Abstractions.Events
 {
     /// <summary>
-    /// MCP Endpoint 查询请求事件
-    /// AgentsManager 发送此事件来请求 MCP 模块返回可用的 Endpoints
+    /// MCP Endpoint Query request event
+    /// AgentsManager Send this event to request the MCP module to return available Endpoints
     /// </summary>
     public class QueryMCPEndpointsEvent : IIntegrationEvent
     {
         /// <summary>
-        /// 事件 ID（用于追踪响应）
+        /// Event ID (used to track responses)
         /// </summary>
         public string RequestId { get; set; } = Guid.NewGuid().ToString();
 
         /// <summary>
-        /// 是否仅返回已启用的端点
+        /// Whether to return only enabled endpoints
         /// </summary>
         public bool OnlyEnabled { get; set; } = true;
 
@@ -28,14 +28,14 @@ namespace Senparc.Xncf.MCP.Abstractions.Events
     }
 
     /// <summary>
-    /// MCP Endpoint 更新事件
-    /// MCP 模块发送此事件通知端点的更新
+    /// MCP Endpoint Update event
+    /// MCP The module sends this event to notify the endpoint of updates
     /// </summary>
     public class MCPEndpointsUpdatedEvent : IIntegrationEvent
     {
         /// <summary>
-        /// 端点列表 JSON（包含所有有效端点的信息）
-        /// 格式：
+        /// Endpoint list JSON (contains information about all valid endpoints)
+        /// Format:
         /// [
         ///   {
         ///     "id": 1,
@@ -49,13 +49,13 @@ namespace Senparc.Xncf.MCP.Abstractions.Events
         public string EndpointsJson { get; set; }
 
         /// <summary>
-        /// 更新的端点数量
+        /// Number of updated endpoints
         /// </summary>
         public int EndpointCount { get; set; }
 
         /// <summary>
-        /// 触发更新的原因
-        /// 例如: "Created", "Updated", "Deleted", "Enabled", "Disabled"
+        /// What triggered the update
+        /// For example: "Created", "Updated", "Deleted", "Enabled", "Disabled"
         /// </summary>
         public string UpdateReason { get; set; }
 
@@ -67,7 +67,7 @@ namespace Senparc.Xncf.MCP.Abstractions.Events
     }
 
     /// <summary>
-    /// MCP Endpoint 创建事件
+    /// MCP Endpoint Create event
     /// </summary>
     public class MCPEndpointCreatedEvent : IIntegrationEvent
     {
@@ -83,7 +83,7 @@ namespace Senparc.Xncf.MCP.Abstractions.Events
     }
 
     /// <summary>
-    /// MCP Endpoint 启用/禁用事件
+    /// MCP Endpoint enable/Disable event
     /// </summary>
     public class MCPEndpointStatusChangedEvent : IIntegrationEvent
     {

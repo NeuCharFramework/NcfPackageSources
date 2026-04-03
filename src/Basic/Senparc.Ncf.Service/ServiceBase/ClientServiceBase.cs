@@ -12,7 +12,7 @@ namespace Senparc.Ncf.Service
         IClientRepositoryBase<T> BaseClientRepository { get; }
 
         ///// <summary>
-        ///// 开启事务
+        ///// Start transaction
         ///// </summary>
         ///// <returns></returns>
         //IDbContextTransaction BeginTransaction();

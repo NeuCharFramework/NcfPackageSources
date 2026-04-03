@@ -5,7 +5,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// XNCF 数据库模块信息，仅在单独操作特定 XNCF 数据库模块时有用，其他情况下对象可能为 null
+    /// XNCF database module information, only useful when operating a specific XNCF database module alone, the object may be null in other cases
     /// </summary>
     public class XncfDatabaseData
     {
@@ -16,17 +16,17 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        /// DbContext 类型
+        ///DbContext type
         /// </summary>
         public IXncfDatabase XncfDatabaseRegister { get; set; }
 
         /// <summary>
-        /// 指定程序集名称
+        ///Specify the assembly name
         /// </summary>
         public string AssemblyName { get; set; }
 
         /// <summary>
-        /// Migration History 表名
+        ///Migration History table name
         /// </summary>
         public string DatabaseMigrationHistoryTableName => NcfDatabaseMigrationHelper.GetDatabaseMigrationHistoryTableName(XncfDatabaseRegister.DatabaseUniquePrefix);
     }

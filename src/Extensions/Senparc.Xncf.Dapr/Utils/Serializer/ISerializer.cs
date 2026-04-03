@@ -1,12 +1,12 @@
 ﻿namespace Senparc.Xncf.Dapr.Utils.Serializer
 {
     /// <summary>
-    /// 序列化接口
+    /// serialization interface
     /// </summary>
     public interface ISerializer
     {
         /// <summary>
-        /// 序列化T为JSON字符串
+        /// Serialize T to JSON string
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="input"></param>
@@ -15,7 +15,7 @@
         string SerializesJson<T>(T input, bool IngoreOptions = false);
 
         /// <summary>
-        /// 反序列化JSON字符串为T
+        /// Deserialize JSON string to T
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="input"></param>
@@ -23,7 +23,7 @@
         T DeserializesJson<T>(string input);
 
         /// <summary>
-        /// 反序列化JSON字符串为object
+        /// Deserialize JSON string to object
         /// </summary>
         /// <param name="type"></param>
         /// <param name="input"></param>

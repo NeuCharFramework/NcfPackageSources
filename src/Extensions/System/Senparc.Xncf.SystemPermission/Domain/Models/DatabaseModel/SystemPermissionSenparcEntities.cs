@@ -14,24 +14,24 @@ namespace Senparc.Xncf.SystemPermission.Models
 
 
         /// <summary>
-        /// 权限
+        ///permissions
         /// </summary>
         public DbSet<SysRolePermission> SysRolePermissions { get; set; }
 
         /// <summary>
-        /// 系统角色
+        ///system role
         /// </summary>
         public DbSet<SysRole> SysRoles { get; set; }
 
         /// <summary>
-        /// 系统角色管理员
+        /// system role administrator
         /// </summary>
         public DbSet<SysRoleAdminUserInfo> SysRoleAdminUserInfos { get; set; }
 
-        //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
+        //DOT REMOVE OR MODIFY THIS LINE Do not remove or modify this LINE - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }
 
-        //如无特殊需需要，OnModelCreating 方法可以不用写，已经在 Register 中要求注册
+        //If there is no special need, the OnModelCreating method does not need to be written. Registration is already required in Register.
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //}

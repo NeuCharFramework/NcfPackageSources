@@ -5,7 +5,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.MultiTenant
 {
     /// <summary>
-    /// 忽略多租户数据库属性
+    /// Ignore multi-tenant database properties
     /// </summary>
     public interface IIgnoreMulitTenant
     {

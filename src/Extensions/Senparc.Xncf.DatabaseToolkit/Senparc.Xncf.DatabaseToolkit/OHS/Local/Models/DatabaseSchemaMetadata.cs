@@ -5,116 +5,116 @@ using System.ComponentModel.DataAnnotations;
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Models
 {
     /// <summary>
-    /// 数据库结构元数据
-    /// 用于存储模块-表-字段的映射关系
+    /// Database structure metadata
+    /// Used to store module-table-field mapping relationship
     /// </summary>
     public class DatabaseSchemaMetadata
     {
         /// <summary>
-        /// 模块名称
-        /// 例如: Senparc.Xncf.AgentsManager
+        /// module name
+        ///Example: Senparc.Xncf.AgentsManager
         /// </summary>
         [Required]
         public string ModuleName { get; set; }
 
         /// <summary>
-        /// 表名称
+        /// table name
         /// </summary>
         [Required]
         public string TableName { get; set; }
 
         /// <summary>
-        /// 表的完全限定名（C# 类型全名）
-        /// 例如: Senparc.Xncf.AgentsManager.Models.DatabaseModel.AgentTemplate
+        /// Fully qualified name of the table (full C# type name)
+        /// For example: Senparc.Xncf.AgentsManager.Models.DatabaseModel.AgentTemplate
         /// </summary>
         [Required]
         public string EntityFullName { get; set; }
 
         /// <summary>
-        /// 表的中文描述
+        /// Chinese description of the table
         /// </summary>
         public string DisplayName { get; set; }
 
         /// <summary>
-        /// 表的详描述
+        /// Detailed description of the table
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// 字段列表
+        /// field list
         /// </summary>
         public List<DatabaseColumnMetadata> Columns { get; set; } = new List<DatabaseColumnMetadata>();
 
         /// <summary>
-        /// 创建时间
+        ///Creation time
         /// </summary>
         public DateTime CreatedTime { get; set; } = DateTime.Now;
 
         /// <summary>
-        /// 是否可见/可查询
-        /// 用于权限控制
+        /// Whether it is visible/queryable
+        /// used for permission control
         /// </summary>
         public bool IsVisible { get; set; } = true;
     }
 
     /// <summary>
-    /// 数据库字段元数据
+    /// Database field metadata
     /// </summary>
     public class DatabaseColumnMetadata
     {
         /// <summary>
-        /// 字段名称
+        ///Field name
         /// </summary>
         [Required]
         public string ColumnName { get; set; }
 
         /// <summary>
-        /// 字段类型
-        /// 例如: string, int, DateTime
+        ///Field type
+        ///Example: string, int, DateTime
         /// </summary>
         [Required]
         public string ColumnType { get; set; }
 
         /// <summary>
-        /// 字段中文名称/描述
+        ///Field Chinese name/description
         /// </summary>
         public string DisplayName { get; set; }
 
         /// <summary>
-        /// 字段描述
+        ///Field description
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// 是否为主键
+        /// Whether it is the primary key
         /// </summary>
         public bool IsPrimaryKey { get; set; }
 
         /// <summary>
-        /// 是否为必需字段
+        /// Is it a required field?
         /// </summary>
         public bool IsRequired { get; set; }
 
         /// <summary>
-        /// 最大长度（字符串字段）
+        /// Maximum length (string field)
         /// </summary>
         public int? MaxLength { get; set; }
 
         /// <summary>
-        /// 是否可用于查询过滤
+        /// Whether it can be used for query filtering
         /// </summary>
         public bool IsFilterable { get; set; } = true;
 
         /// <summary>
-        /// 是否可见
-        /// 用于确定是否在查询时返回此字段
+        /// is visible
+        /// Used to determine whether to return this field when querying
         /// </summary>
         public bool IsVisible { get; set; } = true;
     }
 
     /// <summary>
-    /// 模型-表映射信息的 DTO
-    /// 用于通过 API 传输
+    /// DTO for model-table mapping information
+    /// for transfer via API
     /// </summary>
     public class DatabaseSchemaDto
     {
@@ -128,7 +128,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Models
     }
 
     /// <summary>
-    /// 数据库字段信息 DTO
+    /// Database field information DTO
     /// </summary>
     public class DatabaseColumnDto
     {
@@ -144,53 +144,53 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Models
     }
 
     /// <summary>
-    /// 查询条件元数据
-    /// 用于指定如何查询某个表
+    /// Query condition metadata
+    /// is used to specify how to query a table
     /// </summary>
     public class QueryConditionMetadata
     {
         /// <summary>
-        /// 模块名称
+        /// module name
         /// </summary>
         [Required]
         public string ModuleName { get; set; }
 
         /// <summary>
-        /// 表名称
+        /// table name
         /// </summary>
         [Required]
         public string TableName { get; set; }
 
         /// <summary>
-        /// 过滤条件 JSON
-        /// 用于构建 Where 条件
-        /// 例如: { "Id": 1 } 或 { "Name": "test" }
+        /// filter condition JSON
+        /// is used to build Where conditions
+        /// For example: { "Id": 1 } or { "Name": "test" }
         /// </summary>
         public string FilterJson { get; set; }
 
         /// <summary>
-        /// 排序字段
+        /// sort field
         /// </summary>
         public string OrderByField { get; set; }
 
         /// <summary>
-        /// 是否降序
+        /// Whether to descend
         /// </summary>
         public bool IsDescending { get; set; } = false;
 
         /// <summary>
-        /// 页码（从 0 开始）
+        ///Page number (starting from 0)
         /// </summary>
         public int PageIndex { get; set; } = 0;
 
         /// <summary>
-        /// 每页数量
+        ///number per page
         /// </summary>
         public int PageSize { get; set; } = 20;
 
         /// <summary>
-        /// 返回的字段列表
-        /// 如果为空，则返回所有可见字段
+        /// Returned field list
+        /// If empty, returns all visible fields
         /// </summary>
         public List<string> SelectColumns { get; set; } = new List<string>();
     }

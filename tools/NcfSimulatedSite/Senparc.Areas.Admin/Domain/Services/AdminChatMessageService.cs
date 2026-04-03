@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.Domain.Services
 {
     /// <summary>
-    /// AdminChatMessageService：管理后台聊天消息服务
+    ///AdminChatMessageService: Manage background chat message service
     /// </summary>
     public class AdminChatMessageService : BaseClientService<AdminChatMessage>
     {
@@ -21,11 +21,11 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取会话的所有消息（按序号正序）
+        /// Get all messages of the session (in positive order by serial number)
         /// </summary>
-        /// <param name="sessionId">会话ID</param>
-        /// <param name="pageIndex">页码（从1开始，0表示获取全部）</param>
-        /// <param name="pageSize">每页数量</param>
+        /// <param name="sessionId">Session ID</param>
+        /// <param name="pageIndex">Page number (starting from 1, 0 means getting all)</param>
+        /// <param name="pageSize">Number per page</param>
         public async Task<(List<AdminChatMessage> messages, int totalCount)> GetSessionMessagesAsync(int sessionId, int pageIndex = 0, int pageSize = 50)
         {
             if (pageIndex == 0)
@@ -48,7 +48,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取下一个序号（用于新消息）
+        /// Get the next sequence number (for new messages)
         /// </summary>
         public async Task<int> GetNextSequenceAsync(int sessionId)
         {
@@ -58,12 +58,12 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 添加新消息
+        ///Add new message
         /// </summary>
-        /// <param name="sessionId">会话ID</param>
-        /// <param name="roleType">角色类型</param>
-        /// <param name="content">消息内容</param>
-        /// <param name="modelIdentifier">模型标识符（可选）</param>
+        /// <param name="sessionId">Session ID</param>
+        /// <param name="roleType">Role type</param>
+        /// <param name="content">Message content</param>
+        /// <param name="modelIdentifier">Model identifier (optional)</param>
         public async Task<AdminChatMessage> AddMessageAsync(int sessionId, ChatMessageRoleType roleType, string content, string modelIdentifier = null)
         {
             var sequence = await GetNextSequenceAsync(sessionId);
@@ -73,7 +73,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 设置消息反馈
+        ///Set message feedback
         /// </summary>
         public async Task<bool> SetMessageFeedbackAsync(int messageId, MessageFeedbackType feedback)
         {
@@ -86,7 +86,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 更新消息内容（用于流式输出场景）
+        /// Update message content (for streaming output scenarios)
         /// </summary>
         public async Task<bool> UpdateMessageContentAsync(int messageId, string newContent)
         {
@@ -99,7 +99,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 删除会话的所有消息（物理删除，慎用）
+        /// Delete all messages in the session (physical deletion, use with caution)
         /// </summary>
         public async Task<int> DeleteSessionMessagesAsync(int sessionId)
         {
@@ -114,7 +114,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 按消息ID批量删除会话消息（物理删除）
+        /// Batch delete session messages by message ID (physical deletion)
         /// </summary>
         public async Task<int> DeleteMessagesAsync(int sessionId, IEnumerable<int> messageIds)
         {
@@ -137,7 +137,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取会话的最后一条消息
+        /// Get the last message of the session
         /// </summary>
         public async Task<AdminChatMessage> GetLastMessageAsync(int sessionId)
         {
@@ -146,7 +146,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取会话的消息数量
+        /// Get the number of messages in the session
         /// </summary>
         public async Task<int> GetMessageCountAsync(int sessionId)
         {

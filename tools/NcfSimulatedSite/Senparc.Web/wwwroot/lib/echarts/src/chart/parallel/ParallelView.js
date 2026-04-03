@@ -189,7 +189,7 @@ define(function (require) {
 
 
     // FIXME
-    // 公用方法?
+    // Public method?
     function isEmptyValue(val, axisType) {
         return axisType === 'category'
             ? val == null

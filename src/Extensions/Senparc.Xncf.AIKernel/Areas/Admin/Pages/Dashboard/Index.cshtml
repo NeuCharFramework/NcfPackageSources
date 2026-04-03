@@ -75,11 +75,11 @@
         }
 
             .box-card:hover {
-                border-color: purple; /* 外框颜色 */
-                box-shadow: 0 0 10px rgba(128, 0, 128, 0.5); /* 发光阴影颜色 */
+                border-color: purple; /* Frame color*/
+                box-shadow: 0 0 10px rgba(128, 0, 128, 0.5); /* glow shadow color*/
             }
 
-        /* 右侧图表区域卡片样式覆盖 */
+        /* Right chart area card style override*/
         .el-main .el-col-16 .box-card {
             margin-top: 0;
         }
@@ -99,7 +99,7 @@
                     float: left;
                 }
 
-                /* 模块卡片样式优化 */
+                /* Module card style optimization*/
                 #xncf-modules-area .xncf-item .box-card {
                     height: 160px;
                     transition: all 0.3s ease;
@@ -112,7 +112,7 @@
                         box-shadow: 0 5px 15px rgba(140, 82, 255, 0.2);
                     }
 
-        /* 模块图标样式优化 */
+        /* Module icon style optimization*/
         .component-item {
             display: flex;
             align-items: center;
@@ -148,7 +148,7 @@
 
 
 
-        /* 版本号样式优化 */
+        /* Version number style optimization*/
         #xncf-modules-area .xncf-item .version {
             background: #f0f2f5;
             padding: 2px 6px;
@@ -160,7 +160,7 @@
             transition: all 0.3s ease;
         }
 
-            /* 可升级版本的样式 */
+            /* Upgradeable version of the style*/
             #xncf-modules-area .xncf-item .version.version-upgradeable {
                 background: #e6f1fc;
                 color: #409EFF;
@@ -173,12 +173,12 @@
             font-size: 14px;
         }
 
-        /* 模块名称样式 */
+        /* Module name style*/
         .xncf-item .el-card__header {
             padding: 10px 15px;
         }
 
-        /* 响应式布局优化 */
+        /* Responsive layout optimization*/
         @@media screen and (max-width: 1200px) {
             #xncf-modules-area .el-col-6 {
                 width: 33.33%;
@@ -197,17 +197,17 @@
             }
         }
 
-        /* 图表容器样式 */
+        /* Chart container style*/
         .charts-container {
             height: 260px;
         }
 
-        /* 针对包含charts-container的卡片内容区域移除内边距 */
+        /* Remove padding from the card content area containing charts-container*/
         .el-card__body .charts-container {
-            margin-bottom: -40px; /* 抵消父元素的padding，底部有足够留白 */
+            margin-bottom: -40px; /* Offset the padding of the parent element, leaving enough space at the bottom*/
         }
 
-        /* 添加更强烈的抖动动画关键帧 */
+        /* Add stronger jitter animation keyframes*/
         @@keyframes shake {
             0%, 100% {
                 transform: translateX(0) rotate(0deg);
@@ -234,7 +234,7 @@
             }
         }
 
-        /* 添加发光动画关键帧 */
+        /* Add glow animation keyframes*/
         @@keyframes glow {
             0%, 100% {
                 box-shadow: 0 0 5px rgba(140, 82, 255, 0.2);
@@ -247,7 +247,7 @@
             }
         }
 
-        /* 添加淡化效果动画 */
+        /* Add fade effect animation*/
         @@keyframes fade {
             0%, 100% {
                 opacity: 1;
@@ -258,7 +258,7 @@
             }
         }
 
-        /* 动画类 */
+        /* Animation*/
         .shake-animation {
             animation: shake 0.8s cubic-bezier(.36,.07,.19,.97) both;
         }
@@ -281,7 +281,7 @@
 
 
 
-<!-- 统计数据 -->
+<!-- Statistics -->
 <div id="home-header">
     <el-container>
         <el-header class="module-header">
@@ -289,10 +289,10 @@
         </el-header>
         <el-main>
             <el-row :gutter="20">
-                <!-- 左侧统计数据 2x2 布局 -->
+                <!-- Left statistics 2x2 layout -->
                 <el-col :span="24">
                     <el-row :gutter="10">
-                        <!-- 第一行 -->
+                        <!-- first line -->
                         <el-col :span="12">
                             <a href="~/Admin/AIKernel/Index">
                                 <div class="grid-content xncf-stat-item">

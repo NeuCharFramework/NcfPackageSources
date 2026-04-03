@@ -6,17 +6,17 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// NCF 数据库帮助类
+    ///NCF database help class
     /// </summary>
     public static class NcfDatabaseMigrationHelper
     {
         /// <summary>
-        /// 系统表的数据库前缀，使用此前缀，将使用 __EFMigrationsHistory 表储存迁移记录，取代模块自定义表
+        /// The database prefix of the system table. Using this prefix, the __EFMigrationsHistory table will be used to store migration records instead of the module custom table.
         /// </summary>
         public const string SYSTEM_UNIQUE_PREFIX = "SYSTEM";
 
         /// <summary>
-        /// 获取 EF Code First MigrationHistory 数据库表名
+        /// Get EF Code First MigrationHistory database table name
         /// </summary>
         /// <returns></returns>
         public static string GetDatabaseMigrationHistoryTableName(string databaseUniquePrefix)
@@ -31,13 +31,13 @@ namespace Senparc.Ncf.Core.Models
             }
             else
             {
-                //也可以抛出异常
+                //Exceptions can also be thrown
                 return "__" + "Unknown" + "_EFMigrationsHistory";
             }
         }
 
         /// <summary>
-        /// 获取 EF Code First MigrationHistory 数据库表名
+        /// Get EF Code First MigrationHistory database table name
         /// </summary>
         /// <returns></returns>
         public static string GetDatabaseMigrationHistoryTableName(IXncfDatabase xncfDatabaseRegister)

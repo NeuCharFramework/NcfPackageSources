@@ -14,28 +14,28 @@ namespace Senparc.Ncf.XncfBase.Threads
     public class ThreadInfo
     {
         /// <summary>
-        /// 用于识别 Thread，请确保单个 XNCF 模块中唯一
+        /// is used to identify Thread, please ensure it is unique in a single XNCF module
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// 间隔时间
+        ///interval time
         /// </summary>
         public TimeSpan IntervalTime { get; set; }
         /// <summary>
-        /// 执行任务
+        /// perform tasks
         /// </summary>
         public Func<IApplicationBuilder, ThreadInfo, Task> Task { get; set; }
         /// <summary>
-        /// 发生异常时的处理
+        /// Handling when an exception occurs
         /// </summary>
         public Func<Exception, Task> ExceptionHandler { get; set; }
         /// <summary>
-        /// 最后故事记录
+        ///Last story record
         /// </summary>
         private List<string> Stories { get; set; } = new List<string>();
 
         /// <summary>
-        /// 获取故事 HTML代码
+        /// Get story HTML code
         /// </summary>
         /// <returns></returns>
         public string StoryHtml => string.Join("<br /><br />", Stories.Select(z => z.HtmlEncode()).ToArray());
@@ -49,7 +49,7 @@ namespace Senparc.Ncf.XncfBase.Threads
         }
 
         /// <summary>
-        /// 记录故事
+        ///record story
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>

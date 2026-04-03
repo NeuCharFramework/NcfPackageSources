@@ -5,37 +5,37 @@ using System.Collections.Generic;
 namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 {
     /// <summary>
-    /// AdminChatSessionDto：管理后台聊天会话数据传输对象
+    ///AdminChatSessionDto: Admin background chat session data transfer object
     /// </summary>
     public class AdminChatSessionDto : DtoBase<int>
     {
         /// <summary>
-        /// 会话标题
+        /// session title
         /// </summary>
         public string Title { get; set; }
 
         /// <summary>
-        /// 用户ID
+        ///userID
         /// </summary>
         public int UserId { get; set; }
 
         /// <summary>
-        /// 会话状态
+        /// session state
         /// </summary>
         public ChatSessionStatus Status { get; set; }
 
         /// <summary>
-        /// 最后一条消息时间
+        ///Last message time
         /// </summary>
         public DateTime LastMessageTime { get; set; }
 
         /// <summary>
-        /// 关联的消息列表（可选，用于嵌套查询）
+        /// Associated message list (optional, for nested queries)
         /// </summary>
         public List<AdminChatMessageDto> Messages { get; set; }
 
         /// <summary>
-        /// 关联的模块列表（可选，用于嵌套查询）
+        /// List of associated modules (optional, for nested queries)
         /// </summary>
         public List<AdminChatSessionModuleDto> Modules { get; set; }
 
@@ -46,7 +46,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
         }
 
         /// <summary>
-        /// 从实体映射到 DTO
+        /// Mapping from entities to DTOs
         /// </summary>
         public static AdminChatSessionDto CreateFromEntity(AdminChatSession entity)
         {
@@ -54,14 +54,14 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 
             return new AdminChatSessionDto
             {
-                // 明确复制基类属性
+                // Explicitly copy base class properties
                 Id = entity.Id,
                 AddTime = entity.AddTime,
                 LastUpdateTime = entity.LastUpdateTime,
                 TenantId = entity.TenantId,
                 Flag = entity.Flag,
 
-                // 复制业务属性
+                // Copy business attributes
                 Title = entity.Title,
                 UserId = entity.UserId,
                 Status = entity.Status,
@@ -71,17 +71,17 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
     }
 
     /// <summary>
-    /// 创建聊天会话的请求 DTO
+    /// Request DTO to create a chat session
     /// </summary>
     public class CreateChatSessionInputDto
     {
         /// <summary>
-        /// 初始消息内容
+        ///Initial message content
         /// </summary>
         public string InitialMessage { get; set; }
 
         /// <summary>
-        /// 关联的模块 UID 列表
+        /// List of associated module UIDs
         /// </summary>
         public List<string> ModuleUids { get; set; }
 

@@ -6,12 +6,12 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// XNCF 线程模块接口
+    ///XNCF thread module interface
     /// </summary>
     public interface IXncfThread
     {
         /// <summary>
-        /// 线程配置
+        ///thread configuration
         /// </summary>
         /// <param name="xncfThreadBuilder"></param>
         void ThreadConfig(XncfThreadBuilder xncfThreadBuilder);

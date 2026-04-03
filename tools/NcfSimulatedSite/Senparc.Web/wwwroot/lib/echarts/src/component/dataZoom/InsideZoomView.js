@@ -58,7 +58,7 @@ define(function (require) {
             }, this);
 
             // TODO
-            // polar支持
+            // polar support
         },
 
         /**

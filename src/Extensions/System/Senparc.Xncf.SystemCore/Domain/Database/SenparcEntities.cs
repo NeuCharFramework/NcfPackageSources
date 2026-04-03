@@ -9,7 +9,7 @@ using Senparc.Ncf.XncfBase;
 namespace Senparc.Xncf.SystemCore.Domain.Database
 {
     /// <summary>
-    /// 【注意】SenparcEntities 不存放任何实体，也不生成任何迁移文件
+    /// [Note] SenparcEntities does not store any entities or generate any migration files.
     /// </summary>
     public partial class SenparcEntities : SenparcEntitiesBase, ISenparcEntitiesDbContext
     {
@@ -21,7 +21,7 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
         {
             #region 系统表
 
-            //实现 [XncfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
+            //After implementing the [XncfAutoConfigurationMapping] feature, it can be executed automatically without adding it manually.
             //modelBuilder.ApplyConfiguration(new AdminUserInfoConfigurationMapping());
             //modelBuilder.ApplyConfiguration(new FeedbackConfigurationMapping());
 
@@ -34,7 +34,7 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
             Console.WriteLine("============= SenparcEntities 动态加载 Start =============");
             var databaseList = XncfRegisterManager.XncfDatabaseList;
 
-            // 计算所有类型名称的最大长度  
+            // Calculate the maximum length of all type names  
             int maxRegisterLength = databaseList.Max(db => db.GetType().FullName.Length);
             int maxDbContextTypeLength = databaseList.Max(db => db.TryGetXncfDatabaseDbContextType.Name.Length);
             Console.WriteLine($"{"Register".PadRight(maxRegisterLength)} | {"DbContextType"}");
@@ -45,7 +45,7 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
                 string typeName = databaseRegister.GetType().FullName;
                 string dbContextTypeName = databaseRegister.TryGetXncfDatabaseDbContextType.Name;
 
-                // 使用字符串格式化，使输出对齐  
+                // Use string formatting to align output  
                 Console.WriteLine($"{typeName.PadRight(maxRegisterLength)} | {dbContextTypeName}");
 
                 databaseRegister.OnModelCreating(modelBuilder);
@@ -59,7 +59,7 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
             var dt2 = SystemTime.Now;
             Console.WriteLine("============= SenparcEntities 数据库实体注入 Start =============");
 
-            //注册所有 XncfAutoConfigurationMapping 动态模块
+            //Register all XncfAutoConfigurationMapping dynamic modules
             Senparc.Ncf.XncfBase.Register.ApplyAllAutoConfigurationMapping(modelBuilder);
 
             var diffDt2 = SystemTime.DiffTotalMS(dt2);
@@ -68,7 +68,7 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
             Console.WriteLine();
             #endregion
 
-            //基类中的系统表处理
+            //System table handling in base classes
             base.OnModelCreating(modelBuilder);
         }
     }

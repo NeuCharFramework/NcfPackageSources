@@ -7,13 +7,13 @@ using System.Text;
 
 namespace Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel
 {
-    //关于 EF 多对多的做法：https://www.entityframeworktutorial.net/efcore/configure-many-to-many-relationship-in-ef-core.aspx
+    //About EF many-to-many approach: https://www.entityframeworktutorial.net/efcore/configure-many-to-many-relationship-in-ef-core.aspx
 
     /// <summary>
-    /// UserTag - WeixinUser 多对多关联表
+    ///UserTag - WeixinUser many-to-many association table
     /// </summary>
 
-    [Table(Register.DATABASE_PREFIX + nameof(UserTag_WeixinUser))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(UserTag_WeixinUser))]//The prefix must be added to prevent conflicts system-wide.
     [Serializable]
     public class UserTag_WeixinUser : EntityBase
     {

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.MCP.Domain.Services
 {
     /// <summary>
-    /// MCP Endpoint 管理服务
+    ///MCP Endpoint Management Service
     /// </summary>
     public class MCPEndpointService : ServiceBase<MCPEndpoint>
     {
@@ -19,7 +19,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
         }
 
         /// <summary>
-        /// 获取所有已启用的 MCP Endpoints
+        /// Get all enabled MCP Endpoints
         /// </summary>
         public async Task<List<MCPEndpoint>> GetEnabledEndpointsAsync()
         {
@@ -28,7 +28,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
         }
 
         /// <summary>
-        /// 根据名称获取端点
+        /// Get the endpoint by name
         /// </summary>
         public async Task<MCPEndpoint> GetEndpointByNameAsync(string name)
         {
@@ -36,7 +36,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
         }
 
         /// <summary>
-        /// 根据 Endpoint 地址获取端点
+        /// Get the endpoint based on the Endpoint address
         /// </summary>
         public async Task<MCPEndpoint> GetEndpointByAddressAsync(string endpoint)
         {
@@ -44,7 +44,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
         }
 
         /// <summary>
-        /// 测试端点连接
+        ///Test endpoint connection
         /// </summary>
         public async Task<bool> TestEndpointAsync(int endpointId)
         {
@@ -56,8 +56,8 @@ namespace Senparc.Xncf.MCP.Domain.Services
 
             try
             {
-                // TODO: 实现实际的端点连接测试逻辑
-                // 这里应该根据 EndpointType 调用相应的测试方法
+                // TODO: Implement actual endpoint connection test logic
+                // The corresponding test method should be called based on EndpointType.
                 endpoint.LastTestedTime = DateTime.Now;
                 endpoint.LastTestResult = true;
                 

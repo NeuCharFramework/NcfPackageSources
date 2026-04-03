@@ -53,22 +53,22 @@ namespace Senparc.Ncf.Core.Cache
                     var httpContextAccessor = SenparcDI.GetServiceProvider().GetService<IHttpContextAccessor>();
                     var httpContext = httpContextAccessor.HttpContext;
                     var urlData = httpContext.Request;
-                    var scheme = urlData.Scheme;//协议
-                    var host = urlData.Host.Host;//主机名（不带端口）
-                    var port = urlData.Host.Port ?? -1;//端口（因为从.NET Framework移植，因此不直接使用urlData.Host）
-                    string portSetting = null;//Url中的端口部分
-                    string schemeUpper = scheme.ToUpper();//协议（大写）
-                    string baseUrl = httpContext.Request.PathBase;//子站点应用路径
+                    var scheme = urlData.Scheme;//protocol
+                    var host = urlData.Host.Host;//Hostname (without port)
+                    var port = urlData.Host.Port ?? -1;//Port (does not use urlData.Host directly because it is ported from .NET Framework)
+                    string portSetting = null;//Port part in URL
+                    string schemeUpper = scheme.ToUpper();//Agreement (uppercase)
+                    string baseUrl = httpContext.Request.PathBase;//Subsite application path
 
-                    if (port == -1 || //这个条件只有在 .net core 中， Host.Port == null 的情况下才会发生
+                    if (port == -1 || //This condition only occurs when Host.Port == null in .net core
                (schemeUpper == "HTTP" && port == 80) ||
                (schemeUpper == "HTTPS" && port == 443))
                     {
-                        portSetting = "";//使用默认值
+                        portSetting = "";//Use default value
                     }
                     else
                     {
-                        portSetting = ":" + port;//添加端口
+                        portSetting = ":" + port;//Add port
                     }
 
                     hostName = $"{scheme}://{host}{portSetting}";
@@ -78,7 +78,7 @@ namespace Senparc.Ncf.Core.Cache
                 {
                 }
 
-                //尝试安装
+                //try to install
 
                 throw new NcfUninstallException($"NCF 系统未初始化，请先执行 {hostName}/Install 进行数据初始化", null);
             }

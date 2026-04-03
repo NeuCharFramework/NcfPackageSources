@@ -8,7 +8,7 @@ namespace Senparc.Xncf.Dapr
 {
     public class DaprClientOptions
     {
-        //Dapr Api监听端口
+        //Dapr Apilistening port
         private int apiport;
         public int ApiPort
         {
@@ -24,11 +24,11 @@ namespace Senparc.Xncf.Dapr
                 }
                 else
                 {
-                    throw new Exception("无效的端口号");
+                    throw new Exception("Invalid port number");
                 }
             }
         }
-        //状态存储组件名称
+        //State storage component name
         private string? stateStoreName;
         public string? StateStoreName 
         {
@@ -45,7 +45,7 @@ namespace Senparc.Xncf.Dapr
             }
         }
 
-        //发布订阅组件名称
+        //Publish and subscribe component name
         private string? pubSubName;
         public string? PubSubName 
         {
@@ -62,7 +62,7 @@ namespace Senparc.Xncf.Dapr
             }
         }
 
-        //Dapr重连最大尝试次数
+        //DaprMaximum number of reconnect attempts
         private int daprConnectionRetryCount;
         public int DaprConnectionRetryCount
         {

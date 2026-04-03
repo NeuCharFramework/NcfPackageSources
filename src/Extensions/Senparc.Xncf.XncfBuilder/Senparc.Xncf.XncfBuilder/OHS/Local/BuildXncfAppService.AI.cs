@@ -25,7 +25,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
     public partial class BuildXncfAppService
     {
         /// <summary>
-        /// AI 生成数据库实体
+        ///AI generates database entities
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -48,7 +48,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                     if (promptRangeModule == null)
                     {
-                        //开始安装模块（创建数据库相关表）
+                        //Start installing the module (create database related tables)
                         await promptRangeRegister.InstallOrUpdateAsync(ServiceProvider, Ncf.Core.Enums.InstallOrUpdate.Install);
 
                         await this._xncfModuleServiceExtension.InstallModuleAsync(promptRangeRegister.Uid);
@@ -62,15 +62,15 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         await _xncfModuleService.SaveObjectAsync(promptRangeModule);
                     }
 
-                    aiSetting = null;//使用 PromptRange 时不需要指定 AI 模型
+                    aiSetting = null;//No need to specify an AI model when using PromptRange
 
-                    //检查是否已经初始化
+                    //Check if it has been initialized
                     var promptRangeInitResult = await promptBuilderService.InitPromptAsync("XncfBuilderPlugin", false, aiModelSelected);
                     logger.Append("PromptRange 初始化：" + promptRangeInitResult);
                 }
                 else
                 {
-                    //如果不使用 PromptRange，则需要指定 AI 模型
+                    //If you do not use PromptRange, you need to specify the AI ​​model
                     aiSetting = Senparc.AI.Config.SenparcAiSetting;
                     if (aiModelSelected != "Default")
                     {
@@ -113,7 +113,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 var fileInfo = entityResult.FileResult.FileContents.First();
 
-                //从 promptGroupFileContent 分析获得类名
+                //Obtain class name from promptGroupFileContent analysis
                 var fileContent = fileInfo.Value; //File.ReadAllText(fileInfo.Key);
                                                   //var entityResultObj = entityResult.ResponseText.GetObject<dynamic>();
                 var className = new Regex(@"public class (\w+)").Match(fileContent).Groups[1].Value;
@@ -149,16 +149,16 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     #region 需要把 DatabasePlant 进行文件附加
                     var databasePlantPath = Path.GetFullPath(Path.Combine(projectPath, "..", "Senparc.Web.DatabasePlant"));
                     var databasePlantCsprojPath = Path.Combine(databasePlantPath, "Senparc.Web.DatabasePlant.csproj");
-                    //目标项目的文件夹名称
+                    //The folder name of the target project
                     var projectFolderName = Path.GetFileName(projectPath.TrimEnd(Path.DirectorySeparatorChar));
-                    //目标项目的 csproj 项目文件名
+                    //csproj project file name of the target project
                     string newReferencePath = @$"..\{projectFolderName}\{projectFolderName}.csproj";
                     XDocument doc = XDocument.Load(databasePlantCsprojPath);
 
-                    // 获取 <ItemGroup> 元素  
+                    // Get the <ItemGroup> element  
                     var itemGroups = doc.Root.Elements("ItemGroup");
 
-                    // 删除所有的 ProjectReference  
+                    // Delete all ProjectReferences  
                     foreach (var itemGroup in itemGroups)
                     {
                         var projectReferences = itemGroup.Elements("ProjectReference").ToList();
@@ -168,7 +168,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         }
                     }
 
-                    // 添加新的 ProjectReference  
+                    // Add new ProjectReference  
                     XElement newProjectReference = new XElement("ProjectReference", new XAttribute("Include", newReferencePath));
                     var itemGroupToAdd = itemGroups.FirstOrDefault() ?? new XElement("ItemGroup");
                     itemGroupToAdd.Add(newProjectReference);
@@ -178,7 +178,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         doc.Root.Add(itemGroupToAdd);
                     }
 
-                    // 保存修改后的 .csproj 文件  
+                    // Save the modified .csproj file  
                     doc.Save(databasePlantCsprojPath);
 
                     logger.Append($"完成 Senparc.Web.DatabasePlant 项目引用自动替换");
@@ -195,14 +195,14 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         DatabasePlantPath = databasePlantPath,
                         MigrationName = $"Add_{className}_Entity",
                     };
-                    //载入数据
+                    //Load data
                     await requestObj.LoadData(this.ServiceProvider);
 
-                    //指定项目路径
+                    //Specify project path
                     requestObj.ProjectPath.SelectedValues = new[] { projectPath };
-                    //选中所有数据库
+                    //Select all databases
                     requestObj.DatabaseTypes.SelectedValues = requestObj.DatabaseTypes.Items.Select(z => z.Value).ToArray();
-                    //选中输出详情
+                    //Check output details
                     requestObj.OutputVerbose.SelectedValues = new[] { requestObj.OutputVerbose.Items.First().Value };
 
                     var databaseMigrationsAppService = base.ServiceProvider.GetRequiredService<DatabaseMigrationsAppService>();
@@ -217,7 +217,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                     var tempId = migrationResult.RequestTempId;
                     var cache = this.ServiceProvider.GetObjectCacheStrategyInstance();
-                    //为了加快响应速度，不等待
+                    //For faster response time, do not wait
                     var migrationLog = await cache.GetAsync<string>(tempId);
                     logger.Append(migrationLog);
 
@@ -231,9 +231,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             });
         }
 
-        //TODO：生成实体的过程中默认检查是否自动载入Prompt，提供手动指定地址选项
+        //TODO: During the process of generating entities, it checks whether Prompt is automatically loaded by default, and provides the option of manually specifying the address.
 
-        //初始化 PromptRange 方法（需要先确保已经安装）
+        //Initialize the PromptRange method (need to ensure it is installed first)
 
 
         [FunctionRender("初始化 Prompt", "初始化所有 AI 代码生成需要的 Prompt", typeof(Register))]
@@ -254,7 +254,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             });
         }
 
-        //[FunctionRender("[AI] 生成 AppService", "使用 AI 指令生成 AppService", typeof(Register))]
+        //[FunctionRender("[AI] Generate AppService", "Use AI instructions to generate AppService", typeof(Register))]
         //public async Task<StringAppResponse> CreateAppService()
         //{ 
 

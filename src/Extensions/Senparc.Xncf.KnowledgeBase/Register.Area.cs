@@ -17,8 +17,8 @@ using System.Reflection;
 
 namespace Senparc.Xncf.KnowledgeBase
 {
-    public partial class Register : IAreaRegister, //注册 XNCF 页面接口（按需选用）
-                                    IXncfRazorRuntimeCompilation  //赋能 RazorPage 运行时编译
+    public partial class Register : IAreaRegister, //Register XNCF page interface (optional on demand)
+                                    IXncfRazorRuntimeCompilation  //Enable RazorPage runtime compilation
     {
         #region IAreaRegister 接口
 
@@ -34,7 +34,7 @@ namespace Senparc.Xncf.KnowledgeBase
         {
             builder.AddRazorPagesOptions(options =>
             {
-                //此处可配置页面权限
+                //Page permissions can be configured here
             });
 
             SenparcTrace.SendCustomLog("KnowledgeBase 启动", "完成 Area:Senparc.Xncf.KnowledgeBase 注册");
@@ -47,14 +47,14 @@ namespace Senparc.Xncf.KnowledgeBase
 
             //var staticResourceSetting = app.ApplicationServices.GetService<IOptionsMonitor<StaticResourceSetting>>();
 
-            ////静态资源允许跨域
+            ////Static resources allow cross-domain
             //var path = Path.Combine(Directory.GetCurrentDirectory(), staticResourceSetting.CurrentValue.RootDir);
             //if (!Directory.Exists(path)) Directory.CreateDirectory(path);
             //var fileOptions = new StaticFileOptions()
             //{
             //    FileProvider = new PhysicalFileProvider(path),
             //    RequestPath = staticResourceSetting.CurrentValue.RequestPath,
-            //    OnPrepareResponse = (x) =>//验证静态资源授权
+            //    OnPrepareResponse = (x) =>//Verify static resource authorization
             //    {
             //        //var token = x.Context.Request.Query["token"];
             //        //if (string.IsNullOrWhiteSpace(token))
@@ -69,7 +69,7 @@ namespace Senparc.Xncf.KnowledgeBase
             //        //    x.Context.Response.WriteAsync(ex.Message);
             //        //}
             //        //new StatusCodes().Status401Unauthorized
-            //        //x.Context.Response.Headers.Add("Access-Control-Allow-Origin", "*");//允许跨域，Core已做处理
+            //        //x.Context.Response.Headers.Add("Access-Control-Allow-Origin", "*");//Cross-domain allowed, Core has processed it
             //    }
             //};
             //app.UseStaticFiles(fileOptions);

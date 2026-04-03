@@ -122,19 +122,19 @@ namespace Senparc.Xncf.Terminal.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 执行cmd.exe命令
+        /// Execute cmd.exe command
         /// </summary>
-        /// <param name="commandText">命令文本</param>
-        /// <returns>命令输出文本</returns>
+        /// <param name="commandText">Command text</param>
+        /// <returns>Command output text</returns>
         private string ExeCommand(string commandText)
         {
             return ExeCommand(new string[] { commandText });
         }
         /// <summary>
-        /// 执行多条cmd.exe命令
+        /// Execute multiple cmd.exe commands
         /// </summary>
-        /// <param name="commandTexts">命令文本数组</param>
-        /// <returns>命令输出文本</returns>
+        /// <param name="commandTexts">Command text array</param>
+        /// <returns>Command output text</returns>
         private string ExeCommand(string[] commandTexts)
         {
             Process p = new Process();
@@ -175,12 +175,12 @@ namespace Senparc.Xncf.Terminal.OHS.Local.AppService
                 var upperCmd = request.CommandLine.ToUpper();
                 switch (upperCmd)
                 {
-                    case "NCF RELEASE"://切换到发布状态
+                    case "NCF RELEASE"://Switch to publishing status
                         break;
-                    case "NCF DEVELOP"://切换到开发状态
+                    case "NCF DEVELOP"://Switch to development status
                         break;
                     default:
-                        //TODO:需要限制一下执行的命令
+                        //TODO: Need to limit the executed commands
                         if (!CommandFilter(request.CommandLine))
                         {
                             logger.Append("命令不在允许范围之内");

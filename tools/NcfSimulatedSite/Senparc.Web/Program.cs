@@ -1,9 +1,9 @@
-﻿//以下数据库模块的命名空间根据需要添加或删除
-//using Senparc.Ncf.Database.MySql;         //使用需要引用包： Senparc.Ncf.Database.MySql
-//using Senparc.Ncf.Database.Sqlite;        //使用需要引用包： Senparc.Ncf.Database.Sqlite
-//using Senparc.Ncf.Database.PostgreSQL;    //使用需要引用包： Senparc.Ncf.Database.PostgreSQL
-//using Senparc.Ncf.Database.Oracle;        //使用需要引用包： Senparc.Ncf.Database.Oracle
-//using Senparc.Ncf.Database.SqlServer;       //使用需要引用包： Senparc.Ncf.Database.SqlServer
+﻿//Namespaces for the following database modules are added or removed as needed
+//using Senparc.Ncf.Database.MySql; //Use requires reference package: Senparc.Ncf.Database.MySql
+//using Senparc.Ncf.Database.Sqlite; //Use requires reference package: Senparc.Ncf.Database.Sqlite
+//using Senparc.Ncf.Database.PostgreSQL; //Use requires reference package: Senparc.Ncf.Database.PostgreSQL
+//using Senparc.Ncf.Database.Oracle; //Use requires reference package: Senparc.Ncf.Database.Oracle
+//using Senparc.Ncf.Database.SqlServer; //Use requires reference package: Senparc.Ncf.Database.SqlServer
 
 using Senparc.CO2NET;
 using Senparc.CO2NET.HttpUtility;
@@ -13,16 +13,16 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//添加（注册） NCF 服务（必须）
+//Add (register) NCF service (required)
 builder.AddNcf();
 
-//添加 ServiceDefaults
+//Add ServiceDefaults
 //builder.AddServiceDefaults();
 
 System.Net.ServicePointManager.ServerCertificateValidationCallback =
     ((sender, certificate, chain, sslPolicyErrors) => true);
 
-//添加 Dapr
+//Add Dapr
 builder.Services.AddDaprClient();
 
 var app = builder.Build();
@@ -34,27 +34,27 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-//Use NCF（必须）
+//Use NCF (required)
 app.UseNcf<BySettingDatabaseConfiguration>();
-/*  UseNcf<TDatabaseConfiguration>() 泛型类型说明
+/*  UseNcf<TDatabaseConfiguration>() generic type description
  *                
- *                  方法                            |         说明
+ * Method | Description
  * -------------------------------------------------|-------------------------
- *  UseNcf<BySettingDatabaseConfiguration>()        |  由 appsettings.json 决定配置
- *  UseNcf<SqlServerDatabaseConfiguration>()        |  使用 SQLServer 数据库
- *  UseNcf<SqliteMemoryDatabaseConfiguration>()     |  使用 SQLite 数据库
- *  UseNcf<MySqlDatabaseConfiguration>()            |  使用 MySQL 数据库
- *  UseNcf<PostgreSQLDatabaseConfiguration>()       |  使用 PostgreSQL 数据库
- *  UseNcf<OracleDatabaseConfiguration>()           |  使用 Oracle 数据库（V12+）
- *  UseNcf<OracleDatabaseConfigurationForV11>()     |  使用 Oracle 数据库（V11+）
- *  UseNcf<DmDatabaseConfiguration>()               |  使用 DM（达梦）数据库
- *  更多数据库可扩展，依次类推……
+ * UseNcf<BySettingDatabaseConfiguration>() | The configuration is determined by appsettings.json
+ * UseNcf<SqlServerDatabaseConfiguration>() | Use SQLServer database
+ * UseNcf<SqliteMemoryDatabaseConfiguration>() | Use SQLite database
+ * UseNcf<MySqlDatabaseConfiguration>() | Use MySQL database
+ * UseNcf<PostgreSQLDatabaseConfiguration>() | Use PostgreSQL database
+ * UseNcf<OracleDatabaseConfiguration>() | Use Oracle database (V12+)
+ * UseNcf<OracleDatabaseConfigurationForV11>() | Use Oracle database (V11+)
+ * UseNcf<DmDatabaseConfiguration>() | Use DM (Dameng) database
+ * More databases can be expanded, and so on...
  *  
  */
 
 //app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseFileServer();//非必须
+app.UseFileServer();//Not necessary
 
 app.UseCookiePolicy();
 
@@ -64,7 +64,7 @@ app.UseAuthorization();
 app.MapRazorPages();
 app.MapControllers();
 
-app.ShowSuccessTip();//显示系统准备成功提示
+app.ShowSuccessTip();//Display system preparation success prompt
 
 string GetNcfApiClientPath(string xncfName,string appServiceName, string methodName,string showStaticApiState=null)
 {

@@ -45,8 +45,8 @@ namespace Senparc.Xncf.AgentsManager.ACL
                     break;
             }
 
-            //记录到聊天记录
-            //TODO: serviceProvider 是 null
+            //Record to chat history
+            //TODO: serviceProvider is null
             //using (var scope = Senparc.CO2NET.SenparcDI.GetServiceProvider().CreateScope())
             //{
             //    var chatGroupHistoryService = scope.ServiceProvider.GetService<ChatGroupHistoryService>();

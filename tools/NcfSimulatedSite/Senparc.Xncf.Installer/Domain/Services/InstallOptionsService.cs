@@ -29,12 +29,12 @@ namespace Senparc.Xncf.Installer.Domain.Services
             this._serviceProvider = serviceProvider;
             this._senparcCoreSetting = senparcCoreSetting.Value;
 
-            //初始化Options的默认值
+            //Initialize the default value of Options
 
         }
 
         /// <summary>
-        /// 获取自动生成的管理员用户名称
+        /// Get the automatically generated administrator user name
         /// </summary>
         /// <returns></returns>
         public string GetDefaultAdminUserName()
@@ -43,7 +43,7 @@ namespace Senparc.Xncf.Installer.Domain.Services
         }
 
         /// <summary>
-        /// 获取默认的系统名称
+        /// Get the default system name
         /// </summary>
         /// <returns></returns>
         public string GetDefaultSystemName()
@@ -52,7 +52,7 @@ namespace Senparc.Xncf.Installer.Domain.Services
         }
 
         /// <summary>
-        /// 读取配置中目标数据库连接字符串
+        /// Read the target database connection string in the configuration
         /// </summary>
         /// <returns></returns>
         public string GetDbConnectionString()
@@ -61,7 +61,7 @@ namespace Senparc.Xncf.Installer.Domain.Services
             return SenparcDatabaseConnectionConfigs.GetClientConnectionString();
         }
         /// <summary>
-        /// 读取模块名称
+        ///Read module name
         /// </summary>
         /// <returns></returns>
         public List<XncfRegisterDto> GetModules()
@@ -103,7 +103,7 @@ namespace Senparc.Xncf.Installer.Domain.Services
         }
 
         /// <summary>
-        /// 修改配置及缓存中目标数据库连接字符串
+        /// Modify the target database connection string in the configuration and cache
         /// </summary>
         public void ResetDbConnectionString(string dbConnectionString)
         {
@@ -133,7 +133,7 @@ namespace Senparc.Xncf.Installer.Domain.Services
                 LogUtility.WebLogger.ErrorFormat("SenparcConfigs.Configs 修改错误：" + e.Message, e);
             }
 
-            //清空数据库配置缓存
+            //Clear database configuration cache
             MethodCache.ClearMethodCache<ConcurrentDictionary<string, SenparcConfig>>(SenparcDatabaseConnectionConfigs.SENPARC_CONFIG_KEY);
 
             _ = SenparcDatabaseConnectionConfigs.Configs.ToJson();

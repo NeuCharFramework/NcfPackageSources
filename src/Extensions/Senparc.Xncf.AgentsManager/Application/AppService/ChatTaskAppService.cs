@@ -42,7 +42,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                       seh.ValueCompare
                           .AndAlso(chatGroupId > 0, z => z.ChatGroupId == chatGroupId)
                           .AndAlso(agentTemplateId > 0, z => chatGroupIdList.Contains(z.ChatGroupId));
-                      //增加模糊搜索任务
+                      //Add fuzzy search tasks
                       seh.ValueCompare.AndAlso(!string.IsNullOrEmpty(filter), _ => _.Name.Contains(filter));
                       var where = seh.BuildWhereExpression();
 

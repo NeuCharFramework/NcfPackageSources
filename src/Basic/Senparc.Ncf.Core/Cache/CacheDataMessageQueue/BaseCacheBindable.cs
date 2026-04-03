@@ -7,13 +7,13 @@ using Senparc.Ncf.Log;
 namespace Senparc.Ncf.Core.Cache
 {
     /// <summary>
-    /// 所有需要分布式缓存的实体基类
+    /// All entity base classes that require distributed caching
     /// </summary>
     [Serializable]
     public abstract class BaseCacheBindable<T> : BindableBase where T : class, ICacheData, new()
     {
         ///// <summary>
-        ///// 缓存键
+        ///// Cache key
         ///// </summary>
         //public abstract object Key { get; }
 
@@ -44,9 +44,9 @@ namespace Senparc.Ncf.Core.Cache
 
             var mqKey = CacheDataMessageQueue.GenerateKey("SenparcCache", sender.GetType(), objCacheData.Key as string, "UpdateCache");
 
-            //获取对应Container的缓存相关
+            //Get the cache related information of the corresponding Container
 
-            //加入消息列队，每过一段时间进行自动更新，防止属性连续被编辑，短时间内反复更新缓存。
+            //Join the message queue and automatically update every period of time to prevent attributes from being edited continuously and update the cache repeatedly in a short period of time.
             CacheDataMessageQueue mq = new CacheDataMessageQueue();
             mq.Add(mqKey, () =>
             {
@@ -63,7 +63,7 @@ namespace Senparc.Ncf.Core.Cache
 
 
         /// <summary>
-        /// 设置Container属性
+        ///Set Container properties
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="storage"></param>

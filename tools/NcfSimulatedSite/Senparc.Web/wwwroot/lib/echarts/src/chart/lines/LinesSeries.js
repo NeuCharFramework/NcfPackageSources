@@ -100,7 +100,7 @@ define(function (require) {
                     show: false,
                     position: 'end'
                     // distance: 5,
-                    // formatter: 标签文本格式器，同Tooltip.formatter，不支持异步回调
+                    // formatter: label text formatter, same as Tooltip.formatter, does not support asynchronous callback
                 }
             },
             // itemStyle: {

@@ -93,13 +93,13 @@ var app = new Vue({
                     console.log('res.data.data.list value:', res.data && res.data.data ? res.data.data.list : 'nested data not found');
                     console.log('==================');
                     
-                    // 尝试多种可能的数据结构
+                    // Try many possible data structures
                     let dataList = null;
                     let totalCount = 0;
                     let dataSource = '';
                     
                     if (res.data && res.data.data && res.data.data.data && res.data.data.data.list) {
-                        // NCF框架标准格式 + 新的API格式: {data: {data: {success, message, data: {list, totalCount}}}}
+                        // NCF framework standard format + new API format: {data: {data: {success, message, data: {list, totalCount}}}}
                         dataList = res.data.data.data.list;
                         totalCount = res.data.data.data.totalCount || 0;
                         dataSource = 'NCF标准格式: res.data.data.data.list';
@@ -107,19 +107,19 @@ var app = new Vue({
                         console.log('✅ List数据:', dataList);
                         console.log('✅ TotalCount:', totalCount);
                     } else if (res.data && res.data.data && res.data.data.list) {
-                        // 简单格式: {data: {list, totalCount}}
+                        // Simple format: {data: {list, totalCount}}
                         dataList = res.data.data.list;
                         totalCount = res.data.data.totalCount || 0;
                         dataSource = '简单格式: res.data.data.list';
                         console.log('✅ 使用简单格式: res.data.data.list');
                     } else if (res.data && Array.isArray(res.data)) {
-                        // 如果data直接是数组
+                        // If data is directly an array
                         dataList = res.data;
                         totalCount = res.data.length;
                         dataSource = '数组格式: res.data (array)';
                         console.log('✅ 使用数组格式: res.data (array)');
                     } else if (res && res.list) {
-                        // 如果list在顶层
+                        // If the list is at the top level
                         dataList = res.list;
                         totalCount = res.totalCount || 0;
                         dataSource = '顶层格式: res.list';
@@ -140,23 +140,23 @@ var app = new Vue({
                     console.log('🎯 Final totalCount:', totalCount);
                     console.log('🎯 Data source:', dataSource);
                     
-                    // 数据赋值前的状态
+                    // The state before data assignment
                     console.log('📋 赋值前 tableData:', this.tableData);
                     console.log('📋 赋值前 total:', this.total);
                     
                     this.tableData = dataList || [];
                     this.total = totalCount;
                     
-                    // 数据赋值后的状态
+                    // The state after data assignment
                     console.log('📋 赋值后 tableData:', this.tableData);
                     console.log('📋 赋值后 tableData.length:', this.tableData.length);
                     console.log('📋 赋值后 total:', this.total);
                     
-                    // 强制Vue更新
+                    // Force Vue to update
                     this.$forceUpdate();
                     console.log('🔄 Vue已强制更新');
                     
-                    // 延迟检查数据是否正确绑定
+                    // Lazy check if data is bound correctly
                     setTimeout(() => {
                         console.log('⏰ 延迟检查 tableData:', this.tableData);
                         console.log('⏰ 延迟检查 tableData.length:', this.tableData ? this.tableData.length : 'null');
@@ -198,7 +198,7 @@ var app = new Vue({
                     })
                         .then(res => {
                             console.log('📥 创建响应:', res);
-                            // 兼容NCF框架的嵌套响应格式
+                            // Nested response format compatible with NCF framework
                             const responseData = res.data.data || res.data;
                             this.$message({
                                 type: responseData.success ? 'success' : 'error',
@@ -266,7 +266,7 @@ var app = new Vue({
                     })
                         .then(res => {
                             console.log('📥 更新响应:', res);
-                            // 兼容NCF框架的嵌套响应格式
+                            // Nested response format compatible with NCF framework
                             const responseData = res.data.data || res.data;
                             this.$message({
                                 type: responseData.success ? 'success' : 'error',
@@ -291,15 +291,15 @@ var app = new Vue({
             if (!date) return '';
             
             try {
-                // 使用原生JavaScript格式化日期
+                // Format dates using native JavaScript
                 const d = new Date(date);
                 
-                // 检查日期是否有效
+                // Check if the date is valid
                 if (isNaN(d.getTime())) {
-                    return date; // 如果无法解析，返回原始值
+                    return date; // If it cannot be parsed, return the original value
                 }
                 
-                // 格式化为 YYYY-MM-DD HH:mm:ss
+                // Formatted as YYYY-MM-DD HH:mm:ss
                 const year = d.getFullYear();
                 const month = String(d.getMonth() + 1).padStart(2, '0');
                 const day = String(d.getDate()).padStart(2, '0');
@@ -310,7 +310,7 @@ var app = new Vue({
                 return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
             } catch (error) {
                 console.warn('日期格式化错误:', error, '原始值:', date);
-                return date; // 如果格式化失败，返回原始值
+                return date; // If formatting fails, the original value is returned
             }
         },
         editColor(row) {
@@ -340,7 +340,7 @@ var app = new Vue({
                 })
                     .then(res => {
                         console.log('📥 删除响应:', res);
-                        // 兼容NCF框架的嵌套响应格式
+                        // Nested response format compatible with NCF framework
                         const responseData = res.data.data || res.data;
                         this.$message({
                             type: responseData.success ? 'success' : 'error',
@@ -373,7 +373,7 @@ var app = new Vue({
             })
                 .then(res => {
                     console.log('📥 随机化响应:', res);
-                    // 兼容NCF框架的嵌套响应格式
+                    // Nested response format compatible with NCF framework
                     const responseData = res.data.data || res.data;
                     this.$message({
                         type: responseData.success ? 'success' : 'error',
@@ -410,7 +410,7 @@ var app = new Vue({
             console.log('Vue instance $el:', this.$el);
             console.log('================================');
             
-            // 测试Vue响应性
+            // Test Vue responsiveness
             if (this.tableData && this.tableData.length === 0) {
                 console.log('测试：添加假数据');
                 this.tableData = [

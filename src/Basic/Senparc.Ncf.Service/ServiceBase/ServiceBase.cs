@@ -29,13 +29,13 @@ namespace Senparc.Ncf.Service
         {
             //_serviceProvider = serviceProvider;
             RepositoryBase = repo;
-            Mapper = _serviceProvider.GetService<IMapper>();//确保 Mapper 中有值
+            Mapper = _serviceProvider.GetService<IMapper>();//Make sure there is a value in the Mapper
         }
 
         #region Insert & DetectChange
 
         /// <summary>
-        /// 强制将实体设置为Modified状态
+        /// Force the entity to Modified state
         /// </summary>
         /// <param name="obj"></param>
         public virtual void TryDetectChange(T obj)
@@ -106,7 +106,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取所有数据
+        /// Get all data
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="where"></param>
@@ -118,7 +118,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取所有数据
+        /// Get all data
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="where"></param>
@@ -136,7 +136,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取所有数据
+        /// Get all data
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TIncludesProperty"></typeparam>
@@ -151,7 +151,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取所有数据
+        /// Get all data
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TIncludesProperty"></typeparam>
@@ -169,7 +169,7 @@ namespace Senparc.Ncf.Service
         #region GetObjectList（分页）
 
         /// <summary>
-        /// 获取分页数据
+        /// Get paging data
         /// </summary>
         /// <typeparam name="TK"></typeparam>
         /// <param name="pageIndex"></param>
@@ -185,14 +185,14 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取分页数据
+        /// Get paging data
         /// </summary>
         /// <typeparam name="TK"></typeparam>
-        /// <param name="pageIndex">页码</param>
-        /// <param name="pageCount">每页数量</param>
-        /// <param name="where">条件</param>
-        /// <param name="orderBy">排序字段</param>
-        /// <param name="orderingType">正序|倒叙</param>
+        /// <param name="pageIndex">Page number</param>
+        /// <param name="pageCount">Number per page</param>
+        /// <param name="where">Condition</param>
+        /// <param name="orderBy">Sort field</param>
+        /// <param name="orderingType">Forward sequence | Flashback</param>
         /// <param name="includes"></param>
         /// <returns></returns>
         public virtual async Task<PagedList<T>> GetObjectListAsync<TK>(int pageIndex, int pageCount, Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, params string[] includes)
@@ -201,12 +201,12 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取分页数据
+        /// Get paging data
         /// </summary>
-        /// <param name="pageIndex">页码</param>
-        /// <param name="pageCount">每页数量</param>
-        /// <param name="where">条件</param>
-        /// <param name="orderBy">排序字段 eg.(xxx desc, bbb aec),默认升序</param>
+        /// <param name="pageIndex">Page number</param>
+        /// <param name="pageCount">Number per page</param>
+        /// <param name="where">Condition</param>
+        /// <param name="orderBy">Sort field eg.(xxx desc, bbb aec), default ascending order</param>
         /// <param name="includes"></param>
         /// <returns></returns>
         public virtual async Task<PagedList<T>> GetObjectListAsync(int pageIndex, int pageCount, Expression<Func<T, bool>> where, string orderBy, params string[] includes)
@@ -220,12 +220,12 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取分页数据
+        /// Get paging data
         /// </summary>
-        /// <param name="pageIndex">页码</param>
-        /// <param name="pageCount">每页数量</param>
-        /// <param name="where">条件</param>
-        /// <param name="orderBy">排序字段 eg.(xxx desc, bbb aec),默认升序</param>
+        /// <param name="pageIndex">Page number</param>
+        /// <param name="pageCount">Number per page</param>
+        /// <param name="where">Condition</param>
+        /// <param name="orderBy">Sort field eg.(xxx desc, bbb aec), default ascending order</param>
         /// <param name="includesNavigationPropertyPathFunc"></param>
         /// <returns></returns>
         public virtual async Task<PagedList<T>> GetObjectListAsync<TIncludesProperty>(int pageIndex, int pageCount, Expression<Func<T, bool>> where, string orderBy, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
@@ -235,14 +235,14 @@ namespace Senparc.Ncf.Service
 
 
         /// <summary>
-        /// 获取分页数据
+        /// Get paging data
         /// </summary>
         /// <typeparam name="TK"></typeparam>
-        /// <param name="pageIndex">页码</param>
-        /// <param name="pageCount">每页数量</param>
-        /// <param name="where">条件</param>
-        /// <param name="orderBy">排序字段</param>
-        /// <param name="orderingType">正序|倒叙</param>
+        /// <param name="pageIndex">Page number</param>
+        /// <param name="pageCount">Number per page</param>
+        /// <param name="where">Condition</param>
+        /// <param name="orderBy">Sort field</param>
+        /// <param name="orderingType">Forward sequence | Flashback</param>
         /// <param name="includesNavigationPropertyPathFunc"></param>
         /// <returns></returns>
         public virtual async Task<PagedList<T>> GetObjectListAsync<TK, TIncludesProperty>(int pageIndex, int pageCount, Expression<Func<T, bool>> where, Expression<Func<T, TK>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc)
@@ -422,7 +422,7 @@ namespace Senparc.Ncf.Service
         #region Transaction
 
         /// <summary>
-        /// 开启事务
+        /// start transaction
         /// </summary>
         /// <returns></returns>
         public async Task BeginTransactionAsync()
@@ -431,7 +431,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 开启事务, 此方法回自动提交事务，失败则回滚
+        /// Start the transaction. This method will automatically commit the transaction. If it fails, it will be rolled back.
         /// </summary>
         /// <returns></returns>
         public async Task BeginTransactionAsync(Action action)
@@ -450,7 +450,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 开启事务
+        /// start transaction
         /// </summary>
         /// <returns></returns>
         public void BeginTransaction()
@@ -459,7 +459,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 开启事务
+        /// start transaction
         /// </summary>
         /// <returns></returns>
         public void BeginTransaction(Action body, Action<Exception> rollbackAction = null)
@@ -480,7 +480,7 @@ namespace Senparc.Ncf.Service
 
 
         /// <summary>
-        /// 开启事务, 此方法回自动提交事务，失败则回滚
+        /// Start the transaction. This method will automatically commit the transaction. If it fails, it will be rolled back.
         /// </summary>
         /// <returns></returns>
         public async Task BeginTransactionAsync(Func<Task> body, Action<Exception> rollbackAction = null)
@@ -501,10 +501,10 @@ namespace Senparc.Ncf.Service
 
 
         /// <summary>
-        /// 开启事务, 此方法会自动提交事务，失败则回滚
+        /// Start the transaction. This method will automatically commit the transaction and roll it back if it fails.
         /// </summary>
         /// <param name="body"></param>
-        /// <param name="rollbackAction">处理一个异常并抛出自定义的异常</param>
+        /// <param name="rollbackAction">Handle an exception and throw a custom exception</param>
         /// <returns></returns>
         public async Task BeginTransactionAsync(Func<Task> body, Func<Exception, Exception> rollbackAction)
         {
@@ -523,10 +523,10 @@ namespace Senparc.Ncf.Service
 
 
         /// <summary>
-        /// 开启事务, 此方法会自动提交事务，失败则回滚
+        /// Start the transaction. This method will automatically commit the transaction and roll it back if it fails.
         /// </summary>
         /// <param name="body"></param>
-        /// <param name="rollbackAction">处理一个异常并抛出自定义的异常</param>
+        /// <param name="rollbackAction">Handle an exception and throw a custom exception</param>
         /// <returns></returns>
         public async Task BeginTransactionAsync(Func<Task> bodyAsync, Func<Exception, Task<Exception>> rollbackActionAsync)
         {
@@ -545,7 +545,7 @@ namespace Senparc.Ncf.Service
 
 
         /// <summary>
-        /// 回滚事务
+        /// rollback transaction
         /// </summary>
         /// <returns></returns>
         public void RollbackTransaction()
@@ -554,7 +554,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 提交事务
+        /// Commit transaction
         /// </summary>
         /// <returns></returns>
         public void CommitTransaction()
@@ -567,7 +567,7 @@ namespace Senparc.Ncf.Service
         #region Mapping
 
         /// <summary>
-        /// 使用 Mapper.Map&lt;TDto&gt;(entity) 快速返回
+        /// Use Mapper.Map&lt;TDto&gt;(entity) to return quickly
         /// </summary>
         /// <typeparam name="TDto"></typeparam>
         /// <param name="entity"></param>
@@ -578,7 +578,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 将 PageList 转为 DTO 对象
+        /// Convert PageList to DTO object
         /// </summary>
         /// <typeparam name="TDto"></typeparam>
         /// <param name="pagedList"></param>
@@ -594,7 +594,7 @@ namespace Senparc.Ncf.Service
         #region Tenant
 
         /// <summary>
-        /// 强制设置租户信息
+        /// Force tenant information to be set
         /// </summary>
         /// <param name="requestTenantInfo"></param>
         /// <returns></returns>

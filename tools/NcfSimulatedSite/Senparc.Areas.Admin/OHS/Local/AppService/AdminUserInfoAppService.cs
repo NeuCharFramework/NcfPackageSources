@@ -48,9 +48,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 创建管理员
+        ///Create administrator
         /// </summary>
-        /// <param name="request">管理员创建请求</param>
+        /// <param name="request">Administrator creates request</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AdminUserInfo_CreateResponse>> Create(AdminUserInfo_CreateOrUpdateRequest request)
@@ -67,9 +67,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 修改管理员
+        ///Modify administrator
         /// </summary>
-        /// <param name="request">管理员创建请求</param>
+        /// <param name="request">Administrator creates request</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Put)]
         public async Task<AppResponseBase<AdminUserInfo_CreateResponse>> Update(AdminUserInfo_CreateOrUpdateRequest request)
@@ -86,7 +86,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 管理员登录验证，并进行登录授权
+        /// Administrator login verification and login authorization
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -119,7 +119,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取当前管理员信息
+        /// Get current administrator information
         /// </summary>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
@@ -135,7 +135,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
 
         /// <summary>
-        /// 增加角色
+        ///Add role
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -151,7 +151,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取当前用户的所有角色
+        /// Get all roles of the current user
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -171,9 +171,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 删除管理员
+        ///remove administrator
         /// </summary>
-        /// <param name="id">管理员 ID</param>
+        /// <param name="id">Administrator ID</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Delete)]
         public async Task<StringAppResponse> DeleteAsync(int id)
@@ -193,7 +193,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     throw new NcfExceptionBase("管理员不存在！");
                 }
 
-                //TODO：进行更多层级判断
+                //TODO: Make more levels of judgment
 
                 await _adminUserInfoService.DeleteObjectAsync(adminUserInfo);
 

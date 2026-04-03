@@ -16,7 +16,7 @@ namespace Senparc.Xncf.KnowledgeBase.Services
         {
         }
 
-        //TODO: 更多业务方法可以写到这里
+        //TODO: More business methods can be written here
         public async Task<IEnumerable<KnowledgeBaseItemDto>> GetKnowledgeBasesDetailList(int PageIndex, int PageSize)
         {
             List<KnowledgeBaseItemDto> selectListItems = null;
@@ -26,7 +26,7 @@ namespace Senparc.Xncf.KnowledgeBase.Services
         }
 
         /// <summary>
-        /// 根据知识库ID获取关联的 KnowledgeBaseItem 列表（用于配置页回显）
+        /// Get the associated KnowledgeBaseItem list based on the knowledge base ID (for configuration page echo)
         /// </summary>
         public async Task<IEnumerable<KnowledgeBaseItemDto>> GetListByKnowledgeBaseIdAsync(int knowledgeBaseId)
         {

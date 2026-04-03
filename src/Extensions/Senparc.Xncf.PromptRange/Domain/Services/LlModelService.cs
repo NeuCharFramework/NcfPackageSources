@@ -31,18 +31,18 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         {
             #region validate
 
-            // 如果是Azure OpenAI
+            // If it is Azure OpenAI
             // if (request.ModelType == AI.AiPlatform.AzureOpenAI.ToString() || request.ModelType == AI.AiPlatform.NeuCharAI.ToString())
 
             if (request.ModelType is AiPlatform.AzureOpenAI)
             {
-                // 强制要求ApiVersion和Endpoint不为空
+                // It is mandatory that ApiVersion and Endpoint are not empty
                 if (string.IsNullOrWhiteSpace(request.ApiVersion) || string.IsNullOrWhiteSpace(request.Endpoint))
                 {
                     throw new NcfExceptionBase("使用AzureOpenAI时，ApiVersion和Endpoint不能为空");
                 }
 
-                // ApiVersion不为空且不在ApiVersionList中
+                // ApiVersion is not empty and not in ApiVersionList
                 if (!string.IsNullOrWhiteSpace(request.ApiVersion) && !Constants.ApiVersionList.Contains(request.ApiVersion))
                 {
                     throw new NcfExceptionBase("ApiVersion不存在");
@@ -86,7 +86,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     break;
                 case AIKernel.Domain.Models.ConfigModelType.TextToImage:
                     configModel = ConfigModel.TextToImage;
-                    //TODO: Image 需要不一样的触发机制
+                    //TODO: Image requires a different triggering mechanism
                     break;
                 case AIKernel.Domain.Models.ConfigModelType.TextEmbedding:
                 case AIKernel.Domain.Models.ConfigModelType.ImageToText:

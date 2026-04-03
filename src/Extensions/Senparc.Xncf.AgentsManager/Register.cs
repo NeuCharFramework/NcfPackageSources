@@ -32,9 +32,9 @@ namespace Senparc.Xncf.AgentsManager
 
         public override string Name => "Senparc.Xncf.AgentsManager";
 
-        public override string Uid => "D858D7FA-775A-4690-9023-CFB0B3B84994";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => "D858D7FA-775A-4690-9023-CFB0B3B84994";//It must be globally unique and must be fixed after generation. It has been automatically generated and can also be modified by yourself.
 
-        public override string Version => "0.3.18.9";//必须填写版本号
+        public override string Version => "0.3.18.9";//Version number is required
 
         public override string MenuName => "Agents 管理模块";
 
@@ -44,21 +44,21 @@ namespace Senparc.Xncf.AgentsManager
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //安装或升级版本时更新数据库
+            //Update database when installing or upgrading a version
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
-            //根据安装或更新不同条件执行逻辑
+            //Execute logic based on different conditions for installation or update
             switch (installOrUpdate)
             {
                 case InstallOrUpdate.Install:
-                    //新安装
+                    //New installation
                     #region 初始化数据库数据
                     //var colorService = serviceProvider.GetService<ColorAppService>();
                     //var colorResult = await colorService.GetOrInitColorAsync();
                     #endregion
                     break;
                 case InstallOrUpdate.Update:
-                    //更新
+                    //renew
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -72,9 +72,9 @@ namespace Senparc.Xncf.AgentsManager
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
             AgentsManagerSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as AgentsManagerSenparcEntities;
 
-            //指定需要删除的数据实体
+            //Specify the data entity to be deleted
 
-            //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
+            //Note: As a demonstration, all tables created by this module are deleted when uninstalling the module. During actual operation, please operate with caution and sort the entities in the order of deletion!
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
@@ -85,7 +85,7 @@ namespace Senparc.Xncf.AgentsManager
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
-            //AutoMap映射
+            //AutoMap mapping
             base.AddAutoMapMapping(profile =>
             {
                 profile.CreateMap<AgentTemplate, AgentTemplateDto>().ReverseMap();
@@ -100,7 +100,7 @@ namespace Senparc.Xncf.AgentsManager
             services.AddScoped<AgentsTemplateService>();
             services.AddSingleton<PromptOptimizationAgentBridge>();
             services.AddScoped<PromptOptimizationKernelFallbackService>();
-            services.AddScoped<PromptOptimizationService>(); // 注册 PromptOptimizationService
+            services.AddScoped<PromptOptimizationService>(); // Register PromptOptimizationService
             services.AddScoped<ChatGroupService>();
             services.AddScoped<ChatGroupHistoryService>();
             services.AddScoped<ChatTaskService>();
@@ -108,12 +108,12 @@ namespace Senparc.Xncf.AgentsManager
 
             //AI Plugins DI
             services.AddScoped<PromptCatalyzerPlugin>();
-            services.AddScoped<PromptOptimizationPlugin>();  // 🔥 新增：Prompt 优化 Plugin（含 GetPromptInfo, CreateOptimizedPrompt, ExecuteShootTest, ExecuteAIGrade 等方法）
+            services.AddScoped<PromptOptimizationPlugin>();  // 🔥 Newly added: Prompt optimization Plugin (including GetPromptInfo, CreateOptimizedPrompt, ExecuteShootTest, ExecuteAIGrade and other methods)
             services.AddScoped<CrawlPlugin>();
             services.AddScoped<FormatorPlugin>();
             services.AddScoped<TranslatorPlugin>();
 
-            //测试
+            //test
             services.AddScoped<BuildXncfAppService>();
 
             return base.AddXncfModule(services, configuration, env);
@@ -127,7 +127,7 @@ namespace Senparc.Xncf.AgentsManager
 
             var aiPlugins = AIPluginHub.Instance;
             aiPlugins.Add(typeof(PromptCatalyzerPlugin));
-            aiPlugins.Add(typeof(PromptOptimizationPlugin));  // 🔥 新增：Prompt 优化 Plugin
+            aiPlugins.Add(typeof(PromptOptimizationPlugin));  // 🔥 New: Prompt Optimization Plugin
             aiPlugins.Add(typeof(CrawlPlugin));
             aiPlugins.Add(typeof(FormatorPlugin));
             aiPlugins.Add(typeof(TranslatorPlugin));

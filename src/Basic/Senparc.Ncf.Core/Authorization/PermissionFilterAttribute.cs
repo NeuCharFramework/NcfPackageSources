@@ -25,7 +25,7 @@ namespace Senparc.Ncf.Core.Authorization
             var result = await _authorizationService.AuthorizeAsync(context.HttpContext.User, null, _requirement);
             if (!result.Succeeded)
             {
-                //TODO... ResourceCodes 是否需要暴露出去?
+                //TODO... Do ResourceCodes need to be exposed?
                 AppResponseBase<string[]> responseBase = new AppResponseBase<string[]>() { Data = _requirement.ResourceCodes, Success = false, ErrorMessage = "您没有此资源的操作权限。" };
                 context.Result = new OkObjectResult(responseBase)
                 {

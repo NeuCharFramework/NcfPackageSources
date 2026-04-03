@@ -52,7 +52,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     }
 
     /// <summary>
-    /// 新增， 打靶时
+    /// Newly added, during target practice
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
@@ -61,13 +61,13 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     {
         #region validate request dto
 
-        // IsNewTactic IsNewSubTactic不能同时为True
+        // IsNewTactic IsNewSubTactic cannot be True at the same time
         if (request.IsTopTactic && request.IsNewTactic && request.IsNewSubTactic)
         {
             throw new NcfExceptionBase("IsTopTactic IsNewTactic IsNewSubTactic不能同时为True");
         }
 
-        // 默认值为2000
+        // The default value is 2000
         request.MaxToken = request.MaxToken > 0 ? request.MaxToken : 2000;
         request.StopSequences = request.StopSequences == "" ? null : request.StopSequences;
 
@@ -84,7 +84,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
         #endregion
 
-        // // 更新版本号
+        // //Update version number
         // var today = SystemTime.Now;
         // var todayStr = today.ToString("yyyy.MM.dd");
 
@@ -93,7 +93,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         PromptItem toSavePromptItem;
         if (request.Id == null)
         {
-            //新建 PromptItem
+            //New PromptItem
             toSavePromptItem = new PromptItem(
                 rangeId: promptRange.Id,
                 rangeName: promptRange.RangeName, // $"{todayStr}.{todayPromptList.Count + 1}",
@@ -105,7 +105,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         }
         else
         {
-            // 如果有id，就先找到对应的promptItem, 再根据Item.RangeId获取promptRange，再根据参数新建一个靶道
+            // If there is an id, first find the corresponding promptItem, then get the promptRange based on Item.RangeId, and then create a new target channel based on the parameters.
             // var basePrompt = await base.GetObjectAsync(p => p.Id == request.Id);
             var basePrompt = await this.GetAsync(request.Id.Value);
             // var promptRange = await _promptRangeService.GetObjectAsync(r => r.Id == basePrompt.RangeId);
@@ -114,7 +114,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
             if (request.IsTopTactic)
             {
-                // 目标版号的父 T 是空串
+                // The parent T of the target version number is an empty string
                 var parentTac = "";
                 List<PromptItem> fullList = await base.GetFullListAsync(p =>
                     p.RangeName == rangeName &&
@@ -133,12 +133,12 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                     parentTac: parentTac,
                     request: request
                 );
-                // 关联复制预期结果过来
+                // Copy the expected results by association
                 toSavePromptItem.UpdateExpectedResultsJson(basePrompt.ExpectedResultsJson, false);
             }
             else if (request.IsNewTactic)
             {
-                // 目标版号的父 T 应该是当前版本的父 T
+                // The parent T of the target version number should be the parent T of the current version
                 var parentTac = basePrompt.ParentTac;
                 List<PromptItem> fullList = await base.GetFullListAsync(p =>
                     p.RangeName == rangeName &&
@@ -161,12 +161,12 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                     parentTac: parentTac,
                     request: request
                 );
-                // 关联复制预期结果过来
+                // Copy the expected results by association
                 toSavePromptItem.UpdateExpectedResultsJson(basePrompt.ExpectedResultsJson, false);
             }
             else if (request.IsNewSubTactic)
             {
-                // 目标版号的父 T 应该是当前版本的 T
+                // The parent T of the target version number should be the current version T
                 var parentTac = basePrompt.Tactic;
                 List<PromptItem> fullList = await base.GetFullListAsync(
                     p => p.RangeName == rangeName &&
@@ -188,10 +188,10 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                     parentTac: parentTac,
                     request: request
                 );
-                // 关联复制预期结果过来
+                // Copy the expected results by association
                 toSavePromptItem.UpdateExpectedResultsJson(basePrompt.ExpectedResultsJson, false);
             }
-            else if (request.IsNewAiming) // 不改变分支
+            else if (request.IsNewAiming) // Do not change branches
             {
                 List<PromptItem> fullList = await base.GetFullListAsync(p =>
                     // p.FullVersion.StartsWith(oldPrompt.FullVersion.Substring(0, oldPrompt.FullVersion.LastIndexOf('A')))
@@ -207,14 +207,14 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                     parentTac: basePrompt.ParentTac,
                     request: request
                 );
-                // 关联复制预期结果过来
+                // Copy the expected results by association
                 toSavePromptItem.UpdateExpectedResultsJson(basePrompt.ExpectedResultsJson, false);
             }
             else
             {
                 SenparcTrace.SendCustomLog("AddPrompt", "指示符都是false, 没有新增");
                 return basePrompt;
-                // // 连发
+                // // burst
                 // var promptResultService = _serviceProvider.GetService<PromptResultService>();
                 // var resultDto = await promptResultService.SenparcGenerateResultAsync(basePrompt);
             }
@@ -222,7 +222,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
         #endregion
 
-        // 保存之前验证一下版号是否已经存在，确保版号唯一性
+        // Before saving, verify whether the version number already exists to ensure the uniqueness of the version number.
         var existPromptItem = await base.GetObjectAsync(p => p.FullVersion == toSavePromptItem.FullVersion);
         if (existPromptItem != null)
         {
@@ -240,8 +240,8 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     }
 
     /// <summary>
-    /// 分数趋势图（依据时间）
-    /// TODO 改为显示靶场下所有有平均分的promptItem的趋势图
+    /// Score trend chart (based on time)
+    /// TODO Change to display the trend chart of all promptItems with average scores in the shooting range
     /// </summary>
     /// <param name="promptItemId"></param>
     /// <returns></returns>
@@ -253,13 +253,13 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
         var curItem = await this.GetAsync(promptItemId);
 
-        // 获取同一个靶道下的所有打过分的item
+        // Get all scored items under the same target lane
         List<PromptItem> fullList = await this.GetFullListAsync(
             p => p.RangeName == curItem.RangeName && p.EvalAvgScore >= 0 && p.EvalMaxScore >= 0,
             p => p.Id,
             OrderingType.Ascending);
 
-        // 构造返回值
+        // Construct return value
         foreach (var promptItem in fullList)
         {
             versionHistoryList.Add(promptItem.FullVersion);
@@ -292,7 +292,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                          throw new Exception("未找到prompt");
 
 
-        // 获取同一个靶道下的所有打过分的item
+        // Get all scored items under the same target lane
         List<PromptItemDto> promptItems = (await this.GetFullListAsync(
                 p => p.RangeId == promptItem.RangeId && (isAvg ? p.EvalAvgScore >= 0 : p.EvalMaxScore >= 0),
                 p => p.Id,
@@ -301,14 +301,14 @@ public partial class PromptItemService : ServiceBase<PromptItem>
             .Select(p => this.Mapper.Map<PromptItemDto>(p))
             .ToList();
 
-        // 根据 Tactic 的第一级（第一个点号之前的部分，如 "1"、"11"、"1.1" 分别提取为 "1"、"11"、"1"）
+        // According to the first level of Tactic (the part before the first period number, such as "1", "11", and "1.1" are extracted as "1", "11", and "1" respectively)
         var itemGroupByT = promptItems.GroupBy(p => p.Tactic.Split('.')[0])
             .ToDictionary(p => p.Key, p => p.ToList());
 
         var resp = new Statistic_TodayTacticResponse(promptItem.RangeName, DateTime.Now);
 
-        // [t1, 版号, 平均分]
-        // [t2, 版号, 平均分]
+        // [t1, version number, average score]
+        // [t2, version number, average score]
         foreach (var (tac, itemList) in itemGroupByT)
         {
             var i = 0;
@@ -351,13 +351,13 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     }
 
     /// <summary>
-    /// 获取某个版本的 PromptItem 和模型信息，支持：
-    /// <para>精准搜索，如：2024.01.06.3-T1-A2</para>
-    /// <para>靶道模糊搜索：输入到靶场和靶道信息，如：2024.01.06.3-T1</para>
-    /// <para>靶场模糊搜索：只输入靶场编号，如：2024.01.06.3</para>
+    /// Get a certain version of PromptItem and model information, support:
+    /// <para>Precise search, such as: 2024.01.06.3-T1-A2</para>
+    /// <para>Target fuzzy search: Enter the shooting range and target information, such as: 2024.01.06.3-T1</para>
+    /// <para>Fuzzy search of shooting range: enter only the shooting range number, such as: 2024.01.06.3</para>
     /// </summary>
     /// <param name="promptRangeVersion"></param>
-    /// <param name="isAvg">当模糊搜索时，是否采用平均分最高分，如果为 false，则直接取最高分</param>
+    /// <param name="isAvg">When fuzzy search, whether to use the average highest score, if it is false, then directly take the highest score</param>
     /// <returns></returns>
     /// <exception cref="NcfExceptionBase"></exception>
     public async Task<SenparcAI_GetByVersionResponse> GetWithVersionAsync(string promptRangeVersion, bool isAvg = true)
@@ -367,7 +367,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         var dto = await this.TransEntityToDtoAsync(promptItem); // this.Mapper.Map<PromptItemDto>(item);
 
         //var aiModel = await _aiModelService.GetObjectAsync(model => model.Id == dto.ModelId) ??
-        //              throw new NcfExceptionBase($"找不到{dto.ModelId}对应的AIModel");
+        //              throw new NcfExceptionBase($"Cannot find the AIModel corresponding to {dto.ModelId}");
 
         //dto.AIModelDto = new AIModelDto(aiModel)
         //{
@@ -380,13 +380,13 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
 
     /// <summary>
-    /// 获取某个版本的 PromptItem 和模型信息，支持：
-    /// <para>精准搜索，如：2024.01.06.3-T1-A2</para>
-    /// <para>靶道模糊搜索：输入到靶场和靶道信息，如：2024.01.06.3-T1</para>
-    /// <para>靶场模糊搜索：只输入靶场编号，如：2024.01.06.3</para>
+    /// Get a certain version of PromptItem and model information, support:
+    /// <para>Precise search, such as: 2024.01.06.3-T1-A2</para>
+    /// <para>Target fuzzy search: Enter the shooting range and target information, such as: 2024.01.06.3-T1</para>
+    /// <para>Fuzzy search of shooting range: enter only the shooting range number, such as: 2024.01.06.3</para>
     /// </summary>
     /// <param name="promptRangeVersion"></param>
-    /// <param name="isAvg">当模糊搜索时，是否采用平均分最高分，如果为 false，则直接取最高分</param>
+    /// <param name="isAvg">When fuzzy search, whether to use the average highest score, if it is false, then directly take the highest score</param>
     /// <returns></returns>
     /// <exception cref="NcfExceptionBase"></exception>
     public async Task<PromptItem> GetBestPromptAsync(string promptRangeVersion, bool isAvg)
@@ -394,13 +394,13 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         PromptItem promptItem;
         if (promptRangeVersion.Contains("-T") && promptRangeVersion.Contains("-A"))
         {
-            //精准查询经过测试的 PromptItem，如：2024.01.06.3-T1-A2
+            //Accurately query the tested PromptItem, such as: 2024.01.06.3-T1-A2
             promptItem = await this.GetObjectAsync(p => p.FullVersion == promptRangeVersion) ??
                          throw new NcfExceptionBase($"找不到 {promptRangeVersion} 对应的 PromptItem");
         }
         else
         {
-            //模糊查询，如：2024.01.06.3-T1，或者 2024.01.06.3
+            //Fuzzy query, such as: 2024.01.06.3-T1, or 2024.01.06.3
 
             var searchTactic = promptRangeVersion.Contains("-T");
 
@@ -413,26 +413,26 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
             var seh = new SenparcExpressionHelper<PromptItem>();
             seh.ValueCompare
-                .AndAlso(true, z => z.RangeId == promptRange.Id/* z.RangeName == rangeName*/) //定位靶场
-                .AndAlso(isAvg, z => z.EvalAvgScore >= 0) //平均分
-                .AndAlso(!isAvg, z => z.EvalMaxScore >= 0); //最高分
+                .AndAlso(true, z => z.RangeId == promptRange.Id/* z.RangeName == rangeName*/) //Positioning range
+                .AndAlso(isAvg, z => z.EvalAvgScore >= 0) //average score
+                .AndAlso(!isAvg, z => z.EvalMaxScore >= 0); //highest score
 
             if (searchTactic)
             {
-                //按照靶道进行模糊搜索
+                //Fuzzy search based on target lane
                 var tactic = versionSet[1];
-                seh.ValueCompare.AndAlso(true, z => z.Tactic == tactic);//定位靶道
+                seh.ValueCompare.AndAlso(true, z => z.Tactic == tactic);//target lane
             }
             else
             {
-                //按照靶场进行模糊搜索
-                //不需要再增加条件
+                //Fuzzy search by shooting range
+                //No need to add any more conditions
             }
 
-            //生成最终的查询条件表达式
+            //Generate the final query condition expression
             var where = seh.BuildWhereExpression();
 
-            //从某个靶道进行模糊搜索
+            //Fuzzy search from a target lane
             promptItem = await this.GetObjectAsync(where,
                 p => (isAvg ? p.EvalAvgScore : p.EvalMaxScore),
                 OrderingType.Descending);
@@ -456,7 +456,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         if (needModel)
         {
             var aiModel = await _aiModelService.GetObjectAsync(model => model.Id == promptItem.ModelId);
-            // ?? throw new NcfExceptionBase($"找不到{promptItem.ModelId}对应的AIModel");
+            // ?? throw new NcfExceptionBase($"Cannot find the AIModel corresponding to {promptItem.ModelId}");
             if (aiModel == null)
             {
                 SenparcTrace.SendCustomLog("NotFoundException", $"找不到{promptItem.ModelId}对应的AIModel");
@@ -495,13 +495,13 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     }
 
     /// <summary>
-    /// 根据配置获取模型参数
+    /// Get model parameters according to configuration
     /// </summary>
     /// <param name="promptItem"></param>
     /// <returns></returns>
     public PromptConfigParameter GetPromptConfigParameterFromAiSetting(PromptItemDto promptItem)
     {
-        //定义 AI 接口调用参数和 Token 限制等
+        //Define AI interface calling parameters and Token restrictions, etc.
         var promptParameter = new PromptConfigParameter()
         {
             MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 200,
@@ -518,21 +518,21 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     #region 生成 PromptItem 树
 
     /// <summary>
-    /// 输入靶场名，构建该靶场内所有的版本树
+    /// Enter the shooting range name to build all version trees in the shooting range
     /// </summary>
-    /// <param name="rangeName">靶场名</param>
-    /// <returns >版本树</returns>
+    /// <param name="rangeName">Range name</param>
+    /// <returns >Version tree</returns>
     /// <exception cref="NcfExceptionBase"></exception>
     public async Task<List<TreeNode<PromptItem_GetIdAndNameResponse>>> GenerateTacticTreeAsync(List<PromptItem> allPromptitems, string rangeName)
     {
-        // 获取同一个靶道下的所有的 PromptItem
+        // Get all PromptItems under the same target lane
         List<PromptItem> fullList = allPromptitems.Where(p => p.RangeName == rangeName).ToList();
         //Console.WriteLine("fulllist:" + fullList.OrderBy(z=>z.Id).Select(z => new { z.Id, z.RangeName, z.Tactic, z.Aiming, z.FullVersion,z.ParentTac }).ToJson(true));
 
-        //设置顶部节点（Tx）
+        //Set top node (Tx)
         var rootNodeList = new List<TreeNode<PromptItem_GetIdAndNameResponse>>();
 
-        //查找结点方法
+        //Find node method
         TreeNode<PromptItem_GetIdAndNameResponse> findNode(TreeNode<PromptItem_GetIdAndNameResponse> parentNode, string promptRange, string tascic)
         {
             if (parentNode == null)
@@ -545,7 +545,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                 return parentNode;
             }
 
-            //由于 PromptItem 的产生时间顺序特征，反向查找能够更快找到
+            //Due to the temporal ordering characteristics of PromptItem, reverse search can find it faster
             for (int i = parentNode.Children.Count - 1; i >= 0; i--)
             {
                 var item = parentNode.Children[i];
@@ -563,7 +563,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         {
             var promptitem = fullList[i];
 
-            //由于 PromptItem 的产生时间顺序特征，反向查找能够更快找到
+            //Due to the temporal ordering characteristics of PromptItem, reverse search can find it faster
             TreeNode<PromptItem_GetIdAndNameResponse> parentNode = null;
             for (int j = rootNodeList.Count - 1; j >= 0; j--)
             {
@@ -578,7 +578,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
         foreach (var promptitem in fullList)
         {
-            //寻找上级节点    TODO：为了提高效率，可以只向上查找
+            //Find superior nodes TODO: In order to improve efficiency, you can only search upwards
 
             TreeNode<PromptItem_GetIdAndNameResponse> parentNode = null;
             for (int i = 0; i < rootNodeList.Count; i++)
@@ -591,18 +591,18 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                 }
             }
 
-            //创造当前新节点信息
+            //Create current new node information
             var newNode = new TreeNode<PromptItem_GetIdAndNameResponse>(promptitem.FullVersion, promptitem.NickName, new PromptItem_GetIdAndNameResponse(promptitem), -1);
 
             if (parentNode == null)
             {
-                //顶部节点
+                //top node
                 newNode.Level = 1;
                 rootNodeList.Add(newNode);
             }
             else
             {
-                //子节点
+                //child node
                 newNode.Level = parentNode.Level + 1;
                 parentNode.Children.Add(newNode);
             }
@@ -612,7 +612,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
 
     /// <summary>
-    /// 返回带树形结构的 PromptRange
+    /// Returns a PromptRange with a tree structure
     /// </summary>
     /// <returns></returns>
     public async Task<PromptItemTreeList> GetPromptRangeTreeList(bool showPromptRangeNode, bool showTacticNode, string promptName = null)
@@ -621,7 +621,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
         var promptRangeService = _promptRangeService;
 
-        //由于 Tastic 层次是根据时间（ID）顺序向下发展，所以只要根据 ID 排序，即可实现所有节点自顶向下的排列顺序
+        //Since the Tastic hierarchy develops downward according to time (ID) order, all nodes can be sorted from top to bottom as long as they are sorted according to ID.
 
         var seh = new SenparcExpressionHelper<Models.DatabaseModel.PromptRange>();
         seh.ValueCompare.AndAlso(!promptName.IsNullOrEmpty(), z => z.RangeName == promptName);
@@ -634,11 +634,11 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         const string treeBranchMark = "┣";
         const string treeBranchArrowMark = "▽";
         const string treeBranchDarkArrowMark = "▼";
-        const string treeBranchStr = treeBranchMark + "　";//加全角空格
-        const string treeBranchArrowStr = treeBranchArrowMark + " ";//加半角空格
-        const string treeBranchDarkArrowStr = treeBranchDarkArrowMark + " ";//加半角空格
+        const string treeBranchStr = treeBranchMark + "　";//Add full-width spaces
+        const string treeBranchArrowStr = treeBranchArrowMark + " ";//Add half-width space
+        const string treeBranchDarkArrowStr = treeBranchDarkArrowMark + " ";//Add half-width space
 
-        //获取柱状结构前缀
+        //Get columnar structure prefix
         Func<int, bool, bool, string> GetPrefix = (level, isTacticPoint, showArrow) =>
         {
             var prefix = string.Concat(Enumerable.Repeat(treeBranchStr, level));
@@ -653,13 +653,13 @@ public partial class PromptItemService : ServiceBase<PromptItem>
             }
         };
 
-        //读取评分
+        //Read ratings
         Func<decimal, string> GetScore = score => score < 0 ? "-" : score.ToString();
 
 
         foreach (var promptRange in allPromptRanges)
         {
-            //获取树状结构
+            //Get tree structure
             var rangeTree = await this.GenerateTacticTreeAsync(allPromptItems, promptRange.RangeName);
 
             //Console.WriteLine("rangeTree:" + rangeTree.Select(z => new { z.Name, z.Data.FullVersion }).ToJson(true));
@@ -673,7 +673,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
             if (showPromptRangeNode)
             {
-                //正在开始一个新的 PromptRange，插入这个 Prompt的整体引导 TODO：判断是否需要添加额外描述性节点
+                //Starting a new PromptRange, inserting the overall guidance of this Prompt TODO: Determine whether additional descriptive nodes need to be added
                 tree.AddNode("PromptRange" + promptRange.Id, $"⊙ {promptRange.RangeName}（{promptRange.GetAvailableName()}）", promptRange.RangeName, -1, rangeTree.Count);
             }
 
@@ -685,17 +685,17 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                 TraversePromptItem(treeNode);
             }
 
-            // 迭代插入子节点
+            // Iteratively insert child nodes
             void TraversePromptItem(TreeNode<PromptItem_GetIdAndNameResponse> treeNote)
             {
                 var versionObj = treeNote.Data.PromptItemVersion;
 
                 string lastTactic = string.Empty;
 
-                //显示 Tactic 虚拟节点
+                //Show Tactic virtual nodes
                 if (showTacticNode && treeNote.Level == 1 && !addedTopNode.Contains(versionObj.Tactic))
                 {
-                    //顶层，如：T1，加上下拉标记
+                    //Top level, such as: T1, plus drop-down mark
                     var version = $"{versionObj.RangeName}-T{versionObj.Tactic}";
                     tree.AddNode(key: "PromptItemTactic" + treeNote.Data.PromptItemVersion.Tactic,
                                  text: GetPrefix(treeNote.Level, true, true) + version,
@@ -706,12 +706,12 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                     addedTopNode.Add(versionObj.Tactic);
                 }
 
-                //创建当前节点
+                //Create current node
                 var nickName = treeNote.NickName.IsNullOrEmpty() ? "" : $"{treeNote.NickName}，";
                 var text = GetPrefix(treeNote.Level, false, treeNote.Children.Count > 0) + /*$"[{treeNote.Data.Id}]" +*/ $"{treeNote.Name} ({nickName}Avg:{GetScore(treeNote.Data.EvalAvgScore)}，Max:{GetScore(treeNote.Data.EvalMaxScore)})：{treeNote.Data.PromptContent.SubString(0, 30)}";
 
                 tree.AddNode("PromptItem" + treeNote.Data.Id, text, treeNote.Data.FullVersion, treeNote.Level, treeNote.Children.Count);
-                //判断是否还有下级
+                //Determine whether there are subordinates
 
                 foreach (var child in treeNote.Children)
                 {

@@ -27,7 +27,7 @@ namespace Senparc.Ncf.Repository
         public RepositoryBase(INcfDbData db) : base(db)
         {
             //System.Web.HttpContext.Current.Response.Write("-"+this.GetType().Name + "<br />");
-            //DB = db ?? ObjectFactory.GetInstance<INcfDbData>();//如果没有定义，取默认数据库
+            //DB = db ?? ObjectFactory.GetInstance<INcfDbData>();//If not defined, take the default database
 
             base.BaseDB = db;
             // ObjectFactory.GetInstance<INcfDbData>();
@@ -45,7 +45,7 @@ namespace Senparc.Ncf.Repository
         public virtual bool IsInsert(T obj)
         {
             Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<T> entry = BaseDB.BaseDataContext.Entry(obj);
-            return entry.State == EntityState.Added || entry.State == EntityState.Detached; //TODO:EF5、Core 验证正确性
+            return entry.State == EntityState.Added || entry.State == EntityState.Detached; //TODO: EF5, Core verification correctness
             //return obj.EntityKey == null || obj.EntityKey.EntityKeyValues == null;
 
             //entry.IsKeySet
@@ -100,13 +100,13 @@ namespace Senparc.Ncf.Repository
             {
                 result = resultList.ToList();
             }
-            //catch (ArgumentException ex)//DbArithmeticExpression 参数必须具有数值通用类型。
+            //catch (ArgumentException ex)//DbArithmeticExpression parameter must have a numeric generic type.
             //{
-            //    //通常是ordery by的问题 TODO:重新整理是否需要Skip等操作
+            //    //Usually a problem with order by TODO: Does reorganizing require operations such as Skip?
             //    //result = query.Includes(includes)
-            //    //            .OrderByIEnumerable(orderBy.Compile(), orderingType)//改用非延时地方法，效率最低
+            //    // .OrderByIEnumerable(orderBy.Compile(), orderingType)//Switch to non-delayed method, the lowest efficiency
             //    //            .Skip(skipCount).Take(pageCount)
-            //    //            .Where(where.Compile())//保险起见用where.Compile()，但是会影响效率
+            //    // .Where(where.Compile())//Use where.Compile() to be on the safe side, but it will affect efficiency
             //    //            .ToList();
             //    AdminLogUtility.WebLogger.Warn("EF ArgumentException", ex);
             //    throw;
@@ -153,13 +153,13 @@ namespace Senparc.Ncf.Repository
             {
                 result = resultList.ToList();
             }
-            //catch (ArgumentException ex)//DbArithmeticExpression 参数必须具有数值通用类型。
+            //catch (ArgumentException ex)//DbArithmeticExpression parameter must have a numeric generic type.
             //{
-            //    //通常是ordery by的问题 TODO:重新整理是否需要Skip等操作
+            //    //Usually a problem with order by TODO: Does reorganizing require operations such as Skip?
             //    //result = query.Includes(includes)
-            //    //            .OrderByIEnumerable(orderBy.Compile(), orderingType)//改用非延时地方法，效率最低
+            //    // .OrderByIEnumerable(orderBy.Compile(), orderingType)//Switch to non-delayed method, the lowest efficiency
             //    //            .Skip(skipCount).Take(pageCount)
-            //    //            .Where(where.Compile())//保险起见用where.Compile()，但是会影响效率
+            //    // .Where(where.Compile())//Use where.Compile() to be on the safe side, but it will affect efficiency
             //    //            .ToList();
             //    AdminLogUtility.WebLogger.Warn("EF ArgumentException", ex);
             //    throw;
@@ -393,19 +393,19 @@ namespace Senparc.Ncf.Repository
         }
 
         /// <summary>
-        /// 删除对象
+        /// delete object
         /// </summary>
         /// <param name="obj"></param>
-        /// <param name="softDelete">是否使用软删除</param>
+        /// <param name="softDelete">Whether to use soft delete</param>
         public virtual void Delete(T obj, bool softDelete = false)
         {
             if (softDelete)
             {
-                obj.Flag = true;//软删除
+                obj.Flag = true;//soft delete
             }
             else
             {
-                BaseDB.BaseDataContext.Set<T>().Remove(obj);//硬删除
+                BaseDB.BaseDataContext.Set<T>().Remove(obj);//hard delete
             }
             this.SaveChanges();
         }
@@ -572,29 +572,29 @@ namespace Senparc.Ncf.Repository
 
 
         /// <summary>
-        /// 删除对象
+        /// delete object
         /// </summary>
         /// <param name="obj"></param>
-        /// <param name="softDelete">是否使用软删除</param>
+        /// <param name="softDelete">Whether to use soft delete</param>
         public virtual async Task DeleteAsync(T obj, bool softDelete = false)
         {
             if (softDelete)
             {
-                obj.Flag = true;//软删除
+                obj.Flag = true;//soft delete
             }
             else
             {
-                BaseDB.BaseDataContext.Set<T>().Remove(obj);//硬删除
+                BaseDB.BaseDataContext.Set<T>().Remove(obj);//hard delete
             }
             await this.SaveChangesAsync();
         }
 
 
         /// <summary>
-        /// 批量删除
+        /// Batch delete
         /// </summary>
         /// <param name="objs"></param>
-        /// <param name="deleteItemAction">删除每一个对象的操作</param>
+        /// <param name="deleteItemAction">The operation of deleting each object</param>
         /// <param name="softDelete"></param>
         /// <returns></returns>
         public virtual async Task DeleteAllAsync(IEnumerable<T> objs, Action<T> deleteItemAction = null, bool softDelete = false)
@@ -603,11 +603,11 @@ namespace Senparc.Ncf.Repository
             {
                 if (softDelete)
                 {
-                    obj.Flag = true;//软删除
+                    obj.Flag = true;//soft delete
                 }
                 else
                 {
-                    BaseDB.BaseDataContext.Set<T>().Remove(obj);//硬删除
+                    BaseDB.BaseDataContext.Set<T>().Remove(obj);//hard delete
                 }
 
                 deleteItemAction?.Invoke(obj);
@@ -617,7 +617,7 @@ namespace Senparc.Ncf.Repository
 
 
         /// <summary>
-        /// 批量添加, 待优化
+        /// Batch addition, to be optimized
         /// </summary>
         /// <param name="objs"></param>
         /// <param name="softDelete"></param>
@@ -626,7 +626,7 @@ namespace Senparc.Ncf.Repository
         {
             //foreach (var obj in objs)
             //{
-            //    //BaseDB.BaseDataContext.Set<T>().(obj);//硬删除
+            //    //BaseDB.BaseDataContext.Set<T>().(obj);//Hard deletion
             //}
             BaseDB.BaseDataContext.Set<T>().AddRange(objs);
             await this.SaveChangesAsync();
@@ -634,7 +634,7 @@ namespace Senparc.Ncf.Repository
 
 
         /// <summary>
-        /// 动态排序
+        /// dynamic sorting
         /// </summary>
         /// <param name="where"></param>
         /// <param name="OrderbyField">xxx DESC, bbb ASC</param>
@@ -708,7 +708,7 @@ namespace Senparc.Ncf.Repository
         }
 
         /// <summary>
-        /// 开启事物
+        ///turn on things
         /// </summary>
         /// <returns></returns>
         public void BeginTransaction()
@@ -717,7 +717,7 @@ namespace Senparc.Ncf.Repository
         }
 
         /// <summary>
-        /// 开启事物
+        ///turn on things
         /// </summary>
         /// <returns></returns>
         public void BeginTransaction(System.Data.IsolationLevel isolationLevel)
@@ -726,7 +726,7 @@ namespace Senparc.Ncf.Repository
         }
 
         /// <summary>
-        /// 开启事物
+        ///turn on things
         /// </summary>
         /// <returns></returns>
         public async Task BeginTransactionAsync()
@@ -735,7 +735,7 @@ namespace Senparc.Ncf.Repository
         }
 
         /// <summary>
-        /// 开启事物
+        ///turn on things
         /// </summary>
         /// <returns></returns>
         public async Task BeginTransactionAsync(System.Data.IsolationLevel isolationLevel)
@@ -744,7 +744,7 @@ namespace Senparc.Ncf.Repository
         }
 
         /// <summary>
-        /// 回滚事物
+        /// rollback transaction
         /// </summary>
         /// <returns></returns>
         public void RollbackTransaction()
@@ -753,7 +753,7 @@ namespace Senparc.Ncf.Repository
         }
 
         /// <summary>
-        /// 提交事务
+        /// Commit transaction
         /// </summary>
         public void CommitTransaction()
         {

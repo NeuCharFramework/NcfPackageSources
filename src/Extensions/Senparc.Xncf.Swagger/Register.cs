@@ -29,7 +29,7 @@ namespace Senparc.Xncf.Swagger
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
         /// <summary>
-        /// Api 默认文档地址，返回 null 则不生成 XML 文档
+        ///Api default document address, return null to not generate XML document
         /// </summary>
         public static Func<IWebHostEnvironment, string> ApiDocXmlPathFunc = (env) => Path.Combine(env.ContentRootPath, "App_Data", "ApiDocXml");
 
@@ -37,9 +37,9 @@ namespace Senparc.Xncf.Swagger
 
         public override string Name => "Senparc.Xncf.Swagger";
 
-        public override string Uid => "712d56f6-989e-4b5f-b769-86a870543e8d";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => "712d56f6-989e-4b5f-b769-86a870543e8d";//It must be globally unique and must be fixed after generation. It has been automatically generated and can also be modified by yourself.
 
-        public override string Version => "0.7.1";//必须填写版本号
+        public override string Version => "0.7.1";//Version number is required
 
         public override string MenuName => "接口说明文档";
 
@@ -114,7 +114,7 @@ namespace Senparc.Xncf.Swagger
                     x.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
                 });
 
-                //接口文档
+                //Interface documentation
                 #region Swagger
 
                 if (ConfigurationHelper.CustsomSwaggerOptions.Enabled)
@@ -196,14 +196,14 @@ namespace Senparc.Xncf.Swagger
                 {
                     var isAuthenticated = context.User?.Identity?.IsAuthenticated ?? false;
 
-                    // 检查 Cookie 认证
+                    // Check Cookie Authentication
                     if (!isAuthenticated)
                     {
-                        // 检查是否有有效的 JWT Token
+                        // Check if there is a valid JWT Token
                         var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
                         if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
                         {
-                            // 既没有 Cookie 认证也没有有效的 JWT，重定向到登录页
+                            // Neither cookie authentication nor valid JWT, redirect to login page
                             var returnUrl = Uri.EscapeDataString(context.Request.Path + context.Request.QueryString);
                             context.Response.Redirect($"/Admin/Login?returnUrl={returnUrl}");
                             return;

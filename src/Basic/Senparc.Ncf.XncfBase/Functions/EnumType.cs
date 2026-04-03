@@ -5,7 +5,7 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase.Functions
 {
     /// <summary>
-    /// 枚举类型
+    /// enum type
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class EnumType<T> where T : struct

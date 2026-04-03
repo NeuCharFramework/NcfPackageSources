@@ -38,7 +38,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 rangeFilePaths.Add(pluginFilePath);
             }
 
-            // 根据 rangeFilePaths， 找出他们公共父文件夹的路径
+            // According to rangeFilePaths, find the path of their common parent folder
             var commonParentPath = this.FindCommonParentPath(rangeFilePaths);
 
             return commonParentPath;
@@ -54,11 +54,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             
             if (pathList.Count == 1)
             {
-                // 只有一个路径，返回其父目录
+                // There is only one path, returning to its parent directory
                 return Directory.GetParent(pathList[0])?.FullName ?? pathList[0];
             }
             
-            // 标准化路径分隔符（兼容Windows和Unix）
+            // Standardized path separators (Windows and Unix compatible)
             var normalizedPaths = pathList.Select(p => 
                 p.Replace('\\', Path.DirectorySeparatorChar)
                  .Replace('/', Path.DirectorySeparatorChar)
@@ -71,10 +71,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var minLen = splitPaths.Min(sp => sp.Length);
 
             var commonPath = new List<string>();
-            for (var i = 0; i < minLen - 1; i++) // minLen - 1 确保不包含最后的文件夹名
+            for (var i = 0; i < minLen - 1; i++) // minLen - 1 ensures that the last folder name is not included
             {
                 var dir = splitPaths[0][i];
-                // 大小写不敏感比较（兼容Windows和Unix）
+                // Case-insensitive comparison (compatible with Windows and Unix)
                 if (splitPaths.All(sp => string.Equals(sp[i], dir, StringComparison.OrdinalIgnoreCase)))
                 {
                     commonPath.Add(dir);
@@ -85,7 +85,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 }
             }
 
-            // Unix系统需要保留根路径的 /
+            // Unix systems need to retain the / of the root path
             var result = Path.Combine(commonPath.ToArray());
             if (normalizedPaths[0].StartsWith(Path.DirectorySeparatorChar.ToString()) && 
                 !result.StartsWith(Path.DirectorySeparatorChar.ToString()))
@@ -97,36 +97,36 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        /// 根据靶场 ID, 导出该靶场下所有的靶道，返回文件夹路径
+        /// Based on the shooting range ID, export all the shooting ranges under the shooting range and return to the folder path
         /// </summary>
         /// <param name="rangeId"></param>
         /// <param name="ids"></param>
         /// <returns></returns>
         public async Task<string> ExportPluginsAsync(int rangeId, List<int> ids)
         {
-            // 根据靶场名，获取靶场
+            // Get the shooting range based on the shooting range name
             var promptRange = await _promptRangeService.GetAsync(rangeId);
 
-            // 获取输出的靶场的文件夹路径
+            // Get the folder path of the output range
             var rangePath = this.GetRangePath(promptRange);
 
-            // 根据靶场名，获取靶道
+            // Get the target lane based on the shooting range name
             var promptItemList = await this.GetFullListAsync(
                 p => p.RangeName == promptRange.RangeName
                      && (ids == null || ids.Contains(p.Id))
             );
 
-            // //用版号作为key, 映射字典
+            // //Use version number as key, mapping dictionary
             // var itemMapByVersion = promptItemList.ToDictionary(p => p.FullVersion, p => p);
 
-            // // 提取出 T 的第一位，并分组
+            // //Extract the first bit of T and group it
             // Dictionary<string, List<PromptItem>> itemGroupByT = promptItemList.GroupBy(p => p.Tactic.Substring(0, 1))
             //     .ToDictionary(p => p.Key, p => p.ToList());
 
-            // 每个靶道都需要导出
+            // Each target lane needs to be exported
             foreach (var item in promptItemList)
             {
-                // // 找出最佳item
+                // // Find the best item
                 // var bestItem = itemList.MaxBy(p => isAvg ? p.EvalAvgScore : p.EvalMaxScore);
 
                 await ExportPluginWithItemAsync(item, rangePath);
@@ -136,7 +136,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        /// 导出指定的单个靶道，返回文件夹路径
+        ///Export the specified single target lane and return the folder path
         /// </summary>
         /// <param name="promptItem"></param>
         /// <param name="rangePath"></param>
@@ -168,13 +168,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 input_variables = new List<PromptInputVariable>()
             };
 
-            //添加输入对象
+            //Add input object
             var inputVarialbes = promptItem.GetInputValiableObject();
             data.input_variables.AddRange(inputVarialbes.Select(z => new PromptInputVariable(z)));
 
             #endregion
 
-            //  当前 plugin 文件夹目录，靶道名/别名
+            //  Current plugin folder directory, target channel name/alias
             var curPluginPath = Path.Combine(rangePath, promptItem.NickName ?? promptItem.FullVersion);
             if (!Directory.Exists(curPluginPath))
             {
@@ -182,12 +182,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
             else
             {
-                // 如果别名已经存在，就增加一个尾缀
+                // If the alias already exists, add a suffix
                 curPluginPath += $"_{DateTime.Now:yyyyMMddHHmmss}";
                 Directory.CreateDirectory(curPluginPath);
             }
 
-            // 完整的JSON文件路径
+            // Full JSON file path
             // string jsonFullPath = Path.Combine(curPluginPath, "config.json");
 
             await using (var jsonFs = new FileStream(
@@ -195,21 +195,21 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                              FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite))
             {
                 jsonFs.Seek(0, SeekOrigin.Begin);
-                jsonFs.SetLength(0); // 清空文件内容
+                jsonFs.SetLength(0); // Clear file contents
                 await using (var jsonSw = new StreamWriter(jsonFs, Encoding.UTF8))
                 {
-                    // 写入并且保持格式
+                    // Write and keep format
                     await jsonSw.WriteLineAsync(JsonConvert.SerializeObject(data, Formatting.Indented));
                 }
             }
 
-            // 同理，构造 skprompt.txt 文件，内容为content
+            // In the same way, construct the skprompt.txt file with content
             await using (var txtFs = new FileStream(
                              Path.Combine(curPluginPath, "skprompt.txt"),
                              FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
             {
                 txtFs.Seek(0, SeekOrigin.Begin);
-                txtFs.SetLength(0); // 清空文件内容
+                txtFs.SetLength(0); // Clear file contents
                 await using (var jsonSw = new StreamWriter(txtFs, Encoding.UTF8))
                 {
                     await jsonSw.WriteLineAsync(promptItem.Content);
@@ -220,7 +220,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        /// 根据靶场，生成文件夹，并返回文件夹路径
+        /// Based on the shooting range, generate a folder and return the folder path
         /// </summary>
         /// <param name="range"></param>
         /// <returns></returns>
@@ -228,20 +228,20 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         {
             #region 根据靶场别名，生成文件夹
 
-            // 有别名就用别名，没有就用靶场名
+            // If there is an alias, use the alias; if not, use the shooting range name.
 
-            // 先获取根目录
+            // Get the root directory first
             var curDir = Directory.GetCurrentDirectory();
 
             var filePathPrefix = Path.Combine(curDir, "App_Data", "Files");
 
 
-            // 生成文件夹
+            // Generate folder
             var rangePath = Path.Combine(filePathPrefix, "ExportedPluginsTemp", $"{range.Alias ?? range.RangeName}_{range.RangeName}");
 
             if (Directory.Exists(rangePath))
             {
-                // 如果存在，就先清理指定文件夹
+                // If it exists, clean the specified folder first
                 Directory.Delete(rangePath, true);
             }
             Directory.CreateDirectory(rangePath);
@@ -288,7 +288,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 Name = inputVariable.Name;
                 Description = inputVariable.Description;
                 Default = inputVariable.Default?.ToString();
-                //TODO: 添加更多
+                //TODO: Add more
             }
         }
 
@@ -300,7 +300,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             if (uploadedFile == null || uploadedFile.Length == 0)
                 throw new NcfExceptionBase("文件未找到");
-            // 限制文件上传的大小为 50M
+            // Limit file upload size to 50M
             if (uploadedFile.Length > 1024 * 1024 * 50)
             {
                 throw new NcfExceptionBase("文件大小超过限制（50 M）");
@@ -321,7 +321,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 Directory.CreateDirectory(toSaveDir);
             }
 
-            // 文件保存路径
+            // File save path
             var zipFilePath = Path.Combine(toSaveDir, uploadedFile.FileName);
 
             using (var stream = new FileStream(zipFilePath, FileMode.Create))
@@ -333,20 +333,20 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
 
 
-            // 读取 zip 文件
+            // Read zip file
             using var zip = ZipFile.OpenRead(zipFilePath);
 
-            //解压
+            //Unzip
             var extractDir = $"{zipFilePath}-{SystemTime.NowTicks}";
             zip.ExtractToDirectory(extractDir);
 
-            //判断文件结构
-            //假设为完整路径
+            //Determine file structure
+            //Assume full path
             var topDirs = Directory.GetDirectories(extractDir);
             List<PromptItem> promptItems = new List<PromptItem>();
             foreach (var topDir in topDirs)
             {
-                // 先创建靶场
+                // Create a shooting range first
                 Console.WriteLine("topDir:" + topDir);
                 var rangeAlias = Path.GetFileName(topDir);
                 var promptRangeDto = await _promptRangeService.AddAsync(rangeAlias);
@@ -360,7 +360,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
                     if (!File.Exists(configFilePath) && !File.Exists(skpromptFilePath))
                     {
-                        //TODO：给出失败提示
+                        //TODO: Give a failure message
                         continue;
                     }
 
@@ -370,7 +370,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
                     if (File.Exists(configFilePath))
                     {
-                        // 读取所有的文件为一个 string
+                        // Read all files into a string
                         await using Stream stream = new FileStream(configFilePath, FileMode.Open);
                         using StreamReader reader = new StreamReader(stream);
 
@@ -395,7 +395,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
                     if (File.Exists(skpromptFilePath))
                     {
-                        // 读取所有的文件为一个 string
+                        // Read all files into a string
                         await using Stream stream = new FileStream(skpromptFilePath, FileMode.Open);
                         using StreamReader reader = new StreamReader(stream);
 
@@ -403,10 +403,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
                         promptItem.UpdateContent(skPrompt);
 
-                        // 提取 prompt 请求参数
-                        var pattern = @"\{\{\$(.*?)\}\}";//TODO: 支持更多格式
+                        // Extract prompt request parameters
+                        var pattern = @"\{\{\$(.*?)\}\}";//TODO: Support more formats
 
-                        // 没有参数
+                        // no parameters
                         if (!Regex.IsMatch(skPrompt, pattern))
                         {
                             continue;
@@ -429,11 +429,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             #region 老方法
             /*
-            // #region 可以选择先解压
+            // #region can choose to decompress first
 
             // zip.ExtractToDirectory(Path.Combine(toSaveDir, zipFile.FileName.Split(".")[0]), true);
 
-            // 解压文件
+            // Unzip the file
             // var unzippedFilePath = Path.Combine(toSaveDir, zipFile.FileName.Split(".")[0], "");
             // if (!Directory.Exists(unzippedFilePath))
             // {
@@ -445,7 +445,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             // #endregion
 
-            // 开始读取
+            // Start reading
             Dictionary<string, PromptItem> zipIdxDict = new();
             int tacticCnt = 0;
             foreach (var curFile in zip.Entries)
@@ -454,10 +454,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 var curDirName = Path.GetDirectoryName(curFile.FullName)!;
                 if (curDirName.Contains('/') || curDirName.Contains('\\'))
                 {
-                    throw new NcfExceptionBase($"{curFile.FullName}文件格式错误");
+                    throw new NcfExceptionBase($"{curFile.FullName} file format error");
                 }
 
-                if (curFile.Name == "") // 是目录
+                if (curFile.Name == "") // is a directory
                 {
                     var promptItem = new PromptItem(promptRange, curDirName, ++tacticCnt);
 
@@ -468,16 +468,16 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     // var directoryName = curDirName!;
                     // if (directoryName.Contains('/') || directoryName.Contains('\\'))
                     // {
-                    //     throw new NcfExceptionBase($"{curFile.FullName}文件格式错误");
+                    // throw new NcfExceptionBase($"{curFile.FullName} file format error");
                     // }
 
-                    // 从缓存中读取
+                    //Read from cache
                     var promptItem = zipIdxDict[curDirName];
 
-                    // 根据不同文件名，更新不同的字段
-                    if (curFile.Name == "config.json") // 更新配置文件
+                    //Update different fields based on different file names
+                    if (curFile.Name == "config.json") // Update configuration file
                     {
-                        // 读取所有的文件为一个 string
+                        // Read all files into a string
                         await using Stream stream = curFile.Open();
                         using StreamReader reader = new StreamReader(stream);
 
@@ -497,7 +497,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     }
                     else if (curFile.Name == "skprompt.txt")
                     {
-                        // 读取所有的文件为一个 string
+                        // Read all files into a string
                         await using Stream stream = curFile.Open();
                         using StreamReader reader = new StreamReader(stream);
 
@@ -505,10 +505,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
                         promptItem.UpdateContent(skPrompt);
 
-                        // 提取 prompt 请求参数
+                        //Extract prompt request parameters
                         var pattern = @"\{\{\$(.*?)\}\}";
 
-                        // 没有参数
+                        // no parameters
                         if (!Regex.IsMatch(skPrompt, pattern))
                         {
                             continue;
@@ -527,7 +527,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     else
                     {
                         continue;
-                        throw new NcfExceptionBase($"{curFile.FullName}不符合上传要求");
+                        throw new NcfExceptionBase($"{curFile.FullName} does not meet the upload requirements");
                     }
                 }
             }
@@ -537,7 +537,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             #endregion
 
 
-            // 保存
+            // save
             await this.SaveObjectListAsync(promptItems);
         }
     }

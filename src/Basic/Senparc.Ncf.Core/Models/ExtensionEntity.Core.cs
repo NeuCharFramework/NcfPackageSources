@@ -15,7 +15,7 @@ namespace Senparc.Ncf.Core.Models
     #region 全局
 
     /// <summary>
-    /// 分页
+    ///pagination
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class PagedList<T> : List<T> //where T : class /*,new()*/
@@ -43,7 +43,7 @@ namespace Senparc.Ncf.Core.Models
     }
 
     /// <summary>
-    /// 网页Meta标签集合
+    /// Web page Meta tag collection
     /// </summary>
     public class MetaCollection : Dictionary<MetaType, string>
     {
@@ -62,7 +62,7 @@ namespace Senparc.Ncf.Core.Models
     }
 
     /// <summary>
-    /// 首页图片切换
+    ///Homepage picture switch
     /// </summary>
     public class HomeSlider
     {
@@ -78,7 +78,7 @@ namespace Senparc.Ncf.Core.Models
     }
 
     /// <summary>
-    /// 系统配置文件
+    ///system configuration file
     /// </summary>
     [Serializable]
     public class SenparcConfig
@@ -105,7 +105,7 @@ namespace Senparc.Ncf.Core.Models
     }
 
     /// <summary>
-    /// 全局提示消息
+    ///Global prompt message
     /// </summary>
     [Serializable]
     public class Messager
@@ -125,7 +125,7 @@ namespace Senparc.Ncf.Core.Models
     }
 
     /// <summary>
-    /// 日志
+    /// log
     /// </summary>
     public class WebLog
     {
@@ -171,11 +171,11 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        /// 创建对象
+        ///Create object
         /// </summary>
-        /// <typeparam name="T">对象类型</typeparam>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="entity">实体实例</param>
+        /// <typeparam name="T">Object type</typeparam>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="entity">Entity instance</param>
         /// <returns></returns>
         public static T CreateEntity<T>(TEntity entity)
         where T : BaseFullEntity<TEntity>,
@@ -187,11 +187,11 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        /// 创建对象列表
+        ///Create object list
         /// </summary>
-        /// <typeparam name="T">对象类型</typeparam>
-        /// <typeparam name="TEntity">试题类型</typeparam>
-        /// <param name="entityList">实体列表</param>
+        /// <typeparam name="T">Object type</typeparam>
+        /// <typeparam name="TEntity">Test type</typeparam>
+        /// <param name="entityList">Entity List</param>
         /// <returns></returns>
         public static List<T> CreateList<T>(IEnumerable<TEntity> entityList)
         where T : BaseFullEntity<TEntity>,
@@ -299,13 +299,13 @@ namespace Senparc.Ncf.Core.Models
         public string ProvinceName { get; set; }
 
         /// <summary>
-        /// 地区代码
+        ///area code
         /// </summary>
         [DataMember]
         public string DivisionsCode { get; set; }
 
         /// <summary>
-        /// 缩写（去掉“省”“市”“自治区”等）
+        /// Abbreviation (remove "province", "city", "autonomous region", etc.)
         /// </summary>
         [DataMember]
         public string ShortName { get; set; }

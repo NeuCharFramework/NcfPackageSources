@@ -1,5 +1,5 @@
-// Grid 是在有直角坐标系的时候必须要存在的
-// 所以这里也要被 Cartesian2D 依赖
+// Grid must exist when there is a rectangular coordinate system
+// So this is also dependent on Cartesian2D
 define(function(require) {
 
     'use strict';

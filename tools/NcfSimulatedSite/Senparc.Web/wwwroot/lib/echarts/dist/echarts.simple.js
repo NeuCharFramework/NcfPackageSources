@@ -1479,7 +1479,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var componentsMap = this._componentsMap;
 	            var newCptTypes = [];
 
-	            // 如果不存在对应的 component model 则直接 merge
+	            // If there is no corresponding component model, merge directly
 	            each(newOption, function (componentOption, mainType) {
 	                if (componentOption == null) {
 	                    return;
@@ -1495,7 +1495,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            });
 
-	            // FIXME OPTION 同步是否要改回原来的
+	            // FIXME OPTION Do you want to change the synchronization back to the original one?
 	            ComponentModel.topologicalTravel(
 	                newCptTypes, ComponentModel.getAllClassMainTypes(), visitComponent, this
 	            );
@@ -1917,7 +1917,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    function mergeTheme(option, theme) {
 	        for (var name in theme) {
-	            // 如果有 component model 则把具体的 merge 逻辑交给该 model 处理
+	            // If there is a component model, the specific merge logic will be handed over to the model for processing.
 	            if (!ComponentModel.hasClass(name)) {
 	                if (typeof theme[name] === 'object') {
 	                    option[name] = !option[name]
@@ -2124,7 +2124,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 
 	    var Gradient = __webpack_require__(4);
-	    // 用于处理merge时无法遍历Date等对象的问题
+	    // Used to deal with the problem of being unable to traverse objects such as Date when merging
 	    var BUILTIN_OBJECT = {
 	        '[object Function]': 1,
 	        '[object RegExp]': 1,
@@ -2144,7 +2144,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    /**
 	     * @param {*} source
-	     * @return {*} 拷贝后的新对象
+      * @return {*} The new object after copying
 	     */
 	    function clone(source) {
 	        if (typeof source == 'object' && source !== null) {
@@ -2157,7 +2157,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            else if (
 	                !isBuildInObject(source)
-	                // 是否为 dom 对象
+	                // Whether it is a dom object
 	                && !isDom(source)
 	            ) {
 	                result = {};
@@ -2201,12 +2201,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    && !isBuildInObject(sourceProp)
 	                    && !isBuildInObject(targetProp)
 	                ) {
-	                    // 如果需要递归覆盖，就递归调用merge
+	                    // If recursive coverage is required, call merge recursively.
 	                    merge(targetProp, sourceProp, overwrite);
 	                }
 	                else if (overwrite || !(key in target)) {
-	                    // 否则只处理overwrite为true，或者在目标对象中没有此属性的情况
-	                    // NOTE，在 target[key] 不存在的时候也是直接覆盖
+	                    // Otherwise, only the case where overwrite is true or there is no such attribute in the target object is processed.
+	                    // NOTE, when target[key] does not exist, it will be overwritten directly.
 	                    target[key] = clone(source[key], true);
 	                }
 	            }
@@ -2274,7 +2274,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    /**
-	     * 查询数组中元素的index
+      * Query the index of the element in the array
 	     * @memberOf module:zrender/core/util
 	     */
 	    function indexOf(array, value) {
@@ -2292,11 +2292,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    /**
-	     * 构造类继承关系
+      * Construct class inheritance relationship
 	     *
 	     * @memberOf module:zrender/core/util
-	     * @param {Function} clazz 源类
-	     * @param {Function} baseClazz 基类
+      * @param {Function} clazz source class
+      * @param {Function} baseClazz base class
 	     */
 	    function inherits(clazz, baseClazz) {
 	        var clazzPrototype = clazz.prototype;
@@ -2338,7 +2338,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    /**
-	     * 数组或对象遍历
+      * Array or object traversal
 	     * @memberOf module:zrender/core/util
 	     * @param {Object|Array} obj
 	     * @param {Function} cb
@@ -2366,7 +2366,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    /**
-	     * 数组映射
+      * Array mapping
 	     * @memberOf module:zrender/core/util
 	     * @param {Array} obj
 	     * @param {Function} cb
@@ -2413,7 +2413,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    /**
-	     * 数组过滤
+      * Array filtering
 	     * @memberOf module:zrender/core/util
 	     * @param {Array} obj
 	     * @param {Function} cb
@@ -2439,7 +2439,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    /**
-	     * 数组项查找
+      * Search array items
 	     * @memberOf module:zrender/core/util
 	     * @param {Array} obj
 	     * @param {Function} cb
@@ -3050,7 +3050,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var numberUtil = __webpack_require__(7);
 
 	    /**
-	     * 每三位默认加,格式化
+      * Every three digits are added by default, formatted
 	     * @type {string|number} x
 	     */
 	    function addCommas(x) {

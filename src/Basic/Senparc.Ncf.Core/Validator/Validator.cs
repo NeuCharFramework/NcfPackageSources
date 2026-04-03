@@ -293,7 +293,7 @@ namespace Senparc.Ncf.Core.Validator
                 }
             }
 
-            string invalidateUserName = "`~!@#$%^&*()+-=;':\",./<>?|\\";//TODO:可以用正则判断
+            string invalidateUserName = "`~!@#$%^&*()+-=;':\",./<>?|\\";//TODO: You can use regular rules to judge
             foreach (var item in invalidateUserName)
             {
                 if (userName.Contains(item))
@@ -325,7 +325,7 @@ namespace Senparc.Ncf.Core.Validator
             //return Regex(container, @"^1[358]\d{9}$", "Please enter a valid phone number in {0}!", stopWhileFail);
             //return Regex(container, @"^1[358]\d{9}$", "Please enter a valid phone number!", stopWhileFail);
 
-            //电信手机号码正则        string dianxin = @"^1[3578][01379]\d{8}$";        Regex dReg = new Regex(dianxin);        //联通手机号正则        string liantong = @"^1[34578][01256]\d{8}$";        Regex tReg = new Regex(liantong);        //移动手机号正则        string yidong = @"^(134[012345678]\d{7}|1[34578][012356789]\d{8})$";        Regex yReg = new Regex(yidong);
+            //Telecom mobile phone number regular string dianxin = @"^1[3578][01379]\d{8}$"; Regex dReg = new Regex(dianxin); //China Unicom mobile phone number regular string liantong = @"^1[34578][01256]\d{8}$"; Regex tReg = new Regex(liantong); //Mobile mobile phone number regular string yidong = @"^(134[012345678]\d{7}|1[34578][012356789]\d{8})$"; Regex yReg = new Regex(yidong);
 
             return Regex(container, @"^(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$", "Please enter a valid phone number!", stopWhileFail);
         }
@@ -531,7 +531,7 @@ namespace Senparc.Ncf.Core.Validator
         }
 
         /// <summary>
-        /// 校验验证码，建议Validator构造函数中的nullOrEmptyable为false
+        /// Validate verification code. It is recommended to set nullOrEmptyable to false in Validator constructor.
         /// </summary>
         /// <param name="container"></param>
         /// <param name="checkCodeKind"></param>

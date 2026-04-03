@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Database.Sqlite
 {
     /// <summary>
-    /// SQLite 数据库配置
+    ///SQLite database configuration
     /// </summary>
     public class SqliteDatabaseConfiguration : DatabaseConfigurationBase<SqliteDbContextOptionsBuilder, SqliteOptionsExtension>
     {
@@ -30,11 +30,11 @@ namespace Senparc.Ncf.Database.Sqlite
 
         internal static string GetLocalConnectionString(string connectionString)
         {
-            // 检查并调整路径  
+            // Check and adjust paths  
             const string PREFIX = "Filename=";
             if (connectionString.StartsWith($"{PREFIX}\\") || connectionString.StartsWith($"{PREFIX}./") || connectionString.StartsWith($"{PREFIX}.\\"))
             {
-                string relativePath = connectionString.Substring(PREFIX.Length); // 去掉 "Filename=" 前缀  
+                string relativePath = connectionString.Substring(PREFIX.Length); // Remove the "Filename=" prefix  
                 string dbPath = Path.Combine(Senparc.CO2NET.Config.RootDirectoryPath, relativePath.Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar));
                 connectionString = $"{PREFIX}{dbPath}";
             }
@@ -45,12 +45,12 @@ namespace Senparc.Ncf.Database.Sqlite
         public override Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase =>
             (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
             {
-                //其他更多配置
+                //Other more configurations
 
-                // 检查并调整路径  
+                // Check and adjust paths  
                 connectionString = GetLocalConnectionString(connectionString);
 
-                //执行 UseSqlite（必须）
+                //Execute UseSqlite (required)
                 //optionsBuilder.UseSqlite(CreateInMemoryDatabase(connectionString), actionBase);
 
                 optionsBuilder.UseSqlite(connectionString, actionBase);
@@ -58,7 +58,7 @@ namespace Senparc.Ncf.Database.Sqlite
 
         public override Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension => (builder, xncfDatabaseData) =>
         {
-            //更多数据库操作独立配置（非必须）
+            //More independent configuration of database operations (not required)
         };
 
 

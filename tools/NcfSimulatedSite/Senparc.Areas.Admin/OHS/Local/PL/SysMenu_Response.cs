@@ -13,18 +13,18 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
     }
 
     /// <summary>
-    /// 菜单创建响应
+    ///menu creation response
     /// </summary>
     public class SysMenu_CreateOrUpdateResponse
     {
         /// <summary>
-        /// 创建后的主键编号
+        /// Primary key number after creation
         /// </summary>
         public string Id { get; set; }
     }
 
     /// <summary>
-    /// 菜单树 不包含按钮
+    /// Menu tree does not contain buttons
     /// </summary>
     public class SysMenu_MenuTreeResponse
     {
@@ -32,7 +32,7 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
     }
 
     /// <summary>
-    /// 菜单列表项目
+    ///menu list item
     /// </summary>
     public class SysMenu_MenusResponse
     {
@@ -40,7 +40,7 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
     }
 
     /// <summary>
-    /// 菜单详情
+    ///menu details
     /// </summary>
     public class SysMenu_GetMenuResponse
     {

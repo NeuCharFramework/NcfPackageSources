@@ -25,7 +25,7 @@ namespace Senparc.Areas.Admin.Domain.Models.Dto
         public string TenantKey { get; set; }
 
         /// <summary>
-        /// 验证码
+        /// Verification code
         /// </summary>
         public string ValidateCode { get; set; }
     }
@@ -33,7 +33,7 @@ namespace Senparc.Areas.Admin.Domain.Models.Dto
     public class AccountLoginResultDto
     {
         /// <summary>
-        /// 用户名
+        /// username
         /// </summary>
         public string UserName { get; set; }
 
@@ -43,14 +43,14 @@ namespace Senparc.Areas.Admin.Domain.Models.Dto
         public string Token { get; set; }
 
         /// <summary>
-        /// 角色列表
+        /// role list
         /// </summary>
         public IEnumerable<string> RoleCodes { get; set; }
 
         public IEnumerable<Ncf.Core.Models.DataBaseModel.SysMenuTreeItemDto> MenuTree { get; set; }
 
         /// <summary>
-        /// 操作代码
+        ///Operation code
         /// </summary>
         public IEnumerable<string> PermissionCodes { get; set; }
         public string RealName { get; internal set; }

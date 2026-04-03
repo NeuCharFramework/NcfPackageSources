@@ -22,7 +22,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        /// 使用 AgentTemplateDto 进行更新
+        /// Update using AgentTemplateDto
         /// </summary>
         /// <param name="id"></param>
         /// <param name="agentTemplateDto"></param>
@@ -31,7 +31,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         {
             AgentTemplate agentTemplate = null;
 
-            //两者暂时等同
+            //The two are temporarily equivalent
             agentTemplateDto.PromptCode = agentTemplateDto.SystemMessage;
 
             if (id > 0)

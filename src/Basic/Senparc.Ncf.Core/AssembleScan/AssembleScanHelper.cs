@@ -107,7 +107,7 @@ namespace Senparc.Ncf.Core.AssembleScan
 
                 if (dynamicLoadAllDlls)
                 {
-                    // 使用 AppDomain 或环境变量来动态获取路径
+                    // Use AppDomain or environment variables to dynamically obtain paths
                     string directoryPath = AppDomain.CurrentDomain.BaseDirectory;
                     // If needed, environment variables can also be used
                     // string directoryPath = Environment.GetEnvironmentVariable("MY_APP_PATH");

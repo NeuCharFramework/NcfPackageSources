@@ -13,12 +13,12 @@ namespace Senparc.Ncf.Core.Authorization
     public class PermissionRequirement: IAuthorizationRequirement
     {
         /// <summary>
-        /// 登录后即可访问
+        /// Can be accessed after logging in
         /// </summary>
         public const string All = "*";
 
         /// <summary>
-        /// 资源code
+        ///resourcecode
         /// </summary>
         public string[] ResourceCodes { get; set; }
 
@@ -29,7 +29,7 @@ namespace Senparc.Ncf.Core.Authorization
 
         public PermissionRequirement(string[] resourceCodes)
         {
-            ResourceCodes = resourceCodes.Where(code => !string.IsNullOrEmpty(code?.Trim())).Select(code => code.Trim()).ToArray(); // 去前后空格
+            ResourceCodes = resourceCodes.Where(code => !string.IsNullOrEmpty(code?.Trim())).Select(code => code.Trim()).ToArray(); // Remove leading and trailing spaces
         }
     }
 }

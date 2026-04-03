@@ -29,7 +29,7 @@ using Senparc.NeuChar.App.AppStore;
 namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
 {
     //[BackendJwtAuthorize]
-    //TODO: 需要权限验证
+    //TODO: Permission verification required
     public class AIModelAppService : AppServiceBase
     {
         private readonly AIModelService _aIModelService;
@@ -71,7 +71,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 分页获取AIModel
+        ///Paging to get AIModel
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -96,7 +96,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取AIModel列表
+        /// Get AIModel list
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -117,7 +117,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 新建一个AIModel
+        /// Create a new AIModel
         /// </summary>
         /// <param name="createRequest"></param>
         /// <returns></returns>
@@ -134,10 +134,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
                     // );
                     // if (count > 0)
                     // {
-                    //     //response.ErrorMessage = "AIModel已存在";
+                    //     //response.ErrorMessage = "AIModel already exists";
                     //     //response.Success = false;
                     //     //return null;
-                    //     throw new NcfExceptionBase("AIModel已存在");
+                    //     throw new NcfExceptionBase("AIModel already exists");
                     // }
                     //
                     // #endregion
@@ -147,7 +147,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 修改AIModel
+        /// Modify AIModel
         /// </summary>
         /// <param name="id"></param>
         /// <param name="request"></param>
@@ -164,7 +164,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 删除AIModel
+        /// Delete AIModel
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -197,14 +197,14 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
                 if (fullSystemConfig.NeuCharAppKey.IsNullOrEmpty() || fullSystemConfig.NeuCharAppSecret.IsNullOrEmpty())
                 {
                     r.Success = false;
-                    //TODO: 使用日志下载提供详细教程
+                    //TODO: Provide detailed tutorial on using log download
                     r.ErrorMessage= "错误：当前系统未配置 NeuChar 开发者账号，请到【系统管理】模块，设置页面，使用【更新 NeuChar 云账户信息】绑定 NeuChar 开发者账号！";
                     return "error";
                 }
 
                 //var apiContainer = new ApiContainer(base.ServiceProvider, fullSystemConfig.NeuCharAppKey, fullSystemConfig.NeuCharAppSecret);
 
-                ////TODO: 集成到 ApiContainer
+                ////TODO: Integrate into ApiContainer
                 ///
 
 
@@ -244,11 +244,11 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
 
                 var models = await Senparc.CO2NET.HttpUtility.Post.PostGetJsonAsync<NeuCharGetModelJsonResult>(base.ServiceProvider, url, formData: modelData, encoding: Encoding.UTF8);
 
-                //TODO: 核验 AppKey 是否正确
+                //TODO: Verify whether the AppKey is correct
 
                 var result = await _aIModelService.UpdateModelsFromNeuCharAsync(models, passportResult.Data.DeveloperId, request.ApiKey);
 
-                //TODO：立即使用一个模型做一个测试
+                //TODO: Use a model to do a test immediately
 
                 return "更新成功！";
             });

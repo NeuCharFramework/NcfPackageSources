@@ -18,8 +18,8 @@ using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 {
     /// <summary>
-    /// PromptResult 管理 AppService
-    /// TODO: 需要权限验证
+    ///PromptResult Management AppService
+    /// TODO: Permission verification required
     /// </summary>
     //[ApiAuthorize("AdminOnly")]
     public class PromptResultAppService : AppServiceBase
@@ -41,7 +41,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 手动打分
+        /// Manual scoring
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -53,7 +53,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 {
                     var result = await _promptResultService.ManualScoreAsync(request.PromptResultId, request.HumanScore);
 
-                    // 更新绑定的 item 的分数
+                    // Update the score of the bound item
                     await _promptResultService.UpdateEvalScoreAsync(result.PromptItemId);
 
                     return "ok";
@@ -69,8 +69,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 自动打分
-        /// 接受一个promptItemId，然后找到所有的promptResult，然后进行评分
+        /// automatic scoring
+        /// Accept a promptItemId, then find all promptResults, and then score
         /// </summary>
         /// <param name="promptResultId"></param>
         /// <param name="expectedResultList"></param>
@@ -100,7 +100,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 根据靶道ID获取对应的结果列表
+        /// Get the corresponding result list based on the target channel ID
         /// </summary>
         /// <param name="promptItemId"></param>
         /// <returns></returns>
@@ -119,11 +119,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 生成结果
+        /// generate results
         /// </summary>
-        /// <param name="promptItemId">靶道ID</param>
-        /// <param name="numsOfResults">连发次数</param>
-        /// <param name="userMessage">用户消息（可选，如果为空且第一个结果是 Chat 模式，则从第一个结果的对话记录中获取）</param>
+        /// <param name="promptItemId">Target ID</param>
+        /// <param name="numsOfResults">Number of bursts</param>
+        /// <param name="userMessage">User message (optional, if empty and the first result is Chat mode, obtained from the conversation record of the first result)</param>
         /// <returns></returns>
         /// <exception cref="NcfExceptionBase"></exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
@@ -134,12 +134,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 {
                     var promptItem = await _promptItemService.DraftSwitch(promptItemId, false);
 
-                    // #region 删除之前的结果
+                    // #region Delete previous results
                     //
                     // var delSucFrag = await _promptResultService.BatchDeleteWithItemId(promptItemId);
                     // if (!delSucFrag)
                     // {
-                    //     throw new NcfExceptionBase("删除失败");
+                    //     throw new NcfExceptionBase("Deletion failed");
                     // }
                     //
                     // #endregion
@@ -147,19 +147,19 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
                     var resp = new PromptResult_ListResponse(promptItemId, promptItem, new());
                     
-                    // 连发时，如果第一个结果是 Chat 模式，后续结果也需要保持 Chat 模式
-                    // 如果没有传入 userMessage，先检查该 PromptItem 的第一个 PromptResult 是否是 Chat 模式
+                    // When sending continuously, if the first result is in Chat mode, subsequent results also need to remain in Chat mode.
+                    // If no userMessage is passed in, first check whether the first PromptResult of the PromptItem is in Chat mode.
                     string firstUserMessage = userMessage;
                     if (string.IsNullOrWhiteSpace(firstUserMessage))
                     {
-                        // 获取该 PromptItem 的第一个 PromptResult（按 ID 升序）
+                        // Get the first PromptResult of this PromptItem (in ascending order by ID)
                         var existingResults = await _promptResultService.GetByItemId(promptItemId);
                         if (existingResults != null && existingResults.Count > 0)
                         {
                             var firstExistingResult = existingResults.OrderBy(r => r.Id).FirstOrDefault();
                             if (firstExistingResult != null && firstExistingResult.Mode == ResultMode.Chat)
                             {
-                                // 第一个结果是 Chat 模式，从对话记录中获取第一条用户消息
+                                // The first result is Chat mode, getting the first user message from the conversation record
                                 var chatHistory = await _promptResultChatService.GetByPromptResultIdAsync(firstExistingResult.Id);
                                 var firstUserChat = chatHistory?.FirstOrDefault(c => c.RoleType == ChatRoleType.User);
                                 if (firstUserChat != null && !string.IsNullOrWhiteSpace(firstUserChat.Content))
@@ -170,34 +170,34 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         }
                     }
                     
-                    // 获取第一个结果的模式，用于后续结果保持一致
+                    // Get the pattern of the first result to keep subsequent results consistent
                     ResultMode? firstResultMode = null;
                     
                     for (int i = 0; i < numsOfResults; i++)
                     {
-                        // 如果是第一次生成，使用传入的参数
-                        // 如果是后续生成，且第一个结果是 Chat 模式，则保持 Chat 模式
+                        // If it is generated for the first time, use the parameters passed in
+                        // If it is a subsequent build and the first result is in Chat mode, stay in Chat mode
                         string currentUserMessage = null;
                         List<ChatMessageDto> currentChatHistory = null;
                         
                         if (i == 0)
                         {
-                            // 第一次生成，使用传入的参数
+                            // The first generation, using the parameters passed in
                             currentUserMessage = firstUserMessage;
-                            currentChatHistory = null; // 第一次生成时，chatHistory 应该为空
+                            currentChatHistory = null; // The first time it is generated, chatHistory should be empty
                         }
                         else if (firstResultMode == ResultMode.Chat && !string.IsNullOrWhiteSpace(firstUserMessage))
                         {
-                            // 后续生成，且第一个结果是 Chat 模式，保持 Chat 模式
-                            // 使用相同的 userMessage，但不传递历史记录（每次都是独立的对话）
+                            // Subsequent generation, and the first result is in Chat mode, remains in Chat mode
+                            // Use the same userMessage but don't pass the history (a separate conversation each time)
                             currentUserMessage = firstUserMessage;
-                            currentChatHistory = null; // 连发时，每次都是独立的对话，不传递历史记录
+                            currentChatHistory = null; // When sending continuously, each session is an independent conversation, and no history records are transferred.
                         }
-                        // 如果第一个结果是 Single 模式，后续也使用 Single 模式（currentUserMessage 为 null）
+                        // If the first result is Single mode, subsequent Single modes are also used (currentUserMessage is null)
                         
                         var result = await _promptResultService.SenparcGenerateResultAsync(promptItem, currentUserMessage, currentChatHistory);
                         
-                        // 记录第一个结果的模式
+                        // Pattern to record the first result
                         if (i == 0)
                         {
                             firstResultMode = result.Mode;
@@ -227,9 +227,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 根据 PromptResultId 获取对话记录
+        /// Get the conversation record based on PromptResultId
         /// </summary>
-        /// <param name="promptResultId">PromptResult 的 ID</param>
+        /// <param name="promptResultId">ID of PromptResult</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<List<PromptResultChatDto>>> GetChatHistory(int promptResultId)
@@ -242,9 +242,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 根据 PromptResultId 获取对话历史和 Prompt 内容
+        /// Get the conversation history and Prompt content based on PromptResultId
         /// </summary>
-        /// <param name="promptResultId">PromptResult 的 ID</param>
+        /// <param name="promptResultId">ID of PromptResult</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<PromptResult_ChatHistoryWithPromptResponse>> GetChatHistoryWithPrompt(int promptResultId)
@@ -252,23 +252,23 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<PromptResult_ChatHistoryWithPromptResponse>(
                 async (response, logger) =>
                 {
-                    // 获取对话历史
+                    // Get conversation history
                     var chatHistory = await _promptResultChatService.GetByPromptResultIdAsync(promptResultId);
                     
-                    // 获取 PromptResult
+                    // GetPromptResult
                     var promptResult = await _promptResultService.GetObjectAsync(p => p.Id == promptResultId)
                         ?? throw new NcfExceptionBase($"未找到 ID 为 {promptResultId} 的 PromptResult");
                     
-                    // 优先使用保存的 SystemMessage，如果没有则使用当前的 Prompt 内容
+                    // The saved SystemMessage is used first, if not, the current Prompt content is used.
                     string promptContent;
                     if (!string.IsNullOrWhiteSpace(promptResult.SystemMessage))
                     {
-                        // 使用保存的 SystemMessage（已完成参数替换）
+                        // Use saved SystemMessage (parameter substitution done)
                         promptContent = promptResult.SystemMessage;
                     }
                     else
                     {
-                        // 降级方案：如果没有保存的 SystemMessage，使用当前的 Prompt 内容
+                        // Downgrade scenario: If there is no saved SystemMessage, use the current Prompt content
                         var promptItem = await _promptItemService.GetAsync(promptResult.PromptItemId);
                         promptContent = promptItem.Content ?? string.Empty;
                     }
@@ -282,9 +282,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 继续聊天：在现有 PromptResult 中追加对话记录
+        /// Continue chatting: Append the conversation record to the existing PromptResult
         /// </summary>
-        /// <param name="request">继续聊天请求</param>
+        /// <param name="request">Continue chat request</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<PromptResultChatDto>>> ContinueChat(PromptResult_ContinueChatRequest request)
@@ -297,9 +297,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 更新对话记录的用户反馈（Like/Unlike）
+        /// Update user feedback of conversation records (Like/Unlike)
         /// </summary>
-        /// <param name="request">更新反馈请求</param>
+        /// <param name="request">Update feedback request</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PromptResultChatDto>> UpdateChatFeedback(PromptResult_UpdateChatFeedbackRequest request)

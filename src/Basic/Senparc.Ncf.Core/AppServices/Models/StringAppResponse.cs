@@ -5,7 +5,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.AppServices
 {
     /// <summary>
-    /// 泛型为 String 的 AppResponse
+    ///AppResponse whose generic type is String
     /// </summary>
     public class StringAppResponse: AppResponseBase<string>
     {

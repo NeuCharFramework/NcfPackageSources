@@ -24,7 +24,7 @@ public class PromptRangeService : ServiceBase<Models.DatabaseModel.PromptRange>
     // public async Task<PromptRangeDto> UpdateExpectedResultsAsync(int promptRangeId, string expectedResults)
     // {
     //     var promptRange = await this.GetObjectAsync(p => p.Id == promptRangeId) ??
-    //                       throw new Exception($"未找到{promptRangeId}对应的靶场");
+    //                       throw new Exception($"The shooting range corresponding to {promptRangeId} was not found");
     //
     //     promptRange.UpdateExpectedResultsJson(expectedResults);
     //
@@ -100,7 +100,7 @@ public class PromptRangeService : ServiceBase<Models.DatabaseModel.PromptRange>
     {
         await base.DeleteObjectAsync(p => p.Id == rangeId);
 
-        // todo 关联删除
+        // todo association deletion
         var promptItemService = _serviceProvider.GetService<PromptItemService>();
 
         await promptItemService.DeleteAllAsync(p => p.RangeId == rangeId);

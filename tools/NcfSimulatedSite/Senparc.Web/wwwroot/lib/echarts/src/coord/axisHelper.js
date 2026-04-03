@@ -150,7 +150,7 @@ define(function (require) {
      */
     axisHelper.getAxisLabelInterval = function (tickCoords, labels, font, isAxisHorizontal) {
         // FIXME
-        // 不同角的axis和label，不只是horizontal和vertical.
+        // Axis and label at different angles, not just horizontal and vertical.
 
         var textSpaceTakenRect;
         var autoLabelInterval = 0;

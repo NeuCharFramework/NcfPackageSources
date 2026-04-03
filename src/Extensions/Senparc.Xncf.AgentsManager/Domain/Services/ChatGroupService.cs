@@ -49,7 +49,7 @@ public class McpEndpoint
 public class ChatGroupService : ServiceBase<ChatGroup>
 {
 
-    //临时使用本机线程
+    //Temporarily use native threads
 
     public static int ChatMaxRound = 20;
     public static List<Task> TaskList = new List<Task>();
@@ -62,7 +62,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     }
 
     /// <summary>
-    /// 运行 ChatGroup（等待运行完成）
+    ///Run ChatGroup (wait for the run to complete)
     /// </summary>
     /// <param name="logger"></param>
     /// <param name="groupId"></param>
@@ -97,9 +97,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         .ConfigModel(ConfigModel.Chat, "JeffreySu")
                         .BuildKernel();
 
-        var kernel = iWantToRun.Kernel;//同一外围 Agent
+        var kernel = iWantToRun.Kernel;//The same peripheral Agent
 
-        //作为唯一入口和汇报的关键人
+        //As the sole point of entry and reporting
         AgentTemplate enterAgentTemplate = await agentTemplateService.GetObjectAsync(z => z.Id == chatGroup.EnterAgentTemplateId);
 
         MiddlewareAgent<SemanticKernelAgent> enterAgent = null;
@@ -110,7 +110,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             var agentTemplateDto = agentTemplateService.Mapper.Map<AgentTemplateDto>(agentTemplate);
             agentsTemplates.Add(agentTemplateDto);
 
-            //TODO：确认 Prompt 此时是否存在，如果不存在需要给出提示
+            //TODO: Confirm whether Prompt exists at this time. If it does not exist, you need to give a prompt.
 
             var promptResult = await promptItemService.GetWithVersionAsync(agentTemplate.PromptCode, isAvg: true);
 
@@ -146,7 +146,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
             if (groupMember.AgentTemplateId == enterAgentTemplate.Id)
             {
-                //TODO：添加指定入口对接人员，参考群主
+                //TODO: Add designated entrance docking personnel, refer to the group owner
                 enterAgentTemplate = agentTemplate;
                 enterAgent = agentMiddleware;
             }
@@ -157,7 +157,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         }
 
         // Create the hearing member
-        //var hearingMember = new UserProxyAgent(name: chatGroup.Name + "群友");
+        //var hearingMember = new UserProxyAgent(name: chatGroup.Name + "Group Friends");
         var hearingMember = new DefaultReplyAgent(name: chatGroup.Name + "群友", GroupChatExtension.TERMINATE);
 
         // Create the group admin
@@ -183,7 +183,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         var graphConnector = GraphBuilder.Start()
                     .ConnectFrom(hearingMember).TwoWay(enterAgent);
 
-        //遍历所有 agents, 两两之间运行 graphConnector.ConnectFrom(agent1).TwoWay(agent2);
+        //Traverse all agents, running graphConnector.ConnectFrom(agent1).TwoWay(agent2);
 
         for (int i = 0; i < agentsMiddlewares.Count; i++)
         {
@@ -234,7 +234,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             //    // process exit
             //    if (message.GetContent()?.Contains("exit") is true)
             //    {
-            //        //Console.WriteLine("您已推出对话");
+            //        //Console.WriteLine("You have exited the conversation");
             //        //return;
             //    }
             //}
@@ -245,7 +245,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             ////      maxRound: 10);
 
             //Console.WriteLine("Chat finished.");
-            //logger.Append("已完成运行：" + chatGroup.Name);
+            //logger.Append("Completed running: " + chatGroup.Name);
 
             return result;
         }
@@ -257,7 +257,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     }
 
     /// <summary>
-    /// 在独立进程中运行 ChatGroup（UI 界面中进行，不等待完成）
+    /// Run ChatGroup in a separate process (in the UI interface, without waiting for completion)
     /// </summary>
     public Task RunChatGroupInThread(ChatGroup_RunGroupRequest request)
     {
@@ -267,7 +267,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     }
 
     /// <summary>
-    /// 运行 ChatGroup 直至本轮对话结束（用于 Prompt 优化等需同步等待的场景）
+    /// Run ChatGroup until the end of this round of dialogue (used for Prompt optimization and other scenarios that require synchronous waiting)
     /// </summary>
     public Task RunChatGroupAwaitAsync(ChatGroup_RunGroupRequest request)
     {
@@ -307,11 +307,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 userCommand, request.Description, personality, request.HookPlatform, request.HookParameter, false,
                 DateTime.Now, DateTime.Now, null);
             var chatTask = await chatTaskService.CreateTask(chatTaskDto);
-            chatTaskDto = chatTaskService.Mapping<ChatTaskDto>(chatTask);//更新
-                                                                         //更新状态
+            chatTaskDto = chatTaskService.Mapping<ChatTaskDto>(chatTask);//renew
+                                                                         //update status
             await chatTaskService.SetStatus(ChatTask_Status.Chatting, chatTask);
 
-            //运行中进行缓存
+            //Caching on the fly
             var runningKey = chatTaskService.GetChatTaskRunCacheKey(chatTask.Id);
             var cacheTask = new RunningChatTaskDto()
             {
@@ -350,7 +350,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 TopP = 0.3,
             };
 
-            //全局默认模型
+            //Global default model
             var iWantToRunGlobal = _semanticAiHandler.IWantTo(senparcAiSetting)
                             .ConfigModel(ConfigModel.Chat, "JeffreySu")
                             .BuildKernel();
@@ -372,7 +372,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             }
 
 
-            //确保已添加 Admin 和 Enter Agent
+            //Make sure Admin and Enter Agent are added
             if (groupMemebers.All(z => z.AgentTemplateId != chatGroup.AdminAgentTemplateId))
             {
                 memberCollection.Add((chatGroup.AdminAgentTemplateId, "Admin"));
@@ -383,7 +383,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 memberCollection.Add((chatGroup.EnterAgentTemplateId, "Enter"));
             }
 
-            // 同一 AgentTemplate 只保留一条（避免 Admin/Enter/成员重复出现两次相同模型，并行工具调用产生重复副作用）
+            // Only one of the same AgentTemplate is retained (to prevent the Admin/Enter/member from appearing twice in the same model and parallel tool calls to produce repeated side effects)
             memberCollection = memberCollection
                 .GroupBy(m => m.AgentTemplateId)
                 .Select(g => g.First())
@@ -393,15 +393,15 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             var agents = new List<SemanticKernelAgent>();
             List<MiddlewareAgent<SemanticKernelAgent>> agentsMiddlewares = new List<MiddlewareAgent<SemanticKernelAgent>>();
 
-            IWantToRun iWantToRunAdmin = null;// Admin Agent 配置
-            IWantToRun iWantToRunEnter = null;// Enter Agent 配置
-            MiddlewareAgent<SemanticKernelAgent> enterAgent = null;// Enter Agent 中间件对象
+            IWantToRun iWantToRunAdmin = null;// Admin Agent configuration
+            IWantToRun iWantToRunEnter = null;// Enter Agent Configuration
+            MiddlewareAgent<SemanticKernelAgent> enterAgent = null;// Enter Agent middleware object
 
             #endregion
 
-            var aiPlugins = AIPluginHub.Instance;// Function Call 全局对象集合
+            var aiPlugins = AIPluginHub.Instance;// Function Call global object collection
 
-            //遍历每一个成员
+            //Iterate through each member
             foreach (var memberInfo in memberCollection)
             {
                 var agentTemplateId = memberInfo.AgentTemplateId;
@@ -411,7 +411,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 if (!agentTemplate.Enable)
                 {
                     logger.AppendLine($"智能体【{agentTemplate.Name}】目前为关闭状态，跳过对话");
-                    //不启用的智能体不参与对话
+                    //Agents that are not enabled do not participate in the conversation
                     continue;
                 }
 
@@ -434,12 +434,12 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     currentAgentAiSetting = senparcAiSetting;
                 }
 
-                IWantToConfig iWantToConfig = null;//当前 Agent 配置
+                IWantToConfig iWantToConfig = null;//Current Agent configuration
 
-                //判断是否需要个性化模型参数
+                //Determine whether personalized model parameters are needed
                 if (personality)
                 {
-                    //使用个性化参数创建
+                    //Created with personalization parameters
                     var personalitySemanticAiHandler = new SemanticAiHandler(currentAgentAiSetting);
                     iWantToConfig = personalitySemanticAiHandler.IWantTo();
 
@@ -449,22 +449,22 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     iWantToConfig = _semanticAiHandler.IWantTo(senparcAiSetting);
                 }
 
-                //当前 Agent 配置
+                //Current Agent configuration
 
                 #region 设置 MCP
 
                 var iWantToConfigModel = iWantToConfig.ConfigModel(ConfigModel.Chat, agentTemplateDto.Name + uid);
 
-                // 获取当前 Agent 的 MCP Endpoints
+                // Get the MCP Endpoints of the current Agent
                 var mcpEndpoints = agentTemplateDto.McpEndpoints;
                 if (!string.IsNullOrEmpty(mcpEndpoints))
                 {
                     var endpointsDict = JsonSerializer.Deserialize<Dictionary<string, McpEndpoint>>(mcpEndpoints);
 
-                    // 遍历 endpointsDict 中的每个键值对
+                    // Iterate over each key-value pair in endpointsDict
                     foreach (var endpoint in endpointsDict)
                     {
-                        // 获取键和值
+                        // Get key and value
                         var mcpName = endpoint.Key;
 
                         var mcpEndpoint = endpoint.Value.url;
@@ -492,10 +492,10 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                             SenparcTrace.BaseExceptionLog(ex);
                         }
                       
-                        // 使用 key 和 value 进行操作
-#pragma warning disable SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+                        // Operate with key and value
+#pragma warning disable SKEXP0001 // Types are for evaluation only and may be changed or removed in future updates. Cancel this diagnostic to continue.
                         iWantToConfigModel.IWantTo.KernelBuilder.Plugins.AddFromFunctions($"SenparcMcp{memberInfo.AgentTemplateId}", tools.Select(z => z.AsKernelFunction()));
-#pragma warning restore SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+#pragma warning restore SKEXP0001 // Types are for evaluation only and may be changed or removed in future updates. Cancel this diagnostic to continue.
                     }
                 }
                 #endregion
@@ -519,7 +519,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
                 #region Function-calling
 
-                //判断是否需要 Function Call
+                //Determine whether Function Call is needed
 
                 var hasFunctionCalls = agentTemplateDto.FunctionCallNames.IsNullOrEmpty()
                                         ? Array.Empty<string>()
@@ -527,7 +527,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
                 if (hasFunctionCalls.Length > 0)
                 {
-                    //添加 Plugins
+                    //Add Plugins
                     foreach (var functionCall in hasFunctionCalls)
                     {
                         try
@@ -555,7 +555,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
                 #endregion
 
-                //设置 Agent
+                //Setup Agent
                 SemanticKernelAgent agent = new SemanticKernelAgent(
                                 kernel: iWantToRunItem.Kernel,
                                 name: agentTemplate.Name,
@@ -579,7 +579,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         //PrintWechatMessageMiddlewareExtension.SendWechatMessage.Invoke(a, m, mStr, agentTemplateDto);
                         logger.Append($"[{chatGroup.Name}]组 {a.Name} 发送消息：{mStr}");
 
-                        //using (var scope = ServiceProvider.CreateScope())//已关闭
+                        //using (var scope = ServiceProvider.CreateScope())//Close
                         using (var scope = Senparc.CO2NET.SenparcDI.GetServiceProvider().CreateScope())
                         {
                             var serviceProvider = scope.ServiceProvider;
@@ -591,7 +591,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
                 if (agentTemplateId == chatGroup.EnterAgentTemplateId)
                 {
-                    //TODO：添加指定入口对接人员，参考群主
+                    //TODO: Add designated entrance docking personnel, refer to the group owner
                     enterAgent = agentMiddleware;
                     iWantToRunEnter = iWantToRunItem;
                 }
@@ -609,7 +609,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             }
 
             // Create the hearing member
-            //var hearingMember = new UserProxyAgent(name: chatGroup.Name + "群友");
+            //var hearingMember = new UserProxyAgent(name: chatGroup.Name + "Group Friends");
             var hearingMember = new DefaultReplyAgent(name: chatGroup.Name + "群友", GroupChatExtension.TERMINATE);
 
             // Create the group admin
@@ -627,7 +627,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             var graphConnector = GraphBuilder.Start()
                         .ConnectFrom(hearingMember).TwoWay(enterAgent);
 
-            //遍历所有 agents, 两两之间运行 graphConnector.ConnectFrom(agent1).TwoWay(agent2);
+            //Traverse all agents, running graphConnector.ConnectFrom(agent1).TwoWay(agent2);
             //for (int i = 0; i < agentsMiddlewares.Count; i++)
             //{
             //    for (int j = i + 1; j < agentsMiddlewares.Count; j++)
@@ -636,7 +636,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             //    }
             //}
 
-            //使用星型网络
+            //Use star network
             for (int i = 0; i < agentsMiddlewares.Count; i++)
             {
                 var agentMiddleware = agentsMiddlewares[i];
@@ -720,7 +720,7 @@ Note: parameter From must be strictly equal to the name of the player spokespers
                     // process exit
                     if (message.GetContent()?.Contains("exit") is true)
                     {
-                        //Console.WriteLine("您已推出对话");
+                        //Console.WriteLine("You have exited the conversation");
                         return;
                     }
                 }
@@ -730,7 +730,7 @@ Note: parameter From must be strictly equal to the name of the player spokespers
 
                 await chatTaskService.SetStatus(ChatTask_Status.Finished, chatTask);
 
-                //完成后移除缓存
+                //Remove cache when finished
                 await _cache.RemoveFromCacheAsync(runningKey);
 
                 SenparcTrace.SendCustomLog($"Agents 运行结果（组：{chatGroup.Name}）", logger.ToString());

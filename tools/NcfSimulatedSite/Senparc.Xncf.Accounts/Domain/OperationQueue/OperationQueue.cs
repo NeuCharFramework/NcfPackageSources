@@ -19,26 +19,26 @@ namespace Senparc.Xncf.Accounts.Domain.OperationQueue
     public class OperationQueue
     {
         /// <summary>
-        /// 列队数据集合
+        ///Queue data collection
         /// </summary>
         private static Dictionary<string, OperationQueueItem> MessageQueueDictionary = new Dictionary<string, OperationQueueItem>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
-        /// 同步执行锁
+        /// Synchronous execution lock
         /// </summary>
         private static object MessageQueueSyncLock = new object();
         /// <summary>
-        /// 立即同步所有缓存执行锁（给OperateQueue()使用）
+        /// Immediately synchronize all cache execution locks (used by OperateQueue())
         /// </summary>
         private static object FlushCacheLock = new object();
 
         /// <summary>
-        /// 生成Key
+        /// Generate Key
         /// </summary>
-        /// <param name="name">列队应用名称，如“ContainerBag”</param>
-        /// <param name="senderType">操作对象类型</param>
-        /// <param name="identityKey">对象唯一标识Key</param>
-        /// <param name="actionName">操作名称，如“UpdateContainerBag”</param>
+        /// <param name="name">Queue application name, such as "ContainerBag"</param>
+        /// <param name="senderType">Operation object type</param>
+        /// <param name="identityKey">Object unique identification Key</param>
+        /// <param name="actionName">Action name, such as "UpdateContainerBag"</param>
         /// <returns></returns>
         public static string GenerateKey(string name, Type senderType, string identityKey, string actionName)
         {
@@ -48,14 +48,14 @@ namespace Senparc.Xncf.Accounts.Domain.OperationQueue
         }
 
         /// <summary>
-        /// 操作列队
+        ///Operation queue
         /// </summary>
         public static void OperateQueue()
         {
             lock (FlushCacheLock)
             {
                 var mq = new OperationQueue();
-                var key = mq.GetCurrentKey(); //获取最新的Key
+                var key = mq.GetCurrentKey(); //Get the latest Key
                 var serviceProvider = SenparcDI.GetServiceProvider();
                 while (!string.IsNullOrEmpty(key))
                 {
@@ -63,9 +63,9 @@ namespace Senparc.Xncf.Accounts.Domain.OperationQueue
                     {
 
                         var operationQueueService = serviceProvider.GetService<OperationQueueService>();
-                        var mqItem = mq.GetItem(key); //获取任务项
+                        var mqItem = mq.GetItem(key); //Get task items
 
-                        //识别类型
+                        //Identification type
                         switch (mqItem.OperationQueueType)
                         {
                             case OperationQueueType.更新用户头像:
@@ -81,14 +81,14 @@ namespace Senparc.Xncf.Accounts.Domain.OperationQueue
                         LogUtility.OperationQueue.ErrorFormat($"OperationQueue列队操作失败，已经跳过：{ex.Message}", ex);
                     }
 
-                    mq.Remove(key); //清除
-                    key = mq.GetCurrentKey(); //获取最新的Key
+                    mq.Remove(key); //Clear
+                    key = mq.GetCurrentKey(); //Get the latest Key
                 }
             }
         }
 
         /// <summary>
-        /// 获取当前等待执行的Key
+        /// Get the Key currently waiting for execution
         /// </summary>
         /// <returns></returns>
         public string GetCurrentKey()
@@ -100,7 +100,7 @@ namespace Senparc.Xncf.Accounts.Domain.OperationQueue
         }
 
         /// <summary>
-        /// 获取OperationQueueItem
+        /// Get OperationQueueItem
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -117,7 +117,7 @@ namespace Senparc.Xncf.Accounts.Domain.OperationQueue
         }
 
         /// <summary>
-        /// 添加列队成员
+        ///Add queue members
         /// </summary>
         /// <param name="key"></param>
         /// <param name="action"></param>
@@ -132,7 +132,7 @@ namespace Senparc.Xncf.Accounts.Domain.OperationQueue
                 //else
                 //{
                 //    MessageQueueList.Remove(key);
-                //    MessageQueueList.Add(key);//移动到末尾
+                //    MessageQueueList.Add(key);//Move to the end
                 //}
 
                 var mqItem = new OperationQueueItem(key, operationQueueType, data, description);
@@ -142,7 +142,7 @@ namespace Senparc.Xncf.Accounts.Domain.OperationQueue
         }
 
         /// <summary>
-        /// 移除列队成员
+        ///Remove queue members
         /// </summary>
         /// <param name="key"></param>
         public void Remove(string key)
@@ -158,7 +158,7 @@ namespace Senparc.Xncf.Accounts.Domain.OperationQueue
         }
 
         /// <summary>
-        /// 获得当前列队数量
+        /// Get the current queue number
         /// </summary>
         /// <returns></returns>
         public int GetCount()

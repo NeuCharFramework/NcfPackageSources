@@ -79,7 +79,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                         if (File.Exists(path))
                         {
                             var modifyTime = File.GetLastWriteTimeUtc(path);
-                            if ((SystemTime.UtcDateTime - modifyTime).TotalSeconds < 5/*5秒钟内创建的*/)
+                            if ((SystemTime.UtcDateTime - modifyTime).TotalSeconds < 5/*Created in 5 seconds*/)
                             {
                                 logger.Append("检查通过，备份成功！最后修改时间：" + modifyTime.ToString());
                                 response.Data = "检查通过，备份成功！";

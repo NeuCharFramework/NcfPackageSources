@@ -21,15 +21,15 @@ namespace Senparc.Xncf.AIAgentsHub.Models
     
 
     /// <summary>
-    /// 设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
-    /// <para>1、切换至 Debug 模式</para>
-    /// <para>2、运行：PM> add-migration [更新名称] -c AIAgentsHubSenparcEntities_Dm -o Domain/Migrations/Migrations.Dm </para>
+    /// DbContext creation at design time (Code-First database migration is only used during development and will not be executed in the production environment)
+    /// <para>1、Switch to Debug mode</para>
+    /// <para>2、Run: PM> add-migration [Update name] -c AIAgentsHubSenparcEntities_Dm -o Domain/Migrations/Migrations.Dm </para>
     /// </summary>
     public class SenparcDbContextFactory_Dm : SenparcDesignTimeDbContextFactoryBase<AIAgentsHubSenparcEntities_Dm, Register>
     {
         protected override Action<IApplicationBuilder> AppAction => app =>
         {
-            //指定其他数据库
+            //Specify another database
             app.UseNcfDatabase("Senparc.Ncf.Database.Dm", "Senparc.Ncf.Database.Dm", "DmDatabaseConfiguration");
         };
 

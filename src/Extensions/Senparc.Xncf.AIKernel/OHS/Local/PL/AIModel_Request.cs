@@ -13,12 +13,12 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
     public class PagedResponse<T>
     {
         /// <summary>
-        /// 总数
+        ///Total
         /// </summary>
         public int Total { get; set; }
 
         /// <summary>
-        /// 数据
+        /// data
         /// </summary>
         public IEnumerable<T> Data { get; set; }
 
@@ -32,17 +32,17 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
     public class PagedRequest
     {
         /// <summary>
-        /// 页码
+        ///page number
         /// </summary>
         public int Page { get; set; }
 
         /// <summary>
-        /// 每页大小
+        /// size per page
         /// </summary>
         public int Size { get; set; }
 
         /// <summary>
-        /// 排序
+        /// sort
         /// </summary>
         public string Order { get; set; } = "Id desc";
     }
@@ -50,32 +50,32 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
     public class AIModel_GetListRequest : PagedRequest
     {
         /// <summary>
-        /// 代号
+        /// code name
         /// </summary>
         public string Alias { get; set; }
 
         /// <summary>
-        /// 部署名称
+        ///deployment name
         /// </summary>
         public string DeploymentName { get; set; }
 
         /// <summary>
-        /// 端点
+        ///endpoint
         /// </summary>
         public string Endpoint { get; set; }
 
         /// <summary>
-        /// AI平台
+        /// AI platform
         /// </summary>
         public AiPlatform AiPlatform { get; set; }
 
         /// <summary>
-        /// 组织ID
+        ///Organization ID
         /// </summary>
         public string OrganizationId { get; set; }
 
         /// <summary>
-        /// 是否显示
+        /// Whether to display
         /// </summary>
         public bool? Show { get; set; }
     }
@@ -83,72 +83,72 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
     public class AIModel_CreateOrEditRequest
     {
         /// <summary>
-        /// 主键 ID
+        /// primary key ID
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// 代号
+        /// code name
         /// </summary>
         public string Alias { get; set; }
 
         /// <summary>
-        /// 模型名称
+        /// model name
         /// </summary>
         public string ModelId { get; set; }
 
         /// <summary>
-        /// 部署名称
+        ///deployment name
         /// </summary>
         public string DeploymentName { get; set; }
 
         /// <summary>
-        /// 端点
+        ///endpoint
         /// </summary>
         public string Endpoint { get; set; } = "";
 
         /// <summary>
-        /// AI平台
+        /// AI platform
         /// </summary>
         public AiPlatform AiPlatform { get; set; }
 
         /// <summary>
-        /// 模型类型
+        /// model type
         /// </summary>
         public ConfigModelType ConfigModelType { get; set; }
 
         /// <summary>
-        /// 组织ID
+        ///Organization ID
         /// </summary>
         public string OrganizationId { get; set; } = "";
 
         /// <summary>
-        /// API密钥
+        ///API key
         /// </summary>
         public string ApiKey { get; set; }
 
         /// <summary>
-        /// API版本
+        ///API version
         /// </summary>
         public string ApiVersion { get; set; }
 
         /// <summary>
-        /// 备注
+        /// Remark
         /// </summary>
         public string Note { get; set; }
 
         /// <summary>
-        /// 最大令牌
+        ///max tokens
         /// </summary>
         public int MaxToken { get; set; }
 
         /// <summary>
-        /// 是否显示
+        /// Whether to display
         /// </summary>
         public bool Show { get; set; }
 
         /// <summary>
-        /// 是否共享
+        /// Whether to share
         /// </summary>
         public bool IsShared { get; set; }
     }
@@ -156,22 +156,22 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
     public class AIModel_EditRequest
     {
         /// <summary>
-        /// 主键 ID
+        /// primary key ID
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// 代号
+        /// code name
         /// </summary>
         public string Alias { get; set; }
 
         /// <summary>
-        /// 是否显示
+        /// Whether to display
         /// </summary>
         public bool Show { get; set; }
 
         /// <summary>
-        /// 是否共享
+        /// Whether to share
         /// </summary>
         public bool IsShared { get; set; }
     }

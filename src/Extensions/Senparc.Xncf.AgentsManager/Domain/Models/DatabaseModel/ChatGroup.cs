@@ -8,37 +8,37 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
 {
     /// <summary>
-    /// ChatGroup 数据库实体
+    ///ChatGroup database entity
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(ChatGroup))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(ChatGroup))]//The prefix must be added to prevent conflicts system-wide.
     [Serializable]
     public class ChatGroup : EntityBase<int>
     {
         /// <summary>
-        /// 群名称
+        ///group name
         /// </summary>
         [Required]
         public string Name { get; private set; }
 
         /// <summary>
-        /// 是否启用
+        /// Whether to enable
         /// </summary>
         [Required]
         public bool Enable { get; private set; }
 
         /// <summary>
-        /// 状态
+        /// state
         /// </summary>
         [Required]
         public ChatGroupState State { get; private set; }
 
         /// <summary>
-        /// 描述
+        /// describe
         /// </summary>
         public string Description { get; private set; }
 
         /// <summary>
-        /// 管理员代理模板Id
+        /// Administrator agent template ID
         /// </summary>
         [Required]
         //[ForeignKey(nameof(AdminAgentTemplate))]
@@ -47,7 +47,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         public AgentTemplate AdminAgentTemplate { get; set; }
 
         /// <summary>
-        /// 对接人代理模板Id
+        /// Connector agent template ID
         /// </summary>
         [Required]
         //[ForeignKey(nameof(EnterAgentTemplate))]
@@ -98,20 +98,20 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
     }
 
     /// <summary>
-    /// 群状态
+    ///group status
     /// </summary>
     public enum ChatGroupState
     {
         /// <summary>
-        /// 未开始
+        /// not started
         /// </summary>
         Unstart = 0,
         /// <summary>
-        /// 运行中
+        /// running
         /// </summary>
         Running = 1,
         /// <summary>
-        /// 已结束
+        /// ended
         /// </summary>
         Finished = 2,
     }

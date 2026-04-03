@@ -7,22 +7,22 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
     public class PromptItem_GetIdAndNameResponse : AppResponseBase<string>
     {
         /// <summary>
-        /// 主键 ID
+        /// primary key ID
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// 昵称
+        /// Nick name
         /// </summary>
         public string NickName { get; set; }
 
         /// <summary>
-        /// 靶场名称
+        ///shooting range name
         /// </summary>
         public string RangeName { get; set; }
 
         /// <summary>
-        /// 完整版号
+        ///Full version number
         /// </summary>
         public string FullVersion { get; set; }
         public PromptItemVersion PromptItemVersion { get; set; }
@@ -30,17 +30,17 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         public PromptItemVersion ParentPromptItemVersion { get; set; }
 
         /// <summary>
-        /// 评估参数, 平均分
+        /// evaluation parameters, average score
         /// </summary>
         public decimal EvalAvgScore { get; set; }
 
         /// <summary>
-        /// 评估参数
+        ///evaluation parameters
         /// </summary>
         public decimal EvalMaxScore { get; set; }
 
         /// <summary>
-        /// 是否是草稿
+        /// Is it a draft?
         /// </summary>
         public bool IsDraft { get; set; }
 

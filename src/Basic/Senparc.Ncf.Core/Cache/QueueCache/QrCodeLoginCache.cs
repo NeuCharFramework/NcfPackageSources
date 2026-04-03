@@ -5,7 +5,7 @@ namespace Senparc.Ncf.Core.Cache
     public enum QrCodeLoginDataType
     {
         /// <summary>
-        /// 登陆
+        ///login
         /// </summary>
         Login,
         /// <summary>
@@ -22,7 +22,7 @@ namespace Senparc.Ncf.Core.Cache
     public class QrCodeLoginData
     {
         /// <summary>
-        /// 即SceneId的字符串
+        /// is the string of SceneId
         /// </summary>
         public string Key { get; set; }
         public int SceneId { get; set; }
@@ -30,7 +30,7 @@ namespace Senparc.Ncf.Core.Cache
         public DateTime ExpireTime { get; set; }
         public Guid LoginGuid { get; set; }
         /// <summary>
-        /// 验证通过
+        ///verification passed
         /// </summary>
         public bool CheckPassed { get; set; }
         public string UserName { get; set; }
@@ -48,7 +48,7 @@ namespace Senparc.Ncf.Core.Cache
     }
 
     /// <summary>
-    /// 登录许可缓存（缓存数据：UserId）
+    /// Login permission cache (cache data: UserId)
     /// </summary>
     public interface IQrCodeLoginCache : IQueueCache<QrCodeLoginData>
     {

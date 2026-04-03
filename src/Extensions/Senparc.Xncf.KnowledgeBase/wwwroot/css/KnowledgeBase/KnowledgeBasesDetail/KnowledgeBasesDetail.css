@@ -51,7 +51,7 @@
 
 .item-right img, .item-right video {
     width: 15rem;
-    -webkit-filter: drop-shadow(10px 10px 10px rgba(0,0,0,.5)); /*考虑浏览器兼容性：兼容 Chrome, Safari, Opera */
+    -webkit-filter: drop-shadow(10px 10px 10px rgba(0,0,0,.5)); /*Consider browser compatibility: Compatible with Chrome, Safari, Opera */
     filter: drop-shadow(10px 10px 10px rgba(0,0,0,.5));
 }
 

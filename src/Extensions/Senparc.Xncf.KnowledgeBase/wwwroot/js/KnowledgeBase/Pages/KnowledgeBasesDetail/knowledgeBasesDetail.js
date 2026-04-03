@@ -16,12 +16,12 @@ new Vue({
             {
                 initialFrameHeight: 500
             },
-            //分页参数
+            //Paging parameters
             paginationQuery:
             {
                 total: 5
             },
-            //分页接口传参
+            //Paging interface parameter passing
             listQuery: {
                 pageIndex: 1,
                 pageSize: 20,
@@ -53,7 +53,7 @@ new Vue({
             multipleSelection: '',
             radio: '',
             props: { multiple: true },
-            // 表格数据
+            // tabular data
             tableData:[],
             uid: '',
             fileList:[],
@@ -87,7 +87,7 @@ new Vue({
                 },
                 updateLoading: false,
                 disabled: false,
-                checkStrictly: true // 是否严格的遵守父子节点不互相关联
+                checkStrictly: true // Whether the parent and child nodes are strictly observed and not related to each other
             },
             detailDialog:
             {
@@ -106,7 +106,7 @@ new Vue({
                 },
                 updateLoading: false,
                 disabled: false,
-                checkStrictly: true // 是否严格的遵守父子节点不互相关联
+                checkStrictly: true // Whether the parent and child nodes are strictly observed and not related to each other
             }
         }
     },
@@ -114,14 +114,14 @@ new Vue({
         let that = this
         that.getList();
 
-        //TODO:初始化设置选中的字段
+        //TODO: Initialize the selected fields
         that.checkedColumns = that.colData.filter(item => item.istrue).map(item => item.title);
         console.log(`that.checkedColumns --- ${JSON.stringify(that.checkedColumns)}`)
     },
     watch:
     {
         'dialog.visible': function(val, old) {
-            // 关闭dialog，清空
+            // Close the dialog and clear it
             if (!val)
             {
                 this.dialog.data = {
@@ -160,7 +160,7 @@ new Vue({
         },
         uploadSuccess(res, file, fileList) {
             let that = this
-            // 上传成功
+            // Upload successful
             that.fileList = fileList;
             log('上传成功',fileList.length,2);
             log('res',res,2);
@@ -190,7 +190,7 @@ new Vue({
                 message: '上传失败，请重新上传'
             });
         },
-        // 获取列表
+        // Get list
         async getList()
         {
             let that = this
@@ -205,7 +205,7 @@ new Vue({
                 keyword = that.keyword;
             }
 
-            await service.get(`/Admin/KnowledgeBasesDetail/Index?handler=KnowledgeBasesDetail&pageIndex=${pageIndex}&pageSize=${pageSize}&keyword=${keyword}&orderField=${orderField}`).then(res => {// 使用 map 转换为目标格式的对象数组
+            await service.get(`/Admin/KnowledgeBasesDetail/Index?handler=KnowledgeBasesDetail&pageIndex=${pageIndex}&pageSize=${pageSize}&keyword=${keyword}&orderField=${orderField}`).then(res => {// Convert to an array of objects in the target format using map
                 that.filterTableHeader.knowledgeBasesId = res.data.data.list.map(z => ({
                     text: z.knowledgeBasesId,
                     value: z.knowledgeBasesId
@@ -226,28 +226,28 @@ new Vue({
         async getCategoryList()
         {
             let that = this
-            //获取分类列表数据
+            //Get category list data
             await service.get('/Admin/KnowledgeBasesDetail/Index?handler=KnowledgeBasesDetailCategory').then(res => {
                 that.categoryData = res.data.data.list;
                 log('categoryData',res,2);
             });
         },
-        // 编辑 // 新增知识库管理详情 // 增加下一级
+        // Edit // Add new knowledge base management details // Add next level
         handleEdit(index, row, flag)
         {
             let that = this
             that.dialog.visible = true;
-            //获取分类列表数据
+            //Get category list data
             //that.getCategoryList();
             if (flag === 'add')
             {
-                // 新增
+                // New
                 that.dialog.title = '新增知识库管理详情';
                 that.dialogImageUrl = '';
                 //that.$refs['bodyEditor'].editor.setData('');
                 return;
             }
-            // 编辑
+            // edit
             let { id,knowledgeBasesId,contentType,content } = row;
             that.dialog.data = {
                 id,knowledgeBasesId,contentType,content
@@ -264,7 +264,7 @@ new Vue({
             //{
             //    that.editorData = this.$refs['bodyEditor'].editor.setData(body);
             //}
-            // dialog中父级菜单 做递归显示
+            // Recursive display of parent menu in dialog
             //let x = [];
             //that.recursionFunc(row, this.categoryData, x);
             //that.dialog.data.categoryId = x;
@@ -274,7 +274,7 @@ new Vue({
                 that.dialog.title = '编辑知识库管理详情';
             }
         },
-        // 设置父级菜单默认显示 递归
+        // Set the default display of the parent menu recursively
         recursionFunc(row, source, dest)
         {
             if (row.categoryId === null)
@@ -295,7 +295,7 @@ new Vue({
                 }
             }
         },
-        // 更新新增、编辑
+        // Update, add, edit
         updateData()
         {
             let that = this
@@ -303,7 +303,7 @@ new Vue({
             that.$refs['dataForm'].validate(valid => {
                 //that.editorData = that.$refs['bodyEditor'].editor.getData()
                 //that.dialog.data.body = that.$refs['bodyEditor'].editor.getData();
-                // 表单校验
+                // form validation
                 if (valid)
                 {
                     that.dialog.updateLoading = true;
@@ -330,7 +330,7 @@ new Vue({
                 }
             });
         },
-        // 删除
+        // delete
         handleDelete(index, row) {
             let that = this
             let ids = [row.id];
@@ -372,7 +372,7 @@ new Vue({
         },
         getCurrentRow(row) {
             let that = this
-            //获取选中数据
+            //Get selected data
             //that.templateSelection = row;
             that.multipleSelection = row;
             log('multipleSelection', row, 2)

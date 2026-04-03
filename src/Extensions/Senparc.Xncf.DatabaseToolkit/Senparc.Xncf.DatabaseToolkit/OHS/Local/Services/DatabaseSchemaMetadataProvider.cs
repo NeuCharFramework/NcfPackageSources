@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
 {
     /// <summary>
-    /// 数据库架构元数据提供者
-    /// 用于获取和管理数据库结构信息
+    /// Database schema metadata provider
+    /// Used to obtain and manage database structure information
     /// </summary>
     public class DatabaseSchemaMetadataProvider
     {
@@ -24,8 +24,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        /// 初始化元数据缓存
-        /// 扫描所有已注册的 XNCF 模块中的实体类
+        /// Initialize metadata cache
+        /// Scan all registered XNCF modules for entity classes
         /// </summary>
         public async Task InitializeAsync()
         {
@@ -44,8 +44,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
 
                     var moduleSchemas = new List<DatabaseSchemaMetadata>();
 
-                    // 获取模块中的所有实体类
-                    // 查找 DatabaseModel 或 Models 命名空间下的实体
+                    // Get all entity classes in the module
+                    // Find entities under the DatabaseModel or Models namespace
                     var entityTypes = GetEntityTypesFromModule(module);
 
                     foreach (var entityType in entityTypes)
@@ -67,16 +67,16 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
             }
             catch (Exception ex)
             {
-                // 记录错误但继续，避免启动失败
+                // Log error but continue to avoid startup failure
                 System.Diagnostics.Debug.WriteLine($"DatabaseSchemaMetadataProvider initialization error: {ex.Message}");
             }
         }
 
-        // EntityBase 的完全限定类型名，避免强制引用 Senparc.Ncf.Core 程序集
+        // Fully qualified type name of EntityBase to avoid forcing a reference to the Senparc.Ncf.Core assembly
         private static readonly string EntityBaseTypeName = "Senparc.Ncf.Core.Models.EntityBase";
 
         /// <summary>
-        /// 从模块程序集中获取实体类（继承自 EntityBase 的非抽象类）
+        /// Get the entity class (non-abstract class inherited from EntityBase) from the module assembly
         /// </summary>
         private List<Type> GetEntityTypesFromModule(Assembly assembly)
         {
@@ -98,14 +98,14 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
             }
             catch
             {
-                // 忽略错误（如无法加载依赖项的程序集）
+                // Ignore errors (such as the dependency's assembly cannot be loaded)
             }
 
             return entityTypes;
         }
 
         /// <summary>
-        /// 判断类型是否继承自 Senparc.Ncf.Core.Models.EntityBase
+        /// Determine whether the type inherits from Senparc.Ncf.Core.Models.EntityBase
         /// </summary>
         private static bool IsEntityBaseSubclass(Type type)
         {
@@ -124,7 +124,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        /// 从实体类型创建架构元数据
+        /// Create schema metadata from entity types
         /// </summary>
         private DatabaseSchemaMetadata CreateSchemaFromEntityType(Type entityType, string moduleName)
         {
@@ -139,7 +139,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
                     IsVisible = true
                 };
 
-                // 获取类的 XML 注释（如果存在）
+                // Get the XML annotation for a class (if present)
                 var attributes = entityType.GetCustomAttributes();
                 var descriptionAttr = attributes.FirstOrDefault(a => a.GetType().Name == "DescriptionAttribute");
                 if (descriptionAttr != null)
@@ -151,12 +151,12 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
                     }
                 }
 
-                // 获取所有公共属性
+                // Get all public properties
                 var properties = entityType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
                 foreach (var prop in properties)
                 {
-                    // 跳过某些不应该在查询中暴露的属性
+                    // Skip certain properties that should not be exposed in queries
                     if (ShouldSkipProperty(prop.Name))
                         continue;
 
@@ -184,7 +184,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        /// 判断是否应该跳过某个属性
+        /// Determine whether an attribute should be skipped
         /// </summary>
         private bool ShouldSkipProperty(string propertyName)
         {
@@ -193,7 +193,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        /// 获取简化的类型名称
+        /// Get the simplified type name
         /// </summary>
         private string GetSimpleTypeName(Type type)
         {
@@ -203,7 +203,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        /// 判断属性是否为必需字段
+        /// Determine whether the attribute is a required field
         /// </summary>
         private bool IsRequiredProperty(PropertyInfo prop)
         {
@@ -212,7 +212,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        /// 获取属性的最大长度
+        /// Get the maximum length of the attribute
         /// </summary>
         private int? GetMaxLength(PropertyInfo prop)
         {
@@ -233,7 +233,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        /// 判断类型是否可以用于过滤
+        /// Determine whether the type can be used for filtering
         /// </summary>
         private bool IsFilterableType(Type type)
         {
@@ -248,10 +248,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        /// 将用户输入的模块名解析为缓存中的精确 key。
-        /// 匹配顺序：精确 → 大小写不敏感 → 后缀（"AIKernel"→"Senparc.Xncf.AIKernel"）
-        ///           → XncfRegisterManager.Name/MenuName → 包含（唯一时）
-        /// 返回 null 表示未找到。
+        /// Resolve the module name entered by the user into the exact key in the cache.
+        /// Matching order: Exact → Case-insensitive → Suffix ("AIKernel" → "Senparc.Xncf.AIKernel")
+        /// → XncfRegisterManager.Name/MenuName → Contains (when unique)
+        /// Returns null if not found.
         /// </summary>
         public string ResolveModuleName(string input)
         {
@@ -260,25 +260,25 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
 
             EnsureInitialized();
 
-            // 1. 精确匹配
+            // 1. Exact match
             if (_schemaCache.ContainsKey(input))
                 return input;
 
-            // 2. 大小写不敏感精确匹配
+            // 2. Case-insensitive exact matching
             var caseInsensitive = _schemaCache.Keys
                 .FirstOrDefault(k => string.Equals(k, input, StringComparison.OrdinalIgnoreCase));
             if (caseInsensitive != null)
                 return caseInsensitive;
 
-            // 3. 后缀匹配（如 "AIKernel" 匹配 "Senparc.Xncf.AIKernel"）
+            // 3. Suffix matching (such as "AIKernel" matches "Senparc.Xncf.AIKernel")
             var suffix = _schemaCache.Keys
                 .Where(k => k.EndsWith("." + input, StringComparison.OrdinalIgnoreCase))
                 .ToList();
             if (suffix.Count == 1)
                 return suffix[0];
 
-            // 4. 通过 XncfRegisterManager.RegisterList 匹配 Name / MenuName
-            //    优先使用已注册模块的官方 Name 及人性化 MenuName 进行匹配
+            // 4. Match Name / MenuName through XncfRegisterManager.RegisterList
+            //    Priority is given to using the official Name and humanized MenuName of the registered module for matching.
             var registerMatches = XncfRegisterManager.RegisterList
                 .Where(r =>
                     string.Equals(r.Name, input, StringComparison.OrdinalIgnoreCase) ||
@@ -294,7 +294,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
                     return assemblyName;
             }
 
-            // 5. 包含匹配（最宽松，仅在唯一匹配时使用）
+            // 5. Inclusive match (the loosest, only used when there is a unique match)
             var contains = _schemaCache.Keys
                 .Where(k => k.Contains(input, StringComparison.OrdinalIgnoreCase))
                 .ToList();
@@ -305,9 +305,9 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        /// 在已解析模块中模糊匹配实体名（表名）。
-        /// 匹配优先级（高→低）：精确 > 大小写不敏感 > 前缀/被包含 > 包含
-        /// 唯一最高分匹配时返回精确 TableName，否则返回 null。
+        /// Fuzzy matches entity names (table names) in parsed modules.
+        /// Match priority (high → low): exact > case insensitive > prefix/included > contains
+        /// Returns the exact TableName if the unique highest score matches, otherwise returns null.
         /// </summary>
         public string ResolveEntityName(string resolvedModuleName, string inputEntityName)
         {
@@ -331,7 +331,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
             if (scored.Count == 0)
                 return null;
 
-            // 唯一最高分 → 返回；多个相同最高分 → 歧义，返回 null
+            // Unique highest score → return; multiple identical highest scores → ambiguous, return null
             if (scored.Count == 1 || scored[1].Score < scored[0].Score)
                 return scored[0].Schema.TableName;
 
@@ -339,31 +339,31 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        /// 对单个 schema 与输入实体名的匹配程度打分（0 = 不匹配）
+        /// Score how well a single schema matches the input entity name (0 = no match)
         /// </summary>
         private static int ScoreEntityMatch(DatabaseSchemaMetadata schema, string shortInput, string fullInput)
         {
             var schemaShort = GetShortTypeName(schema.TableName ?? string.Empty);
             var schemaFull = schema.EntityFullName ?? string.Empty;
 
-            // 精确匹配（短名）
+            // Exact match (short name)
             if (string.Equals(schemaShort, shortInput, StringComparison.OrdinalIgnoreCase))
                 return 100;
 
-            // 精确匹配（全限定名）
+            // Exact match (fully qualified name)
             if (string.Equals(schemaFull, fullInput, StringComparison.OrdinalIgnoreCase))
                 return 90;
 
-            // 前缀：schema名 以 input 开头，或 input 以 schema名 开头
+            // Prefix: schema name starts with input, or input starts with schema name
             if (schemaShort.StartsWith(shortInput, StringComparison.OrdinalIgnoreCase) ||
                 shortInput.StartsWith(schemaShort, StringComparison.OrdinalIgnoreCase))
                 return 60;
 
-            // 包含：schema名包含 input
+            // Contains: schema name contains input
             if (schemaShort.Contains(shortInput, StringComparison.OrdinalIgnoreCase))
                 return 40;
 
-            // 包含：input 包含 schema名
+            // Contains: input contains schema name
             if (shortInput.Contains(schemaShort, StringComparison.OrdinalIgnoreCase))
                 return 30;
 
@@ -371,7 +371,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        /// 获取所有模块的架构信息
+        /// Get the architecture information of all modules
         /// </summary>
         public Dictionary<string, List<DatabaseSchemaDto>> GetAllSchemas()
         {
@@ -390,7 +390,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        /// 获取指定模块的架构信息
+        /// Get the architecture information of the specified module
         /// </summary>
         public List<DatabaseSchemaDto> GetSchemasByModule(string moduleName)
         {
@@ -407,7 +407,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        /// 获取所有已知模块名称（缓存 key 列表），用于错误提示。
+        /// Get all known module names (cache key list) for error prompts.
         /// </summary>
         public IReadOnlyList<string> GetAllModuleNames()
         {
@@ -416,7 +416,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        /// 获取指定模块下所有可见实体的短名称，用于错误提示。
+        /// Get the short names of all visible entities under the specified module for error prompts.
         /// </summary>
         public IReadOnlyList<string> GetTableNames(string moduleName)
         {
@@ -432,7 +432,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        /// 获取指定表的架构信息
+        /// Get the schema information of the specified table
         /// </summary>
         public DatabaseSchemaDto GetSchemaByTable(string moduleName, string tableName)
         {
@@ -448,7 +448,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        /// 获取实体的完全限定名
+        /// Get the fully qualified name of the entity
         /// </summary>
         public string GetEntityFullName(string moduleName, string tableName)
         {
@@ -463,7 +463,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
         }
 
         /// <summary>
-        /// 转换为 DTO
+        /// Convert to DTO
         /// </summary>
         private DatabaseSchemaDto ConvertToDto(DatabaseSchemaMetadata metadata)
         {

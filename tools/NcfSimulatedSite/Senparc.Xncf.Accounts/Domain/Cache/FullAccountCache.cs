@@ -22,7 +22,7 @@ namespace Senparc.Xncf.Accounts.Domain.Cache
     public class FullAccountCache : BaseStringDictionaryCache<FullAccount, Account> //, IFullAccountCache
     {
         /// <summary>
-        /// UserId和UserName的映射关系
+        /// Mapping relationship between UserId and UserName
         /// </summary>
         public static ConcurrentDictionary<int, string> UserIdNameRelationshop = new ConcurrentDictionary<int, string>();
 
@@ -34,7 +34,7 @@ namespace Senparc.Xncf.Accounts.Domain.Cache
         #region 同步方法
 
         /// <summary>
-        /// 根据判断条件获取User
+        /// Get User based on judgment conditions
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
@@ -74,9 +74,9 @@ namespace Senparc.Xncf.Accounts.Domain.Cache
             {
                 return null;
             }
-            UserIdNameRelationshop[fullUser.Id] = fullUser.UserName;//TODO:需要使用分布式缓存
+            UserIdNameRelationshop[fullUser.Id] = fullUser.UserName;//TODO: Need to use distributed cache
 
-            this.UpdateToCache(key, fullUser); //需要更新对象到Redis
+            this.UpdateToCache(key, fullUser); //Need to update objects to Redis
             return fullUser;
         }
 
@@ -107,7 +107,7 @@ namespace Senparc.Xncf.Accounts.Domain.Cache
             var userName = GetUserName(accountId);
             if (userName == null)
             {
-                //未命中，查找数据库
+                //Missed, search database
                 var account = this.GetAccount(z => z.Id == accountId);
                 if (account == null)
                 {
@@ -132,7 +132,7 @@ namespace Senparc.Xncf.Accounts.Domain.Cache
 
 
         /// <summary>
-        /// 根据判断条件获取User
+        /// Get User based on judgment conditions
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
@@ -151,9 +151,9 @@ namespace Senparc.Xncf.Accounts.Domain.Cache
             {
                 return null;
             }
-            UserIdNameRelationshop[fullUser.Id] = fullUser.UserName;//TODO:需要使用分布式缓存
+            UserIdNameRelationshop[fullUser.Id] = fullUser.UserName;//TODO: Need to use distributed cache
 
-            await this.UpdateToCacheAsync(key, fullUser).ConfigureAwait(false); //需要更新对象到Redis
+            await this.UpdateToCacheAsync(key, fullUser).ConfigureAwait(false); //Need to update objects to Redis
             return fullUser;
         }
 

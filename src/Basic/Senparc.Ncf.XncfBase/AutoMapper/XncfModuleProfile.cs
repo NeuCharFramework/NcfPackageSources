@@ -7,7 +7,7 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase.AutoMapper
 {
     /// <summary>
-    /// Xncf 模块使用的 AutoMap 配置
+    ///AutoMap configuration used by the Xncf module
     /// </summary>
     public class XncfModuleProfile : Profile
     {

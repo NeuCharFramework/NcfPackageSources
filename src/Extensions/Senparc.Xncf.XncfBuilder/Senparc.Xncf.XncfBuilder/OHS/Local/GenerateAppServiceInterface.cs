@@ -15,7 +15,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         }
 
         /// <summary>
-        /// 生成 生成 AppService 接口代码
+        ///Generate Generate AppService interface code
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>

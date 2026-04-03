@@ -1,6 +1,6 @@
 /**
- * HTML 操作辅助工具
- * 提供 HTML 转义、UUID 生成、防抖节流等通用功能
+ * HTML operation assistance tool
+ * Provides common functions such as HTML escaping, UUID generation, anti-shake throttling, etc.
  * 
  * @version 1.0.0
  * @author Senparc
@@ -9,15 +9,15 @@
     'use strict';
     
     /**
-     * HTML 辅助工具集
-     * 使用对象字面量模式（无需实例化）
+     *HTML auxiliary toolset
+     * Use object literal mode (no instantiation required)
      */
     var HtmlHelper = {
         /**
-         * HTML 转义
-         * 将文本中的特殊字符转换为 HTML 实体
-         * @param {string} text - 要转义的文本
-         * @returns {string} 转义后的文本
+         * HTML escape
+         * Convert special characters in text to HTML entities
+         * @param {string} text - the text to escape
+         * @returns {string} escaped text
          */
         escape: function(text) {
             if (!text) return '';
@@ -27,19 +27,19 @@
         },
 
         /**
-         * 正则表达式转义
-         * 转义正则表达式中的特殊字符
-         * @param {string} str - 要转义的字符串
-         * @returns {string} 转义后的字符串
+         * Regular expression escape
+         * Escape special characters in regular expressions
+         * @param {string} str - the string to escape
+         * @returns {string} escaped string
          */
         escapeRegex: function(str) {
             return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         },
 
         /**
-         * 生成 UUID (v4)
-         * 生成符合 RFC4122 标准的 UUID
-         * @returns {string} UUID 字符串
+         * Generate UUID (v4)
+         * Generate UUID compliant with RFC4122 standard
+         * @returns {string} UUID string
          */
         generateUUID: function() {
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -50,10 +50,10 @@
         },
 
         /**
-         * 格式化文件大小
-         * 将字节数转换为人类可读的格式
-         * @param {number} bytes - 字节数
-         * @returns {string} 格式化后的文件大小（如 "1.23 MB"）
+         * Format file size
+         * Convert byte count to human-readable format
+         * @param {number} bytes - number of bytes
+         * @returns {string} formatted file size (such as "1.23 MB")
          */
         formatFileSize: function(bytes) {
             if (bytes === 0) return '0 B';
@@ -64,11 +64,11 @@
         },
 
         /**
-         * 防抖函数
-         * 延迟执行函数，如果在延迟期间再次调用，则重新计时
-         * @param {Function} func - 要防抖的函数
-         * @param {number} wait - 延迟时间（毫秒）
-         * @returns {Function} 防抖后的函数
+         * Anti-shake function
+         * Delay execution function, if called again during the delay period, retime
+         * @param {Function} func - the function to be anti-shake
+         * @param {number} wait - delay time (milliseconds)
+         * @returns {Function} function after anti-shake
          */
         debounce: function(func, wait) {
             var timeout;
@@ -83,11 +83,11 @@
         },
 
         /**
-         * 节流函数
-         * 限制函数在指定时间内只能执行一次
-         * @param {Function} func - 要节流的函数
-         * @param {number} limit - 时间限制（毫秒）
-         * @returns {Function} 节流后的函数
+         * Throttle function
+         * Limit the function to be executed only once within a specified time
+         * @param {Function} func - the function to throttle
+         * @param {number} limit - time limit (milliseconds)
+         * @returns {Function} The function after throttling
          */
         throttle: function(func, limit) {
             var inThrottle;
@@ -105,10 +105,10 @@
         },
 
         /**
-         * 深度克隆对象
-         * 创建对象的深拷贝
-         * @param {*} obj - 要克隆的对象
-         * @returns {*} 克隆后的对象
+         * Deep clone object
+         * Create a deep copy of the object
+         * @param {*} obj - the object to be cloned
+         * @returns {*} cloned object
          */
         deepClone: function(obj) {
             if (obj === null || typeof obj !== 'object') {
@@ -139,11 +139,11 @@
         },
 
         /**
-         * 获取 URL 查询参数
-         * 从 URL 中提取指定的查询参数值
-         * @param {string} name - 参数名
-         * @param {string} [url] - URL 字符串，默认为当前页面 URL
-         * @returns {string|null} 参数值，不存在则返回 null
+         * Get URL query parameters
+         * Extract the specified query parameter value from the URL
+         * @param {string} name - parameter name
+         * @param {string} [url] - URL string, defaults to the current page URL
+         * @returns {string|null} parameter value, if it does not exist, return null
          */
         getQueryParam: function(name, url) {
             url = url || window.location.href;
@@ -156,10 +156,10 @@
         },
 
         /**
-         * 判断是否为空值
-         * 检查值是否为 null、undefined、空字符串、空数组或空对象
-         * @param {*} value - 要检查的值
-         * @returns {boolean} 是否为空
+         * Determine whether it is a null value
+         * Check whether the value is null, undefined, empty string, empty array or empty object
+         * @param {*} value - the value to check
+         * @returns {boolean} whether it is empty
          */
         isEmpty: function(value) {
             if (value === null || value === undefined) return true;
@@ -170,7 +170,7 @@
         }
     };
 
-    // 暴露到全局命名空间
+    // Exposed to the global namespace
     window.PromptRangeUtils = window.PromptRangeUtils || {};
     window.PromptRangeUtils.HtmlHelper = HtmlHelper;
 

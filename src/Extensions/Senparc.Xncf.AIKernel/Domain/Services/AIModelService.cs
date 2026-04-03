@@ -70,7 +70,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 构造 SenparcAiSetting
+        /// Construct SenparcAiSetting
         /// </summary>
         /// <param name="aiModel"></param>
         /// <returns></returns>
@@ -119,14 +119,14 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     aiSettings.NeuCharAIKeys = new NeuCharAIKeys()
                     {
                         ApiKey = aiModel.ApiKey,
-                        NeuCharAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        NeuCharAIApiVersion = aiModel.ApiVersion, // ApiVersion is not actually used in SK
                         NeuCharEndpoint = aiModel.Endpoint,
                         ModelName = modelName,
                     };
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
                     {
                         ApiKey = aiModel.ApiKey,
-                        AzureOpenAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        AzureOpenAIApiVersion = aiModel.ApiVersion, // ApiVersion is not actually used in SK
                         AzureEndpoint = aiModel.Endpoint,
                         ModelName = modelName,
                         DeploymentName = aiModel.DeploymentName
@@ -136,7 +136,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
                     {
                         ApiKey = aiModel.ApiKey,
-                        AzureOpenAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        AzureOpenAIApiVersion = aiModel.ApiVersion, // ApiVersion is not actually used in SK
                         AzureEndpoint = aiModel.Endpoint,
                         ModelName = modelName,
                         DeploymentName = aiModel.DeploymentName
@@ -198,7 +198,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 运行模型
+        ///run model
         /// </summary>
         /// <param name="senparcAiSetting"></param>
         /// <param name="prompt"></param>
@@ -257,7 +257,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     Show = true
                 };
 
-                //TODO: 远程不提供，临时本地判断
+                //TODO: Not provided remotely, temporary local judgment
                 if (neucharModel.Name.Contains("embedding"))
                 {
                     dto.ConfigModelType = Models.ConfigModelType.TextEmbedding;

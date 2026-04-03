@@ -9,17 +9,17 @@ using System.Text;
 namespace Senparc.Ncf.Database
 {
     /// <summary>
-    /// 多数据库生成 Migration 的实体类，无需考虑
+    /// Multiple databases generate Migration entity classes, no need to consider
     /// </summary>
-    [System.AttributeUsage(AttributeTargets.Class, AllowMultiple = false/*暂时不支持*/)]
+    [System.AttributeUsage(AttributeTargets.Class, AllowMultiple = false/*Not supported at the moment*/)]
     public class MultipleMigrationDbContextAttribute : Attribute
     {
         /// <summary>
-        /// MultipleMigrationDbContext 构造函数。指定多数据库配置。
+        /// MultipleMigrationDbContext constructor. Specify a multi-database configuration.
         /// </summary>
-        /// <param name="multipleDatabaseType">MultipleDatabaseType 数据库类型</param>
-        /// <param name="xncfDatabaseRegisterType">XncfDatabase 注册类类型</param>
-        // /// <param name="runtimeDbContextType">当运行时使用的统一数据库上下文类型</param>
+        /// <param name="multipleDatabaseType">MultipleDatabaseType database type</param>
+        /// <param name="xncfDatabaseRegisterType">XncfDatabase registration class type</param>
+        // /// <param name="runtimeDbContextType">The unified database context type used when running</param>
         public MultipleMigrationDbContextAttribute(MultipleDatabaseType multipleDatabaseType,
             Type xncfDatabaseRegisterType/*, Type runtimeDbContextType*/)
         {

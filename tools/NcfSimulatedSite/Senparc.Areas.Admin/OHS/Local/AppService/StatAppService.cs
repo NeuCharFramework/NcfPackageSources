@@ -41,7 +41,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取当天日志信息
+        /// Get the day's log information
         /// </summary>
         /// <returns></returns>
         [ApiBind]

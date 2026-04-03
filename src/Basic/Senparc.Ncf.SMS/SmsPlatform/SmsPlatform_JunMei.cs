@@ -34,7 +34,7 @@ namespace Senparc.Ncf.SMS
                 int contentIndex = 0;
                 int limitedLetterCount = 65 * 4;
 
-                //组装消息，判断内容长度，太长则分开发
+                //Assemble the message and determine the length of the content. If it is too long, develop it separately.
                 List<string> messageList = new List<string>();
                 while (contentIndex < content.Length)
                 {
@@ -43,7 +43,7 @@ namespace Senparc.Ncf.SMS
                     contentIndex += limitedLetterCount;
                 }
 
-                //分批发送
+                //Send in batches
                 for (int i = 0; i < messageList.Count; i++)
                 {
                     var msg = messageList[i];
@@ -81,7 +81,7 @@ namespace Senparc.Ncf.SMS
         }
 
         /// <summary>
-        /// 接收回复信息
+        ///Receive reply message
         /// </summary>
         /// <returns></returns>
         public ReplyMessageCollection GetReplyMessages()

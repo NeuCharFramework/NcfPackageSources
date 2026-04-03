@@ -3,23 +3,23 @@ var app = new Vue({
     data() {
         return {
             devHost: 'http://pr-felixj.frp.senparc.com',
-            elSize: 'medium', // el 组件尺寸大小 默认为空  medium、small、mini\
-            // 数据表 列表 list
+            elSize: 'medium', // el component size defaults to empty medium, small, mini\
+            // data table list list
             dataSheetList: [], 
             dataSheetTotal: 0,
             queryDataSheet: {
                 page: 1,
                 size: 10
             },
-            // 数据表 选中的item Id
+            // Data table selected item ID
             sheetSelectId: 0,
-            // 创建数据表的 表单
+            // Create data table form
             sheetFormEidt:false,
             sheetForm: {
                 name: '',
                 description: ''
             },
-            // 创建 表字段 
+            // Create table fields 
             newFieldDrawer: false,
             newFieldForm: {
                 name:'',
@@ -54,16 +54,16 @@ var app = new Vue({
                     { required: true, message: '请选择是否唯一', trigger: 'change' },
                 ],
                 //event: [
-                //    { required: true, message: '请选择事件', trigger: 'change' },
+                //    { required: true, message: 'Please select an event', trigger: 'change' },
                 //],
                 //color: [
-                //    { required: true, message: '请选择颜色', trigger: 'change' },
+                //    { required: true, message: 'Please select a color', trigger: 'change' },
                 //],
                 //description: [
-                //    { required: true, message: '请填写描述', trigger: 'blur' }
+                //    { required: true, message: 'Please fill in the description', trigger: 'blur' }
                 //]
             },
-            // 表字段 列表 list
+            // table field list list
             tableFieldList: [],
             tableFieldTotal: 0,
             queryTableField: {
@@ -73,11 +73,11 @@ var app = new Vue({
         };
     },
     computed: {
-        // 表相关按钮 disabled
+        // Table related buttons disabled
         sheetBD() {
             return !this.sheetSelectId
         },
-        // 布局相关按钮 disabled
+        // Layout related buttons disabled
         layoutBD() {
             return !this.sheetSelectId || !this.tableFieldTotal
         },
@@ -100,9 +100,9 @@ var app = new Vue({
 
     },
     methods: {
-        // 获取 数据表 列表
+        // Get data table list
         getDataSheetListData() {
-            // 模拟 数据
+            // simulated data
             const simulationData = []
             for (let i = 0; i < 10; i++) {
                 simulationData.push({
@@ -114,11 +114,11 @@ var app = new Vue({
             }
             this.dataSheetList = simulationData
             this.dataSheetTotal = simulationData.length
-            // todo 调用接口
+            // todo calling interface
         },
-        // 获取 数据表字段 列表
+        // Get the list of data table fields
         getTableFieldListData() {
-            // 模拟 数据
+            // simulated data
             const simulationData = []
             for (let i = 0; i < 5; i++) {
                 simulationData.push({
@@ -138,9 +138,9 @@ var app = new Vue({
             }
             this.tableFieldList = simulationData
             this.tableFieldTotal = simulationData.length
-            // todo 调用接口
+            // todo calling interface
         },
-        // 查看表详情
+        // View table details
         viewTableDetails(item) {
             if (!item) return
             this.sheetSelectId = item.id
@@ -149,10 +149,10 @@ var app = new Vue({
                 description: item.description
             }
             this.sheetFormEidt = true
-            // 调用接口 获取字段列表信息
+            // Call the interface to obtain field list information
             this.getTableFieldListData()
         },
-        // 新增数据表
+        // Add data table
         addDataTable() {
             this.sheetSelectId = 0
             this.sheetForm = {
@@ -160,17 +160,17 @@ var app = new Vue({
                 description: ''
             }
             this.sheetFormEidt = false
-            // 清空 字段数据
+            // Clear field data
             this.tableFieldList = []
             this.tableFieldTotal = 0
-            // 重置表单
+            // Reset form
             //this.resetSheetForm()
         },
-        // 数据表 基础信息编辑
+        // Data table basic information editing
         onEidtSheet() {
             this.sheetFormEidt = false
         },
-        // 取消编辑数据表
+        // Cancel editing data table
         onCancelEidtSheet() {
             const sheetFindItem = this.dataSheetList.find(item => item.id === this.sheetSelectId)
             if (sheetFindItem) {
@@ -180,12 +180,12 @@ var app = new Vue({
             }
             this.sheetFormEidt = true
         },
-        // 确认创建数据表
+        // Confirm creation of data table
         onSubmitSheet() {
-            // 校验 sheetForm 表单
+            // Validate sheetForm form
             //this.$refs.sheetElForm.validate((valid) => {
             //    if (valid) {
-            //        // todo 调用接口
+            //        // todo calling interface
             //    } else {
             //        console.log('error submit!!');
             //        return false;
@@ -204,7 +204,7 @@ var app = new Vue({
                 this.$message.error(messageText);
                 return
             }
-            // 模拟调用接口
+            // Simulation call interface
             if (this.sheetSelectId) {
                 const sheetFindIndex = this.dataSheetList.findIndex(item => item.id === this.sheetSelectId)
                 if (sheetFindIndex !== -1) {
@@ -227,15 +227,15 @@ var app = new Vue({
             }
             
             this.sheetFormEidt = true
-            // todo 调用接口 创建 this.sheetSelectId
-            // todo 调用接口 重新获取 dataSheetList
-            // todo 调用接口 重新获取 tableFieldList: [], tableFieldTotal: 0,
+            // todo calls the interface to create this.sheetSelectId
+            // todo calls the interface to re-obtain dataSheetList
+            // todo calls the interface to re-obtain tableFieldList: [], tableFieldTotal: 0,
         },
-        // 重置 sheetForm 表单
+        // Reset sheetForm form
         //resetSheetForm() {
         //    this.$refs.sheetElForm.resetFields();
         //}
-        // 关闭 字段表单抽屉
+        // Close Field Form Drawer
         handleNewFieldDrawerClose(done) {
             this.$confirm('确认关闭？')
                 .then(_ => {
@@ -246,19 +246,19 @@ var app = new Vue({
                 })
                 .catch(_ => { });
         },
-        // 新增字段
+        // Add new field
         newFieldsAdd() {
             this.newFieldDrawer = true
-            // todo 调用接口
+            // todo calling interface
         },
-        // 编辑字段
+        // Edit field
         newFieldsEdit(row) {
             this.newFieldForm = {
                 ...row
             }
             this.newFieldDrawer = true
         },
-        // 删除字段
+        // Delete field
         newFieldsDelete(row) {
             this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
                 confirmButtonText: '确定',
@@ -269,8 +269,8 @@ var app = new Vue({
                     type: 'success',
                     message: '删除成功!'
                 });
-                // todo 调用删除接口
-                // 调用接口 获取字段列表信息
+                // todo calls the delete interface
+                // Call the interface to obtain field list information
                 // this.getTableFieldListData()
             }).catch(() => {
                 this.$message({
@@ -279,16 +279,16 @@ var app = new Vue({
                 });
             });
         },
-        // 标识ID 自动生成 
+        // Identification ID automatically generated 
         autoGenerate() {
 
         },
-        // 提交 新增字段表单抽屉
+        // Submit New Field Form Drawer
         submitNewField() {
-            // 校验 sheetForm 表单
+            // Validate sheetForm form
             this.$refs.newFieldElForm.validate((valid) => {
                 if (valid) {
-                    // 模拟调用接口
+                    // Simulation call interface
                     if (this.newFieldForm.id) {
                         const fieldFindIndex = this.tableFieldList.findIndex(item => item.id === this.newFieldForm.id)
                         if (fieldFindIndex !== -1) {
@@ -303,9 +303,9 @@ var app = new Vue({
                         this.tableFieldTotal += 1
                     }
                    
-                    // 调用接口 获取字段列表信息
+                    // Call the interface to obtain field list information
                     // this.getTableFieldListData()
-                    // 清空表单 关闭抽屉
+                    // Clear form Close drawer
                     this.resetNewField()
                 } else {
                     console.log('error submit!!');
@@ -313,7 +313,7 @@ var app = new Vue({
                 }
             });
         },
-        // 重置 新增字段表单抽屉
+        // Reset the new field form drawer
         resetNewField(isClose = true) {
             Object.assign(this.newFieldForm, this.$options.data().newFieldForm)
             this.$refs.newFieldElForm.resetFields();
@@ -322,18 +322,18 @@ var app = new Vue({
             }
              
         },
-        // 创建布局
+        // Create layout
         createLayout() {
-            // todo 跳转 ?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69
+            // todo jump ?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69
             window.open('/Admin/DynamicData/LayoutSet')
         },
-        // 导入
+        // import
         importDataSheet() {
-            // todo 调用接口
+            // todo calling interface
         },
-        // 导出
+        // Export
         exportDataSheet() {
-            // todo 调用接口
+            // todo calling interface
         }
     }
 });

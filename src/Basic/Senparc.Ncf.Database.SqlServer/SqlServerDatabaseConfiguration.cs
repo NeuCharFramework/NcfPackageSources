@@ -13,7 +13,7 @@ using System.Data.Common;
 namespace Senparc.Ncf.Database.SqlServer
 {
     /// <summary>
-    /// SQL Server 数据库配置
+    /// SQL Server database configuration
     /// </summary>
     public class SqlServerDatabaseConfiguration : DatabaseConfigurationBase<SqlServerDbContextOptionsBuilder, SqlServerOptionsExtension>
     {
@@ -46,7 +46,7 @@ namespace Senparc.Ncf.Database.SqlServer
         public override string GetDropTableSql(DbContext dbContext, string tableName)
         {
             //var schma = dbContext.Model.FindEntityType(type).GetSchema();
-            //TODO: 增加 schma
+            //TODO: Add schma
             return $"DROP TABLE {tableName}";
         }
 

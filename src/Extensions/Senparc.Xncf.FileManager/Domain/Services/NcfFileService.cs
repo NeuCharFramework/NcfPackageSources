@@ -18,7 +18,7 @@ namespace Senparc.Xncf.FileManager.Domain.Services
     public class NcfFileService : ServiceBase<NcfFile>
     {
         /// <summary>
-        /// 文件存储的基础路径
+        /// base path for file storage
         /// </summary>
         private readonly string _baseFilePath;
 
@@ -36,7 +36,7 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             }
         }
 
-        // 列表（支持按文件夹过滤）
+        // List (supports filtering by folder)
         public async Task<PagedList<NcfFileDto>> GetFilesAsync(int page, int pageSize, int? folderId)
         {
             var result = (await GetObjectListAsync(page, pageSize, z => z.FolderId == folderId, z => z.Id, OrderingType.Descending, null))

@@ -30,7 +30,7 @@
 
 
 
-/*组件内容区域*/
+/*component content area*/
 .main_content {
   flex: 1;
   background: rgba(255, 255, 255, 1);
@@ -48,7 +48,7 @@
 
 
 
-/* 以下 自定义公用样式 */
+/* The following custom public styles */
 .marginTop{
   margin-top: 20px;
 }

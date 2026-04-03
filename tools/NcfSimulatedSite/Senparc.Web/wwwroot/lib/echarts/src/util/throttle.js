@@ -6,35 +6,35 @@ define(function () {
     var RATE = '\0__throttleRate';
 
     /**
-     * 频率控制 返回函数连续调用时，fn 执行频率限定为每多少时间执行一次
-     * 例如常见效果：
+     * Frequency control When the return function is called continuously, the execution frequency of fn is limited to how many times it is executed.
+     * For example, common effects:
      * notifyWhenChangesStop
-     *      频繁调用时，只保证最后一次执行
-     *      配成：trailing：true；debounce：true 即可
+     * When called frequently, only the last execution is guaranteed.
+     * Match: trailing: true; debounce: true
      * notifyAtFixRate
-     *      频繁调用时，按规律心跳执行
-     *      配成：trailing：true；debounce：false 即可
-     * 注意：
-     *     根据model更新view的时候，可以使用throttle，
-     *     但是根据view更新model的时候，避免使用这种延迟更新的方式。
-     *     因为这可能导致model和server同步出现问题。
+     * When called frequently, execute according to regular heartbeat
+     * Match: trailing: true; debounce: false
+     * Notice:
+     * When updating the view based on the model, you can use throttle.
+     * But when updating the model based on the view, avoid using this delayed update method.
+     * Because this may cause synchronization problems between the model and the server.
      *
      * @public
-     * @param {(Function|Array.<Function>)} fn 需要调用的函数
-     *                                         如果fn为array，则表示可以对多个函数进行throttle。
-     *                                         他们共享同一个timer。
-     * @param {number} delay 延迟时间，单位毫秒
-     * @param {bool} trailing 是否保证最后一次触发的执行
-     *                        true：表示保证最后一次调用会触发执行。
-     *                        但任何调用后不可能立即执行，总会delay。
-     *                        false：表示不保证最后一次调用会触发执行。
-     *                        但只要间隔大于delay，调用就会立即执行。
-     * @param {bool} debounce 节流
-     *                        true：表示：频繁调用（间隔小于delay）时，根本不执行
-     *                        false：表示：频繁调用（间隔小于delay）时，按规律心跳执行
-     * @return {(Function|Array.<Function>)} 实际调用函数。
-     *                                       当输入的fn为array时，返回值也为array。
-     *                                       每项是Function。
+     * @param {(Function|Array.<Function>)} fn The function to be called
+     * If fn is an array, it means that multiple functions can be throttled.
+     * They share the same timer.
+     * @param {number} delay delay time, in milliseconds
+     * @param {bool} whether trailing guarantees the execution of the last trigger
+     * true: Indicates that the last call is guaranteed to trigger execution.
+     * But it is impossible to execute immediately after any call, and there will always be a delay.
+     * false: Indicates that the last call is not guaranteed to trigger execution.
+     * But as long as the interval is greater than delay, the call will be executed immediately.
+     * @param {bool} debounce throttling
+     * true: means: when called frequently (the interval is less than delay), it will not be executed at all.
+     * false: means: when called frequently (interval less than delay), execute according to regular heartbeat
+     * @return {(Function|Array.<Function>)} actually calls the function.
+     * When the input fn is an array, the return value is also an array.
+     * Each item is Function.
      */
     lib.throttle = function (fn, delay, trailing, debounce) {
 
@@ -111,7 +111,7 @@ define(function () {
     };
 
     /**
-     * 按一定频率执行，最后一次调用总归会执行
+     * Executed at a certain frequency, the last call will always be executed
      *
      * @public
      */
@@ -122,7 +122,7 @@ define(function () {
     };
 
     /**
-     * 直到不频繁调用了才会执行，最后一次调用总归会执行
+     * It will not be executed until it is called infrequently. The last call will always be executed.
      *
      * @public
      */

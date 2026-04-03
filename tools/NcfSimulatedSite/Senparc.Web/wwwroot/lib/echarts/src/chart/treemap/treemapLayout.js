@@ -108,7 +108,7 @@ define(function (require) {
             seriesModel.setLayoutInfo(layoutInfo);
 
             // FIXME
-            // 现在没有clip功能，暂时取ec高宽。
+            // There is no clip function now, so take the ec height and width for now.
             prunning(
                 treeRoot,
                 // Transform to base element coordinate system.

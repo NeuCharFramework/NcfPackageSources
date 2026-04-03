@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.Domain.Services
 {
     /// <summary>
-    /// AdminChatSessionModuleService：管理后台聊天会话-模块关联服务
+    ///AdminChatSessionModuleService: Manage background chat session-module associated service
     /// </summary>
     public class AdminChatSessionModuleService : BaseClientService<AdminChatSessionModule>
     {
@@ -21,9 +21,9 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取会话关联的所有模块
+        /// Get all modules associated with the session
         /// </summary>
-        /// <param name="sessionId">会话ID</param>
+        /// <param name="sessionId">Session ID</param>
         public async Task<List<AdminChatSessionModule>> GetSessionModulesAsync(int sessionId)
         {
             var modules = await base.GetFullListAsync(m => m.SessionId == sessionId, "AddedTime ASC");
@@ -31,15 +31,15 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 添加模块到会话
+        ///Add module to session
         /// </summary>
-        /// <param name="sessionId">会话ID</param>
-        /// <param name="xncfModuleUid">XNCF 模块 UID</param>
-        /// <param name="moduleName">模块名称</param>
-        /// <param name="moduleVersion">模块版本</param>
+        /// <param name="sessionId">Session ID</param>
+        /// <param name="xncfModuleUid">XNCF module UID</param>
+        /// <param name="moduleName">Module name</param>
+        /// <param name="moduleVersion">Module version</param>
         public async Task<AdminChatSessionModule> AddModuleToSessionAsync(int sessionId, string xncfModuleUid, string moduleName, string moduleVersion)
         {
-            // 检查是否已存在（防止重复添加）
+            // Check if it already exists (prevent duplicate addition)
             var existing = await base.GetObjectAsync(m => 
                 m.SessionId == sessionId && m.XncfModuleUid == xncfModuleUid);
 
@@ -54,7 +54,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 批量添加模块到会话
+        /// Batch add modules to session
         /// </summary>
         public async Task<List<AdminChatSessionModule>> AddModulesToSessionAsync(
             int sessionId, 
@@ -72,7 +72,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 从会话中移除模块
+        ///Remove module from session
         /// </summary>
         public async Task<bool> RemoveModuleFromSessionAsync(int sessionId, string xncfModuleUid)
         {
@@ -86,7 +86,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 清空会话的所有模块关联
+        ///Clear all module associations of the session
         /// </summary>
         public async Task<int> ClearSessionModulesAsync(int sessionId)
         {
@@ -101,7 +101,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 检查模块是否已关联到会话
+        /// Check if the module is associated to the session
         /// </summary>
         public async Task<bool> IsModuleInSessionAsync(int sessionId, string xncfModuleUid)
         {
@@ -110,7 +110,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取会话的模块数量
+        /// Get the number of modules in the session
         /// </summary>
         public async Task<int> GetSessionModuleCountAsync(int sessionId)
         {
@@ -119,7 +119,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取模块被使用的会话数量（统计用）
+        /// Get the number of sessions used by the module (for statistics)
         /// </summary>
         public async Task<int> GetModuleUsageCountAsync(string xncfModuleUid)
         {

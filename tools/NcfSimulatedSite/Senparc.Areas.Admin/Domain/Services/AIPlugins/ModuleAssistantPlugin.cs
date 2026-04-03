@@ -12,24 +12,24 @@ using System.Text;
 namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
 {
     /// <summary>
-    /// ModuleAssistantPlugin：针对会话关联模块的 AI Function Calling 插件。
-    /// <para>当用户提问涉及模块信息、数据库结构、已安装功能等时，AI 将自动调用对应函数。</para>
+    ///ModuleAssistantPlugin: AI Function Calling plugin for session association modules.
+    /// <para>When the user asks a question involving module information, database structure, installed functions, etc., AI will automatically call the corresponding function. </para>
     /// </summary>
     public class ModuleAssistantPlugin
     {
         private readonly List<AdminChatSessionModule> _sessionModules;
 
         /// <summary>
-        /// 初始化模块助手插件。
+        /// Initialize module helper plugin.
         /// </summary>
-        /// <param name="sessionModules">当前会话关联模块列表。</param>
+        /// <param name="sessionModules">List of modules associated with the current session. </param>
         public ModuleAssistantPlugin(List<AdminChatSessionModule> sessionModules)
         {
             _sessionModules = sessionModules ?? new List<AdminChatSessionModule>();
         }
 
         /// <summary>
-        /// 列出当前会话关联的所有 XNCF 模块
+        /// List all XNCF modules associated with the current session
         /// </summary>
         [KernelFunction, Description("获取当前对话会话已关联的所有 XNCF 模块列表。当用户询问当前会话有哪些模块、关联了哪些模块时调用。")]
         public string GetSessionModuleList()
@@ -55,7 +55,7 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
         }
 
         /// <summary>
-        /// 获取指定模块的详细信息（含 Functions 列表）
+        /// Get detailed information of the specified module (including Functions list)
         /// </summary>
         [KernelFunction, Description("获取指定模块的详细信息，包括描述、版本、可用功能（FunctionRender）列表等。支持通过模块名称关键字或 UID 查询。当用户询问某个模块有哪些功能、模块说明时调用。")]
         public string GetModuleDetail(
@@ -79,7 +79,7 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
                 sb.AppendLine($"- **图标**: {register.Icon}");
                 sb.AppendLine($"- **支持 MCP**: {(register.EnableMcpServer ? "是" : "否")}");
 
-                // 获取 FunctionRender 注册的功能列表
+                // Get the list of functions registered by FunctionRender
                 if (Ncf.XncfBase.Register.FunctionRenderCollection.TryGetValue(register.GetType(), out var functionGroup) && functionGroup.Any())
                 {
                     sb.AppendLine($"\n### 可用功能（FunctionRender，共 {functionGroup.Count} 个）：");
@@ -101,7 +101,7 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
         }
 
         /// <summary>
-        /// 获取指定模块的数据库结构信息
+        /// Get the database structure information of the specified module
         /// </summary>
         [KernelFunction, Description("获取指定模块的数据库/存储结构信息，包括数据库前缀、DbContext 类型、数据表（DbSet）列表等。当用户询问模块的数据结构、数据库表、存储内容时调用。")]
         public string GetModuleDatabaseInfo(
@@ -139,7 +139,7 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
                             var entityType = prop.PropertyType.GetGenericArguments().FirstOrDefault();
                             sb.AppendLine($"  * **{prop.Name}** → 实体类型：{entityType?.Name ?? "未知"}");
 
-                            // 列出实体的公开属性（简要字段清单）
+                            // List the public properties of an entity (brief field list)
                             if (entityType != null)
                             {
                                 var fields = entityType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
@@ -168,7 +168,7 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
         }
 
         /// <summary>
-        /// 列出系统中所有已注册模块
+        /// List all registered modules in the system
         /// </summary>
         [KernelFunction, Description("列出当前系统中所有已注册的 XNCF 模块（不局限于当前会话的关联模块）。当用户想了解系统整体有哪些模块、模块概览时调用。")]
         public string ListAllInstalledModules()
@@ -194,7 +194,7 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
         }
 
         /// <summary>
-        /// 根据 UID 或名称关键字从会话模块中查找
+        /// Find from session module based on UID or name keyword
         /// </summary>
         private AdminChatSessionModule FindModule(string moduleUidOrName)
         {

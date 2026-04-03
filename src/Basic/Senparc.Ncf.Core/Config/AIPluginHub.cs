@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Core
 {
     /// <summary>
-    /// 注册 AI 插件
+    ///Register AI plugin
     /// </summary>
     public class AIPluginHub
     {
@@ -19,7 +19,7 @@ namespace Senparc.Ncf.Core
         AIPluginHub() { }
 
         /// <summary>
-        /// AIPluginHub 的全局单例
+        /// Global singleton of AIPluginHub
         /// </summary>
         public static AIPluginHub Instance
         {
@@ -43,7 +43,7 @@ namespace Senparc.Ncf.Core
 
 
         /// <summary>
-        /// 添加 Plugin 类型
+        /// Add Plugin type
         /// </summary>
         /// <param name="pluginType"></param>
 
@@ -58,7 +58,7 @@ namespace Senparc.Ncf.Core
         }
 
         /// <summary>
-        /// 获取 Plugin 类型
+        /// Get Plugin type
         /// </summary>
         /// <param name="fullName"></param>
         /// <param name="patternSearch"></param>
@@ -91,7 +91,7 @@ namespace Senparc.Ncf.Core
         }
 
         /// <summary>
-        /// 获取所有 Plugin 类型
+        /// Get all Plugin types
         /// </summary>
         /// <returns></returns>
         public List<string> GetAllPluginNames()

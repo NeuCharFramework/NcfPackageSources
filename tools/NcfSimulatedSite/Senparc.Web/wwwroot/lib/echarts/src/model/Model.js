@@ -49,13 +49,13 @@ define(function (require) {
         constructor: Model,
 
         /**
-         * Model 的初始化函数
+         * Model initialization function
          * @param {Object} option
          */
         init: null,
 
         /**
-         * 从新的 Option merge
+         * From new Option merge
          */
         mergeOption: function (option) {
             zrUtil.merge(this.option, option, true);

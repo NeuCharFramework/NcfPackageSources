@@ -5,42 +5,42 @@ using System.ComponentModel.DataAnnotations;
 namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 {
     /// <summary>
-    /// AdminChatMessageDto：管理后台聊天消息数据传输对象
+    ///AdminChatMessageDto: Management background chat message data transfer object
     /// </summary>
     public class AdminChatMessageDto : DtoBase<int>
     {
         /// <summary>
-        /// 所属会话ID
+        /// belongs to the session ID
         /// </summary>
         public int SessionId { get; set; }
 
         /// <summary>
-        /// 消息角色类型
+        /// message role type
         /// </summary>
         public ChatMessageRoleType RoleType { get; set; }
 
         /// <summary>
-        /// 消息内容
+        /// message content
         /// </summary>
         public string Content { get; set; }
 
         /// <summary>
-        /// 消息序号
+        /// message sequence number
         /// </summary>
         public int Sequence { get; set; }
 
         /// <summary>
-        /// 用户反馈
+        /// User feedback
         /// </summary>
         public MessageFeedbackType UserFeedback { get; set; }
 
         /// <summary>
-        /// 使用的模型标识符
+        /// model identifier to use
         /// </summary>
         public string ModelIdentifier { get; set; }
 
         /// <summary>
-        /// 从实体映射到 DTO
+        /// Mapping from entities to DTOs
         /// </summary>
         public static AdminChatMessageDto CreateFromEntity(AdminChatMessage entity)
         {
@@ -48,14 +48,14 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 
             return new AdminChatMessageDto
             {
-                // 明确复制基类属性
+                // Explicitly copy base class properties
                 Id = entity.Id,
                 AddTime = entity.AddTime,
                 LastUpdateTime = entity.LastUpdateTime,
                 TenantId = entity.TenantId,
                 Flag = entity.Flag,
 
-                // 复制业务属性
+                // Copy business attributes
                 SessionId = entity.SessionId,
                 RoleType = entity.RoleType,
                 Content = entity.Content,
@@ -67,18 +67,18 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
     }
 
     /// <summary>
-    /// 发送聊天消息的请求 DTO
+    /// Request to send chat message DTO
     /// </summary>
     public class ChatMessageInputDto
     {
         /// <summary>
-        /// 会话ID
+        /// session id
         /// </summary>
         [Required]
         public int SessionId { get; set; }
 
         /// <summary>
-        /// 消息内容
+        /// message content
         /// </summary>
         [Required]
         public string Content { get; set; }

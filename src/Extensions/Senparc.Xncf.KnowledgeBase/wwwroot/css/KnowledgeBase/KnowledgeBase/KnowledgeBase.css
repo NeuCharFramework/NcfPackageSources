@@ -51,7 +51,7 @@
 
 .item-right img, .item-right video {
     width: 15rem;
-    -webkit-filter: drop-shadow(10px 10px 10px rgba(0,0,0,.5)); /*考虑浏览器兼容性：兼容 Chrome, Safari, Opera */
+    -webkit-filter: drop-shadow(10px 10px 10px rgba(0,0,0,.5)); /*Consider browser compatibility: Compatible with Chrome, Safari, Opera */
     filter: drop-shadow(10px 10px 10px rgba(0,0,0,.5));
 }
 
@@ -75,7 +75,7 @@
 width: 250px;
 }*/
 
-/* 抽屉 表单容器 */
+/* Drawer form container */
 .drawerForm-container {
     padding: 0px 20px;
 }
@@ -109,14 +109,14 @@ width: 250px;
 
         .drawerForm-container .agentAvatarBoxItem-active img {
             transform: translateY(-60px);
-            /* //颜色、x轴偏移量、y轴偏移量, */
+            /* //Color, x-axis offset, y-axis offset, */
             filter: drop-shadow(#409eff 0 60px);
             /* background-image: url(''), linear-gradient(#409eff, #409eff);
 background-blend-mode: lighten;
 background-size: cover; */
         }
 
-/* 文件列表 */
+/* file list */
 .groupFMB {
     line-height: normal;
     padding: 10px 15px;
@@ -171,7 +171,7 @@ background-size: cover; */
 
 
 
-/* 抽屉 右侧自定义 */
+/* Drawer right side customized */
 .drawerRtl {
     display: flex;
     flex-direction: column;
@@ -222,7 +222,7 @@ background-size: cover; */
     /*box-shadow: 0 -1px 4px 1px rgba(0, 0, 0, 0.14);*/
 }
 
-/* 向量化进度弹窗 */
+/* Vectorized progress pop-up window */
 .embedding-progress-body {
     padding: 10px 0 16px;
 }
@@ -233,7 +233,7 @@ background-size: cover; */
     font-size: 14px;
 }
 
-/* 向量化结果展示 */
+/* Display of vectorization results */
 .embedding-result-body {
     max-height: 420px;
     overflow: auto;

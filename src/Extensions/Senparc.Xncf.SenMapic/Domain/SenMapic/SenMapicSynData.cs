@@ -12,12 +12,12 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             CurrentCrawlingUrlList = new CurrentCrawlingUrlList();
         }
 
-        //静态SearchCache
+        //StaticSearchCache
         public static SenMapicSynData Instance
         {
             get
             {
-                return Nested.instance;//返回Nested类中的静态成员instance
+                return Nested.instance;//Returns the static member instance in the Nested class
             }
         }
 
@@ -26,7 +26,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             static Nested()
             {
             }
-            //将instance设为一个初始化的SearchCache新实例
+            //Set instance to an initialized new instance of SearchCache
             internal static readonly SenMapicSynData instance = new SenMapicSynData();
         }
 

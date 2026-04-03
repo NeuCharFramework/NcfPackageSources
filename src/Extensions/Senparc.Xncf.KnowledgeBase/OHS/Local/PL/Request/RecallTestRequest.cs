@@ -10,11 +10,11 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Request
     {
         public int Id { get; set; }
         /// <summary>
-        /// 内容
+        /// content
         /// </summary>
         public string Content { get; set; }
         /// <summary>
-        /// 召回片段数量 Top K，默认 5，范围 1-20
+        /// Number of recalled fragments Top K, default 5, range 1-20
         /// </summary>
         public int TopK { get; set; } = 5;
     }

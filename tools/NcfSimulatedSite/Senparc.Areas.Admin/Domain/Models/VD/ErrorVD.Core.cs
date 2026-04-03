@@ -4,17 +4,17 @@ using System;
 namespace Senparc.Areas.Admin.Domain.Models.VD
 {
     /// <summary>
-    /// 全局所有的Error_ExceptionVD必须实现这个接口
+    /// All Error_ExceptionVD globally must implement this interface
     /// </summary>
     public interface IError_BaseVD : IBaseVD
     {
         ///// <summary>
-        ///// 给Error_ExceptionVD用
+        ///// For Error_ExceptionVD
         ///// </summary>
         //HandleErrorInfo HandleErrorInfo { get; set; }
 
         /// <summary>
-        /// 给Error_Error404VD用
+        /// for Error_Error404VD
         /// </summary>
         string Url { get; set; }
     }
@@ -23,12 +23,12 @@ namespace Senparc.Areas.Admin.Domain.Models.VD
     public class Error_BaseVD : BaseVD, IError_BaseVD
     {
         /// <summary>
-        /// 给Error_ExceptionVD用
+        /// For Error_ExceptionVD
         /// </summary>
         //public HandleErrorInfo HandleErrorInfo { get; set; }
 
         /// <summary>
-        /// 给Error_Error404VD用
+        /// for Error_Error404VD
         /// </summary>
         public string Url { get; set; }
     }

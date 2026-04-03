@@ -5,30 +5,30 @@ using System.Text;
 namespace Senparc.Ncf.Core.MultiTenant
 {
     /// <summary>
-    /// 某一个请求对应的租户信息
+    /// Tenant information for a specific request
     /// </summary>
     public class RequestTenantInfo
     {
         public int Id { get; set; }
         /// <summary>
-        /// 唯一名称
+        /// Unique name
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// 匹配条件
+        /// match condition
         /// </summary>
         public string TenantKey { get; set; }
         /// <summary>
-        /// 初始化开始时间
+        ///Initialization start time
         /// </summary>
         public DateTime BeginTime { get; }
         /// <summary>
-        /// 是否匹配成功
+        /// Whether the match is successful
         /// </summary>
         public bool MatchSuccess { get; private set; }
 
         /// <summary>
-        /// 是否已经尝试过匹配
+        /// Whether matching has already been attempted
         /// </summary>
         public bool TriedMatching { get; private set; }
 
@@ -38,9 +38,9 @@ namespace Senparc.Ncf.Core.MultiTenant
         }
 
        /// <summary>
-       /// 尝试匹配
+       /// try to match
        /// </summary>
-       /// <param name="success">是否成功</param>
+       /// <param name="success">Whether it was successful</param>
         public void TryMatch(bool success)
         {
             TriedMatching = true;

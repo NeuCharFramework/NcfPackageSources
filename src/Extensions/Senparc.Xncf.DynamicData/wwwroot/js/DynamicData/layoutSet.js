@@ -7,15 +7,15 @@
 function debounce(func, wait, immediate) {
     let timeout, args, context, timestamp, result
     const later = function () {
-        // 据上一次触发时间间隔
+        // According to the last trigger time interval
         const last = +new Date() - timestamp
 
-        // 上次被包装函数被调用时间间隔 last 小于设定时间间隔 wait
+        // The time interval between the last time the wrapped function was called last is less than the set time interval wait
         if (last < wait && last > 0) {
             timeout = setTimeout(later, wait - last)
         } else {
             timeout = null
-            // 如果设定为immediate===true，因为开始边界已经调用过了此处无需调用
+            // If set to immediate===true, there is no need to call here because the starting boundary has already been called.
             if (!immediate) {
                 result = func.apply(context, args)
                 if (!timeout) context = args = null
@@ -27,7 +27,7 @@ function debounce(func, wait, immediate) {
         context = this
         timestamp = +new Date()
         const callNow = immediate && !timeout
-        // 如果延时不存在，重新设定延时
+        // If the delay does not exist, reset the delay
         if (!timeout) timeout = setTimeout(later, wait)
         if (callNow) {
             result = func.apply(context, args)
@@ -61,8 +61,8 @@ function deepClone(source) {
 }
 
 /**
- * 判断值是否 数字
- * @param {*} val 需要判断的变量
+ * Determine whether the value is a number
+ * @param {*} val variable to be judged
  */
 function isNumber(val) {
     // return !isNaN(val) && (typeof val === 'number' || !isNaN(Number(val)))
@@ -70,8 +70,8 @@ function isNumber(val) {
 }
 
 /**
- * 判断值是否是 空对象
- * @param {*} val 需要判断的变量
+ * Determine whether the value is an empty object
+ * @param {*} val variable to be judged
  */
 function isObjEmpty(obj) {
     return Object.keys(obj).length === 0;
@@ -81,19 +81,19 @@ var app = new Vue({
     data() {
         return {
             devHost: 'http://pr-felixj.frp.senparc.com',
-            elSize: 'medium', // el 组件尺寸大小 默认为空  medium、small、mini
-            layoutName: '', // 布局名称
-            isEditLayoutName: false,// 布局名称是否 编辑
-            // 布局菜单
-            loadingAddMenu: false, // 新增菜单loading
+            elSize: 'medium', // el component size defaults to empty medium, small, mini
+            layoutName: '', // layout name
+            isEditLayoutName: false,// Whether the layout name is Edit
+            // layout menu
+            loadingAddMenu: false, // Added menu loading
 
-            layoutMenuActive: 0, // 默认选中的菜单
-            layoutComponentActive: '', // 默认选中的组件
-            layoutComponentActiveType: '', // 组件 选中类型 table normalColumn customColumn columnEditBtn form formItem formSubmitBtn
-            columnActiveIndex: '', // 列选中 index
+            layoutMenuActive: 0, // Default selected menu
+            layoutComponentActive: '', // Components selected by default
+            layoutComponentActiveType: '', // Component selected type table normalColumn customColumn columnEditBtn form formItem formSubmitBtn
+            columnActiveIndex: '', // Column selected index
 
-            dragStarIndex: '', // 拖拽 开始 index
-            dragEnterIndex: '', // 拖拽 结束 index
+            dragStarIndex: '', // Drag and drop to start index
+            dragEnterIndex: '', // Drag to end index
 
             layoutMenuList: [
                 {
@@ -102,50 +102,50 @@ var app = new Vue({
                     layoutList: []
                 }
             ],
-            // 布局组件区域列表
+            // Layout component area list
             layoutComponentsList: [],
 
-            // 侧边菜单 切换
-            tabsOverallActiveName: 'first', //tabs 类别 添加:first 设置:second
-            setUpActiveName: 'first', // 设置 tabs 类别 属性:first 样式:second
-            // 数据表 的 列管理
+            // Side menu toggle
+            tabsOverallActiveName: 'first', //tabs category add:first set:second
+            setUpActiveName: 'first', // Set tabs category attribute: first style: second
+            // Data table column management
             columnForm: {
                 dataSheet: '',
                 allChecked: false,
-                // 是否选择checked 字段:field 类型:dataType 名称:name
+                // Whether to select checked field: field type: dataType name: name
                 columnData: []
             },
-            // 添加列表单
+            // Add list
             addColumnVisible: false,
             addColumnForm: {},
-            // 数据设置
+            // Data settings
             dataSetForm: {
-                filterCriteriaLen: 0, // 筛选条件个数
-                filterCriteria: [], // 筛选条件field symbol condition 
-                sortingRules: [],// 排序规则
+                filterCriteriaLen: 0, // Number of filter conditions
+                filterCriteria: [], // filter conditionfield symbol condition 
+                sortingRules: [],// Sorting rules
                 allFilterChecked: true,
-                filterFieldLen: 0,// 筛选字段 数量
-                filterFieldList: [],// 筛选字段
-                queryScope: '', // 字段查询范围
+                filterFieldLen: 0,// Filter field quantity
+                filterFieldList: [],// Filter fields
+                queryScope: '', // Field query range
             },
-            // 表格样式设置
+            // Table style settings
             tableStyleForm: {
-                stripe: false, // 是否 斑马纹
-                border: false, // 是否 边框
-                showHeader: true, // 是否显示表头
-                height: '', // 表格高度 固定高度
-                size: 'medium', // Table 的尺寸 medium / small / mini
-                columnData: [] // 列数据
+                stripe: false, // Whether zebra print
+                border: false, // Whether border
+                showHeader: true, // Whether to display header
+                height: '', // Table height fixed height
+                size: 'medium', // Table size medium / small / mini
+                columnData: [] // column data
             },
-            // 分页设置
+            // Pagination settings
             paginationForm: {
-                enable: false, // 是否启用分页
-                small: false, // 是否使用小型分页样式
-                background: false, // 是否为分页按钮添加背景色
-                hideOnSinglePage: false, // 只有一页时是否隐藏
-                pagerCount: 7, // 设置最大页码按钮数 默认7
-                pageSizes: [10, 20, 30], // 每页显示个数
-                position: 'bottom-end', // 位置
+                enable: false, // Whether to enable paging
+                small: false, // Whether to use small pagination style
+                background: false, // Whether to add a background color to the paging button
+                hideOnSinglePage: false, // Whether to hide when there is only one page
+                pagerCount: 7, // Set the maximum number of page number buttons, default 7
+                pageSizes: [10, 20, 30], // Display number per page
+                position: 'bottom-end', // Location
                 allCheckedLayout: false,
                 layout: [{
                     name: 'total',
@@ -178,7 +178,7 @@ var app = new Vue({
                 'bottom-end': 'flex-je'
             },
             pageSizesPositionOpt: ['top', 'top-start', 'top-end', 'bottom', 'bottom-start', 'bottom-end'],
-            // 自定义列按钮 
+            // Custom column buttons 
             customColumnBtnForm: {
                 name: '',
                 property: '',
@@ -200,16 +200,16 @@ var app = new Vue({
                     popupClosePage: '关闭当前页面'
                 }
             },
-            // 表格样式设置
+            // Table style settings
             formStyleForm: {
-                size: 'medium', // Table 的尺寸 medium / small / mini
+                size: 'medium', // Table size medium / small / mini
                 labelPosition: 'left', // left right top
-                labelWidth: '100', // lable 狂顶
+                labelWidth: '100', // lable Crazy support
                 // lableFontSize: '16',
                 lableColor: '#333',
             },
             // input switch select time-select time-picker date-picker checkbox radio
-            // 表单 组件
+            // form component
             formItemOpt: [
                 {
                     label: '输入框',
@@ -249,7 +249,7 @@ var app = new Vue({
                     disabled: false,
                 },
                 // {
-                //     label: '固定时间点选择器',
+                //     label: 'Fixed time point selector',
                 //     value: 'timeSelect',
                 //     disabled: false,
                 // },
@@ -321,84 +321,84 @@ var app = new Vue({
                     disabled: false,
                 }
             ],
-            // 表单 组件 类型
+            // form component type
             formItemTypeOptChildren: [],
-            // // 自定义列设置
+            // // Custom column settings
             // customSetForm: {
-            //     columnAttribute: '', //自定义列属性
-            //     columnTitle: '',  //自定义列标题
-            //     btnList: [], //按钮列表
-            //     displayColumn: false,//显示列
-            //     fixedColumn: true,//固定列
+            //     columnAttribute: '', //custom column attributes
+            //     columnTitle: '', //custom column title
+            //     btnList: [], //Button list
+            //     displayColumn: false,//display column
+            //     fixedColumn: true,//Fixed column
             // },
-            // // 列属性设置
+            // //Column attribute settings
             // ColumnAttributeSetForm: {
-            //     columnTitle: '',//列标题
-            //     boundField: '',//绑定字段
-            //     displayContent: '',//展示内容
-            //     dataFormat: '',//数据格式
-            //     colWidth: '',//列宽
-            //     alignment: '',//对齐方式
-            //     sortEnable: false,//允许排序
-            //     exportEnable: false,//允许导出
-            //     editEnable: false,//允许编辑
-            //     deleteEnable: false,//允许删除
+            //     columnTitle: '',//column title
+            //     boundField: '',//Binding field
+            //     displayContent: '',//display content
+            //     dataFormat: '',//data format
+            //     colWidth: '',//column width
+            //     alignment: '',//alignment
+            //     sortEnable: false,//Allow sorting
+            //     exportEnable: false,//Allow export
+            //     editEnable: false,//Allow editing
+            //     deleteEnable: false,//Allow deletion
             // },
-            // // 按钮设置
+            // // Button settings
             formSubmitBtnForm: {
-                buttonName: '',//按钮名称
-                buttonAttribute: '',//按钮属性
-                buttonType: '',//按钮类型
-                disableId: false,//禁用
-                bringinId: false,//带入id
-                customIdname: false//自定义id名称
+                buttonName: '',//Button name
+                buttonAttribute: '',//Button properties
+                buttonType: '',//button type
+                disableId: false,//Disable
+                bringinId: false,//Bring in id
+                customIdname: false//Custom id name
             },
-            //事件设置
+            //Event settings
             eventSettingForm: {
-                buttonEvent: '',//按钮事件
-                moduleName: '',//组件名称
-                mannerExecution: '',//执行方法
-                selectInteraction: '',//选择交互
-                selectPage: '',//选择页面
-                calldataMethod: '',//选择数据源
+                buttonEvent: '',//Button event
+                moduleName: '',//Component name
+                mannerExecution: '',//Execution method
+                selectInteraction: '',//Select interaction
+                selectPage: '',//Select page
+                calldataMethod: '',//Select data source
             },
-            // //表单属性设置
+            // //Form attribute settings
             // sheetSettingForm: {
-            //     boundField: '',//绑定字段
-            //     selectComponent: '',//选择组件
-            //     fieldName: '',//字段名称
-            //     tipText: '',//提示文字
-            //     defaultValue: '',//默认值
-            //     formType: '1',//类型
-            //     mustFillin: '',//必填
-            //     notReuse: '',//不允许重复输入
-            //     finiteWord: '',//限制字数
-            //     maxWord: '',//最大字数
-            //     miniWord: '',//最小字数
-            //     finiteFormat: '',//限定输入格式
-            //     size: '1/4',//表单尺寸
-            //     displayUsage: '',//显示方式
-            //     dateType: '',//日期类型
-            //     timeType: '',//时间类型
-            //     dateFormat: '',//日期格式
-            //     readOnly: '',//只读
-            //     conCeal: '',//隐藏
-            //     optionList: [], //选项列表
-            //     customData: '',//自定义数据集
+            //     boundField: '',//Binding field
+            //     selectComponent: '',//Select component
+            //     fieldName: '',//Field name
+            //     tipText: '',//prompt text
+            //     defaultValue: '',//Default value
+            //     formType: '1',//type
+            //     mustFillin: '',//required
+            //     notReuse: '',//Do not allow repeated input
+            //     finiteWord: '',//Limit the number of words
+            //     maxWord: '',//Maximum number of words
+            //     miniWord: '',//minimum number of words
+            //     finiteFormat: '',//limited input format
+            //     size: '1/4',//form size
+            //     displayUsage: '',//Display mode
+            //     dateType: '',//Date type
+            //     timeType: '',//time type
+            //     dateFormat: '',//Date format
+            //     readOnly: '',//read only
+            //     conCeal: '',//Hide
+            //     optionList: [], //option list
+            //     customData: '',//custom data set
             // },
         };
     },
     computed: {
     },
     watch: {
-        // table | form 的数据表和列 配置
+        // table | form data table and column configuration
         columnForm: {
             handler: function (val, oldVal) {
-                // 选择组件 后变化后修改对应的
+                // Select the component and modify the corresponding
                 if (isNumber(this.layoutComponentActive) && ['table', 'form'].includes(this.layoutComponentActiveType)) {
-                    // 当前组件
+                    // current component
                     const layoutComponentItem = this.layoutComponentsList[this.layoutComponentActive]
-                    // 处理数据
+                    // Process data
                     const { dataSheet = '', columnData = [] } = val ?? {}
                     const _columnData = []
                     const tableMockItem = {}
@@ -421,7 +421,7 @@ var app = new Vue({
                             ...val
                         }
                     }
-                    // table 组件 增加模拟数据
+                    // table component adds simulation data
                     if (this.layoutComponentActiveType === 'table') {
                         if (!isObjEmpty(tableMockItem)) {
                             tableMockData.push(tableMockItem)
@@ -445,11 +445,11 @@ var app = new Vue({
         },
         dataSetForm: {
             handler: function (val, oldVal) {
-                // 选择组件 后变化后修改对应的
+                // Select the component and modify the corresponding
                 if (isNumber(this.layoutComponentActive) && this.layoutComponentActiveType === 'table') {
-                    // 当前组件
+                    // current component
                     const layoutComponentItem = this.layoutComponentsList[this.layoutComponentActive]
-                    // 处理数据
+                    // Process data
                     const newLayoutComponentItem = {
                         ...layoutComponentItem,
                         filterConfig: {
@@ -464,11 +464,11 @@ var app = new Vue({
         },
         tableStyleForm: {
             handler: function (val, oldVal) {
-                // 选择组件 后变化后修改对应的
+                // Select the component and modify the corresponding
                 if (isNumber(this.layoutComponentActive) && this.layoutComponentActiveType === 'table') {
-                    // 当前组件
+                    // current component
                     const layoutComponentItem = this.layoutComponentsList[this.layoutComponentActive]
-                    // 处理数据
+                    // Process data
                     const { columnData = [] } = val ?? {}
                     const tableColumnFixed = {}
                     columnData.forEach(item => {
@@ -491,11 +491,11 @@ var app = new Vue({
         },
         paginationForm: {
             handler: function (val, oldVal) {
-                // 选择组件 后变化后修改对应的
+                // Select the component and modify the corresponding
                 if (isNumber(this.layoutComponentActive) && this.layoutComponentActiveType === 'table') {
-                    // 当前组件
+                    // current component
                     const layoutComponentItem = this.layoutComponentsList[this.layoutComponentActive]
-                    // 处理数据
+                    // Process data
                     const { layout = [] } = val ?? {}
                     const layoutStrArr = []
                     layout.forEach(item => {
@@ -517,17 +517,17 @@ var app = new Vue({
             deep: true
         },
         // customColumnBtnForm:{},
-        // table列|form列 选择侧边 配置
+        // table column|form column select side configuration
         addColumnForm: {
             handler: function (val, oldVal) {
-                // 选择组件 和table列 后变化后修改对应的
+                // Select the component and table column and modify the corresponding ones after changing them.
                 if (isNumber(this.layoutComponentActive) && isNumber(this.columnActiveIndex)) {
-                    // 当前组件
+                    // current component
                     const layoutComponentItem = this.layoutComponentsList[this.layoutComponentActive]
                     // 
                     const tableColumnItem = layoutComponentItem.columnData[this.columnActiveIndex]
 
-                    // 处理数据
+                    // Process data
                     const newLayoutComponentItem = {
                         ...layoutComponentItem
                     }
@@ -537,7 +537,7 @@ var app = new Vue({
                         ...val
                     }
 
-                    // table 组件 )
+                    // table component)
                     // if (this.layoutComponentActiveType === 'table' ) {
                     // }
                     // if (this.layoutComponentActiveType === 'form') {
@@ -549,14 +549,14 @@ var app = new Vue({
             // immediate: true,
             deep: true
         },
-        // formStyleForm 表单样式
+        // formStyleForm form style
         formStyleForm: {
             handler: function (val, oldVal) {
-                // 选择组件 后变化后修改对应的
+                // Select the component and modify the corresponding
                 if (isNumber(this.layoutComponentActive) && this.layoutComponentActiveType === 'form') {
-                    // 当前组件
+                    // current component
                     const layoutComponentItem = this.layoutComponentsList[this.layoutComponentActive]
-                    // 处理数据
+                    // Process data
                     const newLayoutComponentItem = {
                         ...layoutComponentItem,
                         formConfig: {
@@ -571,11 +571,11 @@ var app = new Vue({
         },
         formSubmitBtnForm: {
             handler: function (val, oldVal) {
-                // 选择组件 后变化后修改对应的
+                // Select the component and modify the corresponding
                 if (isNumber(this.layoutComponentActive) && this.layoutComponentActiveType === 'form') {
-                    // 当前组件
+                    // current component
                     const layoutComponentItem = this.layoutComponentsList[this.layoutComponentActive]
-                    // 处理数据
+                    // Process data
                     const newLayoutComponentItem = {
                         ...layoutComponentItem,
                         submitBtnConfig: {
@@ -590,11 +590,11 @@ var app = new Vue({
         },
         eventSettingForm: {
             handler: function (val, oldVal) {
-                // 选择组件 后变化后修改对应的
+                // Select the component and modify the corresponding
                 if (isNumber(this.layoutComponentActive) && this.layoutComponentActiveType === 'form') {
-                    // 当前组件
+                    // current component
                     const layoutComponentItem = this.layoutComponentsList[this.layoutComponentActive]
-                    // 处理数据
+                    // Process data
                     const newLayoutComponentItem = {
                         ...layoutComponentItem,
                         eventSetConfig: {
@@ -611,15 +611,15 @@ var app = new Vue({
     created() {
     },
     mounted() {
-        // 添加页面 点击事件监听
+        // Add page click event monitoring
         // document.addEventListener('click',()=>{});
     },
     beforeDestroy() {
-        // 移除页面 点击事件监听
+        // Remove page click event listener
         // document.removeEventListener('click',()=>{})
     },
     methods: {
-        // 编辑区域 组件占位显隐判断
+        // Edit area component occupancy display and concealment judgment
         componentOccupantShow(item) {
             if (!item.componentType) return true
             if (item.componentType === 'table') {
@@ -632,7 +632,7 @@ var app = new Vue({
                 return false
             }
         },
-        // 侧边 添加组件按钮 禁用判断
+        // Side Add component button Disable judgment
         addAssembBtnDisabled(addType) {
             if (isNumber(this.layoutComponentActive)) {
                 const layoutComponentItem = this.layoutComponentsList[this.layoutComponentActive]
@@ -643,19 +643,19 @@ var app = new Vue({
             }
             return true
         },
-        // 设置菜单和组件列表的值
+        // Set values ​​for menus and component lists
         setMeunOrComponentData(newComponent) {
-            // 修改对应组件
+            // Modify the corresponding component
             this.$set(this.layoutComponentsList, this.layoutComponentActive, deepClone(newComponent))
-            // 当前菜单
+            // Current menu
             const menuItem = this.layoutMenuList[this.layoutMenuActive]
             menuItem.layoutList = deepClone(this.layoutComponentsList)
-            // 修改对应菜单
+            // Modify the corresponding menu
             this.$set(this.layoutMenuList, this.layoutMenuActive, deepClone(menuItem))
         },
-        // 处理 Subsection 数据更新
+        // Handling Subsection data updates
         handleSubsectionUpdate(dataName, upData) {
-            // 目前 column选中时 subsection 不切换
+            // Currently, subsection does not switch when column is selected.
             if (this.columnActiveIndex !== '') {
                 return
             }
@@ -675,11 +675,11 @@ var app = new Vue({
 
             }
         },
-        // 拖拽修改排序 开始
+        // Drag and drop to modify sorting start
         handleDragstart(index) {
             this.dragStarIndex = index
         },
-        // 拖拽修改排序 结束
+        // Drag and drop to modify sorting End
         handleDragenter(e, index, dragType) {
             e.preventDefault();
             this.dragEnterIndex = index
@@ -695,19 +695,19 @@ var app = new Vue({
                                 item.columnkey = index
                             })
                         }
-                        // 切换位置
+                        // Switch location
                         this.layoutComponentsList.splice(this.dragStarIndex, 1)
                         this.layoutComponentsList.splice(index, 0, source)
                     }
                     if (dragType === 'column') {
                         const source = this.columnForm.columnData[this.dragStarIndex]
-                        // 切换位置
+                        // Switch location
                         this.columnForm.columnData.splice(this.dragStarIndex, 1)
                         this.columnForm.columnData.splice(index, 0, source)
                     }
                     if (dragType === 'customColumnBtn') {
                         const source = this.addColumnForm.btnList[this.dragStarIndex]
-                        // 切换位置
+                        // Switch location
                         this.addColumnForm.btnList.splice(this.dragStarIndex, 1)
                         this.addColumnForm.btnList.splice(index, 0, source)
                     }
@@ -716,60 +716,60 @@ var app = new Vue({
                         this.dataSetForm.sortingRules.splice(this.dragStarIndex, 1)
                         this.dataSetForm.sortingRules.splice(index, 0, source)
                     }
-                    // 排序变化后目标对象的索引变成源对象的索引
+                    // After the sorting change, the index of the target object becomes the index of the source object.
                     this.dragStarIndex = index;
                 }
             }, 100)()
         },
-        // 拖拽修改排序 移动
+        // Drag and drop to modify sorting and move
         handleDragover(e) {
             e.preventDefault();
         },
-        // 处理 选中组件事件
+        // Handle selected component events
         handleSelectComponent(item, index = '') {
             // if (this.layoutComponentActive === index) return
             this.layoutComponentActive = index
             this.layoutComponentActiveType = item.componentType ?? ''
-            this.columnActiveIndex = '' // 列选中 index
-            // 重置 中间|右侧 配置
+            this.columnActiveIndex = '' // Column selected index
+            // Reset center|right configuration
             this.resetItemsConfig()
             this.resetAddColumnForm()
-            // 数据回显
+            // Data echo
             if (item.componentType === 'table') {
                 const { columnConfig, filterConfig, tableConfig, pagConfig } = item
                 if (columnConfig) {
-                    this.columnForm = deepClone(columnConfig)  // 列管理
+                    this.columnForm = deepClone(columnConfig)  // column management
                 }
                 if (filterConfig) {
-                    this.dataSetForm = deepClone(filterConfig) // 数据设置
+                    this.dataSetForm = deepClone(filterConfig) // Data settings
                 }
                 if (tableConfig) {
-                    this.tableStyleForm = deepClone(tableConfig) // 表格样式设置
+                    this.tableStyleForm = deepClone(tableConfig) // Table style settings
                 }
                 if (pagConfig) {
-                    this.paginationForm = deepClone(pagConfig)  // 分页设置
+                    this.paginationForm = deepClone(pagConfig)  // Pagination settings
                 }
             }
             if (item.componentType === 'form') {
                 const { columnConfig, formConfig, submitBtnConfig, eventSetConfig } = item
                 if (columnConfig) {
-                    this.columnForm = deepClone(columnConfig)  // 列管理
+                    this.columnForm = deepClone(columnConfig)  // column management
                 }
                 if (formConfig) {
-                    this.formStyleForm = deepClone(formConfig)  // 样式
+                    this.formStyleForm = deepClone(formConfig)  // style
                 }
                 if (submitBtnConfig) {
-                    this.formSubmitBtnForm = deepClone(submitBtnConfig)  // 提交按钮
+                    this.formSubmitBtnForm = deepClone(submitBtnConfig)  // submit button
                 }
                 if (eventSetConfig) {
-                    this.eventSettingForm = deepClone(eventSetConfig)  // 提交按钮事件
+                    this.eventSettingForm = deepClone(eventSetConfig)  // submit button event
                 }
             }
             if (item.componentType === 'btn') { }
-            this.tabsOverallActiveName = 'first' // tabs 类别 添加:first 设置:second
-            this.setUpActiveName = 'first' // 属性:first 样式:second
+            this.tabsOverallActiveName = 'first' // tabs category add:first set:second
+            this.setUpActiveName = 'first' // Attribute: first Style: second
         },
-        // 添加 组件
+        // Add component
         handleAddComponent(addType = '') {
             let addComponentObj = {
                 name: '',
@@ -778,12 +778,12 @@ var app = new Vue({
             const addTypeList = ['table', 'form', 'btn']
             if (addTypeList.includes(addType)) {
                 if (this.addAssembBtnDisabled()) return
-                // 重置 中间|右侧 配置
+                // Reset center|right configuration
                 this.resetItemsConfig()
-                // tabs 类别切换
-                this.tabsOverallActiveName = 'second'  // 添加:first 设置:second
-                this.setUpActiveName = 'first' // 属性:first 样式:second
-                // 添加 组件 数据类型
+                // tabs category switching
+                this.tabsOverallActiveName = 'second'  // Add:first Set:second
+                this.setUpActiveName = 'first' // Attribute: first Style: second
+                // Add component data type
                 const currentItem = this.layoutComponentsList[this.layoutComponentActive]
                 currentItem.componentType = addType
 
@@ -795,51 +795,51 @@ var app = new Vue({
             } else {
                 this.layoutComponentsList.push(addComponentObj)
             }
-            // 当前菜单
+            // Current menu
             const menuItem = this.layoutMenuList[this.layoutMenuActive]
             menuItem.layoutList = deepClone(this.layoutComponentsList)
-            // 修改对应菜单 数据
+            // Modify corresponding menu data
             this.$set(this.layoutMenuList, this.layoutMenuActive, deepClone(menuItem))
         },
-        // 重置各项 配置
+        // Reset various configurations
         resetItemsConfig() {
-            this.dragStarIndex = '' // 组件区域 拖拽 开始 index
-            this.dragEnterIndex = '' // 组件区域 拖拽 结束 index
+            this.dragStarIndex = '' // Component area drag start index
+            this.dragEnterIndex = '' // Component area drag end index
 
-            // 重置 table this.$options.data.call(this)
-            this.columnForm = this.$options.data().columnForm // 列管理
-            this.dataSetForm = this.$options.data().dataSetForm // 数据设置
-            this.tableStyleForm = this.$options.data().tableStyleForm // 表格样式设置
-            this.paginationForm = this.$options.data().paginationForm // 分页设置
-            this.addColumnForm = this.$options.data().addColumnForm // 添加列
-            this.customColumnBtnForm = this.$options.data().customColumnBtnForm // 自定义列添加按钮
+            // Reset table this.$options.data.call(this)
+            this.columnForm = this.$options.data().columnForm // column management
+            this.dataSetForm = this.$options.data().dataSetForm // Data settings
+            this.tableStyleForm = this.$options.data().tableStyleForm // Table style settings
+            this.paginationForm = this.$options.data().paginationForm // Pagination settings
+            this.addColumnForm = this.$options.data().addColumnForm // Add column
+            this.customColumnBtnForm = this.$options.data().customColumnBtnForm // Custom column add button
 
-            // 重置 form
+            // reset form
             this.formStyleForm = this.$options.data().formStyleForm
             this.formItemTypeOptChildren = []
         },
 
-        // 代码查看
+        // code view
         handleCodeView() { },
-        // 预览
+        // Preview
         handlePreview() { },
-        // 发布
+        // release
         handleRelease() { },
 
-        // 布局名称 编辑
+        // Layout name edit
         handleEditLayoutName() {
             this.isEditLayoutName = true
-            // 布局名称 输入框 聚焦
+            // Layout name input box focus
             this.$nextTick(() => {
                 this.$refs.inputLayoutName.focus()
             })
         },
-        // 布局名称 失去焦点
+        // Layout name loses focus
         handleBlurLayoutName() {
             this.isEditLayoutName = false
         },
 
-        // 新增菜单
+        // New menu
         handleAddMenu() {
             if (this.loadingAddMenu) return
             this.loadingAddMenu = true
@@ -850,37 +850,37 @@ var app = new Vue({
             })
             this.loadingAddMenu = false
         },
-        // 切换菜单
+        // Toggle menu
         handleSwitchMenu(index) {
-            this.layoutMenuActive = index // 选中的菜单
-            this.layoutComponentActive = '' // 选中的组件
-            this.layoutComponentActiveType = '' // 组件 选中类型
-            this.columnActiveIndex = '' // 列选中 index
-            // 布局组件区域列表
+            this.layoutMenuActive = index // selected menu
+            this.layoutComponentActive = '' // selected component
+            this.layoutComponentActiveType = '' // Component selected type
+            this.columnActiveIndex = '' // Column selected index
+            // Layout component area list
             this.layoutComponentsList = this.layoutMenuList[index]?.layoutList ?? []
-            // 切换 tabs 类别  
-            this.tabsOverallActiveName = 'first' // 添加:first 设置:second
-            this.setUpActiveName = 'first' // 属性:first 样式:second
-            // 重置 中间|右侧 配置
+            // Switch tabs category  
+            this.tabsOverallActiveName = 'first' // Add:first Set:second
+            this.setUpActiveName = 'first' // Attribute: first Style: second
+            // Reset center|right configuration
             this.resetItemsConfig()
         },
-        // 修改菜单名称
+        // Modify menu name
         handleEditMenuName(item, index) {
             item.isEditName = true
-            // 菜单名称 输入框 聚焦
+            // Menu name input box focus
             this.$nextTick(() => {
                 // console.log('ref', this.$refs)
                 this.$refs.inputMenuName[0].focus()
             })
         },
-        // 修改菜单名称 失去焦点
+        // Modify menu name and lose focus
         handleBlurMenuName(item) {
             item.isEditName = false
         },
 
 
 
-        // table 组件 renderHeader
+        // table component renderHeader
         renderHeader(createElement, { column, $index }) {
             return createElement(
                 'div', {
@@ -889,39 +889,39 @@ var app = new Vue({
                     mousedown: ($event) => { this.handleTableHeaderMouseDown($event, column, $index) }
                 }
             }, [
-                // 添加 <a> 用于显示表头 label
+                // Add <a> to display header label
                 createElement('a', column.label),
-                // 添加一个空标签用于显示拖动动画
+                // Add an empty label to display the drag animation
                 // createElement('span', {
                 //     'class': ['virtual']
                 // })
             ])
         },
-        // table 组件 列 鼠标按下
+        // table component column mouse click
         handleTableHeaderMouseDown(e, column, columnIndex) {
             e.preventDefault();
             this.resetItemsConfig()
             this.layoutComponentActive = column.columnKey
             // column.columnKey
             const currentComponentItem = this.layoutComponentsList[column.columnKey]
-            // 数据 回显
+            // Data echo
             const selectColumnForm = currentComponentItem.columnConfig.columnData[columnIndex]
 
             this.$set(this, 'addColumnForm', deepClone(selectColumnForm))
-            // tabs 切换
+            // tabs switch
             this.columnActiveIndex = columnIndex
             this.layoutComponentActiveType = selectColumnForm.property
-            this.tabsOverallActiveName = 'second'  // 添加:first 设置:second
+            this.tabsOverallActiveName = 'second'  // Add:first Set:second
             this.handleSubsectionUpdate('setUpActiveName', 'first')
         },
-        // table 组件 选中 heade列样式
+        // table component selects header column style
         headerCellClassName({ row, column, columnIndex }) {
             if (this.layoutComponentActive === column.columnKey) {
                 return this.columnActiveIndex === columnIndex ? 'column_active_th' : ''
             }
             return ''
         },
-        // table 组件 选中 heade列样式
+        // table component selects header column style
         cellClassName({ row, column, columnIndex }) {
             if (this.layoutComponentActive === column.columnKey) {
                 return this.columnActiveIndex === columnIndex ? 'column_active_td' : ''
@@ -929,42 +929,42 @@ var app = new Vue({
             return ''
         },
 
-        // 表单 item 列 鼠标按下
+        // Form item column mouse click
         handleFormItemMouseDown(index, fIndex) {
-            // 重置 配置
+            // reset configuration
             this.resetItemsConfig()
             this.layoutComponentActive = index
-            this.columnActiveIndex = fIndex // 选中列
-            this.layoutComponentActiveType = 'formItem' // 选中组件类型
+            this.columnActiveIndex = fIndex // Select column
+            this.layoutComponentActiveType = 'formItem' // Select component type
 
             const currentComponentItem = this.layoutComponentsList[index]
-            // 数据 回显
+            // Data echo
             const selectColumnForm = currentComponentItem.columnData[fIndex]
 
             this.$set(this, 'addColumnForm', deepClone(selectColumnForm))
-            // tabs 切换
-            this.tabsOverallActiveName = 'second'  // 添加:first 设置:second
+            // tabs switch
+            this.tabsOverallActiveName = 'second'  // Add:first Set:second
             this.handleSubsectionUpdate('setUpActiveName', 'first')
         },
 
-        // 切换 tabs
+        // switch tabs
         handleTabsLeave(activeName, oldActiveName) {
-            // 没有选中的菜单则禁用 
+            // Unselected menus are disabled 
             // this.layoutComponentActiveType  ['customColumn','normalColumn']
             if (activeName === 'second' && !isNumber(this.layoutComponentActive)) {
                 return false
             }
             return true
         },
-        // 右侧Tabs 整体组件 添加 设置
+        // Tabs overall component on the right Add settings
         handleTabsClickOverall(tab, event) {
             // console.log(tab, event);
         },
 
-        // 确认添加 列
+        // Confirm to add column
         onConfirmAddColumn() {
             const copyAddColumnForm = deepClone(this.addColumnForm)
-            // 自定义列 增加按钮列表
+            // Custom column Add button list
             if (copyAddColumnForm.property === 'customColumn') {
                 copyAddColumnForm.btnList = []
             }
@@ -972,41 +972,41 @@ var app = new Vue({
             this.addColumnVisible = false
             this.resetAddColumnForm()
         },
-        // 重置添加列
+        // Reset added columns
         resetAddColumnForm() {
-            // 选择组件类型为 table 时
+            // When the component type is selected as table
             if (this.layoutComponentActiveType === 'table') {
                 this.addColumnForm = {
-                    property: '', // 列属性
-                    name: '', // 列标题
-                    field: '', // 绑定字段
-                    displayContent: '', // 展示内容
-                    dataType: '', // 数据格式
-                    columnWidth: '', // 列宽
-                    alignment: '', // 对齐方式
-                    isSort: false, // 允许排序
-                    isExport: false, // 允许导出
-                    isEdit: false, // 允许编辑
-                    isDelete: false, // 允许删除
+                    property: '', // Column properties
+                    name: '', // Column header
+                    field: '', // Bind field
+                    displayContent: '', // Show content
+                    dataType: '', // Data format
+                    columnWidth: '', // column width
+                    alignment: '', // Alignment
+                    isSort: false, // Allow sorting
+                    isExport: false, // Allow export
+                    isEdit: false, // Allow editing
+                    isDelete: false, // Allow deletion
                 }
             }
-            // 选择组件类型为 form 时 设置基础信息
+            // When selecting the component type as form, set basic information
             if (this.layoutComponentActiveType === 'form') {
                 this.addColumnForm = {
-                    field: '', // 绑定字段
-                    formItemType: '', // 表单 组件类别 默认是input switch select time date checkbox radio
-                    type: '', // 组件类型
-                    name: '', // 列标题
-                    displayContent: '', // 展示内容
-                    columnWidth: 100, // 列宽
+                    field: '', // Bind field
+                    formItemType: '', // Form component category default is input switch select time date checkbox radio
+                    type: '', // Component type
+                    name: '', // Column header
+                    displayContent: '', // Show content
+                    columnWidth: 100, // column width
                     optionDataType: '',
                     dataSheet: '',
                     optionData: [],
-                    value: '', // 值 可设置默认值
+                    value: '', // Value can set default value
                 }
             }
         },
-        // 添加列 表单 单个组件类型切换处理
+        // Add list form Single component type switching processing
         handleFormItemTypeChange(val) {
             this.formItemTypeOptChildren = this.formItemOpt.find(item => {
                 return item.value === val
@@ -1023,8 +1023,8 @@ var app = new Vue({
 
             // timeSelect pickerOptions
         },
-        // form 选择
-        // 列 table 全选
+        // form selection
+        // Column table select all
         handleColumnAllCheckedChange(val) {
             this.columnForm.columnData.forEach(item => {
                 item.checked = val
@@ -1032,7 +1032,7 @@ var app = new Vue({
             this.dataSetForm.filterFieldList = val ? deepClone(this.columnForm.columnData) : []
             this.dataSetForm.filterFieldLen = val ? this.dataSetForm.filterFieldList.length : 0
         },
-        // 列 table 选择
+        // Column table selection
         handleColumnCheckedChange(val) {
             const isAllChecked = this.columnForm.columnData.every(item => {
                 return item.checked
@@ -1043,7 +1043,7 @@ var app = new Vue({
             this.dataSetForm.filterFieldLen = filterFieldList.length
         },
 
-        // 添加 筛选条件
+        // Add filter
         handleAddFilterCondition() {
             this.dataSetForm.filterCriteria.push({
                 id: this.dataSetForm.filterCriteriaLen + 1,
@@ -1053,31 +1053,31 @@ var app = new Vue({
             })
             this.dataSetForm.filterCriteriaLen += 1
         },
-        // 删除 筛选条件
+        // Delete filter
         handleDeleteFilterCondition(index) {
             this.dataSetForm.filterCriteria.splice(index, 1);
             this.dataSetForm.filterCriteriaLen -= 1
         },
-        // 添加 排序规则
+        // Add sorting rules
         handleAddSortingRules() {
             this.dataSetForm.sortingRules.push({
                 field: '',
                 sort: '升序'
             })
         },
-        // 删除 排序规则
+        // Delete sorting rule
         handleDeleteSortingRules(index) {
             this.dataSetForm.sortingRules.splice(index, 1);
         },
 
-        // 筛选器 table 全选
+        // filter table select all
         handleFilterAllCheckedChange(val) {
             this.dataSetForm.filterFieldList.forEach(item => {
                 item.checked = val
             })
             this.dataSetForm.filterFieldLen = val ? this.dataSetForm.filterFieldList.length : 0
         },
-        // 筛选器 table 选择
+        // filter table selection
         handleFilterCheckedChange(val) {
             let checkedLen = 0
             const isAllChecked = this.dataSetForm.filterFieldList.every(item => {
@@ -1089,13 +1089,13 @@ var app = new Vue({
             this.dataSetForm.allFilterChecked = isAllChecked
             this.dataSetForm.filterFieldLen = checkedLen
         },
-        // 分页 全选
+        // Pagination Select all
         handlePaginationAllCheckedChange(val) {
             this.paginationForm.layout.forEach(item => {
                 item.checked = val
             })
         },
-        // 分页 选择
+        // Pagination Select
         handlePaginationCheckedChange(val) {
             const isAllChecked = this.paginationForm.layout.every(item => {
                 return item.checked
@@ -1103,7 +1103,7 @@ var app = new Vue({
             this.paginationForm.allCheckedLayout = isAllChecked
         },
 
-        // table 自定义列 添加按钮
+        // table custom column add button
         handleAddCustomColumnBtn() {
             this.addColumnForm.btnList.push({
                 name: '',
@@ -1127,12 +1127,12 @@ var app = new Vue({
                 }
             })
         },
-        // table 自定义列 删除按钮
+        // table custom column delete button
         handleDeleteCustomColumnBtn(index) {
             this.addColumnForm.btnList.splice(index, 1);
         },
 
-        // table 自定义列 按钮（选中） 侧边属性编辑
+        // table custom column button (selected) side attribute editing
         customColumnBtnSelect(item) {
             this.layoutComponentActiveType = 'columnEditBtn'
             this.customColumnBtnForm = {
@@ -1140,18 +1140,18 @@ var app = new Vue({
             }
         },
 
-        // form 列 添加 optionData
+        // form column add optionData
         handleAddOptionData() {
             this.addColumnForm?.optionData?.push({
                 label: "",
                 value: ""
             })
         },
-        // form 列 删除 optionData
+        // form column delete optionData
         handleDeleteOptionData(index) {
             this.addColumnForm?.optionData?.splice(index, 1);
         },
-        // form 提交 按钮
+        // form submit button
         handleSubmitBtnEdit(item) {
             this.layoutComponentActiveType = 'formSubmitBtn'
             if (item.submitBtnConfig) {
@@ -1165,20 +1165,20 @@ var app = new Vue({
                 }
             }
         },
-        // //切换宽度占比
+        // //Switch width ratio
         // handleSwitchSubformstyle(field, value) {
         //     console.log(111, field, value)
         //     this.$set(this.sheetSettingForm, field, value);
         //     console.log(this.sheetSettingForm.size)
         // },
-        // // 添加 按钮列表
+        // //Add button list
         // handleAddBtnList() {
         //     this.customSetForm.btnList.push({
         //         btntext: '',
 
         //     })
         // },
-        // // 删除 按钮列表
+        // //Delete button list
         // handleDeleteBtnList(index) {
         //     this.customSetForm.btnList.splice(index, 1);
         // },

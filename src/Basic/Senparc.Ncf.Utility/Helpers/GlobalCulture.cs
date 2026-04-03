@@ -14,7 +14,7 @@ namespace Senparc.Ncf.Utility.Helpers
     }
 
     /// <summary>
-    /// 文化帮助类
+    /// Cultural help category
     /// </summary>
     public class GlobalCulture
     {
@@ -24,7 +24,7 @@ namespace Senparc.Ncf.Utility.Helpers
         private Dictionary<SystemLanguage, Action> _languageActionCollection = new Dictionary<SystemLanguage, Action>();
 
         /// <summary>
-        /// 当前系统使用的语言
+        /// The language currently used by the system
         /// </summary>
         public static SystemLanguage CurrentLanguage
         {
@@ -91,10 +91,10 @@ namespace Senparc.Ncf.Utility.Helpers
         }
 
         /// <summary>
-        /// 如果之前的语言都不匹配，则执行默认语言设置
+        /// If none of the previous languages ​​match, perform the default language setting
         /// </summary>
-        /// <param name="throwIfNothingIsSet">如果未设置任何语言，则抛出异常</param>
-        /// <param name="throwIfNotAllIsSet">如何未设置全所有语言，则抛出异常</param>
+        /// <param name="throwIfNothingIsSet">Throws an exception if no language is set</param>
+        /// <param name="throwIfNotAllIsSet">How to throw an exception if all languages ​​are not set</param>
         /// <exception cref="Exception"></exception>
         public void InvokeDefault(bool throwIfNothingIsSet = false, bool throwIfNotAllIsSet = false)
         {
@@ -123,12 +123,12 @@ namespace Senparc.Ncf.Utility.Helpers
 
             if (_languageActionCollection.ContainsKey(_defaultLanguage))
             {
-                //使用默认语言
+                //Use default language
                 _languageActionCollection[_defaultLanguage].Invoke();
             }
             else
             {
-                //默认语言也未指定，取当前设定的第一个
+                //The default language is also not specified, and the first one currently set is taken.
                 _languageActionCollection.Values.First().Invoke();
             }
         }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.Domain.Services
 {
     /// <summary>
-    /// 菜单
+    /// menu
     /// </summary>
     public class SysMenuService : BaseClientService<SysMenu>
     {
@@ -20,16 +20,16 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 递归获取树形结构
+        /// Recursively obtain the tree structure
         /// </summary>
-        /// <param name="iteration">当前筛选列表</param>
-        /// <param name="source">完整列表数据</param>
+        /// <param name="iteration">Current filter list</param>
+        /// <param name="source">Full list data</param>
         private IList<SysMenuTreeItemDto> BuildTreeItems(IEnumerable<SysMenuDto> iteration, IEnumerable<SysMenuDto> source)
         {
             var items = new List<SysMenuTreeItemDto>();
             foreach (var menu in iteration)
             {
-                //查找子菜单
+                //Find submenu
                 var parentNode = new SysMenuTreeItemDto()
                 {
                     Icon = menu.Icon,
@@ -50,8 +50,8 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取所有菜单(不包含页面)
-        /// TODO... 缓存
+        /// Get all menus (excluding pages)
+        ///TODO... cache
         /// </summary>
         /// <returns></returns>
         public async Task<IEnumerable<SysMenuTreeItemDto>> GetAllMenusTreeAsync(bool hasButton)
@@ -65,9 +65,9 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取完整菜单信息
+        /// Get complete menu information
         /// </summary>
-        /// <param name="hasButton">是否包含按钮信息</param>
+        /// <param name="hasButton">Whether to include button information</param>
         /// <returns></returns>
         public async Task<IEnumerable<SysMenuDto>> GetAllMenuListAsync(bool hasButton)
         {

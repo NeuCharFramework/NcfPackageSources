@@ -28,12 +28,12 @@ namespace Senparc.Service
         {
             if (notRecordIfPointIsZero && points == 0)
             {
-                return;//积分为0则不更改
+                return;//If the points are 0, no changes will be made.
             }
 
             if (throwIfNotEnoughPoints && points < 0 && accountPoints + points < 0)
             {
-                //TODO 抛出异常待定
+                //TODO throws an exception to be determined
                 throw new Exception($"积分不足,还需{Convert.ToInt32(accountPoints + points)}积分！");
             }
 
@@ -52,7 +52,7 @@ namespace Senparc.Service
             };
             this.SaveObject(pointsLog);
 
-            //删除Account缓存
+            //Delete Account cache
             var fullAccountCache = _serviceProvider.GetService<FullAccountCache>();
             fullAccountCache.RemoveObject(userName);
         }

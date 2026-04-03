@@ -104,7 +104,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 添加权限信息
+        ///Add permission information
         /// </summary>
         /// <param name="sysMenuDto"></param>
         /// <returns></returns>
@@ -126,7 +126,7 @@ namespace Senparc.Ncf.Service
             //db.Set<SysPermission>().RemoveRange(entitis);
             //db.Set<SysPermission>().AddRange(sysRoleMenus);
             //await db.SaveChangesAsync();
-            //await DbToCacheAsync();//暂时 
+            //await DbToCacheAsync();//temporarily 
             #endregion
 
             #region 异常方法
@@ -135,7 +135,7 @@ namespace Senparc.Ncf.Service
             //    IEnumerable<SysPermission> entitis = await GetFullListAsync(_ => _.RoleId == sysMenuDto.FirstOrDefault().RoleId);
             //    await DeleteAllAsync(entitis);
             //    await SaveObjectListAsync(sysRoleMenus);
-            //    await DbToCacheAsync();//暂时
+            //    await DbToCacheAsync();//temporarily
             //}); 
             #endregion
             #region 正确方式2 多次调用DbContext.SaveChanges 方式
@@ -143,15 +143,15 @@ namespace Senparc.Ncf.Service
             await ServiceBase.ResilientTransaction.New(BaseData.BaseDB.BaseDataContext).ExecuteAsync(async () =>
             {
                 IEnumerable<SysRolePermission> entitis = await GetFullListAsync(_ => _.RoleId == sysMenuDto.FirstOrDefault().RoleId);
-                await DeleteAllAsync(entitis); // 此处会调用SaveChangeAsync
-                await SaveObjectListAsync(sysRoleMenus); // 此处会调用SaveChangeAsync
-                await DbToCacheAsync();//暂时
+                await DeleteAllAsync(entitis); // SaveChangeAsync will be called here
+                await SaveObjectListAsync(sysRoleMenus); // SaveChangeAsync will be called here
+                await DbToCacheAsync();//temporary
             });
             #endregion
         }
 
         /// <summary>
-        /// 获取当前用户的权限
+        /// Get the permissions of the current user
         /// </summary>
         /// <returns></returns>
         public async Task<IEnumerable<SysPermissionDto>> GetUserSysPermissionDtosAsync()
@@ -212,7 +212,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 验证权限
+        ///Verify permissions
         /// </summary>
         /// <param name="codes"></param>
         /// <returns></returns>
@@ -233,7 +233,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取当前用户可以看见的菜单（可见）树形结构
+        /// Get the menu (visible) tree structure visible to the current user
         /// </summary>
         /// <param name="isRefresh"></param>
         /// <returns></returns>
@@ -247,7 +247,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取当前用户可以看见的菜单（可见）
+        /// Get the menu that the current user can see (visible)
         /// </summary>
         /// <returns></returns>
         public async Task<IEnumerable<SysMenuDto>> GetCurrentUserMenuDtoAsync(MenuType menuType = MenuType.菜单)
@@ -260,7 +260,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取用户可见的所有资源（除菜单外）
+        /// Get all resources visible to the user (except menus)
         /// </summary>
         /// <returns></returns>
         public async Task<IEnumerable<SysMenuDto>> GetCurrentUserResourcesDtoAsync()
@@ -273,7 +273,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取用户得权限(包括按钮)
+        /// Get user permissions (including buttons)
         /// </summary>
         /// <param name="currentAdminUserId"></param>
         /// <returns></returns>
@@ -291,10 +291,10 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 检查当前用户是否权限
+        /// Check whether the current user has permissions
         /// </summary>
-        /// <param name="resourceCodes">资源codes</param>
-        /// <param name="adminUserInfoId">当前用户Id</param>
+        /// <param name="resourceCodes">Resource codes</param>
+        /// <param name="adminUserInfoId">Current user Id</param>
         /// <returns></returns>
         public async Task<bool> HasPermissionAsync(string[] resourceCodes, int adminUserInfoId)
         {
@@ -302,9 +302,9 @@ namespace Senparc.Ncf.Service
             {
                 return false;
             }
-            string cacheKey = string.Format("adminUserInfoPermission:{0}", adminUserInfoId); // 缓存当前用户的所有资源
+            string cacheKey = string.Format("adminUserInfoPermission:{0}", adminUserInfoId); // Cache all resources of the current user
             var distributedCache = _serviceProvider.GetService<IDistributedCache>();
-            string codesJsonValue = await distributedCache.GetStringAsync(cacheKey); // 尝试从缓存读取用户的资源
+            string codesJsonValue = await distributedCache.GetStringAsync(cacheKey); // Try to read the user's resource from cache
             IEnumerable<string> codes = null;
             if (string.IsNullOrEmpty(codesJsonValue))
             {
@@ -313,7 +313,7 @@ namespace Senparc.Ncf.Service
                 await distributedCache.SetStringAsync(cacheKey, codesJsonValue, new DistributedCacheEntryOptions()
                 {
                     SlidingExpiration = TimeSpan.FromHours(8)
-                }); // 缓存 8 小时
+                }); // Cache for 8 hours
             }
             else
             {
@@ -323,7 +323,7 @@ namespace Senparc.Ncf.Service
             {
                 return false;
             }
-            //获取当前用户的所有资源code
+            //Get all resource codes of the current user
             return codes.Intersect(resourceCodes).Any();
         }
     }

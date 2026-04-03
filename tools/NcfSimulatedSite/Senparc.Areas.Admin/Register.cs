@@ -1,8 +1,8 @@
 /* 
- * 特别注意：
- * 当前注册类是比较特殊的底层系统支持模块，
- * 其中加入了一系列特殊处理的代码，并不适合所有模块使用，
- * 如果需要学习扩展模块，请参考 【Senparc.ExtensionAreaTemplate】 项目的 Register.cs 文件！
+ *Special note:
+ * The current registration class is a special underlying system support module.
+ * A series of special processing codes are added, which are not suitable for all modules.
+ * If you need to learn extension modules, please refer to the Register.cs file of the [Senparc.ExtensionAreaTemplate] project!
  */
 
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -45,10 +45,10 @@ namespace Senparc.Areas.Admin
     [XncfRegister]
     [XncfOrder(5996)]
     public class Register : XncfRegisterBase,
-        IXncfRegister, //注册 XNCF 基础模块接口（必须）
-        IAreaRegister, //注册 XNCF 页面接口（按需选用）
-        IXncfDatabase  //注册 XNCF 模块数据库（按需选用）
-                       //IXncfRazorRuntimeCompilation  //需要使用 RazorRuntimeCompilation，在开发环境下实时更新 Razor Page
+        IXncfRegister, //Register XNCF basic module interface (required)
+        IAreaRegister, //Register XNCF page interface (optional on demand)
+        IXncfDatabase  //Register the XNCF module database (optional)
+                       //IXncfRazorRuntimeCompilation //Need to use RazorRuntimeCompilation to update the Razor Page in real time in the development environment
     {
 
         #region IXncfRegister 接口
@@ -68,15 +68,15 @@ namespace Senparc.Areas.Admin
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //更新数据库
+            //Update database
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
             //XncfModuleServiceExtension xncfModuleServiceExtension = serviceProvider.GetService<XncfModuleServiceExtension>();
             //var adminModule = xncfModuleServiceExtension.GetObject(z => z.Uid == this.Uid);
             //if (adminModule == null)
             //{
-            //    //只在未安装的情况下进行安装，InstallModuleAsync会访问到此方法，不做判断可能会引发死循环。
-            //    //常规模块中请勿在此方法中自动安装模块！
+            //    //Only install if it is not installed. InstallModuleAsync will access this method. Failure to make a judgment may cause an infinite loop.
+            //    //Do not automatically install modules in this method in regular modules!
             //    await xncfModuleServiceExtension.InstallModuleAsync(this.Uid).ConfigureAwait(false);
             //}
 
@@ -85,16 +85,16 @@ namespace Senparc.Areas.Admin
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            //TODO：可以提供一个 BeforeUninstall 方法，阻止卸载。
+            //TODO: You can provide a BeforeUninstall method to prevent uninstallation.
 
             #region 删除数据库（演示）
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
             AdminSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as AdminSenparcEntities;
 
-            //指定需要删除的数据实体
+            //Specify the data entity to be deleted
 
-            //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
+            //Note: As a demonstration, all tables created by this module are deleted when uninstalling the module. During actual operation, please operate with caution and sort the entities in the order of deletion!
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
@@ -110,7 +110,7 @@ namespace Senparc.Areas.Admin
             services.AddScoped<AuthenticationResultFilterAttribute>();
             //services.AddScoped(typeof(AuthenticationAsyncPageFilterAttribute));
 
-            services.Configure<JwtSettings>(JwtSettings.Position_Backend, configuration.GetSection(JwtSettings.Position_Backend));// 配置管理后台jwt
+            services.Configure<JwtSettings>(JwtSettings.Position_Backend, configuration.GetSection(JwtSettings.Position_Backend));// Configure management background jwt
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -119,7 +119,7 @@ namespace Senparc.Areas.Admin
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            //AutoMap映射
+            //AutoMap mapping
             base.AddAutoMapMapping(profile =>
             {
                 profile.CreateMap<AdminUserInfo, CreateOrUpdate_AdminUserInfoDto>();
@@ -134,7 +134,7 @@ namespace Senparc.Areas.Admin
             services.AddScoped<IAdminUserInfoRepository, AdminUserInfoRepository>();
             services.AddScoped<InstallerService>();
 
-            // 聊天功能相关服务注册
+            // Chat function related service registration
             services.AddScoped<IAdminChatSessionRepository, AdminChatSessionRepository>();
             services.AddScoped<IAdminChatMessageRepository, AdminChatMessageRepository>();
             services.AddScoped<IAdminChatSessionModuleRepository, AdminChatSessionModuleRepository>();
@@ -148,7 +148,7 @@ namespace Senparc.Areas.Admin
 
 
         /// <summary>
-        /// 添加前后端认证
+        /// Add front-end and back-end authentication
         /// </summary>
         /// <param name="services"></param>
         private void AddJwtAuthentication(IServiceCollection services, IConfiguration configuration)
@@ -207,15 +207,15 @@ namespace Senparc.Areas.Admin
         {
             new AreaPageMenuItem(GetAreaUrl("/Admin/Menu/Index"),"菜单管理","fa fa-bug"),
             new AreaPageMenuItem(GetAreaUrl("/Admin/SenparcTrace/Index"),"SenparcTrace 日志","fa fa-calendar-o"),
-        };//Admin比较特殊，不需要全部输出
+        };//Admin is special and does not need to output all
 
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             Console.WriteLine("[IAreaRegister - Admin] AuthorizeConfig - AdminArea");
 
-            //鉴权配置
-            //添加基于Cookie的权限验证：https://docs.microsoft.com/en-us/aspnet/core/security/authentication/cookie?view=aspnetcore-2.1&tabs=aspnetcore2x
+            //Authentication configuration
+            //Add cookie-based permission verification: https://docs.microsoft.com/en-us/aspnet/core/security/authentication/cookie?view=aspnetcore-2.1&tabs=aspnetcore2x
             builder.Services
                 .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(AdminAuthorizeAttribute.AuthenticationScheme, options =>
@@ -242,9 +242,9 @@ namespace Senparc.Areas.Admin
                 //    model.Filters.Add(new AdminAuthorizeAttribute());
                 //});
 
-                //options.Conventions.AuthorizeAreaFolder("Admin", "/", "AdminOnly");//必须登录
-                //options.Conventions.AddAreaPageRoute("Admin", "/Login", "/Admin/Login");//允许匿名
-                //options.Conventions.AddAreaPageRoute("Admin", "/Index", "/Admin/Index");//允许匿名
+                //options.Conventions.AuthorizeAreaFolder("Admin", "/", "AdminOnly");//Must be logged in
+                //options.Conventions.AddAreaPageRoute("Admin", "/Login", "/Admin/Login");//Allow anonymity
+                //options.Conventions.AddAreaPageRoute("Admin", "/Index", "/Admin/Index");//Allow anonymity
 
                 //options.Conventions.AddAreaFolderRouteModelConvention("Admin","/Admin/", model =>
                 //{
@@ -261,11 +261,11 @@ namespace Senparc.Areas.Admin
                 //});
 
 
-                options.Conventions.AuthorizePage("/", "AdminOnly");//必须登录
-                options.Conventions.AuthorizePage("/AdminChat/Chat", "AdminOnly");//聊天页面必须登录
-                options.Conventions.AllowAnonymousToPage("/Login");//允许匿名
+                options.Conventions.AuthorizePage("/", "AdminOnly");//Must log in
+                options.Conventions.AuthorizePage("/AdminChat/Chat", "AdminOnly");//You must log in to the chat page
+                options.Conventions.AllowAnonymousToPage("/Login");//Allow anonymity
 
-                //更多：https://learn.microsoft.com/en-us/aspnet/core/security/authorization/razor-pages-authorization?view=aspnetcore-8.0
+                //More: https://learn.microsoft.com/en-us/aspnet/core/security/authorization/razor-pages-authorization?view=aspnetcore-8.0
             });
 
             SenparcTrace.SendCustomLog("系统启动", "完成 Area:Admin 注册");
@@ -282,7 +282,7 @@ namespace Senparc.Areas.Admin
         #region IXncfDatabase 接口
 
         public const string DATABASE_PREFIX = "ADMIN_";
-        //NcfDatabaseMigrationHelper.SYSTEM_UNIQUE_PREFIX;//系统表，将会留空
+        //NcfDatabaseMigrationHelper.SYSTEM_UNIQUE_PREFIX;//System table, will be left blank
         public string DatabaseUniquePrefix => DATABASE_PREFIX;
 
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
@@ -304,27 +304,27 @@ namespace Senparc.Areas.Admin
 
         //public void OnModelCreating(ModelBuilder modelBuilder)
         //{
-        //    //已在 SenparcEntities 中完成
+        //    //Done in SenparcEntities
 
         //}
 
         //public void AddXncfDatabaseModule(IServiceCollection services)
         //{
-        //    #region 历史解决方案参考信息
-        //    /* 参考信息
-        //     *      错误信息：
-        //     *          中文：EnableRetryOnFailure 解决短暂的数据库连接失败
-        //     *          英文：Win32Exception: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+        //    #region Historical Solution Reference Information
+        //    /* Reference information
+        //     *      error message:
+        //     * Chinese: EnableRetryOnFailure solves temporary database connection failure
+        //     * English: Win32Exception: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
         //     *                InvalidOperationException: An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
-        //     *      问题解决方案说明：https://www.colabug.com/2329124.html
+        //     * Problem solution description: https://www.colabug.com/2329124.html
         //     */
 
-        //    /* 参考信息
-        //     *      错误信息：
-        //     *          中文：EnableRetryOnFailure 解决短暂的数据库连接失败
-        //     *          英文：Win32Exception: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+        //    /* Reference information
+        //     *      error message:
+        //     * Chinese: EnableRetryOnFailure solves temporary database connection failure
+        //     * English: Win32Exception: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
         //     *                InvalidOperationException: An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
-        //     *      问题解决方案说明：https://www.colabug.com/2329124.html
+        //     * Problem solution description: https://www.colabug.com/2329124.html
         //     */
         //    #endregion
 
@@ -345,10 +345,10 @@ namespace Senparc.Areas.Admin
         //    services.AddScoped(typeof(AuthenticationResultFilterAttribute));
         //    services.AddScoped(typeof(AuthenticationAsyncPageFilterAttribute));
 
-        //    //预加载 EntitySetKey
+        //    //Preload EntitySetKey
         //    EntitySetKeys.TryLoadSetInfo(typeof(SenparcEntities));
 
-        //    //AutoMap映射
+        //    //AutoMap mapping
         //    base.AddAutoMapMapping(profile =>
         //    {
         //        profile.CreateMap<AdminUserInfo, CreateOrUpdate_AdminUserInfoDto>();
@@ -358,7 +358,7 @@ namespace Senparc.Areas.Admin
 
         #endregion
 
-        //#region IXncfRazorRuntimeCompilation 接口
+        //#region IXncfRazorRuntimeCompilation interface
         //public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Areas.Admin"));
         //#endregion
         public override void OnAutoMapMapping(IServiceCollection services, IConfiguration configuration)
@@ -370,7 +370,7 @@ namespace Senparc.Areas.Admin
             }
             catch (Exception ex)
             {
-                //TODO: Oracle 未升级到 .NET 8.0，此处会抛错
+                //TODO: Oracle has not been upgraded to .NET 8.0, an error will be thrown here
                 _ = new NcfExceptionBase(ex.Message, ex);
             }
 

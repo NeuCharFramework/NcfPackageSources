@@ -221,9 +221,9 @@ new Vue({
             }
 
             //that.recallResults = [
-            //  { score: '0.95', content: (that.recallContent || '') + ' [召回示例1]', recallTime: timeStr },
-            //  { score: '0.88', content: (that.recallContent || '') + ' [召回示例2]', recallTime: timeStr },
-            //  { score: '0.72', content: (that.recallContent || '') + ' [召回示例3]', recallTime: timeStr }
+            //  { score: '0.95', content: (that.recallContent || '') + ' [Recall Example 1]', recallTime: timeStr },
+            //  { score: '0.88', content: (that.recallContent || '') + ' [Recall Example 2]', recallTime: timeStr },
+            //  { score: '0.72', content: (that.recallContent || '') + ' [Recall Example 3]', recallTime: timeStr }
             //];
 
             that.recallLoading = false;

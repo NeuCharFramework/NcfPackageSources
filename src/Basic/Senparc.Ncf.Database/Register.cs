@@ -11,12 +11,12 @@ using System.Reflection;
 namespace Senparc.Ncf.Database
 {
     /// <summary>
-    /// 数据库注册类
+    /// Database registration class
     /// </summary>
     public static class Register
     {
         ///// <summary>
-        ///// 使用指定数据库
+        ///// Use the specified database
         ///// </summary>
         ///// <typeparam name="TDatabaseConfiguration"></typeparam>
         ///// <param name="services"></param>
@@ -29,17 +29,17 @@ namespace Senparc.Ncf.Database
         //}
 
         ///// <summary>
-        ///// 使用指定数据库
+        ///// Use the specified database
         ///// </summary>
         ///// <param name="services"></param>
         ///// <param name="databaseConfigurationType"></param>
         ///// <returns></returns>
         //public static IServiceCollection AddDatabase(this IServiceCollection services, Type databaseConfigurationType)
         //{
-        //    //必须实现 IDatabaseConfiguration 接口的类型才能进行下一步配置
+        //    //The type that must implement the IDatabaseConfiguration interface can be used for the next step of configuration.
         //    if (typeof(IDatabaseConfiguration).IsAssignableFrom(databaseConfigurationType))
         //    {
-        //        throw new NcfDatabaseException($"类型{databaseConfigurationType.Name} 必须实现接口：IDatabaseConfiguration", databaseConfigurationType);
+        //        throw new NcfDatabaseException($"Type {databaseConfigurationType.Name} must implement the interface: IDatabaseConfiguration", databaseConfigurationType);
         //    }
 
         //    var databaseConfiguration = Activator.CreateInstance(databaseConfigurationType, true) as IDatabaseConfiguration;
@@ -49,17 +49,17 @@ namespace Senparc.Ncf.Database
         //}
 
         ///// <summary>
-        ///// 使用指定数据库
+        ///// Use the specified database
         ///// </summary>
         ///// <param name="services"></param>
         ///// <param name="databaseConfiguration"></param>
         ///// <returns></returns>
         //public static IServiceCollection AddDatabase(this IServiceCollection services, IDatabaseConfiguration databaseConfiguration)
         //{
-        //    //必须实现 IDatabaseConfiguration 接口的类型才能进行下一步配置
+        //    //The type that must implement the IDatabaseConfiguration interface can be used for the next step of configuration.
         //    if (databaseConfiguration == null)
         //    {
-        //        throw new NcfDatabaseException($"{nameof(databaseConfiguration)} 参数不能为 null", null);
+        //        throw new NcfDatabaseException($"{nameof(databaseConfiguration)} parameter cannot be null", null);
         //    }
 
         //    DatabaseConfigurationFactory.Instance.Current = databaseConfiguration;
@@ -67,18 +67,18 @@ namespace Senparc.Ncf.Database
         //}
 
         ///// <summary>
-        ///// 使用指定数据库
+        ///// Use the specified database
         ///// </summary>
         ///// <param name="services"></param>
-        ///// <param name="assemblyName">DatabaseConfiguration 程序集名称</param>
-        ///// <param name="nameSpace">DatabaseConfiguration 命名空间</param>
-        ///// <param name="className">DatabaseConfiguration 类名</param>
+        ///// <param name="assemblyName">DatabaseConfiguration assembly name</param>
+        ///// <param name="nameSpace">DatabaseConfiguration namespace</param>
+        ///// <param name="className">DatabaseConfiguration class name</param>
         ///// <returns></returns>
         //public static IServiceCollection AddDatabase(this IServiceCollection services, string assemblyName, string nameSpace, string className)
         //{
-        //    //TODO:集成到 CO2NET
-        //    string fullName = nameSpace + "." + className;//命名空间.类型名
-        //    var databaseConfiguration = Assembly.Load(assemblyName).CreateInstance(fullName) as IDatabaseConfiguration;//加载程序集，创建程序集里面的 命名空间.类型名 实例
+        //    //TODO: Integrated into CO2NET
+        //    string fullName = nameSpace + "." + className;//Namespace.Type name
+        //    var databaseConfiguration = Assembly.Load(assemblyName).CreateInstance(fullName) as IDatabaseConfiguration;//Load the assembly and create the namespace.type name instance in the assembly
         //    return services.AddDatabase(databaseConfiguration);
         //}
 
@@ -86,19 +86,19 @@ namespace Senparc.Ncf.Database
         #region UseNcfDatabase
 
         /// <summary>
-        /// UseNcfDatabase() 方法是否已经执行完毕
+        /// Whether the UseNcfDatabase() method has been executed
         /// </summary>
         public static bool UseNcfDatabaseSetted = false;
 
         /// <summary>
-        /// 使用指定数据库
+        /// Use the specified database
         /// </summary>
         /// <param name="app"></param>
-        /// <param name="databaseConfiguration">可用的 DatabaseConfiguration，非 <see cref="BySettingDatabaseConfiguration"/></param>
+        /// <param name="databaseConfiguration">Available DatabaseConfiguration, not <see cref="BySettingDatabaseConfiguration"/></param>
         /// <returns></returns>
         public static IApplicationBuilder UseNcfDatabase(this IApplicationBuilder app, IDatabaseConfiguration databaseConfiguration)
         {
-            //必须实现 IDatabaseConfiguration 接口的类型才能进行下一步配置
+            //The type that must implement the IDatabaseConfiguration interface can be used for the next step of configuration.
             if (databaseConfiguration == null)
             {
                 throw new NcfDatabaseException($"{nameof(databaseConfiguration)} 参数不能为 null", null);
@@ -109,39 +109,39 @@ namespace Senparc.Ncf.Database
         }
 
         /// <summary>
-        /// 使用指定数据库
+        /// Use the specified database
         /// </summary>
         /// <param name="app"></param>
-        /// <param name="assemblyName">DatabaseConfiguration 程序集名称</param>
-        /// <param name="nameSpace">DatabaseConfiguration 命名空间</param>
-        /// <param name="className">DatabaseConfiguration 类名</param>
+        /// <param name="assemblyName">DatabaseConfiguration assembly name</param>
+        /// <param name="nameSpace">DatabaseConfiguration namespace</param>
+        /// <param name="className">DatabaseConfiguration class name</param>
         /// <returns></returns>
         public static IApplicationBuilder UseNcfDatabase(this IApplicationBuilder app, string assemblyName, string nameSpace, string className)
         {
-            //TODO:集成到 CO2NET
-            string fullName = nameSpace + "." + className;//命名空间.类型名
-            var databaseConfiguration = Assembly.Load(assemblyName).CreateInstance(fullName) as IDatabaseConfiguration;//加载程序集，创建程序集里面的 命名空间.类型名 实例
+            //TODO: Integrate into CO2NET
+            string fullName = nameSpace + "." + className;//namespace.typename
+            var databaseConfiguration = Assembly.Load(assemblyName).CreateInstance(fullName) as IDatabaseConfiguration;//Load the assembly and create the namespace.typename instance in the assembly
             return app.UseNcfDatabase(databaseConfiguration);
         }
 
         /// <summary>
-        /// 使用指定数据库（必须在 UseXncfModule() 方法之后执行）
+        /// Use the specified database (must be executed after the UseXncfModule() method)
         /// </summary>
         /// <param name="app"></param>
         /// <param name="databaseConfigurationType"></param>
         /// <returns></returns>
         public static IApplicationBuilder UseNcfDatabase(this IApplicationBuilder app, Type databaseConfigurationType)
         {
-            //必须实现 IDatabaseConfiguration 接口的类型才能进行下一步配置
+            //The type that must implement the IDatabaseConfiguration interface can be used for the next step of configuration.
             if (!typeof(IDatabaseConfiguration).IsAssignableFrom(databaseConfigurationType))
             {
                 throw new NcfDatabaseException($"类型{databaseConfigurationType.Name} 必须实现接口：IDatabaseConfiguration", databaseConfigurationType);
             }
 
-            //判断是否为默认数据库配置（使用 appsettings.json 文件）
+            //Determine whether it is the default database configuration (using the appsettings.json file)
             if (databaseConfigurationType == typeof(BySettingDatabaseConfiguration))
             {
-                var dbType = SiteConfig.SenparcCoreSetting.DatabaseType;//此时还没有设置完成
+                var dbType = SiteConfig.SenparcCoreSetting.DatabaseType;//The setting has not been completed yet
 
                 if (dbType == null)
                 {
@@ -168,8 +168,8 @@ namespace Senparc.Ncf.Database
             }
             //else if (databaseConfigurationType == typeof(DatabaseConfiguration))
             //{
-            //    //供单元测试使用
-            //    Console.WriteLine("进入单元测试环境");
+            //    //for unit testing
+            //    Console.WriteLine("Enter the unit test environment");
             //}
 
             var databaseConfiguration = (IDatabaseConfiguration)Activator.CreateInstance(databaseConfigurationType);
@@ -183,14 +183,14 @@ namespace Senparc.Ncf.Database
 
 
         /// <summary>
-        /// 使用指定数据库
+        /// Use the specified database
         /// </summary>
         /// <param name="app"></param>
         /// <returns></returns>
         public static IApplicationBuilder UseNcfDatabase<TDatabaseConfiguration>(this IApplicationBuilder app)
         where TDatabaseConfiguration : IDatabaseConfiguration, new()
         {
-            //添加数据库
+            //Add database
             app.UseNcfDatabase(typeof(TDatabaseConfiguration));
             return app;
         }

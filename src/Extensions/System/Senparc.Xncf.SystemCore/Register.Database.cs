@@ -16,7 +16,7 @@ namespace Senparc.Xncf.SystemCore
 {
     public partial class Register : IXncfDatabase
     {
-        public const string DATABASE_PREFIX = "SYSTEM_CORE_"; //NcfDatabaseMigrationHelper.SYSTEM_UNIQUE_PREFIX;//系统表，
+        public const string DATABASE_PREFIX = "SYSTEM_CORE_"; //NcfDatabaseMigrationHelper.SYSTEM_UNIQUE_PREFIX;//System table,
 
         public string DatabaseUniquePrefix => DATABASE_PREFIX;
 
@@ -25,30 +25,30 @@ namespace Senparc.Xncf.SystemCore
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
             #region 历史解决方案参考信息
-            /* 参考信息
-             *      错误信息：
-             *          中文：EnableRetryOnFailure 解决短暂的数据库连接失败
-             *          英文：Win32Exception: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+            /* Reference information
+             *      error message:
+             * Chinese: EnableRetryOnFailure solves temporary database connection failure
+             * English: Win32Exception: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
              *                InvalidOperationException: An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
-             *      问题解决方案说明：https://www.colabug.com/2329124.html
+             * Problem solution description: https://www.colabug.com/2329124.html
              */
 
-            /* 参考信息
-             *      错误信息：
-             *          中文：EnableRetryOnFailure 解决短暂的数据库连接失败
-             *          英文：Win32Exception: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+            /* Reference information
+             *      error message:
+             * Chinese: EnableRetryOnFailure solves temporary database connection failure
+             * English: Win32Exception: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
              *                InvalidOperationException: An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
-             *      问题解决方案说明：https://www.colabug.com/2329124.html
+             * Problem solution description: https://www.colabug.com/2329124.html
              */
             #endregion
 
             //var currentDatabasConfiguration = DatabaseConfigurationFactory.Instance.Current;
 
             /* 
-             *     非常重要！！
-             * SenparcEntities 工厂配置
+             * Very important! !
+             * SenparcEntities factory configuration
              * 
-             * SYSTEM 为特定标记，将直接定位到 __EFMigrationsHistory 
+             * SYSTEM is a specific tag and will be located directly to __EFMigrationsHistory 
             */
             var xncfDatabaseData = new XncfDatabaseData(this, NcfDatabaseMigrationHelper.SYSTEM_UNIQUE_PREFIX);
 
@@ -62,14 +62,14 @@ namespace Senparc.Xncf.SystemCore
                 return multipleDatabasePool.GetXncfDbContext(this.GetType(), serviceProvider: s) as SenparcEntities;
             };
 
-            services.AddScoped<SenparcEntitiesDbContextBase>(senparcEntitiesImplementationFactory);// 继承自 DbContext
+            services.AddScoped<SenparcEntitiesDbContextBase>(senparcEntitiesImplementationFactory);// Inherited from DbContext
             services.AddScoped<ISenparcEntitiesDbContext>(senparcEntitiesImplementationFactory);
-            services.AddScoped<SenparcEntitiesBase>(senparcEntitiesImplementationFactory);//继承自 SenparcEntitiesMultiTenantBase
+            services.AddScoped<SenparcEntitiesBase>(senparcEntitiesImplementationFactory);//Inherited from SenparcEntitiesMultiTenantBase
             services.AddScoped<SenparcEntities>(senparcEntitiesImplementationFactory);
 
             #endregion
 
-            //BasePoolEntities 工厂配置（上层应用实际不会用到，构建 NcfClientDbData 时需要，NcfClientDbData 也不需要在正式系统中被使用到）
+            //BasePoolEntities factory configuration (the upper-layer application will not actually use it, it is needed when building NcfClientDbData, and NcfClientDbData does not need to be used in the official system)
             Func<IServiceProvider, BasePoolEntities> basePoolEntitiesImplementationFactory = s =>
             {
                 var multipleDatabasePool = MultipleDatabasePool.Instance;
@@ -80,7 +80,7 @@ namespace Senparc.Xncf.SystemCore
             services.AddScoped<INcfClientDbData, NcfClientDbData>();
             services.AddScoped<INcfDbData, NcfClientDbData>();
 
-            //预加载 EntitySetKey
+            //Preload EntitySetKey
             EntitySetKeys.TryLoadSetInfo(typeof(BasePoolEntities));
         }
 
@@ -105,18 +105,18 @@ namespace Senparc.Xncf.SystemCore
             {
                 SiteConfig.IsInstalling = true;
 
-                //更新数据库
+                //Update database
                 var pendingMigs = await basePoolEntities.Database.GetPendingMigrationsAsync();
                 if (pendingMigs.Count() > 0)
                 {
-                    basePoolEntities.ResetMigrate();//重置合并状态
+                    basePoolEntities.ResetMigrate();//Reset merge status
 
                     try
                     {
                         var script = basePoolEntities.Database.GenerateCreateScript();
                         SenparcTrace.SendCustomLog("senparcEntities.Database.GenerateCreateScript", script);
 
-                        basePoolEntities.Migrate();//进行合并
+                        basePoolEntities.Migrate();//merge
 
                         msg = "已成功合并";
                     }
@@ -147,10 +147,10 @@ namespace Senparc.Xncf.SystemCore
             using (var scope = serviceProvider.CreateScope())
             {
                 var oldMultiTenant = SiteConfig.SenparcCoreSetting.EnableMultiTenant;
-                //暂时关闭多租户状态
+                //Temporarily turn off multi-tenancy status
                 SiteConfig.SenparcCoreSetting.EnableMultiTenant = false;
 
-                var result = await GenerateCreateScript(serviceProvider);//尝试执行更新
+                var result = await GenerateCreateScript(serviceProvider);//Try to perform an update
                 success = result.success;
                 msg = result.msg;
 

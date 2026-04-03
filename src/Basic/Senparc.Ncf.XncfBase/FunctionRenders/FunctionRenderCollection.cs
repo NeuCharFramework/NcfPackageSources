@@ -10,12 +10,12 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase.FunctionRenders
 {
     /// <summary>
-    /// FunctionRender 集合。Key：唯一标识，value：MethodInfo
+    ///FunctionRender collection. Key: unique identifier, value: MethodInfo
     /// </summary>
     public class FunctionRenderCollection : ConcurrentDictionary<Type, ConcurrentDictionary<string, FunctionRenderBag>>
     {
         /// <summary>
-        /// 获取 单个 Group 的 Key
+        /// Get the Key of a single Group
         /// </summary>
         /// <param name="methodInfo"></param>
         /// <returns></returns>
@@ -25,7 +25,7 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
         }
 
         /// <summary>
-        /// 设置 FunctionRenderBag
+        ///Set FunctionRenderBag
         /// </summary>
         /// <param name="methodInfo"></param>
         /// <returns></returns>
@@ -46,7 +46,7 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
         }
 
         /// <summary>
-        /// 获取指定注册类型下的 FunctionRender 集合。
+        /// Get the FunctionRender collection under the specified registration type.
         /// </summary>
         public IReadOnlyList<FunctionRenderBag> GetByRegisterType(Type registerType)
         {
@@ -64,7 +64,7 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
         }
 
         /// <summary>
-        /// 通过模块 UID 获取 FunctionRender 集合。
+        /// Get the FunctionRender collection by module UID.
         /// </summary>
         public IReadOnlyList<FunctionRenderBag> GetByModuleUid(string moduleUid)
         {
@@ -83,7 +83,7 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
         }
 
         /// <summary>
-        /// 当输入包含 [#sym:FunctionRender] 时，将指定模块中的 FunctionRender 方法自动转换为可导入的插件对象。
+        /// When the input contains [#sym:FunctionRender], automatically convert the FunctionRender method in the specified module into an importable plug-in object.
         /// </summary>
         public IReadOnlyDictionary<string, object> ResolveSymbolPlugins(IServiceProvider serviceProvider, string symbolExpression, IEnumerable<string> moduleUids)
         {

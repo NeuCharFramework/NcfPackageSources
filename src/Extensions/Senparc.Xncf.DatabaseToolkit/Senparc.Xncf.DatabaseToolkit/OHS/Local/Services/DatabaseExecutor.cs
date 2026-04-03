@@ -12,8 +12,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
 {
     /// <summary>
-    /// 通用数据库执行器
-    /// 提供模块/表级别的数据查询与统计能力
+    ///Universal Database Executor
+    /// Provide module/table level data query and statistical capabilities
     /// </summary>
     public class DatabaseExecutor
     {
@@ -99,7 +99,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
                 return new List<object>();
             }
 
-            // 构造 Expression<Func<T, bool>> 类型（而非 Func<T, bool>），与 GetFullListAsync 签名一致
+            // Constructs type Expression<Func<T, bool>> (instead of Func<T, bool>), consistent with GetFullListAsync signature
             var funcType = typeof(Func<,>).MakeGenericType(entityType, typeof(bool));
             var expressionPredicateType = typeof(Expression<>).MakeGenericType(funcType);
 
@@ -108,7 +108,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
                 ?.MakeGenericMethod(entityType);
             var predicate = alwaysTrueMethod?.Invoke(null, null);
 
-            // 必须提供全部参数类型（包括可选参数），否则 GetMethod 无法定位到正确重载
+            // All parameter types (including optional parameters) must be provided, otherwise GetMethod cannot locate the correct overload
             var method = serviceType.GetMethod("GetFullListAsync",
                 new[] { expressionPredicateType, typeof(string), typeof(string[]) });
             if (method == null)
@@ -116,7 +116,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
                 return new List<object>();
             }
 
-            // 调用时须传入全部参数（可选参数也必须明确提供）
+            // All parameters must be passed in when calling (optional parameters must also be provided explicitly)
             var task = method.Invoke(serviceInstance,
                 new object[] { predicate, null, Array.Empty<string>() }) as Task;
             if (task == null)

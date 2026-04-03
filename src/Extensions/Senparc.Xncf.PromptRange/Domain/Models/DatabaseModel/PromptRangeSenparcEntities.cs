@@ -10,31 +10,31 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 数据库中的 PromptItems 实体
+        /// PromptItems entity in database
         /// </summary>
         public DbSet<PromptItem> PromptItems { get; set; }
 
         /// <summary>
-        /// 数据库中的 PromptResult 实体
+        /// PromptResult entity in database
         /// </summary>
         public DbSet<PromptResult> PromptResults { get; set; }
 
         /// <summary>
-        /// 数据库中的 LlmModel 实体
+        ///LlmModel entity in database
         /// </summary>
         public DbSet<LlModel> LlmModels { get; set; }
 
         public DbSet<PromptRange> PromptRanges { get; set; }
 
         /// <summary>
-        /// 数据库中的 PromptResultChat 实体
+        /// PromptResultChat entity in database
         /// </summary>
         public DbSet<PromptResultChat> PromptResultChats { get; set; }
 
-        //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
+        //DOT REMOVE OR MODIFY THIS LINE Do not remove or modify this LINE - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }
 
-        //如无特殊需需要，OnModelCreating 方法可以不用写，已经在 Register 中要求注册
+        //If there is no special need, the OnModelCreating method does not need to be written. Registration is already required in Register.
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //}

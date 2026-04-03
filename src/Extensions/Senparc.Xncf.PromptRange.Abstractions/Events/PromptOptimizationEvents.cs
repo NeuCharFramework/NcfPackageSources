@@ -4,7 +4,7 @@ using Senparc.Ncf.Shared.Abstractions.Events;
 namespace Senparc.Xncf.PromptRange.Abstractions.Events
 {
     /// <summary>
-    /// Prompt 优化请求事件
+    ///Prompt optimization request event
     /// </summary>
     public record PromptOptimizationRequestEvent(
         string RequestId,
@@ -21,7 +21,7 @@ namespace Senparc.Xncf.PromptRange.Abstractions.Events
     };
 
     /// <summary>
-    /// Prompt 优化响应事件
+    ///Prompt optimizes response events
     /// </summary>
     public record PromptOptimizationResponseEvent(
         string RequestId,
@@ -41,7 +41,7 @@ namespace Senparc.Xncf.PromptRange.Abstractions.Events
     };
 
     /// <summary>
-    /// 优化上下文（当前 Prompt 的参数）
+    /// Optimization context (parameters of the current Prompt)
     /// </summary>
     public record OptimizationContext(
         int ModelId,
@@ -50,12 +50,12 @@ namespace Senparc.Xncf.PromptRange.Abstractions.Events
         int CurrentMaxTokens,
         float CurrentFrequencyPenalty,
         float CurrentPresencePenalty,
-        bool AutoShootAfterOptimize = true,      // 🆕 创建后立即打靶（默认 true）
-        bool AutoAIGradeAfterShoot = false       // 🆕 打靶后 AI 评分（默认 false）
+        bool AutoShootAfterOptimize = true,      // 🆕 Target shooting immediately after creation (default true)
+        bool AutoAIGradeAfterShoot = false       // 🆕 AI scoring after target practice (default false)
     );
 
     /// <summary>
-    /// 优化后的参数
+    ///Optimized parameters
     /// </summary>
     public record OptimizedParameters(
         float Temperature,

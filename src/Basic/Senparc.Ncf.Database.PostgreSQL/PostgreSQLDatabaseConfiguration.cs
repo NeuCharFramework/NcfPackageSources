@@ -16,7 +16,7 @@ using System.Diagnostics;
 namespace Senparc.Ncf.Database.PostgreSQL
 {
     /// <summary>
-    /// PostgreSQL 数据库配置
+    /// PostgreSQL database configuration
     /// </summary>
     public class PostgreSQLDatabaseConfiguration : DatabaseConfigurationBase<NpgsqlDbContextOptionsBuilder, NpgsqlOptionsExtension>
     {
@@ -28,7 +28,7 @@ namespace Senparc.Ncf.Database.PostgreSQL
         {
             var typedBuilder = optionsBuilder as NpgsqlDbContextOptionsBuilder;
 
-            //解决 .NET 6.0 timestamp 问题： https://qiita.com/k-yamamoto/items/a87989569cb6f0415fbb
+            //Resolving .NET 6.0 timestamp issues: https://qiita.com/k-yamamoto/items/a87989569cb6f0415fbb
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             typedBuilder.EnableRetryOnFailure(
@@ -86,7 +86,7 @@ namespace Senparc.Ncf.Database.PostgreSQL
                 Process cmdProcess = getNewProcess();
                 Console.WriteLine(cmd);
                 cmdProcess.StandardInput.WriteLine(cmd);
-                cmdProcess.StandardInput.WriteLine("exit");//需要执行exit后才能读取 StandardOutput
+                cmdProcess.StandardInput.WriteLine("exit");//You need to execute exit before you can read StandardOutput.
                 var output = cmdProcess.StandardOutput.ReadToEnd();
                 Console.WriteLine("pg_dump.exe outupt: " + output);
                 closeProcess(cmdProcess);
@@ -98,7 +98,7 @@ namespace Senparc.Ncf.Database.PostgreSQL
                 Process passwordProcess = getNewProcess();
                 Console.WriteLine(cmd);
                 passwordProcess.StandardInput.WriteLine(password);
-                passwordProcess.StandardInput.WriteLine("exit");//需要执行exit后才能读取 StandardOutput
+                passwordProcess.StandardInput.WriteLine("exit");//You need to execute exit before you can read StandardOutput.
                 var output = passwordProcess.StandardOutput.ReadToEnd();
                 Console.WriteLine("pg_dump.exe outupt: " + output);
                 closeProcess(passwordProcess);
@@ -111,7 +111,7 @@ namespace Senparc.Ncf.Database.PostgreSQL
         public override string GetDropTableSql(DbContext dbContext, string tableName)
         {
             //var schma = dbContext.Model.FindEntityType(type).GetSchema();
-            //TODO: 增加 schma
+            //TODO: Add schma
             return $"DROP TABLE \"{tableName}\"";//CASCADE
         }
 

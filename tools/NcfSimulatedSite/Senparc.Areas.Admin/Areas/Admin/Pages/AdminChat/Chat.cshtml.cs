@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.Pages.AdminChat
 {
     /// <summary>
-    /// 与 SenparcTrace/Index 等页一致：<see cref="Ncf.AreaBase.Admin.Filters.IgnoreAuth"/> 跳过菜单 URL 校验；
-    /// 登录与 AdminOnly 由 <see cref="BaseAdminPageModel"/> 与 Cookie 中间件统一处理，不在此页写 Login 跳转。
+    /// Consistent with pages such as SenparcTrace/Index: <see cref="Ncf.AreaBase.Admin.Filters.IgnoreAuth"/> Skip menu URL verification;
+    /// Login and AdminOnly are handled uniformly by <see cref="BaseAdminPageModel"/> and Cookie middleware, and no Login jump is written on this page.
     /// </summary>
     [Ncf.AreaBase.Admin.Filters.IgnoreAuth]
     public class ChatModel : BaseAdminPageModel
@@ -28,24 +28,24 @@ namespace Senparc.Areas.Admin.Pages.AdminChat
         }
 
         /// <summary>
-        /// 会话ID（URL参数）
+        ///Session ID (URL parameter)
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public int SessionId { get; set; }
 
         /// <summary>
-        /// 初始消息（URL参数，可选）
+        /// Initial message (URL parameters, optional)
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public string InitialMessage { get; set; }
 
         /// <summary>
-        /// 当前用户ID
+        ///Current user ID
         /// </summary>
         public int CurrentUserId { get; set; }
 
         /// <summary>
-        /// 模块 UID 列表（逗号分隔的字符串）
+        /// List of module UIDs (comma separated string)
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public string ModuleUids { get; set; }

@@ -27,16 +27,16 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.Tests
             var aiModelService = base._serviceProvider.GetRequiredService<AIModelService>();
             var aiModel = await aiModelService.GetObjectAsync(z => true);
 
-            // 测试启动聊天组
+            // Test launch chat group
             await chatGroupService.RunChatGroupInThread(new ChatGroup_RunGroupRequest()
             {
                 ChatGroupId = chatGroup.Id,
                 AiModelId = aiModel.Id,
-                PromptCommand = "请对 https://www.ncf.pub 进行分析，告诉我这个站点的概要信息，以及所表述的产品的特点。",
-                Name = "测试项目聊天组",
+                PromptCommand = "Please use https://www.ncf.pub Do an analysis and tell me an overview of the site and the features of the product being represented.",
+                Name = "Test project chat group",
                 HookPlatform = HookPlatform.None,
                 HookParameter = "",
-                Description = "测试项目聊天组",
+                Description = "Test project chat group",
                 Personality = true,
             });
 
@@ -44,10 +44,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.Tests
             ChatTask? chatTask = null;
             for (int i = 0; i < 80; i++)
             {
-                // 验证聊天组状态已更新为运行中
+                // Verify that the chat group status has been updated to Running
                 await Task.Delay(1000);
 
-                //说明：此处使用 CreateAsyncScope() 方法是由于还有其他线程在读写 ChatTask，此处缓存可能读取不到最新的更新
+                //Note: The CreateAsyncScope() method is used here because there are other threads reading and writing ChatTask, and the cache here may not be able to read the latest updates.
                 await using (var scope = base._serviceProvider.CreateAsyncScope())
                 {
                     var chatTaskService = scope.ServiceProvider.GetRequiredService<ChatTaskService>();

@@ -35,7 +35,7 @@ namespace Senparc.Xncf.WeixinManager.Domain.Services
             foreach (var keyValuePair in weixinFaceCahce.Data)
             {
                 var image = $"<img src=\"/Content/WeixinFace/{keyValuePair.Value}.png\" title=\"{keyValuePair.Value.ToString()}\" />";
-                //表情中有<>之类符号，需要考虑到进来的content已经HtmlEncode的情况
+                //If there are symbols such as <> in the expression, you need to consider that the incoming content has been HtmlEncoded.
                 var encodedCode = keyValuePair.Key.HtmlEncode();
                 if (encodedCode != keyValuePair.Key)
                 {
@@ -48,7 +48,7 @@ namespace Senparc.Xncf.WeixinManager.Domain.Services
 
         public string GetStandardKeyword(string keyword, int maxKeywordCount = 0)
         {
-            //整理keywords格式
+            //Organize keywords format
             if (!keyword.IsNullOrEmpty())
             {
                 var keywords = keyword.Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -67,13 +67,13 @@ namespace Senparc.Xncf.WeixinManager.Domain.Services
         /// 
         /// </summary>
         /// <param name="serverId"></param>
-        /// <param name="filePath">相对路径</param>
+        /// <param name="filePath">Relative path</param>
         /// <returns></returns>
         public bool DownloadTemplate(string serverId, string filePath)
         {
             try
             {
-                //创建目录
+                //Create directory
                 LogUtility.Weixin.Debug($"DownloadTemplate:path {filePath} serverId={serverId}");
                 var downloadTemplateImage = DownloadTemplate(serverId, filePath, false);
                 LogUtility.Weixin.Debug("DownloadTemplate:downloadTemplateImage " + downloadTemplateImage);
@@ -96,7 +96,7 @@ namespace Senparc.Xncf.WeixinManager.Domain.Services
         }
 
         /// <summary>
-        /// 下载微信临时素材Image
+        /// Download WeChat temporary material Image
         /// </summary>
         /// <param name="serverId"></param>
         /// <param name="fileName"></param>
@@ -108,16 +108,16 @@ namespace Senparc.Xncf.WeixinManager.Domain.Services
             {
                 var senparcWeixinSetting = _serviceProvider.GetService<IOptions<SenparcWeixinSetting>>().Value;
                 MediaApi.Get(senparcWeixinSetting.WeixinAppId, serverId, ms);
-                //保存到文件
+                //save to file
                 ms.Position = 0;
                 byte[] buffer = new byte[1024];
                 int bytesRead = 0;
-                //判断是否上传成功
+                //Determine whether the upload is successful
                 byte[] topBuffer = new byte[1];
                 ms.Read(topBuffer, 0, 1);
                 if (topBuffer[0] == '{')
                 {
-                    //写入日志
+                    //write log
                     ms.Position = 0;
                     byte[] logBuffer = new byte[1024];
                     ms.Read(logBuffer, 0, logBuffer.Length);
@@ -126,7 +126,7 @@ namespace Senparc.Xncf.WeixinManager.Domain.Services
                     return false;
                 }
                 ms.Position = 0;
-                //创建目录
+                //Create directory
                 using (FileStream fs = new FileStream(fileName, FileMode.Create))
                 {
                     while ((bytesRead = ms.Read(buffer, 0, buffer.Length)) != 0)
@@ -146,7 +146,7 @@ namespace Senparc.Xncf.WeixinManager.Domain.Services
             try
             {
                 var dt1 = DateTime.Now;
-                //TODO:写到配置文件里
+                //TODO: Write to the configuration file
                 var accessToken = AccessTokenContainer.TryGetAccessToken(
                     "wxbe855a981c34aa3f", "2d65ad33a2e8d03c79ecd7b035522227", true);
                 var dt2 = DateTime.Now;

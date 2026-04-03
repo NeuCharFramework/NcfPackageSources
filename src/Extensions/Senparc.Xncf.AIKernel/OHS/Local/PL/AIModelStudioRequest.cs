@@ -17,10 +17,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
     public class AIModelStudioRequest_RunModelAsync : FunctionAppRequestBase
     {
         [Required]
-        [Description("选择模型||")]//下拉列表
+        [Description("选择模型||")]//drop down list
         public SelectionList Model { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>());
 
-        //TODO: 更多 AI 参数
+        //TODO: More AI parameters
 
         [Required]
         [MaxLength(1000)]
@@ -34,7 +34,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
 
             List<ModelItem> settings =
             [
-                //从 appsettings.json 读取
+                //Read from appsettings.json
                 new("Default", Senparc.AI.Config.SenparcAiSetting, "appsettings.json"),
             ];
 
@@ -46,7 +46,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
                 }
             }
 
-            //从数据库中获取模型
+            //Get model from database
             var aiModelService = serviceProvider.GetService<AIModelService>();
             var aiModels = await aiModelService.GetFullListAsync(z => z.Show, z => z.Alias, Ncf.Core.Enums.OrderingType.Ascending);
             foreach (var aiModel in aiModels)
@@ -55,7 +55,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
                 settings.Add(new(aiModel.Alias, setting, "AIKernel 模块数据库"));
             }
 
-            //集成模型参数
+            //Integrated model parameters
             settings.ForEach(z =>
             {
                 var value = z.ModelAlias;

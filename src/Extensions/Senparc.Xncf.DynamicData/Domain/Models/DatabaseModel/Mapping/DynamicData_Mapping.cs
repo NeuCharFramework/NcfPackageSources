@@ -19,7 +19,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Mapping
         {
             Console.WriteLine("run DynamicData_TableDataConfigurationMapping");
 
-            // 配置索引  
+            // Configure index  
             builder.HasIndex(td => td.TableId)
                    .HasDatabaseName("idx_table_id");
 

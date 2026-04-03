@@ -5,42 +5,42 @@ using Senparc.Ncf.Core.MultiTenant;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// 全局可调整配置的设置
+    /// Globally adjustable configuration settings
     /// </summary>
     public partial record class SenparcCoreSetting
     {
         /// <summary>
-        /// 网站是否开启 Debug 标记
+        /// Whether the website has the Debug flag turned on
         /// </summary>
         public bool IsDebug { get; set; }
         /// <summary>
-        /// 是否是测试站
+        /// Is it a test station?
         /// </summary>
         public bool IsTestSite { get; set; }
 
         /// <summary>
-        /// 对应：AppData/Database/SenparcConfig.config 中，所需要使用的数据库连接的 &lt;SenparcConfig&gt; 节点的 Name
+        /// Corresponding: In AppData/Database/SenparcConfig.config, the Name of the &lt;SenparcConfig&gt; node of the database connection that needs to be used
         /// </summary>
         public string DatabaseName { get; set; }
 
         /// <summary>
-        /// 通过配置指定数据库类型。必须因为 MultipleDatabaseType 枚举类型，请注意大小写。
+        /// Specify the database type through configuration. Required because of the MultipleDatabaseType enumeration type, please note the case.
         /// </summary>
         public MultipleDatabaseType? DatabaseType { get; set; }
 
         /// <summary>
-        /// 缓存类型
+        /// cache type
         /// </summary>
         public CacheType CacheType { get; set; }
 
         #region 多租户
 
         /// <summary>
-        /// 是否启用多租户，默认为 false
+        /// Whether to enable multi-tenancy, the default is false
         /// </summary>
         public bool EnableMultiTenant { get; set; }
         /// <summary>
-        /// 区分租户的规则
+        /// Rules for distinguishing tenants
         /// </summary>
         public TenantRule TenantRule { get; set; } = TenantRule.Default;
 
@@ -52,17 +52,17 @@ namespace Senparc.Ncf.Core.Models
         public string MemcachedAddresses { get; set; }
 
         /// <summary>
-        /// 缓存中的请求暂存日志缓存时间（分钟），0 则不缓存
+        /// Request temporary log cache time in cache (minutes), 0 means no caching
         /// </summary>
         public int RequestTempLogCacheMinutes { get; set; }
 
         /// <summary>
-        /// 密码加密加强选项，此值在首个账号生成后不修改，否则会导致所有密码失效
+        /// Password encryption strengthening option, this value will not be modified after the first account is generated, otherwise all passwords will become invalid.
         /// </summary>
         public string PasswordSaltToken { get; set; }
 
         /// <summary>
-        /// MCP 访问令牌，用于 SSE 连接鉴权
+        ///MCP access token, used for SSE connection authentication
         /// </summary>
         public string McpAccessToken { get; set; }
     }

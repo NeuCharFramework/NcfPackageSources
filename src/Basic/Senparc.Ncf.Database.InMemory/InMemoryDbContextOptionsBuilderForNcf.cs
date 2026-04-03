@@ -13,21 +13,21 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
     public class InMemoryDbContextOptionsBuilderForNcf : RelationalDbContextOptionsBuilder<InMemoryDbContextOptionsBuilderForNcf, InMemoryOptionsExtensionForNcf>
     {
         //
-        // 摘要:
+        // summary:
         //     Clones the configuration in this builder.
         //
-        // 返回结果:
+        // Return results:
         //     The cloned configuration.
         protected virtual DbContextOptionsBuilder OptionsBuilder { get; }
 
         //DbContextOptionsBuilder IInMemoryDbContextOptionsBuilderInfrastructure.OptionsBuilder => OptionsBuilder;
 
         //
-        // 摘要:
+        // summary:
         //     Initializes a new instance of the Microsoft.EntityFrameworkCore.Infrastructure.InMemoryDbContextOptionsBuilder
         //     class.
         //
-        // 参数:
+        // parameter:
         //   optionsBuilder:
         //     The options builder.
         public InMemoryDbContextOptionsBuilderForNcf(DbContextOptionsBuilder optionsBuilder)
@@ -37,18 +37,18 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
         }
 
         //
-        // 摘要:
+        // summary:
         //     Enables nullability check for all properties across all entities within the in-memory
         //     database.
         //
-        // 参数:
+        // parameter:
         //   nullChecksEnabled:
         //     If true, then nullability check is enforced.
         //
-        // 返回结果:
+        // Return results:
         //     The same builder instance so that multiple calls can be chained.
         //
-        // 言论：
+        // Speech:
         //     See Using DbContextOptions, and The EF Core in-memory database provider for more
         //     information and examples.
         public virtual InMemoryDbContextOptionsBuilderForNcf EnableNullChecks(bool nullChecksEnabled = true)
@@ -60,10 +60,10 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
         }
 
         //
-        // 摘要:
+        // summary:
         //     Returns a string that represents the current object.
         //
-        // 返回结果:
+        // Return results:
         //     A string that represents the current object.
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override string? ToString()
@@ -72,14 +72,14 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
         }
 
         //
-        // 摘要:
+        // summary:
         //     Determines whether the specified object is equal to the current object.
         //
-        // 参数:
+        // parameter:
         //   obj:
         //     The object to compare with the current object.
         //
-        // 返回结果:
+        // Return results:
         //     true if the specified object is equal to the current object; otherwise, false.
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object? obj)
@@ -88,10 +88,10 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
         }
 
         //
-        // 摘要:
+        // summary:
         //     Serves as the default hash function.
         //
-        // 返回结果:
+        // Return results:
         //     A hash code for the current object.
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode()

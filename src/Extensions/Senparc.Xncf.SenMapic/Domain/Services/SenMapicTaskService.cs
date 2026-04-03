@@ -55,7 +55,7 @@ namespace Senparc.Xncf.SenMapic.Domain.Services
         {
             await SaveTaskStateAsync(task, t => t.Start());
 
-            // 创建爬虫引擎
+            // Create a crawler engine
             var engine = new SenMapicEngine(
                 serviceProvider: _serviceProvider,
                 urls: new[] { task.StartUrl },
@@ -65,7 +65,7 @@ namespace Senparc.Xncf.SenMapic.Domain.Services
                 maxPageCount: task.MaxPageCount
             );
 
-            // 异步执行爬虫任务
+            // Execute crawler tasks asynchronously
             _ = Task.Run(async () =>
             {
                 try

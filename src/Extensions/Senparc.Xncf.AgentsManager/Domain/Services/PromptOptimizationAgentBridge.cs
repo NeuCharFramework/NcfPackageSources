@@ -6,7 +6,7 @@ using Senparc.Xncf.PromptRange.Abstractions.Events;
 namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
     /// <summary>
-    /// 在 Agent 对话与 HTTP 优化请求之间传递结果（CreateOptimizedPrompt 写入，Handler 读取后发布响应事件）。
+    /// Pass results between Agent conversations and HTTP optimization requests (CreateOptimizedPrompt writes, Handler reads and publishes response events).
     /// </summary>
     public class PromptOptimizationAgentBridge
     {
@@ -98,25 +98,25 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         private readonly ConcurrentDictionary<string, State> _states = new();
 
         /// <summary>
-        /// 每个优化 RequestId 只允许一次 <see cref="PromptItemService.AddPromptItemAsync"/>（工具或 Kernel 回退谁先抢到谁写）。
-        /// 解决：工具已插入 DB 但 <see cref="RecordCreatedPrompt"/> 未写入 State → TryTakeResult 失败 → 回退再插一条（内容相同）。
+        /// Each optimization RequestId is only allowed once <see cref="PromptItemService.AddPromptItemAsync"/> (the tool or Kernel fallback will be written by whoever grabs it first).
+        /// Solution: The tool has been inserted into DB but <see cref="RecordCreatedPrompt"/> is not written to State → TryTakeResult fails → fall back and insert another one (with the same content).
         /// </summary>
         private readonly ConcurrentDictionary<string, byte> _versionInsertClaimed = new();
 
         /// <summary>
-        /// 统一键格式，避免模型/客户端传入的 GUID 大小写与 <see cref="Guid.ToString"/> 不一致导致 _states 匹配失败（no registered session）。
+        /// Unify the key format to avoid _states matching failure (no registered session) caused by inconsistency between the case of the GUID passed in by the model/client and <see cref="Guid.ToString"/>.
         /// </summary>
         private static string NormalizeRequestKey(string requestId) =>
             string.IsNullOrWhiteSpace(requestId) ? null : requestId.Trim().ToLowerInvariant();
 
-        /// <summary>在调用 AddPromptItemAsync 之前调用；仅第一次返回 true。</summary>
+        /// <summary> Called before calling AddPromptItemAsync; only returns true the first time. </summary>
         public bool TryClaimVersionInsert(string requestId)
         {
             var key = NormalizeRequestKey(requestId);
             return key != null && _versionInsertClaimed.TryAdd(key, 0);
         }
 
-        /// <summary>AddPromptItemAsync 失败时释放，允许 Kernel 回退重试写库。</summary>
+        /// <summary> Released when AddPromptItemAsync fails, allowing Kernel to fall back and retry writing to the library. </summary>
         public void ReleaseVersionInsertClaim(string requestId)
         {
             var key = NormalizeRequestKey(requestId);
@@ -138,7 +138,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        /// 将模型传入的 optimizationRequestId 归一到 <see cref="BeginRequest"/> 已注册的 key（禁止瞎填 Guid 导致孤儿 State）。
+        /// Normalize the optimizationRequestId passed in by the model to the <see cref="BeginRequest"/> registered key (it is forbidden to blindly fill in the Guid and cause an orphan state).
         /// </summary>
         public bool TryResolveRegisteredOptimizationKey(string candidateFromModel, out string registeredKey)
         {
@@ -273,8 +273,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        /// 统一清理指定 requestId 的所有 Bridge 状态（_states + _versionInsertClaimed）。
-        /// 应在 ChatTaskHandler 的 finally 中调用，确保无论成功/失败都不留残余。
+        /// Uniformly clear all Bridge states (_states + _versionInsertClaimed) of the specified requestId.
+        /// should be called in the finally of ChatTaskHandler to ensure that no residue is left regardless of success/failure.
         /// </summary>
         public void CleanupRequest(string requestId)
         {

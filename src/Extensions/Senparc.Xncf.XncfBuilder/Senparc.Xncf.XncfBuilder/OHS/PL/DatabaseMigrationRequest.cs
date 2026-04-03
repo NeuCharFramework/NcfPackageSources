@@ -67,7 +67,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             });
 
         /// <summary>
-        /// 预载入数据
+        /// preload data
         /// </summary>
         /// <param name="serviceProvider"></param>
         /// <returns></returns>
@@ -75,11 +75,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         {
             try
             {
-                //TODO:单独生成一个表来记录
+                //TODO: Generate a separate table to record
 
                 this.ProjectPath.Items.Add(new SelectionItem("N/A", "自定义路径", "", true));
 
-                //添加“停机坪”路径
+                //Add a "tarmac" path
                 var configService = serviceProvider.GetService<ConfigService>();
                 var config = await configService.GetObjectAsync(z => true);
                 if (config != null)
@@ -89,11 +89,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                         this.DatabasePlantPath = Path.Combine(Path.GetDirectoryName(config.SlnFilePath), "Senparc.Web.DatabasePlant");
                     }
 
-                    //添加当前解决方案的项目选项
+                    //Add project options for current solution
                     var projectList = FunctionHelper.LoadXncfProjects(false, null, "Senparc.Areas.Admin");
                     projectList.OrderBy(z=>z.Value).ToList().ForEach(z => ProjectPath.Items.Add(z));
 
-                    //添加 NcfPackageSource 项目的解决方案的项目选项
+                    //Add project options to solution for NcfPackageSource project
                     var sourceRootDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..", "..", "..", "src");
                     Console.WriteLine("查找 Source 项目源文件根目录：" + sourceRootDir);
                     var sourceProjectList = FunctionHelper.LoadXncfProjects(false, sourceRootDir, "Senparc.Areas.Admin");
@@ -107,7 +107,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
 
         /// <summary>
-        /// 获取项目路径
+        /// Get project path
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>

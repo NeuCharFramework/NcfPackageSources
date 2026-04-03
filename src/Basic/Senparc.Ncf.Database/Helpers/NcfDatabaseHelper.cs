@@ -15,7 +15,7 @@ namespace Senparc.Ncf.Database.Helpers
     public static class NcfDatabaseHelper
     {
         /// <summary>
-        /// 获取当前数据库连接信息
+        /// Get current database connection information
         /// </summary>
         /// <returns></returns>
         public static Dictionary<string, string> GetCurrentConnectionInfo()
@@ -30,10 +30,10 @@ namespace Senparc.Ncf.Database.Helpers
         }
 
         /// <summary>
-        /// 尝试获取数据库连接信息的值，如果获取不到，则返回 null
+        /// Try to get the value of the database connection information, if not, return null
         /// </summary>
-        /// <param name="dic">数据库信息</param>
-        /// <param name="name">名称，如 Database、UserName，不区分大小写</param>
+        /// <param name="dic">Database information</param>
+        /// <param name="name">Names, such as Database, UserName, are not case sensitive</param>
         /// <returns></returns>
         public static string TryGetConnectionValue(Dictionary<string, string> dic, string name)
         {
@@ -45,9 +45,9 @@ namespace Senparc.Ncf.Database.Helpers
         }
 
         /// <summary>
-        /// 尝试获取数据库连接信息的值，如果获取不到，则返回 null
+        /// Try to get the value of the database connection information, if not, return null
         /// </summary>
-        /// <param name="name">名称，如 Database、UserName，不区分大小写</param>
+        /// <param name="name">Names, such as Database, UserName, are not case sensitive</param>
         /// <returns></returns>
         public static string TryGetConnectionValue(string name)
         {

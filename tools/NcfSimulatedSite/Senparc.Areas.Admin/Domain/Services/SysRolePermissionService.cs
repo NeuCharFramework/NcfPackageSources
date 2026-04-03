@@ -21,10 +21,10 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 检查当前用户是否权限
+        /// Check whether the current user has permissions
         /// </summary>
-        /// <param name="resourceCodes">资源codes</param>
-        /// <param name="adminUserInfoId">当前用户Id</param>
+        /// <param name="resourceCodes">Resource codes</param>
+        /// <param name="adminUserInfoId">Current user Id</param>
         /// <returns></returns>
         internal async Task<bool> HasPermissionAsync(IEnumerable<string> resourceCodes, int adminUserInfoId)
         {
@@ -32,9 +32,9 @@ namespace Senparc.Areas.Admin.Domain.Services
             {
                 return false;
             }
-            string cacheKey = string.Format("adminUserInfoPermission:{0}", adminUserInfoId); // 缓存当前用户的所有资源
+            string cacheKey = string.Format("adminUserInfoPermission:{0}", adminUserInfoId); // Cache all resources of the current user
             var distributedCache = _serviceProvider.GetService<IDistributedCache>();
-            string codesJsonValue = await distributedCache.GetStringAsync(cacheKey); // 尝试从缓存读取用户的资源
+            string codesJsonValue = await distributedCache.GetStringAsync(cacheKey); // Try to read the user's resource from cache
             IEnumerable<string> codes = null;
             if (string.IsNullOrEmpty(codesJsonValue))
             {
@@ -43,7 +43,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 await distributedCache.SetStringAsync(cacheKey, codesJsonValue, new DistributedCacheEntryOptions()
                 {
                     SlidingExpiration = TimeSpan.FromHours(8)
-                }); // 缓存 8 小时
+                }); // Cache for 8 hours
             }
             else
             {
@@ -53,7 +53,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             {
                 return false;
             }
-            //获取当前用户的所有资源code
+            //Get all resource codes of the current user
             return codes.Intersect(resourceCodes).Any();
         }
     }

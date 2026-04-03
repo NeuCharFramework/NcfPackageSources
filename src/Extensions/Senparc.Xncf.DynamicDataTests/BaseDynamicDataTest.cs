@@ -19,21 +19,21 @@ namespace Senparc.Xncf.DynamicDataTests
 
             // TableMetadata
             List<TableMetadata> tableMetadataList = new() {
-                     new("User","用户名"){
+                     new("User","username"){
                           ColumnMetadatas=new List<ColumnMetadata>(){
                                new ColumnMetadata(0,"Guid","Text",false,""),
                                new ColumnMetadata(0,"UserName","Text",false,""),
                                new ColumnMetadata(0,"Balance","Float",false,"0.0"),
                           }
                          },
-                         new("Product","产品表"){
+                         new("Product","product list"){
                           ColumnMetadatas = new List<ColumnMetadata>(){
                                new ColumnMetadata(0,"Guid","Text",false,""),
                                new ColumnMetadata(0,"Name","Text",false,""),
                                new ColumnMetadata(0,"Price","Float",false,"0.0"),
                           }
                          },
-                         new("Order","订单表"){
+                         new("Order","order form"){
                           ColumnMetadatas = new List<ColumnMetadata>(){
                                new ColumnMetadata(0,"Guid","Text",false,""),
                                new ColumnMetadata(0,"UserGuid","Text",false,""),
@@ -53,14 +53,13 @@ namespace Senparc.Xncf.DynamicDataTests
             var tableDataService = serviceProvider.GetRequiredService<TableDataService>();
             var columnMetadataService = serviceProvider.GetRequiredService<ColumnMetadataService>();
 
-            // User 表
+            // User surface
             var userTableColumns = await columnMetadataService.GetColumnDtos(1);
             var tableDataDtos = new List<TableDataDto>();
 
-            //添加一些数据
+            //add some data
 
-            /* User 表
-             * | Column   | Value  |
+            /* User surface* | Column   | Value  |
              * |----------|--------|
              * | Guid     |        |
              * | UserName | UserX  |

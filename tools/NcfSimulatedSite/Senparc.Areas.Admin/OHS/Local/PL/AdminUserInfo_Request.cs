@@ -17,24 +17,24 @@ namespace Senparc.Areas.Admin.OHS.PL
     public class AdminUserInfo_AddRoleRequest
     {
         /// <summary>
-        /// 角色Id
+        /// roleId
         /// </summary>
         [Required]
         public IEnumerable<string> RoleId { get; set; }
 
         /// <summary>
-        /// 管理员id
+        ///admin id
         /// </summary>
         public int AccountId { get; set; }
     }
 
     /// <summary>
-    /// 管理员新增
+    ///Administrator added
     /// </summary>
     public class AdminUserInfo_CreateOrUpdateRequest : IValidatableObject
     {
         /// <summary>
-        /// 用户名
+        /// username
         /// </summary>
         [Required]
         [MaxLength(35)]
@@ -75,7 +75,7 @@ namespace Senparc.Areas.Admin.OHS.PL
         }
 
         /// <summary>
-        /// 备注1
+        /// Note 1
         /// </summary>
         [MaxLength(150)]
         public string AdminRemark
@@ -85,7 +85,7 @@ namespace Senparc.Areas.Admin.OHS.PL
         }
 
         /// <summary>
-        /// 备注2
+        /// Note 2
         /// </summary>
         [MaxLength(150)]
         public string Remark

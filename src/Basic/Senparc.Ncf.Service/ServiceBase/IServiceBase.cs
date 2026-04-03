@@ -71,7 +71,7 @@ namespace Senparc.Ncf.Service
         void TryDetectChange(T obj);
 
         /// <summary>
-        /// 使用 Mapper.Map&lt;TDto&gt;(entity) 快速返回
+        /// Use Mapper.Map&lt;TDto&gt;(entity) to return quickly
         /// </summary>
         /// <typeparam name="TDto"></typeparam>
         /// <param name="entity"></param>
@@ -79,7 +79,7 @@ namespace Senparc.Ncf.Service
         TDto Mapping<TDto>(T entity);
 
         /// <summary>
-        /// 强制设置租户信息
+        /// Force tenant information to be set
         /// </summary>
         /// <param name="requestTenantInfo"></param>
         /// <returns></returns>

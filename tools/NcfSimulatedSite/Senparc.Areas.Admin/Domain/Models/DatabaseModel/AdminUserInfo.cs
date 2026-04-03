@@ -14,7 +14,7 @@ using static Dm.net.buffer.ByteArrayBuffer;
 
 namespace Senparc.Areas.Admin.Domain.Models
 {
-    [Table(Register.DATABASE_PREFIX + nameof(AdminUserInfo) + "s")]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(AdminUserInfo) + "s")]//The prefix must be added to prevent conflicts system-wide.
     [Serializable]
     public partial class AdminUserInfo : EntityBase<int>
     {
@@ -30,8 +30,8 @@ namespace Senparc.Areas.Admin.Domain.Models
         public string LastLoginIp { get; private set; }
 
         /// <summary>
-        /// 获取加盐后的 MD5 密码
-        /// MD5 作为登陆凭证已经缺少安全性，请使用 GetSHA512Password() 方法
+        /// Get the salted MD5 password
+        ///MD5 is no longer secure as a login credential, please use the GetSHA512Password() method
         /// </summary>
         /// <param name="password"></param>
         /// <param name="salt"></param>
@@ -42,9 +42,9 @@ namespace Senparc.Areas.Admin.Domain.Models
             string md5 = password.ToUpper().Replace("-", "");
             if (!isMD5Password)
             {
-                md5 = MD5.GetMD5Code(password, "").Replace("-", ""); //原始MD5
+                md5 = MD5.GetMD5Code(password, "").Replace("-", ""); //Original MD5
             }
-            return MD5.GetMD5Code(md5, salt).Replace("-", ""); //再加密
+            return MD5.GetMD5Code(md5, salt).Replace("-", ""); //Re-encrypt
         }
 
         private AdminUserInfo() { }
@@ -52,25 +52,25 @@ namespace Senparc.Areas.Admin.Domain.Models
         ///// <summary>
         ///// 
         ///// </summary>
-        ///// <param name="userName">用户名为空时会按照SenparcCoreAdmin+两位数字的格式随机生成</param>
+        ///// <param name="userName">When the user name is empty, it will be randomly generated in the format of SenparcCoreAdmin+two digits</param>
         ///// <param name="password"></param>
-        ///// <param name="realName">真实姓名</param>
-        ///// <param name="phone">电话号码</param>
-        ///// <param name="note">备注</param>
+        ///// <param name="realName">Real name</param>
+        ///// <param name="phone">Phone number</param>
+        ///// <param name="note">Note</param>
         /// <summary>
-        /// <para>创建管理员账号</para>
-        /// <para>用户名为空时会按照SenparcCoreAdmin+两位数字的格式随机生成</para>
-        /// <para>密码为空时会生成16字符长度的随机字符串作为密码</para>
+        /// <para>Create an administrator account</para>
+        /// <para>If the username is empty, it will be randomly generated in the format of SenparcCoreAdmin+two digits</para>
+        /// <para>When the password is empty, a random string of 16 characters in length will be generated as the password</para>
         /// </summary>
         /// <param name="objDto"></param>
         public AdminUserInfo(CreateOrUpdate_AdminUserInfoDto objDto)
         {
-            objDto.UserName ??= GenerateUserName();//记录用户名
-            objDto.Password ??= GeneratePassword();//记录明文密码
+            objDto.UserName ??= GenerateUserName();//Record username
+            objDto.Password ??= GeneratePassword();//Record clear text password
 
             UserName = objDto.UserName;
-            PasswordSalt = GeneratePasswordSalt();//生成密码盐
-            Password = GetSHA512Password(objDto.Password, PasswordSalt, true);//生成密码
+            PasswordSalt = GeneratePasswordSalt();//Generate password salt
+            Password = GetSHA512Password(objDto.Password, PasswordSalt, true);//Generate password
             RealName = objDto.RealName;
             Phone = objDto.Phone;
             Note = objDto.Note;
@@ -80,11 +80,11 @@ namespace Senparc.Areas.Admin.Domain.Models
             ThisLoginTime = now;
             LastLoginTime = now;
 
-            //TODO：用户名及密码合规性验证
+            //TODO: Username and password compliance verification
         }
 
         /// <summary>
-        /// 检查密码是否正确
+        /// Check if the password is correct
         /// </summary>
         /// <param name="password"></param>
         /// <param name="usePasswordSaltToken"></param>
@@ -96,7 +96,7 @@ namespace Senparc.Areas.Admin.Domain.Models
         }
 
         /// <summary>
-        /// 生成用户名
+        /// Generate username
         /// </summary>
         /// <returns></returns>
         public string GenerateUserName()
@@ -105,7 +105,7 @@ namespace Senparc.Areas.Admin.Domain.Models
         }
 
         /// <summary>
-        /// 生成随机密码
+        /// Generate random password
         /// </summary>
         /// <returns></returns>
         public string GeneratePassword()
@@ -114,7 +114,7 @@ namespace Senparc.Areas.Admin.Domain.Models
         }
 
         /// <summary>
-        /// 生成密码盐
+        /// Generate password salt
         /// </summary>
         /// <returns></returns>
         public string GeneratePasswordSalt()

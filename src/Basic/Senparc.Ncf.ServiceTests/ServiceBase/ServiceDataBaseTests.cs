@@ -15,7 +15,7 @@
 //    public class ServiceDataBaseTests : BaseNcfUnitTest
 //    {
 //        /// <summary>
-//        /// 测试保存单个对象
+//        /// Test saving a single object
 //        /// </summary>
 //        /// <returns></returns>
 //        [TestMethod]
@@ -25,7 +25,7 @@
 //            string dataDb = null;
 //            string senparcEntities = null;
 
-//            //设置保存对象后的行为
+//            //Set the behavior after saving the object
 //            ServiceDataBase.AfterSaveObject = (dataBase, obj) =>
 //            {
 //                dataDb = dataBase.BaseDB.GetType().Name;
@@ -50,7 +50,7 @@
 //        }
 
 //        /// <summary>
-//        /// 测试批量保存对象
+//        /// Test batch saving objects
 //        /// </summary>
 //        /// <returns></returns>
 //        [TestMethod]
@@ -58,7 +58,7 @@
 //        {
 //            List<string> result = new List<string>();
 
-//            //设置保存对象后的行为
+//            //Set the behavior after saving the object
 //            ServiceDataBase.AfterSaveObject = (dataBase, obj) =>
 //            {
 //                if (obj is PromptRange promptRange)
@@ -87,7 +87,7 @@
 //        }
 
 //        /// <summary>
-//        /// 测试保存所有变化
+//        /// Test save all changes
 //        /// </summary>
 //        /// <returns></returns>
 //        [TestMethod]
@@ -96,7 +96,7 @@
 //            string dataDb = null;
 //            string senparcEntities = null;
 
-//            //设置保存对象后的行为
+//            //Set the behavior after saving the object
 //            ServiceDataBase.AfterSaveChanges = (dataBase) =>
 //            {
 //                dataDb = dataBase.BaseDB.GetType().Name;

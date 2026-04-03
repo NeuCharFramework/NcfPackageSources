@@ -8,7 +8,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
     /// <summary>
-    /// 菜单表
+    /// menu table
     /// </summary>
     [Table("SysMenus")]
     public class SysMenu : EntityBase<string>
@@ -44,7 +44,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public string MenuName { get; set; }
 
         /// <summary>
-        /// 父菜单
+        ///parent menu
         /// </summary>
         [MaxLength(150)]
         public string ParentId { get; set; }
@@ -53,23 +53,23 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public string Url { get; set; }
 
         /// <summary>
-        /// 图标
+        /// icon
         /// </summary>
         [MaxLength(150)]
         public string Icon { get; set; }
 
         /// <summary>
-        /// 是否锁定, 锁定后不能 修改和删除
+        /// Whether to lock or not, it cannot be modified or deleted after locking.
         /// </summary>
         public bool IsLocked { get; set; }
 
         /// <summary>
-        /// 类型
+        /// type
         /// </summary>
         public MenuType MenuType { get; set; }
 
         /// <summary>
-        /// 操作资源
+        ///operating resources
         /// </summary>
         [MaxLength(150)]
         public string ResourceCode { get; set; }
@@ -91,7 +91,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public int Sort { get; set; }
 
         /// <summary>
-        /// 是否可见
+        /// is visible
         /// </summary>
         public bool Visible { get; set; }
     }

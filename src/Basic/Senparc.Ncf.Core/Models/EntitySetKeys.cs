@@ -13,7 +13,7 @@ using System.Reflection;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// 所有 EntityFramework 中 Entitey 的 SetKey 的集合
+    /// A collection of SetKeys of Entitey in all EntityFrameworks
     /// </summary>
     public static class EntitySetKeys
     {
@@ -24,10 +24,10 @@ namespace Senparc.Ncf.Core.Models
         internal static object DbContextStoreLock = new object();
 
         /// <summary>
-        /// 加载制定 DbContext 中的 SetKey
+        /// Load the SetKey in the specified DbContext
         /// </summary>
         /// <param name="tryLoadDbContextType"></param>
-        /// <param name="forceLoad">尝试强制载入，如果之前已经载入，则删除后重新载入</param>
+        /// <param name="forceLoad">Try to force load, if it has been loaded before, delete and reload</param>
         /// <returns></returns>
         public static EntitySetKeysDictionary TryLoadSetInfo(Type tryLoadDbContextType, bool forceLoad = false)
         {
@@ -43,12 +43,12 @@ namespace Senparc.Ncf.Core.Models
                 {
                     if (EntitySetKeys.DbContextStore.Contains(tryLoadDbContextType))
                     {
-                        return AllKeys;//已经载入过了，直接返回现有对象，不再加载
+                        return AllKeys;//It has already been loaded. Return the existing object directly and no longer load it.
                     }
                 }
                 else
                 {
-                    //强制载入
+                    //force load
                     removeSuccess = EntitySetKeys.DbContextStore.TryTake(out tryLoadDbContextType);
                     SenparcTrace.BaseExceptionLog(new BaseException($"EntitySetKeys.DbContextStore.TryTake 失败，tryLoadDbContextType 类型：{tryLoadDbContextType.FullName}"));
                 }
@@ -58,7 +58,7 @@ namespace Senparc.Ncf.Core.Models
                     EntitySetKeys.DbContextStore.Add(tryLoadDbContextType);
                 }
 
-                //初始化的时候从ORM中自动读取实体集名称及实体类别名称
+                //During initialization, the entity set name and entity category name are automatically read from the ORM.
                 var clientProperties = tryLoadDbContextType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty);
 
                 var properities = new List<PropertyInfo>();
@@ -74,11 +74,11 @@ namespace Senparc.Ncf.Core.Models
                             var dbSetType = prop.PropertyType.GetGenericArguments()[0];
                             if (!AllKeys.ContainsKey(dbSetType))
                             {
-                                AllKeys[dbSetType] = new SetKeyInfo(prop.Name, dbSetType, tryLoadDbContextType);//获取第一个泛型
+                                AllKeys[dbSetType] = new SetKeyInfo(prop.Name, dbSetType, tryLoadDbContextType);//Get the first generic
                             }
                             else if (!AllKeys[dbSetType].SenparcEntityTypes.Contains(tryLoadDbContextType))
                             {
-                                AllKeys[dbSetType].SenparcEntityTypes.Add(tryLoadDbContextType);//给这个 dbSetType 添加一个新的 DbContext 关联类型
+                                AllKeys[dbSetType].SenparcEntityTypes.Add(tryLoadDbContextType);//Add a new DbContext associated type to this dbSetType
                             }
                         }
                     }
@@ -93,9 +93,9 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        /// 获取 Entity SetKey 集合
+        /// Get the Entity SetKey collection
         /// </summary>
-        /// <param name="dbContextType">DbContext 类型</param>
+        /// <param name="dbContextType">DbContext type</param>
         /// <returns></returns>
         public static EntitySetKeysDictionary GetEntitySetInfo(Type dbContextType)
         {
@@ -115,7 +115,7 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        /// 获取所有 Entity 的 SetKey
+        /// Get the SetKey of all Entities
         /// </summary>
         /// <returns></returns>
         public static EntitySetKeysDictionary GetAllEntitySetInfo()
@@ -128,15 +128,15 @@ namespace Senparc.Ncf.Core.Models
     public class SetKeyInfo
     {
         /// <summary>
-        /// SetKey 属性名称
+        ///SetKey property name
         /// </summary>
         public string SetName { get; set; }
         /// <summary>
-        /// DbSet 属性类型
+        ///DbSet property type
         /// </summary>
         public Type DbSetType { get; set; }
         /// <summary>
-        /// SenparcEntity 类型
+        ///SenparcEntity type
         /// </summary>
         public List<Type> SenparcEntityTypes { get; set; }
 
@@ -149,7 +149,7 @@ namespace Senparc.Ncf.Core.Models
     }
 
     /// <summary>
-    /// 与ORM实体类对应的实体集
+    /// Entity set corresponding to ORM entity class
     /// </summary>
     public class EntitySetKeysDictionary : ConcurrentDictionary<Type, SetKeyInfo>
     {

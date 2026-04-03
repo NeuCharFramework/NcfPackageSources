@@ -8,72 +8,72 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
     public class AIModelDto : DtoBase
     {
         /// <summary>
-        /// 主键 ID
+        /// primary key ID
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// 代号
+        /// code name
         /// </summary>
         public string Alias { get; set; }
 
         /// <summary>
-        /// 部署名称
+        ///deployment name
         /// </summary>
         public string DeploymentName { get; set; }
 
         /// <summary>
-        /// 模型名称（必须）
+        ///Model name (required)
         /// </summary>
         public string ModelId { get; set; }
 
         /// <summary>
-        /// Endpoint（必须）
+        ///Endpoint (required)
         /// </summary>
         public string Endpoint { get; set; }
 
         /// <summary>
-        /// 模型的类型（必须）, 例如：NeuCharAI, OpenAI, Azure OpenAI, HuggingFace
+        /// Type of model (required), for example: NeuCharAI, OpenAI, Azure OpenAI, HuggingFace
         /// </summary>
         public AiPlatform AiPlatform { get; set; }
         /// <summary>
-        /// 模型类型
+        /// model type
         /// </summary>
         public ConfigModelType ConfigModelType { get; set; }
 
 
         /// <summary>
-        /// OrganizationId（可选）
+        ///OrganizationId (optional)
         /// </summary>
         public string OrganizationId { get; set; }
 
         /// <summary>
-        /// ApiKey（可选）
+        ///ApiKey (optional)
         /// </summary>
         public string ApiKey { get; set; }
 
         /// <summary>
-        /// ApiVersion（可选）
+        ///ApiVersion (optional)
         /// </summary>
         public string ApiVersion { get; set; }
 
         /// <summary>
-        /// Note（可选）
+        ///Note (optional)
         /// </summary>
         public string Note { get; set; }
 
         /// <summary>
-        /// MaxToken（可选）
+        ///MaxToken (optional)
         /// </summary>
         public int MaxToken { get; set; }
 
         /// <summary>
-        /// 是否共享
+        /// Whether to share
         /// </summary>
         public bool IsShared { get; set; } = false;
 
         /// <summary>
-        /// 是否展示
+        /// Whether to display
         /// </summary>
         public bool Show { get;  set; }
         

@@ -2,7 +2,7 @@ var app = new Vue({
     el: "#app",
     data() {
         return {
-            // 查询列表 参数
+            // Query list parameters
             queryList: {
                 page: 1,
                 size: 10,
@@ -10,8 +10,8 @@ var app = new Vue({
             },
             pageSizes: [10, 20, 30, 50],
             tableTotal: 0,
-            tableData: [], // 模型列表
-            multipleSelection: {}, // 选中的模型
+            tableData: [], // Model list
+            multipleSelection: {}, // selected model
             dialogFormVisible: false,
             dialogFormTitle: '新增模型',
             formLabelWidth: '',
@@ -118,7 +118,7 @@ var app = new Vue({
         //}
     },
     created: function () {
-        // 获取table列表数据
+        // Get table list data
         this.getList();
     },
     methods: {
@@ -160,7 +160,7 @@ var app = new Vue({
             return this.usageData.filter(item => {
                 return new Date(item.date) >= new Date(start) && new Date(item.date) <= new Date(end);
             });
-        },//echarts表格
+        },//echarts form
         closeDialog() {
             this.$refs.newDialogModelForm.resetFields();
         },
@@ -175,12 +175,12 @@ var app = new Vue({
                 }
             });
         },
-        // 新增模型 btn
+        // New model btn
         createBtnFrom() {
             this.dialogFormTitle = '新增模型'
             this.dialogFormVisible = true
         },
-        // 编辑模型 btn
+        // Edit model btn
         editBtnFrom(row) {
             this.dialogFormTitle = '编辑模型'
             this.newModelForm = {
@@ -188,17 +188,17 @@ var app = new Vue({
             }
             this.dialogFormVisible = true
         },
-        // 删除模型 
+        // Delete model 
         deleteHandle(row) {
             console.log('删除', row)
         },
-        // btn 批量删除
+        // btn batch delete
         btnBatchdelete() {
             console.log('批量删除', this.multipleSelection)
-            // 循环 this.multipleSelection
+            // Loop this.multipleSelection
             // this.$refs.multipleTable.toggleRowSelection(row);
         },
-        // async  获取table列表数据
+        // async gets table list data
         getList() {
             this.tableData = [{
                 id: 1,
@@ -220,30 +220,30 @@ var app = new Vue({
                 date: '2016-05-05'
             }]
             this.tableTotal = 3
-            // to do 对接接口 queryList
+            // to do docking interface queryList
             //const _tableData = await service.get(`/Admin/PromptRange/Index?handler=Mofules`);
             //this.tableData = tableData.data.data.result;
         },
 
-        // table 自定义行号
+        // table custom row number
         indexMethod(index) {
             let { page, size } = this.queryList
             return (page - 1) * size + index + 1;
             //return  index + 1;
         },
-        // table 选中列
+        // table selected column
         handleSelectionChange(val) {
             let { page } = this.queryList
             this.multipleSelection[page] = val;
-            // 按照 页码 记录对应页选择的数量
+            // Record the number of selected pages according to the page number
             console.log('tbale 选择', this.multipleSelection)
         },
-        // 分页 页大小
+        // Pagination page size
         handleSizeChange(val) {
             this.queryList.size = val
             this.getList()
         },
-        // 分页 页码
+        // Pagination Page number
         handleCurrentChange(val) {
             this.queryList.page = val
             this.getList()

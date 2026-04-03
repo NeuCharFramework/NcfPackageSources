@@ -22,7 +22,7 @@ namespace Senparc.Xncf.DatabaseToolkit
 
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
-            //AutoMap映射
+            //AutoMap mapping
             base.AddAutoMapMapping(profile =>
             {
                 profile.CreateMap<SetConfigFunctionAppRequest, DbConfig>();
@@ -37,7 +37,7 @@ namespace Senparc.Xncf.DatabaseToolkit
 
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //实现 [XncfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
+            //After implementing the [XncfAutoConfigurationMapping] feature, it can be executed automatically without adding it manually.
             //modelBuilder.ApplyConfiguration(new DbConfig_WeixinUserConfigurationMapping());
         }
     }

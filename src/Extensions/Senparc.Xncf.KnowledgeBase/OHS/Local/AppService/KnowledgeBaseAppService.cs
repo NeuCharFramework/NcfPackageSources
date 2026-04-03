@@ -37,9 +37,9 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 创建及修改
+        ///Create and modify
         /// </summary>
-        /// <param name="request">请求记录Dto模型</param>
+        /// <param name="request">Request to record Dto model</param>
         /// <returns></returns>
         [ApiBind("AutoMate", ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<bool>> CreateOrUpdateAsync(KnowledgeBaseRequest request)
@@ -60,10 +60,10 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 创建或设置 KnowledgeBaseDetail
+        /// Create or set KnowledgeBaseDetail
         /// </summary>
-        /// <param name="chatGroupDto">ChatGroup 信息></param>
-        /// <param name="memberAgentTemplateIds">成员 AgentTemplate ID</param>
+        /// <param name="chatGroupDto">ChatGroup information></param>
+        /// <param name="memberAgentTemplateIds">Member AgentTemplate ID</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<bool>> SetKnowledgeBaseDetail(KnowledgeBaseItemRequest request)
@@ -78,7 +78,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
                     Content = request.Content
                 };
 
-                //TODO:封装到 Service 中
+                //TODO: Encapsulated into Service
                 await knowledgeBasesDetailService.CreateOrUpdateAsync(knowledgeBasesDetailDto);
 
                 logger.Append($"KnowledgeBasesDetail 新增成功！");
@@ -90,7 +90,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 对KnowledgeBase进行Embedding，返回向量化结果描述（供前端展示）
+        /// Embedding KnowledgeBase and returning vectorized result description (for front-end display)
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<string>> EmbeddingKnowledgeBase(plRequest.KnowledgeBasesRequest request)
@@ -115,7 +115,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 批量导入文件到知识库
+        /// Batch import files into the knowledge base
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>

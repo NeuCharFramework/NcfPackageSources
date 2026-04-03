@@ -2,7 +2,7 @@ using Senparc.Ncf.Shared.Abstractions.Events;
 
 namespace Senparc.Xncf.PromptRange.Abstractions.Events
 {
-    // 这个事件定义属于 PromptRange 的契约
+    // This event definition belongs to the PromptRange contract
     public record PromptTestFinishedEvent(
         string PromptCode,
         string OriginalPrompt,

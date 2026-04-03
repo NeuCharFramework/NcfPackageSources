@@ -20,7 +20,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
     public class DatabaseMigrationsAppService : AppServiceBase
     {
         /// <summary>
-        /// 获取迁移文件生成目录
+        /// Get the migration file generation directory
         /// </summary>
         /// <param name="request"></param>
         /// <param name="dbType"></param>
@@ -51,28 +51,28 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 }
 
                 var commandTexts = new List<string>();
-                commandTexts.Add($"chcp 65001"); // 设置代码页为 UTF-8
+                commandTexts.Add($"chcp 65001"); // Set code page to UTF-8
 
-                //添加停机坪引用（直接引用会有问题）
+                //Add tarmac reference (direct reference will cause problems)
                 //var slnFilePath = Path.Combine(request.DatabasePlantPath, "..\\");
                 //commandTexts.Add($"dotnet sln {slnFilePath} add {request.ProjectPath}");
                 //commandTexts.Add($"dotnet add {request.DatabasePlantPath} reference {request.ProjectPath}");
 
-                //进入项目目录
+                //Enter the project directory
                 var projectPath = request.GetProjectPath(request);
                 commandTexts.Add(@$"cd ""{projectPath}""");
 
-                //执行迁移
+                //Execute migration
                 foreach (var dbType in request.DatabaseTypes.SelectedValues)
                 {
                     string migrationDir = GetMigrationDir(request, dbType);
                     var outputVerbose = request.OutputVerbose.SelectedValues.Contains("1") ? " -v" : "";
 
-                    //数据库上下文实体名称
+                    //Database context entity name
                     var dbContextName = request.DbContextName;
                     if (dbContextName == "[Default]")
                     {
-                        //会自动拼接数据类型
+                        //Data types will be automatically spliced
                         dbContextName = FunctionHelper.GetSenparcEntitiesFilePath(projectPath, dbType);
                     }
                     else
@@ -93,7 +93,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         }
                     };
 
-                    //把 request.DatabasePlantPath 中独立存在的 \ 替换为 \\
+                    //Replace the independent \ in request.DatabasePlantPath with \\
                     var databasePlantPath = removeFileName(request.DatabasePlantPath.Replace("\\", "\\\\"));
                     var migrationDirFinal = removeFileName(migrationDir.Replace("\\", "\\\\"));
 
@@ -103,10 +103,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                     commandTexts.Add(migrationsCmd);
                     // --framework netcoreapp3.1
-                    // 如需指定框架，可以追加上述参数，也可以支持更多参数，如net5.0
+                    // If you need to specify a framework, you can add the above parameters, and you can also support more parameters, such as net5.0
                 }
 
-                ////移除停机坪引用（直接引用会有问题）
+                ////Remove the apron reference (direct reference will cause problems)
                 //commandTexts.Add($"dotnet remove {request.DatabasePlantPath} reference {request.ProjectPath}");
                 //commandTexts.Add($"dotnet sln {slnFilePath} remove {request.ProjectPath}");
 
@@ -139,7 +139,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     strOutput = e.Message;
                 }
 
-                ////Pomelo-MySQL 命名有不统一的情况，需要处理
+                ////Pomelo-MySQL naming is inconsistent and needs to be dealt with
                 //if (request.DatabaseTypes.SelectedValues.Contains(MultipleDatabaseType.MySql.ToString()))
                 //{
                 //    string migrationDir = GetMigrationDir(request, MultipleDatabaseType.MySql.ToString());
@@ -148,7 +148,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 //    if (File.Exists(defaultFileName) && File.Exists(pomeloFileName))
                 //    {
                 //        File.Delete(defaultFileName);
-                //        base.RecordLog(sb, $"扫描到不兼容常规格式的 Pomelo.EntityFrameworkCore.MySql 的快照文件：{pomeloFileName}，已将默认文件删除（{defaultFileName}）！");
+                //        base.RecordLog(sb, $"Scanned the snapshot file of Pomelo.EntityFrameworkCore.MySql that is incompatible with the regular format: {pomeloFileName}, the default file has been deleted ({defaultFileName})!");
                 //    }
                 //}
 
@@ -160,7 +160,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 }
                 else
                 {
-                    //更新版本号
+                    //Update version number
                     try
                     {
                         logger.Append("");
@@ -174,9 +174,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                             {
                                 logger.Append("Register.cs 文件存在，开始更新版本号");
 
-                                //获取 Register.cs 文件内容
+                                //Get the contents of the Register.cs file
                                 var fileContent = File.ReadAllText(registerFile);
-                                //获取版本号
+                                //Get version number
                                 var result = VersionHelper.ParseFromCode(fileContent);
                                 var oldVersion = result.VersionInfo;
                                 logger.Append($"当前版本号：{oldVersion.ToString()}");
@@ -198,9 +198,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                                 }
 
 
-                                //更新代码
+                                //Update code
                                 var newCode = VersionHelper.ReplaceVersionInCode(fileContent, result.RawVersionString, newVersion);
-                                //保存代码
+                                //save code
                                 using (var fw = new FileStream(registerFile, FileMode.Create))
                                 {
                                     using (var sw = new StreamWriter(fw))

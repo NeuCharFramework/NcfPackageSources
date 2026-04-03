@@ -195,10 +195,10 @@ define(function(require) {
                 matrix.translate(transform, transform, position);
 
                 // TODO
-                // tick等排布信息。
+                // tick and other arrangement information.
 
                 // TODO
-                // 根据axis order 更新 dimensions顺序。
+                // Update dimensions order according to axis order.
 
                 this._axesLayout[dim] = {
                     position: position,

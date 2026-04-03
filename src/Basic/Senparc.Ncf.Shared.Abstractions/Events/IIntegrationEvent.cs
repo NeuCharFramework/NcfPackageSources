@@ -5,7 +5,7 @@ using System.Linq;
 namespace Senparc.Ncf.Shared.Abstractions.Events
 {
     /// <summary>
-    /// 集成事件标记接口
+    /// Integrated event marking interface
     /// </summary>
     public interface IIntegrationEvent
     {
@@ -13,23 +13,23 @@ namespace Senparc.Ncf.Shared.Abstractions.Events
         DateTime CreationDate { get; }
         
         /// <summary>
-        /// 父事件 ID（用于追踪事件链和检测循环引用）
+        /// Parent event ID (used for tracing event chains and detecting circular references)
         /// </summary>
         Guid? ParentEventId { get; }
         
         /// <summary>
-        /// 事件链深度（根事件为 0，每次派生 +1）
+        /// Event chain depth (root event is 0, each fork +1)
         /// </summary>
         int Depth { get; }
         
         /// <summary>
-        /// 事件类型链路径（用于检测循环，格式：EventType1→EventType2→...）
+        /// Event type chain path (used to detect loops, format: EventType1→EventType2→...)
         /// </summary>
         string EventChain { get; }
     }
 
     /// <summary>
-    /// 基础事件类（建议所有具体事件继承此类）
+    ///Basic event class (it is recommended that all specific events inherit this class)
     /// </summary>
     public abstract record IntegrationEvent : IIntegrationEvent
     {
@@ -37,22 +37,22 @@ namespace Senparc.Ncf.Shared.Abstractions.Events
         public DateTime CreationDate { get; init; } = DateTime.UtcNow;
         
         /// <summary>
-        /// 父事件 ID（用于追踪事件链）
+        /// Parent event ID (used to track event chains)
         /// </summary>
         public Guid? ParentEventId { get; init; }
         
         /// <summary>
-        /// 事件链深度（根事件为 0）
+        /// Event chain depth (root event is 0)
         /// </summary>
         public int Depth { get; init; }
         
         /// <summary>
-        /// 事件类型链路径（格式：EventType1→EventType2→...）
+        /// Event type chain path (format: EventType1→EventType2→...)
         /// </summary>
         public string EventChain { get; init; } = string.Empty;
 
         /// <summary>
-        /// 用于调试和日志记录的事件摘要信息
+        /// Event summary information for debugging and logging
         /// </summary>
         public virtual string GetEventSummary()
         {
@@ -60,7 +60,7 @@ namespace Senparc.Ncf.Shared.Abstractions.Events
         }
         
         /// <summary>
-        /// 从当前事件派生新事件（继承事件链信息）
+        /// Derive new events from current events (inherit event chain information)
         /// </summary>
         public EventMetadata DeriveMetadata()
         {
@@ -73,7 +73,7 @@ namespace Senparc.Ncf.Shared.Abstractions.Events
         }
         
         /// <summary>
-        /// 检查事件链中是否存在循环（同一事件类型出现两次）
+        /// Check if there is a loop in the event chain (the same event type appears twice)
         /// </summary>
         public bool HasCircularReference(string newEventType)
         {
@@ -85,14 +85,14 @@ namespace Senparc.Ncf.Shared.Abstractions.Events
             var eventTypes = EventChain.Split('→').ToList();
             eventTypes.Add(newEventType);
             
-            // 检查是否有重复的事件类型
+            // Check if there are duplicate event types
             var duplicates = eventTypes.GroupBy(x => x).Where(g => g.Count() > 1).ToList();
             return duplicates.Any();
         }
     }
     
     /// <summary>
-    /// 事件元数据（用于创建派生事件）
+    ///Event metadata (used to create derived events)
     /// </summary>
     public record EventMetadata(
         Guid ParentEventId,

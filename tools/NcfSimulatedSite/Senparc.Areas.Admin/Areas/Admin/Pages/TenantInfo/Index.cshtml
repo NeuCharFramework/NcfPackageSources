@@ -100,7 +100,7 @@
                     :page.sync="listQuery.pageIndex"
                     :limit.sync="listQuery.pageSize"
                     @@pagination="getList"></pagination>
-        <!--编辑、新增 -->
+        <!--Edit, add -->
         <el-dialog :title="dialog.title" :visible.sync="dialog.visible" :close-on-click-modal="false">
             <el-form ref="dataForm"
                      :rules="dialog.rules"
@@ -108,7 +108,7 @@
                      label-position="left"
                      label-width="100px"
                      style="max-width: 400px; margin-left:50px;">
-                @*<p class="username-tip" v-if="dialog.title==='编辑管理员'">不建议修改用户名！</p>*@
+                @*<p class="username-tip" v-if="dialog.title==='Edit Admin'">It is not recommended to change your username!</p>*@
                 <el-form-item label="租户名称" :error="dialog.nameError" prop="name">
                     <el-input v-model="dialog.data.name" clearable placeholder="请输入租户名称" />
                 </el-form-item>
@@ -128,7 +128,7 @@
             </div>
         </el-dialog>
 
-        <!--初始化 -->
+        <!--initialization -->
         <el-dialog title="租户初始化" :visible.sync="initializeDialog.visible" :close-on-click-modal="false">
             <el-form ref="initializeForm"
                      :rules="initializeDialog.rules"
@@ -149,7 +149,7 @@
             </div>
         </el-dialog>
 
-        <!--初始化结果 -->
+        <!--Initialization result -->
         <el-dialog title="初始化结果" :visible.sync="resultDialog.visible" :close-on-click-modal="false" :show-close="true">
             <div class="result-content">
                 <div class="warning-message">

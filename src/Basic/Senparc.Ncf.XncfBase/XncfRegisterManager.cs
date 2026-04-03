@@ -11,33 +11,33 @@ using Senparc.Ncf.XncfBase.MCP;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// XncfRegister 管理器
+    ///XncfRegister Manager
     /// </summary>
     public class XncfRegisterManager
     {
         #region 静态方法
 
         /// <summary>
-        /// 模块和方法集合。模块已经按照 Order 倒叙排序（优先级从高到低）
+        /// Collection of modules and methods. Modules have been sorted backwards according to Order (priority from high to low)
         /// </summary>
         public static List<IXncfRegister> RegisterList { get; set; } = new List<IXncfRegister>();
 
         /// <summary>
-        /// 带有数据库的模块 TODO：可放置到缓存中 / TODO：可移除
+        /// Module with database TODO: can be placed in cache / TODO: can be removed
         /// </summary>
         public static List<IXncfDatabase> XncfDatabaseList => RegisterList.Where(z => z is IXncfDatabase).Select(z => z as IXncfDatabase).ToList();
 
         public static McpServerInfoCollection McpServerInfoCollection =new McpServerInfoCollection();
 
         /// <summary>
-        /// 判断指定名称的模块是否已注册
+        /// Determine whether the module with the specified name has been registered
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
         public static bool IsRegistered(string name) => RegisterList.Exists(z => z.Name == name);
 
         /// <summary>
-        /// 判断指定名称的模块是否已注册（推荐）
+        /// Determine whether the module with the specified name has been registered (recommended)
         /// </summary>
         /// <param name="xncfRegister">XncfRegister</param>
         /// <returns></returns>
@@ -54,39 +54,39 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        /// 检查数据库（缓存）中的模块信息，是否开放，并为开放状态
+        /// Check the module information in the database (cache) to see if it is open and in the open state
         /// </summary>
         /// <param name="xncfName"></param>
         /// <returns></returns>
         private async Task<bool> CheckOpenStateAsync(string xncfName)
         {
-            //检查数据库中的安装状态
+            //Check installation status in database
             var fullXncfModuleCache = this._serviceProvider.GetService<FullXncfModuleCache>();
             var fullXncfModule = await fullXncfModuleCache.GetObjectAsync(xncfName);
             return fullXncfModule != null && fullXncfModule.State == Core.Enums.XncfModules_State.开放;
         }
 
         /// <summary>
-        /// 检查 XNCF 模块是否可用（推荐）
+        /// Check if XNCF module is available (recommended)
         /// </summary>
         /// <param name="xncfRegister"></param>
         /// <returns></returns>
         public async Task<bool> CheckXncfAvailable(IXncfRegister xncfRegister)
         {
-            //检查内存中是否存在
+            //Check if it exists in memory
             return xncfRegister!=null && IsRegistered(xncfRegister)
                 ? await CheckOpenStateAsync(xncfRegister.Name).ConfigureAwait(false)
                 : false;
         }
 
         /// <summary>
-        /// 检查 XNCF 模块是否可用
+        /// Check if XNCF module is available
         /// </summary>
         /// <param name="xncfName"></param>
         /// <returns></returns>
         public async Task<bool> CheckXncfAvailable(string xncfName)
         {
-            //检查内存中是否存在
+            //Check if it exists in memory
             return IsRegistered(xncfName)
                 ? await CheckOpenStateAsync(xncfName).ConfigureAwait(false)
                 : false;

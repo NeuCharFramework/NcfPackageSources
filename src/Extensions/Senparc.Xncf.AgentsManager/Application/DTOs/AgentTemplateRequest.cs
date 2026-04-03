@@ -47,7 +47,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         [Required]
         [Description("外接平台||需要对外发布消息的平台")]
         public SelectionList HookRobotType { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
-        //TODO:可以选择多个通道
+        //TODO: Multiple channels can be selected
 
 
         [Description("外界平台参数||通常为 Key 之类的参数")]
@@ -74,7 +74,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         {
             await base.LoadData(serviceProvider);
 
-            //HootRobotType 枚举
+            //HootRobotType enumeration
             var hookRobotTypeItems = Enum.GetValues<HookRobotType>();
             foreach (var item in hookRobotTypeItems)
             {

@@ -8,9 +8,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
 {
     /// <summary>
-    /// ChatGroupHistory 数据库实体
+    ///ChatGroupHistory database entity
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(ChatGroupHistory))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(ChatGroupHistory))]//The prefix must be added to prevent conflicts system-wide.
     [Serializable]
     public class ChatGroupHistory : EntityBase<int>
     {

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.OHS.Local.AppService
 {
     /// <summary>
-    /// 菜单表
+    /// menu table
     /// </summary>
     [BackendJwtAuthorize]
     public class SysMenuAppService : AppServiceBase
@@ -29,7 +29,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 创建菜单
+        ///Create menu
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -50,9 +50,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取菜单树 不包含按钮
+        /// Get menu tree without buttons
         /// </summary>
-        /// <param name="hasButton">是否包含按钮</param>
+        /// <param name="hasButton">Whether to include buttons</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         public async Task<AppResponseBase<SysMenu_MenuTreeResponse>> GetAllMenusTreeAsync(bool hasButton)
@@ -69,9 +69,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取菜单列表
+        /// Get menu list
         /// </summary>
-        /// <param name="parentId">父级Id</param>
+        /// <param name="parentId">ParentId</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         public async Task<AppResponseBase<SysMenu_MenusResponse>> GetMenusAsync(string parentId)
@@ -95,9 +95,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取菜单详情
+        /// Get menu details
         /// </summary>
-        /// <param name="id">父级Id</param>
+        /// <param name="id">Parent Id</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         public async Task<AppResponseBase<SysMenu_GetMenuResponse>> GetMenuAsync(string id)
@@ -114,9 +114,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取完整菜单信息
+        /// Get complete menu information
         /// </summary>
-        /// <param name="hasButton">是否包含按钮</param>
+        /// <param name="hasButton">Whether to include buttons</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         public async Task<AppResponseBase<List<SysMenuDto>>> GetAllMenuListAsync(bool hasButton)
@@ -131,9 +131,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 删除菜单
+        ///delete menu
         /// </summary>
-        /// <param name="id">父级Id</param>
+        /// <param name="id">Parent Id</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Delete)]
         public async Task<AppResponseBase<SysMenu_GetMenuResponse>> DeleteMenuAsync(string id)

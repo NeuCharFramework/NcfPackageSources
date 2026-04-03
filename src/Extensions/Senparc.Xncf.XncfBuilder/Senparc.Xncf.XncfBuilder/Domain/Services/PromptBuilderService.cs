@@ -45,7 +45,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         }
 
         /// <summary>
-        /// 运行提示内容
+        /// Run prompt content
         /// </summary>
         /// <param name="senparcAiSetting"></param>
         /// <param name="buildType"></param>
@@ -70,7 +70,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 
             var plugins = new Dictionary<string, List<string>>();
 
-            //选择需要执行的生成方式
+            // Select the generation mode to execute
             switch (buildType)
             {
                 case PromptBuildType.EntityClass:
@@ -101,7 +101,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 
                         if (buildType == PromptBuildType.EntityDtoClass)
                         {
-                            //可能会生成转义后的注释
+                            // Escaped comments might be generated
                             promptResult = promptResult.Replace("&lt;", "<").Replace("&gt;", ">");
                         }
 
@@ -112,22 +112,22 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                         await Console.Out.WriteLineAsync($"{buildType.ToString()} 信息：");
                         await Console.Out.WriteLineAsync(promptResult);
 
-                        //需要保存文件
+                        // Save generated files when a project path is provided
                         if (!projectPath.IsNullOrEmpty())
                         {
-                            #region 创建文件
+                            #region Create files
 
-                            //输入生成文件的项目路径
+                            // Input the project path where files will be generated
 
-                            //var context = _promptService.IWantToRun.Kernel.CreateNewContext();//TODO：简化
-                            var fileContext = new AI.Kernel.Entities.SenparcAiArguments();//TODO：简化
+                            //var context = _promptService.IWantToRun.Kernel.CreateNewContext();//TODO: simplify
+                            var fileContext = new AI.Kernel.Entities.SenparcAiArguments();//TODO: simplify
 
                             fileContext.KernelArguments["fileBasePath"] = createFilePath;
                             fileContext.KernelArguments["fileGenerateResult"] = promptResult;
 
                             var fileGenerateResult = promptResult.GetObject<List<FileGenerateResult>>();
 
-                            //添加保存文件的 Plugin
+                            // Add plugin for file persistence
                             var filePlugin = new FilePlugin(_promptService.IWantToRun);
                             var kernelPlugin = _promptService.IWantToRun.ImportPluginFromObject(filePlugin, "FilePlugin").kernelPlugin;
 
@@ -147,7 +147,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                     break;
                 case PromptBuildType.UpdateSenparcEntities:
                     {
-                        #region 获取单词复数
+                        #region Get plural form
 
                         var pluginDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
                         context.KernelArguments["input"] = className;
@@ -158,8 +158,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 
                         #endregion
 
-                        #region 更新 SenparcEntities
-                        //添加保存文件的 Plugin
+                        #region Update SenparcEntities
+                        // Add plugin for file persistence
                         var filePlugin = new FilePlugin(_promptService.IWantToRun);
                         //var skills = _promptService.IWantToRun.Kernel.ImportPluginFromPromptDirectory("FilePlugin");
                         var kernelPlugin = _promptService.IWantToRun.ImportPluginFromObject(filePlugin, "FilePlugin").kernelPlugin;
@@ -201,7 +201,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         }
 
         /// <summary>
-        /// 初始化数据库中 PromptRange 的 XncfBuilderPlugin 靶场信息
+        /// Initialize XncfBuilderPlugin prompt-range data in database
         /// </summary>
         public async Task<string> InitPromptAsync(string promptRangeName, bool needOverride, string selectedAiModelId)
         {
@@ -214,10 +214,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                 {
                     try
                     {
-                        //需要删除
+                        // Deletion required
                         log.AppendLine(promptRangeName + " 已存在，需要删除");
 
-                        //删除所有 PromptItem
+                        // Delete all PromptItems
                         var promptItems = await _promptItemService.GetFullListAsync(z => z.RangeId == promptRange.Id);
 
                         foreach (var promptItem in promptItems)
@@ -249,7 +249,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                     }
                 }
 
-                //初始化
+                // Initialization
                 int aiModelId = 0;
                 if (selectedAiModelId != "Default")
                 {
@@ -260,11 +260,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                 {
                     log.AppendLine("开始初始化 XncfBuilderPlugin 靶场信息");
 
-                    //添加 PromptRange
+                    // Add PromptRange
                     var promptRangeDto = await _promptRangeService.AddAsync(promptRangeName);
                     var promptRangeId = promptRangeDto.Id;
 
-                    //添加 PromptItem
+                    // Add PromptItem
                     var promptItemDto = new PromptItemDto()
                     {
                         RangeId = promptRangeId,
@@ -282,7 +282,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
                         FrequencyPenalty = 0,
                         PresencePenalty = 0,
                         StopSequences = "[\"#JsonResultEnd\"]",
-                        FullVersion = "2024.05.12.1-T1-A1",//注意：仍然会被自动重置
+                        FullVersion = "2024.05.12.1-T1-A1",// Note: it will still be auto-reset
                         Prefix = "{{$",
                         Suffix = "}}",
                         VariableDictJson = @"{""namespace"":"""",""input"":"""",""className"":""""}",
@@ -408,7 +408,7 @@ className:{{$className}}
                     await this._promptItemService.SaveObjectAsync(promptItemGenerateEntityClass);
                     log.AppendLine($"完成 {promptRangeName}-{promptItemDto.NickName} 添加");
 
-                    //添加 PromptItem-GenerateEntityDtoClass
+                    // Add PromptItem-GenerateEntityDtoClass
                     promptItemDto.NickName = "GenerateEntityDtoClass";
                     promptItemDto.Content = @"[背景]
 1. 这是一个代码生成任务。
@@ -505,7 +505,7 @@ className:{{$className}}
 #JsonResultStart
 ";
                     promptItemDto.Tactic = "2";
-                    promptItemDto.FullVersion = "2024.05.12.1-T2-A1";//注意：仍然会被自动重置
+                    promptItemDto.FullVersion = "2024.05.12.1-T2-A1";// Note: it will still be auto-reset
                     promptItemDto.StopSequences = "[\"#JsonResultEnd\"]";
                     promptItemDto.VariableDictJson = @"{""className"":"""",""namespace"":"""",""input"":""""}";
                     promptItemDto.Note = "生成 DTO Entity 类的内容";
@@ -513,7 +513,7 @@ className:{{$className}}
                     await this._promptItemService.SaveObjectAsync(promptItemGenerateEntityDtoClass);
                     log.AppendLine($"完成 {promptRangeName}-{promptItemDto.NickName} 添加");
 
-                    //添加 PromptItem-Pluralize
+                    // Add PromptItem-Pluralize
                     promptItemDto.NickName = "Pluralize";
                     promptItemDto.Content = @"[要求]
 [要求]
@@ -530,7 +530,7 @@ Apple
 {{$input}}
 >";
                     promptItemDto.Tactic = "3";
-                    promptItemDto.FullVersion = "2024.05.12.1-T3-A1";//注意：仍然会被自动重置
+                    promptItemDto.FullVersion = "2024.05.12.1-T3-A1";// Note: it will still be auto-reset
                     promptItemDto.StopSequences = "[\"INPUT\",\"OUTPUT\",\" #END\"]";
                     promptItemDto.VariableDictJson = @"{""input"":""""}";
                     promptItemDto.Note = "将单词转换为复数";

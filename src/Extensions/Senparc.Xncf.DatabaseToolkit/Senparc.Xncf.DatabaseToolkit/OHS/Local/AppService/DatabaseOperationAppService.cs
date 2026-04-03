@@ -15,8 +15,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 {
     /// <summary>
-    /// 数据库操作 AppService
-    /// 提供执行数据库查询、更新、删除等操作的 Function
+    /// Database operation AppService
+    /// Provide functions to perform database query, update, delete and other operations
     /// </summary>
     public class DatabaseOperationAppService : AppServiceBase
     {
@@ -33,8 +33,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 查询数据库记录
-        /// 根据指定条件和字段查询表中的数据
+        /// Query database records
+        /// Query data in the table based on specified conditions and fields
         /// </summary>
         [FunctionRender("查询数据库记录", "查询指定表中的数据，支持条件过滤和字段选择", typeof(Register))]
         public async Task<AppResponseBase<string>> QueryRecords(QueryRecordsRequest request)
@@ -43,13 +43,13 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
             {
                 try
                 {
-                    // 验证模块和表
+                    // Validate modules and tables
                     if (string.IsNullOrWhiteSpace(request.ModuleName) || string.IsNullOrWhiteSpace(request.TableName))
                     {
                         return "模块名称和表名称不能为空";
                     }
 
-                    // 模糊解析模块名
+                    // Fuzzy parsing module name
                     var resolvedModule = _metadataProvider.ResolveModuleName(request.ModuleName);
                     if (resolvedModule == null)
                     {
@@ -57,7 +57,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                         return $"找不到模块 '{request.ModuleName}'。可用模块：{string.Join(", ", available)}";
                     }
 
-                    // 模糊解析实体名
+                    // Fuzzy parsing of entity names
                     var resolvedTable = _metadataProvider.ResolveEntityName(resolvedModule, request.TableName);
                     if (resolvedTable == null)
                     {
@@ -73,7 +73,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 
                     logger.Append($"查询表 {resolvedModule}.{resolvedTable}（原始输入: {request.ModuleName}.{request.TableName}）");
 
-                    // 执行查询
+                    // Execute query
                     var result = await _databaseExecutor.QueryRecordsAsync(
                         resolvedModule,
                         resolvedTable,
@@ -96,8 +96,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取数据库统计信息
-        /// 获取指定表的行数、最小/最大值等统计信息
+        /// Get database statistics
+        /// Get statistical information such as the number of rows and minimum/maximum values ​​of the specified table
         /// </summary>
         [FunctionRender("获取统计信息", "获取数据库表的统计信息，如行数、数据大小等", typeof(Register))]
         public async Task<AppResponseBase<string>> GetStatistics(GetStatisticsRequest request)
@@ -111,7 +111,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                         return "模块名称和表名称不能为空";
                     }
 
-                    // 模糊解析模块名
+                    // Fuzzy parsing module name
                     var resolvedModule = _metadataProvider.ResolveModuleName(request.ModuleName);
                     if (resolvedModule == null)
                     {
@@ -119,7 +119,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                         return $"找不到模块 '{request.ModuleName}'。可用模块：{string.Join(", ", available)}";
                     }
 
-                    // 模糊解析实体名
+                    // Fuzzy parsing of entity names
                     var resolvedTable = _metadataProvider.ResolveEntityName(resolvedModule, request.TableName);
                     if (resolvedTable == null)
                     {
@@ -152,7 +152,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 查询数据库记录请求
+        ///Query database record request
         /// </summary>
         public class QueryRecordsRequest : FunctionAppRequestBase
         {
@@ -185,7 +185,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取统计信息请求
+        /// Get statistics request
         /// </summary>
         public class GetStatisticsRequest : FunctionAppRequestBase
         {

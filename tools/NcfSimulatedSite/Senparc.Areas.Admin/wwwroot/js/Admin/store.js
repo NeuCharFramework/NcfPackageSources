@@ -2,15 +2,15 @@
     state: {
         pageSrc: '1',
         resourceCodes: [],
-        navMenu: { //侧边栏数据
+        navMenu: { //Sidebar data
             navMenuList: [],
             isCollapse:JSON.parse( window.sessionStorage.getItem('isCollapse'))|| false,
             variables: {
-                menuBg: '#304156', // 背景色
-                menuText: '#bfcbd9', // 文字色
-                menuActiveText: '#409EFF' //激活颜色
+                menuBg: '#304156', // background color
+                menuText: '#bfcbd9', // text color
+                menuActiveText: '#409EFF' //Activate color
             },
-            // 当前激活菜单的 index
+            // The index of the currently active menu
             activeMenu: window.sessionStorage.getItem('activeMenu') || '0'
         }
     },
@@ -21,11 +21,11 @@
         saveResourceCodes(state, data) {
             state.resourceCodes = data;
         },
-        // 切换菜单栏状态
+        // Toggle menu bar status
         changeIsCollapse(state,data) {
             state.navMenu.isCollapse = data;
         },
-        // 保存菜单数据
+        // Save menu data
         savenavMenuList(state, data) {
             state.navMenu.navMenuList = data;
         }

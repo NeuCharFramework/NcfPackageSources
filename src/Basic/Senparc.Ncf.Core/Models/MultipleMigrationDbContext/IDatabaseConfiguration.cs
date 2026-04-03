@@ -6,9 +6,9 @@ using System.Data.Common;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// 数据库配置接口
-    /// <para>官方推荐的数据库提供程序：https://docs.microsoft.com/zh-cn/ef/core/providers/?tabs=dotnet-core-cli </para>
-    /// <typeparamref name="TBuilder">DbContextOptionsBuilder 的类型，如：SQL Server 使用 SqlServerDbContextOptionsBuilder</typeparamref>
+    ///Database configuration interface
+    /// <para>Officially recommended database provider: https://docs.microsoft.com/zh-cn/ef/core/providers/?tabs=dotnet-core-cli </para>
+    /// <typeparamref name="TBuilder">The type of DbContextOptionsBuilder, such as: SQL Server uses SqlServerDbContextOptionsBuilder</typeparamref>
     /// </summary>
     public interface IDatabaseConfiguration<TBuilder, TExtension> : IDatabaseConfiguration
         where TBuilder : RelationalDbContextOptionsBuilder<TBuilder, TExtension>
@@ -18,52 +18,52 @@ namespace Senparc.Ncf.Core.Models
     }
 
     /// <summary>
-    /// 数据库配置接口
+    ///Database configuration interface
     /// </summary>
     public interface IDatabaseConfiguration
     {
         /// <summary>
-        /// 数据库类型
+        /// database type
         /// </summary>
         MultipleDatabaseType MultipleDatabaseType { get; }
 
         /// <summary>
-        /// 操作 DbContextOptions 的基础方法
+        /// Basic methods for operating DbContextOptions
         /// </summary>
         Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionBase { get; }
 
         /// <summary>
-        /// 操作 DbContextOptions 的扩展方法
+        /// Extension method to operate DbContextOptions
         /// </summary>
         Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension { get; }
 
         /// <summary>
-        /// 设定 UseSLite、UseSQLServer 等方法
+        /// Set methods such as UseSLite and UseSQLServer
         /// </summary>
         Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase { get; }
 
         /// <summary>
-        /// 使用数据库，如：
+        /// Use a database, such as:
         /// <para>var builder = new DbContextOptionsBuilder&lt;TDbContext&gt;(); builder.UseSqlServer(sqlConnection, DbContextOptionsAction);</para>
         /// </summary>
         /// <param name="builder">DbContextOptionsBuilder</param>
-        /// <param name="connectionString">连接字符串</param>
-        /// <param name="dbContextOptionsAction">额外配置操作</param>
-        /// <param name="xncfDatabaseData">IXncfDatabase 信息（仅在针对 XNCF 进行数据库迁移时有效）</param>
+        /// <param name="connectionString">Connection string</param>
+        /// <param name="dbContextOptionsAction">Additional configuration operations</param>
+        /// <param name="xncfDatabaseData">IXncfDatabase information (valid only when doing database migration for XNCF)</param>
         void UseDatabase(DbContextOptionsBuilder builder, /*IRelationalDbContextOptionsBuilderInfrastructure optionsBuilder,*/ string connectionString,
                 XncfDatabaseData xncfDatabaseData = null, Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null);
 
         /// <summary>
-        /// 备份数据库方法
-        /// <para>如果返回null，则在方法内部完成备份程序</para>
+        /// Backup database method
+        /// <para>If null is returned, the backup procedure is completed inside the method</para>
         /// </summary>
         /// <param name="dbConnection"></param>
         /// <param name="backupFilePath"></param>
         string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath);
 
         /// <summary>
-        /// 删除指定表Sql
-        /// <para>如果返回null，则在方法内部完成删除操作</para>
+        /// Delete the specified table Sql
+        /// <para>If null is returned, the deletion operation is completed inside the method</para>
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="tableName"></param>

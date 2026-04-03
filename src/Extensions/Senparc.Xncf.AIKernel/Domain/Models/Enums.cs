@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AIKernel.Domain.Models
 {
     /// <summary>
-    /// 和 Senaprc.AI 中的 ConfigModel 匹配（包括值），是其子集
+    /// matches (including the value) the ConfigModel in Senaprc.AI and is a subset of it
     /// </summary>
     public enum ConfigModelType
     {

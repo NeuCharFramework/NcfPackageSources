@@ -13,8 +13,8 @@ using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService;
 
 /// <summary>
-/// PromptRange 管理 AppService
-/// TODO: 需要权限验证
+///PromptRange Management AppService
+/// TODO: Permission verification required
 /// </summary>
 //[ApiAuthorize("AdminOnly")]
 public class PromptRangeAppService : AppServiceBase
@@ -30,7 +30,7 @@ public class PromptRangeAppService : AppServiceBase
 
 
     // /// <summary>
-    // /// 设置 AI 自动打分评分标准接口
+    // ///Set the AI ​​automatic scoring standard interface
     // /// </summary>
     // /// <param name="promptRangeId"></param>
     // /// <param name="expectedResults"></param>
@@ -45,7 +45,7 @@ public class PromptRangeAppService : AppServiceBase
     // }
 
     /// <summary>
-    /// 获取靶场列表详情（添加时间倒序）
+    /// Get shooting range list details (add reverse chronological order)
     /// </summary>
     /// <param name="alias"></param>
     /// <returns></returns>
@@ -59,7 +59,7 @@ public class PromptRangeAppService : AppServiceBase
     }
 
     /// <summary>
-    /// 获取靶场列表详情（添加时间倒序）
+    /// Get shooting range list details (add reverse chronological order)
     /// </summary>
     /// <returns></returns>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
@@ -73,7 +73,7 @@ public class PromptRangeAppService : AppServiceBase
 
 
     /// <summary>
-    /// 获取 PromptRange 的树状结构
+    /// Get the tree structure of PromptRange
     /// </summary>
     /// <returns></returns>
     [ApiBind]
@@ -88,7 +88,7 @@ public class PromptRangeAppService : AppServiceBase
     }
 
     /// <summary>
-    /// 修改自定义靶场代号
+    /// Modify custom shooting range code
     /// </summary>
     /// <param name="rangeId"></param>
     /// <param name="alias"></param>
@@ -103,7 +103,7 @@ public class PromptRangeAppService : AppServiceBase
     }
 
     /// <summary>
-    /// 根据　ID 删除靶场
+    /// Delete range based on ID
     /// </summary>
     /// <param name="rangeId"></param>
     /// <returns></returns>

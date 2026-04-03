@@ -4,17 +4,17 @@ using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 {
     /// <summary>
-    /// 对话历史和 Prompt 内容响应
+    ///Conversation history and prompt content response
     /// </summary>
     public class PromptResult_ChatHistoryWithPromptResponse
     {
         /// <summary>
-        /// 对话历史记录
+        ///conversation history
         /// </summary>
         public List<PromptResultChatDto> ChatHistory { get; set; }
         
         /// <summary>
-        /// Prompt 内容（SystemMessage）
+        ///Prompt content(SystemMessage)
         /// </summary>
         public string PromptContent { get; set; }
     }

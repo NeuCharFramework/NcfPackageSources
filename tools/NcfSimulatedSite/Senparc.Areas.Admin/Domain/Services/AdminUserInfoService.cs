@@ -47,7 +47,7 @@ namespace Senparc.Areas.Admin.Domain
                 z => z.Id != id && z.UserName.ToUpper() == userName /*z.UserName.Equals(userName, StringComparison.CurrentCultureIgnoreCase)*/) != null;
         }
 
-        ////TODO：放到 OHS 的 Service
+        ////TODO: put in the Service of OHS
         ////[ApiBind]
         ////[Core.BackendJwtAuthorize]
         public async Task<AdminUserInfo> GetUserInfoAsync(string userName)
@@ -101,7 +101,7 @@ namespace Senparc.Areas.Admin.Domain
                 IsPersistent = false,
             };
 
-            await LogoutAsync(); //退出登录
+            await LogoutAsync(); //Log out
             await _contextAccessor.Value.HttpContext.SignInAsync(SiteConfig.NcfAdminAuthorizeScheme, new ClaimsPrincipal(identity), authProperties);
 
             #endregion
@@ -119,7 +119,7 @@ namespace Senparc.Areas.Admin.Domain
         //}
 
         /// <summary>
-        /// 如果密码正确，则尝试登录
+        /// If the password is correct, try to log in
         /// </summary>
         /// <param name="adminUserInfo"></param>
         /// <param name="password"></param>
@@ -134,7 +134,7 @@ namespace Senparc.Areas.Admin.Domain
             var failedLoginKey = $"FailedLogin:{adminUserInfo.UserName}";
             using (var cacheLock = await cache.BeginCacheLockAsync("LoginLock-Admin", adminUserInfo.UserName))
             {
-                // 先检查是否在锁定期，避免不必要的数据库查询
+                // First check whether it is in the lock period to avoid unnecessary database queries.
                 var lockEndTime = await cache.GetAsync<DateTime?>(lockTimeKey);
                 if (lockEndTime.HasValue && lockEndTime.Value > DateTime.Now)
                 {
@@ -143,21 +143,21 @@ namespace Senparc.Areas.Admin.Domain
 
                 if (adminUserInfo.CheckPassword(password))
                 {
-                    // 登录成功，清除失败记录
+                    // Login successful, clear failure records
                     await cache.RemoveFromCacheAsync(failedLoginKey);
                     await cache.RemoveFromCacheAsync(lockTimeKey);
 
-                    // 登录
+                    // Log in
                     await LoginAsync(adminUserInfo, rememberMe, tenantKey);
                     return adminUserInfo;
                 }
                 else
                 {
-                    // 记录失败次数，即使锁定期已过，也要累加之前的失败次数
+                    // Record the number of failures. Even if the lockout period has expired, the number of previous failures will be accumulated.
                     var failedCount = await cache.GetAsync<int>(failedLoginKey);
                     failedCount++;
 
-                    // 设置锁定时间
+                    // Set lock time
                     DateTime? lockTime = null;
                     if (failedCount >= 20)
                     {
@@ -176,7 +176,7 @@ namespace Senparc.Areas.Admin.Domain
                         lockTime = DateTime.Now.AddMinutes(5);
                     }
 
-                    // 更新缓存，失败次数在24小时内有效
+                    // Update cache, the number of failures is valid within 24 hours
                     await cache.SetAsync(failedLoginKey, failedCount, TimeSpan.FromHours(24));
                     if (lockTime.HasValue)
                     {
@@ -189,7 +189,7 @@ namespace Senparc.Areas.Admin.Domain
         }
 
         /// <summary>
-        /// 创建管理员
+        ///Create administrator
         /// </summary>
         /// <param name="objDto"></param>
         /// <returns></returns>
@@ -201,7 +201,7 @@ namespace Senparc.Areas.Admin.Domain
         }
 
         /// <summary>
-        /// 创建管理员
+        ///Create administrator
         /// </summary>
         /// <param name="objDto"></param>
         /// <returns></returns>
@@ -218,7 +218,7 @@ namespace Senparc.Areas.Admin.Domain
         }
 
         /// <summary>
-        /// 更新用户信息
+        ///Update user information
         /// </summary>
         /// <param name="objDto"></param>
         public void UpdateAdminUserInfo(CreateOrUpdate_AdminUserInfoDto objDto)
@@ -247,10 +247,10 @@ namespace Senparc.Areas.Admin.Domain
         }
 
         /// <summary>
-        /// 初始化，随机生成密码
+        /// Initialization, randomly generate password
         /// </summary>
-        /// <param name="userName">用户名</param>
-        /// <param name="password">密码</param>
+        /// <param name="userName">Username</param>
+        /// <param name="password">Password</param>
         /// <returns></returns>
         public async Task<(AdminUserInfo AdminUserInfo, string Password)> InitAsync(string userName)
         {
@@ -298,8 +298,8 @@ namespace Senparc.Areas.Admin.Domain
         }
 
         /// <summary>
-        /// 登录
-        /// <paramref name="loginDto">登录dto</paramref>
+        /// Log in
+        /// <paramref name="loginDto">Login dto</paramref>
         /// </summary>
         /// <returns></returns>
         //[ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
@@ -332,14 +332,14 @@ namespace Senparc.Areas.Admin.Domain
             }
             catch (LoginLockException)
             {
-                throw; // 直接向上层抛出登录锁定异常
+                throw; // Throw login lock exception directly to the upper layer
             }
 
             return result;
         }
 
         /// <summary>
-        /// 获取当前管理信息
+        /// Get current management information
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

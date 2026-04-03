@@ -2,11 +2,11 @@
     el: "#app",
     data() {
         return {
-            //分页参数
+            //Paging parameters
             paginationQuery: {
                 total: 5
             },
-            //分页接口传参（只会有一个）
+            //Paging interface parameter passing (there will only be one)
             listQuery: {
                 pageIndex: 1,
                 pageSize: 20,
@@ -27,7 +27,7 @@
                 }
             },
             updateLoading: false,
-            updateLoadingSet: false, // 确认loading按钮
+            updateLoadingSet: false, // Confirm loading button
         };
     },
     created: function () {
@@ -37,7 +37,7 @@
     },
     watch: {
         'dialog.visible': function (val, old) {
-            // 关闭dialog，清空
+            // Close the dialog and clear it
             if (!val) {
                 this.dialog.data = {
                     id: 0,
@@ -49,7 +49,7 @@
         }
     },
     methods: {
-        // 获取数据
+        // Get data
         getList() {
             let { pageIndex, pageSize } = this.listQuery;
             service.get(`/Admin/SystemConfig/index?handler=List&&pageIndex=${pageIndex}&pageSize=${pageSize}`).then(res => {
@@ -57,11 +57,11 @@
                 this.paginationQuery.total = res.data.data.totalCount;
             });
         },
-        // 编辑
+        // edit
         handleEdit(index, row) {
             this.dialog.visible = true;
             if (row) {
-                // 编辑
+                // edit
                 let { systemName, id } = row;
                 this.dialog.data = {
                     systemName, id
@@ -69,10 +69,10 @@
                 this.dialog = Object.assign({}, this.dialog);
             }
         },
-        // 更新新增编辑
+        // Update new editor
         updateData() {
             this.$refs['dataForm'].validate(valid => {
-                // 表单校验
+                // form validation
                 if (valid) {
                     this.dialog.updateLoading = true;
                     let data = {

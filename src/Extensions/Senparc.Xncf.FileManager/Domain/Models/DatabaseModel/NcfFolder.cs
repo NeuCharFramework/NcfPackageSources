@@ -6,15 +6,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel
 {
 
-    // 新增文件夹实体
-    [Table(Register.DATABASE_PREFIX + nameof(NcfFolder))]//必须添加前缀，防止全系统中发生冲突
+    // Add new folder entity
+    [Table(Register.DATABASE_PREFIX + nameof(NcfFolder))]//The prefix must be added to prevent conflicts system-wide.
     public class NcfFolder : EntityBase<int>
     {
         [Required]
         [MaxLength(200)]
         public string Name { get; set; }
 
-        public int? ParentId { get; set; } // 父级文件夹，null 为根
+        public int? ParentId { get; set; } // Parent folder, null is the root
 
         [MaxLength(500)]
         public string Description { get; set; }

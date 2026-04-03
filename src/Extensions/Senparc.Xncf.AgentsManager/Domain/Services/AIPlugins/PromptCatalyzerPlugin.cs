@@ -13,9 +13,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 
         public PromptCatalyzerPlugin()
         {
-            // 尝试从 DI 容器获取服务，确保在调用时 ServiceProvider 已就绪
-            // 注意：Constructor 注入在 Kernel.Plugins.AddFromType<T>() 时可能需要 Kernel 自身配置了 DI
-            // 这里为了保险起见，使用 ServiceLocator 作为 backup
+            // Try to get the service from the DI container, make sure the ServiceProvider is ready when called
+            // Note: Constructor injection in Kernel.Plugins.AddFromType<T>() may require Kernel itself to configure DI
+            // To be on the safe side, use ServiceLocator as backup here.
             _optimizationService = Senparc.CO2NET.SenparcDI.GetServiceProvider().GetRequiredService<PromptOptimizationService>();
         }
 

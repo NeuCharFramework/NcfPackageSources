@@ -16,9 +16,9 @@ define(function(require) {
          */
         defaultOption: {
 
-            backgroundColor: 'rgba(0,0,0,0)',   // 时间轴背景颜色
-            borderColor: '#ccc',               // 时间轴边框颜色
-            borderWidth: 0,                    // 时间轴边框线宽，单位px，默认为0（无边框）
+            backgroundColor: 'rgba(0,0,0,0)',   // Timeline background color
+            borderColor: '#ccc',               // Timeline border color
+            borderWidth: 0,                    // Timeline border line width, unit px, default is 0 (no border)
 
             orient: 'horizontal',              // 'vertical'
             inverse: false,
@@ -35,7 +35,7 @@ define(function(require) {
                 width: 2,
                 color: '#304654'
             },
-            label: {                            // 文本标签
+            label: {                            // text label
                 position: 'auto',           // auto left right top bottom
                                             // When using number, label position is not
                                             // restricted by viewRect.
@@ -45,13 +45,13 @@ define(function(require) {
                     interval: 'auto',
                     rotate: 0,
                     // formatter: null,
-                    textStyle: {                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                    textStyle: {                // The remaining attributes use the global text style by default, see TEXTSTYLE for details.
                         color: '#304654'
                     }
                 },
                 emphasis: {
                     show: true,
-                    textStyle: {                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                    textStyle: {                // The remaining attributes use the global text style by default, see TEXTSTYLE for details.
                         color: '#c23531'
                     }
                 }

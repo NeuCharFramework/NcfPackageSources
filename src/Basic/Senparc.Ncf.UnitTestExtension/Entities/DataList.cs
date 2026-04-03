@@ -15,7 +15,7 @@ namespace Senparc.Ncf.UnitTestExtension.Entities
         public string UUID { get; set; }
 
         /// <summary>
-        /// 获取强类型的列表
+        /// Get a strongly typed list
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
@@ -41,7 +41,7 @@ namespace Senparc.Ncf.UnitTestExtension.Entities
 
 
         /// <summary>
-        /// 快速添加实体类型的列表数据
+        /// Quickly add list data of entity types
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="list"></param>
@@ -58,7 +58,7 @@ namespace Senparc.Ncf.UnitTestExtension.Entities
         }
 
         /// <summary>
-        /// 快速添加 个对象，兼备自动根据类型分类
+        /// Quickly add objects, with automatic classification by type
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="item"></param>
@@ -68,7 +68,7 @@ namespace Senparc.Ncf.UnitTestExtension.Entities
         }
 
         /// <summary>
-        /// 快速添加实体类型的列表数据
+        /// Quickly add list data of entity types
         /// </summary>
         /// <param name="DataList"></param>
         public void AddRange(DataList dataList)
@@ -87,9 +87,9 @@ namespace Senparc.Ncf.UnitTestExtension.Entities
         }
 
         /// <summary>
-        /// 创建 DataList
+        /// Create DataList
         /// </summary>
-        /// <param name="uUID">唯一编号，相同编号的 DataList 数据在同一次单元门测试中不会被反复写入</param>
+        /// <param name="uUID">Unique number. DataList data with the same number will not be written repeatedly in the same unit gate test.</param>
         public DataList(string uUID)
         {
             UUID = uUID;

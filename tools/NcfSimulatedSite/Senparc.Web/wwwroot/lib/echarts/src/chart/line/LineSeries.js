@@ -16,8 +16,8 @@ define(function(require) {
         },
 
         defaultOption: {
-            zlevel: 0,                  // 一级层叠
-            z: 2,                       // 二级层叠
+            zlevel: 0,                  // One level cascading
+            z: 2,                       // Second level stacking
             coordinateSystem: 'cartesian2d',
             legendHoverLink: true,
 
@@ -50,22 +50,22 @@ define(function(require) {
 
             smooth: false,
             smoothMonotone: null,
-            // 拐点图形类型
+            // Inflection point graph type
             symbol: 'emptyCircle',
-            // 拐点图形大小
+            // Inflection point graphic size
             symbolSize: 4,
-            // 拐点图形旋转控制
+            // Inflection point graphic rotation control
             symbolRotate: null,
 
-            // 是否显示 symbol, 只有在 tooltip hover 的时候显示
+            // Whether to display the symbol, it will only be displayed when the tooltip hovers
             showSymbol: true,
-            // 标志图形默认只有主轴显示（随主轴标签间隔隐藏策略）
+            // By default, only the main axis is displayed in the logo graphic (with the main axis label interval hidden strategy)
             showAllSymbol: false,
 
-            // 是否连接断点
+            // Whether to connect breakpoints
             connectNulls: false,
 
-            // 数据过滤，'average', 'max', 'min', 'sum'
+            // Data filtering, 'average', 'max', 'min', 'sum'
             sampling: 'none',
 
             animationEasing: 'linear'

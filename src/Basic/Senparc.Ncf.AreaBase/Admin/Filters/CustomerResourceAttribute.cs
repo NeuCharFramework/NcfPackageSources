@@ -16,7 +16,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
     }
 
     /// <summary>
-    /// 不进行权限校验
+    ///Do not perform permission verification
     /// </summary>
     public class IgnoreAuthAttribute: Attribute, IFilterMetadata
     {

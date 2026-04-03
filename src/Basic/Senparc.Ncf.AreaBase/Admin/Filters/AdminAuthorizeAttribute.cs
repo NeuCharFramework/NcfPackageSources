@@ -7,11 +7,11 @@ using System.Text;
 namespace Senparc.Ncf.AreaBase.Admin.Filters
 {
     /// <summary>
-    /// 当前 Area 授权处理特性
+    /// Current Area authorization processing characteristics
     /// </summary>
     public class AdminAuthorizeAttribute : AuthorizeAttribute
     {
-        //AuthorizeAttribute 可以和 MVC 通用：https://docs.microsoft.com/en-us/aspnet/core/razor-pages/filter?view=aspnetcore-2.2
+        //AuthorizeAttribute can be used in common with MVC: https://docs.microsoft.com/en-us/aspnet/core/razor-pages/filter?view=aspnetcore-2.2
         public static string AuthenticationScheme => SiteConfig.NcfAdminAuthorizeScheme;
 
         public AdminAuthorizeAttribute()

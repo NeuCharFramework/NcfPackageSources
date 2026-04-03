@@ -13,26 +13,26 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public string Id { get; set; }
 
         /// <summary>
-        /// 菜单id
+        /// menu id
         /// </summary>
         [MaxLength(50)]
         public string MenuId { get; set; }
 
         /// <summary>
-        /// 操作名称
+        /// operation name
         /// </summary>
         [MaxLength(50)]
         //[Required]
         public string ButtonName { get; set; }
 
         /// <summary>
-        /// 操作标识
+        /// operation identifier
         /// </summary>
         [MaxLength(50)]
         public string OpearMark { get; set; }
 
         /// <summary>
-        /// 按钮对应的请求地址
+        ///Request address corresponding to the button
         /// </summary>
         [MaxLength(350)]
         public string Url { get; set; }

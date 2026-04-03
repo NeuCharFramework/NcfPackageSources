@@ -26,14 +26,14 @@ namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                /* 页面上点击“执行”后，将调用这里的方法
+                /* After clicking "Execute" on the page, the method here will be called
                   *
-                  * 参数说明：
-                  * response：已经初始化后的返回结果
-                  * logger：日志
+                  * Parameter description:
+                  * response: the return result after initialization
+                  * logger: log
                   * 
-                  * 如果直接对 response 的属性修改，则最终 return null，
-                  * 否则可以返回一个新的 response 对象，系统将自动覆盖原有对象
+                  * If the properties of response are modified directly, null will eventually be returned.
+                  * Otherwise, a new response object can be returned, and the system will automatically overwrite the original object.
                   */
 
                 double calcResult = request.Number1;

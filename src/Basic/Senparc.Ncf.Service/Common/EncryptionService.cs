@@ -34,7 +34,7 @@ namespace Senparc.Ncf.Service
         { }
 
         /// <summary>
-        /// 通用加密
+        ///Universal Encryption
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -45,7 +45,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 通用解密
+        /// universal decryption
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -73,7 +73,7 @@ namespace Senparc.Ncf.Service
 
                 if ((DateTime.Now - dateTime).TotalSeconds > 15)
                 {
-                    return -1;//指定秒后失效
+                    return -1;//Expires after specified seconds
                 }
 
                 var accountId = int.Parse(datas[1]);

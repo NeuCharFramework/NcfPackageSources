@@ -3,13 +3,13 @@
 namespace Senparc.Ncf.Core.Cache
 {
     /// <summary>
-    /// 二维码缓存[暂未使用]
+    /// QR code cache [not used yet]
     /// </summary>
     [Serializable]
     public class QrCodeBaseData
     {
         /// <summary>
-        /// 即SceneId的字
+        /// is the word of SceneId
         /// </summary>
         public string Key { get; set; }
         public int SceneId { get; set; }
@@ -17,7 +17,7 @@ namespace Senparc.Ncf.Core.Cache
         public DateTime ExpireTime { get; set; }
         public Guid Guid { get; set; }
         /// <summary>
-        /// 验证通过
+        ///verification passed
         /// </summary>
         public bool CheckPassed { get; set; }
         public string UserName { get; set; }

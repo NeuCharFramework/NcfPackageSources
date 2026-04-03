@@ -31,7 +31,7 @@ namespace Senparc.Ncf.SMS
                 int contentIndex = 0;
                 int limitedLetterCount = 65 * 4;
 
-                //组装消息，判断内容长度，太长则分开发
+                //Assemble the message and determine the length of the content. If it is too long, develop it separately.
                 List<string> messageList = new List<string>();
                 while (contentIndex < content.Length)
                 {
@@ -40,7 +40,7 @@ namespace Senparc.Ncf.SMS
                     contentIndex += limitedLetterCount;
                 }
 
-                //分批发送
+                //Send in batches
                 for (int i = 0; i < messageList.Count; i++)
                 {
                     var msg = messageList[i];
@@ -48,7 +48,7 @@ namespace Senparc.Ncf.SMS
                     {
                         msg = $" [{i + 1}/{messageList.Count}]" + msg;
                     }
-                    //msg += "【盛派网络】";
+                    //msg += "[Shengpai Network]";
                     string encodedLimitedConent = UrlEncode(msg, encoding);
 
 
@@ -99,7 +99,7 @@ namespace Senparc.Ncf.SMS
     }
 
     /// <summary>
-    /// 发送结果
+    ///Send results
     /// </summary>
     public class Fissosoft_SendResult
     {
@@ -109,8 +109,8 @@ namespace Senparc.Ncf.SMS
 
 
     /// <summary>
-    /// 获取剩余短信条数结果
-    /// 格式：{"Code":1,"Msg":"成功！","Value":"{\"UserName\":\"test\",\"OperId\":\"sms0013\",\"SMSNum\":5846,\"EmergentSMSNum\":10,\"IsEnable\":1}"}
+    /// Get the result of the number of remaining text messages
+    /// Format: {"Code":1,"Msg":"Success!","Value":"{\"UserName\":\"test\",\"OperId\":\"sms0013\",\"SMSNum\":5846,\"EmergentSMSNum\":10,\"IsEnable\":1}"}
     /// </summary>
     public class Fissoft_LastCountResult
     {
@@ -120,7 +120,7 @@ namespace Senparc.Ncf.SMS
     }
 
     /// <summary>
-    /// Fissoft_LastCountResult的Value类型
+    ///Value type of Fissoft_LastCountResult
     /// </summary>
     public class Fissoft_LastCountResult_Value
     {

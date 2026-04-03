@@ -6,12 +6,12 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// 中间件接口
+    /// middleware interface
     /// </summary>
     public interface IXncfMiddleware
     {
         /// <summary>
-        /// 使用中间件
+        /// use middleware
         /// </summary>
         /// <param name="app"></param>
         /// <returns></returns>

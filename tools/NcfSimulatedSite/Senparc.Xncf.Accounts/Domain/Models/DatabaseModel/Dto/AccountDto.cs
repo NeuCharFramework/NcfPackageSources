@@ -19,7 +19,7 @@ namespace Senparc.Xncf.Accounts.Domain.Models.Dto
         public string Password { get; set; }
 
         /// <summary>
-        /// 验证码
+        /// Verification code
         /// </summary>
         public string ValidateCode { get; set; }
     }
@@ -27,7 +27,7 @@ namespace Senparc.Xncf.Accounts.Domain.Models.Dto
     public class AccountLoginResultDto
     {
         /// <summary>
-        /// 用户名
+        /// username
         /// </summary>
         public string UserName { get; set; }
 
@@ -37,7 +37,7 @@ namespace Senparc.Xncf.Accounts.Domain.Models.Dto
         public string Token { get; set; }
 
         /// <summary>
-        /// 用户所关联的角色
+        /// role associated with user
         /// </summary>
         public IEnumerable<string> RoleCodes { get; set; }
     }

@@ -8,7 +8,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
     /// <summary>
-    /// 角色人员表
+    ///Character list
     /// </summary>
     [Table("SysRoleAdminUserInfos")]
     public class SysRoleAdminUserInfo : EntityBase<int>
@@ -30,12 +30,12 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public string RoleCode { get; set; }
 
         /// <summary>
-        /// 管理员Id
+        ///adminId
         /// </summary>
         public int AccountId { get; set; }
 
         /// <summary>
-        /// 角色Id
+        /// roleId
         /// </summary>
         [MaxLength(150)]
         public string RoleId { get; set; }

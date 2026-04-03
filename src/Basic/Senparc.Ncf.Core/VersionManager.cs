@@ -11,7 +11,7 @@ namespace Senparc.Ncf.Core
     public class VersionManager
     {
         /// <summary>
-        /// 返回版本信息
+        /// Return version information
         /// </summary>
         /// <returns></returns>
         public static string GetVersionNote(string ncfVersion = null, string note = null, bool showOpenSourceInfo = true)
@@ -51,7 +51,7 @@ namespace Senparc.Ncf.Core
                     {
                         sb.AppendLine("    Open source template: https://github.com/NeuCharFramework/NCF");
                         sb.AppendLine("    Open source template: https://gitee.com/NeuCharFramework/NCF");
-                        //sb.AppendLine("    基础模块源码：https://github.com/NeuCharFramework/NcfPackageSources");
+                        //sb.AppendLine("Basic module source code: https://github.com/NeuCharFramework/NcfPackageSources");
                         sb.AppendLine("    Documentation: https://doc.ncf.pub/");
                     }
                 })

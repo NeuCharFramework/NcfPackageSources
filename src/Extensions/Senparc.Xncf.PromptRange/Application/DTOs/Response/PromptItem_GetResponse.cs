@@ -10,7 +10,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
     public class PromptItem_GetResponse : BaseResponse
     {
         /// <summary>
-        /// 昵称
+        /// Nick name
         /// </summary>
         public string NickName { get; set; }
 
@@ -19,12 +19,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         public int ModelId { get; set; }
 
         /// <summary>
-        /// 最大 Token 数
+        ///Maximum number of Tokens
         /// </summary>
         public int MaxToken { get; set; }
 
         /// <summary>
-        /// 温度
+        /// temperature
         /// </summary>
         public float Temperature { get; set; }
 
@@ -34,14 +34,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         public float TopP { get; set; }
 
         /// <summary>
-        /// 频率惩罚
+        /// frequency penalty
         /// </summary>
         public float FrequencyPenalty { get; set; }
 
         public float PresencePenalty { get; private set; }
 
         /// <summary>
-        /// 停止序列（JSON 数组）
+        /// stop sequence (JSON array)
         /// </summary>
         public string StopSequences { get; set; }
 
@@ -50,7 +50,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         public string PromptContent { get; set; }
 
         /// <summary>
-        /// 完整版本号
+        ///Full version number
         /// </summary>
         public string FullVersion { get; set; }
 
@@ -62,7 +62,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         public new DateTime LastRunTime { get; set; } = DateTime.Now;
 
         /// <summary>
-        /// 是否分享
+        /// Whether to share
         /// </summary>
         public bool IsShare { get; set; } = false;
 
@@ -71,17 +71,17 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         #region 打分相关
 
         /// <summary>
-        /// 评估参数, 平均分
+        /// evaluation parameters, average score
         /// </summary>
         public decimal EvalAvgScore { get; set; }
 
         /// <summary>
-        /// 评估参数
+        ///evaluation parameters
         /// </summary>
         public decimal EvalMaxScore { get; set; }
 
         /// <summary>
-        /// 期望结果Json
+        ///Expected result Json
         /// </summary>
         public string ExpectedResultsJson { get; set; }
 
@@ -91,17 +91,17 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         #region Prompt请求参数
 
         /// <summary>
-        /// 前缀
+        /// prefix
         /// </summary>
         public string Prefix { get; set; }
 
         /// <summary>
-        /// 后缀
+        /// suffix
         /// </summary>
         public string Suffix { get; set; }
 
         /// <summary>
-        /// 参数字典（JSON）
+        ///parameter dictionary (JSON)
         /// </summary>
         public string VariableDictJson { get; set; }
 

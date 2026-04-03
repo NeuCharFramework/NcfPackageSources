@@ -7,12 +7,12 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// 作为需要进行视图验证的基础接口（如Controller、PageModel）
+    /// As a basic interface that requires view verification (such as Controller, PageModel)
     /// </summary>
     public interface IValidatorEnvironment
     {
         /// <summary>
-        /// Controller 及 PageModel 中的 ModelState 对象
+        /// ModelState objects in Controller and PageModel
         /// </summary>
         ModelStateDictionary ModelState { get; }
 

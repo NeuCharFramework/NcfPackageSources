@@ -1,16 +1,16 @@
-using Senparc.Xncf.PromptRange.Abstractions.Events; // 引用 PromptRange 的事件
+using Senparc.Xncf.PromptRange.Abstractions.Events; // Events referencing PromptRange
 using System.Threading.Tasks;
 using System.Threading;
 using Senparc.Ncf.Shared.Abstractions.Events;
 
 namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
 {
-    // AgentsManager 现在知道 PromptRange 的存在，但只通过抽象层交互
+    // AgentsManager is now aware of the existence of PromptRange but only interacts through the abstraction layer
     public class PromptOptimizationHandler : IIntegrationEventHandler<PromptTestFinishedEvent>
     {
         public async Task Handle(PromptTestFinishedEvent @event, CancellationToken cancellationToken)
         {
-            // 处理逻辑...
+            // Processing logic...
         }
     }
 }

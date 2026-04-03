@@ -8,7 +8,7 @@ using Senparc.Xncf.Tenant.Domain.DataBaseModel;
 namespace Senparc.Xncf.Tenant.Domain.DatabaseModel
 {
     /// <summary>
-    /// 当前上下文不应该和租户无关
+    /// The current context should not be irrelevant to the tenant
     /// </summary>
     public class TenantSenparcEntities : XncfDatabaseDbContext
     {

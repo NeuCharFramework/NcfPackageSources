@@ -9,15 +9,15 @@ namespace Senparc.Web.FirefoxDriverTest
     public class AdminUserInfoModuleTest : FireFoxBaseDriverTest
     {
         /// <summary>
-        /// 管理员模块
+        ///admin module
         /// </summary>
         [TestMethod]
         public void VerifyAdminModule()
         {
-            _verifyLogin();//登录
-            System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> firstNavs = _driver.FindElementsByCssSelector("ul.el-menu:nth-child(1) > li.el-submenu");//一级导航
+            _verifyLogin();//Log in
+            System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> firstNavs = _driver.FindElementsByCssSelector("ul.el-menu:nth-child(1) > li.el-submenu");//First level navigation
             IWebElement systemManager_li = firstNavs.FirstOrDefault(_ => "系统管理".Equals(_.FindElement(By.CssSelector("div.el-submenu__title span")).Text));
-            systemManager_li.Click();//点击系统管理
+            systemManager_li.Click();//Click System Management
             captureScreenShot();
             System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> subNavs_li = systemManager_li.FindElements(By.CssSelector("ul.el-menu li.el-menu-item"));//
             IWebElement adminUserInfoManager_li = subNavs_li.FirstOrDefault(_ => "管理员管理".Equals(_.FindElement(By.CssSelector("span")).Text));
@@ -29,7 +29,7 @@ namespace Senparc.Web.FirefoxDriverTest
         }
 
         /// <summary>
-        /// 添加管理员
+        ///Add administrator
         /// </summary>
         private IWebElement _addAdminUserInfo()
         {
@@ -37,7 +37,7 @@ namespace Senparc.Web.FirefoxDriverTest
             addBtn.Click();
             captureScreenShot();
             fillAdminUserInfoForm(out string userName);
-            _driver.FindElementByCssSelector(".el-dialog .el-dialog__footer button.el-button--primary").Click();//保存按钮
+            _driver.FindElementByCssSelector(".el-dialog .el-dialog__footer button.el-button--primary").Click();//save button
             captureScreenShot();
             System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> trs = _driver.FindElementsByCssSelector(".el-table__body tbody tr");
             IWebElement webElement = trs.FirstOrDefault(_ => userName.Equals(_.FindElement(By.CssSelector("td:nth-child(2) div.cell")).Text));
@@ -46,19 +46,19 @@ namespace Senparc.Web.FirefoxDriverTest
         }
 
         /// <summary>
-        /// 设置角色
+        ///set role
         /// </summary>
         /// <param name="tr"></param>
         private void _setAdminRoel(IWebElement tr)
         {
-            tr.FindElement(By.CssSelector("td:nth-child(5) div.cell button:nth-child(2)")).Click();//设置角色
+            tr.FindElement(By.CssSelector("td:nth-child(5) div.cell button:nth-child(2)")).Click();//Set up roles
             captureScreenShot();
             IWebElement[] checkBoxs = _driver.FindElementsByCssSelector(".el-dialog .el-dialog__body .el-checkbox-group label").ToArray();
             ICollection<string> checkedRole = new List<string>();
-            int checkCount = new Random().Next(1, checkBoxs.Length);//选中的数量，至少选择一个
+            int checkCount = new Random().Next(1, checkBoxs.Length);//Selected quantity, select at least one
             for (int i = 0; i < checkCount; i++)
             {
-                int checkIndex = new Random(BitConverter.ToInt32(Guid.NewGuid().ToByteArray())).Next(0, checkBoxs.Length);//重复点击问题
+                int checkIndex = new Random(BitConverter.ToInt32(Guid.NewGuid().ToByteArray())).Next(0, checkBoxs.Length);//Repeated click issue
                 checkBoxs[checkIndex].Click();
                 checkedRole.Add(checkBoxs[checkIndex].Text);
             }
@@ -66,8 +66,8 @@ namespace Senparc.Web.FirefoxDriverTest
             checkCount = checkedRole.Count();
             Console.WriteLine("输入选中数量：{0}", checkCount);
             captureScreenShot("输入角色");
-            _driver.FindElementByCssSelector("div.el-dialog__wrapper:nth-child(5) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > button:nth-child(2)").Click();//保存
-            tr.FindElement(By.CssSelector("td:nth-child(5) div.cell button:nth-child(2)")).Click();//设置角色
+            _driver.FindElementByCssSelector("div.el-dialog__wrapper:nth-child(5) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > button:nth-child(2)").Click();//save
+            tr.FindElement(By.CssSelector("td:nth-child(5) div.cell button:nth-child(2)")).Click();//Set up roles
             captureScreenShot("输出角色");
             checkBoxs = _driver.FindElementsByCssSelector(".el-dialog .el-dialog__body .el-checkbox-group label").ToArray();
             IWebElement[] nowCheckedEle = checkBoxs.Where(_ => _.GetAttribute("class").Contains("is-checked")).ToArray();
@@ -78,7 +78,7 @@ namespace Senparc.Web.FirefoxDriverTest
         }
 
         /// <summary>
-        /// 填充管理人员表单
+        /// Populate the admin form
         /// </summary>
         private void fillAdminUserInfoForm(out string userName)
         {

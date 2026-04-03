@@ -6,7 +6,7 @@ using System.Text;
 namespace Senparc.Areas.Admin
 {
     /// <summary>
-    /// 权限认证
+    ///Permission authentication
     /// </summary>
     public class BackendJwtAuthorizeAttribute: AuthorizeAttribute
     {

@@ -6,45 +6,45 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
 {
     /// <summary>
-    /// AdminChatSession：管理后台聊天会话
+    ///AdminChatSession: Manage background chat sessions
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(AdminChatSession))] //必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(AdminChatSession))] //The prefix must be added to prevent conflicts system-wide.
     [Serializable]
     public class AdminChatSession : EntityBase<int>
     {
         /// <summary>
-        /// 会话标题（从首条消息自动提取，最多150字符）
+        /// Conversation title (automatically extracted from the first message, up to 150 characters)
         /// </summary>
         [Required, MaxLength(150)]
         public string Title { get; private set; }
 
         /// <summary>
-        /// 用户ID（外键到 AdminUserInfo）
+        ///UserID (foreign key to AdminUserInfo)
         /// </summary>
         [Required]
         public int UserId { get; private set; }
 
         /// <summary>
-        /// 会话状态
+        /// session state
         /// </summary>
         [Required]
         public ChatSessionStatus Status { get; private set; }
 
         /// <summary>
-        /// 最后一条消息时间
+        ///Last message time
         /// </summary>
         public DateTime LastMessageTime { get; private set; }
 
         /// <summary>
-        /// 私有构造函数（供 EF Core 使用）
+        /// Private constructor (for use by EF Core)
         /// </summary>
         private AdminChatSession() { }
 
         /// <summary>
-        /// 创建新的聊天会话
+        ///Create new chat session
         /// </summary>
-        /// <param name="title">会话标题</param>
-        /// <param name="userId">用户ID</param>
+        /// <param name="title">Session title</param>
+        /// <param name="userId">User ID</param>
         public AdminChatSession(string title, int userId)
         {
             Title = title?.Length > 150 ? title.Substring(0, 150) : title ?? "新对话";
@@ -54,7 +54,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 更新会话标题
+        ///update session title
         /// </summary>
         public void UpdateTitle(string title)
         {
@@ -66,7 +66,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 更新最后消息时间
+        /// Update last message time
         /// </summary>
         public void UpdateLastMessageTime()
         {
@@ -75,7 +75,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 归档会话
+        ///archive session
         /// </summary>
         public void Archive()
         {
@@ -84,7 +84,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 删除会话（软删除，修改状态）
+        /// Delete session (soft delete, modify status)
         /// </summary>
         public void Delete()
         {
@@ -93,7 +93,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 恢复会话
+        ///restore session
         /// </summary>
         public void Restore()
         {
@@ -103,20 +103,20 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
     }
 
     /// <summary>
-    /// 聊天会话状态
+    ///Chat session status
     /// </summary>
     public enum ChatSessionStatus
     {
         /// <summary>
-        /// 活跃中
+        ///active
         /// </summary>
         Active = 0,
         /// <summary>
-        /// 已归档
+        ///archived
         /// </summary>
         Archived = 1,
         /// <summary>
-        /// 已删除
+        /// deleted
         /// </summary>
         Deleted = 2
     }

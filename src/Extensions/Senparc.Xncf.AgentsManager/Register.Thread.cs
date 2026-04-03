@@ -17,19 +17,19 @@ namespace Senparc.Xncf.AgentsManager
     {
         public void ThreadConfig(XncfThreadBuilder xncfThreadBuilder)
         {
-            //TOOD: 按照不同租户，需要区分
+            //TOOD: Different tenants need to be distinguished
             DateTime lastAlertTime = DateTime.MinValue;
-            //TODO: 调试多租户，暂时禁用
+            //TODO: Debugging multi-tenancy, temporarily disabled
 
 //            xncfThreadBuilder.AddThreadInfo(new Ncf.XncfBase.Threads.ThreadInfo(
-//                name: "Agents 定时清理未完成任务",
+//                name: "Agents regularly clean up unfinished tasks",
 //                intervalTime: TimeSpan.FromSeconds(60),
 //                task: async (app, threadInfo) =>
 //                {
 //                    try
 //                    {
-//                        //SenparcTrace.SendCustomLog("执行调试", "DatabaseToolkit.Register.ThreadConfig");
-//                        threadInfo.RecordStory("Agents 任务开始检测并");
+//                        //SenparcTrace.SendCustomLog("Execute debugging", "DatabaseToolkit.Register.ThreadConfig");
+//                        threadInfo.RecordStory("Agents task started to detect and complete");
 
 //                        using (var scope = app.ApplicationServices.CreateScope())
 //                        {
@@ -49,7 +49,7 @@ namespace Senparc.Xncf.AgentsManager
 //                    }
 //                    finally
 //                    {
-//                        threadInfo.RecordStory("检测并备份结束");
+//                        threadInfo.RecordStory("Detection and backup completed");
 //                    }
 //                },
 //                exceptionHandler: ex =>

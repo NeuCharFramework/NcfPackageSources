@@ -5,16 +5,16 @@ using System.Text;
 namespace Senparc.Ncf.Core.Utility
 {
     /// <summary>
-    /// MD5 加密
+    ///MD5 encryption
     /// </summary>
     public static class MD5
     {
         /// <summary>
-        /// 获得 NCF 系统内全局一致的加盐的 MD5 加密结果
+        /// Obtain globally consistent salted MD5 encryption results within the NCF system
         /// </summary>
-        /// <param name="str">原始密码</param>
-        /// <param name="salt">盐</param>
-        /// <param name="encoding">默认为 UTF8</param>
+        /// <param name="str">Original password</param>
+        /// <param name="salt">Salt</param>
+        /// <param name="encoding">Default is UTF8</param>
         /// <returns></returns>
         public static string GetMD5Code(string str, string salt, Encoding encoding = null)
         {

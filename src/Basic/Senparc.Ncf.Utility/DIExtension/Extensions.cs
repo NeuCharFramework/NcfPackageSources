@@ -3,7 +3,7 @@ using System;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    //参考：https://www.cnblogs.com/yuangang/archive/2016/08/08/5743660.html
+    //Reference: https://www.cnblogs.com/yuangang/archive/2016/08/08/5743660.html
 
     public static class Extensions
     {
@@ -16,7 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
     }
 
     /// <summary>
-    /// TODO:和SenparcDI合并
+    ///TODO: Merge with SenparcDI
     /// </summary>
     public static class DI
     {

@@ -20,7 +20,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 namespace Senparc.Ncf.AreaBase.Admin.Filters
 {
     /// <summary>
-    /// 校验权限的类
+    /// Class for verifying permissions
     /// </summary>
     public class AuthenticationResultFilterAttribute : IAsyncPageFilter, IFilterMetadata
     {
@@ -41,7 +41,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
         }
 
         /// <summary>
-        /// 验证权限得方法
+        /// How to verify permissions
         /// </summary>
         /// <param name="serviceProvider"></param>
         /// <param name="context"></param>
@@ -57,7 +57,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
                 .OfType<CustomerResourceAttribute>()
                 .FirstOrDefault();
             bool isIgnore = context.Filters.OfType<IgnoreAuthAttribute>().Any();
-            IEnumerable<string> resourceCodes = attributeCodes?.ResourceCodes.ToList() ?? new List<string>() { "*" };//当前方法的资源Code
+            IEnumerable<string> resourceCodes = attributeCodes?.ResourceCodes.ToList() ?? new List<string>() { "*" };//Resource Code of the current method
             //Console.WriteLine("isAjax:{0}， isIgnore：{1}", isAjax, isIgnore);
             System.Diagnostics.Debug.WriteLine("isAjax:{0}, isIgnore: {1}", isAjax, isIgnore);
             if (isIgnore || (resourceCodes.Any(_ => "*".Equals(_)) && isAjax))
@@ -92,7 +92,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
         }
 
         /// <summary>
-        /// 是否是Ajax请求
+        /// Is it an Ajax request?
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>

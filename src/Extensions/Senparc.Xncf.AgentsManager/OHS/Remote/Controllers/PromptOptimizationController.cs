@@ -10,7 +10,7 @@ using Senparc.Xncf.PromptRange.Abstractions.Events;
 namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
 {
     /// <summary>
-    /// Prompt 优化 API Controller
+    ///Prompt Optimize API Controller
     /// </summary>
     [ApiController]
     [Route("api/Senparc.Xncf.AgentsManager/PromptOptimizationAppService")]
@@ -28,7 +28,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
         }
 
         /// <summary>
-        /// 优化指定的 Prompt（包括内容和参数如 Temperature）
+        /// Optimize the specified Prompt (including content and parameters such as Temperature)
         /// </summary>
         [HttpPost("OptimizeAsync")]
         public async Task<IActionResult> OptimizeAsync([FromBody] PromptOptimizationRequestDto request)
@@ -39,7 +39,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
                 _logger.LogInformation("PromptCode: {PromptCode}, UserRequirement: {UserRequirement}", 
                     request.PromptCode, request.UserRequirement);
 
-                // 验证请求参数
+                // Verify request parameters
                 if (string.IsNullOrWhiteSpace(request.PromptCode))
                 {
                     _logger.LogWarning("  ❌ PromptCode 为空");
@@ -77,12 +77,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
                     request.Context.CurrentTopP,
                     request.Context.CurrentMaxTokens);
 
-                // 🔥 关键修复：确保 Agent 和 ChatGroup 已初始化
+                // 🔥 Critical fix: Make sure Agent and ChatGroup are initialized
                 _logger.LogInformation("  开始确保初始化状态...");
                 await _promptOptimizationService.EnsureInitializedAsync();
                 _logger.LogInformation("  ✅ 初始化状态确认完成");
 
-                // 调用优化服务
+                // Call optimization service
                 _logger.LogInformation("  开始调用 OptimizePromptAsync...");
                 var result = await _promptOptimizationService.OptimizePromptAsync(
                     request.PromptCode,
@@ -149,7 +149,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
     #region DTOs
 
     /// <summary>
-    /// Prompt 优化请求 DTO
+    ///Prompt optimization request DTO
     /// </summary>
     public class PromptOptimizationRequestDto
     {

@@ -13,18 +13,18 @@ using System.Linq;
 namespace Senparc.Xncf.Application.Functions
 {
     /// <summary>
-    /// 启动应用程序
+    /// Start application
     /// </summary>
     public class LaunchApp : FunctionBase
     {
         public class LaunchApp_Parameters : IFunctionParameter
         {
         //    /// <summary>
-        //    /// 提供选项
-        //    /// <para>注意：string[]类型的默认值为选项的备选值，如果没有提供备选值，此参数将别忽略</para>
+        //    /// Provide options
+        //    /// <para>Note: string[]The default value of the type is the alternative value of the option. If no alternative value is provided, this parameter will not be ignored.</para>
         //    /// </summary>
         //    [Required]
-        //    [Description("启动路径,如果是自定义路径，需要输入程序的安装路径;如果是系统则只需要输入执行程序的文件名即可")]
+        //    [Description("Startup path,If it is a custom path, you need to enter the installation path of the program;If it is a system, you only need to enter the file name of the executing program.")]
         //    public string[] LaunchPath { get; set; } = new[] {
         //    Parameters_Path.System.ToString(),
         //    Parameters_Path.Custom.ToString()
@@ -38,14 +38,14 @@ namespace Senparc.Xncf.Application.Functions
 
             [Required]
             [MaxLength(300)]
-            [Description("自定义路径||文件名")]
+            [Description("Custom path||file name")]
             public string FilePath { get; set; }
         }
 
-        //注意：Name 必须在单个 Xncf 模块中唯一！
-        public override string Name => "应用程序";
+        //Note: Name must be unique within a single Xncf module!
+        public override string Name => "app";
 
-        public override string Description => "启动所有的程序";
+        public override string Description => "Start all programs";
 
         public override Type FunctionParameterType => typeof(LaunchApp_Parameters);
 
@@ -54,7 +54,7 @@ namespace Senparc.Xncf.Application.Functions
         }
 
         /// <summary>
-        /// 运行
+        /// run
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
@@ -68,7 +68,7 @@ namespace Senparc.Xncf.Application.Functions
             };
 
             StringBuilder sb = new StringBuilder();
-            base.RecordLog(sb, "开始运行 LaunchApp");
+            base.RecordLog(sb, "Start running LaunchApp");
 
             StartApp(typeParam.FilePath);
 
@@ -76,13 +76,12 @@ namespace Senparc.Xncf.Application.Functions
             sb.AppendLine($"FilePath{typeParam.FilePath}");
 
             result.Log = sb.ToString();
-            result.Message = "操作成功！";
+            result.Message = "Operation successful!";
             return result;
         }
 
-        #region 启动程序
-        private bool StartApp(string appName)
-        {
+        #region Start the program
+        private bool StartApp(string appName){
             return StartApp(appName, ProcessWindowStyle.Hidden);
         }
 

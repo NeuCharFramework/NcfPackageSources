@@ -10,54 +10,54 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
     public class PromptResultChatDto : DtoBase
     {
         /// <summary>
-        /// ID 主键
+        ///ID primary key
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// PromptResult 的 ID（外键）
+        ///ID of PromptResult (foreign key)
         /// </summary>
         public int PromptResultId { get; set; }
 
         /// <summary>
-        /// 对话角色类型：User 或 Assistant
+        /// Dialogue role type: User or Assistant
         /// </summary>
         public ChatRoleType RoleType { get; set; }
 
         /// <summary>
-        /// 对话内容
+        ///Conversation content
         /// </summary>
         public string Content { get; set; }
 
         /// <summary>
-        /// 对话顺序（在同一 PromptResult 中的顺序，从 1 开始）
+        /// Conversation order (order within the same PromptResult, starting from 1)
         /// </summary>
         public int Sequence { get; set; }
 
         /// <summary>
-        /// 用户反馈：Like（true）、Unlike（false）、未反馈（null）
+        /// User feedback: Like (true), Unlike (false), No feedback (null)
         /// </summary>
         public bool? UserFeedback { get; set; }
 
         /// <summary>
-        /// 用户评分（0-10分，可选）
+        /// User rating (0-10 points, optional)
         /// </summary>
         public decimal? UserScore { get; set; }
 
         /// <summary>
-        /// 创建时间
+        ///Creation time
         /// </summary>
         public new DateTime AddTime { get; set; }
 
         /// <summary>
-        /// 构造函数
+        ///Constructor
         /// </summary>
         public PromptResultChatDto()
         {
         }
 
         /// <summary>
-        /// 从实体创建 DTO
+        ///Create DTO from entity
         /// </summary>
         /// <param name="entity"></param>
         public PromptResultChatDto(PromptResultChat entity)

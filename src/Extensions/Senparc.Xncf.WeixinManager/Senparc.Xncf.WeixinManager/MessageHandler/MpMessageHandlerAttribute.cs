@@ -5,7 +5,7 @@ using System.Text;
 namespace Senparc.Xncf.WeixinManager
 {
     /// <summary>
-    /// 用自动识别在系统中绑定的公众号 MessageHandler 
+    /// Use MessageHandler to automatically identify the official account bound in the system 
     /// </summary>
     public class MpMessageHandlerAttribute : Attribute
     {

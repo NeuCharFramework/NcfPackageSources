@@ -19,41 +19,41 @@ namespace Senparc.Xncf.Swagger.Models
         }
 
         /// <summary>
-        /// 是否启用
+        /// Whether to enable
         /// </summary>
         public bool Enabled { get; set; }
 
         /// <summary>
-        /// 项目发布路径 子应用程序的目录名（虚拟站点）
-        /// 直接发布为站点时，请保持默认值
+        /// Project release path Directory name of the sub-application (virtual site)
+        /// When publishing directly as a site, keep the default value
         /// </summary>
         public string AppPath { get; set; }
         /// <summary>
-        /// 项目名称
+        ///project name
         /// </summary>
         public string ProjectName { get; set; } = "My API";
         /// <summary>
-        /// 接口文档显示版本
+        /// Interface document display version
         /// </summary>
         public List<string> ApiVersions { get; set; } = VersionHelper.GetApiVersions();
         /// <summary>
-        /// 接口文档访问路由前缀
+        ///Interface document access route prefix
         /// </summary>
         public string RoutePrefix { get; set; } = "swagger";
         /// <summary>
-        /// 使用自定义首页
+        /// Use custom homepage
         /// </summary>
         public bool UseCustomIndex { get; set; }
         /// <summary>
-        /// 允许匿名访问
+        ///Allow anonymous access
         /// </summary>
         public bool AllowAnonymous { get; set; }
         /// <summary>
-        /// 使用主项目的Admin模块认证登录
+        /// Use the Admin module of the main project to authenticate and log in
         /// </summary>
         public bool UseAdminAuth { get; set; }
         /// <summary>
-        /// swagger login账号,未指定则不启用
+        /// swagger login account, if not specified, it will not be enabled.
         /// </summary>
         public List<CustomSwaggerAuth> CustomAuthList { get; set; }
         /// <summary>

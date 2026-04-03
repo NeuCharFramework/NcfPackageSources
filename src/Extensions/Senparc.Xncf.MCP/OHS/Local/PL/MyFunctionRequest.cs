@@ -25,17 +25,17 @@ namespace Senparc.Xncf.MCP.OHS.Local.PL
 
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
-            // 添加手动输入选项
+            // Add manual input option
             McpServerSelection.Items.Add(new SelectionItem("Manual", "手动输入", "手动输入 MCP 服务器地址", true));
 
-            // 从 XncfRegisterManager 获取已注册的 MCP 服务器
+            // Get registered MCP servers from XncfRegisterManager
             var mcpServers = XncfRegisterManager.McpServerInfoCollection.Values.ToList();
             
             foreach (var mcpServer in mcpServers)
             {
                 var displayText = $"{mcpServer.XncfName}（{mcpServer.McpRoute}）";
                 var description = $"服务器：{mcpServer.ServerName}，路由：{mcpServer.McpRoute}";
-                // 使用服务器的唯一标识作为 Value，而不是路由
+                // Use the server's unique identifier as Value, not the route
                 var serverKey = $"{mcpServer.XncfName}|{mcpServer.McpRoute}";
                 
                 McpServerSelection.Items.Add(new SelectionItem(serverKey, displayText, description));
@@ -60,7 +60,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.PL
         [Description("数字||数字2")]
         public int Number2 { get; set; }
 
-        [Description("运算符||")]//下拉列表
+        [Description("运算符||")]//drop down list
         public SelectionList Operator { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
                  new SelectionItem("+","加法","数字1 + 数字2",false),
                  new SelectionItem("-","减法","数字1 - 数字2",true),
@@ -68,7 +68,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.PL
                  new SelectionItem("÷","除法","数字1 ÷ 数字2",false)
             });
 
-        [Description("计算平方||")]//多选框
+        [Description("计算平方||")]//checkbox
         public SelectionList Power { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
                  new SelectionItem("2","平方","计算上述结果之后再计算平方",false),
                  new SelectionItem("3","三次方","计算上述结果之后再计算三次方",false)

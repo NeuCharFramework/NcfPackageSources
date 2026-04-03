@@ -8,7 +8,7 @@ using System.Text;
 namespace Senparc.Ncf.Utility.ExpressionExtension
 {
     /// <summary>
-    /// linq拓展方法
+    ///linq expansion method
     /// </summary>
     public static class SenparcIQueryableExtension
     {
@@ -25,7 +25,7 @@ namespace Senparc.Ncf.Utility.ExpressionExtension
         const string Desc = "desc";
 
         /// <summary>
-        /// 动态字段排序方法
+        ///Dynamic field sorting method
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="iQueryable"></param>

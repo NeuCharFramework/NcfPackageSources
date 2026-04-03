@@ -10,7 +10,7 @@ using System.IO;
 
 namespace Senparc.Xncf.Swagger
 {
-    public partial class Register : IAreaRegister //注册 XNCF 页面接口（按需选用）
+    public partial class Register : IAreaRegister //Register XNCF page interface (optional on demand)
     {
         #region IAreaRegister 接口
 
@@ -40,7 +40,7 @@ namespace Senparc.Xncf.Swagger
 
             builder.AddRazorPagesOptions(options =>
             {
-                //此处可配置页面权限
+                //Page permissions can be configured here
             });
 
             SenparcTrace.SendCustomLog("Swagger 启动", "完成 Area:Senparc.Xncf.Swagger 注册");

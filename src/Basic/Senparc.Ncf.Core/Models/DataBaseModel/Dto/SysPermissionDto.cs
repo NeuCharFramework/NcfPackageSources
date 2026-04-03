@@ -13,12 +13,12 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public bool IsMenu { get; set; }
 
         /// <summary>
-        /// 角色代码
+        ///role code
         /// </summary>
         public string RoleCode { get; set; }
 
         /// <summary>
-        /// 资源（按钮）代码
+        /// Resource (button) code
         /// </summary>
         public string ResourceCode { get; set; }
     }

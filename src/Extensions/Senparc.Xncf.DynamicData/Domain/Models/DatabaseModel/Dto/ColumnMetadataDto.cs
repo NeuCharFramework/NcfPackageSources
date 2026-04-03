@@ -11,44 +11,44 @@ namespace Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto
     public class ColumnMetadataDto : DtoBase<ColumnMetadata,int>
     {
         /// <summary>  
-        /// 关联的表格ID。
+        ///The associated table ID.
         /// </summary>  
         //[ForeignKey(nameof(TableMetadata))]
         public int TableMetadataId { get;  set; }
 
         /// <summary>  
-        /// 列名称。  
+        /// column name.  
         /// </summary>  
         [Required]
         [MaxLength(255)]
         public string ColumnName { get;  set; }
 
         /// <summary>  
-        /// 列的数据类型。  
+        /// The data type of the column.  
         /// </summary>  
         [Required]
         [MaxLength(50)]
         public string ColumnType { get;  set; }
 
         /// <summary>  
-        /// 是否允许NULL值。  
+        /// Whether to allow NULL values.  
         /// </summary>  
         [Required]
         public bool IsNullable { get;  set; }
 
         /// <summary>  
-        /// 列的默认值。  
+        /// The default value for the column.  
         /// </summary>  
         public string DefaultValue { get;  set; }
 
         /// <summary>  
-        /// 关联的表格元数据。  
+        /// Associated table metadata.  
         /// </summary>  
         //[InverseProperty(nameof(TableMetadata.ColumnMetadatas))]
         public TableMetadataDto TableMetadata { get; set; }
 
         /// <summary>  
-        /// 关联的表格元数据。  
+        /// Associated table metadata.  
         /// </summary>  
         //[InverseProperty(nameof(TableData.ColumnMetadata))]
         public ICollection<TableDataDto> TableDatas { get; set; }

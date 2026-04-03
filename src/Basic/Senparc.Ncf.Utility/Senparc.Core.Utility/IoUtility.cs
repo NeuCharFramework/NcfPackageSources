@@ -2,7 +2,7 @@
 {
     public class IoUtility
     {
-        //COCONET .net core不支持FileSystemRights，需要继续改进
+        //COCONET .net core does not support FileSystemRights and needs to continue to be improved.
 
         //// Adds an ACL entry on the specified directory for the specified account.
         //public static void AddDirectorySecurity(string FileName, string User, FileSystemRights Rights, AccessControlType ControlType)

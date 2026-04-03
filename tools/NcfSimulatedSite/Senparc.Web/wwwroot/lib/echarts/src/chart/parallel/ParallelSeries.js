@@ -60,27 +60,27 @@ define(function(require) {
         },
 
         defaultOption: {
-            zlevel: 0,                  // 一级层叠
-            z: 2,                       // 二级层叠
+            zlevel: 0,                  // One level cascading
+            z: 2,                       // Second level stacking
 
             coordinateSystem: 'parallel',
             parallelIndex: 0,
 
-            // FIXME 尚无用
+            // FIXME is not available yet
             label: {
                 normal: {
                     show: false
-                    // formatter: 标签文本格式器，同Tooltip.formatter，不支持异步回调
-                    // position: 默认自适应，水平布局为'top'，垂直布局为'right'，可选为
+                    // formatter: label text formatter, same as Tooltip.formatter, does not support asynchronous callback
+                    // position: The default is adaptive, the horizontal layout is 'top', the vertical layout is 'right', optional
                     //           'inside'|'left'|'right'|'top'|'bottom'
-                    // textStyle: null      // 默认使用全局文本样式，详见TEXTSTYLE
+                    // textStyle: null // Use global text style by default, see TEXTSTYLE for details
                 },
                 emphasis: {
                     show: false
-                    // formatter: 标签文本格式器，同Tooltip.formatter，不支持异步回调
-                    // position: 默认自适应，水平布局为'top'，垂直布局为'right'，可选为
+                    // formatter: label text formatter, same as Tooltip.formatter, does not support asynchronous callback
+                    // position: The default is adaptive, the horizontal layout is 'top', the vertical layout is 'right', optional
                     //           'inside'|'left'|'right'|'top'|'bottom'
-                    // textStyle: null      // 默认使用全局文本样式，详见TEXTSTYLE
+                    // textStyle: null // Use global text style by default, see TEXTSTYLE for details
                 }
             },
 
@@ -114,6 +114,6 @@ define(function(require) {
             });
         }
         // FIXME
-        // 如果没有设置axis data, 应自动算出，或者提示。
+        // If axis data is not set, it should be calculated automatically or prompted.
     }
 });

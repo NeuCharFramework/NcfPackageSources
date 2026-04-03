@@ -7,15 +7,15 @@ namespace Senparc.Ncf.Core.Utility
 {
     public class DesUtility
     {
-        //默认密钥向量
+        //Default key vector
         private static byte[] Keys = { 0xA2, 0x24, 0x26, 0x77, 0x99, 0xAB, 0xEF, 0x88 };
 
         /// <summary>
-        /// DES加密字符串
+        ///DES encrypted string
         /// </summary>
-        /// <param name="encryptString">待加密的字符串</param>
-        /// <param name="encryptKey">加密密钥,要求为8位</param>
-        /// <returns>加密成功返回加密后的字符串，失败返回源串</returns>
+        /// <param name="encryptString">String to be encrypted</param>
+        /// <param name="encryptKey">Encryption key, required to be 8 bits</param>
+        /// <returns>Encryption successfully returns the encrypted string, failure returns the source string</returns>
         public static string EncryptDES(string encryptString, string encryptKey)
         {
             try
@@ -37,11 +37,11 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// DES解密字符串
+        ///DES decrypt string
         /// </summary>
-        /// <param name="decryptString">待解密的字符串</param>
-        /// <param name="decryptKey">解密密钥,要求为8位,和加密密钥相同</param>
-        /// <returns>解密成功返回解密后的字符串，失败返源串</returns>
+        /// <param name="decryptString">String to be decrypted</param>
+        /// <param name="decryptKey">The decryption key, which is required to be 8 bits, is the same as the encryption key</param>
+        /// <returns>Returns the decrypted string if decryption is successful, otherwise returns the source string</returns>
         public static string DecryptDES(string decryptString, string decryptKey)
         {
             try

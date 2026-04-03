@@ -20,17 +20,17 @@ namespace Senparc.Ncf.Service
         #region 保存或删除后的操作，将影响全局
 
         /// <summary>
-        /// 在指定对象保存后执行（无论是否成功），将影响全局所有保存过程
+        /// Executed after the specified object is saved (whether successful or not), it will affect all save processes globally.
         /// </summary>
         public static Action<IDataBase, object>? AfterSaveObject { get; set; }
 
         /// <summary>
-        /// 在指定对象删除后执行（无论是否成功），将影响全局所有保存过程
+        /// Executed after the specified object is deleted (whether successful or not), it will affect all global save processes
         /// </summary>
         public static Action<IDataBase, object>? AfterDeleteObject { get; set; }
 
         /// <summary>
-        /// 在所有对象保存后执行（无论是否成功），将影响全局所有保存过程
+        /// Executed after all objects are saved (whether successful or not), it will affect all save processes globally
         /// </summary>
         public static Action<IDataBase>? AfterSaveChanges { get; set; }
 

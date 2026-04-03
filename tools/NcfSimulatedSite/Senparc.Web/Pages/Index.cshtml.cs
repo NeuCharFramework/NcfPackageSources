@@ -25,7 +25,7 @@ namespace Senparc.Web.Pages
 
         public Task<IActionResult> OnGetAsync(string forceUpdateModule)
         {
-            //判断是否需要自动进入到安装程序
+            //Determine whether you need to automatically enter the installation program
             if (base.FullSystemConfig == null)
             {
                 return Task.FromResult<IActionResult>(new RedirectResult("/Install"));

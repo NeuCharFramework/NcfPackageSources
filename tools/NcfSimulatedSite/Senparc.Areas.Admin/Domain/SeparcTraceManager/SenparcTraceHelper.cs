@@ -16,7 +16,7 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
         public static string DefaultLogPath { get; set; } = Path.Combine(Senparc.CO2NET.Config.RootDirectoryPath, "App_Data", "SenparcTraceLog");// Path.Combine(Senparc.CO2NET.Config.RootDictionaryPath, "App_Data", "SenparcTraceLog");
 
         /// <summary>
-        /// 获取所有日期列表
+        /// Get a list of all dates
         /// </summary>
         /// <returns></returns>
         public static List<string> GetLogDate()
@@ -26,7 +26,7 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
         }
 
         /// <summary>
-        /// 获取指定日期的日志
+        /// Get logs for a specified date
         /// </summary>
         /// <returns></returns>
         public static async Task<List<SenparcTraceItem>> GetAllLogsAsync(IServiceProvider serviceProvider, string date)
@@ -43,9 +43,9 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
 
             using (var cacheLock = await cache.BeginCacheLockAsync("GetAllLogsAsync", logFile, 100, TimeSpan.FromMilliseconds(100)))
             {
-                string bakFilename = logFile + ".bak";//备份文件名
+                string bakFilename = logFile + ".bak";//Backup file name
                 System.IO.File.Delete(bakFilename);
-                System.IO.File.Copy(logFile, bakFilename, true);//读取备份文件，以免资源占用
+                System.IO.File.Copy(logFile, bakFilename, true);//Read backup files to avoid resource usage
 
                 using (StreamReader sr = new StreamReader(bakFilename, Encoding.UTF8))
                 {
@@ -67,10 +67,10 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
 
                         if (startExceptionRegex.Success)
                         {
-                            //一个片段的开始（异常）
+                            //Beginning of a fragment (Exception)
                             log = new SenparcTraceItem();
                             logList.Add(log);
-                            log.Title = "【{0}Exception】异常！".FormatWith(startExceptionRegex.Value);//记录标题
+                            log.Title = "【{0}Exception】异常！".FormatWith(startExceptionRegex.Value);//record title
                             log.Line = line;
                             log.IsException = true;
                             log.SenparcTraceType = SenparcTraceType.Exception;
@@ -81,14 +81,14 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
                             continue;
                         }
 
-                        //其他自定义类型
+                        //Other custom types
                         var startRegex = Regex.Match(lineText, @"(?<=\[{3})([^\]\n\r]+)(?=\]{3})");
                         if (startRegex.Success)
                         {
-                            //一个片段的开始
+                            //start of a segment
                             log = new SenparcTraceItem();
                             logList.Add(log);
-                            log.Title = startRegex.Value;//记录标题
+                            log.Title = startRegex.Value;//record title
                             log.Line = line;
 
                             readPostData = false;
@@ -101,7 +101,7 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
                         var threadRegex = Regex.Match(lineText, @"(?<=\[{1}线程：)(\d+)(?=\]{1})");
                         if (threadRegex.Success)
                         {
-                            //线程
+                            //thread
                             log.ThreadId = int.Parse(threadRegex.Value);
                             continue;
                         }
@@ -109,19 +109,19 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
                         var timeRegex = Regex.Match(lineText, @"(?<=\[{1})([\s\S]{8,30})(?=\]{1})");
                         if (timeRegex.Success && string.IsNullOrEmpty(log.DateTime))
                         {
-                            //时间
+                            //time
                             log.DateTime = timeRegex.Value;
                             continue;
                         }
 
 
-                        //内容
+                        //content
                         log.Result.TotalResult += lineText + Environment.NewLine;
 
                         if (readPostData)
                         {
                             log.Result.PostData += lineText + Environment.NewLine;
-                            continue;//一直读到底
+                            continue;//Read to the end
                         }
 
 
@@ -137,7 +137,7 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
                         }
                         else if (lineText == "Post Data：")
                         {
-                            log.SenparcTraceType = SenparcTraceType.PostRequest;//POST请求
+                            log.SenparcTraceType = SenparcTraceType.PostRequest;//POST request
                             readPostData = true;
                         }
                         else if (lineText == "Result：" || readResult)
@@ -147,20 +147,20 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
 
                             if (SenparcTraceType.PostRequest != log.SenparcTraceType)
                             {
-                                log.SenparcTraceType = SenparcTraceType.GetRequest;//GET请求
+                                log.SenparcTraceType = SenparcTraceType.GetRequest;//GET request
                             }
                         }
 
                         if (log.IsException)
                         {
-                            //异常信息处理
+                            //Exception information processing
                             if (lineText.StartsWith("AccessTokenOrAppId："))
                             {
                                 log.Result.ExceptionAccessTokenOrAppId = lineText.Replace("AccessTokenOrAppId：", "");
                             }
                             else if (lineText.StartsWith("Message：") || lineText.StartsWith("errcode："))
                             {
-                                log.Result.ExceptionMessage = lineText.Replace("Message：", "");//“errcode：”保留
+                                log.Result.ExceptionMessage = lineText.Replace("Message：", "");//"errcode:" reserved
                             }
                             else if (lineText.StartsWith("StackTrace："))
                             {
@@ -175,10 +175,10 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
                     }
                 }
 
-                System.IO.File.Delete(bakFilename);//删除备份文件
+                System.IO.File.Delete(bakFilename);//Delete backup files
             }
 
-            logList.Reverse();//翻转序列
+            logList.Reverse();//flip sequence
             return logList;
         }
     }

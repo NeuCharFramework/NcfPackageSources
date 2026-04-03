@@ -39,12 +39,12 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         public List<string> XncfModuleUpdateLog { get; set; }
 
         /// <summary>
-        /// 获取当前模块的已注册线程信息
+        /// Get the registered thread information of the current module
         /// </summary>
         public IEnumerable<KeyValuePair<ThreadInfo, Thread>> RegisteredThreadInfo { get; set; }
 
         /// <summary>
-        /// 是否必须更新（常规读取失败）
+        /// Whether it must be updated (regular read fails)
         /// </summary>
         public bool MustUpdate { get; set; }
 
@@ -56,7 +56,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             await Task.CompletedTask;
             //            if (uid.IsNullOrEmpty())
             //            {
-            //                throw new Exception("模块编号未提供！");
+            //                throw new Exception("Module number not provided!");
             //            }
 
 
@@ -64,7 +64,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 
             //            if (XncfModule == null)
             //            {
-            //                throw new Exception("模块未添加！");
+            //                throw new Exception("Module not added!");
             //            }
 
             //            if (!XncfModule.UpdateLog.IsNullOrEmpty())
@@ -81,21 +81,21 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             //            XncfRegister = Senparc.Ncf.XncfBase.Register.RegisterList.FirstOrDefault(z => z.Uid == uid);
             //            if (XncfRegister == null)
             //            {
-            //                throw new Exception($"模块丢失或未加载（{Senparc.Ncf.XncfBase.Register.RegisterList.Count}）！");
+            //                throw new Exception($"Module is missing or not loaded ({Senparc.Ncf.XncfBase.Register.RegisterList.Count})!");
             //            }
 
             //            try
             //            {
             //                foreach (var functionType in XncfRegister.Functions)
             //                {
-            //                    var function = _serviceProvider.GetService(functionType) as FunctionBase;//如：Senparc.Xncf.ChangeNamespace.Functions.ChangeNamespace
+            //                    var function = _serviceProvider.GetService(functionType) as FunctionBase;//For example: Senparc.Xncf.ChangeNamespace.Functions.ChangeNamespace
             //                    FunctionParameterInfoCollection[function] = await function.GetFunctionParameterInfoAsync(_serviceProvider, true);
             //                }
             //            }
             //            catch (Exception ex)
             //            {
-            //                SenparcTrace.SendCustomLog("模块读取失败", @$"模块：{XncfModule.Name} / {XncfModule.MenuName} / {XncfModule.Uid}
-            //请尝试更新此模块后刷新页面！");
+            //                SenparcTrace.SendCustomLog("Module reading failed", @$"Module: {XncfModule.Name} / {XncfModule.MenuName} / {XncfModule.Uid}
+            //Please try refreshing the page after updating this module! ");
             //                MustUpdate = true;
             //            }
 
@@ -103,7 +103,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 更新状态
+        ///update status
         /// </summary>
         /// <param name="id"></param>
         /// <param name="toState"></param>
@@ -124,7 +124,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 提交信息，执行方法
+        /// Submit information, execute method
         /// </summary>
         /// <param name="xncfUid"></param>
         /// <param name="xncfFunctionName"></param>
@@ -187,7 +187,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                     paras = new[] { requestPara };
                     break;
                 case 0:
-                    //不处理
+                    //Not processed
                     break;
                 default:
                     return new JsonResult(new { success = false, msg = "FunctionRender 只允许方法具有一个传入参数！" });
@@ -198,27 +198,27 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             await taskFunc.ConfigureAwait(false);
 
 
-            //方案一：
-            //参考：https://stackoverflow.com/questions/48033760/cast-taskt-to-taskobject-in-c-sharp-without-having-t/48033780
+            //Option one:
+            //Reference: https://stackoverflow.com/questions/48033760/cast-taskt-to-taskobject-in-c-sharp-without-having-t/48033780
             var taskResult = (object)((dynamic)taskFunc).Result;
             var result = taskResult as IAppResponse;
 
-            /* 方案二：
+            /* Option two:
             var obj0 = rightFunctionBag.Value.MethodInfo.Invoke(functionClass, paras);
             var obj1 = taskFunc.GetType().GetMethod("GetAwaiter").Invoke(taskFunc, null);
             var obj2= obj1.GetType().GetMethod("GetResult").Invoke(obj1, null);
             var realResult = obj2 as IAppResponse;
 
-            方案效率对比见：https://www.cnblogs.com/szw/p/dynamic-vs-reflect.html
+            For a comparison of solution efficiency, see: https://www.cnblogs.com/szw/p/dynamic-vs-reflect.html
             */
 
-            //已经在 AppService 中记录
+            //Already recorded in AppService
             //var tempId = "Xncf-FunctionRun-" + Guid.NewGuid().ToString("n");
-            ////记录日志缓存
+            ////Record log cache
             //if (result.Data != null)
             //{
             //    var cache = _serviceProvider.GetObjectCacheStrategyInstance();
-            //    await cache.SetAsync(tempId, result.Data.ToJson(), TimeSpan.FromMinutes(5));//TODO：可设置
+            //    await cache.SetAsync(tempId, result.Data.ToJson(), TimeSpan.FromMinutes(5));//TODO: can be set
             //}
 
             var returnData = result.Data is string stringData ? stringData.HtmlEncode() : result.Data?.ToJson().HtmlEncode();
@@ -235,7 +235,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 获取日志
+        /// Get log
         /// </summary>
         /// <param name="tempId"></param>
         /// <returns></returns>
@@ -254,7 +254,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 删除模块
+        /// delete module
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -267,30 +267,30 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 throw new Exception("模块未添加！");
             }
 
-            //删除菜单
+            //delete menu
             Func<Task> uninstall = async () =>
             {
-                //删除菜单
+                //delete menu
                 SysRolePermissionService sysPermissionService = _serviceProvider.GetService<SysRolePermissionService>();
                 var menu = await _sysMenuService.GetObjectAsync(z => z.Id == module.MenuId).ConfigureAwait(false);
                 if (menu != null)
                 {
-                    //删除菜单
+                    //delete menu
                     await _sysMenuService.DeleteObjectAsync(menu).ConfigureAwait(false);
-                    //删除权限数据
+                    //Delete permission data
                     await sysPermissionService.DeleteAllAsync(_ => _.PermissionId == menu.Id);
-                    //更新菜单缓存                                                                                                                            
+                    //Update menu cache                                                                                                                            
                     await _sysMenuService.GetMenuDtoByCacheAsync(true).ConfigureAwait(false);
                 }
                 await _xncfModuleService.DeleteObjectAsync(module).ConfigureAwait(false);
             };
 
 
-            //尝试从已加载的模块中执行删除过程
+            //Try to perform the removal process from the loaded module
             var register = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == module.Uid);
             if (register == null)
             {
-                //直接删除，如dll已经不存在，可能引发此问题，只能在当前系统内直接执行删除
+                //Direct deletion, if the dll no longer exists, may cause this problem, the deletion can only be performed directly in the current system.
                 await uninstall().ConfigureAwait(false);
             }
             else
@@ -342,7 +342,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             {
                 if (Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.TryGetValue(xncfRegister.GetType(), out var functionGroup))
                 {
-                    //遍历某个 Register 下所有的方法      TODO：未来可添加分组
+                    //Traverse all methods under a Register TODO: Grouping can be added in the future
                     foreach (var functionBag in functionGroup.Values)
                     {
                         try
@@ -365,7 +365,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 SenparcTrace.SendCustomLog("模块读取失败", @$"模块：{XncfModule?.Name} / {XncfModule?.MenuName} / {XncfModule?.Uid}
 请尝试更新此模块后刷新页面！\r\n{ex.Message}\r\n{ex.StackTrace}");
                 mustUpdate = true;
-                //TODO:页面上需要给提示
+                //TODO: Prompts need to be given on the page
             }
 
             IEnumerable<KeyValuePair<ThreadInfo, Thread>> registeredThreadInfo = xncfRegister.RegisteredThreadInfo;

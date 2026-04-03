@@ -54,7 +54,7 @@ namespace Senparc.Ncf.Core.Config
         public const decimal PROJECTDMANDDEPOSIT = 1000; //Default project deposit
         public const string CERT_P12_ADDRESS = @"E:\";//Storage path for WeChat Pay certificate
 
-        /* UID 建议格式： NCF公司ID-项目类型-保留字段(可随机)-内部类别1-内部类别2*/
+        /* UID Recommended format: NCF company ID-project type-reserved field (can be random)-internal category 1-internal category 2*/
         public const string SYSTEM_XNCF_TANENT_UID = "00000000-0000-0000-0000-000000000001";
         public const string SYSTEM_XNCF_MODULE_SYSTEM_CORE_UID = "00000000-0000-0000-0001-000000000001";
         public const string SYSTEM_XNCF_MODULE_SERVICE_MANAGER_UID = "00000000-0000-0000-0001-000000000002";
@@ -83,8 +83,7 @@ namespace Senparc.Ncf.Core.Config
             set => SenparcCoreSetting.CacheType = value;
         }
 
-        //以下参数放到SiteConfig.cs中
-        //public readonly static string VERSION = "1.3.2";
+        //Put the following parameters into SiteConfig.csmiddle//public readonly static string VERSION = "1.3.2";
         //public const string GLOBAL_PASSWORD_SALT = "senparc@20131113";
 
         public const string VERSION = "0.0.1";
@@ -125,7 +124,7 @@ namespace Senparc.Ncf.Core.Config
         /// </summary>
         public static readonly bool IsUnitTest = false;
         ///// <summary>
-        ///// AI 插件注册
+        ///// AI plug-in registration
         ///// </summary>
         //public static readonly AIPlugins AIPlugins = new AIPlugins();
 

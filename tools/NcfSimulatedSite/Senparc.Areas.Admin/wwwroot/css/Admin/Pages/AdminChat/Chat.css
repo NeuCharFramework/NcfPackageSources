@@ -1,4 +1,4 @@
-/* 管理后台 AI 对话页面样式 */
+/* Manage background AI dialogue page style */
 
 .admin-chat-container {
   height: calc(100vh - 120px);
@@ -13,7 +13,7 @@
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* ========== 左侧会话历史区域 ========== */
+/* ========== Session history area on the left ========== */
 .chat-sidebar {
   background: #fafbfc;
   border-right: 1px solid #e4e7ed;
@@ -135,7 +135,7 @@
   font-size: 14px;
 }
 
-/* ========== 右侧对话窗口区域 ========== */
+/* ========== Dialogue window area on the right ========== */
 .chat-content {
   display: flex;
   flex-direction: column;
@@ -215,7 +215,7 @@
   max-height: 340px;
 }
 
-/* ========== 消息列表区域 ========== */
+/* ========== Message list area ========== */
 .messages-container {
   flex: 1;
   overflow-y: auto;
@@ -395,7 +395,7 @@
   font-size: 16px;
 }
 
-/* AI 思考中动画 */
+/* AI thinking animation */
 .ai-thinking .message-text {
   display: flex;
   align-items: center;
@@ -438,7 +438,7 @@
   }
 }
 
-/* ========== 输入区域 ========== */
+/* ========== Input area ========== */
 .input-container {
   padding: 20px 25px;
   border-top: 1px solid #e4e7ed;
@@ -471,7 +471,7 @@
   margin-right: 5px;
 }
 
-/* ========== 响应式布局 ========== */
+/* ========== Responsive layout ========== */
 @media screen and (max-width: 768px) {
   .chat-sidebar {
     width: 250px !important;
@@ -502,7 +502,7 @@
   }
 }
 
-/* ========== 滚动条样式 ========== */
+/* ========== Scroll bar style ========== */
 .messages-container::-webkit-scrollbar,
 .session-list::-webkit-scrollbar {
   width: 6px;

@@ -44,11 +44,11 @@ namespace System.Web.Mvc
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="helper"></param>
-        /// <param name="dataSource">数据源</param>
-        /// <param name="htmlAttributes">Table的属性</param>
-        /// <param name="emptyTemplete">没有数据时显示。没有数据时，Footer不显示</param>
-        /// <param name="htmlCodeFormat">HTML代码换行（供调试状态下使用）。如果为false，自动生成的代码将不换行</param>
-        /// <param name="itemTempletes">模板数据</param>
+        /// <param name="dataSource">Data source</param>
+        /// <param name="htmlAttributes">Table attributes</param>
+        /// <param name="emptyTemplete">Displayed when there is no data. When there is no data, Footer does not display</param>
+        /// <param name="htmlCodeFormat">HTML code line wrapping (for use in debugging state). If false, automatically generated code will not wrap.</param>
+        /// <param name="itemTempletes">Template data</param>
         /// <returns></returns>
         public static string GridViewAction<T>(this HtmlHelper helper, IEnumerable<T> dataSource,
             object htmlAttributes, string emptyTemplete, bool htmlCodeFormat, params GridViewActionItemTemplateModel<T>[] itemTempletes)

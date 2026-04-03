@@ -43,13 +43,13 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                //群主
+                //Group owner
                 if (request.Admin.SelectedValues.Count() == 0 || !int.TryParse(request.Admin.SelectedValues.First(), out int adminId))
                 {
                     return "必须选择一位群主，请到 AgentTemplate 中设置！";
                 }
 
-                //对接人
+                //docking person
                 if (request.EnterAgent.SelectedValues.Count() == 0 || !int.TryParse(request.EnterAgent.SelectedValues.First(), out int enterAgentId))
                 {
                     return "必须选择一位对接人，请到 AgentTemplate 中设置！";
@@ -58,13 +58,13 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 //var agentsTemplateAdmin = await _agentsTemplateService.GetAgentTemplateAsync(adminId);
                 //var agentsTemplateEnterAgent = await _agentsTemplateService.GetAgentTemplateAsync(enterAgent);
 
-                //TODO:封装到 Service 中
+                //TODO: Encapsulated into Service
                 ChatGroup chatGroup = null;
                 var chatGroupDto = new ChatGroupDto(request.Name, true, ChatGroupState.Unstart, request.Description, adminId, enterAgentId);
                 var isNew = false;
                 if (request.ChatGroup.IsSelected("New"))
                 {
-                    //新建
+                    //New
                     chatGroup = new ChatGroup(chatGroupDto);
                     isNew = false;
                 }
@@ -79,10 +79,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 logger.Append($"ChatGroup {(isNew ? "新增" : "编辑")} 成功！");
 
-                //添加成员
+                //Add member
                 var memberList = new List<ChatGroupMember>();
                 var memberIdList = request.Members.SelectedValues.Select(z => int.Parse(z)).ToList();
-                //合并“对接人”为成员
+                //Merge "connectors" as members
                 if (!memberIdList.Contains(chatGroupDto.EnterAgentTemplateId))
                 {
                     memberIdList.Add(chatGroupDto.EnterAgentTemplateId);
@@ -108,7 +108,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                //群主
+                //Group owner
                 if (request.ChatGroups.SelectedValues.Count() == 0)
                 {
                     return "至少选择一个组！";
@@ -145,10 +145,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 创建或设置 ChatGroup
+        /// Create or set up a ChatGroup
         /// </summary>
-        /// <param name="chatGroupDto">ChatGroup 信息></param>
-        /// <param name="memberAgentTemplateIds">成员 AgentTemplate ID</param>
+        /// <param name="chatGroupDto">ChatGroup information></param>
+        /// <param name="memberAgentTemplateIds">Member AgentTemplate ID</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<ChatGroup_SetGroupChatResponse>> SetChatGroup(ChatGroupDto chatGroupDto, List<int> memberAgentTemplateIds)
@@ -158,7 +158,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 //var agentsTemplateAdmin = await _agentsTemplateService.GetAgentTemplateAsync(adminId);
                 //var agentsTemplateEnterAgent = await _agentsTemplateService.GetAgentTemplateAsync(enterAgent);
 
-                //TODO:封装到 Service 中
+                //TODO: Encapsulated into Service
                 ChatGroup chatGroup = null;
                 chatGroupDto.State = ChatGroupState.Unstart;
 
@@ -166,7 +166,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 var memberList = new List<ChatGroupMember>();
                 if (chatGroupDto.Id == 0)
                 {
-                    //新建
+                    //New
                     chatGroup = new ChatGroup(chatGroupDto);
                     isNew = false;
                 }
@@ -185,9 +185,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 logger.Append($"ChatGroup {(isNew ? "新增" : "编辑")} 成功！");
 
-                //添加成员
+                //Add member
 
-                //合并“对接人”为成员
+                //Merge "connectors" as members
                 if (!memberAgentTemplateIds.Contains(chatGroupDto.EnterAgentTemplateId))
                 {
                     memberAgentTemplateIds.Add(chatGroupDto.EnterAgentTemplateId);
@@ -197,7 +197,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 {
                     if (memberList.Exists(z => z.AgentTemplateId == agentId))
                     {
-                        continue;//已存在的不添加
+                        continue;//Do not add existing ones
                     }
 
                     var chatGroupMemberDto = new ChatGroupMemberDto(null, chatGroup.Id, agentId);
@@ -206,7 +206,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     memberList.Add(member);
                 }
 
-                //删除不在范围内的成员
+                //Remove members that are not in scope
                 var tobeRemove = memberList.Where(z => !memberAgentTemplateIds.Contains(z.AgentTemplateId)).ToArray();
 
                 for (var i = 0; i < tobeRemove.Length; i++) {
@@ -228,7 +228,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 创建或设置 ChatGroup
+        /// Create or set up a ChatGroup
         /// </summary>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
@@ -249,7 +249,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 var seh = new SenparcExpressionHelper<ChatGroup>();
                 seh.ValueCompare
                     .AndAlso(agentTemplateId > 0, z => chatGroupIdList.Contains(z.Id));
-                //增加模糊搜索组
+                //Add fuzzy search group
                 seh.ValueCompare.AndAlso(!string.IsNullOrEmpty(filter), _ => _.Name.Contains(filter));
                 var where = seh.BuildWhereExpression();
 
@@ -263,7 +263,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 创建或设置 ChatGroup
+        /// Create or set up a ChatGroup
         /// </summary>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
@@ -291,7 +291,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 运行智能体
+        ///run agent
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -302,7 +302,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             {
                 List<Task> tasks = new List<Task>();
 
-                //TODO: 使用线程进行维护
+                //TODO: Use threads for maintenance
                 var task = _chatGroupService.RunChatGroupInThread(request);
                 tasks.Add(task);
 
@@ -314,20 +314,20 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 删除整个对话（包括所有消息、任务等）
+        /// Delete the entire conversation (including all messages, tasks, etc.)
         /// </summary>
         [FunctionRender("删除对话", "删除整个对话及其所有数据", typeof(Register))]
         public async Task<StringAppResponse> DeleteChatGroup(ChatGroup_DeleteChatGroupRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                // 检查是否选择了对话
+                // Check if the conversation is selected
                 if (request.ChatGroups.SelectedValues.Count() == 0)
                 {
                     return "请选择要删除的对话！";
                 }
 
-                // 检查是否确认删除
+                // Check if deletion is confirmed
                 if (!request.ConfirmDelete)
                 {
                     return "请勾选\"确认删除\"复选框来确认删除操作！";
@@ -345,7 +345,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 {
                     try
                     {
-                        // 获取对话信息
+                        // Get conversation information
                         var chatGroup = await _chatGroupService.GetObjectAsync(z => z.Id == chatGroupId);
                         if (chatGroup == null)
                         {
@@ -353,15 +353,15 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                             continue;
                         }
 
-                        // 1. 删除所有关联的消息和任务
+                        // 1. Delete all associated messages and tasks
                         var chatTaskService = base.GetRequiredService<ChatTaskService>();
                         var chatGroupHistoryService = base.GetRequiredService<ChatGroupHistoryService>();
 
-                        // 先获取所有相关的 ChatTask
+                        // First get all related ChatTasks
                         var chatTasks = await chatTaskService.GetFullListAsync(z => z.ChatGroupId == chatGroupId);
                         var chatTaskIds = chatTasks.Select(z => z.Id).ToList();
 
-                        // 删除这些 ChatTask 下的所有 ChatGroupHistory
+                        // Delete all ChatGroupHistory under these ChatTasks
                         if (chatTaskIds.Count > 0)
                         {
                             var histories = await chatGroupHistoryService.GetFullListAsync(
@@ -376,7 +376,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                             }
                         }
 
-                        // 2. 删除所有 ChatTask
+                        // 2. Delete all ChatTasks
                         if (chatTasks.Count > 0)
                         {
                             foreach (var chatTask in chatTasks)
@@ -386,7 +386,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                             logger.Append($"  ✓ 已删除 {chatTasks.Count} 个对话任务");
                         }
 
-                        // 3. 删除所有对话成员 (ChatGroupMember)
+                        // 3. Delete all chat members (ChatGroupMember)
                         var members = await _chatGroupMemeberService.GetFullListAsync(z => z.ChatGroupId == chatGroupId);
                         if (members.Count > 0)
                         {
@@ -397,7 +397,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                             logger.Append($"  ✓ 已删除 {members.Count} 个对话成员");
                         }
 
-                        // 4. 最后删除对话本身 (ChatGroup)
+                        // 4. Finally delete the conversation itself (ChatGroup)
                         await _chatGroupService.DeleteObjectAsync(chatGroup);
                         logger.Append($"✓ 对话 '{chatGroup.Name}' 及其所有数据已删除");
 
@@ -410,7 +410,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     }
                 }
 
-                // 生成删除摘要
+                // Generate deletion summary
                 logger.Append($"\n========== 删除摘要 ==========");
                 logger.Append($"✓ 成功删除: {deletedCount} 个对话");
                 if (errors.Count > 0)

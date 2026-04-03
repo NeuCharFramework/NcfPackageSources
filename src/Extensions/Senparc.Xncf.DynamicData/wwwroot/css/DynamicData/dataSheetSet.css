@@ -7,7 +7,7 @@
     height:100%;
 }
 
-/* 侧边栏 */
+/* sidebar */
 .dataSheetSet-aside {
     width: 275px;
     /*height: 100%;*/
@@ -41,7 +41,7 @@
             text-align: left;
             vertical-align: top;
             cursor: pointer;
-            /* 单行 溢出隐藏 */
+            /* Single line overflow hidden */
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -72,7 +72,7 @@
         background: rgba(42, 130, 228, 0.05);
         color: rgba(42, 130, 228, 1);
     }
-    /* 主要内容区域 */
+    /* main content area */
     .dataSheetSet-main {
         flex: 1;
         display: flex;
@@ -108,7 +108,7 @@
                 padding: 0 15px;
                 border-radius: 4px;
                 border: 1px solid #DCDFE6;
-                /* 单行 溢出隐藏 */
+                /* Single line overflow hidden */
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -201,11 +201,11 @@
         color: #606266;
         padding: 0 12px 0 0;
     }
-/* 以下 修改el组件样式 */
+/* Modify the el component style below */
 .el-input-group__append {
     padding: 0;
 }
-/* 以下 自定义公用样式 */
+/* The following custom public styles */
 .text-right{
     text-align:right;
 }

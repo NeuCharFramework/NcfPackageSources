@@ -11,7 +11,7 @@ namespace System.Web.Mvc
 {
     public enum BarStyle
     {
-        defaultStyle = 0,//默认
+        defaultStyle = 0,//default
         digg,
         yahoo,
         meneame,
@@ -73,7 +73,7 @@ namespace System.Web.Mvc
         public string Url { get; set; }
 
         /// <summary>
-        ///   项目中处在iframe中的页码条
+        /// The page number bar in the iframe in the project
         /// </summary>
         public bool InIframe { get; set; }
 
@@ -133,12 +133,12 @@ namespace System.Web.Mvc
 
         public static string PagerBar(this IHtmlHelper html, PagerBarSettings settings)
         {
-            SetDefaultValue(settings);//设置默认值
+            SetDefaultValue(settings);//Set default value
 
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("<div class=\"{0}\" >", settings.barStyle.ToString());
 
-            //判断空记录
+            //Determine empty records
             if (settings.TotalCount == 0)
             {
                 sb.Append(settings.NoRecordTip);
@@ -147,26 +147,26 @@ namespace System.Web.Mvc
                 return sb.ToString();
             }
 
-            int totalPage = Convert.ToInt32((settings.TotalCount - 1) / settings.PageCount) + 1;//总页数
+            int totalPage = Convert.ToInt32((settings.TotalCount - 1) / settings.PageCount) + 1;//Total pages
 
             string backPageStyle = (settings.PageIndex <= 1) ? "disabled" : "";
             string nextPageStyle = (settings.PageIndex >= totalPage) ? "disabled" : "";
 
-            var firstDisplayPageEnd = 0;//从第1页显示到xx页
-            var bodyDisplayPageStart = 0;//当前页临近最左页码
-            var bodyDisplayPageEnd = 0;//当前页临近最右页码
-            var endDisplayPageStart = 0;//从第xx页显示到最后一页
+            var firstDisplayPageEnd = 0;//Display from page 1 to page xx
+            var bodyDisplayPageStart = 0;//The current page is adjacent to the leftmost page number
+            var bodyDisplayPageEnd = 0;//The current page is adjacent to the rightmost page number
+            var endDisplayPageStart = 0;//Display from page xx to the last page
 
 
-            //设定 bodyDisplayPageStart
+            //Set bodyDisplayPageStart
             bodyDisplayPageStart = (settings.PageIndex - settings.ShowPageNumber <= 1) ? 1 : settings.PageIndex - settings.ShowPageNumber; // (ViewData.pageIndex - ViewData.showPageNumber <= ViewData.showPageNumber) ? ViewData.showPageNumber + 1 : ViewData.pageIndex - ViewData.showPageNumber;
 
 
-            //设定 bodyDisplayPageEnd
+            //Set bodyDisplayPageEnd
             bodyDisplayPageEnd = (settings.PageIndex + settings.ShowPageNumber >= totalPage) ? totalPage : settings.PageIndex + settings.ShowPageNumber;
 
 
-            //设定 firstDisplayPageEnd
+            //Set firstDisplayPageEnd
             if (bodyDisplayPageStart > 1)
             {
                 if (bodyDisplayPageStart - settings.ShowPageNumber <= 1)
@@ -183,7 +183,7 @@ namespace System.Web.Mvc
                 firstDisplayPageEnd = 0;
             }
 
-            //设定 endDisplayPageStart
+            //Set endDisplayPageStart
             if (bodyDisplayPageEnd < totalPage)
             {
                 if (bodyDisplayPageEnd + settings.ShowPageNumber >= totalPage)
@@ -199,12 +199,12 @@ namespace System.Web.Mvc
             {
                 endDisplayPageStart = totalPage + 1;
             }
-            //页面参数设定结束
+            //Page parameter setting ends
 
 
-            //开始输出
+            //Start output
 
-            // 上一条
+            // Previous article
             if (settings.PageIndex <= 1)
             {
                 sb.Append("<span class=\"").Append(backPageStyle).Append("\">").Append(settings.PreWord).Append("</span>");
@@ -221,7 +221,7 @@ namespace System.Web.Mvc
                 sb.Append(GetPageLink(i, settings.PageIndex, i.ToString(), settings.CurrentPageWordFormat, settings.Onclick, settings.Url, settings.BarMark, settings.InIframe));
             }
 
-            //省略号
+            //Ellipsis
             if (firstDisplayPageEnd + 1 < bodyDisplayPageStart)
             {
                 sb.Append("<span>... </span>");
@@ -233,7 +233,7 @@ namespace System.Web.Mvc
                 sb.Append(GetPageLink(i, settings.PageIndex, i.ToString(), settings.CurrentPageWordFormat, settings.Onclick, settings.Url, settings.BarMark, settings.InIframe));
             }
 
-            //省略号
+            //Ellipsis
             if (bodyDisplayPageEnd + 1 < endDisplayPageStart)
             {
                 sb.Append("<span>... </span>");
@@ -245,7 +245,7 @@ namespace System.Web.Mvc
                 sb.Append(GetPageLink(i, settings.PageIndex, i.ToString(), settings.CurrentPageWordFormat, settings.Onclick, settings.Url, settings.BarMark, settings.InIframe));
             }
 
-            // 下一条 
+            // Next article 
             if (settings.PageIndex >= totalPage)
             {
                 sb.Append("<span class=\"").Append(nextPageStyle).Append("\">").Append(settings.NextWord).Append("</span>");
@@ -255,14 +255,14 @@ namespace System.Web.Mvc
                 sb.Append(GetPageLink(settings.PageIndex + 1, settings.PageIndex, settings.NextWord, settings.CurrentPageWordFormat, settings.Onclick, settings.Url, settings.BarMark, settings.InIframe));
             }
 
-            //总数
+            //total
             if (settings.ShowTotalCount)
             {
                 int recordStart = (settings.PageIndex - 1) * settings.PageCount + 1;
                 int recordEnd = recordStart + settings.PageCount - 1;
                 if (recordEnd > settings.TotalCount)
                 {
-                    recordEnd = settings.TotalCount;//如果超出最大值，则修正为最大值
+                    recordEnd = settings.TotalCount;//If it exceeds the maximum value, correct it to the maximum value
                 }
                 sb.Append("<span class=\"total\" title=\"当前显示第" + (recordStart == recordEnd ? recordStart.ToString() : (recordStart + "-" + recordEnd)) + "条\">总共 <b>" + settings.TotalCount.ToString() + "</b> 条</span>");
             }
@@ -313,7 +313,7 @@ namespace System.Web.Mvc
 
         private static string GetPageLink(int linkPageIndex, int currentPageIndex, string text, string currentPageWordFormat, string onclick, string url, string barMark, bool inInframe)
         {
-            //var pageData = "?page=";//string.Format("{0}page=", (Request.QueryString.Count == 0) ? "?" : "&") + "{0}";//页码参数
+            //var pageData = "?page=";//string.Format("{0}page=", (Request.QueryString.Count == 0) ? "?" : "&") + "{0}";//Page number parameter
 
             onclick = (onclick != null) ? "onclick=\"" + onclick + "\"" : "";
             onclick = onclick.Replace("{pageindex}", linkPageIndex.ToString());
@@ -325,7 +325,7 @@ namespace System.Web.Mvc
 
             var linkHTML = "";
 
-            string formatedText = currentPageWordFormat.IndexOf("{0}") >= 0 ? string.Format(currentPageWordFormat, text) : text;//判断是{0}形式还是自定义替换字符串。
+            string formatedText = currentPageWordFormat.IndexOf("{0}") >= 0 ? string.Format(currentPageWordFormat, text) : text;//Determine whether it is in {0} form or a custom replacement string.
 
             if (linkPageIndex == currentPageIndex)
             {

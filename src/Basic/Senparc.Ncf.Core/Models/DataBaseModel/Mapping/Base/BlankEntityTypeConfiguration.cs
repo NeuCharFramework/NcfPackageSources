@@ -7,16 +7,16 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
     /// <summary>
-    /// 空的实现 IEntityTypeConfiguration 接口的类
+    /// Empty class that implements the IEntityTypeConfiguration interface
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     public class BlankEntityTypeConfiguration<TEntity> : IEntityTypeConfiguration<TEntity>
          where TEntity : class
     {
         /// <summary>
-        /// 设置 TEntity 的实体
+        ///Set the entity of TEntity
         /// </summary>
-        /// <param name="builder">用于设置实体类型（entity type）的 builder</param>
+        /// <param name="builder">Builder used to set entity type (entity type)</param>
         public void Configure(EntityTypeBuilder<TEntity> builder)
         {
             

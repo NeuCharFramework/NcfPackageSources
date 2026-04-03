@@ -43,14 +43,14 @@ namespace Senparc.Ncf.Service.ServiceBase
         }
 
         /// <summary>
-        /// 获取分页数据
+        /// Get paging data
         /// </summary>
         /// <typeparam name="TK"></typeparam>
-        /// <param name="pageIndex">页码</param>
-        /// <param name="pageCount">每页数量</param>
-        /// <param name="where">条件</param>
-        /// <param name="orderBy">排序字段</param>
-        /// <param name="orderingType">正序|倒叙</param>
+        /// <param name="pageIndex">Page number</param>
+        /// <param name="pageCount">Number per page</param>
+        /// <param name="where">Condition</param>
+        /// <param name="orderBy">Sort field</param>
+        /// <param name="orderingType">Forward sequence | Flashback</param>
         /// <param name="includes"></param>
         /// <returns></returns>
         public override PagedList<TEntity> GetObjectList<TK>(int pageIndex, int pageCount, Expression<Func<TEntity, bool>> where, Expression<Func<TEntity, TK>> orderBy, OrderingType orderingType,params string[] includes)
@@ -60,14 +60,14 @@ namespace Senparc.Ncf.Service.ServiceBase
 
 
         /// <summary>
-        /// 获取分页数据
+        /// Get paging data
         /// </summary>
         /// <typeparam name="TK"></typeparam>
-        /// <param name="pageIndex">页码</param>
-        /// <param name="pageCount">每页数量</param>
-        /// <param name="where">条件</param>
-        /// <param name="orderBy">排序字段</param>
-        /// <param name="orderingType">正序|倒叙</param>
+        /// <param name="pageIndex">Page number</param>
+        /// <param name="pageCount">Number per page</param>
+        /// <param name="where">Condition</param>
+        /// <param name="orderBy">Sort field</param>
+        /// <param name="orderingType">Forward sequence | Flashback</param>
         /// <param name="includes"></param>
         /// <returns></returns>
         public override async Task<PagedList<TEntity>> GetObjectListAsync<TK>(int pageIndex, int pageCount, Expression<Func<TEntity, bool>> where, Expression<Func<TEntity, TK>> orderBy, OrderingType orderingType,params string[] includes)
@@ -86,7 +86,7 @@ namespace Senparc.Ncf.Service.ServiceBase
         }
 
         /// <summary>
-        /// 强制将实体设置为Modified状态
+        /// Force the entity to Modified state
         /// </summary>
         /// <param name="obj"></param>
         public override void TryDetectChange(TEntity obj)
@@ -126,6 +126,6 @@ namespace Senparc.Ncf.Service.ServiceBase
             }
         }
 
-        //TODO: 提供异步版本
+        //TODO: Provide an asynchronous version
     }
 }

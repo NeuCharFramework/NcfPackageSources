@@ -39,7 +39,7 @@ namespace Senparc.Ncf.Core.Models.VD
         public new RouteData RouteData { get => base.RouteData; set => throw new NotImplementedException(); }
 
         //public RouteData RouteData { get; set; }
-        //另外一种写法：
+        //Another way to write it:
         //public RouteData GetRouteData()
         //{
         //    return base.RouteData;
@@ -75,7 +75,7 @@ namespace Senparc.Ncf.Core.Models.VD
 
         public override Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
         {
-            //获取缓存系统信息
+            //Get cache system information
             try
             {
                 if (SiteConfig.IsInstalling)
@@ -92,7 +92,7 @@ namespace Senparc.Ncf.Core.Models.VD
             }
             catch (/*SqlException*/ DbException)
             {
-                //如数据库未创建
+                //If the database is not created
                 context.Result = new RedirectResult("/Install");
 
                 return Task.CompletedTask;
@@ -100,7 +100,7 @@ namespace Senparc.Ncf.Core.Models.VD
             }
             catch (NcfUninstallException)
             {
-                //需要进行安装
+                //Requires installation
                 context.Result = new RedirectResult("/Install");
                 return Task.CompletedTask;
             }
@@ -110,9 +110,9 @@ namespace Senparc.Ncf.Core.Models.VD
 
 
         /// <summary>
-        /// 检查是否在特定 Scheme 下已登录
+        /// Check if you are logged in under a specific Scheme
         /// </summary>
-        /// <param name="authenticationScheme">Scheme 名称</param>
+        /// <param name="authenticationScheme">Scheme name</param>
         /// <returns></returns>
         public async Task<bool> CheckLoginedAsync(string authenticationScheme)
         {

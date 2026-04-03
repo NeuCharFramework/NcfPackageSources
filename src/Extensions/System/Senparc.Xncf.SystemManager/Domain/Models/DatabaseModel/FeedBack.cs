@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
 {
     /// <summary>
-    /// 意见反馈
+    ///Feedback
     /// </summary>
     [Table("FeedBacks")]
     public class FeedBack : EntityBase<int>
@@ -16,7 +16,7 @@ namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
         public string Content { get; set; }
 
         ///// <summary>
-        ///// 用户
+        ///// User
         ///// </summary>
         ///// <value></value>
         //public Account Account { get; set; }

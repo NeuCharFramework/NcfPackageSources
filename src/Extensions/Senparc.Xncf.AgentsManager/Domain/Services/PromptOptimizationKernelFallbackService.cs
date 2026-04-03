@@ -190,8 +190,8 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
                         ? "Agent did not call CreateOptimizedPrompt; kernel fallback created a new version."
                         : $"Agent did not call CreateOptimizedPrompt; kernel fallback: {reason}";
 
-                    // 成功路径不释放 claim：保持锁定以阻止后续重复插入。
-                    // 锁将由 ChatTaskHandler 的 CleanupRequest 统一清理。
+                    // Success paths do not release claim: the lock is held to prevent subsequent repeated insertions.
+                    // The lock will be cleaned uniformly by ChatTaskHandler's CleanupRequest.
 
                     return new PromptOptimizationResponseEvent(
                         request.RequestId,

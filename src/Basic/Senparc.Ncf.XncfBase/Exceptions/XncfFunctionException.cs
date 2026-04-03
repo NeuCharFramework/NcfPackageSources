@@ -6,7 +6,7 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// Xncf 模块方法执行异常
+    ///Xncf module method execution exception
     /// </summary>
     public class XncfFunctionException : NcfExceptionBase
     {

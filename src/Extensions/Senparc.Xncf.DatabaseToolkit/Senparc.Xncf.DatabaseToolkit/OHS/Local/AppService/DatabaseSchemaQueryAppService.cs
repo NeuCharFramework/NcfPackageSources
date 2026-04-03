@@ -15,8 +15,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 {
     /// <summary>
-    /// 数据库架构元数据查询 AppService
-    /// 提供查询数据库结构信息的 Function
+    /// Database schema metadata query AppService
+    /// Provides functions for querying database structure information
     /// </summary>
     public class DatabaseSchemaQueryAppService : AppServiceBase
     {
@@ -29,8 +29,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 查询可用的模块和表结构
-        /// 返回所有可查询的模块及其表的结构信息
+        /// Query available modules and table structures
+        /// Returns the structure information of all queryable modules and their tables
         /// </summary>
         [FunctionRender("查询数据库结构", "查询可用的模块、表和字段信息，用于了解数据库结构", typeof(Register))]
         public async Task<AppResponseBase<string>> QueryDatabaseSchema(QuerySchemaRequest request)
@@ -39,12 +39,12 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
             {
                 try
                 {
-                    // 如果指定了模块名和表名，获取详细信息
+                    // If module name and table name are specified, get detailed information
                     if (!string.IsNullOrWhiteSpace(request.ModuleName) && !string.IsNullOrWhiteSpace(request.TableName))
                     {
                         logger.Append($"获取表详情: {request.ModuleName}.{request.TableName}");
 
-                        // 先尝试精确匹配，再尝试模糊匹配
+                        // Try exact match first, then fuzzy match
                         var resolvedModule = _metadataProvider.ResolveModuleName(request.ModuleName);
                         if (resolvedModule == null)
                         {
@@ -95,7 +95,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                         });
                     }
 
-                    // 如果只指定了模块名，获取该模块的所有表
+                    // If only the module name is specified, get all tables of the module
                     if (!string.IsNullOrWhiteSpace(request.ModuleName))
                     {
                         logger.Append($"获取模块 {request.ModuleName} 的所有表");
@@ -139,7 +139,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                         });
                     }
 
-                    // 获取所有模块和表的概览
+                    // Get an overview of all modules and tables
                     logger.Append("获取所有可查询的模块和表的概览");
                     
                     var allSchemas = _metadataProvider.GetAllSchemas();
@@ -181,7 +181,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 查询数据库架构请求
+        ///Query database schema request
         /// </summary>
         public class QuerySchemaRequest : FunctionAppRequestBase
         {
@@ -195,7 +195,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 
             public override async Task LoadData(IServiceProvider serviceProvider)
             {
-                // 可选：在此处加载默认数据
+                // Optional: Load default data here
                 await base.LoadData(serviceProvider);
             }
         }

@@ -6,16 +6,16 @@ using System.Linq.Expressions;
 namespace Senparc.Ncf.Utility
 {
     /// <summary>
-    /// 支持关联表查询
+    ///Support related table query
     /// 
-    /// 类型如：
+    /// Type such as:
     ///   var seh = new SenparcExpressionHelper<T>();
     ///   seh.ValueCompare
     ///       .AndAlso(true, i => !i.IsDeleted && i.MPAccountId == MPAccount.Id)
     ///       .AndAlso(!string.IsNullOrEmpty(SearchText), i => i.MPKeywordList.Count(c => c.Content.Contains(SearchText)) > 0);
     ///   var where = seh.BuildWhereExpression();
     ///   
-    /// 其中关联表的Count统计，在SenparcExpressionHelper下，会吧变量c当作主表属性而报错
+    /// Among them, the Count statistics of the related table, under SenparcExpressionHelper, the variable c will be treated as the main table attribute and an error will be reported.
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     public class SenparcExpressionHelper<TEntity> where TEntity : class
@@ -27,14 +27,14 @@ namespace Senparc.Ncf.Utility
         }
 
         /// <summary>
-        /// 生成where表达式
+        /// Generate where expression
         /// </summary>
         /// <returns></returns>
         public Expression<Func<TEntity, bool>> BuildWhereExpression()
         {
             if (ValueCompare.ExpressionBody == null)
             {
-                //不需要查询
+                //No query required
                 Expression<Func<TEntity, bool>> returnTrue = z => true;
                 return returnTrue;
             }

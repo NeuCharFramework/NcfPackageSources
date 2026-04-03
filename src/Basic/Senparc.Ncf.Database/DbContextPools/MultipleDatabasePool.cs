@@ -19,8 +19,8 @@ namespace Senparc.Ncf.Database
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="migrationDbContextType">设计时（或运行时进行 Database.Migrate() 操作的）所使用的 XncfDatabaseDbContext 类型</param>
-        /// <param name="runtimeDbContextType">运行时所使用的 XncfDatabaseDbContext 类型（通常为进行查询时）</param>
+        /// <param name="migrationDbContextType">The XncfDatabaseDbContext type used at design time (or runtime for Database.Migrate() operations)</param>
+        /// <param name="runtimeDbContextType">The XncfDatabaseDbContext type used at runtime (usually when querying)</param>
         public XncfDatabaseDbContextWapper(Type migrationDbContextType, Type runtimeDbContextType)
         {
             MigrationDbContextType = migrationDbContextType;
@@ -32,18 +32,18 @@ namespace Senparc.Ncf.Database
     }
 
     /// <summary>
-    /// 多数据库配置池
-    /// <para>Value 为 Dictionary<Type/* IXncfDatabase Register 类型*/, Type/* 数据库 XncfDatabaseDbContext 类型 */></para>
+    ///Multiple database configuration pool
+    /// <para>Value is Dictionary<Type/* IXncfDatabase Register type */, Type/* database XncfDatabaseDbContext type */></para>
     /// </summary>
     public class MultipleDatabasePool
-        : Dictionary<MultipleDatabaseType, Dictionary<Type/* IXncfDatabase Register 类型*/, Type/* 数据库 XncfDatabaseDbContext 类型 */>>
+        : Dictionary<MultipleDatabaseType, Dictionary<Type/* IXncfDatabaseRegisterType*/, Type/* Database XncfDatabaseDbContext type */>>
     {
         #region 单例
 
         MultipleDatabasePool() { }
 
         /// <summary>
-        /// DatabaseConfigurationFactory 的全局单例
+        ///Global singleton of DatabaseConfigurationFactory
         /// </summary>
         public static MultipleDatabasePool Instance
         {
@@ -63,41 +63,41 @@ namespace Senparc.Ncf.Database
         #endregion
 
         /// <summary>
-        /// 单元测试用的 DbContext
+        /// DbContext for unit testing
         /// </summary>
         public static Type UnitTestPillarDbContext { get; set; } = null;
 
         /// <summary>
-        /// 添加配置
+        ///Add configuration
         /// </summary>
         /// <param name="multiDbContextAttr"></param>
-        /// <param name="xncfDatabaseDbContextType">实现了 IXncfDatabase 接口的类型</param>
-        /// <param name="logColumnWidth">输出日志表格的宽度</param>
+        /// <param name="xncfDatabaseDbContextType">Type that implements the IXncfDatabase interface</param>
+        /// <param name="logColumnWidth">Width of the output log table</param>
         /// <returns></returns>
         public string TryAdd(MultipleMigrationDbContextAttribute multiDbContextAttr, Type xncfDatabaseDbContextType, int[] logColumnWidth)
         {
             var msg = $"| {multiDbContextAttr.XncfDatabaseRegisterType.FullName.PadRight(logColumnWidth[0])}| {xncfDatabaseDbContextType.Name.PadRight(logColumnWidth[1])}| {multiDbContextAttr.MultipleDatabaseType.ToString().PadRight(logColumnWidth[2])}";
 
-            //查看是否已经包含 MultipleDatabaseType 
+            //Check if MultipleDatabaseType is already included 
             if (!this.ContainsKey(multiDbContextAttr.MultipleDatabaseType))
             {
-                //添加 MultipleDatabaseType 对应集合
+                //Add MultipleDatabaseType corresponding collection
                 this[multiDbContextAttr.MultipleDatabaseType] = new Dictionary<Type, Type>();
             }
 
-            //加入配置
+            //Add configuration
             this[multiDbContextAttr.MultipleDatabaseType][multiDbContextAttr.XncfDatabaseRegisterType] = xncfDatabaseDbContextType;
 
-            //同步添加到 XncfDatabaseDbContextPool
+            //Synchronously added to XncfDatabaseDbContextPool
             XncfDatabaseDbContextPool.Instance.TryAdd(multiDbContextAttr, xncfDatabaseDbContextType);
 
             return msg;
         }
 
         /// <summary>
-        /// 获取指定 IXncfDatabase 关联的当前数据库上下文（DbContext）
+        /// Get the current database context (DbContext) associated with the specified IXncfDatabase
         /// </summary>
-        /// <param name="xncfDatabaseRegister">实现了 IXncfDatabase 的实体</param>
+        /// <param name="xncfDatabaseRegister">Entity that implements IXncfDatabase</param>
         /// <returns></returns>
         public Type GetXncfDbContextType(IXncfDatabase xncfDatabaseRegister)
         {
@@ -105,22 +105,22 @@ namespace Senparc.Ncf.Database
         }
 
         /// <summary>
-        /// 获取指定 IXncfDatabase 关联的当前数据库上下文（DbContext）
+        /// Get the current database context (DbContext) associated with the specified IXncfDatabase
         /// </summary>
-        /// <param name="xncfDatabaseRegisterType">实现了 IXncfDatabase 的具体类型</param>
+        /// <param name="xncfDatabaseRegisterType">Implements the specific type of IXncfDatabase</param>
         /// <returns></returns>
         public Type GetXncfDbContextType(Type xncfDatabaseRegisterType)
         {
-            //数据库配置工厂
+            //Database configuration factory
             var databaseConfigurationFactory = DatabaseConfigurationFactory.Instance;
-            //当前数据库配置
+            //Current database configuration
             var currentDatabaseConfiguration = databaseConfigurationFactory.Current;
-            //当前数据库类型
+            //Current database type
             MultipleDatabaseType multipleDatabaseType = currentDatabaseConfiguration.MultipleDatabaseType;
 
             if (multipleDatabaseType == MultipleDatabaseType.InMemory)
             {
-                //单元测试
+                //Unit testing
                 return UnitTestPillarDbContext ?? throw new NcfExceptionBase($"当前数据库类型为 {multipleDatabaseType}，需要指定 {nameof(UnitTestPillarDbContext)}！");
             }
             else if (!this.ContainsKey(multipleDatabaseType))
@@ -139,11 +139,11 @@ namespace Senparc.Ncf.Database
 
 
         /// <summary>
-        /// 获取指定 DbContext 的数据库实例
+        /// Get the database instance of the specified DbContext
         /// </summary>
-        /// <param name="connectionString">连接字符串，如果为 null，则默认使用 SenparcDatabaseConfigs.ClientConnectionString</param>
-        /// <param name="dbContextOptionsAction">额外配置操作</param>
-        /// <param name="xncfDatabaseData">IXncfDatabase 信息（仅在针对 XNCF 进行数据库迁移时有效）</param>
+        /// <param name="connectionString">Connection string, if null, defaults to SenparcDatabaseConfigs.ClientConnectionString</param>
+        /// <param name="dbContextOptionsAction">Additional configuration operations</param>
+        /// <param name="xncfDatabaseData">IXncfDatabase information (valid only when doing database migration for XNCF)</param>
         /// <param name="serviceProvider">ServiceProvider</param>
         /// <returns></returns>
         public T GetDbContext<T>(string connectionString = null, XncfDatabaseData xncfDatabaseData = null,
@@ -157,29 +157,29 @@ namespace Senparc.Ncf.Database
 
             if (dbOptionBuilderType.GenericTypeArguments.Length > 0)
             {
-                //带泛型
-                //准备创建 DbContextOptionsBuilder 实例，定义类型
+                //With generics
+                //Prepare to create a DbContextOptionsBuilder instance and define the type
                 dbOptionBuilderType = typeof(DbContextOptionsBuilder<>);
                 //dbOptionBuilderType = typeof(RelationalDbContextOptionsBuilder<,>);
-                //获取泛型对象类型，如：DbContextOptionsBuilder<SenparcEntities>
+                //Get the generic object type, such as: DbContextOptionsBuilder<SenparcEntities>
                 dbOptionBuilderType = dbOptionBuilderType.MakeGenericType(dbContextType);
 
-                //创建 DbContextOptionsBuilder 实例
+                //Create a DbContextOptionsBuilder instance
                 dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder;
             }
             else
             {
-                //不带泛型
+                //Without generics
                 dbOptionBuilder = new DbContextOptionsBuilder();
             }
 
             //if (UnitTestDatabaseConfiguration.UnitTestPillarDbContext == null)
             {
-                //不是单元测试，需要读取数据库
+                //Not a unit test, needs to read the database
 
-                //获取当前数据库配置
+                //Get the current database configuration
                 var currentDatabasConfiguration = DatabaseConfigurationFactory.Instance.Current;
-                //指定使用当前数据库
+                //Specify to use the current database
                 currentDatabasConfiguration.UseDatabase(
                     dbOptionBuilder,
                     connectionString ?? (SenparcDatabaseConnectionConfigs.GetClientConnectionString()),
@@ -188,7 +188,7 @@ namespace Senparc.Ncf.Database
                     );
             }
 
-            //实例化 DbContext
+            //Instantiate DbContext
             T dbContext;
             if (serviceProvider == null)
             {
@@ -207,12 +207,12 @@ namespace Senparc.Ncf.Database
         }
 
         /// <summary>
-        /// 获取指定 xncfDatabaseRegister 关联的当前数据库实例
+        /// Get the current database instance associated with the specified xncfDatabaseRegister
         /// </summary>
-        /// <param name="xncfDatabaseRegisterType">实现了 IXncfDatabase 的具体类型</param>
-        /// <param name="connectionString">连接字符串，如果为 null，则默认使用 SenparcDatabaseConfigs.ClientConnectionString</param>
-        /// <param name="dbContextOptionsAction">额外配置操作</param>
-        /// <param name="xncfDatabaseData">IXncfDatabase 信息（仅在针对 XNCF 进行数据库迁移时有效）</param>
+        /// <param name="xncfDatabaseRegisterType">Implements the specific type of IXncfDatabase</param>
+        /// <param name="connectionString">Connection string, if null, defaults to SenparcDatabaseConfigs.ClientConnectionString</param>
+        /// <param name="dbContextOptionsAction">Additional configuration operations</param>
+        /// <param name="xncfDatabaseData">IXncfDatabase information (valid only when doing database migration for XNCF)</param>
         /// <param name="serviceProvider">ServiceProvider</param>
         /// <returns></returns>
         public DbContext GetXncfDbContext(Type xncfDatabaseRegisterType, string connectionString = null, XncfDatabaseData xncfDatabaseData = null,
@@ -223,7 +223,7 @@ namespace Senparc.Ncf.Database
                 throw new NcfDatabaseException($"{nameof(xncfDatabaseRegisterType)} 参数：{xncfDatabaseRegisterType.Name} 必须实现 IXncfDatabase 接口", DatabaseConfigurationFactory.Instance.Current.GetType());
             }
 
-            //获取 DbContext 上下文类型
+            //Get the DbContext context type
             var dbContextType = GetXncfDbContextType(xncfDatabaseRegisterType);
 
             return this.GetType().GetMethod(nameof(GetDbContext))

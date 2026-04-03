@@ -4,12 +4,12 @@ using System;
 namespace Senparc.Ncf.Core.Models.VD
 {
     /// <summary>
-    /// 地区数据（省、市、区）
+    ///Regional data (province, city, district)
     /// </summary>
     public class Common_AreaListVD : Base_AreaXmlVD
     {
         /// <summary>
-        /// ID,Name前缀
+        ///ID,Name prefix
         /// </summary>
         public string Prefixes { get; set; }
 
@@ -51,7 +51,7 @@ namespace Senparc.Ncf.Core.Models.VD
             UserCity = userCity;
             UserDistrict = userDistrict;
 
-            //如果首项为空，则ID设为-1
+            //If the first item is empty, the ID is set to -1
             topProvince = topProvince ?? new AreaXML_Provinces(-1, "", "", "");
             topCity = topCity ?? new AreaXML_Cities(-1, 0, "", "", "", 0);
             topDistrict = topDistrict ?? new AreaXML_Districts(-1, 0, "");

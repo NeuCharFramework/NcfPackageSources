@@ -20,7 +20,7 @@ define(function (require) {
     var ONE_HOUR = ONE_MINUTE * 60;
     var ONE_DAY = ONE_HOUR * 24;
 
-    // FIXME 公用？
+    // FIXME Public?
     var bisect = function (a, x, lo, hi) {
         while (lo < hi) {
             var mid = lo + hi >>> 1;

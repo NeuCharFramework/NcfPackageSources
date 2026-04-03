@@ -9,14 +9,14 @@ namespace Senparc.Ncf.SMS
         SenparcSmsSetting Setting { get; set; }
 
         /// <summary>
-        /// 发送
+        /// send
         /// </summary>
         /// <param name="content"></param>
         /// <param name="number"></param>
         /// <returns></returns>
         SmsResult Send(string content, string number);
         /// <summary>
-        /// 获取剩余短信数量
+        /// Get the remaining number of text messages
         /// </summary>
         /// <returns></returns>
         string GetLastCount();

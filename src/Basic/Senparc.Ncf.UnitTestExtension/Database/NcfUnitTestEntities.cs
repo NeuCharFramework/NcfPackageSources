@@ -8,8 +8,8 @@ using Senparc.Xncf.SystemCore.Domain.Database;
 namespace Senparc.Ncf.UnitTestExtension.Database
 {
     /// <summary>
-    /// 模拟 SenparcEntities 或各个 XNCF 模块中的 xxxSenparcEntities。
-    /// 在单元测试过程中，这个类将取代 NCF 运行时的 SenparcEntities，集成所有模块的 DbSet 对象
+    /// Emulate SenparcEntities or xxxSenparcEntities in various XNCF modules.
+    /// During unit testing, this class will replace the NCF runtime's SenparcEntities, integrating all modules' DbSet objects
     /// </summary>
     public class NcfUnitTestEntities : BasePoolEntities //DbContext
     {

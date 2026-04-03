@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.Domain.Services
 {
     /// <summary>
-    /// AdminChatSessionService：管理后台聊天会话服务
+    ///AdminChatSessionService: Manage background chat session service
     /// </summary>
     public class AdminChatSessionService : BaseClientService<AdminChatSession>
     {
         /// <summary>
-        /// 构造函数
+        ///Constructor
         /// </summary>
         public AdminChatSessionService(IAdminChatSessionRepository repository, IServiceProvider serviceProvider) 
             : base(repository, serviceProvider)
@@ -24,11 +24,11 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取用户的活跃会话列表（按最后消息时间倒序）
+        /// Get the user's active conversation list (in descending order of last message time)
         /// </summary>
-        /// <param name="userId">用户ID</param>
-        /// <param name="pageIndex">页码（从1开始）</param>
-        /// <param name="pageSize">每页数量</param>
+        /// <param name="userId">User ID</param>
+        /// <param name="pageIndex">Page number (starting from 1)</param>
+        /// <param name="pageSize">Number per page</param>
         public async Task<(List<AdminChatSession> sessions, int totalCount)> GetUserActiveSessionsAsync(int userId, int pageIndex = 1, int pageSize = 20)
         {
             var result = await base.GetObjectListAsync(
@@ -42,7 +42,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 根据 ID 获取会话（包含验证用户权限）
+        /// Get the session based on ID (including verifying user permissions)
         /// </summary>
         public async Task<AdminChatSession> GetSessionByIdAsync(int sessionId, int userId)
         {
@@ -51,7 +51,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 创建新的聊天会话
+        ///Create new chat session
         /// </summary>
         public async Task<AdminChatSession> CreateSessionAsync(string title, int userId)
         {
@@ -61,7 +61,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 更新会话标题
+        ///update session title
         /// </summary>
         public async Task<bool> UpdateSessionTitleAsync(int sessionId, int userId, string newTitle)
         {
@@ -74,7 +74,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 更新会话的最后消息时间
+        /// Update the last message time of the session
         /// </summary>
         public async Task UpdateLastMessageTimeAsync(int sessionId)
         {
@@ -87,7 +87,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 归档会话
+        ///archive session
         /// </summary>
         public async Task<bool> ArchiveSessionAsync(int sessionId, int userId)
         {
@@ -100,7 +100,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 删除会话（软删除）
+        /// Delete session (soft delete)
         /// </summary>
         public async Task<bool> DeleteSessionAsync(int sessionId, int userId)
         {
@@ -113,7 +113,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 恢复已删除的会话
+        ///Restore deleted session
         /// </summary>
         public async Task<bool> RestoreSessionAsync(int sessionId, int userId)
         {
@@ -126,7 +126,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取会话总数（按状态）
+        /// Get the total number of sessions (by status)
         /// </summary>
         public async Task<int> GetSessionCountByStatusAsync(int userId, ChatSessionStatus status)
         {

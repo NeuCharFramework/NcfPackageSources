@@ -1,6 +1,6 @@
 /**
- * LocalStorage 存储辅助工具
- * 提供简化的本地存储操作，自动处理 JSON 序列化
+ * LocalStorage storage auxiliary tool
+ * Provide simplified local storage operations and automatically handle JSON serialization
  * 
  * @version 1.0.0
  * @author Senparc
@@ -9,16 +9,16 @@
     'use strict';
     
     /**
-     * Storage 辅助工具集
-     * 使用对象字面量模式（无需实例化）
+     * Storage auxiliary toolset
+     * Use object literal mode (no instantiation required)
      */
     var StorageHelper = {
         /**
-         * 保存数据到 localStorage
-         * 自动进行 JSON 序列化
-         * @param {string} key - 键名
-         * @param {*} value - 值（会自动 JSON 序列化）
-         * @returns {boolean} 是否保存成功
+         * Save data to localStorage
+         * Automatic JSON serialization
+         * @param {string} key - key name
+         * @param {*} value - value (automatically JSON serialized)
+         * @returns {boolean} Whether the save was successful
          */
         set: function(key, value) {
             if (!key) {
@@ -37,11 +37,11 @@
         },
 
         /**
-         * 从 localStorage 读取数据
-         * 自动进行 JSON 反序列化
-         * @param {string} key - 键名
-         * @param {*} [defaultValue=null] - 默认值（键不存在或解析失败时返回）
-         * @returns {*} 读取到的值或默认值
+         * Read data from localStorage
+         * Automatic JSON deserialization
+         * @param {string} key - key name
+         * @param {*} [defaultValue=null] - Default value (returned when the key does not exist or parsing fails)
+         * @returns {*} read value or default value
          */
         get: function(key, defaultValue) {
             if (!key) {
@@ -64,9 +64,9 @@
         },
 
         /**
-         * 从 localStorage 移除数据
-         * @param {string} key - 键名
-         * @returns {boolean} 是否移除成功
+         * Remove data from localStorage
+         * @param {string} key - key name
+         * @returns {boolean} Whether the removal was successful
          */
         remove: function(key) {
             if (!key) {
@@ -84,8 +84,8 @@
         },
 
         /**
-         * 清空所有 localStorage 数据
-         * @returns {boolean} 是否清空成功
+         * Clear all localStorage data
+         * @returns {boolean} Whether the clearing is successful
          */
         clear: function() {
             try {
@@ -98,9 +98,9 @@
         },
 
         /**
-         * 检查键是否存在
-         * @param {string} key - 键名
-         * @returns {boolean} 键是否存在
+         * Check if the key exists
+         * @param {string} key - key name
+         * @returns {boolean} whether the key exists
          */
         has: function(key) {
             if (!key) {
@@ -110,8 +110,8 @@
         },
 
         /**
-         * 获取所有键名
-         * @returns {Array<string>} 所有键名的数组
+         * Get all key names
+         * @returns {Array<string>} Array of all key names
          */
         keys: function() {
             var keys = [];
@@ -126,8 +126,8 @@
         },
 
         /**
-         * 获取存储数据的数量
-         * @returns {number} 存储数据的数量
+         * Get the amount of stored data
+         * @returns {number} The number of stored data
          */
         length: function() {
             try {
@@ -139,8 +139,8 @@
         },
 
         /**
-         * 获取所有数据
-         * @returns {Object} 包含所有键值对的对象
+         * Get all data
+         * @returns {Object} An object containing all key-value pairs
          */
         getAll: function() {
             var all = {};
@@ -156,9 +156,9 @@
         },
 
         /**
-         * 批量设置数据
-         * @param {Object} data - 键值对对象
-         * @returns {boolean} 是否全部设置成功
+         * Batch set data
+         * @param {Object} data - key-value pair object
+         * @returns {boolean} Whether all settings are successful
          */
         setMultiple: function(data) {
             if (!data || typeof data !== 'object') {
@@ -178,9 +178,9 @@
         },
 
         /**
-         * 批量获取数据
-         * @param {Array<string>} keys - 键名数组
-         * @returns {Object} 包含请求的键值对的对象
+         * Get data in batches
+         * @param {Array<string>} keys - array of key names
+         * @returns {Object} An object containing the requested key-value pairs
          */
         getMultiple: function(keys) {
             if (!Array.isArray(keys)) {
@@ -197,9 +197,9 @@
         },
 
         /**
-         * 批量移除数据
-         * @param {Array<string>} keys - 键名数组
-         * @returns {boolean} 是否全部移除成功
+         * Remove data in batches
+         * @param {Array<string>} keys - array of key names
+         * @returns {boolean} Whether all removals were successful
          */
         removeMultiple: function(keys) {
             if (!Array.isArray(keys)) {
@@ -217,8 +217,8 @@
         },
 
         /**
-         * 检查 localStorage 是否可用
-         * @returns {boolean} 是否可用
+         * Check if localStorage is available
+         * @returns {boolean} whether available
          */
         isAvailable: function() {
             try {
@@ -232,12 +232,12 @@
         },
 
         /**
-         * 获取存储空间使用情况
+         * Get storage space usage
          * @returns {Object} {used: number, total: number, percentage: number}
          */
         getStorageInfo: function() {
             var used = 0;
-            var total = 5 * 1024 * 1024; // 假设 5MB 总容量（不同浏览器可能不同）
+            var total = 5 * 1024 * 1024; // Assuming 5MB total capacity (may vary between browsers)
 
             try {
                 for (var key in localStorage) {
@@ -257,7 +257,7 @@
         }
     };
 
-    // 暴露到全局命名空间
+    // Exposed to the global namespace
     window.PromptRangeUtils = window.PromptRangeUtils || {};
     window.PromptRangeUtils.StorageHelper = StorageHelper;
 

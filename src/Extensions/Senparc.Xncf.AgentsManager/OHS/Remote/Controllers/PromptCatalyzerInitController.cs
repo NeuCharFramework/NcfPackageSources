@@ -12,7 +12,7 @@ using Senparc.Xncf.PromptRange.Abstractions.Events;
 namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
 {
     /// <summary>
-    /// PromptCatalyzer 初始化 API Controller
+    ///PromptCatalyzer initializes API Controller
     /// </summary>
     [ApiController]
     [Route("api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService")]
@@ -36,7 +36,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
         }
 
         /// <summary>
-        /// 检查 PromptCatalyzer 是否已初始化
+        /// Check if PromptCatalyzer has been initialized
         /// </summary>
         [HttpGet("CheckStatus")]
         public IActionResult CheckStatus()
@@ -70,24 +70,24 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
         }
 
         /// <summary>
-        /// 获取所有可用的 Chat 类型 AI Model
+        /// Get all available Chat type AI Models
         /// </summary>
         [HttpGet("GetAvailableModels")]
         public IActionResult GetAvailableModels()
         {
             try
             {
-                // 先获取所有模型用于调试
+                // First obtain all models for debugging
                 var allModels = _aiModelService.GetFullList(z => true, z => z.Id, Ncf.Core.Enums.OrderingType.Ascending);
                 _logger.LogInformation($"数据库中共有 {allModels.Count} 个 AI Model");
                 
-                // 记录每个模型的详情
+                // Record the details of each model
                 foreach (var model in allModels)
                 {
                     _logger.LogInformation($"Model ID: {model.Id}, Alias: {model.Alias}, ConfigModelType: {model.ConfigModelType}, Show: {model.Show}");
                 }
                 
-                // 查询 Chat 类型的模型（只检查类型，不检查 Show 字段）
+                // Query the model of Chat type (only the type is checked, the Show field is not checked)
                 var chatModels = _aiModelService
                     .GetFullList(z => z.ConfigModelType == AIKernel.Domain.Models.ConfigModelType.Chat,
                                 z => z.Id, Ncf.Core.Enums.OrderingType.Ascending)
@@ -139,7 +139,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
         }
 
         /// <summary>
-        /// 初始化 PromptCatalyzer Agent 和相关 Prompt 资源
+        /// Initialize PromptCatalyzer Agent and related Prompt resources
         /// </summary>
         [HttpPost("Initialize")]
         public async Task<IActionResult> Initialize([FromBody] InitializeRequestDto request)
@@ -157,7 +157,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
                     });
                 }
 
-                // 验证 Model 是否存在
+                // Verify that Model exists
                 var model = _aiModelService.GetObject(z => z.Id == request.ModelId.Value);
                 if (model == null)
                 {
@@ -177,7 +177,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
                     });
                 }
 
-                // 调用初始化服务
+                // Call initialization service
                 var initResult = await _promptOptimizationService.EnsureInitializedAsync(request.ModelId.Value);
 
                 var result = new AppResponseBase<InitializeResponseDto>
@@ -208,7 +208,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
     #region DTOs
 
     /// <summary>
-    /// PromptCatalyzer 状态 DTO
+    ///PromptCatalyzer Status DTO
     /// </summary>
     public class PromptCatalyzerStatusDto
     {
@@ -218,7 +218,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
     }
 
     /// <summary>
-    /// 可用模型列表 DTO
+    /// List of available models DTO
     /// </summary>
     public class AvailableModelsDto
     {
@@ -227,7 +227,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
     }
 
     /// <summary>
-    /// AI Model 信息 DTO
+    ///AI Model Information DTO
     /// </summary>
     public class AIModelInfoDto
     {
@@ -241,7 +241,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
     }
 
     /// <summary>
-    /// 初始化请求 DTO
+    ///Initialization request DTO
     /// </summary>
     public class InitializeRequestDto
     {
@@ -249,7 +249,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
     }
 
     /// <summary>
-    /// 初始化响应 DTO
+    ///Initialize response DTO
     /// </summary>
     public class InitializeResponseDto
     {

@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.Domain.Services
 {
     /// <summary>
-    /// AdminChatAiService：管理后台聊天 AI 调用服务（直接使用 appsettings 的 SenparcAiSetting）
+    /// AdminChatAiService: Manage background chat AI call service (use SenparcAiSetting of appsettings directly)
     /// </summary>
     public class AdminChatAiService
     {
@@ -31,12 +31,12 @@ namespace Senparc.Areas.Admin.Domain.Services
         private readonly ILogger<AdminChatAiService> _logger;
 
         /// <summary>
-        /// 初始化管理后台聊天 AI 服务。
+        /// Initialize the management background chat AI service.
         /// </summary>
-        /// <param name="messageService">聊天消息服务。</param>
-        /// <param name="sessionModuleService">会话模块服务。</param>
-        /// <param name="serviceProvider">服务提供器。</param>
-        /// <param name="logger">日志记录器。</param>
+        /// <param name="messageService">Chat message service. </param>
+        /// <param name="sessionModuleService">Session module service. </param>
+        /// <param name="serviceProvider">Service provider. </param>
+        /// <param name="logger">Logger. </param>
         public AdminChatAiService(
             AdminChatMessageService messageService,
             AdminChatSessionModuleService sessionModuleService,
@@ -50,12 +50,12 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 生成 AI 回复内容并返回所使用的模型标识。
+        /// Generates the AI ​​reply content and returns the model id used.
         /// </summary>
-        /// <param name="sessionId">会话 Id。</param>
-        /// <param name="userId">用户 Id。</param>
-        /// <param name="userMessage">用户输入消息。</param>
-        /// <returns>返回回复文本与模型标识。</returns>
+        /// <param name="sessionId">Session Id. </param>
+        /// <param name="userId">User Id. </param>
+        /// <param name="userMessage">User input message. </param>
+        /// <returns> Returns the reply text and model ID. </returns>
         public async Task<(string response, string modelIdentifier)> GenerateResponseAsync(int sessionId, int userId, string userMessage)
         {
             var setting = Senparc.AI.Config.SenparcAiSetting as SenparcAiSetting;
@@ -89,11 +89,11 @@ namespace Senparc.Areas.Admin.Domain.Services
                 chatSystemMessage: BuildSystemMessage(modules),
                 senparcAiSetting: setting);
 
-            // 注册模块信息 Function Calling 插件
+            // Register module information Function Calling plug-in
             iWantToRun.ImportPluginFromObject(modulePlugin, "ModuleAssistant");
             var importedPluginNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "ModuleAssistant" };
 
-            // 自动加载会话关联模块中的 FunctionRender（[#sym:FunctionRender]）插件对象
+            // Automatically load the FunctionRender ([#sym:FunctionRender]) plug-in object in the session association module
             var moduleUids = modules.Where(z => !z.XncfModuleUid.IsNullOrEmpty()).Select(z => z.XncfModuleUid).ToList();
             var functionRenderBags = moduleUids
                 .SelectMany(uid => Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.GetByModuleUid(uid))
@@ -183,7 +183,7 @@ namespace Senparc.Areas.Admin.Domain.Services
 
             var prompt = BuildUserPrompt(messages, userMessage);
 
-            // 使用 FunctionChoiceBehavior.Auto() 让 AI 根据需要自动调用 ModuleAssistantPlugin 函数
+            // Use FunctionChoiceBehavior.Auto() to let AI automatically call the ModuleAssistantPlugin function as needed
             var executionSettings = new PromptExecutionSettings
             {
                 FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
