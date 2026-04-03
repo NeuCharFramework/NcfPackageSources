@@ -534,7 +534,15 @@ var app = new Vue({
       const groupIdSet = new Set(filteredGroups.map(item => item.id))
       const filteredLinks = allLinks.filter(item => groupIdSet.has(item.groupId))
       const agentIdSet = new Set(filteredLinks.map(item => item.agentId))
-      const filteredAgents = allAgents.filter(item => agentIdSet.has(item.id))
+
+      const hasExplicitGroupConstraint = Boolean(selectedGroupId)
+        || this.agentGraphShowOnlyActiveGroup
+        || selectedStatuses.length > 0
+
+      // Keep ungrouped agents visible when there is no explicit group/status constraint.
+      const filteredAgents = hasExplicitGroupConstraint
+        ? allAgents.filter(item => agentIdSet.has(item.id))
+        : allAgents
 
       const filteredCollaborations = allCollaborations.filter(item => {
         if (!groupIdSet.has(item.groupId)) {
