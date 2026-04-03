@@ -117,4 +117,9 @@
   <data name="Install.Footer.Copyright" xml:space="preserve">
     <value>Senparc Network Technology Co., Ltd. Todos los derechos reservados</value>
   </data>
+  <data name="Install.ForceUpgrade.Completed" xml:space="preserve"><value>La actualización manual forzada se completó: {0}. Continúe actualizando otros módulos o vuelva a abrir la página de inicio.</value></data>
+  <data name="Install.InitRequired" xml:space="preserve"><value>Se requiere inicialización</value></data>
+  <data name="Installer.Register.MenuName" xml:space="preserve"><value>Instalador NCF</value></data>
+  <data name="Installer.Register.Description" xml:space="preserve"><value>Módulo de instalación inicial de NCF. Puede desinstalarse o eliminarse después de completar la instalación.</value></data>
+  <data name="Installer.Area.Home" xml:space="preserve"><value>Inicio</value></data>
 </root>

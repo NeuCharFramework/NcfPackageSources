@@ -117,4 +117,19 @@
   <data name="Install.Footer.Copyright" xml:space="preserve">
     <value>Senparc Network Technology Co., Ltd. All Rights Reserved</value>
   </data>
+  <data name="Install.ForceUpgrade.Completed" xml:space="preserve">
+    <value>Forced manual upgrade completed: {0}. Continue updating other modules or reopen the home page.</value>
+  </data>
+  <data name="Install.InitRequired" xml:space="preserve">
+    <value>Initialization is required</value>
+  </data>
+  <data name="Installer.Register.MenuName" xml:space="preserve">
+    <value>NCF Installer</value>
+  </data>
+  <data name="Installer.Register.Description" xml:space="preserve">
+    <value>NCF initialization installer module. It can be uninstalled or removed after setup is complete.</value>
+  </data>
+  <data name="Installer.Area.Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
 </root>
