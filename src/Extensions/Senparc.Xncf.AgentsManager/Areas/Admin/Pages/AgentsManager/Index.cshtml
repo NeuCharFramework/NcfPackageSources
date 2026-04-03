@@ -120,7 +120,27 @@
 
                     </el-scrollbar>
                     <div v-else class="agent-3d-wrap">
+                        <div class="agent-3d-controls">
+                            <el-select v-model="agentGraphFilterGroupId" size="mini" clearable placeholder="全部组" @@change="handleAgentGraphFilterChange">
+                                <el-option v-for="item in agentGraphGroupOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                            </el-select>
+                            <el-select v-model="agentGraphFilterTaskStatuses" size="mini" multiple collapse-tags placeholder="任务状态" @@change="handleAgentGraphFilterChange">
+                                <el-option label="等待" :value="0"></el-option>
+                                <el-option label="聊天中" :value="1"></el-option>
+                                <el-option label="暂停" :value="2"></el-option>
+                                <el-option label="完成" :value="3"></el-option>
+                                <el-option label="取消" :value="4"></el-option>
+                            </el-select>
+                            <el-checkbox v-model="agentGraphShowOnlyActiveGroup" @@change="handleAgentGraphFilterChange">仅运行中组</el-checkbox>
+                        </div>
                         <div class="agent-3d-tip">悬停 Group 柱体可高亮组成员；顶部数字展示该组运行任务状态统计。</div>
+                        <div class="agent-3d-legend">
+                            <span class="legend-item"><i class="legend-dot waiting"></i>等待</span>
+                            <span class="legend-item"><i class="legend-dot chatting"></i>聊天中</span>
+                            <span class="legend-item"><i class="legend-dot paused"></i>暂停</span>
+                            <span class="legend-item"><i class="legend-dot finished"></i>完成</span>
+                            <span class="legend-item"><i class="legend-dot cancelled"></i>取消</span>
+                        </div>
                         <div ref="agent3dContainer" class="agent-3d-canvas"></div>
                     </div>
                 </template>

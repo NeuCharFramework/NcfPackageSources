@@ -400,6 +400,11 @@ var app = new Vue({
       agentGraphPollingTimer: null,
       hoveredAgentGroupId: null,
       agentGraph3d: null,
+      agentGraphFilterGroupId: null,
+      agentGraphFilterTaskStatuses: [],
+      agentGraphShowOnlyActiveGroup: false,
+      agentGraphRequesting: false,
+      agentGraphLastSignature: '',
     };
   },
   computed: {
@@ -426,6 +431,12 @@ var app = new Vue({
         return {};
       }
     },
+    agentGraphGroupOptions() {
+      return (this.agentGraphSnapshot.groups || []).map(item => ({
+        id: item.id,
+        name: item.name
+      }))
+    }
   },
   watch: {},
   created() {
@@ -477,6 +488,78 @@ var app = new Vue({
     },
     calculateDuration,
     scoreFormatter,
+    handleAgentGraphFilterChange() {
+      this.renderAgentGraph()
+    },
+    buildAgentGraphSignature(snapshot) {
+      if (!snapshot) {
+        return ''
+      }
+      return JSON.stringify({
+        agents: (snapshot.agents || []).map(item => [item.id, item.chattingCount, item.score, item.enable]),
+        groups: (snapshot.groups || []).map(item => [item.id, item.runningTaskCount, item.state, item.taskStatusCounts]),
+        links: (snapshot.links || []).map(item => [item.groupId, item.agentId]),
+        collaborations: (snapshot.collaborations || []).map(item => [item.taskId, item.groupId, item.status, item.agentIds])
+      })
+    },
+    buildFilteredAgentGraphSnapshot(snapshot) {
+      const source = snapshot || { agents: [], groups: [], links: [], collaborations: [] }
+      const allGroups = source.groups || []
+      const allLinks = source.links || []
+      const allAgents = source.agents || []
+      const allCollaborations = source.collaborations || []
+
+      const selectedGroupId = this.agentGraphFilterGroupId
+      const selectedStatuses = Array.isArray(this.agentGraphFilterTaskStatuses)
+        ? this.agentGraphFilterTaskStatuses.map(item => Number(item))
+        : []
+
+      let filteredGroups = allGroups.filter(group => {
+        if (selectedGroupId && group.id !== selectedGroupId) {
+          return false
+        }
+
+        if (this.agentGraphShowOnlyActiveGroup && !(group.runningTaskCount > 0)) {
+          return false
+        }
+
+        if (selectedStatuses.length > 0) {
+          const statusMap = group.taskStatusCounts || {}
+          return selectedStatuses.some(status => (statusMap[status] || statusMap[String(status)] || 0) > 0)
+        }
+
+        return true
+      })
+
+      const groupIdSet = new Set(filteredGroups.map(item => item.id))
+      const filteredLinks = allLinks.filter(item => groupIdSet.has(item.groupId))
+      const agentIdSet = new Set(filteredLinks.map(item => item.agentId))
+      const filteredAgents = allAgents.filter(item => agentIdSet.has(item.id))
+
+      const filteredCollaborations = allCollaborations.filter(item => {
+        if (!groupIdSet.has(item.groupId)) {
+          return false
+        }
+        if (selectedStatuses.length > 0) {
+          return selectedStatuses.includes(Number(item.status))
+        }
+        return true
+      })
+
+      return {
+        agents: filteredAgents,
+        groups: filteredGroups,
+        links: filteredLinks,
+        collaborations: filteredCollaborations
+      }
+    },
+    renderAgentGraph(snapshot = null) {
+      if (!this.agentGraph3d) {
+        return
+      }
+      const filtered = this.buildFilteredAgentGraphSnapshot(snapshot || this.agentGraphSnapshot)
+      this.agentGraph3d.updateGraph(filtered)
+    },
     handleAgentListViewModeChange(mode) {
       this.agentListViewMode = mode || 'panel'
       if (this.agentListViewMode === 'three' && this.tabsActiveName === 'first' && this.scrollbarAgentIndex === '') {
@@ -500,6 +583,9 @@ var app = new Vue({
           }
         })
         this.agentGraph3d.init()
+        if ((this.agentGraphSnapshot.groups || []).length > 0) {
+          this.renderAgentGraph(this.agentGraphSnapshot)
+        }
       }
     },
     destroyAgentGraph3d() {
@@ -524,39 +610,49 @@ var app = new Vue({
       }
     },
     async refreshAgentGraphSnapshot(syncRender = false) {
+      if (this.agentGraphRequesting) {
+        return
+      }
+      this.agentGraphRequesting = true
       const query = {
         filter: this.agentQueryList.filter || ''
       }
-      await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetAgentGraphSnapshot?${getInterfaceQueryStr(query)}`)
-        .then((res) => {
-          const data = res?.data ?? {}
-          if (!data.success) {
-            return
-          }
+      try {
+        const res = await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetAgentGraphSnapshot?${getInterfaceQueryStr(query)}`)
+        const data = res?.data ?? {}
+        if (!data.success) {
+          return
+        }
 
-          const snapshot = data.data || {}
-          const normalizedSnapshot = {
-            agents: snapshot.agents || [],
-            groups: snapshot.groups || [],
-            links: snapshot.links || [],
-            collaborations: snapshot.collaborations || []
-          }
-          this.agentGraphSnapshot = normalizedSnapshot
-          this.applyGraphMetricsToAgentList(normalizedSnapshot.agents)
+        const snapshot = data.data || {}
+        const normalizedSnapshot = {
+          agents: snapshot.agents || [],
+          groups: snapshot.groups || [],
+          links: snapshot.links || [],
+          collaborations: snapshot.collaborations || []
+        }
+        this.agentGraphSnapshot = normalizedSnapshot
+        this.applyGraphMetricsToAgentList(normalizedSnapshot.agents)
 
-          if (this.agentGraph3d) {
-            this.agentGraph3d.updateGraph(normalizedSnapshot)
-          }
+        if (this.agentGraphFilterGroupId && !normalizedSnapshot.groups.some(item => item.id === this.agentGraphFilterGroupId)) {
+          this.agentGraphFilterGroupId = null
+        }
 
-          if (syncRender && this.agentListViewMode === 'three') {
+        const nextSignature = this.buildAgentGraphSignature(normalizedSnapshot)
+        const isChanged = nextSignature !== this.agentGraphLastSignature
+        this.agentGraphLastSignature = nextSignature
+
+        if (syncRender || isChanged) {
+          if (this.agentListViewMode === 'three') {
             this.$nextTick(() => {
               this.ensureAgentGraph3d()
-              if (this.agentGraph3d) {
-                this.agentGraph3d.updateGraph(normalizedSnapshot)
-              }
+              this.renderAgentGraph(normalizedSnapshot)
             })
           }
-        })
+        }
+      } finally {
+        this.agentGraphRequesting = false
+      }
     },
     applyGraphMetricsToAgentList(graphAgents) {
       if (!Array.isArray(this.agentList) || !Array.isArray(graphAgents) || graphAgents.length === 0) {
