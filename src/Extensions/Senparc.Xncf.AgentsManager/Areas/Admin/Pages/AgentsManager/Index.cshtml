@@ -1,8 +1,11 @@
 ﻿@page
 @model Senparc.Xncf.AgentsManager.Areas.AgentsManager.Pages.Index
 @using Senparc.Xncf.AgentsManager.Models.DatabaseModel
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizerFactory LocalizerFactory
 @{
-    ViewData["Title"] = "AgentsManager 首页";
+    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    ViewData["Title"] = AR["AgentsManager.PageTitle"];
     Layout = "_Layout_Vue";
 }
 @section Style {
@@ -12,13 +15,13 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>Agents 管理模块</el-breadcrumb-item>
-    <el-breadcrumb-item>首页</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["AgentsManager.BreadcrumbModule"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["AgentsManager.BreadcrumbTitle"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["AgentsManager.BreadcrumbHome"]</el-breadcrumb-item>
 }
 
 <el-tabs v-model="tabsActiveName" class="pageTabs" @@tab-click="handleTabsClick">
-    <el-tab-pane label="智能体" name="first">
+    <el-tab-pane label="@AR["AgentsManager.TabAgents"]" name="first">
         <div class="tabPane-container">
             @* 侧边 *@
             <div class="sidebar-container">

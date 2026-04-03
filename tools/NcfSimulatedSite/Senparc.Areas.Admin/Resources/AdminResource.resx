@@ -177,4 +177,95 @@
   <data name="AdminChat.SelectAtLeastOneMessage" xml:space="preserve"><value>请至少选择一条消息</value></data>
   <data name="AdminChat.DeleteMessagesSuccess" xml:space="preserve"><value>删除成功，共删除 {0} 条消息</value></data>
   <data name="AdminChat.AddModulesSuccess" xml:space="preserve"><value>添加成功</value></data>
+  <data name="Xncf.ModuleReadFailedRefresh" xml:space="preserve"><value>模块读取失败，请尝试更新此模块后刷新页面！模块：{0} / {1} / {2}</value></data>
+  <data name="AdminUser.CannotDeleteSelf" xml:space="preserve"><value>管理员不能删除自己！</value></data>
+  <data name="AdminUser.NotFound" xml:space="preserve"><value>管理员不存在！</value></data>
+  <data name="AdminUser.DeleteSuccess" xml:space="preserve"><value>删除成功！</value></data>
+  <data name="SystemConfig.NotFound" xml:space="preserve"><value>系统配置信息不存在</value></data>
+  <data name="Role.CodeDuplicate" xml:space="preserve"><value>{0} 重复</value></data>
+  <data name="Common.Logout" xml:space="preserve"><value>退出登录</value></data>
+  <data name="AdminChat.PageTitle" xml:space="preserve"><value>AI 智能助手</value></data>
+  <data name="AdminChat.BreadcrumbAssistant" xml:space="preserve"><value>AI 助手</value></data>
+  <data name="AdminChat.BreadcrumbChat" xml:space="preserve"><value>对话</value></data>
+  <data name="AdminChat.SessionHistory" xml:space="preserve"><value>对话历史</value></data>
+  <data name="AdminChat.NewSession" xml:space="preserve"><value>新对话</value></data>
+  <data name="AdminChat.NoChatHistory" xml:space="preserve"><value>暂无对话历史</value></data>
+  <data name="AdminChat.Done" xml:space="preserve"><value>完成</value></data>
+  <data name="AdminChat.Manage" xml:space="preserve"><value>管理</value></data>
+  <data name="AdminChat.NoPreviewDetails" xml:space="preserve"><value>当前模块无可预览详情</value></data>
+  <data name="AdminChat.SelectAll" xml:space="preserve"><value>全选</value></data>
+  <data name="AdminChat.SelectedCount" xml:space="preserve"><value>已选</value></data>
+  <data name="AdminChat.Copy" xml:space="preserve"><value>复制</value></data>
+  <data name="AdminChat.ClearSelection" xml:space="preserve"><value>清空选择</value></data>
+  <data name="AdminChat.StartConversation" xml:space="preserve"><value>开始您的对话吧</value></data>
+  <data name="AdminChat.ThinkingMessage" xml:space="preserve"><value>正在思考中...</value></data>
+  <data name="AdminChat.InputPlaceholder" xml:space="preserve"><value>输入您的问题...</value></data>
+  <data name="AdminChat.ShortcutTip" xml:space="preserve"><value>Ctrl + Enter 或 Cmd + Enter 发送</value></data>
+  <data name="AdminChat.Send" xml:space="preserve"><value>发送</value></data>
+  <data name="AdminChat.EntranceSubtitle" xml:space="preserve"><value>输入问题并选择引用模块，开始新的对话会话</value></data>
+  <data name="AdminChat.EntranceInputPlaceholder" xml:space="preserve"><value>输入您的问题，例如：如何配置系统参数？&#10;&#10;提示：按 Ctrl+Enter 或 Cmd+Enter 发送消息</value></data>
+  <data name="AdminChat.StartChat" xml:space="preserve"><value>开始对话</value></data>
+  <data name="AdminChat.ReferenceModulesOptional" xml:space="preserve"><value>引用模块（可选）</value></data>
+  <data name="AdminChat.AddReferenceModule" xml:space="preserve"><value>添加引用模块</value></data>
+  <data name="AdminChat.Clear" xml:space="preserve"><value>清空</value></data>
+  <data name="AdminChat.SelectModulesAsContext" xml:space="preserve"><value>点击“添加引用模块”可选择多个模块作为上下文</value></data>
+  <data name="ModuleSelector.TitleAddReference" xml:space="preserve"><value>添加引用模块</value></data>
+  <data name="ModuleSelector.SearchPlaceholder" xml:space="preserve"><value>搜索模块名称 / 描述 / UID</value></data>
+  <data name="ModuleSelector.SelectAllFiltered" xml:space="preserve"><value>当前筛选结果全选</value></data>
+  <data name="ModuleSelector.ClearSelection" xml:space="preserve"><value>清空选择</value></data>
+  <data name="ModuleSelector.Selected" xml:space="preserve"><value>已选</value></data>
+  <data name="ModuleSelector.QuickAccess" xml:space="preserve"><value>快速进入</value></data>
+  <data name="ModuleSelector.Menu" xml:space="preserve"><value>菜单</value></data>
+  <data name="ModuleSelector.NoMenu" xml:space="preserve"><value>无菜单</value></data>
+  <data name="ModuleSelector.MenuHierarchy" xml:space="preserve"><value>菜单层级</value></data>
+  <data name="ModuleSelector.NoAvailableMenuAndFunctions" xml:space="preserve"><value>当前模块无可用菜单和 Functions</value></data>
+  <data name="ModuleSelector.NoMatchingModules" xml:space="preserve"><value>没有匹配的模块</value></data>
+  <data name="ModuleSelector.ConfirmAdd" xml:space="preserve"><value>确认添加</value></data>
+  <data name="SystemConfig.PageTitle" xml:space="preserve"><value>系统信息</value></data>
+  <data name="SystemConfig.BasicInfo" xml:space="preserve"><value>基础信息</value></data>
+  <data name="SystemConfig.SystemName" xml:space="preserve"><value>系统名称</value></data>
+  <data name="SystemConfig.ModulePublishMode" xml:space="preserve"><value>模块发布模式</value></data>
+  <data name="SystemConfig.InputSystemName" xml:space="preserve"><value>请输入系统名称</value></data>
+  <data name="TenantInfo.PageTitle" xml:space="preserve"><value>多租户信息</value></data>
+  <data name="TenantInfo.CurrentTenantInfo" xml:space="preserve"><value>当前租户信息</value></data>
+  <data name="TenantInfo.MultiTenantDisabled" xml:space="preserve"><value>当前系统已关闭多租户</value></data>
+  <data name="TenantInfo.CurrentRule" xml:space="preserve"><value>当前系统匹配规则：</value></data>
+  <data name="TenantInfo.NameLabel" xml:space="preserve"><value>名称：</value></data>
+  <data name="TenantInfo.MatchKeyword" xml:space="preserve"><value>匹配关键字：</value></data>
+  <data name="TenantInfo.MatchTime" xml:space="preserve"><value>匹配时间：</value></data>
+  <data name="TenantInfo.AddTenant" xml:space="preserve"><value>新增租户</value></data>
+  <data name="TenantInfo.TenantName" xml:space="preserve"><value>租户名称</value></data>
+  <data name="TenantInfo.MatchRule" xml:space="preserve"><value>匹配规则</value></data>
+  <data name="TenantInfo.AdminRemark" xml:space="preserve"><value>管理员备注</value></data>
+  <data name="TenantInfo.Enabled" xml:space="preserve"><value>启用</value></data>
+  <data name="TenantInfo.Initialize" xml:space="preserve"><value>初始化</value></data>
+  <data name="TenantInfo.ConfirmDelete" xml:space="preserve"><value>确认删除此租户吗？删除后所有租户信息将处于游离状态，请谨慎操作！</value></data>
+  <data name="TenantInfo.InputTenantName" xml:space="preserve"><value>请输入租户名称</value></data>
+  <data name="TenantInfo.TenantMatchKeyword" xml:space="preserve"><value>租户匹配关键字</value></data>
+  <data name="TenantInfo.InputTenantMatchKeyword" xml:space="preserve"><value>请输入租户匹配关键字</value></data>
+  <data name="TenantInfo.InputAdminRemark" xml:space="preserve"><value>请输入管理员备注</value></data>
+  <data name="TenantInfo.EnableSwitch" xml:space="preserve"><value>是否启用</value></data>
+  <data name="TenantInfo.InitializeDialogTitle" xml:space="preserve"><value>租户初始化</value></data>
+  <data name="TenantInfo.DefaultAdminAccount" xml:space="preserve"><value>默认管理员账号</value></data>
+  <data name="TenantInfo.InputDefaultAdminAccount" xml:space="preserve"><value>请输入默认管理员账号</value></data>
+  <data name="TenantInfo.InitializeResult" xml:space="preserve"><value>初始化结果</value></data>
+  <data name="TenantInfo.WarningKeepCredentials" xml:space="preserve"><value>请妥善保管以下信息，密码将无法再次查看！</value></data>
+  <data name="TenantInfo.TenantInfoSection" xml:space="preserve"><value>租户信息</value></data>
+  <data name="TenantInfo.AdminAccountSection" xml:space="preserve"><value>管理员账号</value></data>
+  <data name="TenantInfo.RecordedAndClose" xml:space="preserve"><value>我已记录，关闭</value></data>
+  <data name="AdminUserInfo.AdminList" xml:space="preserve"><value>管理员列表</value></data>
+  <data name="AdminUserInfo.SetRole" xml:space="preserve"><value>设置角色</value></data>
+  <data name="AdminUserInfo.UsernameEditWarning" xml:space="preserve"><value>不建议修改用户名！</value></data>
+  <data name="AdminUserInfo.ConfirmPassword" xml:space="preserve"><value>再次确认密码</value></data>
+  <data name="AdminUserInfo.InputConfirmPassword" xml:space="preserve"><value>请再次输入密码</value></data>
+  <data name="AdminUserInfo.RealName" xml:space="preserve"><value>真实姓名</value></data>
+  <data name="AdminUserInfo.InputRealName" xml:space="preserve"><value>请输入真实姓名</value></data>
+  <data name="AdminUserInfo.Phone" xml:space="preserve"><value>手机号</value></data>
+  <data name="AdminUserInfo.InputPhone" xml:space="preserve"><value>请输入手机号</value></data>
+  <data name="AgentsManager.PageTitle" xml:space="preserve"><value>AgentsManager 首页</value></data>
+  <data name="AgentsManager.BreadcrumbModule" xml:space="preserve"><value>扩展模块</value></data>
+  <data name="AgentsManager.BreadcrumbTitle" xml:space="preserve"><value>Agents 管理模块</value></data>
+  <data name="AgentsManager.BreadcrumbHome" xml:space="preserve"><value>首页</value></data>
+  <data name="AgentsManager.TabAgents" xml:space="preserve"><value>智能体</value></data>
+  <data name="AgentsManager.DatabaseSample" xml:space="preserve"><value>数据库操作示例</value></data>
 </root>

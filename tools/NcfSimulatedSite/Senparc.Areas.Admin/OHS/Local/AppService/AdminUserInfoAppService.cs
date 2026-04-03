@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Senparc.Areas.Admin.Domain;
 using Senparc.Areas.Admin.Domain.Models.Dto;
 using Senparc.Areas.Admin.OHS.Local.PL;
@@ -21,10 +22,18 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     {
         private readonly AdminUserInfoService _adminUserInfoService;
         private readonly AutoMapper.IMapper _mapper;
-        public AdminUserInfoAppService(IServiceProvider serviceProvider, AutoMapper.IMapper mapper, AdminUserInfoService adminUserInfoService) : base(serviceProvider)
+        private readonly IStringLocalizer<AdminResource> _localizer;
+        public AdminUserInfoAppService(IServiceProvider serviceProvider, AutoMapper.IMapper mapper, AdminUserInfoService adminUserInfoService, IStringLocalizer<AdminResource> localizer) : base(serviceProvider)
         {
             this._adminUserInfoService = adminUserInfoService;
             _mapper = mapper;
+            _localizer = localizer;
+        }
+
+        private string L(string key, string fallback, params object[] args)
+        {
+            var value = _localizer[key, args];
+            return value.ResourceNotFound ? string.Format(fallback, args) : value.Value;
         }
 
         [ApiBind]
@@ -91,7 +100,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         /// <param name="request"></param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
-        [FunctionRender("管理员登录", "测试当前管理员登录", typeof(Register))]
+        [FunctionRender("Admin Login", "Test current admin login", typeof(Register))]
         [Microsoft.AspNetCore.Authorization.AllowAnonymous]
         public async Task<AppResponseBase<AccountLoginResultDto>> LoginAsync([FromBody] AdminUserInfo_LoginRequest request)
         {
@@ -102,8 +111,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     UserName = request.UserName,
                     Password = request.Password
                 });
-                logger.Append("管理员登录：" + request.UserName);
-                logger.Append("结果：" + !result.UserName.IsNullOrEmpty());
+                logger.Append("Admin login: " + request.UserName);
+                logger.Append("Result: " + !result.UserName.IsNullOrEmpty());
 
                 return result;
             }, exceptionHandler: (ex, response, logger) =>
@@ -114,7 +123,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 response.ErrorMessage = ex.Message;
             },
             saveLogAfterFinished: true,
-            saveLogName: "管理员登录");
+            saveLogName: "Admin Login");
             return resultDto;
         }
 
@@ -184,20 +193,20 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 if (id == adminUserInfoId)
                 {
-                    throw new NcfExceptionBase("管理员不能删除自己！");
+                    throw new NcfExceptionBase(L("AdminUser.CannotDeleteSelf", "An administrator cannot delete itself."));
                 }
 
                 var adminUserInfo = await _adminUserInfoService.GetObjectAsync(z => z.Id == id);
                 if (adminUserInfo == null)
                 {
-                    throw new NcfExceptionBase("管理员不存在！");
+                    throw new NcfExceptionBase(L("AdminUser.NotFound", "Administrator does not exist."));
                 }
 
                 //TODO：进行更多层级判断
 
                 await _adminUserInfoService.DeleteObjectAsync(adminUserInfo);
 
-                return "删除成功！";
+                return L("AdminUser.DeleteSuccess", "Deleted successfully.");
             });
             return response;
         }

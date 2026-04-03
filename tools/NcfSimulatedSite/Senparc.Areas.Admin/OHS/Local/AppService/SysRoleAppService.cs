@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Senparc.Areas.Admin.OHS.Local.PL;
 using Senparc.CO2NET;
 using Senparc.Ncf.Core.AppServices;
@@ -19,12 +20,20 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         private readonly SysRoleService _sysRoleService;
         private readonly SysRolePermissionService _sysPermissionService;
         private readonly AutoMapper.IMapper _mapper;
+        private readonly IStringLocalizer<AdminResource> _localizer;
 
-        public SysRoleAppService(SysRoleService sysRoleService, IServiceProvider serviceProvider, AutoMapper.IMapper mapper, SysRolePermissionService sysPermissionService) : base(serviceProvider)
+        public SysRoleAppService(SysRoleService sysRoleService, IServiceProvider serviceProvider, AutoMapper.IMapper mapper, SysRolePermissionService sysPermissionService, IStringLocalizer<AdminResource> localizer) : base(serviceProvider)
         {
             _sysRoleService = sysRoleService;
             _mapper = mapper;
             _sysPermissionService = sysPermissionService;
+            _localizer = localizer;
+        }
+
+        private string L(string key, string fallback, params object[] args)
+        {
+            var value = _localizer[key, args];
+            return value.ResourceNotFound ? string.Format(fallback, args) : value.Value;
         }
 
         /// <summary>
@@ -44,7 +53,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 var codeRepeat = await _sysRoleService.GetCountAsync(o => o.RoleCode == request.RoleCode && o.Id != request.Id);
                 if (codeRepeat > 0)
                 {
-                    throw new Ncf.Core.Exceptions.NcfExceptionBase($"{request.RoleCode} 重复");
+                    throw new Ncf.Core.Exceptions.NcfExceptionBase(L("Role.CodeDuplicate", "{0} is duplicated.", request.RoleCode));
                 }
                 await _sysRoleService.CreateOrUpdateAsync(dto);
                 var modifyRole = await _sysRoleService.GetObjectAsync(o => o.RoleCode == dto.RoleCode);
@@ -148,7 +157,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 {
                     logger.Append(ex.StackTrace);
                     logger.Append(ex.InnerException?.StackTrace);
-                    logger.SaveLogs("修改权限出错");
+                    logger.SaveLogs("Permission update failed");
                     throw;
                 }
             });

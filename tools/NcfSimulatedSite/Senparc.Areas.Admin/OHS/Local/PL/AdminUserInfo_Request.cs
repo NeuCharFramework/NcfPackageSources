@@ -100,7 +100,7 @@ namespace Senparc.Areas.Admin.OHS.PL
         {
             if (string.IsNullOrEmpty(Password) && Id == 0)
             {
-                yield return new ValidationResult("密码为必填项！", new[] { "Password" });
+                yield return new ValidationResult("Password is required.", new[] { "Password" });
             }
         }
     }

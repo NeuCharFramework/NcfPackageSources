@@ -1,4 +1,5 @@
 ﻿using Senparc.Areas.Admin.Domain.Dto;
+using Microsoft.Extensions.Localization;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Extensions;
@@ -25,12 +26,20 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         private readonly SystemConfigService _systemConfigService;
         private readonly FullSystemConfigCache _fullSystemConfigCache;
         private readonly IBaseObjectCacheStrategy _cacheStrategy;
+        private readonly IStringLocalizer<AdminResource> _localizer;
 
-        public SystemInfoAppService(IServiceProvider serviceProvider, SystemConfigService systemConfigService, FullSystemConfigCache fullSystemConfigCache, IBaseObjectCacheStrategy cacheStrategy) : base(serviceProvider)
+        public SystemInfoAppService(IServiceProvider serviceProvider, SystemConfigService systemConfigService, FullSystemConfigCache fullSystemConfigCache, IBaseObjectCacheStrategy cacheStrategy, IStringLocalizer<AdminResource> localizer) : base(serviceProvider)
         {
             _systemConfigService = systemConfigService;
             _fullSystemConfigCache = fullSystemConfigCache;
             this._cacheStrategy = cacheStrategy;
+            _localizer = localizer;
+        }
+
+        private string L(string key, string fallback, params object[] args)
+        {
+            var value = _localizer[key, args];
+            return value.ResourceNotFound ? string.Format(fallback, args) : value.Value;
         }
 
 
@@ -68,7 +77,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 if (systemConfig == null)
                 {
-                    throw new NcfExceptionBase("系统配置信息不存在");
+                    throw new NcfExceptionBase(L("SystemConfig.NotFound", "System configuration does not exist."));
                 }
 
                 systemConfig.Update(request.SystemName, request.MchId, request.MchKey, request.TenPayAppId, systemConfig.HideModuleManager);
@@ -104,7 +113,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 if (systemConfig == null)
                 {
-                    throw new NcfExceptionBase("系统配置信息不存在");
+                    throw new NcfExceptionBase(L("SystemConfig.NotFound", "System configuration does not exist."));
                 }
 
                 systemConfig.Update(systemConfig.SystemName, systemConfig.MchId, systemConfig.MchKey, systemConfig.TenPayAppId, hide);
@@ -118,7 +127,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             return response;
         }
 
-        [FunctionRender("缓存测试", "测试当前缓存类型及分布式锁", typeof(Register))]
+        [FunctionRender("Cache Test", "Test current cache type and distributed lock", typeof(Register))]
         public async Task<StringAppResponse> CacheTest()
         {
             var response = await this.GetStringResponseAsync(async (response, logger) =>
