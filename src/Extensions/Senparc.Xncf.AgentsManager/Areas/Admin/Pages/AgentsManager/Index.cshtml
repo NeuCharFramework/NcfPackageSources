@@ -79,7 +79,13 @@
                 :class="[scrollbarAgentIndex === ''? 'agent-container':'agentDetails-container']">
                 @* 智能体列表 *@
                 <template v-if="scrollbarAgentIndex === ''">
-                    <el-scrollbar class="sidebar-agent-container" wrap-class="scrollbar-wrapper">
+                    <div class="agent-view-mode-row">
+                        <el-radio-group v-model="agentListViewMode" size="mini" @@change="handleAgentListViewModeChange">
+                            <el-radio-button label="panel">面板视图</el-radio-button>
+                            <el-radio-button label="three">3D视图</el-radio-button>
+                        </el-radio-group>
+                    </div>
+                    <el-scrollbar v-if="agentListViewMode === 'panel'" class="sidebar-agent-container" wrap-class="scrollbar-wrapper">
                         <div ref="agentElListBox" class="agent-listWrap">
                             <div v-for="(aitem,aindex) in agentList" :key="aindex" class="agent-cardBox">
                                 <div class="agentCard-statebox" :class="[getStatusColor(aitem,'1')]">
@@ -91,13 +97,6 @@
                                     </div>
                                     <div class="upperHalfbox_describe_title text-ellipsis" :title="aitem.name">{{
                                         aitem.name }}</div>
-                                    @* <div class="upperHalfbox_describe">
-                                    <div class="upperHalfbox_describe_title text-ellipsis" :title="aitem.name">{{
-                                    aitem.name }}</div>
-                                    <div class="upperHalfbox_describe_introduce text-ellipsis-2line"
-                                    :title="aitem.description">{{
-                                    aitem.description }}</div>
-                                    </div> *@
                                 </div>
                                 <div class="agentCard-middleHalfbox text-ellipsis-2line" :title="aitem.description">{{
                                     aitem.description }}
@@ -120,6 +119,10 @@
                         </div>
 
                     </el-scrollbar>
+                    <div v-else class="agent-3d-wrap">
+                        <div class="agent-3d-tip">悬停 Group 柱体可高亮组成员；顶部数字展示该组运行任务状态统计。</div>
+                        <div ref="agent3dContainer" class="agent-3d-canvas"></div>
+                    </div>
                 </template>
                 @* 智能体详情 *@
                 <template v-else-if="agentDetails">
@@ -1683,23 +1686,23 @@
                             <div>
                                 <img src="~/images/AgentsManager/prompt_selectPrompt.svg" alt="" style="width: 15px;height:15px;" />
                                 <span class="label">靶场:</span>
-                                <span class="value">202401.15.1</span>
+                                <span class="value">{{ item.promptRangeDto ? item.promptRangeDto.alias : '--' }}</span>
                             </div>
                             <div>
                                 <span class="label">靶道:</span>
-                                <span class="value">T2.3</span>
+                                <span class="value">{{ item.promptItemDto ? item.promptItemDto.fullVersion : '--' }}</span>
                             </div>
                             <div>
                                 <span class="label">瞄准:</span>
-                                <span class="value">A1</span>
+                                <span class="value">{{ item.promptItemDto ? (item.promptItemDto.nickName || '--') : '--' }}</span>
                             </div>
                             <div>
                                 <span class="label">平均分:</span>
-                                <span class="value">10</span>
+                                <span class="value">{{ item.promptItemDto ? scoreFormatter(item.promptItemDto.evalAvgScore) : '--' }}</span>
                             </div>
                             <div>
                                 <span class="label">最高分:</span>
-                                <span class="value">10</span>
+                                <span class="value">{{ item.promptItemDto ? scoreFormatter(item.promptItemDto.evalMaxScore) : '--' }}</span>
                             </div>
                         </div>
                         <div class="prompt-value">
@@ -1788,6 +1791,9 @@
 @section scripts {
     <script src="~/js/AgentsManager/lib/axios.min.js"></script>
     <script src="~/js/PromptRange/lib/marked.min.js"></script>
+    <script src="~/js/PromptRange/lib/three.min.js"></script>
+    <script src="~/js/PromptRange/lib/OrbitControls.js"></script>
     <script src="~/js/AgentsManager/axios.js"></script>
+    <script src="~/js/AgentsManager/agent-3d.js"></script>
     <script src="~/js/AgentsManager/index.js"></script>
 }

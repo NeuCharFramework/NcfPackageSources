@@ -7,6 +7,7 @@ using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Utility;
 using Senparc.Xncf.AgentsManager.Domain.Services;
+using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.AgentsManager.OHS.Local.PL;
@@ -90,10 +91,49 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 var where = seh.BuildWhereExpression();
                 var list = await this._agentsTemplateService.GetObjectListAsync(pageIndex, pageSize, where, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
 
-                var listDto = new PagedList<AgentTemplateSimpleStatusDto>(list
-                    .Select(z =>
-                    _agentsTemplateService.Mapping<AgentTemplateSimpleStatusDto>(z)).ToList(),
-                        list.PageIndex, list.PageCount, list.TotalCount, list.SkipCount);
+                var chatGroupMemberService = base.GetRequiredService<ChatGroupMemberService>();
+                var chatTaskService = base.GetRequiredService<ChatTaskService>();
+
+                var agentIds = list.Select(z => z.Id).Distinct().ToList();
+                var groupMembers = agentIds.Count > 0
+                    ? await chatGroupMemberService.GetFullListAsync(z => agentIds.Contains(z.AgentTemplateId))
+                    : new List<Models.DatabaseModel.Models.ChatGroupMember>();
+
+                var groupIds = groupMembers.Select(z => z.ChatGroupId).Distinct().ToList();
+                var activeTasks = groupIds.Count > 0
+                    ? await chatTaskService.GetFullListAsync(z =>
+                        groupIds.Contains(z.ChatGroupId)
+                        && (z.Status == ChatTask_Status.Waiting
+                            || z.Status == ChatTask_Status.Chatting
+                            || z.Status == ChatTask_Status.Paused))
+                    : new List<ChatTask>();
+
+                var activeTaskCountByGroup = activeTasks
+                    .GroupBy(z => z.ChatGroupId)
+                    .ToDictionary(g => g.Key, g => g.Count());
+
+                var promptScoreCache = new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
+                var dtoList = new List<AgentTemplateSimpleStatusDto>();
+
+                foreach (var item in list)
+                {
+                    var dto = _agentsTemplateService.Mapping<AgentTemplateSimpleStatusDto>(item);
+
+                    var memberGroupIds = groupMembers
+                        .Where(z => z.AgentTemplateId == item.Id)
+                        .Select(z => z.ChatGroupId)
+                        .Distinct()
+                        .ToList();
+
+                    dto.ChattingCount = memberGroupIds.Sum(groupId =>
+                        activeTaskCountByGroup.TryGetValue(groupId, out var count) ? count : 0);
+
+                    dto.Score = await GetAgentScoreByPromptCodeAsync(dto.PromptCode, promptScoreCache);
+                    dtoList.Add(dto);
+                }
+
+                var listDto = new PagedList<AgentTemplateSimpleStatusDto>(dtoList,
+                    list.PageIndex, list.PageCount, list.TotalCount, list.SkipCount);
 
                 var result = new AgentTemplate_GetListResponse()
                 {
@@ -101,6 +141,32 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 };
                 return result;
             });
+        }
+
+        private async Task<float> GetAgentScoreByPromptCodeAsync(string promptCode, Dictionary<string, float> scoreCache)
+        {
+            if (string.IsNullOrWhiteSpace(promptCode))
+            {
+                return -1;
+            }
+
+            if (scoreCache.TryGetValue(promptCode, out var cachedScore))
+            {
+                return cachedScore;
+            }
+
+            try
+            {
+                var promptItem = await _promptItemService.GetBestPromptAsync(promptCode, true);
+                var score = promptItem == null ? -1 : (float)promptItem.EvalAvgScore;
+                scoreCache[promptCode] = score;
+                return score;
+            }
+            catch
+            {
+                scoreCache[promptCode] = -1;
+                return -1;
+            }
         }
 
         /// <summary>

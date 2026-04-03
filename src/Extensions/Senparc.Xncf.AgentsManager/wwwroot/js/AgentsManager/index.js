@@ -390,6 +390,16 @@ var app = new Vue({
       mcpEndpointEditMode: false,
       mcpEndpointOriginalName: '',
       currentMcpTools: [], // 当前查看的MCP工具列表
+      agentListViewMode: 'panel',
+      agentGraphSnapshot: {
+        agents: [],
+        groups: [],
+        links: [],
+        collaborations: []
+      },
+      agentGraphPollingTimer: null,
+      hoveredAgentGroupId: null,
+      agentGraph3d: null,
     };
   },
   computed: {
@@ -426,30 +436,7 @@ var app = new Vue({
     this.tabsActiveName = "first";
     this.agentForm.systemMessageType = "2";
     this.getPluginTypes();
-    
-    // 调试对话框相关变量
-    console.log('Vue实例挂载完成');
-    console.log('visible对象:', this.visible);
-    console.log('dialogMcpTools初始状态:', this.visible.dialogMcpTools);
-    
-    // 测试对话框显示
-    window.testDialog = () => {
-      console.log('测试显示对话框');
-      this.visible.dialogMcpTools = true;
-      console.log('dialogMcpTools新状态:', this.visible.dialogMcpTools);
-    };
-    
-    // 测试创建假工具列表
-    window.testTools = () => {
-      console.log('测试创建工具列表');
-      this.currentMcpTools = [
-        { name: '测试工具1', description: '这是一个测试工具', parameters: [{ name: 'param1', description: '参数1' }] },
-        { name: '测试工具2', description: '这是另一个测试工具', parameters: [] }
-      ];
-      console.log('currentMcpTools:', this.currentMcpTools);
-      this.visible.dialogMcpTools = true;
-    };
-    
+
     // 智能体
     if (this.tabsActiveName === 'first') {
       this.getAgentListData('agent')
@@ -466,6 +453,8 @@ var app = new Vue({
   },
   beforeDestroy() {
     this.clearHistoryTimer()
+    this.stopAgentGraphPolling()
+    this.destroyAgentGraph3d()
   },
   methods: {
     //寻找目标字符串
@@ -487,6 +476,117 @@ var app = new Vue({
       }
     },
     calculateDuration,
+    scoreFormatter,
+    handleAgentListViewModeChange(mode) {
+      this.agentListViewMode = mode || 'panel'
+      if (this.agentListViewMode === 'three' && this.tabsActiveName === 'first' && this.scrollbarAgentIndex === '') {
+        this.$nextTick(() => {
+          this.ensureAgentGraph3d()
+          this.refreshAgentGraphSnapshot(true)
+          this.startAgentGraphPolling()
+        })
+      } else {
+        this.stopAgentGraphPolling()
+      }
+    },
+    ensureAgentGraph3d() {
+      if (!this.$refs.agent3dContainer || typeof AgentGraph3D === 'undefined') {
+        return
+      }
+      if (!this.agentGraph3d) {
+        this.agentGraph3d = new AgentGraph3D(this.$refs.agent3dContainer, {
+          onGroupHover: (groupId) => {
+            this.hoveredAgentGroupId = groupId
+          }
+        })
+        this.agentGraph3d.init()
+      }
+    },
+    destroyAgentGraph3d() {
+      if (this.agentGraph3d) {
+        this.agentGraph3d.dispose()
+        this.agentGraph3d = null
+      }
+    },
+    startAgentGraphPolling() {
+      this.stopAgentGraphPolling()
+      this.agentGraphPollingTimer = setInterval(() => {
+        if (this.tabsActiveName !== 'first' || this.scrollbarAgentIndex !== '' || this.agentListViewMode !== 'three') {
+          return
+        }
+        this.refreshAgentGraphSnapshot(false)
+      }, 1000)
+    },
+    stopAgentGraphPolling() {
+      if (this.agentGraphPollingTimer) {
+        clearInterval(this.agentGraphPollingTimer)
+        this.agentGraphPollingTimer = null
+      }
+    },
+    async refreshAgentGraphSnapshot(syncRender = false) {
+      const query = {
+        filter: this.agentQueryList.filter || ''
+      }
+      await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetAgentGraphSnapshot?${getInterfaceQueryStr(query)}`)
+        .then((res) => {
+          const data = res?.data ?? {}
+          if (!data.success) {
+            return
+          }
+
+          const snapshot = data.data || {}
+          const normalizedSnapshot = {
+            agents: snapshot.agents || [],
+            groups: snapshot.groups || [],
+            links: snapshot.links || [],
+            collaborations: snapshot.collaborations || []
+          }
+          this.agentGraphSnapshot = normalizedSnapshot
+          this.applyGraphMetricsToAgentList(normalizedSnapshot.agents)
+
+          if (this.agentGraph3d) {
+            this.agentGraph3d.updateGraph(normalizedSnapshot)
+          }
+
+          if (syncRender && this.agentListViewMode === 'three') {
+            this.$nextTick(() => {
+              this.ensureAgentGraph3d()
+              if (this.agentGraph3d) {
+                this.agentGraph3d.updateGraph(normalizedSnapshot)
+              }
+            })
+          }
+        })
+    },
+    applyGraphMetricsToAgentList(graphAgents) {
+      if (!Array.isArray(this.agentList) || !Array.isArray(graphAgents) || graphAgents.length === 0) {
+        return
+      }
+
+      const graphAgentMap = new Map(graphAgents.map(item => [item.id, item]))
+      const mergedList = this.agentList.map(item => {
+        const graph = graphAgentMap.get(item.id)
+        if (!graph) {
+          return item
+        }
+        return {
+          ...item,
+          chattingCount: graph.chattingCount,
+          score: graph.score,
+          promptCode: graph.promptCode
+        }
+      })
+      this.$set(this, 'agentList', mergedList)
+
+      if (this.agentDetails && this.agentDetails.agentTemplateDto) {
+        const current = graphAgentMap.get(this.agentDetails.agentTemplateDto.id)
+        if (current) {
+          this.$set(this.agentDetails.agentTemplateDto, 'chattingCount', current.chattingCount)
+          this.$set(this.agentDetails.agentTemplateDto, 'score', current.score)
+          this.$set(this.agentDetails.agentTemplateDto, 'promptCode', current.promptCode)
+        }
+      }
+    },
     // 计算 agent列表 需要填充的元素数量
     calcAgentFillNum() {
       // if (this.tabsActiveName === 'first' && this.scrollbarAgentIndex === '') {
@@ -606,6 +706,10 @@ var app = new Vue({
               }
               // 计算 agent列表 需要填充的元素数量
               this.calcAgentFillNum()
+
+              if (this.tabsActiveName === 'first' && this.scrollbarAgentIndex === '') {
+                this.refreshAgentGraphSnapshot(this.agentListViewMode === 'three')
+              }
             }
             if (listType === 'groupAgent') {
               this.$set(this, 'groupAgentList', agentData)
@@ -1516,9 +1620,17 @@ var app = new Vue({
     // 切换 tabs 页面
     handleTabsClick(tab, event) {
       this.clearHistoryTimer()
+      this.stopAgentGraphPolling()
       // 智能体
       if (this.tabsActiveName === 'first') {
         this.getAgentListData('agent')
+        if (this.agentListViewMode === 'three' && this.scrollbarAgentIndex === '') {
+          this.$nextTick(() => {
+            this.ensureAgentGraph3d()
+            this.refreshAgentGraphSnapshot(true)
+            this.startAgentGraphPolling()
+          })
+        }
       }
       // 组
       if (this.tabsActiveName === 'second') {
@@ -1537,6 +1649,9 @@ var app = new Vue({
 
         this.agentQueryList.filter = value
         this.getAgentListData('agent', 1)
+        if (this.agentListViewMode === 'three' && this.tabsActiveName === 'first' && this.scrollbarAgentIndex === '') {
+          this.refreshAgentGraphSnapshot(true)
+        }
       }
       if (filterType === 'groupAgent') {
         this.groupAgentQueryList.filter = value
@@ -1634,10 +1749,18 @@ var app = new Vue({
       this.scrollbarAgentIndex = '' // 清空索引
       this.agentDetails = '' // 清空详情数据
       this.getAgentListData('agent')
+      if (this.agentListViewMode === 'three') {
+        this.$nextTick(() => {
+          this.ensureAgentGraph3d()
+          this.refreshAgentGraphSnapshot(true)
+          this.startAgentGraphPolling()
+        })
+      }
     },
     // 查看 智能体
     handleAgentView(item, index) {
       this.clearHistoryTimer()
+      this.stopAgentGraphPolling()
       this.scrollbarAgentIndex = item.id ?? ''
       // 重置 数据
       this.resetAgentDetailsQuery()

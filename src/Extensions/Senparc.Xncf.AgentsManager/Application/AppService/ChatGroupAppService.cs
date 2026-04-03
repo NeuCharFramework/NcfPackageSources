@@ -5,12 +5,15 @@ using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Utility;
+using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Services;
+using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.AgentsManager.OHS.Local.PL;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
+using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 using System;
 using System.Collections.Generic;
@@ -25,17 +28,23 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         private readonly ChatGroupMemberService _chatGroupMemeberService;
         private readonly AgentsTemplateService _agentsTemplateService;
         private readonly AIModelService _aIModelService;
+        private readonly ChatTaskService _chatTaskService;
+        private readonly PromptItemService _promptItemService;
 
         public ChatGroupAppService(IServiceProvider serviceProvider,
             ChatGroupService chatGroupService,
             ChatGroupMemberService chatGroupMemeberService,
             AgentsTemplateService agentsTemplateService,
-            AIModelService aIModelService) : base(serviceProvider)
+            AIModelService aIModelService,
+            ChatTaskService chatTaskService,
+            PromptItemService promptItemService) : base(serviceProvider)
         {
             this._chatGroupService = chatGroupService;
             this._chatGroupMemeberService = chatGroupMemeberService;
             this._agentsTemplateService = agentsTemplateService;
             this._aIModelService = aIModelService;
+            this._chatTaskService = chatTaskService;
+            this._promptItemService = promptItemService;
         }
 
         [FunctionRender("管理 ChatGroup", "管理 ChatGroup", typeof(Register))]
@@ -314,6 +323,153 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
+        /// 获取 Agents 3D 视图所需的聚合快照数据
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<AgentGraphSnapshotResponse>> GetAgentGraphSnapshot(string filter = "")
+        {
+            return await this.GetResponseAsync<AgentGraphSnapshotResponse>(async (response, logger) =>
+            {
+                var agentExpression = new SenparcExpressionHelper<AgentTemplate>();
+                agentExpression.ValueCompare.AndAlso(!string.IsNullOrWhiteSpace(filter), z => z.Name.Contains(filter));
+                var agents = await _agentsTemplateService.GetObjectListAsync(0, 0, agentExpression.BuildWhereExpression(), z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
+
+                var result = new AgentGraphSnapshotResponse();
+                if (agents.Count == 0)
+                {
+                    return result;
+                }
+
+                var agentIds = agents.Select(z => z.Id).Distinct().ToList();
+                var members = await _chatGroupMemeberService.GetFullListAsync(z => agentIds.Contains(z.AgentTemplateId));
+                var groupIds = members.Select(z => z.ChatGroupId).Distinct().ToList();
+                var groups = groupIds.Count > 0
+                    ? await _chatGroupService.GetFullListAsync(z => groupIds.Contains(z.Id), z => z.Id, Ncf.Core.Enums.OrderingType.Ascending)
+                    : new List<ChatGroup>();
+
+                var tasks = groupIds.Count > 0
+                    ? await _chatTaskService.GetFullListAsync(z => groupIds.Contains(z.ChatGroupId), z => z.Id, Ncf.Core.Enums.OrderingType.Descending)
+                    : new List<ChatTask>();
+
+                var activeTasks = tasks.Where(z =>
+                    z.Status == ChatTask_Status.Waiting
+                    || z.Status == ChatTask_Status.Chatting
+                    || z.Status == ChatTask_Status.Paused).ToList();
+
+                var activeTaskCountByGroup = activeTasks
+                    .GroupBy(z => z.ChatGroupId)
+                    .ToDictionary(g => g.Key, g => g.Count());
+
+                var promptScoreCache = new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
+
+                foreach (var agent in agents)
+                {
+                    var memberGroupIds = members.Where(z => z.AgentTemplateId == agent.Id).Select(z => z.ChatGroupId).Distinct().ToList();
+                    var chattingCount = memberGroupIds.Sum(groupId =>
+                        activeTaskCountByGroup.TryGetValue(groupId, out var count) ? count : 0);
+
+                    var score = await GetPromptScoreAsync(agent.PromptCode, promptScoreCache);
+
+                    result.Agents.Add(new AgentGraphAgentDto
+                    {
+                        Id = agent.Id,
+                        Name = agent.Name,
+                        PromptCode = agent.PromptCode,
+                        Score = score,
+                        ChattingCount = chattingCount,
+                        Enable = agent.Enable,
+                        Avastar = agent.Avastar
+                    });
+                }
+
+                foreach (var group in groups)
+                {
+                    var statusMap = tasks
+                        .Where(z => z.ChatGroupId == group.Id)
+                        .GroupBy(z => (int)z.Status)
+                        .ToDictionary(g => g.Key, g => g.Count());
+
+                    var memberAgentIds = members
+                        .Where(z => z.ChatGroupId == group.Id)
+                        .Select(z => z.AgentTemplateId)
+                        .Distinct()
+                        .ToList();
+
+                    result.Groups.Add(new AgentGraphGroupDto
+                    {
+                        Id = group.Id,
+                        Name = group.Name,
+                        Enable = group.Enable,
+                        State = (int)group.State,
+                        RunningTaskCount = activeTaskCountByGroup.TryGetValue(group.Id, out var runningCount) ? runningCount : 0,
+                        TaskStatusCounts = statusMap,
+                        MemberAgentIds = memberAgentIds
+                    });
+
+                    foreach (var memberAgentId in memberAgentIds)
+                    {
+                        result.Links.Add(new AgentGraphLinkDto
+                        {
+                            GroupId = group.Id,
+                            AgentId = memberAgentId
+                        });
+                    }
+                }
+
+                foreach (var task in activeTasks)
+                {
+                    var memberAgentIds = members
+                        .Where(z => z.ChatGroupId == task.ChatGroupId)
+                        .Select(z => z.AgentTemplateId)
+                        .Distinct()
+                        .ToList();
+
+                    if (memberAgentIds.Count < 2)
+                    {
+                        continue;
+                    }
+
+                    result.Collaborations.Add(new AgentGraphCollaborationDto
+                    {
+                        TaskId = task.Id,
+                        GroupId = task.ChatGroupId,
+                        TaskName = task.Name,
+                        Status = (int)task.Status,
+                        AgentIds = memberAgentIds
+                    });
+                }
+
+                return result;
+            });
+        }
+
+        private async Task<float> GetPromptScoreAsync(string promptCode, Dictionary<string, float> scoreCache)
+        {
+            if (string.IsNullOrWhiteSpace(promptCode))
+            {
+                return -1;
+            }
+
+            if (scoreCache.TryGetValue(promptCode, out var cachedScore))
+            {
+                return cachedScore;
+            }
+
+            try
+            {
+                var promptItem = await _promptItemService.GetBestPromptAsync(promptCode, true);
+                var score = promptItem == null ? -1 : (float)promptItem.EvalAvgScore;
+                scoreCache[promptCode] = score;
+                return score;
+            }
+            catch
+            {
+                scoreCache[promptCode] = -1;
+                return -1;
+            }
+        }
+
+        /// <summary>
         /// 删除整个对话（包括所有消息、任务等）
         /// </summary>
         [FunctionRender("删除对话", "删除整个对话及其所有数据", typeof(Register))]
@@ -426,5 +582,50 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 return logger.ToString();
             });
         }
+    }
+
+    public class AgentGraphSnapshotResponse
+    {
+        public List<AgentGraphAgentDto> Agents { get; set; } = new List<AgentGraphAgentDto>();
+        public List<AgentGraphGroupDto> Groups { get; set; } = new List<AgentGraphGroupDto>();
+        public List<AgentGraphLinkDto> Links { get; set; } = new List<AgentGraphLinkDto>();
+        public List<AgentGraphCollaborationDto> Collaborations { get; set; } = new List<AgentGraphCollaborationDto>();
+    }
+
+    public class AgentGraphAgentDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string PromptCode { get; set; }
+        public float Score { get; set; }
+        public int ChattingCount { get; set; }
+        public bool Enable { get; set; }
+        public string Avastar { get; set; }
+    }
+
+    public class AgentGraphGroupDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool Enable { get; set; }
+        public int State { get; set; }
+        public int RunningTaskCount { get; set; }
+        public Dictionary<int, int> TaskStatusCounts { get; set; } = new Dictionary<int, int>();
+        public List<int> MemberAgentIds { get; set; } = new List<int>();
+    }
+
+    public class AgentGraphLinkDto
+    {
+        public int GroupId { get; set; }
+        public int AgentId { get; set; }
+    }
+
+    public class AgentGraphCollaborationDto
+    {
+        public int TaskId { get; set; }
+        public int GroupId { get; set; }
+        public string TaskName { get; set; }
+        public int Status { get; set; }
+        public List<int> AgentIds { get; set; } = new List<int>();
     }
 }
