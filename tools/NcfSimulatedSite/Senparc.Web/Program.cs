@@ -1,4 +1,4 @@
-﻿//以下数据库模块的命名空间根据需要添加或删除
+//以下数据库模块的命名空间根据需要添加或删除
 //using Senparc.Ncf.Database.MySql;         //使用需要引用包： Senparc.Ncf.Database.MySql
 //using Senparc.Ncf.Database.Sqlite;        //使用需要引用包： Senparc.Ncf.Database.Sqlite
 //using Senparc.Ncf.Database.PostgreSQL;    //使用需要引用包： Senparc.Ncf.Database.PostgreSQL
@@ -10,6 +10,9 @@ using Senparc.CO2NET.HttpUtility;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Database.SqlServer;
 using System.Text;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Localization;
+using Senparc.Web.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,12 +30,20 @@ builder.Services.AddDaprClient();
 
 var app = builder.Build();
 
-//app.MapDefaultEndpoints();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
+
+// Configure request localization (cookie first, then query/header providers)
+var supportedCultures = LanguageController.SupportedCultures;
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures)
+    .AddInitialRequestCultureProvider(new CookieRequestCultureProvider());
+
+app.UseRequestLocalization(localizationOptions);
 
 //Use NCF（必须）
 app.UseNcf<BySettingDatabaseConfiguration>();

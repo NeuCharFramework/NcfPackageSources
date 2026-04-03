@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Admin.Title" xml:space="preserve">
+    <value>NCF 管理パネル</value>
+  </data>
+  <data name="Admin.Nav.Home" xml:space="preserve">
+    <value>ホーム</value>
+  </data>
+  <data name="Admin.Logout.Title" xml:space="preserve">
+    <value>ログアウト</value>
+  </data>
+  <data name="Admin.Logout.Confirm" xml:space="preserve">
+    <value>ログアウトしますか？</value>
+  </data>
+  <data name="Admin.Logout.Yes" xml:space="preserve">
+    <value>ログアウト</value>
+  </data>
+  <data name="Admin.Logout.No" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="Admin.Login.Title" xml:space="preserve">
+    <value>管理者ログイン</value>
+  </data>
+  <data name="Admin.Login.Username" xml:space="preserve">
+    <value>ユーザー名</value>
+  </data>
+  <data name="Admin.Login.Password" xml:space="preserve">
+    <value>パスワード</value>
+  </data>
+  <data name="Admin.Login.Tenant" xml:space="preserve">
+    <value>テナント名</value>
+  </data>
+  <data name="Admin.Login.Submit" xml:space="preserve">
+    <value>ログイン</value>
+  </data>
+  <data name="Admin.Login.UsernamePlaceholder" xml:space="preserve">
+    <value>ユーザー名を入力してください</value>
+  </data>
+  <data name="Admin.Login.PasswordPlaceholder" xml:space="preserve">
+    <value>パスワードを入力してください</value>
+  </data>
+  <data name="Admin.Login.TenantPlaceholder" xml:space="preserve">
+    <value>テナント名を入力してください</value>
+  </data>
+  <data name="Admin.Login.Error.UsernameRequired" xml:space="preserve">
+    <value>ユーザー名を入力してください</value>
+  </data>
+  <data name="Admin.Login.Error.PasswordRequired" xml:space="preserve">
+    <value>パスワードを入力してください</value>
+  </data>
+  <data name="Admin.Language.SelectLanguage" xml:space="preserve">
+    <value>言語選択</value>
+  </data>
+</root>
