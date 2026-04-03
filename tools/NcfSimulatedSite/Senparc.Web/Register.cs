@@ -9,6 +9,7 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.AreasBase;
 using Senparc.Ncf.Core.EventBus;
+using Senparc.Web.Controllers;
 
 namespace Senparc.Web
 {
@@ -22,6 +23,10 @@ namespace Senparc.Web
         public static void AddNcf(this WebApplicationBuilder builder)
         {
             StartTime = SystemTime.Now.DateTime;
+
+            // Localization baseline for all modules (Web/Admin/Installer/XNCF).
+            // Use type-based lookup without ResourcesPath override to match embedded resource names.
+            builder.Services.AddLocalization();
 
             //激活 Xncf 扩展引擎（必须）
             var logMsg = builder.StartWebEngine(new[] { "Senparc.Areas.Admin"});
