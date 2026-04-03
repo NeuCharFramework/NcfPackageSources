@@ -90,6 +90,10 @@
     this.currentSnapshot = null;
     this.targets = new Map();
     this.activeGroupId = null;
+    this.lockedGroupId = null;
+    this.avatarTextureLoader = null;
+    this.avatarTextureCache = new Map();
+    this.pointerClickHandler = null;
   }
 
   AgentGraph3D.prototype.init = function () {
@@ -123,6 +127,7 @@
 
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector2();
+    this.avatarTextureLoader = new THREE.TextureLoader();
 
     const ambient = new THREE.AmbientLight(0xffffff, 0.58);
     const key = new THREE.DirectionalLight(0xa9d2ff, 0.9);
@@ -144,6 +149,8 @@
     this.pointerMoveHandler = this.handlePointerMove.bind(this);
     this.renderer.domElement.addEventListener('mousemove', this.pointerMoveHandler);
     this.renderer.domElement.addEventListener('mouseleave', this.clearGroupFocus.bind(this));
+    this.pointerClickHandler = this.handlePointerClick.bind(this);
+    this.renderer.domElement.addEventListener('click', this.pointerClickHandler);
 
     this.animate();
     return true;
@@ -157,6 +164,10 @@
 
     if (this.renderer && this.pointerMoveHandler) {
       this.renderer.domElement.removeEventListener('mousemove', this.pointerMoveHandler);
+    }
+
+    if (this.renderer && this.pointerClickHandler) {
+      this.renderer.domElement.removeEventListener('click', this.pointerClickHandler);
     }
 
     if (this.resizeHandler) {
@@ -182,6 +193,7 @@
     this.scene = null;
     this.agentById.clear();
     this.groupById.clear();
+    this.avatarTextureCache.clear();
   };
 
   AgentGraph3D.prototype.handleResize = function () {
@@ -208,6 +220,18 @@
         return;
       }
       entry.mesh.position.lerp(target, 0.09);
+      if (entry.avatarSprite) {
+        entry.avatarSprite.position.set(entry.mesh.position.x, entry.mesh.position.y + 0.02, entry.mesh.position.z);
+      }
+      if (entry.pulseRing) {
+        entry.pulseRing.position.set(entry.mesh.position.x, 0.25, entry.mesh.position.z);
+        if (entry.isActive) {
+          const elapsed = Date.now() * 0.0025 + entry.pulsePhase;
+          const scale = 1 + ((Math.sin(elapsed) + 1) * 0.22);
+          entry.pulseRing.scale.set(scale, scale, scale);
+          entry.pulseRing.material.opacity = 0.2 + ((Math.sin(elapsed) + 1) * 0.2);
+        }
+      }
       if (entry.label) {
         entry.label.position.set(entry.mesh.position.x, entry.mesh.position.y + 3.7, entry.mesh.position.z);
       }
@@ -313,6 +337,12 @@
     });
 
     const activeGroupIds = new Set((this.currentSnapshot.collaborations || []).map(function (c) { return c.groupId; }));
+    const activeAgentIds = new Set();
+    (this.currentSnapshot.collaborations || []).forEach(function (col) {
+      (col.agentIds || []).forEach(function (id) {
+        activeAgentIds.add(id);
+      });
+    });
     const agentGeom = new THREE.SphereGeometry(1.6, 22, 22);
 
     agents.forEach(function (agent, index) {
@@ -381,8 +411,36 @@
         label: label,
         agent: agent,
         target: target,
-        groupIds: memberGroupIds
+        groupIds: memberGroupIds,
+        avatarSprite: null,
+        pulseRing: null,
+        isActive: activeAgentIds.has(agent.id) || agent.chattingCount > 0,
+        pulsePhase: (hashNumber(agent.id) % 100) / 10
       };
+
+      const avatarUrl = agent.avastar || '/images/AgentsManager/avatar/avatar1.png';
+      const avatarSprite = this.createAgentAvatarSprite(avatarUrl);
+      if (avatarSprite) {
+        avatarSprite.position.set(target.x, target.y + 0.02, target.z);
+        this.scene.add(avatarSprite);
+        entry.avatarSprite = avatarSprite;
+      }
+
+      if (entry.isActive) {
+        const ringGeometry = new THREE.RingGeometry(1.9, 2.25, 36);
+        const ringMaterial = new THREE.MeshBasicMaterial({
+          color: 0x66d4ff,
+          transparent: true,
+          opacity: 0.35,
+          side: THREE.DoubleSide,
+          depthWrite: false
+        });
+        const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+        ring.rotation.x = -Math.PI / 2;
+        ring.position.set(target.x, 0.25, target.z);
+        this.scene.add(ring);
+        entry.pulseRing = ring;
+      }
 
       this.agentObjects.push(entry);
       this.agentById.set(agent.id, entry);
@@ -459,6 +517,12 @@
     this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
     this.raycaster.setFromCamera(this.mouse, this.camera);
+
+    if (this.lockedGroupId) {
+      this.applyGroupHighlight();
+      return;
+    }
+
     const intersects = this.raycaster.intersectObjects(this.groupObjects.map(function (g) { return g.mesh; }), false);
     if (intersects.length > 0) {
       this.activeGroupId = intersects[0].object.userData.groupId;
@@ -474,7 +538,37 @@
     this.applyGroupHighlight();
   };
 
+  AgentGraph3D.prototype.handlePointerClick = function (event) {
+    if (!this.camera || !this.renderer || !this.raycaster) {
+      return;
+    }
+
+    const rect = this.renderer.domElement.getBoundingClientRect();
+    this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    this.raycaster.setFromCamera(this.mouse, this.camera);
+
+    const intersects = this.raycaster.intersectObjects(this.groupObjects.map(function (g) { return g.mesh; }), false);
+    if (intersects.length === 0) {
+      this.lockedGroupId = null;
+      this.applyGroupHighlight();
+      return;
+    }
+
+    const groupId = intersects[0].object.userData.groupId;
+    if (this.lockedGroupId === groupId) {
+      this.lockedGroupId = null;
+    } else {
+      this.lockedGroupId = groupId;
+    }
+    this.applyGroupHighlight();
+  };
+
   AgentGraph3D.prototype.clearGroupFocus = function () {
+    if (this.lockedGroupId) {
+      this.applyGroupHighlight();
+      return;
+    }
     this.activeGroupId = null;
     if (typeof this.options.onGroupHover === 'function') {
       this.options.onGroupHover(null);
@@ -487,7 +581,7 @@
       return;
     }
 
-    const activeGroup = this.activeGroupId;
+    const activeGroup = this.lockedGroupId || this.activeGroupId;
     const activeMemberSet = new Set();
 
     if (activeGroup) {
@@ -508,6 +602,8 @@
     this.groupObjects.forEach(function (entry) {
       const isActive = activeGroup && entry.group.id === activeGroup;
       entry.mesh.material.opacity = !activeGroup ? 0.86 : (isActive ? 1 : 0.2);
+      entry.mesh.material.emissive = new THREE.Color(isActive ? 0x2b8fd1 : 0x000000);
+      entry.mesh.material.emissiveIntensity = isActive ? 0.35 : 0;
       if (entry.label) {
         entry.label.material.opacity = !activeGroup ? 1 : (isActive ? 1 : 0.3);
       }
@@ -520,6 +616,42 @@
         line.material.opacity = line.userData.groupId === activeGroup ? 0.85 : 0.08;
       }
     });
+  };
+
+  AgentGraph3D.prototype.createAgentAvatarSprite = function (avatarUrl) {
+    if (!this.avatarTextureLoader || !avatarUrl) {
+      return null;
+    }
+
+    const material = new THREE.SpriteMaterial({
+      transparent: true,
+      opacity: 0.92,
+      depthWrite: false
+    });
+    const sprite = new THREE.Sprite(material);
+    sprite.scale.set(2.35, 2.35, 1);
+
+    const cached = this.avatarTextureCache.get(avatarUrl);
+    if (cached) {
+      material.map = cached;
+      material.needsUpdate = true;
+      return sprite;
+    }
+
+    this.avatarTextureLoader.load(
+      avatarUrl,
+      function (texture) {
+        this.avatarTextureCache.set(avatarUrl, texture);
+        material.map = texture;
+        material.needsUpdate = true;
+      }.bind(this),
+      undefined,
+      function () {
+        material.opacity = 0;
+      }
+    );
+
+    return sprite;
   };
 
   global.AgentGraph3D = AgentGraph3D;
