@@ -14,7 +14,7 @@ namespace Senparc.Ncf.Core
     /// </summary>
     public class AIPluginHub
     {
-        #region 单例
+        #region Singleton
 
         AIPluginHub() { }
 

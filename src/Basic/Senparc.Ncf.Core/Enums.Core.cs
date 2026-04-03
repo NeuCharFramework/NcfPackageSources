@@ -1,7 +1,7 @@
 ﻿namespace Senparc.Ncf.Core.Enums
 {
     /// <summary>
-    /// 消息类型（级别）
+    /// Message type (level)
     /// </summary>
     public enum MessageType
     {
@@ -13,7 +13,7 @@
 
 
     /// <summary>
-    /// Email账户
+    /// Email account
     /// </summary>
     public enum EmailAccountType
     {
@@ -23,7 +23,7 @@
     }
 
     /// <summary>
-    /// 排序类型
+    /// Ordering type
     /// </summary>
     public enum OrderingType
     {
@@ -32,7 +32,7 @@
     }
 
     /// <summary>
-    /// 安装或更新
+    /// Install or update
     /// </summary>
     public enum InstallOrUpdate
     {
@@ -41,7 +41,7 @@
     }
 
     /// <summary>
-    /// Email设置类型
+    /// Email setting type
     /// </summary>
     public enum SendEmailType
     {
@@ -54,13 +54,13 @@
         OrderCreate,
         OrderPaySuccess,
         OrderCancelled,
-        WeixinStat, //微信统计
-        AppStatusChanged, //应用状态改变
+        WeixinStat, //WeChat statistics
+        AppStatusChanged, //Application status changed
     }
 
 
     /// <summary>
-    /// Meta类型
+    /// Meta type
     /// </summary>
     public enum MetaType
     {
@@ -68,7 +68,7 @@
         description
     }
 
-    #region 实体属性
+    #region Entity properties
 
 
     public enum Account_RegisterWay
@@ -107,14 +107,14 @@
     #endregion
 }
 
-//#region 弥补 MySQL 库暂时的 bug
+//#region Temporary workaround for MySQL library bug
 
 //#if RELEASE
 //namespace Microsoft.EntityFrameworkCore.Metadata
 //{
 //    /// <summary>
-//    /// 说明：因为 Pomelo.EntityFrameworkCore.MySql 一个未充分解耦的问题，这里暂时先引用，待其升级后会取消，和具体数据库充分解耦
-//    /// <para>官方反馈：https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/issues/1205</para>
+//    /// Note: due to an insufficient decoupling issue in Pomelo.EntityFrameworkCore.MySql, this temporary reference is used and will be removed after upstream upgrade.
+//    /// <para>Official feedback: https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/issues/1205</para>
 //    /// </summary>
 //    public enum MySqlValueGenerationStrategy
 //    {

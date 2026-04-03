@@ -65,7 +65,7 @@ namespace Senparc.Ncf.Core.Cache
         /// <returns></returns>
         private QueueCacheData<T> GetMessageContext(string key, bool removeDataWhenExist = true)
         {
-            //检查并移除过期记录，为了尽量节约资源，这里暂不使用独立线程轮询
+            // Check and remove expired records. Temporary no standalone thread polling to save resources
             while (MessageQueue.Count > 0)
             {
                 var firstMessageContext = MessageQueue[0];
@@ -116,7 +116,7 @@ namespace Senparc.Ncf.Core.Cache
 
         public virtual string Insert(T obj, string key)
         {
-            //检查并移除过期记录，为了尽量节约资源，这里暂不使用独立线程轮询
+            // Check and remove expired records. Temporary no standalone thread polling to save resources
             //while (MessageQueue.Count > 0)
             //{
             //    var firstMessageContext = MessageQueue[0];

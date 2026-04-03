@@ -330,7 +330,7 @@ namespace Senparc.Ncf.Core.Utility
                     {
                         value = maxId;
                         maxIdAttr.Value = maxId.ToString();
-                        prop.SetValue(entity, maxId, null); //把最新的Id设置到实体
+                        prop.SetValue(entity, maxId, null); //Set the latest Id to the entity
                     }
 
                     switch (prop.PropertyType.Name)
@@ -352,7 +352,7 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 使用此方法须确定数据库中没有重复项（或有主键）
+        /// Use this method only when the database has no duplicates (or has a primary key)
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entity"></param>
@@ -362,7 +362,7 @@ namespace Senparc.Ncf.Core.Utility
             try
             {
                 string entityName = typeof(TEntity).Name;
-                XElement xml = this.GetXElement(GetXmlFullApplicationPath(entityName));//载入文档
+                XElement xml = this.GetXElement(GetXmlFullApplicationPath(entityName));//Load document
 
                 var idProp = typeof(TEntity).GetProperty("Id");
                 if (idProp == null)
@@ -375,9 +375,9 @@ namespace Senparc.Ncf.Core.Utility
                 XElement delElement = xml.Elements(entityName).FirstOrDefault(z => z.Element("Id").Value == id.ToString());
                 if (delElement == null)
                 {
-                    return true;//throw new Exception("待更新数据不存在！");
+                    return true;//throw new Exception("The data to update does not exist!");
                 }
-                delElement.Remove();//删除节点
+                delElement.Remove();//Remove node
 
                 xml.Save(this.GetMapPath(this.GetXmlFullApplicationPath(entityName)));
                 return true;
@@ -401,7 +401,7 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 使用此方法须确定数据库中没有重复项（或有主键）
+        /// Use this method only when the database has no duplicates (or has a primary key)
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entity"></param>
@@ -411,7 +411,7 @@ namespace Senparc.Ncf.Core.Utility
             try
             {
                 string entityName = typeof(TEntity).Name;
-                XElement xml = this.GetXElement(GetXmlFullApplicationPath(entityName));//载入文档
+                XElement xml = this.GetXElement(GetXmlFullApplicationPath(entityName));//Load document
 
                 var idProp = typeof(TEntity).GetProperty("Id");
                 if (idProp == null)
@@ -423,7 +423,7 @@ namespace Senparc.Ncf.Core.Utility
                 XElement item = xml.Elements(entityName).FirstOrDefault(z => z.Element("Id").Value == id.ToString());
                 if (item == null)
                 {
-                    return null;//throw new Exception("待更新数据不存在！");
+                    return null;//throw new Exception("The data to update does not exist!");
                 }
 
                 TEntity result = ConvertXmlToEntity<TEntity>(item);

@@ -7,7 +7,7 @@ namespace Senparc.Ncf.Core.Cache
 {
     public static class MethodCache
     {
-        #region 同步方法
+        #region Synchronous Methods
 
         /// <summary>
         /// 获取缓存
@@ -66,7 +66,7 @@ namespace Senparc.Ncf.Core.Cache
         #endregion
 
 
-        #region 异步方法  
+        #region Asynchronous Methods  
 
         /// <summary>
         /// 获取缓存

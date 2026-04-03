@@ -45,14 +45,14 @@ namespace Senparc.Ncf.Core
                 })
                 .SetChinese(() =>
                 {
-                    sb.AppendLine("    AI 原生 / DDD（Domain-Driven Design）系统");
+                    sb.AppendLine("    AI Native / DDD (Domain-Driven Design) System");
                     sb.AppendLine("");
                     if (showOpenSourceInfo)
                     {
-                        sb.AppendLine("    开源模板：https://github.com/NeuCharFramework/NCF");
-                        sb.AppendLine("    开源模板：https://gitee.com/NeuCharFramework/NCF");
+                        sb.AppendLine("    Open source template: https://github.com/NeuCharFramework/NCF");
+                        sb.AppendLine("    Open source template: https://gitee.com/NeuCharFramework/NCF");
                         //sb.AppendLine("    基础模块源码：https://github.com/NeuCharFramework/NcfPackageSources");
-                        sb.AppendLine("    文档：https://doc.ncf.pub/");
+                        sb.AppendLine("    Documentation: https://doc.ncf.pub/");
                     }
                 })
                 .InvokeDefault();
@@ -68,7 +68,7 @@ namespace Senparc.Ncf.Core
 
         public static void ShowSuccessTip(string note, string systemVersion = null, bool showOpenSourceInfo = true)
         {
-            //输出启动成功标志
+            // Output startup success flag
             systemVersion ??= Assembly.GetExecutingAssembly().GetName().Version.ToString();
             var startupNote = Senparc.Ncf.Core.VersionManager.GetVersionNote(systemVersion, note, showOpenSourceInfo);
             Console.WriteLine("----------------------------------------------------------");

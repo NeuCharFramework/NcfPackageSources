@@ -15,7 +15,7 @@ namespace Senparc.Ncf.Core.Cache
         DateTime CacheTime { get; set; }
         DateTime CacheTimeOut { get; set; }
 
-        #region 同步方法
+        #region Synchronous Methods
         T Data { get; set; }
         void RemoveCache();
         void SetData(T value, int timeOut, BaseCache<T>.UpdateWithBataBase updateWithDatabases);
@@ -23,7 +23,7 @@ namespace Senparc.Ncf.Core.Cache
         void UpdateToDatabase(T obj);
         #endregion
 
-        #region 异步方法
+        #region Asynchronous Methods
         Task<T> GetDataAsync();
         Task RemoveCacheAsync();
         Task SetDataAsync(T value, int timeOut, BaseCache<T>.UpdateWithBataBase updateWithDatabases);

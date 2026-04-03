@@ -245,14 +245,14 @@ namespace Senparc.Ncf.Core.Models
 
         public override int SaveChanges()
         {
-            //处理多租户
+            // Handle multi-tenant
             AddTenandId();
             return base.SaveChanges();
         }
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
-            //处理多租户
+            // Handle multi-tenant
             AddTenandId();
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }

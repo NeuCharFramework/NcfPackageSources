@@ -52,11 +52,11 @@ namespace Senparc.Ncf.Core.Cache
             {
                 var cacheStragegy = CacheStrategyFactory.GetObjectCacheStrategyInstance();
                 //var cacheKey = objCacheData.Key;
-                objCacheData.CacheTime = DateTime.Now;//记录缓存时间
+                objCacheData.CacheTime = DateTime.Now;// Record cache time
                 cacheStragegy.Set(objCacheData.Key, objCacheData as T);
 
                 //var cacheKey = ContainerHelper.GetCacheKey(this.GetType());
-                //containerBag.CacheTime = DateTime.Now;//记录缓存时间
+                //containerBag.CacheTime = DateTime.Now;// Record cache time
                 //containerCacheStragegy.UpdateContainerBag(cacheKey, containerBag);
             });
         }

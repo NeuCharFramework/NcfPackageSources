@@ -68,7 +68,7 @@ namespace Senparc.Ncf.Core.Cache
 
         public override string CreateKey()
         {
-            throw new Exception("请在外部生成Key");
+            throw new Exception("Please generate Key externally");
         }
 
         public override QueueCacheData<QrCodeLoginData> Get(string key, bool removeDataWhenExist = true)
@@ -76,7 +76,7 @@ namespace Senparc.Ncf.Core.Cache
             var value = base.Get(key, removeDataWhenExist);
             //if (value != null)
             //{
-            //    base.Remove(key);//一次性有效
+            //    base.Remove(key);  // One-time use
             //}
             return value;
         }

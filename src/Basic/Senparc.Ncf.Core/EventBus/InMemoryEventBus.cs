@@ -10,14 +10,14 @@ using Microsoft.Extensions.Logging;
 namespace Senparc.Ncf.Core.EventBus
 {
     /// <summary>
-    /// 基于内存 Channel 的事件总线实现
+    /// In-memory Channel-based event bus implementation
     /// </summary>
     public class InMemoryEventBus : IEventBus
     {
         private readonly Channel<IIntegrationEvent> _channel;
         private readonly ILogger<InMemoryEventBus> _logger;
         
-        // 用于防止重复处理的事件 ID 追踪（使用滑动窗口，保留最近 10 分钟的事件 ID）
+        // Tracks processed event IDs to prevent duplicate processing (sliding window of last 10 minutes)
         private readonly ConcurrentDictionary<Guid, DateTime> _processedEventIds = new();
         private readonly TimeSpan _eventIdRetentionPeriod = TimeSpan.FromMinutes(10);
         
@@ -25,12 +25,12 @@ namespace Senparc.Ncf.Core.EventBus
         {
             _logger = logger;
             
-            // 配置无界通道（生产速度 > 消费速度时，内存会增加，但不会阻塞生产者）
-            // 如果需要背压控制，可以使用 Channel.CreateBounded
+            // Configure unbounded channel (memory can grow when producer speed > consumer speed, but producers won't block)
+            // Use Channel.CreateBounded if backpressure control is required
             var options = new UnboundedChannelOptions
             {
-                SingleReader = false,  // 支持多个消费者并发读取
-                SingleWriter = false   // 多个业务模块在并发写
+                SingleReader = false,  // Support concurrent reads from multiple consumers
+                SingleWriter = false   // Allow concurrent writes from multiple business modules
             };
             _channel = Channel.CreateUnbounded<IIntegrationEvent>(options);
         }
@@ -42,13 +42,13 @@ namespace Senparc.Ncf.Core.EventBus
         }
         
         /// <summary>
-        /// 发布派生事件（自动继承父事件的链信息并检测循环）
-        /// 注意：此方法要求事件类型继承自 IntegrationEvent 基类
+        /// Publish a derived event (automatically inherit parent chain metadata and detect cycles)
+        /// Note: this method requires event types to inherit from the IntegrationEvent base class
         /// </summary>
         public ValueTask PublishDerivedAsync<TEvent>(TEvent @event, IIntegrationEvent parentEvent, CancellationToken cancellationToken = default)
             where TEvent : IIntegrationEvent
         {
-            // 仅支持 IntegrationEvent 基类（因为需要访问 DeriveMetadata 等方法）
+            // Only IntegrationEvent base class is supported (DeriveMetadata and related methods are required)
             if (parentEvent is not IntegrationEvent typedParent)
             {
                 throw new ArgumentException("Parent event must inherit from IntegrationEvent base class", nameof(parentEvent));
@@ -59,10 +59,10 @@ namespace Senparc.Ncf.Core.EventBus
                 throw new ArgumentException("Event must inherit from IntegrationEvent base class", nameof(@event));
             }
             
-            // 派生事件的元数据
+            // Metadata for the derived event
             var metadata = typedParent.DeriveMetadata();
             
-            // 检查是否会产生循环引用（在发布前预检）
+            // Pre-check for circular references before publishing
             var newEventType = typedEvent.GetType().Name;
             if (typedParent.HasCircularReference(newEventType))
             {
@@ -77,7 +77,7 @@ namespace Senparc.Ncf.Core.EventBus
                     $"This would cause an infinite event loop.");
             }
             
-            // 创建一个带有链信息的新事件实例
+            // Create a new event instance with propagated chain metadata
             var derivedEvent = typedEvent with
             {
                 ParentEventId = metadata.ParentEventId,
@@ -96,11 +96,11 @@ namespace Senparc.Ncf.Core.EventBus
         }
 
         /// <summary>
-        /// 检查事件是否已经被处理过（用于防止重复处理）
+        /// Check whether the event has already been processed (to prevent duplicate handling)
         /// </summary>
         public bool TryMarkEventAsProcessed(Guid eventId)
         {
-            // 清理过期的事件 ID（每100次调用清理一次）
+            // Clean up expired event IDs (once per 100 calls)
             if (_processedEventIds.Count > 0 && _processedEventIds.Count % 100 == 0)
             {
                 CleanupExpiredEventIds();
@@ -123,7 +123,7 @@ namespace Senparc.Ncf.Core.EventBus
             }
         }
 
-        // 供同一个程序集内的 HostedService 读取
+        // Exposed for HostedService reads within the same assembly
         internal ChannelReader<IIntegrationEvent> Reader => _channel.Reader;
     }
 }

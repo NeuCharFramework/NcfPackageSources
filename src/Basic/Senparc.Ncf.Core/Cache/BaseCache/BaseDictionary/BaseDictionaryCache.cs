@@ -18,7 +18,7 @@ namespace Senparc.Ncf.Core.Cache
     public interface IBaseDictionaryCache<TKey, TValue, TEntity> : IBaseCache<TValue>
            where TValue : class, new()
     {
-        #region 同步方法
+        #region Synchronous Methods
 
         TValue InsertObjectToCache(TKey key);
         TValue InsertObjectToCache(TKey key, TEntity obj);
@@ -28,7 +28,7 @@ namespace Senparc.Ncf.Core.Cache
 
         #endregion
 
-        #region 异步方法
+        #region Asynchronous Methods
 
         Task<TValue> InsertObjectToCacheAsync(TKey key);
         Task<TValue> InsertObjectToCacheAsync(TKey key, TEntity obj);
@@ -165,7 +165,7 @@ namespace Senparc.Ncf.Core.Cache
             //}
         }
 
-        #region 同步方法
+        #region Synchronous Methods
 
         public override TValue Update()
         {
@@ -198,10 +198,10 @@ namespace Senparc.Ncf.Core.Cache
                 }
                 catch (Exception ex)
                 {
-                    //var msg = "系统调试记录cache的一个bug。发生错误：{0}。当前参数：base.Data：{1}（Count：{4}），key:{2}，obj：{3}。Null情况分别是：{4}，{5},{6}"
+                    //var msg = "System debug record cache a bug。发生错误：{0}。当前参数：base.Data：{1}（Count：{4}），key:{2}，obj：{3}。Null情况分别是：{4}，{5},{6}"
                     //    .With(ex.Message, base.Data, key, obj, base.Data == null, key == null, obj == null, base.Data.Count);
 
-                    var msg = $"系统调试记录cache的一个bug。发生错误：{ex.Message}。再次访问base.Data=null：{base.Data == null}";//实际上这里base.Data还是为null
+                    var msg = $"System debug record cache a bug。发生错误：{ex.Message}。再次访问base.Data=null：{base.Data == null}";//实际上这里base.Data还是为null
                     LogUtility.SystemLogger.Debug(msg, ex);
                     throw new Exception(msg, ex);
                 }
@@ -254,12 +254,12 @@ namespace Senparc.Ncf.Core.Cache
 
         public override void RemoveCache()
         {
-            throw new Exception("不可以使用此方法");
+            throw new Exception("This method cannot be used");
         }
 
         #endregion
 
-        #region 异步方法
+        #region Asynchronous Methods
 
         public override async Task<TValue> UpdateAsync()
         {
@@ -292,10 +292,10 @@ namespace Senparc.Ncf.Core.Cache
                 }
                 catch (Exception ex)
                 {
-                    //var msg = "系统调试记录cache的一个bug。发生错误：{0}。当前参数：base.Data：{1}（Count：{4}），key:{2}，obj：{3}。Null情况分别是：{4}，{5},{6}"
+                    //var msg = "System debug record cache a bug。发生错误：{0}。当前参数：base.Data：{1}（Count：{4}），key:{2}，obj：{3}。Null情况分别是：{4}，{5},{6}"
                     //    .With(ex.Message, base.Data, key, obj, base.Data == null, key == null, obj == null, base.Data.Count);
 
-                    var msg = $"系统调试记录cache的一个bug。发生错误：{ex.Message}。再次访问base.Data=null：{base.Data == null}";//实际上这里base.Data还是为null
+                    var msg = $"System debug record cache a bug。发生错误：{ex.Message}。再次访问base.Data=null：{base.Data == null}";//实际上这里base.Data还是为null
                     LogUtility.SystemLogger.Debug(msg, ex);
                     throw new Exception(msg, ex);
                 }
@@ -348,7 +348,7 @@ namespace Senparc.Ncf.Core.Cache
 
         public override Task RemoveCacheAsync()
         {
-            throw new Exception("不可以使用此方法");
+            throw new Exception("This method cannot be used");
         }
 
         #endregion

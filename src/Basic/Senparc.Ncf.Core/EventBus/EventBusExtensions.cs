@@ -10,22 +10,22 @@ namespace Senparc.Ncf.Core.EventBus
     public static class EventBusExtensions
     {
         /// <summary>
-        /// 注册 Senparc EventBus 及所有事件处理器
+        /// Register Senparc EventBus and all event handlers
         /// </summary>
-        /// <param name="services">服务集合</param>
-        /// <param name="configureOptions">配置 EventBus 选项的委托（可选）</param>
-        /// <param name="assembliesToScan">需要扫描事件处理器的程序集</param>
+        /// <param name="services">Service collection</param>
+        /// <param name="configureOptions">Delegate used to configure EventBus options (optional)</param>
+        /// <param name="assembliesToScan">Assemblies to scan for event handlers</param>
         public static IServiceCollection AddSenparcEventBus(
             this IServiceCollection services, 
             Action<EventBusOptions> configureOptions = null,
             params Assembly[] assembliesToScan)
         {
-            // 1. 注册 EventBus 配置选项
+            // 1. Register EventBus options
             var options = new EventBusOptions();
             configureOptions?.Invoke(options);
             services.AddSingleton(options);
 
-            // 2. 注册单例 EventBus (发布者用) - 使用工厂方法来支持 ILogger 注入
+            // 2. Register singleton EventBus (for publishers) using factory method to support ILogger injection
             services.AddSingleton<InMemoryEventBus>(sp =>
             {
                 var logger = sp.GetService<ILogger<InMemoryEventBus>>();
@@ -33,15 +33,15 @@ namespace Senparc.Ncf.Core.EventBus
             });
             services.AddSingleton<IEventBus>(sp => sp.GetRequiredService<InMemoryEventBus>());
 
-            // 3. 注册后台托管服务 (消费者用)
+            // 3. Register background hosted service (for consumers)
             services.AddHostedService<EventBusHostedService>();
 
-            // 4. 扫描并注册 Handler
+            // 4. Scan and register handlers
             if (assembliesToScan != null && assembliesToScan.Length > 0)
             {
                 foreach (var assembly in assembliesToScan)
                 {
-                    // 查找实现了 IIntegrationEventHandler<T> 的具体类
+                    // Find concrete classes implementing IIntegrationEventHandler<T>
                     var handlerTypes = assembly.GetTypes()
                         .Where(t => t.IsClass && !t.IsAbstract &&
                                t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IIntegrationEventHandler<>)));
@@ -53,7 +53,7 @@ namespace Senparc.Ncf.Core.EventBus
 
                         foreach (var i in interfaces)
                         {
-                            // 注册为 Scoped
+                            // Register as Scoped
                             services.AddScoped(i, type);
                         }
                     }

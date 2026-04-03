@@ -66,7 +66,7 @@ namespace Senparc.Ncf.Core.Cache
             this.CacheSetKey = cacheKey;//设置缓存集合键，必须提供
         }
 
-        #region 同步方法
+        #region Synchronous Methods
 
         /// <summary>
         /// Data不能在Update()方法中调用，否则会引发循环调用。Update()方法中应该使用SetData()方法
@@ -106,7 +106,7 @@ namespace Senparc.Ncf.Core.Cache
         {
             Cache.Set(CacheKey, value, TimeSpan.FromMinutes(timeOut));
 
-            //记录缓存时间
+            // Record cache time
             this.CacheTime = DateTime.Now;
             this.CacheTimeOut = this.CacheTime.AddMinutes(timeOut);
 
@@ -129,7 +129,7 @@ namespace Senparc.Ncf.Core.Cache
 
         #endregion
 
-        #region 异步方法
+        #region Asynchronous Methods
         /// <summary>
         /// 获取全部缓存数据
         /// Data不能在Update()方法中调用，否则会引发循环调用。Update()方法中应该使用SetData()方法
@@ -165,7 +165,7 @@ namespace Senparc.Ncf.Core.Cache
         {
             await Cache.SetAsync(CacheKey, value, TimeSpan.FromMinutes(timeOut)).ConfigureAwait(false);
 
-            //记录缓存时间
+            // Record cache time
             this.CacheTime = DateTime.Now;
             this.CacheTimeOut = this.CacheTime.AddMinutes(timeOut);
 

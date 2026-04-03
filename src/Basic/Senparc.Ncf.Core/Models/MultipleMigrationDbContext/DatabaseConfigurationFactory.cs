@@ -7,7 +7,7 @@ namespace Senparc.Ncf.Core.Models
     /// </summary>
     public class DatabaseConfigurationFactory
     {
-        #region 单例
+        #region Singleton
 
         DatabaseConfigurationFactory() { }
 
