@@ -11,7 +11,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Mapping
     {
         public override void Configure(EntityTypeBuilder<ChatGroup> builder)
         {
-            //throw new System.Exception("运行到这里了");
+            //throw new System.Exception("Running here");
             base.Configure(builder);
 
             builder.HasOne(z => z.AdminAgentTemplate)

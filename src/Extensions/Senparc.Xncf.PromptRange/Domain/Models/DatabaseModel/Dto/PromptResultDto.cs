@@ -6,19 +6,19 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
     public class PromptResultDto : DtoBase
     {
         /// <summary>
-        /// ID 主键
+        ///ID primary key
         /// </summary>
         public int Id { get; set; }
 
         #region LlmModel
 
         /// <summary>
-        /// LlmModel 的 Id
+        ///Id of LlmModel
         /// </summary>
         public int LlmModelId { get; set; }
 
         /// <summary>
-        /// LlmModel 类型的 LlmModel
+        /// LlmModel type LlmModel
         /// </summary>
         public LlModel LlModel { get; set; }
 
@@ -27,12 +27,12 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         #region Prompt Item
 
         /// <summary>
-        /// PromptItem类型的PromptItem
+        ///PromptItem of type PromptItem
         /// </summary>
         public int PromptItemId { get; set; }
 
         /// <summary>
-        /// string类型的PromptItemVersion
+        ///PromptItemVersion of type string
         /// </summary>
         public string PromptItemVersion { get; set; }
 
@@ -40,69 +40,69 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
 
 
         /// <summary>
-        /// 结果字符串
+        ///result string
         /// </summary>
         public string ResultString { get; set; }
 
         /// <summary>
-        /// 花费时间，单位：毫秒
+        /// Time spent, unit: milliseconds
         /// </summary>
         public double CostTime { get; set; }
 
         /// <summary>
-        /// 机器人打分，0-100分
+        /// Robot scoring, 0-100 points
         /// </summary>
         public decimal RobotScore { get; set; }
 
         /// <summary>
-        /// 人类打分，0-100分
+        /// Human scoring, 0-100 points
         /// </summary>
         public decimal HumanScore { get; set; }
 
         /// <summary>
-        /// 最终得分
+        /// final score
         /// </summary>
         public decimal FinalScore { get; set; }
 
 
         /// <summary>
-        /// 机器人测试期望结果
+        /// Robot test expected results
         /// </summary>
         public string RobotTestExceptedResult { get; set; }
 
         /// <summary>
-        /// 是否机器人测试结果完全相等
+        /// Whether the robot test results are exactly equal
         /// </summary>
         public bool IsRobotTestExactlyEquat { get; set; }
 
         /// <summary>
-        /// 测试类型，枚举中包含：文字、图形、声音
+        /// Test type, the enumeration includes: text, graphics, sound
         /// </summary>
         public TestType TestType { get; set; }
 
         /// <summary>
-        /// 提示花费的 Token 数量
+        /// Prompt the number of Tokens spent
         /// </summary>
         public int PromptCostToken { get; set; }
 
         /// <summary>
-        /// 结果花费的 Token 数量
+        /// The number of Tokens spent as a result
         /// </summary>
         public int ResultCostToken { get; set; }
 
         /// <summary>
-        /// 总共花费的 Token 数量
+        ///Total number of Tokens spent
         /// </summary>
         public int TotalCostToken { get; set; }
 
         /// <summary>
-        /// 打靶模式：Chat（聊天模式）或 Single（单次测试模式），可为空（兼容旧数据）
+        /// Target practice mode: Chat (chat mode) or Single (single test mode), can be empty (compatible with old data)
         /// </summary>
         public ResultMode? Mode { get; set; }
 
         /// <summary>
-        /// SystemMessage（Prompt 内容，完成参数替换后的最终内容）
-        /// 用于对话模式，确保即使 Prompt 内容或参数变化，也能追溯历史使用的 SystemMessage
+        /// SystemMessage (Prompt content, final content after completing parameter replacement)
+        /// Used in conversation mode to ensure that even if the Prompt content or parameters change, the historically used SystemMessage can be traced
         /// </summary>
         public string SystemMessage { get; set; }
     }

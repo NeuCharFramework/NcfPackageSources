@@ -6,7 +6,7 @@ namespace Senparc.Ncf.Core.Utility
     {
         private W3wp() { }
 
-        //COCONET .net core不支持System.Management，需要继续改进
+        //COCONET .net core does not support System.Management and needs to continue to be improved.
 
         //public static string GetAllW3wp(string input)
         //{

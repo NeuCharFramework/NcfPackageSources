@@ -30,8 +30,8 @@ define(function(require) {
         },
 
         defaultOption: {
-            zlevel: 0,                  // 一级层叠
-            z: 2,                       // 二级层叠
+            zlevel: 0,                  // One level cascading
+            z: 2,                       // Second level stacking
             coordinateSystem: 'cartesian2d',
             legendHoverLink: true,
             // stack: null
@@ -40,15 +40,15 @@ define(function(require) {
             xAxisIndex: 0,
             yAxisIndex: 0,
 
-            // 最小高度改为0
+            // Minimum height changed to 0
             barMinHeight: 0,
 
             // barMaxWidth: null,
-            // 默认自适应
+            // Default adaptive
             // barWidth: null,
-            // 柱间距离，默认为柱形宽度的30%，可设固定值
+            // The distance between columns, the default is 30% of the column width, and can be set to a fixed value
             // barGap: '30%',
-            // 类目间柱形距离，默认为类目间距的20%，可设固定值
+            // Column distance between categories, the default is 20% of the category spacing, and can be set to a fixed value
             // barCategoryGap: '20%',
             // label: {
             //     normal: {
@@ -57,17 +57,17 @@ define(function(require) {
             // },
             itemStyle: {
                 normal: {
-                    // color: '各异',
-                    // 柱条边线
+                    // color: 'different',
+                    // Column edge
                     barBorderColor: '#fff',
-                    // 柱条边线线宽，单位px，默认为1
+                    // Column edge line width, unit px, default is 1
                     barBorderWidth: 0
                 },
                 emphasis: {
-                    // color: '各异',
-                    // 柱条边线
+                    // color: 'different',
+                    // Column edge
                     barBorderColor: '#fff',
-                    // 柱条边线线宽，单位px，默认为1
+                    // Column edge line width, unit px, default is 1
                     barBorderWidth: 0
                 }
             }

@@ -1,4 +1,4 @@
-﻿/*首页开始*/
+﻿/*Start from home page*/
 
 header .nav-item:hover {
     opacity: .6;
@@ -196,7 +196,7 @@ footer #qq-code-img {
 footer .footer-img:hover {
     opacity: .7
 }
-/*模块*/
+/*module*/
 .index-module {
     padding: 4px;
     line-height: 1.42857143;
@@ -214,7 +214,7 @@ footer .footer-img:hover {
     color: #444;
     cursor: default;
     border-radius: 5px;
-    /*动画*/
+    /*animation*/
     transition: all .2s,transform .2s;
     transform: translateY(0);
     box-shadow: 0 2px 5px 0 rgba(0,0,0,.16);
@@ -240,7 +240,7 @@ footer .footer-img:hover {
     font-size: 24px;
     color: #1976d2;
 }
-/*媒体查询*/
+/*media inquiries*/
 @media(max-width: 576px) {
     header .header-icon {
         display: none;

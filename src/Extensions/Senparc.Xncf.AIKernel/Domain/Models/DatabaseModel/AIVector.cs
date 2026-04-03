@@ -12,56 +12,56 @@ using Senparc.AI.Interfaces;
 namespace Senparc.Xncf.AIKernel.Models
 {
     /// <summary>
-    /// 向量数据库实体
+    ///Vector database entity
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(AIVector))] //必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(AIVector))] //The prefix must be added to prevent conflicts system-wide.
     [Serializable]
     public class AIVector : EntityBase<int>
     {
         /// <summary>
-        /// 代号
+        /// code name
         /// </summary>
         [Required, MaxLength(50)]
         public string Alias { get; private set; }
 
 
         /// <summary>
-        /// 向量数据库名称（必须）
+        /// Vector database name (required)
         /// </summary>
         [Required, MaxLength(100)]
         public string VectorId { get; private set; }
 
         /// <summary>
-        /// 名称
+        ///name
         /// </summary>
         [MaxLength(150)]
         public string Name { get; private set; }
 
         /// <summary>
-        /// 连接字符串
+        /// connection string
         /// </summary>
         public string ConnectionString { get; private set; }
 
         /// <summary>
-        /// 向量数据库的类型（必须）, 例如：Memory, HardDisk, Redis, Mulivs, Chroma, PostgreSQL, Sqlite, SqlServer, Default
+        /// Type of vector database (required), for example: Memory, HardDisk, Redis, Mulivs, Chroma, PostgreSQL, Sqlite, SqlServer, Default
         /// </summary>
         [Required]
         public VectorDBType VectorDBType { get; private set; }
 
         /// <summary>
-        /// Note（可选）
+        ///Note (optional)
         /// </summary>
         public string Note { get; private set; }
 
         /// <summary>
-        /// 是否共享
+        /// Whether to share
         /// </summary>
         [Required, DefaultValue(false)]
         public bool IsShared { get; private set; } = false;
 
 
         /// <summary>
-        /// 是否展示
+        /// Whether to display
         /// </summary>
         [Required, DefaultValue(true)]
         public bool Show { get; private set; }

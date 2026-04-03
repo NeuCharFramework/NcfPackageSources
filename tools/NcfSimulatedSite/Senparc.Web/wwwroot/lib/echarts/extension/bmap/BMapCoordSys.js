@@ -57,7 +57,7 @@ define(function (require) {
 
         Overlay.prototype = new BMap.Overlay();
         /**
-         * 初始化
+         * initialization
          *
          * @param {BMap.Map} map
          * @override

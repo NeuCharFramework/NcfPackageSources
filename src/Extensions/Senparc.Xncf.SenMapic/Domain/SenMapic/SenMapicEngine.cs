@@ -16,9 +16,9 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
     public partial class SenMapicEngine
     {
-        private static string _version = "1.7.0.0";//TODO:目前为Beta 2
+        private static string _version = "1.7.0.0";//TODO: Currently in Beta 2
         /// <summary>
-        /// SenMapicEngine版本
+        ///SenMapicEngine version
         /// </summary>
         public static string Version
         {
@@ -33,32 +33,32 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         private const string charSetPttern = @"(?i)\bcharset=(?<charset>[-a-zA-Z_0-9]+)";
-        private const string urlPattern = "<a[^>]+href=(['\"]{0,1})([^'\"#>\\s\\(\\)]+)(?=['\"#>]{1}).*?>(.*?)</a>";//TODO:过滤js中此类情形："<a href=\""+ url +"\">";Joomla中，url有;出现
-        private int _maxThread = 2;//最大线程数
-        private readonly int _maxTimeoutTimes = 10;//最大超时页面数（超过此数量，终止收集）
-        private readonly int _pageRequestTimeoutMillionSeconds = 1000 * 20;//页面请求超时时间（毫秒）
+        private const string urlPattern = "<a[^>]+href=(['\"]{0,1})([^'\"#>\\s\\(\\)]+)(?=['\"#>]{1}).*?>(.*?)</a>";//TODO: Filter such situations in js: "<a href=\""+ url +"\">"; In Joomla, the url has; appears
+        private int _maxThread = 2;//Maximum number of threads
+        private readonly int _maxTimeoutTimes = 10;//Maximum number of timeout pages (if this number is exceeded, collection will be terminated)
+        private readonly int _pageRequestTimeoutMillionSeconds = 1000 * 20;//Page request timeout (milliseconds)
         private readonly IServiceProvider _serviceProvider;
-        private int _maxBuildMinutesForSingleSite = 10;//默认最长收集时间（每一个站点）
+        private int _maxBuildMinutesForSingleSite = 10;//Default maximum collection time (per site)
 
-        private IEnumerable<string> _urls;//带收录的列队Url
-        private string _currentUrl;//当前搜索的Url
-        private bool _currentUrlBuildStop;//停止当前站点搜索
-        private string _currentOriginalFullDomain;//当前原始完整的域名（http://www.senparc.com）
-        private string _currentDomain;//当前搜索的域名
-        private string _currentProtocol;//协议（http | https）
-        private int _currentDeep;//当前收录深度
-        private int _currentPageCount;//当前域名下收录页面数量
-        private Dictionary<string, AvailableUrl> _currentAvaliableUrlTemp;//当前可用Url集合   TODO:lock
-        private Dictionary<string, UrlData> _currentUrls;//当前域域名收集的所有URL
-        private int _maxDeep = 5;//搜索深度（指通过页面进入网址的搜索层次，非网页在网站中的实际路径深度）
-        private int _maxPageCount = 500;//最大允许收录页面数
-        private List<UrlPathCollection> _urlPath;//路径
-        private int _requestPageCount = 0;//请求页面数量
-        private long _requestPageTicks = 0;//请求页面时间
-        private int _threadInUsing = 0;//当前使用线程数
+        private IEnumerable<string> _urls;//Queue Url with included
+        private string _currentUrl;//Current search URL
+        private bool _currentUrlBuildStop;//Stop current site search
+        private string _currentOriginalFullDomain;//Current original complete domain name (http://www.senparc.com)
+        private string _currentDomain;//Domain name currently searched
+        private string _currentProtocol;//Protocol (http|https)
+        private int _currentDeep;//Current collection depth
+        private int _currentPageCount;//The number of pages included under the current domain name
+        private Dictionary<string, AvailableUrl> _currentAvaliableUrlTemp;//Currently available URL collection TODO:lock
+        private Dictionary<string, UrlData> _currentUrls;//All URLs collected by the current domain name
+        private int _maxDeep = 5;//Search depth (referring to the search level of entering the URL through the page, not the actual path depth of the web page in the website)
+        private int _maxPageCount = 500;//Maximum number of pages allowed to be included
+        private List<UrlPathCollection> _urlPath;//path
+        private int _requestPageCount = 0;//Number of pages requested
+        private long _requestPageTicks = 0;//Request page time
+        private int _threadInUsing = 0;//Number of threads currently used
 
         /// <summary>
-        /// 正在使用中的线程数
+        ///Number of threads in use
         /// </summary>
         private int threadInUsing
         {
@@ -78,7 +78,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             }
         }
 
-        private object syncLock = new object();//锁
+        private object syncLock = new object();//Lock
 
         //private SenMapicSemaphore _semaphorePool;
         //private int _semaphorePoolPreviousCount;
@@ -100,23 +100,23 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         //    }
         //}
 
-        private int _remainDomainCount;//剩余未处理域名
-        int _remainUrlCount = 0;//剩余未收录url数量
+        private int _remainDomainCount;//Remaining unprocessed domain names
+        int _remainUrlCount = 0;//Number of remaining uncollected urls
 
         public IEnumerable<string> TotalDomains { get { return _urls; } }
-        public Dictionary<string, UrlData> TotalUrls { get; private set; }//所有域名收集的Url
+        public Dictionary<string, UrlData> TotalUrls { get; private set; }//Urls collected from all domain names
         public double TotalPageSizeKB { get; private set; }
         public DateTime? UpdateDate { get; set; }
         public string Priority { get; set; }
         public string Changefreq { get; set; }
-        public DateTime CurrentSiteStartTime { get; private set; }//当前搜索站点开始时间
-        public int MaxBuildMinutesForSingleSite { get { return this._maxBuildMinutesForSingleSite; } set { this._maxBuildMinutesForSingleSite = value; } }//单个站点对大允许时间
+        public DateTime CurrentSiteStartTime { get; private set; }//Current search site start time
+        public int MaxBuildMinutesForSingleSite { get { return this._maxBuildMinutesForSingleSite; } set { this._maxBuildMinutesForSingleSite = value; } }//Maximum allowed time for a single site
 
-        public bool ReachMaxPages { get; private set; }//到达最大页面数
+        public bool ReachMaxPages { get; private set; }//Maximum number of pages reached
         public int MaxDeep { get { return _maxDeep; } set { _maxDeep = value; } }
         public int MaxPageCount { get { return _maxPageCount; } set { _maxPageCount = value; } }
         public TimeSpan AverageRequestTime { get { return TimeSpan.FromTicks(_requestPageCount == 0 ? 0 : (_requestPageTicks / _requestPageCount)); } }
-        public List<FilterOmitWord> FilterOmitWords;//过滤Url中的关键字
+        public List<FilterOmitWord> FilterOmitWords;//Filter keywords in Url
         //public Dictionary<string,Dictionary<string,UrlData>> TotalUrlDataCollection { get; set; }
 
       
@@ -164,13 +164,13 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        /// 开始收集Url及页面信息
+        /// Start collecting Url and page information
         /// </summary>
         /// <returns></returns>
         public Dictionary<string, UrlData> Build()
         {
             // System.Web.HttpContext.Current.Response.Write(this.GetDomain(url));
-            //搜索所有网址
+            //Search all URLs
             foreach (var url in _urls)
             {
                 try
@@ -179,11 +179,11 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                     _currentUrl = url;
                     if (!_currentUrl.EndsWith("/"))
                     {
-                        _currentUrl += "/";//加上末尾/（为了获得更完整的URL，以便判断下属链接URL是否等于域名根目录）
+                        _currentUrl += "/";//Add the trailing / (in order to obtain a more complete URL, so as to determine whether the subordinate link URL is equal to the domain name root directory)
                     }
                     _currentDomain = this.GetDomain(_currentUrl);
 
-                    //_domainAll += (_domainAll == null ? "" : "+") + _currentDomain;//所有域名
+                    //_domainAll += (_domainAll == null ? "" : "+") + _currentDomain;//All domain names
 
                     if (string.IsNullOrEmpty(_currentDomain))
                     {
@@ -191,21 +191,21 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                     }
                     _currentUrlBuildStop = false;
                     _currentProtocol = this.GetProtocol(_currentUrl);
-                    _currentOriginalFullDomain = this.GetFullDomain(_currentUrl);//如：http://www.senparc.com
-                    _currentDeep = -1;//深度还原
-                    _currentPageCount = 0;//页面计数还原
-                    //_currentFilterOmitWords = new Dictionary<string, string>();//过滤关键字还原
+                    _currentOriginalFullDomain = this.GetFullDomain(_currentUrl);//Such as: http://www.senparc.com
+                    _currentDeep = -1;//Deep restoration
+                    _currentPageCount = 0;//Page count restoration
+                    //_currentFilterOmitWords = new Dictionary<string, string>();//Filter keyword restoration
                     _currentAvaliableUrlTemp = new Dictionary<string, AvailableUrl>(StringComparer.OrdinalIgnoreCase);
-                    _currentUrls = new Dictionary<string, UrlData>(StringComparer.OrdinalIgnoreCase);//当前域名收集URL还原
-                    ResetUrlPath(_currentUrl);//初始化UrlCollection集合
+                    _currentUrls = new Dictionary<string, UrlData>(StringComparer.OrdinalIgnoreCase);//Current domain name collection URL restoration
+                    ResetUrlPath(_currentUrl);//Initialize the UrlCollection collection
                     CurrentSiteStartTime = DateTime.Now;
 
-                    //_semaphorePool = new SenMapicSemaphore(_maxThread);//使用Semaphore控制当前线程数量
+                    //_semaphorePool = new SenMapicSemaphore(_maxThread);//Use Semaphore to control the current number of threads
 
-                    this.SearchWebSite(_currentUrl);//开始收集（核心方法）
-                    //TotalUrlDataCollection.Add(_currentUrl, _currentUrls);//添加UrlData结果到汇总集合
+                    this.SearchWebSite(_currentUrl);//Start collection (core method)
+                    //TotalUrlDataCollection.Add(_currentUrl, _currentUrls);//Add UrlData results to the summary collection
 
-                    foreach (var item in _currentUrls.Take(MaxPageCount).ToList()/*确保收录数量正确（由于deep的原因，可能导致实际收录url数量比设定值要多）*/)
+                    foreach (var item in _currentUrls.Take(MaxPageCount).ToList()/*Make sure the number of included URLs is correct (due to deep reasons, the actual number of included URLs may be more than the set value)*/)
                     {
                         if (!TotalUrls.ContainsKey(item.Key))
                         {
@@ -215,7 +215,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
                     DateTime dt2 = DateTime.Now;
                     TimeSpan ts = dt2 - dt1;
-                    //写入日志
+                    //write log
                     SenparcTrace.SendCustomLog("SiteMap", $"Sitemap生成：{this._currentUrl}，收录页面：{this._currentUrls.Count}，总耗时：{ts.TotalMilliseconds:###,###}毫秒，平均{(this._currentUrls.Count > 0 ? (ts.TotalMilliseconds / this._currentUrls.Count).ToString("###,###") : "0")}毫秒。");
                 }
                 catch (Exception e)
@@ -226,7 +226,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 }
                 finally
                 {
-                    _remainDomainCount--;//剩余未处理域名数减少
+                    _remainDomainCount--;//The number of remaining unprocessed domain names decreases
                 }
             }
 
@@ -240,7 +240,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
             //}
             //catch(Exception e) {
-            //    LogUtility.SitemapLogger.Error("生成报表及sitemap文件出错：{0}".With(e.Message), e);
+            //    LogUtility.SitemapLogger.Error("Error in generating report and sitemap file: {0}".With(e.Message), e);
             //    return null;
             //}
         }
@@ -249,55 +249,55 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         private static ManualResetEvent allDoneSL = new ManualResetEvent(false);
 
         /// <summary>
-        /// 爬行站点（SenMapic核心启动方法）
+        /// Crawl site (SenMapic core startup method)
         /// </summary>
-        /// <param name="homeUrl">域名或首页地址</param>
+        /// <param name="homeUrl">Domain name or homepage address</param>
         private void SearchWebSite(string homeUrl)
         {
             homeUrl = this.RemoveUrlEndingSlash(homeUrl);
-            this._currentAvaliableUrlTemp.Add(homeUrl, new AvailableUrl(homeUrl, "", 0, "",AvailableUrlStatus.UnStart));//首页加入待选
+            this._currentAvaliableUrlTemp.Add(homeUrl, new AvailableUrl(homeUrl, "", 0, "",AvailableUrlStatus.UnStart));//Home page added to be selected
 
             WaitCallback waitCallback = new WaitCallback(async (url) => await this.CrawlUrlEventHandler(url));//WaitCallback
 
-            //开始从第0层（首页）抓取
+            //Start crawling from layer 0 (home page)
             for (int deep = 0; deep <= this._maxDeep; deep++)
             {
                 if (threadInUsing > 0)
                 {
-                    //每层结束前，会等待所有线程结束，threadInUsing > 0 说明此时还有线程在工作
+                    //Before the end of each layer, it will wait for all threads to end. threadInUsing > 0 means there are still threads working at this time.
                     SenparcTrace.SendCustomLog("Sitemap", $"Sitemap多线程出错！当前实际线程数：{threadInUsing},Deep:{deep},Url:{homeUrl}");
                 }
 
                 if (this._currentUrls.Count >= this._maxPageCount || this._currentUrlBuildStop)
                 {
-                    break;//收集已满，或被呼叫停止。
+                    break;//The collection is full, or was called to stop.
                 }
 
                 _currentDeep = deep;
-                //_urlPath[_currentDeep].Url = url;//记录当前层次Url
-                var thisLayerUrls = this._currentAvaliableUrlTemp.Where(z => z.Value.Deep == deep && z.Value.Status == AvailableUrlStatus.UnStart).Select(z => z.Value.Url).ToList();//当前层所有有效，且为开始收集的Url
+                //_urlPath[_currentDeep].Url = url;//Record the current level Url
+                var thisLayerUrls = this._currentAvaliableUrlTemp.Where(z => z.Value.Deep == deep && z.Value.Status == AvailableUrlStatus.UnStart).Select(z => z.Value.Url).ToList();//All valid URLs in the current layer are the Url to start collecting.
                 if (thisLayerUrls.Count == 0)
                 {
-                    break;//所有页面已完成。
+                    break;//All pages are completed.
                 }
 
-                //分线程开始爪录，添加到线程池
+                //Start recording in separate threads and add to thread pool
                 _remainUrlCount = 0;
                 int urlIndex = 0;
                 foreach (var url in thisLayerUrls)
                 {
                     if (this._currentUrls.Count >= this._maxPageCount || this._currentUrlBuildStop)
                     {
-                        break;//收集已满，或被呼叫停止。
+                        break;//The collection is full, or was called to stop.
                     }
 
                     #region 多线程爬行方案
                     try
                     {
                         int tryQueue = 0;
-                        while (tryQueue < 3)//尝试3次加入列队
+                        while (tryQueue < 3)//Tried 3 times to join the queue
                         {
-                            bool queueSuccess = ThreadPool.QueueUserWorkItem(waitCallback, url);//尝试加入列队
+                            bool queueSuccess = ThreadPool.QueueUserWorkItem(waitCallback, url);//Try to join the queue
                             if (queueSuccess)
                             {
                                 //_remainUrlCount++;
@@ -306,7 +306,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                             }
                             else
                             {
-                                tryQueue++;//尝试放入列队
+                                tryQueue++;//try to queue
                             }
                         }
                     }
@@ -317,49 +317,49 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                     }
 
                     #region 等待线程，依次执行
-                    //这里如果一次全部将线程加入到列队，使用_semaphorePool.WaitOne()等待时，
-                    //当某一层链接数量非常多（如几百个）时，会使整个应用程序无响应。
+                    //Here, if all threads are added to the queue at once, when waiting using _semaphorePool.WaitOne(),
+                    //When the number of links in a certain layer is very large (such as hundreds), the entire application will become unresponsive.
 
                     double waitMinutesPerUrl = 1;
                     double totalWaitMinutes = _maxThread * waitMinutesPerUrl;
 
                     DateTime dtStartWait = DateTime.Now;
                     bool firstWait = true;
-                    while (threadInUsing >= _maxThread || (threadInUsing > 0 && urlIndex == thisLayerUrls.Count - 1) /*|| _remainUrlCount > 0*/ || firstWait)//每一层结束的时候确保没有线程被占用
+                    while (threadInUsing >= _maxThread || (threadInUsing > 0 && urlIndex == thisLayerUrls.Count - 1) /*|| _remainUrlCount > 0*/ || firstWait)//At the end of each layer, ensure that no threads are occupied
                     {
                         if (firstWait)
                         {
                             firstWait = false;
                         }
 
-                        if ((DateTime.Now - dtStartWait).TotalMinutes > totalWaitMinutes)/*每个线程页面采集大于大于0.5分钟，强制退出*/
+                        if ((DateTime.Now - dtStartWait).TotalMinutes > totalWaitMinutes)/*Page collection for each thread takes more than 0.5 minutes and forced exit*/
                         {
                             var ex = new Exception($"Sitemap线程超时，强制忽略。首页:{homeUrl}，已等待{totalWaitMinutes}分钟，当前使用线程数：{threadInUsing}，最大允许线程数：{_maxThread}，当前层Url数：{thisLayerUrls.Count}，当前使用线程数：{threadInUsing}，当前剩余Url数：{_remainUrlCount}");
                             SenparcTrace.BaseExceptionLog(ex);
                             break;
                         }
 
-                        Thread.Sleep(200);//还有线程没有执行完
+                        Thread.Sleep(200);//There are still threads that have not finished executing
                     }
                     #endregion
                     #endregion
 
                     #region 单线程爬行方案
-                    //CrawlUrlEventHandler(url);//不使用多线程，单线程
+                    //CrawlUrlEventHandler(url);//Do not use multi-threading, single thread
                     #endregion
 
                     urlIndex++;
                 }
 
-                //所有链接库中搜索完毕之后，开始下一层。
-                Thread.Sleep(500);//休息一下:)
+                //After searching in all link libraries, start the next level.
+                Thread.Sleep(500);//take a break:)
             }
         }
 
         /// <summary>
-        /// 提供多线程同时爪录
+        /// Provide multi-threaded simultaneous recording
         /// </summary>
-        /// <param name="url">完整URL，格式如：http://www.senparc.com/xx.html</param>
+        /// <param name="url">Full URL, in the format: http://www.senparc.com/xx.html</param>
         private async Task CrawlUrlEventHandler(object url)
         {
             //bool threadStarted = false;
@@ -367,12 +367,12 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             try
             {
                 _remainUrlCount++;
-                //LogUtility.WebLogger.DebugFormat("url:{0} 进入列队等待开始。", url);
-                //_semaphorePool.WaitOne();//等待加入semaphore列队
+                //LogUtility.WebLogger.DebugFormat("url:{0} has entered the queue and is waiting to start.", url);
+                //_semaphorePool.WaitOne();//Waiting to join the semaphore queue
 
                 //threadStarted = true;
                 //threadInUsing++;
-                //LogUtility.WebLogger.DebugFormat("url:{0} 线程正式开始。当前运行线程数：{1}", url, threadInUsing);
+                //LogUtility.WebLogger.DebugFormat("url:{0} thread officially started. Current number of running threads: {1}", url, threadInUsing);
 
                 string avaliableUrl = url as string;
                 AvailableUrl currentAvaliableUrl = this._currentAvaliableUrlTemp[avaliableUrl];
@@ -382,7 +382,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 try
                 {
                     SenMapicSynData synData = SenMapicSynData.Instance;
-                    synData.CurrentCrawlingUrlList[synDataID] = currentAvaliableUrl;//加入全局同步信息
+                    synData.CurrentCrawlingUrlList[synDataID] = currentAvaliableUrl;//Add global synchronization information
                 }
                 catch (Exception e)
                 {
@@ -393,7 +393,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 try
                 {
                     currentAvaliableUrl.StartBuildTime = DateTime.Now;
-                    urlData = await this.CrawlUrl(avaliableUrl, parentUrl, _currentDeep, false, currentAvaliableUrl.LinkText);//爬行Url,获取Url,HTML等重要信息
+                    urlData = await this.CrawlUrl(avaliableUrl, parentUrl, _currentDeep, false, currentAvaliableUrl.LinkText);//Crawl Url and obtain Url, HTML and other important information
                 }
                 catch (Exception e)
                 {
@@ -402,46 +402,46 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                     urlData = new UrlData(avaliableUrl, -1, "", "", -1, 0.00, parentUrl, currentAvaliableUrl.LinkText);
                 }
 
-                this._currentAvaliableUrlTemp[avaliableUrl].Status = AvailableUrlStatus.Finished;//爬行完成
+                this._currentAvaliableUrlTemp[avaliableUrl].Status = AvailableUrlStatus.Finished;//Crawl completed
                 if (urlData == null /*|| urlData.Html.IsNullOrEmpty()*/)
                 {
-                    return; //不符合爬行条件
+                    return; //Not eligible for crawling
                 }
 
-                urlData.ParentUrl = parentUrl;//父页面Url
+                urlData.ParentUrl = parentUrl;//Parent page Url
 
                 if (!this._currentUrls.ContainsKey(urlData.Url))
                 {
-                    this._currentUrls.Add(urlData.Url.ToUpper()/*Key大写*/, urlData);//记录到已完成表中。
+                    this._currentUrls.Add(urlData.Url.ToUpper()/*Key capitalized*/, urlData);//Record in completed table.
                 }
 
                 if (!urlData.Url.IsNullOrEmpty() && urlData.Url != avaliableUrl)
                 {
-                    avaliableUrl = urlData.Url;//Url已经经过跳转，需要更新avaliableUrl
+                    avaliableUrl = urlData.Url;//The URL has been redirected and the availableUrl needs to be updated.
                 }
 
                 #region 分析链接（收集有效Url，未开始抓取）
                 if (_currentDeep < this._maxDeep)
                 {
-                    //未到最后一层，收集改页面面下一层的所有可用网页
+                    //Before reaching the last level, collect all available web pages in the next level of the changed page.
                     MatchCollection aTags = Regex.Matches(urlData.Html, urlPattern);
                     //TODO: Distinct aTags
                     foreach (Match tag in aTags)
                     {
-                        string newUrl = tag.Groups[2].Value; // 获取 href 属性值  
-                        string linkText = tag.Groups[4].Value; // 获取超链接文本 
+                        string newUrl = tag.Groups[2].Value; // Get href attribute value  
+                        string linkText = tag.Groups[4].Value; // Get hyperlink text 
                         newUrl = GetFullUrl(newUrl, avaliableUrl);
                         if (!newUrl.IsNullOrEmpty())
                         {
-                            //存入有效链接库
+                            //Save to valid link library
                             if (!this._currentAvaliableUrlTemp.ContainsKey(newUrl))
                             {
-                                this._currentAvaliableUrlTemp.Add(newUrl, new AvailableUrl(newUrl, urlData.Url/*当前Url*/, _currentDeep + 1/*属于下一层*/, linkText/*超链接文字*/, AvailableUrlStatus.UnStart));//标记未开始
+                                this._currentAvaliableUrlTemp.Add(newUrl, new AvailableUrl(newUrl, urlData.Url/*CurrentUrl*/, _currentDeep + 1/*Belongs to the next level*/, linkText/*hyperlink text*/, AvailableUrlStatus.UnStart));//Marking not started
                             }
                         }
                         else
                         {
-                            //continue;//无效Url，或超出范围
+                            //continue;//Invalid Url, or out of range
                         }
                     }
                 }
@@ -455,7 +455,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             finally
             {
                 //_semaphorePool.Release();
-                //LogUtility.WebLogger.DebugFormat("url:{0} 线程退出。", url);
+                //LogUtility.WebLogger.DebugFormat("url:{0} thread exited.", url);
 
                 //if (threadStarted)
                 {
@@ -466,7 +466,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 SenMapicSynData synData = SenMapicSynData.Instance;
                 synData.CurrentCrawlingUrlList.Remove(synDataID);
                 //allDoneSL.Set();
-                //Thread.Sleep(80);//休息一下:)
+                //Thread.Sleep(80);//Take a rest :)
             }
         }
     }

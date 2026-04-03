@@ -24,7 +24,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
         }
 
         /// <summary>
-        /// 根据模板创建 TableDataDto 列表
+        /// Create a TableDataDto list based on the template
         /// </summary>
         /// <param name="tableId"></param>
         /// <returns></returns>
@@ -36,13 +36,13 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
         }
 
         /// <summary>
-        /// 根据模板创建 TableDataDto 列表
+        /// Create a TableDataDto list based on the template
         /// </summary>
         /// <param name="columnTemplate"></param>
         /// <returns></returns>
         public DataTemplate GetTableDataTemplate(ColumnTemplate columnTemplate)
         {
-            //从ColumnMetadataDto中获取TableDataDto
+            //Get TableDataDto from ColumnMetadataDto
             var tableDataDtos = new List<TableDataDto>();
             foreach (var columnMetadataDto in columnTemplate)
             {
@@ -88,7 +88,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
         }
 
         /// <summary>
-        /// 设置数据
+        ///set data
         /// </summary>
         /// <param name="dataTemplate"></param>
         /// <param name="dataList"></param>

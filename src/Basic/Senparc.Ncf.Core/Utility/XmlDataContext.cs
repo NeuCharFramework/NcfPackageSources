@@ -18,7 +18,7 @@ namespace Senparc.Ncf.Core.Utility
         //private const string RESET_PASSWORD_CODE = "ResetPasswordCode.xml";
 
         /// <summary>
-        /// 文件名，不包含扩展名
+        /// File name, without extension
         /// </summary>
         public string FileName { get; set; }
 
@@ -30,7 +30,7 @@ namespace Senparc.Ncf.Core.Utility
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="databaseDictionary">数据库路径，必须是~/开头</param>
+        /// <param name="databaseDictionary">Database path, must start with ~/</param>
         /// <param name="fileName"></param>
         public XmlDataContext(string databaseDictionary, string fileName = null)
         {
@@ -46,7 +46,7 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 载入xml文档
+        /// Load XML document
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -56,7 +56,7 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 获取文件路径
+        /// Get file path
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -68,18 +68,18 @@ namespace Senparc.Ncf.Core.Utility
 
 
         /// <summary>
-        /// 获取完整路径
+        /// Get full path
         /// </summary>
         /// <param name="entityName"></param>
         /// <returns></returns>
         private string GetXmlFullApplicationPath(string entityName)
         {
-            Func<string, string> getFilePath = (string fileName) => DatabaseDictionary + fileName + ".config";//xml文件规则为 “{实例名称}.config”
+            Func<string, string> getFilePath = (string fileName) => DatabaseDictionary + fileName + ".config";//XML file naming rule: "{InstanceName}.config"
 
             var fileName = FileName.IsNullOrEmpty() ? entityName : FileName;
             var origionalPath = getFilePath(fileName);
 
-            //TODO: 添加对环境变量的识别
+            //TODO: Add environment variable recognition
             if (System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
             {
                 var tryEntityName = entityName + ".Development";
@@ -90,14 +90,14 @@ namespace Senparc.Ncf.Core.Utility
                     origionalPath = tryPath;
                 }
 
-                //TODO:暂时不支持其他环境变量
+                //TODO: other environment variables are not supported yet
             }
 
             return origionalPath;
         }
 
         /// <summary>
-        /// 获取xml数据，并返回TEntity实体
+        /// Get XML data and return TEntity list
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
@@ -119,7 +119,7 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 将Xml Item节点内容专为实体类型
+        /// Convert XML item node content to entity type
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="x"></param>
@@ -159,7 +159,7 @@ namespace Senparc.Ncf.Core.Utility
                         prop.SetValue(result, bool.Parse(value), null);
                         break;
                     default:
-                        //判断是否为枚举类型
+                        //Check whether it is enum type
                         if (prop.PropertyType.IsEnum)
                         {
                             prop.SetValue(result, Enum.Parse(prop.PropertyType, value), null);
@@ -176,7 +176,7 @@ namespace Senparc.Ncf.Core.Utility
 
 
         ///// <summary>
-        ///// 重设密码
+        /////Reset password
         ///// </summary>
         //public List<ResetPasswordCode> ResetPasswordCodes
         //{
@@ -229,10 +229,10 @@ namespace Senparc.Ncf.Core.Utility
         //}
 
         /// <summary>
-        /// 保存记录，需要有ID
+        /// Save records, requires ID
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entities">需要保存的完整对象列表</param>
+        /// <param name="entities">Complete object list to save</param>
         /// <returns></returns>
         public bool Save<TEntity>(IEnumerable<TEntity> entities) where TEntity : class
         {
@@ -245,21 +245,21 @@ namespace Senparc.Ncf.Core.Utility
                 var idProp = typeof(TEntity).GetProperty("Id");
                 if (idProp == null)
                 {
-                    throw new Exception("Id属性不存在！");
+                    throw new Exception("Id property does not exist!");
                 }
 
                 foreach (var entity in entities)
                 {
                     int id = (int)idProp.GetValue(entity, null);
 
-                    //查找原纪录
+                    // Find original record
                     XElement oldElement = xml.Elements(entityName).FirstOrDefault(z => z.Element("Id").Value == id.ToString());
                     if (oldElement == null)
                     {
                         throw new Exception("待更新数据不存在！");
                     }
 
-                    //开始更新
+                    //Start update
                     foreach (var prop in props)
                     {
                         if (prop.Name == "Id")
@@ -286,7 +286,7 @@ namespace Senparc.Ncf.Core.Utility
                     }
                 }
 
-                //保存更新
+                //Save updates
                 xml.Save(this.GetMapPath(this.GetXmlFullApplicationPath(entityName)));
                 return true;
             }
@@ -297,7 +297,7 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 插入记录
+        /// Insert record
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entity"></param>
@@ -309,7 +309,7 @@ namespace Senparc.Ncf.Core.Utility
                 string entityName = typeof(TEntity).Name;
                 XElement xml = this.GetXElement(GetXmlFullApplicationPath(entityName));
 
-                //判断主键
+                //Check primary key
                 int maxId = -1;
                 XAttribute maxIdAttr = xml.Attribute("maxId");
                 if (maxIdAttr != null)
@@ -330,7 +330,7 @@ namespace Senparc.Ncf.Core.Utility
                     {
                         value = maxId;
                         maxIdAttr.Value = maxId.ToString();
-                        prop.SetValue(entity, maxId, null); //把最新的Id设置到实体
+                        prop.SetValue(entity, maxId, null); //Set the latest Id to the entity
                     }
 
                     switch (prop.PropertyType.Name)
@@ -352,7 +352,7 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 使用此方法须确定数据库中没有重复项（或有主键）
+        /// Use this method only when the database has no duplicates (or has a primary key)
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entity"></param>
@@ -362,22 +362,22 @@ namespace Senparc.Ncf.Core.Utility
             try
             {
                 string entityName = typeof(TEntity).Name;
-                XElement xml = this.GetXElement(GetXmlFullApplicationPath(entityName));//载入文档
+                XElement xml = this.GetXElement(GetXmlFullApplicationPath(entityName));//Load document
 
                 var idProp = typeof(TEntity).GetProperty("Id");
                 if (idProp == null)
                 {
-                    throw new Exception("Id属性不存在！");
+                    throw new Exception("Id property does not exist!");
                 }
 
                 int id = (int)idProp.GetValue(entity, null);
-                //查找原纪录
+                // Find original record
                 XElement delElement = xml.Elements(entityName).FirstOrDefault(z => z.Element("Id").Value == id.ToString());
                 if (delElement == null)
                 {
-                    return true;//throw new Exception("待更新数据不存在！");
+                    return true;//throw new Exception("The data to update does not exist!");
                 }
-                delElement.Remove();//删除节点
+                delElement.Remove();//Remove node
 
                 xml.Save(this.GetMapPath(this.GetXmlFullApplicationPath(entityName)));
                 return true;
@@ -387,7 +387,7 @@ namespace Senparc.Ncf.Core.Utility
                 //XmlDataContext ctx = new XmlDataContext(_context);
                 //AutoSendEmail error = new AutoSendEmail
                 //{
-                //    Subject = "发送出错记录",
+                //    Subject = "Sending error record",
                 //    Body = e.Message + "\r\n" + e.StackTrace,
                 //    LastSendTime = DateTime.Now,
                 //    UserName = "System",
@@ -401,7 +401,7 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 使用此方法须确定数据库中没有重复项（或有主键）
+        /// Use this method only when the database has no duplicates (or has a primary key)
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entity"></param>
@@ -411,19 +411,19 @@ namespace Senparc.Ncf.Core.Utility
             try
             {
                 string entityName = typeof(TEntity).Name;
-                XElement xml = this.GetXElement(GetXmlFullApplicationPath(entityName));//载入文档
+                XElement xml = this.GetXElement(GetXmlFullApplicationPath(entityName));//Load document
 
                 var idProp = typeof(TEntity).GetProperty("Id");
                 if (idProp == null)
                 {
-                    throw new Exception("Id属性不存在！");
+                    throw new Exception("Id property does not exist!");
                 }
 
-                //查找原纪录
+                // Find original record
                 XElement item = xml.Elements(entityName).FirstOrDefault(z => z.Element("Id").Value == id.ToString());
                 if (item == null)
                 {
-                    return null;//throw new Exception("待更新数据不存在！");
+                    return null;//throw new Exception("The data to update does not exist!");
                 }
 
                 TEntity result = ConvertXmlToEntity<TEntity>(item);
@@ -436,13 +436,13 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 仅保留指定项目
+        /// Keep only specified items
         /// </summary>
-        /// <param name="retainItemCount">保留不删除的项目数量</param>
+        /// <param name="retainItemCount">Number of items to retain without deletion</param>
         public void RetainItems<TEntity>(int retainItemCount) where TEntity : class, new()
         {
             string entityName = typeof(TEntity).Name;
-            XElement xml = this.GetXElement(GetXmlFullApplicationPath(entityName));//载入文档
+            XElement xml = this.GetXElement(GetXmlFullApplicationPath(entityName));//Load document
 
             var elements = xml.Elements(entityName);
             if (elements.Count() >= retainItemCount)
@@ -453,14 +453,14 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 尝试创建数据库
+        ///try to create database
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         public void TryCreateDataBase<TEntity>()
         {
             string entityName = typeof(TEntity).Name;
 
-            //判断文件是否存在，如果不存在则新建
+            //Determine whether the file exists, if not, create a new one
             var filePath = GetXmlFullApplicationPath(entityName);
             if (!File.Exists(filePath))
             {
@@ -474,7 +474,7 @@ namespace Senparc.Ncf.Core.Utility
     #region XML DataBase格式
 
     ///// <summary>
-    ///// 重设密码
+    /////Reset password
     ///// </summary>
     //public partial class ResetPasswordCode
     //{

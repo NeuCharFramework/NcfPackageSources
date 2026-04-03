@@ -17,7 +17,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
     //     public void RemoveSiteMapCollectionFiles(SiteMapOrder order)
     //     {
-    //         //删除目录
+    //         //delete directory
     //         string dir = Server.HttpContext.Server.MapPath(GlobalConfigString.GetSitemapCollectionFileDirectory(order.Id));
     //         if (Directory.Exists(dir))
     //         {

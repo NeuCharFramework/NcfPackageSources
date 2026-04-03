@@ -187,7 +187,7 @@ define(function(require) {
 
         geo: function (data, seriesModel, ecModel) {
             // TODO Region
-            // 多个散点图系列在同一个地区的时候
+            // When multiple scatter plot series are in the same region
             return {
                 dimensions: completeDimensions([
                     {name: 'lng'},

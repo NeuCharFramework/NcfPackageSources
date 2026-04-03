@@ -38,13 +38,13 @@
     },
     methods: {
         link(item) {
-            // 显示在首页ifram
+            // Show on home page ifram
             if (!item.url) return;
             window.location.href = item.url;
         }
     }
 });
-//基于 Element 的 el - pagination进行了二次封装，并拓展了自动滚动的功能。
+//Based on Element's el-pagination, it is re-encapsulated and the automatic scrolling function is expanded.
 //https://panjiachen.github.io/vue-element-admin-site/zh/feature/component/pagination.html#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F
 Vue.component('pagination', {
     template: `
@@ -100,7 +100,7 @@ Vue.component('pagination', {
         }
     },
     computed: {
-        //监听传进来的当前页和大小，有变化时更新 :page.sync="listQuery.page"和:limit.sync="listQuery.limit"
+        //Monitor the current page and size passed in, and update when there are changes: page.sync="listQuery.page" and:limit.sync="listQuery.limit"
         currentPage: {
             get() {
                 return this.page;

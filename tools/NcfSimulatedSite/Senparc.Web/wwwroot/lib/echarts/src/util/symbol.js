@@ -289,7 +289,7 @@ define(function(require) {
                 symbolStyle.fill = '#fff';
             }
             else {
-                // FIXME 判断图形默认是填充还是描边，使用 onlyStroke ?
+                // FIXME To determine whether a graphic is filled or stroked by default, use onlyStroke?
                 symbolStyle.fill && (symbolStyle.fill = color);
                 symbolStyle.stroke && (symbolStyle.stroke = color);
             }

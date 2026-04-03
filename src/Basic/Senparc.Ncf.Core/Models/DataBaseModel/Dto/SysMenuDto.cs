@@ -9,7 +9,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
     {
       
         /// <summary>
-        /// 是否是菜单
+        /// Whether it is a menu
         /// </summary>
         [Obsolete("使用MenuType字段代替")]
         public bool IsMenu { get; set; }
@@ -22,7 +22,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public string MenuName { get; set; }
 
         /// <summary>
-        /// 父菜单
+        ///parent menu
         /// </summary>
         [MaxLength(50)]
         public string ParentId { get; set; }
@@ -31,7 +31,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public string Url { get; set; }
 
         /// <summary>
-        /// 图标
+        /// icon
         /// </summary>
         [MaxLength(50)]
         public string Icon { get; set; }
@@ -42,7 +42,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public int Sort { get; set; }
 
         /// <summary>
-        /// 是否可见
+        /// is visible
         /// </summary>
         public bool Visible { get; set; }
 
@@ -72,7 +72,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
     }
 
     /// <summary>
-    /// 菜单树
+    ///menu tree
     /// </summary>
     public class SysMenuTreeItemDto
     {

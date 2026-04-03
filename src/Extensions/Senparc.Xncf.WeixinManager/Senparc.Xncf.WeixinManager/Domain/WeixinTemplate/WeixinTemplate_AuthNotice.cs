@@ -3,22 +3,22 @@
 namespace Senparc.Xncf.WeixinManager.WeixinTemplate
 {
     /// <summary>
-    /// 审核结果通知
+    /// Notification of audit results
     /// </summary>
     public class WeixinTemplate_AppAuditNotice : WeixinTemplateBase
     {
         /*
         {{first.DATA}}
-        审核事项：{{keyword1.DATA}}
-        审核状态：{{keyword2.DATA}}
-        审核时间：{{keyword3.DATA}}
+        Review matters: {{keyword1.DATA}}
+        Review status: {{keyword2.DATA}}
+        Review time: {{keyword3.DATA}}
         {{remark.DATA}}
         * 
-        你的审核请求已经处理。
-        审核事项：机构申请注册
-        审核状态：通过
-        审核时间：2017年2月5日18:17
-        点击查看详情
+        Your review request has been processed.
+        Review matters: Organization application for registration
+        Review status: Passed
+        Review time: 18:17 on February 5, 2017
+        Click to view details
         */
         public TemplateDataItem first { get; set; }
 
@@ -34,8 +34,8 @@ namespace Senparc.Xncf.WeixinManager.WeixinTemplate
         /// 
         /// </summary>
         /// <param name="_first"></param>
-        /// <param name="_keyword1">认证详情</param>
-        /// <param name="_keyword2">认证结果</param>
+        /// <param name="_keyword1">Authentication details</param>
+        /// <param name="_keyword2">Authentication result</param>
         /// <param name="_remark"></param>
         public WeixinTemplate_AppAuditNotice(string _first, string _keyword1, string _keyword2, string _keyword3,
             string _remark) : base("_1_gRx85XBc7OGY4dw9D-fyW4XEeu6Q5URn_ikKH2UD", "审核结果通知")

@@ -19,7 +19,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         private readonly XncfModuleServiceExtension _xncfModuleServiceEx;
         private readonly SysMenuService _sysMenuService;
 
-        //TODO:从其他模块获得，或独立到对应模块的API
+        //TODO: Obtained from other modules, or independent to the API of the corresponding module
         private readonly Lazy<SystemConfigService> _systemConfigService;
 
         public XncfModuleIndexModel(IServiceProvider serviceProvider, XncfModuleServiceExtension xncfModuleServiceEx,
@@ -38,7 +38,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         public int PageIndex { get; set; } = 1;
 
         /// <summary>
-        /// 数据库已存的XncfModules
+        /// XncfModules stored in the database
         /// </summary>
         public PagedList<XncfModule> XncfModules { get; set; }
         public List<IXncfRegister> NewXncfRegisters { get; set; }
@@ -50,14 +50,14 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 
         public async Task OnGetAsync()
         {
-            //更新菜单缓存
+            //Update menu cache
             await _sysMenuService.GetMenuDtoByCacheAsync(true).ConfigureAwait(false);
             XncfModules = await _xncfModuleServiceEx.GetObjectListAsync(PageIndex, 10, _ => true, _ => _.AddTime, Ncf.Core.Enums.OrderingType.Descending);
             LoadNewXncfRegisters(XncfModules);
         }
 
         /// <summary>
-        /// 扫描新模块
+        ///Scan for new modules
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> OnGetScanAsync(string uid)
@@ -67,17 +67,17 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             base.SetMessager(Ncf.Core.Enums.MessageType.info, result.Item2, true);
 
             //if (backpage=="Start")
-            return RedirectToPage("Start", new { uid = uid });//始终到详情页
+            return RedirectToPage("Start", new { uid = uid });//Always go to the details page
             //return RedirectToPage("Index");
         }
 
         /// <summary>
-        /// 隐藏“模块管理”功能
+        /// Hide "Module Management" function
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> OnPostHideManagerAsync()
         {
-            //TODO:使用DTO操作
+            //TODO: use DTO operation
             var systemConfig = _systemConfigService.Value.GetObject(z => true);
             systemConfig.Update(systemConfig.SystemName, systemConfig.MchId, systemConfig.MchKey, systemConfig.TenPayAppId,
                 systemConfig.HideModuleManager.HasValue && systemConfig.HideModuleManager.Value == true ? false : true);
@@ -93,12 +93,12 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 隐藏“模块管理”功能 handler=HideManagerAjax
+        /// Hide the "Module Management" function handler=HideManagerAjax
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> OnPostHideManagerAjaxAsync()
         {
-            //TODO:使用DTO操作
+            //TODO: use DTO operation
             var systemConfig = _systemConfigService.Value.GetObject(z => true);
             systemConfig.Update(systemConfig.SystemName, systemConfig.MchId, systemConfig.MchKey, systemConfig.TenPayAppId,
                             systemConfig.HideModuleManager.HasValue && systemConfig.HideModuleManager.Value == true ? false : true); await _systemConfigService.Value.SaveObjectAsync(systemConfig);
@@ -114,12 +114,12 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 获取已安装模块 handler=Modules
+        /// Get installed modules handler=Modules
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> OnGetMofulesAsync(int pageIndex = 0, int pageSize = 0)
         {
-            //更新菜单缓存
+            //Update menu cache
             await _sysMenuService.GetMenuDtoByCacheAsync(true).ConfigureAwait(false);
             PagedList<XncfModule> xncfModules = await _xncfModuleServiceEx.GetObjectListAsync(pageIndex, pageSize, _ => true, _ => _.AddTime, Ncf.Core.Enums.OrderingType.Descending);
             //xncfModules.FirstOrDefault().
@@ -137,14 +137,14 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 获取未安装模块 handler=UnModules
+        /// Get uninstalled modules handler=UnModules
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> OnGetUnMofulesAsync()
         {
-            //所有已安装的模块
+            //All installed modules
             var oldXncfModules = await _xncfModuleServiceEx.GetObjectListAsync(0, 0, z => true, z => z.AddTime, Ncf.Core.Enums.OrderingType.Descending);
-            //未安装或版本已更新（不同）的模块
+            //Modules that are not installed or have updated (different) versions
             //var newXncfRegisters = _xncfModuleServiceEx.GetUnInstallXncfModule(oldXncfModules);
             var newXncfRegisters = _xncfModuleServiceEx.GetOnlyUnInstallXncfModule(oldXncfModules);
 
@@ -159,14 +159,14 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 获取待更新模块 handler=UpdatedModules
+        /// Get the module to be updated handler=UpdatedModules
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> OnGetUpdatedMofulesAsync()
         {
-            //所有已安装的模块
+            //All installed modules
             var oldXncfModules = await _xncfModuleServiceEx.GetObjectListAsync(0, 0, z => true, z => z.AddTime, Ncf.Core.Enums.OrderingType.Descending);
-            //未安装或版本已更新（不同）的模块
+            //Modules that are not installed or have updated (different) versions
             var newXncfRegisters = _xncfModuleServiceEx.GetUpdatedInstallXncfModule(oldXncfModules);
 
             return Ok(newXncfRegisters.Select(z => new
@@ -180,7 +180,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 扫描新模块 handler=ScanAjax
+        ///Scan new module handler=ScanAjax
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> OnGetScanAjaxAsync(string uid)
@@ -193,7 +193,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 根据名称安装模块
+        ///Install module by name
         /// </summary>
         /// <param name="xncfName"></param>
         /// <returns></returns>
@@ -218,14 +218,14 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 {
                     try
                     {
-                        //查找并安装模块
+                        //Find and install modules
                         var docModule = await _xncfModuleServiceEx.GetObjectAsync(z => z.Uid == docRegister.Uid);
                         if (docModule == null)
                         {
                             await _xncfModuleServiceEx.InstallModuleAsync(docRegister.Uid, true);
                             docModule = await _xncfModuleServiceEx.GetObjectAsync(z => z.Uid == docRegister.Uid);
                         }
-                        //开启模块
+                        //Open module
                         if (docModule.State != Ncf.Core.Enums.XncfModules_State.开放)
                         {
                             docModule.UpdateState(Ncf.Core.Enums.XncfModules_State.开放);

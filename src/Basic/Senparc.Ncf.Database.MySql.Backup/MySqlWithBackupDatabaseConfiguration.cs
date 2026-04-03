@@ -15,7 +15,7 @@ using Senparc.Ncf.Database.MySql;
 namespace Senparc.Ncf.Database.MySql.Backup
 {
     /// <summary>
-    /// MySQL（附带备份） 数据库配置，处于等待官方更新中，目前无效
+    /// MySQL（Backup included) Database configuration, waiting for official update, currently invalid
     /// </summary>
     public class MySqlWithBackupDatabaseConfiguration : MySqlDatabaseConfiguration
     {
@@ -24,7 +24,7 @@ namespace Senparc.Ncf.Database.MySql.Backup
 
         public override string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath)
         {
-            //需要等 Pomelo.EntityFrameworkCore.MySql 5.0才能支持：https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/issues/1226
+            //Need to wait Pomelo.EntityFrameworkCore.MySql 5.0To support: https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/issues/1226
 
             //string constring = Senparc.Ncf.Core.Config.SenparcDatabaseConnectionConfigs.ClientConnectionString;
             //using (var conn = new MySqlClient.MySqlConnection(constring))

@@ -14,8 +14,8 @@ namespace Senparc.Xncf.Terminal
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.Terminal";
-        public override string Uid => "600C608A-F99A-4B1B-A18E-8CE69BE8DA92";//必须确保全局唯一，生成后必须固定
-        public override string Version => "0.1.6";//必须填写版本号
+        public override string Uid => "600C608A-F99A-4B1B-A18E-8CE69BE8DA92";//Must ensure global uniqueness and must be fixed after generation
+        public override string Version => "0.1.6";//Version number is required
 
         public override string MenuName => "终端模块";
         public override string Icon => "fa fa-terminal";
@@ -68,7 +68,7 @@ namespace Senparc.Xncf.Terminal
                                       $"\r\n'WMIC'";
 
         ///// <summary>
-        ///// 注册当前模块需要支持的功能模块
+        ///// Register the function modules that the current module needs to support
         ///// </summary>
         //public override IList<Type> Functions => new[] { 
         //    typeof(Functions.Terminal),

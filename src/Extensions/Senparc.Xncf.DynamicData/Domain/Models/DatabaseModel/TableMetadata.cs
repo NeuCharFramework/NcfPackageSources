@@ -7,32 +7,32 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.DynamicData
 {
     /// <summary>  
-    /// TableMetadata 实体类，用于存储表格的基本信息。  
+    /// TableMetadata entity class, used to store basic information of the table.  
     /// </summary>  
     [Table(Register.DATABASE_PREFIX + nameof(TableMetadata))]
     [Serializable]
     public class TableMetadata : EntityBase<int>
     {
         /// <summary>  
-        /// 表格名称。  
+        /// table name.  
         /// </summary>  
         [Required]
         [MaxLength(255)]
         public string TableName { get; private set; }
 
         /// <summary>  
-        /// 表格描述。  
+        ///Table description.  
         /// </summary>  
         public string Description { get; private set; }
 
         /// <summary>  
-        /// 关联的列元数据集合。  
+        /// Associated column metadata collection.  
         /// </summary>  
         //[InverseProperty(nameof(ColumnMetadata.TableMetadata))]
         public ICollection<ColumnMetadata> ColumnMetadatas { get; set; }
 
         /// <summary>  
-        /// 关联的数据集合。  
+        /// Associated data collection.  
         /// </summary>  
         //[InverseProperty(nameof(TableData.TableMetadata))]
         public ICollection<TableData> TableDatas { get; set; }

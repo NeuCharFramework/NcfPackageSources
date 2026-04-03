@@ -8,24 +8,24 @@ using System.Text;
 namespace Senparc.Xncf.Swagger.Models.DataBaseModel
 {
     /// <summary>
-    /// 配置
+    ///config
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(Config))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(Config))]//The prefix must be added to prevent conflicts system-wide.
     [Serializable]
     public class Config : EntityBase<int>
     {
         /// <summary>
-        /// 使用目录筛选
+        /// Use directory filtering
         /// </summary>
         [DefaultValue(true)]
         public bool UseCategoryFilter { get; set; }
         /// <summary>
-        /// 启用
+        ///enable
         /// </summary>
         [DefaultValue(true)]
         public bool Enabled { get; set; }
         /// <summary>
-        /// 允许访问的用户分组，留空则不做判断
+        /// User group allowed to access, leave blank and no judgment will be made
         /// </summary>
         public string AllowUserRoles { get; set; }
     }

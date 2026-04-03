@@ -14,58 +14,58 @@ define(function(require) {
         layoutMode: {type: 'box', ignoreSize: true},
 
         defaultOption: {
-            // 一级层叠
+            // One level cascading
             zlevel: 0,
-            // 二级层叠
+            // Second level stacking
             z: 6,
             show: true,
 
             text: '',
-            // 超链接跳转
+            // Hyperlink jump
             // link: null,
-            // 仅支持self | blank
+            // Only supports self | blank
             target: 'blank',
             subtext: '',
 
-            // 超链接跳转
+            // Hyperlink jump
             // sublink: null,
-            // 仅支持self | blank
+            // Only supports self | blank
             subtarget: 'blank',
 
             // 'center' ¦ 'left' ¦ 'right'
-            // ¦ {number}（x坐标，单位px）
+            // ¦ {number} (x coordinate, unit px)
             left: 0,
             // 'top' ¦ 'bottom' ¦ 'center'
-            // ¦ {number}（y坐标，单位px）
+            // ¦ {number} (y coordinate, unit px)
             top: 0,
 
-            // 水平对齐
+            // Align horizontally
             // 'auto' | 'left' | 'right'
-            // 默认根据 x 的位置判断是左对齐还是右对齐
+            // By default, it is judged whether to align left or right based on the position of x
             //textAlign: null
 
             backgroundColor: 'rgba(0,0,0,0)',
 
-            // 标题边框颜色
+            // Title border color
             borderColor: '#ccc',
 
-            // 标题边框线宽，单位px，默认为0（无边框）
+            // Title border line width, unit px, default is 0 (no border)
             borderWidth: 0,
 
-            // 标题内边距，单位px，默认各方向内边距为5，
-            // 接受数组分别设定上右下左边距，同css
+            // Title padding, unit px, default padding in all directions is 5.
+            // Accept arrays to set the top, right, bottom and left margins respectively, same as css
             padding: 5,
 
-            // 主副标题纵向间隔，单位px，默认为10，
+            // Vertical spacing between main and subtitles, unit px, default is 10,
             itemGap: 10,
             textStyle: {
                 fontSize: 18,
                 fontWeight: 'bolder',
-                // 主标题文字颜色
+                // Main title text color
                 color: '#333'
             },
             subtextStyle: {
-                // 副标题文字颜色
+                // Subtitle text color
                 color: '#aaa'
             }
         }

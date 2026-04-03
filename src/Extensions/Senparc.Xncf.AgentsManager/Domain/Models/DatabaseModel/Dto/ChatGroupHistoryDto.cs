@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 {
     /// <summary>
-    /// ChatGroupHistory 数据库实体 DTO
+    /// ChatGroupHistory Database Entity DTO
     /// </summary>
     public class ChatGroupHistoryDto : DtoBase
     {

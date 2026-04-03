@@ -25,24 +25,24 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
 
         public int Id { get; set; }
         /// <summary>
-        /// 训练模型Id
+        ///Training model ID
         /// </summary>
         public int EmbeddingModelId { get; set; }
         /// <summary>
-        /// 向量数据库Id
+        ///Vector databaseId
         /// </summary>
         public int VectorDBId { get; set; }
         /// <summary>
-        /// 对话模型Id
+        /// Dialog model ID
         /// </summary>
         public int ChatModelId { get; set; }
         /// <summary>
-        /// 名称
+        ///name
         /// </summary>
         [MaxLength(100)]
         public string Name { get; set; }
         /// <summary>
-        /// 内容
+        /// content
         /// </summary>
         public string Content { get; set; }
 

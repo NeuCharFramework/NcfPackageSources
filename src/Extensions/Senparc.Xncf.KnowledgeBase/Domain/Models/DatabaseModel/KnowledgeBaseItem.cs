@@ -9,9 +9,9 @@ using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
 namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
 {
     /// <summary>
-    /// KnowledgeBasesDetail 实体类
+    /// KnowledgeBasesDetail entity class
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(KnowledgeBaseItem))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(KnowledgeBaseItem))]//The prefix must be added to prevent conflicts system-wide.
     [Serializable]
     public class KnowledgeBaseItem : EntityBase<int>
     {
@@ -39,42 +39,42 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
             ChunkIndex = knowledgeBaseItemDto.ChunkIndex;
         }
         /// <summary>
-        /// 知识库Id
+        ///Knowledge BaseId
         /// </summary>
         public int KnowledgeBasesId { get; private set; }
         /// <summary>
-        /// 内容类型
+        /// content type
         /// </summary>
         public ContentType ContentType { get; private set; }
         /// <summary>
-        /// 内容
+        /// content
         /// </summary>
         public string Content { get; private set; }
 
         /// <summary>
-        /// 源文件名称
+        /// source file name
         /// </summary>
         [MaxLength(500)]
         public string FileName { get; private set; }
 
         /// <summary>
-        /// 文本切片索引总数
+        ///Total number of text slice indexes
         /// </summary>
         public int ChunkIndex { get; private set; }
 
         /// <summary>
-        /// 是否已向量化
+        /// Whether it has been vectorized
         /// </summary>
         public bool IsEmbedded { get; private set; }
 
         /// <summary>
-        /// 向量化时间
+        ///vectorization time
         /// </summary>
         public DateTime? EmbeddedTime { get; private set; }
 
 
         /// <summary>
-        /// 向量化成功后调用，更新状态和时间戳
+        /// Called after successful vectorization, update status and timestamp
         /// </summary>
         public void EmbeddingSuccessed(int totalChunkIndex)
         {

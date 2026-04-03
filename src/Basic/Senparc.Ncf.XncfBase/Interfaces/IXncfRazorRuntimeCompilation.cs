@@ -5,12 +5,12 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// 需要使用 AddRazorRuntimeCompilation() 方法时，需要设置对应当前项目相对于 Senparc.Web 的路径
+    /// When you need to use the AddRazorRuntimeCompilation() method, you need to set the path corresponding to the current project relative to Senparc.Web
     /// </summary>
     public interface IXncfRazorRuntimeCompilation
     {
         /// <summary>
-        /// 相对路径，如：Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Areas.Admin"));
+        /// Relative path, such as: Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Areas.Admin"));
         /// </summary>
         string LibraryPath { get; }
     }

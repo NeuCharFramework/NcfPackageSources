@@ -17,7 +17,7 @@ define(function(require) {
      */
     var Graph = function(directed) {
         /**
-         * 是否是有向图
+         * Whether it is a directed graph
          * @type {boolean}
          * @private
          */
@@ -408,7 +408,7 @@ define(function(require) {
     };
 
     /**
-     * 图边
+     * Picture edge
      * @alias module:echarts/data/Graph.Edge
      * @param {module:echarts/data/Graph.Node} n1
      * @param {module:echarts/data/Graph.Node} n2
@@ -417,13 +417,13 @@ define(function(require) {
     function Edge(n1, n2, dataIndex) {
 
         /**
-         * 节点1，如果是有向图则为源节点
+         * Node 1, if it is a directed graph, it is the source node
          * @type {module:echarts/data/Graph.Node}
          */
         this.node1 = n1;
 
         /**
-         * 节点2，如果是有向图则为目标节点
+         * Node 2, if it is a directed graph, it is the target node
          * @type {module:echarts/data/Graph.Node}
          */
         this.node2 = n2;

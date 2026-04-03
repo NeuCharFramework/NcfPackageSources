@@ -20,7 +20,7 @@ using Senparc.Xncf.SystemCore.Domain.Database;
 namespace Senparc.Xncf.XncfModuleManager.Domain.Services
 {
     /// <summary>
-    /// TODO：此接口需要开放到 OHS，对外提供服务
+    /// TODO: This interface needs to be exposed to OHS for external services.
     /// </summary>
     public class XncfModuleServiceExtension : XncfModuleService
     {
@@ -28,7 +28,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
         private readonly Lazy<SysRoleService> _sysRoleService;
 
         /// <summary>
-        /// 获取模块起始触发 URL
+        /// Get module start trigger URL.
         /// </summary>
         /// <param name="register"></param>
         /// <returns></returns>
@@ -44,10 +44,10 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
         }
 
         /// <summary>
-        /// 安装模块
+        /// Install module.
         /// </summary>
-        /// <param name="uid">模块 Uid</param>
-        /// <param name="addMenu">是否在安装完成后添加到管理员菜单</param>
+        /// <param name="uid">Module Uid</param>
+        /// <param name="addMenu">Whether to add the module to the admin menu after installation.</param>
         /// <returns></returns>
         //public async Task<Tuple<PagedList<XncfModule>, string, InstallOrUpdate?>> InstallModuleAsync(string uid)
         public async Task<(PagedList<XncfModule> XncfModuleList, string scanAndInstallResult, InstallOrUpdate? InstallOrUpdate)> InstallModuleAsync(string uid, bool addMenu = true)
@@ -69,7 +69,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
                 throw new Exception("相同版本模块已安装，无需重复安装！");
             }
 
-            /* 目前禁用自动升级，因此不从数据库访问所有记录 */
+            /* Auto-upgrade is currently disabled, so all records are not loaded from the database. */
 
             PagedList<XncfModule> xncfModules = await base.GetObjectListAsync(1, 999, z => true, z => z.AddTime, Ncf.Core.Enums.OrderingType.Descending).ConfigureAwait(false);
 
@@ -77,7 +77,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
 
             //var se = _serviceProvider.GetService(typeof(BasePoolEntities_SqlServer));
 
-            //进行模块扫描
+            //Scan modules
             InstallOrUpdate? installOrUpdateValue = null;
             var result = await Senparc.Ncf.XncfBase.Register.ScanAndInstall(xncfModuleDtos, _serviceProvider, async (register, installOrUpdate) =>
             {
@@ -89,7 +89,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
 
             }, uid).ConfigureAwait(false);
 
-            //记录日志
+            //Log result
             var installOrUpdateMsg = installOrUpdateValue.HasValue
                                         ? (installOrUpdateValue.Value == InstallOrUpdate.Install ? "安装" : "更新")
                                         : "失败";
@@ -98,7 +98,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
         }
 
         /// <summary>
-        /// 安装模块之后，安装菜单
+        /// Install menu after module installation.
         /// </summary>
         /// <param name="register"></param>
         /// <returns></returns>
@@ -112,14 +112,14 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
 
             if (installOrUpdate == InstallOrUpdate.Update && currentMenu != null)
             {
-                //更新菜单
+                //Update menu
                 menuDto = _sysMenuService.Value.Mapper.Map<SysMenuDto>(currentMenu);
-                menuDto.MenuName = register.MenuName;//更新菜单名称
-                menuDto.Icon = register.Icon;//更新菜单图标
+                menuDto.MenuName = register.MenuName;//Update menu name
+                menuDto.Icon = register.Icon;//Update menu icon
             }
             else
             {
-                //新建菜单
+                //Create menu
                 var icon = register.Icon.IsNullOrEmpty() ? "fa fa-bars" : register.Icon;
                 var order = 20;
                 switch (register.Uid)
@@ -140,9 +140,9 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
 
             if (installOrUpdate == InstallOrUpdate.Install)
             {
-                //更新菜单信息
+                //Update menu information
 
-                //获取管理员组的 RoleId
+                //Get RoleId of the administrator group
                 var administratorRoleCode = Senparc.Ncf.Service.Config.SYSROLE_ADMINISTRATOR_ROLE_CODE;
                 var sysRole = await _sysRoleService.Value.GetObjectAsync(z => z.RoleCode == administratorRoleCode);
 
@@ -170,7 +170,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
 
 
         /// <summary>
-        /// 获取显示的版本号信息（如果有新版本，则显示格式：[旧版本号] -> [新版本号]
+        /// Get display version information (if a newer version exists, format: [oldVersion] -> [newVersion]).
         /// </summary>
         /// <param name="xncfModules"></param>
         /// <param name="xncfRegister"></param>
@@ -186,7 +186,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
         }
 
         /// <summary>
-        /// 获取未安装的 Xncf（或版本不同）
+        /// Get uninstalled Xncf modules (or modules with different versions).
         /// </summary>
         /// <returns></returns>
         public List<IXncfRegister> GetUnInstallXncfModule(List<XncfModule> xncfModules)
@@ -196,7 +196,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
         }
 
         /// <summary>
-        /// 获取未安装的 Xncf
+        /// Get only uninstalled Xncf modules.
         /// </summary>
         /// <returns></returns>
         public List<IXncfRegister> GetOnlyUnInstallXncfModule(List<XncfModule> xncfModules)
@@ -206,7 +206,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
         }
 
         /// <summary>
-        /// 获取版本不同的 Xncf
+        /// Get Xncf modules with different versions.
         /// </summary>
         /// <returns></returns>
         public List<IXncfRegister> GetUpdatedInstallXncfModule(List<XncfModule> xncfModules)

@@ -22,7 +22,7 @@ namespace Senparc.Ncf.Service
 
             base.SaveObject(obj);
 
-            //删除缓存
+            //Delete cache
             var systemConfigCache = _serviceProvider.GetService<FullSystemConfigCache>();
             systemConfigCache.RemoveCache();
         }
@@ -33,7 +33,7 @@ namespace Senparc.Ncf.Service
 
             await base.SaveObjectAsync(obj);
 
-            //删除缓存
+            //Delete cache
             var systemConfigCache = _serviceProvider.GetService<FullSystemConfigCache>();
             await systemConfigCache.RemoveCacheAsync();
             await base.SaveObjectAsync(obj);
@@ -41,7 +41,7 @@ namespace Senparc.Ncf.Service
 
         public virtual string BackupDatabase()
         {
-            string timeStamp = DateTime.Now.ToString("yyyyMMdd-HH-mm");//分钟
+            string timeStamp = DateTime.Now.ToString("yyyyMMdd-HH-mm");//minute
             return timeStamp;
         }
 

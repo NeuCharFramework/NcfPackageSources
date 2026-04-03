@@ -57,7 +57,7 @@ define(function (require) {
             var dir = clockwise ? 1 : -1;
             data.each('value', function (value, idx) {
                 var angle;
-                // FIXME 兼容 2.0 但是 roseType 是 area 的时候才是这样？
+                // FIXME is compatible with 2.0 but is this the case when roseType is area?
                 if (roseType !== 'area') {
                     angle = sum === 0 ? unitRadian : (value * unitRadian);
                 }

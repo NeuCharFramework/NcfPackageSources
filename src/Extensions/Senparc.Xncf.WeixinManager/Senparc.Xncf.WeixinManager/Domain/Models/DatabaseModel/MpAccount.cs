@@ -10,9 +10,9 @@ using System.Text;
 namespace Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel
 {
     /// <summary>
-    /// 微信公众号信息
+    /// WeChat public account information
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(MpAccount))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(MpAccount))]//The prefix must be added to prevent conflicts system-wide.
     [Serializable]
     public class MpAccount : EntityBase<int>
     {

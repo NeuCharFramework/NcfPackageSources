@@ -21,16 +21,16 @@ using System.Text.Json.Serialization;
 namespace Senparc.Xncf.AreasBase
 {
     /// <summary>
-    /// 对所有扩展 Area 进行注册
+    ///Register all extension areas
     /// </summary>
     public static class AreaRegister
     {
         /// <summary>
-        /// 自动注册所有 Area
+        /// Automatically register all Areas
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="env"></param>
-        /// <param name="eachRegsiterAction">遍历到每一个 Register 额外的操作</param>
+        /// <param name="eachRegsiterAction">Traverse to each Register additional operations</param>
         /// <returns></returns>
         public static IMvcBuilder AddNcfAreas(this IMvcBuilder builder, /*Microsoft.Extensions.Hosting.IHostEnvironment*/IWebHostEnvironment env, Action<IAreaRegister> eachRegsiterAction = null)
         {
@@ -44,19 +44,19 @@ namespace Senparc.Xncf.AreasBase
                 Console.WriteLine("[IAreaRegister] " + register.Name);
                 Console.WriteLine("[IAreaRegister] run AuthorizeConfig:" + areaRegister.AreaPageMenuItems.FirstOrDefault()?.Url);
 
-                areaRegister.AuthorizeConfig(builder, env);//进行注册
+                areaRegister.AuthorizeConfig(builder, env);//Register
 
                 Console.WriteLine("[IAreaRegister] run AuthorizeConfig finished:" + areaRegister.AreaPageMenuItems.FirstOrDefault()?.Url);
 
-                eachRegsiterAction?.Invoke(areaRegister);//执行额外的操作
+                eachRegsiterAction?.Invoke(areaRegister);//perform additional actions
             }
 
-            //已经不需要重新扫描
+            //No need to rescan anymore
             //AssembleScanHelper.AddAssembleScanItem(assembly =>
             //{
             //    try
             //    {
-            //        //进行过滤
+            //        //Filter
             //        if (assembly.FullName.StartsWith("Microsoft.Data.SqlClient"))
             //        {
             //            return;
@@ -73,21 +73,21 @@ namespace Senparc.Xncf.AreasBase
             //            {
             //                Console.WriteLine("[areaRegisterTypes] run AuthorizeConfig:" + register.AreaPageMenuItems.FirstOrDefault()?.Url);
 
-            //                register.AuthorizeConfig(builder, env);//进行注册
+            //                register.AuthorizeConfig(builder, env);//Register
 
             //                Console.WriteLine("[areaRegisterTypes] run AuthorizeConfig finished:" + register.AreaPageMenuItems.FirstOrDefault()?.Url);
 
-            //                eachRegsiterAction?.Invoke(register);//执行额外的操作
+            //                eachRegsiterAction?.Invoke(register);//Perform additional operations
             //            }
             //            else
             //            {
-            //                SenparcTrace.BaseExceptionLog(new BaseException($"{registerType.Name} 类型没有实现接口 IAreaRegister！"));
+            //                SenparcTrace.BaseExceptionLog(new BaseException($"{registerType.Name} type does not implement the interface IAreaRegister!"));
             //            }
             //        }
             //    }
             //    catch (Exception ex)
             //    {
-            //        var title = "AddNcfAreas() 自动扫描程序集报告（非程序异常）：" + assembly.FullName;
+            //        var title = "AddNcfAreas() automatic scan assembly report (non-program exception):" + assembly.FullName;
             //        var message = ex.ToString();
             //        Console.WriteLine(title);
             //        Console.WriteLine(message);
@@ -95,7 +95,7 @@ namespace Senparc.Xncf.AreasBase
             //    }
             //}, true);
 
-            //所有 AuthorizeConfig 方法已经执行完成
+            //All AuthorizeConfig methods have been executed
             Ncf.Core.Config.SiteConfig.NcfCoreState.AllAuthorizeConfigApplied = true;
 
 
@@ -103,14 +103,14 @@ namespace Senparc.Xncf.AreasBase
         }
 
         /// <summary>
-        /// 启动带 Web 功能的 NCF 引擎（如不需要使用 Web，如 RazorPage，可以直接使用 <see cref="Senparc.Ncf.XncfBase.Register.StartEngine(IServiceCollection, IConfiguration)"/>）
+        /// Start the NCF engine with Web function (if you do not need to use the Web, such as RazorPage, you can directly use <see cref="Senparc.Ncf.XncfBase.Register.StartEngine(IServiceCollection, IConfiguration)"/>)
         /// </summary>
         /// <param name="services"></param>
         /// <param name="configuration"></param>
         /// <param name="env"></param>
-        /// <param name="addRazorPagesConfig">services.AddRazorPages() 的内部委托</param>
-        /// <param name="eachRegsiterAction">遍历到每一个 Register 额外的操作</param>
-        /// <param name="dllFilePatterns">被包含的 dll 的文件名，“.Xncf.”会被必定包含在里面</param>
+        /// <param name="addRazorPagesConfig">Internal delegate for services.AddRazorPages()</param>
+        /// <param name="eachRegsiterAction">Traverse to each Register additional operations</param>
+        /// <param name="dllFilePatterns">The file name of the included dll, ".Xncf." will definitely be included</param>
         /// <returns></returns>
         public static string StartWebEngine(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env,
             string[] dllFilePatterns,
@@ -118,7 +118,7 @@ namespace Senparc.Xncf.AreasBase
             Action<IAreaRegister> eachRegsiterAction = null)
         {
             var builder = services.AddRazorPages(addRazorPagesConfig)
-             //注册所有 Ncf 的 Area 模块（必须）
+             //Register all Ncf Area modules (required)
              .AddNcfAreas(env, eachRegsiterAction)
              //.AddJsonOptions(options =>
              //{
@@ -131,15 +131,15 @@ namespace Senparc.Xncf.AreasBase
 
 
         /// <summary>
-        /// 启动带 Web 功能的 NCF 引擎（如不需要使用 Web，如 RazorPage，可以直接使用 <see cref="Senparc.Ncf.XncfBase.Register.StartEngine(IServiceCollection, IConfiguration)"/>）
+        /// Start the NCF engine with Web function (if you do not need to use the Web, such as RazorPage, you can directly use <see cref="Senparc.Ncf.XncfBase.Register.StartEngine(IServiceCollection, IConfiguration)"/>)
         /// </summary>
-        /// <typeparam name="TDatabaseConfiguration">数据库类型</typeparam>
+        /// <typeparam name="TDatabaseConfiguration">Database type</typeparam>
         /// <param name="builder">WebApplicationBuilder</param>
         /// <param name="configuration"></param>
         /// <param name="env"></param>
-        /// <param name="addRazorPagesConfig">services.AddRazorPages() 的内部委托</param>
-        /// <param name="eachRegsiterAction">遍历到每一个 Register 额外的操作</param>
-        /// <param name="dllFilePatterns">被包含的 dll 的文件名，“.Xncf.”会被必定包含在里面</param>
+        /// <param name="addRazorPagesConfig">Internal delegate for services.AddRazorPages()</param>
+        /// <param name="eachRegsiterAction">Traverse to each Register additional operations</param>
+        /// <param name="dllFilePatterns">The file name of the included dll, ".Xncf." will definitely be included</param>
         /// <returns></returns>
         public static string StartWebEngine(this WebApplicationBuilder builder,
                 string[] dllFilePatterns,
@@ -150,9 +150,9 @@ namespace Senparc.Xncf.AreasBase
 
             var startEngineLog = services.StartNcfEngine(builder.Configuration, builder.Environment, dllFilePatterns);
 
-            //添加 RazorPage 和 Area
+            //Add RazorPage and Area
             var mvcBuilder = services.AddRazorPages(addRazorPagesConfig)
-                            //注册所有 Ncf 的 Area 模块（必须）
+                            //Register all Ncf Area modules (required)
                             .AddNcfAreas(builder.Environment, eachRegsiterAction);
 
             return startEngineLog;

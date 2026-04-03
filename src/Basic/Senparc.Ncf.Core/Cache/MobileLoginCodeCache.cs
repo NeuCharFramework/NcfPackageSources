@@ -11,11 +11,11 @@ namespace Senparc.Ncf.Core.Cache
     public class MobileLoginCode
     {
         /// <summary>
-        /// 完整带域名格式的用户名：<用户名>@<域名>
+        /// Complete username with domain name format: <username>@<domain name>
         /// </summary>
         public string FullDomainUserName { get; set; }
         /// <summary>
-        /// 用户名
+        /// username
         /// </summary>
         public string UserName
         {
@@ -30,7 +30,7 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        /// 域名
+        ///domain name
         /// </summary>
         public string Domain
         {

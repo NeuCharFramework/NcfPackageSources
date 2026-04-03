@@ -28,18 +28,18 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
         }
 
         /// <summary>
-        /// 尝试根据实体创建表和列元数据
+        /// Attempts to create table and column metadata based on entities
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public async Task<ColumnTemplate> TryCreateTableAndColumnMetaFromEntityAsync<T>()
         {
-            //查看是否已经存在表
+            //Check if the table already exists
             var tableName = typeof(T).FullName;
             var tableMetaDto = await _tableMetadataService.Value.GetTableMetadataDtoAsync(tableName);
             if (tableMetaDto == null)
             {
-                //创建对象
+                //Create object
                 //tableMetaDto = new TableMetadataDto()
                 //{
                 //    TableName = tableName,
@@ -52,12 +52,12 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
 
                 tableMetaDto = _tableMetadataService.Value.Mapping<TableMetadataDto>(tableMeta);
 
-                //创建列
+                //Create column
                 var props = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public);
                 List<ColumnMetadata> columns = new List<ColumnMetadata>();
                 foreach (var prop in props)
                 {
-                    //TODO:是否可为null，需要[Required]特性进行判断
+                    //TODO: Whether it can be null requires the [Required] attribute to judge.
                     var isRequired = prop.GetCustomAttribute<RequiredAttribute>() != null;
                     var defaultAttr = prop.GetCustomAttribute<DefaultValueAttribute>();
 
@@ -74,7 +74,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
         public async Task<ColumnTemplate> GetColumnDtos(int tableId)
         {
             var columns = await base.GetFullListAsync(z => z.TableMetadataId == tableId);
-            //TODO: 添加 .ToDto<T>扩展方法
+            //TODO: Add .ToDto<T> extension method
             var columnDtos = columns.Select(z => base.Mapper.Map<ColumnMetadataDto>(z)).ToList();
             return new ColumnTemplate(tableId, columnDtos);
         }

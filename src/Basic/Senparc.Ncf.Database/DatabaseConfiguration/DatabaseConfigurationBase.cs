@@ -10,8 +10,8 @@ using System.Data.Common;
 namespace Senparc.Ncf.Database
 {
     /// <summary>
-    /// 数据库配置基类
-    /// <para>官方推荐的数据库提供程序：https://docs.microsoft.com/zh-cn/ef/core/providers/?tabs=dotnet-core-cli </para>
+    /// Database configuration base class
+    /// <para>Officially recommended database provider: https://docs.microsoft.com/zh-cn/ef/core/providers/?tabs=dotnet-core-cli </para>
     /// </summary>
     public abstract class DatabaseConfigurationBase<TBuilder, TExtension> : IDatabaseConfiguration<TBuilder, TExtension>
         where TBuilder : RelationalDbContextOptionsBuilder<TBuilder, TExtension>
@@ -20,26 +20,26 @@ namespace Senparc.Ncf.Database
         public abstract MultipleDatabaseType MultipleDatabaseType { get; }
 
         /// <summary>
-        /// 具有 <typeparamref name="TBuilder"/> 类型的 DbContextOptionsAction
+        /// DbContextOptionsAction with type <typeparamref name="TBuider"/>
         /// </summary>
         public virtual Action<TBuilder, XncfDatabaseData> TypedDbContextOptionsActionBase => DbContextOptionsActionBase;
 
         public Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionBase => (builder, xncfDatabaseData) =>
          {
 
-             //获取当前数据库工厂
+             //Get the current database factory
              var databaseConfigurationFactory = DatabaseConfigurationFactory.Instance;
-             //获取当前指定的 IXncfDatabase 对应信息（只在针对某个特定的 XNCF 数据库模块进行 add-migration 等情况下有效）
+             //Get the corresponding information of the currently specified IXncfDatabase (only valid when add-migration is performed for a specific XNCF database module)
              if (xncfDatabaseData != null)
              {
                  var typedBuilder = builder as TBuilder;
 
-                 //获取指定 IXncfDatabase 对应于当前数据库类型的 DbContext 的类型
+                 //Gets the type of the DbContext corresponding to the current database type for the specified IXncfDatabase
                  var dbContextType = MultipleDatabasePool.Instance.GetXncfDbContextType(xncfDatabaseData.XncfDatabaseRegister.GetType());
 
-                 //DbContext的程序集名称（或强制指定生成 add-migration 的程序集名称
+                 //The assembly name of the DbContext (or force specifying the assembly name that generates add-migration
                  var dbContextAssemblyName = xncfDatabaseData.AssemblyName ?? dbContextType.Assembly.FullName;
-                 //Migration History 的表名
+                 //Migration History table name
                  var databaseMigrationHistoryTableName = NcfDatabaseMigrationHelper.GetDatabaseMigrationHistoryTableName(xncfDatabaseData.XncfDatabaseRegister);
 
                  typedBuilder.MigrationsAssembly(dbContextAssemblyName)
@@ -47,7 +47,7 @@ namespace Senparc.Ncf.Database
              }
              else
              {
-                 // 程序执行时 DatabaseConfigurationFactory.CurrentXncfDatabaseData 允许为 null
+                 // DatabaseConfigurationFactory.CurrentXncfDatabaseData is allowed to be null when the program is executed
              }
          };
 
@@ -56,16 +56,16 @@ namespace Senparc.Ncf.Database
         public abstract Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase { get; }
 
         /// <summary>
-        /// 备份数据库方法
-        /// <para>如果返回null，则在方法内部完成备份程序</para>
+        /// Backup database method
+        /// <para>If null is returned, the backup procedure is completed inside the method</para>
         /// </summary>
         /// <param name="dbConnection"></param>
         /// <param name="backupFilePath"></param>
         /// <returns></returns>
         public abstract string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath);
         /// <summary>
-        /// 删除指定表Sql
-        /// <para>如果返回null，则在方法内部完成删除操作</para>
+        /// Delete the specified table Sql
+        /// <para>If null is returned, the deletion operation is completed inside the method</para>
         /// </summary>
         /// <param name="dbConnection"></param>
         /// <param name="tableName"></param>
@@ -73,25 +73,25 @@ namespace Senparc.Ncf.Database
         public abstract string GetDropTableSql(DbContext dbContext, string tableName);
 
         /// <summary>
-        /// 使用数据库，如：
+        /// Use a database, such as:
         /// <para>var builder = new DbContextOptionsBuilder&lt;TDbContext&gt;(); builder.UseSqlServer(sqlConnection, DbContextOptionsAction);</para>
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="xncfDatabaseData"></param>
         /// <param name="connectionString"></param>
-        /// <param name="dbContextOptionsAction">额外需要配置的内容</param>
+        /// <param name="dbContextOptionsAction">Additional content that needs to be configured</param>
         public void UseDatabase(DbContextOptionsBuilder builder,/*IRelationalDbContextOptionsBuilderInfrastructure optionsBuilder,*/ string connectionString,
                 XncfDatabaseData xncfDatabaseData = null, 
                 Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> dbContextOptionsAction = null)
         {
-            //执行 UseSQLite、UseSQLServer 等操作
+            //Perform operations such as UseSQLite, UseSQLServer, etc.
             SetUseDatabase(builder, connectionString, xncfDatabaseData, b =>
                 {
-                    //执行基础代码
+                    //Execute basic code
                     DbContextOptionsActionBase(b, xncfDatabaseData);
-                    //执行扩展代码
+                    //Execute extension code
                     DbContextOptionsActionExtension?.Invoke(b, xncfDatabaseData);
-                    //执行外部传入的其他方法
+                    //Execute other methods passed in from outside
                     dbContextOptionsAction?.Invoke(b, xncfDatabaseData);
                 }
             );

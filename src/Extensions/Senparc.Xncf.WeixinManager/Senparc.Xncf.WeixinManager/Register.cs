@@ -41,7 +41,7 @@ namespace Senparc.Xncf.WeixinManager
 {
     [XncfRegister]
     [XncfOrder(5880)]
-    public partial class Register : XncfRegisterBase, IXncfRegister //注册 XNCF 基础模块接口（必须）
+    public partial class Register : XncfRegisterBase, IXncfRegister //Register XNCF basic module interface (required)
     {
         #region IXncfRegister 接口
 
@@ -71,7 +71,7 @@ namespace Senparc.Xncf.WeixinManager
         {
             //services.AddScoped<PostModel>(ServiceProvider =>
             //{
-            //    //根据条件生成不同的PostModel
+            //    //Generate different PostModels based on conditions
             //});
             services.AddScoped<IAiHandler, SemanticAiHandler>();
             services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();
@@ -79,36 +79,36 @@ namespace Senparc.Xncf.WeixinManager
             services.AddScoped<MpAccountService>();
             services.AddScoped<PromptItemService>();
 
-            var autoCreateApi = false;//是否自动生成API
+            var autoCreateApi = false;//Whether to automatically generate API
             services.AddSenparcWeixin(configuration, env, autoCreateApi);
 
-            return base.AddXncfModule(services, configuration, env);//如果重写此方法，必须调用基类方法
+            return base.AddXncfModule(services, configuration, env);//If you override this method, you must call the base class method
         }
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //安装或升级版本时更新数据库
+            //Update database when installing or upgrading a version
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
         }
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            //TODO:可以在基础模块里给出选项是否删除
+            //TODO: You can give the option whether to delete it in the basic module
 
             #region 删除数据库（演示）
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
             WeixinSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as WeixinSenparcEntities;
 
-            //指定需要删除的数据实体
+            //Specify the data entity to be deleted
 
-            //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
+            //Note: As a demonstration, all tables created by this module are deleted when uninstalling the module. During actual operation, please operate with caution and sort the entities in the order of deletion!
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
-            //按照删除顺序排序
+            //Sort by deletion order
             var types = new[] { typeof(UserTag_WeixinUser), typeof(UserTag), typeof(WeixinUser), typeof(MpAccount) };
             types.ToList().AddRange(dropTableKeys);
             types = types.Distinct().ToArray();
-            //指定需要删除的数据实体
+            //Specify the data entity to be deleted
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, types);
 
             #endregion
@@ -118,32 +118,32 @@ namespace Senparc.Xncf.WeixinManager
 
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
-            //等待数据库注册完成后运行
+            //Wait for database registration to complete before running
             _ = Task.Factory.StartNew(async () =>
             {
-                //注册微信
+                //Register WeChat
                 Senparc.Weixin.WeixinRegister.UseSenparcWeixin(null, null, senparcSetting: null);
                 
-                //等待数据库注册完成后运行
+                //Wait for database registration to complete before running
                 while (Ncf.Database.Register.UseNcfDatabaseSetted is false)
                 {
                     await Task.Delay(1000);
                 }
                 
-                //开始查询数据库
+                //Start querying the database
                 try
                 {
-                    //未安装数据库表的情况下可能会出错，因此需要try
+                    //An error may occur if the database table is not installed, so try
                     using (var scope = app.ApplicationServices.CreateScope())
                     {
                         var mpAccountService = scope.ServiceProvider.GetRequiredService<MpAccountService>();
                         var allMpAccount = mpAccountService.GetAllMpAccounts();
 
-                        //批量自动注册公众号
+                        //Automatically register public accounts in batches
                         allMpAccount.AsParallel().ForAll(mpAccount =>
                         {
                             AccessTokenContainer.RegisterAsync(mpAccount.AppId, mpAccount.AppSecret, $"{mpAccount.Name}-{mpAccount.Id}");
-                            //TODO：更多执行过程中的动态注册
+                            //TODO: More dynamic registration during execution
                         });
                     }
                 }
@@ -166,7 +166,7 @@ namespace Senparc.Xncf.WeixinManager
             //    foreach (var neucharApiDocAssembly in WeixinApiService.WeixinApiAssemblyCollection)
             //    {
 
-            //        //TODO:真实的动态版本号
+            //        //TODO: real dynamic version number
             //        var verion = WeixinApiService.WeixinApiAssemblyVersions[neucharApiDocAssembly.Key]; //neucharApiDocAssembly.Value.ImageRuntimeVersion;
             //        var docName = WeixinApiService.GetDocName(neucharApiDocAssembly.Key);
 
@@ -206,7 +206,7 @@ namespace Senparc.Xncf.WeixinManager
 
             public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
             {
-                //每次切换定义，都需要经过比较长的时间才到达这里
+                //Every time you switch definitions, it takes a long time to get here.
 
                 return;
                 string platformType;
@@ -243,14 +243,14 @@ namespace Senparc.Xncf.WeixinManager
                 {
                     if (!path.Contains(platformType))
                     {
-                        //移除非当前模块的API对象
+                        //Remove API objects that are not in the current module
                         swaggerDoc.Paths.Remove(path);
                     }
                 }
 
                 //SwaggerOperationAttribute
-                //移除Schema对象
-                //var toRemoveSchema = context.SchemaRepository.Schemas.Where(z => !z.Key.Contains(platformType)).ToList();//结果为全部删除，仅测试
+                //Remove Schema object
+                //var toRemoveSchema = context.SchemaRepository.Schemas.Where(z => !z.Key.Contains(platformType)).ToList();//The result is all deletion, only testing
                 //foreach (var schema in toRemoveSchema)
                 //{
                 //    context.SchemaRepository.Schemas.Remove(schema.Key);
@@ -293,15 +293,15 @@ namespace Senparc.Xncf.WeixinManager
         //{
         //    public void Apply(OpenApiOperation operation, OperationFilterContext context)
         //    {
-        //        //获取是否添加登录特性
+        //        //Get whether to add login features
         //        var authAttributes = context.MethodInfo.DeclaringType.GetCustomAttributes(true)
         //         .Union(context.MethodInfo.GetCustomAttributes(true))
         //         .OfType<AuthorizeAttribute>().Any();
 
         //        if (authAttributes)
         //        {
-        //            operation.Responses.Add("401", new OpenApiResponse { Description = "暂无访问权限" });
-        //            operation.Responses.Add("403", new OpenApiResponse { Description = "禁止访问" });
+        //            operation.Responses.Add("401", new OpenApiResponse { Description = "No access rights yet" });
+        //            operation.Responses.Add("403", new OpenApiResponse { Description = "Access Forbidden" });
         //            operation.Security = new List<OpenApiSecurityRequirement>
         //            {
         //                new OpenApiSecurityRequirement { { new OpenApiSecurityScheme() {  Name= "oauth2" }, new[] { "swagger_api" } }}

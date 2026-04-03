@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace Senparc.Ncf.XncfBase.Threads
 {
-    //TODO: 线程备份及后台操作需要考虑租户问题
+    //TODO: Thread backup and background operations need to consider tenant issues
 
     /// <summary>
-    /// XNCF Thread 模块，线程配置
+    ///XNCF Thread module, thread configuration
     /// </summary>
     public class XncfThreadBuilder
     {
@@ -29,10 +29,10 @@ namespace Senparc.Ncf.XncfBase.Threads
                 return;
             }
 
-            //return;//TODO:多租户完成之前暂时不启用后台线程，需要解决线程和租户的对应关系
+            //return;//TODO: Background threads will not be enabled until multi-tenancy is completed. The corresponding relationship between threads and tenants needs to be resolved.
 
             var i = 0;
-            //遍历单个 XNCF 内所有线程配置
+            //Traverse all thread configurations within a single XNCF
             foreach (var threadInfo in _threadInfoList)
             {
                 if (threadInfo.Task == null)
@@ -42,7 +42,7 @@ namespace Senparc.Ncf.XncfBase.Threads
                 try
                 {
                     i++;
-                    //定义线程
+                    //Define thread
                     Thread thread = new Thread(async () =>
                     {
                         SenparcTrace.SendCustomLog("启动线程", $"{register.Name}-{threadInfo.Name}");
@@ -52,7 +52,7 @@ namespace Senparc.Ncf.XncfBase.Threads
                             try
                             {
                                 await threadInfo.Task.Invoke(app, threadInfo);
-                                // 建议开发者自己在内部做好线程内的异常处理
+                                // It is recommended that developers handle exceptions within threads internally
                             }
                             catch (Exception ex)
                             {
@@ -66,13 +66,13 @@ namespace Senparc.Ncf.XncfBase.Threads
                                 }
                             }
                             finally {
-                                //进行延迟
+                                //delay
                                 await Task.Delay(threadInfo.IntervalTime);
                             }
                         }
                     });
                     thread.Name = $"{register.Uid}-{threadInfo.Name ?? Guid.NewGuid().ToString()}";
-                    thread.Start();//启动
+                    thread.Start();//start up
                     Register.ThreadCollection[threadInfo] = thread;
                 }
                 catch (Exception ex)

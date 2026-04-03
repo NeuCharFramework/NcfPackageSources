@@ -9,7 +9,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.AutoMapper
 {
     /// <summary>
-    /// AutoMapp 的 Profile
+    /// Profile of AutoMapp
     /// </summary>
     public class SystemProfile : Profile
     {

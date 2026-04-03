@@ -1,5 +1,5 @@
 /**
- * 数值处理模块
+ * Numerical processing module
  * @module echarts/util/number
  */
 

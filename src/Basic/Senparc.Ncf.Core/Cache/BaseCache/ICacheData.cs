@@ -5,7 +5,7 @@ namespace Senparc.Ncf.Core.Cache
     public interface ICacheData
     {
         /// <summary>
-        /// 缓存键
+        ///cache key
         /// </summary>
         string Key { get; }
 

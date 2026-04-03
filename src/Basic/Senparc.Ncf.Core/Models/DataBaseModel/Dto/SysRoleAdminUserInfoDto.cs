@@ -7,22 +7,22 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
     public class SysRoleAdminUserInfoDto : DtoBase
     {
         /// <summary>
-        /// 角色名称
+        /// role name
         /// </summary>
         public string RoleName { get; set; }
 
         /// <summary>
-        /// 角色编号
+        /// role number
         /// </summary>
         public string RoleId { get; set; }
 
         /// <summary>
-        /// 用户编号
+        ///user number
         /// </summary>
         public int AdminAccountId { get; set; }
 
         /// <summary>
-        /// 当前用户是否有此角色
+        /// Whether the current user has this role
         /// </summary>
         public bool HasRole { get; set; }
     }

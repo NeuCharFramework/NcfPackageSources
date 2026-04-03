@@ -7,11 +7,11 @@ namespace System.Web.Mvc
     public static class OnClickSpanExtension
     {
         /// <summary>
-        /// 供Onclick操作的span(样式默认为“onclick”)
+        /// span for Onclick operation (the style defaults to "onclick")
         /// </summary>
         /// <param name="helper"></param>
-        /// <param name="onclickMethod">事件名称（onclick中的所有内容）</param>
-        /// <param name="text">文字</param>
+        /// <param name="onclickMethod">Event name (everything in onclick)</param>
+        /// <param name="text">Text</param>
         /// <returns></returns>
         public static string OnClickSpan(this HtmlHelper helper, string text, string onclickMethod)
         {
@@ -19,11 +19,11 @@ namespace System.Web.Mvc
         }
 
         /// <summary>
-        /// 供Onclick操作的span(样式默认为“onclick”)
+        /// span for Onclick operation (the style defaults to "onclick")
         /// </summary>
         /// <param name="helper"></param>
-        /// <param name="onclickMethod">事件名称（onclick中的所有内容）</param>
-        /// <param name="text">文字</param>
+        /// <param name="onclickMethod">Event name (everything in onclick)</param>
+        /// <param name="text">Text</param>
         /// <returns></returns>
         public static string OnClickSpan(this HtmlHelper helper, string text, string onclickMethod, object htmlAttributes)
         {
@@ -31,18 +31,18 @@ namespace System.Web.Mvc
         }
 
         /// <summary>
-        /// 供Onclick操作的span
+        /// span for Onclick operation
         /// </summary>
         /// <param name="helper"></param>
-        /// <param name="cssClass">class样式，如果为空，则使用“onclick”</param>
-        /// <param name="onclickMethod">事件名称（onclick中的所有内容）</param>
-        /// <param name="text">文字</param>
+        /// <param name="cssClass">class style, if empty, use "onclick"</param>
+        /// <param name="onclickMethod">Event name (everything in onclick)</param>
+        /// <param name="text">Text</param>
         /// <returns></returns>
         public static string OnClickSpan(this HtmlHelper helper, string text, string onclickMethod, string cssClass, object htmlAttributes)
         {
-            //样式
+            //style
             cssClass = cssClass ?? "onclick";
-            //属性
+            //property
             string setHash = htmlAttributes.ToAttributeList();
             string attributeList = string.Empty;
             if (setHash != null)

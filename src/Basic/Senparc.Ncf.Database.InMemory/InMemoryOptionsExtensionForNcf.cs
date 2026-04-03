@@ -79,7 +79,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         private DbContextOptionsExtensionInfo _info;
 
         //
-        // 摘要:
+        // summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -88,7 +88,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         public override DbContextOptionsExtensionInfo Info => _info ?? (_info = new ExtensionInfo(this));
 
         //
-        // 摘要:
+        // summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -97,7 +97,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         public virtual string StoreName => _storeName;
 
         //
-        // 摘要:
+        // summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -106,7 +106,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         public virtual bool IsNullabilityCheckEnabled => _nullabilityCheckEnabled;
 
         //
-        // 摘要:
+        // summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -115,7 +115,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         public virtual InMemoryDatabaseRoot? DatabaseRoot => _databaseRoot;
 
         //
-        // 摘要:
+        // summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -126,7 +126,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         }
 
         //
-        // 摘要:
+        // summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -139,7 +139,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         }
 
         //
-        // 摘要:
+        // summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -151,7 +151,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         //}
 
         //
-        // 摘要:
+        // summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -171,7 +171,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         }
 
         //
-        // 摘要:
+        // summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -191,7 +191,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         }
 
         //
-        // 摘要:
+        // summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -211,7 +211,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         }
 
         //
-        // 摘要:
+        // summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -223,7 +223,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         }
 
         //
-        // 摘要:
+        // summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly

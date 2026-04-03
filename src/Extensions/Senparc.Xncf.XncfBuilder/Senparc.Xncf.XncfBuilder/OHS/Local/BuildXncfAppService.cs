@@ -45,7 +45,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         private readonly XncfModuleServiceExtension _xncfModuleServiceExtension;
 
         /// <summary>
-        /// 执行模板生成
+        ///Execute template generation
         /// </summary>
         /// <returns></returns>
         private async Task<string> BuildSampleAsync(BuildXncf_BuildRequest request, AppServiceLogger logger)
@@ -195,7 +195,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 //var useDatabase = getBoolParam(isUseDatabase, "Database");
                 var useWebApi = request.UseModule.SelectedValues.Contains("webapi");
 
-                //采用一个独立的进程
+                //use a separate process
                 var args = new List<string>
                 {
                     "new", "XNCF",
@@ -275,7 +275,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 {
                     "chcp 65001",
                     $"cd {_outPutBaseDir}",
-                    //$"dotnet new XNCF ",//仅作为标记
+                    //$"dotnet new XNCF ",//Only as a mark
                     $"dotnet add ./Senparc.Web/Senparc.Web.csproj reference ./{projectName}/{projectName}.csproj",
                     $"dotnet sln \"{request.SlnFilePath}\" add \"./{projectName}/{projectName}.csproj\" --solution-folder XncfModules"
                 };
@@ -318,7 +318,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
 
         /// <summary>
-        /// 项目名称
+        ///project name
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -332,14 +332,14 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                var outputStr = await BuildSampleAsync(request, logger); //执行模板生成
+                var outputStr = await BuildSampleAsync(request, logger); //Perform template generation
                 var projectFilePath = $"{request.OrgName}.Xncf.{request.XncfName}\\{request.OrgName}.Xncf.{request.XncfName}.csproj";
 
                 #region 生成 .sln
 
                 var relativeFilePath = $"{request.OrgName}.Xncf.{request.XncfName}.csproj";
 
-                //生成 .sln
+                //Generate .sln
                 if (!request.SlnFilePath.ToUpper().EndsWith(".SLN"))
                 {
                     response.Success = false;
@@ -348,7 +348,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 }
                 else if (File.Exists(request.SlnFilePath))
                 {
-                    //是否创建新的 .sln 文件
+                    //Whether to create a new .sln file
                     var useNewSlnFile = request.NewSlnFile.SelectedValues.Contains("new");
 
                     var slnFileName = Path.GetFileName(request.SlnFilePath);

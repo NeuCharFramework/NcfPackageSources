@@ -10,19 +10,19 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Request
     public class KnowledgeBaseRequest
     {
         /// <summary>
-        /// 训练模型Id
+        ///Training model ID
         /// </summary>
         public int EmbeddingModelId { get; set; }
         /// <summary>
-        /// 向量数据库Id
+        ///Vector databaseId
         /// </summary>
         public int VectorDBId { get; set; }
         /// <summary>
-        /// 对话模型Id
+        /// Dialog model ID
         /// </summary>
         public int ChatModelId { get; set; }
         /// <summary>
-        /// 名称
+        ///name
         /// </summary>
         public string Name { get; set; }
     }

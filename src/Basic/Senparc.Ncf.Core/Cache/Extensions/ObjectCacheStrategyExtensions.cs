@@ -16,7 +16,7 @@ namespace Senparc.Ncf.Core.Cache.Extensions
                 RedisObjectCacheStrategy _obj = obj as RedisObjectCacheStrategy;
                 return _obj.GetAllByPrefix<T>(key);
             }
-            throw new Exception("未实现或缓存不支持前缀方式获取缓存！");
+            throw new Exception("Not implemented or cache does not support prefix access!");
         }
 
         public static async Task<IList<T>> GetAllByPrefixAsync<T>(this IBaseObjectCacheStrategy obj, string key)
@@ -26,7 +26,7 @@ namespace Senparc.Ncf.Core.Cache.Extensions
                 var _obj = obj as RedisObjectCacheStrategy;
                 return await _obj.GetAllByPrefixAsync<T>(key);
             }
-            throw new Exception("未实现或缓存不支持前缀方式获取缓存！");
+            throw new Exception("Not implemented or cache does not support prefix access!");
         }
     }
 }

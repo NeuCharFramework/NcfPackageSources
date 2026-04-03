@@ -29,7 +29,7 @@ using Senparc.NeuChar.App.AppStore;
 namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
 {
     //[BackendJwtAuthorize]
-    //TODO: 需要权限验证
+    //TODO: Permission verification required
     public class AIVectorAppService : AppServiceBase
     {
         private readonly AIVectorService _aIVectorService;
@@ -71,7 +71,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 分页获取AIVector
+        /// Get AIVector in paging
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -96,7 +96,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取AIVector列表
+        /// Get AIVector list
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -117,7 +117,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 新建一个AIVector
+        /// Create a new AIVector
         /// </summary>
         /// <param name="createRequest"></param>
         /// <returns></returns>
@@ -134,10 +134,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
                     // );
                     // if (count > 0)
                     // {
-                    //     //response.ErrorMessage = "AIVector已存在";
+                    //     //response.ErrorMessage = "AIVector already exists";
                     //     //response.Success = false;
                     //     //return null;
-                    //     throw new NcfExceptionBase("AIVector已存在");
+                    //     throw new NcfExceptionBase("AIVector already exists");
                     // }
                     //
                     // #endregion
@@ -147,7 +147,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 修改AIVector
+        /// Modify AIVector
         /// </summary>
         /// <param name="id"></param>
         /// <param name="request"></param>
@@ -164,7 +164,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 删除AIModel
+        /// Delete AIModel
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

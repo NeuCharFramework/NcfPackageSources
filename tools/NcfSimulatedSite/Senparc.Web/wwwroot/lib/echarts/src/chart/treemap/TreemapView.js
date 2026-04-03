@@ -128,7 +128,7 @@
             var containerGroup = this._containerGroup;
             if (!containerGroup) {
                 // FIXME
-                // 加一层containerGroup是为了clip，但是现在clip功能并没有实现。
+                // Adding a layer of containerGroup is for clipping, but the clip function is not implemented now.
                 containerGroup = this._containerGroup = new Group();
                 this._initEvents(containerGroup);
                 this.group.add(containerGroup);
@@ -479,9 +479,9 @@
          */
         _initEvents: function (containerGroup) {
             // FIXME
-            // 不用click以及silent的原因是，animate时视图设置silent true来避免click生效，
-            // 但是animate中，按下鼠标，animate结束后（silent设回为false）松开鼠标，
-            // 还是会触发click，期望是不触发。
+            // The reason why click and silent are not used is that the view sets silent true when animate to prevent click from taking effect.
+            // But in animate, if you press the mouse and release the mouse after animate ends (silent is set back to false),
+            // The click will still be triggered, but the expectation is that it will not be triggered.
 
             // Mousedown occurs when drag start, and mouseup occurs when drag end,
             // click event should not be triggered in that case.

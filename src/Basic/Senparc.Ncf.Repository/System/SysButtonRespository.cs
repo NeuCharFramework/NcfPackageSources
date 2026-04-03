@@ -14,7 +14,7 @@ namespace Senparc.Respository
     public interface ISysButtonRespository : IClientRepositoryBase<SysButton>
     {
         /// <summary>
-        /// 删除某个页面下的所有按钮
+        /// Delete all buttons under a page
         /// </summary>
         /// <param name="menuId"></param>
         /// <returns></returns>
@@ -31,13 +31,13 @@ namespace Senparc.Respository
         }
 
         /// <summary>
-        /// 删除某个页面下的所有按钮
+        /// Delete all buttons under a page
         /// </summary>
         /// <param name="menuId"></param>
         /// <returns></returns>
         public async Task<int> DeleteButtonsByMenuId(string menuId)
         {
-            //升级至 EF Core 5.0 后方法无效
+            //Method not working after upgrading to EF Core 5.0
             //return await _senparcEntities.Database.ExecuteSqlCommandAsync($"DELETE {nameof(_senparcEntities.SysButtons)} WHERE {nameof(SysButton.MenuId)} = {{0}}", menuId);
 
             //return await _senparcEntities.Database.ExecuteSqlRawAsync($"DELETE {nameof(_senparcEntitie.SysButtons)} WHERE {nameof(SysButton.MenuId)} = {{0}}", menuId); 

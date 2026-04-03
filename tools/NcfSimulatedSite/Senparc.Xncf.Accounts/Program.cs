@@ -27,9 +27,9 @@ builder.Services.AddProblemDetails();
 builder.Services.AddDaprClient();
 builder.Services.AddControllers().AddDapr();
 
-//激活 Xncf 扩展引擎（必须）
+//Activate Xncf extension engine (required)
 var logMsg = builder.StartWebEngine(new[] { "Senparc.Areas.Admin" });
-//如果不需要启用 Areas，可以只使用 services.StartEngine() 方法
+//If you don't need to enable Areas, you can just use the services.StartEngine() method
 
 Console.WriteLine("============ logMsg =============");
 Console.WriteLine(logMsg);
@@ -42,16 +42,16 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
-//Use NCF（必须）
+//Use NCF (required)
 IOptions<SenparcCoreSetting> senparcCoreSetting = app.Services.GetService<IOptions<SenparcCoreSetting>>();
 
-//启动 CO2NET 全局注册，必须！
-//关于 UseSenparcGlobal() 的更多用法见 CO2NET Demo：https://github.com/Senparc/Senparc.CO2NET/blob/master/Sample/Senparc.CO2NET.Sample.netcore3/Startup.cs
+//Start CO2NET global registration, must!
+//For more usage of UseSenparcGlobal(), see CO2NET Demo: https://github.com/Senparc/Senparc.CO2NET/blob/master/Sample/Senparc.CO2NET.Sample.netcore3/Startup.cs
 var registerService = app.UseSenparcGlobal(app.Environment);
 
-//XncfModules（必须）
+//XncfModules (required)
 app.UseXncfModules(registerService, senparcCoreSetting.Value)
-//指定数据库（必须）
+//Specify database (required)
    .UseNcfDatabase<SqlServerDatabaseConfiguration>();
 
 using (var scope = app.Services.CreateScope())

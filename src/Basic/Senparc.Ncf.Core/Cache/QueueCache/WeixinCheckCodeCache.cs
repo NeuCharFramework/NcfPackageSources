@@ -22,7 +22,7 @@ namespace Senparc.Ncf.Core.Cache.QueueCache
             var value = base.Get(key, removeDataWhenExist);
             if (value != null)
             {
-                base.Remove(key);//一次性有效
+                base.Remove(key);  // One-time use
             }
             return value;
         }

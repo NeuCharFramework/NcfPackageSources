@@ -3,7 +3,7 @@
     public static class ObjectExtensions
     {
         /// <summary>
-        /// 判断对象是否为null
+        /// Determine whether the object is null
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>

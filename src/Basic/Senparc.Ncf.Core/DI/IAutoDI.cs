@@ -6,8 +6,8 @@ using System.Text;
 namespace Senparc.Ncf.Core.DI
 {
     /// <summary>
-    /// 所有需要自动扫描进行依赖注入的基础接口
-    /// <para>默认 DI 使用 AddScoped 方法，如果需要强制使用其他方法，请在子类上使用 [AutoDIType(typeName)] 特性标签</para>
+    /// Base interface for all types that require auto-scanned dependency injection
+    /// <para>By default, DI uses AddScoped. To force a different lifecycle, add the [AutoDIType(typeName)] attribute on the implementation class.</para>
     /// </summary>
     public interface IAutoDI
     {

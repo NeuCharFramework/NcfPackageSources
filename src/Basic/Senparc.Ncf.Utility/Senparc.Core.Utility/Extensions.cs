@@ -8,10 +8,10 @@ namespace Senparc.Ncf.Core.Utility
     public static class Extensions
     {
         /// <summary>
-        /// 获取翻页时跳过的记录数
+        /// Get the number of records skipped when turning pages
         /// </summary>
-        /// <param name="pageIndex">当前页码</param>
-        /// <param name="pageCount">每页记录数</param>
+        /// <param name="pageIndex">Current page number</param>
+        /// <param name="pageCount">Number of records per page</param>
         /// <returns></returns>
         public static int GetSkipRecord(int pageIndex, int pageCount)
         {
@@ -19,7 +19,7 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 获取数组的字典类型（key为index，value为数组内容）。通常用于配合枚举类型
+        /// Get the dictionary type of the array (key is index, value is array content). Usually used with enumeration types
         /// </summary>
         /// <param name="strArr"></param>
         /// <returns></returns>
@@ -36,10 +36,10 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 获取枚举成员，转为Dictionary类型
+        /// Get the enumeration members and convert them to Dictionary type
         /// </summary>
         /// <param name="enumType"></param>
-        /// <param name="useDescription">是否使用枚举类型的描述</param>
+        /// <param name="useDescription">Whether to use the description of the enumeration type</param>
         /// <returns></returns>
         public static Dictionary<string, string> GetDictionaryForEnums(this Type enumType, bool useDescription = false, bool addBlankOption = false, string blankOptionText = null)
         {
@@ -50,7 +50,7 @@ namespace Senparc.Ncf.Core.Utility
             Dictionary<string, string> dic = new Dictionary<string, string>();
             if (addBlankOption)
             {
-                dic.Add("", blankOptionText ?? "");//添加空白项
+                dic.Add("", blankOptionText ?? "");//Add blank items
             }
             foreach (int item in Enum.GetValues(enumType))
             {

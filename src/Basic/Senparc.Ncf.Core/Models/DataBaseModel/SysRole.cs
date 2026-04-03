@@ -8,7 +8,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
     /// <summary>
-    /// 系统角色
+    ///system role
     /// </summary>
     [Table("SysRoles")]
     public class SysRole : EntityBase<string>
@@ -41,7 +41,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         }
 
         /// <summary>
-        /// 启用状态
+        /// enabled status
         /// </summary>
         public bool Enabled { get; set; }
 
@@ -49,13 +49,13 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public new string Id { get; set; }
 
         /// <summary>
-        /// 角色名称
+        /// role name
         /// </summary>
         [MaxLength(150)]
         public string RoleName { get; set; }
 
         /// <summary>
-        /// 角色代码
+        ///role code
         /// </summary>
         [MaxLength(150)]
         public string RoleCode { get; set; }

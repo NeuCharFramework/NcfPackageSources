@@ -168,7 +168,7 @@
                     },
                     chartBuilt: false,
                     chartOptions: {},
-                    activeNames: [] //默认打开折叠面板
+                    activeNames: [] //Open accordion by default
                 };
             },
             mounted() {
@@ -176,7 +176,7 @@
                 this.getDetail();
             },
             methods: {
-                // 获取数据
+                // Get data
                 async getDetail() {
                     const res = await service.get('/Admin/WeixinManager/Index?handler=Ajax');
                     this.count = {
@@ -190,7 +190,7 @@
                     }
                     this.getCharData();
                 },
-                // 获取图表数据
+                // Get chart data
                 async getCharData() {
                     let ids = [];
                     this.count.mpAccountDtos.map(res => {
@@ -203,7 +203,7 @@
                         app.getCharData();
                     }, 5000);
                 },
-                // 生成图表
+                // Generate chart
                 bildMpAccountChart(dataArr) {
                     for (var i = 0; i < dataArr.length; i++) {
                         var data = dataArr[i];
@@ -215,7 +215,7 @@
                             this.chartOptions[data.id + ''].options.series[0].data[0].name = status;
                         } else {
                             var id = 'chart_mpaccount_' + data.id;
-                            // 指定图表的配置项和数据
+                            // Specify chart configuration items and data
                             this.chartOptions[data.id + ''] = {
                                 chartObj: echarts.init(document.getElementById(id)),
                                 options: {
@@ -230,7 +230,7 @@
                                     },
                                     series: [
                                         {
-                                            name: 'AccessToken 凭证状态',
+                                            name: 'AccessToken Voucher status',
                                             type: 'gauge',
                                             detail: { formatter: '{value}%' },
                                             data: [{ value: leftTimePercent, name: status }]

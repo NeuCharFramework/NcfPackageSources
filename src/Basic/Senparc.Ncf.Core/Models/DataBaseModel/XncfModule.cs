@@ -8,7 +8,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
     /// <summary>
-    /// 扩展模块信息
+    ///Extension module information
     /// </summary>
     [Table("XncfModules")]
     public class XncfModule : EntityBase<int>
@@ -22,14 +22,14 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public bool AllowRemove { get; private set; }
         public string MenuId { get; private set; }
         /// <summary>
-        /// 使用 FontAwesome 图标，如：fa fa-star
+        /// Use FontAwesome icons, such as: fa fa-star
         /// </summary>
         public string Icon { get; private set; }
 
         public XncfModules_State State { get; private set; }
 
         /// <summary>
-        /// 添加日志
+        ///Add log
         /// </summary>
         /// <param name="log"></param>
         private void AddUpdateLog(string log)

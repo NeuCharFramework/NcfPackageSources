@@ -21,7 +21,7 @@ namespace Senparc.Xncf.WeixinManager.Domain.Services
         }
 
         /// <summary>
-        /// 获取指定的 MpAccount 对象
+        /// Get the specified MpAccount object
         /// </summary>
         /// <param name="serviceProvider"></param>
         /// <param name="accountId"></param>

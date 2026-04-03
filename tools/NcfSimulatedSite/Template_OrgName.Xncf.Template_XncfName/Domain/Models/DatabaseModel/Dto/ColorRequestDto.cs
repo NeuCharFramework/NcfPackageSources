@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto
 {
     /// <summary>
-    /// 创建颜色请求DTO
+    ///Create color request DTO
     /// </summary>
     public class CreateColorRequestDto
     {
@@ -17,13 +17,13 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dt
         public int Blue { get; set; }
 
         /// <summary>
-        /// 附加备注
+        ///Additional notes
         /// </summary>
         public string AdditionNote { get; set; }
     }
 
     /// <summary>
-    /// 更新颜色请求DTO
+    /// Update color request DTO
     /// </summary>
     public class UpdateColorRequestDto
     {
@@ -40,13 +40,13 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dt
         public int Blue { get; set; }
 
         /// <summary>
-        /// 附加备注
+        ///Additional notes
         /// </summary>
         public string AdditionNote { get; set; }
     }
 
     /// <summary>
-    /// 删除颜色请求DTO
+    /// Delete color request DTO
     /// </summary>
     public class DeleteColorRequestDto
     {
@@ -55,7 +55,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dt
     }
 
     /// <summary>
-    /// 随机化颜色请求DTO
+    /// Randomize color request DTO
     /// </summary>
     public class RandomizeColorRequestDto
     {

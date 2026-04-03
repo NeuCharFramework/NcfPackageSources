@@ -13,19 +13,19 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         public int Id { get; set; }
 
         /// <summary>
-        /// 靶场　ID
+        ///shooting range ID
         /// </summary>
         public int RangeId { get; set; }
 
         public PromptRangeDto PromptRange { get; set; }
 
         /// <summary>
-        /// 昵称
+        /// Nick name
         /// </summary>
         public string NickName { get; set; }
 
         /// <summary>
-        /// Prompt内容
+        ///Prompt content
         /// </summary>
         public string Content { get; set; }
 
@@ -41,24 +41,24 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         public float TopP { get; set; }
 
         /// <summary>
-        /// 温度
+        /// temperature
         /// </summary>
         public float Temperature { get; set; }
 
         /// <summary>
-        /// 最大 Token 数
+        ///Maximum number of Tokens
         /// </summary>
         public int MaxToken { get; set; }
 
         /// <summary>
-        /// 频率惩罚
+        /// frequency penalty
         /// </summary>
         public float FrequencyPenalty { get; set; }
 
         public float PresencePenalty { get; set; }
 
         /// <summary>
-        /// 停止序列（JSON 数组） 
+        /// stop sequence (JSON array) 
         /// </summary>
         public string StopSequences { get; set; }
 
@@ -67,22 +67,22 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         #region 打分
 
         /// <summary>
-        /// 评估参数, 平均分
+        /// evaluation parameters, average score
         /// </summary>
         public decimal EvalAvgScore { get; set; } = -1;
 
         /// <summary>
-        /// 评估参数
+        ///evaluation parameters
         /// </summary>
         public decimal EvalMaxScore { get; set; } = -1;
 
         /// <summary>
-        /// 期望结果Json
+        ///Expected result Json
         /// </summary>
         public string ExpectedResultsJson { get; set; }
 
         /// <summary>
-        /// 是否启用“ai评分标准”
+        /// Whether to enable "ai scoring criteria"
         /// </summary>
         public bool isAIGrade { get; set; } = false;
 
@@ -102,29 +102,29 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         public string Tactic { get; set; }
 
         /// <summary>
-        /// <para>为打靶次数，int</para>
+        /// <para>is the number of target shooting, int</para>
         /// </summary>
         public int Aiming { get; set; }
 
         /// <summary>
-        /// 父Tactic, 可以是空串
+        /// Parent Tactic, can be an empty string
         /// </summary>
         public string ParentTac { get; set; }
 
         #endregion
 
         /// <summary>
-        /// Note（可选）
+        ///Note (optional)
         /// </summary>
         public string Note { get; set; }
 
         /// <summary>
-        /// 最后一次运行时间
+        ///Last run time
         /// </summary>
         public DateTime LastRunTime { get; set; } = DateTime.Now;
 
         /// <summary>
-        /// 是否公开
+        /// Is it public?
         /// </summary>
         public bool IsShare { get; set; } = false;
 

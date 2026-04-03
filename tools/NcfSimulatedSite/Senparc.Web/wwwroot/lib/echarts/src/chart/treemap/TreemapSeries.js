@@ -138,7 +138,7 @@ define(function(require) {
             completeTreeValue(root, zrUtil.isArray(value0) ? value0.length : -1);
 
             // FIXME
-            // sereis.mergeOption 的 getInitData是否放在merge后，从而能直接获取merege后的结果而非手动判断。
+            // Whether the getInitData of sereis.mergeOption is placed after merge, so that the result after merge can be obtained directly instead of manual judgment.
             var levels = option.levels || [];
 
             levels = option.levels = setDefault(levels, ecModel);

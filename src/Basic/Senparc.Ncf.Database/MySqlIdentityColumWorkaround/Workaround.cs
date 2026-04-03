@@ -7,12 +7,12 @@ using System.Text;
 namespace Microsoft.EntityFrameworkCore.Metadata
 {
     /// <summary>
-    /// 弥补 MySQL 库暂时的缺陷
+    /// Make up for the temporary shortcomings of the MySQL library
     /// </summary>
     public class MySqlHelper
     {
         /// <summary>
-        /// 获取 MySqlValueGenerationStrateg.IdentityColumn 等枚举
+        /// Get enumerations such as MySqlValueGenerationStrateg.IdentityColumn
         /// </summary>
         /// <param name="enumName"></param>
         /// <returns></returns>
@@ -21,11 +21,11 @@ namespace Microsoft.EntityFrameworkCore.Metadata
             var field = Type.GetType("Microsoft.EntityFrameworkCore.Metadata.MySqlValueGenerationStrategy,Pomelo.EntityFrameworkCore.MySql").GetFields().FirstOrDefault(z => z.Name == enumName);
             if (field == null)
             {
-                //数据库配置工厂
+                //Database configuration factory
                 var databaseConfigurationFactory = DatabaseConfigurationFactory.Instance;
-                //当前数据库配置
+                //Current database configuration
                 var currentDatabaseConfiguration = databaseConfigurationFactory.Current;
-                //抛出异常
+                //throw an exception
                 throw new Senparc.Ncf.Core.Exceptions.NcfDatabaseException("程序集中未找到 MySqlValueGenerationStrategy.IdentityColumn 枚举", currentDatabaseConfiguration.GetType());
             }
             var value = field.GetValue(null);

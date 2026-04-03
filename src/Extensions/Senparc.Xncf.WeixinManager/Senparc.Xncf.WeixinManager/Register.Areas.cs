@@ -10,7 +10,7 @@ using Senparc.Ncf.Core.Areas;
 
 namespace Senparc.Xncf.WeixinManager
 {
-    public partial class Register : IAreaRegister //注册 XNCF 页面接口（按需选用）
+    public partial class Register : IAreaRegister //Register XNCF page interface (optional on demand)
     {
         #region IAreaRegister 接口
 
@@ -28,7 +28,7 @@ namespace Senparc.Xncf.WeixinManager
 
             var services = builder.Services;
             //WebApiEngineExtensions.WebApiInitFinished = false;
-            //启用 WebApi（可选）
+            //Enable WebApi (optional)
             services.AddAndInitDynamicApi(builder, options =>
             {
                 options.DefaultRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get;

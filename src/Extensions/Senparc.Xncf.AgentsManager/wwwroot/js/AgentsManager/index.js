@@ -12,26 +12,26 @@ var app = new Vue({
   data() {
     return {
       devHost: 'http://pr-felixj.frp.senparc.com',
-      elSize: 'medium', // el 组件尺寸大小 默认为空  medium、small、mini
-      tabsActiveName: 'first', // first(智能体) second(组) third(任务)
-      // 显隐 visible
+      elSize: 'medium', // el component size defaults to empty medium, small, mini
+      tabsActiveName: 'first', // first(agent) second(group) third(task)
+      // visible visible
       visible: {
-        drawerAgent: false, // 智能体 新增|编辑
-        dialogGroupAgent: false, // 智能体 新增dialog
-        drawerGroup: false, // 组 新增|编辑
-        drawerGroupStart: false, // 组 启动 
-        dialogAgentParameter: false, // 智能体参数 列表
-        dialogTaskDescription: false, // 任务描述
-        dialogTaskEvaluation: false, // 任务评价页面
-        dialogMcpTools: false, // MCP工具列表对话框
+        drawerAgent: false, // Agent New|Edit
+        dialogGroupAgent: false, // Intelligent agent adds dialog
+        drawerGroup: false, // Group New|Edit
+        drawerGroupStart: false, // group start 
+        dialogAgentParameter: false, // Agent parameter list
+        dialogTaskDescription: false, // Task description
+        dialogTaskEvaluation: false, // Task evaluation page
+        dialogMcpTools: false, // MCP Tool List Dialog
       },
       taskStateText: {
-        0: '等待',  // 等待 Waiting stand #3376cd
-        1: '聊天', // 聊天 Chatting loading #409EFF
-        2: '停顿', // 停顿 Paused loading #409EFF
-        3: '完成', // 完成 Finished success #67C23A
-        4: '取消', // 取消 Cancelled error #666 
-        5: '失败', // 取消 fail error #F56C6C
+        0: '等待',  // Waiting stand #3376cd
+        1: '聊天', // Chat Chatting loading #409EFF
+        2: '停顿', // Paused loading #409EFF
+        3: '完成', // Finished Finished success #67C23A
+        4: '取消', // Cancel Canceled error #666 
+        5: '失败', // Cancel fail error #F56C6C
       },
       taskStateColor: {
         0: 'waitColor',
@@ -43,10 +43,10 @@ var app = new Vue({
       },
       taskStateIcon: {
         0: 'fas fa-clock',
-        1: 'fas fa-spinner fa-pulse',// 动画
+        1: 'fas fa-spinner fa-pulse',// animation
         2: 'fas fa-play-circle',
         3: 'fas fa-check-circle', // el-icon-success
-        4: 'fal fa-minus-circle fa-rotate-45', // 旋转
+        4: 'fal fa-minus-circle fa-rotate-45', // rotate
         5: 'fas fa-times-circle',// el-icon-error
       },
       agentStateText: {
@@ -66,17 +66,17 @@ var app = new Vue({
         '/images/AgentsManager/avatar/avatar4.png',
         '/images/AgentsManager/avatar/avatar5.png',
       ],
-      // 智能体 ---start
+      // Agent ---start
       agentQueryList: {
         pageIndex: 0,
         pageSize: 0,
-        filter: '', // 筛选文本
-        timeSort: false, // 默认降序
-        proce: false, // 进行中
-        stop: false, // 停用
-        stand: false, // 待命
+        filter: '', // Filter text
+        timeSort: false, // Default descending order
+        proce: false, // in progress
+        stop: false, // deactivate
+        stand: false, // Standby
       },
-      agentFCPVisible: false, // 筛选条件 popover 显隐
+      agentFCPVisible: false, // Filter condition popover show and hide
       agentFilterCriteria: [
         {
           label: '全部',
@@ -100,72 +100,72 @@ var app = new Vue({
         }
       ],
       agentList: [],
-      fillCardNum: 0, // 为了保持最后一行的样式 填充的card数量
+      fillCardNum: 0, // In order to maintain the style of the last row, the number of cards filled in
       agentListElResizeObserver: null,
-      scrollbarAgentIndex: '', // 侧边智能体index 默认全部
-      agentDetails: '', // 智能体详情数据 查看
-      // 智能体详情 tabs
-      agentDetailsTabsActiveName: 'first', // first(组) second(任务)
-      // 智能体详情 组
+      scrollbarAgentIndex: '', // Side agent index defaults to all
+      agentDetails: '', // View agent details data
+      // Agent details tabs
+      agentDetailsTabsActiveName: 'first', // first(group) second(task)
+      // Agent Details Group
       agentDetailsGroupQueryList: {
         pageIndex: 0,
         pageSize: 0,
-        filter: '', // 筛选文本
-        timeSort: false, // 默认降序
-        proce: false, // 进行中
-        stop: false, // 停用
-        stand: false, // 待命
+        filter: '', // Filter text
+        timeSort: false, // Default descending order
+        proce: false, // in progress
+        stop: false, // deactivate
+        stand: false, // Standby
       },
       agentDetailsGroupList: [],
-      agentDetailsGroupShowType: '1', // 1:组详情 2:任务详情
-      agentDetailsGroupIndex: 0, // 侧边组index 默认全部
+      agentDetailsGroupShowType: '1', // 1:Group details 2:Task details
+      agentDetailsGroupIndex: 0, // Side group index defaults to all
       agentDetailsGroupDetails: '',
       agentDetailsGroupTaskQueryList: {
         pageIndex: 0,
         pageSize: 0,
         chatGroupId: null,
-        filter: '', // 筛选文本
-        timeSort: false, // 默认降序
-        proce: false, // 进行中
-        stop: false, // 停用
-        stand: false, // 待命
+        filter: '', // Filter text
+        timeSort: false, // Default descending order
+        proce: false, // in progress
+        stop: false, // deactivate
+        stand: false, // Standby
       },
-      agentGroupTaskSelection: [], // 选中的任务列表
-      agentDetailsGroupTaskList: [], // 组 任务列表
+      agentGroupTaskSelection: [], // Selected task list
+      agentDetailsGroupTaskList: [], // Group task list
       agentDetailsGroupTaskHistoryList: [],
       agentDetailsGroupDetailsTaskDetails: '',
       agentGroupTaskMemberfilter: '',
       agentGroupTaskMemberfilterList: [],
-      // 智能体详情 任务
+      // Agent Details Task
       agentDetailsTaskQueryList: {
         pageIndex: 0,
         pageSize: 0,
         chatGroupId: null,
-        filter: '', // 筛选文本
-        timeSort: false, // 默认降序
-        proce: false, // 进行中
-        stop: false, // 停用
-        stand: false, // 待命
+        filter: '', // Filter text
+        timeSort: false, // Default descending order
+        proce: false, // in progress
+        stop: false, // deactivate
+        stand: false, // Standby
       },
-      agentDetailsTaskIndex: 0, // 侧边任务index 默认全部
+      agentDetailsTaskIndex: 0, // Side task index defaults to all
       agentDetailsTaskList: [],
       agentDetailsTaskDetails: '',
       agentDetailsTaskHistoryList: [],
       agentDetailsTaskMemberList: [],
       agentTaskMemberfilter: '',
       agentTaskMemberfilterList: [],
-      // 智能体 ---end
-      // 组 ---start
+      // Agent ---end
+      // Group ---start
       groupQueryList: {
         pageIndex: 0,
         pageSize: 0,
-        filter: '', // 筛选文本
-        timeSort: false, // 默认降序
-        proce: false, // 进行中
-        stop: false, // 停用
-        stand: false, // 待命
+        filter: '', // Filter text
+        timeSort: false, // Default descending order
+        proce: false, // in progress
+        stop: false, // deactivate
+        stand: false, // Standby
       },
-      groupFCPVisible: false, // 筛选条件 popover 显隐
+      groupFCPVisible: false, // Filter condition popover show and hide
       groupFilterCriteria: [
         {
           label: '全部',
@@ -195,18 +195,18 @@ var app = new Vue({
       groupTreeData: [],
       groupSelection: [],
       groupList: [],
-      groupShowType: '1', // 1:组列表 2:组详情 3:任务详情
-      scrollbarGroupIndex: '', // 侧边任务index 默认全部
+      groupShowType: '1', // 1: Group list 2: Group details 3: Task details
+      scrollbarGroupIndex: '', // Side task index defaults to all
       groupDetails: '',
       groupTaskQueryList: {
         pageIndex: 0,
         pageSize: 0,
         chatGroupId: null,
-        filter: '', // 筛选文本
-        timeSort: false, // 默认降序
-        proce: false, // 进行中
-        stop: false, // 停用
-        stand: false, // 待命
+        filter: '', // Filter text
+        timeSort: false, // Default descending order
+        proce: false, // in progress
+        stop: false, // deactivate
+        stand: false, // Standby
       },
       groupTaskSelection: [],
       groupTaskList: [],
@@ -215,32 +215,32 @@ var app = new Vue({
       groupTaskHistoryList: [],
       groupTaskMemberfilter: '',
       groupTaskMemberfilterList: [],
-      // 组 新增|编辑 智能体
+      // Group New|Edit Agent
       groupAgentQueryList: {
         pageIndex: 0,
         pageSize: 0,
-        filter: '', // 筛选文本
-        timeSort: false, // 默认降序
-        proce: false, // 进行中
-        stop: false, // 停用
-        stand: false, // 待命
+        filter: '', // Filter text
+        timeSort: false, // Default descending order
+        proce: false, // in progress
+        stop: false, // deactivate
+        stand: false, // Standby
       },
       isGetGroupAgent: false,
-      groupAgentList: [], // 组新增时的智能体列表
+      groupAgentList: [], // Agent list when the group is added
       groupAgentTotal: 0,
-      // 组 ---end
-      // 任务 task ---start
+      // Group ---end
+      // Task task ---start
       taskQueryList: {
         pageIndex: 0,
         pageSize: 0,
         chatGroupId: null,
-        filter: '', // 筛选文本
-        timeSort: false, // 默认降序
-        proce: false, // 进行中
-        stop: false, // 停用
-        stand: false, // 待命
+        filter: '', // Filter text
+        timeSort: false, // Default descending order
+        proce: false, // in progress
+        stop: false, // deactivate
+        stand: false, // Standby
       },
-      taskFCPVisible: false, // 任务模块 筛选条件 popover 显隐
+      taskFCPVisible: false, // Task module filter condition popover show and hide
       taskFilterCriteria: [
         {
           label: '全部',
@@ -263,27 +263,27 @@ var app = new Vue({
           checked: false
         }
       ],
-      scrollbarTaskIndex: '', // 侧边任务index 默认全部
+      scrollbarTaskIndex: '', // Side task index defaults to all
       taskSelection: [],
       taskList: [],
-      taskDetails: '', // 任务详情数据 查看
+      taskDetails: '', // View task details data
       taskHistoryList: [],
       taskMemberList: [],
       taskMemberfilter: '',
       taskMemberfilterList: [],
-      // 任务 task ---end
-      // 智能体 新增|编辑
+      // Task task ---end
+      // Agent New|Edit
       agentForm: {
-        id: 0, // 0 是新增 
-        name: '', // 名称
+        id: 0, // 0 is new 
+        name: '', // name
         systemMessageType: '1',
         systemMessage: '', // 
-        enable: true, // 是否启用
-        description: '', // 说明
-        hookRobotType: 0, // 外接平台
-        hookRobotParameter: '', // 外接参数
-        avastar: '/images/AgentsManager/avatar/avatar1.png', // 头像
-        functionCallNames: '', // Function Call 名称，逗号分隔
+        enable: true, // Whether to enable
+        description: '', // illustrate
+        hookRobotType: 0, // External platform
+        hookRobotParameter: '', // External parameters
+        avastar: '/images/AgentsManager/avatar/avatar1.png', // avatar
+        functionCallNames: '', // Function Call names, comma separated
         mcpEndpoints: '', // MCP Endpoints
       },
       agentFormRules: {
@@ -294,13 +294,13 @@ var app = new Vue({
           { required: true, message: '请选择', trigger: 'change' },
         ],
         // description: [
-        //     { required: true, message: '请填写', trigger: 'blur' },
+        //     { required: true, message: 'Please fill in', trigger: 'blur' },
         // ],
         hookRobotType: [
           { required: true, message: '请选择', trigger: 'change' },
         ],
         // hookRobotParameter: [
-        //     { required: true, message: '请填写', trigger: 'blur' },
+        //     { required: true, message: 'Please fill in', trigger: 'blur' },
         // ],
         avastar: [
           { required: true, message: '请选择', trigger: 'change' },
@@ -309,13 +309,13 @@ var app = new Vue({
           { required: false, message: '请输入Function Call名称', trigger: 'change' }
         ]
       },
-      // 组 新增|编辑
+      // Group New|Edit
       groupForm: {
-        name: '', // 名称
-        members: [], // 成员列表
-        description: '', // 说明
-        adminAgentTemplateId: '', // 群主即agent
-        enterAgentTemplateId: '' // 对接人即agent
+        name: '', // name
+        members: [], // Member list
+        description: '', // illustrate
+        adminAgentTemplateId: '', // The group owner is the agent
+        enterAgentTemplateId: '' // The docking person is the agent
       },
       groupFormRules: {
         name: [
@@ -331,17 +331,17 @@ var app = new Vue({
           { required: true, message: '请选择', trigger: 'change' },
         ],
         // description: [
-        //     { required: true, message: '请填写', trigger: 'blur' },
+        //     { required: true, message: 'Please fill in', trigger: 'blur' },
         // ],
       },
-      // 组 启动
+      // group start
       groupStartForm: {
-        groupName: '', // 组名称
-        chatGroupId: '', // 组id
-        name: '', // 标题
-        aiModelId: '', // 模型 id
-        promptCommand: '', // 任务描述
-        personality: true, // 是否采用个性化
+        groupName: '', // Group name
+        chatGroupId: '', // group id
+        name: '', // title
+        aiModelId: '', // model id
+        promptCommand: '', // Task description
+        personality: true, // Whether to use personalization
         description: ''
       },
       groupStartFormRules: {
@@ -358,7 +358,7 @@ var app = new Vue({
           { required: true, message: '请填写', trigger: 'blur' },
         ],
       },
-      // 任务评价
+      // task evaluation
       evaluationForm: {
         score: '',
         evaluation: ''
@@ -372,39 +372,39 @@ var app = new Vue({
           { required: true, message: '请填写', trigger: 'blur' },
         ]
       },
-      // 对话记录 轮询
+      // Conversation Record Polling
       historyTimer: {},
-      // 智能体参数列表
-      agentParameterTabsValue: 0, // tabs选中
+      // Agent parameter list
+      agentParameterTabsValue: 0, // tabs selected
       agentParameterList: [],
-      // 描述内容
+      // Description content
       describeContent: '',
       functionCallInputVisible: false,
       functionCallInputValue: '',
-      functionCallTags: [], // 用于编辑时临时存储标签
-      pluginTypes: [], // 存储所有可用的插件类型
-      // MCP Endpoints相关
+      functionCallTags: [], // Used to temporarily store tags while editing
+      pluginTypes: [], // Stores all available plugin types
+      // MCP Endpoints related
       mcpEndpointInputVisible: false,
       mcpEndpointNameValue: '',
       mcpEndpointUrlValue: '',
       mcpEndpointEditMode: false,
       mcpEndpointOriginalName: '',
-      currentMcpTools: [], // 当前查看的MCP工具列表
+      currentMcpTools: [], // List of currently viewed MCP tools
     };
   },
   computed: {
-    // 计算未被选择的插件类型
+    // Count unselected plugin types
     availablePluginTypes() {
       if (!this.agentForm.functionCallNames) {
         return this.pluginTypes;
       }
-      // 将逗号分隔的字符串转换为数组进行比较
+      // Convert comma separated string to array for comparison
       const currentNames = this.agentForm.functionCallNames.split(',').filter(x => x);
       return this.pluginTypes.filter(type =>
         !currentNames.includes(type)
       );
     },
-    // 解析 McpEndpoints JSON 字符串
+    // Parse McpEndpoints JSON string
     parsedMcpEndpoints() {
       try {
         if (!this.agentForm.mcpEndpoints) {
@@ -419,7 +419,7 @@ var app = new Vue({
   },
   watch: {},
   created() {
-    // 在组件创建时获取插件类型列表
+    // Get list of plugin types when component is created
     this.getPluginTypes();
   },
   mounted() {
@@ -427,19 +427,19 @@ var app = new Vue({
     this.agentForm.systemMessageType = "2";
     this.getPluginTypes();
     
-    // 调试对话框相关变量
+    // Debug dialog related variables
     console.log('Vue实例挂载完成');
     console.log('visible对象:', this.visible);
     console.log('dialogMcpTools初始状态:', this.visible.dialogMcpTools);
     
-    // 测试对话框显示
+    // Test dialog box displays
     window.testDialog = () => {
       console.log('测试显示对话框');
       this.visible.dialogMcpTools = true;
       console.log('dialogMcpTools新状态:', this.visible.dialogMcpTools);
     };
     
-    // 测试创建假工具列表
+    // Test creating fake tool list
     window.testTools = () => {
       console.log('测试创建工具列表');
       this.currentMcpTools = [
@@ -450,15 +450,15 @@ var app = new Vue({
       this.visible.dialogMcpTools = true;
     };
     
-    // 智能体
+    // agent
     if (this.tabsActiveName === 'first') {
       this.getAgentListData('agent')
     }
-    // 组
+    // Group
     if (this.tabsActiveName === 'second') {
       this.getGroupListData('group')
     }
-    // 任务
+    // Task
     if (this.tabsActiveName === 'third') {
       this.gettaskListData('task')
     }
@@ -468,16 +468,16 @@ var app = new Vue({
     this.clearHistoryTimer()
   },
   methods: {
-    //寻找目标字符串
+    //Find target string
     findDest(arg1) {
-      // 待判断的字符串
-      //const str = '2025.05.07.1-T1-A1-草稿';
+      // The string to be judged
+      //const str = '2025.05.07.1-T1-A1-Draft';
       const str = arg1;
 
-      // 正则表达式：匹配 XXXX.XX.XX.X 的结构（X为数字）
+      // Regular expression: Match the structure of XXXX.XX.XX.X (X is a number)
       const regex = /^\d{4}\.\d{2}\.\d{2}\.\d+/;
 
-      // 判断字符串是否符合规则
+      // Determine whether a string conforms to the rules
       if (regex.test(str)) {
         console.log('目标字符串');
         return true;
@@ -487,18 +487,18 @@ var app = new Vue({
       }
     },
     calculateDuration,
-    // 计算 agent列表 需要填充的元素数量
+    // Calculate the number of elements that need to be filled in the agent list
     calcAgentFillNum() {
       // if (this.tabsActiveName === 'first' && this.scrollbarAgentIndex === '') {
       // }
       if (!this.agentListElResizeObserver) {
-        // 计算 agent列表 需要填充的元素数量
+        // Calculate the number of elements that need to be filled in the agent list
         this.agentListElResizeObserver = new ResizeObserver(entries => {
           const elWidth = entries[0]?.contentRect?.width ?? 0
           const singleElWidth = 315
           const elSpac = 30
           const num = this.agentList.length
-          // 单个元素 最小宽 315
+          // Single element minimum width 315
           let rowNum = Math.floor(elWidth / singleElWidth)
           if (rowNum > 1) {
             rowNum = Math.floor((elWidth - ((rowNum - 1) * elSpac)) / singleElWidth)
@@ -518,11 +518,11 @@ var app = new Vue({
       }
 
     },
-    // 获取 状态文本
+    // Get status text
     getStatusText(item, showType) {
       // this.taskStateText this.agentStateText
       let statusText = ''
-      // 智能体
+      // agent
       if (showType === '1') {
         let detailData = item.agentTemplateDto || item
         statusText = detailData.enable ? '待命' : '停用'
@@ -533,7 +533,7 @@ var app = new Vue({
         }
         return resultText || statusText
       }
-      // 组
+      // Group
       if (showType === '2') {
         let detailData = item.chatGroupDto || item
         statusText = detailData.enable ? '待命' : '停用'
@@ -543,18 +543,18 @@ var app = new Vue({
         }
         return resultText || statusText
       }
-      // 任务
+      // Task
       if (showType === '3') {
         statusText = this.taskStateText[item.status]
         return statusText
       }
       return ''
     },
-    // 获取 状态颜色
+    // Get status color
     getStatusColor(item, showType) {
       // this.taskStateColor this.agentStateColor
       let statusColor = ''
-      // 智能体列表
+      // Agent list
       if (showType === '1') {
         let detailData = item.agentTemplateDto || item
         statusColor = detailData.enable ? 'standColor' : 'stopColor'
@@ -564,7 +564,7 @@ var app = new Vue({
         }
         return resultColor || statusColor
       }
-      // 组
+      // Group
       if (showType === '2') {
         let detailData = item.chatGroupDto || item
         statusColor = detailData.enable ? 'standColor' : 'stopColor'
@@ -574,13 +574,13 @@ var app = new Vue({
         }
         return resultColor || statusColor
       }
-      // 任务 
+      // Task 
       if (showType === '3') {
         statusColor = this.taskStateColor[item.status]
         return statusColor
       }
     },
-    // 获取 智能体 数据
+    // Get agent data
     async getAgentListData(listType, page = 0) {
       const queryList = {}
       if (listType === 'agent') {
@@ -591,7 +591,7 @@ var app = new Vue({
         this.groupAgentQueryList.pageIndex = page ?? 1
         Object.assign(queryList, this.groupAgentQueryList)
       }
-      // 接口对接
+      // Interface docking
       await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetList?${getInterfaceQueryStr(queryList)}`)
         .then(res => {
           const data = res?.data ?? {}
@@ -600,20 +600,20 @@ var app = new Vue({
             if (listType === 'agent') {
               this.$set(this, 'agentList', agentData)
               const agentDetail = this.agentDetails?.agentTemplateDto ?? {}
-              // 获取详情 
+              // Get details 
               if (agentDetail.id) {
                 this.getAgentDetailData(agentDetail.id, agentDetail)
               }
-              // 计算 agent列表 需要填充的元素数量
+              // Calculate the number of elements that need to be filled in the agent list
               this.calcAgentFillNum()
             }
             if (listType === 'groupAgent') {
               this.$set(this, 'groupAgentList', agentData)
-              // 确保更新数据时 不会清空选中
+              // Make sure the selection is not cleared when updating data
               this.$nextTick(() => {
                 this.isGetGroupAgent = false
               })
-              // 组成员table 初始选中
+              // Group members table initial selection
               if (this.visible.drawerGroup && this.groupForm.members.length > 0) {
                 // this.toggleSelection()
                 this.$nextTick(() => {
@@ -639,7 +639,7 @@ var app = new Vue({
           this.isGetGroupAgent = false
         })
     },
-    // 获取 智能体详情 
+    // Get agent details 
     async getAgentDetailData(id, detail = {}) {
       let taskList = []
       let groupList = []
@@ -649,7 +649,7 @@ var app = new Vue({
           pageSize: 0,
           agentTemplateId: id
         }
-        // 获取组列表
+        // Get list of groups
         await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupList?${getInterfaceQueryStr(groupQuery)}`, groupQuery)
           .then(res => {
             const data = res?.data ?? {}
@@ -662,7 +662,7 @@ var app = new Vue({
           pageSize: 0,
           agentTemplateId: id
         }
-        //  获取任务列表
+        //  Get task list
         await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetList?${getInterfaceQueryStr(taskQuery)}`, taskQuery)
           .then(res => {
             const data = res?.data ?? {}
@@ -698,7 +698,7 @@ var app = new Vue({
           }
         })
     },
-    // 获取 组 数据
+    // Get group data
     async getGroupListData(listType, id, page = 0) {
       const queryList = {}
       if (listType === 'group') {
@@ -711,7 +711,7 @@ var app = new Vue({
         Object.assign(queryList, this.agentDetailsGroupQueryList)
       }
       // debugger
-      // 获取agent列表
+      // Get agent list
       let agentAllList = []
       await serviceAM.get('/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetList')
         .then(res => {
@@ -721,18 +721,18 @@ var app = new Vue({
             agentAllList = data?.data?.list ?? []
           }
         })
-      // 获取任务列表
+      // Get task list
       let taskAllList = []
       await serviceAM.get('/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetList')
         .then(res => {
           const data = res?.data ?? {}
           if (data.success) {
             taskAllList = data?.data?.chatTaskList ?? []
-            //设置最新的任务信息
+            //Set the latest task information
             this.groupTaskListLastNew = taskAllList[0]
           }
         })
-      // 获取组列表
+      // Get list of groups
       await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupList?${getInterfaceQueryStr(queryList)}`, queryList)
         .then(res => {
           // debugger
@@ -753,13 +753,13 @@ var app = new Vue({
             if (listType === 'group') {
               // this.groupTreeData = [{
               //     id: '0',
-              //     name: '全部组',
+              //     name: 'All groups',
               //     children: groupData
               // }]
-              this.groupSelection = [] // 清空选中
+              this.groupSelection = [] // Clear selection
               this.$set(this, 'groupList', handleGroupData)
               const groupDetail = this.groupDetails?.chatGroupDto ?? {}
-              // 获取详情 
+              // Get details 
               if (this.groupShowType === '2' && groupDetail.id) {
                 this.getGroupDetailData(listType, groupDetail.id, groupDetail)
               }
@@ -767,7 +767,7 @@ var app = new Vue({
             if (listType === 'agentGroup') {
               this.$set(this, 'agentDetailsGroupList', handleGroupData)
               const groupDetail = handleGroupData[this.agentDetailsGroupIndex]
-              // 获取详情
+              // Get details
               if (groupDetail && groupDetail.id) {
                 this.getGroupDetailData(listType, groupDetail.id, groupDetail)
               }
@@ -781,7 +781,7 @@ var app = new Vue({
           }
         })
     },
-    // 获取 组详情 
+    // Get group details 
     async getGroupDetailData(detailType, id, detail = {}) {
       await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${id}`)
         .then(res => {
@@ -794,12 +794,12 @@ var app = new Vue({
             }
             if (detailType === 'agentGroup') {
               this.$set(this, 'agentDetailsGroupDetails', groupDetail)
-              // 获取任务列表
+              // Get task list
               this.gettaskListData('agentGroupTask', id)
             }
             if (['group', 'groupTable'].includes(detailType)) {
               this.$set(this, 'groupDetails', groupDetail)
-              // 获取任务列表
+              // Get task list
               this.gettaskListData('groupTask', id)
             }
           } else {
@@ -811,34 +811,34 @@ var app = new Vue({
           }
         })
     },
-    // 获取 任务 数据
+    // Get task data
     async gettaskListData(listType, id, page = 0) {
       const queryList = {}
-      // 任务
+      // Task
       if (listType === 'task') {
         this.taskQueryList.pageIndex = page ?? 1
         Object.assign(queryList, this.taskQueryList)
       }
-      // 智能体 任务
+      // agent task
       if (listType === 'agentTask') {
         this.agentDetailsTaskQueryList.pageIndex = page ?? 1
         this.agentDetailsTaskQueryList.agentTemplateId = id
         Object.assign(queryList, this.agentDetailsTaskQueryList)
       }
-      // 智能体 组 任务
+      // Agent group task
       if (listType === 'agentGroupTask') {
         this.agentDetailsGroupTaskQueryList.pageIndex = page ?? 1
         this.agentDetailsGroupTaskQueryList.chatGroupId = id
         Object.assign(queryList, this.agentDetailsGroupTaskQueryList)
       }
-      // 组 任务
+      // group task
       if (listType === 'groupTask') {
         this.groupTaskQueryList.pageIndex = page ?? 1
         this.groupTaskQueryList.chatGroupId = id
         Object.assign(queryList, this.groupTaskQueryList)
       }
       let modelList = []
-      // 获取模型列表
+      // Get model list
       await serviceAM.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync', {
         pageIndex: 0,
         pageSize: 0
@@ -856,7 +856,7 @@ var app = new Vue({
           })
         }
       })
-      //  接口对接
+      //  Interface docking
       await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetList?${getInterfaceQueryStr(queryList)}`, queryList)
         .then(res => {
           const data = res?.data ?? {}
@@ -869,29 +869,29 @@ var app = new Vue({
                 modelName
               }
             })
-            // 任务
+            // Task
             if (listType === 'task') {
               this.$set(this, 'taskList', handleTaskData)
-              // 默认展示第一个任务详情
+              // Display the first task details by default
               if (handleTaskData && handleTaskData.length) {
                 const taskDetail = this.taskDetails ? this.taskDetails : handleTaskData[0]
                 this.getTaskDetailData(listType, taskDetail.id, taskDetail)
               }
             }
-            // 智能体 任务
+            // agent task
             if (listType === 'agentTask') {
               this.$set(this, 'agentDetailsTaskList', handleTaskData)
-              // 默认展示第一个任务详情
+              // Display the first task details by default
               if (handleTaskData && handleTaskData.length) {
                 const taskDetail = this.agentDetailsTaskDetails ? this.agentDetailsTaskDetails : handleTaskData[0]
                 this.getTaskDetailData(listType, taskDetail.id, taskDetail)
               }
             }
-            // 智能体 组 任务
+            // Agent group task
             if (listType === 'agentGroupTask') {
               this.$set(this, 'agentDetailsGroupTaskList', handleTaskData)
             }
-            // 组 任务
+            // group task
             if (listType === 'groupTask') {
               this.$set(this, 'groupTaskList', handleTaskData)
             }
@@ -904,7 +904,7 @@ var app = new Vue({
           }
         })
     },
-    // 获取 任务详情 
+    // Get task details 
     async getTaskDetailData(detailType, id, detail = {}, detailsOn = false) {
       //TODO:
       if (id == undefined) {
@@ -919,7 +919,7 @@ var app = new Vue({
         .then(res => {
           const data = res?.data ?? {}
           if (data.success) {
-            // 不是仅详情时 清除轮询
+            // Not Details Only Clear Polling
             if (!detailsOn) {
               this.clearHistoryTimer()
             }
@@ -928,29 +928,29 @@ var app = new Vue({
             if (taskDetail) {
               taskDetail = Object.assign({}, detail, taskDetail)
             }
-            // 智能体 组 任务
+            // Agent group task
             if (detailType === 'agentGroupTask') {
               this.$set(this, 'agentDetailsGroupDetailsTaskDetails', taskDetail)
             }
-            // 组 任务
+            // group task
             if (detailType === 'groupTask') {
               this.$set(this, 'groupTaskDetails', taskDetail)
             }
-            // 智能体 任务
+            // agent task
             if (detailType === 'agentTask') {
               this.$set(this, 'agentDetailsTaskDetails', taskDetail)
             }
-            // 任务
+            // Task
             if (detailType === 'task') {
               this.$set(this, 'taskDetails', taskDetail)
             }
 
             if (!detailsOn && taskDetail) {
               if (['task', 'agentTask'].includes(detailType)) {
-                // 获取任务成员列表
+                // Get task member list
                 this.getTaskMemberListData(detailType, taskDetail.chatGroupId)
               }
-              // 轮询 获取对话数据
+              // Polling to get conversation data
               this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData, taskDetail.id)
             }
           } else {
@@ -962,24 +962,24 @@ var app = new Vue({
           }
         })
     },
-    // 获取 任务历史记录
+    // Get task history
     async getTaskRecordListData(recordType, chatTaskId, nextHistoryId, isFirst = false) {
       const queryList = {
         chatTaskId,
         nextHistoryId
       }
-      //  接口对接
+      //  Interface docking
       await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatGroupHistoryAppService/Xncf.AgentsManager_ChatGroupHistoryAppService.GetList?${getInterfaceQueryStr(queryList)}`, queryList)
         .then(res => {
           const data = res?.data ?? {}
           if (data.success) {
             const chatGroupHistories = data?.data?.chatGroupHistories ?? []
             const historiesData = chatGroupHistories.map(item => {
-              //使用 MarkDown 格式，对输出结果进行展示
+              //Use MarkDown format to display the output results
               item.messageHtml = marked.parse(item.message);
               return item
             })
-            // 任务
+            // Task
             if (recordType === 'task') {
               if (nextHistoryId) {
                 // for (let index = 0; index < historiesData.length; index++) {
@@ -998,12 +998,12 @@ var app = new Vue({
                   this.$set(this, 'taskHistoryList', historiesData)
                 }
               }
-              // 滚动区域 吸附底部
+              // Scroll area adsorption bottom
               this.$nextTick(() => {
                 this.scrollbarDown('taskHistoryScrollbar', true, isFirst)
               })
             }
-            // 智能体 任务
+            // agent task
             if (recordType === 'agentTask') {
               if (nextHistoryId) {
                 // for (let index = 0; index < historiesData.length; index++) {
@@ -1022,12 +1022,12 @@ var app = new Vue({
                   this.$set(this, 'agentDetailsTaskHistoryList', historiesData)
                 }
               }
-              // 滚动区域 吸附底部
+              // Scroll area adsorption bottom
               this.$nextTick(() => {
                 this.scrollbarDown('agentDetailsTaskHistoryScrollbar', true, isFirst)
               })
             }
-            // 智能体 组 任务
+            // Agent group task
             if (recordType === 'agentGroupTask') {
               if (nextHistoryId) {
                 // for (let index = 0; index < historiesData.length; index++) {
@@ -1046,12 +1046,12 @@ var app = new Vue({
                   this.$set(this, 'agentDetailsGroupTaskHistoryList', historiesData)
                 }
               }
-              // 滚动区域 吸附底部
+              // Scroll area adsorption bottom
               this.$nextTick(() => {
                 this.scrollbarDown('agentDetailsGroupTaskHistoryScrollbar', true, isFirst)
               })
             }
-            // 组 任务
+            // group task
             if (recordType === 'groupTask') {
               if (nextHistoryId) {
                 if (historiesData.length > 0) {
@@ -1064,7 +1064,7 @@ var app = new Vue({
                   this.$set(this, 'groupTaskHistoryList', historiesData)
                 }
               }
-              // 滚动区域 吸附底部
+              // Scroll area adsorption bottom
               this.$nextTick(() => {
                 this.scrollbarDown('groupTaskHistoryScrollbar', true, isFirst)
               })
@@ -1078,18 +1078,18 @@ var app = new Vue({
           }
         })
     },
-    // 获取 任务 成员列表
+    // Get task member list
     async getTaskMemberListData(memberType, chatGroupld) {
       await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${chatGroupld}`)
         .then(res => {
           const data = res?.data ?? {}
           if (data.success) {
             const taskMemberList = data?.data?.agentTemplateDtoList ?? []
-            // 任务
+            // Task
             if (memberType === 'task') {
               this.$set(this, 'taskMemberList', taskMemberList)
             }
-            // 智能体 任务
+            // agent task
             if (memberType === 'agentTask') {
               this.$set(this, 'agentDetailsTaskMemberList', taskMemberList)
             }
@@ -1102,19 +1102,19 @@ var app = new Vue({
           }
         })
     },
-    // 保存 submitForm 数据
+    // Save submitForm data
     async saveSubmitFormData(saveType, serviceForm = {}) {
       //debugger
       let serviceURL = ''
-      // agent 新增|编辑
+      // agent new|edit
       if (['drawerAgent', 'dialogGroupAgent'].includes(saveType)) {
-        // 确保 serviceForm 是正确的对象
+        // Make sure serviceForm is the correct object
         serviceForm = serviceForm || {};
 
-        // 直接将 functionCallTags 数组转换为字符串并赋值
+        // Directly convert the functionCallTags array to a string and assign it
         serviceForm.functionCallNames = this.functionCallTags.length > 0 ? this.functionCallTags.join(',') : '';
 
-        // 打印日志以便调试
+        // Print logs for debugging
         console.log('Submitting serviceForm:', serviceForm);
         console.log('functionCallTags:', this.functionCallTags);
         console.log('functionCallNames:', serviceForm.functionCallNames);
@@ -1124,7 +1124,7 @@ var app = new Vue({
           this.isGetGroupAgent = true
         }
       }
-      // 组 新增|编辑
+      // Group New|Edit
       if (saveType === 'drawerGroup') {
         serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.SetChatGroup'
         if (serviceForm.members) {
@@ -1133,7 +1133,7 @@ var app = new Vue({
           serviceURL += `?${getInterfaceQueryStr({ memberAgentTemplateIds: membersIds })}`
         }
       }
-      // 组启动（运行任务） ['drawerGroupStart', 'drawerTaskStart'].includes(btnType)
+      // Group start (run task) ['drawerGroupStart', 'drawerTaskStart'].includes(btnType)
       if (['drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
         serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.RunGroup'
       }
@@ -1145,24 +1145,24 @@ var app = new Vue({
         const response = await serviceAM.post(serviceURL, serviceForm)
         if (response.data.success) {
           let refName = '', formName = ''
-          // 智能体
+          // agent
           if (['drawerAgent', 'dialogGroupAgent'].includes(saveType)) {
             refName = 'agentELForm'
             formName = 'agentForm'
           }
-          // 组
+          // Group
           if (saveType === 'drawerGroup') {
             refName = 'groupELForm'
             formName = 'groupForm'
-            // 重置 组获取智能体query
+            // Reset group acquisition agent query
             this.$set(this, 'groupAgentQueryList', this.$options.data().groupAgentQueryList)
           }
-          // 组 启动
+          // group start
           if (['drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
             refName = 'groupStartELForm'
             formName = 'groupStartForm'
           }
-          // 任务评价
+          // task evaluation
           if (saveType === 'dialogTaskEvaluation') {
             refName = 'evaluationELForm'
             formName = 'evaluationForm'
@@ -1177,7 +1177,7 @@ var app = new Vue({
           this.$nextTick(() => {
             this.visible[saveType] = false
           })
-          // 重新获取数据
+          // Retrieve data
           if (['drawerGroup', 'drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
             console.log('#***#', this.tabsActiveName, this.agentDetails);
 
@@ -1203,7 +1203,7 @@ var app = new Vue({
             }
             this.getAgentListData(agentMapStr[saveType])
           } else if (saveType === 'dialogTaskEvaluation') {
-            // 重新获取任务详情 
+            // Retrieve task details 
             let detail = {}
             if (this.tabsActiveName === 'first') {
               if (this.agentDetailsTabsActiveName === 'first') {
@@ -1239,7 +1239,7 @@ var app = new Vue({
         this.isGetGroupAgent = false
       }
     },
-    // 轮询获取 task 历史对话记录
+    // Polling to obtain task history conversation records
     pollGetTaskHistoryData(listType, fun, id) {
       if (!listType || !fun) return
       fun(listType, id, '', true)
@@ -1247,27 +1247,27 @@ var app = new Vue({
         if (this.historyTimer[listType]) clearTimeout(this.historyTimer[listType])
         this.historyTimer[listType] = setTimeout(() => {
           let nextHistoryId = ''
-          // 任务
+          // Task
           if (listType === 'task') {
             let lenIndex = this.taskHistoryList.length - 1
             nextHistoryId = this.taskHistoryList[lenIndex]?.id ?? ''
           }
-          // 智能体 任务
+          // agent task
           if (listType === 'agentTask') {
             let lenIndex = this.agentDetailsTaskHistoryList.length - 1
             nextHistoryId = this.agentDetailsTaskHistoryList[lenIndex]?.id ?? ''
           }
-          // 智能体 组 任务
+          // Agent group task
           if (listType === 'agentGroupTask') {
             let lenIndex = this.agentDetailsGroupTaskHistoryList.length - 1
             nextHistoryId = this.agentDetailsGroupTaskHistoryList[lenIndex]?.id ?? ''
           }
-          // 组 任务
+          // group task
           if (listType === 'groupTask') {
             let lenIndex = this.groupTaskHistoryList.length - 1
             nextHistoryId = this.groupTaskHistoryList[lenIndex]?.id ?? ''
           }
-          // 执行代码块
+          // Execute code block
           fun(listType, id, nextHistoryId)
           interval()
         }, 1000 * 5)
@@ -1275,7 +1275,7 @@ var app = new Vue({
       }
       interval()
     },
-    // 清除 获取历史对话记录 的轮询
+    // Clear polling for historical conversation records
     clearHistoryTimer() {
       for (const key in this.historyTimer) {
         if (Object.prototype.hasOwnProperty.call(this.historyTimer, key)) {
@@ -1288,41 +1288,41 @@ var app = new Vue({
       }
     },
 
-    // 编辑 Dailog|抽屉 按钮 
+    // Edit Dailog|Drawer Button 
     async handleEditDrawerOpenBtn(btnType, item) {
       // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
       //console.log('handleEditDrawerOpenBtn', btnType, item);
       let formName = ''
-      // 智能体
+      // agent
       if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) {
         formName = 'agentForm'
       }
-      // 组
+      // Group
       if (btnType === 'drawerGroup') {
         formName = 'groupForm'
       }
-      // 组 启动 
+      // group start 
       if (['drawerGroupStart', 'drawerTaskStart'].includes(btnType)) {
         formName = 'groupStartForm'
       }
-      // 任务 评价
+      // Task Evaluation
       if (btnType === 'dialogTaskEvaluation') {
         formName = 'evaluationForm'
       }
       if (formName) {
         if (btnType === 'drawerAgent' && item) {
           console.log('item', item);
-          // 创建一个新的对象来存储表单数据
+          // Create a new object to store form data
           const formData = item.agentTemplateDto ? { ...item.agentTemplateDto } : { ...item };
           console.log('formData', formData);
 
-          // 确保 functionCallNames 被正确初始化
+          // Make sure functionCallNames is initialized correctly
           this.functionCallTags = formData.functionCallNames ? formData.functionCallNames.split(',').filter(Boolean) : [];
 
-          // 将数据赋值给表单
+          // Assign data to the form
           Object.assign(this[formName], formData);
 
-          // 打印日志以便调试
+          // Print logs for debugging
           console.log('Loaded form data:', formData);
           console.log('functionCallTags:', this.functionCallTags);
 
@@ -1345,7 +1345,7 @@ var app = new Vue({
                 }
               })
           }
-          // // 获取 全部智能体数据
+          // // Get all agent data
           // this.getAgentListData('groupAgent')
         } else if (btnType === 'drawerTaskStart') {
           Object.assign(this[formName], {
@@ -1355,20 +1355,20 @@ var app = new Vue({
         } else {
           Object.assign(this[formName], item)
         }
-        // 回显 表单值
+        // echo form values
         // this.$set(this, `${formName}`, deepClone(item))
-        // 打开 抽屉
+        // open drawer
         this.handleElVisibleOpenBtn(btnType)
       }
     },
-    // Dailog|抽屉 打开 按钮
+    // Dailog|Drawer Open button
     handleElVisibleOpenBtn(btnType, formData) {
       // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
-      // console.log('通用新增按钮:', btnType);
+      // console.log('Universal new button:', btnType);
       let visibleKey = btnType
-      // 组 启动 
+      // group start 
       if (btnType === 'drawerGroupStart') {
-        // 详情: formData.chatGroupDto 列表: formData
+        // Details: formData.chatGroupDto List: formData
         this.groupStartForm.groupName = formData.chatGroupDto ? formData.chatGroupDto.name : formData.name
         this.groupStartForm.name = formData.chatGroupDto ? `${formData.chatGroupDto.name}1` : `${formData.name}1`
         this.groupStartForm.chatGroupId = formData.chatGroupDto ? formData.chatGroupDto.id : formData.id
@@ -1381,17 +1381,17 @@ var app = new Vue({
       }
       this.visible[visibleKey] = true
     },
-    // Dailog|抽屉 关闭 按钮
+    // Dailog|Drawer Close Button
     handleElVisibleClose(btnType) {
       if (btnType === 'dialogAgentParameter') {
-        // 清空数据
+        // Clear data
         this.agentParameterList = []
         this.$nextTick(() => {
           this.visible[btnType] = false
         })
         return
       } else if (btnType === 'dialogTaskDescription') {
-        // 清空数据
+        // Clear data
         this.describeContent = ''
         this.$nextTick(() => {
           this.visible[btnType] = false
@@ -1402,25 +1402,25 @@ var app = new Vue({
       this.$confirm('确认关闭？')
         .then(_ => {
           let refName = '', formName = ''
-          // 智能体
+          // agent
           if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) {
             refName = 'agentELForm'
             formName = 'agentForm'
           }
-          // 组
+          // Group
           if (btnType === 'drawerGroup') {
             refName = 'groupELForm'
             formName = 'groupForm'
-            // 重置 组获取智能体query
+            // Reset group acquisition agent query
             this.$set(this, 'groupAgentQueryList', this.$options.data().groupAgentQueryList)
             this.groupAgentList = []
           }
-          // 组 启动
+          // group start
           if (['drawerGroupStart', 'drawerTaskStart'].includes(btnType)) {
             refName = 'groupStartELForm'
             formName = 'groupStartForm'
           }
-          // 任务评价
+          // task evaluation
           if (btnType === 'dialogTaskEvaluation') {
             refName = 'evaluationELForm'
             formName = 'evaluationForm'
@@ -1435,7 +1435,7 @@ var app = new Vue({
           this.$nextTick(() => {
             this.visible[btnType] = false
           })
-          // 清理 Function Calls 数据
+          // Clean up Function Calls data
           if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) {
             this.functionCallTags = []
             this.functionCallInputVisible = false
@@ -1444,26 +1444,26 @@ var app = new Vue({
         })
         .catch(_ => { });
     },
-    // Dailog|抽屉 提交 按钮
+    // Dailog|Drawer Submit Button
     handleElVisibleSubmit(btnType) {
       // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
       let refName = '', formName = ''
-      // 智能体 
+      // agent 
       if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) {
         refName = 'agentELForm'
         formName = 'agentForm'
       }
-      // 组
+      // Group
       if (btnType === 'drawerGroup') {
         refName = 'groupELForm'
         formName = 'groupForm'
       }
-      // 组 启动
+      // group start
       if (['drawerGroupStart', 'drawerTaskStart'].includes(btnType)) {
         refName = 'groupStartELForm'
         formName = 'groupStartForm'
       }
-      // 任务评价
+      // task evaluation
       if (btnType === 'dialogTaskEvaluation') {
         refName = 'evaluationELForm'
         formName = 'evaluationForm'
@@ -1472,14 +1472,14 @@ var app = new Vue({
       this.$refs[refName].validate((valid) => {
         if (valid) {
           const submitForm = this[formName] ?? {}
-          //提交数据给后端
+          //Submit data to the backend
           this.saveSubmitFormData(btnType, submitForm)
           debugger
-          //只有执行分配任务启动的时候，保存后，才跳入到任务详情
+          //Only when the assigned task is started, and after saving, will it jump to the task details.
           if (btnType === 'drawerGroupStart') {
-            //切换到对应的tab
+            //Switch to the corresponding tab
             this.tabsActiveName = 'third'
-            //跳转到任务详情
+            //Jump to task details
             this.handleTaskView('task', this.groupTaskListLastNew)
           }
           // this.visible[btnType] = false
@@ -1489,48 +1489,48 @@ var app = new Vue({
         }
       });
     },
-    // 表单 单条校验
+    // Form single check
     handleFormValidateField(refFormEL, formName, propName, item) {
       // this[formName][propName] = item
       this.$set(this[formName], `${propName}`, item)
       this.$refs[refFormEL]?.validateField(propName, () => { })
     },
 
-    // 识别事件
+    // Identify events
     handleIdentify(e) {
 
       //debugger
       let bRes = this.findDest(e)
       if (bRes) {
         console.log('命中')
-        //自动选出PromptRange（不做处理）
+        //Automatically select PromptRange (no processing)
 
       } else {
         console.log('未命中')
-        //TODO:默认成为新的提示词，zai
+        //TODO: becomes the new prompt word by default, zai
 
       }
       console.log('识别事件', e);
     },
 
-    // 切换 tabs 页面
+    // Switch tabs page
     handleTabsClick(tab, event) {
       this.clearHistoryTimer()
-      // 智能体
+      // agent
       if (this.tabsActiveName === 'first') {
         this.getAgentListData('agent')
       }
-      // 组
+      // Group
       if (this.tabsActiveName === 'second') {
         this.getGroupListData('group')
       }
-      // 任务
+      // Task
       if (this.tabsActiveName === 'third') {
         this.gettaskListData('task')
       }
     },
 
-    // 筛选输入变化
+    // Filter input changes
     handleFilterChange(value, filterType) {
       console.log('handleFilterChange', filterType, value)
       if (filterType === 'agent') {
@@ -1559,9 +1559,9 @@ var app = new Vue({
         this.gettaskListData('task', 1)
       }
     },
-    // 筛选条件事件 agent  group task
+    // Filter event agent group task
     handleFilterCriteria(filterType, fieldType) {
-      // 智能体
+      // agent
       if (filterType === 'agent') {
         if (fieldType === 'timeSort') {
           this.agentQueryList.timeSort = !this.agentQueryList.timeSort
@@ -1580,9 +1580,9 @@ var app = new Vue({
           })
         }
         // this.agentFCPVisible = !this.agentFCPVisible
-        // to do 调用接口
+        // to do call interface
       }
-      // 组
+      // Group
       if (filterType === 'group') {
         if (fieldType === 'timeSort') {
           this.groupQueryList.timeSort = !this.groupQueryList.timeSort
@@ -1601,9 +1601,9 @@ var app = new Vue({
           })
         }
         // this.groupFCPVisible = !this.groupFCPVisible
-        // to do 调用接口
+        // to do call interface
       }
-      // 任务
+      // Task
       if (filterType === 'task') {
         if (fieldType === 'timeSort') {
           this.taskQueryList.timeSort = !this.taskQueryList.timeSort
@@ -1622,28 +1622,28 @@ var app = new Vue({
           })
         }
         // this.taskFCPVisible = !this.taskFCPVisible
-        // to do 调用接口
+        // to do call interface
       }
     },
 
 
 
-    // 查看全部智能体 列表 
+    // View all agents list 
     handleAgentViewAll() {
       this.clearHistoryTimer()
-      this.scrollbarAgentIndex = '' // 清空索引
-      this.agentDetails = '' // 清空详情数据
+      this.scrollbarAgentIndex = '' // Clear index
+      this.agentDetails = '' // Clear detailed data
       this.getAgentListData('agent')
     },
-    // 查看 智能体
+    // View Agent
     handleAgentView(item, index) {
       this.clearHistoryTimer()
       this.scrollbarAgentIndex = item.id ?? ''
-      // 重置 数据
+      // Reset data
       this.resetAgentDetailsQuery()
-      // 获取智能体 详情
+      // Get agent details
       this.getAgentDetailData(item.id, item)
-      // 重置 组获取智能体query
+      // Reset group acquisition agent query
       if (this.agentDetailsTabsActiveName === 'first') {
         this.getGroupListData('agentGroup', item.id)
       }
@@ -1651,7 +1651,7 @@ var app = new Vue({
         this.gettaskListData('agentTask', item.id)
       }
     },
-    // 重置 智能体详情下的组和任务数据
+    // Reset group and task data under Agent Details
     resetAgentDetailsQuery() {
       this.agentDetailsTabsActiveName = 'first'
       this.agentDetailsGroupList = []
@@ -1675,7 +1675,7 @@ var app = new Vue({
       this.$set(this, 'agentDetailsGroupQueryList', this.$options.data().agentDetailsGroupQueryList)
       this.$set(this, 'agentDetailsTaskQueryList', this.$options.data().agentDetailsTaskQueryList)
     },
-    // 切换 智能体详情 tabs 页面
+    // Switch the agent details tabs page
     handleAgentDetailsTabsClick(tab, event) {
       this.clearHistoryTimer()
       let id = ''
@@ -1689,7 +1689,7 @@ var app = new Vue({
         this.gettaskListData('agentTask', id)
       }
     },
-    // 智能体 状态 切换
+    // Agent state switching
     setAgentState(stateType, item) {
       if (!stateType || !item) return
       let messageText = ''
@@ -1709,7 +1709,7 @@ var app = new Vue({
       }
       if (!serviceURL) return
       this.$confirm(messageText, '操作确认', {
-        dangerouslyUseHTMLString: true, // message 当作 HTML片段处理
+        dangerouslyUseHTMLString: true, // message is treated as an HTML fragment
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         // type: 'warning'
@@ -1746,12 +1746,12 @@ var app = new Vue({
 
 
 
-    // 侧边 组tree 组件 节点 筛选
+    // side group tree component node filter
     filterGroupTreeNode(value, data) {
       if (!value) return true;
       return data.name.indexOf(value) !== -1;
     },
-    // 侧边 组tree 组件 节点 点击
+    // Side group tree component node click
     handleGroupTreeNodeClick(node, data, clickType) {
       // console.log('handleGroupTreeNodeClick', node, data)
       if (clickType === 'agentGroup') {
@@ -1766,7 +1766,7 @@ var app = new Vue({
       if (clickType === 'group') {
         this.groupShowType = node.level.toString()
         if (this.groupShowType === '1') {
-          this.groupDetails = '' // 清空组详情
+          this.groupDetails = '' // Clear group details
         }
         if (this.groupShowType === '2') {
           this.groupDetails = deepClone(data)
@@ -1776,7 +1776,7 @@ var app = new Vue({
         }
       }
     },
-    // 组 查看详情
+    // Group View details
     handleGroupDetail(row, clickType) {
       // console.log('handleGroupDetail', row)
       if (clickType === 'agentGroup') {
@@ -1788,12 +1788,12 @@ var app = new Vue({
         this.groupDetails = deepClone(row)
       }
     },
-    // 组 查看全部 列表 
+    // Group View All List 
     handleGroupViewAll() {
       this.clearHistoryTimer()
       this.groupShowType = '1'
-      // 清空组详情
-      this.scrollbarGroupIndex = '' // 清空索引
+      // Clear group details
+      this.scrollbarGroupIndex = '' // Clear index
       this.groupDetails = ''
       this.groupTaskSelection = []
       this.groupTaskList = []
@@ -1804,15 +1804,15 @@ var app = new Vue({
       this.groupTaskMemberfilterList = []
       this.getGroupListData('group')
     },
-    // 组 查看列表 详情 
+    // Group View List Details 
     handleGroupView(clickType, item, index = 0) {
       this.clearHistoryTimer()
-      // 智能体下时 查看组详情
+      // View group details when the agent is down
       if (clickType === 'agentGroup') {
-        // 切换展示类型
+        // Switch display type
         this.agentDetailsGroupShowType = '1'
         this.agentDetailsGroupIndex = index ?? 0
-        // 清空组详情
+        // Clear group details
         this.agentDetailsGroupDetails = ''
         this.agentGroupTaskSelection = []
         this.agentDetailsGroupTaskList = []
@@ -1822,9 +1822,9 @@ var app = new Vue({
         this.agentGroupTaskMemberfilterList = []
         this.getGroupDetailData(clickType, item.id, item)
       }
-      // 组大类时 查看组详情
+      // View group details when grouping into major categories
       if (clickType === 'group' || clickType === 'groupTable') {
-        // 切换展示类型
+        // Switch display type
         this.groupShowType = '2'
         // if (clickType === 'groupTable') {
         //     const { pageIndex, pageSize } = this.groupQueryList
@@ -1833,7 +1833,7 @@ var app = new Vue({
         //     this.scrollbarGroupIndex = index ?? 0
         // }
         this.scrollbarGroupIndex = item.id ?? ''
-        // 清空组详情
+        // Clear group details
         this.groupDetails = ''
         this.groupTaskSelection = []
         this.groupTaskList = []
@@ -1844,7 +1844,7 @@ var app = new Vue({
         this.getGroupDetailData(clickType, item.id, item)
       }
     },
-    // 组 新增|编辑 智能体table 切换table 选中
+    // Group Add | Edit Agent table Switch table Select
     toggleSelection(rows) {
       if (rows) {
         rows.forEach(row => {
@@ -1854,7 +1854,7 @@ var app = new Vue({
         this.$refs?.groupAgentTable?.clearSelection();
       }
     },
-    // 组 新增|编辑 智能体table 选中变化
+    // Group New|Edit Agent table Select changes
     handleSelectionChange(val) {
       if (!this.isGetGroupAgent) {
         const selectedIds = new Set(val.map((i) => i.id))
@@ -1886,7 +1886,7 @@ var app = new Vue({
       }
 
     },
-    // 组 新增|编辑 智能体 成员取消选中
+    // Group New|Edit Agent Members Unchecked
     groupMembersCancel(item, index) {
       this.groupForm.members.splice(index, 1);
       const findIndex = this.groupAgentList.findIndex(i => item.id === i.id)
@@ -1894,18 +1894,18 @@ var app = new Vue({
         this.toggleSelection([this.groupAgentList[findIndex]])
       }
     },
-    // 组列表选中变化 (批量删除)
+    // Group list selection changes (batch deletion)
     handleGroupSelectionChange(val) {
       this.groupSelection = val
     },
-    // 组 删除
+    // group delete
     handleGroupDelete(optype, row) {
       console.log('handleGroupDelete:', row);
       let serviceURL = ''
       if (!serviceURL) return
-      // 操作确认 提示
+      // Operation confirmation prompt
       this.$confirm('确认删除数据吗？', '操作确认', {
-        dangerouslyUseHTMLString: true, // message 当作 HTML片段处理
+        dangerouslyUseHTMLString: true, // message is treated as an HTML fragment
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         // type: 'warning'
@@ -1917,10 +1917,10 @@ var app = new Vue({
               message: '操作成功!'
             });
             if (optype === 'groupTable') {
-              // 重新获取数据
+              // Retrieve data
               this.getGroupListData('group')
             } else {
-              // 查看全部组
+              // View all groups
               this.handleGroupViewAll()
             }
           } else {
@@ -1938,14 +1938,14 @@ var app = new Vue({
         });
       });
     },
-    // 组批量删除
+    // Group batch deletion
     handleGroupDeleteBatch() {
       let serviceURL = ''
       console.log('handleGroupDeleteBatch:', this.groupSelection);
       if (!serviceURL) return
-      // 操作确认 提示
+      // Operation confirmation prompt
       this.$confirm('确认批量删除数据吗？', '操作确认', {
-        dangerouslyUseHTMLString: true, // message 当作 HTML片段处理
+        dangerouslyUseHTMLString: true, // message is treated as an HTML fragment
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         // type: 'warning'
@@ -1956,7 +1956,7 @@ var app = new Vue({
               type: 'success',
               message: '操作成功!'
             });
-            // 重新获取数据
+            // Retrieve data
             this.getGroupListData('group')
           } else {
             app.$message({
@@ -1975,11 +1975,11 @@ var app = new Vue({
     },
 
 
-    // 任务 查看全部 列表 
+    // Tasks View All List 
     handleTaskViewAll() {
       this.clearHistoryTimer()
       this.scrollbarTaskIndex = ''
-      // 清空详情数据
+      // Clear detailed data
       this.taskDetails = ''
       this.taskSelection = []
       this.taskHistoryList = []
@@ -1988,12 +1988,12 @@ var app = new Vue({
       this.taskMemberfilterList = []
       this.gettaskListData('task')
     },
-    // 查看 任务详情
+    // View task details
     handleTaskView(clickType, item = {}, index = 0) {
       this.clearHistoryTimer()
       if (clickType === 'agentTask') {
         this.agentDetailsTaskIndex = index ?? ''
-        // 清空详情数据
+        // Clear detailed data
         this.agentDetailsTaskDetails = ''
         this.agentDetailsTaskHistoryList = []
         this.agentDetailsTaskMemberList = []
@@ -2003,7 +2003,7 @@ var app = new Vue({
       }
       if (clickType === 'agentGroupTask') {
         this.agentDetailsGroupShowType = '2'
-        // 清空详情数据
+        // Clear detailed data
         this.agentDetailsGroupDetailsTaskDetails = ''
         this.agentDetailsGroupTaskHistoryList = []
         this.agentGroupTaskMemberfilter = ''
@@ -2012,7 +2012,7 @@ var app = new Vue({
       }
       if (clickType === 'groupTask') {
         this.groupShowType = '3'
-        // 清空详情数据
+        // Clear detailed data
         this.groupTaskDetails = ''
         this.groupTaskHistoryList = []
         this.groupTaskMemberfilter = ''
@@ -2021,7 +2021,7 @@ var app = new Vue({
       }
       if (clickType === 'task') {
         this.scrollbarTaskIndex = index ?? ''
-        // 清空详情数据
+        // Clear detailed data
         this.taskDetails = ''
         this.taskHistoryList = []
         this.taskMemberList = []
@@ -2030,7 +2030,7 @@ var app = new Vue({
         this.getTaskDetailData(clickType, item.id, item)
       }
     },
-    // 返回组详情页面
+    // Return to group details page
     returnGroup(clickType) {
       this.clearHistoryTimer()
       if (clickType === 'agentGroupTask') {
@@ -2040,29 +2040,29 @@ var app = new Vue({
 
       }
       if (clickType === 'groupTask') {
-        this.groupShowType = '2' // 组件详情
+        this.groupShowType = '2' // Component details
         // const item = this.groupList[this.scrollbarGroupIndex]
         // this.getGroupDetailData('groupTable', item.id,this.groupDetails)
       }
     },
-    // 智能体-组 任务列表table选中变化 (批量启动和删除)
+    // Agent-group task list table selection change (batch startup and deletion)
     handleAgentGroupTaskSelectionChange(val) {
       this.agentGroupTaskSelection = val
     },
 
-    // 组 任务列表table选中变化 (批量启动和删除)
+    // Group task list table selection change (batch startup and deletion)
     handleGroupTaskSelectionChange(val) {
       this.groupTaskSelection = val
     },
-    // 任务列表选择 
+    // Task list selection 
     handleTaskSelectionChange(val) {
       this.taskSelection = val
     },
-    // 查看智能体参数 列表
+    // View the list of agent parameters
     viewAgentParameters(optype, item) {
-      // 对接接口获取数据 this.agentParameterList
+      // The docking interface obtains data this.agentParameterList
       if (optype === 'task') {
-        // 获取 任务成员列表
+        // Get task member list
         // this.getTaskMemberListData()
       }
       if (optype === 'taskDetail') {
@@ -2104,20 +2104,20 @@ var app = new Vue({
       }
       this.visible.dialogAgentParameter = true
     },
-    // 再次执行 (即再次启动)
+    // Execute again (i.e. start again)
     handleTaskAgain(optype, item = {}) {
       let startData = item ?? {}
       // this.groupStartForm.groupName = item.name
       this.handleEditDrawerOpenBtn('drawerTaskStart', startData)
     },
-    // 任务删除
+    // Task deletion
     handleTaskDelet(optype, row) {
       console.log('handleTaskDelet:', row);
       let serviceURL = ''
       if (!serviceURL) return
-      // 操作确认 提示
+      // Operation confirmation prompt
       this.$confirm('确认删除数据吗？', '操作确认', {
-        dangerouslyUseHTMLString: true, // message 当作 HTML片段处理
+        dangerouslyUseHTMLString: true, // message is treated as an HTML fragment
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         // type: 'warning'
@@ -2137,7 +2137,7 @@ var app = new Vue({
               this.gettaskListData(optype)
             }
             if (groupDetail.id) {
-              // 获取任务列表
+              // Get task list
               this.gettaskListData(optype, groupDetail.id)
             }
           } else {
@@ -2155,7 +2155,7 @@ var app = new Vue({
         });
       });
     },
-    // 组-任务批量启动(任务) agentGroupTaskBatch groupTaskBatch
+    // Group-task batch start (task) agentGroupTaskBatch groupTaskBatch
     handleTaskStartBatch(opType, item) {
       let serviceURL = ''
       if (opType === 'agentGroupTaskBatch') {
@@ -2168,9 +2168,9 @@ var app = new Vue({
         console.log('taskSelection:', this.taskSelection);
       }
       if (!serviceURL) return
-      // 操作确认 提示
+      // Operation confirmation prompt
       this.$confirm('确认批量启动数据吗？', '操作确认', {
-        dangerouslyUseHTMLString: true, // message 当作 HTML片段处理
+        dangerouslyUseHTMLString: true, // message is treated as an HTML fragment
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         // type: 'warning'
@@ -2190,7 +2190,7 @@ var app = new Vue({
               groupType = 'groupTask' //'group'
             }
             if (groupDetail.id) {
-              // 获取任务列表
+              // Get task list
               this.gettaskListData(groupType, groupDetail.id)
               // this.getGroupDetailData(groupType, groupDetail.id, groupDetail)
             }
@@ -2209,7 +2209,7 @@ var app = new Vue({
         });
       });
     },
-    // 组-任务批量删除(任务) agentGroupTaskBatch groupTaskBatch
+    // Group-task batch deletion (task) agentGroupTaskBatch groupTaskBatch
     handleTaskDeleteBatch(opType, item) {
       let serviceURL = ''
       if (opType === 'agentGroupTaskBatch') {
@@ -2222,9 +2222,9 @@ var app = new Vue({
         console.log('taskSelection:', this.taskSelection);
       }
       if (!serviceURL) return
-      // 操作确认 提示
+      // Operation confirmation prompt
       this.$confirm('确认批量删除数据吗？', '操作确认', {
-        dangerouslyUseHTMLString: true, // message 当作 HTML片段处理
+        dangerouslyUseHTMLString: true, // message is treated as an HTML fragment
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         // type: 'warning'
@@ -2244,7 +2244,7 @@ var app = new Vue({
               groupType = 'groupTask' //'group'
             }
             if (groupDetail.id) {
-              // 获取任务列表
+              // Get task list
               this.gettaskListData(groupType, groupDetail.id)
               // this.getGroupDetailData(groupType, groupDetail.id, groupDetail)
             }
@@ -2263,24 +2263,24 @@ var app = new Vue({
         });
       });
     },
-    // 查看任务描述
+    // View task description
     viewTaskDescription(item) {
       this.describeContent = item?.promptCommand ?? ''
       this.visible.dialogTaskDescription = true
     },
-    // 任务描述复制
+    // Task description copy
     taskDescriptionCopy() {
-      // 复制文本
+      // copy text
       this.copyText('4', this.describeContent).then(() => {
         this.handleElVisibleClose('dialogTaskDescription')
       })
     },
-    // 任务评价
+    // task evaluation
     taskEvaluation(item) {
       Object.assign(this.evaluationForm, item)
       this.visible.dialogTaskEvaluation = true
     },
-    // input 数值类型处理
+    // input numerical type processing
     handleInputNum(val, form) {
       if (form) {
         const sliderStep = 0.1
@@ -2296,70 +2296,70 @@ var app = new Vue({
         }
       }
     },
-    // 任务成员列表筛选 
+    // Filter task member list 
     handleTaskFilterChange(val, listType) {
       if (listType === 'agentGroupTask') {
-        // 智能体 组 任务
+        // Agent group task
         const chatGroupMembers = this.agentDetailsGroupDetails?.agentTemplateDtoList ?? []
         const filterList = chatGroupMembers.filter(item => item.name.includes(val))
         this.agentGroupTaskMemberfilterList = filterList.map(item => item.id)
       } else if (listType === 'groupTask') {
-        // 组 任务
+        // group task
         const chatGroupMembers = this.groupDetails?.agentTemplateDtoList ?? []
         const filterList = chatGroupMembers.filter(item => item.name.includes(val))
         this.groupTaskMemberfilterList = filterList.map(item => item.id)
       } else if (listType === 'agentTask') {
-        // 智能体 任务
+        // agent task
         const filterList = this.agentDetailsTaskMemberList.filter(item => item.name.includes(val))
         this.agentTaskMemberfilterList = filterList.map(item => item.id)
       } else if (listType === 'task') {
-        // 任务
+        // Task
         const filterList = this.taskMemberList.filter(item => item.name.includes(val))
         this.taskMemberfilterList = filterList.map(item => item.id)
         console.log('handleTaskFilterChange', this.taskMemberfilterList);
       }
     },
 
-    // el-scrollbar 触底滚动 到底部
+    // el-scrollbar bottom scroll to the bottom
     scrollbarDown(refName, istouchBottom = false, isFirst = false) {
       if (!refName) return
       const scrollbar = this.$refs[refName];
       if (!scrollbar) return
       if (istouchBottom) {
-        const scrollTop = scrollbar.wrap.scrollTop; // 当前滚动的顶部
-        const scrollHeight = scrollbar.wrap.scrollHeight; // 内容总高度
-        const clientHeight = scrollbar.wrap.clientHeight; // 可视区域高度
+        const scrollTop = scrollbar.wrap.scrollTop; // The top of the current scroll
+        const scrollHeight = scrollbar.wrap.scrollHeight; // total content height
+        const clientHeight = scrollbar.wrap.clientHeight; // Viewing area height
         // scrollTop, scrollHeight, clientHeight
         if (scrollHeight !== clientHeight && (scrollTop + clientHeight + 30 >= scrollHeight || isFirst)) {
-          // 滚动到底部
+          // scroll to bottom
           scrollbar.wrap.scrollTop = scrollbar.wrap.scrollHeight;
         }
       } else {
-        // 滚动到底部
+        // scroll to bottom
         scrollbar.wrap.scrollTop = scrollbar.wrap.scrollHeight;
       }
     },
-    // 获取发送人名称
+    // Get sender name
     getTaskSenderInfo(taskType, formId) {
-      // 智能体 组 任务
+      // Agent group task
       if (taskType === 'agentGroupTask') {
         const chatGroupMembers = this.agentDetailsGroupDetails?.agentTemplateDtoList ?? []
         const fintItem = chatGroupMembers.find(item => item.id === formId)
         return fintItem ?? {}
       }
-      // 组 任务
+      // group task
       if (taskType === 'groupTask') {
         const chatGroupMembers = this.groupDetails?.agentTemplateDtoList ?? []
         const fintItem = chatGroupMembers.find(item => item.id === formId)
         return fintItem ?? {}
       }
-      // 智能体 任务
+      // agent task
       if (taskType === 'agentTask') {
         const fintItem = this.agentDetailsTaskMemberList.find(item => item.id === formId)
         return fintItem ?? {}
       }
 
-      // 任务
+      // Task
       if (taskType === 'task') {
         const fintItem = this.taskMemberList.find(item => item.id === formId)
         return fintItem ?? {}
@@ -2370,7 +2370,7 @@ var app = new Vue({
     jumpPromptRange(urlType, item) {
       let url = ''
       if (urlType === 'promptRange') {
-        // 靶场:targetrangeId   靶道:targetlaneId
+        // Target range: targetrangeId Target lane: targetlaneId
         let targetrangeId = item?.promptRange.id ?? ''
         let targetlaneId = item?.id ?? ''
         url = `/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18&targetrangeId=${targetrangeId}&targetlaneId=${targetlaneId}`
@@ -2381,7 +2381,7 @@ var app = new Vue({
       if (urlType === 'modelParameter') {
         // url = `/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18`
         if (item) {
-          // 展示详情数据
+          // Display detailed data
           this.$confirm(`<div class="df">
                     <div class="df-wn flex-ac flex-js" style="width:50%">
                         <span>Top_p:</span>
@@ -2408,7 +2408,7 @@ var app = new Vue({
                         <span>${item.stopSequences}</span>
                     </div>
     </div>`, '模型参数', {
-            dangerouslyUseHTMLString: true, // message 当作 HTML片段处理
+            dangerouslyUseHTMLString: true, // message is treated as an HTML fragment
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             showCancelButton: false,
@@ -2420,17 +2420,17 @@ var app = new Vue({
       simulationAELOperation(url)
       // openWindow(url)
     },
-    // 处理靶道 和 靶场展示名称
+    // Processing Lanes and Range Display Names
     handlePromptShowName(showType, item) {
       let resultText = ''
       if (showType === '1') {
-        // 靶道
+        // target lane
         const itemData = item?.promptRangeDto ?? ''
         if (itemData) {
           resultText = `${itemData.alias}(${itemData.rangeName})`
         }
       } else if (showType === '2') {
-        // 靶场
+        // range
         const itemData = item?.promptItemDto ?? ''
         if (itemData) {
           const avg = scoreFormatter(itemData.evalAvgScore)
@@ -2440,24 +2440,24 @@ var app = new Vue({
       }
       return resultText ?? ''
     },
-    // 复制 task 任务描述
+    // Copy task task description
     copyText(opType, item) {
-      // 把结果复制到剪切板
+      // Copy results to clipboard
       return new Promise(resolve => {
         try {
           const textarea = document.createElement('textarea');
           textarea.setAttribute('readonly', 'readonly');
           if (opType === '1') {
-            // task 对话 原始内容
+            // task conversation original content
             textarea.value = item?.message ?? ''
           } else if (opType === '2') {
-            // task 对话 HTML内容
+            // task conversation HTML content
             textarea.value = item?.messageHtml ?? ''
           } else if (opType === '3') {
-            // task 对话 promptCommand(任务描述)内容
+            // task dialogue promptCommand (task description) content
             textarea.value = item?.promptCommand ?? ''
           } else if (opType === '4') {
-            // task 任务描述
+            // task task description
             textarea.value = item ?? ''
           }
 
@@ -2478,21 +2478,21 @@ var app = new Vue({
       })
 
     },
-    // 组成员头像堆叠 数量处理
+    // Group member avatar stacking quantity processing
     displayedAvatars(list, limit = 5) {
       if (Array.isArray(list)) {
         return list?.slice(0, limit) ?? [];
       }
       return []
     },
-    // 组成员头像堆叠 数量
+    // Group member avatar stack quantity
     exceededCount(list, limit = 5) {
       if (Array.isArray(list)) {
         return list.length > limit ? list.length - limit : 0;
       }
       return 0
     },
-    // 显示新增 Function Call 输入框
+    // Display the new Function Call input box
     showFunctionCallInput() {
       this.functionCallInputVisible = true;
       this.$nextTick(_ => {
@@ -2500,7 +2500,7 @@ var app = new Vue({
       });
     },
 
-    // 处理 Function Call 输入确认
+    // Handling Function Call input confirmation
     handleFunctionCallInputConfirm() {
       const inputValue = this.functionCallInputValue;
       if (inputValue) {
@@ -2519,7 +2519,7 @@ var app = new Vue({
       this.functionCallInputValue = '';
     },
 
-    // 删除 Function Call 标签
+    // Delete Function Call tag
     handleFunctionCallClose(tag) {
       const currentNames = this.agentForm.functionCallNames.split(',').filter(x => x);
       const index = currentNames.indexOf(tag);
@@ -2530,9 +2530,9 @@ var app = new Vue({
       this.functionCallTags = currentNames;
     },
     
-    // 测试MCP Endpoint连接
+    // Test MCP Endpoint connection
     async testMcpEndpoint(name, endpoint) {
-      // 设置加载状态
+      // Set loading status
       this.$set(endpoint, 'testing', true);
       
       try {
@@ -2543,29 +2543,29 @@ var app = new Vue({
           }
         });
         
-        // 详细日志
+        // Detailed log
         console.log('MCP测试响应数据:', response);
         
-        // 根据实际API返回的数据结构进行判断
+        // Determine based on the data structure returned by the actual API
         if (response.data && response.data.success) {
-          // 尝试从不同位置获取工具列表
+          // Try getting a list of tools from a different location
           let tools = [];
           let status = 200;
           
-          // 调试完整响应
+          // Debug full response
           console.log('API返回数据结构:', JSON.stringify(response.data, null, 2));
           
-          // 检查可能的数据结构
+          // Check possible data structures
           if (response.data.data) {
             console.log('data字段:', response.data.data);
             
-            // 结构1: response.data.data.tools
+            // Structure 1: response.data.data.tools
             if (response.data.data.tools) {
               console.log('从data.tools获取工具列表');
               tools = response.data.data.tools;
               status = response.data.data.status || 200;
             } 
-            // 结构2: response.data.data直接是工具列表
+            // Structure 2: response.data.data is directly the tool list
             else if (Array.isArray(response.data.data)) {
               console.log('data直接是工具列表');
               tools = response.data.data;
@@ -2574,13 +2574,13 @@ var app = new Vue({
           
           console.log('提取的工具列表:', tools);
           
-          // 确保工具列表是数组
+          // Make sure the tools list is an array
           if (!Array.isArray(tools)) {
             console.warn('工具列表不是数组，将转换为空数组');
             tools = [];
           }
           
-          // 确保每个工具对象都有必要的属性
+          // Make sure each tool object has the necessary properties
           tools = tools.map(tool => ({
             name: tool.name || '未命名工具', 
             description: tool.description || '无描述',
@@ -2589,12 +2589,12 @@ var app = new Vue({
           
           console.log('处理后的工具列表:', tools);
           
-          // 初始化testResult对象
+          // Initialize testResult object
           if (!endpoint.testResult) {
             this.$set(endpoint, 'testResult', {});
           }
           
-          // 设置结果属性
+          // Set result properties
           this.$set(endpoint.testResult, 'success', true);
           this.$set(endpoint.testResult, 'tools', tools);
           this.$set(endpoint.testResult, 'status', status);
@@ -2603,7 +2603,7 @@ var app = new Vue({
           
           this.$message.success('连接测试成功');
           
-          // 如果有工具列表，直接显示弹窗
+          // If there is a tool list, directly display the pop-up window
           if (tools && tools.length > 0) {
             this.showMcpToolsDialog(endpoint);
           }
@@ -2624,12 +2624,12 @@ var app = new Vue({
         this.$set(endpoint, 'testResult', testResult);
         this.$message.error('连接测试出错: ' + testResult.message);
       } finally {
-        // 清除加载状态
+        // Clear loading status
         this.$set(endpoint, 'testing', false);
       }
     },
     
-    // 获取插件类型列表
+    // Get a list of plugin types
     async getPluginTypes() {
       try {
         const res = await serviceAM.get('/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetPluginTypes');
@@ -2642,24 +2642,24 @@ var app = new Vue({
       }
     },
 
-    // 添加插件类型到 functionCallNames
+    // Add plugin type to functionCallNames
     handleAddPluginType(pluginType) {
       if (!this.agentForm.functionCallNames) {
         this.agentForm.functionCallNames = pluginType;
         this.functionCallTags = [pluginType];
       } else {
-        // 将现有值分割为数组
+        // Split existing values ​​into array
         const currentNames = this.agentForm.functionCallNames.split(',').filter(x => x);
         if (!currentNames.includes(pluginType)) {
-          // 添加新值并用逗号连接
+          // Add new value and concatenate with comma
           this.agentForm.functionCallNames = [...currentNames, pluginType].join(',');
           this.functionCallTags = [...currentNames, pluginType];
         }
       }
     },
-    // McpEndpoints 相关方法
+    // McpEndpoints related methods
     
-    // 显示添加 Endpoint 输入框
+    // Display the Add Endpoint input box
     showMcpEndpointInput() {
       this.mcpEndpointInputVisible = true;
       this.mcpEndpointNameValue = '';
@@ -2673,7 +2673,7 @@ var app = new Vue({
       });
     },
     
-    // 编辑 Endpoint
+    // Edit Endpoint
     handleMcpEndpointEdit(name, endpoint) {
       this.mcpEndpointInputVisible = true;
       this.mcpEndpointNameValue = name;
@@ -2688,7 +2688,7 @@ var app = new Vue({
       });
     },
     
-    // 取消添加 Endpoint
+    // Cancel adding Endpoint
     cancelMcpEndpointInput() {
       this.mcpEndpointInputVisible = false;
       this.mcpEndpointNameValue = '';
@@ -2697,7 +2697,7 @@ var app = new Vue({
       this.mcpEndpointOriginalName = '';
     },
     
-    // 确认添加或更新 Endpoint
+    // Confirm to add or update Endpoint
     handleMcpEndpointInputConfirm() {
       const name = this.mcpEndpointNameValue.trim();
       const url = this.mcpEndpointUrlValue.trim();
@@ -2718,17 +2718,17 @@ var app = new Vue({
       }
       
       if (this.mcpEndpointEditMode) {
-        // 编辑模式：如果名称变了，需要删除旧的再添加新的
+        // Edit mode: If the name changes, you need to delete the old one and add the new one.
         if (this.mcpEndpointOriginalName !== name) {
           delete endpoints[this.mcpEndpointOriginalName];
         }
       }
       
-      // 添加/更新 Endpoint
+      // Add/Update Endpoint
       endpoints[name] = { url };
       this.agentForm.mcpEndpoints = JSON.stringify(endpoints);
       
-      // 清空输入框
+      // Clear input box
       this.mcpEndpointInputVisible = false;
       this.mcpEndpointNameValue = '';
       this.mcpEndpointUrlValue = '';
@@ -2736,7 +2736,7 @@ var app = new Vue({
       this.mcpEndpointOriginalName = '';
     },
     
-    // 删除 Endpoint
+    // Delete Endpoint
     handleMcpEndpointRemove(name) {
       let endpoints = {};
       try {
@@ -2748,7 +2748,7 @@ var app = new Vue({
         return;
       }
       
-      // 删除指定 Endpoint
+      // Delete the specified Endpoint
       if (endpoints[name]) {
         delete endpoints[name];
         this.agentForm.mcpEndpoints = Object.keys(endpoints).length > 0 
@@ -2757,11 +2757,11 @@ var app = new Vue({
       }
     },
     
-    // 显示MCP工具列表对话框
+    // Display the MCP Tool List dialog box
     showMcpToolsDialog(endpoint) {
       console.log('调用showMcpToolsDialog函数', endpoint);
       
-      // 检查endpoint对象及其属性
+      // Check the endpoint object and its properties
       if (!endpoint) {
         console.error('endpoint参数为空');
         this.$message.warning('endpoint参数为空');
@@ -2771,19 +2771,19 @@ var app = new Vue({
       console.log('endpoint.testResult:', endpoint.testResult);
       
       if (endpoint && endpoint.testResult && endpoint.testResult.tools) {
-        // 创建一个工具列表的副本
+        // Create a copy of the tool list
         const tools = [...endpoint.testResult.tools];
         console.log('显示工具列表:', tools);
         console.log('工具列表数量:', tools.length);
         
-        // 设置当前MCP工具列表，并显示对话框
+        // Set the current MCP tool list and display the dialog box
         this.currentMcpTools = tools;
         this.visible.dialogMcpTools = true;
         
         console.log('设置currentMcpTools:', this.currentMcpTools);
         console.log('设置dialogMcpTools为可见');
         
-        // 如果对话框不显示，则尝试使用备用弹窗
+        // If the dialog does not appear, try using an alternate popup
         setTimeout(() => {
           if (!document.querySelector('.el-dialog__wrapper[aria-label="MCP 工具列表"]')) {
             console.warn('对话框未显示，使用备用弹窗');
@@ -2796,7 +2796,7 @@ var app = new Vue({
       }
     },
 
-    // 备用的MCP工具列表弹窗 (使用alert)
+    // Alternate MCP tool list pop-up window (use alert)
     showMcpToolsAlert(tools) {
       if (!tools || !tools.length) {
         this.$message.warning('没有可用的工具信息');
@@ -2839,7 +2839,7 @@ var app = new Vue({
 });
 
 /**
- * 节流 防抖
+ *Throttling and anti-shake
  * @param {Function} func
  * @param {number} wait
  * @param {boolean} immediate
@@ -2848,15 +2848,15 @@ var app = new Vue({
 function debounce(func, wait, immediate) {
   let timeout, args, context, timestamp, result
   const later = function () {
-    // 据上一次触发时间间隔
+    // According to the last trigger time interval
     const last = +new Date() - timestamp
 
-    // 上次被包装函数被调用时间间隔 last 小于设定时间间隔 wait
+    // The time interval between the last time the wrapped function was called last is less than the set time interval wait
     if (last < wait && last > 0) {
       timeout = setTimeout(later, wait - last)
     } else {
       timeout = null
-      // 如果设定为immediate===true，因为开始边界已经调用过了此处无需调用
+      // If set to immediate===true, there is no need to call here because the starting boundary has already been called.
       if (!immediate) {
         result = func.apply(context, args)
         if (!timeout) context = args = null
@@ -2868,7 +2868,7 @@ function debounce(func, wait, immediate) {
     context = this
     timestamp = +new Date()
     const callNow = immediate && !timeout
-    // 如果延时不存在，重新设定延时
+    // If the delay does not exist, reset the delay
     if (!timeout) timeout = setTimeout(later, wait)
     if (callNow) {
       result = func.apply(context, args)
@@ -2880,7 +2880,7 @@ function debounce(func, wait, immediate) {
 }
 
 /**
-* 克隆
+* clone
 * @param {Object} source
 * @returns {Object}
 */
@@ -2900,8 +2900,8 @@ function deepClone(source) {
 }
 
 /**
-* 判断值是否 数字
-* @param {*} val 需要判断的变量
+* Determine whether the value is a number
+* @param {*} val variable to be judged
 */
 function isNumber(val) {
   // return !isNaN(val) && (typeof val === 'number' || !isNaN(Number(val)))
@@ -2909,15 +2909,15 @@ function isNumber(val) {
 }
 
 /**
-* 判断值是否是 空对象
-* @param {*} val 需要判断的变量
+* Determine whether the value is an empty object
+* @param {*} val variable to be judged
 */
 function isObjEmpty(obj) {
   return Object.keys(obj).length === 0;
 }
 
 /**
- * 打开 window窗口
+ * Open window window
  * @param {Sting} url
  * @param {Sting} title
  * @param {Number} w
@@ -2942,8 +2942,8 @@ function openWindow(url, title, w, h) {
 }
 
 /**
- * 模拟 a 标签
- * @param {string} url // 原地址
+ * Simulate a tag
+ * @param {string} url // original address
  */
 function simulationAELOperation(url = '', name = '') {
   if (!url) return
@@ -2957,15 +2957,15 @@ function simulationAELOperation(url = '', name = '') {
 }
 
 /**
- * 处理接口 query 参数 转换为 string
- * @param {Object} queryObj // 原地址
+ * Process the interface query parameter and convert it to string
+ * @param {Object} queryObj //Original address
  */
 function getInterfaceQueryStr(queryObj) {
   if (!queryObj) return ''
-  // 将对象转换为 URL 参数字符串
+  // Convert object to URL parameter string
   return Object.entries(queryObj)
     .filter(([key, value]) => {
-      // 过滤掉空值
+      // Filter out null values
       // console.log('value', typeof value)
       if (typeof value === 'string') {
         return value !== ''
@@ -2994,23 +2994,23 @@ function getInterfaceQueryStr(queryObj) {
 }
 
 /**
- * 日期格式化为 yyyy-MM-dd HH:mm:ss
+ * The date is formatted as yyyy-MM-dd HH:mm:ss
  * @param {date} dateString
  * @param {string} format
- * @returns {string} - 格式化后的时间
+ * @returns {string} - formatted time
  */
 function formatDate(dateString, format = 'yyyy-MM-dd HH:mm:ss') {
   if (!dateString) return ''
   const dateObject = new Date(dateString);
 
   const year = dateObject.getFullYear();
-  const month = String(dateObject.getMonth() + 1).padStart(2, '0'); // 月份从0开始
+  const month = String(dateObject.getMonth() + 1).padStart(2, '0'); // Month starts from 0
   const day = String(dateObject.getDate()).padStart(2, '0');
   const hours = String(dateObject.getHours()).padStart(2, '0');
   const minutes = String(dateObject.getMinutes()).padStart(2, '0');
   const seconds = String(dateObject.getSeconds()).padStart(2, '0');
 
-  // 替换格式中的标识符
+  // Replace identifiers in format
   return format
     .replace('yyyy', year)
     .replace('MM', month)
@@ -3020,35 +3020,35 @@ function formatDate(dateString, format = 'yyyy-MM-dd HH:mm:ss') {
     .replace('ss', seconds);
 };
 /**
- * 计算持续时间
- * @param {string} startTime - 开始时间字符串（ISO格式）
- * @param {string} [endTime] - 结束时间字符串（ISO格式），可选
- * @returns {string} - 持续时间字符串，根据差值级别动态显示
+ * Calculate duration
+ * @param {string} startTime - start time string (ISO format)
+ * @param {string} [endTime] - end time string (ISO format), optional
+ * @returns {string} - duration string, dynamically displayed according to the difference level
  */
 function calculateDuration(startTime, endTime) {
   if (!startTime) return ''
-  // 将开始时间和结束时间转换为 Date 对象
+  // Convert start time and end time to Date objects
   const startDate = new Date(startTime);
-  const endDate = endTime ? new Date(endTime) : new Date(); // 如果没有结束时间，则使用当前时间
+  const endDate = endTime ? new Date(endTime) : new Date(); // If there is no end time, the current time is used
 
-  // 计算时间差（以毫秒为单位）
+  // Calculate time difference in milliseconds
   const durationInMillis = endDate - startDate;
 
-  // 各个时间单位的毫秒值
+  // millisecond value for each time unit
   const secondsInMillis = 1000;
   const minutesInMillis = secondsInMillis * 60;
   const hoursInMillis = minutesInMillis * 60;
   const daysInMillis = hoursInMillis * 24;
-  const yearsInMillis = daysInMillis * 365; // 假设一年365天
+  const yearsInMillis = daysInMillis * 365; // Assume there are 365 days in a year
 
-  // 计算各个时间单位
+  // Calculate individual time units
   const years = Math.floor(durationInMillis / yearsInMillis);
   const days = Math.floor((durationInMillis % yearsInMillis) / daysInMillis);
   const hours = Math.floor((durationInMillis % daysInMillis) / hoursInMillis);
   const minutes = Math.floor((durationInMillis % hoursInMillis) / minutesInMillis);
   const seconds = Math.floor((durationInMillis % minutesInMillis) / secondsInMillis);
 
-  // 动态构建输出字符串
+  // Dynamically build output string
   let durationParts = [];
   if (years > 0) durationParts.push(`${years} 年`);
   if (days > 0) durationParts.push(`${days} 天`);
@@ -3059,18 +3059,18 @@ function calculateDuration(startTime, endTime) {
   return durationParts.join(' ');
 }
 
-// 简单对比 数组是否相等
+// Simple comparison to see if arrays are equal
 function arraysEqual(arr1, arr2) {
   return JSON.stringify(arr1) === JSON.stringify(arr2);
 }
 
-// prompt 分数处理
+// prompt score processing
 function scoreFormatter(score) {
   return score === -1 ? '--' : score.toFixed(1)
 }
 
 /**
- * 加载载 模拟json 数据
+ * Load simulated json data
  */
 // function funcMockJson() {
 //     return fetch("/json/AgentsManager/data.json")
@@ -3079,30 +3079,30 @@ function scoreFormatter(score) {
 //         })
 // }
 
-// task-html-renderer 渲染任务对话记录的内容
+// task-html-renderer renders the content of the task conversation record
 Vue.component('task-html-renderer', {
   props: ['content'],
   render(createElement) {
     return createElement('div', {
-      class: 'taskrecord-listWrap-item-content', // 使用 CSS 类
+      class: 'taskrecord-listWrap-item-content', // Use CSS classes
       domProps: {
-        innerHTML: this.content // 直接插入 HTML
+        innerHTML: this.content // Insert HTML directly
       }
     });
   }
 });
 
-// 注册一个全局自定义指令 v-el-select-loadmore
+// Register a global custom directive v-el-select-loadmore
 Vue.directive('el-select-loadmore', {
   bind(el, binding, vnode) {
-    // 获取element-ui定义好的scroll盒子
+    // Get the scroll box defined by element-ui
     const SELECTWRAP_DOM = el.querySelector('.el-select-dropdown .el-select-dropdown__wrap')
     SELECTWRAP_DOM.addEventListener('scroll', function () {
       /**
-      * scrollHeight 获取元素内容高度(只读)
-      * scrollTop 获取或者设置元素的偏移值,常用于, 计算滚动条的位置, 当一个元素的容器没有产生垂直方向的滚动条, 那它的scrollTop的值默认为0.
-      * clientHeight 读取元素的可见高度(只读)
-      * 如果元素滚动到底, 下面等式返回true, 没有则返回false:
+      * scrollHeight gets the content height of the element (read-only)
+      * scrollTop gets or sets the offset value of the element. It is often used to calculate the position of the scroll bar. When an element's container does not produce a vertical scroll bar, its scrollTop value defaults to 0.
+      * clientHeight reads the visible height of the element (read-only)
+      * If the element is scrolled to the end, the following equation returns true, otherwise it returns false:
       * ele.scrollHeight - ele.scrollTop === ele.clientHeight;
       */
       const condition = this.scrollHeight - this.scrollTop <= this.clientHeight
@@ -3113,7 +3113,7 @@ Vue.directive('el-select-loadmore', {
   }
 })
 
-// load-more-select 组件
+// load-more-select component
 Vue.component('load-more-select', {
   // v-el-select-loadmore="interestsLoadmore" filterable remote collapse-tags reserve-keyword :remote-method="remoteMethod" @focus="remoteMethod('',true)" @visible-change="reverseArrow"
   template: `<div :class="[direction === 'horizontal' ? 'df-wn flex-ac flex-js' : '']" style="width:100%;gap:10px;">
@@ -3145,7 +3145,7 @@ Vue.component('load-more-select', {
     },
     serviceType: {
       type: String,
-      default: '' // 默认使用公共 
+      default: '' // Use public by default 
     },
     misiptvId: {
       type: [String, Number],
@@ -3157,13 +3157,13 @@ Vue.component('load-more-select', {
     },
     direction: {
       type: String,
-      default: 'horizontal' // 横向/竖向  horizontal/vertical
+      default: 'horizontal' // horizontal/vertical horizontal/vertical
     }
   },
   data: function () {
     return {
       optionVisible: false,
-      interestsOptions: [], //  接口返回数据
+      interestsOptions: [], //  Interface returns data
       interesLoading: false,
       currentPageSize: 0,
       listQuery: {
@@ -3201,11 +3201,11 @@ Vue.component('load-more-select', {
     // }
   },
   mounted() {
-    // 找到dom
+    // find dom
     // const rulesDom = this.$refs['elSelectLoadMore'].$el.querySelector(
     //     '.el-input .el-input__suffix .el-input__suffix-inner .el-input__icon'
     // )
-    // // 对dom新增class
+    // //Add class to dom
     // rulesDom?.classList.add('el-icon-arrow-up')
     this.refreshManagementList()
   },
@@ -3224,14 +3224,14 @@ Vue.component('load-more-select', {
     },
     reverseArrow(flag) {
       this.optionVisible = flag
-      // 找到dom
+      // find dom
       const rulesDom = this.$refs['elSelectLoadMore'].$el.querySelector(
         '.el-input .el-input__suffix .el-input__suffix-inner .el-input__icon'
       )
       if (flag) {
-        rulesDom.classList.add('is-reverse') // 对dom新增class
+        rulesDom.classList.add('is-reverse') // Add new class to dom
       } else {
-        rulesDom.classList.remove('is-reverse') // 对dom新增class
+        rulesDom.classList.remove('is-reverse') // Add new class to dom
       }
     },
     handleChange(e) {
@@ -3245,7 +3245,7 @@ Vue.component('load-more-select', {
         this.$emit('change', fintItem)
       }
     },
-    // 远程搜索
+    // remote search
     remoteMethod(query, isfocus) {
       // console.log(query, 8888, this.optionVisible,isfocus)
       if (this.optionVisible && isfocus) return
@@ -3253,7 +3253,7 @@ Vue.component('load-more-select', {
       this.listQuery.pageIndex = 1
       this.interestsOptions = []
       this.interesLoading = true
-      this.managementListOption() // 请求接口
+      this.managementListOption() // Request interface
     },
     interestsLoadmore() {
       setTimeout(() => {
@@ -3265,17 +3265,17 @@ Vue.component('load-more-select', {
         this.managementListOption()
       }, 1000)
     },
-    // 刷新接口
+    // Refresh interface
     refreshManagementList() {
       this.listQuery.pageIndex = 1
       this.interestsOptions = []
       this.interesLoading = true
       this.managementListOption()
     },
-    // 调用接口
+    // Call interface
     managementListOption() {
       // console.log('managementListOption',this.serviceType);
-      this.interesLoading = true // 本地搜索 调用
+      this.interesLoading = true // local search call
       if (this.serviceType === 'agent') {
         serviceAM.get(`/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetList?${getInterfaceQueryStr(this.listQuery)}`)
           .then(res => {

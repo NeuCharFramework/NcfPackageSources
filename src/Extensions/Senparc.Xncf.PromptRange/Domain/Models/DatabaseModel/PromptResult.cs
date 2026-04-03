@@ -7,50 +7,50 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
 {
     /// <summary>
-    /// PromptResult：PromptItem 的打靶结果
+    /// PromptResult: PromptItem’s target shooting result
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(PromptResult))] //必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(PromptResult))] //The prefix must be added to prevent conflicts system-wide.
     [Serializable]
     public class PromptResult : EntityBase<int>
     {
         /// <summary>
-        /// LlmModelId，并添加LlmModel类作为属性
+        ///LlmModelId and add the LlmModel class as a property
         /// </summary>
         public int LlmModelId { get; private set; }
 
         // public LlmModel LlmModel { get; private set; }
 
         /// <summary>
-        /// 结果字符串
+        ///result string
         /// </summary>
         public string ResultString { get; private set; }
 
         /// <summary>
-        /// 花费时间，单位：毫秒
+        /// Time spent, unit: milliseconds
         /// </summary>
         public double CostTime { get; private set; }
 
         #region 打分
 
         /// <summary>
-        /// 机器人打分，0-10分
+        /// Robot scoring, 0-10 points
         /// </summary>
         public decimal RobotScore { get; private set; } = -1;
 
         /// <summary>
-        /// 人类打分，0-10分
+        /// Human rating, 0-10 points
         /// </summary>
         public decimal HumanScore { get; private set; } = -1;
 
         /// <summary>
-        /// 最终得分
+        /// final score
         /// </summary>
         public decimal FinalScore { get; private set; } = -1;
 
         #endregion
 
         /// <summary>
-        /// 测试类型，枚举中包含：文字、图形、声音
+        /// Test type, the enumeration includes: text, graphics, sound
         /// </summary>
         public TestType TestType { get; private set; }
 
@@ -70,7 +70,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         public int TotalCostToken { get; private set; }
 
         /// <summary>
-        /// PromptItem，并添加PromptItem类作为属性
+        ///PromptItem and add PromptItem class as attribute
         /// </summary>
         public int PromptItemId { get; private set; }
 
@@ -81,13 +81,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         public string PromptItemVersion { get; private set; }
 
         /// <summary>
-        /// 打靶模式：Chat（聊天模式）或 Single（单次测试模式），可为空（兼容旧数据）
+        /// Target practice mode: Chat (chat mode) or Single (single test mode), can be empty (compatible with old data)
         /// </summary>
         public ResultMode? Mode { get; private set; }
 
         /// <summary>
-        /// SystemMessage（Prompt 内容，完成参数替换后的最终内容）
-        /// 用于对话模式，确保即使 Prompt 内容或参数变化，也能追溯历史使用的 SystemMessage
+        /// SystemMessage (Prompt content, final content after completing parameter replacement)
+        /// Used in conversation mode to ensure that even if the Prompt content or parameters change, the historically used SystemMessage can be traced
         /// </summary>
         public string SystemMessage { get; private set; }
 
@@ -115,7 +115,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
 
         public PromptResult(
             int llmModelId, string resultString, double costTime,
-            int robotScore, int humanScore, int finalScore, // 分数
+            int robotScore, int humanScore, int finalScore, // Fraction
             TestType testType, int promptCostToken,
             int resultCostToken, int totalCostToken, string promptItemVersion, int promptItemId,
             ResultMode? mode = null, string systemMessage = null)
@@ -137,7 +137,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
 
 
         /// <summary>
-        /// 更新手动评分
+        ///update manual rating
         /// </summary>
         /// <param name="score"></param>
         /// <returns></returns>
@@ -149,7 +149,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 更新自动机器评分
+        ///Update automatic machine ratings
         /// </summary>
         /// <param name="score"></param>
         /// <returns></returns>
@@ -161,7 +161,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 更新最终得分
+        ///update final score
         /// </summary>
         /// <param name="score"></param>
         /// <returns></returns>
@@ -174,38 +174,38 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
     }
 
     /// <summary>
-    /// 测试类型枚举
+    ///Test type enum
     /// </summary>
     public enum TestType
     {
         /// <summary>
-        /// 文字
+        /// Word
         /// </summary>
         Text,
 
         /// <summary>
-        /// 图形
+        ///graphics
         /// </summary>
         Graph,
 
         /// <summary>
-        /// 声音
+        /// sound
         /// </summary>
         Voice
     }
 
     /// <summary>
-    /// 打靶模式枚举
+    /// Targeting mode enumeration
     /// </summary>
     public enum ResultMode
     {
         /// <summary>
-        /// 单次测试模式
+        ///Single test mode
         /// </summary>
         Single = 1,
 
         /// <summary>
-        /// 聊天模式
+        ///chat mode
         /// </summary>
         Chat = 2
     }

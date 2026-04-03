@@ -18,12 +18,12 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.XncfBase.Functions
 {
     /// <summary>
-    /// Function 帮助类
+    ///Function helper class
     /// </summary>
     public class FunctionHelper
     {
         /// <summary>
-        /// 记录日志
+        ///log
         /// </summary>
         /// <param name="sb"></param>
         /// <param name="msg"></param>
@@ -33,11 +33,11 @@ namespace Senparc.Ncf.XncfBase.Functions
         }
 
         /// <summary>
-        /// 获取所有参数的信息列表
+        /// Get the information list of all parameters
         /// </summary>
         /// <param name="serviceProvider"></param>
         /// <param name="functionRenderBag">FunctionRenderBag</param>
-        /// <param name="tryLoadData">是否尝试载入数据（参数必须实现 IFunctionParameterLoadDataBase 接口）</param>
+        /// <param name="tryLoadData">Whether to try to load data (the parameter must implement the IFunctionParameterLoadDataBase interface)</param>
         /// <returns></returns>
         public static async Task<List<FunctionParameterInfo>> GetFunctionParameterInfoAsync(IServiceProvider serviceProvider, FunctionRenderBag functionRenderBag, bool tryLoadData = true)
         {
@@ -47,14 +47,14 @@ namespace Senparc.Ncf.XncfBase.Functions
 
             if (ReflectionHelper.HasParameterlessConstructor(functionParameterType))
             {
-                //包含不带参数的构造函数
-                paraObj = functionParameterType.Assembly.CreateInstance(functionParameterType.FullName) as IAppRequest;//TODO:通过 DI 生成
+                //Contains a constructor with no parameters
+                paraObj = functionParameterType.Assembly.CreateInstance(functionParameterType.FullName) as IAppRequest;//TODO: generated through DI
 
                 if (tryLoadData && paraObj is FunctionAppRequestBase functionRequestPara)
                 {
                     try
                     {
-                        await functionRequestPara.LoadData(serviceProvider);//载入原有信息
+                        await functionRequestPara.LoadData(serviceProvider);//Load original information
                     }
                     catch (Exception ex)
                     {
@@ -70,8 +70,8 @@ namespace Senparc.Ncf.XncfBase.Functions
             foreach (var prop in props)
             {
                 SelectionList selectionList = null;
-                parameterType = ParameterType.Text;//默认为文本内容
-                                                   //判断是否存在选项
+                parameterType = ParameterType.Text;//Defaults to text content
+                                                   //Determine if option exists
                 if (prop.PropertyType == typeof(SelectionList))
                 {
                     var selections = prop.GetValue(paraObj, null) as SelectionList;
@@ -103,7 +103,7 @@ namespace Senparc.Ncf.XncfBase.Functions
                 var maxLength = 0;
                 if (descriptionAttr != null && descriptionAttr.Description != null)
                 {
-                    //分割：名称||说明
+                    //Split: Name||Description
                     var descriptionAttrArr = descriptionAttr.Description.Split(new[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
                     title = descriptionAttrArr[0];
                     if (descriptionAttrArr.Length > 1)
@@ -137,12 +137,12 @@ namespace Senparc.Ncf.XncfBase.Functions
         }
 
         /// <summary>
-        /// 给 SelectionList 对象添加当前解决方案中的 XNCF 项目
-        /// （扫描当前解决方案包含的所有领域项目）
+        /// Add the XNCF items in the current solution to the SelectionList object
+        /// (Scan all domain projects contained in the current solution)
         /// </summary>
-        /// <param name="mustHaveXncfModule">当前解决方案是否必须包含 XNCF 项目</param>
-        /// <param name="rootDir">查找 XNCF 模块根目录，如果留 null，则使用 <code>System.IO.Directory.GetCurrentDirectory()</code>获取，并且查找 .sln 所在文件夹</param>
-        /// <param name="additionalProjects">除了标准的 XNCF 以外额外的项目</param>
+        /// <param name="mustHaveXncfModule">Whether the current solution must contain the XNCF project</param>
+        /// <param name="rootDir">Find the XNCF module root directory. If left null, use <code>System.IO.Directory.GetCurrentDirectory()</code> to obtain it, and find the folder where the .sln is located</param>
+        /// <param name="additionalProjects">Additional projects besides standard XNCF</param>
         public static List<SelectionItem> LoadXncfProjects(bool mustHaveXncfModule = false, string rootDir = null, params string[] additionalProjects)
         {
             var selectList = new List<SelectionItem>();
@@ -161,9 +161,9 @@ namespace Senparc.Ncf.XncfBase.Functions
 
             if (currentDir != null)
             {
-                //找到了 SLN 文件，开始展开地毯式搜索
+                //Found the SLN file and started searching
 
-                //第一步：查找 XNCF
+                //Step 1: Find XNCF
 
                 var projectFolders = Directory.GetDirectories(currentDir, "*.XNCF.*", SearchOption.AllDirectories).ToList();
 
@@ -181,14 +181,14 @@ namespace Senparc.Ncf.XncfBase.Functions
 
                 foreach (var projectFolder in projectFolders)
                 {
-                    //第二步：查看 Register 文件是否存在
+                    //Step 2: Check whether the Register file exists
                     var registerFilePath = Path.Combine(projectFolder, "Register.cs");
                     if (!File.Exists(registerFilePath))
                     {
-                        continue;//不存在则跳过
+                        continue;//If it does not exist, skip it.
                     }
 
-                    //第三步：检查 Register 文件是否合格
+                    //Step 3: Check whether the Register file is qualified
 
                     var registerContent = File.ReadAllText(registerFilePath);
                     if (registerContent.Contains("[XncfRegister]") &&
@@ -216,10 +216,10 @@ namespace Senparc.Ncf.XncfBase.Functions
         }
 
         /// <summary>
-        /// 获取 xxxSenparcEntities.cs 数据库文件
+        /// Get xxxSenparcEntities.cs database file
         /// </summary>
         /// <param name="projectPath"></param>
-        /// <param name="dbType">数据库类型</param>
+        /// <param name="dbType">Database type</param>
         /// <returns></returns>
         /// <exception cref="NcfExceptionBase"></exception>
         public static string GetSenparcEntitiesFilePath(string projectPath, string dbType)

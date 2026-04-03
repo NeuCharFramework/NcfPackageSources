@@ -21,13 +21,13 @@ namespace Senparc.Ncf.AreaBase.Admin//  Senparc.Areas.Admin
         IActionResult RenderError(string message);
     }
 
-    //暂时取消权限验证
+    //Temporarily cancel permission verification
     //[ServiceFilter(typeof(AuthenticationAsyncPageFilterAttribute))]
     [AdminAuthorize("AdminOnly")]
     public class AdminPageModelBase : PageModelBase, IAdminPageModelBase
     {
         /// <summary>
-        /// 存储相关用户信息
+        ///Storage related user information
         /// </summary>
         public virtual AdminWorkContext AdminWorkContext { get; set; }
 
@@ -35,18 +35,18 @@ namespace Senparc.Ncf.AreaBase.Admin//  Senparc.Areas.Admin
         public string Uid { get; set; }
 
         /// <summary>
-        /// 所有 XncfRegister 列表（包括还未注册的）
+        /// List of all XncfRegisters (including those not yet registered)
         /// </summary>
         public virtual List<IXncfRegister> XncfRegisterList => Senparc.Ncf.XncfBase.XncfRegisterManager.RegisterList;
 
 
         public virtual IActionResult RenderError(string message)
         {
-            //保留原有的controller和action信息
+            //Keep original controller and action information
             //ViewData["FakeControllerName"] = RouteData.Values["controller"] as string;
             //ViewData["FakeActionName"] = RouteData.Values["action"] as string;
 
-            return Page();//TODO：设定一个特定的错误页面
+            return Page();//TODO: Set a specific error page
 
             //return View("Error", new Error_ExceptionVD
             //{

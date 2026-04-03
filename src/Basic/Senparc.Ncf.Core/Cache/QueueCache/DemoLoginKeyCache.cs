@@ -18,7 +18,7 @@ namespace Senparc.Ncf.Core.Cache
     }
 
     /// <summary>
-    /// 登录许可缓存（缓存数据：UserId）
+    /// Login permission cache (cache data: UserId)
     /// </summary>
     public interface IDemoLoginKeyCache : IQueueCache<DemoLoginKeyCacheData>
     {
@@ -39,7 +39,7 @@ namespace Senparc.Ncf.Core.Cache
         {
             var instance = new DemoLoginKeyCache();
 
-            // 初始化父类中的异步初始化操作  
+            // Initialize the asynchronous initialization operation in the parent class  
             await instance.InitializeAsync();
 
             return instance;
@@ -47,10 +47,10 @@ namespace Senparc.Ncf.Core.Cache
 
         private async Task InitializeAsync()
         {
-            // 调用父类的静态工厂方法进行异步初始化  
+            // Call the static factory method of the parent class for asynchronous initialization  
             var queueCache = await QueueCache<DemoLoginKeyCacheData>.CreateAsync(cacheKey, timeoutSeconds);
 
-            // 将初始化的结果赋值给当前实例  
+            // Assign the initialization result to the current instance  
             this.MessageQueue = queueCache.MessageQueue;
             this.MessageCollection = queueCache.MessageCollection;
         }
@@ -60,7 +60,7 @@ namespace Senparc.Ncf.Core.Cache
             var value = base.Get(key,removeDataWhenExist);
             if (value != null)
             {
-                base.Remove(key);//一次性有效
+                base.Remove(key);  // One-time use
             }
             return value;
         }

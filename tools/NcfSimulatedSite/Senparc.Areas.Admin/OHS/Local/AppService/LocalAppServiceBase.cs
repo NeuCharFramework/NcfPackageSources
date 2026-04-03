@@ -14,7 +14,7 @@ using Senparc.Xncf.XncfModuleManager.Domain.Services;
 namespace Senparc.Areas.Admin.OHS.Local.AppService
 {
     /// <summary>
-    /// 基类
+    /// base class
     /// </summary>
     public class LocalAppServiceBase : AppServiceBase
     {
@@ -24,7 +24,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取当前用的Id
+        /// Get the current ID
         /// </summary>
         /// <returns></returns>
         public int GetCurrentAdminUserInfoId(HttpContext httpContext = null)

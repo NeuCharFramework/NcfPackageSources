@@ -9,7 +9,7 @@ using Senparc.Ncf.Core.Models;
 namespace Senparc.Ncf.Database
 {
     /// <summary>
-    /// 使用 appsettigs.json 中的配置进行获取，不作为任何实际使用的数据库配置
+    /// Use the configuration in appsettigs.json to obtain, not as any actual database configuration.
     /// </summary>
     public class BySettingDatabaseConfiguration : IDatabaseConfiguration
     {

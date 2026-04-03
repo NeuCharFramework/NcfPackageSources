@@ -5,7 +5,7 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// 版本更新类型
+    /// version update type
     /// </summary>
     public enum UpdateVersionType
     {

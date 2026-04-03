@@ -298,7 +298,7 @@ define(function (require) {
                     return;
                 }
                 // FIXME
-                // 应该使用统计的空判断？还是在list里进行空判断？
+                // Should statistical null judgment be used? Or perform empty judgment in the list?
                 var otherCoord = (value == null || isNaN(value) || value === '')
                     ? null
                     : linearMap(value, otherDataExtent, otherShadowExtent, true);
@@ -517,7 +517,7 @@ define(function (require) {
             var labelTexts = ['', ''];
 
             // FIXME
-            // date型，支持formatter，autoformatter（ec2 date.getAutoFormatter）
+            // date type, supports formatter, autoformatter (ec2 date.getAutoFormatter)
             if (dataZoomModel.get('showDetail')) {
                 var dataInterval;
                 var axis;
@@ -666,14 +666,14 @@ define(function (require) {
             var targetInfo = this.getTargetInfo();
 
             // FIXME
-            // 判断是catesian还是polar
+            // Determine whether it is catesian or polar
             var rect;
             if (targetInfo.cartesians.length) {
                 rect = targetInfo.cartesians[0].model.coordinateSystem.getRect();
             }
             else { // Polar
                 // FIXME
-                // 暂时随便写的
+                // Just writing casually for now
                 var width = this.api.getWidth();
                 var height = this.api.getHeight();
                 rect = {
@@ -691,7 +691,7 @@ define(function (require) {
 
     function getOtherDim(thisDim) {
         // FIXME
-        // 这个逻辑和getOtherAxis里一致，但是写在这里是否不好
+        // This logic is consistent with getOtherAxis, but is it not good to write it here?
         return thisDim === 'x' ? 'y' : 'x';
     }
 

@@ -37,11 +37,11 @@ namespace Senparc.Ncf.UnitTestExtension.Database
         }
 
         /// <summary>
-        /// 关闭连接（长时间保持一个连接操作会导致数据库操作时间逐渐变长）
+        /// Close the connection (maintaining a connection operation for a long time will cause the database operation time to gradually become longer)
         /// </summary>
         public override void CloseConnection()
         {
-            //COCONET 升级到.net core的过程中注释掉
+            //COCONET upgrade to.net coreComment out the process
             //BaseDataContext.Database.Connection.Close();
             dataContext = null;
         }
@@ -55,10 +55,10 @@ namespace Senparc.Ncf.UnitTestExtension.Database
                     //var connectionString = Ncf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString;
 
                     //dataContext = SenparcDI.GetService<SenparcEntities>();
-                    //TODO:当前采用注入可以保证HttpContext单例，如果要全局单例，可采用单件模式（需要先解决释放的问题）
+                    //TODO:Currently, injection can be used to ensure the HttpContext singleton. If you want a global singleton, you can use the singleton mode (you need to solve the release problem first)
                 }
                 //var hashCode = dataContext.GetHashCode();
-                //System.Web.HttpContext.Current.Response.Write(dataContext.GetHashCode() + "<br />");//测试同一Request只有一个SenparcEntities实例
+                //System.Web.HttpContext.Current.Response.Write(dataContext.GetHashCode() + "<br />");//Test that there is only one SenparcEntities instance for the same Request
                 return dataContext;
             }
 

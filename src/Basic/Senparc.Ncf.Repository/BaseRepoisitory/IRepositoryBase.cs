@@ -20,11 +20,11 @@ namespace Senparc.Ncf.Repository
         IQueryable<T> GeAll<TOrderProperty, TIncludesProperty>(Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc);
 
         /// <summary>
-        /// 获取分页列表
+        /// Get paginated list
         /// </summary>
-        /// <param name="where">搜索条件</param>
+        /// <param name="where">Search conditions</param>
         /// <param name="pageIndex"></param>
-        /// <param name="pageCount">当pageCount小于等于0时不分页</param>
+        /// <param name="pageCount">No paging when pageCount is less than or equal to 0</param>
         /// <returns></returns>
         PagedList<T> GetObjectList<TOrderProperty>(Expression<Func<T, bool>> where, Expression<Func<T, TOrderProperty>> orderBy, OrderingType orderingType, int pageIndex, int pageCount, params string[] includes);
 
@@ -60,7 +60,7 @@ namespace Senparc.Ncf.Repository
         void Update(T obj);
 
         /// <summary>
-        /// 此方法会自动判断应当执行更新(Update)还是添加(Add)
+        /// This method will automatically determine whether to perform Update (Update) or Add (Add)
         /// </summary>
         /// <param name="obj"></param>
         void Save(T obj);
@@ -105,16 +105,16 @@ namespace Senparc.Ncf.Repository
         Task<decimal> GetSumAsync<TIncludesProperty>(Expression<Func<T, bool>> where, Expression<Func<T, decimal>> sum, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>> includesNavigationPropertyPathFunc);
 
         /// <summary>
-        /// 批量删除
+        /// Batch delete
         /// </summary>
         /// <param name="objs"></param>
-        /// <param name="deleteItemAction">删除每一个对象的操作</param>
+        /// <param name="deleteItemAction">The operation of deleting each object</param>
         /// <param name="softDelete"></param>
         /// <returns></returns>
         Task DeleteAllAsync(IEnumerable<T> objs, Action<T> deleteItemAction = null, bool softDelete = false);
 
         /// <summary>
-        /// 批量添加
+        /// Batch add
         /// </summary>
         /// <param name="objs"></param>
         /// <param name="softDelete"></param>
@@ -122,7 +122,7 @@ namespace Senparc.Ncf.Repository
         Task AddAllAsync(IEnumerable<T> objs);
 
         /// <summary>
-        /// 动态字段排序
+        ///Dynamic field sorting
         /// </summary>
         /// <param name="where"></param>
         /// <param name="OrderbyField">xxx desc, bbb asc</param>
@@ -141,20 +141,20 @@ namespace Senparc.Ncf.Repository
         Task SaveObjectListAsync(IEnumerable<T> objs);
 
         /// <summary>
-        /// 开启事务
+        /// start transaction
         /// </summary>
         /// <returns></returns>
         Task BeginTransactionAsync();
 
         /// <summary>
-        /// 开启事务
+        /// start transaction
         /// </summary>
         /// <param name="isolationLevel"></param>
         /// <returns></returns>
         Task BeginTransactionAsync(System.Data.IsolationLevel isolationLevel);
 
         /// <summary>
-        /// 开启事务
+        /// start transaction
         /// </summary>
         /// <returns></returns>
         void BeginTransaction();
@@ -167,13 +167,13 @@ namespace Senparc.Ncf.Repository
         void BeginTransaction(System.Data.IsolationLevel isolationLevel);
 
         /// <summary>
-        /// 回滚事务
+        /// rollback transaction
         /// </summary>
         /// <returns></returns>
         void RollbackTransaction();
 
         /// <summary>
-        /// 提交事务
+        /// Commit transaction
         /// </summary>
         void CommitTransaction();
     }

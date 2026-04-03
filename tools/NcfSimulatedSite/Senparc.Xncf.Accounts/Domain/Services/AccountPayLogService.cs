@@ -28,7 +28,7 @@ namespace Senparc.Xncf.Accounts.Domain.Services
         {
             AccountPayLog accountPayLog = new AccountPayLog()
             {
-                OrderNumber = orderNumber, //Add的时候会自动生成
+                OrderNumber = orderNumber, //It will be automatically generated when adding
                 AddTime = DateTime.Now,
                 CompleteTime = DateTime.Now,
                 AccountId = fullAccount.Id,
@@ -88,7 +88,7 @@ namespace Senparc.Xncf.Accounts.Domain.Services
             //catch (Exception ex)
             //{
 
-            //    throw new Exception($"支付回调失败【{ex.Message}】");
+            //    throw new Exception($"Payment callback failed [{ex.Message}]");
             //}
         }
 

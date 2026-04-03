@@ -51,19 +51,19 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
                 new MeetRule("@addTagHelper *,",OldNamespaceKeyword,$"{newNamespace}","*.cshtml"),
             };
 
-                //TODO:使用正则记录，并全局修改
+                //TODO:Use regular records and modify them globally
 
                 Dictionary<string, List<MatchNamespace>> namespaceCollection = new Dictionary<string, List<MatchNamespace>>(StringComparer.OrdinalIgnoreCase);
 
-                //扫描所有规则
+                //Scan all rules
                 foreach (var item in meetRules)
                 {
                     var files = Directory.GetFiles(path, item.FileType, SearchOption.AllDirectories);
 
-                    //扫描所有文件，将满足这一条规则替换条件的对象记录下来
+                    //Scan all files and record the objects that meet the replacement conditions of this rule.
                     foreach (var file in files)
                     {
-                        logger.Append($"扫描文件类型:{item.FileType} 数量:{files.Length}");
+                        logger.Append($"Scan file types:{item.FileType} quantity:{files.Length}");
 
                         //string content = null;
                         using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read))
@@ -82,9 +82,9 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
                                             namespaceCollection[file] = new List<MatchNamespace>();
                                         }
 
-                                        //不能使用Split，中间可能还有空格
+                                        //Split cannot be used, there may be spaces in the middle
                                         //var oldNamespaceArr = line.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                                        var getOld = line.Replace(item.Prefix + " ", "");//也可以用IndexOf+Length来做
+                                        var getOld = line.Replace(item.Prefix + " ", "");//You can also use IndexOf+LengthCome and do it
                                         var getNew = getOld.Replace(item.OrignalKeyword, item.ReplaceWord);
                                         namespaceCollection[file].Add(new MatchNamespace()
                                         {
@@ -109,7 +109,7 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
                         }
                     }
 
-                    //遍历所有文件，替换已经解锁出来的旧命名空间
+                    //Traverse all files and replace the old namespace that has been unlocked
                     foreach (var file in files)
                     {
                         string content = null;
@@ -128,10 +128,10 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
                             {
                                 var oldNamespaceFull = $"{namespaceInfo.Prefix} {namespaceInfo.OldNamespace}";
 
-                                //替换旧的NameSpace
+                                //Replace old NameSpace
                                 if (content.IndexOf(oldNamespaceFull) > -1)
                                 {
-                                    logger.Append($"文件命中:{file} -> {oldNamespaceFull}");
+                                    logger.Append($"file hit:{file} -> {oldNamespaceFull}");
                                     var newNameSpaceFull = $"{namespaceInfo.Prefix} {namespaceInfo.NewNamespace}";
                                     content = content.Replace(oldNamespaceFull, newNameSpaceFull);
                                 }
@@ -151,14 +151,14 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
 
                 }
 
-                return logger.Append("更新成功！您还可以使用【还原命名空间】功能进行还原！");
+                return logger.Append("Update successful! You can also use the [Restore Namespace] function to restore!");
 
             }, saveLogAfterFinished: true);
         }
 
         #endregion
 
-        [FunctionRender("还原命名空间", "还原所有源码在 .cs, .cshtml 中的命名空间为 NCF 默认（建议在断崖式更新之前进行此操作）。", typeof(Register))]
+        [FunctionRender("Restore namespace", "Restore all source code in.cs, .cshtml The namespace in is NCF by default (recommended before cliff updates).", typeof(Register))]
         public async Task<StringAppResponse> Restore(NameSpace_RestoreRequest request)
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
@@ -173,14 +173,14 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
                 var newesult = await this.Change(changeNamespaceParam);
                 if (newesult.Success == true)
                 {
-                    response.Data = "还原命名空间成功！";
+                    response.Data = "Namespace restoration successful!";
                 }
                 return null;
             });
         }
 
 
-        [FunctionRender("下载官方 NCF 源码", "修改所有源码在 .cs, .cshtml 中的命名空间。", typeof(Register))]
+        [FunctionRender("Download official NCF source code", "Modify all source code in.cs, .cshtml namespace in .", typeof(Register))]
         public async Task<StringAppResponse> DownloadSourceCode(NameSpace_DownloadSourceCodeRequest request)
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
@@ -196,14 +196,14 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
                             response.Data = "https://gitee.com/NeuCharFramework/NCF/repository/archive/master.zip";
                             break;
                         default:
-                            response.Data = "未知的下载地址";
+                            response.Data = "Unknown download address";
                             response.Success = false;
                             break;
                     }
                 }
                 else
                 {
-                    response.Data = "未知的下载参数";
+                    response.Data = "Unknown download parameters";
                     response.Success = false;
                 }
                 return null;

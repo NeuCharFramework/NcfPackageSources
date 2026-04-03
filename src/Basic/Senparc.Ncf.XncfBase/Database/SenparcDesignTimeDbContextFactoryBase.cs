@@ -22,7 +22,7 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase.Database
 {
     /// <summary>
-    /// 提供给数据库 Migration 使用的 DesignTimeDbContextFactory
+    /// DesignTimeDbContextFactory provided to database Migration
     /// </summary>
     /// <typeparam name="TSenparcEntities"></typeparam>
     public abstract class SenparcDesignTimeDbContextFactoryBase<TSenparcEntities, TXncfDatabaseRegister>
@@ -32,23 +32,23 @@ namespace Senparc.Ncf.XncfBase.Database
     {
         public override TSenparcEntities GetDbContextInstance(DbContextOptions<TSenparcEntities> dbContextOptions)
         {
-            //获取 XncfDatabase 对象
+            //Get the XncfDatabase object
             //var databaseRegister = Activator.CreateInstance(typeof(TXncfDatabaseRegister)) as TXncfDatabaseRegister;
 
-            //获取当前适用的 DbContext 类型
+            //Get the currently applicable DbContext type
             var dbContextType = MultipleDatabasePool.Instance.GetXncfDbContextType(typeof(TXncfDatabaseRegister));
 
             var constructorParams = new List<object>() {
                 dbContextOptions
             };
 
-            //判断构造函数参数个数
+            //Determine the number of constructor parameters
             if (dbContextType.GetConstructors().First().GetParameters().Length == 2)
             {
-                constructorParams.Add(SenparcDI.GetServiceProvider());//添加第二个参数（目前只为系统基础对象，如 SystemServiceEntities 使用）
+                constructorParams.Add(SenparcDI.GetServiceProvider());//Add a second parameter (currently only used by system base objects such as SystemServiceEntities)
             }
 
-            //获取 XncfSenparcEntities 实例
+            //Get XncfSenparcEntities instance
             var xncfSenparcEntities = Activator.CreateInstance(dbContextType, constructorParams.ToArray()) as TSenparcEntities;
             return xncfSenparcEntities;
         }
@@ -79,7 +79,7 @@ namespace Senparc.Ncf.XncfBase.Database
                 Console.WriteLine($"Version: {xncfRegister.Version}");
             }
 
-            //获取当前适用的 DbContext 类型
+            //Get the currently applicable DbContext type
             var multipleDatabasePool = MultipleDatabasePool.Instance;
             var dbContextType = multipleDatabasePool.GetXncfDbContextType(typeof(TXncfDatabaseRegister));
             var dbContextName = dbContextType.Name;
@@ -89,8 +89,8 @@ namespace Senparc.Ncf.XncfBase.Database
     }
 
     /// <summary>
-    /// 提供给数据库 Migration 使用的 DesignTimeDbContextFactory
-    /// <para>（针对非 XNCF 模块的普通 DbContext，在Senparc.Web 项目下进行 Add-Migration 等操作）</para>
+    /// DesignTimeDbContextFactory provided to database Migration
+    /// <para>(For ordinary DbContext of non-XNCF modules, perform Add-Migration and other operations under the Senparc.Web project)</para>
     /// </summary>
     /// <typeparam name="TDbContext"></typeparam>
     public abstract class SenparcDesignTimeDbContextFactoryBase<TDbContext>
@@ -103,21 +103,21 @@ namespace Senparc.Ncf.XncfBase.Database
         public IDatabaseConfiguration DatabaseConfiguration { get; set; }
 
         /// <summary>
-        /// 数据库 连接字符串
+        ///database connection string
         /// </summary>
         public virtual string DatabaseConnectionStr => SenparcDatabaseConnectionConfigs.GetClientConnectionString(); //?? "Server=.\\;Database=NCF;Trusted_Connection=True;integrated security=True;";
 
         /// <summary>
-        /// 返回 DbContext 实例
+        /// Returns the DbContext instance
         /// </summary>
         /// <param name="dbContextOptions"></param>
         /// <returns></returns>
         public abstract TDbContext GetDbContextInstance(DbContextOptions<TDbContext> dbContextOptions);
 
         /// <summary>
-        /// 指定程序集等配置，如：
+        /// Specify assembly and other configurations, such as:
         /// b => systemServiceRegister.DbContextOptionsAction(b, "Senparc.Service")
-        /// <para>注意：如果重写，最后一定要执行 base.DbContextOptionsAction() </para>
+        /// <para>Note: If you rewrite, you must execute base.DbContextOptionsAction() at the end </para>
         /// </summary>
         public virtual Action</*SqlServerDbContextOptionsBuilder*/IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsAction => (builder, xncfDatabaseData) =>
          {
@@ -133,22 +133,22 @@ namespace Senparc.Ncf.XncfBase.Database
         protected XncfDatabaseData XncfDatabaseData { get; set; }
 
         ///// <summary>
-        ///// 特殊类型，例如 SystemServiceEntities
+        ///// Special types, such as SystemServiceEntities
         ///// </summary>
         //protected Type SpecificSenparcEntites { get; } = null;
 
 
         /// <summary>
-        /// SenparcDesignTimeDbContextFactoryBase 构造函数
+        /// SenparcDesignTimeDbContextFactoryBase constructor
         /// </summary>
-        /// <param name="ncfVersion">NCF 版本号</param>
-        /// <param name="rootDirectoryPath">将要设置的CO2NET.Config.RootDirectoryPath，一般为 Senparc.Web 或具有 App_Data/Database/SenparcConfig.config 配置文件的目录</param>
-        /// <param name="databaseName">数据库名称，默认为 Local，即 Senparc.Web/appsettings.json 中的 DatabaseName</param>
-        /// <param name="note">在日志中输出额外信息</param>
+        /// <param name="ncfVersion">NCF version number</param>
+        /// <param name="rootDirectoryPath">CO2NET.Config.RootDirectoryPath to be set, usually Senparc.Web or the directory with the App_Data/Database/SenparcConfig.config configuration file</param>
+        /// <param name="databaseName">Database name, default is Local, that is, DatabaseName in Senparc.Web/appsettings.json</param>
+        /// <param name="note">Output additional information in the log</param>
         public SenparcDesignTimeDbContextFactoryBase(string ncfVersion, string rootDirectoryPath, /*XncfDatabaseData xncfDatabaseData = null,*/
             string databaseName = "Local", string note = null)
         {
-            //注释可能出现中文，对中文环境可以配置使用 GB2312
+            //Comments may appear in Chinese, and the Chinese environment can be configured to use GB2312
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             Console.InputEncoding = Encoding.UTF8;
             Console.OutputEncoding = Encoding.UTF8;
@@ -164,12 +164,12 @@ namespace Senparc.Ncf.XncfBase.Database
 
 
         /// <summary>
-        /// 创建过程的其他代码
+        /// Other code for the creation process
         /// </summary>
         public abstract void CreateDbContextAction();
         public virtual TDbContext CreateDbContext(string[] args)
         {
-            //获取数据库配置
+            //Get database configuration
             DatabaseConfiguration = DatabaseConfigurationFactory.Instance.Current;
 
             try
@@ -185,15 +185,15 @@ namespace Senparc.Ncf.XncfBase.Database
             var senparcSetting = new SenparcSetting() { IsDebug = true };
             var services = serviceCollection.AddSenparcGlobalServices(config);
 
-            //TODO:env 参数从 v0.11 开始使用，需要进一步测试    —— Jeffrey 2021.12.15
+            //TODO:env parameter is used starting from v0.11 and needs further testing - Jeffrey 2021.12.15
             var env = services.BuildServiceProvider().GetService<IHostEnvironment>();
 
-            serviceCollection.AddMemoryCache();//使用内存缓存
-            //修复 https://github.com/NeuCharFramework/NCF/issues/13 发现的问题（在非Web环境下无法得到网站根目录路径）
+            serviceCollection.AddMemoryCache();//Use memory cache
+            //Fix the problem found in https://github.com/NeuCharFramework/NCF/issues/13 (the website root directory path cannot be obtained in non-Web environment)
             IRegisterService register = RegisterService.Start(senparcSetting);
 
-            //如果运行 Add-Migration 命令，并且获取不到正确的网站根目录，此处可能无法自动获取到连接字符串（上述#13问题），
-            //也可通过下面已经注释的的提供默认值方式解决（不推荐）
+            //If you run the Add-Migration command and cannot obtain the correct website root directory, the connection string may not be automatically obtained here (issue #13 above),
+            //It can also be solved by providing default values ​​as commented below (not recommended)
 
             if (DatabaseConnectionStr.IsNullOrEmpty())
             {
@@ -210,7 +210,7 @@ namespace Senparc.Ncf.XncfBase.Database
             Console.WriteLine("");
             Console.WriteLine("=======  Start XNCF Engine  =======");
             var dt1 = DateTime.Now;
-            var startEngineRresult = Senparc.Ncf.XncfBase.Register.StartNcfEngine(serviceCollection, config, env, null);//TODO:env 参数从 v0.11 开始使用，需要进一步测试    —— Jeffrey 2021.12.15
+            var startEngineRresult = Senparc.Ncf.XncfBase.Register.StartNcfEngine(serviceCollection, config, env, null);//TODO:env parameter is used starting from v0.11 and needs further testing - Jeffrey 2021.12.15
             if (!startEngineRresult.IsNullOrEmpty())
             {
                 Console.Write(startEngineRresult);
@@ -241,12 +241,12 @@ namespace Senparc.Ncf.XncfBase.Database
 
             CreateDbContextAction();
 
-            //创建 DbContextOptionsBuilder 对象
+            //Create a DbContextOptionsBuilder object
             var builder = new DbContextOptionsBuilder<TDbContext>();
             DatabaseConfiguration.UseDatabase(builder, sqlConnection, XncfDatabaseData,
-            /* 注意：这里不能用 this.DbContextOptionsAction，否则子类重写将无效！*/
+            /* Note: this.DbContextOptionsAction cannot be used here, otherwise subclass rewriting will be invalid!*/
             DbContextOptionsAction);
-            //单一使用 SQL Server 的方法：builder.UseSqlServer(sqlConnection, DbContextOptionsAction);//beta6
+            //Single method of using SQL Server: builder.UseSqlServer(sqlConnection, DbContextOptionsAction);//beta6
 
             return GetDbContextInstance(builder.Options);
         }

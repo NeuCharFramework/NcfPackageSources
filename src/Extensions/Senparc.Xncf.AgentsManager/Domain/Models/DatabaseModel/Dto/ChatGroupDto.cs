@@ -5,39 +5,39 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 {
     /// <summary>
-    /// ChatGroup 数据库实体 DTO
+    /// ChatGroup Database Entity DTO
     /// </summary>
     public class ChatGroupDto : DtoBase<int>
     {
         /// <summary>
-        /// 群名称
+        ///group name
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 是否启用
+        /// Whether to enable
         /// </summary>
         public bool Enable { get; set; }
 
         /// <summary>
-        /// 状态
+        /// state
         /// </summary>
         public ChatGroupState State { get; set; }
 
         /// <summary>
-        /// 描述
+        /// describe
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// 管理员代理模板Id
+        /// Administrator agent template ID
         /// </summary>
         public int AdminAgentTemplateId { get; set; }
 
         //public AgentTemplate AdminAgentTemplate { get; set; }
 
         /// <summary>
-        /// 对接人代理模板Id
+        /// Connector agent template ID
         /// </summary>
 
         public int EnterAgentTemplateId { get; set; }

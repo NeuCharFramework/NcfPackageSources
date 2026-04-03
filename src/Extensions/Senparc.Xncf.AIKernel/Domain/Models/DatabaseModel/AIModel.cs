@@ -11,87 +11,87 @@ using Senparc.Xncf.AIKernel.Domain.Models;
 namespace Senparc.Xncf.AIKernel.Models
 {
     /// <summary>
-    /// LlmModel 数据库实体
+    ///LlmModel database entity
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(AIModel))] //必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(AIModel))] //The prefix must be added to prevent conflicts system-wide.
     [Serializable]
     public class AIModel : EntityBase<int>
     {
         /// <summary>
-        /// 代号
+        /// code name
         /// </summary>
         [Required, MaxLength(50)]
         public string Alias { get; private set; }
 
 
         /// <summary>
-        /// 模型名称（必须）
+        ///Model name (required)
         /// </summary>
         [Required, MaxLength(100)]
         public string ModelId { get; private set; }
 
         /// <summary>
-        /// 部署名称
+        ///deployment name
         /// </summary>
         [MaxLength(150)]
         public string DeploymentName { get; private set; }
 
         /// <summary>
-        /// Endpoint（可选）
+        ///Endpoint (optional)
         /// </summary>
         [MaxLength(250)]
         public string Endpoint { get; private set; }
 
         /// <summary>
-        /// 模型的类型（必须）, 例如：NeuCharAI, OpenAI, Azure OpenAI, HuggingFace
+        /// Type of model (required), for example: NeuCharAI, OpenAI, Azure OpenAI, HuggingFace
         /// </summary>
         [Required]
         public AiPlatform AiPlatform { get; private set; }
 
         /// <summary>
-        /// 模型类别
+        /// model category
         /// </summary>
         [Required]
         public ConfigModelType ConfigModelType { get; private set; }
 
         /// <summary>
-        /// OrganizationId（可选）
+        ///OrganizationId (optional)
         /// </summary>
         [MaxLength(200)]
         public string OrganizationId { get; private set; }
 
         /// <summary>
-        /// ApiKey（可选）
+        ///ApiKey (optional)
         /// </summary>
         [MaxLength(200)]
         public string ApiKey { get; private set; }
 
         /// <summary>
-        /// ApiVersion（可选）
+        ///ApiVersion (optional)
         /// </summary>
         [MaxLength(100)]
         public string ApiVersion { get; private set; }
 
         /// <summary>
-        /// Note（可选）
+        ///Note (optional)
         /// </summary>
         public string Note { get; private set; }
 
         /// <summary>
-        /// MaxToken（可选）
+        ///MaxToken (optional)
         /// </summary>
         [Required, DefaultValue(0)]
         public int MaxToken { get; private set; }
 
         /// <summary>
-        /// 是否共享
+        /// Whether to share
         /// </summary>
         [Required, DefaultValue(false)]
         public bool IsShared { get; private set; } = false;
 
 
         /// <summary>
-        /// 是否展示
+        /// Whether to display
         /// </summary>
         [Required, DefaultValue(true)]
         public bool Show { get; private set; }
@@ -121,7 +121,7 @@ namespace Senparc.Xncf.AIKernel.Models
         }
 
         /// <summary>
-        /// 切换模型可见状态
+        /// Switch model visible state
         /// </summary>
         /// <param name="show"></param>
         /// <returns></returns>
@@ -132,7 +132,7 @@ namespace Senparc.Xncf.AIKernel.Models
         }
 
         /// <summary>
-        /// 更新模型
+        ///update model
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>

@@ -33,7 +33,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
 
         public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
         {
-            //在调用处理程序方法前，但在模型绑定结束后，进行异步调用。
+            //Make an asynchronous call before the handler method is called, but after model binding ends.
 
             //context.ActionDescriptor.FilterDescriptors
             var authenticateResult = await context.HttpContext.AuthenticateAsync(AdminAuthorizeAttribute.AuthenticationScheme);
@@ -56,7 +56,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
                 if (!hasRight /*&& !(adminPageModel is Pages.IndexModel)*/)
                 {
                     IActionResult actionResult = new Microsoft.AspNetCore.Mvc.RedirectResult("/Admin/Forbidden");
-                    //跳出
+                    //Jump out
                     if (context.HttpContext.Request.Headers.TryGetValue("x-requested-with", out Microsoft.Extensions.Primitives.StringValues strings))
                     {
                         if (strings.Contains("XMLHttpRequest"))
@@ -73,7 +73,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
 
         public Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
         {
-            //在选择处理程序方法后，但在模型绑定发生前，进行异步调用。
+            //Make an asynchronous call after the handler method is selected, but before model binding occurs.
             return Task.CompletedTask;
         }
     }

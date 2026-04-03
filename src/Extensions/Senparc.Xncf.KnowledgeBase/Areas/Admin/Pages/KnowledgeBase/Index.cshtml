@@ -31,7 +31,7 @@
                     <el-button class="filter-item" size="mini" type="primary" icon="el-icon-plus" @@click="handleEdit('','','add')">新增</el-button>
                 </el-col>
                 <el-col :span="1">
-                    <!-- 筛选按钮 -->
+                    <!-- filter button -->
                     <el-popover placement="bottom" title="筛选列" trigger="click" width="40">
                         <el-checkbox-group v-model="checkedColumns" size="mini">
                             <el-checkbox v-for="item in checkBoxGroup" :key="item" :label="item" :value="item"></el-checkbox>
@@ -83,7 +83,7 @@
                     :page.sync="listQuery.pageIndex"
                     :limit.sync="listQuery.pageSize"
                     @@pagination="getList"></pagination>
-        <!--编辑、新增-->
+        <!--Edit, add-->
         <el-dialog :title="dialog.title"
                    :visible.sync="dialog.visible"
                    :close-on-click-modal="false"
@@ -145,22 +145,6 @@
                 <el-form-item label="内容" prop="content">
                     <el-input type="textarea" size="mini" v-model="dialog.data.content" clearable placeholder="请输入内容" />
                 </el-form-item>
-
-                <el-upload class="upload-demo"
-                           ref="uploadRef"
-                           action="/api/Senparc.Xncf.KnowledgeBase/CommonService/Xncf.KnowledgeBase_CommonService.UploadAsync"
-                           :auto-upload="true"
-                           :multiple="true"
-                           :show-file-list="true"
-                           :on-success="uploadSuccess"
-                           :on-error="uploadError"
-                           @* :on-change="handleFileChange" *@
-                           @* :on-progress="handleProgress" *@
-                           @* :before-upload="beforeUpload" *@
-                           :file-list="fileList">
-                    <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
-                    <div slot="tip" class="el-upload__tip">可以选择多个文件同时上传</div>
-                </el-upload>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button size="mini" @@click="dialog.visible=false">取消</el-button>
@@ -168,37 +152,41 @@
             </div>
         </el-dialog>
 
-        @* 抽屉 新增|编辑 知识库关联 *@
+        @* Drawer New|Edit Knowledge Base Association*@
         <el-drawer :visible.sync="visible.drawerGroup" direction="rtl" :with-header="false" :wrapper-closable="false"
                    :close-on-press-escape="false" size="960px">
             <div class="drawerRtl">
-                @* 内容中的头（包括标题和关闭图标） *@
+                @* Header within content (including title and close icon)*@
                 <div class="drawerRtl__header">
                     <div class="drawerRtl__header__title">{{ groupForm.id ? '编辑知识库关联' : '新增知识库关联' }} </div>
                     <div class="drawerRtl__header__close" @@click="handleElVisibleClose('drawerGroup')">&times;</div>
                 </div>
-                @* 内容中的主体内容 *@
+                @* body of content*@
                 <div class="drawerRtl__body">
                     <el-form v-if="visible.drawerGroup" ref="groupELForm" :model="groupForm" :rules="groupFormRules"
                              :size="elSize" label-position="left" label-width="130px" class="drawerForm-container">
                         <el-form-item label="内容类型">
-                            <el-select size="mini" v-model="groupForm.contentType" placeholder="请输入内容类型">
+                            <el-select size="mini" v-model="groupForm.contentType" placeholder="请选择内容类型">
                                 <el-option v-for="item in contentTypeData" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="文件列表" prop="files">
+                        <el-form-item v-if="groupForm.contentType === 2" label="文件列表" prop="files">
                             <div class="groupFMB">
                                 <div class="df-wn flex-ac flex-jsb" style="gap: 10px;margin-bottom: 10px;">
                                     <div class="df-wn flex-ac" style="gap: 10px;">
-                                        <el-input v-model="groupAgentQueryList.filter" size="small"
-                                                  placeholder="请填写" style="width:auto;"></el-input>
+                                        <el-input v-model="fileQueryList.filter" size="small"
+                                                  placeholder="文件名称" style="width:auto;"></el-input>
                                         <el-button size="small" icon="el-icon-search"
-                                                   @@click="handleFilterChange(groupAgentQueryList.filter,'groupAgent')">搜索</el-button>
-                                        <div class="groupFMB_filter_addBtn" @@click="handleElVisibleOpenBtn('dialogFile')">
-                                            新建文件
-                                        </div>
+                                                   @@click="handleConfigFileSearch">搜索</el-button>
                                     </div>
-                                    
+                                </div>
+                                <div class="df-wn flex-ac flex-jsb" style="gap: 10px;margin-bottom: 10px;">
+                                    <div class="df-wn flex-ac" style="gap: 10px;">
+                                        <el-button size="small" type="primary" icon="el-icon-upload2"
+                                                   @@click="handleElVisibleOpenBtn('dialogFile')">上传文件</el-button>
+                                        <el-button size="small" type="danger" icon="el-icon-delete"
+                                                   @@click="handleConfigFileBatchDelete">批量删除</el-button>
+                                    </div>
                                 </div>
                                 <div class="df-wn flex-as flex-js" style="gap: 10px;margin-bottom: 10px;">
                                     <span class="groupFMB_ma_label">已选择:</span>
@@ -213,37 +201,104 @@
                                         </div>
                                     </div>
                                 </div>
-                                <el-table ref="groupAgentTable" key="groupAgentTable" :data="fileList" max-height="447"
+                                <el-table ref="groupAgentTable" key="groupAgentTable" :data="fileList" max-height="380"
                                           style="width: 100%;margin-bottom: 10px;border: 1px solid rgba(229, 229, 229, 1);"
-                                          @@selection-change="handleSelectionChange">
+                                          @@selection-change="handleConfigFileSelectionChange">
                                     <el-table-column type="selection" width="30"></el-table-column>
-                                    <el-table-column prop="fileName" label="文件名" width="130"
+                                    <el-table-column prop="fileName" label="文件名" width="200"
                                                      show-overflow-tooltip></el-table-column>
                                     <el-table-column prop="fileSize" label="文件大小" width="100">
                                     </el-table-column>
-                                    <el-table-column prop="description" label="描述" min-width="100">
+                                    <el-table-column label="上传时间" width="130" align="center">
+                                        <template slot-scope="scope">
+                                            {{ formaTableTime(scope.row.uploadTime) }}
+                                        </template>
                                     </el-table-column>
-                                    <el-table-column fixed="right" label="操作" width="100">
+                              @*       <el-table-column prop="description" label="describe" min-width="100">
+                                    </el-table-column> *@
+                                    <el-table-column fixed="right" label="操作" width="130">
                                         <template slot-scope="{ row }">
-                                            <el-button type="primary" size="small"
-                                                       @@click="handleEditDrawerOpenBtn('dialogGroupAgent',row)">编辑</el-button>
+                                            @* <el-button type="primary" size="small"
+                                                       @@click="handleEditDrawerOpenBtn('dialogGroupAgent',row)">edit</el-button> *@
+                                            <el-button type="danger" size="small"
+                                                       @@click="handleConfigFileDelete(row)">删除</el-button>
                                         </template>
                                     </el-table-column>
                                 </el-table>
+                                <div class="df-wn flex-ac flex-jsb" style="margin-top:10px;flex-wrap:wrap;gap:8px;">
+                                    <span class="el-pagination__total" style="margin-right:12px;">当前选中 {{ groupForm.files.length }} 行</span>
+                                    <el-pagination :current-page.sync="fileQueryList.pageIndex"
+                                                   :page-size="fileQueryList.pageSize"
+                                                   :page-sizes="[10, 20, 50,100]"
+                                                   :total="fileListTotal"
+                                                   layout="total, sizes, prev, pager, next, jumper"
+                                                   @@size-change="handleConfigFileSizeChange"
+                                                   @@current-change="handleConfigFilePageChange">
+                                    </el-pagination>
+                                </div>
                             </div>
                         </el-form-item>
-                        <el-form-item label="内容">
+                        <el-form-item v-if="groupForm.contentType === 1 || groupForm.contentType === 3" label="内容">
                             <el-input type="textarea" v-model="groupForm.content" :rows="4" placeholder="请填写"></el-input>
                         </el-form-item>
                     </el-form>
                 </div>
-                @* 内容中固定的footer *@
+                @* Fixed footer in content*@
                 <div class="drawerRtl__footer text-right">
                     <el-button :size="elSize" @@click="handleElVisibleClose('drawerGroup')">取消</el-button>
                     <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerGroup')">确认</el-button>
                 </div>
             </div>
         </el-drawer>
+
+        @* Configuration page「Create new file」Upload pop-up box: After selecting the file, call the upload interface to write to FileManage, and associate it with the knowledge base when saving.*@
+        <el-dialog title="新建文件"
+                   :visible.sync="visible.dialogFile"
+                   width="480px"
+                   :close-on-click-modal="false"
+                   @@close="handleDialogFileClose">
+            <el-upload class="upload-demo"
+                       ref="configUploadRef"
+                       action="/api/Senparc.Xncf.KnowledgeBase/CommonService/Xncf.KnowledgeBase_CommonService.UploadAsync"
+                       :auto-upload="true"
+                       :multiple="true"
+                       :show-file-list="true"
+                       :on-success="configUploadSuccess"
+                       :on-error="configUploadError"
+                       :file-list="configUploadFileList">
+                <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
+                <div slot="tip" class="el-upload__tip">选择文件后将上传至文件管理，并可在下方文件列表中勾选后与当前知识库关联</div>
+            </el-upload>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="mini" @@click="visible.dialogFile = false">关闭</el-button>
+            </div>
+        </el-dialog>
+
+        @* Vectorized progress pop-up window*@
+        <el-dialog title="向量化进度"
+                   :visible.sync="visible.embeddingProgress"
+                   width="420px"
+                   :close-on-click-modal="false"
+                   :close-on-press-escape="false"
+                   :show-close="false">
+            <div class="embedding-progress-body">
+                <el-progress :percentage="embeddingProgressPercent" :status="embeddingProgressStatus"></el-progress>
+                <p class="embedding-progress-text">{{ embeddingProgressText }}</p>
+            </div>
+        </el-dialog>
+
+        @* Vectorization result display pop-up window*@
+        <el-dialog title="向量化结果"
+                   :visible.sync="visible.embeddingResult"
+                   width="560px"
+                   @@close="embeddingResultText = ''">
+            <div class="embedding-result-body">
+                <pre class="embedding-result-pre">{{ embeddingResultText }}</pre>
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" size="small" @@click="visible.embeddingResult = false; getList()">确定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </div>
 @section scripts

@@ -7,23 +7,23 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase.Functions
 {
     /// <summary>
-    /// 选项列表
+    ///option list
     /// </summary>
     public class SelectionList
     {
         private string[] selectedValues;
 
         /// <summary>
-        /// 选项类型
+        /// option type
         /// </summary>
         public SelectionType SelectionType { get; set; }
         ///// <summary>
-        ///// 选中的项的值（从客户端传入）
+        ///// The value of the selected item (passed in from the client)
         ///// </summary>
         public string[] SelectedValues { get => selectedValues ?? new string[0]; set => selectedValues = value; }
 
         /// <summary>
-        /// 选项参数
+        /// option parameters
         /// </summary>
         public IList<SelectionItem> Items { get; set; }
 
@@ -41,9 +41,9 @@ namespace Senparc.Ncf.XncfBase.Functions
         }
 
         /// <summary>
-        /// 判断 SelectedValues 中是否存在值
+        /// Determine whether there is a value in SelectedValues
         /// </summary>
-        /// <param name="itemIndex">获取 Items 中的索引项对应的 Value</param>
+        /// <param name="itemIndex">Get the Value corresponding to the index item in Items</param>
         /// <returns></returns>
         public bool IsSelected(int itemIndex)
         {
@@ -56,7 +56,7 @@ namespace Senparc.Ncf.XncfBase.Functions
         }
 
         /// <summary>
-        /// 判断 SelectedValues 中是否存在值
+        /// Determine whether there is a value in SelectedValues
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -67,24 +67,24 @@ namespace Senparc.Ncf.XncfBase.Functions
     }
 
     /// <summary>
-    /// 选项
+    ///options
     /// </summary>
     public class SelectionItem
     {
         /// <summary>
-        /// 文字标签
+        /// text label
         /// </summary>
         public string Text { get; set; }
         /// <summary>
-        /// 值
+        /// value
         /// </summary>
         public string Value { get; set; }
         /// <summary>
-        /// （仅供显示时使用），是否默认选中
+        /// (for display only), whether selected by default
         /// </summary>
         public bool DefaultSelected { get; set; }
         /// <summary>
-        /// 说明
+        /// illustrate
         /// </summary>
         public string Note { get; set; }
 
@@ -102,24 +102,24 @@ namespace Senparc.Ncf.XncfBase.Functions
     }
 
     /// <summary>
-    /// 选项集合类型
+    /// option collection type
     /// </summary>
     public enum SelectionType
     {
         /// <summary>
-        /// 未知参数
+        /// unknown parameters
         /// </summary>
         Unknown,
         /// <summary>
-        /// 下拉列表（单选）
+        /// drop-down list (single selection)
         /// </summary>
         DropDownList,
         /// <summary>
-        /// 复选框列表（多选）
+        /// Checkbox list (multiple selection)
         /// </summary>
         CheckBoxList,
         ///// <summary>
-        ///// 单选列表（单选）
+        ///// Single choice list (single choice)
         ///// </summary>
         //RadioButtonList
     }

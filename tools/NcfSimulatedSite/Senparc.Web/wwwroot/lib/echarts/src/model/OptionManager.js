@@ -142,7 +142,7 @@ define(function (require) {
             rawOption = clone(rawOption, true);
 
             // FIXME
-            // 如果 timeline options 或者 media 中设置了某个属性，而baseOption中没有设置，则进行警告。
+            // If a property is set in timeline options or media but not in baseOption, a warning will be issued.
 
             var oldOptionBackup = this._optionBackup;
             var newParsedOption = parseRawOption.call(
@@ -181,7 +181,7 @@ define(function (require) {
             var optionBackup = this._optionBackup;
 
             // TODO
-            // 如果没有reset功能则不clone。
+            // If there is no reset function, it will not be cloned.
 
             this._timelineOptions = map(optionBackup.timelineOptions, clone);
             this._mediaList = map(optionBackup.mediaList, clone);
@@ -246,7 +246,7 @@ define(function (require) {
             }
 
             // FIXME
-            // 是否mediaDefault应该强制用户设置，否则可能修改不能回归。
+            // Whether mediaDefault should be forced to be set by users, otherwise it may be modified and cannot be returned.
             if (!indices.length && mediaDefault) {
                 indices = [-1];
             }

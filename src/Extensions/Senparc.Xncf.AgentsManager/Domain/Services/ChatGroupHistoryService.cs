@@ -35,7 +35,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        /// 获取干净的消息信息
+        /// Get clean message information
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>

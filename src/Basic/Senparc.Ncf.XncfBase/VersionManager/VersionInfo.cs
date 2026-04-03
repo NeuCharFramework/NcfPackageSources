@@ -5,54 +5,54 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase.VersionManager
 {
     /// <summary>  
-    /// 软件版本信息
+    ///Software version information
     /// </summary>  
     public record class VersionInfo
     {
         /// <summary>  
-        /// 主版本
+        ///major version
         /// </summary>  
         public int Major { get; set; }
 
         /// <summary>  
-        /// 次版本
+        ///minor version
         /// </summary>  
         public int Minor { get; set; }
 
         /// <summary>  
-        /// 修订版本
+        ///revision
         /// </summary>  
         public int Patch { get; set; }
 
         /// <summary>  
-        /// 可选的构建版本
+        /// optional build version
         /// </summary>  
         public int? Build { get; set; }
 
         /// <summary>  
-        /// 可选的预发布版本标签  
+        /// optional pre-release tag  
         /// </summary>  
         public string PreRelease { get; set; }
 
         /// <summary>  
-        /// 可选的元数据标签  
+        /// Optional metadata tag  
         /// </summary>  
         public string Metadata { get; set; }
 
 
         /// <summary>  
-        /// 将 VersionInfo 对象转换为版本字符串。  
+        /// Convert a VersionInfo object to a version string.  
         /// </summary>  
-        /// <returns>表示版本信息的字符串。</returns>  
+        ///<returns>A string representing version information. </returns>  
         /// <summary>  
-        /// 将 VersionInfo 对象转换为版本字符串。  
+        /// Convert a VersionInfo object to a version string.  
         /// </summary>  
-        /// <returns>表示版本信息的字符串。</returns>  
+        ///<returns>A string representing version information. </returns>  
         public override string ToString()
         {
             var versionString = $"{Major}.{Minor}.{Patch}";
 
-            // 如果存在 Build 属性，则将其添加到版本字符串中  
+            // If the Build attribute is present, add it to the version string  
             if (Build.HasValue)
             {
                 versionString += $".{Build.Value}";

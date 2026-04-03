@@ -13,12 +13,12 @@ namespace Senparc.Ncf.Core.MultiTenant
     public static class MultiTenantHelper
     {
         /// <summary>
-        /// 获取 RequestTenantInfo，并且检查其是否匹配
+        /// Get the RequestTenantInfo and check if it matches
         /// </summary>
         /// <param name="serviceProvider"></param>
-        /// <param name="referenceMethod">引用此方法的方法（用于异常提示）</param>
+        /// <param name="referenceMethod">Method that references this method (used for exception messages)</param>
         /// <param name="dbContext"></param>
-        /// <exception cref="NcfTenantException">如果 RequestTenantInfo.MatchSuccess 为 false，则抛出异常</exception>
+        /// <exception cref="NcfTenantException">Thrown when RequestTenantInfo.MatchSuccess is false</exception>
         /// <returns></returns>
         public static RequestTenantInfo TryGetAndCheckRequestTenantInfo(IServiceProvider serviceProvider, string referenceMethod, DbContext dbContext = null)
         {
@@ -27,10 +27,10 @@ namespace Senparc.Ncf.Core.MultiTenant
 
             if (!SiteConfig.IsInstalling)
             {
-                //如果未设置，则进行设定
+                //If not set, set it
                //if (!requestTenantInfo.TriedMatching)
                // {
-               //     throw new NcfUninstallException("TriedMatching 为 false，推测系统未进行安装。如果在调试状态下（F5）看到此消息请忽略，继续执行。", null);
+               //     throw new NcfUninstallException("TriedMatching is false, it is assumed that the system has not been installed. If you see this message in debugging mode (F5), please ignore it and continue execution.", null);
                // }
 
                 if (!requestTenantInfo.MatchSuccess)

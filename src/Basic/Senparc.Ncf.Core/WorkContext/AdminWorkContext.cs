@@ -5,22 +5,22 @@ using System.Text;
 namespace Senparc.Ncf.Core.WorkContext
 {
     /// <summary>
-    /// 管理员区域上下文
+    /// Admin area context
     /// </summary>
     public class AdminWorkContext
     {
         /// <summary>
-        /// 姓名
+        /// Name
         /// </summary>
         public string UserName { get; set; }
 
         /// <summary>
-        /// 用户Id
+        /// User Id
         /// </summary>
         public int AdminUserId { get; set; }
 
         /// <summary>
-        /// 拥有的角色
+        /// Owned roles
         /// </summary>
         public IEnumerable<string> RoleCodes { get; set; }
     }

@@ -30,8 +30,8 @@ define(function(require) {
          * @override
          */
         defaultOption: {
-            zlevel: 0,                  // 一级层叠
-            z: 2,                       // 二级层叠
+            zlevel: 0,                  // One level cascading
+            z: 2,                       // Second level stacking
             coordinateSystem: 'cartesian2d',
             legendHoverLink: true,
 
@@ -44,11 +44,11 @@ define(function(require) {
 
             itemStyle: {
                 normal: {
-                    color: '#c23531', // 阳线 positive
-                    color0: '#314656', // 阴线 negative     '#c23531', '#314656'
+                    color: '#c23531', // Yang line positive
+                    color0: '#314656', // negative line negative '#c23531', '#314656'
                     borderWidth: 1,
                     // FIXME
-                    // ec2中使用的是lineStyle.color 和 lineStyle.color0
+                    // LineStyle.color and lineStyle.color0 are used in ec2
                     borderColor: '#c23531',
                     borderColor0: '#314656'
                 },

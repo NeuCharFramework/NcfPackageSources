@@ -8,7 +8,7 @@ namespace Senparc.Ncf.Core.Cache
     //public interface IBaseCacheStrategy
     //{
     //    /// <summary>
-    //    /// 开始一个同步锁
+    //    /// Start a synchronization lock
     //    /// </summary>
     //    /// <param name="resourceName"></param>
     //    /// <param name="key"></param>
@@ -21,12 +21,12 @@ namespace Senparc.Ncf.Core.Cache
     //}
 
     /// <summary>
-    /// 公共缓存策略接口
+    ///Public cache policy interface
     /// </summary>
     public interface INcfCacheStrategy : IBaseObjectCacheStrategy
     { 
         /// <summary>
-        /// 整个Cache集合的Key
+        /// Key of the entire Cache collection
         /// </summary>
         string CacheSetKey { get; set; }
     }

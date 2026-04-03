@@ -24,7 +24,7 @@
         margin-top: 10px;
     }
 
-/* 树形菜单固定行样式 */
+/* Tree menu fixed row style */
 .sticky-parent {
     position: relative;
 }
@@ -38,12 +38,12 @@
     border-collapse: collapse !important;
 }
 
-/* 隐藏克隆行中的操作按钮 */
+/* Hide action buttons in cloned rows */
 .sticky-clone .el-table_1_column_6 {
     visibility: hidden;
 }
 
-/* 确保表格可以显示固定元素 */
+/* Make sure the table can display fixed elements */
 .el-table__body-wrapper {
     overflow: visible !important;
 }
@@ -52,7 +52,7 @@
     overflow: visible !important;
 }
 
-/* 克隆元素样式调整 */
+/* Clone element style adjustment */
 .sticky-clone td {
     background-color: #fff !important;
     border-bottom: 1px solid #EBEEF5;
@@ -67,7 +67,7 @@
     background-color: #F5F7FA !important;
 }
 
-/* 确保展开图标的样式一致 */
+/* Ensure expansion icons are styled consistently */
 .sticky-clone .el-table__expand-icon {
     display: inline-block;
     width: 24px;

@@ -7,7 +7,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.DI
 {
     /// <summary>
-    /// 自动依赖注入特性标签
+    /// Attribute marker for automatic dependency injection
     /// </summary>
     public class AutoDITypeAttribute : Attribute
     {

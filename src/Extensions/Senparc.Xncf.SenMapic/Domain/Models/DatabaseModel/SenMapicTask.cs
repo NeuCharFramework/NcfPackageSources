@@ -5,87 +5,87 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.SenMapic
 {
     /// <summary>
-    /// 任务状态枚举
+    ///Task status enumeration
     /// </summary>
     public enum SenMapicTaskStatus
     {
         /// <summary>
-        /// 出错
+        /// error
         /// </summary>
         Error = -1,
         /// <summary>
-        /// 等待开始
+        ///wait to start
         /// </summary>
         Waiting = 0,
         /// <summary>
-        /// 进行中
+        /// in progress
         /// </summary>
         Running = 1,
         /// <summary>
-        /// 已完成
+        /// Completed
         /// </summary>
         Completed = 2
     }
 
     /// <summary>
-    /// SenMapic 爬虫任务实体类
+    /// SenMapic crawler task entity class
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(SenMapicTask))]
     [Serializable]
     public class SenMapicTask : EntityBase<int>
     {
         /// <summary>
-        /// 任务名称
+        /// task name
         /// </summary>
         public string Name { get; private set; }
 
         /// <summary>
-        /// 起始URL
+        ///Start URL
         /// </summary>
         public string StartUrl { get; private set; }
 
         /// <summary>
-        /// 最大线程数
+        ///Maximum number of threads
         /// </summary>
         public int MaxThread { get; private set; }
 
         /// <summary>
-        /// 单站点最大爬取时间(分钟)
+        /// Maximum crawling time of a single site (minutes)
         /// </summary>
         public int MaxBuildMinutes { get; private set; }
 
         /// <summary>
-        /// 最大爬取深度
+        ///Maximum crawl depth
         /// </summary>
         public int MaxDeep { get; private set; }
 
         /// <summary>
-        /// 最大页面数量
+        ///Maximum number of pages
         /// </summary>
         public int MaxPageCount { get; private set; }
 
         /// <summary>
-        /// 任务状态
+        ///task status
         /// </summary>
         public SenMapicTaskStatus Status { get; private set; }
 
         /// <summary>
-        /// 开始时间
+        /// start time
         /// </summary>
         public DateTime? StartTime { get; private set; }
 
         /// <summary>
-        /// 完成时间
+        ///completion time
         /// </summary>
         public DateTime? EndTime { get; private set; }
 
         /// <summary>
-        /// 已爬取的页面数量
+        ///Number of pages crawled
         /// </summary>
         public int CrawledPages { get; private set; }
 
         /// <summary>
-        /// 错误信息
+        /// error message
         /// </summary>
         public string ErrorMessage { get; private set; }
 

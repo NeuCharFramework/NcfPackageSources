@@ -12,19 +12,19 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
     public class Module_StatResponse
     {
         /// <summary>
-        /// 已安装模块数量
+        ///Number of installed modules
         /// </summary>
         public int InstalledXncfCount { get; set; }
         /// <summary>
-        /// 待更新模块数量
+        ///Number of modules to be updated
         /// </summary>
         public int UpdateVersionXncfCount { get; set; }
         /// <summary>
-        /// 新模块数量
+        ///Number of new modules
         /// </summary>
         public int NewXncfCount { get; set; }
         /// <summary>
-        /// 异常模块数量
+        ///Number of exception modules
         /// </summary>
         public int MissingXncfCount { get; set; }
     }
@@ -32,15 +32,15 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
     public class Module_GetItemResponse
     {
         /// <summary>
-        /// 必须刷新页面，MustUpdate 为 true 时，必定有异常信息
+        /// The page must be refreshed. When MustUpdate is true, there must be exception information
         /// </summary>
         public bool MustUpdate { get; set; }
         /// <summary>
-        /// 模块信息
+        ///module information
         /// </summary>
         public XncfModuleDto XncfModule { get; set; }
         /// <summary>
-        /// XNCF 模块注册信息
+        ///XNCF module registration information
         /// </summary>
         public Response_XncfRegister XncfRegister { get; set; }
 
@@ -49,43 +49,43 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
         public class Response_XncfRegister
         {
             /// <summary>
-            /// 主页 URL
+            ///Homepage URL
             /// </summary>
             public string AreaHomeUrl { get; set; }
             /// <summary>
-            /// 菜单显示名称
+            ///Menu display name
             /// </summary>
             public string MenuName { get; set; }
             /// <summary>
-            /// 图标
+            /// icon
             /// </summary>
             public string Icon { get; set; }
             /// <summary>
-            /// 版本
+            /// Version
             /// </summary>
             public string Version { get; set; }
             /// <summary>
-            /// 唯一编号
+            /// unique number
             /// </summary>
             public string Uid { get; set; }
 
             /// <summary>
-            /// 子菜单项目列表
+            /// List of submenu items
             /// </summary>
             public List<Ncf.Core.Areas.AreaPageMenuItem> AreaPageMenuItems { get; set; }
 
             /// <summary>
-            /// 接口
+            ///interface
             /// </summary>
             public List<string> Interfaces { get; set; }
 
             /// <summary>
-            /// “执行方法”数量统计
+            /// "Execution method" quantity statistics
             /// </summary>
             public int FunctionCount { get; set; }
 
             /// <summary>
-            /// 线程信息
+            /// thread information
             /// </summary>
             public IEnumerable<Response_XncfRegister_RegisteredThreadInfo> RegisteredThreadInfo { get; set; }
 
@@ -93,22 +93,22 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
             public class Response_XncfRegister_RegisteredThreadInfo
             {
                 /// <summary>
-                /// 线程信息
+                /// thread information
                 /// </summary>
                 public RegisteredThreadInfo_Key Key { get; set; }
                 /// <summary>
-                /// 线程状态详情
+                ///Thread status details
                 /// </summary>
                 public RegisteredThreadInfo_Value Value { get; set; }
 
                 public class RegisteredThreadInfo_Key
                 {
                     /// <summary>
-                    /// 线程名称
+                    ///thread name
                     /// </summary>
                     public string Name { get; set; }
                     /// <summary>
-                    /// 线程故事
+                    ///thread story
                     /// </summary>
                     public string StoryHtml { get; set; }
                 }

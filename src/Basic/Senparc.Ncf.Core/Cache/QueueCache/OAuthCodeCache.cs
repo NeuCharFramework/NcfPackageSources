@@ -21,7 +21,7 @@ namespace Senparc.Ncf.Core.Cache
     }
 
     /// <summary>
-    /// 登录许可缓存（缓存数据：UserId）
+    /// Login permission cache (cache data: UserId)
     /// </summary>
     public interface IOAuthCodeCache : IQueueCache<OAuthCodeData>
     {
@@ -49,7 +49,7 @@ namespace Senparc.Ncf.Core.Cache
             var value = base.Get(key, removeDataWhenExist);
             if (value != null)
             {
-                base.Remove(key);//一次性有效
+                base.Remove(key);  // One-time use
             }
             return value;
         }

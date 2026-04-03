@@ -7,28 +7,28 @@ using Senparc.Ncf.Core.Models;
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 
 /// <summary>
-/// PromptRange 靶场
+///PromptRange shooting range
 /// </summary>
-[Table(Register.DATABASE_PREFIX + nameof(PromptRange))] /*必须添加前缀，防止全系统中发生冲突*/
+[Table(Register.DATABASE_PREFIX + nameof(PromptRange))] /*The prefix must be added to prevent conflicts system-wide.*/
 [Serializable]
 public class PromptRange : EntityBase<int>
 {
     /// <summary>
-    /// 靶场代号（用户自定义）
+    /// Shooting range code (user-defined)
     /// </summary>
     [MaxLength(50)]
     //[CanBeNull]
     public string Alias { get; private set; }
 
     /// <summary>
-    /// 靶场名称（来自版号生成）
+    /// Shooting range name (from version number generation)
     /// </summary>
     [Required, MaxLength(20)]
     //[NotNull]
     public string RangeName { get; private set; }
 
     // /// <summary>
-    // /// 期望结果Json
+    // /// Expected result Json
     // /// </summary>
     // [MaxLength(200)]
     // [CanBeNull]
@@ -76,7 +76,7 @@ public class PromptRange : EntityBase<int>
     }
 
     /// <summary>
-    /// 当存在 <see cref="Alias"/> 时返回此属性，否则使用 <see cref="RangeName"/>
+    /// Return this property when <see cref="Alias"/> is present, otherwise use <see cref="RangeName"/>
     /// </summary>
     /// <returns></returns>
     public string GetAvailableName()

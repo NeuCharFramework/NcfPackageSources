@@ -16,32 +16,32 @@ using System.Linq;
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 
 /// <summary>
-/// PromptItem：每个不同版本的 Prompt 配置
+///PromptItem: Prompt configuration for each different version
 /// </summary>
-[Table(Register.DATABASE_PREFIX + nameof(PromptItem))] /*必须添加前缀，防止全系统中发生冲突*/
+[Table(Register.DATABASE_PREFIX + nameof(PromptItem))] /*The prefix must be added to prevent conflicts system-wide.*/
 [Serializable]
 public class PromptItem : EntityBase<int>
 {
     /// <summary>
-    /// 靶场 ID
+    ///rangeID
     /// </summary>
     public int RangeId { get; private set; }
 
     /// <summary>
-    /// 昵称
+    /// Nick name
     /// </summary>
     [MaxLength(50)]
     public string NickName { get; private set; }
 
     /// <summary>
-    /// Prompt内容
+    ///Prompt content
     /// </summary>
     public string Content { get; private set; }
 
     #region 模型参数
 
     /// <summary>
-    /// AI 模型的 AiModel.Id
+    /// AiModel.Id of the AI ​​model
     /// </summary>
     [Required]
     public int ModelId { get; private set; }
@@ -53,19 +53,19 @@ public class PromptItem : EntityBase<int>
     public float TopP { get; private set; }
 
     /// <summary>
-    /// 温度
+    /// temperature
     /// </summary>
     [Required]
     public float Temperature { get; private set; }
 
     /// <summary>
-    /// 最大 Token 数
+    ///Maximum number of Tokens
     /// </summary>
     [Required]
     public int MaxToken { get; private set; }
 
     /// <summary>
-    /// 频率惩罚
+    /// frequency penalty
     /// </summary>
     [Required]
     public float FrequencyPenalty { get; private set; }
@@ -73,7 +73,7 @@ public class PromptItem : EntityBase<int>
     [Required] public float PresencePenalty { get; private set; }
 
     /// <summary>
-    /// 停止序列（JSON 数组）
+    /// stop sequence (JSON array)
     /// </summary>
     public string StopSequences { get; private set; }
 
@@ -82,19 +82,19 @@ public class PromptItem : EntityBase<int>
     #region 打分
 
     /// <summary>
-    /// 评估参数, 平均分
+    /// evaluation parameters, average score
     /// </summary>
     [MaxLength(3)]
     public decimal EvalAvgScore { get; private set; } = -1;
 
     /// <summary>
-    /// 评估参数
+    ///evaluation parameters
     /// </summary>
     [MaxLength(3)]
     public decimal EvalMaxScore { get; private set; } = -1;
 
     /// <summary>
-    /// 期望结果Json
+    ///Expected result Json
     /// </summary>
     public string ExpectedResultsJson { get; private set; }
 
@@ -106,13 +106,13 @@ public class PromptItem : EntityBase<int>
     #region Full Version
 
     /// <summary>
-    /// <para>版本号，格式为 Name-Tactic-Aiming</para> 
+    /// <para>Version number, in the format Name-Tactic-Aiming</para> 
     /// <example>2023.12.14.1-T1.1-A123</example>
     /// <para>Name: <inheritdoc cref="RangeName"/></para>
     /// <para>Tactic: <inheritdoc cref="Tactic"/></para>
     /// <para>Aiming: <inheritdoc cref="Aiming"/></para>
-    ///         为   Tx              这里的x为分支号，str,允许1.1.1。。。
-    ///      Aiming   为   Ax              这里的x为打靶次数，int
+    /// is Tx where x is the branch number, str, 1.1.1 is allowed. . .
+    /// Aiming is Ax where x is the number of shooting times, int
     /// </summary>
     [Required, MaxLength(50)]
     public string FullVersion
@@ -122,12 +122,12 @@ public class PromptItem : EntityBase<int>
     }
 
     /// <summary>
-    /// 靶场名 -> 应该采用 PromptRange 中的名字
-    /// <para>格式为 yyyy.MM.dd.x ,这里的x为当天生成的序号，int</para>
-    /// <example>示例一
+    /// Range name -> should use the name in PromptRange
+    /// <para>The format is yyyy.MM.dd.x, where x is the serial number generated on the day, int</para>
+    /// <example>Example 1
     ///     <code>2023.12.14.1</code>
     /// </example>
-    /// <example>示例二
+    /// <example>Example 2
     ///     <code>2023.12.14.123</code>
     /// </example>
     /// </summary>
@@ -135,21 +135,21 @@ public class PromptItem : EntityBase<int>
     public string RangeName { get; private set; }
 
     /// <summary>
-    /// 靶道名
-    /// <para>格式为 x.x.x... ,这里的x为分支号</para>
-    /// <para>在完整的版本号中，应该用-T连接Name</para>
+    /// Target lane name
+    /// <para>The format is x.x.x..., where x is the branch number</para>
+    /// <para>In the complete version number, -T should be used to connect Name</para>
     /// 
     /// </summary>
     public string Tactic { get; private set; }
 
     /// <summary>
-    /// <para>为打靶次数，int</para>
+    /// <para>is the number of target shooting, int</para>
     /// </summary>
     [MaxLength(5)]
     public int Aiming { get; private set; }
 
     /// <summary>
-    /// 父Tactic, 可以是空串
+    /// Parent Tactic, can be an empty string
     /// </summary>
     [Required]
     public string ParentTac { get; private set; }
@@ -159,19 +159,19 @@ public class PromptItem : EntityBase<int>
     #region Prompt请求参数
 
     /// <summary>
-    /// 前缀
+    /// prefix
     /// </summary>
     [MaxLength(10)]
     public string Prefix { get; private set; }
 
     /// <summary>
-    /// 后缀
+    /// suffix
     /// </summary>
     [MaxLength(10)]
     public string Suffix { get; private set; }
 
     /// <summary>
-    /// 请求参数键值对 JSON 
+    /// Request parameter key-value pair JSON 
     /// </summary>
 
     public string VariableDictJson { get; private set; }
@@ -179,18 +179,18 @@ public class PromptItem : EntityBase<int>
     #endregion
 
     /// <summary>
-    /// Note（可选）
+    ///Note (optional)
     /// </summary>
     [MaxLength(20)]
     public string Note { get; private set; }
 
     /// <summary>
-    /// 最后一次运行时间
+    ///Last run time
     /// </summary>
     public DateTime LastRunTime { get; private set; } = DateTime.Now;
 
     /// <summary>
-    /// 是否公开
+    /// Is it public?
     /// </summary>
     public bool IsShare { get; private set; } = false;
 
@@ -199,19 +199,19 @@ public class PromptItem : EntityBase<int>
     #region 静态方法
 
     /// <summary>
-    /// 判断是否为 Version 格式
+    /// Determine whether it is Version format
     /// </summary>
     /// <returns></returns>
     public static bool IsPromptVersion(string versionOrNickName)
     {
-        /* 判断是否为 Prompt 版本（从左到右，必须包含 -T 之前的部分，-Txxx 为可选，当，出现 -T 时，-A 为可选，但 -A 不能单独出现）。
-         * 可能的格式为：
+        /* Determine whether it is a Prompt version (from left to right, the part before -T must be included, -Txxx is optional, when -T appears, -A is optional, but -A cannot appear alone).
+         * Possible formats are:
          * 2023.12.14.1-T1-A123，
          * 2023.12.14.2-T1.1-A123
          * 2023.12.14.3-T2.1-A123
          * 2023.12.14.1-T2.2-A123
          * 2023.12.14.1-T2.2.1-A123
-         * ...（T 后面可以有多个小数点）
+         * ...(T can have multiple decimal points after it)
          * 2023.12.14.1
          * 2023.12.14.2-T1.1
          */
@@ -219,45 +219,45 @@ public class PromptItem : EntityBase<int>
     }
 
     /// <summary>
-    /// 判断 Version 是否能匹配前缀
+    /// Determine whether Version can match the prefix
     /// </summary>
     /// <param name="compareString"></param>
     /// <param name="inputString"></param>
     /// <returns></returns>
     public static bool IsValidVersionSegment(string compareString, string inputString)
     {
-        // 完整正则表达式  
+        // Complete regular expression  
         string pattern = @"^\d{4}\.\d{2}\.\d{2}\.\d+(-T\d+(\.\d+)*(-A\d+)?)?$";
         Regex fullRegex = new Regex(pattern);
 
-        // 检查输入字符串和对比字符串是否完全匹配  
+        // Check if input string and comparison string match exactly  
         if (compareString == inputString)
         {
             return true;
         }
 
-        // 检查输入字符串是否部分匹配对比字符串  
+        // Check if the input string partially matches the comparison string  
         if (!fullRegex.IsMatch(compareString))
         {
             return false;
         }
 
-        // 分割对比字符串和输入字符串  
+        // Split comparison string and input string  
         string[] compareParts = compareString.Split('-');
         string[] inputParts = inputString.Split('-');
 
-        // 输入部分段数不能超过对比字符串段数  
+        // The number of input part segments cannot exceed the number of comparison string segments.  
         if (inputParts.Length > compareParts.Length)
         {
             return false;
         }
 
-        // 检查每个段是否匹配，并处理-T部分的继承规则  
+        // Checks each segment for a match and handles inheritance rules for the -T part  
         for (int i = 0; i < inputParts.Length; i++)
         {
             if (i == 0)
             {
-                // 比较日期段  
+                // Compare date range  
                 if (compareParts[i] != inputParts[i])
                 {
                     return false;
@@ -265,17 +265,17 @@ public class PromptItem : EntityBase<int>
             }
             else if (inputParts[i].StartsWith("T"))
             {
-                // 处理-T部分的继承规则  
+                // Inheritance rules for handling -T parts  
                 string[] compareTParts = compareParts[i].Substring(1).Split('.');
                 string[] inputTParts = inputParts[i].Substring(1).Split('.');
 
-                // 输入的T部分不能比对比的T部分更长  
+                // The T part of the input cannot be longer than the T part of the comparison  
                 if (inputTParts.Length > compareTParts.Length)
                 {
                     return false;
                 }
 
-                // 比较每一级T部分  
+                // Compare T-sections at each level  
                 for (int j = 0; j < inputTParts.Length; j++)
                 {
                     if (compareTParts[j] != inputTParts[j])
@@ -286,7 +286,7 @@ public class PromptItem : EntityBase<int>
             }
             else
             {
-                // 其他部分必须完全匹配  
+                // Other parts must match exactly  
                 if (compareParts[i] != inputParts[i])
                 {
                     return false;
@@ -303,7 +303,7 @@ public class PromptItem : EntityBase<int>
     #region ctor 构造函数
 
     /// <summary>
-    /// 导入时使用
+    /// used when importing
     /// </summary>
     /// <param name="promptRange"></param>
     /// <param name="nickName"></param>
@@ -360,6 +360,9 @@ public class PromptItem : EntityBase<int>
         VariableDictJson = variableDictJson;
         EvalAvgScore = -1;
         EvalMaxScore = -1;
+        
+        // Initialize NickName (to avoid null causing database saving failure)
+        NickName = string.Empty;
     }
 
     public PromptItem(int rangeId, string rangeName, string tactic, int aiming, string parentTac, PromptItem_AddRequest request) :
@@ -429,7 +432,7 @@ public class PromptItem : EntityBase<int>
     }
 
     /// <summary>
-    /// 更新使用的模型参数
+    /// Update the model parameters used
     /// </summary>
     /// <param name="topP"></param>
     /// <param name="temperature"></param>
@@ -498,7 +501,7 @@ public class PromptItem : EntityBase<int>
     }
 
     /// <summary>
-    /// 从 <see cref="VariableDictJson"/> 获取 <see cref="InputVariable"/> 对象
+    /// Get the <see cref="InputVariable"/> object from <see cref="VariableDictJson"/>
     /// </summary>
     /// <returns></returns>
     public IEnumerable<InputVariable> GetInputValiableObject()
@@ -524,7 +527,7 @@ public class PromptItem : EntityBase<int>
     }
 
     /// <summary>
-    /// 当存在 <see cref="NickName"/> 时返回此属性，否则使用 <see cref="FullVersion"/>
+    /// Return this property when <see cref="NickName"/> is present, otherwise use <see cref="FullVersion"/>
     /// </summary>
     /// <returns></returns>
     public string GetAvailableName()
@@ -541,7 +544,7 @@ public class PromptItem : EntityBase<int>
 
 
     /// <summary>
-    /// 根据 FullVersion 字符串获取 RangeName、Tactic、Aim参数
+    /// Get RangeName, Tactic, Aim parameters based on FullVersion string
     /// </summary>
     /// <param name="fullVersion"></param>
     /// <returns></returns>
@@ -556,7 +559,7 @@ public class PromptItem : EntityBase<int>
     }
 
     /// <summary>
-    /// 从 Tastic 字符串判断上一级 Tastic，如果已经是顶级，则返回 ""
+    /// Determine the previous level Tastic from the Tastic string. If it is already the top level, return ""
     /// </summary>
     /// <param name="tastic"></param>
     /// <returns></returns>

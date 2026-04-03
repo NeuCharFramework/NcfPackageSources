@@ -32,9 +32,9 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override string Name => "Senparc.Xncf.XncfBuilder";
 
-        public override string Uid => "C2E1F87F-2DCE-4921-87CE-36923ED0D6EA";//必须确保全局唯一，生成后必须固定
+        public override string Uid => "C2E1F87F-2DCE-4921-87CE-36923ED0D6EA";//Must ensure global uniqueness and must be fixed after generation
 
-        public override string Version => "0.10.1";//必须填写版本号
+        public override string Version => "0.10.1";//Version number is required
 
         public override string MenuName => "XNCF 模块生成器";
 
@@ -51,7 +51,7 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //更新数据库
+            //Update database
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
         }
 
@@ -61,9 +61,9 @@ namespace Senparc.Xncf.XncfBuilder
             XncfBuilderSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as XncfBuilderSenparcEntities;
             var xncfDbContextType = MultipleDatabasePool.Instance.GetXncfDbContextType(this.GetType());
 
-            //指定需要删除的数据实体
+            //Specify the data entity to be deleted
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(xncfDbContextType).Keys.ToArray();
-            //删除数据库表
+            //Delete database table
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
             await base.UninstallAsync(serviceProvider, unsinstallFunc).ConfigureAwait(false);
@@ -77,7 +77,7 @@ namespace Senparc.Xncf.XncfBuilder
             services.AddScoped<ConfigService>();
             services.AddScoped<PromptBuilderService>();
 
-            // Senparc.Xncf.AIKernel 模块
+            // Senparc.Xncf.AIKernel module
             services.AddScoped<AIModelService>();
             services.AddScoped<AIModelAppService>();
 

@@ -8,7 +8,7 @@ using Senparc.Ncf.Core.Models;
 namespace Senparc.Ncf.Core.Cache
 {
     /// <summary>
-    /// 省数据缓存（来自XML文件中）。不要直接使用此方法，使用Common.AreaData获取。
+    /// Provincial data cache (from XML file). Do not use this method directly, use Common.AreaData to get it.
     /// </summary>
     [AutoDIType(DILifecycleType.Singleton)]
     public class AreaDataCache_Province : BaseCache<List<AreaXML_Provinces>>
@@ -29,7 +29,7 @@ namespace Senparc.Ncf.Core.Cache
     }
 
     /// <summary>
-    /// 市数据缓存（来自XML文件中）。不要直接使用此方法，使用Common.AreaData获取。
+    /// City data cache (from XML file). Do not use this method directly, use Common.AreaData to get it.
     /// </summary>
     public class AreaDataCache_City : BaseCache<List<AreaXML_Cities>>
     {
@@ -48,7 +48,7 @@ namespace Senparc.Ncf.Core.Cache
     }
 
     /// <summary>
-    /// 区县数据缓存（来自XML文件中）。不要直接使用此方法，使用Common.AreaData获取。
+    /// District and county data cache (from XML file). Do not use this method directly, use Common.AreaData to get it.
     /// </summary>
     public class AreaDataCache_District : BaseCache<List<AreaXML_Districts>>
     {

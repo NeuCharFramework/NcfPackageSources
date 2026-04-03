@@ -89,7 +89,7 @@
                     const res = await service.get('/Admin/SenMapic/DatabaseSample?handler=Detail&uid=' + this.uid);
                     this.moduleData = res.data.data;
                 },
-                // 改变颜色
+                // change color
                 async changeColor(param) {
                     const res = await service.get('/Admin/SenMapic/DatabaseSample?handler=' + param + '&uid=' + this.uid);
                     this.moduleData.colorDto = res.data.data;

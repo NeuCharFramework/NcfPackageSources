@@ -40,10 +40,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
         #region MCP AI 接入（由于官方组件 bug，暂时使用平铺参数方式接入）
 
-        //[McpServerTool, Description("生成 XNCF 模块")]
-        //[FunctionRender("生成 XNCF", "根据配置条件生成 XNCF", typeof(Register))]
+        //[McpServerTool, Description("Generate XNCF module")]
+        //[FunctionRender("Generate XNCF", "Generate XNCF according to configuration conditions", typeof(Register))]
         public async Task<StringAppResponse> Build(
-            // [Required,Description("解决方案文件路径")]
+            // [Required,Description("Solution file path")]
             // string slnFilePath, 
             [Description("组织名称，默认为 Senparc")]
             string orgName,
@@ -76,10 +76,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 new Ncf.XncfBase.Functions.SelectionItem("database","数据库","使用数据库",true),
               }),
                 //   UseWeb = new Ncf.XncfBase.Functions.SelectionList( Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
-                //     new Ncf.XncfBase.Functions.SelectionItem("1","使用Web","使用Web",true),
+                //     new Ncf.XncfBase.Functions.SelectionItem("1","Use Web","Use Web",true),
                 //   }),
                 //   UseWebApi = new Ncf.XncfBase.Functions.SelectionList( Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
-                //     new Ncf.XncfBase.Functions.SelectionItem("1","使用WebApi","使用WebApi",true),
+                //     new Ncf.XncfBase.Functions.SelectionItem("1","Use WebApi","Use WebApi",true),
                 //   }),
                 NewSlnFile = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
                 new Ncf.XncfBase.Functions.SelectionItem("backup","备份 .sln 文件（推荐）","如果使用覆盖现有 .sln 文件，对当前文件进行备份",true),
@@ -106,7 +106,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
         #endregion
 
-        //[McpServerTool, Description("获取前端代码模板示例")]
+        //[McpServerTool, Description("Get front-end code template example")]
         public async Task<string> GetFrontEndCodeTemplate()
         {
             var template = BuildXncfAppService.FrontendTemplate;
@@ -114,7 +114,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
         }
 
-        //[McpServerTool, Description("获取后端代码模板示例")]
+        //[McpServerTool, Description("Get backend code template example")]
         public async Task<string> GetBackEndCodeTemplate()
         {
             var template = BuildXncfAppService.BackendTemplate;
@@ -122,7 +122,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             return template;
         }
 
-        //[McpServerTool, Description("获取文件内容")]
+        //[McpServerTool, Description("Get file content")]
         public async Task<BuildXncf_GetFileResponse> GetFile([Description("完整模块名，如 Senparc.Xncf.XncfBuilder")] string moduleName, [Description("在模块内的路径+文件名")] string filePath)
         {
             var response = new BuildXncf_GetFileResponse();
@@ -154,7 +154,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             return response;
         }
 
-        //[McpServerTool, Description("创建或更新文件内容，文件不存在时会自动创建")]
+        //[McpServerTool, Description("Create or update file content, the file will be created automatically if it does not exist")]
         public async Task<BuildXncf_CreateOrUpdateFileResponse> CreateOrUpdateFile([Description("完整模块名，如 Senparc.Xncf.XncfBuilder")] string moduleName,
            [Description("在模块内的路径+文件名")] string filePath,
            [Description("完整文件内容")] string fullFileContent)
@@ -174,7 +174,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     response.IsNewFile = true;
                 }
 
-                //TODO: 使用 SHA1 验证指纹，把旧文件内容进行缓存或差量备份
+                //TODO: Use SHA1 to verify fingerprints and cache or differentially back up old file contents
                 await File.WriteAllTextAsync(fullFilePath, fileContent);
                 response.Success = true;
                 response.FileName = Path.GetFileName(fullFilePath);

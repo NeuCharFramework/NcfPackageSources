@@ -55,14 +55,14 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             return $"{message}: {DateTime.Now}";
         }
 
-        //[McpServerTool, Description("获取当前时间")]
+        //[McpServerTool, Description("Get the current time")]
         //public static string Now(DoFuncReq reqeust)
         //{
-        //    Console.WriteLine("Now tool 收到请求：" + reqeust.ToJson());
+        //    Console.WriteLine("Now tool received request: " + reqeust.ToJson());
         //    return $"{reqeust.Str}: {DateTime.Now}";
         //}
 
-        //自动增加小时数
+        //Automatically add hours
         [McpServerTool, Description("自动增加小时数")]
         public static string AddHours(int hours)
         {
@@ -103,46 +103,46 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 //    // Arguments = ["-y", "@modelcontextprotocol/server-everything"],
                 //});
 
-                // 根据 MCP 服务器选择来确定端点
+                // Determine endpoints based on MCP server selection
                 string endpoint;
                 var selectedMcpServer = request.McpServerSelection.SelectedValues.FirstOrDefault();
                 
                 if (!string.IsNullOrEmpty(selectedMcpServer) && selectedMcpServer != "Manual")
                 {
-                    // 如果选中了非"手动输入"的 MCP 服务器，从注册列表中获取真实地址
+                    // If an MCP server other than "Manual Entry" is selected, get the real address from the registration list
                     var serverParts = selectedMcpServer.Split('|');
                     if (serverParts.Length == 2)
                     {
                         var xncfName = serverParts[0];
                         var mcpRoute = serverParts[1];
                         
-                        // 从 XncfRegisterManager 中查找对应的服务器信息
+                        // Find the corresponding server information from XncfRegisterManager
                         var mcpServerInfo = Senparc.Ncf.XncfBase.XncfRegisterManager.McpServerInfoCollection.Values
                             .FirstOrDefault(s => s.XncfName == xncfName && s.McpRoute == mcpRoute);
                         
                         if (mcpServerInfo != null)
                         {
-                            // 构建完整的服务器地址
+                            // Build the complete server address
                             endpoint = $"http://localhost:5000/{mcpServerInfo.McpRoute}/sse";
                             Console.WriteLine($"使用选中的 MCP 服务器: {mcpServerInfo.XncfName}，路由: {mcpServerInfo.McpRoute}/sse");
                         }
                         else
                         {
-                            // 如果找不到对应的服务器信息，回退到默认地址
+                            // If the corresponding server information cannot be found, fall back to the default address.
                             endpoint = "http://localhost:5000/mcp-senparc-xncf-mcp/sse";
                             Console.WriteLine($"警告：找不到选中的 MCP 服务器信息，使用默认端点");
                         }
                     }
                     else
                     {
-                        // 如果解析失败，回退到默认地址
+                        // If parsing fails, fall back to the default address
                         endpoint = "http://localhost:5000/mcp-senparc-xncf-mcp/sse";
                         Console.WriteLine($"警告：无法解析选中的 MCP 服务器标识: {selectedMcpServer}，使用默认端点");
                     }
                 }
                 else
                 {
-                    // 如果选中了"手动输入"或没有选择，使用手动输入的端点
+                    // If "Manual input" is checked or not selected, the manually entered endpoint is used
                     endpoint = request.Endpoint.IsNullOrEmpty() ? "http://localhost:5000/mcp-senparc-xncf-mcp/sse" : request.Endpoint;
                     Console.WriteLine("使用手动输入的端点");
                 }
@@ -169,7 +169,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 //     new Dictionary<string, object?>() { ["message"] = "Hello MCP!" }//,
                 //     /*System.Threading.CancellationToken.None*/);
 
-                // Console.WriteLine("MCP 收到结果：" + response.ToJson(true));
+                // Console.WriteLine("MCP received the result: " + response.ToJson(true));
 
 
 
@@ -236,9 +236,9 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
 
                       // kh.Plugins.AddMcpFunctionsFromSseServerAsync("NCF-Server", "http://localhost:5000/sse/sse");
 
-#pragma warning disable SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+#pragma warning disable SKEXP0001 // Types are for evaluation only and may be changed or removed in future updates. Cancel this diagnostic to continue.
                       kh.Plugins.AddFromFunctions("SenparcMcpPlugin", tools2.Select(z => z.AsKernelFunction()));
-#pragma warning restore SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+#pragma warning restore SKEXP0001 // Types are for evaluation only and may be changed or removed in future updates. Cancel this diagnostic to continue.
                   }
                       );
                 var executionSettings2 = new OpenAIPromptExecutionSettings
@@ -248,7 +248,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 };
                 var ka = new KernelArguments(executionSettings2) { };
 
-                ////输出结果
+                ////Output results
                 //SenparcAiResult ret = await semanticAiHandler.ChatAsync(iWantToRun, request.RequestPrompt/*, streamItemProceessing*/);
 
                 //////////var resultRaw = await iWantToRun.Kernel.InvokePromptAsync(request.RequestPrompt, ka);
@@ -267,14 +267,14 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                /* 页面上点击"执行"后，将调用这里的方法
+                /* After clicking "Execute" on the page, the method here will be called
                   *
-                  * 参数说明：
-                  * response：已经初始化后的返回结果
-                  * logger：日志
+                  * Parameter description:
+                  * response: the return result after initialization
+                  * logger: log
                   * 
-                  * 如果直接对 response 的属性修改，则最终 return null，
-                  * 否则可以返回一个新的 response 对象，系统将自动覆盖原有对象
+                  * If the properties of response are modified directly, null will eventually be returned.
+                  * Otherwise, a new response object can be returned, and the system will automatically overwrite the original object.
                   */
 
                 double calcResult = request.Number1;
@@ -332,14 +332,14 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             //RequestType request
             )
         {
-            /* 页面上点击"执行"后，将调用这里的方法
+            /* After clicking "Execute" on the page, the method here will be called
               *
-              * 参数说明：
-              * response：已经初始化后的返回结果
-              * logger：日志
+              * Parameter description:
+              * response: the return result after initialization
+              * logger: log
               * 
-              * 如果直接对 response 的属性修改，则最终 return null，
-              * 否则可以返回一个新的 response 对象，系统将自动覆盖原有对象
+              * If the properties of response are modified directly, null will eventually be returned.
+              * Otherwise, a new response object can be returned, and the system will automatically overwrite the original object.
               */
             RequestType request = new RequestType
             {
@@ -367,18 +367,18 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                     if (request.Number2 == 0)
                     {
                         //response.Success = false;
-                        //response.ErrorMessage = "被除数不能为0！";
+                        //response.ErrorMessage = "The dividend cannot be 0!";
                         return "被除数不能为0！";
                     }
                     calcResult = calcResult / request.Number2;
                     break;
                 default:
                     //response.Success = false;
-                    //response.ErrorMessage = $"未知的运算符：{theOperator}";
+                    //response.ErrorMessage = $"Unknown operator: {theOperator}";
                     return $"未知的运算符：{request.TheOperator}";
             }
 
-            //logger.Append($"进行运算：{number1} {theOperator} {number2} = {calcResult}");
+            //logger.Append($"Perform operation: {number1} {theOperator} {number2} = {calcResult}");
 
             Action<int> raisePower = p =>
             {
@@ -388,7 +388,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                     {
                         var oldValue = calcResult;
                         calcResult = Math.Pow(calcResult, request.Power);
-                        //logger.Append($"进行{power}次方运算：{oldValue}{(power == 2 ? "²" : "³")} = {calcResult}");
+                        //logger.Append($"Perform {power} power operation: {oldValue}{(power == 2 ? "²" : "³")} = {calcResult}");
                     }
                 }
             };
@@ -396,7 +396,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             raisePower(2);
             raisePower(3);
 
-            // response.Data = $"【{theOperator}】计算结果：{calcResult}。计算过程请看日志";
+            // response.Data = $"[{theOperator}] calculation result: {calcResult}. Please see the log for the calculation process";
             return $"【{request.TheOperator}】计算结果：{calcResult}。计算过程请看日志";
             // });
         }

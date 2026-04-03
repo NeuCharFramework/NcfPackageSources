@@ -1,6 +1,6 @@
 ﻿namespace Senparc.Xncf.Installer.Domain.Dto
 {
-    /* 模块信息数据传输对象*/
+    /* Module information data transfer object*/
     public class XncfRegisterDto
     {
         public bool IgnoreInstall { get; set; }

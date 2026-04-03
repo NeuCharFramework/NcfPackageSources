@@ -126,7 +126,7 @@ define(function (require) {
                 var itemModel = mpData.getItemModel(idx);
                 var symbolSize = itemModel.getShallow('symbolSize');
                 if (typeof symbolSize === 'function') {
-                    // FIXME 这里不兼容 ECharts 2.x，2.x 貌似参数是整个数据？
+                    // FIXME This is not compatible with ECharts 2.x. It seems that the parameter in 2.x is the entire data?
                     symbolSize = symbolSize(
                         mpModel.getRawValue(idx), mpModel.getDataParams(idx)
                     );

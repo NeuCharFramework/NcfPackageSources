@@ -12,91 +12,91 @@ using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
 {
     /// <summary>
-    /// LlmModel 数据库实体
+    ///LlmModel database entity
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(LlModel))] //必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(LlModel))] //The prefix must be added to prevent conflicts system-wide.
     [Serializable]
     public class LlModel : EntityBase<int>
     {
         /// <summary>
-        /// 代号
+        /// code name
         /// </summary>
         [Required, MaxLength(50)]
         public string Alias { get; private set; }
 
         /// <summary>
-        /// 名称（必须）
+        ///name (required)
         /// </summary>
         [Required, MaxLength(100)]
         public string DeploymentName { get; private set; }
 
         /// <summary>
-        /// Endpoint（必须）
+        ///Endpoint (required)
         /// </summary>
         [Required, MaxLength(250)]
         public string Endpoint { get; private set; }
 
         /// <summary>
-        /// 模型的类型（必须）, 例如：OpenAI,Azure OpenAI,HuggingFace
+        /// Model type (required), for example: OpenAI, Azure OpenAI, HuggingFace
         /// </summary>
         [Required, MaxLength(20)]
         public AiPlatform ModelType { get; private set; }
 
         /// <summary>
-        /// OrganizationId（可选）
+        ///OrganizationId (optional)
         /// </summary>
         [MaxLength(200)]
         public string OrganizationId { get; private set; }
 
         /// <summary>
-        /// ApiKey（可选）
+        ///ApiKey (optional)
         /// </summary>
         [MaxLength(200)]
         public string ApiKey { get; private set; }
 
         /// <summary>
-        /// ApiVersion（可选）
+        ///ApiVersion (optional)
         /// </summary>
         [MaxLength(100)]
         public string ApiVersion { get; private set; }
 
         /// <summary>
-        /// Note（可选）
+        ///Note (optional)
         /// </summary>
         [MaxLength(1000)]
         public string Note { get; private set; }
 
         /// <summary>
-        /// MaxToken（可选）
+        ///MaxToken (optional)
         /// </summary>
         [Required, DefaultValue(0)]
         public int MaxToken { get; private set; }
 
         // /// <summary>
-        // /// TextCompletionModelName（可选）
+        // /// TextCompletionModelName (optional)
         // /// </summary>
         // [MaxLength(100)]
         // public string TextCompletionModelName { get; private set; }
         //
         // /// <summary>
-        // /// TextEmbeddingModelName（可选）
+        // /// TextEmbeddingModelName (optional)
         // /// </summary>
         // [MaxLength(100)]
         // public string TextEmbeddingModelName { get; private set; }
         //
         // /// <summary>
-        // /// OtherModelName（可选）
+        // /// OtherModelName (optional)
         // /// </summary>
         // [MaxLength(100)]
         // public string OtherModelName { get; private set; }
 
         /// <summary>
-        /// 是否共享
+        /// Whether to share
         /// </summary>
         public bool IsShared { get; private set; }
 
         /// <summary>
-        /// 是否展示
+        /// Whether to display
         /// </summary>
         public bool Show { get; private set; }
 

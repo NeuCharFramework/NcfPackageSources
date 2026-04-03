@@ -5,19 +5,19 @@ using System.Text;
 namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Config
 {
     /// <summary>
-    /// 允许扩展名类
+    /// Allow extension classes
     /// </summary>
     public class AllowFileExtension
     {
         /// <summary>
-        /// 图片扩展名
+        ///image extension
         /// </summary>
         public static readonly HashSet<string> ImageExtension = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             ".png", ".jpg", ".jpeg", ".gif", ".bmp"
         };
         /// <summary>
-        /// 音视频扩展名
+        /// audio and video extension
         /// </summary>
         public static readonly HashSet<string> VideoExtensiong = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
@@ -25,7 +25,7 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Config
             ".ogg", ".ogv", ".mov", ".wmv", ".mp4", ".webm", ".mp3", ".wav", ".mid"
         };
         /// <summary>
-        /// 文件扩展名
+        /// file extension
         /// </summary>
         public static readonly HashSet<string> FileExtension = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {

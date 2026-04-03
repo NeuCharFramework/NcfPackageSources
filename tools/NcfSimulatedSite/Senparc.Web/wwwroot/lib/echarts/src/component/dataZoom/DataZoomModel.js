@@ -238,8 +238,8 @@ define(function(require) {
 
             if (autoAxisIndex) {
                 // FIXME
-                // 这里是兼容ec2的写法（没指定xAxisIndex和yAxisIndex时把scatter和双数值轴折柱纳入dataZoom控制），
-                // 但是实际是否需要Grid.js#getScaleByOption来判断（考虑time，log等axis type）？
+                // Here is the writing method compatible with ec2 (when xAxisIndex and yAxisIndex are not specified, scatter and double value axis folding columns are included in dataZoom control),
+                // But is Grid.js#getScaleByOption actually needed to judge (consider axis types such as time, log, etc.)?
 
                 // If both dataZoom.xAxisIndex and dataZoom.yAxisIndex is not specified,
                 // dataZoom component auto adopts series that reference to
@@ -277,8 +277,8 @@ define(function(require) {
          */
         _isSeriesHasAllAxesTypeOf: function (seriesModel, axisType) {
             // FIXME
-            // 需要series的xAxisIndex和yAxisIndex都首先自动设置上。
-            // 例如series.type === scatter时。
+            // The xAxisIndex and yAxisIndex of the required series are automatically set first.
+            // For example, when series.type === scatter.
 
             var is = true;
             eachAxisDim(function (dimNames) {

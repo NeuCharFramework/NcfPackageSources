@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 {
     /// <summary>
-    /// ChatGroupMemer 数据库实体 DTO
+    /// ChatGroupMemer Database Entity DTO
     /// </summary>
     public class ChatGroupMemberDto : DtoBase
     {
@@ -21,7 +21,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         public int AgentTemplateId { get;  set; }
 
         /// <summary>
-        /// AgentTemplate（类型同名）
+        ///AgentTemplate (type with the same name)
         /// </summary>
         public AgentTemplate AgentTemplate { get;  set; }
 
@@ -31,7 +31,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         public int ChatGroupId { get;  set; }
 
         ///// <summary>
-        ///// ChatGroup（类型同名）
+        ///// ChatGroup (type with the same name)
         ///// </summary>
         //public ChatGroup ChatGroup { get;  set; }
 

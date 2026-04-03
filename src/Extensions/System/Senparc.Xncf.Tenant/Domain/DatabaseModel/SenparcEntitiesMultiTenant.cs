@@ -13,22 +13,22 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.Tenant.Domain.DatabaseModel
 {
-    /* 说明：
-     * 把 SenparcEntitiesMultiTenantBase 独立出来做一层的意义在于剥离必须需要支持多租户的对象（如系统表），
-     * 这样可以单独初始化一个只有 TenantInfo，而没有任何其他系统表的 DbContext。
-     * 这么做可以避免一种死循环的情况：
-     *      1、在缓存第一次录入租户信息（TenantInfos）的过程中，需要初始化所有表，并执行 OnModelCreating()，
-     *          而 OnModelCreating() 在整个系统服务生命周期中只执行一次，而此时马上要确定依赖多租户对象（如系统表）的租户信息，
-     *      2、但多租户信息此时尚未生成，如果尝试获取，就进入到 1 的循环中。
+    /* illustrate:
+     * The significance of making SenparcEntitiesMultiTenantBase independent as a layer is to separate objects that must support multi-tenancy (such as system tables).
+     * This allows you to separately initialize a DbContext with only TenantInfo and no other system tables.
+     * This can avoid an infinite loop situation:
+     * 1. During the process of caching tenant information (TenantInfos) entered for the first time, all tables need to be initialized and OnModelCreating() executed.
+     * OnModelCreating() is only executed once in the entire system service life cycle. At this time, the tenant information that relies on multi-tenant objects (such as system tables) must be determined immediately.
+     * 2. However, the multi-tenant information has not been generated yet. If you try to obtain it, you will enter the loop of 1.
      */
 
     /// <summary>
-    /// 多租户 EF Core DbContext
+    ///Multi-tenant EF Core DbContext
     /// </summary>
     public sealed class SenparcEntitiesMultiTenant : SenparcEntitiesDbContextBase, ISenparcEntitiesDbContext
     {
         /// <summary>
-        /// 多租户信息
+        ///Multi-tenant information
         /// </summary>
         public DbSet<TenantInfo> TenantInfos { get; set; }
 

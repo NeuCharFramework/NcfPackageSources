@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Core.Authorization
 {
     /// <summary>
-    /// 校验
+    ///check
     /// </summary>
     public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
     {
@@ -21,12 +21,12 @@ namespace Senparc.Ncf.Core.Authorization
         {
             if (requirement.ResourceCodes.Length == 1 && PermissionRequirement.All.Equals(requirement.ResourceCodes[0]))
             {
-                // 有且仅有一个*
+                // There is and only one*
                 context.Succeed(requirement);
                 return;
             }
             int adminUserInfoId = GetCurrentAdminUserInfoId(context);
-            bool hasPermission = await _checkPermission.HasPermissionAsync(requirement.ResourceCodes, adminUserInfoId); // 当前用户是否有权限
+            bool hasPermission = await _checkPermission.HasPermissionAsync(requirement.ResourceCodes, adminUserInfoId); // Does the current user have permissions?
             if (hasPermission)
             {
                 context.Succeed(requirement);
@@ -38,7 +38,7 @@ namespace Senparc.Ncf.Core.Authorization
         }
 
         /// <summary>
-        /// 获取当前登录人Id
+        /// Get the current login user ID
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>

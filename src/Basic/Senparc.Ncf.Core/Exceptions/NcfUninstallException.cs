@@ -6,7 +6,7 @@ using System.Text;
 namespace Senparc.Ncf.Core
 {
     /// <summary>
-    /// NCF 未安装
+    ///NCF not installed
     /// </summary>
     public class NcfUninstallException : NcfExceptionBase
     {

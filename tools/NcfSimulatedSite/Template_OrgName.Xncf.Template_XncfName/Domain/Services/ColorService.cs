@@ -25,9 +25,9 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
         public async Task<ColorDto> GetOrInitColor()
         {
             var color = await base.GetObjectAsync(z => true);
-            if (color == null)//如果是纯第一次安装，理论上不会有残留数据
+            if (color == null)//If this is a purely first-time installation, theoretically there will be no residual data.
             {
-                //创建默认颜色
+                //Create default colors
                 ColorDto colorDto = await this.CreateNewColor().ConfigureAwait(false);
                 return colorDto;
             }
@@ -37,7 +37,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
 
         public async Task<ColorDto> Brighten()
         {
-            //TODO:异步方法需要添加排序功能
+            //TODO: The asynchronous method needs to add sorting function
             var obj = await this.GetObjectAsync(z => true, z => z.Id, OrderingType.Descending);
             obj.Brighten();
             await base.SaveObjectAsync(obj).ConfigureAwait(false);
@@ -46,7 +46,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
 
         public async Task<ColorDto> Darken()
         {
-            //TODO:异步方法需要添加排序功能
+            //TODO: The asynchronous method needs to add sorting function
             var obj = await this.GetObjectAsync(z => true, z => z.Id, OrderingType.Descending);
             obj.Darken();
             await base.SaveObjectAsync(obj).ConfigureAwait(false);
@@ -55,13 +55,13 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
 
         public async Task<ColorDto> Random()
         {
-            //TODO:异步方法需要添加排序功能
+            //TODO: The asynchronous method needs to add sorting function
             var obj = await this.GetObjectAsync(z => true, z => z.Id, OrderingType.Descending);
             obj.Random();
             await base.SaveObjectAsync(obj).ConfigureAwait(false);
             return base.Mapper.Map<ColorDto>(obj);
         }
 
-        //TODO: 更多业务方法可以写到这里
+        //TODO: More business methods can be written here
     }
 }

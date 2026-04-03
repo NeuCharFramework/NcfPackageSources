@@ -108,3 +108,5 @@ tools/NcfDesktopApp.GUI/安全性与隐私中允许*
 tools/NcfDesktopApp.GUI/publish-self-contained/*
 /.github/appmod/custom-tasks/
 *.tmp
+.vscode/settings.json
+.venv_translate/*

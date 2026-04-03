@@ -11,27 +11,27 @@ namespace Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto
     {
 
         /// <summary>  
-        /// 关联的表格ID。  
+        ///The associated table ID.  
         /// </summary>  
         public int TableId { get; set; }
 
         /// <summary>  
-        /// 关联的列ID。  
+        /// Associated column ID.  
         /// </summary>  
         public int ColumnMetadataId { get; set; }
 
         /// <summary>  
-        /// 单元格的值。  
+        ///The value of the cell.  
         /// </summary>  
         public string CellValue { get; set; }
 
         /// <summary>  
-        /// 关联的表格元数据。  
+        /// Associated table metadata.  
         /// </summary>  
         //public TableMetadata TableMetadata { get; set; }
 
         /// <summary>  
-        /// 关联的列元数据。  
+        /// Associated column metadata.  
         /// </summary>  
         public ColumnMetadataDto ColumnMetadata { get; set; }
 

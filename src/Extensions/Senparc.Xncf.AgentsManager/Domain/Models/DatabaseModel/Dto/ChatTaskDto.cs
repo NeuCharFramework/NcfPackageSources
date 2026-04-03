@@ -31,19 +31,19 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
         public DateTime EndTime { get; set; }
 
         /// <summary>
-        /// 对于对话结果的评价
+        /// Comment on the outcome of the conversation
         /// </summary>
         public string ResultComment { get; set; }
 
 
         /// <summary>
-        /// 进行 WebHook 的平台
+        /// Platform for performing WebHook
         /// </summary>
         [Required]
         public HookPlatform HookPlatform { get; set; }
 
         /// <summary>
-        /// 进行 WebHook 的平台参数
+        /// Platform parameters for WebHook
         /// </summary>
         public string HookPlatformParameter { get; set; }
 
@@ -85,7 +85,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
     }
 
     /// <summary>
-    /// 用于缓存的当前运行任务信息
+    /// used to cache currently running task information
     /// </summary>
     public class RunningChatTaskDto
     {

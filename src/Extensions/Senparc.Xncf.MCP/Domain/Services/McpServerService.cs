@@ -27,7 +27,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
     }
 
     /// <summary>
-    /// NCF 内置启动的 MCP 服务（Server）
+    ///NCF built-in started MCP service (Server)
     /// </summary>
     public class McpServerService(IServiceProvider serviceProvider)
     {
@@ -59,13 +59,13 @@ namespace Senparc.Xncf.MCP.Domain.Services
                 McpServerCollection[mcpServerName] = mcpServerData;
             }
 
-            //TODO: 找一个没有被用过的端口
+            //TODO: Find an unused port
 
             IHost? _extraHost = mcpServerData.Host;
             CancellationTokenSource? _cts = mcpServerData.CancellationTokenSource;
             bool _isRunning = mcpServerData.IsRunning;
 
-            if (_isRunning) return;  // 防止重复启动
+            if (_isRunning) return;  // Prevent repeated starts
             _cts = new CancellationTokenSource();
 
             _extraHost = Host.CreateDefaultBuilder()
@@ -88,10 +88,10 @@ namespace Senparc.Xncf.MCP.Domain.Services
                               })
                               .Configure(app =>
                               {
-                                  // 启用路由支持
+                                  // Enable routing support
                                   app.UseRouting();
 
-                                  // 配置端点，包括 "/"
+                                  // Configure the endpoint, including "/"
                                   app.UseEndpoints(endpoints =>
                                   {
                                       endpoints.MapGet("/", async context =>
@@ -108,7 +108,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
 
                                       routeGroup.MapGet("/ncf-mcp-sse", async (HttpContext context, HttpResponse response, CancellationToken requestAborted) =>
                                       {
-                                          // 检查 Token
+                                          // Check Token
                                           var configuredToken = mcpServerData.accessToken;
 
                                           if (string.IsNullOrEmpty(configuredToken))

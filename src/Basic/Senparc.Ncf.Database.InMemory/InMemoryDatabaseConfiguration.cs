@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Database.InMemory
 {
     /// <summary>
-    /// SQLite 数据库配置
+    ///SQLite database configuration
     /// </summary>
     public class InMemoryDatabaseConfiguration : DatabaseConfigurationBase<InMemoryDbContextOptionsBuilderForNcf, /*InMemoryOptionsExtension*/ InMemoryOptionsExtensionForNcf>
     {
@@ -31,9 +31,9 @@ namespace Senparc.Ncf.Database.InMemory
         public override Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase =>
             (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
             {
-                //其他更多配置
+                //Other more configurations
 
-                //执行 UseInMemory（必须）
+                //Execute UseInMemory (required)
                 //optionsBuilder.UseInMemory(CreateInMemoryDatabase(connectionString), actionBase);
 
                 optionsBuilder.UseInMemoryDatabase(connectionString);
@@ -41,19 +41,19 @@ namespace Senparc.Ncf.Database.InMemory
 
         public override Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension => (builder, xncfDatabaseData) =>
         {
-            //更多数据库操作独立配置（非必须）
+            //More independent configuration of database operations (not required)
         };
 
 
         public override string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath)
         {
-            //不需要用到
+            //No need to use
             return null;
         }
 
         public override string GetDropTableSql(DbContext dbContext, string tableName)
         {
-            //不需要用到
+            //No need to use
             return null;
         }
     }

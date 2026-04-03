@@ -32,7 +32,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         public IWantToRun IWantToRun { get; set; }
 
-        private string _userId = "XncfBuilder"; //区分用户
+        private string _userId = "XncfBuilder"; //Distinguish between users
 
         public PromptService(PromptRangeService promptRangeService, PromptItemService promptItemService, ISenparcAiSetting senparcAiSetting = null, AIModelService aiModelService = null)
         {
@@ -54,10 +54,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        /// 根据输入的 Version、NickName 等规则，找到关联 PromptItem 中质量最好的一个
-        /// <para>当明确指定时，会精确命中； </para>
-        /// <para>当 Version 是模糊查询时，在下级 PromptItem 中查找最好的一个</para>
-        /// <para>当 NickName 存在多个的时候，寻找同名的最好的一个</para>
+        /// Based on the input Version, NickName and other rules, find the best quality among the associated PromptItems
+        /// <para>When explicitly specified, an exact hit will occur; </para>
+        /// <para>When Version is a fuzzy query, find the best one among the lower-level PromptItems</para>
+        /// <para>When there are multiple NickNames, find the best one with the same name</para>
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="senparcAiSetting"></param>
@@ -71,13 +71,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// <returns></returns>
         public async Task<T> GetPromptResultAsync<T>(ISenparcAiSetting senparcAiSetting, string input, SenparcAiArguments context = null, Dictionary<string, List<string>> pluginCollection = null, string pluginDir = null, IPromptTemplateFactory? promptTemplateFactory = null, IServiceProvider? services = null, params KernelFunction[] functionPiple)
         {
-            //准备运行
-            //var userId = "XncfBuilder";//区分用户
-            //var modelName = "text-davinci-003";//默认使用模型
+            //ready to run
+            //var userId = "XncfBuilder";//Differentiate users
+            //var modelName = "text-davinci-003"; //Use model by default
 
             var iWantToRun = IWantToRun ?? ReBuildKernel(senparcAiSetting);
 
-            ////TODO:外部传入配置
+            ////TODO: External incoming configuration
             //var promptParameter = new PromptConfigParameter()
             //{
             //    MaxTokens = 6000,
@@ -90,21 +90,21 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             if (pluginCollection?.Count > 0)
             {
-                //优先从数据库找
-                var fromDatabasePrompt = pluginDir.IsNullOrEmpty();//不提供文件地址时，优先从数据库找
+                //Find it first from the database
+                var fromDatabasePrompt = pluginDir.IsNullOrEmpty();//When the file address is not provided, priority is given to finding it from the database.
 
                 pluginDir ??= Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
 
                 foreach (var pluginItem in pluginCollection)
                 {
-                    //第一层：靶场，对应 Plugin
+                    //The first level: shooting range, corresponding to Plugin
 
-                    var pluginName = pluginItem.Key;//Plugin 名字
+                    var pluginName = pluginItem.Key;//Plugin name
                     var functionNames = pluginItem.Value;
 
-                    KernelPlugin kernelPlugin = null;//导入 Plugin 后的 KernelPlugin 对象
+                    KernelPlugin kernelPlugin = null;//KernelPlugin object after importing Plugin
 
-                    var tryLocalPromptFile = false; //从数据库读取失败，需要尝试从本地文件读取
+                    var tryLocalPromptFile = false; //Failed to read from database, need to try reading from local file
 
                     if (iWantToRun.Kernel.Plugins.Contains(pluginName))
                     {
@@ -114,7 +114,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     {
                         if (fromDatabasePrompt)
                         {
-                            //从数据库读取
+                            //Read from database
 
                             ILoggerFactory loggerFactory = services?.GetService<ILoggerFactory>() ?? NullLoggerFactory.Instance;
                             IPromptTemplateFactory factory = promptTemplateFactory ?? new KernelPromptTemplateFactory(loggerFactory);
@@ -124,54 +124,54 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                             var promptRange = await this._promptRangeService.GetObjectAsync(z => z.Alias == pluginName || z.RangeName == pluginName);
                             if (promptRange == null)
                             {
-                                //转到尝试用文件读取
+                                //Go to try reading with file
                                 tryLocalPromptFile = true;
                             }
                             else
                             {
-                                //查找下属所有的靶道
+                                //Find all target lanes for subordinates
                                 var allPromptItems = await this._promptItemService
                                     .GetObjectListAsync(0, 0,
                                     z => z.RangeId == promptRange.Id
-                                    //&& (functionNames.Any(f => f == z.FullVersion) //完整版本信息匹配
-                                    //    || functionNames.Any(f => f == z.NickName)) //别称匹配
+                                    //&& (functionNames.Any(f => f == z.FullVersion) //Full version information matching
+                                    //    || functionNames.Any(f => f == z.NickName)) //alias matching
                                     ,
                                     z => z.EvalMaxScore, OrderingType.Descending);
 
-                                /* PromptItem 的命中有几种可能：
-                                 * 1、FullVersion 达到匹配 functionName 要求
-                                 * 2、NickName 达到匹配 functionName 要求（常见）
-                                 * 3、满足上述任意条件后（都可能多个），在相关记录内，找到评分最高的一个
+                                /* There are several possibilities for PromptItem hits:
+                                 * 1. FullVersion meets the requirement of matching functionName
+                                 * 2. NickName meets the requirement of matching functionName (common)
+                                 * 3. After meeting any of the above conditions (there may be multiple), find the one with the highest score in the relevant records
                                  */
 
                                 Dictionary<string, PromptItem> filteredPromptItems = new Dictionary<string, PromptItem>();
 
                                 foreach (var functionName in functionNames)
                                 {
-                                    //第二层：在某个靶场下的具体 PromptItem 筛选
+                                    //Second level: specific PromptItem filtering under a certain shooting range
                                     List<PromptItem> filteredItems = null;
                                     if (PromptItem.IsPromptVersion(functionName))
                                     {
-                                        //符合版本格式
+                                        //Comply with version format
                                         filteredItems = allPromptItems
                                             .Where(z => PromptItem.IsValidVersionSegment(z.FullVersion, functionName))
                                             .ToList();
                                     }
                                     else
                                     {
-                                        //使用别名查找
+                                        //Find using alias
                                         filteredItems = allPromptItems
                                                .Where(z => z.NickName == functionName)
                                                .ToList();
                                     }
 
-                                    //选择最佳结果
+                                    //Select best result
                                     if (filteredItems?.Count != 0)
                                     {
                                         var theBestItem = filteredItems.OrderByDescending(z => z.EvalMaxScore).FirstOrDefault();
                                         if (theBestItem != null)
                                         {
-                                            //加入当前 functionName 的最佳结果
+                                            //Add the best results for the current functionName
                                             filteredPromptItems.Add(functionName, theBestItem);
 
                                             #region 使用当前制定的 AI 模型进行生成
@@ -190,7 +190,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                                                     if (iWantToRun.IWantToBuild.IWantToConfig.IWantTo.SenparcAiSetting == null)
                                                     {
                                                         SenparcTrace.BaseExceptionLog(new Exception("AI 模型配置错误，将使用系统默认配置进行覆盖！"));
-                                                        //采用默认配置覆盖
+                                                        //Override with default configuration
                                                         iWantToRun.SemanticKernelHelper.ResetSenparcAiSetting(Senparc.AI.Config.SenparcAiSetting);
                                                     }
                                                 }
@@ -200,9 +200,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
                                             PromptTemplateConfig promptTemplateConfig = new PromptTemplateConfig()
                                             {
-                                                Description = theBestItem.Note,//TODO: 专门提供注释
+                                                Description = theBestItem.Note,//TODO: Specially provide comments
                                                 Name = this.GetAvaliableFunctionName(theBestItem.GetAvailableName()),
-                                                //设置模型参数
+                                                //Set model parameters
                                                 ExecutionSettings = new Dictionary<string, PromptExecutionSettings>() {
                                                     { "Default", new PromptExecutionSettings() {
                                                         ExtensionData = new Dictionary<string, object>() {
@@ -216,7 +216,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                                                          }
                                                     }
                                                  },
-                                                //设置输入参数
+                                                //Set input parameters
                                                 InputVariables = theBestItem.VariableDictJson.IsNullOrEmpty()
                                                                     ? new List<InputVariable>()
                                                                     : theBestItem.GetInputValiableObject().Select(z => new InputVariable(z)).ToList(),
@@ -245,15 +245,15 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         }
                     }
 
-                    //需要从 Plugin 文件读取
+                    //Need to read from Plugin file
                     if (!fromDatabasePrompt || tryLocalPromptFile)
                     {
-                        //从文件读取
+                        //read from file
                         var finalDir = Path.Combine(pluginDir, pluginName);
                         kernelPlugin = iWantToRun.ImportPluginFromPromptDirectory(finalDir, pluginName).kernelPlugin;
                     }
 
-                    //统一将文件或数据库读取的 function 进行注册
+                    //Unifiedly register functions for reading files or databases
                     foreach (var functionName in functionNames)
                     {
                         if (kernelPlugin.Contains(functionName))
@@ -262,7 +262,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                         }
                         else
                         {
-                            //TODO:给出警告
+                            //TODO: give a warning
                         }
 
                     }
@@ -283,18 +283,18 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 }
             }
 
-            //构建请求对象
+            //Build request object
             var request = context == null
                 ? iWantToRun.CreateRequest(input, true, allFunctionPiple.ToArray())
                 : iWantToRun.CreateRequest(context.KernelArguments, true, allFunctionPiple.ToArray());
-            //请求
+            //ask
             var result = await iWantToRun.RunAsync<T>(request);
             return result.Output;
         }
 
         /// <summary>
-        /// 提供可供 functionName 使用的名称
-        /// <para>如果出现特殊字符，可能出现错误：A function name can contain only ASCII letters, digits, and underscores: '2024.05.17.1-T1.1-A3' is not a valid name. (Parameter 'value')</para>
+        /// Provides a name that functionName can use
+        /// <para>If special characters appear, an error may occur: A function name can contain only ASCII letters, digits, and underscores: '2024.05.17.1-T1.1-A3' is not a valid name. (Parameter 'value')</para>
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>

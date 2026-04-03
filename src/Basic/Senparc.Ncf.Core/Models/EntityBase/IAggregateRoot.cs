@@ -5,7 +5,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// 聚合根
+    /// aggregate root
     /// </summary>
     public interface IAggregateRoot
     {

@@ -46,7 +46,7 @@
             :page.sync="listQuery.pageIndex"
             :limit.sync="listQuery.pageSize"
             @@pagination="getList"></pagination>*@
-        <!--编辑、新增 -->
+        <!--Edit, add -->
         <el-dialog :title="dialog.title" :visible.sync="dialog.visible" :close-on-click-modal="false">
             <el-form ref="dataForm"
                      :rules="dialog.rules"
@@ -54,7 +54,7 @@
                      label-position="left"
                      label-width="100px"
                      style="max-width: 400px; margin-left:50px;">
-                @*<p class="username-tip" v-if="dialog.title==='编辑管理员'">不建议修改用户名！</p>*@
+                @*<p class="username-tip" v-if="dialog.title==='Edit Admin'">It is not recommended to change your username!</p>*@
                 <el-form-item label="系统名称" prop="systemName">
                     <el-input v-model="dialog.data.systemName" clearable placeholder="请输入系统名称" />
                 </el-form-item>

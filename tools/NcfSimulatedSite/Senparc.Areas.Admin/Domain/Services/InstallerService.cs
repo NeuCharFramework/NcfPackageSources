@@ -36,20 +36,20 @@ namespace Senparc.Areas.Admin.Domain.Services
             Senparc.Xncf.Menu.Register menuRegister = new Senparc.Xncf.Menu.Register();
 
             {
-                //开始安装权限模块
-                //（必须放在第一个，其他模块操作都需要依赖此模块）
+                //Start installing permission module
+                //(Must be placed first, other module operations need to rely on this module)
                 await InstallAndOpenModuleAsync(systemPermissionRegister, serviceProvider, tenantInfo, installNow: false, addMenu: false);
 
-                //开始安装菜单管理模块
-                //（必须放在第二个，其他模块操作都需要依赖此模块）
+                //Start installing the menu management module
+                //(Must be placed second, other module operations need to rely on this module)
                 await InstallAndOpenModuleAsync(menuRegister, serviceProvider, tenantInfo, installNow: false, addMenu: false);
 
                 try
                 {
-                    //安装权限、菜单等默认模块和配置
+                    //Install default modules and configurations such as permissions and menus
 
                     NcfSysMenuService _sysMenuService = serviceProvider.GetService<NcfSysMenuService>();
-                    //.Init 内部还会执行一次
+                    //.Init will be executed once internally
                     _sysMenuService.SetTenantInfoForAllServices(tenantInfoService.GetRequestTenantInfo(tenantInfo));
 
                     _sysMenuService.Init(tenantInfoService.GetRequestTenantInfo(tenantInfo), adminUserInfoId);
@@ -61,36 +61,36 @@ namespace Senparc.Areas.Admin.Domain.Services
                     throw;
                 }
 
-                //开始安装模块理管理模块
-                //（必须放在第三个，其他模块操作都需要依赖此模块）
+                //Start installing the module management module
+                //(Must be placed in the third position, other module operations need to rely on this module)
                 await InstallAndOpenModuleAsync(xncfModuleManagerRegister, serviceProvider, tenantInfo);
 
-                //开始安装系统基础模块
+                //Start installing system basic modules
                 await InstallAndOpenModuleAsync(systemCoreRegister, serviceProvider, tenantInfo);
 
-                //开始安装系统管理管理模块
+                //Start installing the system management management module
                 await InstallAndOpenModuleAsync(systemManagerRegister, serviceProvider, tenantInfo);
 
-                //开始安装 Areas 模块
+                //Start installing the Areas module
                 await InstallAndOpenModuleAsync(areasBaseRegister, serviceProvider, tenantInfo);
 
-                ////开始安装 Installer 模块
+                ////Start installing the Installer module
                 //await InstallAndOpenModuleAsync(installerRegister, serviceProvider);
 
-                //安装租户模块
+                //Install tenant module
                 //if (Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.EnableMultiTenant)
                 //{
                 //    await InstallAndOpenModuleAsync(tenantRegister, serviceProvider, tenantInfo);
                 //}
 
-                //将权限模块进行安装
+                //Install the permission module
                 await InstallAndOpenModuleAsync(systemPermissionRegister, serviceProvider, tenantInfo, true, true);
 
-                //将菜单模块进行安装
+                //Install the menu module
                 await InstallAndOpenModuleAsync(menuRegister, serviceProvider, tenantInfo, true, true);
             }
 
-            //TODO:选择性安装用户自定义模块
+            //TODO: Selectively install user-defined modules
             {
                 List<string> installedList = new List<string> { "00000000-0000-0000-0001-000000000001", "00000000-0000-0000-0001-000000000002", "00000000-0000-0000-0001-000000000003", "00000000-0000-0000-0001-000000000004"
                 , "00000000-0000-0000-0001-000000000005", "00000000-0000-0000-0001-000000000006","00000000-0000-0001-0001-000000000001", "62FBB022-B04E-423F-82FE-926D418A0815"};
@@ -108,10 +108,10 @@ namespace Senparc.Areas.Admin.Domain.Services
                 //                await _xncfModuleService.InstallModuleAsync(needModelId);
                 //                docModule = await _xncfModuleService.GetObjectAsync(z => z.Uid == needModelId);
                 //            }
-                //            //开启模块
-                //            if (docModule.State != Ncf.Core.Enums.XncfModules_State.开放)
+                //            //Open module
+                //            if (docModule.State != Ncf.Core.Enums.XncfModules_State.open)
                 //            {
-                //                docModule.UpdateState(Ncf.Core.Enums.XncfModules_State.开放);
+                //                docModule.UpdateState(Ncf.Core.Enums.XncfModules_State.Open);
                 //                await _xncfModuleService.SaveObjectAsync(docModule);
                 //            }
                 //        }
@@ -124,39 +124,39 @@ namespace Senparc.Areas.Admin.Domain.Services
                 var _xncfModuleService = xncfModuleServiceExtension;
                 _xncfModuleService.SetTenantInfo(tenantInfoService.GetRequestTenantInfo(tenantInfo));
 
-                //开始安装并启用系统模块（Admin）
+                //Start installing and enabling system modules (Admin)
                 Senparc.Areas.Admin.Register adminRegister = new Senparc.Areas.Admin.Register();
                 var adminModule = await InstallAndOpenModuleAsync(adminRegister, serviceProvider, tenantInfo);
-                //确保已被赋值
+                //Make sure it has been assigned
                 adminModule ??= await _xncfModuleService.GetObjectAsync(z => z.Uid == adminRegister.Uid);
 
-                //一次性保存（所有）修改
+                //Save (all) changes at once
                 await _xncfModuleService.SaveObjectAsync(adminModule).ConfigureAwait(false);
 
                 var _systemConfigService = serviceProvider.GetService<SystemConfigService>();
                 _systemConfigService.SetTenantInfo(tenantInfoService.GetRequestTenantInfo(tenantInfo));
-                _systemConfigService.Init(systemName);//初始化系统信息
+                _systemConfigService.Init(systemName);//Initialize system information
             }
 
             {
-                //开始安装用户模块（如有）  TODO:选择性安装
+                //Start installing user modules (if any) TODO: Selective installation
 
             }
         }
 
 
         /// <summary>
-        /// 安装并且开放模块
+        ///Install and open the module
         /// </summary>
         /// <param name="register"></param>
-        /// <param name="installNow">是否立即安装</param>
-        /// <param name="addMenu">是否添加菜单（必须 installNow 为 true 时生效）</param>
+        /// <param name="installNow">Whether to install now</param>
+        /// <param name="addMenu">Whether to add a menu (must be installedNow is true to take effect)</param>
         /// <returns></returns>
         private async Task<XncfModule> InstallAndOpenModuleAsync(IXncfRegister register, IServiceProvider serviceProvider, TenantInfo tenantInfo, bool installNow = true, bool addMenu = true)
         {
             try
             {
-                //开始安装模块（创建数据库相关表）
+                //Start installing the module (create database related tables)
                 await register.InstallOrUpdateAsync(serviceProvider, Ncf.Core.Enums.InstallOrUpdate.Install);
             }
             catch (Exception ex)
@@ -169,12 +169,12 @@ namespace Senparc.Areas.Admin.Domain.Services
 
             XncfModule xncfModule = null;
 
-            //安装模块
+            //Install module
             if (installNow)
             {
                 var _xncfModuleService = xncfModuleServiceExtension;// serviceProvider.GetService<XncfModuleServiceExtension>();
 
-                //设置租户信息
+                //Set tenant information
                 _xncfModuleService.SetTenantInfo(tenantInfoService.GetRequestTenantInfo(tenantInfo));
 
                 xncfModule = _xncfModuleService.GetObject(z => z.Uid == register.Uid);
@@ -193,14 +193,14 @@ namespace Senparc.Areas.Admin.Domain.Services
                     }
                 }
 
-                //启用模块
+                //enable module
                 //xncfModule = await _xncfModuleService.GetObjectAsync(z => z.Uid == register.Uid);
                 xncfModule.UpdateState(Ncf.Core.Enums.XncfModules_State.开放);
             }
 
             //if (addMenu)
             //{
-            //    //TODO:判断是否已存在
+            //    //TODO: Determine whether it already exists
             //    await _xncfModuleService.InstallMenuAsync(register, Ncf.Core.Enums.InstallOrUpdate.Install);
             //}
 

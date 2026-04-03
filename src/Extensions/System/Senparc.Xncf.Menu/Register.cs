@@ -22,7 +22,7 @@ namespace Senparc.Xncf.Menu
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_MENU_UID;// "00000000-0000-0000-0000-000000000005";
 
-        public override string Version => "0.1";//必须填写版本号
+        public override string Version => "0.1";//Version number is required
 
         public override string MenuName => "菜单管理";
 
@@ -32,7 +32,7 @@ namespace Senparc.Xncf.Menu
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //安装或升级数据库
+            //Install or upgrade database
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
         }
 

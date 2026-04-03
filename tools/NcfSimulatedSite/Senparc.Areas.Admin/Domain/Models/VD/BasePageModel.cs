@@ -10,7 +10,7 @@ namespace Senparc.Areas.Admin.Domain.Models.VD
     { }
 
     /// <summary>
-    /// 当前项目供前端（非Areas）使用的PageModel全局基类
+    /// The current project's PageModel global base class for front-end (non-Areas) use
     /// </summary>
     public class BasePageModel : PageModelBase, IBasePageModel
     {

@@ -137,7 +137,7 @@ define(function (require) {
             }
 
             // FIXME
-            // 暂没有实现用户传入
+            // User input is not implemented yet
             // var labelAlign = timelineModel.get('label.normal.textStyle.align');
             // var labelBaseline = timelineModel.get('label.normal.textStyle.baseline');
             var labelAlignMap = {

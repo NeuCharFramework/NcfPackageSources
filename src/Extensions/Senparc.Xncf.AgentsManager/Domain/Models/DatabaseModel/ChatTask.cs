@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
 {
-    [Table(Register.DATABASE_PREFIX + nameof(ChatTask))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(ChatTask))]//The prefix must be added to prevent conflicts system-wide.
     [Serializable]
     public class ChatTask : EntityBase<int>
     {
@@ -34,19 +34,19 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
         public DateTime EndTime { get; private set; }
 
         /// <summary>
-        /// 对于对话结果的评价
+        /// Comment on the outcome of the conversation
         /// </summary>
         public string ResultComment { get; private set; }
 
 
         /// <summary>
-        /// 进行 WebHook 的平台
+        /// Platform for performing WebHook
         /// </summary>
         [Required]
         public HookPlatform HookPlatform { get; private set; }
 
         /// <summary>
-        /// 进行 WebHook 的平台参数
+        /// Platform parameters for WebHook
         /// </summary>
         public string HookPlatformParameter { get; private set; }
 

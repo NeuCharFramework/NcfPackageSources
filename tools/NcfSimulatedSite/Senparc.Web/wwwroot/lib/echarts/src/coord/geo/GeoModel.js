@@ -56,7 +56,7 @@ define(function (require) {
 
             top: 'center',
 
-            // 自适应
+            // Adaptive
             // width:,
             // height:,
             // right
@@ -91,12 +91,12 @@ define(function (require) {
 
             itemStyle: {
                 normal: {
-                    // color: 各异,
+                    // color: different,
                     borderWidth: 0.5,
                     borderColor: '#444',
                     color: '#eee'
                 },
-                emphasis: {                 // 也是选中样式
+                emphasis: {                 // Also selected style
                     color: 'rgba(255,215,0,0.8)'
                 }
             },

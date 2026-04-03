@@ -5,7 +5,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// 多数据库系统中，特定的某个数据库类型
+    /// In a multi-database system, a specific database type
     /// </summary>
     public enum MultipleDatabaseType
     {
@@ -19,6 +19,6 @@ namespace Senparc.Ncf.Core.Models
         Dm,
         Other = 99999,
         //UnitTest = 100000,
-        //TODO:更多
+        //TODO:More
     }
 }

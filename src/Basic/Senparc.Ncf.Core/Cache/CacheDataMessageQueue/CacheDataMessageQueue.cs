@@ -5,31 +5,31 @@ using System.Linq;
 namespace Senparc.Ncf.Core.Cache
 {
     /// <summary>
-    /// 缓存消息列队，用于自动更新分布式缓存数据
+    /// Cache message queue, used to automatically update distributed cache data
     /// </summary>
     public class CacheDataMessageQueue
     {
         /// <summary>
-        /// 列队数据集合
+        ///Queue data collection
         /// </summary>
         private static Dictionary<string, CacheDataMessageQueueItem> MessageQueueDictionary = new Dictionary<string, CacheDataMessageQueueItem>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
-        /// 同步执行锁
+        /// Synchronous execution lock
         /// </summary>
         private static object MessageQueueSyncLock = new object();
         /// <summary>
-        /// 立即同步所有缓存执行锁（给OperateQueue()使用）
+        /// Immediately synchronize all cache execution locks (used by OperateQueue())
         /// </summary>
         private static object FlushCacheLock = new object();
 
         /// <summary>
-        /// 生成Key
+        /// Generate Key
         /// </summary>
-        /// <param name="name">列队应用名称，如“ContainerBag”</param>
-        /// <param name="senderType">操作对象类型</param>
-        /// <param name="identityKey">对象唯一标识Key</param>
-        /// <param name="actionName">操作名称，如“UpdateContainerBag”</param>
+        /// <param name="name">Queue application name, such as "ContainerBag"</param>
+        /// <param name="senderType">Operation object type</param>
+        /// <param name="identityKey">Object unique identification Key</param>
+        /// <param name="actionName">Action name, such as "UpdateContainerBag"</param>
         /// <returns></returns>
         public static string GenerateKey(string name, Type senderType, string identityKey, string actionName)
         {
@@ -39,26 +39,26 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        /// 操作列队
+        ///Operation queue
         /// </summary>
         public static void OperateQueue()
         {
             lock (FlushCacheLock)
             {
                 var mq = new CacheDataMessageQueue();
-                var key = mq.GetCurrentKey(); //获取最新的Key
+                var key = mq.GetCurrentKey(); //Get the latest Key
                 while (!string.IsNullOrEmpty(key))
                 {
-                    var mqItem = mq.GetItem(key); //获取任务项
-                    mqItem.Action(); //执行
-                    mq.Remove(key); //清除
-                    key = mq.GetCurrentKey(); //获取最新的Key
+                    var mqItem = mq.GetItem(key); //Get task items
+                    mqItem.Action(); //implement
+                    mq.Remove(key); //Clear
+                    key = mq.GetCurrentKey(); //Get the latest Key
                 }
             }
         }
 
         /// <summary>
-        /// 获取当前等待执行的Key
+        /// Get the Key currently waiting for execution
         /// </summary>
         /// <returns></returns>
         public string GetCurrentKey()
@@ -70,7 +70,7 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        /// 获取SenparcMessageQueueItem
+        /// Get SenparcMessageQueueItem
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -87,7 +87,7 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        /// 添加列队成员
+        ///Add queue members
         /// </summary>
         /// <param name="key"></param>
         /// <param name="action"></param>
@@ -102,7 +102,7 @@ namespace Senparc.Ncf.Core.Cache
                 //else
                 //{
                 //    MessageQueueList.Remove(key);
-                //    MessageQueueList.Add(key);//移动到末尾
+                //    MessageQueueList.Add(key);//Move to the end
                 //}
 
                 var mqItem = new CacheDataMessageQueueItem(key, action);
@@ -112,7 +112,7 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        /// 移除列队成员
+        ///Remove queue members
         /// </summary>
         /// <param name="key"></param>
         public void Remove(string key)
@@ -128,7 +128,7 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        /// 获得当前列队数量
+        /// Get the current queue number
         /// </summary>
         /// <returns></returns>
         public int GetCount()

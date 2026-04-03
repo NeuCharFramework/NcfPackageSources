@@ -3,7 +3,7 @@
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// Xncf 模块特性 - 注册
+    ///Xncf Module Properties - Register
     /// </summary>
     public class XncfRegisterAttribute : Attribute
     {

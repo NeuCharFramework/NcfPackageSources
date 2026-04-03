@@ -25,9 +25,9 @@ namespace Senparc.Xncf.Installer
 
         public override string Name => "Senparc.Xncf.Installer";
 
-        public override string Uid => "62FBB022-B04E-423F-82FE-926D418A0815";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => "62FBB022-B04E-423F-82FE-926D418A0815";//It must be globally unique and must be fixed after generation. It has been automatically generated and can also be modified by yourself.
 
-        public override string Version => "0.3";//必须填写版本号
+        public override string Version => "0.3";//Version number is required
 
         public override string MenuName => "NCF 安装程序";
 

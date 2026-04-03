@@ -17,7 +17,7 @@ define(function(require, factory) {
     var ifAxisCrossZero = axisHelper.ifAxisCrossZero;
     var niceScaleExtent = axisHelper.niceScaleExtent;
 
-    // 依赖 GridModel, AxisModel 做预处理
+    // Rely on GridModel, AxisModel for preprocessing
     require('./GridModel');
 
     /**

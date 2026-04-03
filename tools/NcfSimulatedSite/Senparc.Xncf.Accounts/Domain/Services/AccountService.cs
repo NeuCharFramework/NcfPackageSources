@@ -1,6 +1,6 @@
-﻿/* 注意：
- * 为了兼容emoji表情，使用NickName字段前需要进行一次UrlDecode(Encoding.UTF8)，
- * 存入NickName之前，对原始字符串（如直接从接口获得）进行一次UrlEncode（Encoding.UTF8）
+﻿/* Notice:
+ * In order to be compatible with emoji expressions, UrlDecode (Encoding.UTF8) needs to be performed before using the NickName field.
+ * Before storing NickName, perform UrlEncode (Encoding.UTF8) on the original string (such as obtained directly from the interface)
  */
 
 using Microsoft.AspNetCore.Authentication;
@@ -34,7 +34,7 @@ namespace Senparc.Xncf.Accounts.Domain.Services
         }
 
         /// <summary>
-        /// 检验用户名是否存在
+        /// Check if username exists
         /// </summary>
         /// <param name="id"></param>
         /// <param name="userName"></param>
@@ -48,7 +48,7 @@ namespace Senparc.Xncf.Accounts.Domain.Services
         }
 
         /// <summary>
-        /// 检测密码是否正确
+        /// Check if the password is correct
         /// </summary>
         /// <param name="id"></param>
         /// <param name="userName"></param>
@@ -60,7 +60,7 @@ namespace Senparc.Xncf.Accounts.Domain.Services
         }
 
         /// <summary>
-        /// 修改密码
+        /// change password
         /// </summary>
         /// <param name="id"></param>
         /// <param name="userName"></param>
@@ -75,7 +75,7 @@ namespace Senparc.Xncf.Accounts.Domain.Services
             return true;
         }
         /// <summary>
-        /// 改变用户基本信息
+        /// Change basic user information
         /// </summary>
         /// <param name="id"></param>
         /// <param name="realName"></param>
@@ -93,7 +93,7 @@ namespace Senparc.Xncf.Accounts.Domain.Services
         }
 
         /// <summary>
-        /// 检查手机号是否存在
+        /// Check if the mobile phone number exists
         /// </summary>
         /// <param name="id"></param>
         /// <param name="phone"></param>
@@ -123,7 +123,7 @@ namespace Senparc.Xncf.Accounts.Domain.Services
         }
 
         /// <summary>
-        /// 根据用户名获取账号信息
+        /// Get account information based on username
         /// </summary>
         /// <param name="userName"></param>
         /// <returns></returns>
@@ -139,9 +139,9 @@ namespace Senparc.Xncf.Accounts.Domain.Services
             string md5 = password.ToUpper().Replace("-", "");
             if (!isMD5Password)
             {
-                md5 = MD5.GetMD5Code(password, "").Replace("-", ""); //原始MD5
+                md5 = MD5.GetMD5Code(password, "").Replace("-", ""); //Original MD5
             }
-            return MD5.GetMD5Code(md5, salt).Replace("-", ""); //再加密
+            return MD5.GetMD5Code(md5, salt).Replace("-", ""); //Re-encrypt
         }
 
         public virtual void Logout()
@@ -154,8 +154,8 @@ namespace Senparc.Xncf.Accounts.Domain.Services
                 _httpContextAccessor.Value.HttpContext.SignOutAsync(
                     UserAuthorizeAttribute.AuthenticationScheme);
 
-                //FormsAuthentication.SignOut(); //退出网站登录
-                //继续删除其他登陆信息
+                //FormsAuthentication.SignOut(); //Log out of website login
+                //Continue to delete other login information
             }
             catch (Exception ex)
             {
@@ -207,12 +207,12 @@ namespace Senparc.Xncf.Accounts.Domain.Services
                     // redirect response value.
                 };
 
-                Logout();//退出登录
+                Logout();//Log out
                 httpContext.SignInAsync(UserAuthorizeAttribute.AuthenticationScheme, new ClaimsPrincipal(identity), authProperties);
 
                 #endregion
 
-                //FormsAuthentication.SetAuthCookie(userName, rememberMe);//.net core 的方法
+                //FormsAuthentication.SetAuthCookie(userName, rememberMe);//.net core method
 
                 using (var wrap = this.InstanceAutoDetectChangeContextWrap())
                 {
@@ -220,7 +220,7 @@ namespace Senparc.Xncf.Accounts.Domain.Services
                     if (account != null)
                     {
                         account.ThisLoginTime = DateTime.Now;
-                        this.SaveObject(account); //保存User信息，同时会清除FullAccount信息，顺便保证“强制退出”等参数失效。
+                        this.SaveObject(account); //Saving the User information will also clear the FullAccount information and ensure that parameters such as "Force Exit" are invalid.
                     }
                 }
             }
@@ -257,7 +257,7 @@ namespace Senparc.Xncf.Accounts.Domain.Services
         }
 
         /// <summary>
-        /// 自动生成新的用户名
+        /// Automatically generate new username
         /// </summary>
         /// <returns></returns>
         public string GetNewUserName()
@@ -275,7 +275,7 @@ namespace Senparc.Xncf.Accounts.Domain.Services
         }
 
         /// <summary>
-        /// 登陆
+        ///login
         /// </summary>
         /// <param name="userNameOrEmailOrPhone"></param>
         /// <param name="password"></param>
@@ -311,10 +311,10 @@ namespace Senparc.Xncf.Accounts.Domain.Services
             return account.Password == codedPassword ? account : null;
         }
 
-        /* 微信方法，分离到 XNCF
+        /* WeChat method, separated into XNCF
 
         /// <summary>
-        /// 从weixin.senparc.com获取到的用户信息，对应添加Account
+        /// User information obtained from weixin.senparc.com, corresponding to add Account
         /// </summary>
         /// <param name="userInfo"></param>
         /// <param name="account"></param>
@@ -332,15 +332,15 @@ namespace Senparc.Xncf.Accounts.Domain.Services
 
             if (fullAccount == null)
             {
-                LogUtility.Account.Error($"userInfo.P2PData 中的 P2PData可能为Null,userInfo：{userInfo?.ToJson()}");
+                LogUtility.Account.Error($"P2PData in userInfo.P2PData may be Null, userInfo: {userInfo?.ToJson()}");
             }
 
-            if (fullAccount.UserName == "JeffreySu")//TODO：这种情况只会存在于老用户，UnionId未同步过来，如accountId=31，name=zhensherlock
+            if (fullAccount.UserName == "JeffreySu")//TODO: This situation will only exist for old users, and the UnionId has not been synchronized, such as accountId=31, name=zhensherlock
             {
                 account = GetObject(z => z.UserName == "JeffreySu");
 
-                account.WeixinUnionId = userInfo.unionid;//更新UnionId
-                account.WeixinOpenId = userInfo.openid;//更新OpenId
+                account.WeixinUnionId = userInfo.unionid;//Update UnionId
+                account.WeixinOpenId = userInfo.openid;//Update OpenId
                 SaveObject(account);
             }
 
@@ -375,7 +375,7 @@ namespace Senparc.Xncf.Accounts.Domain.Services
 
                 var fileName = $@"/Upload/Account/headimgurl.{DateTime.Now.Ticks + Guid.NewGuid().ToString("n").Substring(0, 8)}.jpg";
 
-                //下载图片
+                //Download pictures
                 DownLoadPic(_serviceProvider,userInfo.headimgurl, fileName);
 
                 account.PicUrl = fileName;
@@ -385,7 +385,7 @@ namespace Senparc.Xncf.Accounts.Domain.Services
         }
 
         /// <summary>
-        /// 下载图片到指定文件
+        /// Download the image to the specified file
         /// </summary>
         /// <param name="picUrl"></param>
         /// <param name="fileName"></param>
@@ -409,7 +409,7 @@ namespace Senparc.Xncf.Accounts.Domain.Services
             using (var wrap = this.InstanceAutoDetectChangeContextWrap())
             {
                 Account account = null;
-                LogUtility.SystemLogger.Debug($"开始创建用户（Account），OAuthUserInfo：\r\n{userInfo.ToJson()}");
+                LogUtility.SystemLogger.Debug($"Start creating user (Account), OAuthUserInfo:\r\n{userInfo.ToJson()}");
 
                 var nickname = userInfo.nickname;
                 string userName = GetNewUserName();
@@ -419,14 +419,14 @@ namespace Senparc.Xncf.Accounts.Domain.Services
                 account.HeadImgUrl = url;
                 account.NickName = nickname;
                 account.Sex = (byte)userInfo.sex;
-                account.PicUrl = url; //暂时存为远程地址，让线程异步更新和下载
+                account.PicUrl = url; //Temporarily save as a remote address to allow the thread to update and download asynchronously
                 SaveObject(account);
 
-                LogUtility.SystemLogger.Debug($"进行异步头像更新：{userInfo.headimgurl}");
+                LogUtility.SystemLogger.Debug($"Perform asynchronous avatar update: {userInfo.headimgurl}");
 
-                //异步下载图片
+                //Download pictures asynchronously
                 var operationQueue = new OperationQueue.OperationQueue();
-                operationQueue.Add($"{account.Id}-{DateTime.Now.Ticks.ToString()}", OperationQueueType.更新用户头像, new List<object>() { account.Id, userInfo.headimgurl });
+                operationQueue.Add($"{account.Id}-{DateTime.Now.Ticks.ToString()}", OperationQueueType.Update user avatar, new List<object>() { account.Id, userInfo.headimgurl });
 
                 return account;
             }
@@ -436,26 +436,26 @@ namespace Senparc.Xncf.Accounts.Domain.Services
         {
             var account = GetObject(z => z.WeixinOpenId == userInfo.openid) ??
                               CreateAccount(GetNewUserName(), "", "", "", userInfo.openid, "", userInfo.nickname);
-            LogUtility.SystemLogger.Debug($"开始创建用户（Account），OAuthUserInfo：\r\n{userInfo.ToJson()}");
+            LogUtility.SystemLogger.Debug($"Start creating user (Account), OAuthUserInfo:\r\n{userInfo.ToJson()}");
             var url = userInfo.headimgurl.Replace("Http", "Https");
             account.HeadImgUrl = url;
             account.NickName = userInfo.nickname;
             account.Sex = (byte)userInfo.sex;
-            account.PicUrl = url; //暂时存为远程地址，让线程异步更新和下载
+            account.PicUrl = url; //Temporarily save as a remote address to allow the thread to update and download asynchronously
             SaveObject(account);
 
-            LogUtility.SystemLogger.Debug($"进行异步头像更新：{userInfo.headimgurl}");
+            LogUtility.SystemLogger.Debug($"Perform asynchronous avatar update: {userInfo.headimgurl}");
 
-            //异步下载图片
+            //Download pictures asynchronously
             var operationQueue = new OperationQueue.OperationQueue();
-            operationQueue.Add($"{account.Id}-{DateTime.Now.Ticks.ToString()}", OperationQueueType.更新用户头像, new List<object>() { account.Id, userInfo.headimgurl });
+            operationQueue.Add($"{account.Id}-{DateTime.Now.Ticks.ToString()}", OperationQueueType.Update user avatar, new List<object>() { account.Id, userInfo.headimgurl });
 
             return account;
         }
 
         public void UpdateAccountByUserInfo(OAuthUserInfo userInfo, Account account)
         {
-            //删除图片
+            //delete picture
             if (!account.PicUrl.IsNullOrEmpty())
             {
                 File.Delete(Server.GetMapPath("~" + account.PicUrl));
@@ -477,16 +477,16 @@ namespace Senparc.Xncf.Accounts.Domain.Services
             base.SaveObject(obj);
             LogUtility.WebLogger.InfoFormat("User{2}：{0}（ID：{1}）", obj.UserName, obj.Id, isInsert ? "新增" : "编辑");
 
-            //清除缓存
+            //clear cache
             var fullUserCache = _serviceProvider.GetService<FullAccountCache>();
-            //示范同步缓存锁
+            //Demonstration of synchronized cache locks
             using (fullUserCache.Cache.BeginCacheLock(FullAccountCache.CACHE_KEY, obj.Id.ToString()))
             {
                 fullUserCache.RemoveObject(obj.UserName);
             }
         }
 
-        //TODO:提供异步方法
+        //TODO: Provide asynchronous methods
 
         public override void DeleteObject(Account obj)
         {
@@ -494,7 +494,7 @@ namespace Senparc.Xncf.Accounts.Domain.Services
             base.SaveObject(obj);
             LogUtility.WebLogger.Info($"User被删除：{obj.UserName}（ID：{obj.Id}）");
 
-            //清除缓存
+            //clear cache
             var fullUserCache = _serviceProvider.GetService<FullAccountCache>();
             fullUserCache.RemoveObject(obj.UserName);
         }

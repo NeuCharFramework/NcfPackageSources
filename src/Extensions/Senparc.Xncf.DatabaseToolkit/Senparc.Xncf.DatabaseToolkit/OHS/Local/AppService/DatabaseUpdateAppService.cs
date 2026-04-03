@@ -16,7 +16,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 显示当前的数据库配置类型
+        /// Display the current database configuration type
         /// </summary>
         /// <returns></returns>
         [FunctionRender("检测数据库是否需要更新", "使用 Entity Framework Core 的 Code First 模式中的 Migration 功能，检测系统当前数据库是否有未被更新的版本，如果有，请使用“Merge EF Core”方法进行更新。", typeof(Register))]

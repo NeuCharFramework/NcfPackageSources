@@ -33,8 +33,8 @@ define(function(require) {
          * @override
          */
         defaultOption: {
-            zlevel: 0,                  // 一级层叠
-            z: 2,                       // 二级层叠
+            zlevel: 0,                  // One level cascading
+            z: 2,                       // Second level stacking
             coordinateSystem: 'cartesian2d',
             legendHoverLink: true,
 

@@ -4,22 +4,22 @@ using System.IO;
 
 namespace Microsoft.AspNetCore.Http
 {
-    //参考：https://www.cnblogs.com/yuangang/archive/2016/08/08/5743660.html
+    //Reference: https://www.cnblogs.com/yuangang/archive/2016/08/08/5743660.html
 
     public static class SenparcHttpContext
     {
         /// <summary>
-        /// 目录分隔符：Windows下“\”，Mac OS和Linux下“\”
+        /// Directory separator: "\" under Windows, "\" under Mac OS and Linux
         /// </summary>
         public static string DirectorySeparatorChar { get; } = Path.DirectorySeparatorChar.ToString();
 
         /// <summary>
-        /// 包含引用程序的目录绝对路径
+        /// Absolute path to the directory containing the referencing program
         /// </summary>
         public static string ContentRootPath { get; } = DI.ServiceProvider.GetRequiredService<IHostingEnvironment>().ContentRootPath;
 
         /// <summary>
-        /// 包含引用程序的目录绝对路径
+        /// Absolute path to the directory containing the referencing program
         /// </summary>
         public static string ContentWebRootPath { get; } = DI.ServiceProvider.GetRequiredService<IHostingEnvironment>().WebRootPath;
 
@@ -42,9 +42,9 @@ namespace Microsoft.AspNetCore.Http
         }
 
         /// <summary>
-        /// 获取文件绝对路径
+        /// Get the absolute path of the file
         /// </summary>
-        /// <param name="path">文件路径</param>
+        /// <param name="path">File path</param>
         /// <returns></returns>
         public static string MapPath(string path)
         {
@@ -54,9 +54,9 @@ namespace Microsoft.AspNetCore.Http
         }
 
         /// <summary>
-        /// 获取文件绝对路径
+        /// Get the absolute path of the file
         /// </summary>
-        /// <param name="path">文件路径</param>
+        /// <param name="path">File path</param>
         /// <returns></returns>
         public static string MapWebPath(string path)
         {
@@ -66,11 +66,11 @@ namespace Microsoft.AspNetCore.Http
         }
 
         /// <summary>
-        /// 是否是绝对路径
-        /// windows下判断 路径是否包含 ":"
-        /// Mac OS、Linux下判断 路径是否包含 "\"
+        /// Is it an absolute path?
+        /// Determine whether the path contains ":" under windows
+        /// Determine whether the path contains "\" under Mac OS and Linux
         /// </summary>
-        /// <param name="path">路径</param>
+        /// <param name="path">Path</param>
         /// <returns></returns>
         public static bool IsAbsolute(string path)
         {

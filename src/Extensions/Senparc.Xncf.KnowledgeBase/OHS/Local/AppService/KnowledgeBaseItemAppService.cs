@@ -26,9 +26,22 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 创建及修改
+        /// Get the associated entry list based on the knowledge base ID (used for configuration page echo: associated files, content, etc.)
         /// </summary>
-        /// <param name="request">请求记录Dto模型</param>
+        [ApiBind]
+        public async Task<AppResponseBase<List<KnowledgeBaseItemDto>>> GetListByKnowledgeBaseId(int knowledgeBaseId)
+        {
+            return await this.GetResponseAsync<List<KnowledgeBaseItemDto>>(async (response, logger) =>
+            {
+                var list = await knowledgeBasesDetailService.GetListByKnowledgeBaseIdAsync(knowledgeBaseId);
+                return list?.ToList() ?? new List<KnowledgeBaseItemDto>();
+            });
+        }
+
+        /// <summary>
+        ///Create and modify
+        /// </summary>
+        /// <param name="request">Request to record Dto model</param>
         /// <returns></returns>
         [ApiBind("AutoMate", ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<bool>> CreateOrUpdateAsync(KnowledgeBaseItemRequest request)

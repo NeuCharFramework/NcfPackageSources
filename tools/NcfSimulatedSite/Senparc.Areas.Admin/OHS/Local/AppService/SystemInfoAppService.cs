@@ -35,7 +35,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
 
         /// <summary>
-        /// 获取全部系统信息
+        /// Get all system information
         /// </summary>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
@@ -52,7 +52,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
 
         /// <summary>
-        /// 创建or修改系统信息
+        ///Create or modify system information
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -83,10 +83,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 打开或关闭 模块管理
+        /// Turn module management on or off
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="hide">是否隐藏管理模块</param>
+        /// <param name="hide">Whether to hide the management module</param>
         /// <returns></returns>
         /// <exception cref="NcfExceptionBase"></exception>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
@@ -142,7 +142,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 var index = 0;
                 logger.Append($"缓存锁测试开始");
 
-                //清理缓存
+                //clear cache
                 await _cacheStrategy.RemoveFromCacheAsync("NcfLockTest");
 
                 Parallel.For(0, 10, async i =>
@@ -168,7 +168,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 var cacheObjects = await _cacheStrategy.GetAsync<List<LockCacheTest>>("NcfLockTest");
                 logger.Append($"缓存锁测试结束，lastLockCache:{cacheObjects.ToJson(true)}");
 
-                //分级缓存测试
+                //Hierarchical cache testing
                 for (int i = 0; i < 10; i++)
                 {
                     var cacheKey = $"NcfLockTestLevels:{i}";

@@ -7,14 +7,14 @@ namespace Senparc.Ncf.Core.Cache
 {
     public static class MethodCache
     {
-        #region 同步方法
+        #region Synchronous Methods
 
         /// <summary>
-        /// 获取缓存
+        /// Get cache
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="cacheKey"></param>
-        /// <param name="func">当未命中缓存时存入并返回的结果</param>
+        /// <param name="func">The result stored and returned when the cache is missed</param>
         /// <param name="timeoutSeconds"></param>
         /// <returns></returns>
         public static T GetMethodCache<T>(string cacheKey, Func<T> func, int timeoutSeconds) where T : class
@@ -28,21 +28,21 @@ namespace Senparc.Ncf.Core.Cache
 
             if (!cache.CheckExisted(cacheKey))
             {
-                cache.Set(cacheKey, func(), //每次储存的是重新执行过的最新的结果
+                cache.Set(cacheKey, func(), //What is stored each time is the latest result of re-execution.
                    TimeSpan.FromSeconds(timeoutSeconds));
             }
 
-            result = cache.Get<T>(cacheKey);//输出结果
+            result = cache.Get<T>(cacheKey);//Output results
 
             return result;
         }
 
         /// <summary>
-        /// 获取缓存，默认缓存时间为 60 分钟
+        /// Get cache, the default cache time is 60 minutes
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="cacheKey"></param>
-        /// <param name="func">当未命中缓存时存入并返回的结果</param>
+        /// <param name="func">The result stored and returned when the cache is missed</param>
         /// <returns></returns>
         public static T GetMethodCache<T>(string cacheKey, Func<T> func) where T : class
         {
@@ -50,10 +50,10 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        /// 清除缓存
+        /// clear cache
         /// </summary>
         /// <param name="cacheKey"></param>
-        public static void ClearMethodCache<T>(string cacheKey) where T : class //虽然这边的T不需要传入，不过为了拿到CacheStrategy仍然需要提供
+        public static void ClearMethodCache<T>(string cacheKey) where T : class //Although T here does not need to be passed in, it still needs to be provided in order to get CacheStrategy
         {
             cacheKey = cacheKey.ToUpper();
 
@@ -66,14 +66,14 @@ namespace Senparc.Ncf.Core.Cache
         #endregion
 
 
-        #region 异步方法  
+        #region Asynchronous Methods  
 
         /// <summary>
-        /// 获取缓存
+        /// Get cache
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="cacheKey"></param>
-        /// <param name="func">当未命中缓存时存入并返回的结果</param>
+        /// <param name="func">The result stored and returned when the cache is missed</param>
         /// <param name="timeoutSeconds"></param>
         /// <returns></returns>
         public static async Task<T> GetMethodCacheAsync<T>(string cacheKey, Func<Task<T>> func, int timeoutSeconds) where T : class
@@ -93,11 +93,11 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        /// 获取缓存，默认缓存时间为 60 分钟
+        /// Get cache, the default cache time is 60 minutes
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="cacheKey"></param>
-        /// <param name="func">当未命中缓存时存入并返回的结果</param>
+        /// <param name="func">The result stored and returned when the cache is missed</param>
         /// <returns></returns>
         public static Task<T> GetMethodCacheAsync<T>(string cacheKey, Func<Task<T>> func) where T : class
         {
@@ -105,7 +105,7 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>  
-        /// 清除缓存  
+        /// clear cache  
         /// </summary>  
         /// <param name="cacheKey"></param>  
         public static async Task ClearMethodCacheAsync<T>(string cacheKey) where T : class

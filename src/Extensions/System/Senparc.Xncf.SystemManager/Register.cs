@@ -27,7 +27,7 @@ namespace Senparc.Xncf.SystemManager
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_SERVICE_MANAGER_UID;// "00000000-0000-0000-0000-000000000002";
 
-        public override string Version => "1.1.2";//必须填写版本号
+        public override string Version => "1.1.2";//Version number is required
 
         public override string MenuName => "系统管理";
 
@@ -37,7 +37,7 @@ namespace Senparc.Xncf.SystemManager
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //安装或升级数据库
+            //Install or upgrade database
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
             ////SenparcEntities senparcEntities = (SenparcEntities)xncfModuleServiceExtension.BaseData.BaseDB.BaseDataContext;
@@ -51,7 +51,7 @@ namespace Senparc.Xncf.SystemManager
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            //TODO：应该提供一个 BeforeUninstall 方法，阻止卸载。
+            //TODO: A BeforeUninstall method should be provided to prevent uninstallation.
 
             await base.UninstallAsync(serviceProvider, unsinstallFunc);
         }

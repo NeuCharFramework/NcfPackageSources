@@ -67,7 +67,7 @@
                     :page.sync="listQuery.pageIndex"
                     :limit.sync="listQuery.pageSize"
                     @@pagination="getList"></pagination>
-        <!--编辑、新增 -->
+        <!--Edit, add -->
         <el-dialog :title="dialog.title" :visible.sync="dialog.visible" :close-on-click-modal="false">
             <el-form ref="dataForm"
                      :rules="dialog.rules"
@@ -100,7 +100,7 @@
                 <el-button :loading="dialog.updateLoading" type="primary" @@click="updateData">确 认</el-button>
             </div>
         </el-dialog>
-        <!--分配角色-->
+        <!--Assign roles-->
         <el-dialog :title="'设置角色-'+dialog.setTitle" :visible.sync="dialog.visibleSet">
             <el-checkbox-group v-model="dialog.dialogSetSelected">
                 <el-checkbox v-for="item in dialog.dialogSetData" :label="item.value" border>{{item.text}}</el-checkbox>

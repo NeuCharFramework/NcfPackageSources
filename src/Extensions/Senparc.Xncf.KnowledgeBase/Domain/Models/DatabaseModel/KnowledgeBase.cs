@@ -9,9 +9,9 @@ using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
 namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
 {
     /// <summary>
-    /// KnowledgeBase 实体类
+    /// KnowledgeBase entity class
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(KnowledgeBase))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(KnowledgeBase))]//The prefix must be added to prevent conflicts system-wide.
     [Serializable]
     public class KnowledgeBase : EntityBase<int>
     {
@@ -37,23 +37,23 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
             Content = knowledgeBasesDto.Content;
         }
         /// <summary>
-        /// 训练模型Id
+        ///Training model ID
         /// </summary>
         public int EmbeddingModelId { get; set; }
         /// <summary>
-        /// 向量数据库Id
+        ///Vector databaseId
         /// </summary>
         public int VectorDBId { get; set; }
         /// <summary>
-        /// 对话模型Id
+        /// Dialog model ID
         /// </summary>
         public int ChatModelId { get; set; }
         /// <summary>
-        /// 名称
+        ///name
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// 内容
+        /// content
         /// </summary>
         public string Content { get; set; }
     }

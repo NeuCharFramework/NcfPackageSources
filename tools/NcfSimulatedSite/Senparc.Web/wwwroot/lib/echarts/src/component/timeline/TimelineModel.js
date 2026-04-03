@@ -19,11 +19,11 @@ define(function(require) {
          */
         defaultOption: {
 
-            zlevel: 0,                  // 一级层叠
-            z: 4,                       // 二级层叠
+            zlevel: 0,                  // One level cascading
+            z: 4,                       // Second level stacking
             show: true,
 
-            axisType: 'time',  // 模式是时间类型，支持 value, category
+            axisType: 'time',  // The mode is a time type and supports value, category
 
             realtime: true,
 
@@ -37,9 +37,9 @@ define(function(require) {
 
             controlPosition: 'left',           // 'left' 'right' 'top' 'bottom' 'none'
             autoPlay: false,
-            rewind: false,                     // 反向播放
+            rewind: false,                     // Reverse playback
             loop: true,
-            playInterval: 2000,                // 播放时间间隔，单位ms
+            playInterval: 2000,                // Playback time interval, unit ms
 
             currentIndex: 0,
 

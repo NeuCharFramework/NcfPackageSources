@@ -47,7 +47,7 @@ namespace Senparc.Xncf.Swagger.Builder
                 var sortedAssembly = WebApiEngine.ApiAssemblyCollection.OrderBy(z => z.Key);
                 foreach (var co2netApiDocAssembly in sortedAssembly)
                 {
-                    //TODO:真实的动态版本号
+                    //TODO: real dynamic version number
                     var verion = WebApiEngine.ApiAssemblyVersions[co2netApiDocAssembly.Key]; //neucharApiDocAssembly.Value.ImageRuntimeVersion;
                     var docName = WebApiEngine.GetDocName(co2netApiDocAssembly.Key);
 
@@ -73,7 +73,7 @@ namespace Senparc.Xncf.Swagger.Builder
                 if (options.ApiVersions == null) options.ApiVersions = new List<string> { "v1" };
                 foreach (var item in options.ApiVersions)
                 {
-                    var subPath = string.IsNullOrEmpty(options.AppPath) ? "" : $"/{options.AppPath}";//发布为虚拟站点时使用
+                    var subPath = string.IsNullOrEmpty(options.AppPath) ? "" : $"/{options.AppPath}";//Used when publishing as a virtual site
                     c.SwaggerEndpoint($"{subPath}/{options.RoutePrefix}/{item}/swagger.json", $"{item}");
                 }
                 options.UseSwaggerUIAction?.Invoke(c);
@@ -81,7 +81,7 @@ namespace Senparc.Xncf.Swagger.Builder
             return app;
         }
         /// <summary>
-        /// 处理接口文档的用户认证
+        /// Handle user authentication of interface documents
         /// </summary>
         /// <param name="app"></param>
         /// <param name="options"></param>
@@ -95,16 +95,16 @@ namespace Senparc.Xncf.Swagger.Builder
             {
                 var _method = context.Request.Method.ToLower();
                 var _path = context.Request.Path.Value;
-                var subPath = string.IsNullOrEmpty(options.AppPath) ? "" : $"/{options.AppPath}";//发布为虚拟站点时使用
+                var subPath = string.IsNullOrEmpty(options.AppPath) ? "" : $"/{options.AppPath}";//Used when publishing as a virtual site
                 #region 自定义登录页
-                if (_path.IndexOf($"/{options.RoutePrefix}") != 0)//非访问接口时直接返回
+                if (_path.IndexOf($"/{options.RoutePrefix}") != 0)//Return directly when not accessing the interface
                 {
                     await next();
                     return;
                 }
                 else if (_path == $"/{options.RoutePrefix}/login.html")
                 {
-                    //登录
+                    //Log in
                     if (_method == "get")
                     {
                         var stream = currentAssembly.GetManifestResourceStream($"{currentAssembly.GetName().Name}.login.html");
@@ -135,7 +135,7 @@ namespace Senparc.Xncf.Swagger.Builder
                             ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(120),
                             IsPersistent = false,
                         };
-                        await context.SignOutAsync(ConfigurationHelper.SWAGGER_ATUH_COOKIE);//登出
+                        await context.SignOutAsync(ConfigurationHelper.SWAGGER_ATUH_COOKIE);//Sign out
                         await context.SignInAsync(ConfigurationHelper.SWAGGER_ATUH_COOKIE, new ClaimsPrincipal(identity), authProperties);
 
                         context.Response.Redirect($"{subPath}/{options.RoutePrefix}");
@@ -144,7 +144,7 @@ namespace Senparc.Xncf.Swagger.Builder
                 }
                 else if (_path == $"/{options.RoutePrefix}/logout")
                 {
-                    //退出
+                    //quit
                     context.Response.Cookies.Delete(ConfigurationHelper.SWAGGER_ATUH_COOKIE);
                     context.Response.Redirect($"{subPath}/{options.RoutePrefix}/login.html");
                     return;
@@ -175,7 +175,7 @@ namespace Senparc.Xncf.Swagger.Builder
             return app;
         }
         /// <summary>
-        /// 使用自定义首页
+        /// Use custom homepage
         /// </summary>
         /// <returns></returns>
         private static void UseCustomSwaggerIndex(this SwaggerUIOptions c)

@@ -1,6 +1,6 @@
 /**
- * 名称查询辅助工具
- * 提供统一的名称查询功能，避免代码重复
+ * Name query auxiliary tool
+ * Provide a unified name query function to avoid code duplication
  * 
  * @version 1.0.0
  * @author Senparc
@@ -9,37 +9,37 @@
     'use strict';
     
     /**
-     * 名称查询辅助工具集
-     * 使用对象字面量模式（无需实例化）
+     * Name query auxiliary tool set
+     * Use object literal mode (no instantiation required)
      */
     var NameHelper = {
         /**
-         * 通用的名称查询方法
-         * 从选项数组中根据 ID 查找对应的名称
-         * @param {Array} options - 选项数组
-         * @param {string|number} id - 要查询的 ID
-         * @param {string} [defaultName='未知'] - 默认名称（找不到时返回）
-         * @param {string} [valueKey='value'] - ID 字段名
-         * @param {string} [labelKey='label'] - 名称字段名
-         * @returns {string} 查找到的名称或默认名称
+         * Universal name query method
+         * Find the corresponding name based on ID from the options array
+         * @param {Array} options - array of options
+         * @param {string|number} id - the ID to be queried
+         * @param {string} [defaultName='Unknown'] - Default name (returned if not found)
+         * @param {string} [valueKey='value'] - ID field name
+         * @param {string} [labelKey='label'] - Name field name
+         * @returns {string} The found name or the default name
          */
         getName: function(options, id, defaultName, valueKey, labelKey) {
-            // 设置默认值
+            // Set default value
             defaultName = defaultName || '未知';
             valueKey = valueKey || 'value';
             labelKey = labelKey || 'label';
             
-            // 验证输入
+            // Validate input
             if (!options || !id) {
                 return defaultName;
             }
 
-            // 如果不是数组，返回默认值
+            // If not an array, returns the default value
             if (!Array.isArray(options)) {
                 return defaultName;
             }
             
-            // 查找匹配的项
+            // Find matching items
             var item = null;
             for (var i = 0; i < options.length; i++) {
                 if (options[i][valueKey] === id) {
@@ -52,11 +52,11 @@
         },
 
         /**
-         * 创建名称查询器
-         * 返回一个绑定了特定选项数组的查询函数
-         * @param {Array} options - 选项数组
-         * @param {string} [defaultName='未知'] - 默认名称
-         * @returns {Function} 查询函数，接受 id 参数，返回对应名称
+         * Create name query
+         * Returns a query function bound to a specific option array
+         * @param {Array} options - array of options
+         * @param {string} [defaultName='Unknown'] - default name
+         * @returns {Function} query function, accepts the id parameter and returns the corresponding name
          */
         createGetter: function(options, defaultName) {
             defaultName = defaultName || '未知';
@@ -67,14 +67,14 @@
         },
 
         /**
-         * 批量获取名称
-         * 根据 ID 数组批量查询名称
-         * @param {Array} options - 选项数组
-         * @param {Array} ids - ID 数组
-         * @param {string} [defaultName='未知'] - 默认名称
-         * @param {string} [valueKey='value'] - ID 字段名
-         * @param {string} [labelKey='label'] - 名称字段名
-         * @returns {Array} 名称数组
+         * Get names in batches
+         * Query names in batches based on ID array
+         * @param {Array} options - array of options
+         * @param {Array} ids - ID array
+         * @param {string} [defaultName='Unknown'] - default name
+         * @param {string} [valueKey='value'] - ID field name
+         * @param {string} [labelKey='label'] - Name field name
+         * @returns {Array} name array
          */
         getNames: function(options, ids, defaultName, valueKey, labelKey) {
             if (!Array.isArray(ids)) {
@@ -90,14 +90,14 @@
         },
 
         /**
-         * 根据名称查找 ID
-         * 与 getName 相反，根据名称查找对应的 ID
-         * @param {Array} options - 选项数组
-         * @param {string} name - 要查询的名称
-         * @param {string|number} [defaultId=null] - 默认 ID（找不到时返回）
-         * @param {string} [valueKey='value'] - ID 字段名
-         * @param {string} [labelKey='label'] - 名称字段名
-         * @returns {string|number|null} 查找到的 ID 或默认 ID
+         * Find ID based on name
+         * Contrary to getName, find the corresponding ID based on the name
+         * @param {Array} options - array of options
+         * @param {string} name - the name to be queried
+         * @param {string|number} [defaultId=null] - Default ID (returned if not found)
+         * @param {string} [valueKey='value'] - ID field name
+         * @param {string} [labelKey='label'] - Name field name
+         * @returns {string|number|null} The found ID or default ID
          */
         getId: function(options, name, defaultId, valueKey, labelKey) {
             defaultId = defaultId !== undefined ? defaultId : null;
@@ -124,11 +124,11 @@
         },
 
         /**
-         * 检查 ID 是否存在
-         * @param {Array} options - 选项数组
-         * @param {string|number} id - 要检查的 ID
-         * @param {string} [valueKey='value'] - ID 字段名
-         * @returns {boolean} ID 是否存在
+         * Check if ID exists
+         * @param {Array} options - array of options
+         * @param {string|number} id - the ID to check
+         * @param {string} [valueKey='value'] - ID field name
+         * @returns {boolean} Whether the ID exists
          */
         hasId: function(options, id, valueKey) {
             valueKey = valueKey || 'value';
@@ -151,12 +151,12 @@
         },
 
         /**
-         * 获取完整的选项对象
-         * 根据 ID 获取完整的选项对象（不仅仅是名称）
-         * @param {Array} options - 选项数组
-         * @param {string|number} id - 要查询的 ID
-         * @param {string} [valueKey='value'] - ID 字段名
-         * @returns {Object|null} 找到的选项对象或 null
+         * Get the complete options object
+         * Get the complete option object based on ID (not just the name)
+         * @param {Array} options - array of options
+         * @param {string|number} id - the ID to be queried
+         * @param {string} [valueKey='value'] - ID field name
+         * @returns {Object|null} the option object found or null
          */
         getOption: function(options, id, valueKey) {
             valueKey = valueKey || 'value';
@@ -179,7 +179,7 @@
         }
     };
 
-    // 暴露到全局命名空间
+    // Exposed to the global namespace
     window.PromptRangeUtils = window.PromptRangeUtils || {};
     window.PromptRangeUtils.NameHelper = NameHelper;
 

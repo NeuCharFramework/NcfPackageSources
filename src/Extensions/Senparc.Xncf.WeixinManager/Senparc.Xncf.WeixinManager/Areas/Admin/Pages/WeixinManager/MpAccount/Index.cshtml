@@ -128,7 +128,7 @@
                     :limit.sync="searchData.pageSize"
                     @@pagination="fetchData"></pagination>
     </div>
-    <!--新增 / 编辑 模态框-->
+    <!--Add/edit modal box-->
     <el-dialog :title="dialog.title" :visible.sync="dialog.visible" width="40%" :close-on-click-modal="false">
         <el-form :model="mpAccountForm" :rules="mpAccountRule" ref="ref_mpAccountForm" label-width="140px" class="demo-ruleForm">
             <el-form-item label="公众号名称" prop="name">
@@ -231,7 +231,7 @@
                 this.uid = resizeUrl().uid;
             },
             methods: {
-                // 打开用户管理
+                // Open user management
                 openUserMan(id) {
                     window.location.href='/Admin/WeixinManager/WeixinUser?mpid=' + id + '&uid=' + this.uid
             },
@@ -247,7 +247,7 @@
                 },
                 add: function () {
                     this.dialog.visible = true;
-                    this.dialog.title = '新增公众号';
+                    this.dialog.title = 'Add a new official account';
                     this.dialog.data.id = 0;
                     this.mpAccountForm = {
                         name: '',
@@ -262,7 +262,7 @@
                 edit: function (index, row) {
                     this.dialog.data.id = row.id;
                     this.dialog.visible = true;
-                    this.dialog.title = '编辑公众号';
+                    this.dialog.title = 'Edit public account';
                     service.get('@Url.Page("Edit")?handler=Ajax&id=' + row.id).then(res => {
                         const responseData = res.data.data;
                         //debugger
@@ -281,18 +281,18 @@
                 //    //
                 //},
                 saveMpAccount: function () {
-                    //保存
+                    //save
                     var obj = JSON.parse(JSON.stringify(this.mpAccountForm));
                     obj.id = this.dialog.data.id;
                     this.$refs.ref_mpAccountForm.validate().then(res => {
                         return service.post('@Url.Page("Edit")?handler=Ajax', obj);
                     }).then(res => {
-                        var message = '新增公众号成功';
+                        var message = 'Added public account successfully';
                         if (this.dialog.data.id > 0) {
-                            message = '编辑公众号成功';
+                            message = 'Edit public account successfully';
                         }
                         this.$notify({
-                            title: '成功',
+                            title: 'success',
                             message: message,
                             type: 'success',
                             duration: 2000
@@ -307,8 +307,8 @@
                     var delIds = this.multipleSelection;
                     if (delIds.length === 0) {
                         this.$notify({
-                            title: '警告',
-                            message: '请勾选公众号',
+                            title: 'warn',
+                            message: 'Please check the official account',
                             type: 'warning',
                             duration: 2000
                         });
@@ -320,12 +320,12 @@
                         ids.push(ele.id);
                     })
 
-                    app.$confirm('是否删除所都选的项目？', { type: 'warning' }).then(res => {
+                    app.$confirm('Delete all selected items?', { type: 'warning' }).then(res => {
                         return service.post('@Url.Page("Index")?handler=Delete', ids);
                     }).then(res => {
                         this.$notify({
-                            title: '成功',
-                            message: '已成功删除' + ids.length + '条',
+                            title: 'success',
+                            message: 'Deleted successfully' + ids.length + 'strip',
                             type: 'success',
                             duration: 2000
                         });

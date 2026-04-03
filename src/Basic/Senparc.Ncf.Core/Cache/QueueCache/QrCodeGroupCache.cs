@@ -5,7 +5,7 @@ namespace Senparc.Ncf.Core.Cache.QueueCache
     public enum QrCodeGroupDataType
     {
         /// <summary>
-        /// 门派
+        /// sect
         /// </summary>
         Group,
     }
@@ -14,7 +14,7 @@ namespace Senparc.Ncf.Core.Cache.QueueCache
     public class QrCodeGroupData
     {
         /// <summary>
-        /// 即SceneId的字符串
+        /// is the string of SceneId
         /// </summary>
         public string Key { get; set; }
         /// <summary>
@@ -41,7 +41,7 @@ namespace Senparc.Ncf.Core.Cache.QueueCache
     }
 
     /// <summary>
-    /// 门派许可缓存（缓存数据：GroupId）
+    /// Martial arts license cache (cache data: GroupId)
     /// </summary>
     public interface IQrCodeGroupCache : IQueueCache<QrCodeGroupData>
     {
@@ -60,7 +60,7 @@ namespace Senparc.Ncf.Core.Cache.QueueCache
 
         public override string CreateKey()
         {
-            throw new Exception("请在外部生成Key");
+            throw new Exception("Please generate Key externally");
         }
 
         public override QueueCacheData<QrCodeGroupData> Get(string key, bool removeDataWhenExist = true)

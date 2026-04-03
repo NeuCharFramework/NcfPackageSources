@@ -9,7 +9,7 @@ namespace Senparc.Log
   public static  class NLogExtension
     {
         /// <summary>
-        /// 记录错误信息的扩展方法
+        /// Extension method for recording error information
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="stringFormat"></param>

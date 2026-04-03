@@ -27,14 +27,14 @@
             .interfaceSet-page .cardArea .cardItem .cardItem_title {
                 margin-top: 16px;
                 width: 308px;
-                /* 文本 */
+                /* text */
                 font-size: 16px;
                 font-weight: 400;
                 letter-spacing: 0px;
                 color: rgba(0, 0, 0, 1);
                 text-align: left;
                 vertical-align: top;
-                /* 单行 溢出隐藏 */
+                /* Single line overflow hidden */
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -42,8 +42,8 @@
             .interfaceSet-page .cardArea .cardItem .cardItem_description {
                 margin-top: 14px;
                 width: 308px;
-                height: 3em; /* 限制最大高度，以适应两行文本 */
-                /* 文本 */
+                height: 3em; /* Limit the maximum height to fit two lines of text */
+                /* text */
                 font-size: 16px;
                 font-weight: 400;
                 letter-spacing: 0px;
@@ -51,7 +51,7 @@
                 color: rgba(128, 128, 128, 1);
                 text-align: left;
                 vertical-align: top;
-                /* 多行 溢出隐藏 */
+                /* Multi-line overflow hidden */
                 white-space: normal;
                 word-break: break-all;
                 overflow: hidden;
@@ -70,7 +70,7 @@
     display: inline-block;
     padding: 5px 16px;
     border-radius: 2px;
-    /* 文本 */
+    /* text */
     font-size: 16px;
     font-weight: 400;
     letter-spacing: 0px;
@@ -101,12 +101,12 @@
     cursor: pointer;
 }
 
-/* 以下 修改el组件样式 */
+/* Modify the el component style below */
 .el-popover {
     min-width: auto !important;
 }
 
-/* 以下 自定义公用样式 */
+/* The following custom public styles */
 .stateColor-green {
     color: rgba(44, 185, 88, 1);
     background: rgba(44, 185, 88, 0.1);

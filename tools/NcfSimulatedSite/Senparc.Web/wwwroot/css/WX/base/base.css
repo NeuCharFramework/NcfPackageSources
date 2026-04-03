@@ -23,9 +23,9 @@ video {
 
     audio:not([controls]) {
         display: none;
-        /*为防止在主流浏览器中出现“不带控制按钮的音频模块”这一问题。*/
+        /*To prevent the "audio module without control buttons" issue from appearing in mainstream browsers.*/
         height: 0;
-        /*解决iOS5移动端显示多余高度的兼容性问题。 */
+        /*Solve the compatibility problem of excess height display on iOS5 mobile terminal. */
     }
 
 [hidden] {
@@ -33,41 +33,41 @@ video {
 }
 
 address {
-    /* 屏幕阅读器和搜索引擎找到地址或电话号码，默认样式是 display: block */
+    /* For screen readers and search engines to find addresses or phone numbers, the default style is display: block */
     display: block;
 }
 
 html {
     font-family: "Microsoft YaHei", sans-serif;
-    /* 默认字体 */
+    /* Default font */
     font-size: 100%;
-    /* 在用户调整窗口大小时，字体大小做相应调整。 */
+    /* When the user resizes the window, the font size adjusts accordingly. */
     -ms-text-size-adjust: 100%;
-    /* IE浏览器 */
+    /* Internet Explorer */
     -webkit-text-size-adjust: 100%;
     -moz-text-size-adjust: 100%;
     text-size-adjust: 100%;
-    /* FireFox浏览器 */
+    /* FireFox browser */
     overflow-y: auto;
 }
 
 body {
     margin: 0;
-    /* 外边距 */
+    /* margins */
     padding: 0;
-    /* 内边距 */
+    /* padding */
     border: 0;
-    /* 边框 */
+    /* frame */
 }
 
 a {
     text-decoration: none;
-    /* 去除默认下划线 */
+    /* Remove default underline */
 }
 
     a:focus {
         outline: thin dotted;
-        /* 处理“outline”在Chrome浏览器中和其它浏览器之间的不一致 */
+        /* Address inconsistencies between "outline" in Chrome and other browsers */
     }
 
     a:active,
@@ -76,7 +76,7 @@ a {
     }
 
 h1 {
-    /* 使h1标签在section标签和article标签的留白和字体样式统一。可同时兼容Firefox 4+、Safari 5和Chrome等不同的浏览器 */
+    /* Make the space and font style of the h1 tag uniform in the section tag and article tag. Compatible with different browsers such as Firefox 4+, Safari 5 and Chrome at the same time */
     font-size: 2em;
     margin: 0em 0;
 }
@@ -93,22 +93,22 @@ p {
 
 abbr[title] {
     border-bottom: 1px dotted;
-    /* 解决首字母样式在IE8/9、Safari 5和chrome浏览器中未定义的问题 */
+    /* Solve the problem that the initial letter style is not defined in IE8/9, Safari 5 and chrome browsers */
 }
 
 b,
 strong {
     font-weight: bold;
-    /* 添加加粗样式，应用于Firefox 4+、Safari 5和Chrome */
+    /* Add bold style to Firefox 4+, Safari 5 and Chrome */
 }
 
 dfn {
     font-size: italic;
-    /* 添加斜体样式，应用于Safari 5和chrome */
+    /* Add italic style, applied to Safari 5 and Chrome */
 }
 
 hr {
-    /* 解决其在Firefox中的兼容性问题 */
+    /* Resolve its compatibility issues in Firefox */
     -moz-box-sizing: content-box;
     -webkit-box-sizing: content-box;
     box-sizing: content-box;
@@ -116,7 +116,7 @@ hr {
 }
 
 mark {
-    /* 解决其在IE8/9中样式未定义的问题 */
+    /* Solve the problem of undefined styles in IE8/9 */
     background: #ff0;
     color: #000;
 }
@@ -125,18 +125,18 @@ code,
 kbd,
 pre,
 samp {
-    /* 更正关联字体在Safari 5和Chrome中的老式设置 */
+    /* Corrected legacy settings for associated fonts in Safari 5 and Chrome */
     font-family: monospace, serif;
     font-size: 1em;
 }
 
 pre {
-    /* 提高pre标签格式化文本在所有浏览器中的可读性 */
+    /* Improve readability of pre tag formatted text in all browsers */
     white-space: pre-wrap;
 }
 
 q {
-    /* 设置相一致的引号类型 */
+    /* Set consistent quote type */
     quotes: "\201C" "\201D" "\2018" "\2019";
 }
 
@@ -148,13 +148,13 @@ q {
     }
 
 small {
-    /* 统一所有浏览器中字体大小不一致的兼容性问题 */
+    /* Unify compatibility issues with inconsistent font sizes in all browsers */
     font-size: 80%;
 }
 
 sub,
 sup {
-    /* 在所有浏览器中，防止“sub”和“sup”标签影响“line-height”属性 */
+    /* In all browsers, prevent "sub" and "sup" tags from affecting the "line-height" attribute */
     font-size: 75%;
     line-height: 0;
     position: relative;
@@ -215,7 +215,7 @@ dd {
 
 img {
     border: 0;
-    /* 在IE8/9浏览器中，当img标签中包含a标签时，去除img边框属性。 */
+    /* In the IE8/9 browser, when the img tag contains the a tag, the img border attribute is removed. */
 }
 
 svg:not(:root) {
@@ -227,7 +227,7 @@ figure {
 }
 
 fieldset {
-    /* 定义一致的边框、内边距和外边距 */
+    /* Define consistent borders, padding, and margins */
     border: 1px solid #c0c0c0;
     margin: 0 2px;
     padding: 0.35em 0.625em 0.75em;
@@ -235,9 +235,9 @@ fieldset {
 
 legend {
     border: 0;
-    /* 更改“color”属性在IE8/9浏览器中没有被继承的问题 */
+    /* The problem of changing the "color" attribute is not inherited in IE8/9 browsers */
     padding: 0;
-    /* 去除外边距，如此即使人们将字段集归零也不会失去样式 */
+    /* Remove margins so people don't lose style if they zero out the fieldset */
 }
 
 button,
@@ -247,27 +247,27 @@ textarea {
     border: none;
     outline: none;
     font-family: inherit;
-    /* 更改关联字体属性在IE8/9浏览器中没有被继承的问题 */
+    /* The problem of changing associated font attributes is not inherited in IE8/9 browsers */
     font-size: 100%;
-    /* 更改字体大小属性在IE8/9浏览器中没有被继承的问题 */
+    /* The problem of changing the font size attribute is not inherited in IE8/9 browsers */
     margin: 0;
-    /* 调整边距设置在Firefox 4+, Safari 5, 和 Chrome浏览器中的兼容性问题 */
+    /* Compatibility issue of adjusting margin settings in Firefox 4+, Safari 5, and Chrome browsers */
 }
 
 button,
 input {
     line-height: normal;
-    /* 调整Firefox 4+浏览器下，客户端样式表中设置了“!important”的“line-height”属性的input表单 */
+    /* Adjust the input form with the "line-height" attribute of "!important" set in the client style sheet under Firefox 4+ browser */
 }
 
 button,
 select {
     text-transform: none;
     /**
-     * 调整“button”和“select”的“text-transform”继承不一致性的问题
-     * 其他表单控件元素不继承“text-transform”属性
-     * 修正“button”标签在Chrome, Safari 5+, and IE 8+中的样式继承问题
-     * 修正“select”标签在Firefox 4+ 和Opera中的样式继承问题
+     * Adjust the inheritance inconsistency of "text-transform" between "button" and "select"
+     * Other form control elements do not inherit the "text-transform" attribute
+     * Fixed the style inheritance problem of "button" tag in Chrome, Safari 5+, and IE 8+
+     * Fixed the style inheritance problem of "select" tag in Firefox 4+ and Opera
      */
 }
 
@@ -276,15 +276,15 @@ html input[type="button"],
 input[type="reset"],
 input[type="submit"] {
     -webkit-appearance: button;
-    /* 改正iOS设备中“input”类型表单样式不可用的问题 */
+    /* Corrected the problem that "input" type form style is not available in iOS devices */
     cursor: pointer;
-    /* 增强光标样式在input表单和其他表单的可用性和一致性 */
+    /* Enhance the usability and consistency of cursor styles in input forms and other forms */
 }
 
     button[disabled],
     html input[disabled] {
         cursor: default;
-        /* 为禁用表单重设定默认光标样式 */
+        /* Reset default cursor style for disabled forms */
     }
 
 input[type="checkbox"],
@@ -292,24 +292,24 @@ input[type="radio"] {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    /* 调整IE 8/9中尺寸属性设置为“内容框”的盒子模型 */
+    /* Adjust the box model with the size attribute set to "Content Box" in IE 8/9 */
     padding: 0;
-    /* 去除IE 8/9中的多余的外边距留白部分 */
+    /* Remove excess margins in IE 8/9 */
 }
 
 input[type="search"] {
     -webkit-appearance: textfield;
-    /* 兼容Safari 5 and Chrome上 “searchfield” 上设置 “appearance”属性 */
+    /* Compatible with setting the "appearance" attribute on "searchfield" on Safari 5 and Chrome */
     -moz-box-sizing: content-box;
     -webkit-box-sizing: content-box;
-    /* 兼容Safari 5 and Chrome上 “border-box” 上设置 “box-sizing”属性 */
+    /* Compatible with setting the “box-sizing” attribute on “border-box” on Safari 5 and Chrome */
     box-sizing: content-box;
 }
 
     input[type="search"]::-webkit-search-cancel-button,
     input[type="search"]::-webkit-search-decoration {
         -webkit-appearance: none;
-        /* 去除OS X系统上Safari 5和Chrome中容器内边距和搜索取消按钮属性 */
+        /* Remove container padding and search cancel button attributes in Safari 5 and Chrome on OS X */
     }
 
 button::-moz-focus-inner,
@@ -320,13 +320,13 @@ input::-moz-focus-inner {
 
 textarea {
     overflow: auto;
-    /* IE 8/9中，去除默认垂直滚动条属性 */
+    /* In IE 8/9, remove the default vertical scroll bar attribute */
     vertical-align: top;
-    /* 提高所有浏览器中的文本可读性和版式 */
+    /* Improve text readability and layout in all browsers */
 }
 
 table {
-    /* 删除表格单元格之间的间距。 */
+    /* Remove spacing between table cells. */
     border-collapse: collapse;
     border-spacing: 0;
     width: 100% !important;
@@ -411,7 +411,7 @@ td {
     background: -webkit-linear-gradient(bottom, rgba(0,0,0,0), rgba(0,0,0,0.5)); /* Safari 5.1 - 6 */
     background: -o-linear-gradient(bottom, rgba(0,0,0,0), rgba(0,0,0,0.5)); /* Opera 11.1 - 12*/
     background: -moz-linear-gradient(bottom, rgba(0,0,0,0), rgba(0,0,0,0.5)); /* Firefox 3.6 - 15*/
-    background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.5)); /* 标准的语法 */
+    background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.5)); /* standard syntax */
 }
 
 .swiper-title-all {
@@ -431,7 +431,7 @@ td {
     background: -webkit-linear-gradient(bottom, rgba(0,0,0,0), rgba(0,0,0,0.5)); /* Safari 5.1 - 6 */
     background: -o-linear-gradient(bottom, rgba(0,0,0,0), rgba(0,0,0,0.5)); /* Opera 11.1 - 12*/
     background: -moz-linear-gradient(bottom, rgba(0,0,0,0), rgba(0,0,0,0.5)); /* Firefox 3.6 - 15*/
-    background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.5)); /* 标准的语法 */
+    background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.5)); /* standard syntax */
 }
 
 .weui-loadmore_line {

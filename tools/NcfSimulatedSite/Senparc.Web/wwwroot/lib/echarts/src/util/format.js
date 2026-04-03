@@ -4,7 +4,7 @@ define(function (require) {
     var numberUtil = require('./number');
 
     /**
-     * 每三位默认加,格式化
+     * Every three digits are added by default, formatted
      * @type {string|number} x
      */
     function addCommas(x) {

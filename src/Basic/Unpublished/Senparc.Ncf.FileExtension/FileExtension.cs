@@ -11,7 +11,7 @@ namespace Senparc.Ncf.FileExtension
         /// 
         /// </summary>
         /// <param name="formFile"></param>
-        /// <param name="outPath">绝对路径</param>
+        /// <param name="outPath">absolute path</param>
         /// <returns></returns>
         public static async Task<bool> Upload(IFormFile formFile, string outPath)
         {

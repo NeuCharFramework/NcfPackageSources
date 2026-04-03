@@ -3,7 +3,7 @@
 namespace Senparc.Ncf.Service
 {
     /// <summary>
-    /// 临时开放BaseDataContext.Configuration.AutoDetectChangesEnabled属性，用于大批量更新数据的环境，结束后还原到false状态。
+    /// Temporarily open the BaseDataContext.Configuration.AutoDetectChangesEnabled property, which is used in environments where data is updated in large batches. It will be restored to the false state after completion.
     /// </summary>
     public class AutoDetectChangeContextWrap : IDisposable
     {

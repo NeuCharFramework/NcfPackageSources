@@ -5,7 +5,7 @@ namespace Senparc.Ncf.Core.Cache
     public enum QrCodeRegDataType
     {
         /// <summary>
-        /// 注册
+        /// register
         /// </summary>
         Reg,
     }
@@ -14,7 +14,7 @@ namespace Senparc.Ncf.Core.Cache
     public class QrCodeRegData
     {
         /// <summary>
-        /// 即SceneId的字符串
+        /// is the string of SceneId
         /// </summary>
         public string Key { get; set; }
         public int SceneId { get; set; }
@@ -37,7 +37,7 @@ namespace Senparc.Ncf.Core.Cache
     }
 
     /// <summary>
-    /// 登录许可缓存（缓存数据：UserId）
+    /// Login permission cache (cache data: UserId)
     /// </summary>
     public interface IQrCodeRegCache : IQueueCache<QrCodeRegData>
     {
@@ -57,7 +57,7 @@ namespace Senparc.Ncf.Core.Cache
 
         public override string CreateKey()
         {
-            throw new Exception("请在外部生成Key");
+            throw new Exception("Please generate Key externally");
         }
 
         public override QueueCacheData<QrCodeRegData> Get(string key, bool removeDataWhenExist = true)

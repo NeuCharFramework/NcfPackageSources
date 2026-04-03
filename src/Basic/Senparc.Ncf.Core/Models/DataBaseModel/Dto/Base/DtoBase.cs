@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// 数据库 Dto 基类
+    /// Database Dto base class
     /// </summary>
     public class DtoBase<T> : DtoBase
         where T : struct
@@ -13,7 +13,7 @@ namespace Senparc.Ncf.Core.Models
     }
 
     /// <summary>
-    /// 数据库 Dto 基类
+    /// Database Dto base class
     /// </summary>
     public class DtoBase<T, TID> : DtoBase
     where T : EntityBase<TID>
@@ -23,12 +23,12 @@ namespace Senparc.Ncf.Core.Models
 
 
     /// <summary>
-    /// 数据库 Dto 基类
+    /// Database Dto base class
     /// </summary>
     public class DtoBase : IDtoBase
     {
         /// <summary>
-        /// 是否软删除
+        /// Whether to soft delete
         /// </summary>
         public bool Flag { get; set; }
 
@@ -45,18 +45,18 @@ namespace Senparc.Ncf.Core.Models
         public string Remark { get; set; }
 
         /// <summary>
-        /// 添加时间
+        ///add time
         /// </summary>
         public DateTime AddTime { get; set; }
         /// <summary>
-        /// 上次更新时间
+        /// last updated time
         /// </summary>
         public DateTime LastUpdateTime { get; set; }
 
         /// <summary>
-        /// 租户 ID
-        /// <para>如果为-1，则本系统不启用多租户</para>
-        /// <para>如果为0，则为系统公共数据（特殊情况使用）</para>
+        ///Tenant ID
+        /// <para>If it is -1, multi-tenancy is not enabled in this system</para>
+        /// <para>If it is 0, it is system public data (used in special circumstances)</para>
         /// </summary>
         public int TenantId { get; set; }
     }

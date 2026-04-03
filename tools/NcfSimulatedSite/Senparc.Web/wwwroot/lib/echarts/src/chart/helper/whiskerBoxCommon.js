@@ -36,7 +36,7 @@ define(function(require) {
             var addOrdinal;
 
             // FIXME
-            // 考虑时间轴
+            // Consider the timeline
 
             if (xAxisType === 'category') {
                 option.layout = 'horizontal';

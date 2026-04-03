@@ -46,9 +46,9 @@ define(function (require) {
             // Geo coordinate system
             geoIndex: 0,
 
-            // symbol: null,        // 图形类型
-            symbolSize: 10          // 图形大小，半宽（半径）参数，当图形为方向或菱形则总宽度为symbolSize * 2
-            // symbolRotate: null,  // 图形旋转控制
+            // symbol: null, // graphic type
+            symbolSize: 10          // Graphic size, half-width (radius) parameter, when the graphic is a direction or diamond, the total width is symbolSize * 2
+            // symbolRotate: null, // Graphic rotation control
 
             // large: false,
             // Available when large is true

@@ -8,11 +8,11 @@ using Senparc.AI;
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto
 {
     /// <summary>
-    /// 全局常量配置
+    /// Global constant configuration
     /// </summary>
     public static class Constants
     {
-        // Azure OpenAI API版本列表
+        // Azure OpenAI API version list
         public static readonly List<string> ApiVersionList = new()
         {
             "2022-12-01", "2023-03-15-preview", "2023-05-15",

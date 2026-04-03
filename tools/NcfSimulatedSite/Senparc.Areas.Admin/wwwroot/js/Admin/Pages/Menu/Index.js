@@ -13,7 +13,7 @@
             }
         };
         return {
-            // 表格数据
+            // tabular data
             tableData: [],
             dialog: {
                 title: '新增菜单',
@@ -31,7 +31,7 @@
                 },
                 updateLoading: false,
                 disabled: false,
-                checkStrictly: true // 是否严格的遵守父子节点不互相关联	
+                checkStrictly: true // Whether the parent and child nodes are strictly observed and not related to each other 
             },
             dialogIcon: {
                 visible: false,
@@ -674,7 +674,7 @@
     },
     watch: {
         'dialog.visible': function (val, old) {
-            // 关闭dialog，清空
+            // Close the dialog and clear it
             if (!val) {
                 this.dialog.data = {
                     id: '', menuName: '', parentId: [], url: '', icon: '', sort: '', visible: false,
@@ -686,12 +686,12 @@
         }
     },
     methods: {
-        // 选取图标
+        // Select icon
         pickIcon(item) {
             this.dialogIcon.visible = false;
             this.dialog.data.icon = item;
         },
-        // 更新授权
+        // Update authorization
         async  auUpdateData() {
             this.au.updateLoading = true;
             const checkNodes = this.$refs.tree.getCheckedNodes(false, true);
@@ -717,7 +717,7 @@
                 this.au.updateLoading = false;
             }
         },
-        // 获取所有菜单
+        // Get all menus
         async  getList() {
             const a = await service.get('/Admin/Menu/Edit?handler=Menu');
             const b = a.data.data;
@@ -725,12 +725,12 @@
             this.ddd(b, null, allMenu);
             this.tableData = allMenu;
             
-            // 数据加载完成后初始化固定效果
+            // Initialize fixed effects after data loading is complete
             this.$nextTick(() => {
                 this.initStickyParents();
             });
         },
-        // 数据处理
+        // Data processing
         ddd(source, parentId, dest) {
             var array = source.filter(_ => _.parentId === parentId);
             for (var i in array) {
@@ -740,22 +740,22 @@
                 this.ddd(source, ele.id, ele.children);
             }
         },
-        // 编辑 // 新增菜单 // 增加下一级
+        // Edit // Add new menu // Add next level
         handleEdit(index, row, flag) {
             this.dialog.visible = true;
             if (flag === 'add') {
-                // 新增
+                // New
                 this.dialog.title = '新增菜单';
                 return;
             }
-            // 编辑
+            // edit
             let { id, menuName, parentId, url, icon, sort, visible,
                 resourceCode, isLocked, menuType } = row;
             this.dialog.data = {
                 id, menuName, parentId: [parentId], url, icon, sort, visible,
                 resourceCode, isLocked, menuType
             };
-            // dialog中父级菜单 做递归显示
+            // Recursive display of parent menu in dialog
             let x = [];
             this.recursionFunc(row, this.tableData, x);
             this.dialog.data.parentId = x;
@@ -773,7 +773,7 @@
                 this.dialog.data.parentId.push(row.id);
             }
         },
-        // 设置父级菜单默认显示 递归
+        // Set the default display of the parent menu recursively
         recursionFunc(row, source, dest) {
             if (row.parentId === null) {
                 return;
@@ -788,10 +788,10 @@
                 }
             }
         },
-        // 更新新增、编辑
+        // Update, add, edit
         updateData() {
             this.$refs['dataForm'].validate(valid => {
-                // 表单校验
+                // form validation
                 if (valid) {
                     this.dialog.updateLoading = true;
                     let data = {
@@ -821,7 +821,7 @@
                 }
             });
         },
-        // 删除
+        // delete
         handleDelete(index, row) {
             let ids = [row.id];
             service.post("/Admin/Menu/edit?handler=Delete", ids).then(res => {
@@ -836,7 +836,7 @@
                 }
             });
         },
-        // 初始化父节点固定效果
+        // Initialize parent node fixed effect
         initStickyParents() {
             const rows = document.querySelectorAll('.el-table__row');
             const table = document.querySelector('.el-table');
@@ -846,12 +846,12 @@
                 if (expandIcon && !expandIcon.classList.contains('el-table__expand-icon--leaf')) {
                     row.classList.add('sticky-parent');
                     
-                    // 创建克隆行并保持列宽
+                    // Create cloned rows and keep column widths
                     const clone = row.cloneNode(true);
                     clone.classList.add('sticky-clone');
                     clone.style.display = 'none';
                     
-                    // 复制每列的宽度
+                    // Copy the width of each column
                     const originalCells = row.querySelectorAll('td');
                     const cloneCells = clone.querySelectorAll('td');
                     originalCells.forEach((cell, index) => {
@@ -861,14 +861,14 @@
                         cloneCells[index].style.maxWidth = width;
                     });
                     
-                    // 设置克隆行的总宽度
+                    // Set the total width of cloned rows
                     clone.style.width = window.getComputedStyle(row).width;
                     
                     row.parentNode.insertBefore(clone, row.nextSibling);
                 }
             });
         },
-        // 处理滚动事件
+        // Handle scroll events
         handleScroll() {
             const stickyRows = document.querySelectorAll('.sticky-parent');
             const headerHeight = document.querySelector('.el-table__header-wrapper').offsetHeight;
@@ -887,7 +887,7 @@
                     clone.style.top = `${headerHeight}px`;
                     clone.style.left = `${tableRect.left}px`;
                     
-                    // 确保克隆行的列宽与原行保持一致
+                    // Make sure the column widths of the cloned rows are consistent with the original rows
                     const originalCells = row.querySelectorAll('td');
                     const cloneCells = clone.querySelectorAll('td');
                     originalCells.forEach((cell, index) => {
@@ -899,7 +899,7 @@
                 }
             });
         },
-        // 在窗口大小改变时重新计算列宽
+        // Recalculate column widths when window size changes
         handleResize() {
             this.initStickyParents();
         }

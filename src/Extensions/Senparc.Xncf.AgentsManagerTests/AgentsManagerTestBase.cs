@@ -147,19 +147,19 @@ namespace Senparc.Xncf.AgentsManagerTests
             #endregion
 
             #region 初始化 AgentsManager
-            //模板
+            //template
             var agentTemplateService = serviceProvider.GetRequiredService<AgentsTemplateService>();
-            var agentTemplate = new AgentTemplate("产品经理机器人", "你是一名产品经理，负责管理和协调软件开发项目，当需要获取外部资源时，你可以向其他人寻求帮助。", true, "", promptItem.FullVersion, HookRobotType.None, "", "");
+            var agentTemplate = new AgentTemplate("Product Manager Robot", "You are a product manager responsible for managing and coordinating software development projects, and you can call on others for help when you need to obtain external resources.", true, "", promptItem.FullVersion, HookRobotType.None, "", "");
             await agentTemplateService.SaveObjectAsync(agentTemplate);
-            var agentTemplate2 = new AgentTemplate("爬虫机器人", "你是一个爬虫，你负责从互联网上获取信息，并返回给用户。", true, "", promptItem2.FullVersion, HookRobotType.None, "", "", typeof(CrawlPlugin).FullName);
+            var agentTemplate2 = new AgentTemplate("Reptile robot", "You are a crawler and you are responsible for getting information from the Internet and returning it to the user.", true, "", promptItem2.FullVersion, HookRobotType.None, "", "", typeof(CrawlPlugin).FullName);
             await agentTemplateService.SaveObjectAsync(agentTemplate2);
 
-            //聊天组
+            //chat group
             var chatGroupService = serviceProvider.GetRequiredService<ChatGroupService>();
-            var chatGroup = new ChatGroup("测试项目", true, ChatGroupState.Unstart, "测试项目", agentTemplate.Id, agentTemplate.Id);
+            var chatGroup = new ChatGroup("test items", true, ChatGroupState.Unstart, "test items", agentTemplate.Id, agentTemplate.Id);
             await chatGroupService.SaveObjectAsync(chatGroup);
 
-            //聊天组成员
+            //Chat group members
             var chatGroupMemberService = serviceProvider.GetRequiredService<ChatGroupMemberService>();
             var chatGroupMember = new ChatGroupMember(agentTemplate.Id, agentTemplate, chatGroup.Id);
             await chatGroupMemberService.SaveObjectAsync(chatGroupMember);
@@ -181,47 +181,47 @@ namespace Senparc.Xncf.AgentsManagerTests
         [TestMethod]
         public async Task TestSeedDataInitialization()
         {
-            #region 验证 PromptRange 初始化数据
-            var aiModelService = _serviceProvider.GetRequiredService<AIModelService>();
+            #region Verify PromptRange initialization data
+            var aiModelService= _serviceProvider.GetRequiredService<AIModelService>();
             var promptRangeService = _serviceProvider.GetRequiredService<PromptRangeService>();
             var promptItemService = _serviceProvider.GetRequiredService<PromptItemService>();
             var promptResultService = _serviceProvider.GetRequiredService<PromptResultService>();
             
-            // 验证 AIModel
+            // Verify AIModel
             var aiModel = await aiModelService.GetObjectAsync(z => true);
             Assert.IsNotNull(aiModel);
-            Assert.AreEqual("测试", aiModel.Note);
+            Assert.AreEqual("test", aiModel.Note);
 
-            // 验证 PromptRange
-            var promptRange = await promptRangeService.GetObjectAsync(z => z.Alias == "Agents靶场");
+            // Validate PromptRange
+            var promptRange = await promptRangeService.GetObjectAsync(z => z.Alias == "Agentsrange");
             Assert.IsNotNull(promptRange);
             Assert.AreEqual("2025.01.17.1", promptRange.RangeName);
 
-            // 验证 PromptItem
+            // Validate PromptItem
             var promptItems = await promptItemService.GetFullListAsync(z => z.RangeId == promptRange.Id);
             Assert.AreEqual(2, promptItems.Count);
-            Assert.IsTrue(promptItems.Any(z => z.NickName == "项目经理"));
-            Assert.IsTrue(promptItems.Any(z => z.NickName == "爬虫"));
+            Assert.IsTrue(promptItems.Any(z => z.NickName == "project manager"));
+            Assert.IsTrue(promptItems.Any(z => z.NickName == "reptile"));
 
 
-            // 验证 PromptResult
+            // Validate PromptResult
             var promptResults = await promptResultService.GetFullListAsync(z => true);
             Assert.AreEqual(2, promptResults.Count);
             #endregion
 
-            #region 验证 AgentsManager 初始化数据
-            var agentTemplateService = _serviceProvider.GetRequiredService<AgentsTemplateService>();
+            #region Verify AgentsManager initialization data
+            var agentTemplateService= _serviceProvider.GetRequiredService<AgentsTemplateService>();
             var chatGroupService = _serviceProvider.GetRequiredService<ChatGroupService>();
             var chatGroupMemberService = _serviceProvider.GetRequiredService<ChatGroupMemberService>();
 
-            // 验证 AgentTemplate
+            // Validate AgentTemplate
             var templates = await agentTemplateService.GetFullListAsync(z => true);
             Assert.AreEqual(2, templates.Count);
-            Assert.IsTrue(templates.Any(z => z.Name == "产品经理机器人"));
-            Assert.IsTrue(templates.Any(z => z.Name == "爬虫机器人"));
+            Assert.IsTrue(templates.Any(z => z.Name == "Product Manager Robot"));
+            Assert.IsTrue(templates.Any(z => z.Name == "Reptile robot"));
 
             var robotTemplate = templates[1];
-            Console.WriteLine("爬虫 FunctionCall：" + robotTemplate.FunctionCallNames);
+            Console.WriteLine("Crawler FunctionCall:" + robotTemplate.FunctionCallNames);
 
             var functionCallNames = robotTemplate.FunctionCallNames.Split(',');
             Assert.AreEqual("Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins.CrawlPlugin", functionCallNames[0]);
@@ -230,13 +230,13 @@ namespace Senparc.Xncf.AgentsManagerTests
             var functionCall = aiPlugin.GetPluginType(functionCallNames[0], true);
             Assert.IsNotNull(functionCall);
 
-            // 验证 ChatGroup
-            var chatGroup = await chatGroupService.GetObjectAsync(z => z.Name == "测试项目");
+            // Verify ChatGroup
+            var chatGroup = await chatGroupService.GetObjectAsync(z => z.Name == "test items");
             Assert.IsNotNull(chatGroup);
             Assert.IsTrue(chatGroup.Enable);
             Assert.AreEqual(ChatGroupState.Unstart, chatGroup.State);
 
-            // 验证 ChatGroupMember
+            // Verify ChatGroupMember
             var members = await chatGroupMemberService.GetFullListAsync(z => z.ChatGroupId == chatGroup.Id);
             Assert.AreEqual(2, members.Count);
             #endregion

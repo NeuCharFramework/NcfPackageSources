@@ -249,8 +249,8 @@ define(function(require) {
         categories: function () {
             var thisOption = this.option;
             zrUtil.each(thisOption.categories, function (cate) {
-                // FIXME category模式也使用pieceList，但在visualMapping中不是使用pieceList。
-                // 是否改一致。
+                // FIXME category mode also uses pieceList, but pieceList is not used in visualMapping.
+                // Whether to change it to be consistent.
                 this._pieceList.push({
                     text: this.formatValueText(cate, true),
                     value: cate

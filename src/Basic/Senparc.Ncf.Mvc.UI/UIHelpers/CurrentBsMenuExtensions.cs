@@ -7,7 +7,7 @@ namespace System.Web.Mvc
     public static class CurrentBsMenuExtensions
     {
         /// <summary>
-        /// Bootstrap当前菜单
+        ///Bootstrap current menu
         /// </summary>
         /// <param name="htmlHelper"></param>
         /// <param name="menuName"></param>

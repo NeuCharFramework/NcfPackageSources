@@ -1,25 +1,25 @@
-﻿// 切换菜单栏展开
+﻿// Toggle menu bar expansion
 Vue.prototype.toggleSideBar = function () {
     Store.commit('changeIsCollapse', !Store.state.navMenu.isCollapse);
     let isCollapse = JSON.parse(window.sessionStorage.getItem('isCollapse')) || false;
-    // 解决刷新菜单状态复原问题
+    // Solve the problem of refreshing menu status recovery
     window.sessionStorage.setItem('isCollapse', !isCollapse);
 };
 
-// 点击菜单，高亮
+// Click on the menu to highlight
 Vue.prototype.menuSelect = function (key, keypath) {
     window.sessionStorage.setItem('activeMenu', key);
 };
 
-// 菜单栏数据
+// Menu bar data
 function getNavMenu() {
     service.get("/Admin/index?handler=MenuResource").then(res => {
         if (res.data.success) {
             var temp = res.data.data.menuList;
             myfunctionMain(temp);
-            // 数据存起来
+            // Save data
             Store.commit('savenavMenuList', temp);
-            // 按钮权限存起来  使用：直接在dom上v-has=" ['admin-add']"
+            // Save the button permissions and use: v-has=" ['admin-add']" directly on the dom
             window.sessionStorage.setItem('saveResourceCodes', JSON.stringify(res.data.data.resourceCodes));
         }
     });
@@ -27,7 +27,7 @@ function getNavMenu() {
 
 getNavMenu();
 
-// 菜单栏数据递归
+// Menu bar data recursion
 function myfunctionMain(list) {
     if (!list || list.length === 0) {
         return;
@@ -37,7 +37,7 @@ function myfunctionMain(list) {
     //}
     for (var i in list) {
         let setNavMenuActive = window.sessionStorage.getItem('setNavMenuActive');
-        // 如果有需要单独设置的导航 （例如安装、卸载后激活特定的导航）
+        // If there is navigation that needs to be set up separately (such as activating specific navigation after installation or uninstallation)
         if (setNavMenuActive && setNavMenuActive !== "null" && list[i].menuName === setNavMenuActive) {
             window.sessionStorage.setItem('setNavMenuActive', null);
             if (list[i].children.length > 0) {

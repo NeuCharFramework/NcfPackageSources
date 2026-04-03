@@ -9,7 +9,7 @@ define(function (require) {
     var createListFromArray = require('./createListFromArray');
 
     /**
-     * 从邻接矩阵生成
+     * Generated from adjacency matrix
      * ```
      *        TARGET
      *    -1--2--3--4--5-
@@ -20,10 +20,10 @@ define(function (require) {
      *  5| x  x  x  x  x
      * ```
      *
-     * @param {Array.<Object>} nodes 节点信息
-     * @param {Array} matrix 邻接矩阵
+     * @param {Array.<Object>} nodes node information
+     * @param {Array} matrix adjacency matrix
      * @param {module:echarts/model/Series}
-     * @param {boolean} directed 是否是有向图
+     * @param {boolean} directed whether it is a directed graph
      * @return {module:echarts/data/Graph}
      */
     return function (nodes, matrix, hostModel, directed) {

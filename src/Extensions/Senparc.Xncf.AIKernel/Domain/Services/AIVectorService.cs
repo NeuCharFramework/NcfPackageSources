@@ -70,7 +70,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         ///// <summary>
-        ///// 构造 SenparcAiSetting
+        ///// Construct SenparcAiSetting
         ///// </summary>
         ///// <param name="aiVector"></param>
         ///// <returns></returns>
@@ -104,7 +104,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         //            case Models.ConfigModelType.SpeechToText:
         //            case Models.ConfigModelType.SpeechRecognition:
         //            default:
-        //                throw new Exception($"尚未支持：{aiModel.ConfigModelType} 模型在 BuildSenparcAiSetting 中的处理");
+        //                throw new Exception($"Not yet supported: {aiModel.ConfigModelType} model processing in BuildSenparcAiSetting");
         //        }
         //        return modelName;
         //    };
@@ -117,7 +117,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         //}
 
         ///// <summary>
-        ///// 运行模型
+        ///// Run the model
         ///// </summary>
         ///// <param name="senparcAiSetting"></param>
         ///// <param name="prompt"></param>
@@ -126,7 +126,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         //{
         //    if (senparcAiSetting == null)
         //    {
-        //        throw new SenparcAiException("SenparcAiSetting 不能为空");
+        //        throw new SenparcAiException("SenparcAiSetting cannot be empty");
         //    }
 
         //    promptConfigParameter ??= new PromptConfigParameter()
@@ -151,7 +151,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         //{
         //    if (modelResult?.Result?.Data == null)
         //    {
-        //        return "模型数据不存在，请检查是否已部署，或是否具备权限！";
+        //        return "The model data does not exist, please check whether it has been deployed or whether you have permission!";
         //    }
 
         //    var models = await base.GetFullListAsync(z => z.AiPlatform == AiPlatform.NeuCharAI);
@@ -172,11 +172,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         //                            : "",
         //            Endpoint = $"https://www.neuchar.com/{developerId}",
         //            ConfigModelType = Models.ConfigModelType.Chat,
-        //            Note = $"从 NeuChar AI 导入（DevId:{developerId}）",
+        //            Note = $"Import from NeuChar AI (DevId:{developerId})",
         //            Show = true
         //        };
 
-        //        //TODO: 远程不提供，临时本地判断
+        //        //TODO: Not provided remotely, temporary local judgment
         //        if (neucharModel.Name.Contains("embedding"))
         //        {
         //            dto.ConfigModelType = Models.ConfigModelType.TextEmbedding;
@@ -206,7 +206,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
 
         //        await base.SaveObjectAsync(model);
         //    }
-        //    return $"已成功添加 {addCount} 个模型，更新 {updateCount} 个模型信息。";
+        //    return $"{addCount} models have been added successfully and {updateCount} model information has been updated.";
         //}
     }
 }

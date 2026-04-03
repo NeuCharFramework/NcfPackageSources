@@ -4,76 +4,76 @@ define(function (require) {
 
     var defaultOption = {
         show: true,
-        zlevel: 0,                  // 一级层叠
-        z: 0,                       // 二级层叠
-        // 反向坐标轴
+        zlevel: 0,                  // One level cascading
+        z: 0,                       // Second level stacking
+        // reverse axis
         inverse: false,
-        // 坐标轴名字，默认为空
+        // Axis name, default is empty
         name: '',
-        // 坐标轴名字位置，支持'start' | 'middle' | 'end'
+        // Axis name position, supports 'start' | 'middle' | 'end'
         nameLocation: 'end',
-        // 坐标轴文字样式，默认取全局样式
+        // Axis text style, default to global style
         nameTextStyle: {},
-        // 文字与轴线距离
+        // Distance between text and axis
         nameGap: 15,
-        // 是否能触发鼠标事件
+        // Whether mouse events can be triggered
         silent: true,
-        // 坐标轴线
+        // Coordinate axis
         axisLine: {
-            // 默认显示，属性show控制显示与否
+            // Displayed by default, the attribute show controls whether to display or not.
             show: true,
             onZero: true,
-            // 属性lineStyle控制线条样式
+            // The attribute lineStyle controls the line style
             lineStyle: {
                 color: '#333',
                 width: 1,
                 type: 'solid'
             }
         },
-        // 坐标轴小标记
+        // Axis small mark
         axisTick: {
-            // 属性show控制显示与否，默认显示
+            // The attribute show controls whether to display or not. It is displayed by default.
             show: true,
-            // 控制小标记是否在grid里
+            // Control whether the small mark is in the grid
             inside: false,
-            // 属性length控制线长
+            // The length attribute controls the line length
             length: 5,
-            // 属性lineStyle控制线条样式
+            // The attribute lineStyle controls the line style
             lineStyle: {
                 color: '#333',
                 width: 1
             }
         },
-        // 坐标轴文本标签，详见axis.axisLabel
+        // Axis text label, see axis.axisLabel for details
         axisLabel: {
             show: true,
-            // 控制文本标签是否在grid里
+            // Control whether the text label is in the grid
             inside: false,
             rotate: 0,
             margin: 8,
             // formatter: null,
-            // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+            // The remaining attributes use the global text style by default, see TEXTSTYLE for details.
             textStyle: {
                 color: '#333',
                 fontSize: 12
             }
         },
-        // 分隔线
+        // divider
         splitLine: {
-            // 默认显示，属性show控制显示与否
+            // Displayed by default, the attribute show controls whether to display or not.
             show: true,
-            // 属性lineStyle（详见lineStyle）控制线条样式
+            // The attribute lineStyle (see lineStyle for details) controls the line style
             lineStyle: {
                 color: ['#ccc'],
                 width: 1,
                 type: 'solid'
             }
         },
-        // 分隔区域
+        // separate areas
         splitArea: {
-            // 默认不显示，属性show控制显示与否
+            // Not displayed by default, the attribute show controls whether to display it or not.
             show: false,
-            // 属性areaStyle（详见areaStyle）控制区域样式
+            // The attribute areaStyle (see areaStyle for details) controls the area style.
             areaStyle: {
                 color: ['rgba(250,250,250,0.3)','rgba(200,200,200,0.3)']
             }
@@ -81,32 +81,32 @@ define(function (require) {
     };
 
     var categoryAxis = zrUtil.merge({
-        // 类目起始和结束两端空白策略
+        // Blank strategy at the beginning and end of the category
         boundaryGap: true,
-        // 坐标轴小标记
+        // Axis small mark
         axisTick: {
             interval: 'auto'
         },
-        // 坐标轴文本标签，详见axis.axisLabel
+        // Axis text label, see axis.axisLabel for details
         axisLabel: {
             interval: 'auto'
         }
     }, defaultOption);
 
     var valueAxis = zrUtil.defaults({
-        // 数值起始和结束两端空白策略
+        // Numeric starting and ending blank strategy
         boundaryGap: [0, 0],
-        // 最小值, 设置成 'dataMin' 则从数据中计算最小值
+        // Minimum value, set to 'dataMin' to calculate the minimum value from the data
         // min: null,
-        // 最大值，设置成 'dataMax' 则从数据中计算最大值
+        // Maximum value, set to 'dataMax' to calculate the maximum value from the data
         // max: null,
         // Readonly prop, specifies start value of the range when using data zoom.
         // rangeStart: null
         // Readonly prop, specifies end value of the range when using data zoom.
         // rangeEnd: null
-        // 脱离0值比例，放大聚焦到最终_min，_max区间
+        // Break away from the 0 value ratio, zoom in and focus to the final _min, _max interval
         // scale: false,
-        // 分割段数，默认为5
+        // Number of segments, default is 5
         splitNumber: 5
         // Minimum interval
         // minInterval: null

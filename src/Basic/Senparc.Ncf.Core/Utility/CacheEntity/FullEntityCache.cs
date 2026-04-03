@@ -19,12 +19,12 @@ namespace Senparc.Ncf.Core.Utility
                 var props = fullEntityType.GetProperties();
                 foreach (var p in props)
                 {
-                    //获得当前属性的特性
+                    //Get the characteristics of the current attribute
                     AutoSetCacheAttribute m = Attribute.GetCustomAttribute(p, typeof(AutoSetCacheAttribute)) as AutoSetCacheAttribute;
                     if (m != null)
                     {
-                        //允许自动复制
-                        //获取原始实体值
+                        //Allow automatic copying
+                        //Get original entity value
                         var entityProp = entityType.GetProperty(p.Name);
                         if (entityProp == null || entityProp.PropertyType != p.PropertyType)
                         {

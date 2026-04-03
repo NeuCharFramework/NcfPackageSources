@@ -1,14 +1,14 @@
 ﻿@page
 @model Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager.WeixinUser_IndexModel
 @{
-    //var namePrefix = Model.MpAccountDto != null ? $"{Model.MpAccountDto.Name}的" : "所有";
-    //ViewData["Title"] = $"{namePrefix}用户";
+    //var namePrefix = Model.MpAccountDto != null ? $"{Model.MpAccountDto.Name}of" : "all";
+    //ViewData["Title"] = $"{namePrefix}user";
     Layout = "_Layout_Vue";
 }
 @section breadcrumbs {
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>模块管理</el-breadcrumb-item>
-    <el-breadcrumb-item>微信管理</el-breadcrumb-item>
+    <el-breadcrumb-item>Extension modules</el-breadcrumb-item>
+    <el-breadcrumb-item>Module management</el-breadcrumb-item>
+    <el-breadcrumb-item>WeChat management</el-breadcrumb-item>
     <el-breadcrumb-item>{{docTitle}}</el-breadcrumb-item>
 }
 
@@ -16,10 +16,10 @@
     <div class="admin-role">
         <div class="filter-container">
             <template v-if="mpAccountDto">
-                <el-button size="small" class="filter-item" type="primary" icon="el-icon-plus" :loading="addLoading" @@click="addUser('add')">追加新增关注</el-button>
-                <el-button size="small" class="filter-item" type="primary" @@click="asyncUser" :loading="isLoading"><i class="fa fa-exchange"></i> 同步所有关注</el-button>
-                <el-button size="small" class="filter-item" type="danger" icon="el-icon-delete" @@click="del">删除</el-button>
-                <span><small>注意：如果用户数量众多，可能会消耗非常长的时间！</small></span>
+                <el-button size="small" class="filter-item" type="primary" icon="el-icon-plus" :loading="addLoading" @@click="addUser('add')">Add new attention</el-button>
+                <el-button size="small" class="filter-item" type="primary" @@click="asyncUser" :loading="isLoading"><i class="fa fa-exchange"></i> Sync all following</el-button>
+                <el-button size="small" class="filter-item" type="danger" icon="el-icon-delete" @@click="del">delete</el-button>
+                <span><small>Note: If there are a large number of users, it may take a very long time!</small></span>
             </template>
         </div>
         <el-table :data="tableData"
@@ -38,14 +38,14 @@
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="昵称">
+                             label="Nick name">
                 <template slot-scope="scope">
                     {{ scope.row.nickName}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
                              width="65"
-                             label="头像">
+                             label="avatar">
                 <template slot-scope="scope">
                     <el-image style="width: 50px; height: 50px"
                               :src="scope.row.headImgUrl"></el-image>
@@ -53,16 +53,16 @@
             </el-table-column>
 
             <el-table-column align="center"
-                             label="性别">
+                             label="gender">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.sex == 1">男</span>
-                    <span v-if="scope.row.sex == 2">女</span>
-                    <span v-if="scope.row.sex != 2 && scope.row.sex != 1">未知</span>
+                    <span v-if="scope.row.sex == 1">male</span>
+                    <span v-if="scope.row.sex == 2">female</span>
+                    <span v-if="scope.row.sex != 2 && scope.row.sex != 1">unknown</span>
                 </template>
             </el-table-column>
 
             <el-table-column align="center"
-                             label="地区">
+                             label="area">
                 <template slot-scope="scope">
                     {{scope.row.country}}&nbsp;
                     {{scope.row.province}}&nbsp;
@@ -71,37 +71,36 @@
             </el-table-column>
 
             <el-table-column align="center"
-                             label="分组">
+                             label="Group">
                 <template slot-scope="scope">
                     {{ scope.row.groupid}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="关注时间">
+                             label="attention time">
                 <template slot-scope="scope">
                     {{ formaTableTime(scope.row.subscribe_Time)}}
                 </template>
             </el-table-column>
 
             <el-table-column align="center"
-                             label="关注状态">
+                             label="Follow status">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.subscribe == 1">已关注</span>
-                    <span v-if="scope.row.subscribe != 1">未关注</span>
+                    <span v-if="scope.row.subscribe == 1">Already following</span>
+                    <span v-if="scope.row.subscribe != 1">Not following</span>
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="关注场景">
+                             label="Pay attention to the scene">
                 <template slot-scope="scope">
                     {{scope.row.subscribe_Scene}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="标签">
+                             label="Label">
                 <template slot-scope="scope">
                     <template v-if="scope.row.userTags_WeixinUsers.length == 0">
-                        无
-                    </template>
+                        none</template>
                     <template v-if="scope.row.userTags_WeixinUsers.length > 0">
                         <ul>
                             <li v-for="item in scope.row.userTags_WeixinUsers">
@@ -112,28 +111,28 @@
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="备注">
+                             label="Remark">
                 <template slot-scope="scope">
                     {{scope.row.adminRemark}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="说明">
+                             label="illustrate">
                 <template slot-scope="scope">
                     {{scope.row.adminRemark}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
                              width="145"
-                             label="添加时间">
+                             label="Add time">
                 <template slot-scope="scope">
                     {{formaTableTime(scope.row.addTime)}}
                 </template>
             </el-table-column>
-            @*<el-table-column label="操作" align="center" width="100"fixed="right">
+            @*<el-table-column label="operate" align="center" width="100"fixed="right">
                 <template slot-scope="scope">
-                    <el-popconfirm placement="top" title="确认删除此用户吗？" @@on-confirm="deleteCheck(scope.$index, scope.row)">
-                        <el-button size="mini" type="danger" slot="reference">删除</el-button>
+                    <el-popconfirm placement="top" title="Are you sure to delete this user?" @@on-confirm="deleteCheck(scope.$index, scope.row)">
+                        <el-button size="mini" type="danger" slot="reference">delete</el-button>
                     </el-popconfirm>
                 </template>
             </el-table-column>*@
@@ -183,7 +182,7 @@
                         this.tableData = responseData.weixinUserDtos.list;
                         this.mpAccountDto = responseData.mpAccountDto;
                         this.searchData.total = responseData.weixinUserDtos.count;
-                        this.docTitle = this.mpAccountDto !== null ? this.mpAccountDto.name + '的用户' : '所有用户';
+                        this.docTitle = this.mpAccountDto !== null ? this.mpAccountDto.name + 'of users' : 'all users';
                         document.title = this.docTitle;
                     });
                 },
@@ -216,8 +215,8 @@
                     var delIds = this.multipleSelection;
                     if (delIds.length === 0) {
                         this.$notify({
-                            title: '警告',
-                            message: '请勾选公众号',
+                            title: 'warn',
+                            message: 'Please check the official account',
                             type: 'warning',
                             duration: 2000
                         });
@@ -229,12 +228,12 @@
                         ids.push(ele.id);
                     })
 
-                    app.$confirm('是否删除所都选的项目？', { type: 'warning' }).then(res => {
+                    app.$confirm('Delete all selected items?', { type: 'warning' }).then(res => {
                         return service.post('@Url.Page("Index")?handler=Delete', ids);
                     }).then(res => {
                         this.$notify({
-                            title: '成功',
-                            message: '已成功删除' + ids.length + '条',
+                            title: 'success',
+                            message: 'Deleted successfully' + ids.length + 'strip',
                             type: 'success',
                             duration: 2000
                         });

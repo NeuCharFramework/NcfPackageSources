@@ -4,22 +4,36 @@ var app = new Vue({
         return {
             isAIGrade: true,
             devHost: 'http://pr-felixj.frp.senparc.com',
-            pageChange: false, // 页面是否有变化
-            isAvg: true, // 是否平均分 默认false 不平均
-            // 配置 输入 ---start
-            promptField: '', // 靶场列表
-            promptFieldOpt: [], // 靶场列表
-            promptOpt: [], // prompt列表
-            modelOpt: [], // 模型列表
-            waitRefreshModel: false, // 是否等待刷新模型列表
-            promptid: '',// 选择靶场
-            modelid: '',// 选择模型
-            content: '',// prompt 输入内容
-            remarks: '', // prompt 输入的备注
-            isComposing: false, // 是否正在使用输入法（IME composition）
-            numsOfResults: 1, // prompt 的连发次数(发射次数) 1-10
-            numsOfResultsOpt: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // prompt 的连发次数(发射次数) 1-10
-            // 参数设置 视图配置列表
+            // Optimization function
+            optimizeDialogVisible: false,
+            optimizeRequirement: '',
+            optimizing: false,
+            optimizeProgressText: '',          // Optimize the progress description in the pop-up window (Agent → Refresh → Target Practice → Rating)
+            optimizeErrorText: '',             // When optimization fails, it will remain in the pop-up window for developers to view.
+            autoShootAfterOptimize: true,      // 🆕 Target shooting immediately after creation (selected by default)
+            autoAIGradeAfterShoot: false,      // 🆕 AI scoring after target shooting (not selected by default)
+            // PromptCatalyzer initialization function
+            promptCatalyzerInitVisible: false,      // Initialize dialog visibility
+            availableModelsForInit: [],             // List of available AI Models
+            selectedModelIdForInit: null,           // Selected Model ID
+            loadingModels: false,                   // The status of loading the Model list
+            initializing: false,                    // Initializing state
+            pageChange: false, // Is there any change to the page?
+            isAvg: true, // Whether to score equally, default false, not evenly
+            // Configuration input ---start
+            promptField: '', // Range list
+            promptFieldOpt: [], // Range list
+            promptOpt: [], // prompt list
+            modelOpt: [], // Model list
+            waitRefreshModel: false, // Whether to wait to refresh the model list
+            promptid: '',// Choose a shooting range
+            modelid: '',// Select model
+            content: '',// prompt input content
+            remarks: '', // prompt input remarks
+            isComposing: false, // Whether input method (IME composition) is being used
+            numsOfResults: 1, // Number of bursts of prompt (number of launches) 1-10
+            numsOfResultsOpt: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // Number of bursts of prompt (number of launches) 1-10
+            // Parameter settings View configuration list
             parameterViewList: [
                 {
                     tips: '控制词的选择范围，值越高，生成的文本将包含更多的不常见词汇',
@@ -88,21 +102,21 @@ var app = new Vue({
                     sliderStep: 1
                 }
             ],
-            promptLeftShow: false, // prompt左侧区域整体 显隐
-            parameterViewShow: false, // 模型参数设置 显隐 false是默认显示 trun是隐藏
-            targetShootLoading: false, // 打靶loading
-            dodgersLoading: false, // 连发loading
-            // 配置 输入 ---end
-            // prompt请求参数 ---start
-            promptParamVisible: false,// prompt请求参数 显隐 true是显示 false是默认隐藏
+            promptLeftShow: false, // The entire area on the left side of the prompt is shown and hidden.
+            parameterViewShow: false, // Model parameter settings show and hide false is displayed by default trun is hidden
+            targetShootLoading: false, // Target shooting loading
+            dodgersLoading: false, // burst loading
+            // Configure input ---end
+            // prompt request parameters ---start
+            promptParamVisible: false,// Prompt request parameters show/hide true means display false means hide by default
             promptParamFormLoading: false,
             promptParamForm: {
                 prefix: '',
                 suffix: '',
                 variableList: []
             },
-            // prompt请求参数 ---end
-            // sendBtns: 打靶、连发、保存草稿
+            // prompt request parameters ---end
+            // sendBtns: target practice, burst, save draft
             sendBtns: [
                 {
                     text: '打靶'
@@ -115,60 +129,60 @@ var app = new Vue({
                 }
             ],
             sendBtnText: '打靶',
-            // 输出 ---start
-            outputAverageDeci: -1,// 输出列表的平均分
-            outputMaxDeci: -1, // 输出列表的最高分
-            outputActive: '', // 输出列表选中查看|评分
-            outputList: [],  // 输出列表
-            robotScoreLoadingMap: {}, // AI评分加载状态映射 {itemId: true/false}
-            chartData: [], // 图表数据
-            chartInstance: null, // 图表实例
-            // 输出 ---end
-            // 版本记录 ---start
-            versionDrawer: false,// 抽屉
-            versionSearchVal: '', // 版本搜索
+            // Output ---start
+            outputAverageDeci: -1,// Average score of output list
+            outputMaxDeci: -1, // Output the highest score of the list
+            outputActive: '', // Select the output list to view|score
+            outputList: [],  // Output list
+            robotScoreLoadingMap: {}, // AI rating loading status mapping {itemId: true/false}
+            chartData: [], // chart data
+            chartInstance: null, // Chart example
+            // Output ---end
+            // Version record ---start
+            versionDrawer: false,// drawer
+            versionSearchVal: '', // Version search
             versionTreeProps: {
                 children: 'children',
                 label: 'label'
             },
             versionTreeData: [],
-            // 版本记录 ---end
-            // 战术选择
+            // Version record ---end
+            // Tactical options
             tacticalFormVisible: false,
             tacticalFormSubmitLoading: false,
             tacticalForm: {
                 tactics: '重新瞄准',
-                chatMode: '对话模式' // 对话模式/直接测试，默认对话模式
+                chatMode: '对话模式' // Conversation mode/direct testing, default conversation mode
             },
-            // 战术选择弹窗中的对话输入
-            tacticalChatInput: '', // 对话模式下的用户输入内容
-            // 继续聊天相关状态
-            continueChatMode: false, // 是否处于继续聊天模式
-            continueChatPromptResultId: null, // 继续聊天的 PromptResult ID
-            continueChatHistory: [], // 继续聊天的历史记录
-            continueChatSystemMessage: '', // 继续聊天时使用的 SystemMessage（Prompt）
-            systemMessageCollapse: [], // SystemMessage 折叠面板状态
-            // 导图相关状态
-            mapDialogVisible: false, // 导图对话框显示状态
-            map3dScene: null, // three.js 场景
-            map3dCamera: null, // three.js 相机
-            map3dRenderer: null, // three.js 渲染器
-            map3dControls: null, // 相机控制器
-            map3dNodes: [], // 3D 节点数组
-            map3dTreeData: null, // 树状结构数据
-            map3dClickHandler: null, // 点击事件处理器
-            map3dAnimationId: null, // 动画ID
-            map3dNeedsAnimationUpdate: false, // 是否需要更新动画
-            map3dNodeMap: new Map(), // 节点映射，用于快速查找
-            map3dLastAnimationTime: 0, // 上次动画更新时间（用于节流）
-            map3dCurrentNodes: [], // 缓存当前选中的节点（性能优化）
-            // 靶场
+            // Dialogue input in tactical selection pop-up window
+            tacticalChatInput: '', // User input in conversation mode
+            // Continue chatting related status
+            continueChatMode: false, // Whether in continue chat mode
+            continueChatPromptResultId: null, // PromptResult ID to continue chatting with
+            continueChatHistory: [], // Continue chat history
+            continueChatSystemMessage: '', // SystemMessage(Prompt) used when continuing chat
+            systemMessageCollapse: [], // SystemMessage accordion status
+            // Map related status
+            mapDialogVisible: false, // Map dialog display status
+            map3dScene: null, // three.js scene
+            map3dCamera: null, // three.js camera
+            map3dRenderer: null, // three.js renderer
+            map3dControls: null, // camera controller
+            map3dNodes: [], // 3D node array
+            map3dTreeData: null, // tree structure data
+            map3dClickHandler: null, // Click event handler
+            map3dAnimationId: null, // Animation ID
+            map3dNeedsAnimationUpdate: false, // Do you need to update the animation?
+            map3dNodeMap: new Map(), // Node mapping for quick lookups
+            map3dLastAnimationTime: 0, // Last animation update time (for throttling)
+            map3dCurrentNodes: [], // Cache the currently selected node (performance optimization)
+            // range
             fieldFormVisible: false,
             fieldFormSubmitLoading: false,
             fieldForm: {
                 alias: ''
             },
-            // ai 评分标准
+            // ai scoring criteria
             aiScoreFormVisible: false,
             aiScoreFormSubmitLoading: false,
             aiScoreForm: {
@@ -179,7 +193,7 @@ var app = new Vue({
                 }]
             },
 
-            // 模型
+            // Model
             modelFormVisible: false,
             modelFormSubmitLoading: false,
             modelForm: {
@@ -212,7 +226,7 @@ var app = new Vue({
                 label: 'FastAPI',
                 disabled: false
             }],
-            // 表单校验规则
+            // Form validation rules
             rules: {
                 fieldName: [
                     { required: true, message: '请输入靶场名称', trigger: 'blur' }
@@ -268,24 +282,24 @@ var app = new Vue({
             },
             versionData: [],
             promptDetail: {},
-            uploadPluginVisible: false, // Plugin 上传dialog 显隐
-            uploadPluginDropAreaVisible: true,// 上传区域显隐
-            uploadPluginDropHover: false,// 拖拽文件 Hover
-            uploadPluginData: [], // Plugin 文件夹的文件列表
-            jsZip: null, // 压缩实例
-            expectedPluginVisible: false, // Plugin 导出dialog 显隐
-            // 导出 Plugin 选择数据
+            uploadPluginVisible: false, // Plugin upload dialog to show and hide
+            uploadPluginDropAreaVisible: true,// Upload area visible and hidden
+            uploadPluginDropHover: false,// Drag and drop files Hover
+            uploadPluginData: [], // File list of Plugin folder
+            jsZip: null, // Compressed instance
+            expectedPluginVisible: false, // Plugin exports dialog to show or hide
+            // Export Plugin selection data
             expectedPluginFoem: {
-                checkList: [], // 选择的数据 tree 
+                checkList: [], // Selected data tree 
             },
             expectedPluginFieldList: [],
-            exportPluginExpandAll: false, // 是否展开所有节点
-            exportPluginSelectedCount: 0, // 已选择的靶道数量
+            exportPluginExpandAll: false, // Whether to expand all nodes
+            exportPluginSelectedCount: 0, // Number of target lanes selected
             defaultProps: {
                 children: 'children',
                 label: 'label'
             },
-            contentTextareaRows: 14, //prompt 输入框的行数
+            contentTextareaRows: 14, //prompt input box number of lines
             dialogVisible: false,
             targetlaneName: '',
             dailogpromptOptlist: [],
@@ -293,25 +307,25 @@ var app = new Vue({
             box2Hidden: false,
             box3Hidden: false,
             lastClickedBox: null,
-            centerAreaMaximized: false, // 中间区域是否最大化
-            rightAreaMaximized: false,  // 右侧区域是否最大化
-            isBoxVisible: true, // 控制盒子显示和隐藏的状态
+            centerAreaMaximized: false, // Whether the middle area is maximized
+            rightAreaMaximized: false,  // Whether the right area is maximized
+            isBoxVisible: true, // Control the display and hidden state of the box
             foldsidebarShow: false,
-            // 区域宽度控制
-            leftAreaWidth: 360,    // 左侧区域宽度（默认360px）
-            centerAreaWidth: 380,  // 中间区域宽度（默认380px）
-            isResizing: false,     // 是否正在拖动
-            resizeType: null,      // 拖动类型：'left' 或 'right'
-            resizeStartX: 0,       // 拖动开始的X坐标
-            resizeStartLeftWidth: 0,   // 拖动开始时左侧区域的宽度
-            resizeStartCenterWidth: 0, // 拖动开始时中间区域的宽度
-            // Prompt 对比功能
-            compareDialogVisible: false,  // 对比对话框显示状态
-            comparePromptAId: null,       // 对比的Prompt A的ID
-            comparePromptBId: null,       // 对比的Prompt B的ID
-            comparePromptA: null,         // 对比的Prompt A的完整数据
-            comparePromptB: null,         // 对比的Prompt B的完整数据
-            // 自定义滚动条缩略图
+            // Area width control
+            leftAreaWidth: 360,    // Left area width (default 360px)
+            centerAreaWidth: 380,  // Middle area width (default 380px)
+            isResizing: false,     // Is dragging
+            resizeType: null,      // Drag type: 'left' or 'right'
+            resizeStartX: 0,       // The X coordinate where the drag starts
+            resizeStartLeftWidth: 0,   // The width of the left area when dragging starts
+            resizeStartCenterWidth: 0, // The width of the middle area when dragging starts
+            // Prompt comparison function
+            compareDialogVisible: false,  // Compare dialog display status
+            comparePromptAId: null,       // The ID of Prompt A compared
+            comparePromptBId: null,       // Compare the ID of Prompt B
+            comparePromptA: null,         // Comparative complete data of Prompt A
+            comparePromptB: null,         // Complete data of Prompt B compared
+            // Custom scroll bar thumbnail
             showScrollbarThumbnails: false,
             scrollInfo: {
                 scrollTop: 0,
@@ -326,16 +340,16 @@ var app = new Vue({
             return result
         },
         
-        // 获取可选择的Prompt列表（用于对比对话框）
+        // Get a list of selectable prompts (used in comparison dialogs)
         availablePrompts() {
             return this.promptOpt || [];
         },
         
-        // 获取Prompt A的显示信息
+        // Get the display information of Prompt A
         comparePromptAInfo() {
             if (!this.comparePromptA) return null;
             
-            // 从 fullVersion 解析名称 (格式: 靶场-靶道-战术)
+            // Parse name from fullVersion (format: range-range-tactical)
             const versionParts = this.comparePromptA.fullVersion ? this.comparePromptA.fullVersion.split('-') : [];
             
             return {
@@ -346,11 +360,11 @@ var app = new Vue({
             };
         },
         
-        // 获取Prompt B的显示信息
+        // Get the display information of Prompt B
         comparePromptBInfo() {
             if (!this.comparePromptB) return null;
             
-            // 从 fullVersion 解析名称 (格式: 靶场-靶道-战术)
+            // Parse name from fullVersion (format: range-range-tactical)
             const versionParts = this.comparePromptB.fullVersion ? this.comparePromptB.fullVersion.split('-') : [];
             
             return {
@@ -361,16 +375,16 @@ var app = new Vue({
             };
         },
         
-        // 检查是否是同一个Prompt
+        // Check if it is the same prompt
         isSamePrompt() {
             if (!this.comparePromptA || !this.comparePromptB) return false;
             if (!this.comparePromptAId || !this.comparePromptBId) return false;
             
-            // 通过ID判断是否为同一个Prompt
+            // Determine whether it is the same prompt by ID
             return this.comparePromptAId === this.comparePromptBId;
         },
         
-        // 获取当前战术编号（用于显示）
+        // Get the current tactical number (for display)
         currentTacticalInfo() {
             if (!this.promptDetail || !this.promptDetail.fullVersion) {
                 return {
@@ -379,8 +393,8 @@ var app = new Vue({
                 };
             }
             
-            // 解析当前版本号：格式为 RangeName-T{Tactic}-A{Aiming}
-            // 例如：2023.12.14.1-T1.2.3-A1
+            // Parse the current version number: the format is RangeName-T{Tactic}-A{Aiming}
+            // For example: 2023.12.14.1-T1.2.3-A1
             const versionParts = this.promptDetail.fullVersion.split('-');
             if (versionParts.length < 2) {
                 return {
@@ -389,9 +403,9 @@ var app = new Vue({
                 };
             }
             
-            // versionParts[0] = RangeName (例如：2023.12.14.1)
-            // versionParts[1] = T{Tactic} (例如：T1.2.3)
-            // versionParts[2] = A{Aiming} (例如：A1，可选)
+            // versionParts[0] = RangeName (for example: 2023.12.14.1)
+            // versionParts[1] = T{Tactic} (for example: T1.2.3)
+            // versionParts[2] = A{Aiming} (for example: A1, optional)
             const tacticPart = versionParts[1] || ''; // T1.2.3
             const aimingPart = versionParts[2] || ''; // A1
             
@@ -401,7 +415,7 @@ var app = new Vue({
             };
         },
         
-        // 计算下一个战术编号（用于战术选择弹窗的动态提示）
+        // Calculate the next tactic number (dynamic prompt for tactic selection pop-up window)
         nextTacticalNumbers() {
             if (!this.promptDetail || !this.promptDetail.fullVersion) {
                 return {
@@ -412,8 +426,8 @@ var app = new Vue({
                 };
             }
             
-            // 解析当前版本号：格式为 RangeName-T{Tactic}-A{Aiming}
-            // 例如：2023.12.14.1-T1.2.3-A1
+            // Parse the current version number: the format is RangeName-T{Tactic}-A{Aiming}
+            // For example: 2023.12.14.1-T1.2.3-A1
             const versionParts = this.promptDetail.fullVersion.split('-');
             if (versionParts.length < 2) {
                 return {
@@ -425,14 +439,14 @@ var app = new Vue({
             }
             
             // versionParts[0] = RangeName
-            // versionParts[1] = T{Tactic} (例如：T1.2.3)
-            // versionParts[2] = A{Aiming} (例如：A1，可选)
+            // versionParts[1] = T{Tactic} (for example: T1.2.3)
+            // versionParts[2] = A{Aiming} (for example: A1, optional)
             let tacticPart = versionParts[1] || ''; // T1.2.3
             let aimingPart = versionParts[2] || 'A1'; // A1
             
-            // 检查战术部分是否以 T 开头，如果不是，可能是格式错误
+            // Check if the tactics section starts with T, if not it may be a formatting error
             if (!tacticPart.startsWith('T')) {
-                // 如果版本号格式不对，返回默认值
+                // If the format of the version number is incorrect, the default value will be returned.
                 return {
                     topTactic: 'T1',
                     parallelTactic: 'T1.2.4',
@@ -441,15 +455,15 @@ var app = new Vue({
                 };
             }
             
-            // 提取瞄准编号：A1 -> 1
+            // Extract aiming number: A1 -> 1
             const currentAiming = aimingPart.replace(/^A/, '');
             const aimingNumber = parseInt(currentAiming) || 1;
             
-            // 解析战术编号：T1.2.3 -> [1, 2, 3]
-            // 移除开头的 T，然后按 . 分割并转换为数字
+            // Analyze tactical number: T1.2.3 -> [1, 2, 3]
+            // Remove the leading T, then split by . and convert to numbers
             const tacticStr = tacticPart.replace(/^T/, ''); // 1.2.3
             if (!tacticStr || tacticStr.length === 0) {
-                // 如果无法解析战术编号，返回默认值
+                // If the tactical number cannot be parsed, return the default value
                 return {
                     topTactic: 'T1',
                     parallelTactic: 'T1.2.4',
@@ -458,13 +472,13 @@ var app = new Vue({
                 };
             }
             
-            // 解析战术编号数组
+            // Parse tactical number array
             const tacticNumbers = [];
             const parts = tacticStr.split('.');
             for (let i = 0; i < parts.length; i++) {
                 const num = parseInt(parts[i]);
                 if (isNaN(num)) {
-                    // 如果任何部分无法解析为数字，返回默认值
+                    // If any part cannot be parsed as a number, return the default value
                     return {
                         topTactic: 'T1',
                         parallelTactic: 'T1.2.4',
@@ -476,7 +490,7 @@ var app = new Vue({
             }
             
             if (tacticNumbers.length === 0) {
-                // 如果解析失败，返回默认值
+                // If parsing fails, return the default value
                 return {
                     topTactic: 'T1',
                     parallelTactic: 'T1.2.4',
@@ -485,25 +499,25 @@ var app = new Vue({
                 };
             }
             
-            // 1. 创建顶级战术：当前顶级编号+1
-            // 例如：当前是T1.2.3，下一个顶级战术是T2
-            // 注意：这里只是预测，实际编号需要后端查询数据库确定
+            // 1. Create top-level tactics: current top-level number +1
+            // For example: currently it is T1.2.3, the next top tactic is T2
+            // Note: This is just a prediction, the actual number needs to be determined by back-end query database
             const currentTopTactic = tacticNumbers[0] || 1;
             const nextTopTactic = currentTopTactic + 1;
             
-            // 2. 创建平行战术：同父级下，最后一个编号+1
-            // 例如：T1.2.3 -> T1.2.4
+            // 2. Create parallel tactics: under the same parent level, the last number +1
+            // For example: T1.2.3 -> T1.2.4
             const nextParallelTactic = [...tacticNumbers];
             if (nextParallelTactic.length > 0) {
                 nextParallelTactic[nextParallelTactic.length - 1] = nextParallelTactic[nextParallelTactic.length - 1] + 1;
             }
             
-            // 3. 创建子战术：当前战术下添加 .1
-            // 例如：T1.2.3 -> T1.2.3.1
+            // 3. Create a sub-tactic: add .1 under the current tactic
+            // For example: T1.2.3 -> T1.2.3.1
             const nextSubTactic = [...tacticNumbers, 1];
             
-            // 4. 重新瞄准：当前瞄准编号+1
-            // 例如：T1.2.3-A1 -> T1.2.3-A2
+            // 4. Re-aim: Current aiming number +1
+            // For example: T1.2.3-A1 -> T1.2.3-A2
             const nextAiming = aimingNumber + 1;
             
             return {
@@ -514,7 +528,7 @@ var app = new Vue({
             };
         },
         
-        // 检测Prompt中的变量
+        // Detect variables in Prompt
         detectedVariables() {
             if (!this.content) return [];
             
@@ -522,20 +536,20 @@ var app = new Vue({
             const suffix = this.promptParamForm.suffix || '';
             const variableList = this.promptParamForm.variableList || [];
             
-            // 如果没有设置前缀和后缀，返回空数组
+            // If no prefix or suffix is ​​set, an empty array is returned.
             if (!prefix || !suffix) return [];
             
-            // 转义前缀和后缀用于正则表达式
+            // Escape prefixes and suffixes for regular expressions
             const escapedPrefix = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             const escapedSuffix = suffix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             
-            // 构建正则表达式：匹配 prefix + 变量名 + suffix
+            // Build a regular expression: match prefix + variable name + suffix
             const regex = new RegExp(`${escapedPrefix}(\\w+)${escapedSuffix}`, 'g');
             
-            // 获取所有已定义的变量名
+            // Get all defined variable names
             const definedVarNames = variableList.map(v => v.name).filter(n => n);
             
-            // 找出所有匹配的变量
+            // Find all matching variables
             const variables = [];
             const seen = new Set();
             let match;
@@ -544,7 +558,7 @@ var app = new Vue({
                 const fullMatch = match[0];
                 const varName = match[1];
                 
-                // 避免重复
+                // avoid duplication
                 if (!seen.has(fullMatch)) {
                     seen.add(fullMatch);
                     variables.push({
@@ -569,13 +583,13 @@ var app = new Vue({
             this.$refs.versionTree.filter(val);
         },
         
-        // 监听content外部变化（如加载数据时更新编辑器）
+        // Monitor external content changes (such as updating the editor when loading data)
         content(newVal, oldVal) {
             const editor = this.$refs.promptEditor;
             if (!editor || this.isComposing) return;
             
             const currentText = editor.innerText || '';
-            // 如果编辑器内容与content不一致（外部赋值），更新编辑器
+            // If the editor content is inconsistent with content (external assignment), update the editor
             if (currentText !== newVal && newVal !== oldVal) {
                 this.$nextTick(() => {
                     const html = this.generateHighlightHTML(newVal);
@@ -585,28 +599,28 @@ var app = new Vue({
         }
     },
     created() {
-        // 浏览器关闭|浏览器刷新|页面关闭|打开新页面 提示有数据变动保存数据
-        // 添加 beforeunload 事件监听器
+        // Close the browser | Refresh the browser | Close the page | Open a new page Prompt for data changes to save data
+        // Add beforeunload event listener
         window.addEventListener('beforeunload', this.beforeunloadHandler);
         
-        // 页面创建时加载保存的宽度设置
+        // Load saved width settings on page creation
         this.loadAreaWidthsFromStorage();
     },
     mounted() {
-        // 获取靶道列表
+        // Get target lane list
         setTimeout(() => {
             this.getFieldList()
-            // 获取模型列表
+            // Get model list
             this.getModelOptData()
           
         }, 100)
-        // 获取分数趋势图
+        // Get score trend graph
         // this.getScoringTrendData()
-        // 图表自适应
+        // Chart adaptive
         const self = this;
         const viewElem = document.body;
         const resizeObserver = new ResizeObserver(() => {
-            // 加个if约束，当Echarts存在时再执行resize()，否则图表不存在时运行到这会报错。
+            // Add an if constraint and execute resize() when Echarts exists. Otherwise, an error will be reported when the chart does not exist.
             if (self.chartInstance) {
                 self.chartInstance.resize();
             }
@@ -616,7 +630,7 @@ var app = new Vue({
           this.getTargetRangeIdFromUrl();
       }, 200)
       
-        // 初始化contenteditable编辑器
+        // Initialize contenteditable editor
         this.$nextTick(() => {
             const editor = this.$refs.promptEditor;
             if (editor && this.content) {
@@ -625,22 +639,22 @@ var app = new Vue({
             }
         });
         
-        // 初始化代码块复制功能
+        // Initialize code block copy function
         this.initCodeCopyButtons();
       
     },
     beforeDestroy() {
-        // 销毁之前移除事件监听器
+        // Remove event listeners before destroying
         window.removeEventListener('beforeunload', this.beforeunloadHandler);
         
-        // 组件销毁前移除拖动相关的事件监听器
+        // Remove drag-related event listeners before component destruction
         document.removeEventListener('mousemove', this.handleResize);
         document.removeEventListener('mouseup', this.stopResize);
     },
     methods: {
-        //获取路径id 页面数据回显
+        //Get the path id page data echo
         getTargetRangeIdFromUrl() {
-             // 添加安全检查，防止 $route 未定义
+             // Add security check to prevent $route from being undefined
              if (!this.$route || !this.$route.query) {
                  return;
              }
@@ -658,7 +672,7 @@ var app = new Vue({
             if (defaultOption) {
                 this.promptField = defaultOption.value;
                
-                    // 获取靶道列表
+                    // Get target lane list
                   this.getPromptOptData().then(() => {
                     
                         // promptid is the last one of promptOpt
@@ -689,7 +703,7 @@ var app = new Vue({
                                 this.sendBtnText = '连发'
                             }
 
-                            // 获取详情
+                            // Get details
                             this.getPromptetail(this.promptid, true, true)
                         } else {
                             this.sendBtns = [
@@ -704,13 +718,13 @@ var app = new Vue({
                         }
 
                     })
-                    // 获取分数趋势图表数据
+                    // Get score trend chart data
                      this.getScoringTrendData()
                 
 
             }
         },
-        //侧边栏收起操作
+        //Sidebar collapse operation
         foldsidebar() {
             this.isBoxVisible = !this.isBoxVisible;
             if (this.foldsidebarShow) {
@@ -723,11 +737,11 @@ var app = new Vue({
             }
         },
       
-        //放大输入区域
+        //Enlarge input area
        
         Amplification(boxClicked) {
             if (this.lastClickedBox === boxClicked) {
-                // 再次点击同一个区域，恢复所有区域
+                // Click the same area again to restore all areas
                 this.box1Hidden = false;
                 this.box2Hidden = false;
                 this.box3Hidden = false;
@@ -736,23 +750,23 @@ var app = new Vue({
                 this.lastClickedBox = null;
                 this.getScoringTrendData();
             } else {
-                // 点击不同区域，实现最大化
+                // Click on different areas to maximize
                 if (boxClicked === 'box1') {
-                    // 右侧输出区域最大化：隐藏中间区域，隐藏分析图表，扩展右侧区域
+                    // Maximize the right output area: hide the middle area, hide the analysis chart, expand the right area
                     this.box1Hidden = false;
-                    this.box2Hidden = true;  // 隐藏中间Prompt区域
-                    this.box3Hidden = true;  // 隐藏分析图表
+                    this.box2Hidden = true;  // Hide the middle prompt area
+                    this.box3Hidden = true;  // Hide analysis chart
                     this.centerAreaMaximized = false;
                     this.rightAreaMaximized = true;
                 } else if (boxClicked === 'box2') {
-                    // 中间Prompt区域最大化：隐藏右侧所有内容，扩展中间区域
-                    this.box1Hidden = true;  // 隐藏右侧输出区域
+                    // Maximize the middle prompt area: hide all content on the right and expand the middle area
+                    this.box1Hidden = true;  // Hide the right output area
                     this.box2Hidden = false;
-                    this.box3Hidden = true;  // 隐藏分析图表
+                    this.box3Hidden = true;  // Hide analysis chart
                     this.centerAreaMaximized = true;
                     this.rightAreaMaximized = false;
                 } else if (boxClicked === 'box3') {
-                    // 保留原有逻辑
+                    // Keep original logic
                     this.box1Hidden = false;
                     this.box2Hidden = false;
                     this.box3Hidden = false;
@@ -768,11 +782,11 @@ var app = new Vue({
                 paddingLeft: `${left}%`,
             }
         },
-        // 靶场删除
+        // range delete
         fieldDeleteHandel(e, id) {
-            // 阻止事件冒泡
+            // Prevent events from bubbling up
             e.stopPropagation();
-            // 弹出提示框
+            // Pop up prompt box
             this.$confirm('此操作将永久删除该靶场下的所有内容', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -782,11 +796,11 @@ var app = new Vue({
                 if (res.data.success) {
                     this.$message.success('删除成功')
                     let _isReset = id == this.promptField
-                    // 重新获取靶场列表
+                    // Retrieve range list
                     this.getFieldList().then(() => {
                         if (_isReset) {
                             this.promptField = ''
-                            // 重置页面数据
+                            // Reset page data
                             this.resetPageData()
                         }
                     })
@@ -801,11 +815,11 @@ var app = new Vue({
             });
 
         },
-        // 删除靶道
+        // Delete target lane
         promptDeleteHandel(e, id) {
-            // 阻止事件冒泡
+            // Prevent events from bubbling up
             e.stopPropagation();
-            // 弹出提示框
+            // Pop up prompt box
             this.$confirm('此操作将永久删除该靶道', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -819,7 +833,7 @@ var app = new Vue({
                 });
             });
         },
-        // 备注失去焦点 保存
+        // Note loses focus Save
         promptRemarkSave() {
             let { id } = this.promptDetail
             this.btnEditHandle({
@@ -841,27 +855,27 @@ var app = new Vue({
         },
    
       //  promptNameField(e, item) {
-            // 阻止事件冒泡
+            // Prevent events from bubbling up
           //  e.stopPropagation();
-            //弹出提示框，输入新的靶场名称，确认后提交，取消后，提示已取消操作
-          //  this.$prompt('请输入新的靶道名称', '提示', {
-           //     confirmButtonText: '确定',
-           //     cancelButtonText: '取消',
-            //    inputErrorMessage: '靶道名称不能为空',
+            //A prompt box will pop up, enter the new shooting range name, confirm and submit. After cancelling, it will prompt that the operation has been cancelled.
+          //  this.$prompt('Please enter the new target name', 'Prompt', {
+           //     confirmButtonText: 'OK',
+           //     cancelButtonText: 'Cancel',
+            //    inputErrorMessage: 'Target channel name cannot be empty',
            // }).then(async ({ value }) => {
            //     this.btnEditHandle({ id: item.id, nickName: value })
            // }).catch(() => {
                // this.$message({
               //      type: 'info',
-             //       message: '已取消操作'
+             //       message: 'Operation canceled'
            //     });
          //   });
         // },
-        //重置靶道名称
+        //Reset target lane name
         promptNameRest(e,id) {
-            // 阻止事件冒泡
+            // Prevent events from bubbling up
             e.stopPropagation();
-            // 弹出提示框
+            // Pop up prompt box
             this.$confirm('此操作将重置该靶道名称', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -875,7 +889,7 @@ var app = new Vue({
                 });
             });
         },
-        // 靶道 名称弹窗
+        // Target lane name popup
         promptNameField(e, item) {
             e.stopPropagation();
             this.targetlaneNameid = item.id;
@@ -885,7 +899,7 @@ var app = new Vue({
         handleSelect(item) {
             console.log(item);
         },
-        // 修改靶道 名称弹窗 确认操作
+        // Modify target lane name pop-up window to confirm the operation
         confirmtargetlaneName() {
             if(!this.targetlaneName){
                 this.$message({
@@ -901,7 +915,7 @@ var app = new Vue({
             const endIndex = this.targetlaneName.indexOf(suffix, startIndex);
 
             if (startIndex !== -1 && endIndex !== -1) {
-                // 如果找到了“名称：”和“| 版本号：”，则提取它们之间的文本
+                // If "name:" and "|version number:" are found, extract the text between them
                 this.targetlaneName = this.targetlaneName.substring(startIndex + prefix.length, endIndex);
                 console.log(this.targetlaneName);
                 this.btnEditHandle({ id: this.targetlaneNameid, nickName: this.targetlaneName })
@@ -909,7 +923,7 @@ var app = new Vue({
                 this.dialogVisible = false
                 this.targetlaneName = ''
             } else {
-                // 如果没有找到“名称：”或“| 版本号：”，则执行备用逻辑
+                // If "name:" or "|version number:" is not found, then perform fallback logic
                 this.btnEditHandle({ id: this.targetlaneNameid, nickName: this.targetlaneName })
                
                 this.dialogVisible = false
@@ -918,7 +932,7 @@ var app = new Vue({
             }
            
         },
-        //获取靶道弹窗input列表 过滤没有名字的靶道
+        //Get the target lane pop-up window input list and filter the target lanes without names.
         querySearch(queryString, cb) {
             let restaurants = this.dailogpromptOptlist;
             console.log(111,this.dailogpromptOptlist)
@@ -931,7 +945,7 @@ var app = new Vue({
                     );
                 })
                 : restaurants.filter(item => !item.label.includes('未设置'));
-            // 调用 callback 返回建议列表的数据
+            // Call callback to return the data of the suggestion list
             cb(results);
         },
         createFilter(queryString) {
@@ -941,11 +955,11 @@ var app = new Vue({
                 return label.toLowerCase().includes(queryString.toLowerCase());
             };
         },
-        // 战术选择 dialog 提交
+        // Tactics selection dialog submission
         async tacticalFormSubmitBtn() {
-            // 如果是继续聊天模式，直接处理，不需要验证战术字段
+            // If you continue in chat mode, handle it directly without verifying the tactical fields.
             if (this.continueChatMode && this.continueChatPromptResultId) {
-                // 检查是否有输入内容
+                // Check if there is any input
                 if (!this.tacticalChatInput || !this.tacticalChatInput.trim()) {
                     this.$message({
                         message: '请输入对话内容',
@@ -955,14 +969,14 @@ var app = new Vue({
                     return
                 }
                 
-                // 调用继续聊天 API
+                // Call continue chat API
                 this.continueChatSubmit(this.continueChatPromptResultId, this.tacticalChatInput.trim())
                 return
             }
             
-            // 普通模式，需要验证表单
-            // 注意：第一次打靶时（没有promptid），不需要验证"战术"字段，因为会自动创建T1-A1靶道
-            // 先检查"打靶测试"字段是否已选择
+            // Normal mode, need to verify the form
+            // Note: When shooting for the first time (without promptid), there is no need to verify the "tactics" field, because the T1-A1 target lane will be automatically created
+            // First check whether the "Target Test" field is selected
             if (!this.tacticalForm.chatMode) {
                 this.$message({
                     message: '请选择打靶测试模式',
@@ -972,7 +986,7 @@ var app = new Vue({
                 return
             }
             
-            // 如果有 promptid，需要验证"战术"字段
+            // If there is promptid, the "tactics" field needs to be verified
             if (this.promptid && !this.tacticalForm.tactics) {
                 this.$message({
                     message: '请选择战术',
@@ -982,9 +996,9 @@ var app = new Vue({
                 return
             }
             
-            // 如果选择对话模式，需要检查是否有输入内容
+            // If you choose conversation mode, you need to check whether there is input content
             if (this.tacticalForm.chatMode === '对话模式') {
-                // 检查是否有输入内容
+                // Check if there is any input
                 if (!this.tacticalChatInput || !this.tacticalChatInput.trim()) {
                     this.$message({
                         message: '请输入对话内容',
@@ -994,18 +1008,18 @@ var app = new Vue({
                     return
                 }
                 
-                // 执行打靶，将输入内容作为 userMessage 传递
+                // Perform target practice, passing the input as userMessage
                 await this.executeTargetShootWithChatMessage(this.tacticalChatInput.trim())
-                // 清空对话输入
+                // Clear conversation input
                 this.tacticalChatInput = ''
                 return
             }
             
-            // 直接测试模式，继续原有流程
+            // Direct test mode and continue the original process
             await this.executeTargetShoot();
         },
         
-        // 继续聊天提交
+        // Continue Chat Submit
         async continueChatSubmit(promptResultId, userMessage) {
             this.tacticalFormSubmitLoading = true
             try {
@@ -1017,7 +1031,7 @@ var app = new Vue({
                 if (res.data.success) {
                     const newChatMessages = res.data.data || []
                     
-                    // 验证新消息是否有有效的 ID
+                    // Verify that new messages have valid IDs
                     const invalidMessages = newChatMessages.filter(msg => {
                         const msgId = typeof msg.id === 'string' ? parseInt(msg.id, 10) : msg.id
                         return !msgId || msgId === 0 || isNaN(msgId)
@@ -1025,13 +1039,13 @@ var app = new Vue({
                     
                     if (invalidMessages.length > 0) {
                         console.error('错误：部分消息没有有效的 ID，重新加载历史记录以确保获取正确的 ID', invalidMessages)
-                        // 如果消息没有 ID，重新加载历史记录以确保获取正确的 ID
+                        // If the message does not have an ID, reload the history to ensure you get the correct ID
                         const reloadRes = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistory?promptResultId=${promptResultId}`)
                         if (reloadRes.data.success) {
                             this.continueChatHistory = reloadRes.data.data || []
                             console.log('重新加载后的历史记录:', this.continueChatHistory)
                             
-                            // 验证重新加载后的记录是否都有有效的 ID
+                            // Verify that the reloaded records all have valid IDs
                             const stillInvalid = this.continueChatHistory.filter(msg => {
                                 const msgId = typeof msg.id === 'string' ? parseInt(msg.id, 10) : msg.id
                                 return !msgId || msgId === 0 || isNaN(msgId)
@@ -1041,21 +1055,21 @@ var app = new Vue({
                             }
                         }
                     } else {
-                        // 追加新的对话记录到历史记录
+                        // Append new conversations to history
                         console.log('追加新消息到历史记录:', newChatMessages.map(m => ({ id: m.id, roleType: m.roleType, sequence: m.sequence })))
                         this.continueChatHistory.push(...newChatMessages)
                         console.log('更新后的历史记录（最后5条）:', this.continueChatHistory.slice(-5).map(m => ({ id: m.id, idType: typeof m.id, roleType: m.roleType, sequence: m.sequence })))
                     }
                     
-                    // 找到对应的输出项并更新
+                    // Find the corresponding output item and update it
                     const resultIndex = this.outputList.findIndex(item => item.id === promptResultId)
                     if (resultIndex !== -1) {
                         const resultItem = this.outputList[resultIndex]
                         
-                        // 更新显示：将最新的 AI 回复追加到 ResultString
+                        // Update display: Append latest AI reply to ResultString
                         const latestAssistantMessage = this.continueChatHistory.find(msg => msg.roleType === 2 && msg.sequence === Math.max(...this.continueChatHistory.map(m => m.sequence)))
                         if (latestAssistantMessage) {
-                            // 追加到现有的 ResultString（格式化为对话形式）
+                            // Append to existing ResultString (formatted as conversational)
                             const currentResult = resultItem.resultString || ''
                             const separator = currentResult ? '\n\n---\n\n' : ''
                             const newContent = `**用户**: ${userMessage}\n\n**助手**: ${latestAssistantMessage.content}`
@@ -1064,15 +1078,15 @@ var app = new Vue({
                         }
                     }
                     
-                    // 刷新对话历史显示
+                    // Refresh conversation history display
                     this.$forceUpdate()
                     
-                    // 添加代码块复制按钮
+                    // Add code block copy button
                     this.$nextTick(() => {
                         this.addCopyButtonsToCodeBlocks();
                     });
                     
-                    // 滚动到底部显示最新消息
+                    // Scroll to bottom for latest news
                     this.$nextTick(() => {
                         const container = document.getElementById('chatHistoryContainer')
                         if (container) {
@@ -1080,7 +1094,7 @@ var app = new Vue({
                         }
                     })
                     
-                    // 清空输入框，但保持弹窗打开以便继续对话
+                    // Clear the input box but keep the popup open to continue the conversation
                     this.tacticalChatInput = ''
                     this.$message({
                         message: '对话已追加',
@@ -1103,8 +1117,8 @@ var app = new Vue({
             }
         },
         /*
-        * 打靶 事件
-        * isDraft 是否保存草稿
+        * Target shooting event
+        * isDraft whether to save the draft
         */
         async targetShootHandel(isDraft = false, isSaveDirect) {
             if (!this.modelid) {
@@ -1121,12 +1135,12 @@ var app = new Vue({
                 })
                 return
             }
-            // 弹窗逻辑1，有promptid且不是保存草稿，就要弹窗
+            // Pop-up window logic 1, if there is a promptid and the draft is not saved, a pop-up window will appear.
             if (this.promptid && !isDraft) {
                 this.tacticalFormVisible = true
                 return
             }
-            // 弹窗逻辑2，有promptid且不是保存草稿，就要弹窗
+            // Pop-up window logic 2, if there is a promptid and the draft is not saved, a pop-up window will appear.
             let _isPromptDraft = false
             let _findPrompt = this.promptOpt.find(item => item.value == this.promptid)
             if (isDraft && _findPrompt) {
@@ -1138,8 +1152,8 @@ var app = new Vue({
                 return
             }
             
-            // 弹窗逻辑3，第一次打靶时（没有promptid）也要弹窗，让用户选择对话模式或直接测试模式
-            // 注意：第一次打靶时不传递promptid，让后端创建新的靶道（T1-A1）
+            // Pop-up window logic 3: A pop-up window should also pop up when shooting for the first time (without promptid), allowing the user to choose conversation mode or direct test mode
+            // Note: Do not pass promptid when shooting for the first time, let the backend create a new target lane (T1-A1)
             if (!this.promptid && !isDraft) {
                 this.tacticalFormVisible = true
                 return
@@ -1148,10 +1162,10 @@ var app = new Vue({
 
             this.targetShootLoading = true
             let _postData = {
-                //promptid: this.promptid,// 选择靶场
-                modelid: this.modelid,// 选择模型
-                content: this.content,// prompt 输入内容
-                note: this.remarks, // prompt 输入的备注,
+                //promptid: this.promptid,//Select the shooting range
+                modelid: this.modelid,// Select model
+                content: this.content,// prompt input content
+                note: this.remarks, // prompt input remarks,
                 numsOfResults: 1,
                 //numsOfResults: isDraft?this.numsOfResults:1,
                 isDraft: isDraft,
@@ -1159,7 +1173,7 @@ var app = new Vue({
                 prefix: this.promptParamForm.prefix,
 
             }
-            // ai评分标准
+            // ai scoring criteria
             _postData.isAIGrade = this.isAIGrade
             if (this.aiScoreForm.resultList.length > 0) {
                 let _list = this.aiScoreForm.resultList.map(item => item.value)
@@ -1169,14 +1183,14 @@ var app = new Vue({
                 }
             }
             
-            // 请求参数
+            // Request parameters
             if (this.promptParamForm.variableList.length > 0) {
                 _postData.variableDictJson = this.convertData(this.promptParamForm.variableList)
             }
 
             this.parameterViewList.forEach(item => {
                 console.log('item' + item);
-                // todo 单独处理
+                // todo is handled separately
                 if (item.formField === 'stopSequences') {
                     //console.log("item.formField === 'stopSequences'");
                     //if (item.value) {
@@ -1197,7 +1211,7 @@ var app = new Vue({
                     _postData[item.formField] = item.value
                 }
             })
-            // 要提交this.promptField
+            // To submit this.promptField
             _postData['rangeId'] = this.promptField
 
             if (isDraft && _isPromptDraft) {
@@ -1205,7 +1219,7 @@ var app = new Vue({
                     this.targetShootLoading = false
                     if (res.data.success) {
                         this.pageChange = false
-                        // 提示保存成功
+                        // Prompt to save successfully
                         this.$message({
                             message: '保存成功！',
                             type: 'success'
@@ -1226,7 +1240,7 @@ var app = new Vue({
                     if (res.data.success) {
                         this.pageChange = false
                         if (isDraft) {
-                            // 提示保存成功
+                            // Prompt to save successfully
                             this.$message({
                                 message: '保存成功！',
                                 type: 'success'
@@ -1258,7 +1272,7 @@ var app = new Vue({
                             evalAvgScore = -1,
                             evalMaxScore = -1
                         } = res.data.data || {}
-                        // 拷贝数据
+                        // copy data
                         let copyResultData = JSON.parse(JSON.stringify(res.data.data))
                         delete copyResultData.promptResultList
                         let vArr = copyResultData.fullVersion.split('-')
@@ -1266,26 +1280,26 @@ var app = new Vue({
                         copyResultData.promptStr = vArr[1] || ''
                         copyResultData.tacticsStr = vArr[2] || ''
                         this.promptDetail = copyResultData
-                        // 平均分 
+                        // average score 
                         this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1;
-                        // 最高分
+                        // highest score
                         this.outputMaxDeci = evalMaxScore > -1 ? evalMaxScore : -1;
-                        // 输出列表
+                        // Output list
                         this.outputList = promptResultList.map(item => {
                             if (item) {
                                 item.promptId = id
                                 item.version = fullVersion
-                                item.scoreType = '1' // 1 ai、2手动 
-                                item.isScoreView = false // 是否显示评分视图
-                                //时间 格式化  addTime
+                                item.scoreType = '1' // 1 ai, 2 manual 
+                                item.isScoreView = false // Whether to display the rating view
+                                //time format addTime
                                 item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
 
-                                //使用 MarkDown 格式，对输出结果进行展示
+                                //Use MarkDown format to display the output results
                                 item.resultStringHtml = marked.parse(item.resultString);
 
-                                // 手动评分
+                                // Manual scoring
                                 item.scoreVal = 0
-                                // ai评分预期结果
+                                // ai scoring expected results
                                 item.alResultList = [{
                                     id: 1,
                                     label: '预期结果1',
@@ -1303,21 +1317,21 @@ var app = new Vue({
                             return item
                         })
                         
-                        // 添加代码块复制按钮
+                        // Add code block copy button
                         this.$nextTick(() => {
                             this.addCopyButtonsToCodeBlocks();
                         });
                         
-                        //提交数据后，选择正确的靶场和靶道
+                        //After submitting your data, select the correct range and lane
                         this.getFieldList().then(() => {
 
                             this.getPromptOptData(id)
-                            // 获取分数趋势图表数据
+                            // Get score trend chart data
                             this.getScoringTrendData()
                         })
 
                         if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
-                            //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
+                            //Enter the burst mode and call the burst interface N times according to the number of numOfResults-1
                             this.dealRapicFireHandel(this.numsOfResults - 1, id)
                         }
 
@@ -1341,7 +1355,7 @@ var app = new Vue({
         },
 
         /*
-         * 连发 事件
+         * Continuous events
          */
         async dealRapicFireHandel(howmany, id) {
             if (!this.promptid) {
@@ -1361,49 +1375,49 @@ var app = new Vue({
             this.targetShootLoading = true
             this.dodgersLoading = true
             
-            // 注意：现在后端会自动根据第一个 PromptResult 来判断类型
-            // 如果第一个结果是 Chat 模式，后端会从对话记录中获取 userMessage
-            // 所以前端不需要传递 userMessage，后端会自动处理
-            // 但为了兼容性，如果前端有保存的 userMessage，仍然可以传递
+            // Note: Now the backend will automatically determine the type based on the first PromptResult
+            // If the first result is Chat mode, the backend will get the userMessage from the conversation record
+            // So the front end does not need to pass userMessage, the back end will handle it automatically.
+            // But for compatibility, if the front end has a saved userMessage, it can still be passed
             
             let promises = [];
             for (let i = 0; i < howmany; i++) {
-                // 后端会自动判断第一个结果的模式，不需要前端传递 userMessage
-                // 但如果前端有保存的 userMessage，可以传递以保持一致性
+                // The backend will automatically determine the mode of the first result, and the frontend does not need to pass userMessage
+                // But if the front end has a saved userMessage, it can be passed to maintain consistency
                 promises.push(this.rapidFireHandel(id, this._lastUserMessage || null));
             }
             await Promise.all(promises)
-            // 从新获取靶场列表
+            // Retrieve shooting range list
             this.getPromptOptData()
             this.targetShootLoading = false
             this.dodgersLoading = false
         },
-        // 导入 plugins dialog close 回调
+        // Import plugins dialog close callback
         uploadPluginCloseDialog() {
-            // 清空fileData
+            // Clear fileData
             this.uploadPluginDropAreaVisible = true
             this.uploadPluginData = []
             this.jsZip = null
         },
-        // 导入 plugins 在拖动区来回拖拽时
+        // Import plugins when dragging back and forth in the drag area
         pluginDropOverHandler(e) {
             e.stopPropagation();
             e.preventDefault();
             this.uploadPluginDropHover = true;
         },
-        // 导入 plugins 第一次进入拖动区时
+        // Import plugins when entering the drag area for the first time
         pluginDropEnterHandler(e) {
             e.stopPropagation();
             e.preventDefault();
             this.uploadPluginDropHover = true;
         },
-        // 导入 plugins 拖后放
+        // Import plugins drag and drop
         pluginDropLeaveHandler(e) {
             e.stopPropagation();
             e.preventDefault();
             this.uploadPluginDropHover = false;
         },
-        // 导入 plugins 拖拽 选择文件夹
+        // Import plugins drag and drop select folder
         enentPluginDrop(e) {
             this.uploadPluginDropHover = false
             let items = e.dataTransfer.items;
@@ -1413,9 +1427,9 @@ var app = new Vue({
             for (let i = 0; i <= items.length - 1; i++) {
                 let item = items[i];
                 if (item.kind === "file") {
-                    // FileSystemFileEntry 或 FileSystemDirectoryEntry 对象
+                    // FileSystemFileEntry or FileSystemDirectoryEntry object
                     let entry = item.webkitGetAsEntry();
-                    // 递归地获取entry下包含的所有File
+                    // Recursively obtain all files contained under entry
                     this.getFileFromEntryRecursively(entry);
                 }
             }
@@ -1424,28 +1438,28 @@ var app = new Vue({
             e.stopPropagation();
             e.preventDefault();
         },
-        // 拖拽上传 获取文件
+        // Drag and drop to upload files
         getFileFromEntryRecursively(entry) {
             //let _this = this
             if (entry.isFile) {
-                // 文件
+                // document
                 entry.file(
                     file => {
                         //console.log('Drop file', { file, path: _path });
-                        // 想要保留拖拽的层级结构的话，只能从 entry 中获取
-                        // 取path是为了获取上传的文件夹一级的名称
+                        // If you want to retain the drag-and-drop hierarchy, you can only get it from entry
+                        // The purpose of taking path is to get the first-level name of the uploaded folder
                         let _path = entry.fullPath
                         if (entry.fullPath.startsWith('/')) {
                             _path = entry.fullPath.slice(1)
                         }
                         this.forEachZip(file, _path);
-                        // 文件列表
+                        // file list
                         this.uploadPluginData.push({ name: file.name, path: _path })
                     },
                     e => { console.log(e); }
                 );
             } else {
-                // 文件夹
+                // folder
                 let reader = entry.createReader();
                 reader.readEntries(
                     entries => {
@@ -1455,13 +1469,13 @@ var app = new Vue({
                 );
             }
         },
-        // 导入 plugins 点击 选择文件夹
+        // Import plugins Click Select Folder
         enentPluginInput() {
             let input = document.createElement("input");
             input.type = "file";
             input.setAttribute("allowdirs", "true");
             input.setAttribute("directory", "true");
-            input.setAttribute("webkitdirectory", "true"); //设置了webkitdirectory就可以选择文件夹进行上传了
+            input.setAttribute("webkitdirectory", "true"); //After setting up webkitdirectory, you can select a folder to upload.
             input.multiple = false;
             document.querySelector("body").appendChild(input);
             input.click();
@@ -1472,10 +1486,10 @@ var app = new Vue({
                 if (!files) return
                 _this.uploadPluginDropAreaVisible = false
                 _this.jsZip = new JSZip();
-                // 处理文件夹里的所有子文件
+                // Process all sub-files in a folder
                 for (let i = 0; i <= files.length - 1; i++) {
                     _this.uploadPluginData.push({ name: files[i].name, path: files[i].webkitRelativePath })
-                    // 取path是为了获取上传的文件夹一级的名称
+                    // The purpose of taking path is to get the first-level name of the uploaded folder
                     _this.forEachZip(files[i], files[i].webkitRelativePath);
 
                 }
@@ -1483,10 +1497,10 @@ var app = new Vue({
                 document.querySelector("body").removeChild(input);
             };
         },
-        // 将上传的文件添加到压缩包中
+        // Add uploaded files to compressed package
         forEachZip(file, path) {
             //console.log('forEachZip files：', file, path)
-            // 归类处理文件到指定的文件夹
+            // Categorize processed files into specified folders
             let _path = path
             let _index = path.indexOf('/')
             if (_index > -1) {
@@ -1494,7 +1508,7 @@ var app = new Vue({
             }
             this.jsZip.file(`${_path}`, file);
         },
-        // 导入 plugins 上传按钮
+        // Import plugins upload button
         submitUploadPlugins() {
             let _fileData = JSON.parse(JSON.stringify(this.uploadPluginData))
             if (_fileData.length === 0) {
@@ -1504,18 +1518,18 @@ var app = new Vue({
             if (this.isPageLoading) return
             this.isPageLoading = true
             let name = _fileData[0].path.split('/')[0] || 'plugin'
-            // 生成压缩文件
+            // Generate compressed file
             this.jsZip.generateAsync({ type: "blob" }).then((content) => {
-                //将blob类型的再转为file类型用于上传
+                //Convert blob type to file type for uploading
                 let zipFile = new File([content], `${name}.zip`, {
                     type: "application/zip",
                 });
-                //做个大小限制
+                //Make a size limit
                 //let isLt2M = zipFile.size / 1024 / 1024 < 80;
                 //if (!isLt2M) {
                 //    this.fileList = [];
                 //    this.$message({
-                //        message: "上传文件大小不能超过 80MB!",
+                //        message: "The uploaded file size cannot exceed 80MB!",
                 //        type: "warning",
                 //    });
                 //    return false;
@@ -1523,21 +1537,21 @@ var app = new Vue({
                 //    let filedata = new FormData();
                 //    // filedata.append("file", zipFile);
                 //    filedata.append("zipFile", zipFile);
-                //    this.folderHandlesubmit(filedata); //上传事件，filedata已经是压缩好的文件了
-                //    //saveAs(content, `${name}.zip`); //下载用，可以下载下来文件查看上传的是否正确
+                //    this.folderHandlesubmit(filedata); //Upload event, filedata is already a compressed file
+                //    //saveAs(content, `${name}.zip`); //For downloading, you can download the file to check whether the uploaded one is correct.
                 //}
                 let filedata = new FormData();
                 // filedata.append("file", zipFile);
                 filedata.append("zipFile", zipFile);
-                this.folderHandlesubmit(filedata); //上传事件，filedata已经是压缩好的文件了
-                //saveAs(content, `${name}.zip`); //下载用，可以下载下来文件查看上传的是否正确
+                this.folderHandlesubmit(filedata); //Upload event, filedata is already a compressed file
+                //saveAs(content, `${name}.zip`); //For downloading, you can download the file to check whether the uploaded one is correct.
             }).catch(() => {
                 this.isPageLoading = false
             })
         },
-        // 上传 Plugins api
+        // Upload Plugins api
         folderHandlesubmit(formData) {
-            //ajax上传formData
+            //ajax upload formData
             servicePR.request({
                 url: '/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.UploadPluginsAsync',
                 method: 'POST',
@@ -1551,11 +1565,11 @@ var app = new Vue({
                 if (res.data.success) {
                     this.uploadPluginVisible = false
                     app.$message.success('上传成功')
-                    // 更新靶场数据
+                    // Update range data
                     this.getFieldList().then(() => {
                         if (this.promptFieldOpt && this.promptFieldOpt.length > 0) {
                             this.promptField = this.promptFieldOpt[this.promptFieldOpt.length - 1].id
-                            // 重置页面数据
+                            // Reset page data
                             this.resetPageData()
                         }
                     })
@@ -1570,38 +1584,38 @@ var app = new Vue({
                 this.isPageLoading = false
             })
         },
-        // 导出 plugins dialog close 回调
+        // Export plugins dialog close callback
         expectedPluginCloseDialog() {
             this.expectedPluginFoem = {
                 checkList: []
             }
-            this.expectedPluginFieldList = [] // tree数据列表
-            this.exportPluginSelectedCount = 0 // 重置已选择数量
-            this.exportPluginExpandAll = false // 重置展开状态
+            this.expectedPluginFieldList = [] // tree data list
+            this.exportPluginSelectedCount = 0 // Reset selected quantity
+            this.exportPluginExpandAll = false // Reset expanded state
             this.$refs.expectedPluginFoem.resetFields();
         },
-        // 导出 plugins dialog open
+        // export plugins dialog open
         async expectedPluginOpen() {
-            // 获取树形数据 靶场列表
+            // Get tree data shooting range list
             let _valList = this.promptFieldOpt
             let promises = [];
             for (let i = 0; i < _valList.length; i++) {
-                // 获取靶道列表
+                // Get target lane list
                 promises.push(this.getPromptOptData(_valList[i].id, true));
             }
             this.expectedPluginVisible = true
             await Promise.all(promises)
-            // 等待 DOM 更新后再设置选中和更新计数
+            // Wait for DOM to update before setting selection and update counts
             this.$nextTick(() => {
-            // 设置默认选中
+            // Set default selected
             this.$refs.expectedPluginTree.setCheckedKeys(this.expectedPluginFoem.checkList)
                 
-                // 确保 checkList 只包含叶子节点
+                // Make sure checkList only contains leaf nodes
                 const checkedNodes = this.$refs.expectedPluginTree.getCheckedNodes();
                 const leafNodeKeys = [];
                 
                 checkedNodes.forEach(node => {
-                    // 只记录叶子节点（靶道）
+                    // Only record leaf nodes (target lanes)
                     if (!node.children || node.children.length === 0) {
                         leafNodeKeys.push(node.idkey);
                     }
@@ -1609,69 +1623,69 @@ var app = new Vue({
                 
                 this.expectedPluginFoem.checkList = leafNodeKeys;
                 
-                // 更新已选择数量
+                // Update selected quantity
                 this.updateExportPluginSelectedCount()
             })
         },
-        // 导出 plugins dialog tree 选中变化
+        // Export plugins dialog tree selected changes
         treeCheckChange(data, currentCheck, childrenCheck) {
-            // 更新已选择数量（使用 $nextTick 确保 Tree 状态已更新）
+            // Update the selected quantity (use $nextTick to ensure the Tree state is updated)
             this.$nextTick(() => {
-                // 使用 Tree API 重新获取所有选中的节点（只获取叶子节点）
+                // Use Tree API to re-fetch all selected nodes (only leaf nodes)
                 if (!this.$refs.expectedPluginTree) return;
                 
                 const checkedNodes = this.$refs.expectedPluginTree.getCheckedNodes();
                 const leafNodeKeys = [];
                 
                 checkedNodes.forEach(node => {
-                    // 只记录叶子节点（靶道）
+                    // Only record leaf nodes (target lanes)
                     if (!node.children || node.children.length === 0) {
                         leafNodeKeys.push(node.idkey);
                     }
                 });
                 
-                // 更新 checkList，只包含叶子节点
+                // Update checkList to include only leaf nodes
                 this.expectedPluginFoem.checkList = leafNodeKeys;
                 
-                // 更新计数
+                // update count
                 this.updateExportPluginSelectedCount();
             });
         },
         
-        // 更新已选择的靶道数量
+        // Update the number of selected target lanes
         updateExportPluginSelectedCount() {
             if (!this.$refs.expectedPluginTree) {
                 this.exportPluginSelectedCount = 0;
                 return;
             }
             
-            // 使用 Tree 组件的 API 获取所有选中的节点（包括半选状态的父节点的子节点）
+            // Use the API of the Tree component to get all selected nodes (including the child nodes of the parent node in the semi-selected state)
             const checkedNodes = this.$refs.expectedPluginTree.getCheckedNodes();
             const halfCheckedNodes = this.$refs.expectedPluginTree.getHalfCheckedNodes();
             
-            // 统计所有选中的子节点（靶道）
-            // 靶道的特征：有 idkey 且包含下划线，或者没有 children
+            // Count all selected child nodes (target lane)
+            // Characteristics of the target lane: There is an idkey and contains an underscore, or there is no children
             let count = 0;
             
-            // 统计完全选中的节点中的靶道
+            // Count target lanes in fully selected nodes
             checkedNodes.forEach(node => {
-                // 如果是叶子节点（靶道），统计
+                // If it is a leaf node (target channel), statistics
                 if (!node.children || node.children.length === 0) {
                     count++;
                 }
             });
             
-            // 对于半选状态的父节点，需要统计其已选中的子节点
-            // Element UI Tree 的 getCheckedNodes() 已经包含了所有选中的子节点，所以不需要额外处理
+            // For a parent node in a half-selected state, it is necessary to count its selected child nodes.
+            // Element UI Tree's getCheckedNodes() already contains all selected child nodes, so no additional processing is required.
             
             this.exportPluginSelectedCount = count;
         },
         
-        // 导出plugin - 全选
+        // Export plugin - select all
         exportPluginSelectAll() {
             if (!this.$refs.expectedPluginTree) return;
             
-            // 获取所有节点的key（包括父节点和子节点）
+            // Get the keys of all nodes (including parent nodes and child nodes)
             const allKeys = [];
             const collectKeys = (nodes) => {
                 nodes.forEach(node => {
@@ -1683,16 +1697,16 @@ var app = new Vue({
             };
             collectKeys(this.expectedPluginFieldList);
             
-            // 设置选中
+            // Set selected
             this.$refs.expectedPluginTree.setCheckedKeys(allKeys);
             
-            // 等待 DOM 更新后，只记录叶子节点
+            // After waiting for the DOM to be updated, only the leaf nodes are recorded.
             this.$nextTick(() => {
                 const checkedNodes = this.$refs.expectedPluginTree.getCheckedNodes();
                 const leafNodeKeys = [];
                 
                 checkedNodes.forEach(node => {
-                    // 只记录叶子节点（靶道）
+                    // Only record leaf nodes (target lanes)
                     if (!node.children || node.children.length === 0) {
                         leafNodeKeys.push(node.idkey);
                     }
@@ -1705,35 +1719,35 @@ var app = new Vue({
             this.$message.success('已全选所有靶道');
         },
         
-        // 导出plugin - 反选
+        // Export plugin - inverse selection
         exportPluginInvertSelection() {
             if (!this.$refs.expectedPluginTree) return;
             
-            // 收集所有叶子节点（靶道）的key
+            // Collect the keys of all leaf nodes (target lanes)
             const allLeafKeys = [];
             const collectLeafKeys = (nodes) => {
                 nodes.forEach(node => {
                     if (!node.children || node.children.length === 0) {
-                        // 这是叶子节点（靶道）
+                        // This is the leaf node (target lane)
                         allLeafKeys.push(node.idkey);
                     } else {
-                        // 这是父节点（靶场），继续递归
+                        // This is the parent node (shooting range), continue the recursion
                         collectLeafKeys(node.children);
                     }
                 });
             };
             collectLeafKeys(this.expectedPluginFieldList);
             
-            // 获取当前选中的叶子节点key（使用 leafOnly=true 参数）
+            // Get the currently selected leaf node key (use leafOnly=true parameter)
             const currentCheckedLeafKeys = this.$refs.expectedPluginTree.getCheckedKeys(true);
             
-            // 反选：所有叶子节点 - 当前选中的叶子节点
+            // Inverse selection: all leaf nodes - currently selected leaf nodes
             const invertedLeafKeys = allLeafKeys.filter(key => !currentCheckedLeafKeys.includes(key));
             
-            // 设置反选后的结果（只设置叶子节点）
+            // Set the result after inverse selection (only set leaf nodes)
             this.$refs.expectedPluginTree.setCheckedKeys(invertedLeafKeys);
             
-            // 等待 DOM 更新后更新状态
+            // Update status after waiting for DOM update
             this.$nextTick(() => {
                 this.expectedPluginFoem.checkList = invertedLeafKeys;
                 this.updateExportPluginSelectedCount();
@@ -1742,14 +1756,14 @@ var app = new Vue({
             this.$message.success('已反选');
         },
         
-        // 导出plugin - 清空选择
+        // Export plugin - clear selection
         exportPluginClearAll() {
             if (!this.$refs.expectedPluginTree) return;
             
             this.$refs.expectedPluginTree.setCheckedKeys([]);
             this.expectedPluginFoem.checkList = [];
             
-            // 等待 DOM 更新后再统计
+            // Wait for the DOM to be updated before counting
             this.$nextTick(() => {
                 this.updateExportPluginSelectedCount();
             });
@@ -1757,11 +1771,11 @@ var app = new Vue({
             this.$message.info('已清空所有选择');
         },
         
-        // 导出plugin - 切换展开/收起
+        // Export plugin - toggle expand/collapse
         exportPluginToggleExpand() {
             this.exportPluginExpandAll = !this.exportPluginExpandAll;
             
-            // 需要重新渲染树来应用展开状态
+            // The tree needs to be re-rendered to apply the expanded state
             if (!this.$refs.expectedPluginTree) return;
             
             const tree = this.$refs.expectedPluginTree;
@@ -1774,19 +1788,19 @@ var app = new Vue({
                 }
             }
         },
-        // 导出 plugins 确认
+        // Export plugins Confirm
         btnExpectedPlugins() {
             this.$refs.expectedPluginFoem.validate(async (valid) => {
                 if (valid) {
-                    //console.log('导出 plugins 确认', this.expectedPluginFoem.checkList)
+                    //console.log('Export plugins confirmation', this.expectedPluginFoem.checkList)
                     //return
                     this.isPageLoading = true
-                    // 导出 plugins
+                    // Export plugins
                     let _zipname = 'plugins'
                     let _rangeIds = []
                     let _ids = []
                     this.expectedPluginFoem.checkList.forEach(item => {
-                        // 判断是否包含 - 如果包含就是靶道 否则就是靶场
+                        // Determine whether it is included - if included, it is the target lane, otherwise it is the shooting range
                         if (item.indexOf('_') > -1) {
                             let _itemArr = item.split('_')
                             _ids.push(Number(_itemArr[1]))
@@ -1795,7 +1809,7 @@ var app = new Vue({
                             _rangeIds.push(Number(item))
                         }
                     })
-                    // _rangeIds 和 _ids 去重
+                    // _rangeIds and _ids deduplication
                     _rangeIds = [...new Set(_rangeIds)]
                     _ids = [...new Set(_ids)]
 
@@ -1807,8 +1821,8 @@ var app = new Vue({
                             'Content-Type': 'application/json'
                         },
                         data: {
-                            rangeIds: _rangeIds,//靶场
-                            ids: _ids//靶道
+                            rangeIds: _rangeIds,//range
+                            ids: _ids//target lane
                         }
                     }).then((res) => {
                         this.isPageLoading = false
@@ -1817,11 +1831,11 @@ var app = new Vue({
                         const url = URL.createObjectURL(blob);
                         const a = document.createElement('a');
                         a.href = url;
-                        a.download = `${_zipname}.zip`; // 设置下载的文件名，可以根据需要修改
-                        a.click(); // 触发点击事件开始下载
-                        // 下载完成后删除 <a> 标签
-                        URL.revokeObjectURL(url); // 释放 URL 对象
-                        a.parentNode && a.parentNode.removeChild(a); // 从 DOM 中删除 <a> 标签
+                        a.download = `${_zipname}.zip`; // Set the downloaded file name, which can be modified as needed
+                        a.click(); // Trigger click event to start downloading
+                        // Remove <a> tag after download is complete
+                        URL.revokeObjectURL(url); // Release the URL object
+                        a.parentNode && a.parentNode.removeChild(a); // Remove <a> tag from DOM
                         
                         this.$message.success('导出成功！');
                     }).catch((error) => {
@@ -1830,7 +1844,7 @@ var app = new Vue({
                         
                         let errorMessage = '导出 plugins 失败';
                         if (error.response) {
-                            // 服务器返回错误响应
+                            // Server returns error response
                             if (error.response.status === 500) {
                                 errorMessage = '服务器错误：' + (error.response.data?.message || '导出过程中发生错误');
                             } else if (error.response.data && error.response.data.message) {
@@ -1847,9 +1861,9 @@ var app = new Vue({
                 }
             });
         },
-        // ai 评分删除
+        // ai rating delete
         deleteAiScoreBtn(index) {
-            //console.log('删除', index)
+            //console.log('delete', index)
             this.$confirm('此操作将删除该期望结果, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -1864,23 +1878,23 @@ var app = new Vue({
             });
 
         },
-        // 新增靶场
+        // Add new shooting range
         addPromptField() {
-            // 如果靶场变化 靶道
+            // If the range changes, the range
             this.fieldFormVisible = true
         },
-        // 连发次数 数量变化
+        // Number of bursts Quantity changes
         changeNumsBtn(command = 1) {
             this.numsOfResults = command
         },
-        // 打靶按钮 类型切换
+        // Target button type switching
         changeBtn(command) {
             this.sendBtnText = command
         },
-        // 打靶按钮 点击 触发对应类型事件
+        // Click the target button to trigger the corresponding type of event
         clickSendBtn() {
             const command = this.sendBtnText
-            //console.log('点击了' + command)
+            //console.log('clicked' + command)
             if (command === '打靶') {
                 this.targetShootHandel()
             } else if (command === '保存草稿') {
@@ -1889,29 +1903,29 @@ var app = new Vue({
                 this.dealRapicFireHandel(this.numsOfResults)
             }
         },
-        // beforeunload 事件处理函数
+        // beforeunload event handler function
         beforeunloadHandler(e) {
-            //console.log('浏览器关闭|浏览器刷新|页面关闭|打开新页面')
-            // 如果数据没有变动，则不需要提示用户保存
+            //console.log('Browser close|Browser refresh|Page close|Open new page')
+            // If the data has not changed, there is no need to prompt the user to save it.
             if (this.pageChange) {
-                // 显示自定义对话框
+                // Show custom dialog
                 let confirmationMessage = '您的数据已经修改，是否保存为草稿？';
-                // 阻止默认行为
+                // Block default behavior
                 e.preventDefault();
-                // 兼容旧版本浏览器
+                // Compatible with older browsers
                 e.returnValue = confirmationMessage;
                 return confirmationMessage;
             }
             //setTimeout(function () {
-            //    // 弹出自定义模态框
+            //    // Pop up a custom modal box
             //    var modal = document.createElement("div");
-            //    modal.innerHTML = "您确定要离开本页面吗？";
+            //    modal.innerHTML = "Are you sure you want to leave this page?";
             //    var btn = document.createElement("button");
-            //    btn.textContent = "留在页面";
+            //    btn.textContent = "Stay on the page";
             //    btn.onclick = function () {
-            //        // 取消默认的 beforeunload 行为
+            //        //Cancel the default beforeunload behavior
             //        e.preventDefault();
-            //        // 关闭自定义模态框
+            //        // Close the custom modal box
             //        modal.remove();
             //    };
             //    modal.appendChild(btn);
@@ -1922,7 +1936,7 @@ var app = new Vue({
             let fullVersion = '';
             let label = '';
             
-            // 如果传入了参数，则复制对比窗口中的版本号
+            // If parameters are passed in, copy the version number in the comparison window
             if (source === 'A' || source === 'B') {
                 const prompt = source === 'A' ? this.comparePromptA : this.comparePromptB;
                 if (!prompt || !prompt.fullVersion) {
@@ -1932,7 +1946,7 @@ var app = new Vue({
                 fullVersion = prompt.fullVersion;
                 label = `Prompt ${source} 版本号`;
             } else {
-                // 否则复制当前选中的 Prompt
+                // Otherwise copy the currently selected Prompt
             if (!this.promptid) {
                 this.$message.info('请选择靶道后再复制信息！')
                 return
@@ -1946,7 +1960,7 @@ var app = new Vue({
                 label = '';
             }
             
-            // 把结果复制到剪切板
+            // Copy results to clipboard
             const input = document.createElement('input')
             input.setAttribute('readonly', 'readonly')
             input.setAttribute('value', fullVersion)
@@ -1960,7 +1974,7 @@ var app = new Vue({
             }
             document.body.removeChild(input);
         },
-        // 格式化时间
+        // Format time
         formatDate(d) {
             var date = new Date(d);
             var YY = date.getFullYear() + '-';
@@ -1978,7 +1992,7 @@ var app = new Vue({
                 date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
             return YY + MM + DD + ' ' + hh + mm + ss;
         },
-        // 格式化聊天时间（更简洁的格式）
+        // Format chat time (more concise format)
         formatChatTime(d) {
             if (!d) return ''
             var date = new Date(d)
@@ -1993,29 +2007,29 @@ var app = new Vue({
             if (hours < 24) return hours + '小时前'
             if (days < 7) return days + '天前'
             
-            // 超过7天显示具体日期
+            // Show specific date if more than 7 days
             var hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
             var mm = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes())
             var MM = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
             var DD = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
             return MM + DD + ' ' + hh + mm
         },
-        // 格式化聊天内容（支持markdown）
+        // Format chat content (support markdown)
         formatChatContent(content) {
             if (!content) return ''
-            // 使用marked解析markdown
+            // Use marked to parse markdown
             return marked.parse(content)
         },
-        // 切换聊天反馈（Like/Unlike）
+        // Switch chat feedback (Like/Unlike)
         async toggleChatFeedback(chatId, feedback) {
-            // 防止重复点击：如果正在处理，直接返回
+            // Prevent repeated clicks: If it is being processed, return directly
             if (this._isUpdatingFeedback) {
                 return
             }
             this._isUpdatingFeedback = true
             
             try {
-                // 验证 chatId 是否有效
+                // Verify chatId is valid
                 if (!chatId || chatId === 0 || chatId === '0') {
                     console.error('无效的 chatId:', chatId, '类型:', typeof chatId)
                     console.error('当前历史记录:', this.continueChatHistory)
@@ -2026,7 +2040,7 @@ var app = new Vue({
                     return
                 }
                 
-                // 确保 chatId 是数字类型
+                // Make sure chatId is a numeric type
                 const numericChatId = typeof chatId === 'string' ? parseInt(chatId, 10) : chatId
                 if (isNaN(numericChatId) || numericChatId <= 0) {
                     console.error('无效的 chatId（转换后）:', numericChatId, '原始值:', chatId)
@@ -2037,7 +2051,7 @@ var app = new Vue({
                     return
                 }
                 
-                // 找到当前消息（同时检查 id 和 numericChatId）
+                // Find the current message (check both id and numericChatId)
                 const msgIndex = this.continueChatHistory.findIndex(msg => {
                     const msgId = typeof msg.id === 'string' ? parseInt(msg.id, 10) : msg.id
                     return msgId === numericChatId || msg.id === numericChatId || msg.id === chatId
@@ -2057,7 +2071,7 @@ var app = new Vue({
                 const currentMsg = this.continueChatHistory[msgIndex]
                 console.log('找到的消息:', currentMsg)
                 
-                // 验证消息 ID 是否有效
+                // Verify that the message ID is valid
                 const msgId = typeof currentMsg.id === 'string' ? parseInt(currentMsg.id, 10) : currentMsg.id
                 if (!msgId || msgId === 0 || isNaN(msgId)) {
                     console.error('消息 ID 无效:', currentMsg.id, '类型:', typeof currentMsg.id)
@@ -2068,18 +2082,18 @@ var app = new Vue({
                     return
                 }
                 
-                // 如果点击的是当前已选中的反馈，则取消反馈（设为null）
+                // If you click on the currently selected feedback, cancel the feedback (set to null)
                 const newFeedback = currentMsg.userFeedback === feedback ? null : feedback
                 
-                // 调用API更新反馈（使用有效的消息 ID）
-                // 注意：使用 Request DTO 格式，属性名需要首字母大写
+                // Call the API to update the feedback (using a valid message ID)
+                // Note: Using the Request DTO format, the first letter of the attribute name needs to be capitalized
                 const res = await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.UpdateChatFeedback`, {
                     ChatId: msgId,
                     Feedback: newFeedback
                 })
                 
                 if (res.data.success) {
-                    // 更新本地数据
+                    // Update local data
                     this.continueChatHistory[msgIndex].userFeedback = newFeedback
                     this.$forceUpdate()
                     
@@ -2101,22 +2115,22 @@ var app = new Vue({
                     type: 'error'
                 })
             } finally {
-                // 重置标志，允许下次点击
+                // Reset flag to allow next click
                 this._isUpdatingFeedback = false
             }
         },
-        // 处理对话历史滚动
+        // Handle conversation history scrolling
         handleChatHistoryScroll(event) {
-            // 可以在这里添加滚动相关的逻辑，比如显示滚动位置等
-            // 目前暂时不需要特殊处理
+            // You can add scrolling-related logic here, such as displaying the scroll position, etc.
+            // No special treatment is required at the moment
         },
-        // 输出 分数趋势图初始化
+        // Output Score Trend Chart Initialization
         chartInitialization() {
             let scoreChart = document.getElementById('promptPage_scoreChart');
             let chartOption = {
                 tooltip: {
                     show: true,
-                    confine: true, //是否将 tooltip 框限制在图表的区域内。
+                    confine: true, //Whether to limit the tooltip box to the area of ​​the chart.
                     //appendToBody: true
                     formatter: (params) => {
                         //console.log('params', params)
@@ -2144,7 +2158,7 @@ var app = new Vue({
                     name: "",
                     //axisLabel: {
                     //    show: true,
-                    //    interval: 10  //使x轴都显示
+                    //    interval: 10 //Display all x-axis
                     //},
                     data: this.chartData?.xData || [],
                 },
@@ -2166,117 +2180,117 @@ var app = new Vue({
                 //  grid3D
                 grid3D: {
                     show: true,
-                    boxHeight: 150, // 3维图表的高度 z轴
-                    boxWidth: 400, // 3维图表的宽度 x轴
-                    boxDepth: 150, // 3维图表的深度 y轴
-                    // 整个chart背景，可为自定义颜色或图片
+                    boxHeight: 150, // Height z-axis of 3D chart
+                    boxWidth: 400, // Width of 3D chart x-axis
+                    boxDepth: 150, // Depth y-axis of 3D chart
+                    // The entire chart background can be a custom color or picture
                     environment: '#fff',
-                    //坐标轴轴线(线)控制
+                    //Coordinate axis axis (line) control
                     axisLine: {
-                        show: true,//该参数需设为true
-                        // interval:200,//x,y坐标轴刻度标签的显示间隔，在类目轴中有效。
-                        lineStyle: {//坐标轴样式
+                        show: true,//This parameter needs to be set to true
+                        // interval:200,//The display interval of the x, y coordinate axis scale labels, valid in the category axis.
+                        lineStyle: {//axis style
                             color: 'rgba(0,0,0,0.3)',
-                            opacity: 1,//(单个刻度不会受影响)
-                            width: 2//线条宽度
+                            opacity: 1,//(Single scales will not be affected)
+                            width: 2//line width
                         }
                     },
-                    // 坐标轴 label
+                    // axis label
                     axisLabel: {
-                        show: true,//是否显示刻度  (刻度上的数字，或者类目)
-                        interval: 0,//坐标轴刻度标签的显示间隔，在类目轴中有效。
+                        show: true,//Whether to display the scale (number on the scale, or category)
+                        interval: 0,//The display interval of coordinate axis scale labels, valid in category axis.
                         formatter: function (v) {
                             return typeof v === 'number' ? v.toFixed(1) : v
                         },
                         textStyle: {
-                            color: '#32b8be',//刻度标签样式
+                            color: '#32b8be',//tick label style
                             //color: function (value, index) {
-                            //    return value >= 6 ? 'green' : 'red';//根据范围显示颜色，主页为值有效
+                            //    return value >= 6 ? 'green' : 'red';//Display color according to the range, the home page is valid for the value
                             //},
-                            //  borderWidth:"",//文字的描边宽度。
-                            //  borderColor:'',//文字的描边颜色。
-                            fontSize: 12,//刻度标签字体大小
-                            fontWeight: '400',//粗细
+                            //  borderWidth:"",//The stroke width of the text.
+                            //  borderColor:'',//The stroke color of the text.
+                            fontSize: 12,//Tick ​​label font size
+                            fontWeight: '400',//Thickness
                         }
                     },
-                    //刻度
+                    //scale
                     axisTick: {
-                        show: true,//是否显示出
-                        // interval:100,//坐标轴刻度标签的显示间隔，在类目轴中有效
-                        //length: 5,//坐标轴刻度的长度
-                        //lineStyle: {//举个例子，样式太丑将就
-                        //    color: '#000',//颜色
+                        show: true,//Whether to display
+                        // interval:100, //Display interval of coordinate axis scale labels, valid in category axis
+                        //length: 5,//The length of the coordinate axis scale
+                        //lineStyle: {//For example, if the style is too ugly, just make do with it.
+                        //    color: '#000',//color
                         //    opacity: 1,
-                        //    width: 5//厚度（虽然为宽表现为高度），对应length*(宽)
+                        //    width: 5//Thickness (although width is expressed as height), corresponding to length*(width)
                         //}
                     },
-                    //平面上的分隔线。
+                    //Dividers on a flat surface.
                     splitLine: {
-                        show: true,//立体网格线
-                        // interval:100,//坐标轴刻度标签的显示间隔，在类目轴中有效
-                        lineStyle: {//坐标轴样式
+                        show: true,//Three-dimensional grid lines
+                        // interval:100, //Display interval of coordinate axis scale labels, valid in category axis
+                        lineStyle: {//axis style
                             color: 'rgba(0,0,0,0.05)',
-                            opacity: 1,//(单个刻度不会受影响)
-                            width: 1//线条宽度
+                            opacity: 1,//(Single scales will not be affected)
+                            width: 1//line width
                         },
                         //splitArea: {
                         //    show: true,
-                        //    // interval:100,//坐标轴刻度标签的显示间隔，在类目轴中有效
+                        //    //interval:100,//Display interval of coordinate axis scale labels, valid in category axis
                         //    areaStyle: {
                         //        color: ['rgba(250,250,250,0.2)', 'rgba(200,200,200,0.3)', 'rgba(250,250,250,0.2)', 'rgba(200,200,200,0.2)']
                         //    }
                         //},
                     },
-                    // 坐标轴指示线。
+                    // Coordinate axis indicator line.
                     axisPointer: {
-                        show: false,//鼠标在chart上的显示线
+                        show: false,//The display line of the mouse on the chart
                         // lineStyle:{
-                        //     color:'#000',//颜色
+                        //     color:'#000',//color
                         //     opacity:1,
-                        //     width:5//厚度（虽然为宽表现为高度），对应length*(宽)
+                        //     width:5//Thickness (although width is expressed as height), corresponding to length*(width)
                         // }
                     },
-                    //viewControl用于鼠标的旋转，缩放等视角控制。(以下适合用于地球自转等)
+                    //viewControl is used for mouse rotation, zoom and other perspective control. (The following is suitable for earth rotation, etc.)
                     viewControl: {
-                        minBeta: 0, //最小旋转角度
-                        maxBeta: 90, //最大旋转角度
-                        minAlpha: 0, //最小旋转角度
-                        maxAlpha: 90, //最大旋转角度
-                        rotateSensitivity: 10,//旋转灵敏度，值越大旋转越快
-                        // projection: 'orthographic'//默认为透视投影'perspective'，也支持设置为正交投影'orthographic'。
-                        // autoRotate:true,//会有自动旋转查看动画出现,可查看每个维度信息
-                        // autoRotateDirection:'ccw',//物体自传的方向。默认是 'cw' 也就是从上往下看是顺时针方向，也可以取 'ccw'，既从上往下看为逆时针方向。
-                        // autoRotateSpeed:12,//物体自传的速度
-                        // autoRotateAfterStill:2,//在鼠标静止操作后恢复自动旋转的时间间隔。在开启 autoRotate 后有效。
-                        distance: 350,//默认视角距离主体的距离(常用)
-                        alpha: 1,//视角绕 x 轴，即上下旋转的角度(与beta一起控制视野成像效果)
-                        beta: 30,//视角绕 y 轴，即左右旋转的角度。
-                        // center:[]//视角中心点，旋转也会围绕这个中心点旋转，默认为[0,0,0]
+                        minBeta: 0, //Minimum rotation angle
+                        maxBeta: 90, //Maximum rotation angle
+                        minAlpha: 0, //Minimum rotation angle
+                        maxAlpha: 90, //Maximum rotation angle
+                        rotateSensitivity: 10,//Rotation sensitivity, the larger the value, the faster the rotation
+                        // projection: 'orthographic' //The default is perspective projection 'perspective', and it also supports setting to orthogonal projection 'orthographic'.
+                        // autoRotate:true,//There will be an automatic rotation viewing animation, and each dimension information can be viewed
+                        // autoRotateDirection:'ccw',//The direction of the object's autobiography. The default is 'cw', which means the direction is clockwise when viewed from top to bottom, or 'ccw', which means the direction is counterclockwise when viewed from top to bottom.
+                        // autoRotateSpeed:12,//The speed of the object’s autorotation
+                        // autoRotateAfterStill:2,//The time interval for resuming automatic rotation after the mouse is stationary. Valid after turning on autoRotate.
+                        distance: 350,//The distance between the default viewing angle and the subject (commonly used)
+                        alpha: 1,//The viewing angle is around the x-axis, that is, the angle of up and down rotation (together with beta, it controls the visual field imaging effect)
+                        beta: 30,//The angle of view rotates around the y-axis, which is the angle of left-right rotation.
+                        // center:[]//The center point of the perspective, the rotation will also rotate around this center point, the default is [0,0,0]
                         animation: true,
                     },
-                    //光照相关的设置
+                    //Lighting related settings
                     //light: {
                     //    main: {
-                    //        color: '#fff',//光照颜色会与所设置颜色发生混合
-                    //        intensity: 1.2,//主光源的强度(光的强度)
-                    //        shadow: false,//主光源是否投射阴影。默认关闭。
-                    //        // alpha:0//主光源绕 x 轴，即上下旋转的角度。配合 beta 控制光源的方向(跟beta结合可确定太阳位置)
-                    //        // beta:10//主光源绕 y 轴，即左右旋转的角度。
+                    //        color: '#fff',//The lighting color will be mixed with the set color
+                    //        intensity: 1.2,//The intensity of the main light source (the intensity of the light)
+                    //        shadow: false, //Whether the main light source casts shadows. Off by default.
+                    //        // alpha:0//The main light source rotates around the x-axis, that is, the angle of up and down rotation. Use beta to control the direction of the light source (combine with beta to determine the position of the sun)
+                    //        // beta:10//The main light source rotates around the y-axis, that is, the angle of left and right rotation.
                     //    },
-                    //    ambient: {//全局的环境光设置。
+                    //    ambient: {//Global ambient light settings.
                     //        intensity: 0.3,
-                    //        color: '#fff'//影响柱条颜色
+                    //        color: '#fff'//Affects the color of the bar
                     //    },
-                    //    // ambientCubemap: {//会使用纹理作为光源的环境光
+                    //    //ambientCubemap: {//The texture will be used as the ambient light of the light source
                     //    //  texture: 'pisa.hdr',
-                    //    // // 解析 hdr 时使用的曝光值
+                    //    // // Exposure value used when parsing hdr
                     //    // exposure: 1.0
                     //    // }
                     //},
-                    // postEffect:{//后处理特效的相关配置，后处理特效可以为画面添加高光，景深，环境光遮蔽（SSAO），调色等效果。可以让整个画面更富有质感。
+                    // postEffect:{//Relevant configuration of post-processing special effects. Post-processing special effects can add highlights, depth of field, ambient light occlusion (SSAO), color adjustment and other effects to the picture. It can make the whole picture more textured.
                     //     show:true,
                     //     bloom:{
-                    //         enable:true//高光特效,适合地球仪
+                    //         enable:true//Highlight special effect, suitable for globe
                     //     }
                     // }
                 },
@@ -2289,7 +2303,7 @@ var app = new Vue({
                     _series.push({
                         type: 'bar3D',
                         name: item[0][1],
-                        data: item,    //每个区的数据一一对应
+                        data: item,    //The data in each area corresponds to one-to-one
                         itemStyle: {
                             opacity: 0.7
                         },
@@ -2299,7 +2313,7 @@ var app = new Vue({
                             formatter: function (params) {
                                 const promptItem = that.promptOpt.find(item => item.id === that.promptid)
                                 const fullVersion = promptItem ? promptItem.fullVersion : ''
-                                return params.data[3].fullVersion === fullVersion ? '当前' : ' ';  // 将 label 内容固定为 ""
+                                return params.data[3].fullVersion === fullVersion ? '当前' : ' ';  // Fix label content to ""
                             },
                             textStyle: {
                                 color: '#000',
@@ -2317,23 +2331,23 @@ var app = new Vue({
             chartInstance.setOption(chartOption);
             this.chartInstance = chartInstance
             chartInstance.off('click')
-            // 监听点击事件
+            // Listen for click events
             chartInstance.on('click', (params) => {
                 // console.log('click params：', params)
                 const promptItem = this.promptOpt.find(item => item.fullVersion === params.data[3].fullVersion)
                 if (promptItem) {
-                    // 设置霸道选中
+                    // Set overbearing selected
                     this.promptid = promptItem.id
-                    // 获取靶道详情
+                    // Get target lane details
                     this.getPromptetail(promptItem.id, true)
                     this.chartInstance.resize()
-                    // 获取输出列表和平均分
+                    // Get output list and average score
                     //this.getOutputList()
-                    // 获取分数趋势图表数据
+                    // Get score trend chart data
                     // this.getScoringTrendData()
                 }
             })
-            //监听图表鼠标移入事件 mouseover globalout
+            //Listen to the chart mouse move event mouseover globalout
             // chartInstance.on('mouseover', (params) => {
             //     //console.log('mouseover', params)
             //     if (params.seriesType !== "line3D") return
@@ -2344,23 +2358,23 @@ var app = new Vue({
             //             _scatterSeries.splice(_sFindIndex, 1)
             //         })
             //     }
-            //     // 添加对应的 scatter3D
+            //     //Add the corresponding scatter3D
             //     _scatterSeries.push({
             //         type: 'scatter3D',
             //         name: params.seriesName,
-            //         symbol: 'circle',  // 设置圆点样式为圆形
-            //         symbolSize: 10,  // 设置圆点的大小
+            //         symbol: 'circle', // Set the dot style to circle
+            //         symbolSize: 10, //Set the size of the dots
             //         label: {
-            //             show: false,  // 设置 label 显示
+            //             show: false, //Set label display
             //             formatter: function (params) {
-            //                 return '';  // 将 label 内容固定为 ""
+            //                 return ''; // Fix label content to ""
             //             }
             //         },
-            //         data: [params.data]    //每个区的数据一一对应
+            //         data: [params.data] //One-to-one correspondence between data in each area
             //     })
             //     chartInstance.setOption({ series: [..._series, ..._scatterSeries] });
             // })
-            //监听图表鼠标移出事件
+            //Listen to chart mouse out events
             // chartInstance.on('mouseout', (params) => {
             //     /*console.log('globalout', _series, _sFilter, params)*/
             //     _scatterSeries = []
@@ -2372,7 +2386,7 @@ var app = new Vue({
         formatTooltip(val) {
             return val.toFixed(1)
         },
-        // 输出 获取评分趋势 图表数据
+        // Output Get rating trend chart data
         async getScoringTrendData() {
             this.chartData = {
                 xData: [],
@@ -2380,7 +2394,7 @@ var app = new Vue({
                 seriesData: []
             }
             if (this.promptid) {
-                //console.log('获取评分趋势 图表数据', this.isAvg)
+                //console.log('Get rating trend chart data', this.isAvg)
                 /* /api/Senparc.Xncf.PromptRange/StatisticAppService/Xncf.PromptRange_StatisticAppService.GetLineChartDataAsync?promptItemId=${this.promptid}*/
                 let res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/StatisticAppService/Xncf.PromptRange_StatisticAppService.GetLineChartDataAsync?promptItemId=${this.promptid}&isAvg=${this.isAvg}`)
                 if (res.data.success) {
@@ -2420,7 +2434,7 @@ var app = new Vue({
                         duration: 5 * 1000
                     });
                 }
-                // 初始化图表 接口调用成功
+                // Initialization chart interface call successful
                 this.chartInitialization()
             }
 
@@ -2435,21 +2449,21 @@ var app = new Vue({
             //}
             //this.chartInstance.setOption(_setOption);
         },
-        // 靶场|靶道|模型 选择变化
+        // Range|Range|Model Selection Changes
         promptChangeHandel(val, itemKey, oldVal) {
-            // 靶道变化时，重置打靶按钮
+            // When the target lane changes, reset the target button
             this.numsOfResults = 1
             //console.log(this.promptFieldOldVal,'|', val, '|', itemKey, '|', oldVal)
             if (itemKey === 'promptField') {
-                // 如果靶场变化 靶道
+                // If the range changes, the range
                 if (this.pageChange && this.modelid) {
-                    // 提示 有数据变化 是否保存为草稿
+                    // Tip: There are data changes. Do you want to save it as a draft?
                     this.$confirm('您的数据已经修改，是否保存为草稿？', '提示', {
                         confirmButtonText: '保存',
                         cancelButtonText: '不保存',
                         type: 'warning'
                     }).then(() => {
-                        // 保存草稿
+                        // save draft
                         this.targetShootHandel(true).then(() => {
                             this.resetPageData()
                             //console.log(333)
@@ -2461,30 +2475,30 @@ var app = new Vue({
                     return
                 }
                 //console.log(111)
-                // 重置页面数据
+                // Reset page data
                 this.resetPageData()
             } else if (itemKey === 'promptid') {
 
                 if (this.pageChange && this.modelid) {
-                    // 提示 有数据变化 是否保存为草稿
+                    // Tip: There are data changes. Do you want to save it as a draft?
                     this.$confirm('您的数据已经修改，是否保存为草稿？', '提示', {
                         confirmButtonText: '保存',
                         cancelButtonText: '不保存',
                         type: 'warning'
                     }).then(() => {
-                        // 保存草稿
+                        // save draft
                         this.targetShootHandel(true).then(() => {
                             this.resetPageData()
                             this.getPromptetail(val, true, true)
                         })
-                        // 重置 页面变化记录
+                        // Reset page change history
                         this.pageChange = false
-                        // 重新获取靶道列表
+                        // Retrieve target list
                         //this.getFieldList()
                     }).catch(() => {
-                        // 重置 页面变化记录
+                        // Reset page change history
                         this.pageChange = false
-                        // val 在 promptOpt 中的位置
+                        // The position of val in promptOpt
                         let _fitem = this.promptOpt.find(item => item.value === val)
                         if (_fitem.isDraft) {
                             this.sendBtns = [
@@ -2508,19 +2522,19 @@ var app = new Vue({
                             this.sendBtnText = '连发'
                         }
 
-                        // 清空ai评分标准
+                        // Clear ai scoring criteria
                         this.aiScoreForm = {
                             resultList: []
                         }
 
-                        // 获取靶道详情
+                        // Get target lane details
                         this.getPromptetail(val, true, true)
 
                     });
                 } else {
-                    // 重置 页面变化记录
+                    // Reset page change history
                     this.pageChange = false
-                    // 清空ai评分标准
+                    // Clear ai scoring criteria
                     this.aiScoreForm = {
                         resultList: []
                     }
@@ -2546,15 +2560,15 @@ var app = new Vue({
                         ]
                         this.sendBtnText = '连发'
                     }
-                    // 靶道
+                    // target lane
                     this.getPromptetail(val, true, true)
                 }
 
             } else {
 
-                // 其他
+                // other
                 //if (itemKey === 'modelid'){}
-                // 页面变化记录
+                // Page change record
                 this.pageChange = true
                 this.sendBtns = [
                     {
@@ -2568,16 +2582,16 @@ var app = new Vue({
             }
 
         },
-        // 重置页面数据
+        // Reset page data
         async resetPageData() {
-            // 重置 页面变化记录
+            // Reset page change history
             this.pageChange = false
-            // 靶场
-            this.promptid = '' // 靶道
-            this.modelid = '' // 模型
-            // 参数设置 视图配置列表
+            // range
+            this.promptid = '' // target lane
+            this.modelid = '' // Model
+            // Parameter settings View configuration list
             this.resetConfigurineParam(false)
-            // 输入Prompt 重置
+            // Enter Prompt to reset
             this.resetInputPrompt()
             this.outputList = []
             this.outputAverageDeci = -1
@@ -2588,13 +2602,13 @@ var app = new Vue({
                 suffix: '',
                 variableList: []
             }
-            // ai评分标准 重置
+            // ai scoring criteria reset
             this.aiScoreForm = {
                 resultList: []
             }
             this.numsOfResults = 1
             if (this.promptField) {
-                // 获取靶道列表
+                // Get target lane list
                 await this.getPromptOptData().then(() => {
                     console.log(this.promptOpt)
                     // promptid is the last one of promptOpt
@@ -2623,7 +2637,7 @@ var app = new Vue({
                             this.sendBtnText = '连发'
                         }
 
-                        // 获取详情
+                        // Get details
                         this.getPromptetail(this.promptid, true, true)
                     } else {
                         this.sendBtns = [
@@ -2638,16 +2652,16 @@ var app = new Vue({
                     }
 
                 })
-                // 获取分数趋势图表数据
+                // Get score trend chart data
                 await this.getScoringTrendData()
             }
 
         },
 
-        // 继续聊天：加载历史记录并打开战术选择弹窗
+        // Continue chatting: Load history and open tactical selection popup
         async continueChat(promptResultId, resultIndex) {
             try {
-                // 使用新的 API 同时获取对话历史和 Prompt 内容
+                // Get both conversation history and prompt content using new API
                 const res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistoryWithPrompt?promptResultId=${promptResultId}`)
                 if (res.data.success) {
                     this.continueChatMode = true
@@ -2655,27 +2669,27 @@ var app = new Vue({
                     this.continueChatHistory = res.data.data.chatHistory || []
                     this.continueChatSystemMessage = res.data.data.promptContent || ''
                     
-                    // 打开战术选择弹窗，锁定为对话模式
+                    // Open the tactical selection pop-up window and lock it in dialogue mode
                     this.tacticalForm.chatMode = '对话模式'
                     this.tacticalFormVisible = true
                     
-                    // 滚动到底部显示最新消息
+                    // Scroll to bottom for latest news
                     this.$nextTick(() => {
                         const container = document.getElementById('chatHistoryContainer')
                         if (container) {
                             container.scrollTop = container.scrollHeight
                         }
-                        // 添加代码块复制按钮
+                        // Add code block copy button
                         this.addCopyButtonsToCodeBlocks();
                     })
                 } else {
-                    // 降级方案：如果新 API 失败，使用旧的 API
+                    // Downgrade scenario: If new API fails, use old API
                     const fallbackRes = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistory?promptResultId=${promptResultId}`)
                     if (fallbackRes.data.success) {
                         this.continueChatMode = true
                         this.continueChatPromptResultId = promptResultId
                         this.continueChatHistory = fallbackRes.data.data || []
-                        // 尝试从 outputList 获取 Prompt 内容
+                        // Try to get Prompt content from outputList
                         const resultItem = this.outputList.find(item => item.id === promptResultId)
                         if (resultItem && resultItem.promptId && this.promptDetail && this.promptDetail.id === resultItem.promptId) {
                             this.continueChatSystemMessage = this.promptDetail.promptContent || this.content || ''
@@ -2708,40 +2722,40 @@ var app = new Vue({
             }
         },
         
-        // 处理对话输入框的键盘事件（快捷键支持）
+        // Handle keyboard events of dialog input boxes (shortcut key support)
         handleChatInputKeydown(e) {
-            // Ctrl+Enter (Windows/Linux) 或 Cmd+Enter (Mac)
+            // Ctrl+Enter (Windows/Linux) or Cmd+Enter (Mac)
             if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
                 e.preventDefault()
                 e.stopPropagation()
-                // 触发提交
+                // trigger commit
                 this.tacticalFormSubmitBtn()
             }
         },
         
-        // 战术选择 关闭弹出
-        // 战术选择 dialog 关闭
+        // Tactical Options Close Popup
+        // Tactics selection dialog close
         tacticalFormCloseDialog() {
             this.tacticalForm = {
                 tactics: '重新瞄准',
-                chatMode: '对话模式' // 重置为默认值
+                chatMode: '对话模式' // reset to default
             }
-            // 清空对话输入
+            // Clear conversation input
             this.tacticalChatInput = ''
-            // 重置继续聊天状态
+            // Reset chat status
             this.continueChatMode = false
             this.continueChatPromptResultId = null
             this.continueChatHistory = []
             this.continueChatSystemMessage = ''
             this.systemMessageCollapse = []
             if (this.$refs.tacticalForm) {
-                // 使用 clearValidate 清除验证状态，而不是 resetFields
-                // 因为某些字段可能是条件显示的（v-if），resetFields 可能会出错
+                // Use clearValidate to clear validation status instead of resetFields
+                // Because some fields may be displayed conditionally (v-if), resetFields may error
                 this.$refs.tacticalForm.clearValidate();
             }
         },
         
-        // 打开导图对话框
+        // Open the map dialog box
         openMapDialog() {
             if (!this.promptField) {
                 this.$message({
@@ -2751,7 +2765,7 @@ var app = new Vue({
                 return
             }
             
-            // 检查当前靶场是否有靶道数据
+            // Check whether the current shooting range has target track data
             if (!this.promptOpt || this.promptOpt.length === 0) {
                 this.$message({
                     message: '当前靶场还没有进行过打靶，请打靶后再来看吧！',
@@ -2767,20 +2781,20 @@ var app = new Vue({
             })
         },
         
-        // 关闭导图对话框
+        // Close the map dialog box
         mapDialogClose() {
             this.destroyMap3D()
         },
         
-        // 初始化 3D 导图
+        // Initialize 3D map
         initMap3D() {
             const container = document.getElementById('map3dContainer')
             if (!container) return
             
-            // 构建树状结构数据
+            // Build tree-structured data
             this.buildTreeData()
             
-            // 确保 THREE 已加载
+            // Make sure THREE is loaded
             if (typeof THREE === 'undefined' && typeof window.THREE !== 'undefined') {
                 window.THREE = window.THREE
             }
@@ -2794,57 +2808,57 @@ var app = new Vue({
                 return
             }
             
-            // 创建场景（使用渐变背景）
+            // Create a scene (using a gradient background)
             this.map3dScene = new THREE.Scene()
-            // 创建渐变背景
+            // Create a gradient background
             const gradientTexture = this.createGradientBackground()
             this.map3dScene.background = gradientTexture
             
-            // 禁用雾化效果，确保远处节点清晰可见
+            // Disable the fog effect to ensure that distant nodes are clearly visible
             this.map3dScene.fog = null
             
-            // 创建相机（增大远裁剪面，确保所有节点都可见）
+            // Create camera (increase far clipping plane, make sure all nodes are visible)
             const width = container.clientWidth
             const height = container.clientHeight
-            // 参数：视场角(75度), 宽高比, 近裁剪面(0.1), 远裁剪面(5000 - 增大以支持更远的节点)
+            // Parameters: Field of view (75 degrees), aspect ratio, near clipping plane (0.1), far clipping plane (5000 - increased to support further nodes)
             this.map3dCamera = new THREE.PerspectiveCamera(75, width / height, 0.1, 5000)
             this.map3dCamera.position.set(0, 0, 50)
             
-            // 创建渲染器（禁用对数深度缓冲，提高远处物体的清晰度）
+            // Create renderer (disables logarithmic depth buffering, improves clarity of distant objects)
             this.map3dRenderer = new THREE.WebGLRenderer({ 
                 antialias: true,
                 logarithmicDepthBuffer: false,
-                precision: 'highp' // 使用高精度，提高渲染质量
+                precision: 'highp' // Use high precision to improve rendering quality
             })
             this.map3dRenderer.setSize(width, height)
-            // 设置像素比，在高DPI屏幕上更清晰
+            // Set pixel ratio for better clarity on high DPI screens
             this.map3dRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
             container.appendChild(this.map3dRenderer.domElement)
             
-            // 添加控制器（使用本地化的 OrbitControls）
+            // Add a controller (using localized OrbitControls)
             if (typeof THREE.OrbitControls !== 'undefined') {
                 this.map3dControls = new THREE.OrbitControls(this.map3dCamera, this.map3dRenderer.domElement)
                 
-                // 启用阻尼效果，使旋转更平滑
+                // Enable damping effect for smoother rotation
                 this.map3dControls.enableDamping = true
                 this.map3dControls.dampingFactor = 0.05
                 
-                // 启用缩放（增大最大距离，支持更远的视角）
+                // Enable zoom (increases maximum distance, supports further viewing angles)
                 this.map3dControls.enableZoom = true
                 this.map3dControls.zoomSpeed = 1.2
                 this.map3dControls.minDistance = 10
-                this.map3dControls.maxDistance = 500 // 从 200 增加到 500
+                this.map3dControls.maxDistance = 500 // Increased from 200 to 500
                 
-                // 启用旋转
+                // Enable rotation
                 this.map3dControls.enableRotate = true
                 this.map3dControls.rotateSpeed = 0.8
                 
-                // 启用平移
+                // Enable panning
                 this.map3dControls.enablePan = true
                 this.map3dControls.panSpeed = 0.8
                 this.map3dControls.screenSpacePanning = true
                 
-                // 设置初始相机位置，使其能看到整个场景
+                // Set the initial camera position so that it can see the entire scene
                 this.map3dCamera.position.set(30, 30, 50)
                 this.map3dControls.target.set(0, 0, 0)
                 this.map3dControls.update()
@@ -2852,43 +2866,43 @@ var app = new Vue({
                 console.warn('OrbitControls 未找到，3D 场景将无法通过鼠标控制')
             }
             
-            // 添加更丰富的光源系统（增强远处物体的照明）
-            // 环境光 - 提供基础照明（增强亮度以照亮远处节点）
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6) // 从 0.4 增加到 0.6
+            // Add a richer light source system (enhance lighting of distant objects)
+            // Ambient Light - Provides basic lighting (increases brightness to illuminate distant nodes)
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6) // Increased from 0.4 to 0.6
             this.map3dScene.add(ambientLight)
             
-            // 主方向光 - 模拟太阳光（无衰减，照亮所有节点）
+            // Main directional light - simulates sunlight (no attenuation, illuminates all nodes)
             const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.8)
             directionalLight1.position.set(20, 20, 20)
             directionalLight1.castShadow = false
             this.map3dScene.add(directionalLight1)
             
-            // 辅助方向光 - 补充照明（从另一侧照亮）
-            const directionalLight2 = new THREE.DirectionalLight(0x88ccff, 0.5) // 从 0.4 增加到 0.5
+            // Auxiliary directional light - supplementary lighting (light from the other side)
+            const directionalLight2 = new THREE.DirectionalLight(0x88ccff, 0.5) // Increased from 0.4 to 0.5
             directionalLight2.position.set(-20, 10, -20)
             this.map3dScene.add(directionalLight2)
             
-            // 第三方向光 - 从前方照亮远处节点
+            // Third directional light - illuminates distant nodes from the front
             const directionalLight3 = new THREE.DirectionalLight(0xffffff, 0.4)
             directionalLight3.position.set(0, 0, 50)
             this.map3dScene.add(directionalLight3)
             
-            // 点光源 - 增加层次感（无衰减距离限制）
-            const pointLight = new THREE.PointLight(0xffffff, 0.6, 0) // distance=0 表示无限距离
+            // Point light source - increase the sense of layering (no attenuation distance limit)
+            const pointLight = new THREE.PointLight(0xffffff, 0.6, 0) // distance=0 means infinite distance
             pointLight.position.set(0, 20, 0)
             this.map3dScene.add(pointLight)
             
-            // 渲染节点
+            // render node
             this.renderTreeNodes()
             
-            // 开始动画循环
+            // Start animation loop
             this.animateMap3D()
             
-            // 处理窗口大小变化
+            // Handling window size changes
             window.addEventListener('resize', this.handleMap3DResize)
         },
         
-        // 构建树状结构数据
+        // Build tree-structured data
         buildTreeData() {
             if (!this.promptOpt || this.promptOpt.length === 0) {
                 this.map3dTreeData = null
@@ -2898,12 +2912,12 @@ var app = new Vue({
             const tree = {}
             const currentPromptId = this.promptid
             
-            // 解析每个靶道的 FullVersion
+            // Parse the FullVersion of each target lane
             this.promptOpt.forEach(prompt => {
                 const fullVersion = prompt.fullVersion || prompt.label
                 if (!fullVersion) return
                 
-                // 解析格式：2023.12.14.1-T1.1-A123
+                // Parsing format: 2023.12.14.1-T1.1-A123
                 const parts = fullVersion.split('-')
                 if (parts.length < 2) return
                 
@@ -2911,7 +2925,7 @@ var app = new Vue({
                 const tacticPart = parts[1] // T1.1
                 const aimingPart = parts[2] || '' // A123
                 
-                // 获取或创建 RangeName 根节点
+                // Get or create the RangeName root node
                 if (!tree[rangeName]) {
                     tree[rangeName] = {
                         type: 'range',
@@ -2925,7 +2939,7 @@ var app = new Vue({
                 
                 const rangeNode = tree[rangeName]
                 
-                // 解析 Tactic（每个.是一层）
+                // Parse Tactic (each . is a layer)
                 const tacticParts = tacticPart.replace('T', '').split('.')
                 let currentNode = rangeNode.children
                 let lastTacticNode = null
@@ -2934,10 +2948,10 @@ var app = new Vue({
                     const key = `T${tacticParts.slice(0, index + 1).join('.')}`
                     
                     if (!currentNode[key]) {
-                        // 修复 parentPath：应该包含完整的路径前缀
+                        // Fix parentPath: should contain full path prefix
                         const parentFullPath = index > 0 
-                            ? `${rangeName}-T${tacticParts.slice(0, index).join('.')}` // 例如: "Range1-T2.1"
-                            : rangeName // 例如: "Range1"
+                            ? `${rangeName}-T${tacticParts.slice(0, index).join('.')}` // For example: "Range1-T2.1"
+                            : rangeName // For example: "Range1"
                         
                         currentNode[key] = {
                             type: 'tactic',
@@ -2953,20 +2967,20 @@ var app = new Vue({
                     currentNode = currentNode[key].children
                 })
                 
-                // 确保 lastTacticNode 存在
+                // Make sure lastTacticNode exists
                 if (!lastTacticNode) {
                     console.warn('无法找到 Tactic 节点:', tacticPart)
                     return
                 }
                 
-                // 添加 Aiming（特殊层）- 修复：使用唯一的key避免共享
+                // Add Aiming (special layer) - Fix: Use unique key to avoid sharing
                 if (aimingPart) {
-                    // 使用完整路径作为key，确保每个Aiming节点都是独立的
-                    const aimingKey = `${tacticPart}-${aimingPart}` // 例如: "T1.1-A1", "T1.2-A1"
+                    // Use the full path as the key to ensure that each Aiming node is independent
+                    const aimingKey = `${tacticPart}-${aimingPart}` // For example: "T1.1-A1", "T1.2-A1"
                     if (!lastTacticNode.children[aimingKey]) {
                         lastTacticNode.children[aimingKey] = {
                             type: 'aiming',
-                            name: aimingPart.replace('A', ''), // 显示名称去掉A
+                            name: aimingPart.replace('A', ''), // Remove A from display name
                             fullPath: `${rangeName}-${tacticPart}-${aimingPart}`,
                             parentPath: `${rangeName}-${tacticPart}`,
                             children: {},
@@ -2981,7 +2995,7 @@ var app = new Vue({
                         isCurrent: (prompt.idkey || prompt.value) == currentPromptId
                     })
                 } else {
-                    // 如果没有 Aiming，直接添加到最后一个 Tactic 节点
+                    // If there is no Aiming, add it directly to the last Tactic node
                     lastTacticNode.prompts.push({
                         id: prompt.idkey || prompt.value,
                         fullVersion: fullVersion,
@@ -2994,7 +3008,483 @@ var app = new Vue({
             this.map3dTreeData = tree
         },
         
-        // 计算树的高度（用于平衡布局）
+        // ---Optimization function ---
+        // Check if PromptCatalyzer has been initialized
+        async checkPromptCatalyzerStatus() {
+            try {
+                const response = await servicePR.get('/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/CheckStatus');
+                console.log('CheckStatus 完整响应:', response);
+                
+                // NCF AppResponseBase return format: { success: true, data: { isInitialized: true, ... } }
+                if (response.data && response.data.success && response.data.data) {
+                    return response.data.data.isInitialized;
+                }
+                return false;
+            } catch (error) {
+                console.error('检查初始化状态失败:', error);
+                return false;
+            }
+        },
+
+        // Get the list of available AI Models
+        async loadAvailableModels() {
+            this.loadingModels = true;
+            try {
+                const response = await servicePR.get('/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/GetAvailableModels');
+                console.log('GetAvailableModels 完整响应:', response);
+                
+                // NCF AppResponseBase return format: { success: true, data: { models: [...], recommendedModelId: 1 } }
+                if (response.data && response.data.success) {
+                    this.availableModelsForInit = response.data.data.models || [];
+                    
+                    // Automatically select recommended Models
+                    if (response.data.data.recommendedModelId) {
+                        this.selectedModelIdForInit = response.data.data.recommendedModelId;
+                    } else if (this.availableModelsForInit.length > 0) {
+                        this.selectedModelIdForInit = this.availableModelsForInit[0].id;
+                    }
+                    
+                    console.log('加载到', this.availableModelsForInit.length, '个可用 Model');
+                } else {
+                    // Handling error responses
+                    const errorMsg = response.data?.errorMessage || '获取模型列表失败';
+                    this.$message.error(errorMsg);
+                    console.error('获取模型失败:', errorMsg);
+                }
+            } catch (error) {
+                console.error('加载 AI Model 列表失败:', error);
+                this.$message.error('加载 AI Model 列表失败: ' + (error.response?.data?.errorMessage || error.message));
+            } finally {
+                this.loadingModels = false;
+            }
+        },
+
+        // Perform initialization
+        async executeInitialization() {
+            if (!this.selectedModelIdForInit) {
+                this.$message.warning('请选择一个 AI Model');
+                return;
+            }
+
+            this.initializing = true;
+            try {
+                console.log('开始初始化 PromptCatalyzer，使用 Model ID:', this.selectedModelIdForInit);
+                
+                const response = await servicePR.post('/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/Initialize', {
+                    modelId: this.selectedModelIdForInit
+                });
+
+                console.log('Initialize 完整响应:', response);
+                
+                // NCF AppResponseBase return format: { success: true, data: { promptCode: "...", ... } }
+                if (response.data && response.data.success) {
+                    const initData = response.data.data || {};
+                    this.$message({
+                        message: `✅ 初始化成功！已创建 PromptCatalyzer Agent，PromptCode: ${initData.promptCode || '已创建'}`,
+                        type: 'success',
+                        duration: 6000,
+                        showClose: true
+                    });
+                    
+                    this.promptCatalyzerInitVisible = false;
+                    
+                    // After initialization is successful, refresh the page data
+                    console.log('初始化成功，刷新页面数据...');
+                    await this.getFieldList();
+                    
+                    // Continue with optimization
+                    this.proceedWithOptimization();
+                } else {
+                    this.$message.error('初始化失败: ' + (response.data.errorMessage || '未知错误'));
+                }
+            } catch (error) {
+                console.error('初始化失败:', error);
+                const errorMsg = error.response?.data?.error || error.response?.data?.message || error.message;
+                this.$message({
+                    message: '初始化失败: ' + errorMsg,
+                    type: 'error',
+                    duration: 8000,
+                    showClose: true
+                });
+            } finally {
+                this.initializing = false;
+            }
+        },
+
+        // Continue optimization (after initialization is complete)
+        proceedWithOptimization() {
+            // Reopen the optimization dialog
+            this.optimizeRequirement = '';
+            this.optimizeErrorText = '';
+            this.optimizeDialogVisible = true;
+        },
+        
+        // ⭐ NEW: Check scores and prompt for optimization
+        async checkScoreAndSuggestOptimization(resultData, scoreType) {
+            try {
+                // Get final score
+                let finalScore = null;
+                if (resultData && typeof resultData === 'object') {
+                    finalScore = resultData.finalScore;
+                } else if (typeof resultData === 'number') {
+                    finalScore = resultData;
+                }
+                
+                // If score cannot be obtained, do not prompt
+                if (finalScore === null || finalScore === undefined || finalScore === -1) {
+                    console.log('无法获取有效分数，跳过优化提示');
+                    return;
+                }
+                
+                console.log(`${scoreType}完成，最终分数: ${finalScore}`);
+                
+                // Set the threshold for optimization suggestions (optimization is recommended when the score is lower than 6 points)
+                const optimizationThreshold = 6.0;
+                
+                if (finalScore < optimizationThreshold) {
+                    // The score is low, prompting the user whether optimization is needed
+                    this.$confirm(
+                        `当前 Prompt 的${scoreType}为 ${finalScore.toFixed(1)} 分（低于 ${optimizationThreshold} 分）。是否使用 AI 自动优化功能来改进 Prompt？`,
+                        '💡 建议优化',
+                        {
+                            confirmButtonText: '立即优化',
+                            cancelButtonText: '暂不优化',
+                            type: 'warning',
+                            center: true
+                        }
+                    ).then(async () => {
+                        // User confirmation optimization
+                        console.log('用户确认进行优化');
+                        await this.openOptimizeDialog();
+                    }).catch(() => {
+                        // User cancels
+                        console.log('用户取消优化');
+                    });
+                } else {
+                    // Higher scores show a simple success message
+                    console.log(`分数${finalScore.toFixed(1)}较高，无需提示优化`);
+                }
+            } catch (error) {
+                console.error('检查分数并提示优化时出错:', error);
+                // Do not display error messages to avoid affecting user experience
+            }
+        },
+        
+        // ⭐ New: Check whether optimization is needed based on the average score of PromptItem
+        async checkPromptAverageScoreAndSuggest() {
+            try {
+                // Get the currently selected Prompt information
+                if (!this.promptid) {
+                    return;
+                }
+                
+                const selectedPrompt = this.promptOpt.find(item => item.value === this.promptid);
+                if (!selectedPrompt || !selectedPrompt.evalAvgScore) {
+                    return;
+                }
+                
+                const avgScore = selectedPrompt.evalAvgScore;
+                
+                // Do not prompt if average score is -1 or invalid
+                if (avgScore === -1 || avgScore === null || avgScore === undefined) {
+                    console.log('当前 Prompt 尚无平均分数');
+                    return;
+                }
+                
+                console.log(`当前 Prompt 平均分数: ${avgScore}`);
+                
+                // Set thresholds for optimization recommendations
+                const optimizationThreshold = 6.0;
+                
+                // If the average score is lower than the threshold and the current Range has multiple test results, it will prompt optimization
+                if (avgScore < optimizationThreshold) {
+                    // Use Notification instead of Confirm to avoid blocking user operations
+                    this.$notify({
+                        title: '💡 优化建议',
+                        message: `当前 Prompt 的平均分为 ${avgScore.toFixed(1)} 分，建议使用 AI 自动优化功能来改进。点击"优化"按钮开始。`,
+                        type: 'warning',
+                        duration: 8000,
+                        position: 'bottom-right',
+                        showClose: true
+                    });
+                    
+                    console.log('平均分较低，已提示用户优化');
+                } else {
+                    console.log(`平均分 ${avgScore.toFixed(1)} 较高，无需提示优化`);
+                }
+            } catch (error) {
+                console.error('检查平均分并提示优化时出错:', error);
+            }
+        },
+
+        async openOptimizeDialog() {
+            if (!this.promptid) {
+                this.$message.warning('请先选择一个Prompt！');
+                return;
+            }
+            
+            // Check if it has been initialized
+            console.log('检查 PromptCatalyzer 初始化状态...');
+            const isInitialized = await this.checkPromptCatalyzerStatus();
+            
+            if (!isInitialized) {
+                // Not initialized, display initialization dialog box
+                this.$message({
+                    message: '🚀 首次使用需要初始化 PromptCatalyzer，正在加载可用的 AI Model...',
+                    type: 'info',
+                    duration: 3000
+                });
+                
+                // Load the list of available Models
+                await this.loadAvailableModels();
+                
+                if (this.availableModelsForInit.length === 0) {
+                    this.$message.error('没有找到可用的 AI Model，请先在 AIKernel 模块中配置 Chat 类型的 Model');
+                    return;
+                }
+                
+                // Show initialization dialog
+                this.promptCatalyzerInitVisible = true;
+                return;
+            }
+            
+            // Already initialized, open the optimization dialog box directly
+            console.log('PromptCatalyzer 已初始化，打开优化对话框');
+            this.optimizeRequirement = '';
+            this.optimizeErrorText = '';
+            this.optimizeDialogVisible = true;
+        },
+        /// Synchronize the expected results of the current target lane to aiScoreForm to avoid "post-target AI scoring" relying only on the form memory and missing the expectedResultsJson in the details.
+        syncAiScoreFormFromPromptDetail() {
+            if (!this.promptDetail || !this.promptDetail.expectedResultsJson) {
+                return;
+            }
+            try {
+                const arr = JSON.parse(this.promptDetail.expectedResultsJson);
+                if (!Array.isArray(arr) || arr.length === 0) {
+                    return;
+                }
+                const hasValues = arr.some(x => x !== undefined && x !== null && String(x).trim() !== '');
+                if (!hasValues) {
+                    return;
+                }
+                const formHasValues = this.aiScoreForm.resultList && this.aiScoreForm.resultList.some(r => r && r.value);
+                if (!formHasValues) {
+                    this.aiScoreForm.resultList = arr.map((item, index) => ({
+                        id: index + 1,
+                        label: '预期结果',
+                        value: typeof item === 'string' ? item : String(item)
+                    }));
+                }
+            } catch (e) {
+                console.warn('syncAiScoreFormFromPromptDetail:', e);
+            }
+        },
+        async executeOptimize() {
+            if (this.optimizing) {
+                this.$message.warning('优化正在进行中，请勿重复点击');
+                return;
+            }
+            if (!this.promptid) {
+                this.$message.warning('请先选择一个Prompt！');
+                return;
+            }
+            
+            // Get the currently selected Prompt Code
+            let promptCode = '';
+            const selectedPrompt = this.promptOpt.find(item => item.value === this.promptid);
+            if (selectedPrompt) {
+                if (selectedPrompt.fullVersion) {
+                    promptCode = selectedPrompt.fullVersion;
+                } else if (selectedPrompt.label && selectedPrompt.label.includes('-T')) {
+                    promptCode = selectedPrompt.label; 
+                }
+            }
+            
+            // If not found, try to get it from details
+            if (!promptCode && this.promptDetail && this.promptDetail.fullVersion) {
+                promptCode = this.promptDetail.fullVersion;
+            }
+
+            if (!promptCode) {
+                this.$message.error('无法获取当前Prompt的版本号(Prompt Code)');
+                return;
+            }
+
+            // Get the details of the current Prompt (including parameters)
+            const promptDetail = this.promptDetail;
+            if (!promptDetail) {
+                this.$message.error('无法获取当前 Prompt 的详细信息');
+                return;
+            }
+
+            // Seize the space as early as possible to avoid double-clicking after the verification is passed and before sending the request to generate two HTTP requests.
+            this.optimizing = true;
+            this.optimizeErrorText = '';
+            this.optimizeProgressText = 'Agent 正在推理并调用工具（可能需要数分钟，请勿关闭此窗口）…';
+            try {
+                console.log('开始优化 Prompt（Agent 主路径）:', promptCode);
+                
+                const requestData = {
+                    promptCode: promptCode,
+                    promptContent: promptDetail.promptContent || this.content,
+                    userRequirement: this.optimizeRequirement || '提高 Prompt 的质量和效果',
+                    context: {
+                        modelId: this.modelid || promptDetail.modelId,
+                        currentTemperature: promptDetail.temperature || this.parameterViewList.find(p => p.formField === 'temperature')?.value || 0.7,
+                        currentTopP: promptDetail.topP || this.parameterViewList.find(p => p.formField === 'topP')?.value || 0.9,
+                        currentMaxTokens: promptDetail.maxToken || this.parameterViewList.find(p => p.formField === 'maxToken')?.value || 2000,
+                        currentFrequencyPenalty: promptDetail.frequencyPenalty || this.parameterViewList.find(p => p.formField === 'frequencyPenalty')?.value || 0,
+                        currentPresencePenalty: promptDetail.presencePenalty || this.parameterViewList.find(p => p.formField === 'presencePenalty')?.value || 0,
+                        autoShootAfterOptimize: this.autoShootAfterOptimize,
+                        autoAIGradeAfterShoot: this.autoAIGradeAfterShoot
+                    }
+                };
+
+                const response = await servicePR.post(
+                    '/api/Senparc.Xncf.AgentsManager/PromptOptimizationAppService/OptimizeAsync',
+                    requestData,
+                    { timeout: 900000 }
+                );
+
+                if (response.data && response.data.success === false) {
+                    const topErr = response.data.errorMessage || response.data.message || '请求失败';
+                    this.optimizeErrorText = String(topErr);
+                    this.$message.error('优化失败：' + topErr);
+                    return;
+                }
+
+                if (response.data && response.data.success && response.data.data) {
+                    const optimizeResult = response.data.data;
+                    if (!optimizeResult.success) {
+                        const err = optimizeResult.errorMessage || optimizeResult.evaluationReason || '优化未成功';
+                        this.optimizeErrorText = String(err);
+                        this.$message.error('优化失败：' + err);
+                        return;
+                    }
+
+                    this.optimizeProgressText = 'Agent 已完成，正在刷新靶道并选中新版本…';
+                    await this.getFieldList();
+                    // getFieldList only updates the shooting range list; the target drop-down promptOpt must be pulled by getPromptOptData, otherwise the list will still be old and "Prompt Code not matched" will be misjudged.
+                    await this.getPromptOptData();
+
+                    const code = optimizeResult.newPromptCode || optimizeResult.NewPromptCode;
+                    const newPrompt = this.promptOpt.find(p =>
+                        p.fullVersion === code ||
+                        p.label === code ||
+                        (p.label && code && p.label.indexOf(code) >= 0));
+                    if (!newPrompt) {
+                        const w = '已创建新版本，但未在列表中匹配到 Prompt Code：' + code;
+                        this.optimizeErrorText = w;
+                        this.$message.warning(w);
+                        this.optimizeDialogVisible = false;
+                        return;
+                    }
+
+                    this.promptid = newPrompt.value;
+                    this.pageChange = false;
+                    await this.getPromptetail(this.promptid, true, true);
+
+                    const _fitem = this.promptOpt.find(item => item.value === this.promptid);
+                    if (_fitem) {
+                        if (_fitem.isDraft) {
+                            this.sendBtns = [{ text: '打靶' }, { text: '保存草稿' }];
+                            this.sendBtnText = '打靶';
+                        } else {
+                            this.sendBtns = [{ text: '连发' }, { text: '保存草稿' }];
+                            this.sendBtnText = '连发';
+                        }
+                    }
+
+                    if (this.autoShootAfterOptimize) {
+                        this.syncAiScoreFormFromPromptDetail();
+                        this.optimizeProgressText = '正在打靶（与手动打靶相同，可在主界面查看输出）…';
+                        // A new version has been created for optimization, and the "burst" mode is used during target shooting (no new version will be created)
+                        const savedTactics = this.tacticalForm.tactics;
+                        this.tacticalForm.tactics = '连发';
+                        try {
+                            await this.executeTargetShootWithChatMessage(null);
+                        } finally {
+                            this.tacticalForm.tactics = savedTactics;
+                        }
+                        await this.$nextTick();
+                    }
+
+                    if (this.autoShootAfterOptimize && this.autoAIGradeAfterShoot && this.outputList && this.outputList.length > 0) {
+                        const item = this.outputList[0];
+                        let filled = item.alResultList && item.alResultList.some(r => r && r.value);
+                        if (!filled && this.aiScoreForm.resultList && this.aiScoreForm.resultList.some(r => r && r.value)) {
+                            item.alResultList = this.aiScoreForm.resultList.map((x, idx) => ({
+                                id: idx + 1,
+                                label: '预期结果',
+                                value: x.value
+                            }));
+                            filled = true;
+                        }
+                        if (!filled && this.promptDetail && this.promptDetail.expectedResultsJson) {
+                            try {
+                                const arr = JSON.parse(this.promptDetail.expectedResultsJson);
+                                if (Array.isArray(arr) && arr.some(x => x !== undefined && x !== null && String(x).trim() !== '')) {
+                                    item.alResultList = arr.map((v, idx) => ({
+                                        id: idx + 1,
+                                        label: '预期结果',
+                                        value: typeof v === 'string' ? v : String(v)
+                                    }));
+                                    filled = true;
+                                }
+                            } catch (e) {
+                                console.warn('autoAIGrade expectedResultsJson:', e);
+                            }
+                        }
+                        if (filled) {
+                            this.optimizeProgressText = '正在 AI 评分（与手动 AI 评分相同）…';
+                            item.scoreType = '1';
+                            this.$set(this.robotScoreLoadingMap, item.id, true);
+                            await this.saveManualScore(item, 0);
+                        } else {
+                            this.$message.warning('未配置预期结果，已跳过 AI 评分');
+                        }
+                    } else if (this.autoShootAfterOptimize && this.autoAIGradeAfterShoot && (!this.outputList || this.outputList.length === 0)) {
+                        this.$message.warning('自动打靶未返回输出记录，已跳过 AI 评分；可在主界面手动打靶后再评分');
+                    }
+
+                    let message = `✅ 优化完成\n\n新 Prompt：${code}`;
+                    const evalReason = optimizeResult.evaluationReason || optimizeResult.EvaluationReason;
+                    if (evalReason) {
+                        message += `\n\n${evalReason}`;
+                    }
+                    this.$message({ message, type: 'success', duration: 10000, showClose: true });
+
+                    this.optimizeProgressText = '';
+                    this.optimizeErrorText = '';
+                    this.optimizeDialogVisible = false;
+                } else {
+                    const errorMsg = response.data?.errorMessage || '未返回有效的优化结果';
+                    this.optimizeErrorText = String(errorMsg);
+                    this.$message.error('优化失败：' + errorMsg);
+                }
+            } catch (error) {
+                console.error('优化失败:', error);
+                const resp = error.response?.data;
+                let detail = resp?.errorMessage || resp?.message || error.message || String(error);
+                if (resp && typeof resp === 'object' && !resp.errorMessage) {
+                    try {
+                        detail += '\n\n' + JSON.stringify(resp, null, 2);
+                    } catch (e) { /* ignore */ }
+                }
+                this.optimizeErrorText = detail;
+                this.$message({
+                    message: '❌ 优化失败: ' + (resp?.errorMessage || resp?.message || error.message),
+                    type: 'error',
+                    duration: 8000,
+                    showClose: true
+                });
+            } finally {
+                this.optimizing = false;
+                this.optimizeProgressText = '';
+            }
+        },
+        // Calculate the height of the tree (for balanced layout)
         calculateTreeHeight(nodeData) {
             if (!nodeData || typeof nodeData !== 'object') return 0
             
@@ -3014,15 +3504,15 @@ var app = new Vue({
             return maxHeight
         },
         
-        // @deprecated 不再使用：由于A节点在Z轴延伸，T节点间距已改为固定值
-        // 计算子树的节点数量（用于平衡布局）
+        // @deprecated No longer used: Since the A node extends in the Z axis, the T node spacing has been changed to a fixed value
+        // Count the number of nodes in a subtree (for balanced layout)
         countTreeNodes(nodeData) {
             if (!nodeData || typeof nodeData !== 'object') return 0
             
             let count = 0
             Object.keys(nodeData).forEach(key => {
                 const node = nodeData[key]
-                count++ // 当前节点
+                count++ // current node
                 
                 const isExpanded = node.expanded !== false
                 if (isExpanded && node.children && Object.keys(node.children).length > 0) {
@@ -3033,23 +3523,23 @@ var app = new Vue({
             return count
         },
         
-        // **计算所有评分的统计信息（用于排名）**
+        // **Calculate statistics for all ratings (used for ranking)**
         calculateScoreStatistics() {
             const scores = []
             
-            // 遍历所有 promptOpt 收集评分
+            // Iterate through all promptOpt to collect ratings
             if (this.promptOpt && this.promptOpt.length > 0) {
                 this.promptOpt.forEach(prompt => {
                     let score = null
                     
-                    // 优先使用 evalMaxScore
+                    // Prefer using evalMaxScore
                     if (prompt.evalMaxScore !== undefined && 
                         prompt.evalMaxScore !== null && 
                         prompt.evalMaxScore !== -1 && 
                         prompt.evalMaxScore !== '-1') {
                         score = prompt.evalMaxScore
                     }
-                    // 如果没有，使用 evalAvgScore
+                    // If not, use evalAvgScore
                     else if (prompt.evalAvgScore !== undefined && 
                              prompt.evalAvgScore !== null && 
                              prompt.evalAvgScore !== -1 && 
@@ -3067,7 +3557,7 @@ var app = new Vue({
                 return null
             }
             
-            // 排序（从大到小）
+            // Sort (largest to smallest)
             scores.sort((a, b) => b - a)
             
             const result = {
@@ -3075,9 +3565,9 @@ var app = new Vue({
                 min: Math.min(...scores),
                 max: Math.max(...scores),
                 count: scores.length,
-                // 计算百分位点（用于分级）
+                // Calculate percentile points (for grading)
                 getPercentileRank: (score) => {
-                    // 返回该分数在所有分数中的排名百分比（0-100）
+                    // Returns the score's ranking percentage among all scores (0-100)
                     const rank = scores.filter(s => s > score).length
                     return ((scores.length - rank) / scores.length) * 100
                 }
@@ -3087,29 +3577,29 @@ var app = new Vue({
                 总数: result.count,
                 最高分: result.max,
                 最低分: result.min,
-                分数列表: scores.slice(0, 10) // 只显示前10个
+                分数列表: scores.slice(0, 10) // Only show the first 10
             })
             
             return result
         },
         
-        // 渲染树节点（优化版：动态平衡布局 + 动画效果）
+        // Rendering tree nodes (optimized version: dynamic balanced layout + animation effect)
         renderTreeNodes() {
             if (!this.map3dTreeData) return
             
-            // **计算评分统计信息**
+            // **Calculate rating statistics**
             this.scoreStatistics = this.calculateScoreStatistics()
             
             this.map3dNodes = []
-            // 初始化节点映射
+            // Initialize node mapping
             if (!this.map3dNodeMap) {
                 this.map3dNodeMap = new Map()
             }
             const raycaster = new THREE.Raycaster()
             const mouse = new THREE.Vector2()
             
-            // **全新渲染逻辑：简化的固定间距布局**
-            // currentX: 当前X轴位置（全局计数器，每个节点递增）
+            // **New rendering logic: simplified fixed spacing layout**
+            // currentX: current X-axis position (global counter, incremented by each node)
             let currentX = 0
             
             const renderNode = (nodeData, parentPosition, depth) => {
@@ -3119,15 +3609,15 @@ var app = new Vue({
                 
                 keys.forEach((key, index) => {
                     const node = nodeData[key]
-                    const isExpanded = node.expanded !== false // 默认展开
+                    const isExpanded = node.expanded !== false // Expand by default
                     
-                    // **重要：跳过 Aiming 类型节点，它们会在父节点处理时被创建**
+                    // **Important: Skip Aiming type nodes, they will be created when the parent node is processed**
                     if (node.type === 'aiming') {
-                        return // 不在这里处理 Aiming 节点
+                        return // Aiming nodes are not handled here
                     }
                     
-                    // **新逻辑：分离 Aiming 子节点和 Tactic 子节点**
-                    // 任何T节点都可能同时有A节点和T子节点
+                    // **New logic: Separate Aiming child nodes and Tactic child nodes**
+                    // Any T node may have both A nodes and T child nodes
                     let aimingChildren = {}
                     let tacticChildren = {}
                     
@@ -3142,26 +3632,26 @@ var app = new Vue({
                         })
                     }
                     
-                    // **全新简化布局：固定间距，顺序排列**
-                    const nodeSpacing = 15  // 固定间距
+                    // **New simplified layout: fixed spacing, sequential arrangement**
+                    const nodeSpacing = 15  // fixed spacing
                     
-                    // 当前节点位置
-                    const x = currentX  // X轴位置（全局计数器）
-                    const y = -depth * 20   // Y轴深度（层级向下）
-                    const z = 0             // T节点统一在 Z=0 平面
+                    // Current node position
+                    const x = currentX  // X-axis position (global counter)
+                    const y = -depth * 20   // Y-axis depth (level down)
+                    const z = 0             // T nodes are unified on the Z=0 plane
                     
-                    // 递增X轴位置（为下一个同级节点预留）
+                    // Increment the X-axis position (reserved for the next sibling node)
                     currentX += nodeSpacing
                     
                     console.log(`📍 创建T节点: ${key}, 位置(${x}, ${y}, ${z}), depth=${depth}`)
                     
-                    // 检查是否有当前编辑的靶道
+                    // Check if there is a currently edited target lane
                     const hasCurrent = node.prompts && node.prompts.some(p => p.isCurrent)
                     
-                    // 创建几何体（只为 Range 和 Tactic 创建，Aiming 在专门的地方创建）
+                    // Create geometry (only created for Range and Tactic, Aiming is created in a dedicated place)
                     let geometry, material, glowGeometry, glowMaterial
                     if (node.type === 'range') {
-                        // 靶场：方块（使用更平滑的圆角效果）
+                        // Shooting Range: Block (uses smoother rounded corners)
                         geometry = new THREE.BoxGeometry(5, 5, 5)
                         material = new THREE.MeshStandardMaterial({ 
                             color: hasCurrent ? 0xff6b6b : 0x4ecdc4,
@@ -3171,7 +3661,7 @@ var app = new Vue({
                             emissiveIntensity: hasCurrent ? 0.8 : 0.1
                         })
                         
-                        // 添加发光效果（当前选中时）
+                        // Add glow effect (when currently selected)
                         if (hasCurrent) {
                             glowGeometry = new THREE.BoxGeometry(5.5, 5.5, 5.5)
                             glowMaterial = new THREE.MeshBasicMaterial({
@@ -3182,7 +3672,7 @@ var app = new Vue({
                             })
                         }
                     } else if (node.type === 'tactic') {
-                        // 靶道（Tactic）：圆柱体（代表路径/通道）
+                        // Tactic: Cylinder (representing path/channel)
                         // CylinderGeometry(radiusTop, radiusBottom, height, radialSegments)
                         geometry = new THREE.CylinderGeometry(2, 2, 4, 32)
                         material = new THREE.MeshStandardMaterial({ 
@@ -3193,7 +3683,7 @@ var app = new Vue({
                             emissiveIntensity: hasCurrent ? 0.9 : 0.1
                         })
                         
-                        // 添加发光效果（当前选中时）
+                        // Add glow effect (when currently selected)
                         if (hasCurrent) {
                             glowGeometry = new THREE.CylinderGeometry(2.3, 2.3, 4.3, 32)
                             glowMaterial = new THREE.MeshBasicMaterial({
@@ -3204,18 +3694,18 @@ var app = new Vue({
                             })
                         }
                     } else {
-                        // 不应该到达这里，因为 Aiming 节点已经在上面被 return 了
+                        // Shouldn't get here because the Aiming node has already been returned above
                         console.error('意外的节点类型:', node.type, key)
                         return
                     }
                     
                     const mesh = new THREE.Mesh(geometry, material)
-                    // 初始位置设置为目标位置（后续用于动画）
+                    // The initial position is set to the target position (subsequently used for animation)
                     mesh.position.set(x, y, z)
                     
-                    // 如果是圆柱体（tactic节点），需要旋转90度使其竖立
+                    // If it is a cylinder (tactic node), it needs to be rotated 90 degrees to make it stand upright.
                     if (node.type === 'tactic') {
-                        mesh.rotation.x = Math.PI / 2  // 绕X轴旋转90度
+                        mesh.rotation.x = Math.PI / 2  // Rotate 90 degrees around the X axis
                     }
                     
                     mesh.userData = { 
@@ -3224,21 +3714,21 @@ var app = new Vue({
                         depth, 
                         type: node.type,
                         targetPosition: { x, y, z },
-                        initialScale: 0.1 // 用于展开动画
+                        initialScale: 0.1 // for expansion animation
                     }
                     mesh.castShadow = true
                     mesh.receiveShadow = true
                     
-                    // 如果是新创建的节点，从小到大的展开动画
+                    // If it is a newly created node, the animation will expand from small to large.
                     mesh.scale.set(0.1, 0.1, 0.1)
                     
-                    // 添加发光效果
+                    // Add glow effect
                     let glowMesh = null
                     if (glowGeometry && glowMaterial) {
                         glowMesh = new THREE.Mesh(glowGeometry, glowMaterial)
                         glowMesh.position.set(x, y, z)
                         
-                        // 如果是圆柱体（tactic节点），发光效果也需要旋转
+                        // If it is a cylinder (tactic node), the lighting effect also needs to be rotated
                         if (node.type === 'tactic') {
                             glowMesh.rotation.x = Math.PI / 2
                         }
@@ -3247,7 +3737,7 @@ var app = new Vue({
                         this.map3dScene.add(glowMesh)
                     }
                     
-                    // 准备标签文字（提前计算，用于动态宽度）
+                    // Prepare label text (calculated in advance, used for dynamic width)
                     let labelPrefix = ''
                     let labelText = node.name
                     
@@ -3263,16 +3753,16 @@ var app = new Vue({
                         labelText = node.name.length > 15 ? node.name.substring(0, 15) + '...' : node.name
                     }
                     
-                    // 创建文字标签（更大的文字，动态宽度）
+                    // Create text labels (larger text, dynamic width)
                     const canvas = document.createElement('canvas')
                     const context = canvas.getContext('2d')
                     
-                    // 根据文字内容和类型动态计算画布大小（再次加大一倍）
-                    const prefixFontSize = hasCurrent ? 180 : 160  // 从 90/80 加大到 180/160
-                    const mainFontSize = hasCurrent ? 280 : 240   // 从 140/120 加大到 280/240
-                    const rangeFontSize = hasCurrent ? 220 : 190   // 从 110/95 加大到 220/190
+                    // Dynamically calculate canvas size based on text content and type (double again)
+                    const prefixFontSize = hasCurrent ? 180 : 160  // Increased from 90/80 to 180/160
+                    const mainFontSize = hasCurrent ? 280 : 240   // Increased from 140/120 to 280/240
+                    const rangeFontSize = hasCurrent ? 220 : 190   // Increased from 110/95 to 220/190
                     
-                    // 预计算文字宽度
+                    // Precomputed text width
                     if (labelPrefix === 'T') {
                         context.font = `bold ${mainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
                     } else {
@@ -3280,14 +3770,14 @@ var app = new Vue({
                     }
                     const textWidth = context.measureText(labelText).width
                     
-                    const padding = 50  // 从 30 增加到 50
-                    const borderRadius = 30  // 从 20 增加到 30
+                    const padding = 50  // increased from 30 to 50
+                    const borderRadius = 30  // increased from 20 to 30
                     
-                    // 动态设置画布大小（字体加大后，画布也要更大）
+                    // Dynamically set the canvas size (when the font is increased, the canvas must also be larger)
                     canvas.width = Math.max(800, textWidth + padding * 4)
-                    canvas.height = 512  // 从 256 增加到 512
+                    canvas.height = 512  // Increased from 256 to 512
                     
-                    // 绘制圆角矩形（兼容性处理）
+                    // Draw a rounded rectangle (compatibility processing)
                     const drawRoundedRect = (x, y, width, height, radius) => {
                         context.beginPath()
                         context.moveTo(x + radius, y)
@@ -3302,22 +3792,22 @@ var app = new Vue({
                         context.closePath()
                     }
                     
-                    // 玻璃效果：半透明白色背景
+                    // Glass effect: translucent white background
                     context.fillStyle = hasCurrent 
-                        ? 'rgba(255, 107, 107, 0.25)'  // 当前选中：淡红色玻璃
-                        : 'rgba(255, 255, 255, 0.15)'  // 普通：半透明白色玻璃
+                        ? 'rgba(255, 107, 107, 0.25)'  // Currently selected: light red glass
+                        : 'rgba(255, 255, 255, 0.15)'  // Ordinary: translucent white glass
                     drawRoundedRect(padding, padding, canvas.width - padding * 2, canvas.height - padding * 2, borderRadius)
                     context.fill()
                     
-                    // 玻璃边框（增强玻璃效果）
+                    // Glass frame (enhanced glass effect)
                     context.strokeStyle = hasCurrent 
-                        ? 'rgba(255, 150, 150, 0.6)'   // 当前选中：红色边框
-                        : 'rgba(255, 255, 255, 0.3)'   // 普通：白色边框
+                        ? 'rgba(255, 150, 150, 0.6)'   // Currently selected: red border
+                        : 'rgba(255, 255, 255, 0.3)'   // Normal: white border
                     context.lineWidth = 3
                     drawRoundedRect(padding, padding, canvas.width - padding * 2, canvas.height - padding * 2, borderRadius)
                     context.stroke()
                     
-                    // 添加高光效果（模拟玻璃反光）
+                    // Add highlight effect (simulate glass reflection)
                     const highlightGradient = context.createLinearGradient(0, padding, 0, canvas.height / 2)
                     highlightGradient.addColorStop(0, 'rgba(255, 255, 255, 0.4)')
                     highlightGradient.addColorStop(1, 'rgba(255, 255, 255, 0)')
@@ -3325,29 +3815,29 @@ var app = new Vue({
                     drawRoundedRect(padding, padding, canvas.width - padding * 2, (canvas.height - padding * 2) / 2, borderRadius)
                     context.fill()
                     
-                    // 绘制文字（带阴影增强可读性，更大字体）
+                    // Draw text (with shading to enhance readability, larger font size)
                     context.textAlign = 'center'
                     context.textBaseline = 'middle'
                     context.shadowColor = 'rgba(0, 0, 0, 0.8)'
-                    context.shadowBlur = 20  // 从 10 增加到 20
-                    context.shadowOffsetX = 5  // 从 3 增加到 5
-                    context.shadowOffsetY = 5  // 从 3 增加到 5
+                    context.shadowBlur = 20  // increased from 10 to 20
+                    context.shadowOffsetX = 5  // Increased from 3 to 5
+                    context.shadowOffsetY = 5  // Increased from 3 to 5
                     
                     let mainTextY = canvas.height / 2
                     
-                    // 如果有类型前缀（T），T 和数字在同一行显示
+                    // If there is a type prefix (T), T and the number are displayed on the same line
                     if (labelPrefix === 'T') {
-                        // 组合文本：T + 数字
+                        // Combined text: T + number
                         const combinedText = `T${labelText}`
                         
-                        // 使用统一的大字体显示
+                        // Use uniform large font display
                         context.fillStyle = '#ffffff'
                         context.font = `bold ${mainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
                         context.fillText(combinedText, canvas.width / 2, canvas.height / 2)
                         
                         mainTextY = canvas.height / 2
                     } else {
-                        // 靶场名称（更大字体）
+                        // Range name (larger font)
                         context.fillStyle = '#ffffff'
                         context.font = `bold ${rangeFontSize}px 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif`
                         context.fillText(labelText, canvas.width / 2, canvas.height / 2)
@@ -3355,13 +3845,13 @@ var app = new Vue({
                         mainTextY = canvas.height / 2
                     }
                     
-                    // 如果有提示信息，显示在下方
+                    // If there is a prompt message, it will be displayed below
                     if (node.prompts && node.prompts.length > 0) {
-                        context.font = `bold ${hasCurrent ? 110 : 96}px Arial`  // 从 55/48 加大到 110/96
+                        context.font = `bold ${hasCurrent ? 110 : 96}px Arial`  // Increased from 55/48 to 110/96
                         context.fillStyle = 'rgba(255, 255, 255, 0.85)'
                         context.shadowBlur = 12
                         const promptText = `${node.prompts.length} 个结果`
-                        context.fillText(promptText, canvas.width / 2, mainTextY + 120)  // 从 +70 改为 +120
+                        context.fillText(promptText, canvas.width / 2, mainTextY + 120)  // Changed from +70 to +120
                     }
                     
                     const texture = new THREE.CanvasTexture(canvas)
@@ -3370,15 +3860,15 @@ var app = new Vue({
                         map: texture, 
                         transparent: true,
                         alphaTest: 0.1,
-                        opacity: 0 // 初始透明，用于渐入动画
+                        opacity: 0 // Initial transparency, used for fade-in animations
                     })
                     const sprite = new THREE.Sprite(spriteMaterial)
-                    // **横向布局：标签在节点下方（Y轴负方向），Z轴稍微向前避免被遮挡**
-                    const labelZOffset = 3  // Z轴向前偏移，避免被节点遮挡
+                    // **Horizontal layout: The label is below the node (in the negative direction of the Y axis), and the Z axis is slightly forward to avoid being blocked**
+                    const labelZOffset = 3  // The Z-axis is offset forward to avoid being blocked by nodes.
                     sprite.position.set(x, y - (node.type === 'range' ? 5 : 4), z + labelZOffset)
-                    // 动态设置 sprite 尺寸（根据画布宽度，字体加大后标签也要更大）
-                    const spriteWidth = (canvas.width / 1024) * 18  // 从 12 增加到 18
-                    const spriteHeight = (canvas.height / 256) * 4.5  // 从 3 增加到 4.5
+                    // Dynamically set the sprite size (according to the canvas width, the label will be larger when the font is increased)
+                    const spriteWidth = (canvas.width / 1024) * 18  // Increased from 12 to 18
+                    const spriteHeight = (canvas.height / 256) * 4.5  // Increased from 3 to 4.5
                     sprite.scale.set(spriteWidth, spriteHeight, 1)
                     sprite.userData = { 
                         node, 
@@ -3391,10 +3881,10 @@ var app = new Vue({
                     this.map3dScene.add(mesh)
                     this.map3dScene.add(sprite)
                     
-                    // **关键修复：使用 Object.freeze 防止 Vue 响应式监听导致栈溢出**
-                    // Three.js 对象不应该被 Vue 监听，否则会导致性能问题和循环引用
+                    // **Key fix: Use Object.freeze to prevent Vue reactive listening from causing stack overflow**
+                    // Three.js objects should not be listened to by Vue, otherwise it will cause performance issues and circular references
                     
-                    // 冻结 Three.js 相关对象，防止 Vue 添加响应式 getter/setter
+                    // Freeze Three.js related objects to prevent Vue from adding responsive getters/setters
                     Object.freeze(mesh)
                     Object.freeze(sprite)
                     if (glowMesh) Object.freeze(glowMesh)
@@ -3409,7 +3899,7 @@ var app = new Vue({
                         isExpanded, 
                         position: { x, y, z }, 
                         parentPosition: parentPosition,
-                        childrenMeshes: [],  // 这个数组可能会很大，不需要响应式
+                        childrenMeshes: [],  // This array may be large and does not require responsiveness
                         line: null, 
                         dot: null,
                         animationProgress: 0,
@@ -3418,7 +3908,7 @@ var app = new Vue({
                     
                     this.map3dNodes.push(createdNodeData)
                     
-                    // 存储节点引用以便快速查找
+                    // Store node references for quick lookup
                     if (!this.map3dNodeMap) {
                         this.map3dNodeMap = new Map()
                     }
@@ -3433,32 +3923,32 @@ var app = new Vue({
                         dot: null 
                     })
                     
-                    // 先不添加连接线，稍后统一处理（避免在位置调整前创建线条）
+                    // Do not add connecting lines first and process them later (avoid creating lines before position adjustment)
                     let line = null
                     let dot = null
                     
-                    // **1. 先处理 Aiming 子节点（在Z轴延伸，面向镜头）**
+                    // **1. Process the Aiming child node first (extend on the Z axis, facing the camera)**
                     if (isExpanded && Object.keys(aimingChildren).length > 0) {
-                        // Aiming 节点：Z轴排列（面向镜头方向延伸）
-                        // 先保存当前节点的引用，稍后会更新 Aiming 的 parentPosition
+                        // Aiming node: Z-axis arrangement (extending towards the camera direction)
+                        // Save the reference to the current node first, and update Aiming's parentPosition later.
                         const currentParentNodeData = this.map3dNodes[this.map3dNodes.length - 1]
                         
                         const aimingKeys = Object.keys(aimingChildren)
-                        const aimingSpacing = 16 // Aiming 节点之间的 Z 轴间距（增加1倍：8 -> 16）
+                        const aimingSpacing = 16 // Aiming Z-axis spacing between nodes (increase by 1x: 8 -> 16)
                         
-                        // **新策略：A节点从父T节点位置开始，向摄像机方向（+Z）依次排列**
-                        // A1 在最靠近 T 的位置，A2 在 A1 前面，A3 在 A2 前面...
-                        // 不再使用中心对称或 hash 偏移
+                        // **New strategy: A nodes start from the position of the parent T node and are arranged in sequence toward the camera direction (+Z)**
+                        // A1 is at the position closest to T, A2 is in front of A1, A3 is in front of A2...
+                        // No more use of centrosymmetry or hash offsets
                         
-                        const aimingNodesData = [] // 保存 Aiming 节点数据，稍后更新 parentPosition
+                        const aimingNodesData = [] // Save Aiming node data and update parentPosition later
                         
                         aimingKeys.forEach((aimingKey, aimingIndex) => {
                             const aimingNode = aimingChildren[aimingKey]
-                            // **新布局：A节点在Z轴朝向摄像机方向依次排列**
-                            // X和Y保持与父T节点相同，只在Z轴上递增
-                            const aimingX = x // 与父节点同一水平位置
-                            const aimingY = y // 与父节点同一深度（不向下一层）
-                            // Z轴：从T节点位置开始，每个A节点增加 aimingSpacing
+                            // **New layout: A nodes are arranged sequentially on the Z axis toward the camera**
+                            // X and Y remain the same as the parent T node, only incrementing on the Z axis
+                            const aimingX = x // Same horizontal position as parent node
+                            const aimingY = y // Same depth as parent node (not one level lower)
+                            // Z axis: Starting from the T node position, each A node increases aimingSpacing
                             // A1: z + aimingSpacing, A2: z + 2*aimingSpacing, ...
                             const aimingZ = z + (aimingIndex + 1) * aimingSpacing
                                 
@@ -3472,24 +3962,24 @@ var app = new Vue({
                                 strategy: `A${aimingIndex + 1} 在 T 前方 ${(aimingIndex + 1) * aimingSpacing} 单位（朝向摄像机）`
                             })
                                 
-                                // 检查是否有当前编辑的靶道
+                                // Check if there is a currently edited target lane
                                 const aimingHasCurrent = aimingNode.prompts && aimingNode.prompts.some(p => p.isCurrent)
                                 
-                                // **根据评分改变大小和颜色**
-                                let sphereSize = 1.5  // 默认大小
-                                let sphereColor = 0xa8e6cf  // 默认颜色（浅绿）
+                                // **Change size and color based on rating**
+                                let sphereSize = 1.5  // default size
+                                let sphereColor = 0xa8e6cf  // Default color (light green)
                                 let emissiveColor = 0x003333
                                 let emissiveIntensity = 0.05
-                                let score = null  // **提升到外层作用域，供后续发光效果使用**
+                                let score = null  // **Promoted to the outer scope for subsequent use of glowing effects**
                                 
-                                // 如果有评分数据，根据评分调整
+                                // If there is rating data, adjust it based on the rating
                                 if (aimingNode.prompts && aimingNode.prompts.length > 0) {
                                     const promptId = aimingNode.prompts[0].id
                                     const fullPromptData = this.promptOpt.find(p => 
                                         (p.idkey || p.value) == promptId
                                     )
                                     
-                                    // **调试：查看数据结构**
+                                    // **Debug: View data structure**
                                     console.log('🔍 Aiming节点评分数据检查:', {
                                         promptId,
                                         fullPromptData,
@@ -3497,24 +3987,24 @@ var app = new Vue({
                                         finalScore: fullPromptData?.finalScore
                                     })
                                     
-                                    // **优先使用 evalMaxScore（最高分）作为评分**
-                                    // score 已在外层定义，直接赋值
+                                    // **Prefer using evalMaxScore (highest score) as the score**
+                                    // score has been defined in the outer layer and can be assigned directly.
                                     if (fullPromptData) {
-                                        // 先尝试 finalScore
+                                        // Try finalScore first
                                         if (fullPromptData.finalScore !== undefined && 
                                             fullPromptData.finalScore !== null && 
                                             fullPromptData.finalScore !== -1 && 
                                             fullPromptData.finalScore !== '-1') {
                                             score = fullPromptData.finalScore
                                         }
-                                        // 如果没有 finalScore，使用 evalMaxScore
+                                        // If there is no finalScore, use evalMaxScore
                                         else if (fullPromptData.evalMaxScore !== undefined && 
                                                  fullPromptData.evalMaxScore !== null && 
                                                  fullPromptData.evalMaxScore !== -1 && 
                                                  fullPromptData.evalMaxScore !== '-1') {
                                             score = fullPromptData.evalMaxScore
                                         }
-                                        // 如果没有 evalMaxScore，使用 evalAvgScore
+                                        // If evalMaxScore is not available, use evalAvgScore
                                         else if (fullPromptData.evalAvgScore !== undefined && 
                                                  fullPromptData.evalAvgScore !== null && 
                                                  fullPromptData.evalAvgScore !== -1 && 
@@ -3524,7 +4014,7 @@ var app = new Vue({
                                     }
                                     
                                     if (score !== null && this.scoreStatistics) {
-                                        // **根据相对排名设置大小和颜色**
+                                        // **Set size and color based on relative ranking**
                                         const percentile = this.scoreStatistics.getPercentileRank(score)
                                         const allScores = this.scoreStatistics.scores
                                         const rank = allScores.filter(s => s > score).length + 1
@@ -3532,41 +4022,41 @@ var app = new Vue({
                                         
                                         console.log('✅ 使用评分:', score, '排名:', rank, '百分位:', percentile.toFixed(1) + '%', isFirst ? '🥇第一名!' : '')
                                         
-                                        // **特殊处理：排名第一的节点**
+                                        // **Special treatment: Node ranked first**
                                         if (isFirst) {
-                                            // 第一名 - 特大、紫色（区别于黄色高亮）
+                                            // 1st Place - Extra Large, Purple (Different from Yellow Highlight)
                                             sphereSize = 2.5
-                                            sphereColor = 0xb24df5  // 紫色（与黄色区分明显）
-                                            emissiveColor = 0xff00ff  // 紫红色发光
+                                            sphereColor = 0xb24df5  // Purple (obviously different from yellow)
+                                            emissiveColor = 0xff00ff  // Purple red glow
                                             emissiveIntensity = 0.6
                                         }
-                                        // 根据排名百分位分级（Top 20%, 20-40%, 40-60%, 60-80%, Bottom 20%）
+                                        // Ranked according to ranking percentile (Top 20%, 20-40%, 40-60%, 60-80%, Bottom 20%)
                                         else if (percentile >= 80) {
-                                            // Top 20% - 最大、亮绿色
+                                            // Top 20% - Largest, bright green
                                             sphereSize = 2.2
                                             sphereColor = 0x00d4aa
                                             emissiveColor = 0x00ffcc
                                             emissiveIntensity = 0.4
                                         } else if (percentile >= 60) {
-                                            // 20-40% - 较大、绿色
+                                            // 20-40% - Larger, greener
                                             sphereSize = 1.9
                                             sphereColor = 0x52c41a
                                             emissiveColor = 0x66ff66
                                             emissiveIntensity = 0.3
                                         } else if (percentile >= 40) {
-                                            // 40-60% - 正常、橙色
+                                            // 40-60% - Normal, Orange
                                             sphereSize = 1.6
                                             sphereColor = 0xfaad14
                                             emissiveColor = 0xffcc00
                                             emissiveIntensity = 0.2
                                         } else if (percentile >= 20) {
-                                            // 60-80% - 较小、浅红色
+                                            // 60-80% - smaller, light red
                                             sphereSize = 1.3
                                             sphereColor = 0xff7875
                                             emissiveColor = 0xff6666
                                             emissiveIntensity = 0.15
                                         } else {
-                                            // Bottom 20% - 最小、红色
+                                            // Bottom 20% - smallest, red
                                             sphereSize = 1.0
                                             sphereColor = 0xf5222d
                                             emissiveColor = 0xff3333
@@ -3575,14 +4065,14 @@ var app = new Vue({
                                     }
                                 }
                                 
-                                // 如果是当前选中的节点，覆盖为黄色高亮
+                                // If it is the currently selected node, it will be highlighted in yellow.
                                 if (aimingHasCurrent) {
                                     sphereColor = 0xffd93d
                                     emissiveColor = 0xffaa00
                                     emissiveIntensity = 0.7
                                 }
                                 
-                                // 创建 Aiming 几何体：小圆球（大小由评分决定）
+                                // Create aiming geometry: small sphere (size determined by score)
                                 const aimingGeometry = new THREE.SphereGeometry(sphereSize, 24, 24)
                                 const aimingMaterial = new THREE.MeshStandardMaterial({ 
                                     color: sphereColor,
@@ -3606,16 +4096,16 @@ var app = new Vue({
                                 aimingMesh.receiveShadow = true
                                 aimingMesh.scale.set(0.1, 0.1, 0.1)
                                 
-                                // **为第一名添加特殊发光效果**
+                                // **Add special glow effect for first place**
                                 let aimingGlowMesh = null
                                 if (score !== null && this.scoreStatistics) {
                                     const allScores = this.scoreStatistics.scores
                                     const rank = allScores.filter(s => s > score).length + 1
                                     if (rank === 1) {
-                                        // 创建紫色发光外壳（与黄色高亮区分）
+                                        // Create purple glowing shell (distinguishable from yellow highlight)
                                         const aimingGlowGeometry = new THREE.SphereGeometry(sphereSize * 1.3, 24, 24)
                                         const aimingGlowMaterial = new THREE.MeshBasicMaterial({
-                                            color: 0xb24df5,  // 紫色
+                                            color: 0xb24df5,  // Purple
                                             transparent: true,
                                             opacity: 0.35,
                                             side: THREE.BackSide
@@ -3627,31 +4117,31 @@ var app = new Vue({
                                     }
                                 }
                                 
-                                // 创建 Aiming 文字标签（更大的文字，动态宽度）
+                                // Create Aiming text labels (larger text, dynamic width)
                                 const aimingCanvas = document.createElement('canvas')
                                 const aimingContext = aimingCanvas.getContext('2d')
                                 
-                                // 提取 Aiming 数字（提前，用于计算宽度）
+                                // Extract Aiming numbers (ahead of time, used to calculate width)
                                 const aimingMatch = aimingKey.match(/-A(\d+)$/)
                                 const aimingLabelText = aimingMatch ? aimingMatch[1] : aimingNode.name
                                 
-                                // 根据文字内容动态计算画布大小（再次加大一倍）
-                                const aimingPrefixFontSize = aimingHasCurrent ? 180 : 160  // 从 90/80 加大到 180/160
-                                const aimingMainFontSize = aimingHasCurrent ? 280 : 240   // 从 140/120 加大到 280/240
+                                // Dynamically calculate canvas size based on text content (double again)
+                                const aimingPrefixFontSize = aimingHasCurrent ? 180 : 160  // Increased from 90/80 to 180/160
+                                const aimingMainFontSize = aimingHasCurrent ? 280 : 240   // Increased from 140/120 to 280/240
                                 
-                                // 组合文本（用于宽度计算）
+                                // Combined text (for width calculation)
                                 const aimingCombinedText = `A${aimingLabelText}`
                                 
-                                // 预计算文字宽度（使用组合后的文本）
+                                // Precompute text width (using combined text)
                                 aimingContext.font = `bold ${aimingMainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
                                 const textWidth = aimingContext.measureText(aimingCombinedText).width
                                 
-                                const aimingPadding = 50  // 从 30 增加到 50
-                                const aimingBorderRadius = 30  // 从 20 增加到 30
+                                const aimingPadding = 50  // increased from 30 to 50
+                                const aimingBorderRadius = 30  // increased from 20 to 30
                                 
-                                // 动态设置画布大小（根据文字内容，字体加大后画布也要更大）
+                                // Dynamically set the canvas size (according to the text content, the canvas will be larger when the font is increased)
                                 aimingCanvas.width = Math.max(800, textWidth + aimingPadding * 4)
-                                aimingCanvas.height = 512  // 从 256 增加到 512
+                                aimingCanvas.height = 512  // Increased from 256 to 512
                                 
                                 const drawRoundedRect = (x, y, width, height, radius) => {
                                     aimingContext.beginPath()
@@ -3667,14 +4157,14 @@ var app = new Vue({
                                     aimingContext.closePath()
                                 }
                                 
-                                // 玻璃效果背景
+                                // glass effect background
                                 aimingContext.fillStyle = aimingHasCurrent 
                                     ? 'rgba(255, 107, 107, 0.25)' 
                                     : 'rgba(255, 255, 255, 0.15)'
                                 drawRoundedRect(aimingPadding, aimingPadding, aimingCanvas.width - aimingPadding * 2, aimingCanvas.height - aimingPadding * 2, aimingBorderRadius)
                                 aimingContext.fill()
                                 
-                                // 玻璃边框
+                                // glass frame
                                 aimingContext.strokeStyle = aimingHasCurrent 
                                     ? 'rgba(255, 150, 150, 0.6)' 
                                     : 'rgba(255, 255, 255, 0.3)'
@@ -3682,7 +4172,7 @@ var app = new Vue({
                                 drawRoundedRect(aimingPadding, aimingPadding, aimingCanvas.width - aimingPadding * 2, aimingCanvas.height - aimingPadding * 2, aimingBorderRadius)
                                 aimingContext.stroke()
                                 
-                                // 高光效果
+                                // Highlight effect
                                 const aimingHighlightGradient = aimingContext.createLinearGradient(0, aimingPadding, 0, aimingCanvas.height / 2)
                                 aimingHighlightGradient.addColorStop(0, 'rgba(255, 255, 255, 0.4)')
                                 aimingHighlightGradient.addColorStop(1, 'rgba(255, 255, 255, 0)')
@@ -3690,7 +4180,7 @@ var app = new Vue({
                                 drawRoundedRect(aimingPadding, aimingPadding, aimingCanvas.width - aimingPadding * 2, (aimingCanvas.height - aimingPadding * 2) / 2, aimingBorderRadius)
                                 aimingContext.fill()
                                 
-                                // 绘制文字（A 和数字在同一行，已在上面定义 aimingCombinedText）
+                                // Draw text (A and number are on the same line, aimingCombinedText is defined above)
                                 aimingContext.textAlign = 'center'
                                 aimingContext.textBaseline = 'middle'
                                 aimingContext.shadowColor = 'rgba(0, 0, 0, 0.8)'
@@ -3698,12 +4188,12 @@ var app = new Vue({
                                 aimingContext.shadowOffsetX = 5
                                 aimingContext.shadowOffsetY = 5
                                 
-                                // 使用统一的大字体显示（组合文本已在前面定义）
+                                // Display using a uniform large font (combined text has been defined previously)
                                 aimingContext.fillStyle = '#ffffff'
                                 aimingContext.font = `bold ${aimingMainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
                                 aimingContext.fillText(aimingCombinedText, aimingCanvas.width / 2, aimingCanvas.height / 2)
                                 
-                                // 创建 sprite
+                                // Create a sprite
                                 const aimingTexture = new THREE.CanvasTexture(aimingCanvas)
                                 const aimingSpriteMaterial = new THREE.SpriteMaterial({ 
                                     map: aimingTexture, 
@@ -3712,12 +4202,12 @@ var app = new Vue({
                                     opacity: 0
                                 })
                                 const aimingSprite = new THREE.Sprite(aimingSpriteMaterial)
-                                // **横向布局：标签在节点下方，Z轴稍微向前避免被球遮挡**
-                                const aimingLabelZOffset = 3  // Z轴向前偏移
+                                // **Horizontal layout: label is below the node, Z-axis is slightly forward to avoid being obscured by the ball**
+                                const aimingLabelZOffset = 3  // Z axis offset forward
                                 aimingSprite.position.set(aimingX, aimingY - 4, aimingZ + aimingLabelZOffset)
-                                // 动态设置 sprite 尺寸（根据画布宽度，字体加大后标签也要更大）
-                                const spriteWidth = (aimingCanvas.width / 1024) * 18  // 从 12 增加到 18
-                                const spriteHeight = (aimingCanvas.height / 256) * 4.5  // 从 3 增加到 4.5
+                                // Dynamically set the sprite size (according to the canvas width, the label will be larger when the font is increased)
+                                const spriteWidth = (aimingCanvas.width / 1024) * 18  // Increased from 12 to 18
+                                const spriteHeight = (aimingCanvas.height / 256) * 4.5  // Increased from 3 to 4.5
                                 aimingSprite.scale.set(spriteWidth, spriteHeight, 1)
                                 aimingSprite.userData = { 
                                     node: aimingNode, 
@@ -3730,7 +4220,7 @@ var app = new Vue({
                                 this.map3dScene.add(aimingMesh)
                                 this.map3dScene.add(aimingSprite)
                                 
-                                // 冻结 Three.js 对象，防止 Vue 响应式监听导致栈溢出
+                                // Freeze Three.js objects to prevent Vue responsive listening from causing stack overflow
                                 Object.freeze(aimingMesh)
                                 Object.freeze(aimingSprite)
                                 if (aimingGlowMesh) Object.freeze(aimingGlowMesh)
@@ -3770,7 +4260,7 @@ var app = new Vue({
                                 })
                             })
                             
-                            // 更新当前节点数据中记录的子节点引用
+                            // Update the child node reference recorded in the current node data
                             if (currentParentNodeData) {
                                 aimingKeys.forEach(aimingKey => {
                                     const aimingChild = aimingChildren[aimingKey]
@@ -3786,12 +4276,12 @@ var app = new Vue({
                             }
                     }
                     
-                    // **2. 再处理 Tactic 子节点（继续在Y轴向下，递归调用）**
+                    // **2. Process the Tactic child node again (continue downward on the Y axis and call recursively)**
                     if (isExpanded && Object.keys(tacticChildren).length > 0) {
-                        // 简单递归渲染子节点，currentX 会自动累加
+                        // Simple recursive rendering of child nodes, currentX will automatically accumulate
                         renderNode(tacticChildren, { x, y, z }, depth + 1)
                         
-                        // 记录子节点引用（用于快速更新可见性）
+                        // Record child node references (for quick visibility updates)
                         const currentNodeData = this.map3dNodes.find(n => n.key === key && n.depth === depth)
                         if (currentNodeData) {
                             Object.keys(tacticChildren).forEach(childKey => {
@@ -3810,29 +4300,29 @@ var app = new Vue({
                 })
             }
             
-            // **直接渲染所有根节点**
-            currentX = 0  // 重置X轴起点
+            // **Render all root nodes directly**
+            currentX = 0  // Reset the X-axis starting point
             Object.keys(this.map3dTreeData).forEach(key => {
                 renderNode({ [key]: this.map3dTreeData[key] }, null, 0)
             })
             
-            // **特殊处理：将Range节点移动到其子节点的水平中点**
+            // **Special handling: Move the Range node to the horizontal midpoint of its child node**
             const rangeNodes = this.map3dNodes.filter(n => n.node.type === 'range')
             rangeNodes.forEach(rangeNodeData => {
-                // 找到这个Range的所有子T节点
+                // Find all child T nodes of this Range
                 const childTacticNodes = this.map3dNodes.filter(n => 
                     n.depth === 1 && n.parentPosition && 
                     Math.abs(n.parentPosition.y - rangeNodeData.position.y) < 1
                 )
                 
                 if (childTacticNodes.length > 0) {
-                    // 计算子节点的X轴范围
+                    // Calculate the X-axis range of child nodes
                     const childXPositions = childTacticNodes.map(n => n.position.x)
                     const minX = Math.min(...childXPositions)
                     const maxX = Math.max(...childXPositions)
                     const centerX = (minX + maxX) / 2
                     
-                    // 移动Range节点到中点
+                    // Move the Range node to the midpoint
                     rangeNodeData.mesh.position.x = centerX
                     if (rangeNodeData.glowMesh) {
                         rangeNodeData.glowMesh.position.x = centerX
@@ -3842,7 +4332,7 @@ var app = new Vue({
                     
                     console.log(`📦 调整Range节点 ${rangeNodeData.key} 到中点: ${centerX} (子节点范围: ${minX} ~ ${maxX})`)
                     
-                    // 同时更新该Range的所有子节点的parentPosition
+                    // Update the parentPosition of all child nodes of the Range at the same time
                     childTacticNodes.forEach(childData => {
                         childData.parentPosition = {
                             x: centerX,
@@ -3853,7 +4343,7 @@ var app = new Vue({
                 }
             })
             
-            // **计算树的实际范围**
+            // **Calculate the actual extent of the tree**
             let maxDepth = 0
             let minX = Infinity
             let maxX = -Infinity
@@ -3863,26 +4353,26 @@ var app = new Vue({
             this.map3dNodes.forEach(nodeData => {
                 maxDepth = Math.max(maxDepth, nodeData.depth)
                 
-                // 计算X轴范围（只计算T节点，不包括A节点）
+                // Calculate the X-axis range (only T nodes are calculated, excluding A nodes)
                 if (nodeData.node.type !== 'aiming') {
                     minX = Math.min(minX, nodeData.position.x)
                     maxX = Math.max(maxX, nodeData.position.x)
                 }
                 
-                // 计算Z轴范围（只计算A节点）
+                // Calculate the Z-axis range (only calculate the A node)
                 if (nodeData.node.type === 'aiming') {
                     minZ = Math.min(minZ, nodeData.position.z)
                     maxZ = Math.max(maxZ, nodeData.position.z)
                 }
             })
             
-            const treeWidth = maxX - minX  // 水平宽度（X轴）
-            const treeDepth = maxDepth * 20  // 深度（Y轴）
-            const treeZSpan = maxZ - minZ  // Z轴跨度（A节点）
+            const treeWidth = maxX - minX  // Horizontal width (X-axis)
+            const treeDepth = maxDepth * 20  // Depth (Y-axis)
+            const treeZSpan = maxZ - minZ  // Z-axis span (A node)
             
             const treeCenterX = (maxX + minX) / 2
-            const treeCenterY = -treeDepth / 2  // 向下展开，中心点在负Y
-            const treeCenterZ = (maxZ + minZ) / 2  // Z轴中心（Aiming节点的中心）
+            const treeCenterY = -treeDepth / 2  // Expand downward, the center point is at negative Y
+            const treeCenterZ = (maxZ + minZ) / 2  // Z axis center (center of Aiming node)
             
             console.log('📐 树的范围计算:', {
                 treeWidth: treeWidth.toFixed(2),
@@ -3893,31 +4383,31 @@ var app = new Vue({
                 zRange: `${minZ.toFixed(2)} ~ ${maxZ.toFixed(2)}`
             })
             
-            // 调整相机初始位置，确保能看到整个树
+            // Adjust the initial position of the camera to ensure that the entire tree can be seen
             const treeCenter = {
                 x: treeCenterX,
                 y: treeCenterY,
                 z: treeCenterZ
             }
             
-            // **优化相机距离计算：使用更智能的算法**
-            // 考虑3个维度，但给予不同的权重
+            // **Optimize camera distance calculation: use smarter algorithm**
+            // Consider 3 dimensions but give different weights
             const effectiveWidth = treeWidth
             const effectiveDepth = treeDepth
             const effectiveZSpan = treeZSpan
             
-            // 使用包围盒对角线长度作为基准
+            // Use the bounding box diagonal length as a baseline
             const boundingBoxDiagonal = Math.sqrt(
                 effectiveWidth * effectiveWidth + 
                 effectiveDepth * effectiveDepth + 
                 effectiveZSpan * effectiveZSpan
             )
             
-            // 根据节点密度调整距离系数
+            // Adjust distance coefficient based on node density
             const nodeCount = this.map3dNodes.length
-            let distanceMultiplier = 1.2  // 基础系数
+            let distanceMultiplier = 1.2  // Basic coefficient
             
-            // 节点越多，距离系数稍微减小（避免拉太远）
+            // The more nodes there are, the distance coefficient decreases slightly (to avoid pulling too far)
             if (nodeCount > 100) {
                 distanceMultiplier = 1.0
             } else if (nodeCount > 50) {
@@ -3938,21 +4428,21 @@ var app = new Vue({
                 finalDistance: cameraDistance.toFixed(2)
             })
             
-            // 在所有节点位置确定后，统一创建连接线
+            // After the positions of all nodes are determined, connect lines are created uniformly
             this.createConnectionLines()
             
             if (this.map3dControls) {
                 this.map3dControls.target.set(treeCenter.x, treeCenter.y, treeCenter.z)
                 
-                // **优化相机位置：从右前上方观察**
-                // 这样可以同时看清楚：
-                // - X轴的T节点排列
-                // - Y轴的深度层级
-                // - Z轴的A节点分布
+                // **Optimized camera position: viewed from the top right front**
+                // This way you can see clearly at the same time:
+                // - Arrangement of T nodes on the X axis
+                // - Depth level of Y axis
+                // - A node distribution on Z axis
                 this.map3dCamera.position.set(
-                    treeCenter.x + cameraDistance * 0.4,   // X轴：稍微偏右
-                    treeCenter.y + cameraDistance * 0.5,   // Y轴：从上方看（更高）
-                    treeCenter.z + cameraDistance * 0.8    // Z轴：从前方看
+                    treeCenter.x + cameraDistance * 0.4,   // X-axis: slightly to the right
+                    treeCenter.y + cameraDistance * 0.5,   // Y-axis: Viewed from above (higher)
+                    treeCenter.z + cameraDistance * 0.8    // Z axis: Viewed from the front
                 )
                 this.map3dControls.update()
                 
@@ -3962,14 +4452,14 @@ var app = new Vue({
                 })
             }
             
-            // 启动入场动画
+            // Start entry animation
             this.startNodeAnimations()
             
-            // 添加点击事件（简化版：吸入/弹出效果）
-            let isAnimating = false // 标记是否正在执行动画
+            // Add click event (simplified version: inhale/pop effect)
+            let isAnimating = false // Whether the marker is performing animation
             
             const onMouseClick = (event) => {
-                // 如果正在执行动画，忽略点击
+                // Ignore clicks if animation is in progress
                 if (isAnimating) {
                     return
                 }
@@ -3985,23 +4475,23 @@ var app = new Vue({
                     const clickedMesh = intersects[0].object
                     const nodeData = this.map3dNodes.find(n => n.mesh === clickedMesh)
                     
-                    // 只处理有子节点的节点
+                    // Only process nodes with child nodes
                     if (nodeData && nodeData.node.children && Object.keys(nodeData.node.children).length > 0) {
-                        // 切换展开/收拢状态
+                        // Toggle expanded/collapsed state
                         const wasExpanded = nodeData.node.expanded !== false
                         nodeData.node.expanded = !wasExpanded
                         
-                        // 设置动画标记
+                        // Set animated markers
                         isAnimating = true
                         
-                        // 执行动画
+                        // Execute animation
                         if (nodeData.node.expanded) {
-                            // 展开：弹出动画
+                            // Expand: Pop-up animation
                             this.animateNodesPopOut(nodeData, () => {
                                 isAnimating = false
                             })
                         } else {
-                            // 收拢：吸入动画
+                            // Collapse: Inhale animation
                             this.animateNodesSuckIn(nodeData, () => {
                                 isAnimating = false
                             })
@@ -4013,7 +4503,7 @@ var app = new Vue({
             this.map3dRenderer.domElement.addEventListener('click', onMouseClick)
             this.map3dClickHandler = onMouseClick
             
-            // **添加双击事件：选中Aiming节点对应的靶道**
+            // **Add double-click event: select the target channel corresponding to the Aiming node**
             const onMouseDoubleClick = (event) => {
                 const rect = this.map3dRenderer.domElement.getBoundingClientRect()
                 mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
@@ -4021,7 +4511,7 @@ var app = new Vue({
                 
                 raycaster.setFromCamera(mouse, this.map3dCamera)
                 
-                // 检测mesh和sprite
+                // Detect mesh and sprite
                 const detectableObjects = []
                 this.map3dNodes.forEach(n => {
                     if (n.mesh && n.mesh.visible) {
@@ -4040,9 +4530,9 @@ var app = new Vue({
                         n.mesh === intersectedObject || n.sprite === intersectedObject
                     )
                     
-                    // 只处理Aiming节点
+                    // Only handle Aiming nodes
                     if (nodeData && nodeData.node.type === 'aiming') {
-                        // 获取该Aiming节点对应的promptId
+                        // Get the promptId corresponding to the Aiming node
                         if (nodeData.node.prompts && nodeData.node.prompts.length > 0) {
                             const promptId = nodeData.node.prompts[0].id
                             
@@ -4052,25 +4542,25 @@ var app = new Vue({
                                 fullPath: nodeData.node.fullPath
                             })
                             
-                            // **关闭3D导图浮窗（先关闭，避免与确认对话框冲突）**
+                            // **Close the 3D map floating window (close it first to avoid conflict with the confirmation dialog box)**
                             this.mapDialogVisible = false
                             
-                            // **复用原有的靶道切换逻辑（包括保存草稿提示）**
-                            // 注意：程序化设置 v-model 不会触发 @change 事件
-                            // 需要手动调用 promptChangeHandel 函数来触发完整逻辑
-                            // 该函数会自动处理：
-                            // 1. 检查 pageChange 状态
-                            // 2. 如果有修改，弹出"是否保存为草稿"确认框
-                            // 3. 根据用户选择保存或不保存
-                            // 4. 调用 getPromptetail 获取靶道详情
+                            // **Reuse the original target lane switching logic (including save draft prompts)**
+                            // Note: Setting v-model programmatically will not trigger the @change event
+                            // You need to manually call the promptChangeHandel function to trigger the complete logic
+                            // This function automatically handles:
+                            // 1. Check pageChange status
+                            // 2. If there are any modifications, a confirmation box "Whether to save as a draft" will pop up.
+                            // 3. Save or not save according to user choice
+                            // 4. Call getPromptetail to obtain target channel details
                             
-                            // 保存旧值（用于change检测）
+                            // Save old value (for change detection)
                             const oldPromptId = this.promptid
                             
-                            // 设置新值
+                            // Set new value
                             this.promptid = promptId
                             
-                            // 手动触发change处理逻辑
+                            // Manually trigger change processing logic
                             this.promptChangeHandel(promptId, 'promptid', oldPromptId)
                         }
                     }
@@ -4080,11 +4570,11 @@ var app = new Vue({
             this.map3dRenderer.domElement.addEventListener('dblclick', onMouseDoubleClick)
             this.map3dDoubleClickHandler = onMouseDoubleClick
             
-            // **添加鼠标移动事件：显示节点信息tooltip + 边缘高光**
-            let hoveredNode = null  // 当前悬停的节点
-            let currentHighlightMesh = null  // 当前的高光外壳
+            // **Add mouse movement event: display node information tooltip + edge highlight**
+            let hoveredNode = null  // currently hovering node
+            let currentHighlightMesh = null  // Current High Gloss Shell
             
-            // 创建tooltip元素
+            // Create tooltip element
             const createTooltip = () => {
                 let tooltip = document.getElementById('map3d-tooltip')
                 if (!tooltip) {
@@ -4119,7 +4609,7 @@ var app = new Vue({
                 
                 raycaster.setFromCamera(mouse, this.map3dCamera)
                 
-                // **同时检测mesh和sprite（文字标签）**
+                // **Detect mesh and sprite (text labels) simultaneously**
                 const detectableObjects = []
                 this.map3dNodes.forEach(n => {
                     if (n.mesh && n.mesh.visible) {
@@ -4134,15 +4624,15 @@ var app = new Vue({
                 
                 if (intersects.length > 0) {
                     const intersectedObject = intersects[0].object
-                    // 根据相交的对象（mesh或sprite）查找对应的nodeData
+                    // Find the corresponding nodeData based on the intersecting objects (mesh or sprite)
                     const nodeData = this.map3dNodes.find(n => 
                         n.mesh === intersectedObject || n.sprite === intersectedObject
                     )
                     
                     if (nodeData) {
-                        // 如果是新的节点，更新tooltip和高光
+                        // If it is a new node, update tooltip and highlight
                         if (hoveredNode !== nodeData) {
-                            // **移除之前的高光**
+                            // **Remove previous highlights**
                             if (currentHighlightMesh) {
                                 this.map3dScene.remove(currentHighlightMesh)
                                 if (currentHighlightMesh.geometry) currentHighlightMesh.geometry.dispose()
@@ -4152,33 +4642,33 @@ var app = new Vue({
                             
                             hoveredNode = nodeData
                             
-                            // **添加边缘高光效果**
+                            // **Add edge highlight effect**
                             if (nodeData.mesh && nodeData.mesh.visible) {
                                 let highlightGeometry, highlightSize
                                 
-                                // 根据节点类型创建不同形状的高光
+                                // Create differently shaped highlights based on node type
                                 if (nodeData.node.type === 'range') {
-                                    // 方块：使用稍大的方块作为边缘
-                                    highlightSize = 5.3  // 原大小是5
+                                    // Squares: Use slightly larger squares for edges
+                                    highlightSize = 5.3  // The original size is 5
                                     highlightGeometry = new THREE.BoxGeometry(highlightSize, highlightSize, highlightSize)
                                 } else {
-                                    // 圆球：使用稍大的球体作为边缘
+                                    // Sphere: Use a slightly larger sphere as the edge
                                     const originalScale = nodeData.mesh.scale.x
                                     const originalGeometry = nodeData.mesh.geometry
                                     if (originalGeometry && originalGeometry.parameters && originalGeometry.parameters.radius) {
-                                        highlightSize = originalGeometry.parameters.radius * 1.15 * originalScale  // 放大15%
+                                        highlightSize = originalGeometry.parameters.radius * 1.15 * originalScale  // Magnify 15%
                                     } else {
-                                        highlightSize = 2.5 * 1.15 * originalScale  // 默认大小
+                                        highlightSize = 2.5 * 1.15 * originalScale  // default size
                                     }
                                     highlightGeometry = new THREE.SphereGeometry(highlightSize, 32, 32)
                                 }
                                 
-                                // 创建高光材质（边缘发光效果）
+                                // Create a specular material (edge ​​glow effect)
                                 const highlightMaterial = new THREE.MeshBasicMaterial({
-                                    color: 0xffffff,  // 白色
+                                    color: 0xffffff,  // White
                                     transparent: true,
                                     opacity: 0.3,
-                                    side: THREE.BackSide,  // 只显示背面，形成边缘效果
+                                    side: THREE.BackSide,  // Only the back side is shown, creating an edge effect
                                     depthWrite: false
                                 })
                                 
@@ -4188,19 +4678,19 @@ var app = new Vue({
                                 this.map3dScene.add(currentHighlightMesh)
                             }
                             
-                            // 构建tooltip内容
+                            // Build tooltip content
                             let tooltipContent = ''
                             const node = nodeData.node
                             
                             if (node.type === 'range') {
-                                // 靶场信息
+                                // Range information
                                 tooltipContent = `
                                     <div style="font-weight: bold; margin-bottom: 8px; color: #4ecdc4;">📦 靶场</div>
                                     <div>${node.name}</div>
                                     ${node.prompts && node.prompts.length > 0 ? `<div style="margin-top: 4px; color: #aaa;">包含 ${node.prompts.length} 个结果</div>` : ''}
                                 `
                             } else if (node.type === 'tactic') {
-                                // Tactic 信息
+                                // Tactic information
                                 const tacticNumber = nodeData.key.replace('T', '')
                                 tooltipContent = `
                                     <div style="font-weight: bold; margin-bottom: 8px; color: #95e1d3;">🎯 战术节点</div>
@@ -4208,17 +4698,17 @@ var app = new Vue({
                                     ${node.prompts && node.prompts.length > 0 ? `<div style="margin-top: 4px; color: #aaa;">${node.prompts.length} 个结果</div>` : ''}
                                 `
                             } else if (node.type === 'aiming') {
-                                // Aiming 信息（包含评分）
+                                // Aiming information (including ratings)
                                 const aimingNumber = nodeData.key.match(/-A(\d+)$/)?.[1] || nodeData.key
                                 tooltipContent = `
                                     <div style="font-weight: bold; margin-bottom: 8px; color: #a8e6cf;">🎲 瞄准点</div>
                                     <div>编号: A${aimingNumber}</div>
                                 `
                                 
-                                // **从promptOpt获取完整的评分数据**
+                                // **Get complete rating data from promptOpt**
                                 if (node.prompts && node.prompts.length > 0) {
                                     const promptId = node.prompts[0].id
-                                    // 从 promptOpt 中查找完整数据
+                                    // Find complete data from promptOpt
                                     const fullPromptData = this.promptOpt.find(p => 
                                         (p.idkey || p.value) == promptId
                                     )
@@ -4231,24 +4721,24 @@ var app = new Vue({
                                     })
                                     
                                     if (fullPromptData) {
-                                        // **获取最终评分：优先使用 evalMaxScore（最高分）**
+                                        // **Get final score: use evalMaxScore (highest score) first**
                                         let finalScore = null
                                         
-                                        // 先尝试 finalScore
+                                        // Try finalScore first
                                         if (fullPromptData.finalScore !== undefined && 
                                             fullPromptData.finalScore !== null && 
                                             fullPromptData.finalScore !== -1 && 
                                             fullPromptData.finalScore !== '-1') {
                                             finalScore = fullPromptData.finalScore
                                         }
-                                        // 如果没有 finalScore，使用 evalMaxScore
+                                        // If there is no finalScore, use evalMaxScore
                                         else if (fullPromptData.evalMaxScore !== undefined && 
                                                  fullPromptData.evalMaxScore !== null && 
                                                  fullPromptData.evalMaxScore !== -1 && 
                                                  fullPromptData.evalMaxScore !== '-1') {
                                             finalScore = fullPromptData.evalMaxScore
                                         }
-                                        // 如果没有 evalMaxScore，使用 evalAvgScore
+                                        // If evalMaxScore is not available, use evalAvgScore
                                         else if (fullPromptData.evalAvgScore !== undefined && 
                                                  fullPromptData.evalAvgScore !== null && 
                                                  fullPromptData.evalAvgScore !== -1 && 
@@ -4258,14 +4748,14 @@ var app = new Vue({
                                         
                                         console.log('✅ Tooltip使用评分:', finalScore)
                                         
-                                        // 如果有评分数据，显示评分区域
+                                        // If there is rating data, display the rating area
                                         if (finalScore !== null) {
                                             
                                             tooltipContent += `<div style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 8px;">`
                                             
-                                            // **显示最终评分（大号、醒目）+ 排名**
+                                            // **Show final score (large, eye-catching) + ranking**
                                             if (finalScore !== null) {
-                                                // **根据相对排名设置颜色和大小**
+                                                // **Set color and size based on relative ranking**
                                                 let scoreColor = '#999'
                                                 let scoreSize = '20px'
                                                 let scoreEmoji = '📊'
@@ -4281,14 +4771,14 @@ var app = new Vue({
                                                     
                                                     rankText = `排名: ${rank}/${total}`
                                                     
-                                                    // **特殊处理：排名第一**
+                                                    // **Special Treatment: Ranked First**
                                                     if (isFirst) {
-                                                        scoreColor = '#b24df5'  // 紫色（与黄色高亮区分）
+                                                        scoreColor = '#b24df5'  // Purple (distinguishable from yellow highlight)
                                                         scoreSize = '26px'
                                                         scoreEmoji = '🥇'
                                                         rankBadge = '<span style="background: linear-gradient(135deg, #b24df5 0%, #da6aff 50%, #b24df5 100%); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 11px; margin-left: 6px; font-weight: bold; box-shadow: 0 2px 8px rgba(178,77,245,0.5);">👑 第一名</span>'
                                                     }
-                                                    // 根据排名百分位分级
+                                                    // Ranked by Ranking Percentile
                                                     else if (percentile >= 80) {
                                                         // Top 20%
                                                         scoreColor = '#00d4aa'
@@ -4330,14 +4820,14 @@ var app = new Vue({
                                                     </div>
                                                 `
                                                 
-                                                // 显示排名信息
+                                                // Show ranking information
                                                 if (rankText) {
                                                     tooltipContent += `<div style="font-size: 12px; color: #aaa; margin-bottom: 8px;">${rankText}</div>`
                                                 }
                                             }
                                             
-                                            // **显示详细评分**
-                                            // 显示平均分
+                                            // **Show detailed rating**
+                                            // Show average score
                                             if (fullPromptData.evalAvgScore !== undefined && 
                                                 fullPromptData.evalAvgScore !== null && 
                                                 fullPromptData.evalAvgScore !== -1 && 
@@ -4345,7 +4835,7 @@ var app = new Vue({
                                                 tooltipContent += `<div style="font-size: 12px; color: #ccc; margin-top: 4px;">📊 平均分: <span style="color: #95e1d3;">${fullPromptData.evalAvgScore.toFixed(1)}</span></div>`
                                             }
                                             
-                                            // 显示最高分（如果不是用作主评分）
+                                            // Shows the highest score (if not used as the primary score)
                                             if (fullPromptData.evalMaxScore !== undefined && 
                                                 fullPromptData.evalMaxScore !== null && 
                                                 fullPromptData.evalMaxScore !== -1 && 
@@ -4359,29 +4849,29 @@ var app = new Vue({
                                     }
                                 }
                                 
-                                // **添加双击提示（仅Aiming节点）**
+                                // **Add double click prompt (Aiming node only)**
                                 tooltipContent += `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 11px; color: #999;">💡 双击可快速选中此靶道</div>`
                             }
                             
                             tooltip.innerHTML = tooltipContent
                         }
                         
-                        // 更新tooltip位置
+                        // Update tooltip position
                         tooltip.style.display = 'block'
                         tooltip.style.left = (event.clientX + 15) + 'px'
                         tooltip.style.top = (event.clientY + 15) + 'px'
                         
-                        // 改变鼠标样式
+                        // Change mouse style
                         this.map3dRenderer.domElement.style.cursor = 'pointer'
                     }
                 } else {
-                    // 没有悬停在任何节点上
+                    // Not hovering over any node
                     if (hoveredNode) {
                         hoveredNode = null
                         tooltip.style.display = 'none'
                         this.map3dRenderer.domElement.style.cursor = 'default'
                         
-                        // **移除高光效果**
+                        // **Remove highlight effect**
                         if (currentHighlightMesh) {
                             this.map3dScene.remove(currentHighlightMesh)
                             if (currentHighlightMesh.geometry) currentHighlightMesh.geometry.dispose()
@@ -4396,12 +4886,12 @@ var app = new Vue({
             this.map3dMouseMoveHandler = onMouseMove
         },
         
-        // 创建连接线（在所有节点位置确定后调用）- 动态绑定版本
+        // Create connection line (called after all node positions are determined) - dynamic binding version
         createConnectionLines() {
             if (!this.map3dNodes || !this.map3dScene) return
             
             this.map3dNodes.forEach(nodeData => {
-                // 如果已经有连接线，先清理
+                // If there is already a connection cable, clean it first
                 if (nodeData.line) {
                     this.map3dScene.remove(nodeData.line)
                     if (nodeData.line.geometry) nodeData.line.geometry.dispose()
@@ -4415,7 +4905,7 @@ var app = new Vue({
                     nodeData.dot = null
                 }
                 
-                // 通过 parentPath 找到父节点
+                // Find the parent node via parentPath
                 if (nodeData.node.parentPath) {
                     const parentNodeData = this.map3dNodes.find(n => {
                         if (!n.node.fullPath) return false
@@ -4423,30 +4913,30 @@ var app = new Vue({
                     })
                     
                     if (parentNodeData && parentNodeData.mesh) {
-                        // **保存父节点引用，用于动态更新**
+                        // **Save parent node reference for dynamic updates**
                         nodeData.parentNodeData = parentNodeData
                         
                         const hasCurrent = nodeData.hasCurrent
                         
-                        // **使用明亮的白色或接近白色的颜色**
-                        let lineColor = 0xffffff  // 默认白色
+                        // **Use bright white or something close to white**
+                        let lineColor = 0xffffff  // Default white
                         
                         if (hasCurrent) {
-                            lineColor = 0xffd93d  // 当前节点使用黄色
+                            lineColor = 0xffd93d  // The current node uses yellow
                         }
                         
-                        // 使用 Line 而不是 Cylinder，这样可以动态更新端点
-                        // 创建线条几何体（两个点）
+                        // Use Line instead of Cylinder so endpoints can be updated dynamically
+                        // Create line geometry (two points)
                         const lineGeometry = new THREE.BufferGeometry()
-                        const positions = new Float32Array(6) // 2 个点 × 3 个坐标
+                        const positions = new Float32Array(6) // 2 points × 3 coordinates
                         lineGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
                         
-                        // 使用 LineBasicMaterial 代替圆柱体
+                        // Use LineBasicMaterial instead of cylinder
                         const lineMaterial = new THREE.LineBasicMaterial({
                             color: lineColor,
                             linewidth: 2,
                             transparent: true,
-                            opacity: 0 // 初始透明，用于渐入动画
+                            opacity: 0 // Initial transparency, used for fade-in animations
                         })
                         
                         const line = new THREE.Line(lineGeometry, lineMaterial)
@@ -4454,25 +4944,25 @@ var app = new Vue({
                         nodeData.line = line
                         nodeData.lineColor = lineColor
                         
-                        // 添加连接点（小圆球）- 也会动态跟随，使用明亮颜色
+                        // Add connection points (small balls) - also follow dynamically, use bright colors
                         const dotGeometry = new THREE.SphereGeometry(0.3, 8, 8)
                         const dotMaterial = new THREE.MeshStandardMaterial({ 
-                            color: 0xffffff,  // 使用白色
-                            emissive: hasCurrent ? 0xffd93d : 0xffffff,  // 发光颜色
+                            color: 0xffffff,  // use white
+                            emissive: hasCurrent ? 0xffd93d : 0xffffff,  // Glow color
                             emissiveIntensity: hasCurrent ? 0.5 : 0.2,
                             metalness: 0.3,
                             roughness: 0.5,
                             transparent: true,
-                            opacity: 0 // 初始透明
+                            opacity: 0 // initial transparency
                         })
                         const dot = new THREE.Mesh(dotGeometry, dotMaterial)
                         this.map3dScene.add(dot)
                         nodeData.dot = dot
                         
-                        // **立即更新一次连接线位置**
+                        // **Update the connection line position immediately**
                         this.updateConnectionLine(nodeData)
                     } else {
-                        // 调试：记录找不到父节点的情况
+                        // Debugging: Logging when the parent node cannot be found
                         console.warn('找不到父节点:', {
                             fullPath: nodeData.node.fullPath,
                             parentPath: nodeData.node.parentPath,
@@ -4480,7 +4970,7 @@ var app = new Vue({
                             key: nodeData.key
                         })
                         
-                        // 尝试输出所有节点的 fullPath，帮助调试
+                        // Try to output the fullPath of all nodes to help debugging
                         if (nodeData.node.type === 'aiming') {
                             console.log('所有节点的 fullPath:', this.map3dNodes.map(n => n.node.fullPath))
                         }
@@ -4489,14 +4979,14 @@ var app = new Vue({
             })
         },
         
-        // 更新单个连接线的位置（动态绑定到节点位置）
+        // Update the position of a single connecting line (dynamically bound to node position)
         updateConnectionLine(nodeData) {
             if (!nodeData.line || !nodeData.parentNodeData) return
             
             const parentPosition = nodeData.parentNodeData.mesh.position
             const currentPosition = nodeData.mesh.position
             
-            // 更新线条的端点位置
+            // Update the endpoint position of the line
             const positions = nodeData.line.geometry.attributes.position.array
             positions[0] = parentPosition.x
             positions[1] = parentPosition.y
@@ -4506,13 +4996,13 @@ var app = new Vue({
             positions[5] = currentPosition.z
             nodeData.line.geometry.attributes.position.needsUpdate = true
             
-            // 更新连接点位置
+            // Update connection point location
             if (nodeData.dot) {
                 nodeData.dot.position.set(currentPosition.x, currentPosition.y, currentPosition.z)
             }
         },
         
-        // 更新所有连接线的位置
+        // Update the position of all connecting lines
         updateAllConnectionLines() {
             if (!this.map3dNodes) return
             
@@ -4523,27 +5013,27 @@ var app = new Vue({
             })
         },
         
-        // 启动节点入场动画
+        // Start node entry animation
         startNodeAnimations() {
             if (!this.map3dNodes || this.map3dNodes.length === 0) return
             
-            const animationDuration = 500 // 动画持续时间(ms)
+            const animationDuration = 500 // Animation duration (ms)
             const startTime = Date.now()
             
             const animate = () => {
                 const elapsed = Date.now() - startTime
                 const progress = Math.min(elapsed / animationDuration, 1)
                 
-                // 使用缓动函数（easeOutCubic）
+                // Use the easing function (easeOutCubic)
                 const easeProgress = 1 - Math.pow(1 - progress, 3)
                 
                 this.map3dNodes.forEach((nodeData, index) => {
-                    // 延迟每个节点的动画开始时间，创建波浪效果
-                    const delay = index * 20 // 每个节点延迟20ms
+                    // Delay the animation start time of each node to create a wave effect
+                    const delay = index * 20 // 20ms delay per node
                     const nodeProgress = Math.max(0, Math.min(1, (elapsed - delay) / animationDuration))
                     const nodeEaseProgress = 1 - Math.pow(1 - nodeProgress, 3)
                     
-                    // 缩放动画：从 0.1 到 1
+                    // Scale animation: from 0.1 to 1
                     const scale = 0.1 + nodeEaseProgress * 0.9
                     nodeData.mesh.scale.set(scale, scale, scale)
                     
@@ -4551,7 +5041,7 @@ var app = new Vue({
                         nodeData.glowMesh.scale.set(scale, scale, scale)
                     }
                     
-                    // 透明度动画
+                    // transparency animation
                     if (nodeData.sprite && nodeData.sprite.material) {
                         nodeData.sprite.material.opacity = nodeEaseProgress
                     }
@@ -4567,13 +5057,13 @@ var app = new Vue({
                     nodeData.animationProgress = nodeEaseProgress
                 })
                 
-                // **关键：在动画过程中更新连接线位置**
+                // **Key: Update connection line positions during animation**
                 this.updateAllConnectionLines()
                 
                 if (progress < 1) {
                     requestAnimationFrame(animate)
                 } else {
-                    // 动画完成后，确保所有节点都完全可见
+                    // Once the animation is complete, make sure all nodes are fully visible
                     this.map3dNodes.forEach((nodeData) => {
                         nodeData.mesh.scale.set(1, 1, 1)
                         nodeData.mesh.visible = true
@@ -4612,14 +5102,14 @@ var app = new Vue({
             animate()
         },
         
-        // 创建渐变背景
+        // Create a gradient background
         createGradientBackground() {
             const canvas = document.createElement('canvas')
             canvas.width = 256
             canvas.height = 256
             const context = canvas.getContext('2d')
             
-            // 创建径向渐变
+            // Create a radial gradient
             const gradient = context.createRadialGradient(128, 128, 0, 128, 128, 128)
             gradient.addColorStop(0, '#1a1a2e')
             gradient.addColorStop(0.5, '#16213e')
@@ -4633,11 +5123,11 @@ var app = new Vue({
             return texture
         },
         
-        // 清空 3D 场景
+        // Clear 3D scene
         clearMap3DScene() {
             if (!this.map3dScene) return
             
-            // 移除所有对象
+            // Remove all objects
             while(this.map3dScene.children.length > 0) {
                 const obj = this.map3dScene.children[0]
                 if (obj.geometry) obj.geometry.dispose()
@@ -4658,36 +5148,36 @@ var app = new Vue({
             this.map3dNodes = []
         },
         
-        // 动画循环（优化版：减少不必要的计算和渲染）
+        // Animation loop (optimized version: reduce unnecessary calculation and rendering)
         animateMap3D() {
             if (!this.map3dRenderer || !this.map3dScene || !this.map3dCamera) return
             
             this.map3dAnimationId = requestAnimationFrame(() => this.animateMap3D())
             
-            // 跟踪是否需要渲染
+            // Track whether rendering is required
             let needsRender = false
             
-            // 更新控制器（启用阻尼时需要每帧更新）
+            // Update controller (requires update every frame when damping is enabled)
             if (this.map3dControls) {
-                // update() 返回 true 表示相机位置发生了变化
+                // update() returns true indicating that the camera position has changed
                 const controlsChanged = this.map3dControls.update()
                 if (controlsChanged) {
                     needsRender = true
                 }
             }
             
-            // 优化：大幅减少动画更新频率，避免 CPU 占用过高
+            // Optimization: Significantly reduce animation update frequency to avoid excessive CPU usage
             if (!this.map3dLastAnimationTime) {
                 this.map3dLastAnimationTime = Date.now()
-                this.map3dCurrentNodes = [] // 缓存当前选中的节点
+                this.map3dCurrentNodes = [] // Cache the currently selected node
             }
             
             const now = Date.now()
-            // 每 200ms 更新一次动画（降低频率从100ms到200ms）
+            // Update animation every 200ms (reduce frequency from 100ms to 200ms)
             if (now - this.map3dLastAnimationTime > 200) {
                 this.map3dLastAnimationTime = now
                 
-                // 第一次时，找出所有当前选中的节点并缓存
+                // The first time, find all currently selected nodes and cache them
                 if (!this.map3dCurrentNodes || this.map3dCurrentNodes.length === 0) {
                     if (this.map3dNodes && this.map3dNodes.length > 0) {
                         this.map3dCurrentNodes = this.map3dNodes.filter(({ node }) => 
@@ -4696,10 +5186,10 @@ var app = new Vue({
                     }
                 }
                 
-                // **更新连接线位置（确保始终跟随节点）**
+                // **Update connection line position (make sure to always follow the node)**
                 this.updateAllConnectionLines()
                 
-                // 只更新缓存的当前选中节点，避免遍历所有节点
+                // Only update the currently selected node in the cache to avoid traversing all nodes
                 if (this.map3dCurrentNodes && this.map3dCurrentNodes.length > 0) {
                     const time = now * 0.001
                     this.map3dCurrentNodes.forEach(({ mesh }) => {
@@ -4710,18 +5200,18 @@ var app = new Vue({
                 }
             }
             
-            // 只在需要时渲染，避免无效渲染
+            // Only render when needed to avoid invalid rendering
             if (needsRender) {
                 this.map3dRenderer.render(this.map3dScene, this.map3dCamera)
             }
         },
         
-        // 弹出动画（展开子节点）
+        // Pop-up animation (expand child nodes)
         animateNodesPopOut(parentNodeData, onComplete) {
             if (!this.map3dScene || !this.map3dNodes) return
             
-            // **递归收集所有应该显示的子节点**
-            // 如果子节点本身是展开状态（expanded !== false），则递归收集它的子节点
+            // **Recursively collect all child nodes that should be displayed**
+            // If the child node itself is in the expanded state (expanded !== false), then recursively collect its child nodes
             const childNodes = []
             
             const collectChildren = (parentNode) => {
@@ -4733,8 +5223,8 @@ var app = new Vue({
                     if (childNodeData) {
                         childNodes.push(childNodeData)
                         
-                        // **关键修复：如果这个子节点是展开状态，递归收集它的子节点**
-                        // 这样可以一次性展开所有层级
+                        // **Key fix: If this child node is in expanded state, recursively collect its child nodes**
+                        // This allows you to expand all levels at once
                         if (childNode.expanded !== false) {
                             collectChildren(childNode)
                         }
@@ -4749,46 +5239,46 @@ var app = new Vue({
                 return
             }
             
-            // 弹出动画：从父节点位置开始，缩放+位移到目标位置
-            // **缩短单个节点动画时间，让多米诺效果更明显**
-            const animationDuration = 250  // 从 350ms 减少到 250ms
+            // Pop-up animation: starting from the parent node position, scaling + displacement to the target position
+            // **Shorten the animation time of a single node to make the domino effect more obvious**
+            const animationDuration = 250  // Reduced from 350ms to 250ms
             const startTime = Date.now()
             
-            // **修复：保存每个子节点的目标位置和它的直接父节点位置**
+            // **Fix: Save the target position of each child node and its immediate parent node position**
             childNodes.forEach(childData => {
-                // **关键修复：对于 Aiming 节点，重新计算 Z 轴位置**
+                // **Critical Fix: For Aiming nodes, recalculate Z axis position**
                 if (childData.node.type === 'aiming') {
-                    // 找到父节点
+                    // Find parent node
                     const parentData = this.map3dNodes.find(n => 
                         n.node.fullPath === childData.node.parentPath
                     )
                     
                     if (parentData && parentData.node.children) {
-                        // 重新计算 Aiming 节点的 Z 轴偏移
+                        // Recalculate the Z-axis offset of the Aiming node
                         const aimingKeys = Object.keys(parentData.node.children).filter(k => 
                             parentData.node.children[k].type === 'aiming'
                         )
                         const aimingIndex = aimingKeys.indexOf(childData.key)
                         
                         if (aimingIndex !== -1) {
-                            const aimingSpacing = 16 // 与创建时保持一致（增加1倍）
+                            const aimingSpacing = 16 // Remain the same as when it was created (increased by 1x)
                             
-                            // **新策略：A节点从父节点位置开始，向摄像机方向（+Z）依次排列**
+                            // **New strategy: A nodes start from the position of the parent node and are arranged in sequence toward the camera direction (+Z)**
                             // A1: parentZ + aimingSpacing, A2: parentZ + 2*aimingSpacing, ...
                             const parentZ = parentData.mesh.position.z
                             const correctZ = parentZ + (aimingIndex + 1) * aimingSpacing
                             
-                            // **新布局：Aiming 节点的坐标重新计算**
-                            // X 轴：与父节点相同（Aiming 节点在同一水平位置）
+                            // **New layout: Coordinates of Aiming nodes recalculated**
+                            // X-axis: Same as parent node (Aiming node is at the same horizontal position)
                             const correctX = parentData.mesh.position.x
-                            // Y 轴：与父节点相同（Aiming不向下一层，在Z轴延伸）
+                            // Y axis: Same as the parent node (Aiming does not go down one level, but extends on the Z axis)
                             const correctY = parentData.mesh.position.y
                             
-                            // 使用重新计算的正确位置（X, Y, Z 都重新计算）
+                            // Use recalculated correct positions (X, Y, Z are all recalculated)
                             childData._targetPosition = {
-                                x: correctX,  // 与父节点相同的 X
-                                y: correctY,  // 与父节点相同的 Y（不向下）
-                                z: correctZ   // 从父节点向摄像机方向延伸
+                                x: correctX,  // Same X as parent node
+                                y: correctY,  // Same Y as parent node (not down)
+                                z: correctZ   // Extends from the parent node toward the camera
                             }
                         } else {
                             childData._targetPosition = { ...childData.position }
@@ -4797,21 +5287,21 @@ var app = new Vue({
                         childData._targetPosition = { ...childData.position }
                     }
                 } else {
-                    // 非 Aiming 节点：使用保存的原始位置
+                    // Non-aiming nodes: use saved original position
                     childData._targetPosition = { ...childData.position }
                 }
                 
-                // **关键修复：找到这个节点的直接父节点位置**
-                // 而不是使用最顶层的 parentNodeData
+                // **Key Fix: Find the direct parent node position of this node**
+                // Instead of using the top-level parentNodeData
                 if (childData.parentNodeData && childData.parentNodeData.mesh) {
-                    // 如果有 parentNodeData（来自连接线逻辑），使用它
+                    // If there is parentNodeData (from connection line logic), use it
                     childData._parentPosition = {
                         x: childData.parentNodeData.mesh.position.x,
                         y: childData.parentNodeData.mesh.position.y,
                         z: childData.parentNodeData.mesh.position.z
                     }
                 } else {
-                    // 否则，尝试查找直接父节点
+                    // Otherwise, try to find the direct parent node
                     const directParentData = this.map3dNodes.find(n => 
                         n.node.fullPath === childData.node.parentPath
                     )
@@ -4822,7 +5312,7 @@ var app = new Vue({
                             z: directParentData.mesh.position.z
                         }
                     } else {
-                        // 如果找不到，使用最顶层的父节点（兜底）
+                        // If not found, use the top-most parent node (cover the bottom)
                         childData._parentPosition = { ...parentNodeData.position }
                     }
                 }
@@ -4832,17 +5322,17 @@ var app = new Vue({
                 const elapsed = Date.now() - startTime
                 const progress = Math.min(elapsed / animationDuration, 1)
                 
-                // 使用 easeOutBack 缓动（轻微弹出效果）
+                // Easing using easeOutBack (slight pop effect)
                 const c1 = 1.70158
                 const c3 = c1 + 1
                 const easeProgress = 1 + c3 * Math.pow(progress - 1, 3) + c1 * Math.pow(progress - 1, 2)
                 
                 childNodes.forEach((childData, index) => {
-                    // **大幅增加延迟，产生明显的多米诺骨牌效果**
-                    const delay = index * 80  // 从 50ms 增加到 80ms，让每个节点间隔更明显
+                    // **Significantly increases latency, creating a noticeable domino effect**
+                    const delay = index * 80  // Increased from 50ms to 80ms to make the interval between each node more obvious
                     const nodeProgress = Math.max(0, Math.min(1, (elapsed - delay) / animationDuration))
                     
-                    // **如果动画还没开始（nodeProgress === 0），隐藏节点**
+                    // **If the animation has not started yet (nodeProgress === 0), hide the node**
                     if (nodeProgress === 0) {
                         childData.mesh.visible = false
                         if (childData.glowMesh) childData.glowMesh.visible = false
@@ -4854,15 +5344,15 @@ var app = new Vue({
                     
                     const nodeEase = 1 + c3 * Math.pow(nodeProgress - 1, 3) + c1 * Math.pow(nodeProgress - 1, 2)
                     
-                    // 从父节点位置插值到目标位置
+                    // Interpolate from parent node position to target position
                     const x = childData._parentPosition.x + (childData._targetPosition.x - childData._parentPosition.x) * nodeEase
                     const y = childData._parentPosition.y + (childData._targetPosition.y - childData._parentPosition.y) * nodeEase
                     const z = childData._parentPosition.z + (childData._targetPosition.z - childData._parentPosition.z) * nodeEase
                     
-                    // 缩放：从0.1放大到1
+                    // Zoom: zoom in from 0.1 to 1
                     const scale = 0.1 + nodeEase * 0.9
                     
-                    // 更新节点位置和缩放
+                    // Update node position and scale
                     childData.mesh.position.set(x, y, z)
                     childData.mesh.scale.set(scale, scale, scale)
                     childData.mesh.visible = true
@@ -4892,15 +5382,15 @@ var app = new Vue({
                     }
                 })
                 
-                // 更新连接线
+                // Update connection line
                 this.updateAllConnectionLines()
                 
                 if (progress < 1) {
                     requestAnimationFrame(animate)
                 } else {
-                    // **动画完成，恢复正常位置并确保完全可见**
+                    // **Animation complete, return to normal position and ensure full visibility**
                     childNodes.forEach(childData => {
-                        // 恢复位置
+                        // restore location
                         childData.mesh.position.set(childData._targetPosition.x, childData._targetPosition.y, childData._targetPosition.z)
                         childData.mesh.scale.set(1, 1, 1)
                         childData.mesh.visible = true
@@ -4942,11 +5432,11 @@ var app = new Vue({
             animate()
         },
         
-        // 吸入动画（收起子节点）
+        // Inhale animation (collapse child nodes)
         animateNodesSuckIn(parentNodeData, onComplete) {
             if (!this.map3dScene || !this.map3dNodes) return
             
-            // 收集所有直接子节点
+            // Collect all direct child nodes
             const childNodes = []
             const collectChildren = (node) => {
                 if (!node.children || Object.keys(node.children).length === 0) return
@@ -4956,7 +5446,7 @@ var app = new Vue({
                     const childNodeData = this.map3dNodes.find(n => n.node === childNode && n.key === childKey)
                     if (childNodeData) {
                         childNodes.push(childNodeData)
-                        // 递归收集所有子节点
+                        // Recursively collect all child nodes
                         collectChildren(childNode)
                     }
                 })
@@ -4969,12 +5459,12 @@ var app = new Vue({
                 return
             }
             
-            // 吸入动画：从当前位置缩放+位移到父节点位置，然后隐藏
-            // **缩短单个节点动画时间，让多米诺效果更明显**
-            const animationDuration = 200  // 从 300ms 减少到 200ms
+            // Inhalation animation: scale + displacement from current position to parent node position, then hide
+            // **Shorten the animation time of a single node to make the domino effect more obvious**
+            const animationDuration = 200  // Reduced from 300ms to 200ms
             const startTime = Date.now()
             
-            // 保存每个子节点的起始位置
+            // Save the starting position of each child node
             childNodes.forEach(childData => {
                 childData._startPosition = {
                     x: childData.mesh.position.x,
@@ -4987,25 +5477,25 @@ var app = new Vue({
                 const elapsed = Date.now() - startTime
                 const progress = Math.min(elapsed / animationDuration, 1)
                 
-                // 使用 easeInCubic 缓动（加速吸入）
+                // Easing (accelerating inhalation) using easeInCubic
                 const easeProgress = progress * progress * progress
                 
                 childNodes.forEach((childData, index) => {
-                    // **大幅增加反向延迟，产生明显的反向多米诺骨牌效果**
-                    const delay = (childNodes.length - index) * 60  // 从 35ms 增加到 60ms
+                    // **Significantly increases reverse latency, creating a noticeable reverse domino effect**
+                    const delay = (childNodes.length - index) * 60  // Increased from 35ms to 60ms
                     const nodeProgress = Math.max(0, Math.min(1, (elapsed - delay) / animationDuration))
                     const nodeEase = nodeProgress * nodeProgress * nodeProgress
                     
-                    // 从当前位置插值到父节点位置
+                    // Interpolate from current position to parent node position
                     const x = childData._startPosition.x + (parentNodeData.position.x - childData._startPosition.x) * nodeEase
                     const y = childData._startPosition.y + (parentNodeData.position.y - childData._startPosition.y) * nodeEase
                     const z = childData._startPosition.z + (parentNodeData.position.z - childData._startPosition.z) * nodeEase
                     
-                    // 缩放：从1缩小到0.1
+                    // Zoom: from 1 to 0.1
                     const scale = 1 - nodeEase * 0.9
                     const opacity = 1 - nodeEase
                     
-                    // 更新节点位置和缩放
+                    // Update node position and scale
                     childData.mesh.position.set(x, y, z)
                     childData.mesh.scale.set(scale, scale, scale)
                     
@@ -5030,13 +5520,13 @@ var app = new Vue({
                     }
                 })
                 
-                // 更新连接线
+                // Update connection line
                 this.updateAllConnectionLines()
                 
                 if (progress < 1) {
                     requestAnimationFrame(animate)
                 } else {
-                    // 动画完成，完全隐藏所有节点
+                    // The animation is completed and all nodes are completely hidden.
                     childNodes.forEach(childData => {
                         childData.mesh.visible = false
                         if (childData.glowMesh) childData.glowMesh.visible = false
@@ -5051,7 +5541,7 @@ var app = new Vue({
             animate()
         },
         
-        // 处理窗口大小变化
+        // Handling window size changes
         handleMap3DResize() {
             const container = document.getElementById('map3dContainer')
             if (!container || !this.map3dCamera || !this.map3dRenderer) return
@@ -5064,56 +5554,56 @@ var app = new Vue({
             this.map3dRenderer.setSize(width, height)
         },
         
-        // 销毁 3D 场景
+        // Destroy 3D scene
         destroyMap3D() {
             window.removeEventListener('resize', this.handleMap3DResize)
             
-            // 移除点击事件
+            // Remove click event
             if (this.map3dRenderer && this.map3dRenderer.domElement && this.map3dClickHandler) {
                 this.map3dRenderer.domElement.removeEventListener('click', this.map3dClickHandler)
                 this.map3dClickHandler = null
             }
             
-            // **移除双击事件**
+            // **Remove double click event**
             if (this.map3dRenderer && this.map3dRenderer.domElement && this.map3dDoubleClickHandler) {
                 this.map3dRenderer.domElement.removeEventListener('dblclick', this.map3dDoubleClickHandler)
                 this.map3dDoubleClickHandler = null
             }
             
-            // **移除鼠标移动事件**
+            // **Remove mouse movement events**
             if (this.map3dRenderer && this.map3dRenderer.domElement && this.map3dMouseMoveHandler) {
                 this.map3dRenderer.domElement.removeEventListener('mousemove', this.map3dMouseMoveHandler)
                 this.map3dMouseMoveHandler = null
             }
             
-            // **移除tooltip元素**
+            // **Remove tooltip element**
             const tooltip = document.getElementById('map3d-tooltip')
             if (tooltip) {
                 tooltip.remove()
             }
             
-            // 停止动画循环
+            // Stop animation loop
             if (this.map3dAnimationId) {
                 cancelAnimationFrame(this.map3dAnimationId)
                 this.map3dAnimationId = null
             }
             
-            // 销毁控制器
+            // Destroy the controller
             if (this.map3dControls) {
                 this.map3dControls.dispose()
                 this.map3dControls = null
             }
             
-            // 清空场景
+            // Clear scene
             this.clearMap3DScene()
             
-            // 清空节点映射
+            // Clear node mapping
             if (this.map3dNodeMap) {
                 this.map3dNodeMap.clear()
                 this.map3dNodeMap = null
             }
             
-            // 清理缓存的当前节点
+            // Clear cached current node
             this.map3dCurrentNodes = []
             
             if (this.map3dRenderer && this.map3dRenderer.domElement) {
@@ -5130,17 +5620,17 @@ var app = new Vue({
             this.map3dNodes = []
         },
         
-        // 关闭对话输入弹窗
-        // 执行打靶的核心逻辑（提取出来供对话模式和直接测试模式复用）
+        // Close the dialog input pop-up window
+        // Execute the core logic of target practice (extracted for reuse in dialogue mode and direct test mode)
         async executeTargetShoot() {
             await this.executeTargetShootWithChatMessage(null)
         },
         
-        // 执行打靶的核心逻辑（支持对话模式，userMessage 为 null 时表示直接测试模式）
+        // Execute the core logic of target shooting (supports conversation mode, when userMessage is null, it indicates direct test mode)
         async executeTargetShootWithChatMessage(userMessage) {
             this.tacticalFormSubmitLoading = true
             
-            // 保存 userMessage，用于后续连发时保持 Chat 模式
+            // Save userMessage to maintain Chat mode for subsequent bursts of messages
             this._lastUserMessage = userMessage || null
             
             let _postData = {
@@ -5153,12 +5643,12 @@ var app = new Vue({
                 prefix: this.promptParamForm.prefix
             }
             
-            // 如果提供了 userMessage，添加到请求数据中
+            // If userMessage is provided, add to request data
             if (userMessage) {
                 _postData.userMessage = userMessage
             }
             
-            // 如果是继续聊天模式，传递历史记录
+            // If you continue chat mode, pass the history
             if (this.continueChatMode && this.continueChatHistory.length > 0) {
                 _postData.chatHistory = this.continueChatHistory.map(msg => ({
                     role: msg.roleType === 1 ? 'user' : 'assistant',
@@ -5166,7 +5656,7 @@ var app = new Vue({
                 }))
             }
             
-            // ai评分标准
+            // ai scoring criteria
             _postData.isAIGrade = this.isAIGrade
             if (this.aiScoreForm.resultList.length > 0) {
                 let _list = this.aiScoreForm.resultList.map(item => item.value)
@@ -5181,7 +5671,7 @@ var app = new Vue({
             }
             if (this.promptid) {
                 _postData.id = this.promptid
-                //创建顶级战术，创建平行战术，创建子战术，重新瞄准
+                //Create top-level tactics, create parallel tactics, create sub-tactics, re-target
                 if (this.tacticalForm.tactics === '创建顶级战术') {
                     _postData.isTopTactic = true
                 }
@@ -5261,24 +5751,24 @@ var app = new Vue({
                             label: '预期结果3',
                             value: ''
                         }]
-                        // 确保 mode 字段正确设置（后端返回的是枚举值 1 或 2）
+                        // Make sure the mode field is set correctly (the backend returns an enum value of 1 or 2)
                         if (item.mode === undefined || item.mode === null) {
-                            item.mode = null // 兼容旧数据
+                            item.mode = null // Compatible with old data
                         }
                     }
                     return item
                 })
                 
-                // 检查第一个结果的模式，如果不是 Chat 模式，清空保存的 userMessage
+                // Check the mode of the first result, if it is not Chat mode, clear the saved userMessage
                 if (promptResultList.length > 0) {
                     const firstResult = promptResultList[0]
                     if (firstResult.mode !== 2 && firstResult.mode !== 'Chat') {
-                        // 如果不是 Chat 模式，清空保存的 userMessage
+                        // If it is not Chat mode, clear the saved userMessage
                         this._lastUserMessage = null
                     }
                 }
                 
-                // 重置继续聊天状态
+                // Reset chat status
                 this.continueChatMode = false
                 this.continueChatPromptResultId = null
                 this.continueChatHistory = []
@@ -5309,7 +5799,7 @@ var app = new Vue({
             });
             return item.finalScore === item[which] ? 'warnRow' : ''
         },
-        // 版本记录 获取版本记录 树形数据
+        // Version record Get version record Tree data
         async getVersionRecordData() {
             //find rangeName by id
 
@@ -5319,7 +5809,7 @@ var app = new Vue({
 
             let res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetTacticTree?rangeName=${name}`)
             if (res.data.success) {
-                //console.log('获取版本记录数据', res.data.data.rootNodeList)
+                //console.log('Get version record data', res.data.data.rootNodeList)
                 let _listData = res?.data?.data?.rootNodeList || []
                 /*console.log('this.treeArrayFormat(_listData)', this.treeArrayFormat(_listData))*/
                 this.versionTreeData = this.treeArrayFormat(_listData)
@@ -5331,7 +5821,7 @@ var app = new Vue({
                 });
             }
         },
-        //树形数据格式化  参数data:要格式化的数据,child为要格式化数据的子数组值名
+        //Tree data formatting Parameter data: the data to be formatted, child is the subarray value name of the data to be formatted
         treeArrayFormat(data, child) {
             let trees = new Array();
             let fn = null;
@@ -5353,102 +5843,102 @@ var app = new Vue({
             }
             return trees
         },
-        // 版本记录 查看
+        // Version record view
         seeVersionRecord() {
             this.versionDrawer = true
-            // 重新获取数据
+            // Retrieve data
             this.getVersionRecordData()
         },
-        // 版本记录 树形控件 过滤节点
+        // Version record tree control filter node
         versionTreeFilterNode(value, data) {
             if (!value) return true;
             return data.label.indexOf(value) > -1;
         },
-        // 版本记录 抽屉关闭
+        // Version history Drawer closed
         versionDrawerClose() {
             this.versionSearchVal = ''
         },
-        // 版本记录 是否公开
+        // Is the version record public?
         versionRecordIsPublic(itemData) {
-            // console.log('版本记录 是否公开:', itemData)
-            // to do 接口对接 async await
-            // 提示敬请期待
+            // console.log('Is the version record public:', itemData)
+            // to do interface docking async await
+            // Tips to stay tuned
             this.$message.warning('敬请期待')
         },
-        // 版本记录 编辑
+        // Version record edit
         versionRecordEdit(itemData) {
-            //console.log('版本记录 编辑:', itemData)
-            // to do 接口对接 async await
-            // 设置霸道选中
+            //console.log('Version record editor:', itemData)
+            // to do interface docking async await
+            // Set overbearing selected
             this.promptid = itemData.id
-            // 获取靶道详情
+            // Get target lane details
             this.getPromptetail(itemData.id, true, true)
-            // 获取输出列表和平均分
+            // Get output list and average score
             //this.getOutputList()
-            // 获取分数趋势图表数据
+            // Get score trend chart data
             this.getScoringTrendData()
-            // 关闭抽屉
+            // close drawer
             this.versionDrawer = false
         },
-        // 版本记录 生成代码
+        // version record generated code
         versionRecordGenerateCode(itemData) {
-            //console.log('版本记录 生成代码:', itemData)
-            // 提示敬请期待
+            //console.log('Version record generated code:', itemData)
+            // Tips to stay tuned
             this.$message.warning('敬请期待')
-            // to do 接口对接 async await
+            // to do interface docking async await
         },
-        // 版本记录 删除
+        // version record delete
         versionRecordDelete(itemData) {
-            //console.log('版本记录 删除:', itemData)
+            //console.log('Version record deleted:', itemData)
             this.$message.warning('敬请期待')
-            // to do 接口对接 async await
-            //this.$confirm('此操作将永久删除该靶道版本, 是否继续?', '提示', {
-            //    confirmButtonText: '确定',
-            //    cancelButtonText: '取消',
+            // to do interface docking async await
+            //this.$confirm('This operation will permanently delete the target version, do you want to continue?', 'Prompt', {
+            //    confirmButtonText: 'OK',
+            //    cancelButtonText: 'Cancel',
             //    type: 'warning'
             //}).then(() => {
-            //    // 对接接口 删除
+            //    // docking interface delete
             //    this.btnDeleteHandle(itemData.id,true)
 
             //}).catch(() => {
             //    this.$message({
             //        type: 'info',
-            //        message: '已取消删除'
+            //        message: 'Deletion canceled'
             //    });
             //});
         },
-        // 版本记录 查看备注
+        // Version record View notes
         versionRecordViewNotes(itemData) {
-            //console.log('版本记录 查看备注:', itemData)
-            // to do 接口对接 async await
+            //console.log('Version record view remarks:', itemData)
+            // to do interface docking async await
         },
 
 
-        // 获取输出列表
+        // Get output list
         async getOutputList(promptId) {
             let res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetByItemId?promptItemId=${promptId}`)
             //console.log('getOutputList:', res)
             if (res.data.success) {
                 let { promptResults = [], promptItem = {} } = res.data.data || {}
-                // 平均分 _totalScore/promptResults 保留整数
-                this.outputAverageDeci = promptItem.evalAvgScore > -1 ? promptItem.evalAvgScore : -1; // 保留整数
-                this.outputMaxDeci = promptItem.evalMaxScore > -1 ? promptItem.evalMaxScore : -1; // 保留整数
+                // Average score _totalScore/promptResults retain integer
+                this.outputAverageDeci = promptItem.evalAvgScore > -1 ? promptItem.evalAvgScore : -1; // Keep integer
+                this.outputMaxDeci = promptItem.evalMaxScore > -1 ? promptItem.evalMaxScore : -1; // Keep integer
 
-                // 输出列表
+                // Output list
                 this.outputList = promptResults.map(item => {
                     if (item) {
                         item.promptId = this.promptDetail.id
                         item.version = this.promptDetail.fullVersion
-                        item.scoreType = '1' // 1 ai、2手动
-                        item.isScoreView = false // 是否显示评分视图
+                        item.scoreType = '1' // 1 ai, 2 manual
+                        item.isScoreView = false // Whether to display the rating view
                         item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
 
-                        //使用 MarkDown 格式，对输出结果进行展示
+                        //Use MarkDown format to display the output results
                         item.resultStringHtml = marked.parse(item.resultString);
 
-                        // 手动评分
+                        // Manual scoring
                         item.scoreVal = item.humanScore > -1 ? item.humanScore : 0
-                        // ai评分预期结果
+                        // ai scoring expected results
                         if (promptItem.expectedResultsJson) {
                             let _expectedResultsJson = JSON.parse(promptItem.expectedResultsJson)
                             item.alResultList = _expectedResultsJson.map((item, index) => {
@@ -5478,7 +5968,7 @@ var app = new Vue({
                     return item
                 })
                 
-                // 添加代码块复制按钮
+                // Add code block copy button
                 this.$nextTick(() => {
                     this.addCopyButtonsToCodeBlocks();
                 });
@@ -5490,7 +5980,7 @@ var app = new Vue({
                 });
             }
         },
-        // 输出 保存评分
+        // Output Save Rating
         async saveManualScore(item, index) {
             //console.log('manualScorVal', this.promptSelectVal, this.manualScorVal)
             if (item.scoreType === '1') {
@@ -5498,16 +5988,19 @@ var app = new Vue({
                 let res = await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.RobotScore?isRefresh=true&promptResultId=${item.id}`, _list)
                 if (res.data.success) {
                     //console.log('testHandel res data:', res.data.data)
-                    // 从新获取靶场列表
+                    // Retrieve shooting range list
                     this.getPromptOptData()
-                    // 重新获取输出列表
+                    // Retrieve output list
                     await this.getOutputList(item.promptId)
-                    // 清除AI评分加载状态
+                    // Clear AI scoring loading status
                     this.$set(this.robotScoreLoadingMap, item.id, false)
-                    // 重新获取图表
+                    // Retrieve chart
                     this.getScoringTrendData()
+                    
+                    // ⭐ NEW: Check scores and prompt for optimization
+                    await this.checkScoreAndSuggestOptimization(res.data.data || item, 'AI评分');
                 } else {
-                    // 清除AI评分加载状态
+                    // Clear AI scoring loading status
                     this.$set(this.robotScoreLoadingMap, item.id, false)
                     app.$message({
                         message: res.data.errorMessage || res.data.data || 'Error',
@@ -5523,12 +6016,15 @@ var app = new Vue({
                 })
                 if (res.data.success) {
                     //console.log('testHandel res data:', res.data.data)
-                    // 从新获取靶场列表
+                    // Retrieve shooting range list
                     this.getPromptOptData()
-                    // 重新获取输出列表
+                    // Retrieve output list
                     this.getOutputList(item.promptId)
-                    // 重新获取图表
+                    // Retrieve chart
                     this.getScoringTrendData()
+                    
+                    // ⭐ NEW: Check scores and prompt for optimization
+                    await this.checkScoreAndSuggestOptimization(res.data.data || item, '手动评分');
                 } else {
                     app.$message({
                         message: res.data.errorMessage || res.data.data || 'Error',
@@ -5542,16 +6038,16 @@ var app = new Vue({
         cancelManualScore(index) {
             this.outputList[index].isScoreView = false
         },
-        // 输出 选中切换
+        // Output selected switch
         outputSelectSwitch(index) {
             if (this.outputActive !== '' && this.outputActive !== index) {
                 this.outputList[this.outputActive].isScoreView = false
             }
             this.outputActive = index
         },
-        // 输出 显示评分视图
+        // Output Show scoring view
         showRatingView(index, scoreType) {
-            // 如果是ai评分 不显示评分视图 如果没有预期结果则提醒设置预期结果
+            // If it is AI scoring, the scoring view will not be displayed. If there is no expected result, it will remind you to set the expected result.
             if (scoreType === '1') {
                 if (this.promptDetail.modelId) {
                     let _index = this.modelOpt.findIndex(item => item.value == this.promptDetail.modelId)
@@ -5571,7 +6067,7 @@ var app = new Vue({
                         this.outputList[index].alResultList = _listVal.map((item, index) => {
                             return item
                         })
-                        // 设置AI评分加载状态
+                        // Set AI rating loading status
                         const itemId = this.outputList[index].id
                         this.$set(this.robotScoreLoadingMap, itemId, true)
                         this.saveManualScore(this.outputList[index], index)
@@ -5582,8 +6078,8 @@ var app = new Vue({
                         })
                     }
                 } else {
-                    // todo 接口对接 重新评分
-                    // 设置AI评分加载状态
+                    // todo interface docking re-score
+                    // Set AI rating loading status
                     const itemId = this.outputList[index].id
                     this.$set(this.robotScoreLoadingMap, itemId, true)
                     this.saveManualScore(this.outputList[index], index)
@@ -5594,11 +6090,11 @@ var app = new Vue({
             this.outputList[index].scoreType = scoreType
             this.outputList[index].isScoreView = true
         },
-        // 输出 切换ai评分
+        // Output switch ai rating
         alBtnScoring(index) {
             this.outputList[index].scoreType = '1'
         },
-        // 输出 ai评分 增加结果行
+        // Output ai score Add result row
         addAlScoring(index) {
             let _len = this.outputList[index].alResultList.length
             this.outputList[index].alResultList.push({
@@ -5607,7 +6103,7 @@ var app = new Vue({
                 value: ''
             })
         },
-        // 输出 切换手动评分
+        // Output Toggle manual scoring
         manualBtnScoring(index) {
             this.outputList[index].scoreType = '2'
         },
@@ -5625,7 +6121,7 @@ var app = new Vue({
             const promptItemId = id || this.promptid
             const numsOfResults = 1
             const params = { promptItemId, numsOfResults }
-            // 如果提供了 userMessage，添加到参数中（用于保持 Chat 模式）
+            // Add to parameter if userMessage is provided (used to maintain Chat mode)
             if (userMessage) {
                 params.userMessage = userMessage
             }
@@ -5640,22 +6136,22 @@ var app = new Vue({
                         });
                         return
                     }
-                    this.outputAverageDeci = res.data.data.promptItem.evalAvgScore > -1 ? res.data.data.promptItem.evalAvgScore : -1; // 保留整数
-                    this.outputMaxDeci = res.data.data.promptItem.evalMaxScore > -1 ? res.data.data.promptItem.evalMaxScore : -1; // 保留整数
-                    //输出列表 
+                    this.outputAverageDeci = res.data.data.promptItem.evalAvgScore > -1 ? res.data.data.promptItem.evalAvgScore : -1; // Keep integer
+                    this.outputMaxDeci = res.data.data.promptItem.evalMaxScore > -1 ? res.data.data.promptItem.evalMaxScore : -1; // Keep integer
+                    //Output list 
                     res.data.data.promptResults.map(item => {
                         item.promptId = promptItemId
-                        item.scoreType = '1' // 1 ai、2手动 
-                        item.isScoreView = false // 是否显示评分视图
-                        //时间 格式化  addTime
+                        item.scoreType = '1' // 1 ai, 2 manual 
+                        item.isScoreView = false // Whether to display the rating view
+                        //time format addTime
                         item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
 
-                        //使用 MarkDown 格式，对输出结果进行展示
+                        //Use MarkDown format to display the output results
                         item.resultStringHtml = marked.parse(item.resultString);
 
-                        // 手动评分
+                        // Manual scoring
                         item.scoreVal = 0
-                        // ai评分预期结果
+                        // ai scoring expected results
                         item.alResultList = [{
                             id: 1,
                             label: '预期结果1',
@@ -5683,9 +6179,9 @@ var app = new Vue({
             })
         },
 
-        // 配置 重置参数
+        // Configuration reset parameters
         resetConfigurineParam(isPageChange) {
-            // todo 判断是否 记录 页面变化记录
+            // todo determines whether to record page change records
             if (isPageChange) {
                 this.pageChange = true
                 this.sendBtns = [
@@ -5698,8 +6194,8 @@ var app = new Vue({
                 ]
                 this.sendBtnText = '打靶'
             }
-            //console.log('配置参数 重置:', this.parameterViewList)
-            // 参数设置 视图配置列表
+            //console.log('Configuration parameters reset:', this.parameterViewList)
+            // Parameter settings View configuration list
             this.parameterViewList = [
                 {
                     tips: '控制词的选择范围，值越高，生成的文本将包含更多的不常见词汇',
@@ -5769,9 +6265,9 @@ var app = new Vue({
                 }
             ]
         },
-        // 配置 参数设置输入回调
+        // Configuration parameter setting input callback
         parameterInputHandle(val, item) {
-            // 页面变化记录
+            // Page change record
             this.pageChange = true
             this.sendBtns = [
                 {
@@ -5786,17 +6282,17 @@ var app = new Vue({
             //console.log('parameterInputHandle:', val)
             let _findIdnex = this.parameterViewList.findIndex(item => item.formField === formField)
             let _findItem = this.parameterViewList[_findIdnex]
-            // 根据 item里面的参数 判断限制输入的内容
+            // Determine the content of the restricted input based on the parameters in the item
             if (isStr) {
-                // 字符串类型
+                // string type
             } else {
                 // if (isSlider || isStr )
-                //有滑动选择的 数据必须为数字
+                //Data with sliding selection must be numeric
                 let _val = val.replace(/[^\d]/g, '')
                 //floor
                 _val = Math.round(_val / sliderStep) * sliderStep
                 //console.log('parameterInputHandle _val:', _val)
-                //且小于sliderMax大于sliderMin保留位数与sliderStep一样
+                //and is less than sliderMax and is greater than sliderMin. The number of reserved digits is the same as sliderStep.
                 if (_val < sliderMin) {
                     this.$set(this.parameterViewList, _findIdnex, { ..._findItem, value: item.sliderMin })
                 } else if (sliderMax === 'Infinity') {
@@ -5809,14 +6305,14 @@ var app = new Vue({
             }
 
         },
-        // 配置 输入Prompt 重置 
+        // Configuration Enter Prompt Reset 
         resetInputPrompt() {
-            //console.log('输入Prompt 重置:', this.content)
-            this.content = ''// prompt 输入内容
-            //this.remarks = '' // prompt 输入的备注
+            //console.log('Enter Prompt to reset:', this.content)
+            this.content = ''// prompt input content
+            //this.remarks = '' // prompt input comments
         },
         deleteModel(item) {
-            //删除模型 confirm
+            //Delete model confirm
             this.$confirm(`此操作将永久删除模型【${item.alias}】, 是否继续?`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -5832,7 +6328,7 @@ var app = new Vue({
                                 duration: 5 * 1000
                             });
                         } else {
-                            // 重置模型列表
+                            // Reset model list
                             this.modelid = ''
                             this.getModelOptData()
                             this.$message({
@@ -5844,7 +6340,7 @@ var app = new Vue({
             })
         },
 
-        //  prompt请求参数 关闭
+        //  prompt request parameters close
         promptParamFormClose() {
             this.promptParamForm = {
                 prefix: '',
@@ -5854,7 +6350,7 @@ var app = new Vue({
             this.$refs.promptParamForm.resetFields();
             this.promptParamVisible = true;
         },
-        // prompt请求参数 添加变量行btn
+        // prompt request parameter add variable line btn
         addVariableBtn() {
             this.promptParamForm.variableList.push({
                 name: '',
@@ -5864,11 +6360,11 @@ var app = new Vue({
         toAIKernel() {
             window.open('/Admin/AIKernel/Index?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69')
         },
-        // prompt请求参数 删除变量行btn
+        // prompt request parameter delete variable line btn
         deleteVariableBtn(index) {
             this.promptParamForm.variableList.splice(index, 1)
         },
-        // prompt请求参数 提交
+        // prompt request parameters submit
         promptParamFormSubmit() {
             this.$refs.promptParamForm.validate(async (valid) => {
                 if (valid) {
@@ -5894,14 +6390,14 @@ var app = new Vue({
             this.waitRefreshModel = true
             await this.getModelOptData().then(() => {
                 this.waitRefreshModel = false
-                // 提示刷新完成
+                // Prompt refresh completed
                 this.$message({
                     message: '刷新完成！',
                     type: 'success'
                 })
             })
         },
-        // 配置 获取模型 下拉列表数据
+        // Configure Get model drop-down list data
         async getModelOptData() {
             let res = await servicePR.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync', {})
             //console.log('getModelOptData:', res)
@@ -5909,7 +6405,7 @@ var app = new Vue({
                 //console.log('getModelOptData:', res.data)
                 let _optList = res.data.data || []
                 this.modelOpt = _optList.map(item => {
-                    // 构建label：模型名称 + 版本号（如果有）+ 部署名称（如果有）
+                    // Build label: model name + version number (if any) + deployment name (if any)
                     let label = item.alias || '未命名模型';
                     if (item.apiVersion && item.apiVersion.trim()) {
                         label += ` v${item.apiVersion}`;
@@ -5921,9 +6417,9 @@ var app = new Vue({
                     return {
                         ...item,
                         label: label,
-                        displayName: item.alias,  // 保留原始名称用于其他地方显示
-                        deploymentDisplay: item.deploymentName, // 保留部署名称
-                        apiVersion: item.apiVersion, // 保留版本号
+                        displayName: item.alias,  // Keep the original name for display elsewhere
+                        deploymentDisplay: item.deploymentName, // Keep deployment name
+                        apiVersion: item.apiVersion, // Keep version number
                         value: item.id,
                         disabled: false
                     }
@@ -5936,7 +6432,7 @@ var app = new Vue({
                 })
             }
         },
-        // 新增模型 dialog 关闭
+        // New model dialog close
         modelFormCloseDialog() {
             this.modelForm = {
                 alias: "", // string
@@ -5949,7 +6445,7 @@ var app = new Vue({
             }
             this.$refs.modelForm.resetFields();
         },
-        // 新增模型 dialog 提交
+        // Add new model dialog submission
         modelFormSubmitBtn() {
             this.$refs.modelForm.validate(async (valid) => {
                 if (valid) {
@@ -5962,16 +6458,16 @@ var app = new Vue({
                         { customAlert: true })
                     if (res.data.success) {
                         this.modelFormSubmitLoading = false
-                        // 重新获取模型列表
+                        // Retrieve model list
                         await this.getModelOptData().then(() => {
                             this.modelid = res.data.data.id
                         })
-                        // 提示添加成功
+                        // Prompt added successfully
                         this.$message({
                             message: '添加成功！',
                             type: 'success'
                         })
-                        // 关闭dialog
+                        // close dialog
                         this.modelFormVisible = false
                     } else {
                         app.$message({
@@ -5988,34 +6484,34 @@ var app = new Vue({
         },
 
 
-        // 关闭新增靶场 dialog
+        // Close the new shooting range dialog
         fieldFormCloseDialog() {
             this.fieldForm = {
                 alias: ''
             }
             this.$refs.fieldForm.resetFields();
         },
-        // dialog 新增靶场 提交按钮
+        // dialog add shooting range submit button
         fieldFormSubmitBtn() {
             const that = this
             this.$refs.fieldForm.validate(async (valid) => {
                 if (valid) {
                     this.fieldFormVisible = false
-                    // post 接口 /api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.AddAsync'
+                    // post interface /api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.AddAsync'
                     const res = await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.AddAsync?alias='
                         + that.fieldForm.alias, {})
                     if (res.data.success) {
-                        // 重新获取靶场列表
+                        // Retrieve range list
                         await this.getFieldList().then(() => {
                             that.promptField = res.data.data.id
                             this.resetPageData()
                         })
-                        // 提示添加成功
+                        // Prompt added successfully
                         this.$message({
                             message: '添加成功！',
                             type: 'success'
                         })
-                        // 关闭dialog
+                        // close dialog
                         this.fieldFormVisible = false
                     } else {
                         app.$message({
@@ -6030,7 +6526,7 @@ var app = new Vue({
                 }
             });
         },
-        // 配置 获取靶场 下拉列表数据
+        // Configure Get Range Dropdown List Data
         async getFieldList() {
             return await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.GetListAsync', {})
                 .then(res => {
@@ -6054,7 +6550,7 @@ var app = new Vue({
         },
         renameField(e, item) {
             e.stopPropagation()
-            //弹出提示框，输入新的靶场名称，确认后提交，取消后，提示已取消操作
+            //A prompt box will pop up, enter the new shooting range name, confirm and submit. After cancelling, it will prompt that the operation has been cancelled.
             this.$prompt('请输入新的靶场名称', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -6083,12 +6579,13 @@ var app = new Vue({
             });
 
         },
-        // 获取靶道 下拉列表数据
+        // Get target lane dropdown list data
         async getPromptOptData(id, isExpected) {
-            // find rangeName by id
-            let _find = this.promptFieldOpt.find(item => item.value === this.promptField)
+            // find rangeName by id (unify it into a string when compared with promptField to avoid el-select storing string and the interface returning number, resulting in the range not being found)
+            const matchField = (v) => String(v) === String(this.promptField)
+            let _find = this.promptFieldOpt.find(item => matchField(item.value))
             if (isExpected) {
-                _find = this.promptFieldOpt.find(item => item.value === id)
+                _find = this.promptFieldOpt.find(item => String(item.value) === String(id))
             }
 
             const name = _find ? _find.rangeName : ''
@@ -6115,17 +6612,17 @@ var app = new Vue({
                 this.dailogpromptOptlist = _promptOpt
                 if (isExpected) {
                     this.expectedPluginFoem.checkList.push(`${_find.value}`)
-                    // 导出 树形数据 
+                    // Export tree data 
                     this.expectedPluginFieldList.push({
                         id: _find.id,
-                        label: _find.label, // 靶场名称
-                        idkey: `${_find.value}`, // 靶场id
+                        label: _find.label, // Range name
+                        idkey: `${_find.value}`, // shooting range id
                         children: _promptOpt.map(item => {
                             this.expectedPluginFoem.checkList.push(`${_find.value}_${item.id}`)
                             return {
                                 id: item.id,
-                                label: item.label, // 靶场名称
-                                idkey: `${_find.value}_${item.id}`, // 靶场id
+                                label: item.label, // Range name
+                                idkey: `${_find.value}_${item.id}`, // shooting range id
                             }
                         }),
                     })
@@ -6148,13 +6645,13 @@ var app = new Vue({
                 })
             }
         },
-        // 获取 prompt 详情
+        // Get prompt details
         async getPromptetail(id, overwrite, isChart) {
             let res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Get?id=${Number(id)}`,)
             /*console.log('getPromptetail:', res)*/
             if (res.data.success) {
                 //console.log('getPromptetail:', res.data)
-                // 拷贝数据
+                // copy data
                 let copyResultData = JSON.parse(JSON.stringify(res.data.data))
                 let vArr = copyResultData.fullVersion.split('-')
                 copyResultData.promptFieldStr = vArr[0] || ''
@@ -6164,7 +6661,7 @@ var app = new Vue({
                     copyResultData.stopSequences = JSON.parse(copyResultData.stopSequences).join(',')
                 }
                 this.promptDetail = copyResultData
-                //如果获取到的结果没有，则延续以往的expectedJson.
+                //If there is no result obtained, the previous expectedJson will be continued.
                 if (copyResultData.expectedResultsJson) {
                     let expectedResultsJson = this.promptDetail.expectedResultsJson
                     if (expectedResultsJson) {
@@ -6184,15 +6681,15 @@ var app = new Vue({
                     }
                 }
                 if (overwrite) {
-                    // 重新获取输出列表
+                    // Retrieve output list
                     this.getOutputList(this.promptDetail.id)
                     if (isChart) {
-                        // 重新获取图表
+                        // Retrieve chart
                         this.getScoringTrendData()
                     }
 
 
-                    // 参数覆盖
+                    // Parameter override
                     let _parameterViewList = JSON.parse(JSON.stringify(this.parameterViewList))
 
                     this.parameterViewList = _parameterViewList.map(item => {
@@ -6202,26 +6699,26 @@ var app = new Vue({
                         return item
                     })
 
-                    // 判断模型列表是否有选中的模型
+                    // Determine whether there is a selected model in the model list
                     let _findIndex = this.modelOpt.findIndex(item => item.value === this.promptDetail.modelId)
                     if (_findIndex > -1) {
-                        // 模型覆盖
+                        // Model coverage
                         this.modelid = this.promptDetail.modelId
                     } else {
                         this.modelid = ''
                     }
-                    // prompt 输入内容
+                    // prompt input content
                     this.content = this.promptDetail.promptContent || ''
-                    // prompt 输入的备注
+                    // prompt input remarks
                     this.remarks = this.promptDetail.note || ''
-                    // prompt请求参数
+                    // prompt request parameters
                     let _promptParamForm = JSON.parse(JSON.stringify(this.promptParamForm))
                     _promptParamForm.prefix = this.promptDetail.prefix || ''
                     _promptParamForm.suffix = this.promptDetail.suffix || ''
                     _promptParamForm.variableList = []
                     if (this.promptDetail.variableDictJson) {
                         let _variableDictJson = JSON.parse(this.promptDetail.variableDictJson)
-                        // _variableDictJson不是空对象 就循环赋值
+                        // _variableDictJson is not an empty object, so assign values ​​in a loop
                         if (Object.keys(_variableDictJson).length > 0) {
                             _promptParamForm.variableList = Object.keys(_variableDictJson).map(item => {
                                 return {
@@ -6234,7 +6731,7 @@ var app = new Vue({
                     }
                     this.promptParamForm = _promptParamForm
 
-                    //ai 期望结果里面增加接口返回内容
+                    //Add the interface return content to the expected result of ai
                     if (res.data.data.expectedResultsJson) {
                         const expectedResultsJson = JSON.parse(res.data.data.expectedResultsJson)
                         this.aiScoreForm.resultList = expectedResultsJson.map((item, index) => {
@@ -6245,6 +6742,9 @@ var app = new Vue({
                             }
                         })
                     }
+                    
+                    // ⭐ New: Check average score and prompt for optimization
+                    await this.checkPromptAverageScoreAndSuggest();
                 }
 
 
@@ -6256,28 +6756,28 @@ var app = new Vue({
                 })
             }
         },
-        // 删除 prompt 
+        // Delete prompt 
         async btnDeleteHandle(id, versionRecord) {
             const res = await servicePR.request({
                 method: 'delete',
                 url: `/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.DeleteAsync?id=${id}`,
             });
             if (res.data.success) {
-                // 重新获取 靶道列表 如果删除的是当前选中的靶道，就重重置靶道选中值并重置模型、参数、输入内容、备注、输出列表、平均分、图表、ai评分预期结果
+                // Re-acquire the target lane list. If the currently selected target lane is deleted, reset the target lane selection value and reset the model, parameters, input content, notes, output list, average score, chart, and AI score expected results.
                 if (id === this.promptid) {
                     this.resetPageData()
                 } else {
-                    // 重新获取prompt列表
+                    // Re-obtain prompt list
                     await this.getPromptOptData(this.promptid)
                 }
 
                 if (versionRecord) {
-                    // 重新获取版本记录
+                    // Retrieve version records
                     await this.getVersionRecordData()
                 }
 
 
-                // 删除成功
+                // Delete successfully
                 this.$message({
                     type: 'success',
                     message: '删除成功!'
@@ -6290,7 +6790,7 @@ var app = new Vue({
                 })
             }
         },
-        // 修改 prompt 别名
+        // Modify prompt alias
         async btnEditHandle(item, isSave) {
 
             if (!item) return
@@ -6301,13 +6801,13 @@ var app = new Vue({
             });
             if (res.data.success) {
                 if (isSave) {
-                    // 提示保存成功
+                    // Prompt to save successfully
                     this.$message({
                         message: '保存成功！',
                         type: 'success'
                     })
                 } else {
-                    // 重新获取 prompt列表
+                    // Re-obtain prompt list
                     this.getPromptOptData()
                 }
 
@@ -6320,7 +6820,7 @@ var app = new Vue({
             }
         },
 
-        // ai评分设置 dialog 新增结果行btn
+        // ai scoring setting dialog new result line btn
         aiScoreFormAddRow() {
             let _len = this.aiScoreForm.resultList.length
             this.aiScoreForm.resultList.push({
@@ -6329,7 +6829,7 @@ var app = new Vue({
                 value: ''
             })
         },
-        // ai评分设置 打开 dialog 
+        // ai scoring settings open dialog 
         aiScoreFormOpenDialog() {
             let _list = this.aiScoreForm.resultList
             let _listVal = _list.filter(item => item.value)
@@ -6347,25 +6847,25 @@ var app = new Vue({
                 }
             }
             //else {
-            //    // 如果没有预期结果就重置
+            //    //Reset if no expected result
             //    this.aiScoreForm = {
             //        resultList: [{
             //            id: 1,
-            //            label: '预期结果1',
+            //            label: 'Expected result 1',
             //            value: ''
             //        }]
             //    }
             //}
-            // 判断 this.aiScoreForm.resultList 是否有值            
+            // Determine whether this.aiScoreForm.resultList has a value            
             this.aiScoreFormVisible = !this.aiScoreFormVisible
         },
-        // 关闭ai评分设置 dialog
+        // Close ai scoring settings dialog
         aiScoreFormCloseDialog() {
             this.$refs.aiScoreForm.resetFields();
         },
         aiScoreFormClose() {
             this.aiScoreFormVisible = false
-            // 判断 this.aiScoreForm.resultList 对比详情 this.promptDetail.expectedResultsJson 是否有改动
+            // Determine whether the comparison details of this.aiScoreForm.resultList and this.promptDetail.expectedResultsJson have changed
             let _list = this.aiScoreForm.resultList
             let _listVal = _list.filter(item => item.value)
             let _expectedResultsJson = this.promptDetail.expectedResultsJson
@@ -6386,7 +6886,7 @@ var app = new Vue({
                 }
             }
         },
-        // dialog ai评分设置 提交按钮
+        // dialog ai rating settings submit button
         aiScoreFormSubmitBtn() {
             this.$refs.aiScoreForm.validate(async (valid) => {
                 if (valid) {
@@ -6402,9 +6902,9 @@ var app = new Vue({
                     });
                     this.aiScoreFormSubmitLoading = false
                     if (res.data.success) {
-                        // 重新获取详情
+                        // Retrieve details
                         this.getPromptetail(this.promptid, false)
-                        // 关闭dialog
+                        // close dialog
                         this.aiScoreFormVisible = false
                     } else {
                         app.$message({
@@ -6418,10 +6918,10 @@ var app = new Vue({
                 }
             });
         },
-        // 复制 Prompt 测试结果
+        // Copy Prompt test results
         copyPromptResult(item, rawResult) {
 
-            // 把结果复制到剪切板
+            // Copy results to clipboard
             try {
                 const textarea = document.createElement('textarea');
                 textarea.setAttribute('readonly', 'readonly');
@@ -6442,13 +6942,13 @@ var app = new Vue({
         },
         
         /**
-         * 初始化代码块复制按钮
-         * 为所有 <pre><code> 代码块添加复制按钮
+         * Initialization code block copy button
+         * Add copy button to all <pre><code> code blocks
          */
         initCodeCopyButtons() {
             const self = this;
             
-            // 使用 MutationObserver 监听 DOM 变化,自动为新增的代码块添加复制按钮
+            // Use MutationObserver to monitor DOM changes and automatically add copy buttons for new code blocks
             const observer = new MutationObserver((mutations) => {
                 mutations.forEach((mutation) => {
                     if (mutation.addedNodes.length) {
@@ -6457,7 +6957,7 @@ var app = new Vue({
                 });
             });
             
-            // 监听输出区域和对话历史区域
+            // Monitor output area and conversation history area
             const outputArea = document.querySelector('.outputArea_contentBox');
             const chatArea = document.querySelector('.chat-history-container');
             
@@ -6475,41 +6975,41 @@ var app = new Vue({
                 });
             }
             
-            // 初始添加
+            // initial addition
             this.addCopyButtonsToCodeBlocks();
         },
         
         /**
-         * 为所有代码块添加复制按钮
+         * Add copy button to all code blocks
          */
         addCopyButtonsToCodeBlocks() {
             const self = this;
             
-            // 查找所有代码块 (输出区域 + 对话历史区域)
+            // Find all code blocks (output area + conversation history area)
             const codeBlocks = document.querySelectorAll(
                 '.contentRow pre:not(.copy-btn-added), .chat-message-content pre:not(.copy-btn-added)'
             );
             
             codeBlocks.forEach((pre) => {
-                // 标记已添加,避免重复
+                // Tags have been added to avoid duplication
                 pre.classList.add('copy-btn-added');
                 
-                // 创建复制按钮
+                // Create a copy button
                 const copyBtn = document.createElement('button');
                 copyBtn.className = 'code-copy-btn';
                 copyBtn.innerHTML = '<i class="el-icon-document-copy"></i> Copy';
                 copyBtn.title = '复制代码';
                 
-                // 绑定点击事件
+                // Bind click event
                 copyBtn.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     
-                    // 获取代码内容
+                    // Get code content
                     const codeElement = pre.querySelector('code') || pre;
                     const code = codeElement.textContent || codeElement.innerText;
                     
-                    // 使用 CopyHelper 复制
+                    // Copy using CopyHelper
                     if (window.PromptRangeUtils && window.PromptRangeUtils.CopyHelper) {
                         const success = window.PromptRangeUtils.CopyHelper.copyToClipboard(
                             code, 
@@ -6519,31 +7019,31 @@ var app = new Vue({
                         );
                         
                         if (success) {
-                            // 显示复制成功状态
+                            // Show copy success status
                             copyBtn.classList.add('copied');
                             copyBtn.innerHTML = '<i class="el-icon-check"></i> Copied!';
                             
-                            // 2秒后恢复
+                            // Restore after 2 seconds
                             setTimeout(() => {
                                 copyBtn.classList.remove('copied');
                                 copyBtn.innerHTML = '<i class="el-icon-document-copy"></i> Copy';
                             }, 2000);
                         }
                     } else {
-                        // 降级方案:使用传统方法
+                        // Downgrade option: Use traditional methods
                         self.fallbackCopyCode(code, copyBtn);
                     }
                 });
                 
-                // 将按钮添加到 pre 元素中
+                // Add button to pre element
                 pre.appendChild(copyBtn);
             });
         },
         
         /**
-         * 降级复制代码方法
-         * @param {string} code - 要复制的代码
-         * @param {HTMLElement} button - 复制按钮元素
+         * Downgrade copy code method
+         * @param {string} code - the code to copy
+         * @param {HTMLElement} button - copy button element
          */
         fallbackCopyCode(code, button) {
             try {
@@ -6578,7 +7078,7 @@ var app = new Vue({
                 this.$message.error('代码复制失败');
             }
         },
-        // 自定义滚动条缩略图相关方法
+        // Methods related to customizing scroll bar thumbnails
         handleResultScroll(event) {
             const el = event.target;
             this.scrollInfo = {
@@ -6599,7 +7099,7 @@ var app = new Vue({
             const totalHeight = container.scrollHeight;
             const trackHeight = container.clientHeight;
             
-            // 计算每个item的相对位置
+            // Calculate the relative position of each item
             let totalItemsHeight = 0;
             let currentTop = 0;
             
@@ -6612,9 +7112,9 @@ var app = new Vue({
             
             const currentHeight = items[index] ? items[index].offsetHeight : 30;
             
-            // 计算在缩略图轨道中的位置（按比例）
+            // Calculate position in thumbnail track (proportionally)
             const top = (currentTop / totalHeight) * trackHeight;
-            const height = Math.max((currentHeight / totalHeight) * trackHeight, 20); // 最小20px
+            const height = Math.max((currentHeight / totalHeight) * trackHeight, 20); // Minimum 20px
             
             return {
                 top: top + 'px',
@@ -6632,7 +7132,7 @@ var app = new Vue({
             const containerRect = container.getBoundingClientRect();
             const itemRect = item.getBoundingClientRect();
             
-            // 判断item是否在可视区域内
+            // Determine whether the item is within the visible area
             return itemRect.top >= containerRect.top && 
                    itemRect.top <= containerRect.bottom;
         },
@@ -6666,44 +7166,44 @@ var app = new Vue({
             this.outputSelectSwitch(index);
         },
         formatTime(timeStr) {
-            // 提取时间部分，例如 "2024-01-01 10:30:45" => "10:30"
+            // Extract the time part, for example "2024-01-01 10:30:45" => "10:30"
             if (!timeStr) return '';
             const match = timeStr.match(/(\d{2}):(\d{2}):\d{2}/);
             return match ? match[1] + ':' + match[2] : timeStr.substring(0, 10);
         },
-        // 获取最终评分（使用系统的finalScore字段）
+        // Get the final score (using the system's finalScore field)
         getFinalScore(item) {
             if (!item) return null;
-            // 直接使用系统的finalScore字段，这是被标记为红色的那个分数
+            // Directly use the system's finalScore field, which is the score marked in red
             if (item.finalScore !== undefined && item.finalScore !== null && 
                 item.finalScore !== -1 && item.finalScore !== '-1') {
                 return item.finalScore;
             }
             return null;
         },
-        // 获取评分等级的样式类
+        // Get the style class of the rating level
         getScoreBarClass(item) {
             const score = this.getFinalScore(item);
             if (score === null) return '';
             
-            if (score >= 8) return 'score-excellent';      // 8-10分：优秀
-            if (score >= 6) return 'score-good';           // 6-8分：良好
-            if (score >= 4) return 'score-medium';         // 4-6分：中等
-            if (score >= 2) return 'score-low';            // 2-4分：较低
-            return 'score-poor';                           // 0-2分：差
+            if (score >= 8) return 'score-excellent';      // 8-10 points: excellent
+            if (score >= 6) return 'score-good';           // 6-8 points: good
+            if (score >= 4) return 'score-medium';         // 4-6 points: medium
+            if (score >= 2) return 'score-low';            // 2-4 points: lower
+            return 'score-poor';                           // 0-2 points: poor
         },
-        // 获取数据条的宽度样式（Excel风格）
+        // Get the width style of the data bar (Excel style)
         getScoreBarStyle(item) {
             const score = this.getFinalScore(item);
             if (score === null) return { width: '0%' };
             
-            // 0-10分映射到0-100%
+            // 0-10 points map to 0-100%
             const percentage = Math.min(Math.max((score / 10) * 100, 0), 100);
             return {
                 width: percentage + '%'
             };
         },
-        // 获取缩略图的工具提示文本
+        // Get the tooltip text of the thumbnail
         getThumbnailTooltip(item) {
             if (!item) return '';
             
@@ -6711,7 +7211,7 @@ var app = new Vue({
             const score = this.getFinalScore(item);
             
             if (score !== null) {
-                // 判断finalScore等于哪个评分，那个就是最终评分类型
+                // Determine which score the finalScore is equal to, that is the final score type
                 let scoreType = '';
                 if (item.finalScore === item.humanScore) {
                     scoreType = '手动评分';
@@ -6725,31 +7225,31 @@ var app = new Vue({
             
             return tooltip;
         },
-        // 处理输出区域的鼠标移动事件 - 判断是否在右半侧
+        // Handle mouse movement events in the output area - determine whether it is on the right half
         handleOutputAreaMouseMove(event) {
             const outputArea = event.currentTarget;
             const rect = outputArea.getBoundingClientRect();
             const mouseX = event.clientX;
             
-            // 计算鼠标相对于输出区域的位置
+            // Calculate mouse position relative to output area
             const relativeX = mouseX - rect.left;
             const halfWidth = rect.width / 2;
             
-            // 只在右半侧显示滚动条
+            // Show scrollbar only on right half
             if (relativeX > halfWidth) {
                 this.showScrollbarThumbnails = true;
             } else {
                 this.showScrollbarThumbnails = false;
             }
         },
-        // 处理鼠标离开输出区域
+        // Handle mouse leaving the output area
         handleOutputAreaMouseLeave() {
             this.showScrollbarThumbnails = false;
         },
         
-        // ========== 区域宽度拖动调整功能 ==========
+        // ========== Area width drag adjustment function ==========
         
-        // 从localStorage加载保存的宽度设置
+        // Load saved width settings from localStorage
         loadAreaWidthsFromStorage() {
             try {
                 const savedLeftWidth = localStorage.getItem('promptPage_leftAreaWidth');
@@ -6773,7 +7273,7 @@ var app = new Vue({
             }
         },
         
-        // 保存宽度设置到localStorage
+        // Save width settings to localStorage
         saveAreaWidthsToStorage() {
             try {
                 localStorage.setItem('promptPage_leftAreaWidth', this.leftAreaWidth);
@@ -6783,7 +7283,7 @@ var app = new Vue({
             }
         },
         
-        // 开始拖动左侧分隔条
+        // Start dragging the left divider bar
         startResizeLeft(event) {
             this.isResizing = true;
             this.resizeType = 'left';
@@ -6798,7 +7298,7 @@ var app = new Vue({
             event.preventDefault();
         },
         
-        // 开始拖动右侧分隔条
+        // Start dragging the right divider bar
         startResizeRight(event) {
             this.isResizing = true;
             this.resizeType = 'right';
@@ -6813,28 +7313,28 @@ var app = new Vue({
             event.preventDefault();
         },
         
-        // 处理拖动
+        // Handle drag
         handleResize(event) {
             if (!this.isResizing) return;
             
             const deltaX = event.clientX - this.resizeStartX;
             
             if (this.resizeType === 'left') {
-                // 调整左侧区域宽度
+                // Adjust left area width
                 let newWidth = this.resizeStartLeftWidth + deltaX;
-                newWidth = Math.max(280, Math.min(600, newWidth)); // 限制在280-600px之间
+                newWidth = Math.max(280, Math.min(600, newWidth)); // Limit to 280-600px
                 this.leftAreaWidth = newWidth;
             } else if (this.resizeType === 'right') {
-                // 调整中间区域宽度
+                // Adjust the width of the middle area
                 let newWidth = this.resizeStartCenterWidth + deltaX;
-                newWidth = Math.max(320, Math.min(800, newWidth)); // 限制在320-800px之间
+                newWidth = Math.max(320, Math.min(800, newWidth)); // Limit to 320-800px
                 this.centerAreaWidth = newWidth;
             }
             
             event.preventDefault();
         },
         
-        // 停止拖动
+        // Stop dragging
         stopResize() {
             if (this.isResizing) {
                 this.isResizing = false;
@@ -6845,18 +7345,18 @@ var app = new Vue({
                 document.body.style.cursor = '';
                 document.body.style.userSelect = '';
                 
-                // 保存当前宽度设置
+                // Save current width setting
                 this.saveAreaWidthsToStorage();
             }
         },
         
-        // 双击分隔条还原默认宽度
+        // Double-click the separator bar to restore the default width
         resetAreaWidths(event) {
-            // 恢复默认宽度
+            // Restore default width
             this.leftAreaWidth = 360;
             this.centerAreaWidth = 380;
             
-            // 清除localStorage中保存的设置
+            // Clear saved settings in localStorage
             try {
                 localStorage.removeItem('promptPage_leftAreaWidth');
                 localStorage.removeItem('promptPage_centerAreaWidth');
@@ -6864,7 +7364,7 @@ var app = new Vue({
                 console.error('清除区域宽度设置失败:', e);
             }
             
-            // 添加视觉反馈动画
+            // Add visual feedback animation
             if (event && event.target) {
                 event.target.classList.add('reset-animation');
                 setTimeout(() => {
@@ -6872,7 +7372,7 @@ var app = new Vue({
                 }, 600);
             }
             
-            // 显示提示消息
+            // Show prompt message
             this.$message({
                 message: '已还原为默认布局宽度',
                 type: 'success',
@@ -6880,34 +7380,34 @@ var app = new Vue({
             });
         },
         
-        // ========== Prompt 对比功能 ==========
+        // ========== Prompt comparison function ==========
         
-        // 打开对比对话框（可选预设Prompt A）
+        // Open the comparison dialog (optional preset Prompt A)
         openCompareDialog(event, item) {
-            // 阻止事件冒泡，防止触发el-select的下拉
+            // Prevent events from bubbling and triggering the el-select drop-down
             if (event) {
                 event.stopPropagation();
             }
             
-            // Prompt A 应该是当前已经选中显示的 Prompt
-            // Prompt B 是点击"对比"按钮的对应 Prompt
+            // Prompt A should be the currently selected and displayed Prompt
+            // Prompt B is the corresponding prompt for clicking the "Compare" button
             if (this.promptid) {
                 this.comparePromptAId = this.promptid;
                 this.loadComparePromptA(this.promptid);
             }
             
-            // 如果传入了item，则将其设置为Prompt B
-            // item.value 是 el-option 的值，对应 Prompt 的 ID
+            // If item is passed in, set it to Prompt B
+            // item.value is the value of el-option, corresponding to the ID of Prompt
             if (item && item.value) {
                 this.comparePromptBId = item.value;
                 this.loadComparePromptB(item.value);
             }
             
-            // 打开对话框
+            // Open dialog
             this.compareDialogVisible = true;
         },
         
-        // 加载对比Prompt A的数据
+        // Load data comparing Prompt A
         async loadComparePromptA(id) {
             if (!id) {
                 this.comparePromptA = null;
@@ -6918,7 +7418,7 @@ var app = new Vue({
                 const data = await this.getPromptDetail(id);
                 this.comparePromptA = data;
                 
-                // 检查是否选择了同一个Prompt
+                // Check if the same prompt is selected
                 if (this.comparePromptBId && id === this.comparePromptBId) {
                     this.$message({
                         message: '警告：您选择了同一个 Prompt 进行对比！',
@@ -6937,7 +7437,7 @@ var app = new Vue({
             }
         },
         
-        // 加载对比Prompt B的数据
+        // Load data comparing Prompt B
         async loadComparePromptB(id) {
             if (!id) {
                 this.comparePromptB = null;
@@ -6948,7 +7448,7 @@ var app = new Vue({
                 const data = await this.getPromptDetail(id);
                 this.comparePromptB = data;
                 
-                // 检查是否选择了同一个Prompt
+                // Check if the same prompt is selected
                 if (this.comparePromptAId && id === this.comparePromptAId) {
                     this.$message({
                         message: '警告：您选择了同一个 Prompt 进行对比！',
@@ -6967,7 +7467,7 @@ var app = new Vue({
             }
         },
         
-        // 获取单个Prompt的详细信息
+        // Get details of a single prompt
         async getPromptDetail(id) {
             const res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Get?id=${Number(id)}`);
             
@@ -6978,39 +7478,39 @@ var app = new Vue({
             }
         },
         
-        // 交换Prompt A和B
+        // Swap Prompt A and B
         swapComparePrompts() {
-            // 交换ID
+            // Exchange ID
             const tempId = this.comparePromptAId;
             this.comparePromptAId = this.comparePromptBId;
             this.comparePromptBId = tempId;
             
-            // 交换数据
+            // exchange data
             const tempData = this.comparePromptA;
             this.comparePromptA = this.comparePromptB;
             this.comparePromptB = tempData;
         },
         
-        // 检查评分是否存在
+        // Check if the rating exists
         hasScore(score) {
             return score !== null && score !== undefined && score > -1;
         },
         
-        // 获取前缀（直接从 prefix 字段获取）
+        // Get the prefix (directly from the prefix field)
         getPromptPrefix(side) {
             const prompt = side === 'A' ? this.comparePromptA : this.comparePromptB;
             if (!prompt) return '';
             return prompt.prefix || '';
         },
         
-        // 获取后缀（直接从 suffix 字段获取）
+        // Get the suffix (directly from the suffix field)
         getPromptSuffix(side) {
             const prompt = side === 'A' ? this.comparePromptA : this.comparePromptB;
             if (!prompt) return '';
             return prompt.suffix || '';
         },
         
-        // 跳转到指定的Prompt（完全模拟手动点击靶道选择的行为）
+        // Jump to the specified Prompt (completely simulates the behavior of manually clicking on the target channel selection)
         async switchToPrompt(promptId) {
             if (!promptId) {
                 this.$message({
@@ -7022,18 +7522,18 @@ var app = new Vue({
             }
             
             try {
-                // 1. 先获取完整的Prompt数据
+                // 1. Get the complete Prompt data first
                 const promptData = await this.getPromptDetail(promptId);
                 
                 if (!promptData) {
                     throw new Error('无法获取Prompt详细信息');
                 }
                 
-                // 2. 从fullVersion解析靶场名称（格式: 靶场-靶道-战术）
+                // 2. Parse the shooting range name from fullVersion (format: shooting range-range-tactics)
                 const versionParts = promptData.fullVersion ? promptData.fullVersion.split('-') : [];
                 const targetRangeName = versionParts[0];
                 
-                // 3. 查找对应的靶场ID
+                // 3. Find the corresponding shooting range ID
                 const targetRange = this.promptFieldOpt.find(item => 
                     item.label === targetRangeName || item.rangeName === targetRangeName
                 );
@@ -7042,26 +7542,26 @@ var app = new Vue({
                     throw new Error(`未找到对应的靶场: ${targetRangeName}`);
                 }
                 
-                // 4. 关闭对比对话框（先关闭，避免干扰后续操作）
+                // 4. Close the comparison dialog box (close it first to avoid interfering with subsequent operations)
                 this.compareDialogVisible = false;
                 
-                // 5. 重置 pageChange 标记，避免触发"是否保存草稿"的确认对话框
+                // 5. Reset the pageChange mark to avoid triggering the "Do you want to save the draft" confirmation dialog box?
                 this.pageChange = false;
                 
-                // 6. 检查是否需要切换靶场
+                // 6. Check whether you need to switch shooting ranges
                 const needSwitchRange = this.promptField !== targetRange.value;
                 
                 if (needSwitchRange) {
-                    // 切换靶场（这会触发promptOpt的更新）
+                    // Switch ranges (this triggers an update of promptOpt)
                     this.promptField = targetRange.value;
                     await this.promptChangeHandel(targetRange.value, 'promptField');
                     
-                    // 等待promptOpt更新完成
+                    // Wait for promptOpt update to complete
                     await this.$nextTick();
                 }
                 
-                // 7. 在promptOpt中查找对应的Prompt
-                // 注意：promptOpt中的item.value才是正确的promptid
+                // 7. Find the corresponding prompt in promptOpt
+                // Note: item.value in promptOpt is the correct promptid
                 const targetPrompt = this.promptOpt.find(item => 
                     item.id === promptId || item.value === promptId || item.idkey === promptId
                 );
@@ -7070,19 +7570,19 @@ var app = new Vue({
                     throw new Error('在当前靶场中未找到对应的Prompt');
                 }
                 
-                // 8. 设置正确的promptid（这会触发el-select的v-model更新）
-                // 重要：再次确保 pageChange = false，因为切换靶场可能会触发它
+                // 8. Set the correct promptid (this will trigger the v-model update of el-select)
+                // IMPORTANT: Again make sure pageChange = false as switching ranges may trigger this
                 this.pageChange = false;
                 this.promptid = targetPrompt.value || targetPrompt.id;
                 
-                // 9. 手动触发 promptChangeHandel，完全模拟用户点击靶道下拉选择
-                // 这会：
-                //   - 更新 sendBtns（根据是否是草稿）
-                //   - 清空 AI 评分标准
-                //   - 调用 getPromptetail 获取完整详情（包括输出列表、评分、图表等）
+                // 9. Manually trigger promptChangeHandel to completely simulate the user clicking on the target drop-down selection
+                // This will:
+                //   - Update sendBtns (depending on whether it is a draft)
+                //   - Clear AI scoring criteria
+                //   - Call getPromptetail to get complete details (including output list, ratings, charts, etc.)
                 await this.promptChangeHandel(this.promptid, 'promptid');
                 
-                // 10. 显示成功提示
+                // 10. Display success prompt
                 this.$message({
                     message: `已切换到 Prompt: ${promptData.fullVersion}`,
                     type: 'success',
@@ -7099,13 +7599,13 @@ var app = new Vue({
             }
         },
         
-        // 检查字段是否有差异
+        // Check if fields are different
         hasFieldDiff(fieldA, fieldB) {
-            // 处理null/undefined情况
+            // Handling null/undefined cases
             if (fieldA === fieldB) return false;
             if ((fieldA === null || fieldA === undefined) && (fieldB === null || fieldB === undefined)) return false;
             
-            // 如果是对象或数组，进行深度比较
+            // If it is an object or array, perform a deep comparison
             if (typeof fieldA === 'object' && typeof fieldB === 'object') {
                 return JSON.stringify(fieldA) !== JSON.stringify(fieldB);
             }
@@ -7113,7 +7613,7 @@ var app = new Vue({
             return fieldA !== fieldB;
         },
         
-        // 格式化变量配置（从JSON字符串转为可读格式）
+        // Format variable configuration (convert from JSON string to readable format)
         formatVariables(variablesJson) {
             if (!variablesJson) return '无';
             try {
@@ -7125,17 +7625,17 @@ var app = new Vue({
             }
         },
         
-        // 生成Git风格的Prompt内容差异HTML
+        // Generate Git-style Prompt content diff HTML
         getContentDiffHtml(side) {
             const contentA = this.comparePromptA?.promptContent || '';
             const contentB = this.comparePromptB?.promptContent || '';
             
-            // 如果都为空
+            // if both are empty
             if (!contentA && !contentB) {
                 return '<span class="diff-empty">暂无内容</span>';
             }
             
-            // 如果只有一个为空
+            // If only one is empty
             if (!contentA && side === 'A') {
                 return '<span class="diff-empty">暂无内容</span>';
             }
@@ -7143,56 +7643,56 @@ var app = new Vue({
                 return '<span class="diff-empty">暂无内容</span>';
             }
             
-            // 如果内容相同
+            // If the content is the same
             if (contentA === contentB) {
                 return this.escapeHtml(side === 'A' ? contentA : contentB);
             }
             
-            // 使用jsdiff库进行差异对比
+            // Difference comparison using jsdiff library
             if (typeof Diff !== 'undefined') {
                 const diff = Diff.diffLines(contentA, contentB);
                 return this.renderDiffHtml(diff, side);
             }
             
-            // 如果diff库未加载，返回原始内容
+            // If the diff library is not loaded, return the original content
             return this.escapeHtml(side === 'A' ? contentA : contentB);
         },
         
-        // 生成Git风格的变量配置差异HTML
+        // Generate Git-style variable configuration diff HTML
         getVariablesDiffHtml(side) {
             const varsA = this.comparePromptA?.variableDictJson || '{}';
             const varsB = this.comparePromptB?.variableDictJson || '{}';
             
-            // 格式化JSON以便对比
+            // Format JSON for comparison
             let formattedA = varsA;
             let formattedB = varsB;
             try {
                 formattedA = JSON.stringify(JSON.parse(varsA), null, 2);
             } catch (e) {
-                // 保持原样
+                // stay as is
             }
             try {
                 formattedB = JSON.stringify(JSON.parse(varsB), null, 2);
             } catch (e) {
-                // 保持原样
+                // stay as is
             }
             
-            // 如果内容相同
+            // If the content is the same
             if (formattedA === formattedB) {
                 return this.escapeHtml(side === 'A' ? formattedA : formattedB);
             }
             
-            // 使用jsdiff库进行差异对比
+            // Difference comparison using jsdiff library
             if (typeof Diff !== 'undefined') {
                 const diff = Diff.diffLines(formattedA, formattedB);
                 return this.renderDiffHtml(diff, side);
             }
             
-            // 如果diff库未加载，返回原始内容
+            // If the diff library is not loaded, return the original content
             return this.escapeHtml(side === 'A' ? formattedA : formattedB);
         },
         
-        // 渲染差异HTML（Git风格，支持行内单词高亮）
+        // Rendering differential HTML (Git style, supports inline word highlighting)
         renderDiffHtml(diff, side) {
             let html = '';
             let i = 0;
@@ -7200,12 +7700,12 @@ var app = new Vue({
             while (i < diff.length) {
                 const part = diff[i];
                 const lines = part.value.split('\n');
-                // 移除最后的空行
+                // Remove last blank line
                 if (lines[lines.length - 1] === '') {
                     lines.pop();
                 }
                 
-                // 检查是否是相邻的删除和新增（可以做行内diff）
+                // Check whether there are adjacent deletions and additions (inline diff can be done)
                 const nextPart = i + 1 < diff.length ? diff[i + 1] : null;
                 const isInlineDiffCandidate = 
                     part.removed && 
@@ -7215,7 +7715,7 @@ var app = new Vue({
                     nextPart.value.split('\n').filter(l => l).length === 1;
                 
                 if (isInlineDiffCandidate) {
-                    // 行内单词级别差异
+                    // Inline word level differences
                     const oldLine = lines[0];
                     const newLine = nextPart.value.split('\n').filter(l => l)[0];
                     
@@ -7225,24 +7725,24 @@ var app = new Vue({
                         html += `<span class="diff-line diff-modified">+ ${this.renderInlineDiff(oldLine, newLine, 'added')}</span>`;
                     }
                     
-                    i += 2; // 跳过下一个part（因为已经处理了）
+                    i += 2; // Skip the next part (because it has already been processed)
                 } else {
-                    // 常规的整行差异
+                    // regular whole line diff
                     lines.forEach((line, lineIndex) => {
                         if (part.added) {
-                            // 新增的内容（绿色背景）- 仅在B侧显示
+                            // New content (green background) - only shown on side B
                             if (side === 'B') {
                                 html += `<span class="diff-line diff-added">+ ${this.escapeHtml(line)}</span>`;
                             }
-                            // A侧不显示新增内容
+                            // New content is not displayed on side A
                         } else if (part.removed) {
-                            // 删除的内容（红色背景）- 仅在A侧显示
+                            // Deleted content (red background) - only shown on side A
                             if (side === 'A') {
                                 html += `<span class="diff-line diff-removed">- ${this.escapeHtml(line)}</span>`;
                             }
-                            // B侧不显示删除内容
+                            // Deleted content is not displayed on side B
                         } else {
-                            // 未修改的内容（灰色）
+                            // Unmodified content (gray)
                             html += `<span class="diff-line diff-unchanged">  ${this.escapeHtml(line)}</span>`;
                         }
                     });
@@ -7253,7 +7753,7 @@ var app = new Vue({
             return html || '<span class="diff-empty">暂无内容</span>';
         },
         
-        // 渲染行内单词级别差异
+        // Rendering intraline word-level differences
         renderInlineDiff(oldText, newText, mode) {
             if (typeof Diff === 'undefined' || !Diff.diffWords) {
                 return this.escapeHtml(mode === 'removed' ? oldText : newText);
@@ -7266,14 +7766,14 @@ var app = new Vue({
                 const escapedText = this.escapeHtml(part.value);
                 
                 if (mode === 'removed') {
-                    // A侧：高亮删除的单词
+                    // Side A: Highlight deleted words
                     if (part.removed) {
                         html += `<mark class="diff-word-removed">${escapedText}</mark>`;
                     } else if (!part.added) {
                         html += escapedText;
                     }
                 } else {
-                    // B侧：高亮新增的单词
+                    // Side B: Highlight newly added words
                     if (part.added) {
                         html += `<mark class="diff-word-added">${escapedText}</mark>`;
                     } else if (!part.removed) {
@@ -7285,36 +7785,36 @@ var app = new Vue({
             return html;
         },
         
-        // HTML转义工具函数
+        // HTML escape tool function
         escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         },
         
-        // ========== contenteditable编辑器方法（简洁版）==========
+        // ========== contenteditable editor method (concise version) ==========
         
-        // 获取编辑器中的纯文本
+        // Get plain text in editor
         getEditorText() {
             const editor = this.$refs.promptEditor;
             if (!editor) return '';
             return editor.innerText || '';
         },
         
-        // 生成带高亮的HTML
+        // Generate HTML with highlighting
         generateHighlightHTML(text) {
             if (!text) return '';
             
-            // 获取前缀和后缀（从当前编辑的prompt参数）
+            // Get the prefix and suffix (from the currently edited prompt parameter)
             const prefix = this.promptParamForm.prefix || '';
             const suffix = this.promptParamForm.suffix || '';
             
-            // 调试日志
+            // debug log
             console.log('[generateHighlightHTML] prefix:', prefix, 'suffix:', suffix);
             console.log('[generateHighlightHTML] variableList:', this.promptParamForm.variableList);
             
             if (!prefix || !suffix) {
-                // 没有前缀后缀，直接返回转义的HTML
+                // There is no prefix or suffix, and the escaped HTML is returned directly.
                 console.log('[generateHighlightHTML] No prefix/suffix, returning plain text');
                 return text
                     .replace(/&/g, '&amp;')
@@ -7323,7 +7823,7 @@ var app = new Vue({
                     .replace(/\n/g, '<br>');
             }
             
-            // 获取所有已定义的变量名（不带前后缀）
+            // Get all defined variable names (without prefix and suffix)
             const definedVarNames = new Set();
             if (this.promptParamForm.variableList && this.promptParamForm.variableList.length > 0) {
                 this.promptParamForm.variableList.forEach(v => {
@@ -7335,13 +7835,13 @@ var app = new Vue({
             
             console.log('[generateHighlightHTML] definedVarNames:', Array.from(definedVarNames));
             
-            // 转义正则特殊字符
+            // Escape regular special characters
             const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             const escapedPrefix = escapeRegex(prefix);
             const escapedSuffix = escapeRegex(suffix);
             
-            // 构建正则：匹配 {{$varName}}，使用非贪婪匹配
-            // 例如：prefix={{$, suffix=}}, 正则为：\{\{\$(.+?)\}\}
+            // Build regex: match {{$varName}}, use non-greedy matching
+            // For example: prefix={{$, suffix=}}, the regular expression is: \{\{\$(.+?)\}\}
             const regex = new RegExp(`${escapedPrefix}(.+?)${escapedSuffix}`, 'g');
             
             console.log('[generateHighlightHTML] regex:', regex);
@@ -7351,40 +7851,40 @@ var app = new Vue({
             let matchCount = 0;
             let match;
             
-            // 使用 exec 逐个匹配
+            // Use exec to match one by one
             while ((match = regex.exec(text)) !== null) {
                 matchCount++;
-                const fullMatch = match[0];  // 完整匹配，如 {{$prefix}}
-                const varName = match[1];     // 捕获组，如 prefix
+                const fullMatch = match[0];  // Complete match, such as {{$prefix}}
+                const varName = match[1];     // Capturing groups, such as prefix
                 const offset = match.index;
                 
                 console.log(`[generateHighlightHTML] Match ${matchCount}:`, fullMatch, 'varName:', varName, 'offset:', offset);
                 
-                // 添加匹配前的文本（HTML转义并处理换行）
+                // Add text before match (HTML escape and handle newlines)
                 const beforeText = text.substring(lastIndex, offset);
-                // 处理换行：将换行符替换为 <br>
-                // 注意：不再移除 span 标签前的尾随空白字符，因为用户可能有意输入空格
+                // Handle newlines: replace newlines with <br>
+                // NOTE: Trailing whitespace characters before span tags are no longer removed as the user may enter the space intentionally
                 let processedBeforeText = beforeText
                     .replace(/&/g, '&amp;')
                     .replace(/</g, '&lt;')
                     .replace(/>/g, '&gt;');
                 
-                // 将换行符替换为 <br>（保留所有空格和制表符，因为用户可能有意输入）
+                // Replace newlines with <br> (keep all spaces and tabs as the user may have entered them intentionally)
                 processedBeforeText = processedBeforeText.replace(/\n/g, '<br>');
                 result += processedBeforeText;
                 
-                // 判断变量是否已定义
+                // Determine whether the variable has been defined
                 const isDefined = definedVarNames.has(varName);
                 const className = isDefined ? 'var-highlight defined' : 'var-highlight undefined';
                 
                 console.log(`[generateHighlightHTML] varName "${varName}" isDefined:`, isDefined);
                 
-                // 添加高亮的变量（HTML转义，但不包含换行）
+                // Add highlighted variables (HTML escaped, but without newlines)
                 const escapedMatch = fullMatch
                     .replace(/&/g, '&amp;')
                     .replace(/</g, '&lt;')
                     .replace(/>/g, '&gt;');
-                // 确保 span 标签前后没有空白字符，直接拼接（不在 HTML 字符串中添加换行或空格）
+                // Make sure there are no whitespace characters before and after the span tag, and splice it directly (do not add newlines or spaces in the HTML string)
                 result += `<span class="${className}">${escapedMatch}</span>`;
                 
                 lastIndex = offset + fullMatch.length;
@@ -7392,37 +7892,37 @@ var app = new Vue({
             
             console.log('[generateHighlightHTML] Total matches:', matchCount);
             
-            // 添加剩余文本（HTML转义并处理换行）
+            // Add remaining text (HTML escaping and handling newlines)
             const remainingText = text.substring(lastIndex);
-            // 如果剩余文本开头有空白字符（空格、制表符等），先移除，避免在 span 后面产生空白
-            // 但保留换行符，因为需要转换为 <br>
+            // If there are whitespace characters (spaces, tabs, etc.) at the beginning of the remaining text, remove them first to avoid creating whitespace after span
+            // But keep the newlines as they need to be converted to <br>
             let processedRemainingText = remainingText
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;');
             
-            // 移除开头的空白字符（但保留换行符）
+            // Remove leading whitespace characters (but keep newlines)
             processedRemainingText = processedRemainingText.replace(/^[ \t]+/, '');
-            // 将换行符替换为 <br>
+            // Replace newlines with <br>
             processedRemainingText = processedRemainingText.replace(/\n/g, '<br>');
             result += processedRemainingText;
             
-            // 注意：不再清理 span 标签前后的空白字符（空格、制表符等）
-            // 因为用户可能在 span 前后输入空格，这些空格应该保留
-            // 清理函数 cleanupHighlightBrTags 会处理多余的空白文本节点
+            // Note: Whitespace characters (spaces, tabs, etc.) before and after the span tag are no longer cleaned
+            // Because the user may enter spaces before and after the span, these spaces should be preserved
+            // The cleanup function cleanupHighlightBrTags will handle excess blank text nodes
             
             console.log('[generateHighlightHTML] Final HTML (first 200 chars):', result.substring(0, 200));
             
             return result;
         },
         
-        // 转义正则表达式特殊字符
+        // Escape regular expression special characters
         escapeRegex(str) {
             return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         },
         
-        // 保存光标位置（返回字符偏移量，基于纯文本）
-        // 使用与 restoreCaretPosition 完全相同的遍历逻辑，确保一致性
+        // Save cursor position (returns character offset, based on plain text)
+        // Use exactly the same traversal logic as restoreCaretPosition to ensure consistency
         saveCaretPosition() {
             const editor = this.$refs.promptEditor;
             if (!editor) return 0;
@@ -7437,45 +7937,45 @@ var app = new Vue({
             let charCount = 0;
             let found = false;
             
-            // 使用与 restoreCaretPosition 完全相同的遍历逻辑
+            // Uses exactly the same traversal logic as restoreCaretPosition
             const walkNodes = (node) => {
                 if (found) return;
                 
                 if (node.nodeType === Node.TEXT_NODE) {
                     if (node === targetContainer) {
-                        // 找到了目标文本节点，加上偏移量
+                        // The target text node is found, plus the offset
                         charCount += targetOffset;
                         found = true;
                         return;
                     }
-                    // 不是目标节点，加上整个节点的长度
+                    // Not the target node, plus the length of the entire node
                     const nodeLength = node.textContent ? node.textContent.length : 0;
                     charCount += nodeLength;
                 } else if (node.nodeName === 'BR') {
-                    // 检查光标是否在这个 BR 标签之后
-                    // 如果 targetContainer 是 BR 的父节点，且 targetOffset 指向这个 BR 之后
+                    // Check if the cursor is after this BR tag
+                    // If targetContainer is the parent node of BR and targetOffset points to after this BR
                     if (targetContainer.nodeType === Node.ELEMENT_NODE && 
                         targetContainer === node.parentNode &&
                         targetOffset > 0) {
-                        // 检查 targetOffset 是否指向这个 BR 之后
+                        // After checking whether targetOffset points to this BR
                         const brIndex = Array.from(targetContainer.childNodes).indexOf(node);
                         if (targetOffset === brIndex + 1) {
-                            // 光标在这个 BR 标签之后
+                            // The cursor is after this BR tag
                             charCount += 1;
                             found = true;
                             return;
                         }
                     }
-                    // BR 标签算作一个字符（换行符）
+                    // BR tag counts as one character (newline character)
                     charCount += 1;
                 } else if (node.nodeType === Node.ELEMENT_NODE) {
-                    // 检查光标是否在这个元素节点的子节点之间
+                    // Checks whether the cursor is between the child nodes of this element node
                     if (node === targetContainer && targetOffset > 0) {
-                        // 光标在这个节点的子节点之间
-                        // 使用与 restoreCaretPosition 完全相同的遍历逻辑计算字符数
+                        // The cursor is between the child nodes of this node
+                        // Count the number of characters using exactly the same traversal logic as restoreCaretPosition
                         for (let i = 0; i < targetOffset && i < node.childNodes.length; i++) {
                             const childNode = node.childNodes[i];
-                            // 递归遍历子节点，使用相同的逻辑
+                            // Recursively traverse child nodes, using the same logic
                             const countChildNodes = (child) => {
                                 if (child.nodeType === Node.TEXT_NODE) {
                                     return child.textContent ? child.textContent.length : 0;
@@ -7495,7 +7995,7 @@ var app = new Vue({
                         found = true;
                         return;
                     }
-                    // 对于元素节点，递归遍历子节点
+                    // For element nodes, recursively traverse the child nodes
                     for (let i = 0; i < node.childNodes.length; i++) {
                         walkNodes(node.childNodes[i]);
                         if (found) return;
@@ -7510,8 +8010,8 @@ var app = new Vue({
             return charCount;
         },
         
-        // 恢复光标位置（基于纯文本偏移量）
-        // 使用与 saveCaretPosition 完全相同的遍历逻辑，确保一致性
+        // Restore cursor position (based on plain text offset)
+        // Use exactly the same traversal logic as saveCaretPosition to ensure consistency
         restoreCaretPosition(offset) {
             const editor = this.$refs.promptEditor;
             if (!editor) return;
@@ -7523,7 +8023,7 @@ var app = new Vue({
             let charCount = 0;
             let found = false;
             
-            // 使用与 saveCaretPosition 完全相同的遍历逻辑
+            // Uses exactly the same traversal logic as saveCaretPosition
             const walkNodes = (node) => {
                 if (found) return;
                 
@@ -7533,7 +8033,7 @@ var app = new Vue({
                     const nextCharCount = charCount + nodeLength;
                     
                     if (offset >= charCount && offset <= nextCharCount) {
-                        // 光标在这个文本节点内
+                        // The cursor is within this text node
                         const positionInNode = Math.min(offset - charCount, nodeLength);
                         range.setStart(node, positionInNode);
                         range.collapse(true);
@@ -7542,16 +8042,16 @@ var app = new Vue({
                     }
                     charCount = nextCharCount;
                 } else if (node.nodeName === 'BR') {
-                    // BR 标签算作一个字符（换行符）
+                    // BR tag counts as one character (newline character)
                     const nextCharCount = charCount + 1;
                     if (offset === charCount) {
-                        // 光标在 BR 标签之前
+                        // The cursor is before the BR tag
                         range.setStartBefore(node);
                         range.collapse(true);
                         found = true;
                         return;
                     } else if (offset === nextCharCount) {
-                        // 光标在 BR 标签之后
+                        // The cursor is after the BR tag
                         range.setStartAfter(node);
                         range.collapse(true);
                         found = true;
@@ -7559,8 +8059,8 @@ var app = new Vue({
                     }
                     charCount = nextCharCount;
                 } else if (node.nodeType === Node.ELEMENT_NODE) {
-                    // 对于元素节点，递归遍历子节点
-                    // 注意：span 等内联元素不影响字符计数，只计算其内部的文本
+                    // For element nodes, recursively traverse the child nodes
+                    // Note: Inline elements such as span do not affect the character count, only the text inside them is counted.
                     for (let i = 0; i < node.childNodes.length; i++) {
                         walkNodes(node.childNodes[i]);
                         if (found) return;
@@ -7579,7 +8079,7 @@ var app = new Vue({
                     console.log('[restoreCaretPosition] Successfully restored to position:', offset);
                 } catch (e) {
                     console.warn('[restoreCaretPosition] Failed to restore caret position:', e);
-                    // Fallback: 放在末尾
+                    // Fallback: put at the end
                     try {
                         range.selectNodeContents(editor);
                         range.collapse(false);
@@ -7590,11 +8090,11 @@ var app = new Vue({
                     }
                 }
             } else {
-                // 如果找不到精确位置，尝试将光标放在末尾
+                // If you can't find the exact location, try placing the cursor at the end
                 console.warn('[restoreCaretPosition] Could not find position', offset, ', placing at end');
                 try {
                     range.selectNodeContents(editor);
-                    range.collapse(false); // 折叠到末尾
+                    range.collapse(false); // fold to end
                     sel.removeAllRanges();
                     sel.addRange(range);
                 } catch (e) {
@@ -7603,23 +8103,23 @@ var app = new Vue({
             }
         },
         
-        // 处理粘贴事件
+        // Handle paste event
         handlePaste(e) {
             const editor = this.$refs.promptEditor;
             if (!editor) return;
             
-            // 标记正在粘贴
+            // Tag is pasting
             this._isPasting = true;
             
-            // 清除之前的防抖定时器
+            // Clear previous anti-shake timer
             if (this._highlightTimer) clearTimeout(this._highlightTimer);
             
-            // 在粘贴前保存光标位置（使用与 saveCaretPosition 相同的方法）
+            // Save cursor position before pasting (using the same method as saveCaretPosition)
             const sel = window.getSelection();
             let pasteStartPos = 0;
             
             if (sel.rangeCount > 0) {
-                // 使用与 saveCaretPosition 相同的遍历方法来计算位置
+                // Use the same traversal method as saveCaretPosition to calculate the position
                 const range = sel.getRangeAt(0);
                 const targetContainer = range.startContainer;
                 const targetOffset = range.startOffset;
@@ -7627,7 +8127,7 @@ var app = new Vue({
                 let charCount = 0;
                 let found = false;
                 
-                // 使用与 saveCaretPosition 完全相同的遍历逻辑
+                // Uses exactly the same traversal logic as saveCaretPosition
                 const walkNodes = (node) => {
                     if (found) return;
                     
@@ -7686,215 +8186,215 @@ var app = new Vue({
                 console.log('[handlePaste] Saved paste start position:', pasteStartPos);
             }
             
-            // 获取粘贴的纯文本内容
+            // Get pasted plain text content
             const pasteData = e.clipboardData ? e.clipboardData.getData('text/plain') : '';
             const pasteTextLength = pasteData.length;
             
             console.log('[handlePaste] Paste data length:', pasteTextLength, 'pasteStartPos:', pasteStartPos);
             
-            // 等待粘贴内容插入完成后再处理
-            // 使用 requestAnimationFrame 确保粘贴操作完全完成
+            // Wait for the pasted content to be inserted before processing
+            // Use requestAnimationFrame to ensure the paste operation is fully completed
             requestAnimationFrame(() => {
                 setTimeout(() => {
                     this._isPasting = false;
                     
-                    // 计算粘贴后的光标位置：粘贴开始位置 + 粘贴文本长度
+                    // Calculate the cursor position after pasting: paste start position + paste text length
                     const newCaretPos = pasteStartPos + pasteTextLength;
                     
                     console.log('[handlePaste] Calculated new caret position:', newCaretPos);
                     
                     const text = this.getEditorText();
                     
-                    // 检查内容是否真的发生了变化
+                    // Check if the content has actually changed
                     const contentChanged = text !== this.content;
                     
-                    // 更新 content
+                    // Update content
                     this.content = text;
                     
-                    // 如果内容真的发生了变化，触发状态更新（从"连发"切换到"打靶"）
+                    // If the content really changes, trigger a status update (switch from "Burst" to "Target Shooting")
                     if (contentChanged) {
                         this.promptChangeHandel(text, 'content');
                     }
                     
-                    // 应用高亮，并传入预期的光标位置
+                    // Apply highlighting, passing in the expected cursor position
                     this.applyHighlightWithCaretPos(newCaretPos);
                 }, 10);
             });
         },
         
-        // 处理键盘按键事件（特别是回车键）
+        // Handle keyboard key events (especially the Enter key)
         handleKeyDown(e) {
-            // 如果是回车键，需要特殊处理
+            // If it is the Enter key, special processing is required
             if (e.key === 'Enter' || e.keyCode === 13) {
                 const editor = this.$refs.promptEditor;
                 if (!editor) return;
                 
-                // 标记正在输入回车
+                // Mark Enter Enter
                 this._isEntering = true;
                 
-                // 清除之前的防抖定时器
+                // Clear previous anti-shake timer
                 if (this._highlightTimer) clearTimeout(this._highlightTimer);
                 
-                // 在回车键插入 BR 标签之前，保存当前光标位置
+                // Save the current cursor position before entering the BR tag
                 const sel = window.getSelection();
                 let enterStartPos = 0;
                 
                 if (sel.rangeCount > 0) {
-                    // 使用与 saveCaretPosition 相同的方法计算位置
+                    // Calculate the position using the same method as saveCaretPosition
                     enterStartPos = this.saveCaretPosition();
                     console.log('[handleKeyDown] Enter key pressed, saved position before BR insertion:', enterStartPos);
                 }
                 
-                // 等待回车键插入 BR 标签完成后再处理
+                // Wait for the Enter key to be inserted into the BR tag before processing.
                 requestAnimationFrame(() => {
                     setTimeout(() => {
                         this._isEntering = false;
                         
-                        // 回车后，光标应该在 BR 标签之后，位置应该是 enterStartPos + 1
+                        // After pressing Enter, the cursor should be after the BR label and the position should be enterStartPos + 1
                         const newCaretPos = enterStartPos + 1;
                         
                         console.log('[handleKeyDown] After Enter, calculated new caret position:', newCaretPos);
                         
                         const text = this.getEditorText();
                         
-                        // 检查内容是否真的发生了变化
+                        // Check if the content has actually changed
                         const contentChanged = text !== this.content;
                         
-                        // 更新 content
+                        // Update content
                         this.content = text;
                         
-                        // 如果内容真的发生了变化，触发状态更新（从"连发"切换到"打靶"）
+                        // If the content really changes, trigger a status update (switch from "Burst" to "Target Shooting")
                         if (contentChanged) {
                             this.promptChangeHandel(text, 'content');
                         }
                         
-                        // 使用 applyHighlightWithCaretPos 来应用高亮并恢复光标位置
+                        // Use applyHighlightWithCaretPos to apply highlight and restore cursor position
                         this.applyHighlightWithCaretPos(newCaretPos);
                     }, 10);
                 });
             }
         },
         
-        // 用户输入时（立即更新高亮，使用短防抖优化性能）
+        // On user input (immediately updates highlights, uses short stabilization to optimize performance)
         handleEditorInput(e) {
-            if (this.isComposing) return;  // IME输入中不处理
-            if (this._isPasting) return;   // 粘贴操作中不处理，由 handlePaste 处理
-            if (this._isEntering) return;  // 回车操作中不处理，由 handleKeyDown 处理
+            if (this.isComposing) return;  // IME input is not processed
+            if (this._isPasting) return;   // Not processed during paste operation, handled by handlePaste
+            if (this._isEntering) return;  // It is not processed during the carriage return operation and is processed by handleKeyDown.
             
             const text = this.getEditorText();
             
-            // 检查内容是否真的发生了变化
+            // Check if the content has actually changed
             const contentChanged = text !== this.content;
             
-            // 更新 content
+            // Update content
             this.content = text;
             
-            // 如果内容真的发生了变化，触发状态更新（从"连发"切换到"打靶"）
+            // If the content really changes, trigger a status update (switch from "Burst" to "Target Shooting")
             if (contentChanged) {
                 this.promptChangeHandel(text, 'content');
             }
             
-            // 使用较短的防抖时间（150ms）来平衡性能和响应性
-            // 这样用户输入、删除、剪切等操作时，高亮会立即更新
+            // Use a short anti-shake time (150ms) to balance performance and responsiveness
+            // In this way, the highlight will be updated immediately when the user enters, deletes, cuts, etc.
             if (this._highlightTimer) clearTimeout(this._highlightTimer);
             this._highlightTimer = setTimeout(() => {
                 this.applyHighlight();
             }, 150);
         },
         
-        // 清理 var-highlight span 周围多余的 <br> 标签和空白文本节点，并规范化 DOM
+        // Clean up excess <br> tags and blank text nodes around var-highlight span and normalize DOM
         cleanupHighlightBrTags(editor) {
             if (!editor) return;
             
             console.log('[cleanupHighlightBrTags] Starting cleanup...');
             
-            // 查找所有 var-highlight span 标签（使用 Array.from 创建副本，避免动态查询问题）
+            // Find all var-highlight span tags (use Array.from to create a copy to avoid dynamic query issues)
             const highlightSpans = Array.from(editor.querySelectorAll('.var-highlight'));
             
             console.log('[cleanupHighlightBrTags] Found', highlightSpans.length, 'highlight spans');
             
             highlightSpans.forEach(span => {
-                // 清理 span 前面的空白文本节点
-                // 只移除完全空白的文本节点（不包含任何可见字符），保留包含用户输入空格的文本节点
+                // Clean up the blank text nodes in front of the span
+                // Only remove text nodes that are completely blank (containing no visible characters), leaving text nodes that contain user-entered spaces
                 let prevSibling = span.previousSibling;
                 while (prevSibling) {
                     if (prevSibling.nodeType === Node.TEXT_NODE) {
                         const textContent = prevSibling.textContent;
-                        // 只移除完全空白的文本节点（只包含空白字符且长度为0，或者是浏览器自动添加的空白）
-                        // 保留包含用户输入空格的文本节点（即使只有空格，也应该保留，因为用户可能有意输入空格）
+                        // Only remove completely blank text nodes (containing only whitespace characters and a length of 0, or whitespace automatically added by the browser)
+                        // Preserve text nodes that contain user-entered spaces (even if there are only spaces, they should be preserved because the user may enter spaces intentionally)
                         if (!textContent || textContent.length === 0) {
-                            // 完全空的文本节点，移除
+                            // Completely empty text nodes, removed
                             const toRemove = prevSibling;
                             prevSibling = prevSibling.previousSibling;
                             toRemove.remove();
                         } else {
-                            // 有内容的文本节点，保留（包括只包含空格的节点，因为用户可能有意输入空格）
+                            // Text nodes with content, reserved (including nodes containing only spaces, as the user may enter spaces intentionally)
                             break;
                         }
                     } else {
-                        // 其他类型的节点（包括 BR 标签），停止清理
+                        // Nodes of other types (including BR tags), stop cleaning
                         break;
                     }
                 }
                 
-                // 清理 span 后面的空白文本节点
-                // 只移除完全空白的文本节点，保留包含用户输入空格的文本节点
+                // Clean up the blank text nodes after span
+                // Only remove text nodes that are completely blank, leaving text nodes that contain user-entered spaces
                 let nextSibling = span.nextSibling;
                 while (nextSibling) {
                     if (nextSibling.nodeType === Node.TEXT_NODE) {
                         const textContent = nextSibling.textContent;
-                        // 只移除完全空白的文本节点
-                        // 保留包含用户输入空格的文本节点
+                        // Remove only completely blank text nodes
+                        // Preserve text nodes containing user-entered spaces
                         if (!textContent || textContent.length === 0) {
-                            // 完全空的文本节点，移除
+                            // Completely empty text nodes, removed
                             const toRemove = nextSibling;
                             nextSibling = nextSibling.nextSibling;
                             toRemove.remove();
                         } else {
-                            // 有内容的文本节点，保留（包括只包含空格的节点，因为用户可能有意输入空格）
+                            // Text nodes with content, reserved (including nodes containing only spaces, as the user may enter spaces intentionally)
                             break;
                         }
                     } else {
-                        // 遇到非文本节点（包括 BR 标签），停止清理
-                        // BR 标签是用户输入的换行，不应该被移除
+                        // Stop cleaning when encountering non-text nodes (including BR tags)
+                        // The BR tag is a user-entered line break and should not be removed
                         break;
                     }
                 }
             });
             
-            // 规范化 DOM：合并相邻的文本节点
-            // 这可以确保 span 标签紧贴文本节点，没有中间的空白文本节点
+            // Normalize DOM: merge adjacent text nodes
+            // This ensures that the span tags fit snugly into the text nodes, with no intervening white space text nodes
             editor.normalize();
             
             console.log('[cleanupHighlightBrTags] Cleanup completed. Editor innerHTML (first 300 chars):', editor.innerHTML.substring(0, 300));
         },
         
-        // 应用高亮（使用指定的光标位置，用于粘贴等操作）
+        // Apply highlighting (using the specified cursor position, for operations such as pasting)
         applyHighlightWithCaretPos(expectedCaretPos) {
             const editor = this.$refs.promptEditor;
             if (!editor) return;
             
-            // 获取当前文本
+            // Get the current text
             const text = this.getEditorText();
             
-            // 同步 content（但不触发状态变化，因为状态变化应该在 handleEditorInput、handlePaste、handleKeyDown 中处理）
-            // 这里只负责高亮显示
+            // Synchronize content (but do not trigger state changes, because state changes should be handled in handleEditorInput, handlePaste, handleKeyDown)
+            // This is only responsible for highlighting
             this.content = text;
             
-            // 生成高亮HTML
+            // Generate highlighted HTML
             const html = this.generateHighlightHTML(text);
             
-            // 更新HTML
+            // Update HTML
             editor.innerHTML = html;
             
-            // 使用 requestAnimationFrame 确保 DOM 完全更新后再清理和恢复光标
+            // Use requestAnimationFrame to ensure the DOM is fully updated before cleaning and restoring the cursor
             requestAnimationFrame(() => {
-                // 清理多余的 <br> 标签和空白文本节点
+                // Clean up redundant <br> tags and blank text nodes
                 this.cleanupHighlightBrTags(editor);
                 
-                // 使用 $nextTick 确保清理完成后再恢复光标
+                // Use $nextTick to ensure cleanup is complete before restoring the cursor
                 this.$nextTick(() => {
-                    // 使用 innerText 来计算文本长度，确保与 saveCaretPosition 一致
+                    // Use innerText to calculate the text length and ensure it is consistent with saveCaretPosition
                     const currentText = editor.innerText || '';
                     const currentTextLength = currentText.length;
                     const targetPos = Math.min(expectedCaretPos, currentTextLength);
@@ -7903,81 +8403,81 @@ var app = new Vue({
                 });
             });
             
-            // 注意：不再在这里调用 promptChangeHandel
-            // 内容变化的状态更新应该在 handleEditorInput、handlePaste、handleKeyDown 等实际输入事件中处理
-            // 这里只负责高亮显示
+            // NOTE: promptChangeHandel is no longer called here
+            // Status updates of content changes should be handled in actual input events such as handleEditorInput, handlePaste, handleKeyDown, etc.
+            // This is only responsible for highlighting
         },
         
-        // 应用高亮（保存光标位置）
+        // Apply highlighting (save cursor position)
         applyHighlight() {
             const editor = this.$refs.promptEditor;
             if (!editor) return;
             
-            // 检查编辑器是否有焦点
+            // Check if the editor has focus
             const hasFocus = document.activeElement === editor;
             
-            // 获取当前文本（在保存光标位置之前获取，确保文本一致性）
+            // Get the current text (get it before saving the cursor position to ensure text consistency)
             const text = this.getEditorText();
             
-            // 同步 content（但不触发状态变化，因为状态变化应该在 handleEditorInput 中处理）
-            // 这里只负责高亮显示
+            // Synchronize content (but not trigger state changes, since state changes should be handled in handleEditorInput)
+            // This is only responsible for highlighting
             this.content = text;
             
-            // 只有在编辑器有焦点时才保存光标位置
-            // 使用基于文本内容的方法，而不是 DOM 遍历，确保与恢复时一致
+            // Save cursor position only when editor has focus
+            // Use a text content-based approach rather than DOM traversal to ensure consistency with recovery
             let caretPos = 0;
             if (hasFocus) {
                 const sel = window.getSelection();
                 if (sel.rangeCount > 0) {
                     const range = sel.getRangeAt(0);
-                    // 创建一个从编辑器开始到光标位置的 range
+                    // Create a range from the beginning of the editor to the cursor position
                     const preCaretRange = range.cloneRange();
                     preCaretRange.selectNodeContents(editor);
                     preCaretRange.setEnd(range.startContainer, range.startOffset);
-                    // 使用 textContent 来计算位置（不包括 BR 标签，BR 标签会在遍历时单独计算）
-                    // 但我们需要考虑 BR 标签，所以使用遍历 DOM 的方法
+                    // Use textContent to calculate position (excluding BR tags, which are calculated separately during traversal)
+                    // But we need to consider the BR tag, so we use the method of traversing the DOM
                     caretPos = this.saveCaretPosition();
                 }
                 console.log('[applyHighlight] Saved caret position:', caretPos, 'text length:', text.length);
             }
             
-            // 生成高亮HTML
+            // Generate highlighted HTML
             const html = this.generateHighlightHTML(text);
             
-            // 更新HTML
+            // Update HTML
             editor.innerHTML = html;
             
-            // 使用 requestAnimationFrame 确保 DOM 完全更新后再清理和恢复光标
+            // Use requestAnimationFrame to ensure the DOM is fully updated before cleaning and restoring the cursor
             requestAnimationFrame(() => {
-                // 清理多余的 <br> 标签和空白文本节点
+                // Clean up redundant <br> tags and blank text nodes
                 this.cleanupHighlightBrTags(editor);
                 
-                // 只有在编辑器有焦点时才恢复光标位置
+                // Only restore cursor position when editor has focus
                 if (hasFocus && caretPos > 0) {
-                    // 使用 $nextTick 确保清理完成后再恢复光标
+                    // Use $nextTick to ensure cleanup is complete before restoring the cursor
                     this.$nextTick(() => {
-                        // 恢复光标位置（使用相同的遍历逻辑）
+                        // Restore cursor position (using the same traversal logic)
                         console.log('[applyHighlight] Restoring caret position:', caretPos);
                         this.restoreCaretPosition(caretPos);
                     });
                 }
             });
             
-            // 注意：不再在这里调用 promptChangeHandel
-            // 内容变化的状态更新应该在 handleEditorInput、handlePaste、handleKeyDown 等实际输入事件中处理
-            // 这里只负责高亮显示，避免在 blur 时误触发状态变化
+            // NOTE: promptChangeHandel is no longer called here
+            // Status updates of content changes should be handled in actual input events such as handleEditorInput, handlePaste, handleKeyDown, etc.
+            // This is only responsible for highlighting to avoid accidentally triggering state changes during blur.
         },
         
-        // 辅助方法：根据ID获取名称
+        // Helper method: Get name based on ID
         getTargetRangeName: function(id) {
-            // 使用 NameHelper 工具类
+            // Using the NameHelper utility class
             return window.PromptRangeUtils.NameHelper.getName(
                 this.promptFieldOpt, id, '未知靶场'
             );
         },
         
         getTargetLaneName: function(id) {
-            // 从promptOpt中查找对应的靶道（使用自定义字段名 idkey）
+            // Find the corresponding target channel from promptOpt (use custom field name idkey)
             var lane = window.PromptRangeUtils.NameHelper.getOption(
                 this.promptOpt, id, 'idkey'
             );
@@ -7985,14 +8485,14 @@ var app = new Vue({
         },
         
         getTacticalName: function(id) {
-            // 使用 NameHelper 工具类
+            // Using the NameHelper utility class
             return window.PromptRangeUtils.NameHelper.getName(
                 this.tacticalOpt, id, '未知战术'
             );
         },
         
         getModelName: function(id) {
-            // 使用 NameHelper 工具类
+            // Using the NameHelper utility class
             return window.PromptRangeUtils.NameHelper.getName(
                 this.modelOpt, id, '未知模型'
             );

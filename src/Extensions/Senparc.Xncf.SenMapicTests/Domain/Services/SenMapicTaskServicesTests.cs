@@ -85,19 +85,19 @@ namespace Senparc.Xncf.SenMapicTests.Domain.Services
 
             // Assert
             Assert.IsNotNull(task);
-            Assert.AreEqual(SenMapicTaskStatus.Running, task.Status);//正在进行中
+            Assert.AreEqual(SenMapicTaskStatus.Running, task.Status);//in progress
 
             Assert.AreEqual(name, task.Name);
             Assert.AreEqual(startUrl, task.StartUrl);
 
-            //TODO:可以等待完成
+            //TODO:can wait for completion
         }
 
         [TestMethod]
         public async Task CreateTaskAsync_WithRealUrl_CreatesAndSavesTask()
         {
             // Arrange
-            string name = "NCF文档测试";
+            string name = "NCFDocument testing";
             string startUrl = "https://doc.ncf.pub";
             int maxThread = 5;
             int maxBuildMinutes = 60;
@@ -113,7 +113,7 @@ namespace Senparc.Xncf.SenMapicTests.Domain.Services
             Assert.IsNotNull(result);
             Assert.AreEqual(name, result.Name);
             Assert.AreEqual(startUrl, result.StartUrl);
-            Assert.AreEqual(SenMapicTaskStatus.Waiting, result.Status); // 验证初始状态
+            Assert.AreEqual(SenMapicTaskStatus.Waiting, result.Status); // Verify initial state
         }
 
         [TestMethod]
@@ -127,7 +127,7 @@ namespace Senparc.Xncf.SenMapicTests.Domain.Services
             foreach (var url in urls)
             {
                 var task = _senMapicTaskService.CreateTaskAsync(
-                    $"NCF测试-{url}", url, 5, 60, 3, 100,
+                    $"NCFtest-{url}", url, 5, 60, 3, 100,
                     startImmediately: false);
                 tasks.Add(task);
             }
@@ -152,7 +152,7 @@ namespace Senparc.Xncf.SenMapicTests.Domain.Services
             var result = _senMapicTaskService.CreateTaskAsync(name, invalidUrl, 5, 60, 3, 100,
                 startImmediately: true);
 
-            //TODO:验证存在错误信息的结果
+            //TODO:Verify results with error messages
         }
     }
 }

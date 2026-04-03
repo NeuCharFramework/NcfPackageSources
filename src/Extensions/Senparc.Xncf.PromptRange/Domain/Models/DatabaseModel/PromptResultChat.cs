@@ -7,43 +7,43 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
 {
     /// <summary>
-    /// PromptResultChat：PromptResult 的对话历史记录
+    ///PromptResultChat: Conversation history for PromptResult
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(PromptResultChat))] //必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(PromptResultChat))] //The prefix must be added to prevent conflicts system-wide.
     [Serializable]
     public class PromptResultChat : EntityBase<int>
     {
         /// <summary>
-        /// PromptResult 的 ID（外键）
+        ///ID of PromptResult (foreign key)
         /// </summary>
         [Required]
         public int PromptResultId { get; private set; }
 
         /// <summary>
-        /// 对话角色类型：User 或 Assistant
+        /// Dialogue role type: User or Assistant
         /// </summary>
         [Required]
         public ChatRoleType RoleType { get; private set; }
 
         /// <summary>
-        /// 对话内容
+        ///Conversation content
         /// </summary>
         [Required]
         public string Content { get; private set; }
 
         /// <summary>
-        /// 对话顺序（在同一 PromptResult 中的顺序，从 1 开始）
+        /// Conversation order (order within the same PromptResult, starting from 1)
         /// </summary>
         [Required]
         public int Sequence { get; private set; }
 
         /// <summary>
-        /// 用户反馈：Like（true）、Unlike（false）、未反馈（null）
+        /// User feedback: Like (true), Unlike (false), No feedback (null)
         /// </summary>
         public bool? UserFeedback { get; private set; }
 
         /// <summary>
-        /// 用户评分（0-10分，可选）
+        /// User rating (0-10 points, optional)
         /// </summary>
         public decimal? UserScore { get; private set; }
 
@@ -52,12 +52,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 构造函数
+        ///Constructor
         /// </summary>
-        /// <param name="promptResultId">PromptResult 的 ID</param>
-        /// <param name="roleType">对话角色类型</param>
-        /// <param name="content">对话内容</param>
-        /// <param name="sequence">对话顺序</param>
+        /// <param name="promptResultId">ID of PromptResult</param>
+        /// <param name="roleType">Dialogue role type</param>
+        /// <param name="content">Conversation content</param>
+        /// <param name="sequence">Conversation sequence</param>
         public PromptResultChat(int promptResultId, ChatRoleType roleType, string content, int sequence)
         {
             PromptResultId = promptResultId;
@@ -67,7 +67,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 从 DTO 创建实体
+        ///Create entities from DTO
         /// </summary>
         /// <param name="dto"></param>
         public PromptResultChat(PromptResultChatDto dto)
@@ -82,9 +82,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 更新用户反馈
+        ///Update user feedback
         /// </summary>
-        /// <param name="feedback">Like（true）、Unlike（false）、取消反馈（null）</param>
+        /// <param name="feedback">Like (true), Unlike (false), Cancel feedback (null)</param>
         /// <returns></returns>
         public PromptResultChat UpdateUserFeedback(bool? feedback)
         {
@@ -93,9 +93,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 更新用户评分
+        ///update user ratings
         /// </summary>
-        /// <param name="score">评分（0-10分），null 表示取消评分</param>
+        /// <param name="score">Score (0-10 points), null means cancel the score</param>
         /// <returns></returns>
         public PromptResultChat UpdateUserScore(decimal? score)
         {
@@ -109,17 +109,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
     }
 
     /// <summary>
-    /// 对话角色类型枚举
+    /// Dialogue character type enumeration
     /// </summary>
     public enum ChatRoleType
     {
         /// <summary>
-        /// 用户
+        ///user
         /// </summary>
         User = 1,
 
         /// <summary>
-        /// 助手（AI）
+        /// Assistant (AI)
         /// </summary>
         Assistant = 2
     }

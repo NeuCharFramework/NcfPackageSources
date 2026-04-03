@@ -109,12 +109,12 @@ define(function (require) {
         },
 
         defaultOption: {
-            // 一级层叠
+            // One level cascading
             zlevel: 0,
-            // 二级层叠
+            // Second level stacking
             z: 2,
             coordinateSystem: 'geo',
-            // 各省的 map 暂时都用中文
+            // The maps of each province are temporarily in Chinese.
             map: 'china',
 
             // 'center' | 'left' | 'right' | 'x%' | {number}
@@ -124,19 +124,19 @@ define(function (require) {
             // right
             // bottom
             // width:
-            // height   // 自适应
+            // height // adaptive
 
-            // 数值合并方式，默认加和，可选为：
+            // Numeric merging method, default sum, optional:
             // 'sum' | 'average' | 'max' | 'min'
             // mapValueCalculation: 'sum',
-            // 地图数值计算结果小数精度
+            // Decimal precision of map numerical calculation results
             // mapValuePrecision: 0,
-            // 显示图例颜色标识（系列标识的小圆点），图例开启时有效
+            // Displays the legend color identification (the small dot of the series identification), which is valid when the legend is turned on.
             showLegendSymbol: true,
-            // 选择模式，默认关闭，可选single，multiple
+            // Select mode, off by default, single, multiple optional
             // selectedMode: false,
             dataRangeHoverLink: true,
-            // 是否开启缩放及漫游模式
+            // Whether to enable zoom and roaming modes
             // roam: false,
 
             // Default on center of map
@@ -163,12 +163,12 @@ define(function (require) {
             // scaleLimit: null,
             itemStyle: {
                 normal: {
-                    // color: 各异,
+                    // color: different,
                     borderWidth: 0.5,
                     borderColor: '#444',
                     areaColor: '#eee'
                 },
-                // 也是选中样式
+                // Also selected style
                 emphasis: {
                     areaColor: 'rgba(255,215, 0, 0.8)'
                 }

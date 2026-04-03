@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;
 using Senparc.Ncf.Core.Models.DataBaseModel;
+using Senparc.Ncf.Core.WorkContext.Provider;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.XncfModuleManager.Domain.Services;
@@ -12,37 +13,47 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.Pages
 {
     [Ncf.AreaBase.Admin.Filters.IgnoreAuth]
-    public class IndexModel(IServiceProvider serviceProvider, XncfModuleServiceExtension xncfModuleServiceEx) 
+    public class IndexModel(
+        IServiceProvider serviceProvider,
+        XncfModuleServiceExtension xncfModuleServiceEx,
+        IAdminWorkContextProvider adminWorkContextProvider)
         : BaseAdminPageModel(serviceProvider)
     {
         private readonly IServiceProvider _serviceProvider = serviceProvider;
+        private readonly IAdminWorkContextProvider _adminWorkContextProvider = adminWorkContextProvider;
 
-        //TODO:从其他模块获得
+        //TODO: Obtained from other modules
         private readonly XncfModuleServiceExtension _xncfModuleServiceEx = xncfModuleServiceEx;
+
+        /// <summary>
+        ///Current user ID (optional, used for front-end acquisition)
+        /// </summary>
+        public int CurrentUserId { get; set; }
 
         public IActionResult OnGet()
         {
+            CurrentUserId = _adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
             return null;
             //return RedirectToPage("/Home/Index");
         }
 
         /// <summary>
-        /// 获取状态
+        /// Get status
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> OnGetXncfStatAsync()
         {
-            //所有已安装模块
+            //All installed modules
             var installedXncfModules = await _xncfModuleServiceEx.GetFullListAsync(z => true);
-            //未安装或待升级模块
+            //Modules not installed or to be upgraded
             var updateXncfRegisters = _xncfModuleServiceEx.GetUnInstallXncfModule(installedXncfModules);
-            //未安装货代升级模块的版本
+            //The version of the freight forwarding upgrade module is not installed
             var newVersions = updateXncfRegisters.Select(z => _xncfModuleServiceEx.GetVersionDisplayName(installedXncfModules, z));
-            //需要升级的版本号
+            //Version number that needs to be upgraded
             var newXncfCount = newVersions.Count(z => !z.Contains("->"));
-            //全新未安装的版本号
+            //New, uninstalled version number
             var updateVersionXncfCount = newVersions.Count() - newXncfCount;
-            //安装后缺失的模块
+            //Missing modules after installation
             var xncfRegisterManager = new XncfRegisterManager(_serviceProvider);
             var missingXncfCount = installedXncfModules.Count(z => !XncfRegisterManager.RegisterList.Exists(r => r.Uid == z.Uid));
 
@@ -61,34 +72,52 @@ namespace Senparc.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 获取开放中的模块信息
+        /// Get open module information
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> OnGetXncfOpeningAsync()
         {
-            //所有已安装模块
+            //All installed modules
             var installedXncfModules = await _xncfModuleServiceEx.GetObjectListAsync(0, 0, 
                 z => z.State == Ncf.Core.Enums.XncfModules_State.开放, 
                 z => z.Id, 
                 Ncf.Core.Enums.OrderingType.Descending);
 
-            //获取未安装或待升级模块
+            //Get modules that are not installed or need to be upgraded
             var updateXncfRegisters = _xncfModuleServiceEx.GetUnInstallXncfModule(installedXncfModules);
 
             var xncfModuleDtos = installedXncfModules.Select(z =>
             {
                 var data = _xncfModuleServiceEx.Mapper.Map<XncfModuleDisplayDto>(z);
 
-                //TODO:去获取模块下的所有的菜单信息
+                //Get module menu information
                 IXncfRegister xncfRegister = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == data.Uid);
                 // if (xncfRegister == null)
                 // {
-                //     throw new Exception($"模块丢失或未加载（{XncfRegisterManager.RegisterList.Count}）！");
+                //     throw new Exception($"Module is missing or not loaded ({XncfRegisterManager.RegisterList.Count})!");
                 // }
                 data.Menus = (xncfRegister as Ncf.Core.Areas.IAreaRegister)?.AreaPageMenuItems ?? new List<Ncf.Core.Areas.AreaPageMenuItem>();
 
+                //Get the Functions information of the module
+                if (xncfRegister != null)
+                {
+                    var registerType = xncfRegister.GetType();
+                    var functionsByModule = Senparc.Ncf.XncfBase.Register.FunctionRenderCollection?.TryGetValue(registerType, out var funcs) == true ? funcs : null;
+                    if (functionsByModule != null && functionsByModule.Count > 0)
+                    {
+                        data.Functions = functionsByModule.Values.Select(f => new
+                        {
+                            f.FunctionRenderAttribute.Name,
+                            f.FunctionRenderAttribute.Description
+                        }).ToList();
+                    }
+                    else
+                    {
+                        data.Functions = new List<object>();
+                    }
+                }
 
-                //查找对应的更新版本
+                //Find the corresponding updated version
                 var register = updateXncfRegisters.FirstOrDefault(r => r.Uid == z.Uid);
                 if (register != null)
                 {
@@ -114,7 +143,7 @@ namespace Senparc.Areas.Admin.Pages
 
 
         /// <summary>
-        /// 获取无状态的菜单信息
+        /// Get stateless menu information
         /// </summary>
         /// <param name="sysPermissionService"></param>
         /// <returns></returns>
@@ -126,7 +155,7 @@ namespace Senparc.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 获取包含当前停留页面信息的菜单信息
+        /// Get the menu information containing the current page information
         /// </summary>
         /// <param name="sysPermissionService"></param>
         /// <returns></returns>
@@ -139,30 +168,30 @@ namespace Senparc.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 获取 Admin 后台左侧菜单结构
+        /// Get the Admin background left menu structure
         /// </summary>
         /// <param name="sysMenuTreeItems"></param>
         /// <returns></returns>
         private async Task<IEnumerable<SysMenuTreeItemDto>> GetSysMenuTreesMainRecursiveAsync(IEnumerable<SysMenuDto> sysMenuTreeItems)
         {
-            bool hideModuleManager = FullSystemConfig.HideModuleManager == true;//是否处于发布状态，需要隐藏部分菜单
+            bool hideModuleManager = FullSystemConfig.HideModuleManager == true;//Whether it is in publishing state and some menus need to be hidden
             List<SysMenuTreeItemDto> sysMenuTrees = new List<SysMenuTreeItemDto>();
             List<SysMenuDto> dest = new List<SysMenuDto>();
             int index = 60000;
 
             XncfRegisterManager xncfRegisterManager = new XncfRegisterManager(_serviceProvider);
 
-            //遍历菜单设置项目，查找和 XNCF 模块有关的菜单节点
+            //Traverse the menu setting items and find the menu nodes related to the XNCF module
             foreach (var item in sysMenuTreeItems)
             {
-                //定位 XNCF 模块
+                //Locating XNCF modules
                 IXncfRegister xncfRegister = XncfRegisterList
                     .FirstOrDefault(z => !string.IsNullOrEmpty(item.Url) &&
-                                         item.Url.Contains($"uid={z.Uid}", StringComparison.OrdinalIgnoreCase)); //TODO:判断Xncf条件还可以更细
+                                         item.Url.Contains($"uid={z.Uid}", StringComparison.OrdinalIgnoreCase)); //TODO: Judging Xncf conditions can be more detailed
 
                 var isStoredXncf = !string.IsNullOrEmpty(item.Url) &&
-                                    item.Url.Contains("uid=", StringComparison.OrdinalIgnoreCase);//在数据库里面注册为模块
-                var xncfMissing = isStoredXncf && xncfRegister == null;//程序集未加载
+                                    item.Url.Contains("uid=", StringComparison.OrdinalIgnoreCase);//Register as a module in the database
+                var xncfMissing = isStoredXncf && xncfRegister == null;//Assembly not loaded
 
                 if (xncfRegister != null &&
                     xncfRegister is Senparc.Ncf.Core.Areas.IAreaRegister xncfAreapage &&
@@ -196,7 +225,7 @@ namespace Senparc.Areas.Admin.Pages
                     }));
                     item.Url = string.Empty;
                 }
-                else if (!string.IsNullOrEmpty(item.Url) && item.Url.Contains("uid=") && hideModuleManager)//TODO:判断Xncf条件还可以更细
+                else if (!string.IsNullOrEmpty(item.Url) && item.Url.Contains("uid=") && hideModuleManager)//TODO: Judging Xncf conditions can be more detailed
                 {
                     item.ParentId = null;
                     item.Id = (index++).ToString();
@@ -204,15 +233,15 @@ namespace Senparc.Areas.Admin.Pages
 
                 if (hideModuleManager && item.Id == "4")
                 {
-                    continue;//拓展模块，判断是否隐藏
+                    continue;//Expand the module to determine whether to hide it
                 }
 
-                //该菜单为模块用的菜单
+                //This menu is a menu for modules
                 if (isStoredXncf)
                 {
                     if (xncfMissing)
                     {
-                        //XNCF 不可用状态下，给以提示（无论是否在管理模式下）
+                        //Prompt when XNCF is unavailable (whether in management mode or not)
                         item.MenuName = $"!! {item.MenuName} !!";
                     }
                     else
@@ -222,12 +251,12 @@ namespace Senparc.Areas.Admin.Pages
                         {
                             if (hideModuleManager)
                             {
-                                //XNCF 不可用状态下，不显示
+                                //XNCF is not displayed when it is unavailable.
                                 continue;
                             }
                             else
                             {
-                                //XNCF 不可用状态下，给以提示
+                                //When XNCF is unavailable, give a prompt
                                 item.MenuName = $"~~ {item.MenuName} ~~";
                             }
                         }
@@ -241,7 +270,7 @@ namespace Senparc.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 递归设置菜单节点信息
+        /// Recursively set menu node information
         /// </summary>
         /// <param name="sysMenuTreeItems"></param>
         /// <param name="sysMenuTrees"></param>

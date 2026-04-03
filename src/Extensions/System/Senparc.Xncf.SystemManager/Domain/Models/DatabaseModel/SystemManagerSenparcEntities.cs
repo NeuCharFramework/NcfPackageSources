@@ -7,7 +7,7 @@ using Senparc.Ncf.Core.Models.DataBaseModel;
 namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
 {
     /// <summary>
-    /// 当前上下文不应该和租户无关
+    /// The current context should not be irrelevant to the tenant
     /// </summary>
     public class SystemManagerSenparcEntities : XncfDatabaseDbContext
     {
@@ -16,16 +16,16 @@ namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
         }
 
         /// <summary>
-        /// 系统设置
+        ///system settings
         /// </summary>
         public DbSet<SystemConfig> SystemConfigs { get; set; }
 
         public DbSet<FeedBack> FeedBacks { get; set; }
 
-        //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
+        //DOT REMOVE OR MODIFY THIS LINE Do not remove or modify this LINE - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }
 
-        //如无特殊需需要，OnModelCreating 方法可以不用写，已经在 Register 中要求注册
+        //If there is no special need, the OnModelCreating method does not need to be written. Registration is already required in Register.
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //}

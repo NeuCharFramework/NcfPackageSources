@@ -27,7 +27,7 @@ namespace Senparc.Xncf.AreasBase
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_BASE_AREAS;// "00000000-0000-0000-0001-000000000006";
 
-        public override string Version => "0.1";//必须填写版本号
+        public override string Version => "0.1";//Version number is required
 
         public override string MenuName => "Areas 基础模块";
 
@@ -50,7 +50,7 @@ namespace Senparc.Xncf.AreasBase
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
 
-            //提供网站根目录
+            //Provide website root directory
             if (env.ContentRootPath != null)
             {
                 SiteConfig.ApplicationPath = env.ContentRootPath;
@@ -67,29 +67,29 @@ namespace Senparc.Xncf.AreasBase
               .AddXmlSerializerFormatters()
               .AddJsonOptions(options =>
               {
-                  //忽略循环引用
+                  //Ignore circular references
                   options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                   //options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                  //不使用驼峰样式的key
+                  //Do not use camel case keys
                   //options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                  //设置时间格式
+                  //Set time format
                   //options.SerializerSettings.DateFormatString = "yyyy-MM-dd";
               })
               //https://docs.microsoft.com/en-us/aspnet/core/fundamentals/app-state?view=aspnetcore-2.1&tabs=aspnetcore2x
               //.AddSessionStateTempDataProvider()
-              //忽略JSON序列化过程中的循环引用：https://stackoverflow.com/questions/7397207/json-net-error-self-referencing-loop-detected-for-type
+              //Ignore circular references during JSON serialization: https://stackoverflow.com/questions/7397207/json-net-error-self-referencing-loop-detected-for-type
               .AddRazorPagesOptions(options =>
               {
-                  //自动注册  防止跨站请求伪造（XSRF/CSRF）攻击
+                  //Automatic registration to prevent cross-site request forgery (XSRF/CSRF) attacks
                   options.Conventions.Add(new Senparc.Ncf.AreaBase.Conventions.AutoValidateAntiForgeryTokenModelConvention());
               });
 #if DEBUG
-            //Razor启用运行时编译，多个项目不需要手动编译。
+            //Razor enables runtime compilation, eliminating the need for manual compilation for multiple projects.
             if (env.IsDevelopment())
             {
                 //builder.AddRazorRuntimeCompilation(options =>
                 //{
-                //    //自动索引所有需要使用 RazorRuntimeCompilation 的模块
+                //    //Automatically index all modules that need to use RazorRuntimeCompilation
                 //    foreach (var razorRegister in XncfRegisterManager.RegisterList.Where(z => z is IXncfRazorRuntimeCompilation))
                 //    {
                 //        try

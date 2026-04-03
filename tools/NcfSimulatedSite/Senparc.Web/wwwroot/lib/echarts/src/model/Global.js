@@ -115,7 +115,7 @@ define(function (require) {
             var componentsMap = this._componentsMap;
             var newCptTypes = [];
 
-            // 如果不存在对应的 component model 则直接 merge
+            // If there is no corresponding component model, merge directly
             each(newOption, function (componentOption, mainType) {
                 if (componentOption == null) {
                     return;
@@ -131,7 +131,7 @@ define(function (require) {
                 }
             });
 
-            // FIXME OPTION 同步是否要改回原来的
+            // FIXME OPTION Do you want to change the synchronization back to the original one?
             ComponentModel.topologicalTravel(
                 newCptTypes, ComponentModel.getAllClassMainTypes(), visitComponent, this
             );
@@ -553,7 +553,7 @@ define(function (require) {
      */
     function mergeTheme(option, theme) {
         for (var name in theme) {
-            // 如果有 component model 则把具体的 merge 逻辑交给该 model 处理
+            // If there is a component model, the specific merge logic will be handed over to the model for processing.
             if (!ComponentModel.hasClass(name)) {
                 if (typeof theme[name] === 'object') {
                     option[name] = !option[name]

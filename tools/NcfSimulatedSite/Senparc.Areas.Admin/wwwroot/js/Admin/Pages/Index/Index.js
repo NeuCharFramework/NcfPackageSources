@@ -1,5 +1,6 @@
-﻿var app = new Vue({
+var app = new Vue({
   el: '#app',
+  mixins: [window.ChatLauncherMixin],
   data() {
     return {
       isExpandAll: true,
@@ -9,7 +10,7 @@
       xncfOpeningList: {},
       chartData: [],
       todayLogData: [],
-      // 添加动画控制变量
+      // Add animation control variables
       shakeAllModules: false,
       glowUpgradeableModules: false
     };
@@ -19,7 +20,7 @@
     this.getXncfOpening();
     this.fetchChartData();
     this.fetchTodayLogData();
-    // 添加鼠标事件监听
+    // Add mouse event listener
     this.initializeHoverEffects();
   },
   methods: {
@@ -36,13 +37,13 @@
         console.error('Error fetching chart data:', error);
       }
     },
-    async fetchTodayLogData() { // 新增获取今日日志数据的方法  
+    async fetchTodayLogData() { // Added method to obtain today's log data  
       try {
         let response = await service.get('/api/Senparc.Areas.Admin/StatAppService/Areas.Admin_StatAppService.GetTodayLog');
         if (response.data && response.data.data && response.data.data.items) {
           this.todayLogData = response.data.data.items;
           this.todayDate = response.data.data.date;
-          this.initChart(); // 确保图表在获取到数据后更新  
+          this.initChart(); // Make sure the chart updates after getting the data  
         } else {
           console.error('Invalid API response:', response);
         }
@@ -81,7 +82,7 @@
             name: '常规日志',
             type: 'line',
             stack: '总量',
-            areaStyle: { color: '#91c7ae' }, // 添加区域填充颜色  
+            areaStyle: { color: '#91c7ae' }, // Add area fill color  
             data: this.chartData.map(item => item.normalLogCount),
             color: '#91c7ae'
           },
@@ -89,7 +90,7 @@
             name: '异常日志',
             type: 'line',
             stack: '总量',
-            areaStyle: { color: '#d48265' }, // 添加区域填充颜色  
+            areaStyle: { color: '#d48265' }, // Add area fill color  
             data: this.chartData.map(item => item.exceptionLogCount),
             color: '#d48265'
           }
@@ -98,7 +99,7 @@
       let chartInstance1 = echarts.init(chart1);
       chartInstance1.setOption(chartOption1);
 
-      // 添加点击事件监听器  
+      // Add click event listener  
       chartInstance1.on('click', params => {
         if (params.componentType === 'series') {
           let date = params.name;
@@ -106,7 +107,7 @@
         }
       });
 
-      // 准备今日日志数据  
+      // Prepare today’s log data  
       let todayLogData = this.todayLogData.map(item => ({
         name: item.senparcTraceType,
         value: item.count
@@ -126,7 +127,7 @@
         legend: {
           orient: 'vertical',
           left: 'left',
-          data: this.todayLogData.map(item => item.senparcTraceType) // 自动输出所有类别  
+          data: this.todayLogData.map(item => item.senparcTraceType) // Automatically output all categories  
         },
         series: [{
           name: '日志类型',
@@ -144,7 +145,7 @@
       };
       let chartInstance2 = echarts.init(chart2);
       chartInstance2.setOption(chartOption2);
-      // 添加点击事件监听器    
+      // Add click event listener    
       chartInstance2.on('click', params => {
         if (params.componentType === 'series') {
           window.location.href = `/Admin/SenparcTrace/DateLog?date=${this.todayDate}`;
@@ -152,17 +153,17 @@
       });
 
     },
-    //XNCF 统计状态  
+    //XNCF statistics status  
     async getXncfStat() {
       let xncfStatData = await service.get('/Admin/Index?handler=XncfStat');
       this.xncfStat = xncfStatData.data.data;
     },
-    //开放模块数据  
+    //Open module data
     async getXncfOpening() {
       let xncfOpeningList = await service.get('/Admin/Index?handler=XncfOpening');
       this.xncfOpeningList = xncfOpeningList.data.data;
     },
-    //点击打开模块
+    //Click to open module
     navigateTo(uid) {
       window.location.href = '/Admin/XncfModule/Start/?uid=' + uid;
     },
@@ -172,20 +173,20 @@
       var menuInfo = menus[rowIndex]
       window.location.href = menuInfo.url
     },
-    // 添加新方法处理悬停效果
+    // Add new method to handle hover effects
     initializeHoverEffects() {
-      // 获取统计项元素 - 修正选择器
+      // Get statistic element - fix selector
       const installedModulesStat = document.querySelector('.xncf-stat-item');
       const updateModulesStat = document.querySelectorAll('.xncf-stat-item')[1];
 
-      // 已安装模块统计项的鼠标事件
+      // Mouse events for installed module statistics
       if (installedModulesStat) {
         installedModulesStat.addEventListener('mouseenter', () => {
           this.triggerShakeAnimation();
         });
       }
 
-      // 待更新模块统计项的鼠标事件
+      // Mouse events for module statistical items to be updated
       if (updateModulesStat) {
         updateModulesStat.addEventListener('mouseenter', () => {
           this.triggerGlowAnimation();
@@ -193,52 +194,52 @@
       }
     },
 
-    // 触发抖动动画
+    // Trigger jitter animation
     triggerShakeAnimation() {
       const moduleCards = document.querySelectorAll('#xncf-modules-area .box-card');
       moduleCards.forEach(card => {
-        // 添加随机延迟
-        const delay = Math.random() * 200; // 0-200ms的随机延迟
+        // add random delay
+        const delay = Math.random() * 200; // 0-200ms random delay
         setTimeout(() => {
           card.classList.add('shake-animation');
-          // 动画结束后移除类
+          // Remove class after animation ends
           setTimeout(() => {
             card.classList.remove('shake-animation');
-          }, 800); // 与动画持续时间匹配
+          }, 800); // Match animation duration
         }, delay);
       });
     },
 
-    // 触发发光/淡化动画
+    // Trigger glow/fade animation
     triggerGlowAnimation() {
       const allCards = document.querySelectorAll('#xncf-modules-area .box-card');
       const upgradeableVersions = document.querySelectorAll('#xncf-modules-area .version-upgradeable');
 
-      // 为所有可更新的模块添加发光效果
+      // Added glow effect to all updatable modules
       upgradeableVersions.forEach(version => {
         const card = version.closest('.box-card');
         if (card) {
-          // 添加随机延迟
+          // add random delay
           const delay = Math.random() * 200;
           setTimeout(() => {
             card.classList.add('glow-animation');
             setTimeout(() => {
               card.classList.remove('glow-animation');
-            }, 1200); // 与动画持续时间匹配
+            }, 1200); // Match animation duration
           }, delay);
         }
       });
 
-      // 为不可更新的模块添加淡化效果
+      // Add a fade effect to non-updatable modules
       allCards.forEach(card => {
         if (!card.querySelector('.version-upgradeable')) {
-          // 添加随机延迟
+          // add random delay
           const delay = Math.random() * 200;
           setTimeout(() => {
             card.classList.add('fade-animation');
             setTimeout(() => {
               card.classList.remove('fade-animation');
-            }, 1200); // 与动画持续时间匹配
+            }, 1200); // Match animation duration
           }, delay);
         }
       });

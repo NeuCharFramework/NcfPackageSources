@@ -3,7 +3,7 @@
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// Xncf 模块特性 - 扩展方法
+    ///Xncf module attributes - extension methods
     /// </summary>
     public class XncfMethodAttribute : Attribute
     {

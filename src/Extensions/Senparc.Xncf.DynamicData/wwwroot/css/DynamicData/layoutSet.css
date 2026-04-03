@@ -8,7 +8,7 @@
     height: 100%;
 }
 
-/*标题区域*/
+/*title area*/
 .layoutSet-nav {
     height: 70px;
     background: rgba(255, 255, 255, 1);
@@ -42,7 +42,7 @@
     width: 350px;
 }
 
-/* 主要内容区域 */
+/* main content area */
 .layoutSet-main {
     flex: 1;
     padding: 20px 20px 0px 20px;
@@ -53,7 +53,7 @@
     min-width: 300px;
 }
 
-/*菜单区域*/
+/*menu area*/
 .layoutSet-main .main_header {
     flex-shrink: 0;
     height: 50px;
@@ -103,7 +103,7 @@
     color: rgba(128, 128, 128, 1);
 }
 
-/*组件内容区域*/
+/*component content area*/
 .layoutSet-main .main_content {
     flex: 1;
     background: rgba(255, 255, 255, 1);
@@ -115,7 +115,7 @@
     height: 12px;
 }
 
-/*组件提示*/
+/*Component Tips*/
 .layoutSet-main .main_content .add-Component_Tips {
     margin: 30px 0px;
     height: 60px;
@@ -159,7 +159,7 @@
                     font-size: 16px;
                     z-index: 13;
                 }*/
-/*组件占位区域*/
+/*Component footprint area*/
 .layoutSet-main .main_content .component-area {
     margin-bottom: 20px;
     padding: 20px;
@@ -182,7 +182,7 @@
     /*#f0f9eb #ecf5ff*/ 
 }
 
-/* 侧边栏 */
+/* sidebar */
 .layoutSet-aside {
     width: 350px;
     /*height: 100%;*/
@@ -191,7 +191,7 @@
     background-color: rgb(255, 255, 255, 1);
 }
 
-/*提示*/
+/*hint*/
 .tips-container {
     margin-top: 20px;
     gap: 5px;
@@ -211,7 +211,7 @@
     text-align: left;
 }
 
-/*操作区域*/
+/*operating area*/
 .operation-area {}
 
 .operation-title {
@@ -272,7 +272,7 @@
     cursor: not-allowed;
 }
 
-/*分段器*/
+/*segmenter*/
 .subsection-container {
     padding: 4px;
     border-radius: 4px;
@@ -297,7 +297,7 @@
     background-color: #ffffff;
 }
 
-/*表单区域*/
+/*form area*/
 .form-container {
     margin-top: 15px;
 }
@@ -306,7 +306,7 @@
     line-height: normal;
 }
 
-/*table区域*/
+/*table area*/
 .table-container {
     width: 100%;
     border: 1px solid rgba(228, 230, 234, 1);
@@ -366,7 +366,7 @@
     padding: 0px 10px;
 }
 
-/*筛选盒子*/
+/*filter box*/
 .filterCriteria-box {
     gap: 10px;
     padding: 0px 10px;
@@ -386,14 +386,14 @@
     vertical-align: top;
 }
 
-/*添加排序*/
+/*Add sort*/
 .addsort-box {
     gap: 5px;
     color: #2a82e4;
     cursor: pointer;
 }
 
-/*排序展示列表*/
+/*Sort display list*/
 .sortList-box {
     margin-bottom: 10px;
     gap: 12px;
@@ -418,7 +418,7 @@
     background: rgba(239, 240, 242, 1);
 }
 
-/*筛选条件设置*/
+/*Filter settings*/
 .popover-bodyBox {}
 
 .popover-bodyBox .popover-title {
@@ -460,7 +460,7 @@
     cursor: pointer;
 }
 
-/* 以下 修改el组件样式 */
+/* Modify the el component style below */
 .el-main {
     padding: 0px;
 }
@@ -478,7 +478,7 @@
 .el-table--enable-row-hover .el-table__body tr:hover > .column_active_td {
     background-color: #f3f3f3 !important;
 }
-/* 以下 自定义公用样式 */
+/* The following custom public styles */
 .formitem-labelText {
     white-space:nowrap;
     text-align: left;

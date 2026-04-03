@@ -31,8 +31,8 @@ define(function(require) {
         parallelAxisIndex: null,
 
         defaultOption: {
-            zlevel: 0,                  // 一级层叠
-            z: 0,                       // 二级层叠
+            zlevel: 0,                  // One level cascading
+            z: 0,                       // Second level stacking
             left: 80,
             top: 60,
             right: 80,

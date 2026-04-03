@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Service.SignalrHubs
 {
     /// <summary>
-    /// 记录 SignalR 全局上下文的类，可轮询执行操作
+    /// Class that records the SignalR global context and can be polled to perform operations
     /// </summary>
     public class SignalrTicker<THub>
         where THub : Hub
@@ -25,7 +25,7 @@ namespace Senparc.Ncf.Service.SignalrHubs
         }
 
         /// <summary>
-        /// 静态实例对象
+        /// static instance object
         /// </summary>
         public static SignalrTicker<THub> Instance(HttpContext httpContext)
         {
@@ -41,33 +41,33 @@ namespace Senparc.Ncf.Service.SignalrHubs
         }
 
         /// <summary>
-        /// 轮询间隔时间（毫秒），默认值：500
+        /// Polling interval (milliseconds), default value: 500
         /// </summary>
         public int SleepMillionSeconds { get; set; } = 500;
 
         /// <summary>
-        /// 参数：SignalrTicker<THub>，当前轮询的次数
+        /// Parameter: SignalrTicker<THub>, the current number of polls
         /// </summary>
         public Action<SignalrTicker<THub>, int> SenderAction { get; set; }
 
         /// <summary>
-        /// 构造函数
+        ///Constructor
         /// </summary>
         /// <param name="context"></param>
         private SignalrTicker(IHubContext<THub> context)
         {
             m_context = context;
-            //这里不能直接调用Sender，因为Sender是一个不退出的“死循环”，否则这个构造函数将不会退出。  
-            //其他的流程也将不会再执行下去了。所以要采用异步的方式。  
+            //Sender cannot be called directly here because Sender is an "infinite loop" that does not exit, otherwise the constructor will not exit.  
+            //Other processes will no longer be executed. So use an asynchronous approach.  
             Task.Run(() => Sender());
         }
 
         /// <summary>
-        /// 注册 SignalrTicker，激活静态变量
+        ///Register SignalrTicker, activate static variables
         /// </summary>
         public static void Register()
         {
-            //可以写一些初始化
+            //You can write some initialization
         }
 
         public void Sender()

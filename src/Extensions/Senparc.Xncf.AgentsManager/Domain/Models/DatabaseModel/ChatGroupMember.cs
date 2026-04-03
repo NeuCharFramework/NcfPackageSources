@@ -8,9 +8,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
 {
     /// <summary>
-    /// ChatGroupMemer 数据库实体
+    ///ChatGroupMemer database entity
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(ChatGroupMember))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(ChatGroupMember))]//The prefix must be added to prevent conflicts system-wide.
     [Serializable]
     public class ChatGroupMember : EntityBase<int>
     {
@@ -29,7 +29,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
 
         [InverseProperty(nameof(AgentTemplate.ChatGroupMembers))]
         /// <summary>
-        /// AgentTemplate（类型同名）
+        ///AgentTemplate (type with the same name)
         /// </summary>
         public AgentTemplate AgentTemplate { get; private set; }
 
@@ -40,7 +40,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         public int ChatGroupId { get; private set; }
 
         ///// <summary>
-        ///// ChatGroup（类型同名）
+        ///// ChatGroup (type with the same name)
         ///// </summary>
         //public ChatGroup ChatGroup { get; private set; }
 
@@ -72,7 +72,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         }
 
         /// <summary>
-        /// 重新设置 UID
+        ///reset UID
         /// </summary>
         public void ResetUID()
         {

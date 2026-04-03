@@ -41,7 +41,7 @@ namespace Senparc.Ncf.Core.Validator
         }
 
         /// <summary>
-        /// 此方法暂时不能自动让ModelState.IsValid变为false
+        /// This method currently cannot automatically set ModelState.IsValid to false
         /// </summary>
         /// <param name="errorMessage"></param>
         public void AddError(string errorMessage)
@@ -65,24 +65,24 @@ namespace Senparc.Ncf.Core.Validator
         /// <param name="validatorEnvironmentObject"></param>
         /// <param name="valueName"></param>
         /// <param name="htmlName"></param>
-        /// <param name="nullOrEmptyable">是否允许为null或为空。输入null默认为不判断。首尾连续空格将被过滤（.Trim()）</param>
+        /// <param name="nullOrEmptyable">Whether null or empty is allowed. Null means no validation. Leading/trailing spaces are trimmed (.Trim()).</param>
         /// <returns></returns>
         public static ValidatorContainer<T> Validator<T>(this IValidatorEnvironment validatorEnvironment, T validatorEnvironmentObject, string valueName, string htmlName, bool? nullOrEmptyable = null)
         {
             if (validatorEnvironment.ModelState[htmlName] != null
                 && validatorEnvironment.ModelState[htmlName].Errors.Count > 0)
             {
-                //移除原有的ModelState中的"The value '' is invalid."错误
-                //TODO:可以使用Resource自行配置
+                //Remove existing "The value '' is invalid." error in ModelState
+                //TODO: configurable via Resource
                 validatorEnvironment.ModelState[htmlName].Errors.Clear();
             }
             if (nullOrEmptyable != null && (validatorEnvironmentObject == null || string.IsNullOrEmpty(validatorEnvironmentObject.ToString().Trim())))
             {
-                if (nullOrEmptyable == true)//可为空
+                if (nullOrEmptyable == true)//Nullable
                 {
-                    return null;//为空，返回，但是不记录错误
+                    return null;//Return without error when empty
                 }
-                else//不可为空
+                else//Not nullable
                 {
                     var container = new ValidatorContainer<T>(validatorEnvironment, validatorEnvironmentObject, valueName, htmlName);
                     return container.NotNullOrEmpty(true);
@@ -90,7 +90,7 @@ namespace Senparc.Ncf.Core.Validator
             }
             else
             {
-                return new ValidatorContainer<T>(validatorEnvironment, validatorEnvironmentObject, valueName, htmlName);//不判断是否为空
+                return new ValidatorContainer<T>(validatorEnvironment, validatorEnvironmentObject, valueName, htmlName);//Skip null/empty check
             }
         }
 
@@ -163,7 +163,7 @@ namespace Senparc.Ncf.Core.Validator
         }
 
         /// <summary>
-        /// 确认发生错误
+        /// Force failure
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="container"></param>
@@ -208,7 +208,7 @@ namespace Senparc.Ncf.Core.Validator
         }
 
         /// <summary>
-        /// 检测是否有Sql危险字符
+        /// Check whether string contains SQL-dangerous characters
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="container"></param>
@@ -224,7 +224,7 @@ namespace Senparc.Ncf.Core.Validator
             Regex emailExpression = new Regex(@"[-|;|,|\/|\(|\)|\[|\]|\}|\{|%|@|\*|!|\']", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase);
             if (emailExpression.IsMatch((container.ValidatorObject.ToString())))
             {
-                string errorMessage = string.Format("{0}中存在非法字符！", container.ValueName);
+                string errorMessage = string.Format("{0} contains illegal characters!", container.ValueName);
                 container.AddError(errorMessage);
                 if (stopWhileFail)
                 {
@@ -235,7 +235,7 @@ namespace Senparc.Ncf.Core.Validator
         }
 
         /// <summary>
-        /// 检测是否有危险的可能用于链接的字符串
+        /// Check whether string contains dangerous characters that may be used in links
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="container"></param>
@@ -251,7 +251,7 @@ namespace Senparc.Ncf.Core.Validator
             Regex emailExpression = new Regex(@"^\s*$|^c:\\con\\con$|[%,\*" + "\"" + @"\s\t\<\>\&]|游客|管理员|^Guest|admin", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase);
             if (emailExpression.IsMatch((container.ValidatorObject.ToString())))
             {
-                string errorMessage = string.Format("{0}中存在非法字符！", container.ValueName);
+                string errorMessage = string.Format("{0} contains illegal characters!", container.ValueName);
                 container.AddError(errorMessage);
                 if (stopWhileFail)
                 {
@@ -270,7 +270,7 @@ namespace Senparc.Ncf.Core.Validator
             string userName = container.ValidatorObject.ToString();
             if (userName.IndexOf("　") != -1 || userName.IndexOf("") != -1 || userName.IndexOf("") != -1 || userName.IndexOf("") != -1 || userName.IndexOf("") != -1 || userName.IndexOf("") != -1 || userName.IndexOf("") != -1 || userName.IndexOf("") != -1 || userName.IndexOf("") != -1 || userName.IndexOf("") != -1 || userName.IndexOf("") != -1)
             {
-                container.AddError("用户名中不允许包含全角空格符");
+                container.AddError("Username cannot contain full-width spaces");
                 if (stopWhileFail)
                 {
                     return null;
@@ -278,7 +278,7 @@ namespace Senparc.Ncf.Core.Validator
             }
             if (userName.IndexOf(" ") != -1)
             {
-                container.AddError("用户名中不允许包含空格");
+                container.AddError("Username cannot contain spaces");
                 if (stopWhileFail)
                 {
                     return null;
@@ -286,19 +286,19 @@ namespace Senparc.Ncf.Core.Validator
             }
             if (userName.IndexOf(":") != -1)
             {
-                container.AddError("用户名中不允许包含冒号");
+                container.AddError("Username cannot contain colon");
                 if (stopWhileFail)
                 {
                     return null;
                 }
             }
 
-            string invalidateUserName = "`~!@#$%^&*()+-=;':\",./<>?|\\";//TODO:可以用正则判断
+            string invalidateUserName = "`~!@#$%^&*()+-=;':\",./<>?|\\";//TODO: You can use regular rules to judge
             foreach (var item in invalidateUserName)
             {
                 if (userName.Contains(item))
                 {
-                    container.AddError("用户名中可以使用中文、英文或数字及下划线_，但不允许包含特殊符号：" + invalidateUserName);
+                    container.AddError("Username can contain Chinese/English letters, digits, and underscore _, but cannot contain special symbols: " + invalidateUserName);
                     if (stopWhileFail)
                     {
                         return null;
@@ -317,17 +317,17 @@ namespace Senparc.Ncf.Core.Validator
         {
             return Regex(container,
                 @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$",
-                "请在{0}中填写正确的Email地址！", stopWhileFail);
+                "Please enter a valid Email address in {0}!", stopWhileFail);
         }
 
         public static ValidatorContainer<T> IsMobile<T>(this ValidatorContainer<T> container, bool stopWhileFail)
         {
-            //return Regex(container, @"^1[358]\d{9}$", "请在{0}中填写正确的电话号码！", stopWhileFail);
-            //return Regex(container, @"^1[358]\d{9}$", "请填写正确的电话号码！", stopWhileFail);
+            //return Regex(container, @"^1[358]\d{9}$", "Please enter a valid phone number in {0}!", stopWhileFail);
+            //return Regex(container, @"^1[358]\d{9}$", "Please enter a valid phone number!", stopWhileFail);
 
-            //电信手机号码正则        string dianxin = @"^1[3578][01379]\d{8}$";        Regex dReg = new Regex(dianxin);        //联通手机号正则        string liantong = @"^1[34578][01256]\d{8}$";        Regex tReg = new Regex(liantong);        //移动手机号正则        string yidong = @"^(134[012345678]\d{7}|1[34578][012356789]\d{8})$";        Regex yReg = new Regex(yidong);
+            //Telecom mobile phone number regular string dianxin = @"^1[3578][01379]\d{8}$"; Regex dReg = new Regex(dianxin); //China Unicom mobile phone number regular string liantong = @"^1[34578][01256]\d{8}$"; Regex tReg = new Regex(liantong); //Mobile mobile phone number regular string yidong = @"^(134[012345678]\d{7}|1[34578][012356789]\d{8})$"; Regex yReg = new Regex(yidong);
 
-            return Regex(container, @"^(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$", "请填写正确的电话号码！", stopWhileFail);
+            return Regex(container, @"^(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$", "Please enter a valid phone number!", stopWhileFail);
         }
 
         public static ValidatorContainer<T> IsIPAddress<T>(this ValidatorContainer<T> container)
@@ -339,12 +339,12 @@ namespace Senparc.Ncf.Core.Validator
         {
             return Regex<T>(container,
                 @"(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])",
-                "请在{0}中填写正确的IP地址！", stopWhileFail);
+                "Please enter a valid IP address in {0}!", stopWhileFail);
         }
 
         public static ValidatorContainer<T> IsAvailableUrl<T>(this ValidatorContainer<T> container, bool stopWhileFail)
         {
-            return Regex(container, @"HTTP(S)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?", "请在{0}中填写正确的Url地址！", stopWhileFail);
+            return Regex(container, @"HTTP(S)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?", "Please enter a valid URL in {0}!", stopWhileFail);
         }
 
 
@@ -531,7 +531,7 @@ namespace Senparc.Ncf.Core.Validator
         }
 
         /// <summary>
-        /// 校验验证码，建议Validator构造函数中的nullOrEmptyable为false
+        /// Validate verification code. It is recommended to set nullOrEmptyable to false in Validator constructor.
         /// </summary>
         /// <param name="container"></param>
         /// <param name="checkCodeKind"></param>

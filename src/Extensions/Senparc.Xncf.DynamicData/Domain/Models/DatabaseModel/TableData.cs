@@ -6,39 +6,39 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.DynamicData
 {
     /// <summary>  
-    /// TableData 实体类，用于存储单元格的数据。  
+    /// TableData entity class, used to store cell data.  
     /// </summary>  
     [Table(Register.DATABASE_PREFIX + nameof(TableData))]
     [Serializable]
     public class TableData : EntityBase<int>
     {
         /// <summary>  
-        /// 关联的表格ID。  
+        ///The associated table ID.  
         /// </summary>  
         //[ForeignKey(nameof(TableMetadata))]
         //public int TableMetadataId { get; set; }
         public int TableId { get; private set; }
 
         /// <summary>  
-        /// 关联的列ID。  
+        /// Associated column ID.  
         /// </summary>  
         //[ForeignKey(nameof(ColumnMetadata))]
         public int ColumnMetadataId { get; private set; }
 
         /// <summary>  
-        /// 单元格的值。  
+        ///The value of the cell.  
         /// </summary>  
         public string CellValue { get; private set; }
 
         /// <summary>  
-        /// 关联的表格元数据。  
+        /// Associated table metadata.  
         /// </summary>  
        
         ////[InverseProperty(nameof(TableMetadata.TableDatas))]
         //public TableMetadata TableMetadata { get; set; }
 
         /// <summary>  
-        /// 关联的列元数据。  
+        /// Associated column metadata.  
         /// </summary>  
         //[InverseProperty(nameof(ColumnMetadata.TableDatas))]
         public ColumnMetadata ColumnMetadata { get; set; }

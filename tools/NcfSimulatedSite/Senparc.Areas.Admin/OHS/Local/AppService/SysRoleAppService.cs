@@ -28,7 +28,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 创建or修改角色信息
+        ///Create or modify role information
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -57,7 +57,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取分页列表
+        /// Get paginated list
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -80,7 +80,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取详情
+        /// Get details
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -102,7 +102,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 删除角色
+        /// delete role
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -125,7 +125,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 增加权限
+        ///Add permissions
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -156,7 +156,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取角色下面的所有菜单
+        /// Get all menus under the character
         /// </summary>
         /// <param name="roleId"></param>
         /// <returns></returns>

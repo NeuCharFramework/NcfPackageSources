@@ -12,7 +12,7 @@ namespace Senparc.Xncf.WeixinManager.Domain.Cache
     //}
 
     /// <summary>
-    /// 微信表情缓存
+    /// WeChat emoticon cache
     /// </summary>
     public class WeixinFaceCache : BaseCache<List<KeyValuePair<string, WeixinFace>>>/*, IWeixinFaceCache*/
     {
@@ -29,7 +29,7 @@ namespace Senparc.Xncf.WeixinManager.Domain.Cache
         {
             var data = new List<KeyValuePair<string, WeixinFace>>();
 
-            //遍历FaceImage属性
+            //Traverse FaceImage properties
             var enumType = typeof(WeixinFace);
             var names = enumType.GetEnumNames();
             foreach (var name in names)

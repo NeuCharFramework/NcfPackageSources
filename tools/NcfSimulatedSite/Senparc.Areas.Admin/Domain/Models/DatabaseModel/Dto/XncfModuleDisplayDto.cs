@@ -4,7 +4,7 @@ using Senparc.Ncf.Core.Models.DataBaseModel;
 namespace Senparc.Areas.Admin.Domain
 {
     /// <summary>
-    /// XNCF 模块显示 DTO
+    ///XNCF module display DTO
     /// </summary>
     public class XncfModuleDisplayDto : DtoBase
     {
@@ -21,20 +21,25 @@ namespace Senparc.Areas.Admin.Domain
         public XncfModules_State State { get; private set; }
 
         /// <summary>
-        /// 是否有新版本
+        /// Is there a new version?
         /// </summary>
         public bool HasNewVersion { get; set; }
 
         /// <summary>
-        /// 新版本号
+        /// new version number
         /// </summary>
         public string NewVersion { get; set; }
         public object Menus { get; set; }
 
+        /// <summary>
+        ///ModuleFunctions
+        /// </summary>
+        public object Functions { get; set; }
+
         private XncfModuleDisplayDto() { }
  
 
-        public XncfModuleDisplayDto(int id, string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, string menuId, string icon, XncfModules_State state, bool hasNewVersion, string newVersion, object menus)
+        public XncfModuleDisplayDto(int id, string name, string uid, string menuName, string version, string description, string updateLog, bool allowRemove, string menuId, string icon, XncfModules_State state, bool hasNewVersion, string newVersion, object menus, object functions = null)
         {
             Id = id;
             Name = name;
@@ -50,6 +55,7 @@ namespace Senparc.Areas.Admin.Domain
             HasNewVersion = hasNewVersion;
             NewVersion = newVersion;
             Menus = menus;
+            Functions = functions;
         }
 
     }

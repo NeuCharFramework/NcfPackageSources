@@ -19,86 +19,86 @@ namespace Senparc.Ncf.XncfBase
     public interface IXncfRegister
     {
         /// <summary>
-        /// 是否忽略安装（但不影响执行注册代码）
+        /// Whether to ignore installation (but does not affect the execution of registration code)
         /// </summary>
         bool IgnoreInstall { get; }
 
         /// <summary>
-        /// 是否启用 MCP 服务器（MCP Server）
+        /// Whether to enable MCP server (MCP Server)
         /// </summary>
         bool EnableMcpServer { get; }
 
         /// <summary>
-        /// 模块名称，要求全局唯一
+        ///Module name, required to be globally unique
         /// </summary>
         string Name { get; }
 
         /// <summary>
-        /// 编号，要求全局唯一
+        /// Number, required to be globally unique
         /// </summary>
         string Uid { get; }
 
         /// <summary>
-        /// 版本号
+        /// version number
         /// </summary>
         string Version { get; }
 
         /// <summary>
-        /// 菜单名称
+        ///menu name
         /// </summary>
         string MenuName { get; }
 
         /// <summary>
-        /// Icon图标
+        ///icon
         /// </summary>
         string Icon { get; }
 
         /// <summary>
-        /// 说明
+        /// illustrate
         /// </summary>
         string Description { get; }
 
         ///// <summary>
-        ///// 注册方法，注册的顺序决定了界面中排列的顺序
+        ///// Registration method, the order of registration determines the order of arrangement in the interface
         ///// </summary>
         //IList<Type> Functions { get; }
 
         /// <summary>
-        /// 添加 AutoMap 映射
+        ///Add AutoMap mapping
         /// </summary>
         ConcurrentBag<Action<Profile>> AutoMapMappingConfigs { get; set; }
 
         /// <summary>
-        /// 获取当前模块的已注册线程信息
+        /// Get the registered thread information of the current module
         /// </summary>
         IEnumerable<KeyValuePair<ThreadInfo, Thread>> RegisteredThreadInfo { get; }
 
         /// <summary>
-        /// 安装代码
+        ///Installation code
         /// </summary>
         Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate);
 
         /// <summary>
-        /// 卸载代码
+        ///uninstall code
         /// </summary>
         Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc);
 
         /// <summary>
-        /// 获取首页Url
-        /// <para>仅限实现了 IAreaRegister 接口之后的 Register，否则将返回 null</para>
+        /// Get homepage Url
+        /// <para>Only Register after implementing the IAreaRegister interface, otherwise null will be returned</para>
         /// </summary>
         /// <returns></returns>
         string GetAreaHomeUrl();
 
         /// <summary>
-        /// 获取 Area 其他页面的 URL
+        /// Get the URLs of other pages in Area
         /// </summary>
-        /// <param name="path">URL 路径（不带 uid 参数）</param>
+        /// <param name="path">URL path (without uid parameter)</param>
         /// <returns></returns>
         string GetAreaUrl(string path);
 
         /// <summary>
-        /// 在 ConfigureServices 启动时注册当前模块
+        /// Register the current module when ConfigureServices starts
         /// </summary>
         /// <param name="services">IServiceCollection</param>
         /// <param name="configuration">Configuration</param>
@@ -107,33 +107,33 @@ namespace Senparc.Ncf.XncfBase
         IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env);
 
         /// <summary>
-        /// 添加AutoMap的映射关系
+        /// Add AutoMap mapping relationship
         /// </summary>
         /// <param name="mapping"></param>
         void AddAutoMapMapping(Action<Profile> mapping);
 
         /// <summary>
-        /// 执行 AutoMapper 映射
+        ///Execute AutoMapper mapping
         /// </summary>
         void OnAutoMapMapping(IServiceCollection services, IConfiguration configuration);
 
         /// <summary>
-        /// 在 startup.cs 的 Configure() 方法中执行配置
+        /// Perform configuration in the Configure() method of startup.cs
         /// </summary>
         /// <param name="app"></param>
-        /// <param name="registerService">CO2NET 注册对象</param>
+        /// <param name="registerService">CO2NET registration object</param>
         /// <returns></returns>
         IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService);
 
         #region MCP Server
 
         /// <summary>
-        /// 添加 MCP 服务器
+        ///Add MCP server
         /// </summary>
         /// <param name="services"></param>
         void AddMcpServer(IServiceCollection services, IXncfRegister xncfRegister);
         /// <summary>
-        /// 使用 MCP 服务器
+        /// use MCP server
         /// </summary>
         /// <param name="app"></param>
         /// <param name="registerService"></param>

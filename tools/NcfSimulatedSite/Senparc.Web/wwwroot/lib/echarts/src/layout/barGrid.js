@@ -163,7 +163,7 @@ define(function(require) {
                 size: columnWidth
             });
             data.each(valueAxis.dim, function (value, idx) {
-                // 空数据
+                // empty data
                 if (isNaN(value)) {
                     return;
                 }

@@ -11,7 +11,7 @@ using System.Text;
 namespace Senparc.Ncf.AreaBase.Admin
 {
     /// <summary>
-    /// XNCF 模块的页面模板
+    /// Page template for XNCF module
     /// </summary>
     public abstract class AdminXncfModulePageModelBase : AdminPageModelBase
     {
@@ -36,7 +36,7 @@ namespace Senparc.Ncf.AreaBase.Admin
         public string XncfModuleUid => XncfModuleDto?.Uid;
 
         /// <summary>
-        /// 当前正在操作的 XncfRegister
+        /// The XncfRegister currently operating
         /// </summary>
         public virtual IXncfRegister XncfRegister => XncfModuleDto != null ? XncfRegisterList.FirstOrDefault(z => z.Uid == XncfModuleDto.Uid) : null;
 

@@ -16,7 +16,7 @@ namespace Senparc.Xncf.Tenant
 {
     public partial class Register : IXncfDatabase
     {
-        public const string DATABASE_PREFIX = NcfDatabaseMigrationHelper.SYSTEM_UNIQUE_PREFIX;//系统表，
+        public const string DATABASE_PREFIX = NcfDatabaseMigrationHelper.SYSTEM_UNIQUE_PREFIX;//system tables,
 
         public string DatabaseUniquePrefix => DATABASE_PREFIX;
 

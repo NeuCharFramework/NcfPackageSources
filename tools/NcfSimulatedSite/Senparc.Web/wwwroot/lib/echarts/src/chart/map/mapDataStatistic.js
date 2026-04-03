@@ -2,7 +2,7 @@ define(function (require) {
 
     var zrUtil = require('zrender/core/util');
 
-    // FIXME 公用？
+    // FIXME Public?
     /**
      * @param {Array.<module:echarts/data/List>} datas
      * @param {string} statisticsType 'average' 'sum'

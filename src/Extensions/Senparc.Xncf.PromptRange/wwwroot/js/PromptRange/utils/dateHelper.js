@@ -1,6 +1,6 @@
 /**
- * 日期时间辅助工具
- * 提供日期格式化、相对时间显示等功能
+ * Date and time auxiliary tools
+ * Provides date formatting, relative time display and other functions
  * 
  * @version 1.0.0
  * @author Senparc
@@ -9,35 +9,35 @@
     'use strict';
     
     /**
-     * 日期辅助工具集
-     * 使用对象字面量模式（无需实例化）
+     *Date auxiliary tool set
+     * Use object literal mode (no instantiation required)
      */
     var DateHelper = {
         /**
-         * 格式化日期
-         * 将日期对象、字符串或时间戳格式化为指定格式的字符串
-         * @param {Date|string|number} date - 日期对象、字符串或时间戳
-         * @param {string} [format='YYYY-MM-DD HH:mm:ss'] - 格式字符串
-         * @returns {string} 格式化后的日期字符串
+         * Format date
+         * Format a date object, string or timestamp into a string in the specified format
+         * @param {Date|string|number} date - date object, string or timestamp
+         * @param {string} [format='YYYY-MM-DD HH:mm:ss'] - format string
+         * @returns {string} Formatted date string
          * 
-         * 支持的格式标记:
-         * - YYYY: 四位年份
-         * - MM: 两位月份 (01-12)
-         * - DD: 两位日期 (01-31)
-         * - HH: 两位小时 (00-23)
-         * - mm: 两位分钟 (00-59)
-         * - ss: 两位秒 (00-59)
+         *Supported format tags:
+         * - YYYY: four-digit year
+         * - MM: two digit month (01-12)
+         * - DD: two digit date (01-31)
+         * - HH: two digit hours (00-23)
+         * - mm: two digit minutes (00-59)
+         * - ss: two digit seconds (00-59)
          */
         formatDate: function(date, format) {
             format = format || 'YYYY-MM-DD HH:mm:ss';
             var d = new Date(date);
             
-            // 检查日期是否有效
+            // Check if the date is valid
             if (isNaN(d.getTime())) {
                 return '';
             }
 
-            // 辅助函数：补零
+            // Auxiliary function: zero padding
             function pad(num) {
                 return num < 10 ? '0' + num : '' + num;
             }
@@ -57,10 +57,10 @@
         },
 
         /**
-         * 格式化聊天时间（相对时间）
-         * 将时间转换为相对当前时间的描述（如"刚刚"、"5分钟前"）
-         * @param {Date|string|number} date - 日期对象、字符串或时间戳
-         * @returns {string} 相对时间描述
+         * Format chat time (relative time)
+         * Convert the time into a description relative to the current time (such as "just", "5 minutes ago")
+         * @param {Date|string|number} date - date object, string or timestamp
+         * @returns {string} relative time description
          */
         formatChatTime: function(date) {
             var now = new Date();
@@ -87,10 +87,10 @@
         },
 
         /**
-         * 格式化时间字符串
-         * 提取并格式化 ISO 8601 时间字符串
-         * @param {string} timeStr - 时间字符串
-         * @returns {string} 格式化后的时间字符串
+         * Format time string
+         * Extract and format ISO 8601 time string
+         * @param {string} timeStr - time string
+         * @returns {string} Formatted time string
          */
         formatTime: function(timeStr) {
             if (!timeStr) return '';
@@ -99,20 +99,20 @@
         },
 
         /**
-         * 获取时间戳
-         * 返回当前时间的时间戳（毫秒）
-         * @returns {number} 时间戳
+         * Get timestamp
+         * Returns the timestamp of the current time (milliseconds)
+         * @returns {number} timestamp
          */
         getTimestamp: function() {
             return new Date().getTime();
         },
 
         /**
-         * 计算时间差
-         * 计算两个时间之间的差值
-         * @param {Date|string|number} startDate - 开始时间
-         * @param {Date|string|number} endDate - 结束时间
-         * @returns {Object} 时间差对象 {days, hours, minutes, seconds, milliseconds}
+         * Calculate time difference
+         * Calculate the difference between two times
+         * @param {Date|string|number} startDate - start time
+         * @param {Date|string|number} endDate - end time
+         * @returns {Object} time difference object {days, hours, minutes, seconds, milliseconds}
          */
         getTimeDiff: function(startDate, endDate) {
             var start = new Date(startDate);
@@ -129,9 +129,9 @@
         },
 
         /**
-         * 判断是否为今天
-         * @param {Date|string|number} date - 要判断的日期
-         * @returns {boolean} 是否为今天
+         * Determine whether it is today
+         * @param {Date|string|number} date - the date to be judged
+         * @returns {boolean} whether it is today
          */
         isToday: function(date) {
             var d = new Date(date);
@@ -142,9 +142,9 @@
         },
 
         /**
-         * 判断是否为昨天
-         * @param {Date|string|number} date - 要判断的日期
-         * @returns {boolean} 是否为昨天
+         * Determine whether it is yesterday
+         * @param {Date|string|number} date - the date to be judged
+         * @returns {boolean} whether it is yesterday
          */
         isYesterday: function(date) {
             var d = new Date(date);
@@ -156,20 +156,20 @@
         },
 
         /**
-         * 获取月份的天数
-         * @param {number} year - 年份
-         * @param {number} month - 月份 (1-12)
-         * @returns {number} 该月的天数
+         * Get the number of days in the month
+         * @param {number} year - year
+         * @param {number} month - month (1-12)
+         * @returns {number} The number of days in the month
          */
         getDaysInMonth: function(year, month) {
             return new Date(year, month, 0).getDate();
         },
 
         /**
-         * 格式化持续时间
-         * 将毫秒数转换为可读的持续时间格式
-         * @param {number} milliseconds - 毫秒数
-         * @returns {string} 格式化后的持续时间（如 "2小时30分钟"）
+         *Format duration
+         * Convert milliseconds to a readable duration format
+         * @param {number} milliseconds - number of milliseconds
+         * @returns {string} formatted duration (such as "2 hours and 30 minutes")
          */
         formatDuration: function(milliseconds) {
             var seconds = Math.floor(milliseconds / 1000);
@@ -191,7 +191,7 @@
         }
     };
 
-    // 暴露到全局命名空间
+    // Exposed to the global namespace
     window.PromptRangeUtils = window.PromptRangeUtils || {};
     window.PromptRangeUtils.DateHelper = DateHelper;
 

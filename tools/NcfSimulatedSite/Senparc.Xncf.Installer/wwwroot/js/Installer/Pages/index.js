@@ -8,7 +8,7 @@ var app = new Vue({
             systemName: "",
             adminUserName: "",
             dbConnectionString: "",
-            needModelList:null  //模型名称列表
+            needModelList:null  //Model name list
         }
     },
     methods: {

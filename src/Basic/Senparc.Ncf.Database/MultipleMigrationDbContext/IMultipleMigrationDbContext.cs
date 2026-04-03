@@ -5,12 +5,12 @@ using System.Text;
 namespace Senparc.Ncf.Database.MultipleMigrationDbContext
 {
     /// <summary>
-    /// 多数据库生成 Migration 的实体类接口
+    /// Entity class interface for multi-database generation Migration
     /// </summary>
     public interface IMultipleMigrationDbContext
     {
         /////// <summary>
-        /////// 数据库类型
+        /////// Database type
         /////// </summary>
         //MultipleDatabaseType MultipleDatabaseType { get; }
     }

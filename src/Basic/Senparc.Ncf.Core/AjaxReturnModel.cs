@@ -6,7 +6,7 @@ namespace Senparc.Ncf.Core
 {
 
     /// <summary>
-    /// ajax返回模型
+    ///ajax return model
     /// </summary>
     public class AjaxReturnModel
     {
@@ -16,9 +16,9 @@ namespace Senparc.Ncf.Core
     }
 
     /// <summary>
-    /// ajax返回模型
+    ///ajax return model
     /// </summary>
-    /// <typeparam name="T">返回的对象</typeparam>
+    /// <typeparam name="T">Returned object</typeparam>
     public class AjaxReturnModel<T> : AjaxReturnModel
     {
         public T Data { get; set; }

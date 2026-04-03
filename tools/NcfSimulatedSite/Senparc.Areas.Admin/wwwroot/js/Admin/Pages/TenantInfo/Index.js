@@ -2,11 +2,11 @@
     el: "#app",
     data() {
         return {
-            //分页参数
+            //Paging parameters
             paginationQuery: {
                 total: 0
             },
-            //分页接口传参
+            //Paging interface parameter passing
             listQuery: {
                 pageIndex: 1,
                 pageSize: 10,
@@ -35,7 +35,7 @@
                     ]
                 },
                 updateLoading: false,
-                updateLoadingSet: false, // 确认loading按钮
+                updateLoadingSet: false, // Confirm loading button
                 nameError: '',
                 tenantKeyError: ''
             },
@@ -81,7 +81,7 @@
     },
     watch: {
         'dialog.visible': function (val, old) {
-            // 关闭dialog，清空
+            // Close the dialog and clear it
             if (!val) {
                 this.dialog.data = {
                     id: 0,
@@ -98,7 +98,7 @@
         }
     },
     methods: {
-        // 获取数据
+        // Get data
         getList() {
             let { pageIndex, pageSize } = this.listQuery;
             service.get(`/Admin/TenantInfo/index?handler=List&pageIndex=${pageIndex}&pageSize=${pageSize}`).then(res => {
@@ -108,7 +108,7 @@
                 }
             });
         },
-        // 新增
+        // New
         handleAdd() {
             this.dialog.title = '新增租户信息';
             this.dialog.visible = true;
@@ -120,11 +120,11 @@
                 enable: true
             };
         },
-        // 编辑
+        // edit
         handleEdit(index, row) {
             this.dialog.visible = true;
             if (row) {
-                // 编辑
+                // edit
                 let { id, name, tenantKey, adminRemark, enable } = row;
                 this.dialog.data = {
                     id, name, tenantKey, adminRemark, enable
@@ -132,14 +132,14 @@
                 this.dialog.title = '编辑租户信息';
                 this.dialog = Object.assign({}, this.dialog);
             } else {
-                // 新增
+                // New
                 this.dialog.title = '新增租户信息';
             }
         },
-        // 更新新增编辑
+        // Update new editor
         updateData() {
             this.$refs['dataForm'].validate(valid => {
-                // 表单校验
+                // form validation
                 if (valid) {
                     this.dialog.updateLoading = true;
                     let data = {
@@ -167,7 +167,7 @@
                 }
             });
         },
-        // 删除
+        // delete
         handleDelete(index, row) {
             let ids = [row.id];
             service.post("/Admin/TenantInfo/Index?handler=Delete", ids).then(res => {
@@ -191,7 +191,7 @@
                 }
             });
         },
-        // 初始化
+        // initialization
         handleInitialize(row) {
             this.initializeDialog.visible = true;
             this.initializeDialog.data = {
@@ -201,7 +201,7 @@
             };
         },
 
-        // 提交初始化
+        // Submit initialization
         submitInitialize() {
             this.$refs['initializeForm'].validate(valid => {
                 if (valid) {
@@ -209,7 +209,7 @@
                     service.post("/Admin/TenantInfo/Index?handler=Initialize", this.initializeDialog.data).then(res => {
                         if (res.data.success) {
                             this.initializeDialog.visible = false;
-                            // 显示结果弹窗
+                            // Show result popup
                             this.resultDialog.data = res.data.data;
                             this.resultDialog.visible = true;
                         } else {

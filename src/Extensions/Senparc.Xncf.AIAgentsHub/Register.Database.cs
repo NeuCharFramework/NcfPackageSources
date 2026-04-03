@@ -6,34 +6,32 @@ using Senparc.Ncf.Core.Models;
 
 namespace Senparc.Xncf.AIAgentsHub
 {
-    public partial class Register : IXncfDatabase  //注册 XNCF 模块数据库（按需选用）
+    public partial class Register : IXncfDatabase  //Register the XNCF module database (optional)
     {
-        #region IXncfDatabase 接口
-
-        /// <summary>
-        /// 数据库前缀
+        #region IXncfDatabase interface/// <summary>
+        /// Database prefix
         /// </summary>
         public const string DATABASE_PREFIX = "Senparc_AIAgentsHub_";
 
         /// <summary>
-        /// 数据库前缀
+        /// Database prefix
         /// </summary>
         public string DatabaseUniquePrefix => DATABASE_PREFIX;
 
         /// <summary>
-        /// 动态获取数据库上下文
+        /// Dynamically obtain database context
         /// </summary>
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //实现 [XncfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
+            //accomplish[XncfAutoConfigurationMapping] After the feature is added, it can be executed automatically without adding it manually.
             //modelBuilder.ApplyConfiguration(new AreaTemplate_ColorConfigurationMapping());
         }
 
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
-            //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
+            //DOT REMOVE OR MODIFY THIS LINE Do not remove or modify this bank - Entities Point
             //ex. services.AddScoped(typeof(Color));
         }
 

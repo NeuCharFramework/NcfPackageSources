@@ -2,11 +2,11 @@
     el: "#app",
     data() {
         return {
-            //分页参数
+            //Paging parameters
             paginationQuery: {
                 total: 5
             },
-            //分页接口传参
+            //Paging interface parameter passing
             listQuery: {
                 pageIndex: 1,
                 pageSize: 20,
@@ -28,23 +28,23 @@
                 },
                 updateLoading: false
             },
-            // 树结构字段
+            // tree structure fields
             defaultProps: {
                 children: 'children',
                 label: 'menuName'
             },
-            // 授权
+            // Authorize
             au: {
                 title: '',
                 visible: false,
                 updateLoading: false,
                 temp: {}
             },
-            allMenu: [],// 所有权限
-            currMenu: [],// 当前权限
-            defaultExpandedKeys: [], // 默认展开
-            defaultCheckedKeys: [], // 默认选中
-            parentArr: [] // 父节点集合
+            allMenu: [],// All permissions
+            currMenu: [],// Current permissions
+            defaultExpandedKeys: [], // Expand by default
+            defaultCheckedKeys: [], // Selected by default
+            parentArr: [] // set of parent nodes
         };
     },
     created: function () {
@@ -52,7 +52,7 @@
     },
     watch: {
         'dialog.visible': function (val, old) {
-            // 关闭dialog，清空
+            // Close the dialog and clear it
             if (!val) {
                 this.dialog.data = {
                     roleName: '', roleCode: '', adminRemark: '', remark: '', addTime: '', id: ''
@@ -61,7 +61,7 @@
             }
         },
         'au.visible': function (val, old) {
-            // 关闭dialog，清空
+            // Close the dialog and clear it
             if (!val) {
                 this.currMenu = [];
                 this.defaultCheckedKeys = [];
@@ -71,15 +71,15 @@
         }
     },
     methods: {
-        // 权限
+        // Permissions
         async handleRole(index, row) {
-            // 打开dialog
+            // open dialog
             this.au = {
                 title: row.roleName,
                 visible: true,
                 temp: row
             };
-            // 当前已有权限
+            // Currently has permission
             const c = await service.get(`/Admin/Role/Permission?handler=RolePermission&roleId=${row.id}`);
             this.currMenu = c.data.data;
             let defaultCheckedKeys = [];
@@ -90,11 +90,11 @@
             const a = await service.get('/Admin/Menu/Edit?handler=menu');
             const b = a.data.data;
             let allMenu = [];
-            // 父节点的集合, 用于求默认和条件为父节点时的差集，解决element tree无半选问题。
+            // The set of parent nodes is used to find the difference set when the default and condition are parent nodes, and solve the problem of no half-selection in element tree.
             let parentMenuNodes = [];
             this.ddd(b, null, allMenu, parentMenuNodes);
             this.allMenu = allMenu
-            // 所有权限  格式后的数据(用于渲染tree)
+            // All permissions formatted data (used for rendering tree)
             const e = [];
             parentMenuNodes.map((res) => {
                 defaultCheckedKeys.map((ele) => {
@@ -117,7 +117,7 @@
                 }
             }
         },
-        // 更新授权
+        // Update authorization
         async  auUpdateData() {
             this.au.updateLoading = true;
             const checkNodes = this.$refs.tree.getCheckedNodes(false, true);
@@ -146,7 +146,7 @@
                 });
             }
         },
-        // 初始化获取数据
+        // Initialize data acquisition
         getList() {
             let { pageIndex, pageSize, roleName, orderField } = this.listQuery;
             service.get(`/Admin/Role/index?handler=List&pageIndex=${pageIndex}&pageSize=${pageSize}&roleName=${roleName}&orderField=${orderField}`).then(res => {
@@ -154,26 +154,26 @@
                 this.paginationQuery.total = res.data.data.totalCount;
             });
         },
-        // 编辑
+        // edit
         handleEdit(index, row) {
             this.dialog.visible = true;
             if (row) {
-                // 编辑
+                // edit
                 let { roleName, roleCode, adminRemark, remark, addTime, id, enabled } = row;
                 this.dialog.data = {
                     roleName, roleCode, adminRemark, remark, addTime, id, enabled
                 };
                 this.dialog.title = '编辑角色';
             } else {
-                // 新增
+                // New
                 this.dialog.title = '新增角色';
             }
         },
-        // 更新新增、编辑
+        // Update, add, edit
         updateData() {
             this.dialog.updateLoading = true;
             this.$refs['dataForm'].validate(valid => {
-                // 表单校验
+                // form validation
                 if (valid) {
                     let data = {
                         Id: this.dialog.data.id,
@@ -201,7 +201,7 @@
 
 
         },
-        // 删除
+        // delete
         handleDelete(index, row) {
             let ids = [row.id];
             service.post("/Admin/Role/Index?handler=Delete", ids).then(res => {

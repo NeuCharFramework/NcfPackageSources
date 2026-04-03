@@ -19,16 +19,16 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 检查并更新版本
+        /// Check and update version
         /// </summary>
         /// <param name="storedDto"></param>
         /// <param name="assemblyDto"></param>
-        /// <returns>返回是否需要新增或更新</returns>
+        /// <returns>Return whether new addition or update is required</returns>
         public async Task<InstallOrUpdate?> CheckAndUpdateVersionAsync(CreateOrUpdate_XncfModuleDto storedDto, UpdateVersion_XncfModuleDto assemblyDto)
         {
             if (storedDto == null)
             {
-                //新增模块
+                //New module
                 var xncfModule = new XncfModule(assemblyDto.Name, assemblyDto.Uid, assemblyDto.MenuName, assemblyDto.Version, assemblyDto.Description, "", true, "", assemblyDto.Icon, Core.Enums.XncfModules_State.新增待审核);
                 xncfModule.Create();
                 await base.SaveObjectAsync(xncfModule).ConfigureAwait(false);
@@ -36,7 +36,7 @@ namespace Senparc.Ncf.Service
             }
             else
             {
-                //检查更新
+                //Check for updates
                 if (storedDto.Version != assemblyDto.Version)
                 {
                     var xncfModule = base.GetObject(z => z.Uid == storedDto.Uid);
@@ -49,7 +49,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 跟新菜单Id
+        /// Follow the new menu ID
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
@@ -70,9 +70,9 @@ namespace Senparc.Ncf.Service
             base.SaveObject(obj);
             LogUtility.WebLogger.InfoFormat("XncfModule{2}：{0}（ID：{1}）", obj.Name, obj.Id, isInsert ? "新增" : "编辑");
 
-            //清除缓存
+            //clear cache
             var fullUserCache = _serviceProvider.GetService<FullXncfModuleCache>();
-            //同步缓存锁
+            //Synchronous cache lock
             using (fullUserCache.Cache.BeginCacheLock(FullXncfModuleCache.CACHE_KEY, obj.Id.ToString()))
             {
                 fullUserCache.RemoveObject(obj.Name);
@@ -89,9 +89,9 @@ namespace Senparc.Ncf.Service
             await base.SaveObjectAsync(obj);
             LogUtility.WebLogger.InfoFormat("XncfModule{2}：{0}（ID：{1}）", obj.Name, obj.Id, isInsert ? "新增" : "编辑");
 
-            //清除缓存
+            //clear cache
             var fullUserCache = _serviceProvider.GetService<FullXncfModuleCache>();
-            //同步缓存锁
+            //Synchronous cache lock
             using (await fullUserCache.Cache.BeginCacheLockAsync(FullXncfModuleCache.CACHE_KEY, obj.Id.ToString()).ConfigureAwait(false))
             {
                 await fullUserCache.RemoveObjectAsync(obj.Name);
@@ -104,9 +104,9 @@ namespace Senparc.Ncf.Service
             base.SaveObject(obj);
             LogUtility.WebLogger.Info($"XncfModule被删除：{obj.Name}（ID：{obj.Id}）");
 
-            //清除缓存
+            //clear cache
             var fullUserCache = _serviceProvider.GetService<FullXncfModuleCache>();
-            //同步缓存锁
+            //Synchronous cache lock
             using (fullUserCache.Cache.BeginCacheLock(FullXncfModuleCache.CACHE_KEY, obj.Id.ToString()))
             {
                 fullUserCache.RemoveObject(obj.Name);
@@ -119,9 +119,9 @@ namespace Senparc.Ncf.Service
             await base.SaveObjectAsync(obj).ConfigureAwait(false);
             LogUtility.WebLogger.Info($"XncfModule被删除：{obj.Name}（ID：{obj.Id}）");
 
-            //清除缓存
+            //clear cache
             var fullUserCache = _serviceProvider.GetService<FullXncfModuleCache>();
-            //同步缓存锁
+            //Synchronous cache lock
             using (await fullUserCache.Cache.BeginCacheLockAsync(FullXncfModuleCache.CACHE_KEY, obj.Id.ToString()).ConfigureAwait(false))
             {
                 await fullUserCache.RemoveObjectAsync(obj.Name);

@@ -6,7 +6,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.AppServices
 {
     /// <summary>
-    /// AppService 日志处理
+    ///AppService log processing
     /// </summary>
     public class AppServiceLogger
     {
@@ -33,7 +33,7 @@ namespace Senparc.Ncf.Core.AppServices
         {
             string logs = GetLogs();
 
-            //确保能够处理中文字符
+            //Make sure it can handle Chinese characters
             byte[] utf8Bytes = Encoding.UTF8.GetBytes(logs);
             string utf8String = Encoding.UTF8.GetString(utf8Bytes);
 

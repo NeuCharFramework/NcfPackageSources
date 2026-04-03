@@ -5,7 +5,7 @@ namespace Senparc.Ncf.Utility
     public class FileUtility
     {
         /// <summary>
-        /// 获取随机文件名
+        /// Get a random filename
         /// </summary>
         /// <returns></returns>
         public static string GetRandomFileName()

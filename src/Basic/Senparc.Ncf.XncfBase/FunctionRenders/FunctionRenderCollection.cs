@@ -1,4 +1,5 @@
 ﻿using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.Models;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -9,12 +10,12 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase.FunctionRenders
 {
     /// <summary>
-    /// FunctionRender 集合。Key：唯一标识，value：MethodInfo
+    ///FunctionRender collection. Key: unique identifier, value: MethodInfo
     /// </summary>
     public class FunctionRenderCollection : ConcurrentDictionary<Type, ConcurrentDictionary<string, FunctionRenderBag>>
     {
         /// <summary>
-        /// 获取 单个 Group 的 Key
+        /// Get the Key of a single Group
         /// </summary>
         /// <param name="methodInfo"></param>
         /// <returns></returns>
@@ -24,7 +25,7 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
         }
 
         /// <summary>
-        /// 设置 FunctionRenderBag
+        ///Set FunctionRenderBag
         /// </summary>
         /// <param name="methodInfo"></param>
         /// <returns></returns>
@@ -42,6 +43,83 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
             var functionRenderBag = new FunctionRenderBag(groupKey, methodInfo, functionRenderAttribute);
             registerGroup[groupKey] = functionRenderBag;
             return functionRenderBag;
+        }
+
+        /// <summary>
+        /// Get the FunctionRender collection under the specified registration type.
+        /// </summary>
+        public IReadOnlyList<FunctionRenderBag> GetByRegisterType(Type registerType)
+        {
+            if (registerType == null)
+            {
+                return Array.Empty<FunctionRenderBag>();
+            }
+
+            if (!TryGetValue(registerType, out var registerGroup) || registerGroup == null)
+            {
+                return Array.Empty<FunctionRenderBag>();
+            }
+
+            return registerGroup.Values.ToList();
+        }
+
+        /// <summary>
+        /// Get the FunctionRender collection by module UID.
+        /// </summary>
+        public IReadOnlyList<FunctionRenderBag> GetByModuleUid(string moduleUid)
+        {
+            if (string.IsNullOrWhiteSpace(moduleUid))
+            {
+                return Array.Empty<FunctionRenderBag>();
+            }
+
+            var register = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid.Equals(moduleUid, StringComparison.OrdinalIgnoreCase));
+            if (register == null)
+            {
+                return Array.Empty<FunctionRenderBag>();
+            }
+
+            return GetByRegisterType(register.GetType());
+        }
+
+        /// <summary>
+        /// When the input contains [#sym:FunctionRender], automatically convert the FunctionRender method in the specified module into an importable plug-in object.
+        /// </summary>
+        public IReadOnlyDictionary<string, object> ResolveSymbolPlugins(IServiceProvider serviceProvider, string symbolExpression, IEnumerable<string> moduleUids)
+        {
+            if (!FunctionRenderSymbolHelper.HasFunctionRenderSymbol(symbolExpression) || serviceProvider == null || moduleUids == null)
+            {
+                return new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            }
+
+            var pluginObjects = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            var uidList = moduleUids.Where(z => !string.IsNullOrWhiteSpace(z)).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+
+            foreach (var uid in uidList)
+            {
+                var functionBags = GetByModuleUid(uid);
+                if (functionBags.Count == 0)
+                {
+                    continue;
+                }
+
+                foreach (var declaringType in functionBags.Select(z => z.MethodInfo?.DeclaringType).Where(z => z != null).Distinct())
+                {
+                    var key = declaringType.FullName;
+                    if (pluginObjects.ContainsKey(key))
+                    {
+                        continue;
+                    }
+
+                    var plugin = serviceProvider.GetService(declaringType) ?? Activator.CreateInstance(declaringType);
+                    if (plugin != null)
+                    {
+                        pluginObjects[key] = plugin;
+                    }
+                }
+            }
+
+            return pluginObjects;
         }
     }
 }

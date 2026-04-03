@@ -20,7 +20,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 添加角色信息
+        ///Add character information
         /// </summary>
         /// <param name="roleId"></param>
         /// <param name="accountId"></param>

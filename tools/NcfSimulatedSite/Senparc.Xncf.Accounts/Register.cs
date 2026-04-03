@@ -23,9 +23,9 @@ namespace Senparc.Xncf.Accounts
 
         public override string Name => "Senparc.Xncf.Accounts";
 
-        public override string Uid => Senparc.Ncf.Core.Config.SiteConfig.SYSTEM_XNCF_MODULE_ACCOUNTS_UID;//不可修改
+        public override string Uid => Senparc.Ncf.Core.Config.SiteConfig.SYSTEM_XNCF_MODULE_ACCOUNTS_UID;//Cannot be modified
 
-        public override string Version => "0.1";//必须填写版本号
+        public override string Version => "0.1";//Version number is required
 
         public override string MenuName => "用户管理";
 
@@ -35,20 +35,20 @@ namespace Senparc.Xncf.Accounts
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //安装或升级版本时更新数据库
+            //Update database when installing or upgrading a version
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
-            //根据安装或更新不同条件执行逻辑
+            //Execute logic based on different conditions for installation or update
             switch (installOrUpdate)
             {
                 case InstallOrUpdate.Install:
-                    //新安装
+                    //New installation
                     #region 初始化数据库数据
 
                     #endregion
                     break;
                 case InstallOrUpdate.Update:
-                    //更新
+                    //renew
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -62,9 +62,9 @@ namespace Senparc.Xncf.Accounts
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
             AccountSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as AccountSenparcEntities;
 
-            //指定需要删除的数据实体
+            //Specify the data entity to be deleted
 
-            //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
+            //Note: As a demonstration, all tables created by this module are deleted when uninstalling the module. During actual operation, please operate with caution and sort the entities in the order of deletion!
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
@@ -75,7 +75,7 @@ namespace Senparc.Xncf.Accounts
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
-            //注册 User 登录策略
+            //Register User Login Policy
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("UserAnonymous", policy =>

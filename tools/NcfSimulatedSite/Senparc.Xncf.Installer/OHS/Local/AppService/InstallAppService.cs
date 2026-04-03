@@ -51,7 +51,7 @@ namespace Senparc.Xncf.Installer.OHS.Local.AppService
             var httpContext = _httpContextAccessor.Value.HttpContext;
             var tenantInfo = await _tenantInfoService.CreateInitTenantInfoAsync(httpContext);
 
-            //重置租户状态
+            //Reset tenant status
             var createdRequestTenantInfo = await _tenantInfoService.SetScopedRequestTenantInfoAsync(httpContext);
 
             return await this.GetResponseAsync<AppResponseBase<TenantInfoDto>, TenantInfoDto>(async (response, logger) =>

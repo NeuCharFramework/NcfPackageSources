@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Senparc.Ncf.Core.Utility
 {
     /// <summary>
-    /// 验证码用途（分类）
+    /// Verification code usage category
     /// </summary>
     public enum CheckCodeKind
     {
@@ -22,7 +22,7 @@ namespace Senparc.Ncf.Core.Utility
         private const string COOKIE_NAME_PREFIX = "senparccheckcodeverify_";
         private string _cookieName;
         private HttpContext _httpContext;
-        private IMemoryCache _cache;//TODO: _cache需要赋值
+        private IMemoryCache _cache;//TODO: _cache needs assignment
         private string _checkCodeSalt = "_senparccheckcode";
         private Dictionary<string, string> checkedCodeCollection
         {
@@ -46,7 +46,7 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 获取验证码并记录cookie
+        /// Get verification code and record cookie
         /// </summary>
         /// <param name="checkCodeKind"></param>
         /// <returns></returns>
@@ -60,7 +60,7 @@ namespace Senparc.Ncf.Core.Utility
             //string[] str = new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
             string str1 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";//abcdefghijklmnopqrstuvwxyz
 
-            for (int i = 0; i < 4; i++)//原始值：5
+            for (int i = 0; i < 4; i++)//Original value: 5
             {
 
                 //code = (char)str[random.Next(0, 61)];
@@ -88,7 +88,7 @@ namespace Senparc.Ncf.Core.Utility
             DateTimeOffset to = new DateTimeOffset(DateTime.Now.AddDays(1));
             var verifyCode = GenerateVerifyCode(checkCode, null);
             var value = $"checkcode={verifyCode}";
-            _httpContext.Response.Cookies.Append(this._cookieName, value, new CookieOptions() { Expires = to });//确定写入cookie中
+            _httpContext.Response.Cookies.Append(this._cookieName, value, new CookieOptions() { Expires = to });//Confirm to write to cookie
         }
 
         public bool ValidateCheckCode(string inputCheckCode)
@@ -98,7 +98,7 @@ namespace Senparc.Ncf.Core.Utility
                 return false;
             }
 
-            //验证码验证
+            //Verification code
             var myCookie = _httpContext.Request.Cookies[this._cookieName];
 
             if (myCookie == null || !myCookie.StartsWith("checkcode="))
@@ -113,7 +113,7 @@ namespace Senparc.Ncf.Core.Utility
             }
             if (checkedCodeCollection.ContainsKey(checkCodeVerify))
             {
-                return false;//如果已经参与过验证，则不能再次使用
+                return false;//If you have already participated in verification, you cannot use it again.
             }
             var verifyCode = GenerateVerifyCode(inputCheckCode.Trim(), checkCodeVerify.Substring(checkCodeVerify.Length - 32, 32));
             if (verifyCode.ToUpper() != checkCodeVerify.ToUpper())
@@ -123,7 +123,7 @@ namespace Senparc.Ncf.Core.Utility
             checkedCodeCollection.Add(checkCodeVerify, inputCheckCode);
             return true;
 
-            //_httpContext.Response.Write("<script language = 'javascript'> alert('您的浏览器不支持coolie，请联系客服！');</script>");
+            //_httpContext.Response.Write("<script language = 'javascript'> alert('Your browser does not support coolie, please contact customer service!');</script>");
         }
 
         public string GenerateVerifyCode(string inputCheckCode, string key)
@@ -137,7 +137,7 @@ namespace Senparc.Ncf.Core.Utility
             string verifyCode = string.Format(verifyFormat,
                                     ((int)_checkCodeKind).ToString(),
                                     checkcodeEncoding,
-                                    key//密匙
+                                    key//Key
                                     );
             return verifyCode;
         }

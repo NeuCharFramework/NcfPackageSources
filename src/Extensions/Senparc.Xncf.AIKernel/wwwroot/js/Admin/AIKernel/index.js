@@ -9,7 +9,7 @@ var app = new Vue({
             tableLoading: true,
             tableData: [],
             addFormDialogVisible: false,
-            neuCharFormDialogVisible: false, // 新增的对话框可见性  
+            neuCharFormDialogVisible: false, // New dialog visibility  
             addForm: {
                 alias: "",
                 "modelId": "",
@@ -23,7 +23,7 @@ var app = new Vue({
                 "note": "",
                 "maxToken": 0,
             },
-            neuCharForm: { // 新增的表单数据  
+            neuCharForm: { // New form data  
                 developerId: "",
                 apiKey: ""
             },
@@ -72,7 +72,7 @@ var app = new Vue({
                     { required: true, message: '请输入Organization Id', trigger: 'blur' }
                 ]
             },
-            neuCharRules: { // 新增的验证规则  
+            neuCharRules: { // New validation rules  
                 developerId: [
                     { required: true, message: '请输入 DeveloperId', trigger: 'blur' }
                 ],
@@ -140,10 +140,10 @@ var app = new Vue({
             this.addFormDialogVisible = true;
         },
         addNeuCharModel() {
-            this.neuCharFormDialogVisible = true; // 显示对话框  
+            this.neuCharFormDialogVisible = true; // show dialog  
         },
         copyInfo(key) {
-            // 把结果复制到剪切板  
+            // Copy results to clipboard  
             const input = document.createElement('input')
             input.setAttribute('readonly', 'readonly')
             input.setAttribute('value', key)
@@ -152,7 +152,7 @@ var app = new Vue({
             input.setSelectionRange(0, 9999)
             if (document.execCommand('copy')) {
                 document.execCommand('copy')
-                //提示时展示'******'+key的后4位  
+                //Display '******' + the last 4 digits of key when prompted.  
                 this.$message.success(`已复制【******${key.slice(-4)}】！`)
             }
         },
@@ -223,7 +223,7 @@ var app = new Vue({
                 "maxToken": 0,
             }
         },
-        clearNeuCharForm() { // 新增的清理表单方法  
+        clearNeuCharForm() { // New method to clean up the form  
             this.neuCharForm = {
                 developerId: "",
                 apiKey: ""

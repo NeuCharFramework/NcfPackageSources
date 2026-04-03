@@ -40,7 +40,7 @@ namespace Senparc.Xncf.SystemCore
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_SYSTEM_CORE_UID;// "00000000-0000-0000-0001-000000000001";
 
-        public override string Version => "0.1.1";//必须填写版本号
+        public override string Version => "0.1.1";//Version number is required
 
         public override string MenuName => "系统核心模块";
 
@@ -50,24 +50,24 @@ namespace Senparc.Xncf.SystemCore
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //SenparcEntities 不进行任何数据库实体的构建，只作为容器
+            //SenparcEntities does not build any database entities, only serves as a container
             //await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
             /*
-            //更新数据库
+            //update database
             //SenparcEntities senparcEntities = (SenparcEntities)xncfModuleServiceExtension.BaseData.BaseDB.BaseDataContext;
             BasePoolEntities basePoolEntities = serviceProvider.GetService<BasePoolEntities>();
             var pendingMigs = await basePoolEntities.Database.GetPendingMigrationsAsync();
             if (pendingMigs.Count() > 0)
             {
-                basePoolEntities.ResetMigrate();//重置合并状态
+                basePoolEntities.ResetMigrate();//Reset merge status
 
                 try
                 {
                     var script = basePoolEntities.Database.GenerateCreateScript();
                     SenparcTrace.SendCustomLog("senparcEntities.Database.GenerateCreateScript", script);
 
-                    basePoolEntities.Migrate();//进行合并
+                    basePoolEntities.Migrate();//Merge
                 }
                 catch (Exception ex)
                 {
@@ -82,7 +82,7 @@ namespace Senparc.Xncf.SystemCore
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            //TODO：应该提供一个 BeforeUninstall 方法，阻止卸载。
+            //TODO: A BeforeUninstall method should be provided to prevent uninstallation.
 
             await base.UninstallAsync(serviceProvider, unsinstallFunc);
         }
@@ -90,7 +90,7 @@ namespace Senparc.Xncf.SystemCore
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
-            //读取Log配置文件
+            //Read Log configuration file
             try
             {
                 var repository = LogManager.CreateRepository("NETCoreRepository");
@@ -101,22 +101,22 @@ namespace Senparc.Xncf.SystemCore
                 SenparcTrace.BaseExceptionLog(ex);
             }
 
-            services.AddSenparcGlobalServices(configuration);//注册 CO2NET 基础引擎所需服务
+            services.AddSenparcGlobalServices(configuration);//Register the services required by the CO2NET basic engine
 
-            //解决中文进行编码问题
+            //Solve the problem of encoding in Chinese
             services.AddSingleton(HtmlEncoder.Create(UnicodeRanges.All));
-            //使用内存缓存
+            //Use memory cache
             services.AddMemoryCache();
 
 
-            //注册 Lazy<T>
+            //Register Lazy<T>
             services.AddTransient(typeof(Lazy<>));
 
             services.Configure<SenparcCoreSetting>(configuration.GetSection("SenparcCoreSetting"));
 
-            ////自动依赖注入扫描
+            ////Automatic dependency injection scanning
             //services.ScanAssamblesForAutoDI();
-            ////已经添加完所有程序集自动扫描的委托，立即执行扫描（必须）
+            ////The delegates for automatic scanning of all assemblies have been added and the scan will be executed immediately (required)
             //AssembleScanHelper.RunScan();
             ////services.AddSingleton<Core.Cache.RedisProvider.IRedisProvider, Core.Cache.RedisProvider.StackExchangeRedisProvider>();
 
@@ -130,7 +130,7 @@ namespace Senparc.Xncf.SystemCore
 
             services.AddScoped<IAdminWorkContextProvider, AdminWorkContextProvider>();
 
-            //忽略某些 API
+            //Ignore some APIs
             //Senparc.CO2NET.WebApi.Register.OmitCategoryList.Add(Senparc.NeuChar.PlatformType.WeChat_Work.ToString());
             //Senparc.CO2NET.WebApi.Register.OmitCategoryList.Add(Senparc.NeuChar.PlatformType.WeChat_MiniProgram.ToString());
             //Senparc.CO2NET.WebApi.Register.OmitCategoryList.Add(Senparc.NeuChar.PlatformType.WeChat_Open.ToString());
@@ -150,11 +150,11 @@ namespace Senparc.Xncf.SystemCore
 
             #region Senparc.Core 设置
 
-            //用于解决HttpContext.Connection.RemoteIpAddress为null的问题
+            //Used to solve the problem that HttpContext.Connection.RemoteIpAddress is null
             //https://stackoverflow.com/questions/35441521/remoteipaddress-is-always-null
             app.UseHttpMethodOverride(new HttpMethodOverrideOptions
             {
-                //FormFieldName = "X-Http-Method-Override"//此为默认值
+                //FormFieldName = "X-Http-Method-Override"//This is the default value
             });
 
             #endregion
@@ -162,7 +162,7 @@ namespace Senparc.Xncf.SystemCore
             #region 异步线程
 
             {
-                ////APM Ending 数据统计
+                ////APM Ending data statistics
                 //var utility = new APMNeuralDataThreadUtility();
                 //Thread thread = new Thread(utility.Run) { Name = "APMNeuralDataThread" };
                 //SiteConfig.AsynThread.Add(thread.Name, thread);
@@ -172,9 +172,9 @@ namespace Senparc.Xncf.SystemCore
             {
                 z.IsBackground = true;
                 z.Start();
-            }); //全部运行 
+            }); //Run all 
 
-            //更多 XNCF 模块线程已经集成到 Senparc.Ncf.XncfBase.Register.ThreadCollection 中
+            //More XNCF module threads have been integrated into Senparc.Ncf.XncfBase.Register.ThreadCollection
 
             #endregion
 

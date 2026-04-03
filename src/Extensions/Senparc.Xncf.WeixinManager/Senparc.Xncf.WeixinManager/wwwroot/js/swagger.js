@@ -1,11 +1,11 @@
 ﻿'use strict';
 ///    <summary>
-/// 中文转换
+/// Chinese conversion
 ///    </summary>
 var SwaggerTranslator = (function () {
-    //定时执行检测是否转换成中文,最多执行500次  即500*50/1000=25s
+    //Scheduled execution to detect whether to convert into Chinese, can be executed up to 500 times, that is, 500*50/1000=25s
     var iexcute = 0,
-        //中文语言包
+        //Chinese language pack
         _words = {
             "Warning: Deprecated": "警告：已过时",
             "Implementation Notes": "实现备注",
@@ -58,7 +58,7 @@ var SwaggerTranslator = (function () {
             "server returned": "服务器返回"
         },
 
-        //定时执行转换
+        //Schedule conversion
         _translator2Cn = function () {
             if ($("#resources_container .resource").length > 0) {
                 _tryTranslate();
@@ -70,7 +70,7 @@ var SwaggerTranslator = (function () {
             }
         },
 
-        //设置控制器注释
+        //Set controller annotation
         _setControllerSummary = function () {
             $.ajax({
                 type: "get",
@@ -94,7 +94,7 @@ var SwaggerTranslator = (function () {
             });
         },
 
-        //尝试将英文转换成中文
+        //Try to convert English to Chinese
         _tryTranslate = function () {
             $('[data-sw-translate]').each(function () {
                 $(this).html(_getLangDesc($(this).html()));
@@ -111,11 +111,11 @@ var SwaggerTranslator = (function () {
             document.title = "API描述文档";
             $('body').append('<style type="text/css">.controller-summary{color:#10a54a !important;word-break:keep-all;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:250px;text-align:right;cursor:default;} </style>');
             $("#logo").html("接口描述").attr("href", "/Home/Index");
-            //设置控制器描述
+            //Set controller description
             _setControllerSummary();
             _translator2Cn();
         }
     }
 })();
-//执行转换
+//perform conversion
 SwaggerTranslator.Translator();

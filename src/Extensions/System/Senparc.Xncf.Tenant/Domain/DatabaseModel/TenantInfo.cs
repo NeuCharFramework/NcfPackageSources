@@ -14,35 +14,35 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.Tenant.Domain.DataBaseModel
 {
     /// <summary>
-    /// 租户信息
+    ///tenant information
     /// </summary>
     [Table("TenantInfos")]
-    public class TenantInfo : EntityBase<int>, IIgnoreMulitTenant //TODO:可以直接继承不使用多租户的基类
+    public class TenantInfo : EntityBase<int>, IIgnoreMulitTenant //TODO: You can directly inherit the base class without using multi-tenancy
     {
         /// <summary>
-        /// 全局唯一编号（自动分配）
+        /// Globally unique number (automatically assigned)
         /// </summary>
         [Required]
         public Guid Guid { get; private set; }
         /// <summary>
-        /// 名称
+        ///name
         /// </summary>
         [Required]
         public string Name { get; private set; }
         /// <summary>
-        /// 是否启用
+        /// Whether to enable
         /// </summary>
         [Required]
         [DefaultValue(true)]
         public bool Enable { get; private set; }
         /// <summary>
-        /// 匹配域名、URL、Head的参数
+        /// Match parameters of domain name, URL, and Head
         /// </summary>
         [Required]
         public string TenantKey { get; private set; }
 
         /// <summary>
-        /// 此属性已经取消和数据库的映射
+        /// This attribute has been unmapped from the database
         /// </summary>
         [NotMapped]
         new public string TenantId { get; private set; }
@@ -61,7 +61,7 @@ namespace Senparc.Xncf.Tenant.Domain.DataBaseModel
         }
 
         /// <summary>
-        /// 更新数据
+        /// update data
         /// </summary>
         /// <param name="dto"></param>
         public void Update(CreateOrUpdate_TenantInfoDto dto)
@@ -73,7 +73,7 @@ namespace Senparc.Xncf.Tenant.Domain.DataBaseModel
         }
 
         /// <summary>
-        /// 清除缓存
+        /// clear cache
         /// </summary>
         /// <param name="serviceProvider"></param>
         /// <returns></returns>

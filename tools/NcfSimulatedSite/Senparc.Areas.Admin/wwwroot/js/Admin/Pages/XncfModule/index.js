@@ -2,10 +2,10 @@
   el: "#app",
   data() {
     return {
-      newTableData: [], // 新模块数据
-      oldTableData: [], // 已安装模块
-      updatedTableData: [], // 待更新模块
-      isExtend: false, //是否切换状态
+      newTableData: [], // new module data
+      oldTableData: [], // Module installed
+      updatedTableData: [], // Modules to be updated
+      isExtend: false, //Whether to switch status
       handlerText: "",
       handlerTips: "",
       newData: {},
@@ -34,11 +34,11 @@
     this.getList();
   },
   methods: {
-    // 获取
+    // Get
     async getList() {
       const oldTableData = await service.get('/Admin/XncfModule/Index?handler=Mofules');
       this.oldTableData = oldTableData.data.data.result;
-      // 是否切换状态
+      // Whether to switch status
       this.isExtend = oldTableData.data.data.hideModuleManager;
       const newTableData = await service.get('/Admin/XncfModule/Index?handler=UnMofules');
       this.newTableData = newTableData.data.data;
@@ -46,27 +46,27 @@
       const updatedTableData = await service.get('/Admin/XncfModule/Index?handler=UpdatedMofules');
       this.updatedTableData = updatedTableData.data.data;
     },
-    // 切换状态
+    // Switch status
     async handleSwitch() {
       await service.post('/Admin/XncfModule/Index?handler=HideManager');
       this.isExtend = !this.isExtend;
       window.location.href = "/Admin/Index";
     },
-    // 安装
+    // Install
     async handleInstall(index, row) {
       await service.get(`/Admin/XncfModule/Index?handler=ScanAjax&uid=${row.uid}`);
       window.sessionStorage.setItem('setNavMenuActive', row.menuName);
       getNavMenu();
-      // 跳转到模块详情
+      // Jump to module details
       setTimeout(function () {
         window.location.href = `/Admin/XncfModule/Start/?uid=${row.uid}`;
       }, 100);
     },
-    // 操作
+    // operate
     handleHandle(index, row) {
       window.location.href = "/Admin/XncfModule/Start/?uid=" + row.xncfRegister.uid;
     },
-    // 主页
+    // Home page
     handleIndex(index, row) {
       window.location.href = row.xncfRegister.homeUrl;
     }

@@ -6,21 +6,21 @@ namespace Senparc.Xncf.Dapr;
 public static class DaprClientServiceCollectionExtensions
 {
     /// <summary>
-    /// 将Dapr客户端注册到服务
+    /// Register the Dapr client to the service
     /// </summary>
     /// <param name="services"></param>
-    /// <param name="configOptions">Dapr客户端配置选项</param>
+    /// <param name="configOptions">DaprClient configuration options</param>
     public static void AddDaprClient(this IServiceCollection services, Action<DaprClientOptions>? configOptions = null)
     {
         AddDaprClient<Serializer>(services, configOptions);
     }
 
     /// <summary>
-    /// 将Dapr客户端注册到服务
+    /// Register the Dapr client to the service
     /// </summary>
-    /// <typeparam name="TSerializer">序列化器接口的实现类型</typeparam>
+    /// <typeparam name="TSerializer">Implementation type of serializer interface</typeparam>
     /// <param name="services"></param>
-    /// <param name="configOptions">Dapr客户端配置选项</param>
+    /// <param name="configOptions">DaprClient configuration options</param>
     public static void AddDaprClient<TSerializer>(this IServiceCollection services, Action<DaprClientOptions>? configOptions = null) 
         where TSerializer : class, ISerializer
     {

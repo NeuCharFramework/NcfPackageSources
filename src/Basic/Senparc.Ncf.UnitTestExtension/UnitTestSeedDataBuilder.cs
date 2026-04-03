@@ -9,24 +9,24 @@ using Senparc.Ncf.UnitTestExtension.Entities;
 namespace Senparc.Ncf.UnitTestExtension
 {
     /// <summary>
-    /// 创建种子数据
+    /// Create seed data
     /// </summary>
     public abstract class UnitTestSeedDataBuilder
     {
 
 
         /// <summary>
-        /// 填充种子数据前的操作
+        /// Operations before filling in seed data
         /// </summary>
         /// <param name="serviceProvider"></param>
         /// <returns></returns>
         public abstract Task<DataList> ExecuteAsync(IServiceProvider serviceProvider);
 
         /// <summary>
-        /// 填充种子数据后的操作
+        /// What to do after filling in seed data
         /// </summary>
         /// <param name="serviceProvider"></param>
-        /// <param name="dataList">从 ExecuteAsync 中返回的 dataList</param>
+        /// <param name="dataList">dataList returned from ExecuteAsync</param>
         /// <returns></returns>
         public abstract Task OnExecutedAsync(IServiceProvider serviceProvider, DataList dataList);
     }

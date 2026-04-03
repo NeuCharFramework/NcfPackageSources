@@ -74,22 +74,22 @@ define(function(require) {
             legendHoverLink: true,
 
             hoverAnimation: true,
-            // 默认全局居中
+            // Default global center
             center: ['50%', '50%'],
             radius: [0, '75%'],
-            // 默认顺时针
+            // Default clockwise
             clockwise: true,
             startAngle: 90,
-            // 最小角度改为0
+            // Minimum angle changed to 0
             minAngle: 0,
-            // 选中是扇区偏移量
+            // Selected is the sector offset
             selectedOffset: 10,
 
             // If use strategy to avoid label overlapping
             avoidLabelOverlap: true,
-            // 选择模式，默认关闭，可选single，multiple
+            // Select mode, off by default, single, multiple optional
             // selectedMode: false,
-            // 南丁格尔玫瑰图模式，'radius'（半径） | 'area'（面积）
+            // Nightingale rose pattern, 'radius' | 'area'
             // roseType: null,
 
             label: {
@@ -99,9 +99,9 @@ define(function(require) {
                     show: true,
                     // 'outer', 'inside', 'center'
                     position: 'outer'
-                    // formatter: 标签文本格式器，同Tooltip.formatter，不支持异步回调
-                    // textStyle: null      // 默认使用全局文本样式，详见TEXTSTYLE
-                    // distance: 当position为inner时有效，为label位置到圆心的距离与圆半径(环状图为内外半径和)的比例系数
+                    // formatter: label text formatter, same as Tooltip.formatter, does not support asynchronous callback
+                    // textStyle: null // Use global text style by default, see TEXTSTYLE for details
+                    // distance: valid when position is inner, it is the proportional coefficient between the distance from the label position to the center of the circle and the circle radius (the donut diagram is the sum of the inner and outer radii)
                 },
                 emphasis: {}
             },
@@ -109,13 +109,13 @@ define(function(require) {
             labelLine: {
                 normal: {
                     show: true,
-                    // 引导线两段中的第一段长度
+                    // The length of the first of the two segments of the guide line
                     length: 15,
-                    // 引导线两段中的第二段长度
+                    // The length of the second of the two segments of the guide line
                     length2: 15,
                     smooth: false,
                     lineStyle: {
-                        // color: 各异,
+                        // color: different,
                         width: 1,
                         type: 'solid'
                     }
@@ -123,12 +123,12 @@ define(function(require) {
             },
             itemStyle: {
                 normal: {
-                    // color: 各异,
+                    // color: different,
                     borderColor: 'rgba(0,0,0,0)',
                     borderWidth: 1
                 },
                 emphasis: {
-                    // color: 各异,
+                    // color: different,
                     borderColor: 'rgba(0,0,0,0)',
                     borderWidth: 1
                 }

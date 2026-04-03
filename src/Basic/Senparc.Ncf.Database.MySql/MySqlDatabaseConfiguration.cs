@@ -13,7 +13,7 @@ using System.Data.Common;
 namespace Senparc.Ncf.Database.MySql
 {
     /// <summary>
-    /// MySQL 数据库配置
+    ///MySQL database configuration
     /// </summary>
     public class MySqlDatabaseConfiguration : DatabaseConfigurationBase<MySqlDbContextOptionsBuilder, MySqlOptionsExtension>
     {
@@ -34,7 +34,7 @@ namespace Senparc.Ncf.Database.MySql
             (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
             {
                 optionsBuilder.UseMySql(connectionString,
-                    //ServerVersion 用法：https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/pull/1233
+                    //ServerVersion usage: https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/pull/1233
                     ServerVersion.AutoDetect(connectionString), 
                     actionBase);//beta6
             };

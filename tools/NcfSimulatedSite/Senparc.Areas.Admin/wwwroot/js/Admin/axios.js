@@ -1,12 +1,12 @@
 ﻿/**
- * axios封装
- * 请求拦截、响应拦截、错误统一处理
+ * axios package
+ * Request interception, response interception, and unified error handling
  */
-// 创建一个axios实例
+// Create an axios instance
 var service = axios.create({
     timeout: 1000000 // request timeout
 });
-// 请求拦截
+// request interception
 service.interceptors.request.use(
     config => {
         if (config.method.toUpperCase() === 'POST') {
@@ -20,15 +20,15 @@ service.interceptors.request.use(
         return Promise.reject(error);
     }
 );
-// 响应拦截器
+// response interceptor
 service.interceptors.response.use(
     response => {
         if (response.status === 200) {
             if (response.data.success) {
                 return Promise.resolve(response);
             } else {
-                // 请求已发出，其他状态
-                // 切换隐藏时不给错误提示，直接刷新
+                // The request has been sent, other status
+                // No error message is given when switching to hide, refresh directly
                 if (response.config.url.includes('HideManager') || response.config.url.includes('ChangeState')) {
                     return;
                 }

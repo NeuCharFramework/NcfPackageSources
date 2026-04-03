@@ -10,54 +10,54 @@ using System.ComponentModel.DataAnnotations;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 {
     /// <summary>
-    /// Agent模板信息
+    ///Agent template information
     /// </summary>
     public class AgentTemplateDto : DtoBase<int>
     {
         /// <summary>
-        /// 名称
+        ///name
         /// </summary>
         public string Name { get;  set; }
 
         /// <summary>
-        /// 系统消息（PromptCode）
+        /// System message (PromptCode)
         /// </summary>
         public string SystemMessage { get;  set; }
 
         /// <summary>
-        /// 是否启用
+        /// Whether to enable
         /// </summary>
         public bool Enable { get;  set; }
 
         /// <summary>
-        /// 描述
+        /// describe
         /// </summary>
         public string Description { get;  set; }
 
         /// <summary>
-        /// PromptRange 的代号
+        ///Code name for PromptRange
         /// </summary>
         public string PromptCode { get;  set; }
 
         /// <summary>
-        /// 第三方机器人平台类型
+        /// Third-party robot platform type
         /// </summary>
         public HookRobotType HookRobotType { get;  set; }
 
         /// <summary>
-        /// 第三方机器人平台参数
+        /// Third-party robot platform parameters
         /// </summary>
         public string HookRobotParameter { get; set; }
 
         public string Avastar { get; set; }
 
         /// <summary>
-        /// 可调用的函数名称列表,以逗号分隔
+        /// List of callable function names, separated by commas
         /// </summary>
         public string FunctionCallNames { get; set; }
 
         /// <summary>
-        /// McpEndpoints，多个用逗号分隔
+        /// McpEndpoints, multiple separated by commas
         /// </summary>
         public string McpEndpoints { get; set; }
 

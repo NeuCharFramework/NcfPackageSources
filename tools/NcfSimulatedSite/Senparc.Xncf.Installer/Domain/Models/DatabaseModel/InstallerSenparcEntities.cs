@@ -13,10 +13,10 @@ namespace Senparc.Xncf.Installer.Models.DatabaseModel
 
         //public DbSet<Color> Colors { get; set; }
 
-        //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
+        //DOT REMOVE OR MODIFY THIS LINE Do not remove or modify this LINE - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }
 
-        //如无特殊需需要，OnModelCreating 方法可以不用写，已经在 Register 中要求注册
+        //If there is no special need, the OnModelCreating method does not need to be written. Registration is already required in Register.
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //}

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Routing.Tree;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// 所有 DTO 接口或类的基类
+    /// Base class for all DTO interfaces or classes
     /// </summary>
     public interface IDtoBase<T> : IDtoBase
     {
@@ -15,12 +15,12 @@ namespace Senparc.Ncf.Core.Models
     }
 
     /// <summary>
-    /// 所有 DTO 接口或类的基类
+    /// Base class for all DTO interfaces or classes
     /// </summary>
     public interface IDtoBase
     {
         /// <summary>
-        /// 是否软删除
+        /// Whether to soft delete
         /// </summary>
         bool Flag { get; set; }
 
@@ -37,18 +37,18 @@ namespace Senparc.Ncf.Core.Models
         string Remark { get; set; }
 
         /// <summary>
-        /// 添加时间
+        ///add time
         /// </summary>
         DateTime AddTime { get; set; }
         /// <summary>
-        /// 上次更新时间
+        /// last updated time
         /// </summary>
         DateTime LastUpdateTime { get; set; }
 
         /// <summary>
-        /// 租户 ID
-        /// <para>如果为-1，则本系统不启用多租户</para>
-        /// <para>如果为0，则为系统公共数据（特殊情况使用）</para>
+        ///Tenant ID
+        /// <para>If it is -1, multi-tenancy is not enabled in this system</para>
+        /// <para>If it is 0, it is system public data (used in special circumstances)</para>
         /// </summary>
         public int TenantId { get; set; }
     }

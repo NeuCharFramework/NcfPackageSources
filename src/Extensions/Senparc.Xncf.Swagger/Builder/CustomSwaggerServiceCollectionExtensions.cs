@@ -21,7 +21,7 @@ namespace Senparc.Xncf.Swagger.Builder
             {
                 #region WebApiEngine
 
-                //为每个程序集创建文档
+                //Create documentation for each assembly
                 foreach (var apiAssembly in WebApiEngine.ApiAssemblyCollection)
                 {
                     var version = WebApiEngine.ApiAssemblyVersions[apiAssembly.Key]; //neucharApiDocAssembly.Value.ImageRuntimeVersion;
@@ -54,7 +54,7 @@ namespace Senparc.Xncf.Swagger.Builder
                 }
 
 
-                ////分组显示  https://www.cnblogs.com/toiv/archive/2018/07/28/9379249.html
+                ////Group display https://www.cnblogs.com/toiv/archive/2018/07/28/9379249.html
                 //c.DocInclusionPredicate((docName, apiDesc) =>
                 //{
                 //    if (!apiDesc.TryGetMethodInfo(out MethodInfo methodInfo))
@@ -69,7 +69,7 @@ namespace Senparc.Xncf.Swagger.Builder
 
                 //    if (versions.FirstOrDefault() == null)
                 //    {
-                //        return false;//不符合要求的都不显示
+                //        return false;//Nothing that does not meet the requirements will be displayed
                 //    }
 
                 //    //docName: $"{neucharApiDocAssembly.Key}-v1"
@@ -79,24 +79,24 @@ namespace Senparc.Xncf.Swagger.Builder
                 c.OrderActionsBy(z => z.RelativePath);
                 c.EnableAnnotations();
                 //c.DocumentFilter<RemoveVerbsFilter>();
-                c.CustomSchemaIds(x => x.FullName);//规避错误：InvalidOperationException: Can't use schemaId "$JsApiTicketResult" for type "$Senparc.Weixin.Open.Entities.JsApiTicketResult". The same schemaId was already used for type "$Senparc.Weixin.MP.Entities.JsApiTicketResult"
+                c.CustomSchemaIds(x => x.FullName);//Avoid error: InvalidOperationException: Can't use schemaId "$JsApiTicketResult" for type "$Senparc.Weixin.Open.Entities.JsApiTicketResult". The same schemaId was already used for type "$Senparc.Weixin.MP.Entities.JsApiTicketResult"
 
-                /* 需要登陆，暂不考虑    —— Jeffrey Su 2021.06.17
+                /* Requires login, will not be considered for now - Jeffrey Su 2021.06.17
                 var oAuthDocName = "oauth2";// WeixinApiService.GetDocName(PlatformType.WeChat_OfficialAccount);
 
-                //添加授权
+                //Add authorization
                 var authorizationUrl = NeuChar.App.AppStore.Config.IsDebug
-                                               //以下是 appPurachase 的 Id，实际应该是 appId
+                                               //The following is the Id of appPurachase, which should actually be appId
                                                //? "http://localhost:12222/App/LoginOAuth/Authorize/1002/"
                                                //: "https://www.neuchar.com/App/LoginOAuth/Authorize/4664/";
-                                               //以下是正确的 appId
+                                               //The following is the correct appId
                                                ? "http://localhost:12222/App/LoginOAuth/Authorize?appId=xxx"
                                                : "https://www.neuchar.com/App/LoginOAuth/Authorize?appId=3035";
 
                 c.AddSecurityDefinition(oAuthDocName,//"Bearer" 
                     new OpenApiSecurityScheme
                     {
-                        Description = "请输入带有Bearer开头的Token",
+                        Description = "Please enter a Token starting with Bearer",
                         Name = oAuthDocName,// "Authorization",
                         In = ParameterLocation.Header,
                         Type = SecuritySchemeType.OAuth2,
@@ -111,7 +111,7 @@ namespace Senparc.Xncf.Swagger.Builder
                         }
                     });
 
-                //认证方式，此方式为全局添加
+                //Authentication method, this method is added globally
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement()
                 {
                     { new OpenApiSecurityScheme(){ Name =oAuthDocName//"Bearer"
@@ -119,7 +119,7 @@ namespace Senparc.Xncf.Swagger.Builder
                     //{ "Bearer", Enumerable.Empty<string>() }
                 });
 
-                //c.OperationFilter<AuthResponsesOperationFilter>();//AuthorizeAttribute过滤
+                //c.OperationFilter<AuthResponsesOperationFilter>();//AuthorizeAttribute filtering
 
                 */
 
@@ -139,7 +139,7 @@ namespace Senparc.Xncf.Swagger.Builder
                 //    c.SwaggerDoc(version, new OpenApiInfo { Title = options.ProjectName, Version = version });
                 //}
 
-                //分组显示  https://www.cnblogs.com/toiv/archive/2018/07/28/9379249.html
+                //Group display https://www.cnblogs.com/toiv/archive/2018/07/28/9379249.html
                 c.DocInclusionPredicate((docName, apiDesc) =>
                 {
                     if (!apiDesc.TryGetMethodInfo(out MethodInfo methodInfo))
@@ -147,12 +147,12 @@ namespace Senparc.Xncf.Swagger.Builder
                         return false;
                     }
 
-                    //获取方法上的特性
+                    //Get attributes on a method
                     var versions = methodInfo.GetCustomAttributes(true)
                                               .OfType<SwaggerOperationAttribute>()
                                               .Select(z => z.Tags[0].Split(':')[0]);
 
-                    //获取类上的特性
+                    //Get attributes on a class
                     if (versions?.Count() == 0)
                     {
                         versions = methodInfo.DeclaringType.GetCustomAttributes(true)
@@ -162,7 +162,7 @@ namespace Senparc.Xncf.Swagger.Builder
 
                     if (versions?.Count() == 0)
                     {
-                        return false;//不符合要求的都不显示
+                        return false;//Those that do not meet the requirements will not be displayed.
                     }
 
 
@@ -172,7 +172,7 @@ namespace Senparc.Xncf.Swagger.Builder
 
 
 
-                //分组  -- 当前分组策略无效，会导致所有 API 都不显示，暂时停用   —— Jeffrey Su 2021.7.22
+                //Grouping -- The current grouping strategy is invalid, which will cause all APIs to not be displayed and temporarily disabled - Jeffrey Su 2021.7.22
                 //c.TagActionsBy(s =>
                 //{
                 //    var controller = s.ActionDescriptor.RouteValues["controller"];
@@ -184,7 +184,7 @@ namespace Senparc.Xncf.Swagger.Builder
                 //    }
                 //    return new string[] { controller };
                 //});
-                ////版本
+                ////Version
                 //c.DocInclusionPredicate((docName, apiDesc) =>
                 //{
                 //    if (!apiDesc.TryGetMethodInfo(out MethodInfo methodInfo)) return false;

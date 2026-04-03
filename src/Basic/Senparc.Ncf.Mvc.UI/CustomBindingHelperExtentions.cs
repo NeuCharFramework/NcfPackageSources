@@ -34,7 +34,7 @@ namespace System.Web.Mvc
         }
 
         /// <summary>
-        /// “上移”“下移”箭头
+        /// "Move up" "Move down" arrows
         /// </summary>
         /// <param name="helper"></param>
         /// <param name="listCount"></param>

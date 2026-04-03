@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.Tenant.OHS.Remote
 {
     /// <summary>
-    /// 多租户中间件
+    ///Multi-tenant middleware
     /// </summary>
     public class TenantMiddleware
     {
@@ -37,10 +37,10 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
         {
             try
             {
-                //判断是否需要使用数据库
+                //Determine whether you need to use a database
                 if (!SiteConfig.DatabaseXncfLoaded)
                 {
-                    //没有数据库，跳过
+                    //No database, skip
                     await _next(context);
                 }
 
@@ -53,13 +53,13 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
                     AlertedTenantState = true;
                 }
 
-                //判断是否启用了租户
+                //Determine whether the tenant is enabled
                 var urlPath = context.Request.Path.ToString();
                 if (!FirstRunAndInstalling && enableMultiTenant)
                 {
                     var serviceProvider = context.RequestServices;
                     var tenantInfoService = serviceProvider.GetRequiredService<TenantInfoService>();
-                    var requestTenantInfo = await tenantInfoService.SetScopedRequestTenantInfoAsync(context);//设置当前 Request 的 RequestTenantInfo 参数
+                    var requestTenantInfo = await tenantInfoService.SetScopedRequestTenantInfoAsync(context);//Set the RequestTenantInfo parameter of the current Request
                 }
             }
             catch (NcfUninstallException unInstallEx)
@@ -73,7 +73,7 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
             {
                 Console.WriteLine("\t Exception from TenantMiddleware");
 
-                //如果数据库出错
+                //If there is an error in the database
                 SenparcTrace.BaseExceptionLog(ex);
                 throw;
             }

@@ -108,7 +108,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
     }
 
     /// <summary>
-    /// 跟新菜单Id
+    /// Follow the new menu ID
     /// </summary>
     public class UpdateMenuId_XncfModuleDto : DtoBase
     {

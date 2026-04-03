@@ -94,16 +94,16 @@
         <div id="namespaceCheck"></div>
     </div>
 
-    <!-- 加载工具类 -->
+    <!-- Load tool class -->
     <script src="./htmlHelper.js"></script>
     <script src="./dateHelper.js"></script>
     <script src="./nameHelper.js"></script>
     <script src="./storageHelper.js"></script>
     <script src="./copyHelper.js"></script>
 
-    <!-- 测试脚本 -->
+    <!-- test script -->
     <script>
-        // 辅助函数
+        // Helper function
         function addResult(containerId, label, result, isSuccess) {
             var container = document.getElementById(containerId);
             var div = document.createElement('div');
@@ -118,60 +118,60 @@
             addResult(containerId, label, '<br><pre>' + JSON.stringify(value, null, 2) + '</pre>', isSuccess);
         }
 
-        // 1. 测试 HTML Helper
+        // 1. Test HTML Helper
         (function() {
             var HtmlHelper = window.PromptRangeUtils.HtmlHelper;
             
-            // 测试转义
+            // Test escaping
             var escapedText = HtmlHelper.escape('<script>alert("test")</script>');
             addResult('htmlHelperTest', 'HTML 转义', escapedText, escapedText.indexOf('<') === -1);
 
-            // 测试 UUID 生成
+            // Test UUID generation
             var uuid = HtmlHelper.generateUUID();
             addResult('htmlHelperTest', 'UUID 生成', uuid, uuid.length === 36);
 
-            // 测试文件大小格式化
+            // Test file size formatting
             var size = HtmlHelper.formatFileSize(1024 * 1024);
             addResult('htmlHelperTest', '文件大小格式化 (1MB)', size, size === '1.00 MB');
 
-            // 测试正则转义
+            // Test regular escape
             var regexEscaped = HtmlHelper.escapeRegex('test.*');
             addResult('htmlHelperTest', '正则转义', regexEscaped, regexEscaped === 'test\\.\\*');
 
-            // 测试空值判断
+            // Test null value judgment
             var isEmpty1 = HtmlHelper.isEmpty('');
             var isEmpty2 = HtmlHelper.isEmpty('text');
             addResult('htmlHelperTest', '空值判断', 'empty:"" = ' + isEmpty1 + ', "text" = ' + isEmpty2, isEmpty1 && !isEmpty2);
         })();
 
-        // 2. 测试 Date Helper
+        // 2. Test Date Helper
         (function() {
             var DateHelper = window.PromptRangeUtils.DateHelper;
             
-            // 测试日期格式化
+            // Test date formatting
             var now = new Date();
             var formatted = DateHelper.formatDate(now, 'YYYY-MM-DD HH:mm:ss');
             addResult('dateHelperTest', '日期格式化', formatted, formatted.length === 19);
 
-            // 测试相对时间
-            var recent = new Date(Date.now() - 5 * 60 * 1000); // 5分钟前
+            // test relative time
+            var recent = new Date(Date.now() - 5 * 60 * 1000); // 5minutes ago
             var chatTime = DateHelper.formatChatTime(recent);
             addResult('dateHelperTest', '相对时间 (5分钟前)', chatTime, chatTime.indexOf('分钟前') > -1);
 
-            // 测试时间戳
+            // test timestamp
             var timestamp = DateHelper.getTimestamp();
             addResult('dateHelperTest', '获取时间戳', timestamp, timestamp > 0);
 
-            // 测试是否为今天
+            // Test if it is today
             var isToday = DateHelper.isToday(new Date());
             addResult('dateHelperTest', '是否为今天', isToday, isToday === true);
 
-            // 测试持续时间格式化
-            var duration = DateHelper.formatDuration(3665000); // 1小时1分钟5秒
+            // Test duration formatting
+            var duration = DateHelper.formatDuration(3665000); // 1hour 1 minute 5 seconds
             addResult('dateHelperTest', '持续时间格式化', duration, duration.indexOf('小时') > -1);
         })();
 
-        // 3. 测试 Name Helper
+        // 3. Test Name Helper
         (function() {
             var NameHelper = window.PromptRangeUtils.NameHelper;
             var testData = [
@@ -180,39 +180,39 @@
                 {value: 3, label: '选项3'}
             ];
             
-            // 测试 getName
+            // Test getName
             var name = NameHelper.getName(testData, 2, '未知');
             addResult('nameHelperTest', 'getName (ID=2)', name, name === '选项2');
 
-            // 测试找不到的情况
+            // The test cannot be found
             var notFound = NameHelper.getName(testData, 999, '未找到');
             addResult('nameHelperTest', 'getName (不存在的ID)', notFound, notFound === '未找到');
 
-            // 测试 getId
+            // Test getId
             var id = NameHelper.getId(testData, '选项2', null);
             addResult('nameHelperTest', 'getId', id, id === 2);
 
-            // 测试 hasId
+            // Test hasId
             var has = NameHelper.hasId(testData, 2);
             var notHas = NameHelper.hasId(testData, 999);
             addResult('nameHelperTest', 'hasId', 'ID=2: ' + has + ', ID=999: ' + notHas, has && !notHas);
 
-            // 测试批量获取
+            // Test batch acquisition
             var names = NameHelper.getNames(testData, [1, 2, 3]);
             addResult('nameHelperTest', '批量获取名称', names.join(', '), names.length === 3);
         })();
 
-        // 4. 测试 Storage Helper
+        // 4. Test Storage Helper
         function testStorage() {
             var StorageHelper = window.PromptRangeUtils.StorageHelper;
             var container = document.getElementById('storageHelperTest');
             container.innerHTML = '';
             
-            // 测试是否可用
+            // Test if available
             var isAvailable = StorageHelper.isAvailable();
             addResult('storageHelperTest', 'Storage 可用性', isAvailable, isAvailable);
 
-            // 测试保存和读取
+            // Test save and read
             var testData = {name: 'Test', value: 123, arr: [1, 2, 3]};
             var saved = StorageHelper.set('test_key', testData);
             addResult('storageHelperTest', '保存数据', saved, saved);
@@ -221,46 +221,46 @@
             addResult('storageHelperTest', '读取数据', JSON.stringify(retrieved), 
                 retrieved && retrieved.name === 'Test' && retrieved.value === 123);
 
-            // 测试 has
+            // test has
             var exists = StorageHelper.has('test_key');
             addResult('storageHelperTest', '检查键是否存在', exists, exists);
 
-            // 测试删除
+            // Test deletion
             StorageHelper.remove('test_key');
             var afterRemove = StorageHelper.has('test_key');
             addResult('storageHelperTest', '删除后检查', '已删除', !afterRemove);
 
-            // 测试存储信息
+            // Test storage information
             var info = StorageHelper.getStorageInfo();
             addResultWithValue('storageHelperTest', '存储信息', info, true);
         }
 
-        // 5. 测试 Copy Helper
+        // 5. Test Copy Helper
         function testCopy() {
             var CopyHelper = window.PromptRangeUtils.CopyHelper;
             var container = document.getElementById('copyHelperTest');
             container.innerHTML = '';
             
-            // 测试是否支持
+            // Test whether it is supported
             var supported = CopyHelper.isSupported();
             addResult('copyHelperTest', '复制功能支持', supported, supported);
 
-            // 测试复制文本
+            // Test copy text
             var copySuccess = CopyHelper.copyToClipboard('测试文本', '复制成功！', '复制失败！', false);
             addResult('copyHelperTest', '复制文本', '已尝试复制 "测试文本"', true);
 
-            // 测试复制对象
+            // Test copy object
             var obj = {test: 'value', number: 123};
             CopyHelper.copyObject(obj, 2);
             addResult('copyHelperTest', '复制对象 (JSON)', '已尝试复制对象', true);
 
-            // 测试复制数组
+            // Test copy array
             var arr = ['项目1', '项目2', '项目3'];
             CopyHelper.copyArray(arr, '\n');
             addResult('copyHelperTest', '复制数组', '已尝试复制数组', true);
         }
 
-        // 6. 检查全局命名空间
+        // 6. Check global namespace
         (function() {
             var container = document.getElementById('namespaceCheck');
             var utils = window.PromptRangeUtils;
@@ -285,7 +285,7 @@
             }
         })();
 
-        // 页面加载完成提示
+        // Page loading completion prompt
         console.log('%c工具类测试页面已加载', 'color: green; font-size: 16px; font-weight: bold;');
         console.log('window.PromptRangeUtils:', window.PromptRangeUtils);
     </script>

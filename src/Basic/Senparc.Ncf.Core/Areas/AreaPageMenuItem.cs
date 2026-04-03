@@ -6,7 +6,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Areas
 {
     /// <summary>
-    /// Area 页面菜单项
+    ///Area page menu item
     /// </summary>
     public class AreaPageMenuItem
     {

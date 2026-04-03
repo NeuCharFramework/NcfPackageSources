@@ -8,51 +8,51 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.DynamicData
 {
     /// <summary>  
-    /// ColumnMetadata 实体类，用于存储列的基本信息。  
+    /// ColumnMetadata entity class, used to store basic information of columns.  
     /// </summary>  
     [Table(Register.DATABASE_PREFIX + nameof(ColumnMetadata))]
     [Serializable]
     public class ColumnMetadata : EntityBase<int>
     {
         /// <summary>  
-        /// 关联的表格ID。  
+        ///The associated table ID.  
         /// </summary>  
         //[ForeignKey(nameof(TableMetadata))]
         public int TableMetadataId { get; private set; }
 
         /// <summary>  
-        /// 列名称。  
+        /// column name.  
         /// </summary>  
         [Required]
         [MaxLength(255)]
         public string ColumnName { get; private set; }
 
         /// <summary>  
-        /// 列的数据类型。  
+        /// The data type of the column.  
         /// </summary>  
         [Required]
         [MaxLength(50)]
         public string ColumnType { get; private set; }
 
         /// <summary>  
-        /// 是否允许NULL值。  
+        /// Whether to allow NULL values.  
         /// </summary>  
         [Required]
         public bool IsNullable { get; private set; } = true;
 
         /// <summary>  
-        /// 列的默认值。  
+        /// The default value for the column.  
         /// </summary>  
         public string DefaultValue { get; private set; }
 
         /// <summary>  
-        /// 关联的表格元数据。  
+        /// Associated table metadata.  
         /// </summary>  
         //[InverseProperty(nameof(TableMetadata.ColumnMetadatas))]
         public TableMetadata TableMetadata { get; set; }
 
         /// <summary>  
-        /// 关联的表格元数据。  
+        /// Associated table metadata.  
         /// </summary>  
         //[InverseProperty(nameof(TableData.ColumnMetadata))]
         public ICollection<TableData> TableDatas { get; set; }

@@ -10,8 +10,8 @@ namespace Senparc.Xncf.Swagger.Utils
     public class VersionHelper
     {
         /// <summary>
-        /// 扫描整个应用程序获取实现ApiVersion的方法，从而获取使用过的版本
-        /// 效率较低，ApiVersion是否有提供所有使用过的版本接口？？？
+        /// Scan the entire application for methods that implement ApiVersion to obtain the used version
+        /// Low efficiency. Does ApiVersion provide all used version interfaces? ? ?
         /// </summary>
         /// <returns></returns>
         public static List<string> GetApiVersions()
@@ -20,7 +20,7 @@ namespace Senparc.Xncf.Swagger.Utils
 
             AssembleScanHelper.AddAssembleScanItem(assembly =>
             {
-                //类上的ApiVersion
+                //ApiVersion on class
                 try
                 {
                     var allTypes = assembly.GetTypes();
@@ -38,7 +38,7 @@ namespace Senparc.Xncf.Swagger.Utils
                             versions.AddRange(methodVersion);
                         }
                     }
-                    ////方法上的apiversion
+                    ////apiversion on method
                     //var subTypes = allTypes.Where(w => w.GetCustomAttributes(typeof(ApiVersionAttribute), true).Length > 0);
                     //foreach (var t in subTypes)
                     //{

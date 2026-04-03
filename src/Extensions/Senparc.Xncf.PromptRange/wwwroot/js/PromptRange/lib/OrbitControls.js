@@ -1,7 +1,7 @@
 /**
  * @license
- * OrbitControls - 简化版相机控制器
- * 专为 PromptRange 3D 地图优化
+ * OrbitControls - simplified camera controller
+ * Optimized specifically for PromptRange 3D maps
  */
 
 (function() {
@@ -14,7 +14,7 @@
         return;
     }
     
-    // 状态枚举
+    // Status enum
     const STATE = {
         NONE: -1,
         ROTATE: 0,
@@ -23,15 +23,15 @@
     };
     
     /**
-     * OrbitControls 构造函数
-     * @param {THREE.Camera} camera - 相机对象
-     * @param {HTMLElement} domElement - DOM 元素
+     * OrbitControls constructor
+     * @param {THREE.Camera} camera - camera object
+     * @param {HTMLElement} domElement - DOM element
      */
     _THREE.OrbitControls = function(camera, domElement) {
         this.camera = camera;
         this.domElement = domElement || document.body;
         
-        // 公共配置
+        // public configuration
         this.enabled = true;
         this.target = new _THREE.Vector3();
         
@@ -53,18 +53,18 @@
         this.minPolarAngle = 0; // radians
         this.maxPolarAngle = Math.PI; // radians
         
-        // 内部状态
+        // internal state
         const scope = this;
         let state = STATE.NONE;
         
-        // 球坐标系
+        // Spherical coordinate system
         const spherical = new _THREE.Spherical();
         const sphericalDelta = new _THREE.Spherical();
         
         let scale = 1;
         const panOffset = new _THREE.Vector3();
         
-        // 鼠标状态
+        // Mouse status
         const rotateStart = new _THREE.Vector2();
         const rotateEnd = new _THREE.Vector2();
         const rotateDelta = new _THREE.Vector2();
@@ -77,7 +77,7 @@
         const dollyEnd = new _THREE.Vector2();
         const dollyDelta = new _THREE.Vector2();
         
-        // 更新函数
+        // update function
         this.update = (function() {
             const offset = new _THREE.Vector3();
             const quat = new _THREE.Quaternion().setFromUnitVectors(
@@ -94,10 +94,10 @@
                 
                 offset.copy(position).sub(scope.target);
                 
-                // 旋转偏移到 "y-axis-is-up" 空间
+                // Rotation offset to "y-axis-is-up" space
                 offset.applyQuaternion(quat);
                 
-                // 从笛卡尔坐标转换到球坐标
+                // Convert from Cartesian coordinates to spherical coordinates
                 spherical.setFromVector3(offset);
                 
                 if (scope.enableDamping) {
@@ -108,7 +108,7 @@
                     spherical.phi += sphericalDelta.phi;
                 }
                 
-                // 限制 phi 在安全范围内
+                // Limit phi to a safe range
                 let min = scope.minPolarAngle;
                 let max = scope.maxPolarAngle;
                 spherical.phi = Math.max(min, Math.min(max, spherical.phi));
@@ -117,23 +117,23 @@
                 
                 spherical.radius *= scale;
                 
-                // 限制半径在 minDistance 和 maxDistance 之间
+                // Limit the radius to between minDistance and maxDistance
                 spherical.radius = Math.max(
                     scope.minDistance, 
                     Math.min(scope.maxDistance, spherical.radius)
                 );
                 
-                // 移动目标以平移
+                // Move target to pan
                 if (scope.enableDamping === true) {
                     scope.target.addScaledVector(panOffset, scope.dampingFactor);
                 } else {
                     scope.target.add(panOffset);
                 }
                 
-                // 从球坐标转换回笛卡尔坐标
+                // Convert from spherical coordinates back to Cartesian coordinates
                 offset.setFromSpherical(spherical);
                 
-                // 旋转偏移回 "camera-up-vector-is-up" 空间
+                // Rotate offset back to "camera-up-vector-is-up" space
                 offset.applyQuaternion(quatInverse);
                 
                 position.copy(scope.target).add(offset);
@@ -151,7 +151,7 @@
                 
                 scale = 1;
                 
-                // 检查是否需要更新
+                // Check if updates are needed
                 if (lastPosition.distanceToSquared(scope.camera.position) > 0.000001 ||
                     8 * (1 - lastQuaternion.dot(scope.camera.quaternion)) > 0.000001) {
                     lastPosition.copy(scope.camera.position);
@@ -163,17 +163,17 @@
             };
         })();
         
-        // 旋转左（水平）
+        // Rotate left (horizontal)
         function rotateLeft(angle) {
             sphericalDelta.theta -= angle;
         }
         
-        // 旋转上（垂直）
+        // Rotate up (vertical)
         function rotateUp(angle) {
             sphericalDelta.phi -= angle;
         }
         
-        // 缩放
+        // Zoom
         function dollyIn(dollyScale) {
             scale /= dollyScale;
         }
@@ -182,12 +182,12 @@
             scale *= dollyScale;
         }
         
-        // 平移
+        // Pan
         const panLeft = (function() {
             const v = new _THREE.Vector3();
             
             return function panLeft(distance, objectMatrix) {
-                v.setFromMatrixColumn(objectMatrix, 0); // 获取 X 列
+                v.setFromMatrixColumn(objectMatrix, 0); // Get column X
                 v.multiplyScalar(-distance);
                 panOffset.add(v);
             };
@@ -197,7 +197,7 @@
             const v = new _THREE.Vector3();
             
             return function panUp(distance, objectMatrix) {
-                v.setFromMatrixColumn(objectMatrix, 1); // 获取 Y 列
+                v.setFromMatrixColumn(objectMatrix, 1); // Get column Y
                 v.multiplyScalar(distance);
                 panOffset.add(v);
             };
@@ -210,23 +210,23 @@
                 const element = scope.domElement;
                 
                 if (scope.camera.isPerspectiveCamera) {
-                    // 透视相机
+                    // perspective camera
                     const position = scope.camera.position;
                     offset.copy(position).sub(scope.target);
                     let targetDistance = offset.length();
                     
-                    // 根据视场角的一半
+                    // According to half of the field of view
                     targetDistance *= Math.tan((scope.camera.fov / 2) * Math.PI / 180.0);
                     
-                    // 我们实际使用屏幕高度来做所有计算
-                    // 所以不需要改变平移的方向
+                    // We actually use the screen height to do all calculations
+                    // So there is no need to change the direction of translation
                     panLeft(2 * deltaX * targetDistance / element.clientHeight, scope.camera.matrix);
                     panUp(2 * deltaY * targetDistance / element.clientHeight, scope.camera.matrix);
                 }
             };
         })();
         
-        // 鼠标事件处理
+        // Mouse event handling
         function handleMouseDownRotate(event) {
             rotateStart.set(event.clientX, event.clientY);
         }
@@ -293,26 +293,26 @@
             return Math.pow(0.95, scope.zoomSpeed);
         }
         
-        // 事件监听器
+        // event listener
         function onMouseDown(event) {
             if (scope.enabled === false) return;
             
             event.preventDefault();
             
             switch (event.button) {
-                case 0: // 左键 - 旋转
+                case 0: // Left click - Rotate
                     if (scope.enableRotate === false) return;
                     handleMouseDownRotate(event);
                     state = STATE.ROTATE;
                     break;
                     
-                case 1: // 中键 - 缩放
+                case 1: // Middle click - zoom
                     if (scope.enableZoom === false) return;
                     handleMouseDownDolly(event);
                     state = STATE.DOLLY;
                     break;
                     
-                case 2: // 右键 - 平移
+                case 2: // Right click - pan
                     if (scope.enablePan === false) return;
                     handleMouseDownPan(event);
                     state = STATE.PAN;
@@ -372,12 +372,12 @@
             event.preventDefault();
         }
         
-        // 绑定事件
+        // Binding events
         this.domElement.addEventListener('contextmenu', onContextMenu, false);
         this.domElement.addEventListener('mousedown', onMouseDown, false);
         this.domElement.addEventListener('wheel', onMouseWheel, { passive: false });
         
-        // 销毁方法
+        // Destruction method
         this.dispose = function() {
             scope.domElement.removeEventListener('contextmenu', onContextMenu, false);
             scope.domElement.removeEventListener('mousedown', onMouseDown, false);
@@ -387,11 +387,11 @@
             document.removeEventListener('mouseup', onMouseUp, false);
         };
         
-        // 初始化
+        // initialization
         this.update();
     };
     
-    // 设置原型
+    // Set up prototype
     _THREE.OrbitControls.prototype = Object.create(_THREE.EventDispatcher.prototype);
     _THREE.OrbitControls.prototype.constructor = _THREE.OrbitControls;
     

@@ -24,24 +24,24 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
     public class AutoAlertSitemapUtility
     {
         // /// <summary>
-        // /// 只生成一次
+        // /// Only generated once
         // /// </summary>
         // public bool BuildOnlyOnce { get; set; }
         // public List<int> SiteMapOrderIds { get; set; }
         // public bool SendEmail { get; set; }
 
         // /// <summary>
-        // /// 不要自动发送Email的用户名
+        // /// Do not automatically send email username
         // /// </summary>
         // private string[] notAutoSendUsername = new[] { "ZSU", "ADMIN", "GALIJIKUAI", "ANONYMITY" };
         // private string[] vipUsername = new[] { "ZSU", "ADMIN", "GALIJIKUAI", "ANONYMITY" };
         // private string saveFileDirectory;
-        // private readonly int maxBuildThreadCount = 2;//Sitemap Build中最大同时工作线程数（收集页面线程，非当前类同时运行站点线程）
-        // private readonly int maxVipBuidThreadCount = 6;//Sitemap Build中最大同时工作线程数（收集页面线程，非当前类同时运行站点线程）
-        // private int maxAutoAlertThread = 2;//AutoAlert最大同时收集站点（线程）数
+        // private readonly int maxBuildThreadCount = 2;//The maximum number of simultaneous working threads in Sitemap Build (collection page threads, non-current classes run site threads at the same time)
+        // private readonly int maxVipBuidThreadCount = 6;//The maximum number of simultaneous working threads in Sitemap Build (collection page threads, non-current classes run site threads at the same time)
+        // private int maxAutoAlertThread = 2;//AutoAlert maximum number of simultaneous collection sites (threads)
         // private int _autoAlertThreadInUsing = 0;
         // /// <summary>
-        // /// 正在使用中的线程数
+        // /// Number of threads in use
         // /// </summary>
         // private int autoAlertThreadInUsing
         // {
@@ -83,7 +83,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
         // private int remainQueueOrderCount;
 
-        // private object syncLock = new object();//锁
+        // private object syncLock = new object();//lock
 
         // private SenparcEntities ctx;
         // private SendEmail sendEmail;
@@ -103,22 +103,22 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         // {
         //     if (!BuildOnlyOnce)
         //     {
-        //         Thread.Sleep(TimeSpan.FromSeconds(10));//延时
+        //         Thread.Sleep(TimeSpan.FromSeconds(10));//Delay
         //     }
 
         //     do
         //     {
         //         _semaphorePool = new Semaphore(maxAutoAlertThread, maxAutoAlertThread);
-        //         SenparcTrace.SendCustomLog("SiteMap", "一次Sitemap循环开始");
-        //         CleanStatisticsFiles();//清理历史统计文件
-        //         AutoCheckOrderApply();//自动审核定制服务申请
+        //         SenparcTrace.SendCustomLog("SiteMap", "A Sitemap cycle begins");
+        //         CleanStatisticsFiles();//Clean historical statistics files
+        //         AutoCheckOrderApply();//Automatically review custom service applications
         //         this.BuildOnlyOnceEventHandler(null, false);
-        //         SenparcTrace.SendCustomLog("SiteMap", "一次Sitemap循环结束");
+        //         SenparcTrace.SendCustomLog("SiteMap", "A Sitemap cycle ends");
         //         _semaphorePool.Close();
 
         //         if (!BuildOnlyOnce)
         //         {
-        //             Thread.Sleep(TimeSpan.FromMinutes(10));//执行间隔10分钟
+        //             Thread.Sleep(TimeSpan.FromMinutes(10));//Execution interval is 10 minutes
         //         }
         //     } while (!BuildOnlyOnce);
         // }
@@ -133,7 +133,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             //     if (SiteMapOrderIds == null || SiteMapOrderIds.Count == 0)
             //     {
             //         siteMapOrders = ctx.SiteMapOrderSet.Include("UserInfo")
-            //             .Where(z => z.UserInfo.UserId == 2)//暂时只处理zsu用户的信息
+            //             .Where(z => z.UserInfo.UserId == 2)//Only process zsu user information for now
             //             .OrderBy(z => z.Id)
             //             .ToList();
             //     }
@@ -148,31 +148,31 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             //     WaitCallback waitCallback = new WaitCallback(BuidSitemapEventHandler);
             //     var allQueueOrders = siteMapOrders.Where(order =>
             //         BuildOnlyOnce
-            //         ? true//全部
-            //         : (order.LastCreateTime.AddMinutes(order.BuildFrequencyMinutes) < DateTime.Now && order.InUse)//自动循环，只筛选符合条件的记录，避免线程卡死
-            //         ).ToList();//所有符合条件的列表
+            //         ? true//all
+            //         : (order.LastCreateTime.AddMinutes(order.BuildFrequencyMinutes) < DateTime.Now && order.InUse)//Automatically loop, only filter records that meet the conditions to avoid thread stuck
+            //         ).ToList();//All lists that meet the conditions
 
             //     int listedAllOrdersCount = allQueueOrders.Count;
-            //     var queueOrders = new List<SiteMapOrder>();//实际轮询操作的列表
+            //     var queueOrders = new List<SiteMapOrder>();//List of actual polling operations
 
-            //     //在网站访问量较大的时间段内，每次轮询只处理少数个
+            //     //During the period of time when the website has a large number of visits, only a few will be processed in each poll.
             //     if (DateTime.Now.Hour >= 7 && DateTime.Now.Hour <= 21)
             //     {
-            //         int takeEndCount = Math.Max(allQueueOrders.Count / 5, 2);//取ID最大的末尾数量（符合条件订单的1/5或2中的较大值）
-            //         queueOrders = allQueueOrders.OrderByDescending(z => z.Id).Take(takeEndCount).ToList();//取ID最大的最后N个
+            //         int takeEndCount = Math.Max(allQueueOrders.Count / 5, 2);//Take the largest end number of IDs (the larger of 1/5 or 2 of the eligible orders)
+            //         queueOrders = allQueueOrders.OrderByDescending(z => z.Id).Take(takeEndCount).ToList();//Take the last N with the largest ID
             //         if (listedAllOrdersCount > takeEndCount)
             //         {
-            //             int takeBeginingCount = 1;//取ID最小的最前面N个
-            //             int finalTakeBeginingCount = Math.Min(listedAllOrdersCount - takeEndCount, takeBeginingCount);//最终获取ID最小的个数
-            //             queueOrders.AddRange(allQueueOrders.OrderBy(z => z.Id).Take(finalTakeBeginingCount).ToList());//取ID最多ID最小的前N个
+            //             int takeBeginingCount = 1; //Take the first N numbers with the smallest ID
+            //             int finalTakeBeginingCount = Math.Min(listedAllOrdersCount - takeEndCount, takeBeginingCount);//Finally get the smallest number of IDs
+            //             queueOrders.AddRange(allQueueOrders.OrderBy(z => z.Id).Take(finalTakeBeginingCount).ToList());//Get the top N with the largest ID and the smallest ID
             //         }
             //     }
             //     else
             //     {
-            //         queueOrders = allQueueOrders.ToList();//不再限制时间段内，全部处理
+            //         queueOrders = allQueueOrders.ToList();//No longer limited time period, all processes
             //     }
 
-            //     SenparcTrace.SendCustomLog("SiteMap", $"Sitemap预定总数:{siteMapOrders.Count}，符合条件列队数:{listedAllOrdersCount}，实际处理数：{queueOrders.Count}");
+            //     SenparcTrace.SendCustomLog("SiteMap", $"Total number of Sitemap reservations: {siteMapOrders.Count}, number of qualifying queues: {listedAllOrdersCount}, actual number of processes: {queueOrders.Count}");
 
             //     DateTime dtStartWait = DateTime.Now;
             //     foreach (var order in queueOrders)
@@ -180,39 +180,39 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             //         bool successQueuesd = ThreadPool.QueueUserWorkItem(waitCallback, order);
             //         if (successQueuesd)
             //         {
-            //             remainQueueOrderCount++;//还剩下没处理的Order
+            //             remainQueueOrderCount++;//There are still unprocessed Orders left
             //         }
             //     }
 
-            //     //semaphorePoolPreviousCount = this._semaphorePool.Release(maxAutoAlertThread);//释放所有线程
+            //     //semaphorePoolPreviousCount = this._semaphorePool.Release(maxAutoAlertThread);//Release all threads
 
             //     while (remainQueueOrderCount > 0)
             //     {
             //         if (dtStartWait.AddMinutes(5) <= DateTime.Now)
             //         {
             //             dtStartWait = DateTime.Now;
-            //             SenparcTrace.SendCustomLog("SiteMap", "等待线程结束已有5分钟。", 
-            //                 new Exception($"总列队数:{queueOrders.Count},使用中的线程数量:{autoAlertThreadInUsing}"));
+            //             SenparcTrace.SendCustomLog("SiteMap", "It has been 5 minutes waiting for the thread to end.", 
+            //                 new Exception($"Total number of queues: {queueOrders.Count}, number of threads in use: {autoAlertThreadInUsing}"));
             //         }
 
             //         Thread.Sleep(300);
             //     }
 
-            //     //收录时间较长，则记录
+            //     //The collection time is longer, then record
             //     if (queueOrders.Count > 0 && (DateTime.Now - dtStartWait).TotalMinutes >= queueOrders.Count * 5)
             //     {
-            //         SenparcTrace.SendCustomLog("SiteMap", $"所有站点线程结束,耗时{(DateTime.Now - dtStartWait).TotalMinutes.ToString("#.#")}分钟。",
-            //             new Exception($"总列队数:{queueOrders.Count},使用中的线程数量:{autoAlertThreadInUsing}"));
+            //         SenparcTrace.SendCustomLog("SiteMap", $"All site threads ended, taking {(DateTime.Now - dtStartWait).TotalMinutes.ToString("#.#")} minutes.",
+            //             new Exception($"Total number of queues: {queueOrders.Count}, number of threads in use: {autoAlertThreadInUsing}"));
             //     }
 
             //     if (autoAlertThreadInUsing > 0)
             //     {
-            //         SenparcTrace.SendCustomLog("SiteMap", $"AutoAlert线程超出最大值，当前线程数：{autoAlertThreadInUsing}。");
+            //         SenparcTrace.SendCustomLog("SiteMap", $"AutoAlert thread exceeds the maximum value, current number of threads: {autoAlertThreadInUsing}.");
             //     }
             // }
             // catch (Exception e)
             // {
-            //     SenparcTrace.SendCustomLog("SiteMap", $"AutoAlertSitemap严重异常:{e.Message}。下一个AutoAlert循环将继续进行。", e);
+            //     SenparcTrace.SendCustomLog("SiteMap", $"AutoAlertSitemap serious exception: {e.Message}. The next AutoAlert loop will continue.", e);
             //     if (BuildOnlyOnce)
             //     {
             //         throw;
@@ -232,15 +232,15 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             // bool threadStarted = false;
             // try
             // {
-            //     _semaphorePool.WaitOne();//列队等待
+            //     _semaphorePool.WaitOne();//Waiting in queue
             //     threadStarted = true;
             //     autoAlertThreadInUsing++;
 
-            //     LogUtility.WebLogger.Debug("自动收集Sitemap:{0} (ID:{1})开始".With(order.Url, order.Id.ToString()));
+            //     LogUtility.WebLogger.Debug("Automatic collection of Sitemap:{0} (ID:{1}) starts".With(order.Url, order.Id.ToString()));
 
             //     int oldOrderMaxPageCount = order.MaxPageCount;
 
-            //     //收集Url
+            //     //Collect Url
             //     string sitemapXmlFileName;
             //     string zipFileName;
             //     string reportFileName;
@@ -248,7 +248,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             //     string[] domains = order.Url.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             //     List<string> filterOmitKeywords = order.FilterOmitKeyWords != null ? order.FilterOmitKeyWords.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>();
 
-            //     //当前网站允许最大线程数
+            //     //The maximum number of threads allowed by the current website
             //     var currentMaxThreadCount = vipUsername.Contains(order.UserName.ToUpper()) ? maxVipBuidThreadCount : maxBuildThreadCount;
 
             //     SenMapicEngine senMapic = new SenMapicEngine(domains, maxVipBuidThreadCount, 30,
@@ -261,7 +261,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             //         DateTime.Now, senMapic.FilterOmitWords, out sitemapXmlFileName, out zipFileName, out reportFileName, out sitemapHtmlFileName);
 
 
-            //     #region 生成新的SiteMapCollection，加入数据库
+            //     #region Generate a new SiteMapCollection and add it to the database
             //     siteMapCollection = new SiteMapCollection()
             //     {
             //         Guid = Guid.NewGuid(),
@@ -281,10 +281,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             //         AverageRequestMillisecond = Convert.ToInt32(senMapic.AverageRequestTime.TotalMilliseconds)
             //     };
 
-            //     order.LastCreateTime = DateTime.Now;//记录开始的时间。
+            //     order.LastCreateTime = DateTime.Now;//The time when the record starts.
             //     if (!order.Downloaded.IsNullOrEmpty() && !order.Downloaded.Contains("unlimited"))
             //     {
-            //         order.Downloaded = null;//清空下载状态信息  
+            //         order.Downloaded = null;//Clear download status information  
             //     }
             //     ctx.SiteMapCollectionSet.Add(siteMapCollection);
             //     #endregion
@@ -294,38 +294,38 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             //     var isVip = vipUsername.Contains(order.UserName.ToUpper());
             //     if (order.MaxPageCount < 2000 && !isVip)
             //     {
-            //         //只有非VIP且收录上限少于2000的用户，才会增加。
+            //         //Only non-VIP users with an upper limit of less than 2,000 will be added.
 
-            //         //如果所有Url份额全部完成，则增加一定数量的页面
+            //         //If all Url shares are completed, add a certain number of pages
             //         if ((siteMapCollection.SuccessPages + siteMapCollection.FailPages >= oldOrderMaxPageCount)
             //             && oldOrderMaxPageCount > 0 && ((double)siteMapCollection.FailPages / oldOrderMaxPageCount) <= 0.05)
             //         {
-            //             order.MaxPageCount += 2;//TODO:添加响应时间参数
-            //             awardRecord += "收录页面达到最大值，且错误页面小于5%，奖励2个页面数量。<br />";
+            //             order.MaxPageCount += 2;//TODO: Add response time parameter
+            //             awardRecord += "The included pages have reached the maximum value, and the error pages are less than 5%, and the number of pages awarded is 2.<br />";
             //         }
 
-            //         //奖励或惩罚平均页面响应时间
+            //         //Reward or punish average page response time
             //         AwardOrPunishAverageRequestTime(siteMapCollection, order, ref awardRecord, ref punishRecord);
             //     }
             //     else if (isVip)
             //     {
-            //         //扩充vip页面数量，保证有40%富余
+            //         //Expand the number of VIP pages to ensure 40% surplus
             //         if (order.MaxPageCount < siteMapCollection.SuccessPages * 1.4)
             //         {
             //             order.MaxPageCount = (int)(siteMapCollection.SuccessPages * 1.4);
             //         }
 
-            //         LogUtility.SitemapLogger.InfoFormat("VIP Sitemap：{0}，最高页面设定为：{1} -> {2}", order.Url, oldOrderMaxPageCount, order.MaxPageCount);
+            //         LogUtility.SitemapLogger.InfoFormat("VIP Sitemap: {0}, the highest page setting is: {1} -> {2}", order.Url, oldOrderMaxPageCount, order.MaxPageCount);
             //     }
 
             //     ctx.SaveChanges();
 
-            //     //LogUtility.WebLogger.Debug("自动收集Sitemap:{0}存入数据库完成".With(order.Url));
+            //     //LogUtility.WebLogger.Debug("Automatic collection of Sitemap: {0} is completed and stored in the database".With(order.Url));
 
             //     siteMapCollection = ctx.SiteMapCollectionSet.FirstOrDefault(z => z.Guid == siteMapCollection.Guid);
 
-            //     #region 保存文件
-            //     //保存文件
+            //     #region Save file
+            //     //save file
             //     string fileDirectory = Server.HttpContext.Server.MapPath(Config.GlobalConfigString.GetSitemapCollectionFileDirectory(order.Id));
             //     if (!Directory.Exists(fileDirectory))
             //     {
@@ -338,7 +338,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             //     {
             //         //Sitemap Report
             //         string sitemapReport = new Regex(@"(?<=<!-- report start -->)([\s\W\w]*)(?=<!-- report end -->)", RegexOptions.IgnoreCase)
-            //                     .Match(File.OpenText(reportFileName).ReadToEnd()).Value.Trim();//通过正则查找内容部分
+            //                     .Match(File.OpenText(reportFileName).ReadToEnd()).Value.Trim();//Find the content part through regular expressions
             //         //string reportFilePath = Config.GlobalConfigString.GetSitemapCollectionFileName("-report", order.Id, siteMapCollection.Id, "html");
             //         zipFile.AddEntry("report.html", null, sitemapReport);
 
@@ -373,27 +373,27 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             //             //SiteMapCallback("http://www.senparc.com/Home.htm", "/SZD-251");
             //             SiteMapCallback(order.Url, order.Callback);
 
-            //             LogUtility.SitemapLogger.InfoFormat("Sitemap Callback成功：#{0}，Url：{1},Callback：{2}", order.Id, order.Url, order.Callback);
+            //             LogUtility.SitemapLogger.InfoFormat("Sitemap Callback successful: #{0}, Url: {1}, Callback: {2}", order.Id, order.Url, order.Callback);
             //         }
             //         catch (Exception e)
             //         {
-            //             LogUtility.SitemapLogger.Error("Sitemap Callback错误：" + e.Message, e);
+            //             LogUtility.SitemapLogger.Error("Sitemap Callback error: " + e.Message, e);
             //         }
             //     }
 
             //     #endregion
 
-            //     #region 发送Email
+            //     #region Send Email
             //     if (SendEmail)
             //     {
-            //         //不在过滤范围内的用户，且不是只发送一次，则自动发送Email
+            //         //For users who are not within the filtering range, and if the email is not sent only once, the email will be automatically sent.
             //         if (awardRecord.IsNullOrEmpty())
             //         {
-            //             awardRecord = "无";
+            //             awardRecord = "None";
             //         }
             //         if (punishRecord.IsNullOrEmpty())
             //         {
-            //             punishRecord = "无";
+            //             punishRecord = "None";
             //         }
 
             //         bool sendImmediately = !notAutoSendUsername.Contains(order.UserName.ToUpper()) && !BuildOnlyOnce;
@@ -406,36 +406,36 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             //                 awardRecord, punishRecord);
             //         if (sendImmediately)
             //         {
-            //             //只发送非系统用户的
+            //             //Only send non-system users
             //             sendEmail.Send(sendEmailParam, true, sendImmediately, true);
             //         }
             //         else
             //         {
-            //             LogUtility.EmailLogger.InfoFormat("VIP用户收集Sitemap完成，未发送Email：{0},{1}", order.UserName, order.Url);
+            //             LogUtility.EmailLogger.InfoFormat("VIP user Sitemap collection completed, but no email sent: {0}, {1}", order.UserName, order.Url);
             //         }
             //     }
             //     #endregion
 
-            //     CheckLoginAndAlert(order);//判断是否超时未登录
+            //     CheckLoginAndAlert(order);//Determine whether the timeout has not logged in
             // }
             // catch (Exception e)
             // {
             //     try
             //     {
-            //         //TODO:跟踪莫名其妙自动收录停止
-            //         LogUtility.SitemapLogger.Debug("跟踪莫名其妙自动收录停止，到达catch（AutoAlertSitemapUtility.cs第350行）", e);
-            //         LogUtility.SitemapLogger.Error("AutoAlertSitemap自动发送Email出错:{0}.URL:{1}".With(e.Message, siteMapCollection != null ? siteMapCollection.Url : order.Url), e);
+            //         //TODO: Tracking is inexplicably stopped automatically.
+            //         LogUtility.SitemapLogger.Debug("Tracking inexplicably stopped automatically, reaching catch (AutoAlertSitemapUtility.cs line 350)", e);
+            //         LogUtility.SitemapLogger.Error("AutoAlertSitemap automatically sent Email error: {0}.URL:{1}".With(e.Message, siteMapCollection != null ? siteMapCollection.Url : order.Url), e);
             //     }
             //     catch (Exception ex)
             //     {
-            //         LogUtility.SitemapLogger.Error("AutoAlertSitemapUtility.cs第356行错误！！catch中再次发生错误", ex);
+            //         LogUtility.SitemapLogger.Error("Error on line 356 of AutoAlertSitemapUtility.cs!! An error occurred again in catch", ex);
             //     }
 
             //     //AutoSendLogEmail.SendLogEmail(e);
             // }
             // finally
             // {
-            //     //LogUtility.WebLogger.Debug("自动收集Sitemap:{0}发送Email完成".With(order.Url));
+            //     //LogUtility.WebLogger.Debug("Automatic collection of Sitemap: {0} completion of sending email".With(order.Url));
             //     semaphorePoolPreviousCount = _semaphorePool.Release();
             //     remainQueueOrderCount--;
             //     if (threadStarted)
@@ -446,7 +446,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         // }
 
         /// <summary>
-        /// 检查是否超时未登录，如果是，则发送Email提示
+        /// Check whether the user has not logged in after timeout, if so, send an email prompt
         /// </summary>
         /// <param name="order"></param>
         // private void CheckLoginAndAlert(SiteMapOrder order)
@@ -457,30 +457,30 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             // {
             //     if (notAutoSendUsername.Contains(order.UserName.ToUpper()))
             //     {
-            //         return;//指定用户不提示
+            //         return;//Specify the user not to prompt
             //     }
 
-            //     //已超时
+            //     //Timed out
             //     if (currentLoginTime.Add(tsAllowMaxUnloginTime + TimeSpan.FromDays(15)) < order.LastCreateTime)
             //     {
-            //         //超时15天，自动删除
+            //         //Timeout 15 days, automatically deleted
             //         SendEmail sendAlertEmail = new SendEmail(SendEmailType.SiteMap_Remove);
             //         var sendEmailParam = new SendEmailParameter_SiteMap_Remove(order.UserInfo.Email, order.UserName, order.Id, order.Url);
             //         sendAlertEmail.Send(sendEmailParam, true, true, true);
 
-            //         //删除文件
+            //         //delete file
             //         SiteMapHandler siteMapHandler = new SiteMapHandler();
             //         siteMapHandler.RemoveSiteMapCollectionFiles(order);
 
-            //         //ctx.DeleteObject(order);//从数据库删除order，下属orderCollection会被连带删除
+            //         //ctx.DeleteObject(order);//Delete order from the database, and the subordinate orderCollection will be deleted simultaneously
             //         ctx.SiteMapOrderSet.Remove(order);
 
             //         ctx.SaveChanges();
-            //         LogUtility.SitemapLogger.InfoFormat("Sitemap超过登陆天数被自动删除：{0}，{1}", order.UserName, order.Url);
+            //         LogUtility.SitemapLogger.InfoFormat("Sitemap will be automatically deleted after the number of login days: {0}, {1}", order.UserName, order.Url);
             //     }
             //     else if (currentLoginTime.Add(tsAllowMaxUnloginTime + TimeSpan.FromDays(5)) < order.LastCreateTime)
             //     {
-            //         //超时5天，自动关闭
+            //         //Timeout 5 days, automatically shut down
             //         SendEmail sendAlertEmail = new SendEmail(SendEmailType.SiteMap_LoginExpired);
             //         var sendEmailParam = new SendEmailParameter_SiteMap_LoginExpired(order.UserInfo.Email, order.UserName, order.UserInfo.CurrentLoginTime, order.Id, order.Url);
             //         sendAlertEmail.Send(sendEmailParam, true, true, true);
@@ -492,26 +492,26 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         // /// <summary>
-        // /// 奖励或惩罚平均页面响应时间
+        // /// Reward or punish average page response time
         // /// </summary>
-        // /// <param name="siteMapCollection">当前最新的收录结果</param>
+        // /// <param name="siteMapCollection">The latest collection results</param>
         // /// <param name="order">Order</param>
         // private void AwardOrPunishAverageRequestTime(SiteMapCollection siteMapCollection, SiteMapOrder order, ref string awardRecord, ref string punishRecord)
         // {
-        //     //页面奖励或惩罚
-        //     int minMillsecond = 350;//平均响应时间最小值，小于此数值奖励
-        //     int maxMillisecond = 1200;//平均响应时间最大值，大于此数值惩罚
+        //     //Page rewards or penalties
+        //     int minMillsecond = 350; //Minimum average response time, rewards less than this value
+        //     int maxMillisecond = 1200; //Maximum average response time, penalty for greater than this value
         //     int currentAverageRequestMS = siteMapCollection.AverageRequestMillisecond;
         //     if (((currentAverageRequestMS > maxMillisecond || currentAverageRequestMS == 0) && order.MaxPageCount > 1)
         //         || currentAverageRequestMS < minMillsecond)
         //     {
-        //         int lookBackRecord = 2;//向前看2条记录
+        //         int lookBackRecord = 2;//Look forward 2 records
         //         var lastCollection = ctx.SiteMapCollectionSet.Include("SiteMapOrder").Where(z => z.SiteMapOrder.Id == order.Id).OrderByDescending(z => z.Id).Take(lookBackRecord).ToList();
 
-        //         //查看前两次都大于最大值
+        //         //Check that the first two times are greater than the maximum value
         //         if (lastCollection.Count == lookBackRecord)
         //         {
-        //             List<int> averageRequestMillisecondList = new List<int>();//响应时间集合
+        //             List<int> averageRequestMillisecondList = new List<int>();//Response time collection
         //             averageRequestMillisecondList.AddRange(lastCollection.Select(z => z.AverageRequestMillisecond).ToList());
         //             averageRequestMillisecondList.Add(currentAverageRequestMS);
 
@@ -519,29 +519,29 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         //             {
         //                 if (averageRequestMillisecondList[i] <= 0)
         //                 {
-        //                     averageRequestMillisecondList[i] = 99999;//如果无响应，视为响应时间过长
+        //                     averageRequestMillisecondList[i] = 99999; //If there is no response, it is considered that the response time is too long
         //                 }
         //             }
 
-        //             #region 此方法无效。由于Int是值类型，这里赋值不会影响到averageRequestMillisecondList中的值
+        //             #region This method has no effect. Since Int is a value type, the assignment here will not affect the value in averageRequestMillisecondList.
         //             //averageRequestMillisecondList.ForEach(z =>
         //             //{
         //             //    if (z <= 0)
         //             //    {
-        //             //        z = 999999;//没有响应视为响应时间无限长
+        //             // z = 999999; //No response is considered an infinite response time
         //             //    }
         //             //});
         //             #endregion
 
-        //             //检查是大雨最大只或小于最小值
+        //             //Check whether the maximum heavy rain is only or less than the minimum value
         //             Func<int, bool> checkAboveMaxMillisecond = (max) => averageRequestMillisecondList.Count(ms => ms > max) == averageRequestMillisecondList.Count;
         //             Func<int, bool> checkBelowMinMillisecond = (min) => averageRequestMillisecondList.Count(ms => ms < min) == averageRequestMillisecondList.Count;
 
         //             if (checkAboveMaxMillisecond(maxMillisecond))
         //             {
-        //                 int cutPageCount = 10;//扣除页面数
-        //                 int maxMS = 1200;//最大毫秒
-        //                 //分3个等级判断
+        //                 int cutPageCount = 10;//Deduct the number of pages
+        //                 int maxMS = 1200;//Maximum milliseconds
+        //                 //Judge in 3 levels
         //                 if (checkAboveMaxMillisecond(3000))
         //                 {
         //                     maxMS = 3000;
@@ -553,18 +553,18 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         //                     cutPageCount = 20;
         //                 }
 
-        //                 punishRecord += "连续{0}次响应时间大于{1}（毫秒）,页面收录数扣减{2}个。<br />".With(averageRequestMillisecondList.Count, maxMS, cutPageCount);
+        //                 punishRecord += "{0} consecutive response times are greater than {1} (milliseconds), {2} pages will be deducted from the number of included pages.<br />".With(averageRequestMillisecondList.Count, maxMS, cutPageCount);
 
-        //                 order.MaxPageCount = Math.Max(1, order.MaxPageCount - cutPageCount);//减N个页面
-        //                 LogUtility.SitemapLogger.InfoFormat("订单 #{0}({1})连续{2}次响应时间大于{3}（毫秒），最大收录数被扣减{4}页面"
+        //                 order.MaxPageCount = Math.Max(1, order.MaxPageCount - cutPageCount);//Decrease N pages
+        //                 LogUtility.SitemapLogger.InfoFormat("Order #{0}({1}) has received {2} consecutive response times greater than {3} (milliseconds), and the maximum number of included pages has been deducted by {4} pages"
         //                                                 , order.Id, order.Url, averageRequestMillisecondList.Count, maxMillisecond, cutPageCount);
         //             }
         //             else if (checkBelowMinMillisecond(minMillsecond))
         //             {
         //                 order.MaxPageCount += 2;
-        //                 awardRecord += "连续{0}次响应时间小于{1}（毫秒）,奖励{2}个页面数量。<br />".With(lookBackRecord + 1, minMillsecond, 2);
+        //                 awardRecord += "If the response time is less than {1} (milliseconds) for {0} consecutive times, award {2} pages.<br />".With(lookBackRecord + 1, minMillsecond, 2);
 
-        //                 LogUtility.SitemapLogger.InfoFormat("订单 #{0}({1})连续{2}次响应时间小于{3}（毫秒），奖励2个最大页面收录数量"
+        //                 LogUtility.SitemapLogger.InfoFormat("Order #{0}({1}) has {2} consecutive response times less than {3} (milliseconds), and will be rewarded with 2 maximum page inclusions"
         //                                                 , order.Id, order.Url, averageRequestMillisecondList.Count, minMillsecond);
         //             }
         //         }
@@ -572,19 +572,19 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         // }
 
         // /// <summary>
-        // /// 清理自动生成的sitemap及报告文件，并统计到info.text中
+        // /// Clean up the automatically generated sitemap and report files, and add statistics to info.text
         // /// </summary>
         // private void CleanStatisticsFiles()
         // {
         //     if (DateTime.Now.Day != 1)
         //     {
-        //         return;//只在1号执行
+        //         return; //Only executed on No. 1
         //     }
 
-        //     LogUtility.SitemapLogger.Info("清理并统计日志开始");
+        //     LogUtility.SitemapLogger.Info("Start cleaning and counting logs");
 
         //     var historyDirectories = Directory.GetDirectories(Server.HttpContext.Server.MapPath("~/App_Data/SiteMap/Sitemap.bak/"))
-        //                                     .Where(z => Path.GetFileName(z) != DateTime.Now.ToString("yyyy-MM"))//当月信息不清理
+        //                                     .Where(z => Path.GetFileName(z) != DateTime.Now.ToString("yyyy-MM"))//The information of the current month is not cleared
         //                                     .OrderBy(z => z);
 
         //     foreach (var dir in historyDirectories)
@@ -594,7 +594,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         //         bool hasInfoFile = files.Count(z => Path.GetFileName(z) == "info.txt") > 0;
         //         if (!hasInfoFile)
         //         {
-        //             LogUtility.SitemapLogger.InfoFormat("创建{0}/info.txt", Path.GetFileNameWithoutExtension(dir));
+        //             LogUtility.SitemapLogger.InfoFormat("Create {0}/info.txt", Path.GetFileNameWithoutExtension(dir));
 
         //             string infoFileName = Path.Combine(Path.GetFullPath(dir), "info.txt");
         //             TextWriter tw = File.CreateText(infoFileName);
@@ -609,10 +609,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         //             text.AppendLine("SitemapHtmlCount=" + sitemapHtmlCount);
         //             text.AppendLine("ReportCount=" + reportCount);
 
-        //             //计算每天sitemap.xml文件数量
-        //             DateTime dt = DateTime.Parse(Path.GetFileNameWithoutExtension(dir) + "-1");//获取当前月1号
-        //             int daysInMonth = DateTime.DaysInMonth(dt.Year, dt.Month);//本月天数
-        //             Dictionary<int, List<string>> dicFilesInDay = new Dictionary<int, List<string>>();//分类
+        //             //Calculate the number of sitemap.xml files per day
+        //             DateTime dt = DateTime.Parse(Path.GetFileNameWithoutExtension(dir) + "-1");//Get the 1st of the current month
+        //             int daysInMonth = DateTime.DaysInMonth(dt.Year, dt.Month);//Number of days in this month
+        //             Dictionary<int, List<string>> dicFilesInDay = new Dictionary<int, List<string>>();//Category
         //             for (int i = 1; i <= daysInMonth; i++)
         //             {
         //                 dicFilesInDay.Add(i, new List<string>());
@@ -626,52 +626,52 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         //                 }
         //                 else
         //                 {
-        //                     dicFilesInDay.Last().Value.Add(file);//如果不存在，加到最后一天（通常发生在月末，跨两个月的收录）
+        //                     dicFilesInDay.Last().Value.Add(file);//If it does not exist, add it to the last day (usually occurs at the end of the month, spanning two months)
         //                 }
         //             }
-        //             //输出统计结果
+        //             //Output statistical results
         //             string dayXmlCount = string.Join(",", dicFilesInDay.Select(z => z.Value.Count.ToString()).ToArray());
         //             text.AppendLine("DayXmlCount=" + dayXmlCount);
 
-        //             LogUtility.SitemapLogger.InfoFormat("清理统计文件结束，信息:\r\n{0}", text.ToString());
+        //             LogUtility.SitemapLogger.InfoFormat("Cleaning of statistics files ended, information:\r\n{0}", text.ToString());
         //             tw.Write(text);
         //             tw.Flush();
         //             tw.Close();
 
         //             if (totalFileCount != sitemapXmlCount + sitemapHtmlCount + reportCount)
         //             {
-        //                 LogUtility.SitemapLogger.ErrorFormat("清理SItemap历史记录出错，数字不匹配，请检查。文件夹：{0}", Path.GetFileName(dir));
+        //                 LogUtility.SitemapLogger.ErrorFormat("Error cleaning SItemap history, numbers do not match, please check. Folder: {0}", Path.GetFileName(dir));
         //             }
         //             else
         //             {
-        //                 //核算正确，删除多余文件
+        //                 //Accounting is correct, delete redundant files
         //                 try
         //                 {
-        //                     LogUtility.SitemapLogger.InfoFormat("删除自动生成的文件 开始。");
+        //                     LogUtility.SitemapLogger.InfoFormat("Delete automatically generated files. Start.");
         //                     foreach (var delFile in files)
         //                     {
         //                         File.Delete(delFile);
         //                     }
-        //                     LogUtility.SitemapLogger.InfoFormat("删除自动生成的文件 结束。");
+        //                     LogUtility.SitemapLogger.InfoFormat("Delete automatically generated files. End.");
         //                 }
         //                 catch
         //                 {
-        //                     LogUtility.SitemapLogger.ErrorFormat("删除{0}目录文件失败。", Path.GetFileName(dir));
+        //                     LogUtility.SitemapLogger.ErrorFormat("Failed to delete {0} directory file.", Path.GetFileName(dir));
         //                 }
-        //                 LogUtility.SitemapLogger.InfoFormat("清理{0}目录完成。", Path.GetFileName(dir));
+        //                 LogUtility.SitemapLogger.InfoFormat("Cleaning {0} directory completed.", Path.GetFileName(dir));
         //             }
         //         }
         //     }
-        //     LogUtility.SitemapLogger.Info("清理并统计日志结束");
+        //     LogUtility.SitemapLogger.Info("End of cleaning and counting logs");
         // }
 
         // /// <summary>
-        // /// 自动审核Sitemap定制申请
+        // /// Automatically review Sitemap customization applications
         // /// </summary>
         // private void AutoCheckOrderApply()
         // {
         //     SenparcEntities ctx = new SenparcEntities(Senparc.Xncf.SenMapic.Domain.Config.SenparcDatabaseConfigs.ClientConnectionString);
-        //     DateTime dtLimit = DateTime.Now.AddDays(-3);//搜索3天以内的
+        //     DateTime dtLimit = DateTime.Now.AddDays(-3);//Search within 3 days
         //     List<SiteMapOrder> orders = ctx.SiteMapOrderSet
         //                                     .Include("UserInfo")
         //                                     .Include("SiteMapCollections")
@@ -682,7 +682,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         //                                     .Take(2).ToList();
         //     foreach (var order in orders)
         //     {
-        //         //查看是否能访问
+        //         //Check if it can be accessed
         //         //UrlData urlData = null;
 
         //         try
@@ -694,35 +694,35 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         //             if (result.Count > 0 && result.First().Value.Result == 200)
         //             {
         //                 SendEmail sendApplyPassedEmail = new Email.SendEmail(SendEmailType.SiteMap_ApplyPassed);
-        //                 //发送申请通过通知
+        //                 //Send application approval notification
         //                 SendEmailParameter_SiteMap_ApplyPassed sendEmailParam = new SendEmailParameter_SiteMap_ApplyPassed(order.UserInfo.Email, order.UserInfo.UserName, order.Id, order.Url);
         //                 sendApplyPassedEmail.Send(sendEmailParam,
         //                                             lineInCache: true,
         //                                             sendImmediately: true,
         //                                             useBackupEmail: true);
-        //                 //修改Order信息
-        //                 order.InUse = true;//启用定制
-        //                 order.LastCreateTime = order.LastCreateTime.AddDays(-1);//设为上一天，在下次轮询时自动收集
+        //                 //Modify Order information
+        //                 order.InUse = true;//Enable customization
+        //                 order.LastCreateTime = order.LastCreateTime.AddDays(-1);//Set to the previous day and automatically collect it during the next polling
         //                 ctx.SaveChanges();
 
-        //                 LogUtility.SitemapLogger.Info("Sitemap定制服务自动审核通过：(#{0}) {1}".With(order.Id, order.Url));
+        //                 LogUtility.SitemapLogger.Info("Sitemap customization service automatically approved: (#{0}) {1}".With(order.Id, order.Url));
         //             }
         //             else
         //             {
-        //                 LogUtility.SitemapLogger.Error("Sitemap定制服务审核失败：(#{0}) {1}".With(order.Id, order.Url));
-        //                 //TODO:发邮件通知
+        //                 LogUtility.SitemapLogger.Error("Sitemap customization service review failed: (#{0}) {1}".With(order.Id, order.Url));
+        //                 //TODO: Send email notification
         //             }
         //         }
         //         catch (Exception e)
         //         {
-        //             LogUtility.SitemapLogger.Error("自动审核定制服务异常：(#{0}) {1}"
+        //             LogUtility.SitemapLogger.Error("Automatic audit customization service exception: (#{0}) {1}"
         //                 .With(order.Id, e.Message), e);
         //         }
         //     }
         // }
 
         // /// <summary>
-        // /// Sitemap自动更新Callback
+        // /// Sitemap automatically updates Callback
         // /// </summary>
         // /// <param name="url"></param>
         // /// <param name="callbackUrl"></param>
@@ -737,7 +737,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         //     var match = regex.Match(url);
         //     if (!match.Success)
         //     {
-        //         throw new Exception("URL地址无法匹配！");
+        //         throw new Exception("URL address cannot match!");
         //     }
         //     string domain = match.Value;
 

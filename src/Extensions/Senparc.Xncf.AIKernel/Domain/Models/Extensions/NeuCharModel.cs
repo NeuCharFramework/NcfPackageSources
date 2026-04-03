@@ -8,29 +8,29 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace Senparc.Xncf.AIKernel.Domain.Models.Extensions
 {
     /// <summary>
-    /// NeuChar 平台对应当前用户支持的模型参数
+    /// NeuChar platform corresponds to the model parameters supported by the current user
     /// </summary>
     public class NeuCharModel
     {
         public int Id { get; set; }
 
         /// <summary>
-        /// 模型名称
+        /// model name
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 模型权重参考（以text-davinci-003为基准）
+        /// Model weight reference (based on text-davinci-003)
         /// </summary>
         public float Weight { get; set; }
 
         /// <summary>
-        /// 是否激活
+        /// Whether to activate
         /// </summary>
         public bool Enable { get; set; }
 
         /// <summary>
-        /// 添加时间
+        ///add time
         /// </summary>
         public DateTime AddTime { get; set; }
     }
@@ -38,7 +38,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.Extensions
     public class NeuCharGetModelJsonResult
     {
         ///// <summary>
-        ///// 此属性是本地新增
+        ///// This attribute is newly added locally
         ///// </summary>
         //public string Message { get; set; }
         public bool Success { get; set; }

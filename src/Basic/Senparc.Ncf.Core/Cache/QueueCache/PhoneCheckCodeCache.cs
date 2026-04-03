@@ -14,7 +14,7 @@ namespace Senparc.Ncf.Core.Cache
     }
 
     ///// <summary>
-    ///// 手机验证码
+    ///// Mobile phone verification code
     ///// </summary>
     //public interface IPhoneCheckCodeCache : IQueueCache<PhoneCheckCodeData>
     //{
@@ -22,7 +22,7 @@ namespace Senparc.Ncf.Core.Cache
     //}
 
     /// <summary>
-    /// 手机验证码
+    ///Mobile phone verification code
     /// </summary>
     [Serializable]
     public class PhoneCheckCodeCache : QueueCache<PhoneCheckCodeData>/*, IPhoneCheckCodeCache*/
@@ -46,7 +46,7 @@ namespace Senparc.Ncf.Core.Cache
             var value = base.Get(key, removeDataWhenExist);
             if (value != null)
             {
-                base.Remove(key);//一次性有效
+                base.Remove(key);  // One-time use
             }
             return value;
         }

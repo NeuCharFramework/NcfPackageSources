@@ -22,7 +22,7 @@
         <el-button type="info" icon="el-icon-info" size="small" @@click="debugInfo">调试信息</el-button>
     </div>
 
-    <!-- 调试信息显示 -->
+    <!-- Debugging information display -->
     <div v-if="showDebug" style="background: #f0f9ff; border: 1px solid #0ea5e9; padding: 10px; margin: 10px 0; border-radius: 4px;">
         <h4>调试信息：</h4>
         <p><strong>tableData长度:</strong> {{ tableData ? tableData.length : 'null/undefined' }}</p>
@@ -34,7 +34,7 @@
             <pre>{{ JSON.stringify(tableData[0], null, 2) }}</pre>
         </div>
         
-        <!-- 简化数据显示测试 -->
+        <!-- Simplify data display testing -->
         <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 10px; margin: 10px 0; border-radius: 4px;">
             <h5>简化数据显示测试:</h5>
             <div v-for="(item, index) in tableData" :key="item.id || index" style="border: 1px solid #ccc; margin: 5px 0; padding: 5px;">
@@ -110,7 +110,7 @@
         </el-pagination>
     </div>
 
-    @* dialog for 添加颜色 *@
+    @* dialog for add color*@
     <el-dialog title="添加颜色" :visible.sync="addFormDialogVisible" width="50%" :close-on-click-modal="false">
         <el-form :model="addForm" label-width="120px" :rules="addRules" ref="addForm">
             <el-form-item label="红色值 (R)" prop="red">
@@ -140,7 +140,7 @@
         </span>
     </el-dialog>
 
-    @* dialog for 编辑颜色 *@
+    @* dialog for Edit colors*@
     <el-dialog title="编辑颜色" :visible.sync="editFormDialogVisible" width="50%" :close-on-click-modal="false">
         <el-form :model="editForm" label-width="120px" :rules="editRules" ref="editForm">
             <el-form-item label="红色值 (R)" prop="red">

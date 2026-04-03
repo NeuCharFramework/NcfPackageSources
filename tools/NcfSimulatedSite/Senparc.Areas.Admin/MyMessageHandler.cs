@@ -47,24 +47,24 @@ namespace Senparc.Web
 
                 var dalleSetting = ((SenparcAiSetting)Senparc.AI.Config.SenparcAiSetting)["AzureDallE3"];
 
-                //绘制图片，并返回
+                //Draw the picture and return
                 var userId = "Jeffrey";
                 var semanticAiHandler = serviceProvider.GetService<SemanticAiHandler>();
                 var iWantTo = semanticAiHandler.IWantTo(dalleSetting)
                                     .ConfigModel(ConfigModel.ImageGeneration, userId)
                                     .BuildKernel();
 
-#pragma warning disable SKEXP0002 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
-#pragma warning disable SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+#pragma warning disable SKEXP0002 // Types are for evaluation only and may be changed or removed in future updates. Cancel this diagnostic to continue.
+#pragma warning disable SKEXP0001 // Types are for evaluation only and may be changed or removed in future updates. Cancel this diagnostic to continue.
                 var dallE = iWantTo.GetRequiredService<ITextToImageService>();
 
 
                 var imageUrl = await dallE.GenerateImageAsync(requestMessage.Content, 1024, 1024);
-#pragma warning restore SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+#pragma warning restore SKEXP0001 // Types are for evaluation only and may be changed or removed in future updates. Cancel this diagnostic to continue.
 
                 _ = await Senparc.Weixin.MP.AdvancedAPIs.CustomApi.SendTextAsync(mpAccountDto.AppId, requestMessage.FromUserName, $"图片已生成，正在保存并推送（{imageUrl}）");
 
-                //开始保存图片
+                //Start saving pictures
                 var filePath = Senparc.CO2NET.Utilities.ServerUtility.ContentRootMapPath($"~/Senparc.AI.Dalle-{SystemTime.NowTicks}.jpg");
 
                 using (var fs = new FileStream(filePath, FileMode.OpenOrCreate))
@@ -78,10 +78,10 @@ namespace Senparc.Web
 
                 try
                 {
-                    //保存微信图片素材
+                    //Save WeChat picture material
                     var uploadResult = await Senparc.Weixin.MP.AdvancedAPIs.MediaApi.UploadTemporaryMediaAsync(mpAccountDto.AppId, Senparc.Weixin.MP.UploadMediaFileType.image, filePath, timeOut: 50000000);
 
-                    //推送图片
+                    //Push pictures
                     await Senparc.Weixin.MP.AdvancedAPIs.CustomApi.SendImageAsync(mpAccountDto.AppId, requestMessage.FromUserName, uploadResult.media_id);
                 }
                 catch (Exception ex)
@@ -93,7 +93,7 @@ namespace Senparc.Web
                     _ = await Senparc.Weixin.MP.AdvancedAPIs.CustomApi.SendTextAsync(mpAccountDto.AppId, requestMessage.FromUserName, $"图片生成失败：" + ex.Message);
 
                 }
-#pragma warning restore SKEXP0002 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+#pragma warning restore SKEXP0002 // Types are for evaluation only and may be changed or removed in future updates. Cancel this diagnostic to continue.
             }
             else
             {

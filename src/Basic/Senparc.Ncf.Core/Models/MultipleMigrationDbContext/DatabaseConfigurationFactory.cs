@@ -3,16 +3,16 @@
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// 多数据库配置工厂
+    ///Multi-database configuration factory
     /// </summary>
     public class DatabaseConfigurationFactory
     {
-        #region 单例
+        #region Singleton
 
         DatabaseConfigurationFactory() { }
 
         /// <summary>
-        /// DatabaseConfigurationFactory 的全局单例
+        ///Global singleton of DatabaseConfigurationFactory
         /// </summary>
         public static DatabaseConfigurationFactory Instance
         {
@@ -31,7 +31,7 @@ namespace Senparc.Ncf.Core.Models
 
         #endregion
 
-        //TODO:如果是分布式，需要存储到缓存中
+        //TODO: If it is distributed, it needs to be stored in the cache.
 
         private IDatabaseConfiguration _currentDatabaseConfiguration;
 
@@ -53,7 +53,7 @@ namespace Senparc.Ncf.Core.Models
 
 
         ///// <summary>
-        ///// 给 design time（设计时）操作数据库（如migration）使用。指定当前正在操作的 XNCF 数据库信息（如果是直接继承自 DbContext 的类，需要模拟此参数）
+        ///// Used for design time (design time) operation database (such as migration). Specify the XNCF database information currently being operated (if it is a class directly inherited from DbContext, this parameter needs to be simulated)
         ///// </summary>
         //public XncfDatabaseData CurrentXncfDatabaseData { get; set; }
     }

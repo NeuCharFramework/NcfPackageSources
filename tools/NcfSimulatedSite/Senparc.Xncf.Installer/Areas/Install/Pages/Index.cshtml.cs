@@ -22,36 +22,36 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.Instraller.Pages
 {
     [IgnoreAntiforgeryToken]
-    public class IndexModel : PageModel //不使用基类，因为无法通过已安装程序自动检测
+    public class IndexModel : PageModel //No base class is used because it cannot be automatically detected by installed programs
     {
         private readonly AdminUserInfoService _accountInfoService;
         private readonly InstallAppService _installAppService;
         private readonly IServiceProvider _serviceProvider;
 
         /// <summary>
-        /// 系统名称
+        ///system name
         /// </summary>
         public string SystemName { get; set; }
         /// <summary>
-        /// 管理员用户名
+        ///admin username
         /// </summary>
         public string AdminUserName { get; set; }
         /// <summary>
-        /// 管理员密码
+        ///admin password
         /// </summary>
         public string AdminPassword { get; set; }
         /// <summary>
-        /// 数据库连接字符串
+        /// database connection string
         /// </summary>
         public string DbConnectionString { get; set; }
         /// <summary>
-        /// 需要修改的命名空间
+        /// Namespace that needs to be modified
         /// </summary>
         public string Namespace { get; set; }
         public int Step { get; set; }
 
         /// <summary>
-        /// 需要安装的模块
+        /// Modules that need to be installed
         /// </summary>
         public List<XncfRegisterDto> NeedModelList { get; set; }
 
@@ -59,7 +59,7 @@ namespace Senparc.Xncf.Instraller.Pages
         public MultipleDatabaseType MultipleDatabaseType { get; set; }
 
         /// <summary>
-        /// 新创建的 RequestTenantInfo
+        /// Newly created RequestTenantInfo
         /// </summary>
         public RequestTenantInfo CreatedRequestTenantInfo { get; set; }
 
@@ -91,7 +91,7 @@ namespace Senparc.Xncf.Instraller.Pages
                 {
                     if (!forceUpdateModule.IsNullOrEmpty())
                     {
-                        //强制本地安装
+                        //Force local installation
                         Console.WriteLine("强制升级模块：" + forceUpdateModule);
 
                         SenparcTrace.SendCustomLog("强制更新模块", $"开始：{forceUpdateModule}");
@@ -104,7 +104,7 @@ namespace Senparc.Xncf.Instraller.Pages
                 }
 
                 MultipleDatabaseType = DatabaseConfigurationFactory.Instance.Current.MultipleDatabaseType;
-                var adminUserInfo = await _accountInfoService.GetObjectAsync(z => true);//检查是否已初始化
+                var adminUserInfo = await _accountInfoService.GetObjectAsync(z => true);//Check if it has been initialized
                 if (adminUserInfo == null)
                 {
                     Console.WriteLine("需要初始化");
@@ -115,7 +115,7 @@ namespace Senparc.Xncf.Instraller.Pages
                 // {
                 //     if (Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.EnableMultiTenant)
                 //     {
-                //         //判断是不是从新的域名进入
+                //         //Determine whether to enter from a new domain name
                 //         RequestTenantInfo currentRequestTenantInfo = MultiTenantHelper.TryGetAndCheckRequestTenantInfo(_serviceProvider, null);
                 //     }
                 // }
@@ -132,11 +132,11 @@ namespace Senparc.Xncf.Instraller.Pages
                 Console.WriteLine("开始初始化");
 
                 //var database = _accountInfoService.BaseClientRepository.BaseDB.BaseDataContext.Database;
-                //var created = await database.EnsureCreatedAsync();//尝试创建数据库
+                //var created = await database.EnsureCreatedAsync();//Try to create a database
 
-                //await Console.Out.WriteLineAsync("尝试创建数据库：" + (created ? "成功创建" : "已存在，无需创建"));
+                //await Console.Out.WriteLineAsync("Attempt to create database:" + (created ? "Successfully created" : "Already exists, no need to create"));
 
-                //初始化页面显示的配置项的默认值
+                //Default values ​​of configuration items displayed on the initialization page
                 var result = await _installAppService.GetInstallOptionsAsync();
                 SystemName = result.Data.SystemName;
                 AdminUserName = result.Data.AdminUserName;
@@ -150,12 +150,12 @@ namespace Senparc.Xncf.Instraller.Pages
 
             SenparcTrace.SendCustomLog("风险提示", "Install 被访问，已返回 404 进行混淆。如果您已经确保完成项目初始化，建议移除 Senparc.Xncf.Install 模块");
 
-            return new StatusCodeResult(404);//已经安装完毕，且存在管理员则不进行安装
+            return new StatusCodeResult(404);//If the installation has been completed and there is an administrator, the installation will not proceed.
         }
 
         public async Task<IActionResult> OnPostAsync([FromBody] InstallRequestDto installRequestDto)
         {
-            //开始安装
+            //Start installation
             var result = await _installAppService.InstallAsync(installRequestDto);
             if (result.Success != true)
             {
@@ -172,14 +172,14 @@ namespace Senparc.Xncf.Instraller.Pages
 
             MultiTenantEnable = SiteConfig.SenparcCoreSetting.EnableMultiTenant;
 
-            //添加初始化多租户信息
+            //Add initial multi-tenant information
             if (SiteConfig.SenparcCoreSetting.EnableMultiTenant)
             {
                 var tenantReulst = await _installAppService.GetTenantInfoAsync();
                 TenantInfoDto = tenantReulst.Data;
             }
 
-            //撤销安装状态
+            //Undo installation status
             SiteConfig.IsInstalling = false;
             SiteConfig.SetInstallFinished();
             TenantMiddleware.FirstRunAndInstalling = false;

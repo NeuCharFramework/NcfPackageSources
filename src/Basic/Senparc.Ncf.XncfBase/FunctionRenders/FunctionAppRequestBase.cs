@@ -17,7 +17,7 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
     }
 
     /// <summary>
-    /// FunctionAppRequest 基类
+    /// FunctionAppRequest base class
     /// </summary>
     public class FunctionAppRequestBase : AppRequestBase, IFunctionAppRequest
     {
@@ -28,7 +28,7 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
 
 
         /// <summary>
-        /// 记录日志
+        ///log
         /// </summary>
         /// <param name="sb"></param>
         /// <param name="msg"></param>

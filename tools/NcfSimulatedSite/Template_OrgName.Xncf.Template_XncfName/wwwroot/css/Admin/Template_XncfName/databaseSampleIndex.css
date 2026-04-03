@@ -1,4 +1,4 @@
-/* 通用样式 */
+/* Universal style */
 .d-flex{
     display: flex;
 }
@@ -9,7 +9,7 @@
     align-items: center;
 }
 
-/* 过滤器容器样式 */
+/* filter container style */
 .filter-container {
     margin-bottom: 20px;
     padding: 10px 0;
@@ -19,7 +19,7 @@
     margin-right: 10px;
 }
 
-/* 颜色预览样式 */
+/* Color preview style */
 .color-preview {
     width: 100%;
     height: 40px;
@@ -55,13 +55,13 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* 分页容器样式 */
+/* Pagination container style */
 .pagination-container {
     margin-top: 20px;
     text-align: center;
 }
 
-/* 表格样式增强 */
+/* Table style enhancement */
 .el-table {
     border-radius: 8px;
     overflow: hidden;
@@ -74,7 +74,7 @@
     font-weight: 600;
 }
 
-/* 颜色标签样式 */
+/* color label style */
 .el-tag {
     min-width: 50px;
     text-align: center;
@@ -83,7 +83,7 @@
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
 
-/* 对话框样式 */
+/* Dialog style */
 .el-dialog {
     border-radius: 12px;
     overflow: hidden;
@@ -104,7 +104,7 @@
     padding: 30px 20px;
 }
 
-/* 滑块样式 */
+/* Slider style */
 .el-slider {
     margin: 20px 0;
 }
@@ -121,7 +121,7 @@
     border: 2px solid #409eff;
 }
 
-/* 按钮样式增强 */
+/* Button style enhancement */
 .el-button--mini {
     padding: 5px 10px;
     font-size: 12px;
@@ -153,7 +153,7 @@
     border: none;
 }
 
-/* 表单项样式 */
+/* Form item style */
 .el-form-item {
     margin-bottom: 22px;
 }
@@ -163,12 +163,12 @@
     color: #333;
 }
 
-/* 加载动画样式 */
+/* Load animation style */
 .el-loading-mask {
     background-color: rgba(255, 255, 255, 0.9);
 }
 
-/* 响应式设计 */
+/* Responsive design */
 @media (max-width: 768px) {
     .filter-container {
         text-align: center;
@@ -190,7 +190,7 @@
     }
 }
 
-/* 动画效果 */
+/* Animation effects */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -206,7 +206,7 @@
     animation: fadeIn 0.3s ease-out;
 }
 
-/* 鼠标悬停效果 */
+/* mouseover effect */
 .el-table tbody tr:hover {
     background-color: #f5f7fa !important;
     transition: background-color 0.3s ease;

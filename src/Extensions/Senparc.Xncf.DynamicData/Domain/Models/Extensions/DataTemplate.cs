@@ -10,7 +10,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Models
 {
     public class DataTemplate
     {
-        public int TableId { get; set; } //TODO: 缓存所有 Table 和 Column 信息
+        public int TableId { get; set; } //TODO: Cache all Table and Column information
         public ColumnTemplate ColumnTemplate { get; set; }
 
         public List<TableDataDto> TableDataDtos { get; set; }

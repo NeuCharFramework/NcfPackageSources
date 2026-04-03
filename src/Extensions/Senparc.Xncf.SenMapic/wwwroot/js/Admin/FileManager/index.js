@@ -19,11 +19,11 @@ new Vue({
         this.getList()
     },
     methods: {
-        // 获取CSRF Token
+        // Get CSRF Token
         getCsrfToken() {
             return document.querySelector('input[name="__RequestVerificationToken"]').value;
         },
-        // 获取文件列表
+        // Get file list
         async getList() {
             this.tableLoading = true
             try {
@@ -36,18 +36,18 @@ new Vue({
             }
             this.tableLoading = false
         },
-        // 格式化文件大小
+        // Format file size
         formatFileSize(size) {
             if (size < 1024) return size + ' B'
             if (size < 1024 * 1024) return (size / 1024).toFixed(2) + ' KB'
             if (size < 1024 * 1024 * 1024) return (size / 1024 / 1024).toFixed(2) + ' MB'
             return (size / 1024 / 1024 / 1024).toFixed(2) + ' GB'
         },
-        // 日期格式化
+        // date formatting
         dateformatter(date) {
             return moment(date).format('YYYY-MM-DD HH:mm:ss')
         },
-        // 分页处理
+        // Pagination
         handleCurrentChange(val) {
             this.page = val
             this.getList()
@@ -57,28 +57,28 @@ new Vue({
             this.page = 1
             this.getList()
         },
-        // 上传文件
+        // Upload files
         uploadFile() {
             this.uploadDialogVisible = true
         },
-        // 上传成功处理
+        // Upload successfully processed
         handleUploadSuccess(response) {
             this.$message.success('上传成功')
             this.uploadDialogVisible = false
             this.getList()
         },
-        // 上传失败处理
+        // Upload failure handling
         handleUploadError(err) {
             this.$message.error('上传失败')
             console.error(err)
         },
-        // 编辑备注
+        // Editor's Notes
         editNote(row) {
             this.editForm.id = row.id
             this.editForm.note = row.note
             this.editNoteDialogVisible = true
         },
-        // 提交编辑备注
+        // Submit Editor's Note
         async submitEditNote() {
             try {
                 await service.post('/Admin/SenMapic/Index?handler=EditNote', this.editForm)
@@ -90,7 +90,7 @@ new Vue({
                 this.$message.error('修改失败')
             }
         },
-        // 删除文件
+        // Delete files
         deleteFile(row) {
             this.$confirm('确认删除该文件吗?', '提示', {
                 confirmButtonText: '确定',

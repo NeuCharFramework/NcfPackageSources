@@ -5,21 +5,21 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// Xncf 模块执行顺序，Order 数字越大，执行越靠前，如果非系统关键模块，尽量靠后
+    /// Xncf module execution order. The larger the Order number, the earlier the execution. If it is not a system-critical module, try to go as far back as possible.
     /// </summary>
     public class XncfOrderAttribute : Attribute
     {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="order">加载顺序，数字越大加载顺序越靠前。请严格按照参考数值：0：普通（默认），1-5000：需要预加载的重要模块，>5000：系统及基础模块</param>
+        /// <param name="order">Loading order, the larger the number, the higher the loading order. Please strictly follow the reference values: 0: normal (default), 1-5000: important modules that need to be preloaded, >5000: system and basic modules</param>
         public XncfOrderAttribute(int order)
         {
             Order = order;
         }
 
         /// <summary>
-        /// 加载顺序，数字越大加载顺序越靠前。请严格按照参考数值：0：普通（默认），1-5000：需要预加载的重要模块，>5000：系统及基础模块
+        /// Loading order, the larger the number, the higher the loading order. Please strictly follow the reference values: 0: normal (default), 1-5000: important modules that need to be preloaded, >5000: system and basic modules
         /// </summary>
         public int Order { get; set; }
     }

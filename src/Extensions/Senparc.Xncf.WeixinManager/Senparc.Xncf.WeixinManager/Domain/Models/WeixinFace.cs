@@ -15,7 +15,7 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models
         [Description("/:8-)")]
         墨镜 = 4,
         [Description("/::<")]
-        //哭 = 5,
+        //cry = 5,
         流泪 = 5,
         [Description("/::$")]
         羞 = 6,
@@ -32,7 +32,7 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models
         [Description("/::P")]
         调皮 = 12,
         [Description("/::D")]
-        //笑 = 13,
+        //laugh = 13,
         呲牙 = 13,
         [Description("/::O")]
         惊讶 = 14,
@@ -205,7 +205,7 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models
         [Description("/:skip")]
         跳绳 = 98,
         [Description("[挥手]")]
-        挥手 = 99,//天使
+        挥手 = 99,//Angel
         [Description("/:#-0")]
         激动 = 100,
         [Description("[街舞]")]

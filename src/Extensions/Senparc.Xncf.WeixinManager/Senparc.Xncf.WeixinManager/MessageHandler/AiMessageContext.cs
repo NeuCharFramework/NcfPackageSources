@@ -21,8 +21,8 @@ namespace Senparc.Xncf.WeixinManager
         internal static ConcurrentDictionary<string, IWantToRun> IWantoRunDic = new ConcurrentDictionary<string, IWantToRun>();
 
         /// <summary>
-        /// 获取唯一 Key。
-        /// 使用 PromptRangeCode 参与到 Key 的标记中，可以实现实时 Prompt 的更新
+        /// Get the unique Key.
+        /// Use PromptRangeCode to participate in Key tagging to achieve real-time Prompt updates
         /// </summary>
         /// <param name="openId"></param>
         /// <param name="mpAccountDto"></param>
@@ -33,7 +33,7 @@ namespace Senparc.Xncf.WeixinManager
         }
 
         /// <summary>
-        /// 构建并获取 IWantToRun 对象
+        /// Build and get the IWantToRun object
         /// </summary>
         /// <param name="services"></param>
         /// <param name="mpAccountDto"></param>
@@ -59,13 +59,13 @@ namespace Senparc.Xncf.WeixinManager
 
                     if (!mpAccountDto.PromptRangeCode.IsNullOrEmpty())
                     {
-                        //只有靶场，自动选择最好的版本
+                        //Range only, automatically selecting the best version
                         //var isAverage = mpAccountDto.PromptRangeCode.Contains("Average", StringComparison.OrdinalIgnoreCase);
 
                         var promptResult = await promptItemService.GetWithVersionAsync(mpAccountDto.PromptRangeCode, isAvg: true);
                         promptTemplate = promptResult.PromptItem.Content;// Prompt
 
-                        senparcAiSetting = promptResult.SenparcAiSetting;// AI 模型参数
+                        senparcAiSetting = promptResult.SenparcAiSetting;// AI model parameters
                         await Console.Out.WriteLineAsync(senparcAiSetting.ToJson(true));
                         var promptResultDto = promptItemService.Mapper.Map<PromptItemDto>(promptResult.PromptItem);
                         promptConfigParameter = promptItemService.GetPromptConfigParameterFromAiSetting(promptResultDto);
@@ -81,7 +81,7 @@ namespace Senparc.Xncf.WeixinManager
                         };
                     }
 
-                    //配置和初始化模型
+                    //Configure and initialize the model
                     var iWantToRun = _semanticAiHandler.ChatConfig(promptConfigParameter,
                                                      userId: openId,
                                                      maxHistoryStore: 20,

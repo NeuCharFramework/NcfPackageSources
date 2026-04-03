@@ -2,7 +2,7 @@
     el: "#app",
     data() {
         return {
-            data: [], // 数据
+            data: [], // data
             tooltip: {
                 "IAreaRegister": '网页',
                 "IXncfDatabase": '数据库',
@@ -22,13 +22,13 @@
                 2: '新增待审核',
                 3: '更新待审核'
             },
-            // 执行弹窗
+            // Execute pop-up window
             run: {
                 data: {},
                 visible: false
             },
             runData: {
-                // 绑定数据
+                // Bind data
             },
             runResult: {
                 visible: false,
@@ -38,7 +38,7 @@
                 tempId: '',
                 hasLog: false
             },
-            //查看线程 
+            //View thread 
             thread: {
                 visible: false
             }
@@ -57,9 +57,9 @@
         },
 
 
-        // 打开首页
+        // Open home page
         openUrl(url, flag) {
-            // 关闭状态返回
+            // Return to closed state
             flag = flag + '';
             if (flag !== '1') {
                 this.$notify({
@@ -71,9 +71,9 @@
             }
             window.location.href = url;
         },
-        // 打开执行
+        // open execution
         openRun(item, flag) {
-            // 关闭状态返回
+            // Return to closed state
             flag = flag + '';
             if (flag !== '1') {
                 this.$notify({
@@ -86,9 +86,9 @@
             this.run.data = item;
             this.runData = {};
             this.run.data.value.map(res => {
-                // 动态model绑定生成
-                // 默认选择赋值
-                // 多选
+                // Dynamic model binding generation
+                // Default selection assignment
+                // Multiple choice
                 if (res.parameterType === 2 && res.selectionList.items) {
                     this.runData[res.name] = {};
                     this.runData[res.name].value = [];
@@ -99,7 +99,7 @@
                         }
                     });
                 }
-                // 下拉框value
+                // drop-down box value
                 if (res.parameterType === 1 && res.selectionList.items) {
                     this.runData[res.name] = {};
                     this.runData[res.name].value = '';
@@ -109,12 +109,12 @@
                             this.runData[res.name].value = ele.value;
                         }
                     });
-                    // 如果没有默认给第一个
+                    // If not, default to the first one
                     if (this.runData[res.name].value.length === 0) {
                         this.runData[res.name].value = res.selectionList.items[0].value;
                     }
                 }
-                // 输入框
+                // Input box
                 if (res.parameterType === 0) {
                     this.runData[res.name] = {};
                     this.runData[res.name].item = res;
@@ -122,15 +122,15 @@
                 }
             });
             this.runData = Object.assign({}, this.runData);
-            //  this.runData数组结构
-            //在接口传输时，将下拉单选转成数组
+            //  this.runData array structure
+            //When transmitting through the interface, convert the drop-down radio selection into an array
             //{
-            //   // parameterType === 2 多选
+            //   // parameterType === 2 multiple selection
             //    Modules: {
             //        item: {},
             //        value: []
             //    },
-            //   // parameterType === 1 下拉单选
+            //   // parameterType === 1 drop-down radio selection
             //    ReferenceType: {
             //        item: {},
             //        value: []
@@ -143,9 +143,9 @@
             //};
             this.run.visible = true;
         },
-        // 执行
+        // implement
         async handleRun() {
-            // 物理路径校验
+            // Physical path verification
             if (this.runData.hasOwnProperty('SourcePath') && this.runData.SourcePath.length < 1) {
                 this.$notify({
                     title: '警告',
@@ -154,11 +154,11 @@
                 });
                 return;
             }
-            // 关闭执行弹窗
+            // Close the execution pop-up window
             // this.run.visible = false;
             let xncfFunctionParams = {};
             for (var i in this.runData) {
-                // 多选
+                // Multiple choice
                 if (this.runData[i].item.parameterType === 2) {
                     if (this.runData[i].item.isRequired && this.runData[i].value.length === 0) {
                         this.$notify({
@@ -174,7 +174,7 @@
 
                     }
                 }
-                // 下拉框value为字符串，但接口要数组
+                // The value of the drop-down box is a string, but the interface requires an array.
                 if (this.runData[i].item.parameterType === 1) {
                     if (this.runData[i].item.isRequired && this.runData[i].value.length === 0) {
                         this.$notify({
@@ -189,7 +189,7 @@
                         xncfFunctionParams[i].SelectedValues[0] = this.runData[i].value;
                     }
                 }
-                // 输入框
+                // Input box
                 if (this.runData[i].item.parameterType === 0) {
                     if (this.runData[i].item.isRequired && this.runData[i].value.length === 0) {
                         this.$notify({
@@ -227,23 +227,23 @@
                 this.runResult.tip = '返回信息';
                 this.runResult.msg = res.data.msg;
             }
-            // 打开执行结果弹窗
+            // Open the execution result pop-up window
             this.runResult.visible = true;
             this.getList();
         },
-        // 关闭和开启
+        // off and on
         async updataState(state) {
             const id = this.data.xncfModule.id;
             const res = await service.get(`/Admin/XncfModule/Start?handler=ChangeState&id=${id}&tostate=${state}`);
             window.location.reload();
         },
-        // 更新版本
+        // Updated version
         async  updataVersion() {
             const uid = resizeUrl().uid;
             await service.get(`/Admin/XncfModule/Index?handler=ScanAjax&uid=${uid}`);
             window.location.reload();
         },
-        // 删除
+        // delete
         async handleDelete() {
             const id = this.data.xncfModule.id;
             const res = await service.post(`/Admin/XncfModule/Start?handler=Delete&id=${id}`);

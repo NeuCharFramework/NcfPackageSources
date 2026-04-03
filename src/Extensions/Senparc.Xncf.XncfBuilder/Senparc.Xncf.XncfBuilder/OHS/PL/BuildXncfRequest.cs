@@ -40,10 +40,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
         [Description("目标框架版本||指定项目的 TFM(Target Framework Moniker)")]
         public SelectionList FrameworkVersion { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
-                 //new SelectionItem("netstandard2.1","netstandard2.1","使用 .NET Standard 2.1（兼容 .NET Core 3.1 和 .NET 5.0-8.0）",true),
-                 //new SelectionItem("netcoreapp3.1","netcoreapp3.1","使用 .NET Core 3.1",false),
-                 //new SelectionItem("net6.0","net6.0","使用 .NET 6.0",false),
-                 //new SelectionItem("net7.0","net7.0","使用 .NET 7.0",false),
+                 //new SelectionItem("netstandard2.1","netstandard2.1","Use .NET Standard 2.1 (compatible with .NET Core 3.1 and .NET 5.0-8.0)",true),
+                 //new SelectionItem("netcoreapp3.1","netcoreapp3.1","Use .NET Core 3.1",false),
+                 //new SelectionItem("net6.0","net6.0","Use .NET 6.0",false),
+                 //new SelectionItem("net7.0","net7.0","Use .NET 7.0",false),
                  new SelectionItem("net8.0","net8.0","使用 .NET 8.0",false),
             });
 
@@ -99,7 +99,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             });
 
         /// <summary>
-        /// 预载入数据
+        /// Preload data
         /// </summary>
         /// <param name="serviceProvider"></param>
         /// <returns></returns>
@@ -108,12 +108,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             Config config = null;
             try
             {
-                //低版本没有数据库，此处需要try
+                // Older versions may not have a database; keep this in try-catch
                 var configService = serviceProvider.GetService<ServiceBase<Config>>();
                 config = await configService.GetObjectAsync(z => true);
                 if (config != null)
                 {
-                    #region 自动载入上次配置
+                    #region Auto-load last configuration
 
                     //SenparcTrace.SendCustomLog("Xncf Builder Config", config.ToJson(true));
 
@@ -133,7 +133,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                 }
                 else
                 {
-                    #region 自动查找当前项目的解决方案路径
+                    #region Auto-find the current project's solution path
 
                     SlnFilePath = this.GetSlnFilePath();
 
@@ -148,7 +148,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         }
 
         /// <summary>
-        /// 判断当前路径下是否包含 .sln 文件
+        /// Determine whether the current path contains a .sln file
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -158,16 +158,16 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         }
 
         /// <summary>
-        /// 获取当前解决方案文件路径
+        /// Get the current solution file path
         /// </summary>
         /// <returns></returns>
         public string GetSlnFilePath()
         {
             var slnFilePath = string.Empty;
-            //当前程序目录
+            // Current application directory
             var currentDir = AppDomain.CurrentDomain.BaseDirectory;
 
-            //向上查找，直到找到
+            // Search upward until found
             while (!IsSlnDir(currentDir) && currentDir != null)
             {
                 currentDir = Directory.GetParent(currentDir).FullName;

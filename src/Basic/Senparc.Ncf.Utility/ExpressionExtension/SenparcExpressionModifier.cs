@@ -48,7 +48,7 @@ namespace Senparc.Ncf.Utility
             }
             else
             {
-                //默认为添加And
+                //The default is to add And
                 BE = Expression.MakeBinary(ExpressionType.AndAlso, BE, b);
             }
 

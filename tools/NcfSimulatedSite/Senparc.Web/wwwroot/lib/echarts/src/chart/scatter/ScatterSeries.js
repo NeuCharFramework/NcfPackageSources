@@ -33,9 +33,9 @@ define(function (require) {
             // Geo coordinate system
             geoIndex: 0,
 
-            // symbol: null,        // 图形类型
-            symbolSize: 10,          // 图形大小，半宽（半径）参数，当图形为方向或菱形则总宽度为symbolSize * 2
-            // symbolRotate: null,  // 图形旋转控制
+            // symbol: null, // graphic type
+            symbolSize: 10,          // Graphic size, half-width (radius) parameter, when the graphic is a direction or diamond, the total width is symbolSize * 2
+            // symbolRotate: null, // Graphic rotation control
 
             large: false,
             // Available when large is true
@@ -45,16 +45,16 @@ define(function (require) {
                 // normal: {
                     // show: false
                     // distance: 5,
-                    // formatter: 标签文本格式器，同Tooltip.formatter，不支持异步回调
-                    // position: 默认自适应，水平布局为'top'，垂直布局为'right'，可选为
+                    // formatter: label text formatter, same as Tooltip.formatter, does not support asynchronous callback
+                    // position: The default is adaptive, the horizontal layout is 'top', the vertical layout is 'right', optional
                     //           'inside'|'left'|'right'|'top'|'bottom'
-                    // textStyle: null      // 默认使用全局文本样式，详见TEXTSTYLE
+                    // textStyle: null // Use global text style by default, see TEXTSTYLE for details
             //     }
             // },
             itemStyle: {
                 normal: {
                     opacity: 0.8
-                    // color: 各异
+                    // color: various
                 }
             }
         }

@@ -5,7 +5,7 @@ using Senparc.Xncf.Tenant.Domain.Models;
 namespace Senparc.Xncf.Tenant.ACL.Repository
 {
     /// <summary>
-    /// 租户 TenantInfo 的专用 TenantInfoClientRepositoryBase
+    /// Private TenantInfoClientRepositoryBase for tenant TenantInfo
     /// </summary>
     public class TenantInfoRepository : ClientRepositoryBase<TenantInfo>
     {

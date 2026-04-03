@@ -8,7 +8,7 @@ namespace Senparc.Ncf.Core.AppServices.Exceptions
     public class BaseAppServiceException : BaseException
     {
         /// <summary>
-        /// 状态码
+        /// status code
         /// </summary>
         public int StateCode { get; set; }
         public BaseAppServiceException(int stateCode, string message, Exception inner, bool logged = false) : base(message, inner, logged)

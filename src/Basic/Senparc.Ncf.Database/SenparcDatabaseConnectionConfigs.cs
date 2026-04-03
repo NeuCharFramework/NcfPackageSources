@@ -12,7 +12,7 @@ using System.Collections.Concurrent;
 namespace Senparc.Ncf.Core.Config
 {
     /// <summary>
-    /// 数据库连接信息配置
+    /// Database connection information configuration
     /// </summary>
     public static class SenparcDatabaseConnectionConfigs
     {
@@ -47,7 +47,7 @@ namespace Senparc.Ncf.Core.Config
         }
 
         /// <summary>
-        /// 主站客户数据库连接字符串（根据当前配置数据库动态获得）
+        /// Main site customer database connection string (obtained dynamically based on the current configuration database)
         /// </summary>
         public static string GetClientConnectionString()
         {
@@ -74,7 +74,7 @@ namespace Senparc.Ncf.Core.Config
         }
 
         /// <summary>
-        /// 获取完整名称
+        /// get full name
         /// </summary>
         /// <param name="databaseName"></param>
         /// <returns></returns>

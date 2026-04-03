@@ -9,9 +9,9 @@ namespace Senparc.Ncf.Core.Cache
         Func<T> _fun;
 
         /// <summary>
-        /// 公用缓存模块，默认超时时间：1440分钟（1天）
+        ///Public cache module, default timeout: 1440 minutes (1 day)
         /// </summary>
-        /// <param name="key">全局唯一Key（只需要确保在CommonDataCache模块内唯一）</param>
+        /// <param name="key">Globally unique Key (only needs to be unique within the CommonDataCache module)</param>
         /// <param name="fun"></param>
         public CommonDataCache(string key, Func<T> fun)
             :this(key, 1440, fun)
@@ -19,10 +19,10 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        /// 公用缓存模块
+        ///Public cache module
         /// </summary>
-        /// <param name="key">全局唯一Key（只需要确保在CommonDataCache模块内唯一）</param>
-        /// <param name="timeout">缓存时间（分钟）</param>
+        /// <param name="key">Globally unique Key (only needs to be unique within the CommonDataCache module)</param>
+        /// <param name="timeout">Cache time (minutes)</param>
         /// <param name="fun"></param>
         public CommonDataCache(string key, int timeout, Func<T> fun)
             : base(CACHE_KEY + key)

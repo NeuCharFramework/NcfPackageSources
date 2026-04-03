@@ -43,8 +43,8 @@ define(function(require) {
         },
 
         defaultOption: {
-            zlevel: 0,                  // 一级层叠
-            z: 2,                       // 二级层叠
+            zlevel: 0,                  // One level cascading
+            z: 2,                       // Second level stacking
             legendHoverLink: true,
             left: 80,
             top: 60,
@@ -53,7 +53,7 @@ define(function(require) {
             // width: {totalWidth} - left - right,
             // height: {totalHeight} - top - bottom,
 
-            // 默认取数据最小最大值
+            // By default, the minimum and maximum value of the data is taken
             // min: 0,
             // max: 100,
             minSize: '0%',
@@ -65,8 +65,8 @@ define(function(require) {
                 normal: {
                     show: true,
                     position: 'outer'
-                    // formatter: 标签文本格式器，同Tooltip.formatter，不支持异步回调
-                    // textStyle: null      // 默认使用全局文本样式，详见TEXTSTYLE
+                    // formatter: label text formatter, same as Tooltip.formatter, does not support asynchronous callback
+                    // textStyle: null // Use global text style by default, see TEXTSTYLE for details
                 },
                 emphasis: {
                     show: true
@@ -77,7 +77,7 @@ define(function(require) {
                     show: true,
                     length: 20,
                     lineStyle: {
-                        // color: 各异,
+                        // color: different,
                         width: 1,
                         type: 'solid'
                     }
@@ -86,12 +86,12 @@ define(function(require) {
             },
             itemStyle: {
                 normal: {
-                    // color: 各异,
+                    // color: different,
                     borderColor: '#fff',
                     borderWidth: 1
                 },
                 emphasis: {
-                    // color: 各异,
+                    // color: different,
                 }
             }
         }

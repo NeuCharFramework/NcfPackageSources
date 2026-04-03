@@ -1,4 +1,4 @@
-﻿using Senparc.CO2NET;
+using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
@@ -26,13 +26,13 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
         }
 
         /*
-         * 使用 [ApiBind] 可将任意方法或类快速创建动态 WebApi。
-         * 在 DDD 系统中，出于安全和防腐考虑，建议只在 AppService 上使用。
-         * 当 AppService 上添加 [ApiBind] 标签满足不了需求时，仍然可以手动创建 ApiController。
+         * Use [ApiBind] to quickly create dynamic WebApi from any method or class.
+         * In DDD systems, for security and anti-corrosion considerations, it is recommended to only use AppService.
+         * When adding the [ApiBind] tag to the AppService cannot meet the needs, you can still create an ApiController manually.
          */
 
         /// <summary>
-        /// 将 AppService 暴露为 WebApi
+        /// Expose AppService as WebApi
         /// </summary>
         /// <returns></returns>
         [ApiBind]
@@ -46,13 +46,13 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 自定义 Post 类型和复杂参数，同时测试异常抛出和自定义状态码
+        /// Customize Post type and complex parameters, while testing exception throwing and custom status codes
         /// </summary>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> MyCustomApi(Api_MyCustomApiRequest request)
         {
-            //StringAppResponse 是 AppResponseBase<string> 的快捷写法
+            //StringAppResponse is a shortcut for AppResponseBase<string>
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 throw new NcfExceptionBase($"抛出异常测试，传输参数：{request.FirstName} {request.LastName}");
@@ -72,7 +72,7 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取 AgentTemplate 的列表
+        /// Get the list of AgentTemplate
         /// </summary>
         /// <param name="pageSize"></param>
         /// <param name="pageIndex"></param>
@@ -94,9 +94,24 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
 
                 var result = new FileTemplate_GetListResponse()
                 {
-                    List = listDto
+                    List = listDto,
+                    TotalCount = listDto.TotalCount,
+                    PageIndex = listDto.PageIndex
                 };
                 return result;
+            });
+        }
+
+        /// <summary>
+        /// Delete files (delete database records and physical files at the same time)
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<bool>> DeleteFile(DeleteFileRequest request)
+        {
+            return await this.GetResponseAsync<bool>(async (response, logger) =>
+            {
+                await fileService.DeleteFileAsync(request.Id);
+                return true;
             });
         }
     }

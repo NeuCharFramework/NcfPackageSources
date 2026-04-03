@@ -10,7 +10,7 @@ namespace Senparc.Ncf.Core.Extensions
     public static class ObjectQueryExtensions
     {
         /// <summary>
-        /// 添加多个Include()对象
+        /// Add multiple Include() members
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
@@ -18,7 +18,7 @@ namespace Senparc.Ncf.Core.Extensions
         /// <returns></returns>
         public static IQueryable<T> Includes<T>(this IQueryable<T> obj, string[] includes) where T : class
         {
-            //** 用法：entities.Users.Includes(new string[]{ "Roles","Products" }).ToList()
+            //** Usage: entities.Users.Includes(new string[]{ "Roles","Products" }).ToList()
             if (includes == null)
             {
                 return obj;
@@ -32,7 +32,7 @@ namespace Senparc.Ncf.Core.Extensions
         }
 
         /// <summary>
-        /// 添加多个可在编译时检测的Include类型
+        /// Add multiple Include types that can be checked at compile time
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
@@ -40,7 +40,7 @@ namespace Senparc.Ncf.Core.Extensions
         /// <returns></returns>
         public static IQueryable<T> Includes<T>(this IQueryable<T> obj, Type[] includeTyles) where T : class
         {
-            //** 用法：entities.Users.Includes(new Type[]{ typeof(Roles),typeof(Products) }).ToList()
+            //** Usage: entities.Users.Includes(new Type[]{ typeof(Roles),typeof(Products) }).ToList()
             if (includeTyles == null)
                 return obj;
 
@@ -52,7 +52,7 @@ namespace Senparc.Ncf.Core.Extensions
         }
 
         /// <summary>
-        /// 添加可在编译时检测的Include类型
+        /// Add an Include type that can be checked at compile time
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
@@ -60,17 +60,17 @@ namespace Senparc.Ncf.Core.Extensions
         /// <returns></returns>
         public static IQueryable<T> Include<T>(this IQueryable<T> obj, Type includeType) where T : class
         {
-            //** 用法：entities.Users.Include(typeof(Roles)).ToList()
+            //** Usage: entities.Users.Include(typeof(Roles)).ToList()
             return obj.Include(includeType.Name);
         }
 
         /// <summary>
-        /// 委托排序
+        /// Delegate-based sorting
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <param name="orderBy"></param>
-        /// <param name="isAscending">是否升序排列</param>
+        /// <param name="isAscending">Whether to sort in ascending order</param>
         /// <returns></returns>
         public static IOrderedQueryable<T> OrderBy<T, TK>(this IQueryable<T> obj, Expression<Func<T, TK>> orderBy, OrderingType orderingType) where T : class
         {
@@ -81,12 +81,12 @@ namespace Senparc.Ncf.Core.Extensions
         }
 
         /// <summary>
-        /// 委托排序
+        /// Delegate-based sorting
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <param name="orderBy"></param>
-        /// <param name="isAscending">是否升序排列</param>
+        /// <param name="isAscending">Whether to sort in ascending order</param>
         /// <returns></returns>
         public static IOrderedEnumerable<T> OrderByIEnumerable<T, TK>(this IEnumerable<T> obj, Func<T, TK> orderBy, OrderingType orderingType) where T : class
         {

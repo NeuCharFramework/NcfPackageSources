@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.XncfBase.Database
 {
     /// <summary>
-    /// IXncfDatabase 使用的 DbContext 基类
+    ///DbContext base class used by IXncfDatabase
     /// </summary>
     public abstract class XncfDatabaseDbContext : DbContext, ISenparcEntitiesDbContext, IMultipleMigrationDbContext
     {
@@ -43,7 +43,7 @@ namespace Senparc.Ncf.XncfBase.Database
         }
 
         /// <summary>
-        /// 当前 IXncfDatabase 注册类实例
+        /// Current IXncfDatabase registration class instance
         /// </summary>
         public IXncfDatabase XncfDatabaseRegister => MultipleMigrationDbContext.XncfDatabaseRegister;
 
@@ -76,7 +76,7 @@ namespace Senparc.Ncf.XncfBase.Database
         public bool? _enableMultiTenant;
 
         /// <summary>
-        /// 是否启用多租户，默认读取 SiteConfig.SenparcCoreSetting.EnableMultiTenant
+        /// Whether to enable multi-tenancy, the default is to read SiteConfig.SenparcCoreSetting.EnableMultiTenant
         /// </summary>
         public bool EnableMultiTenant
         {
@@ -97,7 +97,7 @@ namespace Senparc.Ncf.XncfBase.Database
         private RequestTenantInfo _tenantInfo;
 
         /// <summary>
-        /// 当前上下文中租户信息 <![CDATA[未启用多租户则默认值为NULL值]]>
+        /// Tenant information in the current context <![CDATA[If multi-tenancy is not enabled, the default value is NULL]]>
         /// </summary>
         public RequestTenantInfo TenantInfo
         {
@@ -160,11 +160,11 @@ namespace Senparc.Ncf.XncfBase.Database
         #endregion
 
         /// <summary>
-        /// 安装过程中使用的 Migrate 系列操作
+        /// Migrate series of operations used during installation
         /// </summary>
         /// <param name="serviceProvider"></param>
-        /// <param name="databaseRegister">实现了数据库接口的 Register，databaseRegister.TryGetXncfDatabaseDbContextType 必须返回 XncfDatabaseDbContext 的子类</param>
-        /// <param name="checkdbContextType">是否需要对 dbContextType 类型进行检查</param>
+        /// <param name="databaseRegister">Register that implements the database interface, databaseRegister.TryGetXncfDatabaseDbContextType must return a subclass of XncfDatabaseDbContext</param>
+        /// <param name="checkdbContextType">Whether the dbContextType type needs to be checked</param>
         /// <returns></returns>
         public static async Task MigrateOnInstallAsync(IServiceProvider serviceProvider, IXncfDatabase databaseRegister, bool checkdbContextType = true)
         {
@@ -180,7 +180,7 @@ namespace Senparc.Ncf.XncfBase.Database
 
 
         /// <summary>
-        /// 安装过程中使用的 Migrate 系列操作
+        /// Migrate series of operations used during installation
         /// </summary>
         /// <param name="dbContext"></param>
         /// <returns></returns>
@@ -191,14 +191,14 @@ namespace Senparc.Ncf.XncfBase.Database
             {
                 throw new ArgumentNullException(nameof(dbContext));
             }
-            //更新数据库
+            //Update database
             var pendingMigs = await dbContext.Database.GetPendingMigrationsAsync();
 
             SenparcTrace.SendCustomLog("MigrateOnInstallAsync", $"dbContext:{dbContext.GetType().FullName}");
 
             if (pendingMigs.Count() > 0)
             {
-                dbContext.ResetMigrate();//重置合并状态
+                dbContext.ResetMigrate();//Reset merge status
 
                 SenparcTrace.SendCustomLog("MigrateOnInstallAsync", $"dbContext.ResetMigrate() 运行完毕");
 
@@ -207,7 +207,7 @@ namespace Senparc.Ncf.XncfBase.Database
                     var script = dbContext.Database.GenerateCreateScript();
                     SenparcTrace.SendCustomLog($"MigrateOnInstallAsync", $"{dbContext.GetType().Name}.Database.GenerateCreateScript:\r\n{script}");
 
-                    dbContext.Migrate();//进行合并
+                    dbContext.Migrate();//merge
                     SenparcTrace.SendCustomLog("MigrateOnInstallAsync", $"dbContext.Migrate() 运行完毕");
                 }
                 catch (Exception ex)

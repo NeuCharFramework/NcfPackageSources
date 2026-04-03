@@ -9,15 +9,15 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Request
     public class KnowledgeBasesDetailRequest
     {
         /// <summary>
-        /// 知识库Id
+        ///Knowledge BaseId
         /// </summary>
         public string KnowledgeBasesId { get; set; }
         /// <summary>
-        /// 内容类型
+        /// content type
         /// </summary>
         public int ContentType { get; set; }
         /// <summary>
-        /// 内容
+        /// content
         /// </summary>
         public string Content { get; set; }
     }

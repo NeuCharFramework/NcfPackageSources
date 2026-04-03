@@ -61,7 +61,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// TODO...重建菜单角色缓存
+        ///TODO...Rebuild menu character cache
         /// </summary>
         /// <param name="sysMenuDto"></param>
         /// <returns></returns>
@@ -75,7 +75,7 @@ namespace Senparc.Ncf.Service
                 menu = await GetObjectAsync(_ => _.Id == sysMenuDto.Id);
                 if (menu.IsLocked)
                 {
-                    return menu;//TODO：需要给出提示
+                    return menu;//TODO: Need to give hints
                 }
 
                 isRepeat = await this.GetObjectAsync(_ => _.ResourceCode == sysMenuDto.ResourceCode && _.Id != sysMenuDto.Id) != null;
@@ -103,7 +103,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// TODO...重建菜单角色缓存
+        ///TODO...Rebuild menu character cache
         /// </summary>
         /// <param name="sysMenuDto"></param>
         /// <param name="buttons"></param>
@@ -163,7 +163,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取缓存中的数据
+        /// Get data from cache
         /// </summary>
         /// <param name="isRefresh"></param>
         /// <returns></returns>
@@ -173,7 +173,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取缓存中的数据 TODO...
+        /// Get the data in the cache TODO...
         /// </summary>
         /// <param name="isRefresh"></param>
         /// <returns></returns>
@@ -220,7 +220,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取缓存中的数据
+        /// Get data from cache
         /// </summary>
         /// <returns></returns>
         public async Task<IEnumerable<SysMenuTreeItemDto>> GetMenuTreeDtoByCacheAsync()
@@ -237,13 +237,13 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 初始化菜单及其权限
+        ///Initialize menu and its permissions
         /// </summary>
         public async void Init(RequestTenantInfo requestTenantInfo, int adminUserInfoId)
         {
             this.SetTenantInfoForAllServices(requestTenantInfo);
 
-            //设置 TenantId 前缀，避免不同租户之间的 ID 冲突
+            //Set TenantId prefix to avoid ID conflicts between different tenants
             string tenantId = null;
             if (SiteConfig.SenparcCoreSetting.EnableMultiTenant)
             {
@@ -323,7 +323,7 @@ namespace Senparc.Ncf.Service
 
             try
             {
-                //确保 DbContext 实例一致
+                //Ensure DbContext instances are consistent
                 //Console.WriteLine("sysRoleService DbConte HashCode: " + sysRoleService.BaseData.BaseDB.BaseDataContext.GetHashCode());
                 //Console.WriteLine("sysRolePermissionService DbConte HashCode: " + sysRolePermissionService.BaseDB.BaseDataContext.GetHashCode());
                 //Console.WriteLine("sysRoleAdminUserInfoService DbConte HashCode: " + sysRoleAdminUserInfoService.BaseData.BaseDB.BaseDataContext.GetHashCode());
@@ -354,7 +354,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取数据库的菜单集合(线性)
+        /// Get the menu collection of the database (linear)
         /// </summary>
         /// <returns></returns>
         public virtual async Task<IEnumerable<SysMenuDto>> GetMenuDtoByDbAsync()

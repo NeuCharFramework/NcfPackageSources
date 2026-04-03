@@ -8,13 +8,13 @@ using System.Text;
 
 namespace Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel
 {
-    [Table(Register.DATABASE_PREFIX + nameof(UserTag))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(UserTag))]//The prefix must be added to prevent conflicts system-wide.
     [Serializable]
     public class UserTag : EntityBase<int>
     {
         public int MpAccountId { get; private set; }
         /// <summary>
-        /// 微信接口的 tagid
+        /// tagid of WeChat interface
         /// </summary>
         public int TagId { get; private set; }
         [Required]

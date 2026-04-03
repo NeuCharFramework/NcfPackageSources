@@ -5,7 +5,7 @@ namespace Senparc.Ncf.Utility
     //public static class ModelStateDictionaryExtension
     //{
     //    /// <summary>
-    //    /// 获取第一个错误提示
+    //    /// Get the first error message
     //    /// </summary>
     //    /// <param name="request"></param>
     //    /// <returns></returns>

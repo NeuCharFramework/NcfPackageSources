@@ -10,9 +10,9 @@
     }
     return false;
 }
-// 注册一个全局自定义指令 `v-has`
+// Register a global custom directive `v-has`
 Vue.directive('has', {
-    // 当被绑定的元素插入到 DOM 中时触发bind钩子
+    // The bind hook is triggered when the bound element is inserted into the DOM
     inserted: function (el, binding) {
         if (!permissionJudge(binding.value)) {
             el.parentNode.removeChild(el);

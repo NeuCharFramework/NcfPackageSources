@@ -14,11 +14,11 @@ namespace Senparc.Xncf.XncfModuleManager.Models
         }
 
         /// <summary>
-        /// 扩展模块
+        /// Extended modules
         /// </summary>
         public DbSet<XncfModule> XncfModules { get; set; }
 
-        //如无特殊需需要，OnModelCreating 方法可以不用写，已经在 Register 中要求注册
+        //If there are no special requirements, OnModelCreating can be omitted because registration is already required in Register.
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //}

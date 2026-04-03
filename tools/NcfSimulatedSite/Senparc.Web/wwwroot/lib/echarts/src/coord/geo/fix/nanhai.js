@@ -1,4 +1,4 @@
-// Fix for 南海诸岛
+// Fix for South China Sea Islands
 define(function (require) {
 
     var Region = require('../Region');

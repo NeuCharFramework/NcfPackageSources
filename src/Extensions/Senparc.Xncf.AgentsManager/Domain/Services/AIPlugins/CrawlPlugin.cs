@@ -75,24 +75,24 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 
                 var requestSuccess = urlData.Result == 200;
 
-                var logStr = $"下载网页内容{(requestSuccess ? "成功" : "失败")}。" +
-                    (requestSuccess ? $"字符数：{urlData.MarkDownHtmlContent?.Length}" : $"错误代码：{item.Value.Result}") +
+                var logStr = $"Download web content {(requestSuccess ? "Success" : "Failure")}." +
+                    (requestSuccess ? $"Number of characters: {urlData.MarkDownHtmlContent?.Length}" : $"Error code: {item.Value.Result}") +
                     $"\t URL:{item.Key.ToLower()}";
 
                 if (!requestSuccess)
                 {
-                    logStr += $" 来源：{urlData.ParentUrl} （链接：{urlData.LinkText}）";
+                    logStr += $"Source: {urlData.ParentUrl} (Link: {urlData.LinkText})";
                 }
 
-                SenparcTrace.SendCustomLog("RAG日志", logStr);
+                SenparcTrace.SendCustomLog("RAG log", logStr);
                 Console.WriteLine(logStr);
             }
 
-            Console.WriteLine("正在处理信息...");
+            Console.WriteLine("Processing information...");
 
-            #region Embedding 储存信息
+            #region Embedding Save information
 
-            //测试 TextEmbedding
+            //Test TextEmbedding
             var embeddingAiSetting = Senparc.AI.Config.SenparcAiSetting;
             var semanticAiHandler = new SemanticAiHandler(embeddingAiSetting);
             var iWantToRunEmbedding = semanticAiHandler
@@ -114,7 +114,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
                 var text = file.Key == ContentType.File ? File.ReadAllTextAsync(file.Value).Result : file.Value;
                 List<string> paragraphs = new List<string>();
 
-#pragma warning disable SKEXP0050 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+#pragma warning disable SKEXP0050 // Type is for evaluation only and may be changed or removed in a future update. Cancel this diagnostic to continue.
                 if (file.Value.EndsWith(".md"))
                 {
                     paragraphs = TextChunker.SplitMarkdownParagraphs(
@@ -127,7 +127,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
                       TextChunker.SplitPlainTextLines(System.Text.RegularExpressions.Regex.Replace(text, @"\s+", " ").Replace("\r\n", " "), 128),
                       256);
                 }
-#pragma warning restore SKEXP0050 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+#pragma warning restore SKEXP0050 // Type is for evaluation only and may be changed or removed in a future update. Cancel this diagnostic to continue.
 
             MemoryStore:
                 try
@@ -151,20 +151,20 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
                     Match match = Regex.Match(ex.Message, pattern);
                     if (match.Success)
                     {
-                        Console.WriteLine($"等待冷却 {match.Value} 秒");
+                        Console.WriteLine($"Waiting for cooling {match.Value} seconds");
                     }
                     goto MemoryStore;
                 }
 
             });
 
-            Console.WriteLine($"处理完成(文件数：{contentMap.Count}，段落数：{i})");
+            Console.WriteLine($"Processing completed (number of files: {contentMap.Count}, number of paragraphs: {i})");
             #endregion
 
 
-            #region 提问
+            #region Ask a question
 
-            Console.WriteLine("提问：" + question);
+            Console.WriteLine("Question: " + question);
             StringBuilder results = new StringBuilder();
             var parameter = new PromptConfigParameter()
             {
@@ -174,13 +174,13 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
             };
 
             var systemMessage = @$"## SystemMessage
-你是一位咨询机器人，你将根据我所提供的“提问”以及“备选信息”组织语言，生成一段给我的回复。
-""备选信息""可能有多条，使用 ////// 表示每一条信息的开头， 表示每一条信息的结尾。在 ****** 后会有一个数字，表示这条信息的相关性。
+You are a consulting robot. You will organize the language based on the "questions" and "alternative information" I provide to generate a reply to me.
+""Alternative information"" may have multiple pieces, use ////// to indicate the beginning of each piece of information, and to indicate the end of each piece of information. There will be a number after ****** indicating the relevance of this message.
 
 ## Rule
-你必须：
- - 将回答内容严格限制在我所提供给你的备选信息中（开头和结尾标记中间的内容），其中越靠前的备选信息可信度越高，相关性不属于答案内容本身，因此在组织语言的过程中必须将其忽略。
- - 请严格从“备选信息”中挑选和“提问”有关的信息，不要输出没有相关依据的信息。";
+You must:
+ - Strictly limit the content of the answer to the alternative information I have provided to you (the content between the opening and closing marks). The earlier the alternative information, the higher the credibility. The relevance does not belong to the answer content itself, so it must be ignored in the process of organizing the language.
+ - Please strictly select information related to the "question" from the "optional information" and do not output information without relevant basis. ";
 
             var iWantToRunChat = semanticAiHandler.ChatConfig(parameter,
                                  userId: "Jeffrey",
@@ -204,30 +204,30 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 ******{item.Relevance}");
             }
 
-            SenparcTrace.SendCustomLog("RAG日志", $@"提问：{question}，耗时：{(DateTime.Now - questionDt).TotalMilliseconds}ms
-结果：
+            SenparcTrace.SendCustomLog("RAG log", $@"Question: {question}, time consumption: {(DateTime.Now - questionDt).TotalMilliseconds}ms
+result:
 {results.ToString()}
 ");
 
             Console.WriteLine();
 
-            Console.Write("回答：");
+            Console.Write("Answer:");
 
-            var input = @$"提问：{question}
-备选答案：
+            var input = @$"Question: {question}
+Alternative answers:
 {results.ToString()}";
 
             var useStream = iWantToRunChat.IWantToBuild.IWantToConfig.IWantTo.SenparcAiSetting.AiPlatform != AiPlatform.NeuCharAI;
             if (useStream)
             {
-                //使用流式输出
+                //Use streaming output
 
-                var originalColor = Console.ForegroundColor;//原始颜色
+                var originalColor = Console.ForegroundColor;//original color
                 Action<StreamingKernelContent> streamItemProceessing = async item =>
                 {
                     await Console.Out.WriteAsync(item.ToString());
 
-                    //每个流式输出改变一次颜色
+                    //Change color once for each streaming output
                     if (Console.ForegroundColor == originalColor)
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
@@ -238,10 +238,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
                     }
                 };
 
-                //输出结果
+                //Output results
                 SenparcAiResult result = await semanticAiHandler.ChatAsync(iWantToRunChat, input, streamItemProceessing);
 
-                //复原颜色
+                //restore color
                 Console.ForegroundColor = originalColor;
 
                 return result.OutputString;

@@ -10,66 +10,66 @@ using System.Text.Json;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
 {
     /// <summary>
-    /// Agent模板信息
+    ///Agent template information
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(AgentTemplate))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(AgentTemplate))]//The prefix must be added to prevent conflicts system-wide.
     [Serializable]
     public class AgentTemplate : EntityBase<int>
     {
         /// <summary>
-        /// 名称
+        ///name
         /// </summary>
         [Required]
         public string Name { get; private set; }
 
         /// <summary>
-        /// 系统消息
+        /// system message
         /// </summary>
         [Required]
         public string SystemMessage { get; private set; }
 
         /// <summary>
-        /// 是否启用
+        /// Whether to enable
         /// </summary>
         [Required]
         public bool Enable { get; private set; }
 
         /// <summary>
-        /// PromptRange 的代号
+        ///Code name for PromptRange
         /// </summary>
         public string PromptCode { get; private set; }
 
         /// <summary>
-        /// 第三方机器人平台类型
+        /// Third-party robot platform type
         /// </summary>
         public HookRobotType HookRobotType { get; private set; }
 
         /// <summary>
-        /// 第三方机器人平台参数
+        /// Third-party robot platform parameters
         /// </summary>
         public string HookRobotParameter { get; set; }
 
         /// <summary>
-        /// 描述
+        /// describe
         /// </summary>
         public string Description { get; private set; }
 
         public string Avastar { get; set; }
 
         /// <summary>
-        /// Function Call 名称列表，多个用逗号分隔
+        /// Function Call name list, multiple separated by commas
         /// </summary>
         public string FunctionCallNames { get; private set; }
 
         /// <summary>
-        /// McpEndpoints，多个用逗号分隔
+        /// McpEndpoints, multiple separated by commas
         /// </summary>
         public string McpEndpoints { get; private set; }
 
         /// <summary>
-        /// 获取McpEndpoints的JSON对象
+        /// Get the JSON object of McpEndpoints
         /// </summary>
-        /// <returns>包含所有Endpoints的Dictionary对象</returns>
+        /// <returns>Dictionary object containing all Endpoints</returns>
         public Dictionary<string, Dictionary<string, string>> GetMcpEndpointsDict()
         {
             if (string.IsNullOrEmpty(McpEndpoints))
@@ -88,11 +88,11 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 添加一个MCP Endpoint
+        /// Add an MCP Endpoint
         /// </summary>
-        /// <param name="name">Endpoint名称</param>
+        /// <param name="name">Endpoint name</param>
         /// <param name="url">Endpoint URL</param>
-        /// <returns>是否添加成功</returns>
+        /// <returns>Whether the addition was successful</returns>
         public bool AddMcpEndpoint(string name, string url)
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(url))
@@ -102,22 +102,22 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
 
             var endpointsDict = GetMcpEndpointsDict();
             
-            // 添加或更新Endpoint
+            // Add or update Endpoint
             endpointsDict[name] = new Dictionary<string, string>
             {
                 { "url", url }
             };
 
-            // 序列化回字符串
+            // serialize back to string
             McpEndpoints = JsonSerializer.Serialize(endpointsDict);
             return true;
         }
 
         /// <summary>
-        /// 移除一个MCP Endpoint
+        /// Remove an MCP Endpoint
         /// </summary>
-        /// <param name="name">Endpoint名称</param>
-        /// <returns>是否移除成功</returns>
+        /// <param name="name">Endpoint name</param>
+        /// <returns>Whether the removal was successful</returns>
         public bool RemoveMcpEndpoint(string name)
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(McpEndpoints))
@@ -132,10 +132,10 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
                 return false;
             }
 
-            // 移除Endpoint
+            // Remove Endpoint
             endpointsDict.Remove(name);
 
-            // 如果为空则设为null，否则序列化回字符串
+            // Set to null if empty, otherwise serialize back to string
             McpEndpoints = endpointsDict.Count > 0 
                 ? JsonSerializer.Serialize(endpointsDict)
                 : null;
@@ -202,17 +202,17 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
     }
 
     /// <summary>
-    /// 第三方机器人平台类型
+    /// Third-party robot platform type
     /// </summary>
     public enum HookRobotType
     {
         None = 0,
         /// <summary>
-        /// 微信公众号
+        /// WeChat public account
         /// </summary>
         WeChatMp = 1,
         /// <summary>
-        /// 企业微信机器人
+        /// Enterprise WeChat robot
         /// </summary>
         WeChatWorkRobot = 2
     }

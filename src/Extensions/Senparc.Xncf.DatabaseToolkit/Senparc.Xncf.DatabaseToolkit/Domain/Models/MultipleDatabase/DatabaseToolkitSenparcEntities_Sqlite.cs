@@ -11,7 +11,7 @@ using System.IO;
 namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
 {
     /// <summary>
-    /// 用于生成 Sqlite 数据库 Migration 信息的类，请勿修改
+    /// Class used to generate Sqlite database Migration information, please do not modify it
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.Sqlite, typeof(Register))]
     public class DatabaseToolkitSenparcEntities_Sqlite : DatabaseToolkitSenparcEntities, IMultipleMigrationDbContext
@@ -22,22 +22,22 @@ namespace Senparc.Xncf.DatabaseToolkit.Models.MultipleDatabase
     }
 
     /// <summary>
-    /// 设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
-    /// <para>1、切换至 Debug 模式</para>
-    /// <para>2、运行：PM> add-migration [更新名称] -C DatabaseToolkitSenparcEntities_SqlServer -o Domain/Migrations/Migrations.SqlServer </para>
+    /// Design-time DbContext creation (Code-First database migration is only used during development and will not be executed in the production environment)
+    /// <para>1. Switch to Debug mode</para>
+    /// <para>2. Run: PM> add-migration [update name] -C DatabaseToolkitSenparcEntities_SqlServer -o Domain/Migrations/Migrations.SqlServer </para>
     /// </summary>
     public class SenparcDbContextFactory_Sqlite : SenparcDesignTimeDbContextFactoryBase<DatabaseToolkitSenparcEntities_Sqlite, Register>
     {
         protected override Action<IApplicationBuilder> AppAction => app =>
         {
-            //指定其他数据库
+            //Specify another database
             app.UseNcfDatabase("Senparc.Ncf.Database.Sqlite", "Senparc.Ncf.Database.Sqlite", "SqliteMemoryDatabaseConfiguration");
         };
 
         public SenparcDbContextFactory_Sqlite()
             : base(
-                 /* Debug模式下项目根目录
-                 /* 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息 */
+                 /* Project root directory in Debug mode
+                 /* Used to find the App_Data folder to find the database connection string configuration information */
                  Path.Combine(AppContext.BaseDirectory, $"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}"))
         {
 

@@ -99,10 +99,10 @@ var app = new Vue({
       this.addFormDialogVisible = true;
     },
     addNeuCharModel() {
-      this.neuCharFormDialogVisible = true; // 显示对话框  
+      this.neuCharFormDialogVisible = true; // show dialog  
     },
     copyInfo(key) {
-      // 把结果复制到剪切板  
+      // Copy results to clipboard  
       const input = document.createElement('input')
       input.setAttribute('readonly', 'readonly')
       input.setAttribute('value', key)
@@ -111,7 +111,7 @@ var app = new Vue({
       input.setSelectionRange(0, 9999)
       if (document.execCommand('copy')) {
         document.execCommand('copy')
-        //提示时展示'******'+key的后4位  
+        //Display '******' + the last 4 digits of key when prompted.  
         this.$message.success(`已复制【******${key.slice(-4)}】！`)
       }
     },

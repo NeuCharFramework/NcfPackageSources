@@ -63,7 +63,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
             return result;
         }
 
-        //TODO：文件修改（从文件中抽取，然后给到 LLM 进行修改）
+        //TODO: File modification (extracted from the file and then sent to LLM for modification)
 
         [KernelFunction, Description("读取数据库上下文")]
         public async Task<FileSaveResult> UpdateSenparcEntities(
@@ -82,8 +82,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
 
             string tempFile = Path.GetTempFileName();
 
-            string targetComment1 = "//DOT REMOVE OR MODIFY THIS LINE"; //"//DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point";
-            string targetComment2 = "//DON'T REMOVE OR MODIFY THIS LINE"; //"//DON'T REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point";
+            string targetComment1 = "//DOT REMOVE OR MODIFY THIS LINE"; //"//DOT REMOVE OR MODIFY THIS LINE Do not remove or modify this line - Entities Point";
+            string targetComment2 = "//DON'T REMOVE OR MODIFY THIS LINE"; //"//DON'T REMOVE OR MODIFY THIS LINE Do not remove or modify this line - Entities Point";
             string insertStr = $"        public DbSet<{entityName}> {pluralEntityName} {{ get; set; }}";
             bool inserted = false;
 

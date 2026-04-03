@@ -23,27 +23,27 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        /// 获取颜色列表（分页）
+        /// Get color list (pagination)
         /// </summary>
-        /// <param name="keyword">关键词</param>
-        /// <param name="orderField">排序字段</param>
-        /// <param name="pageIndex">页码</param>
-        /// <param name="pageSize">页大小</param>
+        /// <param name="keyword">Keyword</param>
+        /// <param name="orderField">Order field</param>
+        /// <param name="pageIndex">Page number</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns></returns>
         public async Task<IActionResult> OnGetColorListAsync(string keyword, string orderField, int pageIndex, int pageSize)
         {
             try
             {
-                // 调试信息
+                // debugging information
                 System.Diagnostics.Debug.WriteLine($"ColorList API Called - PageIndex: {pageIndex}, PageSize: {pageSize}, OrderField: {orderField}");
                 
                 var seh = new SenparcExpressionHelper<Color>();
-                // 可以根据需要添加搜索条件
+                // You can add search conditions as needed
                 // seh.ValueCompare.AndAlso(!string.IsNullOrEmpty(keyword), _ => _.Remark.Contains(keyword));
                 var where = seh.BuildWhereExpression();
                 var response = await _colorService.GetObjectListAsync(pageIndex, pageSize, where, orderField ?? "Id desc");
                 
-                // 调试信息
+                // debugging information
                 System.Diagnostics.Debug.WriteLine($"Database Query Result - TotalCount: {response.TotalCount}, ItemCount: {response.Count()}");
                 
                 var result = new
@@ -67,7 +67,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                     }
                 };
                 
-                // 调试信息
+                // debugging information
                 System.Diagnostics.Debug.WriteLine($"API Response - ListCount: {result.data.list.Count}");
                 
                 return Ok(result);
@@ -86,15 +86,15 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        /// 创建新颜色
+        ///Create new color
         /// </summary>
-        /// <param name="request">创建颜色请求</param>
+        /// <param name="request">Create color request</param>
         /// <returns></returns>
         public async Task<IActionResult> OnPostCreateColorAsync([FromBody] CreateColorRequestDto request)
         {
             try
             {
-                // 调试信息
+                // debugging information
                 System.Diagnostics.Debug.WriteLine($"CreateColor API Called - Red: {request.Red}, Green: {request.Green}, Blue: {request.Blue}, AdditionNote: {request.AdditionNote}");
                 
                 if (request == null)
@@ -115,15 +115,15 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        /// 更新颜色
+        ///update color
         /// </summary>
-        /// <param name="request">更新颜色请求</param>
+        /// <param name="request">Update color request</param>
         /// <returns></returns>
         public async Task<IActionResult> OnPostUpdateColorAsync([FromBody] UpdateColorRequestDto request)
         {
             try
             {
-                // 调试信息
+                // debugging information
                 System.Diagnostics.Debug.WriteLine($"UpdateColor API Called - Id: {request.Id}, Red: {request.Red}, Green: {request.Green}, Blue: {request.Blue}, AdditionNote: {request.AdditionNote}");
                 
                 if (request == null)
@@ -137,7 +137,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                     return Ok(new { success = false, message = "颜色不存在" });
                 }
 
-                // 更新
+                // renew
                 color.Update(request);
                 
                 await _colorService.SaveObjectAsync(color);
@@ -152,15 +152,15 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        /// 删除颜色
+        ///delete color
         /// </summary>
-        /// <param name="request">删除颜色请求</param>
+        /// <param name="request">Delete color request</param>
         /// <returns></returns>
         public async Task<IActionResult> OnPostDeleteColorAsync([FromBody] DeleteColorRequestDto request)
         {
             try
             {
-                // 调试信息
+                // debugging information
                 System.Diagnostics.Debug.WriteLine($"DeleteColor API Called - Id: {request.Id}");
                 
                 if (request == null)
@@ -185,15 +185,15 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        /// 随机化指定颜色
+        /// Randomize the specified color
         /// </summary>
-        /// <param name="request">随机化颜色请求</param>
+        /// <param name="request">Randomize color request</param>
         /// <returns></returns>
         public async Task<IActionResult> OnPostRandomizeColorAsync([FromBody] RandomizeColorRequestDto request)
         {
             try
             {
-                // 调试信息
+                // debugging information
                 System.Diagnostics.Debug.WriteLine($"RandomizeColor API Called - Id: {request.Id}");
                 
                 if (request == null)
@@ -220,9 +220,9 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        /// 获取颜色详情
+        /// Get color details
         /// </summary>
-        /// <param name="id">颜色ID</param>
+        /// <param name="id">Color ID</param>
         /// <returns></returns>
         public async Task<IActionResult> OnGetColorDetailAsync(int id)
         {

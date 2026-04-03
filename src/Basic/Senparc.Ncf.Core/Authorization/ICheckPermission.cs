@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Core.Authorization
 {
     /// <summary>
-    /// 检查权限
+    ///check permissions
     /// </summary>
     public interface ICheckPermission
     {
         /// <summary>
-        /// 检查权限
+        ///check permissions
         /// </summary>
         /// <param name="resourceCodes"></param>
         /// <param name="adminUserInfoId"></param>
