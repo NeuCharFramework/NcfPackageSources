@@ -73,6 +73,49 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             });
         }
 
+        //[ApiBind]
+        [FunctionRender("从 PromptCode 快速创建智能体", "根据 PromptCode 快速创建智能体。支持靶场级别（如：RangeName）、靶道级别（如：RangeName-T1）、完整定位（如：RangeName-T1-A1）", typeof(Register))]
+        public async Task<StringAppResponse> CreateAgentFromPromptCode(AgentTemplate_CreateFromPromptCodeRequest request)
+        {
+            return await this.GetStringResponseAsync(async (response, logger) =>
+            {
+                var promptCode = request.GetPromptCode();
+
+                if (string.IsNullOrEmpty(promptCode))
+                {
+                    return "请选择或手动输入 PromptCode";
+                }
+
+                if (string.IsNullOrEmpty(request.Name))
+                {
+                    return "请输入智能体名称";
+                }
+
+                // 检查是否已有使用该 PromptCode 前缀的智能体
+                var existingAgents = await this._agentsTemplateService.GetObjectListAsync(0, 0,
+                    z => z.PromptCode != null && z.PromptCode.StartsWith(promptCode),
+                    z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
+
+                if (existingAgents.TotalCount > 0)
+                {
+                    var existingNames = string.Join("、", existingAgents.Select(z => z.Name));
+                    logger.Append($"⚠️ 注意：当前 PromptCode（{promptCode}）已有 {existingAgents.TotalCount} 个智能体使用：{existingNames}");
+                    logger.Append("已继续创建新智能体。");
+                }
+
+                var agentTemplateDto = new AgentTemplateDto(request.Name, promptCode, true,
+                    request.Description ?? "", promptCode,
+                    HookRobotType.None, "", null, request.FunctionCallNames);
+
+                await this._agentsTemplateService.UpdateAgentTemplateAsync(0, agentTemplateDto);
+
+                logger.Append($"✅ 智能体「{request.Name}」创建成功！");
+                logger.Append($"使用的 PromptCode：{promptCode}");
+
+                return logger.ToString();
+            });
+        }
+
 
         /// <summary>
         /// 获取 AgentTemplate 的列表
@@ -227,6 +270,32 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 await this._agentsTemplateService.SaveObjectAsync(agent);
 
                 return $"已完成{(enable ? "启用" : "停用")}";
+            });
+        }
+
+        /// <summary>
+        /// 根据 PromptCode 前缀获取匹配的 AgentTemplate 列表
+        /// </summary>
+        /// <param name="promptCode">PromptCode（支持前缀匹配，如"RangeName"、"RangeName-T1"、"RangeName-T1-A1"）</param>
+        /// <returns></returns>
+        [ApiBind]
+        public async Task<AppResponseBase<List<AgentTemplateSimpleStatusDto>>> GetListByPromptCode(string promptCode)
+        {
+            return await this.GetResponseAsync<List<AgentTemplateSimpleStatusDto>>(async (response, logger) =>
+            {
+                if (string.IsNullOrEmpty(promptCode))
+                {
+                    return new List<AgentTemplateSimpleStatusDto>();
+                }
+
+                var list = await this._agentsTemplateService.GetObjectListAsync(0, 0,
+                    z => z.PromptCode != null && z.PromptCode.StartsWith(promptCode),
+                    z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
+
+                var result = list.Select(z =>
+                    _agentsTemplateService.Mapping<AgentTemplateSimpleStatusDto>(z)).ToList();
+
+                return result;
             });
         }
 

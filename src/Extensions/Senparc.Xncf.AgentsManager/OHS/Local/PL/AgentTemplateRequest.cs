@@ -86,4 +86,45 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
 
 
     }
+
+    /// <summary>
+    /// 从 PromptCode 快速创建智能体的请求
+    /// </summary>
+    public class AgentTemplate_CreateFromPromptCodeRequest : FunctionAppRequestBase
+    {
+        [Required]
+        [MaxLength(50)]
+        [Description("智能体名称||新智能体的名称")]
+        public string Name { get; set; }
+
+        [Required]
+        [Description("PromptCode 作用范围||选择 PromptCode 覆盖范围（靶场级别/靶道级别/完整定位）。提示：可选择靶场名称（Range级别）、靶道前缀（Tactic级别）或完整版本号（精确定位）")]
+        public SelectionList ScopeSelection { get; set; } = new SelectionList(SelectionType.DropDownList);
+
+        [Description("手动输入 PromptCode||手动输入 PromptCode（支持靶场名称、靶道前缀或完整版本号），当选择[手动输入 SystemMessage]时必须在此处输入")]
+        public string ManualPromptCode { get; set; }
+
+        [Description("说明||对新智能体的说明（可选）")]
+        public string Description { get; set; }
+
+        [Description("Function Calls||Function Calls 名称列表，多个用逗号分隔（可选）")]
+        public string FunctionCallNames { get; set; }
+
+        public string GetPromptCode()
+        {
+            var selectionValue = ScopeSelection.SelectedValues.FirstOrDefault();
+            if (!string.IsNullOrEmpty(selectionValue) && selectionValue != "0")
+            {
+                return selectionValue;
+            }
+            return ManualPromptCode;
+        }
+
+        public override async Task LoadData(IServiceProvider serviceProvider)
+        {
+            await base.LoadData(serviceProvider);
+
+            await PromptRangeItemHelper.LoadPromptRangeItemSelection(serviceProvider, ScopeSelection);
+        }
+    }
 }

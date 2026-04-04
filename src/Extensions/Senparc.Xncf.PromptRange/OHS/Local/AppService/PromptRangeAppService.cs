@@ -6,9 +6,11 @@ using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Xncf.PromptRange.Domain.Models.Entities;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService;
 
@@ -117,5 +119,37 @@ public class PromptRangeAppService : AppServiceBase
                 throw new NcfExceptionBase("删除失败");
             }
         );
+    }
+
+    //[ApiBind]
+    /// <summary>
+    /// FunctionRender：查看靶场 PromptCode 列表（用于创建智能体）
+    /// </summary>
+    [FunctionRender("查看 PromptCode 列表", "查看所有靶场和靶道的 PromptCode，可用于在 AgentsManager 中快速创建智能体", typeof(Register))]
+    public async Task<StringAppResponse> ViewPromptCodeList(PromptRange_ViewPromptCodeRequest request)
+    {
+        return await this.GetStringResponseAsync(async (response, logger) =>
+        {
+            var promptItemService = base.GetService<PromptItemService>();
+            var tree = await promptItemService.GetPromptRangeTreeList(true, true);
+
+            logger.Append("=== PromptCode 列表（可用于在 AgentsManager 中创建智能体）===");
+            logger.Append("");
+            logger.Append("覆盖范围说明：");
+            logger.Append("  靶场级别（Range）：使用靶场名称作为 PromptCode，匹配该靶场下的最优 Prompt");
+            logger.Append("  靶道级别（Tactic）：使用「靶场名称-T战术编号」，匹配该战术下的最优 Prompt");
+            logger.Append("  完整定位（Full）：使用完整版本号，精确匹配指定 Prompt");
+            logger.Append("");
+
+            foreach (var item in tree)
+            {
+                logger.Append($"[{item.Level}] {item.Text}  →  PromptCode: {item.Value}");
+            }
+
+            logger.Append("");
+            logger.Append("提示：在 AgentsManager 模块中，使用[从 PromptCode 快速创建智能体]功能可基于以上 PromptCode 快速创建智能体。");
+
+            return logger.ToString();
+        });
     }
 }

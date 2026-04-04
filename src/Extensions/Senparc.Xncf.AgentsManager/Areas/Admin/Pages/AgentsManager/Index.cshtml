@@ -1165,6 +1165,17 @@
                 </el-form-item>
                 <el-form-item label="Function Calls" prop="functionCallNames">
                     <div class="function-call-container">
+                        <div style="margin-bottom: 8px;">
+                            <el-switch
+                                v-model="agentAutoAttachXncf"
+                                @@change="handleAutoAttachXncfChange"
+                                active-text="自动附加所有 XNCF 功能插件"
+                                inactive-text="手动选择">
+                            </el-switch>
+                            <el-tooltip content="开启后将自动附加所有已注册的 XNCF 功能插件，使智能体能自动识别并触发对应模块的功能" placement="top">
+                                <i class="el-icon-question" style="margin-left: 6px; color: #909399;"></i>
+                            </el-tooltip>
+                        </div>
                         <div class="function-call-tags">
                             <el-tag
                                 v-for="tag in agentForm.functionCallNames ? agentForm.functionCallNames.split(',').filter(x => x) : []"
@@ -1477,6 +1488,17 @@
         </el-form-item>
         <el-form-item label="Function Calls" prop="functionCallNames">
             <div class="function-call-container">
+                <div style="margin-bottom: 8px;">
+                    <el-switch
+                        v-model="agentAutoAttachXncf"
+                        @@change="handleAutoAttachXncfChange"
+                        active-text="自动附加所有 XNCF 功能插件"
+                        inactive-text="手动选择">
+                    </el-switch>
+                    <el-tooltip content="开启后将自动附加所有已注册的 XNCF 功能插件，使智能体能自动识别并触发对应模块的功能" placement="top">
+                        <i class="el-icon-question" style="margin-left: 6px; color: #909399;"></i>
+                    </el-tooltip>
+                </div>
                 <div class="function-call-tags">
                     <el-tag
                         v-for="tag in agentForm.functionCallNames ? agentForm.functionCallNames.split(',').filter(x => x) : []"
