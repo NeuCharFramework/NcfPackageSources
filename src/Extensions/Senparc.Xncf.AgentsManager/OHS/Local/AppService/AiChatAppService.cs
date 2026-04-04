@@ -211,7 +211,14 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 // 使用 EventBus 模式，在独立线程中运行任务（不阻塞）
                 var _ = Task.Run(async () =>
                 {
-                    await _chatGroupService.RunChatGroupInThread(runRequest);
+                    try
+                    {
+                        await _chatGroupService.RunChatGroupInThread(runRequest);
+                    }
+                    catch (Exception ex)
+                    {
+                        Senparc.CO2NET.Trace.SenparcTrace.BaseExceptionLog(ex);
+                    }
                 });
 
                 var taskName = runRequest.Name;
@@ -253,7 +260,14 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 // 使用 EventBus 模式，在独立线程中运行任务（不阻塞）
                 var _ = Task.Run(async () =>
                 {
-                    await _chatGroupService.RunChatGroupInThread(runRequest);
+                    try
+                    {
+                        await _chatGroupService.RunChatGroupInThread(runRequest);
+                    }
+                    catch (Exception ex)
+                    {
+                        Senparc.CO2NET.Trace.SenparcTrace.BaseExceptionLog(ex);
+                    }
                 });
 
                 return new AiChat_SendMessageResponse
@@ -409,9 +423,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         };
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // 解析失败时，将原始文本作为普通消息返回
+                // 解析失败时，将原始文本作为普通消息返回（AI 可能返回非 JSON 格式的内容）
+                Senparc.CO2NET.Trace.SenparcTrace.Log($"AiChatAppService ParseAiResponse 解析异常: {ex.Message}，原始响应: {aiResponseText?.Substring(0, Math.Min(200, aiResponseText?.Length ?? 0))}");
                 return new AiChat_SendMessageResponse
                 {
                     AiMessage = aiResponseText,

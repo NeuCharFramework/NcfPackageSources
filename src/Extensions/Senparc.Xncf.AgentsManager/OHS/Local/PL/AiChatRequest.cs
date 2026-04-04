@@ -47,7 +47,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
     /// <summary>
     /// AI 建议创建的 ChatGroup 信息
     /// </summary>
-    public class AiChat_SuggestedGroupDto    {
+    public class AiChat_SuggestedGroupDto
+    {
         /// <summary>
         /// 建议的组名称
         /// </summary>

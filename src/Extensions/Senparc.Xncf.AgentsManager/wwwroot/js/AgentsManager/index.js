@@ -3420,10 +3420,11 @@ Vue.component('load-more-select', {
       this.aiChatLoading = true
 
       try {
-        // 构建历史记录（只发送 user/assistant 角色）
+        // 构建历史记录（只发送 user/assistant 角色，不包含最新的用户消息）
+        // 先截取除最后一条外的所有消息，再过滤角色
         const chatHistory = this.aiChatMessages
+          .slice(0, -1)
           .filter(m => m.role === 'user' || m.role === 'assistant')
-          .slice(0, -1) // 不包含最新的用户消息
           .map(m => ({ role: m.role, content: m.content }))
 
         const payload = {
