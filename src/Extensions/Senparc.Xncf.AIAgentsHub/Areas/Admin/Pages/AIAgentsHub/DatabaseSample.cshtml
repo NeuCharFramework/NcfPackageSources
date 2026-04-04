@@ -3,7 +3,8 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{
     var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
-    ViewData["Title"] = AR["Common.DatabaseSample"];
+    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
+    ViewData["Title"] = CR["Common.DatabaseSample"];
     Layout = "_Layout_Vue";
 }
 
@@ -34,15 +35,15 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
     <el-breadcrumb-item>AI Agent Hub</el-breadcrumb-item>
-    <el-breadcrumb-item>@AR["Common.DatabaseSample"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@CR["Common.DatabaseSample"]</el-breadcrumb-item>
 }
 
 <div class="extensionAreaTemplate">
     <el-container>
         <el-header class="module-header">
-            <span class="start-title"> <i class="fa fa-dot-circle-o"></i>&nbsp;<span class="module-header-v">@AR["Common.DatabaseSample"]</span></span>
+            <span class="start-title"> <i class="fa fa-dot-circle-o"></i>&nbsp;<span class="module-header-v">@CR["Common.DatabaseSample"]</span></span>
         </el-header>
         <el-container v-if="moduleData">
             <el-aside width="200px">

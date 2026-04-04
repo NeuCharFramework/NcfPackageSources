@@ -3,6 +3,7 @@
 
 @inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
 
     ViewData["Title"] = AR["Auto.UI.3cff34768c13"];
     Layout = "_Layout_Vue";
@@ -14,7 +15,7 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["DynamicData.ModuleName"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["DynamicData.DataSheetSetTitle"]</el-breadcrumb-item>
 }
@@ -42,9 +43,9 @@
         <div class="main_content">
             @* 新增|编辑 数据表单区域 :rules="sheetFormRules" *@
             <el-form ref="sheetElForm" :inline="true" :model="sheetForm" :size="elSize" class="sheetForm-inline">
-                <el-form-item label="@AR["Common.Name"]" prop="name">
+                <el-form-item label="@CR["Common.Name"]" prop="name">
                     <div v-if="sheetFormEidt" class="formValueText" :title="sheetForm.name">{{ sheetForm.name }}</div>
-                    <el-input v-else v-model.trim="sheetForm.name" placeholder="@AR["Common.PleaseInputName"]"></el-input>
+                    <el-input v-else v-model.trim="sheetForm.name" placeholder="@CR["Common.PleaseInputName"]"></el-input>
                     
                 </el-form-item>
                 <el-form-item label="@AR["Auto.UI.3bdd08adab6e"]" prop="description">
@@ -52,10 +53,10 @@
                     <el-input v-else v-model.trim="sheetForm.description" placeholder="@AR["Auto.UI.11956a43e290"]"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button v-if="sheetFormEidt" type="primary" @@click="onEidtSheet">@AR["Common.Edit"]</el-button>
+                    <el-button v-if="sheetFormEidt" type="primary" @@click="onEidtSheet">@CR["Common.Edit"]</el-button>
                     <template v-else>
-                        <el-button type="primary" @@click="onSubmitSheet">@AR["Common.Confirm"]</el-button>
-                        <el-button v-if="sheetSelectId" @@click="onCancelEidtSheet">@AR["Common.Cancel"]</el-button>
+                        <el-button type="primary" @@click="onSubmitSheet">@CR["Common.Confirm"]</el-button>
+                        <el-button v-if="sheetSelectId" @@click="onCancelEidtSheet">@CR["Common.Cancel"]</el-button>
                     </template>
                     
                 </el-form-item>
@@ -87,10 +88,10 @@
                 </el-table-column>
                 <el-table-column prop="description" label="@AR["Auto.UI.3bdd08adab6e"]" width="180"></el-table-column>
                 @* fixed="right" *@
-                <el-table-column label="@AR["Common.Action"]" width="200">
+                <el-table-column label="@CR["Common.Action"]" width="200">
                     <template slot-scope="{row}">
-                        <el-button type="primary" :size="elSize" @@click="newFieldsEdit(row)">@AR["Common.Edit"]</el-button>
-                        <el-button type="danger" :size="elSize" @@click="newFieldsDelete(row)">@AR["Common.Delete"]</el-button>
+                        <el-button type="primary" :size="elSize" @@click="newFieldsEdit(row)">@CR["Common.Edit"]</el-button>
+                        <el-button type="danger" :size="elSize" @@click="newFieldsDelete(row)">@CR["Common.Delete"]</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -113,7 +114,7 @@
             @* // 内容中的主体内容 *@
         <div class="drawerRtl__body">
             <el-form ref="newFieldElForm" :model="newFieldForm" :rules="newFieldFormRules" :size="elSize" label-position="left" label-width="80px" class="newFieldForm-container">
-                <el-form-item label="@AR["Common.Name"]" prop="name">
+                <el-form-item label="@CR["Common.Name"]" prop="name">
                     <el-input v-model="newFieldForm.name" placeholder="@AR["Auto.UI.856d0df5f2c0"]"></el-input>
                 </el-form-item>
                 <el-form-item label="@AR["Auto.UI.b8ff4f592588"]" prop="identificationId">
@@ -181,8 +182,8 @@
             </div>
             @* // 内容中固定的footer *@
             <div class="drawerRtl__footer text-right">
-            <el-button :size="elSize" @@click="resetNewField()">@AR["Common.Cancel"]</el-button>
-            <el-button :size="elSize" type="primary" @@click="submitNewField">@AR["Common.Confirm"]</el-button>
+            <el-button :size="elSize" @@click="resetNewField()">@CR["Common.Cancel"]</el-button>
+            <el-button :size="elSize" type="primary" @@click="submitNewField">@CR["Common.Confirm"]</el-button>
             </div>
         </div>
 </el-drawer>

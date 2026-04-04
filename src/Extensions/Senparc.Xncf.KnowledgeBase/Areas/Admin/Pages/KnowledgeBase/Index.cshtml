@@ -3,6 +3,7 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{
     var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
     ViewData["Title"] = AR["KnowledgeBase.PageTitle"];
     Layout = "_Layout_Vue";
 }
@@ -12,7 +13,7 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["KnowledgeBase.ManagementTitle"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["KnowledgeBase.ListTitle"]</el-breadcrumb-item>
 }
@@ -21,24 +22,24 @@
     <div class="admin-role">
         <el-row class="filter-condition" :gutter="8">
             <el-col :span="2"></el-col>
-            <el-col :span="5"><el-input v-model="keyword" placeholder="@AR["Common.PleaseInputKeyword"]" size="mini"></el-input></el-col>
+            <el-col :span="5"><el-input v-model="keyword" placeholder="@CR["Common.PleaseInputKeyword"]" size="mini"></el-input></el-col>
             <el-col :span="2" class="operator_button">
-                <el-button type="primary" size="mini" @@click="handleSearch()">@AR["Common.Query"]</el-button>
-                <el-button type="primary" size="mini" @@click="resetCondition()">@AR["Common.Reset"]</el-button>
+                <el-button type="primary" size="mini" @@click="handleSearch()">@CR["Common.Query"]</el-button>
+                <el-button type="primary" size="mini" @@click="resetCondition()">@CR["Common.Reset"]</el-button>
             </el-col>
         </el-row>
         <div class="filter-container">
             <el-row type="flex" class="row-bg" justify="end">
                 <el-col :span="23">
-                    <el-button class="filter-item" size="mini" type="primary" icon="el-icon-plus" @@click="handleEdit('','','add')">@AR["Common.Add"]</el-button>
+                    <el-button class="filter-item" size="mini" type="primary" icon="el-icon-plus" @@click="handleEdit('','','add')">@CR["Common.Add"]</el-button>
                 </el-col>
                 <el-col :span="1">
                     <!-- 筛选按钮 -->
-                    <el-popover placement="bottom" title="@AR["Common.FilterColumns"]" trigger="click" width="40">
+                    <el-popover placement="bottom" title="@CR["Common.FilterColumns"]" trigger="click" width="40">
                         <el-checkbox-group v-model="checkedColumns" size="mini">
                             <el-checkbox v-for="item in checkBoxGroup" :key="item" :label="item" :value="item"></el-checkbox>
                         </el-checkbox-group>
-                        <div title="@AR["Common.FilterColumns"]" class="filter-table-col" slot="reference">
+                        <div title="@CR["Common.FilterColumns"]" class="filter-table-col" slot="reference">
                             <i class="el-icon-s-operation"></i>
                         </div>
                     </el-popover>
@@ -53,29 +54,29 @@
 
             <el-table-column v-if="colData[2].istrue" prop="chatModelId" align="left" label="@AR["KnowledgeBase.ChatModelId"]" sortable :filters="filterTableHeader.chatModelId" :filter-method="filterHandler"></el-table-column>
 
-            <el-table-column v-if="colData[3].istrue" prop="name" align="left" label="@AR["Common.Name"]" sortable :filters="filterTableHeader.name" :filter-method="filterHandler"></el-table-column>
+            <el-table-column v-if="colData[3].istrue" prop="name" align="left" label="@CR["Common.Name"]" sortable :filters="filterTableHeader.name" :filter-method="filterHandler"></el-table-column>
 
-            <el-table-column v-if="colData[4].istrue" prop="content" align="left" label="@AR["Common.Content"]" sortable :filters="filterTableHeader.content" :filter-method="filterHandler"></el-table-column>
+            <el-table-column v-if="colData[4].istrue" prop="content" align="left" label="@CR["Common.Content"]" sortable :filters="filterTableHeader.content" :filter-method="filterHandler"></el-table-column>
 
             <el-table-column align="center"
-                             label="@AR["Common.AddTime"]" sortable>
+                             label="@CR["Common.AddTime"]" sortable>
                 <template slot-scope="scope">
                     {{formaTableTime(scope.row.addTime)}}
                 </template>
             </el-table-column>
-            <el-table-column label="@AR["Common.Action"]" align="center" fixed="right" width="350">
+            <el-table-column label="@CR["Common.Action"]" align="center" fixed="right" width="350">
                 <template slot-scope="scope">
                     <el-button size="mini"
                                type="primary"
-                               @@click="handleElVisibleOpenBtn('drawerGroup',scope.row)">@AR["Common.Configure"]</el-button>
+                               @@click="handleElVisibleOpenBtn('drawerGroup',scope.row)">@CR["Common.Configure"]</el-button>
                     <el-button size="mini"
                                type="primary"
                                @@click="handleEmbeddingBtn('embedding',scope.row)">@AR["KnowledgeBase.Vectorize"]</el-button>
                     <el-button size="mini"
                                type="primary"
-                               @@click="handleEdit(scope.$index, scope.row,'edit')">@AR["Common.Edit"]</el-button>
+                               @@click="handleEdit(scope.$index, scope.row,'edit')">@CR["Common.Edit"]</el-button>
                     <el-popconfirm placement="top" title="@AR["KnowledgeBase.ConfirmDeleteKnowledgeBase"]" @@on-confirm="handleDelete(scope.$index, scope.row)">
-                        <el-button size="mini" type="danger" slot="reference">@AR["Common.Delete"]</el-button>
+                        <el-button size="mini" type="danger" slot="reference">@CR["Common.Delete"]</el-button>
                     </el-popconfirm>
                 </template>
             </el-table-column>
@@ -98,8 +99,8 @@
                      label-position="left"
                      label-width="150px"
                      style="max-width: 600px; margin-left:50px;">
-                <el-form-item label="@AR["Common.Name"]" prop="name">
-                    <el-input size="mini" v-model="dialog.data.name" clearable placeholder="@AR["Common.PleaseInputName"]" />
+                <el-form-item label="@CR["Common.Name"]" prop="name">
+                    <el-input size="mini" v-model="dialog.data.name" clearable placeholder="@CR["Common.PleaseInputName"]" />
                 </el-form-item>
 
                 <el-form-item label="@AR["KnowledgeBase.SelectEmbeddingModel"]">
@@ -144,13 +145,13 @@
                     <el-input size="mini" v-model="dialog.data.chatModelId" clearable placeholder="@AR["KnowledgeBase.PleaseInputChatModelId"]" />
                 </el-form-item>
 
-                <el-form-item label="@AR["Common.Content"]" prop="content">
-                    <el-input type="textarea" size="mini" v-model="dialog.data.content" clearable placeholder="@AR["Common.PleaseInputContent"]" />
+                <el-form-item label="@CR["Common.Content"]" prop="content">
+                    <el-input type="textarea" size="mini" v-model="dialog.data.content" clearable placeholder="@CR["Common.PleaseInputContent"]" />
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button size="mini" @@click="dialog.visible=false">@AR["Common.Cancel"]</el-button>
-                <el-button size="mini" :loading="dialog.updateLoading" :disabled="dialog.disabled" type="primary" @@click="updateData">@AR["Common.Confirm"]</el-button>
+                <el-button size="mini" @@click="dialog.visible=false">@CR["Common.Cancel"]</el-button>
+                <el-button size="mini" :loading="dialog.updateLoading" :disabled="dialog.disabled" type="primary" @@click="updateData">@CR["Common.Confirm"]</el-button>
             </div>
         </el-dialog>
 
@@ -177,21 +178,21 @@
                                 <div class="df-wn flex-ac flex-jsb" style="gap: 10px;margin-bottom: 10px;">
                                     <div class="df-wn flex-ac" style="gap: 10px;">
                                         <el-input v-model="fileQueryList.filter" size="small"
-                                                  placeholder="@AR["Common.FileName"]" style="width:auto;"></el-input>
+                                                  placeholder="@CR["Common.FileName"]" style="width:auto;"></el-input>
                                         <el-button size="small" icon="el-icon-search"
-                                                   @@click="handleConfigFileSearch">@AR["Common.Search"]</el-button>
+                                                   @@click="handleConfigFileSearch">@CR["Common.Search"]</el-button>
                                     </div>
                                 </div>
                                 <div class="df-wn flex-ac flex-jsb" style="gap: 10px;margin-bottom: 10px;">
                                     <div class="df-wn flex-ac" style="gap: 10px;">
                                         <el-button size="small" type="primary" icon="el-icon-upload2"
-                                                   @@click="handleElVisibleOpenBtn('dialogFile')">@AR["Common.UploadFile"]</el-button>
+                                                   @@click="handleElVisibleOpenBtn('dialogFile')">@CR["Common.UploadFile"]</el-button>
                                         <el-button size="small" type="danger" icon="el-icon-delete"
-                                                   @@click="handleConfigFileBatchDelete">@AR["Common.BatchDelete"]</el-button>
+                                                   @@click="handleConfigFileBatchDelete">@CR["Common.BatchDelete"]</el-button>
                                     </div>
                                 </div>
                                 <div class="df-wn flex-as flex-js" style="gap: 10px;margin-bottom: 10px;">
-                                    <span class="groupFMB_ma_label">@AR["Common.SelectedColon"]</span>
+                                    <span class="groupFMB_ma_label">@CR["Common.SelectedColon"]</span>
                                     <div class="groupFMB_ma_list">
                                         <div class="df flex-ac flex-js" style="gap:10px">
                                             <div v-for="(item,index) in groupForm.files" :key="item.id"
@@ -207,9 +208,9 @@
                                           style="width: 100%;margin-bottom: 10px;border: 1px solid rgba(229, 229, 229, 1);"
                                           @@selection-change="handleConfigFileSelectionChange">
                                     <el-table-column type="selection" width="30"></el-table-column>
-                                    <el-table-column prop="fileName" label="@AR["Common.FileName"]" width="200"
+                                    <el-table-column prop="fileName" label="@CR["Common.FileName"]" width="200"
                                                      show-overflow-tooltip></el-table-column>
-                                    <el-table-column prop="fileSize" label="@AR["Common.FileSize"]" width="100">
+                                    <el-table-column prop="fileSize" label="@CR["Common.FileSize"]" width="100">
                                     </el-table-column>
                                     <el-table-column label="@AR["FileManager.UploadTime"]" width="130" align="center">
                                         <template slot-scope="scope">
@@ -218,12 +219,12 @@
                                     </el-table-column>
                               @*       <el-table-column prop="description" label="@AR["Auto.UI.3bdd08adab6e"]" min-width="100">
                                     </el-table-column> *@
-                                    <el-table-column fixed="right" label="@AR["Common.Action"]" width="130">
+                                    <el-table-column fixed="right" label="@CR["Common.Action"]" width="130">
                                         <template slot-scope="{ row }">
                                             @* <el-button type="primary" size="small"
-                                                       @@click="handleEditDrawerOpenBtn('dialogGroupAgent',row)">@AR["Common.Edit"]</el-button> *@
+                                                       @@click="handleEditDrawerOpenBtn('dialogGroupAgent',row)">@CR["Common.Edit"]</el-button> *@
                                             <el-button type="danger" size="small"
-                                                       @@click="handleConfigFileDelete(row)">@AR["Common.Delete"]</el-button>
+                                                       @@click="handleConfigFileDelete(row)">@CR["Common.Delete"]</el-button>
                                         </template>
                                     </el-table-column>
                                 </el-table>
@@ -240,15 +241,15 @@
                                 </div>
                             </div>
                         </el-form-item>
-                        <el-form-item v-if="groupForm.contentType === 1 || groupForm.contentType === 3" label="@AR["Common.Content"]">
-                            <el-input type="textarea" v-model="groupForm.content" :rows="4" placeholder="@AR["Common.PleaseFill"]"></el-input>
+                        <el-form-item v-if="groupForm.contentType === 1 || groupForm.contentType === 3" label="@CR["Common.Content"]">
+                            <el-input type="textarea" v-model="groupForm.content" :rows="4" placeholder="@CR["Common.PleaseFill"]"></el-input>
                         </el-form-item>
                     </el-form>
                 </div>
                 @* 内容中固定的footer *@
                 <div class="drawerRtl__footer text-right">
-                    <el-button :size="elSize" @@click="handleElVisibleClose('drawerGroup')">@AR["Common.Cancel"]</el-button>
-                    <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerGroup')">@AR["Common.Confirm"]</el-button>
+                    <el-button :size="elSize" @@click="handleElVisibleClose('drawerGroup')">@CR["Common.Cancel"]</el-button>
+                    <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerGroup')">@CR["Common.Confirm"]</el-button>
                 </div>
             </div>
         </el-drawer>
@@ -268,11 +269,11 @@
                        :on-success="configUploadSuccess"
                        :on-error="configUploadError"
                        :file-list="configUploadFileList">
-                <el-button slot="trigger" size="small" type="primary">@AR["Common.SelectFile"]</el-button>
+                <el-button slot="trigger" size="small" type="primary">@CR["Common.SelectFile"]</el-button>
                 <div slot="tip" class="el-upload__tip">@AR["Auto.UI.b82bce0cf35f"]</div>
             </el-upload>
             <div slot="footer" class="dialog-footer">
-                <el-button size="mini" @@click="visible.dialogFile = false">@AR["Common.Close"]</el-button>
+                <el-button size="mini" @@click="visible.dialogFile = false">@CR["Common.Close"]</el-button>
             </div>
         </el-dialog>
 
@@ -298,7 +299,7 @@
                 <pre class="embedding-result-pre">{{ embeddingResultText }}</pre>
             </div>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" size="small" @@click="visible.embeddingResult = false; getList()">@AR["Common.Confirm"]</el-button>
+                <el-button type="primary" size="small" @@click="visible.embeddingResult = false; getList()">@CR["Common.Confirm"]</el-button>
             </div>
         </el-dialog>
     </div>

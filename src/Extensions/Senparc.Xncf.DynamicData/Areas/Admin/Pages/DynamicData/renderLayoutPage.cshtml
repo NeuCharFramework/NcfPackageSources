@@ -2,6 +2,7 @@
 @model Senparc.Xncf.DynamicData.Areas.Admin.Pages.DynamicData.renderLayoutPageModel
 @inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
 
     ViewData["Title"] = AR["Auto.UI.ea1127fe472d"];
     Layout = "_Layout_Vue";
@@ -13,7 +14,7 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["DynamicData.ModuleName"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["Auto.UI.9f79dbb48478"]</el-breadcrumb-item>
 }
@@ -119,8 +120,8 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @@click="handleSubmitBtnEdit(item)">@AR["Common.Submit"]</el-button>
-                        @* <el-button @@click="resetForm('ruleForm')">@AR["Common.Reset"]</el-button> *@
+                        <el-button type="primary" @@click="handleSubmitBtnEdit(item)">@CR["Common.Submit"]</el-button>
+                        @* <el-button @@click="resetForm('ruleForm')">@CR["Common.Reset"]</el-button> *@
                     </el-form-item>
                 </el-form>
             </template>

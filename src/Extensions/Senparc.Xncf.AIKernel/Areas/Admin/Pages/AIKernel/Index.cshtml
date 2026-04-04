@@ -3,6 +3,7 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{
     var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
     ViewData["Title"] = AR["AIKernel.HomeTitle"];
     Layout = "_Layout_Vue";
 }
@@ -12,20 +13,20 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["AIKernel.ModuleName"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@AR["Common.Home"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@CR["Common.Home"]</el-breadcrumb-item>
 }
 
 <div>
     <div class="filter-container">
-        <el-button type="primary" icon="el-icon-plus" size="small" @@click="addModel">@AR["Common.Add"]</el-button>
+        <el-button type="primary" icon="el-icon-plus" size="small" @@click="addModel">@CR["Common.Add"]</el-button>
         <el-button type="primary" icon="el-icon-plus" size="small" @@click="addNeuCharModel">@AR["AIKernel.ImportNeuCharAIModel"]</el-button>
     </div>
 
     <el-table :data="tableData" v-loading="tableLoading" border>
         @* alias *@
-        <el-table-column prop="alias" label="@AR["Common.Alias"]" width="auto"></el-table-column>
+        <el-table-column prop="alias" label="@CR["Common.Alias"]" width="auto"></el-table-column>
         <el-table-column prop="modelId" label="@AR["AIKernel.ModelName"]" width="auto"></el-table-column>
             @* <template slot-scope="scope">
                 <span v-if="scope.row.modelId==='text-davinci-003'">text-davinci-003</span>
@@ -38,7 +39,7 @@
             </template> *@
         <el-table-column prop="deploymentName" label="@AR["AIKernel.DeploymentName"]" width="auto"></el-table-column>
         <el-table-column prop="endpoint" label="Endpoint" width="auto"></el-table-column>
-        <el-table-column prop="aiPlatform" label="@AR["Common.Platform"]" width="auto">
+        <el-table-column prop="aiPlatform" label="@CR["Common.Platform"]" width="auto">
             <template slot-scope="scope">
                 <span v-if="scope.row.aiPlatform===4">NeuCharAI</span>
                 <span v-else-if="scope.row.aiPlatform===8">OpenAI</span>
@@ -47,7 +48,7 @@
                 <span v-else-if="scope.row.aiPlatform===128">FastAPI</span>
                 <span v-else-if="scope.row.aiPlatform===256">Ollama</span>
                 <span v-else-if="scope.row.aiPlatform===512">DeepSeek</span>
-                <span v-else type="danger">@AR["Common.Unknown"]</span>
+                <span v-else type="danger">@CR["Common.Unknown"]</span>
             </template>
         </el-table-column>
         <el-table-column prop="configModelType" label="@AR["AIKernel.ModelType"]" width="auto">
@@ -71,17 +72,17 @@
                 </div>
             </template>
         </el-table-column>
-        <el-table-column prop="note" label="@AR["Common.Remark"]" width="auto"></el-table-column>
-        <el-table-column prop="addTime" label="@AR["Common.AddTime"]" width="auto">
+        <el-table-column prop="note" label="@CR["Common.Remark"]" width="auto"></el-table-column>
+        <el-table-column prop="addTime" label="@CR["Common.AddTime"]" width="auto">
             <template slot-scope="scope">
                 {{ dateformatter(scope.row.addTime) }}
             </template>
         </el-table-column>
-        @* 操作 *@
-        <el-table-column label="@AR["Common.Action"]" width="auto">
+        @* Actions *@
+        <el-table-column label="@CR["Common.Action"]" width="auto">
             <template slot-scope="scope">
-                <el-button type="primary" size="mini" @@click="editModel(scope.row)">@AR["Common.Edit"]</el-button>
-                <el-button type="danger" size="mini" @@click="deleteModel(scope.row)">@AR["Common.Delete"]</el-button>
+                <el-button type="primary" size="mini" @@click="editModel(scope.row)">@CR["Common.Edit"]</el-button>
+                <el-button type="danger" size="mini" @@click="deleteModel(scope.row)">@CR["Common.Delete"]</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -99,14 +100,14 @@
     </div>
 
 
-    @* dialog for 添加模型 *@
+    @* Dialog for adding a model *@
     <el-dialog title="@AR["AIKernel.AddModel"]" :visible.sync="addFormDialogVisible" width="50%" :close-on-click-modal="false">
         <el-form :model="addForm" label-width="120px" :rules="addRules" ref="addForm">
-            <el-form-item label="@AR["Common.Alias"]" prop="alias">
+            <el-form-item label="@CR["Common.Alias"]" prop="alias">
                 <el-input v-model="addForm.alias"></el-input>
             </el-form-item>
-            <el-form-item label="@AR["Common.Platform"]" prop="aiPlatform">
-                <el-select v-model="addForm.aiPlatform" placeholder="@AR["Common.PleaseSelect"]">
+            <el-form-item label="@CR["Common.Platform"]" prop="aiPlatform">
+                <el-select v-model="addForm.aiPlatform" placeholder="@CR["Common.PleaseSelect"]">
                     <el-option label="NeuCharAI" value="4"></el-option>
                     <el-option label="OpenAI" value="8"></el-option>
                     <el-option label="AzureOpenAI" value="16"></el-option>
@@ -117,7 +118,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="@AR["AIKernel.ModelType"]" prop="configModelType">
-                <el-select v-model="addForm.configModelType" placeholder="@AR["Common.PleaseSelect"]">
+                <el-select v-model="addForm.configModelType" placeholder="@CR["Common.PleaseSelect"]">
                     <el-option label="TextCompletion" value="1"></el-option>
                     <el-option label="Chat" value="2"></el-option>
                     <el-option label="TextEmbedding" value="3"></el-option>
@@ -129,7 +130,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="@AR["AIKernel.ModelName"]" v-if="addForm.aiPlatform==='4'" prop="modelId">
-                <el-select  v-model="addForm.modelId" filterable allow-create default-first-option placeholder="@AR["Common.PleaseSelect"]">
+                <el-select  v-model="addForm.modelId" filterable allow-create default-first-option placeholder="@CR["Common.PleaseSelect"]">
                     <el-option label="text-davinci-003" value="text-davinci-003"></el-option>
                     <el-option label="gpt-4" value="gpt-4"></el-option>
                     <el-option label="text-embedding-ada-002" value="text-embedding-ada-002"></el-option>
@@ -140,7 +141,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="@AR["AIKernel.ModelName"]" v-else-if="addForm.aiPlatform==='512'" prop="modelId">
-                <el-select v-model="addForm.modelId" filterable allow-create default-first-option placeholder="@AR["Common.PleaseSelect"]">
+                <el-select v-model="addForm.modelId" filterable allow-create default-first-option placeholder="@CR["Common.PleaseSelect"]">
                     <el-option label="deepseek-chat" value="deepseek-chat"></el-option>
                     <el-option label="deepseek-coder" value="deepseek-coder"></el-option>
                 </el-select>
@@ -165,10 +166,10 @@
            <el-form-item label="@AR["AIKernel.OrganizationId"]"  v-if="addForm.aiPlatform==='8'" prop="organizationId">
                 <el-input v-model="addForm.organizationId" type="password"></el-input>
             </el-form-item>
-            <el-form-item label="@AR["Common.Remark"]" prop="note">
+            <el-form-item label="@CR["Common.Remark"]" prop="note">
                 <el-input v-model="addForm.note"></el-input>
             </el-form-item>
-            @* <el-form-item label="@AR["Common.Show"]"> *@
+            @* <el-form-item label="@CR["Common.Show"]"> *@
             @*     $1$ use switch #1# *@
             @*     <el-switch v-model="addForm.show"></el-switch> *@
             @* </el-form-item> *@
@@ -177,17 +178,17 @@
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="addFormDialogVisible = false">@AR["Common.Cancel"]</el-button>
-            <el-button type="primary" @@click="addModelSubmit">@AR["Common.Confirm"]</el-button>
+            <el-button @@click="addFormDialogVisible = false">@CR["Common.Cancel"]</el-button>
+            <el-button type="primary" @@click="addModelSubmit">@CR["Common.Confirm"]</el-button>
         </span>
     </el-dialog>
-    @* dialog for 编辑模型 *@
+    @* Dialog for editing a model *@
     <el-dialog title="@AR["AIKernel.EditModel"]" :visible.sync="editFormDialogVisible" width="50%" :close-on-click-modal="false">
         <el-form :model="editForm" label-width="120px" :rules="editRules" ref="editForm">
-            <el-form-item label="@AR["Common.Alias"]" prop="alias">
+            <el-form-item label="@CR["Common.Alias"]" prop="alias">
                 <el-input v-model="editForm.alias"></el-input>
             </el-form-item>
-            <el-form-item label="@AR["Common.Platform"]" prop="aiPlatform">
+            <el-form-item label="@CR["Common.Platform"]" prop="aiPlatform">
                 @* NeuCharAI = 4, *@
                 @*  OpenAI = 8, *@
                 @*  AzureOpenAI = 16, *@
@@ -197,7 +198,7 @@
                 @*  DeepSeek = 512 *@
                 @* <el-input type="number" v-model="editForm.aiPlatform"></el-input> *@
                 @* use el-select *@
-                <el-select v-model="editForm.aiPlatform" placeholder="@AR["Common.PleaseSelect"]">
+                <el-select v-model="editForm.aiPlatform" placeholder="@CR["Common.PleaseSelect"]">
                     <el-option label="NeuCharAI" value="4"></el-option>
                     <el-option label="OpenAI" value="8"></el-option>
                     <el-option label="AzureOpenAI" value="16"></el-option>
@@ -209,7 +210,7 @@
             </el-form-item>
 
             <el-form-item label="@AR["AIKernel.ModelType"]" prop="configModelType">
-                <el-select v-model="editForm.configModelType" placeholder="@AR["Common.PleaseSelect"]">
+                <el-select v-model="editForm.configModelType" placeholder="@CR["Common.PleaseSelect"]">
                     <el-option label="TextCompletion" value="1"></el-option>
                     <el-option label="Chat" value="2"></el-option>
                     <el-option label="TextEmbedding" value="3"></el-option>
@@ -222,7 +223,7 @@
             </el-form-item>
 
             <el-form-item label="@AR["AIKernel.ModelName"]" prop="modelId">
-                <el-select v-if="editForm.aiPlatform==='4'" v-model="editForm.modelId" filterable allow-create default-first-option placeholder="@AR["Common.PleaseSelect"]">
+                <el-select v-if="editForm.aiPlatform==='4'" v-model="editForm.modelId" filterable allow-create default-first-option placeholder="@CR["Common.PleaseSelect"]">
                     <el-option label="text-davinci-003" value="text-davinci-003"></el-option>
                     <el-option label="gpt-4" value="gpt-4"></el-option>
                     <el-option label="text-embedding-ada-002" value="text-embedding-ada-002"></el-option>
@@ -230,7 +231,7 @@
                     <el-option label="gpt-35-turbo-instruct" value="gpt-35-turbo-instruct"></el-option>
                     <el-option label="dall-e-3" value="dall-e-3"></el-option>
                 </el-select>
-                <el-select v-if="editForm.aiPlatform==='512'" v-model="editForm.modelId" filterable allow-create default-first-option placeholder="@AR["Common.PleaseSelect"]">
+                <el-select v-if="editForm.aiPlatform==='512'" v-model="editForm.modelId" filterable allow-create default-first-option placeholder="@CR["Common.PleaseSelect"]">
                     <el-option label="deepseek-chat" value="deepseek-chat"></el-option>
                     <el-option label="deepseek-coder" value="deepseek-coder"></el-option>
                 </el-select>
@@ -253,10 +254,10 @@
              <el-form-item label="@AR["AIKernel.OrganizationId"]"  v-if="editForm.aiPlatform==='8'" prop="organizationId">
                     <el-input v-model="editForm.organizationId" type="password" placeholder="********"></el-input>
                 </el-form-item>
-            <el-form-item label="@AR["Common.Remark"]" prop="note">
+            <el-form-item label="@CR["Common.Remark"]" prop="note">
                     <el-input v-model="editForm.note"></el-input>
                 </el-form-item>
-               <el-form-item label="@AR["Common.Show"]" prop="show">
+               <el-form-item label="@CR["Common.Show"]" prop="show">
                     @* use switch *@
                     <el-switch v-model="editForm.show"></el-switch>
                 </el-form-item>
@@ -268,12 +269,12 @@
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="editFormDialogVisible = false">@AR["Common.Cancel"]</el-button>
-            <el-button type="primary" @@click="editModelSubmit">@AR["Common.Confirm"]</el-button>
+            <el-button @@click="editFormDialogVisible = false">@CR["Common.Cancel"]</el-button>
+            <el-button type="primary" @@click="editModelSubmit">@CR["Common.Confirm"]</el-button>
         </span>
     </el-dialog>
 
-    <!-- dialog for 导入 NeuCharAI 云端模型算力 -->  
+    <!-- Dialog for importing NeuCharAI cloud model capacity -->  
     <el-dialog title="@AR["AIKernel.ImportNeuCharAIModel"]" :visible.sync="neuCharFormDialogVisible" width="50%" :close-on-click-modal="false">  
         <el-form :model="neuCharForm" label-width="120px" :rules="neuCharRules" ref="neuCharForm">  
             <el-form-item label="DeveloperId" prop="developerId">  
@@ -285,8 +286,8 @@
             <p><i class="fa fa-info-circle"></i>@AR["Auto.UI.c9bcc52eb92c"] <a href="https://www.neuchar.com/Developer/AiApp" target="_blank">https://www.neuchar.com/Developer/AiApp</a> <i class="fa fa-external-link" aria-hidden="true"></i> @AR["Auto.UI.96a5783b3137"]</p>
         </el-form>  
         <span slot="footer" class="dialog-footer">  
-            <el-button @@click="neuCharFormDialogVisible = false">@AR["Common.Cancel"]</el-button>  
-            <el-button type="primary" @@click="addNeuCharModelSubmit">@AR["Common.Confirm"]</el-button>  
+            <el-button @@click="neuCharFormDialogVisible = false">@CR["Common.Cancel"]</el-button>  
+            <el-button type="primary" @@click="addNeuCharModelSubmit">@CR["Common.Confirm"]</el-button>  
         </span>  
     </el-dialog>  
 

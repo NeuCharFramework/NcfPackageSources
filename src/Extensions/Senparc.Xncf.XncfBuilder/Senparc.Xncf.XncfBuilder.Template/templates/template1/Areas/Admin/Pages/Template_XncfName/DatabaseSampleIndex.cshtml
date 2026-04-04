@@ -2,6 +2,7 @@
 @model Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages.DatabaseSampleIndex
 @inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
 
     ViewData["Title"] = AR["Auto.UI.6d8884ca4608"];
     Layout = "_Layout_Vue";
@@ -12,7 +13,7 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
     <el-breadcrumb-item>Template_MenuName</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["Auto.UI.6d8884ca4608"]</el-breadcrumb-item>
 }
@@ -90,11 +91,11 @@
                 {{ dateformatter(scope.row.lastUpdateTime) }}
             </template>
         </el-table-column>
-        <el-table-column label="@AR["Common.Action"]" width="auto">
+        <el-table-column label="@CR["Common.Action"]" width="auto">
             <template slot-scope="scope">
-                <el-button type="primary" size="mini" @@click="editColor(scope.row)">@AR["Common.Edit"]</el-button>
-                <el-button type="warning" size="mini" @@click="randomizeColor(scope.row)">@AR["Common.Random"]</el-button>
-                <el-button type="danger" size="mini" @@click="deleteColor(scope.row)">@AR["Common.Delete"]</el-button>
+                <el-button type="primary" size="mini" @@click="editColor(scope.row)">@CR["Common.Edit"]</el-button>
+                <el-button type="warning" size="mini" @@click="randomizeColor(scope.row)">@CR["Common.Random"]</el-button>
+                <el-button type="danger" size="mini" @@click="deleteColor(scope.row)">@CR["Common.Delete"]</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -137,8 +138,8 @@
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="addFormDialogVisible = false">@AR["Common.Cancel"]</el-button>
-            <el-button type="primary" @@click="addColorSubmit">@AR["Common.Confirm"]</el-button>
+            <el-button @@click="addFormDialogVisible = false">@CR["Common.Cancel"]</el-button>
+            <el-button type="primary" @@click="addColorSubmit">@CR["Common.Confirm"]</el-button>
         </span>
     </el-dialog>
 
@@ -167,8 +168,8 @@
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="editFormDialogVisible = false">@AR["Common.Cancel"]</el-button>
-            <el-button type="primary" @@click="editColorSubmit">@AR["Common.Confirm"]</el-button>
+            <el-button @@click="editFormDialogVisible = false">@CR["Common.Cancel"]</el-button>
+            <el-button type="primary" @@click="editColorSubmit">@CR["Common.Confirm"]</el-button>
         </span>
     </el-dialog>
 </div>

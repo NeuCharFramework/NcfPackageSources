@@ -3,13 +3,14 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{
     var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
     ViewData["Title"] = AR["WeixinManager.MpAccountManagement"];
     Layout = "_Layout_Vue";
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@AR["Common.ModuleManagement"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@CR["Common.ModuleManagement"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["WeixinManager.Management"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["WeixinManager.MpAccountManagement"]</el-breadcrumb-item>
 }
@@ -17,8 +18,8 @@
 <div>
     <div class="admin-role">
         <div class="filter-container">
-            <el-button size="small" class="filter-item" type="primary" icon="el-icon-plus" @@click="add">@AR["Common.Add"]</el-button>
-            <el-button size="small" class="filter-item" type="danger" icon="el-icon-delete" @@click="del">@AR["Common.Delete"]</el-button>
+            <el-button size="small" class="filter-item" type="primary" icon="el-icon-plus" @@click="add">@CR["Common.Add"]</el-button>
+            <el-button size="small" class="filter-item" type="danger" icon="el-icon-delete" @@click="del">@CR["Common.Delete"]</el-button>
         </div>
         <el-table :data="tableData"
                   border
@@ -36,7 +37,7 @@
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="@AR["Common.Name"]">
+                             label="@CR["Common.Name"]">
                 <template slot-scope="scope">
                     {{ scope.row.name}}
                 </template>
@@ -88,20 +89,20 @@
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="@AR["Common.Remark"]">
+                             label="@CR["Common.Remark"]">
                 <template slot-scope="scope">
                     {{ scope.row.adminRemark}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="@AR["Common.Description"]">
+                             label="@CR["Common.Description"]">
                 <template slot-scope="scope">
                     {{ scope.row.remark}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
                              width="145"
-                             label="@AR["Common.AddTime"]">
+                             label="@CR["Common.AddTime"]">
                 <template slot-scope="scope">
                     {{formaTableTime(scope.row.addTime)}}
                 </template>
@@ -113,7 +114,7 @@
                     <a :href="'/WeixinMp/'+ scope.row.name + '?parameter=' + scope.row.id" target="_blank" :title="@AR["Auto.UI.5e233444d144"]"><i class="fa fa-external-link"></i> @AR["Auto.UI.d7098f5050f0"]</a>
                 </template>
             </el-table-column>
-            <el-table-column label="@AR["Common.Action"]" align="center" width="200" fixed="right">
+            <el-table-column label="@CR["Common.Action"]" align="center" width="200" fixed="right">
                 <template slot-scope="scope">
                     <el-button size="mini"
                                type="primary"
@@ -151,7 +152,7 @@
             <el-form-item label="PromptRangeCode" prop="promptRangeCode">
                 <el-input v-model="mpAccountForm.promptRangeCode"></el-input>
             </el-form-item>
-            <el-form-item label="@AR["Common.Remark"]" prop="adminRemark">
+            <el-form-item label="@CR["Common.Remark"]" prop="adminRemark">
                 <el-input v-model="mpAccountForm.adminRemark"></el-input>
             </el-form-item>
             <el-form-item label="URL">
@@ -163,8 +164,8 @@
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="dialog.visible = false">@AR["Common.Cancel"]</el-button>
-            <el-button :loading="dialog.loading" type="primary" @@click="saveMpAccount">@AR["Common.Confirm"]</el-button>
+            <el-button @@click="dialog.visible = false">@CR["Common.Cancel"]</el-button>
+            <el-button :loading="dialog.loading" type="primary" @@click="saveMpAccount">@CR["Common.Confirm"]</el-button>
         </div>
     </el-dialog>
 </div>
@@ -199,28 +200,28 @@
                 mpAccountRule: {
                     name: [
                         { required: true, message: '@AR["WeixinManager.PleaseInputMpAccountName"]', trigger: 'blur' },
-                        { min: 1, max: 100, message: '@AR["Common.LengthBetween1And100"]', trigger: 'blur' }
+                        { min: 1, max: 100, message: '@CR["Common.LengthBetween1And100"]', trigger: 'blur' }
                     ],
                     appId: [
                         { required: true, message: '请输入AppId', trigger: 'blur' },
-                        { min: 1, max: 100, message: '@AR["Common.LengthBetween1And100"]', trigger: 'blur' }
+                        { min: 1, max: 100, message: '@CR["Common.LengthBetween1And100"]', trigger: 'blur' }
                     ],
                     appSecret: [
                         { required: true, message: '请输入AppSecret', trigger: 'blur' },
-                        { min: 1, max: 100, message: '@AR["Common.LengthBetween1And100"]', trigger: 'blur' }
+                        { min: 1, max: 100, message: '@CR["Common.LengthBetween1And100"]', trigger: 'blur' }
                     ],
                     token: [
                         { required: true, message: '请输入Token', trigger: 'blur' },
-                        { min: 1, max: 500, message: '@AR["Common.LengthBetween1And500"]', trigger: 'blur' }
+                        { min: 1, max: 500, message: '@CR["Common.LengthBetween1And500"]', trigger: 'blur' }
                     ],
                     encodingAESKey: [
-                        { min: 0, max: 500, message: '@AR["Common.LengthBetween1And500"]', trigger: 'blur' }
+                        { min: 0, max: 500, message: '@CR["Common.LengthBetween1And500"]', trigger: 'blur' }
                     ],
                     promptRangeCode: [
-                        { min: 0, max: 500, message: '@AR["Common.LengthBetween1And100"]', trigger: 'blur' }
+                        { min: 0, max: 500, message: '@CR["Common.LengthBetween1And100"]', trigger: 'blur' }
                     ],
                     adminRemark: [
-                        { min: 0, max: 100, message: '@AR["Common.LengthBetween1And100"]', trigger: 'blur' }
+                        { min: 0, max: 100, message: '@CR["Common.LengthBetween1And100"]', trigger: 'blur' }
                     ]
                 },
                 uid: '',

@@ -4,13 +4,14 @@
 @{
     //var namePrefix = Model.MpAccountDto != null ? $"{Model.MpAccountDto.Name
     var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
 }的" : "所有";
     //ViewData["Title"] = $"{namePrefix}用户";
     Layout = "_Layout_Vue";
 }
 @section breadcrumbs {
-    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@AR["Common.ModuleManagement"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@CR["Common.ModuleManagement"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["WeixinManager.Management"]</el-breadcrumb-item>
     <el-breadcrumb-item>{{docTitle}}</el-breadcrumb-item>
 }
@@ -21,7 +22,7 @@
             <template v-if="mpAccountDto">
                 <el-button size="small" class="filter-item" type="primary" icon="el-icon-plus" :loading="addLoading" @@click="addUser('add')">@AR["Auto.UI.60e1bae1f8bb"]</el-button>
                 <el-button size="small" class="filter-item" type="primary" @@click="asyncUser" :loading="isLoading"><i class="fa fa-exchange"></i> @AR["Auto.UI.c521327348cd"]</el-button>
-                <el-button size="small" class="filter-item" type="danger" icon="el-icon-delete" @@click="del">@AR["Common.Delete"]</el-button>
+                <el-button size="small" class="filter-item" type="danger" icon="el-icon-delete" @@click="del">@CR["Common.Delete"]</el-button>
                 <span><small>@AR["Auto.UI.c592b1df7604"]</small></span>
             </template>
         </div>
@@ -60,7 +61,7 @@
                 <template slot-scope="scope">
                     <span v-if="scope.row.sex == 1">@AR["Auto.UI.36a4908a5577"]</span>
                     <span v-if="scope.row.sex == 2">@AR["Auto.UI.87c835a6b174"]</span>
-                    <span v-if="scope.row.sex != 2 && scope.row.sex != 1">@AR["Common.Unknown"]</span>
+                    <span v-if="scope.row.sex != 2 && scope.row.sex != 1">@CR["Common.Unknown"]</span>
                 </template>
             </el-table-column>
 
@@ -115,28 +116,28 @@
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="@AR["Common.Remark"]">
+                             label="@CR["Common.Remark"]">
                 <template slot-scope="scope">
                     {{scope.row.adminRemark}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="@AR["Common.Description"]">
+                             label="@CR["Common.Description"]">
                 <template slot-scope="scope">
                     {{scope.row.adminRemark}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
                              width="145"
-                             label="@AR["Common.AddTime"]">
+                             label="@CR["Common.AddTime"]">
                 <template slot-scope="scope">
                     {{formaTableTime(scope.row.addTime)}}
                 </template>
             </el-table-column>
-            @*<el-table-column label="@AR["Common.Action"]" align="center" width="100"fixed="right">
+            @*<el-table-column label="@CR["Common.Action"]" align="center" width="100"fixed="right">
                 <template slot-scope="scope">
                     <el-popconfirm placement="top" title="@AR["Auto.UI.71d71cd9ca97"]" @@on-confirm="deleteCheck(scope.$index, scope.row)">
-                        <el-button size="mini" type="danger" slot="reference">@AR["Common.Delete"]</el-button>
+                        <el-button size="mini" type="danger" slot="reference">@CR["Common.Delete"]</el-button>
                     </el-popconfirm>
                 </template>
             </el-table-column>*@

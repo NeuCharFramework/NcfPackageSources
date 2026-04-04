@@ -2,6 +2,7 @@
 @model Senparc.Xncf.SenMapic.Areas.Admin.Pages.SenMapic.Task.DetailModel
 @inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
 
     ViewData["Title"] = AR["Auto.UI.8ce1c7e92577"];
 }
@@ -9,7 +10,7 @@
 <div class="admin-site">
     <div class="admin-site-header">
         <el-breadcrumb separator="/">
-            <el-breadcrumb-item>@AR["Common.Home"]</el-breadcrumb-item>
+            <el-breadcrumb-item>@CR["Common.Home"]</el-breadcrumb-item>
             <el-breadcrumb-item>@AR["Auto.UI.481ff04e318a"]</el-breadcrumb-item>
             <el-breadcrumb-item>@AR["Auto.UI.4a98bf0c6835"]</el-breadcrumb-item>
         </el-breadcrumb>

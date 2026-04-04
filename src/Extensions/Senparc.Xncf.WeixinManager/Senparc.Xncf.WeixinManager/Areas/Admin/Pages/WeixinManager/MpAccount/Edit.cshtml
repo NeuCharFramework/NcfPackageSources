@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = (Model.IsEdit ? "编辑" : "新增 ") + "公众号";
     var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
 }
 <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
@@ -86,8 +87,8 @@
                     <div class="ln_solid"></div>
                     <div class="form-group">
                         <div class="col-md-6 col-md-offset-3">
-                            <a asp-page="./Index" asp-route-uid="@Model.XncfModuleDto.Uid" class="btn btn-primary">@AR["Common.Cancel"]</a>
-                            <button id="send" type="submit" class="btn btn-success">@AR["Common.Submit"]</button>
+                            <a asp-page="./Index" asp-route-uid="@Model.XncfModuleDto.Uid" class="btn btn-primary">@CR["Common.Cancel"]</a>
+                            <button id="send" type="submit" class="btn btn-success">@CR["Common.Submit"]</button>
                         </div>
                     </div>
                 </form>

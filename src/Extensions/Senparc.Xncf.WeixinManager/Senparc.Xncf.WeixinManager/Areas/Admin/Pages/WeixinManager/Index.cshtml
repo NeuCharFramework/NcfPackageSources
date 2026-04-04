@@ -2,6 +2,7 @@
 @model Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager.IndexModel
 @inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
 
     ViewData["Title"] = AR["Auto.UI.cb37be64be76"];
     Layout = "_Layout_Vue";
@@ -64,7 +65,7 @@
 
 }
 @section breadcrumbs {
-    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["WeixinManager.Management"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["Auto.UI.cb37be64be76"]</el-breadcrumb-item>
 }
@@ -134,7 +135,7 @@
                                             <li><i class="fa fa-thumbs-up"></i><a href="#">@AR["Auto.UI.fdc5054a4b75"]</a></li>
                                             <li><i class="fa fa-calendar-o"></i><a href="#">@AR["Auto.UI.5209e564bb44"]</a></li>
                                             <li><i class="fa fa-area-chart"></i><a href="#">@AR["Auto.UI.85936242fc9e"]</a></li>
-                                            <li><i class="fa fa-cog"></i><a :href="`/Admin/WeixinManager/MpAccount?uid=${uid}`">@AR["Common.Edit"]</a></li>
+                                            <li><i class="fa fa-cog"></i><a :href="`/Admin/WeixinManager/MpAccount?uid=${uid}`">@CR["Common.Edit"]</a></li>
                                         </ul>
                                     </div>
                                 </el-col>

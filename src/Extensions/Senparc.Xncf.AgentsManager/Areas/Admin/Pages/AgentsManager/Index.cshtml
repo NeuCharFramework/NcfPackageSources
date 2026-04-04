@@ -5,6 +5,7 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{
     var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
     ViewData["Title"] = AR["AgentsManager.PageTitle"];
     Layout = "_Layout_Vue";
 }
@@ -268,7 +269,7 @@
                                                 <el-button type="primary" size="mini"
                                                     @@click="handleElVisibleOpenBtn('drawerGroupStart',agentDetailsGroupDetails)">@AR["AgentsManager.Start"]</el-button>
                                                 <el-button type="primary" size="mini"
-                                                    @@click="handleEditDrawerOpenBtn('drawerGroup',agentDetailsGroupDetails)">@AR["Common.Edit"]</el-button>
+                                                    @@click="handleEditDrawerOpenBtn('drawerGroup',agentDetailsGroupDetails)">@CR["Common.Edit"]</el-button>
                                                 <el-button type="primary" size="mini"
                                                     @@click="handleTaskStartBatch('agentGroupTaskBatch',agentDetailsGroupDetails)">@AR["AgentsManager.BatchStart"]</el-button>
                                                 <el-button type="danger" size="mini"
@@ -333,7 +334,7 @@
                                                 {{ row.promptCommand }}
                                             </template>
                                         </el-table-column>
-                                        <el-table-column fixed="right" label="@AR["Common.Action"]" width="350">
+                                        <el-table-column fixed="right" label="@CR["Common.Action"]" width="350">
                                             <template slot-scope="{ row }">
                                                 <el-button type="primary" size="mini"
                                                     @@click="viewAgentParameters('agentGroupTask')">@AR["AgentsManager.AgentParameters"]</el-button>
@@ -342,7 +343,7 @@
                                                 <el-button type="primary" size="mini"
                                                     @@click="handleTaskAgain('agentGroupTask', row)">@AR["AgentsManager.RunAgain"]</el-button>
                                                 <el-button type="danger" size="mini"
-                                                    @@click="handleTaskDelet('agentGroupTask', row)">@AR["Common.Delete"]</el-button>
+                                                    @@click="handleTaskDelet('agentGroupTask', row)">@CR["Common.Delete"]</el-button>
                                             </template>
                                         </el-table-column>
                                     </el-table>
@@ -415,7 +416,7 @@
                                                 <div class="value">
                                                     @* 编辑 type="primary" *@
                                                     <el-button type="text" size="mini"
-                                                        @@click="taskEvaluation(agentDetailsGroupDetailsTaskDetails)">@AR["Common.Edit"]</el-button>
+                                                        @@click="taskEvaluation(agentDetailsGroupDetailsTaskDetails)">@CR["Common.Edit"]</el-button>
                                                 </div>
                                             </div>
                                         </template>
@@ -526,7 +527,7 @@
                                             <div class="value">
                                                 @* 编辑 type="primary" *@
                                                 <el-button type="text" size="mini"
-                                                    @@click="taskEvaluation(agentDetailsTaskDetails)">@AR["Common.Edit"]</el-button>
+                                                    @@click="taskEvaluation(agentDetailsTaskDetails)">@CR["Common.Edit"]</el-button>
                                             </div>
                                         </div>
                                     </template>
@@ -687,16 +688,16 @@
                                 {{ row.enterAgentTemplateName }}
                             </template>
                         </el-table-column>
-                        <el-table-column fixed="right" label="@AR["Common.Action"]" width="290">
+                        <el-table-column fixed="right" label="@CR["Common.Action"]" width="290">
                             <template slot-scope="{ row,$index }">
                                 <el-button type="primary" size="mini"
                                     @@click="handleElVisibleOpenBtn('drawerGroupStart',row)">@AR["AgentsManager.Start"]</el-button>
                                 <el-button type="primary" size="mini"
-                                    @@click="handleEditDrawerOpenBtn('drawerGroup',row)">@AR["Common.Edit"]</el-button>
+                                    @@click="handleEditDrawerOpenBtn('drawerGroup',row)">@CR["Common.Edit"]</el-button>
                                 <el-button type="primary" size="mini"
                                     @@click="handleGroupView('groupTable',row,$index)">@AR["AgentsManager.Details"]</el-button>
                                 <el-button type="danger" size="mini"
-                                    @@click="handleGroupDelete('groupTable',row)">@AR["Common.Delete"]</el-button>
+                                    @@click="handleGroupDelete('groupTable',row)">@CR["Common.Delete"]</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -712,7 +713,7 @@
                                 <el-button type="primary" size="mini"
                                     @@click="handleElVisibleOpenBtn('drawerGroupStart',groupDetails)">@AR["AgentsManager.Start"]</el-button>
                                 <el-button type="primary" size="mini"
-                                    @@click="handleEditDrawerOpenBtn('drawerGroup',groupDetails)">@AR["Common.Edit"]</el-button>
+                                    @@click="handleEditDrawerOpenBtn('drawerGroup',groupDetails)">@CR["Common.Edit"]</el-button>
                                 <el-button type="primary" size="mini"
                                     @@click="handleTaskStartBatch('groupTaskBatch',groupDetails)">@AR["AgentsManager.BatchStart"]</el-button>
                                 <el-button type="danger" size="mini"
@@ -768,7 +769,7 @@
                                 {{ row.promptCommand }}
                             </template>
                         </el-table-column>
-                        <el-table-column fixed="right" label="@AR["Common.Action"]" width="350">
+                        <el-table-column fixed="right" label="@CR["Common.Action"]" width="350">
                             <template slot-scope="{ row }">
                                 <el-button type="primary" size="mini"
                                     @@click="viewAgentParameters('groupTask')">@AR["AgentsManager.AgentParameters"]</el-button>
@@ -777,7 +778,7 @@
                                 <el-button type="primary" size="mini"
                                     @@click="handleTaskAgain('groupTask', row)">@AR["AgentsManager.RunAgain"]</el-button>
                                 <el-button type="danger" size="mini"
-                                    @@click="handleTaskDelet('groupTask', row)">@AR["Common.Delete"]</el-button>
+                                    @@click="handleTaskDelet('groupTask', row)">@CR["Common.Delete"]</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -843,7 +844,7 @@
                                 <div class="value">
                                     @* 编辑 type="primary" *@
                                     <el-button type="text" size="mini"
-                                        @@click="taskEvaluation(groupTaskDetails)">@AR["Common.Edit"]</el-button>
+                                        @@click="taskEvaluation(groupTaskDetails)">@CR["Common.Edit"]</el-button>
                                 </div>
                             </div>
                         </template>
@@ -989,7 +990,7 @@
                                 {{ row.promptCommand }}
                             </template>
                         </el-table-column>
-                        <el-table-column fixed="right" label="@AR["Common.Action"]" width="350">
+                        <el-table-column fixed="right" label="@CR["Common.Action"]" width="350">
                             <template slot-scope="{ row,$index }">
                                 <el-button type="primary" size="mini"
                                     @@click="viewAgentParameters('task', row)">@AR["AgentsManager.AgentParameters"]</el-button>
@@ -998,7 +999,7 @@
                                 <el-button type="primary" size="mini"
                                     @@click="handleTaskAgain('task', row)">@AR["AgentsManager.RunAgain"]</el-button>
                                 <el-button type="danger" size="mini"
-                                    @@click="handleTaskDelet('task', row)">@AR["Common.Delete"]</el-button>
+                                    @@click="handleTaskDelet('task', row)">@CR["Common.Delete"]</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -1055,7 +1056,7 @@
                             <div class="lable">@AR["AgentsManager.TaskEvaluation"]:</div>
                             <div class="value">
                                 @* 编辑 type="primary" *@
-                                <el-button type="text" size="mini" @@click="taskEvaluation(taskDetails)">@AR["Common.Edit"]</el-button>
+                                <el-button type="text" size="mini" @@click="taskEvaluation(taskDetails)">@CR["Common.Edit"]</el-button>
                             </div>
                         </div>
                     </div>
@@ -1281,22 +1282,22 @@
                             </el-input>
                             
                             <div class="endpoint-input-actions">
-                                <el-button size="small" type="primary" @@click="handleMcpEndpointInputConfirm">@AR["Common.Confirm"]</el-button>
-                                <el-button size="small" @@click="cancelMcpEndpointInput">@AR["Common.Cancel"]</el-button>
+                                <el-button size="small" type="primary" @@click="handleMcpEndpointInputConfirm">@CR["Common.Confirm"]</el-button>
+                                <el-button size="small" @@click="cancelMcpEndpointInput">@CR["Common.Cancel"]</el-button>
                             </div>
                         </div>
                     </div>
                 </el-form-item>
                 
-                <el-form-item label="@AR["Common.Remark"]" prop="description">
+                <el-form-item label="@CR["Common.Remark"]" prop="description">
                     <el-input type="textarea" v-model="agentForm.description" :rows="4" placeholder="@AR["AgentsManager.FillAdminOnly"]"></el-input>
                 </el-form-item>
             </el-form>
         </div>
         @* 内容中固定的footer *@
         <div class="drawerRtl__footer text-right">
-            <el-button :size="elSize" @@click="handleElVisibleClose('drawerAgent')">@AR["Common.Cancel"]</el-button>
-            <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerAgent')">@AR["Common.Confirm"]</el-button>
+            <el-button :size="elSize" @@click="handleElVisibleClose('drawerAgent')">@CR["Common.Cancel"]</el-button>
+            <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerAgent')">@CR["Common.Confirm"]</el-button>
         </div>
     </div>
 </el-drawer>
@@ -1350,12 +1351,12 @@
                                 show-overflow-tooltip></el-table-column>
                             <el-table-column prop="score" label="@AR["AgentsManager.Score"]" width="100">
                             </el-table-column>
-                            <el-table-column prop="description" label="@AR["Common.Description"]" min-width="100">
+                            <el-table-column prop="description" label="@CR["Common.Description"]" min-width="100">
                             </el-table-column>
-                            <el-table-column fixed="right" label="@AR["Common.Action"]" width="100">
+                            <el-table-column fixed="right" label="@CR["Common.Action"]" width="100">
                                 <template slot-scope="{ row }">
                                     <el-button type="primary" size="small"
-                                        @@click="handleEditDrawerOpenBtn('dialogGroupAgent',row)">@AR["Common.Edit"]</el-button>
+                                        @@click="handleEditDrawerOpenBtn('dialogGroupAgent',row)">@CR["Common.Edit"]</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -1374,15 +1375,15 @@
                     @* @change="handleChange($event,'')" *@
                     <load-more-select v-model="groupForm.enterAgentTemplateId" service-type='agent' placeholder="@AR["AgentsManager.PleaseSelect"]" />
                 </el-form-item>
-                <el-form-item label="@AR["Common.Description"]">
+                <el-form-item label="@CR["Common.Description"]">
                     <el-input type="textarea" v-model="groupForm.description" :rows="4" placeholder="@AR["AgentsManager.PleaseFill"]"></el-input>
                 </el-form-item>
             </el-form>
         </div>
         @* 内容中固定的footer *@
         <div class="drawerRtl__footer text-right">
-            <el-button :size="elSize" @@click="handleElVisibleClose('drawerGroup')">@AR["Common.Cancel"]</el-button>
-            <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerGroup')">@AR["Common.Confirm"]</el-button>
+            <el-button :size="elSize" @@click="handleElVisibleClose('drawerGroup')">@CR["Common.Cancel"]</el-button>
+            <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerGroup')">@CR["Common.Confirm"]</el-button>
         </div>
     </div>
 </el-drawer>
@@ -1418,7 +1419,7 @@
                     <el-input type="textarea" v-model="groupStartForm.promptCommand" :rows="8"
                         placeholder="@AR["AgentsManager.WhatCanIDoForYou"]"></el-input>
                 </el-form-item>
-                <el-form-item label="@AR["Common.Description"]" prop="description">
+                <el-form-item label="@CR["Common.Description"]" prop="description">
                     <el-input type="textarea" v-model="groupStartForm.description" :rows="8"
                         placeholder="@AR["AgentsManager.PleaseFill"]"></el-input>
                 </el-form-item>
@@ -1426,8 +1427,8 @@
         </div>
         @* 内容中固定的footer *@
         <div class="drawerRtl__footer text-right">
-            <el-button :size="elSize" @@click="handleElVisibleClose('drawerGroupStart')">@AR["Common.Cancel"]</el-button>
-            <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerGroupStart')">@AR["Common.Confirm"]</el-button>
+            <el-button :size="elSize" @@click="handleElVisibleClose('drawerGroupStart')">@CR["Common.Cancel"]</el-button>
+            <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerGroupStart')">@CR["Common.Confirm"]</el-button>
         </div>
     </div>
 </el-drawer>
@@ -1455,7 +1456,7 @@
         <el-form-item label="@AR["AgentsManager.EnableSwitch"]" prop="enable">
             <el-checkbox v-model="agentForm.enable">@AR["AgentsManager.EnableAgent"]</el-checkbox>
         </el-form-item>
-        <el-form-item label="@AR["Common.Description"]" prop="description">
+        <el-form-item label="@CR["Common.Description"]" prop="description">
             <el-input type="textarea" v-model="agentForm.description" :rows="4" placeholder="@AR["AgentsManager.PleaseFill"]"></el-input>
         </el-form-item>
         <el-form-item label="@AR["AgentsManager.ExternalPlatform"]" prop="hookRobotType">
@@ -1593,16 +1594,16 @@
                     </el-input>
                     
                     <div class="endpoint-input-actions">
-                        <el-button size="small" type="primary" @@click="handleMcpEndpointInputConfirm">@AR["Common.Confirm"]</el-button>
-                        <el-button size="small" @@click="cancelMcpEndpointInput">@AR["Common.Cancel"]</el-button>
+                        <el-button size="small" type="primary" @@click="handleMcpEndpointInputConfirm">@CR["Common.Confirm"]</el-button>
+                        <el-button size="small" @@click="cancelMcpEndpointInput">@CR["Common.Cancel"]</el-button>
                     </div>
                 </div>
             </div>
         </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-        <el-button @@click="handleElVisibleClose('dialogGroupAgent')">@AR["Common.Cancel"]</el-button>
-        <el-button type="primary" @@click="handleElVisibleSubmit('dialogGroupAgent')">@AR["Common.Confirm"]</el-button>
+        <el-button @@click="handleElVisibleClose('dialogGroupAgent')">@CR["Common.Cancel"]</el-button>
+        <el-button type="primary" @@click="handleElVisibleSubmit('dialogGroupAgent')">@CR["Common.Confirm"]</el-button>
     </div>
 </el-dialog>
 @* Dialog Carousel 智能体 参数列表 *@
@@ -1726,7 +1727,7 @@
         </el-tabs>
     </div>
     <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @@click="handleElVisibleClose('dialogAgentParameter')">@AR["Common.Close"]</el-button>
+        <el-button type="primary" @@click="handleElVisibleClose('dialogAgentParameter')">@CR["Common.Close"]</el-button>
     </div>
 </el-dialog>
 @* Dialog @AR["AgentsManager.TaskDescription"] *@
@@ -1740,7 +1741,7 @@
             <i class="far fa-clone"></i>
             @AR["AgentsManager.OneClickCopy"]
         </el-button>
-        <el-button @@click="handleElVisibleClose('dialogTaskDescription')">@AR["Common.Close"]</el-button>
+        <el-button @@click="handleElVisibleClose('dialogTaskDescription')">@CR["Common.Close"]</el-button>
     </div>
 </el-dialog>
 @* Dialog 任务评价 *@
@@ -1759,8 +1760,8 @@
         </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @@click="handleElVisibleSubmit('dialogTaskEvaluation')">@AR["Common.Confirm"]</el-button>
-        <el-button @@click="handleElVisibleClose('dialogTaskEvaluation')">@AR["Common.Cancel"]</el-button>
+        <el-button type="primary" @@click="handleElVisibleSubmit('dialogTaskEvaluation')">@CR["Common.Confirm"]</el-button>
+        <el-button @@click="handleElVisibleClose('dialogTaskEvaluation')">@CR["Common.Cancel"]</el-button>
     </div>
 </el-dialog>
 @* Dialog MCP工具列表 *@
@@ -1768,7 +1769,7 @@
     <div v-if="currentMcpTools && currentMcpTools.length > 0">
         <el-table :data="currentMcpTools" style="width: 100%">
             <el-table-column prop="name" label="@AR["AgentsManager.ToolName"]" width="180"></el-table-column>
-            <el-table-column prop="description" label="@AR["Common.Description"]"></el-table-column>
+            <el-table-column prop="description" label="@CR["Common.Description"]"></el-table-column>
             <el-table-column label="@AR["AgentsManager.Parameters"]" width="300">
                 <template slot-scope="scope">
                     <div v-if="scope.row.parameters && scope.row.parameters.length > 0">
@@ -1785,7 +1786,7 @@
         <div class="empty-text">@AR["AgentsManager.NoAvailableTools"]</div>
     </div>
     <div class="dialog-footer" slot="footer">
-        <el-button type="primary" @@click="visible.dialogMcpTools = false">@AR["Common.Close"]</el-button>
+        <el-button type="primary" @@click="visible.dialogMcpTools = false">@CR["Common.Close"]</el-button>
     </div>
 </el-dialog>
 @section scripts {

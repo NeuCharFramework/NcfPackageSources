@@ -2,6 +2,7 @@
 @model Senparc.Xncf.DynamicData.Areas.Admin.Pages.DynamicData.PageSetModel
 @inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
 
     ViewData["Title"] = AR["Auto.UI.d8175faeb205"];
     Layout = "_Layout_Vue";
@@ -13,13 +14,13 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["DynamicData.ModuleName"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["Auto.UI.f814108b8381"]</el-breadcrumb-item>
 }
 
 <div class="interfaceSet-page">
-    <el-button type="primary" icon="el-icon-plus" :size="elSize" @@click="createLayout">@AR["Common.Add"]</el-button>
+    <el-button type="primary" icon="el-icon-plus" :size="elSize" @@click="createLayout">@CR["Common.Add"]</el-button>
     <section class="df flex-as flex-js cardArea">
         <div v-for="item in layoutList" :key="item.id" class="df-wn flex-dc flex-ac cardItem">
             <img :src="item.thumbnail" alt="缩略图" class="cardItem_thumbnail" />

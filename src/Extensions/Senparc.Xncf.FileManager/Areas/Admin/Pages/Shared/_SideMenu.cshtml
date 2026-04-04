@@ -1,10 +1,11 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{
     var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
 }
 ﻿    <el-menu-item index="1">
-        <a :href="'/Admin/FileManager/Index?uid='+moduleData.xncfModuleDto.uid"><i class="fa fa-laptop"></i>@AR["Common.Home"]</a>
+        <a :href="'/Admin/FileManager/Index?uid='+moduleData.xncfModuleDto.uid"><i class="fa fa-laptop"></i>@CR["Common.Home"]</a>
     </el-menu-item>
     <el-menu-item index="2">
-        <a :href="'/Admin/FileManager/DatabaseSample?uid='+moduleData.xncfModuleDto.uid"><i class="fa fa-bookmark-o"></i>@AR["Common.DatabaseSample"]</a>
+        <a :href="'/Admin/FileManager/DatabaseSample?uid='+moduleData.xncfModuleDto.uid"><i class="fa fa-bookmark-o"></i>@CR["Common.DatabaseSample"]</a>
     </el-menu-item>

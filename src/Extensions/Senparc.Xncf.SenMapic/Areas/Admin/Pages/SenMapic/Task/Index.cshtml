@@ -2,6 +2,7 @@
 @model Senparc.Xncf.SenMapic.Areas.Admin.Pages.SenMapic.Task.IndexModel
 @inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
 
     ViewData["Title"] = AR["Auto.UI.481ff04e318a"];
 }
@@ -9,7 +10,7 @@
 <div class="admin-site">
     <div class="admin-site-header">
         <el-breadcrumb separator="/">
-            <el-breadcrumb-item>@AR["Common.Home"]</el-breadcrumb-item>
+            <el-breadcrumb-item>@CR["Common.Home"]</el-breadcrumb-item>
             <el-breadcrumb-item>@AR["Auto.UI.481ff04e318a"]</el-breadcrumb-item>
         </el-breadcrumb>
     </div>
@@ -32,11 +33,11 @@
                         <el-tag :type="getStatusType(scope.row.status)">{{getStatusText(scope.row.status)}}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column label="@AR["Common.Action"]" width="200">
+                <el-table-column label="@CR["Common.Action"]" width="200">
                     <template slot-scope="scope">
                         <el-button size="mini" type="primary" @@click="handleStart(scope.row)" 
                                  :disabled="scope.row.status !== 0">@AR["Auto.UI.a3e3b88377c8"]</el-button>
-                        <el-button size="mini" type="danger" @@click="handleDelete(scope.row)">@AR["Common.Delete"]</el-button>
+                        <el-button size="mini" type="danger" @@click="handleDelete(scope.row)">@CR["Common.Delete"]</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -69,8 +70,8 @@
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="dialogVisible = false">@AR["Common.Cancel"]</el-button>
-            <el-button type="primary" @@click="handleSubmit">@AR["Common.Confirm"]</el-button>
+            <el-button @@click="dialogVisible = false">@CR["Common.Cancel"]</el-button>
+            <el-button type="primary" @@click="handleSubmit">@CR["Common.Confirm"]</el-button>
         </div>
     </el-dialog>
 </div>

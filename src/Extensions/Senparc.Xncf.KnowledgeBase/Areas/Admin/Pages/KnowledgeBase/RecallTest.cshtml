@@ -3,6 +3,7 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{
     var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
     ViewData["Title"] = AR["KnowledgeBase.RecallTest"];
     Layout = "_Layout_Vue";
 }
@@ -12,7 +13,7 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["KnowledgeBase.Management"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["KnowledgeBase.RecallTest"]</el-breadcrumb-item>
 }
@@ -139,8 +140,8 @@
             </div>
         </div>
         <div class="search-settings-footer">
-            <el-button size="small" @@click="visible.searchSettingsDrawer = false">@AR["Common.Cancel"]</el-button>
-            <el-button size="small" type="primary" @@click="saveSearchSettings">@AR["Common.Save"]</el-button>
+            <el-button size="small" @@click="visible.searchSettingsDrawer = false">@CR["Common.Cancel"]</el-button>
+            <el-button size="small" type="primary" @@click="saveSearchSettings">@CR["Common.Save"]</el-button>
         </div>
     </el-drawer>
 
@@ -159,7 +160,7 @@
             <div class="paragraph-detail-title" v-if="paragraphDetailItem.title">{{ paragraphDetailItem.title }}</div>
             <div class="paragraph-detail-content">{{ paragraphDetailItem.content || '—' }}</div>
             <div class="paragraph-detail-keywords" v-if="paragraphDetailTags.length">
-                <span class="paragraph-detail-keywords-label">@AR["Common.Keywords"]</span>
+                <span class="paragraph-detail-keywords-label">@CR["Common.Keywords"]</span>
                 <div class="paragraph-detail-tags">
                     <span v-for="(tag, ti) in paragraphDetailTags" :key="ti" class="recall-tag">#{{ tag }}</span>
                 </div>
@@ -171,10 +172,10 @@
         <el-button size="small" type="primary" @@click="addAttr" style="margin-bottom:10px">@AR["Auto.UI.17914471fa31"]</el-button>
         <el-table :data="attributeList" size="small" border>
             <el-table-column prop="name" label="@AR["KnowledgeBase.AttrName"]"></el-table-column>
-            <el-table-column label="@AR["Common.Action"]" width="150" align="center">
+            <el-table-column label="@CR["Common.Action"]" width="150" align="center">
                 <template slot-scope="scope">
-                    <el-button type="text" size="small" @@click="editAttr(scope.row)">@AR["Common.Edit"]</el-button>
-                    <el-button type="text" size="small" class="danger" @@click="deleteAttr(scope.row)">@AR["Common.Delete"]</el-button>
+                    <el-button type="text" size="small" @@click="editAttr(scope.row)">@CR["Common.Edit"]</el-button>
+                    <el-button type="text" size="small" class="danger" @@click="deleteAttr(scope.row)">@CR["Common.Delete"]</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -183,12 +184,12 @@
                 <el-input v-model="attrForm.name" placeholder="@AR["KnowledgeBase.AttrName"]"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" size="small" @@click="saveAttr">@AR["Common.Save"]</el-button>
-                <el-button size="small" @@click="visible.attrForm = false">@AR["Common.Cancel"]</el-button>
+                <el-button type="primary" size="small" @@click="saveAttr">@CR["Common.Save"]</el-button>
+                <el-button size="small" @@click="visible.attrForm = false">@CR["Common.Cancel"]</el-button>
             </el-form-item>
         </el-form>
         <div slot="footer">
-            <el-button size="small" @@click="visible.attrDialog = false">@AR["Common.Close"]</el-button>
+            <el-button size="small" @@click="visible.attrDialog = false">@CR["Common.Close"]</el-button>
         </div>
     </el-dialog>
 
@@ -196,10 +197,10 @@
         <el-button size="small" type="primary" @@click="addTag" style="margin-bottom:10px">@AR["Auto.UI.abe2cdff0070"]</el-button>
         <el-table :data="tagList" size="small" border>
             <el-table-column prop="name" label="@AR["KnowledgeBase.TagName"]"></el-table-column>
-            <el-table-column label="@AR["Common.Action"]" width="150" align="center">
+            <el-table-column label="@CR["Common.Action"]" width="150" align="center">
                 <template slot-scope="scope">
-                    <el-button type="text" size="small" @@click="editTag(scope.row)">@AR["Common.Edit"]</el-button>
-                    <el-button type="text" size="small" class="danger" @@click="deleteTag(scope.row)">@AR["Common.Delete"]</el-button>
+                    <el-button type="text" size="small" @@click="editTag(scope.row)">@CR["Common.Edit"]</el-button>
+                    <el-button type="text" size="small" class="danger" @@click="deleteTag(scope.row)">@CR["Common.Delete"]</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -208,12 +209,12 @@
                 <el-input v-model="tagForm.name" placeholder="@AR["KnowledgeBase.TagName"]"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" size="small" @@click="saveTag">@AR["Common.Save"]</el-button>
-                <el-button size="small" @@click="visible.tagForm = false">@AR["Common.Cancel"]</el-button>
+                <el-button type="primary" size="small" @@click="saveTag">@CR["Common.Save"]</el-button>
+                <el-button size="small" @@click="visible.tagForm = false">@CR["Common.Cancel"]</el-button>
             </el-form-item>
         </el-form>
         <div slot="footer">
-            <el-button size="small" @@click="visible.tagDialog = false">@AR["Common.Close"]</el-button>
+            <el-button size="small" @@click="visible.tagDialog = false">@CR["Common.Close"]</el-button>
         </div>
     </el-dialog>
 </div>

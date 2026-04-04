@@ -2,6 +2,7 @@
 @model Senparc.Xncf.PromptRange.Areas.PromptRange.Pages.Index
 @inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
 
     ViewData["Title"] = AR["Auto.UI.2ff254e2be7e"];
     Layout = "_Layout_Vue";
@@ -11,9 +12,9 @@
     <link href="~/css/PromptRange/index.css" rel="stylesheet" />
 }
 @section breadcrumbs{
-    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["PromptRange.ModuleName"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@AR["Common.Home"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@CR["Common.Home"]</el-breadcrumb-item>
 }
 
 <div class="indexPage">

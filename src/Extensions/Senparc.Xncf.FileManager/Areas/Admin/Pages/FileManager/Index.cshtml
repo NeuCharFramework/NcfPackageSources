@@ -3,14 +3,15 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{
     var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
     ViewData["Title"] = AR["FileManager.HomeTitle"];
     Layout = "_Layout_Vue";
 }
 
 @section breadcrumbs{
-    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["FileManager.Management"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@AR["Common.Home"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@CR["Common.Home"]</el-breadcrumb-item>
 }
 
 @section style{
@@ -28,7 +29,7 @@
         <el-card shadow="never">
             <div slot="header" class="clearfix">
                 <span>@AR["FileManager.Folder"]</span>
-                <el-button style="float: right; padding: 3px 6px" type="text" @@click="showCreateFolderDialog">@AR["Common.New"]</el-button>
+                <el-button style="float: right; padding: 3px 6px" type="text" @@click="showCreateFolderDialog">@CR["Common.New"]</el-button>
             </div>
 
             <el-tree
@@ -51,7 +52,7 @@
 
     <div class="content-panel">
         <div class="filter-container">
-            <el-button type="primary" icon="el-icon-upload" size="small" @@click="showUploadDialog">@AR["Common.UploadFile"]</el-button>
+            <el-button type="primary" icon="el-icon-upload" size="small" @@click="showUploadDialog">@CR["Common.UploadFile"]</el-button>
             <el-button size="small" @@click="reloadFolderTree">@AR["FileManager.RefreshFolders"]</el-button>
         </div>
 
@@ -68,13 +69,13 @@
 
         <el-table :data="tableData" v-loading="tableLoading" border>
             <el-table-column prop="id" label="@AR["Auto.UI.34ab8c4e2f10"]" width="auto" class-name="hidden"></el-table-column>
-            <el-table-column prop="fileName" label="@AR["Common.FileName"]" width="auto"></el-table-column>
-            <el-table-column prop="fileSize" label="@AR["Common.FileSize"]" width="120">
+            <el-table-column prop="fileName" label="@CR["Common.FileName"]" width="auto"></el-table-column>
+            <el-table-column prop="fileSize" label="@CR["Common.FileSize"]" width="120">
                 <template slot-scope="scope">
                     {{ formatFileSize(scope.row.fileSize) }}
                 </template>
             </el-table-column>
-            <el-table-column prop="fileType" label="@AR["Common.FileType"]" width="100">
+            <el-table-column prop="fileType" label="@CR["Common.FileType"]" width="100">
                 <template slot-scope="scope">
                     <span v-if="scope.row.fileType===1">@AR["FileManager.FileTypeText"]</span>
                     <span v-else-if="scope.row.fileType===2">Word</span>
@@ -84,7 +85,7 @@
                     <span v-else>@AR["FileManager.FileTypeOther"]</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="description" label="@AR["Common.Remark"]" width="auto">
+            <el-table-column prop="description" label="@CR["Common.Remark"]" width="auto">
                 <template slot-scope="scope">
                     <el-input v-model="scope.row.description" @@blur="handleNoteChange(scope.row)" size="small"></el-input>
                 </template>
@@ -94,10 +95,10 @@
                     {{ dateFormatter(scope.row.uploadTime) }}
                 </template>
             </el-table-column>
-            <el-table-column label="@AR["Common.Action"]" width="220">
+            <el-table-column label="@CR["Common.Action"]" width="220">
                 <template slot-scope="scope">
-                    <el-button type="primary" size="mini" @@click="downloadFile(scope.row)">@AR["Common.Download"]</el-button>
-                    <el-button type="danger" size="mini" @@click="deleteFile(scope.row)">@AR["Common.Delete"]</el-button>
+                    <el-button type="primary" size="mini" @@click="downloadFile(scope.row)">@CR["Common.Download"]</el-button>
+                    <el-button type="danger" size="mini" @@click="deleteFile(scope.row)">@CR["Common.Delete"]</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -115,7 +116,7 @@
         </div>
     </div>
 
-    <el-dialog title="@AR["Common.UploadFile"]" :visible.sync="uploadDialog.visible" width="500px">
+    <el-dialog title="@CR["Common.UploadFile"]" :visible.sync="uploadDialog.visible" width="500px">
         <el-upload
             class="upload-demo"
             ref="upload"
@@ -129,11 +130,11 @@
             :on-progress="handleProgress"
             :before-upload="beforeUpload"
             :file-list="uploadDialog.fileList">
-            <el-button slot="trigger" size="small" type="primary">@AR["Common.SelectFile"]</el-button>
+            <el-button slot="trigger" size="small" type="primary">@CR["Common.SelectFile"]</el-button>
             <div slot="tip" class="el-upload__tip">@AR["Auto.UI.be358535f8af"]</div>
         </el-upload>
         <div style="margin-top:8px;">
-            <el-alert type="info" show-icon title="@AR["FileManager.UploadTo"]" :description="currentFolderId? ('文件夹 #'+currentFolderId) : '根目录'"></el-alert>
+            <el-alert type="info" show-icon title="@AR["FileManager.UploadTo"]" :description="currentFolderId ? (folderLabel + ' #' + currentFolderId) : rootLabel"></el-alert>
         </div>
 
         <div v-for="file in uploadDialog.fileList" :key="file.uid" style="margin-top: 10px;">
@@ -143,23 +144,23 @@
         </div>
 
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="cancelUpload">@AR["Common.Cancel"]</el-button>
-            <el-button type="primary" @@click="submitUpload" :loading="uploadDialog.uploading">@AR["Common.Confirm"]</el-button>
+            <el-button @@click="cancelUpload">@CR["Common.Cancel"]</el-button>
+            <el-button type="primary" @@click="submitUpload" :loading="uploadDialog.uploading">@CR["Common.Confirm"]</el-button>
         </span>
     </el-dialog>
 
     <el-dialog title="@AR["FileManager.NewFolder"]" :visible.sync="createFolderDialog.visible" width="420px">
         <el-form :model="createFolderDialog.form" label-width="80px">
-            <el-form-item label="@AR["Common.Name"]">
+            <el-form-item label="@CR["Common.Name"]">
                 <el-input v-model="createFolderDialog.form.name" placeholder="@AR["FileManager.PleaseInputFolderName"]"></el-input>
             </el-form-item>
-            <el-form-item label="@AR["Common.Remark"]">
-                <el-input type="textarea" v-model="createFolderDialog.form.description" placeholder="@AR["Common.RemarkOptional"]" rows="3"></el-input>
+            <el-form-item label="@CR["Common.Remark"]">
+                <el-input type="textarea" v-model="createFolderDialog.form.description" placeholder="@CR["Common.RemarkOptional"]" rows="3"></el-input>
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="createFolderDialog.visible=false">@AR["Common.Cancel"]</el-button>
-            <el-button type="primary" @@click="submitCreateFolder" :loading="createFolderDialog.loading">@AR["Common.Confirm"]</el-button>
+            <el-button @@click="createFolderDialog.visible=false">@CR["Common.Cancel"]</el-button>
+            <el-button type="primary" @@click="submitCreateFolder" :loading="createFolderDialog.loading">@CR["Common.Confirm"]</el-button>
         </span>
     </el-dialog>
 </div>
@@ -176,7 +177,9 @@
                     total: 0,
                     currentFolderId: null,
                     folderPath: [],
-                    folderTree: [{ id: null, name: '根目录', hasChildren: true }],
+                    folderLabel: '@AR["FileManager.Folder"]',
+                    rootLabel: '@AR["FileManager.RootDirectory"]',
+                    folderTree: [{ id: null, name: '@AR["FileManager.RootDirectory"]', hasChildren: true }],
                     folderTreeProps: {
                         label: 'name',
                         children: 'children',
@@ -281,7 +284,7 @@
                 },
                 reloadFolderTree: function () {
                     var self = this;
-                    this.folderTree = [{ id: null, name: '根目录', hasChildren: true }];
+                    this.folderTree = [{ id: null, name: this.rootLabel, hasChildren: true }];
                     this.$nextTick(function () {
                         if (self.$refs.folderTree && typeof self.$refs.folderTree.setCurrentKey === 'function') {
                             self.$refs.folderTree.setCurrentKey(self.currentFolderId);
@@ -291,19 +294,19 @@
                 handleNoteChange: async function (row) {
                     try {
                         await axios.post('/Admin/FileManager/Index?handler=EditNote', { id: row.id, note: row.description });
-                        this.$message.success('更新成功');
+                        this.$message.success('@AR["Common.UpdateSuccess"]');
                     } catch {
-                        this.$message.error('更新失败');
+                        this.$message.error('@AR["Common.UpdateFailed"]');
                     }
                 },
                 deleteFile: async function (row) {
                     try {
-                        await this.$confirm('确认删除该文件?', '提示', { type: 'warning' });
+                        await this.$confirm('@AR["Common.ConfirmDeleteFile"]?', '@AR["Auto.UI.390a4d9af6ec"]', { type: 'warning' });
                         await axios.post('/Admin/FileManager/Index?handler=Delete&id=' + row.id);
-                        this.$message.success('删除成功');
+                        this.$message.success('@AR["Common.DeleteSuccess"]');
                         this.getList();
                     } catch {
-                        this.$message.error('删除失败');
+                        this.$message.error('@AR["Common.DeleteFailed"]');
                     }
                 },
                 downloadFile: function (row) {
@@ -325,7 +328,7 @@
                 },
                 submitUpload: async function () {
                     if (this.uploadDialog.fileList.length === 0) {
-                        this.$message.warning('请选择要上传的文件');
+                        this.$message.warning('@AR["Common.PleaseSelectFileToUpload"]');
                         return;
                     }
 
@@ -342,11 +345,11 @@
 
                         await axios.post('/Admin/FileManager/Index?handler=Upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
 
-                        this.$message.success('上传成功');
+                        this.$message.success('@AR["Common.UploadSuccess"]');
                         this.uploadDialog.visible = false;
                         this.getList();
                     } catch (error) {
-                        this.$message.error('上传失败：' + (error && error.message ? error.message : ''));
+                        this.$message.error('@AR["Common.UploadFailed"]：' + (error && error.message ? error.message : ''));
                     } finally {
                         this.uploadDialog.uploading = false;
                     }
@@ -370,12 +373,12 @@
                             description: this.createFolderDialog.form.description || '',
                             parentId: this.currentFolderId
                         });
-                        this.$message.success('创建成功');
+                        this.$message.success('@AR["Common.CreateSuccess"]');
                         this.createFolderDialog.visible = false;
                         this.reloadFolderTree();
                     } catch (e) {
                         console.error(e);
-                        this.$message.error('创建失败');
+                        this.$message.error('@AR["Common.CreateFailed"]');
                     } finally {
                         this.createFolderDialog.loading = false;
                     }
@@ -383,7 +386,7 @@
                 handleUploadSuccess: function () { },
                 handleUploadError: function (err) {
                     var msg = err && err.message ? err.message : (err ? String(err) : '');
-                    this.$message.error('上传失败：' + msg);
+                    this.$message.error('@AR["Common.UploadFailed"]：' + msg);
                 }
             }
         });

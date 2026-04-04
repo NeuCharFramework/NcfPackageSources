@@ -2,13 +2,14 @@
 @model Senparc.Xncf.PromptRange.Areas.Admin.Pages.PromptRange.ModelModel
 @inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
 
     ViewData["Title"] = AR["Auto.UI.129fa12eec5a"];
     Layout = "_Layout_Vue";
 }
 
 @section breadcrumbs{
-    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["PromptRange.ModuleName"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["Auto.UI.8000f187a5d4"]</el-breadcrumb-item>
 }
@@ -19,13 +20,13 @@
 <div class="modelPage">
     <div class="filterRow">
         <div class="leftBox">
-            <el-input placeholder="@AR["Common.PleaseInputContent"]" v-model="queryList.modelName">
+            <el-input placeholder="@CR["Common.PleaseInputContent"]" v-model="queryList.modelName">
                 <el-button slot="append" icon="el-icon-search" @@click="app.clickSearch()"></el-button>
             </el-input>
         </div>
         <div class="rightBox">
-            <el-button type="primary" @@click="app.createBtnFrom()">@AR["Common.Add"]</el-button>
-            <el-button @@click="app.btnBatchdelete()">@AR["Common.BatchDelete"]</el-button>
+            <el-button type="primary" @@click="app.createBtnFrom()">@CR["Common.Add"]</el-button>
+            <el-button @@click="app.btnBatchdelete()">@CR["Common.BatchDelete"]</el-button>
         </div>
     </div>
 
@@ -40,12 +41,12 @@
                 <el-switch v-model="scope.row.show" @@change="app.changeStatue(scope.row,scope.row.show)" />
             </template>
         </el-table-column>
-        <el-table-column label="@AR["Common.Action"]" width="240">
+        <el-table-column label="@CR["Common.Action"]" width="240">
             <template slot-scope="scope">
            @*      <el-button type="text" @@click="clickDetails(scope.row)">@AR["Auto.UI.f26225bde6a2"]</el-button>
                 <el-button type="text" @@click="clickMaintenance(scope.row)">@AR["Auto.UI.107baa8ea765"]</el-button> *@
-                <el-button type="text" @@click="editBtnFrom(scope.row)">@AR["Common.Edit"]</el-button>
-                <el-button type="text" @@click="deleteHandle(scope.row)">@AR["Common.Delete"]</el-button>
+                <el-button type="text" @@click="editBtnFrom(scope.row)">@CR["Common.Edit"]</el-button>
+                <el-button type="text" @@click="deleteHandle(scope.row)">@CR["Common.Delete"]</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -80,8 +81,8 @@
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="dialogFormVisible = false">@AR["Common.Cancel"]</el-button>
-            <el-button type="primary" @@click="submitForm">@AR["Common.Confirm"]</el-button>
+            <el-button @@click="dialogFormVisible = false">@CR["Common.Cancel"]</el-button>
+            <el-button type="primary" @@click="submitForm">@CR["Common.Confirm"]</el-button>
         </div>
     </el-dialog>
 </div>

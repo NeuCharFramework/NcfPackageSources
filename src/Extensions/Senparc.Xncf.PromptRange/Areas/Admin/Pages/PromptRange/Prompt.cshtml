@@ -5,6 +5,7 @@
     ViewData["Title"] = "PromptRange Prompt";
     Layout = "_Layout_Vue";
     var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
 }
 
 @section Style {
@@ -13,20 +14,20 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["PromptRange.ModuleName"]</el-breadcrumb-item>
     <el-breadcrumb-item>Prompt</el-breadcrumb-item>
 }
 
 
 <div class="promptPage">
-    @*左侧 输入测试 *@
+    @* Left Side Input Test *@
     <div class="promptPage_leftArea" 
          :class="{'promptPage_leftAreaHide':promptLeftShow}"
          :style="!promptLeftShow && !centerAreaMaximized && !rightAreaMaximized ? {width: leftAreaWidth + 'px'} : {}">
-        @*配置*@
+        @* Configuration *@
         <div class="boxCard configurineArea" v-if="isBoxVisible">
-            @*选择靶场*@
+            @* Select Range *@
             <div class="configurineAreaItem rangeBox">
                 <div class="d-flex align-flex-end" style="gap: 10px">
                     <div class="w-100">
@@ -53,7 +54,7 @@
                                     <div>
 
                                         <el-button type="primary" size="mini" @@click="renameField($event,item)">@AR["Auto.UI.e533aeffac22"]</el-button>
-                                        <el-button type="danger" size="mini" @@click="fieldDeleteHandel($event,item.id)">@AR["Common.Delete"]</el-button>
+                                        <el-button type="danger" size="mini" @@click="fieldDeleteHandel($event,item.id)">@CR["Common.Delete"]</el-button>
                                     </div>
                                 </div>
                             </el-option>
@@ -88,9 +89,9 @@
                                     <span>{{ item.label }}</span>
                                     <div style="display: flex; gap: 5px;">
                                         <el-button type="success" size="mini" icon="el-icon-s-data" @@click="openCompareDialog($event, item)">@AR["Auto.UI.f5deaa1716cb"]</el-button>
-                                        <el-button type="primary" size="mini" @@click="promptNameField($event,item)">{{item.nickName ? '修改靶道名称' : '设置靶道名称'}}</el-button>
+                                        <el-button type="primary" size="mini" @@click="promptNameField($event,item)">{{item.nickName ? 'Rename target lane' : 'Set target lane name'}}</el-button>
                                         <el-button type="primary" size="mini" @@click="promptNameRest($event,item.id)">@AR["Auto.UI.5158eebd4f1f"]</el-button>
-                                        <el-button type="danger" size="mini" @@click="promptDeleteHandel($event,item.id)">@AR["Common.Delete"]</el-button>
+                                        <el-button type="danger" size="mini" @@click="promptDeleteHandel($event,item.id)">@CR["Common.Delete"]</el-button>
                                     </div>
                                 </div>
                             </el-option>
@@ -98,7 +99,7 @@
                     </div>
                 </div>
             </div>
-            @*选择模型*@
+            @* Select Model *@
             <div class="configurineAreaItem modelBox" style="width: 100%;">
                 <div class="titleRow" style="padding: 5px">
                     <div class="titleRow_leftBox">
@@ -119,7 +120,7 @@
                                    :disabled="item.disabled">
                             <div class="model-option-content">
                                 <div class="model-name-row">
-                                    <span class="model-name">{{ item.alias || '未命名模型' }}</span>
+                                    <span class="model-name">{{ item.alias || 'Unnamed model' }}</span>
                                     <span class="model-version" v-if="item.apiVersion">v{{ item.apiVersion }}</span>
                                 </div>
                                 <div class="model-deployment" v-if="item.deploymentName">（{{ item.deploymentName }}）</div>
@@ -128,16 +129,16 @@
                     </el-select>
                 </div>
             </div>
-            @*输入*@
+            @* Input *@
             <div class="boxCard inputPromptArea" style="padding: 0">
-                @* 请新建或选择靶场 mask *@
+                @* Please create or select a range mask *@
                 <div class="prompt-mask" v-if="promptFieldOpt.length===0||!promptField" style="z-index: 1350;">
                     <div class="text-center">
                         <i class="el-icon-lock" style="font-size:2.5rem"></i>
                         <br>@AR["Auto.UI.dee46b9ddb11"]
                     </div>
                 </div>
-                @* 连发 mask *@
+                @* Burst mode mask *@
                 <div class="prompt-mask" v-if="dodgersLoading">
                     <div class="text-center">
                         <i class="el-icon-lock" style="font-size:2.5rem"></i>
@@ -145,7 +146,7 @@
                         <br>@AR["Auto.UI.e0f8cac65800"]
                     </div>
                 </div>
-                @*模型参数设置*@
+                @* Model parameter settings *@
                 <div class="configurineAreaItem paramBox" style="padding: 15px">
                     <div class="titleRow">
                         <div class="titleRow_leftBox">
@@ -154,7 +155,7 @@
                         </div>
                        <div class="titleRow_rightBox">
                             @* parameterViewShow=!parameterViewShow *@
-                            <el-button size="mini" @@click="resetConfigurineParam(true)">@AR["Common.Reset"]</el-button>
+                            <el-button size="mini" @@click="resetConfigurineParam(true)">@CR["Common.Reset"]</el-button>
                             @* <i class="el-icon-caret-top icon" :class="{'rotate':parameterViewShow}" @@click="parameterViewToggle"></i>*@
                         </div>
                     </div>
@@ -178,10 +179,10 @@
                         </div>
                     </div>
                 </div>
-                @* 设置ai评分标准 :disabled="!promptid" aiScoreFormOpenDialog aiScoreFormVisible = true*@
+                @* Set AI scoring criteria :disabled="!promptid" aiScoreFormOpenDialog aiScoreFormVisible = true *@
                 <div style="padding-left: 15px; margin-top:25px;">
                     <el-button type="primary" :disabled=!isAIGrade size="mini" @@click="aiScoreFormOpenDialog">@AR["Auto.UI.6c0c254bfcec"]</el-button>
-                    <el-switch active-color="#13ce66" inactive-color="#ff4949" v-model="isAIGrade" active-text="开" inactive-text="关"></el-switch>
+                    <el-switch active-color="#13ce66" inactive-color="#ff4949" v-model="isAIGrade" active-text="On" inactive-text="Off"></el-switch>
                 </div>
             </div>
         </div>
@@ -192,27 +193,27 @@
        
     </div>
     
-    @* 左侧和中间区域之间的拖动分隔条 *@
+    @* Draggable divider between left and center areas *@
     <div class="resize-handle resize-handle-left" 
          v-if="!promptLeftShow && !centerAreaMaximized && !rightAreaMaximized"
          @@mousedown="startResizeLeft"
          @@dblclick="resetAreaWidths"
          title="@AR["Auto.UI.b5c671b7e3ae"]"></div>
     
-    @*中间 输入Prompt*@
+    @* Center Prompt Input *@
     <div class="promptPage_centerArea" 
          v-if="!box2Hidden" 
          :class="{'promptPage_centerAreaMaximized': centerAreaMaximized}"
          :style="!centerAreaMaximized && !rightAreaMaximized ? {width: centerAreaWidth + 'px'} : {}">
         <div class="boxCard entertarget" >
-                @* 请新建或选择靶场 mask *@
+                @* Please create or select a range mask *@
                 <div class="prompt-mask" v-if="promptFieldOpt.length===0||!promptField" style="z-index: 1350;">
                     <div class="text-center">
                         <i class="el-icon-lock" style="font-size:2.5rem"></i>
                         <br>@AR["Auto.UI.dee46b9ddb11"]
                     </div>
                 </div>
-                @* 连发 mask *@
+                @* Burst mode mask *@
                 <div class="prompt-mask" v-if="dodgersLoading">
                     <div class="text-center">
                         <i class="el-icon-lock" style="font-size:2.5rem"></i>
@@ -220,9 +221,9 @@
                         <br>@AR["Auto.UI.e0f8cac65800"]
                     </div>
                 </div>
-                @*输入Prompt*@
+                @* Input Prompt *@
                 <div class="promptContetnPmroparaBox" style="padding: 5px">
-                    @* 输入Prompt内容 *@
+                    @* Input prompt content *@
                     <div class="configurineAreaItem leftItemBox">
                         <div class="titleRow">
                             <div class="titleRow_leftBox">
@@ -230,13 +231,13 @@
                                 <div class="titleContent">@AR["Auto.UI.ee81d7ddd274"]</div>
                             </div>
                             <div class="titleRow_rightBox">
-                                <el-button size="mini" @@click="resetInputPrompt">@AR["Common.Reset"]</el-button>
+                                <el-button size="mini" @@click="resetInputPrompt">@CR["Common.Reset"]</el-button>
                                 <el-button type="primary" size="mini" :icon="promptParamVisible?'el-icon-s-fold':'el-icon-s-unfold'" @@click="promptParamVisible = !promptParamVisible">@AR["Auto.UI.527466ff94bd"]</el-button>
                                 <i class="el-icon-full-screen" style="font-size: 1.3rem;cursor: pointer;" @@click="Amplification('box2')"></i>
                             </div>
                         </div>
                         <div class="promptContentBox">
-                        @* contenteditable编辑器，支持内联高亮 *@
+                        @* contenteditable editor supporting inline highlighting *@
                         <div class="promptInput prompt-rich-editor"
                              contenteditable="true"
                              ref="promptEditor"
@@ -249,11 +250,11 @@
                              :data-placeholder="@AR["Auto.UI.5618aab0e92b"]">
                         </div>
                             
-                            @* 变量提示卡片 *@
+                            @* Variable hint card *@
                             <div class="prompt-variables-hint" v-if="detectedVariables.length > 0">
                                 <div class="hint-title">
                                     <i class="el-icon-info"></i>
-                                    检测到 {{ detectedVariables.length }} 个变量
+                                    Detected {{ detectedVariables.length }} variable(s)
                                 </div>
                                 <div class="variables-list">
                                     <el-tag v-for="varItem in detectedVariables" 
@@ -277,7 +278,7 @@
                                 </el-input>
                                 @* style="z-index: 1250;" *@
                                 <div class="operationBox">
-                                    @* 选择连发次数  *@
+                                    @* Select burst count *@
                                     <el-dropdown trigger="click" @@command="changeNumsBtn" type="primary" size="small">
                                         <div class="numsOfResultsBox">
                                             @AR["Auto.UI.26f647fad995"]<span class="numVal">{{numsOfResults}}</span>
@@ -287,7 +288,7 @@
                                             <el-dropdown-item v-for="btn of numsOfResultsOpt" :key="btn" :command="btn">{{btn}}</el-dropdown-item>
                                         </el-dropdown-menu>
                                     </el-dropdown>
-                                    @* 打靶按钮  v-loading="targetShootLoading" *@
+                                    @* Shooting button  v-loading="targetShootLoading" *@
                                     <div class="targetShootBtnRow">
                                         <el-dropdown trigger="click" @@command="changeBtn" split-button type="primary" @@click="clickSendBtn" size="small">
                                             {{sendBtnText}}
@@ -303,7 +304,7 @@
                                 </div>
                             </div>
                         </div>
-                        @* Prompt请求参数 - 移到leftItemBox内部，作为下方区域 *@
+                        @* Prompt request parameters - moved inside leftItemBox as the lower section *@
                         <div class="promptParamSection" :class="{'paramSectionHide': !promptParamVisible}">
                         <div class="titleRow" style="height:28px;">
                             <div class="titleRow_leftBox">
@@ -320,7 +321,7 @@
                                         <el-input size="mini" v-model="promptParamForm.suffix" autocomplete="off" placeholder="@AR["Auto.UI.7e464d0d84ea"]"></el-input>
                                     </el-form-item>
                                 </div>
-                                @* 变量名 变量值 *@
+                                @* Variable name and value *@
                                 <el-table :data="promptParamForm.variableList" border
                                           max-height="150"
                                           style="width: 100%">
@@ -352,7 +353,7 @@
                                             </el-form-item> *@
                                         </template>
                                     </el-table-column>
-                                    <el-table-column label="@AR["Common.Action"]" width="50">
+                                    <el-table-column label="@CR["Common.Action"]" width="50">
                                         <template slot-scope="scope">
                                             <i class="el-icon-delete deleteIcon" @@click="deleteVariableBtn(scope.$index)"></i>
                                         </template>
@@ -373,8 +374,8 @@
                                 </div>
                             </el-form>
                             <div class="footerBtnRow">
-                                @* <el-button size="mini" @@click="promptParamFormClose">@AR["Common.Cancel"]</el-button> *@
-                                @* <el-button type="primary" size="mini" v-loading="promptParamFormLoading" @@click="promptParamFormSubmit">@AR["Common.Confirm"]</el-button> *@
+                                @* <el-button size="mini" @@click="promptParamFormClose">@CR["Common.Cancel"]</el-button> *@
+                                @* <el-button type="primary" size="mini" v-loading="promptParamFormLoading" @@click="promptParamFormSubmit">@CR["Common.Confirm"]</el-button> *@
                             </div>
                         </div>
                         </div>
@@ -385,17 +386,17 @@
             </div>
     </div>
     
-    @* 中间和右侧区域之间的拖动分隔条 *@
+    @* Draggable divider between center and right areas *@
     <div class="resize-handle resize-handle-right" 
          v-if="!box2Hidden && !centerAreaMaximized && !rightAreaMaximized"
          @@mousedown="startResizeRight"
          @@dblclick="resetAreaWidths"
          title="@AR["Auto.UI.b5c671b7e3ae"]"></div>
     
-    @*右侧 评分|分析*@
+    @* Right side scoring/analysis *@
     <div class="promptPage_rightArea" 
          :class="{'promptPage_rightAreaMaximized': rightAreaMaximized, 'promptPage_rightAreaHidden': box1Hidden && box3Hidden}">
-        @*输出*@
+        @* Output *@
         <div class="boxCard outputArea" 
              :style="{'z-index':isPageLoading && dodgersLoading ? 1000000 : 999}" 
              v-if="!box1Hidden"
@@ -437,7 +438,7 @@
                 <div v-for="(item,index) in outputList" v-key="item.id" class="contentBoxItem" v-bind:class="{'contentBoxActiveItem':outputActive === index}" @@click="app.outputSelectSwitch(index)" :data-result-index="index">
                     <div class="promptResult_Item_Title">
                         <div class="promptReultTimeArea">
-                            <span>{{item.addTime}} [耗时(毫秒):{{item.costTime}}]</span>
+                            <span>{{item.addTime}} [Elapsed (ms):{{item.costTime}}]</span>
                         </div>
                         <div class="copyButtonArea">
                             <a href="javascript:void(0);" @@click="copyPromptResult(item,false)" title="@AR["Auto.UI.c6255f9bac17"]"><i class="fa fa-copy"></i> HTML</a>
@@ -461,7 +462,7 @@
                         </div>
                         <div class="operateRow_item" @@click="app.showRatingView(index,'2')">
                             <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon" />
-                            <span :class="checkUseRed(index,item,'humanScore')">手动评分: {{item.humanScore>-1 ? item.humanScore.toFixed(1) : '--'}}</span>
+                            <span :class="checkUseRed(index,item,'humanScore')">Manual score: {{item.humanScore>-1 ? item.humanScore.toFixed(1) : '--'}}</span>
                         </div>
                         <div class="operateRow_item" v-if="item.mode === 2 || item.mode === 'Chat'" @@click="app.continueChat(item.id, index)" style="cursor: pointer; color: #409EFF;">
                             <i class="el-icon-chat-line-round"></i>
@@ -504,8 +505,8 @@
                             </div>
                             @*<el-input v-model="manualScorVal" clearable placeholder="@AR["Auto.UI.02cc4f8f5a9a"]" class="input"></el-input>*@
                             <div class="manualOperation">
-                                <el-button type="primary" size="mini" @@click="saveManualScore(item)">@AR["Common.Save"]</el-button>
-                                <el-button type="primary" size="mini" @@click="cancelManualScore(index)">@AR["Common.Cancel"]</el-button>
+                                <el-button type="primary" size="mini" @@click="saveManualScore(item)">@CR["Common.Save"]</el-button>
+                                <el-button type="primary" size="mini" @@click="cancelManualScore(index)">@CR["Common.Cancel"]</el-button>
                             </div>
                         </div>
                     </div>
@@ -514,7 +515,7 @@
                     @AR["Auto.UI.de9aecd3c5fc"]
                 </div>
             </div>
-            @* 自定义滚动条缩略图 *@
+            @* Custom scrollbar thumbnails *@
             <div class="custom-scrollbar-thumbnail" 
                  v-if="outputList.length > 0" 
                  v-show="showScrollbarThumbnails">
@@ -526,17 +527,17 @@
                          :style="getThumbnailStyle(index)"
                          :title="getThumbnailTooltip(item)"
                          @@click="scrollToResult(index)">
-                        @* Excel风格数据条背景 *@
+                        @* Excel-style data bar background *@
                         <div v-if="getFinalScore(item) !== null" 
                              class="thumbnail-score-bar" 
                              :class="getScoreBarClass(item)"
                              :style="getScoreBarStyle(item)">
                         </div>
-                        @* 内容容器 *@
+                        @* Content container *@
                         <div class="thumbnail-content">
                             <span class="thumbnail-time">{{formatTime(item.addTime)}}</span>
                             <span v-if="getFinalScore(item) !== null" class="thumbnail-score">
-                                {{getFinalScore(item).toFixed(1)}}分
+                                {{getFinalScore(item).toFixed(1)}} pts
                             </span>
                         </div>
                     </div>
@@ -544,14 +545,14 @@
                 </div>
             </div>
         </div>
-        @*分数趋势图*@
+        @* Score trend chart *@
         <div class="boxCard analysisArea" v-if="!box3Hidden">
                 
                 <div class="titleRow">
                     <div class="titleRow_leftBox">
                         <img src="~/image/PromptRange/prompt_chart.svg" alt="" class="imgIcon" />
                         <div class="titleContent">
-                            @AR["Auto.UI.19e9eb959ff2"] <el-tooltip class="item" content="只有一个有分数，图表无法渲染一个数构成的折线" effect="dark" placement="top">
+                            @AR["Auto.UI.19e9eb959ff2"] <el-tooltip class="item" content="Only one score is available. The chart cannot render a line from a single point." effect="dark" placement="top">
                                 <i class="el-icon-warning-outline" style="color:#f00"></i>
                             </el-tooltip>
                         </div>
@@ -571,7 +572,7 @@
             </div>
         
     </div>
-    @*版本记录-抽屉 drawer*@
+    @* Version history drawer *@
     <div v-if="promptField" class="versionBtn" @@click="seeVersionRecord">@AR["Auto.UI.7e3fd13d0c19"]</div>
     <el-drawer :visible.sync="versionDrawer" direction="rtl" title="@AR["Auto.UI.7e3fd13d0c19"]" :with-header="false" @@close="versionDrawerClose">
         <div class="versionDrawerArea">
@@ -580,7 +581,7 @@
                 <img src="~/image/PromptRange/prompt_back.svg" class="imgIcon" onclick="app.versionDrawer = false" />
             </div>
 
-            <el-input v-model="versionSearchVal" size="mini" placeholder="@AR["Common.PleaseInputName"]" class="versionDrawerArea_inputRow">
+            <el-input v-model="versionSearchVal" size="mini" placeholder="@CR["Common.PleaseInputName"]" class="versionDrawerArea_inputRow">
                 <el-button slot="append" icon="el-icon-search" size="mini"></el-button>
             </el-input>
 
@@ -602,10 +603,10 @@
                                     <el-switch v-model="data.isPublic" disabled="true" :width="34" @@change="versionRecordIsPublic(data)">
                                     </el-switch>
                                 </div>
-                                <div class="operateItem" @@click="versionRecordEdit(data)">@AR["Common.Edit"]</div>
+                                <div class="operateItem" @@click="versionRecordEdit(data)">@CR["Common.Edit"]</div>
                                 <div class="operateItem" @@click="versionRecordGenerateCode(data)">@AR["Auto.UI.f09f59b68cda"]</div>
                                 @* <div class="operateItem" @@click="versionRecordViewNotes(data)">@AR["Auto.UI.bd090e931bb6"]</div> *@
-                                <div class="operateItem" @@click="versionRecordDelete(data)">@AR["Common.Delete"]</div>
+                                <div class="operateItem" @@click="versionRecordDelete(data)">@CR["Common.Delete"]</div>
                             </div>
                             <img slot="reference" src="~/image/PromptRange/prompt_moreDot.svg" class="treeMoreIcon" />
                         </el-popover>
@@ -614,7 +615,7 @@
             </div>
         </div>
     </el-drawer>
-    @*战术选择 dialog*@
+    @* Tactical selection dialog *@
     <el-dialog 
         :title="@AR["Auto.UI.7f7bff66ea55"]" 
         :visible.sync="tacticalFormVisible" 
@@ -623,7 +624,7 @@
         center 
         @@close="tacticalFormCloseDialog">
         <el-form ref="tacticalForm" :model="tacticalForm" :rules="rules" :label-width="continueChatMode ? '120px' : '100px'" label-position="left" class="tacticalFormBox">
-            @* 继续聊天模式下不显示战术选择，第一次打靶时（没有promptid）也不显示战术选择 *@
+            @* Hide tactical selection in continue-chat mode, and also hide it on first shot when there is no promptid *@
             <el-form-item v-if="!continueChatMode && promptid" label="@AR["Auto.UI.517d33ace956"]" prop="tactics">
                 <el-radio-group v-model="tacticalForm.tactics">
                     <el-radio label="@AR["Auto.UI.907103ef40cd"]">
@@ -631,7 +632,7 @@
                         <div class="d-f-startr-start-nowrap">
                             <span style="color: #606266;">@AR["Auto.UI.ac896ab568ca"]</span>
                             <div style="margin-left: 8px;">
-                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">当前：{{ currentTacticalInfo.tactic }}</div>
+                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">Current: {{ currentTacticalInfo.tactic }}</div>
                                 <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.topTactic }} <span style="color: #67C23A; font-size: 12px;">@AR["Auto.UI.fa17b3df46d5"]</span></div>
                             </div>
                         </div>
@@ -641,7 +642,7 @@
                         <div class="d-f-startr-start-nowrap">
                             <span style="color: #606266;">@AR["Auto.UI.ac896ab568ca"]</span>
                             <div class="d-c-startr-start-nowrap" style="margin-left: 8px;">
-                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">当前：{{ currentTacticalInfo.tactic }}</div>
+                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">Current: {{ currentTacticalInfo.tactic }}</div>
                                 <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.parallelTactic }} <span style="color: #67C23A; font-size: 12px;">@AR["Auto.UI.fa17b3df46d5"]</span></div>
                             </div>
                         </div>
@@ -652,7 +653,7 @@
                         <div class="d-f-startr-start-nowrap">
                             <span style="color: #606266;">@AR["Auto.UI.ac896ab568ca"]</span>
                             <div class="d-c-startr-start-nowrap" style="margin-left: 8px;">
-                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">当前：{{ currentTacticalInfo.tactic }}</div>
+                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">Current: {{ currentTacticalInfo.tactic }}</div>
                                 <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.subTactic }} <span style="color: #67C23A; font-size: 12px;">@AR["Auto.UI.fa17b3df46d5"]</span></div>
                             </div>
                         </div>
@@ -662,7 +663,7 @@
                         <div class="d-f-startr-start-nowrap">
                             <span style="color: #606266;">@AR["Auto.UI.ac896ab568ca"]</span>
                             <div class="d-c-startr-start-nowrap" style="margin-left: 8px;">
-                                <div v-if="currentTacticalInfo.fullTactical !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">当前：{{ currentTacticalInfo.fullTactical }}</div>
+                                <div v-if="currentTacticalInfo.fullTactical !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">Current: {{ currentTacticalInfo.fullTactical }}</div>
                                 <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.newAiming }} <span style="color: #67C23A; font-size: 12px;">@AR["Auto.UI.fa17b3df46d5"]</span></div>
                             </div>
                         </div>
@@ -684,19 +685,19 @@
                     <i class="el-icon-lock"></i> @AR["Auto.UI.9e50f52a2c00"]
                 </div>
             </el-form-item>
-            @* 继续聊天模式下的历史记录显示 *@
+            @* History display in continue-chat mode *@
             <el-form-item v-if="continueChatMode" label="@AR["Auto.UI.73950d735c1e"]">
                 <div class="chat-history-container" id="chatHistoryContainer" @@scroll="handleChatHistoryScroll">
-                    @* System Message 显示在对话历史顶部 *@
+                    @* Show System Message at the top of chat history *@
                     <div v-if="continueChatMode" class="system-message-in-chat-history">
                         <el-collapse v-model="systemMessageCollapse">
                             <el-collapse-item name="systemMessage">
                                 <template slot="title">
                                     <i :class="systemMessageCollapse.includes('systemMessage') ? 'el-icon-arrow-up' : 'el-icon-arrow-down'" style="margin-right: 8px;"></i>
                                     <span style="font-weight: 600;">System Message (Prompt)</span>
-                                    <span style="margin-left: 8px; font-size: 12px; color: #909399;">(点击{{ systemMessageCollapse.includes('systemMessage') ? '收起' : '展开' }}查看当前对话使用的 Prompt)</span>
+                                    <span style="margin-left: 8px; font-size: 12px; color: #909399;">(Click to {{ systemMessageCollapse.includes('systemMessage') ? 'collapse' : 'expand' }} and view the Prompt used in the current conversation)</span>
                                 </template>
-                                <div class="system-message-content">{{ continueChatSystemMessage || '加载中...' }}</div>
+                                <div class="system-message-content">{{ continueChatSystemMessage || 'Loading...' }}</div>
                             </el-collapse-item>
                         </el-collapse>
                     </div>
@@ -710,13 +711,13 @@
                         </div>
                         <div class="chat-message-content-wrapper">
                             <div class="chat-message-header">
-                                <span class="chat-message-role">{{ msg.roleType === 1 ? '用户' : '助手' }}</span>
+                                <span class="chat-message-role">{{ msg.roleType === 1 ? 'User' : 'Assistant' }}</span>
                                 <span class="chat-message-sequence">#{{ msg.sequence }}</span>
                                 <span class="chat-message-time">{{ formatChatTime(msg.addTime) }}</span>
                             </div>
                             <div class="chat-message-content" v-html="formatChatContent(msg.content)">
                             </div>
-                            @* 只有助手消息才显示反馈按钮，并且必须有有效的 ID *@
+                            @* Only assistant messages show feedback buttons, and only with a valid ID *@
                             <div v-if="msg.roleType === 2 && msg.id && msg.id > 0" class="chat-message-feedback">
                                 <el-button 
                                     :type="msg.userFeedback === true ? 'success' : 'text'" 
@@ -737,7 +738,7 @@
                                     <span v-else>@AR["Auto.UI.323571adbce6"]</span>
                                 </el-button>
                             </div>
-                            @* 如果没有有效 ID，显示提示 *@
+                            @* Show a hint when there is no valid ID *@
                             <div v-if="msg.roleType === 2 && (!msg.id || msg.id === 0)" class="chat-message-feedback" style="color: #909399; font-size: 12px;">
                                 <i class="el-icon-loading"></i> @AR["Auto.UI.9cc9f0147365"]
                             </div>
@@ -746,8 +747,8 @@
                 </div>
             </el-form-item>
             
-            @* 对话模式下的对话输入区域 *@
-            @* 注意：不使用 prop="chatInput"，因为这是条件显示的字段，resetFields 可能会出错 *@
+            @* Chat input area in conversation mode *@
+            @* Note: do not use prop="chatInput" because this field is conditionally rendered and resetFields may fail *@
             <el-form-item v-if="tacticalForm.chatMode === '对话模式'" label="@AR["Auto.UI.292687130b90"]">
                 <el-input 
                     v-model="tacticalChatInput" 
@@ -758,18 +759,18 @@
                     :placeholder="@AR["Auto.UI.4b70e6d2aa80"]">
                 </el-input>
                 <div style="margin-top: 8px; font-size: 12px; color: #909399;">
-                    {{ continueChatMode ? '输入内容将追加到现有对话中' : '输入内容将作为 userMessage 参数传递到后端接口' }}
+                    {{ continueChatMode ? 'Input will be appended to the existing conversation' : 'Input will be passed to backend API as the userMessage parameter' }}
                     <span style="margin-left: 8px; color: #909399;">@AR["Auto.UI.8ad37ae888d1"]</span>
                 </div>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button size="mini" @@click="tacticalFormVisible = false">@AR["Common.Cancel"]</el-button>
+            <el-button size="mini" @@click="tacticalFormVisible = false">@CR["Common.Cancel"]</el-button>
             @* v-loading="tacticalFormSubmitLoading" *@
             <el-button type="primary" size="mini" @@click="tacticalFormSubmitBtn">@AR["Auto.UI.c233f63ba19d"]</el-button>
         </div>
     </el-dialog>
-    @*导图 dialog*@
+    @* Map dialog *@
     <el-dialog 
         title="@AR["Auto.UI.c75eb28aa84f"]" 
         :visible.sync="mapDialogVisible" 
@@ -779,7 +780,7 @@
         @@close="mapDialogClose">
         <div id="map3dContainer" style="width: 100%; height: 600px; background: #1a1a1a;"></div>
     </el-dialog>
-    @*新增模型 dialog*@
+    @* Add model dialog *@
     <el-dialog title="@AR["Auto.UI.1cbddef0b578"]" :visible.sync="modelFormVisible" center @@close="modelFormCloseDialog">
         <el-form ref="modelForm" :model="modelForm" :rules="rules" label-position="left">
             <el-form-item label="@AR["AIKernel.ModelType"]" prop="modelType" label-width="130px">
@@ -807,12 +808,12 @@
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="modelFormVisible = false">@AR["Common.Cancel"]</el-button>
+            <el-button @@click="modelFormVisible = false">@CR["Common.Cancel"]</el-button>
             @* v-loading="modelFormSubmitLoading" *@
-            <el-button type="primary" @@click="modelFormSubmitBtn">@AR["Common.Confirm"]</el-button>
+            <el-button type="primary" @@click="modelFormSubmitBtn">@CR["Common.Confirm"]</el-button>
         </div>
     </el-dialog>
-    @*新增靶场 dialog*@
+    @* Add range dialog *@
     <el-dialog title="@AR["Auto.UI.0e5b359fd09a"]" :visible.sync="fieldFormVisible" center @@close="fieldFormCloseDialog">
         <el-form ref="fieldForm" :model="fieldForm" :rules="rules" label-position="left">
             <el-form-item label="@AR["Auto.UI.d0d411f2f0d0"]" prop="alias" label-width="130px">
@@ -820,11 +821,11 @@
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="fieldFormVisible = false">@AR["Common.Cancel"]</el-button>
-            <el-button type="primary" v-loading="fieldFormSubmitLoading" @@click="fieldFormSubmitBtn">@AR["Common.Confirm"]</el-button>
+            <el-button @@click="fieldFormVisible = false">@CR["Common.Cancel"]</el-button>
+            <el-button type="primary" v-loading="fieldFormSubmitLoading" @@click="fieldFormSubmitBtn">@CR["Common.Confirm"]</el-button>
         </div>
     </el-dialog>
-    @*ai评分标准 dialog @@close="aiScoreFormCloseDialog" *@
+    @* AI scoring criteria dialog @@close="aiScoreFormCloseDialog" *@
     <el-dialog title="@AR["Auto.UI.e8469e8d075a"]" :visible.sync="aiScoreFormVisible" center>
         <el-form ref="aiScoreForm" :model="aiScoreForm" :rules="rules" label-position="left">
 
@@ -845,42 +846,42 @@
             <div class="warnRow" style="margin-top:20px;">@AR["Auto.UI.a528f60d09b7"]</div>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="aiScoreFormClose">@AR["Common.Close"]</el-button>
+            <el-button @@click="aiScoreFormClose">@CR["Common.Close"]</el-button>
             @* v-loading="aiScoreFormSubmitLoading" *@
-            @* <el-button type="primary" @@click="aiScoreFormSubmitBtn">@AR["Common.Save"]</el-button> *@
+            @* <el-button type="primary" @@click="aiScoreFormSubmitBtn">@CR["Common.Save"]</el-button> *@
         </div>
     </el-dialog>
-    @* 导入plugin *@
+    @* Import plugin *@
     <el-dialog title="@AR["Auto.UI.21942f4a6247"]" :visible.sync="uploadPluginVisible" center @@close="uploadPluginCloseDialog">
         <div class="">
-            @* 提示 *@
+            @* Hint *@
             <div class="tipsRow">
                 @AR["Auto.UI.0afabf5cd9c4"]
             </div>
-            @* 拖拽区域  class="d-flex align-center justify-content-center" *@
+            @* Drag area  class="d-flex align-center justify-content-center" *@
             <div v-if="uploadPluginDropAreaVisible" class="el-upload-dragger" v-bind:class="{'is-dragover':uploadPluginDropHover}" @@drop="enentPluginDrop" @@dragover="pluginDropOverHandler" @@dragenter="pluginDropEnterHandler" @@dragleave="pluginDropLeaveHandler">
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">
                     @AR["Auto.UI.5748533e8fa0"]<em @@click="enentPluginInput">@AR["Auto.UI.2c808b021ecc"]</em>
                 </div>
             </div>
-            @* 选择的文件夹中的文件列表 *@
+            @* File list in selected folder *@
             <div v-else>
                 <el-button type="primary" size="mini" @@click="uploadPluginCloseDialog">@AR["Auto.UI.bc885131aaf7"]</el-button>
                 <el-table :data="uploadPluginData"
                           max-height="300"
                           style="width: 100%">
-                    <el-table-column prop="name" label="@AR["Common.FileName"]" width="200"></el-table-column>
+                    <el-table-column prop="name" label="@CR["Common.FileName"]" width="200"></el-table-column>
                     <el-table-column prop="path" label="@AR["Auto.UI.de6104ca3fb5"]"></el-table-column>
                 </el-table>
             </div>
         </div>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="uploadPluginVisible = false">@AR["Common.Cancel"]</el-button>
-            <el-button type="primary" @@click="submitUploadPlugins">@AR["Common.Upload"]</el-button>
+            <el-button @@click="uploadPluginVisible = false">@CR["Common.Cancel"]</el-button>
+            <el-button type="primary" @@click="submitUploadPlugins">@CR["Common.Upload"]</el-button>
         </div>
     </el-dialog>
-    @* 导出plugin *@
+    @* Export plugin *@
     <el-dialog title="@AR["Auto.UI.09e5a3e91e9f"]" :visible.sync="expectedPluginVisible" center @@close="expectedPluginCloseDialog">
         <el-form ref="expectedPluginFoem" :model="expectedPluginFoem" :rules="rules" label-position="left">
             @*             <el-form-item label="@AR["Auto.UI.bbb1a20d773b"]" prop="rangeId" label-width="130px">
@@ -895,7 +896,7 @@
             </el-select>
             </el-form-item> *@
             <el-form-item label="@AR["Auto.UI.b2f279d78c7e"]" prop="checkList" label-width="130px">
-                @* 操作按钮组 *@
+                @* Action button group *@
                 <div class="plugin-export-actions">
                     <div class="action-buttons">
                         <el-button size="mini" icon="el-icon-check" @@click="exportPluginSelectAll">@AR["Auto.UI.66eeacd93a7c"]</el-button>
@@ -903,7 +904,7 @@
                         <el-button size="mini" icon="el-icon-close" @@click="exportPluginClearAll">@AR["Auto.UI.288f0c404c4e"]</el-button>
                         <el-divider direction="vertical"></el-divider>
                         <el-button size="mini" :icon="exportPluginExpandAll ? 'el-icon-folder-opened' : 'el-icon-folder'" @@click="exportPluginToggleExpand">
-                            {{exportPluginExpandAll ? '收起全部' : '展开全部'}}
+                            {{exportPluginExpandAll ? 'Collapse all' : 'Expand all'}}
                         </el-button>
                     </div>
                     <div class="selection-count">
@@ -912,7 +913,7 @@
                         </el-tag>
                     </div>
                 </div>
-                @* 树形选择器 *@
+                @* Tree selector *@
                 <div class="expectedPluginTreeBox">
                     <el-tree ref="expectedPluginTree" 
                              :data="expectedPluginFieldList" 
@@ -927,8 +928,8 @@
 
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="expectedPluginVisible = false">@AR["Common.Cancel"]</el-button>
-            <el-button type="primary" @@click="btnExpectedPlugins">@AR["Common.Confirm"]</el-button>
+            <el-button @@click="expectedPluginVisible = false">@CR["Common.Cancel"]</el-button>
+            <el-button type="primary" @@click="btnExpectedPlugins">@CR["Common.Confirm"]</el-button>
         </div>
     </el-dialog>
     <el-dialog title="@AR["Auto.UI.b8e63b7bf26c"]"
@@ -937,7 +938,7 @@
               >
         <span>
             @AR["Auto.UI.c13a60b732cc"] 
-            <el-tooltip content="选择已存在的名称时，将把其名称转移到当前靶道，原靶道名称重置为“未设置”" placement="top">
+            <el-tooltip content="When selecting an existing name, it will be moved to the current target lane and the original lane name will be reset to 'Not set'." placement="top">
                 <i class="el-icon-info"></i>
             </el-tooltip>
         </span>
@@ -949,19 +950,19 @@
                          style="width:100%"
         @@select="handleSelect"></el-autocomplete>
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="dialogVisible = false">@AR["Common.Cancel"]</el-button>
-            <el-button type="primary" @@click="confirmtargetlaneName">@AR["Common.Confirm"]</el-button>
+            <el-button @@click="dialogVisible = false">@CR["Common.Cancel"]</el-button>
+            <el-button type="primary" @@click="confirmtargetlaneName">@CR["Common.Confirm"]</el-button>
         </span>
     </el-dialog>
     
-    @* Prompt 对比对话框 *@
+    @* Prompt comparison dialog *@
     <el-dialog title="@AR["Auto.UI.0f2d443ed381"]" 
                :visible.sync="compareDialogVisible" 
                width="90%" 
                top="5vh"
                class="prompt-compare-dialog"
                :close-on-click-modal="false">
-        @* 选择对比的Prompt *@
+        @* Select prompts to compare *@
         <div class="compare-selector">
             <el-select v-model="comparePromptAId" 
                        filterable 
@@ -1113,7 +1114,7 @@
                             </td>
                         </tr>
                         <tr :class="{'has-diff': hasFieldDiff(comparePromptA.nickName, comparePromptB.nickName)}">
-                            <td class="field-name">@AR["Common.Alias"]</td>
+                            <td class="field-name">@CR["Common.Alias"]</td>
                             <td>{{comparePromptA.nickName || '--'}}</td>
                             <td>
                                 {{comparePromptB.nickName || '--'}}
@@ -1267,14 +1268,14 @@
         </div>
         
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="compareDialogVisible = false">@AR["Common.Close"]</el-button>
+            <el-button @@click="compareDialogVisible = false">@CR["Common.Close"]</el-button>
         </div>
     </el-dialog>
 
     @* 优化Prompt弹窗 *@
     <el-dialog title="@AR["Auto.UI.7a1a685a9b9c"]" :visible.sync="optimizeDialogVisible" width="50%" :append-to-body="true" :close-on-click-modal="!optimizing">
         <div class="optimize-dialog-content">
-            <el-alert title="@AR["Common.Description"]" type="info" description="优化由 Agents 模块中的 PromptCatalyzer 智能体通过多轮对话与工具调用完成；点击开始后请等待对话结束（可能需要数分钟），随后本页将自动选中新版本并可按需打靶、评分。" show-icon :closable="false" style="margin-bottom: 20px;">
+            <el-alert title="@CR["Common.Description"]" type="info" description="优化由 Agents 模块中的 PromptCatalyzer 智能体通过多轮对话与工具调用完成；点击开始后请等待对话结束（可能需要数分钟），随后本页将自动选中新版本并可按需打靶、评分。" show-icon :closable="false" style="margin-bottom: 20px;">
             </el-alert>
             <el-alert v-if="optimizing && optimizeProgressText" :title="optimizeProgressText" type="warning" show-icon :closable="false" style="margin-bottom: 16px;">
             </el-alert>
@@ -1311,7 +1312,7 @@
             </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="optimizeDialogVisible = false">@AR["Common.Cancel"]</el-button>
+            <el-button @@click="optimizeDialogVisible = false">@CR["Common.Cancel"]</el-button>
             <el-button type="primary" @@click="executeOptimize" :loading="optimizing" :disabled="optimizing">@AR["Auto.UI.855bc1014072"]</el-button>
         </span>
     </el-dialog>
@@ -1407,7 +1408,7 @@
             </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="promptCatalyzerInitVisible = false" :disabled="initializing">@AR["Common.Cancel"]</el-button>
+            <el-button @@click="promptCatalyzerInitVisible = false" :disabled="initializing">@CR["Common.Cancel"]</el-button>
             <el-button type="primary" 
                        @@click="executeInitialization" 
                        :loading="initializing"
