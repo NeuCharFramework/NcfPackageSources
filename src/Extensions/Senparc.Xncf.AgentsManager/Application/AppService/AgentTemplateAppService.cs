@@ -296,6 +296,26 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             });
         }
 
+        [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<string>> Delete(int id)
+        {
+            return await this.GetResponseAsync<string>(async (response, logger) =>
+            {
+                var result = await DeleteInternalAsync(new List<int> { id }, logger);
+                return result;
+            });
+        }
+
+        [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<string>> DeleteBatch([FromBody] List<int> ids)
+        {
+            return await this.GetResponseAsync<string>(async (response, logger) =>
+            {
+                var result = await DeleteInternalAsync(ids, logger);
+                return result;
+            });
+        }
+
         /// <summary>
         /// 获取所有已注册的 AI Plugin 类型
         /// </summary>
@@ -375,6 +395,82 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 }
 
             });
+        }
+
+        private async Task<string> DeleteInternalAsync(List<int> ids, AppServiceLogger logger)
+        {
+            if (ids == null || ids.Count == 0)
+            {
+                return "未提供 Agent ID";
+            }
+
+            var idSet = ids.Distinct().ToList();
+            var chatGroupService = base.GetRequiredService<ChatGroupService>();
+            var chatGroupMemberService = base.GetRequiredService<ChatGroupMemberService>();
+            var chatGroupHistoryService = base.GetRequiredService<ChatGroupHistoryService>();
+
+            var groupsAsRole = await chatGroupService.GetFullListAsync(
+                z => idSet.Contains(z.AdminAgentTemplateId) || idSet.Contains(z.EnterAgentTemplateId));
+
+            var blockedByRoleMap = groupsAsRole
+                .SelectMany(group =>
+                {
+                    var pairs = new List<(int agentId, string message)>();
+                    if (idSet.Contains(group.AdminAgentTemplateId))
+                    {
+                        pairs.Add((group.AdminAgentTemplateId, $"Agent 被组【{group.Name}】作为群主引用"));
+                    }
+                    if (idSet.Contains(group.EnterAgentTemplateId))
+                    {
+                        pairs.Add((group.EnterAgentTemplateId, $"Agent 被组【{group.Name}】作为对接人引用"));
+                    }
+                    return pairs;
+                })
+                .GroupBy(z => z.agentId)
+                .ToDictionary(g => g.Key, g => g.Select(z => z.message).Distinct().ToList());
+
+            var deleted = 0;
+            var blocked = 0;
+            var missing = 0;
+
+            foreach (var id in idSet)
+            {
+                var agent = await _agentsTemplateService.GetObjectAsync(z => z.Id == id);
+                if (agent == null)
+                {
+                    missing++;
+                    continue;
+                }
+
+                if (blockedByRoleMap.TryGetValue(id, out var blockedMessages) && blockedMessages.Count > 0)
+                {
+                    blocked++;
+                    logger.Append($"✗ 阻止删除 Agent【{agent.Name}】：{string.Join("；", blockedMessages)}");
+                    continue;
+                }
+
+                // 移除普通成员关系（不影响群主/对接人引用，因为上面已经阻止）
+                var members = await chatGroupMemberService.GetFullListAsync(z => z.AgentTemplateId == id);
+                foreach (var member in members)
+                {
+                    await chatGroupMemberService.DeleteObjectAsync(member);
+                }
+
+                // 删除与该 Agent 相关的历史消息，避免外键约束冲突
+                var histories = await chatGroupHistoryService.GetFullListAsync(
+                    z => z.FromAgentTemplateId == id || z.ToAgentTemplateId == id);
+                foreach (var history in histories)
+                {
+                    await chatGroupHistoryService.DeleteObjectAsync(history);
+                }
+
+                await _agentsTemplateService.DeleteObjectAsync(agent);
+                deleted++;
+                logger.Append($"✓ 已删除 Agent【{agent.Name}】（成员关系 {members.Count} 条，消息记录 {histories.Count} 条）");
+            }
+
+            logger.Append($"删除 Agent 完成：成功 {deleted}，阻止 {blocked}，不存在 {missing}");
+            return logger.ToString();
         }
     }
 

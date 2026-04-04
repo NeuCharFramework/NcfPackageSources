@@ -375,7 +375,7 @@ var app = new Vue({
       // 对话记录 轮询
       historyTimer: {},
       // 智能体参数列表
-      agentParameterTabsValue: 0, // tabs选中
+      agentParameterTabsValue: '', // tabs选中(使用空字符串，避免和el-tabs内部string name不匹配)
       agentParameterList: [],
       // 描述内容
       describeContent: '',
@@ -2251,6 +2251,94 @@ var app = new Vue({
       });
     },
 
+    handleAgentDelete(item) {
+      const itemData = item?.agentTemplateDto || item
+      if (!itemData || !itemData.id) return
+
+      const groupQuery = {
+        agentTemplateId: 0,
+        pageIndex: 0,
+        pageSize: 0,
+        filter: ''
+      }
+      const memberGroupQuery = {
+        agentTemplateId: itemData.id,
+        pageIndex: 0,
+        pageSize: 0,
+        filter: ''
+      }
+
+      const serviceURL = `/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.Delete?id=${itemData.id}`
+
+      Promise.all([
+        serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupList?${getInterfaceQueryStr(groupQuery)}`, groupQuery),
+        serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupList?${getInterfaceQueryStr(memberGroupQuery)}`, memberGroupQuery)
+      ]).then(([allGroupRes, memberGroupRes]) => {
+        const allGroupList = allGroupRes?.data?.data?.chatGroupDtoList ?? []
+        const memberGroupList = memberGroupRes?.data?.data?.chatGroupDtoList ?? []
+
+        const adminGroups = allGroupList.filter(group => group.adminAgentTemplateId === itemData.id).map(group => group.name)
+        const enterGroups = allGroupList.filter(group => group.enterAgentTemplateId === itemData.id).map(group => group.name)
+
+        if (adminGroups.length || enterGroups.length) {
+          const blockedMessage = [
+            `<div>智能体「${itemData.name}」当前不可删除。</div>`,
+            adminGroups.length ? `<div style="margin-top:6px;">作为群主的组：${adminGroups.join('、')}</div>` : '',
+            enterGroups.length ? `<div style="margin-top:6px;">作为对接人的组：${enterGroups.join('、')}</div>` : '',
+            '<div style="margin-top:8px;color:#E6A23C;">请先在对应组中替换群主/对接人后再删除。</div>'
+          ].join('')
+
+          this.$alert(blockedMessage, '删除受阻', {
+            dangerouslyUseHTMLString: true,
+            confirmButtonText: '我知道了'
+          })
+          return
+        }
+
+        const memberGroups = memberGroupList.map(group => group.name)
+        const previewMessage = [
+          `<div>确认删除智能体「${itemData.name}」吗？</div>`,
+          memberGroups.length
+            ? `<div style="margin-top:6px;">将移出成员组：${memberGroups.join('、')}</div>`
+            : '<div style="margin-top:6px;">该智能体当前不在任何组成员中。</div>',
+          '<div style="margin-top:8px;">同时会删除与该智能体相关的历史消息记录，且不可恢复。</div>'
+        ].join('')
+
+        this.$confirm(previewMessage, '操作确认', {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        }).then(() => {
+          serviceAM.post(serviceURL).then(res => {
+            if (res.data.success) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.handleAgentViewAll()
+            } else {
+              app.$message({
+                message: res.data.errorMessage || res.data.data || 'Error',
+                type: 'error',
+                duration: 5 * 1000
+              })
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          })
+        })
+      }).catch(() => {
+        app.$message({
+          message: '删除预检查失败，请稍后重试',
+          type: 'error',
+          duration: 5 * 1000
+        })
+      })
+    },
+
 
 
     // 侧边 组tree 组件 节点 筛选
@@ -2418,7 +2506,8 @@ var app = new Vue({
     // 组 删除
     handleGroupDelete(optype, row) {
       console.log('handleGroupDelete:', row);
-      let serviceURL = ''
+      if (!row || !row.id) return
+      let serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.Delete?id=${row.id}`
       if (!serviceURL) return
       // 操作确认 提示
       this.$confirm('确认删除数据吗？', '操作确认', {
@@ -2457,8 +2546,13 @@ var app = new Vue({
     },
     // 组批量删除
     handleGroupDeleteBatch() {
-      let serviceURL = ''
       console.log('handleGroupDeleteBatch:', this.groupSelection);
+      const selectedIds = (this.groupSelection || []).map(item => item.id).filter(Boolean)
+      if (!selectedIds.length) {
+        this.$message.warning('请先选择要删除的组')
+        return
+      }
+      let serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.DeleteBatch'
       if (!serviceURL) return
       // 操作确认 提示
       this.$confirm('确认批量删除数据吗？', '操作确认', {
@@ -2467,7 +2561,7 @@ var app = new Vue({
         cancelButtonText: '取消',
         // type: 'warning'
       }).then(() => {
-        serviceAM.post(serviceURL).then(res => {
+        serviceAM.post(serviceURL, selectedIds).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
@@ -2597,50 +2691,98 @@ var app = new Vue({
       this.taskSelection = val
     },
     // 查看智能体参数 列表
-    viewAgentParameters(optype, item) {
-      // 对接接口获取数据 this.agentParameterList
+    async viewAgentParameters(optype, item) {
+      let baseList = []
       if (optype === 'task') {
-        // 获取 任务成员列表
-        // this.getTaskMemberListData()
-      }
-      if (optype === 'taskDetail') {
-        // taskMemberList
-        this.agentParameterList = this.taskMemberList ?? []
-      }
-      if (optype === 'agentTask') {
-        this.agentParameterList = this.agentDetailsTaskMemberList ?? []
-      }
-      if (optype === 'agentGroupTaskAdmin') {
+        // 从任务行数据获取所在组成员列表
+        if (item && item.chatGroupId) {
+          await this.getTaskMemberListData('task', item.chatGroupId)
+        }
+        baseList = this.taskMemberList ?? []
+      } else if (optype === 'taskDetail') {
+        baseList = this.taskMemberList ?? []
+      } else if (optype === 'agentTask') {
+        baseList = this.agentDetailsTaskMemberList ?? []
+      } else if (optype === 'agentGroupTaskAdmin') {
         let agentDtoList = this.agentDetailsGroupDetails?.agentTemplateDtoList ?? []
         let adminAgentId = this.agentDetailsGroupDetails?.chatGroupDto?.adminAgentTemplateId ?? ''
-        let findItem = agentDtoList.find(item => item.id === adminAgentId)
-        this.agentParameterList = findItem ? [findItem] : []
-      }
-      if (optype === 'agentGroupTaskEnter') {
+        let findItem = agentDtoList.find(a => a.id === adminAgentId)
+        baseList = findItem ? [findItem] : []
+      } else if (optype === 'agentGroupTaskEnter') {
         let agentDtoList = this.agentDetailsGroupDetails?.agentTemplateDtoList ?? []
         let enterAgentId = this.agentDetailsGroupDetails?.chatGroupDto?.enterAgentTemplateId ?? ''
-        let findItem = agentDtoList.find(item => item.id === enterAgentId)
-        this.agentParameterList = findItem ? [findItem] : []
-      }
-      if (optype === 'agentGroupTask') {
-        this.agentParameterList = this.agentDetailsGroupDetails?.agentTemplateDtoList ?? []
-      }
-      if (optype === 'groupTaskAdmin') {
+        let findItem = agentDtoList.find(a => a.id === enterAgentId)
+        baseList = findItem ? [findItem] : []
+      } else if (optype === 'agentGroupTask') {
+        baseList = this.agentDetailsGroupDetails?.agentTemplateDtoList ?? []
+      } else if (optype === 'groupTaskAdmin') {
         let agentDtoList = this.groupDetails?.agentTemplateDtoList ?? []
         let adminAgentId = this.groupDetails?.chatGroupDto?.adminAgentTemplateId ?? ''
-        let findItem = agentDtoList.find(item => item.id === adminAgentId)
-        this.agentParameterList = findItem ? [findItem] : []
-      }
-      if (optype === 'groupTaskEnter') {
+        let findItem = agentDtoList.find(a => a.id === adminAgentId)
+        baseList = findItem ? [findItem] : []
+      } else if (optype === 'groupTaskEnter') {
         let agentDtoList = this.groupDetails?.agentTemplateDtoList ?? []
         let enterAgentId = this.groupDetails?.chatGroupDto?.enterAgentTemplateId ?? ''
-        let findItem = agentDtoList.find(item => item.id === enterAgentId)
-        this.agentParameterList = findItem ? [findItem] : []
+        let findItem = agentDtoList.find(a => a.id === enterAgentId)
+        baseList = findItem ? [findItem] : []
+      } else if (optype === 'groupTask') {
+        baseList = this.groupDetails?.agentTemplateDtoList ?? []
       }
-      if (optype === 'groupTask') {
-        this.agentParameterList = this.groupDetails?.agentTemplateDtoList ?? []
-      }
+      // 填充状态与历史输出后再打开弹窗
+      this.agentParameterList = await this.buildAgentParameterList(baseList)
+      // 先清空再开弹窗，确保 el-tabs 在 pane 渲染完成后按正确类型激活第一个 tab
+      this.agentParameterTabsValue = ''
       this.visible.dialogAgentParameter = true
+      this.$nextTick(() => {
+        this.agentParameterTabsValue = 0
+      })
+    },
+    // 构建智能体参数列表：为基础 DTO 列表补充 promptItemDto / aiModelDto / promptRangeDto 及历史输出
+    async buildAgentParameterList(baseList) {
+      const result = []
+      for (const agent of baseList) {
+        const enriched = Object.assign({}, agent, { outputList: [] })
+        // 获取智能体运行状态（含 promptItemDto / aiModelDto / promptRangeDto）
+        try {
+          const res = await serviceAM.get(
+            `/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetItemStatus?id=${agent.id}`,
+            { customAlert: true }
+          )
+          const data = res?.data ?? {}
+          if (data.success) {
+            const status = data?.data?.agentTemplateStatus ?? null
+            if (status) {
+              enriched.promptItemDto = status.promptItemDto || null
+              enriched.promptRangeDto = status.promptRangeDto || null
+              enriched.aiModelDto = status.aiModelDto || null
+            }
+          }
+        } catch (e) {
+          console.warn('buildAgentParameterList: GetItemStatus failed for agent', agent.id, e)
+        }
+        // 获取历史输出列表（PromptRange 结果）
+        if (enriched.promptItemDto && enriched.promptItemDto.id) {
+          try {
+            const res = await serviceAM.get(
+              `/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetByItemId?promptItemId=${enriched.promptItemDto.id}`,
+              { customAlert: true }
+            )
+            const data = res?.data ?? {}
+            if (data.success) {
+              const promptResults = data?.data?.promptResults ?? []
+              enriched.outputList = promptResults.map(oitem => {
+                oitem.addTime = oitem.addTime ? formatDate(oitem.addTime) : ''
+                oitem.resultStringHtml = marked.parse(oitem.resultString || '')
+                return oitem
+              })
+            }
+          } catch (e) {
+            console.warn('buildAgentParameterList: GetByItemId failed for promptItem', enriched.promptItemDto.id, e)
+          }
+        }
+        result.push(enriched)
+      }
+      return result
     },
     // 再次执行 (即再次启动)
     handleTaskAgain(optype, item = {}) {
@@ -2651,7 +2793,8 @@ var app = new Vue({
     // 任务删除
     handleTaskDelet(optype, row) {
       console.log('handleTaskDelet:', row);
-      let serviceURL = ''
+      if (!row || !row.id) return
+      let serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.Delete?id=${row.id}`
       if (!serviceURL) return
       // 操作确认 提示
       this.$confirm('确认删除数据吗？', '操作确认', {
@@ -2749,16 +2892,25 @@ var app = new Vue({
     },
     // 组-任务批量删除(任务) agentGroupTaskBatch groupTaskBatch
     handleTaskDeleteBatch(opType, item) {
-      let serviceURL = ''
+      let selectedRows = []
       if (opType === 'agentGroupTaskBatch') {
         // item.chatGroupDto.id this.agentDetails.agentTemplateDto.id
         console.log('agentGroupTaskBatch:', this.agentGroupTaskSelection);
+        selectedRows = this.agentGroupTaskSelection
       } else if (opType === 'groupTaskBatch') {
         // item.chatGroupDto.id
         console.log('groupTaskBatch:', this.groupTaskSelection);
+        selectedRows = this.groupTaskSelection
       } else if (opType === 'taskBatch') {
         console.log('taskSelection:', this.taskSelection);
+        selectedRows = this.taskSelection
       }
+      const selectedIds = (selectedRows || []).map(task => task.id).filter(Boolean)
+      if (!selectedIds.length) {
+        this.$message.warning('请先选择要删除的任务')
+        return
+      }
+      let serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.DeleteBatch'
       if (!serviceURL) return
       // 操作确认 提示
       this.$confirm('确认批量删除数据吗？', '操作确认', {
@@ -2767,7 +2919,7 @@ var app = new Vue({
         cancelButtonText: '取消',
         // type: 'warning'
       }).then(() => {
-        serviceAM.post(serviceURL).then(res => {
+        serviceAM.post(serviceURL, selectedIds).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
@@ -2785,6 +2937,8 @@ var app = new Vue({
               // 获取任务列表
               this.gettaskListData(groupType, groupDetail.id)
               // this.getGroupDetailData(groupType, groupDetail.id, groupDetail)
+            } else {
+              this.gettaskListData('task')
             }
           } else {
             app.$message({
@@ -2800,6 +2954,102 @@ var app = new Vue({
           message: '已取消操作'
         });
       });
+    },
+
+    handleTaskForceStop(optype, row) {
+      if (!row || !row.id) return
+      const serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.ForceStop?id=${row.id}`
+      this.$confirm('确认强制停止该任务吗？', '操作确认', {
+        dangerouslyUseHTMLString: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        serviceAM.post(serviceURL).then(res => {
+          if (res.data.success) {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            let groupDetail = {}
+            if (optype === 'agentGroupTask') {
+              groupDetail = this.agentDetailsGroupDetails?.chatGroupDto ?? {}
+            } else if (optype === 'groupTask') {
+              groupDetail = this.groupDetails?.chatGroupDto ?? {}
+            } else {
+              this.gettaskListData('task')
+            }
+            if (groupDetail.id) {
+              this.gettaskListData(optype, groupDetail.id)
+            }
+          } else {
+            app.$message({
+              message: res.data.errorMessage || res.data.data || 'Error',
+              type: 'error',
+              duration: 5 * 1000
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    },
+
+    handleTaskForceStopBatch(opType, item) {
+      let selectedRows = []
+      if (opType === 'agentGroupTaskBatch') {
+        selectedRows = this.agentGroupTaskSelection
+      } else if (opType === 'groupTaskBatch') {
+        selectedRows = this.groupTaskSelection
+      } else if (opType === 'taskBatch') {
+        selectedRows = this.taskSelection
+      }
+      const selectedIds = (selectedRows || []).map(task => task.id).filter(Boolean)
+      if (!selectedIds.length) {
+        this.$message.warning('请先选择要停止的任务')
+        return
+      }
+      const serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.ForceStopBatch'
+      this.$confirm('确认批量强制停止所选任务吗？', '操作确认', {
+        dangerouslyUseHTMLString: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        serviceAM.post(serviceURL, selectedIds).then(res => {
+          if (res.data.success) {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            let groupDetail = {}, groupType = ''
+            if (opType === 'agentGroupTaskBatch') {
+              groupDetail = this.agentDetailsGroupDetails?.chatGroupDto ?? {}
+              groupType = 'agentGroupTask'
+            } else if (opType === 'groupTaskBatch') {
+              groupDetail = this.groupDetails?.chatGroupDto ?? {}
+              groupType = 'groupTask'
+            }
+            if (groupDetail.id) {
+              this.gettaskListData(groupType, groupDetail.id)
+            } else {
+              this.gettaskListData('task')
+            }
+          } else {
+            app.$message({
+              message: res.data.errorMessage || res.data.data || 'Error',
+              type: 'error',
+              duration: 5 * 1000
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
     },
     // 查看任务描述
     viewTaskDescription(item) {

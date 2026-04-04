@@ -1,4 +1,6 @@
-﻿using Senparc.CO2NET;
+﻿using Microsoft.AspNetCore.Mvc;
+using Senparc.CO2NET;
+using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
@@ -17,6 +19,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
     public class ChatTaskAppService : AppServiceBase
     {
         private readonly ChatTaskService _chatTaskService;
+
         public ChatTaskAppService(IServiceProvider serviceProvider, ChatTaskService chatTaskService) : base(serviceProvider)
         {
             _chatTaskService = chatTaskService;
@@ -67,6 +70,107 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     ChatTaskDto = this._chatTaskService.Mapping<ChatTaskDto>(chatTask)
                 };
             });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<string>> ForceStop(int id)
+        {
+            return await this.GetResponseAsync<string>(async (response, logger) =>
+            {
+                var result = await ForceStopInternalAsync(new List<int> { id });
+                return result;
+            });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<string>> ForceStopBatch([FromBody] List<int> ids)
+        {
+            return await this.GetResponseAsync<string>(async (response, logger) =>
+            {
+                var result = await ForceStopInternalAsync(ids);
+                return result;
+            });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<string>> Delete(int id)
+        {
+            return await this.GetResponseAsync<string>(async (response, logger) =>
+            {
+                var result = await DeleteInternalAsync(new List<int> { id });
+                return result;
+            });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<string>> DeleteBatch([FromBody] List<int> ids)
+        {
+            return await this.GetResponseAsync<string>(async (response, logger) =>
+            {
+                var result = await DeleteInternalAsync(ids);
+                return result;
+            });
+        }
+
+        private async Task<string> ForceStopInternalAsync(List<int> ids)
+        {
+            if (ids == null || ids.Count == 0)
+            {
+                return "未提供任务 ID";
+            }
+
+            var idSet = ids.Distinct().ToList();
+            var taskList = await _chatTaskService.GetFullListAsync(z => idSet.Contains(z.Id));
+            var cache = base.GetRequiredService<IBaseObjectCacheStrategy>();
+
+            var changed = 0;
+            var skipped = 0;
+
+            foreach (var task in taskList)
+            {
+                if (task.Status == ChatTask_Status.Finished || task.Status == ChatTask_Status.Cancelled)
+                {
+                    skipped++;
+                    continue;
+                }
+
+                await _chatTaskService.SetStatus(ChatTask_Status.Cancelled, task);
+                await cache.RemoveFromCacheAsync(_chatTaskService.GetChatTaskRunCacheKey(task.Id));
+                changed++;
+            }
+
+            return $"强制停止完成：成功 {changed} 条，跳过 {skipped} 条";
+        }
+
+        private async Task<string> DeleteInternalAsync(List<int> ids)
+        {
+            if (ids == null || ids.Count == 0)
+            {
+                return "未提供任务 ID";
+            }
+
+            var idSet = ids.Distinct().ToList();
+            var taskList = await _chatTaskService.GetFullListAsync(z => idSet.Contains(z.Id));
+            var taskIds = taskList.Select(z => z.Id).ToList();
+            var historyService = base.GetRequiredService<ChatGroupHistoryService>();
+            var cache = base.GetRequiredService<IBaseObjectCacheStrategy>();
+
+            if (taskIds.Count > 0)
+            {
+                var histories = await historyService.GetFullListAsync(z => taskIds.Contains(z.ChatTaskId));
+                foreach (var history in histories)
+                {
+                    await historyService.DeleteObjectAsync(history);
+                }
+            }
+
+            foreach (var task in taskList)
+            {
+                await cache.RemoveFromCacheAsync(_chatTaskService.GetChatTaskRunCacheKey(task.Id));
+                await _chatTaskService.DeleteObjectAsync(task);
+            }
+
+            return $"删除任务完成：成功 {taskList.Count} 条";
         }
     }
 }

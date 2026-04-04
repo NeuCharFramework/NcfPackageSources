@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.AspNetCore.Mvc;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.WebApi;
@@ -491,6 +492,26 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             }
         }
 
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<string>> Delete(int id)
+        {
+            return await this.GetResponseAsync<string>(async (response, logger) =>
+            {
+                var result = await DeleteChatGroupByIdsAsync(new List<int> { id }, logger);
+                return result;
+            });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<string>> DeleteBatch([FromBody] List<int> ids)
+        {
+            return await this.GetResponseAsync<string>(async (response, logger) =>
+            {
+                var result = await DeleteChatGroupByIdsAsync(ids, logger);
+                return result;
+            });
+        }
+
         /// <summary>
         /// 删除整个对话（包括所有消息、任务等）
         /// </summary>
@@ -499,7 +520,6 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                // 检查是否选择了对话
                 if (request.ChatGroups.SelectedValues.Count() == 0)
                 {
                     return "请选择要删除的对话！";
@@ -516,93 +536,105 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     .Select(z => int.Parse(z))
                     .ToList();
 
-                int deletedCount = 0;
-                var errors = new List<string>();
-
-                foreach (var chatGroupId in chatGroupIdList)
-                {
-                    try
-                    {
-                        // 获取对话信息
-                        var chatGroup = await _chatGroupService.GetObjectAsync(z => z.Id == chatGroupId);
-                        if (chatGroup == null)
-                        {
-                            errors.Add($"对话 ID {chatGroupId} 不存在");
-                            continue;
-                        }
-
-                        // 1. 删除所有关联的消息和任务
-                        var chatTaskService = base.GetRequiredService<ChatTaskService>();
-                        var chatGroupHistoryService = base.GetRequiredService<ChatGroupHistoryService>();
-
-                        // 先获取所有相关的 ChatTask
-                        var chatTasks = await chatTaskService.GetFullListAsync(z => z.ChatGroupId == chatGroupId);
-                        var chatTaskIds = chatTasks.Select(z => z.Id).ToList();
-
-                        // 删除这些 ChatTask 下的所有 ChatGroupHistory
-                        if (chatTaskIds.Count > 0)
-                        {
-                            var histories = await chatGroupHistoryService.GetFullListAsync(
-                                z => chatTaskIds.Contains(z.ChatTaskId));
-                            if (histories.Count > 0)
-                            {
-                                foreach (var history in histories)
-                                {
-                                    await chatGroupHistoryService.DeleteObjectAsync(history);
-                                }
-                                logger.Append($"  ✓ 已删除 {histories.Count} 条消息记录");
-                            }
-                        }
-
-                        // 2. 删除所有 ChatTask
-                        if (chatTasks.Count > 0)
-                        {
-                            foreach (var chatTask in chatTasks)
-                            {
-                                await chatTaskService.DeleteObjectAsync(chatTask);
-                            }
-                            logger.Append($"  ✓ 已删除 {chatTasks.Count} 个对话任务");
-                        }
-
-                        // 3. 删除所有对话成员 (ChatGroupMember)
-                        var members = await _chatGroupMemeberService.GetFullListAsync(z => z.ChatGroupId == chatGroupId);
-                        if (members.Count > 0)
-                        {
-                            foreach (var member in members)
-                            {
-                                await _chatGroupMemeberService.DeleteObjectAsync(member);
-                            }
-                            logger.Append($"  ✓ 已删除 {members.Count} 个对话成员");
-                        }
-
-                        // 4. 最后删除对话本身 (ChatGroup)
-                        await _chatGroupService.DeleteObjectAsync(chatGroup);
-                        logger.Append($"✓ 对话 '{chatGroup.Name}' 及其所有数据已删除");
-
-                        deletedCount++;
-                    }
-                    catch (Exception ex)
-                    {
-                        errors.Add($"删除对话 ID {chatGroupId} 失败: {ex.Message}");
-                        logger.Append($"✗ 删除失败: {ex.Message}");
-                    }
-                }
-
-                // 生成删除摘要
-                logger.Append($"\n========== 删除摘要 ==========");
-                logger.Append($"✓ 成功删除: {deletedCount} 个对话");
-                if (errors.Count > 0)
-                {
-                    logger.Append($"✗ 失败: {errors.Count} 个对话");
-                    foreach (var error in errors)
-                    {
-                        logger.Append($"  • {error}");
-                    }
-                }
-                logger.Append($"==============================");
-
-                return logger.ToString();
+                return await DeleteChatGroupByIdsAsync(chatGroupIdList, logger);
             });
+        }
+
+        private async Task<string> DeleteChatGroupByIdsAsync(List<int> chatGroupIdList, AppServiceLogger logger)
+        {
+            if (chatGroupIdList == null || chatGroupIdList.Count == 0)
+            {
+                return "未提供组 ID";
+            }
+
+            chatGroupIdList = chatGroupIdList.Distinct().ToList();
+
+            int deletedCount = 0;
+            var errors = new List<string>();
+
+            foreach (var chatGroupId in chatGroupIdList)
+            {
+                try
+                {
+                    // 获取对话信息
+                    var chatGroup = await _chatGroupService.GetObjectAsync(z => z.Id == chatGroupId);
+                    if (chatGroup == null)
+                    {
+                        errors.Add($"对话 ID {chatGroupId} 不存在");
+                        continue;
+                    }
+
+                    // 1. 删除所有关联的消息和任务
+                    var chatTaskService = base.GetRequiredService<ChatTaskService>();
+                    var chatGroupHistoryService = base.GetRequiredService<ChatGroupHistoryService>();
+
+                    // 先获取所有相关的 ChatTask
+                    var chatTasks = await chatTaskService.GetFullListAsync(z => z.ChatGroupId == chatGroupId);
+                    var chatTaskIds = chatTasks.Select(z => z.Id).ToList();
+
+                    // 删除这些 ChatTask 下的所有 ChatGroupHistory
+                    if (chatTaskIds.Count > 0)
+                    {
+                        var histories = await chatGroupHistoryService.GetFullListAsync(
+                            z => chatTaskIds.Contains(z.ChatTaskId));
+                        if (histories.Count > 0)
+                        {
+                            foreach (var history in histories)
+                            {
+                                await chatGroupHistoryService.DeleteObjectAsync(history);
+                            }
+                            logger.Append($"  ✓ 已删除 {histories.Count} 条消息记录");
+                        }
+                    }
+
+                    // 2. 删除所有 ChatTask
+                    if (chatTasks.Count > 0)
+                    {
+                        foreach (var chatTask in chatTasks)
+                        {
+                            await chatTaskService.DeleteObjectAsync(chatTask);
+                        }
+                        logger.Append($"  ✓ 已删除 {chatTasks.Count} 个对话任务");
+                    }
+
+                    // 3. 删除所有对话成员 (ChatGroupMember)
+                    var members = await _chatGroupMemeberService.GetFullListAsync(z => z.ChatGroupId == chatGroupId);
+                    if (members.Count > 0)
+                    {
+                        foreach (var member in members)
+                        {
+                            await _chatGroupMemeberService.DeleteObjectAsync(member);
+                        }
+                        logger.Append($"  ✓ 已删除 {members.Count} 个对话成员");
+                    }
+
+                    // 4. 最后删除对话本身 (ChatGroup)
+                    await _chatGroupService.DeleteObjectAsync(chatGroup);
+                    logger.Append($"✓ 对话 '{chatGroup.Name}' 及其所有数据已删除");
+
+                    deletedCount++;
+                }
+                catch (Exception ex)
+                {
+                    errors.Add($"删除对话 ID {chatGroupId} 失败: {ex.Message}");
+                    logger.Append($"✗ 删除失败: {ex.Message}");
+                }
+            }
+
+            // 生成删除摘要
+            logger.Append($"\n========== 删除摘要 ==========");
+            logger.Append($"✓ 成功删除: {deletedCount} 个对话");
+            if (errors.Count > 0)
+            {
+                logger.Append($"✗ 失败: {errors.Count} 个对话");
+                foreach (var error in errors)
+                {
+                    logger.Append($"  • {error}");
+                }
+            }
+            logger.Append($"==============================");
+
+            return logger.ToString();
         }
     }
 

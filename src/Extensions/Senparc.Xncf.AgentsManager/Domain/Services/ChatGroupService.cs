@@ -717,6 +717,14 @@ Note: parameter From must be strictly equal to the name of the player spokespers
                 await foreach (var message in aiTeam.SendAsync(chatHistory: [greetingMessage, commandMessage],
             maxRound: ChatMaxRound))
                 {
+                    var keepRunning = await _cache.GetAsync<RunningChatTaskDto>(runningKey);
+                    if (keepRunning == null)
+                    {
+                        logger.Append($"任务已被强制停止：{chatTask.Name}");
+                        await chatTaskService.SetStatus(ChatTask_Status.Cancelled, chatTask);
+                        return;
+                    }
+
                     // process exit
                     if (message.GetContent()?.Contains("exit") is true)
                     {

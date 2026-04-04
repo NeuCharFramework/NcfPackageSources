@@ -110,6 +110,7 @@
                                         @@click="handleEditDrawerOpenBtn('drawerAgent',aitem)">编辑
                                     </div>
                                     <div class="lowerHalfbox_operation" @@click="handleAgentView(aitem,aindex)">详情</div>
+                                    <div class="lowerHalfbox_operation" @@click="handleAgentDelete(aitem)">删除</div>
                                 </div>
                             </div>
                             <div v-for="fitem in fillCardNum" :key="fitem" style="flex-grow: 1;flex-basis: 315px;">
@@ -224,6 +225,8 @@
                                     :style="{'color': agentDetails.agentTemplateDto.enable ? '#F56C6C' : '#2a82e4' }"
                                     @@click="setAgentState('stop', agentDetails)">{{
                                     agentDetails.agentTemplateDto.enable ? '停用' : '启用' }}</span>
+                                <span class="btnText" style="color: #F56C6C; margin-left: 10px;"
+                                    @@click="handleAgentDelete(agentDetails)">删除</span>
                             </div>
                         </div>
                     </div>
@@ -300,6 +303,8 @@
                                                     @@click="handleEditDrawerOpenBtn('drawerGroup',agentDetailsGroupDetails)">编辑</el-button>
                                                 <el-button type="primary" size="mini"
                                                     @@click="handleTaskStartBatch('agentGroupTaskBatch',agentDetailsGroupDetails)">批量启动</el-button>
+                                                <el-button type="warning" size="mini"
+                                                    @@click="handleTaskForceStopBatch('agentGroupTaskBatch',agentDetailsGroupDetails)">批量停止</el-button>
                                                 <el-button type="danger" size="mini"
                                                     @@click="handleTaskDeleteBatch('agentGroupTaskBatch',agentDetailsGroupDetails)">批量删除</el-button>
                                             </div>
@@ -370,6 +375,8 @@
                                                     @@click="handleTaskView('agentGroupTask', row)">详情</el-button>
                                                 <el-button type="primary" size="mini"
                                                     @@click="handleTaskAgain('agentGroupTask', row)">再次执行</el-button>
+                                                <el-button type="warning" size="mini"
+                                                    @@click="handleTaskForceStop('agentGroupTask', row)">强制停止</el-button>
                                                 <el-button type="danger" size="mini"
                                                     @@click="handleTaskDelet('agentGroupTask', row)">删除</el-button>
                                             </template>
@@ -402,6 +409,8 @@
                                                     @@click="viewAgentParameters('agentGroupTask')">智能体参数</el-button>
                                                 <el-button type="primary" size="mini"
                                                     @@click="handleTaskAgain('agentGroupTask',agentDetailsGroupDetailsTaskDetails)">再次执行</el-button>
+                                                <el-button type="warning" size="mini"
+                                                    @@click="handleTaskForceStop('agentGroupTask',agentDetailsGroupDetailsTaskDetails)">强制停止</el-button>
                                             </div>
                                         </template>
                                     </div>
@@ -744,6 +753,8 @@
                                     @@click="handleEditDrawerOpenBtn('drawerGroup',groupDetails)">编辑</el-button>
                                 <el-button type="primary" size="mini"
                                     @@click="handleTaskStartBatch('groupTaskBatch',groupDetails)">批量启动</el-button>
+                                <el-button type="warning" size="mini"
+                                    @@click="handleTaskForceStopBatch('groupTaskBatch',groupDetails)">批量停止</el-button>
                                 <el-button type="danger" size="mini"
                                     @@click="handleTaskDeleteBatch('groupTaskBatch',groupDetails)">批量删除</el-button>
                             </div>
@@ -805,6 +816,8 @@
                                     @@click="handleTaskView('groupTask', row)">详情</el-button>
                                 <el-button type="primary" size="mini"
                                     @@click="handleTaskAgain('groupTask', row)">再次执行</el-button>
+                                <el-button type="warning" size="mini"
+                                    @@click="handleTaskForceStop('groupTask', row)">强制停止</el-button>
                                 <el-button type="danger" size="mini"
                                     @@click="handleTaskDelet('groupTask', row)">删除</el-button>
                             </template>
@@ -834,6 +847,8 @@
                                     @@click="viewAgentParameters('groupTask')">智能体参数</el-button>
                                 <el-button type="primary" size="mini"
                                     @@click="handleTaskAgain('groupTask',groupTaskDetails)">再次执行</el-button>
+                                <el-button type="warning" size="mini"
+                                    @@click="handleTaskForceStop('groupTask',groupTaskDetails)">强制停止</el-button>
                             </div>
                         </template>
                     </div>
@@ -984,6 +999,8 @@
                         <div class="df-wn groupInfoRow-operation">
                             <el-button type="primary" size="mini"
                                 @@click="handleTaskStartBatch('taskBatch')">批量启动</el-button>
+                            <el-button type="warning" size="mini"
+                                @@click="handleTaskForceStopBatch('taskBatch')">批量停止</el-button>
                             <el-button type="danger" size="mini"
                                 @@click="handleTaskDeleteBatch('taskBatch')">批量删除</el-button>
                         </div>
@@ -1026,6 +1043,8 @@
                                     @@click="handleTaskView('task', row, $index)">详情</el-button>
                                 <el-button type="primary" size="mini"
                                     @@click="handleTaskAgain('task', row)">再次执行</el-button>
+                                <el-button type="warning" size="mini"
+                                    @@click="handleTaskForceStop('task', row)">强制停止</el-button>
                                 <el-button type="danger" size="mini"
                                     @@click="handleTaskDelet('task', row)">删除</el-button>
                             </template>
@@ -1049,6 +1068,8 @@
                                 @@click="viewAgentParameters('taskDetail')">智能体参数</el-button>
                             <el-button type="primary" size="mini"
                                 @@click="handleTaskAgain('task',taskDetails)">再次执行</el-button>
+                            <el-button type="warning" size="mini"
+                                @@click="handleTaskForceStop('task',taskDetails)">强制停止</el-button>
                         </div>
                     </div>
                     <div class="df flex-ac flex-jc task-info">
@@ -1706,8 +1727,8 @@
                         <div class="prompt-title">
                             Prompt
                         </div>
-                        <div class="prompt-value">
-
+                        <div class="prompt-value" style="white-space: pre-wrap;">
+                            {{ item.promptItemDto ? item.promptItemDto.content : (item.systemMessage || '') }}
                         </div>
                     </div>
                     <div class="promptResult">
