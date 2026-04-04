@@ -237,6 +237,10 @@ height:100%;
     width: 140px;
 }
 
+.agent-3d-controls .el-button {
+    padding: 7px 10px;
+}
+
 .agent-3d-controls .el-checkbox {
     color: rgba(226, 242, 255, 0.92);
 }
@@ -331,6 +335,10 @@ height:100%;
     }
 
     .agent-3d-controls .el-select {
+        width: calc(50% - 4px);
+    }
+
+    .agent-3d-controls .el-button {
         width: calc(50% - 4px);
     }
 

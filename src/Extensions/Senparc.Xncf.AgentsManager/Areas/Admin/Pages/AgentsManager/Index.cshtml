@@ -132,6 +132,14 @@
                                 <el-option label="取消" :value="4"></el-option>
                             </el-select>
                             <el-checkbox v-model="agentGraphShowOnlyActiveGroup" @@change="handleAgentGraphFilterChange">仅运行中组</el-checkbox>
+                            <el-select v-model="quickJumpGroupId" size="mini" clearable filterable placeholder="快速进入组">
+                                <el-option v-for="item in quickJumpGroupOptions" :key="'qg-'+item.id" :label="item.name" :value="item.id"></el-option>
+                            </el-select>
+                            <el-button size="mini" type="primary" plain @@click="handleQuickJumpGroup">进入组</el-button>
+                            <el-select v-model="quickJumpTaskId" size="mini" clearable filterable placeholder="快速进入任务">
+                                <el-option v-for="item in quickJumpTaskOptions" :key="'qt-'+item.id" :label="item.name" :value="item.id"></el-option>
+                            </el-select>
+                            <el-button size="mini" type="success" plain @@click="handleQuickJumpTask">进入任务</el-button>
                         </div>
                         <div class="agent-3d-tip">悬停 Group 柱体可高亮组成员；点击 Group 可锁定/取消锁定；顶部数字展示该组运行任务状态统计。</div>
                         <div class="agent-3d-legend">

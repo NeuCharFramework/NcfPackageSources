@@ -112,6 +112,7 @@
     this.currentSnapshot = null;
     this.targets = new Map();
     this.activeGroupId = null;
+    this.activeAgentId = null;
     this.lockedGroupId = null;
     this.pointerClickHandler = null;
   }
@@ -490,6 +491,8 @@
         color: '#E8F7FF'
       });
       label.position.set(target.x, target.y + 3.7, target.z);
+      label.userData = { type: 'agent-label', agentId: agent.id };
+      label.material.opacity = 0.42;
       this.scene.add(label);
 
       const entry = {
@@ -636,6 +639,20 @@
 
     this.raycaster.setFromCamera(this.mouse, this.camera);
 
+    const hoverTargets = this.agentObjects.reduce(function (acc, entry) {
+      acc.push(entry.mesh);
+      if (entry.label) {
+        acc.push(entry.label);
+      }
+      return acc;
+    }, []);
+    const agentIntersects = this.raycaster.intersectObjects(hoverTargets, false);
+    if (agentIntersects.length > 0) {
+      this.activeAgentId = agentIntersects[0].object.userData.agentId || null;
+    } else {
+      this.activeAgentId = null;
+    }
+
     if (this.lockedGroupId) {
       this.applyGroupHighlight();
       return;
@@ -688,6 +705,7 @@
       return;
     }
     this.activeGroupId = null;
+    this.activeAgentId = null;
     if (typeof this.options.onGroupHover === 'function') {
       this.options.onGroupHover(null);
     }
@@ -710,12 +728,14 @@
     }
 
     this.agentObjects.forEach(function (entry) {
+      const isHovered = this.activeAgentId && entry.agent.id === this.activeAgentId;
       const opacity = !activeGroup || activeMemberSet.has(entry.agent.id) ? 0.98 : 0.08;
       entry.mesh.material.opacity = opacity;
       if (entry.label) {
-        entry.label.material.opacity = !activeGroup || activeMemberSet.has(entry.agent.id) ? 1 : 0.12;
+        const baseOpacity = !activeGroup || activeMemberSet.has(entry.agent.id) ? 0.42 : 0.1;
+        entry.label.material.opacity = isHovered ? 1 : baseOpacity;
       }
-    });
+    }.bind(this));
 
     this.groupObjects.forEach(function (entry) {
       const isActive = activeGroup && entry.group.id === activeGroup;

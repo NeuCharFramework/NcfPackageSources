@@ -408,6 +408,11 @@ var app = new Vue({
       agentGraphLastRefreshAt: null,
       agentGraphLastRenderAt: null,
       agentGraphRenderCount: 0,
+      quickJumpGroupId: null,
+      quickJumpTaskId: null,
+      quickJumpTaskOptions: [],
+      hashChangeHandler: null,
+      isApplyingHashRoute: false,
     };
   },
   computed: {
@@ -458,6 +463,18 @@ var app = new Vue({
         'Refresh: ' + this.formatAgentGraphDebugTime(this.agentGraphLastRefreshAt),
         'Render: ' + this.formatAgentGraphDebugTime(this.agentGraphLastRenderAt)
       ].join('\n')
+    },
+    quickJumpGroupOptions() {
+      const map = new Map()
+      ;(this.agentGraphSnapshot.groups || []).forEach(item => {
+        map.set(item.id, { id: item.id, name: item.name })
+      })
+      ;(this.groupList || []).forEach(item => {
+        if (!map.has(item.id)) {
+          map.set(item.id, { id: item.id, name: item.name })
+        }
+      })
+      return Array.from(map.values())
     }
   },
   watch: {},
@@ -483,11 +500,24 @@ var app = new Vue({
       this.gettaskListData('task')
     }
 
+    this.hashChangeHandler = () => {
+      this.applyHashRoute()
+    }
+    window.addEventListener('hashchange', this.hashChangeHandler)
+    this.refreshQuickJumpTaskOptions()
+    this.$nextTick(() => {
+      this.applyHashRoute()
+    })
+
   },
   beforeDestroy() {
     this.clearHistoryTimer()
     this.stopAgentGraphPolling()
     this.destroyAgentGraph3d()
+    if (this.hashChangeHandler) {
+      window.removeEventListener('hashchange', this.hashChangeHandler)
+      this.hashChangeHandler = null
+    }
   },
   methods: {
     //寻找目标字符串
@@ -520,6 +550,182 @@ var app = new Vue({
       }
       const pad = n => String(n).padStart(2, '0')
       return pad(date.getHours()) + ':' + pad(date.getMinutes()) + ':' + pad(date.getSeconds())
+    },
+    parseHashRoute() {
+      const raw = (window.location.hash || '').replace(/^#/, '')
+      const route = {
+        tab: '',
+        view: '',
+        agentId: null,
+        groupId: null,
+        taskId: null
+      }
+      if (!raw) {
+        return route
+      }
+      const params = new URLSearchParams(raw)
+      route.tab = params.get('tab') || ''
+      route.view = params.get('view') || ''
+      route.agentId = Number(params.get('agentId') || 0) || null
+      route.groupId = Number(params.get('groupId') || 0) || null
+      route.taskId = Number(params.get('taskId') || 0) || null
+      return route
+    },
+    setHashRoute(route) {
+      if (this.isApplyingHashRoute) {
+        return
+      }
+      const params = new URLSearchParams()
+      if (route.tab) {
+        params.set('tab', route.tab)
+      }
+      if (route.view) {
+        params.set('view', route.view)
+      }
+      if (route.agentId) {
+        params.set('agentId', String(route.agentId))
+      }
+      if (route.groupId) {
+        params.set('groupId', String(route.groupId))
+      }
+      if (route.taskId) {
+        params.set('taskId', String(route.taskId))
+      }
+      const nextHash = params.toString()
+      if ((window.location.hash || '').replace(/^#/, '') === nextHash) {
+        return
+      }
+      window.location.hash = nextHash
+    },
+    buildCurrentRoute(extra = {}) {
+      const route = {
+        tab: this.tabsActiveName || 'first'
+      }
+      if (route.tab === 'first') {
+        if (this.agentListViewMode === 'three') {
+          route.view = 'three'
+        }
+        if (this.scrollbarAgentIndex) {
+          route.agentId = this.scrollbarAgentIndex
+        }
+      }
+      if (route.tab === 'second') {
+        const groupId = this.groupDetails?.chatGroupDto?.id || this.scrollbarGroupIndex || null
+        const taskId = this.groupTaskDetails?.id || null
+        if (groupId) {
+          route.groupId = groupId
+        }
+        if (taskId) {
+          route.taskId = taskId
+        }
+      }
+      if (route.tab === 'third') {
+        const taskId = this.taskDetails?.id || this.scrollbarTaskIndex || null
+        if (taskId) {
+          route.taskId = taskId
+        }
+      }
+      return Object.assign(route, extra)
+    },
+    syncHashRoute(extra = {}) {
+      this.setHashRoute(this.buildCurrentRoute(extra))
+    },
+    async applyHashRoute() {
+      if (this.isApplyingHashRoute) {
+        return
+      }
+      const route = this.parseHashRoute()
+      if (!route.tab && !route.groupId && !route.taskId && !route.agentId) {
+        return
+      }
+
+      this.isApplyingHashRoute = true
+      try {
+        const tab = ['first', 'second', 'third'].includes(route.tab) ? route.tab : 'first'
+        if (this.tabsActiveName !== tab) {
+          this.tabsActiveName = tab
+          this.handleTabsClick()
+        }
+
+        if (tab === 'first') {
+          if (route.view === 'three') {
+            this.handleAgentListViewModeChange('three')
+          }
+          if (route.agentId) {
+            await this.getAgentListData('agent')
+            const idx = (this.agentList || []).findIndex(item => item.id === route.agentId)
+            if (idx >= 0) {
+              this.handleAgentView(this.agentList[idx], idx)
+            }
+          }
+          return
+        }
+
+        if (tab === 'second') {
+          await this.getGroupListData('group')
+          if (route.groupId) {
+            const groupItem = (this.groupList || []).find(item => item.id === route.groupId)
+            if (groupItem) {
+              this.handleGroupView('group', groupItem)
+            } else {
+              this.groupShowType = '2'
+              this.scrollbarGroupIndex = route.groupId
+              await this.getGroupDetailData('groupTable', route.groupId, { id: route.groupId })
+            }
+          }
+          if (route.taskId) {
+            this.groupShowType = '3'
+            await this.getTaskDetailData('groupTask', route.taskId, { id: route.taskId })
+          }
+          return
+        }
+
+        if (tab === 'third' && route.taskId) {
+          await this.gettaskListData('task')
+          const idx = (this.taskList || []).findIndex(item => item.id === route.taskId)
+          if (idx >= 0) {
+            this.handleTaskView('task', this.taskList[idx], idx)
+          } else {
+            this.scrollbarTaskIndex = route.taskId
+            await this.getTaskDetailData('task', route.taskId, { id: route.taskId })
+          }
+        }
+      } finally {
+        this.isApplyingHashRoute = false
+      }
+    },
+    async refreshQuickJumpTaskOptions() {
+      try {
+        const res = await serviceAM.get('/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetList?pageIndex=0&pageSize=0')
+        const data = res?.data ?? {}
+        if (!data.success) {
+          return
+        }
+        const taskList = data?.data?.chatTaskList ?? []
+        this.quickJumpTaskOptions = taskList.slice(0, 200).map(item => ({
+          id: item.id,
+          groupId: item.chatGroupId,
+          name: item.name + ' (G' + item.chatGroupId + ')'
+        }))
+      } catch (e) {
+        console.warn('refreshQuickJumpTaskOptions failed', e)
+      }
+    },
+    handleQuickJumpGroup() {
+      const groupId = Number(this.quickJumpGroupId || 0)
+      if (!groupId) {
+        return
+      }
+      this.setHashRoute({ tab: 'second', groupId: groupId })
+      this.applyHashRoute()
+    },
+    handleQuickJumpTask() {
+      const taskId = Number(this.quickJumpTaskId || 0)
+      if (!taskId) {
+        return
+      }
+      this.setHashRoute({ tab: 'third', taskId: taskId })
+      this.applyHashRoute()
     },
     handleAgentGraphFilterChange() {
       this.renderAgentGraph()
@@ -615,6 +821,7 @@ var app = new Vue({
         this.stopAgentGraphPolling()
         this.destroyAgentGraph3d()
       }
+      this.syncHashRoute({ tab: 'first', view: this.agentListViewMode === 'three' ? 'three' : null })
     },
     ensureAgentGraph3d() {
       if (!this.$refs.agent3dContainer || typeof AgentGraph3D === 'undefined') {
@@ -1477,6 +1684,10 @@ var app = new Vue({
               this.getTaskDetailData(detail.serviceType, detail.id, detail, true)
             }
           }
+
+          if (['drawerGroup', 'drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
+            this.refreshQuickJumpTaskOptions()
+          }
         } else {
           console.error('API Error:', response.data);
           app.$message({
@@ -1788,6 +1999,7 @@ var app = new Vue({
       if (this.tabsActiveName === 'third') {
         this.gettaskListData('task')
       }
+      this.syncHashRoute()
     },
 
     // 筛选输入变化
@@ -1904,6 +2116,7 @@ var app = new Vue({
           this.startAgentGraphPolling()
         })
       }
+      this.syncHashRoute({ tab: 'first', agentId: null })
     },
     // 查看 智能体
     handleAgentView(item, index) {
@@ -1921,6 +2134,7 @@ var app = new Vue({
       if (this.agentDetailsTabsActiveName === 'second') {
         this.gettaskListData('agentTask', item.id)
       }
+      this.syncHashRoute({ tab: 'first', agentId: item.id })
     },
     // 重置 智能体详情下的组和任务数据
     resetAgentDetailsQuery() {
@@ -2074,6 +2288,7 @@ var app = new Vue({
       this.groupTaskMemberfilter = ''
       this.groupTaskMemberfilterList = []
       this.getGroupListData('group')
+      this.syncHashRoute({ tab: 'second', groupId: null, taskId: null })
     },
     // 组 查看列表 详情 
     handleGroupView(clickType, item, index = 0) {
@@ -2113,6 +2328,7 @@ var app = new Vue({
         this.groupTaskMemberfilter = ''
         this.groupTaskMemberfilterList = []
         this.getGroupDetailData(clickType, item.id, item)
+        this.syncHashRoute({ tab: 'second', groupId: item.id, taskId: null })
       }
     },
     // 组 新增|编辑 智能体table 切换table 选中
@@ -2258,6 +2474,7 @@ var app = new Vue({
       this.taskMemberfilter = ''
       this.taskMemberfilterList = []
       this.gettaskListData('task')
+      this.syncHashRoute({ tab: 'third', taskId: null })
     },
     // 查看 任务详情
     handleTaskView(clickType, item = {}, index = 0) {
@@ -2289,6 +2506,7 @@ var app = new Vue({
         this.groupTaskMemberfilter = ''
         this.groupTaskMemberfilterList = []
         this.getTaskDetailData(clickType, item.id, item)
+        this.syncHashRoute({ tab: 'second', groupId: item.chatGroupId || this.scrollbarGroupIndex || null, taskId: item.id })
       }
       if (clickType === 'task') {
         this.scrollbarTaskIndex = index ?? ''
@@ -2299,6 +2517,7 @@ var app = new Vue({
         this.taskMemberfilter = ''
         this.taskMemberfilterList = []
         this.getTaskDetailData(clickType, item.id, item)
+        this.syncHashRoute({ tab: 'third', taskId: item.id })
       }
     },
     // 返回组详情页面
@@ -2312,6 +2531,7 @@ var app = new Vue({
       }
       if (clickType === 'groupTask') {
         this.groupShowType = '2' // 组件详情
+        this.syncHashRoute({ tab: 'second', taskId: null })
         // const item = this.groupList[this.scrollbarGroupIndex]
         // this.getGroupDetailData('groupTable', item.id,this.groupDetails)
       }
