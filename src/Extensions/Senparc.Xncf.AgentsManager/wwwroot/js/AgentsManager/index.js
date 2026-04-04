@@ -405,6 +405,9 @@ var app = new Vue({
       agentGraphShowOnlyActiveGroup: false,
       agentGraphRequesting: false,
       agentGraphLastSignature: '',
+      agentGraphLastRefreshAt: null,
+      agentGraphLastRenderAt: null,
+      agentGraphRenderCount: 0,
     };
   },
   computed: {
@@ -436,6 +439,25 @@ var app = new Vue({
         id: item.id,
         name: item.name
       }))
+    },
+    agentGraphDebugText() {
+      const snapshot = this.agentGraphSnapshot || {}
+      const agents = Array.isArray(snapshot.agents) ? snapshot.agents.length : 0
+      const groups = Array.isArray(snapshot.groups) ? snapshot.groups.length : 0
+      const links = Array.isArray(snapshot.links) ? snapshot.links.length : 0
+      const cols = Array.isArray(snapshot.collaborations) ? snapshot.collaborations.length : 0
+      const polling = this.agentGraphPollingTimer ? 'ON' : 'OFF'
+      const requesting = this.agentGraphRequesting ? 'YES' : 'NO'
+
+      return [
+        '3D Debug',
+        'Agents: ' + agents + '  Groups: ' + groups,
+        'Links: ' + links + '  Collaborations: ' + cols,
+        'Polling: ' + polling + '  Requesting: ' + requesting,
+        'Rendered: ' + this.agentGraphRenderCount,
+        'Refresh: ' + this.formatAgentGraphDebugTime(this.agentGraphLastRefreshAt),
+        'Render: ' + this.formatAgentGraphDebugTime(this.agentGraphLastRenderAt)
+      ].join('\n')
     }
   },
   watch: {},
@@ -488,6 +510,17 @@ var app = new Vue({
     },
     calculateDuration,
     scoreFormatter,
+    formatAgentGraphDebugTime(value) {
+      if (!value) {
+        return '--'
+      }
+      const date = value instanceof Date ? value : new Date(value)
+      if (Number.isNaN(date.getTime())) {
+        return '--'
+      }
+      const pad = n => String(n).padStart(2, '0')
+      return pad(date.getHours()) + ':' + pad(date.getMinutes()) + ':' + pad(date.getSeconds())
+    },
     handleAgentGraphFilterChange() {
       this.renderAgentGraph()
     },
@@ -567,6 +600,8 @@ var app = new Vue({
       }
       const filtered = this.buildFilteredAgentGraphSnapshot(snapshot || this.agentGraphSnapshot)
       this.agentGraph3d.updateGraph(filtered)
+      this.agentGraphLastRenderAt = new Date()
+      this.agentGraphRenderCount += 1
     },
     handleAgentListViewModeChange(mode) {
       this.agentListViewMode = mode || 'panel'
@@ -648,6 +683,7 @@ var app = new Vue({
           collaborations: snapshot.collaborations || []
         }
         this.agentGraphSnapshot = normalizedSnapshot
+        this.agentGraphLastRefreshAt = new Date()
         this.applyGraphMetricsToAgentList(normalizedSnapshot.agents)
 
         if (this.agentGraphFilterGroupId && !normalizedSnapshot.groups.some(item => item.id === this.agentGraphFilterGroupId)) {

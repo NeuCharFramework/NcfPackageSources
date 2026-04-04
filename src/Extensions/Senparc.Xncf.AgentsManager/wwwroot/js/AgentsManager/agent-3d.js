@@ -12,8 +12,11 @@
   function textSprite(text, options) {
     const fontSize = options.fontSize || 24;
     const padding = options.padding || 14;
-    const scaleDivisor = options.scaleDivisor || 22;
-    const sizeAttenuation = typeof options.sizeAttenuation === 'boolean' ? options.sizeAttenuation : false;
+    const scaleDivisor = options.scaleDivisor || 26;
+    const sizeAttenuation = typeof options.sizeAttenuation === 'boolean' ? options.sizeAttenuation : true;
+    const maxLineLength = options.maxLineLength || 30;
+    const maxWorldWidth = options.maxWorldWidth || 15;
+    const maxWorldHeight = options.maxWorldHeight || 9;
     const bg = options.background || 'rgba(10,20,30,0.82)';
     const color = options.color || '#EAF2FF';
     const border = options.border || 'rgba(86, 162, 255, 0.55)';
@@ -22,13 +25,21 @@
     const ctx = canvas.getContext('2d');
     ctx.font = 'bold ' + fontSize + 'px sans-serif';
 
-    const rows = String(text || '').split('\n');
+    const rows = String(text || '').split('\n').map(function (line) {
+      const lineText = String(line || '');
+      if (lineText.length <= maxLineLength) {
+        return lineText;
+      }
+      return lineText.slice(0, maxLineLength - 1) + '…';
+    });
     const width = Math.max.apply(null, rows.map(function (line) { return ctx.measureText(line).width; })) + padding * 2;
     const rowHeight = Math.ceil(fontSize * 1.45);
     const height = rowHeight * rows.length + padding * 2;
 
-    canvas.width = Math.ceil(width);
-    canvas.height = Math.ceil(height);
+    const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    canvas.width = Math.ceil(width * dpr);
+    canvas.height = Math.ceil(height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     ctx.fillStyle = bg;
     ctx.strokeStyle = border;
@@ -63,6 +74,8 @@
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.needsUpdate = true;
+    texture.minFilter = THREE.LinearFilter;
+    texture.magFilter = THREE.LinearFilter;
     const material = new THREE.SpriteMaterial({
       map: texture,
       transparent: true,
@@ -70,7 +83,9 @@
       sizeAttenuation: sizeAttenuation
     });
     const sprite = new THREE.Sprite(material);
-    sprite.scale.set(canvas.width / scaleDivisor, canvas.height / scaleDivisor, 1);
+    const worldWidth = Math.min(canvas.width / dpr / scaleDivisor, maxWorldWidth);
+    const worldHeight = Math.min(canvas.height / dpr / scaleDivisor, maxWorldHeight);
+    sprite.scale.set(worldWidth, worldHeight, 1);
     return sprite;
   }
 
