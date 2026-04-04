@@ -17,6 +17,7 @@ using Senparc.Xncf.AgentsManager.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
+using Senparc.Xncf.AgentsManager.OHS.Local.AppService;
 using Senparc.Xncf.XncfBuilder.OHS.Local;
 using System;
 using System.Linq;
@@ -107,6 +108,9 @@ namespace Senparc.Xncf.AgentsManager
             services.AddScoped<CrawlPlugin>();
             services.AddScoped<FormatorPlugin>();
             services.AddScoped<TranslatorPlugin>();
+
+            //AI Chat
+            services.AddScoped<AiChatAppService>();
 
             //测试
             services.AddScoped<BuildXncfAppService>();
