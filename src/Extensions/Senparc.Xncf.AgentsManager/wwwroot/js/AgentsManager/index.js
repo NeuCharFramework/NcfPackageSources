@@ -390,6 +390,14 @@ var app = new Vue({
       mcpEndpointEditMode: false,
       mcpEndpointOriginalName: '',
       currentMcpTools: [], // 当前查看的MCP工具列表
+      // AI 对话 ---start
+      aiChatMessages: [], // 对话消息列表
+      aiChatInput: '', // 当前输入
+      aiChatLoading: false, // 加载状态
+      aiChatConfirming: false, // 确认操作加载状态
+      aiChatModelId: null, // 使用的 AI 模型 ID（null 表示默认）
+      aiChatModelList: [], // 可选 AI 模型列表
+      // AI 对话 ---end
     };
   },
   computed: {
@@ -1527,6 +1535,10 @@ var app = new Vue({
       // 任务
       if (this.tabsActiveName === 'third') {
         this.gettaskListData('task')
+      }
+      // AI 对话
+      if (this.tabsActiveName === 'fourth') {
+        this.loadAiChatModelList()
       }
     },
 
@@ -3364,6 +3376,254 @@ Vue.component('load-more-select', {
         })
       }
 
-    }
+    },
+
+    // ========= AI 对话相关方法 =========
+
+    // 加载 AI 模型列表
+    async loadAiChatModelList() {
+      try {
+        const res = await serviceAM.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync', {
+          pageIndex: 0,
+          pageSize: 0
+        })
+        const data = res?.data ?? {}
+        if (data.success) {
+          // 只显示 Chat 类型的模型（configModelType === 1）
+          this.aiChatModelList = (data.data ?? []).filter(m => m.configModelType === 1)
+        }
+      } catch (e) {
+        console.error('加载 AI 模型列表失败', e)
+      }
+    },
+
+    // 发送 AI 对话消息
+    async sendAiChatMessage() {
+      const userInput = (this.aiChatInput || '').trim()
+      if (!userInput) return
+      if (this.aiChatLoading) return
+
+      // 添加用户消息
+      this.aiChatMessages.push({
+        role: 'user',
+        content: userInput,
+        contentHtml: userInput.replace(/\n/g, '<br/>')
+      })
+      this.aiChatInput = ''
+
+      // 滚动到底部
+      this.$nextTick(() => {
+        const el = this.$refs.aiChatMessages
+        if (el) el.scrollTop = el.scrollHeight
+      })
+
+      this.aiChatLoading = true
+
+      try {
+        // 构建历史记录（只发送 user/assistant 角色）
+        const chatHistory = this.aiChatMessages
+          .filter(m => m.role === 'user' || m.role === 'assistant')
+          .slice(0, -1) // 不包含最新的用户消息
+          .map(m => ({ role: m.role, content: m.content }))
+
+        const payload = {
+          userMessage: userInput,
+          chatHistory: chatHistory,
+          aiModelId: this.aiChatModelId || 0
+        }
+
+        const res = await serviceAM.post(
+          '/api/Senparc.Xncf.AgentsManager/AiChatAppService/Xncf.AgentsManager_AiChatAppService.SendMessage',
+          payload
+        )
+
+        const data = res?.data ?? {}
+        if (data.success) {
+          const aiData = data.data ?? {}
+          const aiMessage = aiData.aiMessage || '（无响应）'
+          const responseType = aiData.responseType ?? 0
+          const suggestedGroup = aiData.suggestedGroup || null
+          const suggestedGroupId = aiData.suggestedGroupId || null
+
+          // 渲染 Markdown
+          let contentHtml = aiMessage
+          if (typeof marked !== 'undefined') {
+            try { contentHtml = marked.parse(aiMessage) } catch (e) { }
+          }
+
+          // 添加 AI 消息
+          this.aiChatMessages.push({
+            role: 'assistant',
+            content: aiMessage,
+            contentHtml: contentHtml,
+            responseType: responseType,
+            suggestedGroup: suggestedGroup,
+            suggestedGroupId: suggestedGroupId,
+            confirmed: false
+          })
+        } else {
+          this.aiChatMessages.push({
+            role: 'assistant',
+            content: data.errorMessage || '请求失败，请稍后重试',
+            contentHtml: data.errorMessage || '请求失败，请稍后重试',
+            responseType: 4
+          })
+        }
+      } catch (e) {
+        this.aiChatMessages.push({
+          role: 'assistant',
+          content: '网络错误，请稍后重试：' + (e.message || ''),
+          contentHtml: '网络错误，请稍后重试：' + (e.message || ''),
+          responseType: 4
+        })
+      } finally {
+        this.aiChatLoading = false
+        this.$nextTick(() => {
+          const el = this.$refs.aiChatMessages
+          if (el) el.scrollTop = el.scrollHeight
+        })
+      }
+    },
+
+    // 用户确认创建新组并运行任务（通过 FunctionRender 对应方法）
+    async confirmCreateAndRunGroup(msg, idx) {
+      if (!msg.suggestedGroup) return
+      this.aiChatConfirming = true
+      try {
+        const res = await serviceAM.post(
+          '/api/Senparc.Xncf.AgentsManager/AiChatAppService/Xncf.AgentsManager_AiChatAppService.ConfirmCreateAndRunGroup',
+          msg.suggestedGroup
+        )
+        const data = res?.data ?? {}
+        if (data.success) {
+          const aiData = data.data ?? {}
+          const aiMessage = aiData.aiMessage || '✅ 任务已启动！'
+          let contentHtml = aiMessage
+          if (typeof marked !== 'undefined') {
+            try { contentHtml = marked.parse(aiMessage) } catch (e) { }
+          }
+          // 标记当前消息为已确认
+          this.$set(this.aiChatMessages[idx], 'confirmed', true)
+          // 添加确认成功的 AI 回复
+          this.aiChatMessages.push({
+            role: 'assistant',
+            content: aiMessage,
+            contentHtml: contentHtml,
+            responseType: 3,
+            startedGroupId: aiData.startedGroupId,
+            startedTaskName: aiData.startedTaskName
+          })
+          // 使用 EventBus 通知：切换到任务标签页
+          this.$nextTick(() => {
+            this.$message({ message: '任务已启动，可切换到「任务」标签页查看进度', type: 'success', duration: 3000 })
+          })
+        } else {
+          this.aiChatMessages.push({
+            role: 'assistant',
+            content: '创建失败：' + (data.errorMessage || '未知错误'),
+            contentHtml: '创建失败：' + (data.errorMessage || '未知错误'),
+            responseType: 4
+          })
+        }
+      } catch (e) {
+        this.aiChatMessages.push({
+          role: 'assistant',
+          content: '操作失败：' + (e.message || ''),
+          contentHtml: '操作失败：' + (e.message || ''),
+          responseType: 4
+        })
+      } finally {
+        this.aiChatConfirming = false
+        this.$nextTick(() => {
+          const el = this.$refs.aiChatMessages
+          if (el) el.scrollTop = el.scrollHeight
+        })
+      }
+    },
+
+    // 用户确认运行已有组
+    async confirmRunExistingGroup(msg, idx) {
+      if (!msg.suggestedGroupId) return
+      this.aiChatConfirming = true
+      try {
+        // 获取最近一条用户消息作为任务命令
+        const lastUserMsg = [...this.aiChatMessages].reverse().find(m => m.role === 'user')
+        const taskCommand = (msg.suggestedGroup && msg.suggestedGroup.taskCommand) || (lastUserMsg && lastUserMsg.content) || ''
+
+        const res = await serviceAM.post(
+          '/api/Senparc.Xncf.AgentsManager/AiChatAppService/Xncf.AgentsManager_AiChatAppService.RunExistingGroup',
+          {
+            chatGroupId: msg.suggestedGroupId,
+            taskCommand: taskCommand,
+            aiModelId: this.aiChatModelId || 0
+          }
+        )
+        const data = res?.data ?? {}
+        if (data.success) {
+          const aiData = data.data ?? {}
+          const aiMessage = aiData.aiMessage || '✅ 任务已启动！'
+          let contentHtml = aiMessage
+          if (typeof marked !== 'undefined') {
+            try { contentHtml = marked.parse(aiMessage) } catch (e) { }
+          }
+          this.$set(this.aiChatMessages[idx], 'confirmed', true)
+          this.aiChatMessages.push({
+            role: 'assistant',
+            content: aiMessage,
+            contentHtml: contentHtml,
+            responseType: 3,
+            startedGroupId: aiData.startedGroupId,
+            startedTaskName: aiData.startedTaskName
+          })
+          this.$nextTick(() => {
+            this.$message({ message: '任务已启动，可切换到「任务」标签页查看进度', type: 'success', duration: 3000 })
+          })
+        } else {
+          this.aiChatMessages.push({
+            role: 'assistant',
+            content: '启动失败：' + (data.errorMessage || '未知错误'),
+            contentHtml: '启动失败：' + (data.errorMessage || '未知错误'),
+            responseType: 4
+          })
+        }
+      } catch (e) {
+        this.aiChatMessages.push({
+          role: 'assistant',
+          content: '操作失败：' + (e.message || ''),
+          contentHtml: '操作失败：' + (e.message || ''),
+          responseType: 4
+        })
+      } finally {
+        this.aiChatConfirming = false
+        this.$nextTick(() => {
+          const el = this.$refs.aiChatMessages
+          if (el) el.scrollTop = el.scrollHeight
+        })
+      }
+    },
+
+    // 取消 AI 建议
+    cancelSuggestion(idx) {
+      this.$set(this.aiChatMessages[idx], 'confirmed', true)
+      this.aiChatMessages.push({
+        role: 'assistant',
+        content: '已取消。如有其他需要，请继续描述您的任务。',
+        contentHtml: '已取消。如有其他需要，请继续描述您的任务。',
+        responseType: 0
+      })
+    },
+
+    // 清空对话
+    clearAiChat() {
+      this.$confirm('确认清空全部对话记录？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.aiChatMessages = []
+        this.aiChatInput = ''
+      }).catch(() => {})
+    },
+
   },
 })

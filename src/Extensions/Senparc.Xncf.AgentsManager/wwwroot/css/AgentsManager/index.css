@@ -1825,3 +1825,83 @@ height:100%;
     display: flex;
     align-items: center;
 }
+/* AI 对话标签页样式 */
+.aiChatMessagesList {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.aiChatMessage {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    max-width: 85%;
+}
+
+.aiChatMessage-user {
+    flex-direction: row-reverse;
+    margin-left: auto;
+}
+
+.aiChatMessage-ai {
+    flex-direction: row;
+    margin-right: auto;
+}
+
+.aiChatMessage-bubble {
+    background: #f0f2f5;
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 100%;
+    word-break: break-word;
+}
+
+.aiChatMessage-user .aiChatMessage-bubble {
+    background: #409eff;
+    color: #fff;
+}
+
+.aiChatMessage-avatar img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.aiChatMessage-loading {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 16px;
+}
+
+.aiChatMessage-loading span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #409eff;
+    animation: aiChatDot 1.2s infinite;
+    display: inline-block;
+}
+
+.aiChatMessage-loading span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.aiChatMessage-loading span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes aiChatDot {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+}
+
+.aiChatAction {
+    border-top: 1px solid rgba(0,0,0,0.08);
+    padding-top: 8px;
+    margin-top: 8px;
+}
