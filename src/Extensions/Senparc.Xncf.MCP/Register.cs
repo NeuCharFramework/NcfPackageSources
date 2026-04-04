@@ -105,6 +105,9 @@ namespace Senparc.Xncf.MCP
             services.AddScoped<ColorAppService>();
             services.AddScoped<ColorService>();
 
+            services.AddScoped<MCPEndpointAppService>();
+            services.AddScoped<MCPEndpointService>();
+
             services.AddAutoMapper(z =>
             {
                 z.CreateMap<Color, ColorDto>().ReverseMap();

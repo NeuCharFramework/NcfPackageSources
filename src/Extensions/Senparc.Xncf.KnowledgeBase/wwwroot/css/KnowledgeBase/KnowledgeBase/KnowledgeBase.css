@@ -221,3 +221,32 @@ background-size: cover; */
     /*border-top: 1px solid #ededed;*/
     /*box-shadow: 0 -1px 4px 1px rgba(0, 0, 0, 0.14);*/
 }
+
+/* 向量化进度弹窗 */
+.embedding-progress-body {
+    padding: 10px 0 16px;
+}
+
+.embedding-progress-text {
+    margin: 14px 0 0;
+    color: #606266;
+    font-size: 14px;
+}
+
+/* 向量化结果展示 */
+.embedding-result-body {
+    max-height: 420px;
+    overflow: auto;
+}
+
+.embedding-result-pre {
+    margin: 0;
+    padding: 12px;
+    background: #f5f7fa;
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: #303133;
+}

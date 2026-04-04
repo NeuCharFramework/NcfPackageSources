@@ -98,12 +98,17 @@ namespace Senparc.Xncf.AgentsManager
 
             //Service DI
             services.AddScoped<AgentsTemplateService>();
+            services.AddSingleton<PromptOptimizationAgentBridge>();
+            services.AddScoped<PromptOptimizationKernelFallbackService>();
+            services.AddScoped<PromptOptimizationService>(); // 注册 PromptOptimizationService
             services.AddScoped<ChatGroupService>();
             services.AddScoped<ChatGroupHistoryService>();
             services.AddScoped<ChatTaskService>();
             services.AddScoped<ChatGroupMemberService>();
 
             //AI Plugins DI
+            services.AddScoped<PromptCatalyzerPlugin>();
+            services.AddScoped<PromptOptimizationPlugin>();  // 🔥 新增：Prompt 优化 Plugin（含 GetPromptInfo, CreateOptimizedPrompt, ExecuteShootTest, ExecuteAIGrade 等方法）
             services.AddScoped<CrawlPlugin>();
             services.AddScoped<FormatorPlugin>();
             services.AddScoped<TranslatorPlugin>();
@@ -121,6 +126,8 @@ namespace Senparc.Xncf.AgentsManager
             });
 
             var aiPlugins = AIPluginHub.Instance;
+            aiPlugins.Add(typeof(PromptCatalyzerPlugin));
+            aiPlugins.Add(typeof(PromptOptimizationPlugin));  // 🔥 新增：Prompt 优化 Plugin
             aiPlugins.Add(typeof(CrawlPlugin));
             aiPlugins.Add(typeof(FormatorPlugin));
             aiPlugins.Add(typeof(TranslatorPlugin));

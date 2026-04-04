@@ -375,7 +375,7 @@ var app = new Vue({
       // 对话记录 轮询
       historyTimer: {},
       // 智能体参数列表
-      agentParameterTabsValue: 0, // tabs选中
+      agentParameterTabsValue: '', // tabs选中(使用空字符串，避免和el-tabs内部string name不匹配)
       agentParameterList: [],
       // 描述内容
       describeContent: '',
@@ -391,6 +391,29 @@ var app = new Vue({
       mcpEndpointEditMode: false,
       mcpEndpointOriginalName: '',
       currentMcpTools: [], // 当前查看的MCP工具列表
+      agentListViewMode: 'panel',
+      agentGraphSnapshot: {
+        agents: [],
+        groups: [],
+        links: [],
+        collaborations: []
+      },
+      agentGraphPollingTimer: null,
+      hoveredAgentGroupId: null,
+      agentGraph3d: null,
+      agentGraphFilterGroupId: null,
+      agentGraphFilterTaskStatuses: [],
+      agentGraphShowOnlyActiveGroup: false,
+      agentGraphRequesting: false,
+      agentGraphLastSignature: '',
+      agentGraphLastRefreshAt: null,
+      agentGraphLastRenderAt: null,
+      agentGraphRenderCount: 0,
+      quickJumpGroupId: null,
+      quickJumpTaskId: null,
+      quickJumpTaskOptions: [],
+      hashChangeHandler: null,
+      isApplyingHashRoute: false,
     };
   },
   computed: {
@@ -417,6 +440,43 @@ var app = new Vue({
         return {};
       }
     },
+    agentGraphGroupOptions() {
+      return (this.agentGraphSnapshot.groups || []).map(item => ({
+        id: item.id,
+        name: item.name
+      }))
+    },
+    agentGraphDebugText() {
+      const snapshot = this.agentGraphSnapshot || {}
+      const agents = Array.isArray(snapshot.agents) ? snapshot.agents.length : 0
+      const groups = Array.isArray(snapshot.groups) ? snapshot.groups.length : 0
+      const links = Array.isArray(snapshot.links) ? snapshot.links.length : 0
+      const cols = Array.isArray(snapshot.collaborations) ? snapshot.collaborations.length : 0
+      const polling = this.agentGraphPollingTimer ? 'ON' : 'OFF'
+      const requesting = this.agentGraphRequesting ? 'YES' : 'NO'
+
+      return [
+        '3D Debug',
+        'Agents: ' + agents + '  Groups: ' + groups,
+        'Links: ' + links + '  Collaborations: ' + cols,
+        'Polling: ' + polling + '  Requesting: ' + requesting,
+        'Rendered: ' + this.agentGraphRenderCount,
+        'Refresh: ' + this.formatAgentGraphDebugTime(this.agentGraphLastRefreshAt),
+        'Render: ' + this.formatAgentGraphDebugTime(this.agentGraphLastRenderAt)
+      ].join('\n')
+    },
+    quickJumpGroupOptions() {
+      const map = new Map()
+      ;(this.agentGraphSnapshot.groups || []).forEach(item => {
+        map.set(item.id, { id: item.id, name: item.name })
+      })
+      ;(this.groupList || []).forEach(item => {
+        if (!map.has(item.id)) {
+          map.set(item.id, { id: item.id, name: item.name })
+        }
+      })
+      return Array.from(map.values())
+    }
   },
   watch: {},
   created() {
@@ -427,30 +487,7 @@ var app = new Vue({
     this.tabsActiveName = "first";
     this.agentForm.systemMessageType = "2";
     this.getPluginTypes();
-    
-    // 调试对话框相关变量
-    console.log('Vue实例挂载完成');
-    console.log('visible对象:', this.visible);
-    console.log('dialogMcpTools初始状态:', this.visible.dialogMcpTools);
-    
-    // 测试对话框显示
-    window.testDialog = () => {
-      console.log('测试显示对话框');
-      this.visible.dialogMcpTools = true;
-      console.log('dialogMcpTools新状态:', this.visible.dialogMcpTools);
-    };
-    
-    // 测试创建假工具列表
-    window.testTools = () => {
-      console.log('测试创建工具列表');
-      this.currentMcpTools = [
-        { name: '测试工具1', description: '这是一个测试工具', parameters: [{ name: 'param1', description: '参数1' }] },
-        { name: '测试工具2', description: '这是另一个测试工具', parameters: [] }
-      ];
-      console.log('currentMcpTools:', this.currentMcpTools);
-      this.visible.dialogMcpTools = true;
-    };
-    
+
     // 智能体
     if (this.tabsActiveName === 'first') {
       this.getAgentListData('agent')
@@ -464,9 +501,24 @@ var app = new Vue({
       this.gettaskListData('task')
     }
 
+    this.hashChangeHandler = () => {
+      this.applyHashRoute()
+    }
+    window.addEventListener('hashchange', this.hashChangeHandler)
+    this.refreshQuickJumpTaskOptions()
+    this.$nextTick(() => {
+      this.applyHashRoute()
+    })
+
   },
   beforeDestroy() {
     this.clearHistoryTimer()
+    this.stopAgentGraphPolling()
+    this.destroyAgentGraph3d()
+    if (this.hashChangeHandler) {
+      window.removeEventListener('hashchange', this.hashChangeHandler)
+      this.hashChangeHandler = null
+    }
   },
   methods: {
     //寻找目标字符串
@@ -488,6 +540,419 @@ var app = new Vue({
       }
     },
     calculateDuration,
+    scoreFormatter,
+    formatAgentGraphDebugTime(value) {
+      if (!value) {
+        return '--'
+      }
+      const date = value instanceof Date ? value : new Date(value)
+      if (Number.isNaN(date.getTime())) {
+        return '--'
+      }
+      const pad = n => String(n).padStart(2, '0')
+      return pad(date.getHours()) + ':' + pad(date.getMinutes()) + ':' + pad(date.getSeconds())
+    },
+    parseHashRoute() {
+      const raw = (window.location.hash || '').replace(/^#/, '')
+      const route = {
+        tab: '',
+        view: '',
+        agentId: null,
+        groupId: null,
+        taskId: null
+      }
+      if (!raw) {
+        return route
+      }
+      const params = new URLSearchParams(raw)
+      route.tab = params.get('tab') || ''
+      route.view = params.get('view') || ''
+      route.agentId = Number(params.get('agentId') || 0) || null
+      route.groupId = Number(params.get('groupId') || 0) || null
+      route.taskId = Number(params.get('taskId') || 0) || null
+      return route
+    },
+    setHashRoute(route) {
+      if (this.isApplyingHashRoute) {
+        return
+      }
+      const params = new URLSearchParams()
+      if (route.tab) {
+        params.set('tab', route.tab)
+      }
+      if (route.view) {
+        params.set('view', route.view)
+      }
+      if (route.agentId) {
+        params.set('agentId', String(route.agentId))
+      }
+      if (route.groupId) {
+        params.set('groupId', String(route.groupId))
+      }
+      if (route.taskId) {
+        params.set('taskId', String(route.taskId))
+      }
+      const nextHash = params.toString()
+      if ((window.location.hash || '').replace(/^#/, '') === nextHash) {
+        return
+      }
+      window.location.hash = nextHash
+    },
+    buildCurrentRoute(extra = {}) {
+      const route = {
+        tab: this.tabsActiveName || 'first'
+      }
+      if (route.tab === 'first') {
+        if (this.agentListViewMode === 'three') {
+          route.view = 'three'
+        }
+        if (this.scrollbarAgentIndex) {
+          route.agentId = this.scrollbarAgentIndex
+        }
+      }
+      if (route.tab === 'second') {
+        const groupId = this.groupDetails?.chatGroupDto?.id || this.scrollbarGroupIndex || null
+        const taskId = this.groupTaskDetails?.id || null
+        if (groupId) {
+          route.groupId = groupId
+        }
+        if (taskId) {
+          route.taskId = taskId
+        }
+      }
+      if (route.tab === 'third') {
+        const taskId = this.taskDetails?.id || this.scrollbarTaskIndex || null
+        if (taskId) {
+          route.taskId = taskId
+        }
+      }
+      return Object.assign(route, extra)
+    },
+    syncHashRoute(extra = {}) {
+      this.setHashRoute(this.buildCurrentRoute(extra))
+    },
+    navigateByHash(route) {
+      this.setHashRoute(route)
+      this.applyHashRoute()
+    },
+    async applyHashRoute() {
+      if (this.isApplyingHashRoute) {
+        return
+      }
+      const route = this.parseHashRoute()
+      if (!route.tab && !route.groupId && !route.taskId && !route.agentId) {
+        return
+      }
+
+      this.isApplyingHashRoute = true
+      try {
+        const tab = ['first', 'second', 'third'].includes(route.tab) ? route.tab : 'first'
+        if (this.tabsActiveName !== tab) {
+          this.tabsActiveName = tab
+          this.handleTabsClick()
+        }
+
+        if (tab === 'first') {
+          if (route.view === 'three') {
+            this.handleAgentListViewModeChange('three', true)
+          }
+          if (route.agentId) {
+            await this.getAgentListData('agent')
+            const idx = (this.agentList || []).findIndex(item => item.id === route.agentId)
+            if (idx >= 0) {
+              this.handleAgentView(this.agentList[idx], idx, true)
+            }
+          }
+          return
+        }
+
+        if (tab === 'second') {
+          await this.getGroupListData('group')
+          if (route.groupId) {
+            const groupItem = (this.groupList || []).find(item => item.id === route.groupId)
+            if (groupItem) {
+              this.handleGroupView('group', groupItem, 0, true)
+            } else {
+              this.groupShowType = '2'
+              this.scrollbarGroupIndex = route.groupId
+              await this.getGroupDetailData('groupTable', route.groupId, { id: route.groupId })
+            }
+          }
+          if (route.taskId) {
+            this.groupShowType = '3'
+            await this.getTaskDetailData('groupTask', route.taskId, { id: route.taskId })
+          }
+          return
+        }
+
+        if (tab === 'third') {
+          await this.gettaskListData('task')
+          if (!route.taskId) {
+            return
+          }
+          const idx = (this.taskList || []).findIndex(item => item.id === route.taskId)
+          if (idx >= 0) {
+            this.handleTaskView('task', this.taskList[idx], idx, true)
+          } else {
+            this.scrollbarTaskIndex = route.taskId
+            await this.getTaskDetailData('task', route.taskId, { id: route.taskId })
+          }
+        }
+      } finally {
+        this.isApplyingHashRoute = false
+      }
+    },
+    async refreshQuickJumpTaskOptions() {
+      try {
+        const res = await serviceAM.get('/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetList?pageIndex=0&pageSize=0')
+        const data = res?.data ?? {}
+        if (!data.success) {
+          return
+        }
+        const taskList = data?.data?.chatTaskList ?? []
+        this.quickJumpTaskOptions = taskList.slice(0, 200).map(item => ({
+          id: item.id,
+          groupId: item.chatGroupId,
+          name: item.name + ' (G' + item.chatGroupId + ')'
+        }))
+      } catch (e) {
+        console.warn('refreshQuickJumpTaskOptions failed', e)
+      }
+    },
+    handleQuickJumpGroup() {
+      const groupId = Number(this.quickJumpGroupId || 0)
+      if (!groupId) {
+        return
+      }
+      this.navigateByHash({ tab: 'second', groupId: groupId })
+    },
+    handleQuickJumpTask() {
+      const taskId = Number(this.quickJumpTaskId || 0)
+      if (!taskId) {
+        return
+      }
+      this.navigateByHash({ tab: 'third', taskId: taskId })
+    },
+    handleAgentGraphFilterChange() {
+      this.renderAgentGraph()
+    },
+    buildAgentGraphSignature(snapshot) {
+      if (!snapshot) {
+        return ''
+      }
+      return JSON.stringify({
+        agents: (snapshot.agents || []).map(item => [item.id, item.chattingCount, item.score, item.enable]),
+        groups: (snapshot.groups || []).map(item => [item.id, item.runningTaskCount, item.state, item.taskStatusCounts]),
+        links: (snapshot.links || []).map(item => [item.groupId, item.agentId]),
+        collaborations: (snapshot.collaborations || []).map(item => [item.taskId, item.groupId, item.status, item.agentIds])
+      })
+    },
+    buildFilteredAgentGraphSnapshot(snapshot) {
+      const source = snapshot || { agents: [], groups: [], links: [], collaborations: [] }
+      const allGroups = source.groups || []
+      const allLinks = source.links || []
+      const allAgents = source.agents || []
+      const allCollaborations = source.collaborations || []
+
+      const selectedGroupId = this.agentGraphFilterGroupId
+      const selectedStatuses = Array.isArray(this.agentGraphFilterTaskStatuses)
+        ? this.agentGraphFilterTaskStatuses.map(item => Number(item))
+        : []
+
+      let filteredGroups = allGroups.filter(group => {
+        if (selectedGroupId && group.id !== selectedGroupId) {
+          return false
+        }
+
+        if (this.agentGraphShowOnlyActiveGroup && !(group.runningTaskCount > 0)) {
+          return false
+        }
+
+        if (selectedStatuses.length > 0) {
+          const statusMap = group.taskStatusCounts || {}
+          return selectedStatuses.some(status => (statusMap[status] || statusMap[String(status)] || 0) > 0)
+        }
+
+        return true
+      })
+
+      const groupIdSet = new Set(filteredGroups.map(item => item.id))
+      const filteredLinks = allLinks.filter(item => groupIdSet.has(item.groupId))
+      const agentIdSet = new Set(filteredLinks.map(item => item.agentId))
+
+      const hasExplicitGroupConstraint = Boolean(selectedGroupId)
+        || this.agentGraphShowOnlyActiveGroup
+        || selectedStatuses.length > 0
+
+      // Keep ungrouped agents visible when there is no explicit group/status constraint.
+      const filteredAgents = hasExplicitGroupConstraint
+        ? allAgents.filter(item => agentIdSet.has(item.id))
+        : allAgents
+
+      const filteredCollaborations = allCollaborations.filter(item => {
+        if (!groupIdSet.has(item.groupId)) {
+          return false
+        }
+        if (selectedStatuses.length > 0) {
+          return selectedStatuses.includes(Number(item.status))
+        }
+        return true
+      })
+
+      return {
+        agents: filteredAgents,
+        groups: filteredGroups,
+        links: filteredLinks,
+        collaborations: filteredCollaborations
+      }
+    },
+    renderAgentGraph(snapshot = null) {
+      if (!this.agentGraph3d) {
+        return
+      }
+      const filtered = this.buildFilteredAgentGraphSnapshot(snapshot || this.agentGraphSnapshot)
+      this.agentGraph3d.updateGraph(filtered)
+      this.agentGraphLastRenderAt = new Date()
+      this.agentGraphRenderCount += 1
+    },
+    handleAgentListViewModeChange(mode, fromHash = false) {
+      if (!fromHash && !this.isApplyingHashRoute) {
+        this.agentListViewMode = mode || 'panel'
+        this.navigateByHash(this.buildCurrentRoute({ tab: 'first', view: this.agentListViewMode === 'three' ? 'three' : null }))
+        return
+      }
+      this.agentListViewMode = mode || 'panel'
+      if (this.agentListViewMode === 'three' && this.tabsActiveName === 'first' && this.scrollbarAgentIndex === '') {
+        this.$nextTick(() => {
+          this.ensureAgentGraph3d()
+          this.refreshAgentGraphSnapshot(true)
+          this.startAgentGraphPolling()
+        })
+      } else {
+        this.stopAgentGraphPolling()
+        this.destroyAgentGraph3d()
+      }
+      this.syncHashRoute({ tab: 'first', view: this.agentListViewMode === 'three' ? 'three' : null })
+    },
+    ensureAgentGraph3d() {
+      if (!this.$refs.agent3dContainer || typeof AgentGraph3D === 'undefined') {
+        return
+      }
+      if (this.agentGraph3d && this.agentGraph3d.renderer && this.agentGraph3d.renderer.domElement) {
+        const currentCanvas = this.agentGraph3d.renderer.domElement
+        const container = this.$refs.agent3dContainer
+        if (!container.contains(currentCanvas)) {
+          this.destroyAgentGraph3d()
+        }
+      }
+      if (!this.agentGraph3d) {
+        this.agentGraph3d = new AgentGraph3D(this.$refs.agent3dContainer, {
+          onGroupHover: (groupId) => {
+            this.hoveredAgentGroupId = groupId
+          }
+        })
+        this.agentGraph3d.init()
+        if ((this.agentGraphSnapshot.groups || []).length > 0) {
+          this.renderAgentGraph(this.agentGraphSnapshot)
+        }
+      }
+    },
+    destroyAgentGraph3d() {
+      if (this.agentGraph3d) {
+        this.agentGraph3d.dispose()
+        this.agentGraph3d = null
+      }
+    },
+    startAgentGraphPolling() {
+      this.stopAgentGraphPolling()
+      this.agentGraphPollingTimer = setInterval(() => {
+        if (this.tabsActiveName !== 'first' || this.scrollbarAgentIndex !== '' || this.agentListViewMode !== 'three') {
+          return
+        }
+        this.refreshAgentGraphSnapshot(false)
+      }, 1000)
+    },
+    stopAgentGraphPolling() {
+      if (this.agentGraphPollingTimer) {
+        clearInterval(this.agentGraphPollingTimer)
+        this.agentGraphPollingTimer = null
+      }
+    },
+    async refreshAgentGraphSnapshot(syncRender = false) {
+      if (this.agentGraphRequesting) {
+        return
+      }
+      this.agentGraphRequesting = true
+      const query = {
+        filter: this.agentQueryList.filter || ''
+      }
+      try {
+        const res = await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetAgentGraphSnapshot?${getInterfaceQueryStr(query)}`)
+        const data = res?.data ?? {}
+        if (!data.success) {
+          return
+        }
+
+        const snapshot = data.data || {}
+        const normalizedSnapshot = {
+          agents: snapshot.agents || [],
+          groups: snapshot.groups || [],
+          links: snapshot.links || [],
+          collaborations: snapshot.collaborations || []
+        }
+        this.agentGraphSnapshot = normalizedSnapshot
+        this.agentGraphLastRefreshAt = new Date()
+        this.applyGraphMetricsToAgentList(normalizedSnapshot.agents)
+
+        if (this.agentGraphFilterGroupId && !normalizedSnapshot.groups.some(item => item.id === this.agentGraphFilterGroupId)) {
+          this.agentGraphFilterGroupId = null
+        }
+
+        const nextSignature = this.buildAgentGraphSignature(normalizedSnapshot)
+        const isChanged = nextSignature !== this.agentGraphLastSignature
+        this.agentGraphLastSignature = nextSignature
+
+        if (syncRender || isChanged) {
+          if (this.agentListViewMode === 'three') {
+            this.$nextTick(() => {
+              this.ensureAgentGraph3d()
+              this.renderAgentGraph(normalizedSnapshot)
+            })
+          }
+        }
+      } finally {
+        this.agentGraphRequesting = false
+      }
+    },
+    applyGraphMetricsToAgentList(graphAgents) {
+      if (!Array.isArray(this.agentList) || !Array.isArray(graphAgents) || graphAgents.length === 0) {
+        return
+      }
+
+      const graphAgentMap = new Map(graphAgents.map(item => [item.id, item]))
+      const mergedList = this.agentList.map(item => {
+        const graph = graphAgentMap.get(item.id)
+        if (!graph) {
+          return item
+        }
+        return {
+          ...item,
+          chattingCount: graph.chattingCount,
+          score: graph.score,
+          promptCode: graph.promptCode
+        }
+      })
+      this.$set(this, 'agentList', mergedList)
+
+      if (this.agentDetails && this.agentDetails.agentTemplateDto) {
+        const current = graphAgentMap.get(this.agentDetails.agentTemplateDto.id)
+        if (current) {
+          this.$set(this.agentDetails.agentTemplateDto, 'chattingCount', current.chattingCount)
+          this.$set(this.agentDetails.agentTemplateDto, 'score', current.score)
+          this.$set(this.agentDetails.agentTemplateDto, 'promptCode', current.promptCode)
+        }
+      }
+    },
     // 计算 agent列表 需要填充的元素数量
     calcAgentFillNum() {
       // if (this.tabsActiveName === 'first' && this.scrollbarAgentIndex === '') {
@@ -607,6 +1072,10 @@ var app = new Vue({
               }
               // 计算 agent列表 需要填充的元素数量
               this.calcAgentFillNum()
+
+              if (this.tabsActiveName === 'first' && this.scrollbarAgentIndex === '') {
+                this.refreshAgentGraphSnapshot(this.agentListViewMode === 'three')
+              }
             }
             if (listType === 'groupAgent') {
               this.$set(this, 'groupAgentList', agentData)
@@ -1226,6 +1695,10 @@ var app = new Vue({
               this.getTaskDetailData(detail.serviceType, detail.id, detail, true)
             }
           }
+
+          if (['drawerGroup', 'drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
+            this.refreshQuickJumpTaskOptions()
+          }
         } else {
           console.error('API Error:', response.data);
           app.$message({
@@ -1517,10 +1990,22 @@ var app = new Vue({
 
     // 切换 tabs 页面
     handleTabsClick(tab, event) {
+      if (!this.isApplyingHashRoute) {
+        this.navigateByHash(this.buildCurrentRoute({ tab: this.tabsActiveName }))
+        return
+      }
       this.clearHistoryTimer()
+      this.stopAgentGraphPolling()
       // 智能体
       if (this.tabsActiveName === 'first') {
         this.getAgentListData('agent')
+        if (this.agentListViewMode === 'three' && this.scrollbarAgentIndex === '') {
+          this.$nextTick(() => {
+            this.ensureAgentGraph3d()
+            this.refreshAgentGraphSnapshot(true)
+            this.startAgentGraphPolling()
+          })
+        }
       }
       // 组
       if (this.tabsActiveName === 'second') {
@@ -1530,6 +2015,7 @@ var app = new Vue({
       if (this.tabsActiveName === 'third') {
         this.gettaskListData('task')
       }
+      this.syncHashRoute()
     },
 
     // 筛选输入变化
@@ -1539,6 +2025,9 @@ var app = new Vue({
 
         this.agentQueryList.filter = value
         this.getAgentListData('agent', 1)
+        if (this.agentListViewMode === 'three' && this.tabsActiveName === 'first' && this.scrollbarAgentIndex === '') {
+          this.refreshAgentGraphSnapshot(true)
+        }
       }
       if (filterType === 'groupAgent') {
         this.groupAgentQueryList.filter = value
@@ -1631,15 +2120,32 @@ var app = new Vue({
 
 
     // 查看全部智能体 列表 
-    handleAgentViewAll() {
+    handleAgentViewAll(fromHash = false) {
+      if (!fromHash && !this.isApplyingHashRoute) {
+        this.navigateByHash(this.buildCurrentRoute({ tab: 'first', agentId: null }))
+        return
+      }
       this.clearHistoryTimer()
       this.scrollbarAgentIndex = '' // 清空索引
       this.agentDetails = '' // 清空详情数据
       this.getAgentListData('agent')
+      if (this.agentListViewMode === 'three') {
+        this.$nextTick(() => {
+          this.ensureAgentGraph3d()
+          this.refreshAgentGraphSnapshot(true)
+          this.startAgentGraphPolling()
+        })
+      }
+      this.syncHashRoute({ tab: 'first', agentId: null })
     },
     // 查看 智能体
-    handleAgentView(item, index) {
+    handleAgentView(item, index, fromHash = false) {
+      if (!fromHash && !this.isApplyingHashRoute) {
+        this.navigateByHash(this.buildCurrentRoute({ tab: 'first', agentId: item.id }))
+        return
+      }
       this.clearHistoryTimer()
+      this.stopAgentGraphPolling()
       this.scrollbarAgentIndex = item.id ?? ''
       // 重置 数据
       this.resetAgentDetailsQuery()
@@ -1652,6 +2158,7 @@ var app = new Vue({
       if (this.agentDetailsTabsActiveName === 'second') {
         this.gettaskListData('agentTask', item.id)
       }
+      this.syncHashRoute({ tab: 'first', agentId: item.id })
     },
     // 重置 智能体详情下的组和任务数据
     resetAgentDetailsQuery() {
@@ -1746,6 +2253,94 @@ var app = new Vue({
       });
     },
 
+    handleAgentDelete(item) {
+      const itemData = item?.agentTemplateDto || item
+      if (!itemData || !itemData.id) return
+
+      const groupQuery = {
+        agentTemplateId: 0,
+        pageIndex: 0,
+        pageSize: 0,
+        filter: ''
+      }
+      const memberGroupQuery = {
+        agentTemplateId: itemData.id,
+        pageIndex: 0,
+        pageSize: 0,
+        filter: ''
+      }
+
+      const serviceURL = `/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.Delete?id=${itemData.id}`
+
+      Promise.all([
+        serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupList?${getInterfaceQueryStr(groupQuery)}`, groupQuery),
+        serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupList?${getInterfaceQueryStr(memberGroupQuery)}`, memberGroupQuery)
+      ]).then(([allGroupRes, memberGroupRes]) => {
+        const allGroupList = allGroupRes?.data?.data?.chatGroupDtoList ?? []
+        const memberGroupList = memberGroupRes?.data?.data?.chatGroupDtoList ?? []
+
+        const adminGroups = allGroupList.filter(group => group.adminAgentTemplateId === itemData.id).map(group => group.name)
+        const enterGroups = allGroupList.filter(group => group.enterAgentTemplateId === itemData.id).map(group => group.name)
+
+        if (adminGroups.length || enterGroups.length) {
+          const blockedMessage = [
+            `<div>智能体「${itemData.name}」当前不可删除。</div>`,
+            adminGroups.length ? `<div style="margin-top:6px;">作为群主的组：${adminGroups.join('、')}</div>` : '',
+            enterGroups.length ? `<div style="margin-top:6px;">作为对接人的组：${enterGroups.join('、')}</div>` : '',
+            '<div style="margin-top:8px;color:#E6A23C;">请先在对应组中替换群主/对接人后再删除。</div>'
+          ].join('')
+
+          this.$alert(blockedMessage, '删除受阻', {
+            dangerouslyUseHTMLString: true,
+            confirmButtonText: '我知道了'
+          })
+          return
+        }
+
+        const memberGroups = memberGroupList.map(group => group.name)
+        const previewMessage = [
+          `<div>确认删除智能体「${itemData.name}」吗？</div>`,
+          memberGroups.length
+            ? `<div style="margin-top:6px;">将移出成员组：${memberGroups.join('、')}</div>`
+            : '<div style="margin-top:6px;">该智能体当前不在任何组成员中。</div>',
+          '<div style="margin-top:8px;">同时会删除与该智能体相关的历史消息记录，且不可恢复。</div>'
+        ].join('')
+
+        this.$confirm(previewMessage, '操作确认', {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        }).then(() => {
+          serviceAM.post(serviceURL).then(res => {
+            if (res.data.success) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.handleAgentViewAll()
+            } else {
+              app.$message({
+                message: res.data.errorMessage || res.data.data || 'Error',
+                type: 'error',
+                duration: 5 * 1000
+              })
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          })
+        })
+      }).catch(() => {
+        app.$message({
+          message: '删除预检查失败，请稍后重试',
+          type: 'error',
+          duration: 5 * 1000
+        })
+      })
+    },
+
 
 
     // 侧边 组tree 组件 节点 筛选
@@ -1791,7 +2386,11 @@ var app = new Vue({
       }
     },
     // 组 查看全部 列表 
-    handleGroupViewAll() {
+    handleGroupViewAll(fromHash = false) {
+      if (!fromHash && !this.isApplyingHashRoute) {
+        this.navigateByHash({ tab: 'second' })
+        return
+      }
       this.clearHistoryTimer()
       this.groupShowType = '1'
       // 清空组详情
@@ -1805,9 +2404,14 @@ var app = new Vue({
       this.groupTaskMemberfilter = ''
       this.groupTaskMemberfilterList = []
       this.getGroupListData('group')
+      this.syncHashRoute({ tab: 'second', groupId: null, taskId: null })
     },
     // 组 查看列表 详情 
-    handleGroupView(clickType, item, index = 0) {
+    handleGroupView(clickType, item, index = 0, fromHash = false) {
+      if (!fromHash && !this.isApplyingHashRoute && (clickType === 'group' || clickType === 'groupTable')) {
+        this.navigateByHash({ tab: 'second', groupId: item.id })
+        return
+      }
       this.clearHistoryTimer()
       // 智能体下时 查看组详情
       if (clickType === 'agentGroup') {
@@ -1844,6 +2448,7 @@ var app = new Vue({
         this.groupTaskMemberfilter = ''
         this.groupTaskMemberfilterList = []
         this.getGroupDetailData(clickType, item.id, item)
+        this.syncHashRoute({ tab: 'second', groupId: item.id, taskId: null })
       }
     },
     // 组 新增|编辑 智能体table 切换table 选中
@@ -1903,7 +2508,8 @@ var app = new Vue({
     // 组 删除
     handleGroupDelete(optype, row) {
       console.log('handleGroupDelete:', row);
-      let serviceURL = ''
+      if (!row || !row.id) return
+      let serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.Delete?id=${row.id}`
       if (!serviceURL) return
       // 操作确认 提示
       this.$confirm('确认删除数据吗？', '操作确认', {
@@ -1942,8 +2548,13 @@ var app = new Vue({
     },
     // 组批量删除
     handleGroupDeleteBatch() {
-      let serviceURL = ''
       console.log('handleGroupDeleteBatch:', this.groupSelection);
+      const selectedIds = (this.groupSelection || []).map(item => item.id).filter(Boolean)
+      if (!selectedIds.length) {
+        this.$message.warning('请先选择要删除的组')
+        return
+      }
+      let serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.DeleteBatch'
       if (!serviceURL) return
       // 操作确认 提示
       this.$confirm('确认批量删除数据吗？', '操作确认', {
@@ -1952,7 +2563,7 @@ var app = new Vue({
         cancelButtonText: '取消',
         // type: 'warning'
       }).then(() => {
-        serviceAM.post(serviceURL).then(res => {
+        serviceAM.post(serviceURL, selectedIds).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
@@ -1978,7 +2589,11 @@ var app = new Vue({
 
 
     // 任务 查看全部 列表 
-    handleTaskViewAll() {
+    handleTaskViewAll(fromHash = false) {
+      if (!fromHash && !this.isApplyingHashRoute) {
+        this.navigateByHash({ tab: 'third' })
+        return
+      }
       this.clearHistoryTimer()
       this.scrollbarTaskIndex = ''
       // 清空详情数据
@@ -1989,9 +2604,18 @@ var app = new Vue({
       this.taskMemberfilter = ''
       this.taskMemberfilterList = []
       this.gettaskListData('task')
+      this.syncHashRoute({ tab: 'third', taskId: null })
     },
     // 查看 任务详情
-    handleTaskView(clickType, item = {}, index = 0) {
+    handleTaskView(clickType, item = {}, index = 0, fromHash = false) {
+      if (!fromHash && !this.isApplyingHashRoute && clickType === 'groupTask') {
+        this.navigateByHash({ tab: 'second', groupId: item.chatGroupId || this.scrollbarGroupIndex || null, taskId: item.id })
+        return
+      }
+      if (!fromHash && !this.isApplyingHashRoute && clickType === 'task') {
+        this.navigateByHash({ tab: 'third', taskId: item.id })
+        return
+      }
       this.clearHistoryTimer()
       if (clickType === 'agentTask') {
         this.agentDetailsTaskIndex = index ?? ''
@@ -2020,6 +2644,7 @@ var app = new Vue({
         this.groupTaskMemberfilter = ''
         this.groupTaskMemberfilterList = []
         this.getTaskDetailData(clickType, item.id, item)
+        this.syncHashRoute({ tab: 'second', groupId: item.chatGroupId || this.scrollbarGroupIndex || null, taskId: item.id })
       }
       if (clickType === 'task') {
         this.scrollbarTaskIndex = index ?? ''
@@ -2030,10 +2655,16 @@ var app = new Vue({
         this.taskMemberfilter = ''
         this.taskMemberfilterList = []
         this.getTaskDetailData(clickType, item.id, item)
+        this.syncHashRoute({ tab: 'third', taskId: item.id })
       }
     },
     // 返回组详情页面
-    returnGroup(clickType) {
+    returnGroup(clickType, fromHash = false) {
+      if (!fromHash && !this.isApplyingHashRoute && clickType === 'groupTask') {
+        const groupId = this.groupDetails?.chatGroupDto?.id || this.scrollbarGroupIndex || null
+        this.navigateByHash({ tab: 'second', groupId: groupId })
+        return
+      }
       this.clearHistoryTimer()
       if (clickType === 'agentGroupTask') {
         this.agentDetailsGroupShowType = '1'
@@ -2043,6 +2674,7 @@ var app = new Vue({
       }
       if (clickType === 'groupTask') {
         this.groupShowType = '2' // 组件详情
+        this.syncHashRoute({ tab: 'second', taskId: null })
         // const item = this.groupList[this.scrollbarGroupIndex]
         // this.getGroupDetailData('groupTable', item.id,this.groupDetails)
       }
@@ -2061,50 +2693,99 @@ var app = new Vue({
       this.taskSelection = val
     },
     // 查看智能体参数 列表
-    viewAgentParameters(optype, item) {
-      // 对接接口获取数据 this.agentParameterList
+    async viewAgentParameters(optype, item) {
+      let baseList = []
       if (optype === 'task') {
-        // 获取 任务成员列表
-        // this.getTaskMemberListData()
-      }
-      if (optype === 'taskDetail') {
-        // taskMemberList
-        this.agentParameterList = this.taskMemberList ?? []
-      }
-      if (optype === 'agentTask') {
-        this.agentParameterList = this.agentDetailsTaskMemberList ?? []
-      }
-      if (optype === 'agentGroupTaskAdmin') {
+        // 从任务行数据获取所在组成员列表
+        if (item && item.chatGroupId) {
+          await this.getTaskMemberListData('task', item.chatGroupId)
+        }
+        baseList = this.taskMemberList ?? []
+      } else if (optype === 'taskDetail') {
+        baseList = this.taskMemberList ?? []
+      } else if (optype === 'agentTask') {
+        baseList = this.agentDetailsTaskMemberList ?? []
+      } else if (optype === 'agentGroupTaskAdmin') {
         let agentDtoList = this.agentDetailsGroupDetails?.agentTemplateDtoList ?? []
         let adminAgentId = this.agentDetailsGroupDetails?.chatGroupDto?.adminAgentTemplateId ?? ''
-        let findItem = agentDtoList.find(item => item.id === adminAgentId)
-        this.agentParameterList = findItem ? [findItem] : []
-      }
-      if (optype === 'agentGroupTaskEnter') {
+        let findItem = agentDtoList.find(a => a.id === adminAgentId)
+        baseList = findItem ? [findItem] : []
+      } else if (optype === 'agentGroupTaskEnter') {
         let agentDtoList = this.agentDetailsGroupDetails?.agentTemplateDtoList ?? []
         let enterAgentId = this.agentDetailsGroupDetails?.chatGroupDto?.enterAgentTemplateId ?? ''
-        let findItem = agentDtoList.find(item => item.id === enterAgentId)
-        this.agentParameterList = findItem ? [findItem] : []
-      }
-      if (optype === 'agentGroupTask') {
-        this.agentParameterList = this.agentDetailsGroupDetails?.agentTemplateDtoList ?? []
-      }
-      if (optype === 'groupTaskAdmin') {
+        let findItem = agentDtoList.find(a => a.id === enterAgentId)
+        baseList = findItem ? [findItem] : []
+      } else if (optype === 'agentGroupTask') {
+        baseList = this.agentDetailsGroupDetails?.agentTemplateDtoList ?? []
+      } else if (optype === 'groupTaskAdmin') {
         let agentDtoList = this.groupDetails?.agentTemplateDtoList ?? []
         let adminAgentId = this.groupDetails?.chatGroupDto?.adminAgentTemplateId ?? ''
-        let findItem = agentDtoList.find(item => item.id === adminAgentId)
-        this.agentParameterList = findItem ? [findItem] : []
-      }
-      if (optype === 'groupTaskEnter') {
+        let findItem = agentDtoList.find(a => a.id === adminAgentId)
+        baseList = findItem ? [findItem] : []
+      } else if (optype === 'groupTaskEnter') {
         let agentDtoList = this.groupDetails?.agentTemplateDtoList ?? []
         let enterAgentId = this.groupDetails?.chatGroupDto?.enterAgentTemplateId ?? ''
-        let findItem = agentDtoList.find(item => item.id === enterAgentId)
-        this.agentParameterList = findItem ? [findItem] : []
+        let findItem = agentDtoList.find(a => a.id === enterAgentId)
+        baseList = findItem ? [findItem] : []
+      } else if (optype === 'groupTask') {
+        baseList = this.groupDetails?.agentTemplateDtoList ?? []
       }
-      if (optype === 'groupTask') {
-        this.agentParameterList = this.groupDetails?.agentTemplateDtoList ?? []
-      }
+      // 填充状态与历史输出后再打开弹窗
+      this.agentParameterList = await this.buildAgentParameterList(baseList)
+      // 先清空再开弹窗，确保 el-tabs 在 pane 渲染完成后按正确类型激活第一个 tab
+      this.agentParameterTabsValue = ''
       this.visible.dialogAgentParameter = true
+      this.$nextTick(() => {
+        this.agentParameterTabsValue = '0'
+      })
+    },
+    // 构建智能体参数列表：为基础 DTO 列表补充 promptItemDto / aiModelDto / promptRangeDto 及历史输出
+    async buildAgentParameterList(baseList) {
+      const result = []
+      for (const agent of baseList) {
+        const enriched = Object.assign({}, agent, { outputList: [] })
+        // 获取智能体运行状态（含 promptItemDto / aiModelDto / promptRangeDto）
+        // 使用 serviceAM 并设置 customAlert，由拦截器静默处理错误
+        try {
+          const res = await serviceAM.get(
+            `/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetItemStatus?id=${agent.id}`,
+            { customAlert: true }
+          )
+          const data = res?.data ?? {}
+          if (data.success) {
+            const status = data?.data?.agentTemplateStatus ?? null
+            if (status) {
+              enriched.promptItemDto = status.promptItemDto || null
+              enriched.promptRangeDto = status.promptRangeDto || null
+              enriched.aiModelDto = status.aiModelDto || null
+            }
+          }
+        } catch (e) {
+          console.warn('buildAgentParameterList: GetItemStatus failed for agent', agent.id, e)
+        }
+        // 获取历史输出列表（PromptRange 结果）
+        if (enriched.promptItemDto && enriched.promptItemDto.id) {
+          try {
+            const res = await serviceAM.get(
+              `/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetByItemId?promptItemId=${enriched.promptItemDto.id}`,
+              { customAlert: true }
+            )
+            const data = res?.data ?? {}
+            if (data.success) {
+              const promptResults = data?.data?.promptResults ?? []
+              enriched.outputList = promptResults.map(oitem => {
+                oitem.addTime = oitem.addTime ? formatDate(oitem.addTime) : ''
+                oitem.resultStringHtml = marked.parse(oitem.resultString || '')
+                return oitem
+              })
+            }
+          } catch (e) {
+            console.warn('buildAgentParameterList: GetByItemId failed for promptItem', enriched.promptItemDto.id, e)
+          }
+        }
+        result.push(enriched)
+      }
+      return result
     },
     // 再次执行 (即再次启动)
     handleTaskAgain(optype, item = {}) {
@@ -2115,7 +2796,8 @@ var app = new Vue({
     // 任务删除
     handleTaskDelet(optype, row) {
       console.log('handleTaskDelet:', row);
-      let serviceURL = ''
+      if (!row || !row.id) return
+      let serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.Delete?id=${row.id}`
       if (!serviceURL) return
       // 操作确认 提示
       this.$confirm('确认删除数据吗？', '操作确认', {
@@ -2213,16 +2895,25 @@ var app = new Vue({
     },
     // 组-任务批量删除(任务) agentGroupTaskBatch groupTaskBatch
     handleTaskDeleteBatch(opType, item) {
-      let serviceURL = ''
+      let selectedRows = []
       if (opType === 'agentGroupTaskBatch') {
         // item.chatGroupDto.id this.agentDetails.agentTemplateDto.id
         console.log('agentGroupTaskBatch:', this.agentGroupTaskSelection);
+        selectedRows = this.agentGroupTaskSelection
       } else if (opType === 'groupTaskBatch') {
         // item.chatGroupDto.id
         console.log('groupTaskBatch:', this.groupTaskSelection);
+        selectedRows = this.groupTaskSelection
       } else if (opType === 'taskBatch') {
         console.log('taskSelection:', this.taskSelection);
+        selectedRows = this.taskSelection
       }
+      const selectedIds = (selectedRows || []).map(task => task.id).filter(Boolean)
+      if (!selectedIds.length) {
+        this.$message.warning('请先选择要删除的任务')
+        return
+      }
+      let serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.DeleteBatch'
       if (!serviceURL) return
       // 操作确认 提示
       this.$confirm('确认批量删除数据吗？', '操作确认', {
@@ -2231,7 +2922,7 @@ var app = new Vue({
         cancelButtonText: '取消',
         // type: 'warning'
       }).then(() => {
-        serviceAM.post(serviceURL).then(res => {
+        serviceAM.post(serviceURL, selectedIds).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
@@ -2249,6 +2940,8 @@ var app = new Vue({
               // 获取任务列表
               this.gettaskListData(groupType, groupDetail.id)
               // this.getGroupDetailData(groupType, groupDetail.id, groupDetail)
+            } else {
+              this.gettaskListData('task')
             }
           } else {
             app.$message({
@@ -2264,6 +2957,102 @@ var app = new Vue({
           message: '已取消操作'
         });
       });
+    },
+
+    handleTaskForceStop(optype, row) {
+      if (!row || !row.id) return
+      const serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.ForceStop?id=${row.id}`
+      this.$confirm('确认强制停止该任务吗？', '操作确认', {
+        dangerouslyUseHTMLString: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        serviceAM.post(serviceURL).then(res => {
+          if (res.data.success) {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            let groupDetail = {}
+            if (optype === 'agentGroupTask') {
+              groupDetail = this.agentDetailsGroupDetails?.chatGroupDto ?? {}
+            } else if (optype === 'groupTask') {
+              groupDetail = this.groupDetails?.chatGroupDto ?? {}
+            } else {
+              this.gettaskListData('task')
+            }
+            if (groupDetail.id) {
+              this.gettaskListData(optype, groupDetail.id)
+            }
+          } else {
+            app.$message({
+              message: res.data.errorMessage || res.data.data || 'Error',
+              type: 'error',
+              duration: 5 * 1000
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    },
+
+    handleTaskForceStopBatch(opType, item) {
+      let selectedRows = []
+      if (opType === 'agentGroupTaskBatch') {
+        selectedRows = this.agentGroupTaskSelection
+      } else if (opType === 'groupTaskBatch') {
+        selectedRows = this.groupTaskSelection
+      } else if (opType === 'taskBatch') {
+        selectedRows = this.taskSelection
+      }
+      const selectedIds = (selectedRows || []).map(task => task.id).filter(Boolean)
+      if (!selectedIds.length) {
+        this.$message.warning('请先选择要停止的任务')
+        return
+      }
+      const serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.ForceStopBatch'
+      this.$confirm('确认批量强制停止所选任务吗？', '操作确认', {
+        dangerouslyUseHTMLString: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        serviceAM.post(serviceURL, selectedIds).then(res => {
+          if (res.data.success) {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            let groupDetail = {}, groupType = ''
+            if (opType === 'agentGroupTaskBatch') {
+              groupDetail = this.agentDetailsGroupDetails?.chatGroupDto ?? {}
+              groupType = 'agentGroupTask'
+            } else if (opType === 'groupTaskBatch') {
+              groupDetail = this.groupDetails?.chatGroupDto ?? {}
+              groupType = 'groupTask'
+            }
+            if (groupDetail.id) {
+              this.gettaskListData(groupType, groupDetail.id)
+            } else {
+              this.gettaskListData('task')
+            }
+          } else {
+            app.$message({
+              message: res.data.errorMessage || res.data.data || 'Error',
+              type: 'error',
+              duration: 5 * 1000
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
     },
     // 查看任务描述
     viewTaskDescription(item) {
