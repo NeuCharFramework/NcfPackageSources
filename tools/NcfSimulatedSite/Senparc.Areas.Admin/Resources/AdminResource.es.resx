@@ -266,4 +266,64 @@
   <data name="AgentsManager.BreadcrumbHome" xml:space="preserve"><value>Home</value></data>
   <data name="AgentsManager.TabAgents" xml:space="preserve"><value>Agents</value></data>
   <data name="AgentsManager.DatabaseSample" xml:space="preserve"><value>Database Operation Samples</value></data>
+  <data name="AgentsManager.AgentListTitle" xml:space="preserve"><value>Agent List</value></data>
+  <data name="AgentsManager.SearchByNamePlaceholder" xml:space="preserve"><value>Search by name</value></data>
+  <data name="AgentsManager.SortByTime" xml:space="preserve"><value>Sort by time</value></data>
+  <data name="AgentsManager.SelectStatus" xml:space="preserve"><value>Select status</value></data>
+  <data name="AgentsManager.AllAgents" xml:space="preserve"><value>All agents</value></data>
+  <data name="AgentsManager.NoData" xml:space="preserve"><value>No data</value></data>
+  <data name="AgentsManager.Participating" xml:space="preserve"><value>Participating</value></data>
+  <data name="AgentsManager.Score" xml:space="preserve"><value>Score</value></data>
+  <data name="AgentsManager.Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="AgentsManager.Details" xml:space="preserve"><value>Details</value></data>
+  <data name="AgentsManager.ParticipationGroup" xml:space="preserve"><value>Participation Groups</value></data>
+  <data name="AgentsManager.ParticipationTasks" xml:space="preserve"><value>Participation Tasks</value></data>
+  <data name="AgentsManager.RunningTasks" xml:space="preserve"><value>Running Tasks</value></data>
+  <data name="AgentsManager.TargetRange" xml:space="preserve"><value>Range</value></data>
+  <data name="AgentsManager.TargetTrack" xml:space="preserve"><value>Track</value></data>
+  <data name="AgentsManager.Practice" xml:space="preserve"><value>Practice</value></data>
+  <data name="AgentsManager.Model" xml:space="preserve"><value>Model</value></data>
+  <data name="AgentsManager.ManageAIModel" xml:space="preserve"><value>Manage AI Models</value></data>
+  <data name="AgentsManager.ModelParameters" xml:space="preserve"><value>Model Parameters</value></data>
+  <data name="AgentsManager.ModelScore" xml:space="preserve"><value>Model Score</value></data>
+  <data name="AgentsManager.Status" xml:space="preserve"><value>Status</value></data>
+  <data name="AgentsManager.Disable" xml:space="preserve"><value>Disable</value></data>
+  <data name="AgentsManager.Enable" xml:space="preserve"><value>Enable</value></data>
+  <data name="AgentsManager.Group" xml:space="preserve"><value>Group</value></data>
+  <data name="AgentsManager.Task" xml:space="preserve"><value>Task</value></data>
+  <data name="AgentsManager.LeaveGroup" xml:space="preserve"><value>Leave Group</value></data>
+  <data name="AgentsManager.BatchStart" xml:space="preserve"><value>Batch Start</value></data>
+  <data name="AgentsManager.BatchDelete" xml:space="preserve"><value>Batch Delete</value></data>
+  <data name="AgentsManager.TaskCount" xml:space="preserve"><value>Task Count</value></data>
+  <data name="AgentsManager.GroupOwner" xml:space="preserve"><value>Group Owner</value></data>
+  <data name="AgentsManager.Connector" xml:space="preserve"><value>Connector</value></data>
+  <data name="AgentsManager.GroupMembers" xml:space="preserve"><value>Group Members</value></data>
+  <data name="AgentsManager.RunTask" xml:space="preserve"><value>Run Task</value></data>
+  <data name="AgentsManager.StartTime" xml:space="preserve"><value>Start Time</value></data>
+  <data name="AgentsManager.Duration" xml:space="preserve"><value>Duration</value></data>
+  <data name="AgentsManager.ModelName" xml:space="preserve"><value>Model Name</value></data>
+  <data name="AgentsManager.TaskDescription" xml:space="preserve"><value>Task Description</value></data>
+  <data name="AgentsManager.AgentParameters" xml:space="preserve"><value>Agent Parameters</value></data>
+  <data name="AgentsManager.RunAgain" xml:space="preserve"><value>Run Again</value></data>
+  <data name="AgentsManager.TaskStartTime" xml:space="preserve"><value>Task Start Time</value></data>
+  <data name="AgentsManager.TaskEndTime" xml:space="preserve"><value>Task End Time</value></data>
+  <data name="AgentsManager.Scoring" xml:space="preserve"><value>Scoring</value></data>
+  <data name="AgentsManager.TaskEvaluation" xml:space="preserve"><value>Task Evaluation</value></data>
+  <data name="AgentsManager.RobotCount" xml:space="preserve"><value>Robots</value></data>
+  <data name="AgentsManager.GroupList" xml:space="preserve"><value>Group List</value></data>
+  <data name="AgentsManager.TaskList" xml:space="preserve"><value>Task List</value></data>
+  <data name="AgentsManager.AllGroups" xml:space="preserve"><value>All Groups</value></data>
+  <data name="AgentsManager.AllTasks" xml:space="preserve"><value>All Tasks</value></data>
+  <data name="AgentsManager.GroupName" xml:space="preserve"><value>Group Name</value></data>
+  <data name="AgentsManager.LatestRunTime" xml:space="preserve"><value>Latest Run Time</value></data>
+  <data name="AgentsManager.Start" xml:space="preserve"><value>Start</value></data>
+  <data name="AgentsManager.StartGroup" xml:space="preserve"><value>Start Group</value></data>
+  <data name="AgentsManager.AgentName" xml:space="preserve"><value>Agent Name</value></data>
+  <data name="AgentsManager.PleaseFill" xml:space="preserve"><value>Please fill in</value></data>
+  <data name="AgentsManager.PleaseSelect" xml:space="preserve"><value>Please select</value></data>
+  <data name="AgentsManager.AddAgent" xml:space="preserve"><value>Add Agent</value></data>
+  <data name="AgentsManager.EditAgent" xml:space="preserve"><value>Edit Agent</value></data>
+  <data name="AgentsManager.AddGroup" xml:space="preserve"><value>Add Group</value></data>
+  <data name="AgentsManager.EditGroup" xml:space="preserve"><value>Edit Group</value></data>
+  <data name="AgentsManager.FillAdminOnly" xml:space="preserve"><value>Please fill in (admin only)</value></data>
 </root>
