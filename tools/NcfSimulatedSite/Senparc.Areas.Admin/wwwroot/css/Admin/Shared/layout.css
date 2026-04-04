@@ -275,6 +275,24 @@ li {
     font-size: 20px;
 }
 
+/* 全局卡片层主题映射（解决功能模块等区域仍固定浅色的问题） */
+.el-card {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.el-card__header {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.el-card__body {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+}
+
 /* ==================== 暗黑模式主题样式 ==================== */
 
 /* 浅色模式（base rules 已由 :root 变量驱动，此处保留覆盖） */
