@@ -390,6 +390,10 @@ var app = new Vue({
       mcpEndpointEditMode: false,
       mcpEndpointOriginalName: '',
       currentMcpTools: [], // 当前查看的MCP工具列表
+      // 拖放相关
+      isDraggingAgent: false,
+      draggingAgentData: null,
+      dragOverGroupId: null,
     };
   },
   computed: {
@@ -2640,6 +2644,89 @@ var app = new Vue({
         console.error('获取插件类型失败:', error);
         this.$message.error('获取插件类型失败');
       }
+    },
+
+    // 智能体拖拽开始
+    handleAgentDragStart(agent) {
+      this.isDraggingAgent = true;
+      this.draggingAgentData = agent;
+      // 确保组列表已加载
+      if (!this.groupList || this.groupList.length === 0) {
+        this.getGroupListData('group');
+      }
+    },
+
+    // 智能体拖拽结束
+    handleAgentDragEnd() {
+      this.isDraggingAgent = false;
+      this.draggingAgentData = null;
+      this.dragOverGroupId = null;
+    },
+
+    // 拖放到组区域的 dragover
+    handleGroupDropZoneOver(groupId) {
+      this.dragOverGroupId = groupId;
+    },
+
+    // 离开组区域
+    handleGroupDropZoneLeave() {
+      this.dragOverGroupId = null;
+    },
+
+    // 将智能体拖入组
+    async handleAgentDropToGroup(group) {
+      if (!this.draggingAgentData) return;
+      const agentId = this.draggingAgentData.id;
+      const agentName = this.draggingAgentData.name;
+      const groupName = group.name;
+
+      try {
+        // 获取当前组成员
+        const groupRes = await serviceAM.post(
+          `/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${group.id}`
+        );
+
+        if (groupRes.data.success) {
+          const groupDetail = groupRes.data.data;
+          const existingMemberIds = (groupDetail.agentTemplateDtoList || []).map(m => m.id);
+
+          if (existingMemberIds.includes(agentId)) {
+            this.$message.warning(`"${agentName}" 已经是 "${groupName}" 的成员！`);
+            this.isDraggingAgent = false;
+            this.draggingAgentData = null;
+            this.dragOverGroupId = null;
+            return;
+          }
+
+          // 添加智能体到成员列表
+          const newMemberIds = [...existingMemberIds, agentId];
+          const chatGroupDto = groupDetail.chatGroupDto;
+
+          const saveRes = await serviceAM.post(
+            `/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.SetChatGroup?${getInterfaceQueryStr({ memberAgentTemplateIds: newMemberIds })}`,
+            chatGroupDto
+          );
+
+          if (saveRes.data.success) {
+            this.$message.success(`"${agentName}" 已成功加入 "${groupName}"！`);
+            // 如果当前在组详情页面，刷新组详情
+            if (this.tabsActiveName === 'second') {
+              this.getGroupListData('group');
+            }
+          } else {
+            this.$message.error(saveRes.data.errorMessage || '加入失败，请重试');
+          }
+        } else {
+          this.$message.error(groupRes.data.errorMessage || '获取组信息失败');
+        }
+      } catch (err) {
+        console.error('拖放操作失败:', err);
+        this.$message.error('操作失败，请重试');
+      }
+
+      this.isDraggingAgent = false;
+      this.draggingAgentData = null;
+      this.dragOverGroupId = null;
     },
 
     // 添加插件类型到 functionCallNames
