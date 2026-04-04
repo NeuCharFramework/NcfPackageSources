@@ -630,6 +630,10 @@ var app = new Vue({
     syncHashRoute(extra = {}) {
       this.setHashRoute(this.buildCurrentRoute(extra))
     },
+    navigateByHash(route) {
+      this.setHashRoute(route)
+      this.applyHashRoute()
+    },
     async applyHashRoute() {
       if (this.isApplyingHashRoute) {
         return
@@ -649,13 +653,13 @@ var app = new Vue({
 
         if (tab === 'first') {
           if (route.view === 'three') {
-            this.handleAgentListViewModeChange('three')
+            this.handleAgentListViewModeChange('three', true)
           }
           if (route.agentId) {
             await this.getAgentListData('agent')
             const idx = (this.agentList || []).findIndex(item => item.id === route.agentId)
             if (idx >= 0) {
-              this.handleAgentView(this.agentList[idx], idx)
+              this.handleAgentView(this.agentList[idx], idx, true)
             }
           }
           return
@@ -666,7 +670,7 @@ var app = new Vue({
           if (route.groupId) {
             const groupItem = (this.groupList || []).find(item => item.id === route.groupId)
             if (groupItem) {
-              this.handleGroupView('group', groupItem)
+              this.handleGroupView('group', groupItem, 0, true)
             } else {
               this.groupShowType = '2'
               this.scrollbarGroupIndex = route.groupId
@@ -684,7 +688,7 @@ var app = new Vue({
           await this.gettaskListData('task')
           const idx = (this.taskList || []).findIndex(item => item.id === route.taskId)
           if (idx >= 0) {
-            this.handleTaskView('task', this.taskList[idx], idx)
+            this.handleTaskView('task', this.taskList[idx], idx, true)
           } else {
             this.scrollbarTaskIndex = route.taskId
             await this.getTaskDetailData('task', route.taskId, { id: route.taskId })
@@ -716,16 +720,14 @@ var app = new Vue({
       if (!groupId) {
         return
       }
-      this.setHashRoute({ tab: 'second', groupId: groupId })
-      this.applyHashRoute()
+      this.navigateByHash({ tab: 'second', groupId: groupId })
     },
     handleQuickJumpTask() {
       const taskId = Number(this.quickJumpTaskId || 0)
       if (!taskId) {
         return
       }
-      this.setHashRoute({ tab: 'third', taskId: taskId })
-      this.applyHashRoute()
+      this.navigateByHash({ tab: 'third', taskId: taskId })
     },
     handleAgentGraphFilterChange() {
       this.renderAgentGraph()
@@ -809,7 +811,12 @@ var app = new Vue({
       this.agentGraphLastRenderAt = new Date()
       this.agentGraphRenderCount += 1
     },
-    handleAgentListViewModeChange(mode) {
+    handleAgentListViewModeChange(mode, fromHash = false) {
+      if (!fromHash && !this.isApplyingHashRoute) {
+        this.agentListViewMode = mode || 'panel'
+        this.navigateByHash(this.buildCurrentRoute({ tab: 'first', view: this.agentListViewMode === 'three' ? 'three' : null }))
+        return
+      }
       this.agentListViewMode = mode || 'panel'
       if (this.agentListViewMode === 'three' && this.tabsActiveName === 'first' && this.scrollbarAgentIndex === '') {
         this.$nextTick(() => {
@@ -1978,6 +1985,10 @@ var app = new Vue({
 
     // 切换 tabs 页面
     handleTabsClick(tab, event) {
+      if (!this.isApplyingHashRoute) {
+        this.navigateByHash(this.buildCurrentRoute({ tab: this.tabsActiveName }))
+        return
+      }
       this.clearHistoryTimer()
       this.stopAgentGraphPolling()
       // 智能体
@@ -2104,7 +2115,11 @@ var app = new Vue({
 
 
     // 查看全部智能体 列表 
-    handleAgentViewAll() {
+    handleAgentViewAll(fromHash = false) {
+      if (!fromHash && !this.isApplyingHashRoute) {
+        this.navigateByHash(this.buildCurrentRoute({ tab: 'first', agentId: null }))
+        return
+      }
       this.clearHistoryTimer()
       this.scrollbarAgentIndex = '' // 清空索引
       this.agentDetails = '' // 清空详情数据
@@ -2119,7 +2134,11 @@ var app = new Vue({
       this.syncHashRoute({ tab: 'first', agentId: null })
     },
     // 查看 智能体
-    handleAgentView(item, index) {
+    handleAgentView(item, index, fromHash = false) {
+      if (!fromHash && !this.isApplyingHashRoute) {
+        this.navigateByHash(this.buildCurrentRoute({ tab: 'first', agentId: item.id }))
+        return
+      }
       this.clearHistoryTimer()
       this.stopAgentGraphPolling()
       this.scrollbarAgentIndex = item.id ?? ''
@@ -2274,7 +2293,11 @@ var app = new Vue({
       }
     },
     // 组 查看全部 列表 
-    handleGroupViewAll() {
+    handleGroupViewAll(fromHash = false) {
+      if (!fromHash && !this.isApplyingHashRoute) {
+        this.navigateByHash({ tab: 'second' })
+        return
+      }
       this.clearHistoryTimer()
       this.groupShowType = '1'
       // 清空组详情
@@ -2291,7 +2314,11 @@ var app = new Vue({
       this.syncHashRoute({ tab: 'second', groupId: null, taskId: null })
     },
     // 组 查看列表 详情 
-    handleGroupView(clickType, item, index = 0) {
+    handleGroupView(clickType, item, index = 0, fromHash = false) {
+      if (!fromHash && !this.isApplyingHashRoute && (clickType === 'group' || clickType === 'groupTable')) {
+        this.navigateByHash({ tab: 'second', groupId: item.id })
+        return
+      }
       this.clearHistoryTimer()
       // 智能体下时 查看组详情
       if (clickType === 'agentGroup') {
@@ -2463,7 +2490,11 @@ var app = new Vue({
 
 
     // 任务 查看全部 列表 
-    handleTaskViewAll() {
+    handleTaskViewAll(fromHash = false) {
+      if (!fromHash && !this.isApplyingHashRoute) {
+        this.navigateByHash({ tab: 'third' })
+        return
+      }
       this.clearHistoryTimer()
       this.scrollbarTaskIndex = ''
       // 清空详情数据
@@ -2477,7 +2508,15 @@ var app = new Vue({
       this.syncHashRoute({ tab: 'third', taskId: null })
     },
     // 查看 任务详情
-    handleTaskView(clickType, item = {}, index = 0) {
+    handleTaskView(clickType, item = {}, index = 0, fromHash = false) {
+      if (!fromHash && !this.isApplyingHashRoute && clickType === 'groupTask') {
+        this.navigateByHash({ tab: 'second', groupId: item.chatGroupId || this.scrollbarGroupIndex || null, taskId: item.id })
+        return
+      }
+      if (!fromHash && !this.isApplyingHashRoute && clickType === 'task') {
+        this.navigateByHash({ tab: 'third', taskId: item.id })
+        return
+      }
       this.clearHistoryTimer()
       if (clickType === 'agentTask') {
         this.agentDetailsTaskIndex = index ?? ''
@@ -2521,7 +2560,12 @@ var app = new Vue({
       }
     },
     // 返回组详情页面
-    returnGroup(clickType) {
+    returnGroup(clickType, fromHash = false) {
+      if (!fromHash && !this.isApplyingHashRoute && clickType === 'groupTask') {
+        const groupId = this.groupDetails?.chatGroupDto?.id || this.scrollbarGroupIndex || null
+        this.navigateByHash({ tab: 'second', groupId: groupId })
+        return
+      }
       this.clearHistoryTimer()
       if (clickType === 'agentGroupTask') {
         this.agentDetailsGroupShowType = '1'
