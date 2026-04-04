@@ -684,8 +684,11 @@ var app = new Vue({
           return
         }
 
-        if (tab === 'third' && route.taskId) {
+        if (tab === 'third') {
           await this.gettaskListData('task')
+          if (!route.taskId) {
+            return
+          }
           const idx = (this.taskList || []).findIndex(item => item.id === route.taskId)
           if (idx >= 0) {
             this.handleTaskView('task', this.taskList[idx], idx, true)
