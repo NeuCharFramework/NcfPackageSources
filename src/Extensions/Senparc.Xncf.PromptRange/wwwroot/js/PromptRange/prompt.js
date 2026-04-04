@@ -4905,6 +4905,12 @@ var app = new Vue({
             // 跟踪是否需要渲染
             let needsRender = false
             
+            // 检查外部触发的渲染请求（如键盘操作、重置视角等）
+            if (this.map3dNeedsAnimationUpdate) {
+                needsRender = true
+                this.map3dNeedsAnimationUpdate = false
+            }
+            
             // 更新控制器（启用阻尼时需要每帧更新）
             if (this.map3dControls) {
                 // update() 返回 true 表示相机位置发生了变化
