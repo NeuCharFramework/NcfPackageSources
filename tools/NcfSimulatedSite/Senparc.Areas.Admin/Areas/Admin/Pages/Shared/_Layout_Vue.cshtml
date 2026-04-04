@@ -71,6 +71,14 @@
                                 <option value="ru" selected="@(currentCulture.StartsWith("ru") ? "selected" : null)">Русский</option>
                             </select>
                         </div>
+                        <div class="header-theme">
+                            <label for="ncf-theme" class="header-theme-label">风格</label>
+                            <select id="ncf-theme" class="header-theme-select" onchange="ncfSwitchTheme(this.value)">
+                                <option value="auto">跟随系统</option>
+                                <option value="light">浅色</option>
+                                <option value="dark">深色</option>
+                            </select>
+                        </div>
                         @*退出*@
                         <div class="header-logout">
                             <el-tooltip class="item" effect="dark" content="@AR["Admin.Logout.Title"]" placement="left">
@@ -107,6 +115,7 @@
     <script src="~/js/Admin/store.js"></script>
     <script src="~/js/Admin/axios.js"></script>
     <script src="~/js/Admin/global.js"></script>
+    <script src="~/js/Admin/theme.js"></script>
     <!--菜单栏-->
     <script src="~/js/Admin/navMenu.js"></script>
     <script src="~/js/Admin/vuePermission.js"></script>

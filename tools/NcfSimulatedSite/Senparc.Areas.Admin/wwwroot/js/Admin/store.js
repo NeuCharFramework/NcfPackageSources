@@ -2,6 +2,7 @@
     state: {
         pageSrc: '1',
         resourceCodes: [],
+        themeMode: window.localStorage.getItem('ncf-theme-mode') || 'auto', // 'auto' | 'light' | 'dark'
         navMenu: { //侧边栏数据
             navMenuList: [],
             isCollapse:JSON.parse( window.sessionStorage.getItem('isCollapse'))|| false,
@@ -28,6 +29,12 @@
         // 保存菜单数据
         savenavMenuList(state, data) {
             state.navMenu.navMenuList = data;
+        },
+        // 修改主题模式
+        setThemeMode(state, mode) {
+            state.themeMode = mode;
+            window.localStorage.setItem('ncf-theme-mode', mode);
+            applyTheme(mode);
         }
     }
 });
