@@ -31,7 +31,7 @@
 
 .sticky-clone {
     position: fixed !important;
-    background-color: #fff !important;
+    background-color: var(--bg-surface, #fff) !important;
     z-index: 1000;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
     table-layout: fixed !important;
@@ -54,7 +54,7 @@
 
 /* 克隆元素样式调整 */
 .sticky-clone td {
-    background-color: #fff !important;
+    background-color: var(--bg-surface, #fff) !important;
     border-bottom: 1px solid #EBEEF5;
     padding: 12px 0;
     box-sizing: border-box;
@@ -64,7 +64,7 @@
 }
 
 .sticky-clone:hover td {
-    background-color: #F5F7FA !important;
+    background-color: var(--bg-hover, #F5F7FA) !important;
 }
 
 /* 确保展开图标的样式一致 */

@@ -24,7 +24,27 @@ const ThemeConfig = {
         },
         menuText: '#bfcbd9',
         menuActiveBg: '#409EFF',
-        link: '#5A738E'
+        link: '#5A738E',
+        cssVars: {
+            '--bg-body':        '#ffffff',
+            '--bg-content':     '#ffffff',
+            '--bg-surface':     '#ffffff',
+            '--bg-surface-alt': '#fafbfc',
+            '--bg-main':        '#e3e3e3',
+            '--bg-page':        '#f5f7fa',
+            '--bg-hover':       '#f0f2f5',
+            '--bg-input':       '#ffffff',
+            '--bg-header':      '#ffffff',
+            '--bg-pagination':  '#ffffff',
+            '--bg-sticky':      '#ffffff',
+            '--text-primary':   '#303133',
+            '--text-secondary': '#606266',
+            '--text-muted':     '#909399',
+            '--text-placeholder':'#c0c4cc',
+            '--border-color':   '#e4e7ed',
+            '--border-light':   '#dcdfe6',
+            '--border-table':   '#EBEEF5',
+        }
     },
     dark: {
         name: 'dark',
@@ -45,7 +65,27 @@ const ThemeConfig = {
         },
         menuText: '#a0a8b8',
         menuActiveBg: '#409EFF',
-        link: '#73a8d4'
+        link: '#73a8d4',
+        cssVars: {
+            '--bg-body':        '#1a1a1a',
+            '--bg-content':     '#2d2d2d',
+            '--bg-surface':     '#2d2d2d',
+            '--bg-surface-alt': '#252525',
+            '--bg-main':        '#1e1e1e',
+            '--bg-page':        '#1e1e1e',
+            '--bg-hover':       '#363636',
+            '--bg-input':       '#363636',
+            '--bg-header':      '#2d2d2d',
+            '--bg-pagination':  'transparent',
+            '--bg-sticky':      '#2d2d2d',
+            '--text-primary':   '#e0e0e0',
+            '--text-secondary': '#a8a9ad',
+            '--text-muted':     '#707070',
+            '--text-placeholder':'#909399',
+            '--border-color':   '#404040',
+            '--border-light':   '#404040',
+            '--border-table':   '#404040',
+        }
     }
 };
 
@@ -129,6 +169,14 @@ function applyTheme(mode) {
     // 应用 CSS 类用于主题识别
     document.documentElement.setAttribute('data-theme', actualTheme);
     document.body.setAttribute('data-theme', actualTheme);
+
+    // 将 CSS 自定义属性写入 :root（即时覆盖变量，无需重新解析选择器）
+    if (config.cssVars) {
+        const root = document.documentElement;
+        Object.entries(config.cssVars).forEach(([key, val]) => {
+            root.style.setProperty(key, val);
+        });
+    }
 
     // 如果有 Element UI 暗黑模式主题文件，切换它
     switchElementUITheme(actualTheme);

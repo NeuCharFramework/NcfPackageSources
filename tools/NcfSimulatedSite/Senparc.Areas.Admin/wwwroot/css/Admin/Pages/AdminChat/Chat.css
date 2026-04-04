@@ -2,12 +2,12 @@
 
 .admin-chat-container {
   height: calc(100vh - 120px);
-  background: #f5f7fa;
+  background: var(--bg-main, #f5f7fa);
 }
 
 .chat-main-container {
   height: 100%;
-  background: #fff;
+  background: var(--bg-surface, #fff);
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
@@ -15,8 +15,8 @@
 
 /* ========== 左侧会话历史区域 ========== */
 .chat-sidebar {
-  background: #fafbfc;
-  border-right: 1px solid #e4e7ed;
+  background: var(--bg-surface-alt, #fafbfc);
+  border-right: 1px solid var(--border-color, #e4e7ed);
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -24,8 +24,8 @@
 
 .sidebar-header {
   padding: 20px 15px;
-  border-bottom: 1px solid #e4e7ed;
-  background: #fff;
+  border-bottom: 1px solid var(--border-color, #e4e7ed);
+  background: var(--bg-surface, #fff);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -35,7 +35,7 @@
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: #303133;
+  color: var(--text-primary, #303133);
   display: flex;
   align-items: center;
 }
@@ -57,15 +57,15 @@
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: #fff;
-  border: 1px solid #e4e7ed;
+  background: var(--bg-surface, #fff);
+  border: 1px solid var(--border-color, #e4e7ed);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .session-item:hover {
-  background: #f0f2f5;
+  background: var(--bg-hover, #f0f2f5);
   border-color: #667eea;
   transform: translateX(2px);
 }
@@ -89,7 +89,7 @@
 .session-title {
   font-size: 14px;
   font-weight: 500;
-  color: #303133;
+  color: var(--text-primary, #303133);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -145,8 +145,8 @@
 
 .chat-header {
   padding: 20px 25px;
-  border-bottom: 1px solid #e4e7ed;
-  background: #fff;
+  border-bottom: 1px solid var(--border-color, #e4e7ed);
+  background: var(--bg-surface, #fff);
 }
 
 .chat-header-info {
@@ -172,7 +172,7 @@
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  color: #303133;
+  color: var(--text-primary, #303133);
   display: flex;
   align-items: center;
 }
@@ -220,22 +220,22 @@
   flex: 1;
   overflow-y: auto;
   padding: 20px 25px;
-  background: #f5f7fa;
+  background: var(--bg-page, #f5f7fa);
 }
 
 .message-manage-toolbar {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #fff;
-  border: 1px solid #e4e7ed;
+  background: var(--bg-surface, #fff);
+  border: 1px solid var(--border-color, #e4e7ed);
   border-radius: 8px;
   padding: 10px 12px;
   margin-bottom: 14px;
 }
 
 .message-manage-count {
-  color: #606266;
+  color: var(--text-secondary, #606266);
   font-size: 13px;
   margin-right: auto;
 }
@@ -307,7 +307,7 @@
 .message-role {
   font-size: 13px;
   font-weight: 600;
-  color: #606266;
+  color: var(--text-secondary, #606266);
 }
 
 .message-time {
@@ -316,11 +316,11 @@
 }
 
 .message-text {
-  background: #fff;
+  background: var(--bg-surface, #fff);
   padding: 12px 16px;
   border-radius: 10px;
   line-height: 1.6;
-  color: #303133;
+  color: var(--text-primary, #303133);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   word-wrap: break-word;
   white-space: pre-wrap;
@@ -441,8 +441,8 @@
 /* ========== 输入区域 ========== */
 .input-container {
   padding: 20px 25px;
-  border-top: 1px solid #e4e7ed;
-  background: #fff;
+  border-top: 1px solid var(--border-color, #e4e7ed);
+  background: var(--bg-surface, #fff);
 }
 
 .message-input {
@@ -510,17 +510,28 @@
 
 .messages-container::-webkit-scrollbar-track,
 .session-list::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--bg-page, #f1f1f1);
   border-radius: 3px;
 }
 
 .messages-container::-webkit-scrollbar-thumb,
 .session-list::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
+  background: var(--text-muted, #c1c1c1);
   border-radius: 3px;
 }
 
 .messages-container::-webkit-scrollbar-thumb:hover,
 .session-list::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
+  background: var(--text-secondary, #a8a8a8);
+}
+
+/* ========== 深色主题下 Chat 特有覆盖 ========== */
+[data-theme="dark"] .message-text code {
+  background: var(--bg-hover, #363636);
+  color: #e6a23c;
+}
+
+[data-theme="dark"] .sidebar-title .fa,
+[data-theme="dark"] .chat-title .fa {
+  color: #7a8fd4;
 }

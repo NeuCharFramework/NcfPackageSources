@@ -1,4 +1,50 @@
 ﻿
+/* ==================== 主题 CSS 变量 ==================== */
+/* 浅色模式（默认） */
+:root,
+[data-theme="light"] {
+    --bg-body:          #ffffff;
+    --bg-content:       #ffffff;
+    --bg-surface:       #ffffff;
+    --bg-surface-alt:   #fafbfc;
+    --bg-main:          #e3e3e3;
+    --bg-page:          #f5f7fa;
+    --bg-hover:         #f0f2f5;
+    --bg-input:         #ffffff;
+    --bg-header:        #ffffff;
+    --bg-pagination:    #ffffff;
+    --bg-sticky:        #ffffff;
+    --text-primary:     #303133;
+    --text-secondary:   #606266;
+    --text-muted:       #909399;
+    --text-placeholder: #c0c4cc;
+    --border-color:     #e4e7ed;
+    --border-light:     #dcdfe6;
+    --border-table:     #EBEEF5;
+}
+
+/* 深色模式 */
+[data-theme="dark"] {
+    --bg-body:          #1a1a1a;
+    --bg-content:       #2d2d2d;
+    --bg-surface:       #2d2d2d;
+    --bg-surface-alt:   #252525;
+    --bg-main:          #1e1e1e;
+    --bg-page:          #1e1e1e;
+    --bg-hover:         #363636;
+    --bg-input:         #363636;
+    --bg-header:        #2d2d2d;
+    --bg-pagination:    transparent;
+    --bg-sticky:        #2d2d2d;
+    --text-primary:     #e0e0e0;
+    --text-secondary:   #a8a9ad;
+    --text-muted:       #707070;
+    --text-placeholder: #909399;
+    --border-color:     #404040;
+    --border-light:     #404040;
+    --border-table:     #404040;
+}
+
 [v-cloak] {
     display: none;
 }
@@ -53,7 +99,7 @@ li {
 
 .el-main
 {
-    background-color: #e3e3e3;
+    background-color: var(--bg-main);
     height: 730px;
 }
 
@@ -93,7 +139,8 @@ li {
 .el-header {
     overflow: hidden;
     position: relative;
-    background: #fff;
+    background: var(--bg-header);
+    color: var(--text-primary);
     box-shadow: 0 1px 4px rgba(0,21,41,0.08);
 }
 
@@ -150,13 +197,13 @@ li {
 }
 
 .header-language-select {
-    border: 1px solid #dcdfe6;
+    border: 1px solid var(--border-light);
     border-radius: 4px;
     font-size: 12px;
-    color: #303133;
+    color: var(--text-primary);
     padding: 2px 8px;
     height: 28px;
-    background: #fff;
+    background: var(--bg-header);
 }
 
 .header-theme {
@@ -175,13 +222,13 @@ li {
 }
 
 .header-theme-select {
-    border: 1px solid #dcdfe6;
+    border: 1px solid var(--border-light);
     border-radius: 4px;
     font-size: 12px;
-    color: #303133;
+    color: var(--text-primary);
     padding: 2px 8px;
     height: 28px;
-    background: #fff;
+    background: var(--bg-header);
     cursor: pointer;
     transition: all 0.3s ease;
 }
@@ -199,7 +246,7 @@ li {
 
 /*分页*/
 .pagination-container {
-    background: #fff;
+    background: var(--bg-pagination);
     padding: 32px 16px;
 }
 
@@ -230,32 +277,32 @@ li {
 
 /* ==================== 暗黑模式主题样式 ==================== */
 
-/* 浅色模式（默认） */
+/* 浅色模式（base rules 已由 :root 变量驱动，此处保留覆盖） */
 body[data-theme="light"] {
-    background-color: #ffffff;
-    color: #303133;
+    background-color: var(--bg-body);
+    color: var(--text-primary);
 }
 
 body[data-theme="light"] .el-main {
-    background-color: #e3e3e3;
+    background-color: var(--bg-main);
 }
 
 body[data-theme="light"] .el-header {
-    background-color: #ffffff;
-    color: #303133;
-    border-bottom: 1px solid #e6e6e6;
+    background-color: var(--bg-header);
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
 }
 
 body[data-theme="light"] .header-language-label,
 body[data-theme="light"] .header-theme-label {
-    color: #606266;
+    color: var(--text-secondary);
 }
 
 body[data-theme="light"] .header-language-select,
 body[data-theme="light"] .header-theme-select {
-    background-color: #ffffff;
-    color: #303133;
-    border-color: #dcdfe6;
+    background-color: var(--bg-header);
+    color: var(--text-primary);
+    border-color: var(--border-light);
 }
 
 /* 深色模式 */
@@ -296,15 +343,15 @@ body[data-theme="dark"] .header-theme-label {
 
 body[data-theme="dark"] .header-language-select,
 body[data-theme="dark"] .header-theme-select {
-    background-color: #363636;
-    color: #e0e0e0;
-    border-color: #404040;
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border-color: var(--border-light);
 }
 
 body[data-theme="dark"] .header-language-select:hover,
 body[data-theme="dark"] .header-theme-select:hover {
     border-color: #409EFF;
-    background-color: #3d3d3d;
+    background-color: var(--bg-hover);
 }
 
 body[data-theme="dark"] .header-logout {
@@ -492,7 +539,7 @@ body[data-theme="dark"] .el-message__closeBtn {
 }
 
 body[data-theme="dark"] .pagination-container {
-    background-color: transparent;
+    background-color: var(--bg-pagination);
 }
 
 body[data-theme="dark"] .box {
