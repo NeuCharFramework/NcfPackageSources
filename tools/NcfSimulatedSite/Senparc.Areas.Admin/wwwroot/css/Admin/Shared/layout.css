@@ -293,6 +293,58 @@ li {
     color: var(--text-primary);
 }
 
+/* 全局折叠面板主题映射（解决「更新记录」「参数透视」等区域仍固定浅色的问题） */
+.el-collapse,
+.el-collapse-item {
+    border-color: var(--border-color);
+}
+
+.el-collapse-item__header {
+    background-color: var(--border-table);
+    color: var(--text-primary);
+    border-bottom-color: var(--border-color);
+}
+
+.el-collapse-item__wrap {
+    background-color: var(--bg-surface);
+    border-bottom-color: var(--border-color);
+}
+
+.el-collapse-item__content {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+}
+
+/* 全局表格主题映射 */
+.el-table {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+}
+
+.el-table th.el-table__cell {
+    background-color: var(--border-table);
+    color: var(--text-primary);
+    border-bottom-color: var(--border-color);
+}
+
+.el-table tr {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+}
+
+.el-table td.el-table__cell {
+    border-bottom-color: var(--border-color);
+}
+
+.el-table::before,
+.el-table--border::after {
+    background-color: var(--border-color);
+}
+
+.el-table__empty-text {
+    color: var(--text-muted);
+}
+
 /* ==================== 暗黑模式主题样式 ==================== */
 
 /* 浅色模式（base rules 已由 :root 变量驱动，此处保留覆盖） */
