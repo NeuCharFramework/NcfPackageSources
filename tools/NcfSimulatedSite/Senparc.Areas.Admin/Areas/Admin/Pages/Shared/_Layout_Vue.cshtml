@@ -15,6 +15,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon">
+    <!-- 防止主题闪烁：在首次渲染前同步应用主题，避免 light → dark 的视觉跳动 -->
+    <script>
+        (function () {
+            var mode = localStorage.getItem('ncf-theme-mode') || 'auto';
+            var theme = mode === 'auto'
+                ? ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light')
+                : mode;
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
     <!-- 引入样式 -->
     <link href="~/lib/element-ui_2.13.2/element.css" rel="stylesheet" />
     <link href="~/css/Admin/Shared/layout.css" rel="stylesheet" />

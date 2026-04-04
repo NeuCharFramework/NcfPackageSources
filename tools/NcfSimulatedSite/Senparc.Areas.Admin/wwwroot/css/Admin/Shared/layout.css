@@ -345,6 +345,38 @@ li {
     color: var(--text-muted);
 }
 
+/* 全局 Tabs（border-card）主题映射 */
+.el-tabs--border-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+}
+
+.el-tabs--border-card > .el-tabs__header {
+    background-color: var(--border-table);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.el-tabs--border-card > .el-tabs__header .el-tabs__item {
+    color: var(--text-secondary);
+    border-left-color: var(--border-color);
+}
+
+.el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    border-right-color: var(--border-color);
+    border-left-color: var(--border-color);
+}
+
+.el-tabs--border-card > .el-tabs__header .el-tabs__item:not(.is-disabled):hover {
+    color: var(--text-primary);
+}
+
+.el-tabs--border-card > .el-tabs__content {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+}
+
 /* ==================== 暗黑模式主题样式 ==================== */
 
 /* 浅色模式（base rules 已由 :root 变量驱动，此处保留覆盖） */
