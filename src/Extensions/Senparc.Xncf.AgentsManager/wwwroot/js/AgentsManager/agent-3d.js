@@ -729,11 +729,12 @@
 
     this.agentObjects.forEach(function (entry) {
       const isHovered = this.activeAgentId && entry.agent.id === this.activeAgentId;
+      const isGroupFocused = activeGroup && activeMemberSet.has(entry.agent.id);
       const opacity = !activeGroup || activeMemberSet.has(entry.agent.id) ? 0.98 : 0.08;
       entry.mesh.material.opacity = opacity;
       if (entry.label) {
         const baseOpacity = !activeGroup || activeMemberSet.has(entry.agent.id) ? 0.42 : 0.1;
-        entry.label.material.opacity = isHovered ? 1 : baseOpacity;
+        entry.label.material.opacity = (isHovered || isGroupFocused) ? 1 : baseOpacity;
       }
     }.bind(this));
 
