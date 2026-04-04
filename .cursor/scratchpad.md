@@ -1,112 +1,112 @@
-# 管理后台AI对话功能改版 - 开发计划
+# Revision of the management background AI dialogue function - development plan
 
-## 📌 项目概览
+## 📌 Project Overview
 
-### 背景和动机
-用户需要将 NeuCharFramework 管理后台首页改版，增加 AI 对话入口功能，让用户可以通过自然语言与系统进行交互，提升管理后台的智能化体验和操作便利性。同时支持模块拖拽功能，实现上下文感知的对话。
+### Background and motivation
+Users need to revise the homepage of the NeuCharFramework management backend and add an AI dialogue entry function so that users can interact with the system through natural language to improve the intelligent experience and operational convenience of the management backend. It also supports module drag-and-drop function to achieve context-aware dialogue.
 
-### 核心目标
-1. 保留顶部统计区域，维持现有功能
-2. 在统计区域下方增加醒目的 AI 对话入口提示框
-3. 创建专门的对话任务页面（左侧历史记录 + 右侧对话窗口）
-4. 为原有模块增加拖拽功能，支持模块上下文对话
-5. 创建完整的数据模型、服务层和前端交互
+### Core Objectives
+1. Retain the top statistics area and maintain existing functions
+2. Add an eye-catching AI dialogue entrance prompt box below the statistics area
+3. Create a dedicated dialogue task page (history on the left + dialogue window on the right)
+4. Add drag-and-drop function to original modules and support module context dialogue.
+5. Create a complete data model, service layer and front-end interaction
 
-### 技术栈
-- **前端**: Vue.js 2.x + Element UI 2.13.2 + axios（系统现有，不引入新依赖）
-- **后端**: ASP.NET Core (Razor Pages) + NCF 框架
-- **数据层**: Entity Framework Core + 多数据库支持
-- **样式**: CSS3 + 响应式设计（使用系统现有的 Font Awesome 图标）
-- **交互**: HTML5 Drag & Drop API（浏览器原生支持，无需库）
+### Technology stack
+- **Front-end**: Vue.js 2.x + Element UI 2.13.2 + axios (existing in the system, no new dependencies will be introduced)
+- **Backend**: ASP.NET Core (Razor Pages) + NCF Framework
+- **Data layer**: Entity Framework Core + multiple database support
+- **Style**: CSS3 + responsive design (use the system’s existing Font Awesome icons)
+- **Interaction**: HTML5 Drag & Drop API (native browser support, no library required)
 
-**技术约束**：
-- ✅ 只使用系统现有的 UI 组件和库
-- ✅ 不引入新的第三方 JavaScript 库
-- ✅ 所有资源文件使用本地文件，不使用 CDN
-- ✅ DTO 继承 `DtoBase<int>` 自动提供 Id 属性
+**Technical constraints**:
+- ✅ Only use the system’s existing UI components and libraries
+- ✅ No new third-party JavaScript libraries are introduced
+- ✅ All resource files use local files and do not use CDN
+- ✅ DTO inheritance`DtoBase<int>`Automatically provide the Id attribute
 
 ---
 
-## 🎯 规划者分析
+## 🎯 Planner Analysis
 
-### 需求分析
+### Requirements analysis
 
-#### 功能需求
-1. **AI 对话入口**
-   - 在首页顶部统计区下方添加醒目的对话提示框
-   - 提示框需要占据合适的高度，保持适当的 margin
-   - 支持用户输入对话内容
-   - 点击后跳转到专门的对话页面
+#### Functional requirements
+1. **AI dialogue entrance**
+- Add an eye-catching dialog box below the statistics area at the top of the homepage
+- The prompt box needs to occupy an appropriate height and maintain appropriate margins
+- Support user input of conversation content
+- Click to jump to a dedicated conversation page
 
-2. **对话数据模型**
-   - 需要创建聊天会话表（AdminChatSession）
-   - 需要创建聊天消息表（AdminChatMessage）
-   - 需要创建会话-模块关联表（AdminChatSessionModule）
-   - 支持多轮对话历史记录
-   - 记录用户、AI 回复、时间戳等信息
+2. **Conversation Data Model**
+- Need to create a chat session table (AdminChatSession)
+- Need to create a chat message table (AdminChatMessage)
+- Need to create session-module association table (AdminChatSessionModule)
+- Supports multiple rounds of conversation history
+- Record user, AI reply, timestamp and other information
 
-3. **对话任务页面**
-   - 左侧：对话历史记录列表（会话列表）
-   - 右侧：当前会话的对话窗口
-   - 符合系统现有风格，重用 Element UI 组件
-   - 现代化设计，流畅的交互体验
+3. **Dialogue task page**
+- Left: Conversation history list (Conversation list)
+- Right: Dialogue window of the current session
+- Comply with the existing style of the system and reuse Element UI components
+- Modern design, smooth interactive experience
 
-4. **模块拖拽功能**
-   - 原有功能模块卡片支持拖拽
-   - 可以拖拽到对话框区域
-   - 在对话框下方显示已选模块名称
-   - 将选中模块信息传递给 AI 对话上下文
+4. **Module drag and drop function**
+- The original function module card supports drag and drop
+- Can be dragged to the dialog area
+- Display the selected module name at the bottom of the dialog box
+- Pass the selected module information to the AI ​​dialogue context
 
-#### 非功能需求
-1. **性能**: 对话响应时间 < 3s，页面加载 < 2s
-2. **兼容性**: 符合现有系统风格，无破坏性变更
-3. **可维护性**: 代码结构清晰，遵循 NCF 框架规范
-4. **扩展性**: 支持未来添加更多对话功能（如语音、文件上传等）
+#### Non-functional requirements
+1. **Performance**: Dialog response time < 3s, page loading < 2s
+2. **Compatibility**: Comply with existing system style, no destructive changes
+3. **Maintainability**: The code structure is clear and follows the NCF framework specifications.
+4. **Extensibility**: Supports adding more conversational functions (such as voice, file upload, etc.) in the future
 
-### 技术架构
+### Technical architecture
 
-#### 数据库设计
+#### Database design
 
-**表结构设计**：
+**Table structure design**:
 
-1. **ADMIN_AdminChatSession** (聊天会话表)
-   - Id (int, PK) - 由 `EntityBase<int>` 提供
-   - Title (string, 150) - 会话标题（从首条消息自动提取）
-   - UserId (int) - 用户ID（外键到 AdminUserInfo）
-   - Status (enum) - 会话状态（Active, Archived, Deleted）
-   - LastMessageTime (DateTime) - 最后消息时间
-   - CreatedTime, LastModifiedTime, TenantId, AddTime, Flag - 由 `EntityBase<int>` 提供
+1. **ADMIN_AdminChatSession** (chat session table)
+- Id (int, PK) - given by`EntityBase<int>`supply
+- Title (string, 150) - Session title (automatically extracted from first message)
+- UserId (int) - User ID (foreign key to AdminUserInfo)
+- Status (enum) - Session status (Active, Archived, Deleted)
+- LastMessageTime (DateTime) - Last message time
+- CreatedTime, LastModifiedTime, TenantId, AddTime, Flag - by`EntityBase<int>`supply
 
-2. **ADMIN_AdminChatMessage** (聊天消息表)
-   - Id (int, PK) - 由 `EntityBase<int>` 提供
-   - SessionId (int, FK) - 关联会话ID
-   - RoleType (enum) - 角色类型（User, Assistant, System）
-   - Content (string) - 消息内容
-   - Sequence (int) - 消息序号
-   - UserFeedback (bool?) - 用户反馈（Like/Unlike/null）
-   - ModelIdentifier (string, 100) - AI 模型标识
-   - CreatedTime (DateTime) - 消息创建时间
-   - TenantId, AddTime, Flag - 由 `EntityBase<int>` 提供
+2. **ADMIN_AdminChatMessage** (chat message table)
+- Id (int, PK) - given by`EntityBase<int>`supply
+- SessionId (int, FK) - associated session ID
+- RoleType (enum) - Role type (User, Assistant, System)
+- Content (string) - message content
+- Sequence (int) - message sequence number
+- UserFeedback (bool?) - User feedback (Like/Unlike/null)
+- ModelIdentifier (string, 100) - AI model identifier
+- CreatedTime (DateTime) - message creation time
+- TenantId, AddTime, Flag - by`EntityBase<int>`supply
 
-3. **ADMIN_AdminChatSessionModule** (会话-模块关联表)
-   - Id (int, PK) - 由 `EntityBase<int>` 提供
-   - SessionId (int, FK) - 关联会话ID
-   - XncfModuleUid (string, 36) - 模块UID
-   - ModuleName (string, 100) - 模块名称
-   - ModuleVersion (string, 50) - 模块版本
-   - AddedTime (DateTime) - 添加时间
-   - TenantId, AddTime, Flag - 由 `EntityBase<int>` 提供
+3. **ADMIN_AdminChatSessionModule** (session-module association table)
+- Id (int, PK) - given by`EntityBase<int>`supply
+- SessionId (int, FK) - associated session ID
+- XncfModuleUid (string, 36) - Module UID
+- ModuleName (string, 100) - module name
+- ModuleVersion (string, 50) - Module version
+- AddedTime (DateTime) - Add time
+- TenantId, AddTime, Flag - by`EntityBase<int>`supply
 
-**DTO 设计规范**：
-- 所有 DTO 必须继承 `DtoBase<int>`，自动获得 int 类型的 Id 属性
-- DTO 同时继承 Flag、AddTime、LastUpdateTime、TenantId 等基础字段
-- 实体转 DTO 时要复制所有基类属性
+**DTO Design Specifications**:
+- All DTOs must inherit`DtoBase<int>`, automatically obtain the Id attribute of type int
+- DTO also inherits basic fields such as Flag, AddTime, LastUpdateTime, and TenantId.
+- When converting entities to DTO, all base class attributes must be copied
 
-#### 项目结构
+#### Project structure
 
-**新建扩展模块**: `Senparc.Xncf.AdminChat`（在 `Senparc.Areas.Admin` 项目中直接添加相关功能）
+**New extension module**:`Senparc.Xncf.AdminChat`(exist`Senparc.Areas.Admin`Add relevant functions directly to the project)
 
-**目录结构**：
+**Directory structure**:
 ```
 tools/NcfSimulatedSite/Senparc.Areas.Admin/
 ├── Domain/
@@ -139,292 +139,292 @@ tools/NcfSimulatedSite/Senparc.Areas.Admin/
         └── AdminChat/Chat.css (新建)
 ```
 
-#### 技术实现方案
+#### Technical implementation plan
 
-**方案一：作为独立 XNCF 模块**
-- 优点：模块化，可独立管理和升级
-- 缺点：需要用户安装，增加复杂度
+**Option 1: As an independent XNCF module**
+- Advantages: Modular, can be independently managed and upgraded
+- Disadvantages: Requires user installation, increasing complexity
 
-**方案二：直接集成到 Senparc.Areas.Admin 项目** ✅
-- 优点：无需安装，开箱即用，更符合后台核心功能定位
-- 缺点：耦合度稍高
+**Option 2: Directly integrate into the Senparc.Areas.Admin project** ✅
+- Advantages: No installation required, ready to use out of the box, more in line with the core function positioning of the background
+- Disadvantages: slightly higher degree of coupling
 
-**最终决策**: 采用**方案二**，直接集成到 `Senparc.Areas.Admin` 项目中。
+**Final decision**: Adopt **Option 2** and integrate directly into`Senparc.Areas.Admin`project.
 
-**原因**：
-1. AI 对话是管理后台的核心功能，不是可选模块
-2. 简化用户使用流程，无需额外安装
-3. 可以直接访问系统用户信息和权限
+**reason**:
+1. AI dialogue is the core function of the management backend, not an optional module
+2. Simplify the user process, no additional installation is required
+3. Can directly access system user information and permissions
 
-### 风险评估
+### risk assessment
 
-| 风险 | 等级 | 影响 | 应对措施 |
+| risk | grade | Influence | Countermeasures |
 |------|------|------|---------|
-| 数据表需要 Migration | 🟢 低 | 用户已表示手动执行 | 只需提供 Model 定义，用户自行执行 Migration |
-| 与现有 ChatGroup/ChatTask 功能冲突 | 🟡 中 | 可能造成概念混淆 | 明确区分：AdminChat 用于后台管理对话，ChatTask 用于智能体任务 |
-| 拖拽功能的浏览器兼容性 | 🟢 低 | 部分浏览器不支持 | 使用标准 HTML5 Drag API，主流浏览器均支持 |
-| AI 对话接口调用权限 | 🟡 中 | 需要配置 AI 模型 | 复用现有 AIKernel 模块的配置和接口 |
-| 前端状态管理复杂度 | 🟡 中 | 拖拽状态和对话状态交互 | 使用 Vue 的 data 和 computed 属性管理 |
+| Data table requires Migration | 🟢 Low | The user has indicated manual execution | Just provide the Model definition and users can perform Migration by themselves |
+| Conflicts with existing ChatGroup/ChatTask functionality | 🟡 medium | May cause conceptual confusion | Clear distinction: AdminChat is used for background management conversations, ChatTask is used for agent tasks |
+| Browser compatibility for drag and drop functionality | 🟢 Low | Some browsers don't support it | Uses the standard HTML5 Drag API, supported by all major browsers |
+| AI dialogue interface calling permissions | 🟡 medium | Need to configure AI model | Reuse configuration and interfaces of existing AIKernel modules |
+| Front-end state management complexity | 🟡 medium | Interaction between drag and drop state and conversation state | Use Vue’s data and computed properties to manage |
 
-### 技术选型说明
+### Technical selection instructions
 
-#### 前端技术栈（使用系统现有）
-- **Vue.js 2.x**: `~/lib/vue/vue.js` - 系统已有
-- **Element UI 2.13.2**: `~/lib/element-ui_2.13.2/` - 系统已有
-- **axios**: `~/lib/axios/axios.min.js` - 系统已有（通过 service 封装）
-- **Font Awesome**: `~/lib/font-awesome/` - 系统已有
-- **Vuex**: `~/lib/vuex.js` - 系统已有（如需要状态管理）
+#### Front-end technology stack (use existing system)
+- **Vue.js 2.x**: `~/lib/vue/vue.js`- The system already has
+- **Element UI 2.13.2**: `~/lib/element-ui_2.13.2/`- The system already has
+- **axios**: `~/lib/axios/axios.min.js`- The system already exists (encapsulated through service)
+- **Font Awesome**: `~/lib/font-awesome/`- The system already has
+- **Vuex**: `~/lib/vuex.js`- The system already exists (if status management is required)
 
-#### 不引入的库（避免）
-- ❌ lodash（防抖等工具函数自己实现）
-- ❌ marked.js（Markdown 解析，使用简单正则替换）
-- ❌ moment.js（时间格式化自己实现）
-- ❌ vue-virtual-scroller（虚拟滚动，当前场景不需要）
-- ❌ 任何 CDN 远程资源（必须使用本地文件）
+#### Libraries not imported (avoid)
+- ❌ lodash (implement anti-shake and other tool functions by yourself)
+- ❌ marked.js (Markdown parsing, using simple regular replacement)
+- ❌ moment.js (time formatting implemented by yourself)
+- ❌ vue-virtual-scroller (virtual scrolling, not required for the current scene)
+- ❌ Any CDN remote resource (must use local files)
 
-#### 后端技术规范
-- **DTO 继承**: 必须使用 `DtoBase<int>`，自动提供 Id 属性
-- **Service 继承**: 继承 `ServiceBase<TEntity>`
-- **AppService 继承**: 继承 `AppServiceBase`
-- **实体继承**: 继承 `EntityBase<int>`
+#### Backend technical specifications
+- **DTO inheritance**: required`DtoBase<int>`, automatically providing the Id attribute
+- **Service inheritance**: inheritance`ServiceBase<TEntity>`
+- **AppService inheritance**: inheritance`AppServiceBase`
+- **Entity Inheritance**: Inheritance`EntityBase<int>`
 
 ---
 
-## 📋 任务看板
+## 📋 Task board
 
-### 🔄 进行中
-_所有任务已完成，等待用户执行 Migration_
+### 🔄 In progress
+_All tasks have been completed and are waiting for the user to perform Migration_
 
-### ⏳ 待开始
+### ⏳ To be started
 
-_所有开发任务已完成_
+_All development tasks completed_
 
-#### ~~阶段一：数据模型层设计（预计 2 小时）~~ ✅
-详细实现：[Step 01: 数据模型层设计](./steps/step-01-data-models.md)
+#### ~~Phase 1: Data model layer design (estimated 2 hours)~~ ✅
+Detailed implementation: [Step 01: Data model layer design](./steps/step-01-data-models.md)
 
-- [ ] **[TASK-01]** 创建 AdminChatSession 实体和 DTO (0.5h)
-  - 文件路径映射、代码示例、验收标准详见 step-01
+- [ ] **[TASK-01]** Create AdminChatSession entity and DTO (0.5h)
+- For details on file path mapping, code examples, and acceptance criteria, see step-01
   
-- [ ] **[TASK-02]** 创建 AdminChatMessage 实体和 DTO (0.5h)
-  - 文件路径映射、代码示例、验收标准详见 step-01
+- [ ] **[TASK-02]** Create AdminChatMessage entity and DTO (0.5h)
+- For details on file path mapping, code examples, and acceptance criteria, see step-01
 
-- [ ] **[TASK-03]** 创建 AdminChatSessionModule 实体和 DTO (0.5h)
-  - 文件路径映射、代码示例、验收标准详见 step-01
+- [ ] **[TASK-03]** Create AdminChatSessionModule entity and DTO (0.5h)
+- For details on file path mapping, code examples, and acceptance criteria, see step-01
 
-- [ ] **[TASK-04]** 更新 DbContext 和 Register.Database.cs (0.5h)
-  - 文件路径映射、代码示例、验收标准详见 step-01
+- [ ] **[TASK-04]** Update DbContext and Register.Database.cs (0.5h)
+- For details on file path mapping, code examples, and acceptance criteria, see step-01
 
-#### 阶段二：服务层实现（预计 2.5 小时）
-详细实现：[Step 02: 服务层实现](./steps/step-02-service-layer.md)
+#### Phase 2: Service layer implementation (estimated 2.5 hours)
+Detailed implementation: [Step 02: Service layer implementation](./steps/step-02-service-layer.md)
 
-- [ ] **[TASK-05]** 创建 AdminChatSessionService (0.8h)
-  - 文件路径映射、代码示例、验收标准详见 step-02
+- [ ] **[TASK-05]** Create AdminChatSessionService (0.8h)
+- For details on file path mapping, code examples, and acceptance criteria, see step-02
 
-- [ ] **[TASK-06]** 创建 AdminChatMessageService (0.7h)
-  - 文件路径映射、代码示例、验收标准详见 step-02
+- [ ] **[TASK-06]** Create AdminChatMessageService (0.7h)
+- For details on file path mapping, code examples, and acceptance criteria, see step-02
 
-- [ ] **[TASK-07]** 创建 AdminChatSessionModuleService (0.5h)
-  - 文件路径映射、代码示例、验收标准详见 step-02
+- [ ] **[TASK-07]** Create AdminChatSessionModuleService (0.5h)
+- For details on file path mapping, code examples, and acceptance criteria, see step-02
 
-- [ ] **[TASK-08]** 创建 AdminChatAppService API 接口 (0.5h)
-  - 文件路径映射、代码示例、验收标准详见 step-02
+- [ ] **[TASK-08]** Create AdminChatAppService API interface (0.5h)
+- For details on file path mapping, code examples, and acceptance criteria, see step-02
 
-#### 阶段三：首页UI改版（预计 2 小时）
-详细实现：[Step 03: 首页UI改版](./steps/step-03-homepage-ui.md)
+#### Phase 3: Homepage UI revision (estimated 2 hours)
+Detailed implementation: [Step 03: Homepage UI revision](./steps/step-03-homepage-ui.md)
 
-- [ ] **[TASK-09]** 修改 Index.cshtml 添加对话入口 (0.8h)
-  - 文件路径映射、代码示例、验收标准详见 step-03
+- [ ] **[TASK-09]** Modify Index.cshtml to add dialogue entry (0.8h)
+- For details on file path mapping, code examples, and acceptance criteria, see step-03
 
-- [ ] **[TASK-10]** 修改 Index.js 添加对话入口交互 (0.5h)
-  - 文件路径映射、代码示例、验收标准详见 step-03
+- [ ] **[TASK-10]** Modify Index.js to add dialogue entry interaction (0.5h)
+- For details on file path mapping, code examples, and acceptance criteria, see step-03
 
-- [ ] **[TASK-11]** 修改 Index.cshtml.cs 添加后端逻辑 (0.4h)
-  - 文件路径映射、代码示例、验收标准详见 step-03
+- [ ] **[TASK-11]** Modify Index.cshtml.cs to add backend logic (0.4h)
+- For details on file path mapping, code examples, and acceptance criteria, see step-03
 
-- [ ] **[TASK-12]** 添加响应式样式和动画效果 (0.3h)
-  - 文件路径映射、代码示例、验收标准详见 step-03
+- [ ] **[TASK-12]** Add responsive styles and animations (0.3h)
+- For details on file path mapping, code examples, and acceptance criteria, see step-03
 
-#### 阶段四：对话任务页面（预计 3 小时）
-详细实现：[Step 04: 对话任务页面](./steps/step-04-chat-page.md)
+#### Stage 4: Dialogue task page (estimated 3 hours)
+Detailed implementation: [Step 04: Dialogue task page](./steps/step-04-chat-page.md)
 
-- [ ] **[TASK-13]** 创建 Chat.cshtml 页面结构 (1h)
-  - 文件路径映射、代码示例、验收标准详见 step-04
+- [ ] **[TASK-13]** Create Chat.cshtml page structure (1h)
+- For details on file path mapping, code examples, and acceptance criteria, see step-04
 
-- [ ] **[TASK-14]** 创建 Chat.cshtml.cs 后端逻辑 (0.5h)
-  - 文件路径映射、代码示例、验收标准详见 step-04
+- [ ] **[TASK-14]** Create Chat.cshtml.cs backend logic (0.5h)
+- For details on file path mapping, code examples, and acceptance criteria, see step-04
 
-- [ ] **[TASK-15]** 创建 Chat.js 前端交互 (1h)
-  - 文件路径映射、代码示例、验收标准详见 step-04
+- [ ] **[TASK-15]** Create Chat.js front-end interaction (1h)
+- For details on file path mapping, code examples, and acceptance criteria, see step-04
 
-- [ ] **[TASK-16]** 创建 Chat.css 样式文件 (0.5h)
-  - 文件路径映射、代码示例、验收标准详见 step-04
+- [ ] **[TASK-16]** Create Chat.css style file (0.5h)
+- For details on file path mapping, code examples, and acceptance criteria, see step-04
 
-#### 阶段五：模块拖拽功能（预计 1.5 小时）
-详细实现：[Step 05: 模块拖拽功能](./steps/step-05-drag-drop.md)
+#### Stage 5: Module drag and drop function (estimated 1.5 hours)
+Detailed implementation: [Step 05: Module drag and drop function](./steps/step-05-drag-drop.md)
 
-- [ ] **[TASK-17]** 为模块卡片添加拖拽支持 (0.5h)
-  - 文件路径映射、代码示例、验收标准详见 step-05
+- [ ] **[TASK-17]** Add drag and drop support for module cards (0.5h)
+- For details on file path mapping, code examples, and acceptance criteria, see step-05
 
-- [ ] **[TASK-18]** 实现对话框拖放区域 (0.5h)
-  - 文件路径映射、代码示例、验收标准详见 step-05
+- [ ] **[TASK-18]** Implement dialog drag and drop area (0.5h)
+- For details on file path mapping, code examples, and acceptance criteria, see step-05
 
-- [ ] **[TASK-19]** 实现选中模块显示和管理 (0.5h)
-  - 文件路径映射、代码示例、验收标准详见 step-05
+- [ ] **[TASK-19]** Implement display and management of selected modules (0.5h)
+- For details on file path mapping, code examples, and acceptance criteria, see step-05
 
-#### 阶段六：集成测试和优化（预计 1 小时）
-详细实现：[Step 06: 集成测试和优化](./steps/step-06-testing.md)
+#### Phase six: Integration testing and optimization (estimated 1 hour)
+Detailed implementation: [Step 06: Integration testing and optimization](./steps/step-06-testing.md)
 
-- [ ] **[TASK-20]** 完整功能测试 (0.5h)
-  - 文件路径映射、代码示例、验收标准详见 step-06
+- [ ] **[TASK-20]** Full functional test (0.5h)
+- For details on file path mapping, code examples, and acceptance criteria, see step-06
 
-- [ ] **[TASK-21]** 性能优化和代码审查 (0.5h)
-  - 文件路径映射、代码示例、验收标准详见 step-06
+- [ ] **[TASK-21]** Performance optimization and code review (0.5h)
+- For details on file path mapping, code examples, and acceptance criteria, see step-06
 
-### ✅ 已完成
+### ✅ Completed
 
-#### 阶段一：数据模型层设计 ✅ (实际耗时 1.5h)
-- [x] **[TASK-01]** 创建 AdminChatSession 实体和 DTO ✅
-- [x] **[TASK-02]** 创建 AdminChatMessage 实体和 DTO ✅
-- [x] **[TASK-03]** 创建 AdminChatSessionModule 实体和 DTO ✅
-- [x] **[TASK-04]** 更新 DbContext 和 Register.Database.cs ✅
+#### Phase 1: Data model layer design ✅ (actual time taken 1.5h)
+- [x] **[TASK-01]** Create AdminChatSession entity and DTO ✅
+- [x] **[TASK-02]** Create AdminChatMessage entity and DTO ✅
+- [x] **[TASK-03]** Create AdminChatSessionModule entity and DTO ✅
+- [x] **[TASK-04]** Update DbContext and Register.Database.cs ✅
 
-#### 阶段二：服务层实现 ✅ (实际耗时 2h)
-- [x] **[TASK-05]** 创建 AdminChatSessionService ✅
-- [x] **[TASK-06]** 创建 AdminChatMessageService ✅
-- [x] **[TASK-07]** 创建 AdminChatSessionModuleService ✅
-- [x] **[TASK-08]** 创建 AdminChatAppService API 接口 ✅
-- [x] **[额外]** 创建 Repository 接口和实现类 ✅
+#### Phase 2: Service layer implementation ✅ (actual time consuming 2h)
+- [x] **[TASK-05]** Create AdminChatSessionService ✅
+- [x] **[TASK-06]** Create AdminChatMessageService ✅
+- [x] **[TASK-07]** Create AdminChatSessionModuleService ✅
+- [x] **[TASK-08]** Create AdminChatAppService API interface ✅
+- [x] **[Extra]** Create Repository interface and implementation class ✅
 
-#### 阶段三：首页UI改版 ✅ (实际耗时 1.5h)
-- [x] **[TASK-09]** 修改 Index.cshtml 添加对话入口 ✅
-- [x] **[TASK-10]** 修改 Index.js 添加对话入口交互 ✅
-- [x] **[TASK-11]** 修改 Index.cshtml.cs 添加后端逻辑 ✅
+#### Phase 3: Homepage UI revision ✅ (actual time taken 1.5h)
+- [x] **[TASK-09]** Modify Index.cshtml to add dialogue entrance ✅
+- [x] **[TASK-10]** Modify Index.js to add dialogue entry interaction ✅
+- [x] **[TASK-11]** Modify Index.cshtml.cs to add backend logic ✅
 
-#### 阶段四：对话任务页面 ✅ (实际耗时 2h)
-- [x] **[TASK-12]** 创建 Chat.cshtml 页面结构 ✅
-- [x] **[TASK-13]** 创建 Chat.cshtml.cs 后端逻辑 ✅
-- [x] **[TASK-14]** 创建 Chat.js 前端交互 ✅
-- [x] **[TASK-15]** 创建 Chat.css 样式文件 ✅
+#### Stage 4: Dialogue task page ✅ (actual time consuming 2h)
+- [x] **[TASK-12]** Create Chat.cshtml page structure ✅
+- [x] **[TASK-13]** Create Chat.cshtml.cs backend logic ✅
+- [x] **[TASK-14]** Create Chat.js front-end interaction ✅
+- [x] **[TASK-15]** Create Chat.css style file ✅
 
-#### 阶段五：模块拖拽功能 ✅ (实际耗时 1h)
-- [x] **[TASK-16]** 实现模块拖拽功能 ✅
+#### Stage 5: Module drag and drop function ✅ (actual time consuming 1h)
+- [x] **[TASK-16]** Implement module drag and drop function ✅
 
-#### 阶段六：集成测试和优化 ✅ (实际耗时 1.5h)
-- [x] **[TASK-17]** 代码编译和错误修复 ✅
-- [x] **[TASK-18]** 依赖注册和配置 ✅
+#### Phase 6: Integration testing and optimization ✅ (actual time taken 1.5h)
+- [x] **[TASK-17]** Code compilation and bug fixes ✅
+- [x] **[TASK-18]** Depends on registration and configuration ✅
 
-**总实际耗时**: ~9.5 小时
-
----
-
-## 💬 执行者反馈
-
-### 当前进度
-✅ **所有开发任务已完成**（2026-03-25）
-- 数据模型、服务层、API 接口、前端页面和交互全部实现完毕
-- 代码已通过编译（0 个错误，481 个警告主要为 XML 注释）
-- 应用程序可以成功启动
-
-### 遇到的问题
-
-1. **编译错误：找不到 `ApiBindAttribute`**
-   - **问题**: `AdminChatAppService.cs` 中使用 `[ApiBind]` 属性时编译错误
-   - **原因**: 只引用了 `using Senparc.CO2NET.WebApi;`，缺少 `using Senparc.CO2NET;`
-   - **解决**: 添加 `using Senparc.CO2NET;` 后编译成功
-   - **教训**: C# 中导入子命名空间不会自动导入父命名空间
-
-2. **Service 构造函数参数错误**
-   - **问题**: Service 类继承 `ServiceBase<T>` 后构造函数签名不匹配
-   - **原因**: Admin 项目中应使用 `BaseClientService<T>` 而非 `ServiceBase<T>`
-   - **解决**: 修改为继承 `BaseClientService<T>` 并添加对应的 Repository 接口和实现
-   - **教训**: 不同项目可能有不同的 Service 基类，需要参考同项目的现有实现
-
-3. **GetAll() 方法不存在**
-   - **问题**: 调用 `base.GetAll()` 方法报错
-   - **原因**: `BaseClientService<T>` 不提供 `GetAll()` 方法
-   - **解决**: 使用 `GetObjectListAsync()` 或 `GetFullListAsync()` 代替
-   - **教训**: 基类 API 可能与预期不同，需要先查看基类定义
-
-4. **PageModel 中获取当前用户 ID**
-   - **问题**: 调用 `GetCurrentAdminUserInfoId()` 方法找不到
-   - **原因**: 该方法在 `LocalAppServiceBase` 中，PageModel 不继承此基类
-   - **解决**: 使用 `AdminWorkContext?.AdminUserId` 获取当前用户ID
-   - **教训**: PageModel 和 AppService 有不同的基类和 API
-
-### 需要的帮助
-✅ 所有问题已解决，无需额外帮助
+**Total actual time spent**: ~9.5 hours
 
 ---
 
-## 📚 经验教训
+## 💬 Executive feedback
 
-### 技术难点
+### Current progress
+✅ **All development tasks have been completed** (2026-03-25)
+- The data model, service layer, API interface, front-end page and interaction are all implemented
+- Code compiled (0 errors, 481 warnings mostly XML comments)
+- The application can be launched successfully
 
-1. **NCF 框架的 DDD 分层架构**
-   - Entity → DTO → Service → AppService 的严格分层
-   - Repository 接口必须显式定义和注册
-   - Service 需要通过构造函数注入 Repository 和 ServiceProvider
+### Problems encountered
 
-2. **DTO 继承和属性映射**
-   - DTO 必须继承 `DtoBase<int>` 获得 Id 和基础属性
-   - 实体转 DTO 时需要显式复制所有基类属性（Id, AddTime, LastUpdateTime, TenantId, Flag）
-   - 不能直接使用 AutoMapper，需要手动实现 `CreateFromEntity` 方法
+1. **Compilation error: not found`ApiBindAttribute`**
+- **question**:`AdminChatAppService.cs`used in`[ApiBind]`Compilation error when attribute
+- **Reason**: Only quoted`using Senparc.CO2NET.WebApi;`,Lack`using Senparc.CO2NET;`
+- **SOLVED**: Add`using Senparc.CO2NET;`After compiling successfully
+- **Lesson**: Importing a child namespace in C# will not automatically import the parent namespace
 
-3. **ApiBind 属性的命名空间**
-   - `ApiBindAttribute` 在 `Senparc.CO2NET` 命名空间
-   - `ApiRequestMethod` 在 `Senparc.CO2NET.WebApi` 命名空间
-   - 两者都需要引用才能使用
+2. **Service constructor parameter error**
+- **Question**: Service class inheritance`ServiceBase<T>`Post constructor signature mismatch
+- **Reason**: Should be used in Admin project`BaseClientService<T>`rather than`ServiceBase<T>`
+- **Solution**: Change to inheritance`BaseClientService<T>`And add the corresponding Repository interface and implementation
+- **Lessons**: Different projects may have different Service base classes, so you need to refer to the existing implementation of the same project.
 
-4. **前端组件重用**
-   - 必须使用系统现有的 Vue.js 2.x 和 Element UI 2.13.2
-   - 不能引入新的第三方库（lodash, moment.js 等）
-   - 需要自己实现防抖、时间格式化、Markdown 渲染等工具函数
+3. **GetAll() method does not exist**
+- **Question**: Call`base.GetAll()`Method error
+- **reason**:`BaseClientService<T>`Not available`GetAll()`method
+- **SOLUTION**: Use`GetObjectListAsync()`or`GetFullListAsync()`replace
+- **Lesson**: The base class API may be different from expected, you need to check the base class definition first
 
-### 解决方案
+4. **Get the current user ID in PageModel**
+- **Question**: Call`GetCurrentAdminUserInfoId()`Method not found
+- **Reason**: This method is`LocalAppServiceBase`, PageModel does not inherit this base class
+- **SOLUTION**: Use`AdminWorkContext?.AdminUserId`Get current user ID
+- **Lesson**: PageModel and AppService have different base classes and APIs
 
-1. **Service 层实现模式**
+### Help needed
+✅ All issues resolved, no additional help needed
+
+---
+
+## 📚 Lessons learned
+
+### Technical difficulties
+
+1. **DDD layered architecture of NCF framework**
+- Strict layering of Entity → DTO → Service → AppService
+- The Repository interface must be explicitly defined and registered
+- Service needs to inject Repository and ServiceProvider through the constructor
+
+2. **DTO inheritance and attribute mapping**
+- DTO must be inherited`DtoBase<int>`Get ID and basic properties
+- When converting entities to DTO, you need to explicitly copy all base class attributes (Id, AddTime, LastUpdateTime, TenantId, Flag)
+- AutoMapper cannot be used directly and needs to be implemented manually`CreateFromEntity`method
+
+3. **Namespace of ApiBind attribute**
+   - `ApiBindAttribute`exist`Senparc.CO2NET`namespace
+   - `ApiRequestMethod`exist`Senparc.CO2NET.WebApi`namespace
+- Both require a reference to use
+
+4. **Front-end component reuse**
+- Must use the system's existing Vue.js 2.x and Element UI 2.13.2
+- Cannot introduce new third-party libraries (lodash, moment.js, etc.)
+- You need to implement anti-shake, time formatting, Markdown rendering and other tool functions yourself
+
+### Solution
+
+1. **Service layer implementation mode**
    ```csharp
-   // 1. 定义 Repository 接口
+// 1. Define the Repository interface
    public interface IAdminChatSessionRepository : IClientRepositoryBase<AdminChatSession> { }
    
-   // 2. 实现 Repository
+// 2. Implement Repository
    public class AdminChatSessionRepository : ClientRepositoryBase<AdminChatSession>, IAdminChatSessionRepository
    {
        public AdminChatSessionRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
    }
    
-   // 3. Service 继承 BaseClientService
+// 3. Service inherits BaseClientService
    public class AdminChatSessionService : BaseClientService<AdminChatSession>
    {
        public AdminChatSessionService(IAdminChatSessionRepository repository, IServiceProvider serviceProvider) 
            : base(repository, serviceProvider) { }
    }
    
-   // 4. 在 Register.cs 中注册
+// 4. Register in Register.cs
    services.AddScoped<IAdminChatSessionRepository, AdminChatSessionRepository>();
    services.AddScoped<AdminChatSessionService>();
    ```
 
-2. **DTO 映射实现模式**
+2. **DTO mapping implementation mode**
    ```csharp
    public class AdminChatSessionDto : DtoBase<int>
    {
-       // 业务属性
+//Business attributes
        public string Title { get; set; }
        public int UserId { get; set; }
        
-       // 静态工厂方法
+// static factory method
        public static AdminChatSessionDto CreateFromEntity(AdminChatSession entity)
        {
            return new AdminChatSessionDto
            {
-               // 基类属性
+// base class properties
                Id = entity.Id,
                AddTime = entity.AddTime,
                LastUpdateTime = entity.LastUpdateTime,
                TenantId = entity.TenantId,
                Flag = entity.Flag,
-               // 业务属性
+//Business attributes
                Title = entity.Title,
                UserId = entity.UserId,
                // ...
@@ -433,7 +433,7 @@ _所有开发任务已完成_
    }
    ```
 
-3. **前端时间格式化实现**
+3. **Front-end time formatting implementation**
    ```javascript
    formatTime(date) {
        if (!date) return '';
@@ -447,13 +447,13 @@ _所有开发任务已完成_
    }
    ```
 
-4. **Markdown 简单渲染（无需库）**
+4. **Markdown simple rendering (no library required)**
    ```javascript
    formatMessageContent(content) {
        if (!content) return '';
-       // XSS 防护
+// XSS protection
        content = content.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-       // 简单 Markdown 转换
+// Simple Markdown conversion
        content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
        content = content.replace(/\*(.*?)\*/g, '<em>$1</em>');
        content = content.replace(/`(.*?)`/g, '<code>$1</code>');
@@ -462,89 +462,89 @@ _所有开发任务已完成_
    }
    ```
 
-### 避坑指南
+### Guide to avoid pitfalls
 
-1. **✅ 编辑文件前先读取**
-   - 避免盲目修改导致错误
-   - 确保修改的上下文正确
+1. **✅ Read the file before editing**
+- Avoid errors caused by blind modifications
+- Make sure the modified context is correct
 
-2. **✅ 命名空间引用完整性**
-   - 检查父子命名空间的关系
-   - 参考同项目现有文件的 using 语句
+2. **✅ Namespace reference integrity**
+- Check the relationship between parent and child namespaces
+- Refer to using statements of existing files in the same project
 
-3. **✅ Service 基类选择**
-   - Admin 项目使用 `BaseClientService<T>`
-   - XNCF 扩展模块通常使用 `ServiceBase<T>`
-   - 查看同项目其他 Service 的实现
+3. **✅Service base class selection**
+- Admin project use`BaseClientService<T>`
+- The XNCF extension module is typically used`ServiceBase<T>`
+- View the implementation of other Services in the same project
 
-4. **✅ Repository 必须注册**
-   - Service 需要 Repository 接口注入
-   - 在 `Register.cs` 的 `AddXncfModule()` 方法中注册
+4. **✅ Repository must be registered**
+- Service requires Repository interface injection
+- exist`Register.cs`of`AddXncfModule()`Register in method
 
-5. **✅ PageModel 获取用户信息**
-   - 使用 `AdminWorkContext?.AdminUserId` 获取用户ID
-   - 不要调用 AppService 基类的方法
+5. **✅ PageModel gets user information**
+- use`AdminWorkContext?.AdminUserId`Get user ID
+- Do not call methods of the AppService base class
 
-6. **✅ 前端不引入新库**
-   - 自己实现简单的工具函数
-   - 使用系统现有的 Vue/Element UI 组件
-   - 避免远程 CDN 资源
-
----
-
-## 🎉 里程碑记录
-
-### 🎯 Milestone 1: 数据模型完成（2026-03-25）
-- ✅ 创建 3 个实体类（AdminChatSession, AdminChatMessage, AdminChatSessionModule）
-- ✅ 创建对应的 DTO 类，继承 `DtoBase<int>`
-- ✅ 更新 DbContext 添加 DbSet 属性
-- ✅ 创建 Repository 接口和实现类
-- **交付物**: 6 个实体/DTO 文件 + 3 个 Repository 文件
-
-### 🛠️ Milestone 2: 服务层完成（2026-03-25）
-- ✅ 创建 3 个 Service 类（Session, Message, SessionModule）
-- ✅ 创建 AdminChatAppService，提供 9 个 API 接口
-- ✅ 实现完整的增删改查和业务逻辑
-- ✅ 在 Register.cs 中注册所有服务
-- **交付物**: 4 个 Service 文件 + DI 注册
-
-### 🎨 Milestone 3: 首页UI改版完成（2026-03-25）
-- ✅ 首页添加 AI 对话入口提示框
-- ✅ 实现拖拽区域和选中模块显示
-- ✅ 添加"开始对话"按钮和交互逻辑
-- ✅ 集成用户ID传递到前端
-- **交付物**: Index.cshtml + Index.cshtml.cs + Index.js 修改
-
-### 💬 Milestone 4: 对话页面完成（2026-03-25）
-- ✅ 创建 Chat.cshtml 两列布局页面
-- ✅ 实现左侧会话历史列表
-- ✅ 实现右侧对话窗口（用户/AI 消息区分）
-- ✅ 添加消息输入、发送、反馈功能
-- ✅ 实现会话切换和新建对话功能
-- ✅ 添加完整的 CSS 样式和动画效果
-- **交付物**: Chat.cshtml + Chat.cshtml.cs + Chat.js + Chat.css
-
-### 🚀 Milestone 5: 功能集成完成（2026-03-25）
-- ✅ 模块拖拽功能完整实现
-- ✅ 所有编译错误修复
-- ✅ 应用程序成功启动验证
-- ✅ 代码审查和质量检查
-- **交付物**: 完整可运行的功能代码
-
-### 📋 待用户执行
-- ⏳ **手动执行 Database Migration**（创建 3 张新表）
-- ⏳ **测试完整功能流程**
-- ⏳ **配置 AI 模型接口**（可选，用于真实对话）
+6. **✅ The front end does not introduce new libraries**
+- Implement simple tool functions yourself
+- Use the existing Vue/Element UI components of the system
+- Avoid remote CDN resources
 
 ---
 
-**创建日期**: 2026-03-25  
-**最后更新**: 2026-03-25 22:30 (所有开发任务完成)  
-**当前版本**: v1.0.0 (开发完成，待 Migration)
+## 🎉 Milestone Record
 
-### 📄 新建的文件
+### 🎯 Milestone 1: Data model completed (2026-03-25)
+- ✅ Create 3 entity classes (AdminChatSession, AdminChatMessage, AdminChatSessionModule)
+- ✅ Create the corresponding DTO class and inherit`DtoBase<int>`
+- ✅ Update DbContext to add DbSet properties
+- ✅ Create Repository interface and implementation class
+- **Deliverables**: 6 Entity/DTO files + 3 Repository files
 
-**数据模型层**
+### 🛠️ Milestone 2: Service layer completed (2026-03-25)
+- ✅ Create 3 Service classes (Session, Message, SessionModule)
+- ✅ Create AdminChatAppService and provide 9 API interfaces
+- ✅ Implement complete addition, deletion, modification and business logic
+- ✅ Register all services in Register.cs
+- **Deliverables**: 4 Service files + DI registration
+
+### 🎨 Milestone 3: Home page UI revision completed (2026-03-25)
+- ✅Add AI dialogue entrance prompt box to the homepage
+- ✅ Implement drag area and selected module display
+- ✅ Add "Start Conversation" button and interaction logic
+- ✅ Integrated user ID passed to the front end
+- **Deliverable**: Index.cshtml + Index.cshtml.cs + Index.js modification
+
+### 💬 Milestone 4: Dialogue page completed (2026-03-25)
+- ✅ Create Chat.cshtml two-column layout page
+- ✅ Implement the session history list on the left
+- ✅ Implement the right dialogue window (user/AI message distinction)
+- ✅ Add message input, sending and feedback functions
+- ✅ Implement session switching and new conversation functions
+- ✅ Add complete CSS styles and animation effects
+- **Deliverables**: Chat.cshtml + Chat.cshtml.cs + Chat.js + Chat.css
+
+### 🚀 Milestone 5: Function integration completed (2026-03-25)
+- ✅ Module drag and drop function is fully implemented
+- ✅ All compilation bugs fixed
+- ✅ App successfully launched verification
+- ✅ Code review and quality checks
+- **Deliverable**: Complete runnable functional code
+
+### 📋 Waiting for user to execute
+- ⏳ **Manual execution of Database Migration** (create 3 new tables)
+- ⏳ **Test the complete functional process**
+- ⏳ **Configure AI model interface** (optional, for real dialogue)
+
+---
+
+**Creation date**: 2026-03-25
+**Last update**: 2026-03-25 22:30 (all development tasks completed)
+**Current version**: v1.0.0 (development completed, pending Migration)
+
+### 📄 New file
+
+**Data Model Layer**
 1. ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatSession.cs`
 2. ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatMessage.cs`
 3. ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatSessionModule.cs`
@@ -552,24 +552,24 @@ _所有开发任务已完成_
 5. ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatMessageDto.cs`
 6. ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatSessionModuleDto.cs`
 
-**Repository 层**
+**Repository layer**
 7. ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/ACL/Repository/AdminChatSessionRepository.cs`
 8. ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/ACL/Repository/AdminChatMessageRepository.cs`
 9. ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/ACL/Repository/AdminChatSessionModuleRepository.cs`
 
-**服务层**
+**Service layer**
 10. ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Services/AdminChatSessionService.cs`
 11. ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Services/AdminChatMessageService.cs`
 12. ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Services/AdminChatSessionModuleService.cs`
 13. ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/OHS/Local/AppService/AdminChatAppService.cs`
 
-**页面和交互**
+**Pages and Interactions**
 14. ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml`
 15. ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml.cs`
 16. ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/AdminChat/Chat.js`
 17. ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/css/Admin/Pages/AdminChat/Chat.css`
 
-### 🔧 修改的文件
+### 🔧 Modified files
 1. ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml`
 2. ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml.cs`
 3. ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/Index/Index.js`
@@ -578,9 +578,9 @@ _所有开发任务已完成_
 
 ---
 
-## 📖 Migration 操作指南
+## 📖 Migration Operation Guide
 
-### 步骤 1: 创建 Migration
+### Step 1: Create Migration
 
 ```bash
 cd /Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources/tools/NcfSimulatedSite/Senparc.Web
@@ -588,62 +588,62 @@ cd /Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources/to
 dotnet ef migrations add AddAdminChatTables --project ../Senparc.Areas.Admin/Senparc.Areas.Admin.csproj --context AdminSenparcEntities
 ```
 
-### 步骤 2: 查看 Migration 文件
+### Step 2: View the Migration file
 
-检查生成的 Migration 文件，确认以下 3 张表：
+Check the generated Migration file and confirm the following 3 tables:
 - `ADMIN_AdminChatSession`
 - `ADMIN_AdminChatMessage`
 - `ADMIN_AdminChatSessionModule`
 
-### 步骤 3: 执行 Migration
+### Step 3: Execute Migration
 
 ```bash
 dotnet ef database update --project ../Senparc.Areas.Admin/Senparc.Areas.Admin.csproj --context AdminSenparcEntities
 ```
 
-### 步骤 4: 验证表创建
+### Step 4: Verification table creation
 
-使用数据库管理工具检查新表是否创建成功，并验证字段结构。
+Use database management tools to check whether the new table is created successfully and verify the field structure.
 
-### 步骤 5: 启动应用程序
+### Step 5: Launch the application
 
 ```bash
 cd /Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources/tools/NcfSimulatedSite/Senparc.Web
 dotnet run
 ```
 
-访问 `http://localhost:5000/Admin` 查看首页改版效果。
+access`http://localhost:5000/Admin`Check out the effect of the home page redesign.
 
-### 步骤 6: 功能测试
+### Step 6: Functional Testing
 
-1. ✅ **首页测试**
-   - 检查顶部统计区域是否保留
-   - 检查 AI 对话入口提示框是否显示
-   - 测试模块拖拽到对话框功能
+1. ✅ **Home Page Test**
+- Check if the top statistics area is retained
+- Check whether the AI ​​dialogue entry prompt box is displayed
+- Test module drag and drop function into dialog box
 
-2. ✅ **对话页面测试**
-   - 点击"开始对话"按钮，跳转到 `/Admin/AdminChat/Chat` 页面
-   - 检查左侧会话列表是否显示
-   - 测试发送消息功能
-   - 测试会话切换功能
-   - 测试消息反馈（点赞/点踩）功能
+2. ✅ **Conversation page test**
+- Click the "Start Conversation" button to jump to`/Admin/AdminChat/Chat`page
+- Check whether the session list on the left is displayed
+- Test sending message function
+- Test session switching functionality
+- Test message feedback (like/dislike) function
 
-3. ✅ **API 接口测试**
-   - 测试创建会话 API
-   - 测试发送消息 API
-   - 测试获取会话列表 API
-   - 测试获取会话详情 API
+3. ✅ **API interface test**
+- Test create session API
+- Test Send Message API
+- Test the Get Session List API
+- Test the Get Session Details API
 
-### 可能的问题和解决方案
+### Possible problems and solutions
 
-1. **Migration 失败**
-   - **原因**: 数据库连接字符串配置错误
-   - **解决**: 检查 `appsettings.json` 中的数据库配置
+1. **Migration failed**
+- **Cause**: Database connection string configuration error
+- **SOLUTION**: Check`appsettings.json`Database configuration in
 
-2. **AI 回复为占位文本**
-   - **原因**: `GenerateAIResponseAsync` 方法是占位实现
-   - **解决**: 需要集成真实的 AI 模型（如调用 AIKernel 模块）
+2. **AI replies as placeholder text**
+- **reason**:`GenerateAIResponseAsync`The method is to implement the placeholder
+- **Solution**: Need to integrate a real AI model (such as calling the AIKernel module)
 
-3. **用户ID为 0**
-   - **原因**: 未登录或 AdminWorkContext 未正确初始化
-   - **解决**: 确保已登录管理后台，并检查认证配置
+3. **User ID is 0**
+- **Cause**: Not logged in or AdminWorkContext is not initialized correctly
+- **Solution**: Make sure you are logged in to the management background and check the authentication configuration

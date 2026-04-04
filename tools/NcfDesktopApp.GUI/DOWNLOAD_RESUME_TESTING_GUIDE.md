@@ -1,33 +1,33 @@
-# 📥 断点续传功能测试指南
+# 📥 Test Guide for Resume Breakpoint Function
 
-**版本**: v1.1.0  
-**测试日期**: 2025-11-17
-
----
-
-## 🎯 测试目标
-
-验证 NCF 程序包下载的断点续传功能，确保：
-1. ✅ 下载中断后可以继续
-2. ✅ 版本验证机制正常工作
-3. ✅ 元信息文件正确管理
-4. ✅ 日志输出清晰易懂
+**Version**: v1.1.0
+**Test Date**: 2025-11-17
 
 ---
 
-## 📋 测试场景
+## 🎯 Test target
 
-### 场景 1: 正常断点续传（同一版本）
+Verify the resumable download functionality of the NCF package to ensure:
+1. ✅ You can continue downloading after it is interrupted
+2. ✅ The version verification mechanism is working normally
+3. ✅ Properly manage meta-information files
+4. ✅ The log output is clear and easy to understand.
 
-**测试步骤**：
-1. 启动 NCF Desktop App
-2. 在"设置"页面点击下载 NCF 程序包
-3. 等待下载进度到达 **30%-50%** 之间
-4. 强制关闭应用程序（杀进程）
-5. 重新启动应用程序
-6. 再次点击下载 NCF 程序包
+---
 
-**预期结果**：
+## 📋 Test scenario
+
+### Scenario 1: Normal breakpoint resume (same version)
+
+**Test steps**:
+1. Start NCF Desktop App
+2. Click to download the NCF package on the "Settings" page
+3. Wait for the download progress to reach between **30%-50%**
+4. Force close the application (kill the process)
+5. Restart the application
+6. Click again to download the NCF package
+
+**Expected results**:
 ```
 ✅ 检测到同一版本的未完成下载，可以断点续传
 📥 从 XX,XXX,XXX 字节处继续下载: senparc-ncf-template.zip
@@ -37,28 +37,28 @@
 🧹 已清理下载信息文件
 ```
 
-**验证点**：
-- [ ] 日志显示"检测到同一版本的未完成下载"
-- [ ] 下载从中断位置继续，而非从 0% 开始
-- [ ] 下载完成后 `.download` 文件自动删除
-- [ ] 最终文件可以正常解压
+**Verification Point**:
+- [ ] Log says "An incomplete download of the same version was detected"
+- [ ] Download resumes where it left off, rather than starting at 0%
+- [ ] After downloading is complete`.download`Automatic file deletion
+- [ ] The final file can be decompressed normally
 
 ---
 
-### 场景 2: 版本变更（模拟新版本发布）
+### Scenario 2: Version change (simulating new version release)
 
-**测试步骤**：
-1. 下载 NCF 程序包到 **50%**
-2. 关闭应用程序
-3. 手动编辑 `.download` 文件，修改 URL 中的版本号（模拟新版本）
+**Test steps**:
+1. Download NCF package to **50%**
+2. Close the application
+3. Manual editing`.download`File, modify the version number in the URL (simulate a new version)
    ```
-   原内容: https://example.com/.../v1.2.3/...
-   修改为: https://example.com/.../v1.2.4/...
+Original content: https://example.com/.../v1.2.3/...
+Modify to: https://example.com/.../v1.2.4/...
    ```
-4. 重新启动应用程序
-5. 点击下载 NCF 程序包
+4. Restart the application
+5. Click to download the NCF package
 
-**预期结果**：
+**Expected results**:
 ```
 ⚠️ 检测到不同版本的文件，删除旧文件
    旧版本: https://example.com/.../v1.2.3/...
@@ -69,24 +69,24 @@
 🧹 已清理下载信息文件
 ```
 
-**验证点**：
-- [ ] 日志显示"检测到不同版本的文件"
-- [ ] 显示新旧版本的 URL 对比
-- [ ] 旧文件和 `.download` 文件被删除
-- [ ] 下载从 0% 重新开始
+**Verification Point**:
+- [ ] Log says "Different versions of files detected"
+- [ ] shows URL comparison between old and new versions
+- [ ] old files and`.download`File deleted
+- [ ] Download restarts from 0%
 
 ---
 
-### 场景 3: 元信息文件丢失
+### Scenario 3: Meta information file is lost
 
-**测试步骤**：
-1. 下载 NCF 程序包到 **40%**
-2. 关闭应用程序
-3. 手动删除 `.download` 文件（保留部分下载的主文件）
-4. 重新启动应用程序
-5. 点击下载 NCF 程序包
+**Test steps**:
+1. Download the NCF package to **40%**
+2. Close the application
+3. Manual deletion`.download`File (keep partially downloaded master file)
+4. Restart the application
+5. Click to download the NCF package
 
-**预期结果**：
+**Expected results**:
 ```
 ⚠️ 未找到下载信息文件，无法确认版本，重新下载
 📥 开始下载: senparc-ncf-template.zip
@@ -95,22 +95,22 @@
 🧹 已清理下载信息文件
 ```
 
-**验证点**：
-- [ ] 日志显示"未找到下载信息文件"
-- [ ] 旧的部分文件被删除
-- [ ] 下载从 0% 重新开始
-- [ ] 新的 `.download` 文件被创建
+**Verification Point**:
+- [ ] The log shows "Download information file not found"
+- [ ] Old partial files are deleted
+- [ ] Download restarts from 0%
+- [ ] new`.download`File is created
 
 ---
 
-### 场景 4: 完整下载（无中断）
+### Scenario 4: Complete download (no interruption)
 
-**测试步骤**：
-1. 启动 NCF Desktop App
-2. 点击下载 NCF 程序包
-3. 等待下载完成（不中断）
+**Test steps**:
+1. Start NCF Desktop App
+2. Click to download the NCF package
+3. Wait for the download to complete (without interruption)
 
-**预期结果**：
+**Expected results**:
 ```
 📥 开始下载: senparc-ncf-template.zip
 [进度] 0% → 100%
@@ -118,23 +118,23 @@
 🧹 已清理下载信息文件
 ```
 
-**验证点**：
-- [ ] 下载进度平滑增长
-- [ ] 下载完成后 `.download` 文件被删除
-- [ ] 只留下最终的 zip 文件
-- [ ] 文件可以正常解压
+**Verification Point**:
+- [ ] Download progress increases smoothly
+- [ ] After downloading is complete`.download`File deleted
+- [ ] Leave only the final zip file
+- [ ] files can be decompressed normally
 
 ---
 
-### 场景 5: 服务器不支持断点续传（降级处理）
+### Scenario 5: The server does not support resumption of downloads (downgrade processing)
 
-**测试步骤**：
-1. 下载 NCF 程序包到 **30%**
-2. 关闭应用程序
-3. （假设服务器返回 200 而非 206）
-4. 重新启动并下载
+**Test steps**:
+1. Download NCF package to **30%**
+2. Close the application
+3. (Assuming the server returns 200 instead of 206)
+4. Restart and download
 
-**预期结果**：
+**Expected results**:
 ```
 ⚠️ 服务器不支持断点续传，重新下载
 📥 开始下载: senparc-ncf-template.zip
@@ -142,92 +142,92 @@
 ✅ 下载完成: senparc-ncf-template.zip
 ```
 
-**验证点**：
-- [ ] 日志显示"服务器不支持断点续传"
-- [ ] 程序自动降级为完整下载
-- [ ] 下载成功完成
+**Verification Point**:
+- [ ] The log shows "The server does not support resumable downloads"
+- [ ] Program automatically downgrades to full download
+- [ ] Download completed successfully
 
 ---
 
-## 🔍 文件系统检查
+## 🔍 File system check
 
-### 下载过程中应存在的文件：
+### Files that should exist during the download process:
 ```
 Downloads/
 ├── senparc-ncf-template.zip         # 部分下载的文件
 └── senparc-ncf-template.zip.download # 元信息文件（存储 URL）
 ```
 
-### 下载完成后应存在的文件：
+### Files that should exist after the download is complete:
 ```
 Downloads/
 └── senparc-ncf-template.zip         # 完整的压缩包
 ```
 
-### `.download` 文件内容示例：
+### `.download`Example of file content:
 ```
 https://gitee.com/NeuCharFramework/NcfPackageSources/releases/download/v1.2.3/senparc-ncf-template.zip
 ```
 
 ---
 
-## 📊 测试检查清单
+## 📊 Test Checklist
 
-### 功能验证
-- [ ] 同一版本断点续传正常工作
-- [ ] 不同版本自动删除旧文件
-- [ ] 元信息文件缺失时安全处理
-- [ ] 下载完成后清理临时文件
-- [ ] 服务器不支持 Range 时降级处理
+### Function verification
+- [ ] Resumable download of the same version works normally
+- [ ] Different versions automatically delete old files
+- [ ] Safe handling when meta information files are missing
+- [ ] Clean temporary files after download is complete
+- [ ] Downgrade processing when the server does not support Range
 
-### 日志输出验证
-- [ ] 开始下载时有明确提示
-- [ ] 版本不一致时显示新旧版本对比
-- [ ] 下载进度实时更新
-- [ ] 下载完成有明确提示
-- [ ] 清理临时文件有日志记录
+### Log output verification
+- [ ] There is a clear prompt when starting the download
+- [ ] Display the comparison between the old and new versions when the versions are inconsistent.
+- [ ] Download progress updated in real time
+- [ ] There will be a clear prompt when the download is completed.
+- [ ] Clean temporary files with logging
 
-### 异常处理验证
-- [ ] 网络中断后恢复正常
-- [ ] 文件权限问题有错误提示
-- [ ] 磁盘空间不足有错误提示
+###Exception handling verification
+- [ ] Return to normal after network interruption
+- [ ] There is an error message for file permission issues
+- [ ] There is an error message when there is insufficient disk space.
 
-### 文件完整性验证
-- [ ] 下载的 zip 文件可以正常解压
-- [ ] 解压后的文件内容完整
-- [ ] 没有版本混淆导致的文件损坏
-
----
-
-## 🐛 已知问题和限制
-
-### 限制
-1. **URL 作为版本标识**
-   - 依赖 URL 包含版本信息
-   - URL 不变但内容变化时无法检测（极端情况）
-
-2. **服务器支持**
-   - 服务器必须支持 HTTP Range 请求才能断点续传
-   - 不支持时自动降级为完整下载
-
-3. **元信息文件**
-   - 用户手动删除 `.download` 文件会导致重新下载
-   - 这是安全优先的设计，避免版本混淆
+### File integrity verification
+- [ ] The downloaded zip file can be decompressed normally
+- [ ] The decompressed file content is complete
+- [ ] No file corruption caused by version confusion
 
 ---
 
-## 🎯 成功标准
+## 🐛 Known issues and limitations
 
-所有测试场景通过，且满足以下条件：
-- ✅ 断点续传功能正常工作
-- ✅ 版本验证机制有效防止文件损坏
-- ✅ 日志输出清晰易懂
-- ✅ 异常情况优雅处理
-- ✅ 下载的文件完整无损
+### limit
+1. **URL as version identifier**
+- Dependency URL contains version information
+- Unable to detect when the URL remains unchanged but the content changes (extreme case)
+
+2. **Server Support**
+- The server must support HTTP Range requests to resume the download.
+- Automatically downgrade to full download when not supported
+
+3. **Meta Information File**
+- User manual deletion`.download`File will cause re-download
+- This is a security-first design to avoid version confusion
 
 ---
 
-## 📝 测试记录模板
+## 🎯 Success Criteria
+
+All test scenarios pass and meet the following conditions:
+- ✅ The resume function is working properly
+- ✅ Version verification mechanism effectively prevents file corruption
+- ✅ Log output is clear and easy to understand
+- ✅ Exceptional situations are handled gracefully
+- ✅ The downloaded file is intact and intact
+
+---
+
+## 📝 Test record template
 
 ```markdown
 ## 测试记录
@@ -251,6 +251,6 @@ https://gitee.com/NeuCharFramework/NcfPackageSources/releases/download/v1.2.3/se
 
 ---
 
-**文档更新**: 2025-11-17  
-**相关文档**: [DOWNLOAD_RESUME_VERSION_CHECK.md](./DOWNLOAD_RESUME_VERSION_CHECK.md)
+**Document Update**: 2025-11-17
+**Related Documents**: [DOWNLOAD_RESUME_VERSION_CHECK.md](./DOWNLOAD_RESUME_VERSION_CHECK.md)
 

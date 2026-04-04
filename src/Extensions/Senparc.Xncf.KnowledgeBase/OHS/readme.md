@@ -1,3 +1,3 @@
 ﻿# Open Host Service（OHS）  
   
-在 NCF 系统中，我们采用了领域驱动设计（DDD）中的Open Host Service（OHS）模式，以实现系统内部模块或领域之间，以及与外部系统之间的通信。OHS通过公开的、统一的接口（如API、事件等）来实现解耦和易于集成的通信。OHS分为两个分支：[Local](Local/readme.md) 和 [Remote](Remote/readme.md)。 
+In the NCF system, we adopt the Open Host Service (OHS) mode in Domain Driven Design (DDD) to achieve communication between internal modules or domains of the system and with external systems. OHS achieves decoupled and easy-to-integrate communication through public, unified interfaces (such as APIs, events, etc.). OHS is divided into two branches: [Local](Local/readme.md) and [Remote](Remote/readme.md).

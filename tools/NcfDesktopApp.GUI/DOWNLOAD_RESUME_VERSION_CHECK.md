@@ -1,44 +1,44 @@
-# 📥 断点续传版本验证功能
+# 📥Resumable version verification function
 
-**实现时间**: 2025-11-17  
-**状态**: ✅ 已完成
+**Implementation time**: 2025-11-17
+**Status**: ✅ Completed
 
-## 🎯 功能概述
+## 🎯 Function Overview
 
-为 NCF 程序包下载功能增加了**版本验证机制**，确保断点续传时下载的是同一版本的文件，避免版本混淆导致的文件损坏问题。
-
----
-
-## 🔍 问题背景
-
-### 之前的实现
-最初的断点续传功能仅基于文件大小判断是否继续下载：
-- ✅ 支持 HTTP Range 请求
-- ✅ 使用 `FileMode.Append` 追加写入
-- ❌ **未验证版本一致性**
-
-### 潜在风险
-如果用户下载了一半文件后：
-1. NCF 发布了新版本
-2. 用户重新启动下载
-3. 程序会继续追加新版本的内容到旧版本文件
-4. **结果**: 生成混合版本的损坏文件 ⚠️
+A **version verification mechanism** has been added to the NCF package download function to ensure that the same version of the file is downloaded when resuming the download to avoid file damage caused by version confusion.
 
 ---
 
-## ✅ 解决方案
+## 🔍 Problem background
 
-### 核心设计
-使用 `.download` 元信息文件记录下载源，通过 URL 比对确保版本一致性：
+### Previous implementation
+The original breakpoint resume function only judged whether to continue downloading based on file size:
+- ✅ Support HTTP Range request
+- ✅ Use`FileMode.Append`append write
+- ❌ **Version consistency not verified**
+
+### Potential risks
+If the user downloads half of the file:
+1. NCF released a new version
+2. User restarts download
+3. The program will continue to append the new version of the content to the old version of the file
+4. **Result**: Mixed version of corrupted file generated ⚠️
+
+---
+
+## ✅ Solution
+
+### Core Design
+use`.download`The meta information file records the download source and ensures version consistency through URL comparison:
 
 ```
 senparc-ncf-template-v1.2.3.zip       # 实际下载文件
 senparc-ncf-template-v1.2.3.zip.download  # 元信息文件（记录 URL）
 ```
 
-### 工作流程
+### Workflow
 
-#### 1️⃣ 开始下载阶段
+#### 1️⃣ Start downloading phase
 ```csharp
 // 检查是否存在未完成的下载
 if (File.Exists(filePath))
@@ -74,11 +74,11 @@ if (existingFileSize == 0)
 }
 ```
 
-#### 2️⃣ 下载进行中
-- 如果 `canResume == true`：使用 HTTP Range 请求继续下载
-- 否则：从头开始下载
+#### 2️⃣ Download in progress
+- if`canResume == true`: Use HTTP Range request to continue downloading
+- Otherwise: start downloading from the beginning
 
-#### 3️⃣ 下载完成
+#### 3️⃣ Download completed
 ```csharp
 // 清理 .download 元信息文件
 if (File.Exists(downloadInfoPath))
@@ -89,9 +89,9 @@ if (File.Exists(downloadInfoPath))
 
 ---
 
-## 📊 场景测试
+## 📊 Scenario test
 
-### 场景 1: 正常断点续传
+### Scenario 1: Normal breakpoint resumption
 ```
 操作流程:
 1. 开始下载 v1.2.3 版本（50%）
@@ -103,7 +103,7 @@ if (File.Exists(downloadInfoPath))
 📥 从 52,428,800 字节处继续下载: senparc-ncf-template.zip
 ```
 
-### 场景 2: 版本变更
+### Scenario 2: Version change
 ```
 操作流程:
 1. 开始下载 v1.2.3 版本（50%）
@@ -118,7 +118,7 @@ if (File.Exists(downloadInfoPath))
 📥 开始下载: senparc-ncf-template.zip
 ```
 
-### 场景 3: 元信息文件丢失
+### Scenario 3: Meta information file is lost
 ```
 操作流程:
 1. 开始下载 v1.2.3 版本（50%）
@@ -130,7 +130,7 @@ if (File.Exists(downloadInfoPath))
 📥 开始下载: senparc-ncf-template.zip
 ```
 
-### 场景 4: 完整下载（无中断）
+### Scenario 4: Complete download (no interruption)
 ```
 操作流程:
 1. 开始下载 v1.2.3 版本
@@ -143,12 +143,12 @@ if (File.Exists(downloadInfoPath))
 
 ---
 
-## 🔧 实现细节
+## 🔧 Implementation details
 
-### 文件位置
-`Services/NcfService.cs` - `DownloadFileAsync` 方法
+### File location
+`Services/NcfService.cs` - `DownloadFileAsync`method
 
-### 关键代码段
+### Key code snippets
 
 ```128:191:Services/NcfService.cs
 public async Task DownloadFileAsync(string downloadUrl, string fileName, IProgress<double>? progress = null, CancellationToken cancellationToken = default)
@@ -217,9 +217,9 @@ public async Task DownloadFileAsync(string downloadUrl, string fileName, IProgre
     }
 ```
 
-### 日志输出示例
+### Log output example
 
-#### 成功断点续传
+#### Resume upload successfully
 ```
 ✅ 检测到同一版本的未完成下载，可以断点续传
 📥 从 52,428,800 字节处继续下载: senparc-ncf-template.zip
@@ -228,7 +228,7 @@ public async Task DownloadFileAsync(string downloadUrl, string fileName, IProgre
 🧹 已清理下载信息文件
 ```
 
-#### 版本不一致
+#### Version inconsistent
 ```
 ⚠️ 检测到不同版本的文件，删除旧文件
    旧版本: https://example.com/ncf/v1.2.3/package.zip
@@ -240,52 +240,52 @@ public async Task DownloadFileAsync(string downloadUrl, string fileName, IProgre
 
 ---
 
-## 📋 技术要点
+## 📋 Technical Points
 
-### 1. URL 作为版本标识
-- ✅ NCF 下载 URL 包含完整版本号
-- ✅ URL 唯一性保证版本唯一性
-- ✅ 简单可靠，无需额外版本字段
+### 1. URL as version identifier
+- ✅ NCF download URL contains full version number
+- ✅ URL uniqueness ensures version uniqueness
+- ✅ Simple and reliable, no extra version field required
 
-### 2. 元信息文件设计
-- **命名规则**: `原文件名 + .download`
-- **内容**: 仅存储原始下载 URL
-- **生命周期**: 下载完成后自动删除
+### 2. Meta information file design
+- **Naming Rules**:`Original file name + .download`
+- **Content**: Only the original download URL is stored
+- **Life Cycle**: Automatically deleted after downloading is completed
 
-### 3. 错误处理
-- 元信息文件读取失败 → 删除重新下载（安全优先）
-- 元信息文件不存在 → 删除重新下载
-- 异常情况统一处理，避免文件损坏
+### 3. Error handling
+- Failed to read meta information file → Delete and re-download (safety first)
+- Meta information file does not exist → Delete and re-download
+- Unified handling of abnormal situations to avoid file damage
 
-### 4. 性能优化
-- 仅在文件存在时才读取元信息
-- 使用 `Trim()` 避免空白字符干扰
-- 使用 `CancellationToken` 支持取消操作
-
----
-
-## ✅ 验证清单
-
-- [x] 同一版本断点续传正常工作
-- [x] 不同版本自动删除旧文件
-- [x] 元信息文件缺失时安全处理
-- [x] 下载完成后清理元信息文件
-- [x] 日志输出清晰易懂
-- [x] 异常情况正确处理
-- [x] 无内存泄漏或资源泄漏
+### 4. Performance optimization
+- Only read meta information if the file exists
+- use`Trim()`Avoid white space interference
+- use`CancellationToken`Support cancellation operation
 
 ---
 
-## 🎯 用户体验改进
+## ✅ Verification Checklist
 
-### 之前
+- [x] Resumable download of the same version works normally
+- [x] Different versions automatically delete old files
+- [x] Safe handling when meta information files are missing
+- [x] Clean meta information files after download is complete
+- [x] Log output is clear and easy to understand
+- [x] Correct handling of exceptions
+- [x] No memory leaks or resource leaks
+
+---
+
+## 🎯 User experience improvements
+
+### Before
 ```
 [用户不知道为什么下载失败]
 下载完成: senparc-ncf-template.zip
 解压失败：文件已损坏 ❌
 ```
 
-### 现在
+### Now
 ```
 ⚠️ 检测到不同版本的文件，删除旧文件
    旧版本: https://example.com/ncf/v1.2.3/package.zip
@@ -296,30 +296,30 @@ public async Task DownloadFileAsync(string downloadUrl, string fileName, IProgre
 
 ---
 
-## 📚 相关文档
+## 📚 Related documents
 
-- [断点续传实现总结](./DOWNLOAD_RESUME_IMPLEMENTATION.md)
-- [HTTP Range 请求规范](https://developer.mozilla.org/en-US/docs/Web/HTTP/Range_requests)
-- [文件下载最佳实践](https://docs.microsoft.com/en-us/dotnet/api/system.net.http.httpclient)
-
----
-
-## 🔜 未来改进方向
-
-1. **MD5/SHA256 校验**
-   - 除了 URL 比对，增加文件哈希校验
-   - 检测文件是否在下载过程中被篡改
-
-2. **下载元信息扩展**
-   - 记录下载开始时间
-   - 记录预期文件大小
-   - 记录服务器 ETag（如果支持）
-
-3. **下载历史管理**
-   - 保留最近下载的版本信息
-   - 支持回退到之前的版本
+- [Summary of implementation of breakpoint resume download](./DOWNLOAD_RESUME_IMPLEMENTATION.md)
+- [HTTP Range Request Specification](https://developer.mozilla.org/en-US/docs/Web/HTTP/Range_requests)
+- [Best Practices for File Downloads](https://docs.microsoft.com/en-us/dotnet/api/system.net.http.httpclient)
 
 ---
 
-**总结**: 通过简单而有效的 URL 验证机制，彻底解决了断点续传可能导致的版本混淆问题，确保下载文件的完整性和正确性。
+## 🔜 Future improvement directions
+
+1. **MD5/SHA256 verification**
+- In addition to URL comparison, add file hash verification
+- Detect whether files have been tampered with during downloading
+
+2. **Download meta information extension**
+- Record download start time
+- Log expected file size
+- Record server ETag (if supported)
+
+3. **Download History Management**
+- Keep recently downloaded version information
+-Supports rollback to previous version
+
+---
+
+**Summary**: Through a simple and effective URL verification mechanism, the problem of version confusion that may be caused by resuming downloads is completely solved, ensuring the integrity and correctness of downloaded files.
 

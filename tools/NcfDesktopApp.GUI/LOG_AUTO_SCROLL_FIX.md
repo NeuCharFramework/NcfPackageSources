@@ -1,17 +1,17 @@
-# 日志自动滚动修复
+# Log automatic scrolling repair
 
-## 🐛 问题描述
+## 🐛 Problem description
 
-启动速度加快了，但是滚动条并没有自动跟踪移动到最新位置。
+The startup speed is faster, but the scroll bar does not automatically track the movement to the latest position.
 
-## 🔍 问题分析
+## 🔍 Problem Analysis
 
-### 根本原因：
-1. **时序问题**：`ScrollToBottomIfNeeded()` 在 `LogText` 更新后立即调用，但此时 UI 内容可能还没有完全渲染
-2. **控件查找失败**：应用启动时，`_cachedScrollViewer` 可能为 null，且 UI 可能还没完全加载，导致找不到 ScrollViewer
-3. **缺少延迟**：没有等待 UI 内容渲染完成就尝试滚动
+### root cause:
+1. **Timing issues**:`ScrollToBottomIfNeeded()`exist`LogText`Called immediately after updating, but the UI content may not be fully rendered at this time
+2. **Control search failed**: When the application starts,`_cachedScrollViewer`May be null, and the UI may not be fully loaded, causing the ScrollViewer not to be found
+3. **Lack of Delay**: Attempting to scroll without waiting for the UI content to complete rendering
 
-### 原有代码问题：
+### Original code problem:
 ```csharp
 LogText = _logBuffer.ToString();
 ScrollToBottomIfNeeded();  // ❌ 立即调用，UI 可能还没渲染完成
@@ -19,10 +19,10 @@ ScrollToBottomIfNeeded();  // ❌ 立即调用，UI 可能还没渲染完成
 
 ---
 
-## ✅ 修复方案
+## ✅ Repair solution
 
-### 1. 新增延迟滚动方法
-创建 `ScrollToBottomIfNeededDelayed()` 方法，确保在 UI 内容渲染完成后再滚动：
+### 1. Added delayed scrolling method
+create`ScrollToBottomIfNeededDelayed()`method to ensure that the UI content is rendered before scrolling:
 
 ```csharp
 private void ScrollToBottomIfNeededDelayed()
@@ -54,107 +54,107 @@ private void ScrollToBottomIfNeededDelayed()
 }
 ```
 
-### 2. 更新所有调用位置
-将所有 `ScrollToBottomIfNeeded()` 调用改为 `ScrollToBottomIfNeededDelayed()`：
+### 2. Update all call locations
+will all`ScrollToBottomIfNeeded()`The call is changed to`ScrollToBottomIfNeededDelayed()`：
 
-- ✅ `OnLogUpdateTimerElapsed()` - 定时器批量更新时
-- ✅ `FlushPendingLogs()` - 应用就绪或停止时
-
----
-
-## 🔧 技术细节
-
-### 延迟策略：
-1. **第一次查找失败时**：等待 50ms 后再试（处理 UI 未完全加载的情况）
-2. **找到 ScrollViewer 后**：等待 20ms 确保内容已渲染
-3. **总延迟**：最多 70ms（用户无法感知，但足以确保 UI 渲染完成）
-
-### 控件查找优化：
-- ✅ 即使缓存为 null，也会尝试查找
-- ✅ 查找失败时会重试一次
-- ✅ 找到后立即缓存，避免重复查找
+- ✅ `OnLogUpdateTimerElapsed()`- When the timer is updated in batches
+- ✅ `FlushPendingLogs()`- When the app is ready or stopped
 
 ---
 
-## 📊 修复效果
+## 🔧 Technical details
 
-### 修复前：
-- ❌ 滚动条不自动跟踪到最新位置
-- ❌ 应用启动时滚动失效
-- ❌ UI 内容渲染前就尝试滚动
+### Delay strategy:
+1. **When the first search fails**: wait 50ms and try again (to handle the situation where the UI is not fully loaded)
+2. **After finding the ScrollViewer**: Wait 20ms to ensure that the content has been rendered
+3. **Total delay**: up to 70ms (not perceptible to the user, but enough to ensure UI rendering is completed)
 
-### 修复后：
-- ✅ 滚动条自动跟踪到最新位置
-- ✅ 应用启动时也能正确滚动
-- ✅ 等待 UI 内容渲染完成后再滚动
-- ✅ 用户手动滚动时仍然保留位置（智能滚动）
-
----
-
-## 🎯 功能验证
-
-### 场景 1：应用启动时
-**操作**：
-1. 启动应用
-2. 日志快速加载
-
-**预期结果**：
-- ✅ 滚动条自动滚动到底部
-- ✅ 显示最新日志内容
+### Control search optimization:
+- ✅ Will try to find even if the cache is null
+- ✅ Will try again if search fails
+- ✅ Cache immediately after finding to avoid repeated searches
 
 ---
 
-### 场景 2：日志更新时
-**操作**：
-1. 应用运行中
-2. 新日志到来
+## 📊 Repair effect
 
-**预期结果**：
-- ✅ 滚动条自动滚动到底部
-- ✅ 显示最新日志内容
+### Before repair:
+- ❌ The scroll bar does not automatically track to the latest position
+- ❌ Scrolling fails when the app starts
+- ❌ Try scrolling before UI content is rendered
 
----
-
-### 场景 3：用户查看历史时
-**操作**：
-1. 用户向上滚动查看历史日志
-2. 新日志到来
-
-**预期结果**：
-- ✅ **不会自动滚动**，保持在用户查看的位置
-- ✅ 用户可以继续查看历史内容
+### After repair:
+- ✅ The scroll bar automatically tracks to the latest position
+- ✅ Scroll correctly even when the app is launched
+- ✅ Wait for the UI content to be rendered before scrolling
+- ✅ Preserve position when user scrolls manually (smart scrolling)
 
 ---
 
-### 场景 4：从历史位置回到最新
-**操作**：
-1. 用户在查看历史日志
-2. 用户向下滚动到底部附近（距离底部 <= 20px）
-3. 新日志到来
+## 🎯 Functional verification
 
-**预期结果**：
-- ✅ **恢复自动滚动**，自动定位到最新位置
+### Scenario 1: When the application starts
+**operate**:
+1. Start the application
+2. Fast loading of logs
+
+**Expected results**:
+- ✅ The scroll bar automatically scrolls to the bottom
+- ✅ Show the latest log content
 
 ---
 
-## 📝 代码变更
+### Scenario 2: When the log is updated
+**operate**:
+1. The application is running
+2. New log arrives
 
-### 修改的文件：
+**Expected results**:
+- ✅ The scroll bar automatically scrolls to the bottom
+- ✅ Show the latest log content
+
+---
+
+### Scenario 3: When the user views history
+**operate**:
+1. The user scrolls up to view the history log
+2. New log arrives
+
+**Expected results**:
+- ✅ **Does not automatically scroll** and remains at the position viewed by the user
+- ✅ Users can continue to view historical content
+
+---
+
+### Scenario 4: Return to the latest position from the historical position
+**operate**:
+1. The user is viewing the history log
+2. The user scrolls down to near the bottom (<= 20px from the bottom)
+3. New log arrives
+
+**Expected results**:
+- ✅ **Restore automatic scrolling**, automatically locate the latest location
+
+---
+
+## 📝 Code changes
+
+### Modified files:
 - `ViewModels/MainWindowViewModel.cs`
 
-### 主要变更：
-1. ✅ 新增 `ScrollToBottomIfNeededDelayed()` 方法
-2. ✅ 更新 `OnLogUpdateTimerElapsed()` 调用延迟滚动
-3. ✅ 更新 `FlushPendingLogs()` 调用延迟滚动
-4. ✅ 保留 `ScrollToBottomIfNeeded()` 方法（备用）
+###Main changes:
+1. ✅ Newly added`ScrollToBottomIfNeededDelayed()`method
+2. ✅ Update`OnLogUpdateTimerElapsed()`Call delayed scrolling
+3. ✅ Update`FlushPendingLogs()`Call delayed scrolling
+4. ✅ Reserved`ScrollToBottomIfNeeded()`Method (Alternate)
 
 ---
 
-## 🎉 总结
+## 🎉 Summary
 
-修复完成！现在日志滚动条能够：
-1. ✅ **自动跟踪到最新位置**：日志更新时自动滚动到底部
-2. ✅ **智能保留用户位置**：用户查看历史时不自动滚动
-3. ✅ **应用启动时正常工作**：即使 UI 还没完全加载也能正确滚动
+Repair completed! Now the log scrollbar can:
+1. ✅ **Automatically track to the latest location**: Automatically scroll to the bottom when the log is updated
+2. ✅ **Intelligent retention of user location**: Users do not scroll automatically when viewing history
+3. ✅ **App works properly on launch**: Scrolls correctly even if the UI is not fully loaded yet
 
-用户体验已完全符合预期！
+The user experience has been exactly as expected!

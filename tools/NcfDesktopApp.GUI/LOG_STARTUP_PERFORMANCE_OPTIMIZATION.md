@@ -1,41 +1,41 @@
-# 日志启动性能优化
+# Log startup performance optimization
 
-## 🎯 问题描述
+## 🎯Problem description
 
-UI上同步console日志会导致加载速度变慢。实际上日志几秒钟就加载完了，马上就可以启动，但是现在需要等待日志加载完，花很久的时间，因为日志行数很多，但是都是在短时间内完成的。
+Synchronizing console logs on the UI will cause slower loading. In fact, the log is loaded in a few seconds and can be started immediately. However, now you need to wait for the log to be loaded, which takes a long time because there are many log lines, but they are all completed in a short time.
 
-## 🔍 问题分析
+## 🔍 Problem Analysis
 
-### 原有实现的问题：
-1. **启动时立即显示日志**：应用启动时，所有日志都会立即渲染到UI
-2. **频繁的UI更新**：每100ms更新一次，每次都要构建整个日志字符串
-3. **大量日志阻塞UI**：当有几千行日志时，`_logBuffer.ToString()` 和 UI 渲染会阻塞主线程
+### Problems with the original implementation:
+1. **Display logs immediately on startup**: When the application starts, all logs will be rendered to the UI immediately
+2. **Frequent UI updates**: Update every 100ms, and build the entire log string each time
+3. **A large number of logs block the UI**: When there are thousands of lines of logs,`_logBuffer.ToString()`and UI rendering blocks the main thread
 
-### 性能瓶颈：
-- 日志在后台几秒钟就产生完了（都进入了队列）
-- 但UI需要等待所有日志都渲染完才能继续
-- 每次更新都要构建整个日志字符串（几千行），导致UI阻塞
+### Performance bottleneck:
+- The logs are generated in the background in a few seconds (all entered into the queue)
+- But the UI needs to wait for all logs to be rendered before continuing
+-Build the entire log string (thousands of lines) for each update, causing the UI to block
 
-## ✨ 优化方案
+## ✨ Optimization plan
 
-### 1. 延迟日志显示
-- **应用启动阶段**：日志只累积到缓冲区，不更新UI
-- **应用就绪后**：才开始正常显示日志
-- **效果**：应用启动不再被日志渲染阻塞
+### 1. Delay log display
+- **Application startup phase**: Logs are only accumulated into the buffer and the UI is not updated.
+- **After the application is ready**: Logs will be displayed normally.
+- **Effect**: Application startup is no longer blocked by log rendering
 
-### 2. 限制初始显示行数
-- **初始显示限制**：应用就绪后，如果日志超过200行，只显示最后200行
-- **提示信息**：显示 `[已跳过 X 行启动日志，仅显示最后 200 行]`
-- **效果**：避免一次性渲染太多日志，快速显示最新内容
+### 2. Limit the number of initial displayed lines
+- **Initial display limit**: After the application is ready, if the log exceeds 200 lines, only the last 200 lines will be displayed
+- **Prompt message**: Display`[X lines of startup log skipped, only last 200 lines shown]`
+- **Effect**: Avoid rendering too many logs at once and quickly display the latest content
 
-### 3. 动态调整更新频率
-- **正常情况**：每100ms更新一次
-- **日志量大时**：如果队列中有超过50条日志，且距离上次更新时间小于500ms，跳过本次更新
-- **效果**：当日志量很大时，降低更新频率，减少UI阻塞
+### 3. Dynamically adjust update frequency
+- **Normal case**: Update every 100ms
+- **When the log volume is large**: If there are more than 50 logs in the queue and the time since the last update is less than 500ms, skip this update
+- **Effect**: When the log volume is large, the update frequency is reduced and UI blocking is reduced
 
-## 🔧 技术实现
+## 🔧 Technical implementation
 
-### 新增字段：
+### New fields:
 ```csharp
 private bool _isApplicationReady = false;  // 应用是否已就绪
 private DateTime _lastLogUpdateTime = DateTime.MinValue;  // 上次日志更新时间
@@ -43,9 +43,9 @@ private const int InitialDisplayLines = 200;  // 初始只显示最后200行
 private const int MaxLogUpdateIntervalMs = 500;  // 当日志量大时的最大更新间隔
 ```
 
-### 关键逻辑：
+### Key logic:
 
-#### 1. 应用启动阶段（未就绪）
+#### 1. Application startup phase (not ready)
 ```csharp
 if (!_isApplicationReady)
 {
@@ -59,7 +59,7 @@ if (!_isApplicationReady)
 }
 ```
 
-#### 2. 应用就绪后
+#### 2. After the application is ready
 ```csharp
 // 标记应用已就绪
 _isApplicationReady = true;
@@ -67,7 +67,7 @@ _isApplicationReady = true;
 FlushPendingLogs();
 ```
 
-#### 3. 动态调整更新频率
+#### 3. Dynamically adjust update frequency
 ```csharp
 // 如果日志量很大且距离上次更新时间很短，跳过本次更新
 if (pendingCount > 50 && timeSinceLastUpdate < MaxLogUpdateIntervalMs)
@@ -84,27 +84,27 @@ if (pendingCount > 50 && timeSinceLastUpdate < MaxLogUpdateIntervalMs)
 }
 ```
 
-## 📊 性能提升
+## 📊 Performance improvements
 
-### 优化前：
-- ❌ 启动时需要等待所有日志渲染完
-- ❌ 几千行日志一次性渲染，UI阻塞严重
-- ❌ 启动时间：5-10秒（取决于日志量）
+### Before optimization:
+- ❌ You need to wait for all logs to be rendered when starting
+- ❌ Thousands of lines of logs are rendered at once, and the UI is seriously blocked
+- ❌ Startup time: 5-10 seconds (depends on log volume)
 
-### 优化后：
-- ✅ 启动时日志在后台累积，不阻塞UI
-- ✅ 只显示最后200行，快速显示最新内容
-- ✅ 启动时间：<1秒（几乎立即启动）
+### After optimization:
+- ✅ Logs accumulate in the background during startup without blocking the UI
+- ✅ Only display the last 200 lines, quickly display the latest content
+- ✅ Startup time: <1 second (starts almost immediately)
 
-## 🎉 用户体验改进
+## 🎉 User experience improvements
 
-1. **快速启动**：应用几乎立即启动，不再等待日志渲染
-2. **最新日志优先**：只显示最后200行，用户看到的是最新、最重要的日志
-3. **完整日志保留**：所有日志都保留在缓冲区中，只是初始不显示
-4. **平滑更新**：应用就绪后，日志正常更新，但频率会根据日志量动态调整
+1. **Quick Start**: The application starts almost immediately, no longer waiting for log rendering
+2. **Latest log first**: Only the last 200 lines are displayed. Users see the latest and most important logs.
+3. **Complete log retention**: All logs are retained in the buffer, but are not displayed initially.
+4. **Smooth update**: After the application is ready, the log will be updated normally, but the frequency will be dynamically adjusted based on the log volume.
 
-## 📝 注意事项
+## 📝 Notes
 
-1. **日志完整性**：所有日志都保留在缓冲区中，只是初始不显示
-2. **内存管理**：缓冲区大小限制为 `MaxLogLines * 2`，避免内存占用过大
-3. **向后兼容**：应用就绪后，日志功能完全正常，不影响后续使用
+1. **Log Integrity**: All logs are retained in the buffer, but are not displayed initially.
+2. **Memory Management**: Buffer size is limited to`MaxLogLines * 2`, to avoid excessive memory usage
+3. **Backward Compatibility**: After the application is ready, the logging function is completely normal and does not affect subsequent use.

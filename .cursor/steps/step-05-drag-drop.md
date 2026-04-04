@@ -1,31 +1,31 @@
-# Step 05: 模块拖拽功能实现
+# Step 05: Implementation of module drag and drop function
 
-## 📋 任务概述
-为首页的功能模块卡片添加拖拽功能，支持将模块拖拽到对话入口的拖放区域，实现基于模块上下文的 AI 对话。
+## 📋 Mission Overview
+Add a drag-and-drop function to the function module card on the homepage to support dragging the module to the drag-and-drop area of ​​the dialogue entrance to implement AI dialogue based on module context.
 
-## 🎯 目标
-- ✅ 为模块卡片添加拖拽支持（draggable）
-- ✅ 实现对话框拖放区域的接收逻辑
-- ✅ 显示已选中的模块列表
-- ✅ 支持移除已选模块
-- ✅ 拖拽过程提供视觉反馈
-- ✅ 将选中模块传递给对话页面
+## 🎯 Goal
+- ✅ Add draggable support for module cards
+- ✅ Implement the receiving logic of the drag and drop area of ​​the dialog box
+- ✅ Display the selected module list
+- ✅ Supports removing selected modules
+- ✅ Provide visual feedback during the dragging process
+- ✅ Pass the selected module to the conversation page
 
-## 📂 涉及文件
+## 📂Involved documents
 
-### 修改文件
-1. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml` - 已在 Step 03 中添加拖放区域
-2. `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/Index/Index.js` - 需要增强拖拽逻辑
+### Modify files
+1. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml`- Added drag and drop area in Step 03
+2. `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/Index/Index.js`- Need to enhance drag and drop logic
 
-## 🔧 实现步骤
+## 🔧 Implementation steps
 
-### 1. 增强模块卡片的拖拽功能
+### 1. Enhance the drag and drop function of module cards
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/Index/Index.js`
+**File path**:`tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/Index/Index.js`
 
-**修改位置**: 在已有的 `initializeModuleDrag()` 方法中增强（Step 03 已添加基础版本）
+**Modify location**: in existing`initializeModuleDrag()`Enhancement in method (Basic version has been added in Step 03)
 
-**完整增强版本**:
+**Full enhanced version**:
 
 ```javascript
 /**
@@ -284,19 +284,19 @@ async addModulesToSession(sessionId) {
 },
 ```
 
-**关键技术点**：
-- 使用 `dataTransfer` 传递拖拽数据
-- 拖拽过程中的视觉反馈（opacity、class）
-- 限制最多5个模块，避免上下文过长
-- 批量添加模块到会话
+**Key technical points**:
+- use`dataTransfer`Pass drag and drop data
+- Visual feedback (opacity, class) during dragging
+- Limit up to 5 modules to avoid too long contexts
+- Add modules to sessions in batches
 
 ---
 
-### 2. 增强拖放区域样式
+### 2. Enhance drag and drop area style
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml`
+**File path**:`tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml`
 
-**在 @section style 中添加额外样式**:
+**Add additional styles in @section style**:
 
 ```css
 /* 拖拽增强样式 */
@@ -398,19 +398,19 @@ async addModulesToSession(sessionId) {
 }
 ```
 
-**关键技术点**：
-- 拖拽状态的 CSS 动画反馈
-- 悬停提示，引导用户操作
-- 边框脉冲动画，突出拖放区域
-- 模块标签添加动画
+**Key technical points**:
+- CSS animation feedback for dragging state
+- Hover prompts to guide users to operate
+- Border pulse animation to highlight drag and drop areas
+- Add animation to module label
 
 ---
 
-### 3. 在对话页面中处理模块上下文
+### 3. Handle module context in conversation page
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml.cs`
+**File path**:`tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml.cs`
 
-**修改**: 在 `OnGet` 方法中添加模块UID的处理
+**Modification**: in`OnGet`Processing of adding module UID in method
 
 ```csharp
 public IActionResult OnGet(int? sessionId, string initialMessage, string moduleUids)
@@ -440,17 +440,17 @@ public IActionResult OnGet(int? sessionId, string initialMessage, string moduleU
 public List<string> ModuleUids { get; set; } = new List<string>();
 ```
 
-**关键技术点**：
-- 从 QueryString 获取多个模块 UID
-- 传递给前端用于加载模块信息
+**Key technical points**:
+- Get multiple module UIDs from QueryString
+- Passed to the front end for loading module information
 
 ---
 
-### 4. 在对话页面中显示模块上下文
+### 4. Display module context in conversation page
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/AdminChat/Chat.js`
+**File path**:`tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/AdminChat/Chat.js`
 
-**添加方法**: 在 `mounted()` 中添加模块加载逻辑
+**Add method**: in`mounted()`Add module loading logic in
 
 ```javascript
 mounted() {
@@ -485,7 +485,7 @@ mounted() {
 },
 ```
 
-**添加加载模块方法**:
+**Add loading module method**:
 
 ```javascript
 /**
@@ -509,7 +509,7 @@ async loadSessionModules(sessionId) {
 },
 ```
 
-**在 data() 中添加字段**:
+**Add fields in data()**:
 
 ```javascript
 data() {
@@ -522,11 +522,11 @@ data() {
 
 ---
 
-### 5. 在 AppService 中添加获取会话模块的接口
+### 5. Add the interface to obtain the session module in AppService
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/OHS/Local/AppService/AdminChatAppService.cs`
+**File path**:`tools/NcfSimulatedSite/Senparc.Areas.Admin/OHS/Local/AppService/AdminChatAppService.cs`
 
-**添加方法**:
+**Add method**:
 
 ```csharp
 /// <summary>
@@ -567,91 +567,91 @@ public class MessageFeedbackRequest
 
 ---
 
-## ✅ 验收标准
+## ✅ Acceptance Criteria
 
-### 功能验收
-- [ ] 模块卡片可以拖拽
-- [ ] 拖拽到拖放区域时有视觉反馈
-- [ ] 拖放成功后模块显示在拖放区域
-- [ ] 可以点击标签关闭按钮移除模块
-- [ ] 最多只能添加 5 个模块
-- [ ] 重复添加会有提示
-- [ ] 选中的模块会传递到对话页面
-- [ ] 对话页面显示模块上下文
+### Function acceptance
+- [ ] Module cards can be dragged and dropped
+- [ ] Visual feedback when dragging to the drop area
+- [ ] After the drag and drop is successful, the module is displayed in the drag and drop area.
+- [ ] You can click the label close button to remove the module
+- [ ] Only up to 5 modules can be added
+- [ ] There will be a prompt if you add it repeatedly.
+- [ ] The selected module will be passed to the conversation page
+- [ ] Dialog page displays module context
 
-### 技术验收
-- [ ] 使用标准 HTML5 Drag & Drop API
-- [ ] 拖拽数据使用 JSON 格式
-- [ ] 防止重复添加
-- [ ] 数量限制生效
-- [ ] 模块信息正确传递
+### Technical acceptance
+- [ ] Use standard HTML5 Drag & Drop API
+- [ ] Drag and drop data using JSON format
+- [ ] Prevent duplicate additions
+- [ ] Quantity limit is in effect
+- [ ] Module information is passed correctly
 
-### 质量验收
-- [ ] 拖拽交互流畅
-- [ ] 视觉反馈明确
-- [ ] 错误处理完善
-- [ ] 用户提示友好
-- [ ] 无 JavaScript 错误
-
----
-
-## 🔍 测试建议
-
-### 拖拽功能测试
-1. 拖拽一个模块到拖放区域，验证是否成功添加
-2. 尝试重复添加同一个模块，验证是否有提示
-3. 添加 5 个模块后，尝试添加第 6 个，验证是否有限制
-4. 点击标签的关闭按钮，验证是否正确移除
-5. 拖拽过程中移动鼠标，验证视觉反馈
-
-### 上下文传递测试
-1. 在首页选中 2-3 个模块后开始对话
-2. 在对话页面检查是否显示这些模块
-3. 发送消息，验证 AI 是否理解模块上下文
-4. 查看数据库，验证关联表是否正确记录
-
-### 交互体验测试
-1. 测试拖拽的流畅度
-2. 检查动画效果是否自然
-3. 验证提示消息是否及时
-4. 测试不同浏览器的兼容性
+### Quality acceptance
+- [ ] Smooth drag and drop interaction
+- [ ] Clear visual feedback
+- [ ] Error handling improved
+- [ ] User friendly prompts
+- [ ] No JavaScript errors
 
 ---
 
-## 📝 注意事项
+## 🔍 Testing suggestions
 
-⚠️ **重要**：
-- 拖拽数据必须使用 JSON 格式，便于解析
-- 要处理拖拽失败的情况（数据不完整等）
-- 拖放区域的 `dragover` 事件必须 `preventDefault()`，否则 `drop` 不会触发
-- 拖拽离开要判断是否真的离开（避免子元素触发）
+### Drag and drop function test
+1. Drag a module to the drag and drop area and verify whether it is added successfully.
+2. Try to add the same module repeatedly and verify whether there are prompts
+3. After adding 5 modules, try to add the 6th one to verify whether there are any restrictions.
+4. Click the close button of the label to verify that it was removed correctly.
+5. Move the mouse during dragging to verify visual feedback
 
-⚠️ **浏览器兼容性**：
-- HTML5 Drag & Drop API 在主流浏览器均支持（Chrome、Firefox、Edge、Safari）
-- IE11 及以下可能有兼容性问题（系统已不支持旧版 IE）
-- 移动端的拖拽体验较差，建议提供备选方案（如点击选择）
-- 不引入任何拖拽库（如 SortableJS），使用原生 API
+### Context transfer test
+1. Select 2-3 modules on the homepage and start the conversation
+2. Check whether these modules are displayed on the dialog page
+3. Send a message to verify whether the AI ​​understands the module context
+4. Check the database to verify whether the associated table is correctly recorded
 
-⚠️ **性能考虑**：
-- 拖拽数据不要包含过大的对象
-- 动画效果要流畅，使用 CSS3 transition 和 animation
-- 批量添加模块时使用 for 循环即可（不需要 Promise.all 优化）
-- 使用系统现有的动画和过渡效果
-
----
-
-## 🔗 相关任务
-- 上一步：[Step 04: 对话任务页面](./step-04-chat-page.md)
-- 下一步：[Step 06: 集成测试和优化](./step-06-testing.md)
-- 关联文档：[scratchpad.md](../scratchpad.md)
+### Interactive experience test
+1. Test the smoothness of drag and drop
+2. Check whether the animation effect is natural
+3. Verify whether the prompt message is timely
+4. Test the compatibility of different browsers
 
 ---
 
-## 📊 进度追踪
+## 📝 Notes
 
-**任务拆解**：
-- [ ] **[TASK-17]** 为模块卡片添加拖拽支持 (0.5h)
-- [ ] **[TASK-18]** 实现对话框拖放区域 (0.5h)
-- [ ] **[TASK-19]** 实现选中模块显示和管理 (0.5h)
+⚠️ **Important**:
+- Drag and drop data must use JSON format for easy parsing
+- To handle the situation of drag failure (incomplete data, etc.)
+- Drag and drop area`dragover`event must`preventDefault()`,otherwise`drop`will not trigger
+- When dragging to leave, you need to determine whether it is really left (to avoid triggering by child elements)
 
-**预计总耗时**: 1.5 小时
+⚠️ **Browser Compatibility**:
+- HTML5 Drag & Drop API is supported in all major browsers (Chrome, Firefox, Edge, Safari)
+- IE11 and below may have compatibility issues (the system no longer supports older versions of IE)
+- The drag-and-drop experience on mobile is poor, so it is recommended to provide alternatives (such as click selection)
+- Does not introduce any drag and drop libraries (such as SortableJS) and uses native API
+
+⚠️ **Performance Considerations**:
+- Do not drag and drop objects that contain too large objects
+- The animation effect should be smooth, use CSS3 transition and animation
+- Just use a for loop when adding modules in batches (Promise.all optimization is not required)
+- Use the system's existing animations and transitions
+
+---
+
+## 🔗 Related tasks
+- Previous step: [Step 04: Chat task page](./step-04-chat-page.md)
+- Next step: [Step 06: Integration testing and optimization](./step-06-testing.md)
+- Associated documents: [scratchpad.md](../scratchpad.md)
+
+---
+
+## 📊 Progress Tracking
+
+**Task breakdown**:
+- [ ] **[TASK-17]** Add drag and drop support for module cards (0.5h)
+- [ ] **[TASK-18]** Implement dialog drag and drop area (0.5h)
+- [ ] **[TASK-19]** Implement display and management of selected modules (0.5h)
+
+**Estimated total time**: 1.5 hours

@@ -1,16 +1,16 @@
-# PromptCatalyzer 关键修复文档
+# PromptCatalyzer critical fix documentation
 
-## 📋 问题概述
+## 📋 Problem Overview
 
-根据控制台日志分析，发现了两个关键问题：
+Based on console log analysis, two key issues were discovered:
 
-### 问题 1：ChatGroup 未创建
+### Problem 1: ChatGroup not created
 ```
 warn: PromptOptimizationChatTaskHandler[0]
       ⚠️  PromptCatalyzer ChatGroup 未找到，跳过 ChatTask 创建
 ```
 
-### 问题 2：优化失败 - 版本号生成错误
+### Problem 2: Optimization failed - version number generation error
 ```
 fail: PromptOptimizationRequestHandler[0]
       ❌ Prompt 优化失败
@@ -24,17 +24,17 @@ Success: False, NewPromptCode=(null), Score=0
 
 ---
 
-## 🔧 修复方案
+## 🔧 Repair solution
 
-### 修复 1：Controller 添加初始化调用
+### Fix 1: Controller adds initialization call
 
-**文件**: `src/Extensions/Senparc.Xncf.AgentsManager/OHS/Remote/Controllers/PromptOptimizationController.cs`
+**document**:`src/Extensions/Senparc.Xncf.AgentsManager/OHS/Remote/Controllers/PromptOptimizationController.cs`
 
-**问题根因**:
-- `OptimizeAsync` 方法直接调用 `OptimizePromptAsync`，没有先确保 Agent 和 ChatGroup 已初始化
-- 导致每次优化时都不会创建 ChatGroup
+**Root cause of the problem**:
+- `OptimizeAsync`method calls directly`OptimizePromptAsync`, without first ensuring that Agent and ChatGroup are initialized
+- Causes ChatGroup not to be created every time optimization is performed
 
-**修复内容**:
+**Fix content**:
 ```csharp
 [HttpPost("OptimizeAsync")]
 public async Task<IActionResult> OptimizeAsync([FromBody] PromptOptimizationRequestDto request)
@@ -52,18 +52,18 @@ public async Task<IActionResult> OptimizeAsync([FromBody] PromptOptimizationRequ
 }
 ```
 
-**修复效果**:
-- 每次优化前都会检查并创建 ChatGroup（如果不存在）
-- `PromptOptimizationChatTaskHandler` 将能够找到 ChatGroup 并创建 ChatTask
+**Repair effect**:
+- ChatGroup will be checked and created before each optimization (if it does not exist)
+- `PromptOptimizationChatTaskHandler`will be able to find the ChatGroup and create the ChatTask
 
 ---
 
-### 修复 2：设置基础 PromptItem ID
+### Fix 2: Set base PromptItem ID
 
-**文件**: `src/Extensions/Senparc.Xncf.PromptRange/Application/EventHandlers/PromptOptimizationRequestHandler.cs`
+**document**:`src/Extensions/Senparc.Xncf.PromptRange/Application/EventHandlers/PromptOptimizationRequestHandler.cs`
 
-**问题根因**:
-版本号生成逻辑依赖于 `request.Id` 来确定如何计算新版本号：
+**Root cause of the problem**:
+The version number generation logic depends on`request.Id`To determine how to calculate the new version number:
 ```csharp
 // PromptItemService.AddPromptItemAsync
 if (request.Id == null)
@@ -93,7 +93,7 @@ else if (request.IsNewAiming)  // ⬅️ 需要 Id 才能进入这个分支
 }
 ```
 
-**原代码问题**:
+**Original code problem**:
 ```csharp
 var newPromptItemRequest = new PromptItem_AddRequest
 {
@@ -104,7 +104,7 @@ var newPromptItemRequest = new PromptItem_AddRequest
 };
 ```
 
-**修复后**:
+**After fix**:
 ```csharp
 var newPromptItemRequest = new PromptItem_AddRequest
 {
@@ -115,16 +115,16 @@ var newPromptItemRequest = new PromptItem_AddRequest
 };
 ```
 
-**修复效果**:
-- 系统将正确进入 `IsNewAiming` 分支
-- 自动查找当前 Tactic 下的最大 Aiming 号
-- 生成递增的版本号，例如：
-  - 原版本: `2025.12.28.3-T3.1-A2`
-  - 新版本: `2025.12.28.3-T3.1-A3` （自动递增 Aiming）
+**Repair effect**:
+- The system will enter correctly`IsNewAiming`branch
+- Automatically find the largest Aiming number under the current Tactic
+- Generate incremental version numbers, for example:
+-Original version:`2025.12.28.3-T3.1-A2`
+- New version:`2025.12.28.3-T3.1-A3`(Auto-increment Aiming)
 
 ---
 
-## 🔄 完整优化流程（修复后）
+## 🔄 Complete optimization process (after repair)
 
 ```
 用户点击"开始优化"
@@ -160,9 +160,9 @@ PromptOptimizationController.OptimizeAsync
 
 ---
 
-## ⚠️ 重要注意事项
+## ⚠️ IMPORTANT NOTES
 
-### 必须重启应用！
+### The application must be restarted!
 ```bash
 # 在运行 dotnet run 的终端中按 Ctrl+C 停止
 # 然后重新运行
@@ -170,21 +170,21 @@ cd tools/NcfSimulatedSite/Senparc.Web
 dotnet run
 ```
 
-**为什么必须重启**:
-1. `PromptOptimizationController` 是在应用启动时注册的
-2. 新代码不会自动热加载到正在运行的应用中
-3. EventBus handlers 也需要重新注册
+**Why you need to restart**:
+1. `PromptOptimizationController`is registered when the application starts
+2. New code is not automatically hot-loaded into running applications
+3. EventBus handlers also need to be re-registered
 
 ---
 
-## 🧪 测试步骤
+## 🧪 Test steps
 
-### 1️⃣ 重启应用后首次测试
+### 1️⃣ First test after restarting the application
 
-1. **打开 PromptRange 页面**
-2. **选择一个已有的 Prompt**（例如 `2025.12.28.3-T3.1-A2`）
-3. **点击"开始优化"按钮**
-4. **观察控制台日志**，应该能看到：
+1. **Open the PromptRange page**
+2. **Select an existing Prompt** (for example`2025.12.28.3-T3.1-A2`）
+3. **Click the "Start Optimization" button**
+4. **Observe the console log**, you should be able to see:
 
 ```
 ========== 收到 Prompt 优化请求 ==========
@@ -218,7 +218,7 @@ dotnet run
   ✅ ChatTask 状态更新成功！Status: Finished
 ```
 
-5. **验证数据库**:
+5. **Verify database**:
 ```sql
 -- 检查 ChatGroup 是否创建
 SELECT * FROM [NcfAiDB_Simulate_Thesis2].[dbo].[Senparc_AgentsManager_ChatGroup]
@@ -236,83 +236,83 @@ WHERE RangeName = '2025.12.28.3'
 ORDER BY Id DESC
 ```
 
-### 2️⃣ 验证 AI 生成标记
+### 2️⃣ Verify AI generated tags
 
-新创建的 PromptItem 应该在 `Note` 字段显示 `🤖AI-Generated`。
-
----
-
-## 📝 修复详细说明
-
-### 修复项 1: Controller 初始化检查
-- **位置**: Line 43-46 in `PromptOptimizationController.cs`
-- **变更**: 在调用 `OptimizePromptAsync` 之前添加了 `EnsureInitializedAsync()` 调用
-- **影响**: 确保每次优化前都会检查并创建 ChatGroup
-
-### 修复项 2: 版本号生成
-- **位置**: Line 123 in `PromptOptimizationRequestHandler.cs`
-- **变更**: 添加了 `Id = originalItem.Id` 字段
-- **影响**: 
-  - 系统将基于原 PromptItem 创建新版本（Aiming 递增）
-  - 避免版本号冲突错误
-  - 正确维护版本演化关系
+The newly created PromptItem should be in`Note`Field display`🤖AI-Generated`。
 
 ---
 
-## 🎯 预期结果
+## 📝 Repair details
 
-完成上述修复并**重启应用**后：
+### Fix 1: Controller initialization check
+- **Location**: Line 43-46 in`PromptOptimizationController.cs`
+- **Change**: In calling`OptimizePromptAsync`Added before`EnsureInitializedAsync()`call
+- **Impact**: Ensure that ChatGroup is checked and created before each optimization
 
-1. ✅ ChatGroup 将在首次优化时自动创建
-2. ✅ 每次优化都会创建对应的 ChatTask 记录
-3. ✅ 新 PromptItem 版本号正确递增（例如 A2 → A3）
-4. ✅ AI 生成的 Prompt 在 Note 字段标记为 `🤖AI-Generated`
-5. ✅ 优化成功后返回正确的 `NewPromptCode` 和 `Score`
+### Fix 2: Version number generation
+- **Location**: Line 123 in`PromptOptimizationRequestHandler.cs`
+- **CHANGES**: Added`Id = originalItem.Id`Field
+- **Influence**:
+- The system will create a new version based on the original PromptItem (Aiming increment)
+- Avoid version number conflict errors
+- Correctly maintain version evolution relationships
 
 ---
 
-## ⚠️ 下一步操作
+## 🎯 Expected results
 
-**请按照以下步骤操作**：
+After completing the above fixes and **restarting the app**:
 
-1. **停止当前运行的应用**（在终端 5 中按 `Ctrl+C`）
-2. **重新启动应用**:
+1. ✅ ChatGroup will be automatically created during first optimization
+2. ✅ Each optimization will create a corresponding ChatTask record
+3. ✅ The new PromptItem version number is incremented correctly (for example, A2 → A3)
+4. ✅ The Prompt generated by AI is marked as`🤖AI-Generated`
+5. ✅ Return the correct value after optimization is successful.`NewPromptCode`and`Score`
+
+---
+
+## ⚠️ Next steps
+
+**Please follow these steps**:
+
+1. **Stop currently running application** (press in Terminal 5`Ctrl+C`）
+2. **Restart the application**:
    ```bash
    cd tools/NcfSimulatedSite/Senparc.Web
    dotnet run
    ```
-3. **等待应用完全启动**（看到 "自检完成" 消息）
-4. **刷新浏览器页面**
-5. **再次点击"开始优化"按钮**
-6. **观察控制台日志**，应该能看到完整的成功流程
+3. **Wait for the application to fully start** (see "Self-test completed" message)
+4. **Refresh browser page**
+5. **Click the "Start Optimization" button again**
+6. **Observe the console log**, you should be able to see the complete successful process
 
 ---
 
-## 🐛 之前失败的原因总结
+## 🐛 Summary of reasons for previous failures
 
-### 为什么 ChatGroup 没有创建？
-- `PromptOptimizationController` 没有调用 `EnsureInitializedAsync()`
-- 之前的测试可能是直接测试 `Initialize` 接口（初始化按钮），而不是"优化"功能
-- 优化功能有独立的代码路径，需要单独添加初始化检查
+### Why is the ChatGroup not created?
+- `PromptOptimizationController`not called`EnsureInitializedAsync()`
+- The previous test may have been a direct test`Initialize`interface (initialization button), not the "optimize" function
+- The optimization function has an independent code path and requires a separate initialization check.
 
-### 为什么版本号生成错误？
-- `PromptItem_AddRequest` 没有设置 `Id` 字段
-- 系统误以为这是创建全新的 PromptItem（而不是基于现有版本创建新版本）
-- 尝试创建 `2025.12.28.3-T1-A1` 这样的版本号，但该版本号可能已存在
-- 导致唯一性检查失败，抛出"版号生成错误"
+### Why is the version number generated incorrectly?
+- `PromptItem_AddRequest`no settings`Id`Field
+- The system mistakenly thinks that this is creating a completely new PromptItem (instead of creating a new version based on the existing version)
+- try to create`2025.12.28.3-T1-A1`Such a version number, but the version number may already exist
+- Causes the uniqueness check to fail and throws "version number generation error"
 
-### 正确的版本生成流程：
-1. **传入 `Id`** → 获取 `basePrompt`
-2. **`IsNewAiming = true`** → 进入 NewAiming 分支
-3. **查找同 Tactic 下所有 Aiming** → 获取 `maxAiming`
-4. **生成新版本** → `Aiming = maxAiming + 1`
-5. **例如**: `2025.12.28.3-T3.1-A2` → `2025.12.28.3-T3.1-A3`
+### Correct version generation process:
+1. **Incoming`Id`** → get`basePrompt`
+2. **`IsNewAiming = true`** → Enter NewAiming branch
+3. **Find all Aiming under the same Tactic** → Get`maxAiming`
+4. **Generate new version** →`Aiming = maxAiming + 1`
+5. **For example**:`2025.12.28.3-T3.1-A2` → `2025.12.28.3-T3.1-A3`
 
 ---
 
-## 📊 关键代码对比
+## 📊 Key code comparison
 
-### Before (有 Bug)
+### Before (bug)
 ```csharp
 // ❌ Controller 缺少初始化调用
 public async Task<IActionResult> OptimizeAsync(...)
@@ -330,7 +330,7 @@ var newPromptItemRequest = new PromptItem_AddRequest
 };
 ```
 
-### After (已修复)
+### After (Fixed)
 ```csharp
 // ✅ Controller 添加初始化检查
 public async Task<IActionResult> OptimizeAsync(...)
@@ -350,11 +350,11 @@ var newPromptItemRequest = new PromptItem_AddRequest
 
 ---
 
-## 🎉 结论
+## 🎉 Conclusion
 
-这两个修复解决了：
-1. **ChatGroup 未创建** → 现在会在优化前自动创建
-2. **版本号生成错误** → 现在正确递增 Aiming 版本号
-3. **优化失败** → AI 优化的结果现在能正确保存到数据库
+These two fixes solved:
+1. **ChatGroup not created** → will now be automatically created before optimization
+2. **Version number generation error** → Aiming version number is now correctly incremented
+3. **Optimization failed** → AI optimization results can now be correctly saved to the database
 
-**现在请重启应用并重新测试！**
+**Please restart the app now and retest! **

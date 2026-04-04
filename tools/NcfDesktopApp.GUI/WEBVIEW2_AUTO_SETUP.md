@@ -1,61 +1,61 @@
-# WebView2 自动检测和安装功能说明
+# WebView2 automatic detection and installation function description
 
-## 📋 功能概述
+## 📋 Function Overview
 
-本应用已集成 WebView2 Runtime 自动检测和安装功能，确保 Windows 用户能够顺利使用内置浏览器。
-
----
-
-## 🎯 主要功能
-
-### 1. 启动时自动检测
-
-应用程序启动时会自动检测 WebView2 Runtime 是否已安装：
-
-- ✅ **已安装**：显示版本信息，直接使用内置浏览器
-- ❌ **未安装**：自动下载并安装 WebView2 Runtime
-
-### 2. 自动安装流程
-
-如果检测到 WebView2 未安装，应用会：
-
-1. **下载** WebView2 Bootstrapper（约 2MB）
-   - 使用官方链接：`https://go.microsoft.com/fwlink/p/?LinkId=2124703`
-   - 自动检测系统架构（x64、x86、ARM64）
-
-2. **静默安装** WebView2 Runtime
-   - 使用 `/silent /install` 参数
-   - 无需用户手动操作
-   - 显示实时安装进度
-
-3. **验证安装** 
-   - 通过注册表确认安装成功
-   - 获取已安装的版本号
-
-### 3. 友好的错误处理
-
-如果 WebView2 安装失败或初始化失败，会显示友好的错误界面：
-
-#### 错误信息包括：
-- ❌ **失败原因**：
-  - WebView2 Runtime 未安装或安装失败
-  - 系统权限不足
-  - 组件版本不兼容
-
-#### 提供的解决方案：
-- 🌍 **在外部浏览器中打开** - 一键在系统默认浏览器中打开 NCF
-- ⬇️ **下载 WebView2 Runtime** - 跳转到官方下载页面手动安装
-- 💡 **重启提示** - 安装后重启应用即可使用内置浏览器
+This application has integrated WebView2 Runtime automatic detection and installation functions to ensure that Windows users can use the built-in browser smoothly.
 
 ---
 
-## 🔍 技术实现
+## 🎯 Main functions
 
-### 核心组件
+### 1. Automatic detection at startup
+
+When the application starts, it automatically detects whether the WebView2 Runtime is installed:
+
+- ✅ **Installed**: Display version information and use the built-in browser directly
+- ❌ **Not Installed**: Automatically download and install WebView2 Runtime
+
+### 2. Automatic installation process
+
+If it detects that WebView2 is not installed, the application will:
+
+1. **Download** WebView2 Bootstrapper (about 2MB)
+- Use the official link:`https://go.microsoft.com/fwlink/p/?LinkId=2124703`
+- Automatically detect system architecture (x64, x86, ARM64)
+
+2. **Silent installation** WebView2 Runtime
+- use`/silent /install`parameter
+- No manual operation required by user
+- Shows real-time installation progress
+
+3. **Verify installation**
+- Confirm successful installation through registry
+- Get the installed version number
+
+### 3. Friendly error handling
+
+If WebView2 fails to install or initialize, a friendly error interface will be displayed:
+
+#### Error messages include:
+- ❌ **Cause of failure**:
+- WebView2 Runtime is not installed or the installation failed
+- Insufficient system permissions
+- Component versions are incompatible
+
+#### Solutions provided:
+- 🌍 **Open in external browser** - Open NCF in the system default browser with one click
+- ⬇️ **Download WebView2 Runtime** - Jump to the official download page to install manually
+- 💡 **Restart Tip** - Restart the app after installation to use the built-in browser
+
+---
+
+## 🔍 Technical implementation
+
+### Core components
 
 #### 1. `WebView2Service.cs`
 
-负责 WebView2 Runtime 的检测和安装：
+Responsible for the detection and installation of WebView2 Runtime:
 
 ```csharp
 public class WebView2Service
@@ -74,21 +74,21 @@ public class WebView2Service
 }
 ```
 
-**检测方法**：
-- 读取注册表：`HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}`
-- 或 64 位路径：`HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}`
-- 读取 `pv` 键获取版本号
+**Detection method**:
+- Read the registry:`HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}`
+- or 64-bit path:`HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}`
+- read`pv`Key to get the version number
 
-**安装流程**：
-1. 下载 WebView2 Bootstrapper 到临时目录
-2. 使用 `Process.Start()` 运行安装程序
-3. 等待安装完成（最多 5 分钟）
-4. 验证注册表确认安装成功
-5. 清理临时文件
+**Installation process**:
+1. Download WebView2 Bootstrapper to the temporary directory
+2. Use`Process.Start()`Run the installer
+3. Wait for the installation to complete (up to 5 minutes)
+4. Verify the registry to confirm successful installation
+5. Clean up temporary files
 
 #### 2. `MainWindowViewModel.cs`
 
-在应用初始化时集成 WebView2 检测：
+Integrate WebView2 detection during application initialization:
 
 ```csharp
 private async Task InitializeBrowserAsync()
@@ -113,7 +113,7 @@ private async Task InitializeBrowserAsync()
 
 #### 3. `EmbeddedWebView.cs`
 
-增强的错误处理界面：
+Enhanced error handling interface:
 
 ```csharp
 private void ShowFallbackView()
@@ -129,9 +129,9 @@ private void ShowFallbackView()
 
 ---
 
-## 📊 用户体验流程
+## 📊 User experience process
 
-### 场景 1：首次运行（WebView2 未安装）
+### Scenario 1: First run (WebView2 not installed)
 
 ```
 启动应用
@@ -147,7 +147,7 @@ private void ShowFallbackView()
 ✅ 使用内置浏览器
 ```
 
-**日志输出示例**：
+**Log output example**:
 ```
 🚀 正在初始化 NCF 桌面应用程序...
 🌐 正在初始化内置浏览器...
@@ -163,7 +163,7 @@ private void ShowFallbackView()
 ✅ 应用程序初始化完成
 ```
 
-### 场景 2：WebView2 已安装
+### Scenario 2: WebView2 is installed
 
 ```
 启动应用
@@ -173,7 +173,7 @@ private void ShowFallbackView()
 ✅ 直接使用内置浏览器
 ```
 
-**日志输出示例**：
+**Log output example**:
 ```
 🚀 正在初始化 NCF 桌面应用程序...
 🌐 正在初始化内置浏览器...
@@ -183,7 +183,7 @@ private void ShowFallbackView()
 ✅ 应用程序初始化完成
 ```
 
-### 场景 3：安装失败
+### Scenario 3: Installation failed
 
 ```
 启动应用
@@ -199,7 +199,7 @@ private void ShowFallbackView()
     2. 手动下载 WebView2
 ```
 
-**错误界面**：
+**Error interface**:
 ```
 ❌ 内置浏览器初始化失败
 
@@ -219,23 +219,23 @@ private void ShowFallbackView()
 
 ---
 
-## 🛠️ 手动安装 WebView2
+## 🛠️ Manually install WebView2
 
-如果自动安装失败，用户可以手动安装：
+If the automatic installation fails, the user can install it manually:
 
-### 方法 1：使用应用内按钮
-1. 点击 **"⬇️ 下载 WebView2 Runtime"** 按钮
-2. 浏览器会打开官方下载页面
-3. 下载并运行安装程序
-4. 重启 NCF 桌面应用
+### Method 1: Use the in-app button
+1. Click the **"⬇️ Download WebView2 Runtime"** button
+2. The browser will open the official download page
+3. Download and run the installer
+4. Restart the NCF desktop application
 
-### 方法 2：直接下载
-访问 Microsoft 官方下载页面：
-- **Bootstrapper（推荐）**：https://go.microsoft.com/fwlink/p/?LinkId=2124703
-- **离线安装包**：https://developer.microsoft.com/microsoft-edge/webview2/
+### Method 2: Direct download
+Visit the official Microsoft download page:
+- **Bootstrapper (recommended)**: https://go.microsoft.com/fwlink/p/?LinkId=2124703
+- **Offline installation package**: https://developer.microsoft.com/microsoft-edge/webview2/
 
-### 方法 3：通过命令行
-在 PowerShell 中运行（管理员权限）：
+### Method 3: Via command line
+Run in PowerShell (admin rights):
 
 ```powershell
 # 下载并安装
@@ -247,108 +247,108 @@ Start-Process -FilePath $output -ArgumentList "/silent /install" -Wait
 
 ---
 
-## ✅ 验证安装
+## ✅ Verify installation
 
-### 通过注册表
-打开注册表编辑器（`regedit`），检查以下路径：
+### Via registry
+Open the Registry Editor (`regedit`), check the following paths:
 ```
 HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}
 ```
 
-查看 `pv` 键的值，即为 WebView2 版本号。
+Check`pv`The value of the key is the WebView2 version number.
 
-### 通过 PowerShell
+### Via PowerShell
 ```powershell
 Get-AppxPackage -Name "*WebView2*"
 ```
 
-### 通过应用日志
-启动 NCF 桌面应用，查看日志输出中的版本信息。
+### Via application log
+Launch the NCF desktop application and view the version information in the log output.
 
 ---
 
-## 🔧 故障排查
+## 🔧 Troubleshooting
 
-### 问题 1：自动安装失败
+### Problem 1: Automatic installation failed
 
-**可能原因**：
-- 网络连接问题
-- 防火墙/杀毒软件拦截
-- 磁盘空间不足
-- 系统权限不足
+**Possible reasons**:
+- Internet connection issues
+- Firewall/antivirus software blocking
+- Insufficient disk space
+- Insufficient system permissions
 
-**解决方案**：
-1. 检查网络连接
-2. 临时禁用防火墙/杀毒软件
-3. 确保至少有 200MB 可用磁盘空间
-4. 以管理员身份运行应用
-5. 手动下载安装（见上文）
+**Solution**:
+1. Check network connection
+2. Temporarily disable firewall/antivirus software
+3. Make sure you have at least 200MB of free disk space
+4. Run the application as administrator
+5. Manual download and installation (see above)
 
-### 问题 2：WebView 初始化失败
+### Problem 2: WebView initialization failed
 
-**可能原因**：
-- WebView2 版本过旧
-- 系统组件损坏
-- 权限问题
+**Possible reasons**:
+- WebView2 version is out of date
+- System components are damaged
+- Permission issues
 
-**解决方案**：
-1. 更新 WebView2 到最新版本
-2. 重新安装 WebView2
-3. 以管理员身份运行应用
-4. 使用外部浏览器（临时方案）
+**Solution**:
+1. Update WebView2 to the latest version
+2. Reinstall WebView2
+3. Run the application as administrator
+4. Use an external browser (temporary solution)
 
-### 问题 3：在外部浏览器中打开失败
+### Problem 3: Failed to open in external browser
 
-**可能原因**：
-- 没有默认浏览器
-- 浏览器关联损坏
+**Possible reasons**:
+- No default browser
+- Broken browser association
 
-**解决方案**：
-1. 设置默认浏览器
-2. 手动复制 URL 到浏览器地址栏
-
----
-
-## 📝 日志级别
-
-应用会在日志中记录详细的 WebView2 检测和安装信息：
-
-- **ℹ️ Info**：正常流程信息
-- **✅ Success**：成功完成的操作
-- **⚠️ Warning**：警告信息（不影响主要功能）
-- **❌ Error**：错误信息（需要用户干预）
-- **🔍 Debug**：调试信息
+**Solution**:
+1. Set default browser
+2. Manually copy the URL to the browser address bar
 
 ---
 
-## 🔄 更新策略
+## 📝 Log level
 
-WebView2 Runtime 会通过 Microsoft Edge 更新通道自动更新：
-- 自动检测新版本
-- 后台静默更新
-- 无需用户干预
+The application logs detailed WebView2 detection and installation information:
 
-应用会在启动时显示当前安装的 WebView2 版本。
+- **ℹ️ Info**: normal process information
+- **✅ Success**: Operation completed successfully
+- **⚠️ Warning**: warning message (does not affect main functions)
+- **❌ Error**: Error message (requires user intervention)
+- **🔍 Debug**: debugging information
 
 ---
 
-## 📚 参考资源
+## 🔄 Update strategy
 
-- [WebView2 官方文档](https://learn.microsoft.com/microsoft-edge/webview2/)
-- [WebView2 下载页面](https://developer.microsoft.com/microsoft-edge/webview2/)
+The WebView2 Runtime is automatically updated through the Microsoft Edge update channel:
+- Automatically detect new versions
+- Silent updates in the background
+- No user intervention required
+
+The application displays the currently installed version of WebView2 on startup.
+
+---
+
+## 📚 Reference resources
+
+- [WebView2 official document](https://learn.microsoft.com/microsoft-edge/webview2/)
+- [WebView2 download page](https://developer.microsoft.com/microsoft-edge/webview2/)
 - [WebView.Avalonia GitHub](https://github.com/MicroSugarDeveloperOrg/Webviews.Avalonia)
 
 ---
 
-## 💡 最佳实践
+## 💡 Best Practices
 
-1. **首次运行**：确保网络连接良好，让应用自动完成 WebView2 安装
-2. **企业部署**：可以预先安装 WebView2 Runtime 到系统镜像
-3. **离线环境**：提前下载离线安装包，手动安装后再运行应用
-4. **故障恢复**：如遇问题，优先使用"在外部浏览器中打开"功能
+1. **First run**: Make sure the network connection is good and let the application automatically complete the WebView2 installation
+2. **Enterprise Deployment**: WebView2 Runtime can be pre-installed to the system image
+3. **Offline environment**: Download the offline installation package in advance, install it manually and then run the application
+4. **Failure recovery**: If you encounter problems, give priority to using the "Open in external browser" function
 
 ---
 
-**最后更新**：2025-11-14  
-**版本**：1.0.0
+**Last updated**: 2025-11-14
+**Version**: 1.0.0
 

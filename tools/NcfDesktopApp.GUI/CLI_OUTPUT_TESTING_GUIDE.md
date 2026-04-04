@@ -1,27 +1,27 @@
-# CLI 输出实时同步功能 - 测试指南
+# CLI output real-time synchronization function - Testing Guide
 
-## 📋 测试概述
+## 📋 Test Overview
 
-本指南用于验证 Senparc.Web CLI 输出实时同步到 UI 日志的功能。
+This guide is used to verify the functionality of Senparc.Web CLI output to be synchronized to the UI log in real time.
 
-**功能说明**：
-- ✅ 实时捕获 NCF 进程的标准输出（stdout）
-- ✅ 实时捕获 NCF 进程的错误输出（stderr）
-- ✅ 在 UI 日志面板中显示，带有 `[CLI]` 和 `[CLI:ERROR]` 前缀
-- ✅ 与应用日志混合显示，按时间顺序排列
+**Function description**:
+- ✅ Capture the standard output (stdout) of the NCF process in real time
+- ✅ Capture the error output (stderr) of the NCF process in real time
+- ✅ Displayed in UI log panel with`[CLI]`and`[CLI:ERROR]`prefix
+- ✅ Display mixed with application logs, arranged in chronological order
 
 ---
 
-## ✅ 基本功能测试清单
+## ✅ Basic functional test list
 
-### 测试 1：正常启动和日志显示
+### Test 1: Normal startup and log display
 
-**测试步骤**：
-1. 启动 NcfDesktopApp
-2. 点击"启动 NCF"按钮
-3. 观察右侧日志面板
+**Test steps**:
+1. Start NcfDesktopApp
+2. Click the "Start NCF" button
+3. Observe the log panel on the right
 
-**预期结果**：
+**Expected results**:
 ```
 [HH:mm:ss] 🚀 开始启动 NCF...
 [HH:mm:ss] 🌐 使用端口: 5001
@@ -33,46 +33,46 @@
 [HH:mm:ss] ✅ NCF 站点已启动: http://localhost:5001
 ```
 
-**验证点**：
-- [ ] 看到应用日志（无前缀或带 emoji）
-- [ ] 看到 CLI 日志（带 `[CLI]` 前缀）
-- [ ] 日志按时间顺序混合显示
-- [ ] 日志实时更新，无明显延迟（< 1 秒）
-- [ ] ASP.NET Core 的启动信息正确显示
+**Verification Point**:
+- [ ] see application logs (without prefix or with emoji)
+- [ ] see CLI logs (with`[CLI]`prefix)
+- [ ] Logs are displayed mixed in chronological order
+- [ ] Log updated in real time without obvious delay (< 1 second)
+- [ ] ASP.NET Core startup information is displayed correctly
 
 ---
 
-### 测试 2：中文日志显示
+### Test 2: Chinese log display
 
-**测试步骤**：
-1. 启动 NCF 应用
-2. 在 NCF 代码中添加中文日志输出，例如：
+**Test steps**:
+1. Start the NCF application
+2. Add Chinese log output in the NCF code, for example:
    ```csharp
-   _logger.LogInformation("测试中文日志：你好世界！");
+_logger.LogInformation("Test Chinese log: Hello world!");
    ```
-3. 触发该日志输出
-4. 观察 UI 日志面板
+3. Trigger the log output
+4. Observe the UI log panel
 
-**预期结果**：
+**Expected results**:
 ```
 [HH:mm:ss] [CLI] info: YourNamespace.YourClass[0]
 [HH:mm:ss] [CLI]       测试中文日志：你好世界！
 ```
 
-**验证点**：
-- [ ] 中文显示正常，无乱码
-- [ ] Emoji 显示正常（如果有）
+**Verification Point**:
+- [ ] Chinese display is normal, no garbled characters
+- [ ] Emoji are displayed normally (if available)
 
 ---
 
-### 测试 3：错误输出捕获
+### Test 3: Error output capture
 
-**测试步骤**：
-1. 修改 NCF 端口为已占用的端口（如 80 或 443）
-2. 尝试启动 NCF
-3. 观察日志面板
+**Test steps**:
+1. Modify the NCF port to an occupied port (such as 80 or 443)
+2. Try to start NCF
+3. Observe the log panel
 
-**预期结果**：
+**Expected results**:
 ```
 [HH:mm:ss] 🚀 开始启动 NCF...
 [HH:mm:ss] [CLI:ERROR] Unhandled exception. System.IO.IOException: Failed to bind to address http://localhost:80
@@ -80,22 +80,22 @@
 [HH:mm:ss] ❌ 启动失败: ...
 ```
 
-**验证点**：
-- [ ] 错误输出显示为 `[CLI:ERROR]` 前缀
-- [ ] 应用不崩溃
-- [ ] 错误信息完整显示
+**Verification Point**:
+- [ ] error output appears as`[CLI:ERROR]`prefix
+- [ ] App does not crash
+- [ ] The error message is displayed in full
 
 ---
 
-### 测试 4：进程停止处理
+### Test 4: Process stops processing
 
-**测试步骤**：
-1. 启动 NCF
-2. 等待启动完成
-3. 点击"停止 NCF"按钮
-4. 观察日志
+**Test steps**:
+1. Start NCF
+2. Wait for startup to complete
+3. Click the "Stop NCF" button
+4. Observation log
 
-**预期结果**：
+**Expected results**:
 ```
 [HH:mm:ss] 🛑 正在停止 NCF 进程...
 [HH:mm:ss] [CLI] --- 进程已退出 ---
@@ -103,195 +103,195 @@
 [HH:mm:ss] ✅ NCF 已停止
 ```
 
-**验证点**：
-- [ ] 显示进程退出消息
-- [ ] 应用状态正确更新
-- [ ] 无异常或错误
+**Verification Point**:
+- [ ] Display process exit message
+- [ ] App status updates correctly
+- [ ] No exceptions or errors
 
 ---
 
-### 测试 5：异常进程退出
+### Test 5: Abnormal process exit
 
-**测试步骤**：
-1. 启动 NCF
-2. 使用任务管理器（Windows）或 Activity Monitor（macOS）强制终止 NCF 进程
-3. 观察应用反应
+**Test steps**:
+1. Start NCF
+2. Use Task Manager (Windows) or Activity Monitor (macOS) to force terminate the NCF process
+3. Observe application reactions
 
-**预期结果**：
-- [ ] 应用检测到进程退出
-- [ ] 显示"进程已退出"消息
-- [ ] 应用不崩溃
-- [ ] 状态正确更新
-
----
-
-## 🚀 性能测试清单
-
-### 测试 6：大量日志输出
-
-**测试场景**：NCF 启动时会输出大量日志（约 50-100 条）
-
-**验证点**：
-- [ ] UI 不卡顿，按钮可点击
-- [ ] 日志滚动流畅
-- [ ] CPU 占用正常（< 20%）
-- [ ] 内存占用稳定
-
-**性能基准**：
-- 正常日志输出（< 100 条/秒）：UI 应该完全流畅
-- 如果发现卡顿，请报告具体场景
+**Expected results**:
+- [ ] Application detects process exit
+- [ ] Show "Process has exited" message
+- [ ] App does not crash
+- [ ] status updated correctly
 
 ---
 
-### 测试 7：日志行数限制
+## 🚀 Performance Test Checklist
 
-**测试步骤**：
-1. 长时间运行 NCF（或触发大量日志输出）
-2. 观察日志面板
+### Test 6: Massive log output
 
-**验证点**：
-- [ ] 日志不会无限增长
-- [ ] 旧日志被自动删除（保留最新 1000 行）
-- [ ] 内存占用稳定
+**Test scenario**: NCF will output a large number of logs (about 50-100) when it starts.
 
----
+**Verification Point**:
+- [ ] UI is not stuck, buttons are clickable
+- [ ] Log scrolling is smooth
+- [ ] CPU usage is normal (< 20%)
+- [ ] Memory usage is stable
 
-### 测试 8：快速启停测试
-
-**测试步骤**：
-1. 连续快速点击"启动"和"停止"按钮 5-10 次
-2. 观察应用状态
-
-**验证点**：
-- [ ] 应用不崩溃
-- [ ] 无内存泄漏
-- [ ] 日志显示正常
-- [ ] 没有"幽灵进程"（已停止但仍在日志输出）
+**Performance Benchmark**:
+- Normal log output (< 100 entries/second): UI should be completely smooth
+- If you find lag, please report the specific scenario
 
 ---
 
-## 🔍 边界条件测试
+### Test 7: Log line limit
 
-### 测试 9：回退启动场景
+**Test steps**:
+1. Run NCF for a long time (or trigger large amounts of log output)
+2. Observe the log panel
 
-**背景**：NCF 有三个启动分支（自包含 → 回退 → 二次回退）
-
-**测试步骤**：
-1. 删除或重命名 `Senparc.Web.exe`（Windows）或 `Senparc.Web`（macOS/Linux）
-2. 确保存在 `Senparc.Web.dll`
-3. 启动 NCF
-
-**预期结果**：
-- [ ] 应用自动回退到 `dotnet` 方式启动
-- [ ] 日志显示"回退到 dotnet 方式"
-- [ ] CLI 输出仍然正常捕获
-- [ ] 功能完全正常
+**Verification Point**:
+- [ ] The log will not grow indefinitely
+- [ ] Old logs are automatically deleted (retaining the latest 1000 lines)
+- [ ] Memory usage is stable
 
 ---
 
-### 测试 10：跨平台测试
+### Test 8: Quick start and stop test
+
+**Test steps**:
+1. Click the "Start" and "Stop" buttons quickly and continuously 5-10 times
+2. Observe application status
+
+**Verification Point**:
+- [ ] App does not crash
+- [ ] No memory leaks
+- [ ] Log display is normal
+- [ ] No "ghost processes" (stopped but still logging output)
+
+---
+
+## 🔍 Boundary condition testing
+
+### Test 9: Fallback startup scenario
+
+**Background**: NCF has three startup branches (self-contained → rollback → secondary rollback)
+
+**Test steps**:
+1. Delete or rename`Senparc.Web.exe`(Windows) or`Senparc.Web`（macOS/Linux）
+2. Make sure it exists`Senparc.Web.dll`
+3. Start NCF
+
+**Expected results**:
+- [ ] Application automatically falls back to`dotnet`mode start
+- [ ] Log shows "fallback to dotnet mode"
+- [ ] CLI output is still captured normally
+- [ ] fully functional
+
+---
+
+### Test 10: Cross-platform testing
 
 **Windows**：
-- [ ] 所有基本功能正常
-- [ ] 中文显示正常
-- [ ] 使用 `taskkill` 停止进程
+- [ ] All basic functions are normal
+- [ ] Chinese display is normal
+- [ ] use`taskkill`Stop process
 
 **macOS**：
-- [ ] 所有基本功能正常
-- [ ] 自包含可执行文件启动正常
-- [ ] 回退启动正常
+- [ ] All basic functions are normal
+- [ ] Self-contained executables start normally
+- [ ] Rollback starts normally
 
-**Linux**（如果支持）：
-- [ ] 所有基本功能正常
-- [ ] 权限处理正确
+**Linux** (if supported):
+- [ ] All basic functions are normal
+- [ ] Permissions are handled correctly
 
 ---
 
-## 📊 测试结果记录
+## 📊 Test result record
 
-### 测试环境
+### Test environment
 
-- **操作系统**：_________________ （例如：Windows 11 / macOS 15 / Ubuntu 22.04）
-- **.NET 版本**：_________________ （例如：.NET 8.0.1）
-- **NCF 版本**：_________________ （例如：v2.3.0）
-- **测试日期**：_________________
+- **OS**:_______________ (Example: Windows 11/macOS 15/Ubuntu 22.04)
+- **.NET Version**:_______________ (Example: .NET 8.0.1)
+- **NCF Version**:_______________ (Example: v2.3.0)
+- **Test Date**:_______________
 
-### 测试结果汇总
+### Summary of test results
 
-| 测试项 | 状态 | 备注 |
+| Test items | state | Remark |
 |-------|------|------|
-| 1. 正常启动和日志显示 | ☐ 通过 ☐ 失败 |  |
-| 2. 中文日志显示 | ☐ 通过 ☐ 失败 |  |
-| 3. 错误输出捕获 | ☐ 通过 ☐ 失败 |  |
-| 4. 进程停止处理 | ☐ 通过 ☐ 失败 |  |
-| 5. 异常进程退出 | ☐ 通过 ☐ 失败 |  |
-| 6. 大量日志输出 | ☐ 通过 ☐ 失败 |  |
-| 7. 日志行数限制 | ☐ 通过 ☐ 失败 |  |
-| 8. 快速启停测试 | ☐ 通过 ☐ 失败 |  |
-| 9. 回退启动场景 | ☐ 通过 ☐ 失败 |  |
-| 10. 跨平台测试 | ☐ 通过 ☐ 失败 |  |
+| 1. Normal startup and log display | ☐ Pass ☐ Fail |  |
+| 2. Chinese log display | ☐ Pass ☐ Fail |  |
+| 3. Error output capture | ☐ Pass ☐ Fail |  |
+| 4. The process stops processing | ☐ Pass ☐ Fail |  |
+| 5. Abnormal process exits | ☐ Pass ☐ Fail |  |
+| 6. Massive log output | ☐ Pass ☐ Fail |  |
+| 7. Limit on the number of log lines | ☐ Pass ☐ Fail |  |
+| 8. Quick start and stop test | ☐ Pass ☐ Fail |  |
+| 9. Fallback startup scene | ☐ Pass ☐ Fail |  |
+| 10. Cross-platform testing | ☐ Pass ☐ Fail |  |
 
-### 发现的问题
+### Issues found
 
-**问题 1**：
-- **严重程度**：☐ 高 ☐ 中 ☐ 低
-- **描述**：
-- **复现步骤**：
-- **预期结果**：
-- **实际结果**：
+**Question 1**:
+- **Severity**: ☐ High ☐ Medium ☐ Low
+- **describe**:
+- **Reproduction Steps**:
+- **Expected results**:
+- **Actual results**:
 
-**问题 2**：
-_（如有更多问题，请继续添加）_
-
----
-
-## 🐛 已知限制和注意事项
-
-1. **日志时间戳**：
-   - CLI 日志的时间戳是 UI 接收到日志的时间
-   - 可能与 NCF 实际输出时间有微小延迟（< 1 秒）
-
-2. **日志顺序**：
-   - 在极高频输出下，stdout 和 stderr 的顺序可能与原始输出略有差异
-   - 这是操作系统进程机制的限制，不影响功能
-
-3. **性能考虑**：
-   - 当前实现适合正常使用场景（< 100 条/秒）
-   - 如果遇到极端高频输出导致卡顿，可以考虑批量更新优化
+**Question 2**:
+_(If you have more questions, please continue to add)_
 
 ---
 
-## 📞 问题反馈
+## 🐛 Known limitations and notes
 
-如果测试中发现问题，请提供以下信息：
+1. **Log timestamp**:
+- The timestamp of the CLI log is the time the UI received the log
+- There may be a slight delay (< 1 second) from the actual NCF output time
 
-1. **测试环境**：操作系统、.NET 版本
-2. **复现步骤**：详细的操作步骤
-3. **预期行为**：应该如何工作
-4. **实际行为**：实际发生了什么
-5. **日志截图**：如果可能，提供日志截图
-6. **错误信息**：完整的错误消息或堆栈跟踪
+2. **Log order**:
+- At very high frequency output, the order of stdout and stderr may differ slightly from the original output
+- This is a limitation of the operating system process mechanism and does not affect functionality
 
----
-
-## ✅ 验收标准
-
-功能可以被认为是"完成"的标准：
-
-- ✅ 所有基本功能测试（测试 1-5）全部通过
-- ✅ 性能测试（测试 6-8）通过，无明显性能问题
-- ✅ 至少一个平台的跨平台测试通过
-- ✅ 中文显示正常，无乱码
-- ✅ 应用稳定，无崩溃
-
-可选增强（不强制）：
-- 日志过滤功能
-- 颜色区分 CLI 和应用日志
-- 日志搜索功能
+3. **Performance considerations**:
+- The current implementation is suitable for normal usage scenarios (< 100 items/second)
+- If you encounter extreme high-frequency output that causes lag, you can consider batch update optimization.
 
 ---
 
-**测试完成日期**：_________________  
-**测试人员**：_________________  
-**总体评价**：☐ 优秀 ☐ 良好 ☐ 需要改进
+## 📞Feedback
+
+If problems are found during testing, please provide the following information:
+
+1. **Test environment**: operating system, .NET version
+2. **Reproduction Steps**: Detailed steps
+3. **Expected Behavior**: How it should work
+4. **Actual Behavior**: What actually happened
+5. **Log screenshots**: If possible, provide log screenshots
+6. **Error message**: Complete error message or stack trace
+
+---
+
+## ✅ Acceptance Criteria
+
+Features can be considered "done" by the following criteria:
+
+- ✅ All basic functional tests (tests 1-5) passed
+- ✅ Performance test (Test 6-8) passed, no obvious performance issues
+- ✅ Cross-platform test passed on at least one platform
+- ✅ Chinese display is normal, no garbled characters
+- ✅ The application is stable and has no crashes
+
+Optional enhancements (not mandatory):
+- Log filtering function
+- Color-coded CLI and application logs
+- Log search function
+
+---
+
+**Test Completion Date**:_______________
+**Tester**:_______________
+**Overall rating**: ☐ Excellent ☐ Good ☐ Needs improvement
 

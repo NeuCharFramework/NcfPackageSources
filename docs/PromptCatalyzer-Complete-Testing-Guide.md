@@ -1,35 +1,35 @@
-# PromptCatalyzer - 完整功能测试指南
+# PromptCatalyzer - A Complete Guide to Functional Testing
 
-## 🎯 本次更新内容
+## 🎯 Contents of this update
 
-根据用户提醒，完善了 PromptCatalyzer 的以下功能：
+According to user reminders, the following functions of PromptCatalyzer have been improved:
 
-### ✅ 已完成功能
-1. **ChatGroup 自动创建**：初始化时创建 `PromptCatalyzer-OptimizationGroup`
-2. **角色设置**：Admin 和 Enter 都设为同一个 Agent（PromptCatalyzer）
-3. **ChatTask 记录**：每次优化都创建任务记录，便于追踪
-4. **真实 AI 优化**：调用 Semantic Kernel 进行 Prompt 优化（不是模拟）
-5. **AI 生成标记**：所有 AI 生成的 Prompt 在 Note 字段标记 `🤖AI-Generated`
-6. **参数优化**：AI 会根据用户需求优化 Temperature、TopP、MaxTokens 等参数
-7. **预测评分**：AI 会预测优化后的效果评分（0-1 范围）
+### ✅ Function completed
+1. **ChatGroup automatically created**: created during initialization`PromptCatalyzer-OptimizationGroup`
+2. **Role Settings**: Admin and Enter are both set to the same Agent (PromptCatalyzer)
+3. **ChatTask Record**: Create a task record for each optimization for easy tracking
+4. **Real AI Optimization**: Call Semantic Kernel for Prompt optimization (not simulation)
+5. **AI generated mark**: All AI generated prompts are marked in the Note field`🤖AI-Generated`
+6. **Parameter optimization**: AI will optimize parameters such as Temperature, TopP, and MaxTokens according to user needs
+7. **Predicted score**: AI will predict the optimized performance score (0-1 range)
 
-### 📝 新增/修改文件
-1. **新增**：`src/Extensions/Senparc.Xncf.AgentsManager/Application/EventHandlers/PromptOptimizationChatTaskHandler.cs`
-   - 包含 2 个 EventHandler
-2. **重构**：`src/Extensions/Senparc.Xncf.PromptRange/Application/EventHandlers/PromptOptimizationRequestHandler.cs`
-   - 从模拟优化改为真实 AI 优化
-3. **完善**：`src/Extensions/Senparc.Xncf.AgentsManager/Domain/Services/PromptOptimizationService.cs`
-   - 添加 ChatGroup 创建逻辑（步骤4/4）
-4. **新增**：`docs/PromptCatalyzer-ChatGroup-Integration.md`
-   - 完整架构和流程文档
+### 📝 Add/modify files
+1. **New**:`src/Extensions/Senparc.Xncf.AgentsManager/Application/EventHandlers/PromptOptimizationChatTaskHandler.cs`
+- Contains 2 EventHandlers
+2. **Refactor**:`src/Extensions/Senparc.Xncf.PromptRange/Application/EventHandlers/PromptOptimizationRequestHandler.cs`
+- Changed from simulation optimization to real AI optimization
+3. **Improvement**:`src/Extensions/Senparc.Xncf.AgentsManager/Domain/Services/PromptOptimizationService.cs`
+- Add ChatGroup creation logic (step 4/4)
+4. **New**:`docs/PromptCatalyzer-ChatGroup-Integration.md`
+- Complete architecture and process documentation
 
 ---
 
-## 🧪 测试前准备
+## 🧪 Preparation before test
 
-### 1. 清理旧数据（推荐）
+### 1. Clean old data (recommended)
 
-如果之前已经创建过 PromptCatalyzer 相关数据，建议先清理：
+If PromptCatalyzer related data has been created before, it is recommended to clean it first:
 
 ```sql
 -- 清理旧的 ChatTask
@@ -59,7 +59,7 @@ DELETE FROM Senparc_PromptRange_PromptRange
 WHERE NickName = 'PromptCatalyzer';
 ```
 
-### 2. 重启应用
+### 2. Restart the application
 
 ```bash
 # 停止当前应用（Ctrl+C 或 Command+C）
@@ -68,39 +68,39 @@ cd tools/NcfSimulatedSite/Senparc.Web
 dotnet run
 ```
 
-### 3. 强制刷新浏览器
+### 3. Force refresh the browser
 
-- **Windows**: `Ctrl + Shift + R` 或 `Ctrl + F5`
-- **Mac**: `Command + Shift + R` 或 `Command + Option + R`
+- **Windows**: `Ctrl + Shift + R`or`Ctrl + F5`
+- **Mac**: `Command + Shift + R`or`Command + Option + R`
 
 ---
 
-## 📋 完整测试流程
+## 📋 Complete testing process
 
-### 第一部分：初始化测试
+### Part One: Initialization Test
 
-#### Step 1: 打开 PromptRange 页面
-1. 访问：`http://localhost:5000/Admin/PromptRange/Prompt`
-2. 确认页面正常加载，没有 JavaScript 错误
+#### Step 1: Open the PromptRange page
+1. Visit:`http://localhost:5000/Admin/PromptRange/Prompt`
+2. Confirm that the page loads normally and there are no JavaScript errors.
 
-#### Step 2: 选择一个 Prompt
-1. 在 Prompt 列表中选择任意一个 Prompt
-2. 确认右侧详情面板正常显示
+#### Step 2: Select a Prompt
+1. Select any prompt in the prompt list
+2. Confirm that the details panel on the right is displayed normally
 
-#### Step 3: 触发初始化
-1. 点击"优化"按钮
-2. **预期结果**：弹出初始化对话框
-   - 标题："初始化 PromptCatalyzer"
-   - 显示：选择 AI Model 的下拉框
-   - 显示：Model 数量（例如："找到 17 个可用的 AI Model"）
+#### Step 3: Trigger initialization
+1. Click the "Optimize" button
+2. **Expected results**: Pop-up initialization dialog box
+- Title: "Initializing PromptCatalyzer"
+- Display: drop-down box for selecting AI Model
+- Display: Number of Models (for example: "Found 17 available AI Models")
 
-#### Step 4: 选择 Model 并初始化
-1. 在下拉框中选择一个 Chat 类型的 Model
-2. 点击"开始初始化"按钮
-3. **预期结果**：显示 Loading 状态："初始化中，请稍候..."
+#### Step 4: Select Model and initialize
+1. Select a Chat type Model in the drop-down box
+2. Click the "Start Initialization" button
+3. **Expected results**: Display Loading status: "Initializing, please wait..."
 
-#### Step 5: 观察控制台日志
-在后端控制台中，应该看到以下日志（按顺序）：
+#### Step 5: Observe the console log
+In the backend console, you should see the following logs (in order):
 
 ```
 ========== EnsureInitializedAsync 开始 ==========
@@ -129,12 +129,12 @@ dotnet run
 ========== EnsureInitializedAsync 完成 ==========
 ```
 
-#### Step 6: 验证前端
-1. Loading 状态消失
-2. 弹出成功消息："✅ 初始化成功！"
-3. 对话框自动关闭
+#### Step 6: Verify front-end
+1. Loading status disappears
+2. A success message pops up: "✅ Initialization successful!"
+3. The dialog box closes automatically
 
-#### Step 7: 验证数据库
+#### Step 7: Verify database
 
 ```sql
 -- 1. 检查 PromptRange 是否创建
@@ -167,37 +167,37 @@ FROM Senparc_AgentsManager_ChatGroup
 WHERE Name = 'PromptCatalyzer-OptimizationGroup';
 ```
 
-**预期结果**：
-- PromptRange: 1 条记录
-- PromptItem: 1 条记录（Note='AI-Catalyzer'）
-- AgentTemplate: 1 条记录
-- ChatGroup: 1 条记录，`AdminAgentTemplateId = EnterAgentTemplateId`
+**Expected results**:
+- PromptRange: 1 record
+- PromptItem: 1 record (Note='AI-Catalyzer')
+-AgentTemplate: 1 record
+- ChatGroup: 1 record,`AdminAgentTemplateId = EnterAgentTemplateId`
 
 ---
 
-### 第二部分：优化功能测试
+### Part 2: Optimizing Functional Testing
 
-#### Step 1: 再次点击"优化"
-1. 在 PromptRange 页面选择任意一个 Prompt
-2. 点击"优化"按钮
-3. **预期结果**：直接打开优化对话框（不再显示初始化对话框）
-   - 标题："优化 Prompt"
-   - 显示：当前 Prompt 的信息
-   - 显示：输入框让用户输入优化需求
+#### Step 1: Click "Optimize" again
+1. Select any prompt on the PromptRange page
+2. Click the "Optimize" button
+3. **Expected results**: Open the optimization dialog box directly (the initialization dialog box will no longer be displayed)
+- Title: "Optimization Prompt"
+- Display: current Prompt information
+- Display: Input box allows users to enter optimization requirements
 
-#### Step 2: 输入优化需求
-在输入框中输入需求，例如：
+#### Step 2: Enter optimization requirements
+Enter your requirements in the input box, for example:
 ```
 让这个 Prompt 更加专业和详细，增强逻辑性和清晰度
 ```
 
-#### Step 3: 开始优化
-1. 点击"开始优化"按钮
-2. **预期结果**：显示 Loading 状态："优化中，请稍候..."
+#### Step 3: Start optimizing
+1. Click the "Start Optimization" button
+2. **Expected results**: Display Loading status: "Optimizing, please wait..."
 
-#### Step 4: 观察控制台日志（关键！）
+#### Step 4: Observe the console log (key!)
 
-**【并行日志1】PromptOptimizationChatTaskHandler**：
+**[Parallel Log 1] PromptOptimizationChatTaskHandler**:
 ```
 ========== PromptOptimizationChatTaskHandler 开始 ==========
   RequestId: xxxx
@@ -210,7 +210,7 @@ WHERE Name = 'PromptCatalyzer-OptimizationGroup';
 ========== PromptOptimizationChatTaskHandler 完成 ==========
 ```
 
-**【并行日志2】PromptOptimizationRequestHandler**：
+**[Parallel Log 2] PromptOptimizationRequestHandler**:
 ```
 ========== PromptOptimizationRequestHandler 开始 ==========
   RequestId: xxxx
@@ -229,7 +229,7 @@ WHERE Name = 'PromptCatalyzer-OptimizationGroup';
 ========== PromptOptimizationRequestHandler 完成 ==========
 ```
 
-**【后续日志】PromptOptimizationTaskCompletionHandler**：
+**[Follow-up log] PromptOptimizationTaskCompletionHandler**:
 ```
 ========== PromptOptimizationTaskCompletionHandler 开始 ==========
   RequestId: xxxx, Success: True
@@ -238,8 +238,8 @@ WHERE Name = 'PromptCatalyzer-OptimizationGroup';
 ========== PromptOptimizationTaskCompletionHandler 完成 ==========
 ```
 
-#### Step 5: 验证前端显示
-Loading 消失后，应该显示：
+#### Step 5: Verify front-end display
+After Loading disappears, it should show:
 
 ```
 ✅ 优化成功！
@@ -255,13 +255,13 @@ Loading 消失后，应该显示：
 💡 优化说明: [AI 返回的优化理由]
 ```
 
-#### Step 6: 验证 Prompt 列表刷新
-1. 对话框自动关闭
-2. Prompt 列表自动刷新
-3. 新创建的 Prompt 应该自动被选中
-4. **注意**：新 Prompt 的 Note 应该显示 `🤖AI-Generated` 标记
+#### Step 6: Verify Prompt list refresh
+1. The dialog box closes automatically
+2. Prompt list automatically refreshed
+3. The newly created Prompt should be automatically selected
+4. **Note**: The Note for the new Prompt should be displayed`🤖AI-Generated`mark
 
-#### Step 7: 验证数据库
+#### Step 7: Verify database
 
 ```sql
 -- 1. 检查 ChatTask 是否创建
@@ -327,11 +327,11 @@ ORDER BY AddTime ASC;
 
 ---
 
-## 🔍 详细验证项
+## 🔍 Detailed verification items
 
-### A. 初始化流程验证
+### A. Initialization process verification
 
-#### ✅ Agent 创建正确
+#### ✅ Agent created correctly
 ```sql
 SELECT 
     Id, 
@@ -346,13 +346,13 @@ FROM Senparc_AgentsManager_AgentTemplate
 WHERE Name = 'PromptCatalyzer';
 ```
 
-**预期**：
+**expected**:
 - `Enable`: `true`
-- `SystemMessage`: 等于 `PromptCode`（例如 "2026.03.24.1-T1-A1"）
-- `Description`: "自动优化 Prompt 内容和参数（Temperature 等）的 AI Agent"
-- `FunctionCallNames`: `NULL`（当前不使用 function-calling）
+- `SystemMessage`: equal to`PromptCode`(For example "2026.03.24.1-T1-A1")
+- `Description`: "AI Agent that automatically optimizes Prompt content and parameters (Temperature, etc.)"
+- `FunctionCallNames`: `NULL`(function-calling is not currently used)
 
-#### ✅ ChatGroup 角色设置正确
+#### ✅ ChatGroup role is set correctly
 ```sql
 SELECT 
     CG.Id, 
@@ -371,14 +371,14 @@ LEFT JOIN Senparc_AgentsManager_AgentTemplate AT2 ON CG.EnterAgentTemplateId = A
 WHERE CG.Name = 'PromptCatalyzer-OptimizationGroup';
 ```
 
-**预期**：
+**expected**:
 - `AdminAgentTemplateId` = `EnterAgentTemplateId`
 - `AdminAgentName` = `EnterAgentName` = "PromptCatalyzer"
-- `RoleCheck`: "✅ 相同"
+- `RoleCheck`: "✅ Same"
 
-### B. 优化流程验证
+### B. Optimize process verification
 
-#### ✅ ChatTask 正确创建和完成
+#### ✅ ChatTask created and completed correctly
 ```sql
 SELECT 
     CT.Id, 
@@ -403,12 +403,12 @@ WHERE CT.Name LIKE 'Prompt优化-%'
 ORDER BY CT.AddTime DESC;
 ```
 
-**预期**：
+**expected**:
 - `Status`: `3` (Finished)
-- `PromptCommand`: 用户输入的优化需求
-- `ChatGroupId`: 指向 PromptCatalyzer ChatGroup
+- `PromptCommand`: Optimization requirements input by users
+- `ChatGroupId`: points to PromptCatalyzer ChatGroup
 
-#### ✅ AI 生成的 Prompt 标记正确
+#### ✅ The Prompt tag generated by AI is correct
 ```sql
 SELECT 
     PI.Id,
@@ -425,12 +425,12 @@ WHERE PI.Note = '🤖AI-Generated'
 ORDER BY PI.AddTime DESC;
 ```
 
-**预期**：
+**expected**:
 - `Note`: `🤖AI-Generated`
 - `IsDraft`: `0` (false)
-- 参数（Temperature, TopP, MaxToken）可能与原版本不同
+- Parameters (Temperature, TopP, MaxToken) may be different from the original version
 
-#### ✅ 版本树完整性
+#### ✅ Version tree integrity
 ```sql
 -- 查看 PromptCatalyzer Range 的完整版本树
 SELECT 
@@ -451,151 +451,151 @@ WHERE PI.RangeId = (SELECT Id FROM Senparc_PromptRange_PromptRange WHERE NickNam
 ORDER BY PI.AddTime ASC;
 ```
 
-**预期**：
-- 第一个版本：Note='AI-Catalyzer'（初始化时创建）
-- 后续版本：Note='🤖AI-Generated'（AI 优化生成）
+**expected**:
+- First version: Note='AI-Catalyzer' (created during initialization)
+- Subsequent versions: Note='🤖AI-Generated' (AI optimized generation)
 
 ---
 
-## 🎬 完整测试场景
+## 🎬 Complete test scenario
 
-### 场景1：首次使用（初始化 + 优化）
-1. ✅ 打开 PromptRange 页面
-2. ✅ 选择一个 Prompt
-3. ✅ 点击"优化" → 显示初始化对话框
-4. ✅ 选择 Model → 点击"开始初始化" → 初始化成功
-5. ✅ 再次点击"优化" → 直接打开优化对话框
-6. ✅ 输入需求 → 点击"开始优化" → 优化成功
-7. ✅ 验证数据库：ChatGroup、ChatTask、新 PromptItem 都正确
+### Scenario 1: First use (initialization + optimization)
+1. ✅ Open the PromptRange page
+2. ✅ Choose a Prompt
+3. ✅ Click "Optimize" → Display initialization dialog box
+4. ✅ Select Model → Click "Start Initialization" → Initialization successful
+5. ✅ Click "Optimize" again → directly open the optimization dialog box
+6. ✅ Enter the requirements → click "Start Optimization" → Optimization successful
+7. ✅ Verify database: ChatGroup, ChatTask, and new PromptItem are all correct
 
-### 场景2：多次优化（迭代）
-1. ✅ 选择一个 Prompt
-2. ✅ 点击"优化" → 输入需求 → 优化成功
-3. ✅ 选择新生成的 Prompt（带 🤖 标记）
-4. ✅ 再次点击"优化" → 输入新需求 → 优化成功
-5. ✅ 验证数据库：多个 ChatTask 记录，多个 AI 生成的 PromptItem
+### Scenario 2: Multiple optimization (iteration)
+1. ✅ Choose a Prompt
+2. ✅ Click "Optimize" → Enter requirements → Optimization successful
+3. ✅ Select the newly generated Prompt (marked with 🤖)
+4. ✅ Click "Optimize" again → Enter new requirements → Optimization successful
+5. ✅ Verification database: multiple ChatTask records, multiple AI-generated PromptItems
 
-### 场景3：不同 Prompt 的优化
-1. ✅ 选择 Prompt A → 优化 → 成功
-2. ✅ 选择 Prompt B → 优化 → 成功
-3. ✅ 验证数据库：两个不同的 ChatTask，两个不同的新 PromptItem
-
----
-
-## 🚨 常见问题排查
-
-### Q1: 初始化对话框不弹出
-**可能原因**：
-- PromptCatalyzer Agent 已存在
-- 检查：`SELECT * FROM Senparc_AgentsManager_AgentTemplate WHERE Name = 'PromptCatalyzer'`
-- **解决**：删除旧数据，重新测试
-
-### Q2: 初始化一直卡在"初始化中"
-**可能原因**：
-- EventHandler 未注册
-- PromptInitResponseHandler 未触发
-**排查**：
-1. 检查启动日志：是否有 "EventBus 扫描程序集" 输出
-2. 检查是否扫描到 `Senparc.Xncf.PromptRange` 和 `Senparc.Xncf.AgentsManager`
-3. 重启应用，确保 `AddSenparcEventBus()` 在 `StartWebEngine()` 之后调用
-
-### Q3: 优化时返回 404 错误
-**可能原因**：
-- `PromptOptimizationController` 未注册
-**排查**：
-1. 确认文件存在：`src/Extensions/Senparc.Xncf.AgentsManager/OHS/Remote/Controllers/PromptOptimizationController.cs`
-2. 重启应用
-3. 检查路由：`http://localhost:5000/api/Senparc.Xncf.AgentsManager/PromptOptimizationAppService/OptimizeAsync`
-
-### Q4: ChatTask 未创建
-**可能原因**：
-- PromptOptimizationChatTaskHandler 未注册
-- ChatGroup 不存在
-**排查**：
-1. 检查 ChatGroup：`SELECT * FROM Senparc_AgentsManager_ChatGroup WHERE Name = 'PromptCatalyzer-OptimizationGroup'`
-2. 如果不存在，删除 PromptCatalyzer Agent，重新初始化
-3. 检查控制台日志中是否有 "PromptOptimizationChatTaskHandler" 相关输出
-
-### Q5: AI 优化内容不正确或参数没变化
-**可能原因**：
-- AI Model 配置不当
-- 优化 Prompt 设计问题
-**排查**：
-1. 检查 AI 返回的原始 JSON（控制台日志中有前200字符）
-2. 尝试不同的优化需求描述
-3. 尝试更换不同的 AI Model
-
-### Q6: 新 PromptItem 的 Note 不是 "🤖AI-Generated"
-**可能原因**：
-- PromptOptimizationRequestHandler 代码问题
-**排查**：
-1. 检查代码：`PromptOptimizationRequestHandler.cs` 第 162 行
-2. 应该是：`Note = "🤖AI-Generated"`
+### Scenario 3: Optimization of different prompts
+1. ✅ Select Prompt A → Optimize → Success
+2. ✅ Select Prompt B → Optimize → Success
+3. ✅ Authentication database: two different ChatTasks, two different new PromptItems
 
 ---
 
-## 📊 性能和并发测试（可选）
+## 🚨 FAQ Troubleshooting
 
-### 并发优化测试
-1. 打开多个浏览器标签页
-2. 同时点击"优化"按钮
-3. 观察是否会出现数据冲突或错误
-4. 验证每个请求都有对应的 ChatTask 和新 PromptItem
+### Q1: The initialization dialog box does not pop up
+**Possible reasons**:
+- PromptCatalyzer Agent already exists
+- examine:`SELECT * FROM Senparc_AgentsManager_AgentTemplate WHERE Name = 'PromptCatalyzer'`
+- **Solution**: Delete old data and retest
 
-**预期**：
-- ✅ EventBus 支持并发，不会阻塞
-- ✅ TaskCompletionSource 通过 RequestId 精确匹配响应
-- ⚠️ ChatTask 状态更新通过名称匹配，可能有极小概率误匹配
+### Q2: Initialization has been stuck in "Initializing"
+**Possible reasons**:
+- EventHandler is not registered
+- PromptInitResponseHandler is not triggered
+**Troubleshooting**:
+1. Check the startup log: whether there is "EventBus Scan Assembly" output
+2. Check whether the scanned`Senparc.Xncf.PromptRange`and`Senparc.Xncf.AgentsManager`
+3. Restart the application and make sure`AddSenparcEventBus()`exist`StartWebEngine()`call after
+
+### Q3: 404 error returned during optimization
+**Possible reasons**:
+- `PromptOptimizationController`Not registered
+**Troubleshooting**:
+1. Confirm that the file exists:`src/Extensions/Senparc.Xncf.AgentsManager/OHS/Remote/Controllers/PromptOptimizationController.cs`
+2. Restart the application
+3. Check routing:`http://localhost:5000/api/Senparc.Xncf.AgentsManager/PromptOptimizationAppService/OptimizeAsync`
+
+### Q4: ChatTask not created
+**Possible reasons**:
+- PromptOptimizationChatTaskHandler is not registered
+- ChatGroup does not exist
+**Troubleshooting**:
+1. Check the ChatGroup:`SELECT * FROM Senparc_AgentsManager_ChatGroup WHERE Name = 'PromptCatalyzer-OptimizationGroup'`
+2. If it does not exist, delete the PromptCatalyzer Agent and reinitialize it.
+3. Check whether there is "PromptOptimizationChatTaskHandler" related output in the console log
+
+### Q5: The AI ​​optimization content is incorrect or the parameters have not changed
+**Possible reasons**:
+- AI Model is not configured properly
+- Optimize Prompt design issues
+**Troubleshooting**:
+1. Check the raw JSON returned by AI (the first 200 characters are in the console log)
+2. Try different optimization requirements descriptions
+3. Try changing to a different AI Model
+
+### Q6: The Note of the new PromptItem is not "🤖AI-Generated"
+**Possible reasons**:
+- PromptOptimizationRequestHandler code problem
+**Troubleshooting**:
+1. Check the code:`PromptOptimizationRequestHandler.cs`Line 162
+2. Should be:`Note = "🤖AI-Generated"`
 
 ---
 
-## 🎯 成功指标总结
+## 📊 Performance and concurrency testing (optional)
 
-### 初始化成功（4个✅）
-- ✅ PromptRange 创建
-- ✅ PromptItem 创建（Note='AI-Catalyzer'）
-- ✅ AgentTemplate 创建（Name='PromptCatalyzer'）
-- ✅ ChatGroup 创建（Admin = Enter = PromptCatalyzer Agent）
+### Concurrency optimization test
+1. Open multiple browser tabs
+2. Click the "Optimize" button at the same time
+3. Observe whether data conflicts or errors occur
+4. Verify that each request has a corresponding ChatTask and new PromptItem
 
-### 优化成功（5个✅）
-- ✅ ChatTask 创建（Status: Chatting → Finished）
-- ✅ AI 调用成功（控制台有 AI 返回日志）
-- ✅ 新 PromptItem 创建（Note='🤖AI-Generated'）
-- ✅ 前端显示优化结果（新版本号、评分、参数变化）
-- ✅ Prompt 列表自动刷新并切换到新版本
+**expected**:
+- ✅ EventBus supports concurrency and will not block
+- ✅ TaskCompletionSource matches responses exactly by RequestId
+- ⚠️ ChatTask status updates are matched by name, and there may be a very small probability of mismatching
 
 ---
 
-## 📞 测试完成后的反馈
+## 🎯 Summary of success indicators
 
-请测试后反馈：
-1. **初始化是否成功**？
-   - ChatGroup 是否创建？
-   - Admin 和 Enter 是否是同一个 Agent？
-2. **优化是否成功**？
-   - ChatTask 是否创建？
-   - 新 PromptItem 是否标记 🤖AI-Generated？
-   - AI 返回的内容是否合理？
-3. **控制台日志**：
-   - 是否看到完整的步骤日志（1/4 到 4/4，1/5 到 5/5）？
-   - 是否有任何错误或警告？
-4. **数据库验证**：
-   - 各表的数据是否符合预期？
-   - 外键关系是否正确？
+### Initialization successful (4✅)
+- ✅ PromptRange created
+- ✅ PromptItem created (Note='AI-Catalyzer')
+- ✅ AgentTemplate created (Name='PromptCatalyzer')
+- ✅ ChatGroup creation (Admin = Enter = PromptCatalyzer Agent)
+
+### Optimization successful (5 ✅)
+- ✅ ChatTask created (Status: Chatting → Finished)
+- ✅ The AI ​​call is successful (the console has an AI return log)
+- ✅ New PromptItem created (Note='🤖AI-Generated')
+- ✅ The front end displays optimization results (new version number, ratings, parameter changes)
+- ✅ Prompt list automatically refreshes and switches to new version
 
 ---
 
-## 🔧 Function-Calling 扩展说明（可选）
+## 📞 Feedback after test completion
 
-### 当前架构
-- ✅ PromptCatalyzer Agent 的 `FunctionCallNames` 设为 `null`
-- ✅ 优化逻辑由 `PromptOptimizationRequestHandler` 处理
-- ✅ 流程清晰、性能好、易于调试
+Please give feedback after testing:
+1. **Was initialization successful**?
+- ChatGroup created?
+- Are Admin and Enter the same Agent?
+2. **Was the optimization successful**?
+- ChatTask created?
+- Is the new PromptItem marked 🤖AI-Generated?
+- Is the content returned by the AI ​​reasonable?
+3. **Console log**:
+- Do you see the full step log (1/4 to 4/4, 1/5 to 5/5)?
+- Are there any errors or warnings?
+4. **Database Verification**:
+-Does the data in each table meet expectations?
+- Are the foreign key relationships correct?
 
-### 可选扩展（未来）
-如果需要让 Agent 自主调用优化能力，可以：
+---
 
-**1. 修改初始化逻辑**：
+## 🔧 Function-Calling extension description (optional)
+
+### Current architecture
+- ✅ PromptCatalyzer Agent`FunctionCallNames`set to`null`
+- ✅ Optimized logic by`PromptOptimizationRequestHandler`deal with
+- ✅ Clear process, good performance, easy to debug
+
+### Optional extensions (future)
+If you need to let the Agent invoke optimization capabilities independently, you can:
+
+**1. Modify initialization logic**:
 ```csharp
 // PromptOptimizationService.cs
 var newAgent = new AgentTemplate(
@@ -606,63 +606,63 @@ var newAgent = new AgentTemplate(
 );
 ```
 
-**2. Agent 可通过 function-calling 调用**：
+**2. Agent can be called through function-calling**:
 ```csharp
 // Agent 自主决策
 "I need to optimize this prompt, let me call OptimizePrompt function..."
 // 调用 PromptCatalyzerPlugin.OptimizePrompt()
 ```
 
-**3. 实现场景**：
-- 自主迭代优化：Agent 根据评分决定是否继续优化
-- 智能批量优化：Agent 自动优化多个 Prompt
-- 多 Agent 协作：多个 Agent 各自负责不同方面的优化
+**3. Implementation scenario**:
+- Autonomous iterative optimization: Agent decides whether to continue optimization based on scores
+- Intelligent batch optimization: Agent automatically optimizes multiple prompts
+-Multi-Agent collaboration: Multiple Agents are each responsible for different aspects of optimization
 
-**注意**：
-- Function-calling 会增加一层 LLM 调用，可能增加延迟
-- 需要确保 Plugin 在 AIPluginHub 中正确注册
-- 需要测试 function-calling 的稳定性
-
----
-
-## 📁 相关文档
-
-- 📄 [PromptCatalyzer-ChatGroup-Integration.md](./PromptCatalyzer-ChatGroup-Integration.md) - 完整架构和流程
-- 📄 [PromptCatalyzer-Complete-Fix-Summary.md](./PromptCatalyzer-Complete-Fix-Summary.md) - 之前的修复总结
-- 📄 [EventBus-Handler-Registration-Fix.md](./EventBus-Handler-Registration-Fix.md) - EventBus 注册修复
+**Notice**:
+- Function-calling will add a layer of LLM calls, which may increase latency
+- Need to ensure that the Plugin is correctly registered in AIPluginHub
+- Need to test the stability of function-calling
 
 ---
 
-## ✨ 特别说明
+## 📁 Related documents
 
-### AI 生成标记的用途
-1. **UI 区分**：用户可以清楚地知道哪些 Prompt 是 AI 生成的
-2. **审计追踪**：便于统计 AI 优化的效果和使用频率
-3. **数据分析**：可以对比 AI 生成和人工创建的 Prompt 的效果
-4. **版本管理**：清晰的版本来源标记
-
-### ChatGroup 和 ChatTask 的价值
-1. **任务追踪**：每次优化都有完整的任务记录
-2. **审计日志**：记录用户的优化需求和执行时间
-3. **性能监控**：可以统计优化任务的平均耗时
-4. **扩展性**：为未来的多 Agent 协作优化打下基础
+- 📄 [PromptCatalyzer-ChatGroup-Integration.md](./PromptCatalyzer-ChatGroup-Integration.md) - Complete architecture and process
+- 📄 [PromptCatalyzer-Complete-Fix-Summary.md](./PromptCatalyzer-Complete-Fix-Summary.md) - Summary of previous fixes
+- 📄 [EventBus-Handler-Registration-Fix.md](./EventBus-Handler-Registration-Fix.md) - EventBus registration fix
 
 ---
 
-## 🎉 测试成功标志
+## ✨ Special instructions
 
-当以下所有项都完成时，说明功能完全正常：
+### The purpose of AI generated tags
+1. **UI distinction**: Users can clearly know which prompts are generated by AI
+2. **Audit Trail**: Convenient to count the effect and frequency of use of AI optimization
+3. **Data Analysis**: You can compare the effects of AI-generated and manually created prompts
+4. **Version Management**: Clear version source marking
 
-- ✅ 初始化时创建了 4 个数据库记录（PromptRange, PromptItem, Agent, ChatGroup）
-- ✅ ChatGroup 的 Admin 和 Enter 都指向同一个 Agent
-- ✅ 优化时创建了 ChatTask 记录
-- ✅ ChatTask 状态从 Chatting 变为 Finished
-- ✅ 创建了新的 PromptItem，标记为 🤖AI-Generated
-- ✅ AI 返回了合理的优化内容和参数建议
-- ✅ 前端正确显示优化结果（新版本号、评分、参数变化）
-- ✅ 控制台日志完整显示所有步骤
+### Value of ChatGroup and ChatTask
+1. **Task Tracking**: Each optimization has a complete task record
+2. **Audit Log**: Record the user’s optimization needs and execution time
+3. **Performance Monitoring**: You can count the average time spent on optimization tasks
+4. **Scalability**: Laying the foundation for future multi-Agent collaboration optimization
 
-测试完成后，请提供反馈，特别是：
-1. 是否有任何错误或异常？
-2. AI 优化的内容是否合理？
-3. 是否有性能问题（例如优化时间过长）？
+---
+
+## 🎉 Test success flag
+
+Functionality is fully functional when all of the following items are complete:
+
+- ✅ 4 database records (PromptRange, PromptItem, Agent, ChatGroup) were created during initialization
+- ✅ ChatGroup's Admin and Enter both point to the same Agent
+- ✅ ChatTask records created during optimization
+- ✅ ChatTask status changes from Chatting to Finished
+- ✅ New PromptItem created, labeled 🤖AI-Generated
+- ✅ AI returned reasonable optimization content and parameter suggestions
+- ✅ The front end correctly displays the optimization results (new version number, rating, parameter changes)
+- ✅ Console log shows all steps in full
+
+Once testing is complete, please provide feedback, specifically:
+1. Are there any errors or exceptions?
+2. Is the content optimized by AI reasonable?
+3. Are there any performance issues (such as optimization taking too long)?

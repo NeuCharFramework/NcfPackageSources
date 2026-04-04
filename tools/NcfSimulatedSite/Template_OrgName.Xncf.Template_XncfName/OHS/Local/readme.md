@@ -1,5 +1,5 @@
-﻿# Local分支  
+﻿# Local branch
   
-Local 分支主要负责处理系统内部各模块或领域之间的通信。它通过公开的接口来实现这些模块或领域之间的协作，从而确保它们之间的解耦和易于扩展。通常，Local分支在同一个系统或服务内实现，而不涉及跨系统或服务的通信。  
+The Local branch is mainly responsible for handling communication between various modules or areas within the system. It implements collaboration between these modules or areas through exposed interfaces, thereby ensuring decoupling and easy extension between them. Typically, Local branches are implemented within the same system or service and do not involve communication across systems or services.
 
-Local 中，`AppService` 负责处理模块之间的通信，并且 NCF 使用了 `动态 WebApi`，可以将 `AppService` 方法自动生成作为 WebApi 服务来使用，而无需在 `Remote` 分支中手动编写 WebApi 服务。
+In Local,`AppService`Responsible for handling communication between modules, and NCF uses`Dynamic WebApi`, can be`AppService`The method is automatically generated for use as a WebApi service without having to`Remote`Manually write the WebApi service in the branch.

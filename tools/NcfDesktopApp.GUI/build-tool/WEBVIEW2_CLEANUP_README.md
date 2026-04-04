@@ -1,36 +1,36 @@
-# WebView2 清理工具 - 快速指南
+# WebView2 Cleanup Tool - Quick Guide
 
-## 🎯 用途
+## 🎯 Purpose
 
-用于清理 WebView2 Runtime 的注册表项，以便测试 NCF Desktop App 的自动安装功能。
-
----
-
-## 📦 文件说明
-
-### `quick-clean-webview2.bat` ⭐ 推荐使用
-- **用途**: 批处理启动器，自动以正确的权限运行清理脚本
-- **使用方法**: 右键点击 → "以管理员身份运行"
-- **优点**: 简单方便，一键清理
-
-### `quick-clean-webview2.ps1` 🔧 核心脚本
-- **用途**: PowerShell 清理脚本（核心工具）
-- **使用方法**: 在管理员 PowerShell 中运行
-- **优点**: 输出详细，适合调试
+Used to clean up the registry keys for the WebView2 Runtime in order to test the automatic installation feature of the NCF Desktop App.
 
 ---
 
-## 🚀 快速使用
+## 📦 File Description
 
-### 最简单的方法（推荐）
+### `quick-clean-webview2.bat`⭐ Recommended
+- **PURPOSE**: Batch launcher to automatically run cleanup scripts with correct permissions
+- **How ​​to use**: Right click → "Run as administrator"
+- **Advantages**: Simple and convenient, one-click cleaning
 
-1. 找到 `quick-clean-webview2.bat`
-2. **右键点击** → 选择 **"以管理员身份运行"**
-3. 阅读提示，按任意键继续
-4. 等待清理完成
-5. 完成！
+### `quick-clean-webview2.ps1`🔧 Core script
+- **Use**: PowerShell cleanup script (core tool)
+- **How ​​to use**: Run in Administrator PowerShell
+- **Advantages**: Detailed output, suitable for debugging
 
-### PowerShell 方法（输出更详细）
+---
+
+## 🚀 Quick to use
+
+### The simplest method (recommended)
+
+1. find`quick-clean-webview2.bat`
+2. **Right click** → Select **"Run as administrator"**
+3. Read the prompts and press any key to continue
+4. Wait for the cleanup to complete
+5. Done!
+
+### PowerShell method (more detailed output)
 
 ```powershell
 # 1. 右键点击 PowerShell 图标 → "以管理员身份运行"
@@ -46,9 +46,9 @@ cd Y:\SenparcProjects\NeuCharFramework\NcfPackageSources\tools\NcfDesktopApp.GUI
 
 ---
 
-## ✅ 成功标志
+## ✅ Success sign
 
-清理成功后，你会看到：
+After successful cleaning, you will see:
 
 ```
 ========================================
@@ -62,45 +62,45 @@ Files:     ✅ Cleaned  (或 ⚠️ Still exist)
 🎉 SUCCESS: Ready to test!
 ```
 
-**重要**: 即使文件显示 `⚠️ Still exist`，也是成功的！我们的应用只检查注册表。
+**Important**: Even if the file displays`⚠️ Still exist`, is also successful! Our application only checks the registry.
 
 ---
 
-## 🔍 清理了什么？
+## 🔍 What to clean up?
 
-### 关键清理（CRITICAL - 必须成功）
-- ✅ **WebView2 注册表项**
+### CRITICAL - must succeed)
+- ✅ **WebView2 Registry Key**
   - `HKLM\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}`
-  - 这是应用检测 WebView2 的关键！
+- This is the key for your application to detect WebView2!
 
-### 可选清理（OPTIONAL - 可能失败）
-- 🗑️ **WebView2 安装文件**
+### Optional cleanup (OPTIONAL - may fail)
+- 🗑️ **WebView2 installation file**
   - `C:\Program Files (x86)\Microsoft\EdgeWebView\Application`
-  - 由于系统锁定，文件删除可能失败
-  - **不影响测试**
+- File deletion may fail due to system lockup
+- **Does not affect testing**
 
-### 进程清理
-- 🛑 停止所有 `msedgewebview2` 进程
-- 🛑 停止 Edge 更新服务（如果正在运行）
+### Process Cleanup
+- 🛑 Stop all`msedgewebview2`process
+- 🛑 Stop Edge update service if running
 
 ---
 
-## ⚠️ 常见问题
+## ⚠️ FAQ
 
-### Q: 为什么需要管理员权限？
-**A**: 删除 `HKLM` 注册表路径需要管理员权限。
+### Q: Why do I need administrator rights?
+**A**: Delete`HKLM`Registry path requires administrator rights.
 
-### Q: 文件删除失败，怎么办？
-**A**: **不用担心**！只要注册表清理成功，就可以测试了。应用通过注册表检测 WebView2，不检查文件。
+### Q: File deletion failed, what should I do?
+**A**: **Don’t worry**! As long as the registry cleaning is successful, you can test it. The application detects WebView2 through the registry and does not check files.
 
-### Q: 如何验证清理成功？
-**A**: 运行以下命令，应该返回 `False`：
+### Q: How to verify that the cleanup is successful?
+**A**: Run the following command and it should return`False`：
 ```powershell
 Test-Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
 ```
 
-### Q: 清理后如何测试？
-**A**: 在**普通** PowerShell 窗口（不需要管理员）中运行：
+### Q: How to test after cleaning?
+**A**: Run in a **normal** PowerShell window (no administrator required):
 ```powershell
 cd Y:\...\publish-self-contained\win-arm64-final
 .\NcfDesktopApp.GUI.exe
@@ -108,47 +108,47 @@ cd Y:\...\publish-self-contained\win-arm64-final
 
 ---
 
-## 📋 完整测试流程
+## 📋 Complete testing process
 
-1. **清理 WebView2**
+1. **Clean up WebView2**
    ```
-   右键 "quick-clean-webview2.bat" → "以管理员身份运行"
+Right click "quick-clean-webview2.bat" → "Run as administrator"
    ```
 
-2. **启动应用**（普通 PowerShell）
+2. **Start the application** (normal PowerShell)
    ```powershell
    cd Y:\...\publish-self-contained\win-arm64-final
    .\NcfDesktopApp.GUI.exe
    ```
 
-3. **观察日志**
-   - 应用会检测到 WebView2 未安装
-   - 自动下载并安装
-   - 显示进度百分比
-   - 安装完成后 WebView 正常工作
+3. **Observation log**
+- App will detect that WebView2 is not installed
+- Automatically download and install
+- Show progress percentage
+- WebView works normally after installation is complete
 
 ---
 
-## 📚 详细文档
+## 📚 Detailed documentation
 
-更详细的测试步骤和故障排查，请参考：
-- [`TESTING_GUIDE.md`](./TESTING_GUIDE.md) - 完整测试指南
-
----
-
-## 🔄 重复测试
-
-想再次测试自动安装？只需：
-
-1. 再次运行清理工具
-2. 重新启动应用
-3. 观察自动安装过程
-
-就这么简单！
+For more detailed testing steps and troubleshooting, please refer to:
+- [`TESTING_GUIDE.md`](./TESTING_GUIDE.md) - Complete Testing Guide
 
 ---
 
-**提示**: 清理工具不会影响 Edge 浏览器或其他应用的使用。
+## 🔄 Repeat test
 
-**最后更新**: 2025-11-14
+Want to test the automated installation again? Just:
+
+1. Run the cleaning tool again
+2. Restart the application
+3. Observe the automatic installation process
+
+It's that simple!
+
+---
+
+**Tip**: The cleanup tool will not affect the use of the Edge browser or other applications.
+
+**Last updated**: 2025-11-14
 

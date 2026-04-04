@@ -1,2 +1,2 @@
-﻿## 在开发环境更新数据库迁移文件（MySQL 为例）：
+﻿## Update the database migration file in the development environment (MySQL is used as an example):
 > dotnet ef migrations add TestEntites -c XncfBuilderSenparcEntities_MySql  --framework netcoreapp3.1

@@ -1,21 +1,21 @@
-# PromptRange 自动优化功能实施指南
+# PromptRange Automatic Optimization Function Implementation Guide
 
-## 📋 功能概述
+## 📋 Function Overview
 
-本文档详细说明了 PromptRange 模块中新增的 AI 自动优化功能，包括：
+This document details the new AI automatic optimization features in the PromptRange module, including:
 
-1. **自动检测 Prompt 和 Agent 是否已创建**
-2. **智能初始化流程**（首次使用时引导用户选择 AI Model）
-3. **基于打分的自动优化建议**
-4. **完整的优化工作流**
+1. **Automatically detect whether Prompt and Agent have been created**
+2. **Intelligent initialization process** (guide the user to select AI Model when using it for the first time)
+3. **Automatic optimization suggestions based on scoring**
+4. **Complete optimization workflow**
 
 ---
 
-## 🎯 核心功能
+## 🎯 Core Functions
 
-### 1. 初始化检测与引导
+### 1. Initialization detection and guidance
 
-当用户首次点击"优化"按钮时，系统会：
+When the user clicks the "Optimize" button for the first time, the system will:
 
 ```
 用户点击"优化" 
@@ -33,15 +33,15 @@
     └─ 直接打开优化对话框
 ```
 
-### 2. 基于打分的智能优化建议
+### 2. Intelligent optimization suggestions based on scoring
 
-系统会在以下场景自动提示用户进行优化：
+The system will automatically prompt users to optimize in the following scenarios:
 
-#### 场景 A：单次打分后的即时建议
-- **触发时机**：用户完成 AI 评分或手动评分后
-- **阈值**：分数 < 6.0 分
-- **提示方式**：弹出确认对话框，用户可选择"立即优化"或"暂不优化"
-- **用户体验**：阻塞式提示，引导用户立即采取行动
+#### Scenario A: Instant suggestions after a single score
+- **Trigger timing**: After the user completes AI scoring or manual scoring
+- **Threshold**: score < 6.0 points
+- **Prompt method**: A confirmation dialog box pops up, the user can choose "Optimize now" or "Don't optimize yet"
+- **User Experience**: blocking prompts to guide users to take immediate action
 
 ```javascript
 // 示例：AI评分为 4.5 分
@@ -51,11 +51,11 @@
 [立即优化] [暂不优化]
 ```
 
-#### 场景 B：切换 Prompt 时的平均分建议
-- **触发时机**：用户切换到某个 Prompt 后
-- **阈值**：平均分 < 6.0 分
-- **提示方式**：右下角通知（非阻塞式）
-- **用户体验**：温和提示，不干扰用户操作
+#### Scenario B: Average score suggestion when switching Prompt
+- **Trigger timing**: After the user switches to a prompt
+- **Threshold**: Average score < 6.0 points
+- **Prompt method**: Notification in the lower right corner (non-blocking)
+- **User Experience**: Gentle prompts, does not interfere with user operations
 
 ```javascript
 // 示例：某 Prompt 平均分为 5.2 分
@@ -66,7 +66,7 @@
 [8秒后自动消失，可手动关闭]
 ```
 
-### 3. 完整的优化流程
+### 3. Complete optimization process
 
 ```
 用户确认优化
@@ -92,16 +92,16 @@
 
 ---
 
-## 🔧 技术实现
+## 🔧 Technical implementation
 
-### 后端实现
+### Backend implementation
 
 #### 1. PromptCatalyzerInitAppService
-**文件**: `src/Extensions/Senparc.Xncf.AgentsManager/Application/AppService/PromptCatalyzerInitAppService.cs`
+**document**:`src/Extensions/Senparc.Xncf.AgentsManager/Application/AppService/PromptCatalyzerInitAppService.cs`
 
-**提供的 API**:
+**API provided**:
 
-##### API 1: 检查初始化状态
+##### API 1: Check initialization status
 ```http
 GET /api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/CheckStatus
 
@@ -113,7 +113,7 @@ Response:
 }
 ```
 
-##### API 2: 获取可用模型
+##### API 2: Get available models
 ```http
 GET /api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/GetAvailableModels
 
@@ -133,7 +133,7 @@ Response:
 }
 ```
 
-##### API 3: 初始化
+##### API 3: Initialization
 ```http
 POST /api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/Initialize
 Content-Type: application/json
@@ -151,9 +151,9 @@ Response:
 ```
 
 #### 2. PromptOptimizationAppService
-**文件**: `src/Extensions/Senparc.Xncf.AgentsManager/Application/AppService/PromptOptimizationAppService.cs`
+**document**:`src/Extensions/Senparc.Xncf.AgentsManager/Application/AppService/PromptOptimizationAppService.cs`
 
-##### API 4: 优化 Prompt
+##### API 4: Optimize Prompt
 ```http
 POST /api/Senparc.Xncf.AgentsManager/PromptOptimizationAppService/OptimizeAsync
 Content-Type: application/json
@@ -185,10 +185,10 @@ Response:
 }
 ```
 
-### 前端实现
+### Front-end implementation
 
-#### 1. 新增 Data 变量
-**文件**: `src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js`
+#### 1. Add new Data variable
+**document**:`src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js`
 
 ```javascript
 data() {
@@ -209,132 +209,132 @@ data() {
 }
 ```
 
-#### 2. 新增方法
+#### 2. New method
 
 ##### checkPromptCatalyzerStatus()
-检查 PromptCatalyzer 是否已初始化。
+Check if PromptCatalyzer has been initialized.
 
 ##### loadAvailableModels()
-加载所有可用的 Chat 类型 AI Model 列表。
+Loads a list of all available Chat type AI Models.
 
 ##### executeInitialization()
-执行初始化流程，创建必要的资源。
+Execute the initialization process and create necessary resources.
 
 ##### checkScoreAndSuggestOptimization(resultData, scoreType)
-**功能**: 在打分完成后，根据分数自动建议优化
-- **参数**:
-  - `resultData`: 打分结果数据
-  - `scoreType`: 评分类型（"AI评分" 或 "手动评分"）
-- **逻辑**:
-  - 提取 `finalScore`
-  - 如果 `finalScore < 6.0`，弹出确认对话框
-  - 用户确认后自动打开优化对话框
+**Function**: After the scoring is completed, optimization will be automatically suggested based on the score.
+- **Parameters**:
+  - `resultData`: Scoring result data
+  - `scoreType`: Scoring type ("AI scoring" or "Manual scoring")
+- **Logic**:
+- Extract`finalScore`
+- if`finalScore < 6.0`, a confirmation dialog box pops up
+- Automatically open the optimization dialog box after user confirmation
 
 ##### checkPromptAverageScoreAndSuggest()
-**功能**: 根据当前 Prompt 的平均分自动建议优化
-- **触发时机**: 切换 Prompt 后
-- **逻辑**:
-  - 获取 `evalAvgScore`
-  - 如果 `evalAvgScore < 6.0`，显示右下角通知
-  - 非阻塞式提示
+**Function**: Automatically suggest optimizations based on the average score of the current Prompt
+- **Trigger timing**: after switching Prompt
+- **Logic**:
+- get`evalAvgScore`
+- if`evalAvgScore < 6.0`, display the notification in the lower right corner
+- Non-blocking prompts
 
 ##### openOptimizeDialog()
-打开优化对话框（支持自动初始化检测）。
+Opens the optimization dialog (supports automatic initialization detection).
 
 ##### executeOptimize()
-执行优化请求，包含完整的上下文信息。
+Execute optimization requests with complete context information.
 
-#### 3. HTML 更新
-**文件**: `src/Extensions/Senparc.Xncf.PromptRange/Areas/Admin/Pages/PromptRange/Prompt.cshtml`
+#### 3. HTML update
+**document**:`src/Extensions/Senparc.Xncf.PromptRange/Areas/Admin/Pages/PromptRange/Prompt.cshtml`
 
-新增了初始化对话框（约 1289 行后）：
-- Model 选择下拉框（带搜索）
-- 参数预览
-- 友好的提示信息
-
----
-
-## 📊 使用场景
-
-### 场景 1: 首次使用优化功能
-
-1. 用户打开 PromptRange 页面
-2. 选择一个 Prompt
-3. 点击"优化"按钮
-4. **系统自动检测**: 未初始化
-5. **显示初始化对话框**: 引导用户选择 AI Model
-6. 用户选择 Model 并点击"开始初始化"
-7. 等待 30-60 秒（创建 PromptRange、PromptItem、Agent、ChatGroup）
-8. 初始化成功，**自动打开优化对话框**
-9. 用户输入优化需求
-10. 系统生成优化后的 Prompt
-11. 自动切换到新 Prompt
-
-### 场景 2: AI 评分后的优化建议
-
-1. 用户对某个 PromptResult 进行 AI 评分
-2. 评分结果为 4.2 分
-3. **系统自动弹出确认框**: "当前 Prompt 的AI评分为 4.2 分（低于 6.0 分）。是否使用 AI 自动优化功能来改进 Prompt？"
-4. 用户点击"立即优化"
-5. 自动打开优化对话框，进入优化流程
-
-### 场景 3: 切换 Prompt 时的平均分提示
-
-1. 用户切换到某个 Prompt（平均分 5.5 分）
-2. **系统显示右下角通知**: "💡 优化建议：当前 Prompt 的平均分为 5.5 分，建议使用 AI 自动优化功能来改进。点击'优化'按钮开始。"
-3. 通知 8 秒后自动消失，不干扰用户操作
-4. 用户可随时点击"优化"按钮进行优化
+Added new initialization dialog (about line 1289 later):
+- Model selection drop-down box (with search)
+-Parameter preview
+- Friendly reminder messages
 
 ---
 
-## ✅ 验收标准
+## 📊 Usage scenarios
 
-### 功能测试清单
+### Scenario 1: First use of optimization function
 
-#### 初始化功能
-- [ ] 首次点击"优化"显示初始化对话框
-- [ ] Model 列表正确加载（只显示 Chat 类型且已启用的 Model）
-- [ ] 可以搜索过滤 Model
-- [ ] 选择 Model 后显示参数预览
-- [ ] 初始化成功后自动打开优化对话框
-- [ ] 第二次点击"优化"直接打开对话框（不再显示初始化）
+1. The user opens the PromptRange page
+2. Select a Prompt
+3. Click the "Optimize" button
+4. **System automatic detection**: Not initialized
+5. **Display initialization dialog**: Guide the user to select AI Model
+6. The user selects the Model and clicks "Start Initialization"
+7. Wait 30-60 seconds (create PromptRange, PromptItem, Agent, ChatGroup)
+8. Initialization successful, **automatically opens the optimization dialog**
+9. User input optimization requirements
+10. The system generates optimized prompts
+11. Automatically switch to new prompt
 
-#### 优化功能
-- [ ] 可以输入优化需求
-- [ ] 优化过程显示加载状态
-- [ ] 优化成功显示详细结果（新 Code、预测分数、参数变化、优化说明）
-- [ ] 自动刷新 Prompt 列表
-- [ ] 自动切换到新 Prompt
+### Scenario 2: Optimization suggestions after AI scoring
 
-#### 自动优化建议
-- [ ] AI 评分 < 6.0 时弹出确认对话框
-- [ ] 手动评分 < 6.0 时弹出确认对话框
-- [ ] 点击"立即优化"自动打开优化对话框
-- [ ] 点击"暂不优化"关闭提示
-- [ ] 切换到低分 Prompt 时显示右下角通知
-- [ ] 通知 8 秒后自动消失
-- [ ] 分数 >= 6.0 时不显示优化提示
+1. The user performs an AI rating on a PromptResult
+2. The score is 4.2 points
+3. **The system automatically pops up a confirmation box**: "The current AI score of Prompt is 4.2 points (lower than 6.0 points). Do you want to use the AI ​​automatic optimization function to improve Prompt?"
+4. The user clicks "Optimize Now"
+5. Automatically open the optimization dialog box and enter the optimization process
 
-#### 错误处理
-- [ ] 无 Prompt 选择时提示
-- [ ] 无可用 Model 时提示（并引导用户去 AIKernel 配置）
-- [ ] API 调用失败时显示友好错误消息
-- [ ] 初始化失败时显示具体原因
-- [ ] 优化失败时显示详细错误信息
+### Scenario 3: Average score prompt when switching Prompt
+
+1. The user switches to a prompt (average score 5.5 points)
+2. **The system displays a notification in the lower right corner**: "💡 Optimization suggestion: The current average score of Prompt is 5.5 points. It is recommended to use the AI ​​automatic optimization function to improve it. Click the 'Optimize' button to start."
+3. The notification disappears automatically after 8 seconds and does not interfere with user operations.
+4. Users can click the "Optimize" button at any time to optimize
 
 ---
 
-## 🚀 快速开始
+## ✅ Acceptance Criteria
 
-### 前提条件
+### Functional test checklist
 
-1. **AIKernel 模块**: 至少配置一个 Chat 类型的 AI Model
-2. **Model 状态**: Model 必须已启用（Show = true）
-3. **API Key**: AI API Key 已正确配置
+#### Initialization function
+- [ ] Click "Optimize" for the first time to display the initialization dialog box
+- [ ] Model list loads correctly (only models of Chat type and enabled are shown)
+- [ ] can search and filter Model
+- [ ] Display parameter preview after selecting Model
+- [ ] Automatically open the optimization dialog box after successful initialization
+- [ ] Click "Optimize" for the second time to directly open the dialog box (initialization is no longer displayed)
 
-### 测试步骤
+#### Optimization function
+- [ ] can input optimization requirements
+- [ ] Display loading status during optimization process
+- [ ] Detailed results (new code, prediction scores, parameter changes, optimization instructions) are displayed if the optimization is successful.
+- [ ] Automatically refresh the Prompt list
+- [ ] Automatically switch to new prompt
 
-#### 步骤 1: 编译项目
+#### Automatic optimization suggestions
+- [ ] Confirmation dialog box pops up when AI score < 6.0
+- [ ] Confirmation dialog box pops up when manual rating < 6.0
+- [ ] Click "Optimize Now" to automatically open the optimization dialog box
+- [ ] Click "Don't optimize yet" to close the prompt
+- [ ] Display the notification in the lower right corner when switching to low score Prompt
+- [ ] notification disappears automatically after 8 seconds
+- [ ] No optimization tips are displayed when score >= 6.0
+
+#### Error handling
+- [ ] None Prompt Prompt when selecting
+- [ ] prompts when there is no available Model (and guides the user to AIKernel configuration)
+- [ ] Show friendly error message when API call fails
+- [ ] Display the specific reason when initialization fails.
+- [ ] Display detailed error information when optimization fails
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+1. **AIKernel module**: Configure at least one Chat type AI Model
+2. **Model status**: Model must be enabled (Show = true)
+3. **API Key**: AI API Key has been configured correctly
+
+### Test steps
+
+#### Step 1: Compile the project
 ```bash
 # 编译 AgentsManager（包含新 API）
 dotnet build src/Extensions/Senparc.Xncf.AgentsManager/
@@ -346,50 +346,50 @@ dotnet build src/Extensions/Senparc.Xncf.PromptRange/
 dotnet build
 ```
 
-#### 步骤 2: 启动应用
+#### Step 2: Launch the application
 ```bash
 dotnet run --project [你的Web项目路径]
 ```
 
-#### 步骤 3: 测试初始化流程
-1. 打开 PromptRange 页面
-2. 选择一个 Prompt
-3. 点击"优化"按钮
-4. 应该看到初始化对话框
-5. 选择一个 AI Model
-6. 点击"开始初始化"
-7. 等待 30-60 秒
-8. 看到成功提示并自动打开优化对话框
+#### Step 3: Test initialization process
+1. Open the PromptRange page
+2. Select a Prompt
+3. Click the "Optimize" button
+4. You should see the initialization dialog box
+5. Select an AI Model
+6. Click "Start Initialization"
+7. Wait 30-60 seconds
+8. See the success prompt and automatically open the optimization dialog box
 
-#### 步骤 4: 测试优化功能
-1. 在优化对话框中输入需求（例如："让回答更有创意"）
-2. 点击"开始优化"
-3. 等待 10-30 秒
-4. 查看优化结果（参数对比、预测分数、优化说明）
-5. 验证是否自动切换到新 Prompt
+#### Step 4: Test optimization functionality
+1. Enter the requirements in the optimization dialog box (for example: "Make answers more creative")
+2. Click "Start Optimization"
+3. Wait 10-30 seconds
+4. View optimization results (parameter comparison, prediction scores, optimization instructions)
+5. Verify automatic switching to new prompt
 
-#### 步骤 5: 测试自动建议功能
-1. 选择一个测试 Prompt
-2. 进行打靶测试
-3. 对结果进行 AI 评分或手动评分
-4. 如果分数 < 6.0，应该看到优化建议弹窗
-5. 点击"立即优化"验证是否正常进入优化流程
+#### Step 5: Test the auto-suggest feature
+1. Select a test Prompt
+2. Conduct target shooting test
+3. AI scoring or manual scoring of results
+4. If the score is < 6.0, you should see an optimization suggestion pop-up window
+5. Click "Optimize Now" to verify whether the optimization process has entered normally.
 
 ---
 
-## 📁 文件清单
+## 📁 File list
 
-### 新增文件
+### Add new file
 - ✅ `src/Extensions/Senparc.Xncf.AgentsManager/Application/AppService/PromptCatalyzerInitAppService.cs`
 
-### 修改的文件
+### Modified files
 - ✅ `src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js`
-  - 新增 `checkScoreAndSuggestOptimization()` 方法
-  - 新增 `checkPromptAverageScoreAndSuggest()` 方法
-  - 更新 `saveManualScore()` 方法（添加优化提示）
-  - 更新 `getPromptetail()` 方法（添加平均分检查）
+- New`checkScoreAndSuggestOptimization()`method
+- New`checkPromptAverageScoreAndSuggest()`method
+- renew`saveManualScore()`Method (add optimization tips)
+- renew`getPromptetail()`Method (adds average score check)
 
-### 已存在的文件（之前已实现）
+### Existing files (implemented previously)
 - ✅ `src/Extensions/Senparc.Xncf.AgentsManager/Application/AppService/PromptOptimizationAppService.cs`
 - ✅ `src/Extensions/Senparc.Xncf.AgentsManager/Domain/Services/PromptOptimizationService.cs`
 - ✅ `src/Extensions/Senparc.Xncf.PromptRange/Application/EventHandlers/PromptOptimizationRequestHandler.cs`
@@ -397,9 +397,9 @@ dotnet run --project [你的Web项目路径]
 
 ---
 
-## 🎨 UI 效果
+## 🎨 UI effect
 
-### 初始化对话框
+### Initialization dialog box
 ```
 ┌─────────────────────────────────────────────┐
 │  🚀 首次使用：初始化 Prompt 优化功能        │
@@ -430,7 +430,7 @@ dotnet run --project [你的Web项目路径]
 └─────────────────────────────────────────────┘
 ```
 
-### 优化建议对话框（打分后）
+### Optimization suggestion dialog box (after scoring)
 ```
 ┌─────────────────────────────────────────┐
 │          💡 建议优化                    │
@@ -444,7 +444,7 @@ dotnet run --project [你的Web项目路径]
 └─────────────────────────────────────────┘
 ```
 
-### 优化建议通知（右下角）
+### Optimization suggestion notification (lower right corner)
 ```
 ┌────────────────────────────────────┐
 │  💡 优化建议                        │
@@ -457,7 +457,7 @@ dotnet run --project [你的Web项目路径]
 └────────────────────────────────────┘
 ```
 
-### 优化结果显示
+### Optimization result display
 ```
 ✅ 优化成功！
 
@@ -475,13 +475,13 @@ dotnet run --project [你的Web项目路径]
 
 ---
 
-## ⚙️ 配置选项
+## ⚙️ Configuration options
 
-### 优化阈值调整
+### Optimization threshold adjustment
 
-如需调整优化建议的分数阈值，修改以下代码：
+If you need to adjust the score threshold of optimization suggestions, modify the following code:
 
-**文件**: `prompt.js`
+**document**:`prompt.js`
 
 ```javascript
 // checkScoreAndSuggestOptimization 方法中
@@ -491,18 +491,18 @@ const optimizationThreshold = 6.0; // 默认 6.0 分
 const optimizationThreshold = 6.0; // 默认 6.0 分
 ```
 
-**建议值**:
-- **6.0** - 标准（推荐）：分数低于6分时提示
-- **7.0** - 严格：分数低于7分时提示
-- **5.0** - 宽松：只在分数很低时提示
+**Recommended values**:
+- **6.0** - Standard (recommended): Prompt when the score is less than 6 points
+- **7.0** - Strict: Prompt when the score is less than 7 points
+- **5.0** - Loose: only prompt if the score is very low
 
 ---
 
-## 🔍 调试指南
+## 🔍 Debugging Guide
 
-### 浏览器 Console 日志
+### Browser Console Log
 
-在开发模式下，所有关键步骤都会输出 Console 日志：
+In development mode, all critical steps output Console logs:
 
 ```javascript
 // 检查初始化状态
@@ -519,124 +519,124 @@ console.log('AI评分完成，最终分数: 4.5');
 console.log('当前 Prompt 平均分数: 5.2');
 ```
 
-### 常见问题
+### FAQ
 
-#### 问题 1: 初始化对话框不显示
-**原因**: Model 列表为空
-**解决**:
-1. 检查 AIKernel 模块是否配置了 Chat 类型的 Model
-2. 确认 Model 的 Show 字段为 true
-3. 查看浏览器 Console 的错误信息
+#### Problem 1: The initialization dialog box does not display
+**Cause**: Model list is empty
+**solve**:
+1. Check whether the AIKernel module is configured with a Chat type Model
+2. Confirm that the Show field of the Model is true
+3. Check the browser console for error messages
 
-#### 问题 2: 优化失败
-**原因**: API 调用错误或 AI 服务不可用
-**解决**:
-1. 检查 AI API Key 是否正确配置
-2. 查看后端日志了解详细错误
-3. 确认 PromptCatalyzer Agent 已正确初始化
+#### Problem 2: Optimization failed
+**Cause**: API call error or AI service unavailable
+**solve**:
+1. Check whether the AI ​​API Key is configured correctly
+2. Check the backend log for detailed errors
+3. Confirm that PromptCatalyzer Agent has been initialized correctly
 
-#### 问题 3: 优化建议不弹出
-**原因**: 分数高于阈值或前端逻辑未执行
-**解决**:
-1. 确认 `finalScore` < 6.0
-2. 查看 Console 日志："检查分数并提示优化..."
-3. 确认浏览器支持 `$confirm` 和 `$notify`（Element UI）
-
----
-
-## 🎯 设计原则
-
-### 1. 用户体验优先
-- **非侵入式**: 切换 Prompt 时使用通知而非弹窗
-- **即时反馈**: 打分后立即建议优化
-- **智能引导**: 首次使用自动引导初始化
-
-### 2. 容错性
-- **优雅降级**: 如果检测失败，不影响主流程
-- **详细错误**: 提供具体的错误信息和解决建议
-- **日志完善**: Console 日志帮助快速定位问题
-
-### 3. 性能考虑
-- **异步处理**: 所有 API 调用都是异步的
-- **避免阻塞**: 使用通知而非弹窗（适当场景）
-- **资源复用**: PromptCatalyzer Agent 只需初始化一次
+#### Problem 3: Optimization suggestions do not pop up
+**Cause**: The score is higher than the threshold or the front-end logic is not executed
+**solve**:
+1. Confirm`finalScore` < 6.0
+2. View the Console log: "Check scores and prompt optimization..."
+3. Confirm browser support`$confirm`and`$notify`（Element UI）
 
 ---
 
-## 📈 未来扩展
+## 🎯 Design principles
 
-### 可能的增强功能
+### 1. User experience first
+- **Non-intrusive**: Use notifications instead of pop-ups when switching Prompts
+- **Instant Feedback**: Suggest optimizations immediately after scoring
+- **Smart Boot**: Use automatic boot initialization for the first time
 
-1. **批量优化**: 支持一次性优化多个 Prompt
-2. **优化历史**: 记录每次优化的结果和对比
-3. **A/B 测试**: 自动对比优化前后的效果
-4. **自定义阈值**: 允许用户配置优化建议的分数阈值
-5. **优化模板**: 预设常见的优化需求模板
-6. **智能推荐**: 根据历史数据推荐最佳优化策略
+### 2. Fault tolerance
+- **Graceful downgrade**: If the detection fails, the main process will not be affected.
+- **Detailed Error**: Provide specific error information and solution suggestions
+- **Log improvement**: Console logs help quickly locate problems
 
----
-
-## 🔐 安全性
-
-### 数据验证
-- 所有 API 输入都进行严格验证
-- Model ID 必须存在且类型正确
-- Prompt Code 必须有效
-
-### 权限控制
-- 继承 AppServiceBase 的权限机制
-- 遵循 NCF 框架的认证授权体系
-
-### 错误处理
-- 捕获所有可能的异常
-- 提供用户友好的错误消息
-- 记录详细的服务端日志
+### 3. Performance considerations
+- **Asynchronous processing**: All API calls are asynchronous
+- **Avoid blocking**: Use notifications instead of pop-ups (appropriate scenarios)
+- **Resource Reuse**: PromptCatalyzer Agent only needs to be initialized once
 
 ---
 
-## 📝 总结
+## 📈 Future expansion
 
-### 已完成的工作
+### Possible enhancements
 
-1. ✅ **PromptCatalyzerInitAppService**: 提供初始化相关的 3 个 API
-2. ✅ **前端初始化流程**: 引导用户选择 Model 并创建资源
-3. ✅ **前端优化流程**: 完整的优化请求和结果展示
-4. ✅ **打分后优化建议**: 分数低时自动提示优化（确认对话框）
-5. ✅ **平均分优化建议**: 切换 Prompt 时的温和提示（通知）
-6. ✅ **完整的错误处理**: 各种异常场景的处理
-7. ✅ **用户体验优化**: 加载状态、友好提示、自动刷新
-
-### 技术亮点
-
-- **智能初始化**: 自动检测并引导创建必要资源
-- **多维度提示**: 单次打分 + 平均分两种触发场景
-- **非侵入式设计**: 通知不阻塞用户操作
-- **完整的上下文**: 优化时携带所有参数信息
-- **自动化流程**: 初始化 → 优化 → 刷新 → 切换全自动
-
-### 用户价值
-
-1. **降低使用门槛**: 首次使用自动引导初始化
-2. **提升 Prompt 质量**: 基于数据的智能优化建议
-3. **节省时间**: 自动化的优化流程
-4. **数据驱动**: 根据真实打分结果提供建议
-5. **持续改进**: 支持迭代优化
+1. **Batch Optimization**: Supports optimizing multiple Prompts at one time
+2. **Optimization History**: Record the results and comparison of each optimization
+3. **A/B Test**: Automatically compare the effects before and after optimization
+4. **Custom Threshold**: Allows users to configure the score threshold for optimization recommendations
+5. **Optimization Template**: Preset common optimization requirement templates
+6. **Smart Recommendation**: Recommend the best optimization strategy based on historical data
 
 ---
 
-## 📞 技术支持
+## 🔐 Security
 
-如遇到问题，请检查：
+### Data validation
+- All API inputs undergo strict validation
+- Model ID must exist and be of the correct type
+- Prompt Code must be valid
 
-1. **浏览器 Console** (F12): 查看前端日志和错误
-2. **后端日志**: 查看详细的服务端处理过程
-3. **网络请求**: 检查 API 请求和响应
-4. **数据库**: 确认 Agent、PromptRange、PromptItem 是否正确创建
+### Permission control
+- Inherit the permission mechanism of AppServiceBase
+- Certification and authorization system that follows the NCF framework
+
+### Error handling
+- Catch all possible exceptions
+- Provide user-friendly error messages
+- Record detailed server logs
 
 ---
 
-## 🎉 结语
+## 📝 Summary
 
-PromptRange 的 AI 自动优化功能已全面实现，提供了从初始化到优化的完整闭环。通过智能的分数监测和优化建议，帮助用户持续改进 Prompt 质量。
+### Completed work
 
-**立即开始测试，体验 AI 驱动的 Prompt 优化！** 🚀
+1. ✅ **PromptCatalyzerInitAppService**: Provides 3 APIs related to initialization
+2. ✅ **Front-end initialization process**: Guide users to select Model and create resources
+3. ✅ **Front-end optimization process**: complete optimization request and result display
+4. ✅ **Optimization suggestions after scoring**: Automatically prompt for optimization when the score is low (confirmation dialog box)
+5. ✅ **Average Score Optimization Suggestions**: Gentle prompts (notifications) when switching Prompt
+6. ✅ **Complete error handling**: Handling of various abnormal scenarios
+7. ✅ **User experience optimization**: loading status, friendly prompts, automatic refresh
+
+### Technical Highlights
+
+- **Intelligent Initialization**: Automatically detect and guide the creation of necessary resources
+- **Multi-dimensional tips**: Single scoring + average scoring two trigger scenarios
+- **Non-intrusive design**: notifications do not block user operations
+- **Complete context**: carry all parameter information when optimizing
+- **Automated process**: Initialization → Optimization → Refresh → Switch to full automation
+
+### User value
+
+1. **Lower the usage threshold**: Automatic boot initialization for first time use
+2. **Improve Prompt quality**: Intelligent optimization suggestions based on data
+3. **Save time**: Automated optimization process
+4. **Data-driven**: Provide suggestions based on real scoring results
+5. **Continuous Improvement**: Support iterative optimization
+
+---
+
+## 📞Technical Support
+
+If you encounter problems, please check:
+
+1. **Browser Console** (F12): View front-end logs and errors
+2. **Back-end log**: View detailed server-side processing process
+3. **Network Request**: Check API requests and responses
+4. **Database**: Confirm whether Agent, PromptRange, and PromptItem are created correctly
+
+---
+
+## 🎉 Conclusion
+
+PromptRange's AI automatic optimization function has been fully implemented, providing a complete closed loop from initialization to optimization. Help users continuously improve Prompt quality through intelligent score monitoring and optimization suggestions.
+
+**Start testing now to experience AI-driven Prompt optimization! ** 🚀

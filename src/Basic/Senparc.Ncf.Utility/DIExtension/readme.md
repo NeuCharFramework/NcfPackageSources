@@ -1,2 +1,2 @@
-﻿## 说明
-本目录用于存放.NET Core扩展依赖注入的类
+﻿## Description
+This directory is used to store .NET Core extended dependency injection classes

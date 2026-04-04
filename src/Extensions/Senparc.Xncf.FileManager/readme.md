@@ -1,5 +1,5 @@
-﻿## Senparc.Xncf.FileManager 项目说明
+﻿## Senparc.Xncf.FileManager project description
 
-> 本项目为 Xncf 模板项目，用于快速创建可快速嵌入 NeuCharFramework（NCF）的 Xncf 模板项目。
+> This project is an Xncf template project, used to quickly create Xncf template projects that can be quickly embedded in NeuCharFramework (NCF).
 
-文件管理
+File management

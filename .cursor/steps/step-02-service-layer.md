@@ -1,30 +1,30 @@
-# Step 02: 服务层实现
+# Step 02: Service layer implementation
 
-## 📋 任务概述
-创建 AdminChat 功能的服务层，包括 Service 层（数据访问）和 AppService 层（API 接口），实现聊天会话管理、消息管理和模块关联管理的业务逻辑。
+## 📋 Mission Overview
+Create the service layer of the AdminChat function, including the Service layer (data access) and the AppService layer (API interface), to implement the business logic of chat session management, message management and module association management.
 
-## 🎯 目标
-- ✅ 创建 AdminChatSessionService（会话服务）
-- ✅ 创建 AdminChatMessageService（消息服务）
-- ✅ 创建 AdminChatSessionModuleService（模块关联服务）
-- ✅ 创建 AdminChatAppService（API 接口服务）
-- ✅ 实现 AI 对话调用逻辑
+## 🎯 Goal
+- ✅ Create AdminChatSessionService (Session Service)
+- ✅ Create AdminChatMessageService (message service)
+- ✅ Create AdminChatSessionModuleService (module associated service)
+- ✅ Create AdminChatAppService (API interface service)
+- ✅ Implement AI dialogue calling logic
 
-## 📂 涉及文件
+## 📂Involved documents
 
-### 新建文件
+### Create new file
 1. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Services/AdminChatSessionService.cs`
 2. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Services/AdminChatMessageService.cs`
 3. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Services/AdminChatSessionModuleService.cs`
 4. `tools/NcfSimulatedSite/Senparc.Areas.Admin/OHS/Local/AppService/AdminChatAppService.cs`
 
-## 🔧 实现步骤
+## 🔧 Implementation steps
 
-### 1. 创建 AdminChatSessionService
+### 1. Create AdminChatSessionService
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Services/AdminChatSessionService.cs`
+**File path**:`tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Services/AdminChatSessionService.cs`
 
-**完整代码示例**:
+**Full code example**:
 
 ```csharp
 using System;
@@ -215,19 +215,19 @@ namespace Senparc.Areas.Admin.Domain.Services
 }
 ```
 
-**关键技术点**：
-- 继承自 `ServiceBase<AdminChatSession>`，自动获得基础 CRUD 方法
-- 注入其他服务以实现关联查询
-- 使用异步方法提升性能
-- 实现分页查询，避免一次性加载大量数据
+**Key technical points**:
+- Inherited from`ServiceBase<AdminChatSession>`, automatically obtain basic CRUD methods
+- Inject other services to implement related queries
+- Use asynchronous methods to improve performance
+- Implement paging queries to avoid loading large amounts of data at once
 
 ---
 
-### 2. 创建 AdminChatMessageService
+### 2. Create AdminChatMessageService
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Services/AdminChatMessageService.cs`
+**File path**:`tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Services/AdminChatMessageService.cs`
 
-**完整代码示例**:
+**Full code example**:
 
 ```csharp
 using System;
@@ -392,19 +392,19 @@ namespace Senparc.Areas.Admin.Domain.Services
 }
 ```
 
-**关键技术点**：
-- 继承自 `ServiceBase<AdminChatMessage>`
-- 实现消息序号自动递增
-- 支持批量添加对话对（用户+AI回复）
-- 提供消息反馈功能
+**Key technical points**:
+- Inherited from`ServiceBase<AdminChatMessage>`
+- Implement automatic increment of message serial number
+- Support adding conversation pairs in batches (user + AI reply)
+- Provide message feedback function
 
 ---
 
-### 3. 创建 AdminChatSessionModuleService
+### 3. Create AdminChatSessionModuleService
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Services/AdminChatSessionModuleService.cs`
+**File path**:`tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Services/AdminChatSessionModuleService.cs`
 
-**完整代码示例**:
+**Full code example**:
 
 ```csharp
 using System;
@@ -523,18 +523,18 @@ namespace Senparc.Areas.Admin.Domain.Services
 }
 ```
 
-**关键技术点**：
-- 实现模块与会话的关联管理
-- 支持批量操作
-- 自动去重（检查是否已存在）
+**Key technical points**:
+- Implement associated management of modules and sessions
+- Support batch operations
+- Automatic deduplication (check if already exists)
 
 ---
 
-### 4. 创建 AdminChatAppService（API 接口层）
+### 4. Create AdminChatAppService (API interface layer)
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/OHS/Local/AppService/AdminChatAppService.cs`
+**File path**:`tools/NcfSimulatedSite/Senparc.Areas.Admin/OHS/Local/AppService/AdminChatAppService.cs`
 
-**完整代码示例**:
+**Full code example**:
 
 ```csharp
 using System;
@@ -821,70 +821,70 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 }
 ```
 
-**关键技术点**：
-- AppService 是 API 接口层，使用 `[ApiBind]` 特性标记
-- 继承自 `AppServiceBase`
-- 使用 `GetResponseAsync` 统一处理异常和响应格式
-- AI 调用逻辑在 AppService 层实现
-- 提供 Request/Response DTO 用于 API 交互
+**Key technical points**:
+- AppService is the API interface layer, using`[ApiBind]`feature flags
+- Inherited from`AppServiceBase`
+- use`GetResponseAsync`Unified handling of exceptions and response formats
+- AI calling logic is implemented in the AppService layer
+- Provide Request/Response DTO for API interaction
 
 ---
 
-## ✅ 验收标准
+## ✅ Acceptance Criteria
 
-### 功能验收
-- [ ] AdminChatSessionService 可以创建、查询、更新、删除会话
-- [ ] AdminChatMessageService 可以添加消息、查询历史、设置反馈
-- [ ] AdminChatSessionModuleService 可以管理会话-模块关联
-- [ ] AdminChatAppService 提供完整的 API 接口
-- [ ] 服务之间的依赖注入正确
+### Function acceptance
+- [ ] AdminChatSessionService can create, query, update, and delete sessions
+- [ ] AdminChatMessageService can add messages, query history, and set feedback
+- [ ] AdminChatSessionModuleService can manage session-module association
+- [ ] AdminChatAppService provides a complete API interface
+- [ ] Dependency injection between services is correct
 
-### 技术验收
-- [ ] 所有 Service 继承自 `ServiceBase<T>`
-- [ ] AppService 继承自 `AppServiceBase`
-- [ ] 使用 `[ApiBind]` 特性标记 API 方法
-- [ ] 异步方法使用 `async/await`
-- [ ] 事务处理正确（SaveObjectAsync）
-- [ ] 错误处理完善（try-catch）
+### Technical acceptance
+- [ ] All Services inherit from`ServiceBase<T>`
+- [ ] AppService inherited from`AppServiceBase`
+- [ ] use`[ApiBind]`Property Marker API Methods
+- [ ] Asynchronous method usage`async/await`
+- [ ] Transaction processing is correct (SaveObjectAsync)
+- [ ] Improved error handling (try-catch)
 
-### 质量验收
-- [ ] 代码注释清晰完整
-- [ ] 符合 NCF 框架规范
-- [ ] 无编译错误
-- [ ] 无 linting 警告
-- [ ] 日志记录关键操作
-
----
-
-## 📝 注意事项
-
-⚠️ **重要**：
-- Service 层只处理数据访问和业务逻辑，不涉及 HTTP 请求
-- AppService 层是 API 接口，使用 `[ApiBind]` 和 `GetResponseAsync`
-- AI 调用逻辑需要实际集成 AIKernel 模块，当前提供的是框架代码
-- 所有异步方法要使用 `Task` 返回类型
-- 依赖注入要在构造函数中声明
-
-⚠️ **AI 集成说明**：
-- `CallAiServiceAsync` 方法需要根据实际的 AIKernel 接口调整
-- 可以参考 `Senparc.Xncf.PromptRange` 中的 AI 调用示例
-- 需要处理 AI 服务不可用的异常情况
+### Quality acceptance
+- [ ] Code comments are clear and complete
+- [ ] Complies with NCF Framework Specifications
+- [ ] No compilation errors
+- [ ] No linting warning
+- [ ] Logging key operations
 
 ---
 
-## 🔗 相关任务
-- 上一步：[Step 01: 数据模型层设计](./step-01-data-models.md)
-- 下一步：[Step 03: 首页UI改版](./step-03-homepage-ui.md)
-- 关联文档：[scratchpad.md](../scratchpad.md)
+## 📝 Notes
+
+⚠️ **Important**:
+- The Service layer only handles data access and business logic, and does not involve HTTP requests.
+- The AppService layer is the API interface, using`[ApiBind]`and`GetResponseAsync`
+- The AI ​​calling logic needs to actually integrate the AIKernel module, and currently the framework code is provided
+- All asynchronous methods to be used`Task`Return type
+- Dependency injection must be declared in the constructor
+
+⚠️ **AI Integration Instructions**:
+- `CallAiServiceAsync`The method needs to be adjusted according to the actual AIKernel interface
+- You can refer to`Senparc.Xncf.PromptRange`Examples of AI calls in
+- Need to handle exceptions when the AI ​​service is unavailable
 
 ---
 
-## 📊 进度追踪
+## 🔗 Related tasks
+- Previous step: [Step 01: Data model layer design](./step-01-data-models.md)
+- Next step: [Step 03: Homepage UI revision](./step-03-homepage-ui.md)
+- Associated documents: [scratchpad.md](../scratchpad.md)
 
-**任务拆解**：
-- [ ] **[TASK-05]** 创建 AdminChatSessionService (0.8h)
-- [ ] **[TASK-06]** 创建 AdminChatMessageService (0.7h)
-- [ ] **[TASK-07]** 创建 AdminChatSessionModuleService (0.5h)
-- [ ] **[TASK-08]** 创建 AdminChatAppService API 接口 (0.5h)
+---
 
-**预计总耗时**: 2.5 小时
+## 📊 Progress Tracking
+
+**Task breakdown**:
+- [ ] **[TASK-05]** Create AdminChatSessionService (0.8h)
+- [ ] **[TASK-06]** Create AdminChatMessageService (0.7h)
+- [ ] **[TASK-07]** Create AdminChatSessionModuleService (0.5h)
+- [ ] **[TASK-08]** Create AdminChatAppService API interface (0.5h)
+
+**Estimated total time**: 2.5 hours

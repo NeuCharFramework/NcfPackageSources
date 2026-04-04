@@ -1,44 +1,44 @@
-# NCF Desktop App 文件保护机制
+# NCF Desktop App file protection mechanism
 
-## 📋 概述
+## 📋 Overview
 
-本文档描述了 NCF Desktop App 客户端更新程序的文件保护机制，确保在更新过程中重要的用户数据和配置文件不会丢失。
+This document describes the file protection mechanism of the NCF Desktop App client updater to ensure that important user data and configuration files are not lost during the update process.
 
-## 🛡️ 保护机制
+## 🛡️ Protection mechanism
 
-### 保护的文件和文件夹
+### Protected files and folders
 
-1. **App_Data 文件夹**
-   - 完整保护整个 `App_Data` 文件夹及其所有内容
-   - 包括数据库文件、用户配置、缓存等重要数据
+1. **App_Data folder**
+- Complete protection of the entire`App_Data`folder and all its contents
+-Including database files, user configuration, cache and other important data
 
-2. **appsettings*.json 文件**
-   - 保护所有以 `appsettings` 开头、以 `.json` 结尾的配置文件
-   - 包括 `appsettings.json`、`appsettings.Development.json` 等
-   - 支持子目录中的配置文件
+2. **appsettings*.json file**
+- Protect all`appsettings`start with`.json`configuration file at the end
+- include`appsettings.json`、`appsettings.Development.json`wait
+- Support configuration files in subdirectories
 
-### 备份策略
+### Backup strategy
 
-1. **临时备份**
-   - 更新前将重要文件备份到 `backup` 文件夹（与 `runtime` 并列）
-   - 更新完成后自动恢复文件
-   - 临时备份在恢复后自动清理
+1. **Temporary Backup**
+- Back up important files to`backup`folder (with`runtime`tied)
+- Automatically restore files after the update is complete
+- Temporary backups are automatically cleaned after restoration
 
-2. **永久备份**
-   - 为每个 `appsettings*.json` 文件创建带时间戳的备份
-   - 格式：`appsettings.json.20241211_143025.bak`
-   - 保存在 `backup` 文件夹中，不会自动删除
+2. **Permanent Backup**
+- for each`appsettings*.json`Create timestamped backup of files
+- Format:`appsettings.json.20241211_143025.bak`
+- Save in`backup`folder and will not be automatically deleted
 
-## 🔄 更新流程
+## 🔄 Update process
 
-### 原始流程（有问题）
+### Original process (with problems)
 ```
 1. 完全删除 runtime 文件夹 ❌
 2. 重新创建 runtime 文件夹
 3. 解压新版本文件
 ```
 
-### 新的安全流程 ✅
+### New Security Process ✅
 ```
 1. 保护重要文件（PreserveImportantFilesAsync）
    - 备份 App_Data 文件夹到临时位置
@@ -59,7 +59,7 @@
    - 清理临时备份
 ```
 
-## 📁 文件夹结构
+## 📁 Folder structure
 
 ```
 AppData/
@@ -80,26 +80,26 @@ AppData/
     └── NCF-v1.2.3-win-x64.zip
 ```
 
-## 🔧 实现细节
+## 🔧 Implementation details
 
-### 核心方法
+### Core method
 
 1. **PreserveImportantFilesAsync()**
-   - 创建备份目录
-   - 复制 App_Data 文件夹到临时位置
-   - 备份所有 appsettings*.json 文件
+- Create backup directory
+- Copy the App_Data folder to a temporary location
+- Back up all appsettings*.json files
 
 2. **SafeCleanRuntimeDirectoryAsync()**
-   - 遍历所有文件和文件夹
-   - 使用 `ShouldPreserveFile()` 和 `ShouldPreserveDirectory()` 判断是否保留
-   - 只删除非重要文件
+- Iterate through all files and folders
+- use`ShouldPreserveFile()`and`ShouldPreserveDirectory()`Determine whether to retain
+- Delete only non-important files
 
 3. **RestoreImportantFilesAsync()**
-   - 从临时位置恢复 App_Data 文件夹
-   - 恢复 appsettings*.json 文件
-   - 清理临时备份
+- Restore App_Data folder from temporary location
+- Restore appsettings*.json files
+- Clean temporary backups
 
-### 判断逻辑
+### Judgment logic
 
 ```csharp
 // 文件保护判断
@@ -134,16 +134,16 @@ private bool ShouldPreserveDirectory(string directoryPath)
 }
 ```
 
-## 🚨 错误处理
+## 🚨 Error handling
 
-- 所有文件操作都包含异常处理
-- 备份失败不会阻止更新继续进行
-- 恢复失败会记录警告日志但不会中断程序
-- 临时备份清理失败不会影响应用程序运行
+- All file operations include exception handling
+- Backup failure will not prevent the update from proceeding
+- If recovery fails, a warning log will be recorded but the program will not be interrupted.
+- Failure to clean temporary backups will not affect application operation
 
-## 📝 日志记录
+## 📝 Logging
 
-更新过程中会记录详细的日志信息：
+Detailed log information will be recorded during the update process:
 
 ```
 🛡️ 开始保护重要文件...
@@ -159,37 +159,37 @@ private bool ShouldPreserveDirectory(string directoryPath)
 ✅ 重要文件恢复完成
 ```
 
-## 🧪 测试建议
+## 🧪 Testing suggestions
 
-1. **创建测试数据**
-   - 在 App_Data 文件夹中放置测试文件
-   - 修改 appsettings.json 添加自定义配置
+1. **Create test data**
+- Place test files in App_Data folder
+- Modify appsettings.json to add custom configuration
 
-2. **执行更新测试**
-   - 运行客户端更新程序
-   - 验证 App_Data 文件夹内容完整
-   - 验证 appsettings.json 配置保持不变
+2. **Execute update test**
+- Run client updater
+- Verify that the contents of the App_Data folder are complete
+- Verify that the appsettings.json configuration remains unchanged
 
-3. **检查备份文件**
-   - 确认 backup 文件夹中存在带时间戳的备份文件
-   - 验证备份文件内容正确
+3. **Check backup files**
+- Verify that a timestamped backup file exists in the backup folder
+- Verify that the backup file contents are correct
 
-## 🔒 安全性
+## 🔒 Security
 
-- 备份文件存储在用户数据目录，具有适当的访问权限
-- 临时备份在恢复后立即清理，减少敏感数据暴露
-- 永久备份文件可用于手动恢复配置
+- Backup files are stored in the user data directory, with appropriate access rights
+- Temporary backups are cleaned immediately after restoration, reducing exposure of sensitive data
+- Permanent backup files can be used to manually restore configurations
 
-## 📞 故障排除
+## 📞 Troubleshooting
 
-如果更新后发现配置丢失：
+If you find that the configuration is missing after updating:
 
-1. 检查 `backup` 文件夹中的时间戳备份文件
-2. 手动复制备份文件到 runtime 文件夹
-3. 重命名备份文件去掉时间戳后缀
-4. 重启应用程序
+1. Check`backup`Timestamp backup files in folder
+2. Manually copy the backup file to the runtime folder
+3. Rename the backup file to remove the timestamp suffix
+4. Restart the application
 
 ---
 
-**注意**: 此机制确保用户数据的安全性，但建议用户定期备份重要数据到外部位置。
+**Note**: This mechanism ensures the security of user data, but it is recommended that users regularly back up important data to an external location.
 

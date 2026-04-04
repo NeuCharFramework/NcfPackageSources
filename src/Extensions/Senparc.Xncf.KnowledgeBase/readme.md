@@ -1,5 +1,5 @@
-﻿## Senparc.Xncf.KnowledgeBase 项目说明
+﻿## Senparc.Xncf.KnowledgeBase Project Description
 
-> 本项目为 Xncf 模板项目，用于快速创建可快速嵌入 NeuCharFramework（NCF）的 Xncf 模板项目。
+> This project is an Xncf template project, used to quickly create Xncf template projects that can be quickly embedded in NeuCharFramework (NCF).
 
-AI鐭ヨ瘑搴? --Version 0.1.0 --MenuName 鐭ヨ瘑搴?
+AI Knowledge Base --Version 0.1.0 --MenuName Knowledge Base

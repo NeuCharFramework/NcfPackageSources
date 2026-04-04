@@ -1,18 +1,18 @@
-# Step 01: 数据模型层设计与实现
+# Step 01: Data model layer design and implementation
 
-## 📋 任务概述
-创建 AdminChat 功能所需的三个核心数据实体及其 DTO，包括聊天会话、聊天消息和会话-模块关联表。
+## 📋 Mission Overview
+Create the three core data entities and their DTOs required for AdminChat functionality, including chat sessions, chat messages, and session-module association tables.
 
-## 🎯 目标
-- ✅ 创建 AdminChatSession 实体（聊天会话表）
-- ✅ 创建 AdminChatMessage 实体（聊天消息表）
-- ✅ 创建 AdminChatSessionModule 实体（会话-模块关联表）
-- ✅ 为每个实体创建对应的 DTO
-- ✅ 更新 DbContext 和 Register 配置
+## 🎯 Goal
+- ✅ Create AdminChatSession entity (chat session table)
+- ✅ Create AdminChatMessage entity (chat message table)
+- ✅ Create AdminChatSessionModule entity (session-module association table)
+- ✅ Create corresponding DTO for each entity
+- ✅ Update DbContext and Register configuration
 
-## 📂 涉及文件
+## 📂Involved documents
 
-### 新建文件
+### Create new file
 1. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatSession.cs`
 2. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatMessage.cs`
 3. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatSessionModule.cs`
@@ -20,16 +20,16 @@
 5. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatMessageDto.cs`
 6. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatSessionModuleDto.cs`
 
-### 修改文件
+### Modify files
 7. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminSenparcEntities.cs`
 
-## 🔧 实现步骤
+## 🔧 Implementation steps
 
-### 1. 创建 AdminChatSession 实体
+### 1. Create AdminChatSession entity
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatSession.cs`
+**File path**:`tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatSession.cs`
 
-**完整代码示例**:
+**Full code example**:
 
 ```csharp
 using Senparc.Ncf.Core.Models;
@@ -157,19 +157,19 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
 }
 ```
 
-**关键技术点**：
-- 继承自 `EntityBase<int>`，自动获得 Id、TenantId、AddTime、LastUpdateTime、Flag 等字段
-- 使用 `[Table]` 特性指定表名，必须添加前缀 `Register.DATABASE_PREFIX`
-- 所有 setter 使用 `private set`，通过公共方法修改，符合领域驱动设计原则
-- 使用 `private` 构造函数供 EF Core 使用，公共构造函数用于业务创建
+**Key technical points**:
+- Inherited from`EntityBase<int>`, automatically obtain Id, TenantId, AddTime, LastUpdateTime, Flag and other fields
+- use`[Table]`The attribute specifies the table name and must be prefixed`Register.DATABASE_PREFIX`
+- All setters used`private set`, modified through public methods, in line with domain-driven design principles
+- use`private`Constructors are used by EF Core and public constructors are used for business creation
 
 ---
 
-### 2. 创建 AdminChatMessage 实体
+### 2. Create AdminChatMessage entity
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatMessage.cs`
+**File path**:`tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatMessage.cs`
 
-**完整代码示例**:
+**Full code example**:
 
 ```csharp
 using Senparc.Ncf.Core.Models;
@@ -297,21 +297,21 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
 }
 ```
 
-**关键技术点**：
-- 继承自 `DtoBase<int>`，自动获得 int 类型的 Id 属性
-- 同时继承 Flag、AddTime、LastUpdateTime、TenantId 等基础字段
-- 使用可空类型 `bool?` 表示三态（喜欢/不喜欢/未反馈）
-- `CreatedTime` 独立字段便于查询和排序
-- `Sequence` 字段确保消息顺序
-- 提供简化的 `ChatMessageInputDto` 用于前端提交（不需要继承 DtoBase）
+**Key technical points**:
+- Inherited from`DtoBase<int>`, automatically obtain the Id attribute of type int
+- At the same time inherit basic fields such as Flag, AddTime, LastUpdateTime, TenantId, etc.
+- Use nullable types`bool?`Indicates three states (like/dislike/no feedback)
+- `CreatedTime`Independent fields facilitate querying and sorting
+- `Sequence`Fields ensure message order
+- Provides simplified`ChatMessageInputDto`Used for front-end submission (no need to inherit DtoBase)
 
 ---
 
-### 3. 创建 AdminChatSessionModule 实体
+### 3. Create AdminChatSessionModule entity
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatSessionModule.cs`
+**File path**:`tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatSessionModule.cs`
 
-**完整代码示例**:
+**Full code example**:
 
 ```csharp
 using Senparc.Ncf.Core.Models;
@@ -388,20 +388,20 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
 }
 ```
 
-**关键技术点**：
-- 继承自 `DtoBase<int>`，自动获得 int 类型的 Id 属性
-- 关联表用于支持"拖拽模块到对话框"功能
-- 冗余存储 ModuleName 和 ModuleVersion，避免频繁 JOIN 查询
-- AddedTime 记录模块添加时间，便于追溯
-- DTO 的构造函数要复制所有基类属性
+**Key technical points**:
+- Inherited from`DtoBase<int>`, automatically obtain the Id attribute of type int
+- Association table is used to support the "drag and drop module to dialog box" function
+- Redundant storage of ModuleName and ModuleVersion to avoid frequent JOIN queries
+- AddedTime records the module addition time for easy traceability
+- The DTO constructor copies all base class properties
 
 ---
 
-### 4. 创建 AdminChatSessionDto
+### 4. Create AdminChatSessionDto
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatSessionDto.cs`
+**File path**:`tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatSessionDto.cs`
 
-**完整代码示例**:
+**Full code example**:
 
 ```csharp
 using Senparc.Ncf.Core.Models;
@@ -456,11 +456,11 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 
 ---
 
-### 5. 创建 AdminChatMessageDto
+### 5. Create AdminChatMessageDto
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatMessageDto.cs`
+**File path**:`tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatMessageDto.cs`
 
-**完整代码示例**:
+**Full code example**:
 
 ```csharp
 using Senparc.Ncf.Core.Models;
@@ -541,11 +541,11 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 
 ---
 
-### 6. 创建 AdminChatSessionModuleDto
+### 6. Create AdminChatSessionModuleDto
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatSessionModuleDto.cs`
+**File path**:`tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatSessionModuleDto.cs`
 
-**完整代码示例**:
+**Full code example**:
 
 ```csharp
 using Senparc.Ncf.Core.Models;
@@ -592,13 +592,13 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 
 ---
 
-### 7. 更新 AdminSenparcEntities
+### 7. Update AdminSenparcEntities
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminSenparcEntities.cs`
+**File path**:`tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminSenparcEntities.cs`
 
-**修改位置**: 在 `//DOT REMOVE OR MODIFY THIS LINE` 行之前添加
+**Modify location**: in`//DOT REMOVE OR MODIFY THIS LINE`Add before line
 
-**添加内容**:
+**Add content**:
 
 ```csharp
 /// <summary>
@@ -617,7 +617,7 @@ public DbSet<AdminChatMessage> AdminChatMessages { get; set; }
 public DbSet<AdminChatSessionModule> AdminChatSessionModules { get; set; }
 ```
 
-**修改后的完整文件结构**:
+**Modified complete file structure**:
 
 ```csharp
 public class AdminSenparcEntities : XncfDatabaseDbContext
@@ -656,81 +656,81 @@ public class AdminSenparcEntities : XncfDatabaseDbContext
 
 ---
 
-## ✅ 验收标准
+## ✅ Acceptance Criteria
 
-### 功能验收
-- [ ] AdminChatSession 实体包含所有必需字段
-- [ ] AdminChatMessage 实体包含所有必需字段，外键关系正确
-- [ ] AdminChatSessionModule 实体包含所有必需字段，外键关系正确
-- [ ] 所有 DTO 类能正确映射实体
-- [ ] AdminSenparcEntities 已添加三个 DbSet 属性
-- [ ] 所有文件遵循命名空间规范
+### Function acceptance
+- [ ] AdminChatSession entity contains all required fields
+- [ ] AdminChatMessage entity contains all required fields, foreign key relationships are correct
+- [ ] AdminChatSessionModule entity contains all required fields, foreign key relationships are correct
+- [ ] All DTO classes correctly map entities
+- [ ] AdminSenparcEntities Three DbSet properties have been added
+- [ ] All files follow namespace conventions
 
-### 技术验收
-- [ ] 所有实体继承自 `EntityBase<int>`
-- [ ] 所有 DTO 继承自 `DtoBase<int>`（自动提供 Id 属性）
-- [ ] 表名使用 `[Table]` 特性并添加前缀
-- [ ] 所有必需字段标记 `[Required]`
-- [ ] 字符串字段设置合理的 `MaxLength`
-- [ ] 外键关系使用 `[ForeignKey]` 特性
-- [ ] 实体使用 private 构造函数和公共业务方法
-- [ ] DTO 的实体转换构造函数要复制所有基类属性
-- [ ] 枚举定义完整且有注释
+### Technical acceptance
+- [ ] All entities inherit from`EntityBase<int>`
+- [ ] All DTOs inherit from`DtoBase<int>`(Id attribute provided automatically)
+- [ ] table name usage`[Table]`properties and add a prefix
+- [ ] all required field markers`[Required]`
+- [ ] String field settings are reasonable`MaxLength`
+- [ ] Use of foreign key relationships`[ForeignKey]`characteristic
+- [ ] Entities use private constructors and public business methods
+- [ ] DTO's entity conversion constructor copies all base class properties
+- [ ] The enumeration is fully defined and commented
 
-### 质量验收
-- [ ] 代码注释清晰完整
-- [ ] 符合 NCF 框架的编码规范
-- [ ] 无编译错误
-- [ ] 无 linting 警告
-
----
-
-## 🔍 测试建议
-
-### 编译测试
-1. 编译项目，确保无语法错误
-2. 检查命名空间是否正确
-3. 确认所有引用的基类和特性存在
-
-### 代码审查
-1. 检查字段定义是否完整
-2. 验证外键关系是否正确
-3. 确认枚举值是否合理
-4. 检查注释是否清晰
+### Quality acceptance
+- [ ] Code comments are clear and complete
+- [ ] Comply with the coding specifications of the NCF framework
+- [ ] No compilation errors
+- [ ] No linting warning
 
 ---
 
-## 📝 注意事项
+## 🔍 Testing suggestions
 
-⚠️ **重要**：
-- 必须使用 `Register.DATABASE_PREFIX` 作为表名前缀，避免与其他模块冲突
-- 实体的所有属性必须使用 `private set`，通过公共方法修改
-- **DTO 必须继承 `DtoBase<int>`**，这样会自动提供 int 类型的 Id 属性，无需手动定义
-- DTO 的实体转换构造函数要复制所有基类属性（AddTime、LastUpdateTime、TenantId、Flag）
-- DTO 的构造函数要处理 null 情况
-- 外键关系要正确设置，确保 EF Core 能正确生成 Migration
-- AdminSenparcEntities 中的 DbSet 添加位置要在 `//DOT REMOVE` 注释之前
+### Compile test
+1. Compile the project to ensure there are no syntax errors
+2. Check whether the namespace is correct
+3. Confirm that all referenced base classes and attributes exist
 
-⚠️ **特别注意**：
-- 用户将手动执行 Migration，我们只需提供正确的 Model 定义
-- 不要在这个阶段创建 Migration 文件
-- 确保所有实体都正确添加到 DbContext 中
+### Code review
+1. Check whether the field definition is complete
+2. Verify whether the foreign key relationship is correct
+3. Confirm whether the enumeration value is reasonable
+4. Check whether the comments are clear
 
 ---
 
-## 🔗 相关任务
-- 上一步：无（这是第一个任务）
-- 下一步：[Step 02: 服务层实现](./step-02-service-layer.md)
-- 关联文档：[scratchpad.md](../scratchpad.md)
+## 📝 Notes
+
+⚠️ **Important**:
+- required`Register.DATABASE_PREFIX`As a table name prefix to avoid conflicts with other modules
+- All properties of the entity must be used`private set`, modified through public methods
+- **DTO must be inherited`DtoBase<int>`**, this will automatically provide the Id attribute of type int, no need to manually define it
+- The entity conversion constructor of DTO copies all base class properties (AddTime, LastUpdateTime, TenantId, Flag)
+- The constructor of DTO should handle the null case
+- Foreign key relationships must be set correctly to ensure that EF Core can correctly generate migration
+- The DbSet in AdminSenparcEntities must be added at`//DOT REMOVE`Before commenting
+
+⚠️ **Special Note**:
+- Users will perform Migration manually, we only need to provide the correct Model definition
+- Do not create migration files at this stage
+- Make sure all entities are correctly added to the DbContext
 
 ---
 
-## 📊 进度追踪
+## 🔗 Related tasks
+- Previous step: None (this is the first task)
+- Next step: [Step 02: Service layer implementation](./step-02-service-layer.md)
+- Associated documents: [scratchpad.md](../scratchpad.md)
 
-**任务拆解**：
-- [ ] **[TASK-01]** 创建 AdminChatSession 实体和 DTO (0.5h)
-- [ ] **[TASK-02]** 创建 AdminChatMessage 实体和 DTO (0.5h)
-- [ ] **[TASK-03]** 创建 AdminChatSessionModule 实体和 DTO (0.5h)
-- [ ] **[TASK-04]** 更新 AdminSenparcEntities (0.5h)
+---
 
-**预计总耗时**: 2 小时
+## 📊 Progress Tracking
+
+**Task breakdown**:
+- [ ] **[TASK-01]** Create AdminChatSession entity and DTO (0.5h)
+- [ ] **[TASK-02]** Create AdminChatMessage entity and DTO (0.5h)
+- [ ] **[TASK-03]** Create AdminChatSessionModule entity and DTO (0.5h)
+- [ ] **[TASK-04]** Update AdminSenparcEntities (0.5h)
+
+**Estimated total time**: 2 hours

@@ -38,10 +38,10 @@ Before any translation work begins:
 - **Exclude**: UI display text (e.g., Razor `.cshtml` page visible text, `<label>`, `<button>` human-readable content), only translate code **comments** and **XML doc comments**.
 
 ### What counts as a "comment"
-- Single-line comments: `// 中文注释`
-- Multi-line comments: `/* 中文 */`
-- XML doc comments: `/// <summary>中文</summary>`
-- CSS/SCSS/JS comments: `/* 中文 */`, `// 中文`
+- Single-line comments: `// Chinese comments`
+- Multi-line comments: `/* Chinese */`
+- XML doc comments: `/// <summary>Chinese</summary>`
+- CSS/SCSS/JS comments: `/* Chinese */`, `// Chinese`
 
 ### Translation Rules
 - Translate comment content from Chinese to natural, idiomatic English.

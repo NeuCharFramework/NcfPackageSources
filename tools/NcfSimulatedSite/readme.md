@@ -1,13 +1,13 @@
-## 文件夹说明
+## Folder description
 
-NeuCharFramework 前端代码源码文件夹
+NeuCharFramework front-end code source code folder
 
-## 分支说明
+## Branch description
 
-当前最新代码请见分支：[Developer](https://github.com/NeuCharFramework/NCF/tree/Developer)。
+For the latest code, please see the branch: [Developer](https://github.com/NeuCharFramework/NCF/tree/Developer).
 
-> NCF.sln 为常规 NCF 项目模板解决方案<br>
+> NCF.sln is the regular NCF project template solution<br>
 
-## 关于 Senparc.Xncf.XncfBuilder.Template.*.nupkg 文件
+## About Senparc.Xncf.XncfBuilder.Template.*.nupkg files
 
-`Senparc.Xncf.XncfBuilder.Template.*.nupkg` 文件用于在新建 XNCF 项目时，提供本地的模板 Nuget 包文件，如果不存在此文件，将自动转为在线获取。
+`Senparc.Xncf.XncfBuilder.Template.*.nupkg`The file is used to provide the local template Nuget package file when creating a new XNCF project. If this file does not exist, it will be automatically obtained online.

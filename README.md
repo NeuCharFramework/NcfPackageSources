@@ -91,7 +91,7 @@ Use the `[XncfOrder(x)]` attribute to specify the loading order of modules. The 
 - `58xx`: AI-related basic modules
 - `59xx`: System underlying basic modules
 
-## 可用的 Nuget 包 / Available NuGet Packages
+## Available NuGet Packages / Available NuGet Packages
 
 ### Basic Libraries
 
@@ -164,7 +164,7 @@ For details, please refer to: [LICENSE](LICENSE)
 
 ---
 
-<!-- 引用定义 -->
+<!-- Reference definition -->
 [badge-Senparc.Ncf.XncfBase]: https://img.shields.io/nuget/v/Senparc.Ncf.XncfBase.svg
 [nuget-Senparc.Ncf.XncfBase]: https://www.nuget.org/packages/Senparc.Ncf.XncfBase
 [badge-Senparc.Ncf.Core]: https://img.shields.io/nuget/v/Senparc.Ncf.Core.svg

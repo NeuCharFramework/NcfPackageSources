@@ -1,29 +1,29 @@
-# NCF 桌面应用 - 浏览器集成说明
+# NCF Desktop App - Browser Integration Instructions
 
-## 🚀 当前实现状态
+## 🚀 Current implementation status
 
-### ✅ 已完成功能
+### ✅ Function completed
 
-1. **双页面架构**
-   - **设置页面**：完整的NCF配置和管理界面
-   - **浏览器页面**：内置浏览器界面（当前为占位符实现）
+1. **Dual Page Architecture**
+- **Settings Page**: Complete NCF configuration and management interface
+- **Browser Page**: Built-in browser interface (currently implemented as a placeholder)
 
-2. **页面切换功能**
-   - 使用TabControl实现页面间切换
-   - 设置页面和浏览器页面可以自由切换
-   - 智能导航：NCF启动后自动切换到浏览器页面
+2. **Page switching function**
+- Use TabControl to switch between pages
+- The settings page and browser page can be freely switched
+- Intelligent navigation: Automatically switch to the browser page after NCF is started
 
-3. **Hybrid用户体验**
-   - NCF启动后自动显示浏览器页面
-   - 设置页面仍然可用于配置管理
-   - 一体化的用户界面
+3. **Hybrid User Experience**
+- Automatically display the browser page after NCF is started
+- Settings page is still available for configuration management
+- Integrated user interface
 
-4. **外部浏览器集成**
-   - "在外部浏览器中打开"按钮
-   - 跨平台浏览器启动支持
-   - 降级方案确保功能可用
+4. **External browser integration**
+- "Open in external browser" button
+- Cross-platform browser launch support
+- Downgrade scheme ensures functionality is available
 
-### 🔄 当前架构
+### 🔄 Current architecture
 
 ```
 MainWindow (TabControl)
@@ -38,78 +38,78 @@ MainWindow (TabControl)
     └── 外部浏览器按钮
 ```
 
-## 🚧 WebView 集成计划
+## 🚧 WebView Integration Plan
 
-### 第一阶段：基础 WebView (进行中)
+### Phase 1: Basic WebView (in progress)
 
-**问题分析**：
-- `WebViewControl-Avalonia` 在当前环境中存在兼容性问题
-- 需要原生库支持（libEGL.dylib、libGLESv2.dylib等）
-- 跨平台支持复杂性
+**Problem Analysis**:
+- `WebViewControl-Avalonia`There is a compatibility issue in the current environment
+- Requires native library support (libEGL.dylib, libGLESv2.dylib, etc.)
+- Cross-platform support for complexity
 
-**解决方案**：
-1. **评估替代方案**
-   - Avalonia Accelerate WebView (商业解决方案)
-   - 其他开源WebView组件
-   - 自定义WebView实现
+**Solution**:
+1. **Evaluate Alternatives**
+- Avalonia Accelerate WebView (Business Solutions)
+- Other open source WebView components
+- Custom WebView implementation
 
-2. **渐进式集成**
-   - 当前：占位符 + 外部浏览器
-   - 短期：简单WebView集成
-   - 长期：完整的内置浏览器功能
+2. **Progressive Integration**
+- Current: placeholder + external browser
+- Short term: Simple WebView integration
+- Long term: full built-in browser functionality
 
-### 第二阶段：增强功能
+### Phase 2: Enhanced Functions
 
-**计划功能**：
-- 完整的导航功能（前进、后退、刷新）
-- 地址栏显示和交互
-- 页面加载状态显示
-- 错误处理和重试机制
+**Planning Features**:
+- Complete navigation functions (forward, back, refresh)
+- Address bar display and interaction
+- Page loading status display
+- Error handling and retry mechanism
 
-### 第三阶段：高级特性
+### Phase 3: Advanced Features
 
-**扩展功能**：
-- 开发者工具集成
-- 书签和历史记录
-- 页面截图和打印
-- JavaScript交互
+**Extended functions**:
+- Developer tools integration
+- Bookmarks and history
+- Screenshot and print pages
+- JavaScript interaction
 
-## 💡 使用说明
+## 💡 Instructions for use
 
-### 当前版本使用步骤
+### Steps to use the current version
 
-1. **启动应用程序**
+1. **Launch the application**
    ```bash
    cd tools/NcfDesktopApp.GUI
    dotnet run
    ```
 
-2. **配置NCF**
-   - 在"设置中心"页面配置NCF参数
-   - 设置端口范围、下载选项等
+2. **Configure NCF**
+- Configure NCF parameters on the "Settings Center" page
+- Set port ranges, download options, and more
 
-3. **启动NCF**
-   - 点击"启动 NCF"按钮
-   - 应用程序将自动切换到浏览器页面
+3. **Start NCF**
+- Click the "Start NCF" button
+- The application will automatically switch to the browser page
 
-4. **访问NCF站点**
-   - 点击"在外部浏览器中打开"按钮
-   - 在系统默认浏览器中访问NCF
+4. **Visit NCF site**
+- Click the "Open in external browser" button
+- Access NCF in the system default browser
 
-5. **页面切换**
-   - 使用顶部标签页在设置和浏览器页面间切换
-   - 浏览器页面仅在NCF准备就绪后启用
+5. **Page switching**
+- Use the top tabs to switch between settings and browser pages
+- The browser page will only be enabled after NCF is ready
 
-### 功能特点
+### Features
 
-- **智能导航**：NCF启动完成后自动切换到浏览器页面
-- **状态同步**：实时显示NCF运行状态和站点地址
-- **跨平台兼容**：支持Windows、macOS、Linux
-- **优雅降级**：内置浏览器不可用时使用外部浏览器
+- **Smart Navigation**: Automatically switch to the browser page after NCF startup is completed
+- **Status Synchronization**: Display NCF running status and site address in real time
+- **Cross-platform compatibility**: Supports Windows, macOS, Linux
+- **Graceful Downgrade**: use external browser when built-in browser is not available
 
-## 🔧 技术实现
+## 🔧 Technical implementation
 
-### 核心组件
+### Core components
 
 ```csharp
 // 主窗口：TabControl 管理页面切换
@@ -132,39 +132,39 @@ BrowserView.axaml
 └── 外部浏览器集成
 ```
 
-### 关键特性
+### Key Features
 
-- **MVVM架构**：清晰的视图-模型分离
-- **响应式设计**：实时状态更新和UI响应
-- **跨平台支持**：统一的用户体验
-- **模块化设计**：易于扩展和维护
+- **MVVM Architecture**: clear view-model separation
+- **Responsive Design**: Real-time status updates and UI responsiveness
+- **Cross-platform support**: unified user experience
+- **Modular design**: easy to expand and maintain
 
-## 📋 未来计划
+## 📋 Future plans
 
-### 短期目标 (1-2周)
-- [ ] 解决WebViewControl-Avalonia兼容性问题
-- [ ] 实现基础的内置浏览器功能
-- [ ] 完善导航控件功能
+### Short term goals (1-2 weeks)
+- [ ] Solve WebViewControl-Avalonia compatibility issue
+- [ ] Implement basic built-in browser functions
+- [ ] Improve navigation control functions
 
-### 中期目标 (1个月)
-- [ ] 添加完整的WebView功能
-- [ ] 实现JavaScript交互
-- [ ] 优化性能和用户体验
+### Mid-term goal (1 month)
+- [ ] Add full WebView functionality
+- [ ] Implement JavaScript interaction
+- [ ] Optimize performance and user experience
 
-### 长期目标 (3个月)
-- [ ] 高级浏览器功能
-- [ ] 开发者工具集成
-- [ ] 插件和扩展支持
+### Long-term goals (3 months)
+- [ ] Advanced browser features
+- [ ] Developer Tools Integration
+- [ ] Plugin and extension support
 
-## 🤝 贡献
+## 🤝 Contribute
 
-欢迎贡献代码和想法！特别是：
-- WebView组件的替代方案
-- 跨平台兼容性改进
-- 用户体验优化建议
+Contributions of code and ideas are welcome! in particular:
+- Alternative to WebView component
+- Cross-platform compatibility improvements
+- User experience optimization suggestions
 
 ---
 
-**更新日期**：2025-01-04
-**版本**：v1.0-preview
-**状态**：功能完整，WebView集成进行中 
+**Updated date**: 2025-01-04
+**Version**: v1.0-preview
+**Status**: Function complete, WebView integration in progress

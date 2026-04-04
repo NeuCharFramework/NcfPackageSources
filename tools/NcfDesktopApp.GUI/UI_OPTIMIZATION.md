@@ -1,17 +1,17 @@
-# NCF Desktop UI 优化说明
+# NCF Desktop UI optimization instructions
 
-## 📐 布局优化
+## 📐 Layout optimization
 
-### 🎯 优化目标
-- 解决低分辨率屏幕无法首屏显示所有内容的问题
-- 为日志提供更大的可视空间
-- 提升整体视觉效果和用户体验
+### 🎯 Optimization goals
+- Solve the problem that low-resolution screens cannot display all content on the first screen
+- Provide larger visual space for logs
+- Improve overall visual effects and user experience
 
 ---
 
-## 🔄 布局变更
+## 🔄 Layout changes
 
-### 之前：上下布局（垂直堆叠）
+### Before: top-bottom layout (vertical stacking)
 
 ```
 ┌──────────────────────────────────┐
@@ -34,14 +34,14 @@
     ⚠️ 需要滚动才能看到全部内容
 ```
 
-**问题：**
-- ❌ 日志区域固定 150px 高度，空间不足
-- ❌ 低分辨率屏幕（800x600）需要滚动多次
-- ❌ 控制面板和日志混在一起，层次不清晰
+**question:**
+- ❌ The log area has a fixed height of 150px and there is insufficient space.
+- ❌ Low resolution screen (800x600) requires multiple scrolling
+- ❌ The control panel and logs are mixed together, and the hierarchy is not clear.
 
 ---
 
-### 现在：左右布局（分栏设计）
+### Now: left and right layout (column design)
 
 ```
 ┌────────────────────────────────────────────────────────────┐
@@ -67,81 +67,81 @@
      ✅ 一屏显示所有重要信息
 ```
 
-**优势：**
-- ✅ 日志占据整个右侧高度，可视内容增加 300%+
-- ✅ 控制面板紧凑在左侧，易于访问
-- ✅ 适合低分辨率屏幕（800x600+）
-- ✅ 更现代的 IDE 风格布局
-- ✅ 清晰的信息层次结构
+**Advantages:**
+- ✅ The log occupies the entire right side height, and the visible content increases by 300%+
+- ✅ Control panel is compact and easy to access on the left
+- ✅ Suitable for low resolution screens (800x600+)
+- ✅ More modern IDE style layout
+- ✅ Clear information hierarchy
 
 ---
 
-## 🎨 视觉设计优化
+## 🎨 Visual design optimization
 
-### 1. 卡片样式优化
+### 1. Card style optimization
 
-**紧凑卡片（card-compact）**
-- 减小内边距：20px → 15px
-- 圆角优化：8px → 6px
-- 阴影减淡：更柔和的阴影效果
-- 字体大小：标题 18px → 16px，正文 14px → 12px
+**Card-compact**
+- Reduce padding: 20px → 15px
+- Rounded corners optimization: 8px → 6px
+- Shadow Dodge: softer shadow effect
+- Font size: title 18px → 16px, body text 14px → 12px
 
-### 2. 日志面板设计
+### 2. Log panel design
 
-**专业的日志区域**
-- 独立的标题栏，视觉分离
-- 等宽字体：`Consolas, Menlo, Monaco, Courier New`
-- 行高优化：16px，更易阅读
-- 自动滚动条
-- 深色背景，突出日志内容
+**Professional log area**
+- Independent title bar, visual separation
+- Monospaced font:`Consolas, Menlo, Monaco, Courier New`
+- Line height optimization: 16px, easier to read
+- Automatic scroll bar
+- Dark background to highlight log content
 
-### 3. 颜色和图标
+### 3. Colors and icons
 
-**图标语义化**
-- 📊 状态信息
-- ⚡ 操作进度
-- ⚙️ 配置选项
-- 📝 操作日志
+**Icon semantics**
+- 📊 Status information
+- ⚡ Operation progress
+- ⚙️ Configuration options
+- 📝 Operation log
 
-**状态指示器**
-- 圆形指示器：16px → 12px（更精致）
-- 配色保持现有主题系统
+**Status Indicator**
+- Circle indicator: 16px → 12px (more refined)
+- Color matching maintains the existing theme system
 
-### 4. 响应式布局
+### 4. Responsive layout
 
-| 分辨率 | 左侧宽度 | 右侧宽度 | 显示效果 |
+| resolution | left width | Right width | Display effect |
 |--------|---------|---------|---------|
-| 800x600 | 420px | 380px | ✅ 完整显示 |
-| 1024x768 | 420px | 604px | ✅ 舒适 |
-| 1366x768 | 420px | 946px | ✅ 宽敞 |
-| 1920x1080 | 420px | 1500px | ✅ 超宽 |
+| 800x600 | 420px | 380px | ✅ Show in full |
+| 1024x768 | 420px | 604px | ✅ Comfortable |
+| 1366x768 | 420px | 946px | ✅ Spacious |
+| 1920x1080 | 420px | 1500px | ✅ Extra wide |
 
 ---
 
-## 📊 空间对比
+## 📊 Space comparison
 
-### 日志可视空间提升
+### Improved log visual space
 
-| 项目 | 之前 | 现在 | 提升 |
+| project | Before | Now | promote |
 |------|------|------|------|
-| **高度** | 150px | ~500px | **+233%** |
-| **宽度** | 560px | ~860px | **+53%** |
-| **总面积** | 84,000px² | 430,000px² | **+412%** |
-| **可见行数** | ~10行 | ~30行 | **+200%** |
+| **high** | 150px | ~500px | **+233%** |
+| **width** | 560px | ~860px | **+53%** |
+| **Total Area** | 84,000px² | 430,000px² | **+412%** |
+| **Visible number of rows** | ~10 lines | ~30 lines | **+200%** |
 
-### 屏幕利用率
+### Screen utilization
 
-| 分辨率 | 之前需要滚动 | 现在需要滚动 | 改善 |
+| resolution | Need to scroll before | Need to scroll now | improve |
 |--------|-------------|-------------|------|
-| 800x600 | ✅ 是（3次） | ❌ 否 | ✅ |
-| 1024x768 | ✅ 是（2次） | ❌ 否 | ✅ |
-| 1366x768+ | ⚠️ 少量 | ❌ 否 | ✅ |
+| 800x600 | ✅ Yes (3 times) | ❌ No | ✅ |
+| 1024x768 | ✅ Yes (2 times) | ❌ No | ✅ |
+| 1366x768+ | ⚠️ A small amount | ❌ No | ✅ |
 
 ---
 
-## 🛠️ 技术实现
+## 🛠️Technical implementation
 
-### 布局结构
+### Layout structure
 
 ```xml
 <Grid RowDefinitions="Auto,*">
@@ -170,7 +170,7 @@
 </Grid>
 ```
 
-### 关键 CSS 类
+### Key CSS Classes
 
 ```xml
 <!-- 紧凑卡片样式 -->
@@ -189,18 +189,18 @@
 
 ---
 
-## 🎯 用户体验改进
+## 🎯 User experience improvements
 
-### 开发者体验
+### Developer experience
 
-| 场景 | 之前 | 现在 |
+| scene | Before | Now |
 |------|------|------|
-| 查看日志 | 需要滚动，只能看10行 | 一次看30+行，无需滚动 |
-| 调试问题 | 频繁切换滚动位置 | 日志全屏可见，易于追踪 |
-| 修改配置 | 需要滚动找到配置区域 | 配置固定在左侧，易于访问 |
-| 监控状态 | 状态信息分散 | 状态信息集中在左上角 |
+| View log | Need to scroll, can only see 10 lines | See 30+ lines at once, no need to scroll |
+| Debugging issues | Switch scroll positions frequently | Logs are visible in full screen and easy to track |
+| Modify configuration | Need to scroll to find the configuration area | Configuration is pinned to the left for easy access |
+| Monitor status | Status information is scattered | Status information is concentrated in the upper left corner |
 
-### 视觉层次
+### Visual hierarchy
 
 ```
 优先级 1（关键）:  顶部工具栏 - 主要操作按钮
@@ -211,103 +211,103 @@
 
 ---
 
-## 📱 适配说明
+## 📱Adaptation instructions
 
-### 最小分辨率支持
+### Minimum resolution support
 
-- **最小宽度**: 800px（MainWindow.axaml 设置）
-- **最小高度**: 650px（MainWindow.axaml 设置）
-- **推荐分辨率**: 1024x768+
+- **Minimum width**: 800px (MainWindow.axaml setting)
+- **Minimum height**: 650px (MainWindow.axaml setting)
+- **Recommended resolution**: 1024x768+
 
-### 高 DPI 屏幕
+### High DPI screens
 
-- 所有尺寸使用相对单位
-- 支持 Avalonia 的 DPI 自适应
-- 字体大小保持可读性
-
----
-
-## 🎨 主题兼容性
-
-所有颜色使用 DynamicResource，完全支持主题切换：
-
-- `CardBackgroundBrush` - 卡片背景
-- `CardBorderBrush` - 卡片边框
-- `LogBackgroundBrush` - 日志背景
-- `ToolbarBackgroundBrush` - 工具栏背景
-- `SecondaryTextBrush` - 次要文字颜色
-- `InputTextBrush` - 输入文字颜色
+- Use relative units for all dimensions
+- Support Avalonia's DPI adaptation
+- Font size remains readable
 
 ---
 
-## 🚀 性能影响
+## 🎨 Theme Compatibility
 
-- **布局复杂度**: 轻微增加（Grid 嵌套）
-- **渲染性能**: 无影响（移除了固定高度，减少重绘）
-- **内存占用**: 无变化
-- **启动速度**: 无影响
+All colors use DynamicResource, with full support for theme switching:
+
+- `CardBackgroundBrush`- Card background
+- `CardBorderBrush`- Card borders
+- `LogBackgroundBrush`- Log background
+- `ToolbarBackgroundBrush`- Toolbar background
+- `SecondaryTextBrush`- Secondary text color
+- `InputTextBrush`- Enter text color
 
 ---
 
-## 📝 修改文件清单
+## 🚀 Performance impact
 
-### 主要修改
+- **Layout complexity**: slightly increased (Grid nested)
+- **Rendering Performance**: No impact (fixed height removed, reducing redraws)
+- **Memory usage**: No change
+- **Startup Speed**: No impact
+
+---
+
+## 📝 Modify file list
+
+### Major changes
 
 1. **Views/SettingsView.axaml**
-   - 改为左右分栏布局
-   - 新增 `card-compact` 样式
-   - 新增 `log-panel` 样式
-   - 优化字体大小和间距
+- Changed to left and right column layout
+- New`card-compact`style
+- New`log-panel`style
+- Optimize font size and spacing
 
-### 未修改
+### Not modified
 
-- MainWindow.axaml（保持原样）
-- BrowserView.axaml（保持原样）
-- ViewModel 逻辑（无需修改）
-- 主题系统（完全兼容）
-
----
-
-## 🎯 后续优化建议
-
-### 可选增强功能
-
-1. **日志功能增强**
-   - [ ] 添加"清空日志"按钮
-   - [ ] 添加日志行数统计
-   - [ ] 添加日志搜索功能
-   - [ ] 添加日志导出功能
-   - [ ] 添加日志级别过滤（INFO/WARN/ERROR）
-
-2. **布局优化**
-   - [ ] 添加左侧面板折叠功能
-   - [ ] 支持拖动调整左右比例
-   - [ ] 添加布局预设（紧凑/标准/宽松）
-
-3. **交互优化**
-   - [ ] 添加键盘快捷键
-   - [ ] 添加右键菜单
-   - [ ] 添加状态工具提示
+- MainWindow.axaml (leave it as is)
+- BrowserView.axaml (leave it as is)
+- ViewModel logic (no modification required)
+- Theme system (fully compatible)
 
 ---
 
-## 📖 使用指南
+## 🎯 Follow-up optimization suggestions
 
-### 开发者
+### Optional enhancements
 
-**调整左侧面板宽度：**
+1. **Log function enhancement**
+- [ ] Add "Clear Log" button
+- [ ] Add log line count statistics
+- [ ] Add log search function
+- [ ] Add log export function
+- [ ] Add log level filtering (INFO/WARN/ERROR)
+
+2. **Layout optimization**
+- [ ] Add left panel folding function
+- [ ] supports dragging to adjust left and right proportions
+- [ ] Added layout presets (compact/standard/loose)
+
+3. **Interaction Optimization**
+- [ ] Add keyboard shortcuts
+- [ ] Add right-click menu
+- [ ] Add status tooltip
+
+---
+
+## 📖 User Guide
+
+### Developer
+
+**Adjust left panel width:**
 ```xml
 <Grid Grid.Row="1" ColumnDefinitions="420,*">
 <!--                          ↑ 修改这个值 -->
 ```
 
-**调整卡片间距：**
+**Adjust card spacing:**
 ```xml
 <StackPanel Spacing="15">
 <!--                 ↑ 修改这个值 -->
 ```
 
-**自定义卡片样式：**
+**Custom card style:**
 ```xml
 <Style Selector="Border.card-compact">
     <Setter Property="Padding" Value="15"/>
@@ -318,36 +318,36 @@
 
 ---
 
-## ✅ 测试建议
+## ✅ Testing suggestions
 
-### 功能测试
+### Functional testing
 
-- [ ] 所有卡片正常显示
-- [ ] 日志实时更新
-- [ ] 配置选项可用
-- [ ] 进度条正常工作
-- [ ] 按钮操作正常
+- [ ] All cards display normally
+- [ ] Log updated in real time
+- [ ] configuration options available
+- [ ] progress bar works properly
+- [ ] button operates normally
 
-### 视觉测试
+### Visual test
 
-- [ ] 不同分辨率下显示正常（800x600, 1024x768, 1920x1080）
-- [ ] 亮色/暗色主题切换正常
-- [ ] 字体大小适中
-- [ ] 间距舒适
-- [ ] 滚动条工作正常
+- [ ] Displays normally under different resolutions (800x600, 1024x768, 1920x1080)
+- [ ] Light/dark theme switching is normal
+- [ ] font size is moderate
+- [ ] Comfortable spacing
+- [ ] scrollbars work fine
 
-### 性能测试
+### Performance testing
 
-- [ ] 大量日志输出时不卡顿
-- [ ] 窗口缩放流畅
-- [ ] 内存占用正常
+- [ ] No lag when outputting a large amount of logs
+- [ ] Window scaling is smooth
+- [ ] Memory usage is normal
 
 ---
 
-**优化完成日期**: 2025-11-16  
-**版本**: v1.1.0  
-**设计师**: AI Assistant  
-**审核**: 待用户确认
+**Optimization completion date**: 2025-11-16
+**Version**: v1.1.0
+**Designer**: AI Assistant
+**Audit**: To be confirmed by the user
 
 
 

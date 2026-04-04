@@ -1,14 +1,14 @@
-﻿## 数据库实体
+﻿## Database entities
 
-命名空间统一为：Senparc.Core.Models
+The namespace is unified to: Senparc.Core.Models
 
 
-## 设计模式参考（部分）
+## Design pattern reference (part)
 
-逻辑服务：https://www.thereformedprogrammer.net/architecture-of-business-layer-working-with-entity-framework-core-and-v6-revisited/
+Logic service: https://www.thereformedprogrammer.net/architecture-of-business-layer-working-with-entity-framework-core-and-v6-revisited/
 
 EF Core + DDD：https://www.thereformedprogrammer.net/creating-domain-driven-design-entity-classes-with-entity-framework-core/
 
 ABP：https://github.com/abpframework/abp
 
-NCF 并没有`完全`认同上述设计思路，因此会有不同。
+NCF does not`fully`I agree with the above design ideas, so there will be differences.

@@ -1,32 +1,32 @@
-# Step 04: 对话任务页面 - 创建专门的 AI 对话界面
+# Step 04: Dialogue task page - Create a dedicated AI dialogue interface
 
-## 📋 任务概述
-创建独立的对话任务页面，包含左侧对话历史记录列表和右侧 AI 对话窗口，设计符合系统风格且现代化。
+## 📋 Mission Overview
+Create an independent dialogue task page, including a dialogue history list on the left and an AI dialogue window on the right. The design is in line with the system style and modern.
 
-## 🎯 目标
-- ✅ 创建 Chat.cshtml 页面（左右分栏布局）
-- ✅ 左侧：会话历史记录列表
-- ✅ 右侧：当前会话的对话窗口
-- ✅ 实现消息发送和接收
-- ✅ 支持消息反馈（点赞/点踩）
-- ✅ 实时滚动到最新消息
-- ✅ 符合系统风格，重用 Element UI 组件
+## 🎯 Goal
+- ✅ Create Chat.cshtml page (left and right column layout)
+- ✅ Left: Session history list
+- ✅ Right: Conversation window of the current session
+- ✅ Enable message sending and receiving
+- ✅ Support message feedback (like/dislike)
+- ✅ Scroll to the latest news in real time
+- ✅ Comply with system style and reuse Element UI components
 
-## 📂 涉及文件
+## 📂Involved documents
 
-### 新建文件
+### Create new file
 1. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml`
 2. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml.cs`
 3. `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/AdminChat/Chat.js`
 4. `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/css/Admin/Pages/AdminChat/Chat.css`
 
-## 🔧 实现步骤
+## 🔧 Implementation steps
 
-### 1. 创建 Chat.cshtml 页面
+### 1. Create Chat.cshtml page
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml`
+**File path**:`tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml`
 
-**完整代码示例**:
+**Full code example**:
 
 ```cshtml
 @page
@@ -224,20 +224,20 @@
 }
 ```
 
-**关键技术点**：
-- 使用 Element UI 的 Container、Aside、Main 组件实现左右分栏
-- Scrollbar 组件实现平滑滚动
-- v-for 循环渲染消息列表
-- v-loading 显示加载状态
-- 条件渲染 (v-if) 控制显示逻辑
+**Key technical points**:
+- Use Element UI's Container, Apart, and Main components to implement left and right columns
+- Scrollbar component implements smooth scrolling
+- v-for loop renders message list
+- v-loading displays loading status
+- Conditional rendering (v-if) controls display logic
 
 ---
 
-### 2. 创建 Chat.cshtml.cs 后端页面模型
+### 2. Create Chat.cshtml.cs backend page model
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml.cs`
+**File path**:`tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml.cs`
 
-**完整代码示例**:
+**Full code example**:
 
 ```csharp
 using Microsoft.AspNetCore.Mvc;
@@ -301,18 +301,18 @@ namespace Senparc.Areas.Admin.Pages.AdminChat
 }
 ```
 
-**关键技术点**：
-- 继承自 `BaseAdminPageModel`
-- 从 QueryString 获取参数
-- 验证用户登录状态
+**Key technical points**:
+- Inherited from`BaseAdminPageModel`
+- Get parameters from QueryString
+- Verify user login status
 
 ---
 
-### 3. 创建 Chat.js 前端交互逻辑
+### 3. Create Chat.js front-end interaction logic
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/AdminChat/Chat.js`
+**File path**:`tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/AdminChat/Chat.js`
 
-**完整代码示例**:
+**Full code example**:
 
 ```javascript
 var chatApp = new Vue({
@@ -724,21 +724,21 @@ var chatApp = new Vue({
 });
 ```
 
-**关键技术点**：
-- 使用 async/await 处理异步 API 调用
-- 实现消息实时追加和滚动
-- 时间格式化显示（刚刚、X分钟前、昨天等）
-- 消息内容简单格式化（换行、代码、加粗、斜体）
-- XSS 防护（HTML 转义）
-- 只使用系统现有的 Vue.js、Element UI 和 axios，不引入新依赖
+**Key technical points**:
+- Use async/await to handle asynchronous API calls
+- Real-time appending and scrolling of messages
+- Time formatted display (just now, X minutes ago, yesterday, etc.)
+- Simple formatting of message content (line breaks, codes, bold, italics)
+- XSS protection (HTML escaping)
+- Only use the system's existing Vue.js, Element UI and axios, without introducing new dependencies
 
 ---
 
-### 4. 创建 Chat.css 样式文件
+### 4. Create Chat.css style file
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/css/Admin/Pages/AdminChat/Chat.css`
+**File path**:`tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/css/Admin/Pages/AdminChat/Chat.css`
 
-**完整代码示例**:
+**Full code example**:
 
 ```css
 /* 对话容器 */
@@ -1164,81 +1164,81 @@ var chatApp = new Vue({
 }
 ```
 
-**关键技术点**：
-- 使用 Flexbox 实现左右分栏和消息布局
-- 渐变色背景和阴影效果
-- 流畅的动画过渡
-- 响应式设计，适配不同屏幕尺寸
+**Key technical points**:
+- Use Flexbox to implement left and right columns and message layout
+- Gradient background and shadow effects
+- Smooth animated transitions
+- Responsive design to adapt to different screen sizes
 
 ---
 
-## ✅ 验收标准
+## ✅ Acceptance Criteria
 
-### 功能验收
-- [ ] 对话页面正确加载
-- [ ] 左侧显示会话历史列表
-- [ ] 右侧显示当前会话的消息
-- [ ] 可以发送消息并收到 AI 回复
-- [ ] 消息显示正确（用户/AI区分）
-- [ ] 可以创建新会话
-- [ ] 可以切换会话
-- [ ] 可以删除会话
-- [ ] 可以对 AI 回复点赞/点踩
-- [ ] 自动滚动到最新消息
+### Function acceptance
+- [ ] Conversation page loads correctly
+- [ ] Displays the session history list on the left
+- [ ] Displays the messages of the current session on the right
+- [ ] Can send messages and receive AI replies
+- [ ] The message is displayed correctly (user/AI distinction)
+- [ ] can create new sessions
+- [ ] can switch sessions
+- [ ] can delete the session
+- [ ] You can like/dislike the AI ​​reply
+- [ ] automatically scroll to the latest news
 
-### 技术验收
-- [ ] API 调用正确
-- [ ] 数据绑定正确
-- [ ] 事件处理正确
-- [ ] 错误处理完善
-- [ ] 用户体验流畅
+### Technical acceptance
+- [ ] API call is correct
+- [ ] Data binding is correct
+- [ ] event handling is correct
+- [ ] Error handling improved
+- [ ] Smooth user experience
 
-### 质量验收
-- [ ] 样式美观，符合系统风格
-- [ ] 响应式布局正常
-- [ ] 无 JavaScript 错误
-- [ ] 无样式冲突
-- [ ] 代码注释清晰
-
----
-
-## 📝 注意事项
-
-⚠️ **重要**：
-- 确保左侧边栏宽度合适（300px），不要太宽或太窄
-- 消息列表要自动滚动到底部，但不影响用户查看历史消息
-- AI 正在输入时要显示动画，提升用户体验
-- 消息内容要正确换行和格式化，并进行 XSS 防护（HTML 转义）
-- 时间显示要人性化（刚刚、X分钟前等）
-- **只使用系统现有组件**：Vue.js、Element UI、Font Awesome、axios，不引入新的第三方库
-- 所有 JS/CSS 资源使用本地文件，不使用 CDN 远程连接
-
-⚠️ **性能考虑**：
-- 消息列表使用虚拟滚动（如果消息量很大）
-- 会话列表分页加载，避免一次性加载过多
-- API 调用添加防抖，避免重复请求
-
-⚠️ **用户体验**：
-- 发送消息后立即清空输入框
-- 显示 AI 正在输入的动画
-- 提供明确的错误提示
-- 支持键盘快捷键（Ctrl+Enter 发送）
+### Quality acceptance
+- [ ] Beautiful style, consistent with system style
+- [ ] Responsive layout is normal
+- [ ] No JavaScript errors
+- [ ] No style conflicts
+- [ ] Code comments are clear
 
 ---
 
-## 🔗 相关任务
-- 上一步：[Step 03: 首页UI改版](./step-03-homepage-ui.md)
-- 下一步：[Step 05: 模块拖拽功能](./step-05-drag-drop.md)
-- 关联文档：[scratchpad.md](../scratchpad.md)
+## 📝 Notes
+
+⚠️ **Important**:
+- Make sure the left sidebar is the right width (300px), not too wide or too narrow
+- The message list should automatically scroll to the bottom without affecting users' ability to view historical messages.
+- Display animation when AI is typing to improve user experience
+- Message content must be properly wrapped and formatted, and XSS protected (HTML escaped)
+- The time display should be humanized (just now, X minutes ago, etc.)
+- **Only use existing components of the system**: Vue.js, Element UI, Font Awesome, axios, no new third-party libraries are introduced
+- All JS/CSS resources use local files and do not use CDN remote connections
+
+⚠️ **Performance Considerations**:
+- The message list uses virtual scrolling (if the message volume is large)
+- The session list is loaded in pages to avoid loading too much at once
+- Add anti-shake to API calls to avoid repeated requests
+
+⚠️ **User Experience**:
+- Clear the input box immediately after sending the message
+- An animation showing the AI ​​typing
+- Provide clear error messages
+- Supports keyboard shortcuts (Ctrl+Enter to send)
 
 ---
 
-## 📊 进度追踪
+## 🔗 Related tasks
+- Previous step: [Step 03: Homepage UI revision](./step-03-homepage-ui.md)
+- Next step: [Step 05: Module drag and drop function](./step-05-drag-drop.md)
+- Associated documents: [scratchpad.md](../scratchpad.md)
 
-**任务拆解**：
-- [ ] **[TASK-13]** 创建 Chat.cshtml 页面结构 (1h)
-- [ ] **[TASK-14]** 创建 Chat.cshtml.cs 后端逻辑 (0.5h)
-- [ ] **[TASK-15]** 创建 Chat.js 前端交互 (1h)
-- [ ] **[TASK-16]** 创建 Chat.css 样式文件 (0.5h)
+---
 
-**预计总耗时**: 3 小时
+## 📊 Progress Tracking
+
+**Task breakdown**:
+- [ ] **[TASK-13]** Create Chat.cshtml page structure (1h)
+- [ ] **[TASK-14]** Create Chat.cshtml.cs backend logic (0.5h)
+- [ ] **[TASK-15]** Create Chat.js front-end interaction (1h)
+- [ ] **[TASK-16]** Create Chat.css style file (0.5h)
+
+**Estimated total time**: 3 hours

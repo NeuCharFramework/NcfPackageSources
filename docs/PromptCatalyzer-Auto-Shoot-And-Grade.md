@@ -1,27 +1,27 @@
-# PromptCatalyzer 自动打靶与 AI 评分功能
+# PromptCatalyzer automatic target shooting and AI scoring function
 
-## 📋 功能概述
+## 📋 Function Overview
 
-在优化弹窗中新增两个选项，实现优化后的自动化测试流程：
+Two new options are added in the optimization pop-up window to implement the optimized automated testing process:
 
-### 选项 1：创建后立即打靶 ✅ (默认选中)
-- **功能**：优化完成并创建新 PromptItem 后，自动执行一次打靶测试
-- **目的**：立即验证优化后的 Prompt 效果，无需手动操作
-- **等同操作**：等同于手动点击"打靶"按钮
+### Option 1: Shoot immediately after creation ✅ (selected by default)
+- **Function**: After optimization is completed and a new PromptItem is created, automatically perform a target shooting test
+- **Purpose**: Immediately verify the optimized Prompt effect without manual operation
+- **Equivalent operation**: Equivalent to manually clicking the "Target Shooting" button
 
-### 选项 2：打靶后使用 AI 评分 (默认不选中)
-- **功能**：打靶完成后，自动调用 AI 评分功能进行质量评估
-- **依赖**：只有当"创建后立即打靶"选中时才可用（否则冻结）
-- **前提**：需要在 PromptItem 中配置了"期望结果"（ExpectedResultsJson）
-- **等同操作**：等同于手动点击"AI评分"按钮
+### Option 2: Use AI scoring after shooting (not selected by default)
+- **Function**: After target practice is completed, the AI ​​scoring function is automatically called for quality assessment.
+- **Dependencies**: Only available if "Target immediately after creation" is selected (otherwise frozen)
+- **Prerequisite**: "Expected results" (ExpectedResultsJson) need to be configured in PromptItem
+- **Equivalent operation**: Equivalent to manually clicking the "AI Rating" button
 
 ---
 
-## 🎨 前端实现
+## 🎨 Front-end implementation
 
-### 1️⃣ 数据字段
+### 1️⃣ Data field
 
-**文件**: `src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js`
+**document**:`src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js`
 
 ```javascript
 data() {
@@ -37,9 +37,9 @@ data() {
 }
 ```
 
-### 2️⃣ UI 界面
+### 2️⃣ UI interface
 
-**文件**: `src/Extensions/Senparc.Xncf.PromptRange/Areas/Admin/Pages/PromptRange/Prompt.cshtml`
+**document**:`src/Extensions/Senparc.Xncf.PromptRange/Areas/Admin/Pages/PromptRange/Prompt.cshtml`
 
 ```html
 <el-dialog title="AI 自动优化 Prompt" :visible.sync="optimizeDialogVisible" width="50%">
@@ -78,14 +78,14 @@ data() {
 </el-dialog>
 ```
 
-**UI 效果**：
-- 第一个 checkbox 默认选中，用户可以取消
-- 第二个 checkbox 默认不选中
-- 当第一个 checkbox 未选中时，第二个自动禁用（灰色）
+**UI effect**:
+- The first checkbox is selected by default and the user can cancel it
+- The second checkbox is not selected by default
+- When the first checkbox is unchecked, the second one is automatically disabled (grey)
 
-### 3️⃣ 数据传递
+### 3️⃣ Data transfer
 
-**文件**: `src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js`
+**document**:`src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js`
 
 ```javascript
 async executeOptimize() {
@@ -113,11 +113,11 @@ async executeOptimize() {
 
 ---
 
-## 🔧 后端实现
+## 🔧 Backend implementation
 
-### 1️⃣ DTO 扩展
+### 1️⃣ DTO extension
 
-**文件**: `src/Extensions/Senparc.Xncf.PromptRange.Abstractions/Events/PromptOptimizationEvents.cs`
+**document**:`src/Extensions/Senparc.Xncf.PromptRange.Abstractions/Events/PromptOptimizationEvents.cs`
 
 ```csharp
 /// <summary>
@@ -135,9 +135,9 @@ public record OptimizationContext(
 );
 ```
 
-### 2️⃣ 依赖注入
+### 2️⃣ Dependency injection
 
-**文件**: `src/Extensions/Senparc.Xncf.PromptRange/Application/EventHandlers/PromptOptimizationRequestHandler.cs`
+**document**:`src/Extensions/Senparc.Xncf.PromptRange/Application/EventHandlers/PromptOptimizationRequestHandler.cs`
 
 ```csharp
 public class PromptOptimizationRequestHandler : IIntegrationEventHandler<PromptOptimizationRequestEvent>
@@ -163,9 +163,9 @@ public class PromptOptimizationRequestHandler : IIntegrationEventHandler<PromptO
     }
 ```
 
-### 3️⃣ 核心逻辑
+### 3️⃣ Core logic
 
-**文件**: `src/Extensions/Senparc.Xncf.PromptRange/Application/EventHandlers/PromptOptimizationRequestHandler.cs`
+**document**:`src/Extensions/Senparc.Xncf.PromptRange/Application/EventHandlers/PromptOptimizationRequestHandler.cs`
 
 ```csharp
 // 【步骤4/5】创建新版本的 PromptItem
@@ -237,7 +237,7 @@ if (@event.Context.AutoShootAfterOptimize)
 
 ---
 
-## 🔄 完整流程图
+## 🔄 Complete flow chart
 
 ```
 用户点击"开始优化"
@@ -288,80 +288,80 @@ PromptOptimizationController.OptimizeAsync
 
 ---
 
-## 🎯 使用场景
+## 🎯 Usage scenarios
 
-### 场景 1：完整的自动化测试流程
+### Scenario 1: Complete automated testing process
 
-**用户操作**：
-1. 选择一个 PromptItem
-2. 点击"开始优化"
-3. ☑️ 勾选"创建后立即打靶"
-4. ☑️ 勾选"打靶后使用 AI 评分"
-5. 输入优化需求（例如："让回答更具创造性"）
-6. 点击"开始优化"
+**User Operation**:
+1. Select a PromptItem
+2. Click "Start Optimization"
+3. ☑️ Check "Target shooting immediately after creation"
+4. ☑️ Check "Use AI scoring after shooting"
+5. Enter optimization requirements (for example: "Make answers more creative")
+6. Click "Start Optimization"
 
-**系统自动执行**：
-1. AI 优化 Prompt 内容和参数
-2. 创建新版本 PromptItem
-3. 自动打靶（生成测试结果）
-4. 自动 AI 评分
-5. 更新 PromptItem 的平均分和最高分
-6. 返回优化结果
+**System automatically executes**:
+1. AI optimizes Prompt content and parameters
+2. Create a new version of PromptItem
+3. Automatic target shooting (generating test results)
+4. Automatic AI scoring
+5. Update the average score and maximum score of PromptItem
+6. Return optimization results
 
-**用户收益**：
-- 一键完成从优化到评分的全流程
-- 无需多次手动点击
-- 立即获得评分反馈，决定是否需要进一步优化
+**User Benefits**:
+- Complete the entire process from optimization to scoring with one click
+- No need for multiple manual clicks
+- Get instant feedback on ratings to decide if further optimization is needed
 
-### 场景 2：仅自动打靶
+### Scenario 2: Automatic target shooting only
 
-**用户操作**：
-1. ☑️ 勾选"创建后立即打靶"
-2. ☐ 不勾选"打靶后使用 AI 评分"
+**User Operation**:
+1. ☑️ Check "Target shooting immediately after creation"
+2. ☐ Uncheck "Use AI scoring after shooting"
 
-**系统执行**：
-1. 优化并创建新 PromptItem
-2. 自动打靶
-3. **不进行 AI 评分**（用户可能想手动查看结果后再决定是否评分）
+**System execution**:
+1. Optimize and create new PromptItem
+2. Automatic target shooting
+3. **No AI scoring** (Users may want to manually view the results before deciding whether to rate)
 
-### 场景 3：仅优化，不打靶
+### Scenario 3: Optimization only, no target practice
 
-**用户操作**：
-1. ☐ 取消勾选"创建后立即打靶"
+**User Operation**:
+1. ☐ Uncheck "Target shooting immediately after creation"
 
-**系统执行**：
-1. 仅优化并创建新 PromptItem
-2. **不打靶，不评分**
-3. 用户可以后续手动测试
+**System execution**:
+1. Only optimize and create new PromptItem
+2. **No shooting, no scoring**
+3. Users can perform subsequent manual testing
 
 ---
 
-## 🧪 测试步骤
+## 🧪 Test steps
 
-### 前提条件
+### Prerequisites
 
-1. **配置期望结果**（如果要测试 AI 评分）：
-   - 打开一个 PromptItem
-   - 在"AI评分标准"区域添加期望结果，例如：
+1. **Configure expected results** (if you want to test AI scoring):
+- Open a PromptItem
+- Add desired results in the "AI Scoring Criteria" area, for example:
      ```
-     - 回答要专业
-     - 逻辑要清晰
-     - 表达要简洁
+- Answers should be professional
+- The logic should be clear
+- Be concise in your expression
      ```
-   - 保存这些期望结果
+-Save these desired results
 
-### 测试场景 1：完整自动化流程
+### Test scenario 1: Complete automated process
 
-1. **重启应用**（确保代码更新生效）
-2. **打开 PromptRange 页面**
-3. **选择一个有期望结果的 PromptItem**
-4. **点击"开始优化"按钮**
-5. **在弹窗中**：
-   - ✅ 保持"创建后立即打靶"选中
-   - ✅ 勾选"打靶后使用 AI 评分"
-   - 输入需求："让回答更具创造性"
-6. **点击"开始优化"**
-7. **观察控制台日志**：
+1. **Restart the application** (make sure the code update takes effect)
+2. **Open the PromptRange page**
+3. **Choose a PromptItem with the desired result**
+4. **Click the "Start Optimization" button**
+5. **In the pop-up window**:
+- ✅ Keep "Target shooting immediately after creation" selected
+- ✅ Check "Use AI scoring after shooting"
+- Input requirements: "Make answers more creative"
+6. **Click "Start Optimization"**
+7. **Observe console log**:
 
 ```log
 ========== 收到 Prompt 优化请求 ==========
@@ -383,7 +383,7 @@ PromptOptimizationController.OptimizeAsync
   ✅ ChatTask 创建成功！TaskId: 1234
 ```
 
-8. **验证数据库**：
+8. **Verify database**:
 
 ```sql
 -- 检查新 PromptItem（应该有评分）
@@ -402,18 +402,18 @@ WHERE PromptItemId = (
 )
 ```
 
-**期望结果**：
-- ✅ 新 PromptItem 的 `EvalAvgScore` 和 `EvalMaxScore` 应该有值（不是 -1）
-- ✅ 应该有对应的 PromptResult 记录
-- ✅ PromptResult 应该有 AI 评分
+**Expected results**:
+- ✅ New PromptItem`EvalAvgScore`and`EvalMaxScore`There should be a value (not -1)
+- ✅ There should be a corresponding PromptResult record
+- ✅ PromptResult should have AI score
 
-### 测试场景 2：仅自动打靶
+### Test scenario 2: automatic target shooting only
 
-1. **在弹窗中**：
-   - ✅ 勾选"创建后立即打靶"
-   - ☐ 不勾选"打靶后使用 AI 评分"
-2. **点击"开始优化"**
-3. **观察日志**：应该看到"打靶成功"，但没有"AI 自动评分"
+1. **In the pop-up window**:
+- ✅ Check "Target shooting immediately after creation"
+- ☐ Uncheck "Use AI scoring after shooting"
+2. **Click "Start Optimization"**
+3. **Observation log**: You should see "Target shooting successful", but there is no "AI automatic scoring"
 
 ```log
 【步骤4.5/5】开始自动打靶...
@@ -421,16 +421,16 @@ WHERE PromptItemId = (
 【步骤5/5】发布优化响应...
 ```
 
-4. **验证数据库**：
-   - ✅ 应该有 PromptResult 记录
-   - ❌ PromptItem 的 `EvalAvgScore` 仍然是 -1（未评分）
+4. **Verify database**:
+- ✅ There should be a PromptResult record
+- ❌ PromptItem`EvalAvgScore`Still -1 (not rated)
 
-### 测试场景 3：仅优化，不打靶
+### Test scenario 3: Optimization only, no target shooting
 
-1. **在弹窗中**：
-   - ☐ 取消勾选"创建后立即打靶"
-2. **点击"开始优化"**
-3. **观察日志**：不应该看到"步骤4.5"相关日志
+1. **In the pop-up window**:
+- ☐ Uncheck "Target shooting immediately after creation"
+2. **Click "Start Optimization"**
+3. **Observe logs**: You should not see "Step 4.5" related logs
 
 ```log
 【步骤4/5】创建新版本 PromptItem...
@@ -438,15 +438,15 @@ WHERE PromptItemId = (
 【步骤5/5】发布优化响应...
 ```
 
-4. **验证数据库**：
-   - ✅ 应该有新 PromptItem
-   - ❌ 没有对应的 PromptResult（未打靶）
+4. **Verify database**:
+- ✅ There should be new PromptItem
+- ❌ No corresponding PromptResult (not hit)
 
 ---
 
-## 📊 关键代码详解
+## 📊 Detailed explanation of key codes
 
-### 打靶调用
+### Targeting call
 
 ```csharp
 var shootResult = await _promptResultService.SenparcGenerateResultAsync(
@@ -456,15 +456,15 @@ var shootResult = await _promptResultService.SenparcGenerateResultAsync(
 );
 ```
 
-**参数说明**：
-- `newPromptItem`: 新创建的 `PromptItemDto` 对象
-- `userMessage`: 如果是 Chat 模式需要提供用户消息，直接测试模式传 `null`
-- `chatHistory`: 聊天历史记录，直接测试模式传 `null`
+**Parameter Description**:
+- `newPromptItem`: newly created`PromptItemDto`object
+- `userMessage`: If the user message needs to be provided in Chat mode, directly test the mode`null`
+- `chatHistory`: Chat history, directly transfer in test mode`null`
 
-**返回值**：
-- `PromptResultDto`: 包含打靶结果的 DTO，包括 `Id`, `ResultString`, `Score` 等字段
+**Return Value**:
+- `PromptResultDto`: DTO containing target shooting results, including`Id`, `ResultString`, `Score`etc fields
 
-### AI 评分调用
+### AI scoring call
 
 ```csharp
 // 1. 获取期望结果（JSON 字符串）
@@ -484,34 +484,34 @@ await _promptResultService.RobotScoringAsync(
 await _promptResultService.UpdateEvalScoreAsync(newPromptItem.Id);
 ```
 
-**参数说明**：
-- `promptResultId`: 要评分的 PromptResult ID
-- `isRefresh`: 是否重新评分（false = 首次评分，true = 重新评分）
-- `expectedResultsJson`: 期望结果的 JSON 字符串（例如 `["回答要专业", "逻辑要清晰"]`）
+**Parameter Description**:
+- `promptResultId`: PromptResult ID to score
+- `isRefresh`: Whether to regrade (false = first grade, true = regrade)
+- `expectedResultsJson`: JSON string of expected result (e.g.`["Answers should be professional", "Logic should be clear"]`)
 
-**执行流程**：
-1. `RobotScoringAsync`: 使用 AI 对比生成结果和期望结果，给出评分
-2. `UpdateEvalScoreAsync`: 聚合该 PromptItem 下所有 PromptResult 的评分，更新 `EvalAvgScore` 和 `EvalMaxScore`
+**Execution process**:
+1. `RobotScoringAsync`: Use AI to compare generated results with expected results and give a score
+2. `UpdateEvalScoreAsync`: Aggregate the ratings of all PromptResult under this PromptItem and update`EvalAvgScore`and`EvalMaxScore`
 
 ---
 
-## ⚠️ 重要注意事项
+## ⚠️ IMPORTANT NOTES
 
-### 1. 期望结果是必需的
+### 1. Expected results are required
 
-**如果要使用 AI 评分**，必须事先配置期望结果：
-- 在 PromptItem 编辑页面的"AI评分标准"区域添加期望结果
-- 系统会将这些期望结果保存到 `ExpectedResultsJson` 字段
-- 新优化的 PromptItem 会继承原 PromptItem 的期望结果
+**If you want to use AI scoring**, you must configure the desired results in advance:
+- Add desired results in the "AI scoring criteria" area of ​​the PromptItem editing page
+- The system will save these expected results to`ExpectedResultsJson`Field
+- The newly optimized PromptItem will inherit the expected results of the original PromptItem
 
-**如果没有期望结果**：
-- 系统会记录警告日志：`⚠️  未设置期望结果，跳过 AI 评分`
-- 打靶会正常执行，但不会进行 AI 评分
-- 不会报错，不影响优化流程
+**If no result is expected**:
+- The system will record a warning log:`⚠️ The expected result is not set, skipping AI scoring`
+- Target practice will be performed normally, but AI scoring will not be performed
+- No errors will be reported and the optimization process will not be affected.
 
-### 2. 异常处理
+### 2. Exception handling
 
-打靶或 AI 评分失败**不会影响优化结果的返回**：
+Failure in target practice or AI scoring** will not affect the return of optimization results**:
 ```csharp
 try
 {
@@ -524,47 +524,47 @@ catch (Exception shootEx)
 }
 ```
 
-**设计理念**：
-- 优化的核心价值是生成新的 PromptItem
-- 打靶和评分是"附加服务"，失败不应导致整个优化流程失败
-- 用户仍然可以手动打靶和评分
+**Design Concept**:
+- The core value of optimization is to generate new PromptItem
+- Target practice and scoring are "additional services", and failure should not cause the entire optimization process to fail.
+- Users can still manually target and score
 
-### 3. 必须重启应用
+### 3. The application must be restarted
 
-修改了以下文件，必须重启应用：
-- `PromptOptimizationEvents.cs`（DTO 定义）
-- `PromptOptimizationRequestHandler.cs`（核心逻辑）
-- `prompt.js`（前端逻辑）
-- `Prompt.cshtml`（UI 界面）
+The following files have been modified and the application must be restarted:
+- `PromptOptimizationEvents.cs`(DTO definition)
+- `PromptOptimizationRequestHandler.cs`(core logic)
+- `prompt.js`(front-end logic)
+- `Prompt.cshtml`(UI interface)
 
-### 4. 性能考虑
+### 4. Performance considerations
 
-**自动打靶和 AI 评分会增加执行时间**：
-- 优化本身：~5-10 秒（AI 调用）
-- 打靶：~3-5 秒（AI 生成结果）
-- AI 评分：~5-10 秒（AI 评估）
-- **总计**：~15-25 秒
+**Automatic targeting and AI scoring will increase execution time**:
+- Optimization itself: ~5-10 seconds (AI call)
+- Target practice: ~3-5 seconds (AI generated results)
+- AI scoring: ~5-10 seconds (AI evaluation)
+- **Total**: ~15-25 seconds
 
-**建议**：
-- 如果需要快速迭代多个优化版本，可以先取消勾选自动打靶
-- 完成所有优化后，再统一手动打靶和评分
+**suggestion**:
+- If you need to quickly iterate multiple optimized versions, you can first uncheck Automatic Targeting
+- After all optimizations are completed, manual targeting and scoring will be unified
 
 ---
 
-## 💡 技术亮点
+## 💡Technical Highlights
 
-### 1. 智能模型选择
+### 1. Intelligent model selection
 
-新 PromptItem 不是简单复制原 ModelId，而是根据历史评分数据智能选择：
+The new PromptItem does not simply copy the original ModelId, but intelligently selects it based on historical rating data:
 ```
 原 ModelId: 1012
 历史评分: Model1011=0.89, Model1012=0.82
 选择: 1011（评分更高）
 ```
 
-### 2. 换行符正确处理
+### 2. Correct processing of line breaks
 
-AI 返回的 `\n` 转义字符会被正确转换为实际换行：
+returned by AI`\n`Escape characters are correctly converted to actual newlines:
 ```
 Before: "你是专业助理...\n1. 生成内容...\n2. 保持一致..."
 After:  "你是专业助理...
@@ -572,44 +572,44 @@ After:  "你是专业助理...
          2. 保持一致..."
 ```
 
-### 3. 完整的自动化链路
+### 3. Complete automation link
 
 ```
 Prompt 优化 → ModelId 智能选择 → 新 PromptItem 创建 → 自动打靶 → AI 评分 → 分数更新
 ```
 
-所有步骤都有详细日志，易于调试和监控。
+All steps are logged in detail for easy debugging and monitoring.
 
-### 4. 期望结果继承
+### 4. Expected result inheritance
 
-新优化的 PromptItem 自动继承原 PromptItem 的期望结果：
-- 保持评分标准一致
-- 便于对比优化前后的效果
-- 用户无需重新配置
+The newly optimized PromptItem automatically inherits the expected results of the original PromptItem:
+- Keep grading standards consistent
+- Convenient to compare the effects before and after optimization
+- User does not need to reconfigure
 
-### 5. UI 交互优化
+### 5. UI interaction optimization
 
-- 第二个选项依赖第一个：`:disabled="!autoShootAfterOptimize"`
-- 提供 Tooltip 说明每个选项的作用
-- 默认值合理（立即打靶=true，AI评分=false）
+- The second option depends on the first:`:disabled="!autoShootAfterOptimize"`
+- Provide tooltip to explain the function of each option
+- The default values ​​are reasonable (shoot immediately=true, AI score=false)
 
 ---
 
-## 🎉 总结
+## 🎉 Summary
 
-这次增强为 PromptCatalyzer 添加了**完整的自动化测试流程**：
+This enhancement adds a **complete automated testing process** to PromptCatalyzer:
 
-| 功能 | 说明 | 默认值 |
+| Function | illustrate | default value |
 |------|------|--------|
-| **智能 ModelId 选择** | 根据历史评分自动选择最佳模型 | 自动 |
-| **换行符处理** | AI 生成的多行文本正确显示 | 自动 |
-| **创建后立即打靶** | 优化完成后自动测试新 Prompt | ✅ 默认开启 |
-| **打靶后 AI 评分** | 测试完成后自动评分反馈 | ☐ 默认关闭 |
+| **Smart ModelId Selection** | Automatically select the best model based on historical ratings | automatic |
+| **Line break processing** | AI-generated multi-line text displays correctly | automatic |
+| **Target shooting immediately after creation** | Automatically test new prompts after optimization is completed | ✅ Enabled by default |
+| **AI scoring after target practice** | Automatic scoring feedback after test completion | ☐ Off by default |
 
-**用户体验提升**：
-- ✅ 从优化到评分一键完成
-- ✅ 减少手动操作步骤
-- ✅ 立即获得质量反馈
-- ✅ 灵活控制自动化级别
+**User experience improvement**:
+- ✅ Complete the process from optimization to scoring with one click
+- ✅ Reduce manual steps
+- ✅ Get quality feedback instantly
+- ✅ Flexible control of automation levels
 
-**现在请重启应用并测试这些新功能！**
+**Please restart the app now and test these new features! **

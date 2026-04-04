@@ -1,2 +1,2 @@
-﻿## 重要说明
-本目录中的项目保留是作为 ASP.NET MVC 部分文件过渡的参考，不是 NCF 框架的一部分，因此不需要参与编译！
+﻿## Important Notes
+The projects in this directory are reserved as a reference for the transition of some ASP.NET MVC files and are not part of the NCF framework, so they do not need to participate in compilation!

@@ -1,5 +1,5 @@
-﻿## Senparc.Areas.Admin 项目说明
+﻿## Senparc.Areas.Admin Project Description
 
-此项目是管理员后台模块，同样属于 XNCF 模块。不过这是一个特殊的模块，在系统安装的时候就被装载，并且可用于管理其他所有模块。
+This project is an administrator backend module and also belongs to the XNCF module. However, this is a special module that is loaded during system installation and can be used to manage all other modules.
 
-如果你狠狠心，也可以将此模块删除，这不会影响系统的正常运行，只不过你无法再进入管理后台。当然对黑客来说也一样。
+If you are really cruel, you can also delete this module. This will not affect the normal operation of the system, but you will no longer be able to enter the management background. Of course the same goes for hackers.
