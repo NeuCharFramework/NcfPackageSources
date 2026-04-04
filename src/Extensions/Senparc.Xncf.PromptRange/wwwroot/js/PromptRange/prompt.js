@@ -331,7 +331,9 @@ var app = new Vue({
                 scrollTop: 0,
                 scrollHeight: 0,
                 clientHeight: 0
-            }
+            },
+            hashChangeHandler: null,
+            isApplyingHashRoute: false
         };
     },
     computed: {
@@ -608,10 +610,16 @@ var app = new Vue({
     },
     mounted() {
         // 获取靶道列表
-        setTimeout(() => {
-            this.getFieldList()
+        setTimeout(async () => {
+            await this.getFieldList()
             // 获取模型列表
             this.getModelOptData()
+
+            this.hashChangeHandler = () => {
+                this.applyPromptHashRoute()
+            }
+            window.addEventListener('hashchange', this.hashChangeHandler)
+            await this.applyPromptHashRoute()
           
         }, 100)
         // 获取分数趋势图
@@ -626,10 +634,6 @@ var app = new Vue({
             }
         });
         resizeObserver.observe(viewElem);
-        setTimeout(() => {
-          this.getTargetRangeIdFromUrl();
-      }, 200)
-      
         // 初始化contenteditable编辑器
         this.$nextTick(() => {
             const editor = this.$refs.promptEditor;
@@ -646,12 +650,96 @@ var app = new Vue({
     beforeDestroy() {
         // 销毁之前移除事件监听器
         window.removeEventListener('beforeunload', this.beforeunloadHandler);
+        if (this.hashChangeHandler) {
+            window.removeEventListener('hashchange', this.hashChangeHandler);
+            this.hashChangeHandler = null;
+        }
         
         // 组件销毁前移除拖动相关的事件监听器
         document.removeEventListener('mousemove', this.handleResize);
         document.removeEventListener('mouseup', this.stopResize);
     },
     methods: {
+        parsePromptHashRoute() {
+            const raw = (window.location.hash || '').replace(/^#/, '');
+            const route = { rangeId: null, promptId: null };
+            if (raw) {
+                const params = new URLSearchParams(raw);
+                route.rangeId = Number(params.get('rangeId') || 0) || null;
+                route.promptId = Number(params.get('promptId') || 0) || null;
+            }
+
+            // Backward compatibility: old query route (targetrangeId/targetlaneId)
+            if ((!route.rangeId || !route.promptId) && this.$route && this.$route.query) {
+                route.rangeId = route.rangeId || (Number(this.$route.query.targetrangeId || 0) || null);
+                route.promptId = route.promptId || (Number(this.$route.query.targetlaneId || 0) || null);
+            }
+            return route;
+        },
+        setPromptHashRoute(route) {
+            if (this.isApplyingHashRoute) {
+                return;
+            }
+            const params = new URLSearchParams();
+            const rangeId = Number(route.rangeId || 0) || null;
+            const promptId = Number(route.promptId || 0) || null;
+            if (rangeId) {
+                params.set('rangeId', String(rangeId));
+            }
+            if (promptId) {
+                params.set('promptId', String(promptId));
+            }
+            const nextHash = params.toString();
+            if ((window.location.hash || '').replace(/^#/, '') === nextHash) {
+                return;
+            }
+            window.location.hash = nextHash;
+        },
+        buildPromptHashRoute(extra = {}) {
+            const base = {
+                rangeId: Number(this.promptField || 0) || null,
+                promptId: Number(this.promptid || 0) || null
+            };
+            return Object.assign(base, extra);
+        },
+        navigatePromptByHash(route) {
+            this.setPromptHashRoute(route);
+            this.applyPromptHashRoute();
+        },
+        async applyPromptHashRoute() {
+            if (this.isApplyingHashRoute) {
+                return;
+            }
+            const route = this.parsePromptHashRoute();
+            if (!route.rangeId && !route.promptId) {
+                return;
+            }
+
+            this.isApplyingHashRoute = true;
+            try {
+                if (!Array.isArray(this.promptFieldOpt) || this.promptFieldOpt.length === 0) {
+                    await this.getFieldList();
+                }
+
+                if (route.rangeId) {
+                    const rangeOption = this.promptFieldOpt.find(item => String(item.value) === String(route.rangeId) || String(item.id) === String(route.rangeId));
+                    if (rangeOption) {
+                        this.promptField = rangeOption.value;
+                        await this.promptChangeHandel(this.promptField, 'promptField', null, true);
+                    }
+                }
+
+                if (route.promptId) {
+                    const promptOption = (this.promptOpt || []).find(item => String(item.value) === String(route.promptId) || String(item.id) === String(route.promptId));
+                    if (promptOption) {
+                        this.promptid = promptOption.value;
+                        await this.promptChangeHandel(this.promptid, 'promptid', null, true);
+                    }
+                }
+            } finally {
+                this.isApplyingHashRoute = false;
+            }
+        },
         //获取路径id 页面数据回显
         getTargetRangeIdFromUrl() {
              // 添加安全检查，防止 $route 未定义
@@ -2450,11 +2538,24 @@ var app = new Vue({
             //this.chartInstance.setOption(_setOption);
         },
         // 靶场|靶道|模型 选择变化
-        promptChangeHandel(val, itemKey, oldVal) {
+        async promptChangeHandel(val, itemKey, oldVal, fromHash = false) {
+            if ((itemKey === 'promptField' || itemKey === 'promptid') && !fromHash && !this.isApplyingHashRoute) {
+                const route = this.buildPromptHashRoute({
+                    rangeId: itemKey === 'promptField' ? Number(val || 0) || null : Number(this.promptField || 0) || null,
+                    promptId: itemKey === 'promptid' ? Number(val || 0) || null : null
+                });
+                this.navigatePromptByHash(route);
+                return;
+            }
+
             // 靶道变化时，重置打靶按钮
             this.numsOfResults = 1
             //console.log(this.promptFieldOldVal,'|', val, '|', itemKey, '|', oldVal)
             if (itemKey === 'promptField') {
+                if (fromHash || this.isApplyingHashRoute) {
+                    await this.resetPageData()
+                    return
+                }
                 // 如果靶场变化 靶道
                 if (this.pageChange && this.modelid) {
                     // 提示 有数据变化 是否保存为草稿
@@ -2478,6 +2579,36 @@ var app = new Vue({
                 // 重置页面数据
                 this.resetPageData()
             } else if (itemKey === 'promptid') {
+                if (fromHash || this.isApplyingHashRoute) {
+                    this.pageChange = false
+                    this.aiScoreForm = {
+                        resultList: []
+                    }
+                    let _fitem = this.promptOpt.find(item => item.value === val)
+                    if (_fitem && _fitem.isDraft) {
+                        this.sendBtns = [
+                            {
+                                text: '打靶'
+                            },
+                            {
+                                text: '保存草稿'
+                            }
+                        ]
+                        this.sendBtnText = '打靶'
+                    } else {
+                        this.sendBtns = [
+                            {
+                                text: '连发'
+                            },
+                            {
+                                text: '保存草稿'
+                            }
+                        ]
+                        this.sendBtnText = '连发'
+                    }
+                    this.getPromptetail(val, true, true)
+                    return
+                }
 
                 if (this.pageChange && this.modelid) {
                     // 提示 有数据变化 是否保存为草稿

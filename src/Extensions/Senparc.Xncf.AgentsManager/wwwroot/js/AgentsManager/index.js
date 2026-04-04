@@ -2734,7 +2734,7 @@ var app = new Vue({
       this.agentParameterTabsValue = ''
       this.visible.dialogAgentParameter = true
       this.$nextTick(() => {
-        this.agentParameterTabsValue = 0
+        this.agentParameterTabsValue = '0'
       })
     },
     // 构建智能体参数列表：为基础 DTO 列表补充 promptItemDto / aiModelDto / promptRangeDto 及历史输出
@@ -2743,6 +2743,7 @@ var app = new Vue({
       for (const agent of baseList) {
         const enriched = Object.assign({}, agent, { outputList: [] })
         // 获取智能体运行状态（含 promptItemDto / aiModelDto / promptRangeDto）
+        // 使用 serviceAM 并设置 customAlert，由拦截器静默处理错误
         try {
           const res = await serviceAM.get(
             `/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetItemStatus?id=${agent.id}`,
