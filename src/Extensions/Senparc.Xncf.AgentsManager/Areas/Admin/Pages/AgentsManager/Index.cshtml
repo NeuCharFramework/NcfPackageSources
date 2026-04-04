@@ -81,7 +81,10 @@
                 <template v-if="scrollbarAgentIndex === ''">
                     <el-scrollbar class="sidebar-agent-container" wrap-class="scrollbar-wrapper">
                         <div ref="agentElListBox" class="agent-listWrap">
-                            <div v-for="(aitem,aindex) in agentList" :key="aindex" class="agent-cardBox">
+                            <div v-for="(aitem,aindex) in agentList" :key="aindex" class="agent-cardBox"
+                                draggable="true"
+                                @@dragstart="handleAgentDragStart(aitem)"
+                                @@dragend="handleAgentDragEnd">
                                 <div class="agentCard-statebox" :class="[getStatusColor(aitem,'1')]">
                                     {{ getStatusText(aitem,'1') }}
                                 </div>
@@ -1102,6 +1105,33 @@
         </div>
     </el-tab-pane>
 </el-tabs>
+
+@* 拖放覆盖层 - 将智能体拖入组 *@
+<div v-if="isDraggingAgent" class="drag-drop-overlay" @@dragover.prevent @@drop.prevent>
+    <div class="drag-drop-overlay-header">
+        <i class="fas fa-hand-holding"></i>
+        将 <strong>{{ draggingAgentData && draggingAgentData.name }}</strong> 拖放到组中
+    </div>
+    <div class="drag-drop-overlay-list">
+        <template v-if="groupList && groupList.length > 0">
+            <div v-for="group in groupList" :key="group.id"
+                class="drag-drop-group-item"
+                :class="{'drag-drop-group-hover': dragOverGroupId === group.id}"
+                @@dragover.prevent="handleGroupDropZoneOver(group.id)"
+                @@dragleave="handleGroupDropZoneLeave"
+                @@drop.prevent="handleAgentDropToGroup(group)">
+                <i class="fas fa-users" style="margin-right:6px;"></i>
+                <span class="drag-drop-group-name text-ellipsis">{{ group.name }}</span>
+                <span class="drag-drop-group-count">{{ group.numberTasks || 0 }} 个任务</span>
+            </div>
+        </template>
+        <div v-else class="drag-drop-empty">
+            <i class="el-icon-warning-outline"></i>
+            暂无可用组，请先创建组
+        </div>
+    </div>
+    <div class="drag-drop-overlay-footer">拖到组名称上方释放即可加入</div>
+</div>
 
 @* 抽屉 新增|编辑 智能体 540px *@
 <el-drawer :visible.sync="visible.drawerAgent" direction="rtl" :with-header="false" :wrapper-closable="false"

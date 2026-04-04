@@ -5,6 +5,7 @@ using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Utility;
+using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
@@ -15,6 +16,7 @@ using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
@@ -314,6 +316,139 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 return logger.ToString();
 
+            });
+        }
+
+        /// <summary>
+        /// 快速组建团队并立即执行任务
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [FunctionRender("快速组建团队并执行任务", "快速选择成员，组建临时团队，并立即执行指定任务", typeof(Register))]
+        public async Task<StringAppResponse> QuickTeamAndRun(ChatGroup_QuickTeamRequest request)
+        {
+            return await this.GetStringResponseAsync(async (response, logger) =>
+            {
+                if (!request.Members.SelectedValues.Any())
+                {
+                    return "至少需要选择一名成员！";
+                }
+
+                if (!int.TryParse(request.Admin.SelectedValues.FirstOrDefault(), out int adminId))
+                {
+                    return "必须选择一位群主！";
+                }
+
+                if (!int.TryParse(request.EnterAgent.SelectedValues.FirstOrDefault(), out int enterAgentId))
+                {
+                    return "必须选择一位对接人！";
+                }
+
+                if (string.IsNullOrWhiteSpace(request.Command))
+                {
+                    return "任务描述不能为空！";
+                }
+
+                // 创建团队名称
+                var teamName = string.IsNullOrWhiteSpace(request.TeamName)
+                    ? $"快速团队-{DateTime.Now:yyyyMMddHHmmss}"
+                    : request.TeamName;
+
+                // 创建新的 ChatGroup
+                var chatGroupDto = new ChatGroupDto(teamName, true, ChatGroupState.Unstart, "通过快速组建功能创建", adminId, enterAgentId);
+                var chatGroup = new ChatGroup(chatGroupDto);
+                await _chatGroupService.SaveObjectAsync(chatGroup);
+                logger.Append($"团队 [{teamName}] 创建成功！");
+
+                // 添加成员（合并对接人到成员列表）
+                var memberIdList = request.Members.SelectedValues.Select(z => int.Parse(z)).ToList();
+                if (!memberIdList.Contains(enterAgentId))
+                {
+                    memberIdList.Add(enterAgentId);
+                }
+
+                var memberList = new List<ChatGroupMember>();
+                foreach (var agentId in memberIdList)
+                {
+                    var chatGroupMemberDto = new ChatGroupMemberDto(null, chatGroup.Id, agentId);
+                    var member = new ChatGroupMember(chatGroupMemberDto);
+                    member.ResetUID();
+                    memberList.Add(member);
+                }
+                await _chatGroupMemeberService.SaveObjectListAsync(memberList);
+                logger.Append($"已添加 {memberList.Count} 名成员！");
+
+                // 确定 AI 模型设置
+                var aiModelSelected = request.AIModel.SelectedValues.FirstOrDefault();
+                var aiSetting = Senparc.AI.Config.SenparcAiSetting;
+                if (!string.IsNullOrEmpty(aiModelSelected) && aiModelSelected != "Default")
+                {
+                    int.TryParse(aiModelSelected, out int aiModelId);
+                    var aiModel = await _aIModelService.GetObjectAsync(z => z.Id == aiModelId);
+                    if (aiModel == null)
+                    {
+                        throw new NcfExceptionBase($"当前选择的 AI 模型不存在：{aiModelSelected}");
+                    }
+                    var aiModelDto = _aIModelService.Mapper.Map<AIModelDto>(aiModel);
+                    aiSetting = _aIModelService.BuildSenparcAiSetting(aiModelDto);
+                }
+
+                // 执行任务
+                logger.Append($"开始执行任务：{request.Command}");
+                var runTask = _chatGroupService.RunChatGroup(logger, chatGroup.Id, request.Command, aiSetting, false);
+                Task.WaitAll(new[] { (Task)runTask });
+
+                return logger.ToString();
+            });
+        }
+
+        /// <summary>
+        /// 获取可用的 XNCF 模块列表（用于 AI Chat 自动附加模块功能）
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [FunctionRender("获取可用 XNCF 模块", "列举系统中所有已注册的 XNCF 模块及其可用功能，可用于 AI Chat 自动附加模块功能", typeof(Register))]
+        public async Task<StringAppResponse> GetAvailableXncfModules(ChatGroup_GetAvailableXncfModulesRequest request)
+        {
+            return await this.GetStringResponseAsync(async (response, logger) =>
+            {
+                var registers = XncfRegisterManager.RegisterList;
+                if (!registers.Any())
+                {
+                    return "当前没有已注册的 XNCF 模块。";
+                }
+
+                var sb = new StringBuilder();
+                sb.AppendLine($"共发现 {registers.Count} 个 XNCF 模块：");
+                sb.AppendLine();
+
+                foreach (var register in registers)
+                {
+                    sb.AppendLine($"【{register.Name}】");
+                    sb.AppendLine($"  UID: {register.Uid}");
+                    sb.AppendLine($"  版本: {register.Version}");
+                    if (!string.IsNullOrEmpty(register.Description))
+                    {
+                        sb.AppendLine($"  描述: {register.Description}");
+                    }
+
+                    if (Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.TryGetValue(register.GetType(), out var functionGroup)
+                        && functionGroup != null && functionGroup.Count > 0)
+                    {
+                        sb.AppendLine($"  可用功能 ({functionGroup.Count} 个):");
+                        foreach (var function in functionGroup)
+                        {
+                            sb.AppendLine($"    - {function.Value.FunctionRenderAttribute.Name}: {function.Value.FunctionRenderAttribute.Description}");
+                        }
+                    }
+                    else
+                    {
+                        sb.AppendLine("  可用功能: 无");
+                    }
+                    sb.AppendLine();
+                }
+
+                return sb.ToString().Replace("\r\n", "<br />").Replace("\n", "<br />");
             });
         }
     }

@@ -156,4 +156,65 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         /// </summary>
         public int ChatMaxRound { get; set; } = ChatGroupService.ChatMaxRound;
     }
+
+    /// <summary>
+    /// 快速组建团队并执行任务 Request
+    /// </summary>
+    public class ChatGroup_QuickTeamRequest : FunctionAppRequestBase
+    {
+        [Required]
+        [MaxLength(50)]
+        [Description("团队名称||团队名称（将创建一个临时团队并立即执行任务）")]
+        public string TeamName { get; set; }
+
+        [Required]
+        [Description("团队成员||选择加入团队的成员")]
+        public SelectionList Members { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>());
+
+        [Required]
+        [Description("群主||群管理员，通常负责协调和管理团队，不参与显式发言")]
+        public SelectionList Admin { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
+
+        [Required]
+        [Description("对接人||对接人，即接受命令的人，通常也是期待返回期望结果的人，会自动加入成员列表")]
+        public SelectionList EnterAgent { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
+
+        [Description("AI 模型||请选择运行此程序的外围 AI 模型")]
+        public SelectionList AIModel { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
+
+        [Required]
+        [MaxLength(500)]
+        [Description("任务描述||说明需要团队协助完成的工作内容")]
+        public string Command { get; set; }
+
+        public override async Task LoadData(IServiceProvider serviceProvider)
+        {
+            var agentTemplateService = serviceProvider.GetService<AgentsTemplateService>();
+            var agentsTemplates = await agentTemplateService.GetFullListAsync(z => z.Enable, z => z.Name, Ncf.Core.Enums.OrderingType.Ascending);
+
+            Members.Items = agentsTemplates.Select(z => new SelectionItem(z.Id.ToString(), z.Name, z.Description)).ToList();
+            Admin.Items = agentsTemplates.Select(z => new SelectionItem(z.Id.ToString(), z.Name, z.Description)).ToList();
+            EnterAgent.Items = agentsTemplates.Select(z => new SelectionItem(z.Id.ToString(), z.Name, z.Description)).ToList();
+
+            var admin = Admin.Items.FirstOrDefault(z => z.Text == "群主");
+            if (admin != null)
+            {
+                admin.DefaultSelected = true;
+            }
+
+            await BuildXncfRequestHelper.LoadAiModelData(serviceProvider, AIModel);
+            await base.LoadData(serviceProvider);
+        }
+    }
+
+    /// <summary>
+    /// 获取可用 XNCF 模块 Request
+    /// </summary>
+    public class ChatGroup_GetAvailableXncfModulesRequest : FunctionAppRequestBase
+    {
+        public override async Task LoadData(IServiceProvider serviceProvider)
+        {
+            await base.LoadData(serviceProvider);
+        }
+    }
 }
