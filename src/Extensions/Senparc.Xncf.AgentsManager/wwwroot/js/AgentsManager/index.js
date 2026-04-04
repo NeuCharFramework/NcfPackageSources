@@ -2714,14 +2714,16 @@ var app = new Vue({
               this.getGroupListData('group');
             }
           } else {
-            this.$message.error(saveRes.data.errorMessage || '加入失败，请重试');
+            const errMsg = saveRes.data.errorMessage || '未知错误';
+            this.$message.error(`加入组失败：${errMsg}`);
           }
         } else {
-          this.$message.error(groupRes.data.errorMessage || '获取组信息失败');
+          const errMsg = groupRes.data.errorMessage || '未知错误';
+          this.$message.error(`获取组信息失败：${errMsg}`);
         }
       } catch (err) {
         console.error('拖放操作失败:', err);
-        this.$message.error('操作失败，请重试');
+        this.$message.error(`操作失败：${err.message || '请重试或联系管理员'}`);
       }
 
       this.isDraggingAgent = false;

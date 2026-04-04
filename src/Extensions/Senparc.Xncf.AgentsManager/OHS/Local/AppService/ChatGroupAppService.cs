@@ -448,7 +448,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     sb.AppendLine();
                 }
 
-                return sb.ToString().Replace("\r\n", "<br />");
+                return sb.ToString().Replace("\r\n", "<br />").Replace("\n", "<br />");
             });
         }
     }
