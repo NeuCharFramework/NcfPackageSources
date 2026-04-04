@@ -2776,9 +2776,16 @@ var app = new Vue({
         
         // 打开创建智能体对话框
         openCreateAgentDialog() {
+            if (!this.promptField) {
+                this.$message({
+                    message: '请先选择靶场',
+                    type: 'warning'
+                })
+                return
+            }
             if (!this.promptid || !this.promptDetail || !this.promptDetail.fullVersion) {
                 this.$message({
-                    message: '请先选择一个靶道',
+                    message: '请先选择靶道以确定 PromptCode',
                     type: 'warning'
                 })
                 return

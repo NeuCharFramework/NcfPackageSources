@@ -98,7 +98,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         public string Name { get; set; }
 
         [Required]
-        [Description("PromptCode 作用范围||选择 PromptCode 覆盖范围（靶场级别/靶道级别/完整定位）。提示：可选择靶场名称（Range级别）、靶道前缀（Tactic级别）或完整版本号（精确定位）")]
+        [Description("PromptCode 作用范围||选择覆盖范围：靶场名称（Range级别）、靶道前缀（Tactic级别）或完整版本号（精确定位）")]
         public SelectionList ScopeSelection { get; set; } = new SelectionList(SelectionType.DropDownList);
 
         [Description("手动输入 PromptCode||手动输入 PromptCode（支持靶场名称、靶道前缀或完整版本号），当选择[手动输入 SystemMessage]时必须在此处输入")]

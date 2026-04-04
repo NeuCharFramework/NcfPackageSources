@@ -2523,7 +2523,7 @@ var app = new Vue({
 
     // 删除 Function Call 标签
     handleFunctionCallClose(tag) {
-      const currentNames = this.agentForm.functionCallNames.split(',').filter(x => x);
+      const currentNames = this.getFunctionCallNamesList();
       const index = currentNames.indexOf(tag);
       if (index > -1) {
         currentNames.splice(index, 1);
@@ -2532,20 +2532,23 @@ var app = new Vue({
       this.functionCallTags = currentNames;
     },
 
+    // 获取当前 functionCallNames 的数组形式
+    getFunctionCallNamesList() {
+      return this.agentForm.functionCallNames
+        ? this.agentForm.functionCallNames.split(',').filter(x => x)
+        : [];
+    },
+
     // 自动附加所有 XNCF 功能插件
     handleAutoAttachXncfChange(val) {
       if (val) {
         // 开启时：将所有可用插件类型合并到 functionCallNames
-        const currentNames = this.agentForm.functionCallNames
-          ? this.agentForm.functionCallNames.split(',').filter(x => x)
-          : [];
+        const currentNames = this.getFunctionCallNamesList();
         const allNames = [...new Set([...currentNames, ...this.pluginTypes])];
         this.agentForm.functionCallNames = allNames.join(',');
       } else {
         // 关闭时：移除所有自动添加的插件类型（保留用户手动添加的）
-        const currentNames = this.agentForm.functionCallNames
-          ? this.agentForm.functionCallNames.split(',').filter(x => x)
-          : [];
+        const currentNames = this.getFunctionCallNamesList();
         const manualNames = currentNames.filter(name => !this.pluginTypes.includes(name));
         this.agentForm.functionCallNames = manualNames.join(',');
       }
