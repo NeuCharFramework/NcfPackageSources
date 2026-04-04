@@ -1,12 +1,12 @@
 ﻿@page
 @model Senparc.Areas.Admin.Areas.Admin.Pages.SenparcTrace_IndexModel
 @{
-    ViewData["Title"] = AR["Trace.日志"];
+    ViewData["Title"] = AR["Trace.Log"];
     Layout = "_Layout_Vue";
 }
 @section breadcrumbs {
-    <el-breadcrumb-item>@AR["Common.系统管理"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@AR["Trace.日志"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Common.SystemManagement"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Trace.Log"]</el-breadcrumb-item>
 }
 
 <div>
@@ -14,14 +14,14 @@
               border
               style="width: 100%">
         <el-table-column align="center"
-                         label="@AR["Trace.编号"]"
+                         label="@AR["Trace.Number"]"
                          width="120">
             <template slot-scope="scope">
                 {{ scope.row.no}}
             </template>
         </el-table-column>
         <el-table-column align="center"
-                         label="@AR["Trace.日期"]">
+                         label="@AR["Trace.Date"]">
             <template slot-scope="scope">
                 <a :href="'/Admin/SenparcTrace/DateLog?date=' + scope.row.text">
                     {{ scope.row.text }}

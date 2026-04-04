@@ -1,14 +1,17 @@
 ﻿@page
 @model Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager.WeixinUser_IndexModel
+@inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{
-    //var namePrefix = Model.MpAccountDto != null ? $"{Model.MpAccountDto.Name}的" : "所有";
+    //var namePrefix = Model.MpAccountDto != null ? $"{Model.MpAccountDto.Name
+    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+}的" : "所有";
     //ViewData["Title"] = $"{namePrefix}用户";
     Layout = "_Layout_Vue";
 }
 @section breadcrumbs {
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>模块管理</el-breadcrumb-item>
-    <el-breadcrumb-item>微信管理</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Common.ModuleManagement"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["WeixinManager.Management"]</el-breadcrumb-item>
     <el-breadcrumb-item>{{docTitle}}</el-breadcrumb-item>
 }
 
@@ -16,10 +19,10 @@
     <div class="admin-role">
         <div class="filter-container">
             <template v-if="mpAccountDto">
-                <el-button size="small" class="filter-item" type="primary" icon="el-icon-plus" :loading="addLoading" @@click="addUser('add')">追加新增关注</el-button>
-                <el-button size="small" class="filter-item" type="primary" @@click="asyncUser" :loading="isLoading"><i class="fa fa-exchange"></i> 同步所有关注</el-button>
-                <el-button size="small" class="filter-item" type="danger" icon="el-icon-delete" @@click="del">删除</el-button>
-                <span><small>注意：如果用户数量众多，可能会消耗非常长的时间！</small></span>
+                <el-button size="small" class="filter-item" type="primary" icon="el-icon-plus" :loading="addLoading" @@click="addUser('add')">@AR["Auto.UI.60e1bae1f8bb"]</el-button>
+                <el-button size="small" class="filter-item" type="primary" @@click="asyncUser" :loading="isLoading"><i class="fa fa-exchange"></i> @AR["Auto.UI.c521327348cd"]</el-button>
+                <el-button size="small" class="filter-item" type="danger" icon="el-icon-delete" @@click="del">@AR["Common.Delete"]</el-button>
+                <span><small>@AR["Auto.UI.c592b1df7604"]</small></span>
             </template>
         </div>
         <el-table :data="tableData"
@@ -38,14 +41,14 @@
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="昵称">
+                             label="@AR["Auto.UI.23eb0e6024b9"]">
                 <template slot-scope="scope">
                     {{ scope.row.nickName}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
                              width="65"
-                             label="头像">
+                             label="@AR["Auto.UI.4c50eef3bdaf"]">
                 <template slot-scope="scope">
                     <el-image style="width: 50px; height: 50px"
                               :src="scope.row.headImgUrl"></el-image>
@@ -53,16 +56,16 @@
             </el-table-column>
 
             <el-table-column align="center"
-                             label="性别">
+                             label="@AR["Auto.UI.787b5677e325"]">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.sex == 1">男</span>
-                    <span v-if="scope.row.sex == 2">女</span>
-                    <span v-if="scope.row.sex != 2 && scope.row.sex != 1">未知</span>
+                    <span v-if="scope.row.sex == 1">@AR["Auto.UI.36a4908a5577"]</span>
+                    <span v-if="scope.row.sex == 2">@AR["Auto.UI.87c835a6b174"]</span>
+                    <span v-if="scope.row.sex != 2 && scope.row.sex != 1">@AR["Common.Unknown"]</span>
                 </template>
             </el-table-column>
 
             <el-table-column align="center"
-                             label="地区">
+                             label="@AR["Auto.UI.2560b304e691"]">
                 <template slot-scope="scope">
                     {{scope.row.country}}&nbsp;
                     {{scope.row.province}}&nbsp;
@@ -71,36 +74,36 @@
             </el-table-column>
 
             <el-table-column align="center"
-                             label="分组">
+                             label="@AR["Auto.UI.829abe5a8dcd"]">
                 <template slot-scope="scope">
                     {{ scope.row.groupid}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="关注时间">
+                             label="@AR["Auto.UI.97f2bb62f566"]">
                 <template slot-scope="scope">
                     {{ formaTableTime(scope.row.subscribe_Time)}}
                 </template>
             </el-table-column>
 
             <el-table-column align="center"
-                             label="关注状态">
+                             label="@AR["Auto.UI.598726a25017"]">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.subscribe == 1">已关注</span>
-                    <span v-if="scope.row.subscribe != 1">未关注</span>
+                    <span v-if="scope.row.subscribe == 1">@AR["Auto.UI.f4f38064f7a6"]</span>
+                    <span v-if="scope.row.subscribe != 1">@AR["Auto.UI.149861e4243a"]</span>
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="关注场景">
+                             label="@AR["Auto.UI.2070b871f390"]">
                 <template slot-scope="scope">
                     {{scope.row.subscribe_Scene}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="标签">
+                             label="@AR["Auto.UI.14d342362f66"]">
                 <template slot-scope="scope">
                     <template v-if="scope.row.userTags_WeixinUsers.length == 0">
-                        无
+                        @AR["Auto.UI.d81bb206a889"]
                     </template>
                     <template v-if="scope.row.userTags_WeixinUsers.length > 0">
                         <ul>
@@ -112,28 +115,28 @@
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="备注">
+                             label="@AR["Common.Remark"]">
                 <template slot-scope="scope">
                     {{scope.row.adminRemark}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="说明">
+                             label="@AR["Common.Description"]">
                 <template slot-scope="scope">
                     {{scope.row.adminRemark}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
                              width="145"
-                             label="添加时间">
+                             label="@AR["Common.AddTime"]">
                 <template slot-scope="scope">
                     {{formaTableTime(scope.row.addTime)}}
                 </template>
             </el-table-column>
-            @*<el-table-column label="操作" align="center" width="100"fixed="right">
+            @*<el-table-column label="@AR["Common.Action"]" align="center" width="100"fixed="right">
                 <template slot-scope="scope">
-                    <el-popconfirm placement="top" title="确认删除此用户吗？" @@on-confirm="deleteCheck(scope.$index, scope.row)">
-                        <el-button size="mini" type="danger" slot="reference">删除</el-button>
+                    <el-popconfirm placement="top" title="@AR["Auto.UI.71d71cd9ca97"]" @@on-confirm="deleteCheck(scope.$index, scope.row)">
+                        <el-button size="mini" type="danger" slot="reference">@AR["Common.Delete"]</el-button>
                     </el-popconfirm>
                 </template>
             </el-table-column>*@
@@ -217,7 +220,7 @@
                     if (delIds.length === 0) {
                         this.$notify({
                             title: '警告',
-                            message: '请勾选公众号',
+                            message: '@AR["WeixinManager.PleaseSelectMpAccount"]',
                             type: 'warning',
                             duration: 2000
                         });

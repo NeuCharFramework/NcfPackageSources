@@ -1,22 +1,24 @@
 ﻿@page
 @model Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager.MpAccount_IndexModel
+@inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{
-    ViewData["Title"] = "公众号管理";
+    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    ViewData["Title"] = AR["WeixinManager.MpAccountManagement"];
     Layout = "_Layout_Vue";
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>模块管理</el-breadcrumb-item>
-    <el-breadcrumb-item>微信管理</el-breadcrumb-item>
-    <el-breadcrumb-item>公众号管理</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Common.ModuleManagement"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["WeixinManager.Management"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["WeixinManager.MpAccountManagement"]</el-breadcrumb-item>
 }
 
 <div>
     <div class="admin-role">
         <div class="filter-container">
-            <el-button size="small" class="filter-item" type="primary" icon="el-icon-plus" @@click="add">增加</el-button>
-            <el-button size="small" class="filter-item" type="danger" icon="el-icon-delete" @@click="del">删除</el-button>
+            <el-button size="small" class="filter-item" type="primary" icon="el-icon-plus" @@click="add">@AR["Common.Add"]</el-button>
+            <el-button size="small" class="filter-item" type="danger" icon="el-icon-delete" @@click="del">@AR["Common.Delete"]</el-button>
         </div>
         <el-table :data="tableData"
                   border
@@ -34,7 +36,7 @@
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="名称">
+                             label="@AR["Common.Name"]">
                 <template slot-scope="scope">
                     {{ scope.row.name}}
                 </template>
@@ -86,39 +88,39 @@
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="备注">
+                             label="@AR["Common.Remark"]">
                 <template slot-scope="scope">
                     {{ scope.row.adminRemark}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="说明">
+                             label="@AR["Common.Description"]">
                 <template slot-scope="scope">
                     {{ scope.row.remark}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
                              width="145"
-                             label="添加时间">
+                             label="@AR["Common.AddTime"]">
                 <template slot-scope="scope">
                     {{formaTableTime(scope.row.addTime)}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
                              width="80"
-                             label="消息URL">
+                             label="@AR["WeixinManager.MessageUrl"]">
                 <template slot-scope="scope">
-                    <a :href="'/WeixinMp/'+ scope.row.name + '?parameter=' + scope.row.id" target="_blank" :title="'[你的域名]/WeixinMp/' + scope.row.name + '?parameter=' + scope.row.id"><i class="fa fa-external-link"></i> 打开</a>
+                    <a :href="'/WeixinMp/'+ scope.row.name + '?parameter=' + scope.row.id" target="_blank" :title="@AR["Auto.UI.5e233444d144"]"><i class="fa fa-external-link"></i> @AR["Auto.UI.d7098f5050f0"]</a>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" align="center" width="200" fixed="right">
+            <el-table-column label="@AR["Common.Action"]" align="center" width="200" fixed="right">
                 <template slot-scope="scope">
                     <el-button size="mini"
                                type="primary"
-                               @@click="edit(scope.$index, scope.row)"><i class="fa fa-edit"> 编辑</i></el-button>
+                               @@click="edit(scope.$index, scope.row)"><i class="fa fa-edit"> @AR["Auto.UI.95b351c86267"]</i></el-button>
                     <el-button size="mini"
                                type="primary" @@click="openUserMan(scope.row.id)">
-                        <i class="fa fa-users">用户管理</i>
+                        <i class="fa fa-users">@AR["WeixinManager.UserManagement"]</i>
                     </el-button>
                 </template>
             </el-table-column>
@@ -131,7 +133,7 @@
     <!--新增 / 编辑 模态框-->
     <el-dialog :title="dialog.title" :visible.sync="dialog.visible" width="40%" :close-on-click-modal="false">
         <el-form :model="mpAccountForm" :rules="mpAccountRule" ref="ref_mpAccountForm" label-width="140px" class="demo-ruleForm">
-            <el-form-item label="公众号名称" prop="name">
+            <el-form-item label="@AR["WeixinManager.MpAccountName"]" prop="name">
                 <el-input v-model="mpAccountForm.name"></el-input>
             </el-form-item>
             <el-form-item label="AppId" prop="appId">
@@ -149,20 +151,20 @@
             <el-form-item label="PromptRangeCode" prop="promptRangeCode">
                 <el-input v-model="mpAccountForm.promptRangeCode"></el-input>
             </el-form-item>
-            <el-form-item label="备注" prop="adminRemark">
+            <el-form-item label="@AR["Common.Remark"]" prop="adminRemark">
                 <el-input v-model="mpAccountForm.adminRemark"></el-input>
             </el-form-item>
             <el-form-item label="URL">
                 <template>
-                    <p>微信后台配置的服务器地址(URL)</p>
+                    <p>@AR["Auto.UI.88ecc2153037"]</p>
                     <p v-if="dialog.data.id > 0"><a :href="'/WeixinMp/'+ dialog.data.name + '?parameter=' + dialog.data.id" target="_blank"><i class="fa fa-external-link"></i> [您的域名]/WeixinMp/{{mpAccountForm.name}}?parameter={{dialog.data.id}}</a></p>
-                    <p>注意：“公众号名称”必须与所对应的 MessageHandler 所标记的 [MpMessageHandler(name)] 中的 name 对应</p>
+                    <p>@AR["Auto.UI.46a51d412f08"]</p>
                 </template>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="dialog.visible = false">取 消</el-button>
-            <el-button :loading="dialog.loading" type="primary" @@click="saveMpAccount">确 认</el-button>
+            <el-button @@click="dialog.visible = false">@AR["Common.Cancel"]</el-button>
+            <el-button :loading="dialog.loading" type="primary" @@click="saveMpAccount">@AR["Common.Confirm"]</el-button>
         </div>
     </el-dialog>
 </div>
@@ -196,29 +198,29 @@
                 },
                 mpAccountRule: {
                     name: [
-                        { required: true, message: '请输入公众号名称', trigger: 'blur' },
-                        { min: 1, max: 100, message: '长度在 1 至 100 之间', trigger: 'blur' }
+                        { required: true, message: '@AR["WeixinManager.PleaseInputMpAccountName"]', trigger: 'blur' },
+                        { min: 1, max: 100, message: '@AR["Common.LengthBetween1And100"]', trigger: 'blur' }
                     ],
                     appId: [
                         { required: true, message: '请输入AppId', trigger: 'blur' },
-                        { min: 1, max: 100, message: '长度在 1 至 100 之间', trigger: 'blur' }
+                        { min: 1, max: 100, message: '@AR["Common.LengthBetween1And100"]', trigger: 'blur' }
                     ],
                     appSecret: [
                         { required: true, message: '请输入AppSecret', trigger: 'blur' },
-                        { min: 1, max: 100, message: '长度在 1 至 100 之间', trigger: 'blur' }
+                        { min: 1, max: 100, message: '@AR["Common.LengthBetween1And100"]', trigger: 'blur' }
                     ],
                     token: [
                         { required: true, message: '请输入Token', trigger: 'blur' },
-                        { min: 1, max: 500, message: '长度在 1 至 500 之间', trigger: 'blur' }
+                        { min: 1, max: 500, message: '@AR["Common.LengthBetween1And500"]', trigger: 'blur' }
                     ],
                     encodingAESKey: [
-                        { min: 0, max: 500, message: '长度在 1 至 500 之间', trigger: 'blur' }
+                        { min: 0, max: 500, message: '@AR["Common.LengthBetween1And500"]', trigger: 'blur' }
                     ],
                     promptRangeCode: [
-                        { min: 0, max: 500, message: '长度在 1 至 100 之间', trigger: 'blur' }
+                        { min: 0, max: 500, message: '@AR["Common.LengthBetween1And100"]', trigger: 'blur' }
                     ],
                     adminRemark: [
-                        { min: 0, max: 100, message: '长度在 1 至 100 之间', trigger: 'blur' }
+                        { min: 0, max: 100, message: '@AR["Common.LengthBetween1And100"]', trigger: 'blur' }
                     ]
                 },
                 uid: '',
@@ -308,7 +310,7 @@
                     if (delIds.length === 0) {
                         this.$notify({
                             title: '警告',
-                            message: '请勾选公众号',
+                            message: '@AR["WeixinManager.PleaseSelectMpAccount"]',
                             type: 'warning',
                             duration: 2000
                         });

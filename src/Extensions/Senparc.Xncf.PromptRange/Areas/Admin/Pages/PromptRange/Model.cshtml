@@ -1,14 +1,16 @@
 ﻿@page
 @model Senparc.Xncf.PromptRange.Areas.Admin.Pages.PromptRange.ModelModel
-@{
-    ViewData["Title"] = "PromptRange 模型";
+@inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
+@{    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+
+    ViewData["Title"] = AR["Auto.UI.129fa12eec5a"];
     Layout = "_Layout_Vue";
 }
 
 @section breadcrumbs{
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>提示词靶场</el-breadcrumb-item>
-    <el-breadcrumb-item>模型</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["PromptRange.ModuleName"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Auto.UI.8000f187a5d4"]</el-breadcrumb-item>
 }
 @section Style{
     <link href="~/css/PromptRange/model.css" rel="stylesheet" />
@@ -17,33 +19,33 @@
 <div class="modelPage">
     <div class="filterRow">
         <div class="leftBox">
-            <el-input placeholder="请输入内容" v-model="queryList.modelName">
+            <el-input placeholder="@AR["Common.PleaseInputContent"]" v-model="queryList.modelName">
                 <el-button slot="append" icon="el-icon-search" @@click="app.clickSearch()"></el-button>
             </el-input>
         </div>
         <div class="rightBox">
-            <el-button type="primary" @@click="app.createBtnFrom()">新增</el-button>
-            <el-button @@click="app.btnBatchdelete()">批量删除</el-button>
+            <el-button type="primary" @@click="app.createBtnFrom()">@AR["Common.Add"]</el-button>
+            <el-button @@click="app.btnBatchdelete()">@AR["Common.BatchDelete"]</el-button>
         </div>
     </div>
 
     <el-table ref="ModelTable" :data="tableData" class="tableArea" @@selection-change="app.handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column type="index" :index="app.indexMethod" label="序号" width="50"></el-table-column>
-        <el-table-column prop="name" label="模型名称" min-width="120"></el-table-column>
-        <el-table-column prop="developer" label="开发者" min-width="120"></el-table-column>
-        <el-table-column label="是否公开" min-width="120">
+        <el-table-column type="index" :index="app.indexMethod" label="@AR["Auto.UI.faaadc447b1c"]" width="50"></el-table-column>
+        <el-table-column prop="name" label="@AR["AIKernel.ModelName"]" min-width="120"></el-table-column>
+        <el-table-column prop="developer" label="@AR["Auto.UI.c2e48855203e"]" min-width="120"></el-table-column>
+        <el-table-column label="@AR["Auto.UI.d442cb8ab310"]" min-width="120">
             <template slot-scope="scope">
                 @*active-color="#13ce66" inactive-color="#ff4949"*@
                 <el-switch v-model="scope.row.show" @@change="app.changeStatue(scope.row,scope.row.show)" />
             </template>
         </el-table-column>
-        <el-table-column label="操作" width="240">
+        <el-table-column label="@AR["Common.Action"]" width="240">
             <template slot-scope="scope">
-           @*      <el-button type="text" @@click="clickDetails(scope.row)">详情</el-button>
-                <el-button type="text" @@click="clickMaintenance(scope.row)">维护</el-button> *@
-                <el-button type="text" @@click="editBtnFrom(scope.row)">编辑</el-button>
-                <el-button type="text" @@click="deleteHandle(scope.row)">删除</el-button>
+           @*      <el-button type="text" @@click="clickDetails(scope.row)">@AR["Auto.UI.f26225bde6a2"]</el-button>
+                <el-button type="text" @@click="clickMaintenance(scope.row)">@AR["Auto.UI.107baa8ea765"]</el-button> *@
+                <el-button type="text" @@click="editBtnFrom(scope.row)">@AR["Common.Edit"]</el-button>
+                <el-button type="text" @@click="deleteHandle(scope.row)">@AR["Common.Delete"]</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -62,24 +64,24 @@
 
     <el-dialog :title="app.dialogFormTitle" :visible.sync="app.dialogFormVisible" center @@close="closeDialog">
         <el-form :model="newModelForm" :rules="rules" ref="newDialogModelForm">
-            <el-form-item label="模型类型" prop="modelType" label-width="120px">
-                <el-select v-model="app.newModelForm.modelType" placeholder="请选择模型类型">
+            <el-form-item label="@AR["AIKernel.ModelType"]" prop="modelType" label-width="120px">
+                <el-select v-model="app.newModelForm.modelType" placeholder="@AR["Auto.UI.0f749a96beac"]">
                     <el-option v-for="(item,index) in options" :key="index" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="模型名称" prop="modelName" label-width="120px">
-                <el-input  v-model="app.newModelForm.modelName" autocomplete="off" placeholder="请输入模型名称"></el-input>
+            <el-form-item label="@AR["AIKernel.ModelName"]" prop="modelName" label-width="120px">
+                <el-input  v-model="app.newModelForm.modelName" autocomplete="off" placeholder="@AR["Auto.UI.6bb5addf3736"]"></el-input>
             </el-form-item>
-            <el-form-item label="模型终端" prop="modelAPI" label-width="120px" v-if="app.editModelName">
-                <el-input v-model="app.newModelForm.modelAPI" autocomplete="off" placeholder="请输入模型终端（Endpoint)"></el-input>
+            <el-form-item label="@AR["Auto.UI.ea6265621b87"]" prop="modelAPI" label-width="120px" v-if="app.editModelName">
+                <el-input v-model="app.newModelForm.modelAPI" autocomplete="off" placeholder="@AR["Auto.UI.8f94133cb8e7"]"></el-input>
             </el-form-item>
             <el-form-item label="API key" prop="modelAPIkey" label-width="120px" v-if="app.editModelName">
-                <el-input v-model="app.newModelForm.modelAPIkey" autocomplete="off" placeholder="请输入API key"></el-input>
+                <el-input v-model="app.newModelForm.modelAPIkey" autocomplete="off" placeholder="@AR["Auto.UI.0816fb6de358"]"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @@click="submitForm">确 定</el-button>
+            <el-button @@click="dialogFormVisible = false">@AR["Common.Cancel"]</el-button>
+            <el-button type="primary" @@click="submitForm">@AR["Common.Confirm"]</el-button>
         </div>
     </el-dialog>
 </div>

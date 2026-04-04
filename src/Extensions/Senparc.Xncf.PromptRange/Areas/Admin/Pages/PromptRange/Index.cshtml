@@ -1,7 +1,9 @@
 ﻿@page
 @model Senparc.Xncf.PromptRange.Areas.PromptRange.Pages.Index
-@{
-    ViewData["Title"] = "PromptRange 首页";
+@inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
+@{    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+
+    ViewData["Title"] = AR["Auto.UI.2ff254e2be7e"];
     Layout = "_Layout_Vue";
 }
 @section Style{
@@ -9,9 +11,9 @@
     <link href="~/css/PromptRange/index.css" rel="stylesheet" />
 }
 @section breadcrumbs{
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>提示词靶场</el-breadcrumb-item>
-    <el-breadcrumb-item>首页</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["PromptRange.ModuleName"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Common.Home"]</el-breadcrumb-item>
 }
 
 <div class="indexPage">
@@ -19,10 +21,10 @@
         <div class="leftBox">
             <div class="title">
                 <div>PromptRange</div>
-                <div>提示词靶场</div>
+                <div>@AR["PromptRange.ModuleName"]</div>
             </div>
             <div class="btn">
-                新增模型
+                @AR["Auto.UI.1cbddef0b578"]
             </div>
         </div>
         <img src="~/image/PromptRange/index_headBg.png" class="headBg" />
@@ -33,10 +35,10 @@
     <div class="mainBox">
         <div class="leftBox cardBox"> 
             <div id="rank">
-                <h1>热门 Prompt 和 模型 排行榜</h1>
+                <h1>@AR["Auto.UI.e41eb186a9d6"]</h1>
                 <div class="ranking-container">
                     <div class="ranking">
-                        <h2>热门 Prompt</h2>
+                        <h2>@AR["Auto.UI.54124e5981b3"]</h2>
                         <ol id="ol">
                             <li id="li" v-for="(prompt, index) in topPrompts" :key="index">
                                 <span class="rank">{{ index + 1 }}</span>
@@ -46,7 +48,7 @@
                         </ol>
                     </div>
                     <div class="ranking">
-                        <h2>热门模型</h2>
+                        <h2>@AR["Auto.UI.e7ce83e39f4f"]</h2>
                         <ol id="ol">
                             <li id="li" v-for="(model, index) in topModels" :key="index">
                                 <span class="rank">{{ index + 1 }}</span>
@@ -62,19 +64,19 @@
         <div class="rightBox">
             <div class="cardBox">
                 @* <div id="chart">
-                    <h1>模型使用次数</h1>
+                    <h1>@AR["Auto.UI.3dfb165b3cdb"]</h1>
                     <el-date-picker v-model="dateRange"
                                     type="daterange"
                                     range-separator="至"
-                                    start-placeholder="开始日期"
-                                    end-placeholder="结束日期"
+                                    start-placeholder="@AR["Auto.UI.b44c0f337d2f"]"
+                                    end-placeholder="@AR["Auto.UI.1d468be946f7"]"
                                     v-on:change="updateChart"
                                     style="margin-bottom: 20px;" >
                     </el-date-picker>
                     <div ref="chart" id="chart2" ></div>
                 </div> *@
                 <div class="usetimes">
-                    <h1 class="title">模型使用次数</h1>
+                    <h1 class="title">@AR["Auto.UI.3dfb165b3cdb"]</h1>
                     <div id="main"></div>
                     <div class="hotMainBox"></div>
                 </div>

@@ -1,7 +1,9 @@
 ﻿@page
 @model Senparc.Xncf.DynamicData.Areas.Admin.Pages.DynamicData.PageSetModel
-@{
-    ViewData["Title"] = "DynamicData 界面设置";
+@inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
+@{    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+
+    ViewData["Title"] = AR["Auto.UI.d8175faeb205"];
     Layout = "_Layout_Vue";
 }
 
@@ -11,13 +13,13 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>动态数据基础模块</el-breadcrumb-item>
-    <el-breadcrumb-item>界面设置</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["DynamicData.ModuleName"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Auto.UI.f814108b8381"]</el-breadcrumb-item>
 }
 
 <div class="interfaceSet-page">
-    <el-button type="primary" icon="el-icon-plus" :size="elSize" @@click="createLayout">添加</el-button>
+    <el-button type="primary" icon="el-icon-plus" :size="elSize" @@click="createLayout">@AR["Common.Add"]</el-button>
     <section class="df flex-as flex-js cardArea">
         <div v-for="item in layoutList" :key="item.id" class="df-wn flex-dc flex-ac cardItem">
             <img :src="item.thumbnail" alt="缩略图" class="cardItem_thumbnail" />
@@ -33,9 +35,9 @@
                 </span>
                 <el-popover placement="bottom-end" width="80" v-model="item.operationVisible">
                     <div class="cardItem_operation_popover">
-                        <div class="cardItem_operation_popover-item" @@click="copyLayout(item)">复制布局</div>
-                        <div class="cardItem_operation_popover-item" @@click="viewLayout(item)">查看布局</div>
-                        <div class="cardItem_operation_popover-item" @@click="deleteLayout(item)">删除布局</div>
+                        <div class="cardItem_operation_popover-item" @@click="copyLayout(item)">@AR["Auto.UI.10e634255756"]</div>
+                        <div class="cardItem_operation_popover-item" @@click="viewLayout(item)">@AR["Auto.UI.d66b82668121"]</div>
+                        <div class="cardItem_operation_popover-item" @@click="deleteLayout(item)">@AR["Auto.UI.553b3400e228"]</div>
                     </div>
                     <i slot="reference" class="el-icon-more df flex-ac flex-jc stateColor-grey cardItem_operation_operationBtn"></i>
                 </el-popover>

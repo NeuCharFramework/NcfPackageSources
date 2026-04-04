@@ -48,7 +48,7 @@
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item :command="{action: 'delete', id: session.id}">
-                                <i class="fa fa-trash"></i> @AR["Common.删除"]
+                                <i class="fa fa-trash"></i> @AR["Common.Delete"]
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -153,7 +153,7 @@
                     <span class="message-manage-count">@AR["AdminChat.SelectedCount"] {{ selectedMessageIds.length }}</span>
                     <el-button size="mini" @@click="copySelectedMessages" :disabled="selectedMessageIds.length === 0">@AR["AdminChat.Copy"]</el-button>
                     <el-button size="mini" @@click="clearMessageSelection" :disabled="selectedMessageIds.length === 0">@AR["AdminChat.ClearSelection"]</el-button>
-                    <el-button size="mini" type="danger" @@click="deleteSelectedMessages" :disabled="selectedMessageIds.length === 0">@AR["Common.删除"]</el-button>
+                    <el-button size="mini" type="danger" @@click="deleteSelectedMessages" :disabled="selectedMessageIds.length === 0">@AR["Common.Delete"]</el-button>
                 </div>
 
                 <div 

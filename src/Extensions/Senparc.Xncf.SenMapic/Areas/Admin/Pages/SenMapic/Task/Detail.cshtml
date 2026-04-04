@@ -1,54 +1,56 @@
 @page
 @model Senparc.Xncf.SenMapic.Areas.Admin.Pages.SenMapic.Task.DetailModel
-@{
-    ViewData["Title"] = "爬虫任务详情";
+@inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
+@{    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+
+    ViewData["Title"] = AR["Auto.UI.8ce1c7e92577"];
 }
 
 <div class="admin-site">
     <div class="admin-site-header">
         <el-breadcrumb separator="/">
-            <el-breadcrumb-item>首页</el-breadcrumb-item>
-            <el-breadcrumb-item>爬虫任务管理</el-breadcrumb-item>
-            <el-breadcrumb-item>任务详情</el-breadcrumb-item>
+            <el-breadcrumb-item>@AR["Common.Home"]</el-breadcrumb-item>
+            <el-breadcrumb-item>@AR["Auto.UI.481ff04e318a"]</el-breadcrumb-item>
+            <el-breadcrumb-item>@AR["Auto.UI.4a98bf0c6835"]</el-breadcrumb-item>
         </el-breadcrumb>
     </div>
 
     <div class="admin-site-content">
         <div class="task-info">
-            <el-descriptions title="任务信息" :column="2" border>
-                <el-descriptions-item label="任务名称">{{ task.name }}</el-descriptions-item>
-                <el-descriptions-item label="状态">
+            <el-descriptions title="@AR["Auto.UI.937202d64e2c"]" :column="2" border>
+                <el-descriptions-item label="@AR["Auto.UI.78caf7115c51"]">{{ task.name }}</el-descriptions-item>
+                <el-descriptions-item label="@AR["Auto.UI.3fea7ca76cde"]">
                     <el-tag :type="getStatusType(task.status)">{{getStatusText(task.status)}}</el-tag>
                 </el-descriptions-item>
-                <el-descriptions-item label="开始时间">{{ task.startTime }}</el-descriptions-item>
-                <el-descriptions-item label="结束时间">{{ task.endTime }}</el-descriptions-item>
-                <el-descriptions-item label="已爬取页面数">{{ task.crawledPages }}</el-descriptions-item>
-                <el-descriptions-item label="错误信息">{{ task.errorMessage }}</el-descriptions-item>
+                <el-descriptions-item label="@AR["Auto.UI.592c59589144"]">{{ task.startTime }}</el-descriptions-item>
+                <el-descriptions-item label="@AR["Auto.UI.f782779e8b5d"]">{{ task.endTime }}</el-descriptions-item>
+                <el-descriptions-item label="@AR["Auto.UI.08a3630a85e4"]">{{ task.crawledPages }}</el-descriptions-item>
+                <el-descriptions-item label="@AR["Auto.UI.4604d5023479"]">{{ task.errorMessage }}</el-descriptions-item>
             </el-descriptions>
         </div>
 
         <div class="url-stats" style="margin-top: 20px;">
             <el-card>
                 <div slot="header">
-                    <span>URL统计</span>
+                    <span>@AR["Auto.UI.4c3124467f11"]</span>
                 </div>
                 <el-row :gutter="20">
                     <el-col :span="8">
                         <div class="stat-item">
                             <div class="stat-value">{{stats.totalUrls}}</div>
-                            <div class="stat-label">总URL数</div>
+                            <div class="stat-label">@AR["Auto.UI.067242cae100"]</div>
                         </div>
                     </el-col>
                     <el-col :span="8">
                         <div class="stat-item">
                             <div class="stat-value">{{stats.successUrls}}</div>
-                            <div class="stat-label">成功数</div>
+                            <div class="stat-label">@AR["Auto.UI.24f4d3768b6d"]</div>
                         </div>
                     </el-col>
                     <el-col :span="8">
                         <div class="stat-item">
                             <div class="stat-value">{{stats.failedUrls}}</div>
-                            <div class="stat-label">失败数</div>
+                            <div class="stat-label">@AR["Auto.UI.249f7b07b453"]</div>
                         </div>
                     </el-col>
                 </el-row>
@@ -60,16 +62,16 @@
                 <el-tab-pane v-for="domain in domains" :key="domain" :label="domain" :name="domain">
                     <el-table :data="urlList" style="width: 100%" v-loading="loading">
                         <el-table-column prop="url" label="URL" width="300"></el-table-column>
-                        <el-table-column prop="parentUrl" label="父URL" width="300"></el-table-column>
-                        <el-table-column prop="deep" label="深度" width="80"></el-table-column>
-                        <el-table-column prop="crawlTime" label="爬取时间" width="180"></el-table-column>
-                        <el-table-column prop="pageSize" label="页面大小" width="120"></el-table-column>
-                        <el-table-column prop="statusCode" label="状态码" width="100">
+                        <el-table-column prop="parentUrl" label="@AR["Auto.UI.058138b9ba2a"]" width="300"></el-table-column>
+                        <el-table-column prop="deep" label="@AR["Auto.UI.237fb19abddb"]" width="80"></el-table-column>
+                        <el-table-column prop="crawlTime" label="@AR["Auto.UI.db6370666219"]" width="180"></el-table-column>
+                        <el-table-column prop="pageSize" label="@AR["Auto.UI.2d4b6e4f68ba"]" width="120"></el-table-column>
+                        <el-table-column prop="statusCode" label="@AR["Auto.UI.771d897d9a51"]" width="100">
                             <template slot-scope="scope">
                                 <el-tag :type="getHttpStatusType(scope.row.statusCode)">{{scope.row.statusCode}}</el-tag>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="title" label="标题"></el-table-column>
+                        <el-table-column prop="title" label="@AR["Auto.UI.32c65d8d7431"]"></el-table-column>
                     </el-table>
                     <div class="pagination" style="margin-top: 20px; text-align: right;">
                         <el-pagination

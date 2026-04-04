@@ -2,19 +2,19 @@
 @model Senparc.Areas.Admin.Areas.Admin.Pages.AdminUserInfo_IndexModel
 @addTagHelper *, Senparc.Areas.Admin
 @{
-    ViewData["Title"] = AR["AdminUserInfo.管理员管理"]; Layout = "_Layout_Vue";
+    ViewData["Title"] = AR["AdminUserInfo.AdminManagement"]; Layout = "_Layout_Vue";
 }
 @section Style{
     <link href="~/css/Admin/AdminUserInfo/AdminUserInfo.css" rel="stylesheet" />
 }
 @section breadcrumbs {
-    <el-breadcrumb-item>@AR["Common.系统管理"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Common.SystemManagement"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["AdminUserInfo.AdminList"]</el-breadcrumb-item>
 }
 <div>
     <div class="admin-user-info">
         <div class="filter-container">
-            <el-button class="filter-item" v-has="['admin-add']" type="primary" icon="el-icon-plus" @@click="handleEdit">@AR["Common.增加"]</el-button>
+            <el-button class="filter-item" v-has="['admin-add']" type="primary" icon="el-icon-plus" @@click="handleEdit">@AR["Common.Add"]</el-button>
         </div>
         <el-table :data="tableData"
                   border
@@ -34,30 +34,30 @@
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="@AR["Common.备注"]">
+                             label="@AR["Common.Remark"]">
                 <template slot-scope="scope">
                     {{ scope.row.note}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="@AR["Common.添加时间"]">
+                             label="@AR["Common.AddTime"]">
                 <template slot-scope="scope">
                     {{formaTableTime(scope.row.addTime)}}
                 </template>
             </el-table-column>
-            <el-table-column label="@AR["Common.操作"]" align="center">
+            <el-table-column label="@AR["Common.Action"]" align="center">
                 <template slot-scope="scope">
                     <el-button size="mini"
                                type="primary"
                                v-has="['admin-edit']"
-                               @@click="handleEdit(scope.$index, scope.row)">@AR["Common.编辑"]</el-button>
+                               @@click="handleEdit(scope.$index, scope.row)">@AR["Common.Edit"]</el-button>
                     <el-button size="mini"
                                type="primary"
                                v-has="['admin-grant']"
                                @@click="handleSet(scope.$index, scope.row)">@AR["AdminUserInfo.SetRole"]</el-button>
                     <template v-has="['admin-delete']">
-                        <el-popconfirm placement="top" title="@AR["Role.确认删除"]" @@on-confirm="handleDelete(scope.$index, scope.row)">
-                            <el-button size="mini" type="danger" slot="reference">@AR["Common.删除"]</el-button>
+                        <el-popconfirm placement="top" title="@AR["Role.ConfirmDelete"]" @@on-confirm="handleDelete(scope.$index, scope.row)">
+                            <el-button size="mini" type="danger" slot="reference">@AR["Common.Delete"]</el-button>
                         </el-popconfirm>
                     </template>
                 </template>
@@ -91,13 +91,13 @@
                 <el-form-item label="@AR["AdminUserInfo.Phone"]" prop="phone">
                     <el-input v-model="dialog.data.phone" clearable placeholder="@AR["AdminUserInfo.InputPhone"]" />
                 </el-form-item>
-                <el-form-item label="@AR["Common.备注"]" prop="note">
-                    <el-input v-model="dialog.data.note" clearable placeholder="@AR["Common.请输入备注"]" />
+                <el-form-item label="@AR["Common.Remark"]" prop="note">
+                    <el-input v-model="dialog.data.note" clearable placeholder="@AR["Common.PleaseInputRemark"]" />
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @@click="dialog.visible = false">@AR["Common.取消"]</el-button>
-                <el-button :loading="dialog.updateLoading" type="primary" @@click="updateData">@AR["Common.确认"]</el-button>
+                <el-button @@click="dialog.visible = false">@AR["Common.Cancel"]</el-button>
+                <el-button :loading="dialog.updateLoading" type="primary" @@click="updateData">@AR["Common.Confirm"]</el-button>
             </div>
         </el-dialog>
         <!--分配角色-->
@@ -106,8 +106,8 @@
                 <el-checkbox v-for="item in dialog.dialogSetData" :label="item.value" border>{{item.text}}</el-checkbox>
             </el-checkbox-group>
             <div slot="footer" class="dialog-footer">
-                <el-button @@click="dialog.visibleSet = false">@AR["Common.取消"]</el-button>
-                <el-button :loading="dialog.updateLoading" type="primary" @@click="updateDataSet">@AR["Common.确认"]</el-button>
+                <el-button @@click="dialog.visibleSet = false">@AR["Common.Cancel"]</el-button>
+                <el-button :loading="dialog.updateLoading" type="primary" @@click="updateDataSet">@AR["Common.Confirm"]</el-button>
             </div>
         </el-dialog>
     </div>

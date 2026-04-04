@@ -1,7 +1,9 @@
 ﻿@page
 @model Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager.IndexModel
-@{
-    ViewData["Title"] = "公众号控制中心";
+@inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
+@{    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+
+    ViewData["Title"] = AR["Auto.UI.cb37be64be76"];
     Layout = "_Layout_Vue";
 }
 @section HeaderContent{
@@ -62,14 +64,14 @@
 
 }
 @section breadcrumbs {
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>微信管理</el-breadcrumb-item>
-    <el-breadcrumb-item>公众号控制中心</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["WeixinManager.Management"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Auto.UI.cb37be64be76"]</el-breadcrumb-item>
 }
 <div>
     <el-container>
         <el-header class="module-header">
-            <span class="start-title"> <i class="fa fa-weixin"></i>&nbsp;<span class="module-header-v">公众号控制中心</span></span>
+            <span class="start-title"> <i class="fa fa-weixin"></i>&nbsp;<span class="module-header-v">@AR["Auto.UI.cb37be64be76"]</span></span>
         </el-header>
         <el-main>
             <el-row :gutter="20">
@@ -79,8 +81,8 @@
                         <div class="icon">
                             <i class="fa fa-comments"></i>
                         </div>
-                        <p class="tit">公众号数量</p>
-                        <p class="des">已经录入系统的公众号</p>
+                        <p class="tit">@AR["Auto.UI.8d13ecb8e00c"]</p>
+                        <p class="des">@AR["Auto.UI.39c8d5fb036d"]</p>
                     </div>
                 </el-col>
                 <el-col :span="6">
@@ -89,8 +91,8 @@
                         <div class="icon">
                             <i class="fa fa-tachometer"></i>
                         </div>
-                        <p class="tit">运行账号数量</p>
-                        <p class="des">已经生效并连接微信服务器的账号数量</p>
+                        <p class="tit">@AR["Auto.UI.bf1c0abd6816"]</p>
+                        <p class="des">@AR["Auto.UI.2e5c679132b1"]</p>
                     </div>
                 </el-col>
                 <el-col :span="6">
@@ -99,8 +101,8 @@
                         <div class="icon">
                             <i class="fa fa-users"></i>
                         </div>
-                        <p class="tit">总微信用户数</p>
-                        <p class="des">在当前平台交互过或自动拉取关注的用户数</p>
+                        <p class="tit">@AR["Auto.UI.f52ebc972af7"]</p>
+                        <p class="des">@AR["Auto.UI.c865f678bfdd"]</p>
                     </div>
                 </el-col>
                 <el-col :span="6">
@@ -109,8 +111,8 @@
                         <div class="icon">
                             <i class="fa fa-users"></i>
                         </div>
-                        <p class="tit">今日新增用户数</p>
-                        <p class="des">当天已经同步或添加到平台的用户数量</p>
+                        <p class="tit">@AR["Auto.UI.4e705ed25c2d"]</p>
+                        <p class="des">@AR["Auto.UI.e2103d699250"]</p>
                     </div>
                 </el-col>
             </el-row>
@@ -128,17 +130,17 @@
                                 <el-col :span="8" :offset="1">
                                     <div class="chart-li">
                                         <ul class="quick-list">
-                                            <li><i class="fa fa-line-chart"></i><a :href="`/Admin/WeixinManager/WeixinUser?uid=${uid}&mpid=${item.id}`">查看用户</a></li>
-                                            <li><i class="fa fa-thumbs-up"></i><a href="#">查看分组</a></li>
-                                            <li><i class="fa fa-calendar-o"></i><a href="#">查看标签</a></li>
-                                            <li><i class="fa fa-area-chart"></i><a href="#">对话</a></li>
-                                            <li><i class="fa fa-cog"></i><a :href="`/Admin/WeixinManager/MpAccount?uid=${uid}`">编辑</a></li>
+                                            <li><i class="fa fa-line-chart"></i><a :href="`/Admin/WeixinManager/WeixinUser?uid=${uid}&mpid=${item.id}`">@AR["Auto.UI.9519f420c6ad"]</a></li>
+                                            <li><i class="fa fa-thumbs-up"></i><a href="#">@AR["Auto.UI.fdc5054a4b75"]</a></li>
+                                            <li><i class="fa fa-calendar-o"></i><a href="#">@AR["Auto.UI.5209e564bb44"]</a></li>
+                                            <li><i class="fa fa-area-chart"></i><a href="#">@AR["Auto.UI.85936242fc9e"]</a></li>
+                                            <li><i class="fa fa-cog"></i><a :href="`/Admin/WeixinManager/MpAccount?uid=${uid}`">@AR["Common.Edit"]</a></li>
                                         </ul>
                                     </div>
                                 </el-col>
                                 <el-col :span="10">
                                     <div class="chart-li">
-                                        <h4>AccessToken 凭证有效期</h4>
+                                        <h4>@AR["Auto.UI.75b32ce05565"]</h4>
                                         <div :id="'chart_mpaccount_'+item.id" style="width: 400px;height:300px;"></div>
                                     </div>
                                 </el-col>

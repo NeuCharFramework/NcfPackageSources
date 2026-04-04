@@ -1,19 +1,19 @@
 ﻿@page
 @model Senparc.Areas.Admin.Areas.Admin.Pages.MenuIndexModel
 @{
-    ViewData["Title"] = AR["Menu.管理"]; Layout = "_Layout_Vue";
+    ViewData["Title"] = AR["Menu.Management"]; Layout = "_Layout_Vue";
 }
 @section Style{
     <link href="~/css/Admin/Menu/Menu.css" rel="stylesheet" />
 }
 @section breadcrumbs {
-    <el-breadcrumb-item>@AR["Common.系统管理"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@AR["Menu.列表"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Common.SystemManagement"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Menu.List"]</el-breadcrumb-item>
 }
 <div>
     <div class="admin-role">
         <div class="filter-container">
-            <el-button class="filter-item" type="primary" icon="el-icon-plus" @@click="handleEdit('','','add')">@AR["Menu.增加菜单"]</el-button>
+            <el-button class="filter-item" type="primary" icon="el-icon-plus" @@click="handleEdit('','','add')">@AR["Menu.AddMenu"]</el-button>
         </div>
         <el-table :data="tableData"
                   style="width: 100%;margin-bottom: 20px;"
@@ -22,35 +22,35 @@
                   default-expand-all
                   :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
             <el-table-column prop="menuName" align="left"
-                             label="@AR["Menu.名称"]">
+                             label="@AR["Menu.Name"]">
             </el-table-column>
             <el-table-column prop="sort" align="center"
-                             label="@AR["Common.排序"]"
+                             label="@AR["Common.Sort"]"
                              sortable>
             </el-table-column>
             <el-table-column prop="adminRemark" align="center"
-                             label="@AR["Common.备注"]">
+                             label="@AR["Common.Remark"]">
             </el-table-column>
             <el-table-column prop="remark" align="center"
-                             label="@AR["Common.说明"]">
+                             label="@AR["Common.Description"]">
             </el-table-column>
             <el-table-column align="center"
-                             label="@AR["Common.添加时间"]">
+                             label="@AR["Common.AddTime"]">
                 <template slot-scope="scope">
                     {{formaTableTime(scope.row.addTime)}}
                 </template>
             </el-table-column>
-            <el-table-column label="@AR["Common.操作"]" align="center">
+            <el-table-column label="@AR["Common.Action"]" align="center">
                 <template slot-scope="scope">
                     <el-button size="mini"
                                type="primary"
-                               @@click="handleEdit(scope.$index, scope.row,'edit')">@AR["Common.编辑"]</el-button>
+                               @@click="handleEdit(scope.$index, scope.row,'edit')">@AR["Common.Edit"]</el-button>
                     <el-button size="mini"
                                type="primary"
                                v-if="scope.row.children"
-                               @@click="handleEdit(scope.$index, scope.row,'addNext')">@AR["Menu.增加下级"]</el-button>
-                    <el-popconfirm placement="top" title="@AR["Menu.确认删除"]" @@on-confirm="handleDelete(scope.$index, scope.row)">
-                        <el-button size="mini" type="danger" slot="reference">@AR["Common.删除"]</el-button>
+                               @@click="handleEdit(scope.$index, scope.row,'addNext')">@AR["Menu.AddSubMenu"]</el-button>
+                    <el-popconfirm placement="top" title="@AR["Menu.ConfirmDelete"]" @@on-confirm="handleDelete(scope.$index, scope.row)">
+                        <el-button size="mini" type="danger" slot="reference">@AR["Common.Delete"]</el-button>
                     </el-popconfirm>
                 </template>
             </el-table-column>
@@ -64,50 +64,50 @@
                      label-position="left"
                      label-width="100px"
                      style="max-width: 400px; margin-left:50px;">
-                <el-form-item label="@AR["Menu.名称"]" prop="menuName">
+                <el-form-item label="@AR["Menu.Name"]" prop="menuName">
                     <el-input v-model="dialog.data.menuName" clearable placeholder="" />
                 </el-form-item>
-                <el-form-item label="@AR["Menu.父级"]">
+                <el-form-item label="@AR["Menu.Parent"]">
                     <el-cascader v-model="dialog.data.parentId"
                                  :options="tableData"
                                  clearable
                                  :props="{ checkStrictly: dialog.checkStrictly,label: 'menuName',value:'id'}">
                     </el-cascader>
                 </el-form-item>
-                <el-form-item label="@AR["Common.排序"]">
+                <el-form-item label="@AR["Common.Sort"]">
                     <el-input type="number" v-model="dialog.data.sort" clearable placeholder="" />
                 </el-form-item>
-                <el-form-item label="@AR["Menu.类型"]" prop="menuType">
+                <el-form-item label="@AR["Menu.Type"]" prop="menuType">
                     <el-radio-group v-model="dialog.data.menuType">
-                        <el-radio :label="1">@AR["Menu.菜单"]</el-radio>
-                        <el-radio :label="2">@AR["Menu.页面"]</el-radio>
-                        <el-radio :label="3">@AR["Menu.按钮"]</el-radio>
+                        <el-radio :label="1">@AR["Menu.Menu"]</el-radio>
+                        <el-radio :label="2">@AR["Menu.Page"]</el-radio>
+                        <el-radio :label="3">@AR["Menu.Button"]</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="@AR["Menu.路径"]">
+                <el-form-item label="@AR["Menu.Path"]">
                     <el-input v-model="dialog.data.url" clearable placeholder="" />
                 </el-form-item>
-                <el-form-item label="@AR["Menu.操作代码"]" prop="resourceCode">
+                <el-form-item label="@AR["Menu.ActionCode"]" prop="resourceCode">
                     <el-input v-model="dialog.data.resourceCode" clearable placeholder="" />
                 </el-form-item>
-                <el-form-item label="@AR["Menu.是否锁定"]">
+                <el-form-item label="@AR["Menu.IsLocked"]">
                     <el-switch v-model="dialog.data.isLocked"></el-switch>
                 </el-form-item>
-                <el-form-item label="@AR["Menu.是否显示"]">
+                <el-form-item label="@AR["Menu.IsVisible"]">
                     <el-switch v-model="dialog.data.visible"></el-switch>
                 </el-form-item>
-                <el-form-item label="@AR["Menu.图标"]">
+                <el-form-item label="@AR["Menu.Icon"]">
                     <i v-if="dialog.data.icon" :class="'fa '+dialog.data.icon"></i>
-                    <el-button @@click="dialogIcon.visible=true" plain style="margin-left:15px;">@AR["Menu.选择图标"]</el-button>
+                    <el-button @@click="dialogIcon.visible=true" plain style="margin-left:15px;">@AR["Menu.SelectIcon"]</el-button>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @@click="dialog.visible = false">@AR["Common.取消"]</el-button>
-                <el-button :loading="dialog.updateLoading" :disabled="dialog.disabled" type="primary" @@click="updateData">@AR["Common.确认"]</el-button>
+                <el-button @@click="dialog.visible = false">@AR["Common.Cancel"]</el-button>
+                <el-button :loading="dialog.updateLoading" :disabled="dialog.disabled" type="primary" @@click="updateData">@AR["Common.Confirm"]</el-button>
             </div>
         </el-dialog>
         <!--选择图标-->
-        <el-dialog title="@AR["Menu.图标列表"]" :visible.sync="dialogIcon.visible">
+        <el-dialog title="@AR["Menu.IconList"]" :visible.sync="dialogIcon.visible">
             <div class="menu-icons-grid">
                 <div v-for="item in dialogIcon.elementIcons" class="menu-icon-item" @@click="pickIcon(item)">
                     <i :class="'fa ' + item"></i>

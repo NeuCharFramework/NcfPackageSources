@@ -1,14 +1,14 @@
 ﻿@page
 @model Senparc.Areas.Admin.Areas.Admin.Pages.AdminUserInfoAuthorizationPageModel
 @{
-    ViewData["Title"] = AR["AdminUserInfo.角色授予"];
+    ViewData["Title"] = AR["AdminUserInfo.RoleAssignment"];
 }
 
 
 @section breadcrumbs{
-    <li>@AR["Common.系统管理"]</li>
+    <li>@AR["Common.SystemManagement"]</li>
     <li>
-        <a asp-Page="/AdminUserInfo">@AR["AdminUserInfo.管理员管理"]</a>
+        <a asp-Page="/AdminUserInfo">@AR["AdminUserInfo.AdminManagement"]</a>
     </li>
     <li>
         @ViewData["Title"]
@@ -30,8 +30,8 @@
             }
             <hr />
             <div class="col-md-12 col-sm-12 col-xs-12">
-                <a class="btn btn-default" asp-page="./Index">@AR["Common.返回"]</a>
-                <a class="btn btn-success" id="submit">@AR["Common.保存"]</a>
+                <a class="btn btn-default" asp-page="./Index">@AR["Common.Back"]</a>
+                <a class="btn btn-success" id="submit">@AR["Common.Save"]</a>
             </div>
         </div>
     </div>

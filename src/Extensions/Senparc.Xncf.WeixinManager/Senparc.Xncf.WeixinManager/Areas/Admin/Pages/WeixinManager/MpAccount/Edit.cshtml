@@ -1,7 +1,9 @@
 ﻿@page
 @model Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager.MpAccount_EditModel
+@inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{
     ViewData["Title"] = (Model.IsEdit ? "编辑" : "新增 ") + "公众号";
+    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
 }
 <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
@@ -60,7 +62,7 @@
                     </div>
 
                     <div class="item form-group">
-                        @Html.LabelFor(z => z.MpAccountDto.AdminRemark, "备注", new { @class = "control-label col-md-3 col-sm-3 col-xs-12" })
+                        @Html.LabelFor(z => z.MpAccountDto.AdminRemark, new { @class = "control-label col-md-3 col-sm-3 col-xs-12" })
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             @Html.EditorFor(z => z.MpAccountDto.AdminRemark, new { htmlAttributes = new { @class = "form-control col-md-7 col-xs-12" } })
                             @Html.ValidationMessageFor(z => z.MpAccountDto.AdminRemark)
@@ -69,23 +71,23 @@
 
                     <div class="item form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">
-                            微信后台配置的服务器地址(URL)
+                            @AR["Auto.UI.88ecc2153037"]
 
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             @if (Model.IsEdit)
                             {
-                                <p><a href="/WeixinMp/@Model.MpAccountDto.Id" target="_blank"><i class="fa fa-external-link"></i> [您的域名]/WeixinMp/@Model.MpAccountDto.Id</a></p>
+                                <p><a href="/WeixinMp/@Model.MpAccountDto.Id" target="_blank"><i class="fa fa-external-link"></i> @AR["Auto.UI.1b2755ab3c70"]</a></p>
                             }
-                            <p>注意：新添加的账号需要重启系统后生效</p>
+                            <p>@AR["Auto.UI.0eddb953811c"]</p>
                         </div>
                     </div>
 
                     <div class="ln_solid"></div>
                     <div class="form-group">
                         <div class="col-md-6 col-md-offset-3">
-                            <a asp-page="./Index" asp-route-uid="@Model.XncfModuleDto.Uid" class="btn btn-primary">取消</a>
-                            <button id="send" type="submit" class="btn btn-success">提交</button>
+                            <a asp-page="./Index" asp-route-uid="@Model.XncfModuleDto.Uid" class="btn btn-primary">@AR["Common.Cancel"]</a>
+                            <button id="send" type="submit" class="btn btn-success">@AR["Common.Submit"]</button>
                         </div>
                     </div>
                 </form>

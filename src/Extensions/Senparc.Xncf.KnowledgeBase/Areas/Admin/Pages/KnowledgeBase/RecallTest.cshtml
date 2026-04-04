@@ -1,7 +1,9 @@
 @page
 @model Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBase.RecallTestModel
+@inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{
-    ViewData["Title"] = "召回测试";
+    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+    ViewData["Title"] = AR["KnowledgeBase.RecallTest"];
     Layout = "_Layout_Vue";
 }
 
@@ -10,24 +12,24 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>知识库管理</el-breadcrumb-item>
-    <el-breadcrumb-item>召回测试</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["KnowledgeBase.Management"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["KnowledgeBase.RecallTest"]</el-breadcrumb-item>
 }
 
 <div id="app" class="recall-test-page">
     <div class="recall-test-wrap">
         <div class="recall-test-layout">
             <div class="recall-test-left">
-                <h1 class="recall-test-title">召回测试</h1>
-                <p class="recall-test-desc">根据给定的查询文本测试知识的召回效果。</p>
+                <h1 class="recall-test-title">@AR["KnowledgeBase.RecallTest"]</h1>
+                <p class="recall-test-desc">@AR["Auto.UI.a29c28054a06"]</p>
 
                 <div class="knowledge-base-select-row">
-                    <span class="kb-select-label">知识库</span>
+                    <span class="kb-select-label">@AR["KnowledgeBase.KnowledgeBase"]</span>
                     <el-select v-model="selectedKnowledgeBaseId"
                                filterable
                                clearable
-                               placeholder="输入关键字搜索并选择知识库"
+                               placeholder="@AR["KnowledgeBase.SearchSelectKnowledgeBase"]"
                                class="kb-select"
                                @@focus="loadKnowledgeBaseList"
                                @@visible-change="onKbSelectVisibleChange">
@@ -41,37 +43,37 @@
 
                 <div class="source-text-box">
                     <div class="source-text-header">
-                        <span class="source-text-label">源文本</span>
-                        <el-button type="text" size="small" class="inverted-index-btn" icon="el-icon-document" @@click="openSearchSettingsDrawer">倒排索引</el-button>
+                        <span class="source-text-label">@AR["KnowledgeBase.SourceText"]</span>
+                        <el-button type="text" size="small" class="inverted-index-btn" icon="el-icon-document" @@click="openSearchSettingsDrawer">@AR["KnowledgeBase.InvertedIndex"]</el-button>
                     </div>
                     <div class="source-text-area-wrap">
                         <el-input type="textarea"
                                   v-model="recallContent"
                                   :maxlength="200"
                                   :rows="10"
-                                  placeholder="请输入查询文本"
+                                  placeholder="@AR["KnowledgeBase.PleaseInputQueryText"]"
                                   class="source-textarea"></el-input>
                         <div class="source-text-footer">
                             <span class="char-count">{{ recallContent.length }}/200</span>
-                            <el-button type="primary" class="test-btn" @@click="doRecall" :loading="recallLoading" icon="el-icon-video-play">测试</el-button>
+                            <el-button type="primary" class="test-btn" @@click="doRecall" :loading="recallLoading" icon="el-icon-video-play">@AR["Auto.UI.db06c78d1e24"]</el-button>
                         </div>
                     </div>
                 </div>
 
                 <div class="records-section">
-                    <div class="records-title">记录</div>
+                    <div class="records-title">@AR["Auto.UI.620bf82011e0"]</div>
                     <div class="records-table-wrap">
                         <el-table :data="recordPageList"
                                   size="small"
                                   border
                                   class="records-table"
                                   :height="recordTableHeight">
-                            <el-table-column prop="queryContent" label="查询内容" min-width="100" show-overflow-tooltip></el-table-column>
-                            <el-table-column label="召回率" min-width="100" show-overflow-tooltip>
+                            <el-table-column prop="queryContent" label="@AR["KnowledgeBase.QueryContent"]" min-width="100" show-overflow-tooltip></el-table-column>
+                            <el-table-column label="@AR["KnowledgeBase.RecallRate"]" min-width="100" show-overflow-tooltip>
                                 <template slot-scope="scope">{{ scope.row.score != null && scope.row.score !== '' ? scope.row.score : '—' }}</template>
                             </el-table-column>
-                            <el-table-column prop="dataSource" label="数据源" width="120" show-overflow-tooltip></el-table-column>
-                            <el-table-column prop="time" label="时间↓" width="140" align="center"></el-table-column>
+                            <el-table-column prop="dataSource" label="@AR["KnowledgeBase.DataSource"]" width="120" show-overflow-tooltip></el-table-column>
+                            <el-table-column prop="time" label="@AR["Auto.UI.58795001de8c"]" width="140" align="center"></el-table-column>
                         </el-table>
                     </div>
                     <el-pagination class="records-pagination"
@@ -100,28 +102,28 @@
                         <i class="el-icon-document"></i>
                         <span>{{ item.sourceFile || '—' }}</span>
                     </div> *@
-                            <el-button type="text" size="small" class="recall-card-open" @@click="openParagraphDetail(item, index)">打开 <i class="el-icon-right"></i></el-button>
+                            <el-button type="text" size="small" class="recall-card-open" @@click="openParagraphDetail(item, index)">@AR["Auto.UI.d7098f5050f0"] <i class="el-icon-right"></i></el-button>
                         </div>
                     </div>
-                    <div v-if="recallResults.length === 0" class="empty-result">暂无召回结果，请选择知识库、输入源文本并点击「测试」</div>
+                    <div v-if="recallResults.length === 0" class="empty-result">@AR["Auto.UI.fda22f61050e"]</div>
                 </div>
             </div>
         </div>
     </div>
 
     @* 检索设置抽屉：点击倒排索引打开，可设置 Top K 并传给召回接口 *@
-    <el-drawer title="检索设置"
+    <el-drawer title="@AR["KnowledgeBase.SearchSettings"]"
                :visible.sync="visible.searchSettingsDrawer"
                direction="rtl"
                size="380px"
                :with-header="true"
                custom-class="search-settings-drawer">
         <div class="search-settings-body">
-            <p class="search-settings-desc">了解更多关于检索方法。</p>
+            <p class="search-settings-desc">@AR["Auto.UI.9df07adec0bd"]</p>
             <div class="search-settings-item">
-                <div class="search-settings-label">检索方法</div>
-                <div class="search-method-display"><i class="el-icon-document"></i> 倒排索引</div>
-                <p class="search-method-tip">倒排索引是一种用于高效检索的结构。按术语组织，每个术语指向包含它的文档或网页。</p>
+                <div class="search-settings-label">@AR["KnowledgeBase.SearchMethod"]</div>
+                <div class="search-method-display"><i class="el-icon-document"></i> @AR["Auto.UI.07ec4f380dcb"]</div>
+                <p class="search-method-tip">@AR["Auto.UI.5ef0ecb63a58"]</p>
             </div>
             <div class="search-settings-item">
                 <div class="search-settings-label">
@@ -137,13 +139,13 @@
             </div>
         </div>
         <div class="search-settings-footer">
-            <el-button size="small" @@click="visible.searchSettingsDrawer = false">取消</el-button>
-            <el-button size="small" type="primary" @@click="saveSearchSettings">保存</el-button>
+            <el-button size="small" @@click="visible.searchSettingsDrawer = false">@AR["Common.Cancel"]</el-button>
+            <el-button size="small" type="primary" @@click="saveSearchSettings">@AR["Common.Save"]</el-button>
         </div>
     </el-drawer>
 
     @* 段落详情弹框：点击召回片段「打开」显示 *@
-    <el-dialog title="段落详情"
+    <el-dialog title="@AR["KnowledgeBase.ParagraphDetail"]"
                :visible.sync="visible.paragraphDetailDialog"
                width="560px"
                custom-class="paragraph-detail-dialog"
@@ -157,7 +159,7 @@
             <div class="paragraph-detail-title" v-if="paragraphDetailItem.title">{{ paragraphDetailItem.title }}</div>
             <div class="paragraph-detail-content">{{ paragraphDetailItem.content || '—' }}</div>
             <div class="paragraph-detail-keywords" v-if="paragraphDetailTags.length">
-                <span class="paragraph-detail-keywords-label">关键词</span>
+                <span class="paragraph-detail-keywords-label">@AR["Common.Keywords"]</span>
                 <div class="paragraph-detail-tags">
                     <span v-for="(tag, ti) in paragraphDetailTags" :key="ti" class="recall-tag">#{{ tag }}</span>
                 </div>
@@ -165,53 +167,53 @@
         </template>
     </el-dialog>
 
-    <el-dialog title="属性管理" :visible.sync="visible.attrDialog" width="500px" @@close="closeAttrDialog">
-        <el-button size="small" type="primary" @@click="addAttr" style="margin-bottom:10px">+ 新增属性</el-button>
+    <el-dialog title="@AR["KnowledgeBase.AttrManagement"]" :visible.sync="visible.attrDialog" width="500px" @@close="closeAttrDialog">
+        <el-button size="small" type="primary" @@click="addAttr" style="margin-bottom:10px">@AR["Auto.UI.17914471fa31"]</el-button>
         <el-table :data="attributeList" size="small" border>
-            <el-table-column prop="name" label="属性名"></el-table-column>
-            <el-table-column label="操作" width="150" align="center">
+            <el-table-column prop="name" label="@AR["KnowledgeBase.AttrName"]"></el-table-column>
+            <el-table-column label="@AR["Common.Action"]" width="150" align="center">
                 <template slot-scope="scope">
-                    <el-button type="text" size="small" @@click="editAttr(scope.row)">编辑</el-button>
-                    <el-button type="text" size="small" class="danger" @@click="deleteAttr(scope.row)">删除</el-button>
+                    <el-button type="text" size="small" @@click="editAttr(scope.row)">@AR["Common.Edit"]</el-button>
+                    <el-button type="text" size="small" class="danger" @@click="deleteAttr(scope.row)">@AR["Common.Delete"]</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <el-form v-if="visible.attrForm" label-width="80px" size="small" style="margin-top:12px">
-            <el-form-item label="属性名">
-                <el-input v-model="attrForm.name" placeholder="属性名"></el-input>
+            <el-form-item label="@AR["KnowledgeBase.AttrName"]">
+                <el-input v-model="attrForm.name" placeholder="@AR["KnowledgeBase.AttrName"]"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" size="small" @@click="saveAttr">保存</el-button>
-                <el-button size="small" @@click="visible.attrForm = false">取消</el-button>
+                <el-button type="primary" size="small" @@click="saveAttr">@AR["Common.Save"]</el-button>
+                <el-button size="small" @@click="visible.attrForm = false">@AR["Common.Cancel"]</el-button>
             </el-form-item>
         </el-form>
         <div slot="footer">
-            <el-button size="small" @@click="visible.attrDialog = false">关闭</el-button>
+            <el-button size="small" @@click="visible.attrDialog = false">@AR["Common.Close"]</el-button>
         </div>
     </el-dialog>
 
-    <el-dialog title="标签管理" :visible.sync="visible.tagDialog" width="500px" @@close="closeTagDialog">
-        <el-button size="small" type="primary" @@click="addTag" style="margin-bottom:10px">+ 新增标签</el-button>
+    <el-dialog title="@AR["KnowledgeBase.TagManagement"]" :visible.sync="visible.tagDialog" width="500px" @@close="closeTagDialog">
+        <el-button size="small" type="primary" @@click="addTag" style="margin-bottom:10px">@AR["Auto.UI.abe2cdff0070"]</el-button>
         <el-table :data="tagList" size="small" border>
-            <el-table-column prop="name" label="标签名"></el-table-column>
-            <el-table-column label="操作" width="150" align="center">
+            <el-table-column prop="name" label="@AR["KnowledgeBase.TagName"]"></el-table-column>
+            <el-table-column label="@AR["Common.Action"]" width="150" align="center">
                 <template slot-scope="scope">
-                    <el-button type="text" size="small" @@click="editTag(scope.row)">编辑</el-button>
-                    <el-button type="text" size="small" class="danger" @@click="deleteTag(scope.row)">删除</el-button>
+                    <el-button type="text" size="small" @@click="editTag(scope.row)">@AR["Common.Edit"]</el-button>
+                    <el-button type="text" size="small" class="danger" @@click="deleteTag(scope.row)">@AR["Common.Delete"]</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <el-form v-if="visible.tagForm" label-width="80px" size="small" style="margin-top:12px">
-            <el-form-item label="标签名">
-                <el-input v-model="tagForm.name" placeholder="标签名"></el-input>
+            <el-form-item label="@AR["KnowledgeBase.TagName"]">
+                <el-input v-model="tagForm.name" placeholder="@AR["KnowledgeBase.TagName"]"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" size="small" @@click="saveTag">保存</el-button>
-                <el-button size="small" @@click="visible.tagForm = false">取消</el-button>
+                <el-button type="primary" size="small" @@click="saveTag">@AR["Common.Save"]</el-button>
+                <el-button size="small" @@click="visible.tagForm = false">@AR["Common.Cancel"]</el-button>
             </el-form-item>
         </el-form>
         <div slot="footer">
-            <el-button size="small" @@click="visible.tagDialog = false">关闭</el-button>
+            <el-button size="small" @@click="visible.tagDialog = false">@AR["Common.Close"]</el-button>
         </div>
     </el-dialog>
 </div>

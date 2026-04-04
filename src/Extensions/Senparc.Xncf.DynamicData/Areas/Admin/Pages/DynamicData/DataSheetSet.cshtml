@@ -1,8 +1,10 @@
 ﻿@page
 @model Senparc.Xncf.DynamicData.Areas.Admin.Pages.DynamicData.DataSheetSetModel
 
-@{
-    ViewData["Title"] = "DynamicData 数据表设置";
+@inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
+@{    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
+
+    ViewData["Title"] = AR["Auto.UI.3cff34768c13"];
     Layout = "_Layout_Vue";
 }
 
@@ -12,83 +14,83 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>动态数据基础模块</el-breadcrumb-item>
-    <el-breadcrumb-item>数据表设置</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Common.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["DynamicData.ModuleName"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["DynamicData.DataSheetSetTitle"]</el-breadcrumb-item>
 }
 
 <el-container style="height: 100%;flex-wrap: nowrap;gap: 20px;">
     @* 侧边栏 *@
     <div class="dataSheetSet-aside">
-        <div class="aside_title">数据表</div>
+        <div class="aside_title">@AR["Auto.UI.e92734841f74"]</div>
         <div class="aside_list">
             <div v-for="item in dataSheetList" :key="item.id" class="aside_list_item" :class="{'aside_select': sheetSelectId === item.id}" :title="item.name" @@click="viewTableDetails(item)">
                 {{ item.name }}
             </div>
         </div>
-        <div class="aside_newbtn" :class="{'aside_select':sheetSelectId === 0}" @@click="addDataTable"><i class="el-icon-plus"></i> 新增数据表</div>
+        <div class="aside_newbtn" :class="{'aside_select':sheetSelectId === 0}" @@click="addDataTable"><i class="el-icon-plus"></i> @AR["Auto.UI.3ec298738362"]</div>
     </div>
     @* 详情内容 *@
     <div class="dataSheetSet-main">
         @* 共用按钮操作区域 *@
         <div class="main_header">
-            <el-button type="primary" :size="elSize" :disabled="sheetBD" @@click="newFieldsAdd">新增字段</el-button>
-            <el-button type="primary" :disabled="layoutBD" :size="elSize" @@click="createLayout">创建布局</el-button>
-            <el-button :size="elSize" :disabled="sheetBD" @@click="importDataSheet">导入</el-button>
-            <el-button :size="elSize" :disabled="sheetBD" @@click="exportDataSheet">导出</el-button>
+            <el-button type="primary" :size="elSize" :disabled="sheetBD" @@click="newFieldsAdd">@AR["Auto.UI.c520ed9911d3"]</el-button>
+            <el-button type="primary" :disabled="layoutBD" :size="elSize" @@click="createLayout">@AR["Auto.UI.af9a323f4cda"]</el-button>
+            <el-button :size="elSize" :disabled="sheetBD" @@click="importDataSheet">@AR["Auto.UI.8d9a071ee2ef"]</el-button>
+            <el-button :size="elSize" :disabled="sheetBD" @@click="exportDataSheet">@AR["Auto.UI.55405ea6ff6f"]</el-button>
         </div>
         <div class="main_content">
             @* 新增|编辑 数据表单区域 :rules="sheetFormRules" *@
             <el-form ref="sheetElForm" :inline="true" :model="sheetForm" :size="elSize" class="sheetForm-inline">
-                <el-form-item label="名称" prop="name">
+                <el-form-item label="@AR["Common.Name"]" prop="name">
                     <div v-if="sheetFormEidt" class="formValueText" :title="sheetForm.name">{{ sheetForm.name }}</div>
-                    <el-input v-else v-model.trim="sheetForm.name" placeholder="请输入名称"></el-input>
+                    <el-input v-else v-model.trim="sheetForm.name" placeholder="@AR["Common.PleaseInputName"]"></el-input>
                     
                 </el-form-item>
-                <el-form-item label="描述" prop="description">
+                <el-form-item label="@AR["Auto.UI.3bdd08adab6e"]" prop="description">
                     <div v-if="sheetFormEidt" class="formValueText" :title="sheetForm.description">{{ sheetForm.description }}</div>
-                    <el-input v-else v-model.trim="sheetForm.description" placeholder="请输入描述"></el-input>
+                    <el-input v-else v-model.trim="sheetForm.description" placeholder="@AR["Auto.UI.11956a43e290"]"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button v-if="sheetFormEidt" type="primary" @@click="onEidtSheet">编辑</el-button>
+                    <el-button v-if="sheetFormEidt" type="primary" @@click="onEidtSheet">@AR["Common.Edit"]</el-button>
                     <template v-else>
-                        <el-button type="primary" @@click="onSubmitSheet">确定</el-button>
-                        <el-button v-if="sheetSelectId" @@click="onCancelEidtSheet">取消</el-button>
+                        <el-button type="primary" @@click="onSubmitSheet">@AR["Common.Confirm"]</el-button>
+                        <el-button v-if="sheetSelectId" @@click="onCancelEidtSheet">@AR["Common.Cancel"]</el-button>
                     </template>
                     
                 </el-form-item>
             </el-form>
             @* 数据表新增 空状态 提示 *@
-            <div v-if="sheetBD" class="tips-dataSheet">提示：新增数据表之后才能新增字段</div>
+            <div v-if="sheetBD" class="tips-dataSheet">@AR["Auto.UI.e8ab2db924c9"]</div>
             @* 数据表字段 table *@
             <el-table v-else :data="tableFieldList" :size="elSize" border style="width: 100%">
                 <el-table-column prop="identificationId" label="ID" width="110"></el-table-column>
-                <el-table-column prop="name" label="字段名称" width="130"></el-table-column>
-                <el-table-column prop="dataType" label="数据类型" width="130"></el-table-column>
-                <el-table-column prop="format" label="展示类型" width="130"></el-table-column>
-                <el-table-column label="长度" width="200">
+                <el-table-column prop="name" label="@AR["DynamicData.FieldName"]" width="130"></el-table-column>
+                <el-table-column prop="dataType" label="@AR["Auto.UI.185f7bf64751"]" width="130"></el-table-column>
+                <el-table-column prop="format" label="@AR["Auto.UI.1711a82f9b08"]" width="130"></el-table-column>
+                <el-table-column label="@AR["Auto.UI.dfd0cd7f2cba"]" width="200">
                     <template slot-scope="{row}">
                         <span>最小长度:{{ row.minLen }} 最大长度:{{ row.maxLen}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="event" label="事件" width="130"></el-table-column>
-                <el-table-column prop="color" label="颜色" width="80"></el-table-column>
-                <el-table-column prop="requir" label="是否必填" width="80">
+                <el-table-column prop="event" label="@AR["Auto.UI.10b2761db5a8"]" width="130"></el-table-column>
+                <el-table-column prop="color" label="@AR["Auto.UI.6b36c6f7ec83"]" width="80"></el-table-column>
+                <el-table-column prop="requir" label="@AR["Auto.UI.04d815a5d4b8"]" width="80">
                     <template slot-scope="{row}">
                         <span>{{ row.requir ? '是' : '否' }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="primaryKey" label="是否唯一" width="80">
+                <el-table-column prop="primaryKey" label="@AR["Auto.UI.057989a16cc3"]" width="80">
                     <template slot-scope="{row}">
                         <span>{{ row.primaryKey ? '是' : '否' }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="description" label="描述" width="180"></el-table-column>
+                <el-table-column prop="description" label="@AR["Auto.UI.3bdd08adab6e"]" width="180"></el-table-column>
                 @* fixed="right" *@
-                <el-table-column label="操作" width="200">
+                <el-table-column label="@AR["Common.Action"]" width="200">
                     <template slot-scope="{row}">
-                        <el-button type="primary" :size="elSize" @@click="newFieldsEdit(row)">编辑</el-button>
-                        <el-button type="danger" :size="elSize" @@click="newFieldsDelete(row)">删除</el-button>
+                        <el-button type="primary" :size="elSize" @@click="newFieldsEdit(row)">@AR["Common.Edit"]</el-button>
+                        <el-button type="danger" :size="elSize" @@click="newFieldsDelete(row)">@AR["Common.Delete"]</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -105,82 +107,82 @@
     <div class="drawerRtl">
             @* // 内容中的头（包括标题和关闭图标） *@
             <div class="drawerRtl__header">
-            <div class="drawerRtl__header__title">新增字段</div>
+            <div class="drawerRtl__header__title">@AR["Auto.UI.c520ed9911d3"]</div>
             <div class="drawerRtl__header__close" @@click="resetNewField()">&times;</div>
             </div>
             @* // 内容中的主体内容 *@
         <div class="drawerRtl__body">
             <el-form ref="newFieldElForm" :model="newFieldForm" :rules="newFieldFormRules" :size="elSize" label-position="left" label-width="80px" class="newFieldForm-container">
-                <el-form-item label="名称" prop="name">
-                    <el-input v-model="newFieldForm.name" placeholder="请填写名称"></el-input>
+                <el-form-item label="@AR["Common.Name"]" prop="name">
+                    <el-input v-model="newFieldForm.name" placeholder="@AR["Auto.UI.856d0df5f2c0"]"></el-input>
                 </el-form-item>
-                <el-form-item label="标识id" prop="identificationId">
-                    <el-input v-model="newFieldForm.identificationId" placeholder="请填写标识id">
+                <el-form-item label="@AR["Auto.UI.b8ff4f592588"]" prop="identificationId">
+                    <el-input v-model="newFieldForm.identificationId" placeholder="@AR["Auto.UI.0de715730876"]">
                         <template slot="append">
                             <div class="inputAppendIdBox" @@click="autoGenerate">
-                                自动生成
+                                @AR["Auto.UI.cc2177391a48"]
                             </div>
                         </template>
                     </el-input>
-                    <div class="inputIdTips">数据模型英文标识，作为数据模型唯一标识不可重复</div>
+                    <div class="inputIdTips">@AR["Auto.UI.c1377408b5e1"]</div>
                 </el-form-item>
-                <el-form-item label="数据类型" prop="dataType">
-                    <el-select v-model="newFieldForm.dataType" style="width:100%" placeholder="请选择数据类型">
-                        <el-option label="类型文本" value="shanghai"></el-option>
-                        <el-option label="类型文本1" value="beijing"></el-option>
+                <el-form-item label="@AR["Auto.UI.185f7bf64751"]" prop="dataType">
+                    <el-select v-model="newFieldForm.dataType" style="width:100%" placeholder="@AR["Auto.UI.86ec5fbbff20"]">
+                        <el-option label="@AR["Auto.UI.3afa0b339645"]" value="shanghai"></el-option>
+                        <el-option label="@AR["Auto.UI.f2517105935b"]" value="beijing"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="格式" prop="format">
-                    <el-select v-model="newFieldForm.format" style="width:100%" placeholder="请选择格式">
-                        <el-option label="格式文本" value="shanghai"></el-option>
-                        <el-option label="格式文本2" value="beijing"></el-option>
+                <el-form-item label="@AR["Auto.UI.e3127cc1b379"]" prop="format">
+                    <el-select v-model="newFieldForm.format" style="width:100%" placeholder="@AR["Auto.UI.3f51c10f4ad2"]">
+                        <el-option label="@AR["Auto.UI.d8bfb8bb6126"]" value="shanghai"></el-option>
+                        <el-option label="@AR["Auto.UI.03a08b926bcb"]" value="beijing"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label=" ">
                     <el-row :gutter="20">
                         <el-col :span="12" class="df-wn flex-ac flex-as">
-                            <span class="formitem-labelText">最小长度</span>
-                            <el-input v-model="newFieldForm.minLen" placeholder="最小长度"></el-input>
+                            <span class="formitem-labelText">@AR["Auto.UI.17971609e210"]</span>
+                            <el-input v-model="newFieldForm.minLen" placeholder="@AR["Auto.UI.17971609e210"]"></el-input>
                         </el-col>
                         <el-col :span="12" class="df-wn flex-ac flex-as">
-                            <span class="formitem-labelText">最大长度</span>
-                            <el-input v-model="newFieldForm.maxLen" placeholder="最大长度"></el-input>
+                            <span class="formitem-labelText">@AR["Auto.UI.8c4ee6022f15"]</span>
+                            <el-input v-model="newFieldForm.maxLen" placeholder="@AR["Auto.UI.8c4ee6022f15"]"></el-input>
                         </el-col>
                     </el-row>
 
                 </el-form-item>
                 <el-row :gutter="20">
                     <el-col :span="8">
-                        <el-form-item label="是否必填" prop="requir">
+                        <el-form-item label="@AR["Auto.UI.04d815a5d4b8"]" prop="requir">
                             <el-checkbox v-model="newFieldForm.requir"></el-checkbox>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
-                        <el-form-item label="是否唯一" prop="primaryKey">
+                        <el-form-item label="@AR["Auto.UI.057989a16cc3"]" prop="primaryKey">
                             <el-checkbox v-model="newFieldForm.primaryKey"></el-checkbox>
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-form-item label="事件" prop="event">
-                    <el-select v-model="newFieldForm.event" style="width:100%" placeholder="请选择事件">
-                        <el-option label="事件文本" value="shanghai"></el-option>
-                        <el-option label="事件文本2" value="beijing"></el-option>
+                <el-form-item label="@AR["Auto.UI.10b2761db5a8"]" prop="event">
+                    <el-select v-model="newFieldForm.event" style="width:100%" placeholder="@AR["Auto.UI.70671af9a846"]">
+                        <el-option label="@AR["Auto.UI.3b08d7ea3cd7"]" value="shanghai"></el-option>
+                        <el-option label="@AR["Auto.UI.878bce3c9fde"]" value="beijing"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="颜色" prop="color">
+                <el-form-item label="@AR["Auto.UI.6b36c6f7ec83"]" prop="color">
                     @* <el-input type="color" v-model="newFieldForm.color"></el-input> *@
                     <el-color-picker v-model="newFieldForm.color"></el-color-picker>
                 </el-form-item>
-                <el-form-item label="描述" prop="description">
-                    <el-input type="textarea" v-model="newFieldForm.description" placeholder="字段描述"></el-input>
+                <el-form-item label="@AR["Auto.UI.3bdd08adab6e"]" prop="description">
+                    <el-input type="textarea" v-model="newFieldForm.description" placeholder="@AR["Auto.UI.ce2032bc3d14"]"></el-input>
                 </el-form-item>
             </el-form>
 
             </div>
             @* // 内容中固定的footer *@
             <div class="drawerRtl__footer text-right">
-            <el-button :size="elSize" @@click="resetNewField()">取消</el-button>
-            <el-button :size="elSize" type="primary" @@click="submitNewField">确认</el-button>
+            <el-button :size="elSize" @@click="resetNewField()">@AR["Common.Cancel"]</el-button>
+            <el-button :size="elSize" type="primary" @@click="submitNewField">@AR["Common.Confirm"]</el-button>
             </div>
         </div>
 </el-drawer>

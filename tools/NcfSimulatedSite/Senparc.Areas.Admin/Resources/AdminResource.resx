@@ -93,54 +93,54 @@
   <data name="Admin.Language.SelectLanguage" xml:space="preserve">
     <value>选择语言</value>
   </data>
-  <data name="Common.系统管理" xml:space="preserve"><value>系统管理</value></data>
-  <data name="Common.增加" xml:space="preserve"><value>增加</value></data>
-  <data name="Common.排序" xml:space="preserve"><value>排序</value></data>
-  <data name="Common.备注" xml:space="preserve"><value>备注</value></data>
-  <data name="Common.说明" xml:space="preserve"><value>说明</value></data>
-  <data name="Common.添加时间" xml:space="preserve"><value>添加时间</value></data>
-  <data name="Common.操作" xml:space="preserve"><value>操作</value></data>
-  <data name="Common.编辑" xml:space="preserve"><value>编辑</value></data>
-  <data name="Common.删除" xml:space="preserve"><value>删除</value></data>
-  <data name="Common.取消" xml:space="preserve"><value>取消</value></data>
-  <data name="Common.确认" xml:space="preserve"><value>确认</value></data>
-  <data name="Common.请输入说明" xml:space="preserve"><value>请输入说明</value></data>
-  <data name="Common.请输入备注" xml:space="preserve"><value>请输入备注信息</value></data>
-  <data name="Common.返回" xml:space="preserve"><value>返回</value></data>
-  <data name="Common.保存" xml:space="preserve"><value>保存</value></data>
-  <data name="Menu.管理" xml:space="preserve"><value>菜单管理</value></data>
-  <data name="Menu.列表" xml:space="preserve"><value>菜单列表</value></data>
-  <data name="Menu.增加菜单" xml:space="preserve"><value>增加菜单</value></data>
-  <data name="Menu.名称" xml:space="preserve"><value>菜单名称</value></data>
-  <data name="Menu.增加下级" xml:space="preserve"><value>增加下一级</value></data>
-  <data name="Menu.确认删除" xml:space="preserve"><value>确认删除此菜单吗？</value></data>
-  <data name="Menu.父级" xml:space="preserve"><value>父级菜单</value></data>
-  <data name="Menu.类型" xml:space="preserve"><value>类型</value></data>
-  <data name="Menu.菜单" xml:space="preserve"><value>菜单</value></data>
-  <data name="Menu.页面" xml:space="preserve"><value>页面</value></data>
-  <data name="Menu.按钮" xml:space="preserve"><value>按钮</value></data>
-  <data name="Menu.路径" xml:space="preserve"><value>路径</value></data>
-  <data name="Menu.操作代码" xml:space="preserve"><value>操作代码</value></data>
-  <data name="Menu.是否锁定" xml:space="preserve"><value>是否锁定</value></data>
-  <data name="Menu.是否显示" xml:space="preserve"><value>是否显示</value></data>
-  <data name="Menu.图标" xml:space="preserve"><value>图标</value></data>
-  <data name="Menu.选择图标" xml:space="preserve"><value>选择图标</value></data>
-  <data name="Menu.图标列表" xml:space="preserve"><value>图标列表</value></data>
-  <data name="Role.管理" xml:space="preserve"><value>角色管理</value></data>
-  <data name="Role.列表" xml:space="preserve"><value>角色列表</value></data>
-  <data name="Role.名称" xml:space="preserve"><value>角色名称</value></data>
-  <data name="Role.代码" xml:space="preserve"><value>角色代码</value></data>
-  <data name="Role.权限" xml:space="preserve"><value>权限</value></data>
-  <data name="Role.确认删除" xml:space="preserve"><value>确认删除此角色吗？</value></data>
-  <data name="Role.请输入名称" xml:space="preserve"><value>请输入角色名称</value></data>
-  <data name="Role.请输入代码" xml:space="preserve"><value>请输入角色代码</value></data>
-  <data name="Role.是否启用" xml:space="preserve"><value>是否启用</value></data>
-  <data name="Role.为角色授权" xml:space="preserve"><value>为角色授权</value></data>
-  <data name="Trace.日志" xml:space="preserve"><value>SenparcTrace 日志</value></data>
-  <data name="Trace.编号" xml:space="preserve"><value>编号</value></data>
-  <data name="Trace.日期" xml:space="preserve"><value>日期</value></data>
-  <data name="AdminUserInfo.角色授予" xml:space="preserve"><value>角色授予</value></data>
-  <data name="AdminUserInfo.管理员管理" xml:space="preserve"><value>管理员管理</value></data>
+  <data name="Common.SystemManagement" xml:space="preserve"><value>系统管理</value></data>
+  <data name="Common.Add" xml:space="preserve"><value>增加</value></data>
+  <data name="Common.Sort" xml:space="preserve"><value>排序</value></data>
+  <data name="Common.Remark" xml:space="preserve"><value>备注</value></data>
+  <data name="Common.Description" xml:space="preserve"><value>说明</value></data>
+  <data name="Common.AddTime" xml:space="preserve"><value>添加时间</value></data>
+  <data name="Common.Action" xml:space="preserve"><value>操作</value></data>
+  <data name="Common.Edit" xml:space="preserve"><value>编辑</value></data>
+  <data name="Common.Delete" xml:space="preserve"><value>删除</value></data>
+  <data name="Common.Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="Common.Confirm" xml:space="preserve"><value>确认</value></data>
+  <data name="Common.PleaseInputDescription" xml:space="preserve"><value>请输入说明</value></data>
+  <data name="Common.PleaseInputRemark" xml:space="preserve"><value>请输入备注信息</value></data>
+  <data name="Common.Back" xml:space="preserve"><value>返回</value></data>
+  <data name="Common.Save" xml:space="preserve"><value>保存</value></data>
+  <data name="Menu.Management" xml:space="preserve"><value>菜单管理</value></data>
+  <data name="Menu.List" xml:space="preserve"><value>菜单列表</value></data>
+  <data name="Menu.AddMenu" xml:space="preserve"><value>增加菜单</value></data>
+  <data name="Menu.Name" xml:space="preserve"><value>菜单名称</value></data>
+  <data name="Menu.AddSubMenu" xml:space="preserve"><value>增加下一级</value></data>
+  <data name="Menu.ConfirmDelete" xml:space="preserve"><value>确认删除此菜单吗？</value></data>
+  <data name="Menu.Parent" xml:space="preserve"><value>父级菜单</value></data>
+  <data name="Menu.Type" xml:space="preserve"><value>类型</value></data>
+  <data name="Menu.Menu" xml:space="preserve"><value>菜单</value></data>
+  <data name="Menu.Page" xml:space="preserve"><value>页面</value></data>
+  <data name="Menu.Button" xml:space="preserve"><value>按钮</value></data>
+  <data name="Menu.Path" xml:space="preserve"><value>路径</value></data>
+  <data name="Menu.ActionCode" xml:space="preserve"><value>操作代码</value></data>
+  <data name="Menu.IsLocked" xml:space="preserve"><value>是否锁定</value></data>
+  <data name="Menu.IsVisible" xml:space="preserve"><value>是否显示</value></data>
+  <data name="Menu.Icon" xml:space="preserve"><value>图标</value></data>
+  <data name="Menu.SelectIcon" xml:space="preserve"><value>选择图标</value></data>
+  <data name="Menu.IconList" xml:space="preserve"><value>图标列表</value></data>
+  <data name="Role.Management" xml:space="preserve"><value>角色管理</value></data>
+  <data name="Role.List" xml:space="preserve"><value>角色列表</value></data>
+  <data name="Role.Name" xml:space="preserve"><value>角色名称</value></data>
+  <data name="Role.Code" xml:space="preserve"><value>角色代码</value></data>
+  <data name="Role.Permissions" xml:space="preserve"><value>权限</value></data>
+  <data name="Role.ConfirmDelete" xml:space="preserve"><value>确认删除此角色吗？</value></data>
+  <data name="Role.InputName" xml:space="preserve"><value>请输入角色名称</value></data>
+  <data name="Role.InputCode" xml:space="preserve"><value>请输入角色代码</value></data>
+  <data name="Role.IsEnabled" xml:space="preserve"><value>是否启用</value></data>
+  <data name="Role.Authorize" xml:space="preserve"><value>为角色授权</value></data>
+  <data name="Trace.Log" xml:space="preserve"><value>SenparcTrace 日志</value></data>
+  <data name="Trace.Number" xml:space="preserve"><value>编号</value></data>
+  <data name="Trace.Date" xml:space="preserve"><value>日期</value></data>
+  <data name="AdminUserInfo.RoleAssignment" xml:space="preserve"><value>角色授予</value></data>
+  <data name="AdminUserInfo.AdminManagement" xml:space="preserve"><value>管理员管理</value></data>
   <data name="Tenant.NameExists" xml:space="preserve"><value>{0} 租户名称已存在</value></data>
   <data name="Tenant.KeyExists" xml:space="preserve"><value>{0} 租户匹配规则已存在</value></data>
   <data name="Tenant.SaveSuccess.Edit" xml:space="preserve"><value>编辑租户成功</value></data>
@@ -328,4 +328,745 @@
   <data name="AgentsManager.AddGroup" xml:space="preserve"><value>新增组</value></data>
   <data name="AgentsManager.EditGroup" xml:space="preserve"><value>编辑组</value></data>
   <data name="AgentsManager.FillAdminOnly" xml:space="preserve"><value>请填写(仅管理员可见)</value></data>
+  <data name="Common.Close" xml:space="preserve"><value>关闭</value></data>
+  <data name="AgentsManager.Search" xml:space="preserve"><value>搜索</value></data>
+  <data name="AgentsManager.SelectedColon" xml:space="preserve"><value>已选择:</value></data>
+  <data name="AgentsManager.SelectGroup" xml:space="preserve"><value>选择群组</value></data>
+  <data name="AgentsManager.TaskTitle" xml:space="preserve"><value>任务标题</value></data>
+  <data name="AgentsManager.SelectModel" xml:space="preserve"><value>选择模型</value></data>
+  <data name="AgentsManager.PersonalizedAgent" xml:space="preserve"><value>个性化智能体</value></data>
+  <data name="AgentsManager.RunWithPersonalizedParameters" xml:space="preserve"><value>采用个性化参数运行智能体</value></data>
+  <data name="AgentsManager.WhatCanIDoForYou" xml:space="preserve"><value>我能帮你做什么</value></data>
+  <data name="AgentsManager.SelfSelect" xml:space="preserve"><value>自选</value></data>
+  <data name="AgentsManager.Manual" xml:space="preserve"><value>手动</value></data>
+  <data name="AgentsManager.ManualInput" xml:space="preserve"><value>手动输入</value></data>
+  <data name="AgentsManager.EnableSwitch" xml:space="preserve"><value>是否启用</value></data>
+  <data name="AgentsManager.EnableAgent" xml:space="preserve"><value>启用智能体</value></data>
+  <data name="AgentsManager.ExternalPlatform" xml:space="preserve"><value>外接平台</value></data>
+  <data name="AgentsManager.ExternalPlatformParameters" xml:space="preserve"><value>外接平台参数</value></data>
+  <data name="AgentsManager.AgentAvatar" xml:space="preserve"><value>Agent 头像</value></data>
+  <data name="AgentsManager.PluginClassPlaceholder" xml:space="preserve"><value>可输入 Plugin 类名，或带有命名空间的完整名称</value></data>
+  <data name="AgentsManager.Add" xml:space="preserve"><value>添加</value></data>
+  <data name="AgentsManager.AvailablePluginTypes" xml:space="preserve"><value>可用插件类型:</value></data>
+  <data name="AgentsManager.ConnectionSuccess" xml:space="preserve"><value>连接成功</value></data>
+  <data name="AgentsManager.ViewToolList" xml:space="preserve"><value>查看工具列表</value></data>
+  <data name="AgentsManager.ConnectionFailed" xml:space="preserve"><value>连接失败</value></data>
+  <data name="AgentsManager.TestConnection" xml:space="preserve"><value>测试连接</value></data>
+  <data name="AgentsManager.AddMcpEndpoint" xml:space="preserve"><value>添加 MCP Endpoint</value></data>
+  <data name="AgentsManager.EditMcpEndpoint" xml:space="preserve"><value>编辑 MCP Endpoint</value></data>
+  <data name="AgentsManager.EndpointNamePlaceholder" xml:space="preserve"><value>Endpoint 名称 (例如: mcp-server-NCF-7)</value></data>
+  <data name="AgentsManager.EndpointUrlPlaceholder" xml:space="preserve"><value>Endpoint URL (例如: http://localhost:5000/mcp/sse)</value></data>
+  <data name="AgentsManager.AimRange" xml:space="preserve"><value>靶场</value></data>
+  <data name="AgentsManager.AimTrack" xml:space="preserve"><value>靶道</value></data>
+  <data name="AgentsManager.Aiming" xml:space="preserve"><value>瞄准</value></data>
+  <data name="AgentsManager.AverageScore" xml:space="preserve"><value>平均分</value></data>
+  <data name="AgentsManager.HighestScore" xml:space="preserve"><value>最高分</value></data>
+  <data name="AgentsManager.CostTimeMs" xml:space="preserve"><value>耗时(毫秒)</value></data>
+  <data name="AgentsManager.CopyFormattedHtml" xml:space="preserve"><value>复制带格式的 HTML 代码</value></data>
+  <data name="AgentsManager.CopyRawContent" xml:space="preserve"><value>复制原始内容（例如将复制 markdown 标记）</value></data>
+  <data name="AgentsManager.Raw" xml:space="preserve"><value>原始</value></data>
+  <data name="AgentsManager.OneClickCopy" xml:space="preserve"><value>一键复制</value></data>
+  <data name="AgentsManager.PleaseEnterScore" xml:space="preserve"><value>请输入评分(0-10分)</value></data>
+  <data name="AgentsManager.PleaseEnterEvaluation" xml:space="preserve"><value>请输入评价</value></data>
+  <data name="AgentsManager.McpToolsList" xml:space="preserve"><value>MCP 工具列表</value></data>
+  <data name="AgentsManager.ToolName" xml:space="preserve"><value>工具名称</value></data>
+  <data name="AgentsManager.Parameters" xml:space="preserve"><value>参数</value></data>
+  <data name="AgentsManager.NoParameters" xml:space="preserve"><value>无参数</value></data>
+  <data name="AgentsManager.NoAvailableTools" xml:space="preserve"><value>没有可用的工具</value></data>
+  <data name="AIKernel.AddModel" xml:space="preserve"><value>添加模型</value></data>
+  <data name="AIKernel.AgentCount" xml:space="preserve"><value>智能体数量</value></data>
+  <data name="AIKernel.CallableModelCount" xml:space="preserve"><value>可调用模型数量</value></data>
+  <data name="AIKernel.DashboardTitle" xml:space="preserve"><value>AIKernel 仪表盘</value></data>
+  <data name="AIKernel.DeploymentName" xml:space="preserve"><value>部署名称</value></data>
+  <data name="AIKernel.EditModel" xml:space="preserve"><value>编辑模型</value></data>
+  <data name="AIKernel.FeedbackCount" xml:space="preserve"><value>用户反馈数</value></data>
+  <data name="AIKernel.HomeTitle" xml:space="preserve"><value>AIKernel 首页</value></data>
+  <data name="AIKernel.ImportNeuCharAIModel" xml:space="preserve"><value>导入 NeuCharAI 云端模型算力</value></data>
+  <data name="AIKernel.ModelName" xml:space="preserve"><value>模型名称</value></data>
+  <data name="AIKernel.ModelType" xml:space="preserve"><value>模型类型</value></data>
+  <data name="AIKernel.ModuleName" xml:space="preserve"><value>AI 核心模块</value></data>
+  <data name="AIKernel.OrganizationId" xml:space="preserve"><value>组织ID</value></data>
+  <data name="AIKernel.VectorDBCount" xml:space="preserve"><value>向量数据库数量</value></data>
+  <data name="AIVector.AddVectorDB" xml:space="preserve"><value>添加向量数据库</value></data>
+  <data name="AIVector.ConnectionString" xml:space="preserve"><value>连接字符串</value></data>
+  <data name="AIVector.EditVectorDB" xml:space="preserve"><value>编辑向量数据库</value></data>
+  <data name="AIVector.HomeTitle" xml:space="preserve"><value>AIVector 首页</value></data>
+  <data name="AIVector.VectorDBType" xml:space="preserve"><value>向量数据库类型</value></data>
+  <data name="Common.Alias" xml:space="preserve"><value>别名</value></data>
+  <data name="Common.AutoGeneratedModule" xml:space="preserve"><value>当前模块为自动生成模块</value></data>
+  <data name="Common.BatchDelete" xml:space="preserve"><value>批量删除</value></data>
+  <data name="Common.Configure" xml:space="preserve"><value>配置</value></data>
+  <data name="Common.Content" xml:space="preserve"><value>内容</value></data>
+  <data name="Common.Dashboard" xml:space="preserve"><value>仪表盘</value></data>
+  <data name="Common.DatabaseSample" xml:space="preserve"><value>数据库操作示例</value></data>
+  <data name="Common.Download" xml:space="preserve"><value>下载</value></data>
+  <data name="Common.ExtensionModules" xml:space="preserve"><value>扩展模块</value></data>
+  <data name="Common.FileName" xml:space="preserve"><value>文件名</value></data>
+  <data name="Common.FileSize" xml:space="preserve"><value>大小</value></data>
+  <data name="Common.FileType" xml:space="preserve"><value>类型</value></data>
+  <data name="Common.FilterColumns" xml:space="preserve"><value>筛选列</value></data>
+  <data name="Common.Home" xml:space="preserve"><value>首页</value></data>
+  <data name="Common.Keywords" xml:space="preserve"><value>关键词</value></data>
+  <data name="Common.ModuleManagement" xml:space="preserve"><value>模块管理</value></data>
+  <data name="Common.New" xml:space="preserve"><value>新建</value></data>
+  <data name="Common.Platform" xml:space="preserve"><value>平台</value></data>
+  <data name="Common.PleaseFill" xml:space="preserve"><value>请填写</value></data>
+  <data name="Common.PleaseInputContent" xml:space="preserve"><value>请输入内容</value></data>
+  <data name="Common.PleaseInputKeyword" xml:space="preserve"><value>请输入关键字</value></data>
+  <data name="Common.PleaseInputName" xml:space="preserve"><value>请输入名称</value></data>
+  <data name="Common.Publish" xml:space="preserve"><value>发布</value></data>
+  <data name="Common.Query" xml:space="preserve"><value>查询</value></data>
+  <data name="Common.Random" xml:space="preserve"><value>随机</value></data>
+  <data name="Common.Reset" xml:space="preserve"><value>重置</value></data>
+  <data name="Common.Search" xml:space="preserve"><value>搜索</value></data>
+  <data name="Common.SelectedColon" xml:space="preserve"><value>已选择:</value></data>
+  <data name="Common.Show" xml:space="preserve"><value>显示</value></data>
+  <data name="Common.Submit" xml:space="preserve"><value>提交</value></data>
+  <data name="Common.Unknown" xml:space="preserve"><value>未知</value></data>
+  <data name="Common.Upload" xml:space="preserve"><value>上传</value></data>
+  <data name="Common.UploadFile" xml:space="preserve"><value>上传文件</value></data>
+  <data name="DynamicData.ActionColumn" xml:space="preserve"><value>操作列</value></data>
+  <data name="DynamicData.AlignLeft" xml:space="preserve"><value>左对齐</value></data>
+  <data name="DynamicData.AlignRight" xml:space="preserve"><value>右对齐</value></data>
+  <data name="DynamicData.Alignment" xml:space="preserve"><value>对齐方式</value></data>
+  <data name="DynamicData.AllowDelete" xml:space="preserve"><value>允许删除</value></data>
+  <data name="DynamicData.AllowEdit" xml:space="preserve"><value>允许编辑</value></data>
+  <data name="DynamicData.AllowExport" xml:space="preserve"><value>允许导出</value></data>
+  <data name="DynamicData.AllowSort" xml:space="preserve"><value>允许排序</value></data>
+  <data name="DynamicData.BindField" xml:space="preserve"><value>绑定字段</value></data>
+  <data name="DynamicData.ButtonSettings" xml:space="preserve"><value>按钮设置</value></data>
+  <data name="DynamicData.CancelButtonText" xml:space="preserve"><value>取消按钮文字</value></data>
+  <data name="DynamicData.ClickToAddAttribute" xml:space="preserve"><value>点击右侧添加属性</value></data>
+  <data name="DynamicData.ClickToAddComponent" xml:space="preserve"><value>点击右侧添加组件</value></data>
+  <data name="DynamicData.CodeView" xml:space="preserve"><value>代码查看</value></data>
+  <data name="DynamicData.ColumnManagement" xml:space="preserve"><value>列管理</value></data>
+  <data name="DynamicData.ColumnProperty" xml:space="preserve"><value>列属性</value></data>
+  <data name="DynamicData.ColumnTitle" xml:space="preserve"><value>列标题</value></data>
+  <data name="DynamicData.ColumnWidth" xml:space="preserve"><value>列宽</value></data>
+  <data name="DynamicData.ComponentType" xml:space="preserve"><value>组件类型</value></data>
+  <data name="DynamicData.ConfirmButtonText" xml:space="preserve"><value>确认按钮文字</value></data>
+  <data name="DynamicData.CustomButton" xml:space="preserve"><value>自定义按钮</value></data>
+  <data name="DynamicData.DataDetail" xml:space="preserve"><value>数据详情</value></data>
+  <data name="DynamicData.DataFormat" xml:space="preserve"><value>数据格式</value></data>
+  <data name="DynamicData.DataSet" xml:space="preserve"><value>数据集</value></data>
+  <data name="DynamicData.DataSheetSetTitle" xml:space="preserve"><value>数据表设置</value></data>
+  <data name="DynamicData.DataSheetText" xml:space="preserve"><value>数据表文本</value></data>
+  <data name="DynamicData.DataTable" xml:space="preserve"><value>数据表格</value></data>
+  <data name="DynamicData.DisplayContent" xml:space="preserve"><value>展示内容</value></data>
+  <data name="DynamicData.FieldName" xml:space="preserve"><value>字段名称</value></data>
+  <data name="DynamicData.HintContent" xml:space="preserve"><value>提示内容</value></data>
+  <data name="DynamicData.HintText" xml:space="preserve"><value>提示文字</value></data>
+  <data name="DynamicData.LayoutTitle" xml:space="preserve"><value>DynamicData 布局创建</value></data>
+  <data name="DynamicData.ModuleName" xml:space="preserve"><value>动态数据基础模块</value></data>
+  <data name="DynamicData.NormalColumn" xml:space="preserve"><value>普通列</value></data>
+  <data name="DynamicData.Option" xml:space="preserve"><value>选项</value></data>
+  <data name="DynamicData.OptionSettings" xml:space="preserve"><value>选项设置</value></data>
+  <data name="DynamicData.PleaseInputColumnTitle" xml:space="preserve"><value>请输入列标题</value></data>
+  <data name="DynamicData.PleaseInputColumnWidth" xml:space="preserve"><value>请输入列宽</value></data>
+  <data name="DynamicData.PleaseInputFieldName" xml:space="preserve"><value>请输入字段名称</value></data>
+  <data name="DynamicData.PleaseInputLayoutName" xml:space="preserve"><value>请输入布局名称</value></data>
+  <data name="DynamicData.PleaseInputMenuName" xml:space="preserve"><value>请输入菜单名称</value></data>
+  <data name="DynamicData.PleaseSelectAlignment" xml:space="preserve"><value>请选择对齐方式</value></data>
+  <data name="DynamicData.PleaseSelectBindField" xml:space="preserve"><value>请选择绑定字段</value></data>
+  <data name="DynamicData.PleaseSelectComponent" xml:space="preserve"><value>请选择组件</value></data>
+  <data name="DynamicData.PleaseSelectComponentType" xml:space="preserve"><value>请选择组件类型</value></data>
+  <data name="DynamicData.PleaseSelectDataFormat" xml:space="preserve"><value>请选择数据格式</value></data>
+  <data name="DynamicData.PleaseSelectDataSheet" xml:space="preserve"><value>请选择数据表</value></data>
+  <data name="DynamicData.PleaseSelectDisplayContent" xml:space="preserve"><value>请选择展示内容</value></data>
+  <data name="DynamicData.SelectColumn" xml:space="preserve"><value>列选择</value></data>
+  <data name="DynamicData.SelectComponent" xml:space="preserve"><value>选择组件</value></data>
+  <data name="DynamicData.SelectDataSheet" xml:space="preserve"><value>数据表选择</value></data>
+  <data name="DynamicData.TitleText" xml:space="preserve"><value>标题文字</value></data>
+  <data name="FileManager.Folder" xml:space="preserve"><value>文件夹</value></data>
+  <data name="FileManager.HomeTitle" xml:space="preserve"><value>FileManager 首页</value></data>
+  <data name="FileManager.Management" xml:space="preserve"><value>文件管理</value></data>
+  <data name="FileManager.NewFile" xml:space="preserve"><value>新建文件</value></data>
+  <data name="FileManager.NewFolder" xml:space="preserve"><value>新建文件夹</value></data>
+  <data name="FileManager.PleaseInputFolderName" xml:space="preserve"><value>请输入文件夹名称</value></data>
+  <data name="FileManager.RefreshFolders" xml:space="preserve"><value>刷新文件夹</value></data>
+  <data name="FileManager.RootDirectory" xml:space="preserve"><value>根目录</value></data>
+  <data name="FileManager.UploadTime" xml:space="preserve"><value>上传时间</value></data>
+  <data name="KnowledgeBase.AttrManagement" xml:space="preserve"><value>属性管理</value></data>
+  <data name="KnowledgeBase.AttrName" xml:space="preserve"><value>属性名</value></data>
+  <data name="KnowledgeBase.ChatModelId" xml:space="preserve"><value>对话模型Id</value></data>
+  <data name="KnowledgeBase.ConfirmDeleteKnowledgeBase" xml:space="preserve"><value>确认删除此知识库管理吗？</value></data>
+  <data name="KnowledgeBase.ContentType" xml:space="preserve"><value>内容类型</value></data>
+  <data name="KnowledgeBase.DataSource" xml:space="preserve"><value>数据源</value></data>
+  <data name="KnowledgeBase.EmbeddingModelId" xml:space="preserve"><value>Embedding模型Id</value></data>
+  <data name="KnowledgeBase.EmbeddingProgress" xml:space="preserve"><value>向量化进度</value></data>
+  <data name="KnowledgeBase.EmbeddingResult" xml:space="preserve"><value>向量化结果</value></data>
+  <data name="KnowledgeBase.FileList" xml:space="preserve"><value>文件列表</value></data>
+  <data name="KnowledgeBase.InvertedIndex" xml:space="preserve"><value>倒排索引</value></data>
+  <data name="KnowledgeBase.KnowledgeBase" xml:space="preserve"><value>知识库</value></data>
+  <data name="KnowledgeBase.ListTitle" xml:space="preserve"><value>知识库管理列表</value></data>
+  <data name="KnowledgeBase.Management" xml:space="preserve"><value>知识库管理</value></data>
+  <data name="KnowledgeBase.ManagementTitle" xml:space="preserve"><value>知识库管理管理</value></data>
+  <data name="KnowledgeBase.PageTitle" xml:space="preserve"><value>知识库管理列表页面</value></data>
+  <data name="KnowledgeBase.ParagraphDetail" xml:space="preserve"><value>段落详情</value></data>
+  <data name="KnowledgeBase.PleaseInputChatModelId" xml:space="preserve"><value>请输入对话模型Id</value></data>
+  <data name="KnowledgeBase.PleaseInputEmbeddingModelId" xml:space="preserve"><value>请输入Embedding模型Id</value></data>
+  <data name="KnowledgeBase.PleaseInputQueryText" xml:space="preserve"><value>请输入查询文本</value></data>
+  <data name="KnowledgeBase.PleaseInputVectorDBId" xml:space="preserve"><value>请输入向量数据库Id</value></data>
+  <data name="KnowledgeBase.PleaseSelectContentType" xml:space="preserve"><value>请选择内容类型</value></data>
+  <data name="KnowledgeBase.QueryContent" xml:space="preserve"><value>查询内容</value></data>
+  <data name="KnowledgeBase.RecallRate" xml:space="preserve"><value>召回率</value></data>
+  <data name="KnowledgeBase.RecallTest" xml:space="preserve"><value>召回测试</value></data>
+  <data name="KnowledgeBase.SearchMethod" xml:space="preserve"><value>检索方法</value></data>
+  <data name="KnowledgeBase.SearchSelectKnowledgeBase" xml:space="preserve"><value>输入关键字搜索并选择知识库</value></data>
+  <data name="KnowledgeBase.SearchSettings" xml:space="preserve"><value>检索设置</value></data>
+  <data name="KnowledgeBase.SelectChatModel" xml:space="preserve"><value>选择对话模型</value></data>
+  <data name="KnowledgeBase.SelectEmbeddingModel" xml:space="preserve"><value>选择Embedding模型</value></data>
+  <data name="KnowledgeBase.SelectVectorDB" xml:space="preserve"><value>选择向量数据库</value></data>
+  <data name="KnowledgeBase.SourceText" xml:space="preserve"><value>源文本</value></data>
+  <data name="KnowledgeBase.TagManagement" xml:space="preserve"><value>标签管理</value></data>
+  <data name="KnowledgeBase.TagName" xml:space="preserve"><value>标签名</value></data>
+  <data name="KnowledgeBase.VectorDBId" xml:space="preserve"><value>向量数据库Id</value></data>
+  <data name="KnowledgeBase.Vectorize" xml:space="preserve"><value>向量化</value></data>
+  <data name="PromptRange.ModuleName" xml:space="preserve"><value>提示词靶场</value></data>
+  <data name="WeixinManager.Management" xml:space="preserve"><value>微信管理</value></data>
+  <data name="WeixinManager.MessageUrl" xml:space="preserve"><value>消息URL</value></data>
+  <data name="WeixinManager.MpAccountManagement" xml:space="preserve"><value>公众号管理</value></data>
+  <data name="WeixinManager.MpAccountName" xml:space="preserve"><value>公众号名称</value></data>
+  <data name="WeixinManager.UserManagement" xml:space="preserve"><value>用户管理</value></data>
+  <data name="Common.ConfirmDeleteFile" xml:space="preserve"><value>确认删除该文件</value></data>
+  <data name="Common.CreateFailed" xml:space="preserve"><value>创建失败</value></data>
+  <data name="Common.CreateSuccess" xml:space="preserve"><value>创建成功</value></data>
+  <data name="Common.DeleteFailed" xml:space="preserve"><value>删除失败</value></data>
+  <data name="Common.DeleteSuccess" xml:space="preserve"><value>删除成功</value></data>
+  <data name="Common.LengthBetween1And100" xml:space="preserve"><value>长度在 1 至 100 之间</value></data>
+  <data name="Common.LengthBetween1And500" xml:space="preserve"><value>长度在 1 至 500 之间</value></data>
+  <data name="Common.Name" xml:space="preserve"><value>名称</value></data>
+  <data name="Common.PleaseSelect" xml:space="preserve"><value>请选择</value></data>
+  <data name="Common.PleaseSelectFileToUpload" xml:space="preserve"><value>请选择要上传的文件</value></data>
+  <data name="Common.RemarkOptional" xml:space="preserve"><value>备注（可选）</value></data>
+  <data name="Common.SelectFile" xml:space="preserve"><value>选择文件</value></data>
+  <data name="Common.UpdateFailed" xml:space="preserve"><value>更新失败</value></data>
+  <data name="Common.UpdateSuccess" xml:space="preserve"><value>更新成功</value></data>
+  <data name="Common.UploadFailed" xml:space="preserve"><value>上传失败</value></data>
+  <data name="Common.UploadSuccess" xml:space="preserve"><value>上传成功</value></data>
+  <data name="FileManager.FileTypeCode" xml:space="preserve"><value>代码</value></data>
+  <data name="FileManager.FileTypeOther" xml:space="preserve"><value>其他</value></data>
+  <data name="FileManager.FileTypeText" xml:space="preserve"><value>文本</value></data>
+  <data name="FileManager.UploadTo" xml:space="preserve"><value>上传到：</value></data>
+  <data name="WeixinManager.PleaseInputMpAccountName" xml:space="preserve"><value>请输入公众号名称</value></data>
+  <data name="WeixinManager.PleaseSelectMpAccount" xml:space="preserve"><value>请勾选公众号</value></data>
+  <data name="Auto.UI.0024d3be1566" xml:space="preserve"><value>新增页面</value></data>
+  <data name="Auto.UI.01cc6b26131c" xml:space="preserve"><value>模型参数</value></data>
+  <data name="Auto.UI.02cc4f8f5a9a" xml:space="preserve"><value>请输入</value></data>
+  <data name="Auto.UI.03889214b8f5" xml:space="preserve"><value>执行方法</value></data>
+  <data name="Auto.UI.03a08b926bcb" xml:space="preserve"><value>格式文本2</value></data>
+  <data name="Auto.UI.04d815a5d4b8" xml:space="preserve"><value>是否必填</value></data>
+  <data name="Auto.UI.0561589c26e7" xml:space="preserve"><value>打开弹窗</value></data>
+  <data name="Auto.UI.057989a16cc3" xml:space="preserve"><value>是否唯一</value></data>
+  <data name="Auto.UI.058138b9ba2a" xml:space="preserve"><value>父URL</value></data>
+  <data name="Auto.UI.0655a7c2480f" xml:space="preserve"><value>请选择 AI Model</value></data>
+  <data name="Auto.UI.067242cae100" xml:space="preserve"><value>总URL数</value></data>
+  <data name="Auto.UI.071413cda0f7" xml:space="preserve"><value>请输入取消按钮文字</value></data>
+  <data name="Auto.UI.07b35c4e9b06" xml:space="preserve"><value>交换</value></data>
+  <data name="Auto.UI.07ec4f380dcb" xml:space="preserve"><value>倒排索引</value></data>
+  <data name="Auto.UI.0816fb6de358" xml:space="preserve"><value>请输入API key</value></data>
+  <data name="Auto.UI.08a3630a85e4" xml:space="preserve"><value>已爬取页面数</value></data>
+  <data name="Auto.UI.08a4a9b3016c" xml:space="preserve"><value>创建平行战术</value></data>
+  <data name="Auto.UI.09e5a3e91e9f" xml:space="preserve"><value>导出 plugin 文件夹</value></data>
+  <data name="Auto.UI.0a144ec2f000" xml:space="preserve"><value>最大线程数</value></data>
+  <data name="Auto.UI.0ae465d802bd" xml:space="preserve"><value>最大爬取时间</value></data>
+  <data name="Auto.UI.0afabf5cd9c4" xml:space="preserve"><value>可直接上传 OpenAI / Semantic Kernel 标准的 plugin 文件夹，自动生成靶场。（需选择选择整个 plugin 文件夹）</value></data>
+  <data name="Auto.UI.0c3bf4fce505" xml:space="preserve"><value>日期时间</value></data>
+  <data name="Auto.UI.0d3bbd764cc4" xml:space="preserve"><value>关闭页面</value></data>
+  <data name="Auto.UI.0dd1a4f73a81" xml:space="preserve"><value>MCP 首页</value></data>
+  <data name="Auto.UI.0de715730876" xml:space="preserve"><value>请填写标识id</value></data>
+  <data name="Auto.UI.0df68e577fd3" xml:space="preserve"><value>添加筛选条件</value></data>
+  <data name="Auto.UI.0e34a1fe3234" xml:space="preserve"><value>请选择模型</value></data>
+  <data name="Auto.UI.0e5b359fd09a" xml:space="preserve"><value>新增靶场</value></data>
+  <data name="Auto.UI.0eddb953811c" xml:space="preserve"><value>注意：新添加的账号需要重启系统后生效</value></data>
+  <data name="Auto.UI.0f2d443ed381" xml:space="preserve"><value>对比 Prompt</value></data>
+  <data name="Auto.UI.0f749a96beac" xml:space="preserve"><value>请选择模型类型</value></data>
+  <data name="Auto.UI.1041efcc6d87" xml:space="preserve"><value>蓝色值 (B)</value></data>
+  <data name="Auto.UI.107baa8ea765" xml:space="preserve"><value>维护</value></data>
+  <data name="Auto.UI.10b2761db5a8" xml:space="preserve"><value>事件</value></data>
+  <data name="Auto.UI.10e634255756" xml:space="preserve"><value>复制布局</value></data>
+  <data name="Auto.UI.11170e91e4c1" xml:space="preserve"><value>第一条数据:</value></data>
+  <data name="Auto.UI.11956a43e290" xml:space="preserve"><value>请输入描述</value></data>
+  <data name="Auto.UI.129fa12eec5a" xml:space="preserve"><value>PromptRange 模型</value></data>
+  <data name="Auto.UI.133820eee7f5" xml:space="preserve"><value>附加备注</value></data>
+  <data name="Auto.UI.13e792345228" xml:space="preserve"><value>创建后立即打靶</value></data>
+  <data name="Auto.UI.142d5f934bee" xml:space="preserve"><value>(高质量)</value></data>
+  <data name="Auto.UI.144f56ce4bb4" xml:space="preserve"><value>*@
+
+                            @* 表单 按钮样式 设置 *@
+                            @*</value></data>
+  <data name="Auto.UI.149861e4243a" xml:space="preserve"><value>未关注</value></data>
+  <data name="Auto.UI.14d342362f66" xml:space="preserve"><value>标签</value></data>
+  <data name="Auto.UI.155c667ecd07" xml:space="preserve"><value>只有一页时隐藏</value></data>
+  <data name="Auto.UI.16084784a0f1" xml:space="preserve"><value>日期类型</value></data>
+  <data name="Auto.UI.1645ddcfe562" xml:space="preserve"><value>请选择每页显示个数</value></data>
+  <data name="Auto.UI.1711a82f9b08" xml:space="preserve"><value>展示类型</value></data>
+  <data name="Auto.UI.1752d7642a12" xml:space="preserve"><value>最大深度</value></data>
+  <data name="Auto.UI.17914471fa31" xml:space="preserve"><value>+ 新增属性</value></data>
+  <data name="Auto.UI.17971609e210" xml:space="preserve"><value>最小长度</value></data>
+  <data name="Auto.UI.185f7bf64751" xml:space="preserve"><value>数据类型</value></data>
+  <data name="Auto.UI.1902333eff98" xml:space="preserve"><value>请选择靶场</value></data>
+  <data name="Auto.UI.1951814805cf" xml:space="preserve"><value>子组件启用&amp;布局</value></data>
+  <data name="Auto.UI.19e9eb959ff2" xml:space="preserve"><value>分数趋势图</value></data>
+  <data name="Auto.UI.1a249d880743" xml:space="preserve"><value>表格尺寸</value></data>
+  <data name="Auto.UI.1abfae8ea5cd" xml:space="preserve"><value>选项 value</value></data>
+  <data name="Auto.UI.1b2755ab3c70" xml:space="preserve"><value>[您的域名]/WeixinMp/@Model.MpAccountDto.Id</value></data>
+  <data name="Auto.UI.1ca0c125ffba" xml:space="preserve"><value>展示内容文本1</value></data>
+  <data name="Auto.UI.1cbddef0b578" xml:space="preserve"><value>新增模型</value></data>
+  <data name="Auto.UI.1d468be946f7" xml:space="preserve"><value>结束日期</value></data>
+  <data name="Auto.UI.1e852c38a90d" xml:space="preserve"><value>编辑颜色</value></data>
+  <data name="Auto.UI.200f346e2b3e" xml:space="preserve"><value>请选择按钮类型</value></data>
+  <data name="Auto.UI.2070b871f390" xml:space="preserve"><value>关注场景</value></data>
+  <data name="Auto.UI.217f47fcd0e5" xml:space="preserve"><value>带入id</value></data>
+  <data name="Auto.UI.21942f4a6247" xml:space="preserve"><value>导入 plugin 文件夹</value></data>
+  <data name="Auto.UI.21efd88b67a3" xml:space="preserve"><value>暂无数据</value></data>
+  <data name="Auto.UI.22002b6748e0" xml:space="preserve"><value>调用数据源方法</value></data>
+  <data name="Auto.UI.225f3ed00750" xml:space="preserve"><value>默认值</value></data>
+  <data name="Auto.UI.237fb19abddb" xml:space="preserve"><value>深度</value></data>
+  <data name="Auto.UI.23eb0e6024b9" xml:space="preserve"><value>昵称</value></data>
+  <data name="Auto.UI.242d641eab57" xml:space="preserve"><value>后缀</value></data>
+  <data name="Auto.UI.249f7b07b453" xml:space="preserve"><value>失败数</value></data>
+  <data name="Auto.UI.24d67862f87f" xml:space="preserve"><value>属性</value></data>
+  <data name="Auto.UI.24e567ff9878" xml:space="preserve"><value>靶场:</value></data>
+  <data name="Auto.UI.24f4d3768b6d" xml:space="preserve"><value>成功数</value></data>
+  <data name="Auto.UI.2560b304e691" xml:space="preserve"><value>地区</value></data>
+  <data name="Auto.UI.25b3cea9269c" xml:space="preserve"><value>0个字段</value></data>
+  <data name="Auto.UI.26f647fad995" xml:space="preserve"><value>连发次数：</value></data>
+  <data name="Auto.UI.2791dca39c83" xml:space="preserve"><value>大于</value></data>
+  <data name="Auto.UI.288f0c404c4e" xml:space="preserve"><value>清空</value></data>
+  <data name="Auto.UI.292687130b90" xml:space="preserve"><value>对话输入</value></data>
+  <data name="Auto.UI.2a2aa71e84a3" xml:space="preserve"><value>下拉选择</value></data>
+  <data name="Auto.UI.2a6ad292447e" xml:space="preserve"><value>顶部对齐</value></data>
+  <data name="Auto.UI.2afd915728ea" xml:space="preserve"><value>变暗</value></data>
+  <data name="Auto.UI.2b63b8ec34de" xml:space="preserve"><value>请选择组件名称</value></data>
+  <data name="Auto.UI.2c1375d54730" xml:space="preserve"><value>表格列字段</value></data>
+  <data name="Auto.UI.2c808b021ecc" xml:space="preserve"><value>点击上传</value></data>
+  <data name="Auto.UI.2d4b6e4f68ba" xml:space="preserve"><value>页面大小</value></data>
+  <data name="Auto.UI.2dd806507268" xml:space="preserve"><value>表单执行方法</value></data>
+  <data name="Auto.UI.2e50d99973df" xml:space="preserve"><value>事件设置</value></data>
+  <data name="Auto.UI.2e5c679132b1" xml:space="preserve"><value>已经生效并连接微信服务器的账号数量</value></data>
+  <data name="Auto.UI.2ea3ccc65748" xml:space="preserve"><value>首次使用需要初始化</value></data>
+  <data name="Auto.UI.2fe0c4556a6c" xml:space="preserve"><value>固定方向</value></data>
+  <data name="Auto.UI.2fe3a7333f9f" xml:space="preserve"><value>默认参数预览</value></data>
+  <data name="Auto.UI.2fea4d66b2e1" xml:space="preserve"><value>已点踩</value></data>
+  <data name="Auto.UI.2ff254e2be7e" xml:space="preserve"><value>PromptRange 首页</value></data>
+  <data name="Auto.UI.31a854cc42cc" xml:space="preserve"><value>ℹ️ 这些是初始参数，创建后可以在 PromptRange 中调整</value></data>
+  <data name="Auto.UI.323571adbce6" xml:space="preserve"><value>点踩</value></data>
+  <data name="Auto.UI.32c65d8d7431" xml:space="preserve"><value>标题</value></data>
+  <data name="Auto.UI.3360cf67b539" xml:space="preserve"><value>弹窗设置</value></data>
+  <data name="Auto.UI.3360f99a14aa" xml:space="preserve"><value>调试信息：</value></data>
+  <data name="Auto.UI.34ab8c4e2f10" xml:space="preserve"><value>表Id</value></data>
+  <data name="Auto.UI.3569877e4981" xml:space="preserve"><value>平均分</value></data>
+  <data name="Auto.UI.35e46b0f7087" xml:space="preserve"><value>当前数据库类型：@Model.MultipleDatabaseType</value></data>
+  <data name="Auto.UI.36a4908a5577" xml:space="preserve"><value>男</value></data>
+  <data name="Auto.UI.37485657d8bf" xml:space="preserve"><value>时间:</value></data>
+  <data name="Auto.UI.3791ba5c2962" xml:space="preserve"><value>组件名称</value></data>
+  <data name="Auto.UI.39003734d1d7" xml:space="preserve"><value>样式</value></data>
+  <data name="Auto.UI.390a4d9af6ec" xml:space="preserve"><value>提示：</value></data>
+  <data name="Auto.UI.398cd5039352" xml:space="preserve"><value>打靶模式</value></data>
+  <data name="Auto.UI.398e51caf9e8" xml:space="preserve"><value>日期格式</value></data>
+  <data name="Auto.UI.39a2cb79c6d9" xml:space="preserve"><value>左侧</value></data>
+  <data name="Auto.UI.39c8d5fb036d" xml:space="preserve"><value>已经录入系统的公众号</value></data>
+  <data name="Auto.UI.3afa0b339645" xml:space="preserve"><value>类型文本</value></data>
+  <data name="Auto.UI.3b08d7ea3cd7" xml:space="preserve"><value>事件文本</value></data>
+  <data name="Auto.UI.3b8acbffaf69" xml:space="preserve"><value>开始打分</value></data>
+  <data name="Auto.UI.3bdd08adab6e" xml:space="preserve"><value>描述</value></data>
+  <data name="Auto.UI.3bde446e92cb" xml:space="preserve"><value>随机</value></data>
+  <data name="Auto.UI.3c321cef9992" xml:space="preserve"><value>promptField?'请选择靶道':'请先选择靶场'</value></data>
+  <data name="Auto.UI.3cac6342966f" xml:space="preserve"><value>请输入备注</value></data>
+  <data name="Auto.UI.3cff34768c13" xml:space="preserve"><value>DynamicData 数据表设置</value></data>
+  <data name="Auto.UI.3d0a2df9ec50" xml:space="preserve"><value>参数</value></data>
+  <data name="Auto.UI.3d63f50f0680" xml:space="preserve"><value>优化失败</value></data>
+  <data name="Auto.UI.3dfb165b3cdb" xml:space="preserve"><value>模型使用次数</value></data>
+  <data name="Auto.UI.3dfe99b915e3" xml:space="preserve"><value>z.MpAccountDto.AdminRemark, "备注", new { @class = "control-label col-md-3 col-sm-3 col-xs-12" })</value></data>
+  <data name="Auto.UI.3e1c9ae93943" xml:space="preserve"><value>请输入模型别名</value></data>
+  <data name="Auto.UI.3ec298738362" xml:space="preserve"><value>新增数据表</value></data>
+  <data name="Auto.UI.3ee6ef6f2ee1" xml:space="preserve"><value>按钮类型</value></data>
+  <data name="Auto.UI.3f4e4ef8111a" xml:space="preserve"><value>两个Prompt都未配置变量</value></data>
+  <data name="Auto.UI.3f51c10f4ad2" xml:space="preserve"><value>请选择格式</value></data>
+  <data name="Auto.UI.3fea7ca76cde" xml:space="preserve"><value>状态</value></data>
+  <data name="Auto.UI.405551d3b386" xml:space="preserve"><value>AI 评分中...</value></data>
+  <data name="Auto.UI.434eb2c61600" xml:space="preserve"><value>当前处于连发模式，内容已锁定</value></data>
+  <data name="Auto.UI.4363c17ebb34" xml:space="preserve"><value>点击</value></data>
+  <data name="Auto.UI.43ab9af06e1e" xml:space="preserve"><value>标题内容</value></data>
+  <data name="Auto.UI.4442a76279e6" xml:space="preserve"><value>请输入字体大小</value></data>
+  <data name="Auto.UI.450f5ae51cc1" xml:space="preserve"><value>数据筛选</value></data>
+  <data name="Auto.UI.4578b1eac74a" xml:space="preserve"><value>选择的 Model 将用于创建 "PromptCatalyzer" 默认 Prompt，之后可以在优化时选择其他 Model。</value></data>
+  <data name="Auto.UI.4604d5023479" xml:space="preserve"><value>错误信息</value></data>
+  <data name="Auto.UI.46a51d412f08" xml:space="preserve"><value>注意：“公众号名称”必须与所对应的 MessageHandler 所标记的 [MpMessageHandler(name)] 中的 name 对应</value></data>
+  <data name="Auto.UI.481ff04e318a" xml:space="preserve"><value>爬虫任务管理</value></data>
+  <data name="Auto.UI.4891cbde29bf" xml:space="preserve"><value>请输入关闭页面</value></data>
+  <data name="Auto.UI.49198f84cea6" xml:space="preserve"><value>添加列</value></data>
+  <data name="Auto.UI.49bcb8aa03b0" xml:space="preserve"><value>编辑页面</value></data>
+  <data name="Auto.UI.4a3cd6b7e503" xml:space="preserve"><value>筛选器</value></data>
+  <data name="Auto.UI.4a98bf0c6835" xml:space="preserve"><value>任务详情</value></data>
+  <data name="Auto.UI.4b18e4801fa1" xml:space="preserve"><value>导出 plugins</value></data>
+  <data name="Auto.UI.4b47e14823ea" xml:space="preserve"><value>选择靶场</value></data>
+  <data name="Auto.UI.4b70e6d2aa80" xml:space="preserve"><value>continueChatMode ? '请输入您的下一句话... (Ctrl+Enter / Cmd+Enter 发送)' : '请输入您的问题... (Ctrl+Enter / Cmd+Enter 发送)'</value></data>
+  <data name="Auto.UI.4bd8b8ae1746" xml:space="preserve"><value>样式设置</value></data>
+  <data name="Auto.UI.4c1fe14b904a" xml:space="preserve"><value>选择交互</value></data>
+  <data name="Auto.UI.4c3124467f11" xml:space="preserve"><value>URL统计</value></data>
+  <data name="Auto.UI.4c35bf2e4880" xml:space="preserve"><value>等于</value></data>
+  <data name="Auto.UI.4c50eef3bdaf" xml:space="preserve"><value>头像</value></data>
+  <data name="Auto.UI.4c9bb42608b1" xml:space="preserve"><value>前缀</value></data>
+  <data name="Auto.UI.4cd404be5a8c" xml:space="preserve"><value>绑定字段文本1</value></data>
+  <data name="Auto.UI.4ce1d2657675" xml:space="preserve"><value>已选择:</value></data>
+  <data name="Auto.UI.4ddae41599b8" xml:space="preserve"><value>警告：您正在对比同一个 Prompt！</value></data>
+  <data name="Auto.UI.4de9666b29e6" xml:space="preserve"><value>请输入提示时常</value></data>
+  <data name="Auto.UI.4e3cd1a7b193" xml:space="preserve"><value>显示表头</value></data>
+  <data name="Auto.UI.4e705ed25c2d" xml:space="preserve"><value>今日新增用户数</value></data>
+  <data name="Auto.UI.4ec9022938d3" xml:space="preserve"><value>自定义/数据集</value></data>
+  <data name="Auto.UI.4ef9f65ac2b7" xml:space="preserve"><value>请选择页面</value></data>
+  <data name="Auto.UI.4ff1e74e43a3" xml:space="preserve"><value>日期</value></data>
+  <data name="Auto.UI.512e8df6efd7" xml:space="preserve"><value>*@
+
+                            @* 表格 自定义列样式 设置 *@
+                            @*</value></data>
+  <data name="Auto.UI.513c78ddfae8" xml:space="preserve"><value>lable字体颜色</value></data>
+  <data name="Auto.UI.5158eebd4f1f" xml:space="preserve"><value>重置名称</value></data>
+  <data name="Auto.UI.517d33ace956" xml:space="preserve"><value>战术</value></data>
+  <data name="Auto.UI.5209e564bb44" xml:space="preserve"><value>查看标签</value></data>
+  <data name="Auto.UI.527466ff94bd" xml:space="preserve"><value>请求参数</value></data>
+  <data name="Auto.UI.537b39a8b56f" xml:space="preserve"><value>必填</value></data>
+  <data name="Auto.UI.54124e5981b3" xml:space="preserve"><value>热门 Prompt</value></data>
+  <data name="Auto.UI.54adb5ae4a15" xml:space="preserve"><value>立即执行</value></data>
+  <data name="Auto.UI.553b3400e228" xml:space="preserve"><value>删除布局</value></data>
+  <data name="Auto.UI.55405ea6ff6f" xml:space="preserve"><value>导出</value></data>
+  <data name="Auto.UI.5565d87f760e" xml:space="preserve"><value>随机颜色</value></data>
+  <data name="Auto.UI.55d56c3f050b" xml:space="preserve"><value>平均分:</value></data>
+  <data name="Auto.UI.56046115d586" xml:space="preserve"><value>优化后处理</value></data>
+  <data name="Auto.UI.5618aab0e92b" xml:space="preserve"><value>content ? '' : '请输入Prompt内容'</value></data>
+  <data name="Auto.UI.5748533e8fa0" xml:space="preserve"><value>将文件夹拖到此处，或</value></data>
+  <data name="Auto.UI.5785f658c90c" xml:space="preserve"><value>绿色值 (G)</value></data>
+  <data name="Auto.UI.58795001de8c" xml:space="preserve"><value>时间↓</value></data>
+  <data name="Auto.UI.5892ac8b88f1" xml:space="preserve"><value>自定义ID名称</value></data>
+  <data name="Auto.UI.592c59589144" xml:space="preserve"><value>开始时间</value></data>
+  <data name="Auto.UI.598726a25017" xml:space="preserve"><value>关注状态</value></data>
+  <data name="Auto.UI.5a9ef40135ac" xml:space="preserve"><value>优化需求描述</value></data>
+  <data name="Auto.UI.5ab4559a4527" xml:space="preserve"><value>📄 Prompt 内容对比</value></data>
+  <data name="Auto.UI.5ab94c2807db" xml:space="preserve"><value>请选择列宽</value></data>
+  <data name="Auto.UI.5b71d756a8f8" xml:space="preserve"><value>访客编辑页面</value></data>
+  <data name="Auto.UI.5e02aac448e1" xml:space="preserve"><value>最小</value></data>
+  <data name="Auto.UI.5e233444d144" xml:space="preserve"><value>'[你的域名]/WeixinMp/' + scope.row.name + '?parameter=' + scope.row.id</value></data>
+  <data name="Auto.UI.5ed318802ba5" xml:space="preserve"><value>列属性设置</value></data>
+  <data name="Auto.UI.5ef0ecb63a58" xml:space="preserve"><value>倒排索引是一种用于高效检索的结构。按术语组织，每个术语指向包含它的文档或网页。</value></data>
+  <data name="Auto.UI.5f2aed06c984" xml:space="preserve"><value>tableData长度:</value></data>
+  <data name="Auto.UI.5f411223ca5a" xml:space="preserve"><value>返回</value></data>
+  <data name="Auto.UI.6078586e5517" xml:space="preserve"><value>🚀 首次使用：初始化 Prompt 优化功能</value></data>
+  <data name="Auto.UI.60d0458ac6eb" xml:space="preserve"><value>姓名</value></data>
+  <data name="Auto.UI.60e1bae1f8bb" xml:space="preserve"><value>追加新增关注</value></data>
+  <data name="Auto.UI.61fba05e8a3b" xml:space="preserve"><value>描边</value></data>
+  <data name="Auto.UI.620bf82011e0" xml:space="preserve"><value>记录</value></data>
+  <data name="Auto.UI.624f7c0430f6" xml:space="preserve"><value>请输入确认按钮文字</value></data>
+  <data name="Auto.UI.64af497f6210" xml:space="preserve"><value>对话模式</value></data>
+  <data name="Auto.UI.66277f18afe1" xml:space="preserve"><value>删除单条数据</value></data>
+  <data name="Auto.UI.66eeacd93a7c" xml:space="preserve"><value>全选</value></data>
+  <data name="Auto.UI.67890548ee31" xml:space="preserve"><value>请输入按钮名称</value></data>
+  <data name="Auto.UI.694fc5efa9e1" xml:space="preserve"><value>刷新</value></data>
+  <data name="Auto.UI.6a6cc4168841" xml:space="preserve"><value>请输入lable宽度</value></data>
+  <data name="Auto.UI.6b36c6f7ec83" xml:space="preserve"><value>颜色</value></data>
+  <data name="Auto.UI.6bb5addf3736" xml:space="preserve"><value>请输入模型名称</value></data>
+  <data name="Auto.UI.6c0c254bfcec" xml:space="preserve"><value>设置 AI 评分标准</value></data>
+  <data name="Auto.UI.6c7fd749be91" xml:space="preserve"><value>暂无对话记录</value></data>
+  <data name="Auto.UI.6c8001b841f8" xml:space="preserve"><value>排序字段</value></data>
+  <data name="Auto.UI.6cff4b6d794c" xml:space="preserve"><value>弹窗</value></data>
+  <data name="Auto.UI.6d8884ca4608" xml:space="preserve"><value>Color 数据库管理</value></data>
+  <data name="Auto.UI.6e11b7abcf19" xml:space="preserve"><value>AI评分:</value></data>
+  <data name="Auto.UI.6eb70a4114e7" xml:space="preserve"><value>Prompt 版本:</value></data>
+  <data name="Auto.UI.6f2b01db04cb" xml:space="preserve"><value>提示内容</value></data>
+  <data name="Auto.UI.6f7e2c12f4cc" xml:space="preserve"><value>瞄准:</value></data>
+  <data name="Auto.UI.6fa1ff866bc5" xml:space="preserve"><value>请输入End Point</value></data>
+  <data name="Auto.UI.70671af9a846" xml:space="preserve"><value>请选择事件</value></data>
+  <data name="Auto.UI.710ad08b1141" xml:space="preserve"><value>禁用</value></data>
+  <data name="Auto.UI.71d71cd9ca97" xml:space="preserve"><value>确认删除此用户吗？</value></data>
+  <data name="Auto.UI.727a9b741490" xml:space="preserve"><value>复制版本号</value></data>
+  <data name="Auto.UI.73950d735c1e" xml:space="preserve"><value>对话历史</value></data>
+  <data name="Auto.UI.739cbc67cb9c" xml:space="preserve"><value>*@
+
+                            @* 表单 单个组件样式 设置 *@
+                            @*</value></data>
+  <data name="Auto.UI.739f1d888488" xml:space="preserve"><value>展示内容文本</value></data>
+  <data name="Auto.UI.740831ed17d1" xml:space="preserve"><value>Prompt B - 变量配置</value></data>
+  <data name="Auto.UI.7518d3ee4e6f" xml:space="preserve"><value>请选择交互</value></data>
+  <data name="Auto.UI.756e44b36d4d" xml:space="preserve"><value>填充</value></data>
+  <data name="Auto.UI.75b32ce05565" xml:space="preserve"><value>AccessToken 凭证有效期</value></data>
+  <data name="Auto.UI.75f0fa966d82" xml:space="preserve"><value>点赞</value></data>
+  <data name="Auto.UI.771d897d9a51" xml:space="preserve"><value>状态码</value></data>
+  <data name="Auto.UI.787b5677e325" xml:space="preserve"><value>性别</value></data>
+  <data name="Auto.UI.78caf7115c51" xml:space="preserve"><value>任务名称</value></data>
+  <data name="Auto.UI.794417868536" xml:space="preserve"><value>限定输入格式</value></data>
+  <data name="Auto.UI.79ebb5cffe72" xml:space="preserve"><value>模型别名</value></data>
+  <data name="Auto.UI.7a1a685a9b9c" xml:space="preserve"><value>AI 自动优化 Prompt（Agent）</value></data>
+  <data name="Auto.UI.7a391b31caf7" xml:space="preserve"><value>选项 label</value></data>
+  <data name="Auto.UI.7b1d053d9d52" xml:space="preserve"><value>提示时常</value></data>
+  <data name="Auto.UI.7b757faf9f11" xml:space="preserve"><value>已定义</value></data>
+  <data name="Auto.UI.7ccd61253701" xml:space="preserve"><value>是否为分页按钮添加背景色</value></data>
+  <data name="Auto.UI.7d2f6768a637" xml:space="preserve"><value>数据格式文本</value></data>
+  <data name="Auto.UI.7dfd264ad8fc" xml:space="preserve"><value>提交失败状态设置</value></data>
+  <data name="Auto.UI.7e3fd13d0c19" xml:space="preserve"><value>版本记录</value></data>
+  <data name="Auto.UI.7e464d0d84ea" xml:space="preserve"><value>如：}}</value></data>
+  <data name="Auto.UI.7f0308d4f2bf" xml:space="preserve"><value>时间类型</value></data>
+  <data name="Auto.UI.7f7bff66ea55" xml:space="preserve"><value>continueChatMode ? '继续聊天' : (promptid ? '战术选择' : '打靶模式')</value></data>
+  <data name="Auto.UI.7fda172a8681" xml:space="preserve"><value>固定列</value></data>
+  <data name="Auto.UI.8000f187a5d4" xml:space="preserve"><value>模型</value></data>
+  <data name="Auto.UI.801fdf0b9459" xml:space="preserve"><value>请选择两个 Prompt 进行对比</value></data>
+  <data name="Auto.UI.826feca4911a" xml:space="preserve"><value>Prompt请求参数</value></data>
+  <data name="Auto.UI.829abe5a8dcd" xml:space="preserve"><value>分组</value></data>
+  <data name="Auto.UI.8343cb006c1a" xml:space="preserve"><value>管理模型</value></data>
+  <data name="Auto.UI.83cdd84a13a4" xml:space="preserve"><value>导入 plugins</value></data>
+  <data name="Auto.UI.84af2831b31b" xml:space="preserve"><value>例如：让回答更具创造性，或者是减少幻觉...</value></data>
+  <data name="Auto.UI.85451d2eb593" xml:space="preserve"><value>请输入变量值</value></data>
+  <data name="Auto.UI.85541bd9f7f3" xml:space="preserve"><value>只读</value></data>
+  <data name="Auto.UI.855bc1014072" xml:space="preserve"><value>开始优化</value></data>
+  <data name="Auto.UI.856d0df5f2c0" xml:space="preserve"><value>请填写名称</value></data>
+  <data name="Auto.UI.85936242fc9e" xml:space="preserve"><value>对话</value></data>
+  <data name="Auto.UI.86b157654003" xml:space="preserve"><value>请输入提示文字</value></data>
+  <data name="Auto.UI.86bf87636a0f" xml:space="preserve"><value>请输入变量名</value></data>
+  <data name="Auto.UI.86ec5fbbff20" xml:space="preserve"><value>请选择数据类型</value></data>
+  <data name="Auto.UI.878bce3c9fde" xml:space="preserve"><value>事件文本2</value></data>
+  <data name="Auto.UI.87c835a6b174" xml:space="preserve"><value>女</value></data>
+  <data name="Auto.UI.88ecc2153037" xml:space="preserve"><value>微信后台配置的服务器地址(URL)</value></data>
+  <data name="Auto.UI.89ffdd535631" xml:space="preserve"><value>打靶后使用 AI 评分</value></data>
+  <data name="Auto.UI.8a2d99eb1619" xml:space="preserve"><value>数据表文本1</value></data>
+  <data name="Auto.UI.8a42ded5c9d5" xml:space="preserve"><value>显示边框</value></data>
+  <data name="Auto.UI.8ad37ae888d1" xml:space="preserve"><value>快捷键：Ctrl+Enter (Windows) / Cmd+Enter (Mac)</value></data>
+  <data name="Auto.UI.8afea7afdf99" xml:space="preserve"><value>单行</value></data>
+  <data name="Auto.UI.8b0e1ec5ca02" xml:space="preserve"><value>多选组件</value></data>
+  <data name="Auto.UI.8ba7c3a7bef9" xml:space="preserve"><value>输出</value></data>
+  <data name="Auto.UI.8c3686c2d1b5" xml:space="preserve"><value>选择 Prompt B</value></data>
+  <data name="Auto.UI.8c4ee6022f15" xml:space="preserve"><value>最大长度</value></data>
+  <data name="Auto.UI.8ce1c7e92577" xml:space="preserve"><value>爬虫任务详情</value></data>
+  <data name="Auto.UI.8d0472a188d8" xml:space="preserve"><value>不允许重复输入</value></data>
+  <data name="Auto.UI.8d13ecb8e00c" xml:space="preserve"><value>公众号数量</value></data>
+  <data name="Auto.UI.8d9a071ee2ef" xml:space="preserve"><value>导入</value></data>
+  <data name="Auto.UI.8ea1d1ed122b" xml:space="preserve"><value>提示时长</value></data>
+  <data name="Auto.UI.8ee4f8f7776d" xml:space="preserve"><value>复制原始内容（例如将复制 markdown 标记）</value></data>
+  <data name="Auto.UI.8f115163a424" xml:space="preserve"><value>选择靶道</value></data>
+  <data name="Auto.UI.8f94133cb8e7" xml:space="preserve"><value>请输入模型终端（Endpoint)</value></data>
+  <data name="Auto.UI.8f98291c9fa8" xml:space="preserve"><value>列名</value></data>
+  <data name="Auto.UI.8ffc5c2041df" xml:space="preserve"><value>Vue实例是否正常:</value></data>
+  <data name="Auto.UI.907103ef40cd" xml:space="preserve"><value>创建顶级战术</value></data>
+  <data name="Auto.UI.90fd9a48b374" xml:space="preserve"><value>启用分页</value></data>
+  <data name="Auto.UI.920a57a2d11b" xml:space="preserve"><value>请先选择数据表才能对表字段进行设置</value></data>
+  <data name="Auto.UI.934ec96afab5" xml:space="preserve"><value>单选组件</value></data>
+  <data name="Auto.UI.937202d64e2c" xml:space="preserve"><value>任务信息</value></data>
+  <data name="Auto.UI.94086df69ba9" xml:space="preserve"><value>lable字体大小</value></data>
+  <data name="Auto.UI.9426a03b2785" xml:space="preserve"><value>重新瞄准</value></data>
+  <data name="Auto.UI.942ce31194f7" xml:space="preserve"><value>请输入提示内容</value></data>
+  <data name="Auto.UI.9519f420c6ad" xml:space="preserve"><value>查看用户</value></data>
+  <data name="Auto.UI.95b351c86267" xml:space="preserve"><value>编辑</value></data>
+  <data name="Auto.UI.95e9696b0063" xml:space="preserve"><value>添加颜色</value></data>
+  <data name="Auto.UI.96649f4833fd" xml:space="preserve"><value>已点赞</value></data>
+  <data name="Auto.UI.96a5783b3137" xml:space="preserve"><value>页面中，点击【显示 ApiKey】按钮查看到 DeveloperId 及 ApiKey，如果您有多项，可分批次导入。</value></data>
+  <data name="Auto.UI.9714f186a702" xml:space="preserve"><value>弹框设置</value></data>
+  <data name="Auto.UI.97f2bb62f566" xml:space="preserve"><value>关注时间</value></data>
+  <data name="Auto.UI.98e1aba1b47e" xml:space="preserve"><value>靶道:</value></data>
+  <data name="Auto.UI.9a2ee7044ff0" xml:space="preserve"><value>变量值</value></data>
+  <data name="Auto.UI.9b6425cd2d49" xml:space="preserve"><value>输入框</value></data>
+  <data name="Auto.UI.9b6952e950f6" xml:space="preserve"><value>限定字数</value></data>
+  <data name="Auto.UI.9caecd931b95" xml:space="preserve"><value>字段</value></data>
+  <data name="Auto.UI.9cc9f0147365" xml:space="preserve"><value>正在保存...</value></data>
+  <data name="Auto.UI.9d2314d04469" xml:space="preserve"><value>靶道</value></data>
+  <data name="Auto.UI.9d5b09c446ab" xml:space="preserve"><value>选择 Prompt A</value></data>
+  <data name="Auto.UI.9df07adec0bd" xml:space="preserve"><value>了解更多关于检索方法。</value></data>
+  <data name="Auto.UI.9e44c4d8008c" xml:space="preserve"><value>请选择一个 AI Model 来驱动优化功能，系统将自动创建相关资源。</value></data>
+  <data name="Auto.UI.9e50f52a2c00" xml:space="preserve"><value>继续聊天模式已锁定为对话模式</value></data>
+  <data name="Auto.UI.9f460ee100df" xml:space="preserve"><value>全部字段</value></data>
+  <data name="Auto.UI.9f79dbb48478" xml:space="preserve"><value>渲染布局页面</value></data>
+  <data name="Auto.UI.9fb533a421f5" xml:space="preserve"><value>以对话方式输入，输入后进行打靶</value></data>
+  <data name="Auto.UI.9fc53303d853" xml:space="preserve"><value>直接使用当前的 Prompt 进行测试</value></data>
+  <data name="Auto.UI.a001a226fdc3" xml:space="preserve"><value>更新时间</value></data>
+  <data name="Auto.UI.a01a9963238d" xml:space="preserve"><value>年龄</value></data>
+  <data name="Auto.UI.a25657422b40" xml:space="preserve"><value>变量名</value></data>
+  <data name="Auto.UI.a28da7aa2f6c" xml:space="preserve"><value>请输入API Version</value></data>
+  <data name="Auto.UI.a2946a1a42ab" xml:space="preserve"><value>排序方式</value></data>
+  <data name="Auto.UI.a29c28054a06" xml:space="preserve"><value>根据给定的查询文本测试知识的召回效果。</value></data>
+  <data name="Auto.UI.a3adf0614cad" xml:space="preserve"><value>表单属性设置</value></data>
+  <data name="Auto.UI.a3e3b88377c8" xml:space="preserve"><value>开始</value></data>
+  <data name="Auto.UI.a3faa71721c8" xml:space="preserve"><value>请输入靶场名称</value></data>
+  <data name="Auto.UI.a4895ee2e87d" xml:space="preserve"><value>选择页面</value></data>
+  <data name="Auto.UI.a4ac7e752536" xml:space="preserve"><value>升序</value></data>
+  <data name="Auto.UI.a528f60d09b7" xml:space="preserve"><value>注意：设置预期结果后，将会根据预期结果自动进行AI评分。</value></data>
+  <data name="Auto.UI.a55d501e08cd" xml:space="preserve"><value>日期选择器</value></data>
+  <data name="Auto.UI.a62356186dba" xml:space="preserve"><value>按钮事件</value></data>
+  <data name="Auto.UI.a8edf775cdf6" xml:space="preserve"><value>Prompt A - 变量配置</value></data>
+  <data name="Auto.UI.a9cfab552ace" xml:space="preserve"><value>调试信息</value></data>
+  <data name="Auto.UI.aa84ec947f0a" xml:space="preserve"><value>优化</value></data>
+  <data name="Auto.UI.aab57a3547a4" xml:space="preserve"><value>反选</value></data>
+  <data name="Auto.UI.aaec8375dc50" xml:space="preserve"><value>最大页码按钮数</value></data>
+  <data name="Auto.UI.abe2cdff0070" xml:space="preserve"><value>+ 新增标签</value></data>
+  <data name="Auto.UI.ac22b836c8aa" xml:space="preserve"><value>没有数据显示！</value></data>
+  <data name="Auto.UI.ac3bd28b7f10" xml:space="preserve"><value>取消操作设置</value></data>
+  <data name="Auto.UI.ac896ab568ca" xml:space="preserve"><value>将创建：</value></data>
+  <data name="Auto.UI.acc6a82af4ec" xml:space="preserve"><value>请输入期望结果</value></data>
+  <data name="Auto.UI.aded59eee9b7" xml:space="preserve"><value>AIAgentsHub 首页</value></data>
+  <data name="Auto.UI.af70a3b6fe25" xml:space="preserve"><value>筛选器设置</value></data>
+  <data name="Auto.UI.af9a323f4cda" xml:space="preserve"><value>创建布局</value></data>
+  <data name="Auto.UI.b2280aee1bc1" xml:space="preserve"><value>请选择位置</value></data>
+  <data name="Auto.UI.b255a277b38c" xml:space="preserve"><value>新建任务</value></data>
+  <data name="Auto.UI.b2e495ab583e" xml:space="preserve"><value>Template_XncfName 首页</value></data>
+  <data name="Auto.UI.b2f279d78c7e" xml:space="preserve"><value>靶场和靶道</value></data>
+  <data name="Auto.UI.b339aa871047" xml:space="preserve"><value>表格</value></data>
+  <data name="Auto.UI.b44c0f337d2f" xml:space="preserve"><value>开始日期</value></data>
+  <data name="Auto.UI.b5c671b7e3ae" xml:space="preserve"><value>拖动调整宽度 | 双击还原默认</value></data>
+  <data name="Auto.UI.b6456e634675" xml:space="preserve"><value>显示方式</value></data>
+  <data name="Auto.UI.b7b6bfcba91b" xml:space="preserve"><value>中间对齐1</value></data>
+  <data name="Auto.UI.b7e6ea5690b2" xml:space="preserve"><value>(不惩罚)</value></data>
+  <data name="Auto.UI.b82bce0cf35f" xml:space="preserve"><value>选择文件后将上传至文件管理，并可在下方文件列表中勾选后与当前知识库关联</value></data>
+  <data name="Auto.UI.b8e63b7bf26c" xml:space="preserve"><value>设置靶道名称</value></data>
+  <data name="Auto.UI.b8f98a658fef" xml:space="preserve"><value>打开弹框</value></data>
+  <data name="Auto.UI.b8ff4f592588" xml:space="preserve"><value>标识id</value></data>
+  <data name="Auto.UI.b91a22b72dc6" xml:space="preserve"><value>建议选择不同的 Prompt 进行对比以查看差异。</value></data>
+  <data name="Auto.UI.b930420857b2" xml:space="preserve"><value>请输入靶道备注名称</value></data>
+  <data name="Auto.UI.ba750e6e3022" xml:space="preserve"><value>新增菜单</value></data>
+  <data name="Auto.UI.ba94de747337" xml:space="preserve"><value>删除单条</value></data>
+  <data name="Auto.UI.bab4d1763ab8" xml:space="preserve"><value>年-月-日 时:分</value></data>
+  <data name="Auto.UI.bb79667f3703" xml:space="preserve"><value>组件</value></data>
+  <data name="Auto.UI.bbb1a20d773b" xml:space="preserve"><value>靶场</value></data>
+  <data name="Auto.UI.bc3b90bd905c" xml:space="preserve"><value>手动评分</value></data>
+  <data name="Auto.UI.bc885131aaf7" xml:space="preserve"><value>重新上传</value></data>
+  <data name="Auto.UI.bd090e931bb6" xml:space="preserve"><value>查看备注</value></data>
+  <data name="Auto.UI.bd30be2274cd" xml:space="preserve"><value>出参</value></data>
+  <data name="Auto.UI.bd9c34f9c5d9" xml:space="preserve"><value>新增界面</value></data>
+  <data name="Auto.UI.bdb3fd49a3d4" xml:space="preserve"><value>默认值1</value></data>
+  <data name="Auto.UI.be358535f8af" xml:space="preserve"><value>可以选择多个文件同时上传</value></data>
+  <data name="Auto.UI.bf1c0abd6816" xml:space="preserve"><value>运行账号数量</value></data>
+  <data name="Auto.UI.bfe68d5844f8" xml:space="preserve"><value>链接</value></data>
+  <data name="Auto.UI.c1377408b5e1" xml:space="preserve"><value>数据模型英文标识，作为数据模型唯一标识不可重复</value></data>
+  <data name="Auto.UI.c13a60b732cc" xml:space="preserve"><value>请选择或输入备注名称</value></data>
+  <data name="Auto.UI.c1ecedab11bc" xml:space="preserve"><value>原始</value></data>
+  <data name="Auto.UI.c233f63ba19d" xml:space="preserve"><value>发 射</value></data>
+  <data name="Auto.UI.c2394b52ff1f" xml:space="preserve"><value>是否使用小型分页</value></data>
+  <data name="Auto.UI.c26ad5de6440" xml:space="preserve"><value>请输入颜色的附加备注信息...</value></data>
+  <data name="Auto.UI.c2e48855203e" xml:space="preserve"><value>开发者</value></data>
+  <data name="Auto.UI.c360e994dbcf" xml:space="preserve"><value>排序</value></data>
+  <data name="Auto.UI.c3e00bdc8118" xml:space="preserve"><value>最大页面数</value></data>
+  <data name="Auto.UI.c4c598a016d5" xml:space="preserve"><value>请输入Organization Id</value></data>
+  <data name="Auto.UI.c520ed9911d3" xml:space="preserve"><value>新增字段</value></data>
+  <data name="Auto.UI.c521327348cd" xml:space="preserve"><value>同步所有关注</value></data>
+  <data name="Auto.UI.c5374bf13e9b" xml:space="preserve"><value>有差异</value></data>
+  <data name="Auto.UI.c583d00a0432" xml:space="preserve"><value>(标准长度)</value></data>
+  <data name="Auto.UI.c592b1df7604" xml:space="preserve"><value>注意：如果用户数量众多，可能会消耗非常长的时间！</value></data>
+  <data name="Auto.UI.c6255f9bac17" xml:space="preserve"><value>复制带格式的 HTML 代码</value></data>
+  <data name="Auto.UI.c63da45e7063" xml:space="preserve"><value>'请输入' + file.name + '的备注'</value></data>
+  <data name="Auto.UI.c641fe0ae06e" xml:space="preserve"><value>添加按钮</value></data>
+  <data name="Auto.UI.c6ab9c508532" xml:space="preserve"><value>🎯 请求参数对比</value></data>
+  <data name="Auto.UI.c6b523e6158d" xml:space="preserve"><value>入参</value></data>
+  <data name="Auto.UI.c729d902ed6d" xml:space="preserve"><value>跳转到此 Prompt</value></data>
+  <data name="Auto.UI.c75eb28aa84f" xml:space="preserve"><value>3D 结构导图</value></data>
+  <data name="Auto.UI.c865f678bfdd" xml:space="preserve"><value>在当前平台交互过或自动拉取关注的用户数</value></data>
+  <data name="Auto.UI.c9bcc52eb92c" xml:space="preserve"><value>&amp;nbsp; &amp;nbsp;可从</value></data>
+  <data name="Auto.UI.ca746b1ff101" xml:space="preserve"><value>文字</value></data>
+  <data name="Auto.UI.cb37be64be76" xml:space="preserve"><value>公众号控制中心</value></data>
+  <data name="Auto.UI.cc2177391a48" xml:space="preserve"><value>自动生成</value></data>
+  <data name="Auto.UI.cc7e887f9ac8" xml:space="preserve"><value>简化数据显示测试:</value></data>
+  <data name="Auto.UI.ccef41e175b3" xml:space="preserve"><value>lable宽度</value></data>
+  <data name="Auto.UI.cd8992b644e6" xml:space="preserve"><value>验证</value></data>
+  <data name="Auto.UI.ce2032bc3d14" xml:space="preserve"><value>字段描述</value></data>
+  <data name="Auto.UI.ce2ac209a701" xml:space="preserve"><value>继续聊天</value></data>
+  <data name="Auto.UI.cebc6bbbeb66" xml:space="preserve"><value>未定义</value></data>
+  <data name="Auto.UI.ceeedef05144" xml:space="preserve"><value>当前选择的两个 Prompt 是同一个（版本号:</value></data>
+  <data name="Auto.UI.cef80d2d9b52" xml:space="preserve"><value>下拉菜单/平铺</value></data>
+  <data name="Auto.UI.cf37da5e58f0" xml:space="preserve"><value>最高分:</value></data>
+  <data name="Auto.UI.cf6e87cb9edf" xml:space="preserve"><value>按钮名称</value></data>
+  <data name="Auto.UI.d039d7587bdc" xml:space="preserve"><value>表格样式设置</value></data>
+  <data name="Auto.UI.d05d8e31229f" xml:space="preserve"><value>降序</value></data>
+  <data name="Auto.UI.d0d411f2f0d0" xml:space="preserve"><value>靶场名称</value></data>
+  <data name="Auto.UI.d25928577e92" xml:space="preserve"><value>多行</value></data>
+  <data name="Auto.UI.d442cb8ab310" xml:space="preserve"><value>是否公开</value></data>
+  <data name="Auto.UI.d4d2a66820d3" xml:space="preserve"><value>位置</value></data>
+  <data name="Auto.UI.d5279a14c2e1" xml:space="preserve"><value>红色值 (R)</value></data>
+  <data name="Auto.UI.d53dc9b9bdab" xml:space="preserve"><value>确认操作设置</value></data>
+  <data name="Auto.UI.d5d885add255" xml:space="preserve"><value>宽度占比</value></data>
+  <data name="Auto.UI.d66b82668121" xml:space="preserve"><value>查看布局</value></data>
+  <data name="Auto.UI.d7098f5050f0" xml:space="preserve"><value>打开</value></data>
+  <data name="Auto.UI.d78e10695ec9" xml:space="preserve"><value>AI评分</value></data>
+  <data name="Auto.UI.d8163777fc1c" xml:space="preserve"><value>连发：根据当前选择的靶道信息，连续输出多个结果。</value></data>
+  <data name="Auto.UI.d8175faeb205" xml:space="preserve"><value>DynamicData 界面设置</value></data>
+  <data name="Auto.UI.d81bb206a889" xml:space="preserve"><value>无</value></data>
+  <data name="Auto.UI.d8bfb8bb6126" xml:space="preserve"><value>格式文本</value></data>
+  <data name="Auto.UI.d8d8e59e5198" xml:space="preserve"><value>颜色预览</value></data>
+  <data name="Auto.UI.da087fda7e98" xml:space="preserve"><value>显示斑马纹</value></data>
+  <data name="Auto.UI.da21e88591cd" xml:space="preserve"><value>最高分</value></data>
+  <data name="Auto.UI.da7507366f29" xml:space="preserve"><value>创建子战术</value></data>
+  <data name="Auto.UI.db06c78d1e24" xml:space="preserve"><value>测试</value></data>
+  <data name="Auto.UI.db348f9cbd07" xml:space="preserve"><value>筛选条件设置</value></data>
+  <data name="Auto.UI.db6370666219" xml:space="preserve"><value>爬取时间</value></data>
+  <data name="Auto.UI.dce5379cb978" xml:space="preserve"><value>隐藏</value></data>
+  <data name="Auto.UI.dd92c9ea08f2" xml:space="preserve"><value>每页显示个数</value></data>
+  <data name="Auto.UI.dda6d6675945" xml:space="preserve"><value>选择 AI Model</value></data>
+  <data name="Auto.UI.de2a774bf989" xml:space="preserve"><value>右侧</value></data>
+  <data name="Auto.UI.de6104ca3fb5" xml:space="preserve"><value>文件路径</value></data>
+  <data name="Auto.UI.de9aecd3c5fc" xml:space="preserve"><value>暂无生成结果</value></data>
+  <data name="Auto.UI.dec2eb7145e1" xml:space="preserve"><value>跳转链接</value></data>
+  <data name="Auto.UI.dee46b9ddb11" xml:space="preserve"><value>请新建或选择靶场后再进行操作</value></data>
+  <data name="Auto.UI.dfd0cd7f2cba" xml:space="preserve"><value>长度</value></data>
+  <data name="Auto.UI.e02a2736fb9d" xml:space="preserve"><value>个靶道</value></data>
+  <data name="Auto.UI.e0ce8b1afd79" xml:space="preserve"><value>起始URL</value></data>
+  <data name="Auto.UI.e0f8cac65800" xml:space="preserve"><value>如需修改，请切换其他模式</value></data>
+  <data name="Auto.UI.e2103d699250" xml:space="preserve"><value>当天已经同步或添加到平台的用户数量</value></data>
+  <data name="Auto.UI.e2d5bda3c22a" xml:space="preserve"><value>(平衡模式)</value></data>
+  <data name="Auto.UI.e2db534d91ab" xml:space="preserve"><value>子组件</value></data>
+  <data name="Auto.UI.e3127cc1b379" xml:space="preserve"><value>格式</value></data>
+  <data name="Auto.UI.e366ccf1556c" xml:space="preserve"><value>设置</value></data>
+  <data name="Auto.UI.e37f686eb46d" xml:space="preserve"><value>直接测试</value></data>
+  <data name="Auto.UI.e40c634367e3" xml:space="preserve"><value>导图</value></data>
+  <data name="Auto.UI.e41eb186a9d6" xml:space="preserve"><value>热门 Prompt 和 模型 排行榜</value></data>
+  <data name="Auto.UI.e476b52fb48f" xml:space="preserve"><value>DynamicData 首页</value></data>
+  <data name="Auto.UI.e533aeffac22" xml:space="preserve"><value>重命名靶场</value></data>
+  <data name="Auto.UI.e7af71fb102c" xml:space="preserve"><value>数据设置</value></data>
+  <data name="Auto.UI.e7ce83e39f4f" xml:space="preserve"><value>热门模型</value></data>
+  <data name="Auto.UI.e821ce185e41" xml:space="preserve"><value>分页设置</value></data>
+  <data name="Auto.UI.e8469e8d075a" xml:space="preserve"><value>AI 评分标准</value></data>
+  <data name="Auto.UI.e8755fb1e985" xml:space="preserve"><value>添加选项</value></data>
+  <data name="Auto.UI.e8ab2db924c9" xml:space="preserve"><value>提示：新增数据表之后才能新增字段</value></data>
+  <data name="Auto.UI.e8d1401c5db6" xml:space="preserve"><value>请输入标题文字</value></data>
+  <data name="Auto.UI.e92734841f74" xml:space="preserve"><value>数据表</value></data>
+  <data name="Auto.UI.ea1127fe472d" xml:space="preserve"><value>DynamicData 渲染布局页面</value></data>
+  <data name="Auto.UI.ea6265621b87" xml:space="preserve"><value>模型终端</value></data>
+  <data name="Auto.UI.eb3818a316b8" xml:space="preserve"><value>新增变量</value></data>
+  <data name="Auto.UI.eca37cb0726c" xml:space="preserve"><value>创建时间</value></data>
+  <data name="Auto.UI.ed4ffbe659c5" xml:space="preserve"><value>打靶: 根据当前填写的内容或者选择的靶场和靶道，创建新的靶道。</value></data>
+  <data name="Auto.UI.eded9ed93a45" xml:space="preserve"><value>标题文字</value></data>
+  <data name="Auto.UI.ee0f8b291cbd" xml:space="preserve"><value>最大爬取时间(分钟)</value></data>
+  <data name="Auto.UI.ee81d7ddd274" xml:space="preserve"><value>输入Prompt</value></data>
+  <data name="Auto.UI.eee1e2258d7e" xml:space="preserve"><value>表单</value></data>
+  <data name="Auto.UI.efb486ca1c40" xml:space="preserve"><value>双击</value></data>
+  <data name="Auto.UI.f059404dd886" xml:space="preserve"><value>草稿：保存当前输入的内容，并创建新的靶道。</value></data>
+  <data name="Auto.UI.f09dc0d1d60a" xml:space="preserve"><value>小于</value></data>
+  <data name="Auto.UI.f09f59b68cda" xml:space="preserve"><value>生成代码</value></data>
+  <data name="Auto.UI.f1d4ff50f382" xml:space="preserve"><value>自定义</value></data>
+  <data name="Auto.UI.f2170b1fad81" xml:space="preserve"><value>如：{{$</value></data>
+  <data name="Auto.UI.f223d0cecf0a" xml:space="preserve"><value>字段属性</value></data>
+  <data name="Auto.UI.f2402066c99f" xml:space="preserve"><value>绑定字段文本</value></data>
+  <data name="Auto.UI.f2517105935b" xml:space="preserve"><value>类型文本1</value></data>
+  <data name="Auto.UI.f26225bde6a2" xml:space="preserve"><value>详情</value></data>
+  <data name="Auto.UI.f2d3731b92d0" xml:space="preserve"><value>选择模型</value></data>
+  <data name="Auto.UI.f3f75f023a47" xml:space="preserve"><value>按钮属性</value></data>
+  <data name="Auto.UI.f4f38064f7a6" xml:space="preserve"><value>已关注</value></data>
+  <data name="Auto.UI.f52ebc972af7" xml:space="preserve"><value>总微信用户数</value></data>
+  <data name="Auto.UI.f5deaa1716cb" xml:space="preserve"><value>对比</value></data>
+  <data name="Auto.UI.f6cede746a97" xml:space="preserve"><value>请选择按钮属性</value></data>
+  <data name="Auto.UI.f782779e8b5d" xml:space="preserve"><value>结束时间</value></data>
+  <data name="Auto.UI.f814108b8381" xml:space="preserve"><value>界面设置</value></data>
+  <data name="Auto.UI.f8d9dcffa375" xml:space="preserve"><value>欢迎使用 AI 自动优化功能！</value></data>
+  <data name="Auto.UI.f94cdde379a6" xml:space="preserve"><value>创建单条</value></data>
+  <data name="Auto.UI.f98b9af13a74" xml:space="preserve"><value>最大</value></data>
+  <data name="Auto.UI.f9a677969a98" xml:space="preserve"><value>自定义列设置</value></data>
+  <data name="Auto.UI.fa17b3df46d5" xml:space="preserve"><value>(新)</value></data>
+  <data name="Auto.UI.fa44f243a4f6" xml:space="preserve"><value>显示消息提示</value></data>
+  <data name="Auto.UI.fa966345577b" xml:space="preserve"><value>按钮</value></data>
+  <data name="Auto.UI.faaadc447b1c" xml:space="preserve"><value>序号</value></data>
+  <data name="Auto.UI.fb7ea2b05ca7" xml:space="preserve"><value>选项字段</value></data>
+  <data name="Auto.UI.fc5e44ae7f73" xml:space="preserve"><value>排序设置</value></data>
+  <data name="Auto.UI.fc8f5a86a6ac" xml:space="preserve"><value>提交成功状态设置</value></data>
+  <data name="Auto.UI.fc923e38a24c" xml:space="preserve"><value>字段查询范围</value></data>
+  <data name="Auto.UI.fcd184cff3ce" xml:space="preserve"><value>添加排序规则</value></data>
+  <data name="Auto.UI.fd5fb471ecce" xml:space="preserve"><value>打开页面</value></data>
+  <data name="Auto.UI.fda22f61050e" xml:space="preserve"><value>暂无召回结果，请选择知识库、输入源文本并点击「测试」</value></data>
+  <data name="Auto.UI.fdc5054a4b75" xml:space="preserve"><value>查看分组</value></data>
+  <data name="Auto.UI.fe239bf9ccea" xml:space="preserve"><value>请选择按钮事件</value></data>
+  <data name="Auto.UI.fe4b363d6ca0" xml:space="preserve"><value>显示列</value></data>
+  <data name="Auto.UI.fe5427929be9" xml:space="preserve"><value>数据格式文本1</value></data>
+  <data name="Auto.UI.fefcb09a5e39" xml:space="preserve"><value>变亮</value></data>
 </root>

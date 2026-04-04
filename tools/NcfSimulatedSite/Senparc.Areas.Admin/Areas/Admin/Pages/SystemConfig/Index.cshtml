@@ -11,7 +11,7 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@AR["Common.系统管理"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Common.SystemManagement"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["SystemConfig.PageTitle"]</el-breadcrumb-item>
 }
 <div>
@@ -33,12 +33,12 @@
                     {{ scope.row.hideModuleManager }}
                 </template>
             </el-table-column>
-            <el-table-column label="@AR["Common.操作"]" align="center">
+            <el-table-column label="@AR["Common.Action"]" align="center">
                 <template slot-scope="scope">
                     <el-button size="mini"
                                type="primary"
                                v-has="['admin-edit']"
-                               @@click="handleEdit(scope.$index, scope.row)">@AR["Common.编辑"]</el-button>
+                               @@click="handleEdit(scope.$index, scope.row)">@AR["Common.Edit"]</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -60,8 +60,8 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @@click="dialog.visible = false">@AR["Common.取消"]</el-button>
-                <el-button :loading="dialog.updateLoading" type="primary" @@click="updateData">@AR["Common.确认"]</el-button>
+                <el-button @@click="dialog.visible = false">@AR["Common.Cancel"]</el-button>
+                <el-button :loading="dialog.updateLoading" type="primary" @@click="updateData">@AR["Common.Confirm"]</el-button>
             </div>
         </el-dialog>
     </div>

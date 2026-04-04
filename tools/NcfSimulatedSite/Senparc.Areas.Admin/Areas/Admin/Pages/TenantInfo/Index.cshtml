@@ -11,7 +11,7 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@AR["Common.系统管理"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Common.SystemManagement"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["TenantInfo.PageTitle"]</el-breadcrumb-item>
 }
 <div>
@@ -61,7 +61,7 @@
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="@AR["Common.添加时间"]">
+                             label="@AR["Common.AddTime"]">
                 <template slot-scope="scope">
                     {{formaTableTime(scope.row.addTime) }}
                 </template>
@@ -79,19 +79,19 @@
                     {{ scope.row.enable }}
                 </template>
             </el-table-column>
-            <el-table-column label="@AR["Common.操作"]" align="center">
+            <el-table-column label="@AR["Common.Action"]" align="center">
                 <template slot-scope="scope">
                     <el-button size="mini"
                                type="primary"
                                v-has="['admin-edit']"
-                               @@click="handleEdit(scope.$index, scope.row)">@AR["Common.编辑"]</el-button>
+                               @@click="handleEdit(scope.$index, scope.row)">@AR["Common.Edit"]</el-button>
                     <el-button size="mini"
                                type="warning"
                                @@click="handleInitialize(scope.row)">@AR["TenantInfo.Initialize"]</el-button>
                 </template>
                 <template v-has="['admin-delete']">
                     <el-popconfirm placement="top" title="@AR["TenantInfo.ConfirmDelete"]" @@on-confirm="handleDelete(scope.$index, scope.row)">
-                        <el-button size="mini" type="danger" slot="reference">@AR["Common.删除"]</el-button>
+                        <el-button size="mini" type="danger" slot="reference">@AR["Common.Delete"]</el-button>
                     </el-popconfirm>
                 </template>
             </el-table-column>
@@ -123,8 +123,8 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @@click="dialog.visible = false">@AR["Common.取消"]</el-button>
-                <el-button :loading="dialog.updateLoading" type="primary" @@click="updateData">@AR["Common.确认"]</el-button>
+                <el-button @@click="dialog.visible = false">@AR["Common.Cancel"]</el-button>
+                <el-button :loading="dialog.updateLoading" type="primary" @@click="updateData">@AR["Common.Confirm"]</el-button>
             </div>
         </el-dialog>
 
@@ -144,8 +144,8 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @@click="initializeDialog.visible = false">@AR["Common.取消"]</el-button>
-                <el-button :loading="initializeDialog.loading" type="primary" @@click="submitInitialize">@AR["Common.确认"]</el-button>
+                <el-button @@click="initializeDialog.visible = false">@AR["Common.Cancel"]</el-button>
+                <el-button :loading="initializeDialog.loading" type="primary" @@click="submitInitialize">@AR["Common.Confirm"]</el-button>
             </div>
         </el-dialog>
 

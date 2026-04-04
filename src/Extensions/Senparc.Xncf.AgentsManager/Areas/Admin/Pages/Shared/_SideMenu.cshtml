@@ -1,5 +1,5 @@
 ﻿@using Microsoft.Extensions.Localization
-@inject IStringLocalizerFactory LocalizerFactory
+@inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{
     var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
 }
