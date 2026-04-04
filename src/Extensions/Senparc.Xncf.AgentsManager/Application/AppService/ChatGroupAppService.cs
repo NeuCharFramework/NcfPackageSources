@@ -342,7 +342,19 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 var agentIds = agents.Select(z => z.Id).Distinct().ToList();
                 var members = await _chatGroupMemeberService.GetFullListAsync(z => agentIds.Contains(z.AgentTemplateId));
-                var groupIds = members.Select(z => z.ChatGroupId).Distinct().ToList();
+
+                // Include groups even when member rows are missing but admin/enter agent is configured.
+                var groupsByRole = await _chatGroupService.GetFullListAsync(
+                    z => agentIds.Contains(z.AdminAgentTemplateId) || agentIds.Contains(z.EnterAgentTemplateId),
+                    z => z.Id,
+                    Ncf.Core.Enums.OrderingType.Ascending);
+
+                var groupIds = members
+                    .Select(z => z.ChatGroupId)
+                    .Concat(groupsByRole.Select(z => z.Id))
+                    .Distinct()
+                    .ToList();
+
                 var groups = groupIds.Count > 0
                     ? await _chatGroupService.GetFullListAsync(z => groupIds.Contains(z.Id), z => z.Id, Ncf.Core.Enums.OrderingType.Ascending)
                     : new List<ChatGroup>();
@@ -394,6 +406,16 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         .Select(z => z.AgentTemplateId)
                         .Distinct()
                         .ToList();
+
+                    if (!memberAgentIds.Contains(group.AdminAgentTemplateId) && agentIds.Contains(group.AdminAgentTemplateId))
+                    {
+                        memberAgentIds.Add(group.AdminAgentTemplateId);
+                    }
+
+                    if (!memberAgentIds.Contains(group.EnterAgentTemplateId) && agentIds.Contains(group.EnterAgentTemplateId))
+                    {
+                        memberAgentIds.Add(group.EnterAgentTemplateId);
+                    }
 
                     result.Groups.Add(new AgentGraphGroupDto
                     {

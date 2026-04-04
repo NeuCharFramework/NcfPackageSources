@@ -578,11 +578,19 @@ var app = new Vue({
         })
       } else {
         this.stopAgentGraphPolling()
+        this.destroyAgentGraph3d()
       }
     },
     ensureAgentGraph3d() {
       if (!this.$refs.agent3dContainer || typeof AgentGraph3D === 'undefined') {
         return
+      }
+      if (this.agentGraph3d && this.agentGraph3d.renderer && this.agentGraph3d.renderer.domElement) {
+        const currentCanvas = this.agentGraph3d.renderer.domElement
+        const container = this.$refs.agent3dContainer
+        if (!container.contains(currentCanvas)) {
+          this.destroyAgentGraph3d()
+        }
       }
       if (!this.agentGraph3d) {
         this.agentGraph3d = new AgentGraph3D(this.$refs.agent3dContainer, {

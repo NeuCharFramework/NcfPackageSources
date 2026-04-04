@@ -12,6 +12,8 @@
   function textSprite(text, options) {
     const fontSize = options.fontSize || 24;
     const padding = options.padding || 14;
+    const scaleDivisor = options.scaleDivisor || 22;
+    const sizeAttenuation = typeof options.sizeAttenuation === 'boolean' ? options.sizeAttenuation : false;
     const bg = options.background || 'rgba(10,20,30,0.82)';
     const color = options.color || '#EAF2FF';
     const border = options.border || 'rgba(86, 162, 255, 0.55)';
@@ -61,9 +63,14 @@
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.needsUpdate = true;
-    const material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false });
+    const material = new THREE.SpriteMaterial({
+      map: texture,
+      transparent: true,
+      depthWrite: false,
+      sizeAttenuation: sizeAttenuation
+    });
     const sprite = new THREE.Sprite(material);
-    sprite.scale.set(canvas.width / 30, canvas.height / 30, 1);
+    sprite.scale.set(canvas.width / scaleDivisor, canvas.height / scaleDivisor, 1);
     return sprite;
   }
 
@@ -255,15 +262,32 @@
   };
 
   AgentGraph3D.prototype.clearObjects = function () {
-    const all = this.groupObjects.concat(this.agentObjects.map(function (z) { return z.mesh; }), this.linkObjects);
+    const all = [];
+
     this.groupObjects.forEach(function (g) {
+      if (g.mesh) {
+        all.push(g.mesh);
+      }
       if (g.label) {
         all.push(g.label);
       }
     });
+
     this.agentObjects.forEach(function (a) {
+      if (a.mesh) {
+        all.push(a.mesh);
+      }
       if (a.label) {
         all.push(a.label);
+      }
+      if (a.pulseRing) {
+        all.push(a.pulseRing);
+      }
+    });
+
+    this.linkObjects.forEach(function (line) {
+      if (line) {
+        all.push(line);
       }
     });
 
@@ -342,9 +366,17 @@
       const waiting = statusMap[0] || statusMap['0'] || 0;
       const chatting = statusMap[1] || statusMap['1'] || 0;
       const paused = statusMap[2] || statusMap['2'] || 0;
-      const text = group.name + '\nR:' + group.runningTaskCount + ' W:' + waiting + ' C:' + chatting + ' P:' + paused;
+      const finished = statusMap[3] || statusMap['3'] || 0;
+      const cancelled = statusMap[4] || statusMap['4'] || 0;
+      const failed = statusMap[5] || statusMap['5'] || 0;
+      const totalTasks = waiting + chatting + paused + finished + cancelled + failed;
+      const text = group.name
+        + '\nTasks:' + totalTasks + ' Running:' + group.runningTaskCount
+        + '\nW:' + waiting + ' C:' + chatting + ' P:' + paused + ' F:' + finished;
       const label = textSprite(text, {
-        fontSize: 20,
+        fontSize: 24,
+        padding: 16,
+        scaleDivisor: 18,
         background: 'rgba(5,14,26,0.90)',
         border: 'rgba(72,197,255,0.65)',
         color: '#DDEFFF'
@@ -428,8 +460,16 @@
 
       const promptText = agent.promptCode ? agent.promptCode : '--';
       const scoreText = (typeof agent.score === 'number' && agent.score >= 0) ? agent.score.toFixed(1) : '--';
-      const label = textSprite(agent.name + '\n' + promptText + '\nScore:' + scoreText, {
-        fontSize: 16,
+      const stateText = agent.enable ? 'Enabled' : 'Disabled';
+      const label = textSprite(
+        agent.name
+        + '\nPrompt:' + promptText
+        + '\nScore:' + scoreText + '  Running:' + (agent.chattingCount || 0)
+        + '\nState:' + stateText,
+        {
+        fontSize: 20,
+        padding: 14,
+        scaleDivisor: 18,
         background: 'rgba(6, 14, 24, 0.85)',
         border: 'rgba(94,212,255,0.55)',
         color: '#E8F7FF'
