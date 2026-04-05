@@ -41,6 +41,14 @@ var app = new Vue({
         4: 'cancelledColor',
         5: 'errorColor',
       },
+      taskStatusTagType: {
+        0: 'info',      // Waiting
+        1: 'primary',   // Chatting
+        2: 'warning',   // Paused
+        3: 'success',   // Finished
+        4: 'danger',    // Cancelled
+        5: 'danger',    // Failed
+      },
       taskStateIcon: {
         0: 'fas fa-clock',
         1: 'fas fa-spinner fa-pulse',// 动画
@@ -234,39 +242,82 @@ var app = new Vue({
         pageIndex: 0,
         pageSize: 0,
         chatGroupId: null,
-        filter: '', // 筛选文本
-        timeSort: false, // 默认降序
-        proce: false, // 进行中
-        stop: false, // 停用
-        stand: false, // 待命
+        filter: '', // filter text
+        timeSort: false, // default descending
+        statusFilter: -1, // -1 = all statuses
+        isScheduled: null, // null = all, true = scheduled only, false = non-scheduled only
       },
-      taskFCPVisible: false, // 任务模块 筛选条件 popover 显隐
+      taskFCPVisible: false, // task module filter criteria popover visibility
       taskFilterCriteria: [
+        // Status filters
         {
-          label: '全部',
+          label: 'All',
           value: 'all',
+          type: 'status',
+          statusValue: -1,
           checked: true
         },
         {
-          label: '进行中',
-          value: 'proce',
+          label: 'Waiting',
+          value: 'waiting',
+          type: 'status',
+          statusValue: 0,
           checked: false
         },
         {
-          label: '停用',
-          value: 'stop',
+          label: 'Chatting',
+          value: 'chatting',
+          type: 'status',
+          statusValue: 1,
           checked: false
         },
         {
-          label: '待命',
-          value: 'stand',
+          label: 'Paused',
+          value: 'paused',
+          type: 'status',
+          statusValue: 2,
+          checked: false
+        },
+        {
+          label: 'Finished',
+          value: 'finished',
+          type: 'status',
+          statusValue: 3,
+          checked: false
+        },
+        {
+          label: 'Cancelled',
+          value: 'cancelled',
+          type: 'status',
+          statusValue: 4,
           checked: false
         }
       ],
-      scrollbarTaskIndex: '', // 侧边任务index 默认全部
+      taskCharacteristicCriteria: [
+        // Characteristic filters
+        {
+          label: 'All Tasks',
+          value: 'allTasks',
+          type: 'characteristic',
+          checked: true
+        },
+        {
+          label: 'Scheduled',
+          value: 'scheduled',
+          type: 'characteristic',
+          checked: false
+        },
+        {
+          label: 'One-time',
+          value: 'oneTime',
+          type: 'characteristic',
+          checked: false
+        }
+      ],
+      scrollbarTaskIndex: '', // sidebar task index, default all
       taskSelection: [],
       taskList: [],
-      taskDetails: '', // 任务详情数据 查看
+      taskDetails: '', // task details data for viewing
       taskHistoryList: [],
       taskMemberList: [],
       taskMemberfilter: '',
@@ -2096,22 +2147,34 @@ var app = new Vue({
       if (filterType === 'task') {
         if (fieldType === 'timeSort') {
           this.taskQueryList.timeSort = !this.taskQueryList.timeSort
+          this.gettaskListData('task', null, 1)
         } else {
-          this.taskFilterCriteria.forEach(item => {
-            if (item.value === fieldType) {
-              item.checked = true
+          // Check if this is a status filter
+          const statusItem = this.taskFilterCriteria.find(item => item.value === fieldType)
+          if (statusItem) {
+            this.taskFilterCriteria.forEach(item => {
+              item.checked = item.value === fieldType
+            })
+            this.taskQueryList.statusFilter = statusItem.statusValue
+            this.gettaskListData('task', null, 1)
+          }
+          // Check if this is a characteristic filter
+          const charItem = this.taskCharacteristicCriteria.find(item => item.value === fieldType)
+          if (charItem) {
+            this.taskCharacteristicCriteria.forEach(item => {
+              item.checked = item.value === fieldType
+            })
+            if (fieldType === 'scheduled') {
+              this.taskQueryList.isScheduled = true
+            } else if (fieldType === 'oneTime') {
+              this.taskQueryList.isScheduled = false
             } else {
-              item.checked = false
+              this.taskQueryList.isScheduled = null
             }
-            if (fieldType === 'all') {
-              this.taskQueryList[item.value] = true
-            } else {
-              this.taskQueryList[item.value] = item.checked
-            }
-          })
+            this.gettaskListData('task', null, 1)
+          }
         }
         // this.taskFCPVisible = !this.taskFCPVisible
-        // to do 调用接口
       }
     },
 
@@ -3751,19 +3814,20 @@ function simulationAELOperation(url = '', name = '') {
  */
 function getInterfaceQueryStr(queryObj) {
   if (!queryObj) return ''
-  // 将对象转换为 URL 参数字符串
+  // Convert object to URL query string
   return Object.entries(queryObj)
     .filter(([key, value]) => {
-      // 过滤掉空值
-      // console.log('value', typeof value)
+      // Filter out null/undefined/empty values
       if (typeof value === 'string') {
         return value !== ''
       } else if (typeof value === 'object' && value instanceof Array) {
         return value.length > 0
       } else if (typeof value === 'number') {
         return true
+      } else if (typeof value === 'boolean') {
+        return true
       } else {
-        // if(typeof value === 'undefined')
+        // null or undefined values are excluded
         return false
       }
     })

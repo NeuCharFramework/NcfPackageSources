@@ -47,9 +47,24 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
         /// </summary>
         public string HookPlatformParameter { get; set; }
 
+        /// <summary>
+        /// Whether this task is a scheduled (recurring) task
+        /// </summary>
+        public bool IsScheduled { get; set; }
+
+        /// <summary>
+        /// Interval in minutes between scheduled executions (null if not scheduled).
+        /// </summary>
+        public int? ScheduleIntervalMinutes { get; set; }
+
+        /// <summary>
+        /// Schedule recurrence type
+        /// </summary>
+        public ScheduleType ScheduleType { get; set; }
+
         public ChatTaskDto() { }
 
-        public ChatTaskDto(string name, int chatGroupId, int aiModelId, ChatTask_Status status, string promptCommand, string description, bool isPersonality, HookPlatform hookPlatform, string hookPlatformParameter, bool score, DateTime startTime, DateTime endTime, string resultComment)
+        public ChatTaskDto(string name, int chatGroupId, int aiModelId, ChatTask_Status status, string promptCommand, string description, bool isPersonality, HookPlatform hookPlatform, string hookPlatformParameter, bool score, DateTime startTime, DateTime endTime, string resultComment, bool isScheduled = false, int? scheduleIntervalMinutes = null, ScheduleType scheduleType = ScheduleType.Interval)
         {
             Name = name;
             ChatGroupId = chatGroupId;
@@ -64,6 +79,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
             ResultComment = resultComment;
             HookPlatform = hookPlatform;
             HookPlatformParameter = hookPlatformParameter;
+            IsScheduled = isScheduled;
+            ScheduleIntervalMinutes = scheduleIntervalMinutes;
+            ScheduleType = scheduleType;
         }
 
         public ChatTaskDto(ChatTask chatTask)
@@ -81,6 +99,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
             ResultComment = chatTask.ResultComment;
             HookPlatform = chatTask.HookPlatform;
             HookPlatformParameter = chatTask.HookPlatformParameter;
+            IsScheduled = chatTask.IsScheduled;
+            ScheduleIntervalMinutes = chatTask.ScheduleIntervalMinutes;
+            ScheduleType = chatTask.ScheduleType;
         }
     }
 

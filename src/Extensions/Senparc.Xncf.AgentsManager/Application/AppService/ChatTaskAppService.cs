@@ -26,7 +26,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
-        public async Task<AppResponseBase<ChatTask_GetListResponse>> GetList(int chatGroupId, int agentTemplateId, int pageIndex, int pageSize, string filter = "")
+        public async Task<AppResponseBase<ChatTask_GetListResponse>> GetList(int chatGroupId, int agentTemplateId, int pageIndex, int pageSize, string filter = "", int statusFilter = -1, bool? isScheduled = null)
         {
             return await this.GetResponseAsync<ChatTask_GetListResponse>(async (response, logger) =>
                   {
@@ -45,8 +45,13 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                       seh.ValueCompare
                           .AndAlso(chatGroupId > 0, z => z.ChatGroupId == chatGroupId)
                           .AndAlso(agentTemplateId > 0, z => chatGroupIdList.Contains(z.ChatGroupId));
-                      //增加模糊搜索任务
+                      // Text search filter
                       seh.ValueCompare.AndAlso(!string.IsNullOrEmpty(filter), _ => _.Name.Contains(filter));
+                      // Status filter (-1 means all)
+                      seh.ValueCompare.AndAlso(statusFilter >= 0, _ => (int)_.Status == statusFilter);
+                      // Scheduled task filter
+                      var scheduledValue = isScheduled ?? false;
+                      seh.ValueCompare.AndAlso(isScheduled.HasValue, _ => _.IsScheduled == scheduledValue);
                       var where = seh.BuildWhereExpression();
 
                       var list = await this._chatTaskService.GetObjectListAsync(pageIndex, pageSize, where, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);

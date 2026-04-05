@@ -54,6 +54,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
                     b.Property<bool>("IsPersonality")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsScheduled")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TEXT");
 
@@ -72,6 +75,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
 
                     b.Property<string>("ResultComment")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("ScheduleIntervalMinutes")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ScheduleType")
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("Score")
                         .HasColumnType("INTEGER");

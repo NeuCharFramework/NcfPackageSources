@@ -61,6 +61,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
                     b.Property<bool>("IsPersonality")
                         .HasColumnType("NUMBER(1)");
 
+                    b.Property<bool>("IsScheduled")
+                        .HasColumnType("NUMBER(1)");
+
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TIMESTAMP(7)");
 
@@ -79,6 +82,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
 
                     b.Property<string>("ResultComment")
                         .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("ScheduleIntervalMinutes")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("ScheduleType")
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<bool>("Score")
                         .HasColumnType("NUMBER(1)");

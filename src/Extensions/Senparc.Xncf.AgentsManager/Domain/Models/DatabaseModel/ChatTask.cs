@@ -50,9 +50,25 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
         /// </summary>
         public string HookPlatformParameter { get; private set; }
 
+        /// <summary>
+        /// Whether this task is a scheduled (recurring) task
+        /// </summary>
+        public bool IsScheduled { get; private set; }
+
+        /// <summary>
+        /// Interval in minutes between scheduled executions (null if not scheduled).
+        /// Supports: fixed minutes, or encoded day-of-week/day-of-month patterns (see ScheduleType).
+        /// </summary>
+        public int? ScheduleIntervalMinutes { get; private set; }
+
+        /// <summary>
+        /// Schedule type: 0=interval (minutes), 1=daily, 2=weekly (ScheduleIntervalMinutes = day-of-week 1-7), 3=monthly (ScheduleIntervalMinutes = day-of-month 1-31)
+        /// </summary>
+        public ScheduleType ScheduleType { get; private set; }
+
         private ChatTask() { }
 
-        public ChatTask(string name, int chatGroupId, int aiModelId, ChatTask_Status status, string promptCommand, string description, bool isPersonality, HookPlatform hookPlatform, string hookPlatformParameter, bool score, DateTime startTime, DateTime endTime, string resultComment)
+        public ChatTask(string name, int chatGroupId, int aiModelId, ChatTask_Status status, string promptCommand, string description, bool isPersonality, HookPlatform hookPlatform, string hookPlatformParameter, bool score, DateTime startTime, DateTime endTime, string resultComment, bool isScheduled = false, int? scheduleIntervalMinutes = null, ScheduleType scheduleType = ScheduleType.Interval)
         {
             Name = name;
             ChatGroupId = chatGroupId;
@@ -67,7 +83,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
             ResultComment = resultComment;
             HookPlatform = hookPlatform;
             HookPlatformParameter = hookPlatformParameter;
-                  }
+            IsScheduled = isScheduled;
+            ScheduleIntervalMinutes = scheduleIntervalMinutes;
+            ScheduleType = scheduleType;
+        }
 
         public ChatTask(ChatTaskDto chatTaskDto)
         {
@@ -84,6 +103,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
             ResultComment = chatTaskDto.ResultComment;
             HookPlatform = chatTaskDto.HookPlatform;
             HookPlatformParameter = chatTaskDto.HookPlatformParameter;
+            IsScheduled = chatTaskDto.IsScheduled;
+            ScheduleIntervalMinutes = chatTaskDto.ScheduleIntervalMinutes;
+            ScheduleType = chatTaskDto.ScheduleType;
         }
 
         public void ChangeStatus(ChatTask_Status status)
@@ -114,5 +136,28 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
         None = 0,
         WeChat_MP = 1,
         WeChat_Work = 2
+    }
+
+    /// <summary>
+    /// Schedule recurrence type for scheduled tasks
+    /// </summary>
+    public enum ScheduleType
+    {
+        /// <summary>
+        /// Fixed interval in minutes (ScheduleIntervalMinutes = number of minutes)
+        /// </summary>
+        Interval = 0,
+        /// <summary>
+        /// Daily at the same time of day
+        /// </summary>
+        Daily = 1,
+        /// <summary>
+        /// Weekly on a specific day (ScheduleIntervalMinutes = day of week: 1=Monday … 7=Sunday)
+        /// </summary>
+        Weekly = 2,
+        /// <summary>
+        /// Monthly on a specific day (ScheduleIntervalMinutes = day of month: 1–31)
+        /// </summary>
+        Monthly = 3,
     }
 }
