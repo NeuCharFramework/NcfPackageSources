@@ -56,13 +56,19 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
         public bool IsScheduled { get; private set; }
 
         /// <summary>
-        /// Interval in minutes between scheduled executions (null if not scheduled).
-        /// Supports: fixed minutes, or encoded day-of-week/day-of-month patterns (see ScheduleType).
+        /// Interval value whose meaning depends on <see cref="ScheduleType"/>:
+        /// <list type="bullet">
+        ///   <item><description><see cref="ScheduleType.Interval"/> – number of minutes between executions.</description></item>
+        ///   <item><description><see cref="ScheduleType.Daily"/> – not used (always fires at the original task's time-of-day).</description></item>
+        ///   <item><description><see cref="ScheduleType.Weekly"/> – day of week (1 = Monday … 7 = Sunday).</description></item>
+        ///   <item><description><see cref="ScheduleType.Monthly"/> – day of month (1–31).</description></item>
+        /// </list>
+        /// Null when <see cref="IsScheduled"/> is false.
         /// </summary>
         public int? ScheduleIntervalMinutes { get; private set; }
 
         /// <summary>
-        /// Schedule type: 0=interval (minutes), 1=daily, 2=weekly (ScheduleIntervalMinutes = day-of-week 1-7), 3=monthly (ScheduleIntervalMinutes = day-of-month 1-31)
+        /// Schedule recurrence type
         /// </summary>
         public ScheduleType ScheduleType { get; private set; }
 

@@ -251,7 +251,7 @@ var app = new Vue({
       taskFilterCriteria: [
         // Status filters
         {
-          label: 'All',
+          label: 'All Statuses',
           value: 'all',
           type: 'status',
           statusValue: -1,

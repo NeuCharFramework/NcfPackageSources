@@ -50,8 +50,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                       // Status filter (-1 means all)
                       seh.ValueCompare.AndAlso(statusFilter >= 0, _ => (int)_.Status == statusFilter);
                       // Scheduled task filter
-                      var scheduledValue = isScheduled ?? false;
-                      seh.ValueCompare.AndAlso(isScheduled.HasValue, _ => _.IsScheduled == scheduledValue);
+                      seh.ValueCompare.AndAlso(isScheduled.HasValue, _ => _.IsScheduled == isScheduled!.Value);
                       var where = seh.BuildWhereExpression();
 
                       var list = await this._chatTaskService.GetObjectListAsync(pageIndex, pageSize, where, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);

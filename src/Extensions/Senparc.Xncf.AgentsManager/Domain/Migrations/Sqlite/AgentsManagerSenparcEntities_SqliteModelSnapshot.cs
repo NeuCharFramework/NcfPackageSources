@@ -76,7 +76,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
                     b.Property<string>("ResultComment")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ScheduleIntervalMinutes")
+                    b.Property<int?>("ScheduleIntervalMinutes")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("ScheduleType")
