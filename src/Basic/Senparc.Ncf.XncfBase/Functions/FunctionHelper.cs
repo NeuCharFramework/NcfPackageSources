@@ -170,7 +170,7 @@ namespace Senparc.Ncf.XncfBase.Functions
                     RecurseSubdirectories = true,
                     IgnoreInaccessible = true
                 };
-                var projectFolders = Directory.GetDirectories(currentDir, "*.xncf.*", enumerationOptions).ToList();
+                var projectFolders = Directory.GetDirectories(currentDir, "*.XNCF.*", enumerationOptions).ToList();
 
                 if (additionalProjects != null && additionalProjects.Length > 0)
                 {
