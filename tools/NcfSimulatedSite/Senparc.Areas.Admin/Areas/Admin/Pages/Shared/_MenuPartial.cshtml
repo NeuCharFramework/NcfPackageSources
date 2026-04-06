@@ -187,3 +187,21 @@
     </div>
 </div>
 <!-- /menu footer buttons -->
+<style>
+    /* 菜单与右侧工作区底部齐平、满屏不抖动、超出显示纵向滚动条 */
+    body.nav-md .main_container {
+        min-height: 100vh;
+    }
+    body.nav-md .main_container .col-md-3.left_col {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    body.nav-md .main_container .col-md-3.left_col > .left_col.scroll-view {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+</style>

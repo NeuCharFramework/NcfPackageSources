@@ -1,10 +1,178 @@
-.el-dialog .el-form-item .el-input,
-.el-dialog .el-form-item .el-textarea {
-    width: 15rem;
+/* 新增/编辑知识库弹框 */
+.kb-form-dialog .el-dialog__header {
+    padding: 18px 24px 14px;
+    border-bottom: 1px solid #ebeef5;
+}
+
+.kb-form-dialog .el-dialog__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #303133;
+}
+
+.kb-form-dialog .el-dialog__body {
+    padding: 24px 24px 20px;
+}
+
+.kb-form-dialog__form {
+    max-width: 100%;
+}
+
+.kb-form-dialog__form .el-form-item {
+    margin-bottom: 20px;
+}
+
+.kb-form-dialog__form .kb-form-item .el-form-item__label {
+    font-size: 13px;
+    color: #606266;
+    line-height: 1.4;
+    padding-bottom: 8px;
+}
+
+.kb-form-dialog__form .el-form-item__content {
+    line-height: 1.5;
+}
+
+.kb-form-dialog__form .el-input__inner,
+.kb-form-dialog__form .el-textarea__inner {
+    font-size: 13px;
+}
+
+.kb-form-dialog__form .el-textarea__inner {
+    padding: 10px 12px;
+    line-height: 1.6;
+}
+
+.kb-form-group {
+    margin-bottom: 20px;
+    padding: 16px;
+    background: #fafbfc;
+    border: 1px solid #e8eaec;
+    border-radius: 6px;
+}
+
+.kb-form-group__title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #303133;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #ebeef5;
+}
+
+.kb-form-group .el-form-item {
+    margin-bottom: 16px;
+}
+
+.kb-form-group .el-form-item:last-child {
+    margin-bottom: 0;
+}
+
+.kb-form-group .hidden {
+    margin-bottom: 0;
+}
+
+.kb-form-dialog__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 14px 24px 18px;
+    border-top: 1px solid #ebeef5;
+}
+
+.kb-form-dialog__footer .el-button {
+    min-width: 80px;
 }
 
 .el-form-item__content {
     /*width: 30rem;*/
+}
+
+/* 知识库列表页整体 */
+.kb-index-page {
+    padding: 20px 24px;
+    background: #f0f2f5;
+    min-height: 100%;
+    box-sizing: border-box;
+}
+
+.admin-role {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+/* 查询区 */
+.kb-query-section {
+    margin-bottom: 20px;
+    padding: 16px 18px;
+    background: #fafbfc;
+    border: 1px solid #e8eaec;
+    border-radius: 6px;
+}
+
+.kb-query-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.kb-query-label {
+    flex: 0 0 auto;
+    font-size: 14px;
+    color: #606266;
+    margin: 0;
+}
+
+.kb-query-input {
+    width: 260px;
+}
+
+.kb-query-row .el-button {
+    margin-left: 0;
+}
+
+/* 工具栏 */
+.kb-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.kb-toolbar .el-button {
+    margin: 0;
+}
+
+/* 表格区域 */
+.kb-table-wrap {
+    margin-bottom: 16px;
+    overflow-x: auto;
+}
+
+.kb-table-wrap .el-table {
+    font-size: 13px;
+}
+
+.kb-table-wrap .el-table th {
+    background: #f5f7fa;
+    color: #303133;
+    font-weight: 600;
+}
+
+/* 分页 */
+.kb-pagination-wrap {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 12px;
+    border-top: 1px solid #ebeef5;
+}
+
+.kb-pagination-wrap .el-pagination {
+    flex-wrap: nowrap;
+    white-space: nowrap;
 }
 
 .filter-condition {

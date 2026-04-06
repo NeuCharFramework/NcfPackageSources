@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model Senparc.Areas.Admin.Areas.Admin.Pages.MenuIndexModel
 @{
     ViewData["Title"] = AR["Menu.管理"]; Layout = "_Layout_Vue";
@@ -16,7 +16,8 @@
             <el-button class="filter-item" type="primary" icon="el-icon-plus" @@click="handleEdit('','','add')">@AR["Menu.增加菜单"]</el-button>
         </div>
         <el-table :data="tableData"
-                  style="width: 100%;margin-bottom: 20px;"
+                  style="width: 100%;"
+                  size="small"
                   row-key="id"
                   border
                   default-expand-all
@@ -55,8 +56,23 @@
                 </template>
             </el-table-column>
         </el-table>
-        <!--编辑、新增 -->
-        <el-dialog :title="dialog.title" :visible.sync="dialog.visible" :close-on-click-modal="false">
+            </div>
+
+            @* 分页：首页、上一页、下一页、尾页、跳转、每页条数 5/10/15/20/50/100，默认 10 *@
+            <div class="menu-pagination-wrap">
+                <pagination :total="paginationQuery.total"
+                            :page.sync="listQuery.pageIndex"
+                            :limit.sync="listQuery.pageSize"
+                            :page-sizes="[5, 10, 15, 20, 50, 100]"
+                            @@pagination="getList"></pagination>
+            </div>
+
+        <!--编辑、新增 / 增加下一级菜单 -->
+        <el-dialog :title="dialog.title"
+                   :visible.sync="dialog.visible"
+                   :close-on-click-modal="false"
+                   width="600px"
+                   custom-class="menu-form-dialog">
             <el-form ref="dataForm"
                      :rules="dialog.rules"
                      :model="dialog.data"

@@ -1,7 +1,142 @@
-﻿.admin-user-info .username-tip {
+/* 页面整体 */
+.admin-user-info-page {
+    padding: 20px 24px;
+    background: #f0f2f5;
+    min-height: 100%;
+    box-sizing: border-box;
+}
+
+.admin-user-info-main {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+/* 查询区 */
+.admin-user-query-section {
+    margin-bottom: 20px;
+    padding: 16px 18px;
+    background: #fafbfc;
+    border: 1px solid #e8eaec;
+    border-radius: 6px;
+}
+
+.admin-user-query-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.admin-user-query-label {
+    flex: 0 0 auto;
+    font-size: 14px;
+    color: #606266;
+    margin: 0;
+}
+
+.admin-user-query-input {
+    width: 260px;
+}
+
+.admin-user-query-row .el-button {
+    margin-left: 0;
+}
+
+/* 工具栏 */
+.admin-user-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.admin-user-toolbar .el-button {
+    margin: 0;
+}
+
+/* 表格区域 */
+.admin-user-table-wrap {
+    margin-bottom: 16px;
+}
+
+.admin-user-table-wrap .el-table {
+    margin-bottom: 0;
+}
+
+.admin-user-table-wrap .el-table th {
+    background: #f5f7fa;
+    color: #303133;
+    font-weight: 600;
+}
+
+/* 分页区域 */
+.admin-user-pagination-wrap {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 12px;
+    border-top: 1px solid #ebeef5;
+}
+
+.admin-user-info .username-tip {
     padding-left: 100px;
 }
+
 .el-checkbox.is-bordered {
- margin:20px 0;
- margin-left:10px;
+    margin: 20px 0;
+    margin-left: 10px;
+}
+
+/* 弹框样式：新增/编辑管理员、设置角色 */
+.admin-user-form-dialog .el-dialog__header {
+    padding: 18px 24px 14px;
+    border-bottom: 1px solid #ebeef5;
+}
+
+.admin-user-form-dialog .el-dialog__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #303133;
+}
+
+.admin-user-form-dialog .el-dialog__body {
+    padding: 24px 24px 20px;
+}
+
+.admin-user-dialog-form .admin-user-form-item {
+    margin-bottom: 18px;
+}
+
+.admin-user-dialog-form .el-form-item__label {
+    font-size: 13px;
+    color: #606266;
+    line-height: 1.4;
+    padding-bottom: 6px;
+}
+
+.admin-user-dialog-form .el-form-item__content .el-input,
+.admin-user-dialog-form .el-form-item__content .el-textarea {
+    width: 100%;
+}
+
+.admin-user-dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 14px 24px 18px;
+    border-top: 1px solid #ebeef5;
+}
+
+.admin-user-dialog-footer .el-button {
+    min-width: 80px;
+}
+
+.admin-user-dialog-footer .el-button + .el-button {
+    margin-left: 12px;
+}
+
+.admin-user-role-body {
+    max-height: 320px;
+    overflow-y: auto;
+    padding: 8px 4px 0;
 }

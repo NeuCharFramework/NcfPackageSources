@@ -1,4 +1,4 @@
-﻿var app = new Vue({
+var app = new Vue({
     el: "#app",
     data() {
         var validateCode = (rule, value, callback) => {
@@ -13,6 +13,17 @@
             }
         };
         return {
+            // 分页参数
+            paginationQuery: {
+                total: 0
+            },
+            // 分页、查询参数
+            listQuery: {
+                pageIndex: 1,
+                pageSize: 10,
+                menuName: ''
+            },
+            keyword: '',
             // 表格数据
             tableData: [],
             dialog: {
@@ -717,18 +728,72 @@
                 this.au.updateLoading = false;
             }
         },
-        // 获取所有菜单
+        // 获取所有菜单，并根据查询和分页生成当前页数据
         async  getList() {
             const a = await service.get('/Admin/Menu/Edit?handler=Menu');
-            const b = a.data.data;
+            const source = a.data.data;
             let allMenu = [];
-            this.ddd(b, null, allMenu);
-            this.tableData = allMenu;
-            
+            this.ddd(source, null, allMenu);
+
+            const keyword = (this.keyword || '').trim();
+            let filtered = allMenu;
+            if (keyword) {
+                filtered = this.filterMenuTree(allMenu, keyword);
+            }
+
+            const total = filtered.length;
+            this.paginationQuery.total = total;
+
+            let { pageIndex, pageSize } = this.listQuery;
+            const totalPages = total > 0 ? Math.ceil(total / pageSize) : 1;
+            if (pageIndex > totalPages) {
+                pageIndex = totalPages;
+                this.listQuery.pageIndex = totalPages;
+            }
+            if (pageIndex < 1) {
+                pageIndex = 1;
+                this.listQuery.pageIndex = 1;
+            }
+
+            const start = (pageIndex - 1) * pageSize;
+            const end = start + pageSize;
+            this.tableData = filtered.slice(start, end);
+
             // 数据加载完成后初始化固定效果
             this.$nextTick(() => {
                 this.initStickyParents();
             });
+        },
+        // 递归按名称过滤菜单树
+        filterMenuTree(nodes, keyword) {
+            const result = [];
+            nodes.forEach(node => {
+                const matchSelf = node.menuName && node.menuName.indexOf(keyword) !== -1;
+                let children = [];
+                if (node.children && node.children.length) {
+                    children = this.filterMenuTree(node.children, keyword);
+                }
+                if (matchSelf || children.length > 0) {
+                    const cloned = { ...node };
+                    cloned.children = children;
+                    result.push(cloned);
+                }
+            });
+            return result;
+        },
+        // 查询
+        handleSearch() {
+            this.listQuery.pageIndex = 1;
+            this.listQuery.menuName = this.keyword;
+            this.getList();
+        },
+        // 重置
+        resetCondition() {
+            this.keyword = '';
+            this.listQuery.menuName = '';
+            this.listQuery.pageIndex = 1;
+            this.listQuery.pageSize = 10;
+            this.getList();
         },
         // 数据处理
         ddd(source, parentId, dest) {

@@ -1,16 +1,12 @@
-.d-flex{ display: flex; }
-.justify-content-between{ justify-content: space-between; }
-.align-items-center{ align-items: center; }
-
 /* 页面整体 */
-.aivector-index-page {
+.role-index-page {
     padding: 20px 24px;
     background: #f0f2f5;
     min-height: 100%;
     box-sizing: border-box;
 }
 
-.aivector-main {
+.role-main {
     background: #fff;
     border-radius: 8px;
     padding: 20px 24px;
@@ -18,7 +14,7 @@
 }
 
 /* 查询区 */
-.aivector-query-section {
+.role-query-section {
     margin-bottom: 20px;
     padding: 16px 18px;
     background: #fafbfc;
@@ -26,116 +22,113 @@
     border-radius: 6px;
 }
 
-.aivector-query-row {
+.role-query-row {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     gap: 12px;
 }
 
-.aivector-query-label {
+.role-query-label {
     flex: 0 0 auto;
     font-size: 14px;
     color: #606266;
     margin: 0;
 }
 
-.aivector-query-input {
+.role-query-input {
     width: 260px;
 }
 
-.aivector-query-row .el-button {
+.role-query-row .el-button {
     margin-left: 0;
 }
 
 /* 工具栏 */
-.aivector-toolbar {
+.role-toolbar {
     display: flex;
     align-items: center;
     gap: 12px;
     margin-bottom: 16px;
 }
 
-.aivector-toolbar .el-button {
+.role-toolbar .el-button {
     margin: 0;
 }
 
 /* 表格区域 */
-.aivector-table-wrap {
+.role-table-wrap {
     margin-bottom: 16px;
-    max-height: calc(100vh - 280px);
-    overflow-y: auto;
-    overflow-x: auto;
 }
 
-.aivector-table-wrap .el-table {
+.role-table-wrap .el-table {
     margin-bottom: 0;
 }
 
-.aivector-table-wrap .el-table th {
+.role-table-wrap .el-table th {
     background: #f5f7fa;
     color: #303133;
     font-weight: 600;
 }
 
-/* 分页 */
-.aivector-pagination-wrap {
+/* 分页区域 */
+.role-pagination-wrap {
     display: flex;
     justify-content: flex-end;
     padding-top: 12px;
     border-top: 1px solid #ebeef5;
 }
 
-.aivector-pagination-wrap .el-pagination {
-    flex-wrap: nowrap;
-    white-space: nowrap;
-}
-
-/* 弹框样式（新增 / 编辑向量数据库） */
-.aivector-form-dialog .el-dialog__header {
+/* 弹框样式：新增/编辑角色、权限授权 */
+.role-form-dialog .el-dialog__header {
     padding: 18px 24px 14px;
     border-bottom: 1px solid #ebeef5;
 }
 
-.aivector-form-dialog .el-dialog__title {
+.role-form-dialog .el-dialog__title {
     font-size: 16px;
     font-weight: 600;
     color: #303133;
 }
 
-.aivector-form-dialog .el-dialog__body {
+.role-form-dialog .el-dialog__body {
     padding: 24px 24px 20px;
 }
 
-.aivector-dialog-form .el-form-item {
+.role-dialog-form .role-form-item {
     margin-bottom: 18px;
 }
 
-.aivector-dialog-form .el-form-item__label {
+.role-dialog-form .el-form-item__label {
     font-size: 13px;
     color: #606266;
     line-height: 1.4;
     padding-bottom: 6px;
 }
 
-.aivector-dialog-form .el-form-item__content .el-input,
-.aivector-dialog-form .el-form-item__content .el-select,
-.aivector-dialog-form .el-form-item__content .el-textarea {
+.role-dialog-form .el-form-item__content .el-input,
+.role-dialog-form .el-form-item__content .el-textarea {
     width: 100%;
 }
 
-.aivector-dialog-footer {
+.role-dialog-footer {
     display: flex;
     justify-content: flex-end;
     padding: 14px 24px 18px;
     border-top: 1px solid #ebeef5;
 }
 
-.aivector-dialog-footer .el-button {
+.role-dialog-footer .el-button {
     min-width: 80px;
 }
 
-.aivector-dialog-footer .el-button + .el-button {
+.role-dialog-footer .el-button + .el-button {
     margin-left: 12px;
+}
+
+.role-permission-body {
+    max-height: 360px;
+    overflow-y: auto;
+    padding: 8px 4px 0;
 }
 

@@ -1,4 +1,4 @@
-﻿@page "{handler?}"
+@page "{handler?}"
 @model Senparc.Areas.Admin.Areas.Admin.Pages.AdminUserInfo_IndexModel
 @addTagHelper *, Senparc.Areas.Admin
 @{
@@ -12,12 +12,38 @@
     <el-breadcrumb-item>管理员列表</el-breadcrumb-item>
 }
 <div>
-    <div class="admin-user-info">
-        <div class="filter-container">
-            <el-button class="filter-item" v-has="['admin-add']" type="primary" icon="el-icon-plus" @@click="handleEdit">增加</el-button>
-        </div>
+    <div class="admin-user-info-page">
+        <div class="admin-user-info-main">
+            @* 查询区：按管理员名称关键字查询 *@
+            <div class="admin-user-query-section">
+                <div class="admin-user-query-row">
+                    <label class="admin-user-query-label">管理员名称</label>
+                    <el-input v-model="keyword"
+                              placeholder="请输入管理员名称关键字"
+                              size="small"
+                              clearable
+                              class="admin-user-query-input"
+                              @@keyup.enter.native="handleSearch()"></el-input>
+                    <el-button type="primary" size="small" icon="el-icon-search" @@click="handleSearch()">查询</el-button>
+                    <el-button size="small" icon="el-icon-refresh-left" @@click="resetCondition()">重置</el-button>
+                </div>
+            </div>
+
+            @* 工具栏 *@
+            <div class="admin-user-toolbar">
+                <el-button class="filter-item"
+                           v-has="['admin-add']"
+                           type="primary"
+                           icon="el-icon-plus"
+                           size="small"
+                           @@click="handleEdit">增加</el-button>
+            </div>
+
+            @* 表格区域 *@
+            <div class="admin-user-table-wrap">
         <el-table :data="tableData"
                   border
+                  size="small"
                   style="width: 100%">
             <el-table-column align="center"
                              label="id"
@@ -45,7 +71,7 @@
                     {{formaTableTime(scope.row.addTime)}}
                 </template>
             </el-table-column>
-            <el-table-column label="操作" align="center">
+            <el-table-column label="操作" align="center" fixed="right" width="260">
                 <template slot-scope="scope">
                     <el-button size="mini"
                                type="primary"
@@ -63,51 +89,69 @@
                 </template>
             </el-table-column>
         </el-table>
-        <pagination :total="paginationQuery.total"
-                    :page.sync="listQuery.pageIndex"
-                    :limit.sync="listQuery.pageSize"
-                    @@pagination="getList"></pagination>
+            </div>
+
+            @* 分页：首页、上一页、下一页、尾页、跳转、每页条数 5/10/15/20/50/100，默认 10 *@
+            <div class="admin-user-pagination-wrap">
+                <pagination :total="paginationQuery.total"
+                            :page.sync="listQuery.pageIndex"
+                            :limit.sync="listQuery.pageSize"
+                            :page-sizes="[5, 10, 15, 20, 50, 100]"
+                            @@pagination="getList"></pagination>
+            </div>
         <!--编辑、新增 -->
-        <el-dialog :title="dialog.title" :visible.sync="dialog.visible" :close-on-click-modal="false">
+        <el-dialog :title="dialog.title"
+                   :visible.sync="dialog.visible"
+                   :close-on-click-modal="false"
+                   width="560px"
+                   custom-class="admin-user-form-dialog">
             <el-form ref="dataForm"
                      :rules="dialog.rules"
                      :model="dialog.data"
-                     label-position="left"
-                     label-width="100px"
-                     style="max-width: 400px; margin-left:50px;">
+                     label-position="top"
+                     size="small"
+                     class="admin-user-dialog-form">
                 <p class="username-tip" v-if="dialog.title==='编辑管理员'">不建议修改用户名！</p>
-                <el-form-item label="用户名" prop="userName">
+                <el-form-item label="用户名" prop="userName" class="admin-user-form-item">
                     <el-input v-model="dialog.data.userName" clearable placeholder="请输入用户名" />
                 </el-form-item>
-                <el-form-item label="密码" :error="dialog.passwordError" :required="isVerPass">
+                <el-form-item label="密码" :error="dialog.passwordError" :required="isVerPass" class="admin-user-form-item">
                     <el-input v-model="dialog.data.password" show-password clearable placeholder="请输入密码" />
                 </el-form-item>
-                <el-form-item label="再次确认密码" :error="dialog.password2Error" :required="isVerPass">
+                <el-form-item label="再次确认密码" :error="dialog.password2Error" :required="isVerPass" class="admin-user-form-item">
                     <el-input v-model="dialog.data.password2" show-password clearable placeholder="请再次输入密码" />
                 </el-form-item>
-                <el-form-item label="真实姓名" prop="realName">
+                <el-form-item label="真实姓名" prop="realName" class="admin-user-form-item">
                     <el-input v-model="dialog.data.realName" clearable placeholder="请输入真实姓名" />
                 </el-form-item>
-                <el-form-item label="手机号" prop="phone">
+                <el-form-item label="手机号" prop="phone" class="admin-user-form-item">
                     <el-input v-model="dialog.data.phone" clearable placeholder="请输入手机号" />
                 </el-form-item>
-                <el-form-item label="备注" prop="note">
-                    <el-input v-model="dialog.data.note" clearable placeholder="请输入备注信息" />
+                <el-form-item label="备注" prop="note" class="admin-user-form-item">
+                    <el-input v-model="dialog.data.note" type="textarea" :rows="3" clearable placeholder="请输入备注信息" />
                 </el-form-item>
             </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @@click="dialog.visible = false">取 消</el-button>
-                <el-button :loading="dialog.updateLoading" type="primary" @@click="updateData">确 认</el-button>
+            <div slot="footer" class="admin-user-dialog-footer">
+                <el-button @@click="dialog.visible = false">取消</el-button>
+                <el-button :loading="dialog.updateLoading" type="primary" @@click="updateData">确认</el-button>
             </div>
         </el-dialog>
         <!--分配角色-->
-        <el-dialog :title="'设置角色-'+dialog.setTitle" :visible.sync="dialog.visibleSet">
-            <el-checkbox-group v-model="dialog.dialogSetSelected">
-                <el-checkbox v-for="item in dialog.dialogSetData" :label="item.value" border>{{item.text}}</el-checkbox>
-            </el-checkbox-group>
-            <div slot="footer" class="dialog-footer">
-                <el-button @@click="dialog.visibleSet = false">取 消</el-button>
-                <el-button :loading="dialog.updateLoading" type="primary" @@click="updateDataSet">确 认</el-button>
+        <el-dialog :title="'设置角色-'+dialog.setTitle"
+                   :visible.sync="dialog.visibleSet"
+                   width="480px"
+                   custom-class="admin-user-form-dialog">
+            <div class="admin-user-role-body">
+                <el-checkbox-group v-model="dialog.dialogSetSelected">
+                    <el-checkbox v-for="item in dialog.dialogSetData"
+                                 :key="item.value"
+                                 :label="item.value"
+                                 border>{{item.text}}</el-checkbox>
+                </el-checkbox-group>
+            </div>
+            <div slot="footer" class="admin-user-dialog-footer">
+                <el-button @@click="dialog.visibleSet = false">取消</el-button>
+                <el-button :loading="dialog.updateLoading" type="primary" @@click="updateDataSet">确认</el-button>
             </div>
         </el-dialog>
     </div>

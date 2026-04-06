@@ -1,9 +1,198 @@
-.filter-container {
-    padding-bottom: 10px;
+/* FileManager 左右布局 */
+.file-manager-layout {
+    display: flex;
+    gap: 0;
+    min-height: 560px;
+    background: #f5f7fa;
 }
 
-.pagination-container {
-    padding: 20px 0;
+/* 左侧文件夹面板 */
+.folder-panel {
+    width: 260px;
+    min-width: 260px;
+    background: #fff;
+    border-right: 1px solid #e4e7ed;
+    display: flex;
+    flex-direction: column;
+}
+
+.folder-panel-header {
+    padding: 16px;
+    border-bottom: 1px solid #ebeef5;
+}
+
+.folder-panel-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #303133;
+}
+
+.folder-search {
+    padding: 12px;
+    border-bottom: 1px solid #ebeef5;
+}
+
+.folder-search .el-input {
+    width: 100%;
+}
+
+.folder-tree-wrap {
+    flex: 1;
+    overflow: auto;
+    padding: 8px 0;
+}
+
+.folder-tree-wrap .custom-tree-node {
+    display: inline-flex;
+    align-items: center;
+}
+
+.folder-tree-wrap .tree-node-label {
+    margin-left: 6px;
+}
+
+/* 右侧内容区 */
+.content-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: #fff;
+    margin: 0;
+    padding: 16px 20px;
+}
+
+/* 查询区与工具栏同一行 */
+.query-toolbar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.query-input {
+    width: 260px;
+}
+
+/* 搜索框内图标垂直居中 */
+.query-toolbar-row .el-input__prefix {
+    display: flex;
+    align-items: center;
+    left: 10px;
+}
+
+.query-toolbar-row .query-input-prefix {
+    margin: 0;
+    line-height: 1;
+}
+
+.toolbar-selection {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 8px;
+    padding-left: 12px;
+    border-left: 1px solid #dcdfe6;
+}
+
+/* 新建下拉项中图标与文字间距 */
+.query-toolbar-row .el-dropdown-menu__item .el-icon-folder {
+    margin-right: 6px;
+}
+
+/* 导航栏 */
+.nav-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #ebeef5;
+}
+
+.nav-back {
+    color: #606266;
+    font-size: 13px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.nav-back:hover {
+    color: #409eff;
+}
+
+.nav-breadcrumb {
+    flex: 1;
+    font-size: 13px;
+}
+
+.nav-copy {
+    cursor: pointer;
+    color: #909399;
+    font-size: 16px;
+}
+
+.nav-copy:hover {
+    color: #409eff;
+}
+
+/* 表格：行悬停时显示操作图标 */
+.file-table .el-table__row .row-actions {
+    visibility: hidden;
+}
+
+.file-table .el-table__row:hover .row-actions {
+    visibility: visible;
+}
+
+.file-table .col-row-actions {
+    padding: 8px 0;
+}
+
+.row-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.row-actions .action-icon,
+.row-actions .action-icon-wrap {
+    cursor: pointer;
+    color: #909399;
+    font-size: 16px;
+}
+
+.row-actions .action-icon:hover,
+.row-actions .action-icon-wrap:hover {
+    color: #409eff;
+}
+
+.file-icon {
+    margin-right: 8px;
+    color: #409eff;
+}
+
+/* 更新时间列不换行，单行完整显示 */
+.file-table .col-upload-time .cell {
+    white-space: nowrap;
+}
+
+.file-table .cell-upload-time {
+    white-space: nowrap;
+}
+
+/* 分页 */
+.pagination-wrap {
+    margin-top: 16px;
+    padding: 12px 0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* 对话框与上传 */
+.filter-container {
+    padding-bottom: 10px;
 }
 
 .el-upload-dragger {
@@ -16,4 +205,190 @@
 
 .el-dialog .el-upload {
     width: auto;
-} 
+}
+
+/* ========== 新建文件夹 / 编辑备注 弹窗统一样式 ========== */
+.file-manager-dialog.el-dialog {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.file-manager-dialog .el-dialog__header {
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid #ebeef5;
+    background: #fafafa;
+}
+
+.file-manager-dialog .el-dialog__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #303133;
+}
+
+.file-manager-dialog .el-dialog__body {
+    padding: 24px 20px 20px;
+}
+
+.file-manager-dialog .dialog-body-inner {
+    min-height: 60px;
+}
+
+.file-manager-dialog .dialog-form .el-form-item {
+    margin-bottom: 20px;
+}
+
+.file-manager-dialog .dialog-form .el-form-item__label {
+    color: #606266;
+    line-height: 40px;
+    padding-right: 16px;
+}
+
+.file-manager-dialog .dialog-form .el-input__inner,
+.file-manager-dialog .dialog-form .el-textarea__inner {
+    border-radius: 4px;
+}
+
+.file-manager-dialog .dialog-form .el-textarea__inner {
+    padding: 10px 12px;
+    line-height: 1.6;
+    resize: vertical;
+    min-height: 88px;
+}
+
+.file-manager-dialog .el-dialog__footer {
+    padding: 12px 20px 16px;
+    border-top: 1px solid #ebeef5;
+    text-align: right;
+}
+
+.file-manager-dialog .dialog-footer .el-button {
+    min-width: 72px;
+}
+
+/* 编辑备注 - 文件名只读展示 */
+.dialog-edit-note .edit-note-filename {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #f5f7fa;
+    border-radius: 4px;
+    color: #606266;
+    font-size: 13px;
+    line-height: 1.5;
+    max-width: 100%;
+    word-break: break-all;
+}
+
+.dialog-edit-note .edit-note-filename .el-icon-document {
+    color: #909399;
+    flex-shrink: 0;
+}
+
+/* ========== 移动到 / 复制到 弹窗 ========== */
+.dialog-move-copy .el-dialog__body {
+    padding: 16px 20px 12px;
+}
+
+.dialog-move-copy .el-dialog__footer {
+    padding: 0;
+}
+
+.move-copy-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.move-copy-search {
+    flex-shrink: 0;
+}
+
+.move-copy-search-input {
+    width: 100%;
+}
+
+.move-copy-search .el-input__prefix {
+    display: flex;
+    align-items: center;
+}
+
+.move-copy-tree-wrap {
+    border: 1px solid #ebeef5;
+    border-radius: 4px;
+    padding: 12px;
+    min-height: 240px;
+    max-height: 320px;
+    overflow: auto;
+    background: #fafafa;
+}
+
+.dialog-move-copy .move-copy-tree-wrap .custom-tree-node {
+    display: inline-flex;
+    align-items: center;
+}
+
+.dialog-move-copy .move-copy-tree-wrap .tree-node-label {
+    margin-left: 6px;
+}
+
+.move-copy-current {
+    flex-shrink: 0;
+    padding: 10px 12px;
+    background: #f0f9ff;
+    border-radius: 4px;
+    border: 1px solid #d9ecff;
+    font-size: 13px;
+}
+
+.move-copy-current-label {
+    color: #606266;
+    margin-right: 6px;
+}
+
+.move-copy-current-value {
+    color: #303133;
+    font-weight: 500;
+}
+
+.move-copy-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 14px 20px 16px;
+    border-top: 1px solid #ebeef5;
+    background: #fafafa;
+}
+
+.move-copy-recent {
+    font-size: 13px;
+    color: #606266;
+}
+
+.move-copy-recent-label {
+    margin-right: 8px;
+}
+
+.move-copy-recent-path {
+    color: #303133;
+    margin-right: 8px;
+}
+
+.move-copy-use-recent {
+    padding: 0 4px;
+    font-size: 13px;
+}
+
+.move-copy-recent-empty {
+    color: #909399;
+}
+
+.move-copy-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.move-copy-actions .el-button {
+    min-width: 72px;
+}

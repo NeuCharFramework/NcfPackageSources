@@ -1,0 +1,69 @@
+/* 页面整体 */
+.senparctrace-page {
+    padding: 20px 24px;
+    background: #f0f2f5;
+    min-height: 100%;
+    box-sizing: border-box;
+}
+
+.senparctrace-main {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+/* 查询区 */
+.senparctrace-query-section {
+    margin-bottom: 20px;
+    padding: 16px 18px;
+    background: #fafbfc;
+    border: 1px solid #e8eaec;
+    border-radius: 6px;
+}
+
+.senparctrace-query-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.senparctrace-query-label {
+    flex: 0 0 auto;
+    font-size: 14px;
+    color: #606266;
+    margin: 0;
+}
+
+.senparctrace-query-input {
+    width: 260px;
+}
+
+.senparctrace-query-row .el-button {
+    margin-left: 0;
+}
+
+/* 表格区域 */
+.senparctrace-table-wrap {
+    margin-bottom: 16px;
+}
+
+.senparctrace-table-wrap .el-table {
+    margin-bottom: 0;
+}
+
+.senparctrace-table-wrap .el-table th {
+    background: #f5f7fa;
+    color: #303133;
+    font-weight: 600;
+}
+
+/* 分页区域 */
+.senparctrace-pagination-wrap {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 12px;
+    border-top: 1px solid #ebeef5;
+}
+

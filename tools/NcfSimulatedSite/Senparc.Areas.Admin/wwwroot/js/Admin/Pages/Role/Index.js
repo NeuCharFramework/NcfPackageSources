@@ -1,4 +1,4 @@
-﻿var app = new Vue({
+var app = new Vue({
     el: "#app",
     data() {
         return {
@@ -9,10 +9,11 @@
             //分页接口传参
             listQuery: {
                 pageIndex: 1,
-                pageSize: 20,
+                pageSize: 10,
                 roleName: '',
                 orderField: ''
             },
+            keyword: '',
             tableData: [],
             dialog: {
                 title: '新增角色',
@@ -153,6 +154,20 @@
                 this.tableData = res.data.data.list;
                 this.paginationQuery.total = res.data.data.totalCount;
             });
+        },
+        // 查询
+        handleSearch() {
+            this.listQuery.pageIndex = 1;
+            this.listQuery.roleName = this.keyword;
+            this.getList();
+        },
+        // 重置
+        resetCondition() {
+            this.keyword = '';
+            this.listQuery.roleName = '';
+            this.listQuery.pageIndex = 1;
+            this.listQuery.pageSize = 10;
+            this.getList();
         },
         // 编辑
         handleEdit(index, row) {

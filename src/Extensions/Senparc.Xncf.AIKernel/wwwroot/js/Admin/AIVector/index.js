@@ -2,6 +2,7 @@ var app = new Vue({
   el: "#app",
   data() {
     return {
+      keyword: '',
       page: {
         page: 1,
         size: 10
@@ -76,10 +77,21 @@ var app = new Vue({
     },
     async handleSizeChange(val) {
       this.page.size = val;
+      this.page.page = 1;
       await this.getDataList();
     },
     async handleCurrentChange(val) {
       this.page.page = val;
+      await this.getDataList();
+    },
+    async handleSearch() {
+      this.page.page = 1;
+      await this.getDataList();
+    },
+    async resetCondition() {
+      this.keyword = '';
+      this.page.page = 1;
+      this.page.size = 10;
       await this.getDataList();
     },
     async getDataList() {
@@ -87,6 +99,7 @@ var app = new Vue({
       await service.post('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.GetPagedListAsync', {
         "page": this.page.page,
         "size": this.page.size,
+        "name": this.keyword
       })
         .then(res => {
           console.log(res)

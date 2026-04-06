@@ -12,7 +12,7 @@
 @section Style{
     <link href="~/css/Admin/XncfModule/XncfModule.css" rel="stylesheet" />
 }
-<div>
+<div class="xncf-module-start">
     <el-container v-if="data.xncfModule">
         <el-header class="module-header">
             <span class="start-title"> <i :class="data.xncfRegister.icon"></i>&nbsp;{{data.xncfModule.menuName}} <span class="module-header-v">模块 {{data.xncfModule.version}}</span></span>
@@ -102,7 +102,7 @@
                     </el-collapse>
                 </div>
             </el-aside>
-            <el-main>
+            <el-main class="module-main-cards">
                 <template v-if="!data.mustUpdate">
                     <template v-if="data.xncfRegister.interfaces.includes('IAreaRegister')&&data.xncfRegister.areaHomeUrl!==null">
                         <el-card class="box-card">

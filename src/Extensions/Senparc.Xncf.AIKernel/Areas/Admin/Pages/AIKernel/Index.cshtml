@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model Senparc.Xncf.AIKernel.Areas.AIKernel.Pages.Index
 @{
     ViewData["Title"] = "AIKernel 首页";
@@ -15,13 +15,32 @@
     <el-breadcrumb-item>首页</el-breadcrumb-item>
 }
 
-<div>
-    <div class="filter-container">
-        <el-button type="primary" icon="el-icon-plus" size="small" @@click="addModel">添加</el-button>
-        <el-button type="primary" icon="el-icon-plus" size="small" @@click="addNeuCharModel">导入 NeuCharAI 云端模型算力</el-button>
-    </div>
+<div class="aikernel-index-page">
+    <div class="aikernel-main">
+        @* 查询区：按名称(别名)查询 *@
+        <div class="aikernel-query-section">
+            <div class="aikernel-query-row">
+                <label class="aikernel-query-label">名称</label>
+                <el-input v-model="keyword"
+                          placeholder="请输入模型名称/别名关键字"
+                          size="small"
+                          clearable
+                          class="aikernel-query-input"
+                          @@keyup.enter.native="handleSearch()"></el-input>
+                <el-button type="primary" size="small" icon="el-icon-search" @@click="handleSearch()">查询</el-button>
+                <el-button size="small" icon="el-icon-refresh-left" @@click="resetCondition()">重置</el-button>
+            </div>
+        </div>
 
-    <el-table :data="tableData" v-loading="tableLoading" border>
+        @* 工具栏 *@
+        <div class="aikernel-toolbar">
+            <el-button type="primary" size="small" icon="el-icon-plus" @@click="addModel">添加</el-button>
+            <el-button type="primary" size="small" icon="el-icon-upload2" plain @@click="addNeuCharModel">导入 NeuCharAI 云端模型算力</el-button>
+        </div>
+
+        @* 表格区域 *@
+        <div class="aikernel-table-wrap">
+        <el-table :data="tableData" v-loading="tableLoading" border size="small">
         @* alias *@
         <el-table-column prop="alias" label="别名" width="auto"></el-table-column>
         <el-table-column prop="modelId" label="模型名称" width="auto"></el-table-column>
@@ -76,34 +95,35 @@
             </template>
         </el-table-column>
         @* 操作 *@
-        <el-table-column label="操作" width="auto">
+        <el-table-column label="操作" align="center" fixed="right" width="180">
             <template slot-scope="scope">
-                <el-button type="primary" size="mini" @@click="editModel(scope.row)">编辑</el-button>
-                <el-button type="danger" size="mini" @@click="deleteModel(scope.row)">删除</el-button>
+                <el-button type="primary" size="mini" plain @@click="editModel(scope.row)">编辑</el-button>
+                <el-button type="danger" size="mini" plain @@click="deleteModel(scope.row)">删除</el-button>
             </template>
         </el-table-column>
     </el-table>
-    <div class="pagination-container">
-        <el-pagination @@current-change="handleCurrentChange"
-                       @@size-change="handleSizeChange"
-                       :current-page="page.page"
-                       :page-sizes="[10, 20, 30, 40]"
-                       :page-size="page.size"
-                       layout="sizes, prev, next, jumper"
-                       :total="total"
-                       background
-                       style="margin-top: 20px">
-        </el-pagination>
     </div>
 
+        @* 分页：首页、上一页、下一页、尾页、跳转、每页 5/10/15/20/50/100 条，默认 10 *@
+        <div class="aikernel-pagination-wrap">
+            <el-pagination :current-page.sync="page.page"
+                           :page-sizes="[5, 10, 15, 20, 50, 100]"
+                           :page-size.sync="page.size"
+                           :total="total"
+                           layout="total, sizes, prev, pager, next, jumper"
+                           @@size-change="handlePageSizeChange"
+                           @@current-change="handlePageChange">
+            </el-pagination>
+        </div>
+    </div>
 
-    @* dialog for 添加模型 *@
-    <el-dialog title="添加模型" :visible.sync="addFormDialogVisible" width="50%" :close-on-click-modal="false">
-        <el-form :model="addForm" label-width="120px" :rules="addRules" ref="addForm">
-            <el-form-item label="别名" prop="alias">
-                <el-input v-model="addForm.alias"></el-input>
+    @* 添加模型弹框 *@
+    <el-dialog title="添加模型" :visible.sync="addFormDialogVisible" width="560px" :close-on-click-modal="false" custom-class="aikernel-form-dialog">
+        <el-form :model="addForm" :rules="addRules" ref="addForm" label-position="top" size="small" class="aikernel-dialog-form">
+            <el-form-item label="别名" prop="alias" class="aikernel-form-item">
+                <el-input v-model="addForm.alias" placeholder="请输入别名" clearable></el-input>
             </el-form-item>
-            <el-form-item label="平台" prop="aiPlatform">
+            <el-form-item label="平台" prop="aiPlatform" class="aikernel-form-item">
                 <el-select v-model="addForm.aiPlatform" placeholder="请选择">
                     <el-option label="NeuCharAI" value="4"></el-option>
                     <el-option label="OpenAI" value="8"></el-option>
@@ -143,8 +163,8 @@
                     <el-option label="deepseek-coder" value="deepseek-coder"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="模型名称" v-else="addForm.aiPlatform!=='4'&&addForm.aiPlatform!=='512'" prop="modelId">
-                <el-input v-model="addForm.modelId"></el-input>
+            <el-form-item label="模型名称" v-else prop="modelId">
+                <el-input v-model="addForm.modelId" placeholder="请输入模型名称"></el-input>
             </el-form-item>
             <el-form-item label="部署名称" prop="deploymentName" v-if="addForm.aiPlatform!=='512'">
                 <el-input v-model="addForm.deploymentName"></el-input>
@@ -158,7 +178,7 @@
                 <el-input v-model="addForm.apiKey" type="password"></el-input>
             </el-form-item>
             <el-form-item label="Endpoint" v-if="addForm.aiPlatform==='16'||addForm.aiPlatform==='4'||addForm.aiPlatform==='32'||addForm.aiPlatform==='128'||addForm.aiPlatform==='256'||addForm.aiPlatform==='512'" prop="endpoint">
-                <el-input v-model="addForm.endpoint = addForm.aiPlatform==='512' ? 'https://api.deepseek.com' : addForm.endpoint"></el-input>
+                <el-input v-model="addForm.endpoint" placeholder="请输入 Endpoint"></el-input>
             </el-form-item>
            <el-form-item label="组织ID"  v-if="addForm.aiPlatform==='8'" prop="organizationId">
                 <el-input v-model="addForm.organizationId" type="password"></el-input>
@@ -174,18 +194,19 @@
                 <el-input v-model="addForm.maxToken"></el-input>
             </el-form-item>
         </el-form>
-        <span slot="footer" class="dialog-footer">
-            <el-button @@click="addFormDialogVisible = false">取 消</el-button>
-            <el-button type="primary" @@click="addModelSubmit">确 定</el-button>
-        </span>
+        <div slot="footer" class="aikernel-dialog-footer">
+            <el-button @@click="addFormDialogVisible = false">取消</el-button>
+            <el-button type="primary" @@click="addModelSubmit">确定</el-button>
+        </div>
     </el-dialog>
-    @* dialog for 编辑模型 *@
-    <el-dialog title="编辑模型" :visible.sync="editFormDialogVisible" width="50%" :close-on-click-modal="false">
-        <el-form :model="editForm" label-width="120px" :rules="editRules" ref="editForm">
-            <el-form-item label="别名" prop="alias">
-                <el-input v-model="editForm.alias"></el-input>
+
+    @* 编辑模型弹框 *@
+    <el-dialog title="编辑模型" :visible.sync="editFormDialogVisible" width="560px" :close-on-click-modal="false" custom-class="aikernel-form-dialog">
+        <el-form :model="editForm" :rules="editRules" ref="editForm" label-position="top" size="small" class="aikernel-dialog-form">
+            <el-form-item label="别名" prop="alias" class="aikernel-form-item">
+                <el-input v-model="editForm.alias" placeholder="请输入别名" clearable></el-input>
             </el-form-item>
-            <el-form-item label="平台" prop="aiPlatform">
+            <el-form-item label="平台" prop="aiPlatform" class="aikernel-form-item">
                 @* NeuCharAI = 4, *@
                 @*  OpenAI = 8, *@
                 @*  AzureOpenAI = 16, *@
@@ -246,7 +267,7 @@
                     <el-input v-model="editForm.apiKey" type="password" placeholder="********"></el-input>
                 </el-form-item>
                 <el-form-item label="Endpoint" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='4'||editForm.aiPlatform==='32'||editForm.aiPlatform==='128'||editForm.aiPlatform==='256'||editForm.aiPlatform==='512'" prop="endpoint">
-                    <el-input v-model="editForm.endpoint = editForm.aiPlatform==='512' ? 'https://api.deepseek.com' : editForm.endpoint"></el-input>
+                    <el-input v-model="editForm.endpoint" placeholder="请输入 Endpoint"></el-input>
                 </el-form-item>
              <el-form-item label="组织ID"  v-if="editForm.aiPlatform==='8'" prop="organizationId">
                     <el-input v-model="editForm.organizationId" type="password" placeholder="********"></el-input>
@@ -265,27 +286,30 @@
                     <el-input v-model="editForm.maxToken"></el-input>
             </el-form-item>
         </el-form>
-        <span slot="footer" class="dialog-footer">
-            <el-button @@click="editFormDialogVisible = false">取 消</el-button>
-            <el-button type="primary" @@click="editModelSubmit">确 定</el-button>
-        </span>
+        <div slot="footer" class="aikernel-dialog-footer">
+            <el-button @@click="editFormDialogVisible = false">取消</el-button>
+            <el-button type="primary" @@click="editModelSubmit">确定</el-button>
+        </div>
     </el-dialog>
 
-    <!-- dialog for 导入 NeuCharAI 云端模型算力 -->  
-    <el-dialog title="导入 NeuCharAI 云端模型算力" :visible.sync="neuCharFormDialogVisible" width="50%" :close-on-click-modal="false">  
-        <el-form :model="neuCharForm" label-width="120px" :rules="neuCharRules" ref="neuCharForm">  
-            <el-form-item label="DeveloperId" prop="developerId">  
-                <el-input v-model="neuCharForm.developerId"></el-input>
-            </el-form-item>  
-            <el-form-item label="ApiKey" prop="apiKey">  
-                <el-input v-model="neuCharForm.apiKey" type="password"></el-input>  
-            </el-form-item>  
-            <p><i class="fa fa-info-circle"></i>&nbsp; &nbsp;可从 <a href="https://www.neuchar.com/Developer/AiApp" target="_blank">https://www.neuchar.com/Developer/AiApp</a> <i class="fa fa-external-link" aria-hidden="true"></i> 页面中，点击【显示 ApiKey】按钮查看到 DeveloperId 及 ApiKey，如果您有多项，可分批次导入。</p>
-        </el-form>  
-        <span slot="footer" class="dialog-footer">  
-            <el-button @@click="neuCharFormDialogVisible = false">取消</el-button>  
-            <el-button type="primary" @@click="addNeuCharModelSubmit">确定</el-button>  
-        </span>  
+    @* 导入 NeuCharAI 云端模型算力弹框 *@
+    <el-dialog title="导入 NeuCharAI 云端模型算力" :visible.sync="neuCharFormDialogVisible" width="480px" :close-on-click-modal="false" custom-class="aikernel-form-dialog">
+        <el-form :model="neuCharForm" :rules="neuCharRules" ref="neuCharForm" label-position="top" size="small" class="aikernel-dialog-form">
+            <el-form-item label="DeveloperId" prop="developerId" class="aikernel-form-item">
+                <el-input v-model="neuCharForm.developerId" placeholder="请输入 DeveloperId" clearable></el-input>
+            </el-form-item>
+            <el-form-item label="ApiKey" prop="apiKey" class="aikernel-form-item">
+                <el-input v-model="neuCharForm.apiKey" type="password" placeholder="请输入 ApiKey" show-password clearable></el-input>
+            </el-form-item>
+            <div class="aikernel-neuchar-tip">
+                <i class="el-icon-info"></i>
+                可从 <a href="https://www.neuchar.com/Developer/AiApp" target="_blank" rel="noopener">NeuChar 开发者中心</a> 页面中，点击【显示 ApiKey】查看 DeveloperId 及 ApiKey，多项可分批次导入。
+            </div>
+        </el-form>
+        <div slot="footer" class="aikernel-dialog-footer">
+            <el-button @@click="neuCharFormDialogVisible = false">取消</el-button>
+            <el-button type="primary" @@click="addNeuCharModelSubmit">确定</el-button>
+        </div>
     </el-dialog>  
 
 </div>

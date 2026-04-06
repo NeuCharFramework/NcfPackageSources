@@ -1,4 +1,82 @@
-﻿.admin-systemconfig-info h2{
+/* 页面整体 */
+.systemconfig-page {
+    padding: 20px 24px;
+    background: #f0f2f5;
+    min-height: 100%;
+    box-sizing: border-box;
+}
+
+.systemconfig-main {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+/* 头部区域 */
+.systemconfig-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.systemconfig-header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.systemconfig-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #303133;
+    margin: 0;
+}
+
+.systemconfig-subtitle {
+    font-size: 13px;
+    color: #909399;
+    margin: 0;
+}
+
+.systemconfig-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.systemconfig-edit-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 表单区域 */
+.systemconfig-form {
+    margin-top: 8px;
+}
+
+.systemconfig-form .el-form-item__label {
+    font-size: 13px;
+    color: #606266;
+    padding-bottom: 6px;
+}
+
+.systemconfig-form .el-form-item {
+    margin-bottom: 18px;
+}
+
+.systemconfig-form .el-input {
+    width: 100%;
+}
+
+.systemconfig-field-readonly {
+    display: flex;
+    align-items: center;
+}
+
+.admin-systemconfig-info h2{
     margin-bottom:22px;
 }
 

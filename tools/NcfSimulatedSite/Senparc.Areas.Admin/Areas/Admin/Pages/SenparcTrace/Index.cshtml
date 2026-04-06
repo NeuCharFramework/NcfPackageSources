@@ -1,9 +1,14 @@
-﻿@page
+@page
 @model Senparc.Areas.Admin.Areas.Admin.Pages.SenparcTrace_IndexModel
 @{
     ViewData["Title"] = AR["Trace.日志"];
     Layout = "_Layout_Vue";
 }
+
+@section Style{
+    <link href="~/css/Admin/SenparcTrace/Index.css" rel="stylesheet" />
+}
+
 @section breadcrumbs {
     <el-breadcrumb-item>@AR["Common.系统管理"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["Trace.日志"]</el-breadcrumb-item>
@@ -38,4 +43,3 @@
 @section scripts{
     <script src="~/js/Admin/Pages/SenparcTrace/Index.js"></script>
 }
-

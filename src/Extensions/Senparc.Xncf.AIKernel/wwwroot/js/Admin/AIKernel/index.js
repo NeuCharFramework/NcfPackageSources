@@ -2,9 +2,10 @@ var app = new Vue({
     el: "#app",
     data() {
         return {
+            keyword: '',
             page: {
                 page: 1,
-                size: 10
+                size: 8
             },
             tableLoading: true,
             tableData: [],
@@ -105,6 +106,14 @@ var app = new Vue({
             }
         }
     },
+    watch: {
+        'addForm.aiPlatform'(val) {
+            if (val === '512') this.addForm.endpoint = this.addForm.endpoint || 'https://api.deepseek.com';
+        },
+        'editForm.aiPlatform'(val) {
+            if (val === '512') this.editForm.endpoint = this.editForm.endpoint || 'https://api.deepseek.com';
+        }
+    },
     mounted() {
         //wait page load  
         setTimeout(async () => {
@@ -115,6 +124,24 @@ var app = new Vue({
         async init() {
             await this.getDataList();
         },
+        handleSearch() {
+            this.page.page = 1;
+            this.getDataList();
+        },
+        resetCondition() {
+            this.keyword = '';
+            this.page.page = 1;
+            this.getDataList();
+        },
+        handlePageSizeChange(val) {
+            this.page.size = val;
+            this.page.page = 1;
+            this.getDataList();
+        },
+        handlePageChange(val) {
+            this.page.page = val;
+            this.getDataList();
+        },
         async handleSizeChange(val) {
             this.page.size = val;
             await this.getDataList();
@@ -124,17 +151,21 @@ var app = new Vue({
             await this.getDataList();
         },
         async getDataList() {
-            this.tableLoading = true
-            await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetPagedListAsync', {
-                "page": this.page.page,
-                "size": this.page.size,
-            })
-                .then(res => {
-                    console.log(res)
-                    this.tableData = res.data.data.data;
-                    this.total = res.data.data.total;
-                    this.tableLoading = false
-                })
+            this.tableLoading = true;
+            var alias = this.keyword ? (String(this.keyword).trim() || null) : null;
+            if (alias && alias.indexOf('%') === -1) alias = '%' + alias + '%';
+            var payload = { page: this.page.page, size: this.page.size };
+            if (alias) payload.alias = alias;
+            try {
+                var res = await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetPagedListAsync', payload);
+                var data = res && res.data && res.data.data;
+                this.tableData = (data && Array.isArray(data.data)) ? data.data : [];
+                this.total = (data && typeof data.total === 'number') ? data.total : 0;
+            } catch (e) {
+                this.tableData = [];
+                this.total = 0;
+            }
+            this.tableLoading = false;
         },
         addModel() {
             this.addFormDialogVisible = true;
@@ -143,17 +174,22 @@ var app = new Vue({
             this.neuCharFormDialogVisible = true; // 显示对话框  
         },
         copyInfo(key) {
-            // 把结果复制到剪切板  
-            const input = document.createElement('input')
-            input.setAttribute('readonly', 'readonly')
-            input.setAttribute('value', key)
-            document.body.appendChild(input)
-            input.select()
-            input.setSelectionRange(0, 9999)
-            if (document.execCommand('copy')) {
-                document.execCommand('copy')
-                //提示时展示'******'+key的后4位  
-                this.$message.success(`已复制【******${key.slice(-4)}】！`)
+            if (key == null || key === '') {
+                this.$message.warning('无 Api Key 可复制');
+                return;
+            }
+            var input = document.createElement('input');
+            input.setAttribute('readonly', 'readonly');
+            input.setAttribute('value', key);
+            document.body.appendChild(input);
+            input.select();
+            input.setSelectionRange(0, 9999);
+            try {
+                if (document.execCommand('copy')) {
+                    this.$message.success('已复制【******' + key.slice(-4) + '】！');
+                }
+            } finally {
+                document.body.removeChild(input);
             }
         },
         async addModelSubmit() {

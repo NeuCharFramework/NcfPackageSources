@@ -1,4 +1,4 @@
-﻿@model Senparc.Ncf.AreaBase.Admin.IAdminPageModelBase
+@model Senparc.Ncf.AreaBase.Admin.IAdminPageModelBase
 @{
     var thisYear = DateTime.Now.Year;
     var currentCulture = System.Globalization.CultureInfo.CurrentUICulture.Name;
@@ -33,7 +33,7 @@
                             <img src="~/images/Admin/base/head/logo_230x55.png" alt="Alternate Text" />
                         </a>
                     </div>
-                    <el-scrollbar wrap-class="scrollbar-wrapper" style="height:calc(100vh - 80px);">
+                    <el-scrollbar wrap-class="scrollbar-wrapper" class="aside-scrollbar">
                         <el-menu :default-active="Store.state.navMenu.activeMenu"
                                  :collapse="Store.state.navMenu.isCollapse"
                                  :background-color="Store.state.navMenu.variables.menuBg"
