@@ -75,3 +75,11 @@ Key modules for the RAG implementation:
 2.  Implement **Embedding Generation** integration with `AIKernel`.
 3.  Implement **Vector Storage** logic.
 4.  Implement **RAG Query** service.
+
+## Available Skills
+
+| Skill | Description | File |
+|---|---|---|
+| `add-modify-log` | Add modify log | `.github/skills/add-modify-log/SKILL.md` |
+| `update-project-version` | Update .csproj version and release notes when project files change | `.github/skills/update-project-version/SKILL.md` |
+| `multi-language-translation` | Create Developer-Multi-Language branch and translate all Chinese source code comments and README/docs to English | `.github/skills/multi-language-translation/SKILL.md` |

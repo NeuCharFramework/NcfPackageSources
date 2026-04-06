@@ -4,6 +4,20 @@ var app = new Vue({
         return {
             isAIGrade: true,
             devHost: 'http://pr-felixj.frp.senparc.com',
+            // 优化功能
+            optimizeDialogVisible: false,
+            optimizeRequirement: '',
+            optimizing: false,
+            optimizeProgressText: '',          // 优化弹窗内进度说明（Agent → 刷新 → 打靶 → 评分）
+            optimizeErrorText: '',             // 优化失败时保留在弹窗内供开发者查看
+            autoShootAfterOptimize: true,      // 🆕 创建后立即打靶（默认选中）
+            autoAIGradeAfterShoot: false,      // 🆕 打靶后 AI 评分（默认不选中）
+            // PromptCatalyzer 初始化功能
+            promptCatalyzerInitVisible: false,      // 初始化对话框可见性
+            availableModelsForInit: [],             // 可用的 AI Model 列表
+            selectedModelIdForInit: null,           // 选中的 Model ID
+            loadingModels: false,                   // 加载 Model 列表的状态
+            initializing: false,                    // 正在初始化的状态
             pageChange: false, // 页面是否有变化
             isAvg: true, // 是否平均分 默认false 不平均
             // 配置 输入 ---start
@@ -2994,6 +3008,482 @@ var app = new Vue({
             this.map3dTreeData = tree
         },
         
+        // --- 优化功能 ---
+        // 检查 PromptCatalyzer 是否已初始化
+        async checkPromptCatalyzerStatus() {
+            try {
+                const response = await servicePR.get('/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/CheckStatus');
+                console.log('CheckStatus 完整响应:', response);
+                
+                // NCF AppResponseBase 返回格式：{ success: true, data: { isInitialized: true, ... } }
+                if (response.data && response.data.success && response.data.data) {
+                    return response.data.data.isInitialized;
+                }
+                return false;
+            } catch (error) {
+                console.error('检查初始化状态失败:', error);
+                return false;
+            }
+        },
+
+        // 获取可用的 AI Model 列表
+        async loadAvailableModels() {
+            this.loadingModels = true;
+            try {
+                const response = await servicePR.get('/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/GetAvailableModels');
+                console.log('GetAvailableModels 完整响应:', response);
+                
+                // NCF AppResponseBase 返回格式：{ success: true, data: { models: [...], recommendedModelId: 1 } }
+                if (response.data && response.data.success) {
+                    this.availableModelsForInit = response.data.data.models || [];
+                    
+                    // 自动选择推荐的 Model
+                    if (response.data.data.recommendedModelId) {
+                        this.selectedModelIdForInit = response.data.data.recommendedModelId;
+                    } else if (this.availableModelsForInit.length > 0) {
+                        this.selectedModelIdForInit = this.availableModelsForInit[0].id;
+                    }
+                    
+                    console.log('加载到', this.availableModelsForInit.length, '个可用 Model');
+                } else {
+                    // 处理错误响应
+                    const errorMsg = response.data?.errorMessage || '获取模型列表失败';
+                    this.$message.error(errorMsg);
+                    console.error('获取模型失败:', errorMsg);
+                }
+            } catch (error) {
+                console.error('加载 AI Model 列表失败:', error);
+                this.$message.error('加载 AI Model 列表失败: ' + (error.response?.data?.errorMessage || error.message));
+            } finally {
+                this.loadingModels = false;
+            }
+        },
+
+        // 执行初始化
+        async executeInitialization() {
+            if (!this.selectedModelIdForInit) {
+                this.$message.warning('请选择一个 AI Model');
+                return;
+            }
+
+            this.initializing = true;
+            try {
+                console.log('开始初始化 PromptCatalyzer，使用 Model ID:', this.selectedModelIdForInit);
+                
+                const response = await servicePR.post('/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/Initialize', {
+                    modelId: this.selectedModelIdForInit
+                });
+
+                console.log('Initialize 完整响应:', response);
+                
+                // NCF AppResponseBase 返回格式：{ success: true, data: { promptCode: "...", ... } }
+                if (response.data && response.data.success) {
+                    const initData = response.data.data || {};
+                    this.$message({
+                        message: `✅ 初始化成功！已创建 PromptCatalyzer Agent，PromptCode: ${initData.promptCode || '已创建'}`,
+                        type: 'success',
+                        duration: 6000,
+                        showClose: true
+                    });
+                    
+                    this.promptCatalyzerInitVisible = false;
+                    
+                    // 初始化成功后，刷新页面数据
+                    console.log('初始化成功，刷新页面数据...');
+                    await this.getFieldList();
+                    
+                    // 继续执行优化
+                    this.proceedWithOptimization();
+                } else {
+                    this.$message.error('初始化失败: ' + (response.data.errorMessage || '未知错误'));
+                }
+            } catch (error) {
+                console.error('初始化失败:', error);
+                const errorMsg = error.response?.data?.error || error.response?.data?.message || error.message;
+                this.$message({
+                    message: '初始化失败: ' + errorMsg,
+                    type: 'error',
+                    duration: 8000,
+                    showClose: true
+                });
+            } finally {
+                this.initializing = false;
+            }
+        },
+
+        // 继续执行优化（初始化完成后）
+        proceedWithOptimization() {
+            // 重新打开优化对话框
+            this.optimizeRequirement = '';
+            this.optimizeErrorText = '';
+            this.optimizeDialogVisible = true;
+        },
+        
+        // ⭐ 新增：检查分数并提示优化
+        async checkScoreAndSuggestOptimization(resultData, scoreType) {
+            try {
+                // 获取最终分数
+                let finalScore = null;
+                if (resultData && typeof resultData === 'object') {
+                    finalScore = resultData.finalScore;
+                } else if (typeof resultData === 'number') {
+                    finalScore = resultData;
+                }
+                
+                // 如果无法获取分数，不提示
+                if (finalScore === null || finalScore === undefined || finalScore === -1) {
+                    console.log('无法获取有效分数，跳过优化提示');
+                    return;
+                }
+                
+                console.log(`${scoreType}完成，最终分数: ${finalScore}`);
+                
+                // 设置优化建议的阈值（分数低于6分时建议优化）
+                const optimizationThreshold = 6.0;
+                
+                if (finalScore < optimizationThreshold) {
+                    // 分数较低，提示用户是否需要优化
+                    this.$confirm(
+                        `当前 Prompt 的${scoreType}为 ${finalScore.toFixed(1)} 分（低于 ${optimizationThreshold} 分）。是否使用 AI 自动优化功能来改进 Prompt？`,
+                        '💡 建议优化',
+                        {
+                            confirmButtonText: '立即优化',
+                            cancelButtonText: '暂不优化',
+                            type: 'warning',
+                            center: true
+                        }
+                    ).then(async () => {
+                        // 用户确认优化
+                        console.log('用户确认进行优化');
+                        await this.openOptimizeDialog();
+                    }).catch(() => {
+                        // 用户取消
+                        console.log('用户取消优化');
+                    });
+                } else {
+                    // 分数较高，显示简单的成功消息
+                    console.log(`分数${finalScore.toFixed(1)}较高，无需提示优化`);
+                }
+            } catch (error) {
+                console.error('检查分数并提示优化时出错:', error);
+                // 不显示错误消息，避免影响用户体验
+            }
+        },
+        
+        // ⭐ 新增：根据 PromptItem 的平均分检查是否需要优化
+        async checkPromptAverageScoreAndSuggest() {
+            try {
+                // 获取当前选中的 Prompt 信息
+                if (!this.promptid) {
+                    return;
+                }
+                
+                const selectedPrompt = this.promptOpt.find(item => item.value === this.promptid);
+                if (!selectedPrompt || !selectedPrompt.evalAvgScore) {
+                    return;
+                }
+                
+                const avgScore = selectedPrompt.evalAvgScore;
+                
+                // 如果平均分数为 -1 或无效，不提示
+                if (avgScore === -1 || avgScore === null || avgScore === undefined) {
+                    console.log('当前 Prompt 尚无平均分数');
+                    return;
+                }
+                
+                console.log(`当前 Prompt 平均分数: ${avgScore}`);
+                
+                // 设置优化建议的阈值
+                const optimizationThreshold = 6.0;
+                
+                // 如果平均分低于阈值，且当前 Range 有多个测试结果，则提示优化
+                if (avgScore < optimizationThreshold) {
+                    // 使用 Notification 而不是 Confirm，避免阻塞用户操作
+                    this.$notify({
+                        title: '💡 优化建议',
+                        message: `当前 Prompt 的平均分为 ${avgScore.toFixed(1)} 分，建议使用 AI 自动优化功能来改进。点击"优化"按钮开始。`,
+                        type: 'warning',
+                        duration: 8000,
+                        position: 'bottom-right',
+                        showClose: true
+                    });
+                    
+                    console.log('平均分较低，已提示用户优化');
+                } else {
+                    console.log(`平均分 ${avgScore.toFixed(1)} 较高，无需提示优化`);
+                }
+            } catch (error) {
+                console.error('检查平均分并提示优化时出错:', error);
+            }
+        },
+
+        async openOptimizeDialog() {
+            if (!this.promptid) {
+                this.$message.warning('请先选择一个Prompt！');
+                return;
+            }
+            
+            // 检查是否已初始化
+            console.log('检查 PromptCatalyzer 初始化状态...');
+            const isInitialized = await this.checkPromptCatalyzerStatus();
+            
+            if (!isInitialized) {
+                // 未初始化，显示初始化对话框
+                this.$message({
+                    message: '🚀 首次使用需要初始化 PromptCatalyzer，正在加载可用的 AI Model...',
+                    type: 'info',
+                    duration: 3000
+                });
+                
+                // 加载可用 Model 列表
+                await this.loadAvailableModels();
+                
+                if (this.availableModelsForInit.length === 0) {
+                    this.$message.error('没有找到可用的 AI Model，请先在 AIKernel 模块中配置 Chat 类型的 Model');
+                    return;
+                }
+                
+                // 显示初始化对话框
+                this.promptCatalyzerInitVisible = true;
+                return;
+            }
+            
+            // 已初始化，直接打开优化对话框
+            console.log('PromptCatalyzer 已初始化，打开优化对话框');
+            this.optimizeRequirement = '';
+            this.optimizeErrorText = '';
+            this.optimizeDialogVisible = true;
+        },
+        /// 将当前靶道的预期结果同步到 aiScoreForm，避免「打靶后 AI 评分」仅依赖表单内存而遗漏详情里的 expectedResultsJson。
+        syncAiScoreFormFromPromptDetail() {
+            if (!this.promptDetail || !this.promptDetail.expectedResultsJson) {
+                return;
+            }
+            try {
+                const arr = JSON.parse(this.promptDetail.expectedResultsJson);
+                if (!Array.isArray(arr) || arr.length === 0) {
+                    return;
+                }
+                const hasValues = arr.some(x => x !== undefined && x !== null && String(x).trim() !== '');
+                if (!hasValues) {
+                    return;
+                }
+                const formHasValues = this.aiScoreForm.resultList && this.aiScoreForm.resultList.some(r => r && r.value);
+                if (!formHasValues) {
+                    this.aiScoreForm.resultList = arr.map((item, index) => ({
+                        id: index + 1,
+                        label: '预期结果',
+                        value: typeof item === 'string' ? item : String(item)
+                    }));
+                }
+            } catch (e) {
+                console.warn('syncAiScoreFormFromPromptDetail:', e);
+            }
+        },
+        async executeOptimize() {
+            if (this.optimizing) {
+                this.$message.warning('优化正在进行中，请勿重复点击');
+                return;
+            }
+            if (!this.promptid) {
+                this.$message.warning('请先选择一个Prompt！');
+                return;
+            }
+            
+            // 获取当前选择的 Prompt Code
+            let promptCode = '';
+            const selectedPrompt = this.promptOpt.find(item => item.value === this.promptid);
+            if (selectedPrompt) {
+                if (selectedPrompt.fullVersion) {
+                    promptCode = selectedPrompt.fullVersion;
+                } else if (selectedPrompt.label && selectedPrompt.label.includes('-T')) {
+                    promptCode = selectedPrompt.label; 
+                }
+            }
+            
+            // 如果没找到，尝试从详情获取
+            if (!promptCode && this.promptDetail && this.promptDetail.fullVersion) {
+                promptCode = this.promptDetail.fullVersion;
+            }
+
+            if (!promptCode) {
+                this.$message.error('无法获取当前Prompt的版本号(Prompt Code)');
+                return;
+            }
+
+            // 获取当前 Prompt 的详细信息（包括参数）
+            const promptDetail = this.promptDetail;
+            if (!promptDetail) {
+                this.$message.error('无法获取当前 Prompt 的详细信息');
+                return;
+            }
+
+            // 尽早占位，避免校验通过后、发请求前的双击产生两次 HTTP 请求
+            this.optimizing = true;
+            this.optimizeErrorText = '';
+            this.optimizeProgressText = 'Agent 正在推理并调用工具（可能需要数分钟，请勿关闭此窗口）…';
+            try {
+                console.log('开始优化 Prompt（Agent 主路径）:', promptCode);
+                
+                const requestData = {
+                    promptCode: promptCode,
+                    promptContent: promptDetail.promptContent || this.content,
+                    userRequirement: this.optimizeRequirement || '提高 Prompt 的质量和效果',
+                    context: {
+                        modelId: this.modelid || promptDetail.modelId,
+                        currentTemperature: promptDetail.temperature || this.parameterViewList.find(p => p.formField === 'temperature')?.value || 0.7,
+                        currentTopP: promptDetail.topP || this.parameterViewList.find(p => p.formField === 'topP')?.value || 0.9,
+                        currentMaxTokens: promptDetail.maxToken || this.parameterViewList.find(p => p.formField === 'maxToken')?.value || 2000,
+                        currentFrequencyPenalty: promptDetail.frequencyPenalty || this.parameterViewList.find(p => p.formField === 'frequencyPenalty')?.value || 0,
+                        currentPresencePenalty: promptDetail.presencePenalty || this.parameterViewList.find(p => p.formField === 'presencePenalty')?.value || 0,
+                        autoShootAfterOptimize: this.autoShootAfterOptimize,
+                        autoAIGradeAfterShoot: this.autoAIGradeAfterShoot
+                    }
+                };
+
+                const response = await servicePR.post(
+                    '/api/Senparc.Xncf.AgentsManager/PromptOptimizationAppService/OptimizeAsync',
+                    requestData,
+                    { timeout: 900000 }
+                );
+
+                if (response.data && response.data.success === false) {
+                    const topErr = response.data.errorMessage || response.data.message || '请求失败';
+                    this.optimizeErrorText = String(topErr);
+                    this.$message.error('优化失败：' + topErr);
+                    return;
+                }
+
+                if (response.data && response.data.success && response.data.data) {
+                    const optimizeResult = response.data.data;
+                    if (!optimizeResult.success) {
+                        const err = optimizeResult.errorMessage || optimizeResult.evaluationReason || '优化未成功';
+                        this.optimizeErrorText = String(err);
+                        this.$message.error('优化失败：' + err);
+                        return;
+                    }
+
+                    this.optimizeProgressText = 'Agent 已完成，正在刷新靶道并选中新版本…';
+                    await this.getFieldList();
+                    // getFieldList 只更新靶场列表；靶道下拉 promptOpt 必须由 getPromptOptData 拉取，否则列表仍是旧的，会误判「未匹配到 Prompt Code」
+                    await this.getPromptOptData();
+
+                    const code = optimizeResult.newPromptCode || optimizeResult.NewPromptCode;
+                    const newPrompt = this.promptOpt.find(p =>
+                        p.fullVersion === code ||
+                        p.label === code ||
+                        (p.label && code && p.label.indexOf(code) >= 0));
+                    if (!newPrompt) {
+                        const w = '已创建新版本，但未在列表中匹配到 Prompt Code：' + code;
+                        this.optimizeErrorText = w;
+                        this.$message.warning(w);
+                        this.optimizeDialogVisible = false;
+                        return;
+                    }
+
+                    this.promptid = newPrompt.value;
+                    this.pageChange = false;
+                    await this.getPromptetail(this.promptid, true, true);
+
+                    const _fitem = this.promptOpt.find(item => item.value === this.promptid);
+                    if (_fitem) {
+                        if (_fitem.isDraft) {
+                            this.sendBtns = [{ text: '打靶' }, { text: '保存草稿' }];
+                            this.sendBtnText = '打靶';
+                        } else {
+                            this.sendBtns = [{ text: '连发' }, { text: '保存草稿' }];
+                            this.sendBtnText = '连发';
+                        }
+                    }
+
+                    if (this.autoShootAfterOptimize) {
+                        this.syncAiScoreFormFromPromptDetail();
+                        this.optimizeProgressText = '正在打靶（与手动打靶相同，可在主界面查看输出）…';
+                        // 优化已创建新版本，打靶时用"连发"模式（不再创建新版本）
+                        const savedTactics = this.tacticalForm.tactics;
+                        this.tacticalForm.tactics = '连发';
+                        try {
+                            await this.executeTargetShootWithChatMessage(null);
+                        } finally {
+                            this.tacticalForm.tactics = savedTactics;
+                        }
+                        await this.$nextTick();
+                    }
+
+                    if (this.autoShootAfterOptimize && this.autoAIGradeAfterShoot && this.outputList && this.outputList.length > 0) {
+                        const item = this.outputList[0];
+                        let filled = item.alResultList && item.alResultList.some(r => r && r.value);
+                        if (!filled && this.aiScoreForm.resultList && this.aiScoreForm.resultList.some(r => r && r.value)) {
+                            item.alResultList = this.aiScoreForm.resultList.map((x, idx) => ({
+                                id: idx + 1,
+                                label: '预期结果',
+                                value: x.value
+                            }));
+                            filled = true;
+                        }
+                        if (!filled && this.promptDetail && this.promptDetail.expectedResultsJson) {
+                            try {
+                                const arr = JSON.parse(this.promptDetail.expectedResultsJson);
+                                if (Array.isArray(arr) && arr.some(x => x !== undefined && x !== null && String(x).trim() !== '')) {
+                                    item.alResultList = arr.map((v, idx) => ({
+                                        id: idx + 1,
+                                        label: '预期结果',
+                                        value: typeof v === 'string' ? v : String(v)
+                                    }));
+                                    filled = true;
+                                }
+                            } catch (e) {
+                                console.warn('autoAIGrade expectedResultsJson:', e);
+                            }
+                        }
+                        if (filled) {
+                            this.optimizeProgressText = '正在 AI 评分（与手动 AI 评分相同）…';
+                            item.scoreType = '1';
+                            this.$set(this.robotScoreLoadingMap, item.id, true);
+                            await this.saveManualScore(item, 0);
+                        } else {
+                            this.$message.warning('未配置预期结果，已跳过 AI 评分');
+                        }
+                    } else if (this.autoShootAfterOptimize && this.autoAIGradeAfterShoot && (!this.outputList || this.outputList.length === 0)) {
+                        this.$message.warning('自动打靶未返回输出记录，已跳过 AI 评分；可在主界面手动打靶后再评分');
+                    }
+
+                    let message = `✅ 优化完成\n\n新 Prompt：${code}`;
+                    const evalReason = optimizeResult.evaluationReason || optimizeResult.EvaluationReason;
+                    if (evalReason) {
+                        message += `\n\n${evalReason}`;
+                    }
+                    this.$message({ message, type: 'success', duration: 10000, showClose: true });
+
+                    this.optimizeProgressText = '';
+                    this.optimizeErrorText = '';
+                    this.optimizeDialogVisible = false;
+                } else {
+                    const errorMsg = response.data?.errorMessage || '未返回有效的优化结果';
+                    this.optimizeErrorText = String(errorMsg);
+                    this.$message.error('优化失败：' + errorMsg);
+                }
+            } catch (error) {
+                console.error('优化失败:', error);
+                const resp = error.response?.data;
+                let detail = resp?.errorMessage || resp?.message || error.message || String(error);
+                if (resp && typeof resp === 'object' && !resp.errorMessage) {
+                    try {
+                        detail += '\n\n' + JSON.stringify(resp, null, 2);
+                    } catch (e) { /* ignore */ }
+                }
+                this.optimizeErrorText = detail;
+                this.$message({
+                    message: '❌ 优化失败: ' + (resp?.errorMessage || resp?.message || error.message),
+                    type: 'error',
+                    duration: 8000,
+                    showClose: true
+                });
+            } finally {
+                this.optimizing = false;
+                this.optimizeProgressText = '';
+            }
+        },
         // 计算树的高度（用于平衡布局）
         calculateTreeHeight(nodeData) {
             if (!nodeData || typeof nodeData !== 'object') return 0
@@ -5506,6 +5996,9 @@ var app = new Vue({
                     this.$set(this.robotScoreLoadingMap, item.id, false)
                     // 重新获取图表
                     this.getScoringTrendData()
+                    
+                    // ⭐ 新增：检查分数并提示优化
+                    await this.checkScoreAndSuggestOptimization(res.data.data || item, 'AI评分');
                 } else {
                     // 清除AI评分加载状态
                     this.$set(this.robotScoreLoadingMap, item.id, false)
@@ -5529,6 +6022,9 @@ var app = new Vue({
                     this.getOutputList(item.promptId)
                     // 重新获取图表
                     this.getScoringTrendData()
+                    
+                    // ⭐ 新增：检查分数并提示优化
+                    await this.checkScoreAndSuggestOptimization(res.data.data || item, '手动评分');
                 } else {
                     app.$message({
                         message: res.data.errorMessage || res.data.data || 'Error',
@@ -6085,10 +6581,11 @@ var app = new Vue({
         },
         // 获取靶道 下拉列表数据
         async getPromptOptData(id, isExpected) {
-            // find rangeName by id
-            let _find = this.promptFieldOpt.find(item => item.value === this.promptField)
+            // find rangeName by id（与 promptField 比较时统一为字符串，避免 el-select 存 string 而接口返回 number 导致找不到靶场）
+            const matchField = (v) => String(v) === String(this.promptField)
+            let _find = this.promptFieldOpt.find(item => matchField(item.value))
             if (isExpected) {
-                _find = this.promptFieldOpt.find(item => item.value === id)
+                _find = this.promptFieldOpt.find(item => String(item.value) === String(id))
             }
 
             const name = _find ? _find.rangeName : ''
@@ -6245,6 +6742,9 @@ var app = new Vue({
                             }
                         })
                     }
+                    
+                    // ⭐ 新增：检查平均分并提示优化
+                    await this.checkPromptAverageScoreAndSuggest();
                 }
 
 

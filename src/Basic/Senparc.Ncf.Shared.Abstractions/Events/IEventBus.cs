@@ -13,5 +13,11 @@ namespace Senparc.Ncf.Shared.Abstractions.Events
         /// </summary>
         ValueTask PublishAsync<TEvent>(TEvent @event, CancellationToken cancellationToken = default)
             where TEvent : IIntegrationEvent;
+            
+        /// <summary>
+        /// 异步发布派生事件（自动继承父事件的链信息，用于防止循环引用）
+        /// </summary>
+        ValueTask PublishDerivedAsync<TEvent>(TEvent @event, IIntegrationEvent parentEvent, CancellationToken cancellationToken = default)
+            where TEvent : IIntegrationEvent;
     }
 }

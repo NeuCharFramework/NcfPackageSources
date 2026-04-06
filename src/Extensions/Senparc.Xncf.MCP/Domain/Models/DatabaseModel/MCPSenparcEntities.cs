@@ -14,6 +14,8 @@ namespace Senparc.Xncf.MCP.Models
 
         public DbSet<Color> Colors { get; set; }
 
+        public DbSet<MCPEndpoint> MCPEndpoints { get; set; }
+
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }
 
