@@ -217,3 +217,60 @@
     margin-bottom:5px;
 }
 
+/* Start.cshtml：主区域占满视口剩余高度；仅右侧卡片列纵向滚动，左侧信息列固定不随卡片滚动 */
+.el-main:has(> .ifram-wrapper .xncf-module-start) {
+    height: auto !important;
+    max-height: calc(100vh - 120px);
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.ifram-wrapper:has(.xncf-module-start) {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.xncf-module-start {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.xncf-module-start > .el-container {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.xncf-module-start > .el-container > .el-container {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.xncf-module-start .module-aside.el-aside,
+.xncf-module-start .module-aside {
+    flex-shrink: 0;
+    align-self: stretch;
+    overflow-x: hidden;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.xncf-module-start .module-main-cards.el-main {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
