@@ -11,6 +11,7 @@ using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using Senparc.Xncf.PromptRange.Domain.Models.Entities;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using Senparc.CO2NET.Extensions;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService;
 
