@@ -46,7 +46,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 SenparcAI_GetByVersionResponse promptResult;
-                var promptCode = request.GetySystemMessagePromptCode();
+                var promptCode = await NormalizePromptCodeAsync(request.GetySystemMessagePromptCode());
 
                 try
                 {
@@ -80,7 +80,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                var promptCode = request.GetPromptCode();
+                var promptCode = await NormalizePromptCodeAsync(request.GetPromptCode());
 
                 if (string.IsNullOrEmpty(promptCode))
                 {
@@ -115,6 +115,30 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 return logger.ToString();
             });
+        }
+
+        /// <summary>
+        /// 将靶场别称开头的 PromptCode 归一化为 RangeName 开头，避免把 Alias 存入 SystemMessage。
+        /// </summary>
+        private async Task<string> NormalizePromptCodeAsync(string promptCode)
+        {
+            if (string.IsNullOrWhiteSpace(promptCode))
+            {
+                return promptCode;
+            }
+
+            var normalizedPromptCode = promptCode.Trim();
+            var splitIndex = normalizedPromptCode.IndexOf('-');
+            var rangePrefix = splitIndex >= 0 ? normalizedPromptCode.Substring(0, splitIndex) : normalizedPromptCode;
+            var suffix = splitIndex >= 0 ? normalizedPromptCode.Substring(splitIndex) : string.Empty;
+
+            var promptRange = await _promptRangeService.GetObjectAsync(z => z.RangeName == rangePrefix || z.Alias == rangePrefix);
+            if (promptRange == null || string.IsNullOrWhiteSpace(promptRange.RangeName))
+            {
+                return normalizedPromptCode;
+            }
+
+            return promptRange.RangeName + suffix;
         }
 
         /// <summary>
