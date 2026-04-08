@@ -3122,16 +3122,47 @@ var app = new Vue({
             if (this._map3dKeydownHandler) return
             const SPEED = 3
             this._map3dKeydownHandler = (e) => {
-                if (!this.mapDialogVisible || !this.map3dCamera || !this.map3dControls) return
+                if (!this.mapDialogVisible || !this.map3dCamera) return
+                if (e.ctrlKey || e.metaKey || e.altKey) return
+
+                // 优先使用物理键位（e.code）避免中文输入法/非英文布局下 e.key 不稳定导致快捷键失效
+                const key = (e.key || '').toLowerCase()
+                const code = e.code || ''
+                let actionKey = key
+
+                if (code.startsWith('Key') && code.length === 4) {
+                    actionKey = code.slice(3).toLowerCase()
+                } else if (code === 'NumpadAdd') {
+                    actionKey = '+'
+                } else if (code === 'NumpadSubtract') {
+                    actionKey = '-'
+                } else if (code === 'Equal' && (key === '' || key === 'unidentified' || key === 'process')) {
+                    actionKey = '='
+                } else if (code === 'Minus' && (key === '' || key === 'unidentified' || key === 'process')) {
+                    actionKey = '-'
+                }
+
+                const hasControls = !!(this.map3dControls && this.map3dControls.target)
+                const moveBy = (x, y, z) => {
+                    this.map3dCamera.position.x += x
+                    this.map3dCamera.position.y += y
+                    this.map3dCamera.position.z += z
+                    if (hasControls) {
+                        this.map3dControls.target.x += x
+                        this.map3dControls.target.y += y
+                        this.map3dControls.target.z += z
+                    }
+                }
+
                 let moved = false
                 // WASD + QE 平移
-                switch (e.key.toLowerCase()) {
-                    case 'w': this.map3dCamera.position.y += SPEED; this.map3dControls.target.y += SPEED; moved = true; break
-                    case 's': this.map3dCamera.position.y -= SPEED; this.map3dControls.target.y -= SPEED; moved = true; break
-                    case 'a': this.map3dCamera.position.x -= SPEED; this.map3dControls.target.x -= SPEED; moved = true; break
-                    case 'd': this.map3dCamera.position.x += SPEED; this.map3dControls.target.x += SPEED; moved = true; break
-                    case 'q': this.map3dCamera.position.z += SPEED; this.map3dControls.target.z += SPEED; moved = true; break
-                    case 'e': this.map3dCamera.position.z -= SPEED; this.map3dControls.target.z -= SPEED; moved = true; break
+                switch (actionKey) {
+                    case 'w': moveBy(0, SPEED, 0); moved = true; break
+                    case 's': moveBy(0, -SPEED, 0); moved = true; break
+                    case 'a': moveBy(-SPEED, 0, 0); moved = true; break
+                    case 'd': moveBy(SPEED, 0, 0); moved = true; break
+                    case 'q': moveBy(0, 0, SPEED); moved = true; break
+                    case 'e': moveBy(0, 0, -SPEED); moved = true; break
                     case 'r': this.resetMap3DView(); moved = true; break
                     case 'f': this.fitMap3DView(); moved = true; break
                     case '+':
@@ -3139,12 +3170,30 @@ var app = new Vue({
                     case '-': this.map3dCamera.position.z += SPEED * 2; moved = true; break
                 }
                 if (moved) {
-                    this.map3dControls.update()
+                    if (this.map3dControls) {
+                        this.map3dControls.update()
+                    }
                     this.map3dNeedsAnimationUpdate = true
+                    console.debug('[Map3D Keyboard] key:', actionKey, {
+                        rawKey: e.key,
+                        code: e.code,
+                        camera: {
+                            x: this.map3dCamera.position.x,
+                            y: this.map3dCamera.position.y,
+                            z: this.map3dCamera.position.z
+                        },
+                        target: hasControls ? {
+                            x: this.map3dControls.target.x,
+                            y: this.map3dControls.target.y,
+                            z: this.map3dControls.target.z
+                        } : null
+                    })
                     e.preventDefault()
+                    e.stopPropagation()
                 }
             }
-            window.addEventListener('keydown', this._map3dKeydownHandler)
+            window.addEventListener('keydown', this._map3dKeydownHandler, true)
+            console.debug('[Map3D Keyboard] shortcut listener registered')
         },
 
         // 初始化 3D 导图
@@ -5935,7 +5984,7 @@ var app = new Vue({
             
             // 移除键盘事件处理器
             if (this._map3dKeydownHandler) {
-                window.removeEventListener('keydown', this._map3dKeydownHandler)
+                window.removeEventListener('keydown', this._map3dKeydownHandler, true)
                 this._map3dKeydownHandler = null
             }
             
