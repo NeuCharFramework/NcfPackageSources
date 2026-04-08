@@ -3130,8 +3130,8 @@ var app = new Vue({
                     case 's': this.map3dCamera.position.y -= SPEED; this.map3dControls.target.y -= SPEED; moved = true; break
                     case 'a': this.map3dCamera.position.x -= SPEED; this.map3dControls.target.x -= SPEED; moved = true; break
                     case 'd': this.map3dCamera.position.x += SPEED; this.map3dControls.target.x += SPEED; moved = true; break
-                    case 'q': this.map3dCamera.position.z += SPEED; moved = true; break
-                    case 'e': this.map3dCamera.position.z -= SPEED; moved = true; break
+                    case 'q': this.map3dCamera.position.z += SPEED; this.map3dControls.target.z += SPEED; moved = true; break
+                    case 'e': this.map3dCamera.position.z -= SPEED; this.map3dControls.target.z -= SPEED; moved = true; break
                     case 'r': this.resetMap3DView(); moved = true; break
                     case 'f': this.fitMap3DView(); moved = true; break
                     case '+':
