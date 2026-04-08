@@ -136,9 +136,12 @@ public class PromptRangeAppService : AppServiceBase
         return await this.GetStringResponseAsync(async (response, logger) =>
         {
             var promptItemService = base.GetService<PromptItemService>();
-            var tree = await promptItemService.GetPromptRangeTreeList(true, true);
+            var filterRangeName = request?.FilterRangeName?.Trim();
+            var tree = await promptItemService.GetPromptRangeTreeList(true, true, filterRangeName);
 
             logger.Append("=== PromptCode 列表（可用于在 AgentsManager 中创建智能体）===");
+            logger.Append("");
+            logger.Append($"筛选条件：{(filterRangeName.IsNullOrEmpty() ? "全部靶场" : filterRangeName)}");
             logger.Append("");
             logger.Append("覆盖范围说明：");
             logger.Append("  靶场级别（Range）：使用靶场名称作为 PromptCode，匹配该靶场下的最优 Prompt");
