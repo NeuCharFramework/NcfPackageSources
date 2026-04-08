@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,8 +51,13 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     return null;
                 }
 
+                var isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
                 var commandTexts = new List<string>();
-                commandTexts.Add($"chcp 65001"); // 设置代码页为 UTF-8
+                if (isWindows)
+                {
+                    commandTexts.Add($"chcp 65001"); // 设置代码页为 UTF-8（仅 Windows）
+                }
 
                 //添加停机坪引用（直接引用会有问题）
                 //var slnFilePath = Path.Combine(request.DatabasePlantPath, "..\\");
@@ -93,9 +99,13 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         }
                     };
 
-                    //把 request.DatabasePlantPath 中独立存在的 \ 替换为 \\
-                    var databasePlantPath = removeFileName(request.DatabasePlantPath.Replace("\\", "\\\\"));
-                    var migrationDirFinal = removeFileName(migrationDir.Replace("\\", "\\\\"));
+                    //把 request.DatabasePlantPath 中独立存在的 \ 替换为 \\（仅 Windows cmd.exe 需要转义）
+                    var databasePlantPath = isWindows
+                        ? removeFileName(request.DatabasePlantPath.Replace("\\", "\\\\"))
+                        : removeFileName(request.DatabasePlantPath);
+                    var migrationDirFinal = isWindows
+                        ? removeFileName(migrationDir.Replace("\\", "\\\\"))
+                        : removeFileName(migrationDir);
 
                     var migrationsCmd = $"dotnet ef migrations add {request.MigrationName} -c {dbContextName} -s \"{databasePlantPath}\" -o \"{migrationDirFinal}\"{outputVerbose}";
 
@@ -111,7 +121,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 //commandTexts.Add($"dotnet sln {slnFilePath} remove {request.ProjectPath}");
 
                 Process p = new Process();
-                p.StartInfo.FileName = "cmd.exe";
+                p.StartInfo.FileName = isWindows ? "cmd.exe" : "/bin/bash";
                 p.StartInfo.UseShellExecute = false;
                 p.StartInfo.RedirectStandardInput = true;
                 p.StartInfo.RedirectStandardOutput = true;
