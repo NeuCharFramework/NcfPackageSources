@@ -393,7 +393,10 @@ var app = new Vue({
         aiModelId: '', // 模型 id
         promptCommand: '', // 任务描述
         personality: true, // 是否采用个性化
-        description: ''
+        description: '',
+        isScheduled: false, // 是否定时任务
+        scheduleType: 0, // 定时类型: 0=Interval, 1=Daily, 2=Weekly, 3=Monthly
+        scheduleIntervalMinutes: 60, // 间隔值（含义随scheduleType变化）
       },
       groupStartFormRules: {
         chatGroupId: [

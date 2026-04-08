@@ -160,6 +160,21 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         /// 可选：业务关联 ID（例如 Prompt 优化的 RequestId），用于在执行上下文中关联工具调用
         /// </summary>
         public string CorrelationId { get; set; }
+
+        /// <summary>
+        /// 是否为定时（循环）任务
+        /// </summary>
+        public bool IsScheduled { get; set; } = false;
+
+        /// <summary>
+        /// 定时类型（仅当 IsScheduled=true 时有效）
+        /// </summary>
+        public ScheduleType ScheduleType { get; set; } = ScheduleType.Interval;
+
+        /// <summary>
+        /// 定时间隔值（含义随 ScheduleType 变化；仅当 IsScheduled=true 时有效）
+        /// </summary>
+        public int? ScheduleIntervalMinutes { get; set; }
     }
 
     /// <summary>

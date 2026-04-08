@@ -1526,6 +1526,37 @@
                     <el-input type="textarea" v-model="groupStartForm.description" :rows="8"
                         placeholder="请填写"></el-input>
                 </el-form-item>
+                <el-divider content-position="left"><i class="fas fa-clock" style="margin-right:4px;"></i> 定时设置</el-divider>
+                <el-form-item label="定时任务" prop="isScheduled">
+                    <el-switch v-model="groupStartForm.isScheduled" active-text="启用定时循环" inactive-text="仅执行一次"></el-switch>
+                </el-form-item>
+                <template v-if="groupStartForm.isScheduled">
+                    <el-form-item label="定时类型" prop="scheduleType">
+                        <el-select v-model="groupStartForm.scheduleType" style="width:100%" placeholder="请选择">
+                            <el-option label="固定间隔（分钟）" :value="0"></el-option>
+                            <el-option label="每天（同一时刻）" :value="1"></el-option>
+                            <el-option label="每周（指定星期几）" :value="2"></el-option>
+                            <el-option label="每月（指定日期）" :value="3"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item v-if="groupStartForm.scheduleType === 0" label="间隔（分钟）" prop="scheduleIntervalMinutes">
+                        <el-input-number v-model="groupStartForm.scheduleIntervalMinutes" :min="1" :max="525600" controls-position="right" style="width:100%"></el-input-number>
+                    </el-form-item>
+                    <el-form-item v-if="groupStartForm.scheduleType === 2" label="星期几（1-7）" prop="scheduleIntervalMinutes">
+                        <el-select v-model="groupStartForm.scheduleIntervalMinutes" style="width:100%" placeholder="请选择">
+                            <el-option label="星期一" :value="1"></el-option>
+                            <el-option label="星期二" :value="2"></el-option>
+                            <el-option label="星期三" :value="3"></el-option>
+                            <el-option label="星期四" :value="4"></el-option>
+                            <el-option label="星期五" :value="5"></el-option>
+                            <el-option label="星期六" :value="6"></el-option>
+                            <el-option label="星期日" :value="7"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item v-if="groupStartForm.scheduleType === 3" label="每月第几天（1-31）" prop="scheduleIntervalMinutes">
+                        <el-input-number v-model="groupStartForm.scheduleIntervalMinutes" :min="1" :max="31" controls-position="right" style="width:100%"></el-input-number>
+                    </el-form-item>
+                </template>
             </el-form>
         </div>
         @* 内容中固定的footer *@
