@@ -15,6 +15,7 @@
     const scaleDivisor = options.scaleDivisor || 26;
     const sizeAttenuation = typeof options.sizeAttenuation === 'boolean' ? options.sizeAttenuation : true;
     const maxLineLength = options.maxLineLength || 30;
+    const maxLines = options.maxLines || 8;
     const maxWorldWidth = options.maxWorldWidth || 15;
     const maxWorldHeight = options.maxWorldHeight || 9;
     const bg = options.background || 'rgba(10,20,30,0.82)';
@@ -25,13 +26,38 @@
     const ctx = canvas.getContext('2d');
     ctx.font = 'bold ' + fontSize + 'px sans-serif';
 
-    const rows = String(text || '').split('\n').map(function (line) {
+    const rows = [];
+    String(text || '').split('\n').forEach(function (line) {
       const lineText = String(line || '');
-      if (lineText.length <= maxLineLength) {
-        return lineText;
+      if (!lineText) {
+        rows.push('');
+        return;
       }
-      return lineText.slice(0, maxLineLength - 1) + '…';
+      let start = 0;
+      while (start < lineText.length) {
+        rows.push(lineText.slice(start, start + maxLineLength));
+        start += maxLineLength;
+        if (rows.length >= maxLines) {
+          break;
+        }
+      }
     });
+
+    if (rows.length === 0) {
+      rows.push('');
+    }
+
+    if (rows.length > maxLines) {
+      rows.length = maxLines;
+    }
+
+    if (rows.length >= maxLines) {
+      const last = rows[maxLines - 1] || '';
+      if (last.length >= maxLineLength) {
+        rows[maxLines - 1] = last.slice(0, maxLineLength - 1) + '…';
+      }
+    }
+
     const width = Math.max.apply(null, rows.map(function (line) { return ctx.measureText(line).width; })) + padding * 2;
     const rowHeight = Math.ceil(fontSize * 1.45);
     const height = rowHeight * rows.length + padding * 2;
@@ -47,8 +73,8 @@
 
     const x = 2;
     const y = 2;
-    const w = canvas.width - 4;
-    const h = canvas.height - 4;
+    const w = width - 4;
+    const h = height - 4;
     const r = 10;
 
     ctx.beginPath();
@@ -83,8 +109,11 @@
       sizeAttenuation: sizeAttenuation
     });
     const sprite = new THREE.Sprite(material);
-    const worldWidth = Math.min(canvas.width / dpr / scaleDivisor, maxWorldWidth);
-    const worldHeight = Math.min(canvas.height / dpr / scaleDivisor, maxWorldHeight);
+    const rawWorldWidth = width / scaleDivisor;
+    const rawWorldHeight = height / scaleDivisor;
+    const fitRatio = Math.min(1, maxWorldWidth / rawWorldWidth, maxWorldHeight / rawWorldHeight);
+    const worldWidth = rawWorldWidth * fitRatio;
+    const worldHeight = rawWorldHeight * fitRatio;
     sprite.scale.set(worldWidth, worldHeight, 1);
     return sprite;
   }
