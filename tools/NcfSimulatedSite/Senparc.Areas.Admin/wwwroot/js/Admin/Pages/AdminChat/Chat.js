@@ -16,7 +16,9 @@ var chatApp = new Vue({
       currentUserId: 0,
       autoScrollEnabled: true,
       isManageMode: false,
-      selectedMessageIds: []
+      selectedMessageIds: [],
+      isAgentsTaskMode: false,
+      AGENTS_MANAGER_UID: 'D858D7FA-775A-4690-9023-CFB0B3B84994'
     };
   },
   mounted() {
@@ -41,6 +43,22 @@ var chatApp = new Vue({
     }
   },
   methods: {
+    toggleAgentsTaskMode() {
+      this.isAgentsTaskMode = !this.isAgentsTaskMode;
+      const hasAgentsModule = this.currentSessionModules.some(
+        (m) => (m.xncfModuleUid || m.uid || '').toLowerCase() === this.AGENTS_MANAGER_UID.toLowerCase()
+      );
+      if (this.isAgentsTaskMode) {
+        if (!hasAgentsModule) {
+          this.$message && this.$message.warning('当前会话未关联 Agents 管理模块，Agents 任务功能可能不完整。建议新建会话时选择 Agents 管理模块。');
+        } else {
+          this.$message && this.$message.success('Agents 任务模式已开启');
+        }
+      } else {
+        this.$message && this.$message.info('Agents 任务模式已关闭');
+      }
+    },
+
     handleChatInputKeydown(event) {
       // 保持与首页一致：Ctrl+Enter (Windows/Linux) 或 Cmd+Enter (Mac) 发送。
       if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
@@ -109,7 +127,11 @@ var chatApp = new Vue({
         return;
       }
 
-      const messageContent = this.inputMessage.trim();
+      const rawMessageContent = this.inputMessage.trim();
+      // In Agents Task mode, prepend a mode instruction
+      const messageContent = this.isAgentsTaskMode
+        ? `【Agents任务模式】请帮我通过 Agent Group 自动执行以下任务：\n\n${rawMessageContent}`
+        : rawMessageContent;
       this.inputMessage = '';
       this.isSending = true;
       this.isAIResponding = true;
