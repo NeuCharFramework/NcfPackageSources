@@ -112,6 +112,7 @@ namespace Senparc.Xncf.AgentsManager
             services.AddScoped<CrawlPlugin>();
             services.AddScoped<FormatorPlugin>();
             services.AddScoped<TranslatorPlugin>();
+            services.AddScoped<AgentTaskPlugin>();
 
             //测试
             services.AddScoped<BuildXncfAppService>();
@@ -131,6 +132,7 @@ namespace Senparc.Xncf.AgentsManager
             aiPlugins.Add(typeof(CrawlPlugin));
             aiPlugins.Add(typeof(FormatorPlugin));
             aiPlugins.Add(typeof(TranslatorPlugin));
+            aiPlugins.Add(typeof(AgentTaskPlugin));  // Agents 任务创建插件（Admin AI Chat 使用）
 
             return base.UseXncfModule(app, registerService);
         }

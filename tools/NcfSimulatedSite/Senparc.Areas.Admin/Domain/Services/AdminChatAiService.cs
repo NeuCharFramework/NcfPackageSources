@@ -231,6 +231,28 @@ namespace Senparc.Areas.Admin.Domain.Services
             sb.AppendLine("你是 NeuCharFramework 管理后台首页中的 AI 智能助手。");
             sb.AppendLine("请使用简洁、准确、可执行的中文回答用户问题。若信息不足，请明确指出缺失信息。\n");
 
+            // 检测 AgentsManager 模块是否在会话中
+            const string agentsManagerUid = "D858D7FA-775A-4690-9023-CFB0B3B84994";
+            bool hasAgentsManager = modules != null && modules.Any(m =>
+                string.Equals(m.XncfModuleUid, agentsManagerUid, StringComparison.OrdinalIgnoreCase));
+
+            if (hasAgentsManager)
+            {
+                sb.AppendLine("## Agents 任务模式");
+                sb.AppendLine("当前会话已关联 **Agents 管理模块**，你可以帮助用户自动安排 Agent Task。请遵循以下工作流程：");
+                sb.AppendLine();
+                sb.AppendLine("**当用户描述一个需要 Agent 自动化执行的任务时：**");
+                sb.AppendLine("1. 调用 `ListAvailableGroups` 列出所有可用的 Agent Group，分析哪个最适合。");
+                sb.AppendLine("2. **如果找到合适的 Group**：向用户展示推荐方案，包括 Group 名称、Agent 职责及任务描述，征求用户确认。确认后调用 `CreateAndRunAgentTask` 启动任务。");
+                sb.AppendLine("3. **如果没有合适的 Group**：向用户说明需要新建配置，并提出建议方案：");
+                sb.AppendLine("   - Group 名称和描述");
+                sb.AppendLine("   - Agent 名称、职责说明和系统提示词（SystemPrompt/PromptCode）");
+                sb.AppendLine("   - 首次任务描述");
+                sb.AppendLine("   获得用户明确确认（用户回复【确认】【好的】【可以】等肯定表述）后，调用 `CreateGroupWithAgents` 自动创建并启动任务。");
+                sb.AppendLine("4. 系统提示词（SystemPrompt）应根据 Agent 的具体职责生成，内容详细、可执行，参考 PromptCatalyzer 的格式。");
+                sb.AppendLine();
+            }
+
             if (modules != null && modules.Any())
             {
                 sb.AppendLine("当前会话关联模块如下，可优先结合这些模块语境回答。如需深入了解模块详情、数据库结构或功能列表，可使用 ModuleAssistant 函数获取准确信息：");

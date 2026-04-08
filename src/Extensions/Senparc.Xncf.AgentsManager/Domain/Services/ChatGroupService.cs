@@ -305,7 +305,10 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             var chatGroupDto = chatGroupService.Mapping<ChatGroupDto>(chatGroup);
             var chatTaskDto = new ChatTaskDto(request.Name, groupId, aiModelId, ChatTask_Status.Waiting,
                 userCommand, request.Description, personality, request.HookPlatform, request.HookParameter, false,
-                DateTime.Now, DateTime.Now, null);
+                DateTime.Now, DateTime.Now, null,
+                isScheduled: request.IsScheduled,
+                scheduleIntervalMinutes: request.ScheduleIntervalMinutes,
+                scheduleType: request.ScheduleType);
             var chatTask = await chatTaskService.CreateTask(chatTaskDto);
             chatTaskDto = chatTaskService.Mapping<ChatTaskDto>(chatTask);//更新
                                                                          //更新状态

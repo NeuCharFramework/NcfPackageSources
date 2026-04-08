@@ -61,6 +61,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.PostgreSQL
                     b.Property<bool>("IsPersonality")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsScheduled")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("timestamp without time zone");
 
@@ -79,6 +82,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.PostgreSQL
 
                     b.Property<string>("ResultComment")
                         .HasColumnType("text");
+
+                    b.Property<int?>("ScheduleIntervalMinutes")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ScheduleType")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("Score")
                         .HasColumnType("boolean");
