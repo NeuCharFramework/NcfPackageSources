@@ -33,13 +33,22 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         [Description("群成员||群成员")]
         public SelectionList Members { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>());
 
+        [Description("群成员（手动输入）||可选。支持名称、ID、PromptCode，多个值可用逗号、分号、换行分隔")]
+        public string MemberNamesOrIds { get; set; }
+
         [Required]
         [Description("群主||群管理员，群管理员不会被合并到“群成员”中，通常不参与显式的发言。")]
         public SelectionList Admin { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
 
+        [Description("群主（手动输入）||可选。支持名称、ID 或 PromptCode")]
+        public string AdminNameOrId { get; set; }
+
         [Required]
         [Description("对接人||对接人，即接受命令的人，通常也是期待返回期望结果的人。对接人也会被合并到“群成员”中")]
         public SelectionList EnterAgent { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
+
+        [Description("对接人（手动输入）||可选。支持名称、ID 或 PromptCode")]
+        public string EnterAgentNameOrId { get; set; }
 
 
         [MaxLength(200)]

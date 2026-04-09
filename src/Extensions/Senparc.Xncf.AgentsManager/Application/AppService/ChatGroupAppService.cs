@@ -53,20 +53,25 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                //群主
-                if (request.Admin.SelectedValues.Count() == 0 || !int.TryParse(request.Admin.SelectedValues.First(), out int adminId))
-                {
-                    return "必须选择一位群主，请到 AgentTemplate 中设置！";
-                }
+                var enabledAgents = await _agentsTemplateService.GetFullListAsync(z => z.Enable, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
 
-                //对接人
-                if (request.EnterAgent.SelectedValues.Count() == 0 || !int.TryParse(request.EnterAgent.SelectedValues.First(), out int enterAgentId))
+                // 群主：支持传 Agent ID、名称、PromptCode
+                var adminInput = request.Admin.SelectedValues.FirstOrDefault() ?? request.AdminNameOrId;
+                var adminResult = ResolveAgentId(enabledAgents, adminInput);
+                if (!adminResult.Success)
                 {
-                    return "必须选择一位对接人，请到 AgentTemplate 中设置！";
+                    return $"群主选择失败：{adminResult.ErrorMessage}";
                 }
+                var adminId = adminResult.AgentId;
 
-                //var agentsTemplateAdmin = await _agentsTemplateService.GetAgentTemplateAsync(adminId);
-                //var agentsTemplateEnterAgent = await _agentsTemplateService.GetAgentTemplateAsync(enterAgent);
+                // 对接人：支持传 Agent ID、名称、PromptCode
+                var enterInput = request.EnterAgent.SelectedValues.FirstOrDefault() ?? request.EnterAgentNameOrId;
+                var enterResult = ResolveAgentId(enabledAgents, enterInput);
+                if (!enterResult.Success)
+                {
+                    return $"对接人选择失败：{enterResult.ErrorMessage}";
+                }
+                var enterAgentId = enterResult.AgentId;
 
                 //TODO:封装到 Service 中
                 ChatGroup chatGroup = null;
@@ -76,13 +81,18 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 {
                     //新建
                     chatGroup = new ChatGroup(chatGroupDto);
-                    isNew = false;
+                    isNew = true;
                 }
                 else
                 {
-                    int.TryParse(request.ChatGroup.SelectedValues.First(), out int chatGroupId);
+                    int.TryParse(request.ChatGroup.SelectedValues.FirstOrDefault(), out int chatGroupId);
                     chatGroup = await _chatGroupService.GetObjectAsync(z => z.Id == chatGroupId);
-                    _chatGroupService.Mapper.Map<ChatGroup>(chatGroupDto);
+                    if (chatGroup == null)
+                    {
+                        return $"未找到需要编辑的 ChatGroup，ID：{chatGroupId}";
+                    }
+
+                    chatGroup.Update(chatGroupDto);
                 }
 
                 await _chatGroupService.SaveObjectAsync(chatGroup);
@@ -91,7 +101,30 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 //添加成员
                 var memberList = new List<ChatGroupMember>();
-                var memberIdList = request.Members.SelectedValues.Select(z => int.Parse(z)).ToList();
+                var rawMemberInputs = new List<string>();
+                rawMemberInputs.AddRange(request.Members.SelectedValues.Where(z => !string.IsNullOrWhiteSpace(z)));
+                rawMemberInputs.AddRange(SplitInputs(request.MemberNamesOrIds));
+
+                var memberIdList = new List<int>();
+                foreach (var memberInput in rawMemberInputs.Distinct(StringComparer.OrdinalIgnoreCase))
+                {
+                    var memberResult = ResolveAgentId(enabledAgents, memberInput);
+                    if (!memberResult.Success)
+                    {
+                        return $"群成员选择失败：{memberResult.ErrorMessage}";
+                    }
+
+                    if (!memberIdList.Contains(memberResult.AgentId))
+                    {
+                        memberIdList.Add(memberResult.AgentId);
+                    }
+                }
+
+                if (memberIdList.Count == 0)
+                {
+                    return "请至少提供一个群成员（支持 ID 或名称）";
+                }
+
                 //合并“对接人”为成员
                 if (!memberIdList.Contains(chatGroupDto.EnterAgentTemplateId))
                 {
@@ -111,6 +144,83 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 return logger.ToString();
             });
+        }
+
+        private static readonly Dictionary<string, string> AgentNameAliasMap =
+            new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["提示词优化器"] = "PromptCatalyzer",
+                ["优化器"] = "PromptCatalyzer"
+            };
+
+        private static List<string> SplitInputs(string rawInput)
+        {
+            if (string.IsNullOrWhiteSpace(rawInput))
+            {
+                return new List<string>();
+            }
+
+            return rawInput
+                .Split(new[] { ',', '，', ';', '；', '\n', '\r', '|' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(z => z.Trim())
+                .Where(z => !string.IsNullOrWhiteSpace(z))
+                .ToList();
+        }
+
+        private (bool Success, int AgentId, string ErrorMessage) ResolveAgentId(List<AgentTemplate> enabledAgents, string rawInput)
+        {
+            if (string.IsNullOrWhiteSpace(rawInput))
+            {
+                return (false, 0, "输入为空，请传入 Agent ID、名称或 PromptCode");
+            }
+
+            var input = rawInput.Trim();
+
+            if (int.TryParse(input, out var agentId))
+            {
+                var byId = enabledAgents.FirstOrDefault(z => z.Id == agentId);
+                if (byId == null)
+                {
+                    return (false, 0, $"未找到启用状态的 Agent，ID：{agentId}");
+                }
+                return (true, byId.Id, string.Empty);
+            }
+
+            if (AgentNameAliasMap.TryGetValue(input, out var aliasName))
+            {
+                input = aliasName;
+            }
+
+            var exactName = enabledAgents.Where(z => string.Equals(z.Name, input, StringComparison.OrdinalIgnoreCase)).ToList();
+            if (exactName.Count == 1)
+            {
+                return (true, exactName[0].Id, string.Empty);
+            }
+
+            var exactPromptCode = enabledAgents.Where(z => string.Equals(z.PromptCode, input, StringComparison.OrdinalIgnoreCase)).ToList();
+            if (exactPromptCode.Count == 1)
+            {
+                return (true, exactPromptCode[0].Id, string.Empty);
+            }
+
+            var fuzzy = enabledAgents.Where(z =>
+                    (!string.IsNullOrWhiteSpace(z.Name) && z.Name.Contains(input, StringComparison.OrdinalIgnoreCase))
+                    || (!string.IsNullOrWhiteSpace(z.PromptCode) && z.PromptCode.Contains(input, StringComparison.OrdinalIgnoreCase)))
+                .OrderByDescending(z => z.Id)
+                .ToList();
+
+            if (fuzzy.Count == 1)
+            {
+                return (true, fuzzy[0].Id, string.Empty);
+            }
+
+            if (fuzzy.Count > 1)
+            {
+                var options = string.Join("；", fuzzy.Take(5).Select(z => $"{z.Id}:{z.Name}({z.PromptCode})"));
+                return (false, 0, $"输入“{rawInput}”匹配到多个 Agent，请指定 ID：{options}");
+            }
+
+            return (false, 0, $"未找到匹配的 Agent：{rawInput}");
         }
 
         [FunctionRender("启动 ChatGroup", "启动 ChatGroup", typeof(Register))]

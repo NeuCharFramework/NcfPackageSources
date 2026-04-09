@@ -117,6 +117,74 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             });
         }
 
+        [FunctionRender("搜索 Agent 模板并返回 ID", "根据名称或 PromptCode 搜索最匹配的 AgentTemplate，并返回可选 ID。支持多个关键词。", typeof(Register))]
+        public async Task<StringAppResponse> FindAgentTemplate(AgentTemplate_FindByNameRequest request)
+        {
+            return await this.GetStringResponseAsync(async (response, logger) =>
+            {
+                if (string.IsNullOrWhiteSpace(request.Query))
+                {
+                    return "请输入搜索词（名称、PromptCode 或关键字）";
+                }
+
+                var topN = request.TopN <= 0 ? 5 : Math.Min(request.TopN, 20);
+                var aliasMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    ["提示词优化器"] = "PromptCatalyzer",
+                    ["优化器"] = "PromptCatalyzer"
+                };
+
+                var keywords = request.Query
+                    .Split(new[] { ',', '，', ';', '；', '\n', '\r', '|' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(z => z.Trim())
+                    .Where(z => !string.IsNullOrWhiteSpace(z))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+
+                if (keywords.Count == 0)
+                {
+                    return "请输入有效搜索词";
+                }
+
+                var enabledAgents = await _agentsTemplateService.GetFullListAsync(z => z.Enable, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
+
+                foreach (var keywordRaw in keywords)
+                {
+                    var keyword = aliasMap.TryGetValue(keywordRaw, out var alias) ? alias : keywordRaw;
+                    var exact = enabledAgents
+                        .Where(z => string.Equals(z.Name, keyword, StringComparison.OrdinalIgnoreCase)
+                            || string.Equals(z.PromptCode, keyword, StringComparison.OrdinalIgnoreCase))
+                        .OrderByDescending(z => z.Id)
+                        .ToList();
+
+                    var fuzzy = enabledAgents
+                        .Where(z =>
+                            (!string.IsNullOrWhiteSpace(z.Name) && z.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase))
+                            || (!string.IsNullOrWhiteSpace(z.PromptCode) && z.PromptCode.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
+                        .OrderByDescending(z => z.Id)
+                        .ToList();
+
+                    var candidates = exact.Count > 0
+                        ? exact
+                        : fuzzy;
+
+                    logger.Append($"关键词：{keywordRaw}");
+                    if (candidates.Count == 0)
+                    {
+                        logger.Append("  未找到可用 AgentTemplate");
+                        continue;
+                    }
+
+                    foreach (var c in candidates.Take(topN))
+                    {
+                        logger.Append($"  ID={c.Id} | 名称={c.Name} | PromptCode={c.PromptCode}");
+                    }
+                }
+
+                return logger.ToString();
+            });
+        }
+
         /// <summary>
         /// 将靶场别称开头的 PromptCode 归一化为 RangeName 开头，避免把 Alias 存入 SystemMessage。
         /// </summary>

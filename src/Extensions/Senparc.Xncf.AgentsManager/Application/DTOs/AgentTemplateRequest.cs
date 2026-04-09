@@ -127,4 +127,17 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
             await PromptRangeItemHelper.LoadPromptRangeItemSelection(serviceProvider, ScopeSelection);
         }
     }
+
+    /// <summary>
+    /// 搜索 AgentTemplate 并返回可用 ID 的请求
+    /// </summary>
+    public class AgentTemplate_FindByNameRequest : FunctionAppRequestBase
+    {
+        [Required]
+        [Description("搜索词||支持名称、PromptCode 或关键字，可输入多个，使用逗号、分号、换行分隔")]
+        public string Query { get; set; }
+
+        [Description("最大返回数量||每个搜索词的最大候选数，默认 5")]
+        public int TopN { get; set; } = 5;
+    }
 }
