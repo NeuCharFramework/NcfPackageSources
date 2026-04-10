@@ -8,7 +8,7 @@ var app = new Vue({
             systemName: "",
             adminUserName: "",
             dbConnectionString: "",
-            needModelList:null  //模型名称列表
+            needModelList:null  // Module name list
         }
     },
     methods: {
@@ -26,7 +26,7 @@ var app = new Vue({
                     this.optionsModelList = data.needModelList;
                 })
                 .catch(error => {
-                    console.error("获取配置发生错误:", error);
+                    console.error("Error fetching configuration:", error);
                 });
         },
         submit() {

@@ -66,7 +66,7 @@
                     :page.sync="listQuery.pageIndex"
                     :limit.sync="listQuery.pageSize"
                     @@pagination="getList"></pagination>
-        <!--编辑、新增 -->
+        <!-- Edit / Add -->
         <el-dialog :title="dialog.title" :visible.sync="dialog.visible" :close-on-click-modal="false">
             <el-form ref="dataForm"
                      :rules="dialog.rules"
@@ -95,8 +95,8 @@
                 <el-button :loading="dialog.updateLoading" type="primary" @@click="updateData">@AR["Common.确认"]</el-button>
             </div>
         </el-dialog>
-        <!--授权 -->
-        <el-dialog :title="'@AR["Role.为角色授权"] ' + au.title" :visible.sync="au.visible" :close-on-click-modal="false">
+        <!-- Authorization -->
+        <el-dialog :title="'@Html.Raw(AR["Role.为角色授权"]) ' + au.title" :visible.sync="au.visible" :close-on-click-modal="false">
             <el-tree :data="allMenu" ref="tree" show-checkbox :props="defaultProps" :default-expanded-keys="defaultExpandedKeys" :default-checked-keys="defaultCheckedKeys" node-key="id"></el-tree>
             <div slot="footer" class="dialog-footer">
                 <el-button @@click="au.visible = false">@AR["Common.取消"]</el-button>

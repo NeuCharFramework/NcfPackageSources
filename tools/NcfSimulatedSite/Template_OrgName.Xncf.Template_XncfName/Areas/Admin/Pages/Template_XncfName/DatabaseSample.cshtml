@@ -1,7 +1,7 @@
 ﻿@page
 @model Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages.DatabaseSample
 @{
-    ViewData["Title"] = "数据库操作示例";
+    ViewData["Title"] = "Database Sample";
     Layout = "_Layout_Vue";
 }
 
@@ -32,15 +32,15 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>Extension Modules</el-breadcrumb-item>
     <el-breadcrumb-item>Template_MenuName</el-breadcrumb-item>
-    <el-breadcrumb-item>数据库操作示例</el-breadcrumb-item>
+    <el-breadcrumb-item>Database Sample</el-breadcrumb-item>
 }
 
 <div class="extensionAreaTemplate">
     <el-container>
         <el-header class="module-header">
-            <span class="start-title"> <i class="fa fa-dot-circle-o"></i>&nbsp;<span class="module-header-v">数据库操作示例</span></span>
+            <span class="start-title"> <i class="fa fa-dot-circle-o"></i>&nbsp;<span class="module-header-v">Database Sample</span></span>
         </el-header>
         <el-container v-if="moduleData">
             <el-aside width="200px">
@@ -52,13 +52,13 @@
             <el-main>
                 <h4>{{moduleData.xncfModuleDto.description}}</h4>
                 <br />
-                <h4>安装时间：{{formaTableTime(moduleData.colorDto.addTime)}}</h4>
-                <h3>当前数据库类型：@Model.MultipleDatabaseType</h3>
+                <h4>Install Time: {{formaTableTime(moduleData.colorDto.addTime)}}</h4>
+                <h3>Current Database Type: @Model.MultipleDatabaseType</h3>
                 <div class="box" :style="{backgroundColor}">
 
-                    <el-button @@click="changeColor('Brighten')"><i class="fa fa-tachometer"></i> 变亮</el-button>
-                    <el-button @@click="changeColor('Darken')" type="info"><i class="fa fa-moon-o"></i> 变暗</el-button>
-                    <el-button @@click="changeColor('Random')" type="success"><i class="fa fa-sun-o"></i> 随机</el-button>
+                    <el-button @@click="changeColor('Brighten')"><i class="fa fa-tachometer"></i> Brighten</el-button>
+                    <el-button @@click="changeColor('Darken')" type="info"><i class="fa fa-moon-o"></i> Darken</el-button>
+                    <el-button @@click="changeColor('Random')" type="success"><i class="fa fa-sun-o"></i> Random</el-button>
                 </div>
             </el-main>
         </el-container>
@@ -89,7 +89,7 @@
                     const res = await service.get('/Admin/Template_XncfName/DatabaseSample?handler=Detail&uid=' + this.uid);
                     this.moduleData = res.data.data;
                 },
-                // 改变颜色
+                // Change color
                 async changeColor(param) {
                     const res = await service.get('/Admin/Template_XncfName/DatabaseSample?handler=' + param + '&uid=' + this.uid);
                     this.moduleData.colorDto = res.data.data;

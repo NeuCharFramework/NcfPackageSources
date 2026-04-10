@@ -1,4 +1,4 @@
-﻿function permissionJudge(value) {
+function permissionJudge(value) {
     let list = JSON.parse(window.sessionStorage.getItem('saveResourceCodes'));
     if (!value.length > 0) {
         return true;
@@ -10,9 +10,9 @@
     }
     return false;
 }
-// 注册一个全局自定义指令 `v-has`
+// Register a global custom directive `v-has`
 Vue.directive('has', {
-    // 当被绑定的元素插入到 DOM 中时触发bind钩子
+    // Triggered when the bound element is inserted into the DOM
     inserted: function (el, binding) {
         if (!permissionJudge(binding.value)) {
             el.parentNode.removeChild(el);

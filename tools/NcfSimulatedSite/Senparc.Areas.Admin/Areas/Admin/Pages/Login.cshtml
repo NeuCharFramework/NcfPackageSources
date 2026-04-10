@@ -59,9 +59,9 @@
                         </el-form>
                     </div>
                 </div>
-                @*技术支持*@
+                <!-- Technical Support -->
                 <div class="login-ICP">
-                    技术支持：<a href="https://www.senparc.com/" target="_blank" title="点击进入官网">苏州盛派网络科技有限公司</a>
+                    @AR["Admin.Login.TechSupport"]<a href="https://www.senparc.com/" target="_blank" title="@AR["Admin.Login.VisitWebsite"]">Senparc</a>
                 </div>
             </div>
         </div>
@@ -74,8 +74,8 @@
         window.ncfLoginI18n = {
             usernameRequired: '@AR["Admin.Login.Error.UsernameRequired"]',
             passwordRequired: '@AR["Admin.Login.Error.PasswordRequired"]',
-            loginFailed: 'Login failed',
-            loginRetry: 'Login failed, please try again'
+            loginFailed: '@AR["Admin.Login.LoginFailed"]',
+            loginRetry: '@AR["Admin.Login.LoginRetry"]'
         };
 
         function ncfSwitchLanguage(culture) {

@@ -1,3 +1,5 @@
+var ncfI18n = window.ncfI18n || {};
+
 window.ChatLauncherMixin = {
   data() {
     return {
@@ -87,7 +89,7 @@ window.ChatLauncherMixin = {
       try {
         localStorage.setItem(this.moduleStorageKey, JSON.stringify(uids || []));
       } catch (error) {
-        console.warn('保存已选模块失败:', error);
+        console.warn('Failed to save selected modules:', error);
       }
     },
 
@@ -105,7 +107,7 @@ window.ChatLauncherMixin = {
 
         this.selectedModuleUids = uids.filter((uid) => typeof uid === 'string' && uid.length > 0);
       } catch (error) {
-        console.warn('读取已选模块失败:', error);
+        console.warn('Failed to restore selected modules:', error);
       }
     },
 
@@ -140,9 +142,9 @@ window.ChatLauncherMixin = {
     normalizeModuleItem(item) {
       return {
         uid: item.uid,
-        name: item.menuName || item.name || '未命名模块',
+        name: item.menuName || item.name || (ncfI18n.unnamedModule || 'Unnamed module'),
         icon: item.icon || 'fa fa-cube',
-        description: item.description || '暂无描述',
+        description: item.description || (ncfI18n.noDescription || 'No description'),
         version: item.version || '',
         menus: item.menus || [],
         functions: item.functions || []
@@ -162,8 +164,8 @@ window.ChatLauncherMixin = {
         this.syncSelectedModulesFromUids();
         this.ensurePreviewModule();
       } catch (error) {
-        console.error('加载模块列表失败:', error);
-        this.$message.error('加载模块列表失败，请稍后重试');
+        console.error('Failed to load module list:', error);
+        this.$message.error(ncfI18n.loadModuleListFailed || 'Failed to load module list, please try again');
       } finally {
         this.loadingModuleOptions = false;
       }
@@ -215,7 +217,7 @@ window.ChatLauncherMixin = {
 
     async startChatSession() {
       if (!this.chatInputText || this.chatInputText.trim().length === 0) {
-        this.$message.warning('请输入对话内容');
+        this.$message.warning(ncfI18n.pleaseEnterChatContent || 'Please enter chat content');
         return;
       }
 
@@ -233,10 +235,10 @@ window.ChatLauncherMixin = {
           return;
         }
 
-        this.$message.error((response.data && response.data.errorMessage) || '创建会话失败');
+        this.$message.error((response.data && response.data.errorMessage) || (ncfI18n.createSessionFailed || 'Failed to create session'));
       } catch (error) {
-        console.error('创建会话失败:', error);
-        this.$message.error('创建会话失败，请稍后重试');
+        console.error('Failed to create session:', error);
+        this.$message.error(ncfI18n.createSessionFailedRetry || 'Failed to create session, please try again');
       } finally {
         this.isCreatingSession = false;
       }

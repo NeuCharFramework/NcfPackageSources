@@ -1,17 +1,17 @@
-# Senparc NCF EventBus - 高并发事件总线
+# Senparc NCF EventBus - High-Concurrency Event Bus
 
-## 概述
+## Overview
 
-基于 `System.Threading.Channels.Channel` 实现的高性能内存事件总线，支持：
-- ✅ 高并发事件处理（可配置并发度）
-- ✅ 重复事件检测（防止同一事件被处理多次）
-- ✅ 失败自动重试（指数退避策略）
-- ✅ 跨模块解耦通信（避免循环依赖）
-- ✅ 异步非阻塞发布（发布者不会等待处理完成）
+A high-performance in-memory event bus built on `System.Threading.Channels.Channel`, supporting:
+- High-concurrency event processing (configurable concurrency level)
+- Duplicate event detection (prevents the same event from being processed multiple times)
+- Automatic failure retry (exponential backoff strategy)
+- Cross-module decoupled communication (avoids circular dependencies)
+- Async non-blocking publishing (publisher does not wait for processing to complete)
 
-## 核心组件
+## Core Components
 
-### 1. IEventBus - 事件总线接口
+### 1. IEventBus - Event Bus Interface
 ```csharp
 public interface IEventBus
 {
@@ -20,16 +20,16 @@ public interface IEventBus
 }
 ```
 
-### 2. IntegrationEvent - 事件基类
+### 2. IntegrationEvent - Event Base Class
 ```csharp
 public abstract record IntegrationEvent : IIntegrationEvent
 {
-    public Guid Id { get; } = Guid.NewGuid();  // 自动生成唯一 ID
+    public Guid Id { get; } = Guid.NewGuid();  // Auto-generated unique ID
     public DateTime CreationDate { get; } = DateTime.UtcNow;
 }
 ```
 
-### 3. IIntegrationEventHandler<T> - 事件处理器接口
+### 3. IIntegrationEventHandler<T> - Event Handler Interface
 ```csharp
 public interface IIntegrationEventHandler<in TIntegrationEvent>
     where TIntegrationEvent : IIntegrationEvent
@@ -38,9 +38,9 @@ public interface IIntegrationEventHandler<in TIntegrationEvent>
 }
 ```
 
-## 使用方法
+## Usage
 
-### 步骤 1: 定义事件（在 Abstractions 项目中）
+### Step 1: Define Events (in the Abstractions project)
 ```csharp
 // Senparc.Xncf.PromptRange.Abstractions/Events/PromptOptimizationEvents.cs
 public record PromptOptimizationRequestEvent(
@@ -57,7 +57,7 @@ public record PromptOptimizationResponseEvent(
 ) : IntegrationEvent;
 ```
 
-### 步骤 2: 实现事件处理器
+### Step 2: Implement Event Handlers
 ```csharp
 // Senparc.Xncf.AgentsManager/Application/EventHandlers/PromptOptimizationRequestHandler.cs
 public class PromptOptimizationRequestHandler : IIntegrationEventHandler<PromptOptimizationRequestEvent>
@@ -73,17 +73,17 @@ public class PromptOptimizationRequestHandler : IIntegrationEventHandler<PromptO
 
     public async Task Handle(PromptOptimizationRequestEvent @event, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("收到 Prompt 优化请求: {RequestId}", @event.RequestId);
+        _logger.LogInformation("Received Prompt optimization request: {RequestId}", @event.RequestId);
 
-        // 执行业务逻辑...
+        // Execute business logic...
         string optimizedPrompt = await OptimizePromptAsync(@event.PromptCode, @event.UserRequirement);
 
-        // 发布响应事件
+        // Publish response event
         var response = new PromptOptimizationResponseEvent(
             @event.RequestId,
             optimizedPrompt,
             0.95,
-            "优化成功"
+            "Optimization successful"
         );
         
         await _eventBus.PublishAsync(response);
@@ -91,23 +91,23 @@ public class PromptOptimizationRequestHandler : IIntegrationEventHandler<PromptO
 }
 ```
 
-### 步骤 3: 注册 EventBus 和 Handler
+### Step 3: Register EventBus and Handlers
 ```csharp
-// Startup.cs 或 Program.cs
+// Startup.cs or Program.cs
 services.AddSenparcEventBus(
     options =>
     {
-        options.MaxConcurrency = 20;                    // 最大并发数
-        options.EnableDuplicateDetection = true;        // 启用重复检测
-        options.RetryOnFailure = true;                  // 启用失败重试
-        options.MaxRetryAttempts = 3;                   // 最大重试次数
+        options.MaxConcurrency = 20;                    // Max concurrency
+        options.EnableDuplicateDetection = true;        // Enable duplicate detection
+        options.RetryOnFailure = true;                  // Enable failure retry
+        options.MaxRetryAttempts = 3;                   // Max retry attempts
     },
-    typeof(PromptOptimizationRequestHandler).Assembly,  // 扫描程序集
+    typeof(PromptOptimizationRequestHandler).Assembly,  // Scan assemblies
     typeof(AgentCreatedHandler).Assembly
 );
 ```
 
-### 步骤 4: 发布事件
+### Step 4: Publish Events
 ```csharp
 public class MyService
 {
@@ -126,118 +126,118 @@ public class MyService
             requirement
         );
         
-        // 异步发布（不会阻塞，立即返回）
+        // Async publish (non-blocking, returns immediately)
         await _eventBus.PublishAsync(requestEvent);
     }
 }
 ```
 
-## 高并发配置建议
+## Concurrency Configuration Recommendations
 
-### 根据场景选择并发度
+### Choose concurrency level based on scenario
 
-1. **低延迟场景（实时性要求高）**
+1. **Low-latency scenarios (high real-time requirements)**
    ```csharp
-   options.MaxConcurrency = Environment.ProcessorCount * 4;  // CPU 核心数 * 4
+   options.MaxConcurrency = Environment.ProcessorCount * 4;  // CPU cores * 4
    ```
 
-2. **数据库密集型场景**
+2. **Database-intensive scenarios**
    ```csharp
-   options.MaxConcurrency = DbConnectionPoolSize / 2;  // 数据库连接池的一半
+   options.MaxConcurrency = DbConnectionPoolSize / 2;  // Half of DB connection pool
    ```
 
-3. **外部 API 调用场景**
+3. **External API call scenarios**
    ```csharp
-   options.MaxConcurrency = 50;  // 根据外部 API 的 QPS 限制设置
+   options.MaxConcurrency = 50;  // Set based on external API QPS limits
    ```
 
-4. **混合场景（推荐）**
+4. **Mixed scenarios (recommended)**
    ```csharp
    options.MaxConcurrency = Math.Max(8, Environment.ProcessorCount * 2);
    ```
 
-## 防止重复处理机制
+## Duplicate Processing Prevention
 
-EventBus 自动追踪最近 10 分钟处理过的事件 ID：
+EventBus automatically tracks event IDs processed within the last 10 minutes:
 
 ```csharp
-// 在 InMemoryEventBus 中实现
+// Implemented in InMemoryEventBus
 public bool TryMarkEventAsProcessed(Guid eventId)
 {
     return _processedEventIds.TryAdd(eventId, DateTime.UtcNow);
 }
 ```
 
-特点：
-- 每个事件都有唯一的 `Guid Id`
-- 10 分钟滑动窗口（可配置）
-- 自动清理过期记录（每 100 次调用触发一次）
-- 线程安全（使用 `ConcurrentDictionary`）
+Features:
+- Each event has a unique `Guid Id`
+- 10-minute sliding window (configurable)
+- Automatic cleanup of expired records (triggered every 100 calls)
+- Thread-safe (uses `ConcurrentDictionary`)
 
-## 失败重试机制
+## Failure Retry Mechanism
 
-采用**指数退避策略**：
-- 第 1 次重试：延迟 2^0 = 1 秒
-- 第 2 次重试：延迟 2^1 = 2 秒
-- 第 3 次重试：延迟 2^2 = 4 秒
+Uses **exponential backoff strategy**:
+- 1st retry: delay 2^0 = 1 second
+- 2nd retry: delay 2^1 = 2 seconds
+- 3rd retry: delay 2^2 = 4 seconds
 
 ```csharp
-// 配置重试
+// Configure retry
 options.RetryOnFailure = true;
 options.MaxRetryAttempts = 3;
 ```
 
-## 跨模块通信最佳实践
+## Cross-Module Communication Best Practices
 
-### 问题：AgentsManager 和 PromptRange 相互依赖
+### Problem: AgentsManager and PromptRange have circular dependencies
 
 ```
-AgentsManager ──调用──> PromptRange (优化 Prompt)
-                  ↓
-PromptRange ──调用──> AgentsManager (使用 Agent 优化)
+AgentsManager --calls--> PromptRange (optimize Prompt)
+                  |
+PromptRange --calls--> AgentsManager (use Agent for optimization)
 ```
 
-### 解决方案：通过 EventBus 解耦
+### Solution: Decouple via EventBus
 
-1. **创建共享的 Abstractions 项目**
+1. **Create a shared Abstractions project**
    ```
    Senparc.Xncf.PromptRange.Abstractions
-   ├── Events/
-   │   ├── PromptOptimizationRequestEvent.cs
-   │   └── PromptOptimizationResponseEvent.cs
+   +-- Events/
+   |   +-- PromptOptimizationRequestEvent.cs
+   |   +-- PromptOptimizationResponseEvent.cs
    ```
 
-2. **AgentsManager 发布请求事件**
+2. **AgentsManager publishes request event**
    ```csharp
    await _eventBus.PublishAsync(new PromptOptimizationRequestEvent(...));
    ```
 
-3. **PromptRange 处理请求并发布响应**
+3. **PromptRange handles request and publishes response**
    ```csharp
    public class PromptOptimizationRequestHandler : IIntegrationEventHandler<PromptOptimizationRequestEvent>
    {
        public async Task Handle(PromptOptimizationRequestEvent @event, CancellationToken ct)
        {
-           // 处理优化逻辑...
+           // Handle optimization logic...
            await _eventBus.PublishAsync(new PromptOptimizationResponseEvent(...));
        }
    }
    ```
 
-4. **AgentsManager 接收响应**
+4. **AgentsManager receives response**
    ```csharp
    public class PromptOptimizationResponseHandler : IIntegrationEventHandler<PromptOptimizationResponseEvent>
    {
        public Task Handle(PromptOptimizationResponseEvent @event, CancellationToken ct)
        {
-           // 处理响应...
+           // Handle response...
        }
    }
    ```
 
-## 请求-响应模式实现
+## Request-Response Pattern Implementation
 
-对于需要等待响应的场景，使用 `TaskCompletionSource`：
+For scenarios requiring a response, use `TaskCompletionSource`:
 
 ```csharp
 public class PromptOptimizationService
@@ -254,23 +254,23 @@ public class PromptOptimizationService
 
         _pendingRequests.TryAdd(requestId, tcs);
 
-        // 发布请求
+        // Publish request
         await _eventBus.PublishAsync(new PromptOptimizationRequestEvent(requestId, promptCode, requirement));
 
-        // 等待响应（带超时）
+        // Wait for response (with timeout)
         var timeoutTask = Task.Delay(TimeSpan.FromMinutes(5));
         var completedTask = await Task.WhenAny(tcs.Task, timeoutTask);
 
         if (completedTask == timeoutTask)
         {
             _pendingRequests.TryRemove(requestId, out _);
-            throw new TimeoutException("Prompt 优化请求超时");
+            throw new TimeoutException("Prompt optimization request timed out");
         }
 
         return await tcs.Task;
     }
 
-    // 响应 Handler 调用此方法完成请求
+    // Response Handler calls this method to complete the request
     public void CompleteRequest(string requestId, PromptOptimizationResponseEvent response)
     {
         if (_pendingRequests.TryRemove(requestId, out var tcs))
@@ -281,77 +281,77 @@ public class PromptOptimizationService
 }
 ```
 
-## 性能监控
+## Performance Monitoring
 
-EventBus 自动记录关键指标：
-- 事件处理时间
-- Handler 执行时间
-- 重试次数
-- 重复事件数量
+EventBus automatically logs key metrics:
+- Event processing time
+- Handler execution time
+- Retry count
+- Duplicate event count
 
-查看日志：
+View logs:
 ```csharp
 // appsettings.json
 {
   "Logging": {
     "LogLevel": {
-      "Senparc.Ncf.Core.EventBus": "Information"  // 或 "Debug" 查看详细信息
+      "Senparc.Ncf.Core.EventBus": "Information"  // Or "Debug" for detailed info
     }
   }
 }
 ```
 
-## 常见问题
+## FAQ
 
-### Q1: 如何确保事件处理的顺序？
-A: EventBus 不保证全局顺序，但同一类型的事件会按 FIFO 顺序处理。如需严格顺序，考虑：
-   - 将 `MaxConcurrency` 设为 1（串行处理）
-   - 或在业务层使用版本号/序列号
+### Q1: How to ensure event processing order?
+A: EventBus does not guarantee global ordering, but events of the same type are processed in FIFO order. For strict ordering, consider:
+   - Setting `MaxConcurrency` to 1 (serial processing)
+   - Or using version numbers/sequence numbers in the business layer
 
-### Q2: 事件丢失怎么办？
-A: 当前实现是内存队列，应用重启会丢失。生产环境建议：
-   - 使用持久化消息队列（RabbitMQ, Azure Service Bus）
-   - 或实现 `IEventBus` 的持久化版本
+### Q2: What if events are lost?
+A: The current implementation uses an in-memory queue; events are lost on application restart. For production environments, consider:
+   - Using a persistent message queue (RabbitMQ, Azure Service Bus)
+   - Or implementing a persistent version of `IEventBus`
 
-### Q3: 如何处理事务一致性？
-A: 采用 Outbox Pattern：
+### Q3: How to handle transactional consistency?
+A: Use the Outbox Pattern:
    ```csharp
    using var transaction = await _dbContext.Database.BeginTransactionAsync();
    
-   // 1. 保存业务数据
+   // 1. Save business data
    await _dbContext.SaveChangesAsync();
    
-   // 2. 保存事件到 Outbox 表
+   // 2. Save event to Outbox table
    await _outboxRepository.AddAsync(new OutboxMessage { EventData = ... });
    
-   // 3. 提交事务
+   // 3. Commit transaction
    await transaction.CommitAsync();
    
-   // 4. 后台任务从 Outbox 发布事件
+   // 4. Background task publishes events from Outbox
    ```
 
-### Q4: 并发度设置多少合适？
-A: 经验公式：
+### Q4: What concurrency level is appropriate?
+A: Rule of thumb:
    ```
    MaxConcurrency = min(
-       CPU 核心数 * 2,
-       数据库连接池大小 / 2,
-       外部 API 并发限制
+       CPU cores * 2,
+       DB connection pool size / 2,
+       External API concurrency limit
    )
    ```
 
-## 更新日志
+## Changelog
 
 ### v0.23.17 (2025-02-15)
-- ✨ 新增高并发支持（可配置并发度）
-- ✨ 新增重复事件检测机制
-- ✨ 新增失败自动重试（指数退避）
-- ✨ 新增详细的性能监控日志
-- ♻️ 重构 EventBusHostedService，支持异步并发处理
-- 🐛 修复串行处理导致的性能瓶颈
+- Added high-concurrency support (configurable concurrency level)
+- Added duplicate event detection mechanism
+- Added automatic failure retry (exponential backoff)
+- Added detailed performance monitoring logs
+- Refactored EventBusHostedService for async concurrent processing
+- Fixed performance bottleneck caused by serial processing
 
-## 参考资料
+## References
 
-- [System.Threading.Channels 官方文档](https://docs.microsoft.com/en-us/dotnet/api/system.threading.channels)
+- [System.Threading.Channels Documentation](https://docs.microsoft.com/en-us/dotnet/api/system.threading.channels)
 - [Outbox Pattern](https://microservices.io/patterns/data/transactional-outbox.html)
 - [Event-Driven Architecture](https://martinfowler.com/articles/201701-event-driven.html)

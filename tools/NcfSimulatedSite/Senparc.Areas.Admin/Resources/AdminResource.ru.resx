@@ -175,4 +175,597 @@
   <data name="AdminChat.SelectAtLeastOneMessage" xml:space="preserve"><value>Выберите хотя бы одно сообщение</value></data>
   <data name="AdminChat.DeleteMessagesSuccess" xml:space="preserve"><value>Успешно удалено. Удалено сообщений: {0}</value></data>
   <data name="AdminChat.AddModulesSuccess" xml:space="preserve"><value>Модули успешно добавлены</value></data>
+  <data name="Menu.Db.系统管理" xml:space="preserve"><value>Управление системой</value></data>
+  <data name="Menu.Db.管理员管理" xml:space="preserve"><value>Управление администраторами</value></data>
+  <data name="Menu.Db.角色管理" xml:space="preserve"><value>Управление ролями</value></data>
+  <data name="Menu.Db.菜单管理" xml:space="preserve"><value>Управление меню</value></data>
+  <data name="Menu.Db.系统信息" xml:space="preserve"><value>Информация о системе</value></data>
+  <data name="Menu.Db.多租户信息" xml:space="preserve"><value>Информация о мультитенантности</value></data>
+  <data name="Menu.Db.扩展模块" xml:space="preserve"><value>Модули расширения</value></data>
+  <data name="Menu.Db.模块管理" xml:space="preserve"><value>Управление модулями</value></data>
+  <data name="Menu.Db.新增" xml:space="preserve"><value>Добавить</value></data>
+  <data name="Menu.Db.编辑" xml:space="preserve"><value>Редактировать</value></data>
+  <data name="Menu.Db.删除" xml:space="preserve"><value>Удалить</value></data>
+  <data name="Menu.Db.查询" xml:space="preserve"><value>Поиск</value></data>
+  <data name="Menu.Db.查看" xml:space="preserve"><value>Просмотр</value></data>
+  <data name="Menu.Db.授权" xml:space="preserve"><value>Авторизация</value></data>
+  <data name="Menu.Db.分配角色" xml:space="preserve"><value>Назначить роли</value></data>
+  <data name="Menu.Db.AI 核心模块" xml:space="preserve"><value>Модуль ядра ИИ</value></data>
+  <data name="Menu.Db.AI 知识库" xml:space="preserve"><value>База знаний ИИ</value></data>
+  <data name="Menu.Db.Agents 管理模块" xml:space="preserve"><value>Менеджер агентов</value></data>
+  <data name="Menu.Db.Areas 基础模块" xml:space="preserve"><value>Базовый модуль Areas</value></data>
+  <data name="Menu.Db.XNCF 模块管理核心" xml:space="preserve"><value>Менеджер модулей XNCF</value></data>
+  <data name="Menu.Db.系统核心模块" xml:space="preserve"><value>Модуль ядра системы</value></data>
+  <data name="Menu.Db.权限管理" xml:space="preserve"><value>Управление разрешениями</value></data>
+  <data name="Menu.Db.多租户" xml:space="preserve"><value>Мультитенантность</value></data>
+  <data name="Menu.Db.提示词靶场" xml:space="preserve"><value>Prompt Range</value></data>
+  <data name="Menu.Db.动态数据基础模块" xml:space="preserve"><value>Модуль динамических данных</value></data>
+  <data name="Menu.Db.文件管理" xml:space="preserve"><value>Управление файлами</value></data>
+  <data name="Menu.Db.终端模块" xml:space="preserve"><value>Модуль терминала</value></data>
+  <data name="Menu.Db.接口说明文档" xml:space="preserve"><value>Документация API</value></data>
+  <data name="Menu.Db.修改命名空间" xml:space="preserve"><value>Изменить пространство имен</value></data>
+  <data name="Menu.Db.应用程序模块" xml:space="preserve"><value>Модуль приложения</value></data>
+  <data name="Menu.Db.微信管理" xml:space="preserve"><value>Менеджер WeChat</value></data>
+  <data name="Menu.Db.NCF 系统管理员后台" xml:space="preserve"><value>Панель администратора NCF</value></data>
+  <data name="Menu.Db.用户管理" xml:space="preserve"><value>Управление пользователями</value></data>
+  <data name="Menu.Db.NCF 安装程序" xml:space="preserve"><value>Установщик NCF</value></data>
+  <data name="Menu.Db.设置/执行" xml:space="preserve"><value>Настройки/Выполнить</value></data>
+  <data name="Menu.Db.超级管理员" xml:space="preserve"><value>Суперадминистратор</value></data>
+  <data name="AdminUserInfo.EditTitle.Edit" xml:space="preserve"><value>Редактирование администратора</value></data>
+  <data name="AdminUserInfo.EditTitle.Add" xml:space="preserve"><value>Добавить администратора</value></data>
+  <data name="AdminUserInfo.Username" xml:space="preserve"><value>Имя пользователя</value></data>
+  <data name="AdminUserInfo.UsernamePlaceholder" xml:space="preserve"><value>Введите имя пользователя</value></data>
+  <data name="AdminUserInfo.UsernameWarning" xml:space="preserve"><value>Не рекомендуется изменять имя пользователя!</value></data>
+  <data name="AdminUserInfo.Password" xml:space="preserve"><value>Пароль</value></data>
+  <data name="AdminUserInfo.PasswordPlaceholder" xml:space="preserve"><value>Введите пароль</value></data>
+  <data name="AdminUserInfo.ConfirmPassword" xml:space="preserve"><value>Подтвердите пароль</value></data>
+  <data name="AdminUserInfo.ConfirmPasswordPlaceholder" xml:space="preserve"><value>Введите пароль еще раз</value></data>
+  <data name="AdminUserInfo.RealName" xml:space="preserve"><value>Настоящее имя</value></data>
+  <data name="AdminUserInfo.RealNamePlaceholder" xml:space="preserve"><value>Введите настоящее имя</value></data>
+  <data name="AdminUserInfo.Phone" xml:space="preserve"><value>Номер телефона</value></data>
+  <data name="AdminUserInfo.PhonePlaceholder" xml:space="preserve"><value>Введите номер телефона</value></data>
+  <data name="AdminUserInfo.NotePlaceholder" xml:space="preserve"><value>Введите примечания</value></data>
+  <data name="Common.提交" xml:space="preserve"><value>Отправить</value></data>
+  <data name="AdminUserInfo.列表" xml:space="preserve"><value>Список администраторов</value></data>
+  <data name="AdminUserInfo.设置角色" xml:space="preserve"><value>Назначить роли</value></data>
+  <data name="AdminUserInfo.确认删除" xml:space="preserve"><value>Вы уверены, что хотите удалить этого пользователя?</value></data>
+  <data name="AdminUserInfo.SetRolePrefix" xml:space="preserve"><value>Назначить роли - </value></data>
+  <data name="Menu.EditTitle.Edit" xml:space="preserve"><value>Редактировать меню</value></data>
+  <data name="Menu.EditTitle.Add" xml:space="preserve"><value>Добавить меню</value></data>
+  <data name="Menu.增加一级菜单" xml:space="preserve"><value>Добавить меню верхнего уровня</value></data>
+  <data name="Menu.添加子菜单" xml:space="preserve"><value>Добавить подменю</value></data>
+  <data name="Menu.菜单排序" xml:space="preserve"><value>Порядок сортировки меню</value></data>
+  <data name="Menu.请输入菜单排序" xml:space="preserve"><value>Введите порядок сортировки меню</value></data>
+  <data name="Menu.菜单名称" xml:space="preserve"><value>Название меню</value></data>
+  <data name="Menu.请输入菜单名称" xml:space="preserve"><value>Введите название меню</value></data>
+  <data name="Menu.菜单地址" xml:space="preserve"><value>URL меню</value></data>
+  <data name="Menu.请输入菜单地址" xml:space="preserve"><value>Введите URL меню</value></data>
+  <data name="Menu.菜单图标" xml:space="preserve"><value>Иконка меню</value></data>
+  <data name="Menu.请输入菜单图标" xml:space="preserve"><value>Введите иконку меню</value></data>
+  <data name="Menu.是否可见" xml:space="preserve"><value>Видимость</value></data>
+  <data name="Menu.按钮名称" xml:space="preserve"><value>Название кнопки</value></data>
+  <data name="Menu.操作标识" xml:space="preserve"><value>Код действия</value></data>
+  <data name="Menu.操作地址" xml:space="preserve"><value>URL действия</value></data>
+  <data name="Menu.添加按钮" xml:space="preserve"><value>Добавить кнопку</value></data>
+  <data name="Role.EditTitle.Edit" xml:space="preserve"><value>Редактировать роль</value></data>
+  <data name="Role.EditTitle.Add" xml:space="preserve"><value>Добавить роль</value></data>
+  <data name="Role.角色权限管理" xml:space="preserve"><value>Управление правами роли</value></data>
+  <data name="Role.权限设置" xml:space="preserve"><value>Настройки прав</value></data>
+  <data name="Admin.Login.LoginFailed" xml:space="preserve"><value>Ошибка входа</value></data>
+  <data name="Admin.Login.LoginRetry" xml:space="preserve"><value>Ошибка входа, попробуйте снова</value></data>
+  <data name="Admin.Login.TechSupport" xml:space="preserve"><value>Техническая поддержка: </value></data>
+  <data name="Admin.Login.VisitWebsite" xml:space="preserve"><value>Перейти на официальный сайт</value></data>
+  <data name="Admin.Logout.Tooltip" xml:space="preserve"><value>Выход</value></data>
+  <data name="Admin.Nav.首页" xml:space="preserve"><value>Главная</value></data>
+  <data name="SystemConfig.系统信息" xml:space="preserve"><value>Информация о системе</value></data>
+  <data name="SystemConfig.基础信息" xml:space="preserve"><value>Основная информация</value></data>
+  <data name="SystemConfig.系统名称" xml:space="preserve"><value>Имя системы</value></data>
+  <data name="SystemConfig.模块发布模式" xml:space="preserve"><value>Режим публикации модулей</value></data>
+  <data name="SystemConfig.请输入系统名称" xml:space="preserve"><value>Введите имя системы</value></data>
+  <data name="Trace.日志详情" xml:space="preserve"><value>Логи</value></data>
+  <data name="Trace.SenparcTrace日志" xml:space="preserve"><value>Логи SenparcTrace</value></data>
+  <data name="Trace.显示所有完整结果" xml:space="preserve"><value>Показать все полные результаты</value></data>
+  <data name="Trace.只显示所有异常信息" xml:space="preserve"><value>Показать только исключения</value></data>
+  <data name="Trace.异常信息" xml:space="preserve"><value>Информация об исключении</value></data>
+  <data name="Trace.请输入关键字" xml:space="preserve"><value>Введите ключевое слово</value></data>
+  <data name="Trace.至" xml:space="preserve"><value>до</value></data>
+  <data name="Trace.开始时间" xml:space="preserve"><value>Время начала</value></data>
+  <data name="Trace.结束时间" xml:space="preserve"><value>Время окончания</value></data>
+  <data name="Trace.选择线程" xml:space="preserve"><value>Выбрать поток</value></data>
+  <data name="Trace.选择类型" xml:space="preserve"><value>Выбрать тип</value></data>
+  <data name="Trace.异常状态" xml:space="preserve"><value>Статус исключения</value></data>
+  <data name="Common.全部" xml:space="preserve"><value>Все</value></data>
+  <data name="Common.是" xml:space="preserve"><value>Да</value></data>
+  <data name="Common.否" xml:space="preserve"><value>Нет</value></data>
+  <data name="Trace.编号行号" xml:space="preserve"><value>No./Строка</value></data>
+  <data name="Trace.时间" xml:space="preserve"><value>Время</value></data>
+  <data name="Trace.线程" xml:space="preserve"><value>Поток</value></data>
+  <data name="Trace.类型" xml:space="preserve"><value>Тип</value></data>
+  <data name="Trace.是否异常" xml:space="preserve"><value>Исключение</value></data>
+  <data name="Trace.标题" xml:space="preserve"><value>Заголовок</value></data>
+  <data name="Trace.内容" xml:space="preserve"><value>Содержание</value></data>
+  <data name="Trace.返回结果" xml:space="preserve"><value>Результат: </value></data>
+  <data name="Trace.Post数据" xml:space="preserve"><value>Данные Post: </value></data>
+  <data name="Xncf.扩展模块" xml:space="preserve"><value>Модули расширения</value></data>
+  <data name="Xncf.模块管理" xml:space="preserve"><value>Управление модулями</value></data>
+  <data name="Chat.AddReferenceModule" xml:space="preserve"><value>Добавить справочные модули</value></data>
+  <data name="Chat.SearchModulePlaceholder" xml:space="preserve"><value>Поиск по имени / описанию / UID модуля</value></data>
+  <data name="Chat.SelectAllFiltered" xml:space="preserve"><value>Выбрать все отфильтрованные</value></data>
+  <data name="Chat.ClearSelection" xml:space="preserve"><value>Очистить выбор</value></data>
+  <data name="Chat.SelectedCount" xml:space="preserve"><value>Выбрано</value></data>
+  <data name="Chat.QuickEnter" xml:space="preserve"><value>Быстрый доступ</value></data>
+  <data name="Chat.Menu" xml:space="preserve"><value>Меню</value></data>
+  <data name="Chat.NoMenu" xml:space="preserve"><value>Нет меню</value></data>
+  <data name="Chat.MenuHierarchy" xml:space="preserve"><value>Иерархия меню</value></data>
+  <data name="Chat.NoMenuAndFunctions" xml:space="preserve"><value>Нет доступных меню и функций для этого модуля</value></data>
+  <data name="Chat.NoMatchingModule" xml:space="preserve"><value>Нет подходящих модулей</value></data>
+  <data name="Chat.ConfirmAdd" xml:space="preserve"><value>Подтвердить добавление</value></data>
+  <data name="Xncf.SettingsExecute" xml:space="preserve">
+    <value>Настройки / Выполнить</value>
+  </data>
+  <data name="Xncf.PendingUpdateModules" xml:space="preserve">
+    <value>Модули, ожидающие обновления</value>
+  </data>
+  <data name="Xncf.View" xml:space="preserve">
+    <value>Просмотр</value>
+  </data>
+  <data name="Dashboard.AIAssistant.InputPlaceholder" xml:space="preserve">
+    <value>Введите ваш вопрос, например: Как настроить параметры системы?
+
+Подсказка: Нажмите Ctrl+Enter или Cmd+Enter для отправки</value>
+  </data>
+  <data name="Chat.ManageDone" xml:space="preserve">
+    <value>Готово</value>
+  </data>
+  <data name="Chat.Manage" xml:space="preserve">
+    <value>Управление</value>
+  </data>
+  <!-- JavaScript i18n keys (Js.*) -->
+  <data name="Js.addAdmin" xml:space="preserve">
+    <value>Добавить администратора</value>
+  </data>
+  <data name="Js.addMenu" xml:space="preserve">
+    <value>Добавить меню</value>
+  </data>
+  <data name="Js.addRole" xml:space="preserve">
+    <value>Добавить роль</value>
+  </data>
+  <data name="Js.addSubMenu" xml:space="preserve">
+    <value>Добавить подменю</value>
+  </data>
+  <data name="Js.addTenantInfo" xml:space="preserve">
+    <value>Добавить информацию об арендаторе</value>
+  </data>
+  <data name="Js.authorizationSuccess" xml:space="preserve">
+    <value>Авторизация успешна</value>
+  </data>
+  <data name="Js.buttonTypeRequired" xml:space="preserve">
+    <value>Это поле обязательно, когда тип - Кнопка</value>
+  </data>
+  <data name="Js.cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Js.chatRoleAI" xml:space="preserve">
+    <value>ИИ-ассистент</value>
+  </data>
+  <data name="Js.chatRoleMe" xml:space="preserve">
+    <value>Я</value>
+  </data>
+  <data name="Js.chatRoleSystem" xml:space="preserve">
+    <value>Система</value>
+  </data>
+  <data name="Js.chatRoleUnknown" xml:space="preserve">
+    <value>Неизвестно</value>
+  </data>
+  <data name="Js.confirm" xml:space="preserve">
+    <value>ОК</value>
+  </data>
+  <data name="Js.confirmDeleteNMessages" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить выбранные {0} сообщение(я)? Это действие нельзя отменить.</value>
+  </data>
+  <data name="Js.confirmDeleteSession" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить эту сессию?</value>
+  </data>
+  <data name="Js.copiedNMessages" xml:space="preserve">
+    <value>Скопировано {0} сообщение(й)</value>
+  </data>
+  <data name="Js.copyFailedManual" xml:space="preserve">
+    <value>Копирование не удалось, скопируйте вручную</value>
+  </data>
+  <data name="Js.copySuccess" xml:space="preserve">
+    <value>Скопировано! Используйте Ctrl+V для вставки.</value>
+  </data>
+  <data name="Js.createSessionFailed" xml:space="preserve">
+    <value>Не удалось создать сессию</value>
+  </data>
+  <data name="Js.createSessionFailedRetry" xml:space="preserve">
+    <value>Не удалось создать сессию, попробуйте позже</value>
+  </data>
+  <data name="Js.daysAgo" xml:space="preserve">
+    <value>{0} дн. назад</value>
+  </data>
+  <data name="Js.defaultAdminRequired" xml:space="preserve">
+    <value>Учетная запись администратора по умолчанию обязательна</value>
+  </data>
+  <data name="Js.deleteBtn" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Js.deleteConfirm" xml:space="preserve">
+    <value>Подтверждение удаления</value>
+  </data>
+  <data name="Js.deleteFailed" xml:space="preserve">
+    <value>Удаление не удалось</value>
+  </data>
+  <data name="Js.deleteFailedRetry" xml:space="preserve">
+    <value>Удаление не удалось, попробуйте позже</value>
+  </data>
+  <data name="Js.deleteSuccess" xml:space="preserve">
+    <value>Успешно удалено</value>
+  </data>
+  <data name="Js.dynamicData" xml:space="preserve">
+    <value>Динамические данные</value>
+  </data>
+  <data name="Js.editAdmin" xml:space="preserve">
+    <value>Редактировать администратора</value>
+  </data>
+  <data name="Js.editMenu" xml:space="preserve">
+    <value>Редактировать меню</value>
+  </data>
+  <data name="Js.editRole" xml:space="preserve">
+    <value>Редактировать роль</value>
+  </data>
+  <data name="Js.editSystemInfo" xml:space="preserve">
+    <value>Редактировать системную информацию</value>
+  </data>
+  <data name="Js.editTenantInfo" xml:space="preserve">
+    <value>Редактировать информацию об арендаторе</value>
+  </data>
+  <data name="Js.enableExtModuleConfirm" xml:space="preserve">
+    <value>После включения управления [Модулями расширения] все модули расширения будут отображаться в подменю [Модули расширения]. Вы уверены?</value>
+  </data>
+  <data name="Js.enableExtModuleMode" xml:space="preserve">
+    <value>Включить режим управления [Модулями расширения]</value>
+  </data>
+  <data name="Js.entries" xml:space="preserve">
+    <value>записей</value>
+  </data>
+  <data name="Js.error" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="Js.errorEncountered" xml:space="preserve">
+    <value>Произошла ошибка</value>
+  </data>
+  <data name="Js.errorInfo" xml:space="preserve">
+    <value>Информация об ошибке</value>
+  </data>
+  <data name="Js.exceptionLogs" xml:space="preserve">
+    <value>Журналы исключений</value>
+  </data>
+  <data name="Js.executionError" xml:space="preserve">
+    <value>Произошла ошибка при выполнении</value>
+  </data>
+  <data name="Js.executionSuccess" xml:space="preserve">
+    <value>Выполнение успешно</value>
+  </data>
+  <data name="Js.feedbackFailed" xml:space="preserve">
+    <value>Обратная связь не удалась</value>
+  </data>
+  <data name="Js.feedbackSuccess" xml:space="preserve">
+    <value>Обратная связь отправлена</value>
+  </data>
+  <data name="Js.hideExtModuleConfirm" xml:space="preserve">
+    <value>После скрытия управления [Модулями расширения] все модули расширения будут отображаться как элементы меню верхнего уровня. Для повторного включения перейдите непосредственно на эту страницу [/Admin/XncfModule]. Вы уверены?</value>
+  </data>
+  <data name="Js.hoursAgo" xml:space="preserve">
+    <value>{0} ч. назад</value>
+  </data>
+  <data name="Js.initializationFailed" xml:space="preserve">
+    <value>Инициализация не удалась</value>
+  </data>
+  <data name="Js.isRequired" xml:space="preserve">
+    <value>обязательно</value>
+  </data>
+  <data name="Js.justNow" xml:space="preserve">
+    <value>Только что</value>
+  </data>
+  <data name="Js.last14Days" xml:space="preserve">
+    <value>Последние 14 дней</value>
+  </data>
+  <data name="Js.lastHour" xml:space="preserve">
+    <value>Последний час</value>
+  </data>
+  <data name="Js.loadModuleListFailed" xml:space="preserve">
+    <value>Не удалось загрузить список модулей, попробуйте позже</value>
+  </data>
+  <data name="Js.loadSessionDetailFailed" xml:space="preserve">
+    <value>Не удалось загрузить детали сессии</value>
+  </data>
+  <data name="Js.loadSessionListFailed" xml:space="preserve">
+    <value>Не удалось загрузить список сессий</value>
+  </data>
+  <data name="Js.logStatistics" xml:space="preserve">
+    <value>Статистика журналов</value>
+  </data>
+  <data name="Js.logType" xml:space="preserve">
+    <value>Тип журнала</value>
+  </data>
+  <data name="Js.menuNameRequired" xml:space="preserve">
+    <value>Название меню обязательно</value>
+  </data>
+  <data name="Js.menuTypeRequired" xml:space="preserve">
+    <value>Тип обязателен</value>
+  </data>
+  <data name="Js.minutesAgo" xml:space="preserve">
+    <value>{0} мин. назад</value>
+  </data>
+  <data name="Js.moduleStateClosed" xml:space="preserve">
+    <value>Закрыто</value>
+  </data>
+  <data name="Js.moduleStateNewPending" xml:space="preserve">
+    <value>Новый - Ожидает проверки</value>
+  </data>
+  <data name="Js.moduleStateOpen" xml:space="preserve">
+    <value>Открыто</value>
+  </data>
+  <data name="Js.moduleStateUpdatePending" xml:space="preserve">
+    <value>Обновление - Ожидает проверки</value>
+  </data>
+  <data name="Js.noDescription" xml:space="preserve">
+    <value>Нет описания</value>
+  </data>
+  <data name="Js.noPermission" xml:space="preserve">
+    <value>У вас нет прав доступа</value>
+  </data>
+  <data name="Js.noTime" xml:space="preserve">
+    <value>Нет времени</value>
+  </data>
+  <data name="Js.normalLogs" xml:space="preserve">
+    <value>Обычные журналы</value>
+  </data>
+  <data name="Js.notice" xml:space="preserve">
+    <value>Уведомление</value>
+  </data>
+  <data name="Js.operationSuccess" xml:space="preserve">
+    <value>Операция выполнена успешно</value>
+  </data>
+  <data name="Js.passwordMismatch" xml:space="preserve">
+    <value>Пароли не совпадают</value>
+  </data>
+  <data name="Js.pleaseEnableFirst" xml:space="preserve">
+    <value>Пожалуйста, сначала включите, затем выполните</value>
+  </data>
+  <data name="Js.pleaseEnterChatContent" xml:space="preserve">
+    <value>Пожалуйста, введите содержание чата</value>
+  </data>
+  <data name="Js.pleaseEnterMessage" xml:space="preserve">
+    <value>Пожалуйста, введите сообщение</value>
+  </data>
+  <data name="Js.pleaseEnterPassword" xml:space="preserve">
+    <value>Пожалуйста, введите пароль</value>
+  </data>
+  <data name="Js.pleaseEnterSourcePath" xml:space="preserve">
+    <value>Пожалуйста, введите физический путь к исходному коду</value>
+  </data>
+  <data name="Js.pleaseReenterPassword" xml:space="preserve">
+    <value>Пожалуйста, введите пароль повторно</value>
+  </data>
+  <data name="Js.pleaseSelectMessagesToCopy" xml:space="preserve">
+    <value>Пожалуйста, выберите сообщения для копирования</value>
+  </data>
+  <data name="Js.pleaseSelectMessagesToDelete" xml:space="preserve">
+    <value>Пожалуйста, выберите сообщения для удаления</value>
+  </data>
+  <data name="Js.pleaseSelectOrCreateSession" xml:space="preserve">
+    <value>Пожалуйста, выберите или создайте сессию</value>
+  </data>
+  <data name="Js.receivedUrlClickBelow" xml:space="preserve">
+    <value>Получен URL, нажмите ниже, чтобы открыть&lt;br /&gt;(Эта ссылка предоставлена третьей стороной, будьте осторожны):</value>
+  </data>
+  <data name="Js.returnInfo" xml:space="preserve">
+    <value>Информация о возврате</value>
+  </data>
+  <data name="Js.roleCodeRequired" xml:space="preserve">
+    <value>Код роли обязателен</value>
+  </data>
+  <data name="Js.roleNameRequired" xml:space="preserve">
+    <value>Название роли обязательно</value>
+  </data>
+  <data name="Js.sendMessageFailed" xml:space="preserve">
+    <value>Не удалось отправить сообщение</value>
+  </data>
+  <data name="Js.sendMessageFailedRetry" xml:space="preserve">
+    <value>Не удалось отправить сообщение, попробуйте позже</value>
+  </data>
+  <data name="Js.sessionExpired" xml:space="preserve">
+    <value>Сессия истекла, перенаправление на страницу входа</value>
+  </data>
+  <data name="Js.stateDate" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="Js.stateNumber" xml:space="preserve">
+    <value>Число</value>
+  </data>
+  <data name="Js.stateOptions" xml:space="preserve">
+    <value>Параметры</value>
+  </data>
+  <data name="Js.stateText" xml:space="preserve">
+    <value>Текст</value>
+  </data>
+  <data name="Js.switchToPublishMode" xml:space="preserve">
+    <value>Переключиться в режим публикации, скрыть модуль управления [Модулями расширения]</value>
+  </data>
+  <data name="Js.systemNameRequired" xml:space="preserve">
+    <value>Название системы обязательно</value>
+  </data>
+  <data name="Js.tenantKeyRequired" xml:space="preserve">
+    <value>Правило сопоставления арендатора обязательно</value>
+  </data>
+  <data name="Js.tenantNameRequired" xml:space="preserve">
+    <value>Название арендатора обязательно</value>
+  </data>
+  <data name="Js.today" xml:space="preserve">
+    <value>Сегодня</value>
+  </data>
+  <data name="Js.todayLogStatistics" xml:space="preserve">
+    <value>Статистика журналов за сегодня</value>
+  </data>
+  <data name="Js.tooltipDatabase" xml:space="preserve">
+    <value>База данных</value>
+  </data>
+  <data name="Js.tooltipMiddleware" xml:space="preserve">
+    <value>Промежуточное ПО</value>
+  </data>
+  <data name="Js.tooltipThread" xml:space="preserve">
+    <value>Поток</value>
+  </data>
+  <data name="Js.tooltipWebpage" xml:space="preserve">
+    <value>Веб-страница</value>
+  </data>
+  <data name="Js.unnamedModule" xml:space="preserve">
+    <value>Безымянный модуль</value>
+  </data>
+  <data name="Js.updateFailed" xml:space="preserve">
+    <value>Обновление не удалось: </value>
+  </data>
+  <data name="Js.updateSuccess" xml:space="preserve">
+    <value>Обновлено успешно!</value>
+  </data>
+  <data name="Js.usernameRequired" xml:space="preserve">
+    <value>Имя пользователя обязательно</value>
+  </data>
+  <data name="Js.warning" xml:space="preserve">
+    <value>Предупреждение</value>
+  </data>
+  <data name="Common.确定" xml:space="preserve"><value>Подтвердить</value></data>
+  <data name="Dashboard.Title" xml:space="preserve"><value>Панель управления</value></data>
+  <data name="Chat.Title" xml:space="preserve"><value>ИИ чат</value></data>
+  <data name="Tenant.PageTitle" xml:space="preserve"><value>Управление арендаторами</value></data>
+  <data name="Xncf.ModuleManagement" xml:space="preserve"><value>Управление модулями</value></data>
+  <data name="Dashboard.Header" xml:space="preserve"><value>NeuCharFramework Администратор</value></data>
+  <data name="Dashboard.InstalledModules" xml:space="preserve"><value>Установленные модули</value></data>
+  <data name="Dashboard.PendingUpdateModules" xml:space="preserve"><value>Ожидают обновления</value></data>
+  <data name="Dashboard.NewModulesFound" xml:space="preserve"><value>Новые модули</value></data>
+  <data name="Dashboard.ModuleErrors" xml:space="preserve"><value>Ошибки модулей</value></data>
+  <data name="Dashboard.AIAssistant" xml:space="preserve"><value>ИИ-ассистент</value></data>
+  <data name="Dashboard.AIAssistant.Subtitle" xml:space="preserve"><value>Задайте мне вопрос</value></data>
+  <data name="Dashboard.AIAssistant.StartChat" xml:space="preserve"><value>Начать чат</value></data>
+  <data name="Dashboard.AIAssistant.MultiRound" xml:space="preserve"><value>Многоходовая беседа</value></data>
+  <data name="Dashboard.AIAssistant.AddModuleContext" xml:space="preserve"><value>Добавить модули как контекст</value></data>
+  <data name="Dashboard.AIAssistant.AutoSaveHistory" xml:space="preserve"><value>Автосохранение</value></data>
+  <data name="Dashboard.AIAssistant.ReferenceModules" xml:space="preserve"><value>Модули ссылок (необязательно)</value></data>
+  <data name="Dashboard.AIAssistant.AddReferenceModule" xml:space="preserve"><value>Добавить модуль</value></data>
+  <data name="Dashboard.AIAssistant.Clear" xml:space="preserve"><value>Очистить</value></data>
+  <data name="Dashboard.AIAssistant.EmptyModuleTip" xml:space="preserve"><value>Нажмите для добавления модулей</value></data>
+  <data name="Dashboard.FunctionModules" xml:space="preserve"><value>Функциональные модули</value></data>
+  <data name="Dashboard.MenuName" xml:space="preserve"><value>Название меню</value></data>
+  <data name="Dashboard.NoDescription" xml:space="preserve"><value>Нет описания</value></data>
+  <data name="Chat.AIAssistantRole" xml:space="preserve"><value>Ассистент ИИ</value></data>
+  <data name="Chat.Breadcrumb.AIAssistant" xml:space="preserve"><value>Ассистент ИИ</value></data>
+  <data name="Chat.Breadcrumb.Conversation" xml:space="preserve"><value>Беседа</value></data>
+  <data name="Chat.Copy" xml:space="preserve"><value>Копировать</value></data>
+  <data name="Chat.Delete" xml:space="preserve"><value>Удалить</value></data>
+  <data name="Chat.Entrance.Subtitle" xml:space="preserve"><value>Чем могу помочь?</value></data>
+  <data name="Chat.InputPlaceholder" xml:space="preserve"><value>Введите сообщение...</value></data>
+  <data name="Chat.NewConversation" xml:space="preserve"><value>Новая беседа</value></data>
+  <data name="Chat.NoPreviewDetails" xml:space="preserve"><value>Нет подробностей для предпросмотра</value></data>
+  <data name="Chat.NoSessionHistory" xml:space="preserve"><value>Нет истории сессий</value></data>
+  <data name="Chat.SelectAll" xml:space="preserve"><value>Выбрать все</value></data>
+  <data name="Chat.SelectedCount.Prefix" xml:space="preserve"><value>Выбрано</value></data>
+  <data name="Chat.SelectedCount.Suffix" xml:space="preserve"><value>элементов</value></data>
+  <data name="Chat.Send" xml:space="preserve"><value>Отправить</value></data>
+  <data name="Chat.SendShortcut" xml:space="preserve"><value>Ctrl + Enter для отправки</value></data>
+  <data name="Chat.SessionHistory" xml:space="preserve"><value>История сессий</value></data>
+  <data name="Chat.StartConversation" xml:space="preserve"><value>Начать беседу</value></data>
+  <data name="Chat.Thinking" xml:space="preserve"><value>Размышляю...</value></data>
+  <data name="Tenant.AddTenant" xml:space="preserve"><value>Добавить арендатора</value></data>
+  <data name="Tenant.AdminAccount" xml:space="preserve"><value>Учетная запись администратора</value></data>
+  <data name="Tenant.AdminRemark" xml:space="preserve"><value>Примечание администратора</value></data>
+  <data name="Tenant.AdminRemarkPlaceholder" xml:space="preserve"><value>Введите примечание администратора</value></data>
+  <data name="Tenant.ConfirmDelete" xml:space="preserve"><value>Вы уверены, что хотите удалить этого арендатора?</value></data>
+  <data name="Tenant.CurrentInfo" xml:space="preserve"><value>Информация о текущем арендаторе</value></data>
+  <data name="Tenant.DefaultAdminAccount" xml:space="preserve"><value>Учетная запись админа по умолчанию</value></data>
+  <data name="Tenant.DefaultAdminAccountPlaceholder" xml:space="preserve"><value>Введите учетную запись админа по умолчанию</value></data>
+  <data name="Tenant.Enabled" xml:space="preserve"><value>Включено</value></data>
+  <data name="Tenant.Initialize" xml:space="preserve"><value>Инициализировать</value></data>
+  <data name="Tenant.InitializeDialog" xml:space="preserve"><value>Инициализация арендатора</value></data>
+  <data name="Tenant.InitializeResult" xml:space="preserve"><value>Результат инициализации</value></data>
+  <data name="Tenant.MatchKeyword" xml:space="preserve"><value>Ключевое слово соответствия: </value></data>
+  <data name="Tenant.MatchRule" xml:space="preserve"><value>Правило соответствия</value></data>
+  <data name="Tenant.MatchTime" xml:space="preserve"><value>Время соответствия: </value></data>
+  <data name="Tenant.MatchingRule" xml:space="preserve"><value>Правило соответствия: </value></data>
+  <data name="Tenant.MultiTenantDisabled" xml:space="preserve"><value>Мультитенантность отключена</value></data>
+  <data name="Tenant.Name" xml:space="preserve"><value>Имя арендатора: </value></data>
+  <data name="Tenant.Password" xml:space="preserve"><value>Пароль: </value></data>
+  <data name="Tenant.RecordedClose" xml:space="preserve"><value>Записано, Закрыть</value></data>
+  <data name="Tenant.SaveInfoWarning" xml:space="preserve"><value>Сохраните следующую информацию. После закрытия она будет недоступна!</value></data>
+  <data name="Tenant.SystemName" xml:space="preserve"><value>Название системы</value></data>
+  <data name="Tenant.SystemNamePlaceholder" xml:space="preserve"><value>Введите название системы</value></data>
+  <data name="Tenant.TenantInfo" xml:space="preserve"><value>Информация об арендаторе</value></data>
+  <data name="Tenant.TenantMatchKeyword" xml:space="preserve"><value>Ключевое слово арендатора</value></data>
+  <data name="Tenant.TenantMatchKeywordPlaceholder" xml:space="preserve"><value>Введите ключевое слово арендатора</value></data>
+  <data name="Tenant.TenantName" xml:space="preserve"><value>Имя арендатора</value></data>
+  <data name="Tenant.TenantNamePlaceholder" xml:space="preserve"><value>Введите имя арендатора</value></data>
+  <data name="Tenant.Username" xml:space="preserve"><value>Имя пользователя: </value></data>
+  <data name="Xncf.ActiveStatus" xml:space="preserve"><value>Статус активности</value></data>
+  <data name="Xncf.Address" xml:space="preserve"><value>Адрес: </value></data>
+  <data name="Xncf.Close" xml:space="preserve"><value>Закрыть</value></data>
+  <data name="Xncf.ConfirmDeleteModule" xml:space="preserve"><value>Вы уверены, что хотите удалить этот модуль?</value></data>
+  <data name="Xncf.Description" xml:space="preserve"><value>Описание</value></data>
+  <data name="Xncf.Disable" xml:space="preserve"><value>Отключить</value></data>
+  <data name="Xncf.DisabledModuleWarning" xml:space="preserve"><value>Модуль отключен, сначала включите его</value></data>
+  <data name="Xncf.DownloadLog" xml:space="preserve"><value>Скачать журнал</value></data>
+  <data name="Xncf.Enable" xml:space="preserve"><value>Включить</value></data>
+  <data name="Xncf.EnterHomePage" xml:space="preserve"><value>Перейти на главную</value></data>
+  <data name="Xncf.EnterHomePage.Prefix" xml:space="preserve"><value>Перейти на</value></data>
+  <data name="Xncf.EnterHomePage.Suffix" xml:space="preserve"><value>главную страницу</value></data>
+  <data name="Xncf.Execute" xml:space="preserve"><value>Выполнить</value></data>
+  <data name="Xncf.ExecuteMethods" xml:space="preserve"><value>Методы выполнения</value></data>
+  <data name="Xncf.Executing" xml:space="preserve"><value>Выполнение...</value></data>
+  <data name="Xncf.ExtensionModules" xml:space="preserve"><value>Модули расширений</value></data>
+  <data name="Xncf.Features" xml:space="preserve"><value>Функции</value></data>
+  <data name="Xncf.HomePage" xml:space="preserve"><value>Главная страница</value></data>
+  <data name="Xncf.Install" xml:space="preserve"><value>Установить</value></data>
+  <data name="Xncf.InstalledModules" xml:space="preserve"><value>Установленные модули</value></data>
+  <data name="Xncf.MenuDisplayName" xml:space="preserve"><value>Отображаемое имя меню</value></data>
+  <data name="Xncf.MenuNameVersion" xml:space="preserve"><value>Название меню / Версия</value></data>
+  <data name="Xncf.Module" xml:space="preserve"><value>Модуль</value></data>
+  <data name="Xncf.ModuleName" xml:space="preserve"><value>Название модуля</value></data>
+  <data name="Xncf.ModuleNameUniqueCode" xml:space="preserve"><value>Название модуля / Уникальный код</value></data>
+  <data name="Xncf.ModuleNotDeployed" xml:space="preserve"><value>Модуль не развернут</value></data>
+  <data name="Xncf.NewModules" xml:space="preserve"><value>Новые модули</value></data>
+  <data name="Xncf.NewVersionFound" xml:space="preserve"><value>Найдена новая версия</value></data>
+  <data name="Xncf.NoDataRequired" xml:space="preserve"><value>Данные не требуются</value></data>
+  <data name="Xncf.PageInspector" xml:space="preserve"><value>Инспектор страниц</value></data>
+  <data name="Xncf.ParamName" xml:space="preserve"><value>Имя параметра</value></data>
+  <data name="Xncf.ParamType" xml:space="preserve"><value>Тип параметра</value></data>
+  <data name="Xncf.ParameterInspector" xml:space="preserve"><value>Инспектор параметров</value></data>
+  <data name="Xncf.RecentStory" xml:space="preserve"><value>Недавняя история</value></data>
+  <data name="Xncf.Required" xml:space="preserve"><value>Обязательно</value></data>
+  <data name="Xncf.SearchPlaceholder" xml:space="preserve"><value>Поиск модулей...</value></data>
+  <data name="Xncf.Status" xml:space="preserve"><value>Статус</value></data>
+  <data name="Xncf.ThreadStatus" xml:space="preserve"><value>Статус потока</value></data>
+  <data name="Xncf.UIModuleTip" xml:space="preserve"><value>Этот модуль предоставляет UI-страницу, доступную с главной</value></data>
+  <data name="Xncf.UniqueCode" xml:space="preserve"><value>Уникальный код</value></data>
+  <data name="Xncf.UniqueId" xml:space="preserve"><value>Уникальный ID: </value></data>
+  <data name="Xncf.UpdateLog" xml:space="preserve"><value>Журнал обновлений</value></data>
+  <data name="Xncf.UpdateNow" xml:space="preserve"><value>Обновить сейчас</value></data>
+  <data name="Xncf.Version" xml:space="preserve"><value>Версия</value></data>
+  <data name="Xncf.ViewThreads" xml:space="preserve"><value>Просмотр потоков</value></data>
+  <data name="Menu.Db.系统菜单管理" xml:space="preserve"><value>System menu management</value></data>
+  <data name="Menu.Db.系统权限管理" xml:space="preserve"><value>System permission management</value></data>
+  <data name="Menu.Db.运行 RazorPage 等页面的基础模块" xml:space="preserve"><value>Base module for running RazorPage and other pages</value></data>
+  <data name="Menu.Db.这是系统服务核心模块，主管基础数据结构和网站核心运行数据，请勿删除此模块。如果你实在忍不住，请务必做好数据备份。" xml:space="preserve"><value>Core system service module managing data structures and runtime data. Do not delete. Please back up data first.</value></data>
+  <data name="Menu.Db.多租户模块，这是系统服务核心模块，请勿删除此模块。如果你实在忍不住，请务必做好数据备份。" xml:space="preserve"><value>Multi-tenant module. Core system service, do not delete. Please back up data first.</value></data>
+  <data name="Menu.Db.这是管理员后台模块，用于 NCF 系统后台的自我管理，请勿删除此模块。如果你实在忍不住，请务必做好数据备份。" xml:space="preserve"><value>Admin backend module for NCF system self-management. Do not delete. Please back up data first.</value></data>
+  <data name="Menu.Db.注册用户管理" xml:space="preserve"><value>Registered user management</value></data>
+  <data name="Menu.Db.NCF 初始化安装模块，安装完成后可卸载或移除" xml:space="preserve"><value>NCF initialization installer module. Can be uninstalled after setup.</value></data>
+  <data name="Menu.Db.AI 核心模块，基于 Senparc.AI 为所有 AI 项目提供基础能力" xml:space="preserve"><value>AI core module providing foundational capabilities for all AI projects based on Senparc.AI</value></data>
+  <data name="Menu.Db.人工智能代理枢纽模块" xml:space="preserve"><value>AI Agent Hub module</value></data>
+  <data name="Menu.Db.你的提示词（Prompt）训练场" xml:space="preserve"><value>Your Prompt training range</value></data>
+  <data name="Menu.Db.动态数据基础模块，用于创建和管理动态数据（早期迭代，尚未正式发布）" xml:space="preserve"><value>Dynamic data module for creating and managing dynamic data (early iteration)</value></data>
+  <data name="Menu.Db.SenMapic 爬虫模块" xml:space="preserve"><value>SenMapic web crawler module</value></data>
+  <data name="Menu.Db.此模块提供给开发者一个可以直接使用终端命令控制系统的模块！" xml:space="preserve"><value>Terminal module for developers to control the system via command line</value></data>
+  <data name="Menu.Db.此模块提供给开发者在安装完 NCF、发布产品之前，全局修改命名空间，请在生产环境中谨慎使用，此操作不可逆！必须做好提前备份！不建议在已经部署至生产环境并开始运行后使用此功能！" xml:space="preserve"><value>Global namespace changer. Use with caution before production deployment. Irreversible operation, backup required!</value></data>
+  <data name="Menu.Db.此模块提供给开发者一个可以启动任何程序！" xml:space="preserve"><value>Module for developers to launch any program</value></data>
+  <data name="Menu.Db.此模块为其他模块提供Dapr相关功能" xml:space="preserve"><value>Provides Dapr-related functionality for other modules</value></data>
 </root>

@@ -1,4 +1,4 @@
-﻿@* XNCF 模块页面的模板页 *@
+﻿@* XNCF module page layout template *@
 @model Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
 @using Senparc.Ncf.Core.Areas;
 @using Microsoft.AspNetCore.Http;
@@ -23,8 +23,8 @@
     @RenderSection("explanations", false)
 }
 @section breadcrumbs{
-    <li>扩展模块</li>
-    <li>模块管理</li>
+    <li>@AR["Xncf.扩展模块"]</li>
+    <li>@AR["Xncf.模块管理"]</li>
     <li>@Model.XncfModuleDto.MenuName</li>
     @RenderSection("breadcrumbs", false)
     @if (!IsSectionDefined("breadcrumbs"))
@@ -40,13 +40,13 @@
 }
 
 <div class="div">
-    @*左侧*@
+    @* Left sidebar *@
     <div class="col-md-2 col-sm-2" style="background:#586e83;">
         <div class="x_content">
             <div id="sidebar-sub-menu" class="main_menu_side hidden-print main_menu">
                 <div class="menu_section active">
                     <ul class="nav side-menu" style="">
-                        <li><a asp-page="../XncfModule/Start" asp-route-uid="@Model.XncfRegister.Uid"><i class="fa fa-chevron-left"></i> 返回</a></li>
+                        <li><a asp-page="../XncfModule/Start" asp-route-uid="@Model.XncfRegister.Uid"><i class="fa fa-chevron-left"></i> @AR["Common.返回"]</a></li>
                     </ul>
                     @await Html.PartialAsync("_XncfModuleLayout_Menu", Model.XncfRegister)
 
@@ -61,7 +61,7 @@
         </div>
     </div>
 
-    @*右侧*@
+    @* Right content *@
     <div class="col-md-10">
         <div class="x_panel">
             <div class="x_title">

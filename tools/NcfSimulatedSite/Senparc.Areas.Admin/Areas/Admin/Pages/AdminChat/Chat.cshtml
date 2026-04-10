@@ -1,7 +1,7 @@
 @page
 @model Senparc.Areas.Admin.Pages.AdminChat.ChatModel
 @{
-    ViewData["Title"] = "AI 智能助手";
+    ViewData["Title"] = AR["Chat.Title"];
     Layout = "_Layout_Vue";
 }
 
@@ -11,24 +11,24 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>AI 助手</el-breadcrumb-item>
-    <el-breadcrumb-item>对话</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Chat.Breadcrumb.AIAssistant"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Chat.Breadcrumb.Conversation"]</el-breadcrumb-item>
 }
 
 <div class="admin-chat-container">
     <el-container class="chat-main-container">
-        <!-- 左侧会话历史 -->
+        <!-- Session history sidebar -->
         <el-aside width="280px" class="chat-sidebar">
             <div class="sidebar-header">
                 <h3 class="sidebar-title">
-                    <i class="fa fa-comments"></i> 对话历史
+                    <i class="fa fa-comments"></i> @AR["Chat.SessionHistory"]
                 </h3>
                 <el-button 
                     type="primary" 
                     size="small" 
                     icon="el-icon-plus" 
                     @@click="createNewSession">
-                    新对话
+                    @AR["Chat.NewConversation"]
                 </el-button>
             </div>
             
@@ -48,7 +48,7 @@
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item :command="{action: 'delete', id: session.id}">
-                                <i class="fa fa-trash"></i> 删除
+                                <i class="fa fa-trash"></i> @AR["Chat.Delete"]
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -56,25 +56,25 @@
                 
                 <div v-if="sessionList.length === 0 && !loadingSessions" class="empty-sessions">
                     <i class="fa fa-comments-o"></i>
-                    <p>暂无对话历史</p>
+                    <p>@AR["Chat.NoSessionHistory"]</p>
                 </div>
             </div>
         </el-aside>
 
-        <!-- 右侧对话窗口 -->
+        <!-- Chat window -->
         <el-main class="chat-content">
             <div class="chat-header" v-if="currentSessionId">
                 <div class="chat-header-info">
                     <div class="chat-header-top">
                         <h3 class="chat-title">
-                            <i class="fa fa-magic"></i> {{ currentSessionTitle || 'AI 智能助手' }}
+                            <i class="fa fa-magic"></i> {{ currentSessionTitle || '@AR["Chat.Title"]' }}
                         </h3>
                         <div class="chat-header-actions">
                             <el-button
                                 size="mini"
                                 :type="isManageMode ? 'default' : 'primary'"
                                 @@click="toggleManageMode">
-                                {{ isManageMode ? '完成' : '管理' }}
+                                {{ isManageMode ? '@AR["Chat.ManageDone"]' : '@AR["Chat.Manage"]' }}
                             </el-button>
                         </div>
                     </div>
@@ -96,7 +96,7 @@
 
                                 <div class="module-selector-preview-body">
                                     <div class="module-selector-preview-section" v-if="resolveModuleDetail(module).menus && resolveModuleDetail(module).menus.length > 0">
-                                        <div class="module-selector-preview-section-title">菜单层级</div>
+                                        <div class="module-selector-preview-section-title">@AR["Chat.MenuHierarchy"]</div>
                                         <el-tree
                                             :data="resolveModuleDetail(module).menus"
                                             node-key="id"
@@ -122,7 +122,7 @@
                                     <div
                                         class="module-selector-preview-empty"
                                         v-if="(!resolveModuleDetail(module).menus || resolveModuleDetail(module).menus.length === 0) && (!resolveModuleDetail(module).functions || resolveModuleDetail(module).functions.length === 0)">
-                                        当前模块无可预览详情
+                                        @AR["Chat.NoPreviewDetails"]
                                     </div>
                                 </div>
                             </div>
@@ -148,12 +148,12 @@
                         :value="messageList.length > 0 && selectedMessageIds.length === messageList.length"
                         :indeterminate="selectedMessageIds.length > 0 && selectedMessageIds.length < messageList.length"
                         @@change="toggleSelectAllMessages">
-                        全选
+                        @AR["Chat.SelectAll"]
                     </el-checkbox>
-                    <span class="message-manage-count">已选 {{ selectedMessageIds.length }} 条</span>
-                    <el-button size="mini" @@click="copySelectedMessages" :disabled="selectedMessageIds.length === 0">复制</el-button>
-                    <el-button size="mini" @@click="clearMessageSelection" :disabled="selectedMessageIds.length === 0">清空选择</el-button>
-                    <el-button size="mini" type="danger" @@click="deleteSelectedMessages" :disabled="selectedMessageIds.length === 0">删除</el-button>
+                    <span class="message-manage-count">@AR["Chat.SelectedCount.Prefix"] {{ selectedMessageIds.length }} @AR["Chat.SelectedCount.Suffix"]</span>
+                    <el-button size="mini" @@click="copySelectedMessages" :disabled="selectedMessageIds.length === 0">@AR["Chat.Copy"]</el-button>
+                    <el-button size="mini" @@click="clearMessageSelection" :disabled="selectedMessageIds.length === 0">@AR["Chat.ClearSelection"]</el-button>
+                    <el-button size="mini" type="danger" @@click="deleteSelectedMessages" :disabled="selectedMessageIds.length === 0">@AR["Chat.Delete"]</el-button>
                 </div>
 
                 <div 
@@ -197,7 +197,7 @@
 
                 <div v-if="messageList.length === 0 && !loadingMessages" class="empty-messages">
                     <i class="fa fa-comment-o"></i>
-                    <p>开始您的对话吧</p>
+                    <p>@AR["Chat.StartConversation"]</p>
                 </div>
 
                 <div v-if="isAIResponding" class="message-item message-assistant ai-thinking">
@@ -206,13 +206,13 @@
                     </div>
                     <div class="message-content">
                         <div class="message-meta">
-                            <span class="message-role">AI 助手</span>
+                            <span class="message-role">@AR["Chat.AIAssistantRole"]</span>
                         </div>
                         <div class="message-text">
                             <span class="typing-indicator">
                                 <span></span><span></span><span></span>
                             </span>
-                            正在思考中...
+                            @AR["Chat.Thinking"]
                         </div>
                     </div>
                 </div>
@@ -222,15 +222,14 @@
                 <el-input
                     type="textarea"
                     v-model="inputMessage"
-                    placeholder="输入您的问题..."
-                    :rows="3"
+                    placeholder="@AR["Chat.InputPlaceholder"]" :rows="3"
                     :disabled="!currentSessionId || isSending"
                     @@keydown.native="handleChatInputKeydown"
                     class="message-input">
                 </el-input>
                 <div class="input-actions">
                     <span class="input-tip">
-                        <i class="fa fa-info-circle"></i> Ctrl + Enter 或 Cmd + Enter 发送
+                        <i class="fa fa-info-circle"></i> @AR["Chat.SendShortcut"]
                     </span>
                     <el-button 
                         type="primary" 
@@ -238,7 +237,7 @@
                         :loading="isSending"
                         :disabled="!currentSessionId || !inputMessage || inputMessage.trim().length === 0"
                         @@click="sendMessage">
-                        发送
+                        @AR["Chat.Send"]
                     </el-button>
                 </div>
             </div>
@@ -252,9 +251,9 @@
                             </div>
                             <div class="chat-entrance-content">
                                 <h3 class="chat-entrance-title">
-                                    <i class="fa fa-magic"></i> AI 智能助手
+                                    <i class="fa fa-magic"></i> @AR["Dashboard.AIAssistant"]
                                 </h3>
-                                <p class="chat-entrance-subtitle">输入问题并选择引用模块，开始新的对话会话</p>
+                                <p class="chat-entrance-subtitle">@AR["Chat.Entrance.Subtitle"]</p>
                             </div>
                         </div>
 
@@ -262,8 +261,7 @@
                             <el-input
                                 type="textarea"
                                 v-model="chatInputText"
-                                placeholder="输入您的问题，例如：如何配置系统参数？&#10;&#10;提示：按 Ctrl+Enter 或 Cmd+Enter 发送消息"
-                                :rows="4"
+                                placeholder="@AR["Dashboard.AIAssistant.InputPlaceholder"]" :rows="4"
                                 :autosize="{ minRows: 4, maxRows: 8 }"
                                 @@keydown.native="handleLauncherInputKeydown"
                                 class="chat-entrance-input"
@@ -277,16 +275,16 @@
                                 :disabled="!chatInputText || chatInputText.trim().length === 0"
                                 :loading="isCreatingSession"
                                 class="chat-send-button">
-                                开始对话
+                                @AR["Dashboard.AIAssistant.StartChat"]
                             </el-button>
                         </div>
 
                         <div class="chat-module-picker">
                             <div class="chat-module-picker-header">
-                                <span class="chat-module-picker-title">引用模块（可选）</span>
+                                <span class="chat-module-picker-title">@AR["Dashboard.AIAssistant.ReferenceModules"]</span>
                                 <div class="chat-module-picker-actions">
-                                    <el-button size="mini" type="primary" icon="el-icon-plus" @@click="openModuleSelector">添加引用模块</el-button>
-                                    <el-button size="mini" @@click="clearSelectedModules" v-if="selectedModules.length > 0">清空</el-button>
+                                    <el-button size="mini" type="primary" icon="el-icon-plus" @@click="openModuleSelector">@AR["Dashboard.AIAssistant.AddReferenceModule"]</el-button>
+                                    <el-button size="mini" @@click="clearSelectedModules" v-if="selectedModules.length > 0">@AR["Dashboard.AIAssistant.Clear"]</el-button>
                                 </div>
                             </div>
 
@@ -301,7 +299,7 @@
                                     <i :class="module.icon"></i> {{module.name}}
                                 </el-tag>
                             </div>
-                            <div v-else class="chat-module-selected-empty">点击“添加引用模块”可选择多个模块作为上下文</div>
+                            <div v-else class="chat-module-selected-empty">@AR["Dashboard.AIAssistant.EmptyModuleTip"]</div>
                         </div>
 
                         @await Html.PartialAsync("~/Areas/Admin/Pages/Shared/_ChatModuleSelectorDialog.cshtml")

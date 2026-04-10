@@ -1,35 +1,37 @@
-﻿var app = new Vue({
+var ncfI18n = window.ncfI18n || {};
+
+var app = new Vue({
     el: "#app",
     data() {
         return {
-            data: [], // 数据
+            data: [], // Data
             tooltip: {
-                "IAreaRegister": '网页',
-                "IXncfDatabase": '数据库',
-                "IXncfMiddleware": '中间件',
-                "IXncfRazorRuntimeCompilation": '线程'
+                "IAreaRegister": ncfI18n.tooltipWebpage || 'Webpage',
+                "IXncfDatabase": ncfI18n.tooltipDatabase || 'Database',
+                "IXncfMiddleware": ncfI18n.tooltipMiddleware || 'Middleware',
+                "IXncfRazorRuntimeCompilation": ncfI18n.tooltipThread || 'Thread'
             },
             state: {
-                'String': '文本',
-                'Int32': '数字',
-                'Int64': '数字',
-                'DateTime': '日期',
-                'String[]': '选项'
+                'String': ncfI18n.stateText || 'Text',
+                'Int32': ncfI18n.stateNumber || 'Number',
+                'Int64': ncfI18n.stateNumber || 'Number',
+                'DateTime': ncfI18n.stateDate || 'Date',
+                'String[]': ncfI18n.stateOptions || 'Options'
             },
             xNcfModules_State: {
-                0: '关闭',
-                1: '开放',
-                2: '新增待审核',
-                3: '更新待审核'
+                0: ncfI18n.moduleStateClosed || 'Closed',
+                1: ncfI18n.moduleStateOpen || 'Open',
+                2: ncfI18n.moduleStateNewPending || 'New - Pending Review',
+                3: ncfI18n.moduleStateUpdatePending || 'Update - Pending Review'
             },
-            // 执行弹窗
+            // Execution dialog
             run: {
                 data: {},
                 visible: false,
                 loading: false
             },
             runData: {
-                // 绑定数据
+                // Bound data
             },
             runResult: {
                 visible: false,
@@ -39,7 +41,7 @@
                 tempId: '',
                 hasLog: false
             },
-            //查看线程 
+            // View thread
             thread: {
                 visible: false
             }
@@ -58,28 +60,28 @@
         },
 
 
-        // 打开首页
+        // Open homepage
         openUrl(url, flag) {
-            // 关闭状态返回
+            // Return if closed
             flag = flag + '';
             if (flag !== '1') {
                 this.$notify({
-                    title: '提示',
-                    message: '请开启后执行',
+                    title: ncfI18n.notice || 'Notice',
+                    message: ncfI18n.pleaseEnableFirst || 'Please enable before executing',
                     type: 'warning'
                 });
                 return;
             }
             window.location.href = url;
         },
-        // 打开执行
+        // Open execution
         openRun(item, flag) {
-            // 关闭状态返回
+            // Return if closed
             flag = flag + '';
             if (flag !== '1') {
                 this.$notify({
-                    title: '提示',
-                    message: '请开启后执行',
+                    title: ncfI18n.notice || 'Notice',
+                    message: ncfI18n.pleaseEnableFirst || 'Please enable before executing',
                     type: 'warning'
                 });
                 return;
@@ -87,9 +89,9 @@
             this.run.data = item;
             this.runData = {};
             this.run.data.value.map(res => {
-                // 动态model绑定生成
-                // 默认选择赋值
-                // 多选
+                // Dynamic model binding generation
+                // Default selection assignment
+                // Multi-select
                 if (res.parameterType === 2 && res.selectionList.items) {
                     this.runData[res.name] = {};
                     this.runData[res.name].value = [];
@@ -100,7 +102,7 @@
                         }
                     });
                 }
-                // 下拉框value
+                // Dropdown value
                 if (res.parameterType === 1 && res.selectionList.items) {
                     this.runData[res.name] = {};
                     this.runData[res.name].value = '';
@@ -110,12 +112,12 @@
                             this.runData[res.name].value = ele.value;
                         }
                     });
-                    // 如果没有默认给第一个
+                    // If no default, use the first one
                     if (this.runData[res.name].value.length === 0) {
                         this.runData[res.name].value = res.selectionList.items[0].value;
                     }
                 }
-                // 输入框
+                // Input field
                 if (res.parameterType === 0 || res.parameterType === 3) {
                     this.runData[res.name] = {};
                     this.runData[res.name].item = res;
@@ -123,20 +125,20 @@
                 }
             });
             this.runData = Object.assign({}, this.runData);
-            //  this.runData数组结构
-            //在接口传输时，将下拉单选转成数组
+            //  runData array structure
+            //  When sending to API, convert dropdown single-select to array
             //{
-            //   // parameterType === 2 多选
+            //   // parameterType === 2 Multi-select
             //    Modules: {
             //        item: {},
             //        value: []
             //    },
-            //   // parameterType === 1 下拉单选
+            //   // parameterType === 1 Dropdown single-select
             //    ReferenceType: {
             //        item: {},
             //        value: []
             //    },
-            //   // parameterType === 0 input
+            //   // parameterType === 0 Input
             //    SourcePath: {
             //        item: {},
             //        value: ''
@@ -144,30 +146,30 @@
             //};
             this.run.visible = true;
         },
-        // 执行
+        // Execute
         async handleRun() {
-            // 物理路径校验
+            // Physical path validation
             if (this.runData.hasOwnProperty('SourcePath') && this.runData.SourcePath.length < 1) {
                 this.$notify({
-                    title: '警告',
-                    message: '请填写源码物理路径',
+                    title: ncfI18n.warning || 'Warning',
+                    message: ncfI18n.pleaseEnterSourcePath || 'Please enter the source code physical path',
                     type: 'warning'
                 });
                 return;
             }
 
-            // 设置 loading 状态
+            // Set loading state
             this.run.loading = true;
 
             try {
                 let xncfFunctionParams = {};
                 for (var i in this.runData) {
-                    // 多选
+                    // Multi-select
                     if (this.runData[i].item.parameterType === 2) {
                         if (this.runData[i].item.isRequired && this.runData[i].value.length === 0) {
                             this.$notify({
-                                title: '提示',
-                                message: this.runData[i].item.title + '  为必选项',
+                                title: ncfI18n.notice || 'Notice',
+                                message: this.runData[i].item.title + '  ' + (ncfI18n.isRequired || 'is required'),
                                 type: 'warning'
                             });
                             return;
@@ -178,12 +180,12 @@
 
                         }
                     }
-                    // 下拉框value为字符串，但接口要数组
+                    // Dropdown value is string but API expects array
                     if (this.runData[i].item.parameterType === 1) {
                         if (this.runData[i].item.isRequired && this.runData[i].value.length === 0) {
                             this.$notify({
-                                title: '提示',
-                                message: this.runData[i].item.title + '  为必填项',
+                                title: ncfI18n.notice || 'Notice',
+                                message: this.runData[i].item.title + '  ' + (ncfI18n.isRequired || 'is required'),
                                 type: 'warning'
                             });
                             return;
@@ -193,12 +195,12 @@
                             xncfFunctionParams[i].SelectedValues[0] = this.runData[i].value;
                         }
                     }
-                    // 输入框
+                    // Input field
                     if (this.runData[i].item.parameterType === 0 || this.runData[i].item.parameterType === 3) {
                         if (this.runData[i].item.isRequired && this.runData[i].value.length === 0) {
                             this.$notify({
-                                title: '提示',
-                                message: this.runData[i].item.title + '  为必填项',
+                                title: ncfI18n.notice || 'Notice',
+                                message: this.runData[i].item.title + '  ' + (ncfI18n.isRequired || 'is required'),
                                 type: 'warning'
                             });
                             return;
@@ -214,7 +216,7 @@
                 };
 
                 const res = await service.post(`/Admin/XncfModule/Start?handler=RunFunction`, data, { customAlert: true });
-                
+
                 this.runResult.tempId = res.data.tempId;
                 if ((res.data.log || '').length > 0 && (res.data.tempId || '').length > 0) {
                     this.runResult.hasLog = true;
@@ -223,50 +225,50 @@
                 const msg = DOMPurify.sanitize(res.data.msg);
 
                 if (!res.data.success) {
-                    this.runResult.tit = '遇到错误';
-                    this.runResult.tip = '错误信息';
+                    this.runResult.tit = ncfI18n.errorEncountered || 'Error encountered';
+                    this.runResult.tip = ncfI18n.errorInfo || 'Error info';
                     this.runResult.msg = (msg || DOMPurify.sanitize(res.data.exception)).replace(/&lt;br \/&gt;/g, '<br />').replace('\r\n', '<br />').replace('\n', '<br />').replace('\r', '<br />');
                     this.runResult.visible = true;
                     return;
                 }
                 if (msg && (msg.indexOf('http://') === 0 || msg.indexOf('https://') === 0)) {
-                    this.runResult.tit = '执行成功';
-                    this.runResult.tip = '收到网址，点击下方打开<br />（此链接由第三方提供，请注意安全）：';
+                    this.runResult.tit = ncfI18n.executionSuccess || 'Execution successful';
+                    this.runResult.tip = ncfI18n.receivedUrlClickBelow || 'Received a URL, click below to open<br />(This link is provided by a third party, please be careful):';
                     this.runResult.msg = '<i class="fa fa-external-link"></i> <a href="' + msg + '" target="_blank">' + msg + '</a>';
                 }
                 else {
-                    this.runResult.tit = '执行成功';
-                    this.runResult.tip = '返回信息';
+                    this.runResult.tit = ncfI18n.executionSuccess || 'Execution successful';
+                    this.runResult.tip = ncfI18n.returnInfo || 'Return info';
                     this.runResult.msg = msg.replace(/&lt;br \/&gt;/g, '<br />').replace('\r\n', '<br />').replace('\n', '<br />').replace('\r','<br />');
                 }
-                // 打开执行结果弹窗
+                // Open execution result dialog
                 this.runResult.visible = true;
                 this.getList();
             } catch (error) {
-                console.error('执行出错:', error);
+                console.error('Execution error:', error);
                 this.$notify({
-                    title: '错误',
-                    message: '执行过程中发生错误',
+                    title: ncfI18n.error || 'Error',
+                    message: ncfI18n.executionError || 'An error occurred during execution',
                     type: 'error'
                 });
             } finally {
-                // 无论成功失败都取消 loading 状态
+                // Cancel loading state regardless of success or failure
                 this.run.loading = false;
             }
         },
-        // 关闭和开启
+        // Close and open
         async updataState(state) {
             const id = this.data.xncfModule.id;
             const res = await service.get(`/Admin/XncfModule/Start?handler=ChangeState&id=${id}&tostate=${state}`);
             window.location.reload();
         },
-        // 更新版本
+        // Update version
         async  updataVersion() {
             const uid = resizeUrl().uid;
             await service.get(`/Admin/XncfModule/Index?handler=ScanAjax&uid=${uid}`);
             window.location.reload();
         },
-        // 删除
+        // Delete
         async handleDelete() {
             const id = this.data.xncfModule.id;
             const res = await service.post(`/Admin/XncfModule/Start?handler=Delete&id=${id}`);

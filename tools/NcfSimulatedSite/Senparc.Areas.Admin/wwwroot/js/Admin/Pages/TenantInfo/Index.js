@@ -1,12 +1,14 @@
-﻿var app = new Vue({
+var ncfI18n = window.ncfI18n || {};
+
+var app = new Vue({
     el: "#app",
     data() {
         return {
-            //分页参数
+            // Pagination parameters
             paginationQuery: {
                 total: 0
             },
-            //分页接口传参
+            // Pagination API parameters
             listQuery: {
                 pageIndex: 1,
                 pageSize: 10,
@@ -17,7 +19,7 @@
             tenantRule: '',
             enableMultiTenant: true,
             dialog: {
-                title: '新增租户信息',
+                title: ncfI18n.addTenantInfo || 'Add Tenant Info',
                 visible: false,
                 data: {
                     id: 0,
@@ -28,14 +30,14 @@
                 },
                 rules: {
                     name: [
-                        { required: true, message: "租户名称为必填项", trigger: "blur" }
+                        { required: true, message: ncfI18n.tenantNameRequired || "Tenant name is required", trigger: "blur" }
                     ],
                     tenantKey: [
-                        { required: true, message: "租户匹配规则为必填项", trigger: "blur" }
+                        { required: true, message: ncfI18n.tenantKeyRequired || "Tenant matching rule is required", trigger: "blur" }
                     ]
                 },
                 updateLoading: false,
-                updateLoadingSet: false, // 确认loading按钮
+                updateLoadingSet: false, // Confirm loading button
                 nameError: '',
                 tenantKeyError: ''
             },
@@ -49,10 +51,10 @@
                 },
                 rules: {
                     systemName: [
-                        { required: true, message: "系统名称为必填项", trigger: "blur" }
+                        { required: true, message: ncfI18n.systemNameRequired || "System name is required", trigger: "blur" }
                     ],
                     adminAccount: [
-                        { required: true, message: "默认管理员账号为必填项", trigger: "blur" }
+                        { required: true, message: ncfI18n.defaultAdminRequired || "Default admin account is required", trigger: "blur" }
                     ]
                 }
             },
@@ -81,7 +83,7 @@
     },
     watch: {
         'dialog.visible': function (val, old) {
-            // 关闭dialog，清空
+            // Clear on dialog close
             if (!val) {
                 this.dialog.data = {
                     id: 0,
@@ -98,7 +100,7 @@
         }
     },
     methods: {
-        // 获取数据
+        // Get data
         getList() {
             let { pageIndex, pageSize } = this.listQuery;
             service.get(`/Admin/TenantInfo/index?handler=List&pageIndex=${pageIndex}&pageSize=${pageSize}`).then(res => {
@@ -108,9 +110,9 @@
                 }
             });
         },
-        // 新增
+        // Add
         handleAdd() {
-            this.dialog.title = '新增租户信息';
+            this.dialog.title = ncfI18n.addTenantInfo || 'Add Tenant Info';
             this.dialog.visible = true;
             this.dialog.data = {
                 id: 0,
@@ -120,26 +122,26 @@
                 enable: true
             };
         },
-        // 编辑
+        // Edit
         handleEdit(index, row) {
             this.dialog.visible = true;
             if (row) {
-                // 编辑
+                // Edit
                 let { id, name, tenantKey, adminRemark, enable } = row;
                 this.dialog.data = {
                     id, name, tenantKey, adminRemark, enable
                 };
-                this.dialog.title = '编辑租户信息';
+                this.dialog.title = ncfI18n.editTenantInfo || 'Edit Tenant Info';
                 this.dialog = Object.assign({}, this.dialog);
             } else {
-                // 新增
-                this.dialog.title = '新增租户信息';
+                // Add
+                this.dialog.title = ncfI18n.addTenantInfo || 'Add Tenant Info';
             }
         },
-        // 更新新增编辑
+        // Update add/edit
         updateData() {
             this.$refs['dataForm'].validate(valid => {
-                // 表单校验
+                // Form validation
                 if (valid) {
                     this.dialog.updateLoading = true;
                     let data = {
@@ -167,7 +169,7 @@
                 }
             });
         },
-        // 删除
+        // Delete
         handleDelete(index, row) {
             let ids = [row.id];
             service.post("/Admin/TenantInfo/Index?handler=Delete", ids).then(res => {
@@ -175,7 +177,7 @@
                     this.getList();
                     this.$notify({
                         title: "Success",
-                        message: "删除成功",
+                        message: ncfI18n.deleteSuccess || "Deleted successfully",
                         type: "success",
                         duration: 2000
                     });
@@ -191,7 +193,7 @@
                 }
             });
         },
-        // 初始化
+        // Initialize
         handleInitialize(row) {
             this.initializeDialog.visible = true;
             this.initializeDialog.data = {
@@ -201,7 +203,7 @@
             };
         },
 
-        // 提交初始化
+        // Submit initialization
         submitInitialize() {
             this.$refs['initializeForm'].validate(valid => {
                 if (valid) {
@@ -209,13 +211,13 @@
                     service.post("/Admin/TenantInfo/Index?handler=Initialize", this.initializeDialog.data).then(res => {
                         if (res.data.success) {
                             this.initializeDialog.visible = false;
-                            // 显示结果弹窗
+                            // Show result dialog
                             this.resultDialog.data = res.data.data;
                             this.resultDialog.visible = true;
                         } else {
                             this.$notify({
                                 title: "Error",
-                                message: res.data.msg || "初始化失败",
+                                message: res.data.msg || (ncfI18n.initializationFailed || "Initialization failed"),
                                 type: "error",
                                 duration: 2000
                             });

@@ -175,4 +175,597 @@
   <data name="AdminChat.SelectAtLeastOneMessage" xml:space="preserve"><value>少なくとも 1 件のメッセージを選択してください</value></data>
   <data name="AdminChat.DeleteMessagesSuccess" xml:space="preserve"><value>削除に成功しました。{0} 件のメッセージを削除しました</value></data>
   <data name="AdminChat.AddModulesSuccess" xml:space="preserve"><value>追加に成功しました</value></data>
+  <data name="Menu.Db.系统管理" xml:space="preserve"><value>システム管理</value></data>
+  <data name="Menu.Db.管理员管理" xml:space="preserve"><value>管理者管理</value></data>
+  <data name="Menu.Db.角色管理" xml:space="preserve"><value>ロール管理</value></data>
+  <data name="Menu.Db.菜单管理" xml:space="preserve"><value>メニュー管理</value></data>
+  <data name="Menu.Db.系统信息" xml:space="preserve"><value>システム情報</value></data>
+  <data name="Menu.Db.多租户信息" xml:space="preserve"><value>マルチテナント情報</value></data>
+  <data name="Menu.Db.扩展模块" xml:space="preserve"><value>拡張モジュール</value></data>
+  <data name="Menu.Db.模块管理" xml:space="preserve"><value>モジュール管理</value></data>
+  <data name="Menu.Db.新增" xml:space="preserve"><value>追加</value></data>
+  <data name="Menu.Db.编辑" xml:space="preserve"><value>編集</value></data>
+  <data name="Menu.Db.删除" xml:space="preserve"><value>削除</value></data>
+  <data name="Menu.Db.查询" xml:space="preserve"><value>検索</value></data>
+  <data name="Menu.Db.查看" xml:space="preserve"><value>表示</value></data>
+  <data name="Menu.Db.授权" xml:space="preserve"><value>認可</value></data>
+  <data name="Menu.Db.分配角色" xml:space="preserve"><value>ロール割り当て</value></data>
+  <data name="Menu.Db.AI 核心模块" xml:space="preserve"><value>AIコアモジュール</value></data>
+  <data name="Menu.Db.AI 知识库" xml:space="preserve"><value>AIナレッジベース</value></data>
+  <data name="Menu.Db.Agents 管理模块" xml:space="preserve"><value>エージェント管理</value></data>
+  <data name="Menu.Db.Areas 基础模块" xml:space="preserve"><value>Areasベースモジュール</value></data>
+  <data name="Menu.Db.XNCF 模块管理核心" xml:space="preserve"><value>XNCFモジュールマネージャー</value></data>
+  <data name="Menu.Db.系统核心模块" xml:space="preserve"><value>システムコアモジュール</value></data>
+  <data name="Menu.Db.权限管理" xml:space="preserve"><value>権限管理</value></data>
+  <data name="Menu.Db.多租户" xml:space="preserve"><value>マルチテナント</value></data>
+  <data name="Menu.Db.提示词靶场" xml:space="preserve"><value>プロンプトレンジ</value></data>
+  <data name="Menu.Db.动态数据基础模块" xml:space="preserve"><value>ダイナミックデータモジュール</value></data>
+  <data name="Menu.Db.文件管理" xml:space="preserve"><value>ファイル管理</value></data>
+  <data name="Menu.Db.终端模块" xml:space="preserve"><value>ターミナルモジュール</value></data>
+  <data name="Menu.Db.接口说明文档" xml:space="preserve"><value>APIドキュメント</value></data>
+  <data name="Menu.Db.修改命名空间" xml:space="preserve"><value>名前空間変更</value></data>
+  <data name="Menu.Db.应用程序模块" xml:space="preserve"><value>アプリケーションモジュール</value></data>
+  <data name="Menu.Db.微信管理" xml:space="preserve"><value>WeChat管理</value></data>
+  <data name="Menu.Db.NCF 系统管理员后台" xml:space="preserve"><value>NCFシステム管理パネル</value></data>
+  <data name="Menu.Db.用户管理" xml:space="preserve"><value>ユーザー管理</value></data>
+  <data name="Menu.Db.NCF 安装程序" xml:space="preserve"><value>NCFインストーラー</value></data>
+  <data name="Menu.Db.设置/执行" xml:space="preserve"><value>設定/実行</value></data>
+  <data name="Menu.Db.超级管理员" xml:space="preserve"><value>スーパー管理者</value></data>
+  <data name="AdminUserInfo.EditTitle.Edit" xml:space="preserve"><value>管理者を編集</value></data>
+  <data name="AdminUserInfo.EditTitle.Add" xml:space="preserve"><value>管理者を追加</value></data>
+  <data name="AdminUserInfo.Username" xml:space="preserve"><value>ユーザー名</value></data>
+  <data name="AdminUserInfo.UsernamePlaceholder" xml:space="preserve"><value>ユーザー名を入力してください</value></data>
+  <data name="AdminUserInfo.UsernameWarning" xml:space="preserve"><value>ユーザー名の変更は推奨されません！</value></data>
+  <data name="AdminUserInfo.Password" xml:space="preserve"><value>パスワード</value></data>
+  <data name="AdminUserInfo.PasswordPlaceholder" xml:space="preserve"><value>パスワードを入力してください</value></data>
+  <data name="AdminUserInfo.ConfirmPassword" xml:space="preserve"><value>パスワードの確認</value></data>
+  <data name="AdminUserInfo.ConfirmPasswordPlaceholder" xml:space="preserve"><value>パスワードを再入力してください</value></data>
+  <data name="AdminUserInfo.RealName" xml:space="preserve"><value>本名</value></data>
+  <data name="AdminUserInfo.RealNamePlaceholder" xml:space="preserve"><value>本名を入力してください</value></data>
+  <data name="AdminUserInfo.Phone" xml:space="preserve"><value>電話番号</value></data>
+  <data name="AdminUserInfo.PhonePlaceholder" xml:space="preserve"><value>電話番号を入力してください</value></data>
+  <data name="AdminUserInfo.NotePlaceholder" xml:space="preserve"><value>備考を入力してください</value></data>
+  <data name="Common.提交" xml:space="preserve"><value>送信</value></data>
+  <data name="AdminUserInfo.列表" xml:space="preserve"><value>管理者一覧</value></data>
+  <data name="AdminUserInfo.设置角色" xml:space="preserve"><value>ロール設定</value></data>
+  <data name="AdminUserInfo.确认删除" xml:space="preserve"><value>このユーザーを削除しますか？</value></data>
+  <data name="AdminUserInfo.SetRolePrefix" xml:space="preserve"><value>ロール設定 - </value></data>
+  <data name="Menu.EditTitle.Edit" xml:space="preserve"><value>メニューを編集</value></data>
+  <data name="Menu.EditTitle.Add" xml:space="preserve"><value>メニューを追加</value></data>
+  <data name="Menu.增加一级菜单" xml:space="preserve"><value>トップメニューを追加</value></data>
+  <data name="Menu.添加子菜单" xml:space="preserve"><value>サブメニューを追加</value></data>
+  <data name="Menu.菜单排序" xml:space="preserve"><value>メニューの並び順</value></data>
+  <data name="Menu.请输入菜单排序" xml:space="preserve"><value>メニューの並び順を入力してください</value></data>
+  <data name="Menu.菜单名称" xml:space="preserve"><value>メニュー名</value></data>
+  <data name="Menu.请输入菜单名称" xml:space="preserve"><value>メニュー名を入力してください</value></data>
+  <data name="Menu.菜单地址" xml:space="preserve"><value>メニューURL</value></data>
+  <data name="Menu.请输入菜单地址" xml:space="preserve"><value>メニューURLを入力してください</value></data>
+  <data name="Menu.菜单图标" xml:space="preserve"><value>メニューアイコン</value></data>
+  <data name="Menu.请输入菜单图标" xml:space="preserve"><value>メニューアイコンを入力してください</value></data>
+  <data name="Menu.是否可见" xml:space="preserve"><value>表示</value></data>
+  <data name="Menu.按钮名称" xml:space="preserve"><value>ボタン名</value></data>
+  <data name="Menu.操作标识" xml:space="preserve"><value>操作コード</value></data>
+  <data name="Menu.操作地址" xml:space="preserve"><value>操作URL</value></data>
+  <data name="Menu.添加按钮" xml:space="preserve"><value>ボタンを追加</value></data>
+  <data name="Role.EditTitle.Edit" xml:space="preserve"><value>ロールを編集</value></data>
+  <data name="Role.EditTitle.Add" xml:space="preserve"><value>ロールを追加</value></data>
+  <data name="Role.角色权限管理" xml:space="preserve"><value>ロール権限管理</value></data>
+  <data name="Role.权限设置" xml:space="preserve"><value>権限設定</value></data>
+  <data name="Admin.Login.LoginFailed" xml:space="preserve"><value>ログイン失敗</value></data>
+  <data name="Admin.Login.LoginRetry" xml:space="preserve"><value>ログイン失敗、再試行してください</value></data>
+  <data name="Admin.Login.TechSupport" xml:space="preserve"><value>技術サポート：</value></data>
+  <data name="Admin.Login.VisitWebsite" xml:space="preserve"><value>公式サイトへ</value></data>
+  <data name="Admin.Logout.Tooltip" xml:space="preserve"><value>ログアウト</value></data>
+  <data name="Admin.Nav.首页" xml:space="preserve"><value>ホーム</value></data>
+  <data name="SystemConfig.系统信息" xml:space="preserve"><value>システム情報</value></data>
+  <data name="SystemConfig.基础信息" xml:space="preserve"><value>基本情報</value></data>
+  <data name="SystemConfig.系统名称" xml:space="preserve"><value>システム名</value></data>
+  <data name="SystemConfig.模块发布模式" xml:space="preserve"><value>モジュール公開モード</value></data>
+  <data name="SystemConfig.请输入系统名称" xml:space="preserve"><value>システム名を入力してください</value></data>
+  <data name="Trace.日志详情" xml:space="preserve"><value>ログ</value></data>
+  <data name="Trace.SenparcTrace日志" xml:space="preserve"><value>SenparcTrace ログ</value></data>
+  <data name="Trace.显示所有完整结果" xml:space="preserve"><value>全結果を表示</value></data>
+  <data name="Trace.只显示所有异常信息" xml:space="preserve"><value>例外のみ表示</value></data>
+  <data name="Trace.异常信息" xml:space="preserve"><value>例外情報</value></data>
+  <data name="Trace.请输入关键字" xml:space="preserve"><value>キーワードを入力</value></data>
+  <data name="Trace.至" xml:space="preserve"><value>～</value></data>
+  <data name="Trace.开始时间" xml:space="preserve"><value>開始時刻</value></data>
+  <data name="Trace.结束时间" xml:space="preserve"><value>終了時刻</value></data>
+  <data name="Trace.选择线程" xml:space="preserve"><value>スレッドを選択</value></data>
+  <data name="Trace.选择类型" xml:space="preserve"><value>タイプを選択</value></data>
+  <data name="Trace.异常状态" xml:space="preserve"><value>例外ステータス</value></data>
+  <data name="Common.全部" xml:space="preserve"><value>全て</value></data>
+  <data name="Common.是" xml:space="preserve"><value>はい</value></data>
+  <data name="Common.否" xml:space="preserve"><value>いいえ</value></data>
+  <data name="Trace.编号行号" xml:space="preserve"><value>番号/行番号</value></data>
+  <data name="Trace.时间" xml:space="preserve"><value>時刻</value></data>
+  <data name="Trace.线程" xml:space="preserve"><value>スレッド</value></data>
+  <data name="Trace.类型" xml:space="preserve"><value>タイプ</value></data>
+  <data name="Trace.是否异常" xml:space="preserve"><value>例外かどうか</value></data>
+  <data name="Trace.标题" xml:space="preserve"><value>タイトル</value></data>
+  <data name="Trace.内容" xml:space="preserve"><value>内容</value></data>
+  <data name="Trace.返回结果" xml:space="preserve"><value>結果：</value></data>
+  <data name="Trace.Post数据" xml:space="preserve"><value>Post データ：</value></data>
+  <data name="Xncf.扩展模块" xml:space="preserve"><value>拡張モジュール</value></data>
+  <data name="Xncf.模块管理" xml:space="preserve"><value>モジュール管理</value></data>
+  <data name="Chat.AddReferenceModule" xml:space="preserve"><value>参照モジュールを追加</value></data>
+  <data name="Chat.SearchModulePlaceholder" xml:space="preserve"><value>モジュール名/説明/UIDで検索</value></data>
+  <data name="Chat.SelectAllFiltered" xml:space="preserve"><value>フィルター結果を全選択</value></data>
+  <data name="Chat.ClearSelection" xml:space="preserve"><value>選択をクリア</value></data>
+  <data name="Chat.SelectedCount" xml:space="preserve"><value>選択済み</value></data>
+  <data name="Chat.QuickEnter" xml:space="preserve"><value>クイックアクセス</value></data>
+  <data name="Chat.Menu" xml:space="preserve"><value>メニュー</value></data>
+  <data name="Chat.NoMenu" xml:space="preserve"><value>メニューなし</value></data>
+  <data name="Chat.MenuHierarchy" xml:space="preserve"><value>メニュー階層</value></data>
+  <data name="Chat.NoMenuAndFunctions" xml:space="preserve"><value>このモジュールには利用可能なメニューとFunctionsがありません</value></data>
+  <data name="Chat.NoMatchingModule" xml:space="preserve"><value>一致するモジュールがありません</value></data>
+  <data name="Chat.ConfirmAdd" xml:space="preserve"><value>追加を確認</value></data>
+  <data name="Xncf.SettingsExecute" xml:space="preserve">
+    <value>設定/実行</value>
+  </data>
+  <data name="Xncf.PendingUpdateModules" xml:space="preserve">
+    <value>更新待ちモジュール</value>
+  </data>
+  <data name="Xncf.View" xml:space="preserve">
+    <value>表示</value>
+  </data>
+  <data name="Dashboard.AIAssistant.InputPlaceholder" xml:space="preserve">
+    <value>質問を入力してください。例：システムパラメータの設定方法は？
+
+ヒント：Ctrl+Enter または Cmd+Enter で送信</value>
+  </data>
+  <data name="Chat.ManageDone" xml:space="preserve">
+    <value>完了</value>
+  </data>
+  <data name="Chat.Manage" xml:space="preserve">
+    <value>管理</value>
+  </data>
+  <!-- JavaScript i18n keys (Js.*) -->
+  <data name="Js.addAdmin" xml:space="preserve">
+    <value>管理者を追加</value>
+  </data>
+  <data name="Js.addMenu" xml:space="preserve">
+    <value>メニューを追加</value>
+  </data>
+  <data name="Js.addRole" xml:space="preserve">
+    <value>ロールを追加</value>
+  </data>
+  <data name="Js.addSubMenu" xml:space="preserve">
+    <value>サブメニューを追加</value>
+  </data>
+  <data name="Js.addTenantInfo" xml:space="preserve">
+    <value>テナント情報を追加</value>
+  </data>
+  <data name="Js.authorizationSuccess" xml:space="preserve">
+    <value>認可が成功しました</value>
+  </data>
+  <data name="Js.buttonTypeRequired" xml:space="preserve">
+    <value>タイプがButtonの場合、この項目は必須です</value>
+  </data>
+  <data name="Js.cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="Js.chatRoleAI" xml:space="preserve">
+    <value>AIアシスタント</value>
+  </data>
+  <data name="Js.chatRoleMe" xml:space="preserve">
+    <value>自分</value>
+  </data>
+  <data name="Js.chatRoleSystem" xml:space="preserve">
+    <value>システム</value>
+  </data>
+  <data name="Js.chatRoleUnknown" xml:space="preserve">
+    <value>不明</value>
+  </data>
+  <data name="Js.confirm" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Js.confirmDeleteNMessages" xml:space="preserve">
+    <value>選択した {0} 件のメッセージを削除しますか？この操作は元に戻せません。</value>
+  </data>
+  <data name="Js.confirmDeleteSession" xml:space="preserve">
+    <value>このセッションを削除しますか？</value>
+  </data>
+  <data name="Js.copiedNMessages" xml:space="preserve">
+    <value>{0} 件のメッセージをコピーしました</value>
+  </data>
+  <data name="Js.copyFailedManual" xml:space="preserve">
+    <value>コピーに失敗しました。手動でコピーしてください</value>
+  </data>
+  <data name="Js.copySuccess" xml:space="preserve">
+    <value>コピーしました！Ctrl+Vで貼り付けてください。</value>
+  </data>
+  <data name="Js.createSessionFailed" xml:space="preserve">
+    <value>セッションの作成に失敗しました</value>
+  </data>
+  <data name="Js.createSessionFailedRetry" xml:space="preserve">
+    <value>セッションの作成に失敗しました。後でもう一度お試しください</value>
+  </data>
+  <data name="Js.daysAgo" xml:space="preserve">
+    <value>{0}日前</value>
+  </data>
+  <data name="Js.defaultAdminRequired" xml:space="preserve">
+    <value>デフォルト管理者アカウントは必須です</value>
+  </data>
+  <data name="Js.deleteBtn" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="Js.deleteConfirm" xml:space="preserve">
+    <value>削除の確認</value>
+  </data>
+  <data name="Js.deleteFailed" xml:space="preserve">
+    <value>削除に失敗しました</value>
+  </data>
+  <data name="Js.deleteFailedRetry" xml:space="preserve">
+    <value>削除に失敗しました。後でもう一度お試しください</value>
+  </data>
+  <data name="Js.deleteSuccess" xml:space="preserve">
+    <value>削除しました</value>
+  </data>
+  <data name="Js.dynamicData" xml:space="preserve">
+    <value>動的データ</value>
+  </data>
+  <data name="Js.editAdmin" xml:space="preserve">
+    <value>管理者を編集</value>
+  </data>
+  <data name="Js.editMenu" xml:space="preserve">
+    <value>メニューを編集</value>
+  </data>
+  <data name="Js.editRole" xml:space="preserve">
+    <value>ロールを編集</value>
+  </data>
+  <data name="Js.editSystemInfo" xml:space="preserve">
+    <value>システム情報を編集</value>
+  </data>
+  <data name="Js.editTenantInfo" xml:space="preserve">
+    <value>テナント情報を編集</value>
+  </data>
+  <data name="Js.enableExtModuleConfirm" xml:space="preserve">
+    <value>[拡張モジュール]管理を有効にすると、すべての拡張モジュールが[拡張モジュール]サブメニューに表示されます。よろしいですか？</value>
+  </data>
+  <data name="Js.enableExtModuleMode" xml:space="preserve">
+    <value>[拡張モジュール]管理モードを有効にする</value>
+  </data>
+  <data name="Js.entries" xml:space="preserve">
+    <value>件</value>
+  </data>
+  <data name="Js.error" xml:space="preserve">
+    <value>エラー</value>
+  </data>
+  <data name="Js.errorEncountered" xml:space="preserve">
+    <value>エラーが発生しました</value>
+  </data>
+  <data name="Js.errorInfo" xml:space="preserve">
+    <value>エラー情報</value>
+  </data>
+  <data name="Js.exceptionLogs" xml:space="preserve">
+    <value>例外ログ</value>
+  </data>
+  <data name="Js.executionError" xml:space="preserve">
+    <value>実行中にエラーが発生しました</value>
+  </data>
+  <data name="Js.executionSuccess" xml:space="preserve">
+    <value>実行成功</value>
+  </data>
+  <data name="Js.feedbackFailed" xml:space="preserve">
+    <value>フィードバックに失敗しました</value>
+  </data>
+  <data name="Js.feedbackSuccess" xml:space="preserve">
+    <value>フィードバックを送信しました</value>
+  </data>
+  <data name="Js.hideExtModuleConfirm" xml:space="preserve">
+    <value>[拡張モジュール]管理を非表示にすると、すべての拡張モジュールがトップレベルメニュー項目として表示されます。再有効化するには、このページ[/Admin/XncfModule]に直接アクセスしてください。よろしいですか？</value>
+  </data>
+  <data name="Js.hoursAgo" xml:space="preserve">
+    <value>{0}時間前</value>
+  </data>
+  <data name="Js.initializationFailed" xml:space="preserve">
+    <value>初期化に失敗しました</value>
+  </data>
+  <data name="Js.isRequired" xml:space="preserve">
+    <value>は必須です</value>
+  </data>
+  <data name="Js.justNow" xml:space="preserve">
+    <value>たった今</value>
+  </data>
+  <data name="Js.last14Days" xml:space="preserve">
+    <value>過去14日間</value>
+  </data>
+  <data name="Js.lastHour" xml:space="preserve">
+    <value>直近1時間</value>
+  </data>
+  <data name="Js.loadModuleListFailed" xml:space="preserve">
+    <value>モジュールリストの読み込みに失敗しました。後でもう一度お試しください</value>
+  </data>
+  <data name="Js.loadSessionDetailFailed" xml:space="preserve">
+    <value>セッション詳細の読み込みに失敗しました</value>
+  </data>
+  <data name="Js.loadSessionListFailed" xml:space="preserve">
+    <value>セッションリストの読み込みに失敗しました</value>
+  </data>
+  <data name="Js.logStatistics" xml:space="preserve">
+    <value>ログ統計</value>
+  </data>
+  <data name="Js.logType" xml:space="preserve">
+    <value>ログタイプ</value>
+  </data>
+  <data name="Js.menuNameRequired" xml:space="preserve">
+    <value>メニュー名は必須です</value>
+  </data>
+  <data name="Js.menuTypeRequired" xml:space="preserve">
+    <value>タイプは必須です</value>
+  </data>
+  <data name="Js.minutesAgo" xml:space="preserve">
+    <value>{0}分前</value>
+  </data>
+  <data name="Js.moduleStateClosed" xml:space="preserve">
+    <value>クローズ</value>
+  </data>
+  <data name="Js.moduleStateNewPending" xml:space="preserve">
+    <value>新規 - 審査待ち</value>
+  </data>
+  <data name="Js.moduleStateOpen" xml:space="preserve">
+    <value>オープン</value>
+  </data>
+  <data name="Js.moduleStateUpdatePending" xml:space="preserve">
+    <value>更新 - 審査待ち</value>
+  </data>
+  <data name="Js.noDescription" xml:space="preserve">
+    <value>説明なし</value>
+  </data>
+  <data name="Js.noPermission" xml:space="preserve">
+    <value>アクセス権限がありません</value>
+  </data>
+  <data name="Js.noTime" xml:space="preserve">
+    <value>時間なし</value>
+  </data>
+  <data name="Js.normalLogs" xml:space="preserve">
+    <value>通常ログ</value>
+  </data>
+  <data name="Js.notice" xml:space="preserve">
+    <value>お知らせ</value>
+  </data>
+  <data name="Js.operationSuccess" xml:space="preserve">
+    <value>操作が成功しました</value>
+  </data>
+  <data name="Js.passwordMismatch" xml:space="preserve">
+    <value>パスワードが一致しません</value>
+  </data>
+  <data name="Js.pleaseEnableFirst" xml:space="preserve">
+    <value>実行前に有効にしてください</value>
+  </data>
+  <data name="Js.pleaseEnterChatContent" xml:space="preserve">
+    <value>チャット内容を入力してください</value>
+  </data>
+  <data name="Js.pleaseEnterMessage" xml:space="preserve">
+    <value>メッセージを入力してください</value>
+  </data>
+  <data name="Js.pleaseEnterPassword" xml:space="preserve">
+    <value>パスワードを入力してください</value>
+  </data>
+  <data name="Js.pleaseEnterSourcePath" xml:space="preserve">
+    <value>ソースコードの物理パスを入力してください</value>
+  </data>
+  <data name="Js.pleaseReenterPassword" xml:space="preserve">
+    <value>パスワードを再入力してください</value>
+  </data>
+  <data name="Js.pleaseSelectMessagesToCopy" xml:space="preserve">
+    <value>コピーするメッセージを選択してください</value>
+  </data>
+  <data name="Js.pleaseSelectMessagesToDelete" xml:space="preserve">
+    <value>削除するメッセージを選択してください</value>
+  </data>
+  <data name="Js.pleaseSelectOrCreateSession" xml:space="preserve">
+    <value>セッションを選択または作成してください</value>
+  </data>
+  <data name="Js.receivedUrlClickBelow" xml:space="preserve">
+    <value>URLを受信しました。下をクリックして開いてください&lt;br /&gt;（このリンクはサードパーティから提供されています。ご注意ください）:</value>
+  </data>
+  <data name="Js.returnInfo" xml:space="preserve">
+    <value>返却情報</value>
+  </data>
+  <data name="Js.roleCodeRequired" xml:space="preserve">
+    <value>ロールコードは必須です</value>
+  </data>
+  <data name="Js.roleNameRequired" xml:space="preserve">
+    <value>ロール名は必須です</value>
+  </data>
+  <data name="Js.sendMessageFailed" xml:space="preserve">
+    <value>メッセージの送信に失敗しました</value>
+  </data>
+  <data name="Js.sendMessageFailedRetry" xml:space="preserve">
+    <value>メッセージの送信に失敗しました。後でもう一度お試しください</value>
+  </data>
+  <data name="Js.sessionExpired" xml:space="preserve">
+    <value>セッションが期限切れです。ログインページにリダイレクトしています</value>
+  </data>
+  <data name="Js.stateDate" xml:space="preserve">
+    <value>日付</value>
+  </data>
+  <data name="Js.stateNumber" xml:space="preserve">
+    <value>数値</value>
+  </data>
+  <data name="Js.stateOptions" xml:space="preserve">
+    <value>オプション</value>
+  </data>
+  <data name="Js.stateText" xml:space="preserve">
+    <value>テキスト</value>
+  </data>
+  <data name="Js.switchToPublishMode" xml:space="preserve">
+    <value>公開モードに切り替え、[拡張モジュール]管理ユニットを非表示にする</value>
+  </data>
+  <data name="Js.systemNameRequired" xml:space="preserve">
+    <value>システム名は必須です</value>
+  </data>
+  <data name="Js.tenantKeyRequired" xml:space="preserve">
+    <value>テナントマッチングルールは必須です</value>
+  </data>
+  <data name="Js.tenantNameRequired" xml:space="preserve">
+    <value>テナント名は必須です</value>
+  </data>
+  <data name="Js.today" xml:space="preserve">
+    <value>今日</value>
+  </data>
+  <data name="Js.todayLogStatistics" xml:space="preserve">
+    <value>本日のログ統計</value>
+  </data>
+  <data name="Js.tooltipDatabase" xml:space="preserve">
+    <value>データベース</value>
+  </data>
+  <data name="Js.tooltipMiddleware" xml:space="preserve">
+    <value>ミドルウェア</value>
+  </data>
+  <data name="Js.tooltipThread" xml:space="preserve">
+    <value>スレッド</value>
+  </data>
+  <data name="Js.tooltipWebpage" xml:space="preserve">
+    <value>ウェブページ</value>
+  </data>
+  <data name="Js.unnamedModule" xml:space="preserve">
+    <value>無名モジュール</value>
+  </data>
+  <data name="Js.updateFailed" xml:space="preserve">
+    <value>更新に失敗しました：</value>
+  </data>
+  <data name="Js.updateSuccess" xml:space="preserve">
+    <value>更新しました！</value>
+  </data>
+  <data name="Js.usernameRequired" xml:space="preserve">
+    <value>ユーザー名は必須です</value>
+  </data>
+  <data name="Js.warning" xml:space="preserve">
+    <value>警告</value>
+  </data>
+  <data name="Common.确定" xml:space="preserve"><value>確認</value></data>
+  <data name="Dashboard.Title" xml:space="preserve"><value>管理者ダッシュボード</value></data>
+  <data name="Chat.Title" xml:space="preserve"><value>AIチャット</value></data>
+  <data name="Tenant.PageTitle" xml:space="preserve"><value>テナント管理</value></data>
+  <data name="Xncf.ModuleManagement" xml:space="preserve"><value>モジュール管理</value></data>
+  <data name="Dashboard.Header" xml:space="preserve"><value>NeuCharFramework 管理画面</value></data>
+  <data name="Dashboard.InstalledModules" xml:space="preserve"><value>インストール済み</value></data>
+  <data name="Dashboard.PendingUpdateModules" xml:space="preserve"><value>更新待ち</value></data>
+  <data name="Dashboard.NewModulesFound" xml:space="preserve"><value>新しいモジュール</value></data>
+  <data name="Dashboard.ModuleErrors" xml:space="preserve"><value>モジュールエラー</value></data>
+  <data name="Dashboard.AIAssistant" xml:space="preserve"><value>AIアシスタント</value></data>
+  <data name="Dashboard.AIAssistant.Subtitle" xml:space="preserve"><value>何でもお聞きください</value></data>
+  <data name="Dashboard.AIAssistant.StartChat" xml:space="preserve"><value>チャット開始</value></data>
+  <data name="Dashboard.AIAssistant.MultiRound" xml:space="preserve"><value>複数ターン対応</value></data>
+  <data name="Dashboard.AIAssistant.AddModuleContext" xml:space="preserve"><value>モジュールをコンテキストに追加</value></data>
+  <data name="Dashboard.AIAssistant.AutoSaveHistory" xml:space="preserve"><value>自動保存</value></data>
+  <data name="Dashboard.AIAssistant.ReferenceModules" xml:space="preserve"><value>参照モジュール（任意）</value></data>
+  <data name="Dashboard.AIAssistant.AddReferenceModule" xml:space="preserve"><value>参照モジュールを追加</value></data>
+  <data name="Dashboard.AIAssistant.Clear" xml:space="preserve"><value>クリア</value></data>
+  <data name="Dashboard.AIAssistant.EmptyModuleTip" xml:space="preserve"><value>参照モジュールを追加してコンテキストを選択</value></data>
+  <data name="Dashboard.FunctionModules" xml:space="preserve"><value>機能モジュール</value></data>
+  <data name="Dashboard.MenuName" xml:space="preserve"><value>メニュー名</value></data>
+  <data name="Dashboard.NoDescription" xml:space="preserve"><value>説明なし</value></data>
+  <data name="Chat.AIAssistantRole" xml:space="preserve"><value>AI アシスタント</value></data>
+  <data name="Chat.Breadcrumb.AIAssistant" xml:space="preserve"><value>AI アシスタント</value></data>
+  <data name="Chat.Breadcrumb.Conversation" xml:space="preserve"><value>会話</value></data>
+  <data name="Chat.Copy" xml:space="preserve"><value>コピー</value></data>
+  <data name="Chat.Delete" xml:space="preserve"><value>削除</value></data>
+  <data name="Chat.Entrance.Subtitle" xml:space="preserve"><value>何かお手伝いできますか？</value></data>
+  <data name="Chat.InputPlaceholder" xml:space="preserve"><value>メッセージを入力...</value></data>
+  <data name="Chat.NewConversation" xml:space="preserve"><value>新しい会話</value></data>
+  <data name="Chat.NoPreviewDetails" xml:space="preserve"><value>プレビュー詳細なし</value></data>
+  <data name="Chat.NoSessionHistory" xml:space="preserve"><value>セッション履歴なし</value></data>
+  <data name="Chat.SelectAll" xml:space="preserve"><value>全選択</value></data>
+  <data name="Chat.SelectedCount.Prefix" xml:space="preserve"><value>選択済み</value></data>
+  <data name="Chat.SelectedCount.Suffix" xml:space="preserve"><value>件</value></data>
+  <data name="Chat.Send" xml:space="preserve"><value>送信</value></data>
+  <data name="Chat.SendShortcut" xml:space="preserve"><value>Ctrl + Enter で送信</value></data>
+  <data name="Chat.SessionHistory" xml:space="preserve"><value>セッション履歴</value></data>
+  <data name="Chat.StartConversation" xml:space="preserve"><value>会話を始める</value></data>
+  <data name="Chat.Thinking" xml:space="preserve"><value>考え中...</value></data>
+  <data name="Tenant.AddTenant" xml:space="preserve"><value>テナントを追加</value></data>
+  <data name="Tenant.AdminAccount" xml:space="preserve"><value>管理者アカウント</value></data>
+  <data name="Tenant.AdminRemark" xml:space="preserve"><value>管理者メモ</value></data>
+  <data name="Tenant.AdminRemarkPlaceholder" xml:space="preserve"><value>管理者メモを入力してください</value></data>
+  <data name="Tenant.ConfirmDelete" xml:space="preserve"><value>このテナントを削除してもよろしいですか？</value></data>
+  <data name="Tenant.CurrentInfo" xml:space="preserve"><value>現在のテナント情報</value></data>
+  <data name="Tenant.DefaultAdminAccount" xml:space="preserve"><value>デフォルト管理者アカウント</value></data>
+  <data name="Tenant.DefaultAdminAccountPlaceholder" xml:space="preserve"><value>デフォルト管理者アカウントを入力してください</value></data>
+  <data name="Tenant.Enabled" xml:space="preserve"><value>有効</value></data>
+  <data name="Tenant.Initialize" xml:space="preserve"><value>初期化</value></data>
+  <data name="Tenant.InitializeDialog" xml:space="preserve"><value>テナントの初期化</value></data>
+  <data name="Tenant.InitializeResult" xml:space="preserve"><value>初期化結果</value></data>
+  <data name="Tenant.MatchKeyword" xml:space="preserve"><value>マッチキーワード: </value></data>
+  <data name="Tenant.MatchRule" xml:space="preserve"><value>マッチルール</value></data>
+  <data name="Tenant.MatchTime" xml:space="preserve"><value>マッチ時刻: </value></data>
+  <data name="Tenant.MatchingRule" xml:space="preserve"><value>マッチングルール: </value></data>
+  <data name="Tenant.MultiTenantDisabled" xml:space="preserve"><value>マルチテナントは無効です</value></data>
+  <data name="Tenant.Name" xml:space="preserve"><value>テナント名: </value></data>
+  <data name="Tenant.Password" xml:space="preserve"><value>パスワード: </value></data>
+  <data name="Tenant.RecordedClose" xml:space="preserve"><value>記録済み、閉じる</value></data>
+  <data name="Tenant.SaveInfoWarning" xml:space="preserve"><value>以下の情報を保存してください。閉じると再表示できません！</value></data>
+  <data name="Tenant.SystemName" xml:space="preserve"><value>システム名</value></data>
+  <data name="Tenant.SystemNamePlaceholder" xml:space="preserve"><value>システム名を入力してください</value></data>
+  <data name="Tenant.TenantInfo" xml:space="preserve"><value>テナント情報</value></data>
+  <data name="Tenant.TenantMatchKeyword" xml:space="preserve"><value>テナントマッチキーワード</value></data>
+  <data name="Tenant.TenantMatchKeywordPlaceholder" xml:space="preserve"><value>テナントマッチキーワードを入力してください</value></data>
+  <data name="Tenant.TenantName" xml:space="preserve"><value>テナント名</value></data>
+  <data name="Tenant.TenantNamePlaceholder" xml:space="preserve"><value>テナント名を入力してください</value></data>
+  <data name="Tenant.Username" xml:space="preserve"><value>ユーザー名: </value></data>
+  <data name="Xncf.ActiveStatus" xml:space="preserve"><value>アクティブ状態</value></data>
+  <data name="Xncf.Address" xml:space="preserve"><value>アドレス: </value></data>
+  <data name="Xncf.Close" xml:space="preserve"><value>閉じる</value></data>
+  <data name="Xncf.ConfirmDeleteModule" xml:space="preserve"><value>このモジュールを削除してもよろしいですか？</value></data>
+  <data name="Xncf.Description" xml:space="preserve"><value>説明</value></data>
+  <data name="Xncf.Disable" xml:space="preserve"><value>無効化</value></data>
+  <data name="Xncf.DisabledModuleWarning" xml:space="preserve"><value>モジュールは無効です。先に有効にしてください</value></data>
+  <data name="Xncf.DownloadLog" xml:space="preserve"><value>ログをダウンロード</value></data>
+  <data name="Xncf.Enable" xml:space="preserve"><value>有効化</value></data>
+  <data name="Xncf.EnterHomePage" xml:space="preserve"><value>ホームページへ</value></data>
+  <data name="Xncf.EnterHomePage.Prefix" xml:space="preserve"><value>入る</value></data>
+  <data name="Xncf.EnterHomePage.Suffix" xml:space="preserve"><value>ホームページ</value></data>
+  <data name="Xncf.Execute" xml:space="preserve"><value>実行</value></data>
+  <data name="Xncf.ExecuteMethods" xml:space="preserve"><value>実行メソッド</value></data>
+  <data name="Xncf.Executing" xml:space="preserve"><value>実行中...</value></data>
+  <data name="Xncf.ExtensionModules" xml:space="preserve"><value>拡張モジュール</value></data>
+  <data name="Xncf.Features" xml:space="preserve"><value>機能</value></data>
+  <data name="Xncf.HomePage" xml:space="preserve"><value>ホームページ</value></data>
+  <data name="Xncf.Install" xml:space="preserve"><value>インストール</value></data>
+  <data name="Xncf.InstalledModules" xml:space="preserve"><value>インストール済みモジュール</value></data>
+  <data name="Xncf.MenuDisplayName" xml:space="preserve"><value>メニュー表示名</value></data>
+  <data name="Xncf.MenuNameVersion" xml:space="preserve"><value>メニュー名 / バージョン</value></data>
+  <data name="Xncf.Module" xml:space="preserve"><value>モジュール</value></data>
+  <data name="Xncf.ModuleName" xml:space="preserve"><value>モジュール名</value></data>
+  <data name="Xncf.ModuleNameUniqueCode" xml:space="preserve"><value>モジュール名 / ユニークコード</value></data>
+  <data name="Xncf.ModuleNotDeployed" xml:space="preserve"><value>モジュール未デプロイ</value></data>
+  <data name="Xncf.NewModules" xml:space="preserve"><value>新規モジュール</value></data>
+  <data name="Xncf.NewVersionFound" xml:space="preserve"><value>新バージョンが見つかりました</value></data>
+  <data name="Xncf.NoDataRequired" xml:space="preserve"><value>データ不要</value></data>
+  <data name="Xncf.PageInspector" xml:space="preserve"><value>ページインスペクター</value></data>
+  <data name="Xncf.ParamName" xml:space="preserve"><value>パラメータ名</value></data>
+  <data name="Xncf.ParamType" xml:space="preserve"><value>パラメータタイプ</value></data>
+  <data name="Xncf.ParameterInspector" xml:space="preserve"><value>パラメータインスペクター</value></data>
+  <data name="Xncf.RecentStory" xml:space="preserve"><value>最近の履歴</value></data>
+  <data name="Xncf.Required" xml:space="preserve"><value>必須</value></data>
+  <data name="Xncf.SearchPlaceholder" xml:space="preserve"><value>モジュールを検索...</value></data>
+  <data name="Xncf.Status" xml:space="preserve"><value>ステータス</value></data>
+  <data name="Xncf.ThreadStatus" xml:space="preserve"><value>スレッド状態</value></data>
+  <data name="Xncf.UIModuleTip" xml:space="preserve"><value>このモジュールはUIページを提供し、ホームページからアクセスできます</value></data>
+  <data name="Xncf.UniqueCode" xml:space="preserve"><value>ユニークコード</value></data>
+  <data name="Xncf.UniqueId" xml:space="preserve"><value>ユニークID: </value></data>
+  <data name="Xncf.UpdateLog" xml:space="preserve"><value>更新ログ</value></data>
+  <data name="Xncf.UpdateNow" xml:space="preserve"><value>今すぐ更新</value></data>
+  <data name="Xncf.Version" xml:space="preserve"><value>バージョン</value></data>
+  <data name="Xncf.ViewThreads" xml:space="preserve"><value>スレッドを表示</value></data>
+  <data name="Menu.Db.系统菜单管理" xml:space="preserve"><value>System menu management</value></data>
+  <data name="Menu.Db.系统权限管理" xml:space="preserve"><value>System permission management</value></data>
+  <data name="Menu.Db.运行 RazorPage 等页面的基础模块" xml:space="preserve"><value>Base module for running RazorPage and other pages</value></data>
+  <data name="Menu.Db.这是系统服务核心模块，主管基础数据结构和网站核心运行数据，请勿删除此模块。如果你实在忍不住，请务必做好数据备份。" xml:space="preserve"><value>Core system service module managing data structures and runtime data. Do not delete. Please back up data first.</value></data>
+  <data name="Menu.Db.多租户模块，这是系统服务核心模块，请勿删除此模块。如果你实在忍不住，请务必做好数据备份。" xml:space="preserve"><value>Multi-tenant module. Core system service, do not delete. Please back up data first.</value></data>
+  <data name="Menu.Db.这是管理员后台模块，用于 NCF 系统后台的自我管理，请勿删除此模块。如果你实在忍不住，请务必做好数据备份。" xml:space="preserve"><value>Admin backend module for NCF system self-management. Do not delete. Please back up data first.</value></data>
+  <data name="Menu.Db.注册用户管理" xml:space="preserve"><value>Registered user management</value></data>
+  <data name="Menu.Db.NCF 初始化安装模块，安装完成后可卸载或移除" xml:space="preserve"><value>NCF initialization installer module. Can be uninstalled after setup.</value></data>
+  <data name="Menu.Db.AI 核心模块，基于 Senparc.AI 为所有 AI 项目提供基础能力" xml:space="preserve"><value>AI core module providing foundational capabilities for all AI projects based on Senparc.AI</value></data>
+  <data name="Menu.Db.人工智能代理枢纽模块" xml:space="preserve"><value>AI Agent Hub module</value></data>
+  <data name="Menu.Db.你的提示词（Prompt）训练场" xml:space="preserve"><value>Your Prompt training range</value></data>
+  <data name="Menu.Db.动态数据基础模块，用于创建和管理动态数据（早期迭代，尚未正式发布）" xml:space="preserve"><value>Dynamic data module for creating and managing dynamic data (early iteration)</value></data>
+  <data name="Menu.Db.SenMapic 爬虫模块" xml:space="preserve"><value>SenMapic web crawler module</value></data>
+  <data name="Menu.Db.此模块提供给开发者一个可以直接使用终端命令控制系统的模块！" xml:space="preserve"><value>Terminal module for developers to control the system via command line</value></data>
+  <data name="Menu.Db.此模块提供给开发者在安装完 NCF、发布产品之前，全局修改命名空间，请在生产环境中谨慎使用，此操作不可逆！必须做好提前备份！不建议在已经部署至生产环境并开始运行后使用此功能！" xml:space="preserve"><value>Global namespace changer. Use with caution before production deployment. Irreversible operation, backup required!</value></data>
+  <data name="Menu.Db.此模块提供给开发者一个可以启动任何程序！" xml:space="preserve"><value>Module for developers to launch any program</value></data>
+  <data name="Menu.Db.此模块为其他模块提供Dapr相关功能" xml:space="preserve"><value>Provides Dapr-related functionality for other modules</value></data>
 </root>

@@ -1,12 +1,14 @@
-﻿var app = new Vue({
+var ncfI18n = window.ncfI18n || {};
+
+var app = new Vue({
     el: "#app",
     data() {
         return {
-            //分页参数
+            // Pagination parameters
             paginationQuery: {
                 total: 5
             },
-            //分页接口传参（只会有一个）
+            // Pagination API parameters (only one record)
             listQuery: {
                 pageIndex: 1,
                 pageSize: 20,
@@ -14,7 +16,7 @@
             tableData: [],
             tenantData: {},
             dialog: {
-                title: '编辑系统信息',
+                title: ncfI18n.editSystemInfo || 'Edit System Info',
                 visible: false,
                 data: {
                     id: 0,
@@ -22,12 +24,12 @@
                 },
                 rules: {
                     systemName: [
-                        { required: true, message: "用户名为必填项", trigger: "blur" }
+                        { required: true, message: ncfI18n.systemNameRequired || "System name is required", trigger: "blur" }
                     ]
                 }
             },
             updateLoading: false,
-            updateLoadingSet: false, // 确认loading按钮
+            updateLoadingSet: false, // Confirm loading button
         };
     },
     created: function () {
@@ -37,7 +39,7 @@
     },
     watch: {
         'dialog.visible': function (val, old) {
-            // 关闭dialog，清空
+            // Clear on dialog close
             if (!val) {
                 this.dialog.data = {
                     id: 0,
@@ -49,7 +51,7 @@
         }
     },
     methods: {
-        // 获取数据
+        // Get data
         getList() {
             let { pageIndex, pageSize } = this.listQuery;
             service.get(`/Admin/SystemConfig/index?handler=List&&pageIndex=${pageIndex}&pageSize=${pageSize}`).then(res => {
@@ -57,11 +59,11 @@
                 this.paginationQuery.total = res.data.data.totalCount;
             });
         },
-        // 编辑
+        // Edit
         handleEdit(index, row) {
             this.dialog.visible = true;
             if (row) {
-                // 编辑
+                // Edit
                 let { systemName, id } = row;
                 this.dialog.data = {
                     systemName, id
@@ -69,10 +71,10 @@
                 this.dialog = Object.assign({}, this.dialog);
             }
         },
-        // 更新新增编辑
+        // Update add/edit
         updateData() {
             this.$refs['dataForm'].validate(valid => {
-                // 表单校验
+                // Form validation
                 if (valid) {
                     this.dialog.updateLoading = true;
                     let data = {
@@ -84,7 +86,7 @@
                             this.getList();
                             this.$notify({
                                 title: "Success",
-                                message: "更新成功！",
+                                message: ncfI18n.updateSuccess || "Updated successfully!",
                                 type: "success",
                                 duration: 2000
                             });
@@ -92,8 +94,8 @@
                             this.dialog.updateLoading = false;
                         } else {
                             this.$notify({
-                                title: "Faild",
-                                message: "更新失败：" + res.data.msg,
+                                title: "Failed",
+                                message: (ncfI18n.updateFailed || "Update failed: ") + res.data.msg,
                                 type: "success",
                                 duration: 2000
                             });

@@ -1,6 +1,5 @@
-﻿# 防腐层（Anti-Corruption Layer）  
-  
-在 NCF 系统中，我们使用了领域驱动设计（DDD）的防腐层（ACL）模式来确保与外部系统的顺畅交互。防腐层负责转换数据、提供适配器以及隔离变化，从而保护我们的核心领域逻辑免受其他上下文的负面影响。  
-  
-通过使用防腐层，我们可以确保系统的各个部分保持独立，避免紧密耦合，同时提高了代码的可维护性和可扩展性。  
-通常来说，ACL 会包含一系列符防腐（AC）标准的解耦实体，以及 Repository 类等。
+# Anti-Corruption Layer (ACL)
+
+In the NCF system, we use the Anti-Corruption Layer (ACL) pattern from Domain-Driven Design (DDD) to ensure smooth interaction with external systems. The ACL is responsible for data transformation, providing adapters, and isolating changes, thereby protecting our core domain logic from negative impacts of other contexts.
+
+By using the Anti-Corruption Layer, we can ensure that different parts of the system remain independent, avoiding tight coupling while improving code maintainability and extensibility. Typically, the ACL contains a series of decoupled entities that conform to Anti-Corruption (AC) standards, as well as Repository classes, etc.

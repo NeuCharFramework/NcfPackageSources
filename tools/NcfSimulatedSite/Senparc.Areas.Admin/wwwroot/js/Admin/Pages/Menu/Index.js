@@ -1,10 +1,12 @@
-﻿var app = new Vue({
+﻿var ncfI18n = window.ncfI18n || {};
+
+var app = new Vue({
     el: "#app",
     data() {
         var validateCode = (rule, value, callback) => {
             if (this.dialog.data.menuType === 3) {
                 if (!value) {
-                    callback(new Error('当类型是按钮类型时此项必填'));
+                    callback(new Error(ncfI18n.buttonTypeRequired || 'This field is required when type is Button'));
                 } else {
                     callback();
                 }
@@ -13,10 +15,10 @@
             }
         };
         return {
-            // 表格数据
+            // Table data
             tableData: [],
             dialog: {
-                title: '新增菜单',
+                title: ncfI18n.addMenu || 'Add Menu',
                 visible: false,
                 data: {
                     id: '', menuName: '', parentId: [], url: '', icon: '', sort: '', visible: true,
@@ -24,14 +26,14 @@
                 },
                 rules: {
                     menuName: [
-                        { required: true, message: "菜单名称为必填项", trigger: "blur" }
+                        { required: true, message: ncfI18n.menuNameRequired || "Menu name is required", trigger: "blur" }
                     ],
-                    menuType: [{ required: true, message: "类型为必选项", trigger: "blur" }],
+                    menuType: [{ required: true, message: ncfI18n.menuTypeRequired || "Type is required", trigger: "blur" }],
                     resourceCode: [{ validator: validateCode, trigger: "blur" }]
                 },
                 updateLoading: false,
                 disabled: false,
-                checkStrictly: true // 是否严格的遵守父子节点不互相关联	
+                checkStrictly: true // Whether to strictly enforce parent-child node independence
             },
             dialogIcon: {
                 visible: false,
@@ -674,7 +676,7 @@
     },
     watch: {
         'dialog.visible': function (val, old) {
-            // 关闭dialog，清空
+            // Clear on dialog close
             if (!val) {
                 this.dialog.data = {
                     id: '', menuName: '', parentId: [], url: '', icon: '', sort: '', visible: false,
@@ -686,12 +688,12 @@
         }
     },
     methods: {
-        // 选取图标
+        // Pick icon
         pickIcon(item) {
             this.dialogIcon.visible = false;
             this.dialog.data.icon = item;
         },
-        // 更新授权
+        // Update authorization
         async  auUpdateData() {
             this.au.updateLoading = true;
             const checkNodes = this.$refs.tree.getCheckedNodes(false, true);
@@ -709,7 +711,7 @@
                 this.getList();
                 this.$notify({
                     title: "Success",
-                    message: "授权成功",
+                    message: ncfI18n.authorizationSuccess || "Authorization successful",
                     type: "success",
                     duration: 2000
                 });
@@ -717,7 +719,7 @@
                 this.au.updateLoading = false;
             }
         },
-        // 获取所有菜单
+        // Get all menus
         async  getList() {
             const a = await service.get('/Admin/Menu/Edit?handler=Menu');
             const b = a.data.data;
@@ -725,12 +727,12 @@
             this.ddd(b, null, allMenu);
             this.tableData = allMenu;
             
-            // 数据加载完成后初始化固定效果
+            // Initialize sticky effect after data is loaded
             this.$nextTick(() => {
                 this.initStickyParents();
             });
         },
-        // 数据处理
+        // Data processing
         ddd(source, parentId, dest) {
             var array = source.filter(_ => _.parentId === parentId);
             for (var i in array) {
@@ -740,40 +742,40 @@
                 this.ddd(source, ele.id, ele.children);
             }
         },
-        // 编辑 // 新增菜单 // 增加下一级
+        // Edit / Add menu / Add sub-level
         handleEdit(index, row, flag) {
             this.dialog.visible = true;
             if (flag === 'add') {
-                // 新增
-                this.dialog.title = '新增菜单';
+                // Add
+                this.dialog.title = ncfI18n.addMenu || 'Add Menu';
                 return;
             }
-            // 编辑
+            // Edit
             let { id, menuName, parentId, url, icon, sort, visible,
                 resourceCode, isLocked, menuType } = row;
             this.dialog.data = {
                 id, menuName, parentId: [parentId], url, icon, sort, visible,
                 resourceCode, isLocked, menuType
             };
-            // dialog中父级菜单 做递归显示
+            // Recursively show parent menu in dialog
             let x = [];
             this.recursionFunc(row, this.tableData, x);
             this.dialog.data.parentId = x;
             //////////////////////////////
 
             if (flag === 'edit') {
-                this.dialog.title = '编辑菜单';
+                this.dialog.title = ncfI18n.editMenu || 'Edit Menu';
                 if (row.isLocked) {
                     this.dialog.disabled = true;
                 }
             } else if (flag === 'addNext') {
                 this.dialog.data.id = '';
-                this.dialog.title = '增加下一级菜单';
+                this.dialog.title = ncfI18n.addSubMenu || 'Add Sub-level Menu';
                 this.dialog.data.menuName = '';
                 this.dialog.data.parentId.push(row.id);
             }
         },
-        // 设置父级菜单默认显示 递归
+        // Set parent menu default display recursion
         recursionFunc(row, source, dest) {
             if (row.parentId === null) {
                 return;
@@ -788,10 +790,10 @@
                 }
             }
         },
-        // 更新新增、编辑
+        // Update add/edit
         updateData() {
             this.$refs['dataForm'].validate(valid => {
-                // 表单校验
+                // Form validation
                 if (valid) {
                     this.dialog.updateLoading = true;
                     let data = {
@@ -811,7 +813,7 @@
                             this.getList();
                             this.$notify({
                                 title: "Success",
-                                message: "成功",
+                                message: ncfI18n.operationSuccess || "Operation successful",
                                 type: "success",
                                 duration: 2000
                             });
@@ -821,7 +823,7 @@
                 }
             });
         },
-        // 删除
+        // Delete
         handleDelete(index, row) {
             let ids = [row.id];
             service.post("/Admin/Menu/edit?handler=Delete", ids).then(res => {
@@ -829,14 +831,14 @@
                     this.getList();
                     this.$notify({
                         title: "Success",
-                        message: "删除成功",
+                        message: ncfI18n.deleteSuccess || "Deleted successfully",
                         type: "success",
                         duration: 2000
                     });
                 }
             });
         },
-        // 初始化父节点固定效果
+        // Initialize parent node sticky effect
         initStickyParents() {
             const rows = document.querySelectorAll('.el-table__row');
             const table = document.querySelector('.el-table');
@@ -846,12 +848,12 @@
                 if (expandIcon && !expandIcon.classList.contains('el-table__expand-icon--leaf')) {
                     row.classList.add('sticky-parent');
                     
-                    // 创建克隆行并保持列宽
+                    // Create clone row and preserve column widths
                     const clone = row.cloneNode(true);
                     clone.classList.add('sticky-clone');
                     clone.style.display = 'none';
                     
-                    // 复制每列的宽度
+                    // Copy each column's width
                     const originalCells = row.querySelectorAll('td');
                     const cloneCells = clone.querySelectorAll('td');
                     originalCells.forEach((cell, index) => {
@@ -861,14 +863,14 @@
                         cloneCells[index].style.maxWidth = width;
                     });
                     
-                    // 设置克隆行的总宽度
+                    // Set clone row total width
                     clone.style.width = window.getComputedStyle(row).width;
                     
                     row.parentNode.insertBefore(clone, row.nextSibling);
                 }
             });
         },
-        // 处理滚动事件
+        // Handle scroll event
         handleScroll() {
             const stickyRows = document.querySelectorAll('.sticky-parent');
             const headerHeight = document.querySelector('.el-table__header-wrapper').offsetHeight;
@@ -887,7 +889,7 @@
                     clone.style.top = `${headerHeight}px`;
                     clone.style.left = `${tableRect.left}px`;
                     
-                    // 确保克隆行的列宽与原行保持一致
+                    // Ensure clone row column widths match the original
                     const originalCells = row.querySelectorAll('td');
                     const cloneCells = clone.querySelectorAll('td');
                     originalCells.forEach((cell, index) => {
@@ -899,7 +901,7 @@
                 }
             });
         },
-        // 在窗口大小改变时重新计算列宽
+        // Recalculate column widths on window resize
         handleResize() {
             this.initStickyParents();
         }

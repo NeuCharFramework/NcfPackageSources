@@ -92,7 +92,7 @@
                         </div>
                     </el-main>
                     <el-footer class="footer">
-                        Powered by <a href="https://www.ncf.pub" target="_blank">NeuCharFramework</a> © 2010-@thisYear <a href="https://www.senparc.com" target="_blank">盛派网络</a>
+                        Powered by <a href="https://www.ncf.pub" target="_blank">NeuCharFramework</a> © 2010-@thisYear <a href="https://www.senparc.com" target="_blank">Senparc</a>
                     </el-footer>
                 </el-container>
             </el-container>
@@ -101,8 +101,25 @@
     <!--lib-->
     <script src="~/lib/vue/vue.js"></script>
     <script src="~/lib/element-ui_2.13.2/element.js"></script>
+    @if (currentCulture != "zh-CN") {
+    <script>
+        // Set Element UI locale based on server culture
+        (function() {
+            var locale = '@currentCulture';
+            var lang = ELEMENT.lang || {};
+            if (locale.startsWith('en')) {
+                lang.el = { colorpicker:{confirm:'OK',clear:'Clear'}, datepicker:{now:'Now',today:'Today',cancel:'Cancel',clear:'Clear',confirm:'OK',selectDate:'Select date',selectTime:'Select time',startDate:'Start Date',startTime:'Start Time',endDate:'End Date',endTime:'End Time',prevYear:'Previous Year',nextYear:'Next Year',prevMonth:'Previous Month',nextMonth:'Next Month',year:'',month1:'January',month2:'February',month3:'March',month4:'April',month5:'May',month6:'June',month7:'July',month8:'August',month9:'September',month10:'October',month11:'November',month12:'December',weeks:{sun:'Sun',mon:'Mon',tue:'Tue',wed:'Wed',thu:'Thu',fri:'Fri',sat:'Sat'},months:{jan:'Jan',feb:'Feb',mar:'Mar',apr:'Apr',may:'May',jun:'Jun',jul:'Jul',aug:'Aug',sep:'Sep',oct:'Oct',nov:'Nov',dec:'Dec'}}, select:{loading:'Loading',noMatch:'No matching data',noData:'No data',placeholder:'Select'}, pagination:{goto:'Go to',pagesize:'/page',total:'Total {total}',pageClassifier:''}, messagebox:{title:'Message',confirm:'OK',cancel:'Cancel',error:'Illegal input'}, upload:{deleteTip:'press delete to remove',delete:'Delete',preview:'Preview',continue:'Continue'}, table:{emptyText:'No Data',confirmFilter:'Confirm',resetFilter:'Reset',clearFilter:'All',sumText:'Sum'}, tree:{emptyText:'No Data'}, transfer:{noMatch:'No matching data',noData:'No data',titles:['List 1','List 2'],filterPlaceholder:'Enter keyword',noCheckedFormat:'{total} items',hasCheckedFormat:'{checked}/{total} checked'} };
+                ELEMENT.locale(lang);
+            }
+        })();
+    </script>
+    }
     <script src="~/lib/axios/axios.min.js"></script>
     <script src="~/lib/vuex.js"></script>
+    <!-- i18n bridge for JS -->
+    <script>
+        window.ncfI18n = window.ncfI18n || {};
+    </script>
     <!--js-->
     <script src="~/js/Admin/store.js"></script>
     <script src="~/js/Admin/axios.js"></script>

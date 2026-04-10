@@ -2,7 +2,7 @@
 
 @model Senparc.Areas.Admin.Pages.IndexModel
 @{
-    ViewData["Title"] = "管理员后台首页";
+    ViewData["Title"] = AR["Dashboard.Title"];
     Layout = "_Layout_Vue";
 }
 @section style {
@@ -76,11 +76,11 @@
         }
 
             .box-card:hover {
-                border-color: purple; /* 外框颜色 */
-                box-shadow: 0 0 10px rgba(128, 0, 128, 0.5); /* 发光阴影颜色 */
+                border-color: purple; /* border color */
+                box-shadow: 0 0 10px rgba(128, 0, 128, 0.5); /* glow shadow color */
             }
 
-        /* 右侧图表区域卡片样式覆盖 */
+        /* Right-side chart area card style override */
         .el-main .el-col-16 .box-card {
             margin-top: 0;
         }
@@ -100,7 +100,7 @@
                     float: left;
                 }
 
-                /* 模块卡片样式优化 */
+                /* Module card style optimization */
                 #xncf-modules-area .xncf-item .box-card {
                     height: 160px;
                     transition: all 0.3s ease;
@@ -113,7 +113,7 @@
                         box-shadow: 0 5px 15px rgba(140, 82, 255, 0.2);
                     }
 
-        /* 模块图标样式优化 */
+        /* Module icon style optimization */
         .component-item {
             display: flex;
             align-items: center;
@@ -149,7 +149,7 @@
 
 
 
-        /* 版本号样式优化 */
+        /* Version number style optimization */
         #xncf-modules-area .xncf-item .version {
             background: #f0f2f5;
             padding: 2px 6px;
@@ -161,7 +161,7 @@
             transition: all 0.3s ease;
         }
 
-            /* 可升级版本的样式 */
+            /* Upgradeable version style */
             #xncf-modules-area .xncf-item .version.version-upgradeable {
                 background: #e6f1fc;
                 color: #409EFF;
@@ -174,12 +174,12 @@
             font-size: 14px;
         }
 
-        /* 模块名称样式 */
+        /* Module name style */
         .xncf-item .el-card__header {
             padding: 10px 15px;
         }
 
-        /* 响应式布局优化 */
+        /* Responsive layout optimization */
         @@media screen and (max-width: 1200px) {
             #xncf-modules-area .el-col-6 {
                 width: 33.33%;
@@ -198,17 +198,17 @@
             }
         }
 
-        /* 图表容器样式 */
+        /* Chart container style */
         .charts-container {
             height: 260px;
         }
 
-        /* 针对包含charts-container的卡片内容区域移除内边距 */
+        /* Remove padding for card content area containing charts-container */
         .el-card__body .charts-container {
-            margin-bottom: -40px; /* 抵消父元素的padding，底部有足够留白 */
+            margin-bottom: -40px; /* Offset parent padding, enough whitespace at bottom */
         }
 
-        /* 添加更强烈的抖动动画关键帧 */
+        /* Shake animation keyframes */
         @@keyframes shake {
             0%, 100% {
                 transform: translateX(0) rotate(0deg);
@@ -235,7 +235,7 @@
             }
         }
 
-        /* 添加发光动画关键帧 */
+        /* Glow animation keyframes */
         @@keyframes glow {
             0%, 100% {
                 box-shadow: 0 0 5px rgba(140, 82, 255, 0.2);
@@ -248,7 +248,7 @@
             }
         }
 
-        /* 添加淡化效果动画 */
+        /* Fade effect animation */
         @@keyframes fade {
             0%, 100% {
                 opacity: 1;
@@ -259,7 +259,7 @@
             }
         }
 
-        /* 动画类 */
+        /* Animation classes */
         .shake-animation {
             animation: shake 0.8s cubic-bezier(.36,.07,.19,.97) both;
         }
@@ -272,7 +272,7 @@
             animation: fade 1.2s ease-in-out;
         }
 
-        /* AI 对话入口样式 */
+        /* AI chat entrance style */
         #ai-chat-entrance .chat-entrance-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none;
@@ -449,7 +449,7 @@
             transform: scale(1.02);
         }
         
-        /* 拖拽时的鼠标样式 */
+        /* Cursor style during drag */
         #xncf-modules-area .xncf-item[draggable="true"] {
             cursor: grab;
         }
@@ -462,18 +462,18 @@
 
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
 
-<!-- 统计数据 -->
+<!-- Statistics -->
 <div id="home-header">
     <el-container>
         <el-header class="module-header">
-            <span class="start-title"><span class="module-header-v">NeuCharFramework 管理员后台</span></span>
+            <span class="start-title"><span class="module-header-v">@AR["Dashboard.Header"]</span></span>
         </el-header>
         <el-main>
             <el-row :gutter="20">
-                <!-- 左侧统计数据 2x2 布局 -->
+                <!-- Left side statistics 2x2 layout -->
                 <el-col :span="8">
                     <el-row :gutter="10">
-                        <!-- 第一行 -->
+                        <!-- First row -->
                         <el-col :span="12">
                             <a href="~/Admin/XncfModule/Index">
                                 <div class="grid-content xncf-stat-item">
@@ -481,7 +481,7 @@
                                     <div class="icon">
                                         <i class="fa fa-caret-square-o-right"></i>
                                     </div>
-                                    <p class="tit">已安装模块</p>
+                                    <p class="tit">@AR["Dashboard.InstalledModules"]</p>
                                 </div>
                             </a>
                         </el-col>
@@ -492,11 +492,11 @@
                                     <div class="icon">
                                         <i class="fa fa-comments-o"></i>
                                     </div>
-                                    <p class="tit">待更新模块</p>
+                                    <p class="tit">@AR["Dashboard.PendingUpdateModules"]</p>
                                 </div>
                             </a>
                         </el-col>
-                        <!-- 第二行 -->
+                        <!-- Second row -->
                         <el-col :span="12">
                             <a href="~/Admin/XncfModule/Index">
                                 <div class="grid-content xncf-stat-item">
@@ -504,7 +504,7 @@
                                     <div class="icon">
                                         <i class="fa fa-sort-amount-desc"></i>
                                     </div>
-                                    <p class="tit">发现新模块</p>
+                                    <p class="tit">@AR["Dashboard.NewModulesFound"]</p>
                                 </div>
                             </a>
                         </el-col>
@@ -515,14 +515,14 @@
                                     <div class="icon">
                                         <i class="fa fa-check-square-o"></i>
                                     </div>
-                                    <p class="tit">模块异常</p>
+                                    <p class="tit">@AR["Dashboard.ModuleErrors"]</p>
                                 </div>
                             </a>
                         </el-col>
                     </el-row>
                 </el-col>
 
-                <!-- 右侧图表区域 -->
+                <!-- Right side chart area -->
                 <el-col :span="16">
                     <el-row :gutter="20">
                         <el-col :span="12">
@@ -542,7 +542,7 @@
     </el-container>
 </div>
 
-<!-- AI 对话入口 -->
+<!-- AI Chat Entrance -->
 <div id="ai-chat-entrance" style="margin-top: 30px; margin-bottom: 30px;">
     <el-card class="box-card chat-entrance-card">
         <div class="chat-entrance-container">
@@ -552,9 +552,9 @@
                 </div>
                 <div class="chat-entrance-content">
                     <h3 class="chat-entrance-title">
-                        <i class="fa fa-magic"></i> AI 智能助手
+                        <i class="fa fa-magic"></i> @AR["Dashboard.AIAssistant"]
                     </h3>
-                    <p class="chat-entrance-subtitle">向我提问，我将帮助您更高效地管理系统</p>
+                    <p class="chat-entrance-subtitle">@AR["Dashboard.AIAssistant.Subtitle"]</p>
                 </div>
             </div>
             
@@ -562,7 +562,7 @@
                 <el-input
                     type="textarea"
                     v-model="chatInputText"
-                    placeholder="输入您的问题，例如：如何配置系统参数？&#10;&#10;提示：按 Ctrl+Enter 或 Cmd+Enter 发送消息"
+                    placeholder="@AR["Dashboard.AIAssistant.InputPlaceholder"]"
                     :rows="4"
                     :autosize="{ minRows: 4, maxRows: 8 }"
                     @@keydown.native="handleLauncherInputKeydown"
@@ -577,22 +577,22 @@
                     :disabled="!chatInputText || chatInputText.trim().length === 0"
                     :loading="isCreatingSession"
                     class="chat-send-button">
-                    开始对话
+                    @AR["Dashboard.AIAssistant.StartChat"]
                 </el-button>
             </div>
 
             <div class="chat-entrance-tips">
-                <span class="tip-item"><i class="fa fa-lightbulb-o"></i> 支持多轮对话</span>
-                <span class="tip-item"><i class="fa fa-cube"></i> 可添加模块作为对话上下文</span>
-                <span class="tip-item"><i class="fa fa-history"></i> 自动保存历史记录</span>
+                <span class="tip-item"><i class="fa fa-lightbulb-o"></i> @AR["Dashboard.AIAssistant.MultiRound"]</span>
+                <span class="tip-item"><i class="fa fa-cube"></i> @AR["Dashboard.AIAssistant.AddModuleContext"]</span>
+                <span class="tip-item"><i class="fa fa-history"></i> @AR["Dashboard.AIAssistant.AutoSaveHistory"]</span>
             </div>
 
             <div class="chat-module-picker">
                 <div class="chat-module-picker-header">
-                    <span class="chat-module-picker-title">引用模块（可选）</span>
+                    <span class="chat-module-picker-title">@AR["Dashboard.AIAssistant.ReferenceModules"]</span>
                     <div class="chat-module-picker-actions">
-                        <el-button size="mini" type="primary" icon="el-icon-plus" @@click="openModuleSelector">添加引用模块</el-button>
-                        <el-button size="mini" @@click="clearSelectedModules" v-if="selectedModules.length > 0">清空</el-button>
+                        <el-button size="mini" type="primary" icon="el-icon-plus" @@click="openModuleSelector">@AR["Dashboard.AIAssistant.AddReferenceModule"]</el-button>
+                        <el-button size="mini" @@click="clearSelectedModules" v-if="selectedModules.length > 0">@AR["Dashboard.AIAssistant.Clear"]</el-button>
                     </div>
                 </div>
 
@@ -607,7 +607,7 @@
                         <i :class="module.icon"></i> {{module.name}}
                     </el-tag>
                 </div>
-                <div v-else class="chat-module-selected-empty">点击“添加引用模块”可选择多个模块作为上下文</div>
+                <div v-else class="chat-module-selected-empty">@AR["Dashboard.AIAssistant.EmptyModuleTip"]</div>
             </div>
 
             @await Html.PartialAsync("~/Areas/Admin/Pages/Shared/_ChatModuleSelectorDialog.cshtml")
@@ -615,12 +615,12 @@
     </el-card>
 </div>
 
-<!-- 功能模块 -->
+<!-- Function Modules -->
 <div>
     <el-row>
         <el-card class="box-card">
             <div slot="header" class="clearfix">
-                <span><i class="fa fa-cubes"></i> 功能模块</span>
+                <span><i class="fa fa-cubes"></i> @AR["Dashboard.FunctionModules"]</span>
             </div>
             <div id="xncf-modules-area">
                 <el-row :gutter="20">
@@ -634,7 +634,7 @@
                                     <el-tooltip v-if="item.hasNewVersion"
                                                 class="version-tooltip"
                                                 effect="light"
-                                                :content="`当前版本: v${item.version} -> 可更新至: v${item.newVersion}`">
+                                                :content="`v${item.version} -> v${item.newVersion}`">
                                         <i class="fa fa-level-up version-upgrade-icon"></i>
                                     </el-tooltip>
                                 </span>
@@ -650,7 +650,7 @@
                                                   :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
                                                   max-height="250"
                                                   :show-header="false">
-                                            <el-table-column prop="name" label="菜单名称" width="260">
+                                            <el-table-column prop="name" label="@AR["Dashboard.MenuName"]" width="260">
                                                 <template slot-scope="scope">
                                                     <a :href="scope.row.url">{{scope.row.name}}</a>
                                                 </template>
@@ -663,7 +663,7 @@
                             <a v-bind:href="'/Admin/XncfModule/Start/?uid='+item.uid">
                                 <div class="component-item">
                                     <i :class="[item.icon, 'icon']"></i>
-                                    <div class="description">{{item.description || '暂无描述'}}</div>
+                                    <div class="description">{{item.description || '@AR["Dashboard.NoDescription"]'}}</div>
                                 </div>
                             </a>
                         </el-card>

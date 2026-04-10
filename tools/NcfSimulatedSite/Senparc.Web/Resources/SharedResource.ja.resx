@@ -117,4 +117,121 @@
   <data name="Footer.Copyright" xml:space="preserve">
     <value>蘇州盛派ネットワーク科技有限公司 版権所有</value>
   </data>
+  <data name="Web.Index.Tagline" xml:space="preserve">
+    <value>シンプル   柔軟   拡張可能</value>
+  </data>
+  <data name="Web.Index.Description" xml:space="preserve">
+    <value>NCF（NeuCharFramework）は、基盤プロジェクトの構築に使用できるエンタープライズ級の汎用 .NET フレームワークです。DDDデザインパターンに厳格に従い、キャッシュ、データベース、モデル、バリデーション、管理バックエンドを含みます。</value>
+  </data>
+  <data name="Web.Index.DbSupport" xml:space="preserve">
+    <value>NCFは.NET 8.0を完全サポート。SQLite、SQL Server、MySQL、PostgreSQL、Oracle、DMなどのデータベースをサポートしています。</value>
+  </data>
+  <data name="Web.Index.CurrentTenant" xml:space="preserve">
+    <value>現在のテナント：</value>
+  </data>
+  <data name="Web.Index.TenantNotMatched" xml:space="preserve">
+    <value>未有効化または未マッチ</value>
+  </data>
+  <data name="Web.Index.GetStarted" xml:space="preserve">
+    <value>今すぐ始める</value>
+  </data>
+  <data name="Web.Index.Feature.QuickSetup" xml:space="preserve">
+    <value>クイックセットアップ</value>
+  </data>
+  <data name="Web.Index.Feature.QuickSetup.Desc" xml:space="preserve">
+    <value>フレームワークテンプレート提供、ワンクリックインストール。</value>
+  </data>
+  <data name="Web.Index.Feature.AINative" xml:space="preserve">
+    <value>AIネイティブフレームワーク</value>
+  </data>
+  <data name="Web.Index.Feature.AINative.Desc" xml:space="preserve">
+    <value>AIでシステムを構築し、インテリジェントな開発体験を提供。AI基盤機能を統合し、AIアプリの開発を容易にします。</value>
+  </data>
+  <data name="Web.Index.Feature.Modular" xml:space="preserve">
+    <value>モジュール設計</value>
+  </data>
+  <data name="Web.Index.Feature.Modular.Desc" xml:space="preserve">
+    <value>高度にモジュール化された設計で、自由な組み合わせと拡張が可能。各モジュールは独立して開発、テスト、統合、デプロイできます。</value>
+  </data>
+  <data name="Web.Index.Feature.MultiDB" xml:space="preserve">
+    <value>マルチデータベースサポート</value>
+  </data>
+  <data name="Web.Index.Feature.MultiDB.Desc" xml:space="preserve">
+    <value>SQL Server、MySQL、SQLite、PostgreSQL、Oracle、DMなど多数のデータベースをサポートし、容易に拡張可能です。</value>
+  </data>
+  <data name="Web.Index.Feature.HighPerf" xml:space="preserve">
+    <value>高性能</value>
+  </data>
+  <data name="Web.Index.Feature.HighPerf.Desc" xml:space="preserve">
+    <value>10年以上のエンタープライズシステム最適化経験。高性能・高可用性。日間500万PV以上のシステムで使用中。</value>
+  </data>
+  <data name="Web.Index.Feature.Dapr" xml:space="preserve">
+    <value>Dapr サポート</value>
+  </data>
+  <data name="Web.Index.Feature.Dapr.Desc" xml:space="preserve">
+    <value>Daprマイクロサービスフレームワークをサポートし、迅速なマイクロサービス化を実現します。</value>
+  </data>
+  <data name="Web.Index.Feature.BackCompat" xml:space="preserve">
+    <value>下位互換性</value>
+  </data>
+  <data name="Web.Index.Feature.BackCompat.Desc" xml:space="preserve">
+    <value>マイクロサービスや分散システムに加え、従来の開発やスタンドアロンデプロイもサポート。追加の学習コストなし。モジュール設計によるシームレスなアップグレード。</value>
+  </data>
+  <data name="Web.Index.Feature.Community" xml:space="preserve">
+    <value>コミュニティサポート</value>
+  </data>
+  <data name="Web.Index.Feature.Community.Desc" xml:space="preserve">
+    <value>Senparcデベロッパーコミュニティのコアチームによる保守とサポート。継続的なアップグレード。</value>
+  </data>
+  <data name="Web.Layout.SiteTitle" xml:space="preserve">
+    <value>DDDと高度なモジュール設計による基盤プロジェクト構築のための.NETフレームワーク</value>
+  </data>
+  <data name="Web.Layout.BrandName" xml:space="preserve">
+    <value>NeuCharFramework サンプル</value>
+  </data>
+  <data name="Web.Layout.Nav.Docs" xml:space="preserve">
+    <value>ドキュメント</value>
+  </data>
+  <data name="Web.Layout.Nav.Community" xml:space="preserve">
+    <value>コミュニティ</value>
+  </data>
+  <data name="Web.Layout.Nav.AdminLogin" xml:space="preserve">
+    <value>管理者ログイン</value>
+  </data>
+  <data name="Web.Layout.Footer.Events" xml:space="preserve">
+    <value>イベント</value>
+  </data>
+  <data name="Web.Layout.Footer.Contribute" xml:space="preserve">
+    <value>貢献</value>
+  </data>
+  <data name="Web.Layout.Footer.StartDev" xml:space="preserve">
+    <value>開発を始める</value>
+  </data>
+  <data name="Web.Layout.Footer.Glossary" xml:space="preserve">
+    <value>用語解説</value>
+  </data>
+  <data name="Web.Layout.Footer.FAQ" xml:space="preserve">
+    <value>よくある質問</value>
+  </data>
+  <data name="Web.Layout.Footer.Changelog" xml:space="preserve">
+    <value>更新履歴</value>
+  </data>
+  <data name="Web.Layout.Footer.ContactUs" xml:space="preserve">
+    <value>お問い合わせ</value>
+  </data>
+  <data name="Web.Privacy.Title" xml:space="preserve">
+    <value>プライバシーポリシー</value>
+  </data>
+  <data name="Web.Privacy.Description" xml:space="preserve">
+    <value>このページを使用して、サイトのプライバシーポリシーを詳細に説明します。</value>
+  </data>
+  <data name="Web.Index.Feature.DDD" xml:space="preserve">
+    <value>DDDパターン</value>
+  </data>
+  <data name="Web.Index.Feature.DDD.Desc" xml:space="preserve">
+    <value>厳密な DDD（ドメイン駆動設計）パターンに基づき、変化に柔軟に対応します。</value>
+  </data>
+  <data name="Footer.ICP" xml:space="preserve">
+    <value>蘇ICP備11023884号-12</value>
+  </data>
 </root>

@@ -1,12 +1,14 @@
-﻿var app = new Vue({
+var ncfI18n = window.ncfI18n || {};
+
+var app = new Vue({
     el: "#app",
     data() {
         return {
-            //分页参数
+            // Pagination parameters
             paginationQuery: {
                 total: 5
             },
-            //分页接口传参
+            // Pagination API parameters
             listQuery: {
                 pageIndex: 1,
                 pageSize: 20,
@@ -15,36 +17,36 @@
             },
             tableData: [],
             dialog: {
-                title: '新增角色',
+                title: ncfI18n.addRole || 'Add Role',
                 visible: false,
                 data: {
                     roleName: '', roleCode: '', adminRemark: '', remark: '', addTime: '', id: '', enabled: false
                 },
                 rules: {
                     roleName: [
-                        { required: true, message: "角色名称为必填项", trigger: "blur" }
+                        { required: true, message: ncfI18n.roleNameRequired || "Role name is required", trigger: "blur" }
                     ],
-                    roleCode: [{ required: true, message: "角色代码为必填项", trigger: "blur" }]
+                    roleCode: [{ required: true, message: ncfI18n.roleCodeRequired || "Role code is required", trigger: "blur" }]
                 },
                 updateLoading: false
             },
-            // 树结构字段
+            // Tree structure fields
             defaultProps: {
                 children: 'children',
                 label: 'menuName'
             },
-            // 授权
+            // Authorization
             au: {
                 title: '',
                 visible: false,
                 updateLoading: false,
                 temp: {}
             },
-            allMenu: [],// 所有权限
-            currMenu: [],// 当前权限
-            defaultExpandedKeys: [], // 默认展开
-            defaultCheckedKeys: [], // 默认选中
-            parentArr: [] // 父节点集合
+            allMenu: [],// All permissions
+            currMenu: [],// Current permissions
+            defaultExpandedKeys: [], // Default expanded
+            defaultCheckedKeys: [], // Default checked
+            parentArr: [] // Parent node collection
         };
     },
     created: function () {
@@ -52,7 +54,7 @@
     },
     watch: {
         'dialog.visible': function (val, old) {
-            // 关闭dialog，清空
+            // Clear on dialog close
             if (!val) {
                 this.dialog.data = {
                     roleName: '', roleCode: '', adminRemark: '', remark: '', addTime: '', id: ''
@@ -61,7 +63,7 @@
             }
         },
         'au.visible': function (val, old) {
-            // 关闭dialog，清空
+            // Clear on dialog close
             if (!val) {
                 this.currMenu = [];
                 this.defaultCheckedKeys = [];
@@ -71,15 +73,15 @@
         }
     },
     methods: {
-        // 权限
+        // Permissions
         async handleRole(index, row) {
-            // 打开dialog
+            // Open dialog
             this.au = {
                 title: row.roleName,
                 visible: true,
                 temp: row
             };
-            // 当前已有权限
+            // Current permissions
             const c = await service.get(`/Admin/Role/Permission?handler=RolePermission&roleId=${row.id}`);
             this.currMenu = c.data.data;
             let defaultCheckedKeys = [];
@@ -90,11 +92,11 @@
             const a = await service.get('/Admin/Menu/Edit?handler=menu');
             const b = a.data.data;
             let allMenu = [];
-            // 父节点的集合, 用于求默认和条件为父节点时的差集，解决element tree无半选问题。
+            // Parent node collection, used to calculate difference when defaults are parent nodes, fixing Element tree half-select issue.
             let parentMenuNodes = [];
             this.ddd(b, null, allMenu, parentMenuNodes);
             this.allMenu = allMenu
-            // 所有权限  格式后的数据(用于渲染tree)
+            // All permissions - formatted data (for rendering tree)
             const e = [];
             parentMenuNodes.map((res) => {
                 defaultCheckedKeys.map((ele) => {
@@ -117,7 +119,7 @@
                 }
             }
         },
-        // 更新授权
+        // Update authorization
         async  auUpdateData() {
             this.au.updateLoading = true;
             const checkNodes = this.$refs.tree.getCheckedNodes(false, true);
@@ -135,7 +137,7 @@
                 this.getList();
                 this.$notify({
                     title: "Success",
-                    message: "授权成功",
+                    message: ncfI18n.authorizationSuccess || "Authorization successful",
                     type: "success",
                     duration: 800,
                     onClose: function () {
@@ -146,7 +148,7 @@
                 });
             }
         },
-        // 初始化获取数据
+        // Initialize and get data
         getList() {
             let { pageIndex, pageSize, roleName, orderField } = this.listQuery;
             service.get(`/Admin/Role/index?handler=List&pageIndex=${pageIndex}&pageSize=${pageSize}&roleName=${roleName}&orderField=${orderField}`).then(res => {
@@ -154,26 +156,26 @@
                 this.paginationQuery.total = res.data.data.totalCount;
             });
         },
-        // 编辑
+        // Edit
         handleEdit(index, row) {
             this.dialog.visible = true;
             if (row) {
-                // 编辑
+                // Edit
                 let { roleName, roleCode, adminRemark, remark, addTime, id, enabled } = row;
                 this.dialog.data = {
                     roleName, roleCode, adminRemark, remark, addTime, id, enabled
                 };
-                this.dialog.title = '编辑角色';
+                this.dialog.title = ncfI18n.editRole || 'Edit Role';
             } else {
-                // 新增
-                this.dialog.title = '新增角色';
+                // Add
+                this.dialog.title = ncfI18n.addRole || 'Add Role';
             }
         },
-        // 更新新增、编辑
+        // Update add/edit
         updateData() {
             this.dialog.updateLoading = true;
             this.$refs['dataForm'].validate(valid => {
-                // 表单校验
+                // Form validation
                 if (valid) {
                     let data = {
                         Id: this.dialog.data.id,
@@ -188,7 +190,7 @@
                             this.getList();
                             this.$notify({
                                 title: "Success",
-                                message: "成功",
+                                message: ncfI18n.operationSuccess || "Operation successful",
                                 type: "success",
                                 duration: 2000
                             });
@@ -201,7 +203,7 @@
 
 
         },
-        // 删除
+        // Delete
         handleDelete(index, row) {
             let ids = [row.id];
             service.post("/Admin/Role/Index?handler=Delete", ids).then(res => {
@@ -209,7 +211,7 @@
                     this.getList();
                     this.$notify({
                         title: "Success",
-                        message: "删除成功",
+                        message: ncfI18n.deleteSuccess || "Deleted successfully",
                         type: "success",
                         duration: 2000
                     });

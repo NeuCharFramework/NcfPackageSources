@@ -36,7 +36,7 @@
         {
             case 0:
                 <div id="install_start" class="center_content">
-                    <!-- 安装启动时 -->
+                    <!-- Installation start -->
                     <div id="install_start_main">
                         <div class="logo">
                             <img src="~/images/logo-login-ncf.png" />
@@ -61,7 +61,7 @@
 
                         <p class="install_notice red">@IR["Install.Warning"]</p>
                     </div>
-                    <!-- 展开高级选项时 -->
+                    <!-- Expanded advanced options -->
                     <div class="vertical-line" v-if="isExpanded">
                     </div>
                     <div id="install_start_expand" v-if="isExpanded">
@@ -91,7 +91,7 @@
                 </div>
                 break;
             case 1:
-                <!-- 安装成功时 -->
+                <!-- Installation success -->
                 <div id="install_success">
                     <h2>@IR["Install.Success.Title"]</h2>
                     <div id="install_success_info">

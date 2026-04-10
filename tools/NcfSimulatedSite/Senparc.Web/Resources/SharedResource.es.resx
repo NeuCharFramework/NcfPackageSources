@@ -117,4 +117,121 @@
   <data name="Footer.Copyright" xml:space="preserve">
     <value>Senparc Network Technology Co., Ltd. Todos los derechos reservados</value>
   </data>
+  <data name="Web.Index.Tagline" xml:space="preserve">
+    <value>Simple   Flexible   Extensible</value>
+  </data>
+  <data name="Web.Index.Description" xml:space="preserve">
+    <value>NCF (NeuCharFramework) es un framework .NET empresarial completo para construir proyectos base. Sigue estrictamente los patrones DDD e incluye caché, base de datos, modelos, validación y un panel de administración.</value>
+  </data>
+  <data name="Web.Index.DbSupport" xml:space="preserve">
+    <value>NCF es totalmente compatible con .NET 8.0. Actualmente soporta SQLite, SQL Server, MySQL, PostgreSQL, Oracle, DM y más.</value>
+  </data>
+  <data name="Web.Index.CurrentTenant" xml:space="preserve">
+    <value>Inquilino actual: </value>
+  </data>
+  <data name="Web.Index.TenantNotMatched" xml:space="preserve">
+    <value>No habilitado o sin coincidencia</value>
+  </data>
+  <data name="Web.Index.GetStarted" xml:space="preserve">
+    <value>Empezar</value>
+  </data>
+  <data name="Web.Index.Feature.QuickSetup" xml:space="preserve">
+    <value>Configuración rápida</value>
+  </data>
+  <data name="Web.Index.Feature.QuickSetup.Desc" xml:space="preserve">
+    <value>Plantillas de framework proporcionadas, instalación con un clic.</value>
+  </data>
+  <data name="Web.Index.Feature.AINative" xml:space="preserve">
+    <value>Framework nativo de IA</value>
+  </data>
+  <data name="Web.Index.Feature.AINative.Desc" xml:space="preserve">
+    <value>Construya con IA para una experiencia de desarrollo inteligente. Capacidades de IA integradas para desarrollar aplicaciones de IA fácilmente.</value>
+  </data>
+  <data name="Web.Index.Feature.Modular" xml:space="preserve">
+    <value>Diseño modular</value>
+  </data>
+  <data name="Web.Index.Feature.Modular.Desc" xml:space="preserve">
+    <value>Diseño altamente modular con combinación y extensión libres. Cada módulo puede desarrollarse, probarse, integrarse y desplegarse de forma independiente.</value>
+  </data>
+  <data name="Web.Index.Feature.MultiDB" xml:space="preserve">
+    <value>Soporte multi-base de datos</value>
+  </data>
+  <data name="Web.Index.Feature.MultiDB.Desc" xml:space="preserve">
+    <value>Soporta SQL Server, MySQL, SQLite, PostgreSQL, Oracle, DM y más, con fácil extensibilidad.</value>
+  </data>
+  <data name="Web.Index.Feature.HighPerf" xml:space="preserve">
+    <value>Alto rendimiento</value>
+  </data>
+  <data name="Web.Index.Feature.HighPerf.Desc" xml:space="preserve">
+    <value>Más de 10 años de experiencia en optimización de sistemas empresariales. Alto rendimiento y alta disponibilidad.</value>
+  </data>
+  <data name="Web.Index.Feature.Dapr" xml:space="preserve">
+    <value>Soporte Dapr</value>
+  </data>
+  <data name="Web.Index.Feature.Dapr.Desc" xml:space="preserve">
+    <value>Soporta el framework de microservicios Dapr para una rápida adopción.</value>
+  </data>
+  <data name="Web.Index.Feature.BackCompat" xml:space="preserve">
+    <value>Compatibilidad hacia atrás</value>
+  </data>
+  <data name="Web.Index.Feature.BackCompat.Desc" xml:space="preserve">
+    <value>Más allá de microservicios, soporta desarrollo tradicional y despliegue independiente sin curva de aprendizaje adicional.</value>
+  </data>
+  <data name="Web.Index.Feature.Community" xml:space="preserve">
+    <value>Soporte comunitario</value>
+  </data>
+  <data name="Web.Index.Feature.Community.Desc" xml:space="preserve">
+    <value>Mantenido y soportado por el equipo principal de la comunidad de desarrolladores Senparc.</value>
+  </data>
+  <data name="Web.Layout.SiteTitle" xml:space="preserve">
+    <value>Un framework .NET para construir proyectos base con DDD y diseño altamente modular</value>
+  </data>
+  <data name="Web.Layout.BrandName" xml:space="preserve">
+    <value>Ejemplo NeuCharFramework</value>
+  </data>
+  <data name="Web.Layout.Nav.Docs" xml:space="preserve">
+    <value>Documentación</value>
+  </data>
+  <data name="Web.Layout.Nav.Community" xml:space="preserve">
+    <value>Comunidad</value>
+  </data>
+  <data name="Web.Layout.Nav.AdminLogin" xml:space="preserve">
+    <value>Inicio de sesión de administrador</value>
+  </data>
+  <data name="Web.Layout.Footer.Events" xml:space="preserve">
+    <value>Eventos</value>
+  </data>
+  <data name="Web.Layout.Footer.Contribute" xml:space="preserve">
+    <value>Contribuir</value>
+  </data>
+  <data name="Web.Layout.Footer.StartDev" xml:space="preserve">
+    <value>Empezar a desarrollar</value>
+  </data>
+  <data name="Web.Layout.Footer.Glossary" xml:space="preserve">
+    <value>Glosario</value>
+  </data>
+  <data name="Web.Layout.Footer.FAQ" xml:space="preserve">
+    <value>Preguntas frecuentes</value>
+  </data>
+  <data name="Web.Layout.Footer.Changelog" xml:space="preserve">
+    <value>Registro de cambios</value>
+  </data>
+  <data name="Web.Layout.Footer.ContactUs" xml:space="preserve">
+    <value>Contáctenos</value>
+  </data>
+  <data name="Web.Privacy.Title" xml:space="preserve">
+    <value>Política de privacidad</value>
+  </data>
+  <data name="Web.Privacy.Description" xml:space="preserve">
+    <value>Use esta página para detallar la política de privacidad de su sitio.</value>
+  </data>
+  <data name="Web.Index.Feature.DDD" xml:space="preserve">
+    <value>Patrón DDD</value>
+  </data>
+  <data name="Web.Index.Feature.DDD.Desc" xml:space="preserve">
+    <value>Basado en patrones estrictos de DDD (Domain-Driven Design) para una adaptacion flexible a los cambios.</value>
+  </data>
+  <data name="Footer.ICP" xml:space="preserve">
+    <value>Su ICP No. 11023884-12</value>
+  </data>
 </root>

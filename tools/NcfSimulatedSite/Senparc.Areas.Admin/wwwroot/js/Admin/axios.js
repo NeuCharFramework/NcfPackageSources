@@ -1,12 +1,14 @@
 ﻿/**
- * axios封装
- * 请求拦截、响应拦截、错误统一处理
+ * Axios wrapper
+ * Request interceptor, response interceptor, unified error handling
  */
-// 创建一个axios实例
+var ncfI18n = window.ncfI18n || {};
+
+// Create an axios instance
 var service = axios.create({
     timeout: 1000000 // request timeout
 });
-// 请求拦截
+// Request interceptor
 service.interceptors.request.use(
     config => {
         if (config.method.toUpperCase() === 'POST') {
@@ -20,15 +22,15 @@ service.interceptors.request.use(
         return Promise.reject(error);
     }
 );
-// 响应拦截器
+// Response interceptor
 service.interceptors.response.use(
     response => {
         if (response.status === 200) {
             if (response.data.success) {
                 return Promise.resolve(response);
             } else {
-                // 请求已发出，其他状态
-                // 切换隐藏时不给错误提示，直接刷新
+                // Request sent but non-success status
+                // No error prompt on hide/state toggle, just refresh
                 if (response.config.url.includes('HideManager') || response.config.url.includes('ChangeState')) {
                     return;
                 }
@@ -54,7 +56,7 @@ service.interceptors.response.use(
         console.log('err' + error);
         if (error.message.includes('401')) {
             app.$message({
-                message: '登陆过期，即将跳转到登录页面',
+                message: ncfI18n.sessionExpired || 'Session expired, redirecting to login page',
                 type: 'error',
                 duration: 3 * 1000,
                 onClose: function () {
@@ -64,7 +66,7 @@ service.interceptors.response.use(
             return Promise.reject(error);
         } if (error.message.includes('403')) {
             app.$message({
-                message: '您没有访问权限~',
+                message: ncfI18n.noPermission || 'You do not have access permission',
                 type: 'error',
                 duration: 3 * 1000
             });

@@ -32,4 +32,121 @@
   <data name="Message.ConfirmDelete" xml:space="preserve"><value>确认要删除吗？</value></data>
   <data name="Footer.PoweredBy" xml:space="preserve"><value>技术支持：</value></data>
   <data name="Footer.Copyright" xml:space="preserve"><value>苏州盛派网络科技有限公司 版权所有</value></data>
+  <data name="Web.Index.Tagline" xml:space="preserve">
+    <value>简单   灵活   可扩展</value>
+  </data>
+  <data name="Web.Index.Description" xml:space="preserve">
+    <value>NCF（NeuCharFramework）是一整套可用于构建基础项目的企业级通用 .NET 框架，严格遵循 DDD 设计模式，包含了基础的缓存、数据库、模型、验证及配套管理后台，高度模块化，具有高度的可扩展性和耐造性。</value>
+  </data>
+  <data name="Web.Index.DbSupport" xml:space="preserve">
+    <value>NCF 全面支持 .NET 8.0。目前已支持 SQLite、SQL Server、MySQL、PostgreSQL、Oracle、DM（达梦）等数据库，更多数据库陆续添加中，欢迎给我们反馈您的需求！</value>
+  </data>
+  <data name="Web.Index.CurrentTenant" xml:space="preserve">
+    <value>当前租户：</value>
+  </data>
+  <data name="Web.Index.TenantNotMatched" xml:space="preserve">
+    <value>未启用或未匹配成功</value>
+  </data>
+  <data name="Web.Index.GetStarted" xml:space="preserve">
+    <value>立即开始</value>
+  </data>
+  <data name="Web.Index.Feature.QuickSetup" xml:space="preserve">
+    <value>快速搭建</value>
+  </data>
+  <data name="Web.Index.Feature.QuickSetup.Desc" xml:space="preserve">
+    <value>提供框架模板，一键安装。</value>
+  </data>
+  <data name="Web.Index.Feature.AINative" xml:space="preserve">
+    <value>AI 原生框架</value>
+  </data>
+  <data name="Web.Index.Feature.AINative.Desc" xml:space="preserve">
+    <value>使用 AI 构建系统，提供智能化的开发体验。同时集成 AI 基础能力，轻松开发 AI 应用。</value>
+  </data>
+  <data name="Web.Index.Feature.Modular" xml:space="preserve">
+    <value>模块化设计</value>
+  </data>
+  <data name="Web.Index.Feature.Modular.Desc" xml:space="preserve">
+    <value>高度模块化设计，自由组合、自行扩展。每个功能模块都可以独立开发、测试、集成、部署。</value>
+  </data>
+  <data name="Web.Index.Feature.MultiDB" xml:space="preserve">
+    <value>多数据库支持</value>
+  </data>
+  <data name="Web.Index.Feature.MultiDB.Desc" xml:space="preserve">
+    <value>支持 SQL Server、MySQL、SQLite、PostgreSQL、Oracle、DM（达梦）等多种数据库，并可轻松扩展。</value>
+  </data>
+  <data name="Web.Index.Feature.HighPerf" xml:space="preserve">
+    <value>高性能</value>
+  </data>
+  <data name="Web.Index.Feature.HighPerf.Desc" xml:space="preserve">
+    <value>10 余年的企业级系统优化经验，高性能、高可用。大量日均 500 万 PV 以上系统正在使用。</value>
+  </data>
+  <data name="Web.Index.Feature.Dapr" xml:space="preserve">
+    <value>Dapr 支持</value>
+  </data>
+  <data name="Web.Index.Feature.Dapr.Desc" xml:space="preserve">
+    <value>支持 Dapr 微服务框架，可快速实现微服务化。</value>
+  </data>
+  <data name="Web.Index.Feature.BackCompat" xml:space="preserve">
+    <value>向下兼容</value>
+  </data>
+  <data name="Web.Index.Feature.BackCompat.Desc" xml:space="preserve">
+    <value>除微服务、分布式外，支持传统开发和单机部署模式，无额外学习成本。基于模块化原理，框架支持无缝升级，随时保持最新状态。</value>
+  </data>
+  <data name="Web.Index.Feature.Community" xml:space="preserve">
+    <value>社区支持</value>
+  </data>
+  <data name="Web.Index.Feature.Community.Desc" xml:space="preserve">
+    <value>由盛派开发者社区核心主创团队提供维护支持，常年升级维护。</value>
+  </data>
+  <data name="Web.Layout.SiteTitle" xml:space="preserve">
+    <value>用于构造基础项目的 .NET 框架，使用 DDD 和高度模块化设计</value>
+  </data>
+  <data name="Web.Layout.BrandName" xml:space="preserve">
+    <value>NeuCharFramework 示例</value>
+  </data>
+  <data name="Web.Layout.Nav.Docs" xml:space="preserve">
+    <value>文档</value>
+  </data>
+  <data name="Web.Layout.Nav.Community" xml:space="preserve">
+    <value>社区</value>
+  </data>
+  <data name="Web.Layout.Nav.AdminLogin" xml:space="preserve">
+    <value>管理员登录</value>
+  </data>
+  <data name="Web.Layout.Footer.Events" xml:space="preserve">
+    <value>活动</value>
+  </data>
+  <data name="Web.Layout.Footer.Contribute" xml:space="preserve">
+    <value>贡献</value>
+  </data>
+  <data name="Web.Layout.Footer.StartDev" xml:space="preserve">
+    <value>开始开发</value>
+  </data>
+  <data name="Web.Layout.Footer.Glossary" xml:space="preserve">
+    <value>名词解释</value>
+  </data>
+  <data name="Web.Layout.Footer.FAQ" xml:space="preserve">
+    <value>常见问题</value>
+  </data>
+  <data name="Web.Layout.Footer.Changelog" xml:space="preserve">
+    <value>更新日志</value>
+  </data>
+  <data name="Web.Layout.Footer.ContactUs" xml:space="preserve">
+    <value>联系我们</value>
+  </data>
+  <data name="Web.Privacy.Title" xml:space="preserve">
+    <value>隐私策略</value>
+  </data>
+  <data name="Web.Privacy.Description" xml:space="preserve">
+    <value>使用此页面详细说明您的网站的隐私政策。</value>
+  </data>
+  <data name="Web.Index.Feature.DDD" xml:space="preserve">
+    <value>DDD 模式</value>
+  </data>
+  <data name="Web.Index.Feature.DDD.Desc" xml:space="preserve">
+    <value>基于严格的 DDD（Domain-Driven Design）模式开发，灵活应对变化。</value>
+  </data>
+  <data name="Footer.ICP" xml:space="preserve">
+    <value>苏ICP备11023884号-12</value>
+  </data>
 </root>

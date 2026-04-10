@@ -1,20 +1,22 @@
-﻿var app = new Vue({
+var ncfI18n = window.ncfI18n || {};
+
+var app = new Vue({
   el: "#app",
   data() {
     return {
-      newTableData: [], // 新模块数据
-      oldTableData: [], // 已安装模块
-      updatedTableData: [], // 待更新模块
-      isExtend: false, //是否切换状态
+      newTableData: [], // New module data
+      oldTableData: [], // Installed modules
+      updatedTableData: [], // Modules pending update
+      isExtend: false, // Whether to toggle state
       handlerText: "",
       handlerTips: "",
       newData: {},
       oldData: {
         state: {
-          0: '关闭',
-          1: '开放',
-          2: '新增待审核',
-          3: '更新待审核'
+          0: ncfI18n.moduleStateClosed || 'Closed',
+          1: ncfI18n.moduleStateOpen || 'Open',
+          2: ncfI18n.moduleStateNewPending || 'New - Pending Review',
+          3: ncfI18n.moduleStateUpdatePending || 'Update - Pending Review'
         }
       },
       newTableSearch: '',
@@ -24,8 +26,12 @@
   watch: {
     'isExtend': {
       handler: function (val, oldVal) {
-        this.handlerText = val ? '开启【扩展模块】管理模式' : '切换至发布状态，隐藏【扩展模块】管理单元';
-        this.handlerTips = val ? '打开【扩展模块】管理功能后，所有扩展模块将显示在【扩展模块】二级目录中。确定要打开吗？' : '隐藏【扩展模块】管理功能后，所有扩展模块将并列显示在一级目录中。如需重新打开，请直接浏览器内访问此页面【/Admin/XncfModule】。确定要隐藏吗？';
+        this.handlerText = val
+          ? (ncfI18n.enableExtModuleMode || 'Enable [Extension Module] management mode')
+          : (ncfI18n.switchToPublishMode || 'Switch to publish mode, hide [Extension Module] management unit');
+        this.handlerTips = val
+          ? (ncfI18n.enableExtModuleConfirm || 'After enabling [Extension Module] management, all extension modules will be displayed under the [Extension Module] submenu. Are you sure?')
+          : (ncfI18n.hideExtModuleConfirm || 'After hiding [Extension Module] management, all extension modules will be shown as top-level menu items. To re-enable, visit this page [/Admin/XncfModule] directly. Are you sure?');
       },
       immediate: true
     }
@@ -34,11 +40,11 @@
     this.getList();
   },
   methods: {
-    // 获取
+    // Get data
     async getList() {
       const oldTableData = await service.get('/Admin/XncfModule/Index?handler=Mofules');
       this.oldTableData = oldTableData.data.data.result;
-      // 是否切换状态
+      // Whether to toggle state
       this.isExtend = oldTableData.data.data.hideModuleManager;
       const newTableData = await service.get('/Admin/XncfModule/Index?handler=UnMofules');
       this.newTableData = newTableData.data.data;
@@ -46,27 +52,27 @@
       const updatedTableData = await service.get('/Admin/XncfModule/Index?handler=UpdatedMofules');
       this.updatedTableData = updatedTableData.data.data;
     },
-    // 切换状态
+    // Toggle state
     async handleSwitch() {
       await service.post('/Admin/XncfModule/Index?handler=HideManager');
       this.isExtend = !this.isExtend;
       window.location.href = "/Admin/Index";
     },
-    // 安装
+    // Install
     async handleInstall(index, row) {
       await service.get(`/Admin/XncfModule/Index?handler=ScanAjax&uid=${row.uid}`);
       window.sessionStorage.setItem('setNavMenuActive', row.menuName);
       getNavMenu();
-      // 跳转到模块详情
+      // Navigate to module detail
       setTimeout(function () {
         window.location.href = `/Admin/XncfModule/Start/?uid=${row.uid}`;
       }, 100);
     },
-    // 操作
+    // Manage
     handleHandle(index, row) {
       window.location.href = "/Admin/XncfModule/Start/?uid=" + row.xncfRegister.uid;
     },
-    // 主页
+    // Homepage
     handleIndex(index, row) {
       window.location.href = row.xncfRegister.homeUrl;
     }

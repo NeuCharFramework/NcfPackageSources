@@ -1,3 +1,5 @@
+var ncfI18n = window.ncfI18n || {};
+
 var chatApp = new Vue({
   el: '#app',
   mixins: [window.ChatLauncherMixin],
@@ -23,7 +25,7 @@ var chatApp = new Vue({
     if (window.INITIAL_DATA) {
       this.currentSessionId = window.INITIAL_DATA.sessionId || 0;
       this.currentUserId = window.INITIAL_DATA.currentUserId || 0;
-      
+
       if (window.INITIAL_DATA.initialMessage) {
         const initialMessage = decodeURIComponent(window.INITIAL_DATA.initialMessage);
         if (this.currentSessionId > 0) {
@@ -35,34 +37,34 @@ var chatApp = new Vue({
     }
 
     this.loadSessionList();
-    
+
     if (this.currentSessionId > 0) {
       this.loadSessionDetail();
     }
   },
   methods: {
     handleChatInputKeydown(event) {
-      // 保持与首页一致：Ctrl+Enter (Windows/Linux) 或 Cmd+Enter (Mac) 发送。
+      // Keep consistent with homepage: Ctrl+Enter (Windows/Linux) or Cmd+Enter (Mac) to send.
       if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
         this.sendMessage();
       }
-      // 普通 Enter 保留换行行为。
+      // Plain Enter keeps line break behavior.
     },
 
     async loadSessionList() {
       this.loadingSessions = true;
       try {
         const response = await service.get('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetSessionListAsync?pageIndex=1&pageSize=50');
-        
+
         if (response.data && response.data.success && response.data.data) {
           this.sessionList = response.data.data.sessions || [];
         } else {
-          console.error('加载会话列表失败:', response.data.errorMessage);
+          console.error('Failed to load session list:', response.data.errorMessage);
         }
       } catch (error) {
-        console.error('加载会话列表异常:', error);
-        this.$message.error('加载会话列表失败');
+        console.error('Error loading session list:', error);
+        this.$message.error(ncfI18n.loadSessionListFailed || 'Failed to load session list');
       } finally {
         this.loadingSessions = false;
       }
@@ -74,7 +76,7 @@ var chatApp = new Vue({
       this.loadingMessages = true;
       try {
         const response = await service.get(`/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetSessionDetailAsync?sessionId=${this.currentSessionId}`);
-        
+
         if (response.data && response.data.success && response.data.data) {
           const session = response.data.data.session;
           this.currentSessionTitle = session.title;
@@ -82,17 +84,17 @@ var chatApp = new Vue({
           this.currentSessionModules = session.modules || [];
           this.clearMessageSelection();
           this.isManageMode = false;
-          
+
           this.$nextTick(() => {
             this.scrollToBottom();
           });
         } else {
-          console.error('加载会话详情失败:', response.data.errorMessage);
-          this.$message.error('加载会话详情失败');
+          console.error('Failed to load session detail:', response.data.errorMessage);
+          this.$message.error(ncfI18n.loadSessionDetailFailed || 'Failed to load session detail');
         }
       } catch (error) {
-        console.error('加载会话详情异常:', error);
-        this.$message.error('加载会话详情失败');
+        console.error('Error loading session detail:', error);
+        this.$message.error(ncfI18n.loadSessionDetailFailed || 'Failed to load session detail');
       } finally {
         this.loadingMessages = false;
       }
@@ -100,12 +102,12 @@ var chatApp = new Vue({
 
     async sendMessage() {
       if (!this.inputMessage || this.inputMessage.trim().length === 0) {
-        this.$message.warning('请输入消息内容');
+        this.$message.warning(ncfI18n.pleaseEnterMessage || 'Please enter a message');
         return;
       }
 
       if (!this.currentSessionId) {
-        this.$message.error('请先选择或创建会话');
+        this.$message.error(ncfI18n.pleaseSelectOrCreateSession || 'Please select or create a session');
         return;
       }
 
@@ -114,7 +116,7 @@ var chatApp = new Vue({
       this.isSending = true;
       this.isAIResponding = true;
 
-      // 乐观渲染：立即显示“我”的消息，避免等待接口返回期间出现空白。
+      // Optimistic rendering: show user message immediately to avoid blank during API call.
       const tempMessageId = `temp-${Date.now()}`;
       const tempUserMessage = {
         id: tempMessageId,
@@ -135,34 +137,34 @@ var chatApp = new Vue({
         };
 
         const response = await service.post('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.SendMessageAsync', requestData);
-        
+
         if (response.data && response.data.success && response.data.data) {
           const { userMessage, assistantMessage } = response.data.data;
 
                   const tempIndex = this.messageList.findIndex((item) => item.id === tempMessageId);
                   if (tempIndex >= 0) {
-                    // 用服务端正式消息替换临时消息，确保时间、ID等数据准确。
+                    // Replace temporary message with server message for accurate time and ID.
                     this.messageList.splice(tempIndex, 1, userMessage || tempUserMessage);
                   }
 
                   if (assistantMessage) {
                     this.messageList.push(assistantMessage);
                   }
-          
+
           await this.loadSessionList();
-          
+
           this.$nextTick(() => {
             this.scrollToBottom();
           });
         } else {
-          console.error('发送消息失败:', response.data.errorMessage);
-          this.$message.error(response.data.errorMessage || '发送消息失败');
+          console.error('Failed to send message:', response.data.errorMessage);
+          this.$message.error(response.data.errorMessage || (ncfI18n.sendMessageFailed || 'Failed to send message'));
           this.messageList = this.messageList.filter((item) => item.id !== tempMessageId);
           this.inputMessage = messageContent;
         }
       } catch (error) {
-        console.error('发送消息异常:', error);
-        this.$message.error('发送消息失败，请稍后重试');
+        console.error('Error sending message:', error);
+        this.$message.error(ncfI18n.sendMessageFailedRetry || 'Failed to send message, please try again');
         this.messageList = this.messageList.filter((item) => item.id !== tempMessageId);
         this.inputMessage = messageContent;
       } finally {
@@ -174,19 +176,19 @@ var chatApp = new Vue({
     async setFeedback(messageId, feedbackType) {
       try {
         const response = await service.put(`/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.SetMessageFeedbackAsync?messageId=${messageId}&feedback=${feedbackType}`);
-        
+
         if (response.data && response.data.success) {
           const message = this.messageList.find(m => m.id === messageId);
           if (message) {
             message.userFeedback = feedbackType;
           }
-          this.$message.success('反馈成功');
+          this.$message.success(ncfI18n.feedbackSuccess || 'Feedback submitted');
         } else {
-          this.$message.error('反馈失败');
+          this.$message.error(ncfI18n.feedbackFailed || 'Feedback failed');
         }
       } catch (error) {
-        console.error('设置反馈异常:', error);
-        this.$message.error('反馈失败');
+        console.error('Error setting feedback:', error);
+        this.$message.error(ncfI18n.feedbackFailed || 'Feedback failed');
       }
     },
 
@@ -250,7 +252,7 @@ var chatApp = new Vue({
       const selectedSet = new Set(this.selectedMessageIds);
       const selectedMessages = this.messageList.filter((m) => selectedSet.has(String(m.id)));
       if (selectedMessages.length === 0) {
-        this.$message.warning('请先选择要复制的消息');
+        this.$message.warning(ncfI18n.pleaseSelectMessagesToCopy || 'Please select messages to copy');
         return;
       }
 
@@ -272,10 +274,10 @@ var chatApp = new Vue({
           document.body.removeChild(textarea);
         }
 
-        this.$message.success(`已复制 ${selectedMessages.length} 条消息`);
+        this.$message.success((ncfI18n.copiedNMessages || 'Copied {0} message(s)').replace('{0}', selectedMessages.length));
       } catch (error) {
-        console.error('复制消息失败:', error);
-        this.$message.error('复制失败，请手动复制');
+        console.error('Failed to copy messages:', error);
+        this.$message.error(ncfI18n.copyFailedManual || 'Copy failed, please copy manually');
       }
     },
 
@@ -285,14 +287,16 @@ var chatApp = new Vue({
         .filter((id) => Number.isInteger(id) && id > 0);
 
       if (selectedIds.length === 0) {
-        this.$message.warning('请先选择要删除的消息');
+        this.$message.warning(ncfI18n.pleaseSelectMessagesToDelete || 'Please select messages to delete');
         return;
       }
 
       try {
-        await this.$confirm(`确定删除选中的 ${selectedIds.length} 条消息吗？此操作不可撤销。`, '删除确认', {
-          confirmButtonText: '删除',
-          cancelButtonText: '取消',
+        await this.$confirm(
+          (ncfI18n.confirmDeleteNMessages || 'Are you sure you want to delete the selected {0} message(s)? This action cannot be undone.').replace('{0}', selectedIds.length),
+          ncfI18n.deleteConfirm || 'Delete Confirmation', {
+          confirmButtonText: ncfI18n.deleteBtn || 'Delete',
+          cancelButtonText: ncfI18n.cancel || 'Cancel',
           type: 'warning'
         });
       } catch (error) {
@@ -306,53 +310,53 @@ var chatApp = new Vue({
           const selectedSet = new Set(selectedIds.map((id) => String(id)));
           this.messageList = this.messageList.filter((m) => !selectedSet.has(String(m.id)));
           this.clearMessageSelection();
-          this.$message.success(response.data.data || '删除成功');
+          this.$message.success(response.data.data || (ncfI18n.deleteSuccess || 'Deleted successfully'));
         } else {
-          this.$message.error((response.data && response.data.errorMessage) || '删除失败');
+          this.$message.error((response.data && response.data.errorMessage) || (ncfI18n.deleteFailed || 'Delete failed'));
         }
       } catch (error) {
-        console.error('批量删除消息异常:', error);
-        this.$message.error('删除失败，请稍后重试');
+        console.error('Error batch deleting messages:', error);
+        this.$message.error(ncfI18n.deleteFailedRetry || 'Delete failed, please try again');
       }
     },
 
     async handleSessionCommand(command) {
       if (command.action === 'delete') {
-        this.$confirm('确定要删除这个会话吗？', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+        this.$confirm(ncfI18n.confirmDeleteSession || 'Are you sure you want to delete this session?', ncfI18n.notice || 'Notice', {
+          confirmButtonText: ncfI18n.confirm || 'OK',
+          cancelButtonText: ncfI18n.cancel || 'Cancel',
           type: 'warning'
         }).then(async () => {
           try {
             const response = await service.delete(`/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.DeleteSessionAsync?sessionId=${command.id}`);
-            
+
             if (response.data && response.data.success) {
-              this.$message.success('删除成功');
-              
+              this.$message.success(ncfI18n.deleteSuccess || 'Deleted successfully');
+
               if (this.currentSessionId === command.id) {
                 this.currentSessionId = 0;
                 this.messageList = [];
                 this.currentSessionTitle = '';
                 this.currentSessionModules = [];
               }
-              
+
               await this.loadSessionList();
             } else {
-              this.$message.error('删除失败');
+              this.$message.error(ncfI18n.deleteFailed || 'Delete failed');
             }
           } catch (error) {
-            console.error('删除会话异常:', error);
-            this.$message.error('删除失败');
+            console.error('Error deleting session:', error);
+            this.$message.error(ncfI18n.deleteFailed || 'Delete failed');
           }
         }).catch(() => {
-          console.log('取消删除');
+          console.log('Delete cancelled');
         });
       }
     },
 
     scrollToBottom() {
       if (!this.autoScrollEnabled) return;
-      
+
       const container = this.$refs.messagesContainer;
       if (container) {
         container.scrollTop = container.scrollHeight;
@@ -370,11 +374,11 @@ var chatApp = new Vue({
 
     getRoleTypeName(roleType) {
       const nameMap = {
-        0: '我',
-        1: 'AI 助手',
-        2: '系统'
+        0: ncfI18n.chatRoleMe || 'Me',
+        1: ncfI18n.chatRoleAI || 'AI Assistant',
+        2: ncfI18n.chatRoleSystem || 'System'
       };
-      return nameMap[roleType] || '未知';
+      return nameMap[roleType] || (ncfI18n.chatRoleUnknown || 'Unknown');
     },
 
     getMessageIcon(roleType) {
@@ -396,9 +400,9 @@ var chatApp = new Vue({
 
       return {
         uid,
-        name: (module && (module.displayName || module.menuName || module.moduleName)) || (matched && matched.name) || uid || '未命名模块',
+        name: (module && (module.displayName || module.menuName || module.moduleName)) || (matched && matched.name) || uid || (ncfI18n.unnamedModule || 'Unnamed module'),
         icon: (matched && matched.icon) || 'fa fa-cube',
-        description: (module && module.moduleDescription) || (matched && matched.description) || '暂无描述',
+        description: (module && module.moduleDescription) || (matched && matched.description) || (ncfI18n.noDescription || 'No description'),
         version: (module && module.moduleVersion) || (matched && matched.version) || '',
         menus: (matched && matched.menus) || [],
         functions: (matched && matched.functions) || []
@@ -407,7 +411,7 @@ var chatApp = new Vue({
 
     formatTime(dateTimeStr) {
       if (!dateTimeStr) return '';
-      
+
       try {
         const date = new Date(dateTimeStr);
         const now = new Date();
@@ -416,31 +420,31 @@ var chatApp = new Vue({
         const diffHours = Math.floor(diffMs / 3600000);
         const diffDays = Math.floor(diffMs / 86400000);
 
-        if (diffMins < 1) return '刚刚';
-        if (diffMins < 60) return `${diffMins}分钟前`;
-        if (diffHours < 24) return `${diffHours}小时前`;
-        if (diffDays < 7) return `${diffDays}天前`;
-        
+        if (diffMins < 1) return ncfI18n.justNow || 'Just now';
+        if (diffMins < 60) return (ncfI18n.minutesAgo || '{0} min ago').replace('{0}', diffMins);
+        if (diffHours < 24) return (ncfI18n.hoursAgo || '{0} hr ago').replace('{0}', diffHours);
+        if (diffDays < 7) return (ncfI18n.daysAgo || '{0} day(s) ago').replace('{0}', diffDays);
+
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         const hours = String(date.getHours()).padStart(2, '0');
         const minutes = String(date.getMinutes()).padStart(2, '0');
-        
+
         if (year === now.getFullYear()) {
           return `${month}-${day} ${hours}:${minutes}`;
         } else {
           return `${year}-${month}-${day} ${hours}:${minutes}`;
         }
       } catch (error) {
-        console.error('时间格式化失败:', error);
+        console.error('Time formatting failed:', error);
         return dateTimeStr;
       }
     },
 
     formatMessageContent(content) {
       if (!content) return '';
-      
+
       let formatted = content
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
@@ -448,13 +452,13 @@ var chatApp = new Vue({
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#x27;')
         .replace(/\//g, '&#x2F;');
-      
+
       formatted = formatted
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.+?)\*/g, '<em>$1</em>')
         .replace(/`(.+?)`/g, '<code>$1</code>')
         .replace(/\n/g, '<br/>');
-      
+
       return formatted;
     }
   }

@@ -1,3 +1,3 @@
-﻿## 数据库实体
+## Database Entities
 
-命名空间统一为：Senparc.Ncf.Core.Models
+Namespace is unified as: Senparc.Ncf.Core.Models

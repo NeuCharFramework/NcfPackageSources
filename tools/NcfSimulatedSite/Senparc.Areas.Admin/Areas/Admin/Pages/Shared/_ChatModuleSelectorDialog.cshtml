@@ -1,6 +1,5 @@
 <el-dialog
-    title="添加引用模块"
-    :visible.sync="moduleSelectorVisible"
+    title="@AR["Chat.AddReferenceModule"]" :visible.sync="moduleSelectorVisible"
     width="960px"
     class="chat-module-selector-dialog"
     append-to-body>
@@ -10,19 +9,18 @@
                 size="small"
                 clearable
                 v-model="moduleSearchKeyword"
-                placeholder="搜索模块名称 / 描述 / UID"
-                style="max-width: 320px;">
+                placeholder="@AR["Chat.SearchModulePlaceholder"]" style="max-width: 320px;">
             </el-input>
             <el-checkbox
                 :indeterminate="moduleSelectionIndeterminate"
                 :value="isAllFilteredSelected"
                 @@change="handleSelectAllFiltered">
-                当前筛选结果全选
+                @AR["Chat.SelectAllFiltered"]
             </el-checkbox>
-            <el-button size="mini" @@click="clearModuleSelectionInDialog">清空选择</el-button>
+            <el-button size="mini" @@click="clearModuleSelectionInDialog">@AR["Chat.ClearSelection"]</el-button>
         </div>
         <div class="module-selector-toolbar-right">
-            已选 {{ selectedModuleUids.length }} / {{ filteredAvailableModules.length }}
+            @AR["Chat.SelectedCount"] {{ selectedModuleUids.length }} / {{ filteredAvailableModules.length }}
         </div>
     </div>
 
@@ -50,7 +48,7 @@
                     </div>
                 </div>
                 <div class="selector-module-row-actions" @@click.stop>
-                    <a :href="'/Admin/XncfModule/Start/?uid=' + item.uid">快速进入</a>
+                    <a :href="'/Admin/XncfModule/Start/?uid=' + item.uid">@AR["Chat.QuickEnter"]</a>
                     <el-popover
                         v-if="item.menus && item.menus.length > 0"
                         placement="right"
@@ -63,15 +61,15 @@
                             max-height="260"
                             :show-header="false"
                             size="mini">
-                            <el-table-column prop="name" label="菜单" width="280">
+                            <el-table-column prop="name" label="@AR["Chat.Menu"]" width="280">
                                 <template slot-scope="scope">
                                     <a :href="scope.row.url">{{ scope.row.name }}</a>
                                 </template>
                             </el-table-column>
                         </el-table>
-                        <el-button slot="reference" size="mini" icon="el-icon-s-fold">菜单</el-button>
+                        <el-button slot="reference" size="mini" icon="el-icon-s-fold">@AR["Chat.Menu"]</el-button>
                     </el-popover>
-                    <span v-else class="selector-module-menu-empty">无菜单</span>
+                    <span v-else class="selector-module-menu-empty">@AR["Chat.NoMenu"]</span>
                 </div>
             </div>
         </div>
@@ -86,9 +84,9 @@
             </div>
 
             <div class="module-selector-preview-body">
-                <!-- 菜单层级 -->
+                <!-- Menu Hierarchy -->
                 <div v-if="previewModule.menus && previewModule.menus.length > 0" class="module-selector-preview-section">
-                    <div class="module-selector-preview-section-title">菜单层级</div>
+                    <div class="module-selector-preview-section-title">@AR["Chat.MenuHierarchy"]</div>
                     <el-tree
                         :data="previewModule.menus"
                         node-key="id"
@@ -101,7 +99,7 @@
                     </el-tree>
                 </div>
 
-                <!-- Functions列表 -->
+                <!-- Functions List -->
                 <div v-if="previewModule.functions && previewModule.functions.length > 0" class="module-selector-preview-section">
                     <div class="module-selector-preview-section-title">Functions</div>
                     <div class="module-selector-functions-list">
@@ -112,9 +110,9 @@
                     </div>
                 </div>
 
-                <!-- 空状态 -->
+                <!-- Empty State -->
                 <div v-if="(!previewModule.menus || previewModule.menus.length === 0) && (!previewModule.functions || previewModule.functions.length === 0)" class="module-selector-preview-empty">
-                    当前模块无可用菜单和Functions
+                    @AR["Chat.NoMenuAndFunctions"]
                 </div>
             </div>
         </div>
@@ -122,11 +120,11 @@
 
     <div v-else class="module-selector-empty">
         <i class="el-icon-search"></i>
-        <p>没有匹配的模块</p>
+        <p>@AR["Chat.NoMatchingModule"]</p>
     </div>
 
     <span slot="footer" class="dialog-footer">
-        <el-button @@click="moduleSelectorVisible = false">取消</el-button>
-        <el-button type="primary" @@click="applyModuleSelection">确认添加</el-button>
+        <el-button @@click="moduleSelectorVisible = false">@AR["Common.取消"]</el-button>
+        <el-button type="primary" @@click="applyModuleSelection">@AR["Chat.ConfirmAdd"]</el-button>
     </span>
 </el-dialog>

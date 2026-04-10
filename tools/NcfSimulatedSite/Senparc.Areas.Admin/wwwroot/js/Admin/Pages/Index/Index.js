@@ -1,3 +1,5 @@
+var ncfI18n = window.ncfI18n || {};
+
 var app = new Vue({
   el: '#app',
   mixins: [window.ChatLauncherMixin],
@@ -10,7 +12,7 @@ var app = new Vue({
       xncfOpeningList: {},
       chartData: [],
       todayLogData: [],
-      // 添加动画控制变量
+      // Animation control variables
       shakeAllModules: false,
       glowUpgradeableModules: false
     };
@@ -20,7 +22,7 @@ var app = new Vue({
     this.getXncfOpening();
     this.fetchChartData();
     this.fetchTodayLogData();
-    // 添加鼠标事件监听
+    // Add mouse event listeners
     this.initializeHoverEffects();
   },
   methods: {
@@ -37,13 +39,13 @@ var app = new Vue({
         console.error('Error fetching chart data:', error);
       }
     },
-    async fetchTodayLogData() { // 新增获取今日日志数据的方法  
+    async fetchTodayLogData() {
       try {
         let response = await service.get('/api/Senparc.Areas.Admin/StatAppService/Areas.Admin_StatAppService.GetTodayLog');
         if (response.data && response.data.data && response.data.data.items) {
           this.todayLogData = response.data.data.items;
           this.todayDate = response.data.data.date;
-          this.initChart(); // 确保图表在获取到数据后更新  
+          this.initChart();
         } else {
           console.error('Invalid API response:', response);
         }
@@ -55,8 +57,8 @@ var app = new Vue({
       let chart1 = document.getElementById('firstChart');
       let chartOption1 = {
         title: {
-          text: '日志统计',
-          subtext: '近 14 天'
+          text: ncfI18n.logStatistics || 'Log Statistics',
+          subtext: ncfI18n.last14Days || 'Last 14 days'
         },
         xAxis: {
           type: 'category',
@@ -65,7 +67,7 @@ var app = new Vue({
         yAxis: {
           type: 'value',
           axisLabel: {
-            formatter: '{value} 条'
+            formatter: '{value} ' + (ncfI18n.entries || 'entries')
           }
         },
         tooltip: {
@@ -75,22 +77,22 @@ var app = new Vue({
           }
         },
         legend: {
-          data: ['常规日志', '异常日志']
+          data: [ncfI18n.normalLogs || 'Normal Logs', ncfI18n.exceptionLogs || 'Exception Logs']
         },
         series: [
           {
-            name: '常规日志',
+            name: ncfI18n.normalLogs || 'Normal Logs',
             type: 'line',
-            stack: '总量',
-            areaStyle: { color: '#91c7ae' }, // 添加区域填充颜色  
+            stack: 'total',
+            areaStyle: { color: '#91c7ae' },
             data: this.chartData.map(item => item.normalLogCount),
             color: '#91c7ae'
           },
           {
-            name: '异常日志',
+            name: ncfI18n.exceptionLogs || 'Exception Logs',
             type: 'line',
-            stack: '总量',
-            areaStyle: { color: '#d48265' }, // 添加区域填充颜色  
+            stack: 'total',
+            areaStyle: { color: '#d48265' },
             data: this.chartData.map(item => item.exceptionLogCount),
             color: '#d48265'
           }
@@ -99,7 +101,7 @@ var app = new Vue({
       let chartInstance1 = echarts.init(chart1);
       chartInstance1.setOption(chartOption1);
 
-      // 添加点击事件监听器  
+      // Add click event listener
       chartInstance1.on('click', params => {
         if (params.componentType === 'series') {
           let date = params.name;
@@ -107,7 +109,7 @@ var app = new Vue({
         }
       });
 
-      // 准备今日日志数据  
+      // Prepare today's log data
       let todayLogData = this.todayLogData.map(item => ({
         name: item.senparcTraceType,
         value: item.count
@@ -116,8 +118,8 @@ var app = new Vue({
       let chart2 = document.getElementById('secondChart');
       let chartOption2 = {
         title: {
-          text: '今日日志统计',
-          subtext: '动态数据',
+          text: ncfI18n.todayLogStatistics || 'Today Log Statistics',
+          subtext: ncfI18n.dynamicData || 'Dynamic data',
           left: 'center'
         },
         tooltip: {
@@ -127,10 +129,10 @@ var app = new Vue({
         legend: {
           orient: 'vertical',
           left: 'left',
-          data: this.todayLogData.map(item => item.senparcTraceType) // 自动输出所有类别  
+          data: this.todayLogData.map(item => item.senparcTraceType)
         },
         series: [{
-          name: '日志类型',
+          name: ncfI18n.logType || 'Log Type',
           type: 'pie',
           radius: '50%',
           data: todayLogData,
@@ -145,7 +147,7 @@ var app = new Vue({
       };
       let chartInstance2 = echarts.init(chart2);
       chartInstance2.setOption(chartOption2);
-      // 添加点击事件监听器    
+      // Add click event listener
       chartInstance2.on('click', params => {
         if (params.componentType === 'series') {
           window.location.href = `/Admin/SenparcTrace/DateLog?date=${this.todayDate}`;
@@ -153,17 +155,17 @@ var app = new Vue({
       });
 
     },
-    //XNCF 统计状态  
+    // XNCF statistics
     async getXncfStat() {
       let xncfStatData = await service.get('/Admin/Index?handler=XncfStat');
       this.xncfStat = xncfStatData.data.data;
     },
-    //开放模块数据
+    // Open module data
     async getXncfOpening() {
       let xncfOpeningList = await service.get('/Admin/Index?handler=XncfOpening');
       this.xncfOpeningList = xncfOpeningList.data.data;
     },
-    //点击打开模块
+    // Click to open module
     navigateTo(uid) {
       window.location.href = '/Admin/XncfModule/Start/?uid=' + uid;
     },
@@ -173,20 +175,20 @@ var app = new Vue({
       var menuInfo = menus[rowIndex]
       window.location.href = menuInfo.url
     },
-    // 添加新方法处理悬停效果
+    // Handle hover effects
     initializeHoverEffects() {
-      // 获取统计项元素 - 修正选择器
+      // Get stat item elements
       const installedModulesStat = document.querySelector('.xncf-stat-item');
       const updateModulesStat = document.querySelectorAll('.xncf-stat-item')[1];
 
-      // 已安装模块统计项的鼠标事件
+      // Installed modules stat item mouse events
       if (installedModulesStat) {
         installedModulesStat.addEventListener('mouseenter', () => {
           this.triggerShakeAnimation();
         });
       }
 
-      // 待更新模块统计项的鼠标事件
+      // Pending update modules stat item mouse events
       if (updateModulesStat) {
         updateModulesStat.addEventListener('mouseenter', () => {
           this.triggerGlowAnimation();
@@ -194,55 +196,55 @@ var app = new Vue({
       }
     },
 
-    // 触发抖动动画
+    // Trigger shake animation
     triggerShakeAnimation() {
       const moduleCards = document.querySelectorAll('#xncf-modules-area .box-card');
       moduleCards.forEach(card => {
-        // 添加随机延迟
-        const delay = Math.random() * 200; // 0-200ms的随机延迟
+        // Add random delay
+        const delay = Math.random() * 200;
         setTimeout(() => {
           card.classList.add('shake-animation');
-          // 动画结束后移除类
+          // Remove class after animation ends
           setTimeout(() => {
             card.classList.remove('shake-animation');
-          }, 800); // 与动画持续时间匹配
+          }, 800);
         }, delay);
       });
     },
 
-    // 触发发光/淡化动画
+    // Trigger glow/fade animation
     triggerGlowAnimation() {
       const allCards = document.querySelectorAll('#xncf-modules-area .box-card');
       const upgradeableVersions = document.querySelectorAll('#xncf-modules-area .version-upgradeable');
 
-      // 为所有可更新的模块添加发光效果
+      // Add glow effect to all upgradeable modules
       upgradeableVersions.forEach(version => {
         const card = version.closest('.box-card');
         if (card) {
-          // 添加随机延迟
+          // Add random delay
           const delay = Math.random() * 200;
           setTimeout(() => {
             card.classList.add('glow-animation');
             setTimeout(() => {
               card.classList.remove('glow-animation');
-            }, 1200); // 与动画持续时间匹配
+            }, 1200);
           }, delay);
         }
       });
 
-      // 为不可更新的模块添加淡化效果
+      // Add fade effect to non-upgradeable modules
       allCards.forEach(card => {
         if (!card.querySelector('.version-upgradeable')) {
-          // 添加随机延迟
+          // Add random delay
           const delay = Math.random() * 200;
           setTimeout(() => {
             card.classList.add('fade-animation');
             setTimeout(() => {
               card.classList.remove('fade-animation');
-            }, 1200); // 与动画持续时间匹配
+            }, 1200);
           }, delay);
         }
       });
     }
   }
-});  
+});

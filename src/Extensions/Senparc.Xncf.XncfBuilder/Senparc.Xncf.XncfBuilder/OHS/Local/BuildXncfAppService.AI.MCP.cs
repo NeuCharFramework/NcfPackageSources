@@ -106,21 +106,19 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
         #endregion
 
-        //[McpServerTool, Description("获取前端代码模板示例")]
-        public async Task<string> GetFrontEndCodeTemplate()
-        {
-            var template = BuildXncfAppService.FrontendTemplate;
-            return template;
+        //[McpServerTool, Description("Get frontend code template example")]
+        //public async Task<string> GetFrontEndCodeTemplate()
+        //{
+        //    var template = BuildXncfAppService.FrontendTemplate;
+        //    return template;
+        //}
 
-        }
-
-        //[McpServerTool, Description("获取后端代码模板示例")]
-        public async Task<string> GetBackEndCodeTemplate()
-        {
-            var template = BuildXncfAppService.BackendTemplate;
-
-            return template;
-        }
+        //[McpServerTool, Description("Get backend code template example")]
+        //public async Task<string> GetBackEndCodeTemplate()
+        //{
+        //    var template = BuildXncfAppService.BackendTemplate;
+        //    return template;
+        //}
 
         //[McpServerTool, Description("获取文件内容")]
         public async Task<BuildXncf_GetFileResponse> GetFile([Description("完整模块名，如 Senparc.Xncf.XncfBuilder")] string moduleName, [Description("在模块内的路径+文件名")] string filePath)

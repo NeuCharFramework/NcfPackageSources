@@ -117,4 +117,121 @@
   <data name="Footer.Copyright" xml:space="preserve">
     <value>Suzhou Senparc Network Technology Co., Ltd. Все права защищены</value>
   </data>
+  <data name="Web.Index.Tagline" xml:space="preserve">
+    <value>Просто   Гибко   Расширяемо</value>
+  </data>
+  <data name="Web.Index.Description" xml:space="preserve">
+    <value>NCF (NeuCharFramework) — комплексный корпоративный .NET фреймворк для построения базовых проектов. Строго следует шаблонам DDD и включает кэширование, базу данных, модели, валидацию и панель администрирования.</value>
+  </data>
+  <data name="Web.Index.DbSupport" xml:space="preserve">
+    <value>NCF полностью поддерживает .NET 8.0. Поддерживает SQLite, SQL Server, MySQL, PostgreSQL, Oracle, DM и другие базы данных.</value>
+  </data>
+  <data name="Web.Index.CurrentTenant" xml:space="preserve">
+    <value>Текущий арендатор: </value>
+  </data>
+  <data name="Web.Index.TenantNotMatched" xml:space="preserve">
+    <value>Не включен или не совпал</value>
+  </data>
+  <data name="Web.Index.GetStarted" xml:space="preserve">
+    <value>Начать</value>
+  </data>
+  <data name="Web.Index.Feature.QuickSetup" xml:space="preserve">
+    <value>Быстрая настройка</value>
+  </data>
+  <data name="Web.Index.Feature.QuickSetup.Desc" xml:space="preserve">
+    <value>Шаблоны фреймворка, установка в один клик.</value>
+  </data>
+  <data name="Web.Index.Feature.AINative" xml:space="preserve">
+    <value>AI-нативный фреймворк</value>
+  </data>
+  <data name="Web.Index.Feature.AINative.Desc" xml:space="preserve">
+    <value>Создавайте системы с ИИ для интеллектуальной разработки. Интегрированные возможности ИИ для лёгкого создания ИИ-приложений.</value>
+  </data>
+  <data name="Web.Index.Feature.Modular" xml:space="preserve">
+    <value>Модульный дизайн</value>
+  </data>
+  <data name="Web.Index.Feature.Modular.Desc" xml:space="preserve">
+    <value>Высокомодульный дизайн со свободной комбинацией и расширением. Каждый модуль можно независимо разрабатывать, тестировать, интегрировать и развёртывать.</value>
+  </data>
+  <data name="Web.Index.Feature.MultiDB" xml:space="preserve">
+    <value>Поддержка нескольких БД</value>
+  </data>
+  <data name="Web.Index.Feature.MultiDB.Desc" xml:space="preserve">
+    <value>Поддерживает SQL Server, MySQL, SQLite, PostgreSQL, Oracle, DM и другие с лёгкой расширяемостью.</value>
+  </data>
+  <data name="Web.Index.Feature.HighPerf" xml:space="preserve">
+    <value>Высокая производительность</value>
+  </data>
+  <data name="Web.Index.Feature.HighPerf.Desc" xml:space="preserve">
+    <value>Более 10 лет опыта оптимизации корпоративных систем. Высокая производительность и доступность.</value>
+  </data>
+  <data name="Web.Index.Feature.Dapr" xml:space="preserve">
+    <value>Поддержка Dapr</value>
+  </data>
+  <data name="Web.Index.Feature.Dapr.Desc" xml:space="preserve">
+    <value>Поддерживает микросервисный фреймворк Dapr для быстрого внедрения.</value>
+  </data>
+  <data name="Web.Index.Feature.BackCompat" xml:space="preserve">
+    <value>Обратная совместимость</value>
+  </data>
+  <data name="Web.Index.Feature.BackCompat.Desc" xml:space="preserve">
+    <value>Помимо микросервисов поддерживает традиционную разработку и автономное развёртывание без дополнительного обучения.</value>
+  </data>
+  <data name="Web.Index.Feature.Community" xml:space="preserve">
+    <value>Поддержка сообщества</value>
+  </data>
+  <data name="Web.Index.Feature.Community.Desc" xml:space="preserve">
+    <value>Поддерживается основной командой сообщества разработчиков Senparc с постоянными обновлениями.</value>
+  </data>
+  <data name="Web.Layout.SiteTitle" xml:space="preserve">
+    <value>.NET фреймворк для построения базовых проектов с DDD и модульным дизайном</value>
+  </data>
+  <data name="Web.Layout.BrandName" xml:space="preserve">
+    <value>Пример NeuCharFramework</value>
+  </data>
+  <data name="Web.Layout.Nav.Docs" xml:space="preserve">
+    <value>Документация</value>
+  </data>
+  <data name="Web.Layout.Nav.Community" xml:space="preserve">
+    <value>Сообщество</value>
+  </data>
+  <data name="Web.Layout.Nav.AdminLogin" xml:space="preserve">
+    <value>Вход администратора</value>
+  </data>
+  <data name="Web.Layout.Footer.Events" xml:space="preserve">
+    <value>События</value>
+  </data>
+  <data name="Web.Layout.Footer.Contribute" xml:space="preserve">
+    <value>Вклад</value>
+  </data>
+  <data name="Web.Layout.Footer.StartDev" xml:space="preserve">
+    <value>Начать разработку</value>
+  </data>
+  <data name="Web.Layout.Footer.Glossary" xml:space="preserve">
+    <value>Глоссарий</value>
+  </data>
+  <data name="Web.Layout.Footer.FAQ" xml:space="preserve">
+    <value>ЧаВо</value>
+  </data>
+  <data name="Web.Layout.Footer.Changelog" xml:space="preserve">
+    <value>Журнал изменений</value>
+  </data>
+  <data name="Web.Layout.Footer.ContactUs" xml:space="preserve">
+    <value>Свяжитесь с нами</value>
+  </data>
+  <data name="Web.Privacy.Title" xml:space="preserve">
+    <value>Политика конфиденциальности</value>
+  </data>
+  <data name="Web.Privacy.Description" xml:space="preserve">
+    <value>Используйте эту страницу для описания политики конфиденциальности вашего сайта.</value>
+  </data>
+  <data name="Web.Index.Feature.DDD" xml:space="preserve">
+    <value>Паттерн DDD</value>
+  </data>
+  <data name="Web.Index.Feature.DDD.Desc" xml:space="preserve">
+    <value>Построен на строгих паттернах DDD (Domain-Driven Design) для гибкой адаптации к изменениям.</value>
+  </data>
+  <data name="Footer.ICP" xml:space="preserve">
+    <value>Su ICP No. 11023884-12</value>
+  </data>
 </root>

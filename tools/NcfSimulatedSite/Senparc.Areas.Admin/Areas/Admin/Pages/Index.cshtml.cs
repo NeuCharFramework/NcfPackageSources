@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Senparc.Areas.Admin.Domain;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Core.WorkContext.Provider;
@@ -16,13 +17,14 @@ namespace Senparc.Areas.Admin.Pages
     public class IndexModel(
         IServiceProvider serviceProvider,
         XncfModuleServiceExtension xncfModuleServiceEx,
-        IAdminWorkContextProvider adminWorkContextProvider)
+        IAdminWorkContextProvider adminWorkContextProvider,
+        IStringLocalizer<AdminResource> localizer)
         : BaseAdminPageModel(serviceProvider)
     {
         private readonly IServiceProvider _serviceProvider = serviceProvider;
         private readonly IAdminWorkContextProvider _adminWorkContextProvider = adminWorkContextProvider;
+        private readonly IStringLocalizer<AdminResource> _localizer = localizer;
 
-        //TODO:从其他模块获得
         private readonly XncfModuleServiceExtension _xncfModuleServiceEx = xncfModuleServiceEx;
 
         /// <summary>
@@ -132,10 +134,19 @@ namespace Senparc.Areas.Admin.Pages
                 return data;
             });
 
+            // Localize module display names before returning
+            var localizedDtos = xncfModuleDtos.Select(d => new
+            {
+                d.Uid, d.Name, d.Version, d.UpdateLog, d.State,
+                d.Icon, d.Menus, d.Functions, d.HasNewVersion, d.NewVersion,
+                MenuName = LocalizeMenuName(d.MenuName),
+                Description = LocalizeMenuName(d.Description)
+            });
+
             return new JsonResult(new
             {
                 success = true,
-                data = xncfModuleDtos
+                data = localizedDtos
             });
         }
 
@@ -206,7 +217,7 @@ namespace Senparc.Areas.Admin.Pages
                     {
                         dest.Add(new SysMenuDto()
                         {
-                            MenuName = "设置/执行",
+                            MenuName = LocalizeMenuName("设置/执行"),
                             Url = item.Url,
                             Id = (index++).ToString(),
                             ParentId = item.Id,
@@ -282,7 +293,7 @@ namespace Senparc.Areas.Admin.Pages
             {
                 SysMenuTreeItemDto sysMenu = new SysMenuTreeItemDto()
                 {
-                    MenuName = item.MenuName,
+                    MenuName = LocalizeMenuName(item.MenuName),
                     Id = item.Id,
                     Icon = item.Icon,
                     Url = item.Url,
@@ -291,6 +302,17 @@ namespace Senparc.Areas.Admin.Pages
                 sysMenuTrees.Add(sysMenu);
                 GetSysMenuTreesRecursive(sysMenuTreeItems, sysMenu.Children, item);
             }
+        }
+
+        /// <summary>
+        /// Translate a Chinese menu name stored in the database to the current UI culture.
+        /// Uses resource key "Menu.Db.{ChineseName}". Falls back to the original name if no translation exists.
+        /// </summary>
+        private string LocalizeMenuName(string menuName)
+        {
+            if (string.IsNullOrEmpty(menuName)) return menuName;
+            var localized = _localizer[$"Menu.Db.{menuName}"];
+            return localized.ResourceNotFound ? menuName : localized.Value;
         }
 
         #endregion

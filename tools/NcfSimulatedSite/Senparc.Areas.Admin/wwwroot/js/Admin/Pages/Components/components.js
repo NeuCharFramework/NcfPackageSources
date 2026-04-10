@@ -1,6 +1,6 @@
-﻿Vue.component('sidebar-item', {
+Vue.component('sidebar-item', {
     name: 'sidebar-item',
-    template: `         <!--最里面一层-->
+    template: `         <!--Innermost level-->
                       <template v-if="item.children.length<1">
                             <el-menu-item :index="item.index" @click="link(item)">
                                   <template slot='title'>
@@ -10,7 +10,7 @@
                                   </template>
                             </el-menu-item>
                         </template>
-                        <!--递归-->
+                        <!--Recursive-->
                         <el-submenu v-else :index="item.index">
                             <template slot='title'>
                                 <i v-if="item.icon" :class="''+item.icon"></i>
@@ -38,17 +38,17 @@
     },
     methods: {
         link(item) {
-            // 显示在首页ifram
+            // Navigate to page
             if (!item.url) return;
             window.location.href = item.url;
         }
     }
 });
-//基于 Element 的 el - pagination进行了二次封装，并拓展了自动滚动的功能。
-//https://panjiachen.github.io/vue-element-admin-site/zh/feature/component/pagination.html#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F
+// Based on Element's el-pagination with secondary wrapper, extended with auto-scroll feature.
+// https://panjiachen.github.io/vue-element-admin-site/zh/feature/component/pagination.html
 Vue.component('pagination', {
     template: `
-  <!-- 分页组件 -->
+  <!-- Pagination component -->
   <div :class="{'hidden':hidden}" class="pagination-container">
     <el-pagination
       :background="background"
@@ -100,7 +100,7 @@ Vue.component('pagination', {
         }
     },
     computed: {
-        //监听传进来的当前页和大小，有变化时更新 :page.sync="listQuery.page"和:limit.sync="listQuery.limit"
+        // Watch incoming page and size, update :page.sync="listQuery.page" and :limit.sync="listQuery.limit" on change
         currentPage: {
             get() {
                 return this.page;

@@ -13,7 +13,7 @@ var validateUser = (rule, value, callback) => {
     }
 };
 var validateTenant = (rule, value, callback) => {
-    // 租户名称不是必填的，直接通过验证
+    // Tenant name is not required, pass validation directly
     callback();
 };
 var app = new Vue({
@@ -38,15 +38,15 @@ var app = new Vue({
         }, loading: false
     },
     mounted() {
-        // 检查是否启用多租户
+        // Check if multi-tenant is enabled
         service.get('/Admin/Login?handler=CheckMultiTenant').then(res => {
             this.enableMultiTenant = res.data.data;
-            // 如果不是多租户模式，清空租户输入
+            // If not multi-tenant mode, clear tenant input
             if (!this.enableMultiTenant) {
                 this.ruleForm.tenant = '';
             }
         }).catch(error => {
-            console.error('检查多租户状态失败:', error);
+            console.error('Failed to check multi-tenant status:', error);
             this.enableMultiTenant = false;
             this.ruleForm.tenant = '';
         });
@@ -81,7 +81,7 @@ var app = new Vue({
                 }
             });
         },
-        resizeUrl() {//处理剪切url id
+        resizeUrl() {// Parse URL query parameters
             let url = window.location.href;
             let obj = {};
             let reg = /[?&][^?&]+=[^?&]+/g;

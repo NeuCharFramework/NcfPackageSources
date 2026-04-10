@@ -55,7 +55,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <!--编辑、新增 -->
+        <!-- Edit / Add -->
         <el-dialog :title="dialog.title" :visible.sync="dialog.visible" :close-on-click-modal="false">
             <el-form ref="dataForm"
                      :rules="dialog.rules"
@@ -106,7 +106,7 @@
                 <el-button :loading="dialog.updateLoading" :disabled="dialog.disabled" type="primary" @@click="updateData">@AR["Common.确认"]</el-button>
             </div>
         </el-dialog>
-        <!--选择图标-->
+        <!-- Select Icon -->
         <el-dialog title="@AR["Menu.图标列表"]" :visible.sync="dialogIcon.visible">
             <div class="menu-icons-grid">
                 <div v-for="item in dialogIcon.elementIcons" class="menu-icon-item" @@click="pickIcon(item)">

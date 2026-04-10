@@ -1,4 +1,4 @@
-﻿
+
 $(function(){
     $('#qq-code').hover(function () {
         $('#qq-code-img').toggle();
@@ -13,8 +13,10 @@ $(function(){
     $('.start-btn').addClass('normal');
 })
 
+var ncfI18n = window.ncfI18n || {};
+
 function unopen() {
-    alert('版块暂未开放，敬请期待~');
+    alert(ncfI18n.sectionNotOpen || 'This section is not yet open, please stay tuned!');
 }
 
 function start(docOpened, xncfName) {
@@ -22,7 +24,7 @@ function start(docOpened, xncfName) {
         return true;
     }
 
-    if (confirm('您尚未安装离线文档模块，要立即安装吗？')) {
+    if (confirm(ncfI18n.installOfflineDocsConfirm || 'You have not installed the offline documentation module. Install now?')) {
         let openDocs = true;
         $.ajax({
             url: 'Admin/XncfModule/Index?handler=InstallModule&xncfName=' + xncfName,
@@ -33,7 +35,7 @@ function start(docOpened, xncfName) {
                 if (!installSuccess) {
                     alert(json.message);
                 } else {
-                    openDocs = confirm(json.message + '，刷新此页面可看到顶部文档入口，需要立即查看文档吗？');
+                    openDocs = confirm(json.message + (ncfI18n.refreshToSeeDocsEntry || '. Refresh this page to see the documentation entry at the top. View documentation now?'));
                     if (!openDocs) {
                         location.reload();
                     }
