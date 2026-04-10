@@ -92,7 +92,7 @@
                                         {{scope.$index+1}}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="@AR["Xncf.UpdateLog"]"
+                                <el-table-column label="@AR["Xncf.UpdateLog"]">
                                     <template slot-scope="scope">
                                         {{scope.row}}
                                     </template>
@@ -161,7 +161,7 @@
                                                 {{scope.row.title}}
                                             </template>
                                         </el-table-column>
-                                        <el-table-column label="@AR["Common.说明"]"
+                                        <el-table-column label="@AR["Common.说明"]">
                                             <template slot-scope="scope">
                                                 {{scope.row.description}}
                                             </template>
@@ -260,7 +260,7 @@
                         {{scope.row.value.isAlive ? formaTableTime(scope.row.value.threadState): "-"}}
                     </template>
                 </el-table-column>
-                <el-table-column label="@AR["Xncf.RecentStory"]"
+                <el-table-column label="@AR["Xncf.RecentStory"]">
                     <template slot-scope="scope">
                         <span v-html="scope.row.key.storyHtml"></span>
                     </template>

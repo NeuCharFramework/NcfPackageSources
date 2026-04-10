@@ -677,6 +677,18 @@
 
 @section scripts {
     <script src="~/lib/echarts/dist/echarts.js"></script>
+    <script>
+        Object.assign(window.ncfI18n, {
+            logStatistics: @Json.Serialize(AR["Js.logStatistics"].Value),
+            last14Days: @Json.Serialize(AR["Js.last14Days"].Value),
+            normalLogs: @Json.Serialize(AR["Js.normalLogs"].Value),
+            exceptionLogs: @Json.Serialize(AR["Js.exceptionLogs"].Value),
+            todayLogStatistics: @Json.Serialize(AR["Js.todayLogStatistics"].Value),
+            dynamicData: @Json.Serialize(AR["Js.dynamicData"].Value),
+            logType: @Json.Serialize(AR["Js.logType"].Value),
+            entries: @Json.Serialize(AR["Js.entries"].Value)
+        });
+    </script>
     <script src="~/js/Admin/Pages/AdminChat/ChatLauncherMixin.js"></script>
     <script src="~/js/Admin/Pages/Index/Index.js"></script>
 }

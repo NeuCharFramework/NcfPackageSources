@@ -58,7 +58,15 @@ var app = new Vue({
       let chartOption1 = {
         title: {
           text: ncfI18n.logStatistics || 'Log Statistics',
-          subtext: ncfI18n.last14Days || 'Last 14 days'
+          subtext: ncfI18n.last14Days || 'Last 14 days',
+          textStyle: { fontSize: 13 },
+          left: 5
+        },
+        grid: {
+          top: 65,
+          left: 45,
+          right: 10,
+          bottom: 30
         },
         xAxis: {
           type: 'category',
@@ -67,7 +75,7 @@ var app = new Vue({
         yAxis: {
           type: 'value',
           axisLabel: {
-            formatter: '{value} ' + (ncfI18n.entries || 'entries')
+            fontSize: 11
           }
         },
         tooltip: {
@@ -77,7 +85,10 @@ var app = new Vue({
           }
         },
         legend: {
-          data: [ncfI18n.normalLogs || 'Normal Logs', ncfI18n.exceptionLogs || 'Exception Logs']
+          data: [ncfI18n.normalLogs || 'Normal Logs', ncfI18n.exceptionLogs || 'Exception Logs'],
+          top: 0,
+          right: 0,
+          textStyle: { fontSize: 11 }
         },
         series: [
           {
@@ -120,7 +131,8 @@ var app = new Vue({
         title: {
           text: ncfI18n.todayLogStatistics || 'Today Log Statistics',
           subtext: ncfI18n.dynamicData || 'Dynamic data',
-          left: 'center'
+          left: 'center',
+          textStyle: { fontSize: 14 }
         },
         tooltip: {
           trigger: 'item',

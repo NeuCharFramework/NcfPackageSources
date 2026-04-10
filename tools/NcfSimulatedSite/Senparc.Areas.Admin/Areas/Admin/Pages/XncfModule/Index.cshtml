@@ -35,20 +35,20 @@
                     </template>
                     <el-table :data="newTableData.filter(data => !newTableSearch || data.name.includes(newTableSearch))"
                                 style="width: 100%;margin-bottom: 20px;">
-                        <el-table-column align="left" label="@AR["Xncf.ModuleName"]"
+                        <el-table-column align="left" label="@AR["Xncf.ModuleName"]">
                             <template slot-scope="scope">
                                 <i class="fa fa-cubes"></i>
                                 {{scope.row.name}}
                             </template>
                         </el-table-column>
-                        <el-table-column align="center" label="@AR["Xncf.MenuDisplayName"]"
+                        <el-table-column align="center" label="@AR["Xncf.MenuDisplayName"]">
                             <template slot-scope="scope">
                                 <i :class="scope.row.icon"></i>
                                 {{scope.row.menuName}}
 
                             </template>
                         </el-table-column>
-                        <el-table-column align="center" label="@AR["Xncf.Version"]"
+                        <el-table-column align="center" label="@AR["Xncf.Version"]">
                             <template slot-scope="scope">
                                 <i class="fa fa-code-fork"></i>
                                 {{scope.row.version}}
@@ -64,7 +64,7 @@
                             <template slot="header" slot-scope="scope">
                                 <el-input v-model="newTableSearch"
                                             size="mini"
-                                            placeholder="@AR["Xncf.SearchPlaceholder"]"
+                                            placeholder="@AR["Xncf.SearchPlaceholder"]" />
                             </template>
                             <template slot-scope="scope">
                                 <el-button size="mini"
@@ -79,7 +79,8 @@
                     <el-table :data="oldTableData.filter(data => !oldTableSearch || data.xncfModule.name.includes(oldTableSearch))"
                                 v-if="oldTableData.length>0"
                                 style="width: 100%;margin-bottom: 20px;">
-                        <el-table-column align="left" label="@AR["Xncf.MenuNameVersion"]"<template slot-scope="scope">
+                        <el-table-column align="left" label="@AR["Xncf.MenuNameVersion"]">
+                            <template slot-scope="scope">
                                 <div>
                                     <i :class="scope.row.xncfRegister?scope.row.xncfRegister.icon:'fa fa-chain-broken'"></i>
                                     {{scope.row.xncfModule.menuName}}
@@ -102,11 +103,13 @@
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column align="center" label="@AR["Xncf.Status"]"<template slot-scope="scope">
+                        <el-table-column align="center" label="@AR["Xncf.Status"]">
+                            <template slot-scope="scope">
                                 {{oldData.state[scope.row.xncfModule.state]}}
                             </template>
                         </el-table-column>
-                        <el-table-column align="center" label="@AR["Common.添加时间"]"<template slot-scope="scope">
+                        <el-table-column align="center" label="@AR["Common.添加时间"]">
+                            <template slot-scope="scope">
                                 {{formaTableTime(scope.row.xncfModule.addTime)}}
                             </template>
                         </el-table-column>
@@ -114,7 +117,7 @@
                             <template slot="header" slot-scope="scope">
                                 <el-input v-model="oldTableSearch"
                                             size="mini"
-                                            placeholder="@AR["Xncf.SearchPlaceholder"]"
+                                            placeholder="@AR["Xncf.SearchPlaceholder"]" />
                             </template>
                             <template slot-scope="scope">
                                 <el-button size="mini"
@@ -151,20 +154,20 @@
                     </template>
                     <el-table :data="updatedTableData.filter(data => !newTableSearch || data.name.includes(newTableSearch))"
                               style="width: 100%;margin-bottom: 20px;">
-                        <el-table-column align="left" label="@AR["Xncf.ModuleName"]"
+                        <el-table-column align="left" label="@AR["Xncf.ModuleName"]">
                             <template slot-scope="scope">
                                 <i class="fa fa-cubes"></i>
                                 {{scope.row.name}}
                             </template>
                         </el-table-column>
-                        <el-table-column align="center" label="@AR["Xncf.MenuDisplayName"]"
+                        <el-table-column align="center" label="@AR["Xncf.MenuDisplayName"]">
                             <template slot-scope="scope">
                                 <i :class="scope.row.icon"></i>
                                 {{scope.row.menuName}}
 
                             </template>
                         </el-table-column>
-                        <el-table-column align="center" label="@AR["Xncf.Version"]"
+                        <el-table-column align="center" label="@AR["Xncf.Version"]">
                             <template slot-scope="scope">
                                 <i class="fa fa-code-fork"></i>
                                 {{scope.row.version}}
@@ -180,7 +183,7 @@
                             <template slot="header" slot-scope="scope">
                                 <el-input v-model="newTableSearch"
                                           size="mini"
-                                          placeholder="@AR["Xncf.SearchPlaceholder"]"
+                                          placeholder="@AR["Xncf.SearchPlaceholder"]" />
                             </template>
                             <template slot-scope="scope">
                                 <el-button size="mini"
