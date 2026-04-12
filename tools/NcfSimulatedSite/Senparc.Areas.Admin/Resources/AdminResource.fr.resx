@@ -240,6 +240,7 @@
   <data name="AdminUserInfo.Phone" xml:space="preserve"><value>Num&#233;ro de t&#233;l&#233;phone</value></data>
   <data name="AdminUserInfo.PhonePlaceholder" xml:space="preserve"><value>Veuillez saisir le num&#233;ro de t&#233;l&#233;phone</value></data>
   <data name="AdminUserInfo.NotePlaceholder" xml:space="preserve"><value>Veuillez saisir les remarques</value></data>
+  <data name="AdminUserInfo.Db.SystemInitNote" xml:space="preserve"><value>Compte d&apos;initialisation système</value></data>
   <data name="Common.提交" xml:space="preserve"><value>Soumettre</value></data>
   <data name="AdminUserInfo.列表" xml:space="preserve"><value>Liste des administrateurs</value></data>
   <data name="AdminUserInfo.设置角色" xml:space="preserve"><value>Attribuer des r&#244;les</value></data>

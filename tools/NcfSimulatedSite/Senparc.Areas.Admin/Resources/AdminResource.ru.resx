@@ -240,6 +240,7 @@
   <data name="AdminUserInfo.Phone" xml:space="preserve"><value>Номер телефона</value></data>
   <data name="AdminUserInfo.PhonePlaceholder" xml:space="preserve"><value>Введите номер телефона</value></data>
   <data name="AdminUserInfo.NotePlaceholder" xml:space="preserve"><value>Введите примечания</value></data>
+  <data name="AdminUserInfo.Db.SystemInitNote" xml:space="preserve"><value>Учётная запись инициализации системы</value></data>
   <data name="Common.提交" xml:space="preserve"><value>Отправить</value></data>
   <data name="AdminUserInfo.列表" xml:space="preserve"><value>Список администраторов</value></data>
   <data name="AdminUserInfo.设置角色" xml:space="preserve"><value>Назначить роли</value></data>

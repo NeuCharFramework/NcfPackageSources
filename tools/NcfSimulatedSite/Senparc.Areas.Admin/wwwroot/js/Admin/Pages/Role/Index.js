@@ -77,7 +77,7 @@ var app = new Vue({
         async handleRole(index, row) {
             // Open dialog
             this.au = {
-                title: row.roleName,
+                title: row.displayRoleName || row.roleName,
                 visible: true,
                 temp: row
             };

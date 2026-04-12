@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Service;
@@ -11,24 +12,25 @@ using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Core;
 using Senparc.Areas.Admin.Domain.Models;
 using Senparc.Areas.Admin.Domain;
+using Senparc.Areas.Admin.Localization;
 
 namespace Senparc.Areas.Admin.Areas.Admin.Pages
 {
     [IgnoreAntiforgeryToken]
-    public class AdminUserInfo_IndexModel(IServiceProvider serviceProvider, AdminUserInfoService adminUserInfoService) 
+    public class AdminUserInfo_IndexModel(IServiceProvider serviceProvider, AdminUserInfoService adminUserInfoService, IStringLocalizer<AdminResource> ar)
         : BaseAdminPageModel(serviceProvider)
     {
         private readonly AdminUserInfoService _adminUserInfoService = adminUserInfoService;
         public PagedList<AdminUserInfo> AdminUserInfoList { get; set; }
 
         /// <summary>
-        /// 属性绑定，支持GET
+        /// ?????????GET
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public int PageIndex { get; set; } = 1;
 
         /// <summary>
-        /// 排序方法
+        /// ?????
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public string OrderField { get; set; } = "AddTime Desc,Id";
@@ -53,7 +55,21 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             seh.ValueCompare.AndAlso(!string.IsNullOrEmpty(adminUserInfoName), _ => _.UserName.Contains(adminUserInfoName));
             var where = seh.BuildWhereExpression();
             var admins = await _adminUserInfoService.GetObjectListAsync(pageIndex, pageSize, where, OrderField);
-            return Ok(new { admins.TotalCount, admins.PageIndex, List = admins.AsEnumerable() });
+            var list = admins.Select(a => new
+            {
+                a.Id,
+                a.UserName,
+                a.RealName,
+                a.Phone,
+                a.Note,
+                DisplayNote = AdminDbDisplayStrings.LocalizeNote(ar, a.Note),
+                a.AddTime,
+                a.ThisLoginTime,
+                a.LastLoginTime,
+                a.ThisLoginIp,
+                a.LastLoginIp
+            }).ToList();
+            return Ok(new { admins.TotalCount, admins.PageIndex, List = list });
         }
 
         /// <summary>

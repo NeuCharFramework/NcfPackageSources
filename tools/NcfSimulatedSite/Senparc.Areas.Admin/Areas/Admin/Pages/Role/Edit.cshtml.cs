@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.SystemCore.Domain.Database;
+using Senparc.Areas.Admin.Localization;
 
 namespace Senparc.Areas.Admin.Areas.Admin.Pages
 {
@@ -16,12 +18,14 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
     public class RoleEditModel : BaseAdminPageModel
     {
         private readonly SysRoleService _sysRoleService;
+        private readonly IStringLocalizer<AdminResource> _ar;
 
-        public RoleEditModel(IServiceProvider serviceProvider, SysRoleService sysRoleService)
+        public RoleEditModel(IServiceProvider serviceProvider, SysRoleService sysRoleService, IStringLocalizer<AdminResource> ar)
             : base(serviceProvider)
         {
             CurrentMenu = "Role";
             _sysRoleService = sysRoleService;
+            _ar = ar;
         }
 
         [BindProperty(SupportsGet = true)]
@@ -57,9 +61,12 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         /// <returns></returns>
         public async Task<IActionResult> OnGetSelectItemsAsync([FromServices] /*SenparcEntities*/ BasePoolEntities senparcEntities)
         {
-            var list = await senparcEntities.Set<SysRole>().Where(_ => _.Enabled)
-                .Select(_ => new SelectListItem() { Value = _.Id, Text = _.RoleName })
-                .ToListAsync();
+            var roles = await senparcEntities.Set<SysRole>().Where(_ => _.Enabled).ToListAsync();
+            var list = roles.Select(_ => new SelectListItem()
+            {
+                Value = _.Id,
+                Text = AdminDbDisplayStrings.LocalizeRoleName(_ar, _.RoleCode, _.RoleName)
+            }).ToList();
             return Ok(list);
         }
 

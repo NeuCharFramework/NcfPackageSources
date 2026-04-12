@@ -240,6 +240,7 @@
   <data name="AdminUserInfo.Phone" xml:space="preserve"><value>手机号</value></data>
   <data name="AdminUserInfo.PhonePlaceholder" xml:space="preserve"><value>请输入手机号</value></data>
   <data name="AdminUserInfo.NotePlaceholder" xml:space="preserve"><value>请输入备注信息</value></data>
+  <data name="AdminUserInfo.Db.SystemInitNote" xml:space="preserve"><value>系统初始化账号</value></data>
   <data name="Common.提交" xml:space="preserve"><value>提交</value></data>
   <data name="AdminUserInfo.列表" xml:space="preserve"><value>管理员列表</value></data>
   <data name="AdminUserInfo.设置角色" xml:space="preserve"><value>设置角色</value></data>

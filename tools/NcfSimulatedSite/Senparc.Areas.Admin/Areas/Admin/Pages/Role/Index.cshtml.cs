@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Localization;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.Utility;
+using Senparc.Areas.Admin.Localization;
 
 namespace Senparc.Areas.Admin.Areas.Admin.Pages
 {
@@ -15,12 +17,14 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
     public class RoleIndexModel : BaseAdminPageModel
     {
         private readonly SysRoleService _sysRoleService;
+        private readonly IStringLocalizer<AdminResource> _ar;
 
-        public RoleIndexModel(IServiceProvider serviceProvider, SysRoleService sysRoleService)
+        public RoleIndexModel(IServiceProvider serviceProvider, SysRoleService sysRoleService, IStringLocalizer<AdminResource> ar)
             : base(serviceProvider)
         {
             CurrentMenu = "Role";
             this._sysRoleService = sysRoleService;
+            _ar = ar;
         }
 
         [BindProperty(SupportsGet = true)]
@@ -58,7 +62,18 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 admins.TotalCount,
                 admins.PageIndex,
                 List =
-                admins.Select(_ => new { _.Id, _.LastUpdateTime, _.Remark, _.RoleName, _.RoleCode, _.AddTime, _.AdminRemark, _.Enabled })
+                admins.Select(_ => new
+                {
+                    _.Id,
+                    _.LastUpdateTime,
+                    _.Remark,
+                    _.RoleName,
+                    DisplayRoleName = AdminDbDisplayStrings.LocalizeRoleName(_ar, _.RoleCode, _.RoleName),
+                    _.RoleCode,
+                    _.AddTime,
+                    _.AdminRemark,
+                    _.Enabled
+                })
             });
         }
 
