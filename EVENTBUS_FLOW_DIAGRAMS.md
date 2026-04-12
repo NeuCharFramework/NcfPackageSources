@@ -1,7 +1,8 @@
-# PromptRange EventBus 流程图
+[中文版](EVENTBUS_FLOW_DIAGRAMS.cn.md)
 
-## 🔄 Prompt 初始化流程
+# PromptRange EventBus flow chart
 
+## 🔄 Prompt initialization process
 ```mermaid
 sequenceDiagram
     participant User
@@ -27,12 +28,9 @@ sequenceDiagram
     else Agent 已存在
         Service-->>User: 返回现有 PromptCode
     end
-```
+```---
 
----
-
-## 🎨 Prompt 优化流程
-
+## 🎨 Prompt optimization process
 ```mermaid
 sequenceDiagram
     participant User
@@ -51,14 +49,11 @@ sequenceDiagram
     EventBus->>Handler2: Handle(PromptOptimizationResponseEvent)
     Handler2->>Service: CompleteRequest(TCS.SetResult)
     Service-->>User: 返回优化结果
-```
+```---
 
----
+## 🛡️ Example of circular reference protection
 
-## 🛡️ 循环引用防护示例
-
-### 场景 1: 阻止直接循环
-
+### Scenario 1: Prevent direct loop
 ```mermaid
 graph TD
     A[EventA<br/>Depth=0<br/>Chain=Empty] -->|Handler A| B[EventB<br/>Depth=1<br/>Chain=EventA]
@@ -66,10 +61,7 @@ graph TD
     C -->|❌ 检测到循环| D[丢弃事件<br/>记录错误日志]
     
     style D fill:#ff6b6b
-```
-
-### 场景 2: 阻止深度超限
-
+```### Scenario 2: Preventing depth overrun
 ```mermaid
 graph TD
     A[Event 1<br/>Depth=0] --> B[Event 2<br/>Depth=1]
@@ -82,12 +74,9 @@ graph TD
     
     style G fill:#ffd93d
     style H fill:#ff6b6b
-```
+```---
 
----
-
-## 🔍 EventBus 核心架构
-
+## 🔍 EventBus core architecture
 ```mermaid
 graph LR
     subgraph 发布端
@@ -115,14 +104,11 @@ graph LR
     style J fill:#ff6b6b
     style K fill:#6bcf7f
     style L fill:#6bcf7f
-```
+```---
 
----
+## 📈 Performance Features
 
-## 📈 性能特性
-
-### 非阻塞发布
-
+### Non-blocking release
 ```mermaid
 sequenceDiagram
     participant Caller
@@ -139,10 +125,7 @@ sequenceDiagram
     Background->>Channel: ReadAllAsync()
     Channel->>Background: 返回事件
     Background->>Background: 处理事件
-```
-
-### 并发控制
-
+```### Concurrency control
 ```mermaid
 graph TD
     A[Channel 队列] --> B{SemaphoreSlim}
@@ -164,48 +147,34 @@ graph TD
     
     style B fill:#6bcf7f
     style W fill:#ffd93d
+```---
+
+## 🎓 Summary of best practices
+
+### ✅ Recommended mode
+
+1. **Request-Response Mode** (most secure)
 ```
-
----
-
-## 🎓 最佳实践总结
-
-### ✅ 推荐模式
-
-1. **请求-响应模式** (最安全)
-   ```
    Request → Handler → Response → Complete
-   ```
-
-2. **单向事件流** (次安全)
-   ```
+   ```2. **One-way event flow** (less secure)
+```
    EventA → EventB → EventC → ... (不回溯)
-   ```
-
-3. **限制深度** (强制约束)
-   ```
+   ```3. **Limit depth** (mandatory constraints)
+```
    最多 3-5 层事件嵌套
-   ```
+   ```### ❌ Anti-Pattern
 
-### ❌ 反模式
-
-1. **响应再请求** (易循环)
-   ```
+1. **Response and then request** (easy loop)
+```
    Request → Response → Request (❌ 循环风险)
-   ```
-
-2. **相互发布** (易循环)
-   ```
+   ```2. **Mutual publishing** (easy to loop)
+```
    HandlerA publishes EventB
    HandlerB publishes EventA (❌ 循环风险)
-   ```
-
-3. **无限递归** (易爆栈)
-   ```
+   ```3. **Infinite Recursion** (Explosive Stack)
+```
    EventA → EventA → EventA → ... (❌ 深度风险)
-   ```
+   ```---
 
----
-
-**文档版本**: 1.0  
-**最后更新**: 2026-03-24
+**Documentation version**: 1.0
+**Last updated**: 2026-03-24

@@ -1,32 +1,34 @@
-# EventBus Handler 注册问题修复
+[中文版](EventBus-Handler-Registration-Fix.cn.md)
 
-## 问题描述
+# EventBus Handler registration problem fixed
 
-### 问题1：初始化请求一直 Pending
-- **现象**：点击"开始初始化"按钮后，请求一直处于 pending 状态，直到超时
-- **后端日志**：显示找到了17个 Chat 类型的 AI Model
-- **根本原因**：`PromptInitResponseHandler` 没有被注册到 DI 容器，导致 EventBus 无法调用它来完成初始化请求
+## Problem description
 
-### 问题2：前端无法正确解析后端响应
-- **现象**：前端提示"没有找到可用的 AI Model"，但后端已返回17个模型
-- **根本原因**：前端代码直接访问 `response.data.models`，但 NCF 的 `AppResponseBase` 返回格式是嵌套的 `{ success: true, data: { models: [...] } }`
+### Problem 1: The initialization request is always Pending
+- **Phenomena**: After clicking the "Start Initialization" button, the request remains in the pending state until it times out.
+- **Backend log**: Shows that 17 AI Models of Chat type were found.
+- **Root cause**: `PromptInitResponseHandler` is not registered to the DI container, causing EventBus to be unable to call it to complete the initialization request
 
-### 问题3：UI 参数预览缺少说明
-- **现象**：默认参数预览只显示数字，用户不清楚这些参数的含义
-- **需求**：添加工具提示和说明文字
+### Problem 2: The front end cannot correctly parse the back end response
+- **Phenomenon**: The front end prompts "No available AI Model found", but the back end has returned 17 models
+- **Root cause**: The front-end code directly accesses `response.data.models`, but NCF's `AppResponseBase` return format is nested `{ success: true, data: { models: [...] } }`
+
+### Problem 3: UI parameter preview lacks description
+- **Phenomenon**: The default parameter preview only displays numbers, and users do not know the meaning of these parameters.
+- **Requirement**: Add tooltips and description text
 
 ---
 
-## 修复方案
+## Repair plan
 
-### 修复1：注册 EventBus 和 Handler
+### Fix 1: Register EventBus and Handler
 
-**修改文件**：`tools/NcfSimulatedSite/Senparc.Web/Register.cs`
+**Modify file**: `tools/NcfSimulatedSite/Senparc.Web/Register.cs`
 
-**问题分析**：
-之前的代码只注册了 EventBus 本身和 HostedService，但没有调用 `AddSenparcEventBus()` 方法来扫描和注册 EventHandler。
+**Problem Analysis**:
+The previous code only registered the EventBus itself and the HostedService, but did not call the `AddSenparcEventBus()` method to scan and register the EventHandler.
 
-**修复内容**：
+**Fixed content**:
 ```csharp
 public static void AddNcf(this WebApplicationBuilder builder)
 {
@@ -58,26 +60,25 @@ public static void AddNcf(this WebApplicationBuilder builder)
     Console.WriteLine($"EventBus 已注册，共扫描了 {assembliesToScan.Length} 个程序集");
 }
 ```
+**Key Improvements**:
+1. Use the `AddSenparcEventBus()` method instead of manual registration
+2. Automatically scan all `Senparc.Xncf.*` and `Senparc.Areas.*` assemblies
+3. Configure EventBus options (concurrency, loop detection, retry, etc.)
+4. Called **after** `StartWebEngine` to ensure all module assemblies are loaded
 
-**关键改进**：
-1. 使用 `AddSenparcEventBus()` 方法替代手动注册
-2. 自动扫描所有 `Senparc.Xncf.*` 和 `Senparc.Areas.*` 程序集
-3. 配置 EventBus 选项（并发度、循环检测、重试等）
-4. 在 `StartWebEngine` **之后**调用，确保所有模块程序集已加载
-
-**自动注册的 Handler**：
-- `PromptInitRequestHandler` (PromptRange 模块)
-- `PromptInitResponseHandler` (AgentsManager 模块)
-- `PromptOptimizationRequestHandler` (PromptRange 模块)
-- `PromptOptimizationResponseHandler` (AgentsManager 模块)
+**Automatically registered Handler**:
+- `PromptInitRequestHandler` (PromptRange module)
+- `PromptInitResponseHandler` (AgentsManager module)
+- `PromptOptimizationRequestHandler` (PromptRange module)
+- `PromptOptimizationResponseHandler` (AgentsManager module)
 
 ---
 
-### 修复2：修正前端响应数据访问路径
+### Fix 2: Correct front-end response data access path
 
-**修改文件**：`src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js`
+**Modify file**: `src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js`
 
-**NCF AppResponseBase 返回格式**：
+**NCF AppResponseBase return format**:
 ```json
 {
   "success": true,
@@ -88,8 +89,7 @@ public static void AddNcf(this WebApplicationBuilder builder)
   "errorMessage": null
 }
 ```
-
-**修改1：`loadAvailableModels` 方法**
+**Modification 1: `loadAvailableModels` method**
 ```javascript
 // 修改前：
 this.availableModelsForInit = response.data.models || [];
@@ -100,8 +100,7 @@ if (response.data && response.data.success) {
     // ...
 }
 ```
-
-**修改2：`checkPromptCatalyzerStatus` 方法**
+**Modification 2: `checkPromptCatalyzerStatus` method**
 ```javascript
 // 修改前：
 return response.data.isInitialized;
@@ -111,8 +110,7 @@ if (response.data && response.data.success && response.data.data) {
     return response.data.data.isInitialized;
 }
 ```
-
-**修改3：`executeInitialization` 方法**
+**Modification 3: `executeInitialization` method**
 ```javascript
 // 修改前：
 if (response.data.success) {
@@ -131,19 +129,18 @@ if (response.data && response.data.success) {
     });
 }
 ```
-
-**改进点**：
-- 添加了 `console.log` 输出完整响应，便于调试
-- 正确访问嵌套的 `data.data` 结构
-- 增强了错误处理逻辑
+**Improvement points**:
+- Added `console.log` to output complete response for easy debugging
+- Correct access to nested `data.data` structures
+- Enhanced error handling logic
 
 ---
 
-### 修复3：改进 UI 参数预览
+### Fix 3: Improved UI parameter preview
 
-**修改文件**：`src/Extensions/Senparc.Xncf.PromptRange/Areas/Admin/Pages/PromptRange/Prompt.cshtml`
+**Modify file**: `src/Extensions/Senparc.Xncf.PromptRange/Areas/Admin/Pages/PromptRange/Prompt.cshtml`
 
-**改进内容**：
+**Improvements**:
 ```html
 <el-descriptions-item label-class-name="desc-label">
     <template slot="label">
@@ -155,23 +152,22 @@ if (response.data && response.data.success) {
     <span style="margin-left: 8px; color: #909399; font-size: 12px;">(平衡模式)</span>
 </el-descriptions-item>
 ```
+**Added** for each parameter:
+1. **Tooltip**: Display detailed instructions when the mouse is hovered
+2. **Question mark icon**: Prompts the user to view more information
+3. **Explanation text**: Visually display the purpose of parameters (balanced mode, high quality, standard length, etc.)
 
-**为每个参数添加了**：
-1. **工具提示 (Tooltip)**：鼠标悬停时显示详细说明
-2. **问号图标**：提示用户可以查看更多信息
-3. **说明文字**：直观显示参数的用途（平衡模式、高质量、标准长度等）
-
-**参数说明**：
-- **Temperature (0.7)** - 平衡模式：控制输出的随机性，0.0-1.0
-- **TopP (0.9)** - 高质量：核采样参数，控制词汇选择范围
-- **MaxTokens (4000)** - 标准长度：生成的最大 token 数量
-- **FrequencyPenalty (0)** - 不惩罚：-2.0 到 2.0，减少重复词汇
+**Parameter Description**:
+- **Temperature (0.7)** - Balanced mode: controls the randomness of the output, 0.0-1.0
+- **TopP (0.9)** - High quality: kernel sampling parameters, control vocabulary selection range
+- **MaxTokens (4000)** - standard length: maximum number of tokens generated
+- **FrequencyPenalty (0)** - No penalty: -2.0 to 2.0, reduce repeated words
 
 ---
 
-## EventBus 工作原理回顾
+## Review of how EventBus works
 
-### 初始化流程：
+### Initialization process:
 ```
 用户点击"开始初始化"
     ↓
@@ -197,27 +193,25 @@ PromptInitResponseHandler.Handle() (AgentsManager 模块) ← 这里之前没有
     ↓
 Controller 返回给前端
 ```
-
-### 为什么会 Pending？
-1. Controller 在第86-87行使用 `Task.WhenAny(tcs.Task, timeoutTask)` 等待响应
-2. 响应需要 `PromptInitResponseHandler` 调用 `CompleteInitRequest()` 来完成
-3. 如果 `PromptInitResponseHandler` 没有被注册，`PromptInitResponseEvent` 不会被处理
-4. `tcs.Task` 永远不会完成，请求一直 pending 直到2分钟超时
+### Why Pending?
+1. Controller uses `Task.WhenAny(tcs.Task, timeoutTask)` on lines 86-87 to wait for the response
+2. The response requires `PromptInitResponseHandler` to call `CompleteInitRequest()` to complete
+3. If `PromptInitResponseHandler` is not registered, `PromptInitResponseEvent` will not be processed
+4. `tcs.Task` never completes, and the request remains pending until it times out in 2 minutes.
 
 ---
 
-## 测试步骤
+## Test steps
 
-### 1. 重启应用
+### 1. Restart the application
 ```bash
 # 停止当前运行的应用（如果有）
 # 然后启动应用
 cd /Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources
 dotnet run --project tools/NcfSimulatedSite/Senparc.Web/Senparc.Web.csproj
 ```
-
-### 2. 检查启动日志
-应该能看到：
+### 2. Check the startup log
+You should see:
 ```
 EventBus 扫描程序集:
   - Senparc.Xncf.PromptRange
@@ -226,22 +220,20 @@ EventBus 扫描程序集:
   - ... (其他模块)
 EventBus 已注册，共扫描了 XX 个程序集
 ```
+### 3. Test initialization function
+1. Visit `http://localhost:5000`
+2. Enter the PromptRange page
+3. Click the "Optimize" button
+4. You should see a pop-up window showing 17 available models.
+5. The parameter preview area should display tooltips and description text (mouseover the parameter name)
+6. Select a model and click "Start Initialization"
+7. **Expected results**: Initialization should be completed within a few seconds (no longer pending)
 
-### 3. 测试初始化功能
-1. 访问 `http://localhost:5000`
-2. 进入 PromptRange 页面
-3. 点击"优化"按钮
-4. 应该能看到弹窗，显示17个可用模型
-5. 参数预览区域应该显示工具提示和说明文字（鼠标悬停在参数名称上）
-6. 选择一个模型，点击"开始初始化"
-7. **预期结果**：应该在几秒内完成初始化（不再 pending）
-
-### 4. 查看日志
+### 4. View logs
 ```bash
 tail -f tools/NcfSimulatedSite/Senparc.Web/App_Data/SenparcTraceLog/SenparcTrace-20260324.log
 ```
-
-**应该能看到的日志**：
+**Logs you should be able to see**:
 ```
 Initializing PromptCatalyzer with ModelId: 1
 Publishing PromptInitRequestEvent with RequestId: xxx
@@ -251,24 +243,23 @@ Prompt Init Response: [PromptCode], RequestId: xxx
 Received PromptInitResponse with PromptCode: [PromptCode]
 Successfully created PromptCatalyzer Agent with ID: xxx
 ```
-
 ---
 
-## 技术要点
+## Technical points
 
-### EventBus Handler 注册机制
-1. **自动扫描**：`AddSenparcEventBus()` 使用反射扫描指定程序集
-2. **接口匹配**：查找实现了 `IIntegrationEventHandler<T>` 的类
-3. **DI 注册**：将 Handler 注册为 Scoped 服务
-4. **动态调用**：HostedService 通过 `GetServices(handlerType)` 获取 Handler 实例
+### EventBus Handler registration mechanism
+1. **Automatic Scanning**: `AddSenparcEventBus()` uses reflection to scan the specified assembly
+2. **Interface matching**: Find classes that implement `IIntegrationEventHandler<T>`
+3. **DI Registration**: Register Handler as Scoped service
+4. **Dynamic call**: HostedService obtains the Handler instance through `GetServices(handlerType)`
 
-### 为什么要在 StartWebEngine 之后注册？
-- `StartWebEngine` 会触发程序集的扫描和加载
-- 确保所有 Xncf 模块的程序集都在 AppDomain 中
-- 如果在之前注册，可能扫描不到后加载的模块
+### Why register after StartWebEngine?
+- `StartWebEngine` will trigger the scanning and loading of the assembly
+- Ensure that all Xncf module assemblies are in the AppDomain
+- If registered before, modules loaded later may not be scanned.
 
-### 前端响应格式标准化
-所有 NCF API 返回格式都遵循 `AppResponseBase<T>` 结构：
+### Front-end response format standardization
+All NCF API return formats follow the `AppResponseBase<T>` structure:
 ```typescript
 {
   success: boolean,
@@ -276,29 +267,28 @@ Successfully created PromptCatalyzer Agent with ID: xxx
   errorMessage?: string
 }
 ```
-
-前端访问数据时必须使用 `response.data.data.xxx`（两层 data）。
-
----
-
-## 下一步
-
-1. **重启应用**并测试初始化功能
-2. **检查控制台日志**：确认 EventBus 扫描到了所有模块
-3. **测试优化功能**：初始化成功后，测试完整的优化流程
-4. **恢复权限验证**：功能测试通过后，取消注释所有 `[ApiAuthorize("AdminOnly")]` 属性
+The front-end must use `response.data.data.xxx` (two-layer data) when accessing data.
 
 ---
 
-## 相关文件
+## Next step
 
-- `tools/NcfSimulatedSite/Senparc.Web/Register.cs` - EventBus 注册配置
-- `src/Extensions/Senparc.Xncf.AgentsManager/Application/EventHandlers/PromptInitResponseHandler.cs` - 初始化响应处理器
-- `src/Extensions/Senparc.Xncf.PromptRange/Application/EventHandlers/PromptInitRequestHandler.cs` - 初始化请求处理器
-- `src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js` - 前端 API 调用逻辑
-- `src/Extensions/Senparc.Xncf.PromptRange/Areas/Admin/Pages/PromptRange/Prompt.cshtml` - UI 参数预览
+1. **Restart the application** and test the initialization function
+2. **Check the console log**: Confirm that EventBus scanned all modules
+3. **Test optimization function**: After successful initialization, test the complete optimization process
+4. **Restore authority verification**: After the functional test passes, uncomment all `[ApiAuthorize("AdminOnly")]` attributes
 
 ---
 
-## 修复日期
+## Related documents
+
+- `tools/NcfSimulatedSite/Senparc.Web/Register.cs` - EventBus registration configuration
+- `src/Extensions/Senparc.Xncf.AgentsManager/Application/EventHandlers/PromptInitResponseHandler.cs` - Initialize response handler
+- `src/Extensions/Senparc.Xncf.PromptRange/Application/EventHandlers/PromptInitRequestHandler.cs` - Initialize request handler
+- `src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js` - Front-end API calling logic
+- `src/Extensions/Senparc.Xncf.PromptRange/Areas/Admin/Pages/PromptRange/Prompt.cshtml` - UI parameter preview
+
+---
+
+## Repair date
 2026-03-24

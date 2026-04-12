@@ -1,45 +1,45 @@
-# PromptCatalyzer - 细粒度初始化修复说明
+[中文版](PromptCatalyzer-Granular-Init-Fix.cn.md)
 
-## 🐛 问题描述
+# PromptCatalyzer - Fine-grained initialization fix instructions
 
-用户报告了两个关键问题：
+## 🐛 Problem description
 
-### 1. JavaScript 错误
+Users reported two key issues:
+
+### 1. JavaScript Error
 ```
 ❌ 优化失败: this.getPromptList is not a function
 ```
+**Reason**:
+- The non-existent method `getPromptList()` was called in `prompt.js`
+- The same problem also exists with `getPromptFieldList()`
 
-**原因**：
-- `prompt.js` 中调用了不存在的方法 `getPromptList()`
-- 同样的问题也存在于 `getPromptFieldList()`
+**Impact**:
+- The Prompt list cannot be refreshed after optimization is successful.
+- Unable to refresh page data after initialization is successful
 
-**影响**：
-- 优化成功后无法刷新 Prompt 列表
-- 初始化成功后无法刷新页面数据
-
-### 2. ChatGroup 未创建
+### 2. ChatGroup not created
 ```
 数据库中没有 PromptCatalyzer-OptimizationGroup
 ```
+**Reason**:
+- Agent has been created (probably a previous test)
+- But the `EnsureInitializedAsync` method returns directly when the Agent exists
+- Skipping ChatGroup check and creation
 
-**原因**：
-- Agent 已经被创建（可能是之前的测试）
-- 但 `EnsureInitializedAsync` 方法在检测到 Agent 存在时直接返回
-- 跳过了 ChatGroup 的检查和创建
-
-**影响**：
-- 优化功能无法创建 ChatTask（因为找不到 ChatGroup）
-- PromptOptimizationChatTaskHandler 会记录警告并跳过
+**Impact**:
+- Optimization function cannot create ChatTask (because ChatGroup cannot be found)
+- PromptOptimizationChatTaskHandler will log warnings and skip
 
 ---
 
-## ✅ 修复方案
+## ✅ Repair solution
 
-### 修复1：前端方法名错误
+### Fix 1: Wrong front-end method name
 
-**文件**：`src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js`
+**File**: `src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js`
 
-**修改位置1**（初始化成功后）：
+**Modify position 1** (after successful initialization):
 ```javascript
 // 修复前：
 await this.getPromptFieldList();  // ❌ 方法不存在
@@ -47,8 +47,7 @@ await this.getPromptFieldList();  // ❌ 方法不存在
 // 修复后：
 await this.getFieldList();  // ✅ 使用正确的方法名
 ```
-
-**修改位置2**（优化成功后）：
+**Modify position 2** (after successful optimization):
 ```javascript
 // 修复前：
 await this.getPromptList();  // ❌ 方法不存在
@@ -56,17 +55,16 @@ await this.getPromptList();  // ❌ 方法不存在
 // 修复后：
 await this.getFieldList();  // ✅ 使用正确的方法名
 ```
+**Correct method name**:
+- ✅ `getFieldList()` - Get Prompt list and field list
+- ❌ `getPromptList()` - does not exist
+- ❌ `getPromptFieldList()` - does not exist
 
-**正确的方法名**：
-- ✅ `getFieldList()` - 获取 Prompt 列表和字段列表
-- ❌ `getPromptList()` - 不存在
-- ❌ `getPromptFieldList()` - 不存在
+### Fix 2: Fine-grained initialization logic
 
-### 修复2：细粒度初始化逻辑
+**File**: `src/Extensions/Senparc.Xncf.AgentsManager/Domain/Services/PromptOptimizationService.cs`
 
-**文件**：`src/Extensions/Senparc.Xncf.AgentsManager/Domain/Services/PromptOptimizationService.cs`
-
-**修改前的逻辑**（有问题）：
+**Logic before modification** (problematic):
 ```csharp
 // 步骤1: 检查 Agent
 if (agent != null)
@@ -80,8 +78,7 @@ else
     // 创建 ChatGroup
 }
 ```
-
-**修改后的逻辑**（正确）：
+**Modified logic** (correct):
 ```csharp
 // 步骤1: 检查 Agent
 if (agent != null)
@@ -107,18 +104,17 @@ else
     await _chatGroupService.SaveObjectAsync(chatGroup);
 }
 ```
-
-**关键改进**：
-1. **分离检查逻辑**：Agent 和 ChatGroup 的检查是独立的
-2. **支持部分初始化**：即使 Agent 已存在，也会检查并创建缺失的 ChatGroup
-3. **详细日志**：每个步骤都有清晰的日志输出
-4. **容错性强**：可以处理各种不完整的初始化状态
+**Key Improvements**:
+1. **Separated check logic**: Agent and ChatGroup checks are independent
+2. **Support partial initialization**: Even if the Agent already exists, the missing ChatGroup will be checked and created
+3. **Detailed log**: Each step has clear log output
+4. **Strong fault tolerance**: Can handle various incomplete initialization states
 
 ---
 
-## 🔄 完整初始化流程（细粒度）
+## 🔄 Complete initialization process (fine-grained)
 
-### 流程图
+### Flowchart
 ```
 开始 EnsureInitializedAsync(modelId?)
     ↓
@@ -142,51 +138,50 @@ else
     ↓
 返回成功（Agent.Id, ChatGroup.Id）
 ```
+### Supported scenarios
 
-### 支持的场景
-
-#### 场景1：完全未初始化
+#### Scenario 1: Completely uninitialized
 ```
 Agent: ❌ 不存在
 ChatGroup: ❌ 不存在
 ```
-**操作**：
-- 创建 PromptRange 和 PromptItem（EventBus）
-- 创建 Agent
-- 创建 ChatGroup
+**Operation**:
+- Create PromptRange and PromptItem (EventBus)
+-Create Agent
+- Create ChatGroup
 
-#### 场景2：Agent 存在但 ChatGroup 缺失（本次修复的场景）
+#### Scenario 2: Agent exists but ChatGroup is missing (scenario repaired this time)
 ```
 Agent: ✅ 已存在
 ChatGroup: ❌ 不存在
 ```
-**操作**：
-- 跳过 Agent 创建
-- **创建 ChatGroup**（使用现有的 Agent.Id）
+**Operation**:
+- Skip Agent creation
+- **Create ChatGroup** (use existing Agent.Id)
 
-#### 场景3：完全已初始化
+#### Scenario 3: Fully initialized
 ```
 Agent: ✅ 已存在
 ChatGroup: ✅ 已存在
 ```
-**操作**：
-- 验证 ChatGroup 的 Agent 引用是否正确
-- 直接返回（无需创建）
+**Operation**:
+- Verify that the ChatGroup's Agent reference is correct
+- Return directly (no need to create)
 
-#### 场景4：ChatGroup 存在但 Agent 引用错误（未来可能遇到）
+#### Scenario 4: ChatGroup exists but Agent reference error (may be encountered in the future)
 ```
 Agent: ✅ 已存在 (Id=5)
 ChatGroup: ✅ 已存在，但 AdminAgentTemplateId=3, EnterAgentTemplateId=3
 ```
-**操作**：
-- 记录警告日志
-- TODO: 未来可以自动修复引用（当前仅记录）
+**Operation**:
+- Record warning log
+- TODO: References can be automatically repaired in the future (currently only logged)
 
 ---
 
-## 📊 日志输出示例
+## 📊 Log output example
 
-### 场景1：完全初始化（Agent 和 ChatGroup 都不存在）
+### Scenario 1: Full initialization (neither Agent nor ChatGroup exists)
 ```
 ========== EnsureInitializedAsync 开始（细粒度检查）==========
 请求的 ModelId: 1
@@ -205,8 +200,7 @@ ChatGroup: ✅ 已存在，但 AdminAgentTemplateId=3, EnterAgentTemplateId=3
 ========== EnsureInitializedAsync 完成 ==========
   最终状态：Agent=1, ChatGroup=1, Agent是否新创建=True
 ```
-
-### 场景2：Agent 存在，ChatGroup 不存在（本次修复）
+### Scenario 2: Agent exists, ChatGroup does not exist (this fix)
 ```
 ========== EnsureInitializedAsync 开始（细粒度检查）==========
 请求的 ModelId: (null)
@@ -219,8 +213,7 @@ ChatGroup: ✅ 已存在，但 AdminAgentTemplateId=3, EnterAgentTemplateId=3
 ========== EnsureInitializedAsync 完成 ==========
   最终状态：Agent=1, ChatGroup=1, Agent是否新创建=False
 ```
-
-### 场景3：完全已初始化
+### Scenario 3: Fully initialized
 ```
 ========== EnsureInitializedAsync 开始（细粒度检查）==========
 请求的 ModelId: (null)
@@ -231,40 +224,38 @@ ChatGroup: ✅ 已存在，但 AdminAgentTemplateId=3, EnterAgentTemplateId=3
 ========== EnsureInitializedAsync 完成 ==========
   最终状态：Agent=1, ChatGroup=1, Agent是否新创建=False
 ```
-
 ---
 
-## 🧪 测试步骤（针对当前状态）
+## 🧪 Test steps (for current status)
 
-### 前提条件
-- ✅ Agent 已存在（用户已确认）
-- ❌ ChatGroup 不存在（需要修复）
+### Prerequisites
+- ✅ Agent already exists (user confirmed)
+- ❌ ChatGroup does not exist (needs repair)
 
-### 测试步骤
+### Test steps
 
-#### 1. 停止应用并重启
+#### 1. Stop the application and restart
 ```bash
 # 停止当前运行的应用（Ctrl+C）
 cd tools/NcfSimulatedSite/Senparc.Web
 dotnet run
 ```
-
-#### 2. 强制刷新浏览器
+#### 2. Force refresh the browser
 - **Mac**: `Command + Shift + R`
 - **Windows**: `Ctrl + Shift + R`
 
-#### 3. 触发 ChatGroup 创建
-1. 打开 PromptRange 页面
-2. 选择任意一个 Prompt
-3. 点击"优化"按钮
+#### 3. Trigger ChatGroup creation
+1. Open the PromptRange page
+2. Select any Prompt
+3. Click the "Optimize" button
 
-**预期结果**：
-- **直接打开优化对话框**（因为 Agent 已存在，不会显示初始化对话框）
-- 但在后台，`EnsureInitializedAsync` 会检测到 ChatGroup 缺失并创建
+**Expected results**:
+- **Open the optimization dialog directly** (because the Agent already exists, the initialization dialog will not be displayed)
+- But behind the scenes, `EnsureInitializedAsync` will detect that the ChatGroup is missing and create it
 
-#### 4. 观察控制台日志（关键！）
+#### 4. Observe the console log (key!)
 
-应该看到类似以下日志：
+You should see logs similar to the following:
 ```
 ========== EnsureInitializedAsync 开始（细粒度检查）==========
 【步骤1/3】检查 PromptCatalyzer Agent 是否已存在...
@@ -276,13 +267,11 @@ dotnet run
 ========== EnsureInitializedAsync 完成 ==========
   最终状态：Agent=1, ChatGroup=1, Agent是否新创建=False
 ```
+**Note**:
+- Step number skipped 2 (because Agent already exists, step 2 was skipped)
+- Jump directly from step 1 to step 3 (this is normal)
 
-**注意**：
-- 步骤标号跳过了 2（因为 Agent 已存在，跳过了步骤2）
-- 直接从步骤1 跳到步骤3（这是正常的）
-
-#### 5. 验证数据库
-
+#### 5. Verify database
 ```sql
 -- 检查 ChatGroup 是否创建成功
 SELECT 
@@ -302,14 +291,12 @@ WHERE Name = 'PromptCatalyzer-OptimizationGroup';
 -- ✅ Enable = 1 (true)
 -- ✅ State = 1 (Running)
 ```
+#### 6. Test optimization function
+1. Enter the requirements in the optimization dialog box
+2. Click "Start Optimization"
+3. **Expected results**: Optimization successful, no more errors
 
-#### 6. 测试优化功能
-1. 在优化对话框中输入需求
-2. 点击"开始优化"
-3. **预期结果**：优化成功，不再报错
-
-#### 7. 验证 ChatTask 创建
-
+#### 7. Verify ChatTask creation
 ```sql
 -- 检查 ChatTask 是否正确创建
 SELECT 
@@ -330,16 +317,15 @@ ORDER BY CT.AddTime DESC;
 -- ✅ Status: 3 (Finished)
 -- ✅ ChatGroupId 指向 PromptCatalyzer-OptimizationGroup
 ```
-
 ---
 
-## 🔧 修复详情
+## 🔧 Fix details
 
-### 前端修复
+### Front-end repair
 
-#### 文件：`prompt.js`
+#### File: `prompt.js`
 
-**修改1**：初始化成功后刷新（第 3089 行）
+**Modification 1**: Refresh after successful initialization (line 3089)
 ```javascript
 // 修复前：
 await this.getPromptFieldList();
@@ -347,8 +333,7 @@ await this.getPromptFieldList();
 // 修复后：
 await this.getFieldList();
 ```
-
-**修改2**：优化成功后刷新（第 3344 行）
+**Modification 2**: Refresh after successful optimization (line 3344)
 ```javascript
 // 修复前：
 await this.getPromptList();
@@ -356,12 +341,11 @@ await this.getPromptList();
 // 修复后：
 await this.getFieldList();
 ```
+### Backend fix
 
-### 后端修复
+#### File: `PromptOptimizationService.cs`
 
-#### 文件：`PromptOptimizationService.cs`
-
-**修改前的逻辑问题**：
+**Logic issues before modification**:
 ```csharp
 // 步骤1: 检查 Agent
 var agent = _agentsTemplateService.GetObject(z => z.Name == "PromptCatalyzer");
@@ -376,8 +360,7 @@ else
     // 创建 Agent 和 ChatGroup
 }
 ```
-
-**修改后的逻辑**（正确）：
+**Modified logic** (correct):
 ```csharp
 // 步骤1: 检查并创建 Agent（如果需要）
 var agent = _agentsTemplateService.GetObject(z => z.Name == "PromptCatalyzer");
@@ -411,62 +394,59 @@ else
     await _chatGroupService.SaveObjectAsync(chatGroup);
 }
 ```
-
-**关键变化**：
-1. Agent 检查和 ChatGroup 检查是**独立的两个步骤**
-2. 即使 Agent 已存在，仍然会执行 ChatGroup 检查
-3. 如果 ChatGroup 缺失，会自动创建并关联到现有的 Agent
+**Key changes**:
+1. Agent check and ChatGroup check are **two independent steps**
+2. Even if the Agent already exists, the ChatGroup check will still be performed
+3. If the ChatGroup is missing, it will be automatically created and associated with the existing Agent
 
 ---
 
-## 🎯 支持的初始化场景
+## 🎯 Supported initialization scenarios
 
-### 场景矩阵
+### Scene matrix
 
-| 场景 | Agent | ChatGroup | 操作 |
+| Scenario | Agent | ChatGroup | Operation |
 |------|-------|-----------|------|
-| 1 | ❌ 不存在 | ❌ 不存在 | 创建 Agent + 创建 ChatGroup |
-| 2 | ✅ 已存在 | ❌ 不存在 | **创建 ChatGroup**（本次修复） |
-| 3 | ✅ 已存在 | ✅ 已存在 | 跳过创建，验证引用 |
-| 4 | ❌ 不存在 | ✅ 已存在 | 创建 Agent + 验证 ChatGroup（理论上不应出现） |
+| 1 | ❌ Does not exist | ❌ Does not exist | Create Agent + Create ChatGroup |
+| 2 | ✅ Already exists | ❌ Does not exist | **Create ChatGroup** (this fix) |
+| 3 | ✅ Already exists | ✅ Already exists | Skip creation, verify reference |
+| 4 | ❌ Does not exist | ✅ Already exists | Create Agent + Verify ChatGroup (Theoretically it should not appear) |
 
-**场景2** 是本次修复的重点：
-- 之前的代码无法处理这种情况
-- 修复后可以自动检测并补全缺失的 ChatGroup
+**Scenario 2** is the focus of this repair:
+- The previous code cannot handle this situation
+- After repair, the missing ChatGroup can be automatically detected and completed
 
 ---
 
-## 📝 修复后的日志标记
+## 📝 Fixed log markers
 
-### 步骤标号说明
-修改后的步骤标号为 **1/3, 2/3, 3/3**（而非之前的 1/4, 2/4, 3/4, 4/4）：
+### Step number description
+The modified steps are numbered **1/3, 2/3, 3/3** (instead of the previous 1/4, 2/4, 3/4, 4/4):
 
-- **步骤1/3**：检查 Agent（如果不存在则创建）
-- **步骤2/3**：创建 Agent（仅在 Agent 不存在时执行）
-- **步骤3/3**：检查 ChatGroup（如果不存在则创建）
+- **Step 1/3**: Check Agent (create if not present)
+- **Step 2/3**: Create Agent (only executed if Agent does not exist)
+- **Step 3/3**: Check for ChatGroup (create if doesn't exist)
 
-**日志中的步骤跳跃是正常的**：
-- 如果 Agent 已存在：只会看到步骤1和3
-- 如果 Agent 不存在：会看到步骤1、2、3
+**Step jumps in the log are normal**:
+- If Agent already exists: only steps 1 and 3 will be seen
+- If Agent does not exist: you will see steps 1, 2, and 3
 
-### 最终状态日志
+### Final status log
 ```
 ========== EnsureInitializedAsync 完成 ==========
   最终状态：Agent=1, ChatGroup=1, Agent是否新创建=False
 ```
-
-**字段含义**：
+**Field meaning**:
 - `Agent=1`: Agent ID
 - `ChatGroup=1`: ChatGroup ID
-- `Agent是否新创建=False`: 表示 Agent 是已存在的（不是本次创建）
+- `Whether the Agent is newly created=False`: indicates that the Agent already exists (not created this time)
 
 ---
 
-## 🚨 注意事项
+## 🚨 Notes
 
-### 1. Agent 引用验证
-修复后的代码会验证 ChatGroup 的 Agent 引用是否正确：
-
+### 1. Agent reference verification
+The fixed code verifies that the ChatGroup's Agent reference is correct:
 ```csharp
 if (chatGroup.AdminAgentTemplateId != agent.Id || 
     chatGroup.EnterAgentTemplateId != agent.Id)
@@ -475,24 +455,23 @@ if (chatGroup.AdminAgentTemplateId != agent.Id ||
     // TODO: 可以自动更新 ChatGroup 的引用
 }
 ```
+**If you see this warning**:
+- Indicates that the ChatGroup exists but points to the wrong Agent
+- Currently only logs are recorded and will not be automatically repaired.
+- **MANUAL FIX**: Update ChatGroup's `AdminAgentTemplateId` and `EnterAgentTemplateId`
 
-**如果看到此警告**：
-- 说明 ChatGroup 存在，但指向了错误的 Agent
-- 当前仅记录日志，不会自动修复
-- **手动修复**：更新 ChatGroup 的 `AdminAgentTemplateId` 和 `EnterAgentTemplateId`
+### 2. Concurrent initialization
+If multiple users trigger initialization at the same time:
+- ✅ Agent creation: There is a unique constraint, the second one will fail but will not affect
+- ✅ ChatGroup creation: There is a unique constraint, the second one will fail but has no effect
+- ✅ EventBus: supports concurrency and will not conflict
 
-### 2. 并发初始化
-如果多个用户同时触发初始化：
-- ✅ Agent 创建：有唯一约束，第二个会失败但不影响
-- ✅ ChatGroup 创建：有唯一约束，第二个会失败但不影响
-- ✅ EventBus：支持并发，不会冲突
+**Suggestion**:
+- Consider adding distributed locks in production environments
+- Or use the database's unique index to handle concurrency
 
-**建议**：
-- 生产环境中考虑添加分布式锁
-- 或者使用数据库的唯一索引处理并发
-
-### 3. PromptCode 获取
-修复后，PromptCode 的获取逻辑：
+### 3. PromptCode acquisition
+After repair, the acquisition logic of PromptCode:
 ```csharp
 // Agent 不存在时：从 EventBus 响应获取
 promptCode = response.PromptCode;
@@ -508,37 +487,36 @@ return new PromptInitResponseEvent(
     "Initialized successfully"
 );
 ```
+---
+
+## ✅ Verification Checklist
+
+After testing is complete, confirm all of the following:
+
+### Database verification
+- [ ] PromptCatalyzer Agent exists
+- [ ] PromptCatalyzer-OptimizationGroup ChatGroup exists
+- [ ] ChatGroup's `AdminAgentTemplateId` = `EnterAgentTemplateId` = Agent.Id
+- [ ] ChatGroup's `Enable` = `true`, `State` = `1` (Running)
+
+### Function verification
+- [ ] Clicking the "Optimize" button does not report JavaScript errors
+- [ ] The Prompt list is automatically refreshed after optimization is successful.
+- [ ] Automatically switch to the new Prompt after successful optimization
+- [ ] ChatTask is created correctly (each optimization is recorded)
+- [ ] New PromptItem marked `🤖AI-Generated`
+
+### Log verification
+- [ ] console log showing complete steps (1/3, 3/3 or 1/3, 2/3, 3/3)
+- [ ] Final status log showing Agent ID and ChatGroup ID
+- [ ] No errors or warnings (except known framework warnings)
 
 ---
 
-## ✅ 验证清单
+## 🔍 If you still have problems
 
-测试完成后，请确认以下所有项：
-
-### 数据库验证
-- [ ] PromptCatalyzer Agent 存在
-- [ ] PromptCatalyzer-OptimizationGroup ChatGroup 存在
-- [ ] ChatGroup 的 `AdminAgentTemplateId` = `EnterAgentTemplateId` = Agent.Id
-- [ ] ChatGroup 的 `Enable` = `true`, `State` = `1` (Running)
-
-### 功能验证
-- [ ] 点击"优化"按钮不报 JavaScript 错误
-- [ ] 优化成功后 Prompt 列表自动刷新
-- [ ] 优化成功后自动切换到新 Prompt
-- [ ] ChatTask 正确创建（每次优化都有记录）
-- [ ] 新 PromptItem 标记为 `🤖AI-Generated`
-
-### 日志验证
-- [ ] 控制台日志显示完整的步骤（1/3, 3/3 或 1/3, 2/3, 3/3）
-- [ ] 最终状态日志显示 Agent ID 和 ChatGroup ID
-- [ ] 没有错误或警告（除了已知的框架警告）
-
----
-
-## 🔍 如果仍有问题
-
-### 问题1：ChatGroup 仍未创建
-**排查**：
+### Problem 1: ChatGroup has not been created yet
+**Troubleshooting**:
 ```sql
 -- 检查 Agent 是否存在
 SELECT * FROM Senparc_AgentsManager_AgentTemplate WHERE Name = 'PromptCatalyzer';
@@ -546,29 +524,28 @@ SELECT * FROM Senparc_AgentsManager_AgentTemplate WHERE Name = 'PromptCatalyzer'
 -- 检查 ChatGroup 是否存在
 SELECT * FROM Senparc_AgentsManager_ChatGroup WHERE Name = 'PromptCatalyzer-OptimizationGroup';
 ```
+**Solution**:
+- If the Agent exists but the ChatGroup does not, check the console log for steps to create the ChatGroup
+- If there is no log, it means `EnsureInitializedAsync` has not been called
+- Check if `PromptOptimizationController.OptimizeAsync` has called this method
 
-**解决**：
-- 如果 Agent 存在但 ChatGroup 不存在，检查控制台日志中是否有创建 ChatGroup 的步骤
-- 如果没有日志，说明 `EnsureInitializedAsync` 没有被调用
-- 检查 `PromptOptimizationController.OptimizeAsync` 是否调用了此方法
+### Problem 2: JavaScript still reports an error
+**Troubleshooting**:
+- Check if `prompt.js` lines 3089 and 3344 have been modified to `getFieldList()`
+- Force refresh browser cache (Cmd+Shift+R)
+- Check the browser console for specific error messages
 
-### 问题2：JavaScript 仍报错
-**排查**：
-- 检查 `prompt.js` 第 3089 行和第 3344 行是否已修改为 `getFieldList()`
-- 强制刷新浏览器缓存（Cmd+Shift+R）
-- 检查浏览器 Console 中的具体错误信息
-
-### 问题3：优化功能仍然失败
-**排查**：
-1. 检查 ChatGroup 是否创建成功
-2. 检查 PromptOptimizationChatTaskHandler 的日志
-3. 检查是否有其他错误日志
+### Issue 3: Optimization function still fails
+**Troubleshooting**:
+1. Check whether the ChatGroup is created successfully
+2. Check the log of PromptOptimizationChatTaskHandler
+3. Check if there are other error logs
 
 ---
 
-## 📊 预期的完整流程（修复后）
+## 📊 Expected complete process (after repair)
 
-### 用户首次优化（Agent 存在，ChatGroup 不存在）
+### User first optimization (Agent exists, ChatGroup does not exist)
 ```
 用户点击"优化"
     ↓
@@ -594,50 +571,48 @@ PromptOptimizationController.OptimizeAsync()
     ├─ 调用 getFieldList() 刷新列表 ✅（修复后不报错）
     └─ 自动切换到新 Prompt ✅
 ```
+---
+
+## 🎉 Success Metrics
+
+Signs of a successful test:
+
+### Backend log
+- ✅ See "ChatGroup created successfully" log
+- ✅ See "ChatTask created successfully" log
+- ✅ See the "Prompt optimization completed" log
+- ✅ See "ChatTask status updated: Finished" log
+
+### Front-end performance
+- ✅ Click "Optimize" to open the dialog box directly (initialization is not displayed)
+- ✅ No JavaScript errors will be reported after successful optimization
+- ✅ Prompt list automatically refreshed
+- ✅ Automatically switch to newly created Prompt
+
+### Database
+- ✅ ChatGroup table has 1 record (Name='PromptCatalyzer-OptimizationGroup')
+- ✅ ChatTask table has at least 1 record (Status=Finished)
+- ✅ There are new records in the PromptItem table (Note='🤖AI-Generated')
 
 ---
 
-## 🎉 成功指标
+## 📞Feedback
 
-测试成功的标志：
-
-### 后端日志
-- ✅ 看到 "ChatGroup 创建成功" 日志
-- ✅ 看到 "ChatTask 创建成功" 日志
-- ✅ 看到 "Prompt 优化完成" 日志
-- ✅ 看到 "ChatTask 状态已更新: Finished" 日志
-
-### 前端表现
-- ✅ 点击"优化"直接打开对话框（不显示初始化）
-- ✅ 优化成功后不报 JavaScript 错误
-- ✅ Prompt 列表自动刷新
-- ✅ 自动切换到新创建的 Prompt
-
-### 数据库
-- ✅ ChatGroup 表有 1 条记录（Name='PromptCatalyzer-OptimizationGroup'）
-- ✅ ChatTask 表有至少 1 条记录（Status=Finished）
-- ✅ PromptItem 表有新记录（Note='🤖AI-Generated'）
-
----
-
-## 📞 问题反馈
-
-如果测试后仍有问题，请提供：
-1. **控制台完整日志**（特别是 EnsureInitializedAsync 的部分）
-2. **浏览器 Console 日志**
-3. **数据库查询结果**：
-   ```sql
+If you still have problems after testing, please provide:
+1. **Complete console log** (especially the EnsureInitializedAsync part)
+2. **Browser Console Log**
+3. **Database query results**:
+```sql
    SELECT * FROM Senparc_AgentsManager_AgentTemplate WHERE Name = 'PromptCatalyzer';
    SELECT * FROM Senparc_AgentsManager_ChatGroup WHERE Name LIKE '%PromptCatalyzer%';
    ```
-4. **具体的错误信息**（如果还有的话）
+4. **Specific error message** (if any)
 
 ---
 
-## 🔄 如果需要重置
+## 🔄 If you need to reset
 
-如果想完全重新测试初始化流程：
-
+If you want to completely retest the initialization process:
 ```sql
 -- 删除 ChatGroup 和 Agent，保留 PromptRange 和 PromptItem
 DELETE FROM Senparc_AgentsManager_ChatTask WHERE ChatGroupId IN (
@@ -646,12 +621,11 @@ DELETE FROM Senparc_AgentsManager_ChatTask WHERE ChatGroupId IN (
 DELETE FROM Senparc_AgentsManager_ChatGroup WHERE Name = 'PromptCatalyzer-OptimizationGroup';
 DELETE FROM Senparc_AgentsManager_AgentTemplate WHERE Name = 'PromptCatalyzer';
 ```
-
-然后重启应用，测试完整的初始化流程（从零开始）。
+Then restart the application and test the complete initialization process (from scratch).
 
 ---
 
-## 📚 相关文档
+## 📚 Related documents
 
-- 📘 [PromptCatalyzer-Complete-Testing-Guide.md](./PromptCatalyzer-Complete-Testing-Guide.md) - 完整测试指南
-- 📗 [PromptCatalyzer-ChatGroup-Integration.md](./PromptCatalyzer-ChatGroup-Integration.md) - 架构设计文档
+- 📘 [PromptCatalyzer-Complete-Testing-Guide.md](./PromptCatalyzer-Complete-Testing-Guide.md) - Complete Testing Guide
+- 📗 [PromptCatalyzer-ChatGroup-Integration.md](./PromptCatalyzer-ChatGroup-Integration.md) - Architecture design document

@@ -1,20 +1,21 @@
-# 日志自动滚动功能验证
+[中文版](LOG_AUTO_SCROLL_VERIFICATION.cn.md)
 
-## ✅ 功能检查结果
+# Log automatic scrolling function verification
 
-### 1. 自动定位到最新日志位置 ✅
+## ✅ Functional check results
 
-**实现方式**：
-- 每次日志更新时，都会调用 `ScrollToBottomIfNeeded()` 方法
-- 该方法会检查 `SettingsView.ShouldAutoScroll` 属性
-- 如果 `ShouldAutoScroll` 为 `true`，则自动滚动到底部
+### 1. Automatically locate the latest log location ✅
 
-**调用位置**：
-1. `OnLogUpdateTimerElapsed()` - 定时器批量更新日志时（第1278行）
-2. `FlushPendingLogs()` - 应用就绪或停止时刷新日志（第1380行）
+**Implementation**:
+- Each time the log is updated, the `ScrollToBottomIfNeeded()` method will be called
+- This method checks the `SettingsView.ShouldAutoScroll` property
+- If `ShouldAutoScroll` is `true`, automatically scroll to the bottom
 
-**代码实现**：
-```csharp
+**Call location**:
+1. `OnLogUpdateTimerElapsed()` - when the timer updates the log in batches (line 1278)
+2. `FlushPendingLogs()` - Flush logs when the application is ready or stopped (line 1380)
+
+**Code implementation**:```csharp
 private void ScrollToBottomIfNeeded()
 {
     // 查找 SettingsView
@@ -27,19 +28,16 @@ private void ScrollToBottomIfNeeded()
         _cachedScrollViewer.ScrollToEnd();
     }
 }
-```
+```---
 
----
+### 2. Preserve position when user scrolls manually ✅
 
-### 2. 用户手动滚动时保留位置 ✅
+**Implementation**:
+- Listen to the `ScrollChanged` event of `ScrollViewer` in `SettingsView`
+- Detect if user is viewing history log (>20px from bottom)
+- If the user is viewing the history log, `ShouldAutoScroll` returns `false` and will not automatically scroll.
 
-**实现方式**：
-- `SettingsView` 中监听 `ScrollViewer` 的 `ScrollChanged` 事件
-- 检测用户是否在查看历史日志（距离底部 > 20px）
-- 如果用户在查看历史日志，`ShouldAutoScroll` 返回 `false`，不会自动滚动
-
-**检测逻辑**：
-```csharp
+**Detection logic**:```csharp
 private void LogScrollViewer_OnScrollChanged(object? sender, ScrollChangedEventArgs e)
 {
     var scrollableHeight = scrollViewer.Extent.Height - scrollViewer.Viewport.Height;
@@ -57,55 +55,52 @@ private void LogScrollViewer_OnScrollChanged(object? sender, ScrollChangedEventA
 }
 
 public bool ShouldAutoScroll => !_isUserScrolling;
-```
-
-**行为说明**：
-- ✅ **用户向上滚动查看历史**：`distanceFromBottom > 20px` → `_isUserScrolling = true` → `ShouldAutoScroll = false` → **不会自动滚动**
-- ✅ **用户滚动到底部附近**：`distanceFromBottom <= 20px` → `_isUserScrolling = false` → `ShouldAutoScroll = true` → **恢复自动滚动**
+```**Behavioral Description**:
+- ✅ **User scrolls up to view history**: `distanceFromBottom > 20px` → `_isUserScrolling = true` → `ShouldAutoScroll = false` → **Will not scroll automatically**
+- ✅ **User scrolls to near bottom**: `distanceFromBottom <= 20px` → `_isUserScrolling = false` → `ShouldAutoScroll = true` → **Restore automatic scrolling**
 
 ---
 
-## 🎯 功能验证场景
+## 🎯 Function verification scenario
 
-### 场景 1：正常查看最新日志
-**操作**：
-1. 应用启动，NCF 输出日志
-2. 日志自动滚动到底部
-3. 新日志到来时，继续自动滚动到底部
+### Scenario 1: View the latest log normally
+**Operation**:
+1. The application starts and NCF outputs the log
+2. The log automatically scrolls to the bottom
+3. When new logs arrive, continue to automatically scroll to the bottom
 
-**预期结果**：
-- ✅ 日志自动定位到最新位置
-- ✅ 始终显示最新内容
-
----
-
-### 场景 2：查看历史日志
-**操作**：
-1. 用户向上滚动查看之前的日志
-2. 新日志到来时
-
-**预期结果**：
-- ✅ **不会自动滚动**，保持在用户查看的位置
-- ✅ 用户可以继续查看历史内容
+**Expected results**:
+- ✅ The log is automatically positioned to the latest location
+- ✅ Always show the latest content
 
 ---
 
-### 场景 3：从历史位置回到最新
-**操作**：
-1. 用户在查看历史日志（向上滚动）
-2. 用户向下滚动到底部附近（距离底部 <= 20px）
-3. 新日志到来时
+### Scenario 2: View historical logs
+**Operation**:
+1. The user scrolls up to view previous logs
+2. When new logs arrive
 
-**预期结果**：
-- ✅ **恢复自动滚动**，自动定位到最新位置
-- ✅ 用户体验流畅，符合预期
+**Expected results**:
+- ✅ **Does not automatically scroll** and remains at the position viewed by the user
+- ✅ Users can continue to view historical content
 
 ---
 
-## 🔧 技术实现细节
+### Scenario 3: Return to the latest position from the historical position
+**Operation**:
+1. The user is viewing the history log (scroll up)
+2. The user scrolls down to near the bottom (<= 20px from the bottom)
+3. When new logs arrive
 
-### 控件层次结构
-```
+**Expected results**:
+- ✅ **Restore automatic scrolling**, automatically locate the latest location
+- ✅ User experience is smooth and in line with expectations
+
+---
+
+## 🔧 Technical implementation details
+
+### Control Hierarchy```
 MainWindow
   └─ Grid (Content)
       └─ Grid (内容区域)
@@ -115,10 +110,7 @@ MainWindow
           │           └─ ScrollViewer (LogScrollViewer) ← 这里
           │               └─ SelectableTextBlock
           └─ BrowserView
-```
-
-### 查找 SettingsView 的方法
-```csharp
+```### Find the method of SettingsView```csharp
 // 方法1：向上遍历父级（当前实现）
 Views.SettingsView? settingsView = null;
 var parent = _cachedScrollViewer.Parent;
@@ -131,48 +123,46 @@ while (parent != null)
     }
         parent = parent.Parent;
 }
-```
+```---
+
+## ✅ Verification conclusion
+
+### Functional completeness
+- ✅ **Automatically locate the latest log location**: Implemented
+- ✅ **Preserve position when user scrolls manually**: Implemented
+- ✅ **Resume automatic scrolling from historical positions**: Implemented
+
+### Code quality
+- ✅ The code logic is clear and easy to maintain
+- ✅ Performance Optimization: Caching `ScrollViewer` references
+- ✅ Error handling: use try-catch to prevent exceptions from affecting the logging function
+- ✅ Default behavior: If `SettingsView` is not found, auto-scroll by default (`?? true`)
+
+### User experience
+- ✅ In line with user expectations: no interruptions when viewing history
+- ✅ Smart recovery: Automatically resume when scrolling near the bottom
+- ✅ Reasonable threshold: The 20px threshold can detect user intentions without being too sensitive
 
 ---
 
-## ✅ 验证结论
+## 📝 Notes
 
-### 功能完整性
-- ✅ **自动定位到最新日志位置**：已实现
-- ✅ **用户手动滚动时保留位置**：已实现
-- ✅ **从历史位置恢复自动滚动**：已实现
+1. **Threshold setting**: Currently, 20px is used as the threshold to determine whether the user is viewing history.
+   - This value can be adjusted if user feedback is too sensitive or not sensitive enough
 
-### 代码质量
-- ✅ 代码逻辑清晰，易于维护
-- ✅ 性能优化：缓存 `ScrollViewer` 引用
-- ✅ 错误处理：使用 try-catch 防止异常影响日志功能
-- ✅ 默认行为：如果找不到 `SettingsView`，默认自动滚动（`?? true`）
+2. **Control search**: Find `SettingsView` by traversing the parent upwards
+   - If the control hierarchy changes, the search logic may need to be adjusted
 
-### 用户体验
-- ✅ 符合用户预期：查看历史时不被打断
-- ✅ 智能恢复：滚动到底部附近时自动恢复
-- ✅ 阈值合理：20px 的阈值既能检测用户意图，又不会过于敏感
+3. **Performance considerations**: `ScrollViewer` references have been cached to avoid repeated searches
+   - The cache is reinitialized if the window is closed or reopened
 
 ---
 
-## 📝 注意事项
+## 🎉 Summary
 
-1. **阈值设置**：当前使用 20px 作为判断用户是否在查看历史的阈值
-   - 如果用户反馈过于敏感或不够敏感，可以调整这个值
+The automatic log scrolling function has been fully implemented to meet the following requirements:
+1. ✅ Automatically locate the latest log location
+2. ✅ When the user actively drags to the historical location, it remains at this location and does not automatically synchronize to the latest location.
+3. ✅ When the user scrolls to near the bottom, automatic scrolling is restored
 
-2. **控件查找**：通过向上遍历父级查找 `SettingsView`
-   - 如果控件层次结构改变，可能需要调整查找逻辑
-
-3. **性能考虑**：`ScrollViewer` 引用已缓存，避免重复查找
-   - 如果窗口关闭或重新打开，缓存会重新初始化
-
----
-
-## 🎉 总结
-
-日志自动滚动功能已完整实现，满足以下需求：
-1. ✅ 自动定位到最新的日志位置
-2. ✅ 用户主动拖动到历史记录位置时，保留在此位置，不自动同步到最新位置
-3. ✅ 用户滚动到底部附近时，恢复自动滚动
-
-功能运行正常，用户体验良好！
+The function works normally and the user experience is good!

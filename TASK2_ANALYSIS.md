@@ -1,28 +1,29 @@
-# 任务 2 分析：PromptRange 与 AgentsManager 自动优化实现
+[中文版](TASK2_ANALYSIS.cn.md)
 
-## 📋 需求分析
+# Task 2 Analysis: Automatic optimization implementation of PromptRange and AgentsManager
 
-### 用户期望功能
-1. 在 PromptRange 的 Prompt.cshtml 页面点击"优化"按钮
-2. 自动调用 AgentsManager 模块的 Agent 进行 Prompt 优化
-3. 优化过程包括：
-   - 调整 Prompt 内容
-   - 优化 Temperature 等参数
-4. 如果相关的 Range、Prompt、Agent 不存在，自动创建
-5. 通过 EventBus 解决模块间循环依赖问题
+## 📋 Needs Analysis
 
-## 🔍 当前实现分析
+### User expected functions
+1. Click the "Optimize" button on the Prompt.cshtml page of PromptRange
+2. Automatically call the Agent of the AgentsManager module for prompt optimization
+3. The optimization process includes:
+   - Adjust Prompt content
+   - Optimize parameters such as Temperature
+4. If the relevant Range, Prompt, and Agent do not exist, they will be automatically created.
+5. Solve the problem of circular dependencies between modules through EventBus
 
-### 1. 前端实现（已完成 ✅）
+## 🔍 Current implementation analysis
 
-**文件：** `Prompt.cshtml`（行 68-70）
+### 1. Front-end implementation (completed ✅)
+
+**File:** `Prompt.cshtml` (lines 68-70)
 ```html
 <el-button type="primary" size="mini" icon="el-icon-magic-stick" @@click="openOptimizeDialog">
     优化
 </el-button>
 ```
-
-**文件：** `prompt.js`（行 3002-3050）
+**File:** `prompt.js` (lines 3002-3050)
 ```javascript
 openOptimizeDialog() {
     if (!this.promptid) {
@@ -50,15 +51,14 @@ async executeOptimize() {
     this.$message.success(`优化成功！新的 Prompt Code: ${response.data.newPromptCode}`);
 }
 ```
+### 2. Backend implementation (partially completed ⚠️)
 
-### 2. 后端实现（部分完成 ⚠️）
+#### ✅ Implemented parts
 
-#### ✅ 已实现的部分
+**AgentsManager module:**
 
-**AgentsManager 模块：**
-
-1. **API 入口：** `PromptOptimizationAppService.cs`
-   ```csharp
+1. **API entrance:** `PromptOptimizationAppService.cs`
+```csharp
    [HttpPost]
    public async Task<ActionResult<PromptOptimizationResponseEvent>> OptimizeAsync(
        [FromBody] PromptOptimizationRequestDto request)
@@ -68,9 +68,8 @@ async executeOptimize() {
            request.UserRequirement);
    }
    ```
-
-2. **业务逻辑：** `PromptOptimizationService.cs`
-   ```csharp
+2. **Business logic:** `PromptOptimizationService.cs`
+```csharp
    public async Task<PromptOptimizationResponseEvent> OptimizePromptAsync(
        string promptCode, 
        string userRequirement)
@@ -98,9 +97,8 @@ async executeOptimize() {
        }
    }
    ```
-
-3. **事件处理器：** `PromptOptimizationResponseHandler.cs`
-   ```csharp
+3. **Event handler:** `PromptOptimizationResponseHandler.cs`
+```csharp
    public class PromptOptimizationResponseHandler 
        : IIntegrationEventHandler<PromptOptimizationResponseEvent>
    {
@@ -111,11 +109,10 @@ async executeOptimize() {
        }
    }
    ```
+**PromptRange module:**
 
-**PromptRange 模块：**
-
-1. **事件处理器：** `PromptOptimizationRequestHandler.cs`
-   ```csharp
+1. **Event handler:** `PromptOptimizationRequestHandler.cs`
+```csharp
    public class PromptOptimizationRequestHandler 
        : IIntegrationEventHandler<PromptOptimizationRequestEvent>
    {
@@ -137,48 +134,46 @@ async executeOptimize() {
        }
    }
    ```
+#### ⚠️ The missing part
 
-#### ⚠️ 缺失的部分
+1. **Automatically create Agent and ChatGroup**
+   - TODO in `PromptOptimizationService.EnsureInitializedAsync()` is not implemented
+   - Requires "PromptCatalyzer" Agent to be automatically created on first use
 
-1. **自动创建 Agent 和 ChatGroup**
-   - `PromptOptimizationService.EnsureInitializedAsync()` 中的 TODO 未实现
-   - 需要在首次使用时自动创建 "PromptCatalyzer" Agent
+2. **Real AI optimization logic**
+   - `PromptOptimizationRequestHandler` is currently only mocked
+   - Need to call AIKernel for real prompt optimization
 
-2. **真正的 AI 优化逻辑**
-   - `PromptOptimizationRequestHandler` 目前只是模拟
-   - 需要调用 AIKernel 进行真实的 Prompt 优化
+3. **Automatically create PromptRange and PromptItem**
+   - `PromptInitRequestHandler` has implemented automatic creation logic ✅
+   - but not fully tested
 
-3. **自动创建 PromptRange 和 PromptItem**
-   - `PromptInitRequestHandler` 已实现自动创建逻辑 ✅
-   - 但未完全测试
+4. **Parameter optimization (Temperature, etc.)**
+   - Only Prompt content is optimized
+   - Temperature, TopP and other parameters are not optimized
 
-4. **参数优化（Temperature 等）**
-   - 只优化了 Prompt 内容
-   - 未优化 Temperature、TopP 等参数
+## 🐛 Problem Diagnosis
 
-## 🐛 问题诊断
+### Problem 1: Agent is not automatically created
+**Symptom:** The "PromptCatalyzer" Agent is not found when calling the optimization function for the first time
 
-### 问题 1：Agent 未自动创建
-**症状：** 首次调用优化功能时，找不到 "PromptCatalyzer" Agent
+**Cause:** The Agent creation code in `EnsureInitializedAsync` is commented as TODO
 
-**原因：** `EnsureInitializedAsync` 中的 Agent 创建代码被注释为 TODO
+### Problem 2: Incomplete optimization logic
+**Symptoms:** The simulated data is returned and the AI is not actually called
 
-### 问题 2：优化逻辑不完整
-**症状：** 返回的是模拟数据，未真正调用 AI
+**Reason:** `PromptOptimizationRequestHandler` is just a placeholder implementation
 
-**原因：** `PromptOptimizationRequestHandler` 只是占位实现
+### Problem 3: Parameters are not optimized
+**Symptoms:** Only the new Prompt Code is returned, the parameters are unchanged
 
-### 问题 3：参数未优化
-**症状：** 只返回新的 Prompt Code，参数未改变
+**Cause:** The event definition does not contain parameter information
 
-**原因：** 事件定义中没有包含参数信息
+## 🛠️ Solution
 
-## 🛠️ 解决方案
+### Improvement 1: Improve event definition
 
-### 改进 1：完善事件定义
-
-**文件：** `Senparc.Xncf.PromptRange.Abstractions/Events/PromptOptimizationEvents.cs`
-
+**File:** `Senparc.Xncf.PromptRange.Abstractions/Events/PromptOptimizationEvents.cs`
 ```csharp
 // 请求事件（增加更多上下文信息）
 public record PromptOptimizationRequestEvent(
@@ -218,11 +213,9 @@ public record OptimizedParameters(
     float PresencePenalty
 );
 ```
+### Improvement 2: Implement automatic creation of Agent
 
-### 改进 2：实现 Agent 自动创建
-
-**文件：** `Senparc.Xncf.AgentsManager/Domain/Services/PromptOptimizationService.cs`
-
+**File:** `Senparc.Xncf.AgentsManager/Domain/Services/PromptOptimizationService.cs`
 ```csharp
 public async Task<PromptInitResponseEvent> EnsureInitializedAsync()
 {
@@ -303,11 +296,9 @@ public async Task<PromptInitResponseEvent> EnsureInitializedAsync()
     return response;
 }
 ```
+### Improvement 3: Implement real AI optimization logic
 
-### 改进 3：实现真实的 AI 优化逻辑
-
-**文件：** `Senparc.Xncf.PromptRange/Application/EventHandlers/PromptOptimizationRequestHandler.cs`
-
+**File:** `Senparc.Xncf.PromptRange/Application/EventHandlers/PromptOptimizationRequestHandler.cs`
 ```csharp
 public class PromptOptimizationRequestHandler 
     : IIntegrationEventHandler<PromptOptimizationRequestEvent>
@@ -482,11 +473,9 @@ internal record OptimizationResult
     public string Explanation { get; init; }
 }
 ```
+### Improvement 4: Front-end display optimization results
 
-### 改进 4：前端显示优化结果
-
-**文件：** `prompt.js`
-
+**File:** `prompt.js`
 ```javascript
 async executeOptimize() {
     // ... 前面的代码保持不变 ...
@@ -543,9 +532,7 @@ async executeOptimize() {
     }
 }
 ```
-
-## 📊 完整流程图
-
+## 📊 Complete flow chart
 ```
 用户点击"优化"按钮
     ↓
@@ -586,39 +573,38 @@ PromptOptimizationResponseHandler 处理
     ↓
 前端显示优化结果
 ```
+## ✅ Acceptance Criteria
 
-## ✅ 验收标准
+1. **First call**
+   - [ ] Automatically create "PromptCatalyzer" Range
+   - [ ] Automatically create default PromptItem
+   - [ ] Automatically create "PromptCatalyzer" Agent
+   - [ ] Automatically create and bind ChatGroup
 
-1. **首次调用**
-   - [ ] 自动创建 "PromptCatalyzer" Range
-   - [ ] 自动创建默认 PromptItem
-   - [ ] 自动创建 "PromptCatalyzer" Agent
-   - [ ] 自动创建并绑定 ChatGroup
+2. **Optimization function**
+   - [ ] can read the current Prompt content and parameters
+   - [ ] Call AI for real optimization
+   - [ ] Optimization includes Prompt content and parameters (Temperature, etc.)
+   - [ ] Create a new PromptItem to store optimization results
+   - [ ] returns the new PromptCode
 
-2. **优化功能**
-   - [ ] 能够读取当前 Prompt 内容和参数
-   - [ ] 调用 AI 进行真实的优化
-   - [ ] 优化包括 Prompt 内容和参数（Temperature 等）
-   - [ ] 创建新的 PromptItem 存储优化结果
-   - [ ] 返回新的 PromptCode
+3. **User Experience**
+   - [ ] Front-end displays optimization progress
+   - [ ] shows optimization results (new PromptCode, predicted score, description)
+   - [ ] Support automatically switching to optimized Prompt
+   - [ ] Error handling and friendly prompts
 
-3. **用户体验**
-   - [ ] 前端显示优化进度
-   - [ ] 显示优化结果（新 PromptCode、预测分数、说明）
-   - [ ] 支持自动切换到优化后的 Prompt
-   - [ ] 错误处理和友好提示
+4. **Performance and Reliability**
+   - [ ] Support concurrent optimization requests
+   - [ ] Timeout protection (2 minutes)
+   - [ ] Failure retry mechanism
+   - [ ] Detailed logging
 
-4. **性能和可靠性**
-   - [ ] 支持并发优化请求
-   - [ ] 超时保护（2 分钟）
-   - [ ] 失败重试机制
-   - [ ] 详细的日志记录
+## 🎯 Next steps
 
-## 🎯 下一步行动
-
-1. 实现改进的事件定义
-2. 完善 Agent 自动创建逻辑
-3. 实现真实的 AI 优化逻辑
-4. 更新前端代码以支持新的响应格式
-5. 编写单元测试和集成测试
-6. 更新文档和用户指南
+1. Implement improved event definitions
+2. Improve Agent automatic creation logic
+3. Implement real AI optimization logic
+4. Update the front-end code to support the new response format
+5. Write unit tests and integration tests
+6. Update documentation and user guide

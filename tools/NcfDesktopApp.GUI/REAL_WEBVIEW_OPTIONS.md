@@ -1,72 +1,67 @@
-# NCF 桌面应用 - 真正 WebView 解决方案
+[中文版](REAL_WEBVIEW_OPTIONS.cn.md)
 
-## 🔍 问题分析
+#NCF Desktop App - True WebView Solution
 
-您说得对！当前的实现只是一个HTTP客户端，显示页面信息摘要，而不是真正的网页渲染。如果您需要看到真正的网页内容（就像在浏览器中一样），需要使用真正的WebView控件。
+## 🔍 Problem Analysis
 
-## 🎯 可用解决方案
+You are right! The current implementation is just an HTTP client that displays a summary of page information rather than actual rendering of the page. If you need to see real web content (just like in a browser), you need to use a real WebView control.
 
-### 选项 1：Avalonia Accelerate WebView（推荐）
+## 🎯 Available solutions
 
-**优势：**
-- ✅ **官方解决方案**：由Avalonia团队开发维护
-- ✅ **真正的网页渲染**：完整的HTML、CSS、JavaScript支持
-- ✅ **原生性能**：使用系统内置浏览器引擎
+### Option 1: Avalonia Accelerate WebView (recommended)
+
+**Advantages:**
+- ✅ **OFFICIAL SOLUTION**: Developed and maintained by Avalonia team
+- ✅ **True web rendering**: full HTML, CSS, JavaScript support
+- ✅ **Native Performance**: Use the system’s built-in browser engine
   - Windows: WebView2 (Edge)
   - macOS: WKWebView (Safari)
   - Linux: WebKitGTK
-- ✅ **简单集成**：几行代码即可实现
-- ✅ **应用体积小**：不需要打包浏览器引擎
+- ✅ **Easy integration**: Just a few lines of code
+- ✅ **Small application size**: No need to package the browser engine
 
-**成本：**
-- 个人版：€89/年
-- 商业版：€149/年
-- 企业版：€499/年
+**Cost:**
+- Personal version: €89/year
+- Business version: €149/year
+- Enterprise Edition: €499/year
 
-**实现示例：**
-```xml
+**Implementation example:**```xml
 <!-- 添加包引用 -->
 <PackageReference Include="Avalonia.Controls.WebView" Version="最新版本" />
 
 <!-- 使用WebView -->
 <NativeWebView Source="{Binding SiteUrl}" 
                NavigationCompleted="WebView_NavigationCompleted" />
-```
+```### Option 2: WebViewControl-Avalonia (Free)
 
-### 选项 2：WebViewControl-Avalonia（免费）
+**Advantages:**
+- ✅ **TOTAL FREE**: Open Source Solution
+- ✅ **FEATURE FULL**: Based on Chromium, supports modern web standards
+- ✅ **Cross-platform**: Windows, macOS, Linux
 
-**优势：**
-- ✅ **完全免费**：开源解决方案
-- ✅ **功能完整**：基于Chromium，支持现代Web标准
-- ✅ **跨平台**：Windows、macOS、Linux
+**Disadvantages:**
+- ❌ **Large application size**: Need to include Chromium runtime (~100MB+)
+- ❌ **Complex configuration**: Need to deal with native library dependencies
+- ❌ **Slow startup**: Chromium initialization time
 
-**劣势：**
-- ❌ **应用体积大**：需要包含Chromium运行时（~100MB+）
-- ❌ **配置复杂**：需要处理原生库依赖
-- ❌ **启动较慢**：Chromium初始化时间
-
-**实现示例：**
-```xml
+**Implementation example:**```xml
 <PackageReference Include="WebViewControl-Avalonia" Version="3.120.10" />
-```
+```### Option 3: Keep current scheme (suitable for management tools)
 
-### 选项 3：保持当前方案（适合管理工具）
+**Applicable scenarios:**
+- ✅ **Management Tasks**: Check NCF status and monitor operation status
+- ✅ **Quick Preview**: Understand the basic information of the page
+- ✅ **ZERO COST**: No additional fees and complications
+- ✅ **High reliability**: simple to implement, less error-prone
 
-**适用场景：**
-- ✅ **管理任务**：查看NCF状态、监控运行情况
-- ✅ **快速预览**：了解页面基本信息
-- ✅ **零成本**：无额外费用和复杂性
-- ✅ **可靠性高**：简单实现，不易出错
+## 🚀 Quickly implement real WebView
 
-## 🚀 快速实现真正WebView
+If you choose Avalonia Accelerate, this is the fastest way to do it:
 
-如果您选择Avalonia Accelerate，这是最快的实现方式：
+### 1. Obtain a license
+Visit https://avaloniaui.net/accelerate to get a 30-day trial license
 
-### 1. 获取许可证
-访问 https://avaloniaui.net/accelerate 获取30天试用许可证
-
-### 2. 配置NuGet源
-```xml
+### 2. Configure NuGet source```xml
 <!-- nuget.config -->
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
@@ -80,24 +75,15 @@
     </avalonia-accelerate>
   </packageSourceCredentials>
 </configuration>
-```
-
-### 3. 添加包引用
-```xml
+```### 3. Add package reference```xml
 <PackageReference Include="Avalonia.Controls.WebView" Version="最新版本" />
 <AvaloniaUILicenseKey Include="YOUR_LICENSE_KEY" />
-```
-
-### 4. 替换当前WebView
-```xml
+```### 4. Replace the current WebView```xml
 <!-- 替换 SimpleWebView -->
 <NativeWebView Source="{Binding SiteUrl}" 
                NavigationCompleted="WebView_NavigationCompleted"
                NavigationStarted="WebView_NavigationStarted" />
-```
-
-### 5. 更新代码文件
-```csharp
+```### 5. Update code files```csharp
 private void WebView_NavigationCompleted(object? sender, WebViewNavigationCompletedEventArgs e)
 {
     if (e.IsSuccess)
@@ -106,14 +92,11 @@ private void WebView_NavigationCompleted(object? sender, WebViewNavigationComple
         Console.WriteLine($"页面加载成功: {e.Request}");
     }
 }
-```
+```## 🔄 Alternative implementation (if budget is limited)
 
-## 🔄 替代实现（如果预算有限）
+If you don't want to buy Avalonia Accelerate just yet, I can create an improved version for you:
 
-如果暂时不想购买Avalonia Accelerate，我可以为您创建一个改进版本：
-
-### 内嵌iframe方案
-```csharp
+### Embedded iframe solution```csharp
 // 生成包含NCF站点的HTML页面
 private string GenerateEmbeddedHtml(string ncfUrl)
 {
@@ -136,35 +119,33 @@ private string GenerateEmbeddedHtml(string ncfUrl)
 
 // 在SimpleWebView中显示
 await webView.LoadHtmlString(GenerateEmbeddedHtml(ncfUrl));
-```
+```## 📊 Plan comparison
 
-## 📊 方案对比
-
-| 特性 | 当前方案 | Avalonia Accelerate | WebViewControl-Avalonia |
+| Features | Current Solutions | Avalonia Accelerate | WebViewControl-Avalonia |
 |------|----------|-------------------|------------------------|
-| 真实网页显示 | ❌ | ✅ | ✅ |
-| JavaScript支持 | ❌ | ✅ | ✅ |
-| 成本 | 免费 | €89/年起 | 免费 |
-| 应用体积 | 小 | 小 | 大（+100MB） |
-| macOS支持 | ✅ | ✅ | ✅ |
-| 配置复杂度 | 简单 | 简单 | 复杂 |
-| 适合管理工具 | ✅ | ✅ | ❌ |
+| Real web page display | ❌ | ✅ | ✅ |
+| JavaScript support | ❌ | ✅ | ✅ |
+| Cost | Free | From €89/year | Free |
+| Application size | Small | Small | Large (+100MB) |
+| macOS Support | ✅ | ✅ | ✅ |
+| Configuration complexity | Simple | Simple | Complex |
+| Suitable for management tools | ✅ | ✅ | ❌ |
 
-## 💡 建议
+## 💡 Suggestions
 
-### 立即可行的方案：
-1. **短期**：我可以改进当前实现，添加iframe嵌入功能
-2. **中期**：试用Avalonia Accelerate（30天免费）
-3. **长期**：根据需求决定是否购买许可证
+### Immediately feasible solutions:
+1. **Short term**: I can improve the current implementation and add iframe embedding functionality
+2. **Midterm**: Try Avalonia Accelerate (30 days free)
+3. **Long-term**: Decide whether to purchase a license based on your needs
 
-### 最佳实践：
-- 对于**管理和监控**：当前方案已经足够
-- 对于**完整交互**：Avalonia Accelerate是最佳选择
-- 对于**预算敏感**：可以考虑WebViewControl-Avalonia
+### Best Practices:
+- For **Management and Monitoring**: Current solution is sufficient
+- For **Full Interaction**: Avalonia Accelerate is the best choice
+- For **Budget Sensitive**: Consider WebViewControl-Avalonia
 
-您希望我：
-1. 改进当前方案，添加更好的网页预览功能？
-2. 帮您实现Avalonia Accelerate WebView？
-3. 尝试WebViewControl-Avalonia免费方案？
+You want me to:
+1. Improve the current solution and add better web page preview function?
+2. Help you implement Avalonia Accelerate WebView?
+3. Try WebViewControl-Avalonia Free Plan?
 
-请告诉我您的偏好，我立即为您实施！ 
+Please tell me your preference and I will implement it for you immediately!

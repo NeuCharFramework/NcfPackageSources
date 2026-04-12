@@ -1,3 +1,5 @@
+[中文](readme.cn.md)
+
 # Domain Layer
 
 The `Domain` folder contains the core business logic and domain models of the system. These models reflect the core concepts and rules of the business, providing the foundation for the entire system. The `Domain` folder typically contains the following types of components:

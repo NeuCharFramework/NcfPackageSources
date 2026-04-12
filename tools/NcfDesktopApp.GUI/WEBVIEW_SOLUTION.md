@@ -1,33 +1,33 @@
-# NCF 桌面应用 - WebView 解决方案说明
+[中文版](WEBVIEW_SOLUTION.cn.md)
 
-## 🎯 当前实现状态
+# NCF Desktop Application - WebView Solution Description
 
-您的NCF桌面应用现在已经成功解决了WebView显示问题！
+## 🎯 Current implementation status
 
-### ✅ 已实现功能
+Your NCF desktop app now successfully resolves WebView display issues!
 
-1. **智能内嵌浏览器**
-   - 真实HTTP连接到NCF应用
-   - 获取并显示页面基本信息（标题、状态、大小等）
-   - 检测前端框架（Bootstrap、jQuery、Vue.js、Angular）
-   - 显示页面描述和技术信息
+### ✅ Function implemented
 
-2. **完整的用户体验**
-   - 自动连接NCF应用并获取页面信息
-   - 实时状态更新和连接反馈
-   - 美观的界面设计，包含地址栏和状态区域
-   - 刷新功能，可重新获取页面信息
+1. **Smart embedded browser**
+   - Real HTTP connection to NCF application
+   - Get and display basic page information (title, status, size, etc.)
+   - Detect front-end frameworks (Bootstrap, jQuery, Vue.js, Angular)
+   - Display page description and technical information
 
-3. **无缝外部浏览器集成**
-   - "在外部浏览器中打开"按钮
-   - 跨平台浏览器启动支持（Windows、macOS、Linux）
-   - 优雅的降级机制
+2. **Complete User Experience**
+   - Automatically connect to NCF application and obtain page information
+   - Real-time status updates and connection feedback
+   - Beautiful interface design, including address bar and status area
+   - Refresh function to re-obtain page information
 
-## 🌟 当前WebView功能演示
+3. **Seamless external browser integration**
+   - "Open in external browser" button
+   - Cross-platform browser launch support (Windows, macOS, Linux)
+   - Elegant downgrade mechanism
 
-启动NCF后，内嵌浏览器将显示：
+## 🌟 Current WebView function demonstration
 
-```
+After starting NCF, the embedded browser will display:```
 🌐 [地址栏显示: http://localhost:端口号]
 
 ┌─────────────────────────────────────┐
@@ -48,104 +48,98 @@
 └─────────────────────────────────────┘
 
 内嵌浏览器已获取页面基本信息 • 点击上方按钮在外部浏览器中获得完整体验
-```
+```## 🔧 Technical implementation highlights
 
-## 🔧 技术实现亮点
+### HTTP client integration
+- Use `HttpClient` to connect directly to NCF applications
+- 10 seconds timeout control to avoid long waiting
+- Asynchronous processing, does not block the UI thread
 
-### HTTP客户端集成
-- 使用`HttpClient`直接连接NCF应用
-- 10秒超时控制，避免长时间等待
-- 异步处理，不阻塞UI线程
+### Intelligent content analysis
+- Regular expression to extract page title and description
+- Automatically detect front-end technology stack
+- HTTP response status and header information display
 
-### 智能内容分析
-- 正则表达式提取页面标题和描述
-- 自动检测前端技术栈
-- HTTP响应状态和头信息显示
+### Cross-platform compatible
+- Windows: Shell execution
+- macOS: open command
+- Linux: xdg-open command
 
-### 跨平台兼容
-- Windows：Shell执行
-- macOS：open命令
-- Linux：xdg-open命令
+## 🚀 Upgrade path (optional)
 
-## 🚀 升级路径（可选）
+If you need truly full WebView functionality, you have the following options:
 
-如果您需要真正的完整WebView功能，有以下选项：
-
-### 选项1：Avalonia Accelerate（推荐）
-- **官方解决方案**：由Avalonia团队开发维护
-- **完整功能**：真实的网页渲染、JavaScript执行、交互支持
-- **跨平台**：Windows、macOS、Linux完整支持
-- **成本**：€89/年起（个人版）
-- **集成**：简单的包引用和少量代码修改
-
-```xml
+### Option 1: Avalonia Accelerate (recommended)
+- **Official Solution**: developed and maintained by the Avalonia team
+- **Full Features**: Real web page rendering, JavaScript execution, interactive support
+- **Cross-platform**: Full support for Windows, macOS, and Linux
+- **Cost**: from €89/year (Personal version)
+- **Integration**: simple package references and minor code modifications```xml
 <!-- 添加到 NcfDesktopApp.GUI.csproj -->
 <PackageReference Include="Avalonia.Controls.WebView" Version="最新版本" />
-```
+```### Option 2: WebViewControl-Avalonia (Free)
+- **Open Source Solution**: Based on CefGlue/Chromium
+- **FULL FEATURES**: Supports modern web standards
+- **Complexity**: Requires additional native library configuration
+- **Size**: The application package will be larger (including Chromium)
 
-### 选项2：WebViewControl-Avalonia（免费）
-- **开源方案**：基于CefGlue/Chromium
-- **完整功能**：支持现代网页标准
-- **复杂性**：需要额外的native库配置
-- **体积**：应用包会更大（包含Chromium）
+### Option 3: Keep current implementation
+- **Cost**: Free
+- **Maintenance**: Simple, no external dependencies
+- **Function**: Meet basic preview needs
+- **Recommended**: Sufficient for management tools
 
-### 选项3：保持当前实现
-- **成本**：免费
-- **维护**：简单，无外部依赖
-- **功能**：满足基本预览需求
-- **推荐**：对于管理工具足够使用
+## 🎨 Interface optimization suggestions
 
-## 🎨 界面优化建议
+### Current interface features
+- **Modern Design**: card layout, rounded borders
+- **Status feedback**: real-time connection status and error prompts
+- **Information rich**: Page technology stack and basic information
+- **Easy to operate**: refresh and external browser buttons
 
-### 当前界面特点
-- **现代化设计**：卡片式布局，圆角边框
-- **状态反馈**：实时连接状态和错误提示
-- **信息丰富**：页面技术栈和基本信息
-- **操作便捷**：刷新和外部浏览器按钮
+### Can be further optimized
+- Add connection history
+- Support multi-tab browsing
+- Add bookmark function
+- Integrated developer tools
 
-### 可进一步优化
-- 添加连接历史记录
-- 支持多标签页浏览
-- 添加书签功能
-- 集成开发者工具
+## 🔍 Troubleshooting
 
-## 🔍 故障排除
+### FAQ
 
-### 常见问题
+1. **Connection failed**
+   - Make sure the NCF application has started normally
+   - Check firewall settings
+   - Verify that the port number is correct
 
-1. **连接失败**
-   - 确保NCF应用已正常启动
-   - 检查防火墙设置
-   - 验证端口号是否正确
+2. **Incomplete information display**
+   - Some single-page applications may require JavaScript rendering
+   - There may be CORS restrictions
+   - It is recommended to use an external browser for the full experience
 
-2. **信息显示不完整**
-   - 某些单页应用可能需要JavaScript渲染
-   - 可能存在CORS限制
-   - 建议使用外部浏览器获得完整体验
+3. **External browser cannot be opened**
+   - Check system default browser settings
+   - Confirm that the URL format is correct
+   - Verify operating system permissions
 
-3. **外部浏览器无法打开**
-   - 检查系统默认浏览器设置
-   - 确认URL格式正确
-   - 验证操作系统权限
+## 📝 Usage suggestions
 
-## 📝 使用建议
+### Best Practices
+1. **Daily Management**: Use the built-in browser to quickly view NCF status
+2. **Detailed operation**: Perform complex configuration in an external browser
+3. **Development and Debugging**: Use page information to quickly diagnose problems
 
-### 最佳实践
-1. **日常管理**：使用内嵌浏览器快速查看NCF状态
-2. **详细操作**：在外部浏览器中进行复杂配置
-3. **开发调试**：利用页面信息快速诊断问题
+### User experience
+- Built-in browser provides quick preview and status monitoring
+- External browser provides full functionality experience
+- Combine both for optimal workflow
 
-### 用户体验
-- 内嵌浏览器提供快速预览和状态监控
-- 外部浏览器提供完整功能体验
-- 两者结合实现最佳工作流程
+## 📈 Summary
 
-## 📈 总结
+Current WebView solution:
+- ✅ **Core issue solved**: Ability to display NCF application information
+- ✅ **Provides practical value**: page status monitoring and quick access
+- ✅ **Maintain simplicity**: no complex dependencies, easy to maintain
+- ✅ **Supported scalability**: Easily upgrade to full WebView
 
-当前的WebView解决方案：
-- ✅ **解决了核心问题**：能够显示NCF应用信息
-- ✅ **提供了实用价值**：页面状态监控和快速访问
-- ✅ **保持了简洁性**：无复杂依赖，易于维护
-- ✅ **支持了扩展性**：可轻松升级到完整WebView
-
-这个解决方案在功能性、实用性和复杂性之间找到了很好的平衡点，为您的NCF桌面应用提供了有价值的内嵌浏览器体验！ 
+This solution strikes a great balance between functionality, usability, and complexity, providing a valuable embedded browser experience for your NCF desktop applications!

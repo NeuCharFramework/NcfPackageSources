@@ -1,13 +1,15 @@
-﻿## 调试说明
+[中文版](readme.cn.md)
 
-Razor Page 的独立库需要编译成 dll 后被 Senparc.Web 项目引用才能生效。
+﻿## Debugging instructions
 
-因此，如果需要快速调试 .cshtml 中的页面内容（避免每次都调试），可以将此文件夹（Areas）整体移动到 Senparc.Web 根目录下。
+The independent library of Razor Page needs to be compiled into a dll and then referenced by the Senparc.Web project to take effect.
 
-## 安全性
+Therefore, if you need to quickly debug the page content in .cshtml (to avoid debugging every time), you can move this folder (Areas) as a whole to the root directory of Senparc.Web.
 
-### 对Admin 模块进行访问限制
+## Security
 
-1. 为了提高安全性，我们建议对于线上生产环境中的制（如限制IP、限制本地访问，或在别处加载而不在生产环境中集成）。
+### Restrict access to the Admin module
 
-2. 同时，您也可以通过随机修改 Area 名字来提高后台的安全性。请注意：这样会导致所有的链接都需要修改对应的 Area 名字，并且安全性不及上述方法。
+1. In order to improve security, we recommend that you control the system in the online production environment (such as restricting IP, restricting local access, or loading it elsewhere instead of integrating it in the production environment).
+
+2. At the same time, you can also improve the security of the background by randomly modifying the Area name. Please note: This will cause all links to need to modify the corresponding Area names, and is less secure than the above method.

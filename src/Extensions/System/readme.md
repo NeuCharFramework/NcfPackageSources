@@ -1,13 +1,15 @@
-# System 文件夹说明
+[涓枃鐗圿(readme.cn.md)
 
-此文件夹中都是系统指定的 XNCF 顶级模块。
+# System folder description
 
-## 须知
+This folder contains system-specified XNCF top-level modules.
 
-`Senparc.Xncf.SystemCore` 是所有模块启动所必须的前置模块，所以每个项目必须添加（特别是数据库项目）。
+## Notice
 
-> 后期会考虑集成到一个专门的 DatabaseCore 项目中。
+`Senparc.Xncf.SystemCore` is a prerequisite module required for all modules to start, so every project must be added (especially database projects).
 
-## 数字前缀
+> We will consider integrating it into a dedicated DatabaseCore project later.
 
-命名前缀中的数字（如 `[5999]`）表示该模块在启动过程中的执行优先级，数字越大，执行越靠前。
+## Numeric prefix
+
+The number in the naming prefix (such as `[5999]`) indicates the execution priority of the module during the startup process. The larger the number, the higher the execution priority.

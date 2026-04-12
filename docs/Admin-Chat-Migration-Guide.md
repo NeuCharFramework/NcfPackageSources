@@ -1,83 +1,75 @@
-# 管理后台 AI 对话功能 - Migration 指南
+[中文版](Admin-Chat-Migration-Guide.cn.md)
 
-## 📋 执行清单
+#Manage background AI dialogue function - Migration Guide
 
-### ✅ 已完成的工作
+## 📋 Execution Checklist
 
-1. **数据模型创建**
-   - ✅ 3 个实体类（AdminChatSession, AdminChatMessage, AdminChatSessionModule）
-   - ✅ 3 个 DTO 类（继承 DtoBase<int>）
-   - ✅ 3 个 Repository 接口和实现类
+### ✅ Completed work
 
-2. **服务层实现**
-   - ✅ 3 个 Domain Service 类
-   - ✅ 1 个 AppService（9 个 API 接口）
-   - ✅ 所有服务已在 Register.cs 中注册
+1. **Data model creation**
+   - ✅ 3 entity classes (AdminChatSession, AdminChatMessage, AdminChatSessionModule)
+   - ✅ 3 DTO classes (inherit DtoBase<int>)
+   - ✅ 3 Repository interfaces and implementation classes
 
-3. **前端页面开发**
-   - ✅ 首页 AI 对话入口（Index.cshtml + Index.js）
-   - ✅ 对话任务页面（Chat.cshtml + Chat.js + Chat.css）
-   - ✅ 模块拖拽功能
+2. **Service layer implementation**
+   - ✅ 3 Domain Service classes
+   - ✅ 1 AppService (9 API interfaces)
+   - ✅ All services have been registered in Register.cs
 
-4. **代码质量**
-   - ✅ 编译成功（0 个错误）
-   - ✅ 应用程序可正常启动
-   - ✅ 所有依赖已正确注册
+3. **Front-end page development**
+   - ✅ Home page AI dialogue entrance (Index.cshtml + Index.js)
+   - ✅ Conversation task page (Chat.cshtml + Chat.js + Chat.css)
+   - ✅ Module drag and drop function
+
+4. **Code Quality**
+   - ✅ Compiled successfully (0 errors)
+   - ✅ The application can be launched normally
+   - ✅ All dependencies have been registered correctly
 
 ---
 
-## 🚀 待执行操作（醒来后操作）
+## 🚀 Operation to be performed (operation after waking up)
 
-### 步骤 1: 创建数据库 Migration
-
-```bash
+### Step 1: Create database migration```bash
 cd /Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources/tools/NcfSimulatedSite/Senparc.Web
 
 # 创建 Migration
 dotnet ef migrations add AddAdminChatTables \
   --project ../Senparc.Areas.Admin/Senparc.Areas.Admin.csproj \
   --context AdminSenparcEntities
-```
-
-**预期结果**：在 `Senparc.Areas.Admin/Migrations/` 文件夹中生成新的 Migration 文件。
+```**Expected results**: Generate new migration files in the `Senparc.Areas.Admin/Migrations/` folder.
 
 ---
 
-### 步骤 2: 检查 Migration 文件
+### Step 2: Check the Migration file
 
-打开生成的 Migration 文件（如 `20260325_AddAdminChatTables.cs`），确认包含以下 3 张表：
+Open the generated Migration file (such as `20260325_AddAdminChatTables.cs`) and confirm that it contains the following 3 tables:
 
 1. **ADMIN_AdminChatSession**
-   - 字段：Id, Title, UserId, Status, LastMessageTime, AddTime, LastUpdateTime, TenantId, Flag
+   - Fields: Id, Title, UserId, Status, LastMessageTime, AddTime, LastUpdateTime, TenantId, Flag
 
 2. **ADMIN_AdminChatMessage**
-   - 字段：Id, SessionId, RoleType, Content, Sequence, UserFeedback, ModelIdentifier, AddTime, LastUpdateTime, TenantId, Flag
+   - Fields: Id, SessionId, RoleType, Content, Sequence, UserFeedback, ModelIdentifier, AddTime, LastUpdateTime, TenantId, Flag
 
 3. **ADMIN_AdminChatSessionModule**
-   - 字段：Id, SessionId, XncfModuleUid, ModuleName, ModuleVersion, AddedTime, AddTime, LastUpdateTime, TenantId, Flag
+   - Fields: Id, SessionId, XncfModuleUid, ModuleName, ModuleVersion, AddedTime, AddTime, LastUpdateTime, TenantId, Flag
 
 ---
 
-### 步骤 3: 执行 Migration
-
-```bash
+### Step 3: Execute Migration```bash
 cd /Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources/tools/NcfSimulatedSite/Senparc.Web
 
 # 应用 Migration 到数据库
 dotnet ef database update \
   --project ../Senparc.Areas.Admin/Senparc.Areas.Admin.csproj \
   --context AdminSenparcEntities
-```
-
-**预期结果**：数据库中创建 3 张新表，并显示 "Done." 消息。
+```**Expected results**: 3 new tables are created in the database and the "Done." message is displayed.
 
 ---
 
-### 步骤 4: 验证数据库表
+### Step 4: Validate database tables
 
-使用数据库管理工具（如 Navicat, DBeaver）连接数据库，检查：
-
-```sql
+Use database management tools (such as Navicat, DBeaver) to connect to the database and check:```sql
 -- 检查表是否存在
 SELECT * FROM ADMIN_AdminChatSession LIMIT 0;
 SELECT * FROM ADMIN_AdminChatMessage LIMIT 0;
@@ -87,152 +79,146 @@ SELECT * FROM ADMIN_AdminChatSessionModule LIMIT 0;
 DESCRIBE ADMIN_AdminChatSession;
 DESCRIBE ADMIN_AdminChatMessage;
 DESCRIBE ADMIN_AdminChatSessionModule;
-```
+```---
 
----
-
-### 步骤 5: 启动应用程序
-
-```bash
+### Step 5: Launch the application```bash
 cd /Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources/tools/NcfSimulatedSite/Senparc.Web
 
 # 启动应用
 dotnet run
-```
-
-**预期结果**：
-- 应用程序成功启动
-- 显示 "Now listening on: http://localhost:5000"
-- 没有数据库相关错误
+```**Expected results**:
+- Application started successfully
+- Display "Now listening on: http://localhost:5000"
+- No database related errors
 
 ---
 
-### 步骤 6: 功能测试
+### Step 6: Functional Testing
 
-#### 6.1 首页测试
+#### 6.1 Home Page Test
 
-1. 访问 `http://localhost:5000/Admin`
-2. 登录管理后台
-3. 检查首页改版效果：
-   - ✅ 顶部统计区域正常显示
-   - ✅ AI 对话入口提示框显示（醒目、有 margin）
-   - ✅ "开始对话"按钮可点击
-   - ✅ 模块卡片保留
+1. Visit `http://localhost:5000/Admin`
+2. Log in to the management background
+3. Check the effect of homepage revision:
+   - ✅ The top statistics area is displayed normally
+   - ✅ AI dialogue entrance prompt box display (eye-catching, with margin)
+   - ✅ "Start Conversation" button is clickable
+   - ✅ Module cards are retained
 
-#### 6.2 模块拖拽测试
+#### 6.2 Module drag and drop test
 
-1. 在首页，拖拽任一模块卡片
-2. 拖拽到 AI 对话入口提示框上方
-3. 检查效果：
-   - ✅ 拖拽时提示框高亮/变色
-   - ✅ 释放后模块名称显示在提示框下方
-   - ✅ 可以删除已选模块（点击 x 按钮）
+1. On the homepage, drag any module card
+2. Drag it to the top of the AI dialogue entrance prompt box
+3. Check the effect:
+   - ✅ The prompt box is highlighted/discolored when dragging
+   - ✅ After release, the module name is displayed below the prompt box
+   - ✅ Selected modules can be deleted (click the x button)
 
-#### 6.3 对话页面测试
+#### 6.3 Dialogue page test
 
-1. 在对话入口输入文字，点击"开始对话"
-2. 跳转到对话页面 `/Admin/AdminChat/Chat`
-3. 检查页面布局：
-   - ✅ 左侧会话列表显示
-   - ✅ 右侧对话窗口显示
-   - ✅ 初始消息已发送
-   - ✅ AI 回复显示（占位文本）
+1. Enter text in the conversation entry and click "Start Conversation"
+2. Jump to the chat page `/Admin/AdminChat/Chat`
+3. Check the page layout:
+   - ✅ Session list display on the left
+   - ✅ The dialogue window on the right is displayed
+   - ✅ Initial message sent
+   - ✅ AI reply display (placeholder text)
 
-#### 6.4 对话交互测试
+#### 6.4 Dialogue interaction test
 
-1. 在右侧对话窗口输入消息，按 Enter 发送
-2. 检查效果：
-   - ✅ 用户消息显示在右侧（蓝色头像）
-   - ✅ AI 回复显示在左侧（机器人头像）
-   - ✅ 消息时间戳正确
-   - ✅ 滚动到最新消息
+1. Enter a message in the dialog window on the right and press Enter to send.
+2. Check the effect:
+   - ✅ User messages are displayed on the right (blue avatar)
+   - ✅ AI replies are shown on the left (bot avatar)
+   - ✅ Message timestamps are correct
+   - ✅Scroll to the latest news
 
-3. 测试点赞/点踩功能：
-   - ✅ 点击 AI 消息的 👍 或 👎 图标
-   - ✅ 状态切换正常（高亮/取消高亮）
+3. Test the like/dislike function:
+   - ✅ Click on the 👍 or 👎 icon of AI Message
+   - ✅ Status switching is normal (highlight/cancel highlight)
 
-4. 测试会话切换：
-   - ✅ 点击左侧不同会话
-   - ✅ 右侧内容切换正确
-   - ✅ 消息历史加载正确
+4. Test session switching:
+   - ✅ Click on different conversations on the left
+   - ✅ The content on the right is switched correctly
+   - ✅ Message history is loaded correctly
 
-5. 测试新建对话：
-   - ✅ 点击"新建对话"按钮
-   - ✅ 创建新会话，切换到新对话
-
----
-
-## ⚠️ 已知限制和待扩展功能
-
-### 当前限制
-
-1. **AI 回复为占位文本**
-   - `AdminChatAppService.GenerateAIResponseAsync()` 方法返回固定文本
-   - **原因**: 需要配置真实的 AI 模型接口
-   - **扩展方向**: 集成 AIKernel 模块，调用配置的 AI 模型
-
-2. **模块上下文暂未传递给 AI**
-   - 选中的模块信息会保存到数据库，但暂未在 AI 生成时使用
-   - **扩展方向**: 在 `GenerateAIResponseAsync` 中读取关联模块，加入 prompt
-
-3. **会话管理功能简化**
-   - 暂不支持会话归档、删除、重命名等操作
-   - **扩展方向**: 在会话列表添加更多操作按钮（归档、删除、导出等）
-
-### 未来扩展方向
-
-1. **文件上传支持**
-   - 支持上传文档、图片到对话中
-   - 使用 FileManager 模块存储文件
-
-2. **语音对话支持**
-   - 集成语音识别和 TTS
-   - 支持语音消息
-
-3. **对话导出功能**
-   - 导出对话为 Markdown / PDF
-   - 分享对话链接
-
-4. **多人协作对话**
-   - 支持多个管理员在同一会话中对话
-   - 实时消息推送（WebSocket）
-
-5. **智能建议和快捷指令**
-   - 根据对话历史提供智能建议
-   - 支持 `/` 快捷指令（如 `/help`, `/clear` 等）
+5. Test the new conversation:
+   - ✅ Click the "New Conversation" button
+   - ✅ Create a new conversation and switch to a new conversation
 
 ---
 
-## 📊 功能清单总结
+## ⚠️ Known limitations and functions to be expanded
 
-| 功能模块 | 状态 | 说明 |
+### Current Limitations
+
+1. **AI replies as placeholder text**
+   - `AdminChatAppService.GenerateAIResponseAsync()` method returns fixed text
+   - **Reason**: Need to configure a real AI model interface
+   - **Extension direction**: Integrate the AIKernel module and call the configured AI model
+
+2. **Module context has not been passed to AI yet**
+   - The selected module information will be saved to the database, but it will not be used in AI generation yet.
+   - **Extension direction**: Read related modules in `GenerateAIResponseAsync` and add prompt
+
+3. **Simplified session management function**
+   - Session archiving, deletion, renaming and other operations are not currently supported.
+   - **Extension direction**: Add more operation buttons (archive, delete, export, etc.) in the conversation list
+
+### Future expansion directions
+
+1. **File upload support**
+   - Support uploading documents and pictures to conversations
+   - Use FileManager module to store files
+
+2. **Voice dialogue support**
+   - Integrated speech recognition and TTS
+   - Support voice messages
+
+3. **Conversation export function**
+   - Export conversations to Markdown/PDF
+   - Share conversation link
+
+4. **Multi-person collaborative dialogue**
+   - Support multiple administrators talking in the same session
+   - Real-time message push (WebSocket)
+
+5. **Smart suggestions and shortcut commands**
+   - Intelligent suggestions based on conversation history
+   - Support `/` shortcut commands (such as `/help`, `/clear`, etc.)
+
+---
+
+## 📊 Function list summary
+
+| Function module | Status | Description |
 |---------|------|------|
-| 首页统计区域保留 | ✅ 已完成 | 原有功能完全保留 |
-| AI 对话入口提示框 | ✅ 已完成 | 醒目设计，支持输入和拖拽 |
-| 模块拖拽功能 | ✅ 已完成 | HTML5 Drag API，无需库 |
-| 对话任务页面 | ✅ 已完成 | 左右布局，现代化设计 |
-| 会话历史管理 | ✅ 已完成 | 列表显示，切换，新建 |
-| 消息发送接收 | ✅ 已完成 | 用户/AI 消息区分 |
-| 消息反馈功能 | ✅ 已完成 | 点赞/点踩 |
-| 模块上下文关联 | ✅ 已完成 | 保存到数据库 |
-| API 接口完整 | ✅ 已完成 | 9 个接口，CRUD 完整 |
-| 编译通过 | ✅ 已完成 | 0 个错误 |
-| AI 真实回复 | ⏳ 待扩展 | 需要集成 AI 模型 |
+| Home page statistics area retained | ✅ Completed | Original functions fully retained |
+| AI dialogue entrance prompt box | ✅ Completed | Eye-catching design, supports input and drag and drop |
+| Module drag and drop function | ✅ Completed | HTML5 Drag API, no library required |
+| Dialogue task page | ✅ Completed | Left and right layout, modern design |
+| Session history management | ✅ Completed | List display, switch, create new |
+| Message sending and receiving | ✅ Completed | User/AI message distinction |
+| Message feedback function | ✅ Completed | Like/dislike |
+| Module context association | ✅ Completed | Save to database |
+| API interface complete | ✅ Completed | 9 interfaces, CRUD complete |
+| Compiled | ✅ Completed | 0 errors |
+| AI real reply | ⏳ To be expanded | Need to integrate AI model |
 
 ---
 
-## 🎯 技术亮点
+## 🎯Technical Highlights
 
-1. **零新依赖**: 完全使用系统现有的 Vue.js、Element UI、axios，无新增库
-2. **DDD 架构**: 严格遵循 Domain 实体、Service、AppService 分层
-3. **Repository 模式**: 为每个实体创建对应的 Repository 接口和实现
-4. **DTO 规范化**: 所有 DTO 继承 `DtoBase<int>`，统一基类属性管理
-5. **拖拽交互**: 原生 HTML5 Drag API，无需第三方库
-6. **现代化 UI**: 符合系统风格，响应式设计，流畅动画
-7. **API 安全**: 使用 `[BackendJwtAuthorize]` 保护所有接口
+1. **Zero new dependencies**: completely use the existing systemVue.js, Element UI, axios, no new libraries
+2. **DDD architecture**: Strictly follow the Domain entity, Service, AppService layering
+3. **Repository pattern**: Create corresponding Repository interface and implementation for each entity
+4. **DTO standardization**: All DTOs inherit `DtoBase<int>` and unify base class attribute management
+5. **Drag interaction**: Native HTML5 Drag API, no need for third-party libraries
+6. **Modern UI**: In line with system style, responsive design, smooth animation
+7. **API Security**: Use `[BackendJwtAuthorize]` to protect all interfaces
 
 ---
 
-**文档创建日期**: 2026-03-25  
-**预计执行时间**: 10-15 分钟  
-**难度等级**: ⭐⭐ (中等)
+**Document creation date**: 2026-03-25
+**Estimated execution time**: 10-15 minutes
+**Difficulty Level**: ⭐⭐ (Medium)

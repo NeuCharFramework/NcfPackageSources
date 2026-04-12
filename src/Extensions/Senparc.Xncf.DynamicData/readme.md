@@ -1,5 +1,7 @@
-﻿## Senparc.Xncf.DynamicData 项目说明
+[中文版](readme.cn.md)
 
-> 本项目为 Xncf 模板项目，用于快速创建可快速嵌入 NeuCharFramework（NCF）的 Xncf 模板项目。
+﻿## Senparc.Xncf.DynamicData project description
 
-动态数据基础模块，用于创建和管理动态数据
+> This project is an Xncf template project, used to quickly create Xncf template projects that can be quickly embedded in NeuCharFramework (NCF).
+
+Dynamic data basic module for creating and managing dynamic data

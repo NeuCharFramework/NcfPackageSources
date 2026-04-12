@@ -1,56 +1,59 @@
-## Senparc.Web.DatabasePlant Module Overview
+[中文版](readme.cn.md)
 
-"Plant" here refers to a "maintenance tarmac" -- it is used when you need to perform maintenance on modules.
+## Senparc.Web.DatabasePlant module overview
 
-1. This project is used with the `dotnet ef migrations add` command to specify a startup project with a specific target framework (e.g. netcoreapp3.1 or net6.0, net8.0), allowing you to work with projects targeting any framework (e.g. netstandard2.1) without any modifications.
+“Plant” means a maintenance apron (tarmac): you use it when you need to service modules.
 
-2. This project should not be referenced by the Senparc.Web project, so it will not be deployed to production -- it is only used during development.
+1. Use this project as the startup project (with an explicit target framework such as netcoreapp3.1, net6.0, or net8.0) when running `dotnet ef migrations add`, so you can work with projects targeting any framework (for example netstandard2.1) without changing them.
 
-3. Projects that need to execute database migration commands must be referenced by this project.
+2. Do not reference this project from Senparc.Web; it is not deployed to production and is for development only.
 
+3. Any project that must run database migrations should reference this project.
 
-### How It Works
+### How it works
 
-Senparc.Ncf.DatabasePlant references all officially implemented NCF database DatabaseConfiguration projects, such as Senparc.Ncf.Database.MySql, Senparc.Ncf.Database.SqlServer, etc.
+Senparc.Ncf.DatabasePlant references all official NCF database `DatabaseConfiguration` packages, such as Senparc.Ncf.Database.MySql and Senparc.Ncf.Database.SqlServer.
 
 ### Purpose
 
-With references to all database DatabaseConfiguration projects, any project (module) that references Senparc.Ncf.DatabasePlant gains the ability to work with all implemented databases.
+Because all database providers are referenced, any project (module) that references Senparc.Ncf.DatabasePlant can use every supported database.
 
-However, deploying a bundle of database Providers to production is unnecessary overhead (although it typically does not affect runtime performance). Therefore, we recommend using it only during maintenance (Debug) and excluding it in production. To smoothly switch between these scenarios, add a build condition when referencing Senparc.Ncf.DatabasePlant:
+Deploying many providers to production is unnecessary overhead (usually not a runtime issue). Prefer using this only during Debug and excluding it from production. To switch cleanly, add a conditional `ProjectReference` when referencing Senparc.Ncf.DatabasePlant, for example:
 
-``` XML
+```xml
 <ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
 ```
 
-This is exactly the origin of the "tarmac" name: we only let the project sit on the tarmac during Debug, where it can perform batch operations such as database migrations across all databases. When NCF takes off (Release), this package is automatically ignored and adds no extra burden to the system.
+That is where the “tarmac” name comes from: during Debug the project parks here so you can batch migrations across databases. After Release, the package is ignored and adds no cost.
 
-## Manual Operations
+## Manual operations
 
-When you do not have an NCF project that can be executed directly (primarily the XncfBuilder module), you can use manual command-line operations to generate databases. For example, using SQLite:
+When you have no runnable NCF project (often when using the XncfBuilder module), you can use the CLI. Examples use placeholders; replace with paths on your machine.
 
-```
-dotnet ef migrations add Init -c SystemManagerSenparcEntities_Sqlite -s E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\DevelopmentTools\Senparc.Web.DatabasePlant -o E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\System\Senparc.Xncf.SystemManager\Domain\Migrations\Sqlite
-```
-
-Using MySQL:
+SQLite:
 
 ```
-dotnet ef migrations add Init -c SystemManagerSenparcEntities_MySql -s E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\DevelopmentTools\Senparc.Web.DatabasePlant -o E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\System\Senparc.Xncf.SystemManager\Domain\Migrations\Mysql
+dotnet ef migrations add Init -c SystemManagerSenparcEntities_Sqlite -s <path-to-Senparc.Web.DatabasePlant> -o <path-to-SystemManager-Domain-Migrations-Sqlite>
 ```
 
-Using SQL Server:
+MySQL:
 
 ```
-dotnet ef migrations add Init -c SystemManagerSenparcEntities_SqlServer -s E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\DevelopmentTools\Senparc.Web.DatabasePlant -o E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\System\Senparc.Xncf.SystemManager\Domain\Migrations\SqlServer
+dotnet ef migrations add Init -c SystemManagerSenparcEntities_MySql -s <path-to-Senparc.Web.DatabasePlant> -o <path-to-SystemManager-Domain-Migrations-Mysql>
 ```
 
-Using PostgreSQL:
+SQL Server:
 
 ```
-dotnet ef migrations add Init -c SystemManagerSenparcEntities_PostgreSQL -s E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\DevelopmentTools\Senparc.Web.DatabasePlant -o E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\Extensions\System\Senparc.Xncf.SystemManager\Domain\Migrations\PostgreSQL
+dotnet ef migrations add Init -c SystemManagerSenparcEntities_SqlServer -s <path-to-Senparc.Web.DatabasePlant> -o <path-to-SystemManager-Domain-Migrations-SqlServer>
 ```
 
-## Update Notes
+PostgreSQL:
 
-Whenever any `Senparc.Ncf.Database.xx` library version is upgraded, the version of this project should also be upgraded to ensure it always references the latest library versions.
+```
+dotnet ef migrations add Init -c SystemManagerSenparcEntities_PostgreSQL -s <path-to-Senparc.Web.DatabasePlant> -o <path-to-SystemManager-Domain-Migrations-PostgreSQL>
+```
+
+## Version updates
+
+Whenever any `Senparc.Ncf.Database.*` library version changes, bump this project’s version so references stay aligned.

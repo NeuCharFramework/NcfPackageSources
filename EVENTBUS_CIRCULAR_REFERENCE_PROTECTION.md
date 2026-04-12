@@ -1,17 +1,18 @@
-# EventBus 循环引用防护机制 - 技术文档
+[中文版](EVENTBUS_CIRCULAR_REFERENCE_PROTECTION.cn.md)
 
-## 📋 概述
+#EventBus circular reference protection mechanism - technical documentation
 
-本文档描述了 Senparc NCF EventBus 系统新增的循环引用防护机制，用于防止事件链中的无限循环和资源耗尽。
+## 📋 Overview
+
+This document describes the new circular reference protection mechanism of the Senparc NCF EventBus system to prevent infinite loops and resource exhaustion in the event chain.
 
 ---
 
-## 🎯 问题背景
+## 🎯 Problem background
 
-### 循环引用风险场景
+### Circular reference risk scenario
 
-在事件驱动架构中，多个模块之间可能通过事件进行交互，容易产生循环引用：
-
+In an event-driven architecture, multiple modules may interact through events, which can easily lead to circular references:
 ```
 场景 1: 直接循环
 HandlerA 处理 EventA → 发布 EventB
@@ -27,10 +28,7 @@ HandlerC 处理 EventC → 发布 EventA
 场景 3: 深度递归
 HandlerA 处理 EventA → 发布 EventA（新实例）
 → 无限递归
-```
-
-### PromptRange 实际场景分析
-
+```### PromptRange Actual Scenario Analysis
 ```
 PromptOptimizationService.OptimizePromptAsync()
   ↓ 发布 PromptOptimizationRequestEvent
@@ -38,30 +36,28 @@ PromptOptimizationRequestHandler
   ↓ 发布 PromptOptimizationResponseEvent  
 PromptOptimizationResponseHandler
   ↓ 完成请求（不发布新事件）✅ 安全
-```
-
-**当前 PromptRange 实现是安全的**，因为：
-- 响应处理器只完成 TaskCompletionSource，不发布新事件
-- 请求-响应模式天然避免了循环
+```**The current PromptRange implementation is safe** because:
+- The response handler only completes the TaskCompletionSource and does not publish new events
+- The request-response pattern naturally avoids loops
 
 ---
 
-## 🛡️ 防护机制设计
+## 🛡️ Protection mechanism design
 
-### 1. 事件链追踪
+### 1. Event chain tracking
 
-每个事件包含以下元数据：
+Each event contains the following metadata:
 
-| 属性 | 类型 | 说明 |
+| Properties | Type | Description |
 |------|------|------|
-| `Id` | `Guid` | 事件唯一标识 |
-| `ParentEventId` | `Guid?` | 父事件ID（用于追踪事件链） |
-| `Depth` | `int` | 事件链深度（根事件为0，每派生一次+1） |
-| `EventChain` | `string` | 事件类型链路径（格式：EventA→EventB→EventC） |
+| `Id` | `Guid` | Event unique identifier |
+| `ParentEventId` | `Guid?` | Parent event ID (used to track event chains) |
+| `Depth` | `int` | Event chain depth (root event is 0, each derivation +1) |
+| `EventChain` | `string` | Event type chain path (format: EventA→EventB→EventC) |
 
-### 2. 三层防护策略
+### 2. Three-layer protection strategy
 
-#### 🔸 第一层：深度限制检查
+#### 🔸 Layer 1: Depth Limit Check
 ```csharp
 // 在 EventBusHostedService 中，处理事件前检查深度
 if (@event.Depth >= _options.MaxEventChainDepth)
@@ -69,11 +65,9 @@ if (@event.Depth >= _options.MaxEventChainDepth)
     _logger.LogError("Event chain depth limit exceeded: {Depth}", @event.Depth);
     continue; // 丢弃事件，不处理
 }
-```
+```**Default configuration**: `MaxEventChainDepth = 10`
 
-**默认配置**: `MaxEventChainDepth = 10`
-
-#### 🔸 第二层：循环路径检测
+#### 🔸 Second layer: circular path detection
 ```csharp
 // 检查事件链中是否有重复的事件类型
 if (@event.EventChain.Contains(currentEventType))
@@ -82,34 +76,27 @@ if (@event.EventChain.Contains(currentEventType))
         @event.EventChain, currentEventType);
     continue; // 丢弃事件
 }
-```
+```**Detection logic**: If the current event type already exists in the event chain, it is determined to be a circular reference.
 
-**检测逻辑**: 如果事件链中已经存在当前事件类型，则判定为循环引用。
-
-#### 🔸 第三层：发布前预检
+#### 🔸 The third level: Pre-inspection before release
 ```csharp
 // 在 PublishDerivedAsync 中，发布前检查
 if (parentEvent.HasCircularReference(newEventType))
 {
     throw new InvalidOperationException("Circular reference detected");
 }
-```
+```**Advantage**: Block the loop before publishing, preventing events from entering the queue.
 
-**优势**: 在发布前就阻止循环，避免事件进入队列。
+### 3. Event derivation mechanism
 
-### 3. 事件派生机制
-
-使用 `PublishDerivedAsync` 方法发布派生事件，自动继承父事件的链信息：
-
+Use the `PublishDerivedAsync` method to publish a derived event and automatically inherit the chain information of the parent event:
 ```csharp
 // ❌ 错误用法：直接发布，丢失事件链信息
 await _eventBus.PublishAsync(responseEvent);
 
 // ✅ 正确用法：使用 PublishDerivedAsync，自动继承链信息
 await _eventBus.PublishDerivedAsync(responseEvent, parentEvent);
-```
-
-**工作原理**：
+```**How ​​it works**:
 ```csharp
 // 自动派生元数据
 var metadata = parentEvent.DeriveMetadata();
@@ -121,22 +108,16 @@ var derivedEvent = @event with
     Depth = metadata.Depth,              // 父深度 + 1
     EventChain = metadata.EventChain     // 追加当前事件类型
 };
-```
+```---
 
----
+## 📝 User Guide
 
-## 📝 使用指南
-
-### 场景 1: 发布根事件（无父事件）
-
+### Scenario 1: Publish root event (no parent event)
 ```csharp
 // 直接使用 PublishAsync
 var requestEvent = new PromptInitRequestEvent(requestId, modelId);
 await _eventBus.PublishAsync(requestEvent);
-```
-
-### 场景 2: 在 Handler 中发布派生事件
-
+```### Scenario 2: Publish derived events in Handler
 ```csharp
 public class MyEventHandler : IIntegrationEventHandler<MyRequestEvent>
 {
@@ -152,10 +133,7 @@ public class MyEventHandler : IIntegrationEventHandler<MyRequestEvent>
         await _eventBus.PublishDerivedAsync(responseEvent, @event);
     }
 }
-```
-
-### 场景 3: 配置 EventBus 选项
-
+```### Scenario 3: Configure EventBus options
 ```csharp
 services.AddSenparcEventBus(options =>
 {
@@ -167,42 +145,34 @@ services.AddSenparcEventBus(options =>
     options.MaxRetryAttempts = 3;                         // 最大重试次数
 }, 
 typeof(MyAssembly).Assembly);
-```
+```---
 
----
+## 🔍 Debugging and Monitoring
 
-## 🔍 调试和监控
+### Log output example
 
-### 日志输出示例
-
-#### 正常事件处理
+#### Normal event handling
 ```
 [Information] Processing event PromptInitRequestEvent (Id: xxx, Depth: 0, Chain: )
 [Information] Publishing derived event: PromptInitResponseEvent (ParentId: xxx, Depth: 1, Chain: PromptInitRequestEvent)
-```
-
-#### 检测到循环引用
+```#### Circular reference detected
 ```
 [Error] Circular reference detected: PromptInitRequestEvent (Id: xxx, Chain: PromptInitRequestEvent→PromptInitResponseEvent→PromptInitRequestEvent)
-```
-
-#### 超过深度限制
+```#### Depth limit exceeded
 ```
 [Error] Event chain depth limit exceeded: PromptTestEvent (Id: xxx, Depth: 10, Chain: Event1→Event2→...→Event10)
-```
+```### Key indicator monitoring
 
-### 关键指标监控
-
-1. **事件处理时间**: 每个事件的处理耗时（毫秒）
-2. **事件链深度**: 监控平均深度和最大深度
-3. **循环引用次数**: 被阻止的循环引用数量
-4. **并发处理数**: 当前活跃的事件处理任务数
+1. **Event processing time**: The processing time of each event (milliseconds)
+2. **Event chain depth**: Monitor the average depth and maximum depth
+3. **Number of circular references**: The number of blocked circular references
+4. **Number of concurrent processing**: The number of currently active event processing tasks
 
 ---
 
-## 🧪 测试验证
+## 🧪 Test verification
 
-### 1. 循环引用检测测试
+### 1. Circular reference detection test
 ```csharp
 [TestMethod]
 public async Task EventBus_CircularReferenceDetection_ShouldPreventLoop()
@@ -210,9 +180,7 @@ public async Task EventBus_CircularReferenceDetection_ShouldPreventLoop()
     // 模拟事件链: TestEventA → TestEventB → TestEventA
     // 应该在发布第三个事件时抛出异常
 }
-```
-
-### 2. 深度限制测试
+```### 2. Depth limit test
 ```csharp
 [TestMethod]
 public async Task EventBus_MaxDepthLimit_ShouldStopProcessing()
@@ -220,9 +188,7 @@ public async Task EventBus_MaxDepthLimit_ShouldStopProcessing()
     // 设置 MaxEventChainDepth = 3
     // 发布递归事件，验证深度超过3时停止处理
 }
-```
-
-### 3. 高并发测试
+```### 3. High concurrency testing
 ```csharp
 [TestMethod]
 public async Task InMemoryEventBus_PublishAndHandle_ShouldWork()
@@ -230,37 +196,34 @@ public async Task InMemoryEventBus_PublishAndHandle_ShouldWork()
     // 发布 10000 个事件，验证全部正确处理
     // 验证非阻塞特性和并发性能
 }
-```
-
-**测试结果**: ✅ 所有测试通过
+```**Test Results**: ✅ All tests passed
 
 ---
 
-## 📊 性能影响分析
+## 📊 Performance impact analysis
 
-### 新增防护机制的性能开销
+### Performance overhead of new protection mechanism
 
-| 检查项 | 时间复杂度 | 性能影响 | 说明 |
+| Check items | Time complexity | Performance impact | Description |
 |--------|-----------|---------|------|
-| 深度检查 | O(1) | < 0.01ms | 简单整数比较 |
-| 循环检测 | O(n) | < 0.1ms | n = 事件链长度（通常 < 10） |
-| 事件派生 | O(n) | < 0.5ms | 字符串拼接和对象创建 |
+| Deep checking | O(1) | < 0.01ms | Simple integer comparison |
+| Loop detection | O(n) | < 0.1ms | n = event chain length (usually < 10) |
+| Event derivation | O(n) | < 0.5ms | String concatenation and object creation |
 
-**总体影响**: < 1ms / 事件，对高并发场景几乎无影响。
+**Overall Impact**: < 1ms/event, almost no impact on high-concurrency scenarios.
 
-### 并发性能基准测试
+### Concurrency performance benchmark test
 
-- **10,000 个事件处理**: ~450ms
-- **平均吞吐量**: ~22,000 events/sec
-- **并发度**: 基于 CPU 核心数动态调整（默认 ProcessorCount * 2）
+- **10,000 event handling**: ~450ms
+- **Average Throughput**: ~22,000 events/sec
+- **Concurrency**: Dynamically adjusted based on the number of CPU cores (default ProcessorCount * 2)
 
 ---
 
-## ⚠️ 注意事项
+## ⚠️ Notes
 
-### 1. 记录类型（record）的限制
-由于 C# record 的不可变特性，必须使用 `with` 表达式来更新属性：
-
+### 1. Record type (record) restrictions
+Due to the immutable nature of C# records, properties must be updated using a `with` expression:
 ```csharp
 var derivedEvent = @event with
 {
@@ -268,58 +231,48 @@ var derivedEvent = @event with
     Depth = metadata.Depth,
     EventChain = metadata.EventChain
 };
-```
-
-### 2. 事件必须继承 IntegrationEvent
-`PublishDerivedAsync` 要求事件类型继承自 `IntegrationEvent` 基类，而非仅实现接口：
-
+```### 2. The event must inherit IntegrationEvent
+`PublishDerivedAsync` requires the event type to inherit from the `IntegrationEvent` base class instead of just implementing the interface:
 ```csharp
 // ✅ 正确
 public record MyEvent(string Data) : IntegrationEvent;
 
 // ❌ 错误
 public record MyEvent(string Data) : IIntegrationEvent;
-```
+```### 3. Performance tuning suggestions
 
-### 3. 性能调优建议
-
-- **MaxConcurrency**: 建议设置为数据库连接池大小的一半
-- **MaxEventChainDepth**: 正常业务场景建议 5-10，复杂场景可增加到 20
-- **EnableCircularReferenceDetection**: 生产环境建议启用
-- **EnableDuplicateDetection**: 对于幂等性要求高的场景必须启用
+- **MaxConcurrency**: It is recommended to set it to half the size of the database connection pool
+- **MaxEventChainDepth**: 5-10 is recommended for normal business scenarios, and can be increased to 20 for complex scenarios.
+- **EnableCircularReferenceDetection**: It is recommended to enable it in production environment
+- **EnableDuplicateDetection**: Must be enabled for scenarios with high idempotence requirements
 
 ---
 
-## 🔄 迁移指南
+## 🔄 Migration Guide
 
-### 升级现有代码
+### Upgrade existing code
 
-如果你的代码已经在使用 EventBus，需要进行以下调整：
+If your code is already using EventBus, the following adjustments need to be made:
 
-#### Step 1: 更新事件处理器中的发布逻辑
+#### Step 1: Update the publishing logic in the event handler
 
-**修改前**:
+**Before modification**:
 ```csharp
 public async Task Handle(MyRequestEvent @event, CancellationToken ct)
 {
     var response = new MyResponseEvent(/* ... */);
     await _eventBus.PublishAsync(response);
 }
-```
-
-**修改后**:
+```**After modification**:
 ```csharp
 public async Task Handle(MyRequestEvent @event, CancellationToken ct)
 {
     var response = new MyResponseEvent(/* ... */);
     await _eventBus.PublishDerivedAsync(response, @event); // ✅ 使用 PublishDerivedAsync
 }
-```
+```#### Step 2: Verify event definition
 
-#### Step 2: 验证事件定义
-
-确保所有事件都继承自 `IntegrationEvent` 基类：
-
+Make sure all events inherit from the `IntegrationEvent` base class:
 ```csharp
 // ✅ 正确
 public record PromptInitRequestEvent(string RequestId, int? ModelId) 
@@ -330,12 +283,9 @@ public class PromptInitRequestEvent : IIntegrationEvent
 {
     // ...
 }
-```
+```#### Step 3: Configure protection options (optional)
 
-#### Step 3: 配置防护选项（可选）
-
-如果需要自定义配置，在注册 EventBus 时提供选项：
-
+If custom configuration is required, provide the option when registering EventBus:
 ```csharp
 services.AddSenparcEventBus(options =>
 {
@@ -343,71 +293,65 @@ services.AddSenparcEventBus(options =>
     options.EnableCircularReferenceDetection = true;
 }, 
 typeof(YourAssembly).Assembly);
-```
+```---
+
+## 🐛 Troubleshooting
+
+### Question 1: InvalidOperationException - Circular reference detected
+
+**Cause**: There is a circular reference in the event chain
+
+**Solution**:
+1. Check the `EventChain` information in the log to identify the loop path
+2. Redesign event flow to avoid circular dependencies
+3. Consider using different event types or adding conditional judgments
+
+### Problem 2: Event chain depth limit exceeded
+
+**Cause**: The event chain depth exceeds the configuration limit
+
+**Solution**:
+1. Check for unnecessary event nesting
+2. If the business really needs deep nesting, increase the `MaxEventChainDepth` configuration
+3. Consider refactoring to a flatter event structure
+
+### Question 3: ArgumentException - Event must inherit from IntegrationEvent
+
+**Cause**: When using `PublishDerivedAsync`, the event does not inherit the `IntegrationEvent` base class
+
+**Solution**:
+- Change the event definition from the `IIntegrationEvent` interface to inherit the `IntegrationEvent` base class
+- Or use the `PublishAsync` method (without loop detection)
 
 ---
 
-## 🐛 故障排查
+## 📈 Performance optimization suggestions
 
-### 问题 1: InvalidOperationException - Circular reference detected
-
-**原因**: 事件链中存在循环引用
-
-**解决方案**:
-1. 检查日志中的 `EventChain` 信息，识别循环路径
-2. 重新设计事件流，避免循环依赖
-3. 考虑使用不同的事件类型或添加条件判断
-
-### 问题 2: Event chain depth limit exceeded
-
-**原因**: 事件链深度超过配置限制
-
-**解决方案**:
-1. 检查是否存在不必要的事件嵌套
-2. 如果业务确实需要深层嵌套，增加 `MaxEventChainDepth` 配置
-3. 考虑重构为更扁平的事件结构
-
-### 问题 3: ArgumentException - Event must inherit from IntegrationEvent
-
-**原因**: 使用 `PublishDerivedAsync` 时，事件未继承 `IntegrationEvent` 基类
-
-**解决方案**:
-- 将事件定义从 `IIntegrationEvent` 接口改为继承 `IntegrationEvent` 基类
-- 或者使用 `PublishAsync` 方法（不进行循环检测）
-
----
-
-## 📈 性能优化建议
-
-### 1. 合理配置并发度
-
+### 1. Properly configure concurrency
 ```csharp
 options.MaxConcurrency = Math.Min(
     Environment.ProcessorCount * 2,  // CPU 核心数 * 2
     connectionPoolSize / 2           // 数据库连接池一半
 );
-```
+```### 2. Avoid deep event chains
 
-### 2. 避免深层事件链
+- **Recommended depth**: 0-3 levels (root event + 2-3 levels derived)
+- **Warning Threshold**: > 5 levels
+- **Danger Threshold**: > 10 layers
 
-- **建议深度**: 0-3 层（根事件 + 2-3 层派生）
-- **警告阈值**: > 5 层
-- **危险阈值**: > 10 层
+### 3. Monitor key indicators
 
-### 3. 监控关键指标
-
-使用日志分析工具（如 ELK、Application Insights）监控：
-- 事件处理平均耗时
-- 事件链平均深度
-- 循环引用检测次数
-- 被丢弃的事件数量
+Use log analysis tools (such as ELK, Application Insights) to monitor:
+- Average event processing time
+- Average depth of event chain
+- Number of circular reference detections
+- Number of events that were discarded
 
 ---
 
-## 📚 API 参考
+## 📚 API Reference
 
-### IntegrationEvent 基类
-
+### IntegrationEvent base class
 ```csharp
 public abstract record IntegrationEvent : IIntegrationEvent
 {
@@ -426,10 +370,7 @@ public abstract record IntegrationEvent : IIntegrationEvent
     // 获取事件摘要
     public virtual string GetEventSummary();
 }
-```
-
-### IEventBus 接口
-
+```### IEventBus interface
 ```csharp
 public interface IEventBus
 {
@@ -441,10 +382,7 @@ public interface IEventBus
     ValueTask PublishDerivedAsync<TEvent>(TEvent @event, IIntegrationEvent parentEvent, CancellationToken cancellationToken = default)
         where TEvent : IIntegrationEvent;
 }
-```
-
-### EventBusOptions 配置
-
+```### EventBusOptions Configuration
 ```csharp
 public class EventBusOptions
 {
@@ -455,65 +393,58 @@ public class EventBusOptions
     public int MaxEventChainDepth { get; set; }                 // 默认: 10 ⭐ 新增
     public bool EnableCircularReferenceDetection { get; set; }  // 默认: true ⭐ 新增
 }
-```
+```---
+
+## ✅ Checklist
+
+When implementing or reviewing event handlers, make sure:
+
+- [ ] event definition inherited from `IntegrationEvent` base class
+- [ ] Use `PublishDerivedAsync` in Handler to publish derived events
+- [ ] The naming of response events follows the convention (such as `XxxResponseEvent`)
+- [ ] Avoid publishing the request event again in the response handler
+- [ ] Configure a reasonable `MaxEventChainDepth` limit
+- [ ] Enabled `EnableCircularReferenceDetection` option
+- [ ] Added adequate logging
+- [ ] Wrote unit tests to verify event flow
 
 ---
 
-## ✅ 检查清单
+## 🎓 Best Practices
 
-在实现或审查事件处理器时，请确保：
-
-- [ ] 事件定义继承自 `IntegrationEvent` 基类
-- [ ] Handler 中使用 `PublishDerivedAsync` 发布派生事件
-- [ ] 响应事件的命名遵循约定（如 `XxxResponseEvent`）
-- [ ] 避免在响应处理器中再次发布请求事件
-- [ ] 配置了合理的 `MaxEventChainDepth` 限制
-- [ ] 启用了 `EnableCircularReferenceDetection` 选项
-- [ ] 添加了充分的日志记录
-- [ ] 编写了单元测试验证事件流
-
----
-
-## 🎓 最佳实践
-
-### 1. 请求-响应模式
-优先使用请求-响应模式，天然避免循环：
+### 1. Request-response pattern
+Prioritize the use of request-response mode to naturally avoid loops:
 ```
 Request → Handler → Response → CompleteTask (不再发布事件)
-```
-
-### 2. 事件链可视化
-使用日志记录事件链，便于调试：
+```### 2. Event chain visualization
+Use logging event chains for easy debugging:
 ```csharp
 _logger.LogInformation("Event chain: {Chain} → {CurrentEvent}", 
     @event.EventChain, @event.GetType().Name);
-```
+```### 3. Limit the depth of the event chain
+Deep nesting should be avoided when designing your business:
+- Prefer direct method calls over events (< level 3)
+- Consider using workflow engines (> 5 layers) for complex processes
 
-### 3. 限制事件链深度
-业务设计时应避免深层嵌套：
-- 优先使用直接方法调用而非事件（< 3 层）
-- 复杂流程考虑使用工作流引擎（> 5 层）
-
-### 4. 单元测试覆盖
-为每个 Handler 编写测试，验证：
-- 正常流程的事件发布
-- 异常情况的错误处理
-- 不会产生循环引用
+### 4. Unit test coverage
+Write tests for each Handler to verify:
+- Event release in normal process
+- Error handling of abnormal situations
+- No circular references will be generated
 
 ---
 
-## 📅 版本历史
+## 📅 Version History
 
-| 版本 | 日期 | 改动说明 |
+| Version | Date | Change Description |
 |------|------|----------|
-| 1.0 | 2026-03-24 | 初始版本，添加循环引用防护机制 |
+| 1.0 | 2026-03-24 | Initial version, adding circular reference protection mechanism |
 
 ---
 
-## 📞 支持
+## 📞 Support
 
-如有问题或建议，请：
-1. 查看日志中的详细错误信息
-2. 检查事件链路径（`EventChain` 属性）
-3. 联系开发团队获取技术支持
-
+If you have questions or suggestions, please:
+1. View detailed error information in the log
+2. Check the event chain path (`EventChain` property)
+3. Contact the development team for technical support

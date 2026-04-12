@@ -1,64 +1,62 @@
-# 模块拖拽功能 - 故障排查指南
+[中文版](Admin-Chat-Drag-Troubleshooting.cn.md)
 
-## ✅ 已完成的修复
+# Module Drag and Drop Function - Troubleshooting Guide
 
-### 1. 拖拽初始化时机调整
-**问题**: 模块列表是异步加载的，`mounted` 时可能还未渲染  
-**修复**: 将 `initializeModuleDrag()` 移到 `getXncfOpening()` 完成后调用
+## ✅ Completed fixes
 
-### 2. 事件处理增强
-**问题**: `dragover` 事件没有阻止默认行为，导致 `drop` 事件无法触发  
-**修复**: 在 `handleDragOver()` 中添加 `event.preventDefault()` 和 `dropEffect`
+### 1. Adjustment of drag initialization timing
+**Problem**: The module list is loaded asynchronously and may not be rendered when `mounted`
+**Fix**: Moved `initializeModuleDrag()` to call `getXncfOpening()` after completion
 
-### 3. 样式优化
-- 拖放区域高度增加到 100px
-- 添加更明显的拖拽提示
-- 增强拖拽时的视觉反馈（高亮、缩放、阴影）
-- 添加 cursor: grab/grabbing 样式
+### 2. Event handling enhancement
+**Problem**: The `dragover` event does not prevent the default behavior, causing the `drop` event to fail to fire
+**Fix**: Add `event.preventDefault()` and `dropEffect` in `handleDragOver()`
 
-### 4. 调试信息
-- 添加 console.log 输出，方便排查问题
-- 添加友好的错误提示消息
+### 3. Style optimization
+- Drag and drop area height increased to 100px
+- Add more obvious drag prompts
+- Enhanced visual feedback (highlight, zoom, shadow) when dragging
+- Add cursor: grab/grabbing style
+
+### 4. Debugging information
+- Add console.log output to facilitate troubleshooting
+- Add friendly error message
 
 ---
 
-## 🔍 故障排查步骤
+## 🔍 Troubleshooting steps
 
-### 步骤 1: 检查控制台日志
+### Step 1: Check the console log
 
-打开浏览器开发者工具（F12），查看 Console 标签页：
+Open the browser developer tools (F12) and view the Console tab:
 
-1. **页面加载时应该看到**:
-   ```
+1. **When the page loads you should see**:
+```
    找到的模块卡片数量: X
    模块拖拽初始化完成，已绑定 X 个模块
    ```
-
-2. **如果看到**:
-   ```
+2. **If you see**:
+```
    找到的模块卡片数量: 0
    未找到模块卡片，将在 200ms 后重试
    ```
-   - 说明模块还未加载，会自动重试
+- Indicates that the module has not been loaded and will automatically retry.
 
-3. **拖拽模块时应该看到**:
-   ```
+3. **When dragging the module you should see**:
+```
    开始拖拽模块: [模块名称] {uid: "...", name: "..."}
    拖放区域已高亮
    ```
-
-4. **放下模块时应该看到**:
-   ```
+4. **When you drop the module you should see**:
+```
    检测到放下操作 DragEvent {...}
    接收到的数据: {"uid":"...","name":"..."}
    解析后的模块数据: {uid: "...", name: "..."}
    模块添加成功，当前选中模块: [...]
    ```
+### Step 2: Check if the module can be dragged and dropped
 
-### 步骤 2: 检查模块是否可拖拽
-
-在 Console 中运行：
-
+Run in Console:
 ```javascript
 // 检查模块数量
 document.querySelectorAll('#xncf-modules-area .xncf-item').length
@@ -69,110 +67,105 @@ document.querySelectorAll('#xncf-modules-area .xncf-item[draggable="true"]').len
 // 检查拖放区域
 document.querySelector('.chat-module-drop-zone')
 ```
+**Expected results**:
+- The first line should return the number of modules (e.g. 8 or more)
+- The second row should return the same amount
+- The third line should return an HTMLDivElement
 
-**预期结果**:
-- 第一行应该返回模块数量（如 8 或更多）
-- 第二行应该返回相同的数量
-- 第三行应该返回一个 HTMLDivElement
+### Step 3: Manually test drag and drop
 
-### 步骤 3: 手动测试拖拽
-
-1. **打开页面**: `http://localhost:5000/Admin`
-2. **等待加载**: 确保模块列表完全加载（看到模块卡片）
-3. **尝试拖拽**:
-   - 鼠标悬停在任一模块卡片上
-   - 鼠标指针应该变为 "grab" 样式（抓手）
-   - 按住鼠标左键开始拖拽
-   - 模块卡片应该变半透明
-   - 拖放区域应该高亮显示
-4. **释放鼠标**:
-   - 在拖放区域内释放鼠标
-   - 应该看到消息提示："已添加模块: [模块名称]"
-   - 拖放区域显示选中的模块标签
+1. **Open page**: `http://localhost:5000/Admin`
+2. **Waiting for loading**: Make sure the module list is fully loaded (see the module card)
+3. **Try dragging**:
+   - Hover your mouse over any module card
+   - The mouse pointer should change to "grab" style (grab hand)
+   - Press and hold the left mouse button to start dragging
+   - Module cards should become translucent
+   - The drag and drop area should be highlighted
+4. **Release mouse**:
+   - Release the mouse within the drag and drop area
+   - You should see the message: "Module added: [module name]"
+   - The drag and drop area displays the selected module label
 
 ---
 
-## 🐛 常见问题和解决方案
+## 🐛 Frequently Asked Questions and Solutions
 
-### 问题 1: 模块卡片无法拖拽（鼠标指针不变）
+### Problem 1: The module card cannot be dragged (the mouse pointer does not change)
 
-**可能原因**:
-- 拖拽初始化未执行
-- 模块列表未加载完成
+**Possible reasons**:
+- Drag initialization is not executed
+- The module list has not been loaded
 
-**解决方案**:
-1. 刷新页面（Ctrl+F5 强制刷新）
-2. 在 Console 中手动执行：
-   ```javascript
+**Solution**:
+1. Refresh the page (Ctrl+F5 to force refresh)
+2. Manually execute in the Console:
+```javascript
    app.initializeModuleDrag()
    ```
-3. 检查 Console 是否有错误信息
+3. Check the Console for error messages
 
-### 问题 2: 可以拖拽，但无法放下
+### Problem 2: Can drag but cannot drop
 
-**可能原因**:
-- 拖放区域未正确绑定 drop 事件
-- dragover 事件未阻止默认行为
+**Possible reasons**:
+- The drop event is not correctly bound to the drag and drop area
+- dragover event does not prevent default behavior
 
-**解决方案**:
-1. 检查拖放区域是否存在：
-   ```javascript
+**Solution**:
+1. Check whether the drag and drop area exists:
+```javascript
    console.log(document.querySelector('.chat-module-drop-zone'))
    ```
-2. 检查 Vue 实例的方法：
-   ```javascript
+2. Check the method of Vue instance:
+```javascript
    console.log(typeof app.handleModuleDrop)
    console.log(typeof app.handleDragOver)
    ```
-3. 确认 Index.cshtml 中的事件绑定：
-   ```html
+3. Confirm the event binding in Index.cshtml:
+```html
    @@drop.prevent="handleModuleDrop"
    @@dragover.prevent="handleDragOver"
    ```
+### Problem 3: The drag and drop area is not highlighted when dragging
 
-### 问题 3: 拖拽时拖放区域不高亮
+**Possible reasons**:
+- Incorrect CSS selector
+- Failed to add class name
 
-**可能原因**:
-- CSS 选择器不正确
-- 类名添加失败
-
-**解决方案**:
-1. 拖拽时在 Console 查看元素：
-   ```javascript
+**Solution**:
+1. View the element in the Console while dragging:
+```javascript
    document.querySelector('.chat-module-drop-zone').classList
    ```
-   应该包含 `highlight` 类
+Should contain the `highlight` class
 
-2. 检查样式是否加载：
-   ```javascript
+2. Check whether the style is loaded:
+```javascript
    getComputedStyle(document.querySelector('.chat-module-drop-zone')).background
    ```
+### Question 4: The console displays "Module data not found"
 
-### 问题 4: 控制台显示 "未找到模块数据"
+**Possible reasons**:
+- dataTransfer data transfer failed
+- Browser security restrictions
 
-**可能原因**:
-- dataTransfer 数据传递失败
-- 浏览器安全限制
-
-**解决方案**:
-1. 检查浏览器版本（建议使用最新版 Chrome/Edge/Firefox）
-2. 检查是否有浏览器扩展干扰（尝试隐身模式）
-3. 手动测试 dataTransfer：
-   ```javascript
+**Solution**:
+1. Check the browser version (it is recommended to use the latest version of Chrome/Edge/Firefox)
+2. Check if there are any browser extensions interfering (try incognito mode)
+3. Manually test dataTransfer:
+```javascript
    // 在 dragstart 事件中添加断点，检查
    event.dataTransfer.setData('text/plain', 'test')
    ```
-
 ---
 
-## 🔧 临时解决方案
+## 🔧 Temporary solution
 
-如果拖拽功能仍然不工作，可以使用点击选择作为临时方案：
+If drag-and-drop still doesn't work, you can use click-to-select as a workaround:
 
-### 修改方案：点击选择模块
+### Modify the plan: Click to select the module
 
-在 `Index.js` 的 `initializeModuleDrag()` 方法前添加：
-
+Add before the `initializeModuleDrag()` method of `Index.js`:
 ```javascript
 initializeModuleClick() {
   this.$nextTick(() => {
@@ -216,31 +209,28 @@ initializeModuleClick() {
   });
 }
 ```
-
-然后在 `getXncfOpening()` 中同时调用：
+Then call it simultaneously in `getXncfOpening()`:
 ```javascript
 this.initializeModuleDrag();
 this.initializeModuleClick(); // 添加点击选择作为备用
 ```
-
 ---
 
-## 📞 需要更多帮助？
+## 📞Need more help?
 
-如果以上方法都无法解决问题，请提供以下信息：
+If none of the above resolves the issue, please provide the following information:
 
-1. 浏览器控制台的完整输出（Console 标签）
-2. 浏览器版本和类型
-3. 执行以下命令的输出：
-   ```javascript
+1. Complete output of browser console (Console tag)
+2. Browser version and type
+3. Execute the output of the following command:
+```javascript
    console.log('模块数量:', document.querySelectorAll('#xncf-modules-area .xncf-item').length);
    console.log('可拖拽模块:', document.querySelectorAll('#xncf-modules-area .xncf-item[draggable]').length);
    console.log('拖放区域:', document.querySelector('.chat-module-drop-zone'));
    console.log('Vue 实例:', app);
    ```
-
 ---
 
-**文档创建日期**: 2026-03-25  
-**最后更新**: 2026-03-25  
-**版本**: v1.0
+**Document creation date**: 2026-03-25
+**Last updated**: 2026-03-25
+**Version**: v1.0

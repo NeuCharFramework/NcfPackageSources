@@ -1,1 +1,3 @@
-﻿当前文件夹存放基础模板提供的页面，继承 _XncfModuleLayout 模板。
+[中文版](readme.cn.md)
+
+﻿The current folder stores the pages provided by the basic template and inherits the _XncfModuleLayout template.

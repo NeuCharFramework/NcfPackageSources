@@ -1,16 +1,16 @@
-# NeuCharFramework (NCF) Functions 管理体系完整指南
+[中文版](FUNCTIONS_MANAGEMENT_GUIDE.cn.md)
 
-## 概述
-NeuCharFramework 中的 Functions 是通过 **FunctionRender 系统** 管理的，用于在 XNCF 模块中定义和暴露可执行的操作方法。这是一个基于特性标记和反射扫描的动态注册系统。
+# Complete Guide to NeuCharFramework (NCF) Functions Management System
+
+## Overview
+Functions in NeuCharFramework are managed through the **FunctionRender system**, which is used to define and expose executable operation methods in XNCF modules. This is a dynamic registration system based on feature tags and reflection scanning.
 
 ---
 
-## 一、核心数据结构
+## 1. Core data structure
 
-### 1. FunctionRenderAttribute 特性
-**位置**: `src/Basic/Senparc.Ncf.Core/AppServices/FunctionRenderAttribute.cs`
-
-```csharp
+### 1. FunctionRenderAttribute attribute
+**Location**: `src/Basic/Senparc.Ncf.Core/AppServices/FunctionRenderAttribute.cs````csharp
 [AttributeUsage(AttributeTargets.Method)]
 public class FunctionRenderAttribute : Attribute
 {
@@ -31,12 +31,8 @@ public class FunctionRenderAttribute : Attribute
 
     public FunctionRenderAttribute(string name, string description, Type registerType)
 }
-```
-
-### 2. FunctionRenderBag 数据包
-**位置**: `src/Basic/Senparc.Ncf.XncfBase/FunctionRenders/FunctionRenderBag.cs`
-
-```csharp
+```### 2. FunctionRenderBag data package
+**Location**: `src/Basic/Senparc.Ncf.XncfBase/FunctionRenders/FunctionRenderBag.cs````csharp
 public struct FunctionRenderBag
 {
     // 唯一标识键 = "{DeclaringType.FullName}-{MethodName}"
@@ -51,12 +47,8 @@ public struct FunctionRenderBag
     // 函数标记特性
     public FunctionRenderAttribute FunctionRenderAttribute { get; set; }
 }
-```
-
-### 3. FunctionRenderCollection 集合
-**位置**: `src/Basic/Senparc.Ncf.XncfBase/FunctionRenders/FunctionRenderCollection.cs`
-
-```csharp
+```### 3. FunctionRenderCollection collection
+**Location**: `src/Basic/Senparc.Ncf.XncfBase/FunctionRenders/FunctionRenderCollection.cs````csharp
 // 结构: Type(Register类型) -> Dictionary<string(Key), FunctionRenderBag>
 public class FunctionRenderCollection : 
     ConcurrentDictionary<Type, ConcurrentDictionary<string, FunctionRenderBag>>
@@ -84,16 +76,12 @@ public class FunctionRenderCollection :
         string symbolExpression, 
         IEnumerable<string> moduleUids)
 }
-```
+```---
 
----
+## 2. Global registration management
 
-## 二、全局注册管理
-
-### 1. Register 静态类（核心管理器）
-**位置**: `src/Basic/Senparc.Ncf.XncfBase/Register.cs`
-
-```csharp
+### 1. Register static class (core manager)
+**Location**: `src/Basic/Senparc.Ncf.XncfBase/Register.cs````csharp
 public static class Register
 {
     /// <summary>
@@ -107,21 +95,18 @@ public static class Register
     /// </summary>
     public static ConcurrentDictionary<ThreadInfo, Thread> ThreadCollection { get; set; }
 }
-```
+```### 2. Automatic scanning registration process
+**Timing**: Call `services.StartNcfEngine(configuration, env, dllFilePatterns)`
 
-### 2. 自动扫描注册流程
-**时机**: 调用 `services.StartNcfEngine(configuration, env, dllFilePatterns)`
+**Process**:
+1. Scan all assemblies
+2. Iterate through all types in each assembly
+3. **Filter condition**: Class must inherit from `AppServiceBase`
+4. **Method filtering**: Get methods marked with the `[FunctionRender]` attribute
+5. **Registration**: Call `FunctionRenderCollection.Add(methodInfo, attribute)`
+6. **DI Registration**: Add the AppService type to the dependency injection container
 
-**流程**:
-1. 扫描所有程序集
-2. 遍历每个程序集中的所有类型
-3. **筛选条件**: 类必须继承自 `AppServiceBase`
-4. **方法筛选**: 获取有 `[FunctionRender]` 特性标记的方法
-5. **注册**: 调用 `FunctionRenderCollection.Add(methodInfo, attribute)`
-6. **DI注册**: 将 AppService 类型添加到依赖注入容器
-
-**核心代码** (Register.cs, 第 175-193 行):
-```csharp
+**Core code** (Register.cs, lines 175-193):```csharp
 //配置 FunctionRender
 if (t.IsSubclassOf(typeof(AppServiceBase)))
 {
@@ -141,15 +126,11 @@ if (t.IsSubclassOf(typeof(AppServiceBase)))
 
     services.AddScoped(t);
 }
-```
+```---
 
----
+## 3. IXncfRegister interface
 
-## 三、IXncfRegister 接口
-
-**位置**: `src/Basic/Senparc.Ncf.XncfBase/Interfaces/IXncfRegister.cs`
-
-```csharp
+**Location**: `src/Basic/Senparc.Ncf.XncfBase/Interfaces/IXncfRegister.cs````csharp
 public interface IXncfRegister
 {
     /// <summary>
@@ -185,18 +166,14 @@ public interface IXncfRegister
     // 注：Functions 列表属性已注释掉，改为动态扫描注册
     // 旧设计: public abstract IList<Type> Functions { get; }
 }
-```
-
-**注意**: `Functions` 属性已被注释掉（见第 45-47 行），改为通过 `FunctionRenderAttribute` 特性进行动态扫描。
+```**NOTE**: The `Functions` attribute has been commented out (see lines 45-47) and is instead scanned dynamically via the `FunctionRenderAttribute` attribute.
 
 ---
 
-## 四、实际使用示例
+## 4. Actual usage examples
 
-### 示例：AgentsManager 模块
-**位置**: `src/Extensions/Senparc.Xncf.AgentsManager/Application/AppService/ChatGroupAppService.cs`
-
-```csharp
+### Example: AgentsManager module
+**Location**: `src/Extensions/Senparc.Xncf.AgentsManager/Application/AppService/ChatGroupAppService.cs````csharp
 public class ChatGroupAppService : AppServiceBase
 {
     [FunctionRender("管理 ChatGroup", "管理 ChatGroup", typeof(Register))]
@@ -221,14 +198,11 @@ public class ChatGroupAppService : AppServiceBase
         });
     }
 }
-```
+```---
 
----
+## 5. Three ways to obtain Functions
 
-## 五、获取 Functions 的三种方式
-
-### 方式 1：通过 Register 类型获取
-```csharp
+### Method 1: Obtain through Register type```csharp
 // 获取 AgentsManager.Register 所属的所有 Functions
 var functions = Register.FunctionRenderCollection.GetByRegisterType(typeof(Senparc.Xncf.AgentsManager.Register));
 foreach (var func in functions)
@@ -237,20 +211,14 @@ foreach (var func in functions)
     Console.WriteLine($"说明: {func.FunctionRenderAttribute.Description}");
     Console.WriteLine($"方法: {func.MethodInfo.Name}");
 }
-```
-
-### 方式 2：通过模块 UID 获取
-```csharp
+```### Method 2: Obtain through module UID```csharp
 // 获取 uid 为 "agentsmanager" 的模块的所有 Functions
 var functions = Register.FunctionRenderCollection.GetByModuleUid("agentsmanager");
 foreach (var func in functions)
 {
     Console.WriteLine($"Function: {func.Key}");
 }
-```
-
-### 方式 3：解析符号插件（高级用法）
-```csharp
+```### Method 3: Parse symbol plug-in (advanced usage)```csharp
 // 当表达式包含 [#sym:FunctionRender] 时
 var symbols = Register.FunctionRenderCollection.ResolveSymbolPlugins(
     serviceProvider,
@@ -264,29 +232,26 @@ foreach (var kvp in symbols)
     var appServiceType = kvp.Key;  // e.g., "Senparc.Xncf.AgentsManager.Application.AppService.ChatGroupAppService"
     var appServiceInstance = kvp.Value;
 }
-```
+```---
 
----
+## 6. Summary of key file paths
 
-## 六、关键文件路径总结
-
-| 组件 | 路径 |
+| Component | Path |
 |------|------|
 | **FunctionRenderAttribute** | `src/Basic/Senparc.Ncf.Core/AppServices/FunctionRenderAttribute.cs` |
 | **FunctionRenderBag** | `src/Basic/Senparc.Ncf.XncfBase/FunctionRenders/FunctionRenderBag.cs` |
 | **FunctionRenderCollection** | `src/Basic/Senparc.Ncf.XncfBase/FunctionRenders/FunctionRenderCollection.cs` |
-| **核心 Register 类** | `src/Basic/Senparc.Ncf.XncfBase/Register.cs` |
-| **IXncfRegister 接口** | `src/Basic/Senparc.Ncf.XncfBase/Interfaces/IXncfRegister.cs` |
-| **XncfRegisterBase 基类** | `src/Basic/Senparc.Ncf.XncfBase/XncfRegisterBase.cs` |
+| **Core Register Class** | `src/Basic/Senparc.Ncf.XncfBase/Register.cs` |
+| **IXncfRegister interface** | `src/Basic/Senparc.Ncf.XncfBase/Interfaces/IXncfRegister.cs` |
+| **XncfRegisterBase base class** | `src/Basic/Senparc.Ncf.XncfBase/XncfRegisterBase.cs` |
 | **FunctionAppRequestBase** | `src/Basic/Senparc.Ncf.XncfBase/FunctionRenders/FunctionAppRequestBase.cs` |
 | **FunctionRenderSymbolHelper** | `src/Basic/Senparc.Ncf.Core/AppServices/FunctionRenderSymbolHelper.cs` |
 
 ---
 
-## 七、最佳实践
+## 7. Best Practices
 
-### 1. 定义 Function（在 AppService 中）
-```csharp
+### 1. Define Function (in AppService)```csharp
 public class MyAppService : AppServiceBase
 {
     [FunctionRender("操作名称", "操作描述", typeof(Register))]
@@ -300,10 +265,7 @@ public class MyAppService : AppServiceBase
         });
     }
 }
-```
-
-### 2. 定义 Function 参数请求
-```csharp
+```### 2. Define Function parameter request```csharp
 public class MyFunctionRequest : FunctionAppRequestBase
 {
     // FunctionAppRequestBase 继承自 AppRequestBase
@@ -312,10 +274,7 @@ public class MyFunctionRequest : FunctionAppRequestBase
     [XncfField("参数名", "参数说明")]
     public string Parameter1 { get; set; }
 }
-```
-
-### 3. 在模块中访问 Functions
-```csharp
+```### 3. Access Functions in the module```csharp
 public class MyRegister : XncfRegisterBase
 {
     // ...其他实现...
@@ -329,31 +288,27 @@ public class MyRegister : XncfRegisterBase
         var functionList = Register.FunctionRenderCollection.GetByModuleUid(this.Uid);
     }
 }
-```
+```---
+
+## 8. Architecture design features
+
+1. **Dynamic Scanning**: No manual registration required, the [FunctionRender] feature in all AppServices will be automatically scanned when the system starts.
+
+2. **Hierarchical isolation**: Functions are stored in groups according to Register type (module) to facilitate modular management.
+
+3. **Metadata retention**: FunctionRenderBag retains complete method metadata (MethodInfo) and supports runtime reflection calls
+
+4. **Thread Safety**: Use ConcurrentDictionary to support concurrent access
+
+5. **Symbol parsing**: Supports automatic parsing and importing plug-ins through [#sym:FunctionRender] symbols
+
+6. **Parameter streaming**: All Function methods use a unified request/response mode and support automatic parameter mapping.
 
 ---
 
-## 八、架构设计特点
+## 9. Integration suggestions with KnowledgeBase module
 
-1. **动态扫描**: 无需手动注册，系统启动时自动扫描所有 AppService 中的 [FunctionRender] 特性
-
-2. **分层隔离**: Functions 按 Register 类型（模块）分组存储，便于模块化管理
-
-3. **元数据保留**: FunctionRenderBag 保留完整的方法元数据（MethodInfo），支持运行时反射调用
-
-4. **线程安全**: 使用 ConcurrentDictionary，支持并发访问
-
-5. **符号解析**: 支持通过 [#sym:FunctionRender] 符号自动解析和导入插件
-
-6. **参数流式化**: 所有 Function 方法使用统一的请求/响应模式，支持参数自动映射
-
----
-
-## 九、与 KnowledgeBase 模块的集成建议
-
-对于 RAG 系统的 KnowledgeBase 模块：
-
-```csharp
+For the KnowledgeBase module of the RAG system:```csharp
 public class KnowledgeBasesAppService : AppServiceBase
 {
     [FunctionRender("上传并处理文档", "上传文件并进行分块/嵌入处理", typeof(Register))]
@@ -376,6 +331,4 @@ public class KnowledgeBasesAppService : AppServiceBase
         // 管理操作
     }
 }
-```
-
-这样 KnowledgeBase 模块的操作方法将自动被注册到全局 Functions 系统中。
+```In this way, the operation methods of the KnowledgeBase module will be automatically registered in the global Functions system.

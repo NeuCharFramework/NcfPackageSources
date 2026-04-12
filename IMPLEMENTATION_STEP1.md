@@ -1,13 +1,14 @@
-# 📝 实施指南 - Step 1: 更新 PromptOptimizationRequestHandler
+[中文版](IMPLEMENTATION_STEP1.cn.md)
 
-## 🎯 目标
-实现真正的 AI 优化逻辑，替换当前的模拟代码
+# 📝 Implementation Guide - Step 1: Update PromptOptimizationRequestHandler
 
-## 📄 完整实现代码
+## 🎯 Goal
 
-将以下代码**完整替换** `PromptOptimizationRequestHandler.cs` 的内容：
+Implement real AI optimization logic and replace current simulation code
 
-```csharp
+## 📄 Complete implementation code
+
+Replace the following code **completely** with the contents of `PromptOptimizationRequestHandler.cs`:```csharp
 using Senparc.Ncf.Core.EventBus;
 using Senparc.Ncf.Shared.Abstractions.Events;
 using Senparc.Xncf.PromptRange.Abstractions.Events;
@@ -319,10 +320,10 @@ Please optimize the prompt and parameters to better meet the user's requirement.
                 }
                 jsonContent = jsonContent.Trim();
 
-                // 解析 JSON
-                var options = new JsonSerializerOptions 
-                { 
-                    PropertyNameCaseInsensitive = true 
+                // Parse JSON
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
                 };
                 var json = JsonDocument.Parse(jsonContent);
                 var root = json.RootElement;
@@ -343,29 +344,28 @@ Please optimize the prompt and parameters to better meet the user's requirement.
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "解析 AI 响应失败: {Response}", aiResponse);
+                _logger.LogError(ex, "Failed to parse AI response: {Response}", aiResponse);
                 
-                // 如果解析失败，返回默认优化结果
-                _logger.LogWarning("使用默认优化结果");
+                // If parsing fails, return the default optimization result
+                _logger.LogWarning("Use default optimization results");
                 return new OptimizationResult
                 {
-                    OptimizedContent = aiResponse, // 直接使用 AI 返回的文本
+                    OptimizedContent = aiResponse, // Directly use the text returned by AI
                     Parameters = new OptimizedParameters(
                         Temperature: 0.7f,
                         TopP: 0.9f,
-                        MaxTokens: 2000,
-                        FrequencyPenalty: 0f,
+                        MaxTokens: 2000,FrequencyPenalty: 0f,
                         PresencePenalty: 0f
                     ),
                     PredictedScore = 7.0,
-                    Explanation = "AI 返回格式不正确，使用默认参数"
+                    Explanation = "AI return format is incorrect, use default parameters"
                 };
             }
         }
     }
 
     /// <summary>
-    /// 优化结果内部类
+    /// Optimization result inner class
     /// </summary>
     internal class OptimizationResult
     {
@@ -374,21 +374,23 @@ Please optimize the prompt and parameters to better meet the user's requirement.
         public double PredictedScore { get; init; }
         public string Explanation { get; init; }
     }
-}
-```
+}```
 
 ## ✅ 实施步骤
 
 ### Step 1: 备份原文件
+
 ```bash
 cp src/Extensions/Senparc.Xncf.PromptRange/Application/EventHandlers/PromptOptimizationRequestHandler.cs \
    src/Extensions/Senparc.Xncf.PromptRange/Application/EventHandlers/PromptOptimizationRequestHandler.cs.backup
 ```
 
 ### Step 2: 替换文件内容
+
 将上面的完整代码复制并替换 `PromptOptimizationRequestHandler.cs` 的全部内容
 
 ### Step 3: 编译检查
+
 ```bash
 dotnet build src/Extensions/Senparc.Xncf.PromptRange/Senparc.Xncf.PromptRange.csproj
 ```
@@ -396,6 +398,7 @@ dotnet build src/Extensions/Senparc.Xncf.PromptRange/Senparc.Xncf.PromptRange.cs
 ## 🔍 代码说明
 
 ### 核心改进：
+
 1. **真实 AI 调用**：使用 `SemanticAiHandler` 调用 AI 模型
 2. **智能 System Prompt**：引导 AI 返回 JSON 格式的优化结果
 3. **参数优化**：AI 会根据需求优化 Temperature 等参数
@@ -403,6 +406,7 @@ dotnet build src/Extensions/Senparc.Xncf.PromptRange/Senparc.Xncf.PromptRange.cs
 5. **日志记录**：详细的调试和跟踪日志
 
 ### 关键依赖：
+
 - `AIModelService` - 获取 AI 模型配置
 - `SemanticAiHandler` - 调用 AI 的核心服务
 - `PromptItemService` - 操作 Prompt 数据
@@ -416,6 +420,7 @@ dotnet build src/Extensions/Senparc.Xncf.PromptRange/Senparc.Xncf.PromptRange.cs
 ## 🧪 测试建议
 
 完成后，请告诉我，我将帮您：
+
 1. 检查编译错误
 2. 提供前端代码更新
 3. 进行端到端测试

@@ -1,4 +1,6 @@
-## 扩展包
+[中文版](readme.cn.md)
 
-## 扩展包
-用于  [NCF（NeuCharFramework）](https://github.com/NeuCharFramework/NCF) 项目的扩展包，以 `Senparc.Xncf.`开头
+## Expansion pack
+
+## Expansion pack
+Extension package for the [NCF (NeuCharFramework)](https://github.com/NeuCharFramework/NCF) project, starting with `Senparc.Xncf.`

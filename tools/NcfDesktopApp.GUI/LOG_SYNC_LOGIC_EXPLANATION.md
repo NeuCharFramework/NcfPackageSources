@@ -1,17 +1,17 @@
-# 📋 日志同步输出逻辑详解
+[中文版](LOG_SYNC_LOGIC_EXPLANATION.cn.md)
 
-**文档日期**: 2025-11-17  
-**实现版本**: v1.2.0
+# 📋 Detailed explanation of log synchronization output logic
+
+**Document Date**: 2025-11-17
+**Implementation version**: v1.2.0
 
 ---
 
-## 🎯 核心机制：定时批量更新
+## 🎯 Core mechanism: scheduled batch updates
 
-是的，**当前实现使用定时器间隔扫描**的方式同步日志输出。
+Yes, the current implementation uses timer interval scanning to synchronize log output.
 
-### 工作原理
-
-```
+### Working principle```
 ┌─────────────────────────────────────────────────────────────┐
 │                    日志同步输出流程                           │
 └─────────────────────────────────────────────────────────────┘
@@ -56,19 +56,15 @@
    │   ├─ 更新 LogText 属性              │
    │   └─ 滚动到底部                      │
    └─────────────────────────────────────┘
-```
+```---
 
----
+## 📊 Detailed process description
 
-## 📊 详细流程说明
+### Phase 1: Log generation and enqueuing
 
-### 阶段 1: 日志产生和入队
+**Trigger timing**: NCF process outputs any content (stdout/stderr)
 
-**触发时机**: NCF 进程输出任何内容（stdout/stderr）
-
-**代码位置**: `ViewModels/MainWindowViewModel.cs:1123-1137`
-
-```csharp
+**Code location**: `ViewModels/MainWindowViewModel.cs:1123-1137````csharp
 private void AddCliLog(string message, bool isError)
 {
     if (string.IsNullOrWhiteSpace(message)) return;
@@ -84,30 +80,23 @@ private void AddCliLog(string message, bool isError)
     }
     // ⚠️ 注意：这里没有更新 UI，性能优化的关键！
 }
-```
+```**Features**:
+- ✅ **Non-blocking**: Enqueue operation is very fast (O(1))
+- ✅ **Thread Safety**: Use `lock` to protect the queue
+- ✅ **Not updating UI**: Avoid frequent UI thread switching
 
-**特点**:
-- ✅ **非阻塞**: 入队操作非常快（O(1)）
-- ✅ **线程安全**: 使用 `lock` 保护队列
-- ✅ **不更新 UI**: 避免频繁的 UI 线程切换
-
-**示例场景**:
-```
+**Example scenario**:```
 时间 0ms:  日志1 入队 → 队列: [日志1]
 时间 10ms: 日志2 入队 → 队列: [日志1, 日志2]
 时间 20ms: 日志3 入队 → 队列: [日志1, 日志2, 日志3]
 时间 30ms: 日志4 入队 → 队列: [日志1, 日志2, 日志3, 日志4]
 ...
 时间 100ms: ⏰ Timer 触发 → 批量处理所有日志
-```
+```---
 
----
+### Phase 2: Timer scan (every 100ms)
 
-### 阶段 2: 定时器扫描（每 100ms）
-
-**定时器配置**: `ViewModels/MainWindowViewModel.cs:132, 146-149`
-
-```csharp
+**Timer configuration**: `ViewModels/MainWindowViewModel.cs:132, 146-149````csharp
 private const int LogUpdateIntervalMs = 100;  // 每100ms批量更新一次
 
 // 构造函数中初始化
@@ -115,16 +104,12 @@ _logUpdateTimer = new System.Timers.Timer(LogUpdateIntervalMs);
 _logUpdateTimer.Elapsed += OnLogUpdateTimerElapsed;
 _logUpdateTimer.AutoReset = true;  // 自动重复触发
 _logUpdateTimer.Start();  // 立即启动
-```
+```**Timer Features**:
+- ⏰ **Interval**: 100 milliseconds (0.1 seconds)
+- 🔄 **Autorepeat**: `AutoReset = true`
+- 🚀 **Start immediately**: Start in the constructor and run immediately after the application starts
 
-**定时器特性**:
-- ⏰ **间隔**: 100 毫秒（0.1 秒）
-- 🔄 **自动重复**: `AutoReset = true`
-- 🚀 **立即启动**: 构造函数中启动，应用启动后立即运行
-
-**扫描逻辑**: `ViewModels/MainWindowViewModel.cs:1142-1152`
-
-```csharp
+**Scan logic**: `ViewModels/MainWindowViewModel.cs:1142-1152````csharp
 private void OnLogUpdateTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
 {
     List<string> logsToAdd;
@@ -143,20 +128,16 @@ private void OnLogUpdateTimerElapsed(object? sender, System.Timers.ElapsedEventA
     
     // 后续处理...
 }
-```
-
-**扫描特点**:
-- ✅ **批量处理**: 一次取出所有待处理日志
-- ✅ **快速检查**: 队列为空时立即返回，不浪费资源
-- ✅ **线程安全**: 使用 `lock` 保护队列操作
+```**Scanning Features**:
+- ✅ **Batch Processing**: Get all pending logs at once
+- ✅ **Quick Check**: Return immediately when the queue is empty, without wasting resources
+- ✅ **Thread Safety**: Use `lock` to protect queue operations
 
 ---
 
-### 阶段 3: UI 批量更新
+### Phase 3: UI batch update
 
-**更新逻辑**: `ViewModels/MainWindowViewModel.cs:1154-1181`
-
-```csharp
+**Update logic**: `ViewModels/MainWindowViewModel.cs:1154-1181````csharp
 Dispatcher.UIThread.Post(() =>
 {
     // 📝 批量添加日志到缓冲区
@@ -189,21 +170,17 @@ Dispatcher.UIThread.Post(() =>
     // 📜 滚动到底部
     ScrollToBottomIfNeeded();
 });
-```
-
-**更新特点**:
-- ✅ **批量操作**: 一次更新多条日志，减少 UI 重绘次数
-- ✅ **线程切换**: 使用 `Dispatcher.UIThread.Post` 切换到 UI 线程
-- ✅ **智能清理**: 只在超出阈值时才清理旧日志
-- ✅ **自动滚动**: 更新后自动滚动到底部
+```**UPDATE FEATURES**:
+- ✅ **Batch Operation**: Update multiple logs at one time to reduce the number of UI redraws
+- ✅ **Thread switching**: Use `Dispatcher.UIThread.Post` to switch to the UI thread
+- ✅ **Smart Cleanup**: Only clean old logs when the threshold is exceeded
+- ✅ **AUTO SCROLL**: Automatically scroll to the bottom after updating
 
 ---
 
-## ⏱️ 时间线示例
+## ⏱️ Timeline example
 
-### 场景：启动时产生 200 条日志
-
-```
+### Scenario: 200 logs generated at startup```
 时间轴（毫秒）:
 ─────────────────────────────────────────────────────────────
 0ms     日志1-10 产生 → 入队
@@ -217,20 +194,16 @@ Dispatcher.UIThread.Post(() =>
 ...
 190ms   日志191-200 产生 → 入队
 200ms   ⏰ Timer 触发 → 批量处理日志101-200 → UI更新
-```
-
-**结果**:
-- ✅ 200 条日志分 **2 批**更新（每批 100ms）
-- ✅ 只触发 **2 次** UI 更新（而不是 200 次）
-- ✅ 用户看到的是平滑的批量更新，而不是逐条闪烁
+```**Result**:
+- ✅ 200 logs updated in **2 batches** (100ms per batch)
+- ✅ Only trigger **2** UI updates (instead of 200)
+- ✅ Users see smooth batch updates instead of flashes one by one
 
 ---
 
-## 🔄 对比：优化前 vs 优化后
+## 🔄 Comparison: before optimization vs after optimization
 
-### 优化前（逐条更新）❌
-
-```
+### Before optimization (update item by item) ❌```
 日志产生 → 立即更新 UI → 日志产生 → 立即更新 UI → ...
 
 特点:
@@ -239,11 +212,7 @@ Dispatcher.UIThread.Post(() =>
 - 200 条日志 = 200 次线程切换
 - 200 条日志 = 200 次控件查找
 - 结果: 严重卡顿，2-5秒延迟
-```
-
-### 优化后（批量更新）✅
-
-```
+```### After optimization (batch update)✅```
 日志产生 → 入队 → 日志产生 → 入队 → ...
                 ↓
         定时器每 100ms 扫描
@@ -256,120 +225,105 @@ Dispatcher.UIThread.Post(() =>
 - 200 条日志 ≈ 2 次线程切换
 - 200 条日志 = 1 次控件查找（缓存）
 - 结果: 流畅启动，<100ms 延迟
-```
+```---
 
----
+## 📊 Performance parameters
 
-## 📊 性能参数
+### Current configuration
 
-### 当前配置
-
-| 参数 | 值 | 说明 |
+| Parameter | Value | Description |
 |------|-----|------|
-| **更新间隔** | 100ms | 每 0.1 秒扫描一次 |
-| **更新频率** | 10次/秒 | 每秒最多更新 10 次 |
-| **最大日志行数** | 1000 行 | 超出后自动清理旧日志 |
-| **清理阈值** | 1100 行 | 超出此值才执行清理 |
+| **Update Interval** | 100ms | Scan every 0.1 seconds |
+| **Update frequency** | 10 times/second | Up to 10 updates per second |
+| **Maximum number of log lines** | 1000 lines | Automatically clean old logs after exceeding |
+| **Cleaning Threshold** | 1100 rows | Cleaning will not be performed until this value is exceeded |
 
-### 可调整参数
+### Adjustable parameters
 
-如果需要调整性能，可以修改以下常量：
+If you need to adjust performance, you can modify the following constants:
 
-**文件位置**: `ViewModels/MainWindowViewModel.cs:132`
-
-```csharp
+**File location**: `ViewModels/MainWindowViewModel.cs:132````csharp
 private const int LogUpdateIntervalMs = 100;  // 👈 调整这个值
-```
+```**Adjustment suggestions**:
 
-**调整建议**:
-
-| 场景 | 推荐值 | 效果 |
+| Scene | Recommended value | Effect |
 |------|--------|------|
-| **更快响应** | 50ms | 每秒更新 20 次，响应更快 |
-| **当前设置** | 100ms | 平衡性能和响应（推荐） |
-| **更高性能** | 200ms | 每秒更新 5 次，性能更好 |
-| **极致性能** | 500ms | 每秒更新 2 次，性能最佳 |
+| **Faster Response** | 50ms | 20 updates per second, faster response |
+| **Current Settings** | 100ms | Balance performance and responsiveness (recommended) |
+| **Higher Performance** | 200ms | 5 updates per second, better performance |
+| **Ultimate Performance** | 500ms | 2 updates per second, best performance |
 
 ---
 
-## 🎯 关键设计决策
+## 🎯 Key Design Decisions
 
-### 1. 为什么使用定时器而不是事件驱动？
+### 1. Why use timer instead of event driven?
 
-**定时器方式**（当前实现）:
-- ✅ **批量处理**: 一次处理多条日志，减少 UI 更新次数
-- ✅ **性能稳定**: 无论日志频率如何，UI 更新频率固定
-- ✅ **资源可控**: 定时器开销固定，不会因日志量激增而崩溃
+**Timer mode** (current implementation):
+- ✅ **Batch Processing**: Process multiple logs at one time to reduce the number of UI updates
+- ✅ **Stable performance**: Regardless of the log frequency, the UI update frequency is fixed
+- ✅ **Resources Controllable**: The timer overhead is fixed and will not crash due to a surge in log volume.
 
-**事件驱动方式**（如果每条日志都更新）:
-- ❌ **频繁更新**: 日志多时 UI 更新过于频繁
-- ❌ **性能不稳定**: 日志频率高时性能急剧下降
-- ❌ **资源不可控**: 可能因日志量激增导致 UI 卡死
+**Event-driven approach** (if every log is updated):
+- ❌ **Frequent Updates**: When there are many logs, the UI updates too frequently
+- ❌ **Unstable performance**: Performance drops sharply when log frequency is high
+- ❌ **Uncontrollable resources**: The UI may freeze due to a surge in log volume
 
-### 2. 为什么选择 100ms 间隔？
+### 2. Why choose 100ms interval?
 
-**100ms 的优势**:
-- ✅ **响应及时**: 用户感觉不到明显延迟（< 100ms 人眼几乎感觉不到）
-- ✅ **性能优秀**: 每秒最多 10 次更新，性能开销低
-- ✅ **平衡点**: 在响应速度和性能之间取得最佳平衡
+**Advantages of 100ms**:
+- ✅ **Prompt response**: Users will not feel any obvious delay (< 100ms, almost imperceptible to the human eye)
+- ✅ **Excellent performance**: Up to 10 updates per second, low performance overhead
+- ✅ **Balance Point**: Get the best balance between responsiveness and performance
 
-**其他间隔对比**:
-- **50ms**: 响应更快，但更新频率翻倍（性能略降）
-- **200ms**: 性能更好，但用户可能感觉到延迟
-- **500ms**: 性能最佳，但延迟明显（不推荐）
+**Other intervals comparison**:
+- **50ms**: faster response, but twice the update frequency (slightly lower performance)
+- **200ms**: Better performance, but users may experience latency
+- **500ms**: Best performance, but obvious delay (not recommended)
 
-### 3. 为什么使用队列而不是直接更新？
+### 3. Why use a queue instead of direct update?
 
-**队列方式**（当前实现）:
-- ✅ **解耦**: 日志产生和 UI 更新分离
-- ✅ **批量**: 可以一次处理多条日志
-- ✅ **缓冲**: 可以平滑处理日志高峰
+**Queue mode** (current implementation):
+- ✅ **Decoupling**: Separate log generation and UI updates
+- ✅ **Batch**: Can process multiple logs at one time
+- ✅ **Buffer**: Can handle log peaks smoothly
 
-**直接更新方式**（如果不用队列）:
-- ❌ **耦合**: 日志产生和 UI 更新强耦合
-- ❌ **无法批量**: 必须逐条更新
-- ❌ **无缓冲**: 日志高峰时直接冲击 UI
+**Direct update method** (if no queue is used):
+- ❌ **Coupling**: Log generation and UI updates are strongly coupled
+- ❌ **Unable to batch**: must be updated one by one
+- ❌ **No buffering**: Log peaks directly impact the UI
 
 ---
 
-## 🔍 特殊情况处理
+## 🔍 Special case handling
 
-### 情况 1: 队列为空
-
-```csharp
+### Case 1: Queue is empty```csharp
 if (_pendingCliLogs.Count == 0) return;  // 直接返回，不浪费资源
-```
+```**Processing**: If the queue is empty when the timer is triggered, return immediately without performing any operation.
 
-**处理**: 定时器触发时如果队列为空，立即返回，不执行任何操作。
-
-**性能**: 开销极小（只是检查队列长度）。
+**Performance**: Minimal overhead (just checking the queue length).
 
 ---
 
-### 情况 2: 日志量激增
+### Scenario 2: Log volume surges
 
-**场景**: 启动时短时间内产生大量日志（如 500 条）
+**Scenario**: A large number of logs (such as 500) are generated in a short period of time during startup.
 
-**处理流程**:
-```
+**Processing Flow**:```
 0ms-100ms:   产生 500 条日志 → 全部入队
 100ms:       Timer 触发 → 批量处理 500 条 → UI 更新
-```
-
-**结果**: 
-- ✅ 500 条日志一次更新，不会卡顿
-- ✅ UI 更新频率仍然固定（每 100ms 一次）
-- ✅ 性能稳定，不会因日志量激增而崩溃
+```**Result**:
+- ✅ 500 logs updated at one time, no lag
+- ✅ UI update frequency remains fixed (once every 100ms)
+- ✅ Stable performance and will not crash due to a surge in log volume
 
 ---
 
-### 情况 3: 停止时刷新
+### Case 3: Refresh when stopped
 
-**场景**: 停止 NCF 时，队列中可能还有未处理的日志
+**Scenario**: When stopping NCF, there may be unprocessed logs in the queue
 
-**处理**: `ViewModels/MainWindowViewModel.cs:1217-1246`
-
-```csharp
+**Processing**: `ViewModels/MainWindowViewModel.cs:1217-1246````csharp
 private void FlushPendingLogs()
 {
     // 立即取出所有待处理日志
@@ -390,54 +344,47 @@ private void FlushPendingLogs()
         LogText = _logBuffer.ToString();
     });
 }
-```
+```**Calling Timing**: In the `StopNcfAsync()` method, refresh immediately before stopping
 
-**调用时机**: `StopNcfAsync()` 方法中，停止前立即刷新
-
-**目的**: 确保停止时不丢失任何日志
+**Purpose**: Ensure that no logs are lost when stopping
 
 ---
 
-## 📈 性能数据
+## 📈 Performance data
 
-### 实际测试数据（200 条日志场景）
+### Actual test data (200 log scenarios)
 
-| 指标 | 优化前 | 优化后 | 改善 |
+| Indicators | Before optimization | After optimization | Improvement |
 |------|--------|--------|------|
-| **UI 更新次数** | 200 次 | 2 次 | ⬇️ 99% |
-| **线程切换次数** | 600 次 | 2 次 | ⬇️ 99.7% |
-| **控件查找次数** | 200 次 | 1 次 | ⬇️ 99.5% |
-| **总延迟** | 2-5 秒 | <100ms | ⬆️ 20-50 倍 |
+| **UI updates** | 200 times | 2 times | ⬇️ 99% |
+| **Thread switching times** | 600 times | 2 times | ⬇️ 99.7% |
+| **Control search times** | 200 times | 1 time | ⬇️ 99.5% |
+| **Total Latency** | 2-5 seconds | <100ms | ⬆️ 20-50 times |
 
 ---
 
-## 🎓 总结
+## 🎓 Summary
 
-### 核心机制
+### Core Mechanism
 
-1. ✅ **定时扫描**: 使用 `System.Timers.Timer` 每 100ms 扫描一次
-2. ✅ **批量处理**: 一次处理多条日志，减少 UI 更新次数
-3. ✅ **队列缓冲**: 使用队列缓冲日志，平滑处理日志高峰
-4. ✅ **线程安全**: 使用 `lock` 保护共享队列
+1. ✅ **Scheduled Scan**: Use `System.Timers.Timer` to scan every 100ms
+2. ✅ **Batch Processing**: Process multiple logs at one time to reduce the number of UI updates
+3. ✅ **Queue buffering**: Use queue buffering logs to smoothly handle log peaks
+4. ✅ **Thread Safety**: Use `lock` to protect shared queues
 
-### 关键优势
+### Key advantages
 
-- 🚀 **性能优秀**: 减少 95%+ 的 UI 更新操作
-- ⚡ **响应及时**: 100ms 延迟用户几乎感觉不到
-- 🛡️ **稳定可靠**: 日志量激增时性能仍然稳定
-- 💡 **易于调整**: 只需修改一个常量即可调整性能
+- 🚀 **Excellent performance**: Reduce 95%+ UI update operations
+- ⚡ **Prompt response**: 100ms delay is almost imperceptible to users
+- 🛡️ **Stable and Reliable**: Performance remains stable even when log volume increases.
+- 💡 **Easy to tune**: Just modify a constant to tune performance
 
-### 工作流程
-
-```
+### Workflow```
 日志产生 → 入队 → 定时器扫描（100ms） → 批量更新 UI
-```
+```---
 
----
-
-**文档创建**: 2025-11-17  
-**相关文档**: 
+**Document Creation**: 2025-11-17
+**Related Documents**:
 - CLI_OUTPUT_PERFORMANCE_ANALYSIS.md
 - CLI_OUTPUT_PERFORMANCE_OPTIMIZATION.md
 - PERFORMANCE_OPTIMIZATION_SUMMARY.md
-

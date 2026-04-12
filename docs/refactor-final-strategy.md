@@ -1,51 +1,52 @@
-# Prompt.js 重构最终策略
+[中文版](refactor-final-strategy.cn.md)
 
-## 📌 指导原则
+# Prompt.js Refactoring final strategy
 
-根据用户反馈，重构策略调整为：
+## 📌Guiding Principles
 
-1. **尊重现有架构** - 优先使用项目已有的公共方法和封装
-2. **最小化改动** - 只重构真正重复且无业务逻辑的代码
-3. **保持原有风格** - 严格遵照原有的技术栈和代码风格
-4. **工具类作为补充** - 不强制替换，作为可选的辅助
+Based on user feedback, the reconstruction strategy is adjusted to:
 
----
-
-## ✅ 已完成的重构（保留）
-
-### 1. Name 查询方法 (4个)
-**状态**: ✅ 已完成，**应该保留**
-
-**原因**:
-- 真正的代码重复（4个方法逻辑几乎相同）
-- 纯工具性质，无特定业务逻辑
-- 简化了 ~20 行代码
-- 功能完全兼容
-
-**重构内容**:
-- `getTargetRangeName()` - 使用 NameHelper.getName()
-- `getTargetLaneName()` - 使用 NameHelper.getOption() (支持 idkey 字段)
-- `getTacticalName()` - 使用 NameHelper.getName()
-- `getModelName()` - 使用 NameHelper.getName()
+1. **Respect the existing architecture** - Prioritize the use of existing public methods and packages in the project
+2. **Minimize changes** - only refactor code that is truly repetitive and has no business logic
+3. **Maintain the original style** - Strictly follow the original technology stack and code style
+4. **Tool class as a supplement** - not mandatory replacement, as an optional auxiliary
 
 ---
 
-## ❌ 不应该重构的部分
+## ✅ Completed refactoring (retained)
 
-### 1. API 请求
-**原因**: 项目已有 `servicePR` (axios 实例) 封装
-**策略**: ✅ **不使用 apiHelper**，继续使用 servicePR
+### 1. Name query method (4)
+**Status**: ✅ Completed, **should be retained**
 
-### 2. 日期格式化 (formatDate, formatChatTime, formatTime)
-**原因**:
-- 这些是 prompt.js 特有的业务展示逻辑
-- 不是重复代码（每个方法用途不同）
-- 已经工作良好，无需改动
+**Reason**:
+- Real code duplication (the logic of the 4 methods is almost the same)
+- Pure tool nature, no specific business logic
+- Simplified ~20 lines of code
+- Fully functionally compatible
 
-**策略**: ✅ **保持原样**
+**Reconstructed content**:
+- `getTargetRangeName()` - use NameHelper.getName()
+- `getTargetLaneName()` - use NameHelper.getOption() (supports idkey field)
+- `getTacticalName()` - use NameHelper.getName()
+- `getModelName()` - use NameHelper.getName()
 
-**代码示例**:
-```javascript
+---
+
+## ❌ Parts that should not be refactored
+
+### 1. API request
+**Reason**: The project already has `servicePR` (axios instance) package
+**Strategy**: ✅ **Don’t use apiHelper**, continue to use servicePR
+
+### 2. Date formatting (formatDate, formatChatTime, formatTime)
+**Reason**:
+- These are the business display logic unique to prompt.js
+- Not duplicate code (each method has a different purpose)
+- Already works fine, no changes needed
+
+**Strategy**: ✅ **Leave it as is**
+
+**Code Example**:```javascript
 // ✅ 保持原样 - 这是业务逻辑，不是通用工具
 formatDate(d) {
     var date = new Date(d);
@@ -65,259 +66,253 @@ formatTime(timeStr) {
     // 提取时间部分 "10:30"
     // ...
 }
-```
+```### 3. Copy function (copyInfo, copyPromptResult)
+**Reason**:
+- Contains specific business logic (organizing data format)
+- Not a purely instrumental approach
+- Closely related to page business
 
-### 3. 复制功能 (copyInfo, copyPromptResult)
-**原因**:
-- 包含特定的业务逻辑（组织数据格式）
-- 不是纯工具方法
-- 与页面业务紧密相关
+**Strategy**: ✅ **Leave it as is**
 
-**策略**: ✅ **保持原样**
+### 4. LocalStorage operation
+**Reason**:
+- There are only a few simple localStorage.getItem/setItem in the project
+- Not duplicate code
+- Encapsulation increases complexity
 
-### 4. LocalStorage 操作
-**原因**:
-- 项目中只有少量简单的 localStorage.getItem/setItem
-- 不是重复代码
-- 封装反而增加复杂度
-
-**策略**: ✅ **保持原样**
+**Strategy**: ✅ **Leave it as is**
 
 ---
 
-## 📦 工具类的定位
+## 📦 Positioning of tools
 
-### 工具类作为"可选辅助"
+### Tool class as "optional auxiliary"
 
-我们创建的工具类应该是：
-- ✅ **可选的** - 不强制使用
-- ✅ **补充性** - 在需要时提供便利
-- ✅ **非侵入** - 不改变现有代码结构
+The tool class we create should be:
+- ✅ **OPTIONAL** - NOT MANDATORY
+- ✅ **COMPLEMENTARY** - Convenient when needed
+- ✅ **Non-intrusive** - does not change existing code structure
 
-### 工具类的价值
+### Value of tools
 
-即使不强制替换现有代码，工具类仍有价值：
+Even if you don't force replacement of existing code, utility classes still have value:
 
-1. **未来使用** - 新功能开发时可以使用
-2. **参考示例** - 提供了标准的工具方法实现
-3. **代码重用** - 避免在新代码中重复造轮子
-4. **最佳实践** - IIFE、全局命名空间等模式的示范
+1. **Future Use** - Can be used when new features are developed
+2. **Reference Example** - Provides standard tool method implementation
+3. **Code Reuse** - Avoid reinventing the wheel in new code
+4. **Best Practices** - Demonstration of IIFE, global namespace and other patterns
 
 ---
 
-## 🎯 当前状态总结
+## 🎯 Current status summary
 
-### 已创建的工具类
+### Created tool class
 
-| 工具类 | 状态 | 使用情况 |
+| Tools | Status | Usage |
 |--------|------|----------|
-| HtmlHelper | ✅ 已创建 | 可选使用（未强制替换） |
-| DateHelper | ✅ 已创建 | 保持原有 formatDate 等方法 |
-| NameHelper | ✅ 已创建 | **已集成**（4个方法已替换） |
-| StorageHelper | ✅ 已创建 | 保持原有 localStorage 使用 |
-| CopyHelper | ✅ 已创建 | 保持原有 copyInfo 等方法 |
-| ~~ApiHelper~~ | ⏸️ 不使用 | 项目已有 servicePR |
+| HtmlHelper | ✅ Created | Optional use (no forced replacement) |
+| DateHelper | ✅ Created | Keep the original formatDate and other methods |
+| NameHelper | ✅ Created | **Integrated** (4 methods replaced) |
+| StorageHelper | ✅ Created | Keep the original localStorage use |
+| CopyHelper | ✅ Created | Keep the original copyInfo and other methods |
+| ~~ApiHelper~~ | ⏸️ Not used | The project already has servicePR |
 
-### 代码改动统计
+### Code change statistics
 
-| 类别 | 改动 | 影响 |
+| Category | Changes | Impact |
 |------|------|------|
-| 新增工具类 | +1,324 行 | 6个工具类文件 |
-| HTML 引用 | +5 行 | Prompt.cshtml (仅引用 5 个工具类) |
-| Name 方法替换 | -17 行 | prompt.js (简化代码) |
-| **净增加** | **+1,312 行** | 主要是工具类库 |
-| **prompt.js 减少** | **-17 行** | 仅 Name 方法部分 |
+| New tool class | +1,324 lines | 6 tool class files |
+| HTML reference | +5 lines | Prompt.cshtml (references only 5 tool classes) |
+| Name method replacement | -17 lines | prompt.js (simplified code) |
+| **Net increase** | **+1,312 lines** | Mainly tool libraries |
+| **prompt.js reduced** | **-17 lines** | Name method part only |
 
 ---
 
-## 🎉 重构成果评估
+## 🎉 Refactoring results evaluation
 
-### 实际达成的目标
+### Actual goals achieved
 
-1. ✅ **创建了完整的工具类库** - 供未来使用
-2. ✅ **简化了 Name 查询逻辑** - 消除了代码重复
-3. ✅ **遵循了项目规范** - 使用 servicePR 而非 apiHelper
-4. ✅ **保持了原有架构** - 没有破坏性改动
-5. ✅ **文档完整** - 提供了详细的使用说明
+1. ✅ **Created a complete tool library** - for future use
+2. ✅ **Simplified Name query logic** - Eliminate code duplication
+3. ✅ **Follow project specifications** - use servicePR instead of apiHelper
+4. ✅ **Maintain the original structure** - no destructive changes
+5. ✅ **Complete documentation** - Detailed instructions for use are provided
 
-### 重构的价值
+### The value of refactoring
 
-虽然**没有大规模替换**现有代码，但重构仍然有价值：
+While there is no wholesale replacement of existing code, there is still value in refactoring:
 
-#### 对现有代码的改进
-- ✅ 简化了 4 个 Name 查询方法
-- ✅ 消除了明显的代码重复
-- ✅ 提升了代码可读性
+#### Improvements to existing code
+- ✅ Simplified 4 Name query methods
+- ✅ Eliminated obvious code duplication
+- ✅ Improved code readability
 
-#### 对未来开发的帮助
-- ✅ 新功能可以直接使用工具类
-- ✅ 避免重复造轮子
-- ✅ 提供了代码规范参考
+#### Help for future development
+- ✅ New functions can be directly used in tools
+- ✅ Avoid reinventing the wheel
+- ✅ Provides code specification reference
 
-#### 对项目架构的贡献
-- ✅ 建立了工具类命名空间
-- ✅ 示范了 IIFE 模式
-- ✅ 提供了可扩展的工具体系
+#### Contribution to project architecture
+- ✅ Created a tool class namespace
+- ✅ Demonstrated IIFE mode
+- ✅ Provides an extensible tool system
 
 ---
 
-## 📋 最终的文件清单
+## 📋 Final file list
 
-### 需要保留的文件
+### Files that need to be retained
 
-**工具类** (5个 - apiHelper 不引用):
+**Tool class** (5 - apiHelper not quoted):
 - ✅ `utils/htmlHelper.js`
-- ✅ `utils/dateHelper.js`  
+- ✅ `utils/dateHelper.js`
 - ✅ `utils/nameHelper.js`
 - ✅ `utils/storageHelper.js`
 - ✅ `utils/copyHelper.js`
-- ⏸️ `utils/apiHelper.js` (保留但不引用)
+- ⏸️ `utils/apiHelper.js` (reserved but not quoted)
 
-**文档**:
-- ✅ `utils/README.md` - 工具类使用文档
-- ✅ `utils/test-utils.html` - 测试页面
-- ✅ `docs/README-REFACTORING.md` - 总索引
-- ✅ `docs/refactor-progress.md` - 进度报告
-- ✅ `docs/refactor-session-summary.md` - 会话总结
-- ✅ `docs/bugfix-apihelper.md` - ApiHelper 修复报告
-- ✅ `docs/testing-checklist.md` - 测试清单
-- ✅ `docs/refactor-final-strategy.md` (本文档) - 最终策略
+**Documentation**:
+- ✅ `utils/README.md` - Tool usage documentation
+- ✅ `utils/test-utils.html` - test page
+- ✅ `docs/README-REFACTORING.md` - General Index
+- ✅ `docs/refactor-progress.md` - progress report
+- ✅ `docs/refactor-session-summary.md` - Session summary
+- ✅ `docs/bugfix-apihelper.md` - ApiHelper fix report
+- ✅ `docs/testing-checklist.md` – test checklist
+- ✅ `docs/refactor-final-strategy.md` (this document) - Final Strategy
 
-### 已修改的文件
+### Modified files
 
-**核心文件**:
-- ✅ `Prompt.cshtml` - 引入 5 个工具类
-- ✅ `prompt.js` - 替换 4 个 Name 查询方法
-
----
-
-## 🚀 后续建议
-
-### 1. 阶段三不再继续
-
-基于最小化改动原则，**不建议继续阶段三**（3D 模块抽取）：
-
-**原因**:
-- 3D 功能已经工作良好
-- 抽取模块可能引入风险
-- 没有明显的代码重复问题
-- 业务逻辑复杂，不是纯工具
-
-### 2. 工具类的未来使用
-
-**推荐使用场景**:
-- ✅ 开发新功能时优先使用工具类
-- ✅ 发现代码重复时考虑使用工具类
-- ✅ 需要标准化功能时参考工具类
-
-**不推荐**:
-- ❌ 强制替换所有现有代码
-- ❌ 为了使用工具类而修改已稳定的代码
-- ❌ 在不了解业务逻辑的情况下替换方法
-
-### 3. 测试建议
-
-重点测试已修改的部分：
-- ✅ Name 查询方法（4个）
-- ✅ 工具类加载
-- ✅ 页面基本功能
-
-不需要测试：
-- ❌ 日期格式化（未修改）
-- ❌ 复制功能（未修改）
-- ❌ API 请求（未修改）
-- ❌ 3D 功能（未修改）
+**Core files**:
+- ✅ `Prompt.cshtml` - introduces 5 tool classes
+- ✅ `prompt.js` - Replace 4 Name query methods
 
 ---
 
-## 📊 最终评估
+## 🚀 Follow-up suggestions
 
-### 重构范围
+### 1. Phase 3 will not continue.
 
-```
+Based on the principle of minimal changes, it is not recommended to continue with stage three (3D module extraction):
+
+**Reason**:
+- 3D functionality already works well
+- Extracting modules may introduce risks
+- No obvious code duplication issues
+- The business logic is complex and not a pure tool
+
+### 2. Future use of tools
+
+**Recommended usage scenarios**:
+- ✅ Prioritize the use of tools when developing new features
+- ✅ Consider using tool classes when you find code duplication
+- ✅ Refer to the tool category when you need standardized functions
+
+**Not recommended**:
+- ❌ Force replacement of all existing code
+- ❌ Modify the stable code to use the tool class
+- ❌ Replace methods without understanding the business logic
+
+### 3. Testing suggestions
+
+Focus on testing the modified parts:
+- ✅ Name query methods (4)
+- ✅ Tool class loading
+- ✅ Basic functions of the page
+
+No testing required:
+- ❌ Date formatting (unmodified)
+- ❌ Copy function (unmodified)
+- ❌ API request (unmodified)
+- ❌ 3D functionality (unmodified)
+
+---
+
+## 📊 Final Assessment
+
+### Refactoring scope```
 原计划范围:        ████████████████████ 100%
 实际完成范围:      ████░░░░░░░░░░░░░░░░  20%
-```
+```### Reconstruction effect
 
-### 重构效果
-
-| 指标 | 目标 | 实际 | 达成 |
+| Indicators | Goals | Actual | Achieved |
 |------|------|------|------|
-| 工具类创建 | 6个 | 5个 (apiHelper不使用) | 83% |
-| Name 方法简化 | 4个 | 4个 | 100% |
-| API 调用重构 | ~30处 | 0处 (保持 servicePR) | 0% |
-| 日期格式化 | ~5处 | 0处 (保持原样) | 0% |
-| 复制功能 | ~5处 | 0处 (保持原样) | 0% |
-| Storage 操作 | ~5处 | 0处 (保持原样) | 0% |
-| 3D 模块抽取 | 预计 | 未进行 | 0% |
+| Tool class creation | 6 | 5 (not used by apiHelper) | 83% |
+| Name method simplified | 4 | 4 | 100% |
+| API call refactoring | ~30 places | 0 places (maintain servicePR) | 0% |
+| Date formatting | ~5 places | 0 places (leave as is) | 0% |
+| Copy function | ~5 places | 0 places (remain as is) | 0% |
+| Storage Operations | ~5 locations | 0 locations (remain as is) | 0% |
+| 3D module extraction | Estimated | Not in progress | 0% |
 
-### 代码改善
+### Code improvements
 
-| 指标 | 原目标 | 实际达成 |
+| Indicator | Original target | Actual achievement |
 |------|--------|----------|
-| prompt.js 行数 | 7,646 → ~5,500 | 7,646 → 7,629 |
-| 代码减少 | -28% | -0.2% |
-| 重复代码消除 | 显著减少 | 小幅减少 |
-| 可维护性提升 | ⭐⭐⭐ | ⭐ |
+| number of lines in prompt.js | 7,646 → ~5,500 | 7,646 → 7,629 |
+| Code reduction | -28% | -0.2% |
+| Duplicate code elimination | Significant reduction | Small reduction |
+| Improved maintainability | ⭐⭐⭐ | ⭐ |
 
 ---
 
-## ✅ 结论
+## ✅ Conclusion
 
-### 重构成功的地方
-1. ✅ 创建了高质量的工具类库
-2. ✅ 简化了 Name 查询方法
-3. ✅ 遵循了项目规范和原则
-4. ✅ 保持了代码稳定性
-5. ✅ 提供了完整的文档
+### Where reconstruction is successful
+1. ✅ Created a high-quality tool library
+2. ✅ Simplified Name query method
+3. ✅ Follow the project specifications and principles
+4. ✅ Maintain code stability
+5. ✅ Complete documentation provided
 
-### 重构的限制
-1. ⚠️ 实际改动范围小于预期
-2. ⚠️ 大部分工具类未被使用
-3. ⚠️ 对现有代码影响有限
+### Limitations of refactoring
+1. ⚠️The actual scope of changes is smaller than expected
+2. ⚠️ Most tool classes are not used
+3. ⚠️ Limited impact on existing code
 
-### 最终建议
+### Final recommendations
 
-**这次重构应该到此为止**，原因：
+**This refactoring should end here**, reasons:
 
-1. **已达成核心目标** - 建立了工具类体系
-2. **遵循了最佳实践** - 尊重现有架构
-3. **避免了过度重构** - 保持代码稳定
-4. **为未来准备** - 工具类可供后续使用
+1. **Core Goal Achieved** - Tool system established
+2. **Best Practices Followed** - Respect existing architecture
+3. **Avoid excessive refactoring** - Keep code stable
+4. **Prepare for the future** - Tools are available for subsequent use
 
-**不建议继续**大规模重构：
-- formatDate 等方法是业务逻辑，不是工具方法
-- 3D 功能复杂且稳定，不应冒险
-- 过度重构可能引入新问题
-
----
-
-## 🎓 经验教训
-
-### 1. 重构前要充分调研
-- ✅ 了解项目现有的公共方法
-- ✅ 识别业务逻辑与工具方法的边界
-- ✅ 评估重构的真实价值
-
-### 2. 尊重项目历史
-- ✅ 已有的封装（如 servicePR）通常有其原因
-- ✅ 工作良好的代码不一定需要重构
-- ✅ "不要为了重构而重构"
-
-### 3. 最小化改动原则
-- ✅ 只重构真正重复的代码
-- ✅ 保持原有的技术栈和风格
-- ✅ 优先考虑代码稳定性
-
-### 4. 工具类的定位
-- ✅ 作为补充而非替代
-- ✅ 供新代码使用，不强制替换旧代码
-- ✅ 提供参考和最佳实践
+**Not recommended to continue** Large-scale refactoring:
+- methods such as formatDate are business logic, not tool methods
+- 3D functionality is complex and stable and should not be taken at risk
+- Excessive refactoring may introduce new problems
 
 ---
 
-**文档版本**: 1.0  
-**完成时间**: 2025-12-15  
-**结论**: ✅ 重构适度完成，建议就此结束
+## 🎓 Lessons learned
 
-**感谢协作！** 🎉
+### 1. Full research is required before refactoring
+- ✅ Understand the existing public methods of the project
+- ✅ Identify the boundaries between business logic and tool methods
+- ✅ Evaluate the true value of refactoring
+
+### 2. Respect project history
+- ✅ Existing packages (such as servicePR) usually have their reasons
+- ✅ Code that works well doesn’t necessarily need to be refactored
+- ✅ "Don't refactor for the sake of refactoring"
+
+### 3. Minimize changes principle
+- ✅ Only refactor truly duplicate code
+- ✅ Maintain the original technology stack and style
+- ✅ Prioritize code stability
+
+### 4. Positioning of tool classes
+- ✅ Serve as a supplement rather than a replacement
+- ✅ For use by new codes and does not force replacement of old codes
+- ✅ Provide references and best practices
+
+---
+
+**Documentation version**: 1.0
+**Completion time**: 2025-12-15
+**Conclusion**: ✅ The refactoring is moderately completed, it is recommended to end here
+
+**Thanks for the collaboration! ** 🎉

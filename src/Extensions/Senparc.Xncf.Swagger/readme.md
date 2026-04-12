@@ -1,11 +1,13 @@
-## Senparc.Xncf.Swagger 项目说明
+[中文版](readme.cn.md)
 
-MVC模式设置文档生成，需要：
-1.标注接口访问方法类型，如：[HttpGet]
-2.标注接口所属版本，如：[ApiVersion("1")]
-3.设置接口方法路由，如：[Route("GetTest")]
+## Senparc.Xncf.Swagger Project Description
 
-Page模式设置文档生成：
-暂不支持
+MVC mode setting document generation requires:
+1. Mark the interface access method type, such as: [HttpGet]
+2. Mark the version of the interface, such as: [ApiVersion("1")]
+3. Set the interface method route, such as: [Route("GetTest")]
 
-如需设置注释的支持，需要在项目属性-->生成面板的输出模块选中“XML文档文件”
+Page mode setting document generation:
+Not supported yet
+
+If you need to set up annotation support, you need to select "XML document file" in the project properties-->output module of the generation panel.

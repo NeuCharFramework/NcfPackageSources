@@ -1,130 +1,131 @@
-# 🧹 重构文件清理报告
+[中文版](CLEANUP-SUMMARY.cn.md)
 
-## 📅 清理信息
+# 🧹 Reconstruct file cleanup report
 
-**清理时间**: 2025-12-15  
-**清理原则**: 保留核心，删除冗余  
-**清理结果**: 删除 8 个文件，-5,803 行代码
+## 📅 Clean up information
 
----
-
-## 🗑️ 已删除的文件
-
-### 1. 不使用的工具类
-
-#### `utils/apiHelper.js` (275 行)
-**删除原因**:
-- 依赖 jQuery，但项目使用 axios
-- 功能与项目现有的 servicePR 重复
-- 引入错误和不必要的复杂度
-
-**替代方案**: 使用项目现有的 `servicePR` (axios 实例)
+**Cleaning Time**: 2025-12-15
+**Cleaning Principle**: Keep core, remove redundancy
+**Cleaning results**: 8 files deleted, -5,803 lines of code
 
 ---
 
-### 2. 过程性文档 (7个，共 5,528 行)
+## 🗑️ Deleted files
 
-#### `prompt-js-analysis.md` (1,300+ 行)
-**删除原因**: 初期分析文档，重构已完成，不再需要
+### 1. Unused tool classes
 
-#### `prompt-js-refactoring-plan.md` (1,513 行)
-**删除原因**: 详细规划文档，已执行完毕，最终策略已记录在 `refactor-final-strategy.md`
+#### `utils/apiHelper.js` (line 275)
+**Reason for deletion**:
+- Depends on jQuery, but the project uses axios
+- The function is duplicated with the existing servicePR of the project
+-Introduces errors and unnecessary complexity
 
-#### `prompt-js-refactoring-comparison.md` (815 行)
-**删除原因**: 对比分析文档，内容已整合到 `REFACTOR-COMPLETE.md`
-
-#### `prompt-js-summary.md` (500+ 行)
-**删除原因**: 早期总结文档，已过时，最新总结在完成报告中
-
-#### `prompt-js-traditional-loading-guide.md` (800+ 行)
-**删除原因**: 技术指南，内容已包含在 `utils/README.md` 中
-
-#### `refactor-progress.md` (220+ 行)
-**删除原因**: 进度跟踪文档，重构已完成，进度信息在完成报告中
-
-#### `refactor-session-summary.md` (380+ 行)
-**删除原因**: 会话总结，内容已整合到 `REFACTOR-COMPLETE.md`
-
-#### `testing-checklist.md` (249 行)
-**删除原因**: 测试清单，测试已通过，清单不再需要
+**Alternative**: Use the project's existing `servicePR` (axios instance)
 
 ---
 
-## ✅ 保留的核心文件
+### 2. Process documents (7, 5,528 lines in total)
 
-### 核心文档 (4个)
+#### `prompt-js-analysis.md` (1,300+ lines)
+**Reason for deletion**: Initial analysis document, reconstruction completed, no longer needed
 
-#### 1. `README-REFACTORING.md` (更新)
-**作用**: 文档总入口，快速导航
-**内容**: 
-- 重构成果概览
-- 核心文档链接
-- 快速使用指南
+#### `prompt-js-refactoring-plan.md` (1,513 lines)
+**Reason for deletion**: The detailed planning document has been executed and the final strategy has been recorded in `refactor-final-strategy.md`
 
-#### 2. `REFACTOR-COMPLETE.md` (448 行)
-**作用**: 最重要的完成报告
-**内容**:
-- 完整的工作总结
-- 统计数据和成果
-- 经验教训
-- 工具类使用指南
-- 后续建议
+#### `prompt-js-refactoring-comparison.md` (line 815)
+**Reason for deletion**: Comparative analysis document, the content has been integrated into `REFACTOR-COMPLETE.md`
 
-#### 3. `refactor-final-strategy.md` (325 行)
-**作用**: 最终策略说明
-**内容**:
-- 指导原则
-- 重构决策依据
-- 已完成和未完成的内容
-- 经验总结
+#### `prompt-js-summary.md` (500+ lines)
+**Reason for deletion**: Early summary document, outdated, the latest summary is in the completion report
 
-#### 4. `bugfix-apihelper.md` (200+ 行)
-**作用**: 问题修复记录
-**内容**:
-- apiHelper 依赖问题
-- servicePR 功能说明
-- 解决方案记录
+#### `prompt-js-traditional-loading-guide.md` (800+ lines)
+**Reason for removal**: Technical guide, content already included in `utils/README.md`
 
-### 工具类文档 (1个)
+#### `refactor-progress.md` (220+ lines)
+**Reason for deletion**: Progress tracking document, refactoring has been completed, progress information is in the completion report
 
-#### `utils/README.md` (更新，简化版)
-**作用**: 工具类使用手册
-**内容**:
-- 5个工具类的 API 文档
-- 使用示例
-- 注意事项
-- 移除了 apiHelper 的说明
+#### `refactor-session-summary.md` (380+ lines)
+**Reason for deletion**: Session summary, the content has been integrated into `REFACTOR-COMPLETE.md`
+
+#### `testing-checklist.md` (line 249)
+**Reason for deletion**: Test list, the test has passed, the list is no longer needed
 
 ---
 
-## 📊 清理统计
+## ✅ Reserved core files
 
-### 文件数量
+### Core documents (4)
 
-| 类别 | 删除 | 保留 | 总计 |
+#### 1. `README-REFACTORING.md` (updated)
+**Function**: Document main entrance, quick navigation
+**Content**:
+- Overview of reconstruction results
+- Core documentation links
+- Quick start guide
+
+#### 2. `REFACTOR-COMPLETE.md` (line 448)
+**Function**: The most important completion report
+**Content**:
+- Complete work summary
+- Statistics and results
+- Lessons learned
+- Tool usage guide
+- Follow-up suggestions
+
+#### 3. `refactor-final-strategy.md` (line 325)
+**Function**: Final strategy description
+**Content**:
+- Guiding principles
+- Reconstruct decision-making basis
+- Completed and unfinished content
+- Experience summary
+
+#### 4. `bugfix-apihelper.md` (200+ lines)
+**Function**: Problem fix record
+**Content**:
+- apiHelper dependency issue
+- servicePR function description
+- Solution record
+
+### Tool documentation (1)
+
+#### `utils/README.md` (updated, simplified version)
+**Function**: Tool user manual
+**Content**:
+- API documentation for 5 tool classes
+- Usage examples
+- Precautions
+- Removed apiHelper description
+
+---
+
+## 📊 Clean statistics
+
+### Number of files
+
+| Category | Delete | Keep | Total |
 |------|------|------|------|
-| 工具类 | 1 | 5 | 6 |
-| 核心文档 | 0 | 4 | 4 |
-| 过程文档 | 7 | 0 | 7 |
-| 工具类文档 | 0 | 1 | 1 |
-| **总计** | **8** | **10** | **18** |
+| Tools | 1 | 5 | 6 |
+| Core Documentation | 0 | 4 | 4 |
+| Process Documentation | 7 | 0 | 7 |
+| Tool documentation | 0 | 1 | 1 |
+| **Total** | **8** | **10** | **18** |
 
-### 代码行数
+### Number of lines of code
 
-| 类别 | 删除行数 |
+| Category | Delete rows |
 |------|----------|
 | apiHelper.js | 275 |
-| 过程性文档 | 5,528 |
-| **总计** | **5,803** |
+| Process Documentation | 5,528 |
+| **Total** | **5,803** |
 
 ---
 
-## 🎯 清理效果
+## 🎯 Cleaning effect
 
-### 文档结构优化
+### Document structure optimization
 
-**清理前**:
-```
+**Before cleaning**:```
 docs/
 ├── README-REFACTORING.md (冗长)
 ├── prompt-js-analysis.md
@@ -138,21 +139,15 @@ docs/
 ├── bugfix-apihelper.md
 ├── refactor-final-strategy.md
 └── REFACTOR-COMPLETE.md
-```
-
-**清理后**:
-```
+```**After cleaning**:```
 docs/
 ├── README-REFACTORING.md ⭐ (简洁入口)
 ├── REFACTOR-COMPLETE.md ⭐ (最重要)
 ├── refactor-final-strategy.md
 └── bugfix-apihelper.md
-```
+```### Tool class structure optimization
 
-### 工具类结构优化
-
-**清理前**:
-```
+**Before cleaning**:```
 utils/
 ├── htmlHelper.js ✅
 ├── dateHelper.js ✅
@@ -162,10 +157,7 @@ utils/
 ├── apiHelper.js ❌ (依赖错误)
 ├── README.md (冗长，包含 apiHelper)
 └── test-utils.html ✅
-```
-
-**清理后**:
-```
+```**After cleaning**:```
 utils/
 ├── htmlHelper.js ✅
 ├── dateHelper.js ✅
@@ -174,142 +166,140 @@ utils/
 ├── copyHelper.js ✅
 ├── README.md (简洁，无 apiHelper)
 └── test-utils.html ✅
-```
+```---
+
+## 💡 Cleaning principles
+
+### 1. Keep core and delete redundancy
+- ✅ Keep final results and important decisions
+- ❌ Delete procedural and temporary documents
+
+### 2. Avoid duplication of functions
+- ✅ Use the existing servicePR of the project
+- ❌ Delete apiHelper with duplicate functions
+
+### 3. Simplify document structure
+- ✅ 4 core documents, clear and concise
+- ❌ Delete 7 process documents to reduce confusion
+
+### 4. Keep information intact
+- ✅ Important content has been integrated into core documents
+- ✅ Lessons learned have been recorded
+- ✅ User guide has been retained
 
 ---
 
-## 💡 清理原则
+## 📖 Document navigation (after cleaning)
 
-### 1. 保留核心，删除冗余
-- ✅ 保留最终成果和重要决策
-- ❌ 删除过程性、临时性文档
-
-### 2. 避免功能重复
-- ✅ 使用项目现有的 servicePR
-- ❌ 删除功能重复的 apiHelper
-
-### 3. 简化文档结构
-- ✅ 4个核心文档，清晰明了
-- ❌ 删除7个过程文档，减少混乱
-
-### 4. 保持信息完整
-- ✅ 重要内容已整合到核心文档
-- ✅ 经验教训已记录
-- ✅ 使用指南已保留
-
----
-
-## 📖 文档导航（清理后）
-
-### 快速开始 (10 分钟)
+### Quick start (10 minutes)
 👉 [README-REFACTORING.md](./README-REFACTORING.md)
 
-### 详细了解 (30 分钟)
-1. [REFACTOR-COMPLETE.md](./REFACTOR-COMPLETE.md) - 完成报告 ⭐
-2. [refactor-final-strategy.md](./refactor-final-strategy.md) - 策略说明
-3. [bugfix-apihelper.md](./bugfix-apihelper.md) - 问题修复
+### Learn more (30 minutes)
+1. [REFACTOR-COMPLETE.md](./REFACTOR-COMPLETE.md) - Complete Report ⭐
+2. [refactor-final-strategy.md](./refactor-final-strategy.md) - Strategy description
+3. [bugfix-apihelper.md](./bugfix-apihelper.md) - Problem fix
 
-### 使用工具类 (20 分钟)
+### Using Tools (20 minutes)
 👉 [utils/README.md](../src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/utils/README.md)
 
 ---
 
-## ✅ 清理检查清单
+## ✅ Cleanup Checklist
 
-- [x] 删除不使用的 apiHelper.js
-- [x] 删除过程性分析文档
-- [x] 删除过时的规划文档
-- [x] 删除重复的对比文档
-- [x] 删除早期总结文档
-- [x] 删除技术指南（内容已整合）
-- [x] 删除进度报告（重构已完成）
-- [x] 删除会话总结（内容已整合）
-- [x] 删除测试清单（测试已通过）
-- [x] 更新 README-REFACTORING.md
-- [x] 更新 utils/README.md
-- [x] 移除所有 apiHelper 相关引用
-- [x] Git 提交清理记录
+- [x] Remove unused apiHelper.js
+- [x] Delete procedural analysis documentation
+- [x] Remove outdated planning documents
+- [x] Remove duplicate comparison documents
+- [x] Remove early summary documents
+- [x] Removed technical guide (content has been consolidated)
+- [x] Remove progress report (refactoring completed)
+- [x] Removed session summary (content has been consolidated)
+- [x] Remove test list (tests passed)
+- [x] Update README-REFACTORING.md
+- [x] Update utils/README.md
+- [x] Remove all apiHelper related references
+- [x] Git commit cleanup record
 
 ---
 
-## 🎉 清理结果
+## 🎉 Clean results
 
-### 优化效果
+### Optimization effect
 
-| 指标 | 清理前 | 清理后 | 改善 |
+| Metrics | Before Cleanup | After Cleanup | Improvement |
 |------|--------|--------|------|
-| 文档数量 | 12 个 | 4 个 | -67% |
-| 工具类数量 | 6 个 | 5 个 | -17% |
-| 文档总行数 | ~8,000 | ~2,000 | -75% |
-| 文档结构 | 复杂 | 简洁 | ⭐⭐⭐ |
+| Number of documents | 12 | 4 | -67% |
+| Number of tools | 6 | 5 | -17% |
+| Total number of lines in document | ~8,000 | ~2,000 | -75% |
+| Document structure | Complex | Concise | ⭐⭐⭐ |
 
-### 保留的核心价值
+### Retained core values
 
-- ✅ 5 个高质量工具类
-- ✅ 完整的使用文档
-- ✅ 重构成果记录
-- ✅ 经验教训总结
-- ✅ 后续使用指南
+- ✅ 5 high-quality tool categories
+- ✅ Complete usage documentation
+- ✅Reconstruction achievement record
+- ✅ Summary of experiences and lessons learned
+- ✅ Follow-up guide
 
-### 清理的冗余内容
+### Cleaned redundant content
 
-- ❌ 不使用的 apiHelper
-- ❌ 过程性分析文档
-- ❌ 重复的规划文档
-- ❌ 临时的测试清单
-- ❌ ~5,800 行冗余文档
+- ❌ unused apiHelper
+- ❌ Process Analysis Documentation
+- ❌ Duplicate planning documents
+- ❌ Temporary test list
+- ❌ ~5,800 lines of redundant documentation
 
 ---
 
-## 📝 后续维护
+## 📝 Follow-up maintenance
 
-### 文档更新原则
+### Document update principles
 
-1. **只更新核心文档**
+1. **Only update core documents**
    - REFACTOR-COMPLETE.md
    - refactor-final-strategy.md
    - utils/README.md
 
-2. **不再创建临时文档**
-   - 避免过程性文档积累
-   - 直接更新核心文档
+2. **No more temporary documents created**
+   - Avoid accumulation of process documents
+   - Directly update core documents
 
-3. **保持简洁**
-   - 4个核心文档足够
-   - 不追求文档数量
-   - 追求内容质量
-
----
-
-## 🎯 总结
-
-### 清理成果
-
-✅ **删除了 8 个多余文件** (-5,803 行)  
-✅ **保留了 10 个核心文件** (必要内容)  
-✅ **简化了文档结构** (12个 → 4个核心文档)  
-✅ **移除了功能重复** (apiHelper)  
-✅ **整合了重要信息** (无遗漏)
-
-### 最终状态
-
-**文档**: 精简、清晰、易于维护  
-**工具类**: 5个实用工具，无冗余  
-**代码**: 干净、无无效文件  
-**结构**: 简单明了，一目了然
+3. **Keep it Simple**
+   - 4 core documents are enough
+   - Don’t pursue the number of documents
+   - Pursuing content quality
 
 ---
 
-**清理完成！** 🎊
+## 🎯 Summary
 
-项目现在处于最佳状态：
-- ✅ 功能完整
-- ✅ 文档清晰
-- ✅ 结构简洁
-- ✅ 易于维护
+### Clean up results
+
+✅ **Deleted 8 redundant files** (-5,803 lines)
+✅ **10 core files reserved** (required content)
+✅ **Simplified document structure** (12 → 4 core documents)
+✅ **Removed function duplication** (apiHelper)
+✅ **Integrated important information** (no omissions)
+
+### Final state
+
+**Documentation**: streamlined, clear, and easy to maintain
+**Tools**: 5 practical tools, no redundancy
+**Code**: clean, no invalid files
+**Structure**: Simple and clear, clear at a glance
 
 ---
 
-**清理完成时间**: 2025-12-15  
-**清理提交**: `c15bbe93`  
-**状态**: ✅ 完成
+**Cleaning completed! ** 🎊
+
+The project is now in its best shape:
+- ✅ Fully functional
+- ✅ Documentation is clear
+- ✅ Simple structure
+- ✅ Easy to maintain
+
+---
+
+**Cleaning completion time**: 2025-12-15
+**Clean commit**: `c15bbe93`
+**Status**: ✅ Completed

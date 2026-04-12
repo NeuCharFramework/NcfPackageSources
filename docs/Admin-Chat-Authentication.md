@@ -1,144 +1,123 @@
-# Admin Chat 认证配置说明
+[中文版](Admin-Chat-Authentication.cn.md)
 
-## 认证方式兼容性
+# Admin Chat authentication configuration instructions
 
-`AdminChatAppService` 现在支持两种认证方式，只要其中一种通过即可访问 API：
+## Authentication method compatibility
 
-### 1. Cookie 认证（网页登录）
-- **认证方案**: `NcfAdminAuthorizeScheme`
-- **使用场景**: 通过管理后台登录页面（`/Admin/Login`）登录
-- **适用于**: 浏览器网页访问
+`AdminChatAppService` now supports two authentication methods. As long as one of them passes, you can access the API:
 
-### 2. JWT 认证（API Token）
-- **认证方案**: `Bearer_Backend`
-- **使用场景**: API 客户端、移动端、第三方集成
-- **适用于**: 需要 Token 认证的场景
+### 1. Cookie authentication (web page login)
+- **Authentication scheme**: `NcfAdminAuthorizeScheme`
+- **Usage scenario**: Log in through the management backend login page (`/Admin/Login`)
+- **Applicable to**: Browser web access
 
-## 问题修复历史
+### 2. JWT authentication (API Token)
+- **Authentication scheme**: `Bearer_Backend`
+- **Usage scenarios**: API client, mobile terminal, third-party integration
+- **Applicable to**: Scenarios that require Token authentication
 
-### 问题1: "登录过期，即将跳转到登录页面"
-**原因**: `AdminChatAppService` 使用了 `[BackendJwtAuthorize]`，但用户使用 Cookie 登录
-**修复**: 改用 `[AdminOrJwtAuthorize]` 支持两种认证方式
+## Problem fix history
 
-### 问题2: "跳转到 /Admin/Forbidden"
-**原因**: Chat 页面需要 "AdminOnly" Policy，但在 Register.cs 中未配置
-**修复**: 在 Register.cs 中添加 `options.Conventions.AuthorizePage("/AdminChat/Chat", "AdminOnly");`
+### Question 1: "The login has expired and will be redirected to the login page soon"
+**Cause**: `AdminChatAppService` uses `[BackendJwtAuthorize]`, but the user uses Cookie to log in
+**Fix**: Use `[AdminOrJwtAuthorize]` instead to support two authentication methods
 
-## 实现细节
+### Question 2: "Jump to /Admin/Forbidden"
+**Cause**: Chat page requires "AdminOnly" Policy, but it is not configured in Register.cs
+**Fix**: Add `options.Conventions.AuthorizePage("/AdminChat/Chat", "AdminOnly");` in Register.cs
+
+## Implementation details
 
 ### AdminOrJwtAuthorizeAttribute
-新创建的认证属性，位于 `AdminOrJwtAuthorizeAttribute.cs`
-
-```csharp
+The newly created authentication attribute, located in `AdminOrJwtAuthorizeAttribute.cs````csharp
 [AdminOrJwtAuthorize("AdminOnly")]
 public class AdminChatAppService : LocalAppServiceBase
 {
     // API 方法可以通过 Cookie 或 JWT 任一方式访问
     // 同时要求用户具有 "AdminMember" Claim
 }
-```
-
-### Register.cs 配置
-```csharp
+```### Register.cs configuration```csharp
 options.Conventions.AuthorizePage("/", "AdminOnly");                    // 首页
 options.Conventions.AuthorizePage("/AdminChat/Chat", "AdminOnly");      // 聊天页面
 options.Conventions.AllowAnonymousToPage("/Login");                     // 登录页允许匿名
-```
-
-### Policy "AdminOnly" 定义
-```csharp
+```### Policy "AdminOnly" Definition```csharp
 options.AddPolicy("AdminOnly", policy =>
 {
     policy.RequireClaim("AdminMember");  // 要求 "AdminMember" Claim
 });
-```
-
-### 登录时设置的 Claims
-在 `AdminUserInfoService.LoginAsync` 方法中：
-```csharp
+```### Claims set when logging in
+In the `AdminUserInfoService.LoginAsync` method:```csharp
 var claims = new List<Claim>
 {
     new Claim(ClaimTypes.Name, userInfo.UserName),
     new Claim(ClaimTypes.NameIdentifier, userInfo.Id.ToString(), ClaimValueTypes.Integer),
     new Claim("AdminMember", "", ClaimValueTypes.String)  // 关键 Claim
 };
-```
+```## Working principle
 
-## 工作原理
+### Certification process
+1. User logs in through `Login.cshtml`
+2. The system sets cookies and adds "AdminMember" Claim
+3. When accessing the Chat page or API, the framework checks:
+   - Whether it is authenticated (Cookie or JWT)
+   - Whether it has "AdminMember" Claim
+4. If both conditions are met, access is allowed
 
-### 认证流程
-1. 用户通过 `Login.cshtml` 登录
-2. 系统设置 Cookie 并添加 "AdminMember" Claim
-3. 访问 Chat 页面或 API 时，框架检查：
-   - 是否已认证（Cookie 或 JWT）
-   - 是否具有 "AdminMember" Claim
-4. 两个条件都满足，允许访问
-
-### ASP.NET Core 多认证方案
-`AuthenticationSchemes` 属性支持多个认证方案（用逗号分隔）：
-```csharp
+### ASP.NET Core multi-authentication solution
+The `AuthenticationSchemes` property supports multiple authentication schemes (separated by commas):```csharp
 AuthenticationSchemes = $"{SiteConfig.NcfAdminAuthorizeScheme},{JwtScheme}";
-```
+```When the request arrives:
+1. The framework will try the configured authentication schemes in sequence.
+2. As long as **any** authentication scheme is successful, access is allowed
+3. If **all** authentication schemes fail, 401 Unauthorized will be returned.
 
-当请求到达时：
-1. 框架会依次尝试配置的认证方案
-2. 只要**任何一个**认证方案成功，就允许访问
-3. 如果**所有**认证方案都失败，才会返回 401 Unauthorized
+## Usage example
 
-## 使用示例
-
-### Cookie 认证访问（当前场景）
-```javascript
+### Cookie authentication access (current scenario)```javascript
 // 用户通过 Login.cshtml 登录后，浏览器会自动携带 Cookie
 axios.post('/api/AdminChat/CreateSessionAsync', data)
   .then(response => {
     // Cookie 认证自动完成，无需额外操作
   });
-```
-
-### JWT 认证访问（未来扩展）
-```javascript
+```### JWT authenticated access (future expansion)```javascript
 // 客户端需要先获取 JWT Token，然后在请求头中携带
 axios.post('/api/AdminChat/CreateSessionAsync', data, {
   headers: {
     'Authorization': 'Bearer ' + jwtToken
   }
 });
-```
+```## Other AppService certification comparison
 
-## 其他 AppService 认证对比
-
-| AppService | 认证属性 | 认证方式 | Policy |
+| AppService | Authentication Properties | Authentication Method | Policy |
 |------------|---------|---------|--------|
-| `AdminChatAppService` | `[AdminOrJwtAuthorize("AdminOnly")]` | Cookie **或** JWT | 需要 "AdminMember" Claim |
-| `AdminUserInfoAppService` | `[BackendJwtAuthorize]` | 仅 JWT | 无 |
-| `StatAppService` | `[AdminAuthorize("AdminOnly")]` | 仅 Cookie | 需要 "AdminMember" Claim |
-| `ModuleAppService` | `[BackendJwtAuthorize]` | 仅 JWT | 无 |
+| `AdminChatAppService` | `[AdminOrJwtAuthorize("AdminOnly")]` | Cookie **or** JWT | Requires "AdminMember" Claim |
+| `AdminUserInfoAppService` | `[BackendJwtAuthorize]` | JWT only | None |
+| `StatAppService` | `[AdminAuthorize("AdminOnly")]` | Cookie only | Requires "AdminMember" Claim |
+| `ModuleAppService` | `[BackendJwtAuthorize]` | JWT only | None |
 
-## 优势
+## Advantages
 
-1. **向后兼容**: 现有 Cookie 登录完全可用
-2. **未来扩展**: 支持 API Token 方式，便于移动端或第三方集成
-3. **灵活性高**: 不同客户端可以选择最适合的认证方式
-4. **安全性**: Policy 确保只有管理员可以访问
+1. **Backward Compatibility**: Existing cookie logins are fully usable
+2. **Future Expansion**: Support API Token method to facilitate mobile or third-party integration
+3. **High flexibility**: Different clients can choose the most suitable authentication method
+4. **Security**: Policy ensures that only administrators have access
 
-## 测试建议
+## Testing suggestions
 
-### Cookie 认证测试
-1. 通过 `/Admin/Login` 登录管理后台
-2. 在首页输入框发送消息
-3. 应能正常跳转到聊天页面，不会出现 Forbidden 错误
+### Cookie Certification Test
+1. Log in to the management background through `/Admin/Login`
+2. Send a message in the input box on the homepage
+3. You should be able to jump to the chat page normally without Forbidden errors.
 
-### JWT 认证测试（可选）
-1. 使用 Postman 或其他 API 工具
-2. 获取包含 "AdminMember" Claim 的 JWT Token
-3. 在请求头添加 `Authorization: Bearer {token}`
-4. 调用 `/api/AdminChat/CreateSessionAsync` 等接口
-5. 应能正常获取响应
+### JWT authentication test (optional)
+1. Use Postman or other API tools
+2. Get the JWT Token containing "AdminMember" Claim
+3. Add `Authorization: Bearer {token}` to the request header
+4. Call interfaces such as `/api/AdminChat/CreateSessionAsync`
+5. The response should be obtained normally
 
-## 注意事项
+## Notes
 
-- **Claim 要求**: 无论使用哪种认证方式，都必须包含 "AdminMember" Claim
-- **Razor Pages 路径配置**: 新增的 Razor Pages 需要在 Register.cs 中配置授权策略
-- **统一授权策略**: API 和页面使用相同的 "AdminOnly" Policy，保证安全性一致
-
+- **Claim requirement**: No matter which authentication method is used, the "AdminMember" Claim must be included
+- **Razor Pages path configuration**: The new Razor Pages need to configure the authorization policy in Register.cs
+- **Unified authorization policy**: API and page use the same "AdminOnly" Policy to ensure consistent security

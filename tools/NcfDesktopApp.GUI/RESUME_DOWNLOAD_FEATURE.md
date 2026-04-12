@@ -1,75 +1,60 @@
-# 断点续传功能实现
+[中文版](RESUME_DOWNLOAD_FEATURE.cn.md)
 
-## ✨ 功能说明
+# Implementation of breakpoint resume function
 
-当 NCF 压缩包下载到一半时意外退出（断网、关闭应用等），再次启动下载时会自动从上次中断的位置继续下载，而不是从头开始。
+## ✨ Function description
 
-### 使用场景
+When the NCF compressed package unexpectedly exits halfway through downloading (disconnection from the Internet, closing the application, etc.), when the download is started again, it will automatically resume the download from the last interrupted position instead of starting from the beginning.
 
-1. **网络中断**：下载过程中网络断开
-2. **应用关闭**：用户关闭了应用程序
-3. **系统重启**：电脑意外重启或关机
-4. **手动取消**：用户取消下载后想要继续
+### Usage scenarios
+
+1. **Network Interruption**: The network is disconnected during downloading
+2. **App Close**: The user closed the application
+3. **System Restart**: The computer restarts or shuts down unexpectedly
+4. **Manual Cancel**: The user wants to continue after canceling the download
 
 ---
 
-## 🔧 技术实现
+## 🔧 Technical implementation
 
-### HTTP Range 请求
+### HTTP Range Request
 
-断点续传基于 HTTP/1.1 的 Range 请求头实现：
-
-```http
+Breakpoint resume transmission is implemented based on the Range request header of HTTP/1.1:```http
 GET /file.zip HTTP/1.1
 Host: github.com
 Range: bytes=1048576-
-```
-
-服务器响应：
-```http
+```Server response:```http
 HTTP/1.1 206 Partial Content
 Content-Range: bytes 1048576-5242880/5242880
 Content-Length: 4194304
-```
+```### Core code
 
-### 核心代码
+**Modify file**: `Services/NcfService.cs`
 
-**修改文件**：`Services/NcfService.cs`
+**Main changes**:
 
-**主要改动**：
-
-#### 1. 检查未完成的下载
-```csharp
+#### 1. Check for incomplete downloads```csharp
 long existingFileSize = 0;
 if (File.Exists(filePath))
 {
     var fileInfo = new FileInfo(filePath);
     existingFileSize = fileInfo.Length;
 }
-```
-
-#### 2. 使用 Range 请求头
-```csharp
+```#### 2. Use Range request header```csharp
 if (existingFileSize > 0)
 {
     request.Headers.Range = new RangeHeaderValue(existingFileSize, null);
     _logger?.LogInformation($"检测到未完成的下载，从 {existingFileSize:N0} 字节处继续下载");
 }
-```
+```#### 3. Process server response
 
-#### 3. 处理服务器响应
-
-**情况 1：服务器支持断点续传（206 Partial Content）**
-```csharp
+**Case 1: The server supports resumable download (206 Partial Content)**```csharp
 if (response.StatusCode == HttpStatusCode.PartialContent)
 {
     _logger?.LogInformation($"✅ 服务器支持断点续传，继续下载");
     await DownloadToFileAsync(response, filePath, existingFileSize, progress, cancellationToken);
 }
-```
-
-**情况 2：服务器不支持断点续传（200 OK）**
-```csharp
+```**Case 2: The server does not support resumable download (200 OK)**```csharp
 else if (response.IsSuccessStatusCode)
 {
     if (existingFileSize > 0)
@@ -79,20 +64,14 @@ else if (response.IsSuccessStatusCode)
     }
     await DownloadToFileAsync(response, filePath, 0, progress, cancellationToken);
 }
-```
-
-**情况 3：Range 不满足（416 Range Not Satisfiable）**
-```csharp
+```**Case 3: Range Not Satisfiable (416 Range Not Satisfiable)**```csharp
 if (response.StatusCode == HttpStatusCode.RequestedRangeNotSatisfiable)
 {
     _logger?.LogWarning($"服务器不支持断点续传或文件已完整，重新下载");
     File.Delete(filePath);
     // 重新请求完整文件
 }
-```
-
-#### 4. 文件追加写入
-```csharp
+```#### 4. File append writing```csharp
 private async Task DownloadToFileAsync(...)
 {
     var totalBytes = (response.Content.Headers.ContentLength ?? 0) + existingFileSize;
@@ -105,15 +84,11 @@ private async Task DownloadToFileAsync(...)
     var buffer = new byte[81920]; // 80KB 缓冲区
     // ... 写入数据
 }
-```
+```---
 
----
+## 📊 Workflow
 
-## 📊 工作流程
-
-### 场景 1：首次下载（无中断）
-
-```
+### Scenario 1: First download (no interruption)```
 用户启动下载
     ↓
 检查本地文件 → 不存在
@@ -125,11 +100,7 @@ private async Task DownloadToFileAsync(...)
 下载完整文件（0% → 100%）
     ↓
 ✅ 下载完成
-```
-
-### 场景 2：断点续传（下载到 40% 时中断）
-
-```
+```### Scenario 2: Resume downloading (interrupted when download reaches 40%)```
 用户启动下载
     ↓
 检查本地文件 → 存在（40% 大小）
@@ -142,11 +113,7 @@ Range: bytes=4194304-
 从 40% 位置继续下载（40% → 100%）
     ↓
 ✅ 下载完成
-```
-
-### 场景 3：服务器不支持断点续传
-
-```
+```### Scenario 3: The server does not support resumed downloads```
 用户启动下载
     ↓
 检查本地文件 → 存在（40% 大小）
@@ -162,282 +129,260 @@ Range: bytes=4194304-
 重新下载完整文件（0% → 100%）
     ↓
 ✅ 下载完成
-```
+```---
 
----
+## 🎯 User experience
 
-## 🎯 用户体验
-
-### 改进前
-```
+### Before improvement```
 [10:00:00] 开始下载 NCF-win-x64.zip (100 MB)
 [10:05:00] 已下载 40 MB (40%)
 [10:05:01] ❌ 网络中断，下载失败
 [10:10:00] 重新启动下载
 [10:10:01] 从 0 MB 开始下载 ← 浪费时间和流量
-```
-
-### 改进后
-```
+```### After improvement```
 [10:00:00] 开始下载 NCF-win-x64.zip (100 MB)
 [10:05:00] 已下载 40 MB (40%)
 [10:05:01] ❌ 网络中断，下载失败
 [10:10:00] 重新启动下载
 [10:10:01] 检测到未完成的下载，从 40 MB 处继续下载 ← 节省时间
 [10:12:00] ✅ 下载完成
-```
+```### Log output example
 
-### 日志输出示例
-
-**首次下载**：
-```
+**First Download**:```
 [14:23:15] 开始下载: NCF-win-x64-v2.3.0.zip
 [14:23:16] ✅ 下载完成
-```
-
-**断点续传**：
-```
+```**Resume upload from breakpoint**:```
 [14:30:00] 检测到未完成的下载，从 41,943,040 字节处继续下载: NCF-win-x64-v2.3.0.zip
 [14:30:01] ✅ 服务器支持断点续传，继续下载
 [14:30:15] ✅ 下载完成
-```
-
-**服务器不支持**：
-```
+```**Not supported by the server**:```
 [14:35:00] 检测到未完成的下载，从 41,943,040 字节处继续下载: NCF-win-x64-v2.3.0.zip
 [14:35:01] ⚠️ 服务器不支持断点续传，重新下载: NCF-win-x64-v2.3.0.zip
 [14:35:20] ✅ 下载完成
-```
+```---
+
+## ✅ Functional features
+
+### 1. Automatic detection
+- ✅ Automatically detect whether there are unfinished downloads locally
+- ✅ Automatically determine whether the server supports resumable uploads
+- ✅ No manual operation required by users
+
+### 2. Intelligent rollback
+- ✅ If the server does not support resumed downloading, it will automatically fall back to normal downloading.
+- ✅ If Range request fails, automatically re-download
+- ✅ Guaranteed that the download will be completed
+
+### 3. Progress is displayed correctly
+- ✅ When resuming the download, the progress bar starts from the downloaded position.
+- ✅ Total progress is calculated correctly: `(downloaded + new downloads) / total size`
+- ✅ Smooth user experience
+
+### 4. Performance optimization
+- ✅ Buffer increased from 8KB to 80KB
+- ✅ Download speed increased by about 10 times
+- ✅ Reduce the number of system calls
 
 ---
 
-## ✅ 功能特性
+## 🧪 Test scenario
 
-### 1. 自动检测
-- ✅ 自动检测本地是否有未完成的下载
-- ✅ 自动判断服务器是否支持断点续传
-- ✅ 无需用户手动操作
+### Test 1: Normal download (no interruption)
+**Steps**:
+1. Start NCF download
+2. Wait for the download to complete
 
-### 2. 智能回退
-- ✅ 如果服务器不支持断点续传，自动回退到普通下载
-- ✅ 如果 Range 请求失败，自动重新下载
-- ✅ 保证下载一定能完成
+**Expected results**:
+- ✅ Normal download, showing progress 0% → 100%
+- ✅ File complete
 
-### 3. 进度正确显示
-- ✅ 断点续传时进度条从已下载位置开始
-- ✅ 总进度正确计算：`(已下载 + 新下载) / 总大小`
-- ✅ 用户体验流畅
+### Test 2: Canceling and continuing
+**Steps**:
+1. Start NCF download
+2. Close the app when the download reaches 40%
+3. Restart the application
+4. Start downloading again
 
-### 4. 性能优化
-- ✅ 缓冲区从 8KB 增加到 80KB
-- ✅ 下载速度提升约 10 倍
-- ✅ 减少系统调用次数
+**Expected results**:
+- ✅ Log shows "Incomplete download detected, continue from XX bytes"
+- ✅ Progress bar starts at 40%
+- ✅ Only download the remaining 60%
+- ✅ File complete
 
----
+### Test 3: Network outage
+**Steps**:
+1. Start NCF download
+2. Network interruption during downloading process
+3. Wait for download to fail
+4. Restore the network
+5. Start downloading again
 
-## 🧪 测试场景
+**Expected results**:
+- ✅Resumable downloading takes effect
+- ✅ Continue where you left off
 
-### 测试 1：正常下载（无中断）
-**步骤**：
-1. 启动 NCF 下载
-2. 等待下载完成
+### Test 4: Multiple interruptions
+**Steps**:
+1. Download to 20% → Cancel
+2. Download to 50% → Cancel
+3. Download to 80% → Cancel
+4. Finally complete the download
 
-**预期结果**：
-- ✅ 正常下载，显示进度 0% → 100%
-- ✅ 文件完整
+**Expected results**:
+- ✅ Continue from last position every time
+- ✅ File finally complete
 
-### 测试 2：中途取消后继续
-**步骤**：
-1. 启动 NCF 下载
-2. 下载到 40% 时关闭应用
-3. 重新启动应用
-4. 再次启动下载
+### Test 5: File Integrity Verification
+**Steps**:
+1. Use breakpoint resumable download to download the complete file
+2. Compare file sizes
+3. Verify file hash if possible
 
-**预期结果**：
-- ✅ 日志显示"检测到未完成的下载，从 XX 字节处继续"
-- ✅ 进度条从 40% 开始
-- ✅ 只下载剩余 60%
-- ✅ 文件完整
-
-### 测试 3：网络中断
-**步骤**：
-1. 启动 NCF 下载
-2. 下载过程中断网
-3. 等待下载失败
-4. 恢复网络
-5. 再次启动下载
-
-**预期结果**：
-- ✅ 断点续传生效
-- ✅ 从中断位置继续
-
-### 测试 4：多次中断
-**步骤**：
-1. 下载到 20% → 取消
-2. 下载到 50% → 取消
-3. 下载到 80% → 取消
-4. 最后完成下载
-
-**预期结果**：
-- ✅ 每次都从上次位置继续
-- ✅ 文件最终完整
-
-### 测试 5：文件完整性验证
-**步骤**：
-1. 使用断点续传下载完整文件
-2. 对比文件大小
-3. 如果可能，验证文件哈希
-
-**预期结果**：
-- ✅ 文件大小与服务器一致
-- ✅ 文件可以正常解压
-- ✅ 哈希值匹配（如果有）
+**Expected results**:
+- ✅ The file size is consistent with the server
+- ✅ Files can be decompressed normally
+- ✅ Hash value match (if any)
 
 ---
 
-## 🔍 技术细节
+## 🔍 Technical details
 
-### HTTP 状态码处理
+### HTTP status code processing
 
-| 状态码 | 含义 | 处理方式 |
+| Status code | Meaning | Processing method |
 |-------|------|---------|
-| 200 OK | 服务器返回完整文件 | 如果本地有文件，删除后重新下载 |
-| 206 Partial Content | 服务器支持断点续传 | 从指定位置继续下载 |
-| 416 Range Not Satisfiable | Range 不满足或不支持 | 删除本地文件，重新下载 |
+| 200 OK | The server returns the complete file | If there is a file locally, delete it and download it again |
+| 206 Partial Content | The server supports resuming downloads | Resume downloading from the specified location |
+| 416 Range Not Satisfiable | Range is not satisfied or not supported | Delete the local file and download again |
 
-### FileMode 选择
+### FileMode selection
 
-| 场景 | FileMode | 说明 |
+| Scenario | FileMode | Description |
 |-----|----------|------|
-| 首次下载 | FileMode.Create | 创建新文件，覆盖已存在的文件 |
-| 断点续传 | FileMode.Append | 追加到已存在文件的末尾 |
+| First download | FileMode.Create | Create a new file, overwriting an existing file |
+| Resume upload from breakpoint | FileMode.Append | Append to the end of existing file |
 
-### 缓冲区大小
-
-```csharp
+### Buffer size```csharp
 // 之前：8KB
 var buffer = new byte[8192];
 
 // 现在：80KB（提升 10 倍）
 var buffer = new byte[81920];
-```
-
-**原因**：
-- 更大的缓冲区减少系统调用次数
-- 提升下载速度
-- 80KB 是常见的最佳实践值
+```**Reason**:
+- Larger buffer reduces system calls
+- Improve download speed
+- 80KB is a common best practice value
 
 ---
 
-## 📝 已知限制
+## 📝 Known limitations
 
-### 限制 1：依赖服务器支持
-**情况**：GitHub Releases 支持 Range 请求，但并非所有服务器都支持。
+### Limitation 1: Dependent on server support
+**Scenario**: GitHub Releases supports Range requests, but not all servers do.
 
-**缓解措施**：
-- 自动检测服务器是否支持
-- 不支持时自动回退到普通下载
-- 用户体验不受影响
+**Mitigation**:
+- Automatically detect whether the server supports it
+- Automatically fall back to normal download when not supported
+- User experience is not affected
 
-### 限制 2：文件损坏风险
-**情况**：如果本地文件在中断前已经损坏，断点续传会继续追加到损坏的文件。
+### Limitation 2: Risk of file corruption
+**Scenario**: If the local file is damaged before the interruption, the resumed upload will continue to append to the damaged file.
 
-**缓解措施**：
-- 可以考虑添加哈希验证（未实现）
-- 用户可以手动删除 Downloads 目录重新下载
-- 解压失败时提示用户重新下载
+**Mitigation**:
+- Consider adding hash verification (not implemented)
+- Users can manually delete the Downloads directory and download again
+- Prompt the user to re-download when decompression fails
 
-### 限制 3：不适用于动态内容
-**情况**：如果服务器文件内容改变（如发布新版本），Range 请求可能失败。
+### Limitation 3: Does not apply to dynamic content
+**Case**: If the contents of the server file change (such as releasing a new version), the Range request may fail.
 
-**缓解措施**：
-- 文件名包含版本号（如 `NCF-v2.3.0.zip`）
-- 版本变更时会下载新文件
-- 不会出现版本混合问题
-
----
-
-## 🚀 性能提升
-
-### 下载速度提升
-- 缓冲区：8KB → 80KB
-- 预期提升：约 30-50%（取决于网络和硬盘速度）
-
-### 流量节省
-- 断点续传避免重复下载
-- 100MB 文件下载到 40MB 时中断 → 节省 40MB 流量
-
-### 时间节省
-- 示例：100MB 文件，2MB/s 网速
-  - 完整下载：50 秒
-  - 从 40% 续传：30 秒
-  - 节省时间：40%
+**Mitigation**:
+- The file name contains the version number (e.g. `NCF-v2.3.0.zip`)
+- New files will be downloaded when the version changes
+- No version mixing issues
 
 ---
 
-## 🔧 故障排查
+## 🚀 Performance improvements
 
-### 问题 1：断点续传不工作
-**可能原因**：
-- 服务器不支持 Range 请求
-- 本地文件权限问题
+### Improved download speed
+- Buffer: 8KB → 80KB
+- Expected improvement: ~30-50% (depending on network and hard drive speed)
 
-**解决方案**：
-- 检查日志，看是否显示"服务器不支持断点续传"
-- 手动删除 Downloads 目录下的未完成文件
+### Data saving
+- Resume downloads at breakpoints to avoid repeated downloads
+- 100MB file download is interrupted when it reaches 40MB → save 40MB of traffic
 
-### 问题 2：下载后无法解压
-**可能原因**：
-- 文件损坏
-- 下载未完成
-
-**解决方案**：
-1. 检查文件大小是否与服务器一致
-2. 删除文件重新下载
-3. 检查磁盘空间是否充足
-
-### 问题 3：进度显示不正确
-**可能原因**：
-- 进度计算错误
-- 服务器未返回 Content-Length
-
-**解决方案**：
-- 查看日志中的字节数
-- 如果服务器不返回总大小，进度可能不准确
+### Time Saving
+- Example: 100MB file, 2MB/s network speed
+  - Full download: 50 seconds
+  - Resume from 40%: 30 seconds
+  - Time saved: 40%
 
 ---
 
-## 📊 统计信息
+## 🔧 Troubleshooting
 
-### 断点续传成功率
-- GitHub Releases: ~99%（GitHub 支持 Range 请求）
-- 其他服务器: 取决于服务器配置
+### Problem 1: Resume upload does not work
+**Possible reasons**:
+- The server does not support Range requests
+- Local file permission issues
 
-### 性能数据
-- 缓冲区优化后速度提升：30-50%
-- 断点续传节省的流量：取决于中断位置
+**Solution**:
+- Check the log to see if it says "The server does not support resumable downloads"
+- Manually delete unfinished files in the Downloads directory
+
+### Problem 2: Unable to decompress after downloading
+**Possible reasons**:
+- File corruption
+- Download not completed
+
+**Solution**:
+1. Check whether the file size is consistent with the server
+2. Delete the file and re-download it
+3. Check whether there is sufficient disk space
+
+### Problem 3: The progress display is incorrect
+**Possible reasons**:
+- Progress calculation error
+- Server did not return Content-Length
+
+**Solution**:
+- View the number of bytes in the log
+- If the server does not return the total size, the progress may be inaccurate
 
 ---
 
-## 🎉 总结
+## 📊 Statistics
 
-### 改进前
-- ❌ 下载中断后从头开始
-- ❌ 浪费时间和流量
-- ❌ 用户体验差
+### Breakpoint resume success rate
+- GitHub Releases: ~99% (GitHub supports Range requests)
+- Other servers: Depends on server configuration
 
-### 改进后
-- ✅ 自动检测未完成的下载
-- ✅ 智能续传或重新下载
-- ✅ 进度正确显示
-- ✅ 缓冲区优化提升性能
-- ✅ 完善的异常处理
-- ✅ 用户无感知，自动工作
+### Performance data
+- Speed increase after buffer optimization: 30-50%
+- Traffic saved by resuming interrupted download: depends on the interruption location
 
 ---
 
-**实施日期**: 2025-11-16  
-**版本**: v1.2.0  
-**文件**: Services/NcfService.cs (DownloadFileAsync 方法)  
-**行数**: 128-233
+## 🎉 Summary
 
+### Before improvement
+- ❌ Restart from the beginning after an interrupted download
+- ❌ Waste of time and traffic
+- ❌ Poor user experience
+
+### After improvement
+- ✅ Automatically detect incomplete downloads
+- ✅ Smart resume or re-download
+- ✅ Progress is displayed correctly
+- ✅ Buffer optimization improves performance
+- ✅ Perfect exception handling
+- ✅ User is unaware and works automatically
+
+---
+
+**Implementation date**: 2025-11-16
+**Version**: v1.2.0
+**File**: Services/NcfService.cs (DownloadFileAsync method)
+**Number of lines**: 128-233

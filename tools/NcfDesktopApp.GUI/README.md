@@ -1,85 +1,83 @@
-# NCF 桌面应用程序 - GUI 版本
+[中文版](README.cn.md)
 
-## 🖥️ 概述
+# NCF Desktop App - GUI version
 
-NCF桌面应用程序的图形用户界面（GUI）版本，提供直观、易用的界面来管理NeuChar Framework站点的下载、部署和运行。
+## 🖥️ Overview
 
-## ✨ 特性
+A graphical user interface (GUI) version of the NCF desktop application that provides an intuitive, easy-to-use interface to manage the download, deployment, and operation of NeuChar Framework sites.
 
-### 🎨 **现代化界面**
-- 基于 Avalonia UI 框架，支持 Windows、macOS、Linux
-- 响应式设计，支持窗口缩放
-- 卡片式布局，信息层次清晰
-- 现代化的色彩和字体设计
+## ✨ Features
 
-### 📊 **实时状态监控**
-- **运行平台信息**：自动检测当前操作系统和架构
-- **版本信息**：显示最新可用版本和当前安装版本
-- **运行状态**：实时显示应用程序当前状态
-- **站点地址**：显示NCF站点的访问地址
+### 🎨 **Modern interface**
+- Based on Avalonia UI framework, supports Windows, macOS, Linux
+- Responsive design, supports window scaling
+- Card layout, clear information hierarchy
+- Modern colors and font design
 
-### 📈 **操作进度可视化**
-- **进度条**：显示下载和安装进度
-- **详细日志**：实时显示操作日志
-- **状态提示**：清晰的状态颜色指示
+### 📊 **Real-time status monitoring**
+- **Running platform information**: Automatically detect the current operating system and architecture
+- **Version Information**: Shows the latest available version and the currently installed version
+- **Running Status**: Displays the current status of the application in real time
+- **Site Address**: Displays the access address of the NCF site
 
-### ⚙️ **灵活配置选项**
-- **自动打开浏览器**：NCF启动后自动打开浏览器
-- **自动清理下载文件**：可选择是否自动删除下载的ZIP文件
-- **详细信息显示**：控制日志的详细程度
-- **系统托盘最小化**：支持最小化到系统托盘
-- **端口范围配置**：自定义端口扫描范围
+### 📈 **Visualization of operation progress**
+- **Progress Bar**: Show download and installation progress
+- **Detailed Log**: Display operation log in real time
+- **Status Tip**: clear status color indication
 
-### 🔄 **智能操作管理**
-- **一键启动/停止**：简单的操作界面
-- **连接测试**：测试网络连接和GitHub API可用性
-- **配置目录访问**：快速打开应用程序配置目录
-- **操作取消**：支持取消正在进行的操作
+### ⚙️ **Flexible configuration options**
+- **Auto-open browser**: Automatically open the browser after NCF starts
+- **Automatically clean downloaded files**: You can choose whether to automatically delete downloaded ZIP files
+- **Detailed information display**: Control the detail level of the log
+- **System Tray Minimization**: Support minimizing to the system tray
+- **Port range configuration**: Customize port scanning range
 
-## 🚀 **使用方法**
+### 🔄 **Intelligent Operation Management**
+- **One-click start/stop**: Simple operation interface
+- **Connection Test**: Test network connection and GitHub API availability
+- **Configuration Directory Access**: Quickly open the application configuration directory
+- **Operation Cancel**: Supports canceling ongoing operations
 
-### 启动应用程序
-```bash
+## 🚀 **How to use**
+
+### Start the application```bash
 cd tools/NcfDesktopApp.GUI
 dotnet run
-```
+```### Basic operation process
 
-### 基本操作流程
+1. **Launch the application**
+   - The application automatically detects platform information
+   - Get the latest version information
 
-1. **启动应用程序**
-   - 应用程序会自动检测平台信息
-   - 获取最新版本信息
+2. **Configuration Options** (optional)
+   - Adjust settings in the "Configuration Options" card
+   - Set port ranges, browser options, and more
 
-2. **配置选项**（可选）
-   - 在"配置选项"卡片中调整设置
-   - 设置端口范围、浏览器选项等
+3. **Start NCF**
+   - Click the "Start NCF" button
+   - The application automatically:
+     - Download the latest version (if needed)
+     - Extract files (if needed)
+     - Find available ports
+     - Start NCF site
+     - Wait for the site to be ready
 
-3. **启动NCF**
-   - 点击"启动 NCF"按钮
-   - 应用程序会自动：
-     - 下载最新版本（如需要）
-     - 提取文件（如需要）
-     - 查找可用端口
-     - 启动NCF站点
-     - 等待站点就绪
+4. **Visit site**
+   - After the site is successfully launched, the access address will be displayed
+   - If auto-open browser is enabled, the site will be opened automatically
 
-4. **访问站点**
-   - 站点启动成功后，会显示访问地址
-   - 如果启用了自动打开浏览器，会自动打开站点
+5. **Stop NCF**
+   - Click the "Stop NCF" button to stop the site
 
-5. **停止NCF**
-   - 点击"停止 NCF"按钮停止站点
+### Accessibility
 
-### 辅助功能
+- **Test Connection**: Verify network connection and GitHub API availability
+- **Open Configuration Directory**: Quick access to the application data directory
+- **Operation Log**: View detailed operation process
 
-- **测试连接**：验证网络连接和GitHub API可用性
-- **打开配置目录**：快速访问应用程序数据目录
-- **操作日志**：查看详细的操作过程
+## 🎨 **Interface Preview**
 
-## 🎨 **界面预览**
-
-### 主界面布局
-```
+### Main interface layout```
 ┌─────────────────────────────────────────┐
 │              NCF 桌面应用程序              │
 │        自动下载并运行最新的 NCF 站点        │
@@ -116,45 +114,42 @@ dotnet run
 ├─────────────────────────────────────────┤
 │        [测试连接] [打开配置目录] [停止 NCF] │
 └─────────────────────────────────────────┘
-```
+```## 🔧 **Technical Architecture**
 
-## 🔧 **技术架构**
+### Front-end framework
+- **Avalonia UI 11.3.2**: Cross-platform UI framework
+- **CommunityToolkit.Mvvm**: MVVM mode support
 
-### 前端框架
-- **Avalonia UI 11.3.2**：跨平台UI框架
-- **CommunityToolkit.Mvvm**：MVVM模式支持
+### Core Services
+- **NcfService**: core business logic service
+- **GitHub API integration**: automatically get the latest version
+- **Cross-platform file management**: Intelligent path handling
+- **Port Management**: Automatic port detection and allocation
 
-### 核心服务
-- **NcfService**：核心业务逻辑服务
-- **GitHub API集成**：自动获取最新版本
-- **跨平台文件管理**：智能路径处理
-- **端口管理**：自动端口检测和分配
+### Data binding
+- **ObservableProperty**: automatic property notification
+- **AsyncRelayCommand**: Asynchronous command support
+- **Two-way Binding**: Configuration options automatically saved
 
-### 数据绑定
-- **ObservableProperty**：自动属性通知
-- **AsyncRelayCommand**：异步命令支持
-- **双向绑定**：配置选项自动保存
+## 🌍 **Cross-platform support**
 
-## 🌍 **跨平台支持**
-
-| 平台 | 状态 | 特殊功能 |
+| Platform | Status | Special Features |
 |------|------|----------|
-| **Windows** | ✅ 完全支持 | Shell集成、注册表支持 |
-| **macOS** | ✅ 完全支持 | Dock集成、通知中心 |
-| **Linux** | ✅ 完全支持 | 桌面环境集成 |
+| **Windows** | ✅ Fully supported | Shell integration, registry support |
+| **macOS** | ✅ Fully supported | Dock integration, notification center |
+| **Linux** | ✅ Fully supported | Desktop environment integration |
 
-## 📋 **系统要求**
+## 📋 **System Requirements**
 
 - **.NET 8.0 Runtime**
-- **操作系统**：Windows 10+、macOS 10.15+、Linux（现代发行版）
-- **内存**：至少 512MB 可用内存
-- **磁盘空间**：至少 1GB 可用空间（用于NCF文件）
-- **网络连接**：用于下载NCF包
+- **OS**: Windows 10+, macOS 10.15+, Linux (modern distributions)
+- **RAM**: At least 512MB available memory
+- **Disk Space**: At least 1GB free space (for NCF files)
+- **Network Connection**: used to download NCF package
 
-## 🔧 **开发和构建**
+## 🔧 **Develop and Build**
 
-### 开发环境
-```bash
+### Development environment```bash
 # 安装依赖
 dotnet restore
 
@@ -163,10 +158,7 @@ dotnet run
 
 # 构建Release版本
 dotnet build -c Release
-```
-
-### 平台特定发布
-```bash
+```### Platform specific releases```bash
 # Windows
 dotnet publish -c Release -r win-x64 --self-contained true
 
@@ -176,51 +168,49 @@ dotnet publish -c Release -r osx-arm64 --self-contained true
 
 # Linux
 dotnet publish -c Release -r linux-x64 --self-contained true
-```
+```## 🐛 **Troubleshooting**
 
-## 🐛 **故障排除**
+### FAQ
 
-### 常见问题
+1. **Application cannot be started**
+   - Make sure .NET 8.0 Runtime is installed
+   - Check system compatibility
 
-1. **应用程序无法启动**
-   - 确保安装了.NET 8.0 Runtime
-   - 检查系统兼容性
+2. **Unable to obtain version information**
+   - Check network connection
+   - Verify GitHub API access
 
-2. **无法获取版本信息**
-   - 检查网络连接
-   - 验证GitHub API访问
+3. **NCF site startup failed**
+   - Check whether the port is occupied
+   - Make sure you have sufficient system permissions
 
-3. **NCF站点启动失败**
-   - 检查端口是否被占用
-   - 确保有足够的系统权限
+4. **Abnormal interface display**
+   - Update graphics card driver
+   - Check system DPI settings
 
-4. **界面显示异常**
-   - 更新显卡驱动
-   - 检查系统DPI设置
+### Logs and Diagnostics
+- Application logs are saved in the configuration directory
+- Use the "Test Connection" feature to diagnose network problems
+- View live log output for detailed status
 
-### 日志和诊断
-- 应用程序日志保存在配置目录中
-- 使用"测试连接"功能诊断网络问题
-- 查看实时日志输出了解详细状态
-
-## 📝 **更新日志**
+## 📝 **Update Log**
 
 ### v1.0.0
-- ✨ 初始GUI版本发布
-- 🎨 现代化界面设计
-- 🔄 完整的NCF生命周期管理
-- ⚙️ 灵活的配置选项
-- 🌍 跨平台支持
+- ✨ Initial GUI version released
+- 🎨 Modern interface design
+- 🔄 Complete NCF life cycle management
+- ⚙️ Flexible configuration options
+- 🌍 Cross-platform support
 
 ---
 
-## 📞 **支持和反馈**
+## 📞 **Support and Feedback**
 
-如果您遇到问题或有改进建议，请：
+If you encounter problems or have suggestions for improvements, please:
 
-1. 查看日志获取详细错误信息
-2. 使用"测试连接"功能诊断问题
-3. 在GitHub Issues中报告问题
-4. 提供完整的系统信息和错误日志
+1. Check the log for detailed error information
+2. Diagnose the problem using the "Test Connection" function
+3. Report an issue in GitHub Issues
+4. Provide complete system information and error logs
 
-**享受更便捷的NCF开发体验！** 🚀 
+**Enjoy a more convenient NCF development experience! ** 🚀

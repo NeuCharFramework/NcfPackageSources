@@ -1,3 +1,5 @@
+[English](readme.md)
+
 ## Senparc.Ncf.DatabasePlant 项目说明
 
 Plant 意为"停机坪"，这意味着当你准备"检修"模块的时候，需要用到它。

@@ -1,40 +1,42 @@
-# NCF 框架增强 - 完整实施报告
+[中文版](README_IMPLEMENTATION_COMPLETE.cn.md)
 
-本报告总结了对 NCF (NeuCharFramework) 的两项重大改进。
+#NCF Framework Enhancements - Full Implementation Report
 
----
-
-## 📋 改进概览
-
-### 改进 1: EventBus 高并发与循环引用保护
-**目标**: 确保 EventBus 能应对高并发场景，防止模块间循环引用导致的无限递归
-
-### 改进 2: PromptRange 自动优化功能
-**目标**: 实现基于 AI 的 Prompt 自动优化，包括智能初始化、打分后自动建议等
+This report summarizes two major improvements to NCF (NeuCharFramework).
 
 ---
 
-## 🎯 改进 1: EventBus 增强
+## 📋 Improvements Overview
 
-### 核心问题
-在多模块协作场景下，EventBus 可能面临：
-1. **高并发场景**: 大量事件同时发布可能导致阻塞
-2. **循环引用**: 模块 A 发布事件 → 模块 B 处理 → 模块 B 发布新事件 → 模块 A 处理 → 无限循环
-3. **深度递归**: 事件链过深可能导致资源耗尽
+### Improvement 1: EventBus high concurrency and circular reference protection
+**Goal**: Ensure that EventBus can cope with high concurrency scenarios and prevent infinite recursion caused by circular references between modules
 
-### 解决方案
+### Improvement 2: PromptRange automatic optimization function
+**Goal**: Implement AI-based automatic optimization of Prompt, including intelligent initialization, automatic suggestions after scoring, etc.
 
-#### 1. 高并发处理
-- **System.Threading.Channels**: 使用 UnboundedChannel 作为底层队列
-- **非阻塞发布**: `PublishAsync` 使用 `Channel.Writer.WriteAsync`，永不阻塞
-- **并发控制**: `EventBusHostedService` 使用 `SemaphoreSlim` 限制并发处理数
-- **结果**: 支持每秒数千次事件发布，无阻塞
+---
 
-#### 2. 循环引用检测与防护
-**多层保护机制**:
+## 🎯 Improvement 1: EventBus enhancement
 
-##### 第 1 层: 事件元数据追踪
-扩展 `IIntegrationEvent` 和 `IntegrationEvent`:
+### Core Issues
+In a multi-module collaboration scenario, EventBus may face:
+1. **High concurrency scenario**: Publishing a large number of events at the same time may cause blocking
+2. **Circular reference**: Module A publishes events → Module B processes → Module B publishes new events → Module A processes → infinite loop
+3. **Deep recursion**: Too deep an event chain may lead to resource exhaustion
+
+### Solution
+
+#### 1. High concurrency processing
+- **System.Threading.Channels**: Use UnboundedChannel as the underlying queue
+- **Non-blocking publishing**: `PublishAsync` uses `Channel.Writer.WriteAsync` and never blocks
+- **Concurrency Control**: `EventBusHostedService` uses `SemaphoreSlim` to limit the number of concurrent processes
+- **Result**: Supports thousands of event releases per second, no blocking
+
+#### 2. Circular reference detection and protection
+**Multi-layer protection mechanism**:
+
+##### Layer 1: Event Metadata Tracking
+Extends `IIntegrationEvent` and `IntegrationEvent`:
 ```csharp
 public interface IIntegrationEvent
 {
@@ -54,9 +56,8 @@ public abstract record IntegrationEvent : IIntegrationEvent
     public bool HasCircularReference(string newEventType) { /* ... */ }
 }
 ```
-
-##### 第 2 层: 预发布检测
-新增 `PublishDerivedAsync` 方法:
+##### Tier 2: Pre-release detection
+Added `PublishDerivedAsync` method:
 ```csharp
 public interface IEventBus
 {
@@ -68,13 +69,12 @@ public interface IEventBus
         where TEvent : IIntegrationEvent;
 }
 ```
+**Detection logic**:
+- Check `parentEvent.HasCircularReference(newEventType)` before posting
+- If a loop is detected, throw an `InvalidOperationException` immediately, **preventing events from entering the queue**
 
-**检测逻辑**:
-- 在发布前检查 `parentEvent.HasCircularReference(newEventType)`
-- 如果检测到循环，立即抛出 `InvalidOperationException`，**阻止事件进入队列**
-
-##### 第 3 层: 运行时保护
-在 `EventBusHostedService` 中添加双重检查:
+##### Layer 3: Runtime Protection
+Add double check in `EventBusHostedService`:
 ```csharp
 // 检查 1: 事件链深度限制
 if (@event.Depth >= _options.MaxEventChainDepth) // 默认 10
@@ -90,8 +90,7 @@ if (@event.EventChain.Contains(currentEventType))
     continue; // 跳过此事件
 }
 ```
-
-#### 3. 配置选项
+#### 3. Configuration options
 ```csharp
 public class EventBusOptions
 {
@@ -103,49 +102,48 @@ public class EventBusOptions
     public int RetryDelayMilliseconds { get; set; } = 1000;
 }
 ```
+### Test verification
+- ✅ Unit test: `EventBusTests.cs` - circular reference detection, depth limit
+- ✅ High concurrency test: 1000 events are released concurrently without blocking
+- ✅ PromptRange integration: Update all Handlers to use `PublishDerivedAsync`
 
-### 测试验证
-- ✅ 单元测试: `EventBusTests.cs` - 循环引用检测、深度限制
-- ✅ 高并发测试: 1000 个事件并发发布，无阻塞
-- ✅ PromptRange 集成: 更新所有 Handler 使用 `PublishDerivedAsync`
-
-### 文档
-- `EVENTBUS_INSPECTION_REPORT.md` - 详细的技术报告
-- `EVENTBUS_CIRCULAR_REFERENCE_PROTECTION.md` - 循环引用保护机制
-- `EVENTBUS_FLOW_DIAGRAMS.md` - 流程图和架构图
-- `EVENTBUS_QUICK_REFERENCE.md` - 快速参考指南
-- `EVENTBUS_COMPLETE_SUMMARY.md` - 完整总结
+### Documentation
+- `EVENTBUS_INSPECTION_REPORT.md` - Detailed technical report
+- `EVENTBUS_CIRCULAR_REFERENCE_PROTECTION.md` - circular reference protection mechanism
+- `EVENTBUS_FLOW_DIAGRAMS.md` - flowcharts and architecture diagrams
+- `EVENTBUS_QUICK_REFERENCE.md` - Quick Reference Guide
+- `EVENTBUS_COMPLETE_SUMMARY.md` - full summary
 
 ---
 
-## 🎯 改进 2: PromptRange 自动优化
+## 🎯 Improvement 2: PromptRange automatic optimization
 
-### 核心功能
+### Core functions
 
-#### 1. 智能初始化检测
-**问题**: 用户首次使用优化功能时，系统缺少必要的 Prompt 和 Agent
+#### 1. Intelligent initialization detection
+**Problem**: When the user uses the optimization function for the first time, the system lacks the necessary Prompt and Agent
 
-**解决方案**:
-- 新增 `PromptCatalyzerInitAppService` 提供 3 个 API:
-  - `CheckStatus()` - 检查是否已初始化
-  - `GetAvailableModels()` - 获取可用的 AI Model
-  - `Initialize(modelId)` - 执行初始化
+**Solution**:
+- Added `PromptCatalyzerInitAppService` to provide 3 APIs:
+  - `CheckStatus()` - Check whether it has been initialized
+  - `GetAvailableModels()` - Get available AI Models
+  - `Initialize(modelId)` - perform initialization
   
-- 前端自动检测并引导:
-  - 点击"优化"按钮时自动检查状态
-  - 未初始化时显示 Model 选择对话框
-  - 用户选择 Model 后自动创建所有资源
-  - 初始化完成后自动打开优化对话框
+- Front-end automatically detects and guides:
+  - Automatically check status when clicking "Optimize" button
+  - Show Model selection dialog when not initialized
+  - All resources are automatically created after the user selects the Model
+  - Automatically open the optimization dialog box after initialization is completed
 
-#### 2. 基于打分的自动优化建议
+#### 2. Automatic optimization suggestions based on scoring
 
-##### 场景 A: 单次打分后的即时建议
-- **触发时机**: 用户完成 AI 评分或手动评分后
-- **判断条件**: `finalScore < 6.0`
-- **提示方式**: 弹出确认对话框
-- **用户选择**: "立即优化" 或 "暂不优化"
+##### Scenario A: Instant suggestions after a single score
+- **Trigger timing**: After the user completes AI scoring or manual scoring
+- **Judgment Condition**: `finalScore < 6.0`
+- **Prompt method**: Pop up confirmation dialog box
+- **User Choice**: "Optimize now" or "Don't optimize yet"
 
-**代码实现**:
+**Code implementation**:
 ```javascript
 async checkScoreAndSuggestOptimization(resultData, scoreType) {
     const finalScore = resultData.finalScore;
@@ -160,17 +158,16 @@ async checkScoreAndSuggestOptimization(resultData, scoreType) {
     }
 }
 ```
+**Integration Point**:
+- `saveManualScore()` method - automatically called after AI scoring and manual scoring
 
-**集成点**:
-- `saveManualScore()` 方法 - AI评分和手动评分后自动调用
+##### Scenario B: Smart tips for average scores
+- **Trigger timing**: After the user switches to a prompt
+- **Judgment condition**: `evalAvgScore < 6.0`
+- **Notification method**: Notification in the lower right corner (non-blocking)
+- **Automatically disappear**: after 8 seconds
 
-##### 场景 B: 平均分的智能提示
-- **触发时机**: 用户切换到某个 Prompt 后
-- **判断条件**: `evalAvgScore < 6.0`
-- **提示方式**: 右下角通知（非阻塞式）
-- **自动消失**: 8 秒后
-
-**代码实现**:
+**Code implementation**:
 ```javascript
 async checkPromptAverageScoreAndSuggest() {
     const avgScore = selectedPrompt.evalAvgScore;
@@ -185,11 +182,10 @@ async checkPromptAverageScoreAndSuggest() {
     }
 }
 ```
+**Integration Point**:
+- `getPromptetail()` method - automatically called after loading Prompt details
 
-**集成点**:
-- `getPromptetail()` 方法 - 加载 Prompt 详情后自动调用
-
-#### 3. 完整的优化流程
+#### 3. Complete optimization process
 ```
 用户触发优化（手动点击或自动建议）
     ↓
@@ -211,23 +207,22 @@ async checkPromptAverageScoreAndSuggest() {
         ↓
 自动刷新列表并切换到新 Prompt
 ```
+### Test verification
+- ✅ Compilation test: AgentsManager + PromptRange compiled and passed
+- ⏳ Functional testing: Users are required to run the application for end-to-end testing
 
-### 测试验证
-- ✅ 编译测试: AgentsManager + PromptRange 编译通过
-- ⏳ 功能测试: 需用户运行应用进行端到端测试
-
-### 文档
-- `docs/PromptRange-Auto-Optimization-Guide.md` - 完整技术指南
-- `PROMPTRANGE_OPTIMIZATION_COMPLETE.md` - 功能概述
-- `TASK_COMPLETION_SUMMARY.md` - 任务完成总结
+### Documentation
+- `docs/PromptRange-Auto-Optimization-Guide.md` - Complete technical guide
+- `PROMPTRANGE_OPTIMIZATION_COMPLETE.md` - Function overview
+- `TASK_COMPLETION_SUMMARY.md` - Task completion summary
 
 ---
 
-## 📊 整体成果
+## 📊 Overall results
 
-### 文件变更统计
+### File change statistics
 
-#### 新增文件 (8个)
+#### New files (8)
 1. `src/Extensions/Senparc.Xncf.AgentsManager/Application/AppService/PromptCatalyzerInitAppService.cs`
 2. `docs/PromptRange-Auto-Optimization-Guide.md`
 3. `EVENTBUS_INSPECTION_REPORT.md`
@@ -237,11 +232,11 @@ async checkPromptAverageScoreAndSuggest() {
 7. `EVENTBUS_COMPLETE_SUMMARY.md`
 8. `PROMPTRANGE_OPTIMIZATION_COMPLETE.md`
 9. `TASK_COMPLETION_SUMMARY.md`
-10. `README_IMPLEMENTATION_COMPLETE.md` (本文件)
+10. `README_IMPLEMENTATION_COMPLETE.md` (this file)
 
-#### 修改的文件 (15个)
+#### Modified files (15)
 
-##### EventBus 相关 (6个)
+##### EventBus related (6)
 - `src/Basic/Senparc.Ncf.Shared.Abstractions/Events/IIntegrationEvent.cs`
 - `src/Basic/Senparc.Ncf.Shared.Abstractions/Events/IEventBus.cs`
 - `src/Basic/Senparc.Ncf.Core/EventBus/InMemoryEventBus.cs`
@@ -249,7 +244,7 @@ async checkPromptAverageScoreAndSuggest() {
 - `src/Basic/Senparc.Ncf.Core/EventBus/EventBusExtensions.cs`
 - `src/Basic/Senparc.Ncf.Core.Tests/EventBus/EventBusTests.cs`
 
-##### PromptRange 优化相关 (9个)
+##### PromptRange optimization related (9 items)
 - `src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js`
 - `src/Extensions/Senparc.Xncf.PromptRange/Areas/Admin/Pages/PromptRange/Prompt.cshtml`
 - `src/Extensions/Senparc.Xncf.PromptRange/Application/EventHandlers/PromptInitRequestHandler.cs`
@@ -260,7 +255,7 @@ async checkPromptAverageScoreAndSuggest() {
 - `src/Extensions/Senparc.Xncf.AgentsManager/Domain/Services/AIPlugins/PromptCatalyzerPlugin.cs`
 - `src/Extensions/Senparc.Xncf.AgentsManager/Senparc.Xncf.AgentsManager.csproj`
 
-#### 删除的临时文件 (4个)
+#### Deleted temporary files (4)
 - ❌ `FRONTEND_IMPLEMENTATION_COMPLETE.md`
 - ❌ `IMPLEMENTATION_STEP1_ENHANCED.md`
 - ❌ `QUICK_START.md`
@@ -268,11 +263,11 @@ async checkPromptAverageScoreAndSuggest() {
 
 ---
 
-## 🔧 技术亮点
+## 🔧Technical Highlights
 
-### EventBus 改进
+### EventBus improvements
 
-#### 1. 事件链追踪
+#### 1. Event chain tracking
 ```csharp
 public abstract record IntegrationEvent : IIntegrationEvent
 {
@@ -281,8 +276,7 @@ public abstract record IntegrationEvent : IIntegrationEvent
     public string EventChain { get; init; }    // 事件链路径 "EventA→EventB→EventC"
 }
 ```
-
-#### 2. 预发布检测
+#### 2. Pre-release detection
 ```csharp
 // 在 InMemoryEventBus 中
 public ValueTask PublishDerivedAsync<TEvent>(TEvent @event, IIntegrationEvent parentEvent, ...)
@@ -304,8 +298,7 @@ public ValueTask PublishDerivedAsync<TEvent>(TEvent @event, IIntegrationEvent pa
     return PublishAsync(derivedEvent);
 }
 ```
-
-#### 3. 运行时保护
+#### 3. Runtime protection
 ```csharp
 // 在 EventBusHostedService 中
 protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -325,21 +318,20 @@ protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     }
 }
 ```
+### PromptRange optimization improvements
 
-### PromptRange 优化改进
-
-#### 1. 智能初始化
+#### 1. Intelligent initialization
 **PromptCatalyzerInitAppService**:
-- **CheckStatus**: 检查 PromptCatalyzer Agent 是否存在
-- **GetAvailableModels**: 获取所有 Chat 类型的可用 Model
-- **Initialize**: 创建 PromptRange、PromptItem、Agent、ChatGroup
+- **CheckStatus**: Check whether PromptCatalyzer Agent exists
+- **GetAvailableModels**: Get all available Models of Chat type
+- **Initialize**: Create PromptRange, PromptItem, Agent, ChatGroup
 
-#### 2. 自动优化建议
-**双重触发机制**:
-- **即时建议**: 打分完成 → 分数 < 6.0 → 弹出确认框 → 用户选择
-- **温和提示**: 切换 Prompt → 平均分 < 6.0 → 右下角通知 → 不阻塞
+#### 2. Automatic optimization suggestions
+**Double trigger mechanism**:
+- **Instant Suggestion**: Scoring completed → Score < 6.0 → Confirmation box pops up → User selection
+- **Gentle Tip**: Switch Prompt → Average score < 6.0 → Notification in the lower right corner → No blocking
 
-**智能判断**:
+**Intelligent Judgment**:
 ```javascript
 // 打分后立即建议（阻塞式）
 if (finalScore < 6.0) {
@@ -357,59 +349,58 @@ if (avgScore < 6.0) {
     });
 }
 ```
+---
+
+## 📈 Performance and Security
+
+### EventBus Performance
+- **Throughput**: Supports thousands of event releases per second
+- **Concurrency Control**: Configurable number of concurrent processes (default 10)
+- **Zero blocking**: Unbounded queue using Channel
+- **Memory Safety**: Depth limit prevents infinite recursion
+
+### PromptRange Performance
+- **Asynchronous processing**: All API calls are asynchronous
+- **Resource Reuse**: PromptCatalyzer Agent only needs to be initialized once
+- **Load on demand**: Model list is obtained on demand
+- **Graceful downgrade**: Detection failure does not affect the main process
 
 ---
 
-## 📈 性能与安全
+## ✅ Acceptance status
 
-### EventBus 性能
-- **吞吐量**: 支持每秒数千次事件发布
-- **并发控制**: 可配置的并发处理数（默认 10）
-- **零阻塞**: 使用 Channel 的无界队列
-- **内存安全**: 深度限制防止无限递归
+### EventBus improvements
+- [x] High concurrency support (Channel + SemaphoreSlim)
+- [x] Circular reference pre-release detection
+- [x] Event chain depth limit
+- [x] Runtime detection of loop paths
+- [x] Unit tests (2 new test cases)
+- [x] PromptRange integration update
+- [x] Complete documentation (5 documents)
 
-### PromptRange 性能
-- **异步处理**: 所有 API 调用都是异步的
-- **资源复用**: PromptCatalyzer Agent 只需初始化一次
-- **按需加载**: Model 列表按需获取
-- **优雅降级**: 检测失败不影响主流程
+### PromptRange optimization
+- [x] PromptCatalyzerInitAppService (3 APIs)
+- [x] Front-end initialization process
+- [x] Optimization suggestions after scoring
+- [x] Average score optimization tips
+- [x] Complete optimization workflow
+- [x] Error handling and logging
+- [x] Full documentation
 
----
-
-## ✅ 验收状态
-
-### EventBus 改进
-- [x] 高并发支持（Channel + SemaphoreSlim）
-- [x] 循环引用预发布检测
-- [x] 事件链深度限制
-- [x] 循环路径运行时检测
-- [x] 单元测试（2个新测试案例）
-- [x] PromptRange 集成更新
-- [x] 完整文档（5个文档）
-
-### PromptRange 优化
-- [x] PromptCatalyzerInitAppService（3个API）
-- [x] 前端初始化流程
-- [x] 打分后优化建议
-- [x] 平均分优化提示
-- [x] 完整优化工作流
-- [x] 错误处理和日志
-- [x] 完整文档
-
-### 编译测试
-- [x] Senparc.Ncf.Core 编译通过
-- [x] Senparc.Ncf.Core.Tests 编译通过
-- [x] Senparc.Xncf.AgentsManager 编译通过
-- [x] Senparc.Xncf.PromptRange 编译通过
-- [ ] 端到端功能测试（需用户运行应用）
+### Compile test
+- [x] Senparc.Ncf.Core compiled and passed
+- [x] Senparc.Ncf.Core.Tests compiled and passed
+- [x] Senparc.Xncf.AgentsManager compiled and passed
+- [x] Senparc.Xncf.PromptRange compiled and passed
+- [ ] End-to-end functional testing (requires user to run the application)
 
 ---
 
-## 🎯 使用指南
+## 🎯 User Guide
 
-### EventBus 使用
+### EventBus usage
 
-#### 标准方式（推荐）
+#### Standard method (recommended)
 ```csharp
 // 在 Handler 中发布派生事件
 public class MyEventHandler : IIntegrationEventHandler<EventA>
@@ -427,8 +418,7 @@ public class MyEventHandler : IIntegrationEventHandler<EventA>
     }
 }
 ```
-
-#### 配置选项
+#### Configuration options
 ```csharp
 services.AddSenparcEventBus(options =>
 {
@@ -437,109 +427,105 @@ services.AddSenparcEventBus(options =>
     options.EnableCircularReferenceDetection = true;
 });
 ```
+### Optimized use of PromptRange
 
-### PromptRange 优化使用
+#### User flow
+1. Open the PromptRange page
+2. Select a Prompt
+3. Click the "Optimize" button
+4. **First time**: Select AI Model → Initialization → Optimization
+5. **Follow-up**: Direct optimization
+6. **After scoring**: Automatically suggest optimization if the score is low
 
-#### 用户流程
-1. 打开 PromptRange 页面
-2. 选择一个 Prompt
-3. 点击"优化"按钮
-4. **首次**: 选择 AI Model → 初始化 → 优化
-5. **后续**: 直接优化
-6. **打分后**: 分数低自动建议优化
-
-#### 开发者集成
-前端已完全集成，无需额外配置。优化阈值可在代码中调整：
+#### Developer Integration
+The front-end is fully integrated and requires no additional configuration. Optimization thresholds can be adjusted in code:
 ```javascript
 const optimizationThreshold = 6.0; // 默认 6.0 分
 ```
+---
+
+## 📚 Document Navigation
+
+### EventBus Documentation
+- **[EVENTBUS_INSPECTION_REPORT.md](./EVENTBUS_INSPECTION_REPORT.md)** - Detailed technical report
+- **[EVENTBUS_CIRCULAR_REFERENCE_PROTECTION.md](./EVENTBUS_CIRCULAR_REFERENCE_PROTECTION.md)** - Circular reference mechanism
+- **[EVENTBUS_FLOW_DIAGRAMS.md](./EVENTBUS_FLOW_DIAGRAMS.md)** - Flowchart
+- **[EVENTBUS_QUICK_REFERENCE.md](./EVENTBUS_QUICK_REFERENCE.md)** - Quick Reference
+- **[EVENTBUS_COMPLETE_SUMMARY.md](./EVENTBUS_COMPLETE_SUMMARY.md)** - Full summary
+
+### PromptRange Documentation
+- **[docs/PromptRange-Auto-Optimization-Guide.md](./docs/PromptRange-Auto-Optimization-Guide.md)** - Complete Technical Guide
+- **[PROMPTRANGE_OPTIMIZATION_COMPLETE.md](./PROMPTRANGE_OPTIMIZATION_COMPLETE.md)** - Function overview
+- **[TASK_COMPLETION_SUMMARY.md](./TASK_COMPLETION_SUMMARY.md)** - Task summary
 
 ---
 
-## 📚 文档导航
+## 🎉 Summary
 
-### EventBus 文档
-- **[EVENTBUS_INSPECTION_REPORT.md](./EVENTBUS_INSPECTION_REPORT.md)** - 详细技术报告
-- **[EVENTBUS_CIRCULAR_REFERENCE_PROTECTION.md](./EVENTBUS_CIRCULAR_REFERENCE_PROTECTION.md)** - 循环引用机制
-- **[EVENTBUS_FLOW_DIAGRAMS.md](./EVENTBUS_FLOW_DIAGRAMS.md)** - 流程图
-- **[EVENTBUS_QUICK_REFERENCE.md](./EVENTBUS_QUICK_REFERENCE.md)** - 快速参考
-- **[EVENTBUS_COMPLETE_SUMMARY.md](./EVENTBUS_COMPLETE_SUMMARY.md)** - 完整总结
+### Improvement value
 
-### PromptRange 文档
-- **[docs/PromptRange-Auto-Optimization-Guide.md](./docs/PromptRange-Auto-Optimization-Guide.md)** - 完整技术指南
-- **[PROMPTRANGE_OPTIMIZATION_COMPLETE.md](./PROMPTRANGE_OPTIMIZATION_COMPLETE.md)** - 功能概述
-- **[TASK_COMPLETION_SUMMARY.md](./TASK_COMPLETION_SUMMARY.md)** - 任务总结
+#### EventBus improvements
+- **Reliability**: Multi-layered protection mechanisms prevent system crashes
+- **Maintainability**: Clear event chain tracking and logging
+- **Extensibility**: Support more complex inter-module collaboration
+- **Performance**: Stable performance in high concurrency scenarios
 
----
+#### PromptRange optimization
+- **Ease of use**: Zero threshold to start, automatic boot initialization
+- **Intelligent**: Data-driven optimization suggestions
+- **Automation**: Fully automatic from detection to optimization to refresh
+- **USER EXPERIENCE**: Friendly prompts, detailed results, non-intrusive
 
-## 🎉 总结
+### Technical achievements
+- ✅ Solved the risk of circular reference of EventBus
+- ✅ Improved the high concurrency processing capability of EventBus
+- ✅ Implemented AI-driven prompt automatic optimization
+- ✅ Created a complete initialization boot process
+- ✅ Implemented intelligent optimization suggestions based on scoring
 
-### 改进价值
-
-#### EventBus 改进
-- **可靠性**: 多层保护机制防止系统崩溃
-- **可维护性**: 清晰的事件链追踪和日志
-- **可扩展性**: 支持更复杂的模块间协作
-- **性能**: 高并发场景下的稳定表现
-
-#### PromptRange 优化
-- **易用性**: 零门槛开始，自动引导初始化
-- **智能化**: 数据驱动的优化建议
-- **自动化**: 从检测到优化到刷新全自动
-- **用户体验**: 友好提示、详细结果、非侵入式
-
-### 技术成就
-- ✅ 解决了 EventBus 的循环引用风险
-- ✅ 提升了 EventBus 的高并发处理能力
-- ✅ 实现了 AI 驱动的 Prompt 自动优化
-- ✅ 创建了完整的初始化引导流程
-- ✅ 实现了基于打分的智能优化建议
-
-### 代码质量
-- ✅ 所有修改编译通过（0个错误）
-- ✅ 完善的单元测试（EventBus）
-- ✅ 详细的代码注释和日志
-- ✅ 与现有代码风格一致
-- ✅ 完整的错误处理
+### Code quality
+- ✅ All modifications and compilation passed (0 errors)
+- ✅ Complete unit testing (EventBus)
+- ✅ Detailed code comments and logs
+- ✅ Consistent with existing code style
+- ✅ Complete error handling
 
 ---
 
-## 🚀 立即开始
+## 🚀 Start now
 
-### 编译项目
+### Compile project
 ```bash
 dotnet build
 ```
-
-### 运行应用
+### Run the application
 ```bash
 dotnet run --project [你的Web项目路径]
 ```
-
-### 测试清单
-1. **EventBus**: 运行单元测试 `dotnet test src/Basic/Senparc.Ncf.Core.Tests/`
-2. **PromptRange 初始化**: 打开页面 → 选择 Prompt → 点击"优化" → 验证初始化流程
-3. **优化功能**: 输入需求 → 查看结果 → 验证参数对比
-4. **自动建议**: 对结果打低分（<6.0）→ 验证优化建议弹出
+### Test list
+1. **EventBus**: Run unit test `dotnet test src/Basic/Senparc.Ncf.Core.Tests/`
+2. **PromptRange initialization**: Open the page → Select Prompt → Click "Optimize" → Verify the initialization process
+3. **Optimization function**: Enter requirements → View results → Verify parameter comparison
+4. **Auto Suggestion**: Give the result a low score (<6.0) → Verification optimization suggestions pop up
 
 ---
 
-## 📞 技术支持
+## 📞Technical Support
 
-### 查看日志
-- **浏览器 Console** (F12): 前端日志和错误
-- **后端日志**: 搜索 "EventBus" 或 "PromptCatalyzer"
+### View log
+- **Browser Console** (F12): Frontend logs and errors
+- **Backend Log**: Search for "EventBus" or "PromptCatalyzer"
 
-### 常见问题
-参见各自的详细文档：
+### FAQ
+See respective detailed documentation:
 - EventBus: `EVENTBUS_QUICK_REFERENCE.md`
 - PromptRange: `docs/PromptRange-Auto-Optimization-Guide.md`
 
 ---
 
-**所有改进已完成，立即测试体验！** 🎊
+**All improvements have been completed, test the experience now! ** 🎊
 
 ---
 
-*生成时间: 2026-03-24*
-*NCF 版本: 兼容所有现有版本*
+*Generation time: 2026-03-24*
+*NCF version: compatible with all existing versions*

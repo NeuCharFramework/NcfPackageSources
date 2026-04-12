@@ -1,3 +1,5 @@
+[中文](readme.cn.md)
+
 ## Senparc.Ncf.DatabasePlant Module Overview
 
 "Plant" here refers to a "maintenance tarmac" -- it is used when you need to perform maintenance on modules.

@@ -1,5 +1,7 @@
-﻿## 说明
+[中文版](readme.cn.md)
 
-程序发布之前，整体修改 NCF 模板中的命名空间
+﻿## Description
 
-注意：本模块已停止更新，您可以使用 dotnet 模板生成项目！
+Before the program is released, modify the namespace in the NCF template as a whole
+
+Note: This module has stopped updating. You can use dotnet templates to generate projects!

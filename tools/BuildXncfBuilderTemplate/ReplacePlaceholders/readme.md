@@ -1,17 +1,17 @@
-﻿# ReplacePlaceholders 工具
+[中文版](readme.cn.md)
 
-## 使用介绍
+﻿# ReplacePlaceholders Tool
 
-本工具将对 ` Senparc.Xncf.XncfBuilder.Template` 项目中的文件进行替换操作，以便符合模板的占位符（参数）要求。
+## Introduction to use
 
-替换内容如下：
+This tool will replace files in the `Senparc.Xncf.XncfBuilder.Template` project to comply with the template's placeholder (parameter) requirements.
 
-ORGPLACEHOLDER 替换为 Template_OrgName
-MODPLACEHOLDER 替换为 Template_XncfName
+The replacement content is as follows:
+
+ORGPLACEHOLDER replaced with Template_OrgName
+MODPLACEHOLDER replaced with Template_XncfName
 
 
-## 运行
-
-```
+## Run```
 X:\Senparc 项目\NeuCharFramework\NcfPackageSources\tools\BuildXncfBuilderTemplate\ReplacePlaceholders\bin\Debug\net8.0> .\ReplacePlaceholders.exe "X:\Senparc 项目\NeuCharFramework\NcfPackageSources\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.Template"
 ```

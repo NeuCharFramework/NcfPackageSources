@@ -1,3 +1,5 @@
+[中文](README.cn.md)
+
 # Senparc NCF EventBus - High-Concurrency Event Bus
 
 ## Overview

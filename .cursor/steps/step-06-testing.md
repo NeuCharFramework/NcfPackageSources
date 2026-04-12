@@ -1,31 +1,33 @@
-# Step 06: 集成测试和优化
+[中文版](step-06-testing.cn.md)
 
-## 📋 任务概述
-进行完整的功能测试，确保所有功能正常工作，优化性能和用户体验，修复发现的问题。
+# Step 06: Integration testing and optimization
 
-## 🎯 目标
-- ✅ 完成端到端功能测试
-- ✅ 验证数据库操作正确性
-- ✅ 优化前端性能和用户体验
-- ✅ 修复发现的 Bug
-- ✅ 代码审查和规范检查
-- ✅ 编写用户使用文档
+## 📋 Mission Overview
+Conduct complete functional testing to ensure all features are working properly, optimize performance and user experience, and fix discovered issues.
 
-## 📂 涉及文件
+## 🎯 Goal
+- ✅ Complete end-to-end functional testing
+- ✅ Verify the correctness of database operations
+- ✅ Optimize front-end performance and user experience
+- ✅ Fix found bugs
+- ✅ Code review and specification checking
+- ✅Write user documentation
 
-### 测试范围
-- 所有新建和修改的文件
-- 数据库表结构验证
-- API 接口测试
-- 前端交互测试
+## 📂Involved documents
 
-## 🔧 测试步骤
+### Test scope
+- All new and modified files
+- Database table structure verification
+- API interface testing
+- Front-end interaction testing
 
-### 1. 数据库表结构测试
+## 🔧 Test steps
 
-**测试清单**：
+### 1. Database table structure test
 
-#### 1.1 执行 Migration
+**Test Checklist**:
+
+#### 1.1 Execute Migration
 ```bash
 # 在 Package Manager Console 或 Terminal 中执行
 # 根据使用的数据库类型选择相应的上下文
@@ -45,16 +47,14 @@ Update-Database -Context AdminSenparcEntities_PostgreSQL
 # SQLite
 Add-Migration Add_AdminChat_Tables -Context AdminSenparcEntities_Sqlite -OutputDir Domain/Migrations/Sqlite
 Update-Database -Context AdminSerparcEntities_Sqlite
-```
+```#### 1.2 Verify table structure
+- [ ] Check whether the `ADMIN_AdminChatSession` table is created successfully
+- [ ] Check whether the `ADMIN_AdminChatMessage` table is created successfully
+- [ ] Check whether the `ADMIN_AdminChatSessionModule` table is created successfully
+- [ ] Verify whether the foreign key relationship is correct
+- [ ] Check whether the index was created (if necessary)
 
-#### 1.2 验证表结构
-- [ ] 检查 `ADMIN_AdminChatSession` 表是否创建成功
-- [ ] 检查 `ADMIN_AdminChatMessage` 表是否创建成功
-- [ ] 检查 `ADMIN_AdminChatSessionModule` 表是否创建成功
-- [ ] 验证外键关系是否正确
-- [ ] 检查索引是否创建（如需要）
-
-#### 1.3 数据库操作测试
+#### 1.3 Database operation test
 ```sql
 -- 插入测试数据
 INSERT INTO ADMIN_AdminChatSession (Title, UserId, Status, LastMessageTime, AddTime, LastUpdateTime, Flag)
@@ -70,15 +70,13 @@ VALUES (1, 0, '测试消息', 1, GETDATE(), GETDATE(), 0);
 -- 清理测试数据
 DELETE FROM ADMIN_AdminChatMessage;
 DELETE FROM ADMIN_AdminChatSession;
-```
+```---
 
----
+### 2. API interface testing
 
-### 2. API 接口测试
+**Testing Tools**: Postman / Swagger / Browser Developer Tools
 
-**测试工具**: Postman / Swagger / 浏览器开发者工具
-
-#### 2.1 创建会话接口
+#### 2.1 Create session interface
 ```
 POST /api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.CreateSession
 
@@ -99,9 +97,7 @@ Body:
     ...
   }
 }
-```
-
-#### 2.2 获取会话列表接口
+```#### 2.2 Get session list interface
 ```
 GET /api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetUserSessions?userId=1&pageIndex=1&pageSize=20
 
@@ -115,9 +111,7 @@ GET /api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService
     "pageSize": 20
   }
 }
-```
-
-#### 2.3 发送消息接口
+```#### 2.3 Send message interface
 ```
 POST /api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.SendMessage
 
@@ -137,72 +131,68 @@ Body:
     "sessionId": 1
   }
 }
-```
-
-#### 2.4 其他接口
-- [ ] 测试获取会话消息接口
-- [ ] 测试添加模块到会话接口
-- [ ] 测试删除会话接口
-- [ ] 测试设置消息反馈接口
+```#### 2.4 Other interfaces
+- [ ] Test the interface for obtaining session messages
+- [ ] Test adding module to session interface
+- [ ] Test delete session interface
+- [ ] Test setting message feedback interface
 
 ---
 
-### 3. 前端功能测试
+### 3. Front-end functional testing
 
-#### 3.1 首页对话入口测试
-- [ ] 页面加载后对话入口正确显示
-- [ ] 输入框可以正常输入
-- [ ] 空输入时按钮禁用
-- [ ] 点击按钮跳转到对话页面
-- [ ] 按 Enter 键触发对话
-- [ ] 拖放区域显示正常
-- [ ] 拖拽模块到拖放区域成功
+#### 3.1 Home page dialogue entrance test
+- [ ] The dialogue entry is displayed correctly after the page is loaded.
+- [ ] input box can be input normally
+- [ ] Button disabled when empty input
+- [ ] Click the button to jump to the conversation page
+- [ ] Press Enter key to trigger conversation
+- [ ] Drag and drop area displays normally
+- [ ] Drag the module to the drag and drop area successfully
 
-#### 3.2 对话页面测试
-- [ ] 页面布局正确（左右分栏）
-- [ ] 会话列表正确加载
-- [ ] 消息列表正确显示
-- [ ] 可以发送消息
-- [ ] AI 回复正确显示
-- [ ] 消息自动滚动到底部
-- [ ] 可以创建新会话
-- [ ] 可以切换会话
-- [ ] 可以删除会话
-- [ ] 可以对消息点赞/点踩
-- [ ] 正在输入动画显示
+#### 3.2 Dialogue page test
+- [ ] The page layout is correct (left and right columns)
+- [ ] Session list loads correctly
+- [ ] Message list is displayed correctly
+- [ ] can send messages
+- [ ] AI replies are displayed correctly
+- [ ] Message automatically scrolls to the bottom
+- [ ] can create new sessions
+- [ ] can switch sessions
+- [ ] can delete the session
+- [ ] You can like/dislike the message
+- [ ] input animation display
 
-#### 3.3 拖拽功能测试
-- [ ] 模块卡片可以拖拽
-- [ ] 拖拽过程有视觉反馈
-- [ ] 拖放到区域后正确显示
-- [ ] 重复添加有提示
-- [ ] 超过 5 个模块有限制
-- [ ] 可以移除已选模块
-- [ ] 选中模块传递到对话页面
+#### 3.3 Drag and drop function test
+- [ ] Module cards can be dragged and dropped
+- [ ] Visual feedback during dragging process
+- [ ] is displayed correctly after dragging and dropping into the area
+- [ ] Prompts for repeated additions
+- [ ] Limitations for more than 5 modules
+- [ ] can remove the selected module
+- [ ] Pass the selected module to the dialog page
 
-#### 3.4 响应式测试
-- [ ] 在 1920x1080 分辨率下正常显示
-- [ ] 在 1366x768 分辨率下正常显示
-- [ ] 在平板（768px）下正常显示
-- [ ] 在手机（< 480px）下正常显示
+#### 3.4 Responsive testing
+- [ ] displays normally at 1920x1080 resolution
+- [ ] displays normally at 1366x768 resolution
+- [ ] displays normally on tablets (768px)
+- [ ] displays normally on mobile phones (< 480px)
 
 ---
 
-### 4. 性能优化
+### 4. Performance optimization
 
-#### 4.1 前端性能优化
+#### 4.1 Front-end performance optimization
 
-**优化项目**：
+**Optimization Project**:
 
-1. **消息列表虚拟滚动**（如消息量 > 100 条）
+1. **Virtual scrolling of message list** (such as message volume > 100)
 ```javascript
 // 如果消息量非常大，可以考虑使用 Element UI 自带的虚拟滚动
 // 或者实现简单的分页加载机制
 // 当前实现已满足一般场景（< 100 条消息），可选优化
 // 注意：不要引入新的第三方库，使用系统现有组件
-```
-
-2. **防抖输入**（使用简单实现，不引入 lodash）
+```2. **Anti-shake input** (simple implementation, without introducing lodash)
 ```javascript
 // 在 Index.js 中添加简单的防抖函数
 methods: {
@@ -218,13 +208,11 @@ methods: {
 
 // 如果需要实时搜索建议功能，可以使用防抖
 // 当前不需要，可选优化
-```
+```3. **Lazy loading of session list**
+- Paging loading has been implemented
+- Can add scroll to bottom auto-loading
 
-3. **会话列表懒加载**
-- 已实现分页加载
-- 可以添加滚动到底部自动加载
-
-4. **缓存优化**
+4. **Caching Optimization**
 ```javascript
 // 缓存已加载的会话消息，避免重复请求
 const messageCache = {};
@@ -239,13 +227,11 @@ async loadMessages(sessionId) {
   
   messageCache[sessionId] = this.messageList;
 }
-```
+```#### 4.2 Backend performance optimization
 
-#### 4.2 后端性能优化
+**Optimization Project**:
 
-**优化项目**：
-
-1. **添加数据库索引**
+1. **Add database index**
 ```sql
 -- AdminChatSession 表
 CREATE INDEX IX_AdminChatSession_UserId_Status ON ADMIN_AdminChatSession(UserId, Status);
@@ -257,9 +243,7 @@ CREATE INDEX IX_AdminChatMessage_CreatedTime ON ADMIN_AdminChatMessage(CreatedTi
 
 -- AdminChatSessionModule 表
 CREATE INDEX IX_AdminChatSessionModule_SessionId ON ADMIN_AdminChatSessionModule(SessionId);
-```
-
-2. **EF Core 查询优化**
+```2. **EF Core Query Optimization**
 ```csharp
 // 在 Service 中使用 AsNoTracking 提升查询性能
 public async Task<List<AdminChatMessageDto>> GetSessionMessagesAsync(int sessionId)
@@ -271,9 +255,7 @@ public async Task<List<AdminChatMessageDto>> GetSessionMessagesAsync(int session
 
     return messages.Select(m => new AdminChatMessageDto(m)).ToList();
 }
-```
-
-3. **批量操作优化**
+```3. **Batch operation optimization**
 ```csharp
 // 批量添加模块
 public async Task<List<AdminChatSessionModuleDto>> AddModulesToSessionBatchAsync(
@@ -297,13 +279,11 @@ public async Task<List<AdminChatSessionModuleDto>> AddModulesToSessionBatchAsync
     
     return sessionModules.Select(m => new AdminChatSessionModuleDto(m)).ToList();
 }
-```
+```---
 
----
+### 5. User experience optimization
 
-### 5. 用户体验优化
-
-#### 5.1 加载状态优化
+#### 5.1 Loading state optimization
 ```javascript
 // 在关键操作时显示加载动画
 const loading = this.$loading({
@@ -314,9 +294,7 @@ const loading = this.$loading({
 
 // 操作完成后关闭
 loading.close();
-```
-
-#### 5.2 错误提示优化
+```#### 5.2 Error prompt optimization
 ```javascript
 // 使用更友好的错误提示
 catch (error) {
@@ -335,9 +313,7 @@ catch (error) {
   
   this.$message.error(errorMessage);
 }
-```
-
-#### 5.3 快捷键支持
+```#### 5.3 Shortcut key support
 ```javascript
 // 在对话页面添加快捷键支持
 mounted() {
@@ -364,132 +340,129 @@ methods: {
     }
   }
 }
-```
+```---
+
+### 6. Code review checklist
+
+#### 6.1 Code Quality
+- [ ] All methods have XML annotations
+- [ ] Clear naming of variables and methods
+- [ ] No hardcoded magic numbers and strings
+- [ ] Improved exception handling
+- [ ] Logging key operations
+- [ ] Code conforms to C# and JavaScript specifications
+
+#### 6.2 Security Check
+- [ ] User input for validation and sanitization
+- [ ] SQL injection protection (using parameterized queries)
+- [ ] XSS attack protection (front-end output escaping)
+- [ ] Permission verification (make sure you can only access your own session)
+- [ ] Sensitive information is not output in the log
+
+#### 6.3 Maintainability Check
+- [ ] The code structure is clear and the responsibilities are clearly defined
+- [ ] No duplicate code
+- [ ] Configuration items are configurable (such as the maximum number of modules, message length, etc.)
+- [ ] Easy to extend (such as adding new message types)
 
 ---
 
-### 6. 代码审查清单
+### 7. Complete functional test scenario
 
-#### 6.1 代码质量
-- [ ] 所有方法都有 XML 注释
-- [ ] 变量和方法命名清晰
-- [ ] 没有硬编码的魔法数字和字符串
-- [ ] 异常处理完善
-- [ ] 日志记录关键操作
-- [ ] 代码符合 C# 和 JavaScript 规范
+#### Scenario 1: First time use process
+1. User login management background
+2. See the AI dialogue entrance on the homepage
+3. Enter the question "How to configure the system?"
+4. Click the "Start Conversation" button
+5. Automatically create a conversation and jump to the conversation page
+6. AI automatically responds to questions
+7. Users can continue the conversation
 
-#### 6.2 安全性检查
-- [ ] 用户输入进行验证和清理
-- [ ] SQL 注入防护（使用参数化查询）
-- [ ] XSS 攻击防护（前端输出转义）
-- [ ] 权限验证（确保只能访问自己的会话）
-- [ ] 敏感信息不在日志中输出
+**Expected results**:
+- ✅ Smooth process, no lags
+- ✅ Session created successfully
+- ✅ AI replies correctly
+- ✅ Save messages to database
 
-#### 6.3 可维护性检查
-- [ ] 代码结构清晰，职责分明
-- [ ] 没有重复代码
-- [ ] 配置项可配置（如最大模块数、消息长度等）
-- [ ] 易于扩展（如添加新的消息类型）
+#### Scenario 2: Module drag-and-drop dialogue process
+1. The user drags the "System Configuration" module on the home page to the drag and drop area.
+2. Drag the "User Management" module to the drag and drop area
+3. Enter the question "How do I manage user permissions?"
+4. Click "Start Conversation"
+5. Jump to the dialogue page, showing 2 selected modules
+6. AI considers module context when replying
 
----
+**Expected results**:
+- ✅ Smooth dragging and clear visual feedback
+- ✅ Module added correctly
+- ✅Module information is transferred to the conversation page
+- ✅ Correct records in the association table
 
-### 7. 完整功能测试场景
+#### Scenario 3: Multiple rounds of dialogue process
+1. Enter an existing session
+2. Send the message "What is the XNCF module?"
+3. AI reply
+4. Continue to send "How to create a new module?"
+5. AI replies based on context
+6. Like AI replies
 
-#### 场景 1: 首次使用流程
-1. 用户登录管理后台
-2. 在首页看到 AI 对话入口
-3. 输入问题"如何配置系统？"
-4. 点击"开始对话"按钮
-5. 自动创建会话并跳转到对话页面
-6. AI 自动回复问题
-7. 用户可以继续对话
+**Expected results**:
+- ✅ The dialogue is coherent and AI understands the context
+- ✅ Messages are in the correct order
+- ✅ Feedback function is normal
 
-**预期结果**: 
-- ✅ 流程顺畅，无卡顿
-- ✅ 会话创建成功
-- ✅ AI 回复正确
-- ✅ 消息保存到数据库
+#### Scenario 4: Session management process
+1. View the conversation list on the left side of the conversation page
+2. Click to switch to other sessions
+3. Create a new session
+4. Delete an old session
+5. Verify session state updates
 
-#### 场景 2: 模块拖拽对话流程
-1. 用户在首页拖拽"系统配置"模块到拖放区域
-2. 拖拽"用户管理"模块到拖放区域
-3. 输入问题"如何管理用户权限？"
-4. 点击"开始对话"
-5. 跳转到对话页面，显示 2 个已选模块
-6. AI 回复时考虑模块上下文
+**Expected results**:
+- ✅ Session list updated in real time
+- ✅ No delay in switching sessions
+- ✅ Session deleted successfully
+- ✅ Database status is correct
 
-**预期结果**:
-- ✅ 拖拽顺畅，视觉反馈明确
-- ✅ 模块正确添加
-- ✅ 模块信息传递到对话页面
-- ✅ 关联表正确记录
+#### Scenario 5: Exception handling
+1. Send messages when the network is disconnected
+2. Access when the session does not exist
+3. Enter very long messages (> 2000 characters)
+4. Click the send button in quick succession
+5. Access when the user is not logged in
 
-#### 场景 3: 多轮对话流程
-1. 进入已有会话
-2. 发送消息"什么是 XNCF 模块？"
-3. AI 回复
-4. 继续发送"如何创建一个新模块？"
-5. AI 基于上下文回复
-6. 对 AI 回复点赞
-
-**预期结果**:
-- ✅ 对话连贯，AI 理解上下文
-- ✅ 消息顺序正确
-- ✅ 反馈功能正常
-
-#### 场景 4: 会话管理流程
-1. 在对话页面左侧查看会话列表
-2. 点击其他会话切换
-3. 创建新会话
-4. 删除一个旧会话
-5. 验证会话状态更新
-
-**预期结果**:
-- ✅ 会话列表实时更新
-- ✅ 切换会话无延迟
-- ✅ 删除会话成功
-- ✅ 数据库状态正确
-
-#### 场景 5: 异常情况处理
-1. 网络断开时发送消息
-2. 会话不存在时访问
-3. 输入超长消息（> 2000 字符）
-4. 快速连续点击发送按钮
-5. 用户未登录时访问
-
-**预期结果**:
-- ✅ 错误提示友好
-- ✅ 不会崩溃或卡死
-- ✅ 数据不丢失
-- ✅ 自动重定向到登录页
+**Expected results**:
+- ✅ Friendly error prompts
+- ✅ No crashing or freezing
+- ✅ No data loss
+- ✅ Automatically redirect to login page
 
 ---
 
-### 8. 性能测试
+### 8. Performance testing
 
-#### 8.1 压力测试
-- [ ] 创建 100+ 会话，测试列表加载速度
-- [ ] 单个会话包含 200+ 消息，测试消息加载速度
-- [ ] 快速连续发送 10 条消息，测试系统稳定性
-- [ ] 同时打开 5 个对话页面，测试并发处理
+#### 8.1 Stress Test
+- [ ] Create 100+ sessions to test list loading speed
+- [ ] A single session contains 200+ messages to test the message loading speed
+- [ ] Send 10 messages in quick succession to test system stability
+- [ ] Open 5 conversation pages at the same time to test concurrent processing
 
-#### 8.2 性能指标
-| 操作 | 目标时间 | 实际时间 | 状态 |
+#### 8.2 Performance indicators
+| Action | Target Time | Actual Time | Status |
 |------|---------|---------|------|
-| 首页加载 | < 2s | _待测试_ | ⏳ |
-| 对话页面加载 | < 2s | _待测试_ | ⏳ |
-| 发送消息（含 AI 回复） | < 3s | _待测试_ | ⏳ |
-| 切换会话 | < 1s | _待测试_ | ⏳ |
-| 加载 50 条消息 | < 1s | _待测试_ | ⏳ |
+| Home page loading | < 2s | _To be tested_ | ⏳ |
+| Dialogue page loading | < 2s | _To be tested_ | ⏳ |
+| Send message (including AI reply) | < 3s | _To be tested_ | ⏳ |
+| Switch session | < 1s | _To be tested_ | ⏳ |
+| Loading 50 messages | < 1s | _To be tested_ | ⏳ |
 
 ---
 
-### 9. 用户使用文档
+### 9. User documentation
 
-**文件路径**: `docs/AdminChat-Usage-Guide.md`（可选，根据需要创建）
+**File path**: `docs/AdminChat-Usage-Guide.md` (optional, create as needed)
 
-**内容大纲**:
-
+**Content Outline**:
 ```markdown
 # 管理后台 AI 对话功能使用指南
 
@@ -521,13 +494,11 @@ A: 可能是网络问题或 AI 模型配置问题...
 
 Q: 如何切换不同的 AI 模型？
 A: 在系统设置中配置默认 AI 模型...
-```
+```---
 
----
+### 10. Bug fix record
 
-### 10. Bug 修复记录
-
-**格式**:
+**Format**:
 ```markdown
 **Bug #1**: 消息发送后不自动滚动到底部
 - **发现时间**: 2026-03-25
@@ -535,123 +506,121 @@ A: 在系统设置中配置默认 AI 模型...
 - **原因**: $nextTick 时机不对
 - **解决方案**: 使用 setTimeout 延迟滚动
 - **修复文件**: Chat.js
-```
+```---
+
+## ✅ Acceptance Criteria
+
+### Function acceptance
+- [ ] All test scenarios passed
+- [ ] No blocking bugs
+- [ ] Performance indicators meet the standards
+- [ ] Smooth user experience
+
+### Technical acceptance
+- [ ] Code review passed
+- [ ] Security check passed
+- [ ] Performance optimization completed
+- [ ] Complete documentation
+
+### Quality acceptance
+- [ ] No compilation errors
+- [ ] No linting warning
+- [ ] No console errors
+- [ ] Responsive layout is normal
 
 ---
 
-## ✅ 验收标准
+## 📝 Notes
 
-### 功能验收
-- [ ] 所有测试场景通过
-- [ ] 没有阻断性 Bug
-- [ ] 性能指标达标
-- [ ] 用户体验流畅
+⚠️ **Database Migration**:
+- Users indicated that they would manually perform Migration
+- We just need to make sure the Model is defined correctly
+- Provide Migration command reference
+- It is recommended to execute it in the test environment first
 
-### 技术验收
-- [ ] 代码审查通过
-- [ ] 安全性检查通过
-- [ ] 性能优化完成
-- [ ] 文档完整
+⚠️ **AI Service Integration**:
+- Current AI calls are simplified versions
+- Needs to be adjusted according to the actual AIKernel interface
+- Make sure the AI model is configured correctly
+- Handle situations where AI services are unavailable
 
-### 质量验收
-- [ ] 无编译错误
-- [ ] 无 linting 警告
-- [ ] 无控制台错误
-- [ ] 响应式布局正常
-
----
-
-## 📝 注意事项
-
-⚠️ **数据库迁移**：
-- 用户表示会手动执行 Migration
-- 我们只需确保 Model 定义正确
-- 提供 Migration 命令参考
-- 建议在测试环境先执行
-
-⚠️ **AI 服务集成**：
-- 当前 AI 调用是简化版本
-- 需要根据实际的 AIKernel 接口调整
-- 确保 AI 模型已正确配置
-- 处理 AI 服务不可用的情况
-
-⚠️ **生产环境部署**：
-- 备份数据库后再执行 Migration
-- 检查依赖服务是否就绪（AI 服务、缓存等）
-- 测试登录用户的权限
-- 监控系统性能和错误日志
-- **确认所有资源文件都在本地**，没有使用 CDN 远程连接
-- 检查浏览器兼容性（主要支持 Chrome、Firefox、Edge、Safari 最新版本）
+⚠️ **Production environment deployment**:
+- Back up the database before executing Migration
+- Check whether dependent services are ready (AI service, cache, etc.)
+- Test the logged in user's permissions
+- Monitor system performance and error logs
+- **Confirm that all resource files are local**, no CDN remote connection is used
+- Check browser compatibility (mainly supports the latest versions of Chrome, Firefox, Edge, and Safari)
 
 ---
 
-## 🔗 相关任务
-- 上一步：[Step 05: 模块拖拽功能](./step-05-drag-drop.md)
-- 关联文档：[scratchpad.md](../scratchpad.md)
+## 🔗 Related tasks
+- Previous step: [Step 05: Module drag and drop function](./step-05-drag-drop.md)
+- Associated documents: [scratchpad.md](../scratchpad.md)
 
 ---
 
-## 📊 进度追踪
+## 📊 Progress Tracking
 
-**任务拆解**：
-- [ ] **[TASK-20]** 完整功能测试 (0.5h)
-  - 数据库表结构验证
-  - API 接口测试
-  - 前端功能测试
-  - 响应式测试
+**Task breakdown**:
+- [ ] **[TASK-20]** Full functional test (0.5h)
+  - Database table structure verification
+  - API interface testing
+  - Front-end functional testing
+  - Responsive testing
   
-- [ ] **[TASK-21]** 性能优化和代码审查 (0.5h)
-  - 前端性能优化
-  - 后端性能优化
-  - 代码审查
-  - 安全性检查
+- [ ] **[TASK-21]** Performance optimization and code review (0.5h)
+  - Front-end performance optimization
+  - Backend performance optimization
+  - Code review
+  - Security check
 
-**预计总耗时**: 1 小时
+**Estimated total time**: 1 hour
 
 ---
 
-## 📦 最终交付清单
+## 📦 Final delivery list
 
-### ✅ 完成的功能
-1. **数据模型层** - 3 个实体 + 3 个 DTO
-2. **服务层** - 3 个 Service + 1 个 AppService
-3. **首页改版** - AI 对话入口 + 拖放区域
-4. **对话页面** - 完整的对话界面
-5. **拖拽功能** - 模块拖拽和上下文管理
+### ✅ Completed features
+1. **Data Model Layer** - 3 Entities + 3 DTOs
+2. **Service layer** - 3 Services + 1 AppService
+3. **Home Page Revision** - AI dialogue entrance + drag and drop area
+4. **Dialogue Page** - Complete dialogue interface
+5. **Drag and drop function** - module drag and context management
 
-### 📄 新建文件（14 个）
-- 6 个数据模型和 DTO 文件
-- 3 个 Service 文件
-- 1 个 AppService 文件
-- 2 个页面文件（cshtml + cs）
-- 1 个 JS 文件
-- 1 个 CSS 文件
+### 📄 New files (14)
+- 6 data models and DTO files
+- 3 Service files
+- 1 AppService file
+- 2 page files (cshtml + cs)
+- 1 JS file
+- 1 CSS file
 
-### 🔧 修改文件（4 个）
+### 🔧 Modify files (4)
 - Index.cshtml
 - Index.cshtml.cs
 - Index.js
 - AdminSenparcEntities.cs
 
-### 📚 文档（6 个）
-- scratchpad.md（项目规划）
-- step-01-data-models.md（数据模型）
-- step-02-service-layer.md（服务层）
-- step-03-homepage-ui.md（首页UI）
-- step-04-chat-page.md（对话页面）
-- step-05-drag-drop.md（拖拽功能）
-- step-06-testing.md（测试优化）
+### 📚 Documents (6)
+- scratchpad.md (project planning)
+- step-01-data-models.md (data model)
+- step-02-service-layer.md (service layer)
+- step-03-homepage-ui.md (Homepage UI)
+- step-04-chat-page.md (conversation page)
+- step-05-drag-drop.md (drag and drop function)
+- step-06-testing.md (test optimization)
 
 ---
 
-## 🎉 项目完成标志
+## 🎉 Project completion sign
 
-当以下所有项目都完成时，项目即可交付：
+The project is ready for delivery when all of the following items are completed:
 
-- ✅ 所有代码文件创建和修改完成
-- ✅ 数据库 Migration 执行成功
-- ✅ 所有测试场景通过
-- ✅ 性能指标达标
-- ✅ 用户验收通过
+- ✅ All code files have been created and modified
+- ✅ Database Migration was executed successfully
+- ✅ All test scenarios passed
+- ✅ Performance indicators meet standards
+- ✅ User acceptance passed
 
-**恭喜！管理后台 AI 对话功能改版项目完成！** 🎊
+**Congratulations! The management backend AI dialogue function revision project is completed! ** 🎊

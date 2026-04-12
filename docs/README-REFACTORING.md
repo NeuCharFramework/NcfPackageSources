@@ -1,122 +1,129 @@
-# Prompt.js 重构文档
+[中文版](README-REFACTORING.cn.md)
 
-## 🎉 重构已完成
+# Prompt.js Refactor document
 
-**完成时间**: 2025-12-15  
-**状态**: ✅ 已完成  
-**分支**: `refactor/prompt-js-modularization`
+## 🎉 Refactoring completed
+
+**Completion time**: 2025-12-15
+**Status**: ✅ Completed
+**Branch**: `refactor/prompt-js-modularization`
 
 ---
 
-## 📚 核心文档
+## 📚 Core Documentation
 
-### 1. [REFACTOR-COMPLETE.md](./REFACTOR-COMPLETE.md) ⭐ **推荐首读**
-**重构完成报告** - 了解重构成果和经验总结
+### 1. [REFACTOR-COMPLETE.md](./REFACTOR-COMPLETE.md) ⭐ **Recommended first reading**
 
-**内容摘要**:
-- ✅ 完成的工作和统计数据
-- 📊 代码变更和改善效果
-- 🎓 经验与教训
-- 💡 工具类使用指南
-- 🚀 后续建议
+**Refactoring completion report** - Understand the refactoring results and experience summary
 
-**阅读时间**: 15-20 分钟
+**Content summary**:
+
+- ✅ Completed jobs and statistics
+- 📊 Code changes and improvements
+- 🎓 Experience and lessons
+- 💡 Tool usage guide
+- 🚀 Follow-up suggestions
+
+**Reading time**: 15-20 minutes
 
 ---
 
 ### 2. [refactor-final-strategy.md](./refactor-final-strategy.md)
-**最终策略说明** - 了解重构范围和决策依据
 
-**内容摘要**:
-- 📌 指导原则（尊重现有架构、最小化改动）
-- ✅ 已完成的重构内容
-- ❌ 不应该重构的部分（及原因）
-- 📦 工具类的定位（可选辅助）
-- 🎯 重构成果评估
+**Final strategy statement** - Understand the scope of refactoring and the basis for decision-making
 
-**阅读时间**: 10-15 分钟
+**Content summary**:
+
+- 📌Guiding principles (respect existing architecture, minimize changes)
+- ✅ Completed reconstruction content
+- ❌ What should not be refactored (and why)
+- 📦 Positioning of tools (optional assistance)
+- 🎯 Evaluation of refactoring results
+
+**Reading time**: 10-15 minutes
 
 ---
 
 ### 3. [bugfix-apihelper.md](./bugfix-apihelper.md)
-**ApiHelper 修复报告** - 技术问题解决记录
 
-**内容摘要**:
-- 🐛 发现的问题（jQuery 依赖错误）
-- 🔧 解决方案（使用项目现有的 servicePR）
-- 📋 servicePR 功能说明
-- ✅ 修复效果
+**ApiHelper Fix Report** - Technical problem resolution record
 
-**阅读时间**: 5-10 分钟
+**Content summary**:
+
+- 🐛 Issue found (jQuery dependency error)
+- 🔧 Solution (use the existing servicePR of the project)
+- 📋 servicePR function description
+- ✅ Repair effect
+
+**Reading time**: 5-10 minutes
 
 ---
 
-## 📦 工具类文档
+## 📦 Tool documentation
 
 ### [utils/README.md](../src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/utils/README.md)
-**工具类使用手册** - 详细的 API 文档和使用示例
 
-**包含的工具类**:
-- HtmlHelper - HTML 转义、UUID、防抖节流
-- DateHelper - 日期格式化、相对时间
-- NameHelper - 名称查询、ID 互查（已在 prompt.js 中使用）
-- StorageHelper - LocalStorage 封装
-- CopyHelper - 剪贴板操作
+**Tool User Manual** - Detailed API documentation and usage examples
 
-**阅读时间**: 20-30 分钟
+**Tools included**:
 
----
+- HtmlHelper - HTML escaping, UUID, anti-shake throttling
+- DateHelper - date formatting, relative time
+- NameHelper - Name query, ID mutual query (already used in prompt.js)
+- StorageHelper - LocalStorage package
+- CopyHelper - Clipboard operations
 
-## ✅ 重构成果
-
-### 完成的工作
-
-1. **创建工具类库** ✅
-   - 5 个高质量工具类（1,088 行代码）
-   - IIFE 模式 + 全局命名空间
-   - 完整的文档和测试页面
-
-2. **集成工具类** ✅
-   - 替换 4 个 Name 查询方法
-   - 代码减少 17 行
-   - 消除明显的代码重复
-
-3. **项目规范适配** ✅
-   - 使用项目现有的 servicePR (axios)
-   - 不引入 apiHelper（避免功能重复）
-   - 遵循原有技术栈和代码风格
-
-### 代码改善
-
-| 指标 | 结果 |
-|------|------|
-| 创建工具类 | 5 个文件，1,088 行 |
-| prompt.js 减少 | 17 行 |
-| Name 方法简化 | 从 ~40 行 → ~20 行 |
-| 代码重复 | 消除 Name 查询重复 |
-
-### 重构原则
-
-遵循**最小化改动**原则：
-- ✅ 只重构真正重复的代码
-- ✅ 尊重现有架构和封装
-- ✅ 保持原有技术栈和代码风格
-- ✅ 工具类作为可选辅助，不强制替换
+**Reading time**: 20-30 minutes
 
 ---
 
-## 💡 工具类使用
+## ✅ Reconstruction results
 
-### 快速开始
+### Completed work
 
-**检查工具类是否加载**:
-```javascript
+1. **Create tool library** ✅
+  - 5 high-quality tool classes (1,088 lines of code)
+  - IIFE mode + global namespace
+  - Complete documentation and test pages
+2. **Integrated Tools** ✅
+  - Replaced 4 Name query methods
+  - 17 lines of code reduced
+  - Eliminate obvious code duplication
+3. **Project specification adaptation** ✅
+  - Use the project's existing servicePR (axios)
+  - Do not introduce apiHelper (to avoid duplication of functions)
+  - Follow the original technology stack and coding style
+
+### Code improvements
+
+
+| Indicators | Results |
+| ------------- | --------------- |
+| Create utility class | 5 files, 1,088 lines |
+| prompt.js reduced | 17 lines |
+| Name method simplified | From ~40 lines → ~20 lines |
+| Code Duplication | Eliminate Name Query Duplication |
+
+
+### Refactoring Principles
+
+Follow the **Minimum Changes** principle:
+
+- ✅ Only refactor truly duplicate code
+- ✅ Respect existing architecture and packaging
+- ✅ Maintain the original technology stack and code style
+- ✅ Tools are optional auxiliaries and are not mandatory replacements
+
+---
+
+## 💡 Usage of tools
+
+### Quick Start
+
+**Check whether the tool class is loaded**:```javascript
 console.log(window.PromptRangeUtils);
 // 输出: { HtmlHelper: {...}, DateHelper: {...}, ... }
-```
-
-**使用示例**:
-```javascript
+```**Usage Example**:```javascript
 // HTML 转义
 var escaped = window.PromptRangeUtils.HtmlHelper.escape('<script>');
 
@@ -134,140 +141,152 @@ window.PromptRangeUtils.CopyHelper.copyText('Hello');
 
 // LocalStorage 操作
 window.PromptRangeUtils.StorageHelper.set('key', {value: 123});
-```
-
-详细 API 文档请查看 [utils/README.md](../src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/utils/README.md)
+```For detailed API documentation, please view [utils/README.md](../src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/utils/README.md)
 
 ---
 
-## 🎯 重构决策
+## 🎯 Refactoring decisions
 
-### 已完成的重构
+### Completed refactoring
 
-✅ **Name 查询方法** (4个)
-- 明显的代码重复
-- 纯工具性质，无业务逻辑
-- 重构有明显价值
+✅ **Name query method** (4)
 
-### 保持原样的代码
+- Obvious code duplication
+- Pure tool nature, no business logic
+- Refactoring has obvious value
 
-❌ **API 请求** - 项目已有 servicePR (axios) 封装  
-❌ **日期格式化** - 包含业务展示逻辑，不是通用工具  
-❌ **复制功能** - 包含特定的业务逻辑  
-❌ **LocalStorage 操作** - 简单调用，封装反而增加复杂度  
-❌ **3D 模块** - 功能复杂且稳定，不应冒险重构
+### Keep the code as it is
 
-### 原因说明
+❌ **API request** - the project already has servicePR (axios) package
+❌ **Date Formatting** - Contains business display logic, not a general tool
+❌ **Copy Function** - Contains specific business logic
+❌ **LocalStorage operation** - simple call, encapsulation increases complexity
+❌ **3D Module** - functionally complex and stable, should not be risked by refactoring
 
-详见 [refactor-final-strategy.md](./refactor-final-strategy.md)
+### Reason explanation
 
----
-
-## 📊 统计数据
-
-### 代码变更
-
-| 类别 | 变更 |
-|------|------|
-| 新增工具类 | +1,088 行 |
-| 新增文档 | +1,800+ 行 |
-| prompt.js | -17 行 |
-| Prompt.cshtml | +9 行 |
-
-### Git 提交
-
-共 8 个提交：
-- feat: 添加工具类库
-- refactor: Name 查询方法重构
-- fix: 移除 apiHelper 依赖
-- docs: 相关文档（5 个提交）
+For details, see [refactor-final-strategy.md](./refactor-final-strategy.md)
 
 ---
 
-## 🎓 经验总结
+## 📊 Statistics
 
-### 成功经验
+### Code changes
 
-1. **尊重现有架构** - 使用项目已有的 servicePR
-2. **最小化改动** - 只重构真正需要的部分
-3. **充分沟通** - 及时调整策略方向
-4. **完整文档** - 详细记录决策过程
 
-### 关键教训
+| Category | Change |
+|-------------|---------|
+| New tool class | +1,088 lines |
+| New document | +1,800+ lines |
+| prompt.js | -17 lines |
+| Prompt.cshtml | +9 lines |
 
-1. **重构前要评估价值** - 不是所有代码都需要重构
-2. **区分工具与业务** - formatDate 等是业务逻辑，不是工具
-3. **稳定 > 完美** - 保持代码稳定性为首要原则
-4. **工具类定位** - 应该是补充，不是替代
 
----
+### Git Commit
 
-## 🚀 后续建议
+8 submissions in total:
 
-### 1. 保持现状
-✅ **重构到此为止**，已达成核心目标
-
-### 2. 未来使用
-- 开发新功能时优先使用工具类
-- 发现代码重复时考虑工具类
-- 不强制替换已稳定的代码
-
-### 3. 工具类扩展
-如需扩展，遵循：
-- IIFE 模式
-- 挂载到 `window.PromptRangeUtils`
-- ES5 兼容语法
-- 完整的文档
+- feat: Add tool library
+- refactor: Name query method reconstruction
+- fix: remove apiHelper dependency
+- docs: related documentation (5 commits)
 
 ---
 
-## 📖 文档阅读顺序
+## 🎓 Experience summary
 
-### 快速了解（10 分钟）
-1. 本文档 (README-REFACTORING.md)
+### Successful experience
 
-### 深入理解（30 分钟）
-1. 本文档
+1. **Respect the existing architecture** - Use the existing servicePR of the project
+2. **Minimize changes** - Refactor only what is really needed
+3. **Full communication** - timely adjustment of strategic direction
+4. **Complete Documentation** - Document the decision-making process in detail
+
+### Key Lessons
+
+1. **Evaluate the value before refactoring** - Not all code needs to be refactored
+2. **Distinguish between tools and business** - formatDate, etc. are business logic, not tools
+3. **Stable > Perfect** - Maintain code stability as the first principle
+4. **Tool positioning** - should be a supplement, not a replacement
+
+---
+
+## 🚀 Follow-up suggestions
+
+### 1. Maintain the status quo
+
+✅ **Refactoring ends**, the core goal has been achieved
+
+### 2. Future use
+
+- Prioritize the use of tools when developing new features
+- Consider tool classes when finding code duplication
+- Do not force replacement of stabilized code
+
+### 3. Tool class extension
+
+To expand, follow:
+
+- IIFE mode
+- Mount to `window.PromptRangeUtils`
+- ES5 compatible syntax
+- Complete documentation
+
+---
+
+## 📖 Document reading order
+
+### Quick introduction (10 minutes)
+
+1. This document (README-REFACTORING.md)
+
+### In-depth understanding (30 minutes)
+
+1. This document
 2. [REFACTOR-COMPLETE.md](./REFACTOR-COMPLETE.md)
 3. [refactor-final-strategy.md](./refactor-final-strategy.md)
 
-### 使用工具类（20 分钟）
+### Using Tools (20 minutes)
+
 1. [utils/README.md](../src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/utils/README.md)
 
 ---
 
-## 📅 文档信息
+## 📅 Document information
 
-- **创建日期**: 2025-12-15
-- **更新日期**: 2025-12-15
-- **文档版本**: 2.0 (清理后)
-- **状态**: ✅ 完成
-
----
-
-## 🎉 总结
-
-本次重构采用**最小化改动**原则，成功完成：
-
-**核心成果**:
-- ✅ 创建了 5 个高质量工具类
-- ✅ 简化了 4 个 Name 查询方法
-- ✅ 建立了完整的文档体系
-- ✅ 为未来开发准备好了工具
-
-**遵循的原则**:
-- ✅ 尊重现有架构（使用 servicePR）
-- ✅ 保持代码稳定性
-- ✅ 不过度重构
-- ✅ 工具类作为可选辅助
-
-**最终评价**: ⭐⭐⭐⭐ (4/5)
-- 建立了高质量的工具类体系
-- 保持了代码稳定性
-- 为未来开发提供了良好基础
+- **Creation date**: 2025-12-15
+- **Updated date**: 2025-12-15
+- **Documentation version**: 2.0 (after cleaning)
+- **Status**: ✅ Completed
 
 ---
 
-**重构完成！** 🎊
+## 🎉 Summary
 
-如有疑问，请查看详细文档或联系技术团队。
+This refactoring adopted the principle of **minimized changes** and was successfully completed:
+
+**Core results**:
+
+- ✅ Created 5 high-quality tool categories
+- ✅ Simplified 4 Name query methods
+- ✅ Established a complete documentation system
+- ✅ Prepared tools for future development
+
+**Principles to follow**:
+
+- ✅ Respect existing architecture (use servicePR)
+- ✅ Maintain code stability
+- ✅ No excessive refactoring
+- ✅ Tools as optional auxiliary
+
+**Final Rating**: ⭐⭐⭐⭐ (4/5)
+
+- Established a high-quality tool system
+- Maintained code stability
+- Provides a good foundation for future development
+
+---
+
+**Refactoring completed! ** 🎊
+
+If you have questions, please review the detailed documentation or contact the technical team.

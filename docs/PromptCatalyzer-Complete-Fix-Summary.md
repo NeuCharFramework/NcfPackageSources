@@ -1,79 +1,77 @@
-# PromptCatalyzer 完整功能修复总结
+[中文版](PromptCatalyzer-Complete-Fix-Summary.cn.md)
 
-## 🎉 修复成果
+# PromptCatalyzer Complete feature fix summary
 
-### ✅ 已修复的问题
+## 🎉 Repair results
 
-1. **EventHandler 未注册** → 请求 pending
-2. **PromptItem.Note 字段超长** → 数据库保存失败
-3. **PromptItem.NickName 未初始化** → 数据库约束错误
-4. **前端响应数据访问错误** → 无法读取模型列表和结果
-5. **OptimizeAsync API 404** → 创建了新的 Controller
-6. **UI 参数预览缺少说明** → 添加了工具提示
+### ✅ Fixed issues
 
-### 🏗️ 初始化成功验证
+1. **EventHandler is not registered** → request pending
+2. **PromptItem.Note field is too long** → Database saving failed
+3. **PromptItem.NickName is not initialized** → Database constraint error
+4. **Front-end response data access error** → Unable to read model list and results
+5. **OptimizeAsync API 404** → Created a new Controller
+6. **UI parameter preview lacks description** → Added tooltips
 
-根据日志，初始化已成功完成：
-```
+### 🏗️ Successful initialization verification
+
+According to the logs, the initialization was completed successfully:```
 ✅ PromptRange 已存在，ID: 3024, Alias: PromptCatalyzer
 ✅ PromptItem 创建成功，ID: 9099, FullVersion: 2026.03.24.1-T1-A1
 ✅ Agent 创建成功！AgentId: 1011, PromptCode: 2026.03.24.1-T1-A1
-```
+```---
 
----
+## 📁 List of modified files
 
-## 📁 修改的文件清单
-
-### 后端（C#）
+### Backend (C#)
 
 1. **`tools/NcfSimulatedSite/Senparc.Web/Register.cs`**
-   - 使用 `AddSenparcEventBus()` 自动扫描和注册 EventHandler
-   - 在 `StartWebEngine()` 之后调用，确保所有模块已加载
-   - 添加程序集扫描日志输出
+   - Use `AddSenparcEventBus()` to automatically scan and register EventHandler
+   - Called after `StartWebEngine()` to ensure all modules are loaded
+   - Added assembly scan log output
 
 2. **`src/Extensions/Senparc.Xncf.PromptRange/Domain/Models/DatabaseModel/PromptItem.cs`**
-   - 在构造函数中初始化 `NickName = string.Empty;`
+   - Initialize `NickName = string.Empty;` in the constructor
 
 3. **`src/Extensions/Senparc.Xncf.PromptRange/Application/EventHandlers/PromptInitRequestHandler.cs`**
-   - 将 `Note` 字段从 `"Auto-created for PromptCatalyzer initialization with Model ID: {modelId}"` 改为 `"AI-Catalyzer"`（符合20字符限制）
-   - 为 request 对象设置所有字符串字段的默认值（避免 null）
-   - 增加详细的步骤日志（【步骤1/4】到【步骤4/4】）
-   - 增加 try-catch 容错机制
-   - 捕获完整的 inner exception
+   - Changed the `Note` field from `"Auto-created for PromptCatalyzer initialization with Model ID: {modelId}"` to `"AI-Catalyzer"` (complying with the 20 character limit)
+   - Set default values for all string fields in the request object (avoid null)
+   - Add detailed step log ([Step 1/4] to [Step 4/4])
+   - Add try-catch fault tolerance mechanism
+   - catch the complete inner exception
 
 4. **`src/Extensions/Senparc.Xncf.AgentsManager/Domain/Services/PromptOptimizationService.cs`**
-   - 增加详细的步骤日志（【步骤1/3】到【步骤3/3】）
-   - 验证返回的 PromptCode 不为空
+   - Add detailed step log ([Step 1/3] to [Step 3/3])
+   - Verify that the returned PromptCode is not empty
 
 5. **`src/Extensions/Senparc.Xncf.AgentsManager/OHS/Remote/Controllers/PromptCatalyzerInitController.cs`**
-   - （之前已创建）传统 MVC Controller 替代 AppService
+   - (previously created) traditional MVC Controller replacement for AppService
 
-6. **`src/Extensions/Senparc.Xncf.AgentsManager/OHS/Remote/Controllers/PromptOptimizationController.cs`** ⭐ 新文件
-   - 创建传统 MVC Controller 替代 `PromptOptimizationAppService`
-   - 实现 `OptimizeAsync` 方法
-   - 添加详细的请求验证和日志
+6. **`src/Extensions/Senparc.Xncf.AgentsManager/OHS/Remote/Controllers/PromptOptimizationController.cs`** ⭐ New file
+   - Create traditional MVC Controller instead of `PromptOptimizationAppService`
+   - Implement the `OptimizeAsync` method
+   - Added detailed request validation and logging
 
-### 前端（JavaScript）
+### Front-end (JavaScript)
 
 7. **`src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js`**
-   - 修正 `checkPromptCatalyzerStatus` 数据访问路径
-   - 修正 `loadAvailableModels` 数据访问路径
-   - 修正 `executeInitialization` 数据访问路径
-   - 修正 `executeOptimize` 数据访问路径（新增）
-   - 增强错误日志输出
+   - Fixed `checkPromptCatalyzerStatus` data access path
+   - Fixed `loadAvailableModels` data access path
+   - Fix `executeInitialization` data access path
+   - Fixed `executeOptimize` data access path (new)
+   - Enhanced error log output
 
-### 前端（Razor/HTML）
+### Front-end (Razor/HTML)
 
 8. **`src/Extensions/Senparc.Xncf.PromptRange/Areas/Admin/Pages/PromptRange/Prompt.cshtml`**
-   - 为参数预览添加工具提示（Tooltip）
-   - 添加问号图标和参数说明文字
+   - Add tooltip for parameter preview (Tooltip)
+   - Add question mark icon and parameter description text
 
 ---
 
-## 🔄 完整的事件流程
+## 🔄 Complete event process
 
-### 初始化流程
-```
+### Initialization process```
 用户点击"开始初始化"
     ↓
 PromptCatalyzerInitController.Initialize()
@@ -97,10 +95,7 @@ PromptInitResponseHandler.Handle()
 创建 AgentTemplate
     ↓
 返回成功响应
-```
-
-### 优化流程
-```
+```### Optimize process```
 用户点击"开始优化"
     ↓
 PromptOptimizationController.OptimizeAsync()
@@ -119,69 +114,52 @@ PromptOptimizationResponseHandler.Handle()
 调用 CompleteRequest()
     ↓
 返回优化结果
-```
+```---
 
----
+## 🚀 Test steps
 
-## 🚀 测试步骤
-
-### 1. 重启应用
-
-```bash
+### 1. Restart the application```bash
 # 在运行应用的终端按 Ctrl+C 停止
 cd /Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources
 dotnet run --project tools/NcfSimulatedSite/Senparc.Web/Senparc.Web.csproj
-```
+```### 2. Confirm startup log
 
-### 2. 确认启动日志
-
-**必须看到**：
-```
+**Must See**:```
 EventBus 扫描程序集:
   - Senparc.Xncf.PromptRange
   - Senparc.Xncf.AgentsManager
   ...
 EventBus 已注册，共扫描了 XX 个程序集
-```
+```### 3. Refresh the browser
 
-### 3. 刷新浏览器
-
-**重要**：强制刷新浏览器清除 JavaScript 缓存
+**Important**: Force refresh the browser to clear JavaScript cache
 - Mac: `Cmd + Shift + R`
 - Windows: `Ctrl + Shift + R`
 
-### 4. 测试完整流程
+### 4. Test the complete process
 
-#### A. 如果需要重新初始化
+#### A. If reinitialization is required
 
-如果之前的初始化不完整，可以：
-1. 清理数据库：
-```sql
+If the previous initialization is incomplete, you can:
+1. Clean the database:```sql
 DELETE FROM [Xncf_AgentsManager_AgentTemplate] WHERE Name = 'PromptCatalyzer';
 DELETE FROM [Xncf_PromptRange_PromptItem] 
 WHERE RangeId IN (SELECT Id FROM [Xncf_PromptRange_PromptRange] WHERE Alias = 'PromptCatalyzer');
-```
+```2. Click the "Optimize" button again → select the model → "Start Initialization"
 
-2. 重新点击"优化"按钮 → 选择模型 → "开始初始化"
+#### B. Test optimization function
 
-#### B. 测试优化功能
+1. Enter the PromptRange page
+2. **Select a Prompt** (any existing Prompt)
+3. Click the "Optimize" button
+4. **You should directly enter the "AI Automatic Optimization Prompt" pop-up window** (because it has been initialized)
+5. Fill in the "Optimization Requirements" (for example: "Make this Prompt clearer and easier to understand")
+6. Click "Start Optimization"
+7. **Expected**: The optimization results will be displayed after a few seconds to a few minutes.
 
-1. 进入 PromptRange 页面
-2. **选择一个 Prompt**（任意一个已有的 Prompt）
-3. 点击"优化"按钮
-4. **应该直接进入"AI 自动优化 Prompt"弹窗**（因为已初始化）
-5. 填写"优化需求"（例如："让这个 Prompt 更清晰易懂"）
-6. 点击"开始优化"
-7. **预期**：几秒到几分钟后显示优化结果
-
-### 5. 查看日志验证
-
-```bash
+### 5. View log verification```bash
 tail -f tools/NcfSimulatedSite/Senparc.Web/App_Data/SenparcTraceLog/SenparcTrace-20260324.log
-```
-
-**优化请求的日志应该显示**：
-```
+```**The log of the optimization request should show**:```
 ========== 收到 Prompt 优化请求 ==========
 PromptCode: xxx, UserRequirement: xxx
   请求参数验证通过
@@ -189,47 +167,43 @@ PromptCode: xxx, UserRequirement: xxx
   开始调用 OptimizePromptAsync...
   ✅ 优化完成！NewPromptCode: xxx, Score: 8.5
 ========== Prompt 优化请求处理完成 ==========
-```
+```---
+
+## 🐛 Known issues and notes
+
+### Problem 1: PromptCode format is inconsistent
+
+**Phenomena**:
+- Alias for PromptRange is "PromptCatalyzer"
+- But the FullVersion of the PromptItem is "2026.03.24.1-T1-A1" (RangeName is used instead of Alias)
+
+**Reason**:
+- The FullVersion format of PromptItem is `{RangeName}-T{Tactic}-A{Aiming}`
+- RangeName uses date format (automatically generated by PromptRangeService.AddAsync())
+
+**Impact**:
+- Does not affect the functionality, but the naming is not intuitive enough
+- Agent's SystemMessage stores the actual FullVersion
+
+**OPTIONAL OPTIMIZATION**:
+If you need to use the "PromptCatalyzer-T1-A1" format, you need to modify `PromptRangeService.AddAsync()` or specify the RangeName when creating the Range.
+
+### Problem 2: Flash error during initialization
+
+You mentioned that an error message flashed during initialization, which may be:
+1. **Permission verification error** (we commented out `[ApiAuthorize]`)
+2. **Old response format handling on frontend** (fixed, but may still be cached)
+
+If you still see flashing errors after restarting, please:
+- Open browser console (F12)
+- View the Network and Console tabs
+- Provide complete error message
 
 ---
 
-## 🐛 已知问题和注意事项
+## 📊 Data verification
 
-### 问题1：PromptCode 格式不一致
-
-**现象**：
-- PromptRange 的 Alias 是 "PromptCatalyzer"
-- 但 PromptItem 的 FullVersion 是 "2026.03.24.1-T1-A1"（使用的是 RangeName 而不是 Alias）
-
-**原因**：
-- PromptItem 的 FullVersion 格式是 `{RangeName}-T{Tactic}-A{Aiming}`
-- RangeName 使用的是日期格式（由 PromptRangeService.AddAsync() 自动生成）
-
-**影响**：
-- 不影响功能，只是命名不够直观
-- Agent 的 SystemMessage 存储的是实际的 FullVersion
-
-**可选优化**：
-如果需要使用 "PromptCatalyzer-T1-A1" 格式，需要修改 `PromptRangeService.AddAsync()` 或在创建 Range 时指定 RangeName。
-
-### 问题2：初始化时的闪现错误
-
-您提到初始化时有个错误信息闪过，可能是：
-1. **权限验证错误**（我们注释掉了 `[ApiAuthorize]`）
-2. **前端的旧响应格式处理**（已修复，但可能还有缓存）
-
-如果重启后还看到闪现错误，请：
-- 打开浏览器控制台（F12）
-- 查看 Network 和 Console 标签页
-- 提供完整的错误信息
-
----
-
-## 📊 数据验证
-
-初始化成功后，数据库应该有：
-
-```sql
+After successful initialization, the database should have:```sql
 -- 1. PromptRange（靶场）
 SELECT Id, Alias, RangeName FROM [Xncf_PromptRange_PromptRange] WHERE Alias = 'PromptCatalyzer';
 -- 预期：1条，例如 Id=3024, Alias='PromptCatalyzer', RangeName='2026.03.24.1'
@@ -245,62 +219,57 @@ SELECT Id, Name, SystemMessage, Enable
 FROM [Xncf_AgentsManager_AgentTemplate] 
 WHERE Name = 'PromptCatalyzer';
 -- 预期：1条，例如 Id=1011, SystemMessage='2026.03.24.1-T1-A1'
-```
+```---
+
+## 🎯 Test Checklist
+
+Complete the following tests to confirm that everything is functioning properly:
+
+- [ ] Show EventBus scan log when application starts
+- [ ] PromptRange page can be opened normally
+- [ ] Click the "Optimize" button, a pop-up window displays 17 models
+- [ ] Parameter preview has tooltips (displayed on mouse hover)
+- [ ] If not initialized, it can be successfully initialized (completed within a few seconds)
+- [ ] After initialization, the database has 3 complete records.
+- [ ] Click "Optimize" again to enter the optimization pop-up window directly (no need to re-initialize)
+- [ ] Fill in the optimization requirements and click "Start Optimization"
+- [ ] can receive optimization results (new PromptCode and parameters)
+- [ ] The page automatically refreshes and switches to the new prompt
 
 ---
 
-## 🎯 测试清单
+## 🔍 If the optimization function still fails
 
-完成以下测试，确认所有功能正常：
+Please provide:
 
-- [ ] 应用启动时显示 EventBus 扫描日志
-- [ ] PromptRange 页面可以正常打开
-- [ ] 点击"优化"按钮，弹窗显示17个模型
-- [ ] 参数预览有工具提示（鼠标悬停显示）
-- [ ] 如果未初始化，能成功初始化（几秒内完成）
-- [ ] 初始化后，数据库有完整的3条记录
-- [ ] 再次点击"优化"，直接进入优化弹窗（不需要重新初始化）
-- [ ] 填写优化需求，点击"开始优化"
-- [ ] 能收到优化结果（新的 PromptCode 和参数）
-- [ ] 页面自动刷新并切换到新的 Prompt
+1. **Complete browser console output** (F12 → Console)
+   - Especially the content of "OptimizeAsync full response:"
+   - and any red error messages
 
----
-
-## 🔍 如果优化功能仍然失败
-
-请提供：
-
-1. **浏览器控制台完整输出**（F12 → Console）
-   - 特别是 "OptimizeAsync 完整响应:" 的内容
-   - 以及任何红色错误信息
-
-2. **服务端日志**（包含优化请求的部分）
-   ```bash
+2. **Server log** (including the part of optimization request)```bash
    grep -A 20 "收到 Prompt 优化请求" tools/NcfSimulatedSite/Senparc.Web/App_Data/SenparcTraceLog/SenparcTrace-*.log
-   ```
-
-3. **Network 请求详情**（F12 → Network）
-   - 找到 OptimizeAsync 请求
-   - 查看 Request Payload 和 Response
+   ```3. **Network request details** (F12 → Network)
+   - Find the OptimizeAsync request
+   - View Request Payload and Response
 
 ---
 
-## 📝 技术债务
+## 📝 Technical Debt
 
-以下问题已标记为 TODO，需要后续处理：
+The following questions have been marked as TODO and require further processing:
 
-1. **权限验证**：所有 AppService 的 `[ApiAuthorize("AdminOnly")]` 已注释，需要重新启用
-2. **ApiBind 机制调查**：为什么 `[ApiBind]` 在 AgentsManager 项目中不工作？
-3. **PromptCode 命名优化**：是否需要使用 Alias 而不是日期格式的 RangeName？
-4. **ChatGroup 创建**：初始化流程中 TODO 标记的 ChatGroup 绑定逻辑
+1. **Permission verification**: `[ApiAuthorize("AdminOnly")]` of all AppServices has been commented and needs to be re-enabled
+2. **ApiBind Mechanism Investigation**: Why `[ApiBind]` does not work in AgentsManager project?
+3. **PromptCode naming optimization**: Is it necessary to use Alias ​​instead of RangeName in date format?
+4. **ChatGroup creation**: ChatGroup binding logic marked by TODO in the initialization process
 
 ---
 
-## 🚀 现在请重启应用测试！
+## 🚀 Please restart the application test now!
 
-1. **停止应用**（Ctrl+C）
-2. **重新启动**
-3. **强制刷新浏览器**（Cmd+Shift+R）
-4. **测试优化功能**
+1. **Stop application** (Ctrl+C)
+2. **Restart**
+3. **Force refresh browser** (Cmd+Shift+R)
+4. **Test optimization function**
 
-如果还有问题，请提供浏览器控制台的完整输出！
+If you still have problems, please provide the full output of your browser console!

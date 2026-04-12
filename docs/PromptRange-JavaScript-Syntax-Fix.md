@@ -1,86 +1,83 @@
-# 问题修复总结 - PromptRange JavaScript 语法错误
+[中文版](PromptRange-JavaScript-Syntax-Fix.cn.md)
 
-## 🐛 问题描述
+# Summary of problem fixes - PromptRange JavaScript syntax error
 
-**错误信息**: `prompt.js:3345 Uncaught SyntaxError: Unexpected token '.'`
+## 🐛 Problem description
 
-**原因**: 在 `prompt.js` 文件的第 3345-3365 行存在一段**孤立的重复代码**，这些代码不属于任何方法，直接出现在两个方法之间，导致 JavaScript 解析器报语法错误。
+**Error message**: `prompt.js:3345 Uncaught SyntaxError: Unexpected token '.'`
 
-## 🔧 修复内容
+**Cause**: There is a piece of **isolated repeated code** at lines 3345-3365 of the `prompt.js` file. This code does not belong to any method and appears directly between the two methods, causing the JavaScript parser to report a syntax error.
 
-### 删除的重复代码 (第 3345-3365 行)
+## 🔧Fix content
 
-这段代码原本是 `executeOptimize()` 方法的旧版本实现片段，在代码更新时未被正确清理：
+### Removed duplicate code (lines 3345-3365)
 
+This code was originally an old implementation fragment of the `executeOptimize()` method, which was not properly cleaned up when the code was updated:
 ```javascript
-// ❌ 错误：这些代码孤立存在，不在任何方法内
+// Invalid: orphaned fragment, not inside any method
                     this.optimizeDialogVisible = false;
-                    // 刷新列表或跳转到新Prompt (可选)
-                    // this.getPromptList(this.promptField); // 刷新
+                    // Optional: refresh list or navigate to new prompt
+                    // this.getPromptList(this.promptField);
                 } else if (response.data && response.data.success === false) {
-                     this.$message.error('优化失败: ' + (response.data.message || '未知原因'));
+                     this.$message.error('Optimize failed: ' + (response.data.message || 'Unknown reason'));
                 } else {
-                    // NCF 可能直接返回 data
+                    // NCF may return data directly
                    if (response.data.newPromptCode) {
-                      this.$message.success(`优化成功！newPromptCode: ${response.data.newPromptCode}`);
+                      this.$message.success(`Optimize succeeded. newPromptCode: ${response.data.newPromptCode}`);
                       this.optimizeDialogVisible = false;
                    } else {
-                      this.$message.error('优化未返回有效结果');
+                      this.$message.error('Optimize returned no valid result');
                    }
                 }
             } catch (error) {
                 console.error('Optimize Error:', error);
-                this.$message.error('请求出错：' + (error.message || '未知错误'));
+                this.$message.error('Request error: ' + (error.message || 'Unknown error'));
             } finally {
                 this.optimizing = false;
             }
         },
 ```
-
-### 修复后的代码结构
-
+### Fixed code structure
 ```javascript
         async executeOptimize() {
-            // ... 方法实现 ...
+            // ... method body ...
             } finally {
                 this.optimizing = false;
             }
-        },  // ✅ 方法正常结束
-        // 计算树的高度（用于平衡布局）
+        },  // method ends here
+        // Tree height for balanced layout
         calculateTreeHeight(nodeData) {
-            // ... 下一个方法开始 ...
+            // ... next method ...
         }
 ```
+## ✅ Verification results
 
-## ✅ 验证结果
-
-### JavaScript 语法验证
+### JavaScript syntax verification
 ```bash
 node --check prompt.js
-# 返回 Exit Code: 0 (无语法错误)
+# Exit code: 0 (no syntax errors)
 ```
+### Affected files
+- **File**: `src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js`
+- **Fixed lines**: 3345-3365 (a total of 21 lines of duplicate code have been removed)
 
-### 受影响的文件
-- **文件**: `src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js`
-- **修复行**: 3345-3365 (共 21 行重复代码已删除)
+## 🎯 Root cause analysis
 
-## 🎯 根本原因分析
+This problem was caused by the old code fragments not being completely cleaned up after the new code was added when the `executeOptimize()` method was implemented previously. Specific reasons may be:
 
-这个问题是在之前实现 `executeOptimize()` 方法时，新代码添加后旧代码片段未被完全清理导致的。具体原因可能是：
+1. Incomplete string replacement was used when editing the code
+2. Multiple versions of optimized logic fragments exist
+3. Old code is left behind after the method terminator `},`
 
-1. 代码编辑时使用了不完整的字符串替换
-2. 存在多个版本的优化逻辑片段
-3. 方法结束符 `},` 后遗留了旧代码
+## 📋 Follow-up suggestions
 
-## 📋 后续建议
-
-1. **清理浏览器缓存**: 按 `Ctrl+Shift+R` (或 `Cmd+Shift+R`) 强制刷新页面
-2. **验证功能**: 测试优化功能是否正常工作
-3. **代码审查**: 检查其他 JavaScript 文件是否存在类似问题
+1. **Clear browser cache**: Press `Ctrl+Shift+R` (or `Cmd+Shift+R`) to force refresh the page
+2. **Verification function**: Test whether the optimization function works properly
+3. **Code Review**: Check other JavaScript files for similar problems
 
 ---
 
-**修复时间**: 2026-03-24  
-**影响范围**: PromptRange 前端页面加载  
-**严重程度**: 高（阻止页面正常加载）  
-**状态**: ✅ 已修复并验证
+**Repair time**: 2026-03-24
+**Scope of Impact**: PromptRange front-end page loading
+**Severity**: High (prevents page from loading properly)
+**Status**: ✅ Fixed and verified

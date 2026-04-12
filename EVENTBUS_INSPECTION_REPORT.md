@@ -1,31 +1,31 @@
-# EventBus 系统检查报告
+[中文版](EVENTBUS_INSPECTION_REPORT.cn.md)
 
-**检查日期**: 2026-03-24  
-**检查范围**: EventBus 机制、高并发能力、循环引用防护  
-**检查结果**: ✅ 已完成优化和防护增强
+# EventBus system check report
+
+**Inspection date**: 2026-03-24
+**Scope of inspection**: EventBus mechanism, high concurrency capability, circular reference protection
+**Check results**: ✅ Optimization and protection enhancement completed
 
 ---
 
-## 📊 检查结果总结
+## 📊 Summary of inspection results
 
-### 1️⃣ 高并发处理能力 - ✅ 优秀
+### 1️⃣ High concurrent processing capability - ✅ Excellent
 
-**现状评估**:
-- ✅ 使用 `System.Threading.Channels` 实现非阻塞消息队列
-- ✅ `UnboundedChannel` 配置支持高吞吐量（生产者不阻塞）
-- ✅ 信号量（SemaphoreSlim）控制并发度，防止资源耗尽
-- ✅ 多消费者并发读取支持（`SingleReader = false`）
-- ✅ 异步任务并行处理事件
+**Situation Assessment**:
+- ✅ Use `System.Threading.Channels` to implement non-blocking message queue
+- ✅ `UnboundedChannel` configuration supports high throughput (producer does not block)
+- ✅ SemaphoreSlim controls concurrency and prevents resource exhaustion
+- ✅ Multi-consumer concurrent reading support (`SingleReader = false`)
+- ✅ Asynchronous tasks handle events in parallel
 
-**性能基准**:
+**Performance Benchmark**:
 ```
 测试场景: 10,000 个事件批量发布
 处理时间: ~450ms
 吞吐量: ~22,000 events/sec
 并发度: Environment.ProcessorCount * 2 (动态调整)
-```
-
-**架构优势**:
+```**Architectural Advantages**:
 ```
 发布端 (PublishAsync)              处理端 (EventBusHostedService)
      ↓                                      ↓
@@ -36,14 +36,11 @@ Channel.Writer.WriteAsync           Channel.Reader.ReadAllAsync
                                     Task.Run 异步处理
                                            ↓
                                     多个 Handler 并发执行
-```
+```---
 
----
+### 2️⃣ Circular reference protection - ⭐ Newly added
 
-### 2️⃣ 循环引用防护 - ⭐ 已新增
-
-**问题识别**: 原系统**没有**循环引用检测机制，存在以下风险：
-
+**Problem Identification**: The original system **does not** have a circular reference detection mechanism, and there are the following risks:
 ```
 风险场景 1: 直接循环
 Event A → Handler A → Event B → Handler B → Event A ♾️
@@ -53,50 +50,43 @@ Event A → Event B → Event C → Event A ♾️
 
 风险场景 3: 深度递归
 Event A → Event A → Event A → ... ♾️
-```
+```**Solution**: Implement a three-layer protection mechanism
 
-**解决方案**: 实施三层防护机制
+#### 🛡️ First level: event chain tracking
 
-#### 🛡️ 第一层：事件链追踪
+Added in `IIntegrationEvent` interface:
+- `ParentEventId`: Parent event ID
+- `Depth`: event chain depth (root event is 0)
+- `EventChain`: event type chain path (such as "EventA→EventB→EventC")
 
-在 `IIntegrationEvent` 接口中新增：
-- `ParentEventId`: 父事件 ID
-- `Depth`: 事件链深度（根事件为 0）
-- `EventChain`: 事件类型链路径（如 "EventA→EventB→EventC"）
+#### 🛡️ Second level: Depth limit
 
-#### 🛡️ 第二层：深度限制
-
-在 `EventBusHostedService` 中添加深度检查：
+Add deep check in `EventBusHostedService`:
 ```csharp
 if (@event.Depth >= _options.MaxEventChainDepth) // 默认 10
 {
     _logger.LogError("Event chain depth limit exceeded");
     continue; // 丢弃事件
 }
-```
+```#### 🛡️ The third layer: loop detection
 
-#### 🛡️ 第三层：循环检测
-
-在发布前预检，检测事件链中是否有重复类型：
+Preflight before publishing to detect duplicate types in the event chain:
 ```csharp
 if (@event.EventChain.Contains(currentEventType))
 {
     _logger.LogError("Circular reference detected");
     throw new InvalidOperationException(...);
 }
-```
-
-**防护效果**:
-- ✅ 阻止 A→B→A 循环模式
-- ✅ 限制递归深度防止栈溢出
-- ✅ 发布前预检，避免无效事件进入队列
+```**Protective effect**:
+- ✅ Prevent A→B→A loop pattern
+- ✅ Limit recursion depth to prevent stack overflow
+- ✅ Pre-check before publishing to avoid invalid events entering the queue
 
 ---
 
-### 3️⃣ PromptRange 功能检查 - ✅ 正确无循环
+### 3️⃣ PromptRange function check - ✅ Correct without looping
 
-**事件流分析**:
-
+**Event flow analysis**:
 ```
 场景 1: Prompt 初始化
 PromptOptimizationService.EnsureInitializedAsync()
@@ -117,67 +107,61 @@ PromptOptimizationResponseEvent (Depth=1)
   ↓ PromptOptimizationResponseHandler
 CompleteRequest() → TCS.SetResult()
 ✅ 终止，无循环
-```
-
-**结论**: 
-- ✅ PromptRange 采用请求-响应模式，天然无循环
-- ✅ 响应处理器仅完成 TaskCompletionSource，不再发布事件
-- ✅ 事件链最大深度仅为 1，远低于限制（10）
+```**Conclusion**:
+- ✅ PromptRange adopts request-response mode, naturally without loops
+- ✅ The response processor only completes the TaskCompletionSource and no longer publishes events
+- ✅ The maximum event chain depth is only 1, which is far below the limit (10)
 
 ---
 
-## 🔧 实施的改进措施
+## 🔧 Improvement measures implemented
 
-### 修改的文件列表
+### Modified file list
 
-| 文件 | 改动类型 | 说明 |
+| Documentation | Change Type | Description |
 |------|---------|------|
-| `IIntegrationEvent.cs` | 接口增强 | 添加 ParentEventId、Depth、EventChain 属性 |
-| `IntegrationEvent.cs` | 基类增强 | 实现 DeriveMetadata()、HasCircularReference() 方法 |
-| `IEventBus.cs` | 接口扩展 | 新增 PublishDerivedAsync() 方法 |
-| `InMemoryEventBus.cs` | 功能实现 | 实现循环检测和事件派生逻辑 |
-| `EventBusHostedService.cs` | 检查增强 | 添加深度限制和循环检测 |
-| `EventBusOptions.cs` | 配置扩展 | 新增 MaxEventChainDepth、EnableCircularReferenceDetection |
-| `EventBusExtensions.cs` | DI 优化 | 支持 ILogger 注入到 InMemoryEventBus |
-| `PromptInitRequestHandler.cs` | 使用更新 | 使用 PublishDerivedAsync |
-| `PromptOptimizationRequestHandler.cs` | 使用更新 | 使用 PublishDerivedAsync |
-| `EventBusTests.cs` | 测试增强 | 新增循环检测和深度限制测试 |
+| `IIntegrationEvent.cs` | Interface enhancement | Add ParentEventId, Depth, EventChain properties |
+| `IntegrationEvent.cs` | Base class enhancement | Implement DeriveMetadata(), HasCircularReference() methods |
+| `IEventBus.cs` | Interface extension | Added PublishDerivedAsync() method |
+| `InMemoryEventBus.cs` | Function implementation | Implement loop detection and event derivation logic |
+| `EventBusHostedService.cs` | Inspection enhancements | Add depth limit and loop detection |
+| `EventBusOptions.cs` | Configuration extension | Added MaxEventChainDepth, EnableCircularReferenceDetection |
+| `EventBusExtensions.cs` | DI optimization | Support ILogger injection into InMemoryEventBus |
+| `PromptInitRequestHandler.cs` | Using update | Using PublishDerivedAsync |
+| `PromptOptimizationRequestHandler.cs` | Using update | Using PublishDerivedAsync |
+| `EventBusTests.cs` | Test enhancements | Added loop detection and depth limit tests |
 
-### 向后兼容性
+### Backwards Compatibility
 
-✅ **完全向后兼容**:
-- 现有的 `PublishAsync` 方法保持不变
-- 新增的属性使用 `init` 关键字，默认值为 0 和空字符串
-- 不启用循环检测时，行为与原系统一致
+✅ **Fully Backwards Compatible**:
+- Existing `PublishAsync` methods remain unchanged
+- The new properties use the `init` keyword, and the default value is 0 and empty string
+- When loop detection is not enabled, the behavior is consistent with the original system
 
 ---
 
-## 📈 性能影响评估
+## 📈 Performance Impact Assessment
 
-### 新增检查的性能开销
+### Performance overhead of new check
 
-| 检查项 | 时间复杂度 | 单次耗时 | 说明 |
+| Check items | Time complexity | Single time consumption | Description |
 |--------|-----------|---------|------|
-| 深度检查 | O(1) | < 0.01ms | 整数比较 |
-| 循环检测 | O(n) | < 0.1ms | n = 事件链长度 (通常 < 10) |
-| 事件派生 | O(n) | < 0.5ms | 字符串拼接和记录创建 |
-| **总开销** | **O(n)** | **< 1ms** | **对高并发几乎无影响** |
+| Deep Check | O(1) | < 0.01ms | Integer Comparison |
+| Loop detection | O(n) | < 0.1ms | n = event chain length (usually < 10) |
+| Event derivation | O(n) | < 0.5ms | String concatenation and record creation |
+| **Total overhead** | **O(n)** | **< 1ms** | **Almost no impact on high concurrency** |
 
-### 高并发性能验证
-
+### High concurrency performance verification
 ```
 测试: 10,000 个事件 (含新检查机制)
 结果: ~450ms (与原系统基本一致)
 吞吐量: ~22,000 events/sec
 结论: 新增防护对性能影响可忽略不计
-```
+```---
 
----
+## 🎯 Configuration suggestions
 
-## 🎯 配置建议
-
-### 生产环境推荐配置
-
+### Recommended configuration for production environment
 ```csharp
 services.AddSenparcEventBus(options =>
 {
@@ -197,24 +181,18 @@ services.AddSenparcEventBus(options =>
     options.MaxRetryAttempts = 3;                         // 最多 3 次
 }, 
 typeof(YourModule).Assembly);
-```
-
-### 开发/调试环境配置
-
+```### Development/debugging environment configuration
 ```csharp
 options.MaxConcurrency = 2;                          // 降低并发，便于调试
 options.MaxEventChainDepth = 5;                      // 更严格的限制
 options.EnableCircularReferenceDetection = true;     // 必须启用
-```
+```---
 
----
+## 🔍 PromptRange module security analysis
 
-## 🔍 PromptRange 模块安全性分析
+### Event definition check
 
-### 事件定义检查
-
-✅ 所有事件均继承自 `IntegrationEvent` 基类：
-
+✅ All events inherit from the `IntegrationEvent` base class:
 ```csharp
 // PromptInitEvents.cs
 public record PromptInitRequestEvent(...) : IntegrationEvent;
@@ -223,130 +201,110 @@ public record PromptInitResponseEvent(...) : IntegrationEvent;
 // PromptOptimizationEvents.cs
 public record PromptOptimizationRequestEvent(...) : IntegrationEvent;
 public record PromptOptimizationResponseEvent(...) : IntegrationEvent;
-```
+```### Handler check results
 
-### Handler 检查结果
-
-| Handler | 输入事件 | 输出事件 | 循环风险 | 状态 |
+| Handler | Input Events | Output Events | Cycle Risk | Status |
 |---------|---------|---------|---------|------|
-| `PromptInitRequestHandler` | PromptInitRequestEvent | PromptInitResponseEvent | ✅ 无 | 已优化 |
-| `PromptInitResponseHandler` | PromptInitResponseEvent | 无 | ✅ 无 | 正常 |
-| `PromptOptimizationRequestHandler` | PromptOptimizationRequestEvent | PromptOptimizationResponseEvent | ✅ 无 | 已优化 |
-| `PromptOptimizationResponseHandler` | PromptOptimizationResponseEvent | 无 | ✅ 无 | 正常 |
+| `PromptInitRequestHandler` | PromptInitRequestEvent | PromptInitResponseEvent | ✅ None | Optimized |
+| `PromptInitResponseHandler` | PromptInitResponseEvent | None | ✅ None | Normal |
+| `PromptOptimizationRequestHandler` | PromptOptimizationRequestEvent | PromptOptimizationResponseEvent | ✅ None | Optimized |
+| `PromptOptimizationResponseHandler` | PromptOptimizationResponseEvent | None | ✅ None | Normal |
 
-**结论**: 
-- ✅ PromptRange 采用标准的请求-响应模式
-- ✅ 响应 Handler 只完成异步任务，不发布新事件
-- ✅ 不存在循环引用风险
-- ✅ 已更新为使用 `PublishDerivedAsync`
+**Conclusion**:
+- ✅ PromptRange adopts the standard request-response model
+- ✅ Response Handler only completes asynchronous tasks and does not publish new events
+- ✅ No risk of circular references
+- ✅ Updated to use `PublishDerivedAsync`
 
 ---
 
-## 🧪 测试覆盖
+## 🧪 Test coverage
 
-### 已通过的测试
+### Passed tests
 
-| 测试名称 | 测试内容 | 结果 |
+| Test name | Test content | Results |
 |---------|---------|------|
-| `InMemoryEventBus_PublishAndHandle_ShouldWork` | 高并发场景 (10,000 事件) | ✅ 通过 |
-| `EventBus_CircularReferenceDetection_ShouldPreventLoop` | 循环引用检测 | ✅ 通过 |
-| `EventBus_MaxDepthLimit_ShouldStopProcessing` | 深度限制验证 | ✅ 通过 |
+| `InMemoryEventBus_PublishAndHandle_ShouldWork` | High concurrency scenario (10,000 events) | ✅ Passed |
+| `EventBus_CircularReferenceDetection_ShouldPreventLoop` | Circular reference detection | ✅ Passed |
+| `EventBus_MaxDepthLimit_ShouldStopProcessing` | Depth limit verification | ✅ Passed |
 
-**测试覆盖率**: 100% (核心功能)
+**Test Coverage**: 100% (core functionality)
 
 ---
 
-## 💡 使用建议
+## 💡 Usage suggestions
 
-### ✅ DO - 推荐做法
+### ✅ DO - Recommended Practice
 
-1. **在 Handler 中发布派生事件时，使用 `PublishDerivedAsync`**:
-   ```csharp
+1. **When publishing derived events in Handler, use `PublishDerivedAsync`**:
+```csharp
    await _eventBus.PublishDerivedAsync(responseEvent, @event);
-   ```
-
-2. **为业务流程设计请求-响应模式**:
-   ```
+   ```2. **Design request-response pattern for business processes**:
+```
    Request Event → Handler → Response Event → Complete (不再发布)
-   ```
-
-3. **监控事件链深度和循环检测日志**:
-   ```csharp
+   ```3. **Monitor event chain depth and loop detection log**:
+```csharp
    _logger.LogInformation("Event processed: Depth={Depth}, Chain={Chain}", 
        @event.Depth, @event.EventChain);
-   ```
+   ```4. **Configure reasonable depth limits**:
+   - Simple business: 3-5 floors
+   - Complex business: 10-15 layers
+   - Refactoring should be considered if there are more than 20 layers
 
-4. **配置合理的深度限制**:
-   - 简单业务: 3-5 层
-   - 复杂业务: 10-15 层
-   - 超过 20 层应考虑重构
+### ❌ DON'T - What to avoid
 
-### ❌ DON'T - 避免做法
-
-1. **不要在响应 Handler 中再次发布请求事件**:
-   ```csharp
+1. **Do not publish the request event again in the response Handler**:
+```csharp
    // ❌ 错误：可能造成循环
    public Task Handle(ResponseEvent @event, CancellationToken ct)
    {
        await _eventBus.PublishAsync(new RequestEvent(...));
    }
-   ```
-
-2. **不要关闭循环检测（除非有特殊理由）**:
-   ```csharp
+   ```2. **Do not turn off loop detection (unless there is a special reason)**:
+```csharp
    // ⚠️ 不推荐
    options.EnableCircularReferenceDetection = false;
-   ```
-
-3. **不要设置过大的深度限制**:
-   ```csharp
+   ```3. **Don’t set too large a depth limit**:
+```csharp
    // ⚠️ 危险：可能导致栈溢出或性能问题
    options.MaxEventChainDepth = 100;
-   ```
+   ```---
 
----
+## 🎯 Key improvements
 
-## 🎯 关键改进点
+### Improvement 1: Event chain tracking
 
-### 改进 1: 事件链追踪
+**Before improvement**: Unable to trace the source and derivation relationship of events
 
-**改进前**: 无法追踪事件的来源和派生关系
-
-**改进后**: 每个事件包含完整的链信息
+**Improved**: Each event contains complete chain information
 ```
 PromptInitRequestEvent (Depth=0, Chain="")
   ↓
 PromptInitResponseEvent (Depth=1, Chain="PromptInitRequestEvent")
-```
+```### Improvement 2: Automatic loop detection
 
-### 改进 2: 自动循环检测
+**Before improvement**: Completely dependent on developers to manually avoid loops
 
-**改进前**: 完全依赖开发者手动避免循环
-
-**改进后**: 系统自动检测并阻止循环
+**Improved**: The system automatically detects and prevents loops
 ```
 检测模式: A→B→A, A→B→C→A, A→A
 处理方式: 记录错误日志 + 丢弃事件 / 抛出异常
-```
+```### Improvement 3: Depth Limit Protection
 
-### 改进 3: 深度限制保护
+**Before improvement**: Infinite recursion may lead to resource exhaustion
 
-**改进前**: 无限递归可能导致资源耗尽
-
-**改进后**: 自动限制事件链深度
+**Improved**: Automatically limit event chain depth
 ```
 默认限制: 10 层
 超过限制: 记录错误 + 丢弃事件
 可配置: EventBusOptions.MaxEventChainDepth
-```
+```---
 
----
+## 📝 Code change example
 
-## 📝 代码变更示例
+### Example 1: Handler correctly publishes derived events
 
-### 示例 1: Handler 正确发布派生事件
-
-**修改前**:
+**Before modification**:
 ```csharp
 public async Task Handle(PromptInitRequestEvent @event, CancellationToken ct)
 {
@@ -354,9 +312,7 @@ public async Task Handle(PromptInitRequestEvent @event, CancellationToken ct)
     var response = new PromptInitResponseEvent(...);
     await _eventBus.PublishAsync(response);  // ❌ 丢失链信息
 }
-```
-
-**修改后**:
+```**After modification**:
 ```csharp
 public async Task Handle(PromptInitRequestEvent @event, CancellationToken ct)
 {
@@ -364,10 +320,7 @@ public async Task Handle(PromptInitRequestEvent @event, CancellationToken ct)
     var response = new PromptInitResponseEvent(...);
     await _eventBus.PublishDerivedAsync(response, @event);  // ✅ 自动继承链信息
 }
-```
-
-### 示例 2: 配置 EventBus 选项
-
+```### Example 2: Configuring EventBus options
 ```csharp
 // Startup.cs 或 Program.cs
 services.AddSenparcEventBus(options =>
@@ -377,50 +330,45 @@ services.AddSenparcEventBus(options =>
     options.EnableCircularReferenceDetection = true;      // ⭐ 新增
 }, 
 typeof(PromptRangeModule).Assembly);
-```
+```---
 
----
+## 🐛 Troubleshooting potential problems
 
-## 🐛 潜在问题排查
+### Question 1: InvalidOperationException - Circular reference detected
 
-### 问题 1: InvalidOperationException - Circular reference detected
+**Phenomenon**: An exception is thrown when publishing an event, prompting circular reference
 
-**现象**: 发布事件时抛出异常，提示循环引用
+**Cause**: There are duplicate event types in the event chain
 
-**原因**: 事件链中存在重复的事件类型
+**Troubleshooting steps**:
+1. Check the `EventChain` information in the log
+2. Draw event flow charts and identify loop paths
+3. Redesign the event flow and eliminate circular dependencies
 
-**排查步骤**:
-1. 查看日志中的 `EventChain` 信息
-2. 绘制事件流程图，识别循环路径
-3. 重新设计事件流，消除循环依赖
-
-**示例**:
+**Example**:
 ```
 错误日志: Circular reference detected: Chain=PromptRequestEvent→PromptResponseEvent→PromptRequestEvent
 
 解决方案: 在响应处理器中不要再发布请求事件
-```
+```### Problem 2: Event chain depth limit exceeded
 
-### 问题 2: Event chain depth limit exceeded
+**Phenomena**: The log shows that the event chain depth exceeds the limit and the event is discarded
 
-**现象**: 日志显示事件链深度超过限制，事件被丢弃
+**Reason**:
+- The nesting level of events is too deep
+- There may be undetected recursive patterns
 
-**原因**: 
-- 事件嵌套层次过深
-- 可能存在未检测到的递归模式
-
-**排查步骤**:
-1. 检查事件链路径，识别深度来源
-2. 评估是否真的需要如此深的嵌套
-3. 如果合理，增加 `MaxEventChainDepth` 配置
-4. 如果不合理，重构为更扁平的结构
+**Troubleshooting steps**:
+1. Check the event chain path and identify the deep source
+2. Evaluate whether such deep nesting is really needed
+3. If reasonable, increase the `MaxEventChainDepth` configuration
+4. If it doesn’t make sense, refactor it into a flatter structure
 
 ---
 
-## 📊 监控指标
+## 📊 Monitoring indicators
 
-### 推荐监控的日志事件
-
+### Recommended log events to monitor
 ```csharp
 // 1. 循环引用检测
 LogLevel.Error - "Circular reference detected"
@@ -433,71 +381,68 @@ LogLevel.Information - "Event {EventType} processed successfully in {Duration}ms
 
 // 4. 重复事件检测
 LogLevel.Warning - "Duplicate event detected and skipped"
-```
+```### Grafana / Application Insights Metrics
 
-### Grafana / Application Insights 指标
-
-- `eventbus_circular_reference_count`: 检测到的循环次数
-- `eventbus_depth_exceeded_count`: 超过深度限制的次数
-- `eventbus_event_depth_avg`: 事件链平均深度
-- `eventbus_processing_time_p95`: 事件处理时间 P95
-- `eventbus_active_tasks_count`: 当前活跃的处理任务数
+- `eventbus_circular_reference_count`: number of detected cycles
+- `eventbus_depth_exceeded_count`: The number of times the depth limit has been exceeded
+- `eventbus_event_depth_avg`: average depth of event chain
+- `eventbus_processing_time_p95`: event processing time P95
+- `eventbus_active_tasks_count`: The number of currently active processing tasks
 
 ---
 
-## ✅ 检查结论
+## ✅ Check conclusion
 
-| 检查项 | 状态 | 评级 |
+| Check Item | Status | Rating |
 |--------|------|------|
-| 高并发能力 | ✅ 优秀 | ⭐⭐⭐⭐⭐ |
-| 非阻塞发布 | ✅ 已实现 | ⭐⭐⭐⭐⭐ |
-| 循环引用防护 | ✅ 已新增 | ⭐⭐⭐⭐⭐ |
-| 深度限制保护 | ✅ 已新增 | ⭐⭐⭐⭐⭐ |
-| PromptRange 安全性 | ✅ 无风险 | ⭐⭐⭐⭐⭐ |
-| 测试覆盖 | ✅ 完整 | ⭐⭐⭐⭐⭐ |
-| 向后兼容 | ✅ 完全兼容 | ⭐⭐⭐⭐⭐ |
+| High concurrency | ✅ Excellent | ⭐⭐⭐⭐⭐ |
+| Non-blocking publishing | ✅ Implemented | ⭐⭐⭐⭐⭐ |
+| Circular reference protection | ✅ Newly added | ⭐⭐⭐⭐⭐ |
+| Depth Limit Protection | ✅ Added | ⭐⭐⭐⭐⭐ |
+| PromptRange Security | ✅ Risk-free | ⭐⭐⭐⭐⭐ |
+| Test Coverage | ✅ Complete | ⭐⭐⭐⭐⭐ |
+| Backwards Compatible | ✅ Fully Compatible | ⭐⭐⭐⭐⭐ |
 
-### 综合评价
+### Comprehensive evaluation
 
-**当前系统已具备生产级的高并发事件总线能力**:
-- ✅ 高性能：22,000+ events/sec
-- ✅ 非阻塞：发布操作立即返回
-- ✅ 高可靠：重试机制 + 重复检测
-- ✅ 高安全：循环检测 + 深度限制
-- ✅ 易监控：完善的日志和指标
+**The current system already has production-level high-concurrency event bus capabilities**:
+- ✅ High performance: 22,000+ events/sec
+- ✅ Non-blocking: publish operation returns immediately
+- ✅ High reliability: retry mechanism + repeated detection
+- ✅ High security: loop detection + depth limit
+- ✅ Easy to monitor: complete logs and indicators
 
-**PromptRange 模块已验证安全**:
-- ✅ 无循环引用风险
-- ✅ 事件链结构清晰
-- ✅ 已更新使用新 API
-
----
-
-## 📚 相关文档
-
-- [EventBus 循环引用防护技术文档](./EVENTBUS_CIRCULAR_REFERENCE_PROTECTION.md)
-- [EventBus 使用指南](#) (待创建)
-- [事件驱动架构最佳实践](#) (待创建)
+**PromptRange module verified safe**:
+- ✅ No risk of circular references
+- ✅ The event chain structure is clear
+- ✅ Updated to use new API
 
 ---
 
-## 📞 后续建议
+## 📚 Related documents
 
-### 短期改进（可选）
-
-1. **性能监控面板**: 集成 Grafana 监控事件处理指标
-2. **告警规则**: 配置循环检测和深度超限告警
-3. **可视化工具**: 开发事件链可视化工具（用于调试）
-
-### 中期规划（可选）
-
-1. **分布式追踪**: 集成 OpenTelemetry 实现跨服务事件追踪
-2. **事件重放**: 添加事件存储和重放功能
-3. **流量控制**: 添加更精细的背压控制机制
+- [EventBus circular reference protection technical document](./EVENTBUS_CIRCULAR_REFERENCE_PROTECTION.md)
+- [EventBus User Guide](#) (to be created)
+- [Best Practices for Event Driven Architecture](#) (to be created)
 
 ---
 
-**报告完成时间**: 2026-03-24  
-**检查人员**: AI Agent  
-**测试状态**: ✅ 全部通过 (3/3)
+## 📞 Follow-up suggestions
 
+### Short-term improvements (optional)
+
+1. **Performance Monitoring Panel**: Integrated Grafana monitoring event processing indicators
+2. **Alarm Rules**: Configure loop detection and depth over-limit alarms
+3. **Visualization Tools**: Develop event chain visualization tools (for debugging)
+
+### Medium-term planning (optional)
+
+1. **Distributed Tracing**: Integrate OpenTelemetry to implement cross-service event tracking
+2. **Event Replay**: Add event storage and replay functions
+3. **Flow Control**: Add a more refined back pressure control mechanism
+
+---
+
+**Report completion time**: 2026-03-24
+**Inspector**: AI Agent
+**Test Status**: ✅ All passed (3/3)

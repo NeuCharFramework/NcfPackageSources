@@ -1,31 +1,29 @@
-# AdminChat API 接口文档
+[中文版](Admin-Chat-API-Documentation.cn.md)
 
-## 📌 基础信息
+# AdminChat API interface documentation
 
-**Base URL**: `/api/{XNCF_NAME}/AdminChatAppService/`  
-**认证方式**: JWT Bearer Token（BackendJwtAuthorize）  
-**内容类型**: `application/json`
+## 📌 Basic information
+
+**Base URL**: `/api/{XNCF_NAME}/AdminChatAppService/`
+**Authentication method**: JWT Bearer Token (BackendJwtAuthorize)
+**Content type**: `application/json`
 
 ---
 
-## 📡 API 接口列表
+## 📡 API interface list
 
-### 1. 创建会话
+### 1. Create session
 
-**接口**: `CreateSession`  
-**方法**: POST  
-**路径**: `/api/{XNCF_NAME}/AdminChatAppService/CreateSession`
+**Interface**: `CreateSession`
+**Method**: POST
+**Path**: `/api/{XNCF_NAME}/AdminChatAppService/CreateSession`
 
-**请求体**:
-```json
+**Request body**:```json
 {
   "InitialMessage": "你好，我想了解系统功能",
   "ModuleUids": ["module-uid-1", "module-uid-2"]
 }
-```
-
-**响应**:
-```json
+```**response**:```json
 {
   "success": true,
   "msg": "",
@@ -42,22 +40,20 @@
     }
   }
 }
-```
+```---
 
----
+### 2. Get session list
 
-### 2. 获取会话列表
+**Interface**: `GetSessionList`
+**Method**: GET
+**Path**: `/api/{XNCF_NAME}/AdminChatAppService/GetSessionList?pageIndex=1&pageSize=20`
 
-**接口**: `GetSessionList`  
-**方法**: GET  
-**路径**: `/api/{XNCF_NAME}/AdminChatAppService/GetSessionList?pageIndex=1&pageSize=20`
+**Query Parameters**:
 
-**查询参数**:
-- `pageIndex` (int, 可选, 默认1): 页码
-- `pageSize` (int, 可选, 默认20): 每页数量
+- `pageIndex` (int, optional, default 1): page number
+- `pageSize` (int, optional, default 20): Number of pages per page
 
-**响应**:
-```json
+**Response**:```json
 {
   "success": true,
   "msg": "",
@@ -74,21 +70,19 @@
     "TotalCount": 10
   }
 }
-```
+```---
 
----
+### 3. Get session details
 
-### 3. 获取会话详情
+**Interface**: `GetSessionDetail`
+**Method**: GET
+**Path**: `/api/{XNCF_NAME}/AdminChatAppService/GetSessionDetail?sessionId=123`
 
-**接口**: `GetSessionDetail`  
-**方法**: GET  
-**路径**: `/api/{XNCF_NAME}/AdminChatAppService/GetSessionDetail?sessionId=123`
+**Query Parameters**:
 
-**查询参数**:
-- `sessionId` (int, 必需): 会话ID
+- `sessionId` (int, required): session ID
 
-**响应**:
-```json
+**Response**:```json
 {
   "success": true,
   "msg": "",
@@ -128,26 +122,20 @@
     }
   }
 }
-```
+```---
 
----
+### 4. Send message
 
-### 4. 发送消息
+**Interface**: `SendMessage`
+**Method**: POST
+**Path**: `/api/{XNCF_NAME}/AdminChatAppService/SendMessage`
 
-**接口**: `SendMessage`  
-**方法**: POST  
-**路径**: `/api/{XNCF_NAME}/AdminChatAppService/SendMessage`
-
-**请求体**:
-```json
+**Request body**:```json
 {
   "SessionId": 123,
   "Content": "请介绍一下系统核心功能"
 }
-```
-
-**响应**:
-```json
+```**response**:```json
 {
   "success": true,
   "msg": "",
@@ -168,29 +156,24 @@
     }
   }
 }
-```
+```---
 
----
+### 5. Set message feedback
 
-### 5. 设置消息反馈
+**Interface**: `SetMessageFeedback`
+**Method**: POST
+**Path**: `/api/{XNCF_NAME}/AdminChatAppService/SetMessageFeedback`
 
-**接口**: `SetMessageFeedback`  
-**方法**: POST  
-**路径**: `/api/{XNCF_NAME}/AdminChatAppService/SetMessageFeedback`
-
-**请求体**:
-```json
+**Request body**:```json
 {
   "MessageId": 4,
   "Feedback": 1
 }
-```
+```**Parameter Description**:
 
-**参数说明**:
 - `Feedback`: 0=None, 1=Like, 2=Dislike
 
-**响应**:
-```json
+**Response**:```json
 {
   "success": true,
   "msg": "",
@@ -198,28 +181,22 @@
     "Success": true
   }
 }
-```
+```---
 
----
+### 6. Add module to session
 
-### 6. 添加模块到会话
+**Interface**: `AddModuleToSession`
+**Method**: POST
+**Path**: `/api/{XNCF_NAME}/AdminChatAppService/AddModuleToSession`
 
-**接口**: `AddModuleToSession`  
-**方法**: POST  
-**路径**: `/api/{XNCF_NAME}/AdminChatAppService/AddModuleToSession`
-
-**请求体**:
-```json
+**Request body**:```json
 {
   "SessionId": 123,
   "XncfModuleUid": "module-uid-3",
   "ModuleName": "用户管理",
   "ModuleVersion": "1.0.0"
 }
-```
-
-**响应**:
-```json
+```**response**:```json
 {
   "success": true,
   "msg": "",
@@ -233,21 +210,19 @@
     }
   }
 }
-```
+```---
 
----
+### 7. Get the session module
 
-### 7. 获取会话模块
+**Interface**: `GetSessionModules`
+**Method**: GET
+**Path**: `/api/{XNCF_NAME}/AdminChatAppService/GetSessionModules?sessionId=123`
 
-**接口**: `GetSessionModules`  
-**方法**: GET  
-**路径**: `/api/{XNCF_NAME}/AdminChatAppService/GetSessionModules?sessionId=123`
+**Query Parameters**:
 
-**查询参数**:
-- `sessionId` (int, 必需): 会话ID
+- `sessionId` (int, required): session ID
 
-**响应**:
-```json
+**Response**:```json
 {
   "success": true,
   "msg": "",
@@ -262,21 +237,19 @@
     ]
   }
 }
-```
+```---
 
----
+### 8. Delete session
 
-### 8. 删除会话
+**Interface**: `DeleteSession`
+**Method**: DELETE
+**Path**: `/api/{XNCF_NAME}/AdminChatAppService/DeleteSession?sessionId=123`
 
-**接口**: `DeleteSession`  
-**方法**: DELETE  
-**路径**: `/api/{XNCF_NAME}/AdminChatAppService/DeleteSession?sessionId=123`
+**Query Parameters**:
 
-**查询参数**:
-- `sessionId` (int, 必需): 会话ID
+- `sessionId` (int, required): session ID
 
-**响应**:
-```json
+**Response**:```json
 {
   "success": true,
   "msg": "",
@@ -284,28 +257,22 @@
     "Success": true
   }
 }
-```
-
-**说明**: 软删除，会话状态变为 Deleted（2），但数据不会真正删除。
+```**Description**: Soft deletion, the session status changes to Deleted (2), but the data will not actually be deleted.
 
 ---
 
-### 9. 更新会话标题
+### 9. Update session title
 
-**接口**: `UpdateSessionTitle`  
-**方法**: POST  
-**路径**: `/api/{XNCF_NAME}/AdminChatAppService/UpdateSessionTitle`
+**Interface**: `UpdateSessionTitle`
+**Method**: POST
+**Path**: `/api/{XNCF_NAME}/AdminChatAppService/UpdateSessionTitle`
 
-**请求体**:
-```json
+**Request body**:```json
 {
   "SessionId": 123,
   "NewTitle": "系统功能咨询"
 }
-```
-
-**响应**:
-```json
+```**response**:```json
 {
   "success": true,
   "msg": "",
@@ -313,20 +280,18 @@
     "Success": true
   }
 }
-```
+```---
 
----
+## 📋 Data type definition
 
-## 📋 数据类型定义
-
-### ChatSessionStatus (enum)
-```csharp
+### ChatSessionStatus (enum)```csharp
 Active = 0,    // 活跃
 Archived = 1,  // 已归档
 Deleted = 2    // 已删除
 ```
 
 ### ChatMessageRoleType (enum)
+
 ```csharp
 User = 0,      // 用户消息
 Assistant = 1, // AI 助手消息
@@ -334,28 +299,22 @@ System = 2     // 系统消息
 ```
 
 ### MessageFeedbackType (enum)
+
 ```csharp
 None = 0,      // 无反馈
 Like = 1,      // 点赞
 Dislike = 2    // 点踩
-```
+```---
 
----
+## 🔒 Permission verification
 
-## 🔒 权限验证
-
-所有接口都受 `[BackendJwtAuthorize]` 保护，需要在请求头中携带有效的 JWT Token：
-
-```http
+All interfaces are protected by `[BackendJwtAuthorize]` and need to carry a valid JWT Token in the request header:```http
 Authorization: Bearer {your_jwt_token}
-```
+```---
 
----
+## 🧪 Test example (using curl)
 
-## 🧪 测试示例（使用 curl）
-
-### 创建会话
-```bash
+### Create session```bash
 curl -X POST http://localhost:5000/api/{XNCF_NAME}/AdminChatAppService/CreateSession \
   -H "Authorization: Bearer {token}" \
   -H "Content-Type: application/json" \
@@ -363,10 +322,7 @@ curl -X POST http://localhost:5000/api/{XNCF_NAME}/AdminChatAppService/CreateSes
     "InitialMessage": "你好",
     "ModuleUids": []
   }'
-```
-
-### 发送消息
-```bash
+```### Send message```bash
 curl -X POST http://localhost:5000/api/{XNCF_NAME}/AdminChatAppService/SendMessage \
   -H "Authorization: Bearer {token}" \
   -H "Content-Type: application/json" \
@@ -374,10 +330,8 @@ curl -X POST http://localhost:5000/api/{XNCF_NAME}/AdminChatAppService/SendMessa
     "SessionId": 123,
     "Content": "请介绍系统功能"
   }'
-```
+```---
 
----
-
-**文档版本**: v1.0  
-**最后更新**: 2026-03-25  
-**维护者**: NeuCharFramework Team
+**Document version**: v1.0
+**Last updated**: 2026-03-25
+**Maintainer**: NeuCharFramework Team

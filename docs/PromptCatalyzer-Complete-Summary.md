@@ -1,38 +1,38 @@
-# PromptCatalyzer 完整功能总结
+[中文版](PromptCatalyzer-Complete-Summary.cn.md)
 
-## 📋 最新完成的增强功能
+# PromptCatalyzer Complete feature summary
 
-### 本次更新（2026-03-25）
+## 📋 Latest enhancements completed
 
-#### 🎯 功能 1：智能 ModelId 选择
-- **实现**: 根据当前 Range 的历史评分数据自动选择表现最好的模型
-- **逻辑**: 统计每个 ModelId 的平均分，选择评分最高的模型
-- **约束**: 只选择在当前 Range 中已使用过的模型（有评分数据）
-- **文件**: `PromptOptimizationRequestHandler.cs` - `SelectBestModelIdAsync` 方法
+### This update (2026-03-25)
 
-#### 🔧 功能 2：JSON 转义字符处理
-- **问题**: AI 返回的内容包含 `\n` 字符串而不是实际换行
-- **修复**: 新增 `UnescapeJsonString` 方法处理 JSON 转义
-- **支持**: `\n`, `\r`, `\t`, `\"`, `\\`
-- **文件**: `PromptOptimizationRequestHandler.cs` - `UnescapeJsonString` 方法
+#### 🎯 Function 1: Intelligent ModelId selection
+- **Implementation**: Automatically select the best performing model based on the historical rating data of the current Range
+- **Logic**: Count the average score of each ModelId and select the model with the highest score
+- **Constraint**: Only select models that have been used in the current Range (with scoring data)
+- **File**: `PromptOptimizationRequestHandler.cs` - `SelectBestModelIdAsync` method
 
-#### ✨ 功能 3：自动打靶和 AI 评分
-- **选项 1**: 创建后立即打靶（默认选中）
-  - 优化完成后自动执行一次打靶测试
-  - 等同于手动点击"打靶"按钮
-- **选项 2**: 打靶后使用 AI 评分（默认不选中）
-  - 依赖选项 1，如果选项 1 未选中则禁用
-  - 打靶完成后自动调用 AI 评分功能
-  - 需要事先配置期望结果（ExpectedResultsJson）
-- **文件**: 
-  - 前端：`prompt.js`, `Prompt.cshtml`
-  - 后端：`PromptOptimizationEvents.cs`, `PromptOptimizationRequestHandler.cs`
+#### 🔧 Function 2: JSON escape character processing
+- **Issue**: AI returns content containing `\n` strings instead of actual newlines
+- **Fix**: Added `UnescapeJsonString` method to handle JSON escaping
+- **Supported**: `\n`, `\r`, `\t`, `\"`, `\\`
+- **File**: `PromptOptimizationRequestHandler.cs` - `UnescapeJsonString` method
+
+#### ✨ Function 3: Automatic target shooting and AI scoring
+- **Option 1**: Shoot immediately after creation (selected by default)
+  - Automatically execute a target shooting test after optimization is completed
+  - Equivalent to manually clicking the "Target Shooting" button
+- **Option 2**: Use AI scoring after target practice (unchecked by default)
+  - Depends on option 1, disabled if option 1 is not selected
+  - Automatically call the AI scoring function after target practice is completed
+  - Expected results (ExpectedResultsJson) need to be configured in advance
+- **Documents**:
+  - Front-end: `prompt.js`, `Prompt.cshtml`
+  - Backend: `PromptOptimizationEvents.cs`, `PromptOptimizationRequestHandler.cs`
 
 ---
 
-## 🏗️ 完整的优化流程
-
-```
+## 🏗️ Complete optimization process```
 用户点击"开始优化"
     ↓
 [前端] 收集用户输入
@@ -89,256 +89,245 @@
 [Controller] 返回给前端
     ↓
 [前端] 显示结果并刷新列表
-```
+```---
 
----
+## 📁 Modified file list
 
-## 📁 修改的文件列表
-
-### 前端文件
+### Front-end files
 
 1. **`src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js`**
-   - 添加 `autoShootAfterOptimize` 和 `autoAIGradeAfterShoot` 数据字段
-   - 修改 `executeOptimize` 方法，将选项传递给后端
+   - Added `autoShootAfterOptimize` and `autoAIGradeAfterShoot` data fields
+   - Modify the `executeOptimize` method to pass options to the backend
 
 2. **`src/Extensions/Senparc.Xncf.PromptRange/Areas/Admin/Pages/PromptRange/Prompt.cshtml`**
-   - 在优化弹窗中添加两个 checkbox
-   - 第二个 checkbox 依赖第一个（`:disabled="!autoShootAfterOptimize"`）
-   - 添加 Tooltip 说明
+   - Add two checkboxes in the optimization pop-up window
+   - The second checkbox depends on the first one (`:disabled="!autoShootAfterOptimize"`)
+   - Add Tooltip description
 
-### 后端文件
+### Backend files
 
 3. **`src/Extensions/Senparc.Xncf.PromptRange.Abstractions/Events/PromptOptimizationEvents.cs`**
-   - 在 `OptimizationContext` record 中添加两个可选参数：
+   - Add two optional parameters in `OptimizationContext` record:
      - `bool AutoShootAfterOptimize = true`
      - `bool AutoAIGradeAfterShoot = false`
 
 4. **`src/Extensions/Senparc.Xncf.PromptRange/Application/EventHandlers/PromptOptimizationRequestHandler.cs`**
-   - 注入 `PromptResultService`
-   - 添加 `using System.Collections.Generic;`
-   - 新增 `SelectBestModelIdAsync` 方法（智能 ModelId 选择）
-   - 新增 `UnescapeJsonString` 方法（JSON 转义字符处理）
-   - 在步骤 4.5 添加自动打靶和 AI 评分逻辑
+   - Inject `PromptResultService`
+   - Added `using System.Collections.Generic;`
+   - Added `SelectBestModelIdAsync` method (intelligent ModelId selection)
+   - Added `UnescapeJsonString` method (JSON escape character processing)
+   - Add automatic target shooting and AI scoring logic in step 4.5
 
 5. **`src/Extensions/Senparc.Xncf.AgentsManager/OHS/Remote/Controllers/PromptOptimizationController.cs`**
-   - 在 `OptimizeAsync` 方法中添加 `EnsureInitializedAsync()` 调用
-   - 确保 Agent 和 ChatGroup 在优化前已初始化
+   - Add `EnsureInitializedAsync()` call in `OptimizeAsync` method
+   - Ensure Agent and ChatGroup are initialized before optimization
 
-### 文档文件
+### Documentation files
 
-6. **`docs/PromptCatalyzer-Critical-Fixes.md`** - 关键 Bug 修复文档
-7. **`docs/PromptCatalyzer-Smart-Optimization.md`** - 智能优化增强文档
-8. **`docs/PromptCatalyzer-Auto-Shoot-And-Grade.md`** - 自动打靶和评分文档
-
----
-
-## 🧪 完整测试清单
-
-### ✅ 测试 1：智能 ModelId 选择
-
-**前提**：Range 中有多个模型的历史评分数据
-
-**步骤**：
-1. 选择一个 PromptItem
-2. 点击"开始优化"
-3. 执行优化
-
-**验证**：
-- 控制台日志显示：`智能选择 ModelId: 原=1012, 选择=1011`
-- 显示评分统计：`Range 中模型评分统计：Model1011=0.89(5次), Model1012=0.82(3次)`
-- 新 PromptItem 的 ModelId 应该是评分最高的模型
-
-### ✅ 测试 2：换行符正确显示
-
-**步骤**：
-1. 优化一个 Prompt（让 AI 生成多段落内容）
-2. 查看新 PromptItem 的 Content 字段
-
-**验证**：
-- 数据库中 Content 字段包含实际换行符
-- 前端显示为正常的多行文本
-- 不显示 `\n` 字符串
-
-### ✅ 测试 3：仅优化（不打靶）
-
-**步骤**：
-1. ☐ 取消勾选"创建后立即打靶"
-2. 执行优化
-
-**验证**：
-- ✅ 创建新 PromptItem
-- ❌ 没有 PromptResult 记录
-- ❌ EvalAvgScore = -1（未评分）
-
-### ✅ 测试 4：优化 + 打靶
-
-**步骤**：
-1. ☑️ 勾选"创建后立即打靶"
-2. ☐ 不勾选"打靶后使用 AI 评分"
-3. 执行优化
-
-**验证**：
-- ✅ 创建新 PromptItem
-- ✅ 有 PromptResult 记录
-- ❌ EvalAvgScore = -1（未评分）
-
-### ✅ 测试 5：完整自动化流程
-
-**前提**：PromptItem 已配置期望结果
-
-**步骤**：
-1. ☑️ 勾选"创建后立即打靶"
-2. ☑️ 勾选"打靶后使用 AI 评分"
-3. 执行优化
-
-**验证**：
-- ✅ 创建新 PromptItem
-- ✅ 有 PromptResult 记录
-- ✅ PromptResult 有 AI 评分
-- ✅ EvalAvgScore 和 EvalMaxScore 有值（不是 -1）
-
-### ✅ 测试 6：ChatGroup 自动创建
-
-**步骤**：
-1. 确保 Agent 存在但 ChatGroup 不存在
-2. 执行优化
-
-**验证**：
-- 控制台显示：`【步骤3/3】检查 ChatGroup 是否已存在...`
-- 控制台显示：`✅ ChatGroup 创建成功！`
-- 数据库中能找到 `PromptCatalyzer-OptimizationGroup`
+6. **`docs/PromptCatalyzer-Critical-Fixes.md`** - Critical bug fix documentation
+7. **`docs/PromptCatalyzer-Smart-Optimization.md`** - Smart optimization enhanced documentation
+8. **`docs/PromptCatalyzer-Auto-Shoot-And-Grade.md`** - Automatic shooting and grading documentation
 
 ---
 
-## 🔍 问题排查
+## 🧪 Complete test list
 
-### 问题 1：AI 评分跳过
+### ✅ Test 1: Smart ModelId Selection
 
-**现象**：
-```log
+**Premise**: There are historical scoring data for multiple models in Range.
+
+**Steps**:
+1. Select a PromptItem
+2. Click "Start Optimization"
+3. Perform optimization
+
+**Verification**:
+- The console log shows: `Smart selection ModelId: original=1012, selection=1011`
+- Display scoring statistics: `Range model scoring statistics: Model1011=0.89 (5 times), Model1012=0.82 (3 times)`
+- The ModelId of the new PromptItem should be the highest rated model
+
+### ✅ Test 2: Line breaks are displayed correctly
+
+**Steps**:
+1. Optimize a Prompt (let AI generate multi-paragraph content)
+2. View the Content field of the new PromptItem
+
+**Verification**:
+- The Content field in the database contains actual newlines
+- Frontend displays as normal multiline text
+- Do not display `\n` strings
+
+### ✅ Test 3: Optimization only (no target practice)
+
+**Steps**:
+1. ☐ Uncheck "Target shooting immediately after creation"
+2. Perform optimization
+
+**Verification**:
+- ✅ Create new PromptItem
+- ❌ No PromptResult record
+- ❌ EvalAvgScore = -1 (not rated)
+
+### ✅ Test 4: Optimization + Target Practice
+
+**Steps**:
+1. ☑️ Check "Target shooting immediately after creation"
+2. ☐ Uncheck "Use AI scoring after shooting"3. Perform optimization
+
+**Verification**:
+- ✅ Create new PromptItem
+- ✅ There is PromptResult record
+- ❌ EvalAvgScore = -1 (not rated)
+
+### ✅ Test 5: Complete automated process
+
+**Prerequisite**: PromptItem has configured expected results
+
+**Steps**:
+1. ☑️ Check "Target shooting immediately after creation"
+2. ☑️ Check "Use AI scoring after shooting"
+3. Perform optimization
+
+**Verification**:
+- ✅ Create new PromptItem
+- ✅ There is PromptResult record
+- ✅ PromptResult has AI rating
+- ✅ EvalAvgScore and EvalMaxScore have values (not -1)
+
+### ✅ Test 6: ChatGroup automatically created
+
+**Steps**:
+1. Make sure the Agent exists but the ChatGroup does not exist
+2. Perform optimization
+
+**Verification**:
+- The console displays: `[Step 3/3] Check whether the ChatGroup already exists...`
+- The console displays: `✅ ChatGroup created successfully! `
+- `PromptCatalyzer-OptimizationGroup` can be found in the database
+
+---
+
+## 🔍 Troubleshooting
+
+### Issue 1: AI scoring skipped
+
+**Phenomena**:```log
 ⚠️  未设置期望结果，跳过 AI 评分
-```
+```**Cause**: The `ExpectedResultsJson` field of PromptItem is empty
 
-**原因**：PromptItem 的 `ExpectedResultsJson` 字段为空
+**Solution**:
+1. Open the original PromptItem
+2. Add desired results in the "AI Scoring Criteria" area
+3. Re-optimize after saving
 
-**解决**：
-1. 打开原 PromptItem
-2. 在"AI评分标准"区域添加期望结果
-3. 保存后重新优化
+### Problem 2: Target practice failed
 
-### 问题 2：打靶失败
-
-**现象**：
-```log
+**Phenomena**:```log
 ❌ 自动打靶或 AI 评分失败（不影响优化结果）
-```
+```**Possible reasons**:
+- AI Model is unavailable or misconfigured
+- Network problems
+- Prompt content format error
 
-**可能原因**：
-- AI Model 不可用或配置错误
-- 网络问题
-- Prompt 内容格式错误
+**DEBUG**:
+1. View the detailed exception log (Controller will record the complete stack)
+2. Try manual target shooting to confirm whether it is a problem with Prompt itself.
+3. Check AI Model configuration
 
-**调试**：
-1. 查看详细的异常日志（Controller 会记录完整堆栈）
-2. 尝试手动打靶，确认是否是 Prompt 本身的问题
-3. 检查 AI Model 配置
+### Problem 3: Line breaks still appear as \n
 
-### 问题 3：换行符仍然显示为 \n
-
-**检查**：
-1. 确认应用已重启
-2. 清空浏览器缓存
-3. 查看数据库中 Content 字段的实际内容（使用 `SELECT CONVERT(varbinary(max), Content) ...`）
+**CHECK**:
+1. Confirm that the application has been restarted
+2. Clear browser cache
+3. View the actual content of the Content field in the database (use `SELECT CONVERT(varbinary(max), Content) ...`)
 
 ---
 
-## 📚 相关文档索引
+## 📚Related document index
 
 1. **docs/PromptCatalyzer-Critical-Fixes.md**
-   - ChatGroup 创建失败修复
-   - 版本号生成错误修复
+   - ChatGroup creation failure fixed
+   - Version number generation error fixed
 
 2. **docs/PromptCatalyzer-Smart-Optimization.md**
-   - 智能 ModelId 选择实现
-   - JSON 转义字符处理实现
+   - Intelligent ModelId selection implementation
+   - JSON escape character processing implementation
 
 3. **docs/PromptCatalyzer-Auto-Shoot-And-Grade.md**
-   - 自动打靶功能实现
-   - AI 评分自动化实现
-   - UI 交互设计
+   - Implementation of automatic target shooting function
+   - AI scoring automation implementation
+   - UI interaction design
 
 4. **docs/PromptCatalyzer-ChatGroup-Integration.md**
-   - ChatGroup 和 ChatTask 集成架构
-   - AI 优化和 AI 生成 Prompt 标记
+   - ChatGroup and ChatTask integration architecture
+   - AI optimization and AI generated prompt markers
 
 5. **docs/PromptCatalyzer-Complete-Testing-Guide.md**
-   - 完整的测试指南
-   - 数据库验证查询
+   - Complete testing guide
+   - Database validation query
 
 ---
 
-## 🎯 下一步建议
+## 🎯 Next step suggestions
 
-### 高优先级
+### High priority
 
-1. **重新启用授权机制**
-   - 当前 `[ApiAuthorize]` 已注释掉
-   - 需要调试并修复授权问题
-   - 确保只有管理员可以使用优化功能
+1. **Re-enable authorization mechanism**
+   - Currently `[ApiAuthorize]` is commented out
+   - Need to debug and fix authorization issues
+   - Make sure only administrators can use optimization features
 
-2. **性能优化**
-   - 考虑添加缓存机制（模型评分统计）
-   - 优化数据库查询（索引优化）
+2. **Performance Optimization**
+   - Consider adding a caching mechanism (model scoring statistics)
+   - Optimize database queries (index optimization)
 
-### 中优先级
+### Medium priority
 
-3. **增强错误反馈**
-   - 前端显示更详细的错误信息
-   - 提供重试机制
+3. **Enhance error feedback**
+   - Frontend displays more detailed error information
+   - Provide retry mechanism
 
-4. **UI 改进**
-   - 在优化进度中显示当前步骤（步骤 1/5, 2/5, ...）
-   - 打靶和评分进度实时显示
+4. **UI improvements**
+   - Show current steps in optimization progress (steps 1/5, 2/5, ...)
+   - Target practice and scoring progress are displayed in real time
 
-### 低优先级
+### Low priority
 
-5. **Function-calling 扩展**
-   - 让 Agent 能够通过 Function-calling 触发优化
-   - 实现更智能的优化触发机制
+5. **Function-calling extension**
+   - Allow Agent to trigger optimization through Function-calling
+   - Implement a more intelligent optimization triggering mechanism
 
-6. **批量优化**
-   - 支持一次优化多个 PromptItem
-   - 生成优化报告
-
----
-
-## 🚀 使用建议
-
-### 最佳实践
-
-1. **首次使用**：
-   - 先配置 2-3 个不同的 AI Model
-   - 为每个模型创建并评分 3-5 个 PromptItem
-   - 建立基线数据后再使用优化功能
-
-2. **优化策略**：
-   - 对于探索性优化：取消"自动打靶"，批量生成多个版本后再统一测试
-   - 对于验证性优化：开启"自动打靶 + AI 评分"，立即获得反馈
-
-3. **期望结果配置**：
-   - 配置 3-5 个清晰的期望结果
-   - 避免太宽泛或太具体
-   - 示例：
-     - ✅ "回答要专业准确"
-     - ✅ "逻辑结构清晰"
-     - ❌ "好"（太宽泛）
-     - ❌ "必须包含 123 个单词"（太具体）
+6. **Batch Optimization**
+   -Supports optimizing multiple PromptItems at one time
+   - Generate optimization reports
 
 ---
 
-## 📊 数据库架构关联
+## 🚀 Usage suggestions
 
-```
+### Best Practices
+
+1. **First time use**:
+   - Configure 2-3 different AI Models first
+   - Create and score 3-5 PromptItems per model
+   - Establish baseline data before using the optimization function
+
+2. **Optimization Strategy**:
+   - For exploratory optimization: cancel "automatic target shooting", generate multiple versions in batches and then test them uniformly
+   - For confirmatory optimization: Turn on "Auto Targeting + AI Scoring" and get immediate feedback
+
+3. **Expected result configuration**:
+   - Configure 3-5 clear desired outcomes
+   - Avoid being too broad or too specific
+   - Example:
+     - ✅ "Answers must be professional and accurate"
+     - ✅ "Clear logical structure"
+     - ❌ "Good" (too broad)
+     - ❌ "Must contain 123 words" (too specific)
+
+---
+
+## 📊 Database schema association```
 PromptRange (靶场)
     ├─ PromptItem (靶道/Prompt版本)
     │   ├─ Content (Prompt 内容)
@@ -368,59 +357,54 @@ ChatTask (聊天任务)
     ├─ ChatGroupId (所属 ChatGroup)
     ├─ AiModelId (使用的模型)
     └─ Status (Chatting → Finished)
-```
+```---
 
----
+## 🎉 Summary
 
-## 🎉 总结
+PromptCatalyzer is now a **complete AI Prompt optimization and testing platform**:
 
-PromptCatalyzer 现在是一个**完整的 AI Prompt 优化和测试平台**：
-
-| 阶段 | 功能 | 自动化程度 |
+| Stage | Function | Level of automation |
 |------|------|-----------|
-| **初始化** | Agent + ChatGroup 创建 | 🟢 全自动（首次使用） |
-| **优化** | AI 优化内容和参数 | 🟢 全自动 |
-| **模型选择** | 基于历史评分选择最佳模型 | 🟢 全自动 |
-| **版本管理** | 自动递增版本号（Aiming） | 🟢 全自动 |
-| **打靶测试** | 自动执行测试 | 🟡 可选（默认开启） |
-| **AI 评分** | 自动质量评估 | 🟡 可选（默认关闭） |
-| **任务记录** | ChatTask 记录优化活动 | 🟢 全自动 |
+| **Initialization** | Agent + ChatGroup creation | 🟢 Fully automatic (first time use) |
+| **Optimization** | AI optimized content and parameters | 🟢 Fully automatic |
+| **Model Selection** | Select the best model based on historical ratings | 🟢 Fully automatic |
+| **Version Management** | Automatically increment version number (Aiming) | 🟢 Fully automatic |
+| **Target Test** | Automatically execute the test | 🟡 Optional (enabled by default) |
+| **AI Rating** | Automatic quality assessment | 🟡 Optional (off by default) |
+| **Task Record** | ChatTask records optimization activities | 🟢 Fully automatic |
 
-**核心价值**：
-- ✅ 端到端的自动化流程
-- ✅ 智能决策（模型选择）
-- ✅ 灵活控制（可选打靶和评分）
-- ✅ 完整的追踪记录（ChatTask）
-- ✅ 用户体验优化（一键完成）
+**Core Value**:
+- ✅ End-to-end automated process
+- ✅ Intelligent decision-making (model selection)
+- ✅ Flexible controls (optional targeting and scoring)
+- ✅ Complete tracking record (ChatTask)
+- ✅ User experience optimization (one-click completion)
 
 ---
 
-## ⚠️ 下一步操作
+## ⚠️ Next steps
 
-**立即测试**：
+**Test now**:
 
-1. **重启应用**（必需）
-   ```bash
+1. **Restart the application** (required)```bash
    # 在终端 5 按 Ctrl+C 停止
    cd tools/NcfSimulatedSite/Senparc.Web
    dotnet run
-   ```
+   ```2. **Refresh browser**
 
-2. **刷新浏览器**
+3. **Complete test process**:
+   - Select a PromptItem with the desired result
+   - Click "Start Optimization"
+   - ✅ Check "Target shooting immediately after creation"
+   - ✅ Check "Use AI scoring after shooting"
+   - Enter optimization requirements
+   - Click "Start Optimization"
+   - Wait for completion (about 15-25 seconds)
 
-3. **测试完整流程**：
-   - 选择一个有期望结果的 PromptItem
-   - 点击"开始优化"
-   - ✅ 勾选"创建后立即打靶"
-   - ✅ 勾选"打靶后使用 AI 评分"
-   - 输入优化需求
-   - 点击"开始优化"
-   - 等待完成（约 15-25 秒）
+4. **Verification results**:
+   - Check the console log (you should see the log from step 4.5)
+   - View the new PromptItem in the database (should have a rating)
+   - Check the PromptResult in the database (there should be shooting records)
+   - View ChatTask in the database (there should be task records)
 
-4. **验证结果**：
-   - 查看控制台日志（应该看到步骤 4.5 的日志）
-   - 查看数据库中的新 PromptItem（应该有评分）
-   - 查看数据库中的 PromptResult（应该有打靶记录）
-   - 查看数据库中的 ChatTask（应该有任务记录）
-
-**祝测试顺利！** 🎉
+**Good luck with the test! ** 🎉

@@ -1,10 +1,12 @@
+[中文版](readme.cn.md)
+
 ﻿# Readme
 
 References:
 https://github.com/dotnet/templating/wiki/Reference-for-template.json
 
-## 模板生成规则：
+## Template generation rules:
 
-组织占位符：ORGPLACEHOLDER
+Organization placeholder: ORGPLACEHOLDER
 
-模块名称占位符：MODPLACEHOLDER
+Module name placeholder: MODPLACEHOLDER

@@ -1,70 +1,71 @@
-# WebView 功能更新日志
+[中文版](CHANGELOG_WEBVIEW.cn.md)
 
-## 🎉 v1.1.0 - WebView2 自动化改进 (2025-11-14)
+# WebView function update log
 
-### ✨ 新增功能
+## 🎉 v1.1.0 - WebView2 automation improvements (2025-11-14)
 
-#### 1. WebView2 自动检测和安装
-- ✅ 启动时自动检测 WebView2 Runtime 是否已安装
-- ✅ 未安装时自动下载并静默安装
-- ✅ 显示安装进度和状态信息
-- ✅ 安装完成后自动验证
+### ✨ New features
 
-#### 2. 友好的错误处理
-- ✅ WebView 初始化失败时显示详细错误信息
-- ✅ 提供"在外部浏览器中打开"按钮
-- ✅ 提供"下载 WebView2 Runtime"按钮（仅 Windows）
-- ✅ 显示问题原因和解决方案
+#### 1. WebView2 automatic detection and installation
+- ✅ Automatically detect whether WebView2 Runtime is installed at startup
+- ✅ Automatically download and install silently when not installed
+- ✅ Display installation progress and status information
+- ✅ Automatically verify after installation is complete
 
-#### 3. 关闭标签确认对话框
-- ✅ 点击关闭按钮时弹出确认对话框
-- ✅ 提示关闭标签将停止 NCF 应用程序
-- ✅ 防止误操作
+#### 2. Friendly error handling
+- ✅ Display detailed error message when WebView initialization fails
+- ✅ Provide "Open in external browser" button
+- ✅ Provide "Download WebView2 Runtime" button (Windows only)
+- ✅ Shows the cause and solution of the problem
 
-#### 4. 进程树完整终止
-- ✅ Windows 上使用 `taskkill /T /F` 杀死整个进程树
-- ✅ 确保 Senparc.Web 及所有子进程都被正确终止
-- ✅ macOS/Linux 上使用 `Kill(entireProcessTree: true)`
+#### 3. Close the tag confirmation dialog box
+- ✅ Confirmation dialog pops up when clicking the close button
+- ✅ Prompt closing the tab will stop the NCF application
+- ✅ Prevent misuse
 
-#### 5. 地址栏改进
-- ✅ 地址栏变为可编辑
-- ✅ 按 Enter 键或点击"打开"按钮导航
-- ✅ 自动添加 http:// 协议
-- ✅ 输入时不会触发导航（改为 OneWay 绑定）
+#### 4. Complete termination of process tree
+- ✅ Use `taskkill /T /F` on Windows to kill the entire process tree
+- ✅ Make sure Senparc.Web and all child processes are terminated correctly
+- ✅ Use `Kill(entireProcessTree: true)` on macOS/Linux
+
+#### 5. Address bar improvements
+- ✅ The address bar becomes editable
+- ✅ Press Enter or click the "Open" button to navigate
+- ✅ Automatically add http:// protocol
+- ✅ Navigation will not be triggered when typing (changed to OneWay binding)
 
 ---
 
-### 📝 新增文件
+### 📝 Add new file
 
 1. **`Services/WebView2Service.cs`**
-   - WebView2 Runtime 检测和安装服务
-   - 支持注册表检测
-   - 自动下载 Bootstrapper
-   - 静默安装和验证
+   - WebView2 Runtime detection and installation service
+   - Support registry detection
+   - Automatically download Bootstrapper
+   - Silent installation and verification
 
 2. **`WEBVIEW2_AUTO_SETUP.md`**
-   - WebView2 自动检测和安装功能说明文档
-   - 包含技术实现细节
-   - 故障排查指南
-   - 手动安装指南
+   - WebView2 automatic detection and installation function documentation
+   - Contains technical implementation details
+   - Troubleshooting guide
+   - Manual installation guide
 
 3. **`CHANGELOG_WEBVIEW.md`**
-   - WebView 功能更新日志（本文件）
+   - WebView function update log (this file)
 
 ---
 
-### 🔧 修改文件
+### 🔧 Modify files
 
 #### `ViewModels/MainWindowViewModel.cs`
-**改动**：
-- 添加 `WebView2Service` 字段
-- 在 `InitializeBrowserAsync()` 中集成 WebView2 检测和安装
-- 改进 `StopNcfAsync()` 方法，使用进程树终止
-- 添加 `ShowConfirmDialogAsync()` 方法显示确认对话框
-- 优化 `CloseBrowserTab()` 方法，添加确认提示
+**Changes**:
+- Add `WebView2Service` field
+- Integrate WebView2 detection and installation in `InitializeBrowserAsync()`
+- Improve `StopNcfAsync()` method to use process tree termination
+- Added `ShowConfirmDialogAsync()` method to display confirmation dialog
+- Optimize the `CloseBrowserTab()` method and add a confirmation prompt
 
-**关键代码**：
-```csharp
+**Key code**:```csharp
 // WebView2 检测和安装
 var installed = await _webView2Service.EnsureWebView2InstalledAsync(progress);
 
@@ -73,146 +74,125 @@ taskkill /PID {_ncfProcess.Id} /T /F
 
 // 关闭确认对话框
 var result = await ShowConfirmDialogAsync("确认关闭", "关闭标签页将停止 NCF 应用程序...");
-```
+```#### `Views/Controls/EmbeddedWebView.cs`
+**Changes**:
+- Enhanced `ShowFallbackView()` method
+- Add detailed error message and reason list
+- Added "Open in external browser" button
+- Added "Download WebView2 Runtime" button (Windows only)
+- Add `CreateReasonItem()` helper method
 
-#### `Views/Controls/EmbeddedWebView.cs`
-**改动**：
-- 增强 `ShowFallbackView()` 方法
-- 添加详细的错误信息和原因列表
-- 添加"在外部浏览器中打开"按钮
-- 添加"下载 WebView2 Runtime"按钮（仅 Windows）
-- 添加 `CreateReasonItem()` 辅助方法
-
-**UI 改进**：
-- 更清晰的错误标题和描述
-- 失败原因列表
-- 解决方案按钮
-- 提示文本
+**UI improvements**:
+- Clearer error titles and descriptions
+- List of failure reasons
+- Solution button
+- Prompt text
 
 #### `Views/BrowserView.axaml`
-**改动**：
-- 地址栏绑定模式从 `TwoWay` 改为 `OneWay`
-- 在地址栏右侧添加"打开"按钮
-- 优化 UI 布局
+**Changes**:
+- Address bar binding mode changed from `TwoWay` to `OneWay`
+- Add an "Open" button to the right of the address bar
+- Optimize UI layout
 
 #### `Views/BrowserView.axaml.cs`
-**改动**：
-- 添加 `GoButton_Click` 事件处理
-- 添加 `NavigateToUrlFromTextBox()` 方法
-- 优化 `UrlTextBox_KeyDown` 事件处理
-- 改进 `OnNavigationCompleted` 方法，同步更新地址栏
+**Changes**:
+- Add `GoButton_Click` event handling
+- Added `NavigateToUrlFromTextBox()` method
+- Optimize `UrlTextBox_KeyDown` event handling
+- Improve the `OnNavigationCompleted` method to update the address bar synchronously
 
 ---
 
-### 🎨 用户体验改进
+### 🎨 User experience improvements
 
-#### 启动流程
-**之前**：
-```
+#### Start the process
+**Before**:```
 启动应用 → WebView 可能失败 → 黑屏/错误
-```
-
-**现在**：
-```
+```**Now**:```
 启动应用 → 检测 WebView2 → 自动安装（如需要）→ 使用内置浏览器
                                     ↓
                               安装失败 → 显示错误 → 提供解决方案按钮
-```
-
-#### 地址栏使用
-**之前**：
-```
+```#### Address bar usage
+**Before**:```
 地址栏不可编辑 → 用户无法输入新 URL
-```
-
-**现在**：
-```
+```**Now**:```
 地址栏可编辑 → 输入 URL → 按 Enter 或点击"打开" → 导航到新页面
-```
-
-#### 关闭标签
-**之前**：
-```
+```#### Close tag
+**Before**:```
 点击关闭按钮 → 直接关闭 → 进程可能残留
-```
-
-**现在**：
-```
+```**Now**:```
 点击关闭按钮 → 确认对话框 → 用户确认 → 完整终止进程树
-```
+```---
+
+### 🐛 Bug fix
+
+1. **Fix the problem that the Senparc.Web process cannot be completely terminated**
+   - Use `taskkill /T /F` to kill the entire process tree
+   - Make sure all child processes are shut down properly
+
+2. **Fix the issue where navigation is triggered every time you enter letters in the address bar**
+   - Changed to `OneWay` binding
+   - Navigate only on Enter key or button click
+
+3. **Fix the problem that WebView cannot be restored after initialization failure**
+   - Add friendly error interface
+   - Provide external browser opening option
 
 ---
 
-### 🐛 Bug 修复
+### 📊 Technical indicators
 
-1. **修复 Senparc.Web 进程无法完全终止的问题**
-   - 使用 `taskkill /T /F` 终止整个进程树
-   - 确保所有子进程都被正确关闭
+#### WebView2 installation success rate
+- **Automatic installation success rate**: Estimated > 95%
+- **Manual installation success rate**: Estimated > 99%
+- **Average installation time**: 1-3 minutes (depending on network speed)
 
-2. **修复地址栏每次输入字母都触发导航的问题**
-   - 改为 `OneWay` 绑定
-   - 只在 Enter 键或点击按钮时导航
+#### Process termination effect
+- **Full Termination Rate**: Windows 100% (using taskkill)
+- **Residual processes**: 0
 
-3. **修复 WebView 初始化失败后无法恢复的问题**
-   - 添加友好的错误界面
-   - 提供外部浏览器打开选项
-
----
-
-### 📊 技术指标
-
-#### WebView2 安装成功率
-- **自动安装成功率**：预计 > 95%
-- **手动安装成功率**：预计 > 99%
-- **平均安装时间**：1-3 分钟（取决于网络速度）
-
-#### 进程终止效果
-- **完全终止率**：Windows 100%（使用 taskkill）
-- **残留进程**：0 个
-
-#### 用户体验
-- **首次启动时间**：增加 1-3 分钟（仅首次需要安装 WebView2）
-- **后续启动时间**：无影响（< 1 秒）
-- **误操作减少**：添加确认对话框，误关闭率降低 90%+
+#### User experience
+- **First Start Time**: Add 1-3 minutes (Only first time requires WebView2 installation)
+- **Subsequent boot time**: No impact (< 1 second)
+- **Reduced misoperations**: Add a confirmation dialog box, reducing the misoperation rate by 90%+
 
 ---
 
-### 🔜 后续计划
+### 🔜 Follow-up plan
 
-#### 短期（v1.2.0）
-- [ ] 添加 WebView2 版本更新检测
-- [ ] 优化安装进度显示（更详细的进度信息）
-- [ ] 添加离线安装包支持
+#### Short term (v1.2.0)
+- [ ] Add WebView2 version update detection
+- [ ] Optimize installation progress display (more detailed progress information)
+- [ ] Add offline installation package support
 
-#### 中期（v1.3.0）
-- [ ] 支持自定义 WebView2 Runtime 路径
-- [ ] 添加 WebView 性能监控
-- [ ] 优化 WebView 内存占用
+#### Mid-term (v1.3.0)
+- [ ] Support custom WebView2 Runtime path
+- [ ] Add WebView performance monitoring
+- [ ] Optimize WebView memory usage
 
-#### 长期（v2.0.0）
-- [ ] 支持多标签页浏览
-- [ ] 添加 WebView 开发者工具
-- [ ] 支持浏览器扩展
+#### Long term (v2.0.0)
+- [ ] Support multi-tab browsing
+- [ ] Add WebView developer tools
+- [ ] Support browser extensions
 
 ---
 
-### 📚 相关文档
+### 📚 Related documents
 
-- [WebView2 自动化功能说明](./WEBVIEW2_AUTO_SETUP.md)
-- [WebView2 官方文档](https://learn.microsoft.com/microsoft-edge/webview2/)
+- [WebView2 Automation Function Description](./WEBVIEW2_AUTO_SETUP.md)
+- [WebView2 official document](https://learn.microsoft.com/microsoft-edge/webview2/)
 - [WebView.Avalonia GitHub](https://github.com/MicroSugarDeveloperOrg/Webviews.Avalonia)
 
 ---
 
-### 🙏 致谢
+### 🙏 Acknowledgments
 
-感谢以下项目和资源的支持：
+Thanks to the following projects and resources for their support:
 - [Avalonia UI](https://avaloniaui.net/)
 - [WebView.Avalonia](https://github.com/MicroSugarDeveloperOrg/Webviews.Avalonia)
 - [Microsoft Edge WebView2](https://developer.microsoft.com/microsoft-edge/webview2/)
 
 ---
 
-**维护者**：NCF Desktop App Team  
-**最后更新**：2025-11-14
-
+**Maintainer**: NCF Desktop App Team
+**Last updated**: 2025-11-14

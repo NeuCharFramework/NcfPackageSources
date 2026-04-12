@@ -1,26 +1,26 @@
-# PromptRange Utils - 工具类库
+[中文版](README.cn.md)
 
-## 📚 概述
+# PromptRange Utils - Utility library
 
-这是 PromptRange 项目的工具类库，提供了一系列可复用的辅助功能，采用传统的 IIFE (立即执行函数) 模式，无需构建工具即可直接在浏览器中使用。
+## 📚 Overview
 
-所有工具类都挂载在全局命名空间 `window.PromptRangeUtils` 下。
+This is the tool class library of the PromptRange project, which provides a series of reusable auxiliary functions, using the traditional IIFE (immediate execution function) mode, which can be used directly in the browser without building tools.
+
+All tool classes are mounted under the global namespace `window.PromptRangeUtils`.
 
 ---
 
-## ⚠️ 重要说明
+## ⚠️ IMPORTANT NOTE
 
-### 关于 API 请求
+### About API requests
 
-**项目已有完善的 axios 封装** (`servicePR`)，包含：
-- ✅ 请求/响应拦截器
-- ✅ 自动错误处理和消息提示
-- ✅ Token 自动注入
-- ✅ 401/403 自动跳转
+**The project has a complete axios package** (`servicePR`), including:
+- ✅ Request/Response Interceptor
+- ✅ Automatic error handling and message prompts
+- ✅ Token automatically injected
+- ✅ 401/403 automatically redirected
 
-**直接使用项目现有的 `servicePR` 即可**：
-
-```javascript
+**Just use the existing `servicePR` of the project**:```javascript
 // ✅ 推荐：使用项目现有的 servicePR
 servicePR.post('/api/xxx', { data: {...} })
     .then(res => {
@@ -28,27 +28,24 @@ servicePR.post('/api/xxx', { data: {...} })
             // 成功处理
         }
     });
-```
+```---
 
----
+## 📦 Tool list
 
-## 📦 工具类列表
+### 1. HtmlHelper - HTML operation tool
+**File**: `htmlHelper.js`
 
-### 1. HtmlHelper - HTML 操作工具
-**文件**: `htmlHelper.js`
+**Function**:
+- HTML escaping
+- Regular expression escaping
+- UUID generation
+- File size formatting
+- Anti-shake/throttle function
+- Deep cloning
+- URL parameter acquisition
+- Null value judgment
 
-**功能**:
-- HTML 转义
-- 正则表达式转义
-- UUID 生成
-- 文件大小格式化
-- 防抖/节流函数
-- 深度克隆
-- URL 参数获取
-- 空值判断
-
-**使用示例**:
-```javascript
+**Usage Example**:```javascript
 var HtmlHelper = window.PromptRangeUtils.HtmlHelper;
 
 // HTML 转义
@@ -67,21 +64,18 @@ var debouncedFunc = HtmlHelper.debounce(function() {
 
 // 判断空值
 var isEmpty = HtmlHelper.isEmpty(''); // true
-```
+```---
 
----
+### 2. DateHelper - Date and time tool
+**File**: `dateHelper.js`
 
-### 2. DateHelper - 日期时间工具
-**文件**: `dateHelper.js`
+**Function**:
+- Date formatting
+- Relative time display (just now, N minutes ago, etc.)
+- Time difference calculation
+- Duration formatting
 
-**功能**:
-- 日期格式化
-- 相对时间显示（刚刚、N分钟前等）
-- 时间差计算
-- 持续时间格式化
-
-**使用示例**:
-```javascript
+**Usage Example**:```javascript
 var DateHelper = window.PromptRangeUtils.DateHelper;
 
 // 日期格式化
@@ -99,21 +93,18 @@ var diff = DateHelper.getTimeDiff('2025-12-15', '2025-12-16');
 // 持续时间格式化
 var duration = DateHelper.formatDuration(3665000);
 // "1小时1分钟5秒"
-```
+```---
 
----
+### 3. NameHelper - Name query tool
+**File**: `nameHelper.js`
 
-### 3. NameHelper - 名称查询工具
-**文件**: `nameHelper.js`
+**Function**:
+- Unified name query interface
+- ID and name mutual check
+- Support custom field names
+- Batch name query
 
-**功能**:
-- 统一的名称查询接口
-- ID 与名称互查
-- 支持自定义字段名
-- 批量名称查询
-
-**使用示例**:
-```javascript
+**Usage Example**:```javascript
 var NameHelper = window.PromptRangeUtils.NameHelper;
 
 // 根据 ID 获取名称
@@ -145,31 +136,25 @@ var names = NameHelper.getNames(
     [1, 2]
 );
 // ["选项1", "选项2"]
-```
-
-**在 prompt.js 中的使用**:
-```javascript
+```**Usage in prompt.js**:```javascript
 // 已集成到 prompt.js 的 Name 查询方法
 getModelName: function(id) {
     return window.PromptRangeUtils.NameHelper.getName(
         this.modelOpt, id, '未知模型'
     );
 }
-```
+```---
 
----
+### 4. StorageHelper - Local storage tool
+**File**: `storageHelper.js`
 
-### 4. StorageHelper - 本地存储工具
-**文件**: `storageHelper.js`
+**Function**:
+- LocalStorage package
+- Automatic JSON serialization/deserialization
+- Batch operations
+- Stored information query
 
-**功能**:
-- LocalStorage 封装
-- 自动 JSON 序列化/反序列化
-- 批量操作
-- 存储信息查询
-
-**使用示例**:
-```javascript
+**Usage Example**:```javascript
 var StorageHelper = window.PromptRangeUtils.StorageHelper;
 
 // 保存数据（自动 JSON 序列化）
@@ -209,22 +194,19 @@ StorageHelper.setMultiple({
 
 var values = StorageHelper.getMultiple(['key1', 'key2']);
 // {key1: 'value1', key2: {data: 'value2'}}
-```
+```---
 
----
+### 5. CopyHelper - Clipboard Tool
+**File**: `copyHelper.js`
 
-### 5. CopyHelper - 剪贴板工具
-**文件**: `copyHelper.js`
+**Function**:
+- Copy text to clipboard
+- Copy objects (automatic JSON formatting)
+- copy array
+- Copy HTML content
+- Automatic downgrade processing
 
-**功能**:
-- 复制文本到剪贴板
-- 复制对象（自动 JSON 格式化）
-- 复制数组
-- 复制 HTML 内容
-- 自动降级处理
-
-**使用示例**:
-```javascript
+**Usage Example**:```javascript
 var CopyHelper = window.PromptRangeUtils.CopyHelper;
 
 // 复制文本
@@ -253,17 +235,13 @@ CopyHelper.copyPromptResult({
     content: 'Test content',
     score: 8.5
 }, false); // false = 原始内容，true = HTML
-```
+```---
 
----
+## 🚀 How to use
 
-## 🚀 使用方法
+### 1. Introduced in HTML
 
-### 1. 在 HTML 中引入
-
-在 `prompt.js` 之前加载工具类：
-
-```html
+Load utility classes before `prompt.js`:```html
 <!-- 先加载第三方库 -->
 <script src="/js/PromptRange/lib/axios.min.js"></script>
 <script src="/js/PromptRange/axios.js"></script>
@@ -277,11 +255,7 @@ CopyHelper.copyPromptResult({
 
 <!-- 最后加载主文件 -->
 <script src="/js/PromptRange/prompt.js"></script>
-```
-
-### 2. 在 Vue 中使用
-
-```javascript
+```### 2. Use in Vue```javascript
 var app = new Vue({
     el: "#app",
     
@@ -309,33 +283,25 @@ var app = new Vue({
         }
     }
 });
-```
+```---
 
----
+## 🧪 Test
 
-## 🧪 测试
-
-打开 `test-utils.html` 文件进行测试：
-
-```
+Open the `test-utils.html` file for testing:```
 /js/PromptRange/utils/test-utils.html
-```
-
-在浏览器中打开该文件，可以交互式测试所有工具类的功能。
+```Open this file in a browser to interactively test the functionality of all tool classes.
 
 ---
 
-## 📝 注意事项
+## 📝 Notes
 
-### 1. 加载顺序
+### 1. Loading order
 
-工具类**必须**在 `prompt.js` 之前加载，否则会报错。
+The tool class **must** be loaded before `prompt.js`, otherwise an error will be reported.
 
-### 2. 全局命名空间
+### 2. Global namespace
 
-所有工具类都挂载在 `window.PromptRangeUtils` 下：
-
-```javascript
+All tool classes are mounted under `window.PromptRangeUtils`:```javascript
 window.PromptRangeUtils = {
     HtmlHelper: {...},
     DateHelper: {...},
@@ -343,20 +309,16 @@ window.PromptRangeUtils = {
     StorageHelper: {...},
     CopyHelper: {...}
 };
-```
+```### 3. ES5 compatible syntax
 
-### 3. ES5 兼容语法
+The tool class uses traditional JavaScript syntax and is compatible with IE11+:
+- Use `var` instead of `const/let`
+- Use `function` instead of arrow functions
+- Use traditional for loop
 
-工具类使用传统 JavaScript 语法，兼容 IE11+：
-- 使用 `var` 而非 `const/let`
-- 使用 `function` 而非箭头函数
-- 使用传统 for 循环
+### 4. IIFE mode
 
-### 4. IIFE 模式
-
-每个工具类都使用 IIFE 封装，避免全局污染：
-
-```javascript
+Each utility class is encapsulated using IIFE to avoid global pollution:```javascript
 (function(window) {
     'use strict';
     
@@ -370,25 +332,23 @@ window.PromptRangeUtils = {
     window.PromptRangeUtils.Helper = Helper;
     
 })(window);
-```
+```---
+
+## 🔗 Related documents
+
+- [Refactoring completion report](../../../docs/REFACTOR-COMPLETE.md)
+- [Refactor final strategy](../../../docs/refactor-final-strategy.md)
+- [ApiHelper fix report](../../../docs/bugfix-apihelper.md)
 
 ---
 
-## 🔗 相关文档
+## 📅 Document information
 
-- [重构完成报告](../../../docs/REFACTOR-COMPLETE.md)
-- [重构最终策略](../../../docs/refactor-final-strategy.md)
-- [ApiHelper 修复报告](../../../docs/bugfix-apihelper.md)
-
----
-
-## 📅 文档信息
-
-- **创建日期**: 2025-12-15
-- **更新日期**: 2025-12-15
-- **版本**: 2.0 (清理后)
-- **状态**: ✅ 完成
+- **Creation date**: 2025-12-15
+- **Updated date**: 2025-12-15
+- **Version**: 2.0 (after cleaning)
+- **Status**: ✅ Completed
 
 ---
 
-**祝使用愉快！** 🎉
+**Happy use! ** 🎉

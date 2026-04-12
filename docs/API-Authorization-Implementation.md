@@ -1,19 +1,19 @@
-# API 权限验证实现说明
+[中文版](API-Authorization-Implementation.cn.md)
 
-## 📌 概述
+# API permission verification implementation instructions
 
-根据安全要求，为 **AgentsManager** 和 **PromptRange** 模块的所有 AppService 添加了用户登录权限验证，防止未授权访问。
+## 📌 Overview
 
-## 🔐 实现方案
+According to security requirements, user login permission verification has been added to all AppServices of the **AgentsManager** and **PromptRange** modules to prevent unauthorized access.
 
-### 1. 创建统一的权限验证特性
+## 🔐 Implementation plan
 
-在两个模块中分别创建了 `ApiAuthorizeAttribute.cs`，支持 **.NET 常规 Cookie 认证** 和 **JWT Bearer 认证**：
+### 1. Create unified permission verification features
 
-#### AgentsManager 模块
-**文件路径**: `src/Extensions/Senparc.Xncf.AgentsManager/OHS/Local/AppService/ApiAuthorizeAttribute.cs`
+`ApiAuthorizeAttribute.cs` was created in two modules respectively, supporting **.NET regular Cookie authentication** and **JWT Bearer authentication**:
 
-```csharp
+#### AgentsManager module
+**File path**: `src/Extensions/Senparc.Xncf.AgentsManager/OHS/Local/AppService/ApiAuthorizeAttribute.cs````csharp
 using Microsoft.AspNetCore.Authorization;
 using Senparc.Ncf.AreaBase.Admin.Filters;
 using System;
@@ -46,68 +46,60 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
     }
 }
-```
+```#### PromptRange module
+**File path**: `src/Extensions/Senparc.Xncf.PromptRange/OHS/Local/AppService/ApiAuthorizeAttribute.cs`
 
-#### PromptRange 模块
-**文件路径**: `src/Extensions/Senparc.Xncf.PromptRange/OHS/Local/AppService/ApiAuthorizeAttribute.cs`
+(The content is the same, only the namespace is different)
 
-（内容相同，仅命名空间不同）
+### 2. Apply to AppService
 
-### 2. 应用到 AppService
+#### AgentsManager module protected AppService
 
-#### AgentsManager 模块受保护的 AppService
+1. **PromptCatalyzerInitAppService** - PromptCatalyzer initialization service
+   - ✅ `CheckStatus()` - Check initialization status
+   - ✅ `GetAvailableModels()` - Get available AI models
+   - ✅ `Initialize()` - perform initialization
 
-1. **PromptCatalyzerInitAppService** - PromptCatalyzer 初始化服务
-   - ✅ `CheckStatus()` - 检查初始化状态
-   - ✅ `GetAvailableModels()` - 获取可用 AI 模型
-   - ✅ `Initialize()` - 执行初始化
+2. **PromptOptimizationAppService** - Prompt optimization service
+   - ✅ `EnsureInitializedAsync()` - Ensure it has been initialized
+   - ✅ `OptimizeAsync()` - perform optimization
 
-2. **PromptOptimizationAppService** - Prompt 优化服务
-   - ✅ `EnsureInitializedAsync()` - 确保已初始化
-   - ✅ `OptimizeAsync()` - 执行优化
+#### PromptRange module protected AppService
 
-#### PromptRange 模块受保护的 AppService
+1. **PromptItemAppService** - Prompt item management
+   - ✅ `Add()` - Add Prompt
+   - ✅ `Edit()` - Edit Prompt
+   - ✅ `Delete()` - Delete Prompt
+   - ✅ `GetList()` - Get the list
+   - ✅ All other management methods
 
-1. **PromptItemAppService** - Prompt 条目管理
-   - ✅ `Add()` - 添加 Prompt
-   - ✅ `Edit()` - 编辑 Prompt
-   - ✅ `Delete()` - 删除 Prompt
-   - ✅ `GetList()` - 获取列表
-   - ✅ 其他所有管理方法
+2. **PromptRangeAppService** - PromptRange management
+   - ✅ All management methods
 
-2. **PromptRangeAppService** - PromptRange 管理
-   - ✅ 所有管理方法
+3. **PromptResultAppService** - Prompt result management
+   - ✅ All rating and result management methods
 
-3. **PromptResultAppService** - Prompt 结果管理
-   - ✅ 所有评分和结果管理方法
+4. **StatisticAppService** - statistical data service
+   - ✅ All statistical methods
 
-4. **StatisticAppService** - 统计数据服务
-   - ✅ 所有统计方法
+5. **LlmModelAppService** - LLM model management
+   - ✅ All model management methods
 
-5. **LlmModelAppService** - LLM 模型管理
-   - ✅ 所有模型管理方法
+### 3. Authentication scheme description
 
-### 3. 认证方案说明
-
-#### 认证方案支持
-
-```csharp
+#### Authentication scheme support```csharp
 [ApiAuthorize("AdminOnly")]
 public class YourAppService : AppServiceBase
 {
     // 所有方法都受保护
 }
-```
+```- **Cookie Authentication**: Use `AdminAuthorizeAttribute.AuthenticationScheme` (NcfAdminAuthorizeScheme)
+- **JWT authentication**: use `Bearer` scheme
+- **Policy**: `AdminOnly` - requires user to have `AdminMember` declaration
 
-- **Cookie 认证**: 使用 `AdminAuthorizeAttribute.AuthenticationScheme` (NcfAdminAuthorizeScheme)
-- **JWT 认证**: 使用 `Bearer` scheme
-- **策略**: `AdminOnly` - 要求用户具有 `AdminMember` 声明
+#### Front-end interaction
 
-#### 前端交互
-
-前端 `axios.js` 已配置处理认证失败：
-
-```javascript
+The frontend `axios.js` has been configured to handle authentication failures:```javascript
 servicePR.interceptors.response.use(
     response => { /* ... */ },
     error => {
@@ -130,75 +122,71 @@ servicePR.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-```
+```## 🎯 Security
 
-## 🎯 安全保障
+### Behavior when non-logged-in users access the API
 
-### 未登录用户访问 API 时的行为
+1. **Cookie authentication failed** or **JWT Token is invalid/missing**
+2. The server returns **401 Unauthorized**
+3. Front-end interceptor catches errors
+4. Automatically jump to the `/Admin/Login` login page
 
-1. **Cookie 认证失败** 或 **JWT Token 无效/缺失**
-2. 服务器返回 **401 Unauthorized**
-3. 前端拦截器捕获错误
-4. 自动跳转到 `/Admin/Login` 登录页面
+### Behavior when permissions are insufficient
 
-### 权限不足时的行为
+1. The user is logged in but the `AdminMember` statement is missing
+2. The server returns **403 Forbidden**
+3. The front end displays the prompt "You do not have access rights~"
 
-1. 用户已登录但缺少 `AdminMember` 声明
-2. 服务器返回 **403 Forbidden**
-3. 前端显示"您没有访问权限~"提示
+## 📋 List of protected API endpoints
 
-## 📋 受保护的 API 端点清单
+### AgentsManager module
 
-### AgentsManager 模块
-
-| API 端点 | 方法 | 说明 | 权限 |
+| API Endpoint | Method | Description | Permissions |
 |---------|------|------|------|
-| `/api/PromptCatalyzerInit/CheckStatus` | GET | 检查初始化状态 | AdminOnly |
-| `/api/PromptCatalyzerInit/GetAvailableModels` | GET | 获取可用模型 | AdminOnly |
-| `/api/PromptCatalyzerInit/Initialize` | POST | 执行初始化 | AdminOnly |
-| `/api/PromptOptimization/EnsureInitializedAsync` | POST | 确保已初始化 | AdminOnly |
-| `/api/PromptOptimization/OptimizeAsync` | POST | 优化 Prompt | AdminOnly |
+| `/api/PromptCatalyzerInit/CheckStatus` | GET | Check initialization status | AdminOnly |
+| `/api/PromptCatalyzerInit/GetAvailableModels` | GET | Get available models | AdminOnly |
+| `/api/PromptCatalyzerInit/Initialize` | POST | Perform initialization | AdminOnly |
+| `/api/PromptOptimization/EnsureInitializedAsync` | POST | Ensure initialized | AdminOnly |
+| `/api/PromptOptimization/OptimizeAsync` | POST | Optimization Prompt | AdminOnly |
 
-### PromptRange 模块
+### PromptRange module
 
-| AppService | 受保护方法数量 | 权限 |
-|-----------|--------------|------|
-| PromptItemAppService | 全部 (~20个) | AdminOnly |
-| PromptRangeAppService | 全部 (~10个) | AdminOnly |
-| PromptResultAppService | 全部 (~15个) | AdminOnly |
-| StatisticAppService | 全部 (~5个) | AdminOnly |
-| LlmModelAppService | 全部 (~8个) | AdminOnly |
+| AppService | Number of protected methods | Permissions |
+|-----------|-------------|------|
+| PromptItemAppService | All (~20) | AdminOnly |
+| PromptRangeAppService | All (~10) | AdminOnly |
+| PromptResultAppService | All (~15) | AdminOnly |
+| StatisticAppService | All (~5) | AdminOnly |
+| LlmModelAppService | All (~8) | AdminOnly |
 
-> **注意**: `ApiAppService` 是测试服务，未添加权限验证（如需生产使用，需单独评估）
+> **Note**: `ApiAppService` is a test service and no permission verification is added (if it needs to be used in production, it needs to be evaluated separately)
 
-## ✅ 验证结果
+## ✅ Verification results
 
-### 编译状态
-- ✅ **Senparc.Xncf.AgentsManager.csproj** - 编译成功，0 错误
-- ✅ **Senparc.Xncf.PromptRange.csproj** - 编译成功，0 错误
+### Compilation status
+- ✅ **Senparc.Xncf.AgentsManager.csproj** - Compiled successfully, 0 errors
+- ✅ **Senparc.Xncf.PromptRange.csproj** - Compiled successfully, 0 errors
 
-### 安全测试建议
+### Security testing recommendations
 
-1. **未登录访问测试**
-   - 清除 Cookie/Token
-   - 尝试访问任意 API 端点
-   - 预期：401 错误，自动跳转登录页
+1. **Access test without logging in**
+   - Clear Cookie/Token
+   - Attempt to access any API endpoint
+   - Expectation: 401 error, automatically jump to the login page
 
-2. **权限不足测试**
-   - 使用非管理员账户登录
-   - 尝试访问 API 端点
-   - 预期：403 错误，提示无权限
+2. **Insufficient permissions test**
+   - Log in using a non-administrator account
+   - Try to access the API endpoint
+   - Expected: 403 error, prompting no permissions
 
-3. **正常访问测试**
-   - 使用管理员账户登录
-   - 访问所有功能
-   - 预期：正常工作
+3. **Normal access test**
+   - Log in with an administrator account
+   - Access all features
+   - Expectation: Works normally
 
-## 🔧 技术细节
+## 🔧 Technical details
 
-### 认证流程
-
-```
+### Certification process```
 用户请求 API
     ↓
 [ApiAuthorize] 特性拦截
@@ -209,31 +197,29 @@ servicePR.interceptors.response.use(
     ↓
 通过 → 执行方法
 失败 → 返回 401/403
-```
+```### Integrate with existing systems
 
-### 与现有系统集成
+- **Reuse existing authentication infrastructure**: use `AdminAuthorizeAttribute.AuthenticationScheme`
+- **Compatible with multiple authentication methods**: Cookie + JWT
+- **Unified Policy Management**: Use `AdminOnly` policy
+- **No changes required on the front end**: axios interceptor already supports 401/403 processing
 
-- **复用现有认证基础设施**: 使用 `AdminAuthorizeAttribute.AuthenticationScheme`
-- **兼容多种认证方式**: Cookie + JWT
-- **统一策略管理**: 使用 `AdminOnly` 策略
-- **前端无需改动**: axios 拦截器已支持 401/403 处理
+## 📝 Best Practices
 
-## 📝 最佳实践
+1. **Class level application**: Add `[ApiAuthorize("AdminOnly")]` to the AppService class to protect all methods
+2. **Policy First**: Use `AdminOnly` policy instead of pure authentication check
+3. **Front-end friendly**: Make sure the front-end has clear error prompts and login jumps
+4. **Complete test**: Test three scenarios: not logged in, insufficient permissions, and normal login.
 
-1. **类级别应用**: 在 AppService 类上添加 `[ApiAuthorize("AdminOnly")]`，保护所有方法
-2. **策略优先**: 使用 `AdminOnly` 策略而非单纯的认证检查
-3. **前端友好**: 确保前端有明确的错误提示和登录跳转
-4. **测试完整**: 测试未登录、权限不足、正常登录三种场景
+## 🚀 Deployment Notes
 
-## 🚀 部署注意事项
-
-1. 确保系统已配置 `AdminOnly` 策略和 `AdminMember` 声明
-2. 确认 JWT Bearer 认证方案已在 Startup/Program.cs 中注册
-3. 前端 axios 配置已正确处理 401/403 响应
-4. 所有新 API 端点都应经过权限验证测试
+1. Make sure the system is configured with the `AdminOnly` policy and the `AdminMember` statement
+2. Confirm that the JWT Bearer authentication scheme has been registered in Startup/Program.cs
+3. The front-end axios configuration has correctly handled 401/403 responses.
+4. All new API endpoints should be tested for permission verification
 
 ---
 
-**实施日期**: 2026-03-24
-**影响范围**: AgentsManager 和 PromptRange 模块的所有管理 API
-**安全级别**: 管理员专用（AdminOnly）
+**Implementation Date**: 2026-03-24
+**Scope of Impact**: All management APIs of AgentsManager and PromptRange modules
+**Security level**: Administrator only (AdminOnly)

@@ -1,170 +1,165 @@
-# WebView 快速开始指南
+[中文版](WEBVIEW_QUICK_START.cn.md)
 
-## 🚀 快速开始
+# WebView Quick Start Guide
 
-### 首次运行
+## 🚀 Quick Start
 
-1. **启动应用**
-   ```
+### First run
+
+1. **Launch the application**```
    双击 NcfDesktopApp.GUI.exe
-   ```
+   ```2. **Automatically install WebView2** (first time only)
+   - The application will automatically detect the WebView2 Runtime
+   - If not installed, it will be automatically downloaded and installed.
+   - Show installation progress
+   - Automatically use the built-in browser after installation is complete
 
-2. **自动安装 WebView2**（仅首次）
-   - 应用会自动检测 WebView2 Runtime
-   - 如未安装，会自动下载并安装
-   - 显示安装进度
-   - 安装完成后自动使用内置浏览器
-
-3. **使用 NCF**
-   - 点击"启动 NCF"按钮
-   - 等待 NCF 应用启动
-   - 内置浏览器会自动打开 NCF 界面
+3. **Use NCF**
+   - Click the "Start NCF" button
+   - Wait for the NCF application to start
+   - The built-in browser will automatically open the NCF interface
 
 ---
 
-## 🎯 主要功能
+## 🎯 Main functions
 
-### 1. 地址栏导航
+### 1. Address bar navigation
 
-**输入新 URL**：
-1. 在地址栏输入 URL（例如：`localhost:3000`）
-2. 按 **Enter** 键或点击 **→** 按钮
-3. 自动导航到新页面
+**Enter new URL**:
+1. Enter the URL in the address bar (for example: `localhost:3000`)
+2. Press **Enter** or click the **→** button
+3. Automatically navigate to new page
 
-**自动补全协议**：
-- 输入 `localhost:5000` → 自动转换为 `http://localhost:5000`
-- 输入 `www.example.com` → 自动转换为 `http://www.example.com`
+**Autocomplete protocol**:
+- Enter `localhost:5000` → automatically converted to `http://localhost:5000`
+- Enter `www.example.com` → automatically converted to `http://www.example.com`
 
-### 2. 导航控制
+### 2. Navigation control
 
-- **← 后退**：返回上一页（可能不可用）
-- **→ 前进**：前进到下一页（可能不可用）
-- **↻ 刷新**：重新加载当前页面
+- **← Back**: Return to the previous page (may not be available)
+- **→ Forward**: Forward to the next page (may not be available)
+- **↻ Refresh**: Reload the current page
 
-### 3. 关闭标签
+### 3. Close the tag
 
-1. 点击 **✕ 关闭标签** 按钮
-2. 弹出确认对话框
-3. 选择：
-   - **关闭** - 关闭标签并停止 NCF
-   - **取消** - 取消操作
+1. Click the **✕Close Tag** button
+2. Pop up a confirmation dialog box
+3. Select:
+   - **Close** - closes the tab and stops NCF
+   - **Cancel** - Cancel the operation
 
 ---
 
-## 🛠️ 故障排查
+## 🛠️ Troubleshooting
 
-### WebView2 安装失败
+### WebView2 installation failed
 
-**症状**：
-- 显示"内置浏览器初始化失败"
-- 区域一片黑或显示错误信息
+**Symptoms**:
+- Display "Built-in browser initialization failed"
+- The area is black or an error message is displayed
 
-**解决方案**：
+**Solution**:
 
-#### 方案 1：使用外部浏览器（临时）
-1. 点击 **🌍 在外部浏览器中打开** 按钮
-2. 系统默认浏览器会打开 NCF
+#### Option 1: Use an external browser (temporary)
+1. Click the **🌍 Open in external browser** button
+2. The system default browser will open NCF
 
-#### 方案 2：手动安装 WebView2
-1. 点击 **⬇️ 下载 WebView2 Runtime** 按钮
-2. 浏览器会打开下载页面
-3. 下载并运行安装程序
-4. 重启 NCF 桌面应用
+#### Option 2: Manually install WebView2
+1. Click the **⬇️ Download WebView2 Runtime** button
+2. The browser will open the download page
+3. Download and run the installer
+4. Restart the NCF desktop application
 
-#### 方案 3：命令行安装
-在 PowerShell（管理员）中运行：
-```powershell
+#### Option 3: Command line installation
+Run in PowerShell (admin):```powershell
 $url = "https://go.microsoft.com/fwlink/p/?LinkId=2124703"
 $output = "$env:TEMP\WebView2.exe"
 Invoke-WebRequest -Uri $url -OutFile $output
 Start-Process -FilePath $output -Wait
-```
+```### The address bar cannot be edited.
 
-### 地址栏无法编辑
+**Symptoms**:
+- Unable to enter text in the address bar
 
-**症状**：
-- 无法在地址栏输入文字
+**Solution**:
+- Click on the address bar to make sure it has focus
+- Check if there are other dialogs in the foreground
+- Restart the app
 
-**解决方案**：
-- 点击地址栏确保它获得焦点
-- 检查是否有其他对话框在前台
-- 重启应用
+### The process cannot be stopped
 
-### 进程无法停止
+**Symptoms**:
+- After closing the tab, there is still the Senparc.Web process in the task manager
 
-**症状**：
-- 关闭标签后，任务管理器中仍有 Senparc.Web 进程
-
-**解决方案**：
-- 本版本已修复此问题
-- 使用 `taskkill /T /F` 强制终止整个进程树
-- 如仍有问题，手动在任务管理器中结束进程
+**Solution**:
+- This issue has been fixed in this version
+- Use `taskkill /T /F` to force terminate the entire process tree
+- If you still have problems, manually end the process in Task Manager
 
 ---
 
-## 💡 使用技巧
+## 💡 Tips for use
 
-### 1. 快速导航
-- 使用 `Ctrl+L` 聚焦地址栏（如果支持）
-- 直接输入 URL 后按 Enter
+### 1. Quick navigation
+- Use `Ctrl+L` to focus the address bar (if supported)
+- Enter the URL directly and press Enter
 
-### 2. 防止误操作
-- 关闭标签时会弹出确认对话框
-- 仔细阅读提示信息
+### 2. Prevent misuse
+- A confirmation dialog will pop up when closing a tab
+- Read the prompts carefully
 
-### 3. 外部浏览器
-- 如内置浏览器有问题，随时可以使用外部浏览器
-- 点击"在外部浏览器中打开"即可
+### 3. External browser
+- If there is a problem with the built-in browser, you can always use an external browser
+- Click "Open in external browser"
 
-### 4. 日志查看
-- 在"设置"标签页可以查看详细日志
-- 日志会显示 WebView2 检测和安装信息
+### 4. Log viewing
+- Detailed logs can be viewed on the "Settings" tab
+- The log will show WebView2 detection and installation information
 
 ---
 
-## 📝 常见问题
+## 📝 FAQ
 
-### Q: 为什么首次启动很慢？
-**A**: 首次启动需要下载并安装 WebView2 Runtime（约 2-5 分钟），后续启动会很快。
+### Q: Why is the first startup so slow?
+**A**: The first startup requires downloading and installing WebView2 Runtime (about 2-5 minutes), subsequent startups will be very fast.
 
-### Q: 可以跳过 WebView2 安装吗？
-**A**: 可以点击"在外部浏览器中打开"使用系统浏览器，但内置浏览器功能将不可用。
+### Q: Can I skip the WebView2 installation?
+**A**: You can click "Open in external browser" to use the system browser, but the built-in browser function will not be available.
 
-### Q: WebView2 会自动更新吗？
-**A**: 是的，WebView2 会通过 Microsoft Edge 更新通道自动更新，无需手动操作。
+### Q: Will WebView2 update automatically?
+**A**: Yes, WebView2 updates automatically through the Microsoft Edge update channel, no manual action required.
 
-### Q: 如何卸载 WebView2？
-**A**: 
-1. 打开"设置" → "应用" → "应用和功能"
-2. 搜索"Microsoft Edge WebView2 Runtime"
-3. 点击"卸载"
+### Q: How to uninstall WebView2?
+**A**:
+1. Open "Settings" → "Apps" → "Apps & Features"
+2. Search for "Microsoft Edge WebView2 Runtime"
+3. Click "Uninstall"
 
-### Q: 支持哪些操作系统？
-**A**: 
+### Q: What operating systems are supported?
+**A**:
 - ✅ Windows 10/11 (x64, x86, ARM64)
-- ✅ macOS (使用系统 WKWebView)
-- ✅ Linux (使用 WebKitGTK)
+- ✅ macOS (using system WKWebView)
+- ✅ Linux (using WebKitGTK)
 
 ---
 
-## 🔗 相关资源
+## 🔗 Related resources
 
-- [详细功能说明](./WEBVIEW2_AUTO_SETUP.md)
-- [更新日志](./CHANGELOG_WEBVIEW.md)
-- [WebView2 官方文档](https://learn.microsoft.com/microsoft-edge/webview2/)
-
----
-
-## 📞 获取帮助
-
-如果遇到问题：
-1. 查看应用内日志
-2. 查阅本文档
-3. 查看 [详细功能说明](./WEBVIEW2_AUTO_SETUP.md)
-4. 联系技术支持
+- [Detailed function description](./WEBVIEW2_AUTO_SETUP.md)
+- [Change Log](./CHANGELOG_WEBVIEW.md)
+- [WebView2 official document](https://learn.microsoft.com/microsoft-edge/webview2/)
 
 ---
 
-**版本**: 1.1.0  
-**最后更新**: 2025-11-14
+## 📞 Get help
 
+If you encounter problems:
+1. View in-app logs
+2. Consult this document
+3. View [Detailed Function Description](./WEBVIEW2_AUTO_SETUP.md)
+4. Contact technical support
+
+---
+
+**Version**: 1.1.0
+**Last updated**: 2025-11-14

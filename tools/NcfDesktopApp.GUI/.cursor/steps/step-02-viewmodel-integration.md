@@ -1,23 +1,24 @@
-# Step 02: 在 MainWindowViewModel 中集成 CLI 日志输出
+[中文版](step-02-viewmodel-integration.cn.md)
 
-## 📋 任务概述
-在 `ViewModels/MainWindowViewModel.cs` 中集成 CLI 输出处理，将 NcfService 的输出回调连接到 UI 日志系统。
+# Step 02: Integrate CLI log output in MainWindowViewModel
 
-## 🎯 目标
-- ✅ 注册 NcfService 的输出回调
-- ✅ 实现线程安全的日志更新
-- ✅ 区分 CLI 输出和应用日志
-- ✅ 保持良好的性能和响应速度
+## 📋 Mission Overview
+Integrate CLI output processing in `ViewModels/MainWindowViewModel.cs` and connect the output callback of NcfService to the UI logging system.
 
-## 📂 涉及文件
-- `ViewModels/MainWindowViewModel.cs` - 主要修改文件
+## 🎯 Goal
+- ✅ Register the output callback of NcfService
+- ✅ Implement thread-safe log updates
+- ✅ Differentiate between CLI output and application logs
+- ✅ Maintain good performance and responsiveness
 
-## 🔧 实现步骤
+## 📂Involved documents
+- `ViewModels/MainWindowViewModel.cs` - main modified file
 
-### 1. 添加 CLI 日志处理方法
+## 🔧 Implementation steps
 
-在 `MainWindowViewModel` 类中，找到现有的 `AddLog` 方法（约 1054 行），在其附近添加新方法：
+### 1. Add CLI log processing method
 
+In the `MainWindowViewModel` class, find the existing `AddLog` method (around line 1054) and add the new method near it:
 ```csharp
 /// <summary>
 /// 添加 CLI 进程输出到日志
@@ -47,12 +48,9 @@ private void AddCliLog(string message, bool isError)
     
     LogText = _logBuffer.ToString();
 }
-```
+```### 2. Modify the existing AddLog method (optional optimization)
 
-### 2. 修改现有 AddLog 方法（可选优化）
-
-为了更清晰地区分应用日志和 CLI 输出，可以修改现有的 `AddLog` 方法添加前缀：
-
+To more clearly distinguish between application logs and CLI output, you can modify the existing `AddLog` method to add a prefix:
 ```csharp
 private void AddLog(string message)
 {
@@ -72,14 +70,11 @@ private void AddLog(string message)
     
     LogText = _logBuffer.ToString();
 }
-```
+```**Note**: If you don’t want to affect the existing log display, you can leave it as is without adding the `[APP]` prefix.
 
-**注意**：如果不想影响现有日志显示，可以不添加 `[APP]` 前缀，保持原样。
+### 3. Register callback in StartNcfAsync method
 
-### 3. 在 StartNcfAsync 方法中注册回调
-
-找到 `StartNcfAsync` 方法（约 400-500 行之间），在调用 `_ncfService.StartNcfProcessAsync` **之前**注册回调：
-
+Find the `StartNcfAsync` method (between about 400-500 lines) and register the callback before calling `_ncfService.StartNcfProcessAsync`:
 ```csharp
 [RelayCommand]
 private async Task StartNcfAsync()
@@ -111,12 +106,9 @@ private async Task StartNcfAsync()
         IsNcfStarting = false;
     }
 }
-```
+```### 4. Clean up callbacks in StopNcf method (optional)
 
-### 4. 在 StopNcf 方法中清理回调（可选）
-
-在停止进程时，可以清理回调（虽然不是必须的）：
-
+When stopping the process, the callback can be cleaned up (although not required):
 ```csharp
 [RelayCommand]
 private void StopNcf()
@@ -138,12 +130,9 @@ private void StopNcf()
         AddLog($"❌ 停止失败: {ex.Message}");
     }
 }
-```
+```### 5. Performance optimization: batch update (optional advanced function)
 
-### 5. 性能优化：批量更新（可选高级功能）
-
-如果 CLI 输出非常频繁，可以实现批量更新机制：
-
+If the CLI output is very frequent, a batch update mechanism can be implemented:
 ```csharp
 private readonly Queue<(string message, bool isError)> _cliLogQueue = new();
 private readonly Timer _logFlushTimer;
@@ -197,78 +186,75 @@ private void FlushCliLogs(object? state)
         LogText = _logBuffer.ToString();
     });
 }
-```
+```**Note**: Batch updates will increase complexity. It is recommended to implement a simple version first and only consider it if there are real performance problems.
 
-**注意**：批量更新会增加复杂度，建议先实现简单版本，只有在性能确实有问题时再考虑。
+## ✅ Acceptance Criteria
 
-## ✅ 验收标准
+### Function acceptance
+- [ ] CLI output shown in UI log after starting NCF
+- [ ] CLI normal output is shown with `[CLI]` prefix
+- [ ] CLI error output is shown with the `[CLI:ERROR]` prefix
+- [ ] Application logs and CLI output are mixed and displayed in correct chronological order
+- [ ] Log updated in real time, delay < 1 second
 
-### 功能验收
-- [ ] 启动 NCF 后，UI 日志中显示 CLI 输出
-- [ ] CLI 正常输出显示为 `[CLI]` 前缀
-- [ ] CLI 错误输出显示为 `[CLI:ERROR]` 前缀
-- [ ] 应用日志和 CLI 输出混合显示，时间顺序正确
-- [ ] 日志实时更新，延迟 < 1 秒
+### Technical acceptance
+- [ ] Use `Dispatcher.UIThread.Post` to ensure thread safety
+- [ ] Do not block the UI thread
+- [ ] The limit on the number of log lines takes effect (1000 lines)
+- [ ] Improved exception handling
 
-### 技术验收
-- [ ] 使用 `Dispatcher.UIThread.Post` 确保线程安全
-- [ ] 不阻塞 UI 线程
-- [ ] 日志行数限制生效（1000 行）
-- [ ] 异常处理完善
+### Quality acceptance
+- [ ] Code style is consistent with existing code
+- [ ] Good performance, no obvious lag
+- [ ] cleanup works correctly (cancel callback on stop)
 
-### 质量验收
-- [ ] 代码风格与现有代码一致
-- [ ] 性能良好，无明显卡顿
-- [ ] 清理工作正确（停止时取消回调）
+## 🔍 Testing suggestions
 
-## 🔍 测试建议
+1. **Basic Function Test**
+   - Start NCF and observe whether the CLI log appears
+   - Verify that the `[CLI]` prefix is displayed correctly
+   - Verify that application logs (`[APP]` or no prefix) and CLI logs are mixed
 
-1. **基本功能测试**
-   - 启动 NCF，观察是否出现 CLI 日志
-   - 验证 `[CLI]` 前缀显示正确
-   - 验证应用日志（`[APP]` 或无前缀）和 CLI 日志混合显示
+2. **Performance Test**
+   - Run NCF for a long time and observe whether the UI is stuck.
+   - Check whether memory usage is stable
+   - Verify that the limit on the number of log lines takes effect
 
-2. **性能测试**
-   - 长时间运行 NCF，观察 UI 是否卡顿
-   - 检查内存占用是否稳定
-   - 验证日志行数限制生效
+3. **Error handling test**
+   - Make NCF startup error, observe stderr capture
+   - Verify that `[CLI:ERROR]` prefix is displayed
 
-3. **错误处理测试**
-   - 制造 NCF 启动错误，观察 stderr 捕获
-   - 验证 `[CLI:ERROR]` 前缀显示
+4. **Concurrency Test**
+   - Quickly start/stop multiple times and verify that there are no abnormalities
+   - Check if callbacks are cleaned up correctly
 
-4. **并发测试**
-   - 快速启动/停止多次，验证无异常
-   - 检查回调是否正确清理
+## 📝 Notes
 
-## 📝 注意事项
+⚠️ **Important**:
+- Must use `Dispatcher.UIThread.Post` (asynchronous) instead of `Invoke` (synchronous) to avoid deadlock
+- CLI output callback is executed in the background thread, and direct access to the UI will crash
+- Consider performance: ASP.NET Core will have a lot of log output when it starts
+- The limit on the number of log lines is important to avoid unlimited memory growth
 
-⚠️ **重要**：
-- 必须使用 `Dispatcher.UIThread.Post`（异步）而非 `Invoke`（同步），避免死锁
-- CLI 输出回调在后台线程执行，直接访问 UI 会崩溃
-- 考虑性能：ASP.NET Core 启动时会有大量日志输出
-- 日志行数限制很重要，避免内存无限增长
+⚙️ **Performance Suggestions**:
+- Simple scenario: each log is updated directly (current solution)
+- High frequency output: use batch update + Timer (optional optimization)
+- Extreme scenarios: consider virtual scrolling or paging display
 
-⚙️ **性能建议**：
-- 简单场景：每条日志直接更新（当前方案）
-- 高频输出：使用批量更新 + Timer（可选优化）
-- 极端场景：考虑虚拟滚动或分页显示
+## 🎨 UI enhancement suggestions (optional, next phase)
 
-## 🎨 UI 增强建议（可选，下一阶段）
+1. **Visual distinction**
+   - Add different colors for `[CLI]` and `[CLI:ERROR]`
+   - Use icons to replace text prefixes
 
-1. **视觉区分**
-   - 为 `[CLI]` 和 `[CLI:ERROR]` 添加不同颜色
-   - 使用图标替代文本前缀
+2. **Filter function**
+   - Added drop-down boxes: All/Application Log/CLI Output
+   - Implement log search function
 
-2. **过滤功能**
-   - 添加下拉框：全部 / 应用日志 / CLI 输出
-   - 实现日志搜索功能
+3. **Export function**
+   - Added "Export Log" button
+   - Support export to txt file
 
-3. **导出功能**
-   - 添加"导出日志"按钮
-   - 支持导出为 txt 文件
-
-## 🔗 相关任务
-- 上一步：[Step 01: 在 NcfService 中实现 CLI 输出捕获机制](./step-01-cli-capture.md)
-- 下一步：[Step 03: 测试和优化性能](./step-03-testing-optimization.md)
-
+## 🔗 Related tasks
+- Previous step: [Step 01: Implement CLI output capture mechanism in NcfService](./step-01-cli-capture.md)
+- Next step: [Step 03: Testing and optimizing performance](./step-03-testing-optimization.md)

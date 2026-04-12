@@ -1,22 +1,23 @@
-# 快速参考：三个任务的完成情况
+[中文版](QUICK_REFERENCE.cn.md)
 
-## ✅ 任务 1：EventBus 高并发优化（已完成）
+# Quick reference: completion status of three tasks
 
-### 改动的文件
+## ✅ Task 1: EventBus high concurrency optimization (completed)
+
+### Changed files
 1. `src/Basic/Senparc.Ncf.Shared.Abstractions/Events/IIntegrationEvent.cs`
 2. `src/Basic/Senparc.Ncf.Core/EventBus/InMemoryEventBus.cs`
 3. `src/Basic/Senparc.Ncf.Core/EventBus/EventBusHostedService.cs`
 4. `src/Basic/Senparc.Ncf.Core/EventBus/EventBusExtensions.cs`
-5. `src/Basic/Senparc.Ncf.Core/EventBus/README.md` (新建)
+5. `src/Basic/Senparc.Ncf.Core/EventBus/README.md` (new)
 
-### 核心改进
-- ✅ 支持高并发处理（可配置并发度，默认为 CPU 核心数 * 2）
-- ✅ 失败自动重试（指数退避策略，最多 3 次）
-- ✅ 详细的性能监控日志
-- ✅ 完整的配置选项（EventBusOptions）
+### Core improvements
+- ✅Supports high concurrency processing (configurable concurrency, the default is the number of CPU cores * 2)
+- ✅ Automatic retry on failure (exponential backoff strategy, up to 3 times)
+- ✅ Detailed performance monitoring logs
+- ✅ Complete configuration options (EventBusOptions)
 
-### 如何使用
-```csharp
+### How to use```csharp
 // 在 Startup.cs 或 Program.cs 中配置
 services.AddSenparcEventBus(
     options =>
@@ -28,23 +29,20 @@ services.AddSenparcEventBus(
     },
     typeof(YourHandler).Assembly
 );
-```
+```---
 
----
+## ✅ Task 3: EventBus anti-duplication mechanism (completed)
 
-## ✅ 任务 3：EventBus 防重复机制（已完成）
+### Changed files
+- `src/Basic/Senparc.Ncf.Core/EventBus/InMemoryEventBus.cs` (updated in task 1)
 
-### 改动的文件
-- `src/Basic/Senparc.Ncf.Core/EventBus/InMemoryEventBus.cs`（在任务 1 中已更新）
+### Core improvements
+- ✅ Each event has a unique `Guid Id` (automatically generated)
+- ✅ Track event IDs for the last 10 minutes using a sliding window
+- ✅ Automatically clean up expired records (triggered every 100 calls)
+- ✅ Thread safety (ConcurrentDictionary)
 
-### 核心改进
-- ✅ 每个事件都有唯一的 `Guid Id`（自动生成）
-- ✅ 使用滑动窗口追踪最近 10 分钟的事件 ID
-- ✅ 自动清理过期记录（每 100 次调用触发）
-- ✅ 线程安全（ConcurrentDictionary）
-
-### 工作原理
-```csharp
+### Working principle```csharp
 // 在 EventBusHostedService 中自动检测
 await foreach (var @event in _eventBus.Reader.ReadAllAsync(stoppingToken))
 {
@@ -59,37 +57,34 @@ await foreach (var @event in _eventBus.Reader.ReadAllAsync(stoppingToken))
     
     // 处理事件...
 }
-```
+```---
 
----
+## 🔄 Task 2: PromptRange integrated with AgentsManager (partially completed)
 
-## 🔄 任务 2：PromptRange 与 AgentsManager 集成（部分完成）
+### Completed
+1. ✅ Enhance event definition and support parameter optimization
+2. ✅ Implement Agent automatic creation logic
+3. ✅ Improve API layer error handling and parameter validation
+4. ✅ Add timeout control (2 minutes for initialization, 5 minutes for optimization)
+5. ✅ Add detailed logging
 
-### 已完成
-1. ✅ 增强事件定义，支持参数优化
-2. ✅ 实现 Agent 自动创建逻辑
-3. ✅ 改进 API 层错误处理和参数验证
-4. ✅ 添加超时控制（初始化 2 分钟，优化 5 分钟）
-5. ✅ 添加详细的日志记录
-
-### 改动的文件
+### Changed files
 1. `src/Extensions/Senparc.Xncf.PromptRange.Abstractions/Events/PromptOptimizationEvents.cs`
 2. `src/Extensions/Senparc.Xncf.AgentsManager/Application/AppService/PromptOptimizationAppService.cs`
 3. `src/Extensions/Senparc.Xncf.AgentsManager/Domain/Services/PromptOptimizationService.cs`
 
-### 待完成（需要手动实现）
-❌ **AI 优化逻辑**
-   - 文件: `src/Extensions/Senparc.Xncf.PromptRange/Application/EventHandlers/PromptOptimizationRequestHandler.cs`
-   - 需要调用 AIKernel 服务
-   - 详细实现见 `TASK2_ANALYSIS.md` 中的"改进 3"
+### To be completed (needs to be implemented manually)
+❌ **AI optimization logic**
+   - File: `src/Extensions/Senparc.Xncf.PromptRange/Application/EventHandlers/PromptOptimizationRequestHandler.cs`
+   - Need to call AIKernel service
+   - For detailed implementation, see "Improvement 3" in `TASK2_ANALYSIS.md`
 
-❌ **前端显示优化**
-   - 文件: `src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js`
-   - 需要更新 `executeOptimize()` 方法
-   - 详细实现见 `TASK2_ANALYSIS.md` 中的"改进 4"
+❌ **Front-end display optimization**
+   - File: `src/Extensions/Senparc.Xncf.PromptRange/wwwroot/js/PromptRange/prompt.js`
+   - Need to update `executeOptimize()` method
+   - For detailed implementation, see "Improvement 4" in `TASK2_ANALYSIS.md`
 
-### 当前工作流程
-```
+### Current workflow```
 用户点击"优化" 
     ↓
 AgentsManager API
@@ -101,39 +96,33 @@ AgentsManager API
 PromptRange 处理（模拟优化）⚠️ 需要改进
     ↓
 返回优化结果 ✅
-```
+```---
 
----
+## 📊 Performance improvement comparison
 
-## 📊 性能提升对比
-
-| 指标 | 优化前 | 优化后 | 提升 |
+| Indicators | Before optimization | After optimization | Improvement |
 |------|--------|--------|------|
-| 10,000 事件处理时间 | 50-100 秒 | 5-10 秒 | **10-20x** |
-| 吞吐量 | 100-200/秒 | 1000-2000/秒 | **10x** |
-| 并发处理 | 否（串行） | 是（可配置） | ✅ |
-| 重复检测 | 否 | 是（10 分钟窗口） | ✅ |
-| 失败重试 | 否 | 是（指数退避） | ✅ |
+| 10,000 event processing time | 50-100 seconds | 5-10 seconds | **10-20x** |
+| Throughput | 100-200/second | 1000-2000/second | **10x** |
+| Concurrent processing | No (serial) | Yes (configurable) | ✅ |
+| Duplicate Detection | No | Yes (10 minute window) | ✅ |
+| Retry on failure | No | Yes (exponential backoff) | ✅ |
 
 ---
 
-## 📖 相关文档
+## 📖 Related documents
 
-### 完整文档
-1. **EventBus 使用文档**: `src/Basic/Senparc.Ncf.Core/EventBus/README.md`
-2. **任务 1 总结**: `TASK1_COMPLETION_SUMMARY.md`
-3. **任务 2 分析**: `TASK2_ANALYSIS.md`
-4. **完成报告**: `COMPLETION_REPORT.md`
+### Complete documentation
+1. **EventBus usage documentation**: `src/Basic/Senparc.Ncf.Core/EventBus/README.md`
+2. **Task 1 Summary**: `TASK1_COMPLETION_SUMMARY.md`
+3. **Task 2 Analysis**: `TASK2_ANALYSIS.md`
+4. **Complete Report**: `COMPLETION_REPORT.md`
 
-### 关键代码示例
+### Key code examples
 
-#### 1. 定义事件
-```csharp
+#### 1. Define events```csharp
 public record MyEvent(string Data) : IntegrationEvent;
-```
-
-#### 2. 实现处理器
-```csharp
+```#### 2. Implement the processor```csharp
 public class MyEventHandler : IIntegrationEventHandler<MyEvent>
 {
     public async Task Handle(MyEvent @event, CancellationToken ct)
@@ -141,57 +130,39 @@ public class MyEventHandler : IIntegrationEventHandler<MyEvent>
         // 处理逻辑
     }
 }
-```
-
-#### 3. 发布事件
-```csharp
+```#### 3. Publishing events```csharp
 await _eventBus.PublishAsync(new MyEvent("data"));
-```
+```---
+
+## ⚠️ IMPORTANT NOTICE
+
+### Tasks 1 and 3 (EventBus)
+- **Ready to use**: All changes completed and tested
+- **NO BREAKING CHANGES**: Compatible with existing code
+- **Recommended configuration**: Adjust `MaxConcurrency` according to actual scenarios
+
+### Task 2 (Prompt optimization)
+- **Partially Available**: The infrastructure is complete, but the AI optimization logic needs to be implemented
+- **Next step**: Refer to `TASK2_ANALYSIS.md` to implement AI calling
+- **Testing Suggestion**: Complete the AI optimization logic first and then test the end-to-end process
 
 ---
 
-## ⚠️ 重要提示
+## 🔧 Configuration suggestions
 
-### 任务 1 和 3（EventBus）
-- **立即可用**：所有改动都已完成并测试
-- **无破坏性变更**：兼容现有代码
-- **建议配置**：根据实际场景调整 `MaxConcurrency`
-
-### 任务 2（Prompt 优化）
-- **部分可用**：基础架构已完成，但 AI 优化逻辑需要实现
-- **下一步**：参考 `TASK2_ANALYSIS.md` 实现 AI 调用
-- **测试建议**：先完成 AI 优化逻辑再测试端到端流程
-
----
-
-## 🔧 配置建议
-
-### 高并发场景
-```csharp
+### High concurrency scenario```csharp
 options.MaxConcurrency = Environment.ProcessorCount * 4;
-```
-
-### 数据库密集型
-```csharp
+```### Database intensive```csharp
 options.MaxConcurrency = DbConnectionPoolSize / 2;  // 连接池大小的一半
-```
-
-### 外部 API 调用
-```csharp
+```### External API calls```csharp
 options.MaxConcurrency = 50;  // 根据 API QPS 限制
-```
-
-### 混合场景（推荐）
-```csharp
+```### Mixed scene (recommended)```csharp
 options.MaxConcurrency = Math.Max(8, Environment.ProcessorCount * 2);
-```
+```---
 
----
+## 🐛 Troubleshooting
 
-## 🐛 故障排查
-
-### EventBus 日志级别
-```json
+### EventBus log level```json
 {
   "Logging": {
     "LogLevel": {
@@ -199,28 +170,25 @@ options.MaxConcurrency = Math.Max(8, Environment.ProcessorCount * 2);
     }
   }
 }
-```
+```### FAQ
 
-### 常见问题
+**Q: Event processing is too slow? **
+A: Increase the `MaxConcurrency` value
 
-**Q: 事件处理太慢？**
-A: 增加 `MaxConcurrency` 值
+**Q: The database connection pool is exhausted? **
+A: Reduce `MaxConcurrency` or increase the connection pool size
 
-**Q: 数据库连接池用尽？**
-A: 降低 `MaxConcurrency` 或增加连接池大小
+**Q: Duplicate processing occurs? **
+A: Make sure `EnableDuplicateDetection = true`
 
-**Q: 出现重复处理？**
-A: 确保 `EnableDuplicateDetection = true`
-
-**Q: Prompt 优化失败？**
-A: 检查日志，可能是 AI 优化逻辑未实现
+**Q: Prompt optimization failed? **
+A: Check the log, it may be that the AI optimization logic has not been implemented.
 
 ---
 
-## ✅ 验证步骤
+## ✅ Verification steps
 
-### 1. 验证 EventBus 高并发
-```csharp
+### 1. Verify EventBus high concurrency```csharp
 // 发布 10,000 个事件
 for (int i = 0; i < 10000; i++)
 {
@@ -228,10 +196,7 @@ for (int i = 0; i < 10000; i++)
 }
 
 // 检查日志，应该在 10-20 秒内处理完成
-```
-
-### 2. 验证重复检测
-```csharp
+```### 2. Verify duplicate detection```csharp
 var @event = new TestEvent(1);
 
 // 发布两次相同 ID 的事件
@@ -239,20 +204,18 @@ await _eventBus.PublishAsync(@event);
 await _eventBus.PublishAsync(@event);
 
 // 检查日志，第二次应该被跳过
-```
-
-### 3. 验证 Prompt 优化（需要先完成 AI 逻辑）
-1. 打开 PromptRange 页面
-2. 选择一个 Prompt
-3. 点击"优化"按钮
-4. 输入优化需求
-5. 检查是否返回新的 PromptCode
+```### 3. Verify Prompt optimization (AI logic needs to be completed first)
+1. Open the PromptRange page
+2. Select a Prompt
+3. Click the "Optimize" button
+4. Enter optimization requirements
+5. Check whether a new PromptCode is returned
 
 ---
 
-## 📞 获取帮助
+## 📞 Get help
 
-如有问题，请查阅：
-1. EventBus 详细文档: `src/Basic/Senparc.Ncf.Core/EventBus/README.md`
-2. 任务 2 实现指南: `TASK2_ANALYSIS.md`
-3. 完整报告: `COMPLETION_REPORT.md`
+If you have questions, please check:
+1. EventBus detailed documentation: `src/Basic/Senparc.Ncf.Core/EventBus/README.md`
+2. Task 2 Implementation Guide: `TASK2_ANALYSIS.md`
+3. Full report: `COMPLETION_REPORT.md`

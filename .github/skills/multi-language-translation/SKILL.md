@@ -1,3 +1,5 @@
+[中文版](SKILL.cn.md)
+
 ---
 name: multi-language-translation
 description: Create a Developer-Multi-Language branch and translate all Chinese comments in source files (.cs, .js, .css, etc.) to English, and translate README/documentation markdown files while preserving Chinese copies.
@@ -26,9 +28,7 @@ Before any translation work begins:
 3. **Verify the branch was created successfully**:
    ```bash
    git branch --show-current
-   ```
-
----
+   ```---
 
 ## Phase 1: Translate Source Code Comments
 
@@ -38,10 +38,10 @@ Before any translation work begins:
 - **Exclude**: UI display text (e.g., Razor `.cshtml` page visible text, `<label>`, `<button>` human-readable content), only translate code **comments** and **XML doc comments**.
 
 ### What counts as a "comment"
-- Single-line comments: `// 中文注释`
-- Multi-line comments: `/* 中文 */`
+- Single-line comments: `// Chinese comments`
+- Multi-line comments: `/* Chinese */`
 - XML doc comments: `/// <summary>中文</summary>`
-- CSS/SCSS/JS comments: `/* 中文 */`, `// 中文`
+- CSS/SCSS/JS comments: `/* Chinese */`, `//中文`
 
 ### Translation Rules
 - Translate comment content from Chinese to natural, idiomatic English.
@@ -51,8 +51,7 @@ Before any translation work begins:
 - If a comment is already in English (or another language), leave it unchanged.
 
 ### Workflow per file batch
-1. Identify files containing Chinese characters using:
-   ```bash
+1. Identify files containing Chinese characters using:```bash
    grep -rl '[^\x00-\x7F]' src/ --include="*.cs" --include="*.js" --include="*.ts" --include="*.css" --include="*.scss"
    ```
 2. Work through files in logical groups (e.g., by module/folder).

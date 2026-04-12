@@ -1,56 +1,50 @@
-# ApiHelper Bug 修复报告
+[中文版](bugfix-apihelper.cn.md)
 
-## 🐛 发现的问题
+#ApiHelper Bug fix report
 
-### 问题 1: ApiHelper 依赖 jQuery
-**错误信息**:
-```
+## 🐛 Issues found
+
+### Problem 1: ApiHelper depends on jQuery
+**Error message**:```
 apiHelper.js:14 ApiHelper requires jQuery
-```
+```**Reason**:
+- ApiHelper was originally designed to use jQuery's `$.ajax` method
+- But the PromptRange project **does not use jQuery** but uses **axios**
 
-**原因**: 
-- ApiHelper 原本设计为使用 jQuery 的 `$.ajax` 方法
-- 但 PromptRange 项目**不使用 jQuery**，而是使用 **axios**
-
-### 问题 2: Element UI 表单重置错误
-**错误信息**:
-```
+### Problem 2: Element UI form reset error
+**Error message**:```
 TypeError: Cannot read properties of undefined (reading 'indexOf')
     at a.resetField (element.js:1:369631)
-```
-
-**原因**: 
-- 这个错误与 ApiHelper 无关，是 Element UI 的已知问题
-- 通常在表单字段定义变化时出现
+```**Reason**:
+- This bug has nothing to do with ApiHelper and is a known issue with Element UI
+- Usually occurs when form field definition changes
 
 ---
 
-## 🔧 解决方案
+## 🔧 Solution
 
-### 方案：不使用 ApiHelper，直接使用项目现有的 servicePR
+### Solution: Do not use ApiHelper, directly use the existing servicePR of the project
 
-#### 为什么不使用 ApiHelper？
+#### Why not use ApiHelper?
 
-1. **项目已有完善的 axios 封装**
-   - `servicePR` 是配置好的 axios 实例
-   - 已包含请求/响应拦截器
-   - 自动处理错误和消息提示
-   - 自动注入 RequestVerificationToken
-   - 自动处理 401/403 跳转
+1. **The project already has a complete axios package**
+   - `servicePR` is the configured axios instance
+   - Request/response interceptors included
+   - Automatically handle errors and message prompts
+   - Automatically inject RequestVerificationToken
+   - Automatically handle 401/403 jumps
 
-2. **避免功能重复**
-   - ApiHelper 提供的功能 servicePR 已全部实现
-   - 不需要额外的封装层
+2. **Avoid duplication of functions**
+   - The function servicePR provided by ApiHelper has been fully implemented
+   - No additional encapsulation layer required
 
-3. **保持代码一致性**
-   - prompt.js 中已有多处使用 `servicePR`
-   - 统一使用同一套 API 调用方式
+3. **Maintain code consistency**
+   - `servicePR` has been used in many places in prompt.js
+   - Use the same set of API calling methods in a unified manner
 
-#### 项目现有的 servicePR 功能
+#### Existing servicePR functions of the project
 
-**文件**: `wwwroot/js/PromptRange/axios.js`
-
-```javascript
+**File**: `wwwroot/js/PromptRange/axios.js````javascript
 // 创建 axios 实例
 var servicePR = axios.create({
     timeout: 100000
@@ -107,13 +101,9 @@ servicePR.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-```
+```#### Usage examples
 
-#### 使用示例
-
-**现有代码中的用法**（prompt.js 已在使用）:
-
-```javascript
+**Usage in existing code** (prompt.js is already in use):```javascript
 // POST 请求
 servicePR.post('/api/xxx/Add', {
     data: { id: 123, name: 'test' }
@@ -145,30 +135,22 @@ async someMethod() {
         // 错误已被拦截器处理
     }
 }
-```
+```---
 
----
+## ✅ Fixes performed
 
-## ✅ 已执行的修复
-
-### 1. 移除 ApiHelper 引用
-**文件**: `Areas/Admin/Pages/PromptRange/Prompt.cshtml`
-
-```html
+### 1. Remove ApiHelper reference
+**File**: `Areas/Admin/Pages/PromptRange/Prompt.cshtml````html
 <!-- 修改前 -->
 <script src="~/js/PromptRange/utils/apiHelper.js"></script>
 
 <!-- 修改后 -->
 @* ApiHelper 暂不使用，项目已有 servicePR (axios) *@
 @* <script src="~/js/PromptRange/utils/apiHelper.js"></script> *@
-```
+```### 2. Update documentation
+**File**: `utils/README.md`
 
-### 2. 更新文档
-**文件**: `utils/README.md`
-
-添加了关于项目已有 API 封装的说明：
-
-```markdown
+Added description about existing API packages for the project:```markdown
 ## ⚠️ 重要说明
 
 ### 关于 API 请求
@@ -180,103 +162,101 @@ async someMethod() {
 - ✅ 401/403 自动跳转
 
 **因此 `apiHelper.js` 暂不使用**
-```
-
-### 3. 保留 ApiHelper 文件
-虽然暂不使用，但保留 `apiHelper.js` 文件：
-- ✅ 已更新为使用 axios 而非 jQuery
-- ✅ 可作为参考或将来使用
-- ✅ 不影响当前项目运行
+```### 3. Keep the ApiHelper file
+Although not used yet, keep the `apiHelper.js` file:
+- ✅ Updated to use axios instead of jQuery
+- ✅ Can be used as a reference or for future use
+- ✅ Does not affect the current project operation
 
 ---
 
-## 📋 工具类使用清单
+## 📋 Tool usage list
 
-### ✅ 正在使用的工具类
+### ✅ Tools in use
 
-| 工具类 | 文件 | 状态 | 用途 |
+| Tools | Files | Status | Purpose |
 |--------|------|------|------|
-| HtmlHelper | htmlHelper.js | ✅ 使用 | HTML转义、UUID、防抖等 |
-| DateHelper | dateHelper.js | ✅ 使用 | 日期格式化 |
-| NameHelper | nameHelper.js | ✅ 使用 | 名称查询（已集成到 prompt.js） |
-| StorageHelper | storageHelper.js | ✅ 使用 | LocalStorage 封装 |
-| CopyHelper | copyHelper.js | ✅ 使用 | 剪贴板操作 |
+| HtmlHelper | htmlHelper.js | ✅ Use | HTML escaping, UUID, anti-shake, etc. |
+| DateHelper | dateHelper.js | ✅ Use | Date formatting |
+| NameHelper | nameHelper.js | ✅ Use | Name query (integrated into prompt.js) |
+| StorageHelper | storageHelper.js | ✅ Using | LocalStorage package |
+| CopyHelper | copyHelper.js | ✅ Use | Clipboard operations |
 
-### ⏸️ 暂不使用的工具类
+### ⏸️ Tools not used yet
 
-| 工具类 | 文件 | 状态 | 原因 |
+| Tools | Files | Status | Reasons |
 |--------|------|------|------|
-| ApiHelper | apiHelper.js | ⏸️ 暂不用 | 项目已有 servicePR (axios) |
+| ApiHelper | apiHelper.js | ⏸️ Not used yet | The project already has servicePR (axios) |
 
 ---
 
-## 🎯 后续重构策略
+## 🎯 Subsequent reconstruction strategy
 
-### 阶段二：继续集成其他工具类
+### Phase 2: Continue to integrate other tool classes
 
-不再关注 API 请求封装（使用 servicePR），专注于：
+Stop focusing on API request encapsulation (using servicePR) and focus on:
 
-1. **日期格式化** - 使用 DateHelper
+1. **Date Formatting** - Using DateHelper
    - `formatDate()`
    - `formatChatTime()`
    - `formatTime()`
 
-2. **复制功能** - 使用 CopyHelper
+2. **Copy function** - using CopyHelper
    - `copyInfo()`
    - `copyPromptResult()`
 
-3. **Storage 操作** - 使用 StorageHelper
-   - 区域宽度保存/读取
-   - 其他配置存储
+3. **Storage operations** - using StorageHelper
+   - Area width save/read
+   - Other configuration storage
 
-4. **其他工具** - 使用 HtmlHelper
+4. **Other Tools** - Using HtmlHelper
    - `getUuid()` → `HtmlHelper.generateUUID()`
-   - 防抖/节流
-   - 深度克隆
+   - Anti-shake/throttle
+   - Deep cloning
 
-### API 调用保持现状
+### API calls remain current
 
-**不需要重构 API 调用**，因为：
-- ✅ servicePR 已经很好用
-- ✅ 项目中已大量使用
-- ✅ 功能完善（拦截器、错误处理等）
-- ✅ 不需要额外封装
-
----
-
-## 📊 影响评估
-
-### 对当前功能的影响
-- ✅ **无负面影响** - 移除了未使用的 apiHelper.js 引用
-- ✅ **减少加载** - 少加载一个 JS 文件（~9KB）
-- ✅ **避免冲突** - 不会因为依赖 jQuery 而报错
-
-### 对重构计划的影响
-- ✅ **简化工作** - 不需要重构 API 调用（约 30-40 处）
-- ✅ **更快完成** - 预计节省 2-3 小时工作量
-- ✅ **保持一致** - 统一使用项目现有的 servicePR
-
-### 代码质量影响
-- ✅ **遵循现有规范** - 使用项目已有的封装
-- ✅ **减少冗余** - 不引入重复功能
-- ✅ **更好维护** - 统一的 API 调用方式
+**No need to refactor API calls** because:
+- ✅ servicePR is already very useful
+- ✅ Has been used extensively in projects
+- ✅ Complete functions (interceptor, error handling, etc.)
+- ✅ No additional packaging required
 
 ---
 
-## 🎉 总结
+## 📊 Impact Assessment
 
-1. **问题已解决** - apiHelper.js 不再报错（因为不加载）
-2. **策略更合理** - 使用项目现有的 servicePR
-3. **工作量减少** - 不需要重构 API 调用
-4. **重构继续** - 专注于其他工具类的集成
+### Impact on current functionality
+- ✅ **NO NEGATIVE EFFECT** - Removed unused apiHelper.js reference
+- ✅ **REDUCED LOADING** - One less JS file to load (~9KB)
+- ✅ **Avoid conflicts** - No errors due to dependence on jQuery
 
-**最佳实践**: 
-- 在重构时，优先使用项目已有的封装
-- 避免引入功能重复的工具
-- 保持代码风格和架构的一致性
+### Impact on refactoring plans
+- ✅ **Simplified work** - No need to refactor API calls (about 30-40 places)
+- ✅ **FASTER FINISH** - Estimated saving of 2-3 hours of work
+- ✅ **Keep consistent** - Use the existing servicePR of the project uniformly
+
+### Impact on code quality
+- ✅ **Follow existing specifications** - Use existing packages in the project
+- ✅ **REDUCED REDUNDANCY** - No duplication of functionality introduced
+- ✅ **Better Maintenance** - Unified API calling method
 
 ---
 
-**修复完成时间**: 2025-12-15  
-**影响范围**: 仅移除未使用的引用，无破坏性改动  
-**测试状态**: ✅ 无报错，功能正常
+## 🎉 Summary
+
+1. **Problem solved** - apiHelper.js no longer reports errors (because it is not loaded)
+2. **Strategy is more reasonable** - Use the existing servicePR of the project
+3. **Reduced Workload** - No need to refactor API calls
+4. **Refactoring continues** - Focus on the integration of other tool classes
+
+**Best Practice**:
+- When refactoring, give priority to using the existing packages of the project
+- Avoid introducing tools with duplicate functions
+- Maintain consistency in coding style and architecture
+
+---
+
+**Repair completion time**: 2025-12-15
+**Scope of Impact**: Only unused references are removed, no destructive changes
+**Testing status**: ✅ No error, normal function

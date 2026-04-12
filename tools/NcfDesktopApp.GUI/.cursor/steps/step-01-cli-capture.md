@@ -1,32 +1,30 @@
-# Step 01: 在 NcfService 中实现 CLI 输出捕获机制
+[中文版](step-01-cli-capture.cn.md)
 
-## 📋 任务概述
-在 `Services/NcfService.cs` 中实现 CLI 进程输出的实时捕获，通过事件回调将输出传递给上层。
+# Step 01: Implement CLI output capture mechanism in NcfService
 
-## 🎯 目标
-- ✅ 捕获 Senparc.Web 进程的 stdout 和 stderr 输出
-- ✅ 通过回调机制将输出传递给 ViewModel
-- ✅ 优雅处理进程退出和异常情况
-- ✅ 设置正确的控制台编码
+## 📋 Mission Overview
+Implement real-time capture of CLI process output in `Services/NcfService.cs`, and pass the output to the upper layer through event callbacks.
 
-## 📂 涉及文件
-- `Services/NcfService.cs` - 主要修改文件
+## 🎯 Goal
+- ✅ Capture stdout and stderr output of Senparc.Web process
+- ✅ Pass output to ViewModel through callback mechanism
+- ✅ Handle process exits and exceptions gracefully
+- ✅ Set correct console encoding
 
-## 🔧 实现步骤
+## 📂Involved documents
+- `Services/NcfService.cs` - main modified file
 
-### 1. 定义输出回调委托
+## 🔧 Implementation steps
 
-在 `NcfService.cs` 文件顶部添加委托定义：
+### 1. Define the output callback delegate
 
+Add the delegate definition at the top of the `NcfService.cs` file:
 ```csharp
 // 在 namespace 内，class 外部定义
 public delegate void ProcessOutputHandler(string output, bool isError);
-```
+```### 2. Add output callback attribute
 
-### 2. 添加输出回调属性
-
-在 `NcfService` 类中添加回调属性：
-
+Add callback attribute in `NcfService` class:
 ```csharp
 public class NcfService
 {
@@ -37,12 +35,9 @@ public class NcfService
     /// </summary>
     public ProcessOutputHandler? OnProcessOutput { get; set; }
 }
-```
+```### 3. Modify StartNcfProcessAsync method
 
-### 3. 修改 StartNcfProcessAsync 方法
-
-在 `StartNcfProcessAsync` 方法中，找到进程启动后的位置（约 350 行附近），添加输出捕获逻辑：
-
+In the `StartNcfProcessAsync` method, find the position after the process is started (around line 350) and add output capture logic:
 ```csharp
 public async Task<Process> StartNcfProcessAsync(int port, CancellationToken cancellationToken = default)
 {
@@ -114,19 +109,16 @@ public async Task<Process> StartNcfProcessAsync(int port, CancellationToken canc
     
     return process;
 }
-```
+```### 4. Handle rollback startup scenario
 
-### 4. 处理回退启动场景
+Also add the same output capture logic in the fallback startup (fallback) code block. There are three places that need to be added:
 
-在回退启动（fallback）的代码块中也添加相同的输出捕获逻辑。有三个地方需要添加：
+1. **First rollback** (about lines 372-410)
+2. **Second rollback** (about lines 418-450)
 
-1. **第一次回退**（约 372-410 行）
-2. **第二次回退**（约 418-450 行）
+The same event handling code needs to be added after each startup code block.
 
-每个启动代码块后都需要添加相同的事件处理代码。
-
-**代码复用建议**：提取为私有方法
-
+**Code Reuse Recommendation**: Extract to private method
 ```csharp
 /// <summary>
 /// 为进程附加输出捕获
@@ -185,59 +177,50 @@ private void AttachProcessOutputHandlers(Process process)
         catch { }
     };
 }
-```
-
-然后在所有 `Process.Start()` 之后调用：
-
+```Then call after all `Process.Start()`:
 ```csharp
 var process = Process.Start(startInfo);
 AttachProcessOutputHandlers(process);
-```
+```### 5. Set console encoding (optional)
 
-### 5. 设置控制台编码（可选）
-
-如果遇到中文乱码，在 `startInfo` 中添加：
-
+If you encounter Chinese garbled characters, add: in `startInfo`:
 ```csharp
 startInfo.StandardOutputEncoding = System.Text.Encoding.UTF8;
 startInfo.StandardErrorEncoding = System.Text.Encoding.UTF8;
-```
+```## ✅ Acceptance Criteria
 
-## ✅ 验收标准
+### Function acceptance
+- [ ] You can receive stdout output after the process is started.
+- [ ] stderr output can be received after the process is started
+- [ ] callback correctly passes output content and error identifier
+- [ ] Trigger exit message when process exits
+- [ ] All three startup branches (self-contained/rollback/secondary rollback) can be captured correctly
 
-### 功能验收
-- [ ] 进程启动后可以收到 stdout 输出
-- [ ] 进程启动后可以收到 stderr 输出
-- [ ] 回调正确传递输出内容和错误标识
-- [ ] 进程退出时触发退出消息
-- [ ] 三个启动分支（自包含/回退/二次回退）都能正确捕获
+### Technical acceptance
+- [ ] Use asynchronous event mechanism without blocking the main thread
+- [ ] Exception handling is perfect and will not cause crashes due to output exceptions.
+- [ ] Chinese output is displayed normally (no garbled characters)
+- [ ] Good code reuse to avoid duplication
 
-### 技术验收
-- [ ] 使用异步事件机制，不阻塞主线程
-- [ ] 异常处理完善，不会因输出异常导致崩溃
-- [ ] 中文输出显示正常（无乱码）
-- [ ] 代码复用良好，避免重复
+### Quality acceptance
+- [ ] Added necessary try-catch protection
+- [ ] Logging key operations
+- [ ] Code style is consistent with existing code
 
-### 质量验收
-- [ ] 添加了必要的 try-catch 保护
-- [ ] 日志记录关键操作
-- [ ] 代码风格与现有代码一致
+## 🔍 Testing suggestions
 
-## 🔍 测试建议
+1. **Normal startup test**: Start the NCF application and observe whether the startup log of ASP.NET Core is received
+2. **Error output test**: Create a startup error (such as port occupation) and observe whether the error information is captured
+3. **Process Exit Test**: Stop the NCF process and verify whether the exit message is received
+4. **Chinese output test**: Output the Chinese log in NCF and verify that the display is correct
 
-1. **正常启动测试**：启动 NCF 应用，观察是否收到 ASP.NET Core 的启动日志
-2. **错误输出测试**：制造一个启动错误（如端口占用），观察是否捕获错误信息
-3. **进程退出测试**：停止 NCF 进程，验证是否收到退出消息
-4. **中文输出测试**：在 NCF 中输出中文日志，验证显示正确
+## 📝 Notes
 
-## 📝 注意事项
+⚠️ **Important**:
+- `OutputDataReceived` and `ErrorDataReceived` events are triggered on background threads
+- Do not access UI elements directly in event callbacks
+- `BeginOutputReadLine()` and `BeginErrorReadLine()` must be called to trigger the event
+- The event will automatically stop after the process exits, no need to manually unsubscribe
 
-⚠️ **重要**：
-- `OutputDataReceived` 和 `ErrorDataReceived` 事件在后台线程触发
-- 不要在事件回调中直接访问 UI 元素
-- 必须调用 `BeginOutputReadLine()` 和 `BeginErrorReadLine()` 才能触发事件
-- 进程退出后事件会自动停止，无需手动取消订阅
-
-## 🔗 相关任务
-- 下一步：[Step 02: 在 MainWindowViewModel 中集成 CLI 日志输出](./step-02-viewmodel-integration.md)
-
+## 🔗 Related tasks
+- Next step: [Step 02: Integrate CLI log output in MainWindowViewModel](./step-02-viewmodel-integration.md)

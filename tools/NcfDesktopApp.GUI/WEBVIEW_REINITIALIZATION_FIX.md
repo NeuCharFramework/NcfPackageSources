@@ -1,18 +1,19 @@
-# WebView 重新初始化问题修复
+[中文版](WEBVIEW_REINITIALIZATION_FIX.cn.md)
 
-## 🐛 问题描述
+# WebView reinitialization problem fixed
 
-**平台**: Windows ARM64 (其他平台可能也受影响)  
-**症状**: 
-- 第一次启动应用程序，WebView 能正常显示网站
-- 关闭 NCF 后再次运行，WebView 显示错误：**"WebView is not initialized"**
+## 🐛 Problem description
 
-## 🔍 根本原因
+**Platform**: Windows ARM64 (other platforms may also be affected)
+**Symptoms**:
+- When starting the application for the first time, WebView can display the website normally
+- After closing NCF and running it again, WebView displays an error: **"WebView is not initialized"**
 
-在 `EmbeddedWebView.cs` 中，`OnUnloaded()` 方法的清理逻辑不完整：
+## 🔍 Root cause
 
-### ❌ 原代码（有问题）
-```csharp
+In `EmbeddedWebView.cs`, the cleanup logic of the `OnUnloaded()` method is incomplete:
+
+### ❌ Original code (with problems)```csharp
 protected override void OnUnloaded(Avalonia.Interactivity.RoutedEventArgs e)
 {
     base.OnUnloaded(e);
@@ -20,16 +21,13 @@ protected override void OnUnloaded(Avalonia.Interactivity.RoutedEventArgs e)
     // 清理资源
     _webView = null;  // 仅设置为 null，没有真正清理
 }
-```
+```**Problem Analysis:**
+1. ❌ Only set `_webView` to null without removing it from the container
+2. ❌ The `_isWebViewReady` flag is not reset
+3. ❌ The web page resources and memory of WebView2 are not released
+4. ❌ May cause the user data directory to be locked (especially on Windows ARM64)
 
-**问题分析：**
-1. ❌ 仅将 `_webView` 设置为 null，没有从容器移除
-2. ❌ 没有重置 `_isWebViewReady` 标志
-3. ❌ WebView2 的网页资源和内存没有释放
-4. ❌ 可能导致用户数据目录被锁定（特别是在 Windows ARM64 上）
-
-**错误流程：**
-```
+**Error process:**```
 第一次启动 ✅ → 创建 WebView → 正常显示
          ↓
       关闭 NCF
@@ -37,12 +35,9 @@ protected override void OnUnloaded(Avalonia.Interactivity.RoutedEventArgs e)
 OnUnloaded() 仅设为 null → WebView2 资源未释放 ⚠️
          ↓
 第二次启动 → 尝试创建新 WebView → 资源冲突 → "WebView is not initialized" ❌
-```
+```## ✅ Repair solution
 
-## ✅ 修复方案
-
-### 新代码（已修复）
-```csharp
+### New code (fixed)```csharp
 protected override void OnUnloaded(Avalonia.Interactivity.RoutedEventArgs e)
 {
     base.OnUnloaded(e);
@@ -97,111 +92,103 @@ private void CleanupWebView()
         Debug.WriteLine($"❌ WebView 清理失败: {ex.Message}");
     }
 }
-```
+```## 🎯 Repair points
 
-## 🎯 修复要点
+1. **Navigate to blank page** (`about:blank`)
+   - Release the resources occupied by the current web page
+   - Clean JavaScript engine and DOM
 
-1. **导航到空白页** (`about:blank`)
-   - 释放当前网页占用的资源
-   - 清理 JavaScript 引擎和 DOM
+2. **Remove WebView from container**
+   - Make sure the UI tree no longer references WebView
+   - Allow the garbage collector to reclaim resources
 
-2. **从容器移除 WebView**
-   - 确保 UI 树不再引用 WebView
-   - 允许垃圾回收器回收资源
-
-3. **重置初始化标志** ⭐ **最关键**
+3. **Reset initialization flag** ⭐ **The most critical**
    - `_isWebViewReady = false`
    - `_currentUrl = ""`
-   - 确保下次初始化从干净状态开始
+   - Ensure next initialization starts from a clean state
 
-4. **设置为 null**
-   - 释放引用，允许垃圾回收
+4. **Set to null**
+   - Release the reference, allowing garbage collection
 
-## 🧪 测试步骤
+## 🧪 Test steps
 
-### 测试环境
+### Test environment
 - ✅ Windows 10/11 ARM64
 - ✅ Windows 10/11 x64
 - ✅ macOS (Apple Silicon)
 - ✅ macOS (Intel)
 
-### 测试流程
+### Test process
 
-#### 测试 1: 基本重启测试
-1. 启动 NCF Desktop App
-2. 等待 WebView 初始化完成
-3. 启动 NCF 应用，在内置浏览器中打开
-4. 验证网页正常显示 ✅
-5. 关闭浏览器标签页（停止 NCF）
-6. 再次启动 NCF
-7. **验证**: WebView 能正常显示，没有 "WebView is not initialized" 错误 ✅
+#### Test 1: Basic restart test
+1. Start NCF Desktop App
+2. Wait for WebView initialization to complete
+3. Start the NCF application and open it in the built-in browser
+4. Verify that the web page displays normally ✅
+5. Close the browser tab (stop NCF)
+6. Start NCF again
+7. **Verification**: WebView can be displayed normally without "WebView is not initialized" error ✅
 
-#### 测试 2: 多次重启测试
-1. 重复以上步骤 5-10 次
-2. **验证**: 每次都能正常显示，没有错误 ✅
+#### Test 2: Restart the test multiple times
+1. Repeat the above steps 5-10 times
+2. **Verification**: It can be displayed normally every time without errors ✅
 
-#### 测试 3: 完全退出应用测试
-1. 启动应用，启动 NCF，正常显示
-2. 关闭浏览器标签页
-3. 完全退出应用（关闭主窗口）
-4. 重新启动应用
-5. 启动 NCF
-6. **验证**: WebView 能正常显示 ✅
+#### Test 3: Exit application testing completely
+1. Start the application, start NCF, and display normally
+2. Close the browser tab
+3. Completely exit the application (close the main window)
+4. Restart the application
+5. Start NCF
+6. **Verification**: WebView can display normally ✅
 
-#### 测试 4: 资源清理验证
-1. 打开任务管理器/活动监视器
-2. 启动应用，启动 NCF
-3. 记录内存使用量 M1
-4. 关闭浏览器标签页
-5. 等待 5 秒
-6. 记录内存使用量 M2
-7. **验证**: M2 < M1（内存已释放）✅
+#### Test 4: Resource Cleanup Verification
+1. Open Task Manager/Activity Monitor
+2. Start the application and start NCF
+3. Record memory usage M1
+4. Close the browser tab
+5. Wait 5 seconds
+6. Record memory usage M2
+7. **Verification**: M2 < M1 (memory has been released)✅
 
-## 📝 调试日志示例
+## 📝 Debug log example
 
-### 正常清理日志
-```
+### Clear logs normally```
 [13:45:23] 🧹 开始清理 WebView 资源...
 [13:45:23]    ✓ WebView 已导航到空白页
 [13:45:23]    ✓ WebView 已从容器移除
 [13:45:23] ✅ WebView 资源清理完成
-```
-
-### 异常清理日志（非致命）
-```
+```### Exception cleanup log (non-fatal)```
 [13:45:23] 🧹 开始清理 WebView 资源...
 [13:45:23]    ⚠️ WebView 清理警告: Object is already disposed
 [13:45:23] ✅ WebView 资源清理完成
-```
+```## 🔄 Related documents
 
-## 🔄 相关文件
+- **Fixed file**: `Views/Controls/EmbeddedWebView.cs`
+  - Modified method: `OnUnloaded()` (Lines 522-528)
+  - New method: `CleanupWebView()` (lines 530-574)
 
-- **修复文件**: `Views/Controls/EmbeddedWebView.cs`
-  - 修改方法: `OnUnloaded()` (第 522-528 行)
-  - 新增方法: `CleanupWebView()` (第 530-574 行)
+## ⚠️ Known limitations
 
-## ⚠️ 已知限制
+1. **WebView.Avalonia Limitations**
+   - `AvaloniaWebView.WebView` does not implement `IDisposable`
+   - Unable to actively call the `Dispose()` method
+   - Rely on automatic cleaning by garbage collector
 
-1. **WebView.Avalonia 限制**
-   - `AvaloniaWebView.WebView` 不实现 `IDisposable`
-   - 无法主动调用 `Dispose()` 方法
-   - 依赖垃圾回收器自动清理
+2. **Platform differences**
+   - Windows: using WebView2 (Edge Chromium)
+   - macOS: Using WKWebView (Safari)
+   - Linux: using WebKitGTK
+   - Cleanup behavior may be slightly different
 
-2. **平台差异**
-   - Windows: 使用 WebView2 (Edge Chromium)
-   - macOS: 使用 WKWebView (Safari)
-   - Linux: 使用 WebKitGTK
-   - 清理行为可能略有不同
+## 🎉 Expected results
 
-## 🎉 预期效果
+After the fix, users can:
+- ✅ After starting and stopping NCF many times, WebView works normally
+- ✅ Resources are released correctly after closing the browser tab
+- ✅ Completely exit the app and then restart, the WebView will initialize normally.
+- ✅ No more initialization errors on Windows ARM64
 
-修复后，用户可以：
-- ✅ 多次启动和停止 NCF，WebView 都能正常工作
-- ✅ 关闭浏览器标签页后，资源被正确释放
-- ✅ 完全退出应用再重启，WebView 初始化正常
-- ✅ 在 Windows ARM64 上不再出现初始化错误
-
-## 📚 参考资料
+## 📚 References
 
 - [AvaloniaWebView Documentation](https://github.com/AvaloniaWebView/AvaloniaWebView)
 - [WebView2 Best Practices](https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/best-practices)
@@ -209,7 +196,6 @@ private void CleanupWebView()
 
 ---
 
-**修复日期**: 2025-11-16  
-**修复版本**: Hybrid 版本  
-**测试状态**: ⏳ 待用户测试确认
-
+**Repair Date**: 2025-11-16
+**Fixed version**: Hybrid version
+**Test status**: ⏳ To be confirmed by user testing

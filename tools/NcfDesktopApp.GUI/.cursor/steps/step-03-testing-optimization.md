@@ -1,211 +1,211 @@
-# Step 03: 测试和优化性能
+[中文版](step-03-testing-optimization.cn.md)
 
-## 📋 任务概述
-全面测试 CLI 输出同步功能，发现并解决性能问题，确保功能稳定可靠。
+# Step 03: Test and optimize performance
 
-## 🎯 目标
-- ✅ 验证基本功能正确性
-- ✅ 测试极端场景（大量输出、异常退出等）
-- ✅ 识别和优化性能瓶颈
-- ✅ 确保中文显示正确
-- ✅ 验证跨平台兼容性
+## 📋 Mission Overview
+Comprehensive testing of CLI output synchronization functionality to identify and resolve performance issues to ensure stable and reliable functionality.
 
-## 📂 涉及文件
-- 所有相关文件（Services/NcfService.cs, ViewModels/MainWindowViewModel.cs）
+## 🎯 Goal
+- ✅ Verify the correctness of basic functions
+- ✅ Test extreme scenarios (large output, abnormal exit, etc.)
+- ✅ Identify and optimize performance bottlenecks
+- ✅ Make sure the Chinese display is correct
+- ✅ Verified cross-platform compatibility
 
-## 🧪 测试清单
+## 📂Involved documents
+- All related files (Services/NcfService.cs, ViewModels/MainWindowViewModel.cs)
 
-### 1. 基本功能测试
+## 🧪 Test Checklist
 
-#### 测试 1.1：正常启动和日志捕获
-**步骤**：
-1. 启动 NcfDesktopApp
-2. 点击"启动"按钮
-3. 观察日志面板
+### 1. Basic functional testing
 
-**预期结果**：
-- ✅ 出现 `[APP]` 开头的应用日志
-- ✅ 出现 `[CLI]` 开头的 NCF 启动日志
-- ✅ 日志实时更新，无明显延迟（< 1s）
-- ✅ 日志顺序正确（按时间排序）
+#### Test 1.1: Normal startup and log capture
+**Steps**:
+1. Start NcfDesktopApp
+2. Click the "Start" button
+3. Observe the log panel
 
-#### 测试 1.2：错误输出捕获
-**步骤**：
-1. 修改 NCF 端口为已占用的端口（如 80）
-2. 启动 NCF
-3. 观察日志
+**Expected results**:
+- ✅ App logs starting with `[APP]` appear
+- ✅ NCF startup log starting with `[CLI]` appears
+- ✅ The log is updated in real time without obvious delay (< 1s)
+- ✅ Logs are in the correct order (sorted by time)
 
-**预期结果**：
-- ✅ 出现 `[CLI:ERROR]` 开头的错误信息
-- ✅ 错误信息完整显示
-- ✅ 应用不崩溃
+#### Test 1.2: Error output capture
+**Steps**:
+1. Modify the NCF port to an occupied port (such as 80)
+2. Start NCF
+3. Observation log
 
-#### 测试 1.3：进程退出处理
-**步骤**：
-1. 启动 NCF
-2. 点击"停止"按钮
-3. 观察日志
+**Expected results**:
+- ✅ Error messages starting with `[CLI:ERROR]` appear
+- ✅ Error message is displayed in full
+- ✅ App does not crash
 
-**预期结果**：
-- ✅ 出现进程退出消息
-- ✅ 应用状态正确更新
-- ✅ 无异常或错误
+#### Test 1.3: Process exit handling
+**Steps**:
+1. Start NCF
+2. Click the "Stop" button
+3. Observation log
 
----
-
-### 2. 性能测试
-
-#### 测试 2.1：大量日志输出
-**步骤**：
-1. 启动 NCF（ASP.NET Core 启动时会输出大量日志）
-2. 观察 UI 响应速度
-3. 检查 CPU 和内存占用
-
-**预期结果**：
-- ✅ UI 不卡顿，按钮可点击
-- ✅ 日志滚动流畅
-- ✅ CPU 占用合理（< 20%）
-- ✅ 内存稳定（无持续增长）
-
-**性能基准**：
-- 100 条/秒日志输出 → UI 响应正常
-- 500 条/秒日志输出 → 可能需要批量更新优化
-
-#### 测试 2.2：日志行数限制
-**步骤**：
-1. 长时间运行 NCF（模拟大量日志）
-2. 检查日志行数
-
-**预期结果**：
-- ✅ 日志行数不超过 1000 行
-- ✅ 旧日志被正确删除
-- ✅ 内存占用稳定
-
-#### 测试 2.3：快速启停
-**步骤**：
-1. 连续快速点击"启动"和"停止"按钮 10 次
-2. 观察应用状态
-
-**预期结果**：
-- ✅ 应用不崩溃
-- ✅ 无内存泄漏
-- ✅ 日志显示正常
+**Expected results**:
+- ✅ Process exit message appears
+- ✅ App status updated correctly
+- ✅ No abnormalities or errors
 
 ---
 
-### 3. 中文编码测试
+### 2. Performance test
 
-#### 测试 3.1：中文日志显示
-**步骤**：
-1. 在 NCF 应用中输出中文日志
-2. 观察 UI 显示
+#### Test 2.1: Large amount of log output
+**Steps**:
+1. Start NCF (ASP.NET Core will output a lot of logs when it starts)
+2. Observe UI response speed
+3. Check CPU and memory usage
 
-**预期结果**：
-- ✅ 中文显示正确，无乱码
-- ✅ Emoji 显示正常（如果有）
+**Expected results**:
+- ✅ UI is not stuck, buttons are clickable
+- ✅ Log scrolling is smooth
+- ✅ Reasonable CPU usage (< 20%)
+- ✅ Memory stable (no continuous growth)
 
-**修复方案**（如果出现乱码）：
+**Performance Benchmark**:
+- 100 logs/second log output → UI responds normally
+- 500 logs/second log output → may require batch update optimization
+
+#### Test 2.2: Log line limit
+**Steps**:
+1. Run NCF for a long time (simulating a large number of logs)
+2. Check the number of log lines
+
+**Expected results**:
+- ✅ The number of log lines does not exceed 1000 lines
+- ✅ Old logs are deleted correctly
+- ✅ Stable memory usage
+
+#### Test 2.3: Quick start and stop
+**Steps**:
+1. Click the "Start" and "Stop" buttons 10 times in quick succession
+2. Observe application status
+
+**Expected results**:
+- ✅ App does not crash
+- ✅ No memory leaks
+- ✅ Log display is normal
+
+---
+
+### 3. Chinese coding test
+
+#### Test 3.1: Chinese log display
+**Steps**:
+1. Output Chinese logs in NCF application
+2. Observe the UI display
+
+**Expected results**:
+- ✅ Chinese is displayed correctly, no garbled characters
+- ✅ Emoji are displayed normally (if available)
+
+**Repair** (if garbled characters appear):
 ```csharp
 // 在 NcfService.cs 的 startInfo 中添加
 startInfo.StandardOutputEncoding = System.Text.Encoding.UTF8;
 startInfo.StandardErrorEncoding = System.Text.Encoding.UTF8;
-```
+```---
+
+### 4. Abnormal scenario testing
+
+#### Test 4.1: Process exits abnormally
+**Steps**:
+1. Start NCF
+2. Use Task Manager to force terminate the NCF process
+3. Observe application reactions
+
+**Expected results**:
+- ✅ The application detected process exit
+- ✅ Show exit message
+- ✅ App does not crash
+- ✅ Status updated correctly to "Stopped"
+
+#### Test 4.2: Callback exception handling
+**Steps**:
+1. Simulate the callback to throw an exception (temporarily modify the code)
+2. Start NCF
+
+**Expected results**:
+- ✅Exception is caught by catch
+- ✅ Log recording warning messages
+- ✅ App continues to run
+
+#### Test 4.3: Thread Safety
+**Steps**:
+1. Trigger a large number of log outputs at the same time (simulating high concurrency)
+2. Observe the log display
+
+**Expected results**:
+- ✅ No logs lost
+- ✅ No disorder (timestamps are in correct order)
+- ✅ No crashes or exceptions
 
 ---
 
-### 4. 异常场景测试
+### 5. Cross-platform testing
 
-#### 测试 4.1：进程异常退出
-**步骤**：
-1. 启动 NCF
-2. 使用任务管理器强制终止 NCF 进程
-3. 观察应用反应
+#### Test 5.1: Windows Platform
+**Steps**:
+1. Run the app on Windows
+2. Perform all basic functional tests
 
-**预期结果**：
-- ✅ 应用检测到进程退出
-- ✅ 显示退出消息
-- ✅ 应用不崩溃
-- ✅ 状态正确更新为"已停止"
+**Expected results**:
+- ✅ All functions are working properly
 
-#### 测试 4.2：回调异常处理
-**步骤**：
-1. 模拟回调抛出异常（临时修改代码）
-2. 启动 NCF
+#### Test 5.2: macOS platform
+**Steps**:
+1. Run the app on macOS
+2. Perform all basic functional tests
 
-**预期结果**：
-- ✅ 异常被 catch 捕获
-- ✅ 日志记录警告信息
-- ✅ 应用继续运行
+**Expected results**:
+- ✅ All functions are working properly
+- ✅ Self-contained executable files start normally
 
-#### 测试 4.3：线程安全
-**步骤**：
-1. 同时触发大量日志输出（模拟高并发）
-2. 观察日志显示
+#### Test 5.3: Linux platform (if supported)
+**Steps**:
+1. Run the application on Linux
+2. Perform all basic functional tests
 
-**预期结果**：
-- ✅ 无日志丢失
-- ✅ 无乱序（时间戳顺序正确）
-- ✅ 无崩溃或异常
+**Expected results**:
+- ✅ All functions are working properly
 
 ---
 
-### 5. 跨平台测试
+## 🔧 Optimization suggestions
 
-#### 测试 5.1：Windows 平台
-**步骤**：
-1. 在 Windows 上运行应用
-2. 执行所有基本功能测试
+### Optimization 1: Batch update (if performance is insufficient)
 
-**预期结果**：
-- ✅ 所有功能正常
+**Trigger condition**: UI freezes when log output frequency > 200 entries/second
 
-#### 测试 5.2：macOS 平台
-**步骤**：
-1. 在 macOS 上运行应用
-2. 执行所有基本功能测试
+**Implementation plan**:
+Refer to the batch update code in `step-02-viewmodel-integration.md`.
 
-**预期结果**：
-- ✅ 所有功能正常
-- ✅ 自包含可执行文件启动正常
+**Performance improvements**:
+- UI update frequency: each log → every 200ms
+-CPU usage: reduced by 50-70%
+- UI fluency: significantly improved
 
-#### 测试 5.3：Linux 平台（如果支持）
-**步骤**：
-1. 在 Linux 上运行应用
-2. 执行所有基本功能测试
+### Optimization 2: Virtual scrolling (if there are too many log lines)
 
-**预期结果**：
-- ✅ 所有功能正常
+**Trigger condition**: The scrolling is stuck when the number of log lines > 5000 lines
 
----
+**Implementation plan**:
+- Using Avalonia's `VirtualizingStackPanel`
+- Only render log lines in the visible area
+- Need to change the log from string to ObservableCollection<LogEntry>
 
-## 🔧 优化建议
+### Optimization 3: Log compression
 
-### 优化 1：批量更新（如果性能不足）
+**Trigger condition**: Memory usage > 100MB
 
-**触发条件**：日志输出频率 > 200 条/秒时 UI 卡顿
-
-**实现方案**：
-参考 `step-02-viewmodel-integration.md` 中的批量更新代码。
-
-**性能提升**：
-- UI 更新频率：每条日志 → 每 200ms
-- CPU 占用：降低 50-70%
-- UI 流畅度：显著提升
-
-### 优化 2：虚拟滚动（如果日志行数过多）
-
-**触发条件**：日志行数 > 5000 行时滚动卡顿
-
-**实现方案**：
-- 使用 Avalonia 的 `VirtualizingStackPanel`
-- 只渲染可见区域的日志行
-- 需要将日志从 string 改为 ObservableCollection<LogEntry>
-
-### 优化 3：日志压缩
-
-**触发条件**：内存占用 > 100MB
-
-**实现方案**：
+**Implementation plan**:
 ```csharp
 // 压缩重复日志
 private string CompressLogs(string logText)
@@ -235,33 +235,30 @@ private string CompressLogs(string logText)
     
     return string.Join('\n', compressed);
 }
-```
+```---
+
+## ✅ Acceptance Criteria
+
+### Functional completeness
+- [ ] All basic functional tests passed
+- [ ] All abnormal scenario tests passed
+- [ ] Cross-platform compatibility verification passed
+
+### Performance indicators
+- [ ] Normal log output (< 100 items/second) UI smooth
+- [ ] Large amount of log output (200-500 entries/second) available
+- [ ] Stable memory usage (< 150MB, including NCF process)
+- [ ] The limit on the number of log lines takes effect
+
+### User experience
+- [ ] Chinese display is normal
+- [ ] Logs are updated in real time without obvious delay
+- [ ] The interface responds quickly and has no lag.
+- [ ] Clear and friendly error messages
 
 ---
 
-## ✅ 验收标准
-
-### 功能完整性
-- [ ] 所有基本功能测试通过
-- [ ] 所有异常场景测试通过
-- [ ] 跨平台兼容性验证通过
-
-### 性能指标
-- [ ] 正常日志输出（< 100 条/秒）UI 流畅
-- [ ] 大量日志输出（200-500 条/秒）可用
-- [ ] 内存占用稳定（< 150MB，含 NCF 进程）
-- [ ] 日志行数限制生效
-
-### 用户体验
-- [ ] 中文显示正常
-- [ ] 日志实时更新，无明显延迟
-- [ ] 界面响应迅速，无卡顿
-- [ ] 错误提示清晰友好
-
----
-
-## 📝 测试报告模板
-
+## 📝 Test report template
 ```markdown
 ## CLI 输出同步功能测试报告
 
@@ -289,54 +286,49 @@ private string CompressLogs(string logText)
 
 ### 建议
 - [优化建议或改进方向]
-```
+```---
 
----
+## 🐛 FAQ Troubleshooting
 
-## 🐛 常见问题排查
+### Problem 1: The log is not displayed
+**Possible reasons**:
+- callback not registered correctly
+- Dispatcher call error
+- The process did not start correctly
 
-### 问题 1：日志不显示
-**可能原因**：
-- 回调未正确注册
-- Dispatcher 调用错误
-- 进程未正确启动
+**Troubleshooting steps**:
+1. Check whether `OnProcessOutput` is assigned a value
+2. Check whether `BeginOutputReadLine()` is called
+3. Add a breakpoint to verify whether the callback is triggered
 
-**排查步骤**：
-1. 检查 `OnProcessOutput` 是否赋值
-2. 检查 `BeginOutputReadLine()` 是否调用
-3. 添加断点验证回调是否触发
+### Problem 2: Chinese garbled characters
+**Possible reasons**:
+- Encoding setting error
 
-### 问题 2：中文乱码
-**可能原因**：
-- 编码设置错误
-
-**解决方案**：
+**Solution**:
 ```csharp
 startInfo.StandardOutputEncoding = System.Text.Encoding.UTF8;
 startInfo.StandardErrorEncoding = System.Text.Encoding.UTF8;
-```
+```### Problem 3: UI stuck
+**Possible reasons**:
+- The log is updated too frequently
+- Perform time-consuming operations on the UI thread
 
-### 问题 3：UI 卡顿
-**可能原因**：
-- 日志更新过于频繁
-- 在 UI 线程进行耗时操作
+**Solution**:
+- Implement batch update mechanism
+- Use `Post` instead of `Invoke`
 
-**解决方案**：
-- 实现批量更新机制
-- 使用 `Post` 而非 `Invoke`
+### Problem 4: Memory continues to grow
+**Possible reasons**:
+- The limit on the number of log lines does not take effect
+- Events are not properly unsubscribed
 
-### 问题 4：内存持续增长
-**可能原因**：
-- 日志行数限制未生效
-- 事件未正确取消订阅
-
-**解决方案**：
-- 验证日志截断逻辑
-- 停止时清理回调
+**Solution**:
+- Verify log truncation logic
+- Cleanup callback when stopped
 
 ---
 
-## 🔗 相关任务
-- 上一步：[Step 02: 在 MainWindowViewModel 中集成 CLI 日志输出](./step-02-viewmodel-integration.md)
-- 下一步：完成核心功能，可选进行 UI 增强（TASK-04, TASK-05）
-
+## 🔗 Related tasks
+- Previous step: [Step 02: Integrate CLI log output in MainWindowViewModel](./step-02-viewmodel-integration.md)
+- Next step: Complete core functions, optional UI enhancement (TASK-04, TASK-05)

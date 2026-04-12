@@ -1,30 +1,27 @@
-# WebView 重新初始化问题修复 V2
+[中文版](WEBVIEW_REINITIALIZATION_FIX_V2.cn.md)
 
-## 🐛 新发现的问题
+# WebView re-initialization problem fix V2
 
-**症状**: 
-- ✅ 第一版修复解决了"关闭后再次启动"的重新初始化问题
-- ❌ 但引入了新问题：第一次启动也显示 **"WebView is not initialized"**
+## 🐛 Newly discovered issues
 
-## 🔍 问题原因分析
+**Symptoms**:
+- ✅ The first version fix solves the "shut down and start again" re-initialization issue
+- ❌ But a new problem is introduced: **"WebView is not initialized"** is also displayed on the first startup
 
-### 之前的修复（V1）
-在 `EmbeddedWebView.cs` 中添加了 `OnUnloaded()` 方法来清理 WebView 资源：
+## 🔍 Problem cause analysis
 
-```csharp
+### Previous fix (V1)
+Added `OnUnloaded()` method to `EmbeddedWebView.cs` to clean up WebView resources:```csharp
 protected override void OnUnloaded(RoutedEventArgs e)
 {
     base.OnUnloaded(e);
     CleanupWebView(); // 清理 WebView 并设置 _isWebViewReady = false
 }
-```
+```**THIS FIX IS CORRECT** and resolves the reinitialization issue on Windows ARM64.
 
-**这个修复是正确的**，解决了 Windows ARM64 上的重新初始化问题。
+### Root cause of new problem
 
-### 新问题的根本原因
-
-**问题流程**：
-```
+**Question Process**:```
 1. 用户启动 NCF ✅
    └─> IsBrowserTabVisible = true
    └─> BrowserView 控件加载
@@ -48,21 +45,17 @@ protected override void OnUnloaded(RoutedEventArgs e)
    └─> ❌ _isWebViewReady = false，_webView = null
    └─> 尝试导航 NavigateTo(url)
    └─> 抛出异常: "WebView is not initialized" ❌
-```
+```**Core question**:
+- The constructor of the control is only executed once when it is first created
+- When the control is hidden (`IsBrowserTabVisible = false`) and then displayed, **the constructor will not be re-executed**
+- But `OnUnloaded()` will clean up the WebView
+- There is no corresponding `OnLoaded()` to reinitialize
 
-**核心问题**：
-- 控件的构造函数只在**第一次创建时**执行一次
-- 当控件被隐藏（`IsBrowserTabVisible = false`）后再显示，**不会重新执行构造函数**
-- 但是 `OnUnloaded()` 会清理 WebView
-- 没有对应的 `OnLoaded()` 来重新初始化
+## ✅ Repair solution (V2)
 
-## ✅ 修复方案（V2）
+### Add OnLoaded method
 
-### 添加 OnLoaded 方法
-
-在 `EmbeddedWebView.cs` 中添加 `OnLoaded()` 方法，检测并重新初始化：
-
-```csharp
+Add the `OnLoaded()` method in `EmbeddedWebView.cs` to detect and reinitialize:```csharp
 protected override void OnLoaded(Avalonia.Interactivity.RoutedEventArgs e)
 {
     base.OnLoaded(e);
@@ -74,11 +67,7 @@ protected override void OnLoaded(Avalonia.Interactivity.RoutedEventArgs e)
         _ = InitializeWebViewAsync();
     }
 }
-```
-
-### 完整的生命周期管理
-
-```csharp
+```### Complete life cycle management```csharp
 // 构造函数 - 第一次创建时执行
 public EmbeddedWebView()
 {
@@ -106,11 +95,7 @@ protected override void OnUnloaded(RoutedEventArgs e)
     // 清理资源
     CleanupWebView();
 }
-```
-
-## 📊 修复后的流程
-
-```
+```## 📊 Process after repair```
 1. 用户启动 NCF ✅
    └─> IsBrowserTabVisible = true
    └─> BrowserView 控件加载
@@ -133,72 +118,64 @@ protected override void OnUnloaded(RoutedEventArgs e)
    └─> WebView 重新创建 ✅
    └─> _isWebViewReady = true ✅
    └─> NavigateTo(url) 成功 ✅
-```
+```## 🎯 Fix verification
 
-## 🎯 修复验证
+### Test scenario 1: First startup
+**Steps**:
+1. Start the application
+2. Click "Start NCF"
+3. Observe the built-in browser
 
-### 测试场景 1：第一次启动
-**步骤**：
-1. 启动应用
-2. 点击"启动 NCF"
-3. 观察内置浏览器
+**Expected results**:
+- ✅ The browser displays normally
+- ✅ NCF website loaded successfully
 
-**预期结果**：
-- ✅ 浏览器正常显示
-- ✅ NCF 网站加载成功
+### Test scenario 2: Restart after stopping
+**Steps**:
+1. Start NCF (the browser displays normally)
+2. Stop NCF
+3. Start NCF again
 
-### 测试场景 2：停止后重新启动
-**步骤**：
-1. 启动 NCF（浏览器正常显示）
-2. 停止 NCF
-3. 再次启动 NCF
+**Expected results**:
+- ✅ Browser re-initialized successfully
+- ✅ NCF website is loading normally
+- ✅ "WebView is not initialized" error does not appear
 
-**预期结果**：
-- ✅ 浏览器重新初始化成功
-- ✅ NCF 网站正常加载
-- ✅ 不出现 "WebView is not initialized" 错误
+### Test scenario 3: multiple switching
+**Steps**:
+1. Start NCF
+2. Stop NCF
+3. Repeat 3-5 times
 
-### 测试场景 3：多次切换
-**步骤**：
-1. 启动 NCF
-2. 停止 NCF
-3. 重复 3-5 次
+**Expected results**:
+- ✅ Can be initialized normally every time
+- ✅ No resource leaks
+- ✅ Stable performance
 
-**预期结果**：
-- ✅ 每次都能正常初始化
-- ✅ 无资源泄漏
-- ✅ 性能稳定
+## 🔧 Technical details
 
-## 🔧 技术细节
-
-### Avalonia 控件生命周期
-
-```
+### Avalonia control life cycle```
 创建 → OnAttachedToVisualTree → OnLoaded → [显示]
                                       ↓
                                    可见状态
                                       ↓
                                    OnUnloaded → OnDetachedFromVisualTree
-```
+```**Key Points**:
+- `Constructor`: only called when the control is first created
+- `OnLoaded`: called every time the control becomes visible
+- `OnUnloaded`: called every time the control becomes invisible
 
-**关键点**：
-- `构造函数`：只在控件第一次创建时调用
-- `OnLoaded`：每次控件变为可见时调用
-- `OnUnloaded`：每次控件变为不可见时调用
+### Why OnLoaded is needed
 
-### 为什么需要 OnLoaded
+In an Avalonia/WPF application, when a control's `IsVisible` or `Visibility` property changes:
+- `IsVisible = false` → trigger `OnUnloaded`
+- `IsVisible = true` → trigger `OnLoaded`
 
-在 Avalonia/WPF 应用中，当控件的 `IsVisible` 或 `Visibility` 属性改变时：
-- `IsVisible = false` → 触发 `OnUnloaded`
-- `IsVisible = true` → 触发 `OnLoaded`
+This is the right time to reinitialize.
 
-这是重新初始化的正确时机。
+## 📝 Best Practices
 
-## 📝 最佳实践
-
-### ✅ 正确的资源管理模式
-
-```csharp
+### ✅ Correct resource management model```csharp
 public class MyControl : UserControl
 {
     private Resource? _resource;
@@ -242,11 +219,7 @@ public class MyControl : UserControl
         _isInitialized = false;
     }
 }
-```
-
-### ❌ 常见错误
-
-```csharp
+```### ❌ Common mistakes```csharp
 // 错误 1：只在构造函数中初始化
 public MyControl()
 {
@@ -265,31 +238,28 @@ protected override void OnUnloaded(RoutedEventArgs e)
 {
     // ❌ 什么都不做，导致内存泄漏
 }
-```
+```## 🎉 Summary
 
-## 🎉 总结
+### V1 fix (before)
+- ✅ Added `OnUnloaded()` and `CleanupWebView()`
+- ✅ Fixed Windows ARM64 re-initialization failure issue
+- ❌ But there is no corresponding re-initialization mechanism
 
-### V1 修复（之前）
-- ✅ 添加了 `OnUnloaded()` 和 `CleanupWebView()`
-- ✅ 解决了 Windows ARM64 重新初始化失败问题
-- ❌ 但没有对应的重新初始化机制
+### V2 fix (this time)
+- ✅ Added `OnLoaded()` method
+- ✅ Detect `_isWebViewReady` status
+- ✅ Automatically reinitialize WebView
+- ✅ Complete life cycle management
 
-### V2 修复（本次）
-- ✅ 添加了 `OnLoaded()` 方法
-- ✅ 检测 `_isWebViewReady` 状态
-- ✅ 自动重新初始化 WebView
-- ✅ 完整的生命周期管理
-
-### 最终效果
-- ✅ 第一次启动：正常工作
-- ✅ 重复启动/停止：正常工作
-- ✅ 资源正确清理：无内存泄漏
-- ✅ 跨平台兼容：Windows/macOS/Linux
+### Final effect
+- ✅ First launch: working normally
+- ✅ Repeated start/stop: working normally
+- ✅ Resources are properly cleaned: no memory leaks
+- ✅ Cross-platform compatible: Windows/macOS/Linux
 
 ---
 
-**修复日期**: 2025-11-16  
-**版本**: V2  
-**文件**: Views/Controls/EmbeddedWebView.cs  
-**修复行数**: 522-532（OnLoaded 方法）
-
+**Repair Date**: 2025-11-16
+**Version**: V2
+**File**: Views/Controls/EmbeddedWebView.cs
+**Number of fixed lines**: 522-532 (OnLoaded method)
