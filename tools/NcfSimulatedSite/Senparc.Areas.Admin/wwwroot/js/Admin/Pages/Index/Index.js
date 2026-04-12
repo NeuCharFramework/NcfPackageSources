@@ -64,13 +64,26 @@ var app = new Vue({
         },
         grid: {
           top: 65,
-          left: 45,
-          right: 10,
-          bottom: 30
+          left: 48,
+          right: 12,
+          bottom: 56,
+          containLabel: true
         },
         xAxis: {
           type: 'category',
-          data: this.chartData.map(item => item.date)
+          data: this.chartData.map(item => item.date),
+          axisLabel: {
+            fontSize: 10,
+            interval: 0,
+            rotate: 32,
+            formatter: function (value) {
+              if (value && String(value).length === 8 && /^\d{8}$/.test(String(value))) {
+                var s = String(value);
+                return s.slice(0, 4) + '-' + s.slice(4, 6) + '-' + s.slice(6, 8);
+              }
+              return value;
+            }
+          }
         },
         yAxis: {
           type: 'value',

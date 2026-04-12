@@ -195,6 +195,7 @@
   <data name="Menu.Db.Agents 管理模块" xml:space="preserve"><value>Менеджер агентов</value></data>
   <data name="Menu.Db.Areas 基础模块" xml:space="preserve"><value>Базовый модуль Areas</value></data>
   <data name="Menu.Db.XNCF 模块管理核心" xml:space="preserve"><value>Менеджер модулей XNCF</value></data>
+  <data name="Menu.Db.XNCF 模块生成器" xml:space="preserve"><value>Генератор модулей XNCF</value></data>
   <data name="Menu.Db.系统核心模块" xml:space="preserve"><value>Модуль ядра системы</value></data>
   <data name="Menu.Db.权限管理" xml:space="preserve"><value>Управление разрешениями</value></data>
   <data name="Menu.Db.多租户" xml:space="preserve"><value>Мультитенантность</value></data>
@@ -211,6 +212,20 @@
   <data name="Menu.Db.NCF 安装程序" xml:space="preserve"><value>Установщик NCF</value></data>
   <data name="Menu.Db.设置/执行" xml:space="preserve"><value>Настройки/Выполнить</value></data>
   <data name="Menu.Db.超级管理员" xml:space="preserve"><value>Суперадминистратор</value></data>
+  <data name="Menu.Db.更新 NeuChar 云账户信息" xml:space="preserve"><value>Обновить облачную учётную запись NeuChar</value></data>
+  <data name="Menu.Db.使用 https://www.neuchar.com/Developer/Developer 页面中提供的 AppKey、Secret 信息，绑定 NeuChar 云账号，激活更多高级功能" xml:space="preserve"><value>Используйте AppKey и Secret со страницы разработчика NeuChar, чтобы привязать облачную учётную запись и включить расширенные возможности.</value></data>
+  <data name="Menu.Db.管理员登录" xml:space="preserve"><value>Вход администратора</value></data>
+  <data name="Menu.Db.测试当前管理员登录" xml:space="preserve"><value>Проверить текущий вход администратора</value></data>
+  <data name="Menu.Db.缓存测试" xml:space="preserve"><value>Тест кэша</value></data>
+  <data name="Menu.Db.测试当前缓存类型及分布式锁" xml:space="preserve"><value>Проверить тип кэша и распределённую блокировку</value></data>
+  <data name="Menu.Db.查看 XNCF 模型的 Function 状态" xml:space="preserve"><value>Состояние загрузки Function XNCF</value></data>
+  <data name="Menu.Db.查看当前 XNCF 的 Function 载入情况" xml:space="preserve"><value>Как загружаются Function текущего модуля XNCF</value></data>
+  <data name="Menu.Db.安装并开放 XNCF 模块" xml:space="preserve"><value>Установить и открыть модуль XNCF</value></data>
+  <data name="Menu.Db.安装指定 XNCF 模块，并将模块状态切换为【开放】" xml:space="preserve"><value>Установить указанный модуль XNCF и перевести в состояние «Открыт»</value></data>
+  <data name="Menu.Db.安装并开放 XNCF 模块（AI兼容）" xml:space="preserve"><value>Установить и открыть модуль XNCF (совместимость с ИИ)</value></data>
+  <data name="Menu.Db.AI 直接传入模块 UID 或名称关键字即可安装并开放模块，无需 SelectionList 结构" xml:space="preserve"><value>Установка и открытие по UID или ключевому слову без SelectionList (для ИИ)</value></data>
+  <data name="Menu.Db.获取全部 XNCF 模块信息" xml:space="preserve"><value>Получить сведения обо всех модулях XNCF</value></data>
+  <data name="Menu.Db.获取系统中全部 XNCF 模块名称和描述（含状态）" xml:space="preserve"><value>Имена и описания всех модулей XNCF (включая состояние)</value></data>
   <data name="AdminUserInfo.EditTitle.Edit" xml:space="preserve"><value>Редактирование администратора</value></data>
   <data name="AdminUserInfo.EditTitle.Add" xml:space="preserve"><value>Добавить администратора</value></data>
   <data name="AdminUserInfo.Username" xml:space="preserve"><value>Имя пользователя</value></data>

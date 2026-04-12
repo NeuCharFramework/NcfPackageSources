@@ -371,19 +371,28 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             }
 
             IEnumerable<KeyValuePair<ThreadInfo, Thread>> registeredThreadInfo = xncfRegister.RegisteredThreadInfo;
+            var areaItems = (xncfRegister as Ncf.Core.Areas.IAreaRegister)?.AreaPageMenuItems ?? new List<Ncf.Core.Areas.AreaPageMenuItem>();
             return Ok(new
             {
                 mustUpdate,
-                xncfModule,
+                xncfModule = ProjectXncfModuleForDetail(xncfModule),
                 xncfModuleUpdateLog,
                 xncfRegister = new
                 {
                     AreaHomeUrl = xncfRegister.GetAreaHomeUrl(),
-                    xncfRegister.MenuName,
+                    MenuName = LocalizeMenuDb(xncfRegister.MenuName),
                     xncfRegister.Icon,
                     xncfRegister.Version,
                     xncfRegister.Uid,
-                    areaPageMenuItems = (xncfRegister as Ncf.Core.Areas.IAreaRegister)?.AreaPageMenuItems ?? new List<Ncf.Core.Areas.AreaPageMenuItem>(),
+                    areaPageMenuItems = areaItems.Select(_ => new
+                    {
+                        _.Id,
+                        _.Url,
+                        Name = LocalizeMenuDb(_.Name),
+                        _.Icon,
+                        _.ParentId,
+                        _.MenuType
+                    }),
                     Interfaces = xncfRegister.GetType().GetInterfaces().Select(z => z.Name),
                     FunctionCount = functionParameterInfoCollection.Count,
                     registeredThreadInfo = xncfRegister.RegisteredThreadInfo.Select(z => new
@@ -407,8 +416,8 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 {
                     Key = new
                     {
-                        z.Key.name,
-                        z.Key.description
+                        name = LocalizeMenuDb(z.Key.name),
+                        description = LocalizeMenuDb(z.Key.description)
                     },
                     z.Value
                 }).OrderBy(z => z.Key.name),
@@ -448,6 +457,37 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             module.UpdateState(toState);
             await _xncfModuleService.SaveObjectAsync(module).ConfigureAwait(false);
             return Ok(true);
+        }
+
+        private string LocalizeMenuDb(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return text;
+            var localized = _localizer[$"Menu.Db.{text}"];
+            return localized.ResourceNotFound ? text : localized.Value;
+        }
+
+        private object ProjectXncfModuleForDetail(Ncf.Core.Models.DataBaseModel.XncfModule m)
+        {
+            return new
+            {
+                m.Id,
+                m.Name,
+                m.Uid,
+                MenuName = LocalizeMenuDb(m.MenuName),
+                m.Version,
+                Description = LocalizeMenuDb(m.Description),
+                m.UpdateLog,
+                m.AllowRemove,
+                m.MenuId,
+                m.Icon,
+                m.State,
+                m.AddTime,
+                m.Flag,
+                m.LastUpdateTime,
+                m.TenantId,
+                m.AdminRemark,
+                m.Remark
+            };
         }
     }
 

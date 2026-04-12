@@ -197,6 +197,7 @@
   <data name="Menu.Db.Agents 管理模块" xml:space="preserve"><value>Agents Manager</value></data>
   <data name="Menu.Db.Areas 基础模块" xml:space="preserve"><value>Areas Base Module</value></data>
   <data name="Menu.Db.XNCF 模块管理核心" xml:space="preserve"><value>XNCF Module Manager</value></data>
+  <data name="Menu.Db.XNCF 模块生成器" xml:space="preserve"><value>XNCF Module Generator</value></data>
   <data name="Menu.Db.系统核心模块" xml:space="preserve"><value>System Core Module</value></data>
   <data name="Menu.Db.权限管理" xml:space="preserve"><value>Permission Management</value></data>
   <data name="Menu.Db.多租户" xml:space="preserve"><value>Multi-Tenant</value></data>
@@ -213,6 +214,20 @@
   <data name="Menu.Db.NCF 安装程序" xml:space="preserve"><value>NCF Installer</value></data>
   <data name="Menu.Db.设置/执行" xml:space="preserve"><value>Settings/Execute</value></data>
   <data name="Menu.Db.超级管理员" xml:space="preserve"><value>Super Admin</value></data>
+  <data name="Menu.Db.更新 NeuChar 云账户信息" xml:space="preserve"><value>Update NeuChar cloud account</value></data>
+  <data name="Menu.Db.使用 https://www.neuchar.com/Developer/Developer 页面中提供的 AppKey、Secret 信息，绑定 NeuChar 云账号，激活更多高级功能" xml:space="preserve"><value>Use the AppKey and Secret from the NeuChar developer page to bind your cloud account and unlock advanced features.</value></data>
+  <data name="Menu.Db.管理员登录" xml:space="preserve"><value>Admin login</value></data>
+  <data name="Menu.Db.测试当前管理员登录" xml:space="preserve"><value>Test the current admin login</value></data>
+  <data name="Menu.Db.缓存测试" xml:space="preserve"><value>Cache test</value></data>
+  <data name="Menu.Db.测试当前缓存类型及分布式锁" xml:space="preserve"><value>Test current cache type and distributed lock</value></data>
+  <data name="Menu.Db.查看 XNCF 模型的 Function 状态" xml:space="preserve"><value>View XNCF Function load status</value></data>
+  <data name="Menu.Db.查看当前 XNCF 的 Function 载入情况" xml:space="preserve"><value>View how Functions are loaded for the current XNCF module</value></data>
+  <data name="Menu.Db.安装并开放 XNCF 模块" xml:space="preserve"><value>Install and open XNCF module</value></data>
+  <data name="Menu.Db.安装指定 XNCF 模块，并将模块状态切换为【开放】" xml:space="preserve"><value>Install the specified XNCF module and set its state to Open</value></data>
+  <data name="Menu.Db.安装并开放 XNCF 模块（AI兼容）" xml:space="preserve"><value>Install and open XNCF module (AI compatible)</value></data>
+  <data name="Menu.Db.AI 直接传入模块 UID 或名称关键字即可安装并开放模块，无需 SelectionList 结构" xml:space="preserve"><value>Install and open a module by UID or name keyword without SelectionList (AI-friendly)</value></data>
+  <data name="Menu.Db.获取全部 XNCF 模块信息" xml:space="preserve"><value>Get all XNCF module information</value></data>
+  <data name="Menu.Db.获取系统中全部 XNCF 模块名称和描述（含状态）" xml:space="preserve"><value>Get all XNCF module names and descriptions (including state)</value></data>
   <data name="AdminUserInfo.EditTitle.Edit" xml:space="preserve"><value>Edit Admin User</value></data>
   <data name="AdminUserInfo.EditTitle.Add" xml:space="preserve"><value>Add Admin User</value></data>
   <data name="AdminUserInfo.Username" xml:space="preserve"><value>Username</value></data>

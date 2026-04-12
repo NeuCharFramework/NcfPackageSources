@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Localization;
+using Senparc.Areas.Admin;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Service;
@@ -14,13 +16,15 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
     {
         private readonly SysMenuService _sysMenuService;
         private readonly SysButtonService _sysButtonService;
+        private readonly IStringLocalizer<AdminResource> _localizer;
 
-        public MenuEditModel(IServiceProvider serviceProvider, SysMenuService _sysMenuService, SysButtonService _sysButtonService)
+        public MenuEditModel(IServiceProvider serviceProvider, SysMenuService _sysMenuService, SysButtonService _sysButtonService, IStringLocalizer<AdminResource> localizer)
             : base(serviceProvider)
         {
             CurrentMenu = "Menu";
             this._sysMenuService = _sysMenuService;
             this._sysButtonService = _sysButtonService;
+            this._localizer = localizer;
         }
 
         [BindProperty(SupportsGet = true)]
@@ -55,17 +59,44 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 获取菜单
+        /// ??????
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> OnGetMenuAsync()
         {
-            //return Ok(await _sysMenuService.GetMenuDtoByCacheAsync(true));
-            return Ok(await _sysMenuService.GetMenuDtoByDbAsync());
+            var menus = await _sysMenuService.GetMenuDtoByDbAsync();
+            return Ok(menus.Select(m => new
+            {
+                m.Id,
+                m.MenuName,
+                localizedMenuName = LocalizeMenuDb(m.MenuName),
+                m.ParentId,
+                m.Url,
+                m.Icon,
+                m.Sort,
+                m.Visible,
+                m.ResourceCode,
+                m.IsLocked,
+                m.MenuType,
+                m.IsMenu,
+                m.Flag,
+                m.AdminRemark,
+                m.Remark,
+                m.AddTime,
+                m.LastUpdateTime,
+                m.TenantId
+            }));
+        }
+
+        private string LocalizeMenuDb(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return text;
+            var localized = _localizer[$"Menu.Db.{text}"];
+            return localized.ResourceNotFound ? text : localized.Value;
         }
 
         /// <summary>
-        /// 获取菜单下的按钮
+        /// ???????????
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> OnGetButtonsAsync(string menuId)
@@ -99,7 +130,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         {
             if (string.IsNullOrEmpty(sysMenu.MenuName))
             {
-                return Ok(false, "菜单名称不能为空");
+                return Ok(false, "?????????????");
             }
             var entity = await _sysMenuService.CreateOrUpdateAsync(sysMenu);
             return Ok(entity.Id);
@@ -109,7 +140,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         {
             if (!ModelState.IsValid)
             {
-                return Ok(false, "模型验证未通过");
+                return Ok(false, "???????????");
             }
 
             await _sysMenuService.CreateOrUpdateAsync(sysMenuDto);

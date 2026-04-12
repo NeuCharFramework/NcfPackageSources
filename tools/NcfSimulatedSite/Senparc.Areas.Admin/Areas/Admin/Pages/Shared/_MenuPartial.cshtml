@@ -8,6 +8,13 @@
 @{
     var sysMenuDtos = await _sysMenuService.GetMenuTreeDtoByCacheAsync();
 
+    string LocalizeMenuName(string menuName)
+    {
+        if (string.IsNullOrEmpty(menuName)) return menuName;
+        var localized = AR[$"Menu.Db.{menuName}"];
+        return localized.ResourceNotFound ? menuName : localized.Value;
+    }
+
     /// <summary>
     /// Check whether the current page is an XNCF module entry
     /// </summary>
@@ -93,7 +100,7 @@
                                 {
                                     <i class="@item.Icon"></i>
                                 }
-                                @item.MenuName
+                                @LocalizeMenuName(item.MenuName)
 
                             </a>
                         }
@@ -121,7 +128,7 @@
                                         xncfAreapage.AreaPageMenuItems.Count() > 0)
                                         {
                                             // This is an XNCF UI module menu with multiple menu configurations
-                                            <a><i class="@childrenItem.Icon"></i> @childrenItem.MenuName<span class="fa fa-chevron-down"></span></a>
+                                            <a><i class="@childrenItem.Icon"></i> @LocalizeMenuName(childrenItem.MenuName)<span class="fa fa-chevron-down"></span></a>
                                             <ul class="nav child_menu">
                                                 <li class="sub_menu @(hideXncfModuleManager?"":"xncf_area_submenu")">
                                                     <a href="@childrenItem.Url" class="@CurrentXncfPage(childrenItem.Url)">
@@ -137,7 +144,7 @@
                                                             {
                                                                 <i class="@xncfSubMenu.Icon"></i>
                                                             }
-                                                            @xncfSubMenu.Name
+                                                            @LocalizeMenuName(xncfSubMenu.Name)
                                                         </a>
                                                     </li>
                                                 }
@@ -151,7 +158,7 @@
                                                 {
                                                     <i class="@childrenItem.Icon"></i>
                                                 }
-                                                @childrenItem.MenuName
+                                                @LocalizeMenuName(childrenItem.MenuName)
                                             </a>
                                         }
                                     }
@@ -163,7 +170,7 @@
                                             {
                                                 <i class="@childrenItem.Icon"></i>
                                             }
-                                            @childrenItem.MenuName
+                                            @LocalizeMenuName(childrenItem.MenuName)
                                         </a>
                                     }
                                 </li>

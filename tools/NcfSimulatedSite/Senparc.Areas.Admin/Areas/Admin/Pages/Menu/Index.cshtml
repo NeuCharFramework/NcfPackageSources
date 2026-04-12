@@ -21,8 +21,11 @@
                   border
                   default-expand-all
                   :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
-            <el-table-column prop="menuName" align="left"
+            <el-table-column align="left"
                              label="@AR["Menu.名称"]">
+                <template slot-scope="scope">
+                    {{ scope.row.localizedMenuName || scope.row.menuName }}
+                </template>
             </el-table-column>
             <el-table-column prop="sort" align="center"
                              label="@AR["Common.排序"]"
@@ -71,7 +74,7 @@
                     <el-cascader v-model="dialog.data.parentId"
                                  :options="tableData"
                                  clearable
-                                 :props="{ checkStrictly: dialog.checkStrictly,label: 'menuName',value:'id'}">
+                                 :props="{ checkStrictly: dialog.checkStrictly,label: 'localizedMenuName',value:'id'}">
                     </el-cascader>
                 </el-form-item>
                 <el-form-item label="@AR["Common.排序"]">

@@ -134,7 +134,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                          from xncfRegister in xncfRegister_left.DefaultIfEmpty()
                          select new
                          {
-                             xncfModule,
+                             xncfModule = ProjectXncfModuleForList(xncfModule),
                              xncfRegister
                          };
             return Ok(new { result, FullSystemConfig.HideModuleManager });
@@ -154,7 +154,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 
             return Ok(newXncfRegisters.Select(z => new
             {
-                z.MenuName,
+                MenuName = LocalizeMenuName(z.MenuName),
                 z.Name,
                 z.Uid,
                 Version = _xncfModuleServiceEx.GetVersionDisplayName(oldXncfModules, z),
@@ -175,7 +175,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 
             return Ok(newXncfRegisters.Select(z => new
             {
-                z.MenuName,
+                MenuName = LocalizeMenuName(z.MenuName),
                 z.Name,
                 z.Uid,
                 Version = _xncfModuleServiceEx.GetVersionDisplayName(oldXncfModules, z),
@@ -248,6 +248,37 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 
             return new JsonResult(new { success, message });
 
+        }
+
+        private string LocalizeMenuName(string menuName)
+        {
+            if (string.IsNullOrEmpty(menuName)) return menuName;
+            var localized = _localizer[$"Menu.Db.{menuName}"];
+            return localized.ResourceNotFound ? menuName : localized.Value;
+        }
+
+        private object ProjectXncfModuleForList(XncfModule m)
+        {
+            return new
+            {
+                m.Id,
+                m.Name,
+                m.Uid,
+                MenuName = LocalizeMenuName(m.MenuName),
+                m.Version,
+                m.Description,
+                m.UpdateLog,
+                m.AllowRemove,
+                m.MenuId,
+                m.Icon,
+                m.State,
+                m.AddTime,
+                m.Flag,
+                m.LastUpdateTime,
+                m.TenantId,
+                m.AdminRemark,
+                m.Remark
+            };
         }
     }
 }

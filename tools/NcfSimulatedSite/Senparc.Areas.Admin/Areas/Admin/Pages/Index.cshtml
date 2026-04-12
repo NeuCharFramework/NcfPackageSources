@@ -200,12 +200,14 @@
 
         /* Chart container style */
         .charts-container {
-            height: 260px;
+            height: 300px;
+            min-height: 280px;
         }
 
-        /* Remove padding for card content area containing charts-container */
         .el-card__body .charts-container {
-            margin-bottom: -40px; /* Offset parent padding, enough whitespace at bottom */
+            margin-bottom: 0;
+            padding-bottom: 8px;
+            box-sizing: border-box;
         }
 
         /* Shake animation keyframes */
