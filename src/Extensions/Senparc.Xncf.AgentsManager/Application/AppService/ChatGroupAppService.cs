@@ -14,7 +14,9 @@ using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.AgentsManager.OHS.Local.PL;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
+using Senparc.Xncf.PromptRange.Domain.Models;
 using Senparc.Xncf.PromptRange.Domain.Services;
+using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 using System;
 using System.Collections.Generic;
@@ -31,6 +33,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         private readonly AIModelService _aIModelService;
         private readonly ChatTaskService _chatTaskService;
         private readonly PromptItemService _promptItemService;
+        private readonly PromptRangeService _promptRangeService;
 
         public ChatGroupAppService(IServiceProvider serviceProvider,
             ChatGroupService chatGroupService,
@@ -38,7 +41,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             AgentsTemplateService agentsTemplateService,
             AIModelService aIModelService,
             ChatTaskService chatTaskService,
-            PromptItemService promptItemService) : base(serviceProvider)
+            PromptItemService promptItemService,
+            PromptRangeService promptRangeService) : base(serviceProvider)
         {
             this._chatGroupService = chatGroupService;
             this._chatGroupMemeberService = chatGroupMemeberService;
@@ -46,6 +50,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             this._aIModelService = aIModelService;
             this._chatTaskService = chatTaskService;
             this._promptItemService = promptItemService;
+            this._promptRangeService = promptRangeService;
         }
 
         [FunctionRender("管理 ChatGroup", "管理 ChatGroup", typeof(Register))]
@@ -55,23 +60,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             {
                 var enabledAgents = await _agentsTemplateService.GetFullListAsync(z => z.Enable, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
 
-                // 群主：支持传 Agent ID、名称、PromptCode
-                var adminInput = request.Admin.SelectedValues.FirstOrDefault() ?? request.AdminNameOrId;
-                var adminResult = ResolveAgentId(enabledAgents, adminInput);
-                if (!adminResult.Success)
-                {
-                    return $"群主选择失败：{adminResult.ErrorMessage}";
-                }
-                var adminId = adminResult.AgentId;
-
-                // 对接人：支持传 Agent ID、名称、PromptCode
-                var enterInput = request.EnterAgent.SelectedValues.FirstOrDefault() ?? request.EnterAgentNameOrId;
-                var enterResult = ResolveAgentId(enabledAgents, enterInput);
-                if (!enterResult.Success)
-                {
-                    return $"对接人选择失败：{enterResult.ErrorMessage}";
-                }
-                var enterAgentId = enterResult.AgentId;
+                // 固定逻辑：群主和对接人优先使用“主持人”名称中评分最高的 Agent；不存在则自动创建。
+                var preferredHost = await EnsurePreferredHostAgentAsync(enabledAgents, logger);
+                var adminId = preferredHost.Id;
+                var enterAgentId = preferredHost.Id;
 
                 //TODO:封装到 Service 中
                 ChatGroup chatGroup = null;
@@ -144,6 +136,103 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 return logger.ToString();
             });
+        }
+
+        private async Task<AgentTemplate> EnsurePreferredHostAgentAsync(List<AgentTemplate> enabledAgents, AppServiceLogger logger)
+        {
+            var hostCandidates = enabledAgents
+                .Where(z => !string.IsNullOrWhiteSpace(z.Name)
+                            && z.Name.Contains("主持人", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            if (hostCandidates.Count > 0)
+            {
+                var scored = new List<(AgentTemplate Agent, float Score)>();
+                foreach (var candidate in hostCandidates)
+                {
+                    var score = await GetAgentScoreByPromptCodeAsync(candidate.PromptCode);
+                    scored.Add((candidate, score));
+                }
+
+                var selected = scored
+                    .OrderByDescending(z => z.Score)
+                    .ThenByDescending(z => z.Agent.Id)
+                    .First().Agent;
+
+                logger.Append($"已自动选择主持人 Agent：{selected.Name}(ID:{selected.Id})");
+                return selected;
+            }
+
+            var promptRange = await _promptRangeService.AddAsync("智能主持人");
+
+            var chatModel = await _aIModelService.GetObjectAsync(
+                z => z.Show && z.ConfigModelType == Senparc.Xncf.AIKernel.Domain.Models.ConfigModelType.Chat)
+                ?? await _aIModelService.GetObjectAsync(
+                    z => z.ConfigModelType == Senparc.Xncf.AIKernel.Domain.Models.ConfigModelType.Chat);
+
+            if (chatModel == null)
+            {
+                throw new NcfExceptionBase("未找到可用的 Chat 类型 AI 模型，无法自动创建主持人 Agent");
+            }
+
+            var promptItem = await _promptItemService.AddPromptItemAsync(new PromptItem_AddRequest
+            {
+                RangeId = promptRange.Id,
+                ModelId = chatModel.Id,
+                Content = "你是一个多智能体小组的主持人（群主）。职责：维护讨论秩序、拆解任务、分配发言顺序、在信息不足时追问澄清、在出现分歧时推动收敛，并输出清晰的阶段结论。你应保持中立、简洁、可执行，不直接替代成员完成专业内容。",
+                IsTopTactic = true,
+                IsNewTactic = false,
+                IsNewSubTactic = false,
+                IsNewAiming = false,
+                NumsOfResults = 0,
+                MaxToken = 3000,
+                Temperature = 0.4f,
+                TopP = 0.8f,
+                FrequencyPenalty = 0,
+                PresencePenalty = 0,
+                StopSequences = null,
+                IsDraft = true,
+                Note = "自动主持人",
+                ExpectedResultsJson = string.Empty,
+                Prefix = string.Empty,
+                Suffix = string.Empty,
+                VariableDictJson = string.Empty
+            });
+
+            var hostAgent = new AgentTemplate(
+                name: "智能主持人",
+                systemMessage: promptItem.FullVersion,
+                enable: true,
+                description: "系统自动创建的主持人 Agent（用于群主与对接人）",
+                promptCode: promptItem.FullVersion,
+                hookRobotType: HookRobotType.None,
+                hookRobotParameter: string.Empty,
+                avastar: null,
+                functionCallNames: null,
+                mcpEndpoints: null);
+
+            await _agentsTemplateService.SaveObjectAsync(hostAgent);
+
+            logger.Append($"未找到主持人 Agent，已自动创建：{hostAgent.Name}(ID:{hostAgent.Id})，PromptCode：{hostAgent.PromptCode}");
+            return hostAgent;
+        }
+
+        private async Task<float> GetAgentScoreByPromptCodeAsync(string promptCode)
+        {
+            if (string.IsNullOrWhiteSpace(promptCode))
+            {
+                return -1;
+            }
+
+            try
+            {
+                var promptItem = await _promptItemService.GetBestPromptAsync(promptCode, true);
+                return promptItem == null ? -1 : (float)promptItem.EvalAvgScore;
+            }
+            catch
+            {
+                return -1;
+            }
         }
 
         private static readonly Dictionary<string, string> AgentNameAliasMap =
@@ -235,32 +324,35 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 }
 
                 var aiModelSelected = request.AIModel.SelectedValues.FirstOrDefault();
-                var aiSetting = Senparc.AI.Config.SenparcAiSetting;
-                if (aiModelSelected != "Default")
+                var aiModelId = 0;
+
+                if (!string.IsNullOrWhiteSpace(aiModelSelected)
+                    && !string.Equals(aiModelSelected, "Default", StringComparison.OrdinalIgnoreCase)
+                    && int.TryParse(aiModelSelected, out var selectedModelId)
+                    && selectedModelId > 0)
                 {
-                    int.TryParse(aiModelSelected, out int aiModelId);
-                    var aiModel = await _aIModelService.GetObjectAsync(z => z.Id == aiModelId);
-                    if (aiModel == null)
-                    {
-                        throw new NcfExceptionBase($"当前选择的 AI 模型不存在：{aiModelSelected}");
-                    }
-
-                    var aiModelDto = _aIModelService.Mapper.Map<AIModelDto>(aiModel);
-
-                    aiSetting = _aIModelService.BuildSenparcAiSetting(aiModelDto);
+                    aiModelId = selectedModelId;
                 }
-
-                List<Task> tasks = new List<Task>();
 
                 foreach (var chatGroupId in request.ChatGroups.SelectedValues.Select(z => int.Parse(z)))
                 {
-                    var task =  _chatGroupService.RunChatGroup(logger, chatGroupId, request.Command, aiSetting, request.Individuation.IsSelected("1"));
-                    tasks.Add(task);
-                } 
+                    var runRequest = new ChatGroup_RunGroupRequest
+                    {
+                        Name = $"ChatGroup-{chatGroupId}-{DateTime.Now:yyyyMMddHHmmss}",
+                        ChatGroupId = chatGroupId,
+                        AiModelId = aiModelId,
+                        PromptCommand = request.Command,
+                        Description = "由 FunctionRender 启动",
+                        Personality = request.Individuation.IsSelected("1"),
+                        HookPlatform = HookPlatform.None,
+                        HookParameter = string.Empty,
+                        ChatMaxRound = ChatGroupService.ChatMaxRound
+                    };
 
-                Task.WaitAll(tasks.ToArray());
+                    await _chatGroupService.RunChatGroupInThread(runRequest);
+                }
 
-                return logger.ToString();
+                return "已创建并启动任务，请到 ChatTask 列表查看执行状态。";
             });
         }
 

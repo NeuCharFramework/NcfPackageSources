@@ -302,6 +302,28 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             var chatGroupService = services.GetService<ChatGroupService>();
 
             var chatGroup = await chatGroupService.GetObjectAsync(x => x.Id == groupId);
+
+            // 默认模型继承规则：未显式指定模型时，优先继承当前群主使用的 Prompt 模型。
+            if (aiModelId <= 0 && chatGroup != null)
+            {
+                var adminAgent = await agentTemplateService.GetObjectAsync(z => z.Id == chatGroup.AdminAgentTemplateId);
+                if (adminAgent != null && !adminAgent.PromptCode.IsNullOrEmpty())
+                {
+                    try
+                    {
+                        var adminPrompt = await promptItemService.GetBestPromptAsync(adminAgent.PromptCode, true);
+                        if (adminPrompt != null && adminPrompt.ModelId > 0)
+                        {
+                            aiModelId = adminPrompt.ModelId;
+                        }
+                    }
+                    catch
+                    {
+                        // 保持 aiModelId=0，继续走系统默认模型。
+                    }
+                }
+            }
+
             var chatGroupDto = chatGroupService.Mapping<ChatGroupDto>(chatGroup);
             var chatTaskDto = new ChatTaskDto(request.Name, groupId, aiModelId, ChatTask_Status.Waiting,
                 userCommand, request.Description, personality, request.HookPlatform, request.HookParameter, false,
