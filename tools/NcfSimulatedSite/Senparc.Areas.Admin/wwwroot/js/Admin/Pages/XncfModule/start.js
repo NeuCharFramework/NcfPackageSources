@@ -49,6 +49,20 @@
         this.getList();
     },
     methods: {
+        normalizeMultiValue(value) {
+            if (Array.isArray(value)) {
+                return value;
+            }
+
+            if (typeof value !== 'string' || value.length === 0) {
+                return [];
+            }
+
+            return value
+                .split(/[;,，；\n\r|]+/)
+                .map(item => item.trim())
+                .filter(item => item.length > 0);
+        },
         async  getList() {
             const uid = resizeUrl().uid;
             const res = await service.get(`/Admin/XncfModule/Start?handler=Detail&uid=${uid}`);
@@ -92,10 +106,10 @@
                 // 多选
                 if (res.parameterType === 2 && res.selectionList.items) {
                     this.runData[res.name] = {};
-                    this.runData[res.name].value = [];
+                    this.runData[res.name].value = this.normalizeMultiValue(res.value);
                     this.runData[res.name].item = res;
                     res.selectionList.items.map(ele => {
-                        if (ele.defaultSelected) {
+                        if (ele.defaultSelected && this.runData[res.name].value.indexOf(ele.value) < 0) {
                             this.runData[res.name].value.push(ele.value);
                         }
                     });
@@ -103,10 +117,10 @@
                 // 下拉框value
                 if (res.parameterType === 1 && res.selectionList.items) {
                     this.runData[res.name] = {};
-                    this.runData[res.name].value = '';
+                    this.runData[res.name].value = res.value || '';
                     this.runData[res.name].item = res;
                     res.selectionList.items.map(ele => {
-                        if (ele.defaultSelected) {
+                        if (!this.runData[res.name].value && ele.defaultSelected) {
                             this.runData[res.name].value = ele.value;
                         }
                     });
@@ -172,13 +186,10 @@
                             });
                             return;
                         } else {
-                            xncfFunctionParams[i] = {};
-                            xncfFunctionParams[i].SelectedValues = [];
-                            xncfFunctionParams[i].SelectedValues = this.runData[i].value;
-
+                            xncfFunctionParams[i] = this.runData[i].value;
                         }
                     }
-                    // 下拉框value为字符串，但接口要数组
+                    // 下拉框
                     if (this.runData[i].item.parameterType === 1) {
                         if (this.runData[i].item.isRequired && this.runData[i].value.length === 0) {
                             this.$notify({
@@ -188,9 +199,7 @@
                             });
                             return;
                         } else {
-                            xncfFunctionParams[i] = {};
-                            xncfFunctionParams[i].SelectedValues = [];
-                            xncfFunctionParams[i].SelectedValues[0] = this.runData[i].value;
+                            xncfFunctionParams[i] = this.runData[i].value;
                         }
                     }
                     // 输入框

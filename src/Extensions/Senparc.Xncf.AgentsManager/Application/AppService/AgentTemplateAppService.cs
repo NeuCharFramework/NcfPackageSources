@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Senparc.CO2NET.Extensions;
 
 
 namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
@@ -43,10 +44,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         [FunctionRender("Agent 模板管理", "Agent 模板管理", typeof(Register))]
         public async Task<StringAppResponse> AgentTemplateManage(AgentTemplate_ManageRequest request)
         {
+            Console.Write(request.ToJson(true));
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 SenparcAI_GetByVersionResponse promptResult;
-                var promptCode = await NormalizePromptCodeAsync(request.GetySystemMessagePromptCode());
+                var promptCode = await NormalizePromptCodeAsync(request.GetSystemMessagePromptCode());
 
                 try
                 {
@@ -63,7 +65,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 var agentTemplateDto = new AgentTemplateDto(request.Name, promptCode, true,
                     request.Description, promptCode,
-                    Enum.Parse<HookRobotType>(request.HookRobotType.SelectedValues.FirstOrDefault()), request.HookRobotParameter, request.FunctionCallNames);
+                    Enum.Parse<HookRobotType>(request.HookRobotType), request.HookRobotParameter, request.FunctionCallNames);
 
                 await this._agentsTemplateService.UpdateAgentTemplateAsync(request.Id, agentTemplateDto);
 
@@ -80,7 +82,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                var promptCode = await NormalizePromptCodeAsync(request.GetPromptCode());
+             try{
+            Console.Write(request.ToJson(true));
+                var promptCode = request.GetPromptCode();//await NormalizePromptCodeAsync(request.GetPromptCode());
 
                 if (string.IsNullOrEmpty(promptCode))
                 {
@@ -112,7 +116,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 logger.Append($"✅ 智能体「{request.Name}」创建成功！");
                 logger.Append($"使用的 PromptCode：{promptCode}");
+             }catch(Exception ex){
 
+logger.Append($"❌ 创建智能体失败：{ex.Message}");
+             }
                 return logger.ToString();
             });
         }
