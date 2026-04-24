@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using Senparc.Ncf.XncfBase.Functions.Parameters;
+using System.Text.Json.Serialization;
 
 namespace Senparc.Xncf.ChangeNamespace.OHS.PL
 {
@@ -30,7 +32,11 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.PL
         /// </summary>z
         [Required]
         [Description("源码来源||目前更新最快的是 GitHub，Gitee（码云）在国内下载速度更快，但是不能确定是最新代码，下载前请注意核对最新 GitHub 上的版本。")]
-        public SelectionList Site { get; set; } = new SelectionList(SelectionType.DropDownList, new[]
+        [FunctionParameterUi(ParameterType.DropDownList, nameof(SiteOptions))]
+        public string Site { get; set; }
+
+        [JsonIgnore]
+        public SelectionList SiteOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new[]
         {
                 new SelectionItem(Parameters_Site.GitHub.ToString(),Parameters_Site.GitHub.ToString()),
                 new SelectionItem(Parameters_Site.Gitee.ToString(),Parameters_Site.Gitee.ToString())

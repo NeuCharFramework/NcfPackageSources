@@ -69,7 +69,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 ChatGroup chatGroup = null;
                 var chatGroupDto = new ChatGroupDto(request.Name, true, ChatGroupState.Unstart, request.Description, adminId, enterAgentId);
                 var isNew = false;
-                if (request.ChatGroup.IsSelected("New"))
+                if (string.Equals(request.ChatGroup, "New", StringComparison.OrdinalIgnoreCase))
                 {
                     //新建
                     chatGroup = new ChatGroup(chatGroupDto);
@@ -77,7 +77,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 }
                 else
                 {
-                    int.TryParse(request.ChatGroup.SelectedValues.FirstOrDefault(), out int chatGroupId);
+                    int.TryParse(request.ChatGroup, out int chatGroupId);
                     chatGroup = await _chatGroupService.GetObjectAsync(z => z.Id == chatGroupId);
                     if (chatGroup == null)
                     {
@@ -94,7 +94,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 //添加成员
                 var memberList = new List<ChatGroupMember>();
                 var rawMemberInputs = new List<string>();
-                rawMemberInputs.AddRange(request.Members.SelectedValues.Where(z => !string.IsNullOrWhiteSpace(z)));
+                rawMemberInputs.AddRange((request.Members ?? Array.Empty<string>()).Where(z => !string.IsNullOrWhiteSpace(z)));
                 rawMemberInputs.AddRange(SplitInputs(request.MemberNamesOrIds));
 
                 var memberIdList = new List<int>();
@@ -318,12 +318,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 //群主
-                if (request.ChatGroups.SelectedValues.Count() == 0)
+                if ((request.ChatGroups?.Length ?? 0) == 0)
                 {
                     return "至少选择一个组！";
                 }
 
-                var aiModelSelected = request.AIModel.SelectedValues.FirstOrDefault();
+                var aiModelSelected = request.AIModel;
                 var aiModelId = 0;
 
                 if (!string.IsNullOrWhiteSpace(aiModelSelected)
@@ -334,7 +334,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     aiModelId = selectedModelId;
                 }
 
-                foreach (var chatGroupId in request.ChatGroups.SelectedValues.Select(z => int.Parse(z)))
+                foreach (var chatGroupId in request.ChatGroups.Select(z => int.Parse(z)))
                 {
                     var runRequest = new ChatGroup_RunGroupRequest
                     {
@@ -343,7 +343,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         AiModelId = aiModelId,
                         PromptCommand = request.Command,
                         Description = "由 FunctionRender 启动",
-                        Personality = request.Individuation.IsSelected("1"),
+                        Personality = request.Individuation,
                         HookPlatform = HookPlatform.None,
                         HookParameter = string.Empty,
                         ChatMaxRound = ChatGroupService.ChatMaxRound
@@ -722,7 +722,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                if (request.ChatGroups.SelectedValues.Count() == 0)
+                if ((request.ChatGroups?.Length ?? 0) == 0)
                 {
                     return "请选择要删除的对话！";
                 }
@@ -733,7 +733,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     return "请勾选\"确认删除\"复选框来确认删除操作！";
                 }
 
-                var chatGroupIdList = request.ChatGroups.SelectedValues
+                var chatGroupIdList = request.ChatGroups
                     .Where(z => int.TryParse(z, out _))
                     .Select(z => int.Parse(z))
                     .ToList();

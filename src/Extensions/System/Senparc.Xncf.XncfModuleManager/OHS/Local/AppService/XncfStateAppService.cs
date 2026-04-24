@@ -34,7 +34,7 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                var selectedRegisterUid = request.XncfModule.SelectedValues.FirstOrDefault();
+                var selectedRegisterUid = request.XncfModule;
                 var register = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == selectedRegisterUid);
                 if (register == null)
                 {
@@ -89,7 +89,7 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                var selectedRegisterUid = request.XncfModule.SelectedValues.FirstOrDefault();
+                var selectedRegisterUid = request.XncfModule;
                 if (string.IsNullOrWhiteSpace(selectedRegisterUid))
                 {
                     response.Data = logger.Append("请先选择需要安装的 XNCF 模块。");

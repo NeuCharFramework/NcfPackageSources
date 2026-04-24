@@ -129,7 +129,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 logger.Append(templateOutput);
                 var unInstallTemplatePackage = !templateOutput.Contains("Custom XNCF Module Template");
                 var installPackageCmd = string.Empty;
-                switch (request.TemplatePackage.SelectedValues.First())
+                switch (request.TemplatePackage)
                 {
                     case "online":
                         logger.Append("配置在线安装 XNCF 模板");
@@ -180,20 +180,21 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 }
 
                 var frameworkVersion = string.IsNullOrEmpty(request.OtherFrameworkVersion)
-                    ? request.FrameworkVersion.SelectedValues.First()
+                    ? request.FrameworkVersion
                     : request.OtherFrameworkVersion;
 
                 string xncfBaseVersion = getLibVersionParam("Senparc.Ncf.XncfBase.dll", "XncfBaseVersion");
                 string ncfAreaBaseVersion = getLibVersionParam("Senparc.Ncf.AreaBase.dll", "NcfAreaBaseVersion");
 
-                var isUseSample = request.UseSammple.SelectedValues.Contains("1");
-                var isUseDatabase = isUseSample || request.UseModule.SelectedValues.Contains("database");
+                var useModules = request.UseModule ?? Array.Empty<string>();
+                var isUseSample = request.UseSammple;
+                var isUseDatabase = isUseSample || useModules.Contains("database");
                 //var useSample = getBoolParam(isUseSample, "Sample");
-                var useFunction = request.UseModule.SelectedValues.Contains("function");
-                var isUseWeb = isUseSample || request.UseModule.SelectedValues.Contains("web");
+                var useFunction = useModules.Contains("function");
+                var isUseWeb = isUseSample || useModules.Contains("web");
                 //var useWeb = getBoolParam(isUseWeb, "Web");
                 //var useDatabase = getBoolParam(isUseDatabase, "Database");
-                var useWebApi = request.UseModule.SelectedValues.Contains("webapi");
+                var useWebApi = useModules.Contains("webapi");
 
                 //采用一个独立的进程
                 var args = new List<string>
@@ -349,7 +350,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 else if (File.Exists(request.SlnFilePath))
                 {
                     //是否创建新的 .sln 文件
-                    var useNewSlnFile = request.NewSlnFile.SelectedValues.Contains("new");
+                    var newSlnFileOptions = request.NewSlnFile ?? Array.Empty<string>();
+                    var useNewSlnFile = newSlnFileOptions.Contains("new");
 
                     var slnFileName = Path.GetFileName(request.SlnFilePath);
                     string newSlnFileName = slnFileName;
@@ -363,7 +365,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     }
                     else
                     {
-                        var backupSln = request.NewSlnFile.SelectedValues.Contains("backup");
+                        var backupSln = newSlnFileOptions.Contains("backup");
                         var backupFileName = $"{slnFileName}-backup-{SystemTime.Now.DateTime.ToString("yyyyMMdd_HHmmss")}.sln";
                         var backupFilePath = Path.Combine(Path.GetDirectoryName(request.SlnFilePath), backupFileName);
                         File.Copy(request.SlnFilePath, backupFilePath);
