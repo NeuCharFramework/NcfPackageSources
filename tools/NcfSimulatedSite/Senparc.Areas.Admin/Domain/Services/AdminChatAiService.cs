@@ -10,7 +10,6 @@ using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.XncfBase;
-using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using System;
 using System.Collections.Generic;
@@ -131,8 +130,6 @@ namespace Senparc.Areas.Admin.Domain.Services
                     {
                         try
                         {
-                            var functionParameters = await FunctionHelper.GetFunctionParameterInfoAsync(_serviceProvider, functionBag);
-
                             var options = new KernelFunctionFromMethodOptions
                             {
                                 FunctionName = functionBag.MethodInfo.Name,
@@ -141,8 +138,6 @@ namespace Senparc.Areas.Admin.Domain.Services
 
                             var kernelFunction = KernelFunctionFactory.CreateFromMethod(functionBag.MethodInfo, plugin, options);
                             kernelFunctions.Add(kernelFunction);
-                            importedFunctionSignatures.Add($"{pluginName}.{functionBag.MethodInfo.Name}({functionBag.FunctionRenderAttribute?.Description ?? "N/A"})");
-                            loadedFunctionDebugLines.AddRange(BuildFunctionDebugLines(pluginName, functionBag, functionParameters));
                         }
                         catch (Exception ex)
                         {
@@ -159,9 +154,11 @@ namespace Senparc.Areas.Admin.Domain.Services
                         continue;
                     }
 
-                    iWantToRun.Kernel.Plugins.AddFromFunctions(pluginName, kernelFunctions);
+                    var addedPlugin = iWantToRun.Kernel.Plugins.AddFromFunctions(pluginName, kernelFunctions);
+                    importedFunctionSignatures.AddRange(addedPlugin.Select(kernelFunction => $"{kernelFunction.Metadata.PluginName}.{kernelFunction.Metadata.Name}({kernelFunction.Metadata.Description ?? "N/A"})"));
+                    loadedFunctionDebugLines.AddRange(BuildKernelPluginDebugLines(addedPlugin));
                     importedPluginNames.Add(pluginName);
-                    importedFunctionCount += kernelFunctions.Count;
+                    importedFunctionCount += addedPlugin.Count();
                 }
                 catch (Exception ex)
                 {
@@ -254,13 +251,27 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
         }
 
-        private static List<string> BuildFunctionDebugLines(string pluginName, FunctionRenderBag functionBag, List<FunctionParameterInfo> functionParameters)
+        private static List<string> BuildKernelPluginDebugLines(KernelPlugin kernelPlugin)
         {
+            var lines = new List<string>();
+            foreach (var kernelFunction in kernelPlugin)
+            {
+                lines.AddRange(BuildKernelFunctionDebugLines(kernelFunction));
+            }
+
+            return lines;
+        }
+
+        private static List<string> BuildKernelFunctionDebugLines(KernelFunction kernelFunction)
+        {
+            var metadata = kernelFunction.Metadata;
+            var functionParameters = metadata.Parameters?.ToList() ?? new List<KernelParameterMetadata>();
             var lines = new List<string>
             {
-                $"- Function: {pluginName}.{functionBag.MethodInfo.Name}",
-                $"  Description: {functionBag.FunctionRenderAttribute?.Description ?? "(none)"}",
-                $"  RequestType: {functionBag.FunctionParameterType?.FullName ?? "(none)"}"
+                $"- Function: {metadata.PluginName}.{metadata.Name}",
+                $"  Description: {metadata.Description ?? "(none)"}",
+                $"  ReturnType: {metadata.ReturnParameter.ParameterType?.FullName ?? "(none)"}",
+                $"  ReturnSchema: {FormatSchema(metadata.ReturnParameter.Schema)}"
             };
 
             if (functionParameters == null || functionParameters.Count == 0)
@@ -272,29 +283,10 @@ namespace Senparc.Areas.Admin.Domain.Services
             lines.Add($"  Parameters: {functionParameters.Count}");
             foreach (var parameter in functionParameters)
             {
-                lines.Add($"    - {parameter.Name}: type={parameter.SystemType}, required={parameter.IsRequired}, ui={parameter.ParameterType}, title={FormatInlineValue(parameter.Title)}, description={FormatInlineValue(parameter.Description)}, default={FormatParameterValue(parameter.Value)}, maxLength={parameter.MaxLength}, filterable={parameter.Filterable}, allowCreate={parameter.AllowCreate}");
-
-                var selectionItems = parameter.SelectionList?.Items ?? new List<SelectionItem>();
-                if (selectionItems.Count == 0)
-                {
-                    continue;
-                }
-
-                lines.Add($"      Options({selectionItems.Count}): {string.Join(" | ", selectionItems.Select(item => FormatSelectionItem(parameter.SelectionList, item)))}");
+                lines.Add($"    - {parameter.Name}: type={parameter.ParameterType?.FullName ?? "(none)"}, required={parameter.IsRequired}, description={FormatInlineValue(parameter.Description)}, default={FormatParameterValue(parameter.DefaultValue)}, schema={FormatSchema(parameter.Schema)}");
             }
 
             return lines;
-        }
-
-        private static string FormatSelectionItem(SelectionList selectionList, SelectionItem item)
-        {
-            if (item == null)
-            {
-                return "(null)";
-            }
-
-            var currentSelected = selectionList?.IsSelected(item.Value) ?? false;
-            return $"text={FormatInlineValue(item.Text)}, value={FormatInlineValue(item.Value)}, defaultSelected={item.DefaultSelected}, currentSelected={currentSelected}, note={FormatInlineValue(item.Note)}";
         }
 
         private static string FormatParameterValue(object value)
@@ -315,6 +307,11 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
 
             return FormatInlineValue(value.ToString());
+        }
+
+        private static string FormatSchema(KernelJsonSchema schema)
+        {
+            return schema == null ? "(none)" : FormatInlineValue(schema.ToString());
         }
 
         private static string FormatInlineValue(string value)
