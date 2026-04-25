@@ -7,22 +7,22 @@ using System.Text.Json.Serialization;
 
 namespace Senparc.Xncf.SenMapic.OHS.Local.PL
 {
-     public class MyFunction_SenMapicRequest: FunctionAppRequestBase
-{
-    [Required]
-    [Description("网址||请输入要爬取的网址")]
-public string Url { get; set; }
+    public class MyFunction_SenMapicRequest : FunctionAppRequestBase
+    {
+        [Required]
+        [Description("网址||请输入要爬取的网址")]
+        public string Url { get; set; }
 
-[Required]
-[Description("深度||请输入最大要爬取的深度")]
-public int Deepth { get; set; }
+        [Required]
+        [Description("深度||请输入最大要爬取的深度")]
+        public int Deepth { get; set; }
 
-[Required]
-[Description("网页数量||请输入要爬取的最大数量")]
-public int PageNumber { get; set; }
+        [Required]
+        [Description("网页数量||请输入要爬取的最大数量")]
+        public int PageNumber { get; set; }
 
-}
-    public class MyFunction_CaculateRequest: FunctionAppRequestBase
+    }
+    public class MyFunction_CaculateRequest : FunctionAppRequestBase
     {
         [Required]
         [MaxLength(50)]
@@ -38,24 +38,24 @@ public int PageNumber { get; set; }
         [Description("数字||数字2")]
         public int Number2 { get; set; }
 
-        [Description("运算符||")]//下拉列表
-           [FunctionParameterUi(ParameterType.DropDownList, nameof(OperatorOptions))]
-           public string Operator { get; set; }
+        [Description("运算符||只能在以下选项中选择：+ - × ")]//下拉列表
+        [FunctionParameterUi(ParameterType.DropDownList, nameof(OperatorOptions))]
+        public string Operator { get; set; }
 
-           [JsonIgnore]
-           public SelectionList OperatorOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
-                 new SelectionItem("+","加法","数字1 + 数字2",false),
-                 new SelectionItem("-","减法","数字1 - 数字2",true),
+        [JsonIgnore]
+        public SelectionList OperatorOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
+                 new SelectionItem("+","加法","数字1 + 数字2",true),
+                 new SelectionItem("-","减法","数字1 - 数字2",false),
                  new SelectionItem("×","乘法","数字1 × 数字2",false),
                  new SelectionItem("÷","除法","数字1 ÷ 数字2",false)
             });
 
-        [Description("计算平方||")]//多选框
-           [FunctionParameterUi(ParameterType.CheckBoxList, nameof(PowerOptions))]
-           public string[] Power { get; set; }
+        [Description("计算平方||如果传入，只能在以下选项中选择：2 3")]//多选框
+        [FunctionParameterUi(ParameterType.CheckBoxList, nameof(PowerOptions))]
+        public string[] Power { get; set; }
 
-           [JsonIgnore]
-           public SelectionList PowerOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
+        [JsonIgnore]
+        public SelectionList PowerOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
                  new SelectionItem("2","平方","计算上述结果之后再计算平方",false),
                  new SelectionItem("3","三次方","计算上述结果之后再计算三次方",false)
             });

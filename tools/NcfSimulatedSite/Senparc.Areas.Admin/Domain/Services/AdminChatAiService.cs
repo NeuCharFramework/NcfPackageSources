@@ -10,6 +10,8 @@ using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.XncfBase;
+using Senparc.Ncf.XncfBase.Functions;
+using Senparc.Ncf.XncfBase.FunctionRenders;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -58,6 +60,8 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <returns>返回回复文本与模型标识。</returns>
         public async Task<(string response, string modelIdentifier)> GenerateResponseAsync(int sessionId, int userId, string userMessage)
         {
+            var showLoadedFunctionsInConsole = true;//是否输出 function 的 schema 信息到控制台，便于调试和验证 Function Calling 功能是否正确加载了函数
+
             var setting = Senparc.AI.Config.SenparcAiSetting as SenparcAiSetting;
             if (setting == null)
             {
@@ -106,6 +110,7 @@ namespace Senparc.Areas.Admin.Domain.Services
 
             var importedFunctionCount = 0;
             var importedFunctionSignatures = new List<string>();
+            var loadedFunctionDebugLines = new List<string>();
 
             foreach (var pluginGroup in functionPluginGroups)
             {
@@ -126,6 +131,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                     {
                         try
                         {
+                            var functionParameters = await FunctionHelper.GetFunctionParameterInfoAsync(_serviceProvider, functionBag);
+
                             var options = new KernelFunctionFromMethodOptions
                             {
                                 FunctionName = functionBag.MethodInfo.Name,
@@ -135,6 +142,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                             var kernelFunction = KernelFunctionFactory.CreateFromMethod(functionBag.MethodInfo, plugin, options);
                             kernelFunctions.Add(kernelFunction);
                             importedFunctionSignatures.Add($"{pluginName}.{functionBag.MethodInfo.Name}({functionBag.FunctionRenderAttribute?.Description ?? "N/A"})");
+                            loadedFunctionDebugLines.AddRange(BuildFunctionDebugLines(pluginName, functionBag, functionParameters));
                         }
                         catch (Exception ex)
                         {
@@ -169,6 +177,13 @@ namespace Senparc.Areas.Admin.Domain.Services
                     userId,
                     moduleUids.Count,
                     string.Join(",", moduleUids));
+            }
+            else
+            {
+                if (showLoadedFunctionsInConsole)
+                {
+                    WriteLoadedFunctionsToConsole(sessionId, userId, loadedFunctionDebugLines);
+                }
             }
 
             _logger.LogInformation(
@@ -223,6 +238,93 @@ namespace Senparc.Areas.Admin.Domain.Services
             var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(input ?? string.Empty));
             var hex = BitConverter.ToString(bytes).Replace("-", string.Empty).ToLower(CultureInfo.InvariantCulture);
             return hex.Length > length ? hex.Substring(0, length) : hex;
+        }
+
+        private static void WriteLoadedFunctionsToConsole(int sessionId, int userId, List<string> loadedFunctionDebugLines)
+        {
+            if (loadedFunctionDebugLines == null || loadedFunctionDebugLines.Count == 0)
+            {
+                return;
+            }
+
+            Console.WriteLine($"[AdminChat Functions] SessionId={sessionId}, UserId={userId}, LoadedFunctions={loadedFunctionDebugLines.Count(line => line.StartsWith("- Function:", StringComparison.Ordinal))}");
+            foreach (var line in loadedFunctionDebugLines)
+            {
+                Console.WriteLine(line);
+            }
+        }
+
+        private static List<string> BuildFunctionDebugLines(string pluginName, FunctionRenderBag functionBag, List<FunctionParameterInfo> functionParameters)
+        {
+            var lines = new List<string>
+            {
+                $"- Function: {pluginName}.{functionBag.MethodInfo.Name}",
+                $"  Description: {functionBag.FunctionRenderAttribute?.Description ?? "(none)"}",
+                $"  RequestType: {functionBag.FunctionParameterType?.FullName ?? "(none)"}"
+            };
+
+            if (functionParameters == null || functionParameters.Count == 0)
+            {
+                lines.Add("  Parameters: (none)");
+                return lines;
+            }
+
+            lines.Add($"  Parameters: {functionParameters.Count}");
+            foreach (var parameter in functionParameters)
+            {
+                lines.Add($"    - {parameter.Name}: type={parameter.SystemType}, required={parameter.IsRequired}, ui={parameter.ParameterType}, title={FormatInlineValue(parameter.Title)}, description={FormatInlineValue(parameter.Description)}, default={FormatParameterValue(parameter.Value)}, maxLength={parameter.MaxLength}, filterable={parameter.Filterable}, allowCreate={parameter.AllowCreate}");
+
+                var selectionItems = parameter.SelectionList?.Items ?? new List<SelectionItem>();
+                if (selectionItems.Count == 0)
+                {
+                    continue;
+                }
+
+                lines.Add($"      Options({selectionItems.Count}): {string.Join(" | ", selectionItems.Select(item => FormatSelectionItem(parameter.SelectionList, item)))}");
+            }
+
+            return lines;
+        }
+
+        private static string FormatSelectionItem(SelectionList selectionList, SelectionItem item)
+        {
+            if (item == null)
+            {
+                return "(null)";
+            }
+
+            var currentSelected = selectionList?.IsSelected(item.Value) ?? false;
+            return $"text={FormatInlineValue(item.Text)}, value={FormatInlineValue(item.Value)}, defaultSelected={item.DefaultSelected}, currentSelected={currentSelected}, note={FormatInlineValue(item.Note)}";
+        }
+
+        private static string FormatParameterValue(object value)
+        {
+            if (value == null)
+            {
+                return "(null)";
+            }
+
+            if (value is string stringValue)
+            {
+                return FormatInlineValue(stringValue);
+            }
+
+            if (value is IEnumerable<string> stringValues)
+            {
+                return $"[{string.Join(", ", stringValues.Select(FormatInlineValue))}]";
+            }
+
+            return FormatInlineValue(value.ToString());
+        }
+
+        private static string FormatInlineValue(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return "(empty)";
+            }
+
+            return value.Replace("\r", " ").Replace("\n", " ").Trim();
         }
 
         private static string BuildSystemMessage(List<AdminChatSessionModule> modules)
