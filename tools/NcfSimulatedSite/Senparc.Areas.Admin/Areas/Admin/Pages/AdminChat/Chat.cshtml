@@ -70,6 +70,24 @@
                             <i class="fa fa-magic"></i> {{ currentSessionTitle || 'AI 智能助手' }}
                         </h3>
                         <div class="chat-header-actions">
+                            <el-select
+                                v-model="currentSessionAiModelId"
+                                size="mini"
+                                class="chat-ai-model-select"
+                                :loading="loadingAiModelOptions"
+                                @@change="handleCurrentSessionAiModelChange"
+                                placeholder="选择 AI 算力">
+                                <el-option
+                                    v-for="item in aiModelOptions"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                    <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;">
+                                        <span>{{ item.name }}</span>
+                                        <span style="color:#999;font-size:12px;">{{ item.description }}</span>
+                                    </div>
+                                </el-option>
+                            </el-select>
                             <el-button
                                 size="mini"
                                 :type="isManageMode ? 'default' : 'primary'"
@@ -259,6 +277,29 @@
                         </div>
 
                         <div class="chat-entrance-input-wrapper">
+                            <div class="chat-module-picker" style="margin-bottom:16px;">
+                                <div class="chat-module-picker-header">
+                                    <span class="chat-module-picker-title">AI 算力</span>
+                                </div>
+                                <el-select
+                                    v-model="launcherAiModelId"
+                                    class="chat-ai-model-select"
+                                    :loading="loadingAiModelOptions"
+                                    placeholder="选择 AI 算力"
+                                    style="width:100%;">
+                                    <el-option
+                                        v-for="item in aiModelOptions"
+                                        :key="`launcher-${item.id}`"
+                                        :label="item.name"
+                                        :value="item.id">
+                                        <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;">
+                                            <span>{{ item.name }}</span>
+                                            <span style="color:#999;font-size:12px;">{{ item.description }}</span>
+                                        </div>
+                                    </el-option>
+                                </el-select>
+                            </div>
+
                             <el-input
                                 type="textarea"
                                 v-model="chatInputText"
