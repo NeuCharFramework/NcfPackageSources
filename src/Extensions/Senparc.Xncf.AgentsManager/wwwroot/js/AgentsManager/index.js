@@ -383,6 +383,7 @@ var app = new Vue({
       functionCallInputValue: '',
       functionCallTags: [], // 用于编辑时临时存储标签
       pluginTypes: [], // 存储所有可用的插件类型
+      agentAutoAttachXncf: false, // 是否自动附加所有 XNCF 功能插件
       // MCP Endpoints相关
       mcpEndpointInputVisible: false,
       mcpEndpointNameValue: '',
@@ -1913,6 +1914,7 @@ var app = new Vue({
             this.functionCallTags = []
             this.functionCallInputVisible = false
             this.functionCallInputValue = ''
+            this.agentAutoAttachXncf = false
           }
         })
         .catch(_ => { });
@@ -3310,13 +3312,35 @@ var app = new Vue({
 
     // 删除 Function Call 标签
     handleFunctionCallClose(tag) {
-      const currentNames = this.agentForm.functionCallNames.split(',').filter(x => x);
+      const currentNames = this.getFunctionCallNamesList();
       const index = currentNames.indexOf(tag);
       if (index > -1) {
         currentNames.splice(index, 1);
         this.agentForm.functionCallNames = currentNames.join(',');
       }
       this.functionCallTags = currentNames;
+    },
+
+    // 获取当前 functionCallNames 的数组形式
+    getFunctionCallNamesList() {
+      return this.agentForm.functionCallNames
+        ? this.agentForm.functionCallNames.split(',').filter(x => x)
+        : [];
+    },
+
+    // 自动附加所有 XNCF 功能插件
+    handleAutoAttachXncfChange(val) {
+      if (val) {
+        // 开启时：将所有可用插件类型合并到 functionCallNames
+        const currentNames = this.getFunctionCallNamesList();
+        const allNames = [...new Set([...currentNames, ...this.pluginTypes])];
+        this.agentForm.functionCallNames = allNames.join(',');
+      } else {
+        // 关闭时：移除所有自动添加的插件类型（保留用户手动添加的）
+        const currentNames = this.getFunctionCallNamesList();
+        const manualNames = currentNames.filter(name => !this.pluginTypes.includes(name));
+        this.agentForm.functionCallNames = manualNames.join(',');
+      }
     },
     
     // 测试MCP Endpoint连接

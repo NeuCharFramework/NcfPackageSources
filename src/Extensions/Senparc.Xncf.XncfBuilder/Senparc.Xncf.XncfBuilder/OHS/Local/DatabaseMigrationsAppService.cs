@@ -43,7 +43,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                if (request.DatabaseTypes.SelectedValues.Count() == 0)
+                var databaseTypes = request.DatabaseTypes ?? Array.Empty<string>();
+                if (databaseTypes.Length == 0)
                 {
                     response.Success = false;
                     response.Data = "至少选择 1 个数据库！";
@@ -63,10 +64,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 commandTexts.Add(@$"cd ""{projectPath}""");
 
                 //执行迁移
-                foreach (var dbType in request.DatabaseTypes.SelectedValues)
+                foreach (var dbType in databaseTypes)
                 {
                     string migrationDir = GetMigrationDir(request, dbType);
-                    var outputVerbose = request.OutputVerbose.SelectedValues.Contains("1") ? " -v" : "";
+                    var outputVerbose = request.OutputVerbose ? " -v" : "";
 
                     //数据库上下文实体名称
                     var dbContextName = request.DbContextName;
@@ -166,7 +167,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         logger.Append("");
                         logger.Append("==== 版本号更新 ====");
 
-                        var updateVesionType = request.UpdateVersion.SelectedValues.FirstOrDefault();
+                        var updateVesionType = request.UpdateVersion;
                         if (updateVesionType != "0")
                         {
                             var registerFile = Path.Combine(projectPath, "Register.cs");

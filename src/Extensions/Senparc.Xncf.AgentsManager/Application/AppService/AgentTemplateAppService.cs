@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.Timeouts;
+using Microsoft.AspNetCore.Http.Timeouts;
 using Microsoft.AspNetCore.Mvc;
 using ModelContextProtocol.Client;
 using Senparc.CO2NET;
@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Senparc.CO2NET.Extensions;
 
 
 namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
@@ -43,10 +44,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         [FunctionRender("Agent 模板管理", "Agent 模板管理", typeof(Register))]
         public async Task<StringAppResponse> AgentTemplateManage(AgentTemplate_ManageRequest request)
         {
+            Console.Write(request.ToJson(true));
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 SenparcAI_GetByVersionResponse promptResult;
-                var promptCode = request.GetySystemMessagePromptCode();
+                var promptCode = await NormalizePromptCodeAsync(request.GetSystemMessagePromptCode());
 
                 try
                 {
@@ -63,7 +65,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 var agentTemplateDto = new AgentTemplateDto(request.Name, promptCode, true,
                     request.Description, promptCode,
-                    Enum.Parse<HookRobotType>(request.HookRobotType.SelectedValues.FirstOrDefault()), request.HookRobotParameter, request.FunctionCallNames);
+                    Enum.Parse<HookRobotType>(request.HookRobotType), request.HookRobotParameter, request.FunctionCallNames);
 
                 await this._agentsTemplateService.UpdateAgentTemplateAsync(request.Id, agentTemplateDto);
 
@@ -74,6 +76,145 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             });
         }
 
+//[ApiBind]
+        [FunctionRender("从 PromptCode 快速创建智能体", "根据 PromptCode 快速创建智能体。支持靶场级别（如：RangeName）、靶道级别（如：RangeName-T1）、完整定位（如：RangeName-T1-A1）", typeof(Register))]
+        public async Task<StringAppResponse> CreateAgentFromPromptCode(AgentTemplate_CreateFromPromptCodeRequest request)
+        {
+            return await this.GetStringResponseAsync(async (response, logger) =>
+            {
+             try{
+            Console.Write(request.ToJson(true));
+                var promptCode = request.GetPromptCode();//await NormalizePromptCodeAsync(request.GetPromptCode());
+
+                if (string.IsNullOrEmpty(promptCode))
+                {
+                    return "请选择或手动输入 PromptCode";
+                }
+
+                if (string.IsNullOrEmpty(request.Name))
+                {
+                    return "请输入智能体名称";
+                }
+
+                // 检查是否已有使用该 PromptCode 前缀的智能体
+                var existingAgents = await this._agentsTemplateService.GetObjectListAsync(0, 0,
+                    z => z.PromptCode != null && z.PromptCode.StartsWith(promptCode),
+                    z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
+
+                if (existingAgents.TotalCount > 0)
+                {
+                    var existingNames = string.Join("、", existingAgents.Select(z => z.Name));
+                    logger.Append($"⚠️ 注意：当前 PromptCode（{promptCode}）已有 {existingAgents.TotalCount} 个智能体使用：{existingNames}");
+                    logger.Append("已继续创建新智能体。");
+                }
+
+                var agentTemplateDto = new AgentTemplateDto(request.Name, promptCode, true,
+                    request.Description ?? "", promptCode,
+                    HookRobotType.None, "", null, request.FunctionCallNames);
+
+                await this._agentsTemplateService.UpdateAgentTemplateAsync(0, agentTemplateDto);
+
+                logger.Append($"✅ 智能体「{request.Name}」创建成功！");
+                logger.Append($"使用的 PromptCode：{promptCode}");
+             }catch(Exception ex){
+
+logger.Append($"❌ 创建智能体失败：{ex.Message}");
+             }
+                return logger.ToString();
+            });
+        }
+
+        [FunctionRender("搜索 Agent 模板并返回 ID", "根据名称或 PromptCode 搜索最匹配的 AgentTemplate，并返回可选 ID。支持多个关键词。", typeof(Register))]
+        public async Task<StringAppResponse> FindAgentTemplate(AgentTemplate_FindByNameRequest request)
+        {
+            return await this.GetStringResponseAsync(async (response, logger) =>
+            {
+                if (string.IsNullOrWhiteSpace(request.Query))
+                {
+                    return "请输入搜索词（名称、PromptCode 或关键字）";
+                }
+
+                var topN = request.TopN <= 0 ? 5 : Math.Min(request.TopN, 20);
+                var aliasMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    ["提示词优化器"] = "PromptCatalyzer",
+                    ["优化器"] = "PromptCatalyzer"
+                };
+
+                var keywords = request.Query
+                    .Split(new[] { ',', '，', ';', '；', '\n', '\r', '|' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(z => z.Trim())
+                    .Where(z => !string.IsNullOrWhiteSpace(z))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+
+                if (keywords.Count == 0)
+                {
+                    return "请输入有效搜索词";
+                }
+
+                var enabledAgents = await _agentsTemplateService.GetFullListAsync(z => z.Enable, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
+
+                foreach (var keywordRaw in keywords)
+                {
+                    var keyword = aliasMap.TryGetValue(keywordRaw, out var alias) ? alias : keywordRaw;
+                    var exact = enabledAgents
+                        .Where(z => string.Equals(z.Name, keyword, StringComparison.OrdinalIgnoreCase)
+                            || string.Equals(z.PromptCode, keyword, StringComparison.OrdinalIgnoreCase))
+                        .OrderByDescending(z => z.Id)
+                        .ToList();
+
+                    var fuzzy = enabledAgents
+                        .Where(z =>
+                            (!string.IsNullOrWhiteSpace(z.Name) && z.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase))
+                            || (!string.IsNullOrWhiteSpace(z.PromptCode) && z.PromptCode.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
+                        .OrderByDescending(z => z.Id)
+                        .ToList();
+
+                    var candidates = exact.Count > 0
+                        ? exact
+                        : fuzzy;
+
+                    logger.Append($"关键词：{keywordRaw}");
+                    if (candidates.Count == 0)
+                    {
+                        logger.Append("  未找到可用 AgentTemplate");
+                        continue;
+                    }
+
+                    foreach (var c in candidates.Take(topN))
+                    {
+                        logger.Append($"  ID={c.Id} | 名称={c.Name} | PromptCode={c.PromptCode}");
+                    }
+                }
+
+                return logger.ToString();
+            });
+        }
+
+        /// <summary>
+        /// 将靶场别称开头的 PromptCode 归一化为 RangeName 开头，避免把 Alias 存入 SystemMessage。
+        /// </summary>
+        private async Task<string> NormalizePromptCodeAsync(string promptCode)
+        {
+            if (string.IsNullOrWhiteSpace(promptCode))
+            {
+                return promptCode;
+            }
+
+            var normalizedPromptCode = promptCode.Trim();
+            var splitIndex = normalizedPromptCode.IndexOf('-');
+            var rangePrefix = splitIndex >= 0 ? normalizedPromptCode.Substring(0, splitIndex) : normalizedPromptCode;
+            var suffix = splitIndex >= 0 ? normalizedPromptCode.Substring(splitIndex) : string.Empty;
+
+            var promptRange = await _promptRangeService.GetObjectAsync(z => z.RangeName == rangePrefix || z.Alias == rangePrefix);
+            if (promptRange == null || string.IsNullOrWhiteSpace(promptRange.RangeName))
+            {
+                return normalizedPromptCode;
+            }
+
+            return promptRange.RangeName + suffix;
+        }
 
         /// <summary>
         /// 获取 AgentTemplate 的列表
@@ -312,6 +453,32 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             return await this.GetResponseAsync<string>(async (response, logger) =>
             {
                 var result = await DeleteInternalAsync(ids, logger);
+                return result;
+            });
+        }
+
+/// <summary>
+        /// 根据 PromptCode 前缀获取匹配的 AgentTemplate 列表
+        /// </summary>
+        /// <param name="promptCode">PromptCode（支持前缀匹配，如"RangeName"、"RangeName-T1"、"RangeName-T1-A1"）</param>
+        /// <returns></returns>
+        [ApiBind]
+        public async Task<AppResponseBase<List<AgentTemplateSimpleStatusDto>>> GetListByPromptCode(string promptCode)
+        {
+            return await this.GetResponseAsync<List<AgentTemplateSimpleStatusDto>>(async (response, logger) =>
+            {
+                if (string.IsNullOrEmpty(promptCode))
+                {
+                    return new List<AgentTemplateSimpleStatusDto>();
+                }
+
+                var list = await this._agentsTemplateService.GetObjectListAsync(0, 0,
+                    z => z.PromptCode != null && z.PromptCode.StartsWith(promptCode),
+                    z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
+
+                var result = list.Select(z =>
+                    _agentsTemplateService.Mapping<AgentTemplateSimpleStatusDto>(z)).ToList();
+
                 return result;
             });
         }

@@ -176,6 +176,7 @@ var app = new Vue({
             map3dNodeMap: new Map(), // 节点映射，用于快速查找
             map3dLastAnimationTime: 0, // 上次动画更新时间（用于节流）
             map3dCurrentNodes: [], // 缓存当前选中的节点（性能优化）
+            _map3dKeydownHandler: null, // 键盘事件处理器
             // 靶场
             fieldFormVisible: false,
             fieldFormSubmitLoading: false,
@@ -325,6 +326,17 @@ var app = new Vue({
             comparePromptBId: null,       // 对比的Prompt B的ID
             comparePromptA: null,         // 对比的Prompt A的完整数据
             comparePromptB: null,         // 对比的Prompt B的完整数据
+            // 快速创建智能体
+            createAgentDialogVisible: false,  // 创建智能体对话框显示状态
+            createAgentLoading: false,         // 创建中加载状态
+            createAgentForm: {
+                name: '',          // 智能体名称
+                scopeType: 'full', // 覆盖范围: 'range'=靶场级别, 'tactic'=靶道级别, 'full'=完整定位
+                promptCode: '',    // 最终使用的 PromptCode
+                description: '',   // 说明
+                functionCallNames: '' // Function Calls
+            },
+            createAgentExistingList: [], // 当前 PromptCode 下已有的智能体列表
             // 自定义滚动条缩略图
             showScrollbarThumbnails: false,
             scrollInfo: {
@@ -340,6 +352,27 @@ var app = new Vue({
         isPageLoading() {
             let result = this.tacticalFormSubmitLoading || this.modelFormSubmitLoading || this.aiScoreFormSubmitLoading || this.targetShootLoading || this.dodgersLoading
             return result
+        },
+        
+        // 计算创建智能体时使用的 PromptCode（根据范围选择）
+        createAgentPromptCode() {
+            if (!this.promptDetail || !this.promptDetail.fullVersion) {
+                return ''
+            }
+            const fullVersion = this.promptDetail.fullVersion
+            const parts = fullVersion.split('-')
+            const rangeName = parts[0] || ''
+            const tacticPart = parts[1] || ''
+            
+            switch (this.createAgentForm.scopeType) {
+                case 'range':
+                    return rangeName
+                case 'tactic':
+                    return tacticPart ? `${rangeName}-${tacticPart}` : rangeName
+                case 'full':
+                default:
+                    return fullVersion
+            }
         },
         
         // 获取可选择的Prompt列表（用于对比对话框）
@@ -2886,6 +2919,119 @@ var app = new Vue({
             }
         },
         
+        // 打开创建智能体对话框
+        openCreateAgentDialog() {
+            if (!this.promptField) {
+                this.$message({
+                    message: '请先选择靶场',
+                    type: 'warning'
+                })
+                return
+            }
+            if (!this.promptid || !this.promptDetail || !this.promptDetail.fullVersion) {
+                this.$message({
+                    message: '请先选择靶道以确定 PromptCode',
+                    type: 'warning'
+                })
+                return
+            }
+            // 重置表单
+            this.createAgentForm = {
+                name: this.promptDetail.nickName || this.promptDetail.fullVersion,
+                scopeType: 'full',
+                promptCode: '',
+                description: '',
+                functionCallNames: ''
+            }
+            this.createAgentExistingList = []
+            this.createAgentDialogVisible = true
+            // 检查是否已有智能体使用该 PromptCode
+            this.$nextTick(() => {
+                this.checkExistingAgentsByPromptCode()
+            })
+        },
+
+        // 切换 PromptCode 范围时重新检查
+        onCreateAgentScopeChange() {
+            this.checkExistingAgentsByPromptCode()
+        },
+
+        // 检查当前 PromptCode 下已有的智能体
+        async checkExistingAgentsByPromptCode() {
+            const promptCode = this.createAgentPromptCode
+            if (!promptCode) return
+            try {
+                const res = await servicePR.get(
+                    `/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetListByPromptCode?promptCode=${encodeURIComponent(promptCode)}`
+                )
+                if (res.data && res.data.success) {
+                    this.createAgentExistingList = res.data.data || []
+                }
+            } catch (e) {
+                // 忽略错误（AgentsManager 模块可能未安装）
+                console.warn('检查智能体时出错（请确认 AgentsManager 模块已安装）:', e)
+                this.createAgentExistingList = []
+            }
+        },
+
+        // 提交创建智能体
+        async submitCreateAgent() {
+            if (!this.createAgentForm.name) {
+                this.$message({ message: '请输入智能体名称', type: 'warning' })
+                return
+            }
+            const promptCode = this.createAgentPromptCode
+            if (!promptCode) {
+                this.$message({ message: '无效的 PromptCode', type: 'error' })
+                return
+            }
+
+            // 如果已有智能体，需确认
+            if (this.createAgentExistingList.length > 0) {
+                try {
+                    await this.$confirm(
+                        `当前 PromptCode（${promptCode}）已有 ${this.createAgentExistingList.length} 个智能体使用。是否继续创建新智能体？`,
+                        '确认创建',
+                        { confirmButtonText: '继续创建', cancelButtonText: '取消', type: 'warning' }
+                    )
+                } catch {
+                    return
+                }
+            }
+
+            this.createAgentLoading = true
+            try {
+                const agentData = {
+                    id: 0,
+                    name: this.createAgentForm.name,
+                    systemMessage: promptCode,
+                    promptCode: promptCode,
+                    enable: true,
+                    description: this.createAgentForm.description || '',
+                    hookRobotType: 0,
+                    hookRobotParameter: '',
+                    avastar: '/images/AgentsManager/avatar/avatar1.png',
+                    functionCallNames: this.createAgentForm.functionCallNames || '',
+                    mcpEndpoints: ''
+                }
+                const res = await servicePR.post(
+                    '/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.SetItem',
+                    agentData
+                )
+                if (res.data && res.data.success) {
+                    this.$message({ message: `智能体「${this.createAgentForm.name}」创建成功！`, type: 'success' })
+                    this.createAgentDialogVisible = false
+                } else {
+                    this.$message({ message: '创建失败：' + (res.data?.msg || '未知错误'), type: 'error' })
+                }
+            } catch (e) {
+                console.error('创建智能体失败:', e)
+                this.$message({ message: '创建失败，请确认 AgentsManager 模块已安装', type: 'error' })
+            } finally {
+                this.createAgentLoading = false
+            }
+        },
+
         // 打开导图对话框
         openMapDialog() {
             if (!this.promptField) {
@@ -2915,8 +3061,141 @@ var app = new Vue({
         // 关闭导图对话框
         mapDialogClose() {
             this.destroyMap3D()
+            // 退出全屏（如果全屏状态）
+            if (document.fullscreenElement) {
+                document.exitFullscreen()
+            }
         },
-        
+
+        // 重置 3D 视角到初始位置
+        resetMap3DView() {
+            if (!this.map3dCamera || !this.map3dControls) return
+            this.map3dCamera.position.set(30, 30, 50)
+            this.map3dControls.target.set(0, 0, 0)
+            this.map3dControls.update()
+            this.map3dNeedsAnimationUpdate = true
+        },
+
+        // 适应视图：将所有节点都纳入视野
+        fitMap3DView() {
+            if (!this.map3dCamera || !this.map3dControls || !this.map3dNodes || this.map3dNodes.length === 0) return
+            // 计算所有节点的包围盒中心
+            let minX = Infinity, maxX = -Infinity
+            let minY = Infinity, maxY = -Infinity
+            let minZ = Infinity, maxZ = -Infinity
+            this.map3dNodes.forEach(node => {
+                if (node.position) {
+                    minX = Math.min(minX, node.position.x)
+                    maxX = Math.max(maxX, node.position.x)
+                    minY = Math.min(minY, node.position.y)
+                    maxY = Math.max(maxY, node.position.y)
+                    minZ = Math.min(minZ, node.position.z)
+                    maxZ = Math.max(maxZ, node.position.z)
+                }
+            })
+            const centerX = (minX + maxX) / 2
+            const centerY = (minY + maxY) / 2
+            const centerZ = (minZ + maxZ) / 2
+            const size = Math.max(maxX - minX, maxY - minY, maxZ - minZ)
+            const distance = size * 1.5 + 50
+            this.map3dCamera.position.set(centerX + distance * 0.4, centerY + distance * 0.4, centerZ + distance)
+            this.map3dControls.target.set(centerX, centerY, centerZ)
+            this.map3dControls.update()
+            this.map3dNeedsAnimationUpdate = true
+        },
+
+        // 切换全屏模式
+        toggleMap3DFullscreen() {
+            const container = document.getElementById('map3dContainer')
+            if (!container) return
+            if (!document.fullscreenElement) {
+                container.requestFullscreen().catch(e => {
+                    console.warn('全屏请求失败:', e)
+                })
+            } else {
+                document.exitFullscreen()
+            }
+        },
+
+        // 注册 3D 键盘快捷键
+        registerMap3DKeyboard() {
+            if (this._map3dKeydownHandler) return
+            const SPEED = 3
+            this._map3dKeydownHandler = (e) => {
+                if (!this.mapDialogVisible || !this.map3dCamera) return
+                if (e.ctrlKey || e.metaKey || e.altKey) return
+
+                // 优先使用物理键位（e.code）避免中文输入法/非英文布局下 e.key 不稳定导致快捷键失效
+                const key = (e.key || '').toLowerCase()
+                const code = e.code || ''
+                let actionKey = key
+
+                if (code.startsWith('Key') && code.length === 4) {
+                    actionKey = code.slice(3).toLowerCase()
+                } else if (code === 'NumpadAdd') {
+                    actionKey = '+'
+                } else if (code === 'NumpadSubtract') {
+                    actionKey = '-'
+                } else if (code === 'Equal' && (key === '' || key === 'unidentified' || key === 'process')) {
+                    actionKey = '='
+                } else if (code === 'Minus' && (key === '' || key === 'unidentified' || key === 'process')) {
+                    actionKey = '-'
+                }
+
+                const hasControls = !!(this.map3dControls && this.map3dControls.target)
+                const moveBy = (x, y, z) => {
+                    this.map3dCamera.position.x += x
+                    this.map3dCamera.position.y += y
+                    this.map3dCamera.position.z += z
+                    if (hasControls) {
+                        this.map3dControls.target.x += x
+                        this.map3dControls.target.y += y
+                        this.map3dControls.target.z += z
+                    }
+                }
+
+                let moved = false
+                // WASD + QE 平移
+                switch (actionKey) {
+                    case 'w': moveBy(0, SPEED, 0); moved = true; break
+                    case 's': moveBy(0, -SPEED, 0); moved = true; break
+                    case 'a': moveBy(-SPEED, 0, 0); moved = true; break
+                    case 'd': moveBy(SPEED, 0, 0); moved = true; break
+                    case 'q': moveBy(0, 0, SPEED); moved = true; break
+                    case 'e': moveBy(0, 0, -SPEED); moved = true; break
+                    case 'r': this.resetMap3DView(); moved = true; break
+                    case 'f': this.fitMap3DView(); moved = true; break
+                    case '+':
+                    case '=': this.map3dCamera.position.z -= SPEED * 2; moved = true; break
+                    case '-': this.map3dCamera.position.z += SPEED * 2; moved = true; break
+                }
+                if (moved) {
+                    if (this.map3dControls) {
+                        this.map3dControls.update()
+                    }
+                    this.map3dNeedsAnimationUpdate = true
+                    console.debug('[Map3D Keyboard] key:', actionKey, {
+                        rawKey: e.key,
+                        code: e.code,
+                        camera: {
+                            x: this.map3dCamera.position.x,
+                            y: this.map3dCamera.position.y,
+                            z: this.map3dCamera.position.z
+                        },
+                        target: hasControls ? {
+                            x: this.map3dControls.target.x,
+                            y: this.map3dControls.target.y,
+                            z: this.map3dControls.target.z
+                        } : null
+                    })
+                    e.preventDefault()
+                    e.stopPropagation()
+                }
+            }
+            window.addEventListener('keydown', this._map3dKeydownHandler, true)
+            console.debug('[Map3D Keyboard] shortcut listener registered')
+        },
+
         // 初始化 3D 导图
         initMap3D() {
             const container = document.getElementById('map3dContainer')
@@ -3031,6 +3310,14 @@ var app = new Vue({
             
             // 处理窗口大小变化
             window.addEventListener('resize', this.handleMap3DResize)
+
+            // 注册键盘快捷键
+            this.registerMap3DKeyboard()
+
+            // 自动适应视图（延迟一点等节点渲染完成）
+            this.$nextTick(() => {
+                setTimeout(() => this.fitMap3DView(), 200)
+            })
         },
         
         // 构建树状结构数据
@@ -5288,6 +5575,12 @@ var app = new Vue({
             // 跟踪是否需要渲染
             let needsRender = false
             
+            // 检查外部触发的渲染请求（如键盘操作、重置视角等）
+            if (this.map3dNeedsAnimationUpdate) {
+                needsRender = true
+                this.map3dNeedsAnimationUpdate = false
+            }
+            
             // 更新控制器（启用阻尼时需要每帧更新）
             if (this.map3dControls) {
                 // update() 返回 true 表示相机位置发生了变化
@@ -5688,6 +5981,12 @@ var app = new Vue({
         // 销毁 3D 场景
         destroyMap3D() {
             window.removeEventListener('resize', this.handleMap3DResize)
+            
+            // 移除键盘事件处理器
+            if (this._map3dKeydownHandler) {
+                window.removeEventListener('keydown', this._map3dKeydownHandler, true)
+                this._map3dKeydownHandler = null
+            }
             
             // 移除点击事件
             if (this.map3dRenderer && this.map3dRenderer.domElement && this.map3dClickHandler) {

@@ -83,7 +83,7 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
                   */
 
                 double calcResult = request.Number1;
-                var theOperator = request.Operator.SelectedValues.FirstOrDefault();
+                var theOperator = request.Operator;
                 switch (theOperator)
                 {
                     case "+":
@@ -114,7 +114,7 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
 
                 Action<int> raisePower = power =>
                 {
-                    if (request.Power.SelectedValues.Contains(power.ToString()))
+                    if ((request.Power ?? Array.Empty<string>()).Contains(power.ToString()))
                     {
                         var oldValue = calcResult;
                         calcResult = Math.Pow(calcResult, power);

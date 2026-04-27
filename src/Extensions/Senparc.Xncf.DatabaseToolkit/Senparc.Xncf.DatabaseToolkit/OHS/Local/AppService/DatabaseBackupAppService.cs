@@ -41,11 +41,12 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                 try
                 {
                     var path = request.Path;
+                    var options = request.Options ?? Array.Empty<string>();
 
                     if (File.Exists(path))
                     {
                         var copyPath = path + ".last.bak";
-                        if (request.Options.SelectedValues.Contains($"{(int)BackupDatabaseOptions.如果文件存在则不覆盖}"))
+                        if (options.Contains($"{(int)BackupDatabaseOptions.如果文件存在则不覆盖}"))
                         {
                             logger.Append("检测到同名文件，停止覆盖。地址：" + copyPath);
                             return response.Data = logger.Append("检测到同名文件，停止覆盖！");
@@ -73,7 +74,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                         logger.Append("执行完毕，备份结束。affectRows：" + affectRows);
                     }
 
-                    if (request.Options.SelectedValues.Contains($"{(int)BackupDatabaseOptions.校验备份成功}"))
+                    if (options.Contains($"{(int)BackupDatabaseOptions.校验备份成功}"))
                     {
                         logger.Append("检查备份文件：" + path);
                         if (File.Exists(path))

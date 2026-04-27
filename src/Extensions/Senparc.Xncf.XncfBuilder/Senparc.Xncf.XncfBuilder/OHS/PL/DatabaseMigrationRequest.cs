@@ -3,6 +3,7 @@ using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Service;
+using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.XncfBuilder.Domain.Models.Services;
@@ -14,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace Senparc.Xncf.XncfBuilder.OHS.PL
 {
@@ -25,14 +27,22 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         public string DatabasePlantPath { get; set; }
 
         [Description("XNCF 项目路径||选择 XNCF 项目根目录的完整物理路径")]
-        public SelectionList ProjectPath { get; set; } = new SelectionList(SelectionType.DropDownList);
+        [FunctionParameterUi(ParameterType.DropDownList, nameof(ProjectPathOptions))]
+        public string ProjectPath { get; set; }
+
+        [JsonIgnore]
+        public SelectionList ProjectPathOptions { get; set; } = new SelectionList(SelectionType.DropDownList);
 
         [MaxLength(250)]
         [Description("自定义 XNCF 项目路径||仅当“XNCF 项目路径”选择“自定义路径”时有效。输入 XNCF 项目根目录的完整物理路径，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\MyDemo.Xncf.NewApp\\")]
         public string CustomProjectPath { get; set; }
 
         [Description("生成数据库类型||更多类型陆续添加中")]
-        public SelectionList DatabaseTypes { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
+        [FunctionParameterUi(ParameterType.CheckBoxList, nameof(DatabaseTypeOptions))]
+        public string[] DatabaseTypes { get; set; }
+
+        [JsonIgnore]
+        public SelectionList DatabaseTypeOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
                  new SelectionItem(MultipleDatabaseType.Sqlite.ToString(),MultipleDatabaseType.Sqlite.ToString(),"",true),
                  new SelectionItem(MultipleDatabaseType.SqlServer.ToString(),MultipleDatabaseType.SqlServer.ToString(),"",true),
                  new SelectionItem(MultipleDatabaseType.MySql.ToString(),MultipleDatabaseType.MySql.ToString(),"",true),
@@ -53,7 +63,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
 
         [Description("自动更新版本号||自动更新 Register.cs 中的版本号")]
-        public SelectionList UpdateVersion { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
+        [FunctionParameterUi(ParameterType.DropDownList, nameof(UpdateVersionOptions))]
+        public string UpdateVersion { get; set; }
+
+        [JsonIgnore]
+        public SelectionList UpdateVersionOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
                  new SelectionItem("0","不更新","",true),
                  new SelectionItem("1","主版本号（Major） + 1","",false),
                  new SelectionItem("2","次版本号（Minor） + 1","",false),
@@ -62,7 +76,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
 
         [Description("输出详细日志||使用 add-migration 的 -v 参数")]
-        public SelectionList OutputVerbose { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
+    [FunctionParameterUi(ParameterType.CheckBoxList, nameof(OutputVerboseOptions))]
+    public bool OutputVerbose { get; set; }
+
+    [JsonIgnore]
+    public SelectionList OutputVerboseOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
                  new SelectionItem("1","使用","",false)
             });
 
@@ -77,7 +95,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             {
                 //TODO:单独生成一个表来记录
 
-                this.ProjectPath.Items.Add(new SelectionItem("N/A", "自定义路径", "", true));
+                this.ProjectPathOptions.Items.Add(new SelectionItem("N/A", "自定义路径", "", true));
 
                 //添加“停机坪”路径
                 var configService = serviceProvider.GetService<ConfigService>();
@@ -91,13 +109,13 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
                     //添加当前解决方案的项目选项
                     var projectList = FunctionHelper.LoadXncfProjects(false, null, "Senparc.Areas.Admin");
-                    projectList.OrderBy(z=>z.Value).ToList().ForEach(z => ProjectPath.Items.Add(z));
+                    projectList.OrderBy(z=>z.Value).ToList().ForEach(z => ProjectPathOptions.Items.Add(z));
 
                     //添加 NcfPackageSource 项目的解决方案的项目选项
                     var sourceRootDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..", "..", "..", "src");
                     Console.WriteLine("查找 Source 项目源文件根目录：" + sourceRootDir);
                     var sourceProjectList = FunctionHelper.LoadXncfProjects(false, sourceRootDir, "Senparc.Areas.Admin");
-                    sourceProjectList.OrderBy(z => z.Value).ToList().ForEach(z => ProjectPath.Items.Add(z));
+                    sourceProjectList.OrderBy(z => z.Value).ToList().ForEach(z => ProjectPathOptions.Items.Add(z));
                 }
             }
             catch
@@ -114,7 +132,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         /// <exception cref="NcfExceptionBase"></exception>
         public string GetProjectPath(DatabaseMigrations_MigrationRequest request)
         {
-            var projectPath = request.ProjectPath.SelectedValues.FirstOrDefault();
+            var projectPath = request.ProjectPath;
             if (projectPath == "N/A")
             {
                 projectPath = request.CustomProjectPath;

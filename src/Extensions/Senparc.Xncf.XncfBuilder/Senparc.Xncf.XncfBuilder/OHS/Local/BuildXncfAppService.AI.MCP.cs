@@ -69,35 +69,20 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 MenuName = menuName,
                 Icon = icon,
                 Description = description,
-                UseSammple = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
-                new Ncf.XncfBase.Functions.SelectionItem("1","使用示例","使用示例",true),
-              }),
-                UseModule = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
-                new Ncf.XncfBase.Functions.SelectionItem("database","数据库","使用数据库",true),
-              }),
+                                UseSammple = true,
+                                UseModule = new[] { "database" },
                 //   UseWeb = new Ncf.XncfBase.Functions.SelectionList( Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
                 //     new Ncf.XncfBase.Functions.SelectionItem("1","使用Web","使用Web",true),
                 //   }),
                 //   UseWebApi = new Ncf.XncfBase.Functions.SelectionList( Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
                 //     new Ncf.XncfBase.Functions.SelectionItem("1","使用WebApi","使用WebApi",true),
                 //   }),
-                NewSlnFile = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
-                new Ncf.XncfBase.Functions.SelectionItem("backup","备份 .sln 文件（推荐）","如果使用覆盖现有 .sln 文件，对当前文件进行备份",true),
-              }),
-                TemplatePackage = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.DropDownList, new[] {
-                new Ncf.XncfBase.Functions.SelectionItem("no","已安装，不需要安装新版本","请确保已经在本地安装过版本（无论新旧），否则将自动从在线获取",true),
-              }),
-                FrameworkVersion = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.DropDownList, new[] {
-                new Ncf.XncfBase.Functions.SelectionItem("net8.0","net8.0","使用 .NET 8.0",false),
-              })
+                                NewSlnFile = new[] { "backup" },
+                                TemplatePackage = "no",
+                                FrameworkVersion = "net8.0"
             };
 
             request.SlnFilePath = request.GetSlnFilePath();
-            request.UseSammple.SelectedValues = new[] { "1" };
-            request.UseModule.SelectedValues = new[] { "database" };
-            request.NewSlnFile.SelectedValues = new[] { "backup" };
-            request.TemplatePackage.SelectedValues = new[] { "no" };
-            request.FrameworkVersion.SelectedValues = new[] { "net8.0" };
 
             Console.WriteLine("XNCF Builder parameters:" + request.ToJson(true));
 

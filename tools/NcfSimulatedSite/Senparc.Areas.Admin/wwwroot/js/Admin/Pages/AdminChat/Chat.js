@@ -6,6 +6,10 @@ var chatApp = new Vue({
       currentSessionId: 0,
       currentSessionTitle: '',
       currentSessionModules: [],
+      currentSessionAiModelId: 0,
+      aiModelOptions: [],
+      aiKernelAvailable: false,
+      loadingAiModelOptions: false,
       sessionList: [],
       messageList: [],
       inputMessage: '',
@@ -34,6 +38,10 @@ var chatApp = new Vue({
       }
     }
 
+    this.currentSessionAiModelId = this.getSessionAiModelId(this.currentSessionId);
+    this.launcherAiModelId = this.currentSessionAiModelId;
+
+    this.loadAiModelOptions();
     this.loadSessionList();
     
     if (this.currentSessionId > 0) {
@@ -41,6 +49,30 @@ var chatApp = new Vue({
     }
   },
   methods: {
+    async loadAiModelOptions() {
+      this.loadingAiModelOptions = true;
+      try {
+        const response = await service.get('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetAiModelOptionsAsync');
+
+        if (response.data && response.data.success && response.data.data) {
+          this.aiKernelAvailable = !!response.data.data.aiKernelAvailable;
+          this.aiModelOptions = response.data.data.models || [];
+        } else {
+          this.aiModelOptions = [{ id: 0, name: '系统级 SenparcAiSetting', description: '使用 appsettings.json 中当前生效的默认 Chat 配置', isDefault: true }];
+        }
+      } catch (error) {
+        console.error('加载 AI 模型失败:', error);
+        this.aiModelOptions = [{ id: 0, name: '系统级 SenparcAiSetting', description: '使用 appsettings.json 中当前生效的默认 Chat 配置', isDefault: true }];
+      } finally {
+        this.loadingAiModelOptions = false;
+      }
+    },
+
+    handleCurrentSessionAiModelChange(value) {
+      this.currentSessionAiModelId = this.normalizeAiModelId(value);
+      this.setSessionAiModelId(this.currentSessionId, this.currentSessionAiModelId);
+    },
+
     handleChatInputKeydown(event) {
       // 保持与首页一致：Ctrl+Enter (Windows/Linux) 或 Cmd+Enter (Mac) 发送。
       if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
@@ -80,6 +112,7 @@ var chatApp = new Vue({
           this.currentSessionTitle = session.title;
           this.messageList = session.messages || [];
           this.currentSessionModules = session.modules || [];
+          this.currentSessionAiModelId = this.getSessionAiModelId(this.currentSessionId);
           this.clearMessageSelection();
           this.isManageMode = false;
           
@@ -131,6 +164,7 @@ var chatApp = new Vue({
       try {
         const requestData = {
           sessionId: this.currentSessionId,
+          aiModelId: this.normalizeAiModelId(this.currentSessionAiModelId),
           content: messageContent
         };
 
@@ -194,6 +228,7 @@ var chatApp = new Vue({
       if (this.currentSessionId === sessionId) return;
 
       this.currentSessionId = sessionId;
+      this.currentSessionAiModelId = this.getSessionAiModelId(sessionId);
       this.messageList = [];
       this.currentSessionModules = [];
       this.clearMessageSelection();
@@ -202,6 +237,7 @@ var chatApp = new Vue({
     },
 
     async createNewSession() {
+      this.launcherAiModelId = this.currentSessionAiModelId || this.launcherAiModelId || 0;
       this.currentSessionId = 0;
       this.currentSessionTitle = '';
       this.currentSessionModules = [];

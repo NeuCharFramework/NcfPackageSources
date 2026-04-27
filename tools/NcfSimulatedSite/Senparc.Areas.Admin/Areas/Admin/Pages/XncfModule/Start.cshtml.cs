@@ -185,7 +185,8 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             switch (paramCount)
             {
                 case 1:
-                    var requestPara = SerializerHelper.GetObject(executeFuncParamDto2.XncfFunctionParams, functionParameterType) as IAppRequest;
+                    var normalizedJson = FunctionRequestParameterNormalizer.NormalizeJson(executeFuncParamDto2.XncfFunctionParams, functionParameterType);
+                    var requestPara = SerializerHelper.GetObject(normalizedJson, functionParameterType) as IAppRequest;
                     paras = new[] { requestPara };
                     break;
                 case 0:
