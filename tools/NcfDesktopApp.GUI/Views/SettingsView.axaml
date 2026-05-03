@@ -192,6 +192,22 @@
                                                   FontSize="12"/>
                                 </StackPanel>
                             </StackPanel>
+
+                            <Separator Margin="0,8"/>
+
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="备用服务器地址:" 
+                                          FontWeight="SemiBold"
+                                          FontSize="12"/>
+                                <TextBox Text="{Binding MirrorServerBaseUrl}"
+                                         Watermark="https://www.ncf.pub"
+                                         FontSize="12"
+                                         FontFamily="Consolas,Menlo,Monaco,Courier New"/>
+                                <TextBlock Text="GitHub 不可用时，从此地址拼接 /NcfPackages/latest-release.json 获取版本元数据与安装包链接。修改后自动保存到配置目录中的 desktop-user-settings.json。"
+                                          FontSize="11"
+                                          Foreground="{DynamicResource SecondaryTextBrush}"
+                                          TextWrapping="Wrap"/>
+                            </StackPanel>
                         </StackPanel>
                     </Border>
 

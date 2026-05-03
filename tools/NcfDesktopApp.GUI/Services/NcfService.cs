@@ -29,6 +29,21 @@ public class NcfService
     public static string AppDataPath { get; private set; } = string.Empty;
     public static string DownloadsPath { get; private set; } = string.Empty;
     public static string NcfRuntimePath { get; private set; } = string.Empty;
+
+    /// <summary>
+    /// 备用更新源站点根地址（默认 https://www.ncf.pub）。元数据地址为 {此属性}/NcfPackages/latest-release.json。
+    /// 可由用户在设置中修改，并通过 desktop-user-settings.json 持久化。
+    /// </summary>
+    public string MirrorServerBaseUrl { get; set; } = DesktopUserSettings.DefaultMirrorServerBaseUrl;
+
+    /// <summary>
+    /// 备用元数据 latest-release.json 的完整 URL。
+    /// </summary>
+    public string GetMirrorMetadataUrl()
+    {
+        var b = DesktopSettingsStore.NormalizeMirrorServerBase(MirrorServerBaseUrl);
+        return $"{b}/NcfPackages/latest-release.json";
+    }
     
     // 🆕 配置文件冲突处理回调
     // 参数: fileName, oldContent, newContent
@@ -74,23 +89,52 @@ public class NcfService
     
     public async Task<GitHubRelease?> GetLatestReleaseAsync(CancellationToken cancellationToken = default)
     {
+        _httpClient.DefaultRequestHeaders.Clear();
+        _httpClient.DefaultRequestHeaders.Add("User-Agent", "NCF-Desktop-App");
+
+        var fromGitHub = await TryGetLatestReleaseFromGitHubAsync(cancellationToken).ConfigureAwait(false);
+        if (fromGitHub != null)
+        {
+            return fromGitHub;
+        }
+
+        var mirrorUrl = GetMirrorMetadataUrl();
+        _logger?.LogWarning("GitHub API 不可用，尝试备用元数据地址: {Mirror}", mirrorUrl);
+        return await TryGetLatestReleaseFromMirrorAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<GitHubRelease?> TryGetLatestReleaseFromGitHubAsync(CancellationToken cancellationToken)
+    {
         try
         {
-            _logger?.LogInformation("获取最新版本信息...");
-            
-            _httpClient.DefaultRequestHeaders.Clear();
-            _httpClient.DefaultRequestHeaders.Add("User-Agent", "NCF-Desktop-App");
-            
-            var response = await _httpClient.GetStringAsync("https://api.github.com/repos/NeuCharFramework/NCF/releases/latest", cancellationToken);
-            
+            _logger?.LogInformation("从 GitHub 获取最新版本信息...");
+            var response = await _httpClient.GetStringAsync("https://api.github.com/repos/NeuCharFramework/NCF/releases/latest", cancellationToken).ConfigureAwait(false);
             var release = JsonSerializer.Deserialize<GitHubRelease>(response);
-            _logger?.LogInformation($"获取到最新版本: {release?.TagName}");
-            
+            _logger?.LogInformation("获取到最新版本(GitHub): {Tag}", release?.TagName);
             return release;
         }
         catch (Exception ex)
         {
-            _logger?.LogError(ex, "获取最新版本失败");
+            _logger?.LogDebug(ex, "从 GitHub 获取 latest 失败");
+            return null;
+        }
+    }
+
+    private async Task<GitHubRelease?> TryGetLatestReleaseFromMirrorAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            var url = GetMirrorMetadataUrl();
+            _logger?.LogInformation("从备用源获取版本元数据: {Url}", url);
+            var json = await _httpClient.GetStringAsync(url, cancellationToken).ConfigureAwait(false);
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var release = JsonSerializer.Deserialize<GitHubRelease>(json, options);
+            _logger?.LogInformation("获取到最新版本(备用源): {Tag}", release?.TagName);
+            return release;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "从备用源获取最新版本失败");
             return null;
         }
     }
@@ -974,6 +1018,19 @@ public class NcfService
         try
         {
             using var response = await _httpClient.GetAsync("https://api.github.com/repos/NeuCharFramework/NCF/releases/latest");
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+        }
+        catch
+        {
+            // 继续尝试备用源
+        }
+
+        try
+        {
+            using var response = await _httpClient.GetAsync(GetMirrorMetadataUrl());
             return response.IsSuccessStatusCode;
         }
         catch

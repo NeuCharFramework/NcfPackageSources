@@ -74,6 +74,10 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private int _endPort = 5300;
 
+    /// <summary>备用更新源站点根地址，持久化至 AppData/desktop-user-settings.json</summary>
+    [ObservableProperty]
+    private string _mirrorServerBaseUrl = DesktopUserSettings.DefaultMirrorServerBaseUrl;
+
     [ObservableProperty]
     private string _mainButtonText = "启动 NCF";
 
@@ -149,12 +153,32 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         OpenInExternalBrowserCommand.NotifyCanExecuteChanged();
     }
+
+    partial void OnMirrorServerBaseUrlChanged(string value)
+    {
+        if (_suppressMirrorSettingsSave)
+        {
+            return;
+        }
+
+        var normalized = DesktopSettingsStore.NormalizeMirrorServerBase(value);
+        _ncfService.MirrorServerBaseUrl = normalized;
+        if (!string.Equals(normalized, value, StringComparison.Ordinal))
+        {
+            _suppressMirrorSettingsSave = true;
+            MirrorServerBaseUrl = normalized;
+            _suppressMirrorSettingsSave = false;
+        }
+
+        DesktopSettingsStore.Save(new DesktopUserSettings { MirrorServerBaseUrl = normalized });
+    }
     
     #endregion
 
     #region 私有字段
     
     private readonly NcfService _ncfService;
+    private bool _suppressMirrorSettingsSave;
     private readonly WebView2Service _webView2Service;
     private readonly StringBuilder _logBuffer;
     private CancellationTokenSource? _cancellationTokenSource;
@@ -447,6 +471,17 @@ public partial class MainWindowViewModel : ViewModelBase
                 AddLog("🚀 正在初始化 NCF 桌面应用程序...");
                 IsInitializing = true;
             });
+
+            var desktopSettings = DesktopSettingsStore.Load();
+            _ncfService.MirrorServerBaseUrl = DesktopSettingsStore.NormalizeMirrorServerBase(desktopSettings.MirrorServerBaseUrl);
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                _suppressMirrorSettingsSave = true;
+                MirrorServerBaseUrl = _ncfService.MirrorServerBaseUrl;
+                _suppressMirrorSettingsSave = false;
+            });
+
+            DesktopSettingsStore.Save(new DesktopUserSettings { MirrorServerBaseUrl = _ncfService.MirrorServerBaseUrl });
 
             // 检查最新版本
             await CheckLatestVersionAsync();
