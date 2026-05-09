@@ -797,6 +797,28 @@ steps:
   condition: succeededOrFailed()  
   
 - task: NuGetCommand@2    
+  displayName: Senparc.Xncf.PromptRange.Abstractions 
+  inputs:      
+    command: push      
+    packagesToPush: '**/Senparc.Xncf.PromptRange.Abstractions.*.nupkg'      
+    nuGetFeedType: external      
+    publishFeedCredentials: 'nuget-jeffrey-full-key'      
+    arguments: '-skipDuplicate'    
+  continueOnError: true    
+  condition: succeededOrFailed()  
+  
+- task: NuGetCommand@2    
+  displayName: 'Senparc.Xncf.PromptRange.Abstractions - Symbol'    
+  inputs:      
+    command: push      
+    packagesToPush: '**/Senparc.Xncf.PromptRange.Abstractions.*.snupkg;'      
+    nuGetFeedType: external      
+    publishFeedCredentials: 'nuget-jeffrey-full-key'      
+    arguments: '-skipDuplicate'    
+  continueOnError: true    
+  condition: succeededOrFailed()  
+  
+- task: NuGetCommand@2    
   displayName: Senparc.Xncf.PromptRange    
   inputs:      
     command: push      
@@ -856,6 +878,28 @@ steps:
   inputs:      
     command: push      
     packagesToPush: '**/Senparc.Xncf.AIKernel.*.snupkg;'      
+    nuGetFeedType: external      
+    publishFeedCredentials: 'nuget-jeffrey-full-key'      
+    arguments: '-skipDuplicate'    
+  continueOnError: true    
+  condition: succeededOrFailed()  
+
+- task: NuGetCommand@2    
+  displayName: Senparc.Xncf.AgentsManager.Abstractions    
+  inputs:      
+    command: push      
+    packagesToPush: '**/Senparc.Xncf.AgentsManager.Abstractions.*.nupkg'      
+    nuGetFeedType: external      
+    publishFeedCredentials: 'nuget-jeffrey-full-key'      
+    arguments: '-skipDuplicate'    
+  continueOnError: true    
+  condition: succeededOrFailed()  
+  
+- task: NuGetCommand@2    
+  displayName: 'Senparc.Xncf.AgentsManager.Abstractions - Symbol'    
+  inputs:      
+    command: push      
+    packagesToPush: '**/Senparc.Xncf.AgentsManager.Abstractions.*.snupkg;'      
     nuGetFeedType: external      
     publishFeedCredentials: 'nuget-jeffrey-full-key'      
     arguments: '-skipDuplicate'    
@@ -928,7 +972,7 @@ steps:
   continueOnError: true    
   condition: succeededOrFailed()  
 
-  - task: NuGetCommand@2    
+- task: NuGetCommand@2    
   displayName: Senparc.Xncf.FirmwareUpdate    
   inputs:      
     command: push      
