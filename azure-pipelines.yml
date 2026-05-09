@@ -928,6 +928,29 @@ steps:
   continueOnError: true    
   condition: succeededOrFailed()  
 
+  - task: NuGetCommand@2    
+  displayName: Senparc.Xncf.FirmwareUpdate    
+  inputs:      
+    command: push      
+    packagesToPush: '**/Senparc.Xncf.FirmwareUpdate.*.nupkg'      
+    nuGetFeedType: external      
+    publishFeedCredentials: 'nuget-jeffrey-full-key'      
+    arguments: '-skipDuplicate'    
+  continueOnError: true    
+  condition: succeededOrFailed()  
+  
+- task: NuGetCommand@2    
+  displayName: 'Senparc.Xncf.FirmwareUpdate - Symbol'    
+  inputs:      
+    command: push      
+    packagesToPush: '**/Senparc.Xncf.FirmwareUpdate.*.snupkg;'      
+    nuGetFeedType: external      
+    publishFeedCredentials: 'nuget-jeffrey-full-key'      
+    arguments: '-skipDuplicate'    
+  continueOnError: true    
+  condition: succeededOrFailed()  
+
+
 - task: NuGetCommand@2    
   displayName: Senparc.Xncf.MCP    
   inputs:      
