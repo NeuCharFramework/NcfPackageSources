@@ -265,6 +265,30 @@ namespace Senparc.Areas.Admin.Pages
 
                 dest.Add(item);
             }
+
+            var systemManagementMenu = dest.FirstOrDefault(z =>
+                z.ParentId == null &&
+                (string.Equals(z.MenuName, "系统管理", StringComparison.OrdinalIgnoreCase)
+                 || string.Equals(z.MenuName, "System Management", StringComparison.OrdinalIgnoreCase)))
+                ?? dest.FirstOrDefault(z =>
+                    z.ParentId == null &&
+                    dest.Any(child => child.ParentId == z.Id && string.Equals(child.MenuName, "管理员管理", StringComparison.OrdinalIgnoreCase)));
+
+            var adminChatParentId = systemManagementMenu?.Id;
+            var hasAdminChatMenu = dest.Any(z => string.Equals(z.Url, "/Admin/AdminChat/Chat", StringComparison.OrdinalIgnoreCase));
+
+            if (!hasAdminChatMenu)
+            {
+                dest.Insert(0,new SysMenuDto()
+                {
+                    MenuName = "AI 智能助手",
+                    Url = "/Admin/AdminChat/Chat",
+                    Icon = "fa fa-comments-o",
+                    Id = (index++).ToString(),
+                    ParentId = adminChatParentId
+                });
+            }
+
             GetSysMenuTreesRecursive(dest, sysMenuTrees, null);
             return sysMenuTrees;
         }

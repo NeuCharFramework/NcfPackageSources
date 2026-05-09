@@ -12,6 +12,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -69,10 +70,33 @@ namespace Senparc.Ncf.XncfBase.Functions
             List<FunctionParameterInfo> result = new List<FunctionParameterInfo>();
             foreach (var prop in props)
             {
+                if (ShouldIgnoreProperty(prop))
+                {
+                    continue;
+                }
+
                 SelectionList selectionList = null;
+                var filterable = false;
+                var allowCreate = false;
                 parameterType = ParameterType.Text;//默认为文本内容
-                                                   //判断是否存在选项
-                if (prop.PropertyType == typeof(SelectionList))
+
+                var functionParameterUi = prop.GetCustomAttribute<FunctionParameterUiAttribute>();
+                if (functionParameterUi != null)
+                {
+                    parameterType = functionParameterUi.ParameterType;
+                    filterable = functionParameterUi.Filterable;
+                    allowCreate = functionParameterUi.AllowCreate;
+
+                    if (!functionParameterUi.SelectionListPropertyName.IsNullOrEmpty() && paraObj != null)
+                    {
+                        var selectionProp = functionParameterType.GetProperty(functionParameterUi.SelectionListPropertyName);
+                        if (selectionProp?.PropertyType == typeof(SelectionList))
+                        {
+                            selectionList = selectionProp.GetValue(paraObj, null) as SelectionList;
+                        }
+                    }
+                }
+                else if (prop.PropertyType == typeof(SelectionList))
                 {
                     var selections = prop.GetValue(paraObj, null) as SelectionList;
                     switch (selections.SelectionType)
@@ -92,6 +116,10 @@ namespace Senparc.Ncf.XncfBase.Functions
                 else if (prop.Name.Contains("SECRET", StringComparison.OrdinalIgnoreCase) || prop.GetCustomAttribute<PasswordAttribute>() != null)
                 {
                     parameterType = ParameterType.Password;
+                }
+                else if (IsBooleanProperty(prop))
+                {
+                    parameterType = ParameterType.CheckBox;
                 }
 
                 var name = prop.Name;
@@ -130,10 +158,27 @@ namespace Senparc.Ncf.XncfBase.Functions
                 }
 
                 var functionParamInfo = new FunctionParameterInfo(name, title, description, isRequired, systemType, parameterType,
-                                                selectionList ?? new SelectionList(SelectionType.Unknown), value, maxLength);
+                                                selectionList ?? new SelectionList(SelectionType.Unknown), value, maxLength,
+                                                filterable, allowCreate);
                 result.Add(functionParamInfo);
             }
             return result;
+        }
+
+        private static bool ShouldIgnoreProperty(PropertyInfo propertyInfo)
+        {
+            if (propertyInfo.GetCustomAttribute<JsonIgnoreAttribute>() != null)
+            {
+                return true;
+            }
+
+            return propertyInfo.CustomAttributes.Any(z => z.AttributeType.FullName == "Newtonsoft.Json.JsonIgnoreAttribute");
+        }
+
+        private static bool IsBooleanProperty(PropertyInfo prop)
+        {
+            var t = prop.PropertyType;
+            return t == typeof(bool) || Nullable.GetUnderlyingType(t) == typeof(bool);
         }
 
         /// <summary>

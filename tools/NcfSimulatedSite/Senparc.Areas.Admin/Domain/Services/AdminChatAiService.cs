@@ -10,6 +10,9 @@ using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.XncfBase;
+using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AIKernel.Domain.Services;
+using Senparc.Ncf.XncfBase.FunctionRenders;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -21,7 +24,8 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.Domain.Services
 {
     /// <summary>
-    /// AdminChatAiService：管理后台聊天 AI 调用服务（直接使用 appsettings 的 SenparcAiSetting）
+    /// AdminChatAiService：管理后台聊天 AI 调用服务。
+    /// 默认使用 appsettings 中的 SenparcAiSetting，也支持按请求切换到 AIKernel 中配置的 Chat 模型。
     /// </summary>
     public class AdminChatAiService
     {
@@ -55,19 +59,13 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <param name="sessionId">会话 Id。</param>
         /// <param name="userId">用户 Id。</param>
         /// <param name="userMessage">用户输入消息。</param>
+        /// <param name="aiModelId">可选 AIModelId，0 表示系统级 SenparcAiSetting。</param>
         /// <returns>返回回复文本与模型标识。</returns>
-        public async Task<(string response, string modelIdentifier)> GenerateResponseAsync(int sessionId, int userId, string userMessage)
+        public async Task<(string response, string modelIdentifier)> GenerateResponseAsync(int sessionId, int userId, string userMessage, int aiModelId = 0)
         {
-            var setting = Senparc.AI.Config.SenparcAiSetting as SenparcAiSetting;
-            if (setting == null)
-            {
-                throw new NcfExceptionBase("未读取到 SenparcAiSetting，请检查 appsettings.json 配置。");
-            }
+            var showLoadedFunctionsInConsole = true;//是否输出 function 的 schema 信息到控制台，便于调试和验证 Function Calling 功能是否正确加载了函数
 
-            if (setting.AiPlatform == AiPlatform.UnSet)
-            {
-                throw new NcfExceptionBase("SenparcAiSetting.AiPlatform 仍为 UnSet，请先在 appsettings.json 中设置可用平台。");
-            }
+            var (setting, modelIdentifier) = await ResolveChatSettingAsync(aiModelId);
 
             var (messages, _) = await _messageService.GetSessionMessagesAsync(sessionId);
             var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
@@ -106,6 +104,7 @@ namespace Senparc.Areas.Admin.Domain.Services
 
             var importedFunctionCount = 0;
             var importedFunctionSignatures = new List<string>();
+            var loadedFunctionDebugLines = new List<string>();
 
             foreach (var pluginGroup in functionPluginGroups)
             {
@@ -134,7 +133,6 @@ namespace Senparc.Areas.Admin.Domain.Services
 
                             var kernelFunction = KernelFunctionFactory.CreateFromMethod(functionBag.MethodInfo, plugin, options);
                             kernelFunctions.Add(kernelFunction);
-                            importedFunctionSignatures.Add($"{pluginName}.{functionBag.MethodInfo.Name}({functionBag.FunctionRenderAttribute?.Description ?? "N/A"})");
                         }
                         catch (Exception ex)
                         {
@@ -151,9 +149,11 @@ namespace Senparc.Areas.Admin.Domain.Services
                         continue;
                     }
 
-                    iWantToRun.Kernel.Plugins.AddFromFunctions(pluginName, kernelFunctions);
+                    var addedPlugin = iWantToRun.Kernel.Plugins.AddFromFunctions(pluginName, kernelFunctions);
+                    importedFunctionSignatures.AddRange(addedPlugin.Select(kernelFunction => $"{kernelFunction.Metadata.PluginName}.{kernelFunction.Metadata.Name}({kernelFunction.Metadata.Description ?? "N/A"})"));
+                    loadedFunctionDebugLines.AddRange(BuildKernelPluginDebugLines(addedPlugin));
                     importedPluginNames.Add(pluginName);
-                    importedFunctionCount += kernelFunctions.Count;
+                    importedFunctionCount += addedPlugin.Count();
                 }
                 catch (Exception ex)
                 {
@@ -169,6 +169,13 @@ namespace Senparc.Areas.Admin.Domain.Services
                     userId,
                     moduleUids.Count,
                     string.Join(",", moduleUids));
+            }
+            else
+            {
+                if (showLoadedFunctionsInConsole)
+                {
+                    WriteLoadedFunctionsToConsole(sessionId, userId, loadedFunctionDebugLines);
+                }
             }
 
             _logger.LogInformation(
@@ -197,7 +204,70 @@ namespace Senparc.Areas.Admin.Domain.Services
                 result = "抱歉，我暂时没有生成有效回复，请稍后再试。";
             }
 
-            return (result, ResolveModelIdentifier(setting));
+            return (result, modelIdentifier);
+        }
+
+        private async Task<(SenparcAiSetting setting, string modelIdentifier)> ResolveChatSettingAsync(int aiModelId)
+        {
+            var defaultSetting = Senparc.AI.Config.SenparcAiSetting as SenparcAiSetting;
+            if (defaultSetting == null)
+            {
+                throw new NcfExceptionBase("未读取到 SenparcAiSetting，请检查 appsettings.json 配置。");
+            }
+
+            if (defaultSetting.AiPlatform == AiPlatform.UnSet)
+            {
+                throw new NcfExceptionBase("SenparcAiSetting.AiPlatform 仍为 UnSet，请先在 appsettings.json 中设置可用平台。");
+            }
+
+            if (aiModelId <= 0)
+            {
+                return (defaultSetting, ResolveModelIdentifier(defaultSetting));
+            }
+
+            if (!await IsAiKernelAvailableAsync())
+            {
+                throw new NcfExceptionBase("当前系统未安装或未启用 AIKernel 模块，无法切换到指定 AI 模型。");
+            }
+
+            var aiModelService = _serviceProvider.GetService(typeof(AIModelService)) as AIModelService;
+            if (aiModelService == null)
+            {
+                throw new NcfExceptionBase("未能解析 AIModelService，无法加载指定 AI 模型。");
+            }
+
+            var aiModel = await aiModelService.GetObjectAsync(z => z.Id == aiModelId);
+            if (aiModel == null)
+            {
+                throw new NcfExceptionBase($"当前选择的 AI 模型不存在：{aiModelId}");
+            }
+
+            if (aiModel.ConfigModelType != Senparc.Xncf.AIKernel.Domain.Models.ConfigModelType.Chat)
+            {
+                throw new NcfExceptionBase($"当前选择的 AI 模型不是 Chat 类型：{aiModelId}");
+            }
+
+            var aiModelDto = aiModelService.Mapper.Map<AIModelDto>(aiModel);
+            var selectedSetting = aiModelService.BuildSenparcAiSetting(aiModelDto);
+            var selectedModelIdentifier = !string.IsNullOrWhiteSpace(aiModelDto.Alias)
+                ? $"{aiModelDto.Alias} [{ResolveModelIdentifier(selectedSetting)}]"
+                : ResolveModelIdentifier(selectedSetting);
+
+            return (selectedSetting, selectedModelIdentifier);
+        }
+
+        private async Task<bool> IsAiKernelAvailableAsync()
+        {
+            var aiKernelRegister = XncfRegisterManager.RegisterList.FirstOrDefault(z =>
+                string.Equals(z.Name, "Senparc.Xncf.AIKernel", StringComparison.OrdinalIgnoreCase));
+
+            if (aiKernelRegister == null)
+            {
+                return false;
+            }
+
+            var registerManager = new XncfRegisterManager(_serviceProvider);
+            return await registerManager.CheckXncfAvailable(aiKernelRegister);
         }
 
         private static string BuildFunctionPluginName(Type pluginType)
@@ -223,6 +293,93 @@ namespace Senparc.Areas.Admin.Domain.Services
             var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(input ?? string.Empty));
             var hex = BitConverter.ToString(bytes).Replace("-", string.Empty).ToLower(CultureInfo.InvariantCulture);
             return hex.Length > length ? hex.Substring(0, length) : hex;
+        }
+
+        private static void WriteLoadedFunctionsToConsole(int sessionId, int userId, List<string> loadedFunctionDebugLines)
+        {
+            if (loadedFunctionDebugLines == null || loadedFunctionDebugLines.Count == 0)
+            {
+                return;
+            }
+
+            Console.WriteLine($"[AdminChat Functions] SessionId={sessionId}, UserId={userId}, LoadedFunctions={loadedFunctionDebugLines.Count(line => line.StartsWith("- Function:", StringComparison.Ordinal))}");
+            foreach (var line in loadedFunctionDebugLines)
+            {
+                Console.WriteLine(line);
+            }
+        }
+
+        private static List<string> BuildKernelPluginDebugLines(KernelPlugin kernelPlugin)
+        {
+            var lines = new List<string>();
+            foreach (var kernelFunction in kernelPlugin)
+            {
+                lines.AddRange(BuildKernelFunctionDebugLines(kernelFunction));
+            }
+
+            return lines;
+        }
+
+        private static List<string> BuildKernelFunctionDebugLines(KernelFunction kernelFunction)
+        {
+            var metadata = kernelFunction.Metadata;
+            var functionParameters = metadata.Parameters?.ToList() ?? new List<KernelParameterMetadata>();
+            var lines = new List<string>
+            {
+                $"- Function: {metadata.PluginName}.{metadata.Name}",
+                $"  Description: {metadata.Description ?? "(none)"}",
+                $"  ReturnType: {metadata.ReturnParameter.ParameterType?.FullName ?? "(none)"}",
+                $"  ReturnSchema: {FormatSchema(metadata.ReturnParameter.Schema)}"
+            };
+
+            if (functionParameters == null || functionParameters.Count == 0)
+            {
+                lines.Add("  Parameters: (none)");
+                return lines;
+            }
+
+            lines.Add($"  Parameters: {functionParameters.Count}");
+            foreach (var parameter in functionParameters)
+            {
+                lines.Add($"    - {parameter.Name}: type={parameter.ParameterType?.FullName ?? "(none)"}, required={parameter.IsRequired}, description={FormatInlineValue(parameter.Description)}, default={FormatParameterValue(parameter.DefaultValue)}, schema={FormatSchema(parameter.Schema)}");
+            }
+
+            return lines;
+        }
+
+        private static string FormatParameterValue(object value)
+        {
+            if (value == null)
+            {
+                return "(null)";
+            }
+
+            if (value is string stringValue)
+            {
+                return FormatInlineValue(stringValue);
+            }
+
+            if (value is IEnumerable<string> stringValues)
+            {
+                return $"[{string.Join(", ", stringValues.Select(FormatInlineValue))}]";
+            }
+
+            return FormatInlineValue(value.ToString());
+        }
+
+        private static string FormatSchema(KernelJsonSchema schema)
+        {
+            return schema == null ? "(none)" : FormatInlineValue(schema.ToString());
+        }
+
+        private static string FormatInlineValue(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return "(empty)";
+            }
+
+            return value.Replace("\r", " ").Replace("\n", " ").Trim();
         }
 
         private static string BuildSystemMessage(List<AdminChatSessionModule> modules)

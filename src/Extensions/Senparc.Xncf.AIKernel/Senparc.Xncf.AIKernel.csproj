@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.12.24-preview.1</Version>
+    <Version>0.12.26.1-preview</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -54,6 +54,7 @@
 			[2025-05-18] v0.12.18-preview1 Update Installation
 			[2025-06-20] v0.12.20-preview Add MCP functions in XncfRegisterBase class
 			[2026-03-24] v0.12.24-preview.1 update Senparc.AI.Kernel to v0.28.0
+      [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
 </PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>

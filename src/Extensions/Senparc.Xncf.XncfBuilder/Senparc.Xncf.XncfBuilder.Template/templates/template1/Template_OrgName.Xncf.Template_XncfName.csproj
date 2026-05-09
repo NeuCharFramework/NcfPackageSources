@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>1.0.1-preview.1</Version>
+    <Version>1.0.2</Version>
     <AssemblyName>Template_OrgName.Xncf.Template_XncfName</AssemblyName>
     <RootNamespace>Template_OrgName.Xncf.Template_XncfName</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -19,6 +19,7 @@
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
 			v1.0.0 创世
+      [2026-04-24] Update FunctionRender request templates for simplified values and SelectionList UI metadata compatibility
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -32,7 +33,7 @@
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.20.12-preview.1" />
+    <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.20.12.4-preview" />
   </ItemGroup>
   <ItemGroup>
     <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.22.4-preview1" />

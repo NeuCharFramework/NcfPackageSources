@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Service;
+using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase.Functions;
 using System;
@@ -8,6 +9,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.PL
 {
@@ -25,7 +27,11 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.PL
         public string Path { get; set; }
 
         [Description("选项||备份数据库选项")]
-        public SelectionList Options { get; set; } = new SelectionList(SelectionType.CheckBoxList,
+        [FunctionParameterUi(ParameterType.CheckBoxList, nameof(OptionsList))]
+        public string[] Options { get; set; }
+
+        [JsonIgnore]
+        public SelectionList OptionsList { get; set; } = new SelectionList(SelectionType.CheckBoxList,
             new[] {
                     new SelectionItem($"{(int)BackupDatabaseOptions.如果文件存在则不覆盖}","如果文件存在，则不覆盖","文件已存在的情况下，不会执行备份操作"),
                     new SelectionItem($"{(int)BackupDatabaseOptions.校验备份成功}","备份完成后校验.bak文件是否更新成功","此操作只能检查文件是否被更新，无法检测文件内部内容",true),

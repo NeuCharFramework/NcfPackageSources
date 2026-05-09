@@ -15,6 +15,10 @@ namespace Senparc.Ncf.XncfBase
         DropDownList = 1,
         CheckBoxList = 2,
         Password = 3,
+        /// <summary>
+        /// 单个布尔，对应 <c>bool</c> / <c>bool?</c>，前端渲染为单个复选框。
+        /// </summary>
+        CheckBox = 4,
     }
 
     /// <summary>
@@ -61,12 +65,23 @@ namespace Senparc.Ncf.XncfBase
         /// </summary>
         public SelectionList SelectionList { get; set; }
 
+        /// <summary>
+        /// 下拉框是否允许搜索
+        /// </summary>
+        public bool Filterable { get; set; }
+
+        /// <summary>
+        /// 下拉框是否允许创建自定义值
+        /// </summary>
+        public bool AllowCreate { get; set; }
+
         public FunctionParameterInfo()
         {
         }
 
         public FunctionParameterInfo(string name, string title, string description,
-            bool isRequired, string systemType, ParameterType parameterType, SelectionList selectionList, object value, int maxLength)
+            bool isRequired, string systemType, ParameterType parameterType, SelectionList selectionList, object value, int maxLength,
+            bool filterable = false, bool allowCreate = false)
         {
             Name = name;
             Title = title;
@@ -77,6 +92,8 @@ namespace Senparc.Ncf.XncfBase
             ParameterType = parameterType;
             Value = value;
             MaxLength = maxLength;
+            Filterable = filterable;
+            AllowCreate = allowCreate;
         }
     }
 }

@@ -10,6 +10,7 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase;
 using Microsoft.Extensions.Localization;
+using Senparc.Xncf.AIKernel.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -94,7 +95,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                         ChatMessageRoleType.User,
                         request.InitialMessage);
 
-                    var (aiResponse, modelIdentifier) = await _chatAiService.GenerateResponseAsync(session.Id, userId, request.InitialMessage);
+                    var (aiResponse, modelIdentifier) = await _chatAiService.GenerateResponseAsync(session.Id, userId, request.InitialMessage, request.AiModelId);
                     await _messageService.AddMessageAsync(
                         session.Id,
                         ChatMessageRoleType.Assistant,
@@ -226,7 +227,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 await _sessionService.UpdateLastMessageTimeAsync(request.SessionId);
 
-                var (aiResponse, modelIdentifier) = await _chatAiService.GenerateResponseAsync(request.SessionId, userId, request.Content);
+                var (aiResponse, modelIdentifier) = await _chatAiService.GenerateResponseAsync(request.SessionId, userId, request.Content, request.AiModelId);
 
                 var assistantMessage = await _messageService.AddMessageAsync(
                     request.SessionId,
@@ -392,6 +393,68 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// 获取 Chat 可选 AI 模型列表。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<GetAiModelOptionsResponse>> GetAiModelOptionsAsync()
+        {
+            return await this.GetResponseAsync<AppResponseBase<GetAiModelOptionsResponse>, GetAiModelOptionsResponse>(async (response, logger) =>
+            {
+                var optionList = new List<AiModelOptionDto>
+                {
+                    new AiModelOptionDto
+                    {
+                        Id = 0,
+                        Name = "系统级 SenparcAiSetting",
+                        Description = "使用 appsettings.json 中当前生效的默认 Chat 配置",
+                        IsDefault = true
+                    }
+                };
+
+                var aiKernelRegister = XncfRegisterManager.RegisterList.FirstOrDefault(z =>
+                    string.Equals(z.Name, "Senparc.Xncf.AIKernel", StringComparison.OrdinalIgnoreCase));
+
+                var aiKernelAvailable = false;
+                if (aiKernelRegister != null)
+                {
+                    var registerManager = new XncfRegisterManager(ServiceProvider);
+                    aiKernelAvailable = await registerManager.CheckXncfAvailable(aiKernelRegister);
+                }
+
+                if (aiKernelAvailable)
+                {
+                    var aiModelService = ServiceProvider.GetService(typeof(AIModelService)) as AIModelService;
+                    if (aiModelService != null)
+                    {
+                        var aiModels = await aiModelService.GetFullListAsync(z =>
+                            z.Show && z.ConfigModelType == Senparc.Xncf.AIKernel.Domain.Models.ConfigModelType.Chat);
+
+                        optionList.AddRange(aiModels
+                            .OrderByDescending(z => z.Show)
+                            .ThenBy(z => z.Alias)
+                            .Select(z => new AiModelOptionDto
+                            {
+                                Id = z.Id,
+                                Name = !string.IsNullOrWhiteSpace(z.Alias)
+                                    ? $"{z.Alias} ({z.ModelId})"
+                                    : $"{z.DeploymentName} ({z.ModelId})",
+                                Description = string.IsNullOrWhiteSpace(z.Note)
+                                    ? $"{z.AiPlatform} | {z.Endpoint}"
+                                    : z.Note,
+                                IsDefault = false
+                            }));
+                    }
+                }
+
+                return new GetAiModelOptionsResponse
+                {
+                    AiKernelAvailable = aiKernelAvailable,
+                    Models = optionList
+                };
+            });
+        }
+
         private static AdminChatSessionModuleDto MapModuleDtoWithRegisterInfo(AdminChatSessionModuleDto dto)
         {
             if (dto == null)
@@ -495,6 +558,26 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     public class GetSessionModulesResponse
     {
         public List<AdminChatSessionModuleDto> Modules { get; set; }
+    }
+
+    /// <summary>
+    /// 获取 AI 模型选项响应
+    /// </summary>
+    public class GetAiModelOptionsResponse
+    {
+        public bool AiKernelAvailable { get; set; }
+        public List<AiModelOptionDto> Models { get; set; }
+    }
+
+    /// <summary>
+    /// AI 模型选项
+    /// </summary>
+    public class AiModelOptionDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public bool IsDefault { get; set; }
     }
 
     #endregion

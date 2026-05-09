@@ -79,7 +79,13 @@
                 :class="[scrollbarAgentIndex === ''? 'agent-container':'agentDetails-container']">
                 @* 智能体列表 *@
                 <template v-if="scrollbarAgentIndex === ''">
-                    <el-scrollbar class="sidebar-agent-container" wrap-class="scrollbar-wrapper">
+                    <div class="agent-view-mode-row">
+                        <el-radio-group v-model="agentListViewMode" size="mini" @@change="handleAgentListViewModeChange">
+                            <el-radio-button label="panel">面板视图</el-radio-button>
+                            <el-radio-button label="three">3D视图</el-radio-button>
+                        </el-radio-group>
+                    </div>
+                    <el-scrollbar v-if="agentListViewMode === 'panel'" class="sidebar-agent-container" wrap-class="scrollbar-wrapper">
                         <div ref="agentElListBox" class="agent-listWrap">
                             <div v-for="(aitem,aindex) in agentList" :key="aindex" class="agent-cardBox">
                                 <div class="agentCard-statebox" :class="[getStatusColor(aitem,'1')]">
@@ -91,13 +97,6 @@
                                     </div>
                                     <div class="upperHalfbox_describe_title text-ellipsis" :title="aitem.name">{{
                                         aitem.name }}</div>
-                                    @* <div class="upperHalfbox_describe">
-                                    <div class="upperHalfbox_describe_title text-ellipsis" :title="aitem.name">{{
-                                    aitem.name }}</div>
-                                    <div class="upperHalfbox_describe_introduce text-ellipsis-2line"
-                                    :title="aitem.description">{{
-                                    aitem.description }}</div>
-                                    </div> *@
                                 </div>
                                 <div class="agentCard-middleHalfbox text-ellipsis-2line" :title="aitem.description">{{
                                     aitem.description }}
@@ -111,6 +110,7 @@
                                         @@click="handleEditDrawerOpenBtn('drawerAgent',aitem)">编辑
                                     </div>
                                     <div class="lowerHalfbox_operation" @@click="handleAgentView(aitem,aindex)">详情</div>
+                                    <div class="lowerHalfbox_operation" @@click="handleAgentDelete(aitem)">删除</div>
                                 </div>
                             </div>
                             <div v-for="fitem in fillCardNum" :key="fitem" style="flex-grow: 1;flex-basis: 315px;">
@@ -120,6 +120,39 @@
                         </div>
 
                     </el-scrollbar>
+                    <div v-else class="agent-3d-wrap">
+                        <div class="agent-3d-controls">
+                            <el-select v-model="agentGraphFilterGroupId" size="mini" clearable placeholder="全部组" @@change="handleAgentGraphFilterChange">
+                                <el-option v-for="item in agentGraphGroupOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                            </el-select>
+                            <el-select v-model="agentGraphFilterTaskStatuses" size="mini" multiple collapse-tags placeholder="任务状态" @@change="handleAgentGraphFilterChange">
+                                <el-option label="等待" :value="0"></el-option>
+                                <el-option label="聊天中" :value="1"></el-option>
+                                <el-option label="暂停" :value="2"></el-option>
+                                <el-option label="完成" :value="3"></el-option>
+                                <el-option label="取消" :value="4"></el-option>
+                            </el-select>
+                            <el-checkbox v-model="agentGraphShowOnlyActiveGroup" @@change="handleAgentGraphFilterChange">仅运行中组</el-checkbox>
+                            <el-select v-model="quickJumpGroupId" size="mini" clearable filterable placeholder="快速进入组">
+                                <el-option v-for="item in quickJumpGroupOptions" :key="'qg-'+item.id" :label="item.name" :value="item.id"></el-option>
+                            </el-select>
+                            <el-button size="mini" type="primary" plain @@click="handleQuickJumpGroup">进入组</el-button>
+                            <el-select v-model="quickJumpTaskId" size="mini" clearable filterable placeholder="快速进入任务">
+                                <el-option v-for="item in quickJumpTaskOptions" :key="'qt-'+item.id" :label="item.name" :value="item.id"></el-option>
+                            </el-select>
+                            <el-button size="mini" type="success" plain @@click="handleQuickJumpTask">进入任务</el-button>
+                        </div>
+                        <div class="agent-3d-tip">悬停 Group 柱体可高亮组成员；点击 Group 可锁定/取消锁定；顶部数字展示该组运行任务状态统计。</div>
+                        <div class="agent-3d-legend">
+                            <span class="legend-item"><i class="legend-dot waiting"></i>等待</span>
+                            <span class="legend-item"><i class="legend-dot chatting"></i>聊天中</span>
+                            <span class="legend-item"><i class="legend-dot paused"></i>暂停</span>
+                            <span class="legend-item"><i class="legend-dot finished"></i>完成</span>
+                            <span class="legend-item"><i class="legend-dot cancelled"></i>取消</span>
+                        </div>
+                        <pre class="agent-3d-debug">{{ agentGraphDebugText }}</pre>
+                        <div ref="agent3dContainer" class="agent-3d-canvas"></div>
+                    </div>
                 </template>
                 @* 智能体详情 *@
                 <template v-else-if="agentDetails">
@@ -192,6 +225,8 @@
                                     :style="{'color': agentDetails.agentTemplateDto.enable ? '#F56C6C' : '#2a82e4' }"
                                     @@click="setAgentState('stop', agentDetails)">{{
                                     agentDetails.agentTemplateDto.enable ? '停用' : '启用' }}</span>
+                                <span class="btnText" style="color: #F56C6C; margin-left: 10px;"
+                                    @@click="handleAgentDelete(agentDetails)">删除</span>
                             </div>
                         </div>
                     </div>
@@ -268,6 +303,8 @@
                                                     @@click="handleEditDrawerOpenBtn('drawerGroup',agentDetailsGroupDetails)">编辑</el-button>
                                                 <el-button type="primary" size="mini"
                                                     @@click="handleTaskStartBatch('agentGroupTaskBatch',agentDetailsGroupDetails)">批量启动</el-button>
+                                                <el-button type="warning" size="mini"
+                                                    @@click="handleTaskForceStopBatch('agentGroupTaskBatch',agentDetailsGroupDetails)">批量停止</el-button>
                                                 <el-button type="danger" size="mini"
                                                     @@click="handleTaskDeleteBatch('agentGroupTaskBatch',agentDetailsGroupDetails)">批量删除</el-button>
                                             </div>
@@ -338,6 +375,8 @@
                                                     @@click="handleTaskView('agentGroupTask', row)">详情</el-button>
                                                 <el-button type="primary" size="mini"
                                                     @@click="handleTaskAgain('agentGroupTask', row)">再次执行</el-button>
+                                                <el-button type="warning" size="mini"
+                                                    @@click="handleTaskForceStop('agentGroupTask', row)">强制停止</el-button>
                                                 <el-button type="danger" size="mini"
                                                     @@click="handleTaskDelet('agentGroupTask', row)">删除</el-button>
                                             </template>
@@ -370,6 +409,8 @@
                                                     @@click="viewAgentParameters('agentGroupTask')">智能体参数</el-button>
                                                 <el-button type="primary" size="mini"
                                                     @@click="handleTaskAgain('agentGroupTask',agentDetailsGroupDetailsTaskDetails)">再次执行</el-button>
+                                                <el-button type="warning" size="mini"
+                                                    @@click="handleTaskForceStop('agentGroupTask',agentDetailsGroupDetailsTaskDetails)">强制停止</el-button>
                                             </div>
                                         </template>
                                     </div>
@@ -712,6 +753,8 @@
                                     @@click="handleEditDrawerOpenBtn('drawerGroup',groupDetails)">编辑</el-button>
                                 <el-button type="primary" size="mini"
                                     @@click="handleTaskStartBatch('groupTaskBatch',groupDetails)">批量启动</el-button>
+                                <el-button type="warning" size="mini"
+                                    @@click="handleTaskForceStopBatch('groupTaskBatch',groupDetails)">批量停止</el-button>
                                 <el-button type="danger" size="mini"
                                     @@click="handleTaskDeleteBatch('groupTaskBatch',groupDetails)">批量删除</el-button>
                             </div>
@@ -773,6 +816,8 @@
                                     @@click="handleTaskView('groupTask', row)">详情</el-button>
                                 <el-button type="primary" size="mini"
                                     @@click="handleTaskAgain('groupTask', row)">再次执行</el-button>
+                                <el-button type="warning" size="mini"
+                                    @@click="handleTaskForceStop('groupTask', row)">强制停止</el-button>
                                 <el-button type="danger" size="mini"
                                     @@click="handleTaskDelet('groupTask', row)">删除</el-button>
                             </template>
@@ -802,6 +847,8 @@
                                     @@click="viewAgentParameters('groupTask')">智能体参数</el-button>
                                 <el-button type="primary" size="mini"
                                     @@click="handleTaskAgain('groupTask',groupTaskDetails)">再次执行</el-button>
+                                <el-button type="warning" size="mini"
+                                    @@click="handleTaskForceStop('groupTask',groupTaskDetails)">强制停止</el-button>
                             </div>
                         </template>
                     </div>
@@ -952,6 +999,8 @@
                         <div class="df-wn groupInfoRow-operation">
                             <el-button type="primary" size="mini"
                                 @@click="handleTaskStartBatch('taskBatch')">批量启动</el-button>
+                            <el-button type="warning" size="mini"
+                                @@click="handleTaskForceStopBatch('taskBatch')">批量停止</el-button>
                             <el-button type="danger" size="mini"
                                 @@click="handleTaskDeleteBatch('taskBatch')">批量删除</el-button>
                         </div>
@@ -994,6 +1043,8 @@
                                     @@click="handleTaskView('task', row, $index)">详情</el-button>
                                 <el-button type="primary" size="mini"
                                     @@click="handleTaskAgain('task', row)">再次执行</el-button>
+                                <el-button type="warning" size="mini"
+                                    @@click="handleTaskForceStop('task', row)">强制停止</el-button>
                                 <el-button type="danger" size="mini"
                                     @@click="handleTaskDelet('task', row)">删除</el-button>
                             </template>
@@ -1017,6 +1068,8 @@
                                 @@click="viewAgentParameters('taskDetail')">智能体参数</el-button>
                             <el-button type="primary" size="mini"
                                 @@click="handleTaskAgain('task',taskDetails)">再次执行</el-button>
+                            <el-button type="warning" size="mini"
+                                @@click="handleTaskForceStop('task',taskDetails)">强制停止</el-button>
                         </div>
                     </div>
                     <div class="df flex-ac flex-jc task-info">
@@ -1165,6 +1218,17 @@
                 </el-form-item>
                 <el-form-item label="Function Calls" prop="functionCallNames">
                     <div class="function-call-container">
+                        <div style="margin-bottom: 8px;">
+                            <el-switch
+                                v-model="agentAutoAttachXncf"
+                                @@change="handleAutoAttachXncfChange"
+                                active-text="自动附加所有 XNCF 功能插件"
+                                inactive-text="手动选择">
+                            </el-switch>
+                            <el-tooltip content="开启后将自动附加所有已注册的 XNCF 功能插件，使智能体能自动识别并触发对应模块的功能" placement="top">
+                                <i class="el-icon-question" style="margin-left: 6px; color: #909399;"></i>
+                            </el-tooltip>
+                        </div>
                         <div class="function-call-tags">
                             <el-tag
                                 v-for="tag in agentForm.functionCallNames ? agentForm.functionCallNames.split(',').filter(x => x) : []"
@@ -1477,6 +1541,17 @@
         </el-form-item>
         <el-form-item label="Function Calls" prop="functionCallNames">
             <div class="function-call-container">
+                <div style="margin-bottom: 8px;">
+                    <el-switch
+                        v-model="agentAutoAttachXncf"
+                        @@change="handleAutoAttachXncfChange"
+                        active-text="自动附加所有 XNCF 功能插件"
+                        inactive-text="手动选择">
+                    </el-switch>
+                    <el-tooltip content="开启后将自动附加所有已注册的 XNCF 功能插件，使智能体能自动识别并触发对应模块的功能" placement="top">
+                        <i class="el-icon-question" style="margin-left: 6px; color: #909399;"></i>
+                    </el-tooltip>
+                </div>
                 <div class="function-call-tags">
                     <el-tag
                         v-for="tag in agentForm.functionCallNames ? agentForm.functionCallNames.split(',').filter(x => x) : []"
@@ -1674,8 +1749,8 @@
                         <div class="prompt-title">
                             Prompt
                         </div>
-                        <div class="prompt-value">
-
+                        <div class="prompt-value" style="white-space: pre-wrap;">
+                            {{ item.promptItemDto ? item.promptItemDto.content : (item.systemMessage || '') }}
                         </div>
                     </div>
                     <div class="promptResult">
@@ -1683,23 +1758,23 @@
                             <div>
                                 <img src="~/images/AgentsManager/prompt_selectPrompt.svg" alt="" style="width: 15px;height:15px;" />
                                 <span class="label">靶场:</span>
-                                <span class="value">202401.15.1</span>
+                                <span class="value">{{ item.promptRangeDto ? item.promptRangeDto.alias : '--' }}</span>
                             </div>
                             <div>
                                 <span class="label">靶道:</span>
-                                <span class="value">T2.3</span>
+                                <span class="value">{{ item.promptItemDto ? item.promptItemDto.fullVersion : '--' }}</span>
                             </div>
                             <div>
                                 <span class="label">瞄准:</span>
-                                <span class="value">A1</span>
+                                <span class="value">{{ item.promptItemDto ? (item.promptItemDto.nickName || '--') : '--' }}</span>
                             </div>
                             <div>
                                 <span class="label">平均分:</span>
-                                <span class="value">10</span>
+                                <span class="value">{{ item.promptItemDto ? scoreFormatter(item.promptItemDto.evalAvgScore) : '--' }}</span>
                             </div>
                             <div>
                                 <span class="label">最高分:</span>
-                                <span class="value">10</span>
+                                <span class="value">{{ item.promptItemDto ? scoreFormatter(item.promptItemDto.evalMaxScore) : '--' }}</span>
                             </div>
                         </div>
                         <div class="prompt-value">
@@ -1788,6 +1863,9 @@
 @section scripts {
     <script src="~/js/AgentsManager/lib/axios.min.js"></script>
     <script src="~/js/PromptRange/lib/marked.min.js"></script>
+    <script src="~/js/PromptRange/lib/three.min.js"></script>
+    <script src="~/js/PromptRange/lib/OrbitControls.js"></script>
     <script src="~/js/AgentsManager/axios.js"></script>
+    <script src="~/js/AgentsManager/agent-3d.js"></script>
     <script src="~/js/AgentsManager/index.js"></script>
 }

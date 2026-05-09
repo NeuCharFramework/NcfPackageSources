@@ -7,10 +7,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
 using Senparc.CO2NET.Trace;
+using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
+using System.Text.Json.Serialization;
 
 namespace Senparc.Xncf.AIKernel.OHS.Local.PL
 {
@@ -18,7 +20,11 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
     {
         [Required]
         [Description("选择模型||")]//下拉列表
-        public SelectionList Model { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>());
+        [FunctionParameterUi(ParameterType.CheckBoxList, nameof(ModelOptions))]
+        public string[] Model { get; set; }
+
+        [JsonIgnore]
+        public SelectionList ModelOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>());
 
         //TODO: 更多 AI 参数
 
@@ -60,7 +66,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
             {
                 var value = z.ModelAlias;
                 var text = z.DisplayText;
-                Model.Items.Add(new SelectionItem(value, text, $"来自：{z.From}", false) { BindData = z.SenparcAiSetting });
+                ModelOptions.Items.Add(new SelectionItem(value, text, $"来自：{z.From}", false) { BindData = z.SenparcAiSetting });
             });
 
             await base.LoadData(serviceProvider);

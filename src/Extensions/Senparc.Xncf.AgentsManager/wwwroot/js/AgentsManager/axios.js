@@ -76,11 +76,14 @@ serviceAM.interceptors.response.use(
         } else if (error.message.includes('302')) {
             return Promise.reject(error);
         }
-        app.$message({
-            message: error.message,
-            type: 'error',
-            duration: 5 * 1000
-        });
+        // customAlert: true 时静默处理，不弹框
+        if (!error.config?.customAlert) {
+            app.$message({
+                message: error.message,
+                type: 'error',
+                duration: 5 * 1000
+            });
+        }
         return Promise.reject(error);
     }
 );

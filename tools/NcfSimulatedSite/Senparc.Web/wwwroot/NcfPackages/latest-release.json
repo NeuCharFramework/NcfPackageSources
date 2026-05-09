@@ -1,0 +1,36 @@
+{
+  "tag_name": "v0.32.0-build9601",
+  "name": "NCF Release v0.32.0-build9601",
+  "assets": [
+    {
+      "name": "ncf-linux-arm64-0.32.0-build9601.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/v0.32.0-build9601/ncf-linux-arm64-0.32.0-build9601.zip",
+      "size": 89954782
+    },
+    {
+      "name": "ncf-linux-x64-0.32.0-build9601.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/v0.32.0-build9601/ncf-linux-x64-0.32.0-build9601.zip",
+      "size": 91595726
+    },
+    {
+      "name": "ncf-osx-arm64-0.32.0-build9601.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/v0.32.0-build9601/ncf-osx-arm64-0.32.0-build9601.zip",
+      "size": 89190305
+    },
+    {
+      "name": "ncf-osx-x64-0.32.0-build9601.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/v0.32.0-build9601/ncf-osx-x64-0.32.0-build9601.zip",
+      "size": 91100491
+    },
+    {
+      "name": "ncf-win-arm64-0.32.0-build9601.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/v0.32.0-build9601/ncf-win-arm64-0.32.0-build9601.zip",
+      "size": 91862979
+    },
+    {
+      "name": "ncf-win-x64-0.32.0-build9601.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/v0.32.0-build9601/ncf-win-x64-0.32.0-build9601.zip",
+      "size": 93385302
+    }
+  ]
+}
