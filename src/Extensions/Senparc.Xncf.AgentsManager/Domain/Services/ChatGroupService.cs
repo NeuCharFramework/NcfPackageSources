@@ -1,4 +1,4 @@
-﻿using AutoGen.Core;
+using AutoGen.Core;
 using AutoGen.SemanticKernel;
 using AutoGen.SemanticKernel.Extension;
 using Microsoft.Extensions.DependencyInjection;
@@ -257,13 +257,32 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     }
 
     /// <summary>
-    /// 在独立进程中运行 ChatGroup（UI 界面中进行）
+    /// 在独立进程中运行 ChatGroup（UI 界面中进行，不等待完成）
     /// </summary>
-    /// <returns></returns>
     public Task RunChatGroupInThread(ChatGroup_RunGroupRequest request)
     {
-        var task = Task.Factory.StartNew(async () =>
-        {
+        var task = RunChatGroupExecutionCoreAsync(request);
+        TaskList.Add(task);
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// 运行 ChatGroup 直至本轮对话结束（用于 Prompt 优化等需同步等待的场景）
+    /// </summary>
+    public Task RunChatGroupAwaitAsync(ChatGroup_RunGroupRequest request)
+    {
+        return RunChatGroupExecutionCoreAsync(request);
+    }
+
+    private async Task RunChatGroupExecutionCoreAsync(ChatGroup_RunGroupRequest request)
+    {
+            IDisposable activeOptimizationScope = null;
+            if (!string.IsNullOrWhiteSpace(request.CorrelationId))
+            {
+                activeOptimizationScope = PromptOptimizationAgentBridge.BeginActiveRequestScope(request.CorrelationId);
+                PromptOptimizationAgentBridge.SetFallbackCorrelationId(request.CorrelationId);
+            }
+
             //base.ServiceProvider = base._serviceProvider;
             var scope = Senparc.CO2NET.SenparcDI.GetServiceProvider(true).CreateScope(); //base.ServiceProvider.CreateScope();
             var services = scope.ServiceProvider;
@@ -283,6 +302,28 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             var chatGroupService = services.GetService<ChatGroupService>();
 
             var chatGroup = await chatGroupService.GetObjectAsync(x => x.Id == groupId);
+
+            // 默认模型继承规则：未显式指定模型时，优先继承当前群主使用的 Prompt 模型。
+            if (aiModelId <= 0 && chatGroup != null)
+            {
+                var adminAgent = await agentTemplateService.GetObjectAsync(z => z.Id == chatGroup.AdminAgentTemplateId);
+                if (adminAgent != null && !adminAgent.PromptCode.IsNullOrEmpty())
+                {
+                    try
+                    {
+                        var adminPrompt = await promptItemService.GetBestPromptAsync(adminAgent.PromptCode, true);
+                        if (adminPrompt != null && adminPrompt.ModelId > 0)
+                        {
+                            aiModelId = adminPrompt.ModelId;
+                        }
+                    }
+                    catch
+                    {
+                        // 保持 aiModelId=0，继续走系统默认模型。
+                    }
+                }
+            }
+
             var chatGroupDto = chatGroupService.Mapping<ChatGroupDto>(chatGroup);
             var chatTaskDto = new ChatTaskDto(request.Name, groupId, aiModelId, ChatTask_Status.Waiting,
                 userCommand, request.Description, personality, request.HookPlatform, request.HookParameter, false,
@@ -363,6 +404,12 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             {
                 memberCollection.Add((chatGroup.EnterAgentTemplateId, "Enter"));
             }
+
+            // 同一 AgentTemplate 只保留一条（避免 Admin/Enter/成员重复出现两次相同模型，并行工具调用产生重复副作用）
+            memberCollection = memberCollection
+                .GroupBy(m => m.AgentTemplateId)
+                .Select(g => g.First())
+                .ToList();
 
             var agentsTemplates = new List<AgentTemplateDto>();
             var agents = new List<SemanticKernelAgent>();
@@ -692,6 +739,14 @@ Note: parameter From must be strictly equal to the name of the player spokespers
                 await foreach (var message in aiTeam.SendAsync(chatHistory: [greetingMessage, commandMessage],
             maxRound: ChatMaxRound))
                 {
+                    var keepRunning = await _cache.GetAsync<RunningChatTaskDto>(runningKey);
+                    if (keepRunning == null)
+                    {
+                        logger.Append($"任务已被强制停止：{chatTask.Name}");
+                        await chatTaskService.SetStatus(ChatTask_Status.Cancelled, chatTask);
+                        return;
+                    }
+
                     // process exit
                     if (message.GetContent()?.Contains("exit") is true)
                     {
@@ -722,11 +777,11 @@ Note: parameter From must be strictly equal to the name of the player spokespers
             finally
             {
                 scope.Dispose();
+                activeOptimizationScope?.Dispose();
+                if (!string.IsNullOrWhiteSpace(request.CorrelationId))
+                {
+                    PromptOptimizationAgentBridge.ClearFallbackCorrelationId();
+                }
             }
-        });
-
-        TaskList.Add(task);
-
-        return Task.CompletedTask;
     }
 }

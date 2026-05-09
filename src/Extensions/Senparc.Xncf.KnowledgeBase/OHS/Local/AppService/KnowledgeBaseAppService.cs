@@ -90,15 +90,12 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 对KnowledgeBase进行Embedding
+        /// 对KnowledgeBase进行Embedding，返回向量化结果描述（供前端展示）
         /// </summary>
-        /// <param name="chatGroupDto">ChatGroup 信息></param>
-        /// <param name="memberAgentTemplateIds">成员 AgentTemplate ID</param>
-        /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<AppResponseBase<bool>> EmbeddingKnowledgeBase(plRequest.KnowledgeBasesRequest request)
+        public async Task<AppResponseBase<string>> EmbeddingKnowledgeBase(plRequest.KnowledgeBasesRequest request)
         {
-            return await this.GetResponseAsync<bool>(async (response, logger) =>
+            return await this.GetResponseAsync<AppResponseBase<string>, string>(async (response, logger) =>
             {
                 logger.Append($"开始对知识库 ID: {request.Id} 进行向量化处理...");
                 System.Console.WriteLine($"开始对知识库 ID: {request.Id} 进行向量化处理...");
@@ -106,13 +103,12 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
                 {
                     var result = await knowledgeBaseService.EmbeddingKnowledgeBaseAsync(request.Id);
                     logger.Append(result);
-                    return true;
+                    return result;
                 }
                 catch (Exception ex)
                 {
                     logger.Append($"向量化处理失败：{ex.Message}");
                     System.Console.WriteLine(ex.Message);
-                
                     throw;
                 }
             });

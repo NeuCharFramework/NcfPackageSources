@@ -11,7 +11,16 @@ new Vue({
             // 显隐 visible
             visible: {
                 drawerGroup: false, // 组 新增|编辑
+                dialogFile: false,   // 配置抽屉内「新建文件」上传弹框
+                embeddingProgress: false,  // 向量化进度弹窗
+                embeddingResult: false,    // 向量化结果展示弹窗
             },
+            embeddingProgressPercent: 0,
+            embeddingProgressStatus: '',   // '' | success | exception
+            embeddingProgressText: '正在准备...',
+            embeddingResultText: '',
+            _embeddingTimer: null,
+            configUploadFileList: [], // 新建文件弹框内的上传列表（仅展示用，关闭时清空）
             form:
             {
                 content: ''
@@ -124,9 +133,9 @@ new Vue({
                 disabled: false,
                 checkStrictly: true // 是否严格的遵守父子节点不互相关联
             },
-            // 组 新增|编辑
+            // 组 新增|编辑（内容类型：1=输入 2=文件 3=采集外部数据，默认文件）
             groupForm: {
-                contentType: '', // 内容类型
+                contentType: 2, // 内容类型，默认「文件」
                 files: [], // 文件列表
                 content: '', // 内容
                 knowledgeBasesId: '' //知识库ID
@@ -159,17 +168,15 @@ new Vue({
                 stand: false, // 待命
             },
             groupAgentList: [], // 组新增时的智能体列表
-            // 组 新增|编辑 智能体
+            // 配置页文件列表查询与分页
             fileQueryList: {
-                pageIndex: 0,
-                pageSize: 0,
-                filter: '', // 筛选文本
-                timeSort: false, // 默认降序
-                proce: false, // 进行中
-                stop: false, // 停用
-                stand: false, // 待命
+                pageIndex: 1,
+                pageSize: 10,
+                filter: '', // 文件名称筛选
             },
-            fileList: [], // 组新增时的智能体列表
+            fileListTotal: 0, // 文件列表总条数，用于分页
+            fileList: [], // 配置页文件列表
+            fileNamesToSelect: [], // 打开配置时待选中的文件名（从 KnowledgeBaseItem 回显用）
         }
     },
     created: function () {
@@ -178,7 +185,7 @@ new Vue({
         that.getEmbeddingModelList();
         that.getVectorDBList();
         that.getChatModelList();
-        debugger
+        //debugger
         // 获取文件数据
         that.getFileListData('file');
 
@@ -229,7 +236,7 @@ new Vue({
             let that = this;
             // 上传成功
             that.fileList = fileList;
-            debugger
+            //debugger
             if (res.stateCode == 0) {
                 that.$notify({
                     title: '成功',
@@ -252,8 +259,39 @@ new Vue({
                 message: '上传失败，请重新上传'
             });
         },
+        // 配置抽屉「新建文件」弹框：上传成功后将文件写入 FileManage，并加入当前已选列表、刷新文件列表并勾选新文件
+        async configUploadSuccess(res, file, fileList) {
+            const that = this;
+            const ok = (res && (res.stateCode === 0 || res.success === true));
+            const fileId = res && res.data != null ? res.data : null;
+            if (ok && fileId != null) {
+                const id = typeof fileId === 'number' ? fileId : parseInt(fileId, 10);
+                if (!isNaN(id)) {
+                    that.groupForm.files = that.groupForm.files || [];
+                    that.groupForm.files.push({ id: id, name: file.name || file.fileName || '' });
+                }
+                await that.getFileListData('file');
+                that.$nextTick(() => {
+                    const row = that.fileList.find(i => i.id === id);
+                    if (row) that.toggleSelection(that.groupForm.files.map(f => that.fileList.find(i => i.id === f.id)).filter(Boolean));
+                });
+                that.$notify({ title: '成功', message: '文件已上传至文件管理', type: 'success' });
+            } else {
+                that.$notify.error({ title: '失败', message: (res && res.errorMessage) || '上传失败，请重试' });
+            }
+            that.$nextTick(() => {
+                if (that.$refs.configUploadRef) that.$refs.configUploadRef.clearFiles();
+            });
+        },
+        configUploadError() {
+            this.$notify.error({ title: '失败', message: '上传失败，请重新上传' });
+        },
+        handleDialogFileClose() {
+            this.configUploadFileList = [];
+            if (this.$refs.configUploadRef) this.$refs.configUploadRef.clearFiles();
+        },
         async getEmbeddingModelList() {
-            debugger
+            //debugger
             let that = this
             let param = {
                 page: that.page.page,
@@ -290,51 +328,95 @@ new Vue({
                     that.chatModelData = res.data.data.data;
                 })
         },
-        // 获取 文件 数据
-        async getFileListData(listType, page = 0) {
+        // 获取 文件 数据（支持分页与筛选）
+        async getFileListData(listType, page) {
+            const that = this
+            if (listType === 'file') {
+                if (page != null) that.fileQueryList.pageIndex = page
+            }
             const queryList = {}
             if (listType === 'file') {
-                this.fileQueryList.pageIndex = page ?? 1
-                Object.assign(queryList, this.fileQueryList)
+                Object.assign(queryList, that.fileQueryList)
             }
-            // 接口对接
             await axios.get(`/api/Senparc.Xncf.FileManager/FileTemplateAppService/Xncf.FileManager_FileTemplateAppService.GetList?${getInterfaceQueryStr(queryList)}`)
                 .then(res => {
-                    debugger
                     const data = res?.data ?? {}
                     if (data.success) {
-                        const fileData = data?.data?.list ?? []
+                        const payload = data?.data ?? {}
+                        const fileData = payload.list ?? []
                         if (listType === 'file') {
-                            this.$set(this, 'fileList', fileData)
-                            // 确保更新数据时 不会清空选中
-                            this.$nextTick(() => {
-                                this.isGetGroupAgent = false
+                            that.$set(that, 'fileList', fileData)
+                            that.fileListTotal = payload.totalCount ?? 0
+                            that.$nextTick(() => {
+                                if (that.visible.drawerGroup && that.groupForm.files.length > 0) {
+                                    const filterList = fileData.filter(i => that.groupForm.files.some(item => item.id === i.id))
+                                    that.toggleSelection(filterList)
+                                }
                             })
-                            // 组成员table 初始选中
-                            if (this.visible.drawerGroup && this.groupForm.files.length > 0) {
-                                // this.toggleSelection()
-                                this.$nextTick(() => {
-                                    // this.groupAgentTotal = agentData.length
-                                    const filterList = fileData.filter(i => {
-                                        return this.groupForm.files.findIndex(item => item.id === i.id) !== -1
-                                    })
-                                    this.toggleSelection(filterList)
-                                })
-
-                            }
                         }
                     } else {
-                        app.$message({
-                            message: data.errorMessage || data.data || 'Error',
-                            type: 'error',
-                            duration: 5 * 1000
-                        })
-                        this.isGetGroupAgent = false
+                        app.$message({ message: data.errorMessage || data.data || 'Error', type: 'error', duration: 5 * 1000 })
                     }
                 }).catch((err) => {
                     console.log('err', err)
-                    this.isGetGroupAgent = false
                 })
+        },
+        // 配置页文件列表：页码变化（首页/上一页/下一页/尾页/跳转）
+        handleConfigFilePageChange(page) {
+            this.fileQueryList.pageIndex = page
+            this.getFileListData('file')
+        },
+        // 配置页文件列表：每页条数变化
+        handleConfigFileSizeChange(size) {
+            this.fileQueryList.pageSize = size
+            this.fileQueryList.pageIndex = 1
+            this.getFileListData('file')
+        },
+        // 打开配置时：根据当前知识库拉取 KnowledgeBaseItem 关联项，回填文件选中或内容
+        async loadConfigKnowledgeBaseItems(knowledgeBaseId) {
+            const that = this
+            if (!knowledgeBaseId) {
+                that.getFileListData('file')
+                return
+            }
+            const url = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseItemAppService/Xncf.KnowledgeBase_KnowledgeBaseItemAppService.GetListByKnowledgeBaseId'
+            try {
+                const res = await axios.get(`${url}?knowledgeBaseId=${knowledgeBaseId}`)
+                const data = res?.data ?? {}
+                const list = (data.success && data.data) ? (Array.isArray(data.data) ? data.data : []) : []
+                if (list.length === 0) {
+                    that.getFileListData('file')
+                    return
+                }
+                const hasFileType = list.some(i => i.contentType === 100 || i.contentType === 200 || i.contentType === 300 || i.contentType === 400)
+                if (hasFileType) {
+                    const fileNames = [...new Set(list.filter(i => i.fileName).map(i => i.fileName))]
+                    that.groupForm.contentType = 2
+                    that.groupForm.files = []
+                    that.fileNamesToSelect = fileNames
+                    that.fileQueryList.pageSize = 9999
+                    that.fileQueryList.pageIndex = 1
+                    await that.getFileListData('file')
+                    that.$nextTick(() => {
+                        if (that.fileNamesToSelect.length && that.fileList.length) {
+                            const matched = that.fileList.filter(f => that.fileNamesToSelect.includes(f.fileName))
+                            that.groupForm.files = matched.map(f => ({ id: f.id, name: f.fileName }))
+                            that.toggleSelection(matched)
+                        }
+                        that.fileNamesToSelect = []
+                        that.fileQueryList.pageSize = 10
+                        that.getFileListData('file')
+                    })
+                } else {
+                    that.groupForm.contentType = (list.length && list[0].contentType === 0) ? 1 : 1
+                    that.groupForm.content = list.map(i => i.content).filter(Boolean).join('\n\n') || ''
+                    that.groupForm.files = []
+                    that.getFileListData('file')
+                }
+            } catch (e) {
+                console.error(e)
+                that.getFileListData('file')
+            }
         },
         // 获取列表
         async getList() {
@@ -382,14 +464,10 @@ new Vue({
                 log('categoryData', res, 2);
             });
         },
-        // 编辑 // 新增知识库管理 // 增加下一级
+        // 编辑 // 新增知识库管理（文件在配置中上传，此处不再使用文件列表）
         handleEdit(index, row, flag) {
             let that = this;
-            //销毁
             that.dialog.visible = false;
-            //清空文件列表
-            that.fileList = [];
-            //重建
             that.$nextTick(() => {
                 that.dialog.visible = true;
             });
@@ -454,44 +532,46 @@ new Vue({
                 }
             }
         },
-        // 保存 submitForm 数据
+        // 保存 submitForm 数据（配置抽屉确认：内容类型为文件时导入选中文件，否则不校验文件）
         async saveSubmitFormData(saveType, serviceForm = {}) {
-            debugger
-            let serviceURL = ''
-            // 组 新增|编辑
+            const that = this;
             if (saveType === 'drawerGroup') {
-                // 调用新的批量导入文件 API
-                serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.ImportFilesToKnowledgeBase'
+                const contentType = serviceForm.contentType;
+                const isFileType = contentType === 2; // 2=文件
 
-                // 从表单中提取选中的文件 ID 列表
-                const selectedFiles = serviceForm.files || [];
-                const fileIds = selectedFiles.map(file => file.id);
+                if (isFileType) {
+                    const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.ImportFilesToKnowledgeBase';
+                    const selectedFiles = serviceForm.files || [];
+                    const fileIds = selectedFiles.map(f => (typeof f.id === 'number' ? f.id : parseInt(f.id, 10))).filter(id => !isNaN(id));
 
-                // 构建请求数据
-                const requestData = {
-                    knowledgeBaseId: serviceForm.knowledgeBasesId,
-                    fileIds: fileIds
-                };
+                    if (fileIds.length === 0) {
+                        that.$notify({ title: '提示', message: '请至少选择一个文件后再保存', type: 'warning', duration: 2000 });
+                        return;
+                    }
 
-                try {
-                    service.post(serviceURL, requestData).then(res => {
-                        debugger
-                        that.$notify({
-                            title: "Success",
-                            message: "文件导入成功",
-                            type: "success",
-                            duration: 2000
-                        });
-                        that.visible.drawerGroup = false;
-                    });
-                } catch (err) {
-                    console.error('Request Error:', err);
-                    that.$notify({
-                        title: "Error",
-                        message: "文件导入失败: " + err.message,
-                        type: "error",
-                        duration: 3000
-                    });
+                    const requestData = {
+                        knowledgeBaseId: parseInt(serviceForm.knowledgeBasesId, 10),
+                        fileIds: fileIds
+                    };
+
+                    try {
+                        const res = await service.post(serviceURL, requestData);
+                        const success = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)));
+                        if (success) {
+                            that.$notify({ title: '成功', message: '文件已关联到知识库并写入条目', type: 'success', duration: 2000 });
+                            that.visible.drawerGroup = false;
+                            that.getList();
+                        } else {
+                            that.$notify({ title: '失败', message: (res && res.message) || (res && res.data && res.data.errorMessage) || '文件导入失败', type: 'error', duration: 3000 });
+                        }
+                    } catch (err) {
+                        console.error('Request Error:', err);
+                        that.$notify({ title: '错误', message: '文件导入失败: ' + (err.message || err), type: 'error', duration: 3000 });
+                    }
+                } else {
+                    // 内容类型为「输入」或「采集外部数据」时，不校验文件，直接关闭
+                    that.$notify({ title: '成功', message: '已保存', type: 'success', duration: 2000 });
+                    that.visible.drawerGroup = false;
                 }
             }
         },
@@ -522,25 +602,12 @@ new Vue({
                 }
             }
         },
-        // 更新新增、编辑
+        // 更新新增、编辑（文件改为在「配置」中上传并关联，此处不再传文件）
         updateData() {
-            let that = this
+            let that = this;
             that.dialog.updateLoading = true;
             that.$refs['dataForm'].validate(valid => {
-                //that.editorData = that.$refs['bodyEditor'].editor.getData()
-                //that.dialog.data.body = that.$refs['bodyEditor'].editor.getData();
-                debugger
-                console.log(`filelist -- ${JSON.stringify(that.fileList)}`)
-
-                // 遍历fileList，提取response.data并用逗号连接
-                let files = that.fileList
-                    .map(item => parseInt(item.response?.data))
-                    .filter(data => data !== undefined && data !== null);
-                //.join(',');
-
-                // 表单校验
                 if (valid) {
-                    that.dialog.updateLoading = true;
                     let data = {
                         id: that.dialog.data.id || 0,
                         embeddingModelId: parseInt(that.dialog.data.embeddingModelId) || 0,
@@ -548,13 +615,14 @@ new Vue({
                         chatModelId: parseInt(that.dialog.data.chatModelId) || 0,
                         name: that.dialog.data.name,
                         content: that.dialog.data.content || '',
-                        NcfFileIds: files
+                        NcfFileIds: []
                     };
                     console.log('保存知识库数据：' + JSON.stringify(data));
                     service.post("/Admin/KnowledgeBase/Edit?handler=Save", data).then(res => {
-                        console.log('保存响应：', res);
+                      console.log('保存响应：', res);
+                        debugger
                         // res.data 是后端返回的对象：{success: true, data: true, msg: "保存成功"}
-                        if (res.data && res.data.success && res.data.data === true) {
+                        if (res.data && res.data.data.success && res.data.data.data === true) {
                             that.getList();
                             that.$notify({
                                 title: "成功",
@@ -612,6 +680,13 @@ new Vue({
                 //console.log(`that.newsId----${that.newsId}`);
             }
         },
+        // 配置抽屉内「文件列表」表格勾选变化：同步到 groupForm.files，保存时用于关联知识库
+        handleConfigFileSelectionChange(val) {
+            this.groupForm.files = (val || []).map(r => ({
+                id: r.id,
+                name: r.fileName != null ? r.fileName : (r.name || '')
+            }));
+        },
         handleDbClick(row, column, event) {
             let that = this
             //that.multipleSelection = val;
@@ -632,6 +707,69 @@ new Vue({
                 this.groupAgentQueryList.filter = value
                 this.getAgentListData('groupAgent', 1)
             }
+        },
+        // 配置页文件列表：按文件名称搜索（调用接口过滤，并回到第一页）
+        handleConfigFileSearch() {
+            this.fileQueryList.pageIndex = 1
+            this.getFileListData('file')
+        },
+        // 配置页文件列表：删除文件（删除数据库与物理文件，并刷新列表与已选）
+        handleConfigFileDelete(row) {
+            const that = this
+            that.$confirm(`确认删除文件「${row.fileName || row.name}」吗？删除后数据库与物理文件均会移除。`, '删除确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                that.doDeleteFileById(row.id).then(ok => {
+                    if (ok) {
+                        that.groupForm.files = (that.groupForm.files || []).filter(f => f.id !== row.id)
+                        that.getFileListData('file')
+                    }
+                })
+            }).catch(() => {})
+        },
+        // 配置页文件列表：批量删除（删除当前选中的多行，并同步数据库与物理文件）
+        handleConfigFileBatchDelete() {
+            const that = this
+            const selected = (that.groupForm.files || []).slice()
+            if (selected.length === 0) {
+                that.$message.warning('请先勾选需要删除的文件')
+                return
+            }
+            that.$confirm(`确认删除已选中的 ${selected.length} 个文件吗？删除后数据库与物理文件均会移除。`, '批量删除确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                const deleteUrl = '/api/Senparc.Xncf.FileManager/FileTemplateAppService/Xncf.FileManager_FileTemplateAppService.DeleteFile'
+                const promises = selected.map(f => service.post(deleteUrl, { id: f.id }).then(res => {
+                    const ok = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)))
+                    return !!ok
+                }).catch(() => false))
+                Promise.all(promises).then(results => {
+                    const successCount = results.filter(Boolean).length
+                    that.groupForm.files = []
+                    that.getFileListData('file')
+                    that.$notify({
+                        title: successCount === selected.length ? '成功' : '部分完成',
+                        message: `已删除 ${successCount}/${selected.length} 个文件`,
+                        type: successCount === selected.length ? 'success' : 'warning'
+                    })
+                })
+            }).catch(() => {})
+        },
+        doDeleteFileById(id) {
+            const url = '/api/Senparc.Xncf.FileManager/FileTemplateAppService/Xncf.FileManager_FileTemplateAppService.DeleteFile'
+            return service.post(url, { id: id }).then(res => {
+                const ok = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)))
+                if (ok) this.$notify({ title: '成功', message: '文件已删除', type: 'success' })
+                else this.$notify({ title: '失败', message: (res && res.data && res.data.errorMessage) || '删除失败', type: 'error' })
+                return ok
+            }).catch(err => {
+                this.$notify({ title: '错误', message: '删除失败: ' + (err.message || err), type: 'error' })
+                return false
+            })
         },
         getCurrentRow(row) {
             let that = this
@@ -689,72 +827,93 @@ new Vue({
         handleEmbeddingBtn(btnType, item) {
             const that = this;
             if (btnType === 'embedding') {
-                // 确认对话框
                 this.$confirm(`确认对知识库 "${item.name}" 进行向量化处理吗？`, '向量化确认', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    // 显示加载提示
-                    const loading = this.$loading({
-                        lock: true,
-                        text: '正在进行向量化处理，请稍候...',
-                        spinner: 'el-icon-loading',
-                        background: 'rgba(0, 0, 0, 0.7)'
-                    });
+                    that.embeddingProgressPercent = 0;
+                    that.embeddingProgressStatus = '';
+                    that.embeddingProgressText = '正在准备...';
+                    that.visible.embeddingProgress = true;
 
-                    //开始向量化数据
+                    var progressVal = 0;
+                    that._embeddingTimer = setInterval(function () {
+                        progressVal += Math.random() * 8 + 4;
+                        if (progressVal > 90) progressVal = 90;
+                        that.embeddingProgressPercent = Math.floor(progressVal);
+                        that.embeddingProgressText = '正在向量化处理中... ' + that.embeddingProgressPercent + '%';
+                    }, 400);
+
                     const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.EmbeddingKnowledgeBase';
-                    const dataTemp = {
-                        id: item?.id ?? ''
-                    };
+                    const dataTemp = { id: item?.id ?? '' };
 
                     service.post(serviceURL, dataTemp).then(res => {
-                        loading.close();
+                        if (that._embeddingTimer) {
+                            clearInterval(that._embeddingTimer);
+                            that._embeddingTimer = null;
+                        }
+                        that.embeddingProgressPercent = 100;
+                        that.embeddingProgressStatus = 'success';
+                        that.embeddingProgressText = '向量化完成';
 
-                        if (res.success) {
-                            // 显示详细结果
-                            const message = res.data || '向量化成功！';
-                            that.$notify({
-                                title: "向量化成功",
-                                message: message,
-                                type: "success",
-                                duration: 5000,
-                                dangerouslyUseHTMLString: true
-                            });
+                        var body = res && res.data;
+                        var success = body && (body.success === true);
+                        var resultMessage = (body && body.data != null) ? (typeof body.data === 'string' ? body.data : (body.data.data != null ? body.data.data : '')) : '';
+                        if (success && resultMessage) {
+                            setTimeout(function () {
+                                that.visible.embeddingProgress = false;
+                                that.embeddingResultText = resultMessage;
+                                that.visible.embeddingResult = true;
+                            }, 400);
+                        } else if (success) {
+                            setTimeout(function () {
+                                that.visible.embeddingProgress = false;
+                                that.embeddingResultText = '知识库「' + (item.name || '') + '」向量化已完成。';
+                                that.visible.embeddingResult = true;
+                            }, 400);
                         } else {
-                            that.$notify({
-                                title: "向量化失败",
-                                message: res.message || '向量化处理失败',
-                                type: "error",
-                                duration: 5000
-                            });
+                            that.embeddingProgressStatus = 'exception';
+                            that.embeddingProgressText = (res && res.errorMessage) || (res && res.message) || '向量化失败';
+                            setTimeout(function () {
+                                that.visible.embeddingProgress = false;
+                                that.$notify({ title: '向量化失败', message: that.embeddingProgressText, type: 'error', duration: 5000 });
+                            }, 800);
                         }
                     }).catch(err => {
-                        loading.close();
-                        console.error('Embedding Error:', err);
-                        that.$notify({
-                            title: "错误",
-                            message: err.message || '向量化处理出错，请检查配置',
-                            type: "error",
-                            duration: 5000
-                        });
+                        if (that._embeddingTimer) {
+                            clearInterval(that._embeddingTimer);
+                            that._embeddingTimer = null;
+                        }
+                        that.embeddingProgressStatus = 'exception';
+                        that.embeddingProgressPercent = Math.max(that.embeddingProgressPercent, 50);
+                        that.embeddingProgressText = '处理出错：' + (err.message || err);
+                        setTimeout(function () {
+                            that.visible.embeddingProgress = false;
+                            that.$notify({
+                                title: '错误',
+                                message: err.message || '向量化处理出错，请检查配置',
+                                type: 'error',
+                                duration: 5000
+                            });
+                        }, 800);
                     });
-                }).catch(() => {
-                    // 用户取消
-                });
+                }).catch(function () {});
             }
         },
         // Dailog|抽屉 打开 按钮
         handleElVisibleOpenBtn(btnType, item) {
+            const that = this
             let visibleKey = btnType
             if (btnType === 'drawerGroup') {
-                //this.getAgentListData('groupAgent')
                 visibleKey = 'drawerGroup'
-                //设置
-                this.groupForm.knowledgeBasesId = item?.id ?? ''
+                that.groupForm.knowledgeBasesId = item?.id ?? ''
+                that.fileQueryList.pageIndex = 1
+                that.fileNamesToSelect = []
+                that.visible[visibleKey] = true
+                that.loadConfigKnowledgeBaseItems(item?.id)
+                return
             }
-            //新建文件
             if (btnType === 'dialogFile') {
                 visibleKey = 'dialogFile'
             }
@@ -808,11 +967,11 @@ new Vue({
             if (!refName) return
             this.$refs[refName].validate((valid) => {
                 if (valid) {
-                    debugger
+                    //debugger
                     const submitForm = this[formName] ?? {}
                     //提交数据给后端
                     this.saveSubmitFormData(btnType, submitForm)
-                    debugger
+                    //debugger
                     // this.visible[btnType] = false
                 } else {
                     console.log('error submit!!');
@@ -820,13 +979,18 @@ new Vue({
                 }
             });
         },
-        // 组 新增|编辑 智能体 成员取消选中
+        // 配置抽屉「已选择」文件列表中移除某一项，并同步表格勾选
         groupMembersCancel(item, index) {
-            this.groupForm.members.splice(index, 1);
-            const findIndex = this.groupAgentList.findIndex(i => item.id === i.id)
-            if (findIndex !== -1) {
-                this.toggleSelection([this.groupAgentList[findIndex]])
-            }
+            this.groupForm.files.splice(index, 1);
+            this.$nextTick(() => {
+                const tbl = this.$refs.groupAgentTable;
+                if (!tbl) return;
+                tbl.clearSelection();
+                this.groupForm.files.forEach(f => {
+                    const row = this.fileList.find(i => i.id === f.id);
+                    if (row) tbl.toggleRowSelection(row, true);
+                });
+            });
         },
         // 编辑 Dailog|抽屉 按钮 
         async handleEditDrawerOpenBtn(btnType, item) {

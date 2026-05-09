@@ -37,11 +37,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 var promptBuilderService = base.ServiceProvider.GetRequiredService<PromptBuilderService>();
-                var aiModelSelected = request.AIModel.SelectedValues.FirstOrDefault();
+                var aiModelSelected = request.AIModel;
                 ISenparcAiSetting aiSetting = null;
 
                 #region PromptRange 是否已经初始化
-                if (request.UseDatabasePrompt.IsSelected("1"))
+                if (request.UseDatabasePrompt)
                 {
                     var promptRangeRegister = new Xncf.PromptRange.Register();
                     var promptRangeModule = this._xncfModuleService.GetObject(z => z.Uid == promptRangeRegister.Uid);
@@ -96,7 +96,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 var input = request.Requirement;
 
-                var projectPath = request.InjectDomain.SelectedValues.FirstOrDefault();
+                var projectPath = request.InjectDomain;
 
                 if (projectPath.IsNullOrEmpty() || projectPath == "N/A")
                 {
@@ -122,7 +122,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 #region 生成实体 DTO
 
-                if (request.MoreActions.IsSelected("BuildDto"))
+                if ((request.MoreActions ?? Array.Empty<string>()).Contains("BuildDto"))
                 {
                     var entityDtoResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.EntityDtoClass, fileContent, className, null, projectPath, @namespace);
                     logger.Append("生成实体 DTO：");
@@ -140,7 +140,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 #endregion
 
                 #region 进行 Migration
-                if (request.MoreActions.IsSelected("BuildMigration"))
+                if ((request.MoreActions ?? Array.Empty<string>()).Contains("BuildMigration"))
                 {
                     await Console.Out.WriteLineAsync("进入 Migration，可能耗时较长，请等待");
                     logger.Append();
@@ -199,11 +199,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     await requestObj.LoadData(this.ServiceProvider);
 
                     //指定项目路径
-                    requestObj.ProjectPath.SelectedValues = new[] { projectPath };
+                    requestObj.ProjectPath = projectPath;
                     //选中所有数据库
-                    requestObj.DatabaseTypes.SelectedValues = requestObj.DatabaseTypes.Items.Select(z => z.Value).ToArray();
+                    requestObj.DatabaseTypes = requestObj.DatabaseTypeOptions.Items.Select(z => z.Value).ToArray();
                     //选中输出详情
-                    requestObj.OutputVerbose.SelectedValues = new[] { requestObj.OutputVerbose.Items.First().Value };
+                    requestObj.OutputVerbose = true;
 
                     var databaseMigrationsAppService = base.ServiceProvider.GetRequiredService<DatabaseMigrationsAppService>();
                     var migrationResult = await databaseMigrationsAppService.AddMigration(requestObj);
@@ -241,8 +241,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                var needOverride = request.Override.SelectedValues.Contains("1");
-                var aiModel = request.AIModel.SelectedValues.FirstOrDefault();
+                var needOverride = request.Override;
+                var aiModel = request.AIModel;
 
                 var promptBuilderService = base.ServiceProvider.GetRequiredService<PromptBuilderService>();
                 var log = await promptBuilderService.InitPromptAsync("XncfBuilderPlugin", needOverride, aiModel);

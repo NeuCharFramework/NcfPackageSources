@@ -7,6 +7,7 @@ using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.DatabaseToolkit.Domain.Services;
 using Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService;
+using Senparc.Xncf.DatabaseToolkit.OHS.Local.Services;
 using System;
 using static Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService.DatabaseConfigAppService;
 
@@ -29,6 +30,9 @@ namespace Senparc.Xncf.DatabaseToolkit
 
             //services.AddScoped<DatabaseBackupAppService>();
             //services.AddScoped<DbConfigQueryService>();
+
+            services.AddSingleton<DatabaseSchemaMetadataProvider>();
+            services.AddScoped<DatabaseExecutor>();
         }
 
         public void OnModelCreating(ModelBuilder modelBuilder)

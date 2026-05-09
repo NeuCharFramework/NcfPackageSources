@@ -26,6 +26,19 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
+        /// 根据知识库ID获取关联的条目列表（用于配置页回显：已关联文件、内容等）
+        /// </summary>
+        [ApiBind]
+        public async Task<AppResponseBase<List<KnowledgeBaseItemDto>>> GetListByKnowledgeBaseId(int knowledgeBaseId)
+        {
+            return await this.GetResponseAsync<List<KnowledgeBaseItemDto>>(async (response, logger) =>
+            {
+                var list = await knowledgeBasesDetailService.GetListByKnowledgeBaseIdAsync(knowledgeBaseId);
+                return list?.ToList() ?? new List<KnowledgeBaseItemDto>();
+            });
+        }
+
+        /// <summary>
         /// 创建及修改
         /// </summary>
         /// <param name="request">请求记录Dto模型</param>

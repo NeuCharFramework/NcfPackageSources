@@ -203,6 +203,162 @@ height:100%;
     background: rgba(255, 255, 255, 1);
 }
 
+.agent-view-mode-row {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 8px 4px 10px;
+}
+
+.agent-3d-wrap {
+    height: calc(100vh - 255px);
+    position: relative;
+    border: 1px solid rgba(223, 232, 243, 1);
+    border-radius: 6px;
+    background: linear-gradient(160deg, #0a1826 0%, #0d2437 60%, #103149 100%);
+    overflow: hidden;
+}
+
+.agent-3d-controls {
+    position: absolute;
+    right: 12px;
+    top: 10px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    background: rgba(4, 12, 22, 0.58);
+    border: 1px solid rgba(89, 167, 226, 0.28);
+}
+
+.agent-3d-controls .el-select {
+    width: 140px;
+}
+
+.agent-3d-controls .el-button {
+    padding: 7px 10px;
+}
+
+.agent-3d-controls .el-checkbox {
+    color: rgba(226, 242, 255, 0.92);
+}
+
+.agent-3d-tip {
+    position: absolute;
+    left: 12px;
+    top: 58px;
+    z-index: 4;
+    color: rgba(226, 242, 255, 0.92);
+    font-size: 12px;
+    background: rgba(3, 10, 18, 0.45);
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(105, 179, 231, 0.25);
+}
+
+.agent-3d-legend {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    z-index: 4;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: rgba(3, 10, 18, 0.45);
+    border: 1px solid rgba(105, 179, 231, 0.25);
+    color: rgba(226, 242, 255, 0.92);
+    font-size: 12px;
+}
+
+.agent-3d-legend .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.agent-3d-legend .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.agent-3d-legend .legend-dot.waiting {
+    background: #3376cd;
+}
+
+.agent-3d-legend .legend-dot.chatting {
+    background: #409eff;
+}
+
+.agent-3d-legend .legend-dot.paused {
+    background: #66b1ff;
+}
+
+.agent-3d-legend .legend-dot.finished {
+    background: #67c23a;
+}
+
+.agent-3d-legend .legend-dot.cancelled {
+    background: #909399;
+}
+
+.agent-3d-debug {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    z-index: 4;
+    margin: 0;
+    padding: 8px 10px;
+    border-radius: 6px;
+    background: rgba(3, 10, 18, 0.55);
+    border: 1px solid rgba(105, 179, 231, 0.25);
+    color: rgba(214, 237, 255, 0.95);
+    font-size: 11px;
+    line-height: 1.45;
+    letter-spacing: 0.2px;
+    white-space: pre-wrap;
+    pointer-events: none;
+    min-width: 220px;
+}
+
+@media (max-width: 900px) {
+    .agent-3d-controls {
+        left: 12px;
+        right: 12px;
+        top: 10px;
+        flex-wrap: wrap;
+    }
+
+    .agent-3d-controls .el-select {
+        width: calc(50% - 4px);
+    }
+
+    .agent-3d-controls .el-button {
+        width: calc(50% - 4px);
+    }
+
+    .agent-3d-tip {
+        top: 98px;
+    }
+
+    .agent-3d-debug {
+        right: 10px;
+        bottom: 10px;
+        min-width: 180px;
+        font-size: 10px;
+    }
+}
+
+.agent-3d-canvas {
+    width: 100%;
+    height: 100%;
+}
+
 .agent-container .el-scrollbar__wrap {
     overflow-x: hidden;
 }

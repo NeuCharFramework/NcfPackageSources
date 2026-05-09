@@ -360,6 +360,9 @@ public class PromptItem : EntityBase<int>
         VariableDictJson = variableDictJson;
         EvalAvgScore = -1;
         EvalMaxScore = -1;
+        
+        // 初始化 NickName（避免 null 导致数据库保存失败）
+        NickName = string.Empty;
     }
 
     public PromptItem(int rangeId, string rangeName, string tactic, int aiming, string parentTac, PromptItem_AddRequest request) :

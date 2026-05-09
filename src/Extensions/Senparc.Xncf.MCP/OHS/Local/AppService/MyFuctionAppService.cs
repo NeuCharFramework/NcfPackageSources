@@ -105,7 +105,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
 
                 // 根据 MCP 服务器选择来确定端点
                 string endpoint;
-                var selectedMcpServer = request.McpServerSelection.SelectedValues.FirstOrDefault();
+                var selectedMcpServer = request.McpServerSelection;
                 
                 if (!string.IsNullOrEmpty(selectedMcpServer) && selectedMcpServer != "Manual")
                 {
@@ -278,7 +278,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                   */
 
                 double calcResult = request.Number1;
-                var theOperator = request.Operator.SelectedValues.FirstOrDefault();
+                var theOperator = request.Operator;
                 switch (theOperator)
                 {
                     case "+":
@@ -309,7 +309,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
 
                 Action<int> raisePower = power =>
                 {
-                    if (request.Power.SelectedValues.Contains(power.ToString()))
+                    if ((request.Power ?? Array.Empty<string>()).Contains(power.ToString()))
                     {
                         var oldValue = calcResult;
                         calcResult = Math.Pow(calcResult, power);

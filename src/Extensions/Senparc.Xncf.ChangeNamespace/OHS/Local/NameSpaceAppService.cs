@@ -185,7 +185,7 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
-                if (Enum.TryParse<NameSpace_DownloadSourceCodeRequest.Parameters_Site>(request.Site.SelectedValues.FirstOrDefault(), out var siteType))
+                if (Enum.TryParse<NameSpace_DownloadSourceCodeRequest.Parameters_Site>(request.Site, out var siteType))
                 {
                     switch (siteType)
                     {
