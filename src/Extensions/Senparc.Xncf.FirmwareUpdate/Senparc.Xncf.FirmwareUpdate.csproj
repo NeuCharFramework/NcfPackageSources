@@ -21,15 +21,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>..\..\..\BuildOutPut</OutputPath>
-    <DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.FirmwareUpdate.XML</DocumentationFile>
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DocumentationFile>..\..\BuildOutPut\Senparc.Xncf.FirmwareUpdate.XML</DocumentationFile>
     <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
-    <OutputPath>..\..\..\BuildOutPut</OutputPath>
-    <DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.FirmwareUpdate.XML</DocumentationFile>
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DocumentationFile>..\..\BuildOutPut\Senparc.Xncf.FirmwareUpdate.XML</DocumentationFile>
     <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>

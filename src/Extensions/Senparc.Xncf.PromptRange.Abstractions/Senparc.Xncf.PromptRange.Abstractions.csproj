@@ -24,8 +24,8 @@
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>..\..\..\BuildOutPut</OutputPath>
-    <DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.PromptRange.Abstractions.XML</DocumentationFile>
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DocumentationFile>..\..\BuildOutPut\Senparc.Xncf.PromptRange.Abstractions.XML</DocumentationFile>
     <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -33,8 +33,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
-    <OutputPath>..\..\..\BuildOutPut</OutputPath>
-    <DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.PromptRange.Abstractions.XML</DocumentationFile>
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DocumentationFile>..\..\BuildOutPut\Senparc.Xncf.PromptRange.Abstractions.XML</DocumentationFile>
     <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
