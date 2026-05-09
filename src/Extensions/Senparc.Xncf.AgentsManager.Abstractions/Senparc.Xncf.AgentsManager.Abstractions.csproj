@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net8.0</TargetFrameworks>
-    <Version>0.1.0-preview1</Version>
+    <Version>0.1.1-preview1</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager.Abstractions</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -19,7 +19,7 @@
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
       v0.1.0 创世
-    </PackageReleaseNotes>
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

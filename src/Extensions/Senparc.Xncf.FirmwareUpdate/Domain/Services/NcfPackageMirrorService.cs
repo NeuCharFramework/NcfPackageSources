@@ -3,12 +3,14 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
+using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Service;
 
 namespace Senparc.Xncf.FirmwareUpdate.Domain.Services;
 
 /// <summary>
-/// 从 GitHub 拉取 NeuCharFramework/NCF 的 Release 资源，写入用户目录 ~/wwwroot/NcfPackages，并生成 latest-release.json（供 ncf.pub 镜像与桌面端 Plan B）。
+/// 从 GitHub 拉取 NeuCharFramework/NCF 的 Release 资源，写入当前站点 wwwroot 下的 NcfPackages 目录，并生成 latest-release.json（供 ncf.pub 镜像与桌面端 Plan B）。
 /// </summary>
 public class NcfPackageMirrorService
 {
@@ -28,12 +30,27 @@ public class NcfPackageMirrorService
         _logger = logger;
     }
 
+    /// <summary>
+    /// 安装包本地根目录：优先 <see cref="SiteConfig.WebRootPath"/>/NcfPackages，其次 ContentRoot/wwwroot/NcfPackages，最后回退到用户主目录（设计时等场景）。
+    /// </summary>
     public static string GetLocalPackageRoot()
     {
-        return Path.Combine(
+        if (!string.IsNullOrWhiteSpace(SiteConfig.WebRootPath))
+        {
+            return Path.Combine(SiteConfig.WebRootPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar), "NcfPackages");
+        }
+
+        if (!string.IsNullOrWhiteSpace(SiteConfig.ApplicationPath))
+        {
+            return Path.Combine(SiteConfig.ApplicationPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar), "wwwroot", "NcfPackages");
+        }
+
+        var fallback = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
             "wwwroot",
             "NcfPackages");
+        SenparcTrace.SendCustomLog("FirmwareUpdate", $"SiteConfig.WebRootPath/ApplicationPath 未设置，已回退到用户目录：{fallback}");
+        return fallback;
     }
 
     /// <param name="manualTrigger">为 true 时忽略「是否启用」与「距上次同步间隔」。</param>

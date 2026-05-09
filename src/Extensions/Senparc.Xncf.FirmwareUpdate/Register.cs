@@ -26,7 +26,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Icon => "fa fa-cloud-download";
 
-    public override string Description => "从 GitHub 同步 NCF 桌面端安装包到本机 ~/wwwroot/NcfPackages，保留最近 3 个版本，并生成 latest-release.json 供 ncf.pub 与桌面端备用下载使用。";
+    public override string Description => "从 GitHub 同步 NCF 桌面端安装包到当前站点 wwwroot 下的 NcfPackages，保留最近 3 个版本，并生成 latest-release.json 供 ncf.pub 与桌面端备用下载使用。";
 
     public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
     {

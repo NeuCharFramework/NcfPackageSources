@@ -81,6 +81,11 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
 
         private static JsonNode NormalizeSimpleNode(Type targetType, JsonNode currentNode, FunctionParameterUiAttribute uiAttr)
         {
+            if (IsBooleanTargetType(targetType) && TryNormalizeBooleanJsonNode(currentNode, out var boolJson))
+            {
+                return boolJson;
+            }
+
             var forMultiple = uiAttr?.ParameterType == ParameterType.CheckBoxList || targetType == typeof(string[]);
             var values = ExtractValues(currentNode, forMultiple);
 
@@ -220,6 +225,42 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
         {
             var underlyingType = Nullable.GetUnderlyingType(actualType) ?? actualType;
             return underlyingType == targetType;
+        }
+
+        private static bool IsBooleanTargetType(Type targetType)
+        {
+            return targetType == typeof(bool) || Nullable.GetUnderlyingType(targetType) == typeof(bool);
+        }
+
+        private static bool TryNormalizeBooleanJsonNode(JsonNode currentNode, out JsonNode boolJson)
+        {
+            boolJson = null;
+            if (currentNode is not JsonValue jsonValue)
+            {
+                return false;
+            }
+
+            try
+            {
+                if (jsonValue.TryGetValue<bool>(out var direct))
+                {
+                    boolJson = JsonValue.Create(direct);
+                    return true;
+                }
+            }
+            catch
+            {
+                // fall through
+            }
+
+            var s = jsonValue.ToString();
+            if (bool.TryParse(s, out var parsed))
+            {
+                boolJson = JsonValue.Create(parsed);
+                return true;
+            }
+
+            return false;
         }
     }
 }

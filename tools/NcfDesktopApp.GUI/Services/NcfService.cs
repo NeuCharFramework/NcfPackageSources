@@ -44,6 +44,15 @@ public class NcfService
         var b = DesktopSettingsStore.NormalizeMirrorServerBase(MirrorServerBaseUrl);
         return $"{b}/NcfPackages/latest-release.json";
     }
+
+    /// <summary>
+    /// 用户将「备用更新源」设为非默认根地址（如本机 https://localhost:xxx）时，应优先从该地址拉取 latest-release.json 与其中给出的下载链接。
+    /// </summary>
+    private bool PreferMirrorMetadataFirst =>
+        !string.Equals(
+            DesktopSettingsStore.NormalizeMirrorServerBase(MirrorServerBaseUrl),
+            DesktopSettingsStore.NormalizeMirrorServerBase(DesktopUserSettings.DefaultMirrorServerBaseUrl),
+            StringComparison.OrdinalIgnoreCase);
     
     // 🆕 配置文件冲突处理回调
     // 参数: fileName, oldContent, newContent
@@ -92,14 +101,34 @@ public class NcfService
         _httpClient.DefaultRequestHeaders.Clear();
         _httpClient.DefaultRequestHeaders.Add("User-Agent", "NCF-Desktop-App");
 
-        var fromGitHub = await TryGetLatestReleaseFromGitHubAsync(cancellationToken).ConfigureAwait(false);
-        if (fromGitHub != null)
+        if (PreferMirrorMetadataFirst)
         {
-            return fromGitHub;
+            var mirrorUrl = GetMirrorMetadataUrl();
+            _logger?.LogInformation("已配置自定义镜像根地址，优先从元数据地址获取版本: {Url}", mirrorUrl);
+            var fromMirror = await TryGetLatestReleaseFromMirrorAsync(cancellationToken).ConfigureAwait(false);
+            if (fromMirror != null)
+            {
+                return fromMirror;
+            }
+
+            _logger?.LogWarning("自定义镜像元数据不可用，回退到 GitHub API");
+            var fromGitHub = await TryGetLatestReleaseFromGitHubAsync(cancellationToken).ConfigureAwait(false);
+            if (fromGitHub != null)
+            {
+                return fromGitHub;
+            }
+
+            return null;
         }
 
-        var mirrorUrl = GetMirrorMetadataUrl();
-        _logger?.LogWarning("GitHub API 不可用，尝试备用元数据地址: {Mirror}", mirrorUrl);
+        var fromGitHubDefault = await TryGetLatestReleaseFromGitHubAsync(cancellationToken).ConfigureAwait(false);
+        if (fromGitHubDefault != null)
+        {
+            return fromGitHubDefault;
+        }
+
+        var fallbackMirrorUrl = GetMirrorMetadataUrl();
+        _logger?.LogWarning("GitHub API 不可用，尝试备用元数据地址: {Mirror}", fallbackMirrorUrl);
         return await TryGetLatestReleaseFromMirrorAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -125,16 +154,16 @@ public class NcfService
         try
         {
             var url = GetMirrorMetadataUrl();
-            _logger?.LogInformation("从备用源获取版本元数据: {Url}", url);
+            _logger?.LogInformation("从镜像元数据获取版本: {Url}", url);
             var json = await _httpClient.GetStringAsync(url, cancellationToken).ConfigureAwait(false);
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var release = JsonSerializer.Deserialize<GitHubRelease>(json, options);
-            _logger?.LogInformation("获取到最新版本(备用源): {Tag}", release?.TagName);
+            _logger?.LogInformation("获取到最新版本(镜像元数据): {Tag}", release?.TagName);
             return release;
         }
         catch (Exception ex)
         {
-            _logger?.LogError(ex, "从备用源获取最新版本失败");
+            _logger?.LogError(ex, "从镜像元数据获取最新版本失败");
             return null;
         }
     }
@@ -1015,6 +1044,32 @@ public class NcfService
 
     public async Task<bool> TestConnectionAsync()
     {
+        if (PreferMirrorMetadataFirst)
+        {
+            try
+            {
+                using var response = await _httpClient.GetAsync(GetMirrorMetadataUrl());
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+            }
+            catch
+            {
+                // 继续尝试 GitHub
+            }
+
+            try
+            {
+                using var response = await _httpClient.GetAsync("https://api.github.com/repos/NeuCharFramework/NCF/releases/latest");
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         try
         {
             using var response = await _httpClient.GetAsync("https://api.github.com/repos/NeuCharFramework/NCF/releases/latest");

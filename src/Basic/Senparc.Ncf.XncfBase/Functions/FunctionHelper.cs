@@ -117,6 +117,10 @@ namespace Senparc.Ncf.XncfBase.Functions
                 {
                     parameterType = ParameterType.Password;
                 }
+                else if (IsBooleanProperty(prop))
+                {
+                    parameterType = ParameterType.CheckBox;
+                }
 
                 var name = prop.Name;
                 string title = null;
@@ -169,6 +173,12 @@ namespace Senparc.Ncf.XncfBase.Functions
             }
 
             return propertyInfo.CustomAttributes.Any(z => z.AttributeType.FullName == "Newtonsoft.Json.JsonIgnoreAttribute");
+        }
+
+        private static bool IsBooleanProperty(PropertyInfo prop)
+        {
+            var t = prop.PropertyType;
+            return t == typeof(bool) || Nullable.GetUnderlyingType(t) == typeof(bool);
         }
 
         /// <summary>

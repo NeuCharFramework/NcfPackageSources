@@ -14,7 +14,8 @@
                 'Int32': '数字',
                 'Int64': '数字',
                 'DateTime': '日期',
-                'String[]': '选项'
+                'String[]': '选项',
+                'Boolean': '布尔'
             },
             xNcfModules_State: {
                 0: '关闭',
@@ -135,6 +136,12 @@
                     this.runData[res.name].item = res;
                     this.runData[res.name].value = res.value || '';
                 }
+                // 布尔（单个复选框）
+                if (res.parameterType === 4) {
+                    this.runData[res.name] = {};
+                    this.runData[res.name].item = res;
+                    this.runData[res.name].value = res.value === true || res.value === 'true' || res.value === 'True';
+                }
             });
             this.runData = Object.assign({}, this.runData);
             //  this.runData数组结构
@@ -214,6 +221,10 @@
                         } else {
                             xncfFunctionParams[i] = this.runData[i].value;
                         }
+                    }
+                    // 布尔
+                    if (this.runData[i].item.parameterType === 4) {
+                        xncfFunctionParams[i] = !!this.runData[i].value;
                     }
                 }
                 const data = {

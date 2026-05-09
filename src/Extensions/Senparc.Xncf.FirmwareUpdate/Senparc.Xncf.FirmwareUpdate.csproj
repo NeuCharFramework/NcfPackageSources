@@ -1,19 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.1.0-preview.1</Version>
+    <Version>0.1.1.1-preview</Version>
     <AssemblyName>Senparc.Xncf.FirmwareUpdate</AssemblyName>
     <RootNamespace>Senparc.Xncf.FirmwareUpdate</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
-    <Description>NCF 桌面端安装包镜像：从 GitHub Release 同步至本机 wwwroot/NcfPackages，并提供备用下载元数据</Description>
+    <Description>NCF 桌面端安装包镜像：从 GitHub Release 同步至当前站点 wwwroot 下的 NcfPackages，并提供备用下载元数据</Description>
     <Copyright>NeuCharFramework</Copyright>
     <PackageTags>NeuCharFramework,NCF,Senparc.Xncf.FirmwareUpdate</PackageTags>
     <Authors>NeuCharFramework</Authors>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>XNCF 固件/安装包镜像更新</Title>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>v0.1.0 初始版本：定时/手动从 GitHub 同步 NCF 发布包到 ~/wwwroot/NcfPackages，并生成 latest-release.json</PackageReleaseNotes>
+    <PackageReleaseNotes>v0.1.0 初始版本：定时/手动从 GitHub 同步 NCF 发布包到当前站点 wwwroot 下的 NcfPackages，并生成 latest-release.json
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <Nullable>enable</Nullable>

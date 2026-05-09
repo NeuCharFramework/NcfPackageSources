@@ -15,6 +15,10 @@ namespace Senparc.Ncf.XncfBase
         DropDownList = 1,
         CheckBoxList = 2,
         Password = 3,
+        /// <summary>
+        /// 单个布尔，对应 <c>bool</c> / <c>bool?</c>，前端渲染为单个复选框。
+        /// </summary>
+        CheckBox = 4,
     }
 
     /// <summary>
