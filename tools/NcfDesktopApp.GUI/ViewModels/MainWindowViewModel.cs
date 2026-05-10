@@ -495,6 +495,35 @@ public partial class MainWindowViewModel : ViewModelBase
     
     private bool CanCloseBrowserTab() => IsBrowserTabVisible;
 
+    /// <summary>NCF 站点进程是否处于运行中（主窗口关闭前判断）。</summary>
+    public bool IsNcfRunning => _isNcfRunning;
+
+    /// <summary>
+    /// 主窗口即将关闭：若 NCF 在运行则弹框确认并停止进程；返回 <c>true</c> 表示可以关闭窗口。
+    /// </summary>
+    public async Task<bool> TryPrepareShutdownForWindowCloseAsync()
+    {
+        if (!_isNcfRunning)
+        {
+            return true;
+        }
+
+        var confirm = await ShowConfirmDialogAsync(
+            "关闭应用",
+            "NCF 正在运行。关闭窗口将停止 NCF 进程。\n是否继续？",
+            "停止并关闭",
+            "取消"
+        ).ConfigureAwait(true);
+
+        if (!confirm)
+        {
+            return false;
+        }
+
+        await StopNcfAsync().ConfigureAwait(true);
+        return true;
+    }
+
     #endregion
 
     #region 初始化方法

@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using NcfDesktopApp.GUI.ViewModels;
 using System;
 using System.Linq;
 
@@ -6,10 +7,49 @@ namespace NcfDesktopApp.GUI.Views;
 
 public partial class MainWindow : Window
 {
+    /// <summary>为 true 时跳过「NCF 运行中」关闭确认（避免二次 Close 再次弹框）。</summary>
+    private bool _allowCloseWithoutNcfConfirm;
+
     public MainWindow()
     {
         InitializeComponent();
         AdjustWindowSizeToScreen();
+        Closing += OnMainWindowClosing;
+    }
+
+    private async void OnMainWindowClosing(object? sender, WindowClosingEventArgs e)
+    {
+        if (_allowCloseWithoutNcfConfirm)
+        {
+            return;
+        }
+
+        if (DataContext is not MainWindowViewModel vm)
+        {
+            return;
+        }
+
+        if (!vm.IsNcfRunning)
+        {
+            return;
+        }
+
+        e.Cancel = true;
+
+        try
+        {
+            if (!await vm.TryPrepareShutdownForWindowCloseAsync().ConfigureAwait(true))
+            {
+                return;
+            }
+
+            _allowCloseWithoutNcfConfirm = true;
+            Close();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[关闭主窗口] 停止 NCF 或确认流程异常: {ex.Message}");
+        }
     }
 
     /// <summary>
@@ -33,12 +73,12 @@ public partial class MainWindow : Window
                 var workingArea = screen.WorkingArea;
                 
                 // 定义理想尺寸
-                const double idealWidth = 900;
-                const double idealHeight = 800;
+                const double idealWidth = 920;
+                const double idealHeight = 860;
                 
-                // 定义最小尺寸
-                const double minWidth = 800;
-                const double minHeight = 650;
+                // 定义最小尺寸（与 MainWindow.axaml 中 MinWidth/MinHeight 一致）
+                const double minWidth = 820;
+                const double minHeight = 720;
                 
                 // 计算安全边距（为任务栏、标题栏等预留空间）
                 const double safetyMarginWidth = 100;  // 左右各留50px

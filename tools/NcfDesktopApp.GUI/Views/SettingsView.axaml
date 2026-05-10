@@ -3,11 +3,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:NcfDesktopApp.GUI.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="720"
              x:Class="NcfDesktopApp.GUI.Views.SettingsView"
-             x:DataType="vm:MainWindowViewModel">
+             x:DataType="vm:MainWindowViewModel"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
 
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,*" VerticalAlignment="Stretch" MinHeight="0">
         
         <!-- 顶部操作栏 -->
         <Border Grid.Row="0" 
@@ -53,13 +55,19 @@
             </Grid>
         </Border>
 
-        <!-- 🆕 主要内容区域 - 左右分栏布局 -->
-        <Grid Grid.Row="1" ColumnDefinitions="420,*">
-            
+        <!-- 主要内容区域：占满剩余高度，左侧可纵向滚动，右侧日志区独立滚动 -->
+        <Grid Grid.Row="1"
+              ColumnDefinitions="420,*"
+              VerticalAlignment="Stretch"
+              MinHeight="0">
+
             <!-- 左侧：控制面板 -->
-            <ScrollViewer Grid.Column="0" 
+            <ScrollViewer Grid.Column="0"
                          Padding="20,15,10,20"
-                         VerticalScrollBarVisibility="Auto">
+                         VerticalAlignment="Stretch"
+                         HorizontalAlignment="Stretch"
+                         VerticalScrollBarVisibility="Auto"
+                         HorizontalScrollBarVisibility="Disabled">
 
                 <StackPanel Spacing="15">
                     
@@ -214,10 +222,12 @@
                 </StackPanel>
             </ScrollViewer>
             
-            <!-- 🆕 右侧：日志面板 -->
-            <Border Grid.Column="1" 
+            <!-- 右侧：日志面板 -->
+            <Border Grid.Column="1"
                     Classes="log-panel"
-                    Margin="10,15,20,20">
+                    Margin="10,15,20,20"
+                    VerticalAlignment="Stretch"
+                    MinHeight="0">
                 <Grid RowDefinitions="Auto,*">
                     <!-- 日志标题栏 -->
                     <Border Grid.Row="0" 

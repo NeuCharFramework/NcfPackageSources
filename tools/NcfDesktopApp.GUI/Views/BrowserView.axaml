@@ -6,9 +6,11 @@
              xmlns:controls="using:NcfDesktopApp.GUI.Views.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="NcfDesktopApp.GUI.Views.BrowserView"
-             x:DataType="vm:MainWindowViewModel">
+             x:DataType="vm:MainWindowViewModel"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
     
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,*" VerticalAlignment="Stretch" MinHeight="0">
         
         <!-- 顶部工具栏 -->
         <Border Grid.Row="0" Background="{DynamicResource ToolbarBackgroundBrush}" BorderBrush="{DynamicResource ToolbarBorderBrush}" BorderThickness="0,0,0,1" Padding="10">
