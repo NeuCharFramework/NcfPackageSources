@@ -21,6 +21,8 @@ variables:
   buildPlatform: 'Any CPU'    
   buildConfiguration: 'Release'  
   NUGET_PACKAGES: $(Agent.ToolsDirectory)/nuget/packages  # NuGet 缓存路径
+  # 与 NuGetCommand@2 external 推送目标一致（nuget.org v3）
+  NuGetPushSource: 'https://api.nuget.org/v3/index.json'
 
 steps:  
 # - task: UseDotNet@2  
@@ -145,926 +147,165 @@ steps:
 #   inputs:  
 #     versionSpec: 5.2.0  
 #     checkLatest: true  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Ncf.Core -V0    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Core.0.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Ncf.Core -V0 - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Core.0.*.snupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Ncf.Core.AspNet    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Core.AspNet*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Ncf.Core.AspNet - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Core.AspNet*.snupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Ncf.Log    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Log.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Ncf.Log - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Log.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Ncf.Mvc.UI    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Mvc.UI.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Ncf.Mvc.UI - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Mvc.UI.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Ncf.Repository    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Repository.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Ncf.Repository - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Repository.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Ncf.Service    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Service.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Ncf.Service - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Service.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Ncf.SMS    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.SMS.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Ncf.SMS - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.SMS.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Ncf.Utility    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Utility.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Ncf.Utility - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Utility.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Ncf.XncfBase    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.XncfBase.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Ncf.XncfBase - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.XncfBase.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Ncf.AreaBase    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.AreaBase.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Ncf.AreaBase - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.AreaBase.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.ChangeNamespace    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.ChangeNamespace.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Xncf.ChangeNamespace - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.ChangeNamespace.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.DynamicData    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.DynamicData.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Xncf.DynamicData - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.DynamicData.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.DatabaseToolkit    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.DatabaseToolkit.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Xncf.DatabaseToolkit - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.DatabaseToolkit.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.Swagger    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.Swagger.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Xncf.Swagger - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.Swagger.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.Terminal    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.Terminal.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Xncf.Terminal - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.Terminal.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.XncfBuilder    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.XncfBuilder.0.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Xncf.XncfBuilder - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.XncfBuilder.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Ncf.Database -v0    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Database.0.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Ncf.Database -v0 - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Database.0.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Ncf.DatabasePlant    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.DatabasePlant.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Ncf.DatabasePlant - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.DatabasePlant.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Ncf.Database.MySql    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Database.MySql.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Ncf.Database.MySql - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Database.MySql.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Ncf.Database.InMemory    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Database.InMemory.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Ncf.Database.InMemory - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Database.InMemory.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Ncf.Database.SqlServer    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Database.SqlServer.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Ncf.Database.SqlServer - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Database.SqlServer.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Ncf.Database.Sqlite    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Database.Sqlite.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Ncf.Database.Sqlite - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Database.Sqlite.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Ncf.Database.PostgreSQL    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Database.PostgreSQL.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Ncf.Database.PostgreSQL - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Database.PostgreSQL.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Ncf.Database.Oracle    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Database.Oracle.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Ncf.Database.Oracle - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Database.Oracle.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Ncf.Database.Dm    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Database.Dm.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Ncf.Database.Dm - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Database.Dm.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.XncfBuilder.Template    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.XncfBuilder.Template.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-# 系统模块 开始  
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.Menu    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.Menu.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.XncfModuleManager    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.XncfModuleManager.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.SystemPermission    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.SystemPermission.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.SystemManager    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.SystemManager.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.SystemCore    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.SystemCore.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.AreasBase    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.AreasBase.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.Tenant.Interface    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.Tenant.Interface.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.Tenant    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.Tenant.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.PromptRange.Abstractions 
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.PromptRange.Abstractions.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Xncf.PromptRange.Abstractions - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.PromptRange.Abstractions.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.PromptRange    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.PromptRange.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Xncf.PromptRange - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.PromptRange.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Xncf.XncfBuilder - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.XncfBuilder.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Ncf.Database -v0    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.Database.0.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.AIKernel    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.AIKernel.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Xncf.AIKernel - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.AIKernel.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
 
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.AgentsManager.Abstractions    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.AgentsManager.Abstractions.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Xncf.AgentsManager.Abstractions - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.AgentsManager.Abstractions.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.AgentsManager    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.AgentsManager.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Xncf.AgentsManager - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.AgentsManager.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.Dapr    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.Dapr.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Xncf.Dapr - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.Dapr.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.SenMapic    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.SenMapic.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Xncf.SenMapic - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.SenMapic.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
+# 自动发现并推送 Senparc.Ncf.* / Senparc.Xncf.* 的 .nupkg（仅 .nupkg；符号包 .snupkg 未包含，可按需扩展）
+# 凭据：脚本无法使用 NuGetAuthenticate 注入仅含 ApiKey 的 nuget.org 服务连接（Microsoft 文档限制），
+# 请在 Pipeline 中配置机密变量 NUGET_API_KEY（与「nuget-jeffrey-full-key」服务连接中的 NuGet.org API Key 相同即可）。
+- powershell: |
+    $ErrorActionPreference = 'Continue'
+    $root = "$(Build.SourcesDirectory)"
+    $source = "$(NuGetPushSource)"
+    $apiKey = $env:NUGET_API_KEY
+    if ([string]::IsNullOrWhiteSpace($apiKey)) {
+      Write-Host "##[error]缺少机密变量 NUGET_API_KEY：请在 Pipeline / Variable group 中设置（NuGet.org 推送用 API Key，可与服务连接 nuget-jeffrey-full-key 使用同一密钥）。"
+      exit 2
+    }
 
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.FirmwareUpdate    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.FirmwareUpdate.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Xncf.FirmwareUpdate - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.FirmwareUpdate.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
 
+    function Get-NupkgMetadataFromZip {
+      param([string]$PackagePath)
+      try {
+        $zip = [System.IO.Compression.ZipFile]::OpenRead($PackagePath)
+        try {
+          $entry = $zip.Entries | Where-Object { $_.FullName -match '(?i)\.nuspec$' } | Select-Object -First 1
+          if (-not $entry) {
+            return @{ Id = ''; Version = '' }
+          }
+          $r = New-Object System.IO.StreamReader($entry.Open())
+          try {
+            $txt = $r.ReadToEnd()
+          } finally { $r.Close() }
+          $xml = New-Object System.Xml.XmlDocument
+          $xml.PreserveWhitespace = $true
+          $xml.LoadXml($txt)
+          $nsUri = $xml.DocumentElement.NamespaceURI
+          $id = $null
+          $ver = $null
+          if ([string]::IsNullOrEmpty($nsUri)) {
+            $id = $xml.package.metadata.id
+            $ver = $xml.package.metadata.version
+          } else {
+            $nsm = New-Object System.Xml.XmlNamespaceManager($xml.NameTable)
+            $nsm.AddNamespace('n', $nsUri)
+            $meta = $xml.SelectSingleNode('//n:metadata', $nsm)
+            if ($meta) {
+              $idN = $meta.SelectSingleNode('n:id', $nsm)
+              $verN = $meta.SelectSingleNode('n:version', $nsm)
+              if ($idN) { $id = $idN.InnerText }
+              if ($verN) { $ver = $verN.InnerText }
+            }
+          }
+          return @{ Id = [string]$id; Version = [string]$ver }
+        } finally { $zip.Dispose() }
+      } catch {
+        return @{ Id = ''; Version = '' }
+      }
+    }
 
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.MCP    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.MCP.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Xncf.MCP - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.MCP.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()    
+    function Test-SenparcPackageFileName {
+      param([string]$FileName)
+      return ($FileName.StartsWith('Senparc.Ncf.', [System.StringComparison]::Ordinal) -or
+        $FileName.StartsWith('Senparc.Xncf.', [System.StringComparison]::Ordinal))
+    }
 
+    $candidates = Get-ChildItem -Path $root -Recurse -File -Filter '*.nupkg' -ErrorAction SilentlyContinue |
+      Where-Object { Test-SenparcPackageFileName $_.Name } |
+      Sort-Object FullName -Unique
+    $rows = New-Object System.Collections.Generic.List[object]
 
-- task: NuGetCommand@2    
-  displayName: Senparc.Xncf.WeixinManager    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.WeixinManager.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Xncf.WeixinManager - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Xncf.WeixinManager.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()    
-  
-- task: NuGetCommand@2    
-  displayName: Senparc.Ncf.UnitTestExtension    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.UnitTestExtension.*.nupkg'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-- task: NuGetCommand@2    
-  displayName: 'Senparc.Ncf.UnitTestExtension - Symbol'    
-  inputs:      
-    command: push      
-    packagesToPush: '**/Senparc.Ncf.UnitTestExtension.*.snupkg;'      
-    nuGetFeedType: external      
-    publishFeedCredentials: 'nuget-jeffrey-full-key'      
-    arguments: '-skipDuplicate'    
-  continueOnError: true    
-  condition: succeededOrFailed()  
-  
-  
+    Write-Host "== Senparc NuGet push: discovered $($candidates.Count) package file(s) under $root =="
 
-# 系统模块 结束  
+    $anyUnexpectedFailure = $false
+
+    foreach ($f in $candidates) {
+      $path = $f.FullName
+      $meta = Get-NupkgMetadataFromZip $path
+      $pkgId = if ([string]::IsNullOrWhiteSpace($meta.Id)) { $f.BaseName } else { $meta.Id }
+      $pkgVer = if ([string]::IsNullOrWhiteSpace($meta.Version)) { '' } else { $meta.Version }
+
+      Write-Host ("##[command] dotnet nuget push ""{0}"" --source ""{1}"" --api-key *** --skip-duplicate" -f $path, $source)
+
+      $stdoutPath = Join-Path $env:TEMP ("nuget-push-{0}.out.txt" -f [Guid]::NewGuid().ToString('N'))
+      $stderrPath = Join-Path $env:TEMP ("nuget-push-{0}.err.txt" -f [Guid]::NewGuid().ToString('N'))
+      try {
+        # 使用逗号分隔的 ArgumentList，避免 Windows PowerShell 5.1 对数组变量的已知问题
+        $p = Start-Process -FilePath 'dotnet' -ArgumentList 'nuget', 'push', $path, '--source', $source, '--api-key', $apiKey, '--skip-duplicate', '--timeout', '3600' -NoNewWindow -Wait -PassThru `
+          -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
+        $out = (Get-Content -LiteralPath $stdoutPath -Raw -ErrorAction SilentlyContinue)
+        $err = (Get-Content -LiteralPath $stderrPath -Raw -ErrorAction SilentlyContinue)
+        $code = $p.ExitCode
+      } finally {
+        Remove-Item -LiteralPath $stdoutPath -Force -ErrorAction SilentlyContinue
+        Remove-Item -LiteralPath $stderrPath -Force -ErrorAction SilentlyContinue
+      }
+
+      $combined = (@($out, $err) | Where-Object { $_ }) -join "`n"
+      $result = 'Failed'
+      $reason = ''
+
+      # --skip-duplicate: 成功退出码 0，重复包通常会有 skip / already exists 类提示
+      if ($code -eq 0) {
+        $lower = if ($combined) { $combined.ToLowerInvariant() } else { '' }
+        if ($lower -match 'skip|already exists|duplicate|409') {
+          $result = 'Skipped (exists)'
+          if ($combined) {
+            $one = ($combined.Trim() -replace '\s+', ' ')
+            if ($one.Length -gt 200) { $reason = $one.Substring(0, 200) + '...' } else { $reason = $one }
+          }
+        } else {
+          $result = 'Published'
+        }
+      } else {
+        # 非 0：409 Conflict / 已存在 仍视为跳过；其余为失败
+        $lower = if ($combined) { $combined.ToLowerInvariant() } else { '' }
+        if ($lower -match '409|conflict|already exists|duplicate|cannot publish.*exists') {
+          $result = 'Skipped (exists)'
+          if ($combined) {
+            $one = ($combined.Trim() -replace '\s+', ' ')
+            if ($one.Length -gt 200) { $reason = $one.Substring(0, 200) + '...' } else { $reason = $one }
+          }
+        } else {
+          $anyUnexpectedFailure = $true
+          $result = 'Failed'
+          $reason = if ($combined) { ($combined.Trim() -replace '\s+', ' ') } else { ("dotnet exit code {0}" -f $code) }
+          if ($reason.Length -gt 400) { $reason = $reason.Substring(0, 400) + '...' }
+        }
+      }
+
+      $rows.Add([pscustomobject]@{
+          PackageId = $pkgId
+          Version   = $pkgVer
+          Path      = $path
+          Result    = $result
+          Detail    = $reason
+        })
+    }
+
+    Write-Host ''
+    Write-Host '========== NuGet push summary (PackageId | Version | Path | Result) =========='
+    foreach ($r in $rows) {
+      $pathDisp = $r.Path
+      if ($pathDisp.Length -gt 120) { $pathDisp = '...' + $pathDisp.Substring([Math]::Max(0, $pathDisp.Length - 117)) }
+      Write-Host ('| {0} | {1} | {2} | {3} |' -f $r.PackageId, $r.Version, $pathDisp, $r.Result)
+      if ($r.Detail) {
+        Write-Host ('  Reason: {0}' -f $r.Detail)
+      }
+    }
+    Write-Host '==============================================================================='
+    Write-Host ('Total: {0}  (Published / Skipped / Failed 见上表 Result 列)' -f $rows.Count)
+    Write-Host 'Job exit: 发现与推送循环已执行完毕；若存在非重复性错误则失败。'
+
+    if ($anyUnexpectedFailure) {
+      Write-Host "##[error]One or more package pushes failed (see summary table)."
+      exit 1
+    }
+    exit 0
+  displayName: 'Push Senparc .nupkg (auto-discover, skip duplicates)'
+  condition: succeededOrFailed()
+  env:
+    NUGET_API_KEY: $(NUGET_API_KEY)
+
 - task: DotNetCoreCLI@2    
   displayName: Publish    
   inputs:      
