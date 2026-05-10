@@ -25,7 +25,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             {
                 aiModel.Items.Add(new SelectionItem("Default", $"系统默认（AiPlatform：{defaultSetting.AiPlatform}，Endpoint：{defaultSetting.Endpoint}）", "通过系统默认配置的固定 AI 模型信息", true));
             }
-            catch (SenparcAiException ex)
+            catch (SenparcAiException)
             {
                 //Endpoint 可能未配置
 

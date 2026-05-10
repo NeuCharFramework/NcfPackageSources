@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <PackageType>Template</PackageType>
-    <PackageVersion>0.12.11-preview.1</PackageVersion>
+    <PackageVersion>0.12.12-preview.1</PackageVersion>
     <PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
     <Title>XNCF Template</Title>
     <Authors>JeffreySu</Authors>
@@ -11,9 +11,11 @@
     <PackageTags>NeuCharFramework;NCF;XNCF;template;dotnet-new;templates</PackageTags>
     <IncludeContentInPack>true</IncludeContentInPack>
     <IncludeBuildOutput>false</IncludeBuildOutput>
+    <!-- 无程序集输出时若仍生成符号包(.snupkg)会为空，SDK 10 会在 Pack 阶段报 NU5017 -->
+    <IncludeSymbols>false</IncludeSymbols>
     <ContentTargetFolders>content</ContentTargetFolders>
-    <!-- IncludeBuildOutput=false 时，出现的NU5017错误处理： https://github.com/NuGet/Home/issues/8583 -->
-    <NoWarn>$(NoWarn);NU5128;NU5017</NoWarn>
+    <!-- NU5128：与 SuppressDependenciesWhenPacking 等相关 -->
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
     <!--<NoDefaultExcludes>true</NoDefaultExcludes>-->
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>

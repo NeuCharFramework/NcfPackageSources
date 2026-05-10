@@ -45,4 +45,11 @@ namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.PL
                 new SelectionItem("3","三次方","计算上述结果之后再计算三次方",false)
         });
     }
+
+    /// <summary>
+    /// 通过 EventBus 向 XncfBuilder 请求模块清单的演示（无表单参数）。
+    /// </summary>
+    public class MyFunction_XncfModulesInventoryRequest : FunctionAppRequestBase
+    {
+    }
 }

@@ -45,7 +45,7 @@ public class MultiFileCodeGenerator : IIncrementalGenerator
     {
         // 获取配置文件
         var configProvider = context.AdditionalTextsProvider
-            .Where(file => file.Path.EndsWith("generation-config.json"))
+            .Where(file => file.Path.EndsWith("generation-config.json", StringComparison.OrdinalIgnoreCase))
             .Select((file, cancellationToken) => LoadConfig(file, cancellationToken))
             .Where(config => config != null);
 
@@ -96,25 +96,22 @@ public class MultiFileCodeGenerator : IIncrementalGenerator
         {
             var processedFiles = new List<ProcessedFile>();
 
-            // 处理每个配置的文件
-            foreach (var fileItem in config.Files)
+            // 处理每个配置的文件（即使未读到内容也占位，否则不会生成 BackendTemplate/FrontendTemplate，
+            // 且 CI 上路径/检出范围与本地不一致时会出现“生成器零输出”导致下游编译失败）
+            foreach (var fileItem in config.Files ?? Array.Empty<FileItem>())
             {
-                var content = GetFileContent(fileItem.Path, additionalFiles);
-                if (!string.IsNullOrEmpty(content))
+                var content = GetFileContent(fileItem.Path, additionalFiles) ?? "";
+                processedFiles.Add(new ProcessedFile
                 {
-                    processedFiles.Add(new ProcessedFile
-                    {
-                        ConstantName = fileItem.ConstantName,
-                        Content = content,
-                        Description = fileItem.Description,
-                        Type = fileItem.Type,
-                        Path = fileItem.Path
-                    });
-                }
+                    ConstantName = fileItem.ConstantName,
+                    Content = content,
+                    Description = fileItem.Description,
+                    Type = fileItem.Type,
+                    Path = fileItem.Path
+                });
             }
 
-            // 生成代码
-            if (processedFiles.Any())
+            if (processedFiles.Count > 0)
             {
                 GenerateMultiFileClass(context, config, processedFiles);
             }

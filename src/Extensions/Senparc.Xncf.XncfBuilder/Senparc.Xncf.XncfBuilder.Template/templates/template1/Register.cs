@@ -7,7 +7,6 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-
 using Template_OrgName.Xncf.Template_XncfName.Models;
 using Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Services;
