@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.Xncf.XncfBuilder.Abstractions;
 using Microsoft.Extensions.Configuration;
 using Senparc.Ncf.Database;
 using Senparc.Xncf.XncfBuilder.Domain.Models.Services;
@@ -71,6 +72,11 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
+            if (!services.Any(d => d.ServiceType == typeof(IXncfModulesInventoryRequestWaiter)))
+            {
+                services.AddSingleton<IXncfModulesInventoryRequestWaiter, XncfModulesInventoryRequestWaiter>();
+            }
+
             //services.AddScoped<PromptRange.Domain.Services.PromptService>();
             //services.AddScoped<AI.Interfaces.IAiHandler>(s => new SemanticAiHandler());
 

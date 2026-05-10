@@ -11,9 +11,6 @@ using System.Threading.Tasks;
 using Senparc.CO2NET.Extensions;
 using System.IO;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
-using Senparc.AI.Entities.Keys;
-
 namespace Senparc.Xncf.XncfBuilder.OHS.Local
 {
     /// <summary>
@@ -92,19 +89,15 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         #endregion
 
         //[McpServerTool, Description("获取前端代码模板示例")]
-        public async Task<string> GetFrontEndCodeTemplate()
+        public Task<string> GetFrontEndCodeTemplate()
         {
-            var template = BuildXncfAppService.FrontendTemplate;
-            return template;
-
+            return Task.FromResult(FrontendTemplate);
         }
 
         //[McpServerTool, Description("获取后端代码模板示例")]
-        public async Task<string> GetBackEndCodeTemplate()
+        public Task<string> GetBackEndCodeTemplate()
         {
-            var template = BuildXncfAppService.BackendTemplate;
-
-            return template;
+            return Task.FromResult(BackendTemplate);
         }
 
         //[McpServerTool, Description("获取文件内容")]
