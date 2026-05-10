@@ -46,6 +46,40 @@ public class NcfService
     }
 
     /// <summary>
+    /// 镜像模块生成的 JSON 常把 <c>browser_download_url</c> 写成固定域名（如 ncf.pub）；使用自定义镜像根时，改为从当前镜像同源路径下载，避免 404。
+    /// </summary>
+    public string ApplyMirrorBaseToPackageDownloadUrl(string? browserDownloadUrl)
+    {
+        if (string.IsNullOrWhiteSpace(browserDownloadUrl))
+        {
+            return browserDownloadUrl ?? string.Empty;
+        }
+
+        var customBase = DesktopSettingsStore.NormalizeMirrorServerBase(MirrorServerBaseUrl);
+        var defaultBase = DesktopSettingsStore.NormalizeMirrorServerBase(DesktopUserSettings.DefaultMirrorServerBaseUrl);
+        if (string.Equals(customBase, defaultBase, StringComparison.OrdinalIgnoreCase))
+        {
+            return browserDownloadUrl;
+        }
+
+        const string marker = "/NcfPackages/";
+        var idx = browserDownloadUrl.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
+        if (idx < 0)
+        {
+            return browserDownloadUrl;
+        }
+
+        var relativeFromPackages = browserDownloadUrl.Substring(idx);
+        var resolved = $"{customBase}{relativeFromPackages}";
+        if (!string.Equals(resolved, browserDownloadUrl, StringComparison.Ordinal))
+        {
+            _logger?.LogInformation("已按自定义镜像根重写安装包下载地址: {Resolved}", resolved);
+        }
+
+        return resolved;
+    }
+
+    /// <summary>
     /// 用户将「备用更新源」设为非默认根地址（如本机 https://localhost:xxx）时，应优先从该地址拉取 latest-release.json 与其中给出的下载链接。
     /// </summary>
     private bool PreferMirrorMetadataFirst =>
@@ -1132,7 +1166,8 @@ public class NcfService
                 progress.Report(($"下载中... {value:F1}%", value * 0.6));
             });
 
-            await DownloadFileAsync(targetAsset.BrowserDownloadUrl!, targetAsset.Name!, downloadProgress, cancellationToken);
+            var downloadUrl = ApplyMirrorBaseToPackageDownloadUrl(targetAsset.BrowserDownloadUrl);
+            await DownloadFileAsync(downloadUrl, targetAsset.Name!, downloadProgress, cancellationToken);
             progress.Report(("✅ 下载完成", 60));
         }
         else

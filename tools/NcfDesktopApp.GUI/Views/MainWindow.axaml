@@ -4,12 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="using:NcfDesktopApp.GUI.Views"
-        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="800"
+        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="860"
         x:Class="NcfDesktopApp.GUI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="NCF 桌面应用程序 - Hybrid版"
-        Width="900" Height="800"
-        MinWidth="800" MinHeight="650"
+        Width="920" Height="860"
+        MinWidth="820" MinHeight="720"
         WindowStartupLocation="CenterScreen"
         Icon="/Assets/NCF-logo.png">
 
@@ -56,13 +56,12 @@
     </Window.Styles>
 
     <Grid>
-        <!-- 🔧 方案1最终版：使用 Grid 叠加层，确保 WebView 始终在 UI 树中，永不卸载 -->
-        <!-- 使用自定义标签按钮 + Grid 叠加，完全避免 TabControl 可能导致的卸载问题 -->
-        <Grid>
-            <!-- 自定义标签按钮栏 -->
-            <StackPanel Orientation="Horizontal" 
+        <!-- 标签栏独占一行，内容区 * 获得明确剩余高度，避免子控件在「无限高」测量下无法滚动、底部被裁切 -->
+        <Grid RowDefinitions="Auto,*" ZIndex="1">
+            <StackPanel Grid.Row="0"
+                       Orientation="Horizontal"
                        Background="{DynamicResource CardBackgroundBrush}"
-                       HorizontalAlignment="Left"
+                       HorizontalAlignment="Stretch"
                        VerticalAlignment="Top"
                        ZIndex="100">
                 <Button Content="⚙️ 设置中心"
@@ -84,16 +83,14 @@
                        IsVisible="{Binding IsBrowserTabVisible}"
                        Classes="tab-button browser-tab"/>
             </StackPanel>
-            
-            <!-- 内容区域 - 两个视图都保持在 UI 树中，只通过 IsVisible 控制显示 -->
-            <Grid Margin="0,48,0,0">
-                <!-- 设置页面 - 始终在 UI 树中 -->
+
+            <Grid Grid.Row="1" VerticalAlignment="Stretch">
                 <views:SettingsView DataContext="{Binding}"
-                                   IsVisible="{Binding IsSettingsTabActive}"/>
-                
-                <!-- 浏览器页面 - 始终在 UI 树中，永不卸载 -->
+                                   IsVisible="{Binding IsSettingsTabActive}"
+                                   VerticalAlignment="Stretch"/>
                 <views:BrowserView DataContext="{Binding}"
-                                  IsVisible="{Binding IsBrowserTabActive}"/>
+                                  IsVisible="{Binding IsBrowserTabActive}"
+                                  VerticalAlignment="Stretch"/>
             </Grid>
         </Grid>
         
