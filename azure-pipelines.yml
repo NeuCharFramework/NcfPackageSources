@@ -16,14 +16,18 @@ pool:
   demands:
     - Agent.OS -equals Windows_NT
 
-variables:   
-  solution: '**/NcfPackageSources.sln'    
-  buildPlatform: 'Any CPU'    
-  buildConfiguration: 'Release'  
-  NUGET_PACKAGES: $(Agent.ToolsDirectory)/nuget/packages  # NuGet 缓存路径
-  # 与 NuGetCommand@2 external 推送目标一致（nuget.org v3）
-  NuGetPushSource: 'https://api.nuget.org/v3/index.json'
-  # NUGET_API_KEY：在 Azure DevOps → Pipeline → Variables 中配置（勾选 secret，勿写入本仓库）
+variables:
+  - group: Nuget_Key   # Library 变量组，内含变量 NUGET_API_KEY
+  - name: solution
+    value: '**/NcfPackageSources.sln'
+  - name: buildPlatform
+    value: 'Any CPU'
+  - name: buildConfiguration
+    value: 'Release'
+  - name: NUGET_PACKAGES
+    value: '$(Agent.ToolsDirectory)/nuget/packages'  # NuGet 缓存路径
+  - name: NuGetPushSource
+    value: 'https://api.nuget.org/v3/index.json'  # 与 NuGetCommand@2 external 推送目标一致
 
 steps:  
 # - task: UseDotNet@2  
@@ -150,14 +154,14 @@ steps:
 #     checkLatest: true  
 
 # 自动发现并推送 Senparc.Ncf.* / Senparc.Xncf.* 的 .nupkg（仅 .nupkg；符号包 .snupkg 未包含，可按需扩展）
-# 凭据：通过 Pipeline 机密变量 NUGET_API_KEY 注入（见上方 variables 注释；密钥仅存于 Azure DevOps，不入库）
+# 凭据：通过 Library 变量组 NugetKey 中的变量 NUGET_API_KEY 注入（见 variables → group: NugetKey）
 - powershell: |
     $ErrorActionPreference = 'Continue'
     $root = "$(Build.SourcesDirectory)"
     $source = "$(NuGetPushSource)"
     $apiKey = $env:NUGET_API_KEY
     if ([string]::IsNullOrWhiteSpace($apiKey)) {
-      Write-Host "##[error]缺少机密变量 NUGET_API_KEY：请在 Azure DevOps → Pipeline → Variables 中新建并勾选 secret。"
+      Write-Host "##[error]缺少变量 NUGET_API_KEY：请在 Library 变量组 NugetKey 中设置（变量名须为 NUGET_API_KEY，勾选 secret）。"
       exit 2
     }
 
