@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.IO;
 using System.Collections.Generic;
 using System;
+using System.Threading;
 
 public class FileGenerationConfig
 {
@@ -41,39 +42,98 @@ public class GenerationOptions
 [Generator]
 public class MultiFileCodeGenerator : IIncrementalGenerator
 {
+    /// <summary>
+    /// 与 generation-config.json 保持一致；AdditionalFiles 未带上配置或反序列化失败时使用，
+    /// 避免 RegisterSourceOutput 不执行导致缺少 FrontendTemplate / BackendTemplate。
+    /// </summary>
+    private const string EmbeddedDefaultGenerationConfigJson = """
+{
+  "outputNamespace": "Senparc.Xncf.XncfBuilder.OHS.Local",
+  "outputClassName": "BuildXncfAppService",
+  "files": [
+    {
+      "path": "Request.cs",
+      "constantName": "RequestCode",
+      "description": "请求类代码",
+      "type": "code"
+    },
+    {
+      "path": "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Template_XncfNameSenparcEntities.cs",
+      "constantName": "SenparcEntitiesTemplate",
+      "description": "Senparc实体类模板",
+      "type": "backend_template"
+    },
+    {
+      "path": "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Color.cs",
+      "constantName": "ColorModelTemplate",
+      "description": "颜色模型模板",
+      "type": "backend_template"
+    },
+    {
+      "path": "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Dto/ColorDto.cs",
+      "constantName": "ColorDtoTemplate",
+      "description": "颜色DTO模板",
+      "type": "backend_template"
+    },
+    {
+      "path": "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Services/ColorService.cs",
+      "constantName": "ColorServiceTemplate",
+      "description": "颜色服务模板",
+      "type": "backend_template"
+    },
+    {
+      "path": "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml",
+      "constantName": "DatabaseSampleIndexViewTemplate",
+      "description": "数据库示例索引页面视图模板",
+      "type": "frontend_template"
+    },
+    {
+      "path": "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml.cs",
+      "constantName": "DatabaseSampleIndexCodeBehindTemplate",
+      "description": "数据库示例索引页面代码后置模板",
+      "type": "frontend_template"
+    },
+    {
+      "path": "../Senparc.Xncf.XncfBuilder.Template/templates/template1/wwwroot/js/Admin/Template_XncfName/databaseSampleIndex.js",
+      "constantName": "DatabaseSampleIndexJsTemplate",
+      "description": "数据库示例索引页面JavaScript模板",
+      "type": "frontend_script"
+    },
+    {
+      "path": "../Senparc.Xncf.XncfBuilder.Template/templates/template1/wwwroot/css/Admin/Template_XncfName/databaseSampleIndex.css",
+      "constantName": "DatabaseSampleIndexCssTemplate",
+      "description": "数据库示例索引页面CSS模板",
+      "type": "frontend_style"
+    }
+  ],
+  "grouping": {
+    "byType": true,
+    "generateTypeConstants": true
+  },
+  "options": {
+    "includeFileInfo": true,
+    "includeMetadata": true,
+    "generateHelperMethods": true
+  }
+}
+""";
+
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        // 获取配置文件
-        var configProvider = context.AdditionalTextsProvider
-            .Where(file => file.Path.EndsWith("generation-config.json", StringComparison.OrdinalIgnoreCase))
-            .Select((file, cancellationToken) => LoadConfig(file, cancellationToken))
-            .Where(config => config != null);
-
-        // 获取所有需要处理的文件
-        var sourceFilesProvider = context.AdditionalTextsProvider
-            .Collect();
-
-        // 组合配置和文件
-        var combinedProvider = configProvider.Combine(sourceFilesProvider);
-
-        // 注册源代码生成
-        context.RegisterSourceOutput(combinedProvider, GenerateCode);
+        var allAdditional = context.AdditionalTextsProvider.Collect();
+        context.RegisterSourceOutput(allAdditional, GenerateFromAllAdditionalTexts);
     }
 
-    private FileGenerationConfig? LoadConfig(AdditionalText configFile, CancellationToken cancellationToken)
+    private static FileGenerationConfig? DeserializeConfig(string? json)
     {
+        if (string.IsNullOrWhiteSpace(json))
+            return null;
         try
         {
-            var configContent = configFile.GetText(cancellationToken)?.ToString();
-            if (string.IsNullOrEmpty(configContent))
-                return null;
-
-            var options = new JsonSerializerOptions
+            return JsonSerializer.Deserialize<FileGenerationConfig>(json, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
-            };
-
-            return JsonSerializer.Deserialize<FileGenerationConfig>(configContent, options);
+            });
         }
         catch
         {
@@ -81,23 +141,36 @@ public class MultiFileCodeGenerator : IIncrementalGenerator
         }
     }
 
-    private void GenerateCode(SourceProductionContext context, (FileGenerationConfig?, ImmutableArray<AdditionalText>) input)
+    private static FileGenerationConfig? TryLoadConfigFromAdditionalFiles(ImmutableArray<AdditionalText> additionalFiles)
     {
-        var (config, additionalFiles) = input;
+        var configFile = additionalFiles.FirstOrDefault(f =>
+            f.Path.EndsWith("generation-config.json", StringComparison.OrdinalIgnoreCase));
+        if (configFile == null)
+            return null;
+        try
+        {
+            return DeserializeConfig(configFile.GetText(CancellationToken.None)?.ToString());
+        }
+        catch
+        {
+            return null;
+        }
+    }
 
+    private void GenerateFromAllAdditionalTexts(SourceProductionContext context, ImmutableArray<AdditionalText> additionalFiles)
+    {
+        var config = TryLoadConfigFromAdditionalFiles(additionalFiles)
+                     ?? DeserializeConfig(EmbeddedDefaultGenerationConfigJson);
         if (config == null)
         {
-            // 如果没有配置文件，使用默认行为
-            GenerateDefaultCode(context, additionalFiles);
+            ReportError(context, "MFG002", "MultiFileCodeGenerator: could not deserialize embedded default generation config.");
+            EmitMinimalBuildXncfAppServicePartial(context);
             return;
         }
 
         try
         {
             var processedFiles = new List<ProcessedFile>();
-
-            // 处理每个配置的文件（即使未读到内容也占位，否则不会生成 BackendTemplate/FrontendTemplate，
-            // 且 CI 上路径/检出范围与本地不一致时会出现“生成器零输出”导致下游编译失败）
             foreach (var fileItem in config.Files ?? Array.Empty<FileItem>())
             {
                 var content = GetFileContent(fileItem.Path, additionalFiles) ?? "";
@@ -111,15 +184,34 @@ public class MultiFileCodeGenerator : IIncrementalGenerator
                 });
             }
 
-            if (processedFiles.Count > 0)
-            {
-                GenerateMultiFileClass(context, config, processedFiles);
-            }
+            GenerateMultiFileClass(context, config, processedFiles);
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             ReportError(context, "MFG001", $"Error in MultiFileCodeGenerator: {ex.Message}");
+            EmitMinimalBuildXncfAppServicePartial(context);
         }
+    }
+
+    /// <summary>仅保证编译通过；模板内容为空。</summary>
+    private static void EmitMinimalBuildXncfAppServicePartial(SourceProductionContext context)
+    {
+        const string minimal = """
+// <auto-generated />
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Senparc.Xncf.XncfBuilder.OHS.Local
+{
+    public partial class BuildXncfAppService
+    {
+        public const string BackendTemplate = "";
+        public const string FrontendTemplate = "";
+    }
+}
+""";
+        context.AddSource("BuildXncfAppService.Generated.cs", SourceText.From(minimal, Encoding.UTF8));
     }
 
     private string GetFileContent(string filePath, ImmutableArray<AdditionalText> additionalFiles)

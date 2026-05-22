@@ -20,12 +20,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         /// <param name="request"></param>
         /// <returns></returns>
         [FunctionRender("生成 AppService 接口代码", "将某个模块的 AppService ", typeof(Register))]
-        public async Task<StringAppResponse> Generate(GenerateAppServiceInterface_GenerateRequest request)
+        public Task<StringAppResponse> Generate(GenerateAppServiceInterface_GenerateRequest request)
         {
-            return await this.GetStringResponseAsync(async (response, logger) =>
-            {
-                return "";
-            });
+            return this.GetStringResponseAsync((response, logger) => Task.FromResult(""));
         }
     }
 }
