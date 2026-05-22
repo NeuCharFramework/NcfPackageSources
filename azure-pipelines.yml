@@ -17,7 +17,7 @@ pool:
     - Agent.OS -equals Windows_NT
 
 variables:
-  - group: Nuget_key   # Library 变量组，内含变量 NUGET_API_KEY
+  - group: Nuget_Key   # Library 变量组，内含变量 NUGET_API_KEY
   - name: solution
     value: '**/NcfPackageSources.sln'
   - name: buildPlatform
@@ -154,14 +154,14 @@ steps:
 #     checkLatest: true  
 
 # 自动发现并推送 Senparc.Ncf.* / Senparc.Xncf.* 的 .nupkg（仅 .nupkg；符号包 .snupkg 未包含，可按需扩展）
-# 凭据：通过 Library 变量组 Nuget_key 中的机密变量 NUGET_API_KEY 注入（见 variables → group: Nuget_key）
+# 凭据：通过 Library 变量组 Nuget_Key 中的机密变量 NUGET_API_KEY 注入（见 variables → group: Nuget_Key)
 - powershell: |
     $ErrorActionPreference = 'Continue'
     $root = "$(Build.SourcesDirectory)"
     $source = "$(NuGetPushSource)"
     $apiKey = $env:NUGET_API_KEY
     if ([string]::IsNullOrWhiteSpace($apiKey)) {
-      Write-Host "##[error]缺少机密变量 NUGET_API_KEY：请在 Library 变量组 Nuget_key 中设置（变量名须为 NUGET_API_KEY，勾选 secret）。"
+      Write-Host "##[error]缺少机密变量 NUGET_API_KEY：请在 Library 变量组 Nuget _Key 中设置（变量名须为 NUGET_API_KEY，勾选 secret）。"
       exit 2
     }
 
