@@ -1,0 +1,176 @@
+@page
+@model Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages.DatabaseSampleIndex
+@{
+    ViewData["Title"] = "Color 数据库管理";
+    Layout = "_Layout_Vue";
+}
+
+@section Style {
+    <link href="~/css/Admin/Template_XncfName/databaseSampleIndex.css" rel="stylesheet" />
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>Template_MenuName</el-breadcrumb-item>
+    <el-breadcrumb-item>Color 数据库管理</el-breadcrumb-item>
+}
+
+<div>
+    <div class="filter-container">
+        <el-button type="primary" icon="el-icon-plus" size="small" @@click="addColor">添加颜色</el-button>
+        <el-button type="success" icon="el-icon-refresh" size="small" @@click="refreshList">刷新</el-button>
+        <el-button type="info" icon="el-icon-info" size="small" @@click="debugInfo">调试信息</el-button>
+    </div>
+
+    <!-- 调试信息显示 -->
+    <div v-if="showDebug" style="background: #f0f9ff; border: 1px solid #0ea5e9; padding: 10px; margin: 10px 0; border-radius: 4px;">
+        <h4>调试信息：</h4>
+        <p><strong>tableData长度:</strong> {{ tableData ? tableData.length : 'null/undefined' }}</p>
+        <p><strong>total:</strong> {{ total }}</p>
+        <p><strong>tableLoading:</strong> {{ tableLoading }}</p>
+        <p><strong>Vue实例是否正常:</strong> {{ $el ? '是' : '否' }}</p>
+        <div v-if="tableData && tableData.length > 0">
+            <strong>第一条数据:</strong>
+            <pre>{{ JSON.stringify(tableData[0], null, 2) }}</pre>
+        </div>
+        
+        <!-- 简化数据显示测试 -->
+        <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 10px; margin: 10px 0; border-radius: 4px;">
+            <h5>简化数据显示测试:</h5>
+            <div v-for="(item, index) in tableData" :key="item.id || index" style="border: 1px solid #ccc; margin: 5px 0; padding: 5px;">
+                <strong>ID:</strong> {{item.id}} | 
+                <strong>RGB:</strong> {{item.red}},{{item.green}},{{item.blue}} | 
+                <strong>时间:</strong> {{item.addTime}}
+            </div>
+            <p v-if="!tableData || tableData.length === 0" style="color: red;">
+                <strong>没有数据显示！</strong>
+            </p>
+        </div>
+    </div>
+
+    <el-table :data="tableData" v-loading="tableLoading" border>
+        <el-table-column prop="id" label="ID" width="auto"></el-table-column>
+        <el-table-column prop="red" label="红色值 (R)" width="auto">
+            <template slot-scope="scope">
+                <el-tag :style="{backgroundColor: `rgb(${scope.row.red}, 0, 0)`, color: 'white'}">
+                    {{scope.row.red}}
+                </el-tag>
+            </template>
+        </el-table-column>
+        <el-table-column prop="green" label="绿色值 (G)" width="auto">
+            <template slot-scope="scope">
+                <el-tag :style="{backgroundColor: `rgb(0, ${scope.row.green}, 0)`, color: 'white'}">
+                    {{scope.row.green}}
+                </el-tag>
+            </template>
+        </el-table-column>
+        <el-table-column prop="blue" label="蓝色值 (B)" width="auto">
+            <template slot-scope="scope">
+                <el-tag :style="{backgroundColor: `rgb(0, 0, ${scope.row.blue})`, color: 'white'}">
+                    {{scope.row.blue}}
+                </el-tag>
+            </template>
+        </el-table-column>
+        <el-table-column label="颜色预览" width="auto">
+            <template slot-scope="scope">
+                <div class="color-preview" :style="{backgroundColor: `rgb(${scope.row.red}, ${scope.row.green}, ${scope.row.blue})`}">
+                    RGB({{scope.row.red}}, {{scope.row.green}}, {{scope.row.blue}})
+                </div>
+            </template>
+        </el-table-column>
+        <el-table-column prop="addTime" label="创建时间" width="auto">
+            <template slot-scope="scope">
+                {{ dateformatter(scope.row.addTime) }}
+            </template>
+        </el-table-column>
+        <el-table-column prop="lastUpdateTime" label="更新时间" width="auto">
+            <template slot-scope="scope">
+                {{ dateformatter(scope.row.lastUpdateTime) }}
+            </template>
+        </el-table-column>
+        <el-table-column label="操作" width="auto">
+            <template slot-scope="scope">
+                <el-button type="primary" size="mini" @@click="editColor(scope.row)">编辑</el-button>
+                <el-button type="warning" size="mini" @@click="randomizeColor(scope.row)">随机</el-button>
+                <el-button type="danger" size="mini" @@click="deleteColor(scope.row)">删除</el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+    
+    <div class="pagination-container">
+        <el-pagination @@current-change="handleCurrentChange"
+                       @@size-change="handleSizeChange"
+                       :current-page="page.page"
+                       :page-sizes="[10, 20, 30, 40]"
+                       :page-size="page.size"
+                       layout="sizes, prev, next, jumper"
+                       :total="total"
+                       background
+                       style="margin-top: 20px">
+        </el-pagination>
+    </div>
+
+    @* dialog for 添加颜色 *@
+    <el-dialog title="添加颜色" :visible.sync="addFormDialogVisible" width="50%" :close-on-click-modal="false">
+        <el-form :model="addForm" label-width="120px" :rules="addRules" ref="addForm">
+            <el-form-item label="红色值 (R)" prop="red">
+                <el-slider v-model="addForm.red" :min="0" :max="255" show-input></el-slider>
+            </el-form-item>
+            <el-form-item label="绿色值 (G)" prop="green">
+                <el-slider v-model="addForm.green" :min="0" :max="255" show-input></el-slider>
+            </el-form-item>
+            <el-form-item label="蓝色值 (B)" prop="blue">
+                <el-slider v-model="addForm.blue" :min="0" :max="255" show-input></el-slider>
+            </el-form-item>
+            <el-form-item label="颜色预览">
+                <div class="color-preview-large" :style="{backgroundColor: `rgb(${addForm.red}, ${addForm.green}, ${addForm.blue})`}">
+                    RGB({{addForm.red}}, {{addForm.green}}, {{addForm.blue}})
+                </div>
+            </el-form-item>
+            <el-form-item label="附加备注" prop="additionNote">
+                <el-input v-model="addForm.additionNote" type="textarea" :rows="3" placeholder="请输入颜色的附加备注信息..."></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button @@click="randomizeForm" type="info">随机颜色</el-button>
+            </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+            <el-button @@click="addFormDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @@click="addColorSubmit">确 定</el-button>
+        </span>
+    </el-dialog>
+
+    @* dialog for 编辑颜色 *@
+    <el-dialog title="编辑颜色" :visible.sync="editFormDialogVisible" width="50%" :close-on-click-modal="false">
+        <el-form :model="editForm" label-width="120px" :rules="editRules" ref="editForm">
+            <el-form-item label="红色值 (R)" prop="red">
+                <el-slider v-model="editForm.red" :min="0" :max="255" show-input></el-slider>
+            </el-form-item>
+            <el-form-item label="绿色值 (G)" prop="green">
+                <el-slider v-model="editForm.green" :min="0" :max="255" show-input></el-slider>
+            </el-form-item>
+            <el-form-item label="蓝色值 (B)" prop="blue">
+                <el-slider v-model="editForm.blue" :min="0" :max="255" show-input></el-slider>
+            </el-form-item>
+            <el-form-item label="颜色预览">
+                <div class="color-preview-large" :style="{backgroundColor: `rgb(${editForm.red}, ${editForm.green}, ${editForm.blue})`}">
+                    RGB({{editForm.red}}, {{editForm.green}}, {{editForm.blue}})
+                </div>
+            </el-form-item>
+            <el-form-item label="附加备注" prop="additionNote">
+                <el-input v-model="editForm.additionNote" type="textarea" :rows="3" placeholder="请输入颜色的附加备注信息..."></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button @@click="randomizeEditForm" type="info">随机颜色</el-button>
+            </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+            <el-button @@click="editFormDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @@click="editColorSubmit">确 定</el-button>
+        </span>
+    </el-dialog>
+</div>
+
+@section scripts{
+    <script src="~/js/Admin/Template_XncfName/databaseSampleIndex.js"></script>
+} 
