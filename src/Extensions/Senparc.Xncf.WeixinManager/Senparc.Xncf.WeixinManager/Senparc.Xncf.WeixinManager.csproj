@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <!--<Project Sdk="Microsoft.NET.Sdk.Razor">-->
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <!--<RazorLangVersion>3.0</RazorLangVersion>-->
     <Version>0.21.6.1-preview</Version>
     <!--<GenerateProgramFile>false</GenerateProgramFile>-->
@@ -86,6 +86,7 @@
     <EmbeddedResource Include="wwwroot\**\*" />
     <EmbeddedResource Include="App_Data\ApiDocXml\*" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
+    <PackageReference Include="Senparc.AI.AgentKernel" Version="0.1.0" />
   </ItemGroup>
   <ItemGroup>
     <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />-->
