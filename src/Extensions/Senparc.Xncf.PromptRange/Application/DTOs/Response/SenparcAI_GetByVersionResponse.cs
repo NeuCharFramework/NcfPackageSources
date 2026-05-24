@@ -1,4 +1,4 @@
-﻿using Senparc.AI.Kernel;
+﻿using Senparc.AI.AgentKernel;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response;

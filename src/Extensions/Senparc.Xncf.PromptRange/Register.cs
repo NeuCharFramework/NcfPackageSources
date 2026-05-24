@@ -11,7 +11,7 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Domain.Services;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 using Microsoft.AspNetCore.Builder;
 using Senparc.CO2NET.RegisterServices;
 using Microsoft.Extensions.FileProviders;

@@ -5,8 +5,8 @@ using Microsoft.SemanticKernel.Text;
 using OllamaSharp.Models;
 using Senparc.AI;
 using Senparc.AI.Entities.Keys;
-using Senparc.AI.Kernel;
-using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Handlers;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Trace;
@@ -237,13 +237,13 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             var embeddingAiSetting = this._aIModelService.BuildSenparcAiSetting(embeddingAiModelDto, aiVectorDto);
             //TODO:改成动态
             var embeddingModelName = embeddingAiSetting.AzureOpenAIKeys.ModelName.Embedding;
-            // 4. 初始化 SemanticAiHandler
-            var embeddingAiHandler = new SemanticAiHandler(embeddingAiSetting);
+            // 4. 初始化 AgentAiHandler
+            var embeddingAiHandler = new AgentAiHandler(embeddingAiSetting);
 
-            //_serviceProvider.GetService<SemanticAiHandler>();
-            //if (semanticAiHandler == null)
+            //_serviceProvider.GetService<AgentAiHandler>();
+            //if (agentAiHandler == null)
             //{
-            //    throw new NcfExceptionBase("SemanticAiHandler 服务未注册。");
+            //    throw new NcfExceptionBase("AgentAiHandler 服务未注册。");
             //}
 
             // 5. 构建 IWantToRun (Embedding 模式)
@@ -423,8 +423,8 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             var embeddingAiSetting = this._aIModelService.BuildSenparcAiSetting(embeddingAiModelDto, aiVectorDto);
             //TODO:改成动态
             var embeddingModelName = embeddingAiSetting.AzureOpenAIKeys.ModelName.Embedding;
-            // 4. 初始化 SemanticAiHandler
-            var embeddingAiHandler = new SemanticAiHandler(embeddingAiSetting);
+            // 4. 初始化 AgentAiHandler
+            var embeddingAiHandler = new AgentAiHandler(embeddingAiSetting);
 
             // 5. 构建 IWantToRun (Embedding 模式)
 

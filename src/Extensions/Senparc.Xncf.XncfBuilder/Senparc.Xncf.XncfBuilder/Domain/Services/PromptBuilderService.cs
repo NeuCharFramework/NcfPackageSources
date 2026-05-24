@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.SemanticKernel;
 using Senparc.AI.Interfaces;
-using Senparc.AI.Kernel;
-using Senparc.AI.Kernel.Entities;
-using Senparc.AI.Kernel.KernelConfigExtensions;
+using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Entities;
+using Senparc.AI.AgentKernel.KernelConfigExtensions;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using Senparc.Xncf.PromptRange.Domain.Services;
@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.AgentKernel.Handlers;
 using System.Linq;
 using Npgsql.Internal;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Query.Expressions.Internal;
@@ -28,7 +28,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 {
     public class PromptBuilderService
     {
-        private readonly SemanticAiHandler _aiHandler;
+        private readonly AgentAiHandler _aiHandler;
         private readonly PromptService _promptService;
         private readonly PromptRangeService _promptRangeService;
         private readonly PromptItemService _promptItemService;
@@ -36,8 +36,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 
         public PromptBuilderService(/*IAiHandler aiHandler,*/ PromptService promptService, PromptRangeService promptRangeService, PromptItemService promptItemService, PromptResultService promptResultService)
         {
-            //this._aiHandler = (SemanticAiHandler)aiHandler;
-            this._aiHandler = promptService.IWantToRun.SemanticAiHandler;
+            //this._aiHandler = (AgentAiHandler)aiHandler;
+            this._aiHandler = promptService.IWantToRun.AgentAiHandler;
             this._promptService = promptService;
             this._promptRangeService = promptRangeService;
             this._promptItemService = promptItemService;

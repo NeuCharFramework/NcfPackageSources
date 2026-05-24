@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI.Entities;
 using Senparc.AI.Interfaces;
-using Senparc.AI.Kernel;
-using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Handlers;
 using Senparc.CO2NET.Extensions;
 using Senparc.Weixin.MP.MessageContexts;
 using Senparc.Xncf.PromptRange.Domain.Services;
@@ -47,7 +47,7 @@ namespace Senparc.Xncf.WeixinManager
 
             if (!IWantoRunDic.ContainsKey(key))
             {
-                SemanticAiHandler _semanticAiHandler = (SemanticAiHandler)services.GetRequiredService<IAiHandler>();
+                AgentAiHandler _agentAiHandler = (AgentAiHandler)services.GetRequiredService<IAiHandler>();
 
                 using (var scope = services.CreateScope())
                 {
@@ -82,7 +82,7 @@ namespace Senparc.Xncf.WeixinManager
                     }
 
                     //配置和初始化模型
-                    var iWantToRun = _semanticAiHandler.ChatConfig(promptConfigParameter,
+                    var iWantToRun = _agentAiHandler.ChatConfig(promptConfigParameter,
                                                      userId: openId,
                                                      maxHistoryStore: 20,
                                                      chatSystemMessage: promptTemplate,

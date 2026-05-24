@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI.Interfaces;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.FunctionRenders;

@@ -1,6 +1,6 @@
 ﻿//using Microsoft.VisualStudio.TestTools.UnitTesting;
 //using Microsoft.Extensions.DependencyInjection;
-//using Senparc.AI.Kernel.Handlers;
+//using Senparc.AI.AgentKernel.Handlers;
 //using Senparc.Xncf.PromptRange.Domain.Services;
 //using Senparc.Xncf.PromptRange.Tests;
 //using Moq;

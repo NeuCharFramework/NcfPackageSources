@@ -9,9 +9,9 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.SemanticKernel;
 using Senparc.AI;
 using Senparc.AI.Interfaces;
-using Senparc.AI.Kernel;
-using Senparc.AI.Kernel.Entities;
-using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Entities;
+using Senparc.AI.AgentKernel.Handlers;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using Senparc.CO2NET.Trace;
@@ -24,7 +24,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 {
     public class PromptService /*: ServiceDataBase*/
     {
-        private readonly SemanticAiHandler _aiHandler;
+        private readonly AgentAiHandler _aiHandler;
         private readonly PromptRangeService _promptRangeService;
         private readonly PromptItemService _promptItemService;
         private readonly AIModelService _aiModelService;
@@ -39,7 +39,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             this._promptRangeService = promptRangeService;
             this._promptItemService = promptItemService;
             this._senparcAiSetting = senparcAiSetting ?? Senparc.AI.Config.SenparcAiSetting;
-            this._aiHandler = new SemanticAiHandler(this._senparcAiSetting);
+            this._aiHandler = new AgentAiHandler(this._senparcAiSetting);
             ReBuildKernel(this._senparcAiSetting);
             _aiModelService = aiModelService;
         }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Senparc.AI.Exceptions;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Xncf.AIKernel.Domain.Services;

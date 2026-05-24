@@ -2,8 +2,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Senparc.AI;
 using Senparc.AI.Entities;
-using Senparc.AI.Kernel;
-using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Handlers;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Areas.Admin.Domain.Services.AIPlugins;
 using Senparc.CO2NET.Extensions;
@@ -70,7 +70,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             var (messages, _) = await _messageService.GetSessionMessagesAsync(sessionId);
             var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
 
-            var semanticAiHandler = new SemanticAiHandler(setting);
+            var agentAiHandler = new AgentAiHandler(setting);
             var promptParameter = new PromptConfigParameter
             {
                 MaxTokens = 2000,
@@ -80,7 +80,7 @@ namespace Senparc.Areas.Admin.Domain.Services
 
             var modulePlugin = new ModuleAssistantPlugin(modules);
 
-            var iWantToRun = semanticAiHandler.ChatConfig(
+            var iWantToRun = agentAiHandler.ChatConfig(
                 promptParameter,
                 userId: $"AdminChat-{userId}-{sessionId}",
                 maxHistoryStore: 20,

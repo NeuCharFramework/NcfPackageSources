@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel.TextToImage;
 using Senparc.AI;
-using Senparc.AI.Kernel;
-using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Handlers;
 using Senparc.NeuChar.Entities;
 using Senparc.Weixin.MP.Entities;
 using Senparc.Weixin.MP.Entities.Request;
@@ -49,8 +49,8 @@ namespace Senparc.Web
 
                 //绘制图片，并返回
                 var userId = "Jeffrey";
-                var semanticAiHandler = serviceProvider.GetService<SemanticAiHandler>();
-                var iWantTo = semanticAiHandler.IWantTo(dalleSetting)
+                var agentAiHandler = serviceProvider.GetService<AgentAiHandler>();
+                var iWantTo = agentAiHandler.IWantTo(dalleSetting)
                                     .ConfigModel(ConfigModel.ImageGeneration, userId)
                                     .BuildKernel();
 

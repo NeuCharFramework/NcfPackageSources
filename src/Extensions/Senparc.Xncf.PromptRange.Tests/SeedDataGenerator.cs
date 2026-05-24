@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.UnitTestExtension.Entities;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;

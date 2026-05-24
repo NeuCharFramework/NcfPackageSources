@@ -8,9 +8,9 @@ using log4net.Util;
 using Senparc.AI;
 using Senparc.AI.Entities;
 using Senparc.AI.Interfaces;
-using Senparc.AI.Kernel;
-using Senparc.AI.Kernel.Handlers;
-using Senparc.AI.Kernel.KernelConfigExtensions;
+using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Handlers;
+using Senparc.AI.AgentKernel.KernelConfigExtensions;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using Senparc.CO2NET.Trace;
@@ -117,7 +117,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             ConfigModel configModel = _llModelService.ConvertToConfigModel(model.ConfigModelType);
 
             // 创建 AI Handler 处理器（也可以通过工厂依赖注入）
-            var handler = new SemanticAiHandler(aiSettings);
+            var handler = new AgentAiHandler(aiSettings);
 
 
             IWantToRun iWantToRun =
@@ -302,7 +302,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             ConfigModel configModel = _llModelService.ConvertToConfigModel(model.ConfigModelType);
 
             // 创建 AI Handler 处理器
-            var handler = new SemanticAiHandler(aiSettings);
+            var handler = new AgentAiHandler(aiSettings);
 
             var hisgoryArgName = "history";
 
@@ -655,7 +655,7 @@ Apple
 
             ConfigModel configModel = _llModelService.ConvertToConfigModel(model.ConfigModelType);
 
-            var handler = new SemanticAiHandler(aiSettings);
+            var handler = new AgentAiHandler(aiSettings);
             var iWantToRun =
                 handler.IWantTo(aiSettings)
                     .ConfigModel(configModel, "AIScoring")

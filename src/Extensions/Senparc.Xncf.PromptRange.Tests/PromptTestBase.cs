@@ -3,7 +3,7 @@
 //using Microsoft.Identity.Client;
 //using Moq;
 //using Senparc.AI.Interfaces;
-//using Senparc.AI.Kernel;
+//using Senparc.AI.AgentKernel;
 //using Senparc.CO2NET.Extensions;
 //using Senparc.Ncf.Core.Tests;
 //using Senparc.Ncf.Repository;
@@ -29,7 +29,7 @@
 
 //        static Action<DataList> InitSeedData = dataList =>
 //        {
-//            SeedDataGenerator.InitPromptItem(dataList);//会同时初始化 PromptRange
+//            SeedDataGenerator.InitPromptItem(dataList);//锟斤拷同时锟斤拷始锟斤拷 PromptRange
 //        };
 
 //        internal MockObjects MockObjects { get; set; }
@@ -42,7 +42,7 @@
 //            base.ServiceCollection.AddScoped<PromptItemService>(z => this.GetPromptItemService());
 //            base.ServiceCollection.AddScoped<PromptRangeService>(z => this.GetPromptRangeService());
 
-//            base.ServiceCollection.AddScoped<IAiHandler, SemanticAiHandler>();
+//            base.ServiceCollection.AddScoped<IAiHandler, AgentAiHandler>();
 
 //            _serviceProvder = base.ServiceCollection.BuildServiceProvider();
 
@@ -68,7 +68,7 @@
 //            Console.WriteLine(senparcAiSetting.ToJson(true));
 //        }
 
-//        #region 快速初始化 Service
+//        #region 锟斤拷锟劫筹拷始锟斤拷 Service
 
 //        public AIModelService GetAIModelService()
 //        {

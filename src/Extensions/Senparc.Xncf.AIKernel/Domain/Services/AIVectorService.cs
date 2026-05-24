@@ -9,10 +9,10 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Models;
 using Senparc.Xncf.AIKernel.OHS.Local.PL;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 using Senparc.AI;
 using Microsoft.Extensions.DependencyInjection;
-using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.AgentKernel.Handlers;
 using Senparc.AI.Entities;
 using Senparc.AI.Exceptions;
 using Senparc.AI.Entities.Keys;
@@ -136,8 +136,8 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         //        TopP = 0.5,
         //    };
 
-        //    var semanticAiHandler = base._serviceProvider.GetService<SemanticAiHandler>();
-        //    var chatConfig = semanticAiHandler.ChatConfig(promptConfigParameter, userId: "Jeffrey",
+        //    var agentAiHandler = base._serviceProvider.GetService<AgentAiHandler>();
+        //    var chatConfig = agentAiHandler.ChatConfig(promptConfigParameter, userId: "Jeffrey",
         //         chatSystemMessage: systemMessage, promptTemplate: promptTemplate,
         //         maxHistoryStore: 20, senparcAiSetting: senparcAiSetting);
         //    var iWantToRun = chatConfig;

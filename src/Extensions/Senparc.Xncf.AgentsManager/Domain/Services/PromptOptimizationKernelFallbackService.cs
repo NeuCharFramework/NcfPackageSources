@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Senparc.AI;
 using Senparc.AI.Entities;
-using Senparc.AI.Kernel;
-using Senparc.AI.Kernel.Handlers;
-using Senparc.AI.Kernel.KernelConfigExtensions;
+using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Handlers;
+using Senparc.AI.AgentKernel.KernelConfigExtensions;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Xncf.PromptRange.Abstractions.Events;
 using Senparc.Xncf.PromptRange.Domain.Services;
@@ -93,7 +93,7 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
                 var rangeName = request.PromptCode?.Split('-').FirstOrDefault()?.Trim() ?? originalItem.RangeName;
                 var bestModelId = await SelectBestModelIdAsync(rangeName, request.Context.ModelId);
 
-                var handler = new SemanticAiHandler(promptResult.SenparcAiSetting);
+                var handler = new AgentAiHandler(promptResult.SenparcAiSetting);
                 var configModel = _llModelService.ConvertToConfigModel(model.ConfigModelType);
                 var promptParameter = new PromptConfigParameter
                 {

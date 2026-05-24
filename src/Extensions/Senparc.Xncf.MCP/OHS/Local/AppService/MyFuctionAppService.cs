@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ModelContextProtocol.Client;
 using ModelContextProtocol.Server;
-using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.AgentKernel.Handlers;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using ModelContextProtocol.SemanticKernel;
 using ModelContextProtocol.SemanticKernel.Extensions;
 using Microsoft.SemanticKernel;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.Extensions.DependencyInjection;
 using Azure.AI.OpenAI;
@@ -217,7 +217,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 }
 
                 var aiSetting = Senparc.AI.Config.SenparcAiSetting;
-                var semanticAiHandler = new SemanticAiHandler(aiSetting);
+                var agentAiHandler = new AgentAiHandler(aiSetting);
 
                 var parameter = new PromptConfigParameter()
                 {
@@ -226,7 +226,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                     TopP = 0.5,
                 };
 
-                var iWantToRun = semanticAiHandler.ChatConfig(parameter,
+                var iWantToRun = agentAiHandler.ChatConfig(parameter,
                   userId: "Jeffrey",
                   maxHistoryStore: 10,
                   chatSystemMessage: "你是一位智能助手，负责帮助我完成任务",
@@ -249,7 +249,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 var ka = new KernelArguments(executionSettings2) { };
 
                 ////输出结果
-                //SenparcAiResult ret = await semanticAiHandler.ChatAsync(iWantToRun, request.RequestPrompt/*, streamItemProceessing*/);
+                //SenparcAiResult ret = await agentAiHandler.ChatAsync(iWantToRun, request.RequestPrompt/*, streamItemProceessing*/);
 
                 //////////var resultRaw = await iWantToRun.Kernel.InvokePromptAsync(request.RequestPrompt, ka);
 

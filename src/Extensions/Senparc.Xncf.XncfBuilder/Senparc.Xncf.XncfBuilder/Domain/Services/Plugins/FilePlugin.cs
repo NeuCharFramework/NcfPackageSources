@@ -1,5 +1,5 @@
 ﻿using Microsoft.SemanticKernel;
-using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.AgentKernel.Handlers;
 using Senparc.CO2NET.Helpers;
 using System;
 using System.Collections.Generic;

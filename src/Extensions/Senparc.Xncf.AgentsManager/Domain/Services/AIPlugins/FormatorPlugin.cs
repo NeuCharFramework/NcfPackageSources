@@ -2,8 +2,8 @@
 using Microsoft.Identity.Client;
 using Microsoft.SemanticKernel;
 using Senparc.AI.Entities;
-using Senparc.AI.Kernel;
-using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Handlers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -50,10 +50,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
             //await Console.Out.WriteLineAsync(localResponse);
             //var remoteResponse = await huggingFaceRemote.CompleteAsync(Input);
             // modelName: "gpt-4-32k"*/
-            var _semanticAiHandler = new SemanticAiHandler(Senparc.AI.Config.SenparcAiSetting);
+            var _agentAiHandler = new AgentAiHandler(Senparc.AI.Config.SenparcAiSetting);
             var setting = (SenparcAiSetting)Senparc.AI.Config.SenparcAiSetting;//也可以留空，将自动获取
 
-            var iWantToRun = _semanticAiHandler.ChatConfig(parameter,
+            var iWantToRun = _agentAiHandler.ChatConfig(parameter,
                                 userId: "Jeffrey",
                                 maxHistoryStore: 1,
                                 chatSystemMessage: @$"你是一个翻译官，你熟悉“{language}”语言，你将帮我完成文本翻译。
