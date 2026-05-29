@@ -36,12 +36,15 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         public PromptBuilderService(/*IAiHandler aiHandler,*/ PromptService promptService, PromptRangeService promptRangeService, PromptItemService promptItemService, PromptResultService promptResultService)
         {
             //this._aiHandler = (AgentAiHandler)aiHandler;
-            this._aiHandler = promptService.IWantToRun.SemanticAiHandler;
+            this._aiHandler = promptService.IWantToRun.AgentAiHandler;
             this._promptService = promptService;
             this._promptRangeService = promptRangeService;
             this._promptItemService = promptItemService;
             this._promptResultService = promptResultService;
         }
+
+        /* 升级 Senparc.AI.AgentKernel，暂时停用此方法，未来改用 SKILL */
+        /*
 
         /// <summary>
         /// 运行提示内容
@@ -550,5 +553,6 @@ Apple
                 return "记录已存在，未覆盖";
             }
         }
+        */
     }
 }

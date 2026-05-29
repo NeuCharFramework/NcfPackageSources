@@ -124,7 +124,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             // 从数据库中获取模型信息
             var model = promptItem.AIModelDto;
             // 构建生成AI设置
-            SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
+            SenparcAiSetting aiSettings = _aiModelService.Value.BuildSenparcAiSetting(model);
 
             //TODO: model 加上模型的类型：Chat/TextCompletion/TextToImage 等
             ConfigModel configModel = _llModelService.ConvertToConfigModel(model.ConfigModelType);
@@ -328,7 +328,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             // 从数据库中获取模型信息
             var model = promptItem.AIModelDto;
             // 构建生成AI设置
-            SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
+            SenparcAiSetting aiSettings = _aiModelService.Value.BuildSenparcAiSetting(model);
 
             ConfigModel configModel = _llModelService.ConvertToConfigModel(model.ConfigModelType);
 
@@ -394,154 +394,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             return promptResult;
         }
-
-
-        /// <summary>
-        /// 构造 SenparcAiSetting, 在两个地方使用
-        /// </summary>
-        /// <param name="llModel"></param>
-        /// <returns></returns>
-        /// <exception cref="NcfExceptionBase"></exception>
-        public SenparcAiSetting BuildSenparcAiSetting(AIModelDto llModel)
-        {
-            var aiSettings = new SenparcAiSetting
-            {
-                AiPlatform = llModel.AiPlatform
-            };
-
-            switch (aiSettings.AiPlatform)
-            {
-                case AiPlatform.NeuCharAI:
-                    aiSettings.NeuCharAIKeys = new NeuCharAIKeys()
-                    {
-                        ApiKey = llModel.ApiKey,
-                        NeuCharAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        NeuCharEndpoint = llModel.Endpoint,
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
-                    };
-                    aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
-                    {
-                        ApiKey = llModel.ApiKey,
-                        AzureOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        AzureEndpoint = llModel.Endpoint,
-                        DeploymentName = llModel.DeploymentName,
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
-                    };
-                    break;
-                case AiPlatform.AzureOpenAI:
-                    aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
-                    {
-                        ApiKey = llModel.ApiKey,
-                        AzureOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        AzureEndpoint = llModel.Endpoint,
-                        DeploymentName = llModel.DeploymentName,
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
-                    };
-                    break;
-                case AiPlatform.HuggingFace:
-                    aiSettings.HuggingFaceKeys = new HuggingFaceKeys()
-                    {
-                        Endpoint = llModel.Endpoint,
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
-                    };
-                    break;
-                case AiPlatform.OpenAI:
-                    aiSettings.OpenAIKeys = new OpenAIKeys()
-                    {
-                        ApiKey = llModel.ApiKey,
-                        OrganizationId = llModel.OrganizationId,
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
-                    };
-                    break;
-                case AiPlatform.FastAPI:
-                    aiSettings.FastAPIKeys = new FastAPIKeys()
-                    {
-                        ApiKey = llModel.ApiKey,
-                        Endpoint = llModel.Endpoint,
-                        //OrganizationId = aiModel.OrganizationId
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
-                    };
-                    break;
-                case AiPlatform.Ollama:
-                    aiSettings.OllamaKeys = new OllamaKeys()
-                    {
-                        Endpoint = llModel.Endpoint,
-                        //OrganizationId = aiModel.OrganizationId
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
-                    };
-                    break;
-                case AiPlatform.DeepSeek:
-                    aiSettings.DeepSeekKeys = new DeepSeekKeys()
-                    {
-                        ApiKey = llModel.ApiKey,
-                        Endpoint = llModel.Endpoint,
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
-                    };
-                    break;
-                default:
-                    throw new NcfExceptionBase($"PromptRange 暂时不支持 {aiSettings.AiPlatform} 类型");
-            }
-
-
-            return aiSettings;
-        }
-
 
         public async Task<PromptResult> RobotScoringAsync(int promptResultId, bool isRefresh, string expectedResultsJson)
         {
@@ -652,16 +504,16 @@ Apple
             }
 
             // build aiSettings by model
-            var aiSettings = this.BuildSenparcAiSetting(aiModelDto);
-            //TODO:可以设置一个默认 PromptRange 的值，或者使用配置来指定打分的 AI，而不是使用同一个模型。
+            var aiSettings = _aiModelService.Value.BuildSenparcAiSetting(aiModelDto);
+            //TODO:可以设置一个默k认 PromptRange 的值，或者使用配置来指定打分的 AI，而不是使用同一个模型。
 
             var expectedResult = expectedResultList.ToJson();
 
             ConfigModel configModel = _llModelService.ConvertToConfigModel(aiModelDto.ConfigModelType);
-           
+
             var handler = new AgentAiHandler(aiSettings);
             var iWantToRun =
-                handler.IWantTo(aiSettings)
+                handler.IWantTo()
                     .ConfigChatModel("AIScoring", new ChatClientAgentOptions()
                     {
                         ChatOptions = new ChatOptions()

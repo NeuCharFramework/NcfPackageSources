@@ -31,6 +31,10 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Domain.Services
         {
             CO2NET.Helpers.FileHelper.TryCreateDirectory(_projectPath);
 
+            /* 升级 Senparc.AI.AgentKernel，暂时停用此方法，未来改用 SKILL */
+
+            /*
+
             var senparcAiSetting = Senparc.AI.Config.SenparcAiSetting;
             var result = await _service.RunPromptAsync(senparcAiSetting, PromptBuildType.EntityClass, input, entityName, null, _projectPath);
 
@@ -49,6 +53,7 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Domain.Services
 
             var newSenparcEntitiesContent = File.ReadAllText(senparcEntitiesFile);
             Assert.IsTrue(newSenparcEntitiesContent.Contains($"public DbSet<{entityName}> {entityName}s {{ get; set; }}"));
+            */
         }
 
         public PromptRangeGenerateTests()

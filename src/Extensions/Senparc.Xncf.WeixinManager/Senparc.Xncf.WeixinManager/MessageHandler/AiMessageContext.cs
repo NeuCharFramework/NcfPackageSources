@@ -82,14 +82,18 @@ namespace Senparc.Xncf.WeixinManager
                     }
 
                     //配置和初始化模型
-                    var iWantToRun = _agentAiHandler.ChatConfig(promptConfigParameter,
-                                                     userId: openId,
-                                                     maxHistoryStore: 20,
-                                                     chatSystemMessage: promptTemplate,
-                                                     promptTemplate: promptTemplate,
-                                                     senparcAiSetting: senparcAiSetting
-                                                                                                          /*, modelName: "gpt-4-32k"*/);
-
+                    var iWantToRun = _agentAiHandler.IWantTo(senparcAiSetting)
+                                     .ConfigChatModel(openId, new Microsoft.Agents.AI.ChatClientAgentOptions()
+                                     {
+                                         ChatOptions = new Microsoft.Extensions.AI.ChatOptions()
+                                         {
+                                             Instructions = promptTemplate,
+                                             MaxOutputTokens = 2000,
+                                             Temperature = 0.7f,
+                                             TopP = 0.5f
+                                         }
+                                     }).BuildKernel();
+              
                     //var iWantToRun = chatConfig.iWantToRun;
 
                     //IWantoRunDic.TryAdd(openId, iWantToRun);

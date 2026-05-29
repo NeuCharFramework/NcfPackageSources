@@ -15,6 +15,7 @@ using Senparc.Weixin.MP.Entities;
 using Senparc.Weixin.MP.Entities.Request;
 using Senparc.Weixin.MP.MessageHandlers;
 using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.Dto;
+using Senparc.AI.AgentKernel.Handlers;
 
 namespace Senparc.Xncf.WeixinManager
 {
@@ -47,7 +48,7 @@ namespace Senparc.Xncf.WeixinManager
             AgentAiHandler agentAiHandler = iWantToRun.AgentAiHandler;
 
             //发送到 AI 模型，获取结果
-            var result = await agentAiHandler.ChatAsync(iWantToRun, requestMessage.Content);
+            var result = await iWantToRun.RunChatAsync(requestMessage.Content);
             await Console.Out.WriteLineAsync("AI result.Output:" + result.OutputString);
             if (result == null)
             {

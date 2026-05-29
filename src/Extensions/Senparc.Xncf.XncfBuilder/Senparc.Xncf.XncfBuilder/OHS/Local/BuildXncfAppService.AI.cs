@@ -24,6 +24,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 {
     public partial class BuildXncfAppService
     {
+        /* 升级 Senparc.AI.AgentKernel，暂时停用此方法，未来改用 SKILL */
+
+        /*
+         * 
         /// <summary>
         /// AI 生成数据库实体
         /// </summary>
@@ -253,6 +257,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 return log;
             });
         }
+
+        */
 
         //[FunctionRender("[AI] 生成 AppService", "使用 AI 指令生成 AppService", typeof(Register))]
         //public async Task<StringAppResponse> CreateAppService()
