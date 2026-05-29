@@ -4,7 +4,6 @@ using Microsoft.SemanticKernel;
 using Senparc.AI.Interfaces;
 using Senparc.AI.AgentKernel;
 using Senparc.AI.AgentKernel.Entities;
-using Senparc.AI.AgentKernel.KernelConfigExtensions;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using Senparc.Xncf.PromptRange.Domain.Services;
@@ -37,7 +36,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
         public PromptBuilderService(/*IAiHandler aiHandler,*/ PromptService promptService, PromptRangeService promptRangeService, PromptItemService promptItemService, PromptResultService promptResultService)
         {
             //this._aiHandler = (AgentAiHandler)aiHandler;
-            this._aiHandler = promptService.IWantToRun.AgentAiHandler;
+            this._aiHandler = promptService.IWantToRun.SemanticAiHandler;
             this._promptService = promptService;
             this._promptRangeService = promptRangeService;
             this._promptItemService = promptItemService;

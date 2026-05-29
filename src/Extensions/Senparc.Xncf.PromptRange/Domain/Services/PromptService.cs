@@ -174,7 +174,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                                             //加入当前 functionName 的最佳结果
                                             filteredPromptItems.Add(functionName, theBestItem);
 
-                                            #region 使用当前制定的 AI 模型进行生成
+                                            #region 使用当前指定的 AI 模型进行生成
                                             if (senparcAiSetting == null)
                                             {
                                                 try

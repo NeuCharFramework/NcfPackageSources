@@ -41,6 +41,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         /// </summary>
         [Required, MaxLength(20)]
         public AiPlatform ModelType { get; private set; }
+        //TODO:这个名称应该叫 AiPlatform 更合理，暂时不处理
 
         /// <summary>
         /// OrganizationId（可选）

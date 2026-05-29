@@ -234,7 +234,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             var iWantToRun = await chatConfig.BuildKernelAsync(chatOptions);
 
             //var request = iWantToRun.CreateRequest(prompt);
-            var aiResult = await iWantToRun.RunAsync(prompt, agentSession);
+            var aiResult = await iWantToRun.RunChatAsync(prompt, agentSession);
             return aiResult;
         }
 
