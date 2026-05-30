@@ -20,6 +20,11 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Agents.AI;
+using Microsoft.AspNetCore.Routing.Constraints;
+using Microsoft.Extensions.AI;
+using Senparc.AI.AgentKernel.IWantToExtensions;
+using Senparc.AI.AgentKernel.Extensions;
 
 namespace Senparc.Areas.Admin.Domain.Services
 {
@@ -71,24 +76,24 @@ namespace Senparc.Areas.Admin.Domain.Services
             var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
 
             var agentAiHandler = new AgentAiHandler(setting);
-            var promptParameter = new PromptConfigParameter
-            {
-                MaxTokens = 2000,
-                Temperature = 0.6f,
-                TopP = 0.9f
-            };
+
 
             var modulePlugin = new ModuleAssistantPlugin(modules);
+            var tools = agentAiHandler.GetAITools(modulePlugin);
 
-            var iWantToRun = agentAiHandler.ChatConfig(
-                promptParameter,
-                userId: $"AdminChat-{userId}-{sessionId}",
-                maxHistoryStore: 20,
-                chatSystemMessage: BuildSystemMessage(modules),
-                senparcAiSetting: setting);
+            var iWantToRun = await agentAiHandler.IWantTo(setting).ConfigChatModel($"AdminChat-{userId}-{sessionId}", new ChatClientAgentOptions()
+                        {
+                            ChatOptions = new ChatOptions()
+                            {
+                                Instructions = BuildSystemMessage(modules),
+                                MaxOutputTokens = 2000,
+                                TopP = 0.9f,
+                                Temperature = 0.6f,
+                                Tools = tools.Select(z => z as AITool).ToList()
+                            }
+                        }
+                ).BuildKernelWithAgentSessionAsync();
 
-            // 注册模块信息 Function Calling 插件
-            iWantToRun.ImportPluginFromObject(modulePlugin, "ModuleAssistant");
             var importedPluginNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "ModuleAssistant" };
 
             // 自动加载会话关联模块中的 FunctionRender（[#sym:FunctionRender]）插件对象
@@ -191,11 +196,13 @@ namespace Senparc.Areas.Admin.Domain.Services
             var prompt = BuildUserPrompt(messages, userMessage);
 
             // 使用 FunctionChoiceBehavior.Auto() 让 AI 根据需要自动调用 ModuleAssistantPlugin 函数
-            var executionSettings = new PromptExecutionSettings
-            {
-                FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
-            };
-            var skResult = await iWantToRun.Kernel.InvokePromptAsync(prompt, new KernelArguments(executionSettings));
+            //var executionSettings = new PromptExecutionSettings
+            //{
+            //    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
+            //};
+
+            //TODO: 测试 MAF 中是否自动开启工具调用
+            var skResult = await iWantToRun.RunChatAsync(prompt);
 
             var result = skResult?.ToString()?.Trim();
             if (string.IsNullOrWhiteSpace(result))
