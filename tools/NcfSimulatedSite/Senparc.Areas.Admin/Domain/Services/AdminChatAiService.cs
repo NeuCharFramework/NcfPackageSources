@@ -79,20 +79,7 @@ namespace Senparc.Areas.Admin.Domain.Services
 
 
             var modulePlugin = new ModuleAssistantPlugin(modules);
-            var tools = agentAiHandler.GetAITools(modulePlugin);
-
-            var iWantToRun = await agentAiHandler.IWantTo(setting).ConfigChatModel($"AdminChat-{userId}-{sessionId}", new ChatClientAgentOptions()
-                        {
-                            ChatOptions = new ChatOptions()
-                            {
-                                Instructions = BuildSystemMessage(modules),
-                                MaxOutputTokens = 2000,
-                                TopP = 0.9f,
-                                Temperature = 0.6f,
-                                Tools = tools.Select(z => z as AITool).ToList()
-                            }
-                        }
-                ).BuildKernelWithAgentSessionAsync();
+            var aiFunctions = agentAiHandler.GetAITools(modulePlugin);
 
             var importedPluginNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "ModuleAssistant" };
 
@@ -138,6 +125,12 @@ namespace Senparc.Areas.Admin.Domain.Services
 
                             var kernelFunction = KernelFunctionFactory.CreateFromMethod(functionBag.MethodInfo, plugin, options);
                             kernelFunctions.Add(kernelFunction);
+
+                            aiFunctions.Add(AIFunctionFactory.Create(
+                                method: functionBag.MethodInfo,
+                                target: null,
+                                name: options.FunctionName,
+                                description: options.Description));
                         }
                         catch (Exception ex)
                         {
@@ -154,7 +147,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                         continue;
                     }
 
-                    var addedPlugin = iWantToRun.Kernel.Plugins.AddFromFunctions(pluginName, kernelFunctions);
+                    var addedPlugin = KernelPluginFactory.CreateFromFunctions(pluginName, kernelFunctions);
+
                     importedFunctionSignatures.AddRange(addedPlugin.Select(kernelFunction => $"{kernelFunction.Metadata.PluginName}.{kernelFunction.Metadata.Name}({kernelFunction.Metadata.Description ?? "N/A"})"));
                     loadedFunctionDebugLines.AddRange(BuildKernelPluginDebugLines(addedPlugin));
                     importedPluginNames.Add(pluginName);
@@ -165,6 +159,21 @@ namespace Senparc.Areas.Admin.Domain.Services
                     _logger.LogWarning(ex, "导入 FunctionRender 插件失败：{PluginType}", pluginGroup.Key?.FullName);
                 }
             }
+
+
+            var iWantToRun = await agentAiHandler.IWantTo(setting).ConfigChatModel($"AdminChat-{userId}-{sessionId}", new ChatClientAgentOptions()
+            {
+                ChatOptions = new ChatOptions()
+                {
+                    Instructions = BuildSystemMessage(modules),
+                    MaxOutputTokens = 2000,
+                    TopP = 0.9f,
+                    Temperature = 0.6f,
+                    Tools = aiFunctions.Select(z => z as AITool).ToList()
+                }
+            }
+                ).BuildKernelWithAgentSessionAsync();
+
 
             if (importedFunctionCount == 0)
             {

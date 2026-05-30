@@ -40,6 +40,9 @@ namespace Senparc.Web
 
         protected override async Task AfterRunBotAsync(IServiceProvider serviceProvider, RequestMessageText requestMessage, MpAccountDto mpAccountDto, SenparcAiResult senparcAiResult, DateTimeOffset startTime)
         {
+            /* TODO：AgentKernel暂时未支持 Image 模型，支持后重新开放。*/
+
+            /*
             var aiResultContent = senparcAiResult.OutputString;
             if (aiResultContent == "Img=True")
             {
@@ -99,6 +102,7 @@ namespace Senparc.Web
             {
                 await base.AfterRunBotAsync(serviceProvider, requestMessage, mpAccountDto, senparcAiResult, startTime);
             }
+            */
         }
     }
 }
