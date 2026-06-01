@@ -170,7 +170,11 @@ namespace Senparc.Areas.Admin.Domain.Services
                     TopP = 0.9f,
                     Temperature = 0.6f,
                     Tools = aiFunctions.Select(z => z as AITool).ToList()
-                }
+                },
+                ChatHistoryProvider = new InMemoryChatHistoryProvider(new InMemoryChatHistoryProviderOptions
+                {
+                    ChatReducer = new MessageCountingChatReducer(20)
+                })
             }
                 ).BuildKernelWithAgentSessionAsync();
 
