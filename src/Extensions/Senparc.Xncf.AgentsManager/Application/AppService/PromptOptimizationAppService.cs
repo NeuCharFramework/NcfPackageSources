@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Senparc.CO2NET.WebApi;
@@ -8,6 +8,7 @@ using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.PromptRange.Abstractions.Events;
 using Microsoft.Extensions.Logging;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 
 namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 {
@@ -15,7 +16,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
     /// Prompt 优化 AppService
     /// TODO: 需要权限验证
     /// </summary>
-    //[ApiAuthorize("AdminOnly")]
+    [ApiAuthorize]
     public class PromptOptimizationAppService : AppServiceBase
     {
         private readonly PromptOptimizationService _promptOptimizationService;

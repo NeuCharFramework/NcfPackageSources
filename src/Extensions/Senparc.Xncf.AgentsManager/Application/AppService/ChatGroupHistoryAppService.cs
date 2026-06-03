@@ -3,11 +3,14 @@ using Senparc.Ncf.Core.AppServices;
 using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.AgentsManager.OHS.Local.PL;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 using System;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 {
+    [ApiAuthorize]
+
     public class ChatGroupHistoryAppService : AppServiceBase
     {
         private readonly ChatGroupHistoryService _chatGroupHistoryService;

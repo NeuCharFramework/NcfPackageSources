@@ -9,6 +9,7 @@ using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.OHS.Local.PL;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 {
+    [ApiAuthorize]
     public class ChatTaskAppService : AppServiceBase
     {
         private readonly ChatTaskService _chatTaskService;

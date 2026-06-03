@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 {
@@ -23,7 +24,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
     /// LLM 模型管理 AppService
     /// TODO: 需要权限验证
     /// </summary>
-    //[ApiAuthorize("AdminOnly")]
+    [ApiAuthorize("AdminOnly")]
     public class LlmModelAppService : AppServiceBase
     {
         private readonly LlModelService _llModelService;
