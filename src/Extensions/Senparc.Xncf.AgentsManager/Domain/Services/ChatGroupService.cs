@@ -6,8 +6,8 @@ using ModelContextProtocol.Client;
 using Senparc.AI;
 using Senparc.AI.Entities;
 using Senparc.AI.Interfaces;
-using Senparc.AI.Kernel;
-using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Handlers;
 using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Trace;
@@ -80,7 +80,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         var agents = new List<SemanticKernelAgent>();
         List<MiddlewareAgent<SemanticKernelAgent>> agentsMiddlewares = new List<MiddlewareAgent<SemanticKernelAgent>>();
 
-        var _semanticAiHandler = new SemanticAiHandler(senparcAiSetting);
+        var _agentAiHandler = new AgentAiHandler(senparcAiSetting);
 
         var parameter = new PromptConfigParameter()
         {
@@ -89,7 +89,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             TopP = 0.3,
         };
 
-        var iWantToRun = _semanticAiHandler.IWantTo(senparcAiSetting)
+        var iWantToRun = _agentAiHandler.IWantTo(senparcAiSetting)
                         .ConfigModel(ConfigModel.Chat, "JeffreySu")
                         .BuildKernel();
 
@@ -114,8 +114,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
             if (individuation)
             {
-                var semanticAiHandler = new SemanticAiHandler(promptResult.SenparcAiSetting);
-                var iWantToRunItem = semanticAiHandler.IWantTo(senparcAiSetting)
+                var agentAiHandler = new AgentAiHandler(promptResult.SenparcAiSetting);
+                var iWantToRunItem = agentAiHandler.IWantTo(senparcAiSetting)
                             .ConfigModel(ConfigModel.Chat, agentTemplate.Name + groupMember.UID)
                             .BuildKernel();
                 itemKernel = iWantToRunItem.Kernel;
@@ -162,8 +162,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         var adminKernel = kernel;
         if (individuation)
         {
-            var semanticAiHandler = new SemanticAiHandler(adminPromptResult.SenparcAiSetting);
-            var iWantToRunItem = semanticAiHandler.IWantTo(senparcAiSetting)
+            var agentAiHandler = new AgentAiHandler(adminPromptResult.SenparcAiSetting);
+            var iWantToRunItem = agentAiHandler.IWantTo(senparcAiSetting)
                         .ConfigModel(ConfigModel.Chat, adminAgenttemplate.Name)
                         .BuildKernel();
             adminKernel = iWantToRunItem.Kernel;
@@ -359,7 +359,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             #endregion
 
             #region 确定默认公共使用的模型
-            var _semanticAiHandler = new SemanticAiHandler(senparcAiSetting);
+            var _agentAiHandler = new AgentAiHandler(senparcAiSetting);
 
             var parameter = new PromptConfigParameter()
             {
@@ -369,7 +369,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             };
 
             //全局默认模型
-            var iWantToRunGlobal = _semanticAiHandler.IWantTo(senparcAiSetting)
+            var iWantToRunGlobal = _agentAiHandler.IWantTo(senparcAiSetting)
                             .ConfigModel(ConfigModel.Chat, "JeffreySu")
                             .BuildKernel();
             #endregion
@@ -458,13 +458,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 if (personality)
                 {
                     //使用个性化参数创建
-                    var personalitySemanticAiHandler = new SemanticAiHandler(currentAgentAiSetting);
-                    iWantToConfig = personalitySemanticAiHandler.IWantTo();
+                    var personalityAgentAiHandler = new AgentAiHandler(currentAgentAiSetting);
+                    iWantToConfig = personalityAgentAiHandler.IWantTo();
 
                 }
                 else
                 {
-                    iWantToConfig = _semanticAiHandler.IWantTo(senparcAiSetting);
+                    iWantToConfig = _agentAiHandler.IWantTo(senparcAiSetting);
                 }
 
                 //当前 Agent 配置
@@ -636,8 +636,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
             if (personality)
             {
-                var semanticAiHandler = new SemanticAiHandler(adminPromptResult.SenparcAiSetting);
-                var iWantToRunItem = semanticAiHandler.IWantTo(senparcAiSetting)
+                var agentAiHandler = new AgentAiHandler(adminPromptResult.SenparcAiSetting);
+                var iWantToRunItem = agentAiHandler.IWantTo(senparcAiSetting)
                             .ConfigModel(ConfigModel.Chat, adminAgenttemplate.Name)
                             .BuildKernel();
             }

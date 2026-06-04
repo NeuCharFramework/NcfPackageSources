@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI.Entities;
 using Senparc.CO2NET.Extensions;
@@ -513,6 +514,26 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         };
 
         return promptParameter;
+    }
+
+    /// <summary>
+    /// 从 <see cref="PromptItemDto"/> 映射获取 <see cref="ChatOptions"/> 对象
+    /// </summary>
+    /// <param name="promptItemDto"></param>
+    /// <param name="systemMessage"></param>
+    public ChatOptions GetChatOptions(PromptItemDto promptItemDto, string systemMessage)
+    {
+        var chatOptions = new ChatOptions()
+        {
+            Instructions = systemMessage,
+            MaxOutputTokens = promptItemDto.MaxToken,
+            TopP = promptItemDto.TopP,
+            Temperature = promptItemDto.Temperature,
+            PresencePenalty = promptItemDto.PresencePenalty,
+            FrequencyPenalty = promptItemDto.FrequencyPenalty,
+            StopSequences = (promptItemDto.StopSequences ?? "[]").GetObject<List<string>>()
+        };
+        return chatOptions;
     }
 
     #region 生成 PromptItem 树

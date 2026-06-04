@@ -13,7 +13,7 @@ using Senparc.Xncf.XncfBuilder.Domain.Models.Services;
 using Senparc.Ncf.XncfBase.Database;
 using Microsoft.Extensions.Hosting;
 using Senparc.Xncf.XncfBuilder.Domain.Services;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.AIKernel.OHS.Local.AppService;
 using OllamaSharp.Models.Chat;
@@ -78,7 +78,7 @@ namespace Senparc.Xncf.XncfBuilder
             }
 
             //services.AddScoped<PromptRange.Domain.Services.PromptService>();
-            //services.AddScoped<AI.Interfaces.IAiHandler>(s => new SemanticAiHandler());
+            //services.AddScoped<AI.Interfaces.IAiHandler>(s => new AgentAiHandler());
 
             services.AddScoped<ConfigService>();
             services.AddScoped<PromptBuilderService>();

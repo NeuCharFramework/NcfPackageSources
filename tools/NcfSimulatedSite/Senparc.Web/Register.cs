@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Senparc.AI.Interfaces;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 using Senparc.Areas.Admin.Domain.Services;
 using Senparc.CO2NET;
 using Senparc.CO2NET.AspNet;

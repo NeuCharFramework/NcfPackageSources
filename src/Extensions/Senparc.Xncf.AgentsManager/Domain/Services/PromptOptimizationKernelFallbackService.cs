@@ -1,19 +1,25 @@
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Logging;
+using NetTopologySuite.Algorithm;
+using Senparc.AI;
+using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Entities;
+using Senparc.AI.AgentKernel.Handlers;
+using Senparc.AI.Entities;
+using Senparc.Ncf.Core.Enums;
+using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AIKernel.Domain.Services;
+using Senparc.Xncf.PromptRange.Abstractions.Events;
+using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
+using Senparc.Xncf.PromptRange.Domain.Services;
+using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using System;
 using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Senparc.AI;
-using Senparc.AI.Entities;
-using Senparc.AI.Kernel;
-using Senparc.AI.Kernel.Handlers;
-using Senparc.AI.Kernel.KernelConfigExtensions;
-using Senparc.Ncf.Core.Enums;
-using Senparc.Xncf.PromptRange.Abstractions.Events;
-using Senparc.Xncf.PromptRange.Domain.Services;
-using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
@@ -26,9 +32,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         private readonly LlModelService _llModelService;
         private readonly PromptOptimizationAgentBridge _bridge;
         private readonly ILogger<PromptOptimizationKernelFallbackService> _logger;
+        private readonly Lazy<AIModelService> _aiModelService;
 
-        private const string OptimizationPromptTemplate = @"You are a senior prompt engineer. Improve the baseline prompt according to the user requirement.
-Output a single JSON object only (no markdown fences, no commentary). Use this shape:
+        private const string OptimizationPromptTemplate =
+@"Output a single JSON object only (no markdown fences, no commentary). Use this shape:
 {
   ""optimizedContent"": ""<full new prompt text; use real newlines inside the string>"",
   ""modelId"": <optional number>,
@@ -56,12 +63,14 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
             PromptItemService promptItemService,
             LlModelService llModelService,
             PromptOptimizationAgentBridge bridge,
-            ILogger<PromptOptimizationKernelFallbackService> logger)
+            ILogger<PromptOptimizationKernelFallbackService> logger,
+            Lazy<AIModelService> aiModelService)
         {
             _promptItemService = promptItemService;
             _llModelService = llModelService;
             _bridge = bridge;
             _logger = logger;
+            _aiModelService = aiModelService;
         }
 
         /// <summary>
@@ -82,31 +91,41 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
                 }
 
                 var originalItem = promptResult.PromptItem;
-                var model = originalItem.AIModelDto;
-                if (model == null)
+                var aiModelDto = originalItem.AIModelDto;
+                if (aiModelDto == null)
                 {
                     var msg = "Kernel fallback: AIModelDto missing on prompt item.";
                     _logger.LogWarning(msg);
                     return Fail(request.RequestId, msg);
                 }
 
+                //获得可用的 Chat 模型
+                var avaliableModelResult = await _aiModelService.Value.GetValiableChatModel(aiModelDto);
+
+                aiModelDto = avaliableModelResult.FinalAiModelDto;
+
+                // build aiSettings by model
+                var aiSettings = avaliableModelResult.AiSetting;
+                //TODO:可以设置一个默k认 PromptRange 的值，或者使用配置来指定打分的 AI，而不是使用同一个模型。
+
+                //ConfigModel configModel = _llModelService.ConvertToConfigModel(aiModelDto.ConfigModelType);
+
+                var handler = new AgentAiHandler(aiSettings);
+                var iWantToRun =
+                    handler.IWantTo()
+                        .ConfigChatModel("PromptOptimizationKernelFallback", new ChatClientAgentOptions()
+                        {
+                            ChatOptions = new ChatOptions()
+                            {
+                                Instructions = "You are a senior prompt engineer. Improve the baseline prompt according to the user requirement.",
+                                MaxOutputTokens = Math.Max(aiModelDto.MaxToken, 6000),
+                                Temperature = 0.2f,
+                                TopP = 0.9f
+                            }
+                        }).BuildKernel();
+
                 var rangeName = request.PromptCode?.Split('-').FirstOrDefault()?.Trim() ?? originalItem.RangeName;
                 var bestModelId = await SelectBestModelIdAsync(rangeName, request.Context.ModelId);
-
-                var handler = new SemanticAiHandler(promptResult.SenparcAiSetting);
-                var configModel = _llModelService.ConvertToConfigModel(model.ConfigModelType);
-                var promptParameter = new PromptConfigParameter
-                {
-                    MaxTokens = Math.Max(model.MaxToken, 6000),
-                    Temperature = 0.35f,
-                    TopP = 0.9f
-                };
-
-                var iWantToRun = handler.IWantTo(promptResult.SenparcAiSetting)
-                    .ConfigModel(configModel, "PromptOptimizationKernelFallback")
-                    .BuildKernel()
-                    .CreateFunctionFromPrompt(OptimizationPromptTemplate, promptParameter)
-                    .iWantToRun;
 
                 var args = iWantToRun.CreateNewArguments().arguments;
                 args["promptCode"] = request.PromptCode ?? "";
@@ -119,9 +138,12 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
                 args["defFreq"] = request.Context.CurrentFrequencyPenalty.ToString(CultureInfo.InvariantCulture);
                 args["defPres"] = request.Context.CurrentPresencePenalty.ToString(CultureInfo.InvariantCulture);
 
-                var aiRequest = iWantToRun.CreateRequest(args, true);
+                var aiRequest = iWantToRun.CreateRequest(OptimizationPromptTemplate, iWantToRun.Kernel.AgentSession);
+                aiRequest.TempAiArguments = new SenparcAiArguments() { AgentKernelArguments = args };
+                aiRequest.RequestContent = aiRequest.ReplacePrompt();//替换参数
+
                 _logger.LogInformation("Kernel fallback: invoking model for RequestId={RequestId}", request.RequestId);
-                var runResult = await iWantToRun.RunAsync(aiRequest).ConfigureAwait(false);
+                var runResult = await iWantToRun.RunChatAsync(aiRequest).ConfigureAwait(false);
                 var raw = runResult.OutputString?.Trim();
                 if (string.IsNullOrEmpty(raw))
                 {

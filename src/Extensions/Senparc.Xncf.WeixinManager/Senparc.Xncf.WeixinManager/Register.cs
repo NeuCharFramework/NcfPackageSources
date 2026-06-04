@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi;
 using ModelContextProtocol.Protocol;
 using Senparc.AI.Interfaces;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 using Senparc.CO2NET.ApiBind;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
@@ -73,7 +73,7 @@ namespace Senparc.Xncf.WeixinManager
             //{
             //    //根据条件生成不同的PostModel
             //});
-            services.AddScoped<IAiHandler, SemanticAiHandler>();
+            services.AddScoped<IAiHandler, AgentAiHandler>();
             services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();
             services.AddAutoMapper(z => z.AddProfile<WeixinManagerProfile>());
             services.AddScoped<MpAccountService>();

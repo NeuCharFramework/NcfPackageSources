@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI.Entities;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.MessageQueue;
 using Senparc.NeuChar.App.AppStore;
@@ -15,6 +15,7 @@ using Senparc.Weixin.MP.Entities;
 using Senparc.Weixin.MP.Entities.Request;
 using Senparc.Weixin.MP.MessageHandlers;
 using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.Dto;
+using Senparc.AI.AgentKernel.Handlers;
 
 namespace Senparc.Xncf.WeixinManager
 {
@@ -44,10 +45,10 @@ namespace Senparc.Xncf.WeixinManager
 
             //获取 AI 处理器
             var iWantToRun = await WechatAiContext.GetIWantToRunAsync(services, _mpAccountDto, requestMessage.FromUserName);
-            SemanticAiHandler semanticAiHandler = iWantToRun.SemanticAiHandler;
+            AgentAiHandler agentAiHandler = iWantToRun.AgentAiHandler;
 
             //发送到 AI 模型，获取结果
-            var result = await semanticAiHandler.ChatAsync(iWantToRun, requestMessage.Content);
+            var result = await iWantToRun.RunChatAsync(requestMessage.Content);
             await Console.Out.WriteLineAsync("AI result.Output:" + result.OutputString);
             if (result == null)
             {

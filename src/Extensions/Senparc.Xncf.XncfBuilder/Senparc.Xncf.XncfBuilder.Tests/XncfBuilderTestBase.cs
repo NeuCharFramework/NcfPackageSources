@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.AI;
 using Senparc.AI.Interfaces;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 using Senparc.CO2NET;
 using Senparc.Ncf.Core.Tests;
 using Senparc.Xncf.PromptRange.Domain.Services;
@@ -37,7 +37,7 @@ namespace Senparc.Xncf.PromptRange.Tests
             services.AddScoped<PromptService>();
             services.AddScoped<PromptBuilderService>();
 
-            services.AddScoped<IAiHandler, SemanticAiHandler>();
+            services.AddScoped<IAiHandler, AgentAiHandler>();
         }
 
         public XncfBuilderTestBase() : base()

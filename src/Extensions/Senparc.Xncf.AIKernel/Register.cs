@@ -16,7 +16,7 @@ using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.FileProviders;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 using Senparc.CO2NET.RegisterServices;
 using System.Reflection;
 using Senparc.AI.Interfaces;
@@ -90,7 +90,7 @@ namespace Senparc.Xncf.AIKernel
             services.AddSenparcAI(configuration);
             //services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();
             //Console.WriteLine("======================services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();================");
-            services.AddScoped<SemanticAiHandler>();
+            services.AddScoped<AgentAiHandler>();
 
             services.AddAutoMapper(config =>
             {

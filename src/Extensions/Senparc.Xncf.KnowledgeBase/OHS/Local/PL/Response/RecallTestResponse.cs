@@ -8,7 +8,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Response
 {
     public class RecallTestResponse
     {
-        public string Score { get; set; }
+        public double? Score { get; set; }
         public string Content { get; set; }
         public string RecallTime { get; set; }
     }

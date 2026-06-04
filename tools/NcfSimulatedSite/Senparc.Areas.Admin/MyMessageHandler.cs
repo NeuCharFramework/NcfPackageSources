@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel.TextToImage;
 using Senparc.AI;
-using Senparc.AI.Kernel;
-using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Handlers;
 using Senparc.NeuChar.Entities;
 using Senparc.Weixin.MP.Entities;
 using Senparc.Weixin.MP.Entities.Request;
@@ -40,6 +40,9 @@ namespace Senparc.Web
 
         protected override async Task AfterRunBotAsync(IServiceProvider serviceProvider, RequestMessageText requestMessage, MpAccountDto mpAccountDto, SenparcAiResult senparcAiResult, DateTimeOffset startTime)
         {
+            /* TODO：AgentKernel暂时未支持 Image 模型，支持后重新开放。*/
+
+            /*
             var aiResultContent = senparcAiResult.OutputString;
             if (aiResultContent == "Img=True")
             {
@@ -49,8 +52,8 @@ namespace Senparc.Web
 
                 //绘制图片，并返回
                 var userId = "Jeffrey";
-                var semanticAiHandler = serviceProvider.GetService<SemanticAiHandler>();
-                var iWantTo = semanticAiHandler.IWantTo(dalleSetting)
+                var agentAiHandler = serviceProvider.GetService<AgentAiHandler>();
+                var iWantTo = agentAiHandler.IWantTo(dalleSetting)
                                     .ConfigModel(ConfigModel.ImageGeneration, userId)
                                     .BuildKernel();
 
@@ -99,6 +102,7 @@ namespace Senparc.Web
             {
                 await base.AfterRunBotAsync(serviceProvider, requestMessage, mpAccountDto, senparcAiResult, startTime);
             }
+            */
         }
     }
 }

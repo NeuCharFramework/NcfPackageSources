@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <!--<Project Sdk="Microsoft.NET.Sdk.Razor">-->
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <!--<RazorLangVersion>3.0</RazorLangVersion>-->
     <Version>0.21.6.1-preview</Version>
     <!--<GenerateProgramFile>false</GenerateProgramFile>-->
@@ -86,6 +86,7 @@
     <EmbeddedResource Include="wwwroot\**\*" />
     <EmbeddedResource Include="App_Data\ApiDocXml\*" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
+    <PackageReference Include="Senparc.AI.AgentKernel" Version="0.1.4.1" />
   </ItemGroup>
   <ItemGroup>
     <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />-->
@@ -96,7 +97,6 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>-->
-    <PackageReference Include="Senparc.AI.Kernel" Version="0.29.0" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
     <!--<PackageReference Include="Senparc.Weixin.All" Version="2025.10.24" />-->
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.1" />-->
@@ -106,7 +106,7 @@
     <PackageReference Include="Senparc.Weixin.Open" Version="4.24.0" />
     <PackageReference Include="Senparc.Weixin.TenPay" Version="1.18.1" />
     <PackageReference Include="Senparc.Weixin.Work" Version="3.30.4" />
-    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.26.0" />
+    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.25.1" />
     <!-- 由于 Npgsql 生成代码有依赖，因此此处暂时引用 -->
     <!--<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />-->
     <!--<PackageReference Include="Senparc.Ncf.Database.PostgreSQL" Version="0.12.8.3-preview1" />

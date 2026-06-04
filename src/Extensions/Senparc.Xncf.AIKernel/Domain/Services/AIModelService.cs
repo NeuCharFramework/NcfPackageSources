@@ -1,23 +1,25 @@
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.DependencyInjection;
+using Senparc.AI;
+using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Handlers;
+using Senparc.AI.Entities;
+using Senparc.AI.Entities.Keys;
+using Senparc.AI.Exceptions;
+using Senparc.CO2NET.Extensions;
+using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
+using Senparc.Xncf.AIKernel.Domain.Models;
+using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AIKernel.Domain.Models.Extensions;
+using Senparc.Xncf.AIKernel.Models;
+using Senparc.Xncf.AIKernel.OHS.Local.PL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Senparc.Ncf.Core.Exceptions;
-using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
-using Senparc.Xncf.AIKernel.Models;
-using Senparc.Xncf.AIKernel.OHS.Local.PL;
-using Senparc.AI.Kernel;
-using Senparc.AI;
-using Microsoft.Extensions.DependencyInjection;
-using Senparc.AI.Kernel.Handlers;
-using Senparc.AI.Entities;
-using Senparc.AI.Exceptions;
-using Senparc.AI.Entities.Keys;
-using Senparc.Xncf.AIKernel.Domain.Models.Extensions;
-using Senparc.CO2NET.Extensions;
 
 namespace Senparc.Xncf.AIKernel.Domain.Services
 {
@@ -203,7 +205,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <param name="senparcAiSetting"></param>
         /// <param name="prompt"></param>
         /// <returns></returns>
-        public async Task<SenparcKernelAiResult<string>> RunModelsync(SenparcAiSetting senparcAiSetting, string prompt, string systemMessage, string promptTemplate, PromptConfigParameter promptConfigParameter = null)
+        public async Task<SenparcKernelAiResult<string>> RunModelsync(SenparcAiSetting senparcAiSetting, string prompt, string systemMessage, string promptTemplate, PromptConfigParameter promptConfigParameter = null, AgentSession agentSession = null)
         {
             if (senparcAiSetting == null)
             {
@@ -217,14 +219,23 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 TopP = 0.5,
             };
 
-            var semanticAiHandler = base._serviceProvider.GetService<SemanticAiHandler>();
-            var chatConfig = semanticAiHandler.ChatConfig(promptConfigParameter, userId: "Jeffrey",
-                 chatSystemMessage: systemMessage, promptTemplate: promptTemplate,
-                 maxHistoryStore: 20, senparcAiSetting: senparcAiSetting);
-            var iWantToRun = chatConfig;
+            var agentAiHandler = base._serviceProvider.GetService<AgentAiHandler>();
+            var chatConfig = agentAiHandler.IWantTo().ConfigModel(ConfigModel.Chat, "SenparcNCF");
+            var chatOptions = new ChatClientAgentOptions()
+            {
+                ChatOptions = new Microsoft.Extensions.AI.ChatOptions()
+                {
+                    Instructions = systemMessage,
+                    MaxOutputTokens = promptConfigParameter.MaxTokens,
+                    Temperature = (float?)promptConfigParameter.Temperature,
+                    TopP = (float?)promptConfigParameter.TopP,
+                },
+            };
 
-            var request = iWantToRun.CreateRequest(prompt);
-            var aiResult = await iWantToRun.RunAsync(request);
+            var iWantToRun = await chatConfig.BuildKernelAsync(chatOptions);
+
+            //var request = iWantToRun.CreateRequest(prompt);
+            var aiResult = await iWantToRun.RunChatAsync(prompt, agentSession);
             return aiResult;
         }
 
@@ -288,6 +299,184 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 await base.SaveObjectAsync(model);
             }
             return $"已成功添加 {addCount} 个模型，更新 {updateCount} 个模型信息。";
+        }
+
+        /// <summary>
+        /// 构造 SenparcAiSetting, 在两个地方使用
+        /// </summary>
+        /// <param name="llModel"></param>
+        /// <returns></returns>
+        /// <exception cref="NcfExceptionBase"></exception>
+        public SenparcAiSetting BuildSenparcAiSetting(AIModelDto llModel)
+        {
+            var aiSettings = new SenparcAiSetting
+            {
+                AiPlatform = llModel.AiPlatform
+            };
+
+            switch (aiSettings.AiPlatform)
+            {
+                case AiPlatform.NeuCharAI:
+                    aiSettings.NeuCharAIKeys = new NeuCharAIKeys()
+                    {
+                        ApiKey = llModel.ApiKey,
+                        NeuCharAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        NeuCharEndpoint = llModel.Endpoint,
+                        ModelName = new AI.Entities.Keys.ModelName()
+                        {
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
+                        }
+                    };
+                    aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
+                    {
+                        ApiKey = llModel.ApiKey,
+                        AzureOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        AzureEndpoint = llModel.Endpoint,
+                        DeploymentName = llModel.DeploymentName,
+                        ModelName = new AI.Entities.Keys.ModelName()
+                        {
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
+                        }
+                    };
+                    break;
+                case AiPlatform.AzureOpenAI:
+                    aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
+                    {
+                        ApiKey = llModel.ApiKey,
+                        AzureOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        AzureEndpoint = llModel.Endpoint,
+                        DeploymentName = llModel.DeploymentName,
+                        ModelName = new AI.Entities.Keys.ModelName()
+                        {
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
+                        }
+                    };
+                    break;
+                case AiPlatform.HuggingFace:
+                    aiSettings.HuggingFaceKeys = new HuggingFaceKeys()
+                    {
+                        Endpoint = llModel.Endpoint,
+                        ModelName = new AI.Entities.Keys.ModelName()
+                        {
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
+                        }
+                    };
+                    break;
+                case AiPlatform.OpenAI:
+                    aiSettings.OpenAIKeys = new OpenAIKeys()
+                    {
+                        ApiKey = llModel.ApiKey,
+                        OrganizationId = llModel.OrganizationId,
+                        ModelName = new AI.Entities.Keys.ModelName()
+                        {
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
+                        }
+                    };
+                    break;
+                case AiPlatform.FastAPI:
+                    aiSettings.FastAPIKeys = new FastAPIKeys()
+                    {
+                        ApiKey = llModel.ApiKey,
+                        Endpoint = llModel.Endpoint,
+                        //OrganizationId = aiModel.OrganizationId
+                        ModelName = new AI.Entities.Keys.ModelName()
+                        {
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
+                        }
+                    };
+                    break;
+                case AiPlatform.Ollama:
+                    aiSettings.OllamaKeys = new OllamaKeys()
+                    {
+                        Endpoint = llModel.Endpoint,
+                        //OrganizationId = aiModel.OrganizationId
+                        ModelName = new AI.Entities.Keys.ModelName()
+                        {
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
+                        }
+                    };
+                    break;
+                case AiPlatform.DeepSeek:
+                    aiSettings.DeepSeekKeys = new DeepSeekKeys()
+                    {
+                        ApiKey = llModel.ApiKey,
+                        Endpoint = llModel.Endpoint,
+                        ModelName = new AI.Entities.Keys.ModelName()
+                        {
+                            Chat = llModel.ModelId,
+                            TextCompletion = llModel.ModelId,
+                            Embedding = llModel.ModelId,
+                            ImageToText = llModel.ModelId,
+                            TextToImage = llModel.ModelId
+                        }
+                    };
+                    break;
+                default:
+                    throw new NcfExceptionBase($"PromptRange 暂时不支持 {aiSettings.AiPlatform} 类型");
+            }
+
+
+            return aiSettings;
+        }
+
+        /// <summary>
+        /// 获取可用的 Chat 模型，如果当前 <see cref="AIModelDto"/> 对象可用，则保留
+        /// </summary>
+        /// <param name="currentModelDto"></param>
+        /// <returns></returns>
+        /// <exception cref="NcfExceptionBase"></exception>
+        public async Task<(SenparcAiSetting AiSetting,AIModelDto FinalAiModelDto, bool ModelChanged)> GetValiableChatModel(AIModelDto currentModelDto)
+        {
+            // 获取模型
+            AIModelDto aiModelDto;
+            var modelChanged = false;
+            //如果当前模型不是 Chat 类型，则需要找一个 Chat 模型
+            if (currentModelDto.ConfigModelType != ConfigModelType.Chat)
+            {
+                var chatModel = await base.GetObjectAsync(z => z.ConfigModelType == ConfigModelType.Chat);
+                if (chatModel == null)
+                {
+                    throw new NcfExceptionBase("必须至少设置一个 Chat 类型的模型才能自动打分（在 AIKernel 模块中）");
+                }
+                aiModelDto = base.Mapping<AIModelDto>(chatModel);
+                modelChanged = true;
+            }
+            else
+            {
+                aiModelDto = currentModelDto;
+            }
+
+            // build aiSettings by model
+            var aiSettings = this.BuildSenparcAiSetting(aiModelDto);
+            return (aiSettings, aiModelDto, modelChanged);
         }
     }
 }

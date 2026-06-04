@@ -86,7 +86,7 @@ using Senparc.Xncf.XncfBuilder.Domain.Models.Services;
 using Senparc.Ncf.XncfBase.Database;
 using Microsoft.Extensions.Hosting;
 using Senparc.Xncf.XncfBuilder.Domain.Services;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 
 namespace Senparc.Xncf.XncfBuilder
 {
@@ -135,7 +135,7 @@ namespace Senparc.Xncf.XncfBuilder
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             //services.AddScoped<PromptRange.Domain.Services.PromptService>();
-            //services.AddScoped<AI.Interfaces.IAiHandler>(s => new SemanticAiHandler());
+            //services.AddScoped<AI.Interfaces.IAiHandler>(s => new AgentAiHandler());
 
             services.AddScoped<ConfigService>();
             services.AddScoped<PromptBuilderService>();
@@ -160,7 +160,7 @@ using Senparc.Xncf.XncfBuilder.Domain.Models.Services;
 using Senparc.Ncf.XncfBase.Database;
 using Microsoft.Extensions.Hosting;
 using Senparc.Xncf.XncfBuilder.Domain.Services;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
     
 namespace Senparc.Xncf.XncfBuilder
 {
@@ -209,7 +209,7 @@ namespace Senparc.Xncf.XncfBuilder
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             //services.AddScoped<PromptRange.Domain.Services.PromptService>();
-            //services.AddScoped<AI.Interfaces.IAiHandler>(s => new SemanticAiHandler());
+            //services.AddScoped<AI.Interfaces.IAiHandler>(s => new AgentAiHandler());
     
             services.AddScoped<ConfigService>();
             services.AddScoped<PromptBuilderService>();

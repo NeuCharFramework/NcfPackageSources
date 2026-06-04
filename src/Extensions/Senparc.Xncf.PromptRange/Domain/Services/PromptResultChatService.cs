@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.AI;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
@@ -166,6 +167,20 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         {
             var chatList = await this.GetFullListAsync(c => c.PromptResultId == promptResultId);
             await this.DeleteAllAsync(chatList);
+        }
+
+
+        /// <summary>
+        /// 从 <see cref="PromptResultChatDto"/> 列表转到 <see cref="ChatMessage"/> 列表
+        /// </summary>
+        /// <param name="promptResultDtos"></param>
+        /// <returns></returns>
+        public List<ChatMessage> GetChatMessageList(List<PromptResultChatDto> promptResultDtos)
+        {
+            var list = promptResultDtos.Select(z =>
+                new ChatMessage(new ChatRole(z.RoleType.ToString()), z.Content)
+            ).ToList();
+            return list;
         }
     }
 

@@ -1,9 +1,11 @@
 ﻿using AutoGen.Anthropic.DTO;
 using Microsoft.Identity.Client;
 using Microsoft.SemanticKernel;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
 using Senparc.AI.Entities;
-using Senparc.AI.Kernel;
-using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Handlers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -50,24 +52,33 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
             //await Console.Out.WriteLineAsync(localResponse);
             //var remoteResponse = await huggingFaceRemote.CompleteAsync(Input);
             // modelName: "gpt-4-32k"*/
-            var _semanticAiHandler = new SemanticAiHandler(Senparc.AI.Config.SenparcAiSetting);
-            var setting = (SenparcAiSetting)Senparc.AI.Config.SenparcAiSetting;//也可以留空，将自动获取
+            var _agentAiHandler = new AgentAiHandler(Senparc.AI.Config.SenparcAiSetting);
 
-            var iWantToRun = _semanticAiHandler.ChatConfig(parameter,
-                                userId: "Jeffrey",
-                                maxHistoryStore: 1,
-                                chatSystemMessage: @$"你是一个翻译官，你熟悉“{language}”语言，你将帮我完成文本翻译。
+            // Use AgentKernel-style configuration (similar to PromptOptimizationKernelFallbackService)
+            var iWantToRun = _agentAiHandler
+                                .IWantTo()
+                                .ConfigChatModel("TranslatorPlugin", new ChatClientAgentOptions()
+                                {
+                                    ChatOptions = new ChatOptions()
+                                    {
+                                        Instructions = @$"你是一个翻译官，你熟悉“{language}”语言，你将帮我完成文本翻译。
 原文：
 这是一个数据库实体类，用于管理和存储AI模型配置信息。
 
 翻译：
-This is a database entity class used to manage and store AI model configuration information.
-",
-                                senparcAiSetting: setting);
+This is a database entity class used to manage and store AI model configuration information.",
+                                        MaxOutputTokens = parameter.MaxTokens > 0 ? (int)parameter.MaxTokens : 3000,
+                                        Temperature = (float)parameter.Temperature,
+                                        TopP = (float)parameter.TopP
+                                    }
+                                }).BuildKernel();
 
-            SenparcAiRequest aiRequest = iWantToRun.CreateRequest(text);
-            var result = await iWantToRun.RunAsync(aiRequest);
-            var resultStr = result.OutputString;
+            // Create a chat request and run it via the Kernel chat path
+            var aiRequest = iWantToRun.CreateRequest(text, iWantToRun.Kernel.AgentSession);
+            // ensure request uses replaced prompt (if any templating is used)
+            aiRequest.RequestContent = aiRequest.ReplacePrompt();
+            var runResult = await iWantToRun.RunChatAsync(aiRequest).ConfigureAwait(false);
+            var resultStr = runResult.OutputString;
 
 
             Console.WriteLine("翻译结果：" + resultStr);
