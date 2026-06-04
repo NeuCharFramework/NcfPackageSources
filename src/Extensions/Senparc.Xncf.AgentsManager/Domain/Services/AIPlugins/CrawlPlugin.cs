@@ -1,6 +1,4 @@
-﻿using AutoGen.Anthropic.DTO;
-using Google.Cloud.AIPlatform.V1;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Text;
 using Senparc.AI.Kernel;

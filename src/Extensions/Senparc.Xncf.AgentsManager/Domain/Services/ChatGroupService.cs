@@ -1,13 +1,9 @@
 using AutoGen.Core;
-using AutoGen.SemanticKernel;
-using AutoGen.SemanticKernel.Extension;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using ModelContextProtocol.Client;
 using Senparc.AI;
-using Senparc.AI.Agents.AgentExtensions;
-using Senparc.AI.Agents.AgentUtility;
 using Senparc.AI.Entities;
 using Senparc.AI.Interfaces;
 using Senparc.AI.Kernel;
