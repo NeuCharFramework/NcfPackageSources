@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +8,7 @@ using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Repository;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models;
@@ -21,7 +22,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
     /// PromptResult 管理 AppService
     /// TODO: 需要权限验证
     /// </summary>
-    //[ApiAuthorize("AdminOnly")]
+    [ApiAuthorize("AdminOnly")]
     public class PromptResultAppService : AppServiceBase
     {
         // private readonly RepositoryBase<PromptResult> _promptResultRepository;

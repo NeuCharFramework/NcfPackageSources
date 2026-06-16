@@ -22,9 +22,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 
 namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 {
+    [ApiAuthorize]
     public class ChatGroupAppService : AppServiceBase
     {
         private readonly ChatGroupService _chatGroupService;

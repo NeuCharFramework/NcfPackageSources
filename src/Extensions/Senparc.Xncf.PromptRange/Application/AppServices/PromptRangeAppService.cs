@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +12,7 @@ using Senparc.Xncf.PromptRange.Domain.Models.Entities;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.CO2NET.Extensions;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService;
 
@@ -19,7 +20,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService;
 /// PromptRange 管理 AppService
 /// TODO: 需要权限验证
 /// </summary>
-//[ApiAuthorize("AdminOnly")]
+[ApiAuthorize("AdminOnly")]
 public class PromptRangeAppService : AppServiceBase
 {
     private readonly PromptRangeService _promptRangeService;

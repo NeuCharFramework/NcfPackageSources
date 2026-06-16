@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 
@@ -14,7 +15,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
     /// 用于传送统计数据的接口服务
     /// TODO: 需要权限验证
     /// </summary>
-    //[ApiAuthorize("AdminOnly")]
+    [ApiAuthorize("AdminOnly")]
     public class StatisticAppService : AppServiceBase
     {
         private readonly LlModelService _llModelService;
