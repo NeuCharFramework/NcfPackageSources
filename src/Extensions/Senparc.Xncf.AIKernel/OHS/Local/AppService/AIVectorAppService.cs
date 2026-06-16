@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -24,11 +24,13 @@ using Senparc.Ncf.Core.Cache;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Xncf.AIKernel.Domain.Models.Extensions;
 using Senparc.NeuChar.App.AppStore;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 
 
 namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
 {
-    //[BackendJwtAuthorize]
+
+    [ApiAuthorize]
     //TODO: 需要权限验证
     public class AIVectorAppService : AppServiceBase
     {
