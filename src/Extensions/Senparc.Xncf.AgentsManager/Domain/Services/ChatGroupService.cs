@@ -1,13 +1,16 @@
 using AutoGen.Core;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using ModelContextProtocol.Client;
 using Senparc.AI;
-using Senparc.AI.Entities;
-using Senparc.AI.Interfaces;
 using Senparc.AI.AgentKernel;
 using Senparc.AI.AgentKernel.Handlers;
+using Senparc.AI.Entities;
+using Senparc.AI.Interfaces;
+using Senparc.CO2NET;
 using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Trace;
@@ -16,6 +19,7 @@ using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
+using Senparc.Weixin.Work.AdvancedAPIs.ThirdPartyAuth;
 using Senparc.Xncf.AgentsManager.ACL;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
@@ -57,6 +61,30 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         this._cache = cache;
     }
 
+    private async Task<IWantToRun> GetIWantToRun(ISenparcAiSetting senparcAiSetting, string name, string description, ChatClientAgentOptions chatClientAgentOptions = null)
+    {
+        chatClientAgentOptions ??= new ChatClientAgentOptions()
+        {
+            Name = name,
+            Description = description,
+            ChatOptions = new ChatOptions()
+            {
+                Instructions = description,
+                MaxOutputTokens = 2000,
+                Temperature = 0.3f,
+                TopP = 0.3f,
+            }
+        };
+
+        var agentAiHandler = new AgentAiHandler(senparcAiSetting);
+
+        var iWantToRun = await agentAiHandler.IWantTo()
+                        .ConfigChatModel("JeffreySu", chatClientAgentOptions)
+                        .BuildKernelWithAgentSessionAsync();
+
+        return iWantToRun;
+    }
+
     /// <summary>
     /// 运行 ChatGroup（等待运行完成）
     /// </summary>
@@ -77,120 +105,94 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
         var groupMemebers = await chatGroupMemberService.GetFullListAsync(z => z.ChatGroupId == groupId);
         var agentsTemplates = new List<AgentTemplateDto>();
-        var agents = new List<SemanticKernelAgent>();
-        List<MiddlewareAgent<SemanticKernelAgent>> agentsMiddlewares = new List<MiddlewareAgent<SemanticKernelAgent>>();
+        var grroupMemberAgents = new List<ChatClientAgent>();
 
-        var _agentAiHandler = new AgentAiHandler(senparcAiSetting);
+        //List<MiddlewareAgent<SemanticKernelAgent>> agentsMiddlewares = new List<MiddlewareAgent<SemanticKernelAgent>>();
 
-        var parameter = new PromptConfigParameter()
-        {
-            MaxTokens = 2000,
-            Temperature = 0.3,
-            TopP = 0.3,
-        };
+        //var _agentAiHandler = new AgentAiHandler(senparcAiSetting);
 
-        var iWantToRun = _agentAiHandler.IWantTo(senparcAiSetting)
-                        .ConfigModel(ConfigModel.Chat, "JeffreySu")
-                        .BuildKernel();
+        //var chatClientAgentOptions = new ChatClientAgentOptions()
+        //{
+        //    ChatOptions = new ChatOptions()
+        //    {
+        //        MaxOutputTokens = 2000,
+        //        Temperature = 0.3f,
+        //        TopP = 0.3f,
+        //    }
+        //};
 
-        var kernel = iWantToRun.Kernel;//同一外围 Agent
+        //var iWantToRun = await _agentAiHandler.IWantTo(senparcAiSetting)
+        //                .ConfigChatModel("JeffreySu", chatClientAgentOptions)
+        //                .BuildKernelWithAgentSessionAsync();
+
+        //var kernel = iWantToRun.Kernel;//同一外围 Agent
 
         //作为唯一入口和汇报的关键人
         AgentTemplate enterAgentTemplate = await agentTemplateService.GetObjectAsync(z => z.Id == chatGroup.EnterAgentTemplateId);
 
-        MiddlewareAgent<SemanticKernelAgent> enterAgent = null;
+        ChatClientAgent enterAgent = null;
 
         foreach (var groupMember in groupMemebers)
         {
             var agentTemplate = await agentTemplateService.GetObjectAsync(x => x.Id == groupMember.AgentTemplateId);
-            var agentTemplateDto = agentTemplateService.Mapper.Map<AgentTemplateDto>(agentTemplate);
+            AgentTemplateDto agentTemplateDto = agentTemplateService.Mapper.Map<AgentTemplateDto>(agentTemplate);
             agentsTemplates.Add(agentTemplateDto);
 
             //TODO：确认 Prompt 此时是否存在，如果不存在需要给出提示
 
             var promptResult = await promptItemService.GetWithVersionAsync(agentTemplate.PromptCode, isAvg: true);
 
-            var itemKernel = kernel;
+            ISenparcAiSetting aiSetting = individuation ? promptResult.SenparcAiSetting : senparcAiSetting;
 
-            if (individuation)
-            {
-                var agentAiHandler = new AgentAiHandler(promptResult.SenparcAiSetting);
-                var iWantToRunItem = agentAiHandler.IWantTo(senparcAiSetting)
-                            .ConfigModel(ConfigModel.Chat, agentTemplate.Name + groupMember.UID)
-                            .BuildKernel();
-                itemKernel = iWantToRunItem.Kernel;
-            }
+            var iWantToRun = await GetIWantToRun(senparcAiSetting, agentTemplate.Name + groupMember.UID, promptResult.PromptItem.Content);
 
-            var agent = new SemanticKernelAgent(
-                        kernel: itemKernel,
-                        name: agentTemplate.Name,
-                        systemMessage: promptResult.PromptItem.Content);
+            //var agent = new SemanticKernelAgent(
+            //            kernel: itemKernel,
+            //            name: agentTemplate.Name,
+            //            systemMessage: promptResult.PromptItem.Content);
 
-            var agentMiddleware =
-                agent
-                    .RegisterTextMessageConnector()
-                    //.RegisterMiddleware(async (messages, ct) =>
-                    //{
-                    //    return messages;
-                    //})
-                    .RegisterCustomPrintMessage(new PrintWechatMessageMiddleware((a, m, mStr) =>
-                    {
-                        PrintWechatMessageMiddlewareExtension.SendWechatMessage.Invoke(a, m, mStr, agentTemplateDto);
-                        logger.Append($"[{chatGroup.Name}]组 {a.Name} 发送消息：{mStr}");
-                    }));
+            var agent = iWantToRun.Kernel.ChatClientAgent;
+
+            //var agentMiddleware =
+            //    agent
+            //        .RegisterTextMessageConnector()
+            //        //.RegisterMiddleware(async (messages, ct) =>
+            //        //{
+            //        //    return messages;
+            //        //})
+            //        .RegisterCustomPrintMessage(new PrintWechatMessageMiddleware((a, m, mStr) =>
+            //        {
+            //            PrintWechatMessageMiddlewareExtension.SendWechatMessage.Invoke(a, m, mStr, agentTemplateDto);
+            //            logger.Append($"[{chatGroup.Name}]组 {a.Name} 发送消息：{mStr}");
+                    //}));
 
 
             if (groupMember.AgentTemplateId == enterAgentTemplate.Id)
             {
                 //TODO：添加指定入口对接人员，参考群主
                 enterAgentTemplate = agentTemplate;
-                enterAgent = agentMiddleware;
+                enterAgent = agent;
             }
 
-            agentsMiddlewares.Add(agentMiddleware);
+            //agentsMiddlewares.Add(agentMiddleware);
 
-            agents.Add(agent);
+            grroupMemberAgents.Add(agent);
         }
 
-        // Create the hearing member
-        //var hearingMember = new UserProxyAgent(name: chatGroup.Name + "群友");
-        var hearingMember = new DefaultReplyAgent(name: chatGroup.Name + "群友", GroupChatExtension.TERMINATE);
+        //// Create the hearing member
+        ////var hearingMember = new UserProxyAgent(name: chatGroup.Name + "群友");
+        //var hearingMember = new DefaultReplyAgent(name: chatGroup.Name + "群友", GroupChatExtension.TERMINATE);
 
         // Create the group admin
         var adminAgenttemplate = await agentTemplateService.GetObjectAsync(x => x.Id == chatGroup.AdminAgentTemplateId);
         var adminPromptResult = await promptItemService.GetWithVersionAsync(adminAgenttemplate.PromptCode, isAvg: true);
-        var adminKernel = kernel;
-        if (individuation)
-        {
-            var agentAiHandler = new AgentAiHandler(adminPromptResult.SenparcAiSetting);
-            var iWantToRunItem = agentAiHandler.IWantTo(senparcAiSetting)
-                        .ConfigModel(ConfigModel.Chat, adminAgenttemplate.Name)
-                        .BuildKernel();
-            adminKernel = iWantToRunItem.Kernel;
-        }
 
-        var admin = new SemanticKernelAgent(
-            kernel: kernel,
-            name: adminAgenttemplate.Name,
-            systemMessage: adminPromptResult.PromptItem.Content)
-            .RegisterTextMessageConnector();
+        var adminIWantToRun = await GetIWantToRun(adminPromptResult.SenparcAiSetting, adminAgenttemplate.Name, adminPromptResult.PromptItem.Content);
+
+        var adminKernel = adminIWantToRun.Kernel;
 
 
-        var graphConnector = GraphBuilder.Start()
-                    .ConnectFrom(hearingMember).TwoWay(enterAgent);
 
-        //遍历所有 agents, 两两之间运行 graphConnector.ConnectFrom(agent1).TwoWay(agent2);
-
-        for (int i = 0; i < agentsMiddlewares.Count; i++)
-        {
-            for (int j = i + 1; j < agentsMiddlewares.Count; j++)
-            {
-                graphConnector.ConnectFrom(agentsMiddlewares[i]).TwoWay(agentsMiddlewares[j]);
-            }
-        }
-
-
-        var finishedGraph = graphConnector.Finish();
 
         admin = admin.RegisterMiddleware(async (messages, option, next, ct) =>
         {
@@ -204,9 +206,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             if (responseContent?.StartsWith("From") is false)
             {
                 // random pick from agents
-                var agent = new Random().Next(0, agents.Count);
+                var agent = new Random().Next(0, grroupMemberAgents.Count);
 
-                return new TextMessage(Role.User, $"From {agents[agent].Name}", from: next.Name);
+                return new TextMessage(Role.User, $"From {grroupMemberAgents[agent].Name}", from: next.Name);
             }
             else
             {
@@ -272,408 +274,408 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
     private async Task RunChatGroupExecutionCoreAsync(ChatGroup_RunGroupRequest request)
     {
-            IDisposable activeOptimizationScope = null;
-            if (!string.IsNullOrWhiteSpace(request.CorrelationId))
+        IDisposable activeOptimizationScope = null;
+        if (!string.IsNullOrWhiteSpace(request.CorrelationId))
+        {
+            activeOptimizationScope = PromptOptimizationAgentBridge.BeginActiveRequestScope(request.CorrelationId);
+            PromptOptimizationAgentBridge.SetFallbackCorrelationId(request.CorrelationId);
+        }
+
+        //base.ServiceProvider = base._serviceProvider;
+        var scope = Senparc.CO2NET.SenparcDI.GetServiceProvider(true).CreateScope(); //base.ServiceProvider.CreateScope();
+        var services = scope.ServiceProvider;
+
+        var groupId = request.ChatGroupId;
+        var aiModelId = request.AiModelId;
+        var personality = request.Personality;
+        var userCommand = request.PromptCommand;
+
+        var logger = new StringBuilder();
+
+        var chatGroupMemberService = services.GetService<ChatGroupMemberService>();
+        var agentTemplateService = services.GetService<AgentsTemplateService>();
+        var promptItemService = services.GetService<PromptItemService>();
+        var chatTaskService = services.GetService<ChatTaskService>();
+
+        var chatGroupService = services.GetService<ChatGroupService>();
+
+        var chatGroup = await chatGroupService.GetObjectAsync(x => x.Id == groupId);
+
+        // 默认模型继承规则：未显式指定模型时，优先继承当前群主使用的 Prompt 模型。
+        if (aiModelId <= 0 && chatGroup != null)
+        {
+            var adminAgent = await agentTemplateService.GetObjectAsync(z => z.Id == chatGroup.AdminAgentTemplateId);
+            if (adminAgent != null && !adminAgent.PromptCode.IsNullOrEmpty())
             {
-                activeOptimizationScope = PromptOptimizationAgentBridge.BeginActiveRequestScope(request.CorrelationId);
-                PromptOptimizationAgentBridge.SetFallbackCorrelationId(request.CorrelationId);
+                try
+                {
+                    var adminPrompt = await promptItemService.GetBestPromptAsync(adminAgent.PromptCode, true);
+                    if (adminPrompt != null && adminPrompt.ModelId > 0)
+                    {
+                        aiModelId = adminPrompt.ModelId;
+                    }
+                }
+                catch
+                {
+                    // 保持 aiModelId=0，继续走系统默认模型。
+                }
+            }
+        }
+
+        var chatGroupDto = chatGroupService.Mapping<ChatGroupDto>(chatGroup);
+        var chatTaskDto = new ChatTaskDto(request.Name, groupId, aiModelId, ChatTask_Status.Waiting,
+            userCommand, request.Description, personality, request.HookPlatform, request.HookParameter, false,
+            DateTime.Now, DateTime.Now, null);
+        var chatTask = await chatTaskService.CreateTask(chatTaskDto);
+        chatTaskDto = chatTaskService.Mapping<ChatTaskDto>(chatTask);//更新
+                                                                     //更新状态
+        await chatTaskService.SetStatus(ChatTask_Status.Chatting, chatTask);
+
+        //运行中进行缓存
+        var runningKey = chatTaskService.GetChatTaskRunCacheKey(chatTask.Id);
+        var cacheTask = new RunningChatTaskDto()
+        {
+            ChatTaskDto = chatTaskDto
+        };
+        await _cache.SetAsync(runningKey, cacheTask);
+
+        logger.Append($"开始运行 {chatGroup.Name}");
+
+        #region 确定 AiSetting
+
+        var senparcAiSetting = Senparc.AI.Config.SenparcAiSetting;
+        var aiModelService = services.GetRequiredService<AIModelService>();
+        if (aiModelId != 0)
+        {
+            var aiModel = await aiModelService.GetObjectAsync(z => z.Id == aiModelId);
+            if (aiModel == null)
+            {
+                throw new NcfExceptionBase($"当前选择的 AI 模型不存在：{aiModelId}");
             }
 
-            //base.ServiceProvider = base._serviceProvider;
-            var scope = Senparc.CO2NET.SenparcDI.GetServiceProvider(true).CreateScope(); //base.ServiceProvider.CreateScope();
-            var services = scope.ServiceProvider;
+            var aiModelDto = aiModelService.Mapper.Map<AIModelDto>(aiModel);
 
-            var groupId = request.ChatGroupId;
-            var aiModelId = request.AiModelId;
-            var personality = request.Personality;
-            var userCommand = request.PromptCommand;
+            senparcAiSetting = aiModelService.BuildSenparcAiSetting(aiModelDto);
+        }
 
-            var logger = new StringBuilder();
+        #endregion
 
-            var chatGroupMemberService = services.GetService<ChatGroupMemberService>();
-            var agentTemplateService = services.GetService<AgentsTemplateService>();
-            var promptItemService = services.GetService<PromptItemService>();
-            var chatTaskService = services.GetService<ChatTaskService>();
+        #region 确定默认公共使用的模型
+        var _agentAiHandler = new AgentAiHandler(senparcAiSetting);
 
-            var chatGroupService = services.GetService<ChatGroupService>();
+        var parameter = new PromptConfigParameter()
+        {
+            MaxTokens = 2000,
+            Temperature = 0.3,
+            TopP = 0.3,
+        };
 
-            var chatGroup = await chatGroupService.GetObjectAsync(x => x.Id == groupId);
+        //全局默认模型
+        var iWantToRunGlobal = _agentAiHandler.IWantTo(senparcAiSetting)
+                        .ConfigModel(ConfigModel.Chat, "JeffreySu")
+                        .BuildKernel();
+        #endregion
 
-            // 默认模型继承规则：未显式指定模型时，优先继承当前群主使用的 Prompt 模型。
-            if (aiModelId <= 0 && chatGroup != null)
+        #region 收集所有对话人员
+
+        List<(int AgentTemplateId, string Uid)> memberCollection = new();
+
+        var groupMemebers = await chatGroupMemberService.GetFullListAsync(z => z.ChatGroupId == groupId, includes: "AgentTemplate");
+        foreach (var member in groupMemebers)
+        {
+            if (member.AgentTemplate.Enable is false)
             {
-                var adminAgent = await agentTemplateService.GetObjectAsync(z => z.Id == chatGroup.AdminAgentTemplateId);
-                if (adminAgent != null && !adminAgent.PromptCode.IsNullOrEmpty())
+                Console.WriteLine($"{member.AgentTemplate.Name} 已被禁用");
+                continue;
+            }
+            memberCollection.Add((member.AgentTemplateId, member.UID));
+        }
+
+
+        //确保已添加 Admin 和 Enter Agent
+        if (groupMemebers.All(z => z.AgentTemplateId != chatGroup.AdminAgentTemplateId))
+        {
+            memberCollection.Add((chatGroup.AdminAgentTemplateId, "Admin"));
+        }
+
+        if (groupMemebers.All(z => z.AgentTemplateId != chatGroup.EnterAgentTemplateId))
+        {
+            memberCollection.Add((chatGroup.EnterAgentTemplateId, "Enter"));
+        }
+
+        // 同一 AgentTemplate 只保留一条（避免 Admin/Enter/成员重复出现两次相同模型，并行工具调用产生重复副作用）
+        memberCollection = memberCollection
+            .GroupBy(m => m.AgentTemplateId)
+            .Select(g => g.First())
+            .ToList();
+
+        var agentsTemplates = new List<AgentTemplateDto>();
+        var agents = new List<SemanticKernelAgent>();
+        List<MiddlewareAgent<SemanticKernelAgent>> agentsMiddlewares = new List<MiddlewareAgent<SemanticKernelAgent>>();
+
+        IWantToRun iWantToRunAdmin = null;// Admin Agent 配置
+        IWantToRun iWantToRunEnter = null;// Enter Agent 配置
+        MiddlewareAgent<SemanticKernelAgent> enterAgent = null;// Enter Agent 中间件对象
+
+        #endregion
+
+        var aiPlugins = AIPluginHub.Instance;// Function Call 全局对象集合
+
+        //遍历每一个成员
+        foreach (var memberInfo in memberCollection)
+        {
+            var agentTemplateId = memberInfo.AgentTemplateId;
+            var uid = memberInfo.Uid;
+
+            var agentTemplate = await agentTemplateService.GetObjectAsync(x => x.Id == agentTemplateId);//TODO: + .ToDto<>()
+            if (!agentTemplate.Enable)
+            {
+                logger.AppendLine($"智能体【{agentTemplate.Name}】目前为关闭状态，跳过对话");
+                //不启用的智能体不参与对话
+                continue;
+            }
+
+            var agentTemplateDto = agentTemplateService.Mapper.Map<AgentTemplateDto>(agentTemplate);
+            agentsTemplates.Add(agentTemplateDto);
+
+            var isPromptCodeVersion = PromptItem.IsPromptVersion(agentTemplateDto.PromptCode);
+            var agentSystemMessagePrompt = string.Empty;
+            ISenparcAiSetting currentAgentAiSetting = null;
+
+            if (isPromptCodeVersion)
+            {
+                var promptResult = await promptItemService.GetWithVersionAsync(agentTemplate.PromptCode, isAvg: true);
+                agentSystemMessagePrompt = promptResult?.PromptItem.Content;
+                currentAgentAiSetting = promptResult.SenparcAiSetting;
+            }
+            else
+            {
+                agentSystemMessagePrompt = agentTemplateDto.PromptCode;
+                currentAgentAiSetting = senparcAiSetting;
+            }
+
+            IWantToConfig iWantToConfig = null;//当前 Agent 配置
+
+            //判断是否需要个性化模型参数
+            if (personality)
+            {
+                //使用个性化参数创建
+                var personalityAgentAiHandler = new AgentAiHandler(currentAgentAiSetting);
+                iWantToConfig = personalityAgentAiHandler.IWantTo();
+
+            }
+            else
+            {
+                iWantToConfig = _agentAiHandler.IWantTo(senparcAiSetting);
+            }
+
+            //当前 Agent 配置
+
+            #region 设置 MCP
+
+            var iWantToConfigModel = iWantToConfig.ConfigModel(ConfigModel.Chat, agentTemplateDto.Name + uid);
+
+            // 获取当前 Agent 的 MCP Endpoints
+            var mcpEndpoints = agentTemplateDto.McpEndpoints;
+            if (!string.IsNullOrEmpty(mcpEndpoints))
+            {
+                var endpointsDict = JsonSerializer.Deserialize<Dictionary<string, McpEndpoint>>(mcpEndpoints);
+
+                // 遍历 endpointsDict 中的每个键值对
+                foreach (var endpoint in endpointsDict)
+                {
+                    // 获取键和值
+                    var mcpName = endpoint.Key;
+
+                    var mcpEndpoint = endpoint.Value.url;
+
+                    var clientTransport = new SseClientTransport(new SseClientTransportOptions()
+                    {
+                        Endpoint = new Uri(mcpEndpoint),
+                        Name = mcpName
+                    });
+
+                    IList<McpClientTool> tools = new List<McpClientTool>();
+
+                    try
+                    {
+                        var client = await McpClientFactory.CreateAsync(clientTransport);
+                        tools = await client.ListToolsAsync();
+                        // Print the list of tools available from the server.
+                        foreach (var tool in tools)
+                        {
+                            Console.WriteLine($"Agent: {memberInfo.AgentTemplateId} MCP: {mcpName} : {tool.Name} ({tool.Description})");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        SenparcTrace.BaseExceptionLog(ex);
+                    }
+
+                    // 使用 key 和 value 进行操作
+#pragma warning disable SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+                    iWantToConfigModel.IWantTo.KernelBuilder.Plugins.AddFromFunctions($"SenparcMcp{memberInfo.AgentTemplateId}", tools.Select(z => z.AsKernelFunction()));
+#pragma warning restore SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+                }
+            }
+            #endregion
+
+
+            var iWantToRunItem = iWantToConfigModel.BuildKernel();
+
+
+            var executionSettings2 = new OpenAIPromptExecutionSettings
+            {
+                Temperature = 0,
+                FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()// FunctionChoiceBehavior.Auto()
+            };
+            var ka = new KernelArguments(executionSettings2) { };
+
+            // iWantToRunItem.Kernel.Data["Arguments"] = ka;
+            // iWantToRunItem.Kernel.Data["Argument"] = ka;
+            // iWantToRunItem.Kernel.Data["KernelArguments"] = ka;
+            // iWantToRunItem.Kernel.Data["KernelArgument"] = ka;
+
+
+            #region Function-calling
+
+            //判断是否需要 Function Call
+
+            var hasFunctionCalls = agentTemplateDto.FunctionCallNames.IsNullOrEmpty()
+                                    ? Array.Empty<string>()
+                                    : agentTemplateDto.FunctionCallNames.Split(',');
+
+            if (hasFunctionCalls.Length > 0)
+            {
+                //添加 Plugins
+                foreach (var functionCall in hasFunctionCalls)
                 {
                     try
                     {
-                        var adminPrompt = await promptItemService.GetBestPromptAsync(adminAgent.PromptCode, true);
-                        if (adminPrompt != null && adminPrompt.ModelId > 0)
+                        var functionCallType = aiPlugins.GetPluginType(functionCall, true);
+
+                        if (functionCallType == null)
                         {
-                            aiModelId = adminPrompt.ModelId;
+                            throw new NcfExceptionBase($"导入 Plugin 失败，FunctionCall 名称不存在：{functionCall}");
                         }
+
+                        var functionName = functionCallType.Name;
+                        var plugin = services.GetService(functionCallType);
+                        var kernelPlugin = iWantToRunItem.ImportPluginFromObject(plugin, pluginName: functionName).kernelPlugin;
+                        //KernelFunction[] functionPiple = new[] { kernelPlugin[nameof(crawlPlugin.Crawl)] };
+                        //iWantToRunItem.ImportPluginFromFunctions("CrawlPlugins", functionPiple);
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        // 保持 aiModelId=0，继续走系统默认模型。
+                        SenparcTrace.SendCustomLog("导入 Plugin 失败", ex.Message);
+                        Console.WriteLine(ex);
                     }
                 }
-            }
-
-            var chatGroupDto = chatGroupService.Mapping<ChatGroupDto>(chatGroup);
-            var chatTaskDto = new ChatTaskDto(request.Name, groupId, aiModelId, ChatTask_Status.Waiting,
-                userCommand, request.Description, personality, request.HookPlatform, request.HookParameter, false,
-                DateTime.Now, DateTime.Now, null);
-            var chatTask = await chatTaskService.CreateTask(chatTaskDto);
-            chatTaskDto = chatTaskService.Mapping<ChatTaskDto>(chatTask);//更新
-                                                                         //更新状态
-            await chatTaskService.SetStatus(ChatTask_Status.Chatting, chatTask);
-
-            //运行中进行缓存
-            var runningKey = chatTaskService.GetChatTaskRunCacheKey(chatTask.Id);
-            var cacheTask = new RunningChatTaskDto()
-            {
-                ChatTaskDto = chatTaskDto
-            };
-            await _cache.SetAsync(runningKey, cacheTask);
-
-            logger.Append($"开始运行 {chatGroup.Name}");
-
-            #region 确定 AiSetting
-
-            var senparcAiSetting = Senparc.AI.Config.SenparcAiSetting;
-            var aiModelService = services.GetRequiredService<AIModelService>();
-            if (aiModelId != 0)
-            {
-                var aiModel = await aiModelService.GetObjectAsync(z => z.Id == aiModelId);
-                if (aiModel == null)
-                {
-                    throw new NcfExceptionBase($"当前选择的 AI 模型不存在：{aiModelId}");
-                }
-
-                var aiModelDto = aiModelService.Mapper.Map<AIModelDto>(aiModel);
-
-                senparcAiSetting = aiModelService.BuildSenparcAiSetting(aiModelDto);
             }
 
             #endregion
 
-            #region 确定默认公共使用的模型
-            var _agentAiHandler = new AgentAiHandler(senparcAiSetting);
+            //设置 Agent
+            SemanticKernelAgent agent = new SemanticKernelAgent(
+                            kernel: iWantToRunItem.Kernel,
+                            name: agentTemplate.Name,
+                            systemMessage: agentSystemMessagePrompt);
 
-            var parameter = new PromptConfigParameter()
-            {
-                MaxTokens = 2000,
-                Temperature = 0.3,
-                TopP = 0.3,
-            };
-
-            //全局默认模型
-            var iWantToRunGlobal = _agentAiHandler.IWantTo(senparcAiSetting)
-                            .ConfigModel(ConfigModel.Chat, "JeffreySu")
-                            .BuildKernel();
-            #endregion
-
-            #region 收集所有对话人员
-
-            List<(int AgentTemplateId, string Uid)> memberCollection = new();
-
-            var groupMemebers = await chatGroupMemberService.GetFullListAsync(z => z.ChatGroupId == groupId, includes: "AgentTemplate");
-            foreach (var member in groupMemebers)
-            {
-                if (member.AgentTemplate.Enable is false)
+            var agentMiddleware = agent
+                .RegisterTextMessageConnector()
+                .RegisterCustomPrintMessage(
+                new PrintWechatMessageMiddleware(async (a, m, mStr) =>
                 {
-                    Console.WriteLine($"{member.AgentTemplate.Name} 已被禁用");
-                    continue;
-                }
-                memberCollection.Add((member.AgentTemplateId, member.UID));
-            }
-
-
-            //确保已添加 Admin 和 Enter Agent
-            if (groupMemebers.All(z => z.AgentTemplateId != chatGroup.AdminAgentTemplateId))
-            {
-                memberCollection.Add((chatGroup.AdminAgentTemplateId, "Admin"));
-            }
-
-            if (groupMemebers.All(z => z.AgentTemplateId != chatGroup.EnterAgentTemplateId))
-            {
-                memberCollection.Add((chatGroup.EnterAgentTemplateId, "Enter"));
-            }
-
-            // 同一 AgentTemplate 只保留一条（避免 Admin/Enter/成员重复出现两次相同模型，并行工具调用产生重复副作用）
-            memberCollection = memberCollection
-                .GroupBy(m => m.AgentTemplateId)
-                .Select(g => g.First())
-                .ToList();
-
-            var agentsTemplates = new List<AgentTemplateDto>();
-            var agents = new List<SemanticKernelAgent>();
-            List<MiddlewareAgent<SemanticKernelAgent>> agentsMiddlewares = new List<MiddlewareAgent<SemanticKernelAgent>>();
-
-            IWantToRun iWantToRunAdmin = null;// Admin Agent 配置
-            IWantToRun iWantToRunEnter = null;// Enter Agent 配置
-            MiddlewareAgent<SemanticKernelAgent> enterAgent = null;// Enter Agent 中间件对象
-
-            #endregion
-
-            var aiPlugins = AIPluginHub.Instance;// Function Call 全局对象集合
-
-            //遍历每一个成员
-            foreach (var memberInfo in memberCollection)
-            {
-                var agentTemplateId = memberInfo.AgentTemplateId;
-                var uid = memberInfo.Uid;
-
-                var agentTemplate = await agentTemplateService.GetObjectAsync(x => x.Id == agentTemplateId);//TODO: + .ToDto<>()
-                if (!agentTemplate.Enable)
-                {
-                    logger.AppendLine($"智能体【{agentTemplate.Name}】目前为关闭状态，跳过对话");
-                    //不启用的智能体不参与对话
-                    continue;
-                }
-
-                var agentTemplateDto = agentTemplateService.Mapper.Map<AgentTemplateDto>(agentTemplate);
-                agentsTemplates.Add(agentTemplateDto);
-
-                var isPromptCodeVersion = PromptItem.IsPromptVersion(agentTemplateDto.PromptCode);
-                var agentSystemMessagePrompt = string.Empty;
-                ISenparcAiSetting currentAgentAiSetting = null;
-
-                if (isPromptCodeVersion)
-                {
-                    var promptResult = await promptItemService.GetWithVersionAsync(agentTemplate.PromptCode, isAvg: true);
-                    agentSystemMessagePrompt = promptResult?.PromptItem.Content;
-                    currentAgentAiSetting = promptResult.SenparcAiSetting;
-                }
-                else
-                {
-                    agentSystemMessagePrompt = agentTemplateDto.PromptCode;
-                    currentAgentAiSetting = senparcAiSetting;
-                }
-
-                IWantToConfig iWantToConfig = null;//当前 Agent 配置
-
-                //判断是否需要个性化模型参数
-                if (personality)
-                {
-                    //使用个性化参数创建
-                    var personalityAgentAiHandler = new AgentAiHandler(currentAgentAiSetting);
-                    iWantToConfig = personalityAgentAiHandler.IWantTo();
-
-                }
-                else
-                {
-                    iWantToConfig = _agentAiHandler.IWantTo(senparcAiSetting);
-                }
-
-                //当前 Agent 配置
-
-                #region 设置 MCP
-
-                var iWantToConfigModel = iWantToConfig.ConfigModel(ConfigModel.Chat, agentTemplateDto.Name + uid);
-
-                // 获取当前 Agent 的 MCP Endpoints
-                var mcpEndpoints = agentTemplateDto.McpEndpoints;
-                if (!string.IsNullOrEmpty(mcpEndpoints))
-                {
-                    var endpointsDict = JsonSerializer.Deserialize<Dictionary<string, McpEndpoint>>(mcpEndpoints);
-
-                    // 遍历 endpointsDict 中的每个键值对
-                    foreach (var endpoint in endpointsDict)
+                    try
                     {
-                        // 获取键和值
-                        var mcpName = endpoint.Key;
-
-                        var mcpEndpoint = endpoint.Value.url;
-
-                        var clientTransport = new SseClientTransport(new SseClientTransportOptions()
-                        {
-                            Endpoint = new Uri(mcpEndpoint),
-                            Name = mcpName
-                        });
-
-                        IList<McpClientTool> tools = new List<McpClientTool>();
-
-                        try
-                        {
-                            var client = await McpClientFactory.CreateAsync(clientTransport);
-                            tools = await client.ListToolsAsync();
-                            // Print the list of tools available from the server.
-                            foreach (var tool in tools)
-                            {
-                                Console.WriteLine($"Agent: {memberInfo.AgentTemplateId} MCP: {mcpName} : {tool.Name} ({tool.Description})");
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            SenparcTrace.BaseExceptionLog(ex);
-                        }
-                      
-                        // 使用 key 和 value 进行操作
-#pragma warning disable SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
-                        iWantToConfigModel.IWantTo.KernelBuilder.Plugins.AddFromFunctions($"SenparcMcp{memberInfo.AgentTemplateId}", tools.Select(z => z.AsKernelFunction()));
-#pragma warning restore SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+                        AgentTemplatePrintMessageMiddleware.SendWechatMessage
+                            .Invoke(a, m, mStr, agentTemplateDto, chatGroupDto, chatTaskDto);
                     }
-                }
-                #endregion
-
-
-                var iWantToRunItem = iWantToConfigModel.BuildKernel();
-
-
-                var executionSettings2 = new OpenAIPromptExecutionSettings
-                {
-                    Temperature = 0,
-                    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()// FunctionChoiceBehavior.Auto()
-                };
-                var ka = new KernelArguments(executionSettings2) { };
-
-                // iWantToRunItem.Kernel.Data["Arguments"] = ka;
-                // iWantToRunItem.Kernel.Data["Argument"] = ka;
-                // iWantToRunItem.Kernel.Data["KernelArguments"] = ka;
-                // iWantToRunItem.Kernel.Data["KernelArgument"] = ka;
-
-
-                #region Function-calling
-
-                //判断是否需要 Function Call
-
-                var hasFunctionCalls = agentTemplateDto.FunctionCallNames.IsNullOrEmpty()
-                                        ? Array.Empty<string>()
-                                        : agentTemplateDto.FunctionCallNames.Split(',');
-
-                if (hasFunctionCalls.Length > 0)
-                {
-                    //添加 Plugins
-                    foreach (var functionCall in hasFunctionCalls)
+                    catch (Exception ex)
                     {
-                        try
-                        {
-                            var functionCallType = aiPlugins.GetPluginType(functionCall, true);
-
-                            if (functionCallType == null)
-                            {
-                                throw new NcfExceptionBase($"导入 Plugin 失败，FunctionCall 名称不存在：{functionCall}");
-                            }
-
-                            var functionName = functionCallType.Name;
-                            var plugin = services.GetService(functionCallType);
-                            var kernelPlugin = iWantToRunItem.ImportPluginFromObject(plugin, pluginName: functionName).kernelPlugin;
-                            //KernelFunction[] functionPiple = new[] { kernelPlugin[nameof(crawlPlugin.Crawl)] };
-                            //iWantToRunItem.ImportPluginFromFunctions("CrawlPlugins", functionPiple);
-                        }
-                        catch (Exception ex)
-                        {
-                            SenparcTrace.SendCustomLog("导入 Plugin 失败", ex.Message);
-                            Console.WriteLine(ex);
-                        }
+                        SenparcTrace.SendCustomLog("SendWechatMessage 发生异常", ex.Message);
                     }
-                }
 
-                #endregion
+                    //PrintWechatMessageMiddlewareExtension.SendWechatMessage.Invoke(a, m, mStr, agentTemplateDto);
+                    logger.Append($"[{chatGroup.Name}]组 {a.Name} 发送消息：{mStr}");
 
-                //设置 Agent
-                SemanticKernelAgent agent = new SemanticKernelAgent(
-                                kernel: iWantToRunItem.Kernel,
-                                name: agentTemplate.Name,
-                                systemMessage: agentSystemMessagePrompt);
-
-                var agentMiddleware = agent
-                    .RegisterTextMessageConnector()
-                    .RegisterCustomPrintMessage(
-                    new PrintWechatMessageMiddleware(async (a, m, mStr) =>
+                    //using (var scope = ServiceProvider.CreateScope())//已关闭
+                    using (var scope = Senparc.CO2NET.SenparcDI.GetServiceProvider().CreateScope())
                     {
-                        try
-                        {
-                            AgentTemplatePrintMessageMiddleware.SendWechatMessage
-                                .Invoke(a, m, mStr, agentTemplateDto, chatGroupDto, chatTaskDto);
-                        }
-                        catch (Exception ex)
-                        {
-                            SenparcTrace.SendCustomLog("SendWechatMessage 发生异常", ex.Message);
-                        }
+                        var serviceProvider = scope.ServiceProvider;
+                        var chatGroupHistoryService = serviceProvider.GetService<ChatGroupHistoryService>();
+                        var chatGroupHistoryDto = new ChatGroupHistoryDto(chatGroupDto.Id, chatTaskDto.Id, null, agentTemplateDto.Id, null, agentTemplateDto.Id, null, mStr, MessageType.Text, Status.Finished);
+                        await chatGroupHistoryService.CreateHistory(chatGroupHistoryDto);
+                    }
+                }));
 
-                        //PrintWechatMessageMiddlewareExtension.SendWechatMessage.Invoke(a, m, mStr, agentTemplateDto);
-                        logger.Append($"[{chatGroup.Name}]组 {a.Name} 发送消息：{mStr}");
-
-                        //using (var scope = ServiceProvider.CreateScope())//已关闭
-                        using (var scope = Senparc.CO2NET.SenparcDI.GetServiceProvider().CreateScope())
-                        {
-                            var serviceProvider = scope.ServiceProvider;
-                            var chatGroupHistoryService = serviceProvider.GetService<ChatGroupHistoryService>();
-                            var chatGroupHistoryDto = new ChatGroupHistoryDto(chatGroupDto.Id, chatTaskDto.Id, null, agentTemplateDto.Id, null, agentTemplateDto.Id, null, mStr, MessageType.Text, Status.Finished);
-                            await chatGroupHistoryService.CreateHistory(chatGroupHistoryDto);
-                        }
-                    }));
-
-                if (agentTemplateId == chatGroup.EnterAgentTemplateId)
-                {
-                    //TODO：添加指定入口对接人员，参考群主
-                    enterAgent = agentMiddleware;
-                    iWantToRunEnter = iWantToRunItem;
-                }
-
-                if (agentTemplateId == chatGroup.AdminAgentTemplateId)
-                {
-                    iWantToRunAdmin = iWantToRunItem;
-                }
-
-                agentsMiddlewares.Add(agentMiddleware);
-                //}
-
-
-                agents.Add(agent);
-            }
-
-            // Create the hearing member
-            //var hearingMember = new UserProxyAgent(name: chatGroup.Name + "群友");
-            var hearingMember = new DefaultReplyAgent(name: chatGroup.Name + "群友", GroupChatExtension.TERMINATE);
-
-            // Create the group admin
-            var adminAgenttemplate = await agentTemplateService.GetObjectAsync(x => x.Id == chatGroup.AdminAgentTemplateId);
-            var adminPromptResult = await promptItemService.GetWithVersionAsync(adminAgenttemplate.PromptCode, isAvg: true);
-
-            if (personality)
+            if (agentTemplateId == chatGroup.EnterAgentTemplateId)
             {
-                var agentAiHandler = new AgentAiHandler(adminPromptResult.SenparcAiSetting);
-                var iWantToRunItem = agentAiHandler.IWantTo(senparcAiSetting)
-                            .ConfigModel(ConfigModel.Chat, adminAgenttemplate.Name)
-                            .BuildKernel();
+                //TODO：添加指定入口对接人员，参考群主
+                enterAgent = agentMiddleware;
+                iWantToRunEnter = iWantToRunItem;
             }
 
-            var graphConnector = GraphBuilder.Start()
-                        .ConnectFrom(hearingMember).TwoWay(enterAgent);
+            if (agentTemplateId == chatGroup.AdminAgentTemplateId)
+            {
+                iWantToRunAdmin = iWantToRunItem;
+            }
 
-            //遍历所有 agents, 两两之间运行 graphConnector.ConnectFrom(agent1).TwoWay(agent2);
-            //for (int i = 0; i < agentsMiddlewares.Count; i++)
-            //{
-            //    for (int j = i + 1; j < agentsMiddlewares.Count; j++)
-            //    {
-            //        graphConnector.ConnectFrom(agentsMiddlewares[i]).TwoWay(agentsMiddlewares[j]);
-            //    }
+            agentsMiddlewares.Add(agentMiddleware);
             //}
 
-            //使用星型网络
-            for (int i = 0; i < agentsMiddlewares.Count; i++)
+
+            agents.Add(agent);
+        }
+
+        // Create the hearing member
+        //var hearingMember = new UserProxyAgent(name: chatGroup.Name + "群友");
+        var hearingMember = new DefaultReplyAgent(name: chatGroup.Name + "群友", GroupChatExtension.TERMINATE);
+
+        // Create the group admin
+        var adminAgenttemplate = await agentTemplateService.GetObjectAsync(x => x.Id == chatGroup.AdminAgentTemplateId);
+        var adminPromptResult = await promptItemService.GetWithVersionAsync(adminAgenttemplate.PromptCode, isAvg: true);
+
+        if (personality)
+        {
+            var agentAiHandler = new AgentAiHandler(adminPromptResult.SenparcAiSetting);
+            var iWantToRunItem = agentAiHandler.IWantTo(senparcAiSetting)
+                        .ConfigModel(ConfigModel.Chat, adminAgenttemplate.Name)
+                        .BuildKernel();
+        }
+
+        var graphConnector = GraphBuilder.Start()
+                    .ConnectFrom(hearingMember).TwoWay(enterAgent);
+
+        //遍历所有 agents, 两两之间运行 graphConnector.ConnectFrom(agent1).TwoWay(agent2);
+        //for (int i = 0; i < agentsMiddlewares.Count; i++)
+        //{
+        //    for (int j = i + 1; j < agentsMiddlewares.Count; j++)
+        //    {
+        //        graphConnector.ConnectFrom(agentsMiddlewares[i]).TwoWay(agentsMiddlewares[j]);
+        //    }
+        //}
+
+        //使用星型网络
+        for (int i = 0; i < agentsMiddlewares.Count; i++)
+        {
+            var agentMiddleware = agentsMiddlewares[i];
+            if (enterAgent == agentMiddleware)
             {
-                var agentMiddleware = agentsMiddlewares[i];
-                if (enterAgent == agentMiddleware)
-                {
-                    continue;
-                }
-                graphConnector.ConnectFrom(enterAgent).TwoWay(agentMiddleware);
+                continue;
             }
+            graphConnector.ConnectFrom(enterAgent).TwoWay(agentMiddleware);
+        }
 
 
-            var finishedGraph = graphConnector.Finish();
+        var finishedGraph = graphConnector.Finish();
 
-            #region 定义 Admin
+        #region 定义 Admin
 
-            var admin = new SemanticKernelAgent(
-                kernel: iWantToRunAdmin.Kernel,
-                name: "admin",
-                systemMessage: @$"You are the administrator and are responsible for managing the conversations in the ChatGroup. However, you cannot participate in any conversation work and cannot respond to any requests from other agents, but determine witch agent can speek in the next round.
+        var admin = new SemanticKernelAgent(
+            kernel: iWantToRunAdmin.Kernel,
+            name: "admin",
+            systemMessage: @$"You are the administrator and are responsible for managing the conversations in the ChatGroup. However, you cannot participate in any conversation work and cannot respond to any requests from other agents, but determine witch agent can speek in the next round.
 You are strictly fobidden to use function-calling, include _tool_use.parallel.
 
 You have to strictly follow the reply format (JSON) as required, each message will use the strickly JSON format with a '//finish suffix':
@@ -684,100 +686,100 @@ e,g:
 
 Note: parameter From must be strictly equal to the name of the player spokesperson and cannot be modified in any way.
 "
-                                    /*adminAgenttemplate.Name*//*,
-                                        systemMessage: adminPromptResult.PromptItem.Content*/)
-                .RegisterMessageConnector();
-            //.RegisterTextMessageConnector();
+                                                                /*adminAgenttemplate.Name*//*,
+                                                                    systemMessage: adminPromptResult.PromptItem.Content*/)
+            .RegisterMessageConnector();
+        //.RegisterTextMessageConnector();
 
 
-            var admin1 = admin.RegisterMiddleware(async (messages, option, next, ct) =>
+        var admin1 = admin.RegisterMiddleware(async (messages, option, next, ct) =>
+        {
+            var response = await next.GenerateReplyAsync(messages, option, ct);
+
+            // check response's format
+            // if the response's format is not From xxx where xxx is a valid group member
+            // use reflection to get it auto-fixed by LLM
+
+            var responseContent = response.GetContent();
+
+            Console.WriteLine($"\t response from admin: {responseContent}");
+
+            if (responseContent?.StartsWith("From") is false)
             {
-                var response = await next.GenerateReplyAsync(messages, option, ct);
+                // random pick from agents
+                var agent = new Random().Next(0, agents.Count);
 
-                // check response's format
-                // if the response's format is not From xxx where xxx is a valid group member
-                // use reflection to get it auto-fixed by LLM
-
-                var responseContent = response.GetContent();
-
-                Console.WriteLine($"\t response from admin: {responseContent}");
-
-                if (responseContent?.StartsWith("From") is false)
-                {
-                    // random pick from agents
-                    var agent = new Random().Next(0, agents.Count);
-
-                    return new TextMessage(Role.User, $"From {agents[agent].Name}", from: next.Name);
-                }
-                else
-                {
-                    return response;
-                }
-            });
-
-            #endregion
-
-            //var aiTeam = finishedGraph.CreateAiTeam(admin);
-            var myRoleOrc = new MyRolePlayOrchestrator(admin, finishedGraph.Graph);
-            var aiTeam = finishedGraph.CreateAiTeam(admin1, myRoleOrc);
-
-            try
-            {
-                var greetingMessage = await enterAgent.SendAsync($"你好，如果已经就绪，请告诉我们“已就位”，并和 {hearingMember.Name} 打个招呼。打招呼请使用用户要求的语言，默认为英文。");
-
-                var commandMessage = new TextMessage(Role.Assistant, userCommand, hearingMember.Name);
-
-                //IEnumerable<IMessage> result = await enterAgent.SendMessageToGroupAsync(
-                //      groupChat: aiTeam,
-                //      chatHistory: [greetingMessage, commandMessage],
-                //      maxRound: 10);
-
-                await foreach (var message in aiTeam.SendAsync(chatHistory: [greetingMessage, commandMessage],
-            maxRound: ChatMaxRound))
-                {
-                    var keepRunning = await _cache.GetAsync<RunningChatTaskDto>(runningKey);
-                    if (keepRunning == null)
-                    {
-                        logger.Append($"任务已被强制停止：{chatTask.Name}");
-                        await chatTaskService.SetStatus(ChatTask_Status.Cancelled, chatTask);
-                        return;
-                    }
-
-                    // process exit
-                    if (message.GetContent()?.Contains("exit") is true)
-                    {
-                        //Console.WriteLine("您已推出对话");
-                        return;
-                    }
-                }
-
-                Console.WriteLine("Chat finished.");
-                logger.Append("已完成运行：" + chatGroup.Name);
-
-                await chatTaskService.SetStatus(ChatTask_Status.Finished, chatTask);
-
-                //完成后移除缓存
-                await _cache.RemoveFromCacheAsync(runningKey);
-
-                SenparcTrace.SendCustomLog($"Agents 运行结果（组：{chatGroup.Name}）", logger.ToString());
-
-                //return result;
+                return new TextMessage(Role.User, $"From {agents[agent].Name}", from: next.Name);
             }
-            catch (Exception ex)
+            else
             {
-                SenparcTrace.BaseExceptionLog(ex);
-                SenparcTrace.SendCustomLog("异常详情", ex.StackTrace);
-                Console.WriteLine(ex);
-                throw;
+                return response;
             }
-            finally
+        });
+
+        #endregion
+
+        //var aiTeam = finishedGraph.CreateAiTeam(admin);
+        var myRoleOrc = new MyRolePlayOrchestrator(admin, finishedGraph.Graph);
+        var aiTeam = finishedGraph.CreateAiTeam(admin1, myRoleOrc);
+
+        try
+        {
+            var greetingMessage = await enterAgent.SendAsync($"你好，如果已经就绪，请告诉我们“已就位”，并和 {hearingMember.Name} 打个招呼。打招呼请使用用户要求的语言，默认为英文。");
+
+            var commandMessage = new TextMessage(Role.Assistant, userCommand, hearingMember.Name);
+
+            //IEnumerable<IMessage> result = await enterAgent.SendMessageToGroupAsync(
+            //      groupChat: aiTeam,
+            //      chatHistory: [greetingMessage, commandMessage],
+            //      maxRound: 10);
+
+            await foreach (var message in aiTeam.SendAsync(chatHistory: [greetingMessage, commandMessage],
+        maxRound: ChatMaxRound))
             {
-                scope.Dispose();
-                activeOptimizationScope?.Dispose();
-                if (!string.IsNullOrWhiteSpace(request.CorrelationId))
+                var keepRunning = await _cache.GetAsync<RunningChatTaskDto>(runningKey);
+                if (keepRunning == null)
                 {
-                    PromptOptimizationAgentBridge.ClearFallbackCorrelationId();
+                    logger.Append($"任务已被强制停止：{chatTask.Name}");
+                    await chatTaskService.SetStatus(ChatTask_Status.Cancelled, chatTask);
+                    return;
+                }
+
+                // process exit
+                if (message.GetContent()?.Contains("exit") is true)
+                {
+                    //Console.WriteLine("您已推出对话");
+                    return;
                 }
             }
+
+            Console.WriteLine("Chat finished.");
+            logger.Append("已完成运行：" + chatGroup.Name);
+
+            await chatTaskService.SetStatus(ChatTask_Status.Finished, chatTask);
+
+            //完成后移除缓存
+            await _cache.RemoveFromCacheAsync(runningKey);
+
+            SenparcTrace.SendCustomLog($"Agents 运行结果（组：{chatGroup.Name}）", logger.ToString());
+
+            //return result;
+        }
+        catch (Exception ex)
+        {
+            SenparcTrace.BaseExceptionLog(ex);
+            SenparcTrace.SendCustomLog("异常详情", ex.StackTrace);
+            Console.WriteLine(ex);
+            throw;
+        }
+        finally
+        {
+            scope.Dispose();
+            activeOptimizationScope?.Dispose();
+            if (!string.IsNullOrWhiteSpace(request.CorrelationId))
+            {
+                PromptOptimizationAgentBridge.ClearFallbackCorrelationId();
+            }
+        }
     }
 }
