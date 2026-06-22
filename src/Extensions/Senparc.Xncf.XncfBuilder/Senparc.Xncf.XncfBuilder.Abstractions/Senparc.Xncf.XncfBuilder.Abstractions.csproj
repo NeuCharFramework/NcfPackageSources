@@ -1,11 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFrameworks>net10.0</TargetFrameworks>
     <Version>0.1.0-preview1</Version>
     <AssemblyName>Senparc.Xncf.XncfBuilder.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder.Abstractions</RootNamespace>
     <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
     <Description>Senparc.Xncf.XncfBuilder 集成事件与跨模块契约抽象</Description>
     <Copyright>NeuCharFramework</Copyright>
     <PackageTags>NeuCharFramework,NCF,XNCF</PackageTags>
@@ -13,12 +15,39 @@
     <Owners>NeuCharFramework</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>Senparc.Xncf.XncfBuilder.Abstractions</Title>
+    <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
+    <PackageIcon>icon.jpg</PackageIcon>
+    <PackageReleaseNotes>
+      v0.1.0 创世
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <!-- Keep compiled outputs (dll/pdb) in the default bin folder.
+         Only control the package output directory so that generated .nupkg files
+         are placed into the shared BuildOutPut folder. -->
+    <PackageOutputPath>..\..\..\BuildOutPut</PackageOutputPath>
+    <DocumentationFile>$(PackageOutputPath)\Senparc.Xncf.XncfBuilder.Abstractions.XML</DocumentationFile>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
+    <PackageOutputPath>..\..\..\BuildOutPut</PackageOutputPath>
+    <DocumentationFile>$(PackageOutputPath)\Senparc.Xncf.XncfBuilder.Abstractions.XML</DocumentationFile>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Shared.Abstractions\Senparc.Ncf.Shared.Abstractions.csproj" />
   </ItemGroup>

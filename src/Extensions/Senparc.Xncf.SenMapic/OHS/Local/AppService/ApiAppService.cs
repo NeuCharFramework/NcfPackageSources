@@ -2,6 +2,7 @@
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 using Senparc.Xncf.SenMapic.OHS.Local.PL;
 using System;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
 {
+    [ApiAuthorize]
     public class ApiAppService : AppServiceBase
     {
         public ApiAppService(IServiceProvider serviceProvider) : base(serviceProvider)

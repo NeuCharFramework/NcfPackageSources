@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Senparc.Ncf.AreaBase.Admin.Filters;
 using System;
 
-namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
+namespace Senparc.Xncf.AreaBase.Admin.Filters
 {
     /// <summary>
     /// API 权限验证特性

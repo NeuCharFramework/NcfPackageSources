@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Http.Timeouts;
+﻿using Microsoft.AspNetCore.Http.Timeouts;
 using Microsoft.AspNetCore.Mvc;
 using ModelContextProtocol.Client;
 using Senparc.CO2NET;
@@ -23,10 +23,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Senparc.CO2NET.Extensions;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 
 
 namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 {
+    [ApiAuthorize]
     public class AgentTemplateAppService : AppServiceBase
     {
         private readonly AgentsTemplateService _agentsTemplateService;

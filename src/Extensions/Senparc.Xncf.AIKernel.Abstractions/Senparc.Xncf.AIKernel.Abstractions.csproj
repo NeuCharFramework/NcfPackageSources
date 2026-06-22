@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net8.0</TargetFrameworks>
-    <Version>0.1.1-preview1</Version>
+    <Version>0.2.1-preview1</Version>
     <AssemblyName>Senparc.Xncf.AIKernel.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel.Abstractions</RootNamespace>
     <LangVersion>10.0</LangVersion>
