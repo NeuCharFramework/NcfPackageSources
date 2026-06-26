@@ -104,7 +104,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 TopP = promptItem.TopP,
                 FrequencyPenalty = promptItem.FrequencyPenalty,
                 PresencePenalty = promptItem.PresencePenalty,
-                StopSequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>(),
+                StopSequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>() ?? new List<string>(),
             };
 
             // 生成替换参数后的 SystemMessage（用于保存到数据库）
@@ -171,7 +171,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 MessageId = Guid.NewGuid().ToString("n").Substring(0, 8),
             }).ToList();
 
-            agentSession.SetInMemoryChatHistory(history);
+            // AgentSession 内部会对输入做 LINQ 处理，避免传入 null 导致 source 参数异常
+            agentSession.SetInMemoryChatHistory(history ?? new List<ChatMessage>());
 
             if (!string.IsNullOrWhiteSpace(promptItem.VariableDictJson))
             {
