@@ -75,7 +75,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     public class MyFuctionAppService : AppServiceBase
     {
         private ColorService _colorService;
-        private IMcpClient McpClient { get; set; }
+        //private IMcpClient McpClient { get; set; }
 
         public MyFuctionAppService(IServiceProvider serviceProvider, ColorService colorService) : base(serviceProvider)
         {
@@ -153,14 +153,14 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                     ApprovalMode = HostedMcpServerToolApprovalMode.NeverRequire
                 };
 
-                var clientTransport = new SseClientTransport(new SseClientTransportOptions()
-                {
-                    Endpoint = new Uri(endpoint),
-                    Name = "NCF-Server"
-                });
+                //var clientTransport = new SseClientTransport(new SseClientTransportOptions()
+                //{
+                //    Endpoint = new Uri(endpoint),
+                //    Name = "NCF-Server"
+                //});
 
-                var client = await McpClientFactory.CreateAsync(clientTransport);
-                var tools = await client.ListToolsAsync();
+                //var client = await McpClientFactory.CreateAsync(clientTransport);
+                //var tools = await client.ListToolsAsync();
                 // Print the list of tools available from the server.
 
 

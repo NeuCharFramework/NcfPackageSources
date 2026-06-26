@@ -632,9 +632,10 @@ Apple
             var dt1 = SystemTime.Now;
 
             var result = await iWantToRun.RunChatAsync(userPrompt);
-            SenparcTrace.SendCustomLog("自动打分结束", $"模型返回为{result.Output}，花费时间{SystemTime.DiffTotalMS(dt1)}ms");
+            var resultOutput = result?.OutputString?.Trim() ?? string.Empty;
+            SenparcTrace.SendCustomLog("自动打分结束", $"模型返回为{resultOutput}，花费时间{SystemTime.DiffTotalMS(dt1)}ms");
 
-            // 正则匹配出result.Output中的数字
+            // 正则匹配出 resultOutput 中的数字
             // Use regular expression to find matches
 
             // 匹配 MAX_SCORE，后面可以跟 0-2 位的小数
@@ -642,20 +643,20 @@ Apple
             //@"^100(\.[0-9]{1,2})?|([0-9]{1,2})(\.[0-9]{1,2})?$";
             //"^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?|0(\.\d{1,2})?)$"
             //^(10(\.0{1,2})?|[1-9](\.\d{1,2})?|0(\.\d{1,2})?)$
-            Match match = Regex.Match(result.Output, pattern);
+            Match match = Regex.Match(resultOutput, pattern);
 
             // If there is a match, the number will be match.Value
             if (!match.Success)
             {
-                SenparcTrace.SendCustomLog("自动打分结束", $"原文为{result.Output}，分数匹配失败");
+                SenparcTrace.SendCustomLog("自动打分结束", $"原文为{resultOutput}，分数匹配失败");
 
-                throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为：{promptResult.ResultString}, 模型返回为{result.Output}，");
+                throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为：{promptResult.ResultString}, 模型返回为{resultOutput}，");
             }
 
             bool success = Decimal.TryParse(match.Value, out var score);
             if (!success)
             {
-                throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为：{promptResult.ResultString}, 模型返回为{result.Output}，");
+                throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为：{promptResult.ResultString}, 模型返回为{resultOutput}，");
             }
 
             #region error 打分结果不在 0-MAX_SCORE 之间

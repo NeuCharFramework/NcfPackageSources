@@ -26,7 +26,7 @@ namespace Senparc.Xncf.PromptRange.Tests
         {
             base.RegisterServiceCollectionFinished(services);
 
-            _senparcAiSetting = new Senparc.AI.Kernel.SenparcAiSetting();
+            _senparcAiSetting = new Senparc.AI.AgentKernel.SenparcAiSetting();
             base.Configuration.GetSection("SenparcAiSetting").Bind(_senparcAiSetting);
 
             //_senparcAiSetting = new  SenparcAiSetting() { IsDebug = true };

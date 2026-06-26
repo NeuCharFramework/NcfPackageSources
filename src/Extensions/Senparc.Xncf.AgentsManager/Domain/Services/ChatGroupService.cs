@@ -445,45 +445,45 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 switch (workflowEvent)
                 {
                     case AgentResponseUpdateEvent updateEvent:
-                    {
-                        var responseId = updateEvent.Update.ResponseId
-                                         ?? updateEvent.Update.MessageId
-                                         ?? updateEvent.ExecutorId;
-
-                        if (!string.Equals(activeResponseKey, responseId, StringComparison.Ordinal))
                         {
-                            await FlushActiveResponseAsync();
-                            activeResponseKey = responseId;
-                            activeExecutorId = updateEvent.ExecutorId;
-                            activeUsageDetails = null;
-                            activeResponseStartedAt = DateTime.Now;
-                        }
+                            var responseId = updateEvent.Update.ResponseId
+                                             ?? updateEvent.Update.MessageId
+                                             ?? updateEvent.ExecutorId;
 
-                        if (!string.IsNullOrEmpty(updateEvent.Update.Text))
-                        {
-                            activeResponseText.Append(updateEvent.Update.Text);
-
-                            if (contextByAgentName.TryGetValue(updateEvent.ExecutorId, out var streamContext))
+                            if (!string.Equals(activeResponseKey, responseId, StringComparison.Ordinal))
                             {
-                                PublishChunkEvent(
-                                    chatTask.Id,
-                                    streamContext.TemplateDto.Id,
-                                    streamContext.Agent.Name,
-                                    responseId,
-                                    updateEvent.Update.Text,
-                                    roundIndex + 1);
+                                await FlushActiveResponseAsync();
+                                activeResponseKey = responseId;
+                                activeExecutorId = updateEvent.ExecutorId;
+                                activeUsageDetails = null;
+                                activeResponseStartedAt = DateTime.Now;
                             }
-                        }
 
-                        var usageContent = updateEvent.Update.Contents?
-                            .FirstOrDefault(z => z is UsageContent) as UsageContent;
-                        if (usageContent?.Details != null)
-                        {
-                            activeUsageDetails = usageContent.Details;
-                        }
+                            if (!string.IsNullOrEmpty(updateEvent.Update.Text))
+                            {
+                                activeResponseText.Append(updateEvent.Update.Text);
 
-                        break;
-                    }
+                                if (contextByAgentName.TryGetValue(updateEvent.ExecutorId, out var streamContext))
+                                {
+                                    PublishChunkEvent(
+                                        chatTask.Id,
+                                        streamContext.TemplateDto.Id,
+                                        streamContext.Agent.Name,
+                                        responseId,
+                                        updateEvent.Update.Text,
+                                        roundIndex + 1);
+                                }
+                            }
+
+                            var usageContent = updateEvent.Update.Contents?
+                                .FirstOrDefault(z => z is UsageContent) as UsageContent;
+                            if (usageContent?.Details != null)
+                            {
+                                activeUsageDetails = usageContent.Details;
+                            }
+
+                            break;
+                        }
                     case WorkflowErrorEvent workflowError:
                         throw workflowError.Exception ?? new Exception("Workflow execution failed.");
                     case ExecutorFailedEvent executorFailed:
@@ -834,14 +834,14 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         return (promptText, currentSetting);
     }
 
-    private static async Task<List<AIFunction>> BuildAgentToolsAsync(
+    private static async Task<List<AITool>> BuildAgentToolsAsync(
         IServiceProvider services,
         AIPluginHub aiPlugins,
         AgentAiHandler agentHandler,
         AgentTemplateDto templateDto,
         int templateId)
     {
-        var tools = new List<AIFunction>();
+        var tools = new List<AITool>();
 
         // 1. 内置 Function-calling 插件
         var functionCallNames = templateDto.FunctionCallNames.IsNullOrEmpty()
@@ -895,9 +895,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             .ToList();
     }
 
-    private static async Task<List<AIFunction>> BuildMcpToolsAsync(string mcpEndpointsJson, int templateId)
+    private static async Task<List<AITool>> BuildMcpToolsAsync(string mcpEndpointsJson, int templateId)
     {
-        var toolList = new List<AIFunction>();
+        var toolList = new List<AITool>();
 
         if (string.IsNullOrWhiteSpace(mcpEndpointsJson))
         {
@@ -921,20 +921,27 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
                 try
                 {
-                    var transport = new SseClientTransport(new SseClientTransportOptions
-                    {
-                        Endpoint = new Uri(endpointUrl),
-                        Name = mcpName
-                    });
+                    //var transport = new SseClientTransport(new SseClientTransportOptions
+                    //{
+                    //    Endpoint = new Uri(endpointUrl),
+                    //    Name = mcpName
+                    //});
 
-                    var client = await McpClientFactory.CreateAsync(transport);
-                    var tools = await client.ListToolsAsync();
+                    //var client = await McpClientFactory.CreateAsync(transport);
+                    //var tools = await client.ListToolsAsync();
 
-                    foreach (var tool in tools)
+                    //foreach (var tool in tools)
+                    //{
+                    //    Console.WriteLine($"Agent: {templateId} MCP: {mcpName} : {tool.Name} ({tool.Description})");
+                    //    toolList.Add(tool);
+                    //}
+
+                    var hostedMcpServerTool = new HostedMcpServerTool(mcpName, endpointUrl)
                     {
-                        Console.WriteLine($"Agent: {templateId} MCP: {mcpName} : {tool.Name} ({tool.Description})");
-                        toolList.Add(tool);
-                    }
+                        // AllowedTools = ["microsoft_docs_search"],
+                        ApprovalMode = HostedMcpServerToolApprovalMode.NeverRequire
+                    };
+                    toolList.Add(hostedMcpServerTool);
                 }
                 catch (Exception ex)
                 {

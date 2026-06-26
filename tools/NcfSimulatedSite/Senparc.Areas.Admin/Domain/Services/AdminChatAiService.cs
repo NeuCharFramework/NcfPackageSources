@@ -217,7 +217,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             //TODO: 测试 MAF 中是否自动开启工具调用
             var skResult = await iWantToRun.RunChatAsync(prompt);
 
-            var result = skResult?.ToString()?.Trim();
+            var result = skResult?.OutputString?.Trim();
             if (string.IsNullOrWhiteSpace(result))
             {
                 _logger.LogWarning("AI 返回空内容：SessionId={SessionId}, UserId={UserId}", sessionId, userId);

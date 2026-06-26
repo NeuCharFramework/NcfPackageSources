@@ -95,7 +95,7 @@ namespace Senparc.Xncf.MCP
         }
         #endregion
 
-        public IMcpClient McpClient { get; set; }
+        //public IMcpClient McpClient { get; set; }
 
         public List<string> McpFunctionMetaInfo { get; set; }
 

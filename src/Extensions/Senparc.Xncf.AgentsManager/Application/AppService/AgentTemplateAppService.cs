@@ -1,18 +1,21 @@
 ﻿using Microsoft.AspNetCore.Http.Timeouts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.AI;
 using ModelContextProtocol.Client;
 using Senparc.CO2NET;
+using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Utility;
-using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
+using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.AgentsManager.OHS.Local.PL;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Models.Entities;
 using Senparc.Xncf.PromptRange.Domain.Services;
@@ -22,8 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Senparc.CO2NET.Extensions;
-using Senparc.Xncf.AreaBase.Admin.Filters;
 
 
 namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
@@ -513,14 +514,22 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 List<McpTool> mcpToolList = new List<McpTool>();
                 try
                 {
-                    var clientTransport = new SseClientTransport(new SseClientTransportOptions()
-                    {
-                        Endpoint = new Uri(endpointUrl),
-                        Name = endpointName
-                    });
+                    //var clientTransport = new SseClientTransport(new SseClientTransportOptions()
+                    //{
+                    //    Endpoint = new Uri(endpointUrl),
+                    //    Name = endpointName
+                    //});
 
-                    await using var client = await McpClientFactory.CreateAsync(clientTransport);
-                    var tools = await client.ListToolsAsync();
+                    //await using var client = await McpClientFactory.CreateAsync(clientTransport);
+                    //var tools = await client.ListToolsAsync();
+
+
+                    var testServerTool = new HostedMcpServerTool(endpointName, new Uri(endpointUrl))
+                    {
+                        ApprovalMode = HostedMcpServerToolApprovalMode.NeverRequire
+                    };
+
+                    var tools = new List<AITool> { testServerTool };
 
                     mcpToolList = tools.Select(z => new McpTool()
                     {
@@ -533,7 +542,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                         }).ToList()
                     }).ToList();
 
-                    await clientTransport.DisposeAsync();
+                    //await clientTransport.DisposeAsync();
 
                     return new McpConnectionTestResult()
                     {
