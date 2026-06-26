@@ -37,9 +37,8 @@
     <PackageReference Include="Microsoft.Extensions.AI" Version="10.5.1" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
     <EmbeddedResource Include="wwwroot\**\*" />
-    <PackageReference Include="ModelContextProtocol" Version="0.2.0-preview.3" />
-    <PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.2.0-preview.3" />
-    <PackageReference Include="ModelContextProtocol-SemanticKernel" Version="0.0.1-preview-15" />
+    <PackageReference Include="ModelContextProtocol" Version="1.0.0" />
+    <PackageReference Include="ModelContextProtocol.AspNetCore" Version="1.0.0" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
   </ItemGroup>
   <ItemGroup>
@@ -60,4 +59,5 @@
   <ItemGroup>
     <None Include="App_Data\Database\SenparcConfig.config" />
   </ItemGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\Senparc.AI.AgentKernel.props" />
 </Project>

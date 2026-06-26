@@ -85,6 +85,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         /// 继续聊天模式下的历史对话记录（可选）
         /// </summary>
         public List<ChatHistoryItem> ChatHistory { get; set; }
+
+        /// <summary>
+        /// 流式输出会话 ID（可选）
+        /// </summary>
+        public string StreamId { get; set; }
     }
     
     /// <summary>

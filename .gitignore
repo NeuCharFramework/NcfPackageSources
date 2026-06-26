@@ -109,3 +109,5 @@ tools/NcfDesktopApp.GUI/publish-self-contained/*
 /.github/appmod/custom-tasks/
 *.tmp
 .vscode/settings.json
+.nuget-packages/
+.claude/

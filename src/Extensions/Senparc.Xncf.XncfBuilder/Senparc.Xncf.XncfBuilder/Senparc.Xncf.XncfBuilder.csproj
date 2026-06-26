@@ -201,4 +201,5 @@
     <Message Text="刷新 Source Generator..." Importance="normal" />
     <Touch Files="@(AdditionalFiles)" AlwaysCreate="false" />
   </Target>-->
+  <Import Project="$(MSBuildThisFileDirectory)..\..\..\Senparc.AI.AgentKernel.props" />
 </Project>

@@ -1345,6 +1345,55 @@ height:100%;
     color: rgba(171, 173, 176, 1);
 }
 
+.taskrecord-listWrap-item-head>.usage {
+    margin-left: 10px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: #2a82e4;
+    background: rgba(42, 130, 228, 0.12);
+}
+
+.usage-analytics-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.usage-analytics-title {
+    margin-right: auto;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.usage-analytics-overview {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.usage-card {
+    background: #f5f7fa;
+    border-radius: 6px;
+    padding: 10px 12px;
+}
+
+.usage-card>.label {
+    color: #8a94a6;
+    font-size: 12px;
+}
+
+.usage-card>.value {
+    margin-top: 6px;
+    color: #1f2d3d;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
 .taskrecord-listWrap-item-content {
     display: inline-block;
     padding: 10px;

@@ -1,4 +1,5 @@
 ﻿using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.AgentsManager.Domain.Models.Usage;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -47,6 +48,18 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
         /// </summary>
         public string HookPlatformParameter { get; set; }
 
+        public int TotalPromptTokens { get; set; }
+
+        public int TotalCompletionTokens { get; set; }
+
+        public int TotalTokens { get; set; }
+
+        public int TotalRounds { get; set; }
+
+        public double AverageResponseMilliseconds { get; set; }
+
+        public int MaxResponseMilliseconds { get; set; }
+
         public ChatTaskDto() { }
 
         public ChatTaskDto(string name, int chatGroupId, int aiModelId, ChatTask_Status status, string promptCommand, string description, bool isPersonality, HookPlatform hookPlatform, string hookPlatformParameter, bool score, DateTime startTime, DateTime endTime, string resultComment)
@@ -81,6 +94,14 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
             ResultComment = chatTask.ResultComment;
             HookPlatform = chatTask.HookPlatform;
             HookPlatformParameter = chatTask.HookPlatformParameter;
+
+            var aggregate = ChatUsageRemarkCodec.DecodeAggregateOrDefault(chatTask.AdminRemark);
+            TotalPromptTokens = aggregate.PromptTokens;
+            TotalCompletionTokens = aggregate.CompletionTokens;
+            TotalTokens = aggregate.TotalTokens;
+            TotalRounds = aggregate.MessageCount;
+            AverageResponseMilliseconds = aggregate.AverageResponseMilliseconds;
+            MaxResponseMilliseconds = aggregate.MaxResponseMilliseconds;
         }
     }
 

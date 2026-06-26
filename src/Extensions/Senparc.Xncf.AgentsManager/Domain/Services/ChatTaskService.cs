@@ -1,10 +1,10 @@
-﻿using AutoGen.Core;
-using Senparc.CO2NET.Trace;
+﻿using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AgentsManager.Domain.Models.Usage;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -62,6 +62,19 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 await base.SaveObjectAsync(unfinishedTask);
                 SenparcTrace.SendCustomLog($"处理未完成任务({unfinishedTask.Id})", $"处理完成，当前状态：{unfinishedTask.Status}");
             }
+        }
+
+        public async Task UpdateUsageAggregateAsync(ChatTask chatTask, ChatUsageSnapshot usageSnapshot)
+        {
+            if (chatTask == null || usageSnapshot == null)
+            {
+                return;
+            }
+
+            var aggregate = ChatUsageRemarkCodec.DecodeAggregateOrDefault(chatTask.AdminRemark);
+            aggregate.Merge(usageSnapshot);
+            chatTask.AdminRemark = ChatUsageRemarkCodec.EncodeAggregate(aggregate);
+            await base.SaveObjectAsync(chatTask);
         }
     }
 }

@@ -20,47 +20,55 @@ namespace Senparc.Ncf.Core.EventBus
             Action<EventBusOptions> configureOptions = null,
             params Assembly[] assembliesToScan)
         {
-            // 1. 注册 EventBus 配置选项
-            var options = new EventBusOptions();
-            configureOptions?.Invoke(options);
-            services.AddSingleton(options);
-
-            // 2. 注册单例 EventBus (发布者用) - 使用工厂方法来支持 ILogger 注入
-            services.AddSingleton<InMemoryEventBus>(sp =>
+            try
             {
-                var logger = sp.GetService<ILogger<InMemoryEventBus>>();
-                return new InMemoryEventBus(logger);
-            });
-            services.AddSingleton<IEventBus>(sp => sp.GetRequiredService<InMemoryEventBus>());
+                // 1. 注册 EventBus 配置选项
+                var options = new EventBusOptions();
+                configureOptions?.Invoke(options);
+                services.AddSingleton(options);
 
-            // 3. 注册后台托管服务 (消费者用)
-            services.AddHostedService<EventBusHostedService>();
-
-            // 4. 扫描并注册 Handler
-            if (assembliesToScan != null && assembliesToScan.Length > 0)
-            {
-                foreach (var assembly in assembliesToScan)
+                // 2. 注册单例 EventBus (发布者用) - 使用工厂方法来支持 ILogger 注入
+                services.AddSingleton<InMemoryEventBus>(sp =>
                 {
-                    // 查找实现了 IIntegrationEventHandler<T> 的具体类
-                    var handlerTypes = assembly.GetTypes()
-                        .Where(t => t.IsClass && !t.IsAbstract &&
-                               t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IIntegrationEventHandler<>)));
+                    var logger = sp.GetService<ILogger<InMemoryEventBus>>();
+                    return new InMemoryEventBus(logger);
+                });
+                services.AddSingleton<IEventBus>(sp => sp.GetRequiredService<InMemoryEventBus>());
 
-                    foreach (var type in handlerTypes)
+                // 3. 注册后台托管服务 (消费者用)
+                services.AddHostedService<EventBusHostedService>();
+
+                // 4. 扫描并注册 Handler
+                if (assembliesToScan != null && assembliesToScan.Length > 0)
+                {
+                    foreach (var assembly in assembliesToScan)
                     {
-                        var interfaces = type.GetInterfaces()
-                            .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IIntegrationEventHandler<>));
+                        // 查找实现了 IIntegrationEventHandler<T> 的具体类
+                        var handlerTypes = assembly.GetTypes()
+                            .Where(t => t.IsClass && !t.IsAbstract &&
+                                t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IIntegrationEventHandler<>)));
 
-                        foreach (var i in interfaces)
+                        foreach (var type in handlerTypes)
                         {
-                            // 注册为 Scoped
-                            services.AddScoped(i, type);
+                            var interfaces = type.GetInterfaces()
+                                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IIntegrationEventHandler<>));
+
+                            foreach (var i in interfaces)
+                            {
+                                // 注册为 Scoped
+                                services.AddScoped(i, type);
+                            }
                         }
                     }
                 }
-            }
 
-            return services;
+            }
+            catch (Exception ex)
+            {
+                Senparc.CO2NET.Trace.SenparcTrace.SendCustomLog("AddSenparcEventBus 异常", ex.Message);
+                Senparc.CO2NET.Trace.SenparcTrace.BaseExceptionLog(ex);
+            }
+                return services;
         }
     }
 }

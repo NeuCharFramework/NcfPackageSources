@@ -93,4 +93,5 @@
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>-->
+	<Import Project="$(MSBuildThisFileDirectory)..\..\..\src\Senparc.AI.AgentKernel.props" />
 </Project>

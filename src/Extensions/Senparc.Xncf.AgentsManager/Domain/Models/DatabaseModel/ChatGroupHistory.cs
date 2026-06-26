@@ -93,6 +93,8 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
             Message = chatGroupHistoryDto.Message;
             MessageType = chatGroupHistoryDto.MessageType;
             Status = chatGroupHistoryDto.Status;
+            AdminRemark = chatGroupHistoryDto.AdminRemark;
+            Remark = chatGroupHistoryDto.Remark;
         }
     }
 

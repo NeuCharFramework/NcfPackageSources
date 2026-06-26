@@ -7,10 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using ModelContextProtocol.Client;
-using ModelContextProtocol.SemanticKernel;
-using ModelContextProtocol.SemanticKernel.Extensions;
 using ModelContextProtocol.Server;
-using OpenAI.Responses;
 using Senparc.AI.AgentKernel;
 using Senparc.AI.AgentKernel.Handlers;
 using Senparc.AI.Entities;
@@ -151,9 +148,10 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
 
                 Console.WriteLine("MCP Request Endpoint:" + endpoint);
 
-                var ncfServerTool = new McpTool(
-                     serverLabel: "NCF-Server",
-                     serverUri: new Uri(endpoint));
+                var ncfServerTool = new HostedMcpServerTool("NCF-Server", new Uri(endpoint))
+                {
+                    ApprovalMode = HostedMcpServerToolApprovalMode.NeverRequire
+                };
 
                 var clientTransport = new SseClientTransport(new SseClientTransportOptions()
                 {

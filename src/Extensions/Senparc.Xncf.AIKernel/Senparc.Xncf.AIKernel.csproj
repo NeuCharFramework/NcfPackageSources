@@ -111,4 +111,5 @@
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
     <!--<ProjectReference Include="..\..\Basic\Senparc.Ncf.Core.Abstractions\Senparc.Ncf.Core.Abstractions.csproj" />-->
   </ItemGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\Senparc.AI.AgentKernel.props" />
 </Project>

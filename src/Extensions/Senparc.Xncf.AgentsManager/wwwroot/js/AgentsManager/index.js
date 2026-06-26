@@ -374,6 +374,31 @@ var app = new Vue({
       },
       // 对话记录 轮询
       historyTimer: {},
+      // 对话记录实时流
+      historyStream: {},
+      historyStreamingDrafts: {},
+      usageAnalyticsVisible: false,
+      usageAnalyticsLoading: false,
+      usageAnalyticsTaskId: null,
+      usageAnalyticsTaskName: '',
+      usageAnalyticsDateRange: [],
+      usageAnalyticsAgentId: '',
+      usageAnalyticsAgentOptions: [],
+      usageAnalyticsData: {
+        overview: {
+          messageCount: 0,
+          promptTokens: 0,
+          completionTokens: 0,
+          totalTokens: 0,
+          averageResponseMilliseconds: 0,
+          minResponseMilliseconds: 0,
+          maxResponseMilliseconds: 0,
+          p95ResponseMilliseconds: 0,
+        },
+        roundStats: [],
+        agentStats: [],
+        timelineStats: [],
+      },
       // 智能体参数列表
       agentParameterTabsValue: '', // tabs选中(使用空字符串，避免和el-tabs内部string name不匹配)
       agentParameterList: [],
@@ -1416,12 +1441,18 @@ var app = new Vue({
             }
 
             if (!detailsOn && taskDetail) {
+              if (detailType === 'task') this.$set(this, 'taskHistoryList', [])
+              if (detailType === 'agentTask') this.$set(this, 'agentDetailsTaskHistoryList', [])
+              if (detailType === 'agentGroupTask') this.$set(this, 'agentDetailsGroupTaskHistoryList', [])
+              if (detailType === 'groupTask') this.$set(this, 'groupTaskHistoryList', [])
+
               if (['task', 'agentTask'].includes(detailType)) {
                 // 获取任务成员列表
                 this.getTaskMemberListData(detailType, taskDetail.chatGroupId)
               }
-              // 轮询 获取对话数据
-              this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData, taskDetail.id)
+              // 首次获取历史 + 开启实时流
+              this.getTaskRecordListData(detailType, taskDetail.id, '', true)
+              this.startTaskHistoryStream(detailType, taskDetail.id)
             }
           } else {
             app.$message({
@@ -1571,6 +1602,76 @@ var app = new Vue({
             })
           }
         })
+    },
+    openUsageAnalytics(detailType, taskDetail) {
+      if (!taskDetail || !taskDetail.id) return
+
+      this.usageAnalyticsTaskId = taskDetail.id
+      this.usageAnalyticsTaskName = taskDetail.name || `Task-${taskDetail.id}`
+      this.usageAnalyticsVisible = true
+
+      let members = []
+      if (detailType === 'task') members = this.taskMemberList || []
+      if (detailType === 'agentTask') members = this.agentDetailsTaskMemberList || []
+      if (detailType === 'groupTask') members = (this.groupDetails && this.groupDetails.agentTemplateDtoList) || []
+      if (detailType === 'agentGroupTask') {
+        members = (this.agentDetailsGroupDetails && this.agentDetailsGroupDetails.agentTemplateDtoList) || []
+      }
+
+      this.usageAnalyticsAgentOptions = members.map(item => ({
+        id: item.id,
+        name: item.name
+      }))
+
+      this.loadUsageAnalytics()
+    },
+    resetUsageAnalyticsFilters() {
+      this.usageAnalyticsDateRange = []
+      this.usageAnalyticsAgentId = ''
+      this.loadUsageAnalytics()
+    },
+    async loadUsageAnalytics() {
+      if (!this.usageAnalyticsTaskId) return
+      this.usageAnalyticsLoading = true
+
+      const query = {
+        chatTaskId: this.usageAnalyticsTaskId
+      }
+      if (this.usageAnalyticsAgentId) {
+        query.agentTemplateId = this.usageAnalyticsAgentId
+      }
+      if (this.usageAnalyticsDateRange && this.usageAnalyticsDateRange.length === 2) {
+        query.startTime = this.usageAnalyticsDateRange[0]
+        query.endTime = this.usageAnalyticsDateRange[1]
+      }
+
+      try {
+        const res = await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatGroupHistoryAppService/Xncf.AgentsManager_ChatGroupHistoryAppService.GetUsageAnalytics?${getInterfaceQueryStr(query)}`)
+        const data = res?.data ?? {}
+        if (!data.success) {
+          this.$message.error(data.errorMessage || data.data || '获取统计数据失败')
+          return
+        }
+
+        const payload = data.data || {}
+        this.usageAnalyticsData = {
+          overview: payload.overview || this.$options.data().usageAnalyticsData.overview,
+          roundStats: payload.roundStats || [],
+          agentStats: payload.agentStats || [],
+          timelineStats: payload.timelineStats || []
+        }
+      } catch (e) {
+        console.error(e)
+        this.$message.error('获取统计数据失败')
+      } finally {
+        this.usageAnalyticsLoading = false
+      }
+    },
+    formatTaskHistoryUsage(history) {
+      const totalTokens = history?.totalTokens || 0
+      const responseMs = history?.responseMilliseconds || 0
+      const roundText = history?.roundIndex ? `R${history.roundIndex} · ` : ''
+      return `${roundText}Token:${totalTokens} · ${responseMs}ms`
     },
     // 保存 submitForm 数据
     async saveSubmitFormData(saveType, serviceForm = {}) {
@@ -1749,6 +1850,168 @@ var app = new Vue({
       }
       interval()
     },
+    getHistoryListByType(listType) {
+      if (listType === 'task') return this.taskHistoryList || []
+      if (listType === 'agentTask') return this.agentDetailsTaskHistoryList || []
+      if (listType === 'agentGroupTask') return this.agentDetailsGroupTaskHistoryList || []
+      if (listType === 'groupTask') return this.groupTaskHistoryList || []
+      return []
+    },
+    setHistoryListByType(listType, list) {
+      if (listType === 'task') this.$set(this, 'taskHistoryList', list)
+      if (listType === 'agentTask') this.$set(this, 'agentDetailsTaskHistoryList', list)
+      if (listType === 'agentGroupTask') this.$set(this, 'agentDetailsGroupTaskHistoryList', list)
+      if (listType === 'groupTask') this.$set(this, 'groupTaskHistoryList', list)
+    },
+    startTaskHistoryStream(listType, chatTaskId) {
+      if (!listType || !chatTaskId || typeof EventSource === 'undefined') {
+        this.pollGetTaskHistoryData(listType, this.getTaskRecordListData, chatTaskId)
+        return
+      }
+
+      this.closeTaskHistoryStream(listType)
+      const streamUrl = `/api/Senparc.Xncf.AgentsManager/ChatTaskStream/Subscribe?chatTaskId=${chatTaskId}&_ts=${Date.now()}`
+      const source = new EventSource(streamUrl, { withCredentials: true })
+      this.historyStream[listType] = source
+
+      const onChunk = (event) => {
+        this.upsertTaskStreamChunk(listType, event)
+      }
+      const onMessage = (event) => {
+        this.flushTaskStreamMessage(listType, event)
+      }
+      const onStatus = (event) => {
+        const payload = this.safeParseStreamEvent(event)
+        if (!payload || !payload.text) return
+
+        const statusText = String(payload.text).toLowerCase()
+        const finishedStates = ['finished', 'cancelled']
+        if (finishedStates.includes(statusText)) {
+          this.closeTaskHistoryStream(listType)
+        }
+      }
+
+      source.addEventListener('chunk', onChunk)
+      source.addEventListener('message', onMessage)
+      source.addEventListener('status', onStatus)
+
+      source.onerror = () => {
+        this.closeTaskHistoryStream(listType)
+        this.pollGetTaskHistoryData(listType, this.getTaskRecordListData, chatTaskId)
+      }
+    },
+    safeParseStreamEvent(event) {
+      if (!event || !event.data) return null
+      try {
+        return JSON.parse(event.data)
+      } catch (e) {
+        console.error('stream parse error', e, event.data)
+        return null
+      }
+    },
+    upsertTaskStreamChunk(listType, event) {
+      const payload = this.safeParseStreamEvent(event)
+      if (!payload || !payload.responseId) return
+
+      const draftKey = `${listType}:${payload.responseId}`
+      const historyList = this.getHistoryListByType(listType).slice()
+      const existedIndex = historyList.findIndex(item => item.id === draftKey)
+      const agentInfo = this.getTaskSenderInfo(listType, payload.fromAgentTemplateId || 0) || {}
+      const oldMessage = existedIndex > -1 ? (historyList[existedIndex].message || '') : ''
+      const mergedMessage = `${oldMessage}${payload.text || ''}`
+
+      const draftItem = {
+        id: draftKey,
+        fromAgentTemplateId: payload.fromAgentTemplateId || 0,
+        addTime: payload.timestamp ? new Date(payload.timestamp).toISOString() : new Date().toISOString(),
+        message: mergedMessage,
+        messageHtml: marked.parse(mergedMessage || ''),
+        promptTokens: payload.promptTokens || 0,
+        completionTokens: payload.completionTokens || 0,
+        totalTokens: payload.totalTokens || 0,
+        responseMilliseconds: payload.responseMilliseconds || 0,
+        roundIndex: payload.roundIndex || 0,
+        _streaming: true,
+        _streamAgentName: payload.fromAgentName || agentInfo.name || '',
+      }
+
+      if (existedIndex > -1) {
+        historyList.splice(existedIndex, 1, draftItem)
+      } else {
+        historyList.push(draftItem)
+      }
+
+      this.historyStreamingDrafts[draftKey] = draftItem
+      this.setHistoryListByType(listType, historyList)
+      this.$nextTick(() => {
+        const scrollbarMap = {
+          task: 'taskHistoryScrollbar',
+          agentTask: 'agentDetailsTaskHistoryScrollbar',
+          agentGroupTask: 'agentDetailsGroupTaskHistoryScrollbar',
+          groupTask: 'groupTaskHistoryScrollbar'
+        }
+        const refName = scrollbarMap[listType]
+        if (refName) {
+          this.scrollbarDown(refName, true, false)
+        }
+      })
+    },
+    flushTaskStreamMessage(listType, event) {
+      const payload = this.safeParseStreamEvent(event)
+      if (!payload) return
+
+      const draftKey = payload.responseId ? `${listType}:${payload.responseId}` : ''
+      const historyList = this.getHistoryListByType(listType).slice()
+      if (draftKey) {
+        const draftIndex = historyList.findIndex(item => item.id === draftKey)
+        if (draftIndex > -1) {
+          historyList.splice(draftIndex, 1)
+        }
+        delete this.historyStreamingDrafts[draftKey]
+      }
+
+      const message = payload.text || ''
+      const finalItem = {
+        id: payload.historyId || `${draftKey || 'msg'}:${Date.now()}`,
+        fromAgentTemplateId: payload.fromAgentTemplateId || 0,
+        addTime: payload.timestamp ? new Date(payload.timestamp).toISOString() : new Date().toISOString(),
+        message,
+        messageHtml: marked.parse(message),
+        promptTokens: payload.promptTokens || 0,
+        completionTokens: payload.completionTokens || 0,
+        totalTokens: payload.totalTokens || 0,
+        responseMilliseconds: payload.responseMilliseconds || 0,
+        roundIndex: payload.roundIndex || 0
+      }
+      historyList.push(finalItem)
+
+      this.setHistoryListByType(listType, historyList)
+      this.$nextTick(() => {
+        const scrollbarMap = {
+          task: 'taskHistoryScrollbar',
+          agentTask: 'agentDetailsTaskHistoryScrollbar',
+          agentGroupTask: 'agentDetailsGroupTaskHistoryScrollbar',
+          groupTask: 'groupTaskHistoryScrollbar'
+        }
+        const refName = scrollbarMap[listType]
+        if (refName) {
+          this.scrollbarDown(refName, true, false)
+        }
+      })
+    },
+    closeTaskHistoryStream(listType) {
+      const source = this.historyStream[listType]
+      if (source) {
+        source.close()
+      }
+      this.$delete(this.historyStream, listType)
+    },
+    clearTaskHistoryStreams() {
+      Object.keys(this.historyStream || {}).forEach((key) => {
+        this.closeTaskHistoryStream(key)
+      })
+      this.historyStreamingDrafts = {}
+    },
     // 清除 获取历史对话记录 的轮询
     clearHistoryTimer() {
       for (const key in this.historyTimer) {
@@ -1760,6 +2023,7 @@ var app = new Vue({
           }
         }
       }
+      this.clearTaskHistoryStreams()
     },
 
     // 编辑 Dailog|抽屉 按钮 

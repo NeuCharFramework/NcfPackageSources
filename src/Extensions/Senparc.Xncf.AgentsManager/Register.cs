@@ -101,6 +101,7 @@ namespace Senparc.Xncf.AgentsManager
             services.AddSingleton<PromptOptimizationAgentBridge>();
             services.AddScoped<PromptOptimizationKernelFallbackService>();
             services.AddScoped<PromptOptimizationService>(); // 注册 PromptOptimizationService
+            services.AddSingleton<ChatTaskStreamHub>();
             services.AddScoped<ChatGroupService>();
             services.AddScoped<ChatGroupHistoryService>();
             services.AddScoped<ChatTaskService>();

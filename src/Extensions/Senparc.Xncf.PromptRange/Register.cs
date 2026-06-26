@@ -108,6 +108,7 @@ namespace Senparc.Xncf.PromptRange
             services.AddScoped<PromptResultService>();
             services.AddScoped<PromptResultChatService>();
             services.AddScoped<LlModelService>();
+            services.AddSingleton<PromptResultStreamHub>();
 
             services.AddAutoMapper(z =>
             {

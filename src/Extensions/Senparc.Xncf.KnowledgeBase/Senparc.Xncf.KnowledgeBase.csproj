@@ -53,4 +53,5 @@
   <ItemGroup>
     <None Include="App_Data\Database\SenparcConfig.config" />
   </ItemGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\Senparc.AI.AgentKernel.props" />
 </Project>

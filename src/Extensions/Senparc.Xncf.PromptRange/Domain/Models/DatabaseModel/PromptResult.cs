@@ -171,6 +171,29 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
 
             return this;
         }
+
+        /// <summary>
+        /// 累计会话 Token 用量，并更新最后一次响应耗时/结果。
+        /// </summary>
+        public PromptResult AppendUsageAndResult(int promptTokens, int completionTokens, int totalTokens, double costTime, string latestResult)
+        {
+            PromptCostToken += Math.Max(0, promptTokens);
+            ResultCostToken += Math.Max(0, completionTokens);
+
+            var safeTotal = Math.Max(0, totalTokens);
+            if (safeTotal <= 0)
+            {
+                safeTotal = Math.Max(0, promptTokens) + Math.Max(0, completionTokens);
+            }
+            TotalCostToken += safeTotal;
+
+            CostTime = costTime;
+            if (!string.IsNullOrWhiteSpace(latestResult))
+            {
+                ResultString = latestResult;
+            }
+            return this;
+        }
     }
 
     /// <summary>

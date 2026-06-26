@@ -18,5 +18,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         /// </summary>
         [Required]
         public string UserMessage { get; set; }
+
+        /// <summary>
+        /// 流式输出会话 ID（可选）
+        /// </summary>
+        public string StreamId { get; set; }
     }
 }

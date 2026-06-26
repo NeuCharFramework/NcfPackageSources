@@ -7,6 +7,7 @@
 		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
 		<DocumentationFile>../Senparc.Web/App_Data/ApiDocXml/Senparc.Areas.Admin.XML</DocumentationFile>
 		<Configurations>Debug;Release;Debug-Dapr;ModifyPublish;ModifyPublish</Configurations>
+		<NoWarn>$(NoWarn);MEAI001</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -63,4 +64,5 @@
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj" />
 	</ItemGroup>
+	<Import Project="$(MSBuildThisFileDirectory)..\..\..\src\Senparc.AI.AgentKernel.props" />
 </Project>

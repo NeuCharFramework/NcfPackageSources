@@ -440,6 +440,7 @@
                     <div class="promptResult_Item_Title">
                         <div class="promptReultTimeArea">
                             <span>{{item.addTime}} [耗时(毫秒):{{item.costTime}}]</span>
+                            <span style="margin-left: 10px; color: #409EFF;">Token: {{item.totalCostToken || 0}}（输入 {{item.promptCostToken || 0}} / 输出 {{item.resultCostToken || 0}}）</span>
                         </div>
                         <div class="copyButtonArea">
                             <a href="javascript:void(0);" @@click="copyPromptResult(item,false)" title="复制带格式的 HTML 代码"><i class="fa fa-copy"></i> HTML</a>
@@ -701,6 +702,9 @@
                                 <div class="system-message-content">{{ continueChatSystemMessage || '加载中...' }}</div>
                             </el-collapse-item>
                         </el-collapse>
+                    </div>
+                    <div v-if="continueChatMode" style="padding: 8px 12px; margin-bottom: 10px; background: #f5f7fa; border-radius: 6px; color: #606266;">
+                        Token 总量：{{ continueChatUsageSummary.totalCostToken || 0 }}（输入 {{ continueChatUsageSummary.promptCostToken || 0 }} / 输出 {{ continueChatUsageSummary.resultCostToken || 0 }}）
                     </div>
                     <div v-if="continueChatHistory.length === 0" class="chat-empty-tip">
                         <i class="el-icon-chat-line-round"></i>

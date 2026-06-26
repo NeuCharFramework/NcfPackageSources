@@ -1,6 +1,4 @@
-﻿using AutoGen.Anthropic.DTO;
-using Microsoft.Identity.Client;
-using Microsoft.SemanticKernel;
+﻿using Microsoft.SemanticKernel;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 using Senparc.AI.Entities;

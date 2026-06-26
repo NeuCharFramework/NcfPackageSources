@@ -19,19 +19,19 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         //[ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
-        public async Task CreateHistory(ChatGroupHistoryDto chatGroupHistoryDto)
+        public async Task<ChatGroupHistory> CreateHistory(ChatGroupHistoryDto chatGroupHistoryDto)
         {
             try
             {
                 ChatGroupHistory chatGroupHistory = new ChatGroupHistory(chatGroupHistoryDto);
                 await base.SaveObjectAsync(chatGroupHistory);
+                return chatGroupHistory;
             }
             catch (Exception ex)
             {
                 new AgentsManagerException(ex.Message, ex, false);
-                //throw;
+                throw;
             }
-
         }
 
         /// <summary>

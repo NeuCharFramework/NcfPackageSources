@@ -96,4 +96,5 @@
 	  <Folder Include="Domain\Models\DatabaseModel\" />
 	  <Folder Include="Domain\Models\MultipleDatabase\" />
 	</ItemGroup>
+	<Import Project="$(MSBuildThisFileDirectory)..\..\..\src\Senparc.AI.AgentKernel.props" />
 </Project>

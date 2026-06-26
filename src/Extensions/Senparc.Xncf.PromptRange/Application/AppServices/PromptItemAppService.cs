@@ -31,14 +31,17 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         // private readonly RepositoryBase<PromptItem> _promptItemRepository;
         private readonly PromptItemService _promptItemService;
         private readonly PromptResultService _promptResultService;
+        private readonly PromptResultStreamHub _promptResultStreamHub;
 
         /// <inheritdoc />
         public PromptItemAppService(IServiceProvider serviceProvider,
             PromptItemService promptItemService,
-            PromptResultService promptResultService) : base(serviceProvider)
+            PromptResultService promptResultService,
+            PromptResultStreamHub promptResultStreamHub) : base(serviceProvider)
         {
             _promptItemService = promptItemService;
             _promptResultService = promptResultService;
+            _promptResultStreamHub = promptResultStreamHub;
         }
 
         /// <summary>
@@ -82,6 +85,19 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     ResultMode? firstResultMode = null;
                     string firstUserMessage = request.UserMessage;
                     List<Domain.Services.ChatMessageDto> firstChatHistory = chatHistory;
+                    Action<PromptResultStreamEvent> streamCallback = null;
+                    if (!string.IsNullOrWhiteSpace(request.StreamId))
+                    {
+                        streamCallback = streamEvent =>
+                        {
+                            if (streamEvent == null)
+                            {
+                                return;
+                            }
+                            streamEvent.StreamId = request.StreamId;
+                            _promptResultStreamHub.Publish(streamEvent);
+                        };
+                    }
                     
                     for (var i = 0; i < request.NumsOfResults; i++)
                     {
@@ -106,7 +122,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         // 如果第一个结果是 Single 模式，后续也使用 Single 模式（currentUserMessage 为 null）
                         
                         // 分别生成结果
-                        PromptResultDto promptResult = await _promptResultService.SenparcGenerateResultAsync(savedPromptItem, currentUserMessage, currentChatHistory);
+                        PromptResultDto promptResult = await _promptResultService.SenparcGenerateResultAsync(
+                            savedPromptItem,
+                            currentUserMessage,
+                            currentChatHistory,
+                            streamCallback);
                         
                         // 记录第一个结果的模式
                         if (i == 0)
@@ -116,6 +136,16 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         }
                         
                         promptItemResponseDto.PromptResultList.Add(promptResult);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(request.StreamId))
+                    {
+                        _promptResultStreamHub.Publish(new PromptResultStreamEvent
+                        {
+                            StreamId = request.StreamId,
+                            EventType = "complete",
+                            IsFinal = true
+                        });
                     }
 
                     await _promptResultService.UpdateEvalScoreAsync(savedPromptItem.Id);

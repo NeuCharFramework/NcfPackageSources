@@ -84,7 +84,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// <param name="chatHistory"></param>
         /// <returns></returns>
         /// <exception cref="NcfExceptionBase"></exception>
-        public async Task<PromptResultDto> SenparcGenerateResultAsync(PromptItemDto promptItem, string userMessage = null, List<ChatMessageDto> chatHistory = null)
+        public async Task<PromptResultDto> SenparcGenerateResultAsync(
+            PromptItemDto promptItem,
+            string userMessage = null,
+            List<ChatMessageDto> chatHistory = null,
+            Action<PromptResultStreamEvent> onStreamEvent = null)
         {
             // 需要在变量前添加$
             //string completionPrompt = $@"请根据提示输出对应内容:
@@ -187,28 +191,53 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             #endregion
             SenparcAiResult aiResult = null;
+            UsageDetails streamUsageDetails = null;
             var dt1 = SystemTime.Now;
+            void HandleStreamUpdate(AgentResponseUpdate update)
+            {
+                if (update == null)
+                {
+                    return;
+                }
+
+                if (!string.IsNullOrEmpty(update.Text) && onStreamEvent != null)
+                {
+                    onStreamEvent(new PromptResultStreamEvent
+                    {
+                        EventType = "chunk",
+                        Text = update.Text,
+                        IsFinal = false
+                    });
+                }
+
+                if (update.Contents?.FirstOrDefault(z => z is UsageContent) is UsageContent usageContent
+                    && usageContent.Details != null)
+                {
+                    streamUsageDetails = usageContent.Details;
+                }
+            }
+
             if (userMessage != null)
             {
-                aiResult = await iWantToRun.RunChatAsync(userMessage, agentSession);
+                aiResult = onStreamEvent == null
+                    ? await iWantToRun.RunChatAsync(userMessage, agentSession)
+                    : await iWantToRun.RunChatAsync(userMessage, agentSession, HandleStreamUpdate);
             }
             else if (variableDic.ContainsKey("input"))
             {
                 //var aiRequest = iWantToRun.CreateRequest(aiArguments, true);
                 //TODO: 需要从原来的 aiArguments 中获取，如input信息
-                aiResult = await iWantToRun.RunChatAsync(variableDic["input"], agentSession);
+                aiResult = onStreamEvent == null
+                    ? await iWantToRun.RunChatAsync(variableDic["input"], agentSession)
+                    : await iWantToRun.RunChatAsync(variableDic["input"], agentSession, HandleStreamUpdate);
             }
             else
             {
                 throw new Exception("请提供 userMessage！");
             }
-            // todo 计算token消耗
-            // 简单计算
-            // num_prompt_tokens = len(encoding.encode(string))
-            // gap_between_send_receive = 15 * len(kwargs["messages"])
-            // num_prompt_tokens += gap_between_send_receive
-            var promptCostToken = 0;
-            var resultCostToken = 0;
+            var usageInfo = PromptUsageHelper.ResolveUsage(streamUsageDetails ?? TryGetUsageFromResult(aiResult));
+            var promptCostToken = usageInfo.PromptTokens;
+            var resultCostToken = usageInfo.CompletionTokens;
 
             // 判断是否为聊天模式
             var isChatMode = userMessage != null;
@@ -249,6 +278,21 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 await this.RobotScoringAsync(promptResult.Id, false, promptItem.ExpectedResultsJson);
             }
 
+            if (onStreamEvent != null)
+            {
+                onStreamEvent(new PromptResultStreamEvent
+                {
+                    EventType = "final",
+                    PromptResultId = promptResult.Id,
+                    Text = aiResult.OutputString,
+                    IsFinal = true,
+                    PromptTokens = promptCostToken,
+                    CompletionTokens = resultCostToken,
+                    TotalTokens = usageInfo.TotalTokens,
+                    ResponseMilliseconds = (int)Math.Round(promptResult.CostTime)
+                });
+            }
+
             return this.Mapper.Map<PromptResultDto>(promptResult);
         }
 
@@ -258,7 +302,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// <param name="promptResultId">现有的 PromptResult ID</param>
         /// <param name="userMessage">用户消息</param>
         /// <returns>返回新追加的对话记录（用户消息和 AI 回复）</returns>
-        public async Task<List<PromptResultChatDto>> ContinueChatAsync(int promptResultId, string userMessage)
+        public async Task<List<PromptResultChatDto>> ContinueChatAsync(
+            int promptResultId,
+            string userMessage,
+            Action<PromptResultStreamEvent> onStreamEvent = null)
         {
             if (string.IsNullOrWhiteSpace(userMessage))
             {
@@ -330,12 +377,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             // 构建生成AI设置
             SenparcAiSetting aiSettings = _aiModelService.Value.BuildSenparcAiSetting(model);
 
-            ConfigModel configModel = _llModelService.ConvertToConfigModel(model.ConfigModelType);
-
             // 创建 AI Handler 处理器
             var handler = new AgentAiHandler(aiSettings);
-
-            var hisgoryArgName = "history";
 
             var chatOptions = _promptItemService.GetChatOptions(promptItem, completionPrompt);
             var iWantToRun = await handler.IWantTo()
@@ -350,8 +393,37 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             // 调用 AI 接口
             var dt1 = SystemTime.Now;
-            var aiResult = await iWantToRun.RunChatAsync(userMessage);
+            UsageDetails streamUsageDetails = null;
+            void HandleStreamUpdate(AgentResponseUpdate update)
+            {
+                if (update == null)
+                {
+                    return;
+                }
+
+                if (!string.IsNullOrEmpty(update.Text) && onStreamEvent != null)
+                {
+                    onStreamEvent(new PromptResultStreamEvent
+                    {
+                        EventType = "chunk",
+                        PromptResultId = promptResultId,
+                        Text = update.Text,
+                        IsFinal = false
+                    });
+                }
+
+                if (update.Contents?.FirstOrDefault(z => z is UsageContent) is UsageContent usageContent
+                    && usageContent.Details != null)
+                {
+                    streamUsageDetails = usageContent.Details;
+                }
+            }
+
+            var aiResult = onStreamEvent == null
+                ? await iWantToRun.RunChatAsync(userMessage, iWantToRun.Kernel.AgentSession)
+                : await iWantToRun.RunChatAsync(userMessage, iWantToRun.Kernel.AgentSession, HandleStreamUpdate);
             var costTime = SystemTime.DiffTotalMS(dt1);
+            var usageInfo = PromptUsageHelper.ResolveUsage(streamUsageDetails ?? TryGetUsageFromResult(aiResult));
 
             // 追加新的对话记录到 PromptResultChat
             var newChatMessages = new List<ChatMessageDto>
@@ -363,10 +435,28 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             // 添加新的对话记录（会自动从现有最大序号+1开始）
             var newChatDtos = await _promptResultChatService.AddChatMessagesAsync(promptResultId, newChatMessages);
 
-            // 更新 PromptResult 的 ResultString（追加新的回复）
-            // 注意：由于 ResultString 是 private set，我们需要通过反射或者添加一个更新方法
-            // 这里我们暂时不更新 ResultString，因为对话记录已经保存在 PromptResultChat 中了
-            // 如果需要更新，可以添加一个 UpdateResultString 方法
+            promptResult.AppendUsageAndResult(
+                usageInfo.PromptTokens,
+                usageInfo.CompletionTokens,
+                usageInfo.TotalTokens,
+                costTime,
+                aiResult.OutputString);
+            await base.SaveObjectAsync(promptResult);
+
+            if (onStreamEvent != null)
+            {
+                onStreamEvent(new PromptResultStreamEvent
+                {
+                    EventType = "final",
+                    PromptResultId = promptResultId,
+                    Text = aiResult.OutputString,
+                    IsFinal = true,
+                    PromptTokens = usageInfo.PromptTokens,
+                    CompletionTokens = usageInfo.CompletionTokens,
+                    TotalTokens = usageInfo.TotalTokens,
+                    ResponseMilliseconds = (int)Math.Round(costTime)
+                });
+            }
 
             return newChatDtos;
         }
@@ -597,6 +687,24 @@ Apple
             }
 
             return true;
+        }
+
+        private static UsageDetails TryGetUsageFromResult(SenparcAiResult aiResult)
+        {
+            if (aiResult == null)
+            {
+                return null;
+            }
+
+            var resultProperty = aiResult.GetType().GetProperty("Result");
+            var resultObject = resultProperty?.GetValue(aiResult);
+            if (resultObject == null)
+            {
+                return null;
+            }
+
+            var usageProperty = resultObject.GetType().GetProperty("Usage");
+            return usageProperty?.GetValue(resultObject) as UsageDetails;
         }
 
         /// <summary>

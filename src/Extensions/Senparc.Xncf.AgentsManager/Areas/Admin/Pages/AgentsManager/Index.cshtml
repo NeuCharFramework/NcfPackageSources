@@ -407,6 +407,8 @@
                                             <div class="task-header_right">
                                                 <el-button type="primary" size="mini"
                                                     @@click="viewAgentParameters('agentGroupTask')">智能体参数</el-button>
+                                                <el-button type="info" size="mini"
+                                                    @@click="openUsageAnalytics('agentGroupTask',agentDetailsGroupDetailsTaskDetails)">用量统计</el-button>
                                                 <el-button type="primary" size="mini"
                                                     @@click="handleTaskAgain('agentGroupTask',agentDetailsGroupDetailsTaskDetails)">再次执行</el-button>
                                                 <el-button type="warning" size="mini"
@@ -475,6 +477,7 @@
                                                                 }}</span>
                                                             <span class="time">{{ ritem.addTime | showFormatDate
                                                                 }}</span>
+                                                            <span class="usage" v-if="ritem.totalTokens || ritem.responseMilliseconds">{{ formatTaskHistoryUsage(ritem) }}</span>
                                                         </div>
                                                         <task-html-renderer :content="ritem.messageHtml" />
                                                     </div>
@@ -523,6 +526,8 @@
                                         <div class="task-header_right">
                                             <el-button type="primary" size="mini"
                                                 @@click="viewAgentParameters('agentTask')">智能体参数</el-button>
+                                            <el-button type="info" size="mini"
+                                                @@click="openUsageAnalytics('agentTask',agentDetailsTaskDetails)">用量统计</el-button>
                                             <el-button type="primary" size="mini"
                                                 @@click="handleTaskAgain('agentTask',agentDetailsTaskDetails)">再次执行</el-button>
                                         </div>
@@ -585,6 +590,7 @@
                                                             getTaskSenderInfo('agentTask',ritem.fromAgentTemplateId).name
                                                             }}</span>
                                                         <span class="time">{{ ritem.addTime | showFormatDate }}</span>
+                                                        <span class="usage" v-if="ritem.totalTokens || ritem.responseMilliseconds">{{ formatTaskHistoryUsage(ritem) }}</span>
                                                     </div>
                                                     <task-html-renderer :content="ritem.messageHtml" />
                                                 </div>
@@ -845,6 +851,8 @@
                             <div class="task-header_right">
                                 <el-button type="primary" size="mini"
                                     @@click="viewAgentParameters('groupTask')">智能体参数</el-button>
+                                <el-button type="info" size="mini"
+                                    @@click="openUsageAnalytics('groupTask',groupTaskDetails)">用量统计</el-button>
                                 <el-button type="primary" size="mini"
                                     @@click="handleTaskAgain('groupTask',groupTaskDetails)">再次执行</el-button>
                                 <el-button type="warning" size="mini"
@@ -907,6 +915,7 @@
                                             <span class="name">{{
                                                 getTaskSenderInfo('groupTask',ritem.fromAgentTemplateId).name }}</span>
                                             <span class="time">{{ ritem.addTime | showFormatDate }}</span>
+                                            <span class="usage" v-if="ritem.totalTokens || ritem.responseMilliseconds">{{ formatTaskHistoryUsage(ritem) }}</span>
                                         </div>
                                         <task-html-renderer :content="ritem.messageHtml" />
                                     </div>
@@ -1066,6 +1075,8 @@
                         <div class="task-header_right">
                             <el-button type="primary" size="mini"
                                 @@click="viewAgentParameters('taskDetail')">智能体参数</el-button>
+                            <el-button type="info" size="mini"
+                                @@click="openUsageAnalytics('task',taskDetails)">用量统计</el-button>
                             <el-button type="primary" size="mini"
                                 @@click="handleTaskAgain('task',taskDetails)">再次执行</el-button>
                             <el-button type="warning" size="mini"
@@ -1124,6 +1135,7 @@
                                             <span class="name">{{
                                                 getTaskSenderInfo('task',ritem.fromAgentTemplateId).name }}</span>
                                             <span class="time">{{ ritem.addTime | showFormatDate }}</span>
+                                            <span class="usage" v-if="ritem.totalTokens || ritem.responseMilliseconds">{{ formatTaskHistoryUsage(ritem) }}</span>
                                         </div>
                                         <task-html-renderer :content="ritem.messageHtml" />
                                     </div>
@@ -1155,6 +1167,87 @@
         </div>
     </el-tab-pane>
 </el-tabs>
+
+<el-dialog title="任务用量统计" :visible.sync="usageAnalyticsVisible" width="86%" :close-on-click-modal="false">
+    <div class="usage-analytics-toolbar">
+        <span class="usage-analytics-title">任务：{{ usageAnalyticsTaskName }}（#{{ usageAnalyticsTaskId }}）</span>
+        <el-date-picker
+            v-model="usageAnalyticsDateRange"
+            type="datetimerange"
+            range-separator="至"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            size="mini">
+        </el-date-picker>
+        <el-select v-model="usageAnalyticsAgentId" clearable filterable size="mini" placeholder="全部 Agents">
+            <el-option v-for="item in usageAnalyticsAgentOptions" :key="'usage-agent-' + item.id" :label="item.name" :value="item.id"></el-option>
+        </el-select>
+        <el-button size="mini" type="primary" @@click="loadUsageAnalytics">查询</el-button>
+        <el-button size="mini" @@click="resetUsageAnalyticsFilters">重置</el-button>
+    </div>
+
+    <div class="usage-analytics-overview" v-loading="usageAnalyticsLoading">
+        <div class="usage-card">
+            <div class="label">消息总数</div>
+            <div class="value">{{ usageAnalyticsData.overview.messageCount || 0 }}</div>
+        </div>
+        <div class="usage-card">
+            <div class="label">总 Token</div>
+            <div class="value">{{ usageAnalyticsData.overview.totalTokens || 0 }}</div>
+        </div>
+        <div class="usage-card">
+            <div class="label">输入 / 输出 Token</div>
+            <div class="value">{{ usageAnalyticsData.overview.promptTokens || 0 }} / {{ usageAnalyticsData.overview.completionTokens || 0 }}</div>
+        </div>
+        <div class="usage-card">
+            <div class="label">平均响应时长</div>
+            <div class="value">{{ Number(usageAnalyticsData.overview.averageResponseMilliseconds || 0).toFixed(1) }} ms</div>
+        </div>
+        <div class="usage-card">
+            <div class="label">P95 / 最大时长</div>
+            <div class="value">{{ usageAnalyticsData.overview.p95ResponseMilliseconds || 0 }} / {{ usageAnalyticsData.overview.maxResponseMilliseconds || 0 }} ms</div>
+        </div>
+    </div>
+
+    <el-tabs>
+        <el-tab-pane label="单轮对话">
+            <el-table :data="usageAnalyticsData.roundStats" size="mini" height="280">
+                <el-table-column prop="roundIndex" label="轮次" width="80"></el-table-column>
+                <el-table-column prop="messageCount" label="消息数" width="90"></el-table-column>
+                <el-table-column prop="promptTokens" label="输入 Token" width="110"></el-table-column>
+                <el-table-column prop="completionTokens" label="输出 Token" width="110"></el-table-column>
+                <el-table-column prop="totalTokens" label="总 Token" width="110"></el-table-column>
+                <el-table-column label="平均响应(ms)">
+                    <template slot-scope="{ row }">{{ Number(row.averageResponseMilliseconds || 0).toFixed(1) }}</template>
+                </el-table-column>
+            </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="单个 Agents">
+            <el-table :data="usageAnalyticsData.agentStats" size="mini" height="280">
+                <el-table-column prop="agentTemplateId" label="Agent ID" width="95"></el-table-column>
+                <el-table-column prop="agentName" label="Agent"></el-table-column>
+                <el-table-column prop="messageCount" label="消息数" width="90"></el-table-column>
+                <el-table-column prop="totalTokens" label="总 Token" width="120"></el-table-column>
+                <el-table-column label="平均响应(ms)" width="140">
+                    <template slot-scope="{ row }">{{ Number(row.averageResponseMilliseconds || 0).toFixed(1) }}</template>
+                </el-table-column>
+            </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="按时间统计">
+            <el-table :data="usageAnalyticsData.timelineStats" size="mini" height="280">
+                <el-table-column label="时间桶（小时）" min-width="180">
+                    <template slot-scope="{ row }">{{ row.bucketTime | showFormatDate }}</template>
+                </el-table-column>
+                <el-table-column prop="messageCount" label="消息数" width="90"></el-table-column>
+                <el-table-column prop="totalTokens" label="总 Token" width="120"></el-table-column>
+                <el-table-column label="平均响应(ms)" width="140">
+                    <template slot-scope="{ row }">{{ Number(row.averageResponseMilliseconds || 0).toFixed(1) }}</template>
+                </el-table-column>
+            </el-table>
+        </el-tab-pane>
+    </el-tabs>
+</el-dialog>
 
 @* 抽屉 新增|编辑 智能体 540px *@
 <el-drawer :visible.sync="visible.drawerAgent" direction="rtl" :with-header="false" :wrapper-closable="false"
