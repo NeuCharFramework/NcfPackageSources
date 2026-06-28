@@ -11,13 +11,18 @@ namespace Senparc.Xncf.AreaBase.Admin.Filters
     public class ApiAuthorizeAttribute : AuthorizeAttribute
     {
         /// <summary>
+        /// 与 Admin 后台 JWT 注册方案一致（Register.cs 中 AddJwtBearer("Bearer_Backend")）
+        /// </summary>
+        public const string JwtBearerScheme = "Bearer_Backend";
+
+        /// <summary>
         /// 默认构造函数，支持 Cookie 和 JWT 两种认证方式
         /// </summary>
         public ApiAuthorizeAttribute()
         {
             // 支持多种认证方案：Admin Cookie 认证 和 JWT Bearer 认证
             // 只要任一方案通过，即可访问
-            base.AuthenticationSchemes = $"{AdminAuthorizeAttribute.AuthenticationScheme},Bearer";
+            base.AuthenticationSchemes = $"{AdminAuthorizeAttribute.AuthenticationScheme},{JwtBearerScheme}";
         }
 
         /// <summary>

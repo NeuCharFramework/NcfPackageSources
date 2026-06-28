@@ -177,8 +177,15 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// <returns></returns>
         public List<ChatMessage> GetChatMessageList(List<PromptResultChatDto> promptResultDtos)
         {
+            if (promptResultDtos == null || promptResultDtos.Count == 0)
+            {
+                return new List<ChatMessage>();
+            }
+
             var list = promptResultDtos.Select(z =>
-                new ChatMessage(new ChatRole(z.RoleType.ToString()), z.Content)
+                new ChatMessage(
+                    z.RoleType == ChatRoleType.User ? ChatRole.User : ChatRole.Assistant,
+                    z.Content ?? string.Empty)
             ).ToList();
             return list;
         }

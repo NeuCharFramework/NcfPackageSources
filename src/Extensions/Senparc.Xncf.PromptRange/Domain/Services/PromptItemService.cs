@@ -510,7 +510,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
             TopP = promptItem.TopP,
             FrequencyPenalty = promptItem.FrequencyPenalty,
             PresencePenalty = promptItem.PresencePenalty,
-            StopSequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>(),
+            StopSequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>() ?? new List<string>(),
         };
 
         return promptParameter;
@@ -531,7 +531,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
             Temperature = promptItemDto.Temperature,
             PresencePenalty = promptItemDto.PresencePenalty,
             FrequencyPenalty = promptItemDto.FrequencyPenalty,
-            StopSequences = (promptItemDto.StopSequences ?? "[]").GetObject<List<string>>()
+            StopSequences = (promptItemDto.StopSequences ?? "[]").GetObject<List<string>>() ?? new List<string>()
         };
         return chatOptions;
     }

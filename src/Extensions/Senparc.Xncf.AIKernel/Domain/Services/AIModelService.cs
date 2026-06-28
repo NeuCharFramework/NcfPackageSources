@@ -220,7 +220,6 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             };
 
             var agentAiHandler = base._serviceProvider.GetService<AgentAiHandler>();
-            var chatConfig = agentAiHandler.IWantTo().ConfigModel(ConfigModel.Chat, "SenparcNCF");
             var chatOptions = new ChatClientAgentOptions()
             {
                 ChatOptions = new Microsoft.Extensions.AI.ChatOptions()
@@ -229,10 +228,14 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     MaxOutputTokens = promptConfigParameter.MaxTokens,
                     Temperature = (float?)promptConfigParameter.Temperature,
                     TopP = (float?)promptConfigParameter.TopP,
+                    StopSequences = promptConfigParameter.StopSequences ?? new List<string>()
                 },
+                ChatHistoryProvider = new InMemoryChatHistoryProvider(new InMemoryChatHistoryProviderOptions())
             };
 
-            var iWantToRun = await chatConfig.BuildKernelAsync(chatOptions);
+            var iWantToRun = await agentAiHandler.IWantTo()
+                .ConfigChatModel("SenparcNCF", chatOptions)
+                .BuildKernelWithAgentSessionAsync();
 
             //var request = iWantToRun.CreateRequest(prompt);
             var aiResult = await iWantToRun.RunChatAsync(prompt, agentSession);

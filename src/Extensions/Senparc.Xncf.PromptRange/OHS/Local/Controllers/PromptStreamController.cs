@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using Senparc.Xncf.AreaBase.Admin.Filters;
+using Senparc.Ncf.AreaBase.Admin.Filters;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using System.Text.Json;
 using System.Threading;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.PromptRange.OHS.Local.Controllers;
 
 [ApiController]
-[ApiAuthorize("AdminOnly")]
+[AdminAuthorize]
 [Route("api/Senparc.Xncf.PromptRange/[controller]/[action]")]
 public class PromptStreamController : ControllerBase
 {
@@ -26,7 +26,7 @@ public class PromptStreamController : ControllerBase
     {
         if (string.IsNullOrWhiteSpace(streamId))
         {
-            Response.StatusCode = 400;
+            Response.StatusCode = StatusCodes.Status400BadRequest;
             await Response.WriteAsync("streamId is required", cancellationToken);
             return;
         }
@@ -34,6 +34,10 @@ public class PromptStreamController : ControllerBase
         Response.Headers.CacheControl = "no-cache";
         Response.Headers.Connection = "keep-alive";
         Response.Headers.ContentType = "text/event-stream";
+
+        // 立即 flush，让 EventSource 收到 200 并触发 onopen
+        await Response.WriteAsync(": connected\n\n", cancellationToken);
+        await Response.Body.FlushAsync(cancellationToken);
 
         await foreach (var streamEvent in _streamHub.Subscribe(streamId, cancellationToken))
         {

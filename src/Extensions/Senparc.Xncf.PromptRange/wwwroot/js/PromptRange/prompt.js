@@ -799,34 +799,55 @@ var app = new Vue({
         },
         openPromptStream(streamId, mode = 'shoot') {
             if (!streamId || typeof EventSource === 'undefined') {
-                return
+                return Promise.resolve(false)
             }
 
             this.closePromptStream()
             this.promptStreamId = streamId
             this.promptStreaming = true
-            const source = new EventSource(`/api/Senparc.Xncf.PromptRange/PromptStream/Subscribe?streamId=${encodeURIComponent(streamId)}&_ts=${Date.now()}`, { withCredentials: true })
-            this.promptStreamSource = source
 
-            source.addEventListener('chunk', (event) => {
-                const payload = this.safeParsePromptStreamEvent(event)
-                if (!payload) return
-                this.handlePromptStreamChunk(payload, mode)
+            return new Promise((resolve) => {
+                const source = new EventSource(`/api/Senparc.Xncf.PromptRange/PromptStream/Subscribe?streamId=${encodeURIComponent(streamId)}&_ts=${Date.now()}`, { withCredentials: true })
+                this.promptStreamSource = source
+                let settled = false
+                const settle = (ok) => {
+                    if (settled) return
+                    settled = true
+                    clearTimeout(timeoutId)
+                    resolve(ok)
+                }
+                const timeoutId = setTimeout(() => settle(true), 8000)
+
+                source.addEventListener('chunk', (event) => {
+                    const payload = this.safeParsePromptStreamEvent(event)
+                    if (!payload) return
+                    this.handlePromptStreamChunk(payload, mode)
+                })
+
+                source.addEventListener('final', (event) => {
+                    const payload = this.safeParsePromptStreamEvent(event)
+                    if (!payload) return
+                    this.handlePromptStreamFinal(payload, mode)
+                })
+
+                source.addEventListener('complete', () => {
+                    this.closePromptStream()
+                })
+
+                source.onopen = () => settle(true)
+
+                source.onerror = () => {
+                    if (source.readyState === EventSource.CONNECTING) {
+                        return
+                    }
+                    if (source.readyState === EventSource.CLOSED && !settled) {
+                        settle(false)
+                    }
+                    if (source.readyState === EventSource.CLOSED) {
+                        this.closePromptStream()
+                    }
+                }
             })
-
-            source.addEventListener('final', (event) => {
-                const payload = this.safeParsePromptStreamEvent(event)
-                if (!payload) return
-                this.handlePromptStreamFinal(payload, mode)
-            })
-
-            source.addEventListener('complete', () => {
-                this.closePromptStream()
-            })
-
-            source.onerror = () => {
-                this.closePromptStream()
-            }
         },
         safeParsePromptStreamEvent(event) {
             if (!event || !event.data) return null
@@ -1370,7 +1391,7 @@ var app = new Vue({
         async continueChatSubmit(promptResultId, userMessage) {
             this.tacticalFormSubmitLoading = true
             const streamId = this.createPromptStreamId()
-            this.openPromptStream(streamId, 'continueChat')
+            await this.openPromptStream(streamId, 'continueChat')
             try {
                 this.removeContinueChatStreamingMessage()
                 const res = await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.ContinueChat`, {
@@ -1432,19 +1453,20 @@ var app = new Vue({
                         duration: 2000
                     })
                 } else {
+                    this.closePromptStream()
                     this.$message({
                         message: res.data.errorMessage || '继续聊天失败',
                         type: 'error'
                     })
                 }
             } catch (error) {
+                this.closePromptStream()
                 this.$message({
                     message: '继续聊天失败：' + (error.message || '未知错误'),
                     type: 'error'
                 })
                 this.removeContinueChatStreamingMessage()
             } finally {
-                this.closePromptStream()
                 this.tacticalFormSubmitLoading = false
             }
         },
@@ -6278,7 +6300,7 @@ var app = new Vue({
         async executeTargetShootWithChatMessage(userMessage) {
             this.tacticalFormSubmitLoading = true
             const streamId = this.createPromptStreamId()
-            this.openPromptStream(streamId, 'shoot')
+            await this.openPromptStream(streamId, 'shoot')
             
             // 保存 userMessage，用于后续连发时保持 Chat 模式
             this._lastUserMessage = userMessage || null
@@ -6412,6 +6434,7 @@ var app = new Vue({
                         await this.dealRapicFireHandel(this.numsOfResults - 1, id)
                     }
                 } else {
+                    this.closePromptStream()
                     this.$message({
                         message: res.data.errorMessage || res.data.data || 'Error',
                         type: 'error',
@@ -6419,6 +6442,7 @@ var app = new Vue({
                     })
                 }
             } catch (error) {
+                this.closePromptStream()
                 this.$message({
                     message: error?.message || '请求失败',
                     type: 'error',
@@ -6426,7 +6450,6 @@ var app = new Vue({
                 })
             } finally {
                 this.tacticalFormSubmitLoading = false
-                this.closePromptStream()
             }
         },
         checkUseRed(index,item, which) {
@@ -6730,7 +6753,7 @@ var app = new Vue({
             const params = { promptItemId, numsOfResults }
             const streamId = this.createPromptStreamId()
             params.streamId = streamId
-            this.openPromptStream(streamId, 'shoot')
+            await this.openPromptStream(streamId, 'shoot')
             // 如果提供了 userMessage，添加到参数中（用于保持 Chat 模式）
             if (userMessage) {
                 params.userMessage = userMessage
@@ -6759,7 +6782,7 @@ var app = new Vue({
                         this.outputList.push(normalized)
                     })
                     this.scrollToBtm()
-                }).finally(() => {
+                }).catch(() => {
                     this.closePromptStream()
                 })
         },

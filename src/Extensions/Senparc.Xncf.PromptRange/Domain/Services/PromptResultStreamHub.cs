@@ -9,7 +9,15 @@ namespace Senparc.Xncf.PromptRange.Domain.Services;
 
 public sealed class PromptResultStreamHub
 {
-    private readonly ConcurrentDictionary<string, ConcurrentDictionary<Guid, Channel<PromptResultStreamEvent>>> _subscribers = new(StringComparer.OrdinalIgnoreCase);
+    private sealed class StreamGroup
+    {
+        public readonly object Sync = new();
+        public readonly List<PromptResultStreamEvent> Buffer = new();
+        public readonly ConcurrentDictionary<Guid, Channel<PromptResultStreamEvent>> Subscribers = new();
+        public bool IsComplete;
+    }
+
+    private readonly ConcurrentDictionary<string, StreamGroup> _streams = new(StringComparer.OrdinalIgnoreCase);
 
     public async IAsyncEnumerable<PromptResultStreamEvent> Subscribe(
         string streamId,
@@ -20,10 +28,22 @@ public sealed class PromptResultStreamHub
             yield break;
         }
 
-        var group = _subscribers.GetOrAdd(streamId, _ => new ConcurrentDictionary<Guid, Channel<PromptResultStreamEvent>>());
+        var group = _streams.GetOrAdd(streamId, _ => new StreamGroup());
         var subscriptionId = Guid.NewGuid();
         var channel = Channel.CreateUnbounded<PromptResultStreamEvent>();
-        group[subscriptionId] = channel;
+        group.Subscribers[subscriptionId] = channel;
+
+        List<PromptResultStreamEvent> bufferedEvents;
+        lock (group.Sync)
+        {
+            bufferedEvents = new List<PromptResultStreamEvent>(group.Buffer);
+        }
+
+        foreach (var bufferedEvent in bufferedEvents)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            yield return bufferedEvent;
+        }
 
         try
         {
@@ -34,11 +54,8 @@ public sealed class PromptResultStreamHub
         }
         finally
         {
-            group.TryRemove(subscriptionId, out _);
-            if (group.IsEmpty)
-            {
-                _subscribers.TryRemove(streamId, out _);
-            }
+            group.Subscribers.TryRemove(subscriptionId, out _);
+            CleanupStreamIfFinished(streamId, group);
         }
     }
 
@@ -49,19 +66,44 @@ public sealed class PromptResultStreamHub
             return;
         }
 
-        if (!_subscribers.TryGetValue(streamEvent.StreamId, out var group) || group.IsEmpty)
+        var group = _streams.GetOrAdd(streamEvent.StreamId, _ => new StreamGroup());
+        lock (group.Sync)
+        {
+            group.Buffer.Add(streamEvent);
+            if (string.Equals(streamEvent.EventType, "complete", StringComparison.OrdinalIgnoreCase))
+            {
+                group.IsComplete = true;
+            }
+        }
+
+        if (group.Subscribers.IsEmpty)
         {
             return;
         }
 
-        foreach (var pair in group)
+        foreach (var pair in group.Subscribers)
         {
             if (!pair.Value.Writer.TryWrite(streamEvent))
             {
                 pair.Value.Writer.TryComplete();
-                group.TryRemove(pair.Key, out _);
+                group.Subscribers.TryRemove(pair.Key, out _);
             }
         }
+
+        if (group.IsComplete)
+        {
+            CleanupStreamIfFinished(streamEvent.StreamId, group);
+        }
+    }
+
+    private void CleanupStreamIfFinished(string streamId, StreamGroup group)
+    {
+        if (!group.IsComplete || !group.Subscribers.IsEmpty)
+        {
+            return;
+        }
+
+        _streams.TryRemove(streamId, out _);
     }
 }
 
