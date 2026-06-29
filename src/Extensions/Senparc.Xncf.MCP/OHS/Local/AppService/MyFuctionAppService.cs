@@ -1,6 +1,7 @@
 ﻿#pragma warning disable OPENAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
 using Azure.AI.OpenAI;
 using Azure.Core;
+using Microsoft.Agents.AI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
@@ -68,6 +69,27 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             return $"{DateTime.Now.AddHours(hours)}";
         }
 
+
+     [McpServerTool,Description("Bob's Lab")]
+    public static async Task<string> BobLab(string input)
+    {
+        var handler = new AgentAiHandler(Senparc.AI.Config.SenparcAiSetting);
+
+        var iWantToRun = await handler.IWantTo()
+            .ConfigChatModel("Bob", new ChatClientAgentOptions(){
+            ChatOptions = new ChatOptions()
+            {
+                Instructions = @"你是一个机器人，负责帮助我回答问题。回答问题之前，你需要完整复述一下我的完整问题。你需要使用 Markdown 格式输出答案，除了中文答案，同时需要用英文翻译一下。并且在开头使用符号#start，末尾使用结束符号#end，如：
+#start
+...
+#end"
+            }
+        }).BuildKernelWithAgentSessionAsync();
+
+        var startTime = DateTime.Now;
+        var result = await iWantToRun.RunChatAsync(input);
+        return result.OutputString + $"[Bob's Lab] - {input} /  {DateTime.Now}, 耗时：{SystemTime.DiffTotalMS(startTime)}毫秒";
+    }
 
     }
 

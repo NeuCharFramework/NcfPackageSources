@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Senparc.CO2NET;
+using Senparc.CO2NET.Trace;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
@@ -56,6 +57,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<PromptItem_AddResponse>(
                 async (response, logger) =>
                 {
+                    try
+                    {
                     // 新增promptItem
                     var savedPromptItem = await _promptItemService.AddPromptItemAsync(request);
                     // ?? throw new NcfExceptionBase("新增失败");
@@ -151,6 +154,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     await _promptResultService.UpdateEvalScoreAsync(savedPromptItem.Id);
 
                     return promptItemResponseDto;
+                    }catch(Exception ex)
+                    {
+                        SenparcTrace.BaseExceptionLog(ex);
+                        throw;
+                    }
                 }
             );
         }

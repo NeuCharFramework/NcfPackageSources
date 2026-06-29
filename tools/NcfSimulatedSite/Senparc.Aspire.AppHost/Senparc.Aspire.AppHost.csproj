@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Sdk Name="Aspire.AppHost.Sdk" Version="13.4.6" />
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsAspireHost>true</IsAspireHost>
@@ -10,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.2.2" />
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="13.4.6" />
     <PackageReference Include="Senparc.Ncf.Core" Version="0.23.14.7-preview" />
     <!--<PackageReference Include="Senparc.Ncf.Core" Version="0.23.3.4-preview1" />-->
 	  <!--<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />-->
@@ -18,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Senparc.Web\Senparc.Web.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.Accounts\Senparc.Xncf.Accounts.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.Installer.Interface\Senparc.Xncf.Installer.Interface.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.Installer\Senparc.Xncf.Installer.csproj" />
   </ItemGroup>

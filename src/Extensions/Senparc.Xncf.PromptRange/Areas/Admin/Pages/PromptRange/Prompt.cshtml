@@ -185,12 +185,32 @@
                     <el-button type="primary" :disabled=!isAIGrade size="mini" @@click="aiScoreFormOpenDialog">设置 AI 评分标准</el-button>
                     <el-switch active-color="#13ce66" inactive-color="#ff4949" v-model="isAIGrade" active-text="开" inactive-text="关"></el-switch>
                 </div>
+                <div style="padding-left: 15px; margin-top: 12px; display: flex; align-items: center; gap: 8px;">
+                    <span>{{ getPromptRangeText('streamOptionLabel') }}</span>
+                    <el-switch active-color="#13ce66"
+                               inactive-color="#ff4949"
+                               v-model="useStreamOutput"
+                               :active-text="getPromptRangeText('switchOn')"
+                               :inactive-text="getPromptRangeText('switchOff')"
+                               @@change="handleUseStreamOutputChange"></el-switch>
+                    <el-tooltip class="item" effect="dark" placement="top" :content="getPromptRangeText('streamOptionTooltip')">
+                        <i class="el-icon-warning-outline"></i>
+                    </el-tooltip>
+                </div>
             </div>
         </div>
         <div class="trapezoid" @@click="foldsidebar">
             <i class="el-icon-caret-right icon" style="position: absolute;top: 15px;" :class="{'sidebarview':foldsidebarShow}"></i>
         </div>
 
+        <div v-if="isPromptExecutionLoading" class="promptSectionLoaderMask">
+            <div class="loading">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
        
     </div>
     
@@ -385,6 +405,14 @@
 
 
             </div>
+            <div v-if="isPromptExecutionLoading" class="promptSectionLoaderMask">
+                <div class="loading">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
     </div>
     
     @* 中间和右侧区域之间的拖动分隔条 *@
@@ -438,16 +466,16 @@
             <div class="outputArea_contentBox" id="resultBox" @@scroll="handleResultScroll">
                 <div v-for="(item,index) in outputList" v-key="item.id" class="contentBoxItem" v-bind:class="{'contentBoxActiveItem':outputActive === index}" @@click="app.outputSelectSwitch(index)" :data-result-index="index">
                     <div class="promptResult_Item_Title">
-                        <div class="promptReultTimeArea">
-                            <span>{{item.addTime}} [耗时(毫秒):{{item.costTime}}]</span>
-                            <span style="margin-left: 10px; color: #409EFF;">Token: {{item.totalCostToken || 0}}（输入 {{item.promptCostToken || 0}} / 输出 {{item.resultCostToken || 0}}）</span>
-                        </div>
                         <div class="copyButtonArea">
                             <a href="javascript:void(0);" @@click="copyPromptResult(item,false)" title="复制带格式的 HTML 代码"><i class="fa fa-copy"></i> HTML</a>
                             <a href="javascript:void(0);" @@click="copyPromptResult(item,true)" title="复制原始内容（例如将复制 markdown 标记）"><i class="fa fa-copy"></i> 原始</a>
                         </div>
                     </div>
                     <div class="contentRow" v-html="item.resultStringHtml">
+                    </div>
+                    <div class="promptResultUsageRow" v-if="item.resultString.length>0">
+                        <span>{{item.addTime}} [耗时(毫秒):{{item.costTime}}]</span>
+                        <span class="promptResultUsageToken">Token: {{item.totalCostToken || 0}}（输入 {{item.promptCostToken || 0}} / 输出 {{item.resultCostToken || 0}}）</span>
                     </div>
                     <div class="operateRow" v-if="item.resultString.length>0">
                         <div class="operateRow_item" @@click="app.showRatingView(index,'1')">
@@ -1505,17 +1533,7 @@
             </el-button>
         </span>
     </el-dialog>
-    
-</div>
 
-
-<div v-if="isPageLoading" class="promptLoaderBox">
-    <div class="loading">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-    </div>
 </div>
 
 @section scripts {

@@ -63,8 +63,9 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\Senparc.AI.AgentKernel.props" />
   <ItemGroup>
-    <PackageReference Include="Senparc.AI.Kernel" Version="0.29.0" />
+    <PackageReference Include="Senparc.AI.Kernel" Version="$(SenparcAiKernelVersion)" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
@@ -111,5 +112,4 @@
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
     <!--<ProjectReference Include="..\..\Basic\Senparc.Ncf.Core.Abstractions\Senparc.Ncf.Core.Abstractions.csproj" />-->
   </ItemGroup>
-  <Import Project="$(MSBuildThisFileDirectory)..\..\Senparc.AI.AgentKernel.props" />
 </Project>

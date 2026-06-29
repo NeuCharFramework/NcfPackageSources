@@ -5,25 +5,29 @@ using System.Text;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-//if (builder.ExecutionContext.IsRunMode)
-//{
-var installer = builder.AddProject<Projects.Senparc_Xncf_Installer>(NcfWebApiHelper.GetXncfProjectName<Senparc_Xncf_Installer>())
-         .WithExternalHttpEndpoints();
+var installer = builder.AddProject<Senparc_Xncf_Installer>(
+        NcfWebApiHelper.GetXncfProjectName<Senparc_Xncf_Installer>(),
+        launchProfileName: null)
+    .WithHttpEndpoint(port: 5010, name: "http")
+    .WithExternalHttpEndpoints();
 
-// "../Senparc.Xncf.Installer/Senparc.Xncf.Installer.csproj"
+var accounts = builder.AddProject<Senparc_Xncf_Accounts>(
+        NcfWebApiHelper.GetXncfProjectName<Senparc_Xncf_Accounts>(),
+        launchProfileName: null)
+    .WithHttpEndpoint(port: 5012, name: "http")
+    .WithExternalHttpEndpoints();
 
-//builder.AddContainer("my-redis", "redis", "5.0.14");
-//}
+var ncfWeb = builder.AddProject<Senparc_Web>(
+        NcfWebApiHelper.GetXncfProjectName<Senparc_Web>(),
+        launchProfileName: null)
+    .WithHttpEndpoint(port: 5060, name: "http")
+    .WithReference(installer)
+    .WithReference(accounts)
+    .WithExternalHttpEndpoints();
 
+installer.WithReference(accounts);
 
-var ncfWeb = builder.AddProject<Projects.Senparc_Web>(NcfWebApiHelper.GetXncfProjectName<Senparc_Web>())
-           .WithReference(installer)
-           .WithExternalHttpEndpoints();
-
-
-//支持中文字符
+// Keep legacy code page support used by existing modules.
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-//Console.InputEncoding = Encoding.UTF8;
-//Console.OutputEncoding = Encoding.UTF8;
 
 builder.Build().Run();

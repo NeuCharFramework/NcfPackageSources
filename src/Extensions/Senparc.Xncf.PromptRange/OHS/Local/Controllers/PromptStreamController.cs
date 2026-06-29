@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using Senparc.Ncf.AreaBase.Admin.Filters;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using System.Text.Json;
 using System.Threading;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.PromptRange.OHS.Local.Controllers;
 
 [ApiController]
-[AdminAuthorize]
+[ApiAuthorize("AdminOnly")]
 [Route("api/Senparc.Xncf.PromptRange/[controller]/[action]")]
 public class PromptStreamController : ControllerBase
 {

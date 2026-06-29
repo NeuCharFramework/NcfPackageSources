@@ -79,6 +79,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\..\Senparc.AI.AgentKernel.props" />
   <!--<ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
 		
 	</ItemGroup>-->
@@ -96,7 +97,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>-->
-    <PackageReference Include="Senparc.AI.Kernel" Version="0.29.0" />
+    <PackageReference Include="Senparc.AI.Kernel" Version="$(SenparcAiKernelVersion)" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
     <!--<PackageReference Include="Senparc.Weixin.All" Version="2025.10.24" />-->
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.1" />-->
@@ -158,7 +159,6 @@
     <ProjectReference Include="..\..\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />
     <!--<ProjectReference Include="..\..\Senparc.Xncf.Swagger\Senparc.Xncf.Swagger.csproj" />-->
   </ItemGroup>
-  <Import Project="$(MSBuildThisFileDirectory)..\..\..\Senparc.AI.AgentKernel.props" />
   <!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 	  <Exec Command="cd E:\Senparc项目\NeuCharFramework\NCF\src\XncfExtensionSample\MyExtensionCode&#xD;&#xA;&#xD;&#xA;dotnet add package $(SolutionName) - - prerelease -s &quot;E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\BuildOutPut&quot;" />
 	</Target>-->

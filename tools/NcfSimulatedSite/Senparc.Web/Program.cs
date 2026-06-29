@@ -20,7 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddNcf();
 
 //添加 ServiceDefaults
-//builder.AddServiceDefaults();
+builder.AddServiceDefaults();
 
 System.Net.ServicePointManager.ServerCertificateValidationCallback =
     ((sender, certificate, chain, sslPolicyErrors) => true);
@@ -74,17 +74,18 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapControllers();
+app.MapDefaultEndpoints();
 
 app.ShowSuccessTip();//显示系统准备成功提示
 
-string GetNcfApiClientPath(string xncfName,string appServiceName, string methodName,string showStaticApiState=null)
+string GetNcfApiClientPath(string xncfName, string appServiceName, string methodName, string showStaticApiState = null)
 {
-    var globalName = ApiBindAttribute.GetGlobalName(xncfName,$"{appServiceName}.{methodName}");
+    var globalName = ApiBindAttribute.GetGlobalName(xncfName, $"{appServiceName}.{methodName}");
 
     var indexOfApiGroupDot = globalName.IndexOf(".");
     var apiName = globalName.Substring(indexOfApiGroupDot + 1, globalName.Length - indexOfApiGroupDot - 1);
     //var apiBindGlobalName = globalName.Split('.')[0];
-    
+
     var apiPath = WebApiEngine.GetApiPath(xncfName, appServiceName, apiName, showStaticApiState);
     Console.WriteLine(apiPath);
     return apiPath;

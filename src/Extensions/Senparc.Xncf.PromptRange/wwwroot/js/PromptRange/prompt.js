@@ -172,6 +172,27 @@ var app = new Vue({
             promptStreaming: false,
             promptStreamingTempResultId: null,
             promptStreamingBuffer: '',
+            promptStreamAvailable: true,
+            useStreamOutput: true,
+            promptStreamPreferenceStorageKey: 'PromptRange.UseStreamOutput',
+            promptRangeTexts: {
+                zh: {
+                    streamOptionLabel: '流式输出',
+                    streamOptionTooltip: '开启后，打靶/连发/继续对话会实时输出；关闭后使用整块输出。',
+                    switchOn: '开',
+                    switchOff: '关',
+                    streamFallbackWarning: '实时流连接失败，已自动切换为普通模式（刷新页面可重试）',
+                    streamUnsupportedWarning: '当前浏览器不支持流式输出，已切换为普通模式'
+                },
+                en: {
+                    streamOptionLabel: 'Streaming Output',
+                    streamOptionTooltip: 'When enabled, shooting/rapid fire/continue chat uses streaming output. When disabled, it uses full-response output.',
+                    switchOn: 'On',
+                    switchOff: 'Off',
+                    streamFallbackWarning: 'Streaming connection failed. Switched to normal mode automatically (refresh to retry).',
+                    streamUnsupportedWarning: 'Streaming is not supported by this browser. Switched to normal mode.'
+                }
+            },
             // 导图相关状态
             mapDialogVisible: false, // 导图对话框显示状态
             map3dScene: null, // three.js 场景
@@ -362,6 +383,9 @@ var app = new Vue({
         isPageLoading() {
             let result = this.tacticalFormSubmitLoading || this.modelFormSubmitLoading || this.aiScoreFormSubmitLoading || this.targetShootLoading || this.dodgersLoading
             return result
+        },
+        isPromptExecutionLoading() {
+            return this.tacticalFormSubmitLoading || this.targetShootLoading || this.dodgersLoading || this.promptStreaming
         },
         
         // 计算创建智能体时使用的 PromptCode（根据范围选择）
@@ -644,6 +668,7 @@ var app = new Vue({
         }
     },
     created() {
+        this.loadPromptStreamPreference();
         // 浏览器关闭|浏览器刷新|页面关闭|打开新页面 提示有数据变动保存数据
         // 添加 beforeunload 事件监听器
         window.addEventListener('beforeunload', this.beforeunloadHandler);
@@ -704,6 +729,66 @@ var app = new Vue({
         document.removeEventListener('mouseup', this.stopResize);
     },
     methods: {
+        getPromptRangeLocale() {
+            const raw = (document.documentElement.lang || navigator.language || 'en').toLowerCase();
+            if (raw.startsWith('zh')) {
+                return 'zh';
+            }
+            return 'en';
+        },
+        getPromptRangeText(key) {
+            const locale = this.getPromptRangeLocale();
+            const localeTexts = this.promptRangeTexts[locale] || this.promptRangeTexts.en || {};
+            return localeTexts[key] || (this.promptRangeTexts.en && this.promptRangeTexts.en[key]) || key;
+        },
+        loadPromptStreamPreference() {
+            if (typeof EventSource === 'undefined') {
+                this.useStreamOutput = false;
+                this.promptStreamAvailable = false;
+                return;
+            }
+
+            let savedValue = null;
+            try {
+                savedValue = window.localStorage.getItem(this.promptStreamPreferenceStorageKey);
+            } catch (e) {
+                savedValue = null;
+            }
+
+            if (savedValue === 'false' || savedValue === '0') {
+                this.useStreamOutput = false;
+            } else if (savedValue === 'true' || savedValue === '1') {
+                this.useStreamOutput = true;
+            }
+        },
+        savePromptStreamPreference(value) {
+            try {
+                window.localStorage.setItem(this.promptStreamPreferenceStorageKey, value ? 'true' : 'false');
+            } catch (e) {
+                // ignore storage errors (private mode / quota / policy)
+            }
+        },
+        handleUseStreamOutputChange(value) {
+            if (value && typeof EventSource === 'undefined') {
+                this.useStreamOutput = false;
+                this.promptStreamAvailable = false;
+                this.savePromptStreamPreference(false);
+                this.$message({
+                    message: this.getPromptRangeText('streamUnsupportedWarning'),
+                    type: 'warning',
+                    duration: 3500
+                });
+                return;
+            }
+
+            if (!value) {
+                this.closePromptStream();
+            } else {
+                this.promptStreamAvailable = true;
+            }
+
+            this.savePromptStreamPreference(!!value);
+        },
         parsePromptHashRoute() {
             const raw = (window.location.hash || '').replace(/^#/, '');
             const route = { rangeId: null, promptId: null };
@@ -798,7 +883,7 @@ var app = new Vue({
             this.promptStreamingTempResultId = null
         },
         openPromptStream(streamId, mode = 'shoot') {
-            if (!streamId || typeof EventSource === 'undefined') {
+            if (!this.useStreamOutput || !streamId || typeof EventSource === 'undefined' || !this.promptStreamAvailable) {
                 return Promise.resolve(false)
             }
 
@@ -834,13 +919,24 @@ var app = new Vue({
                     this.closePromptStream()
                 })
 
-                source.onopen = () => settle(true)
+                source.onopen = () => {
+                    this.promptStreamAvailable = true
+                    settle(true)
+                }
 
                 source.onerror = () => {
                     if (source.readyState === EventSource.CONNECTING) {
                         return
                     }
                     if (source.readyState === EventSource.CLOSED && !settled) {
+                        if (this.promptStreamAvailable) {
+                            this.promptStreamAvailable = false
+                            this.$message({
+                                message: this.getPromptRangeText('streamFallbackWarning'),
+                                type: 'warning',
+                                duration: 3500
+                            })
+                        }
                         settle(false)
                     }
                     if (source.readyState === EventSource.CLOSED) {
@@ -1391,13 +1487,13 @@ var app = new Vue({
         async continueChatSubmit(promptResultId, userMessage) {
             this.tacticalFormSubmitLoading = true
             const streamId = this.createPromptStreamId()
-            await this.openPromptStream(streamId, 'continueChat')
+            const streamReady = await this.openPromptStream(streamId, 'continueChat')
             try {
                 this.removeContinueChatStreamingMessage()
                 const res = await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.ContinueChat`, {
                     promptResultId: promptResultId,
                     userMessage: userMessage || '',
-                    streamId: streamId
+                    streamId: streamReady ? streamId : null
                 })
                 
                 if (res.data.success) {
@@ -6300,7 +6396,7 @@ var app = new Vue({
         async executeTargetShootWithChatMessage(userMessage) {
             this.tacticalFormSubmitLoading = true
             const streamId = this.createPromptStreamId()
-            await this.openPromptStream(streamId, 'shoot')
+            const streamReady = await this.openPromptStream(streamId, 'shoot')
             
             // 保存 userMessage，用于后续连发时保持 Chat 模式
             this._lastUserMessage = userMessage || null
@@ -6369,7 +6465,9 @@ var app = new Vue({
             })
 
             _postData['rangeId'] = this.promptField
-            _postData.streamId = streamId
+            if (streamReady) {
+                _postData.streamId = streamId
+            }
 
             try {
                 let res = await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData)
@@ -6752,8 +6850,10 @@ var app = new Vue({
             const numsOfResults = 1
             const params = { promptItemId, numsOfResults }
             const streamId = this.createPromptStreamId()
-            params.streamId = streamId
-            await this.openPromptStream(streamId, 'shoot')
+            const streamReady = await this.openPromptStream(streamId, 'shoot')
+            if (streamReady) {
+                params.streamId = streamId
+            }
             // 如果提供了 userMessage，添加到参数中（用于保持 Chat 模式）
             if (userMessage) {
                 params.userMessage = userMessage

@@ -113,3 +113,4 @@ tools/NcfDesktopApp.GUI/publish-self-contained/*
 .claude/
 .playwright-cli/page-2026-06-26T18-03-38-266Z.yml
 .playwright-cli/
+tools/NcfSimulatedSite/ASPIRE_USAGE_GUIDE.md

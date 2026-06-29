@@ -83,6 +83,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             {
                 AiPlatform = aiModel.AiPlatform
             };
+            var normalizedEndpoint = NormalizeEndpoint(aiModel.AiPlatform, aiModel.Endpoint);
 
             #region AI Model
 
@@ -122,14 +123,14 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     {
                         ApiKey = aiModel.ApiKey,
                         NeuCharAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        NeuCharEndpoint = aiModel.Endpoint,
+                        NeuCharEndpoint = normalizedEndpoint,
                         ModelName = modelName,
                     };
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
                     {
                         ApiKey = aiModel.ApiKey,
                         AzureOpenAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        AzureEndpoint = aiModel.Endpoint,
+                        AzureEndpoint = normalizedEndpoint,
                         ModelName = modelName,
                         DeploymentName = aiModel.DeploymentName
                     };
@@ -139,7 +140,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     {
                         ApiKey = aiModel.ApiKey,
                         AzureOpenAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        AzureEndpoint = aiModel.Endpoint,
+                        AzureEndpoint = normalizedEndpoint,
                         ModelName = modelName,
                         DeploymentName = aiModel.DeploymentName
                     };
@@ -147,7 +148,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 case AiPlatform.HuggingFace:
                     aiSettings.HuggingFaceKeys = new HuggingFaceKeys()
                     {
-                        Endpoint = aiModel.Endpoint,
+                        Endpoint = normalizedEndpoint,
                         ModelName = modelName,
                     };
                     break;
@@ -163,20 +164,20 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     aiSettings.FastAPIKeys = new FastAPIKeys()
                     {
                         ApiKey = aiModel.ApiKey,
-                        Endpoint = aiModel.Endpoint,
+                        Endpoint = normalizedEndpoint,
                     };
                     break;
                 case AiPlatform.Ollama:
                     aiSettings.OllamaKeys = new OllamaKeys()
                     {
-                        Endpoint = aiModel.Endpoint,
+                        Endpoint = normalizedEndpoint,
                     };
                     break;
                 case AiPlatform.DeepSeek:
                     aiSettings.DeepSeekKeys = new DeepSeekKeys()
                     {
                         ApiKey = aiModel.ApiKey,
-                        Endpoint = aiModel.Endpoint,
+                        Endpoint = normalizedEndpoint,
                         ModelName = modelName,
                     };
                     break;
@@ -265,7 +266,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     ApiVersion = model?.AiPlatform == AiPlatform.AzureOpenAI || model?.AiPlatform == AiPlatform.OpenAI
                                     ? "2024-05-13"
                                     : "",
-                    Endpoint = $"https://www.neuchar.com/{developerId}",
+                    Endpoint = $"https://www.neuchar.com/{developerId}/",
                     ConfigModelType = Models.ConfigModelType.Chat,
                     Note = $"从 NeuChar AI 导入（DevId:{developerId}）",
                     Show = true
@@ -316,6 +317,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             {
                 AiPlatform = llModel.AiPlatform
             };
+            var normalizedEndpoint = NormalizeEndpoint(llModel.AiPlatform, llModel.Endpoint);
 
             switch (aiSettings.AiPlatform)
             {
@@ -324,7 +326,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     {
                         ApiKey = llModel.ApiKey,
                         NeuCharAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        NeuCharEndpoint = llModel.Endpoint,
+                        NeuCharEndpoint = normalizedEndpoint,
                         ModelName = new AI.Entities.Keys.ModelName()
                         {
                             Chat = llModel.ModelId,
@@ -338,7 +340,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     {
                         ApiKey = llModel.ApiKey,
                         AzureOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        AzureEndpoint = llModel.Endpoint,
+                        AzureEndpoint = normalizedEndpoint,
                         DeploymentName = llModel.DeploymentName,
                         ModelName = new AI.Entities.Keys.ModelName()
                         {
@@ -355,7 +357,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     {
                         ApiKey = llModel.ApiKey,
                         AzureOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        AzureEndpoint = llModel.Endpoint,
+                        AzureEndpoint = normalizedEndpoint,
                         DeploymentName = llModel.DeploymentName,
                         ModelName = new AI.Entities.Keys.ModelName()
                         {
@@ -370,7 +372,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 case AiPlatform.HuggingFace:
                     aiSettings.HuggingFaceKeys = new HuggingFaceKeys()
                     {
-                        Endpoint = llModel.Endpoint,
+                        Endpoint = normalizedEndpoint,
                         ModelName = new AI.Entities.Keys.ModelName()
                         {
                             Chat = llModel.ModelId,
@@ -400,7 +402,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     aiSettings.FastAPIKeys = new FastAPIKeys()
                     {
                         ApiKey = llModel.ApiKey,
-                        Endpoint = llModel.Endpoint,
+                        Endpoint = normalizedEndpoint,
                         //OrganizationId = aiModel.OrganizationId
                         ModelName = new AI.Entities.Keys.ModelName()
                         {
@@ -415,7 +417,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 case AiPlatform.Ollama:
                     aiSettings.OllamaKeys = new OllamaKeys()
                     {
-                        Endpoint = llModel.Endpoint,
+                        Endpoint = normalizedEndpoint,
                         //OrganizationId = aiModel.OrganizationId
                         ModelName = new AI.Entities.Keys.ModelName()
                         {
@@ -431,7 +433,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     aiSettings.DeepSeekKeys = new DeepSeekKeys()
                     {
                         ApiKey = llModel.ApiKey,
-                        Endpoint = llModel.Endpoint,
+                        Endpoint = normalizedEndpoint,
                         ModelName = new AI.Entities.Keys.ModelName()
                         {
                             Chat = llModel.ModelId,
@@ -448,6 +450,25 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
 
 
             return aiSettings;
+        }
+
+        private static string NormalizeEndpoint(AiPlatform platform, string endpoint)
+        {
+            if (endpoint.IsNullOrWhiteSpace())
+            {
+                return endpoint;
+            }
+
+            var normalized = endpoint.Trim();
+
+            // NeuChar endpoint usually contains a developer-id path segment.
+            // Keep the segment by forcing a trailing slash (e.g. .../2/).
+            if (platform == AiPlatform.NeuCharAI && !normalized.EndsWith("/", StringComparison.Ordinal))
+            {
+                normalized += "/";
+            }
+
+            return normalized;
         }
 
         /// <summary>

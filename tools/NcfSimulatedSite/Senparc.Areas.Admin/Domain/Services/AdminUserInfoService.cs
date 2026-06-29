@@ -84,7 +84,7 @@ namespace Senparc.Areas.Admin.Domain
             {
                 new Claim(ClaimTypes.Name, userInfo.UserName),
                 new Claim(ClaimTypes.NameIdentifier, userInfo.Id.ToString(), ClaimValueTypes.Integer),
-                new Claim("AdminMember", "", ClaimValueTypes.String)
+                new Claim("AdminMember", "1", ClaimValueTypes.String)
             };
 
             if (userInfo.TenantId > 0)
@@ -375,7 +375,8 @@ namespace Senparc.Areas.Admin.Domain
             {
                 Subject = new System.Security.Claims.ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.NameIdentifier, memberId.ToString(), ClaimValueTypes.Integer)
+                    new Claim(ClaimTypes.NameIdentifier, memberId.ToString(), ClaimValueTypes.Integer),
+                    new Claim("AdminMember", "1", ClaimValueTypes.String)
                 }),
                 Audience = jwtSettings.Audience,
                 Issuer = jwtSettings.Issuer,

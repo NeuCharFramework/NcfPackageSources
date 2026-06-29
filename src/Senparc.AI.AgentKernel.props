@@ -1,9 +1,13 @@
 <Project>
   <PropertyGroup>
-    <SenparcAiAgentKernelVersion>0.1.4.1</SenparcAiAgentKernelVersion>
+    <SenparcAiVersion>0.27.2</SenparcAiVersion>
+    <SenparcAiKernelVersion>0.29.0</SenparcAiKernelVersion>
+    <SenparcAiAgentsVersion>0.7.2</SenparcAiAgentsVersion>
+    <SenparcAiAgentKernelVersion>0.1.9.1</SenparcAiAgentKernelVersion>
     <MicrosoftAgentsAiVersion>1.8.0</MicrosoftAgentsAiVersion>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Senparc.AI" Version="$(SenparcAiVersion)" />
     <PackageReference Include="Senparc.AI.AgentKernel" Version="$(SenparcAiAgentKernelVersion)" />
     <PackageReference Include="Microsoft.Agents.AI" Version="$(MicrosoftAgentsAiVersion)" />
     <PackageReference Include="Microsoft.Agents.AI.Abstractions" Version="$(MicrosoftAgentsAiVersion)" />

@@ -71,10 +71,11 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\Senparc.AI.AgentKernel.props" />
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
     <PackageReference Include="Microsoft.Agents.AI.Workflows" Version="1.8.0" />
-    <PackageReference Include="Senparc.AI.Agents" Version="0.7.2" />
+    <PackageReference Include="Senparc.AI.Agents" Version="$(SenparcAiAgentsVersion)" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
     <PackageReference Include="Senparc.Weixin.Work" Version="3.31.0" />
   </ItemGroup>
@@ -137,5 +138,4 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <Import Project="$(MSBuildThisFileDirectory)..\..\Senparc.AI.AgentKernel.props" />
 </Project>
