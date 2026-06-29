@@ -466,18 +466,25 @@
                                                 class="sidebar-taskrecord-container" wrap-class="scrollbar-wrapper">
                                                 <div class="df-wn flex-dc taskrecord-listWrap">
                                                     <div v-for="ritem in agentDetailsGroupTaskHistoryList"
-                                                        :key="ritem.id" v-show="!agentGroupTaskMemberfilter || agentGroupTaskMemberfilterList.includes(ritem.fromAgentTemplateId)" class="taskrecord-listWrap-item">
+                                                        :key="ritem.id"
+                                                        :class="['taskrecord-listWrap-item', { 'taskrecord-listWrap-item-streaming': ritem._streaming }]"
+                                                        :data-history-id="ritem.id"
+                                                        v-show="!agentGroupTaskMemberfilter || agentGroupTaskMemberfilterList.includes(ritem.fromAgentTemplateId)">
                                                         <div class="taskrecord-listWrap-item-head">
-                                                            <span class="df-wn flex-ac flex-jc avatarBox">
-                                                                <img :src="getTaskSenderInfo('agentGroupTask',ritem.fromAgentTemplateId).avastar | showAvatar"
-                                                                    alt="">
-                                                            </span>
-                                                            <span class="name">{{
-                                                                getTaskSenderInfo('agentGroupTask',ritem.fromAgentTemplateId).name
-                                                                }}</span>
-                                                            <span class="time">{{ ritem.addTime | showFormatDate
-                                                                }}</span>
-                                                            <span class="usage" v-if="ritem.totalTokens || ritem.responseMilliseconds">{{ formatTaskHistoryUsage(ritem) }}</span>
+                                                            <div class="taskrecord-item-meta-top">
+                                                                <span class="df-wn flex-ac flex-jc avatarBox">
+                                                                    <img :src="getTaskSenderInfo('agentGroupTask',ritem.fromAgentTemplateId).avastar | showAvatar"
+                                                                        alt="">
+                                                                </span>
+                                                                <span class="name">{{
+                                                                    getTaskSenderInfo('agentGroupTask',ritem.fromAgentTemplateId).name
+                                                                    }}</span>
+                                                                <span class="time">{{ ritem.addTime | showFormatDate
+                                                                    }}</span>
+                                                            </div>
+                                                            <div class="taskrecord-item-meta-bottom" v-if="ritem.totalTokens || ritem.responseMilliseconds">
+                                                                <span class="usage">{{ formatTaskHistoryUsage(ritem) }}</span>
+                                                            </div>
                                                         </div>
                                                         <task-html-renderer :content="ritem.messageHtml" />
                                                     </div>
@@ -579,18 +586,24 @@
                                         <el-scrollbar ref="agentDetailsTaskHistoryScrollbar"
                                             class="sidebar-taskrecord-container" wrap-class="scrollbar-wrapper">
                                             <div class="df-wn flex-dc taskrecord-listWrap">
-                                                <div v-for="ritem in agentDetailsTaskHistoryList" :key="ritem.id" v-show="!agentTaskMemberfilter || agentTaskMemberfilterList.includes(ritem.fromAgentTemplateId)"
-                                                    class="taskrecord-listWrap-item">
+                                                <div v-for="ritem in agentDetailsTaskHistoryList" :key="ritem.id"
+                                                    :class="['taskrecord-listWrap-item', { 'taskrecord-listWrap-item-streaming': ritem._streaming }]"
+                                                    :data-history-id="ritem.id"
+                                                    v-show="!agentTaskMemberfilter || agentTaskMemberfilterList.includes(ritem.fromAgentTemplateId)">
                                                     <div class="taskrecord-listWrap-item-head">
-                                                        <span class="df-wn flex-ac flex-jc avatarBox">
-                                                            <img :src="getTaskSenderInfo('agentTask',ritem.fromAgentTemplateId).avastar | showAvatar"
-                                                                alt="">
-                                                        </span>
-                                                        <span class="name">{{
-                                                            getTaskSenderInfo('agentTask',ritem.fromAgentTemplateId).name
-                                                            }}</span>
-                                                        <span class="time">{{ ritem.addTime | showFormatDate }}</span>
-                                                        <span class="usage" v-if="ritem.totalTokens || ritem.responseMilliseconds">{{ formatTaskHistoryUsage(ritem) }}</span>
+                                                        <div class="taskrecord-item-meta-top">
+                                                            <span class="df-wn flex-ac flex-jc avatarBox">
+                                                                <img :src="getTaskSenderInfo('agentTask',ritem.fromAgentTemplateId).avastar | showAvatar"
+                                                                    alt="">
+                                                            </span>
+                                                            <span class="name">{{
+                                                                getTaskSenderInfo('agentTask',ritem.fromAgentTemplateId).name
+                                                                }}</span>
+                                                            <span class="time">{{ ritem.addTime | showFormatDate }}</span>
+                                                        </div>
+                                                        <div class="taskrecord-item-meta-bottom" v-if="ritem.totalTokens || ritem.responseMilliseconds">
+                                                            <span class="usage">{{ formatTaskHistoryUsage(ritem) }}</span>
+                                                        </div>
                                                     </div>
                                                     <task-html-renderer :content="ritem.messageHtml" />
                                                 </div>
@@ -905,17 +918,23 @@
                             <el-scrollbar ref="groupTaskHistoryScrollbar" class="sidebar-taskrecord-container"
                                 wrap-class="scrollbar-wrapper">
                                 <div class="df-wn flex-dc taskrecord-listWrap">
-                                    <div v-for="ritem in groupTaskHistoryList" :key="ritem.id" v-show="!groupTaskMemberfilter || groupTaskMemberfilterList.includes(ritem.fromAgentTemplateId)"
-                                        class="taskrecord-listWrap-item">
+                                    <div v-for="ritem in groupTaskHistoryList" :key="ritem.id"
+                                        :class="['taskrecord-listWrap-item', { 'taskrecord-listWrap-item-streaming': ritem._streaming }]"
+                                        :data-history-id="ritem.id"
+                                        v-show="!groupTaskMemberfilter || groupTaskMemberfilterList.includes(ritem.fromAgentTemplateId)">
                                         <div class="taskrecord-listWrap-item-head">
-                                            <span class="df-wn flex-ac flex-jc avatarBox">
-                                                <img :src="getTaskSenderInfo('groupTask',ritem.fromAgentTemplateId).avastar | showAvatar"
-                                                    alt="">
-                                            </span>
-                                            <span class="name">{{
-                                                getTaskSenderInfo('groupTask',ritem.fromAgentTemplateId).name }}</span>
-                                            <span class="time">{{ ritem.addTime | showFormatDate }}</span>
-                                            <span class="usage" v-if="ritem.totalTokens || ritem.responseMilliseconds">{{ formatTaskHistoryUsage(ritem) }}</span>
+                                            <div class="taskrecord-item-meta-top">
+                                                <span class="df-wn flex-ac flex-jc avatarBox">
+                                                    <img :src="getTaskSenderInfo('groupTask',ritem.fromAgentTemplateId).avastar | showAvatar"
+                                                        alt="">
+                                                </span>
+                                                <span class="name">{{
+                                                    getTaskSenderInfo('groupTask',ritem.fromAgentTemplateId).name }}</span>
+                                                <span class="time">{{ ritem.addTime | showFormatDate }}</span>
+                                            </div>
+                                            <div class="taskrecord-item-meta-bottom" v-if="ritem.totalTokens || ritem.responseMilliseconds">
+                                                <span class="usage">{{ formatTaskHistoryUsage(ritem) }}</span>
+                                            </div>
                                         </div>
                                         <task-html-renderer :content="ritem.messageHtml" />
                                     </div>
@@ -1125,17 +1144,23 @@
                             <el-scrollbar ref="taskHistoryScrollbar" class="sidebar-taskrecord-container"
                                 wrap-class="scrollbar-wrapper">
                                 <div class="df-wn flex-dc taskrecord-listWrap">
-                                    <div v-for="ritem in taskHistoryList" :key="ritem.id" v-show="!taskMemberfilter || taskMemberfilterList.includes(ritem.fromAgentTemplateId)"
-                                        class="taskrecord-listWrap-item">
+                                    <div v-for="ritem in taskHistoryList" :key="ritem.id"
+                                        :class="['taskrecord-listWrap-item', { 'taskrecord-listWrap-item-streaming': ritem._streaming }]"
+                                        :data-history-id="ritem.id"
+                                        v-show="!taskMemberfilter || taskMemberfilterList.includes(ritem.fromAgentTemplateId)">
                                         <div class="taskrecord-listWrap-item-head">
-                                            <span class="df-wn flex-ac flex-jc avatarBox">
-                                                <img :src="getTaskSenderInfo('task',ritem.fromAgentTemplateId).avastar | showAvatar"
-                                                    alt="">
-                                            </span>
-                                            <span class="name">{{
-                                                getTaskSenderInfo('task',ritem.fromAgentTemplateId).name }}</span>
-                                            <span class="time">{{ ritem.addTime | showFormatDate }}</span>
-                                            <span class="usage" v-if="ritem.totalTokens || ritem.responseMilliseconds">{{ formatTaskHistoryUsage(ritem) }}</span>
+                                            <div class="taskrecord-item-meta-top">
+                                                <span class="df-wn flex-ac flex-jc avatarBox">
+                                                    <img :src="getTaskSenderInfo('task',ritem.fromAgentTemplateId).avastar | showAvatar"
+                                                        alt="">
+                                                </span>
+                                                <span class="name">{{
+                                                    getTaskSenderInfo('task',ritem.fromAgentTemplateId).name }}</span>
+                                                <span class="time">{{ ritem.addTime | showFormatDate }}</span>
+                                            </div>
+                                            <div class="taskrecord-item-meta-bottom" v-if="ritem.totalTokens || ritem.responseMilliseconds">
+                                                <span class="usage">{{ formatTaskHistoryUsage(ritem) }}</span>
+                                            </div>
                                         </div>
                                         <task-html-renderer :content="ritem.messageHtml" />
                                     </div>

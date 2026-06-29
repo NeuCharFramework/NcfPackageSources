@@ -1482,6 +1482,8 @@ var app = new Vue({
             })
             // 任务
             if (recordType === 'task') {
+              const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef('task'), isFirst)
+              let historyList = this.taskHistoryList || []
               if (nextHistoryId) {
                 // for (let index = 0; index < historiesData.length; index++) {
                 //     const element = historiesData[index];
@@ -1490,22 +1492,26 @@ var app = new Vue({
                 //     }, 1000)
                 // }
                 if (historiesData.length > 0) {
-                  const historyList = this.taskHistoryList.concat(historiesData);
+                  historyList = this.taskHistoryList.concat(historiesData);
                   this.$set(this, 'taskHistoryList', historyList)
                 }
               } else {
                 const isassignment = arraysEqual(this.taskHistoryList, historiesData)
                 if (!isassignment && historiesData.length > 0) {
+                  historyList = historiesData
                   this.$set(this, 'taskHistoryList', historiesData)
                 }
               }
-              // 滚动区域 吸附底部
               this.$nextTick(() => {
-                this.scrollbarDown('taskHistoryScrollbar', true, isFirst)
+                if (!shouldAutoFollow) return
+                const latestId = historyList.length > 0 ? historyList[historyList.length - 1].id : null
+                this.scrollHistoryToItemBottom('task', latestId)
               })
             }
             // 智能体 任务
             if (recordType === 'agentTask') {
+              const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef('agentTask'), isFirst)
+              let historyList = this.agentDetailsTaskHistoryList || []
               if (nextHistoryId) {
                 // for (let index = 0; index < historiesData.length; index++) {
                 //     const element = historiesData[index];
@@ -1514,22 +1520,26 @@ var app = new Vue({
                 //     }, 1000)
                 // }
                 if (historiesData.length > 0) {
-                  const historyList = this.agentDetailsTaskHistoryList.concat(historiesData);
+                  historyList = this.agentDetailsTaskHistoryList.concat(historiesData);
                   this.$set(this, 'agentDetailsTaskHistoryList', historyList)
                 }
               } else {
                 const isassignment = arraysEqual(this.agentDetailsTaskHistoryList, historiesData)
                 if (!isassignment && historiesData.length > 0) {
+                  historyList = historiesData
                   this.$set(this, 'agentDetailsTaskHistoryList', historiesData)
                 }
               }
-              // 滚动区域 吸附底部
               this.$nextTick(() => {
-                this.scrollbarDown('agentDetailsTaskHistoryScrollbar', true, isFirst)
+                if (!shouldAutoFollow) return
+                const latestId = historyList.length > 0 ? historyList[historyList.length - 1].id : null
+                this.scrollHistoryToItemBottom('agentTask', latestId)
               })
             }
             // 智能体 组 任务
             if (recordType === 'agentGroupTask') {
+              const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef('agentGroupTask'), isFirst)
+              let historyList = this.agentDetailsGroupTaskHistoryList || []
               if (nextHistoryId) {
                 // for (let index = 0; index < historiesData.length; index++) {
                 //     const element = historiesData[index];
@@ -1538,36 +1548,42 @@ var app = new Vue({
                 //     }, 1000)
                 // }
                 if (historiesData.length > 0) {
-                  const historyList = this.agentDetailsGroupTaskHistoryList.concat(historiesData);
+                  historyList = this.agentDetailsGroupTaskHistoryList.concat(historiesData);
                   this.$set(this, 'agentDetailsGroupTaskHistoryList', historyList)
                 }
               } else {
                 const isassignment = arraysEqual(this.agentDetailsGroupTaskHistoryList, historiesData)
                 if (!isassignment && historiesData.length > 0) {
+                  historyList = historiesData
                   this.$set(this, 'agentDetailsGroupTaskHistoryList', historiesData)
                 }
               }
-              // 滚动区域 吸附底部
               this.$nextTick(() => {
-                this.scrollbarDown('agentDetailsGroupTaskHistoryScrollbar', true, isFirst)
+                if (!shouldAutoFollow) return
+                const latestId = historyList.length > 0 ? historyList[historyList.length - 1].id : null
+                this.scrollHistoryToItemBottom('agentGroupTask', latestId)
               })
             }
             // 组 任务
             if (recordType === 'groupTask') {
+              const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef('groupTask'), isFirst)
+              let historyList = this.groupTaskHistoryList || []
               if (nextHistoryId) {
                 if (historiesData.length > 0) {
-                  const historyList = this.groupTaskHistoryList.concat(historiesData);
+                  historyList = this.groupTaskHistoryList.concat(historiesData);
                   this.$set(this, 'groupTaskHistoryList', historyList)
                 }
               } else {
                 const isassignment = arraysEqual(this.groupTaskHistoryList, historiesData)
                 if (!isassignment && historiesData.length > 0) {
+                  historyList = historiesData
                   this.$set(this, 'groupTaskHistoryList', historiesData)
                 }
               }
-              // 滚动区域 吸附底部
               this.$nextTick(() => {
-                this.scrollbarDown('groupTaskHistoryScrollbar', true, isFirst)
+                if (!shouldAutoFollow) return
+                const latestId = historyList.length > 0 ? historyList[historyList.length - 1].id : null
+                this.scrollHistoryToItemBottom('groupTask', latestId)
               })
             }
           } else {
@@ -1863,6 +1879,63 @@ var app = new Vue({
       if (listType === 'agentGroupTask') this.$set(this, 'agentDetailsGroupTaskHistoryList', list)
       if (listType === 'groupTask') this.$set(this, 'groupTaskHistoryList', list)
     },
+    getHistoryScrollbarRef(listType) {
+      const scrollbarMap = {
+        task: 'taskHistoryScrollbar',
+        agentTask: 'agentDetailsTaskHistoryScrollbar',
+        agentGroupTask: 'agentDetailsGroupTaskHistoryScrollbar',
+        groupTask: 'groupTaskHistoryScrollbar'
+      }
+      return scrollbarMap[listType] || ''
+    },
+    isHistoryNearBottom(refName, isFirst = false) {
+      if (isFirst) return true
+      if (!refName) return true
+      const scrollbar = this.$refs[refName]
+      if (!scrollbar || !scrollbar.wrap) return true
+      const wrap = scrollbar.wrap
+      const scrollTop = wrap.scrollTop
+      const scrollHeight = wrap.scrollHeight
+      const clientHeight = wrap.clientHeight
+      if (scrollHeight <= clientHeight) return true
+      return scrollTop + clientHeight + 30 >= scrollHeight
+    },
+    scrollHistoryToItemBottom(listType, historyId, behavior = 'auto') {
+      const refName = this.getHistoryScrollbarRef(listType)
+      if (!refName) return
+      const scrollbar = this.$refs[refName]
+      if (!scrollbar || !scrollbar.wrap) return
+
+      const wrap = scrollbar.wrap
+      if (historyId === undefined || historyId === null || historyId === '') {
+        wrap.scrollTop = wrap.scrollHeight
+        return
+      }
+
+      const findTarget = () => {
+        const historyItems = wrap.querySelectorAll('.taskrecord-listWrap-item[data-history-id]')
+        for (let index = 0; index < historyItems.length; index++) {
+          const item = historyItems[index]
+          if (String(item.getAttribute('data-history-id')) === String(historyId)) {
+            return item
+          }
+        }
+        return null
+      }
+
+      let target = findTarget()
+      if (target) {
+        target.scrollIntoView({ behavior, block: 'end', inline: 'nearest' })
+        return
+      }
+
+      requestAnimationFrame(() => {
+        target = findTarget()
+        if (target) {
+          target.scrollIntoView({ behavior, block: 'end', inline: 'nearest' })
+        }
+      })
+    },
     startTaskHistoryStream(listType, chatTaskId) {
       if (!listType || !chatTaskId || typeof EventSource === 'undefined') {
         this.pollGetTaskHistoryData(listType, this.getTaskRecordListData, chatTaskId)
@@ -1914,6 +1987,7 @@ var app = new Vue({
       if (!payload || !payload.responseId) return
 
       const draftKey = `${listType}:${payload.responseId}`
+      const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef(listType), false)
       const historyList = this.getHistoryListByType(listType).slice()
       const existedIndex = historyList.findIndex(item => item.id === draftKey)
       const agentInfo = this.getTaskSenderInfo(listType, payload.fromAgentTemplateId || 0) || {}
@@ -1944,16 +2018,8 @@ var app = new Vue({
       this.historyStreamingDrafts[draftKey] = draftItem
       this.setHistoryListByType(listType, historyList)
       this.$nextTick(() => {
-        const scrollbarMap = {
-          task: 'taskHistoryScrollbar',
-          agentTask: 'agentDetailsTaskHistoryScrollbar',
-          agentGroupTask: 'agentDetailsGroupTaskHistoryScrollbar',
-          groupTask: 'groupTaskHistoryScrollbar'
-        }
-        const refName = scrollbarMap[listType]
-        if (refName) {
-          this.scrollbarDown(refName, true, false)
-        }
+        if (!shouldAutoFollow) return
+        this.scrollHistoryToItemBottom(listType, draftItem.id)
       })
     },
     flushTaskStreamMessage(listType, event) {
@@ -1961,6 +2027,7 @@ var app = new Vue({
       if (!payload) return
 
       const draftKey = payload.responseId ? `${listType}:${payload.responseId}` : ''
+      const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef(listType), false)
       const historyList = this.getHistoryListByType(listType).slice()
       if (draftKey) {
         const draftIndex = historyList.findIndex(item => item.id === draftKey)
@@ -1987,16 +2054,8 @@ var app = new Vue({
 
       this.setHistoryListByType(listType, historyList)
       this.$nextTick(() => {
-        const scrollbarMap = {
-          task: 'taskHistoryScrollbar',
-          agentTask: 'agentDetailsTaskHistoryScrollbar',
-          agentGroupTask: 'agentDetailsGroupTaskHistoryScrollbar',
-          groupTask: 'groupTaskHistoryScrollbar'
-        }
-        const refName = scrollbarMap[listType]
-        if (refName) {
-          this.scrollbarDown(refName, true, false)
-        }
+        if (!shouldAutoFollow) return
+        this.scrollHistoryToItemBottom(listType, finalItem.id)
       })
     },
     closeTaskHistoryStream(listType) {

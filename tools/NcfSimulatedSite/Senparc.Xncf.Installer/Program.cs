@@ -57,7 +57,7 @@ var registerService = app
 
 //XncfModules（必须）
 app.UseXncfModules(registerService, senparcCoreSetting.Value)
-   .UseNcfDatabase<SqlServerDatabaseConfiguration>();
+   .UseNcfDatabase<BySettingDatabaseConfiguration>();
 //using (var scope = app.Services.CreateScope())
 //{
 
