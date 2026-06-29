@@ -464,8 +464,17 @@
                 </div>
             </div>
             <div class="outputArea_contentBox" id="resultBox" @@scroll="handleResultScroll">
-                <div v-for="(item,index) in outputList" v-key="item.id" class="contentBoxItem" v-bind:class="{'contentBoxActiveItem':outputActive === index}" @@click="app.outputSelectSwitch(index)" :data-result-index="index">
+                <div v-for="(item,index) in outputList"
+                     v-key="item.id"
+                     class="contentBoxItem"
+                     v-bind:class="{'contentBoxActiveItem':outputActive === index, 'contentBoxStreamingItem': isStreamingResultItem(item)}"
+                     @@click="app.outputSelectSwitch(index)"
+                     :data-result-index="index"
+                     :data-result-id="item.id">
                     <div class="promptResult_Item_Title">
+                        <div class="promptReultTimeArea">
+                            <span>{{item.addTime}} [耗时(毫秒):{{item.costTime}}]</span>
+                        </div>
                         <div class="copyButtonArea">
                             <a href="javascript:void(0);" @@click="copyPromptResult(item,false)" title="复制带格式的 HTML 代码"><i class="fa fa-copy"></i> HTML</a>
                             <a href="javascript:void(0);" @@click="copyPromptResult(item,true)" title="复制原始内容（例如将复制 markdown 标记）"><i class="fa fa-copy"></i> 原始</a>
@@ -474,7 +483,6 @@
                     <div class="contentRow" v-html="item.resultStringHtml">
                     </div>
                     <div class="promptResultUsageRow" v-if="item.resultString.length>0">
-                        <span>{{item.addTime}} [耗时(毫秒):{{item.costTime}}]</span>
                         <span class="promptResultUsageToken">Token: {{item.totalCostToken || 0}}（输入 {{item.promptCostToken || 0}} / 输出 {{item.resultCostToken || 0}}）</span>
                     </div>
                     <div class="operateRow" v-if="item.resultString.length>0">

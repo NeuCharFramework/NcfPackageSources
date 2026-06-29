@@ -1043,6 +1043,12 @@ var app = new Vue({
             this.outputList = [placeholder].concat(this.outputList || [])
             return 0
         },
+        isStreamingResultItem(item) {
+            if (!item || !this.promptStreaming || !this.promptStreamingTempResultId) {
+                return false
+            }
+            return String(item.id) === String(this.promptStreamingTempResultId)
+        },
         handlePromptStreamChunk(payload, mode) {
             if (mode === 'continueChat') {
                 this.handleContinueChatStreamChunk(payload)
@@ -6872,6 +6878,25 @@ var app = new Vue({
                     this.outputAverageDeci = res.data.data.promptItem.evalAvgScore > -1 ? res.data.data.promptItem.evalAvgScore : -1; // 保留整数
                     this.outputMaxDeci = res.data.data.promptItem.evalMaxScore > -1 ? res.data.data.promptItem.evalMaxScore : -1; // 保留整数
                     //输出列表 
+                    let latestResultId = null
+                    const findStreamingPlaceholderIndex = () => {
+                        if (!streamReady) {
+                            return -1
+                        }
+
+                        if (this.promptStreamingTempResultId !== undefined && this.promptStreamingTempResultId !== null && this.promptStreamingTempResultId !== '') {
+                            const exactMatchIndex = this.outputList.findIndex(outputItem =>
+                                String(outputItem.id) === String(this.promptStreamingTempResultId)
+                            )
+                            if (exactMatchIndex > -1) {
+                                return exactMatchIndex
+                            }
+                        }
+
+                        return this.outputList.findIndex(outputItem =>
+                            typeof outputItem.id === 'string' && outputItem.id.indexOf('streaming_') === 0
+                        )
+                    }
                     res.data.data.promptResults.map(item => {
                         const normalized = this.normalizeOutputResultItem(
                             item,
@@ -6879,20 +6904,66 @@ var app = new Vue({
                             this.promptDetail?.fullVersion,
                             res.data.data.promptItem || {}
                         )
-                        this.outputList.push(normalized)
+                        let replacedStreamingPlaceholder = false
+                        const placeholderIndex = findStreamingPlaceholderIndex()
+                        if (placeholderIndex > -1) {
+                            this.$set(this.outputList, placeholderIndex, normalized)
+                            replacedStreamingPlaceholder = true
+                        }
+                        if (!replacedStreamingPlaceholder) {
+                            this.outputList.push(normalized)
+                        }
+                        latestResultId = normalized.id
                     })
-                    this.scrollToBtm()
+                    this.scrollToBtm(latestResultId)
                 }).catch(() => {
                     this.closePromptStream()
                 })
         },
 
-        scrollToBtm() {
-            // scroll to btm of resultBox  at nextick
+        scrollToResultItemBottom(resultId, behavior = 'auto') {
             this.$nextTick(() => {
-                let _outputArea_contentBox = document.getElementById('resultBox')
-                _outputArea_contentBox.scrollTop = _outputArea_contentBox.scrollHeight
+                const container = document.getElementById('resultBox')
+                if (!container) {
+                    return
+                }
+
+                if (resultId === undefined || resultId === null || resultId === '') {
+                    container.scrollTop = container.scrollHeight
+                    return
+                }
+
+                const locateTarget = () => {
+                    const items = container.querySelectorAll('.contentBoxItem')
+                    const targetIndex = this.outputList.findIndex(item => String(item.id) === String(resultId))
+                    if (targetIndex > -1 && items[targetIndex]) {
+                        return items[targetIndex]
+                    }
+
+                    for (let i = 0; i < items.length; i++) {
+                        if (String(items[i].getAttribute('data-result-id')) === String(resultId)) {
+                            return items[i]
+                        }
+                    }
+                    return null
+                }
+
+                let target = locateTarget()
+                if (target) {
+                    target.scrollIntoView({ behavior, block: 'end' })
+                    return
+                }
+
+                requestAnimationFrame(() => {
+                    target = locateTarget()
+                    if (target) {
+                        target.scrollIntoView({ behavior, block: 'end' })
+                    }
+                })
             })
+        },
+        scrollToBtm(resultId = null) {
+            this.scrollToResultItemBottom(resultId)
         },
 
         // 配置 重置参数

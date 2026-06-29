@@ -1356,6 +1356,33 @@
             border-color: #3EC5AF;
         }
 
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxStreamingItem {
+            border: 2px solid transparent !important;
+            background-color: #fff;
+            background-image: linear-gradient(#fff, #fff),
+                              linear-gradient(120deg, #ff4d4f, #ffa940, #fadb14, #73d13d, #36cfc9, #4096ff, #9254de, #f759ab, #ff4d4f);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            background-size: 100% 100%, 300% 300%;
+            background-position: 0 0, 0% 50%;
+            animation: prompt-streaming-rainbow 3s linear infinite;
+            box-shadow: 0 0 0 1px rgba(64, 158, 255, 0.12), 0 0 12px rgba(64, 158, 255, 0.12);
+        }
+
+@keyframes prompt-streaming-rainbow {
+    0% {
+        background-position: 0 0, 0% 50%;
+    }
+
+    50% {
+        background-position: 0 0, 100% 50%;
+    }
+
+    100% {
+        background-position: 0 0, 0% 50%;
+    }
+}
+
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .infoRow {
             display: flex;
             flex-wrap: nowrap;
@@ -1950,11 +1977,20 @@
 
 .promptResult_Item_Title {
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
     line-height: 20px;
     margin-bottom: 4px;
     margin-right: 160px; /* 为右侧滚动条预留空间 */
+}
+
+.promptResult_Item_Title .promptReultTimeArea {
+    color: #6f6f6f;
+    font-size: 12px;
+    line-height: 20px;
+    min-width: 0;
+    flex: 1;
 }
 
 .promptResultUsageRow {
