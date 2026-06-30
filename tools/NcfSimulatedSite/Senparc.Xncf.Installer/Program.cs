@@ -23,6 +23,7 @@ builder.AddServiceDefaults();
 
 // Add services to the container.
 builder.Services.AddProblemDetails();
+builder.Services.AddLocalization();
 
 builder.Services.AddControllers().AddDapr();
 
@@ -44,6 +45,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// 初始化 Senparc 全局 DI 访问器，避免模块静态初始化阶段拿不到 ServiceProvider。
+app.UseSenparcMvcDI();
+
 //Use NCF（必须）
 IOptions<SenparcCoreSetting> senparcCoreSetting = app.Services.GetService<IOptions<SenparcCoreSetting>>();
 IOptions<SenparcSetting> senparcSetting = app.Services.GetService<IOptions<SenparcSetting>>();
