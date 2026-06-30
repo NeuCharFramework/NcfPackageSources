@@ -3235,6 +3235,7 @@ var app = new Vue({
         // 战术选择 关闭弹出
         // 战术选择 dialog 关闭
         tacticalFormCloseDialog() {
+            const wasContinueChatMode = this.continueChatMode
             this.tacticalForm = {
                 tactics: '重新瞄准',
                 chatMode: '对话模式' // 重置为默认值
@@ -3251,8 +3252,10 @@ var app = new Vue({
                 resultCostToken: 0,
                 totalCostToken: 0
             }
-            this.removeContinueChatStreamingMessage()
-            this.closePromptStream()
+            if (wasContinueChatMode) {
+                this.removeContinueChatStreamingMessage()
+                this.closePromptStream()
+            }
             this.systemMessageCollapse = []
             if (this.$refs.tacticalForm) {
                 // 使用 clearValidate 清除验证状态，而不是 resetFields
@@ -6401,6 +6404,10 @@ var app = new Vue({
         // 执行打靶的核心逻辑（支持对话模式，userMessage 为 null 时表示直接测试模式）
         async executeTargetShootWithChatMessage(userMessage) {
             this.tacticalFormSubmitLoading = true
+            const selectedTactics = this.tacticalForm.tactics
+            if (this.tacticalFormVisible) {
+                this.tacticalFormVisible = false
+            }
             const streamId = this.createPromptStreamId()
             const streamReady = await this.openPromptStream(streamId, 'shoot')
             
@@ -6446,16 +6453,16 @@ var app = new Vue({
             if (this.promptid) {
                 _postData.id = this.promptid
                 //创建顶级战术，创建平行战术，创建子战术，重新瞄准
-                if (this.tacticalForm.tactics === '创建顶级战术') {
+                if (selectedTactics === '创建顶级战术') {
                     _postData.isTopTactic = true
                 }
-                if (this.tacticalForm.tactics === '创建平行战术') {
+                if (selectedTactics === '创建平行战术') {
                     _postData.isNewTactic = true
                 }
-                if (this.tacticalForm.tactics === '创建子战术') {
+                if (selectedTactics === '创建子战术') {
                     _postData.isNewSubTactic = true
                 }
-                if (this.tacticalForm.tactics === '重新瞄准') {
+                if (selectedTactics === '重新瞄准') {
                     _postData.isNewAiming = true
                 }
             }
@@ -6480,7 +6487,6 @@ var app = new Vue({
                 
                 if (res.data.success) {
                     this.pageChange = false
-                    this.tacticalFormVisible = false
                     let {
                         promptResultList = [],
                         fullVersion = '',
