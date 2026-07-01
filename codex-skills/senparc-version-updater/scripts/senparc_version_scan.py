@@ -196,6 +196,47 @@ def to_relative_path(root: Path, file_path: Path) -> str:
         return file_path.resolve().as_posix()
 
 
+def resolve_baseline_branch_ref(root: Path) -> str | None:
+    candidates = [
+        "refs/remotes/origin/master",
+        "refs/remotes/origin/main",
+        "refs/heads/master",
+        "refs/heads/main",
+        "origin/master",
+        "origin/main",
+        "master",
+        "main",
+    ]
+    for ref in candidates:
+        code, _ = run_git(root, ["rev-parse", "--verify", "--quiet", ref])
+        if code == 0:
+            return ref
+    return None
+
+
+def resolve_master_main_comparison_base(root: Path) -> tuple[str, str]:
+    baseline_ref = resolve_baseline_branch_ref(root)
+    if not baseline_ref:
+        raise RuntimeError(
+            "Cannot resolve comparison baseline branch from master/main. "
+            "Expected one of: origin/master, origin/main, master, main."
+        )
+
+    code, output = run_git(root, ["merge-base", "HEAD", baseline_ref])
+    merge_base = output.splitlines()[0].strip() if output else ""
+    if code != 0 or not merge_base:
+        raise RuntimeError(f"Cannot compute merge-base between HEAD and {baseline_ref}.")
+
+    return baseline_ref, merge_base
+
+
+def get_commit_epoch_seconds(root: Path, commit: str) -> int | None:
+    code, output = run_git(root, ["show", "-s", "--format=%ct", commit])
+    if code == 0 and output.isdigit():
+        return int(output)
+    return None
+
+
 def get_last_csproj_change(root: Path, csproj: Path) -> tuple[str | None, int]:
     rel = to_relative_path(root, csproj)
     code, output = run_git(root, ["log", "-1", "--format=%H|%ct", "--", rel])
@@ -377,7 +418,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description=(
             "Scan Senparc project metadata for version updates: choose target csproj, "
-            "list changed files since last csproj change, and compute recursive dependent projects."
+            "list changed files since merge-base against master/main, and compute recursive dependent projects."
         )
     )
     parser.add_argument("--root", required=True, help="Repository root path")
@@ -405,11 +446,22 @@ def main() -> int:
         _stderr(str(ex))
         return 1
 
+    try:
+        comparison_branch_ref, comparison_base_commit = resolve_master_main_comparison_base(root)
+    except RuntimeError as ex:
+        _stderr(str(ex))
+        return 1
+
+    comparison_base_epoch = get_commit_epoch_seconds(root, comparison_base_commit)
+    if comparison_base_epoch is None:
+        _stderr(f"Cannot resolve commit epoch for comparison base commit: {comparison_base_commit}")
+        return 1
+
     primary_info = info_by_path.get(primary) or parse_csproj(primary)
     primary_last_commit, primary_last_epoch = get_last_csproj_change(root, primary)
-    changed_files = list_changed_paths(root, primary.parent, primary_last_commit)
-    changed_files, ignored_generated_cs_files = filter_ignorable_generated_changes(root, changed_files, primary_last_commit)
-    commit_summaries = list_commit_summaries(root, primary.parent, primary_last_commit)
+    changed_files = list_changed_paths(root, primary.parent, comparison_base_commit)
+    changed_files, ignored_generated_cs_files = filter_ignorable_generated_changes(root, changed_files, comparison_base_commit)
+    commit_summaries = list_commit_summaries(root, primary.parent, comparison_base_commit)
 
     changed_cs_files: list[dict[str, str]] = []
     for rel in changed_files:
@@ -435,6 +487,13 @@ def main() -> int:
         "requested_project": requested.as_posix(),
         "primary_csproj": to_relative_path(root, primary),
         "primary_current_version": primary_info.current_version,
+        "comparison_base": {
+            "branch_ref": comparison_branch_ref,
+            "commit": comparison_base_commit,
+            "epoch_seconds": comparison_base_epoch,
+            "utc": datetime.fromtimestamp(comparison_base_epoch, tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
+        },
+        "comparison_range": f"{comparison_base_commit}..HEAD",
         "primary_last_change": {
             "commit": primary_last_commit,
             "epoch_seconds": primary_last_epoch,

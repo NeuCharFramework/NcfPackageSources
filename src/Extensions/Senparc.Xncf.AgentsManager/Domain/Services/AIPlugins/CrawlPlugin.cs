@@ -1,4 +1,18 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：CrawlPlugin.cs
+    文件功能描述：CrawlPlugin 服务逻辑
+    
+    
+    创建标识：Senparc - 20250117
+    
+    修改标识：Senparc - 20260701
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Text;
 using Senparc.AI.AgentKernel;

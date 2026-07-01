@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：ChatTaskStreamHub.cs
+    文件功能描述：ChatTaskStreamHub 服务逻辑
+    
+    
+    创建标识：Senparc - 20260626
+    
+    修改标识：Senparc - 20260701
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

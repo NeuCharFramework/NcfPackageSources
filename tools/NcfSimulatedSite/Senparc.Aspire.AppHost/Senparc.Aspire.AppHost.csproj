@@ -2,6 +2,10 @@
   <Sdk Name="Aspire.AppHost.Sdk" Version="13.4.6" />
 
   <PropertyGroup>
+    <PackageReleaseNotes>
+        [2026-07-01] v0.0.1 Dependency update from Senparc.Xncf.AgentsManager to 0.11.0-preview2
+    </PackageReleaseNotes>
+    <Version>0.0.1</Version>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

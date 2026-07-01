@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：PromptOptimizationKernelFallbackService.cs
+    文件功能描述：PromptOptimizationKernelFallbackService 服务逻辑
+    
+    
+    创建标识：Senparc - 20260326
+    
+    修改标识：Senparc - 20260701
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
@@ -150,8 +164,7 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
                     return Fail(request.RequestId, "Kernel fallback: model returned empty output.");
                 }
 
-                var json = StripMarkdownCodeFence(raw);
-                if (!TryParsePayload(json, out var content, out var modelId, out var temperature, out var topP, out var maxTokens,
+                if (!TryParsePayloadWithRecovery(raw, out var content, out var modelId, out var temperature, out var topP, out var maxTokens,
                         out var frequencyPenalty, out var presencePenalty, out var reason, out var predictedScore))
                 {
                     _logger.LogWarning("Kernel fallback: JSON parse failed. First 500 chars: {Snippet}",
@@ -289,6 +302,136 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
             }
 
             return inner.Trim();
+        }
+
+        private static bool TryParsePayloadWithRecovery(
+            string raw,
+            out string optimizedContent,
+            out int modelId,
+            out float temperature,
+            out float topP,
+            out int maxTokens,
+            out float frequencyPenalty,
+            out float presencePenalty,
+            out string reason,
+            out double predictedScore)
+        {
+            var json = StripMarkdownCodeFence(raw);
+            if (TryParsePayload(
+                    json,
+                    out optimizedContent,
+                    out modelId,
+                    out temperature,
+                    out topP,
+                    out maxTokens,
+                    out frequencyPenalty,
+                    out presencePenalty,
+                    out reason,
+                    out predictedScore))
+            {
+                return true;
+            }
+
+            var scanStart = 0;
+            while (TryExtractNextJsonObject(raw, scanStart, out var candidate, out var nextScanStart))
+            {
+                if (TryParsePayload(
+                        candidate,
+                        out optimizedContent,
+                        out modelId,
+                        out temperature,
+                        out topP,
+                        out maxTokens,
+                        out frequencyPenalty,
+                        out presencePenalty,
+                        out reason,
+                        out predictedScore))
+                {
+                    return true;
+                }
+
+                scanStart = nextScanStart;
+            }
+
+            optimizedContent = null;
+            modelId = 0;
+            temperature = 0.7f;
+            topP = 0.9f;
+            maxTokens = 2000;
+            frequencyPenalty = 0f;
+            presencePenalty = 0f;
+            reason = null;
+            predictedScore = 0;
+            return false;
+        }
+
+        private static bool TryExtractNextJsonObject(string text, int startIndex, out string json, out int nextStartIndex)
+        {
+            json = null;
+            nextStartIndex = Math.Max(startIndex, 0);
+            if (string.IsNullOrEmpty(text) || nextStartIndex >= text.Length)
+            {
+                return false;
+            }
+
+            var objectStart = text.IndexOf('{', nextStartIndex);
+            while (objectStart >= 0)
+            {
+                var depth = 0;
+                var inString = false;
+                var escaped = false;
+
+                for (var i = objectStart; i < text.Length; i++)
+                {
+                    var c = text[i];
+
+                    if (inString)
+                    {
+                        if (escaped)
+                        {
+                            escaped = false;
+                        }
+                        else if (c == '\\')
+                        {
+                            escaped = true;
+                        }
+                        else if (c == '"')
+                        {
+                            inString = false;
+                        }
+
+                        continue;
+                    }
+
+                    if (c == '"')
+                    {
+                        inString = true;
+                        continue;
+                    }
+
+                    if (c == '{')
+                    {
+                        depth++;
+                        continue;
+                    }
+
+                    if (c == '}')
+                    {
+                        depth--;
+                        if (depth == 0)
+                        {
+                            json = text.Substring(objectStart, i - objectStart + 1).Trim();
+                            nextStartIndex = i + 1;
+                            return true;
+                        }
+                    }
+                }
+
+                objectStart = text.IndexOf('{', objectStart + 1);
+            }
+
+            nextStartIndex = text.Length;
+            return false;
         }
 
         private static bool TryParsePayload(

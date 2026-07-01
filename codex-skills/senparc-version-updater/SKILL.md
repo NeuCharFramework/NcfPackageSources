@@ -1,6 +1,6 @@
 ---
 name: senparc-version-updater
-description: Update version metadata for Senparc-prefixed .NET projects. Use when Codex needs to update a package version in .csproj files (preferring .net10+ variants), summarize project changes since the last .csproj update, add standardized Chinese changelog headers to changed .cs files, append PackageReleaseNotes entries, and recursively bump versions for projects that reference the updated project.
+description: Update version metadata for Senparc-prefixed .NET projects. Use when Codex needs to update a package version in .csproj files (preferring .net10+ variants), summarize project changes since the merge-base against master/main, add standardized Chinese changelog headers to changed .cs files, append PackageReleaseNotes entries, and recursively bump versions for projects that reference the updated project.
 ---
 
 # Senparc Version Updater
@@ -24,14 +24,31 @@ python3 scripts/senparc_version_scan.py --root <repo-root> --project <project-pa
 Use the output JSON as the source of truth for:
 
 1. The selected primary `.csproj` to edit.
-2. Changed files since the last primary `.csproj` update.
+2. Changed files in the current update scope (`comparison_base..HEAD` plus uncommitted).
 3. Changed `.cs` files that must receive header updates.
 4. Recursive dependent `.csproj` files that need passive version bumps.
+5. Comparison baseline metadata (`master/main` branch ref and merge-base commit).
 
 Special rule for generated files:
 
 1. Never add header comments to `*.Generated.cs`.
 2. If a `*.Generated.cs` change only updates timestamp-like text after regeneration and has no real content change, do not treat it as a changed file.
+
+## Commit Baseline Rule (Strict)
+
+Before any version decision, resolve comparison baseline in this priority:
+
+1. `origin/master`
+2. `origin/main`
+3. `master`
+4. `main`
+
+Then:
+
+1. Compute `merge-base(HEAD, baseline-branch)` as `comparison_base`.
+2. Treat all commits in `comparison_base..HEAD` as this update's commit set.
+3. Include uncommitted workspace changes in the same update scope.
+4. If no `master/main` branch can be resolved or merge-base fails, stop and report error (do not fallback to other windows).
 
 ## Apply Workflow
 
@@ -49,7 +66,7 @@ Use the scanner's `primary_csproj` and `dependent_csprojs` to avoid inconsistent
 
 Treat the time window as:
 
-1. Start: last Git commit that modified the primary `.csproj`.
+1. Start: scanner output `comparison_base.commit` (merge-base vs `master/main`).
 2. End: current workspace state (`HEAD` plus uncommitted files).
 
 Summarize all project updates in this window and decide bump type:
@@ -100,7 +117,8 @@ For all projects in `dependent_csprojs`:
 1. Update version with passive bump policy (`patch` unless explicit override).
 2. Append a passive release note item:
    - `[YYYY-MM-DD] vX.Y.Z Dependency update from <project-name> to <source-version>`
-3. Continue recursively for projects referencing those projects.
+3. If a dependent project lacks `<Version>`, create it under the first `<PropertyGroup>` before writing release notes.
+4. Continue recursively for projects referencing those projects.
 
 Process in dependency layers from nearest dependents to farthest dependents, and avoid cycles with a visited set.
 
@@ -111,7 +129,8 @@ Validate:
 1. Every file in `changed_cs_files` contains a valid changelog block.
 2. Every edited `.csproj` has incremented version and appended release note entry.
 3. All recursive dependents from scanner output are covered.
-4. Optional: run project build/tests before commit.
+4. All commits in `comparison_base..HEAD` are reflected by updated files/projects in this workflow.
+5. Optional: run project build/tests before commit.
 
 ## Suggested Command Sequence
 
@@ -119,9 +138,15 @@ Validate:
 # 1) Scan baseline and impact scope
 python3 scripts/senparc_version_scan.py --root <repo-root> --project <project-path> > /tmp/senparc-version-scan.json
 
-# 2) Inspect impacted C# files
+# 2) Inspect merge-base baseline
+jq -r '.comparison_base.branch_ref, .comparison_base.commit, .comparison_range' /tmp/senparc-version-scan.json
+
+# 3) Inspect impacted C# files
 jq -r '.changed_cs_files[].path' /tmp/senparc-version-scan.json
 
-# 3) Inspect passive dependent projects
+# 4) Inspect passive dependent projects
 jq -r '.dependent_csprojs[]' /tmp/senparc-version-scan.json
+
+# 5) Inspect commits included in this update window
+jq -r '.commit_summaries[] | "\(.date) \(.commit) \(.message)"' /tmp/senparc-version-scan.json
 ```

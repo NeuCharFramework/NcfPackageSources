@@ -1,3 +1,20 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：ChatGroupService.cs
+    文件功能描述：聊天组运行与多智能体协作编排服务
+    
+    
+    创建标识：Senparc - 20240616
+    
+    修改标识：Senparc - 20260701
+    修改描述：v0.11.0-preview2 优化多智能体群聊任务管理与执行流程
+
+    修改标识：Senparc - 20260701
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Workflows;
 using Microsoft.Extensions.AI;

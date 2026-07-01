@@ -95,13 +95,16 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             public string EvaluationReason = "";
         }
 
-        private readonly ConcurrentDictionary<string, State> _states = new();
+        /// <summary>
+        /// 注意：RunChatGroup 可能在独立 ServiceProvider/Scope 中执行，桥接状态必须跨实例共享。
+        /// </summary>
+        private static readonly ConcurrentDictionary<string, State> _states = new();
 
         /// <summary>
         /// 每个优化 RequestId 只允许一次 <see cref="PromptItemService.AddPromptItemAsync"/>（工具或 Kernel 回退谁先抢到谁写）。
         /// 解决：工具已插入 DB 但 <see cref="RecordCreatedPrompt"/> 未写入 State → TryTakeResult 失败 → 回退再插一条（内容相同）。
         /// </summary>
-        private readonly ConcurrentDictionary<string, byte> _versionInsertClaimed = new();
+        private static readonly ConcurrentDictionary<string, byte> _versionInsertClaimed = new();
 
         /// <summary>
         /// 统一键格式，避免模型/客户端传入的 GUID 大小写与 <see cref="Guid.ToString"/> 不一致导致 _states 匹配失败（no registered session）。
@@ -134,7 +137,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 return;
             }
 
-            _states.TryAdd(key, new State());
+            _states[key] = new State();
+            _versionInsertClaimed.TryRemove(key, out _);
         }
 
         /// <summary>
