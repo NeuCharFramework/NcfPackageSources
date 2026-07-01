@@ -30,25 +30,12 @@ variables:
     value: 'https://api.nuget.org/v3/index.json'  # 与 NuGetCommand@2 external 推送目标一致
 
 steps:  
-# - task: UseDotNet@2  
-#   displayName: 'Use .NET Core SDK 3'  
-#   inputs:  
-#     version: '3.1.x'  
-#     packageType: 'sdk'  
-# - task: UseDotNet@2  
-#   displayName: 'Use .NET SDK 6'  
-#   inputs:  
-#     version: '6.x'  
-#     packageType: 'sdk'  
-#     performMultiLevelLookup: true  
-#     includePreviewVersions: true  
-# - task: UseDotNet@2  
-#   displayName: 'Use .NET SDK 8'  
-#   inputs:  
-#     version: '8.x'  
-#     packageType: 'sdk'  
-#     performMultiLevelLookup: true  
-#     includePreviewVersions: true  
+- task: UseDotNet@2
+  displayName: 'Use .NET SDK 10.x'
+  inputs:
+    packageType: 'sdk'
+    version: '10.0.x'
+    performMultiLevelLookup: false
 
 # 🟢 缓存 NuGet 及依赖项
 - task: Cache@2
@@ -94,9 +81,11 @@ steps:
   displayName: 'Add NuGet Source'  
     
 # ✅ 恢复 NuGet 依赖（使用缓存）
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
+  displayName: Restore
   inputs:
-    restoreSolution: '**/NcfPackageSources.sln'
+    command: restore
+    projects: '**/NcfPackageSources.sln'
 
 - task: DotNetCoreCLI@2    
   displayName: 'dotnet --list-sdks '    
