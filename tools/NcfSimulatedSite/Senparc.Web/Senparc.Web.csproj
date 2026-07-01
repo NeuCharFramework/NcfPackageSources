@@ -5,7 +5,11 @@
 		<Version>0.21.5</Version>
 		<PackageReleaseNotes>
 			[2026-07-01] v0.21.5 Dependency update from Senparc.Xncf.AgentsManager to 0.11.0-preview2
-		</PackageReleaseNotes>
+		
+			[2026-07-02] v0.21.5 支持流式输出并优化交互体验，升级 Senparc.AI.AgentKernel 并完成兼容性适配
+			1、支持流式输出并优化交互体验
+			2、升级 Senparc.AI.AgentKernel 并完成兼容性适配
+</PackageReleaseNotes>
 		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
 		<TypeScriptToolsVersion>4.1</TypeScriptToolsVersion>
 		<UserSecretsId>d2144151-af7a-4d50-896d-4a306e594f7b</UserSecretsId>

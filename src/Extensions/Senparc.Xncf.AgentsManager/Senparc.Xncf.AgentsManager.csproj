@@ -67,9 +67,9 @@
     [2026-07-01] v0.11.0-preview2 Upgrade multi-agent group chat workflow and MAF integration
     1、优化 ChatGroupService 的任务管理、并发处理与异常回退
     2、改进 AgentsManager 页面历史记录展示与交互体验
-    [2026-07-01] v0.11.0-preview2 Baseline sync against origin/master with recursive dependency alignment
-    1、覆盖 comparison_base..HEAD 范围内 AgentsManager 变更并补齐所有 changed_cs_files 头部记录
-    2、递归依赖项目统一执行版本元数据对齐，补齐缺失的 Version 与 PackageReleaseNotes
+    [2026-07-02] v0.11.0-preview2 增强多智能体群聊流程、容错与任务调度能力，优化 PromptOptimizationAgentBridge 稳定性与状态恢复能力
+    1、增强多智能体群聊流程、容错与任务调度能力
+    2、优化 PromptOptimizationAgentBridge 稳定性与状态恢复能力
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

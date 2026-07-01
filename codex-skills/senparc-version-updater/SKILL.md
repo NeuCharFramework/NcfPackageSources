@@ -26,8 +26,9 @@ Use the output JSON as the source of truth for:
 1. The selected primary `.csproj` to edit.
 2. Changed files in the current update scope (`comparison_base..HEAD` plus uncommitted) across the entire repository, not just the primary project directory.
 3. Changed `.cs` files that must receive header updates (repository-wide).
-4. Recursive dependent `.csproj` files that need passive version bumps.
-5. Comparison baseline metadata (`master/main` branch ref and merge-base commit).
+4. `.csproj` files mapped from changed `.cs` files (`changed_csprojs`) that must receive direct project updates.
+5. Recursive dependent `.csproj` files that need passive version bumps.
+6. Comparison baseline metadata (`master/main` branch ref and merge-base commit).
 
 Special rule for generated files:
 
@@ -77,6 +78,7 @@ Summarize all project updates in this window and decide bump type:
 
 If current version contains prerelease suffix (`-preview.N`), preserve prerelease channel and increment its number while applying the major/minor/patch base bump.
 For commits that are still unmerged into `master/main` (same `comparison_base..HEAD` window), bump version at most once. Subsequent updates in the same unmerged window must reuse the same version and only append/merge release notes.
+Version must be monotonic non-decreasing per project: never lower `<Version>` than the pre-update value. In the same unmerged window, reusing the same version is allowed when only merging release notes.
 
 See [versioning-policy.md](references/versioning-policy.md).
 
@@ -98,9 +100,17 @@ If the file already has the block, keep historical entries and append only one n
 Always skip `*.Generated.cs` for header insertion.
 `changed_cs_files` is generated from the repository-wide comparison window, so this step must not filter to the primary project directory.
 
-### 4) Append `<PackageReleaseNotes>` In Selected `.csproj`
+### 4) Update `.csproj` For All Changed Projects
 
-In the selected primary `.csproj`:
+For all projects in `changed_csprojs` (including `primary_csproj`):
+
+1. Ensure project version metadata and release notes are updated for this window.
+2. For the same unmerged window (`comparison_base..HEAD`), version can only bump once per project.
+3. If new commits are added before merge, merge details into the same version's release-note block instead of creating a new version entry.
+
+### 5) Append `<PackageReleaseNotes>` In Selected `.csproj`
+
+In the selected primary `.csproj` (must also satisfy Step 4):
 
 1. Append new lines to existing `<PackageReleaseNotes>` content.
 2. Keep the same leading spaces as the previous line.
@@ -110,10 +120,18 @@ In the selected primary `.csproj`:
    - `2、<detail>`
 4. Include all key updates found in Step 2.
 5. Within the same unmerged `comparison_base..HEAD` window, do not create another version bump entry; merge new details into the same `vX.Y.Z` release-note block.
+6. `summary/detail` must describe project functional changes (feature, behavior, compatibility, bug fix, UI/UX, dependency adaptation).
+7. Do not write process-tracking text in release notes, including but not limited to: `Repository baseline sync`, `sync window`, `comparison_base..HEAD`, or similar window/baseline markers.
+8. `<PackageReleaseNotes>` must be located after `<Version>` in the `.csproj` file.
+9. `<PackageReleaseNotes>` does not need to be immediately adjacent to `<Version>`. If it is already after `<Version>`, keep its current position (manual placement may exist).
+10. If `<PackageReleaseNotes>` appears before `<Version>`, move `<PackageReleaseNotes>` to any valid location after `<Version>` while preserving indentation/content.
+11. `<Version>` must be located after `<TargetFramework>` or `<TargetFrameworks>` in the `.csproj` file.
+12. `<Version>` does not need to be immediately adjacent to `<TargetFramework>`/`<TargetFrameworks>`. If it is already after framework tags, keep its current position.
+13. If `<Version>` appears before `<TargetFramework>`/`<TargetFrameworks>`, move `<Version>` to any valid location after framework tags while preserving indentation/content.
 
 If `<PackageReleaseNotes>` does not exist, create it under the first `<PropertyGroup>` and match surrounding indentation.
 
-### 5) Propagate Version Bumps To Referencing Projects
+### 6) Propagate Version Bumps To Referencing Projects
 
 For all projects in `dependent_csprojs`:
 
@@ -125,15 +143,18 @@ For all projects in `dependent_csprojs`:
 
 Process in dependency layers from nearest dependents to farthest dependents, and avoid cycles with a visited set.
 
-### 6) Validate Before Finish
+### 7) Validate Before Finish
 
 Validate:
 
 1. Every file in `changed_cs_files` contains a valid changelog block.
-2. Every edited `.csproj` has incremented version and appended release note entry.
+2. Every `.csproj` in `changed_csprojs` has updated version/release notes for current window.
 3. All recursive dependents from scanner output are covered.
-4. All commits in `comparison_base..HEAD` are reflected by updated files/projects in this workflow.
-5. Optional: run project build/tests before commit.
+4. In every edited `.csproj`, `<Version>` is located after `<TargetFramework>` or `<TargetFrameworks>`.
+5. In every edited `.csproj`, `<PackageReleaseNotes>` is located after `<Version>`.
+6. In every edited `.csproj`, resulting `<Version>` is not lower than its pre-update `<Version>`.
+7. All commits in `comparison_base..HEAD` are reflected by updated files/projects in this workflow.
+8. Optional: run project build/tests before commit.
 
 ## Suggested Command Sequence
 
@@ -150,9 +171,12 @@ jq -r '.changed_cs_files[].path' /tmp/senparc-version-scan.json
 # 3.1) Optional: inspect only files under selected primary project directory
 jq -r '.changed_cs_files_in_primary_project[].path' /tmp/senparc-version-scan.json
 
-# 4) Inspect passive dependent projects
+# 4) Inspect direct changed projects (.cs -> .csproj mapping)
+jq -r '.changed_csprojs[]' /tmp/senparc-version-scan.json
+
+# 5) Inspect passive dependent projects
 jq -r '.dependent_csprojs[]' /tmp/senparc-version-scan.json
 
-# 5) Inspect commits included in this update window
+# 6) Inspect commits included in this update window
 jq -r '.commit_summaries[] | "\(.date) \(.commit) \(.message)"' /tmp/senparc-version-scan.json
 ```

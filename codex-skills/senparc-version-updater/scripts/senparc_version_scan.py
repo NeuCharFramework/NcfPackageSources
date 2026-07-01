@@ -378,6 +378,18 @@ def path_is_under(child_rel: str, parent_rel: str) -> bool:
     return child == parent or child.startswith(parent + "/")
 
 
+def resolve_selected_csproj_for_file(file_path: Path, selected_by_dir: dict[Path, Path], root: Path) -> Path | None:
+    current = file_path.resolve().parent
+    root_resolved = root.resolve()
+    while True:
+        selected = selected_by_dir.get(current)
+        if selected is not None:
+            return selected
+        if current == root_resolved or current.parent == current:
+            return None
+        current = current.parent
+
+
 def get_file_creation_date_yyyymmdd(root: Path, file_path: Path) -> str:
     rel = to_relative_path(root, file_path)
     code, output = run_git(root, ["log", "--follow", "--diff-filter=A", "--format=%cd", "--date=format:%Y%m%d", "--", rel])
@@ -479,6 +491,7 @@ def main() -> int:
     commit_summaries = list_commit_summaries(root, comparison_base_commit)
 
     changed_cs_files: list[dict[str, str]] = []
+    changed_csproj_targets: set[Path] = set()
     for rel in changed_files:
         if not rel.lower().endswith(".cs"):
             continue
@@ -487,6 +500,9 @@ def main() -> int:
         abs_file = (root / rel).resolve()
         if not abs_file.exists():
             continue
+        mapped_csproj = resolve_selected_csproj_for_file(abs_file, selected_by_dir, root)
+        if mapped_csproj is not None:
+            changed_csproj_targets.add(mapped_csproj.resolve())
         changed_cs_files.append(
             {
                 "path": rel,
@@ -520,6 +536,7 @@ def main() -> int:
         },
         "changed_files": changed_files,
         "changed_cs_files": changed_cs_files,
+        "changed_csprojs": [to_relative_path(root, p) for p in sorted(changed_csproj_targets)],
         "changed_files_in_primary_project": changed_files_in_primary_project,
         "changed_cs_files_in_primary_project": changed_cs_files_in_primary_project,
         "commit_summaries": commit_summaries,
