@@ -66,6 +66,9 @@
 4. `<PackageReleaseNotes>` 标签必须位于 `<Version>` 标签之后。
 5. `<PackageReleaseNotes>` 不要求紧邻 `<Version>`；若当前已在其后（包括人为调整位置），无需改动位置。
 6. 若 `<PackageReleaseNotes>` 在 `<Version>` 之前，必须调整到 `<Version>` 之后并保持内容与缩进。
+7. `<Version>` 标签必须位于 `<TargetFramework>` 或 `<TargetFrameworks>` 标签之后。
+8. `<Version>` 不要求紧邻 `<TargetFramework>`/`<TargetFrameworks>`；若当前已在其后（包括人为调整位置），无需改动位置。
+9. 若 `<Version>` 在 `<TargetFramework>`/`<TargetFrameworks>` 之前，必须调整到其后并保持内容与缩进。
 
 对于被动升级项目，建议使用：
 
