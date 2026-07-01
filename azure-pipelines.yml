@@ -58,13 +58,13 @@ steps:
     restoreKeys: 'nuget'
   displayName: 'Cache NuGet Packages'
 
-# 🟢 缓存 Aspire Workload
-- task: Cache@2
-  inputs:
-    key: 'aspire-workload | "$(Agent.OS)"'
-    path: '~/.dotnet'  # .NET SDK 及 workload 缓存目录
-    restoreKeys: 'aspire-workload'
-  displayName: 'Cache Aspire Workload'
+# # 🟢 缓存 Aspire Workload
+# - task: Cache@2
+#   inputs:
+#     key: 'aspire-workload | "$(Agent.OS)"'
+#     path: '~/.dotnet'  # .NET SDK 及 workload 缓存目录
+#     restoreKeys: 'aspire-workload'
+#   displayName: 'Cache Aspire Workload'
 
 # 🟢 缓存 NuGet 工具（减少安装时间）
 - task: Cache@2
@@ -74,11 +74,11 @@ steps:
     restoreKeys: 'nuget-tool'
   displayName: 'Cache NuGet Tool'
 
-# ✅ 仅当缓存未命中时安装 Aspire Workload
-- script: |
-    dotnet workload list | findstr /C:"aspire" || dotnet workload install aspire
-  displayName: 'Check & Install Aspire Workload'
-  condition: ne(variables['CACHE_RESTORED'], 'true')
+# # ✅ 仅当缓存未命中时安装 Aspire Workload
+# - script: |
+#     dotnet workload list | findstr /C:"aspire" || dotnet workload install aspire
+#   displayName: 'Check & Install Aspire Workload'
+#   condition: ne(variables['CACHE_RESTORED'], 'true')
 
 # ✅ 使用缓存的 NuGet 版本，避免重复安装
 - task: NuGetToolInstaller@1
