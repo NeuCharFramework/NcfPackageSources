@@ -76,6 +76,7 @@ Summarize all project updates in this window and decide bump type:
 3. `patch`: bug fix/refactor/test/docs/passive dependency bump.
 
 If current version contains prerelease suffix (`-preview.N`), preserve prerelease channel and increment its number while applying the major/minor/patch base bump.
+For commits that are still unmerged into `master/main` (same `comparison_base..HEAD` window), bump version at most once. Subsequent updates in the same unmerged window must reuse the same version and only append/merge release notes.
 
 See [versioning-policy.md](references/versioning-policy.md).
 
@@ -108,6 +109,7 @@ In the selected primary `.csproj`:
    - `1、<detail>`
    - `2、<detail>`
 4. Include all key updates found in Step 2.
+5. Within the same unmerged `comparison_base..HEAD` window, do not create another version bump entry; merge new details into the same `vX.Y.Z` release-note block.
 
 If `<PackageReleaseNotes>` does not exist, create it under the first `<PropertyGroup>` and match surrounding indentation.
 
