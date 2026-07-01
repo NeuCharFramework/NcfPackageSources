@@ -26,6 +26,7 @@ using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.AgentsManager.OHS.Local.PL;
+using Senparc.Xncf.AIKernel.Domain.Models;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
@@ -53,6 +54,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         public required AgentTemplateDto TemplateDto { get; init; }
         public required ChatClientAgent Agent { get; init; }
         public required IWantToRun Runner { get; init; }
+        public required ChatClientAgentOptions AgentOptions { get; init; }
+        public SenparcAiSetting? Setting { get; init; }
     }
 
     public static int ChatMaxRound = 20;
@@ -209,6 +212,15 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 var aiModelDto = aiModelService.Mapper.Map<AIModelDto>(aiModel);
                 senparcAiSetting = aiModelService.BuildSenparcAiSetting(aiModelDto);
             }
+            else if (senparcAiSetting is SenparcAiSetting defaultSetting)
+            {
+                // 与 PromptRange 保持一致：将系统默认设置映射为 AIModel 再构建，统一 Endpoint/Deployment 归一化。
+                var defaultModel = BuildModelDtoFromSetting(defaultSetting, "AgentsManager.RequestDefault");
+                if (defaultModel != null)
+                {
+                    senparcAiSetting = aiModelService.BuildSenparcAiSetting(defaultModel);
+                }
+            }
 
             #endregion
 
@@ -261,6 +273,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     promptItemService,
                     templateDto,
                     template,
+                    aiModelService,
                     senparcAiSetting);
 
                 var effectiveSetting = personality ? currentAgentSetting : senparcAiSetting;
@@ -290,7 +303,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 };
 
                 var runner = await agentHandler
-                    .IWantTo()
+                    .IWantTo(effectiveSetting)
                     .ConfigChatModel($"{template.Name}-{member.Uid}", agentOptions)
                     .BuildKernelWithAgentSessionAsync();
 
@@ -299,7 +312,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     Template = template,
                     TemplateDto = templateDto,
                     Agent = runner.Kernel.ChatClientAgent,
-                    Runner = runner
+                    Runner = runner,
+                    AgentOptions = CloneAgentOptions(agentOptions),
+                    Setting = effectiveSetting as SenparcAiSetting
                 });
             }
 
@@ -319,6 +334,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 var hasSingleAgentOutput = await RunSingleAgentAsync(
                     enterContext,
                     userCommand,
+                    aiModelService,
                     logger,
                     chatGroup,
                     chatGroupDto,
@@ -757,6 +773,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 var hasFallbackOutput = await RunSingleAgentAsync(
                     enterContext,
                     userCommand,
+                    aiModelService,
                     logger,
                     chatGroup,
                     chatGroupDto,
@@ -853,6 +870,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     private async Task<bool> RunSingleAgentAsync(
         AgentRuntimeContext agentContext,
         string userCommand,
+        AIModelService aiModelService,
         StringBuilder logger,
         ChatGroup chatGroup,
         ChatGroupDto chatGroupDto,
@@ -879,9 +897,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
         try
         {
-            var result = await agentContext.Runner.RunChatAsync(
+            var result = await ExecuteRunnerWithSessionRetryAsync(
+                agentContext.Runner,
                 userCommand,
-                agentContext.Runner.Kernel.AgentSession,
                 update =>
                 {
                     if (!string.IsNullOrEmpty(update?.Text))
@@ -905,6 +923,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             var output = string.IsNullOrWhiteSpace(result?.OutputString)
                 ? streamedOutput.ToString()
                 : result.OutputString;
+
+            if (ContainsServiceFailureSignature(output))
+            {
+                throw new NcfExceptionBase(output.Trim());
+            }
 
             if (!string.IsNullOrWhiteSpace(output))
             {
@@ -942,6 +965,53 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         }
         catch (Exception ex)
         {
+            if (ContainsForbiddenStatus(ex))
+            {
+                var fallbackResult = await TryRunSingleAgentForbiddenFallbackAsync(
+                    agentContext,
+                    userCommand,
+                    aiModelService,
+                    chatGroup.Name);
+
+                if (fallbackResult.Success && !string.IsNullOrWhiteSpace(fallbackResult.Output))
+                {
+                    logger.AppendLine($"[{chatGroup.Name}] 单智能体 403 回退成功：{fallbackResult.FallbackName}");
+                    var fallbackUsageSnapshot = BuildUsageSnapshot(
+                        fallbackResult.Usage,
+                        Math.Max(0, (int)Math.Round((DateTime.Now - responseStartedAt).TotalMilliseconds)),
+                        roundIndex,
+                        responseId);
+
+                    var fallbackHistory = await SaveAgentMessageAsync(
+                        agentContext,
+                        fallbackResult.Output,
+                        chatGroup,
+                        chatGroupDto,
+                        chatTaskDto,
+                        chatGroupHistoryService,
+                        chatTask,
+                        chatTaskService,
+                        logger,
+                        fallbackUsageSnapshot);
+
+                    PublishMessageEvent(
+                        chatTask.Id,
+                        fallbackHistory?.Id,
+                        agentContext.TemplateDto.Id,
+                        agentContext.Agent.Name,
+                        responseId,
+                        fallbackResult.Output,
+                        fallbackUsageSnapshot);
+
+                    return true;
+                }
+
+                if (!string.IsNullOrWhiteSpace(fallbackResult.Error))
+                {
+                    logger.AppendLine($"[{chatGroup.Name}] 单智能体 403 回退失败：{fallbackResult.Error}");
+                }
+            }
+
             logger.AppendLine($"[{chatGroup.Name}] 单智能体执行异常：{ex.Message}");
 
             var errorMessage = BuildAgentExecutionFailureMessage(ex);
@@ -973,6 +1043,204 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 usageSnapshot);
 
             throw;
+        }
+    }
+
+    private sealed class SingleAgentForbiddenFallbackResult
+    {
+        public bool Success { get; init; }
+        public string Output { get; init; } = string.Empty;
+        public UsageDetails Usage { get; init; }
+        public string FallbackName { get; init; } = string.Empty;
+        public string Error { get; init; } = string.Empty;
+    }
+
+    private async Task<SingleAgentForbiddenFallbackResult> TryRunSingleAgentForbiddenFallbackAsync(
+        AgentRuntimeContext agentContext,
+        string userCommand,
+        AIModelService aiModelService,
+        string scene)
+    {
+        var currentSetting = agentContext.Setting ?? (Senparc.AI.Config.SenparcAiSetting as SenparcAiSetting);
+        var currentModel = BuildModelDtoFromSetting(currentSetting, "AgentsManager.Current");
+        var fallbackErrors = new List<string>();
+
+        if (currentSetting != null)
+        {
+            try
+            {
+                SenparcTrace.SendCustomLog(
+                    "AgentsManager.AI.StreamFallback",
+                    $"{scene} 开始尝试回退（同模型非流式）。Model={BuildModelDiagnosticInfo(currentModel)}");
+
+                var sameModelDirectResult = await RunSingleAgentWithSettingAsync(
+                    agentContext,
+                    currentSetting,
+                    userCommand,
+                    $"{agentContext.Template.Name}-direct-fallback");
+
+                if (!string.IsNullOrWhiteSpace(sameModelDirectResult.Output))
+                {
+                    SenparcTrace.SendCustomLog(
+                        "AgentsManager.AI.StreamFallback",
+                        $"{scene} 403 后回退成功（同模型非流式）。Model={BuildModelDiagnosticInfo(currentModel)}");
+
+                    return new SingleAgentForbiddenFallbackResult
+                    {
+                        Success = true,
+                        Output = sameModelDirectResult.Output,
+                        Usage = sameModelDirectResult.Usage,
+                        FallbackName = "SameModelNonStream"
+                    };
+                }
+
+                fallbackErrors.Add("同模型非流式回退返回空结果");
+            }
+            catch (Exception sameModelEx)
+            {
+                fallbackErrors.Add($"同模型非流式回退失败：{FlattenExceptionMessages(sameModelEx)}");
+            }
+        }
+
+        if (TryBuildAlternateDeploymentModel(currentModel, out var deploymentModel) && deploymentModel != null)
+        {
+            try
+            {
+                SenparcTrace.SendCustomLog(
+                    "AgentsManager.AI.DeploymentFallback",
+                    $"{scene} 开始尝试回退（DeploymentName=ModelId）。Current={BuildModelDiagnosticInfo(currentModel)}; Fallback={BuildModelDiagnosticInfo(deploymentModel)}");
+
+                var deploymentSetting = aiModelService.BuildSenparcAiSetting(deploymentModel);
+                var deploymentResult = await RunSingleAgentWithSettingAsync(
+                    agentContext,
+                    deploymentSetting,
+                    userCommand,
+                    $"{agentContext.Template.Name}-deployment-fallback");
+
+                if (!string.IsNullOrWhiteSpace(deploymentResult.Output))
+                {
+                    SenparcTrace.SendCustomLog(
+                        "AgentsManager.AI.DeploymentFallback",
+                        $"{scene} 403 回退成功（DeploymentName=ModelId）。Current={BuildModelDiagnosticInfo(currentModel)}; Fallback={BuildModelDiagnosticInfo(deploymentModel)}");
+
+                    return new SingleAgentForbiddenFallbackResult
+                    {
+                        Success = true,
+                        Output = deploymentResult.Output,
+                        Usage = deploymentResult.Usage,
+                        FallbackName = "DeploymentName=ModelId"
+                    };
+                }
+
+                fallbackErrors.Add("Deployment 回退返回空结果");
+            }
+            catch (Exception deploymentEx)
+            {
+                fallbackErrors.Add($"Deployment 回退失败：{FlattenExceptionMessages(deploymentEx)}");
+            }
+        }
+
+        var defaultSetting = Senparc.AI.Config.SenparcAiSetting as SenparcAiSetting;
+        if (defaultSetting != null && CanUseDefaultChatFallback(defaultSetting))
+        {
+            var defaultModel = BuildModelDtoFromSetting(defaultSetting, "AgentsManager.SystemDefault");
+            if (!IsSameChatConfig(currentModel, defaultModel))
+            {
+                try
+                {
+                    SenparcTrace.SendCustomLog(
+                        "AgentsManager.AI.DefaultFallback",
+                        $"{scene} 开始尝试回退（SystemDefault）。Current={BuildModelDiagnosticInfo(currentModel)}; Default={BuildModelDiagnosticInfo(defaultModel)}");
+
+                    var defaultResult = await RunSingleAgentWithSettingAsync(
+                        agentContext,
+                        defaultSetting,
+                        userCommand,
+                        $"{agentContext.Template.Name}-default-fallback");
+
+                    if (!string.IsNullOrWhiteSpace(defaultResult.Output))
+                    {
+                        SenparcTrace.SendCustomLog(
+                            "AgentsManager.AI.DefaultFallback",
+                            $"{scene} 403 回退成功（SystemDefault）。Current={BuildModelDiagnosticInfo(currentModel)}; Default={BuildModelDiagnosticInfo(defaultModel)}");
+
+                        return new SingleAgentForbiddenFallbackResult
+                        {
+                            Success = true,
+                            Output = defaultResult.Output,
+                            Usage = defaultResult.Usage,
+                            FallbackName = "SystemDefaultChat"
+                        };
+                    }
+
+                    fallbackErrors.Add("系统默认模型回退返回空结果");
+                }
+                catch (Exception defaultEx)
+                {
+                    fallbackErrors.Add($"系统默认模型回退失败：{FlattenExceptionMessages(defaultEx)}");
+                }
+            }
+        }
+
+        return new SingleAgentForbiddenFallbackResult
+        {
+            Success = false,
+            Error = fallbackErrors.Count == 0 ? "无可用回退方案" : string.Join(" | ", fallbackErrors)
+        };
+    }
+
+    private static async Task<(string Output, UsageDetails Usage)> RunSingleAgentWithSettingAsync(
+        AgentRuntimeContext agentContext,
+        SenparcAiSetting setting,
+        string userCommand,
+        string runnerName)
+    {
+        var handler = new AgentAiHandler(setting);
+        var runner = await handler
+            .IWantTo(setting)
+            .ConfigChatModel(runnerName, CloneAgentOptions(agentContext.AgentOptions))
+            .BuildKernelWithAgentSessionAsync();
+
+        var runResult = await ExecuteRunnerWithSessionRetryAsync(runner, userCommand);
+        var output = runResult?.OutputString;
+        if (string.IsNullOrWhiteSpace(output) && runResult?.Result != null)
+        {
+            output = ExtractAgentResponseText(runResult.Result);
+        }
+
+        if (ContainsServiceFailureSignature(output))
+        {
+            throw new NcfExceptionBase(output.Trim());
+        }
+
+        return (output ?? string.Empty, runResult?.Result?.Usage);
+    }
+
+    private static async Task<SenparcKernelAiResult<string>> ExecuteRunnerWithSessionRetryAsync(
+        IWantToRun runner,
+        string userCommand,
+        Action<AgentResponseUpdate> onUpdate = null)
+    {
+        var session = runner?.Kernel?.AgentSession;
+        if (onUpdate == null)
+        {
+            try
+            {
+                return await runner.RunChatAsync(userCommand, session);
+            }
+            catch when (session != null)
+            {
+                return await runner.RunChatAsync(userCommand, null);
+            }
+        }
+
+        try
+        {
+            return await runner.RunChatAsync(userCommand, session, onUpdate);
+        }
+        catch when (session != null)
+        {
+            return await runner.RunChatAsync(userCommand, null, onUpdate);
         }
     }
 
@@ -1141,6 +1409,264 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         return $"系统提示：AI 服务调用失败，任务已中断。原因：{normalized}";
     }
 
+    private static ChatClientAgentOptions CloneAgentOptions(ChatClientAgentOptions options)
+    {
+        if (options == null)
+        {
+            return new ChatClientAgentOptions
+            {
+                ChatOptions = new ChatOptions()
+            };
+        }
+
+        return new ChatClientAgentOptions
+        {
+            Name = options.Name,
+            Description = options.Description,
+            ChatOptions = CloneChatOptions(options.ChatOptions)
+        };
+    }
+
+    private static ChatOptions CloneChatOptions(ChatOptions chatOptions)
+    {
+        if (chatOptions == null)
+        {
+            return new ChatOptions();
+        }
+
+        return new ChatOptions
+        {
+            Instructions = chatOptions.Instructions,
+            MaxOutputTokens = chatOptions.MaxOutputTokens,
+            Temperature = chatOptions.Temperature,
+            TopP = chatOptions.TopP,
+            FrequencyPenalty = chatOptions.FrequencyPenalty,
+            PresencePenalty = chatOptions.PresencePenalty,
+            AllowMultipleToolCalls = chatOptions.AllowMultipleToolCalls,
+            StopSequences = chatOptions.StopSequences?.ToList() ?? new List<string>(),
+            Tools = chatOptions.Tools?.ToList()
+        };
+    }
+
+    private static bool ContainsForbiddenStatus(Exception ex)
+    {
+        if (ex == null)
+        {
+            return false;
+        }
+
+        var chain = FlattenExceptionMessages(ex);
+        if (chain.Contains("Status: 403 (Forbidden)", StringComparison.OrdinalIgnoreCase)
+            || chain.Contains("StatusCode: 403", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        var has403 = chain.Contains("403", StringComparison.OrdinalIgnoreCase);
+        var hasForbidden = chain.Contains("forbidden", StringComparison.OrdinalIgnoreCase)
+                           || chain.Contains("禁止", StringComparison.OrdinalIgnoreCase)
+                           || chain.Contains("拒绝", StringComparison.OrdinalIgnoreCase);
+
+        return has403 && hasForbidden;
+    }
+
+    private static bool ContainsServiceFailureSignature(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return false;
+        }
+
+        var normalized = text.Trim();
+        var has403 = normalized.Contains("Status: 403", StringComparison.OrdinalIgnoreCase)
+                     || normalized.Contains("StatusCode: 403", StringComparison.OrdinalIgnoreCase);
+        var has401 = normalized.Contains("Status: 401", StringComparison.OrdinalIgnoreCase)
+                     || normalized.Contains("StatusCode: 401", StringComparison.OrdinalIgnoreCase);
+        var hasServiceFailed = normalized.Contains("Service request failed", StringComparison.OrdinalIgnoreCase)
+                               || normalized.Contains("ClientResultException", StringComparison.OrdinalIgnoreCase);
+
+        if (hasServiceFailed && (has403 || has401))
+        {
+            return true;
+        }
+
+        return normalized.StartsWith("Status: 403", StringComparison.OrdinalIgnoreCase)
+               || normalized.StartsWith("Status: 401", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string FlattenExceptionMessages(Exception ex)
+    {
+        if (ex == null)
+        {
+            return string.Empty;
+        }
+
+        var sb = new StringBuilder();
+        var current = ex;
+        var depth = 0;
+        while (current != null && depth < 8)
+        {
+            if (depth > 0)
+            {
+                sb.Append(" -> ");
+            }
+
+            sb.Append('[');
+            sb.Append(current.GetType().Name);
+            sb.Append("] ");
+            sb.Append(current.Message?.Trim());
+
+            current = current.InnerException;
+            depth++;
+        }
+
+        return sb.ToString();
+    }
+
+    private static bool CanUseDefaultChatFallback(SenparcAiSetting? defaultSetting)
+    {
+        if (defaultSetting == null || defaultSetting.AiPlatform == AiPlatform.UnSet)
+        {
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(defaultSetting.ModelName?.Chat))
+        {
+            return false;
+        }
+
+        if (defaultSetting.AiPlatform != AiPlatform.Ollama && string.IsNullOrWhiteSpace(defaultSetting.ApiKey))
+        {
+            return false;
+        }
+
+        return defaultSetting.AiPlatform switch
+        {
+            AiPlatform.OpenAI => true,
+            AiPlatform.Ollama => !string.IsNullOrWhiteSpace(defaultSetting.OllamaEndpoint),
+            _ => !string.IsNullOrWhiteSpace(defaultSetting.Endpoint)
+        };
+    }
+
+    private static AIModelDto? BuildModelDtoFromSetting(SenparcAiSetting? setting, string alias)
+    {
+        if (setting == null)
+        {
+            return null;
+        }
+
+        var apiVersion = setting.AiPlatform switch
+        {
+            AiPlatform.AzureOpenAI => setting.AzureOpenAIApiVersion,
+            AiPlatform.NeuCharAI => setting.NeuCharAIApiVersion,
+            _ => null
+        };
+
+        return new AIModelDto
+        {
+            Id = 0,
+            Alias = alias,
+            AiPlatform = setting.AiPlatform,
+            ConfigModelType = ConfigModelType.Chat,
+            ModelId = setting.ModelName?.Chat,
+            DeploymentName = setting.DeploymentName ?? setting.ModelName?.Chat,
+            Endpoint = setting.Endpoint,
+            ApiKey = setting.ApiKey,
+            ApiVersion = apiVersion
+        };
+    }
+
+    private static bool IsSameChatConfig(AIModelDto? left, AIModelDto? right)
+    {
+        if (left == null || right == null)
+        {
+            return false;
+        }
+
+        return left.AiPlatform == right.AiPlatform
+               && string.Equals(
+                   NormalizeEndpointForDiagnostics(left.AiPlatform, left.Endpoint),
+                   NormalizeEndpointForDiagnostics(right.AiPlatform, right.Endpoint),
+                   StringComparison.OrdinalIgnoreCase)
+               && string.Equals(left.ModelId, right.ModelId, StringComparison.OrdinalIgnoreCase)
+               && string.Equals(left.DeploymentName, right.DeploymentName, StringComparison.OrdinalIgnoreCase)
+               && string.Equals(left.ApiKey, right.ApiKey, StringComparison.Ordinal);
+    }
+
+    private static bool TryBuildAlternateDeploymentModel(AIModelDto? model, out AIModelDto? fallbackModel)
+    {
+        fallbackModel = null;
+        if (model == null)
+        {
+            return false;
+        }
+
+        if (model.AiPlatform != AiPlatform.AzureOpenAI && model.AiPlatform != AiPlatform.NeuCharAI)
+        {
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(model.ModelId))
+        {
+            return false;
+        }
+
+        if (string.Equals(model.DeploymentName, model.ModelId, StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        fallbackModel = new AIModelDto
+        {
+            Id = model.Id,
+            Alias = $"{model.Alias ?? "Model"}_DeploymentAsModelId",
+            DeploymentName = model.ModelId,
+            ModelId = model.ModelId,
+            Endpoint = model.Endpoint,
+            AiPlatform = model.AiPlatform,
+            ConfigModelType = model.ConfigModelType,
+            OrganizationId = model.OrganizationId,
+            ApiKey = model.ApiKey,
+            ApiVersion = model.ApiVersion,
+            Note = model.Note,
+            MaxToken = model.MaxToken,
+            IsShared = model.IsShared,
+            Show = model.Show
+        };
+        return true;
+    }
+
+    private static string BuildModelDiagnosticInfo(AIModelDto? model)
+    {
+        if (model == null)
+        {
+            return "模型配置为空（AIModelDto == null）";
+        }
+
+        var endpoint = NormalizeEndpointForDiagnostics(model.AiPlatform, model.Endpoint);
+        var apiKeyStatus = string.IsNullOrWhiteSpace(model.ApiKey)
+            ? "empty"
+            : $"set(len:{model.ApiKey.Length})";
+
+        return $"AIModelDbId={model.Id}, ConfigType={model.ConfigModelType}, ModelId={model.ModelId ?? "(null)"}, Alias={model.Alias ?? "(null)"}, Platform={model.AiPlatform}, Deployment={model.DeploymentName ?? "(null)"}, Endpoint={endpoint ?? "(null)"}, ApiVersion={model.ApiVersion ?? "(null)"}, ApiKey={apiKeyStatus}";
+    }
+
+    private static string NormalizeEndpointForDiagnostics(AiPlatform platform, string endpoint)
+    {
+        if (string.IsNullOrWhiteSpace(endpoint))
+        {
+            return endpoint;
+        }
+
+        var normalized = endpoint.Trim();
+        if (platform == AiPlatform.NeuCharAI && !normalized.EndsWith("/", StringComparison.Ordinal))
+        {
+            normalized += "/";
+        }
+
+        return normalized;
+    }
+
     private void PublishChunkEvent(
         int chatTaskId,
         int? fromAgentTemplateId,
@@ -1208,6 +1734,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         PromptItemService promptItemService,
         AgentTemplateDto templateDto,
         AgentTemplate template,
+        AIModelService aiModelService,
         ISenparcAiSetting defaultSetting)
     {
         var promptText = template.SystemMessage;
@@ -1215,11 +1742,26 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
         if (!templateDto.PromptCode.IsNullOrEmpty() && PromptItem.IsPromptVersion(templateDto.PromptCode))
         {
-            var promptResult = await promptItemService.GetWithVersionAsync(template.PromptCode, isAvg: true);
+            var promptResult = await promptItemService.GetWithVersionAsync(templateDto.PromptCode, isAvg: true);
             if (promptResult?.PromptItem != null)
             {
                 promptText = promptResult.PromptItem.Content;
                 currentSetting = promptResult.SenparcAiSetting ?? defaultSetting;
+
+                if (promptResult.PromptItem.AIModelDto != null)
+                {
+                    try
+                    {
+                        var availableModelResult = await aiModelService.GetValiableChatModel(promptResult.PromptItem.AIModelDto);
+                        currentSetting = availableModelResult.AiSetting ?? currentSetting;
+                    }
+                    catch (Exception ex)
+                    {
+                        SenparcTrace.SendCustomLog(
+                            "AgentsManager.ResolvePromptSetting",
+                            $"获取可用 Chat 模型失败，继续使用原始设置：{ex.GetType().Name} {ex.Message}");
+                    }
+                }
             }
         }
         else if (!templateDto.PromptCode.IsNullOrEmpty())
