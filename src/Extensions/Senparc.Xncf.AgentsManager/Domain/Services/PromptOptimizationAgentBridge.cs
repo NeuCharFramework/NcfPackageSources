@@ -174,6 +174,13 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 registeredKey = active;
                 return true;
             }
+            if (active != null)
+            {
+                // 容错：若上下文已有 active request，但 BeginRequest 状态缺失，则自动补建状态并继续。
+                _states.TryAdd(active, new State());
+                registeredKey = active;
+                return true;
+            }
 
             string fb;
             lock (FallbackCorrelationLock)
@@ -183,6 +190,13 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 
             if (fb != null && _states.ContainsKey(fb))
             {
+                registeredKey = fb;
+                return true;
+            }
+            if (fb != null)
+            {
+                // 容错：若 fallback correlation 可用，但状态缺失，也允许自动恢复。
+                _states.TryAdd(fb, new State());
                 registeredKey = fb;
                 return true;
             }
