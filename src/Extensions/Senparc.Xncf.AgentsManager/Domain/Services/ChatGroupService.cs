@@ -1,6 +1,5 @@
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Workflows;
-using Microsoft.Agents.AI.Workflows.Specialized.Magentic;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using ModelContextProtocol.Client;
@@ -56,6 +55,19 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         public required IWantToRun Runner { get; init; }
         public required ChatClientAgentOptions AgentOptions { get; init; }
         public SenparcAiSetting? Setting { get; init; }
+    }
+
+    private sealed class AgentRunResult
+    {
+        public bool HasOutput { get; init; }
+        public string OutputText { get; init; } = string.Empty;
+        public bool ShouldExit { get; init; }
+    }
+
+    private sealed class FallbackConversationTurn
+    {
+        public required string Speaker { get; init; }
+        public required string Message { get; init; }
     }
 
     public static int ChatMaxRound = 20;
@@ -331,7 +343,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
             if (runtimeContexts.Count == 1)
             {
-                var hasSingleAgentOutput = await RunSingleAgentAsync(
+                var singleAgentResult = await RunSingleAgentAsync(
                     enterContext,
                     userCommand,
                     aiModelService,
@@ -345,7 +357,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     chatTaskService,
                     1);
 
-                if (!hasSingleAgentOutput)
+                if (!singleAgentResult.HasOutput)
                 {
                     logger.AppendLine($"[{chatGroup.Name}] 单智能体执行未返回可显示文本。");
                 }
@@ -363,37 +375,47 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 return;
             }
 
-            var participantContexts = runtimeContexts
-                .Where(z => z.Template.Id != adminContext.Template.Id)
+            var maxWorkflowTurns = request.ChatMaxRound > 0 ? request.ChatMaxRound : ChatMaxRound;
+            var effectiveWorkflowTurns = Math.Max(2, maxWorkflowTurns);
+            var multiAgentContexts = runtimeContexts
+                .OrderByDescending(z => z.Template.Id == adminContext.Template.Id)
+                .ThenByDescending(z => z.Template.Id == enterContext.Template.Id)
                 .ToList();
 
-            participantContexts = participantContexts
-                .OrderByDescending(z => z.Template.Id == enterContext.Template.Id)
-                .ToList();
-
-            if (participantContexts.Count == 0)
+            if (multiAgentContexts.Count < 2)
             {
-                throw new NcfExceptionBase($"聊天组【{chatGroup.Name}】未找到可参与协作的成员智能体。");
+                throw new NcfExceptionBase($"聊天组【{chatGroup.Name}】多智能体协作至少需要两个启用智能体。");
             }
 
             #region Microsoft Agent Framework 多智能体工作流
 
 #pragma warning disable MAAIW001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
-            Workflow workflow = new MagenticWorkflowBuilder(adminContext.Agent)
-                .AddParticipants(participantContexts.Select(z => z.Agent).ToList())
+            Workflow workflow = AgentWorkflowBuilder
+                .CreateGroupChatBuilderWith(agents =>
+                {
+                    var manager = new RoundRobinGroupChatManager(
+                        agents,
+                        async (_, history, _) =>
+                        {
+                            var latestText = history?
+                                .Reverse()
+                                .Select(ExtractChatMessageText)
+                                .FirstOrDefault(z => !string.IsNullOrWhiteSpace(z));
+
+                            return IsExitSignal(latestText);
+                        });
+
+                    manager.MaximumIterationCount = effectiveWorkflowTurns;
+                    return manager;
+                })
+                .AddParticipants(multiAgentContexts.Select(z => z.Agent).ToList())
                 .WithName(chatGroup.Name)
                 .WithDescription(string.IsNullOrWhiteSpace(chatGroup.Description) ? "AgentsManager ChatGroup Workflow" : chatGroup.Description)
-                .RequirePlanSignoff(false)
-                .WithMaxRounds(request.ChatMaxRound > 0 ? request.ChatMaxRound : ChatMaxRound)
-                .WithMaxStalls(3)
-                .WithMaxResets(2)
                 .Build();
 
-            var taskPrompt = BuildWorkflowPrompt(enterContext.Agent.Name, participantContexts.Select(z => z.Agent.Name), userCommand);
+            var taskPrompt = BuildWorkflowPrompt(adminContext.Agent.Name, multiAgentContexts.Select(z => z.Agent.Name), userCommand);
 
-            var contextByAgentName = runtimeContexts
-                .GroupBy(z => z.Agent.Name, StringComparer.OrdinalIgnoreCase)
-                .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
+            var contextByExecutorId = BuildRuntimeContextIndex(runtimeContexts);
 
             string activeResponseKey = null;
             string activeExecutorId = null;
@@ -439,7 +461,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     roundIndex,
                     responseKey);
 
-                if (contextByAgentName.TryGetValue(executorId, out var speakerContext))
+                if (TryResolveRuntimeContext(contextByExecutorId, executorId, out var speakerContext))
                 {
                     var history = await SaveAgentMessageAsync(
                         speakerContext,
@@ -472,7 +494,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     finalizedResponseKeys.Add(responseKey);
                 }
 
-                if (normalizedText.Contains("exit", StringComparison.OrdinalIgnoreCase))
+                if (IsExitSignal(normalizedText))
                 {
                     shouldExit = true;
                 }
@@ -511,9 +533,10 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     workflow,
                     new List<ChatMessage> { new(ChatRole.User, taskPrompt) });
 
-                await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
+                var emittedTurnTokens = 0;
+                var idleSuperStepCount = 0;
 
-                await foreach (var workflowEvent in run.WatchStreamAsync())
+                while (!shouldExit)
                 {
                     var keepRunning = await _cache.GetAsync<RunningChatTaskDto>(runningKey);
                     if (keepRunning == null)
@@ -525,220 +548,294 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         return;
                     }
 
-                    switch (workflowEvent)
+                    var turnTokenAccepted = await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
+                    if (turnTokenAccepted)
                     {
-                        case AgentResponseUpdateEvent updateEvent:
-                            {
-                                var responseId = updateEvent.Update.ResponseId
-                                                 ?? updateEvent.Update.MessageId;
+                        emittedTurnTokens += 1;
+                    }
+                    else
+                    {
+                        var rejectedStatus = await run.GetStatusAsync();
+                        if (rejectedStatus == RunStatus.Ended)
+                        {
+                            break;
+                        }
 
-                                if (string.IsNullOrWhiteSpace(responseId))
+                        logger.AppendLine($"[{chatGroup.Name}] TurnToken 未被接收，当前状态：{rejectedStatus}");
+                    }
+
+                    var hadEventsInCurrentSuperStep = false;
+
+                    await foreach (var workflowEvent in run.WatchStreamAsync())
+                    {
+                        hadEventsInCurrentSuperStep = true;
+
+                        var loopKeepRunning = await _cache.GetAsync<RunningChatTaskDto>(runningKey);
+                        if (loopKeepRunning == null)
+                        {
+                            logger.Append($"任务已被强制停止：{chatTask.Name}");
+                            await FlushActiveResponseAsync();
+                            await chatTaskService.SetStatus(ChatTask_Status.Cancelled, chatTask);
+                            PublishStatusEvent(chatTask.Id, ChatTask_Status.Cancelled);
+                            return;
+                        }
+
+                        switch (workflowEvent)
+                        {
+                            case AgentResponseUpdateEvent updateEvent:
                                 {
-                                    responseId = string.Equals(activeExecutorId, updateEvent.ExecutorId, StringComparison.OrdinalIgnoreCase)
-                                        && !string.IsNullOrWhiteSpace(activeResponseKey)
-                                        ? activeResponseKey
-                                        : Guid.NewGuid().ToString("n");
-                                }
+                                    var responseId = updateEvent.Update.ResponseId
+                                                     ?? updateEvent.Update.MessageId;
 
-                                if (!string.Equals(activeResponseKey, responseId, StringComparison.Ordinal))
-                                {
-                                    await FlushActiveResponseAsync();
-                                    activeResponseKey = responseId;
-                                    activeExecutorId = updateEvent.ExecutorId;
-                                    activeUsageDetails = null;
-                                    activeResponseStartedAt = DateTime.Now;
-                                }
-
-                                if (!string.IsNullOrEmpty(updateEvent.Update.Text))
-                                {
-                                    activeResponseText.Append(updateEvent.Update.Text);
-
-                                    if (contextByAgentName.TryGetValue(updateEvent.ExecutorId, out var streamContext))
+                                    if (string.IsNullOrWhiteSpace(responseId))
                                     {
-                                        PublishChunkEvent(
-                                            chatTask.Id,
-                                            streamContext.TemplateDto.Id,
-                                            streamContext.Agent.Name,
-                                            responseId,
-                                            updateEvent.Update.Text,
-                                            roundIndex + 1);
-                                    }
-                                }
-
-                                var usageContent = updateEvent.Update.Contents?
-                                    .FirstOrDefault(z => z is UsageContent) as UsageContent;
-                                if (usageContent?.Details != null)
-                                {
-                                    activeUsageDetails = usageContent.Details;
-                                }
-
-                                break;
-                            }
-                        case AgentResponseEvent responseEvent:
-                            {
-                                var executorId = responseEvent.ExecutorId;
-                                var response = responseEvent.Response;
-                                if (response == null || string.IsNullOrWhiteSpace(executorId))
-                                {
-                                    break;
-                                }
-
-                                var responseId = response.ResponseId;
-                                if (string.IsNullOrWhiteSpace(responseId))
-                                {
-                                    responseId = string.Equals(activeExecutorId, executorId, StringComparison.OrdinalIgnoreCase)
-                                        && !string.IsNullOrWhiteSpace(activeResponseKey)
-                                        ? activeResponseKey
-                                        : Guid.NewGuid().ToString("n");
-                                }
-
-                                var responseText = ExtractAgentResponseText(response);
-
-                                if (string.Equals(activeResponseKey, responseId, StringComparison.Ordinal))
-                                {
-                                    if (activeUsageDetails == null && response.Usage != null)
-                                    {
-                                        activeUsageDetails = response.Usage;
+                                        responseId = string.Equals(activeExecutorId, updateEvent.ExecutorId, StringComparison.OrdinalIgnoreCase)
+                                            && !string.IsNullOrWhiteSpace(activeResponseKey)
+                                            ? activeResponseKey
+                                            : Guid.NewGuid().ToString("n");
                                     }
 
-                                    if (activeResponseText.Length == 0 && !string.IsNullOrWhiteSpace(responseText))
+                                    if (!string.Equals(activeResponseKey, responseId, StringComparison.Ordinal))
                                     {
-                                        activeResponseText.Append(responseText);
+                                        await FlushActiveResponseAsync();
+                                        activeResponseKey = responseId;
+                                        activeExecutorId = updateEvent.ExecutorId;
+                                        activeUsageDetails = null;
+                                        activeResponseStartedAt = DateTime.Now;
                                     }
 
-                                    await FlushActiveResponseAsync();
-                                    break;
-                                }
+                                    if (!string.IsNullOrEmpty(updateEvent.Update.Text))
+                                    {
+                                        activeResponseText.Append(updateEvent.Update.Text);
 
-                                await FlushActiveResponseAsync();
-                                await PersistAgentResponseAsync(
-                                    responseId,
-                                    executorId,
-                                    responseText,
-                                    response.Usage,
-                                    DateTime.Now);
-
-                                break;
-                            }
-                        case WorkflowOutputEvent outputEvent:
-                            {
-                                var executorId = outputEvent.ExecutorId;
-                                if (string.IsNullOrWhiteSpace(executorId))
-                                {
-                                    break;
-                                }
-
-                                switch (outputEvent.Data)
-                                {
-                                    case AgentResponse outputResponse:
+                                        if (TryResolveRuntimeContext(contextByExecutorId, updateEvent.ExecutorId, out var streamContext))
                                         {
-                                            var outputResponseId = outputResponse.ResponseId;
-                                            if (string.IsNullOrWhiteSpace(outputResponseId))
-                                            {
-                                                outputResponseId = Guid.NewGuid().ToString("n");
-                                            }
-
-                                            await FlushActiveResponseAsync();
-                                            await PersistAgentResponseAsync(
-                                                outputResponseId,
-                                                executorId,
-                                                ExtractAgentResponseText(outputResponse),
-                                                outputResponse.Usage,
-                                                DateTime.Now);
-                                            break;
+                                            PublishChunkEvent(
+                                                chatTask.Id,
+                                                streamContext.TemplateDto.Id,
+                                                streamContext.Agent.Name,
+                                                responseId,
+                                                updateEvent.Update.Text,
+                                                roundIndex + 1);
                                         }
-                                    case AgentResponseUpdate outputUpdate:
+                                    }
+
+                                    var usageContent = updateEvent.Update.Contents?
+                                        .FirstOrDefault(z => z is UsageContent) as UsageContent;
+                                    if (usageContent?.Details != null)
+                                    {
+                                        activeUsageDetails = usageContent.Details;
+                                    }
+
+                                    break;
+                                }
+                            case AgentResponseEvent responseEvent:
+                                {
+                                    var executorId = responseEvent.ExecutorId;
+                                    var response = responseEvent.Response;
+                                    if (response == null || string.IsNullOrWhiteSpace(executorId))
+                                    {
+                                        break;
+                                    }
+
+                                    var responseId = response.ResponseId;
+                                    if (string.IsNullOrWhiteSpace(responseId))
+                                    {
+                                        responseId = string.Equals(activeExecutorId, executorId, StringComparison.OrdinalIgnoreCase)
+                                            && !string.IsNullOrWhiteSpace(activeResponseKey)
+                                            ? activeResponseKey
+                                            : Guid.NewGuid().ToString("n");
+                                    }
+
+                                    var responseText = ExtractAgentResponseText(response);
+
+                                    if (string.Equals(activeResponseKey, responseId, StringComparison.Ordinal))
+                                    {
+                                        if (activeUsageDetails == null && response.Usage != null)
                                         {
-                                            var responseId = outputUpdate.ResponseId
-                                                             ?? outputUpdate.MessageId;
+                                            activeUsageDetails = response.Usage;
+                                        }
 
-                                            if (string.IsNullOrWhiteSpace(responseId))
-                                            {
-                                                responseId = string.Equals(activeExecutorId, executorId, StringComparison.OrdinalIgnoreCase)
-                                                    && !string.IsNullOrWhiteSpace(activeResponseKey)
-                                                    ? activeResponseKey
-                                                    : Guid.NewGuid().ToString("n");
-                                            }
+                                        if (activeResponseText.Length == 0 && !string.IsNullOrWhiteSpace(responseText))
+                                        {
+                                            activeResponseText.Append(responseText);
+                                        }
 
-                                            if (!string.Equals(activeResponseKey, responseId, StringComparison.Ordinal))
-                                            {
-                                                await FlushActiveResponseAsync();
-                                                activeResponseKey = responseId;
-                                                activeExecutorId = executorId;
-                                                activeUsageDetails = null;
-                                                activeResponseStartedAt = DateTime.Now;
-                                            }
+                                        await FlushActiveResponseAsync();
+                                        break;
+                                    }
 
-                                            if (!string.IsNullOrEmpty(outputUpdate.Text))
+                                    await FlushActiveResponseAsync();
+                                    await PersistAgentResponseAsync(
+                                        responseId,
+                                        executorId,
+                                        responseText,
+                                        response.Usage,
+                                        DateTime.Now);
+
+                                    break;
+                                }
+                            case WorkflowOutputEvent outputEvent:
+                                {
+                                    var executorId = outputEvent.ExecutorId;
+                                    if (string.IsNullOrWhiteSpace(executorId))
+                                    {
+                                        break;
+                                    }
+
+                                    switch (outputEvent.Data)
+                                    {
+                                        case AgentResponse outputResponse:
                                             {
-                                                activeResponseText.Append(outputUpdate.Text);
-                                                if (contextByAgentName.TryGetValue(executorId, out var streamContext))
+                                                var outputResponseId = outputResponse.ResponseId;
+                                                if (string.IsNullOrWhiteSpace(outputResponseId))
                                                 {
-                                                    PublishChunkEvent(
-                                                        chatTask.Id,
-                                                        streamContext.TemplateDto.Id,
-                                                        streamContext.Agent.Name,
-                                                        responseId,
-                                                        outputUpdate.Text,
-                                                        roundIndex + 1);
+                                                    outputResponseId = Guid.NewGuid().ToString("n");
+                                                }
+
+                                                await FlushActiveResponseAsync();
+                                                await PersistAgentResponseAsync(
+                                                    outputResponseId,
+                                                    executorId,
+                                                    ExtractAgentResponseText(outputResponse),
+                                                    outputResponse.Usage,
+                                                    DateTime.Now);
+                                                break;
+                                            }
+                                        case AgentResponseUpdate outputUpdate:
+                                            {
+                                                var responseId = outputUpdate.ResponseId
+                                                                 ?? outputUpdate.MessageId;
+
+                                                if (string.IsNullOrWhiteSpace(responseId))
+                                                {
+                                                    responseId = string.Equals(activeExecutorId, executorId, StringComparison.OrdinalIgnoreCase)
+                                                        && !string.IsNullOrWhiteSpace(activeResponseKey)
+                                                        ? activeResponseKey
+                                                        : Guid.NewGuid().ToString("n");
+                                                }
+
+                                                if (!string.Equals(activeResponseKey, responseId, StringComparison.Ordinal))
+                                                {
+                                                    await FlushActiveResponseAsync();
+                                                    activeResponseKey = responseId;
+                                                    activeExecutorId = executorId;
+                                                    activeUsageDetails = null;
+                                                    activeResponseStartedAt = DateTime.Now;
+                                                }
+
+                                                if (!string.IsNullOrEmpty(outputUpdate.Text))
+                                                {
+                                                    activeResponseText.Append(outputUpdate.Text);
+                                                    if (TryResolveRuntimeContext(contextByExecutorId, executorId, out var streamContext))
+                                                    {
+                                                        PublishChunkEvent(
+                                                            chatTask.Id,
+                                                            streamContext.TemplateDto.Id,
+                                                            streamContext.Agent.Name,
+                                                            responseId,
+                                                            outputUpdate.Text,
+                                                            roundIndex + 1);
+                                                    }
+                                                }
+
+                                                if (outputUpdate.Contents?.FirstOrDefault(z => z is UsageContent) is UsageContent outputUsage
+                                                    && outputUsage.Details != null)
+                                                {
+                                                    activeUsageDetails = outputUsage.Details;
                                                 }
                                             }
+                                            break;
+                                        case ChatMessage outputMessage:
+                                            await FlushActiveResponseAsync();
+                                            await PersistAgentResponseAsync(
+                                                Guid.NewGuid().ToString("n"),
+                                                executorId,
+                                                ExtractChatMessageText(outputMessage),
+                                                null,
+                                                DateTime.Now);
+                                            break;
+                                        case string outputText:
+                                            await FlushActiveResponseAsync();
+                                            await PersistAgentResponseAsync(
+                                                Guid.NewGuid().ToString("n"),
+                                                executorId,
+                                                outputText,
+                                                null,
+                                                DateTime.Now);
+                                            break;
+                                    }
 
-                                            if (outputUpdate.Contents?.FirstOrDefault(z => z is UsageContent) is UsageContent outputUsage
-                                                && outputUsage.Details != null)
-                                            {
-                                                activeUsageDetails = outputUsage.Details;
-                                            }
-                                        }
-                                        break;
-                                    case ChatMessage outputMessage:
-                                        await FlushActiveResponseAsync();
-                                        await PersistAgentResponseAsync(
-                                            Guid.NewGuid().ToString("n"),
-                                            executorId,
-                                            ExtractChatMessageText(outputMessage),
-                                            null,
-                                            DateTime.Now);
-                                        break;
-                                    case string outputText:
-                                        await FlushActiveResponseAsync();
-                                        await PersistAgentResponseAsync(
-                                            Guid.NewGuid().ToString("n"),
-                                            executorId,
-                                            outputText,
-                                            null,
-                                            DateTime.Now);
-                                        break;
+                                    break;
                                 }
-
+                            case WorkflowErrorEvent workflowError:
+                                workflowFailed = true;
+                                workflowFailureReason = workflowError.Exception?.Message
+                                    ?? "Workflow execution failed.";
+                                logger.AppendLine($"[{chatGroup.Name}] 工作流错误：{workflowFailureReason}");
+                                shouldExit = true;
                                 break;
-                            }
-                        case WorkflowErrorEvent workflowError:
-                            workflowFailed = true;
-                            workflowFailureReason = workflowError.Exception?.Message
-                                ?? "Workflow execution failed.";
-                            logger.AppendLine($"[{chatGroup.Name}] 工作流错误：{workflowFailureReason}");
-                            shouldExit = true;
-                            break;
-                        case ExecutorFailedEvent executorFailed:
-                            workflowFailed = true;
-                            workflowFailureReason = $"Executor '{executorFailed.ExecutorId}' failed: {executorFailed.Data}";
-                            logger.AppendLine($"[{chatGroup.Name}] 执行器错误：{workflowFailureReason}");
-                            shouldExit = true;
-                            break;
-                        default:
-                            {
-                                var eventTypeName = workflowEvent.GetType().Name;
-                                if (observedWorkflowEventTypes.Add(eventTypeName))
+                            case ExecutorFailedEvent executorFailed:
+                                workflowFailed = true;
+                                workflowFailureReason = $"Executor '{executorFailed.ExecutorId}' failed: {executorFailed.Data}";
+                                logger.AppendLine($"[{chatGroup.Name}] 执行器错误：{workflowFailureReason}");
+                                shouldExit = true;
+                                break;
+                            default:
                                 {
-                                    logger.AppendLine($"[{chatGroup.Name}] 收到事件：{eventTypeName}");
+                                    var eventTypeName = workflowEvent.GetType().Name;
+                                    if (observedWorkflowEventTypes.Add(eventTypeName))
+                                    {
+                                        logger.AppendLine($"[{chatGroup.Name}] 收到事件：{eventTypeName}");
+                                    }
                                 }
-                            }
+                                break;
+                        }
+
+                        if (shouldExit)
+                        {
                             break;
+                        }
                     }
 
                     if (shouldExit)
                     {
+                        break;
+                    }
+
+                    var runStatus = await run.GetStatusAsync();
+                    if (runStatus == RunStatus.Ended)
+                    {
+                        break;
+                    }
+
+                    if (runStatus == RunStatus.PendingRequests)
+                    {
+                        workflowFailed = true;
+                        workflowFailureReason = "多智能体工作流等待外部响应，当前执行路径无法自动继续。";
+                        logger.AppendLine($"[{chatGroup.Name}] {workflowFailureReason}");
+                        shouldExit = true;
+                        break;
+                    }
+
+                    if (hadEventsInCurrentSuperStep)
+                    {
+                        idleSuperStepCount = 0;
+                    }
+                    else
+                    {
+                        idleSuperStepCount += 1;
+                    }
+
+                    if (idleSuperStepCount >= 2)
+                    {
+                        logger.AppendLine($"[{chatGroup.Name}] 连续两轮未收到新事件，结束本次工作流驱动。");
+                        break;
+                    }
+
+                    if (emittedTurnTokens >= effectiveWorkflowTurns)
+                    {
+                        logger.AppendLine($"[{chatGroup.Name}] 已达到最大轮次限制（{effectiveWorkflowTurns}），结束本次协作。");
                         break;
                     }
                 }
@@ -763,14 +860,15 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             {
                 if (workflowFailed)
                 {
-                    logger.AppendLine($"[{chatGroup.Name}] 多智能体工作流中断，自动降级为入口智能体执行。");
+                    logger.AppendLine($"[{chatGroup.Name}] 多智能体工作流中断，自动降级为顺序轮转回退执行。");
                 }
                 else
                 {
-                    logger.AppendLine($"[{chatGroup.Name}] 多智能体工作流未返回可展示内容，自动降级为入口智能体执行。");
+                    logger.AppendLine($"[{chatGroup.Name}] 多智能体工作流未返回可展示内容，自动降级为顺序轮转回退执行。");
                 }
 
-                var hasFallbackOutput = await RunSingleAgentAsync(
+                var hasFallbackOutput = await RunMultiAgentFallbackAsync(
+                    multiAgentContexts,
                     enterContext,
                     userCommand,
                     aiModelService,
@@ -782,7 +880,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     runningKey,
                     chatTask,
                     chatTaskService,
-                    roundIndex + 1);
+                    Math.Max(1, roundIndex + 1),
+                    effectiveWorkflowTurns);
 
                 if (!hasFallbackOutput && workflowFailed)
                 {
@@ -867,7 +966,214 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 {userCommand}";
     }
 
-    private async Task<bool> RunSingleAgentAsync(
+    private static Dictionary<string, AgentRuntimeContext> BuildRuntimeContextIndex(
+        IEnumerable<AgentRuntimeContext> runtimeContexts)
+    {
+        var index = new Dictionary<string, AgentRuntimeContext>(StringComparer.OrdinalIgnoreCase);
+
+        static void TryAdd(
+            IDictionary<string, AgentRuntimeContext> target,
+            string key,
+            AgentRuntimeContext context)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                return;
+            }
+
+            if (!target.ContainsKey(key))
+            {
+                target[key] = context;
+            }
+        }
+
+        foreach (var context in runtimeContexts)
+        {
+            TryAdd(index, context.Agent.Id, context);
+            TryAdd(index, context.Agent.Name, context);
+            TryAdd(index, context.Template.Name, context);
+            TryAdd(index, context.TemplateDto.Name, context);
+        }
+
+        return index;
+    }
+
+    private static bool TryResolveRuntimeContext(
+        IReadOnlyDictionary<string, AgentRuntimeContext> contextIndex,
+        string executorId,
+        out AgentRuntimeContext context)
+    {
+        context = default!;
+        if (string.IsNullOrWhiteSpace(executorId))
+        {
+            return false;
+        }
+
+        if (contextIndex.TryGetValue(executorId, out context))
+        {
+            return true;
+        }
+
+        foreach (var item in contextIndex)
+        {
+            var key = item.Key;
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                continue;
+            }
+
+            if (executorId.EndsWith(key, StringComparison.OrdinalIgnoreCase)
+                || key.EndsWith(executorId, StringComparison.OrdinalIgnoreCase))
+            {
+                context = item.Value;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool IsExitSignal(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return false;
+        }
+
+        var normalized = text.Trim();
+        normalized = normalized.TrimEnd('.', '!', '?', ';', ':', '。', '！', '？', '；', '：', ']', '>');
+        normalized = normalized.TrimStart('[', '<');
+
+        return normalized.Equals("exit", StringComparison.OrdinalIgnoreCase)
+               || normalized.Equals("结束", StringComparison.OrdinalIgnoreCase)
+               || normalized.Equals("退出", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static List<AgentRuntimeContext> BuildFallbackRoundRobinSequence(
+        IReadOnlyCollection<AgentRuntimeContext> participantContexts,
+        AgentRuntimeContext enterContext)
+    {
+        var sequence = new List<AgentRuntimeContext>();
+
+        if (enterContext != null)
+        {
+            sequence.Add(enterContext);
+        }
+
+        foreach (var context in participantContexts)
+        {
+            if (sequence.Any(z => z.Template.Id == context.Template.Id))
+            {
+                continue;
+            }
+
+            sequence.Add(context);
+        }
+
+        return sequence;
+    }
+
+    private static string BuildRoundRobinFallbackPrompt(
+        string userCommand,
+        IReadOnlyCollection<FallbackConversationTurn> history,
+        string currentSpeaker)
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine("你正在继续一个多智能体协作会话。");
+        sb.AppendLine($"当前轮到你（{currentSpeaker}）发言。");
+        sb.AppendLine("请基于已有对话继续推进，不要重复前文。若任务已完成，请只输出“exit”。");
+        sb.AppendLine();
+        sb.AppendLine("用户需求：");
+        sb.AppendLine(userCommand);
+
+        if (history.Count > 0)
+        {
+            sb.AppendLine();
+            sb.AppendLine("已有对话摘录：");
+            foreach (var turn in history.TakeLast(6))
+            {
+                var message = turn.Message?.Trim() ?? string.Empty;
+                if (message.Length > 220)
+                {
+                    message = message[..220] + "...";
+                }
+
+                sb.AppendLine($"{turn.Speaker}: {message}");
+            }
+        }
+
+        return sb.ToString();
+    }
+
+    private async Task<bool> RunMultiAgentFallbackAsync(
+        IReadOnlyCollection<AgentRuntimeContext> participantContexts,
+        AgentRuntimeContext enterContext,
+        string userCommand,
+        AIModelService aiModelService,
+        StringBuilder logger,
+        ChatGroup chatGroup,
+        ChatGroupDto chatGroupDto,
+        ChatTaskDto chatTaskDto,
+        ChatGroupHistoryService chatGroupHistoryService,
+        string runningKey,
+        ChatTask chatTask,
+        ChatTaskService chatTaskService,
+        int startRoundIndex,
+        int maxRoundCount)
+    {
+        var sequence = BuildFallbackRoundRobinSequence(participantContexts, enterContext);
+        if (sequence.Count == 0)
+        {
+            return false;
+        }
+
+        var totalRounds = Math.Max(2, maxRoundCount);
+        var hasOutput = false;
+        var conversation = new List<FallbackConversationTurn>();
+
+        for (var i = 0; i < totalRounds; i++)
+        {
+            var context = sequence[i % sequence.Count];
+            var prompt = i == 0
+                ? userCommand
+                : BuildRoundRobinFallbackPrompt(userCommand, conversation, context.Agent.Name);
+
+            var roundIndex = startRoundIndex + i;
+            var result = await RunSingleAgentAsync(
+                context,
+                prompt,
+                aiModelService,
+                logger,
+                chatGroup,
+                chatGroupDto,
+                chatTaskDto,
+                chatGroupHistoryService,
+                runningKey,
+                chatTask,
+                chatTaskService,
+                roundIndex);
+
+            if (result.HasOutput)
+            {
+                hasOutput = true;
+                conversation.Add(new FallbackConversationTurn
+                {
+                    Speaker = context.Agent.Name,
+                    Message = result.OutputText
+                });
+            }
+
+            if (result.ShouldExit)
+            {
+                logger.AppendLine($"[{chatGroup.Name}] 回退轮转检测到退出信号，提前结束。");
+                break;
+            }
+        }
+
+        return hasOutput;
+    }
+
+    private async Task<AgentRunResult> RunSingleAgentAsync(
         AgentRuntimeContext agentContext,
         string userCommand,
         AIModelService aiModelService,
@@ -887,7 +1193,12 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             logger.Append($"任务已被强制停止：{chatTask.Name}");
             await chatTaskService.SetStatus(ChatTask_Status.Cancelled, chatTask);
             PublishStatusEvent(chatTask.Id, ChatTask_Status.Cancelled);
-            return false;
+            return new AgentRunResult
+            {
+                HasOutput = false,
+                OutputText = string.Empty,
+                ShouldExit = false
+            };
         }
 
         UsageDetails streamUsageDetails = null;
@@ -958,10 +1269,20 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     output,
                     usageSnapshot);
 
-                return true;
+                return new AgentRunResult
+                {
+                    HasOutput = true,
+                    OutputText = output,
+                    ShouldExit = IsExitSignal(output)
+                };
             }
 
-            return false;
+            return new AgentRunResult
+            {
+                HasOutput = false,
+                OutputText = string.Empty,
+                ShouldExit = false
+            };
         }
         catch (Exception ex)
         {
@@ -1003,7 +1324,12 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         fallbackResult.Output,
                         fallbackUsageSnapshot);
 
-                    return true;
+                    return new AgentRunResult
+                    {
+                        HasOutput = true,
+                        OutputText = fallbackResult.Output,
+                        ShouldExit = IsExitSignal(fallbackResult.Output)
+                    };
                 }
 
                 if (!string.IsNullOrWhiteSpace(fallbackResult.Error))
