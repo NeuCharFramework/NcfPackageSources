@@ -1,4 +1,18 @@
-﻿#pragma warning disable OPENAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：MyFuctionAppService.cs
+    文件功能描述：MyFuctionAppService 服务逻辑
+    
+    
+    创建标识：Senparc - 20211031
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
+#pragma warning disable OPENAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
 using Azure.AI.OpenAI;
 using Azure.Core;
 using Microsoft.Agents.AI;

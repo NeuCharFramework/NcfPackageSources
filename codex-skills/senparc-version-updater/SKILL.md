@@ -24,8 +24,8 @@ python3 scripts/senparc_version_scan.py --root <repo-root> --project <project-pa
 Use the output JSON as the source of truth for:
 
 1. The selected primary `.csproj` to edit.
-2. Changed files in the current update scope (`comparison_base..HEAD` plus uncommitted).
-3. Changed `.cs` files that must receive header updates.
+2. Changed files in the current update scope (`comparison_base..HEAD` plus uncommitted) across the entire repository, not just the primary project directory.
+3. Changed `.cs` files that must receive header updates (repository-wide).
 4. Recursive dependent `.csproj` files that need passive version bumps.
 5. Comparison baseline metadata (`master/main` branch ref and merge-base commit).
 
@@ -95,6 +95,7 @@ For every file in `changed_cs_files`:
 
 If the file already has the block, keep historical entries and append only one new modification group.
 Always skip `*.Generated.cs` for header insertion.
+`changed_cs_files` is generated from the repository-wide comparison window, so this step must not filter to the primary project directory.
 
 ### 4) Append `<PackageReleaseNotes>` In Selected `.csproj`
 
@@ -143,6 +144,9 @@ jq -r '.comparison_base.branch_ref, .comparison_base.commit, .comparison_range' 
 
 # 3) Inspect impacted C# files
 jq -r '.changed_cs_files[].path' /tmp/senparc-version-scan.json
+
+# 3.1) Optional: inspect only files under selected primary project directory
+jq -r '.changed_cs_files_in_primary_project[].path' /tmp/senparc-version-scan.json
 
 # 4) Inspect passive dependent projects
 jq -r '.dependent_csprojs[]' /tmp/senparc-version-scan.json

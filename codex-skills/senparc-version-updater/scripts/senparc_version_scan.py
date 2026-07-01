@@ -260,16 +260,21 @@ def parse_git_status_paths(status_text: str) -> set[str]:
     return paths
 
 
-def list_changed_paths(root: Path, project_dir: Path, base_commit: str | None) -> list[str]:
-    rel_project = to_relative_path(root, project_dir)
+def list_changed_paths(root: Path, base_commit: str | None, path_scope: str | None = None) -> list[str]:
     changed: set[str] = set()
 
     if base_commit:
-        code, output = run_git(root, ["diff", "--name-only", f"{base_commit}..HEAD", "--", rel_project])
+        diff_args = ["diff", "--name-only", f"{base_commit}..HEAD"]
+        if path_scope:
+            diff_args.extend(["--", path_scope])
+        code, output = run_git(root, diff_args)
         if code == 0 and output:
             changed.update(line.strip().replace("\\", "/") for line in output.splitlines() if line.strip())
 
-    code, status_output = run_git(root, ["status", "--porcelain", "--", rel_project])
+    status_args = ["status", "--porcelain"]
+    if path_scope:
+        status_args.extend(["--", path_scope])
+    code, status_output = run_git(root, status_args)
     if code == 0 and status_output:
         changed.update(parse_git_status_paths(status_output))
 
@@ -342,14 +347,16 @@ def filter_ignorable_generated_changes(
     return kept, ignored
 
 
-def list_commit_summaries(root: Path, project_dir: Path, base_commit: str | None) -> list[dict[str, str]]:
+def list_commit_summaries(root: Path, base_commit: str | None, path_scope: str | None = None) -> list[dict[str, str]]:
     if not base_commit:
         return []
 
-    rel_project = to_relative_path(root, project_dir)
+    log_args = ["log", "--reverse", "--date=short", "--format=%h|%ad|%s", f"{base_commit}..HEAD"]
+    if path_scope:
+        log_args.extend(["--", path_scope])
     code, output = run_git(
         root,
-        ["log", "--reverse", "--date=short", "--format=%h|%ad|%s", f"{base_commit}..HEAD", "--", rel_project],
+        log_args,
     )
     if code != 0 or not output:
         return []
@@ -361,6 +368,14 @@ def list_commit_summaries(root: Path, project_dir: Path, base_commit: str | None
             continue
         summaries.append({"commit": parts[0], "date": parts[1], "message": parts[2]})
     return summaries
+
+
+def path_is_under(child_rel: str, parent_rel: str) -> bool:
+    child = child_rel.replace("\\", "/").strip("/")
+    parent = parent_rel.replace("\\", "/").strip("/")
+    if not parent:
+        return True
+    return child == parent or child.startswith(parent + "/")
 
 
 def get_file_creation_date_yyyymmdd(root: Path, file_path: Path) -> str:
@@ -459,9 +474,9 @@ def main() -> int:
 
     primary_info = info_by_path.get(primary) or parse_csproj(primary)
     primary_last_commit, primary_last_epoch = get_last_csproj_change(root, primary)
-    changed_files = list_changed_paths(root, primary.parent, comparison_base_commit)
+    changed_files = list_changed_paths(root, comparison_base_commit)
     changed_files, ignored_generated_cs_files = filter_ignorable_generated_changes(root, changed_files, comparison_base_commit)
-    commit_summaries = list_commit_summaries(root, primary.parent, comparison_base_commit)
+    commit_summaries = list_commit_summaries(root, comparison_base_commit)
 
     changed_cs_files: list[dict[str, str]] = []
     for rel in changed_files:
@@ -478,6 +493,10 @@ def main() -> int:
                 "creation_date_yyyymmdd": get_file_creation_date_yyyymmdd(root, abs_file),
             }
         )
+
+    primary_project_rel = to_relative_path(root, primary.parent)
+    changed_files_in_primary_project = [rel for rel in changed_files if path_is_under(rel, primary_project_rel)]
+    changed_cs_files_in_primary_project = [item for item in changed_cs_files if path_is_under(item["path"], primary_project_rel)]
 
     reverse_map = build_reverse_dependency_map(selected_by_dir, info_by_path)
     dependency_layers, dependents = compute_dependency_layers(primary, reverse_map)
@@ -501,6 +520,8 @@ def main() -> int:
         },
         "changed_files": changed_files,
         "changed_cs_files": changed_cs_files,
+        "changed_files_in_primary_project": changed_files_in_primary_project,
+        "changed_cs_files_in_primary_project": changed_cs_files_in_primary_project,
         "commit_summaries": commit_summaries,
         "ignored_generated_cs_files": ignored_generated_cs_files,
         "dependent_layers": [[to_relative_path(root, p) for p in layer] for layer in dependency_layers],

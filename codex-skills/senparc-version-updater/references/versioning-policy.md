@@ -15,6 +15,7 @@
 1. 基线分支优先级：`origin/master` -> `origin/main` -> `master` -> `main`。
 2. 使用 `merge-base(HEAD, 基线分支)` 作为起点提交（`comparison_base`）。
 3. 本次更新内容 = `comparison_base..HEAD` 的全部提交 + 当前未提交改动。
+3.1 变更文件统计范围必须为“全仓库”，不能只限制在单个目标项目目录。
 4. 如果无法解析 `master/main` 或无法计算 merge-base，流程必须报错终止，不允许降级到“最近一次修改 .csproj”的窗口。
 
 ## 预览版处理
