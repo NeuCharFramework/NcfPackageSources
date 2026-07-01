@@ -109,3 +109,9 @@ tools/NcfDesktopApp.GUI/publish-self-contained/*
 /.github/appmod/custom-tasks/
 *.tmp
 .vscode/settings.json
+.nuget-packages/
+.claude/
+.playwright-cli/page-2026-06-26T18-03-38-266Z.yml
+.playwright-cli/
+tools/NcfSimulatedSite/ASPIRE_USAGE_GUIDE.md
+**/App_Data/Database/NewDB.DB*

@@ -1,16 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：PromptResultService.cs
+    文件功能描述：PromptResultService 服务逻辑
+    
+    
+    创建标识：Senparc - 20231021
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
 using log4net.Util;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+using NetTopologySuite.IO;
 using Senparc.AI;
+using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Handlers;
 using Senparc.AI.Entities;
 using Senparc.AI.Interfaces;
-using Senparc.AI.Kernel;
-using Senparc.AI.Kernel.Handlers;
-using Senparc.AI.Kernel.KernelConfigExtensions;
+using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using Senparc.CO2NET.Trace;
@@ -20,13 +31,19 @@ using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.AIKernel.Domain.Models;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.AIKernel.Models;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.ChatCompletion;
-using Senparc.CO2NET.Cache;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
 {
@@ -37,6 +54,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         private readonly PromptRangeService _promptRangeService;
         private readonly LlModelService _llModelService;
         private readonly PromptResultChatService _promptResultChatService;
+        private readonly Lazy<AIModelService> _aiModelService;
 
         public PromptResultService(
             IRepositoryBase<PromptResult> repo,
@@ -44,14 +62,15 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             PromptItemService promptItemService,
             PromptRangeService promptRangeService,
             LlModelService llModelService,
-            PromptResultChatService promptResultChatService
-            ) : base(repo,
+            PromptResultChatService promptResultChatService,
+            Lazy<AIModelService> aiModelService) : base(repo,
             serviceProvider)
         {
             _promptItemService = promptItemService;
             _promptRangeService = promptRangeService;
             _llModelService = llModelService;
             _promptResultChatService = promptResultChatService;
+            _aiModelService = aiModelService;
         }
 
 
@@ -72,33 +91,47 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return dtoList;
         }
 
-        public async Task<PromptResultDto> SenparcGenerateResultAsync(PromptItemDto promptItem, string userMessage = null, List<ChatMessageDto> chatHistory = null)
+        /// <summary>
+        /// 获取 AI 生成结果
+        /// </summary>
+        /// <param name="promptItem"></param>
+        /// <param name="userMessage"></param>
+        /// <param name="chatHistory"></param>
+        /// <returns></returns>
+        /// <exception cref="NcfExceptionBase"></exception>
+        public async Task<PromptResultDto> SenparcGenerateResultAsync(
+            PromptItemDto promptItem,
+            string userMessage = null,
+            List<ChatMessageDto> chatHistory = null,
+            Action<PromptResultStreamEvent> onStreamEvent = null)
         {
-            //定义 AI 接口调用参数和 Token 限制等
-            var promptParameter = new PromptConfigParameter()
-            {
-                MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 200,
-                Temperature = promptItem.Temperature,
-                TopP = promptItem.TopP,
-                FrequencyPenalty = promptItem.FrequencyPenalty,
-                PresencePenalty = promptItem.PresencePenalty,
-                StopSequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>(),
-            };
-
             // 需要在变量前添加$
             //string completionPrompt = $@"请根据提示输出对应内容:
             //{promptItem.Content}";
             string completionPrompt = $@"{promptItem.Content}";
-            
+
+            //定义 AI 接口调用参数和 Token 限制等
+            var promptParameter = new ChatOptions()
+            {
+                Instructions = completionPrompt,
+                MaxOutputTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 2000,
+                Temperature = promptItem.Temperature,
+                TopP = promptItem.TopP,
+                FrequencyPenalty = promptItem.FrequencyPenalty,
+                PresencePenalty = promptItem.PresencePenalty,
+                StopSequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>() ?? new List<string>(),
+            };
+
             // 生成替换参数后的 SystemMessage（用于保存到数据库）
             // 如果 Prompt 内容包含参数占位符（如 {{$variableName}}），进行参数替换
             string systemMessage = completionPrompt;
-            if (!string.IsNullOrWhiteSpace(promptItem.VariableDictJson) && 
-                !string.IsNullOrWhiteSpace(promptItem.Prefix) && 
+            if (!string.IsNullOrWhiteSpace(promptItem.VariableDictJson) &&
+                !string.IsNullOrWhiteSpace(promptItem.Prefix) &&
                 !string.IsNullOrWhiteSpace(promptItem.Suffix))
             {
                 // 读取参数并替换 Prompt 内容中的占位符
-                var variableDict = (promptItem.VariableDictJson ?? "{}").GetObject<Dictionary<string, string>>();
+                var variableDict = (promptItem.VariableDictJson ?? "{}").GetObject<Dictionary<string, string>>()
+                    ?? new Dictionary<string, string>();
                 foreach (var (key, value) in variableDict)
                 {
                     // 替换格式：{Prefix}{key}{Suffix} -> value
@@ -108,39 +141,19 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 }
             }
 
+            var hasUserMessage = !string.IsNullOrWhiteSpace(userMessage);
+            var normalizedUserMessage = hasUserMessage ? userMessage : null;
+
+            // Chat 模式：Instructions 为系统 Prompt；Single 模式：Prompt 作为用户消息发送
+            promptParameter.Instructions = hasUserMessage ? systemMessage : null;
+
             // 从数据库中获取模型信息
-            var model = promptItem.AIModelDto;
-            // 构建生成AI设置
-            SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
-
-            //TODO: model 加上模型的类型：Chat/TextCompletion/TextToImage 等
-            ConfigModel configModel = _llModelService.ConvertToConfigModel(model.ConfigModelType);
-
-            // 创建 AI Handler 处理器（也可以通过工厂依赖注入）
-            var handler = new SemanticAiHandler(aiSettings);
-
-
-            IWantToRun iWantToRun =
-            userMessage != null
-                ? handler.ChatConfig(promptParameter,
-                                            userId: "Jeffrey",
-                                            maxHistoryStore: 20,
-                                            chatSystemMessage: completionPrompt,
-                                            senparcAiSetting: aiSettings,
-                                            kernelBuilderAction: kh =>
-                                                { }
-                                                )
-                : handler.IWantTo(aiSettings)
-                        // todo 替换为真实用户名，可能需要从NeuChar获取？
-                        .ConfigModel(configModel, "SenparcGenerateResult")
-                        .BuildKernel()
-                        .CreateFunctionFromPrompt(completionPrompt, promptParameter)
-                        .iWantToRun;
-
-            var aiArguments = iWantToRun.CreateNewArguments().arguments;
-            //aiArguments["input"] = promptItem.Content;
+            var model = promptItem.AIModelDto
+                ?? throw new NcfExceptionBase($"找不到 PromptItem（{promptItem.FullVersion}）对应的 AI 模型配置");
 
             #region 用户自定义参数
+
+            var history = BuildChatMessagesFromDto(chatHistory);
 
             if (!string.IsNullOrWhiteSpace(promptItem.VariableDictJson))
             {
@@ -149,43 +162,62 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 {
                     throw new NcfExceptionBase("前后缀不能为空");
                 }
-
-                // 读取参数并填充
-                foreach (var (k, v) in (promptItem.VariableDictJson ?? "{}").GetObject<Dictionary<string, string>>())
-                {
-                    // aiArguments[$"{promptItem.Prefix}{k}{promptItem.Suffix}"] = v;
-                    aiArguments[k] = v;
-                }
             }
 
             #endregion
-            SenparcAiResult aiResult = null;
+            UsageDetails streamUsageDetails = null;
             var dt1 = SystemTime.Now;
-            if (userMessage != null)
+            void HandleStreamUpdate(AgentResponseUpdate update)
             {
-                aiResult = await handler.ChatAsync(iWantToRun, userMessage);
-            }
-            else
-            {
-                var aiRequest = iWantToRun.CreateRequest(aiArguments, true);
-                aiResult = await iWantToRun.RunAsync(aiRequest);
+                if (update == null)
+                {
+                    return;
+                }
+
+                if (!string.IsNullOrEmpty(update.Text) && onStreamEvent != null)
+                {
+                    onStreamEvent(new PromptResultStreamEvent
+                    {
+                        EventType = "chunk",
+                        Text = update.Text,
+                        IsFinal = false
+                    });
+                }
+
+                if (update.Contents?.FirstOrDefault(z => z is UsageContent) is UsageContent usageContent
+                    && usageContent.Details != null)
+                {
+                    streamUsageDetails = usageContent.Details;
+                }
             }
 
-            // todo 计算token消耗
-            // 简单计算
-            // num_prompt_tokens = len(encoding.encode(string))
-            // gap_between_send_receive = 15 * len(kwargs["messages"])
-            // num_prompt_tokens += gap_between_send_receive
-            var promptCostToken = 0;
-            var resultCostToken = 0;
+            // Chat 模式使用 userMessage，Single 模式直接执行解析后的 Prompt 内容
+            var runPrompt = hasUserMessage ? normalizedUserMessage : systemMessage;
+            if (string.IsNullOrWhiteSpace(runPrompt))
+            {
+                throw new NcfExceptionBase("Prompt 内容不能为空");
+            }
+
+            var generateScene = $"PromptRange.Generate#{CreateTraceToken()}";
+            var (aiOutput, usageFromResponse) = await ExecuteChatWithDefaultFallbackAsync(
+                model,
+                promptParameter,
+                $"PromptRange_{promptItem.Id}",
+                runPrompt,
+                history,
+                generateScene,
+                onStreamEvent == null ? null : HandleStreamUpdate);
+            var usageInfo = PromptUsageHelper.ResolveUsage(streamUsageDetails ?? usageFromResponse);
+            var promptCostToken = usageInfo.PromptTokens;
+            var resultCostToken = usageInfo.CompletionTokens;
 
             // 判断是否为聊天模式
-            var isChatMode = userMessage != null;
+            var isChatMode = hasUserMessage;
             var resultMode = isChatMode ? ResultMode.Chat : ResultMode.Single;
 
             // 如果是聊天模式，保存 SystemMessage；否则为 null
             var promptResult = new PromptResult(
-                promptItem.ModelId, aiResult.OutputString, SystemTime.DiffTotalMS(dt1),
+                promptItem.ModelId, aiOutput, SystemTime.DiffTotalMS(dt1),
                 -1, -1, -1, TestType.Text,
                 promptCostToken, resultCostToken, promptCostToken + resultCostToken,
                 promptItem.FullVersion, promptItem.Id,
@@ -195,7 +227,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             await base.SaveObjectAsync(promptResult);
 
             // 如果是聊天模式，保存对话记录
-            if (isChatMode && !string.IsNullOrWhiteSpace(userMessage) && !string.IsNullOrWhiteSpace(aiResult.OutputString))
+            if (isChatMode && !string.IsNullOrWhiteSpace(normalizedUserMessage) && !string.IsNullOrWhiteSpace(aiOutput))
             {
                 var chatMessages = new List<ChatMessageDto>();
 
@@ -206,8 +238,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 }
 
                 // 添加当前对话（用户消息和 AI 响应）
-                chatMessages.Add(new ChatMessageDto { Role = "user", Content = userMessage });
-                chatMessages.Add(new ChatMessageDto { Role = "assistant", Content = aiResult.OutputString });
+                chatMessages.Add(new ChatMessageDto { Role = "user", Content = normalizedUserMessage });
+                chatMessages.Add(new ChatMessageDto { Role = "assistant", Content = aiOutput });
 
                 await _promptResultChatService.AddChatMessagesAsync(promptResult.Id, chatMessages);
             }
@@ -216,6 +248,21 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             if (promptItem.isAIGrade && !string.IsNullOrWhiteSpace(promptItem.ExpectedResultsJson))
             {
                 await this.RobotScoringAsync(promptResult.Id, false, promptItem.ExpectedResultsJson);
+            }
+
+            if (onStreamEvent != null)
+            {
+                onStreamEvent(new PromptResultStreamEvent
+                {
+                    EventType = "final",
+                    PromptResultId = promptResult.Id,
+                    Text = aiOutput,
+                    IsFinal = true,
+                    PromptTokens = promptCostToken,
+                    CompletionTokens = resultCostToken,
+                    TotalTokens = usageInfo.TotalTokens,
+                    ResponseMilliseconds = (int)Math.Round(promptResult.CostTime)
+                });
             }
 
             return this.Mapper.Map<PromptResultDto>(promptResult);
@@ -227,7 +274,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// <param name="promptResultId">现有的 PromptResult ID</param>
         /// <param name="userMessage">用户消息</param>
         /// <returns>返回新追加的对话记录（用户消息和 AI 回复）</returns>
-        public async Task<List<PromptResultChatDto>> ContinueChatAsync(int promptResultId, string userMessage)
+        public async Task<List<PromptResultChatDto>> ContinueChatAsync(
+            int promptResultId,
+            string userMessage,
+            Action<PromptResultStreamEvent> onStreamEvent = null)
         {
             if (string.IsNullOrWhiteSpace(userMessage))
             {
@@ -255,16 +305,16 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             //     Content = c.Content
             // }).ToList();
 
-            // 定义 AI 接口调用参数
-            var promptParameter = new PromptConfigParameter()
-            {
-                MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 200,
-                Temperature = promptItem.Temperature,
-                TopP = promptItem.TopP,
-                FrequencyPenalty = promptItem.FrequencyPenalty,
-                PresencePenalty = promptItem.PresencePenalty,
-                StopSequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>(),
-            };
+            //// 定义 AI 接口调用参数
+            //var promptParameter = new PromptConfigParameter()
+            //{
+            //    MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 200,
+            //    Temperature = promptItem.Temperature,
+            //    TopP = promptItem.TopP,
+            //    FrequencyPenalty = promptItem.FrequencyPenalty,
+            //    PresencePenalty = promptItem.PresencePenalty,
+            //    StopSequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>(),
+            //};
 
             // 优先使用保存的 SystemMessage，如果没有则使用当前的 Prompt 内容
             // 这样可以确保即使 Prompt 内容或参数变化，继续对话时也使用最初保存的 SystemMessage
@@ -279,13 +329,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 // 降级方案：如果没有保存的 SystemMessage，使用当前的 Prompt 内容
                 // 这种情况可能发生在旧数据或 Single 模式的数据中
                 completionPrompt = $@"{promptItem.Content}";
-                
+
                 // 如果 Prompt 内容包含参数占位符，进行参数替换
-                if (!string.IsNullOrWhiteSpace(promptItem.VariableDictJson) && 
-                    !string.IsNullOrWhiteSpace(promptItem.Prefix) && 
+                if (!string.IsNullOrWhiteSpace(promptItem.VariableDictJson) &&
+                    !string.IsNullOrWhiteSpace(promptItem.Prefix) &&
                     !string.IsNullOrWhiteSpace(promptItem.Suffix))
                 {
-                    var variableDict = (promptItem.VariableDictJson ?? "{}").GetObject<Dictionary<string, string>>();
+                    var variableDict = (promptItem.VariableDictJson ?? "{}").GetObject<Dictionary<string, string>>()
+                        ?? new Dictionary<string, string>();
                     foreach (var (key, value) in variableDict)
                     {
                         string placeholder = $"{promptItem.Prefix}{key}{promptItem.Suffix}";
@@ -295,67 +346,84 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
 
             // 从数据库中获取模型信息
-            var model = promptItem.AIModelDto;
-            // 构建生成AI设置
-            SenparcAiSetting aiSettings = this.BuildSenparcAiSetting(model);
+            var model = promptItem.AIModelDto
+                ?? throw new NcfExceptionBase($"找不到 PromptItem（{promptItem.FullVersion}）对应的 AI 模型配置");
 
-            ConfigModel configModel = _llModelService.ConvertToConfigModel(model.ConfigModelType);
-
-            // 创建 AI Handler 处理器
-            var handler = new SemanticAiHandler(aiSettings);
-
-            var hisgoryArgName = "history";
-
-            // 使用 ChatConfig，使用基于 promptResultId 的唯一 userId
-            IWantToRun iWantToRun = handler.ChatConfig(promptParameter,
-                userId: $"PromptResult_{promptResultId}",
-                maxHistoryStore: 20,
-                chatSystemMessage: completionPrompt,
-                senparcAiSetting: aiSettings,
-                hisgoryArgName: hisgoryArgName,
-                kernelBuilderAction: kh => { }
-                );
-
-            // 获取历史记录并添加到 KernelArguments
-            var chatHistoryFromKernel = iWantToRun.StoredAiArguments.KernelArguments[hisgoryArgName] as ChatHistory;
-
-            if (chatHistoryFromKernel != null)
-            {
-                foreach (var c in chatHistory)
-                {
-                    switch (c.RoleType)
-                    {
-                        case ChatRoleType.User:
-                            chatHistoryFromKernel.AddUserMessage(c.Content);
-                            break;
-                        case ChatRoleType.Assistant:
-                            chatHistoryFromKernel.AddAssistantMessage(c.Content);
-                            break;
-                    }
-                }
-
-                iWantToRun.StoredAiArguments.KernelArguments[hisgoryArgName] = chatHistoryFromKernel;
-            }
+            var chatOptions = _promptItemService.GetChatOptions(promptItem, completionPrompt);
+            var chatMessageList = _promptResultChatService.GetChatMessageList(chatHistory);
 
             // 调用 AI 接口
             var dt1 = SystemTime.Now;
-            var aiResult = await handler.ChatAsync(iWantToRun, userMessage,historyArgName:hisgoryArgName);
+            UsageDetails streamUsageDetails = null;
+            void HandleStreamUpdate(AgentResponseUpdate update)
+            {
+                if (update == null)
+                {
+                    return;
+                }
+
+                if (!string.IsNullOrEmpty(update.Text) && onStreamEvent != null)
+                {
+                    onStreamEvent(new PromptResultStreamEvent
+                    {
+                        EventType = "chunk",
+                        PromptResultId = promptResultId,
+                        Text = update.Text,
+                        IsFinal = false
+                    });
+                }
+
+                if (update.Contents?.FirstOrDefault(z => z is UsageContent) is UsageContent usageContent
+                    && usageContent.Details != null)
+                {
+                    streamUsageDetails = usageContent.Details;
+                }
+            }
+
+            var continueScene = $"PromptRange.ContinueChat#{CreateTraceToken()}";
+            var (aiOutput, usageFromResponse) = await ExecuteChatWithDefaultFallbackAsync(
+                model,
+                chatOptions,
+                $"PromptResult_{promptResultId}",
+                userMessage,
+                chatMessageList,
+                continueScene,
+                onStreamEvent == null ? null : HandleStreamUpdate);
             var costTime = SystemTime.DiffTotalMS(dt1);
+            var usageInfo = PromptUsageHelper.ResolveUsage(streamUsageDetails ?? usageFromResponse);
 
             // 追加新的对话记录到 PromptResultChat
             var newChatMessages = new List<ChatMessageDto>
             {
                 new ChatMessageDto { Role = "user", Content = userMessage },
-                new ChatMessageDto { Role = "assistant", Content = aiResult.OutputString }
+                new ChatMessageDto { Role = "assistant", Content = aiOutput }
             };
 
             // 添加新的对话记录（会自动从现有最大序号+1开始）
             var newChatDtos = await _promptResultChatService.AddChatMessagesAsync(promptResultId, newChatMessages);
 
-            // 更新 PromptResult 的 ResultString（追加新的回复）
-            // 注意：由于 ResultString 是 private set，我们需要通过反射或者添加一个更新方法
-            // 这里我们暂时不更新 ResultString，因为对话记录已经保存在 PromptResultChat 中了
-            // 如果需要更新，可以添加一个 UpdateResultString 方法
+            promptResult.AppendUsageAndResult(
+                usageInfo.PromptTokens,
+                usageInfo.CompletionTokens,
+                usageInfo.TotalTokens,
+                costTime,
+                aiOutput);
+            await base.SaveObjectAsync(promptResult);
+
+            if (onStreamEvent != null)
+            {
+                onStreamEvent(new PromptResultStreamEvent
+                {
+                    EventType = "final",
+                    PromptResultId = promptResultId,
+                    Text = aiOutput,
+                    IsFinal = true,
+                    PromptTokens = usageInfo.PromptTokens,
+                    CompletionTokens = usageInfo.CompletionTokens,
+                    TotalTokens = usageInfo.TotalTokens,
+                    ResponseMilliseconds = (int)Math.Round(costTime)
+                });
+            }
 
             return newChatDtos;
         }
@@ -384,158 +452,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return promptResult;
         }
 
-
-        /// <summary>
-        /// 构造 SenparcAiSetting, 在两个地方使用
-        /// </summary>
-        /// <param name="llModel"></param>
-        /// <returns></returns>
-        /// <exception cref="NcfExceptionBase"></exception>
-        public SenparcAiSetting BuildSenparcAiSetting(AIModelDto llModel)
-        {
-            var aiSettings = new SenparcAiSetting
-            {
-                AiPlatform = llModel.AiPlatform
-            };
-
-            switch (aiSettings.AiPlatform)
-            {
-                case AiPlatform.NeuCharAI:
-                    aiSettings.NeuCharAIKeys = new NeuCharAIKeys()
-                    {
-                        ApiKey = llModel.ApiKey,
-                        NeuCharAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        NeuCharEndpoint = llModel.Endpoint,
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
-                    };
-                    aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
-                    {
-                        ApiKey = llModel.ApiKey,
-                        AzureOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        AzureEndpoint = llModel.Endpoint,
-                        DeploymentName = llModel.DeploymentName,
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
-                    };
-                    break;
-                case AiPlatform.AzureOpenAI:
-                    aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
-                    {
-                        ApiKey = llModel.ApiKey,
-                        AzureOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        AzureEndpoint = llModel.Endpoint,
-                        DeploymentName = llModel.DeploymentName,
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
-                    };
-                    break;
-                case AiPlatform.HuggingFace:
-                    aiSettings.HuggingFaceKeys = new HuggingFaceKeys()
-                    {
-                        Endpoint = llModel.Endpoint,
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
-                    };
-                    break;
-                case AiPlatform.OpenAI:
-                    aiSettings.OpenAIKeys = new OpenAIKeys()
-                    {
-                        ApiKey = llModel.ApiKey,
-                        OrganizationId = llModel.OrganizationId,
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
-                    };
-                    break;
-                case AiPlatform.FastAPI:
-                    aiSettings.FastAPIKeys = new FastAPIKeys()
-                    {
-                        ApiKey = llModel.ApiKey,
-                        Endpoint = llModel.Endpoint,
-                        //OrganizationId = aiModel.OrganizationId
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
-                    };
-                    break;
-                case AiPlatform.Ollama:
-                    aiSettings.OllamaKeys = new OllamaKeys()
-                    {
-                        Endpoint = llModel.Endpoint,
-                        //OrganizationId = aiModel.OrganizationId
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
-                    };
-                    break;
-                case AiPlatform.DeepSeek:
-                    aiSettings.DeepSeekKeys = new DeepSeekKeys()
-                    {
-                        ApiKey = llModel.ApiKey,
-                        Endpoint = llModel.Endpoint,
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
-                    };
-                    break;
-                default:
-                    throw new NcfExceptionBase($"PromptRange 暂时不支持 {aiSettings.AiPlatform} 类型");
-            }
-
-
-            return aiSettings;
-        }
-
-
         public async Task<PromptResult> RobotScoringAsync(int promptResultId, bool isRefresh, string expectedResultsJson)
         {
-            List<string> list = //JsonConvert.DeserializeObject<>(expectedResultsJson);
-                expectedResultsJson.GetObject<List<string>>();
+            List<string> list = expectedResultsJson.GetObject<List<string>>() ?? new List<string>();
             return await this.RobotScoringAsync(promptResultId, isRefresh, list);
         }
 
@@ -549,10 +468,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         /// <exception cref="NcfExceptionBase"></exception>
         public async Task<PromptResult> RobotScoringAsync(int promptResultId, bool isRefresh, List<string> expectedResultList)
         {
+            expectedResultList ??= new List<string>();
             // 需要在变量前添加$
             const int MAX_SCORE = 10;
             const string MAX_SOCRE_STR = "10";
-
 
             // get promptResult by id
             var promptResult = await this.GetObjectAsync(z => z.Id == promptResultId)
@@ -585,7 +504,6 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
 
             //TODO：添加不等号规则
-
 
 
             const string scorePrompt = $@"[背景]
@@ -623,56 +541,58 @@ Apple
 
 [打分结果]
 10
-
-
-[期望结果]
-{{{{$expectedResult}}}}
-
-[实际结果]
-{{{{$actualResult}}}}
-
-[打分结果]
 ";
 
             // 获取模型
-            var model = promptItem.AIModelDto;
-
-            // build aiSettings by model
-            var aiSettings = this.BuildSenparcAiSetting(model);
-            //TODO:可以设置一个默认 PromptRange 的值，或者使用配置来指定打分的 AI，而不是使用同一个模型。
+            AIModelDto aiModelDto = null;
+            //如果当前模型不是 Chat 类型，则需要找一个 Chat 模型
+            if (promptItem.AIModelDto.ConfigModelType != ConfigModelType.Chat)
+            {
+                var chatModel = await _aiModelService.Value.GetObjectAsync(z => z.ConfigModelType == ConfigModelType.Chat);
+                if (chatModel == null)
+                {
+                    throw new NcfExceptionBase("必须至少设置一个 Chat 类型的模型才能自动打分（在 AIKernel 模块中）");
+                }
+                aiModelDto = _aiModelService.Value.Mapping<AIModelDto>(chatModel);
+            }
+            else
+            {
+                aiModelDto = promptItem.AIModelDto;
+            }
 
             var expectedResult = expectedResultList.ToJson();
 
-            //定义 AI 接口调用参数和 Token 限制等
-            var promptParameter = new PromptConfigParameter()
+            var scoringChatOptions = new ChatOptions()
             {
-                MaxTokens = promptItem.AIModelDto.MaxToken + expectedResult.Length + scorePrompt.Length + 500,
-                Temperature = 0.2,
-                TopP = 0.2
-                // FrequencyPenalty = 0,
-                // PresencePenalty = 0,
+                Instructions = scorePrompt,
+                MaxOutputTokens = aiModelDto.MaxToken + expectedResult.Length + scorePrompt.Length + 500,
+                Temperature = 0.2f,
+                TopP = 0.2f,
+                StopSequences = new List<string>()
             };
 
-            ConfigModel configModel = _llModelService.ConvertToConfigModel(model.ConfigModelType);
+            var userPrompt = $@"
+[期望结果]
+{expectedResult}
 
-            var handler = new SemanticAiHandler(aiSettings);
-            var iWantToRun =
-                handler.IWantTo(aiSettings)
-                    .ConfigModel(configModel, "AIScoring")
-                    .BuildKernel()
-                    .CreateFunctionFromPrompt(scorePrompt, promptParameter)
-                    .iWantToRun;
-            var aiArguments = iWantToRun.CreateNewArguments().arguments;
-            aiArguments["actualResult"] = promptResult.ResultString;
-            aiArguments["expectedResult"] = expectedResult;
+[实际结果]
+{promptResult.ResultString}
 
-            var aiRequest = iWantToRun.CreateRequest(aiArguments, true);
+[打分结果]";
+
             var dt1 = SystemTime.Now;
+            var scoringScene = $"PromptRange.RobotScoring#{CreateTraceToken()}";
+            var (scoreOutput, _) = await ExecuteChatWithDefaultFallbackAsync(
+                aiModelDto,
+                scoringChatOptions,
+                "AIScoring",
+                userPrompt,
+                null,
+                scoringScene);
+            var resultOutput = scoreOutput?.Trim() ?? string.Empty;
+            SenparcTrace.SendCustomLog("自动打分结束", $"模型返回为{resultOutput}，花费时间{SystemTime.DiffTotalMS(dt1)}ms");
 
-            var result = await iWantToRun.RunAsync(aiRequest);
-            SenparcTrace.SendCustomLog("自动打分结束", $"模型返回为{result.Output}，花费时间{SystemTime.DiffTotalMS(dt1)}ms");
-
-            // 正则匹配出result.Output中的数字
+            // 正则匹配出 resultOutput 中的数字
             // Use regular expression to find matches
 
             // 匹配 MAX_SCORE，后面可以跟 0-2 位的小数
@@ -680,20 +600,20 @@ Apple
             //@"^100(\.[0-9]{1,2})?|([0-9]{1,2})(\.[0-9]{1,2})?$";
             //"^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?|0(\.\d{1,2})?)$"
             //^(10(\.0{1,2})?|[1-9](\.\d{1,2})?|0(\.\d{1,2})?)$
-            Match match = Regex.Match(result.Output, pattern);
+            Match match = Regex.Match(resultOutput, pattern);
 
             // If there is a match, the number will be match.Value
             if (!match.Success)
             {
-                SenparcTrace.SendCustomLog("自动打分结束", $"原文为{result.Output}，分数匹配失败");
+                SenparcTrace.SendCustomLog("自动打分结束", $"原文为{resultOutput}，分数匹配失败");
 
-                throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为：{promptResult.ResultString}, 模型返回为{result.Output}，");
+                throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为：{promptResult.ResultString}, 模型返回为{resultOutput}，");
             }
 
             bool success = Decimal.TryParse(match.Value, out var score);
             if (!success)
             {
-                throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为：{promptResult.ResultString}, 模型返回为{result.Output}，");
+                throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为：{promptResult.ResultString}, 模型返回为{resultOutput}，");
             }
 
             #region error 打分结果不在 0-MAX_SCORE 之间
@@ -708,6 +628,660 @@ Apple
             await this.SaveObjectAsync(promptResult);
 
             return promptResult;
+        }
+
+        private async Task<(string Output, UsageDetails Usage)> ExecuteChatWithDefaultFallbackAsync(
+            AIModelDto model,
+            ChatOptions chatOptions,
+            string runnerName,
+            string prompt,
+            List<ChatMessage> history,
+            string scene,
+            Action<AgentResponseUpdate> inStreamItemProceessing = null)
+        {
+            if (model == null)
+            {
+                throw new NcfExceptionBase($"AI 调用失败（{scene}）：模型配置为空（AIModelDto == null）");
+            }
+
+            try
+            {
+                return await ExecuteChatCoreAsync(
+                    model,
+                    chatOptions,
+                    runnerName,
+                    prompt,
+                    history,
+                    scene,
+                    inStreamItemProceessing);
+            }
+            catch (Exception ex) when (ContainsForbiddenStatus(ex))
+            {
+                var primaryException = ex as NcfExceptionBase ?? BuildAiCallException(ex, model, scene);
+                Exception deploymentFallbackError = null;
+                var deploymentFallbackDetail = string.Empty;
+                if (TryBuildAlternateDeploymentModel(model, out var deploymentFallbackModel))
+                {
+                    deploymentFallbackDetail = BuildModelDiagnosticInfo(deploymentFallbackModel);
+                    SenparcTrace.SendCustomLog(
+                        "PromptRange.AI.DeploymentFallback",
+                        $"{scene} 主模型返回 403，尝试使用 ModelId 作为 DeploymentName 重试。Primary={BuildModelDiagnosticInfo(model)}; Fallback={deploymentFallbackDetail}");
+
+                    try
+                    {
+                        var deploymentResult = await ExecuteChatCoreAsync(
+                            deploymentFallbackModel,
+                            chatOptions,
+                            $"{runnerName}_Deployment",
+                            prompt,
+                            history,
+                            $"{scene}.DeploymentFallback",
+                            inStreamItemProceessing);
+                        SenparcTrace.SendCustomLog(
+                            "PromptRange.AI.DeploymentFallback",
+                            $"{scene} Deployment 回退成功，已使用 ModelId 作为 DeploymentName 完成本次请求。");
+                        return deploymentResult;
+                    }
+                    catch (Exception deploymentEx)
+                    {
+                        deploymentFallbackError = deploymentEx;
+                        SenparcTrace.SendCustomLog(
+                            "PromptRange.AI.DeploymentFallback",
+                            $"{scene} Deployment 回退失败：{FlattenExceptionMessages(deploymentEx)}");
+                    }
+                }
+
+                var chatCandidateHint = await BuildChatModelCandidatesDiagnosticAsync(model.Id);
+                var defaultSetting = Senparc.AI.Config.SenparcAiSetting as SenparcAiSetting;
+                if (!CanUseDefaultChatFallback(defaultSetting))
+                {
+                    if (deploymentFallbackError != null)
+                    {
+                        throw new NcfExceptionBase(
+                            $"{primaryException.Message}{Environment.NewLine}部署名称回退配置：{deploymentFallbackDetail}{Environment.NewLine}部署名称回退重试失败：{FlattenExceptionMessages(deploymentFallbackError)}{Environment.NewLine}可用 Chat 模型候选：{chatCandidateHint}",
+                            deploymentFallbackError);
+                    }
+
+                    throw new NcfExceptionBase(
+                        $"{primaryException.Message}{Environment.NewLine}可用 Chat 模型候选：{chatCandidateHint}",
+                        primaryException);
+                }
+
+                var defaultModel = BuildModelDtoFromDefaultSetting(defaultSetting);
+                var defaultFallbackDetail = BuildModelDiagnosticInfo(defaultModel);
+                if (defaultModel == null || IsSameChatConfig(model, defaultModel))
+                {
+                    if (deploymentFallbackError != null)
+                    {
+                        throw new NcfExceptionBase(
+                            $"{primaryException.Message}{Environment.NewLine}部署名称回退配置：{deploymentFallbackDetail}{Environment.NewLine}部署名称回退重试失败：{FlattenExceptionMessages(deploymentFallbackError)}{Environment.NewLine}可用 Chat 模型候选：{chatCandidateHint}",
+                            deploymentFallbackError);
+                    }
+
+                    throw new NcfExceptionBase(
+                        $"{primaryException.Message}{Environment.NewLine}可用 Chat 模型候选：{chatCandidateHint}",
+                        primaryException);
+                }
+
+                SenparcTrace.SendCustomLog(
+                    "PromptRange.AI.DefaultFallback",
+                    $"{scene} 主模型返回 403，尝试使用系统默认聊天配置重试。Primary={BuildModelDiagnosticInfo(model)}; Default={defaultFallbackDetail}");
+
+                try
+                {
+                    var defaultResult = await ExecuteChatCoreAsync(
+                        defaultModel,
+                        chatOptions,
+                        $"{runnerName}_Default",
+                        prompt,
+                        history,
+                        $"{scene}.DefaultFallback",
+                        inStreamItemProceessing,
+                        defaultSetting);
+                    SenparcTrace.SendCustomLog(
+                        "PromptRange.AI.DefaultFallback",
+                        $"{scene} 默认配置回退成功，已使用系统默认聊天配置完成本次请求。");
+                    return defaultResult;
+                }
+                catch (Exception fallbackEx)
+                {
+                    var messageBuilder = new StringBuilder();
+                    messageBuilder.Append(primaryException.Message);
+                    if (deploymentFallbackError != null)
+                    {
+                        messageBuilder.AppendLine();
+                        messageBuilder.Append("部署名称回退配置：");
+                        messageBuilder.Append(deploymentFallbackDetail);
+                        messageBuilder.AppendLine();
+                        messageBuilder.Append("部署名称回退重试失败：");
+                        messageBuilder.Append(FlattenExceptionMessages(deploymentFallbackError));
+                    }
+                    messageBuilder.AppendLine();
+                    messageBuilder.Append("系统默认回退配置：");
+                    messageBuilder.Append(defaultFallbackDetail);
+                    messageBuilder.AppendLine();
+                    messageBuilder.Append("系统默认聊天配置重试失败：");
+                    messageBuilder.Append(FlattenExceptionMessages(fallbackEx));
+                    messageBuilder.AppendLine();
+                    messageBuilder.Append("可用 Chat 模型候选：");
+                    messageBuilder.Append(chatCandidateHint);
+                    throw new NcfExceptionBase(messageBuilder.ToString(), fallbackEx);
+                }
+            }
+        }
+
+        private async Task<string> BuildChatModelCandidatesDiagnosticAsync(int excludeModelId)
+        {
+            try
+            {
+                var chatModels = await _aiModelService.Value.GetFullListAsync(
+                    z => z.ConfigModelType == ConfigModelType.Chat,
+                    z => z.Id,
+                    OrderingType.Descending);
+
+                var candidates = chatModels
+                    .Where(z => z.Id != excludeModelId)
+                    .Take(6)
+                    .Select(z => BuildModelDiagnosticInfo(new AIModelDto(z)))
+                    .ToList();
+
+                if (candidates.Count == 0)
+                {
+                    return "（无可用候选）";
+                }
+
+                return string.Join(" | ", candidates);
+            }
+            catch (Exception ex)
+            {
+                return $"（读取候选失败：{ex.GetType().Name} {ex.Message}）";
+            }
+        }
+
+        private async Task<(string Output, UsageDetails Usage)> ExecuteChatCoreAsync(
+            AIModelDto model,
+            ChatOptions chatOptions,
+            string runnerName,
+            string prompt,
+            List<ChatMessage> history,
+            string scene,
+            Action<AgentResponseUpdate> inStreamItemProceessing = null,
+            SenparcAiSetting overrideSetting = null)
+        {
+            var chatModel = EnsureChatCompatibleModel(model, scene);
+            var aiSettings = overrideSetting ?? _aiModelService.Value.BuildSenparcAiSetting(chatModel);
+            SenparcTrace.SendCustomLog(
+                "PromptRange.AI.Attempt",
+                $"{scene} 开始请求。Runner={runnerName}, Stream={(inStreamItemProceessing != null)}, HistoryCount={history?.Count ?? 0}, Model={BuildModelDiagnosticInfo(chatModel)}");
+            var iWantToRun = await new AgentAiHandler(aiSettings)
+                .IWantTo(aiSettings)
+                .ConfigChatModel(runnerName, BuildChatClientAgentOptions(CloneChatOptions(chatOptions)))
+                .BuildKernelWithAgentSessionAsync();
+
+            var agentSession = iWantToRun.Kernel.AgentSession
+                ?? throw new NcfExceptionBase("AgentKernel 未创建 AgentSession，请检查 AI 模型配置是否为 Chat 类型");
+            agentSession.SetInMemoryChatHistory(history ?? new List<ChatMessage>());
+
+            var result = await RunChatAndExtractAsync(
+                iWantToRun,
+                prompt,
+                agentSession,
+                chatModel,
+                scene,
+                inStreamItemProceessing);
+            var usage = PromptUsageHelper.ResolveUsage(result.Usage);
+            SenparcTrace.SendCustomLog(
+                "PromptRange.AI.Attempt",
+                $"{scene} 请求成功。Runner={runnerName}, PromptTokens={usage.PromptTokens}, CompletionTokens={usage.CompletionTokens}, TotalTokens={usage.TotalTokens}");
+            return result;
+        }
+
+        private static ChatOptions CloneChatOptions(ChatOptions chatOptions)
+        {
+            if (chatOptions == null)
+            {
+                return new ChatOptions();
+            }
+
+            return new ChatOptions
+            {
+                Instructions = chatOptions.Instructions,
+                MaxOutputTokens = chatOptions.MaxOutputTokens,
+                Temperature = chatOptions.Temperature,
+                TopP = chatOptions.TopP,
+                FrequencyPenalty = chatOptions.FrequencyPenalty,
+                PresencePenalty = chatOptions.PresencePenalty,
+                StopSequences = chatOptions.StopSequences?.ToList() ?? new List<string>(),
+                Tools = chatOptions.Tools?.ToList()
+            };
+        }
+
+        private static bool CanUseDefaultChatFallback(SenparcAiSetting defaultSetting)
+        {
+            if (defaultSetting == null || defaultSetting.AiPlatform == AiPlatform.UnSet)
+            {
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(defaultSetting.ModelName?.Chat))
+            {
+                return false;
+            }
+
+            if (defaultSetting.AiPlatform != AiPlatform.Ollama && string.IsNullOrWhiteSpace(defaultSetting.ApiKey))
+            {
+                return false;
+            }
+
+            return defaultSetting.AiPlatform switch
+            {
+                AiPlatform.OpenAI => true,
+                AiPlatform.Ollama => !string.IsNullOrWhiteSpace(defaultSetting.OllamaEndpoint),
+                _ => !string.IsNullOrWhiteSpace(defaultSetting.Endpoint)
+            };
+        }
+
+        private static AIModelDto BuildModelDtoFromDefaultSetting(SenparcAiSetting defaultSetting)
+        {
+            if (defaultSetting == null)
+            {
+                return null;
+            }
+
+            var apiVersion = defaultSetting.AiPlatform switch
+            {
+                AiPlatform.AzureOpenAI => defaultSetting.AzureOpenAIApiVersion,
+                AiPlatform.NeuCharAI => defaultSetting.NeuCharAIApiVersion,
+                _ => null
+            };
+
+            return new AIModelDto
+            {
+                Id = 0,
+                Alias = "SystemDefaultChat",
+                AiPlatform = defaultSetting.AiPlatform,
+                ConfigModelType = ConfigModelType.Chat,
+                ModelId = defaultSetting.ModelName?.Chat,
+                DeploymentName = defaultSetting.DeploymentName ?? defaultSetting.ModelName?.Chat,
+                Endpoint = defaultSetting.Endpoint,
+                ApiKey = defaultSetting.ApiKey,
+                ApiVersion = apiVersion
+            };
+        }
+
+        private static bool IsSameChatConfig(AIModelDto left, AIModelDto right)
+        {
+            if (left == null || right == null)
+            {
+                return false;
+            }
+
+            return left.AiPlatform == right.AiPlatform
+                   && string.Equals(
+                       NormalizeEndpointForDiagnostics(left.AiPlatform, left.Endpoint),
+                       NormalizeEndpointForDiagnostics(right.AiPlatform, right.Endpoint),
+                       StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(left.ModelId, right.ModelId, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(left.DeploymentName, right.DeploymentName, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(left.ApiKey, right.ApiKey, StringComparison.Ordinal);
+        }
+
+        private static AIModelDto EnsureChatCompatibleModel(AIModelDto model, string scene)
+        {
+            if (model == null)
+            {
+                return null;
+            }
+
+            if (model.ConfigModelType == ConfigModelType.Chat)
+            {
+                return model;
+            }
+
+            var deploymentName = model.DeploymentName;
+            if ((model.AiPlatform == AiPlatform.AzureOpenAI || model.AiPlatform == AiPlatform.NeuCharAI)
+                && string.IsNullOrWhiteSpace(deploymentName))
+            {
+                deploymentName = model.ModelId;
+            }
+
+            var chatModel = new AIModelDto
+            {
+                Id = model.Id,
+                Alias = $"{model.Alias ?? "Model"}_ChatCompat",
+                DeploymentName = deploymentName,
+                ModelId = model.ModelId,
+                Endpoint = model.Endpoint,
+                AiPlatform = model.AiPlatform,
+                ConfigModelType = ConfigModelType.Chat,
+                OrganizationId = model.OrganizationId,
+                ApiKey = model.ApiKey,
+                ApiVersion = model.ApiVersion,
+                Note = model.Note,
+                MaxToken = model.MaxToken,
+                IsShared = model.IsShared,
+                Show = model.Show
+            };
+
+            SenparcTrace.SendCustomLog(
+                "PromptRange.AI.ModelTypeCompat",
+                $"{scene} 检测到非 Chat 模型配置（{model.ConfigModelType}），已临时按 Chat 方式兼容调用。Origin={BuildModelDiagnosticInfo(model)}; Compat={BuildModelDiagnosticInfo(chatModel)}");
+
+            return chatModel;
+        }
+
+        private static bool TryBuildAlternateDeploymentModel(AIModelDto model, out AIModelDto fallbackModel)
+        {
+            fallbackModel = null;
+            if (model == null)
+            {
+                return false;
+            }
+
+            if (model.AiPlatform != AiPlatform.AzureOpenAI && model.AiPlatform != AiPlatform.NeuCharAI)
+            {
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(model.ModelId))
+            {
+                return false;
+            }
+
+            if (string.Equals(model.DeploymentName, model.ModelId, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            fallbackModel = new AIModelDto
+            {
+                Id = model.Id,
+                Alias = $"{model.Alias ?? "Model"}_DeploymentAsModelId",
+                DeploymentName = model.ModelId,
+                ModelId = model.ModelId,
+                Endpoint = model.Endpoint,
+                AiPlatform = model.AiPlatform,
+                ConfigModelType = model.ConfigModelType,
+                OrganizationId = model.OrganizationId,
+                ApiKey = model.ApiKey,
+                ApiVersion = model.ApiVersion,
+                Note = model.Note,
+                MaxToken = model.MaxToken,
+                IsShared = model.IsShared,
+                Show = model.Show
+            };
+            return true;
+        }
+
+        private static async Task<(string Output, UsageDetails Usage)> RunChatAndExtractAsync(
+            IWantToRun iWantToRun,
+            string prompt,
+            AgentSession agentSession,
+            AIModelDto model,
+            string scene,
+            Action<AgentResponseUpdate> inStreamItemProceessing = null)
+        {
+            // NeuCharAI 网关通常不支持稳定的流式返回（参考 AgentKernel 测试约定），
+            // 在 PromptRange 中统一走非流式路径，避免 Stream / 非 Stream 记录链路不一致。
+            if (inStreamItemProceessing != null && model?.AiPlatform == AiPlatform.NeuCharAI)
+            {
+                SenparcTrace.SendCustomLog("PromptRange.AI.StreamBypass",
+                    $"{scene} 检测到 {AiPlatform.NeuCharAI}，跳过流式调用并切换为非流式执行。");
+                return await RunChatDirectAsync(iWantToRun, prompt, agentSession, model, scene);
+            }
+
+            if (inStreamItemProceessing == null)
+            {
+                return await RunChatDirectAsync(iWantToRun, prompt, agentSession, model, scene);
+            }
+
+            SenparcKernelAiResult<string> aiResult;
+            try
+            {
+                aiResult = await iWantToRun.RunChatAsync(prompt, agentSession, inStreamItemProceessing);
+            }
+            catch (NcfExceptionBase)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                // 兼容某些模型/网关在 Session 场景下的拒绝，先尝试去掉 Session 再请求一次
+                if (agentSession != null)
+                {
+                    try
+                    {
+                        SenparcTrace.SendCustomLog("PromptRange.AI.Retry", $"{scene} 流式调用失败，尝试移除 AgentSession 后重试。");
+                        aiResult = await iWantToRun.RunChatAsync(prompt, null, inStreamItemProceessing);
+                    }
+                    catch (Exception retryEx)
+                    {
+                        // 若流式失败（例如网关策略不允许 SSE），降级到非流式以尽可能返回结果
+                        if (ContainsForbiddenStatus(retryEx))
+                        {
+                            SenparcTrace.SendCustomLog("PromptRange.AI.Fallback", $"{scene} 流式调用重试仍返回 403，降级为非流式请求。");
+                            return await RunChatDirectAsync(iWantToRun, prompt, null, model, scene);
+                        }
+
+                        throw BuildAiCallException(retryEx, model, scene);
+                    }
+                }
+                else if (ContainsForbiddenStatus(ex))
+                {
+                    // 无 Session 的流式请求被 403 时，降级到非流式
+                    SenparcTrace.SendCustomLog("PromptRange.AI.Fallback", $"{scene} 流式调用返回 403，降级为非流式请求。");
+                    return await RunChatDirectAsync(iWantToRun, prompt, null, model, scene);
+                }
+                else
+                {
+                    throw BuildAiCallException(ex, model, scene);
+                }
+            }
+
+            EnsureRunChatSucceeded(aiResult, model, scene);
+            return (aiResult.OutputString ?? string.Empty, aiResult.Result?.Usage);
+        }
+
+        private static async Task<(string Output, UsageDetails Usage)> RunChatDirectAsync(
+            IWantToRun iWantToRun,
+            string prompt,
+            AgentSession agentSession,
+            AIModelDto model,
+            string scene)
+        {
+            try
+            {
+                var aiResult = await iWantToRun.RunChatAsync(prompt, agentSession);
+                EnsureRunChatSucceeded(aiResult, model, scene);
+                return (aiResult.OutputString ?? string.Empty, aiResult.Result?.Usage);
+            }
+            catch (NcfExceptionBase)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                if (agentSession != null)
+                {
+                    try
+                    {
+                        SenparcTrace.SendCustomLog("PromptRange.AI.Retry", $"{scene} 非流式调用失败，尝试移除 AgentSession 后重试。");
+                        var retryResult = await iWantToRun.RunChatAsync(prompt, null);
+                        EnsureRunChatSucceeded(retryResult, model, scene);
+                        return (retryResult.OutputString ?? string.Empty, retryResult.Result?.Usage);
+                    }
+                    catch (Exception retryEx)
+                    {
+                        throw BuildAiCallException(retryEx, model, scene);
+                    }
+                }
+
+                throw BuildAiCallException(ex, model, scene);
+            }
+        }
+
+        private static NcfExceptionBase BuildAiCallException(Exception ex, AIModelDto model, string scene)
+        {
+            var detail = BuildModelDiagnosticInfo(model);
+            var chain = FlattenExceptionMessages(ex);
+            var isForbidden = chain.Contains("Status: 403 (Forbidden)", StringComparison.OrdinalIgnoreCase);
+
+            var messageBuilder = new StringBuilder();
+            messageBuilder.Append($"AI 调用失败（{scene}）。{detail}");
+
+            if (isForbidden)
+            {
+                messageBuilder.Append("；检测到上游返回 403（Forbidden），通常由模型端点权限、API Key、Deployment 名称或账号配额/策略导致。");
+
+                // AdminChat 默认（aiModelId=0）会使用系统级 SenparcAiSetting，这里一并输出，
+                // 便于快速对照“PromptRange 指定模型”和“系统默认模型”的差异。
+                var defaultSettingInfo = BuildDefaultChatSettingDiagnosticInfo();
+                if (!string.IsNullOrWhiteSpace(defaultSettingInfo))
+                {
+                    messageBuilder.AppendLine();
+                    messageBuilder.Append("系统默认聊天配置：");
+                    messageBuilder.Append(defaultSettingInfo);
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(chain))
+            {
+                messageBuilder.AppendLine();
+                messageBuilder.Append("原始错误链：");
+                messageBuilder.Append(chain);
+            }
+
+            return new NcfExceptionBase(messageBuilder.ToString(), ex);
+        }
+
+        private static string BuildDefaultChatSettingDiagnosticInfo()
+        {
+            try
+            {
+                var defaultSetting = Senparc.AI.Config.SenparcAiSetting as SenparcAiSetting;
+                if (defaultSetting == null)
+                {
+                    return "未读取到 SenparcAiSetting（null）";
+                }
+
+                var platform = defaultSetting.AiPlatform;
+                var endpoint = NormalizeEndpointForDiagnostics(platform, defaultSetting.Endpoint);
+                var apiKey = defaultSetting.ApiKey;
+                var apiKeyStatus = string.IsNullOrWhiteSpace(apiKey)
+                    ? "empty"
+                    : $"set(len:{apiKey.Length})";
+                var chatModel = defaultSetting.ModelName?.Chat ?? "(null)";
+                var deployment = defaultSetting.DeploymentName ?? "(null)";
+
+                return $"Platform={platform}, ChatModel={chatModel}, Deployment={deployment}, Endpoint={endpoint ?? "(null)"}, ApiKey={apiKeyStatus}";
+            }
+            catch (Exception ex)
+            {
+                return $"读取 SenparcAiSetting 失败：{ex.GetType().Name} {ex.Message}";
+            }
+        }
+
+        private static void EnsureRunChatSucceeded(SenparcKernelAiResult<string> aiResult, AIModelDto model, string scene)
+        {
+            if (aiResult?.Result != null)
+            {
+                return;
+            }
+
+            var fallback = aiResult?.OutputString;
+            if (string.IsNullOrWhiteSpace(fallback))
+            {
+                fallback = "RunChatAsync 未返回有效 AgentResponse（Result 为 null）。";
+            }
+
+            throw BuildAiCallException(new Exception(fallback), model, scene);
+        }
+
+        private static string BuildModelDiagnosticInfo(AIModelDto model)
+        {
+            if (model == null)
+            {
+                return "模型配置为空（AIModelDto == null）";
+            }
+
+            var endpoint = NormalizeEndpointForDiagnostics(model.AiPlatform, model.Endpoint);
+            var apiKeyStatus = string.IsNullOrWhiteSpace(model.ApiKey)
+                ? "empty"
+                : $"set(len:{model.ApiKey.Length})";
+
+            return $"AIModelDbId={model.Id}, ConfigType={model.ConfigModelType}, ModelId={model.ModelId ?? "(null)"}, Alias={model.Alias ?? "(null)"}, Platform={model.AiPlatform}, Deployment={model.DeploymentName ?? "(null)"}, Endpoint={endpoint ?? "(null)"}, ApiVersion={model.ApiVersion ?? "(null)"}, ApiKey={apiKeyStatus}";
+        }
+
+        private static string CreateTraceToken()
+        {
+            return Guid.NewGuid().ToString("N").Substring(0, 8);
+        }
+
+        private static string NormalizeEndpointForDiagnostics(AiPlatform platform, string endpoint)
+        {
+            if (string.IsNullOrWhiteSpace(endpoint))
+            {
+                return endpoint;
+            }
+
+            var normalized = endpoint.Trim();
+            if (platform == AiPlatform.NeuCharAI && !normalized.EndsWith("/", StringComparison.Ordinal))
+            {
+                normalized += "/";
+            }
+
+            return normalized;
+        }
+
+        private static string FlattenExceptionMessages(Exception ex)
+        {
+            if (ex == null)
+            {
+                return string.Empty;
+            }
+
+            var sb = new StringBuilder();
+            var current = ex;
+            var depth = 0;
+            while (current != null && depth < 8)
+            {
+                if (depth > 0)
+                {
+                    sb.Append(" -> ");
+                }
+
+                sb.Append('[');
+                sb.Append(current.GetType().Name);
+                sb.Append("] ");
+                sb.Append(current.Message?.Trim());
+
+                current = current.InnerException;
+                depth++;
+            }
+
+            return sb.ToString();
+        }
+
+        private static bool ContainsForbiddenStatus(Exception ex)
+        {
+            if (ex == null)
+            {
+                return false;
+            }
+
+            var chain = FlattenExceptionMessages(ex);
+            if (chain.Contains("Status: 403 (Forbidden)", StringComparison.OrdinalIgnoreCase)
+                || chain.Contains("StatusCode: 403", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            var has403 = chain.Contains("403", StringComparison.OrdinalIgnoreCase);
+            var hasForbidden = chain.Contains("forbidden", StringComparison.OrdinalIgnoreCase)
+                               || chain.Contains("禁止", StringComparison.OrdinalIgnoreCase)
+                               || chain.Contains("拒绝", StringComparison.OrdinalIgnoreCase);
+
+            return has403 && hasForbidden;
         }
 
         public async Task<Boolean> BatchDeleteWithItemId(List<int> ids)
@@ -725,6 +1299,42 @@ Apple
             }
 
             return true;
+        }
+
+        private static ChatClientAgentOptions BuildChatClientAgentOptions(ChatOptions chatOptions)
+        {
+            return new ChatClientAgentOptions
+            {
+                ChatOptions = chatOptions,
+                ChatHistoryProvider = new InMemoryChatHistoryProvider(new InMemoryChatHistoryProviderOptions())
+            };
+        }
+
+        private static List<ChatMessage> BuildChatMessagesFromDto(List<ChatMessageDto> chatHistory)
+        {
+            if (chatHistory == null || chatHistory.Count == 0)
+            {
+                return new List<ChatMessage>();
+            }
+
+            return chatHistory.Select(z => new ChatMessage(
+                NormalizeChatRole(z.Role),
+                z.Content ?? string.Empty)).ToList();
+        }
+
+        private static ChatRole NormalizeChatRole(string role)
+        {
+            if (string.IsNullOrWhiteSpace(role))
+            {
+                return ChatRole.User;
+            }
+
+            return role.Trim().ToLowerInvariant() switch
+            {
+                "assistant" => ChatRole.Assistant,
+                "system" => ChatRole.System,
+                _ => ChatRole.User
+            };
         }
 
         /// <summary>

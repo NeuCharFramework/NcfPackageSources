@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.2</Version>
+		<TargetFramework>net10.0</TargetFramework>
+		<Version>0.2.1</Version>
 		<AssemblyName>Senparc.Xncf.Accounts</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Accounts</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -19,7 +19,11 @@
 		<PackageReleaseNotes>
 			v0.1 创世
 			[2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
-		</PackageReleaseNotes>
+		
+			[2026-07-02] v0.2.1 增强多智能体群聊流程、容错与任务调度能力，优化 AgentsManager 前端界面与历史消息展示效果
+			1、增强多智能体群聊流程、容错与任务调度能力
+			2、优化 AgentsManager 前端界面与历史消息展示效果
+</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
 		<UserSecretsId>09f08471-c710-42f1-9f6b-936794838320</UserSecretsId>
@@ -76,8 +80,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\Senparc.Aspire.ServiceDefaults\Senparc.Aspire.ServiceDefaults.csproj" />
 	  <ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
 	  <ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
+	  <ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

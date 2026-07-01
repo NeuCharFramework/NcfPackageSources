@@ -1,9 +1,23 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：SeedDataGenerator.cs
+    文件功能描述：SeedDataGenerator 相关实现
+    
+    
+    创建标识：Senparc - 20240713
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.UnitTestExtension.Entities;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;

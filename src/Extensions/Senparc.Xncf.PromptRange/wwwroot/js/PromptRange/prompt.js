@@ -161,7 +161,38 @@ var app = new Vue({
             continueChatPromptResultId: null, // 继续聊天的 PromptResult ID
             continueChatHistory: [], // 继续聊天的历史记录
             continueChatSystemMessage: '', // 继续聊天时使用的 SystemMessage（Prompt）
+            continueChatUsageSummary: {
+                promptCostToken: 0,
+                resultCostToken: 0,
+                totalCostToken: 0
+            },
             systemMessageCollapse: [], // SystemMessage 折叠面板状态
+            promptStreamSource: null,
+            promptStreamId: '',
+            promptStreaming: false,
+            promptStreamingTempResultId: null,
+            promptStreamingBuffer: '',
+            promptStreamAvailable: true,
+            useStreamOutput: true,
+            promptStreamPreferenceStorageKey: 'PromptRange.UseStreamOutput',
+            promptRangeTexts: {
+                zh: {
+                    streamOptionLabel: '流式输出',
+                    streamOptionTooltip: '开启后，打靶/连发/继续对话会实时输出；关闭后使用整块输出。',
+                    switchOn: '开',
+                    switchOff: '关',
+                    streamFallbackWarning: '实时流连接失败，已自动切换为普通模式（刷新页面可重试）',
+                    streamUnsupportedWarning: '当前浏览器不支持流式输出，已切换为普通模式'
+                },
+                en: {
+                    streamOptionLabel: 'Streaming Output',
+                    streamOptionTooltip: 'When enabled, shooting/rapid fire/continue chat uses streaming output. When disabled, it uses full-response output.',
+                    switchOn: 'On',
+                    switchOff: 'Off',
+                    streamFallbackWarning: 'Streaming connection failed. Switched to normal mode automatically (refresh to retry).',
+                    streamUnsupportedWarning: 'Streaming is not supported by this browser. Switched to normal mode.'
+                }
+            },
             // 导图相关状态
             mapDialogVisible: false, // 导图对话框显示状态
             map3dScene: null, // three.js 场景
@@ -352,6 +383,9 @@ var app = new Vue({
         isPageLoading() {
             let result = this.tacticalFormSubmitLoading || this.modelFormSubmitLoading || this.aiScoreFormSubmitLoading || this.targetShootLoading || this.dodgersLoading
             return result
+        },
+        isPromptExecutionLoading() {
+            return this.tacticalFormSubmitLoading || this.targetShootLoading || this.dodgersLoading || this.promptStreaming
         },
         
         // 计算创建智能体时使用的 PromptCode（根据范围选择）
@@ -634,6 +668,7 @@ var app = new Vue({
         }
     },
     created() {
+        this.loadPromptStreamPreference();
         // 浏览器关闭|浏览器刷新|页面关闭|打开新页面 提示有数据变动保存数据
         // 添加 beforeunload 事件监听器
         window.addEventListener('beforeunload', this.beforeunloadHandler);
@@ -683,6 +718,7 @@ var app = new Vue({
     beforeDestroy() {
         // 销毁之前移除事件监听器
         window.removeEventListener('beforeunload', this.beforeunloadHandler);
+        this.closePromptStream();
         if (this.hashChangeHandler) {
             window.removeEventListener('hashchange', this.hashChangeHandler);
             this.hashChangeHandler = null;
@@ -693,6 +729,66 @@ var app = new Vue({
         document.removeEventListener('mouseup', this.stopResize);
     },
     methods: {
+        getPromptRangeLocale() {
+            const raw = (document.documentElement.lang || navigator.language || 'en').toLowerCase();
+            if (raw.startsWith('zh')) {
+                return 'zh';
+            }
+            return 'en';
+        },
+        getPromptRangeText(key) {
+            const locale = this.getPromptRangeLocale();
+            const localeTexts = this.promptRangeTexts[locale] || this.promptRangeTexts.en || {};
+            return localeTexts[key] || (this.promptRangeTexts.en && this.promptRangeTexts.en[key]) || key;
+        },
+        loadPromptStreamPreference() {
+            if (typeof EventSource === 'undefined') {
+                this.useStreamOutput = false;
+                this.promptStreamAvailable = false;
+                return;
+            }
+
+            let savedValue = null;
+            try {
+                savedValue = window.localStorage.getItem(this.promptStreamPreferenceStorageKey);
+            } catch (e) {
+                savedValue = null;
+            }
+
+            if (savedValue === 'false' || savedValue === '0') {
+                this.useStreamOutput = false;
+            } else if (savedValue === 'true' || savedValue === '1') {
+                this.useStreamOutput = true;
+            }
+        },
+        savePromptStreamPreference(value) {
+            try {
+                window.localStorage.setItem(this.promptStreamPreferenceStorageKey, value ? 'true' : 'false');
+            } catch (e) {
+                // ignore storage errors (private mode / quota / policy)
+            }
+        },
+        handleUseStreamOutputChange(value) {
+            if (value && typeof EventSource === 'undefined') {
+                this.useStreamOutput = false;
+                this.promptStreamAvailable = false;
+                this.savePromptStreamPreference(false);
+                this.$message({
+                    message: this.getPromptRangeText('streamUnsupportedWarning'),
+                    type: 'warning',
+                    duration: 3500
+                });
+                return;
+            }
+
+            if (!value) {
+                this.closePromptStream();
+            } else {
+                this.promptStreamAvailable = true;
+            }
+
+            this.savePromptStreamPreference(!!value);
+        },
         parsePromptHashRoute() {
             const raw = (window.location.hash || '').replace(/^#/, '');
             const route = { rangeId: null, promptId: null };
@@ -772,6 +868,259 @@ var app = new Vue({
             } finally {
                 this.isApplyingHashRoute = false;
             }
+        },
+        createPromptStreamId() {
+            return `pr_stream_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`
+        },
+        closePromptStream() {
+            if (this.promptStreamSource) {
+                this.promptStreamSource.close()
+            }
+            this.promptStreamSource = null
+            this.promptStreamId = ''
+            this.promptStreaming = false
+            this.promptStreamingBuffer = ''
+            this.promptStreamingTempResultId = null
+        },
+        openPromptStream(streamId, mode = 'shoot') {
+            if (!this.useStreamOutput || !streamId || typeof EventSource === 'undefined' || !this.promptStreamAvailable) {
+                return Promise.resolve(false)
+            }
+
+            this.closePromptStream()
+            this.promptStreamId = streamId
+            this.promptStreaming = true
+
+            return new Promise((resolve) => {
+                const source = new EventSource(`/api/Senparc.Xncf.PromptRange/PromptStream/Subscribe?streamId=${encodeURIComponent(streamId)}&_ts=${Date.now()}`, { withCredentials: true })
+                this.promptStreamSource = source
+                let settled = false
+                const settle = (ok) => {
+                    if (settled) return
+                    settled = true
+                    clearTimeout(timeoutId)
+                    resolve(ok)
+                }
+                const timeoutId = setTimeout(() => settle(true), 8000)
+
+                source.addEventListener('chunk', (event) => {
+                    const payload = this.safeParsePromptStreamEvent(event)
+                    if (!payload) return
+                    this.handlePromptStreamChunk(payload, mode)
+                })
+
+                source.addEventListener('final', (event) => {
+                    const payload = this.safeParsePromptStreamEvent(event)
+                    if (!payload) return
+                    this.handlePromptStreamFinal(payload, mode)
+                })
+
+                source.addEventListener('complete', () => {
+                    this.closePromptStream()
+                })
+
+                source.onopen = () => {
+                    this.promptStreamAvailable = true
+                    settle(true)
+                }
+
+                source.onerror = () => {
+                    if (source.readyState === EventSource.CONNECTING) {
+                        return
+                    }
+                    if (source.readyState === EventSource.CLOSED && !settled) {
+                        if (this.promptStreamAvailable) {
+                            this.promptStreamAvailable = false
+                            this.$message({
+                                message: this.getPromptRangeText('streamFallbackWarning'),
+                                type: 'warning',
+                                duration: 3500
+                            })
+                        }
+                        settle(false)
+                    }
+                    if (source.readyState === EventSource.CLOSED) {
+                        this.closePromptStream()
+                    }
+                }
+            })
+        },
+        safeParsePromptStreamEvent(event) {
+            if (!event || !event.data) return null
+            try {
+                return JSON.parse(event.data)
+            } catch (e) {
+                console.error('Prompt stream parse error:', e, event.data)
+                return null
+            }
+        },
+        buildDefaultOutputResultItem() {
+            return {
+                scoreType: '1',
+                isScoreView: false,
+                scoreVal: 0,
+                alResultList: [{
+                    id: 1,
+                    label: '预期结果1',
+                    value: ''
+                }, {
+                    id: 2,
+                    label: '预期结果2',
+                    value: ''
+                }, {
+                    id: 3,
+                    label: '预期结果3',
+                    value: ''
+                }]
+            }
+        },
+        normalizeOutputResultItem(item, promptId, fullVersion, promptItem = {}) {
+            const normalized = Object.assign({}, this.buildDefaultOutputResultItem(), item || {})
+            normalized.promptId = promptId || normalized.promptId
+            normalized.version = fullVersion || normalized.version
+            normalized.addTime = normalized.addTime ? this.formatDate(normalized.addTime) : ''
+            normalized.resultString = normalized.resultString || ''
+            normalized.resultStringHtml = marked.parse(normalized.resultString)
+            normalized.scoreVal = normalized.humanScore > -1 ? normalized.humanScore : 0
+
+            if (promptItem && promptItem.expectedResultsJson) {
+                try {
+                    const expectedList = JSON.parse(promptItem.expectedResultsJson)
+                    normalized.alResultList = expectedList.map((value, index) => ({
+                        id: index + 1,
+                        label: '预期结果',
+                        value
+                    }))
+                } catch (e) {
+                    console.warn('expectedResultsJson parse failed', e)
+                }
+            }
+
+            return normalized
+        },
+        syncContinueChatUsageFromResult(promptResultId) {
+            const resultItem = this.outputList.find(item => item.id === promptResultId)
+            if (!resultItem) {
+                this.continueChatUsageSummary = {
+                    promptCostToken: 0,
+                    resultCostToken: 0,
+                    totalCostToken: 0
+                }
+                return
+            }
+
+            this.continueChatUsageSummary = {
+                promptCostToken: resultItem.promptCostToken || 0,
+                resultCostToken: resultItem.resultCostToken || 0,
+                totalCostToken: resultItem.totalCostToken || 0
+            }
+        },
+        removeContinueChatStreamingMessage() {
+            const tempIndex = this.continueChatHistory.findIndex(msg => msg.id === 'streaming_assistant')
+            if (tempIndex > -1) {
+                this.continueChatHistory.splice(tempIndex, 1)
+                this.continueChatHistory = [...this.continueChatHistory]
+            }
+        },
+        ensureStreamingOutputPlaceholder() {
+            if (!this.promptStreamingTempResultId) {
+                this.promptStreamingTempResultId = `streaming_${Date.now()}`
+            }
+
+            let index = this.outputList.findIndex(item => item.id === this.promptStreamingTempResultId)
+            if (index > -1) return index
+
+            const placeholder = this.normalizeOutputResultItem({
+                id: this.promptStreamingTempResultId,
+                resultString: '',
+                addTime: new Date().toISOString(),
+                costTime: 0,
+                promptCostToken: 0,
+                resultCostToken: 0,
+                totalCostToken: 0
+            }, this.promptid, this.promptDetail?.fullVersion || '')
+
+            this.outputList = [placeholder].concat(this.outputList || [])
+            return 0
+        },
+        isStreamingResultItem(item) {
+            if (!item || !this.promptStreaming || !this.promptStreamingTempResultId) {
+                return false
+            }
+            return String(item.id) === String(this.promptStreamingTempResultId)
+        },
+        handlePromptStreamChunk(payload, mode) {
+            if (mode === 'continueChat') {
+                this.handleContinueChatStreamChunk(payload)
+                return
+            }
+
+            const index = this.ensureStreamingOutputPlaceholder()
+            const item = this.outputList[index]
+            if (!item) return
+
+            item.resultString = `${item.resultString || ''}${payload.text || ''}`
+            item.resultStringHtml = marked.parse(item.resultString)
+            item.costTime = payload.responseMilliseconds || item.costTime || 0
+            item.promptCostToken = payload.promptTokens || item.promptCostToken || 0
+            item.resultCostToken = payload.completionTokens || item.resultCostToken || 0
+            item.totalCostToken = payload.totalTokens || item.totalCostToken || 0
+
+            this.$set(this.outputList, index, Object.assign({}, item))
+        },
+        handlePromptStreamFinal(payload, mode) {
+            if (mode === 'continueChat') {
+                this.handleContinueChatStreamFinal(payload)
+                return
+            }
+
+            const index = this.ensureStreamingOutputPlaceholder()
+            const item = this.outputList[index]
+            if (!item) return
+
+            if (payload.text !== undefined && payload.text !== null) {
+                item.resultString = payload.text
+                item.resultStringHtml = marked.parse(item.resultString || '')
+            }
+            item.costTime = payload.responseMilliseconds || item.costTime || 0
+            item.promptCostToken = payload.promptTokens || item.promptCostToken || 0
+            item.resultCostToken = payload.completionTokens || item.resultCostToken || 0
+            item.totalCostToken = payload.totalTokens || item.totalCostToken || 0
+            this.$set(this.outputList, index, Object.assign({}, item))
+        },
+        handleContinueChatStreamChunk(payload) {
+            if (!this.continueChatMode) return
+            const now = new Date().toISOString()
+            let tempMessage = this.continueChatHistory.find(msg => msg.id === 'streaming_assistant')
+            if (!tempMessage) {
+                tempMessage = {
+                    id: 'streaming_assistant',
+                    roleType: 2,
+                    content: '',
+                    sequence: (this.continueChatHistory[this.continueChatHistory.length - 1]?.sequence || 0) + 1,
+                    addTime: now
+                }
+                this.continueChatHistory.push(tempMessage)
+            }
+            tempMessage.content = `${tempMessage.content || ''}${payload.text || ''}`
+            tempMessage.addTime = now
+            this.continueChatUsageSummary.promptCostToken = payload.promptTokens || this.continueChatUsageSummary.promptCostToken
+            this.continueChatUsageSummary.resultCostToken = payload.completionTokens || this.continueChatUsageSummary.resultCostToken
+            this.continueChatUsageSummary.totalCostToken = payload.totalTokens || this.continueChatUsageSummary.totalCostToken
+            this.continueChatHistory = [...this.continueChatHistory]
+        },
+        handleContinueChatStreamFinal(payload) {
+            if (!this.continueChatMode) return
+            const tempMessage = this.continueChatHistory.find(msg => msg.id === 'streaming_assistant')
+            if (tempMessage) {
+                tempMessage.content = payload.text || tempMessage.content || ''
+                tempMessage.addTime = new Date().toISOString()
+            }
+
+            this.continueChatUsageSummary.promptCostToken = payload.promptTokens || this.continueChatUsageSummary.promptCostToken
+            this.continueChatUsageSummary.resultCostToken = payload.completionTokens || this.continueChatUsageSummary.resultCostToken
+            this.continueChatUsageSummary.totalCostToken = payload.totalTokens || this.continueChatUsageSummary.totalCostToken
+            this.continueChatHistory = [...this.continueChatHistory]
         },
         //获取路径id 页面数据回显
         getTargetRangeIdFromUrl() {
@@ -1143,44 +1492,22 @@ var app = new Vue({
         // 继续聊天提交
         async continueChatSubmit(promptResultId, userMessage) {
             this.tacticalFormSubmitLoading = true
+            const streamId = this.createPromptStreamId()
+            const streamReady = await this.openPromptStream(streamId, 'continueChat')
             try {
+                this.removeContinueChatStreamingMessage()
                 const res = await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.ContinueChat`, {
                     promptResultId: promptResultId,
-                    userMessage: userMessage || ''
+                    userMessage: userMessage || '',
+                    streamId: streamReady ? streamId : null
                 })
                 
                 if (res.data.success) {
-                    const newChatMessages = res.data.data || []
-                    
-                    // 验证新消息是否有有效的 ID
-                    const invalidMessages = newChatMessages.filter(msg => {
-                        const msgId = typeof msg.id === 'string' ? parseInt(msg.id, 10) : msg.id
-                        return !msgId || msgId === 0 || isNaN(msgId)
-                    })
-                    
-                    if (invalidMessages.length > 0) {
-                        console.error('错误：部分消息没有有效的 ID，重新加载历史记录以确保获取正确的 ID', invalidMessages)
-                        // 如果消息没有 ID，重新加载历史记录以确保获取正确的 ID
-                        const reloadRes = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistory?promptResultId=${promptResultId}`)
-                        if (reloadRes.data.success) {
-                            this.continueChatHistory = reloadRes.data.data || []
-                            console.log('重新加载后的历史记录:', this.continueChatHistory)
-                            
-                            // 验证重新加载后的记录是否都有有效的 ID
-                            const stillInvalid = this.continueChatHistory.filter(msg => {
-                                const msgId = typeof msg.id === 'string' ? parseInt(msg.id, 10) : msg.id
-                                return !msgId || msgId === 0 || isNaN(msgId)
-                            })
-                            if (stillInvalid.length > 0) {
-                                console.error('严重错误：重新加载后仍有消息 ID 无效:', stillInvalid)
-                            }
-                        }
-                    } else {
-                        // 追加新的对话记录到历史记录
-                        console.log('追加新消息到历史记录:', newChatMessages.map(m => ({ id: m.id, roleType: m.roleType, sequence: m.sequence })))
-                        this.continueChatHistory.push(...newChatMessages)
-                        console.log('更新后的历史记录（最后5条）:', this.continueChatHistory.slice(-5).map(m => ({ id: m.id, idType: typeof m.id, roleType: m.roleType, sequence: m.sequence })))
+                    const reloadRes = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistory?promptResultId=${promptResultId}`)
+                    if (reloadRes.data.success) {
+                        this.continueChatHistory = reloadRes.data.data || []
                     }
+                    this.removeContinueChatStreamingMessage()
                     
                     // 找到对应的输出项并更新
                     const resultIndex = this.outputList.findIndex(item => item.id === promptResultId)
@@ -1188,7 +1515,8 @@ var app = new Vue({
                         const resultItem = this.outputList[resultIndex]
                         
                         // 更新显示：将最新的 AI 回复追加到 ResultString
-                        const latestAssistantMessage = this.continueChatHistory.find(msg => msg.roleType === 2 && msg.sequence === Math.max(...this.continueChatHistory.map(m => m.sequence)))
+                        const assistantMessages = this.continueChatHistory.filter(msg => msg.roleType === 2)
+                        const latestAssistantMessage = assistantMessages.length > 0 ? assistantMessages[assistantMessages.length - 1] : null
                         if (latestAssistantMessage) {
                             // 追加到现有的 ResultString（格式化为对话形式）
                             const currentResult = resultItem.resultString || ''
@@ -1196,6 +1524,10 @@ var app = new Vue({
                             const newContent = `**用户**: ${userMessage}\n\n**助手**: ${latestAssistantMessage.content}`
                             resultItem.resultString = currentResult + separator + newContent
                             resultItem.resultStringHtml = marked.parse(resultItem.resultString)
+                            resultItem.promptCostToken = this.continueChatUsageSummary.promptCostToken || resultItem.promptCostToken || 0
+                            resultItem.resultCostToken = this.continueChatUsageSummary.resultCostToken || resultItem.resultCostToken || 0
+                            resultItem.totalCostToken = this.continueChatUsageSummary.totalCostToken || resultItem.totalCostToken || 0
+                            this.$set(this.outputList, resultIndex, Object.assign({}, resultItem))
                         }
                     }
                     
@@ -1223,16 +1555,19 @@ var app = new Vue({
                         duration: 2000
                     })
                 } else {
+                    this.closePromptStream()
                     this.$message({
                         message: res.data.errorMessage || '继续聊天失败',
                         type: 'error'
                     })
                 }
             } catch (error) {
+                this.closePromptStream()
                 this.$message({
                     message: '继续聊天失败：' + (error.message || '未知错误'),
                     type: 'error'
                 })
+                this.removeContinueChatStreamingMessage()
             } finally {
                 this.tacticalFormSubmitLoading = false
             }
@@ -1501,13 +1836,11 @@ var app = new Vue({
             // 所以前端不需要传递 userMessage，后端会自动处理
             // 但为了兼容性，如果前端有保存的 userMessage，仍然可以传递
             
-            let promises = [];
             for (let i = 0; i < howmany; i++) {
                 // 后端会自动判断第一个结果的模式，不需要前端传递 userMessage
                 // 但如果前端有保存的 userMessage，可以传递以保持一致性
-                promises.push(this.rapidFireHandel(id, this._lastUserMessage || null));
+                await this.rapidFireHandel(id, this._lastUserMessage || null);
             }
-            await Promise.all(promises)
             // 从新获取靶场列表
             this.getPromptOptData()
             this.targetShootLoading = false
@@ -2832,6 +3165,7 @@ var app = new Vue({
                     this.continueChatPromptResultId = promptResultId
                     this.continueChatHistory = res.data.data.chatHistory || []
                     this.continueChatSystemMessage = res.data.data.promptContent || ''
+                    this.syncContinueChatUsageFromResult(promptResultId)
                     
                     // 打开战术选择弹窗，锁定为对话模式
                     this.tacticalForm.chatMode = '对话模式'
@@ -2853,6 +3187,7 @@ var app = new Vue({
                         this.continueChatMode = true
                         this.continueChatPromptResultId = promptResultId
                         this.continueChatHistory = fallbackRes.data.data || []
+                        this.syncContinueChatUsageFromResult(promptResultId)
                         // 尝试从 outputList 获取 Prompt 内容
                         const resultItem = this.outputList.find(item => item.id === promptResultId)
                         if (resultItem && resultItem.promptId && this.promptDetail && this.promptDetail.id === resultItem.promptId) {
@@ -2900,6 +3235,7 @@ var app = new Vue({
         // 战术选择 关闭弹出
         // 战术选择 dialog 关闭
         tacticalFormCloseDialog() {
+            const wasContinueChatMode = this.continueChatMode
             this.tacticalForm = {
                 tactics: '重新瞄准',
                 chatMode: '对话模式' // 重置为默认值
@@ -2911,6 +3247,15 @@ var app = new Vue({
             this.continueChatPromptResultId = null
             this.continueChatHistory = []
             this.continueChatSystemMessage = ''
+            this.continueChatUsageSummary = {
+                promptCostToken: 0,
+                resultCostToken: 0,
+                totalCostToken: 0
+            }
+            if (wasContinueChatMode) {
+                this.removeContinueChatStreamingMessage()
+                this.closePromptStream()
+            }
             this.systemMessageCollapse = []
             if (this.$refs.tacticalForm) {
                 // 使用 clearValidate 清除验证状态，而不是 resetFields
@@ -6059,6 +6404,12 @@ var app = new Vue({
         // 执行打靶的核心逻辑（支持对话模式，userMessage 为 null 时表示直接测试模式）
         async executeTargetShootWithChatMessage(userMessage) {
             this.tacticalFormSubmitLoading = true
+            const selectedTactics = this.tacticalForm.tactics
+            if (this.tacticalFormVisible) {
+                this.tacticalFormVisible = false
+            }
+            const streamId = this.createPromptStreamId()
+            const streamReady = await this.openPromptStream(streamId, 'shoot')
             
             // 保存 userMessage，用于后续连发时保持 Chat 模式
             this._lastUserMessage = userMessage || null
@@ -6102,16 +6453,16 @@ var app = new Vue({
             if (this.promptid) {
                 _postData.id = this.promptid
                 //创建顶级战术，创建平行战术，创建子战术，重新瞄准
-                if (this.tacticalForm.tactics === '创建顶级战术') {
+                if (selectedTactics === '创建顶级战术') {
                     _postData.isTopTactic = true
                 }
-                if (this.tacticalForm.tactics === '创建平行战术') {
+                if (selectedTactics === '创建平行战术') {
                     _postData.isNewTactic = true
                 }
-                if (this.tacticalForm.tactics === '创建子战术') {
+                if (selectedTactics === '创建子战术') {
                     _postData.isNewSubTactic = true
                 }
-                if (this.tacticalForm.tactics === '重新瞄准') {
+                if (selectedTactics === '重新瞄准') {
                     _postData.isNewAiming = true
                 }
             }
@@ -6127,96 +6478,88 @@ var app = new Vue({
             })
 
             _postData['rangeId'] = this.promptField
-            let res = await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData)
-            this.tacticalFormSubmitLoading = false
-            
-            if (res.data.success) {
-                this.pageChange = false
-                this.tacticalFormVisible = false
-                let {
-                    promptResultList = [],
-                    fullVersion = '',
-                    id,
-                    evalAvgScore = -1,
-                    evalMaxScore = -1
-                } = res.data.data || {}
+            if (streamReady) {
+                _postData.streamId = streamId
+            }
 
-                let copyResultData = JSON.parse(JSON.stringify(res.data.data))
-                delete copyResultData.promptResultList
-                let vArr = copyResultData.fullVersion.split('-')
-                copyResultData.promptFieldStr = vArr[0] || ''
-                copyResultData.promptStr = vArr[1] || ''
-                copyResultData.tacticsStr = vArr[2] || ''
-                this.promptDetail = copyResultData
-                this.sendBtns = [
-                    {
-                        text: '连发'
-                    },
-                    {
-                        text: '保存草稿'
-                    }
-                ]
-                this.sendBtnText = '连发'
-                this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1
-                this.outputMaxDeci = evalMaxScore > -1 ? evalMaxScore : -1
-                this.outputList = promptResultList.map(item => {
-                    if (item) {
-                        item.promptId = id
-                        item.version = fullVersion
-                        item.scoreType = '1'
-                        item.isScoreView = false
-                        item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
-                        item.resultStringHtml = marked.parse(item.resultString)
-                        item.scoreVal = 0
-                        item.alResultList = [{
-                            id: 1,
-                            label: '预期结果1',
-                            value: ''
-                        }, {
-                            id: 2,
-                            label: '预期结果2',
-                            value: ''
-                        }, {
-                            id: 3,
-                            label: '预期结果3',
-                            value: ''
-                        }]
-                        // 确保 mode 字段正确设置（后端返回的是枚举值 1 或 2）
-                        if (item.mode === undefined || item.mode === null) {
-                            item.mode = null // 兼容旧数据
+            try {
+                let res = await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Add', _postData)
+                
+                if (res.data.success) {
+                    this.pageChange = false
+                    let {
+                        promptResultList = [],
+                        fullVersion = '',
+                        id,
+                        evalAvgScore = -1,
+                        evalMaxScore = -1,
+                        promptItem = {}
+                    } = res.data.data || {}
+
+                    let copyResultData = JSON.parse(JSON.stringify(res.data.data))
+                    delete copyResultData.promptResultList
+                    let vArr = copyResultData.fullVersion.split('-')
+                    copyResultData.promptFieldStr = vArr[0] || ''
+                    copyResultData.promptStr = vArr[1] || ''
+                    copyResultData.tacticsStr = vArr[2] || ''
+                    this.promptDetail = copyResultData
+                    this.sendBtns = [
+                        {
+                            text: '连发'
+                        },
+                        {
+                            text: '保存草稿'
+                        }
+                    ]
+                    this.sendBtnText = '连发'
+                    this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1
+                    this.outputMaxDeci = evalMaxScore > -1 ? evalMaxScore : -1
+                    this.outputList = promptResultList.map(item => this.normalizeOutputResultItem(item, id, fullVersion, promptItem))
+                    
+                    // 检查第一个结果的模式，如果不是 Chat 模式，清空保存的 userMessage
+                    if (promptResultList.length > 0) {
+                        const firstResult = promptResultList[0]
+                        if (firstResult.mode !== 2 && firstResult.mode !== 'Chat') {
+                            // 如果不是 Chat 模式，清空保存的 userMessage
+                            this._lastUserMessage = null
                         }
                     }
-                    return item
-                })
-                
-                // 检查第一个结果的模式，如果不是 Chat 模式，清空保存的 userMessage
-                if (promptResultList.length > 0) {
-                    const firstResult = promptResultList[0]
-                    if (firstResult.mode !== 2 && firstResult.mode !== 'Chat') {
-                        // 如果不是 Chat 模式，清空保存的 userMessage
-                        this._lastUserMessage = null
+                    
+                    // 重置继续聊天状态
+                    this.continueChatMode = false
+                    this.continueChatPromptResultId = null
+                    this.continueChatHistory = []
+                    this.continueChatUsageSummary = {
+                        promptCostToken: 0,
+                        resultCostToken: 0,
+                        totalCostToken: 0
                     }
-                }
-                
-                // 重置继续聊天状态
-                this.continueChatMode = false
-                this.continueChatPromptResultId = null
-                this.continueChatHistory = []
-                
-                this.getFieldList().then(() => {
-                    this.getPromptOptData(id)
-                    this.getScoringTrendData()
-                })
+                    
+                    this.getFieldList().then(() => {
+                        this.getPromptOptData(id)
+                        this.getScoringTrendData()
+                    })
 
-                if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
-                    this.dealRapicFireHandel(this.numsOfResults - 1, id)
+                    if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
+                        await this.dealRapicFireHandel(this.numsOfResults - 1, id)
+                    }
+                } else {
+                    this.closePromptStream()
+                    this.$message({
+                        message: res.data.errorMessage || res.data.data || 'Error',
+                        type: 'error',
+                        duration: 5 * 1000
+                    })
                 }
-            } else {
+            } catch (error) {
+                this.closePromptStream()
                 this.$message({
-                    message: res.data.errorMessage || res.data.data || 'Error',
+                    message: error?.message || '请求失败',
                     type: 'error',
                     duration: 5 * 1000
                 })
+            } finally {
+                this.tacticalFormSubmitLoading = false
             }
         },
         checkUseRed(index,item, which) {
@@ -6355,48 +6698,15 @@ var app = new Vue({
                 this.outputMaxDeci = promptItem.evalMaxScore > -1 ? promptItem.evalMaxScore : -1; // 保留整数
 
                 // 输出列表
-                this.outputList = promptResults.map(item => {
-                    if (item) {
-                        item.promptId = this.promptDetail.id
-                        item.version = this.promptDetail.fullVersion
-                        item.scoreType = '1' // 1 ai、2手动
-                        item.isScoreView = false // 是否显示评分视图
-                        item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
-
-                        //使用 MarkDown 格式，对输出结果进行展示
-                        item.resultStringHtml = marked.parse(item.resultString);
-
-                        // 手动评分
-                        item.scoreVal = item.humanScore > -1 ? item.humanScore : 0
-                        // ai评分预期结果
-                        if (promptItem.expectedResultsJson) {
-                            let _expectedResultsJson = JSON.parse(promptItem.expectedResultsJson)
-                            item.alResultList = _expectedResultsJson.map((item, index) => {
-                                return {
-                                    id: index + 1,
-                                    label: `预期结果`,
-                                    value: item
-                                }
-                            })
-                        } else {
-                            item.alResultList = [{
-                                id: 1,
-                                label: '预期结果1',
-                                value: ''
-                            }, {
-                                id: 2,
-                                label: '预期结果2',
-                                value: ''
-                            }, {
-                                id: 3,
-                                label: '预期结果3',
-                                value: ''
-                            }]
-                        }
-
-                    }
-                    return item
-                })
+                this.outputList = promptResults.map(item => this.normalizeOutputResultItem(
+                    item,
+                    this.promptDetail?.id,
+                    this.promptDetail?.fullVersion,
+                    promptItem
+                ))
+                if (this.continueChatMode && this.continueChatPromptResultId) {
+                    this.syncContinueChatUsageFromResult(this.continueChatPromptResultId)
+                }
                 
                 // 添加代码块复制按钮
                 this.$nextTick(() => {
@@ -6551,6 +6861,11 @@ var app = new Vue({
             const promptItemId = id || this.promptid
             const numsOfResults = 1
             const params = { promptItemId, numsOfResults }
+            const streamId = this.createPromptStreamId()
+            const streamReady = await this.openPromptStream(streamId, 'shoot')
+            if (streamReady) {
+                params.streamId = streamId
+            }
             // 如果提供了 userMessage，添加到参数中（用于保持 Chat 模式）
             if (userMessage) {
                 params.userMessage = userMessage
@@ -6569,44 +6884,92 @@ var app = new Vue({
                     this.outputAverageDeci = res.data.data.promptItem.evalAvgScore > -1 ? res.data.data.promptItem.evalAvgScore : -1; // 保留整数
                     this.outputMaxDeci = res.data.data.promptItem.evalMaxScore > -1 ? res.data.data.promptItem.evalMaxScore : -1; // 保留整数
                     //输出列表 
+                    let latestResultId = null
+                    const findStreamingPlaceholderIndex = () => {
+                        if (!streamReady) {
+                            return -1
+                        }
+
+                        if (this.promptStreamingTempResultId !== undefined && this.promptStreamingTempResultId !== null && this.promptStreamingTempResultId !== '') {
+                            const exactMatchIndex = this.outputList.findIndex(outputItem =>
+                                String(outputItem.id) === String(this.promptStreamingTempResultId)
+                            )
+                            if (exactMatchIndex > -1) {
+                                return exactMatchIndex
+                            }
+                        }
+
+                        return this.outputList.findIndex(outputItem =>
+                            typeof outputItem.id === 'string' && outputItem.id.indexOf('streaming_') === 0
+                        )
+                    }
                     res.data.data.promptResults.map(item => {
-                        item.promptId = promptItemId
-                        item.scoreType = '1' // 1 ai、2手动 
-                        item.isScoreView = false // 是否显示评分视图
-                        //时间 格式化  addTime
-                        item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
-
-                        //使用 MarkDown 格式，对输出结果进行展示
-                        item.resultStringHtml = marked.parse(item.resultString);
-
-                        // 手动评分
-                        item.scoreVal = 0
-                        // ai评分预期结果
-                        item.alResultList = [{
-                            id: 1,
-                            label: '预期结果1',
-                            value: ''
-                        }, {
-                            id: 2,
-                            label: '预期结果2',
-                            value: ''
-                        }, {
-                            id: 3,
-                            label: '预期结果3',
-                            value: ''
-                        }]
-                        this.outputList.push(item)
+                        const normalized = this.normalizeOutputResultItem(
+                            item,
+                            promptItemId,
+                            this.promptDetail?.fullVersion,
+                            res.data.data.promptItem || {}
+                        )
+                        let replacedStreamingPlaceholder = false
+                        const placeholderIndex = findStreamingPlaceholderIndex()
+                        if (placeholderIndex > -1) {
+                            this.$set(this.outputList, placeholderIndex, normalized)
+                            replacedStreamingPlaceholder = true
+                        }
+                        if (!replacedStreamingPlaceholder) {
+                            this.outputList.push(normalized)
+                        }
+                        latestResultId = normalized.id
                     })
-                    this.scrollToBtm()
+                    this.scrollToBtm(latestResultId)
+                }).catch(() => {
+                    this.closePromptStream()
                 })
         },
 
-        scrollToBtm() {
-            // scroll to btm of resultBox  at nextick
+        scrollToResultItemBottom(resultId, behavior = 'auto') {
             this.$nextTick(() => {
-                let _outputArea_contentBox = document.getElementById('resultBox')
-                _outputArea_contentBox.scrollTop = _outputArea_contentBox.scrollHeight
+                const container = document.getElementById('resultBox')
+                if (!container) {
+                    return
+                }
+
+                if (resultId === undefined || resultId === null || resultId === '') {
+                    container.scrollTop = container.scrollHeight
+                    return
+                }
+
+                const locateTarget = () => {
+                    const items = container.querySelectorAll('.contentBoxItem')
+                    const targetIndex = this.outputList.findIndex(item => String(item.id) === String(resultId))
+                    if (targetIndex > -1 && items[targetIndex]) {
+                        return items[targetIndex]
+                    }
+
+                    for (let i = 0; i < items.length; i++) {
+                        if (String(items[i].getAttribute('data-result-id')) === String(resultId)) {
+                            return items[i]
+                        }
+                    }
+                    return null
+                }
+
+                let target = locateTarget()
+                if (target) {
+                    target.scrollIntoView({ behavior, block: 'end' })
+                    return
+                }
+
+                requestAnimationFrame(() => {
+                    target = locateTarget()
+                    if (target) {
+                        target.scrollIntoView({ behavior, block: 'end' })
+                    }
+                })
             })
+        },
+        scrollToBtm(resultId = null) {
+            this.scrollToResultItemBottom(resultId)
         },
 
         // 配置 重置参数

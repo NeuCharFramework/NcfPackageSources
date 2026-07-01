@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：PromptItem_AddRequest.cs
+    文件功能描述：PromptItem_AddRequest 数据传输对象定义
+    
+    
+    创建标识：Senparc - 20231021
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -85,6 +99,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         /// 继续聊天模式下的历史对话记录（可选）
         /// </summary>
         public List<ChatHistoryItem> ChatHistory { get; set; }
+
+        /// <summary>
+        /// 流式输出会话 ID（可选）
+        /// </summary>
+        public string StreamId { get; set; }
     }
     
     /// <summary>

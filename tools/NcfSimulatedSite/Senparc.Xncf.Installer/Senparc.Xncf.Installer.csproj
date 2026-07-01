@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.3</Version>
+		<TargetFramework>net10.0</TargetFramework>
+		<Version>0.3.1</Version>
 		<AssemblyName>Senparc.Xncf.Installer</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Installer</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -19,7 +19,11 @@
     <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>-->
 		<PackageReleaseNotes>
 			v0.3 创世
-		</PackageReleaseNotes>
+		
+			[2026-07-02] v0.3.1 增强多智能体群聊流程、容错与任务调度能力，优化 AgentsManager 前端界面与历史消息展示效果
+			1、增强多智能体群聊流程、容错与任务调度能力
+			2、优化 AgentsManager 前端界面与历史消息展示效果
+</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
 		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
@@ -51,6 +55,7 @@
 		<!--<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />-->
 
 		<ProjectReference Include="..\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
+		<ProjectReference Include="..\Senparc.Aspire.ServiceDefaults\Senparc.Aspire.ServiceDefaults.csproj" />
 		<ProjectReference Include="..\Senparc.Xncf.Installer.Interface\Senparc.Xncf.Installer.Interface.csproj" />
 
 		<None Include="App_Data\SenparcTraceLog\*" />
@@ -96,4 +101,5 @@
 	  <Folder Include="Domain\Models\DatabaseModel\" />
 	  <Folder Include="Domain\Models\MultipleDatabase\" />
 	</ItemGroup>
+	<Import Project="$(MSBuildThisFileDirectory)..\..\..\src\Senparc.AI.AgentKernel.props" />
 </Project>

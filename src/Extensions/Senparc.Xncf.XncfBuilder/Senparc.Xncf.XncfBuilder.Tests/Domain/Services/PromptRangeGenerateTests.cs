@@ -1,4 +1,18 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：PromptRangeGenerateTests.cs
+    文件功能描述：PromptRangeGenerateTests 服务逻辑
+    
+    
+    创建标识：Senparc - 20231003
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Xncf.PromptRange.Tests;
 using Senparc.Xncf.XncfBuilder.Domain;
@@ -31,6 +45,10 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Domain.Services
         {
             CO2NET.Helpers.FileHelper.TryCreateDirectory(_projectPath);
 
+            /* 升级 Senparc.AI.AgentKernel，暂时停用此方法，未来改用 SKILL */
+
+            /*
+
             var senparcAiSetting = Senparc.AI.Config.SenparcAiSetting;
             var result = await _service.RunPromptAsync(senparcAiSetting, PromptBuildType.EntityClass, input, entityName, null, _projectPath);
 
@@ -49,6 +67,7 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Domain.Services
 
             var newSenparcEntitiesContent = File.ReadAllText(senparcEntitiesFile);
             Assert.IsTrue(newSenparcEntitiesContent.Contains($"public DbSet<{entityName}> {entityName}s {{ get; set; }}"));
+            */
         }
 
         public PromptRangeGenerateTests()

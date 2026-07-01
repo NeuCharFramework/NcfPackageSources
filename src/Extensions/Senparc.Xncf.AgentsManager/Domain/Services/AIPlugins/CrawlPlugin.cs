@@ -1,11 +1,26 @@
-﻿using AutoGen.Anthropic.DTO;
-using Google.Cloud.AIPlatform.V1;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：CrawlPlugin.cs
+    文件功能描述：CrawlPlugin 服务逻辑
+    
+    
+    创建标识：Senparc - 20250117
+    
+    修改标识：Senparc - 20260701
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Text;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 using Senparc.AI;
-using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.AgentKernel.Handlers;
 using Senparc.CO2NET.Trace;
 using Senparc.Xncf.SenMapic.Domain.SiteMap;
 using System;
@@ -94,8 +109,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 
             //测试 TextEmbedding
             var embeddingAiSetting = Senparc.AI.Config.SenparcAiSetting;
-            var semanticAiHandler = new SemanticAiHandler(embeddingAiSetting);
-            var iWantToRunEmbedding = semanticAiHandler
+            var agentAiHandler = new AgentAiHandler(embeddingAiSetting);
+            var iWantToRunEmbedding = agentAiHandler
                  .IWantTo()
                  .ConfigModel(ConfigModel.TextEmbedding, "Jeffrey")
                  .BuildKernel();
@@ -182,7 +197,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
  - 将回答内容严格限制在我所提供给你的备选信息中（开头和结尾标记中间的内容），其中越靠前的备选信息可信度越高，相关性不属于答案内容本身，因此在组织语言的过程中必须将其忽略。
  - 请严格从“备选信息”中挑选和“提问”有关的信息，不要输出没有相关依据的信息。";
 
-            var iWantToRunChat = semanticAiHandler.ChatConfig(parameter,
+            var iWantToRunChat = agentAiHandler.ChatConfig(parameter,
                                  userId: "Jeffrey",
                                  maxHistoryStore: 10,
                                  chatSystemMessage: systemMessage,
@@ -239,7 +254,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
                 };
 
                 //输出结果
-                SenparcAiResult result = await semanticAiHandler.ChatAsync(iWantToRunChat, input, streamItemProceessing);
+                SenparcAiResult result = await agentAiHandler.ChatAsync(iWantToRunChat, input, streamItemProceessing);
 
                 //复原颜色
                 Console.ForegroundColor = originalColor;
@@ -249,7 +264,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
             else
             {
                 //iWantToRunChat
-                var result = await semanticAiHandler.ChatAsync(iWantToRunChat, input);
+                var result = await agentAiHandler.ChatAsync(iWantToRunChat, input);
                 await Console.Out.WriteLineAsync(result.OutputString);
 
                 return result.OutputString;

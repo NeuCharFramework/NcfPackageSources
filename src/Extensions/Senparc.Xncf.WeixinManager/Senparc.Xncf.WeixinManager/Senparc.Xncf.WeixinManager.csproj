@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <!--<Project Sdk="Microsoft.NET.Sdk.Razor">-->
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <!--<RazorLangVersion>3.0</RazorLangVersion>-->
-    <Version>0.22.1-preview1</Version>
+    <Version>0.22.2-preview1</Version>
     <!--<GenerateProgramFile>false</GenerateProgramFile>-->
     <!--https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1511#issuecomment-696682962-->
     <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
@@ -64,6 +64,9 @@
 		[2026-03-24] v0.21.5-preview.1 update Senparc.AI.Kernel to v0.28.0 and Senparc.Weixin.MP to v16.24.2
 
 				[2025-11-01] update basic libraries, including Senparc.AI
+				[2026-07-02] v0.22.2-preview1 支持流式输出并优化交互体验，新增 PromptRange 与 AgentsManager 使用记录能力
+				1、支持流式输出并优化交互体验
+				2、新增 PromptRange 与 AgentsManager 使用记录能力
 </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -79,6 +82,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\..\Senparc.AI.AgentKernel.props" />
   <!--<ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
 		
 	</ItemGroup>-->
@@ -96,7 +100,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>-->
-    <PackageReference Include="Senparc.AI.Kernel" Version="0.29.0" />
+    <PackageReference Include="Senparc.AI.Kernel" Version="$(SenparcAiKernelVersion)" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
     <!--<PackageReference Include="Senparc.Weixin.All" Version="2025.10.24" />-->
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.1" />-->

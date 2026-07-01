@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：PromptItemService.cs
+    文件功能描述：PromptItemService 服务逻辑
+    
+    
+    创建标识：Senparc - 20231021
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,6 +19,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI.Entities;
 using Senparc.CO2NET.Extensions;
@@ -509,10 +524,30 @@ public partial class PromptItemService : ServiceBase<PromptItem>
             TopP = promptItem.TopP,
             FrequencyPenalty = promptItem.FrequencyPenalty,
             PresencePenalty = promptItem.PresencePenalty,
-            StopSequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>(),
+            StopSequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>() ?? new List<string>(),
         };
 
         return promptParameter;
+    }
+
+    /// <summary>
+    /// 从 <see cref="PromptItemDto"/> 映射获取 <see cref="ChatOptions"/> 对象
+    /// </summary>
+    /// <param name="promptItemDto"></param>
+    /// <param name="systemMessage"></param>
+    public ChatOptions GetChatOptions(PromptItemDto promptItemDto, string systemMessage)
+    {
+        var chatOptions = new ChatOptions()
+        {
+            Instructions = systemMessage,
+            MaxOutputTokens = promptItemDto.MaxToken,
+            TopP = promptItemDto.TopP,
+            Temperature = promptItemDto.Temperature,
+            PresencePenalty = promptItemDto.PresencePenalty,
+            FrequencyPenalty = promptItemDto.FrequencyPenalty,
+            StopSequences = (promptItemDto.StopSequences ?? "[]").GetObject<List<string>>() ?? new List<string>()
+        };
+        return chatOptions;
     }
 
     #region 生成 PromptItem 树

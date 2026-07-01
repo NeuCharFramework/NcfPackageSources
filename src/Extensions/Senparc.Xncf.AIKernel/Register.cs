@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Register.cs
+    文件功能描述：模块注册与初始化逻辑
+    
+    
+    创建标识：Senparc - 20200818
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.XncfBase;
 using System;
@@ -16,7 +30,7 @@ using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.FileProviders;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 using Senparc.CO2NET.RegisterServices;
 using System.Reflection;
 using Senparc.AI.Interfaces;
@@ -90,7 +104,7 @@ namespace Senparc.Xncf.AIKernel
             services.AddSenparcAI(configuration);
             //services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();
             //Console.WriteLine("======================services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();================");
-            services.AddScoped<SemanticAiHandler>();
+            services.AddScoped<AgentAiHandler>();
 
             services.AddAutoMapper(config =>
             {

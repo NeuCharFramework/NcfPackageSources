@@ -1,4 +1,18 @@
-﻿using AutoMapper;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：XncfRegisterBase.cs
+    文件功能描述：XncfRegisterBase 相关实现
+    
+    
+    创建标识：Senparc - 20200724
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +34,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -393,50 +408,84 @@ namespace Senparc.Ncf.XncfBase
             return $"ncf-mcp-server-{this.Name.Replace(".", "-")}";
         }
 
+        private static IEnumerable<Type> GetLoadableTypes(Assembly assembly)
+        {
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                return ex.Types.Where(t => t != null)!;
+            }
+        }
+
         public virtual void AddMcpServer(IServiceCollection services, IXncfRegister xncfRegister)
         {
             var serverName = GetMcpServerName();
-
-            var mcpServerBuilder = services.AddMcpServer(opt =>
+            try
             {
-                opt.ServerInfo = new Implementation()
+                var assembly = xncfRegister.GetType().Assembly;
+                var hasMcpToolType = GetLoadableTypes(assembly)
+                    .Any(t => t.GetCustomAttribute<McpServerToolTypeAttribute>() != null);
+
+                var mcpServerBuilder = services.AddMcpServer(opt =>
                 {
-                    Name = serverName,
-                    Version = this.Version,
-                };
-            })
-            .WithHttpTransport()
-            .WithToolsFromAssembly(xncfRegister.GetType().Assembly);
+                    opt.ServerInfo = new Implementation()
+                    {
+                        Name = serverName,
+                        Version = this.Version,
+                    };
+                })
+                .WithHttpTransport();
 
-            XncfRegisterManager.McpServerInfoCollection[serverName] = new MCP.McpServerInfo()
+                if (hasMcpToolType)
+                {
+                    mcpServerBuilder.WithToolsFromAssembly(assembly);
+                }
+                else
+                {
+                    Console.WriteLine($"未检测到 MCP Tool Type，跳过工具注册（{this.Name}）");
+                }
+
+                XncfRegisterManager.McpServerInfoCollection[serverName] = new MCP.McpServerInfo()
+                {
+                    ServerName = serverName,
+                    XncfName = Name,
+                    XncfUid = Uid
+                };
+            }
+            catch (Exception ex)
             {
-                ServerName = serverName,
-                XncfName = Name,
-                XncfUid = Uid
-            };
+                SenparcTrace.BaseExceptionLog(ex);
+                Console.WriteLine($"MCP 服务注册失败（{this.Name}）：{ex.Message}");
+            }
         }
 
         public virtual void UseMcpServer(IApplicationBuilder app, IRegisterService registerService)
         {
             if (app is IEndpointRouteBuilder endpoints)
             {
-                var routePattern = $"mcp-{Name.Replace(".", "-").ToLower()}";
-                endpoints.MapMcp(routePattern);
-
-                //注册 MCP 路由信息
-                var mcpServerInfo = XncfRegisterManager.McpServerInfoCollection.Values.LastOrDefault(z => z.XncfUid == Uid);
-                if (mcpServerInfo == null)
+                var serverName = GetMcpServerName();
+                if (!XncfRegisterManager.McpServerInfoCollection.TryGetValue(serverName, out var mcpServerInfo))
                 {
-                    var serverName = GetMcpServerName();
-                    mcpServerInfo = new MCP.McpServerInfo()
-                    {
-                        ServerName = serverName,
-                        XncfName = Name,
-                        XncfUid = Uid
-                    };
-                    XncfRegisterManager.McpServerInfoCollection[serverName] = mcpServerInfo;
+                    Console.WriteLine($"跳过 MCP 路由注册（{this.Name}）：未完成服务注册");
+                    return;
                 }
 
+                var routePattern = $"mcp-{Name.Replace(".", "-").ToLower()}";
+                try
+                {
+                    endpoints.MapMcp(routePattern);
+                }
+                catch (Exception ex)
+                {
+                    SenparcTrace.BaseExceptionLog(ex);
+                    Console.WriteLine($"MCP 路由注册失败（{this.Name}）：{ex.Message}");
+                    return;
+                }
+
+                //注册 MCP 路由信息
                 mcpServerInfo.McpRoute = routePattern;
 
                 //_logger.LogInformation($"启用 MCP 服务（{this.Name}）：{routePattern}");

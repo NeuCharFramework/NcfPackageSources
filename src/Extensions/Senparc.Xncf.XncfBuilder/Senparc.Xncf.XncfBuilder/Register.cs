@@ -1,4 +1,18 @@
-﻿using Senparc.Ncf.Core.Enums;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Register.cs
+    文件功能描述：模块注册与初始化逻辑
+    
+    
+    创建标识：Senparc - 20200816
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase;
 using System;
@@ -13,7 +27,7 @@ using Senparc.Xncf.XncfBuilder.Domain.Models.Services;
 using Senparc.Ncf.XncfBase.Database;
 using Microsoft.Extensions.Hosting;
 using Senparc.Xncf.XncfBuilder.Domain.Services;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.AIKernel.OHS.Local.AppService;
 using OllamaSharp.Models.Chat;
@@ -78,7 +92,7 @@ namespace Senparc.Xncf.XncfBuilder
             }
 
             //services.AddScoped<PromptRange.Domain.Services.PromptService>();
-            //services.AddScoped<AI.Interfaces.IAiHandler>(s => new SemanticAiHandler());
+            //services.AddScoped<AI.Interfaces.IAiHandler>(s => new AgentAiHandler());
 
             services.AddScoped<ConfigService>();
             services.AddScoped<PromptBuilderService>();

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>0.3.1-preview1</Version>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.3.2-preview1</Version>
     <AssemblyName>Senparc.Xncf.MCP</AssemblyName>
     <RootNamespace>Senparc.Xncf.MCP</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -26,6 +26,9 @@
 
 				[2025-11-01] update basic libraries, including Senparc.AI
       [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+      [2026-07-02] v0.3.2-preview1 支持流式输出并优化交互体验，升级 Senparc.AI.AgentKernel 并完成兼容性适配
+      1、支持流式输出并优化交互体验
+      2、升级 Senparc.AI.AgentKernel 并完成兼容性适配
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -37,9 +40,6 @@
     <PackageReference Include="Microsoft.Extensions.AI" Version="10.5.1" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
     <EmbeddedResource Include="wwwroot\**\*" />
-    <PackageReference Include="ModelContextProtocol" Version="0.2.0-preview.3" />
-    <PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.2.0-preview.3" />
-    <PackageReference Include="ModelContextProtocol-SemanticKernel" Version="0.0.1-preview-15" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
   </ItemGroup>
   <ItemGroup>
@@ -60,4 +60,5 @@
   <ItemGroup>
     <None Include="App_Data\Database\SenparcConfig.config" />
   </ItemGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\Senparc.AI.AgentKernel.props" />
 </Project>

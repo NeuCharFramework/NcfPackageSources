@@ -1,12 +1,26 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：AiMessageContext.cs
+    文件功能描述：AiMessageContext 相关实现
+    
+    
+    创建标识：Senparc - 20250712
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
+using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI.Entities;
 using Senparc.AI.Interfaces;
-using Senparc.AI.Kernel;
-using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Handlers;
 using Senparc.CO2NET.Extensions;
 using Senparc.Weixin.MP.MessageContexts;
 using Senparc.Xncf.PromptRange.Domain.Services;
@@ -47,7 +61,7 @@ namespace Senparc.Xncf.WeixinManager
 
             if (!IWantoRunDic.ContainsKey(key))
             {
-                SemanticAiHandler _semanticAiHandler = (SemanticAiHandler)services.GetRequiredService<IAiHandler>();
+                AgentAiHandler _agentAiHandler = (AgentAiHandler)services.GetRequiredService<IAiHandler>();
 
                 using (var scope = services.CreateScope())
                 {
@@ -82,14 +96,18 @@ namespace Senparc.Xncf.WeixinManager
                     }
 
                     //配置和初始化模型
-                    var iWantToRun = _semanticAiHandler.ChatConfig(promptConfigParameter,
-                                                     userId: openId,
-                                                     maxHistoryStore: 20,
-                                                     chatSystemMessage: promptTemplate,
-                                                     promptTemplate: promptTemplate,
-                                                     senparcAiSetting: senparcAiSetting
-                                                                                                          /*, modelName: "gpt-4-32k"*/);
-
+                    var iWantToRun = _agentAiHandler.IWantTo(senparcAiSetting)
+                                     .ConfigChatModel(openId, new Microsoft.Agents.AI.ChatClientAgentOptions()
+                                     {
+                                         ChatOptions = new Microsoft.Extensions.AI.ChatOptions()
+                                         {
+                                             Instructions = promptTemplate,
+                                             MaxOutputTokens = 2000,
+                                             Temperature = 0.7f,
+                                             TopP = 0.5f
+                                         }
+                                     }).BuildKernel();
+              
                     //var iWantToRun = chatConfig.iWantToRun;
 
                     //IWantoRunDic.TryAdd(openId, iWantToRun);

@@ -374,6 +374,34 @@ var app = new Vue({
       },
       // 对话记录 轮询
       historyTimer: {},
+      // 任务列表重试（用于再次执行后等待新 taskId 出现）
+      taskListRetryTimer: {},
+      // 对话记录实时流
+      historyStream: {},
+      historyStreamSilentTimer: {},
+      historyStreamingDrafts: {},
+      usageAnalyticsVisible: false,
+      usageAnalyticsLoading: false,
+      usageAnalyticsTaskId: null,
+      usageAnalyticsTaskName: '',
+      usageAnalyticsDateRange: [],
+      usageAnalyticsAgentId: '',
+      usageAnalyticsAgentOptions: [],
+      usageAnalyticsData: {
+        overview: {
+          messageCount: 0,
+          promptTokens: 0,
+          completionTokens: 0,
+          totalTokens: 0,
+          averageResponseMilliseconds: 0,
+          minResponseMilliseconds: 0,
+          maxResponseMilliseconds: 0,
+          p95ResponseMilliseconds: 0,
+        },
+        roundStats: [],
+        agentStats: [],
+        timelineStats: [],
+      },
       // 智能体参数列表
       agentParameterTabsValue: '', // tabs选中(使用空字符串，避免和el-tabs内部string name不匹配)
       agentParameterList: [],
@@ -1282,7 +1310,62 @@ var app = new Vue({
         })
     },
     // 获取 任务 数据
-    async gettaskListData(listType, id, page = 0) {
+    async gettaskListData(listType, id, page = 0, options = {}) {
+      const opts = options || {}
+      const preferLatest = !!opts.preferLatest
+      const focusChatGroupIdRaw = opts.focusChatGroupId
+      const hasFocusChatGroupId = focusChatGroupIdRaw !== undefined
+        && focusChatGroupIdRaw !== null
+        && focusChatGroupIdRaw !== ''
+      const focusChatGroupId = hasFocusChatGroupId ? Number(focusChatGroupIdRaw) : null
+      const minTaskIdExclusive = Number(opts.minTaskIdExclusive || 0)
+      const hasMinTaskIdExclusive = Number.isFinite(minTaskIdExclusive) && minTaskIdExclusive > 0
+      const retryOnMiss = !!opts.retryOnMiss
+
+      const getScopedTaskList = (list) => {
+        if (!Array.isArray(list) || list.length === 0) return []
+        if (!preferLatest) return list
+        if (!hasFocusChatGroupId) return list
+
+        const scopedList = list.filter(task => Number(task.chatGroupId) === focusChatGroupId)
+        return scopedList.length > 0 ? scopedList : list
+      }
+
+      const hasLatestCandidate = (list) => {
+        const candidateList = getScopedTaskList(list)
+        if (!hasMinTaskIdExclusive) return candidateList.length > 0
+        return candidateList.some(task => Number(task?.id || 0) > minTaskIdExclusive)
+      }
+
+      const pickTaskForView = (list, currentTaskId) => {
+        if (!Array.isArray(list) || list.length === 0) return null
+
+        if (preferLatest) {
+          const candidateList = getScopedTaskList(list)
+          const filteredList = hasMinTaskIdExclusive
+            ? candidateList.filter(task => Number(task?.id || 0) > minTaskIdExclusive)
+            : candidateList
+          const sortList = filteredList.length > 0 ? filteredList : candidateList
+          return sortList
+            .slice()
+            .sort((a, b) => {
+              const idA = Number(a?.id || 0)
+              const idB = Number(b?.id || 0)
+              if (idA !== idB) return idB - idA
+
+              const timeA = new Date(a?.startTime || a?.addTime || 0).getTime()
+              const timeB = new Date(b?.startTime || b?.addTime || 0).getTime()
+              return timeB - timeA
+            })[0] || null
+        }
+
+        if (currentTaskId !== undefined && currentTaskId !== null && currentTaskId !== '') {
+          const matched = list.find(task => String(task.id) === String(currentTaskId))
+          if (matched) return matched
+        }
+        return list[0]
+      }
+
       const queryList = {}
       // 任务
       if (listType === 'task') {
@@ -1339,31 +1422,67 @@ var app = new Vue({
                 modelName
               }
             })
+
+            const needRetryLatestTask = preferLatest && retryOnMiss
+            if (needRetryLatestTask && !hasLatestCandidate(handleTaskData)) {
+              this.scheduleTaskListRetry(listType, id, page, opts)
+            } else {
+              this.clearTaskListRetryTimer(listType)
+            }
+
             // 任务
             if (listType === 'task') {
               this.$set(this, 'taskList', handleTaskData)
+              if (needRetryLatestTask && !hasLatestCandidate(handleTaskData)) {
+                return
+              }
               // 默认展示第一个任务详情
               if (handleTaskData && handleTaskData.length) {
-                const taskDetail = this.taskDetails ? this.taskDetails : handleTaskData[0]
-                this.getTaskDetailData(listType, taskDetail.id, taskDetail)
+                const taskDetail = pickTaskForView(handleTaskData, this.taskDetails?.id)
+                if (taskDetail) {
+                  this.getTaskDetailData(listType, taskDetail.id, taskDetail)
+                }
               }
             }
             // 智能体 任务
             if (listType === 'agentTask') {
               this.$set(this, 'agentDetailsTaskList', handleTaskData)
+              if (needRetryLatestTask && !hasLatestCandidate(handleTaskData)) {
+                return
+              }
               // 默认展示第一个任务详情
               if (handleTaskData && handleTaskData.length) {
-                const taskDetail = this.agentDetailsTaskDetails ? this.agentDetailsTaskDetails : handleTaskData[0]
-                this.getTaskDetailData(listType, taskDetail.id, taskDetail)
+                const taskDetail = pickTaskForView(handleTaskData, this.agentDetailsTaskDetails?.id)
+                if (taskDetail) {
+                  this.getTaskDetailData(listType, taskDetail.id, taskDetail)
+                }
               }
             }
             // 智能体 组 任务
             if (listType === 'agentGroupTask') {
               this.$set(this, 'agentDetailsGroupTaskList', handleTaskData)
+              if (needRetryLatestTask && !hasLatestCandidate(handleTaskData)) {
+                return
+              }
+              if (preferLatest && handleTaskData.length) {
+                const taskDetail = pickTaskForView(handleTaskData, this.agentDetailsGroupDetailsTaskDetails?.id)
+                if (taskDetail) {
+                  this.getTaskDetailData(listType, taskDetail.id, taskDetail)
+                }
+              }
             }
             // 组 任务
             if (listType === 'groupTask') {
               this.$set(this, 'groupTaskList', handleTaskData)
+              if (needRetryLatestTask && !hasLatestCandidate(handleTaskData)) {
+                return
+              }
+              if (preferLatest && handleTaskData.length) {
+                const taskDetail = pickTaskForView(handleTaskData, this.groupTaskDetails?.id)
+                if (taskDetail) {
+                  this.getTaskDetailData(listType, taskDetail.id, taskDetail)
+                }
+              }
             }
           } else {
             app.$message({
@@ -1373,6 +1492,80 @@ var app = new Vue({
             })
           }
         })
+    },
+    getTaskListByType(listType) {
+      if (listType === 'task') return this.taskList || []
+      if (listType === 'agentTask') return this.agentDetailsTaskList || []
+      if (listType === 'agentGroupTask') return this.agentDetailsGroupTaskList || []
+      if (listType === 'groupTask') return this.groupTaskList || []
+      return []
+    },
+    getCurrentTaskDetailByType(listType) {
+      if (listType === 'task') return this.taskDetails || null
+      if (listType === 'agentTask') return this.agentDetailsTaskDetails || null
+      if (listType === 'agentGroupTask') return this.agentDetailsGroupDetailsTaskDetails || null
+      if (listType === 'groupTask') return this.groupTaskDetails || null
+      return null
+    },
+    getMaxTaskIdByType(listType) {
+      const list = this.getTaskListByType(listType)
+      if (!Array.isArray(list) || list.length === 0) return 0
+      return list.reduce((maxId, item) => {
+        const currentId = Number(item?.id || 0)
+        return currentId > maxId ? currentId : maxId
+      }, 0)
+    },
+    buildTaskRefreshOptions(listType, baseOptions = {}, saveType = '') {
+      const options = Object.assign({}, baseOptions)
+      if (saveType !== 'drawerTaskStart') {
+        return options
+      }
+
+      options.retryOnMiss = true
+      options.retryAttempt = 0
+      options.maxRetry = 20
+      options.retryDelayMs = 300
+
+      const detailId = Number(this.getCurrentTaskDetailByType(listType)?.id || 0)
+      const maxId = this.getMaxTaskIdByType(listType)
+      const baselineTaskId = Math.max(detailId, maxId)
+
+      if (baselineTaskId > 0) {
+        options.minTaskIdExclusive = baselineTaskId
+      }
+
+      return options
+    },
+    clearTaskListRetryTimer(listType) {
+      if (!listType) return
+      const timer = this.taskListRetryTimer[listType]
+      if (timer) {
+        clearTimeout(timer)
+      }
+      this.$delete(this.taskListRetryTimer, listType)
+    },
+    clearTaskListRetryTimers() {
+      Object.keys(this.taskListRetryTimer || {}).forEach((key) => {
+        this.clearTaskListRetryTimer(key)
+      })
+    },
+    scheduleTaskListRetry(listType, id, page, options = {}) {
+      if (!listType) return
+      const attempt = Number(options.retryAttempt || 0)
+      const maxRetry = Number(options.maxRetry || 0)
+      if (attempt >= maxRetry) {
+        this.clearTaskListRetryTimer(listType)
+        return
+      }
+
+      const retryDelayMs = Math.max(120, Number(options.retryDelayMs || 300))
+      this.clearTaskListRetryTimer(listType)
+      this.taskListRetryTimer[listType] = setTimeout(() => {
+        const nextOptions = Object.assign({}, options, {
+          retryAttempt: attempt + 1
+        })
+        this.gettaskListData(listType, id, page, nextOptions)
+      }, retryDelayMs)
     },
     // 获取 任务详情 
     async getTaskDetailData(detailType, id, detail = {}, detailsOn = false) {
@@ -1416,12 +1609,18 @@ var app = new Vue({
             }
 
             if (!detailsOn && taskDetail) {
+              if (detailType === 'task') this.$set(this, 'taskHistoryList', [])
+              if (detailType === 'agentTask') this.$set(this, 'agentDetailsTaskHistoryList', [])
+              if (detailType === 'agentGroupTask') this.$set(this, 'agentDetailsGroupTaskHistoryList', [])
+              if (detailType === 'groupTask') this.$set(this, 'groupTaskHistoryList', [])
+
               if (['task', 'agentTask'].includes(detailType)) {
                 // 获取任务成员列表
                 this.getTaskMemberListData(detailType, taskDetail.chatGroupId)
               }
-              // 轮询 获取对话数据
-              this.pollGetTaskHistoryData(detailType, this.getTaskRecordListData, taskDetail.id)
+              // 首次获取历史 + 开启实时流
+              this.getTaskRecordListData(detailType, taskDetail.id, '', true)
+              this.startTaskHistoryStream(detailType, taskDetail.id)
             }
           } else {
             app.$message({
@@ -1451,6 +1650,8 @@ var app = new Vue({
             })
             // 任务
             if (recordType === 'task') {
+              const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef('task'), isFirst)
+              let historyList = this.taskHistoryList || []
               if (nextHistoryId) {
                 // for (let index = 0; index < historiesData.length; index++) {
                 //     const element = historiesData[index];
@@ -1459,22 +1660,26 @@ var app = new Vue({
                 //     }, 1000)
                 // }
                 if (historiesData.length > 0) {
-                  const historyList = this.taskHistoryList.concat(historiesData);
+                  historyList = this.taskHistoryList.concat(historiesData);
                   this.$set(this, 'taskHistoryList', historyList)
                 }
               } else {
                 const isassignment = arraysEqual(this.taskHistoryList, historiesData)
                 if (!isassignment && historiesData.length > 0) {
+                  historyList = historiesData
                   this.$set(this, 'taskHistoryList', historiesData)
                 }
               }
-              // 滚动区域 吸附底部
               this.$nextTick(() => {
-                this.scrollbarDown('taskHistoryScrollbar', true, isFirst)
+                if (!shouldAutoFollow) return
+                const latestId = historyList.length > 0 ? historyList[historyList.length - 1].id : null
+                this.scrollHistoryToItemBottom('task', latestId)
               })
             }
             // 智能体 任务
             if (recordType === 'agentTask') {
+              const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef('agentTask'), isFirst)
+              let historyList = this.agentDetailsTaskHistoryList || []
               if (nextHistoryId) {
                 // for (let index = 0; index < historiesData.length; index++) {
                 //     const element = historiesData[index];
@@ -1483,22 +1688,26 @@ var app = new Vue({
                 //     }, 1000)
                 // }
                 if (historiesData.length > 0) {
-                  const historyList = this.agentDetailsTaskHistoryList.concat(historiesData);
+                  historyList = this.agentDetailsTaskHistoryList.concat(historiesData);
                   this.$set(this, 'agentDetailsTaskHistoryList', historyList)
                 }
               } else {
                 const isassignment = arraysEqual(this.agentDetailsTaskHistoryList, historiesData)
                 if (!isassignment && historiesData.length > 0) {
+                  historyList = historiesData
                   this.$set(this, 'agentDetailsTaskHistoryList', historiesData)
                 }
               }
-              // 滚动区域 吸附底部
               this.$nextTick(() => {
-                this.scrollbarDown('agentDetailsTaskHistoryScrollbar', true, isFirst)
+                if (!shouldAutoFollow) return
+                const latestId = historyList.length > 0 ? historyList[historyList.length - 1].id : null
+                this.scrollHistoryToItemBottom('agentTask', latestId)
               })
             }
             // 智能体 组 任务
             if (recordType === 'agentGroupTask') {
+              const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef('agentGroupTask'), isFirst)
+              let historyList = this.agentDetailsGroupTaskHistoryList || []
               if (nextHistoryId) {
                 // for (let index = 0; index < historiesData.length; index++) {
                 //     const element = historiesData[index];
@@ -1507,36 +1716,42 @@ var app = new Vue({
                 //     }, 1000)
                 // }
                 if (historiesData.length > 0) {
-                  const historyList = this.agentDetailsGroupTaskHistoryList.concat(historiesData);
+                  historyList = this.agentDetailsGroupTaskHistoryList.concat(historiesData);
                   this.$set(this, 'agentDetailsGroupTaskHistoryList', historyList)
                 }
               } else {
                 const isassignment = arraysEqual(this.agentDetailsGroupTaskHistoryList, historiesData)
                 if (!isassignment && historiesData.length > 0) {
+                  historyList = historiesData
                   this.$set(this, 'agentDetailsGroupTaskHistoryList', historiesData)
                 }
               }
-              // 滚动区域 吸附底部
               this.$nextTick(() => {
-                this.scrollbarDown('agentDetailsGroupTaskHistoryScrollbar', true, isFirst)
+                if (!shouldAutoFollow) return
+                const latestId = historyList.length > 0 ? historyList[historyList.length - 1].id : null
+                this.scrollHistoryToItemBottom('agentGroupTask', latestId)
               })
             }
             // 组 任务
             if (recordType === 'groupTask') {
+              const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef('groupTask'), isFirst)
+              let historyList = this.groupTaskHistoryList || []
               if (nextHistoryId) {
                 if (historiesData.length > 0) {
-                  const historyList = this.groupTaskHistoryList.concat(historiesData);
+                  historyList = this.groupTaskHistoryList.concat(historiesData);
                   this.$set(this, 'groupTaskHistoryList', historyList)
                 }
               } else {
                 const isassignment = arraysEqual(this.groupTaskHistoryList, historiesData)
                 if (!isassignment && historiesData.length > 0) {
+                  historyList = historiesData
                   this.$set(this, 'groupTaskHistoryList', historiesData)
                 }
               }
-              // 滚动区域 吸附底部
               this.$nextTick(() => {
-                this.scrollbarDown('groupTaskHistoryScrollbar', true, isFirst)
+                if (!shouldAutoFollow) return
+                const latestId = historyList.length > 0 ? historyList[historyList.length - 1].id : null
+                this.scrollHistoryToItemBottom('groupTask', latestId)
               })
             }
           } else {
@@ -1571,6 +1786,76 @@ var app = new Vue({
             })
           }
         })
+    },
+    openUsageAnalytics(detailType, taskDetail) {
+      if (!taskDetail || !taskDetail.id) return
+
+      this.usageAnalyticsTaskId = taskDetail.id
+      this.usageAnalyticsTaskName = taskDetail.name || `Task-${taskDetail.id}`
+      this.usageAnalyticsVisible = true
+
+      let members = []
+      if (detailType === 'task') members = this.taskMemberList || []
+      if (detailType === 'agentTask') members = this.agentDetailsTaskMemberList || []
+      if (detailType === 'groupTask') members = (this.groupDetails && this.groupDetails.agentTemplateDtoList) || []
+      if (detailType === 'agentGroupTask') {
+        members = (this.agentDetailsGroupDetails && this.agentDetailsGroupDetails.agentTemplateDtoList) || []
+      }
+
+      this.usageAnalyticsAgentOptions = members.map(item => ({
+        id: item.id,
+        name: item.name
+      }))
+
+      this.loadUsageAnalytics()
+    },
+    resetUsageAnalyticsFilters() {
+      this.usageAnalyticsDateRange = []
+      this.usageAnalyticsAgentId = ''
+      this.loadUsageAnalytics()
+    },
+    async loadUsageAnalytics() {
+      if (!this.usageAnalyticsTaskId) return
+      this.usageAnalyticsLoading = true
+
+      const query = {
+        chatTaskId: this.usageAnalyticsTaskId
+      }
+      if (this.usageAnalyticsAgentId) {
+        query.agentTemplateId = this.usageAnalyticsAgentId
+      }
+      if (this.usageAnalyticsDateRange && this.usageAnalyticsDateRange.length === 2) {
+        query.startTime = this.usageAnalyticsDateRange[0]
+        query.endTime = this.usageAnalyticsDateRange[1]
+      }
+
+      try {
+        const res = await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatGroupHistoryAppService/Xncf.AgentsManager_ChatGroupHistoryAppService.GetUsageAnalytics?${getInterfaceQueryStr(query)}`)
+        const data = res?.data ?? {}
+        if (!data.success) {
+          this.$message.error(data.errorMessage || data.data || '获取统计数据失败')
+          return
+        }
+
+        const payload = data.data || {}
+        this.usageAnalyticsData = {
+          overview: payload.overview || this.$options.data().usageAnalyticsData.overview,
+          roundStats: payload.roundStats || [],
+          agentStats: payload.agentStats || [],
+          timelineStats: payload.timelineStats || []
+        }
+      } catch (e) {
+        console.error(e)
+        this.$message.error('获取统计数据失败')
+      } finally {
+        this.usageAnalyticsLoading = false
+      }
+    },
+    formatTaskHistoryUsage(history) {
+      const totalTokens = history?.totalTokens || 0
+      const responseMs = history?.responseMilliseconds || 0
+      const roundText = history?.roundIndex ? `R${history.roundIndex} · ` : ''
+      return `${roundText}Token:${totalTokens} · ${responseMs}ms`
     },
     // 保存 submitForm 数据
     async saveSubmitFormData(saveType, serviceForm = {}) {
@@ -1656,15 +1941,55 @@ var app = new Vue({
               if (this.agentDetails) {
                 const id = this.agentDetails.agentTemplateDto ? this.agentDetails.agentTemplateDto.id : this.agentDetails.id
                 if (this.agentDetailsTabsActiveName === 'first') {
-                  this.getGroupListData('agentGroup', id)
+                  if (saveType === 'drawerTaskStart') {
+                    const focusChatGroupId = serviceForm?.chatGroupId
+                      || this.agentDetailsGroupDetailsTaskDetails?.chatGroupId
+                      || this.agentDetailsGroupDetails?.chatGroupDto?.id
+                      || ''
+                    if (focusChatGroupId) {
+                      const refreshOptions = this.buildTaskRefreshOptions('agentGroupTask', {
+                        preferLatest: true,
+                        focusChatGroupId
+                      }, saveType)
+                      this.gettaskListData('agentGroupTask', focusChatGroupId, 0, refreshOptions)
+                    } else {
+                      this.getGroupListData('agentGroup', id)
+                    }
+                  } else {
+                    this.getGroupListData('agentGroup', id)
+                  }
                 } else {
-                  this.gettaskListData('agentTask', id)
+                  const refreshOptions = this.buildTaskRefreshOptions('agentTask', {
+                    preferLatest: saveType === 'drawerTaskStart',
+                    focusChatGroupId: serviceForm?.chatGroupId || ''
+                  }, saveType)
+                  this.gettaskListData('agentTask', id, 0, refreshOptions)
                 }
               }
             } else if (this.tabsActiveName === 'second') {
-              this.getGroupListData('group')
+              if (saveType === 'drawerTaskStart') {
+                const focusChatGroupId = serviceForm?.chatGroupId
+                  || this.groupTaskDetails?.chatGroupId
+                  || this.groupDetails?.chatGroupDto?.id
+                  || ''
+                if (focusChatGroupId) {
+                  const refreshOptions = this.buildTaskRefreshOptions('groupTask', {
+                    preferLatest: true,
+                    focusChatGroupId
+                  }, saveType)
+                  this.gettaskListData('groupTask', focusChatGroupId, 0, refreshOptions)
+                } else {
+                  this.getGroupListData('group')
+                }
+              } else {
+                this.getGroupListData('group')
+              }
             } else {
-              this.gettaskListData('task')
+              const refreshOptions = this.buildTaskRefreshOptions('task', {
+                preferLatest: saveType === 'drawerTaskStart',
+                focusChatGroupId: serviceForm?.chatGroupId || ''
+              }, saveType)
+              this.gettaskListData('task', '', 0, refreshOptions)
             }
           } else if (['drawerAgent', 'dialogGroupAgent'].includes(saveType)) {
             const agentMapStr = {
@@ -1720,34 +2045,294 @@ var app = new Vue({
       const interval = () => {
         if (this.historyTimer[listType]) clearTimeout(this.historyTimer[listType])
         this.historyTimer[listType] = setTimeout(() => {
-          let nextHistoryId = ''
-          // 任务
-          if (listType === 'task') {
-            let lenIndex = this.taskHistoryList.length - 1
-            nextHistoryId = this.taskHistoryList[lenIndex]?.id ?? ''
-          }
-          // 智能体 任务
-          if (listType === 'agentTask') {
-            let lenIndex = this.agentDetailsTaskHistoryList.length - 1
-            nextHistoryId = this.agentDetailsTaskHistoryList[lenIndex]?.id ?? ''
-          }
-          // 智能体 组 任务
-          if (listType === 'agentGroupTask') {
-            let lenIndex = this.agentDetailsGroupTaskHistoryList.length - 1
-            nextHistoryId = this.agentDetailsGroupTaskHistoryList[lenIndex]?.id ?? ''
-          }
-          // 组 任务
-          if (listType === 'groupTask') {
-            let lenIndex = this.groupTaskHistoryList.length - 1
-            nextHistoryId = this.groupTaskHistoryList[lenIndex]?.id ?? ''
-          }
+          const nextHistoryId = this.getLatestPersistedHistoryId(listType)
           // 执行代码块
-          fun(listType, id, nextHistoryId)
+          fun(listType, id, nextHistoryId || '')
           interval()
         }, 1000 * 5)
         // console.log('pollGetTaskHistoryData', this.historyTimer[listType]);
       }
       interval()
+    },
+    getHistoryListByType(listType) {
+      if (listType === 'task') return this.taskHistoryList || []
+      if (listType === 'agentTask') return this.agentDetailsTaskHistoryList || []
+      if (listType === 'agentGroupTask') return this.agentDetailsGroupTaskHistoryList || []
+      if (listType === 'groupTask') return this.groupTaskHistoryList || []
+      return []
+    },
+    getLatestPersistedHistoryId(listType) {
+      const historyList = this.getHistoryListByType(listType)
+      if (!Array.isArray(historyList) || historyList.length === 0) return 0
+
+      for (let index = historyList.length - 1; index >= 0; index--) {
+        const item = historyList[index]
+        const historyId = Number(item?.id || 0)
+        if (Number.isFinite(historyId) && historyId > 0) {
+          return historyId
+        }
+      }
+      return 0
+    },
+    pullTaskHistoryAfterStreamClosed(listType, chatTaskId) {
+      if (!listType || !chatTaskId) return
+      const nextHistoryId = this.getLatestPersistedHistoryId(listType)
+      this.getTaskRecordListData(listType, chatTaskId, nextHistoryId || '', false)
+    },
+    setHistoryListByType(listType, list) {
+      if (listType === 'task') this.$set(this, 'taskHistoryList', list)
+      if (listType === 'agentTask') this.$set(this, 'agentDetailsTaskHistoryList', list)
+      if (listType === 'agentGroupTask') this.$set(this, 'agentDetailsGroupTaskHistoryList', list)
+      if (listType === 'groupTask') this.$set(this, 'groupTaskHistoryList', list)
+    },
+    getHistoryScrollbarRef(listType) {
+      const scrollbarMap = {
+        task: 'taskHistoryScrollbar',
+        agentTask: 'agentDetailsTaskHistoryScrollbar',
+        agentGroupTask: 'agentDetailsGroupTaskHistoryScrollbar',
+        groupTask: 'groupTaskHistoryScrollbar'
+      }
+      return scrollbarMap[listType] || ''
+    },
+    isHistoryNearBottom(refName, isFirst = false) {
+      if (isFirst) return true
+      if (!refName) return true
+      const scrollbar = this.$refs[refName]
+      if (!scrollbar || !scrollbar.wrap) return true
+      const wrap = scrollbar.wrap
+      const scrollTop = wrap.scrollTop
+      const scrollHeight = wrap.scrollHeight
+      const clientHeight = wrap.clientHeight
+      if (scrollHeight <= clientHeight) return true
+      return scrollTop + clientHeight + 30 >= scrollHeight
+    },
+    scrollHistoryToItemBottom(listType, historyId, behavior = 'auto') {
+      const refName = this.getHistoryScrollbarRef(listType)
+      if (!refName) return
+      const scrollbar = this.$refs[refName]
+      if (!scrollbar || !scrollbar.wrap) return
+
+      const wrap = scrollbar.wrap
+      if (historyId === undefined || historyId === null || historyId === '') {
+        wrap.scrollTop = wrap.scrollHeight
+        return
+      }
+
+      const findTarget = () => {
+        const historyItems = wrap.querySelectorAll('.taskrecord-listWrap-item[data-history-id]')
+        for (let index = 0; index < historyItems.length; index++) {
+          const item = historyItems[index]
+          if (String(item.getAttribute('data-history-id')) === String(historyId)) {
+            return item
+          }
+        }
+        return null
+      }
+
+      let target = findTarget()
+      const scrollWrapToTargetBottom = (targetItem) => {
+        if (!targetItem) return
+        const targetBottom = targetItem.offsetTop + targetItem.offsetHeight
+        const nextTop = Math.max(0, targetBottom - wrap.clientHeight)
+        if (behavior === 'smooth' && typeof wrap.scrollTo === 'function') {
+          wrap.scrollTo({ top: nextTop, behavior: 'smooth' })
+        } else {
+          wrap.scrollTop = nextTop
+        }
+      }
+      if (target) {
+        scrollWrapToTargetBottom(target)
+        return
+      }
+
+      requestAnimationFrame(() => {
+        target = findTarget()
+        if (target) {
+          scrollWrapToTargetBottom(target)
+        }
+      })
+    },
+    startTaskHistoryStream(listType, chatTaskId) {
+      if (!listType || !chatTaskId || typeof EventSource === 'undefined') {
+        this.pollGetTaskHistoryData(listType, this.getTaskRecordListData, chatTaskId)
+        return
+      }
+
+      this.closeTaskHistoryStream(listType)
+      const streamUrl = `/api/Senparc.Xncf.AgentsManager/ChatTaskStream/Subscribe?chatTaskId=${chatTaskId}&_ts=${Date.now()}`
+      const source = new EventSource(streamUrl, { withCredentials: true })
+      this.historyStream[listType] = source
+      this.resetTaskHistoryStreamSilentTimer(listType, chatTaskId)
+
+      const onChunk = (event) => {
+        if (this.historyStream[listType] !== source) return
+        this.clearTaskHistoryStreamSilentTimer(listType)
+        this.upsertTaskStreamChunk(listType, event)
+      }
+      const onMessage = (event) => {
+        if (this.historyStream[listType] !== source) return
+        this.clearTaskHistoryStreamSilentTimer(listType)
+        this.flushTaskStreamMessage(listType, event)
+      }
+      const onStatus = (event) => {
+        if (this.historyStream[listType] !== source) return
+        this.clearTaskHistoryStreamSilentTimer(listType)
+        const payload = this.safeParseStreamEvent(event)
+        if (!payload || !payload.text) return
+
+        const statusText = String(payload.text).toLowerCase()
+        const finishedStates = ['finished', 'cancelled']
+        if (finishedStates.includes(statusText)) {
+          this.closeTaskHistoryStream(listType)
+          this.pullTaskHistoryAfterStreamClosed(listType, chatTaskId)
+        }
+      }
+
+      source.addEventListener('chunk', onChunk)
+      source.addEventListener('message', onMessage)
+      source.addEventListener('status', onStatus)
+
+      source.onerror = () => {
+        if (this.historyStream[listType] !== source) return
+        this.clearTaskHistoryStreamSilentTimer(listType)
+        this.closeTaskHistoryStream(listType)
+        this.pullTaskHistoryAfterStreamClosed(listType, chatTaskId)
+        this.pollGetTaskHistoryData(listType, this.getTaskRecordListData, chatTaskId)
+      }
+    },
+    clearTaskHistoryStreamSilentTimer(listType) {
+      const timer = this.historyStreamSilentTimer[listType]
+      if (timer) {
+        clearTimeout(timer)
+      }
+      this.$delete(this.historyStreamSilentTimer, listType)
+    },
+    resetTaskHistoryStreamSilentTimer(listType, chatTaskId) {
+      this.clearTaskHistoryStreamSilentTimer(listType)
+      this.historyStreamSilentTimer[listType] = setTimeout(async () => {
+        const source = this.historyStream[listType]
+        if (!source) return
+
+        try {
+          const statusRes = await serviceAM.get(
+            `/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetItem?id=${chatTaskId}`,
+            { customAlert: true }
+          )
+          const taskStatus = Number(statusRes?.data?.data?.chatTaskDto?.status)
+          if ([3, 4].includes(taskStatus)) {
+            this.closeTaskHistoryStream(listType)
+            this.pullTaskHistoryAfterStreamClosed(listType, chatTaskId)
+            return
+          }
+        } catch (e) {
+          console.warn('stream silent fallback status check failed', listType, chatTaskId, e)
+        }
+
+        // 任务仍在运行但暂无流事件，继续观察，避免长时间 pending 无更新。
+        this.resetTaskHistoryStreamSilentTimer(listType, chatTaskId)
+      }, 4000)
+    },
+    safeParseStreamEvent(event) {
+      if (!event || !event.data) return null
+      try {
+        return JSON.parse(event.data)
+      } catch (e) {
+        console.error('stream parse error', e, event.data)
+        return null
+      }
+    },
+    upsertTaskStreamChunk(listType, event) {
+      const payload = this.safeParseStreamEvent(event)
+      if (!payload || !payload.responseId) return
+
+      const draftKey = `${listType}:${payload.responseId}`
+      const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef(listType), false)
+      const historyList = this.getHistoryListByType(listType).slice()
+      const existedIndex = historyList.findIndex(item => item.id === draftKey)
+      const agentInfo = this.getTaskSenderInfo(listType, payload.fromAgentTemplateId || 0) || {}
+      const oldMessage = existedIndex > -1 ? (historyList[existedIndex].message || '') : ''
+      const mergedMessage = `${oldMessage}${payload.text || ''}`
+
+      const draftItem = {
+        id: draftKey,
+        fromAgentTemplateId: payload.fromAgentTemplateId || 0,
+        addTime: payload.timestamp ? new Date(payload.timestamp).toISOString() : new Date().toISOString(),
+        message: mergedMessage,
+        messageHtml: marked.parse(mergedMessage || ''),
+        promptTokens: payload.promptTokens || 0,
+        completionTokens: payload.completionTokens || 0,
+        totalTokens: payload.totalTokens || 0,
+        responseMilliseconds: payload.responseMilliseconds || 0,
+        roundIndex: payload.roundIndex || 0,
+        _streaming: true,
+        _streamAgentName: payload.fromAgentName || agentInfo.name || '',
+      }
+
+      if (existedIndex > -1) {
+        historyList.splice(existedIndex, 1, draftItem)
+      } else {
+        historyList.push(draftItem)
+      }
+
+      this.historyStreamingDrafts[draftKey] = draftItem
+      this.setHistoryListByType(listType, historyList)
+      this.$nextTick(() => {
+        if (!shouldAutoFollow) return
+        this.scrollHistoryToItemBottom(listType, draftItem.id)
+      })
+    },
+    flushTaskStreamMessage(listType, event) {
+      const payload = this.safeParseStreamEvent(event)
+      if (!payload) return
+
+      const draftKey = payload.responseId ? `${listType}:${payload.responseId}` : ''
+      const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef(listType), false)
+      const historyList = this.getHistoryListByType(listType).slice()
+      if (draftKey) {
+        const draftIndex = historyList.findIndex(item => item.id === draftKey)
+        if (draftIndex > -1) {
+          historyList.splice(draftIndex, 1)
+        }
+        delete this.historyStreamingDrafts[draftKey]
+      }
+
+      const message = payload.text || ''
+      const finalItem = {
+        id: payload.historyId || `${draftKey || 'msg'}:${Date.now()}`,
+        fromAgentTemplateId: payload.fromAgentTemplateId || 0,
+        addTime: payload.timestamp ? new Date(payload.timestamp).toISOString() : new Date().toISOString(),
+        message,
+        messageHtml: marked.parse(message),
+        promptTokens: payload.promptTokens || 0,
+        completionTokens: payload.completionTokens || 0,
+        totalTokens: payload.totalTokens || 0,
+        responseMilliseconds: payload.responseMilliseconds || 0,
+        roundIndex: payload.roundIndex || 0
+      }
+      historyList.push(finalItem)
+
+      this.setHistoryListByType(listType, historyList)
+      this.$nextTick(() => {
+        if (!shouldAutoFollow) return
+        this.scrollHistoryToItemBottom(listType, finalItem.id)
+      })
+    },
+    closeTaskHistoryStream(listType) {
+      this.clearTaskHistoryStreamSilentTimer(listType)
+      const source = this.historyStream[listType]
+      if (source) {
+        source.close()
+      }
+      this.$delete(this.historyStream, listType)
+    },
+    clearTaskHistoryStreams() {
+      Object.keys(this.historyStream || {}).forEach((key) => {
+        this.closeTaskHistoryStream(key)
+      })
+      Object.keys(this.historyStreamSilentTimer || {}).forEach((key) => {
+        this.clearTaskHistoryStreamSilentTimer(key)
+      })
+      this.historyStreamingDrafts = {}
     },
     // 清除 获取历史对话记录 的轮询
     clearHistoryTimer() {
@@ -1760,6 +2345,8 @@ var app = new Vue({
           }
         }
       }
+      this.clearTaskListRetryTimers()
+      this.clearTaskHistoryStreams()
     },
 
     // 编辑 Dailog|抽屉 按钮 
@@ -1944,19 +2531,13 @@ var app = new Vue({
         formName = 'evaluationForm'
       }
       if (!refName) return
-      this.$refs[refName].validate((valid) => {
+      this.$refs[refName].validate(async (valid) => {
         if (valid) {
           const submitForm = this[formName] ?? {}
           //提交数据给后端
-          this.saveSubmitFormData(btnType, submitForm)
-          debugger
-          //只有执行分配任务启动的时候，保存后，才跳入到任务详情
-          if (btnType === 'drawerGroupStart') {
-            //切换到对应的tab
-            this.tabsActiveName = 'third'
-            //跳转到任务详情
-            this.handleTaskView('task', this.groupTaskListLastNew)
-          }
+          await this.saveSubmitFormData(btnType, submitForm)
+          // “再次执行/启动任务”的跳转交给 saveSubmitFormData 中刷新后的定位逻辑，
+          // 避免这里用旧缓存任务二次覆盖到历史任务。
           // this.visible[btnType] = false
         } else {
           console.log('error submit!!');

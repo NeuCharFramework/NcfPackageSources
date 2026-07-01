@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：AIVectorService.cs
+    文件功能描述：AIVectorService 服务逻辑
+    
+    
+    创建标识：Senparc - 20250402
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using System;
@@ -9,10 +23,10 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Models;
 using Senparc.Xncf.AIKernel.OHS.Local.PL;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 using Senparc.AI;
 using Microsoft.Extensions.DependencyInjection;
-using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.AgentKernel.Handlers;
 using Senparc.AI.Entities;
 using Senparc.AI.Exceptions;
 using Senparc.AI.Entities.Keys;
@@ -136,8 +150,8 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         //        TopP = 0.5,
         //    };
 
-        //    var semanticAiHandler = base._serviceProvider.GetService<SemanticAiHandler>();
-        //    var chatConfig = semanticAiHandler.ChatConfig(promptConfigParameter, userId: "Jeffrey",
+        //    var agentAiHandler = base._serviceProvider.GetService<AgentAiHandler>();
+        //    var chatConfig = agentAiHandler.ChatConfig(promptConfigParameter, userId: "Jeffrey",
         //         chatSystemMessage: systemMessage, promptTemplate: promptTemplate,
         //         maxHistoryStore: 20, senparcAiSetting: senparcAiSetting);
         //    var iWantToRun = chatConfig;

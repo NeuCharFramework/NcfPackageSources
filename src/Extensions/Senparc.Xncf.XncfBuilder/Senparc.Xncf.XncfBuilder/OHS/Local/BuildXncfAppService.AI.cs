@@ -1,4 +1,18 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：BuildXncfAppService.AI.cs
+    文件功能描述：BuildXncfAppService.AI 服务逻辑
+    
+    
+    创建标识：Senparc - 20240514
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,6 +38,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 {
     public partial class BuildXncfAppService
     {
+        /* 升级 Senparc.AI.AgentKernel，暂时停用此方法，未来改用 SKILL */
+
+        /*
+         * 
         /// <summary>
         /// AI 生成数据库实体
         /// </summary>
@@ -253,6 +271,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 return log;
             });
         }
+
+        */
 
         //[FunctionRender("[AI] 生成 AppService", "使用 AI 指令生成 AppService", typeof(Register))]
         //public async Task<StringAppResponse> CreateAppService()

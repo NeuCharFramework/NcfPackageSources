@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：KnowledgeBaseService.cs
+    文件功能描述：KnowledgeBaseService 服务逻辑
+    
+    
+    创建标识：Senparc - 20251225
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.VectorData;
@@ -5,8 +19,8 @@ using Microsoft.SemanticKernel.Text;
 using OllamaSharp.Models;
 using Senparc.AI;
 using Senparc.AI.Entities.Keys;
-using Senparc.AI.Kernel;
-using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Handlers;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Trace;
@@ -237,21 +251,20 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             var embeddingAiSetting = this._aIModelService.BuildSenparcAiSetting(embeddingAiModelDto, aiVectorDto);
             //TODO:改成动态
             var embeddingModelName = embeddingAiSetting.AzureOpenAIKeys.ModelName.Embedding;
-            // 4. 初始化 SemanticAiHandler
-            var embeddingAiHandler = new SemanticAiHandler(embeddingAiSetting);
+            // 4. 初始化 AgentAiHandler
+            var embeddingAiHandler = new AgentAiHandler(embeddingAiSetting);
 
-            //_serviceProvider.GetService<SemanticAiHandler>();
-            //if (semanticAiHandler == null)
+            //_serviceProvider.GetService<AgentAiHandler>();
+            //if (agentAiHandler == null)
             //{
-            //    throw new NcfExceptionBase("SemanticAiHandler 服务未注册。");
+            //    throw new NcfExceptionBase("AgentAiHandler 服务未注册。");
             //}
 
             // 5. 构建 IWantToRun (Embedding 模式)
 
             var iWantToRunEmbedding = embeddingAiHandler
-                 .IWantTo()
-                 .ConfigModel(ConfigModel.TextEmbedding, $"NcfKnowledgeBase_{embeddingAiModel.Id}")
-                 .ConfigVectorStore(embeddingAiSetting.VectorDB)
+                 .IWantTo(embeddingAiSetting)
+                 .ConfigTextEmbeddingModel("NcfEmbedding",$"NcfKnowledgeBase_{embeddingAiModel.Id}")
             .BuildKernel();
 
             // 6. 批量生成 Embeddings 并存储
@@ -290,8 +303,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                 {
                     
                     var dt = SystemTime.Now;
-                    var vectorCollection = iWantToRunEmbedding.GetVectorCollection<ulong, Record>(embeddingAiSetting.VectorDB, vectorName);
-                    await vectorCollection.EnsureCollectionExistsAsync();
+                    var vectorStore = iWantToRunEmbedding.CreateTextSearchStore();
 
                     var fileName = detail.FileName;
                     List<string> tagList = new List<string>();
@@ -310,19 +322,16 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                         try
                         {
                             var currentIndex = chunkIndex++;
-                            var descriptionEmbedding = await iWantToRunEmbedding.SemanticKernelHelper.GetEmbeddingAsync(embeddingModelName, paragraph);
-
-
-                            var record = new Record()
-                            {
-                                Id = (ulong)chunkIndex,
-                                Name = vectorName + "-paragraph-" + chunkIndex,
-                                Description = paragraph,
-                                DescriptionEmbedding = descriptionEmbedding,
-                                Tags = tagList.ToArray()
-                            };
-
-                            await vectorCollection.UpsertAsync(record);
+                       
+                            await vectorStore.UpsertDocumentsAsync([
+                               new TextSearchDocument
+                                {
+                                    SourceId = (ulong)chunkIndex,
+                                    SourceName = vectorName + "-paragraph-" + chunkIndex,
+                                    SourceLink = $"{fileName}",
+                                    Text = paragraph
+                                }
+                           ]);
                         }
                         catch (Exception ex)
                         {
@@ -423,16 +432,15 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             var embeddingAiSetting = this._aIModelService.BuildSenparcAiSetting(embeddingAiModelDto, aiVectorDto);
             //TODO:改成动态
             var embeddingModelName = embeddingAiSetting.AzureOpenAIKeys.ModelName.Embedding;
-            // 4. 初始化 SemanticAiHandler
-            var embeddingAiHandler = new SemanticAiHandler(embeddingAiSetting);
+            // 4. 初始化 AgentAiHandler
+            var embeddingAiHandler = new AgentAiHandler(embeddingAiSetting);
 
             // 5. 构建 IWantToRun (Embedding 模式)
 
             var iWantToRunEmbedding = embeddingAiHandler
                  .IWantTo()
                  .ConfigModel(ConfigModel.TextEmbedding, $"NcfKnowledgeBase_{embeddingAiModel.Id}")
-                 .ConfigVectorStore(embeddingAiSetting.VectorDB)
-            .BuildKernel();
+                 .BuildKernel();
 
             string collectionName = $"{knowledgeBase.Name.Replace(" ", "_")}";
             var vectorName = collectionName; //$"{knowledgeBase.Name}-{knowledgeBase.Id}";
@@ -441,20 +449,18 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             {
 
                 var dt = SystemTime.Now;
-                var vectorCollection = iWantToRunEmbedding.GetVectorCollection<ulong, Record>(embeddingAiSetting.VectorDB, vectorName);
-                await vectorCollection.EnsureCollectionExistsAsync();
 
                 //测试
-                ReadOnlyMemory<float> searchVector = await iWantToRunEmbedding.SemanticKernelHelper.GetEmbeddingAsync(embeddingModelName, content);
-
-                var vectorResult = vectorCollection.SearchAsync(searchVector, topK);
-                await foreach (var item in vectorResult)
+                var store = iWantToRunEmbedding.CreateTextSearchStore();
+                var vectorResult = await store.SearchAsync(query:content, topK: topK);
+               
+                 foreach (var item in vectorResult)
                 {
-                    Console.WriteLine($"得到结果：{item.Record.ToJson(true)}");
+                    Console.WriteLine($"得到结果：{item.ToJson(true)}");
                     RecallTestResponse recallTest = new RecallTestResponse()
                     {
-                        Score = item.Score.ToString(),
-                        Content = item.Record.Description,
+                        Score = item.Score,
+                        Content = item.Text,
                         RecallTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                     };
                     lstRecallTest.Add(recallTest);
@@ -505,21 +511,21 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         }
     }
 
-    public class Record
-    {
-        [VectorStoreKey]
-        public ulong Id { get; set; }
+    //public class Record
+    //{
+    //    [VectorStoreKey]
+    //    public ulong Id { get; set; }
 
-        [VectorStoreData(IsIndexed = true)]
-        public string Name { get; set; }
+    //    [VectorStoreData(IsIndexed = true)]
+    //    public string Name { get; set; }
 
-        [VectorStoreData(IsFullTextIndexed = true)]
-        public string Description { get; set; }
+    //    [VectorStoreData(IsFullTextIndexed = true)]
+    //    public string Description { get; set; }
 
-        [VectorStoreVector(Dimensions: 1536 /*根据模型调整，例如 text-embedding-ada-002 为 1536，Large 为 3072*/, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
-        public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
+    //    [VectorStoreVector(Dimensions: 1536 /*根据模型调整，例如 text-embedding-ada-002 为 1536，Large 为 3072*/, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
+    //    public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 
-        [VectorStoreData(IsIndexed = true)]
-        public string[] Tags { get; set; }
-    }
+    //    [VectorStoreData(IsIndexed = true)]
+    //    public string[] Tags { get; set; }
+    //}
 }

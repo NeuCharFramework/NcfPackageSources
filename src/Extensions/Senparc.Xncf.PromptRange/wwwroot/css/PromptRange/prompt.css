@@ -235,6 +235,21 @@
     justify-content: center;
 }
 
+.promptSectionLoaderMask {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(1px);
+    pointer-events: auto;
+}
+
 .loading,
 .loading > div {
     position: relative;
@@ -1016,6 +1031,7 @@
     flex-direction: column;
     gap: 12px;
     height: 100%;
+    position: relative;
     transition: width 0.1s ease-out; /* 拖动时的平滑过渡 */
 }
 
@@ -1339,6 +1355,33 @@
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxActiveItem {
             border-color: #3EC5AF;
         }
+
+        .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxStreamingItem {
+            border: 2px solid transparent !important;
+            background-color: #fff;
+            background-image: linear-gradient(#fff, #fff),
+                              linear-gradient(120deg, #ff4d4f, #ffa940, #fadb14, #73d13d, #36cfc9, #4096ff, #9254de, #f759ab, #ff4d4f);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            background-size: 100% 100%, 300% 300%;
+            background-position: 0 0, 0% 50%;
+            animation: prompt-streaming-rainbow 3s linear infinite;
+            box-shadow: 0 0 0 1px rgba(64, 158, 255, 0.12), 0 0 12px rgba(64, 158, 255, 0.12);
+        }
+
+@keyframes prompt-streaming-rainbow {
+    0% {
+        background-position: 0 0, 0% 50%;
+    }
+
+    50% {
+        background-position: 0 0, 100% 50%;
+    }
+
+    100% {
+        background-position: 0 0, 0% 50%;
+    }
+}
 
         .promptPage_rightArea > .outputArea > .outputArea_contentBox > .contentBoxItem > .infoRow {
             display: flex;
@@ -1936,20 +1979,42 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+    gap: 10px;
     line-height: 20px;
+    margin-bottom: 4px;
     margin-right: 160px; /* 为右侧滚动条预留空间 */
 }
 
-    .promptResult_Item_Title .promptReultTimeArea {
-        color: #6f6f6f;
-        font-size: 12px;
-        flex-shrink: 0;
-    }
+.promptResult_Item_Title .promptReultTimeArea {
+    color: #6f6f6f;
+    font-size: 12px;
+    line-height: 20px;
+    min-width: 0;
+    flex: 1;
+}
+
+.promptResultUsageRow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 16px;
+    margin-right: 160px; /* 为右侧滚动条预留空间 */
+    padding: 2px 5px 0 5px;
+    color: #6f6f6f;
+    font-size: 12px;
+    line-height: 20px;
+}
+
+.promptResultUsageRow .promptResultUsageToken {
+    color: #409EFF;
+}
 
 .copyButtonArea {
     text-align: right;
     font-size: 11px;
     display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
     gap: 8px;
     flex-shrink: 0;
 }

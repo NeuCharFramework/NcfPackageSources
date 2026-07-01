@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>0.10.1-preview1</Version>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.11.0-preview2</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -64,6 +64,12 @@
 	
 				[2025-11-01] update basic libraries, including Senparc.AI
     [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+    [2026-07-01] v0.11.0-preview2 Upgrade multi-agent group chat workflow and MAF integration
+    1、优化 ChatGroupService 的任务管理、并发处理与异常回退
+    2、改进 AgentsManager 页面历史记录展示与交互体验
+    [2026-07-02] v0.11.0-preview2 增强多智能体群聊流程、容错与任务调度能力，优化 PromptOptimizationAgentBridge 稳定性与状态恢复能力
+    1、增强多智能体群聊流程、容错与任务调度能力
+    2、优化 PromptOptimizationAgentBridge 稳定性与状态恢复能力
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -71,9 +77,11 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\Senparc.AI.AgentKernel.props" />
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
-    <PackageReference Include="Senparc.AI.Agents" Version="0.7.2" />
+    <PackageReference Include="Microsoft.Agents.AI.Workflows" Version="1.8.0" />
+    <PackageReference Include="Senparc.AI.Agents" Version="$(SenparcAiAgentsVersion)" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
     <PackageReference Include="Senparc.Weixin.Work" Version="3.31.0" />
   </ItemGroup>
@@ -114,7 +122,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.SenMapic\Senparc.Xncf.SenMapic.csproj" />
-    <ProjectReference Include="..\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" AdditionalProperties="UseCheckedInXncfBuilderGeneratedCode=true" />
     <ProjectReference Include="..\Senparc.Xncf.MCP\Senparc.Xncf.MCP.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.AgentsManager.Abstractions\Senparc.Xncf.AgentsManager.Abstractions.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.PromptRange.Abstractions\Senparc.Xncf.PromptRange.Abstractions.csproj" />

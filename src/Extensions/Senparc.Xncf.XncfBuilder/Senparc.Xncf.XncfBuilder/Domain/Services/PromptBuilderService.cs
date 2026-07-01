@@ -1,10 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：PromptBuilderService.cs
+    文件功能描述：PromptBuilderService 服务逻辑
+    
+    
+    创建标识：Senparc - 20231003
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.SemanticKernel;
 using Senparc.AI.Interfaces;
-using Senparc.AI.Kernel;
-using Senparc.AI.Kernel.Entities;
-using Senparc.AI.Kernel.KernelConfigExtensions;
+using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Entities;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using Senparc.Xncf.PromptRange.Domain.Services;
@@ -14,7 +27,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.AgentKernel.Handlers;
 using System.Linq;
 using Npgsql.Internal;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Query.Expressions.Internal;
@@ -28,7 +41,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 {
     public class PromptBuilderService
     {
-        private readonly SemanticAiHandler _aiHandler;
+        private readonly AgentAiHandler _aiHandler;
         private readonly PromptService _promptService;
         private readonly PromptRangeService _promptRangeService;
         private readonly PromptItemService _promptItemService;
@@ -36,13 +49,16 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services
 
         public PromptBuilderService(/*IAiHandler aiHandler,*/ PromptService promptService, PromptRangeService promptRangeService, PromptItemService promptItemService, PromptResultService promptResultService)
         {
-            //this._aiHandler = (SemanticAiHandler)aiHandler;
-            this._aiHandler = promptService.IWantToRun.SemanticAiHandler;
+            //this._aiHandler = (AgentAiHandler)aiHandler;
+            this._aiHandler = promptService.IWantToRun.AgentAiHandler;
             this._promptService = promptService;
             this._promptRangeService = promptRangeService;
             this._promptItemService = promptItemService;
             this._promptResultService = promptResultService;
         }
+
+        /* 升级 Senparc.AI.AgentKernel，暂时停用此方法，未来改用 SKILL */
+        /*
 
         /// <summary>
         /// 运行提示内容
@@ -551,5 +567,6 @@ Apple
                 return "记录已存在，未覆盖";
             }
         }
+        */
     }
 }

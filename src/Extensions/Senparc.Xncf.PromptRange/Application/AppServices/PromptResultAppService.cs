@@ -1,4 +1,18 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：PromptResultAppService.cs
+    文件功能描述：PromptResultAppService 服务逻辑
+    
+    
+    创建标识：Senparc - 20231120
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,16 +43,19 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         private readonly PromptResultService _promptResultService;
         private readonly PromptItemService _promptItemService;
         private readonly PromptResultChatService _promptResultChatService;
+        private readonly PromptResultStreamHub _promptResultStreamHub;
 
         public PromptResultAppService(
             IServiceProvider serviceProvider,
             PromptResultService promptResultService,
             PromptItemService promptItemService,
-            PromptResultChatService promptResultChatService) : base(serviceProvider)
+            PromptResultChatService promptResultChatService,
+            PromptResultStreamHub promptResultStreamHub) : base(serviceProvider)
         {
             _promptResultService = promptResultService;
             _promptItemService = promptItemService;
             _promptResultChatService = promptResultChatService;
+            _promptResultStreamHub = promptResultStreamHub;
         }
 
         /// <summary>
@@ -128,7 +145,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         /// <returns></returns>
         /// <exception cref="NcfExceptionBase"></exception>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
-        public async Task<AppResponseBase<PromptResult_ListResponse>> GenerateWithItemId(int promptItemId, int numsOfResults,string userMessage=null)
+        public async Task<AppResponseBase<PromptResult_ListResponse>> GenerateWithItemId(int promptItemId, int numsOfResults, string userMessage = null, string streamId = null)
         {
             return await this.GetResponseAsync<PromptResult_ListResponse>(
                 async (response, logger) =>
@@ -173,6 +190,19 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     
                     // 获取第一个结果的模式，用于后续结果保持一致
                     ResultMode? firstResultMode = null;
+                    Action<PromptResultStreamEvent> streamCallback = null;
+                    if (!string.IsNullOrWhiteSpace(streamId))
+                    {
+                        streamCallback = streamEvent =>
+                        {
+                            if (streamEvent == null)
+                            {
+                                return;
+                            }
+                            streamEvent.StreamId = streamId;
+                            _promptResultStreamHub.Publish(streamEvent);
+                        };
+                    }
                     
                     for (int i = 0; i < numsOfResults; i++)
                     {
@@ -196,7 +226,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         }
                         // 如果第一个结果是 Single 模式，后续也使用 Single 模式（currentUserMessage 为 null）
                         
-                        var result = await _promptResultService.SenparcGenerateResultAsync(promptItem, currentUserMessage, currentChatHistory);
+                        var result = await _promptResultService.SenparcGenerateResultAsync(
+                            promptItem,
+                            currentUserMessage,
+                            currentChatHistory,
+                            streamCallback);
                         
                         // 记录第一个结果的模式
                         if (i == 0)
@@ -206,6 +240,16 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         }
                         
                         resp.PromptResults.Add(result);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(streamId))
+                    {
+                        _promptResultStreamHub.Publish(new PromptResultStreamEvent
+                        {
+                            StreamId = streamId,
+                            EventType = "complete",
+                            IsFinal = true
+                        });
                     }
 
                     await _promptResultService.UpdateEvalScoreAsync(promptItemId);
@@ -293,7 +337,36 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<List<PromptResultChatDto>>(
                 async (response, logger) =>
                 {
-                    return await _promptResultService.ContinueChatAsync(request.PromptResultId, request.UserMessage);
+                    Action<PromptResultStreamEvent> streamCallback = null;
+                    if (!string.IsNullOrWhiteSpace(request.StreamId))
+                    {
+                        streamCallback = streamEvent =>
+                        {
+                            if (streamEvent == null)
+                            {
+                                return;
+                            }
+                            streamEvent.StreamId = request.StreamId;
+                            _promptResultStreamHub.Publish(streamEvent);
+                        };
+                    }
+
+                    var result = await _promptResultService.ContinueChatAsync(
+                        request.PromptResultId,
+                        request.UserMessage,
+                        streamCallback);
+
+                    if (!string.IsNullOrWhiteSpace(request.StreamId))
+                    {
+                        _promptResultStreamHub.Publish(new PromptResultStreamEvent
+                        {
+                            StreamId = request.StreamId,
+                            EventType = "complete",
+                            IsFinal = true
+                        });
+                    }
+
+                    return result;
                 });
         }
 

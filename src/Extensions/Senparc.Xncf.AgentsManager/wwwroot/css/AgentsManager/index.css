@@ -1301,16 +1301,41 @@ height:100%;
 
 .taskrecord-listWrap-item {
     flex-shrink: 0;
+    padding: 8px 10px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.taskrecord-listWrap-item-streaming {
+    border: 3px solid transparent !important;
+    background-image: linear-gradient(#fff, #fff),
+        linear-gradient(120deg, #ff4d4f, #ffa940, #fadb14, #73d13d, #36cfc9, #4096ff, #9254de, #f759ab, #ff4d4f);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    background-size: 100% 100%, 300% 300%;
+    background-position: 0 0, 0% 50%;
+    animation: agent-history-streaming-rainbow 3s linear infinite;
+    box-shadow: 0 0 0 1px rgba(64, 158, 255, 0.12), 0 0 14px rgba(64, 158, 255, 0.16);
 }
 
 .taskrecord-listWrap-item-head {
     margin-bottom: 10px;
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 6px;
+}
+
+.taskrecord-item-meta-top {
+    width: 100%;
+    display: flex;
     align-items: center;
     justify-content: flex-start;
 }
 
-.taskrecord-listWrap-item-head>.avatarBox {
+.taskrecord-item-meta-top>.avatarBox {
     flex-shrink: 0;
     width: 35px;
     height: 35px;
@@ -1322,7 +1347,7 @@ height:100%;
     overflow: hidden;
 }
 
-.taskrecord-listWrap-item-head>.avatarBox>img {
+.taskrecord-item-meta-top>.avatarBox>img {
     flex-shrink: 0;
     width: 25px;
     height: auto;
@@ -1331,18 +1356,84 @@ height:100%;
     filter: drop-shadow(#409eff 0 35px);
 }
 
-.taskrecord-listWrap-item-head>.name {
+.taskrecord-item-meta-top>.name {
     margin-left: 5px;
     font-size: 14px;
     font-weight: 500;
     color: rgba(0, 0, 0, 1);
 }
 
-.taskrecord-listWrap-item-head>.time {
+.taskrecord-item-meta-top>.time {
     margin-left: 20px;
     font-size: 12px;
     font-weight: 400;
     color: rgba(171, 173, 176, 1);
+}
+
+.taskrecord-item-meta-bottom {
+    padding-left: 40px;
+}
+
+.taskrecord-item-meta-bottom>.usage {
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: #2a82e4;
+    background: rgba(42, 130, 228, 0.12);
+}
+
+@keyframes agent-history-streaming-rainbow {
+    0% {
+        background-position: 0 0, 0% 50%;
+    }
+
+    50% {
+        background-position: 0 0, 100% 50%;
+    }
+
+    100% {
+        background-position: 0 0, 0% 50%;
+    }
+}
+
+.usage-analytics-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.usage-analytics-title {
+    margin-right: auto;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.usage-analytics-overview {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.usage-card {
+    background: #f5f7fa;
+    border-radius: 6px;
+    padding: 10px 12px;
+}
+
+.usage-card>.label {
+    color: #8a94a6;
+    font-size: 12px;
+}
+
+.usage-card>.value {
+    margin-top: 6px;
+    color: #1f2d3d;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
 }
 
 .taskrecord-listWrap-item-content {

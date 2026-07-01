@@ -1,4 +1,18 @@
-﻿using AutoMapper;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Register.cs
+    文件功能描述：模块注册与初始化逻辑
+    
+    
+    创建标识：Senparc - 20200818
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -25,7 +39,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -96,7 +109,7 @@ namespace Senparc.Xncf.MCP
         }
         #endregion
 
-        public IMcpClient McpClient { get; set; }
+        //public IMcpClient McpClient { get; set; }
 
         public List<string> McpFunctionMetaInfo { get; set; }
 
@@ -112,36 +125,6 @@ namespace Senparc.Xncf.MCP
             {
                 z.CreateMap<Color, ColorDto>().ReverseMap();
             });
-
-            // Assembly assembly = Assembly.Load("MyAssembly");
-            // Type type2 = assembly.GetType("MyNamespace.MyClass");
-
-            var type = typeof(Senparc.Xncf.SenMapic.OHS.Local.AppService.MyFuctionAppService);
-            var methodInfo = type.GetMethod("WebSpider");
-
-            
-            var aiFunction = global::Microsoft.Extensions.AI.AIFunctionFactory.Create(methodInfo,
-             typeof(Senparc.Xncf.SenMapic.OHS.Local.AppService.MyFuctionAppService));
-
-            var tool = McpServerTool.Create(aiFunction);
-
-            // System.Console.WriteLine("aiFunction: " + aiFunction.JsonSchema);
-
-            // var mcpServerBuilder = services.AddMcpServer(opt =>
-            //             {
-            //                 opt.ServerInfo = new Implementation()
-            //                 {
-            //                     Name = "ncf-mcp-server",
-            //                     Version = "1.0.0",
-            //                 };
-            //             })
-            //             .WithHttpTransport()
-            //                                 //   .WithStdioServerTransport()
-            //                                 .WithTools(new[] { tool })
-            //                                 .WithToolsFromAssembly()
-            //                                 //.WithToolsFromAssembly(typeof(Senparc.Xncf.SenMapic.Register).Assembly)
-            //                                 ;
-
 
             return base.AddXncfModule(services, configuration, env);
         }

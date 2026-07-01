@@ -1,7 +1,31 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：MyFuctionAppService.cs
+    文件功能描述：MyFuctionAppService 服务逻辑
+    
+    
+    创建标识：Senparc - 20211031
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
+#pragma warning disable OPENAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+using Azure.AI.OpenAI;
+using Azure.Core;
+using Microsoft.Agents.AI;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 using ModelContextProtocol.Client;
 using ModelContextProtocol.Server;
-using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Handlers;
+using Senparc.AI.Entities;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
@@ -15,16 +39,6 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using ModelContextProtocol.SemanticKernel;
-using ModelContextProtocol.SemanticKernel.Extensions;
-using Microsoft.SemanticKernel;
-using Senparc.AI.Kernel;
-using Microsoft.SemanticKernel.Connectors.OpenAI;
-using Microsoft.Extensions.DependencyInjection;
-using Azure.AI.OpenAI;
-using Azure.Core;
-using Microsoft.Extensions.AI;
-using Senparc.AI.Entities;
 
 
 namespace Senparc.Xncf.MCP.OHS.Local.AppService
@@ -70,13 +84,34 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
 
+     [McpServerTool,Description("Bob's Lab")]
+    public static async Task<string> BobLab(string input)
+    {
+        var handler = new AgentAiHandler(Senparc.AI.Config.SenparcAiSetting);
+
+        var iWantToRun = await handler.IWantTo()
+            .ConfigChatModel("Bob", new ChatClientAgentOptions(){
+            ChatOptions = new ChatOptions()
+            {
+                Instructions = @"你是一个机器人，负责帮助我回答问题。回答问题之前，你需要完整复述一下我的完整问题。你需要使用 Markdown 格式输出答案，除了中文答案，同时需要用英文翻译一下。并且在开头使用符号#start，末尾使用结束符号#end，如：
+#start
+...
+#end"
+            }
+        }).BuildKernelWithAgentSessionAsync();
+
+        var startTime = DateTime.Now;
+        var result = await iWantToRun.RunChatAsync(input);
+        return result.OutputString + $"[Bob's Lab] - {input} /  {DateTime.Now}, 耗时：{SystemTime.DiffTotalMS(startTime)}毫秒";
+    }
+
     }
 
     [McpServerToolType]
     public class MyFuctionAppService : AppServiceBase
     {
         private ColorService _colorService;
-        private IMcpClient McpClient { get; set; }
+        //private IMcpClient McpClient { get; set; }
 
         public MyFuctionAppService(IServiceProvider serviceProvider, ColorService colorService) : base(serviceProvider)
         {
@@ -106,7 +141,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 // 根据 MCP 服务器选择来确定端点
                 string endpoint;
                 var selectedMcpServer = request.McpServerSelection;
-                
+
                 if (!string.IsNullOrEmpty(selectedMcpServer) && selectedMcpServer != "Manual")
                 {
                     // 如果选中了非"手动输入"的 MCP 服务器，从注册列表中获取真实地址
@@ -115,11 +150,11 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                     {
                         var xncfName = serverParts[0];
                         var mcpRoute = serverParts[1];
-                        
+
                         // 从 XncfRegisterManager 中查找对应的服务器信息
                         var mcpServerInfo = Senparc.Ncf.XncfBase.XncfRegisterManager.McpServerInfoCollection.Values
                             .FirstOrDefault(s => s.XncfName == xncfName && s.McpRoute == mcpRoute);
-                        
+
                         if (mcpServerInfo != null)
                         {
                             // 构建完整的服务器地址
@@ -149,114 +184,45 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
 
                 Console.WriteLine("MCP Request Endpoint:" + endpoint);
 
-                var clientTransport = new SseClientTransport(new SseClientTransportOptions()
+                var ncfServerTool = new HostedMcpServerTool("NCF-Server", new Uri(endpoint))
                 {
-                    Endpoint = new Uri(endpoint),
-                    Name = "NCF-Server"
-                });
-
-                var client = await McpClientFactory.CreateAsync(clientTransport);
-                var tools = await client.ListToolsAsync();
-                // Print the list of tools available from the server.
-                foreach (var tool in tools)
-                {
-                    Console.WriteLine($"{tool.Name} ({tool.Description})");
-                }
-
-                // // Execute a tool (this would normally be driven by LLM tool invocations).
-                // var result = await client.CallToolAsync(
-                //     "Echo",
-                //     new Dictionary<string, object?>() { ["message"] = "Hello MCP!" }//,
-                //     /*System.Threading.CancellationToken.None*/);
-
-                // Console.WriteLine("MCP 收到结果：" + response.ToJson(true));
-
-
-
-
-                //return result.ToJson(true);
-
-
-
-                /*
-                var builder = Kernel.CreateBuilder();
-                //builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Trace));
-
-
-                var certs = Senparc.AI.Config.SenparcAiSetting.AzureOpenAIKeys;
-
-                builder.Services.AddAzureOpenAIChatCompletion("gpt-4o",new AzureOpenAIClient(new Uri(certs.AzureEndpoint),new System.ClientModel.ApiKeyCredential(certs.ApiKey)));
-
-
-                var kernel = builder.Build();
-                await kernel.Plugins.AddMcpFunctionsFromSseServerAsync("NCF-MCP"+SystemTime.NowTicks, "http://localhost:5000/sse/sse");
-
-                var executionSettings = new OpenAIPromptExecutionSettings
-                {
-                    Temperature = 0,
-                    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
+                    ApprovalMode = HostedMcpServerToolApprovalMode.NeverRequire
                 };
 
-                var prompt = request.RequestPrompt;
-                var result = await kernel.InvokePromptAsync(prompt, new(executionSettings)).ConfigureAwait(false);
-                Console.WriteLine($"\n\n{prompt}\n{result}");
+                //var clientTransport = new SseClientTransport(new SseClientTransportOptions()
+                //{
+                //    Endpoint = new Uri(endpoint),
+                //    Name = "NCF-Server"
+                //});
 
-                return result.ToJson(true);
-
-                */
-
-                var client2 = await McpClientFactory.CreateAsync(clientTransport);
-                var tools2 = await client2.ListToolsAsync();
+                //var client = await McpClientFactory.CreateAsync(clientTransport);
+                //var tools = await client.ListToolsAsync();
                 // Print the list of tools available from the server.
-                foreach (var tool in tools2)
-                {
-                    Console.WriteLine($"{tool.Name} ({tool.Description})");
-                    //var kf = tool.AsKernelFunction();
 
 
-                }
 
                 var aiSetting = Senparc.AI.Config.SenparcAiSetting;
-                var semanticAiHandler = new SemanticAiHandler(aiSetting);
+                var agentAiHandler = new AgentAiHandler(aiSetting);
 
-                var parameter = new PromptConfigParameter()
-                {
-                    MaxTokens = 2000,
-                    Temperature = 0.7,
-                    TopP = 0.5,
-                };
+                var iWantToConfig = agentAiHandler.IWantTo();
+                var chatOptions = iWantToConfig.CreateChatClientAgentOptions(
+                    "Jeffrey", "你是一位智能助手，负责帮助我完成任务",
+                    new ChatOptions()
+                    {
+                        Instructions = "你是一位智能助手，负责帮助我完成任务",
+                        TopP = 0.7f,
+                        Temperature = 0.7f,
+                        MaxOutputTokens = 2000,
+                        Tools = new List<AITool> { ncfServerTool },
+                    });
 
-                var iWantToRun = semanticAiHandler.ChatConfig(parameter,
-                  userId: "Jeffrey",
-                  maxHistoryStore: 10,
-                  chatSystemMessage: "你是一位智能助手，负责帮助我完成任务",
-                  senparcAiSetting: aiSetting,
-                  kernelBuilderAction: kh =>
-                  {
+                var iWantToRun = await iWantToConfig
+                        .ConfigChatModel("Jeffrey", chatOptions)
+                        .BuildKernelAsync();
 
-                      // kh.Plugins.AddMcpFunctionsFromSseServerAsync("NCF-Server", "http://localhost:5000/sse/sse");
-
-#pragma warning disable SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
-                      kh.Plugins.AddFromFunctions("SenparcMcpPlugin", tools2.Select(z => z.AsKernelFunction()));
-#pragma warning restore SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
-                  }
-                      );
-                var executionSettings2 = new OpenAIPromptExecutionSettings
-                {
-                    Temperature = 0,
-                    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()// FunctionChoiceBehavior.Auto()
-                };
-                var ka = new KernelArguments(executionSettings2) { };
-
-                ////输出结果
-                //SenparcAiResult ret = await semanticAiHandler.ChatAsync(iWantToRun, request.RequestPrompt/*, streamItemProceessing*/);
-
-                //////////var resultRaw = await iWantToRun.Kernel.InvokePromptAsync(request.RequestPrompt, ka);
-
-
-                var resultRaw = await iWantToRun.Kernel.InvokePromptAsync(request.RequestPrompt, ka);
+                var resultRaw = await iWantToRun.RunChatAsync(request.RequestPrompt);
                 //return resultRaw.ToJson(true);
-                return resultRaw.ToString();
+                return resultRaw.OutputString;
             });
         }
 
@@ -423,3 +389,4 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
 
     }
 }
+#pragma warning restore OPENAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。

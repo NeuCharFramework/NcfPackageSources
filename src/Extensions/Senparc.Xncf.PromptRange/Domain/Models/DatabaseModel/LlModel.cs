@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：LlModel.cs
+    文件功能描述：LlModel 数据模型定义
+    
+    
+    创建标识：Senparc - 20231019
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using System;
@@ -41,6 +55,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         /// </summary>
         [Required, MaxLength(20)]
         public AiPlatform ModelType { get; private set; }
+        //TODO:这个名称应该叫 AiPlatform 更合理，暂时不处理
 
         /// <summary>
         /// OrganizationId（可选）

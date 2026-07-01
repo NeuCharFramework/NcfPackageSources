@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>0.36.1-preview1</Version>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.36.2-preview1</Version>
     <LangVersion>latest</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -76,6 +76,9 @@
 			[2025-11-01] update basic libraries, including Senparc.AI
 			[2026-01-07] v0.35.6-preview.1 Add NcfSourcePackage project path to DatabaseMigrationRequest loading method
       [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+      [2026-07-02] v0.36.2-preview1 升级 Senparc.AI.AgentKernel 并完成兼容性适配，增强 MCP 工具接入与调用链路兼容能力
+      1、升级 Senparc.AI.AgentKernel 并完成兼容性适配
+      2、增强 MCP 工具接入与调用链路兼容能力
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -201,4 +204,5 @@
     <Message Text="刷新 Source Generator..." Importance="normal" />
     <Touch Files="@(AdditionalFiles)" AlwaysCreate="false" />
   </Target>-->
+  <Import Project="$(MSBuildThisFileDirectory)..\..\..\Senparc.AI.AgentKernel.props" />
 </Project>

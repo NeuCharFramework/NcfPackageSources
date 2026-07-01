@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>0.13.1-preview1</Version>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.13.2-preview1</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -55,6 +55,9 @@
 			[2025-06-20] v0.12.20-preview Add MCP functions in XncfRegisterBase class
 			[2026-03-24] v0.12.24-preview.1 update Senparc.AI.Kernel to v0.28.0
       [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+      [2026-07-02] v0.13.2-preview1 支持流式输出并优化交互体验，新增 PromptRange 与 AgentsManager 使用记录能力
+      1、支持流式输出并优化交互体验
+      2、新增 PromptRange 与 AgentsManager 使用记录能力
 </PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
@@ -63,8 +66,9 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\Senparc.AI.AgentKernel.props" />
   <ItemGroup>
-    <PackageReference Include="Senparc.AI.Kernel" Version="0.29.0" />
+    <PackageReference Include="Senparc.AI.Kernel" Version="$(SenparcAiKernelVersion)" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
