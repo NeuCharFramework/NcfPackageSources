@@ -476,9 +476,7 @@
                                                                     <img :src="getTaskSenderInfo('agentGroupTask',ritem.fromAgentTemplateId).avastar | showAvatar"
                                                                         alt="">
                                                                 </span>
-                                                                <span class="name">{{
-                                                                    getTaskSenderInfo('agentGroupTask',ritem.fromAgentTemplateId).name
-                                                                    }}</span>
+                                                                <span class="name">{{ getTaskSenderName('agentGroupTask', ritem) }}</span>
                                                                 <span class="time">{{ ritem.addTime | showFormatDate
                                                                     }}</span>
                                                             </div>
@@ -596,9 +594,7 @@
                                                                 <img :src="getTaskSenderInfo('agentTask',ritem.fromAgentTemplateId).avastar | showAvatar"
                                                                     alt="">
                                                             </span>
-                                                            <span class="name">{{
-                                                                getTaskSenderInfo('agentTask',ritem.fromAgentTemplateId).name
-                                                                }}</span>
+                                                            <span class="name">{{ getTaskSenderName('agentTask', ritem) }}</span>
                                                             <span class="time">{{ ritem.addTime | showFormatDate }}</span>
                                                         </div>
                                                         <div class="taskrecord-item-meta-bottom" v-if="ritem.totalTokens || ritem.responseMilliseconds">
@@ -928,8 +924,7 @@
                                                     <img :src="getTaskSenderInfo('groupTask',ritem.fromAgentTemplateId).avastar | showAvatar"
                                                         alt="">
                                                 </span>
-                                                <span class="name">{{
-                                                    getTaskSenderInfo('groupTask',ritem.fromAgentTemplateId).name }}</span>
+                                                <span class="name">{{ getTaskSenderName('groupTask', ritem) }}</span>
                                                 <span class="time">{{ ritem.addTime | showFormatDate }}</span>
                                             </div>
                                             <div class="taskrecord-item-meta-bottom" v-if="ritem.totalTokens || ritem.responseMilliseconds">
@@ -1154,8 +1149,7 @@
                                                     <img :src="getTaskSenderInfo('task',ritem.fromAgentTemplateId).avastar | showAvatar"
                                                         alt="">
                                                 </span>
-                                                <span class="name">{{
-                                                    getTaskSenderInfo('task',ritem.fromAgentTemplateId).name }}</span>
+                                                <span class="name">{{ getTaskSenderName('task', ritem) }}</span>
                                                 <span class="time">{{ ritem.addTime | showFormatDate }}</span>
                                             </div>
                                             <div class="taskrecord-item-meta-bottom" v-if="ritem.totalTokens || ritem.responseMilliseconds">

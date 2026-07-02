@@ -882,6 +882,70 @@ var app = new Vue({
             this.promptStreamingBuffer = ''
             this.promptStreamingTempResultId = null
         },
+        clearOutputGeneratingPlaceholder() {
+            if (!Array.isArray(this.outputList) || this.outputList.length === 0) {
+                this.promptStreamingTempResultId = null
+                return
+            }
+
+            const knownId = this.promptStreamingTempResultId
+            this.outputList = this.outputList.filter(item => {
+                if (!item) return false
+                if (item._generating === true) return false
+                if (knownId && String(item.id) === String(knownId)) return false
+                return true
+            })
+            this.promptStreamingTempResultId = null
+        },
+        ensureOutputGeneratingPlaceholder() {
+            this.clearOutputGeneratingPlaceholder()
+            if (!this.promptStreamingTempResultId) {
+                this.promptStreamingTempResultId = `streaming_${Date.now()}`
+            }
+
+            const placeholder = this.normalizeOutputResultItem({
+                id: this.promptStreamingTempResultId,
+                resultString: 'Generating...',
+                addTime: new Date().toISOString(),
+                costTime: 0,
+                promptCostToken: 0,
+                resultCostToken: 0,
+                totalCostToken: 0
+            }, this.promptid, this.promptDetail?.fullVersion || '')
+
+            placeholder._generating = true
+            this.outputList = [placeholder].concat(this.outputList || [])
+            return placeholder.id
+        },
+        ensureContinueChatGeneratingMessage() {
+            const now = new Date().toISOString()
+            let tempMessage = this.continueChatHistory.find(msg => msg.id === 'streaming_assistant')
+            if (!tempMessage) {
+                tempMessage = {
+                    id: 'streaming_assistant',
+                    roleType: 2,
+                    content: 'Generating...',
+                    sequence: (this.continueChatHistory[this.continueChatHistory.length - 1]?.sequence || 0) + 1,
+                    addTime: now,
+                    _generating: true
+                }
+                this.continueChatHistory.push(tempMessage)
+            } else {
+                if (tempMessage._generating !== true && String(tempMessage.content || '').trim()) {
+                    return
+                }
+                tempMessage.content = 'Generating...'
+                tempMessage.addTime = now
+                tempMessage._generating = true
+            }
+            this.continueChatHistory = [...this.continueChatHistory]
+            this.$nextTick(() => {
+                const container = document.getElementById('chatHistoryContainer')
+                if (container) {
+                    container.scrollTop = container.scrollHeight
+                }
+            })
+        },
         openPromptStream(streamId, mode = 'shoot') {
             if (!this.useStreamOutput || !streamId || typeof EventSource === 'undefined' || !this.promptStreamAvailable) {
                 return Promise.resolve(false)
@@ -1027,24 +1091,31 @@ var app = new Vue({
                 this.promptStreamingTempResultId = `streaming_${Date.now()}`
             }
 
-            let index = this.outputList.findIndex(item => item.id === this.promptStreamingTempResultId)
+            let index = this.outputList.findIndex(item => String(item.id) === String(this.promptStreamingTempResultId))
             if (index > -1) return index
 
             const placeholder = this.normalizeOutputResultItem({
                 id: this.promptStreamingTempResultId,
-                resultString: '',
+                resultString: 'Generating...',
                 addTime: new Date().toISOString(),
                 costTime: 0,
                 promptCostToken: 0,
                 resultCostToken: 0,
                 totalCostToken: 0
             }, this.promptid, this.promptDetail?.fullVersion || '')
+            placeholder._generating = true
 
             this.outputList = [placeholder].concat(this.outputList || [])
             return 0
         },
         isStreamingResultItem(item) {
-            if (!item || !this.promptStreaming || !this.promptStreamingTempResultId) {
+            if (!item) {
+                return false
+            }
+            if (item._generating === true) {
+                return true
+            }
+            if (!this.promptStreaming || !this.promptStreamingTempResultId) {
                 return false
             }
             return String(item.id) === String(this.promptStreamingTempResultId)
@@ -1059,6 +1130,10 @@ var app = new Vue({
             const item = this.outputList[index]
             if (!item) return
 
+            if (item._generating === true) {
+                item.resultString = ''
+                item._generating = false
+            }
             item.resultString = `${item.resultString || ''}${payload.text || ''}`
             item.resultStringHtml = marked.parse(item.resultString)
             item.costTime = payload.responseMilliseconds || item.costTime || 0
@@ -1082,6 +1157,7 @@ var app = new Vue({
                 item.resultString = payload.text
                 item.resultStringHtml = marked.parse(item.resultString || '')
             }
+            item._generating = false
             item.costTime = payload.responseMilliseconds || item.costTime || 0
             item.promptCostToken = payload.promptTokens || item.promptCostToken || 0
             item.resultCostToken = payload.completionTokens || item.resultCostToken || 0
@@ -1098,12 +1174,17 @@ var app = new Vue({
                     roleType: 2,
                     content: '',
                     sequence: (this.continueChatHistory[this.continueChatHistory.length - 1]?.sequence || 0) + 1,
-                    addTime: now
+                    addTime: now,
+                    _generating: false
                 }
                 this.continueChatHistory.push(tempMessage)
             }
+            if (tempMessage._generating === true) {
+                tempMessage.content = ''
+            }
             tempMessage.content = `${tempMessage.content || ''}${payload.text || ''}`
             tempMessage.addTime = now
+            tempMessage._generating = false
             this.continueChatUsageSummary.promptCostToken = payload.promptTokens || this.continueChatUsageSummary.promptCostToken
             this.continueChatUsageSummary.resultCostToken = payload.completionTokens || this.continueChatUsageSummary.resultCostToken
             this.continueChatUsageSummary.totalCostToken = payload.totalTokens || this.continueChatUsageSummary.totalCostToken
@@ -1115,6 +1196,7 @@ var app = new Vue({
             if (tempMessage) {
                 tempMessage.content = payload.text || tempMessage.content || ''
                 tempMessage.addTime = new Date().toISOString()
+                tempMessage._generating = false
             }
 
             this.continueChatUsageSummary.promptCostToken = payload.promptTokens || this.continueChatUsageSummary.promptCostToken
@@ -1492,10 +1574,11 @@ var app = new Vue({
         // 继续聊天提交
         async continueChatSubmit(promptResultId, userMessage) {
             this.tacticalFormSubmitLoading = true
+            this.removeContinueChatStreamingMessage()
+            this.ensureContinueChatGeneratingMessage()
             const streamId = this.createPromptStreamId()
             const streamReady = await this.openPromptStream(streamId, 'continueChat')
             try {
-                this.removeContinueChatStreamingMessage()
                 const res = await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.ContinueChat`, {
                     promptResultId: promptResultId,
                     userMessage: userMessage || '',
@@ -1555,6 +1638,7 @@ var app = new Vue({
                         duration: 2000
                     })
                 } else {
+                    this.removeContinueChatStreamingMessage()
                     this.closePromptStream()
                     this.$message({
                         message: res.data.errorMessage || '继续聊天失败',
@@ -6408,6 +6492,7 @@ var app = new Vue({
             if (this.tacticalFormVisible) {
                 this.tacticalFormVisible = false
             }
+            this.ensureOutputGeneratingPlaceholder()
             const streamId = this.createPromptStreamId()
             const streamReady = await this.openPromptStream(streamId, 'shoot')
             
@@ -6515,6 +6600,7 @@ var app = new Vue({
                     this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1
                     this.outputMaxDeci = evalMaxScore > -1 ? evalMaxScore : -1
                     this.outputList = promptResultList.map(item => this.normalizeOutputResultItem(item, id, fullVersion, promptItem))
+                    this.promptStreamingTempResultId = null
                     
                     // 检查第一个结果的模式，如果不是 Chat 模式，清空保存的 userMessage
                     if (promptResultList.length > 0) {
@@ -6544,6 +6630,7 @@ var app = new Vue({
                         await this.dealRapicFireHandel(this.numsOfResults - 1, id)
                     }
                 } else {
+                    this.clearOutputGeneratingPlaceholder()
                     this.closePromptStream()
                     this.$message({
                         message: res.data.errorMessage || res.data.data || 'Error',
@@ -6552,6 +6639,7 @@ var app = new Vue({
                     })
                 }
             } catch (error) {
+                this.clearOutputGeneratingPlaceholder()
                 this.closePromptStream()
                 this.$message({
                     message: error?.message || '请求失败',
@@ -6861,6 +6949,7 @@ var app = new Vue({
             const promptItemId = id || this.promptid
             const numsOfResults = 1
             const params = { promptItemId, numsOfResults }
+            this.ensureOutputGeneratingPlaceholder()
             const streamId = this.createPromptStreamId()
             const streamReady = await this.openPromptStream(streamId, 'shoot')
             if (streamReady) {
@@ -6874,6 +6963,7 @@ var app = new Vue({
                 { params }).then(res => {
                     //console.log('testHandel res ', res.data)
                     if (!res.data.success) {
+                        this.clearOutputGeneratingPlaceholder()
                         app.$message({
                             message: res.data.errorMessage || res.data.data || 'Error',
                             type: 'error',
@@ -6886,10 +6976,6 @@ var app = new Vue({
                     //输出列表 
                     let latestResultId = null
                     const findStreamingPlaceholderIndex = () => {
-                        if (!streamReady) {
-                            return -1
-                        }
-
                         if (this.promptStreamingTempResultId !== undefined && this.promptStreamingTempResultId !== null && this.promptStreamingTempResultId !== '') {
                             const exactMatchIndex = this.outputList.findIndex(outputItem =>
                                 String(outputItem.id) === String(this.promptStreamingTempResultId)
@@ -6921,8 +7007,10 @@ var app = new Vue({
                         }
                         latestResultId = normalized.id
                     })
+                    this.promptStreamingTempResultId = null
                     this.scrollToBtm(latestResultId)
                 }).catch(() => {
+                    this.clearOutputGeneratingPlaceholder()
                     this.closePromptStream()
                 })
         },

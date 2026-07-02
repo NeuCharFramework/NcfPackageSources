@@ -2930,6 +2930,17 @@ think::before {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
+.chat-message-generating.chat-message-assistant .chat-message-content-wrapper {
+    border: 2px solid transparent;
+    background-image: linear-gradient(#fff, #fff),
+                      linear-gradient(120deg, #ff4d4f, #ffa940, #fadb14, #73d13d, #36cfc9, #4096ff, #9254de, #f759ab, #ff4d4f);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    background-size: 100% 100%, 300% 300%;
+    background-position: 0 0, 0% 50%;
+    animation: prompt-streaming-rainbow 3s linear infinite;
+}
+
 /* 消息头像 */
 .chat-message-avatar {
     width: 36px;

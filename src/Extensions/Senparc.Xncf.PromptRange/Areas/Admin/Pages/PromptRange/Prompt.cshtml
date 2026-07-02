@@ -746,7 +746,7 @@
                         <i class="el-icon-chat-line-round"></i>
                         <span>暂无对话记录</span>
                     </div>
-                    <div v-for="(msg, idx) in continueChatHistory" :key="msg.id || `temp-${idx}`" class="chat-message-item" :class="{'chat-message-user': msg.roleType === 1, 'chat-message-assistant': msg.roleType === 2}">
+                    <div v-for="(msg, idx) in continueChatHistory" :key="msg.id || `temp-${idx}`" class="chat-message-item" :class="{'chat-message-user': msg.roleType === 1, 'chat-message-assistant': msg.roleType === 2, 'chat-message-generating': msg._generating}">
                         <div class="chat-message-avatar">
                             <i :class="msg.roleType === 1 ? 'el-icon-user' : 'el-icon-service'"></i>
                         </div>

@@ -1620,7 +1620,7 @@ var app = new Vue({
               }
               // 首次获取历史 + 开启实时流
               this.getTaskRecordListData(detailType, taskDetail.id, '', true)
-              this.startTaskHistoryStream(detailType, taskDetail.id)
+              this.startTaskHistoryStream(detailType, taskDetail.id, taskDetail.status)
             }
           } else {
             app.$message({
@@ -1648,6 +1648,9 @@ var app = new Vue({
               item.messageHtml = marked.parse(item.message);
               return item
             })
+            if (historiesData.length > 0) {
+              this.clearTaskGeneratingPlaceholder(recordType)
+            }
             // 任务
             if (recordType === 'task') {
               const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef('task'), isFirst)
@@ -2061,6 +2064,53 @@ var app = new Vue({
       if (listType === 'groupTask') return this.groupTaskHistoryList || []
       return []
     },
+    shouldShowTaskGenerating(status) {
+      return [1, 2].includes(Number(status))
+    },
+    buildTaskGeneratingItem(listType, chatTaskId) {
+      const nowIso = new Date().toISOString()
+      return {
+        id: `${listType}:generating:${chatTaskId || 'unknown'}`,
+        fromAgentTemplateId: 0,
+        addTime: nowIso,
+        message: 'Generating...',
+        messageHtml: marked.parse('Generating...'),
+        promptTokens: 0,
+        completionTokens: 0,
+        totalTokens: 0,
+        responseMilliseconds: 0,
+        roundIndex: 0,
+        _streaming: true,
+        _generating: true,
+        _streamAgentName: 'Generating...'
+      }
+    },
+    ensureTaskGeneratingPlaceholder(listType, chatTaskId) {
+      if (!listType) return
+      const historyList = this.getHistoryListByType(listType).slice()
+      const existedIndex = historyList.findIndex(item => item && item._generating)
+      if (existedIndex > -1) {
+        return historyList[existedIndex]
+      }
+
+      const placeholder = this.buildTaskGeneratingItem(listType, chatTaskId)
+      historyList.push(placeholder)
+      this.setHistoryListByType(listType, historyList)
+      this.$nextTick(() => {
+        this.scrollHistoryToItemBottom(listType, placeholder.id)
+      })
+      return placeholder
+    },
+    clearTaskGeneratingPlaceholder(listType) {
+      if (!listType) return
+      const historyList = this.getHistoryListByType(listType)
+      if (!Array.isArray(historyList) || historyList.length === 0) return
+
+      const filtered = historyList.filter(item => !item || item._generating !== true)
+      if (filtered.length !== historyList.length) {
+        this.setHistoryListByType(listType, filtered)
+      }
+    },
     getLatestPersistedHistoryId(listType) {
       const historyList = this.getHistoryListByType(listType)
       if (!Array.isArray(historyList) || historyList.length === 0) return 0
@@ -2152,8 +2202,16 @@ var app = new Vue({
         }
       })
     },
-    startTaskHistoryStream(listType, chatTaskId) {
-      if (!listType || !chatTaskId || typeof EventSource === 'undefined') {
+    startTaskHistoryStream(listType, chatTaskId, taskStatus) {
+      if (!listType || !chatTaskId) {
+        return
+      }
+
+      if (this.shouldShowTaskGenerating(taskStatus)) {
+        this.ensureTaskGeneratingPlaceholder(listType, chatTaskId)
+      }
+
+      if (typeof EventSource === 'undefined') {
         this.pollGetTaskHistoryData(listType, this.getTaskRecordListData, chatTaskId)
         return
       }
@@ -2164,28 +2222,51 @@ var app = new Vue({
       this.historyStream[listType] = source
       this.resetTaskHistoryStreamSilentTimer(listType, chatTaskId)
 
+      const rearmSilentTimer = () => {
+        if (this.historyStream[listType] !== source) return
+        this.resetTaskHistoryStreamSilentTimer(listType, chatTaskId)
+      }
+
       const onChunk = (event) => {
         if (this.historyStream[listType] !== source) return
         this.clearTaskHistoryStreamSilentTimer(listType)
+        this.clearTaskGeneratingPlaceholder(listType)
         this.upsertTaskStreamChunk(listType, event)
+        rearmSilentTimer()
       }
       const onMessage = (event) => {
         if (this.historyStream[listType] !== source) return
         this.clearTaskHistoryStreamSilentTimer(listType)
+        this.clearTaskGeneratingPlaceholder(listType)
         this.flushTaskStreamMessage(listType, event)
+        rearmSilentTimer()
       }
       const onStatus = (event) => {
         if (this.historyStream[listType] !== source) return
         this.clearTaskHistoryStreamSilentTimer(listType)
         const payload = this.safeParseStreamEvent(event)
-        if (!payload || !payload.text) return
+        if (!payload || !payload.text) {
+          rearmSilentTimer()
+          return
+        }
 
         const statusText = String(payload.text).toLowerCase()
         const finishedStates = ['finished', 'cancelled']
         if (finishedStates.includes(statusText)) {
           this.closeTaskHistoryStream(listType)
+          this.clearTaskGeneratingPlaceholder(listType)
           this.pullTaskHistoryAfterStreamClosed(listType, chatTaskId)
+          return
         }
+
+        const statusCodeMap = {
+          chatting: 1,
+          paused: 2
+        }
+        if (this.shouldShowTaskGenerating(statusCodeMap[statusText])) {
+          this.ensureTaskGeneratingPlaceholder(listType, chatTaskId)
+        }
+        rearmSilentTimer()
       }
 
       source.addEventListener('chunk', onChunk)
@@ -2196,6 +2277,7 @@ var app = new Vue({
         if (this.historyStream[listType] !== source) return
         this.clearTaskHistoryStreamSilentTimer(listType)
         this.closeTaskHistoryStream(listType)
+        this.clearTaskGeneratingPlaceholder(listType)
         this.pullTaskHistoryAfterStreamClosed(listType, chatTaskId)
         this.pollGetTaskHistoryData(listType, this.getTaskRecordListData, chatTaskId)
       }
@@ -2221,8 +2303,13 @@ var app = new Vue({
           const taskStatus = Number(statusRes?.data?.data?.chatTaskDto?.status)
           if ([3, 4].includes(taskStatus)) {
             this.closeTaskHistoryStream(listType)
+            this.clearTaskGeneratingPlaceholder(listType)
             this.pullTaskHistoryAfterStreamClosed(listType, chatTaskId)
             return
+          }
+
+          if (this.shouldShowTaskGenerating(taskStatus)) {
+            this.ensureTaskGeneratingPlaceholder(listType, chatTaskId)
           }
         } catch (e) {
           console.warn('stream silent fallback status check failed', listType, chatTaskId, e)
@@ -2247,7 +2334,7 @@ var app = new Vue({
 
       const draftKey = `${listType}:${payload.responseId}`
       const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef(listType), false)
-      const historyList = this.getHistoryListByType(listType).slice()
+      const historyList = this.getHistoryListByType(listType).filter(item => !item || item._generating !== true).slice()
       const existedIndex = historyList.findIndex(item => item.id === draftKey)
       const agentInfo = this.getTaskSenderInfo(listType, payload.fromAgentTemplateId || 0) || {}
       const oldMessage = existedIndex > -1 ? (historyList[existedIndex].message || '') : ''
@@ -2287,7 +2374,7 @@ var app = new Vue({
 
       const draftKey = payload.responseId ? `${listType}:${payload.responseId}` : ''
       const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef(listType), false)
-      const historyList = this.getHistoryListByType(listType).slice()
+      const historyList = this.getHistoryListByType(listType).filter(item => !item || item._generating !== true).slice()
       if (draftKey) {
         const draftIndex = historyList.findIndex(item => item.id === draftKey)
         if (draftIndex > -1) {
@@ -2324,6 +2411,7 @@ var app = new Vue({
         source.close()
       }
       this.$delete(this.historyStream, listType)
+      this.clearTaskGeneratingPlaceholder(listType)
     },
     clearTaskHistoryStreams() {
       Object.keys(this.historyStream || {}).forEach((key) => {
@@ -3712,6 +3800,13 @@ var app = new Vue({
       }
     },
     // 获取发送人名称
+    getTaskSenderName(taskType, historyItem) {
+      const sender = this.getTaskSenderInfo(taskType, historyItem?.fromAgentTemplateId)
+      if (sender && sender.name) {
+        return sender.name
+      }
+      return historyItem?._streamAgentName || (historyItem?._generating ? 'Generating...' : '')
+    },
     getTaskSenderInfo(taskType, formId) {
       // 智能体 组 任务
       if (taskType === 'agentGroupTask') {
