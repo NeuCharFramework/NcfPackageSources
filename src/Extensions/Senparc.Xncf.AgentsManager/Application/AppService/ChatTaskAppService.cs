@@ -28,7 +28,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
-        public async Task<AppResponseBase<ChatTask_GetListResponse>> GetList(int chatGroupId, int agentTemplateId, int pageIndex, int pageSize, string filter = "")
+        public async Task<AppResponseBase<ChatTask_GetListResponse>> GetList(int chatGroupId, int agentTemplateId, int pageIndex, int pageSize, string filter = "", int archiveScope = 2)
         {
             return await this.GetResponseAsync<ChatTask_GetListResponse>(async (response, logger) =>
                   {
@@ -47,6 +47,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                       seh.ValueCompare
                           .AndAlso(chatGroupId > 0, z => z.ChatGroupId == chatGroupId)
                           .AndAlso(agentTemplateId > 0, z => chatGroupIdList.Contains(z.ChatGroupId));
+                      // 归档筛选：0=活动（未归档），1=已归档，2=全部
+                      seh.ValueCompare
+                          .AndAlso(archiveScope == 0, z => z.IsArchived == false)
+                          .AndAlso(archiveScope == 1, z => z.IsArchived == true);
                       //增加模糊搜索任务
                       seh.ValueCompare.AndAlso(!string.IsNullOrEmpty(filter), _ => _.Name.Contains(filter));
                       var where = seh.BuildWhereExpression();
@@ -58,6 +62,22 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                           ChatTaskList = this._chatTaskService.Mapping<ChatTaskDto>(list)
                       };
                   });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<string>> SetArchiveStatus(int id, bool isArchived)
+        {
+            return await this.GetResponseAsync<string>(async (response, logger) =>
+            {
+                var task = await _chatTaskService.GetObjectAsync(z => z.Id == id);
+                if (task == null)
+                {
+                    return $"任务不存在：{id}";
+                }
+
+                await _chatTaskService.SetArchiveStatus(task, isArchived);
+                return isArchived ? "归档成功" : "已取消归档";
+            });
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]

@@ -17,6 +17,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AreaBase.Admin.Filters;
 using System.Text.Json;
@@ -44,6 +45,11 @@ public class ChatTaskStreamController : ControllerBase
         Response.Headers.CacheControl = "no-cache";
         Response.Headers.Connection = "keep-alive";
         Response.Headers.ContentType = "text/event-stream";
+        HttpContext.Features.Get<IHttpResponseBodyFeature>()?.DisableBuffering();
+
+        // 先发送连接确认，确保 EventSource 尽快进入已连接状态并减少代理缓冲影响。
+        await Response.WriteAsync(": connected\n\n", cancellationToken);
+        await Response.Body.FlushAsync(cancellationToken);
 
         await foreach (var streamEvent in _chatTaskStreamHub.Subscribe(chatTaskId, cancellationToken))
         {

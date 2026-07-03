@@ -445,6 +445,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             var roundIndex = 0;
             var shouldExit = false;
             var finalizedResponseKeys = new HashSet<string>(StringComparer.Ordinal);
+            var streamedResponseKeys = new HashSet<string>(StringComparer.Ordinal);
             var observedWorkflowEventTypes = new HashSet<string>(StringComparer.Ordinal);
             var workflowFailed = false;
             var workflowFailureReason = string.Empty;
@@ -483,6 +484,19 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
                 if (TryResolveRuntimeContext(contextByExecutorId, executorId, out var speakerContext))
                 {
+                    if (!string.IsNullOrWhiteSpace(responseKey)
+                        && !streamedResponseKeys.Contains(responseKey))
+                    {
+                        await PublishSyntheticChunkEventsAsync(
+                            chatTask.Id,
+                            speakerContext.TemplateDto.Id,
+                            speakerContext.Agent.Name,
+                            responseKey,
+                            normalizedText,
+                            roundIndex);
+                        streamedResponseKeys.Add(responseKey);
+                    }
+
                     var history = await SaveAgentMessageAsync(
                         speakerContext,
                         normalizedText,
@@ -624,18 +638,20 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                         activeResponseStartedAt = DateTime.Now;
                                     }
 
-                                    if (!string.IsNullOrEmpty(updateEvent.Update.Text))
+                                    var updateText = ExtractAgentResponseUpdateText(updateEvent.Update);
+                                    if (!string.IsNullOrEmpty(updateText))
                                     {
-                                        activeResponseText.Append(updateEvent.Update.Text);
+                                        activeResponseText.Append(updateText);
 
                                         if (TryResolveRuntimeContext(contextByExecutorId, updateEvent.ExecutorId, out var streamContext))
                                         {
+                                            streamedResponseKeys.Add(responseId);
                                             PublishChunkEvent(
                                                 chatTask.Id,
                                                 streamContext.TemplateDto.Id,
                                                 streamContext.Agent.Name,
                                                 responseId,
-                                                updateEvent.Update.Text,
+                                                updateText,
                                                 roundIndex + 1);
                                         }
                                     }
@@ -744,17 +760,19 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                                     activeResponseStartedAt = DateTime.Now;
                                                 }
 
-                                                if (!string.IsNullOrEmpty(outputUpdate.Text))
+                                                var updateText = ExtractAgentResponseUpdateText(outputUpdate);
+                                                if (!string.IsNullOrEmpty(updateText))
                                                 {
-                                                    activeResponseText.Append(outputUpdate.Text);
+                                                    activeResponseText.Append(updateText);
                                                     if (TryResolveRuntimeContext(contextByExecutorId, executorId, out var streamContext))
                                                     {
+                                                        streamedResponseKeys.Add(responseId);
                                                         PublishChunkEvent(
                                                             chatTask.Id,
                                                             streamContext.TemplateDto.Id,
                                                             streamContext.Agent.Name,
                                                             responseId,
-                                                            outputUpdate.Text,
+                                                            updateText,
                                                             roundIndex + 1);
                                                     }
                                                 }
@@ -1225,6 +1243,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         var responseId = Guid.NewGuid().ToString("n");
         var responseStartedAt = DateTime.Now;
         var streamedOutput = new StringBuilder();
+        var hasStreamedChunk = false;
 
         try
         {
@@ -1233,15 +1252,17 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 userCommand,
                 update =>
                 {
-                    if (!string.IsNullOrEmpty(update?.Text))
+                    var updateText = ExtractAgentResponseUpdateText(update);
+                    if (!string.IsNullOrEmpty(updateText))
                     {
-                        streamedOutput.Append(update.Text);
+                        streamedOutput.Append(updateText);
+                        hasStreamedChunk = true;
                         PublishChunkEvent(
                             chatTask.Id,
                             agentContext.TemplateDto.Id,
                             agentContext.Agent.Name,
                             responseId,
-                            update.Text,
+                            updateText,
                             roundIndex);
                     }
 
@@ -1267,6 +1288,18 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     Math.Max(0, (int)Math.Round((DateTime.Now - responseStartedAt).TotalMilliseconds)),
                     roundIndex,
                     responseId);
+
+                if (!hasStreamedChunk)
+                {
+                    await PublishSyntheticChunkEventsAsync(
+                        chatTask.Id,
+                        agentContext.TemplateDto.Id,
+                        agentContext.Agent.Name,
+                        responseId,
+                        output,
+                        roundIndex);
+                    hasStreamedChunk = true;
+                }
 
                 var history = await SaveAgentMessageAsync(
                     agentContext,
@@ -1323,6 +1356,18 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         roundIndex,
                         responseId);
 
+                    if (!hasStreamedChunk)
+                    {
+                        await PublishSyntheticChunkEventsAsync(
+                            chatTask.Id,
+                            agentContext.TemplateDto.Id,
+                            agentContext.Agent.Name,
+                            responseId,
+                            fallbackResult.Output,
+                            roundIndex);
+                        hasStreamedChunk = true;
+                    }
+
                     var fallbackHistory = await SaveAgentMessageAsync(
                         agentContext,
                         fallbackResult.Output,
@@ -1366,6 +1411,18 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 Math.Max(0, (int)Math.Round((DateTime.Now - responseStartedAt).TotalMilliseconds)),
                 roundIndex,
                 responseId);
+
+            if (!hasStreamedChunk)
+            {
+                await PublishSyntheticChunkEventsAsync(
+                    chatTask.Id,
+                    agentContext.TemplateDto.Id,
+                    agentContext.Agent.Name,
+                    responseId,
+                    errorMessage,
+                    roundIndex);
+                hasStreamedChunk = true;
+            }
 
             var history = await SaveAgentMessageAsync(
                 agentContext,
@@ -1725,6 +1782,105 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         }
 
         return chatMessage.ToString() ?? string.Empty;
+    }
+
+    private static string ExtractAgentResponseUpdateText(AgentResponseUpdate update)
+    {
+        if (update == null)
+        {
+            return string.Empty;
+        }
+
+        if (!string.IsNullOrWhiteSpace(update.Text))
+        {
+            return update.Text;
+        }
+
+        var textSegments = update.Contents?
+            .OfType<TextContent>()
+            .Select(z => z.Text)
+            .Where(z => !string.IsNullOrWhiteSpace(z))
+            .ToList();
+
+        if (textSegments?.Count > 0)
+        {
+            return string.Join(Environment.NewLine, textSegments);
+        }
+
+        // 只认真实文本内容，避免把 ToString() 结果误判为“已流式输出”，
+        // 从而错过后续 synthetic chunk 回退。
+        return string.Empty;
+    }
+
+    private async Task PublishSyntheticChunkEventsAsync(
+        int chatTaskId,
+        int? fromAgentTemplateId,
+        string fromAgentName,
+        string responseId,
+        string text,
+        int roundIndex)
+    {
+        if (string.IsNullOrWhiteSpace(responseId) || string.IsNullOrWhiteSpace(text))
+        {
+            return;
+        }
+
+        var chunkList = SplitStreamText(text).ToList();
+        if (chunkList.Count == 0)
+        {
+            return;
+        }
+
+        for (var i = 0; i < chunkList.Count; i++)
+        {
+            PublishChunkEvent(
+                chatTaskId,
+                fromAgentTemplateId,
+                fromAgentName,
+                responseId,
+                chunkList[i],
+                roundIndex);
+
+            if (i < chunkList.Count - 1)
+            {
+                // 适当拉开 synthetic chunk 的间隔，避免前端视觉上“整段瞬出”。
+                await Task.Delay(28);
+            }
+        }
+    }
+
+    private static IEnumerable<string> SplitStreamText(string text, int maxChunkLength = 24)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            yield break;
+        }
+
+        var buffer = new StringBuilder();
+        foreach (var ch in text)
+        {
+            buffer.Append(ch);
+            if (ShouldBreakStreamChunk(ch, buffer.Length, maxChunkLength))
+            {
+                yield return buffer.ToString();
+                buffer.Clear();
+            }
+        }
+
+        if (buffer.Length > 0)
+        {
+            yield return buffer.ToString();
+        }
+    }
+
+    private static bool ShouldBreakStreamChunk(char ch, int currentLength, int maxChunkLength)
+    {
+        if (currentLength >= maxChunkLength)
+        {
+            return true;
+        }
+
+        return ch is '\n' or '。' or '！' or '？' or '!' or '?' or ';' or '；' or '，' or ',';
     }
 
     private static string BuildAgentExecutionFailureMessage(Exception ex)

@@ -204,7 +204,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
 
                     foreach (var c in candidates.Take(topN))
                     {
-                        logger.Append($"  ID={c.Id} | 名称={c.Name} | PromptCode={c.PromptCode}");
+                        logger.Append($"  ID={c.Id} | 名称={c.Name} | PromptCode={c.PromptCode}{System.Environment.NewLine}");
                     }
                 }
 

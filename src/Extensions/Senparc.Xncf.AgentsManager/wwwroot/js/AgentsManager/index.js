@@ -240,6 +240,13 @@ var app = new Vue({
         stop: false, // 停用
         stand: false, // 待命
       },
+      taskArchiveScope: 'active', // active | archived | all
+      taskArchiveScopeOptions: [
+        { label: '活动', value: 'active' },
+        { label: '归档', value: 'archived' },
+        { label: '全部', value: 'all' }
+      ],
+      taskArchiveSavingId: 0,
       taskFCPVisible: false, // 任务模块 筛选条件 popover 显隐
       taskFilterCriteria: [
         {
@@ -1371,6 +1378,7 @@ var app = new Vue({
       if (listType === 'task') {
         this.taskQueryList.pageIndex = page ?? 1
         Object.assign(queryList, this.taskQueryList)
+        queryList.archiveScope = this.getTaskArchiveScopeCode()
       }
       // 智能体 任务
       if (listType === 'agentTask') {
@@ -1440,6 +1448,10 @@ var app = new Vue({
               if (handleTaskData && handleTaskData.length) {
                 const taskDetail = pickTaskForView(handleTaskData, this.taskDetails?.id)
                 if (taskDetail) {
+                  if (preferLatest) {
+                    const latestIndex = handleTaskData.findIndex(task => String(task.id) === String(taskDetail.id))
+                    this.scrollbarTaskIndex = latestIndex > -1 ? latestIndex : 0
+                  }
                   this.getTaskDetailData(listType, taskDetail.id, taskDetail)
                 }
               }
@@ -1454,6 +1466,11 @@ var app = new Vue({
               if (handleTaskData && handleTaskData.length) {
                 const taskDetail = pickTaskForView(handleTaskData, this.agentDetailsTaskDetails?.id)
                 if (taskDetail) {
+                  if (preferLatest) {
+                    const latestIndex = handleTaskData.findIndex(task => String(task.id) === String(taskDetail.id))
+                    this.agentDetailsTaskIndex = latestIndex > -1 ? latestIndex : 0
+                    this.agentDetailsTabsActiveName = 'second'
+                  }
                   this.getTaskDetailData(listType, taskDetail.id, taskDetail)
                 }
               }
@@ -1467,6 +1484,7 @@ var app = new Vue({
               if (preferLatest && handleTaskData.length) {
                 const taskDetail = pickTaskForView(handleTaskData, this.agentDetailsGroupDetailsTaskDetails?.id)
                 if (taskDetail) {
+                  this.agentDetailsGroupShowType = '2'
                   this.getTaskDetailData(listType, taskDetail.id, taskDetail)
                 }
               }
@@ -1480,6 +1498,7 @@ var app = new Vue({
               if (preferLatest && handleTaskData.length) {
                 const taskDetail = pickTaskForView(handleTaskData, this.groupTaskDetails?.id)
                 if (taskDetail) {
+                  this.groupShowType = '3'
                   this.getTaskDetailData(listType, taskDetail.id, taskDetail)
                 }
               }
@@ -1517,7 +1536,8 @@ var app = new Vue({
     },
     buildTaskRefreshOptions(listType, baseOptions = {}, saveType = '') {
       const options = Object.assign({}, baseOptions)
-      if (saveType !== 'drawerTaskStart') {
+      const isStartTaskSave = ['drawerTaskStart', 'drawerGroupStart'].includes(saveType)
+      if (!isStartTaskSave) {
         return options
       }
 
@@ -1857,8 +1877,61 @@ var app = new Vue({
     formatTaskHistoryUsage(history) {
       const totalTokens = history?.totalTokens || 0
       const responseMs = history?.responseMilliseconds || 0
-      const roundText = history?.roundIndex ? `R${history.roundIndex} · ` : ''
-      return `${roundText}Token:${totalTokens} · ${responseMs}ms`
+      const roundText = history?.roundIndex ? `R${history.roundIndex} - ` : ''
+      return `${roundText}Token: ${totalTokens}${responseMs > 0 ? ` · ${responseMs}ms` : ''}`
+    },
+    getTaskArchiveScopeCode(scope = this.taskArchiveScope) {
+      const scopeMap = {
+        active: 0,
+        archived: 1,
+        all: 2
+      }
+      return scopeMap[scope] ?? 0
+    },
+    setTaskArchiveScope(scope) {
+      if (!scope || this.taskArchiveScope === scope) return
+      this.taskArchiveScope = scope
+      this.clearHistoryTimer()
+      this.scrollbarTaskIndex = ''
+      this.taskDetails = ''
+      this.taskHistoryList = []
+      this.taskMemberList = []
+      this.taskMemberfilter = ''
+      this.taskMemberfilterList = []
+      this.gettaskListData('task')
+      this.syncHashRoute({ tab: 'third', taskId: null })
+    },
+    async handleTaskArchiveToggle(item) {
+      if (!item || !item.id) return
+      const nextArchived = !item.isArchived
+      const actionText = nextArchived ? '归档' : '取消归档'
+      this.taskArchiveSavingId = item.id
+      try {
+        const response = await serviceAM.post(
+          `/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.SetArchiveStatus?id=${item.id}&isArchived=${nextArchived}`
+        )
+        const data = response?.data ?? {}
+        if (!data.success) {
+          this.$message.error(data.errorMessage || data.data || `${actionText}失败`)
+          return
+        }
+
+        this.$message.success(`${actionText}成功`)
+        const currentTaskId = Number(this.taskDetails?.id || 0)
+        if (currentTaskId === Number(item.id) && this.taskArchiveScope !== 'all' && this.taskArchiveScope !== (nextArchived ? 'archived' : 'active')) {
+          this.scrollbarTaskIndex = ''
+          this.taskDetails = ''
+          this.taskHistoryList = []
+          this.taskMemberList = []
+          this.taskMemberfilter = ''
+          this.taskMemberfilterList = []
+        }
+        this.gettaskListData('task')
+      } catch (error) {
+        this.$message.error(`${actionText}失败：${error?.message || '未知错误'}`)
+      } finally {
+        this.taskArchiveSavingId = 0
+      }
     },
     // 保存 submitForm 数据
     async saveSubmitFormData(saveType, serviceForm = {}) {
@@ -1938,13 +2011,14 @@ var app = new Vue({
           // 重新获取数据
           if (['drawerGroup', 'drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
             console.log('#***#', this.tabsActiveName, this.agentDetails);
+            const isStartTaskSave = ['drawerTaskStart', 'drawerGroupStart'].includes(saveType)
 
             if (this.tabsActiveName === 'first') {
               // agentTemplateStatus
               if (this.agentDetails) {
                 const id = this.agentDetails.agentTemplateDto ? this.agentDetails.agentTemplateDto.id : this.agentDetails.id
                 if (this.agentDetailsTabsActiveName === 'first') {
-                  if (saveType === 'drawerTaskStart') {
+                  if (isStartTaskSave) {
                     const focusChatGroupId = serviceForm?.chatGroupId
                       || this.agentDetailsGroupDetailsTaskDetails?.chatGroupId
                       || this.agentDetailsGroupDetails?.chatGroupDto?.id
@@ -1963,14 +2037,14 @@ var app = new Vue({
                   }
                 } else {
                   const refreshOptions = this.buildTaskRefreshOptions('agentTask', {
-                    preferLatest: saveType === 'drawerTaskStart',
+                    preferLatest: isStartTaskSave,
                     focusChatGroupId: serviceForm?.chatGroupId || ''
                   }, saveType)
                   this.gettaskListData('agentTask', id, 0, refreshOptions)
                 }
               }
             } else if (this.tabsActiveName === 'second') {
-              if (saveType === 'drawerTaskStart') {
+              if (isStartTaskSave) {
                 const focusChatGroupId = serviceForm?.chatGroupId
                   || this.groupTaskDetails?.chatGroupId
                   || this.groupDetails?.chatGroupDto?.id
@@ -1989,7 +2063,7 @@ var app = new Vue({
               }
             } else {
               const refreshOptions = this.buildTaskRefreshOptions('task', {
-                preferLatest: saveType === 'drawerTaskStart',
+                preferLatest: isStartTaskSave,
                 focusChatGroupId: serviceForm?.chatGroupId || ''
               }, saveType)
               this.gettaskListData('task', '', 0, refreshOptions)
@@ -2207,6 +2281,8 @@ var app = new Vue({
         return
       }
 
+      this.closeTaskHistoryStream(listType)
+
       if (this.shouldShowTaskGenerating(taskStatus)) {
         this.ensureTaskGeneratingPlaceholder(listType, chatTaskId)
       }
@@ -2216,7 +2292,6 @@ var app = new Vue({
         return
       }
 
-      this.closeTaskHistoryStream(listType)
       const streamUrl = `/api/Senparc.Xncf.AgentsManager/ChatTaskStream/Subscribe?chatTaskId=${chatTaskId}&_ts=${Date.now()}`
       const source = new EventSource(streamUrl, { withCredentials: true })
       this.historyStream[listType] = source
@@ -2403,6 +2478,11 @@ var app = new Vue({
         if (!shouldAutoFollow) return
         this.scrollHistoryToItemBottom(listType, finalItem.id)
       })
+
+      // 每轮 message 落地后立即补一个 Generating 占位，确保下一轮也有可见彩虹提示。
+      if (this.historyStream[listType]) {
+        this.ensureTaskGeneratingPlaceholder(listType, payload.chatTaskId || '')
+      }
     },
     closeTaskHistoryStream(listType) {
       this.clearTaskHistoryStreamSilentTimer(listType)

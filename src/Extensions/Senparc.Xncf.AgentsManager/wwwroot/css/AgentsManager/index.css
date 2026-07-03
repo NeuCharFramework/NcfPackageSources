@@ -197,6 +197,58 @@ height:100%;
     background: rgba(42, 130, 228, 0.1);
 }
 
+.task-archive-scope-tabs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 20px 8px;
+}
+
+.task-archive-scope-tab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    padding: 0 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(220, 223, 230, 1);
+    color: #606266;
+    font-size: 12px;
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+}
+
+.task-archive-scope-tab-active {
+    border-color: #409eff;
+    color: #409eff;
+    background: rgba(64, 158, 255, 0.1);
+}
+
+.sidebar-taskitem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 45px;
+    line-height: normal;
+}
+
+.sidebar-taskitem-name {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.sidebar-taskitem-archive {
+    flex: 0 0 auto;
+    opacity: 0;
+    transition: opacity .15s ease;
+}
+
+.sidebar-taskitem:hover .sidebar-taskitem-archive,
+.sidebar-taskitem.sidebar-agentitem_active .sidebar-taskitem-archive {
+    opacity: 1;
+}
+
 /* 智能体列表 */
 .agent-container {
     padding: 5px;
@@ -1368,6 +1420,15 @@ height:100%;
     font-size: 12px;
     font-weight: 400;
     color: rgba(171, 173, 176, 1);
+}
+
+.taskrecord-item-meta-top>.usage-inline {
+    margin-left: 10px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: #2a82e4;
+    background: rgba(42, 130, 228, 0.12);
 }
 
 .taskrecord-item-meta-bottom {

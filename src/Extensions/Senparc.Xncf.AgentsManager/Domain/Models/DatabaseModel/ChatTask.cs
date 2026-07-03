@@ -28,6 +28,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
 
         public bool Score { get; private set; }
 
+        /// <summary>
+        /// 是否已归档
+        /// </summary>
+        [Required]
+        public bool IsArchived { get; private set; }
+
         [Required]
         public DateTime StartTime { get; private set; }
         [Required]
@@ -67,7 +73,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
             ResultComment = resultComment;
             HookPlatform = hookPlatform;
             HookPlatformParameter = hookPlatformParameter;
-                  }
+            IsArchived = false;
+        }
 
         public ChatTask(ChatTaskDto chatTaskDto)
         {
@@ -84,6 +91,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
             ResultComment = chatTaskDto.ResultComment;
             HookPlatform = chatTaskDto.HookPlatform;
             HookPlatformParameter = chatTaskDto.HookPlatformParameter;
+            IsArchived = chatTaskDto.IsArchived;
         }
 
         public void ChangeStatus(ChatTask_Status status)
@@ -93,6 +101,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
             {
                 EndTime = DateTime.Now;
             }
+        }
+
+        public void SetArchived(bool isArchived)
+        {
+            IsArchived = isArchived;
         }
 
     }

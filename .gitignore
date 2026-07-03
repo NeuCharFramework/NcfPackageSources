@@ -115,3 +115,4 @@ tools/NcfDesktopApp.GUI/publish-self-contained/*
 .playwright-cli/
 tools/NcfSimulatedSite/ASPIRE_USAGE_GUIDE.md
 **/App_Data/Database/NewDB.DB*
+/NuGetPackages

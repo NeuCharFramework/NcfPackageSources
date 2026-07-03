@@ -43,6 +43,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
 
         public bool Score { get; set; }
 
+        public bool IsArchived { get; set; }
+
         [Required]
         public DateTime StartTime { get; set; }
         [Required]
@@ -89,6 +91,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
             Description = description;
             IsPersonality = isPersonality;
             Score = score;
+            IsArchived = false;
             StartTime = startTime;
             EndTime = endTime;
             ResultComment = resultComment;
@@ -106,6 +109,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
             Description = chatTask.Description;
             IsPersonality = chatTask.IsPersonality;
             Score = chatTask.Score;
+            IsArchived = chatTask.IsArchived;
             StartTime = chatTask.StartTime;
             EndTime = chatTask.EndTime;
             ResultComment = chatTask.ResultComment;

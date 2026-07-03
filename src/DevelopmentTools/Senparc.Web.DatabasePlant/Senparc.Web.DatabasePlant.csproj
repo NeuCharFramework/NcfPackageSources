@@ -14,7 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\tools\NcfSimulatedSite\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
+	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.AgentsManager\Senparc.Xncf.AgentsManager.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -27,17 +27,50 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
 public sealed class ChatTaskStreamHub
 {
-    private readonly ConcurrentDictionary<int, ConcurrentDictionary<Guid, Channel<ChatTaskStreamEvent>>> _subscribers = new();
+    private sealed class StreamGroup
+    {
+        public readonly object Sync = new();
+        public readonly List<ChatTaskStreamEvent> Buffer = new();
+        public readonly ConcurrentDictionary<Guid, Channel<ChatTaskStreamEvent>> Subscribers = new();
+        public bool IsComplete;
+    }
+
+    private readonly ConcurrentDictionary<int, StreamGroup> _streams = new();
 
     public async IAsyncEnumerable<ChatTaskStreamEvent> Subscribe(
         int chatTaskId,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var group = _subscribers.GetOrAdd(chatTaskId, _ => new ConcurrentDictionary<Guid, Channel<ChatTaskStreamEvent>>());
+        if (chatTaskId <= 0)
+        {
+            yield break;
+        }
+
+        var group = _streams.GetOrAdd(chatTaskId, _ => new StreamGroup());
         var subscriptionId = Guid.NewGuid();
         var channel = Channel.CreateUnbounded<ChatTaskStreamEvent>();
+        group.Subscribers[subscriptionId] = channel;
 
-        group[subscriptionId] = channel;
+        List<ChatTaskStreamEvent> bufferedEvents;
+        lock (group.Sync)
+        {
+            bufferedEvents = new List<ChatTaskStreamEvent>(group.Buffer);
+        }
+
+        DateTimeOffset? previousBufferedTimestamp = null;
+        foreach (var bufferedEvent in bufferedEvents)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var replayDelayMs = GetBufferedReplayDelayMilliseconds(bufferedEvent, previousBufferedTimestamp);
+            if (replayDelayMs > 0)
+            {
+                await Task.Delay(replayDelayMs, cancellationToken);
+            }
+
+            previousBufferedTimestamp = bufferedEvent.Timestamp;
+            yield return bufferedEvent;
+        }
 
         try
         {
@@ -48,11 +81,8 @@ public sealed class ChatTaskStreamHub
         }
         finally
         {
-            group.TryRemove(subscriptionId, out _);
-            if (group.IsEmpty)
-            {
-                _subscribers.TryRemove(chatTaskId, out _);
-            }
+            group.Subscribers.TryRemove(subscriptionId, out _);
+            CleanupStreamIfFinished(chatTaskId, group);
         }
     }
 
@@ -63,19 +93,86 @@ public sealed class ChatTaskStreamHub
             return;
         }
 
-        if (!_subscribers.TryGetValue(item.ChatTaskId, out var group) || group.IsEmpty)
+        var group = _streams.GetOrAdd(item.ChatTaskId, _ => new StreamGroup());
+        lock (group.Sync)
+        {
+            group.Buffer.Add(item);
+            if (IsTerminalStatusEvent(item))
+            {
+                group.IsComplete = true;
+            }
+        }
+
+        if (group.Subscribers.IsEmpty)
         {
             return;
         }
 
-        foreach (var pair in group)
+        foreach (var pair in group.Subscribers)
         {
             if (!pair.Value.Writer.TryWrite(item))
             {
                 pair.Value.Writer.TryComplete();
-                group.TryRemove(pair.Key, out _);
+                group.Subscribers.TryRemove(pair.Key, out _);
             }
         }
+
+        if (group.IsComplete)
+        {
+            CleanupStreamIfFinished(item.ChatTaskId, group);
+        }
+    }
+
+    private static bool IsTerminalStatusEvent(ChatTaskStreamEvent item)
+    {
+        return item != null
+            && string.Equals(item.EventType, "status", StringComparison.OrdinalIgnoreCase)
+            && item.IsFinal;
+    }
+
+    private static int GetBufferedReplayDelayMilliseconds(
+        ChatTaskStreamEvent currentItem,
+        DateTimeOffset? previousTimestamp)
+    {
+        if (currentItem == null || !previousTimestamp.HasValue)
+        {
+            return 0;
+        }
+
+        // status/message 事件保持即时，chunk 事件做轻量节奏回放，避免晚订阅时一次性刷屏。
+        if (!string.Equals(currentItem.EventType, "chunk", StringComparison.OrdinalIgnoreCase))
+        {
+            return 0;
+        }
+
+        var rawGapMs = (currentItem.Timestamp - previousTimestamp.Value).TotalMilliseconds;
+        if (rawGapMs <= 0 || rawGapMs > 300)
+        {
+            return 18;
+        }
+
+        var normalizedGap = (int)Math.Round(rawGapMs);
+        if (normalizedGap < 12)
+        {
+            return 12;
+        }
+
+        if (normalizedGap > 48)
+        {
+            return 48;
+        }
+
+        return normalizedGap;
+    }
+
+    private void CleanupStreamIfFinished(int chatTaskId, StreamGroup group)
+    {
+        if (!group.IsComplete || !group.Subscribers.IsEmpty)
+        {
+            return;
+        }
+
+        _streams.TryRemove(chatTaskId, out _);
     }
 }
 

@@ -479,9 +479,7 @@
                                                                 <span class="name">{{ getTaskSenderName('agentGroupTask', ritem) }}</span>
                                                                 <span class="time">{{ ritem.addTime | showFormatDate
                                                                     }}</span>
-                                                            </div>
-                                                            <div class="taskrecord-item-meta-bottom" v-if="ritem.totalTokens || ritem.responseMilliseconds">
-                                                                <span class="usage">{{ formatTaskHistoryUsage(ritem) }}</span>
+                                                                <span class="usage-inline" v-if="ritem.totalTokens || ritem.responseMilliseconds">{{ formatTaskHistoryUsage(ritem) }}</span>
                                                             </div>
                                                         </div>
                                                         <task-html-renderer :content="ritem.messageHtml" />
@@ -596,9 +594,7 @@
                                                             </span>
                                                             <span class="name">{{ getTaskSenderName('agentTask', ritem) }}</span>
                                                             <span class="time">{{ ritem.addTime | showFormatDate }}</span>
-                                                        </div>
-                                                        <div class="taskrecord-item-meta-bottom" v-if="ritem.totalTokens || ritem.responseMilliseconds">
-                                                            <span class="usage">{{ formatTaskHistoryUsage(ritem) }}</span>
+                                                            <span class="usage-inline" v-if="ritem.totalTokens || ritem.responseMilliseconds">{{ formatTaskHistoryUsage(ritem) }}</span>
                                                         </div>
                                                     </div>
                                                     <task-html-renderer :content="ritem.messageHtml" />
@@ -926,9 +922,7 @@
                                                 </span>
                                                 <span class="name">{{ getTaskSenderName('groupTask', ritem) }}</span>
                                                 <span class="time">{{ ritem.addTime | showFormatDate }}</span>
-                                            </div>
-                                            <div class="taskrecord-item-meta-bottom" v-if="ritem.totalTokens || ritem.responseMilliseconds">
-                                                <span class="usage">{{ formatTaskHistoryUsage(ritem) }}</span>
+                                                <span class="usage-inline" v-if="ritem.totalTokens || ritem.responseMilliseconds">{{ formatTaskHistoryUsage(ritem) }}</span>
                                             </div>
                                         </div>
                                         <task-html-renderer :content="ritem.messageHtml" />
@@ -968,6 +962,14 @@
                     <div class="df-wn flex-ac flex-jsb sidebar-title-row">
                         <div class="sidebar-titleRow-title text-ellipsis">任务列表</div>
                     </div>
+                    <div class="task-archive-scope-tabs">
+                        <span v-for="scope in taskArchiveScopeOptions" :key="scope.value"
+                            class="task-archive-scope-tab"
+                            :class="{ 'task-archive-scope-tab-active': taskArchiveScope === scope.value }"
+                            @@click="setTaskArchiveScope(scope.value)">
+                            {{ scope.label }}
+                        </span>
+                    </div>
                     <div class="df-wn flex-ac flex-jsb sidebar-search-row">
                         <el-input v-model="taskQueryList.filter" placeholder="请输入名称搜索" suffix-icon="el-icon-search"
                             class="sidebar-searchRow-input" @@change="handleFilterChange($event,'task')"></el-input>
@@ -1001,10 +1003,15 @@
                         :class="{'sidebar-agentitem_active':scrollbarTaskIndex === ''}" @@click="handleTaskViewAll">
                         全部任务
                     </div>
-                    <div v-for="(item,index) in taskList" :key="index" class="sidebar-agentitem text-ellipsis"
+                    <div v-for="(item,index) in taskList" :key="item.id || index" class="sidebar-agentitem sidebar-taskitem"
                         :class="{'sidebar-agentitem_active':scrollbarTaskIndex === index}" :title="item.name"
                         @@click="handleTaskView('task',item,index)">
-                        {{ item.name }}
+                        <span class="text-ellipsis sidebar-taskitem-name">{{ item.name }}</span>
+                        <el-button type="text" size="mini" class="sidebar-taskitem-archive"
+                            :loading="taskArchiveSavingId === item.id"
+                            @@click.stop="handleTaskArchiveToggle(item)">
+                            {{ item.isArchived ? '取消归档' : '归档' }}
+                        </el-button>
                     </div>
                     </template>
                     <div v-else class="df-wn flex-ac flex-jc emptyData"
@@ -1151,9 +1158,7 @@
                                                 </span>
                                                 <span class="name">{{ getTaskSenderName('task', ritem) }}</span>
                                                 <span class="time">{{ ritem.addTime | showFormatDate }}</span>
-                                            </div>
-                                            <div class="taskrecord-item-meta-bottom" v-if="ritem.totalTokens || ritem.responseMilliseconds">
-                                                <span class="usage">{{ formatTaskHistoryUsage(ritem) }}</span>
+                                                <span class="usage-inline" v-if="ritem.totalTokens || ritem.responseMilliseconds">{{ formatTaskHistoryUsage(ritem) }}</span>
                                             </div>
                                         </div>
                                         <task-html-renderer :content="ritem.messageHtml" />

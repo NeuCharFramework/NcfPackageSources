@@ -64,6 +64,17 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             //TODO 检查是否所有任务已经完成，如果完成则设置 ChatGroup 状态为闲置状态
         }
 
+        public async Task SetArchiveStatus(ChatTask chatTask, bool isArchived)
+        {
+            if (chatTask == null)
+            {
+                return;
+            }
+
+            chatTask.SetArchived(isArchived);
+            await base.SaveObjectAsync(chatTask);
+        }
+
         /// <summary>
         /// 关闭未完成的任务
         /// </summary>
