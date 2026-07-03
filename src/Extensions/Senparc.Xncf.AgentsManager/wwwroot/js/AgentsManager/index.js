@@ -3998,10 +3998,14 @@ var app = new Vue({
     jumpPromptRange(urlType, item) {
       let url = ''
       if (urlType === 'promptRange') {
-        // 靶场:targetrangeId   靶道:targetlaneId
-        let targetrangeId = item?.promptRange.id ?? ''
-        let targetlaneId = item?.id ?? ''
-        url = `/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18&targetrangeId=${targetrangeId}&targetlaneId=${targetlaneId}`
+        // 靶场:rangeId   靶道:promptId（hash 路由）
+        const rangeId = item?.promptRange?.id ?? ''
+        const promptId = item?.id ?? ''
+        if (rangeId && promptId) {
+          url = `/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18#rangeId=${rangeId}&promptId=${promptId}`
+        } else {
+          url = `/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18`
+        }
       }
       if (urlType === 'model') {
         url = `/Admin/AIKernel/Index?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69`
@@ -4863,7 +4867,14 @@ Vue.component('load-more-select', {
     jumpPromptRange(urlType) {
       let url = ''
       if (urlType === 'promptRange') {
-        url = `/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18`
+        const selectedPromptCode = typeof this.selectVal === 'string'
+          ? this.selectVal.trim()
+          : ''
+        if (selectedPromptCode) {
+          url = `/Admin/PromptRange/Prompt?handler=Resolve&uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18&promptCode=${encodeURIComponent(selectedPromptCode)}`
+        } else {
+          url = `/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18`
+        }
       }
       if (urlType === 'model') {
         url = `/Admin/AIKernel/Index?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69`

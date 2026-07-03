@@ -914,8 +914,18 @@ var app = new Vue({
             }, this.promptid, this.promptDetail?.fullVersion || '')
 
             placeholder._generating = true
-            this.outputList = [placeholder].concat(this.outputList || [])
+            this.outputList = (this.outputList || []).concat([placeholder])
+            this.forceScrollResultBoxToBottom()
             return placeholder.id
+        },
+        forceScrollResultBoxToBottom() {
+            this.$nextTick(() => {
+                const container = document.getElementById('resultBox')
+                if (!container) {
+                    return
+                }
+                container.scrollTop = container.scrollHeight
+            })
         },
         ensureContinueChatGeneratingMessage() {
             const now = new Date().toISOString()
@@ -1105,8 +1115,8 @@ var app = new Vue({
             }, this.promptid, this.promptDetail?.fullVersion || '')
             placeholder._generating = true
 
-            this.outputList = [placeholder].concat(this.outputList || [])
-            return 0
+            this.outputList = (this.outputList || []).concat([placeholder])
+            return this.outputList.length - 1
         },
         isStreamingResultItem(item) {
             if (!item) {
@@ -1142,6 +1152,7 @@ var app = new Vue({
             item.totalCostToken = payload.totalTokens || item.totalCostToken || 0
 
             this.$set(this.outputList, index, Object.assign({}, item))
+            this.forceScrollResultBoxToBottom()
         },
         handlePromptStreamFinal(payload, mode) {
             if (mode === 'continueChat') {
@@ -1163,6 +1174,7 @@ var app = new Vue({
             item.resultCostToken = payload.completionTokens || item.resultCostToken || 0
             item.totalCostToken = payload.totalTokens || item.totalCostToken || 0
             this.$set(this.outputList, index, Object.assign({}, item))
+            this.forceScrollResultBoxToBottom()
         },
         handleContinueChatStreamChunk(payload) {
             if (!this.continueChatMode) return
@@ -1925,6 +1937,9 @@ var app = new Vue({
                 // 但如果前端有保存的 userMessage，可以传递以保持一致性
                 await this.rapidFireHandel(id, this._lastUserMessage || null);
             }
+            // 连发结束后兜底清理最后一轮可能残留的 Generating 占位框
+            this.clearOutputGeneratingPlaceholder()
+            this.closePromptStream()
             // 从新获取靶场列表
             this.getPromptOptData()
             this.targetShootLoading = false
@@ -4258,7 +4273,8 @@ var app = new Vue({
                     }
 
                     if (this.autoShootAfterOptimize && this.autoAIGradeAfterShoot && this.outputList && this.outputList.length > 0) {
-                        const item = this.outputList[0];
+                        const latestIndex = this.outputList.length - 1;
+                        const item = this.outputList[latestIndex];
                         let filled = item.alResultList && item.alResultList.some(r => r && r.value);
                         if (!filled && this.aiScoreForm.resultList && this.aiScoreForm.resultList.some(r => r && r.value)) {
                             item.alResultList = this.aiScoreForm.resultList.map((x, idx) => ({
@@ -4287,7 +4303,7 @@ var app = new Vue({
                             this.optimizeProgressText = '正在 AI 评分（与手动 AI 评分相同）…';
                             item.scoreType = '1';
                             this.$set(this.robotScoreLoadingMap, item.id, true);
-                            await this.saveManualScore(item, 0);
+                            await this.saveManualScore(item, latestIndex);
                         } else {
                             this.$message.warning('未配置预期结果，已跳过 AI 评分');
                         }
@@ -6601,6 +6617,12 @@ var app = new Vue({
                     this.outputMaxDeci = evalMaxScore > -1 ? evalMaxScore : -1
                     this.outputList = promptResultList.map(item => this.normalizeOutputResultItem(item, id, fullVersion, promptItem))
                     this.promptStreamingTempResultId = null
+                    const latestResult = this.outputList.length > 0 ? this.outputList[this.outputList.length - 1] : null
+                    if (latestResult && latestResult.id !== undefined && latestResult.id !== null && latestResult.id !== '') {
+                        this.scrollToBtm(latestResult.id)
+                    } else {
+                        this.forceScrollResultBoxToBottom()
+                    }
                     
                     // 检查第一个结果的模式，如果不是 Chat 模式，清空保存的 userMessage
                     if (promptResultList.length > 0) {
@@ -7007,6 +7029,11 @@ var app = new Vue({
                         }
                         latestResultId = normalized.id
                     })
+                    if (!latestResultId) {
+                        this.clearOutputGeneratingPlaceholder()
+                        this.closePromptStream()
+                        return
+                    }
                     this.promptStreamingTempResultId = null
                     this.scrollToBtm(latestResultId)
                 }).catch(() => {
@@ -7045,6 +7072,12 @@ var app = new Vue({
                 let target = locateTarget()
                 if (target) {
                     target.scrollIntoView({ behavior, block: 'end' })
+                    const latestResult = Array.isArray(this.outputList) && this.outputList.length > 0
+                        ? this.outputList[this.outputList.length - 1]
+                        : null
+                    if (latestResult && String(latestResult.id) === String(resultId)) {
+                        container.scrollTop = container.scrollHeight
+                    }
                     return
                 }
 
@@ -7052,6 +7085,14 @@ var app = new Vue({
                     target = locateTarget()
                     if (target) {
                         target.scrollIntoView({ behavior, block: 'end' })
+                        const latestResult = Array.isArray(this.outputList) && this.outputList.length > 0
+                            ? this.outputList[this.outputList.length - 1]
+                            : null
+                        if (latestResult && String(latestResult.id) === String(resultId)) {
+                            container.scrollTop = container.scrollHeight
+                        }
+                    } else {
+                        container.scrollTop = container.scrollHeight
                     }
                 })
             })
