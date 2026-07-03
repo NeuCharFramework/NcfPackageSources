@@ -876,6 +876,10 @@ var app = new Vue({
             if (this.promptStreamSource) {
                 this.promptStreamSource.close()
             }
+            if (this._resultBoxScrollRafId) {
+                cancelAnimationFrame(this._resultBoxScrollRafId)
+                this._resultBoxScrollRafId = null
+            }
             this.promptStreamSource = null
             this.promptStreamId = ''
             this.promptStreaming = false
@@ -892,7 +896,11 @@ var app = new Vue({
             this.outputList = this.outputList.filter(item => {
                 if (!item) return false
                 if (item._generating === true) return false
-                if (knownId && String(item.id) === String(knownId)) return false
+                const isKnownTemp = knownId
+                    && String(item.id) === String(knownId)
+                    && typeof item.id === 'string'
+                    && item.id.indexOf('streaming_') === 0
+                if (isKnownTemp) return false
                 return true
             })
             this.promptStreamingTempResultId = null
@@ -920,6 +928,19 @@ var app = new Vue({
         },
         forceScrollResultBoxToBottom() {
             this.$nextTick(() => {
+                const container = document.getElementById('resultBox')
+                if (!container) {
+                    return
+                }
+                container.scrollTop = container.scrollHeight
+            })
+        },
+        scheduleResultBoxFollowBottom() {
+            if (this._resultBoxScrollRafId) {
+                return
+            }
+            this._resultBoxScrollRafId = requestAnimationFrame(() => {
+                this._resultBoxScrollRafId = null
                 const container = document.getElementById('resultBox')
                 if (!container) {
                     return
@@ -1096,13 +1117,85 @@ var app = new Vue({
                 this.continueChatHistory = [...this.continueChatHistory]
             }
         },
-        ensureStreamingOutputPlaceholder() {
+        removeGeneratingOutputPlaceholdersExcept(keepId) {
+            if (!Array.isArray(this.outputList) || this.outputList.length === 0) {
+                return
+            }
+
+            const keepIdStr = keepId !== undefined && keepId !== null ? String(keepId) : ''
+            let changed = false
+            let keptGenerating = false
+            const filtered = []
+
+            for (let i = 0; i < this.outputList.length; i++) {
+                const item = this.outputList[i]
+                if (!item) {
+                    changed = true
+                    continue
+                }
+
+                if (item._generating === true) {
+                    const isKeep = keepIdStr && String(item.id) === keepIdStr
+                    if (isKeep && !keptGenerating) {
+                        filtered.push(item)
+                        keptGenerating = true
+                    } else {
+                        changed = true
+                    }
+                    continue
+                }
+
+                filtered.push(item)
+            }
+
+            if (changed) {
+                this.outputList = filtered
+            }
+        },
+        ensureStreamingOutputPlaceholder(payload = null, allowCreate = true) {
+            const knownTempId = this.promptStreamingTempResultId
+            let index = knownTempId
+                ? this.outputList.findIndex(item => String(item?.id) === String(knownTempId))
+                : -1
+            if (index > -1) {
+                this.removeGeneratingOutputPlaceholdersExcept(knownTempId)
+                return this.outputList.findIndex(item => String(item?.id) === String(knownTempId))
+            }
+
+            const promptResultId = Number(payload?.promptResultId || 0) || null
+            if (promptResultId) {
+                index = this.outputList.findIndex(item => String(item?.id) === String(promptResultId))
+                if (index > -1) {
+                    this.promptStreamingTempResultId = this.outputList[index].id
+                    this.removeGeneratingOutputPlaceholdersExcept(this.promptStreamingTempResultId)
+                    return this.outputList.findIndex(item => String(item?.id) === String(this.promptStreamingTempResultId))
+                }
+            }
+
+            for (let i = this.outputList.length - 1; i >= 0; i--) {
+                const item = this.outputList[i]
+                if (item && item._generating === true) {
+                    this.promptStreamingTempResultId = item.id
+                    this.removeGeneratingOutputPlaceholdersExcept(this.promptStreamingTempResultId)
+                    return this.outputList.findIndex(el => String(el?.id) === String(this.promptStreamingTempResultId))
+                }
+            }
+
+            for (let i = this.outputList.length - 1; i >= 0; i--) {
+                const item = this.outputList[i]
+                if (item && typeof item.id === 'string' && item.id.indexOf('streaming_') === 0) {
+                    this.promptStreamingTempResultId = item.id
+                    return i
+                }
+            }
+
+            if (!allowCreate) {
+                return -1
+            }
+
             if (!this.promptStreamingTempResultId) {
                 this.promptStreamingTempResultId = `streaming_${Date.now()}`
             }
-
-            let index = this.outputList.findIndex(item => String(item.id) === String(this.promptStreamingTempResultId))
-            if (index > -1) return index
 
             const placeholder = this.normalizeOutputResultItem({
                 id: this.promptStreamingTempResultId,
@@ -1116,14 +1209,18 @@ var app = new Vue({
             placeholder._generating = true
 
             this.outputList = (this.outputList || []).concat([placeholder])
+            this.forceScrollResultBoxToBottom()
             return this.outputList.length - 1
+        },
+        renderStreamingOutputHtml(text) {
+            return this.escapeHtml(text || '').replace(/\n/g, '<br>')
         },
         isStreamingResultItem(item) {
             if (!item) {
                 return false
             }
             if (item._generating === true) {
-                return true
+                return !this.promptStreamingTempResultId || String(item.id) === String(this.promptStreamingTempResultId)
             }
             if (!this.promptStreaming || !this.promptStreamingTempResultId) {
                 return false
@@ -1136,7 +1233,8 @@ var app = new Vue({
                 return
             }
 
-            const index = this.ensureStreamingOutputPlaceholder()
+            const index = this.ensureStreamingOutputPlaceholder(payload, false)
+            if (index < 0) return
             const item = this.outputList[index]
             if (!item) return
 
@@ -1145,14 +1243,13 @@ var app = new Vue({
                 item._generating = false
             }
             item.resultString = `${item.resultString || ''}${payload.text || ''}`
-            item.resultStringHtml = marked.parse(item.resultString)
+            item.resultStringHtml = this.renderStreamingOutputHtml(item.resultString)
             item.costTime = payload.responseMilliseconds || item.costTime || 0
             item.promptCostToken = payload.promptTokens || item.promptCostToken || 0
             item.resultCostToken = payload.completionTokens || item.resultCostToken || 0
             item.totalCostToken = payload.totalTokens || item.totalCostToken || 0
 
-            this.$set(this.outputList, index, Object.assign({}, item))
-            this.forceScrollResultBoxToBottom()
+            this.scheduleResultBoxFollowBottom()
         },
         handlePromptStreamFinal(payload, mode) {
             if (mode === 'continueChat') {
@@ -1160,7 +1257,8 @@ var app = new Vue({
                 return
             }
 
-            const index = this.ensureStreamingOutputPlaceholder()
+            const index = this.ensureStreamingOutputPlaceholder(payload, false)
+            if (index < 0) return
             const item = this.outputList[index]
             if (!item) return
 
@@ -1168,12 +1266,17 @@ var app = new Vue({
                 item.resultString = payload.text
                 item.resultStringHtml = marked.parse(item.resultString || '')
             }
+            if (payload.promptResultId && (String(item.id).indexOf('streaming_') === 0 || String(item.id) === String(this.promptStreamingTempResultId))) {
+                item.id = payload.promptResultId
+            }
             item._generating = false
             item.costTime = payload.responseMilliseconds || item.costTime || 0
             item.promptCostToken = payload.promptTokens || item.promptCostToken || 0
             item.resultCostToken = payload.completionTokens || item.resultCostToken || 0
             item.totalCostToken = payload.totalTokens || item.totalCostToken || 0
-            this.$set(this.outputList, index, Object.assign({}, item))
+            if (payload.promptResultId) {
+                this.promptStreamingTempResultId = payload.promptResultId
+            }
             this.forceScrollResultBoxToBottom()
         },
         handleContinueChatStreamChunk(payload) {
@@ -6616,7 +6719,6 @@ var app = new Vue({
                     this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1
                     this.outputMaxDeci = evalMaxScore > -1 ? evalMaxScore : -1
                     this.outputList = promptResultList.map(item => this.normalizeOutputResultItem(item, id, fullVersion, promptItem))
-                    this.promptStreamingTempResultId = null
                     const latestResult = this.outputList.length > 0 ? this.outputList[this.outputList.length - 1] : null
                     if (latestResult && latestResult.id !== undefined && latestResult.id !== null && latestResult.id !== '') {
                         this.scrollToBtm(latestResult.id)
@@ -7007,9 +7109,17 @@ var app = new Vue({
                             }
                         }
 
-                        return this.outputList.findIndex(outputItem =>
-                            typeof outputItem.id === 'string' && outputItem.id.indexOf('streaming_') === 0
-                        )
+                        for (let i = this.outputList.length - 1; i >= 0; i--) {
+                            const outputItem = this.outputList[i]
+                            if (!outputItem) continue
+                            if (outputItem._generating === true) {
+                                return i
+                            }
+                            if (typeof outputItem.id === 'string' && outputItem.id.indexOf('streaming_') === 0) {
+                                return i
+                            }
+                        }
+                        return -1
                     }
                     res.data.data.promptResults.map(item => {
                         const normalized = this.normalizeOutputResultItem(
@@ -7034,7 +7144,6 @@ var app = new Vue({
                         this.closePromptStream()
                         return
                     }
-                    this.promptStreamingTempResultId = null
                     this.scrollToBtm(latestResultId)
                 }).catch(() => {
                     this.clearOutputGeneratingPlaceholder()
