@@ -30,10 +30,12 @@ Use the output JSON as the source of truth for:
 5. Recursive dependent `.csproj` files that need passive version bumps.
 6. Comparison baseline metadata (`master/main` branch ref and merge-base commit).
 
-Special rule for generated files:
+Special skip rules for header updates:
 
 1. Never add header comments to `*.Generated.cs`.
 2. If a `*.Generated.cs` change only updates timestamp-like text after regeneration and has no real content change, do not treat it as a changed file.
+3. Never add header comments to files under unit test projects (directory names such as `Tests`, `*.Tests`, or `*Tests`).
+4. Never add header comments to files under `MultipleDatabase/` directory.
 
 ## Commit Baseline Rule (Strict)
 
@@ -95,6 +97,7 @@ For every file in `changed_cs_files`:
    - `修改标识：<author> - YYYYMMDD`
    - `修改描述：v<new-version> <summary>`
 7. Keep one blank line between modification groups.
+8. Skip files matched by the special skip rules above (`*.Generated.cs`, unit test project files, and `MultipleDatabase/` directory files).
 
 If the file already has the block, keep historical entries and append only one new modification group.
 Always skip `*.Generated.cs` for header insertion.
@@ -147,7 +150,7 @@ Process in dependency layers from nearest dependents to farthest dependents, and
 
 Validate:
 
-1. Every file in `changed_cs_files` contains a valid changelog block.
+1. Every eligible file in `changed_cs_files` (after applying special skip rules) contains a valid changelog block.
 2. Every `.csproj` in `changed_csprojs` has updated version/release notes for current window.
 3. All recursive dependents from scanner output are covered.
 4. In every edited `.csproj`, `<Version>` is located after `<TargetFramework>` or `<TargetFrameworks>`.

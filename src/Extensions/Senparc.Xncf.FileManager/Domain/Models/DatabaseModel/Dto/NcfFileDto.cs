@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：NcfFileDto.cs
+    文件功能描述：NcfFileDto 相关实现
+    
+    
+    创建标识：Senparc - 20250112
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+----------------------------------------------------------------*/
+
 using System;
 
 namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.Dto

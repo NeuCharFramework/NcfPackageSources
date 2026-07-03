@@ -1954,7 +1954,9 @@ var app = new Vue({
       return `${seconds}s${remainMilliseconds}ms`
     },
     formatTaskHistoryUsage(history) {
-      const totalTokens = history?.totalTokens || 0
+      const promptTokens = Number(history?.promptTokens || 0) || 0
+      const completionTokens = Number(history?.completionTokens || 0) || 0
+      const totalTokens = Number(history?.totalTokens || 0) || (promptTokens + completionTokens)
       const responseMs = history?.responseMilliseconds || 0
       const roundText = history?.roundIndex ? `R${history.roundIndex} - ` : ''
       return `${roundText}Token: ${totalTokens}${responseMs > 0 ? ` · ${this.formatResponseMilliseconds(responseMs, '')}` : ''}`
