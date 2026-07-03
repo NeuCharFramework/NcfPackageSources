@@ -490,6 +490,27 @@
                                         <div class="taskmain-members">
                                             <template
                                                 v-if="agentDetailsGroupDetails && agentDetailsGroupDetails.agentTemplateDtoList">
+                                                <div class="taskmain-members-usage">
+                                                    <div class="taskmain-members-usage-title">用量概览</div>
+                                                    <div class="taskmain-members-usage-list">
+                                                        <div class="taskmain-members-usage-item">
+                                                            <span class="taskmain-members-usage-label">消息总数</span>
+                                                            <span class="taskmain-members-usage-value">{{ formatUsageCount(taskUsageSummaryByType.agentGroupTask.messageCount) }}</span>
+                                                        </div>
+                                                        <div class="taskmain-members-usage-item">
+                                                            <span class="taskmain-members-usage-label">总 Token（输入+输出）</span>
+                                                            <span class="taskmain-members-usage-value">{{ formatUsageCount(taskUsageSummaryByType.agentGroupTask.totalTokens) }}</span>
+                                                        </div>
+                                                        <div class="taskmain-members-usage-item">
+                                                            <span class="taskmain-members-usage-label">平均响应时长</span>
+                                                            <span class="taskmain-members-usage-value">{{ formatResponseMilliseconds(taskUsageSummaryByType.agentGroupTask.averageResponseMilliseconds) }}</span>
+                                                        </div>
+                                                        <div class="taskmain-members-usage-item">
+                                                            <span class="taskmain-members-usage-label">最大时长</span>
+                                                            <span class="taskmain-members-usage-value">{{ formatResponseMilliseconds(taskUsageSummaryByType.agentGroupTask.maxResponseMilliseconds) }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <el-input v-model="agentGroupTaskMemberfilter" placeholder="请输入名称搜索" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'agentGroupTask')"></el-input>
                                                 <div class="taskmain-members-title">
                                                     机器人·{{ agentDetailsGroupDetails.agentTemplateDtoList ?
@@ -603,6 +624,27 @@
                                         </el-scrollbar>
                                     </div>
                                     <div class="taskmain-members">
+                                        <div class="taskmain-members-usage">
+                                            <div class="taskmain-members-usage-title">用量概览</div>
+                                            <div class="taskmain-members-usage-list">
+                                                <div class="taskmain-members-usage-item">
+                                                    <span class="taskmain-members-usage-label">消息总数</span>
+                                                    <span class="taskmain-members-usage-value">{{ formatUsageCount(taskUsageSummaryByType.agentTask.messageCount) }}</span>
+                                                </div>
+                                                <div class="taskmain-members-usage-item">
+                                                    <span class="taskmain-members-usage-label">总 Token（输入+输出）</span>
+                                                    <span class="taskmain-members-usage-value">{{ formatUsageCount(taskUsageSummaryByType.agentTask.totalTokens) }}</span>
+                                                </div>
+                                                <div class="taskmain-members-usage-item">
+                                                    <span class="taskmain-members-usage-label">平均响应时长</span>
+                                                    <span class="taskmain-members-usage-value">{{ formatResponseMilliseconds(taskUsageSummaryByType.agentTask.averageResponseMilliseconds) }}</span>
+                                                </div>
+                                                <div class="taskmain-members-usage-item">
+                                                    <span class="taskmain-members-usage-label">最大时长</span>
+                                                    <span class="taskmain-members-usage-value">{{ formatResponseMilliseconds(taskUsageSummaryByType.agentTask.maxResponseMilliseconds) }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <el-input v-model="agentTaskMemberfilter" placeholder="请输入名称搜索" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'agentTask')"></el-input>
                                         <div class="taskmain-members-title">
                                             机器人·{{ agentDetailsTaskMemberList ? agentDetailsTaskMemberList.length : 0 }}
@@ -932,6 +974,27 @@
                         </div>
                         <div class="taskmain-members">
                             <template v-if="groupDetails&&groupDetails.agentTemplateDtoList">
+                                <div class="taskmain-members-usage">
+                                    <div class="taskmain-members-usage-title">用量概览</div>
+                                    <div class="taskmain-members-usage-list">
+                                        <div class="taskmain-members-usage-item">
+                                            <span class="taskmain-members-usage-label">消息总数</span>
+                                            <span class="taskmain-members-usage-value">{{ formatUsageCount(taskUsageSummaryByType.groupTask.messageCount) }}</span>
+                                        </div>
+                                        <div class="taskmain-members-usage-item">
+                                            <span class="taskmain-members-usage-label">总 Token（输入+输出）</span>
+                                            <span class="taskmain-members-usage-value">{{ formatUsageCount(taskUsageSummaryByType.groupTask.totalTokens) }}</span>
+                                        </div>
+                                        <div class="taskmain-members-usage-item">
+                                            <span class="taskmain-members-usage-label">平均响应时长</span>
+                                            <span class="taskmain-members-usage-value">{{ formatResponseMilliseconds(taskUsageSummaryByType.groupTask.averageResponseMilliseconds) }}</span>
+                                        </div>
+                                        <div class="taskmain-members-usage-item">
+                                            <span class="taskmain-members-usage-label">最大时长</span>
+                                            <span class="taskmain-members-usage-value">{{ formatResponseMilliseconds(taskUsageSummaryByType.groupTask.maxResponseMilliseconds) }}</span>
+                                        </div>
+                                    </div>
+                                </div>
                                 <el-input v-model="groupTaskMemberfilter" placeholder="请输入名称搜索" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'groupTask')"></el-input>
                                 <div class="taskmain-members-title">
                                     机器人·{{ groupDetails.agentTemplateDtoList.length }}
@@ -955,10 +1018,10 @@
         </div>
     </el-tab-pane>
     <el-tab-pane label="任务" name="third">
-        <div class="tabPane-container">
-            @* 侧边 *@
+            <div class="tabPane-container">
+                @* 侧边 *@
             <div class="sidebar-container">
-                <div class="sidebar-head-container">
+                <div class="sidebar-head-container sidebar-head-container-task">
                     <div class="df-wn flex-ac flex-jsb sidebar-title-row">
                         <div class="sidebar-titleRow-title text-ellipsis">任务列表</div>
                     </div>
@@ -997,7 +1060,7 @@
                         </el-popover>
                     </div>
                 </div>
-                <el-scrollbar class="sidebar-main-container" wrap-class="scrollbar-wrapper">
+                <el-scrollbar class="sidebar-main-container sidebar-main-container-task" wrap-class="scrollbar-wrapper">
                     <template v-if="taskList&&taskList.length">
                         <div class="sidebar-agentitem text-ellipsis"
                         :class="{'sidebar-agentitem_active':scrollbarTaskIndex === ''}" @@click="handleTaskViewAll">
@@ -1007,11 +1070,13 @@
                         :class="{'sidebar-agentitem_active':scrollbarTaskIndex === index}" :title="item.name"
                         @@click="handleTaskView('task',item,index)">
                         <span class="text-ellipsis sidebar-taskitem-name">{{ item.name }}</span>
-                        <el-button type="text" size="mini" class="sidebar-taskitem-archive"
-                            :loading="taskArchiveSavingId === item.id"
-                            @@click.stop="handleTaskArchiveToggle(item)">
-                            {{ item.isArchived ? '取消归档' : '归档' }}
-                        </el-button>
+                        <el-tooltip :content="item.isArchived ? '取消归档' : '归档'" placement="top" :open-delay="180">
+                            <el-button type="text" size="mini" class="sidebar-taskitem-archive"
+                                :icon="item.isArchived ? 'el-icon-folder-opened' : 'el-icon-folder'"
+                                :loading="taskArchiveSavingId === item.id"
+                                @@click.stop="handleTaskArchiveToggle(item)">
+                            </el-button>
+                        </el-tooltip>
                     </div>
                     </template>
                     <div v-else class="df-wn flex-ac flex-jc emptyData"
@@ -1167,6 +1232,27 @@
                             </el-scrollbar>
                         </div>
                         <div class="taskmain-members">
+                            <div class="taskmain-members-usage">
+                                <div class="taskmain-members-usage-title">用量概览</div>
+                                <div class="taskmain-members-usage-list">
+                                    <div class="taskmain-members-usage-item">
+                                        <span class="taskmain-members-usage-label">消息总数</span>
+                                        <span class="taskmain-members-usage-value">{{ formatUsageCount(taskUsageSummaryByType.task.messageCount) }}</span>
+                                    </div>
+                                    <div class="taskmain-members-usage-item">
+                                        <span class="taskmain-members-usage-label">总 Token（输入+输出）</span>
+                                        <span class="taskmain-members-usage-value">{{ formatUsageCount(taskUsageSummaryByType.task.totalTokens) }}</span>
+                                    </div>
+                                    <div class="taskmain-members-usage-item">
+                                        <span class="taskmain-members-usage-label">平均响应时长</span>
+                                        <span class="taskmain-members-usage-value">{{ formatResponseMilliseconds(taskUsageSummaryByType.task.averageResponseMilliseconds) }}</span>
+                                    </div>
+                                    <div class="taskmain-members-usage-item">
+                                        <span class="taskmain-members-usage-label">最大时长</span>
+                                        <span class="taskmain-members-usage-value">{{ formatResponseMilliseconds(taskUsageSummaryByType.task.maxResponseMilliseconds) }}</span>
+                                    </div>
+                                </div>
+                            </div>
                             <el-input v-model="taskMemberfilter" placeholder="请输入名称搜索" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'task')"></el-input>
                             <div class="taskmain-members-title">
                                 机器人·{{ taskMemberList ? taskMemberList.length : 0 }}

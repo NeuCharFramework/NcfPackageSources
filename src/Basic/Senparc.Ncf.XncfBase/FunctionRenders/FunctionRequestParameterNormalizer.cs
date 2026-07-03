@@ -1,3 +1,16 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：FunctionRequestParameterNormalizer.cs
+    文件功能描述：FunctionRequestParameterNormalizer 相关实现
+    
+    
+    创建标识：Senparc - 20260424
+    
+    修改标识：Senparc - 20260704
+    修改描述：v0.23.2-preview1 增强函数请求参数归一化与占位符处理能力
+
+----------------------------------------------------------------*/
 using Senparc.Ncf.XncfBase.Functions;
 using System;
 using System.Collections.Generic;

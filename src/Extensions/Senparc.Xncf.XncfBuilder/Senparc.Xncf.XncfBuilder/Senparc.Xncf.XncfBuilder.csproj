@@ -79,6 +79,8 @@
       [2026-07-02] v0.36.2-preview1 升级 Senparc.AI.AgentKernel 并完成兼容性适配，增强 MCP 工具接入与调用链路兼容能力
       1、升级 Senparc.AI.AgentKernel 并完成兼容性适配
       2、增强 MCP 工具接入与调用链路兼容能力
+			3、优化 DatabaseMigrationsAppService，清洗命令输出中的 ANSI 转义字符
+			4、调整 DatabaseMigrationRequest 与迁移执行流程，提高数据库迁移调用稳定性
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

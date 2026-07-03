@@ -1,4 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：20260703153508_Add_IsArchived.cs
+    文件功能描述：数据库迁移定义
+    
+    
+    创建标识：Senparc - 20250816
+    
+    修改标识：Senparc - 20260704
+    修改描述：v0.11.0-preview2 新增 ChatTask 归档能力并完善多数据库迁移支持
+
+----------------------------------------------------------------*/
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 

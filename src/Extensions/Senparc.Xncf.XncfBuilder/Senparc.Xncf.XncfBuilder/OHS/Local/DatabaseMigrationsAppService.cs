@@ -1,4 +1,17 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：DatabaseMigrationsAppService.cs
+    文件功能描述：DatabaseMigrationsAppService 相关实现
+    
+    
+    创建标识：Senparc - 20211016
+    
+    修改标识：Senparc - 20260704
+    修改描述：v0.36.2-preview1 优化数据库迁移命令日志清洗与请求模型能力
+
+----------------------------------------------------------------*/
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using Senparc.CO2NET.Extensions;

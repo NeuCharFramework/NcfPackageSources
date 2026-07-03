@@ -1,4 +1,17 @@
-﻿using Senparc.Ncf.Core.Models;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：ChatTask.cs
+    文件功能描述：ChatTask 相关实现
+    
+    
+    创建标识：Senparc - 20241016
+    
+    修改标识：Senparc - 20260704
+    修改描述：v0.11.0-preview2 新增 ChatTask 归档能力并完善多数据库迁移支持
+
+----------------------------------------------------------------*/
+using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
 using System;
 using System.ComponentModel.DataAnnotations;

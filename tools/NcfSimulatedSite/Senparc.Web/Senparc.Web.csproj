@@ -9,6 +9,7 @@
 			[2026-07-02] v0.21.5 支持流式输出并优化交互体验，升级 Senparc.AI.AgentKernel 并完成兼容性适配
 			1、支持流式输出并优化交互体验
 			2、升级 Senparc.AI.AgentKernel 并完成兼容性适配
+			3、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 </PackageReleaseNotes>
 		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
 		<TypeScriptToolsVersion>4.1</TypeScriptToolsVersion>

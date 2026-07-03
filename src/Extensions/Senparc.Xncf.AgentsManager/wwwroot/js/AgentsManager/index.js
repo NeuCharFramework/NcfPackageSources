@@ -511,6 +511,14 @@ var app = new Vue({
         }
       })
       return Array.from(map.values())
+    },
+    taskUsageSummaryByType() {
+      return {
+        task: this.buildTaskHistoryUsageSummary(this.taskHistoryList),
+        agentTask: this.buildTaskHistoryUsageSummary(this.agentDetailsTaskHistoryList),
+        agentGroupTask: this.buildTaskHistoryUsageSummary(this.agentDetailsGroupTaskHistoryList),
+        groupTask: this.buildTaskHistoryUsageSummary(this.groupTaskHistoryList),
+      }
     }
   },
   watch: {},
@@ -1874,11 +1882,82 @@ var app = new Vue({
         this.usageAnalyticsLoading = false
       }
     },
+    getDefaultTaskUsageSummary() {
+      return {
+        messageCount: 0,
+        promptTokens: 0,
+        completionTokens: 0,
+        totalTokens: 0,
+        averageResponseMilliseconds: 0,
+        maxResponseMilliseconds: 0,
+      }
+    },
+    buildTaskHistoryUsageSummary(historyList = []) {
+      const summary = this.getDefaultTaskUsageSummary()
+      if (!Array.isArray(historyList) || historyList.length === 0) {
+        return summary
+      }
+
+      let responseCount = 0
+      let responseTotalMs = 0
+
+      historyList.forEach((item) => {
+        if (!item || item._generating) {
+          return
+        }
+
+        summary.messageCount += 1
+
+        const promptTokens = Number(item.promptTokens || 0) || 0
+        const completionTokens = Number(item.completionTokens || 0) || 0
+        const itemTotalTokens = Number(item.totalTokens || 0) || 0
+        const totalTokens = itemTotalTokens > 0 ? itemTotalTokens : (promptTokens + completionTokens)
+
+        summary.promptTokens += promptTokens
+        summary.completionTokens += completionTokens
+        summary.totalTokens += totalTokens
+
+        const responseMilliseconds = Number(item.responseMilliseconds || 0) || 0
+        if (responseMilliseconds > 0) {
+          responseCount += 1
+          responseTotalMs += responseMilliseconds
+          if (responseMilliseconds > summary.maxResponseMilliseconds) {
+            summary.maxResponseMilliseconds = responseMilliseconds
+          }
+        }
+      })
+
+      if (responseCount > 0) {
+        summary.averageResponseMilliseconds = Math.round(responseTotalMs / responseCount)
+      }
+
+      return summary
+    },
+    formatUsageCount(value) {
+      const numeric = Number(value || 0)
+      if (!Number.isFinite(numeric)) return '0'
+      return numeric.toLocaleString('en-US')
+    },
+    formatResponseMilliseconds(milliseconds, emptyText = '--') {
+      const numeric = Number(milliseconds || 0)
+      if (!Number.isFinite(numeric) || numeric <= 0) {
+        return emptyText
+      }
+
+      const rounded = Math.round(numeric)
+      if (rounded < 1000) {
+        return `${rounded}ms`
+      }
+
+      const seconds = Math.floor(rounded / 1000)
+      const remainMilliseconds = rounded % 1000
+      return `${seconds}s${remainMilliseconds}ms`
+    },
     formatTaskHistoryUsage(history) {
       const totalTokens = history?.totalTokens || 0
       const responseMs = history?.responseMilliseconds || 0
       const roundText = history?.roundIndex ? `R${history.roundIndex} - ` : ''
-      return `${roundText}Token: ${totalTokens}${responseMs > 0 ? ` · ${responseMs}ms` : ''}`
+      return `${roundText}Token: ${totalTokens}${responseMs > 0 ? ` · ${this.formatResponseMilliseconds(responseMs, '')}` : ''}`
     },
     getTaskArchiveScopeCode(scope = this.taskArchiveScope) {
       const scopeMap = {

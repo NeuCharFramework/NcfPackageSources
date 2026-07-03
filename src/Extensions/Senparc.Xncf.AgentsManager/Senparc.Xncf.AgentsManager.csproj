@@ -70,6 +70,10 @@
     [2026-07-02] v0.11.0-preview2 增强多智能体群聊流程、容错与任务调度能力，优化 PromptOptimizationAgentBridge 稳定性与状态恢复能力
     1、增强多智能体群聊流程、容错与任务调度能力
     2、优化 PromptOptimizationAgentBridge 稳定性与状态恢复能力
+		3、新增 ChatTask 归档状态（IsArchived）及归档管理能力
+		4、补充 MySql、SqlServer、Oracle、PostgreSQL、Sqlite、Dm 迁移与模型快照，保障归档字段落库
+		5、同步应用服务与流式控制器，完善任务归档流程与状态处理
+		6、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -9,6 +9,7 @@
         [2026-07-02] v0.0.1 新增 PromptRange 与 AgentsManager 使用记录能力，升级并适配 net10.0 框架
         1、新增 PromptRange 与 AgentsManager 使用记录能力
         2、升级并适配 net10.0 框架
+        3、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 </PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
