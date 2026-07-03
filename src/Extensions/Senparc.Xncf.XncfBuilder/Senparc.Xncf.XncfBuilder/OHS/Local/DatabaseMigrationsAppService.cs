@@ -13,12 +13,16 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.XncfBuilder.OHS.Local
 {
     public class DatabaseMigrationsAppService : AppServiceBase
     {
+        // ANSI CSI 控制序列（例如 \x1B[39;49m），用于清理日志中的颜色转义字符。
+        private static readonly Regex AnsiEscapeRegex = new(@"\x1B\[[0-?]*[ -/]*[@-~]", RegexOptions.Compiled);
+
         private class CommandExecutionResult
         {
             public bool Started { get; set; }
@@ -100,17 +104,30 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
         private static void AppendCommandOutput(Senparc.Ncf.Core.AppServices.AppServiceLogger logger, CommandExecutionResult result)
         {
-            if (!string.IsNullOrWhiteSpace(result.StandardOutput))
+            var stdOut = StripAnsiEscapeSequences(result.StandardOutput);
+            var stdErr = StripAnsiEscapeSequences(result.StandardError);
+
+            if (!string.IsNullOrWhiteSpace(stdOut))
             {
-                logger.Append(result.StandardOutput.TrimEnd('\r', '\n'));
+                logger.Append(stdOut.TrimEnd('\r', '\n'));
             }
 
-            if (!string.IsNullOrWhiteSpace(result.StandardError))
+            if (!string.IsNullOrWhiteSpace(stdErr))
             {
-                logger.Append(result.StandardError.TrimEnd('\r', '\n'));
+                logger.Append(stdErr.TrimEnd('\r', '\n'));
             }
 
             logger.Append($"命令退出码：{result.ExitCode}");
+        }
+
+        private static string StripAnsiEscapeSequences(string content)
+        {
+            if (string.IsNullOrEmpty(content))
+            {
+                return string.Empty;
+            }
+
+            return AnsiEscapeRegex.Replace(content, string.Empty);
         }
 
         /// <summary>
