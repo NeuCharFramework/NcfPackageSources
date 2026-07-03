@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
+    修改标识：Senparc - 20260704
+    修改描述：v0.11.0-preview2 新增 ChatTask 归档能力并完善多数据库迁移支持
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Trace;
@@ -62,6 +65,17 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             await base.SaveObjectAsync(chatTask);
 
             //TODO 检查是否所有任务已经完成，如果完成则设置 ChatGroup 状态为闲置状态
+        }
+
+        public async Task SetArchiveStatus(ChatTask chatTask, bool isArchived)
+        {
+            if (chatTask == null)
+            {
+                return;
+            }
+
+            chatTask.SetArchived(isArchived);
+            await base.SaveObjectAsync(chatTask);
         }
 
         /// <summary>

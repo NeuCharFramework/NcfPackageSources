@@ -1,4 +1,18 @@
-﻿using ModelContextProtocol.Server;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：BuildXncfAppService.AI.MCP.cs
+    文件功能描述：BuildXncfAppService.AI.MCP 相关实现
+    
+    
+    创建标识：Senparc - 20250524
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+----------------------------------------------------------------*/
+
+using ModelContextProtocol.Server;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Xncf.XncfBuilder.OHS.PL;
 using System;

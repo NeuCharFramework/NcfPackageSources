@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    æ–‡ä»¶åï¼šEdit.cshtml.cs
+    æ–‡ä»¶åŠŸèƒ½æè¿°ï¼šEdit.cshtml ç›¸å…³å®žçŽ°
+    
+    
+    åˆ›å»ºæ ‡è¯†ï¼šSenparc - 20250712
+    
+    ä¿®æ”¹æ ‡è¯†ï¼šSenparc - 20260704
+    ä¿®æ”¹æè¿°ï¼švNext è¡¥å……æ ‡å‡†åŒ–æ–‡ä»¶å¤´æ³¨é‡Š
+
+----------------------------------------------------------------*/
+
 using Microsoft.AspNetCore.Mvc;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Service;
@@ -33,7 +47,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
                 var mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == id);
                 if (mpAccount == null)
                 {
-                    return RenderError("¹«ÖÚºÅÐÅÏ¢²»´æÔÚ£¡");
+                    return RenderError("ÚºÏ¢Ú£");
                 }
 
                 MpAccountDto = _mpAccountService.Mapper.Map<MpAccountDto>(mpAccount);
@@ -53,7 +67,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
                 var mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == id);
                 if (mpAccount == null)
                 {
-                    return RenderError("¹«ÖÚºÅÐÅÏ¢²»´æÔÚ£¡");
+                    return RenderError("ÚºÏ¢Ú£");
                 }
 
                 mpAccountDto = _mpAccountService.Mapper.Map<MpAccountDto>(mpAccount);
@@ -70,7 +84,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
                 mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == id);
                 if (mpAccount == null)
                 {
-                    return RenderError("¹«ÖÚºÅÐÅÏ¢²»´æÔÚ£¡");
+                    return RenderError("ÚºÏ¢Ú£");
                 }
                 _mpAccountService.Mapper.Map(MpAccountDto, mpAccount);
             }
@@ -80,17 +94,17 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
             }
             await _mpAccountService.SaveObjectAsync(mpAccount);
 
-            //ÖØÐÂ½øÐÐ¹«ÖÚºÅ×¢²á
+            //Â½Ð¹Úº×¢
             await AccessTokenContainer.RegisterAsync(mpAccount.AppId, mpAccount.AppSecret, $"{mpAccount.Name}-{mpAccount.Id}");
 
             try
             {
-                //Á¢¼´»ñÈ¡ AccessToken
+                //È¡ AccessToken
                 await AccessTokenContainer.GetAccessTokenAsync(mpAccount.AppId, true);
             }
             catch (Exception ex)
             {
-                return Ok(new { id = mpAccount.Id, uid = Uid, msg = "ÕËºÅÒÑ¾­Ìí¼Ó£¬µ« AppId »ò Secret ÓÐÎó£¬ÎÞ·¨Õý³£¹¤×÷£¬Çë¼ì²é£¡" });
+                return Ok(new { id = mpAccount.Id, uid = Uid, msg = "ËºÑ¾Ó£ AppId  Secret Þ·é£¡" });
             }
 
 
@@ -106,7 +120,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
                 mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == mpAccountDto.Id);
                 if (mpAccount == null)
                 {
-                    return RenderError("¹«ÖÚºÅÐÅÏ¢²»´æÔÚ£¡");
+                    return RenderError("ÚºÏ¢Ú£");
                 }
 
                 mpAccountDto.AddTime = mpAccount.AddTime;
@@ -119,17 +133,17 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
             }
             await _mpAccountService.SaveObjectAsync(mpAccount);
 
-            //ÖØÐÂ½øÐÐ¹«ÖÚºÅ×¢²á
+            //Â½Ð¹Úº×¢
             await AccessTokenContainer.RegisterAsync(mpAccount.AppId, mpAccount.AppSecret, $"{mpAccount.Name}-{mpAccount.Id}");
 
             try
             {
-                //Á¢¼´»ñÈ¡ AccessToken
+                //È¡ AccessToken
                 await AccessTokenContainer.GetAccessTokenAsync(mpAccount.AppId, true);
             }
             catch (Exception ex)
             {
-                return Ok(new { id = mpAccount.Id, uid = Uid, msg = "ÕËºÅÒÑ¾­Ìí¼Ó£¬µ« AppId »ò Secret ÓÐÎó£¬ÎÞ·¨Õý³£¹¤×÷£¬Çë¼ì²é£¡" });
+                return Ok(new { id = mpAccount.Id, uid = Uid, msg = "ËºÑ¾Ó£ AppId  Secret Þ·é£¡" });
             }
 
 

@@ -1,4 +1,17 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：DatabaseMigrationRequest.cs
+    文件功能描述：DatabaseMigrationRequest 相关实现
+    
+    
+    创建标识：Senparc - 20211016
+    
+    修改标识：Senparc - 20260704
+    修改描述：v0.36.2-preview1 优化数据库迁移命令日志清洗与请求模型能力
+
+----------------------------------------------------------------*/
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
@@ -76,12 +89,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
 
         [Description("输出详细日志||使用 add-migration 的 -v 参数")]
-    [FunctionParameterUi(ParameterType.CheckBoxList, nameof(OutputVerboseOptions))]
-    public bool OutputVerbose { get; set; }
+        [FunctionParameterUi(ParameterType.CheckBoxList, nameof(OutputVerboseOptions))]
+        public bool OutputVerbose { get; set; }
 
-    [JsonIgnore]
-    public SelectionList OutputVerboseOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("1","使用","",false)
+        [JsonIgnore]
+        public SelectionList OutputVerboseOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
+                 new SelectionItem("true","使用","",false)
             });
 
         /// <summary>

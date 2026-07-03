@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
+    修改标识：Senparc - 20260704
+    修改描述：v0.11.0-preview2 新增 ChatTask 归档能力并完善多数据库迁移支持
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -42,6 +45,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
 
 
         public bool Score { get; set; }
+
+        public bool IsArchived { get; set; }
 
         [Required]
         public DateTime StartTime { get; set; }
@@ -89,6 +94,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
             Description = description;
             IsPersonality = isPersonality;
             Score = score;
+            IsArchived = false;
             StartTime = startTime;
             EndTime = endTime;
             ResultComment = resultComment;
@@ -106,6 +112,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
             Description = chatTask.Description;
             IsPersonality = chatTask.IsPersonality;
             Score = chatTask.Score;
+            IsArchived = chatTask.IsArchived;
             StartTime = chatTask.StartTime;
             EndTime = chatTask.EndTime;
             ResultComment = chatTask.ResultComment;

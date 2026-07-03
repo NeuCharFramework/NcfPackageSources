@@ -66,13 +66,25 @@ height:100%;
     padding: 20px 15px 10px;
 }
 
+.sidebar-container .sidebar-head-container.sidebar-head-container-task {
+    height: 146px;
+}
+
 /* 侧边主体容器 155 114 60 */
 .sidebar-container .sidebar-main-container {
     height: calc(100vh - 329px);
 }
 
+.sidebar-container .sidebar-main-container.sidebar-main-container-task {
+    height: calc(100vh - 361px);
+}
+
 .sidebar-main-container .el-scrollbar__bar.is-vertical {
     opacity: 1;
+}
+
+.sidebar-main-container .el-scrollbar__bar.is-horizontal {
+    display: none;
 }
 
 /* 标题 行 */
@@ -181,6 +193,7 @@ height:100%;
 .sidebar-agentitem {
     padding: 0px 20px;
     width: 100%;
+    box-sizing: border-box;
     height: 45px;
     font-size: 14px;
     font-weight: 400;
@@ -195,6 +208,81 @@ height:100%;
 .sidebar-agentitem_active {
     color: rgba(42, 130, 228, 1);
     background: rgba(42, 130, 228, 0.1);
+}
+
+.task-archive-scope-tabs {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 0 0 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.task-archive-scope-tab {
+    display: flex;
+    flex: 1 1 0;
+    min-width: 0;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    padding: 0 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(220, 223, 230, 1);
+    color: #606266;
+    font-size: 12px;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+}
+
+.task-archive-scope-tab-active {
+    border-color: #409eff;
+    color: #409eff;
+    background: rgba(64, 158, 255, 0.1);
+}
+
+.sidebar-taskitem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 45px;
+    line-height: normal;
+}
+
+.sidebar-taskitem-name {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.sidebar-taskitem-archive {
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #909399;
+    opacity: 0;
+    transition: opacity .15s ease;
+}
+
+.sidebar-taskitem:hover .sidebar-taskitem-archive,
+.sidebar-taskitem.sidebar-agentitem_active .sidebar-taskitem-archive {
+    opacity: 1;
+}
+
+.sidebar-taskitem-archive:hover,
+.sidebar-taskitem-archive:focus {
+    color: #2a82e4;
+}
+
+.sidebar-taskitem-archive i {
+    font-size: 14px;
 }
 
 /* 智能体列表 */
@@ -770,8 +858,9 @@ height:100%;
 }
 
 .agentDetails-main-right .sidebar-taskmembers-container {
-    /* 552 564px 55 */
-    height: calc(100vh - 619px);
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto;
 }
 
 .sidebar-taskmembers-container .el-scrollbar__bar.is-vertical {
@@ -1370,6 +1459,15 @@ height:100%;
     color: rgba(171, 173, 176, 1);
 }
 
+.taskrecord-item-meta-top>.usage-inline {
+    margin-left: 10px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: #2a82e4;
+    background: rgba(42, 130, 228, 0.12);
+}
+
 .taskrecord-item-meta-bottom {
     padding-left: 40px;
 }
@@ -1461,6 +1559,9 @@ height:100%;
     flex-shrink: 0;
     /* width: 279px; */
     width: 240px;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
     padding: 15px 20px;
     border-left: 1px solid rgba(229, 229, 229, 1);
 }
@@ -1472,9 +1573,54 @@ height:100%;
     margin-bottom: 10px;
 }
 
+.taskmain-members-usage {
+    margin-bottom: 12px;
+    padding: 8px 10px;
+    border: 1px solid rgba(223, 232, 243, 1);
+    border-radius: 8px;
+    background: #f7fbff;
+}
+
+.taskmain-members-usage-title {
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: #909399;
+}
+
+.taskmain-members-usage-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.taskmain-members-usage-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.taskmain-members-usage-label {
+    font-size: 12px;
+    color: #5e6d82;
+    line-height: 1.2;
+}
+
+.taskmain-members-usage-value {
+    max-width: 110px;
+    text-align: right;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2a82e4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .sidebar-taskmembers-container {
-    /* 442 454 55 */
-    height: calc(100vh - 509px);
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto;
 }
 
 .taskmain-members-listWrap {

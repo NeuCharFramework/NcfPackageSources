@@ -11,6 +11,7 @@
         [2026-07-02] v0.0.1 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
         1、支持流式输出并优化交互体验
         2、优化 AgentsManager 前端界面与历史消息展示效果
+        3、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

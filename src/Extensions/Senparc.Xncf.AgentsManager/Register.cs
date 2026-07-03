@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
+    修改标识：Senparc - 20260704
+    修改描述：v0.11.0-preview2 新增 ChatTask 归档能力并完善多数据库迁移支持
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -51,7 +54,7 @@ namespace Senparc.Xncf.AgentsManager
 
         public override string Uid => "D858D7FA-775A-4690-9023-CFB0B3B84994";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.3.18.9";//必须填写版本号
+        public override string Version => "0.3.22";//必须填写版本号
 
         public override string MenuName => "Agents 管理模块";
 
@@ -154,6 +157,9 @@ namespace Senparc.Xncf.AgentsManager
         }
     }
 }
+
+
+
 
 
 

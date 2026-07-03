@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Index.cshtml.cs
+    文件功能描述：Index.cshtml 相关实现
+    
+    
+    创建标识：Senparc - 20250712
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -132,31 +146,31 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
                             if (leftSeconds > 9999)
                             {
                                 leftSeconds = 0;
-                                status = "δ����";
+                                status = "δ";
                             }
                             else if (leftSeconds > 0)
                             {
-                                status = "��Ч";
+                                status = "Ч";
                             }
                             else //leftSeconds <= 0
                             {
                                 leftSeconds = 0;
-                                status = "�ѹ���";
+                                status = "ѹ";
                             }
                         }
                         else
                         {
-                            status = "δ����";
+                            status = "δ";
                         }
                     }
                     else
                     {
-                        status = "δע��";
+                        status = "δע";
                     }
                 }
                 else
                 {
-                    status = "AppId��Ч";
+                    status = "AppIdЧ";
                 }
 
                 var totalSeconds = bag?.AccessTokenResult.expires_in ?? 0;

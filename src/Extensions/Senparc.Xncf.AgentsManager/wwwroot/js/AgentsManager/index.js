@@ -240,6 +240,13 @@ var app = new Vue({
         stop: false, // 停用
         stand: false, // 待命
       },
+      taskArchiveScope: 'active', // active | archived | all
+      taskArchiveScopeOptions: [
+        { label: '活动', value: 'active' },
+        { label: '归档', value: 'archived' },
+        { label: '全部', value: 'all' }
+      ],
+      taskArchiveSavingId: 0,
       taskFCPVisible: false, // 任务模块 筛选条件 popover 显隐
       taskFilterCriteria: [
         {
@@ -504,6 +511,14 @@ var app = new Vue({
         }
       })
       return Array.from(map.values())
+    },
+    taskUsageSummaryByType() {
+      return {
+        task: this.buildTaskHistoryUsageSummary(this.taskHistoryList),
+        agentTask: this.buildTaskHistoryUsageSummary(this.agentDetailsTaskHistoryList),
+        agentGroupTask: this.buildTaskHistoryUsageSummary(this.agentDetailsGroupTaskHistoryList),
+        groupTask: this.buildTaskHistoryUsageSummary(this.groupTaskHistoryList),
+      }
     }
   },
   watch: {},
@@ -1371,6 +1386,7 @@ var app = new Vue({
       if (listType === 'task') {
         this.taskQueryList.pageIndex = page ?? 1
         Object.assign(queryList, this.taskQueryList)
+        queryList.archiveScope = this.getTaskArchiveScopeCode()
       }
       // 智能体 任务
       if (listType === 'agentTask') {
@@ -1440,6 +1456,10 @@ var app = new Vue({
               if (handleTaskData && handleTaskData.length) {
                 const taskDetail = pickTaskForView(handleTaskData, this.taskDetails?.id)
                 if (taskDetail) {
+                  if (preferLatest) {
+                    const latestIndex = handleTaskData.findIndex(task => String(task.id) === String(taskDetail.id))
+                    this.scrollbarTaskIndex = latestIndex > -1 ? latestIndex : 0
+                  }
                   this.getTaskDetailData(listType, taskDetail.id, taskDetail)
                 }
               }
@@ -1454,6 +1474,11 @@ var app = new Vue({
               if (handleTaskData && handleTaskData.length) {
                 const taskDetail = pickTaskForView(handleTaskData, this.agentDetailsTaskDetails?.id)
                 if (taskDetail) {
+                  if (preferLatest) {
+                    const latestIndex = handleTaskData.findIndex(task => String(task.id) === String(taskDetail.id))
+                    this.agentDetailsTaskIndex = latestIndex > -1 ? latestIndex : 0
+                    this.agentDetailsTabsActiveName = 'second'
+                  }
                   this.getTaskDetailData(listType, taskDetail.id, taskDetail)
                 }
               }
@@ -1467,6 +1492,7 @@ var app = new Vue({
               if (preferLatest && handleTaskData.length) {
                 const taskDetail = pickTaskForView(handleTaskData, this.agentDetailsGroupDetailsTaskDetails?.id)
                 if (taskDetail) {
+                  this.agentDetailsGroupShowType = '2'
                   this.getTaskDetailData(listType, taskDetail.id, taskDetail)
                 }
               }
@@ -1480,6 +1506,7 @@ var app = new Vue({
               if (preferLatest && handleTaskData.length) {
                 const taskDetail = pickTaskForView(handleTaskData, this.groupTaskDetails?.id)
                 if (taskDetail) {
+                  this.groupShowType = '3'
                   this.getTaskDetailData(listType, taskDetail.id, taskDetail)
                 }
               }
@@ -1517,7 +1544,8 @@ var app = new Vue({
     },
     buildTaskRefreshOptions(listType, baseOptions = {}, saveType = '') {
       const options = Object.assign({}, baseOptions)
-      if (saveType !== 'drawerTaskStart') {
+      const isStartTaskSave = ['drawerTaskStart', 'drawerGroupStart'].includes(saveType)
+      if (!isStartTaskSave) {
         return options
       }
 
@@ -1620,7 +1648,7 @@ var app = new Vue({
               }
               // 首次获取历史 + 开启实时流
               this.getTaskRecordListData(detailType, taskDetail.id, '', true)
-              this.startTaskHistoryStream(detailType, taskDetail.id)
+              this.startTaskHistoryStream(detailType, taskDetail.id, taskDetail.status)
             }
           } else {
             app.$message({
@@ -1648,6 +1676,9 @@ var app = new Vue({
               item.messageHtml = marked.parse(item.message);
               return item
             })
+            if (historiesData.length > 0) {
+              this.clearTaskGeneratingPlaceholder(recordType)
+            }
             // 任务
             if (recordType === 'task') {
               const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef('task'), isFirst)
@@ -1851,11 +1882,137 @@ var app = new Vue({
         this.usageAnalyticsLoading = false
       }
     },
+    getDefaultTaskUsageSummary() {
+      return {
+        messageCount: 0,
+        promptTokens: 0,
+        completionTokens: 0,
+        totalTokens: 0,
+        averageResponseMilliseconds: 0,
+        maxResponseMilliseconds: 0,
+      }
+    },
+    buildTaskHistoryUsageSummary(historyList = []) {
+      const summary = this.getDefaultTaskUsageSummary()
+      if (!Array.isArray(historyList) || historyList.length === 0) {
+        return summary
+      }
+
+      let responseCount = 0
+      let responseTotalMs = 0
+
+      historyList.forEach((item) => {
+        if (!item || item._generating) {
+          return
+        }
+
+        summary.messageCount += 1
+
+        const promptTokens = Number(item.promptTokens || 0) || 0
+        const completionTokens = Number(item.completionTokens || 0) || 0
+        const itemTotalTokens = Number(item.totalTokens || 0) || 0
+        const totalTokens = itemTotalTokens > 0 ? itemTotalTokens : (promptTokens + completionTokens)
+
+        summary.promptTokens += promptTokens
+        summary.completionTokens += completionTokens
+        summary.totalTokens += totalTokens
+
+        const responseMilliseconds = Number(item.responseMilliseconds || 0) || 0
+        if (responseMilliseconds > 0) {
+          responseCount += 1
+          responseTotalMs += responseMilliseconds
+          if (responseMilliseconds > summary.maxResponseMilliseconds) {
+            summary.maxResponseMilliseconds = responseMilliseconds
+          }
+        }
+      })
+
+      if (responseCount > 0) {
+        summary.averageResponseMilliseconds = Math.round(responseTotalMs / responseCount)
+      }
+
+      return summary
+    },
+    formatUsageCount(value) {
+      const numeric = Number(value || 0)
+      if (!Number.isFinite(numeric)) return '0'
+      return numeric.toLocaleString('en-US')
+    },
+    formatResponseMilliseconds(milliseconds, emptyText = '--') {
+      const numeric = Number(milliseconds || 0)
+      if (!Number.isFinite(numeric) || numeric <= 0) {
+        return emptyText
+      }
+
+      const rounded = Math.round(numeric)
+      if (rounded < 1000) {
+        return `${rounded}ms`
+      }
+
+      const seconds = Math.floor(rounded / 1000)
+      const remainMilliseconds = rounded % 1000
+      return `${seconds}s${remainMilliseconds}ms`
+    },
     formatTaskHistoryUsage(history) {
-      const totalTokens = history?.totalTokens || 0
+      const promptTokens = Number(history?.promptTokens || 0) || 0
+      const completionTokens = Number(history?.completionTokens || 0) || 0
+      const totalTokens = Number(history?.totalTokens || 0) || (promptTokens + completionTokens)
       const responseMs = history?.responseMilliseconds || 0
-      const roundText = history?.roundIndex ? `R${history.roundIndex} · ` : ''
-      return `${roundText}Token:${totalTokens} · ${responseMs}ms`
+      const roundText = history?.roundIndex ? `R${history.roundIndex} - ` : ''
+      return `${roundText}Token: ${totalTokens}${responseMs > 0 ? ` · ${this.formatResponseMilliseconds(responseMs, '')}` : ''}`
+    },
+    getTaskArchiveScopeCode(scope = this.taskArchiveScope) {
+      const scopeMap = {
+        active: 0,
+        archived: 1,
+        all: 2
+      }
+      return scopeMap[scope] ?? 0
+    },
+    setTaskArchiveScope(scope) {
+      if (!scope || this.taskArchiveScope === scope) return
+      this.taskArchiveScope = scope
+      this.clearHistoryTimer()
+      this.scrollbarTaskIndex = ''
+      this.taskDetails = ''
+      this.taskHistoryList = []
+      this.taskMemberList = []
+      this.taskMemberfilter = ''
+      this.taskMemberfilterList = []
+      this.gettaskListData('task')
+      this.syncHashRoute({ tab: 'third', taskId: null })
+    },
+    async handleTaskArchiveToggle(item) {
+      if (!item || !item.id) return
+      const nextArchived = !item.isArchived
+      const actionText = nextArchived ? '归档' : '取消归档'
+      this.taskArchiveSavingId = item.id
+      try {
+        const response = await serviceAM.post(
+          `/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.SetArchiveStatus?id=${item.id}&isArchived=${nextArchived}`
+        )
+        const data = response?.data ?? {}
+        if (!data.success) {
+          this.$message.error(data.errorMessage || data.data || `${actionText}失败`)
+          return
+        }
+
+        this.$message.success(`${actionText}成功`)
+        const currentTaskId = Number(this.taskDetails?.id || 0)
+        if (currentTaskId === Number(item.id) && this.taskArchiveScope !== 'all' && this.taskArchiveScope !== (nextArchived ? 'archived' : 'active')) {
+          this.scrollbarTaskIndex = ''
+          this.taskDetails = ''
+          this.taskHistoryList = []
+          this.taskMemberList = []
+          this.taskMemberfilter = ''
+          this.taskMemberfilterList = []
+        }
+        this.gettaskListData('task')
+      } catch (error) {
+        this.$message.error(`${actionText}失败：${error?.message || '未知错误'}`)
+      } finally {
+        this.taskArchiveSavingId = 0
+      }
     },
     // 保存 submitForm 数据
     async saveSubmitFormData(saveType, serviceForm = {}) {
@@ -1935,13 +2092,14 @@ var app = new Vue({
           // 重新获取数据
           if (['drawerGroup', 'drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
             console.log('#***#', this.tabsActiveName, this.agentDetails);
+            const isStartTaskSave = ['drawerTaskStart', 'drawerGroupStart'].includes(saveType)
 
             if (this.tabsActiveName === 'first') {
               // agentTemplateStatus
               if (this.agentDetails) {
                 const id = this.agentDetails.agentTemplateDto ? this.agentDetails.agentTemplateDto.id : this.agentDetails.id
                 if (this.agentDetailsTabsActiveName === 'first') {
-                  if (saveType === 'drawerTaskStart') {
+                  if (isStartTaskSave) {
                     const focusChatGroupId = serviceForm?.chatGroupId
                       || this.agentDetailsGroupDetailsTaskDetails?.chatGroupId
                       || this.agentDetailsGroupDetails?.chatGroupDto?.id
@@ -1960,14 +2118,14 @@ var app = new Vue({
                   }
                 } else {
                   const refreshOptions = this.buildTaskRefreshOptions('agentTask', {
-                    preferLatest: saveType === 'drawerTaskStart',
+                    preferLatest: isStartTaskSave,
                     focusChatGroupId: serviceForm?.chatGroupId || ''
                   }, saveType)
                   this.gettaskListData('agentTask', id, 0, refreshOptions)
                 }
               }
             } else if (this.tabsActiveName === 'second') {
-              if (saveType === 'drawerTaskStart') {
+              if (isStartTaskSave) {
                 const focusChatGroupId = serviceForm?.chatGroupId
                   || this.groupTaskDetails?.chatGroupId
                   || this.groupDetails?.chatGroupDto?.id
@@ -1986,7 +2144,7 @@ var app = new Vue({
               }
             } else {
               const refreshOptions = this.buildTaskRefreshOptions('task', {
-                preferLatest: saveType === 'drawerTaskStart',
+                preferLatest: isStartTaskSave,
                 focusChatGroupId: serviceForm?.chatGroupId || ''
               }, saveType)
               this.gettaskListData('task', '', 0, refreshOptions)
@@ -2060,6 +2218,53 @@ var app = new Vue({
       if (listType === 'agentGroupTask') return this.agentDetailsGroupTaskHistoryList || []
       if (listType === 'groupTask') return this.groupTaskHistoryList || []
       return []
+    },
+    shouldShowTaskGenerating(status) {
+      return [1, 2].includes(Number(status))
+    },
+    buildTaskGeneratingItem(listType, chatTaskId) {
+      const nowIso = new Date().toISOString()
+      return {
+        id: `${listType}:generating:${chatTaskId || 'unknown'}`,
+        fromAgentTemplateId: 0,
+        addTime: nowIso,
+        message: 'Generating...',
+        messageHtml: marked.parse('Generating...'),
+        promptTokens: 0,
+        completionTokens: 0,
+        totalTokens: 0,
+        responseMilliseconds: 0,
+        roundIndex: 0,
+        _streaming: true,
+        _generating: true,
+        _streamAgentName: 'Generating...'
+      }
+    },
+    ensureTaskGeneratingPlaceholder(listType, chatTaskId) {
+      if (!listType) return
+      const historyList = this.getHistoryListByType(listType).slice()
+      const existedIndex = historyList.findIndex(item => item && item._generating)
+      if (existedIndex > -1) {
+        return historyList[existedIndex]
+      }
+
+      const placeholder = this.buildTaskGeneratingItem(listType, chatTaskId)
+      historyList.push(placeholder)
+      this.setHistoryListByType(listType, historyList)
+      this.$nextTick(() => {
+        this.scrollHistoryToItemBottom(listType, placeholder.id)
+      })
+      return placeholder
+    },
+    clearTaskGeneratingPlaceholder(listType) {
+      if (!listType) return
+      const historyList = this.getHistoryListByType(listType)
+      if (!Array.isArray(historyList) || historyList.length === 0) return
+
+      const filtered = historyList.filter(item => !item || item._generating !== true)
+      if (filtered.length !== historyList.length) {
+        this.setHistoryListByType(listType, filtered)
+      }
     },
     getLatestPersistedHistoryId(listType) {
       const historyList = this.getHistoryListByType(listType)
@@ -2152,40 +2357,72 @@ var app = new Vue({
         }
       })
     },
-    startTaskHistoryStream(listType, chatTaskId) {
-      if (!listType || !chatTaskId || typeof EventSource === 'undefined') {
-        this.pollGetTaskHistoryData(listType, this.getTaskRecordListData, chatTaskId)
+    startTaskHistoryStream(listType, chatTaskId, taskStatus) {
+      if (!listType || !chatTaskId) {
         return
       }
 
       this.closeTaskHistoryStream(listType)
+
+      if (this.shouldShowTaskGenerating(taskStatus)) {
+        this.ensureTaskGeneratingPlaceholder(listType, chatTaskId)
+      }
+
+      if (typeof EventSource === 'undefined') {
+        this.pollGetTaskHistoryData(listType, this.getTaskRecordListData, chatTaskId)
+        return
+      }
+
       const streamUrl = `/api/Senparc.Xncf.AgentsManager/ChatTaskStream/Subscribe?chatTaskId=${chatTaskId}&_ts=${Date.now()}`
       const source = new EventSource(streamUrl, { withCredentials: true })
       this.historyStream[listType] = source
       this.resetTaskHistoryStreamSilentTimer(listType, chatTaskId)
 
+      const rearmSilentTimer = () => {
+        if (this.historyStream[listType] !== source) return
+        this.resetTaskHistoryStreamSilentTimer(listType, chatTaskId)
+      }
+
       const onChunk = (event) => {
         if (this.historyStream[listType] !== source) return
         this.clearTaskHistoryStreamSilentTimer(listType)
+        this.clearTaskGeneratingPlaceholder(listType)
         this.upsertTaskStreamChunk(listType, event)
+        rearmSilentTimer()
       }
       const onMessage = (event) => {
         if (this.historyStream[listType] !== source) return
         this.clearTaskHistoryStreamSilentTimer(listType)
+        this.clearTaskGeneratingPlaceholder(listType)
         this.flushTaskStreamMessage(listType, event)
+        rearmSilentTimer()
       }
       const onStatus = (event) => {
         if (this.historyStream[listType] !== source) return
         this.clearTaskHistoryStreamSilentTimer(listType)
         const payload = this.safeParseStreamEvent(event)
-        if (!payload || !payload.text) return
+        if (!payload || !payload.text) {
+          rearmSilentTimer()
+          return
+        }
 
         const statusText = String(payload.text).toLowerCase()
         const finishedStates = ['finished', 'cancelled']
         if (finishedStates.includes(statusText)) {
           this.closeTaskHistoryStream(listType)
+          this.clearTaskGeneratingPlaceholder(listType)
           this.pullTaskHistoryAfterStreamClosed(listType, chatTaskId)
+          return
         }
+
+        const statusCodeMap = {
+          chatting: 1,
+          paused: 2
+        }
+        if (this.shouldShowTaskGenerating(statusCodeMap[statusText])) {
+          this.ensureTaskGeneratingPlaceholder(listType, chatTaskId)
+        }
+        rearmSilentTimer()
       }
 
       source.addEventListener('chunk', onChunk)
@@ -2196,6 +2433,7 @@ var app = new Vue({
         if (this.historyStream[listType] !== source) return
         this.clearTaskHistoryStreamSilentTimer(listType)
         this.closeTaskHistoryStream(listType)
+        this.clearTaskGeneratingPlaceholder(listType)
         this.pullTaskHistoryAfterStreamClosed(listType, chatTaskId)
         this.pollGetTaskHistoryData(listType, this.getTaskRecordListData, chatTaskId)
       }
@@ -2221,8 +2459,13 @@ var app = new Vue({
           const taskStatus = Number(statusRes?.data?.data?.chatTaskDto?.status)
           if ([3, 4].includes(taskStatus)) {
             this.closeTaskHistoryStream(listType)
+            this.clearTaskGeneratingPlaceholder(listType)
             this.pullTaskHistoryAfterStreamClosed(listType, chatTaskId)
             return
+          }
+
+          if (this.shouldShowTaskGenerating(taskStatus)) {
+            this.ensureTaskGeneratingPlaceholder(listType, chatTaskId)
           }
         } catch (e) {
           console.warn('stream silent fallback status check failed', listType, chatTaskId, e)
@@ -2247,7 +2490,7 @@ var app = new Vue({
 
       const draftKey = `${listType}:${payload.responseId}`
       const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef(listType), false)
-      const historyList = this.getHistoryListByType(listType).slice()
+      const historyList = this.getHistoryListByType(listType).filter(item => !item || item._generating !== true).slice()
       const existedIndex = historyList.findIndex(item => item.id === draftKey)
       const agentInfo = this.getTaskSenderInfo(listType, payload.fromAgentTemplateId || 0) || {}
       const oldMessage = existedIndex > -1 ? (historyList[existedIndex].message || '') : ''
@@ -2287,7 +2530,7 @@ var app = new Vue({
 
       const draftKey = payload.responseId ? `${listType}:${payload.responseId}` : ''
       const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef(listType), false)
-      const historyList = this.getHistoryListByType(listType).slice()
+      const historyList = this.getHistoryListByType(listType).filter(item => !item || item._generating !== true).slice()
       if (draftKey) {
         const draftIndex = historyList.findIndex(item => item.id === draftKey)
         if (draftIndex > -1) {
@@ -2316,6 +2559,11 @@ var app = new Vue({
         if (!shouldAutoFollow) return
         this.scrollHistoryToItemBottom(listType, finalItem.id)
       })
+
+      // 每轮 message 落地后立即补一个 Generating 占位，确保下一轮也有可见彩虹提示。
+      if (this.historyStream[listType]) {
+        this.ensureTaskGeneratingPlaceholder(listType, payload.chatTaskId || '')
+      }
     },
     closeTaskHistoryStream(listType) {
       this.clearTaskHistoryStreamSilentTimer(listType)
@@ -2324,6 +2572,7 @@ var app = new Vue({
         source.close()
       }
       this.$delete(this.historyStream, listType)
+      this.clearTaskGeneratingPlaceholder(listType)
     },
     clearTaskHistoryStreams() {
       Object.keys(this.historyStream || {}).forEach((key) => {
@@ -3712,6 +3961,13 @@ var app = new Vue({
       }
     },
     // 获取发送人名称
+    getTaskSenderName(taskType, historyItem) {
+      const sender = this.getTaskSenderInfo(taskType, historyItem?.fromAgentTemplateId)
+      if (sender && sender.name) {
+        return sender.name
+      }
+      return historyItem?._streamAgentName || (historyItem?._generating ? 'Generating...' : '')
+    },
     getTaskSenderInfo(taskType, formId) {
       // 智能体 组 任务
       if (taskType === 'agentGroupTask') {
@@ -3742,10 +3998,14 @@ var app = new Vue({
     jumpPromptRange(urlType, item) {
       let url = ''
       if (urlType === 'promptRange') {
-        // 靶场:targetrangeId   靶道:targetlaneId
-        let targetrangeId = item?.promptRange.id ?? ''
-        let targetlaneId = item?.id ?? ''
-        url = `/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18&targetrangeId=${targetrangeId}&targetlaneId=${targetlaneId}`
+        // 靶场:rangeId   靶道:promptId（hash 路由）
+        const rangeId = item?.promptRange?.id ?? ''
+        const promptId = item?.id ?? ''
+        if (rangeId && promptId) {
+          url = `/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18#rangeId=${rangeId}&promptId=${promptId}`
+        } else {
+          url = `/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18`
+        }
       }
       if (urlType === 'model') {
         url = `/Admin/AIKernel/Index?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69`
@@ -4607,7 +4867,14 @@ Vue.component('load-more-select', {
     jumpPromptRange(urlType) {
       let url = ''
       if (urlType === 'promptRange') {
-        url = `/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18`
+        const selectedPromptCode = typeof this.selectVal === 'string'
+          ? this.selectVal.trim()
+          : ''
+        if (selectedPromptCode) {
+          url = `/Admin/PromptRange/Prompt?handler=Resolve&uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18&promptCode=${encodeURIComponent(selectedPromptCode)}`
+        } else {
+          url = `/Admin/PromptRange/Prompt?uid=C6175B8E-9F79-4053-9523-F8E4AC0C3E18`
+        }
       }
       if (urlType === 'model') {
         url = `/Admin/AIKernel/Index?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69`

@@ -1,4 +1,18 @@
-﻿using Senparc.Ncf.Core.AppServices.Exceptions;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：UnSetBackupException.cs
+    文件功能描述：UnSetBackupException 相关实现
+    
+    
+    创建标识：Senparc - 20211012
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.Core.AppServices.Exceptions;
 using System;
 
 namespace Senparc.Xncf.DatabaseToolkit.Domain.Exceptions

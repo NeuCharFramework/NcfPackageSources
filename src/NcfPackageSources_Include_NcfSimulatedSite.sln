@@ -211,6 +211,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Senparc.Xncf.XncfBuilder", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Senparc.Xncf.XncfBuilder.Abstractions", "Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.Abstractions\Senparc.Xncf.XncfBuilder.Abstractions.csproj", "{1EC73E04-DD5F-44EF-A5DD-378E4CDE058A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Senparc.Aspire.ServiceDefaults", "..\tools\NcfSimulatedSite\Senparc.Aspire.ServiceDefaults\Senparc.Aspire.ServiceDefaults.csproj", "{C9744DC3-D6D1-D8CD-919B-A6E177516199}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -4297,6 +4299,62 @@ Global
 		{1EC73E04-DD5F-44EF-A5DD-378E4CDE058A}.Test|x64.Build.0 = Test|Any CPU
 		{1EC73E04-DD5F-44EF-A5DD-378E4CDE058A}.Test|x86.ActiveCfg = Test|Any CPU
 		{1EC73E04-DD5F-44EF-A5DD-378E4CDE058A}.Test|x86.Build.0 = Test|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Debug|x64.Build.0 = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Debug|x86.Build.0 = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Debug-Dapr|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Debug-Dapr|Any CPU.Build.0 = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Debug-Dapr|ARM64.ActiveCfg = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Debug-Dapr|ARM64.Build.0 = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Debug-Dapr|x64.ActiveCfg = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Debug-Dapr|x64.Build.0 = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Debug-Dapr|x86.ActiveCfg = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Debug-Dapr|x86.Build.0 = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.ModifyPublish|Any CPU.ActiveCfg = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.ModifyPublish|Any CPU.Build.0 = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.ModifyPublish|ARM64.ActiveCfg = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.ModifyPublish|ARM64.Build.0 = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.ModifyPublish|x64.ActiveCfg = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.ModifyPublish|x64.Build.0 = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.ModifyPublish|x86.ActiveCfg = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.ModifyPublish|x86.Build.0 = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.NcfDebugForPromptRange|Any CPU.ActiveCfg = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.NcfDebugForPromptRange|Any CPU.Build.0 = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.NcfDebugForPromptRange|ARM64.ActiveCfg = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.NcfDebugForPromptRange|ARM64.Build.0 = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.NcfDebugForPromptRange|x64.ActiveCfg = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.NcfDebugForPromptRange|x64.Build.0 = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.NcfDebugForPromptRange|x86.ActiveCfg = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.NcfDebugForPromptRange|x86.Build.0 = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Release|ARM64.Build.0 = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Release|x64.ActiveCfg = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Release|x64.Build.0 = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Release|x86.ActiveCfg = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Release|x86.Build.0 = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.TemplateRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.TemplateRelease|Any CPU.Build.0 = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.TemplateRelease|ARM64.ActiveCfg = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.TemplateRelease|ARM64.Build.0 = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.TemplateRelease|x64.ActiveCfg = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.TemplateRelease|x64.Build.0 = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.TemplateRelease|x86.ActiveCfg = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.TemplateRelease|x86.Build.0 = Release|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Test|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Test|Any CPU.Build.0 = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Test|ARM64.ActiveCfg = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Test|ARM64.Build.0 = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Test|x64.ActiveCfg = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Test|x64.Build.0 = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Test|x86.ActiveCfg = Debug|Any CPU
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199}.Test|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -4395,6 +4453,7 @@ Global
 		{C7CC1FF2-1AE6-445A-8B70-2CE015BEA559} = {BBF132A7-018B-417A-9F56-396FB9CF391D}
 		{F92E1042-4479-7920-2C98-FEB97EBADEF1} = {BE133D91-034E-1084-498B-FF24C4084A55}
 		{1EC73E04-DD5F-44EF-A5DD-378E4CDE058A} = {F92E1042-4479-7920-2C98-FEB97EBADEF1}
+		{C9744DC3-D6D1-D8CD-919B-A6E177516199} = {0BA6E732-6257-4596-B870-D3417FBC2243}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7427A6C9-D522-4B10-B0AC-607D69736B50}

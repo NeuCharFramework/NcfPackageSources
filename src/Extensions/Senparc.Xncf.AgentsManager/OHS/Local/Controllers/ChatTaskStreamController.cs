@@ -13,10 +13,14 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
+    修改标识：Senparc - 20260704
+    修改描述：v0.11.0-preview2 新增 ChatTask 归档能力并完善多数据库迁移支持
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AreaBase.Admin.Filters;
 using System.Text.Json;
@@ -44,6 +48,11 @@ public class ChatTaskStreamController : ControllerBase
         Response.Headers.CacheControl = "no-cache";
         Response.Headers.Connection = "keep-alive";
         Response.Headers.ContentType = "text/event-stream";
+        HttpContext.Features.Get<IHttpResponseBodyFeature>()?.DisableBuffering();
+
+        // 先发送连接确认，确保 EventSource 尽快进入已连接状态并减少代理缓冲影响。
+        await Response.WriteAsync(": connected\n\n", cancellationToken);
+        await Response.Body.FlushAsync(cancellationToken);
 
         await foreach (var streamEvent in _chatTaskStreamHub.Subscribe(chatTaskId, cancellationToken))
         {

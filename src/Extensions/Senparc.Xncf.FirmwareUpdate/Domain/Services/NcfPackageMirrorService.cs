@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：NcfPackageMirrorService.cs
+    文件功能描述：NcfPackageMirrorService 相关实现
+    
+    
+    创建标识：Senparc - 20260504
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+----------------------------------------------------------------*/
+
 using System.Net.Http.Json;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;

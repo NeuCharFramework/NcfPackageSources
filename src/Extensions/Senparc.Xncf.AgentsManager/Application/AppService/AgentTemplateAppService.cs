@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
+    修改标识：Senparc - 20260704
+    修改描述：v0.11.0-preview2 新增 ChatTask 归档能力并完善多数据库迁移支持
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http.Timeouts;
@@ -204,7 +207,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
 
                     foreach (var c in candidates.Take(topN))
                     {
-                        logger.Append($"  ID={c.Id} | 名称={c.Name} | PromptCode={c.PromptCode}");
+                        logger.Append($"  ID={c.Id} | 名称={c.Name} | PromptCode={c.PromptCode}{System.Environment.NewLine}");
                     }
                 }
 

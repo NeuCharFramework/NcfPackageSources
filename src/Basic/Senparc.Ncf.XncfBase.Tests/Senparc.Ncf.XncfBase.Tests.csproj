@@ -9,6 +9,8 @@
     [2026-07-02] v0.0.2 升级 Senparc.AI.AgentKernel 并完成兼容性适配，补充项目依赖与工程配置优化
     1、升级 Senparc.AI.AgentKernel 并完成兼容性适配
     2、补充项目依赖与工程配置优化
+    3、补充 FunctionHelperTests，覆盖参数归一化与占位符场景
+    4、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 </PackageReleaseNotes>
 
 		<IsPackable>false</IsPackable>
