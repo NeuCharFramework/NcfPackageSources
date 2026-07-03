@@ -76,12 +76,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
 
         [Description("输出详细日志||使用 add-migration 的 -v 参数")]
-    [FunctionParameterUi(ParameterType.CheckBoxList, nameof(OutputVerboseOptions))]
-    public bool OutputVerbose { get; set; }
+        [FunctionParameterUi(ParameterType.CheckBoxList, nameof(OutputVerboseOptions))]
+        public bool OutputVerbose { get; set; }
 
-    [JsonIgnore]
-    public SelectionList OutputVerboseOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("1","使用","",false)
+        [JsonIgnore]
+        public SelectionList OutputVerboseOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
+                 new SelectionItem("true","使用","",false)
             });
 
         /// <summary>

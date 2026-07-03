@@ -235,32 +235,121 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
         private static bool TryNormalizeBooleanJsonNode(JsonNode currentNode, out JsonNode boolJson)
         {
             boolJson = null;
-            if (currentNode is not JsonValue jsonValue)
+            if (!TryGetBooleanValue(currentNode, out var parsedValue))
             {
                 return false;
             }
 
-            try
+            boolJson = JsonValue.Create(parsedValue);
+            return true;
+        }
+
+        private static bool TryGetBooleanValue(JsonNode currentNode, out bool result)
+        {
+            result = false;
+
+            if (currentNode == null)
             {
-                if (jsonValue.TryGetValue<bool>(out var direct))
+                return false;
+            }
+
+            if (currentNode is JsonValue jsonValue)
+            {
+                try
                 {
-                    boolJson = JsonValue.Create(direct);
+                    if (jsonValue.TryGetValue<bool>(out var direct))
+                    {
+                        result = direct;
+                        return true;
+                    }
+                }
+                catch
+                {
+                    // fall through
+                }
+
+                if (TryGetString(jsonValue, out var token) && TryParseBooleanToken(token, out var parsed))
+                {
+                    result = parsed;
+                    return true;
+                }
+
+                return false;
+            }
+
+            if (currentNode is JsonArray or JsonObject)
+            {
+                var values = ExtractValues(currentNode, true);
+                if (values.Count == 0)
+                {
+                    result = false;
+                    return true;
+                }
+
+                var hasParsedBoolean = false;
+                foreach (var value in values)
+                {
+                    if (!TryParseBooleanToken(value, out var parsed))
+                    {
+                        continue;
+                    }
+
+                    hasParsedBoolean = true;
+                    if (parsed)
+                    {
+                        result = true;
+                        return true;
+                    }
+                }
+
+                if (hasParsedBoolean)
+                {
+                    result = false;
                     return true;
                 }
             }
-            catch
+
+            return false;
+        }
+
+        private static bool TryParseBooleanToken(string token, out bool result)
+        {
+            result = false;
+            if (token == null)
             {
-                // fall through
+                return false;
             }
 
-            var s = jsonValue.ToString();
-            if (bool.TryParse(s, out var parsed))
+            var normalized = token.Trim();
+            if (normalized.Length == 0)
             {
-                boolJson = JsonValue.Create(parsed);
+                result = false;
                 return true;
             }
 
-            return false;
+            if (bool.TryParse(normalized, out var boolValue))
+            {
+                result = boolValue;
+                return true;
+            }
+
+            switch (normalized.ToLowerInvariant())
+            {
+                case "1":
+                case "yes":
+                case "y":
+                case "on":
+                    result = true;
+                    return true;
+                case "0":
+                case "no":
+                case "n":
+                case "off":
+                    result = false;
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
 }

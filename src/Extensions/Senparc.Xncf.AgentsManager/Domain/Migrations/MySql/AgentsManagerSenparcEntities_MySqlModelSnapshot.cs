@@ -58,6 +58,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.MySql
                     b.Property<string>("HookPlatformParameter")
                         .HasColumnType("longtext");
 
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<bool>("IsPersonality")
                         .HasColumnType("tinyint(1)");
 

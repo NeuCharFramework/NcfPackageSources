@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Senparc.Xncf.AgentsManager.Models;
@@ -11,9 +12,11 @@ using Senparc.Xncf.AgentsManager.Models;
 namespace Senparc.Xncf.AgentsManager.Domain.Migrations.PostgreSQL
 {
     [DbContext(typeof(AgentsManagerSenparcEntities_PostgreSQL))]
-    partial class AgentsManagerSenparcEntities_PostgreSQLModelSnapshot : ModelSnapshot
+    [Migration("20260703153533_Add_IsArchived")]
+    partial class Add_IsArchived
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

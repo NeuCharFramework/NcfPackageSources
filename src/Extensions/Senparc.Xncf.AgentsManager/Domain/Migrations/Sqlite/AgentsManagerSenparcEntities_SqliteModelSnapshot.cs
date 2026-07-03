@@ -51,6 +51,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
                     b.Property<string>("HookPlatformParameter")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("IsPersonality")
                         .HasColumnType("INTEGER");
 

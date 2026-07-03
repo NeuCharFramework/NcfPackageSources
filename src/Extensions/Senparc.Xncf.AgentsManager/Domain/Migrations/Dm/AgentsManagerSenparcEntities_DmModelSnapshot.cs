@@ -56,6 +56,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Dm
                     b.Property<string>("HookPlatformParameter")
                         .HasColumnType("NVARCHAR2(32767)");
 
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("BIT");
+
                     b.Property<bool>("IsPersonality")
                         .HasColumnType("BIT");
 

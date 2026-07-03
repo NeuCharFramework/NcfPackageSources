@@ -2,98 +2,99 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Senparc.Xncf.AgentsManager.Models;
 
 #nullable disable
 
-namespace Senparc.Xncf.AgentsManager.Domain.Migrations.PostgreSQL
+namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Dm
 {
-    [DbContext(typeof(AgentsManagerSenparcEntities_PostgreSQL))]
-    partial class AgentsManagerSenparcEntities_PostgreSQLModelSnapshot : ModelSnapshot
+    [DbContext(typeof(AgentsManagerSenparcEntities_Dm))]
+    [Migration("20260703153600_Add_IsArchived")]
+    partial class Add_IsArchived
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn)
                 .HasAnnotation("ProductVersion", "8.0.10")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
-
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             modelBuilder.Entity("Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.ChatTask", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("AiModelId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<int>("ChatGroupId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<DateTime>("EndTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<int>("HookPlatform")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<string>("HookPlatformParameter")
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<bool>("IsArchived")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<bool>("IsPersonality")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
+                        .HasColumnType("NVARCHAR2(150)");
 
                     b.Property<string>("PromptCommand")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("ResultComment")
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<bool>("Score")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<DateTime>("StartTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<int>("Status")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.HasKey("Id");
 
@@ -104,61 +105,60 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.PostgreSQL
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("Avastar")
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<bool>("Enable")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<string>("FunctionCallNames")
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("HookRobotParameter")
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<int>("HookRobotType")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("McpEndpoints")
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("PromptCode")
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("SystemMessage")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.HasKey("Id");
 
@@ -169,48 +169,47 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.PostgreSQL
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<int>("AdminAgentTemplateId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<bool>("Enable")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<int>("EnterAgentTemplateId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("State")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.HasKey("Id");
 
@@ -225,54 +224,53 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.PostgreSQL
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("ChatGroupId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<int>("ChatTaskId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<int?>("FromAgentTemplateId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("Message")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<int>("MessageType")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<int>("MyProperty")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("Status")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<int?>("ToAgentTemplateId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.HasKey("Id");
 
@@ -291,39 +289,38 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.PostgreSQL
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("AgentTemplateId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<int>("ChatGroupId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<string>("UID")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.HasKey("Id");
 
@@ -344,8 +341,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.PostgreSQL
                         .WithMany("EnterAgentChatGroups")
                         .HasForeignKey("EnterAgentTemplateId")
                         .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("FK_Senparc_AgentsManager_ChatGroup_Senparc_AgentsManager_Agen~1");
+                        .IsRequired();
 
                     b.Navigation("AdminAgentTemplate");
 
@@ -364,18 +360,15 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.PostgreSQL
                         .WithMany()
                         .HasForeignKey("ChatTaskId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_Senparc_AgentsManager_ChatGroupHistory_Senparc_AgentsManag~1");
+                        .IsRequired();
 
                     b.HasOne("Senparc.Xncf.AgentsManager.Models.DatabaseModel.AgentTemplate", "FromAgentTemplate")
                         .WithMany("FromChatGroupHistories")
-                        .HasForeignKey("FromAgentTemplateId")
-                        .HasConstraintName("FK_Senparc_AgentsManager_ChatGroupHistory_Senparc_AgentsManag~2");
+                        .HasForeignKey("FromAgentTemplateId");
 
                     b.HasOne("Senparc.Xncf.AgentsManager.Models.DatabaseModel.AgentTemplate", "ToAgentTemplate")
                         .WithMany("ToChatGroupHistoies")
-                        .HasForeignKey("ToAgentTemplateId")
-                        .HasConstraintName("FK_Senparc_AgentsManager_ChatGroupHistory_Senparc_AgentsManag~3");
+                        .HasForeignKey("ToAgentTemplateId");
 
                     b.Navigation("ChatGroup");
 

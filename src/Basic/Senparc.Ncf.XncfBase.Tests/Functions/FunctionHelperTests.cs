@@ -56,6 +56,19 @@ namespace Senparc.Ncf.XncfBase.Functions.Tests
                         }
                     }
 
+        public class SetBooleanSelectionConfigFunctionAppRequest : FunctionAppRequestBase
+        {
+            [System.ComponentModel.Description("输出详细日志||测试兼容 1/0 的布尔参数绑定")]
+            [FunctionParameterUi(ParameterType.CheckBoxList, nameof(OutputVerboseOptions))]
+            public bool OutputVerbose { get; set; }
+
+            [JsonIgnore]
+            public SelectionList OutputVerboseOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[]
+            {
+                new SelectionItem("1", "使用", "", false)
+            });
+        }
+
         [FunctionRender("设置参数", "设置备份间隔时间、备份文件路径等参数", typeof(TestModuleRegister))]
         public async Task<StringAppResponse> SetConfig(SetConfigFunctionAppRequest request)
         {
@@ -119,6 +132,31 @@ namespace Senparc.Ncf.XncfBase.Functions.Tests
             var result = Senparc.CO2NET.Helpers.SerializerHelper.GetObject(normalizedJson, typeof(TestFunctionAppService.SetSelectionConfigFunctionAppRequest)) as TestFunctionAppService.SetSelectionConfigFunctionAppRequest;
 
             Assert.AreEqual("PromptCatalyzer", result.AgentName);
+        }
+
+        [TestMethod]
+        public void NormalizeLegacySelectionListJsonToBooleanRequestTest()
+        {
+            var testCases = new Dictionary<string, bool>
+            {
+                ["{\"OutputVerbose\":\"1\"}"] = true,
+                ["{\"OutputVerbose\":1}"] = true,
+                ["{\"OutputVerbose\":[\"1\"]}"] = true,
+                ["{\"OutputVerbose\":{\"SelectedValues\":[\"1\"]}}"] = true,
+                ["{\"OutputVerbose\":\"0\"}"] = false,
+                ["{\"OutputVerbose\":0}"] = false,
+                ["{\"OutputVerbose\":[]}"] = false,
+                ["{\"OutputVerbose\":{\"SelectedValues\":[]}}"] = false
+            };
+
+            foreach (var testCase in testCases)
+            {
+                var normalizedJson = FunctionRequestParameterNormalizer.NormalizeJson(testCase.Key, typeof(TestFunctionAppService.SetBooleanSelectionConfigFunctionAppRequest));
+                var result = Senparc.CO2NET.Helpers.SerializerHelper.GetObject(normalizedJson, typeof(TestFunctionAppService.SetBooleanSelectionConfigFunctionAppRequest)) as TestFunctionAppService.SetBooleanSelectionConfigFunctionAppRequest;
+
+                Assert.IsNotNull(result);
+                Assert.AreEqual(testCase.Value, result.OutputVerbose, $"Failed payload: {testCase.Key}");
+            }
         }
     }
 }

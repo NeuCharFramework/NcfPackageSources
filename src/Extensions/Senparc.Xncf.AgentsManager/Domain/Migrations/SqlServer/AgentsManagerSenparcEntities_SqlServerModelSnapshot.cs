@@ -58,6 +58,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.SqlServer
                     b.Property<string>("HookPlatformParameter")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsPersonality")
                         .HasColumnType("bit");
 

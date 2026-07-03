@@ -19,6 +19,100 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 {
     public class DatabaseMigrationsAppService : AppServiceBase
     {
+        private class CommandExecutionResult
+        {
+            public bool Started { get; set; }
+            public int ExitCode { get; set; }
+            public string StandardOutput { get; set; }
+            public string StandardError { get; set; }
+            public Exception StartException { get; set; }
+        }
+
+        private static async Task<CommandExecutionResult> ExecuteDotNetEfCommandAsync(string workingDirectory, IEnumerable<string> args)
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                WorkingDirectory = workingDirectory,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true
+            };
+
+            foreach (var arg in args)
+            {
+                startInfo.ArgumentList.Add(arg);
+            }
+
+            using var process = new Process { StartInfo = startInfo };
+            try
+            {
+                if (!process.Start())
+                {
+                    return new CommandExecutionResult
+                    {
+                        Started = false,
+                        ExitCode = -1,
+                        StandardOutput = string.Empty,
+                        StandardError = "进程未能启动。"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new CommandExecutionResult
+                {
+                    Started = false,
+                    ExitCode = -1,
+                    StandardOutput = string.Empty,
+                    StandardError = ex.Message,
+                    StartException = ex
+                };
+            }
+
+            var stdOutTask = process.StandardOutput.ReadToEndAsync();
+            var stdErrTask = process.StandardError.ReadToEndAsync();
+
+            await process.WaitForExitAsync();
+
+            return new CommandExecutionResult
+            {
+                Started = true,
+                ExitCode = process.ExitCode,
+                StandardOutput = await stdOutTask,
+                StandardError = await stdErrTask
+            };
+        }
+
+        private static string BuildCommandPreview(IEnumerable<string> args)
+        {
+            return "dotnet " + string.Join(" ", args.Select(arg =>
+            {
+                if (arg == null)
+                {
+                    return "\"\"";
+                }
+
+                return arg.IndexOf(' ') >= 0 ? $"\"{arg}\"" : arg;
+            }));
+        }
+
+        private static void AppendCommandOutput(Senparc.Ncf.Core.AppServices.AppServiceLogger logger, CommandExecutionResult result)
+        {
+            if (!string.IsNullOrWhiteSpace(result.StandardOutput))
+            {
+                logger.Append(result.StandardOutput.TrimEnd('\r', '\n'));
+            }
+
+            if (!string.IsNullOrWhiteSpace(result.StandardError))
+            {
+                logger.Append(result.StandardError.TrimEnd('\r', '\n'));
+            }
+
+            logger.Append($"命令退出码：{result.ExitCode}");
+        }
+
         /// <summary>
         /// 获取迁移文件生成目录
         /// </summary>
@@ -51,9 +145,6 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     return null;
                 }
 
-                var commandTexts = new List<string>();
-                commandTexts.Add($"chcp 65001"); // 设置代码页为 UTF-8
-
                 //添加停机坪引用（直接引用会有问题）
                 //var slnFilePath = Path.Combine(request.DatabasePlantPath, "..\\");
                 //commandTexts.Add($"dotnet sln {slnFilePath} add {request.ProjectPath}");
@@ -61,13 +152,14 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 //进入项目目录
                 var projectPath = request.GetProjectPath(request);
-                commandTexts.Add(@$"cd ""{projectPath}""");
+                logger.Append($"工作目录：{projectPath}");
+
+                var allMigrationsSucceeded = true;
 
                 //执行迁移
                 foreach (var dbType in databaseTypes)
                 {
                     string migrationDir = GetMigrationDir(request, dbType);
-                    var outputVerbose = request.OutputVerbose ? " -v" : "";
 
                     //数据库上下文实体名称
                     var dbContextName = request.DbContextName;
@@ -94,15 +186,43 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         }
                     };
 
-                    //把 request.DatabasePlantPath 中独立存在的 \ 替换为 \\
-                    var databasePlantPath = removeFileName(request.DatabasePlantPath.Replace("\\", "\\\\"));
-                    var migrationDirFinal = removeFileName(migrationDir.Replace("\\", "\\\\"));
+                    var databasePlantPath = removeFileName(request.DatabasePlantPath);
+                    var migrationDirFinal = removeFileName(migrationDir);
 
-                    var migrationsCmd = $"dotnet ef migrations add {request.MigrationName} -c {dbContextName} -s \"{databasePlantPath}\" -o \"{migrationDirFinal}\"{outputVerbose}";
+                    var commandArgs = new List<string>
+                    {
+                        "ef",
+                        "migrations",
+                        "add",
+                        request.MigrationName,
+                        "-c",
+                        dbContextName,
+                        "-s",
+                        databasePlantPath,
+                        "-o",
+                        migrationDirFinal
+                    };
 
-                    await Console.Out.WriteLineAsync(migrationsCmd);
+                    if (request.OutputVerbose)
+                    {
+                        commandArgs.Add("-v");
+                    }
 
-                    commandTexts.Add(migrationsCmd);
+                    logger.Append("");
+                    logger.Append($"==== 执行迁移（{dbType}）====");
+                    logger.Append(BuildCommandPreview(commandArgs));
+
+                    var executeResult = await ExecuteDotNetEfCommandAsync(projectPath, commandArgs);
+                    AppendCommandOutput(logger, executeResult);
+
+                    if (!executeResult.Started || executeResult.ExitCode != 0)
+                    {
+                        allMigrationsSucceeded = false;
+                        response.Success = false;
+                        response.Data = $"迁移命令执行失败（{dbType}），请查看日志。";
+                        break;
+                    }
+
                     // --framework netcoreapp3.1
                     // 如需指定框架，可以追加上述参数，也可以支持更多参数，如net5.0
                 }
@@ -110,35 +230,6 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 ////移除停机坪引用（直接引用会有问题）
                 //commandTexts.Add($"dotnet remove {request.DatabasePlantPath} reference {request.ProjectPath}");
                 //commandTexts.Add($"dotnet sln {slnFilePath} remove {request.ProjectPath}");
-
-                Process p = new Process();
-                p.StartInfo.FileName = "cmd.exe";
-                p.StartInfo.UseShellExecute = false;
-                p.StartInfo.RedirectStandardInput = true;
-                p.StartInfo.RedirectStandardOutput = true;
-                p.StartInfo.RedirectStandardError = true;
-                p.StartInfo.CreateNoWindow = true;
-
-                string strOutput = null;
-                try
-                {
-                    p.Start();
-                    foreach (string item in commandTexts)
-                    {
-                        p.StandardInput.WriteLine(item);
-                    }
-                    p.StandardInput.WriteLine("exit");
-                    strOutput = p.StandardOutput.ReadToEnd();
-                    logger.Append(strOutput);
-
-                    //strOutput = Encoding.UTF8.GetString(Encoding.Default.GetBytes(strOutput));
-                    p.WaitForExit();
-                    p.Close();
-                }
-                catch (Exception e)
-                {
-                    strOutput = e.Message;
-                }
 
                 ////Pomelo-MySQL 命名有不统一的情况，需要处理
                 //if (request.DatabaseTypes.SelectedValues.Contains(MultipleDatabaseType.MySql.ToString()))
@@ -155,9 +246,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 response.Data = "执行完毕，请查看日志！";
 
-                if (strOutput.Contains("Build FAILED", StringComparison.InvariantCultureIgnoreCase))
+                if (!allMigrationsSucceeded)
                 {
-                    response.Data += "重要提示：可能出现错误，请检查日志！";
+                    string errMsg = "迁移命令存在失败，已跳过版本号更新。";
+                    response.Data += errMsg;
+                    logger.Append(errMsg);
                 }
                 else
                 {

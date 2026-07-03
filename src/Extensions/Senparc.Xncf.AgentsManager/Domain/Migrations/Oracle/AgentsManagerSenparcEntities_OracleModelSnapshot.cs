@@ -58,6 +58,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
                     b.Property<string>("HookPlatformParameter")
                         .HasColumnType("NVARCHAR2(2000)");
 
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("NUMBER(1)");
+
                     b.Property<bool>("IsPersonality")
                         .HasColumnType("NUMBER(1)");
 
