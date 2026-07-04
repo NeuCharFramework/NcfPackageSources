@@ -2,81 +2,79 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Areas.Admin.Domain.Models;
 
 #nullable disable
 
-namespace Senparc.Areas.Admin.Domain.Migrations.Dm
+namespace Senparc.Areas.Admin.Domain.Migrations.Sqlite
 {
-    [DbContext(typeof(AdminSenparcEntities_Dm))]
-    partial class AdminSenparcEntities_DmModelSnapshot : ModelSnapshot
+    [DbContext(typeof(AdminSenparcEntities_Sqlite))]
+    [Migration("20260704171431_Add_LoginTimeout")]
+    partial class Add_LoginTimeout
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn)
-                .HasAnnotation("ProductVersion", "8.0.10")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
 
             modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.AdminUserInfo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INT")
-                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("NVARCHAR2(300)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("BIT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("LastLoginIp")
-                        .HasColumnType("NVARCHAR2(32767)");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastLoginTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Note")
-                        .HasColumnType("NVARCHAR2(32767)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
-                        .HasColumnType("NVARCHAR2(32767)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PasswordSalt")
-                        .HasColumnType("NVARCHAR2(32767)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Phone")
-                        .HasColumnType("NVARCHAR2(32767)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("RealName")
-                        .HasColumnType("NVARCHAR2(32767)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("NVARCHAR2(300)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("INT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ThisLoginIp")
-                        .HasColumnType("NVARCHAR2(32767)");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("ThisLoginTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("NVARCHAR2(32767)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -87,34 +85,33 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Dm
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INT")
-                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("NVARCHAR2(300)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("AdminWebLoginExpireMinutes")
-                        .HasColumnType("INT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("BackendJwtExpireMinutes")
-                        .HasColumnType("INT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("BIT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("NVARCHAR2(300)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("INT");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -125,48 +122,47 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Dm
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INT")
-                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("NVARCHAR2(300)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("NVARCHAR2(32767)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("BIT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ModelIdentifier")
                         .HasMaxLength(100)
-                        .HasColumnType("NVARCHAR2(100)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("NVARCHAR2(300)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("RoleType")
-                        .HasColumnType("INT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Sequence")
-                        .HasColumnType("INT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("SessionId")
-                        .HasColumnType("INT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("INT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("UserFeedback")
-                        .HasColumnType("INT");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -179,42 +175,41 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Dm
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INT")
-                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("NVARCHAR2(300)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("BIT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("LastMessageTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("NVARCHAR2(300)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
-                        .HasColumnType("INT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("INT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("NVARCHAR2(150)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("INT");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -225,48 +220,47 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Dm
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INT")
-                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("AddedTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("NVARCHAR2(300)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("BIT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ModuleName")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("NVARCHAR2(200)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ModuleVersion")
                         .HasMaxLength(50)
-                        .HasColumnType("NVARCHAR2(50)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("NVARCHAR2(300)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("SessionId")
-                        .HasColumnType("INT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("INT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("XncfModuleUid")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("NVARCHAR2(200)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
