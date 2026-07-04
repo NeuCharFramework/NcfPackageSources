@@ -160,6 +160,7 @@ var app = new Vue({
             continueChatMode: false, // 是否处于继续聊天模式
             continueChatPromptResultId: null, // 继续聊天的 PromptResult ID
             continueChatHistory: [], // 继续聊天的历史记录
+            continueChatPendingUserMessageId: null, // 继续聊天时本地临时用户消息 ID
             continueChatSystemMessage: '', // 继续聊天时使用的 SystemMessage（Prompt）
             continueChatUsageSummary: {
                 promptCostToken: 0,
@@ -1117,6 +1118,59 @@ var app = new Vue({
                 this.continueChatHistory = [...this.continueChatHistory]
             }
         },
+        appendContinueChatPendingUserMessage(userMessage) {
+            const content = typeof userMessage === 'string' ? userMessage.trim() : ''
+            if (!content) {
+                return null
+            }
+
+            this.removeContinueChatPendingUserMessage()
+            const tempId = `streaming_user_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
+            const sequence = (this.continueChatHistory[this.continueChatHistory.length - 1]?.sequence || 0) + 1
+            this.continueChatPendingUserMessageId = tempId
+            this.continueChatHistory.push({
+                id: tempId,
+                roleType: 1,
+                content,
+                sequence,
+                addTime: new Date().toISOString(),
+                _pending: true
+            })
+            this.continueChatHistory = [...this.continueChatHistory]
+            this.$nextTick(() => {
+                const container = document.getElementById('chatHistoryContainer')
+                if (container) {
+                    container.scrollTop = container.scrollHeight
+                }
+            })
+            return tempId
+        },
+        confirmContinueChatPendingUserMessage() {
+            const pendingId = this.continueChatPendingUserMessageId
+            if (!pendingId) {
+                return
+            }
+
+            const tempMessage = this.continueChatHistory.find(msg => String(msg?.id) === String(pendingId))
+            if (tempMessage) {
+                tempMessage._pending = false
+                this.continueChatHistory = [...this.continueChatHistory]
+            }
+            this.continueChatPendingUserMessageId = null
+        },
+        removeContinueChatPendingUserMessage() {
+            const pendingId = this.continueChatPendingUserMessageId
+            if (!pendingId) {
+                return
+            }
+
+            const tempIndex = this.continueChatHistory.findIndex(msg => String(msg?.id) === String(pendingId))
+            if (tempIndex > -1) {
+                this.continueChatHistory.splice(tempIndex, 1)
+                this.continueChatHistory = [...this.continueChatHistory]
+            }
+            this.continueChatPendingUserMessageId = null
+        },
         removeGeneratingOutputPlaceholdersExcept(keepId) {
             if (!Array.isArray(this.outputList) || this.outputList.length === 0) {
                 return
@@ -1688,15 +1742,25 @@ var app = new Vue({
         
         // 继续聊天提交
         async continueChatSubmit(promptResultId, userMessage) {
+            const normalizedUserMessage = typeof userMessage === 'string' ? userMessage.trim() : ''
+            if (!normalizedUserMessage) {
+                this.$message({
+                    message: '请输入对话内容',
+                    type: 'warning',
+                    duration: 3000
+                })
+                return
+            }
             this.tacticalFormSubmitLoading = true
             this.removeContinueChatStreamingMessage()
+            this.appendContinueChatPendingUserMessage(normalizedUserMessage)
             this.ensureContinueChatGeneratingMessage()
             const streamId = this.createPromptStreamId()
             const streamReady = await this.openPromptStream(streamId, 'continueChat')
             try {
                 const res = await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.ContinueChat`, {
                     promptResultId: promptResultId,
-                    userMessage: userMessage || '',
+                    userMessage: normalizedUserMessage,
                     streamId: streamReady ? streamId : null
                 })
                 
@@ -1704,6 +1768,9 @@ var app = new Vue({
                     const reloadRes = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistory?promptResultId=${promptResultId}`)
                     if (reloadRes.data.success) {
                         this.continueChatHistory = reloadRes.data.data || []
+                        this.continueChatPendingUserMessageId = null
+                    } else {
+                        this.confirmContinueChatPendingUserMessage()
                     }
                     this.removeContinueChatStreamingMessage()
                     
@@ -1719,7 +1786,7 @@ var app = new Vue({
                             // 追加到现有的 ResultString（格式化为对话形式）
                             const currentResult = resultItem.resultString || ''
                             const separator = currentResult ? '\n\n---\n\n' : ''
-                            const newContent = `**用户**: ${userMessage}\n\n**助手**: ${latestAssistantMessage.content}`
+                            const newContent = `**用户**: ${normalizedUserMessage}\n\n**助手**: ${latestAssistantMessage.content}`
                             resultItem.resultString = currentResult + separator + newContent
                             resultItem.resultStringHtml = marked.parse(resultItem.resultString)
                             resultItem.promptCostToken = this.continueChatUsageSummary.promptCostToken || resultItem.promptCostToken || 0
@@ -1754,6 +1821,7 @@ var app = new Vue({
                     })
                 } else {
                     this.removeContinueChatStreamingMessage()
+                    this.removeContinueChatPendingUserMessage()
                     this.closePromptStream()
                     this.$message({
                         message: res.data.errorMessage || '继续聊天失败',
@@ -1767,6 +1835,7 @@ var app = new Vue({
                     type: 'error'
                 })
                 this.removeContinueChatStreamingMessage()
+                this.removeContinueChatPendingUserMessage()
             } finally {
                 this.tacticalFormSubmitLoading = false
             }
@@ -3448,6 +3517,7 @@ var app = new Vue({
             this.continueChatMode = false
             this.continueChatPromptResultId = null
             this.continueChatHistory = []
+            this.continueChatPendingUserMessageId = null
             this.continueChatSystemMessage = ''
             this.continueChatUsageSummary = {
                 promptCostToken: 0,
@@ -6739,6 +6809,7 @@ var app = new Vue({
                     this.continueChatMode = false
                     this.continueChatPromptResultId = null
                     this.continueChatHistory = []
+                    this.continueChatPendingUserMessageId = null
                     this.continueChatUsageSummary = {
                         promptCostToken: 0,
                         resultCostToken: 0,
