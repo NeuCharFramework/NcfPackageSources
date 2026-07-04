@@ -39,6 +39,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
+using System.Net.Http;
+using System.Net.Security;
+using System.Security.Authentication;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text;
@@ -380,6 +384,38 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             string prompt,
             string scene)
         {
+            try
+            {
+                return await GenerateTextToImagePayloadViaAgentKernelCoreAsync(
+                    promptItem,
+                    model,
+                    prompt,
+                    scene,
+                    null);
+            }
+            catch (Exception ex) when (ShouldRetryTextToImageWithCompatClient(model, ex))
+            {
+                SenparcTrace.SendCustomLog(
+                    "PromptRange.AI.Retry",
+                    $"{scene} 检测到 SSL/传输层连接重置，使用兼容 HttpClient（HTTP/1.1 + TLS12/13）重试一次。Model={BuildModelDiagnosticInfo(model)}");
+
+                using var compatibilityHttpClient = CreateTextToImageCompatibilityHttpClient();
+                return await GenerateTextToImagePayloadViaAgentKernelCoreAsync(
+                    promptItem,
+                    model,
+                    prompt,
+                    scene,
+                    compatibilityHttpClient);
+            }
+        }
+
+        private async Task<PromptTextToImageResultPayload> GenerateTextToImagePayloadViaAgentKernelCoreAsync(
+            PromptItemDto promptItem,
+            AIModelDto model,
+            string prompt,
+            string scene,
+            HttpClient httpClient)
+        {
             // TextToImage 使用当前模型类型对应的最小模型配置，避免混入 Chat/Completion 模型字段。
             var aiSettings = _aiModelService.Value.BuildSenparcAiSetting(model, null);
             var runnerName = $"PromptRange_{promptItem.Id}";
@@ -387,7 +423,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 "PromptRange.AI.Attempt",
                 $"{scene} 开始请求。Runner={runnerName}, Model={BuildModelDiagnosticInfo(model)}");
 
-            var iWantToRun = new AgentAiHandler(aiSettings)
+            var handler = httpClient == null
+                ? new AgentAiHandler(aiSettings)
+                : new AgentAiHandler(aiSettings, null, null, httpClient, false);
+
+            var iWantToRun = handler
                 .IWantTo(aiSettings)
                 .ConfigImageModel(runnerName)
                 .BuildKernel();
@@ -411,6 +451,42 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 generatedImage.RevisedPrompt,
                 generatedImage.ImageBytes,
                 generatedImage.ImageUri);
+        }
+
+        private static bool ShouldRetryTextToImageWithCompatClient(AIModelDto model, Exception ex)
+        {
+            if (model == null || ex == null)
+            {
+                return false;
+            }
+
+            if (model.AiPlatform != AiPlatform.AzureOpenAI && model.AiPlatform != AiPlatform.NeuCharAI)
+            {
+                return false;
+            }
+
+            return ContainsSslTransportError(ex);
+        }
+
+        private static HttpClient CreateTextToImageCompatibilityHttpClient()
+        {
+            var socketsHandler = new SocketsHttpHandler
+            {
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+                ConnectTimeout = TimeSpan.FromSeconds(20),
+                PooledConnectionLifetime = TimeSpan.FromMinutes(5),
+                SslOptions = new SslClientAuthenticationOptions
+                {
+                    EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13
+                }
+            };
+
+            return new HttpClient(socketsHandler)
+            {
+                Timeout = TimeSpan.FromSeconds(120),
+                DefaultRequestVersion = HttpVersion.Version11,
+                DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrLower
+            };
         }
 
         /// <summary>
@@ -1272,6 +1348,7 @@ Apple
             var detail = BuildModelDiagnosticInfo(model);
             var chain = FlattenExceptionMessages(ex);
             var isForbidden = chain.Contains("Status: 403 (Forbidden)", StringComparison.OrdinalIgnoreCase);
+            var isSslTransportError = ContainsSslTransportError(ex);
 
             var messageBuilder = new StringBuilder();
             messageBuilder.Append($"AI 调用失败（{scene}）。{detail}");
@@ -1289,6 +1366,10 @@ Apple
                     messageBuilder.Append("系统默认聊天配置：");
                     messageBuilder.Append(defaultSettingInfo);
                 }
+            }
+            else if (isSslTransportError)
+            {
+                messageBuilder.Append("；检测到 TLS/SSL 连接在传输阶段被重置（Connection reset by peer）。这通常是网络链路、代理、中间设备或目标区域可达性问题，而不是 Prompt 或模型参数本身错误。");
             }
 
             if (!string.IsNullOrWhiteSpace(chain))
@@ -1429,6 +1510,25 @@ Apple
                                || chain.Contains("拒绝", StringComparison.OrdinalIgnoreCase);
 
             return has403 && hasForbidden;
+        }
+
+        private static bool ContainsSslTransportError(Exception ex)
+        {
+            if (ex == null)
+            {
+                return false;
+            }
+
+            var chain = FlattenExceptionMessages(ex);
+            if (string.IsNullOrWhiteSpace(chain))
+            {
+                return false;
+            }
+
+            return chain.Contains("ssl connection could not be established", StringComparison.OrdinalIgnoreCase)
+                   || chain.Contains("authentication failed", StringComparison.OrdinalIgnoreCase)
+                   || chain.Contains("connection reset by peer", StringComparison.OrdinalIgnoreCase)
+                   || chain.Contains("transport connection", StringComparison.OrdinalIgnoreCase);
         }
 
         private async Task<PromptTextToImageResultPayload> BuildTextToImagePayloadAsync(
