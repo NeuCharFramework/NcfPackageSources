@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.11.0-preview2</Version>
+    <Version>0.11.1-preview3</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -74,6 +74,10 @@
 		4、补充 MySql、SqlServer、Oracle、PostgreSQL、Sqlite、Dm 迁移与模型快照，保障归档字段落库
 		5、同步应用服务与流式控制器，完善任务归档流程与状态处理
 		6、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
+
+        [2026-07-05] v0.11.1-preview3 重构系统配置初始化与更新流程并统一模型处理，新增批量启动任务接口并优化任务调度
+        1、重构系统配置初始化与更新流程并统一模型处理
+        2、新增批量启动任务接口并优化任务调度
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

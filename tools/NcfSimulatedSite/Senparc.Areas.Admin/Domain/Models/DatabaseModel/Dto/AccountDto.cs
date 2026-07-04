@@ -1,4 +1,18 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：AccountDto.cs
+    文件功能描述：AccountDto 相关功能实现
+    
+    
+    创建标识：Senparc - 20241028
+    
+    修改标识：Senparc - 20260705
+    修改描述：v0.0.3 新增登录超时配置并补齐多数据库迁移支持
+
+----------------------------------------------------------------*/
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;

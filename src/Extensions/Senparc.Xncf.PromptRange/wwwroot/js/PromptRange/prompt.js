@@ -7257,6 +7257,14 @@ var app = new Vue({
                     this.outputMaxDeci = res.data.data.promptItem.evalMaxScore > -1 ? res.data.data.promptItem.evalMaxScore : -1; // 保留整数
                     //输出列表 
                     let latestResultId = null
+                    const findExistingResultIndexById = (resultId) => {
+                        if (resultId === undefined || resultId === null || resultId === '') {
+                            return -1
+                        }
+                        return this.outputList.findIndex(outputItem =>
+                            String(outputItem?.id) === String(resultId)
+                        )
+                    }
                     const findStreamingPlaceholderIndex = () => {
                         if (this.promptStreamingTempResultId !== undefined && this.promptStreamingTempResultId !== null && this.promptStreamingTempResultId !== '') {
                             const exactMatchIndex = this.outputList.findIndex(outputItem =>
@@ -7286,6 +7294,15 @@ var app = new Vue({
                             this.promptDetail?.fullVersion,
                             res.data.data.promptItem || {}
                         )
+
+                        // 流式 final 与接口返回可能交错到达，优先按结果 ID 去重更新，避免连发出现重复项。
+                        const existingIndex = findExistingResultIndexById(normalized.id)
+                        if (existingIndex > -1) {
+                            this.$set(this.outputList, existingIndex, normalized)
+                            latestResultId = normalized.id
+                            return
+                        }
+
                         let replacedStreamingPlaceholder = false
                         const placeholderIndex = findStreamingPlaceholderIndex()
                         if (placeholderIndex > -1) {

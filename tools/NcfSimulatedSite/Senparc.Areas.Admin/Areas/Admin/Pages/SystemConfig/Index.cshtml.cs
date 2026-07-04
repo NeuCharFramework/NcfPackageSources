@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Index.cshtml.cs
+    文件功能描述：Index.cshtml 相关功能实现
+    
+    
+    创建标识：Senparc - 20241028
+    
+    修改标识：Senparc - 20260705
+    修改描述：v0.0.3 新增登录超时配置并补齐多数据库迁移支持
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Linq;
 using System.Threading.Tasks;

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.36.2-preview1</Version>
+    <Version>0.36.3-preview2</Version>
     <LangVersion>latest</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -81,6 +81,10 @@
       2、增强 MCP 工具接入与调用链路兼容能力
 			3、优化 DatabaseMigrationsAppService，清洗命令输出中的 ANSI 转义字符
 			4、调整 DatabaseMigrationRequest 与迁移执行流程，提高数据库迁移调用稳定性
+
+        [2026-07-05] v0.36.3-preview2 重构系统配置初始化与更新流程并统一模型处理，补充配置与工程实现细节
+        1、重构系统配置初始化与更新流程并统一模型处理
+        2、补充配置与工程实现细节
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
