@@ -23,9 +23,6 @@ namespace Senparc.Ncf.Core.Models
     [Table("SystemConfigs")]
     public partial class SystemConfig : EntityBase<int>
     {
-        public const int DefaultAdminWebLoginExpireMinutes = 120;
-        public const int DefaultBackendJwtExpireMinutes = 150 * 60;
-
         [Required]
         [MaxLength(100)]
         public string SystemName { get; private set; }
@@ -52,17 +49,7 @@ namespace Senparc.Ncf.Core.Models
         [MaxLength(100)]
         public string NeuCharAppSecret { get; private set; }
 
-        /// <summary>
-        /// 后台网页（Cookie）登录过期时长，单位：分钟
-        /// </summary>
-        public int AdminWebLoginExpireMinutes { get; private set; }
-
-        /// <summary>
-        /// 后台 JWT 过期时长，单位：分钟
-        /// </summary>
-        public int BackendJwtExpireMinutes { get; private set; }
-
-        public SystemConfig(string systemName, string mchId, string mchKey, string tenPayAppId, bool? hideModuleManager, int neuCharDeveloperId, string neuCharAppKey, string neuCharAppSecret, int adminWebLoginExpireMinutes, int backendJwtExpireMinutes)
+        public SystemConfig(string systemName, string mchId, string mchKey, string tenPayAppId, bool? hideModuleManager, int neuCharDeveloperId, string neuCharAppKey, string neuCharAppSecret)
         {
             SystemName = systemName;
             MchId = mchId;
@@ -72,8 +59,6 @@ namespace Senparc.Ncf.Core.Models
             NeuCharDeveloperId = neuCharDeveloperId;
             NeuCharAppKey = neuCharAppKey;
             NeuCharAppSecret = neuCharAppSecret;
-            AdminWebLoginExpireMinutes = adminWebLoginExpireMinutes > 0 ? adminWebLoginExpireMinutes : DefaultAdminWebLoginExpireMinutes;
-            BackendJwtExpireMinutes = backendJwtExpireMinutes > 0 ? backendJwtExpireMinutes : DefaultBackendJwtExpireMinutes;
         }
 
         /// <summary>
@@ -84,15 +69,13 @@ namespace Senparc.Ncf.Core.Models
         /// <param name="mchKey"></param>
         /// <param name="tenPayAppId"></param>
         /// <param name="hideModuleManager"></param>
-        public void Update(string systemName, string mchId, string mchKey, string tenPayAppId, bool? hideModuleManager, int adminWebLoginExpireMinutes, int backendJwtExpireMinutes/*, int neuCharDeveloperId, string neuCharAppKey, string neuCharAppSecret*/)
+        public void Update(string systemName, string mchId, string mchKey, string tenPayAppId, bool? hideModuleManager/*, int neuCharDeveloperId, string neuCharAppKey, string neuCharAppSecret*/)
         {
             SystemName = systemName;
             MchId = mchId;
             MchKey = mchKey;
             TenPayAppId = tenPayAppId;
             HideModuleManager = hideModuleManager;
-            AdminWebLoginExpireMinutes = adminWebLoginExpireMinutes > 0 ? adminWebLoginExpireMinutes : DefaultAdminWebLoginExpireMinutes;
-            BackendJwtExpireMinutes = backendJwtExpireMinutes > 0 ? backendJwtExpireMinutes : DefaultBackendJwtExpireMinutes;
             //NeuCharDeveloperId = neuCharDeveloperId;
             //NeuCharAppKey = neuCharAppKey;
             //NeuCharAppSecret = neuCharAppSecret;

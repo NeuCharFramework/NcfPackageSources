@@ -33,18 +33,6 @@
                     {{ scope.row.hideModuleManager }}
                 </template>
             </el-table-column>
-            <el-table-column align="center"
-                             label="网页登录持续时间(分钟)">
-                <template slot-scope="scope">
-                    {{ scope.row.adminWebLoginExpireMinutes }}
-                </template>
-            </el-table-column>
-            <el-table-column align="center"
-                             label="JWT 过期时间(分钟)">
-                <template slot-scope="scope">
-                    {{ scope.row.backendJwtExpireMinutes }}
-                </template>
-            </el-table-column>
             <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
                     <el-button size="mini"
@@ -64,17 +52,11 @@
                      :rules="dialog.rules"
                      :model="dialog.data"
                      label-position="left"
-                     label-width="180px"
-                     style="max-width: 520px; margin-left:50px;">
+                     label-width="100px"
+                     style="max-width: 400px; margin-left:50px;">
                 @*<p class="username-tip" v-if="dialog.title==='编辑管理员'">不建议修改用户名！</p>*@
                 <el-form-item label="系统名称" prop="systemName">
                     <el-input v-model="dialog.data.systemName" clearable placeholder="请输入系统名称" />
-                </el-form-item>
-                <el-form-item label="网页登录持续时间(分钟)" prop="adminWebLoginExpireMinutes">
-                    <el-input-number v-model="dialog.data.adminWebLoginExpireMinutes" :min="5" :max="525600" :step="5"></el-input-number>
-                </el-form-item>
-                <el-form-item label="JWT 过期时间(分钟)" prop="backendJwtExpireMinutes">
-                    <el-input-number v-model="dialog.data.backendJwtExpireMinutes" :min="5" :max="525600" :step="5"></el-input-number>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">

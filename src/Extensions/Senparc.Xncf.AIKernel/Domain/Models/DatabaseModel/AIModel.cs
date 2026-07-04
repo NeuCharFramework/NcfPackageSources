@@ -153,6 +153,7 @@ namespace Senparc.Xncf.AIKernel.Models
         public AIModel Update(AIModel_CreateOrEditRequest request)
         {
             ModelId = request.ModelId;
+            ConfigModelType = request.ConfigModelType;
             DeploymentName = request.DeploymentName;
             Endpoint = request.Endpoint;
             AiPlatform = request.AiPlatform;

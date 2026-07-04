@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Trace;
+using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.SystemManager.Domain.Service;
@@ -135,9 +136,21 @@ namespace Senparc.Areas.Admin.Domain.Services
 
                 var _systemConfigService = serviceProvider.GetService<SystemConfigService>();
                 _systemConfigService.SetTenantInfo(tenantInfoService.GetRequestTenantInfo(tenantInfo));
-                _systemConfigService.Init(systemName,
-                    Senparc.Ncf.Core.Models.SystemConfig.DefaultAdminWebLoginExpireMinutes,
-                    Senparc.Ncf.Core.Models.SystemConfig.DefaultBackendJwtExpireMinutes);//初始化系统信息
+                _systemConfigService.Init(systemName);//初始化系统信息
+
+                var _adminAuthConfigService = serviceProvider.GetService<AdminAuthConfigService>();
+                _adminAuthConfigService.SetTenantInfo(tenantInfoService.GetRequestTenantInfo(tenantInfo));
+                var authSettings = _adminAuthConfigService.GetEffectiveExpireSettings();
+                if (authSettings.UsingDefault && authSettings.Source == "missing-record")
+                {
+                    var authInitResult = await _adminAuthConfigService.TrySaveExpireSettingsAsync(
+                        AdminAuthConfig.DefaultAdminWebLoginExpireMinutes,
+                        AdminAuthConfig.DefaultBackendJwtExpireMinutes);
+                    if (!authInitResult.Success)
+                    {
+                        SenparcTrace.SendCustomLog("AdminAuthConfig 初始化提示", authInitResult.Message);
+                    }
+                }
             }
 
             {

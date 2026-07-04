@@ -257,12 +257,6 @@ namespace Senparc.Ncf.Core.Models
         [AutoSetCache]
         public string NeuCharAppSecret { get; set; }
 
-        [AutoSetCache]
-        public int AdminWebLoginExpireMinutes { get; set; }
-
-        [AutoSetCache]
-        public int BackendJwtExpireMinutes { get; set; }
-
         public override void CreateEntity(SystemConfig entity)
         {
             base.CreateEntity(entity);

@@ -87,9 +87,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
             }
         }
 
-        public SystemConfig Init(string systemName = null,
-            int adminWebLoginExpireMinutes = SystemConfig.DefaultAdminWebLoginExpireMinutes,
-            int backendJwtExpireMinutes = SystemConfig.DefaultBackendJwtExpireMinutes)
+        public SystemConfig Init(string systemName = null)
         {
             var systemConfig = GetObject(z => true);
             if (systemConfig != null)
@@ -102,8 +100,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
             string appSecret = null;
             systemName ??= "NCF - Template Project";
 
-            systemConfig = new SystemConfig(systemName, null, null, null, false, developerId, appKey, appSecret,
-                adminWebLoginExpireMinutes, backendJwtExpireMinutes);
+            systemConfig = new SystemConfig(systemName, null, null, null, false, developerId, appKey, appSecret);
             SaveObject(systemConfig);
 
             return systemConfig;

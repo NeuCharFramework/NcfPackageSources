@@ -21,6 +21,8 @@
 
 ----------------------------------------------------------------*/
 
+#nullable enable annotations
+
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Workflows;
 using Microsoft.Extensions.AI;

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Ncf.Core.Enums;
-using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.SystemManager.Domain.Service;
 
 namespace Senparc.Areas.Admin.Areas.Admin.Pages
@@ -12,10 +11,8 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         SystemConfigService systemConfigService)
         : BaseAdminPageModel(serviceProvider)
     {
-        private const int MinExpireMinutes = 5;
-        private const int MaxExpireMinutes = 60 * 24 * 365; // 1 year
-
         private readonly SystemConfigService _systemConfigService = systemConfigService;
+
         public async Task<IActionResult> OnGetAsync()
         {
             await Task.CompletedTask;
@@ -26,10 +23,10 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         public async Task<IActionResult> OnGetListAsync(int pageIndex, int pageSize)
         {
             var systemConfig = await _systemConfigService.GetObjectListAsync(pageIndex, pageSize, z => true, z => z.Id, OrderingType.Ascending);
-            return Ok(new { List = systemConfig.AsEnumerable() });
+            return Ok(new { TotalCount = systemConfig.TotalCount, PageIndex = systemConfig.PageIndex, List = systemConfig.AsEnumerable() });
         }
 
-        public async Task<IActionResult> OnPostEditAsync([FromBody] FullSystemConfig fullSystemConfig)
+        public async Task<IActionResult> OnPostEditAsync([FromBody] Senparc.Ncf.Core.Models.FullSystemConfig fullSystemConfig)
         {
             if (fullSystemConfig == null)
             {
@@ -41,33 +38,24 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 return Ok(false, "系统名称不能为空");
             }
 
-            if (fullSystemConfig.AdminWebLoginExpireMinutes < MinExpireMinutes || fullSystemConfig.AdminWebLoginExpireMinutes > MaxExpireMinutes)
-            {
-                return Ok(false, $"网页登录持续时间必须在 {MinExpireMinutes}-{MaxExpireMinutes} 分钟范围内");
-            }
-
-            if (fullSystemConfig.BackendJwtExpireMinutes < MinExpireMinutes || fullSystemConfig.BackendJwtExpireMinutes > MaxExpireMinutes)
-            {
-                return Ok(false, $"JWT 过期时间必须在 {MinExpireMinutes}-{MaxExpireMinutes} 分钟范围内");
-            }
-
             var systemConfig = await _systemConfigService.GetObjectAsync(z => true);
+            if (systemConfig == null)
+            {
+                return Ok(false, "系统配置信息不存在");
+            }
+
             systemConfig.Update(fullSystemConfig.SystemName,
                 systemConfig.MchId,
                 systemConfig.MchKey,
                 systemConfig.TenPayAppId,
-                systemConfig.HideModuleManager,
-                fullSystemConfig.AdminWebLoginExpireMinutes,
-                fullSystemConfig.BackendJwtExpireMinutes);
+                systemConfig.HideModuleManager);
 
             await _systemConfigService.SaveObjectAsync(systemConfig);
 
             base.SetMessager(MessageType.success, "修改成功");
             return Ok(new
             {
-                systemName = systemConfig.SystemName,
-                adminWebLoginExpireMinutes = systemConfig.AdminWebLoginExpireMinutes,
-                backendJwtExpireMinutes = systemConfig.BackendJwtExpireMinutes
+                systemName = systemConfig.SystemName
             });
         }
     }

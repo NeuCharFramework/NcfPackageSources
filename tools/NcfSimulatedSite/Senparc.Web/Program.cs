@@ -36,8 +36,10 @@ builder.AddNcf();
 //添加 ServiceDefaults
 builder.AddServiceDefaults();
 
+#pragma warning disable SYSLIB0014
 System.Net.ServicePointManager.ServerCertificateValidationCallback =
     ((sender, certificate, chain, sslPolicyErrors) => true);
+#pragma warning restore SYSLIB0014
 
 //添加 Dapr
 builder.Services.AddDaprClient();

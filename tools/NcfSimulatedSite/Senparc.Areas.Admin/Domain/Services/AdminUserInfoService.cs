@@ -20,8 +20,9 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Senparc.Areas.Admin.ACL;
 using Senparc.Areas.Admin.Domain.Models;
+using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Areas.Admin.Domain.Models.Dto;
-using Senparc.Ncf.Core.Cache;
+using Senparc.Areas.Admin.Domain.Services;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
@@ -42,11 +43,16 @@ namespace Senparc.Areas.Admin.Domain
         private const int MaxExpireMinutes = 60 * 24 * 365; // 1 year
 
         private readonly Lazy<IHttpContextAccessor> _contextAccessor;
+        private readonly Lazy<AdminAuthConfigService> _adminAuthConfigService;
 
-        public AdminUserInfoService(IAdminUserInfoRepository repository, Lazy<IHttpContextAccessor> httpContextAccessor, IServiceProvider serviceProvider)
+        public AdminUserInfoService(IAdminUserInfoRepository repository,
+            Lazy<IHttpContextAccessor> httpContextAccessor,
+            Lazy<AdminAuthConfigService> adminAuthConfigService,
+            IServiceProvider serviceProvider)
             : base(repository, serviceProvider)
         {
             _contextAccessor = httpContextAccessor;
+            _adminAuthConfigService = adminAuthConfigService;
         }
 
         private int NormalizeExpireMinutes(int expireMinutes, int defaultValue)
@@ -65,39 +71,18 @@ namespace Senparc.Areas.Admin.Domain
             return value;
         }
 
-        private FullSystemConfig GetFullSystemConfigOrNull()
-        {
-            try
-            {
-                return _serviceProvider.GetService<FullSystemConfigCache>()?.Data;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
         public int GetAdminWebLoginExpireMinutes()
         {
-            var fullSystemConfig = GetFullSystemConfigOrNull();
-            return NormalizeExpireMinutes(fullSystemConfig?.AdminWebLoginExpireMinutes ?? SystemConfig.DefaultAdminWebLoginExpireMinutes,
-                SystemConfig.DefaultAdminWebLoginExpireMinutes);
+            var settings = _adminAuthConfigService.Value.GetEffectiveExpireSettings();
+            return NormalizeExpireMinutes(settings.AdminWebLoginExpireMinutes,
+                AdminAuthConfig.DefaultAdminWebLoginExpireMinutes);
         }
 
         public int GetBackendJwtExpireMinutes()
         {
-            var fullSystemConfig = GetFullSystemConfigOrNull();
-            if (fullSystemConfig?.BackendJwtExpireMinutes > 0)
-            {
-                return NormalizeExpireMinutes(fullSystemConfig.BackendJwtExpireMinutes, SystemConfig.DefaultBackendJwtExpireMinutes);
-            }
-
-            var jwtSettings = _serviceProvider.GetService<IOptionsSnapshot<JwtSettings>>()?.Get(JwtSettings.Position_Backend);
-            var fallbackMinutes = jwtSettings == null
-                ? SystemConfig.DefaultBackendJwtExpireMinutes
-                : (int)Math.Round(jwtSettings.Expires * 60d, MidpointRounding.AwayFromZero);
-
-            return NormalizeExpireMinutes(fallbackMinutes, SystemConfig.DefaultBackendJwtExpireMinutes);
+            var settings = _adminAuthConfigService.Value.GetEffectiveExpireSettings();
+            return NormalizeExpireMinutes(settings.BackendJwtExpireMinutes,
+                AdminAuthConfig.DefaultBackendJwtExpireMinutes);
         }
 
         public async Task<DateTimeOffset> KeepCookieLoginAliveAsync(ClaimsPrincipal principal)
@@ -447,7 +432,7 @@ namespace Senparc.Areas.Admin.Domain
                     .Select(o => o.RoleCode).Distinct().ToList();
                 result.Token = token;
                 result.TokenExpiresUtc = tokenExpiresUtc;
-                var permissions = await _serviceProvider.GetService<SysRolePermissionService>().GetFullListAsync(p => roles.Select(o => o.RoleId).Contains(p.RoleId));
+                var permissions = await _serviceProvider.GetService<Domain.Services.SysRolePermissionService>().GetFullListAsync(p => roles.Select(o => o.RoleId).Contains(p.RoleId));
                 result.MenuTree = await _serviceProvider.GetService<Domain.Services.SysMenuService>().GetAllMenusTreeAsync(false);
                 result.UserName = adminUserInfo.UserName;
                 result.RoleCodes = roleCodes;
@@ -473,7 +458,7 @@ namespace Senparc.Areas.Admin.Domain
             var roles = await _serviceProvider.GetService<SysRoleAdminUserInfoService>().GetFullListAsync(o => o.AccountId == adminUserInfo.Id);
             var roleCodes = roles
                 .Select(o => o.RoleCode).Distinct().ToList();
-            var permissions = await _serviceProvider.GetService<SysRolePermissionService>().GetFullListAsync(p => roles.Select(o => o.RoleId).Contains(p.RoleId));
+            var permissions = await _serviceProvider.GetService<Domain.Services.SysRolePermissionService>().GetFullListAsync(p => roles.Select(o => o.RoleId).Contains(p.RoleId));
             result.MenuTree = await _serviceProvider.GetService<Domain.Services.SysMenuService>().GetAllMenusTreeAsync(false);
             result.UserName = adminUserInfo.UserName;
             result.RealName = adminUserInfo.RealName;
@@ -492,7 +477,7 @@ namespace Senparc.Areas.Admin.Domain
         {
             var options = _serviceProvider.GetService<IOptionsSnapshot<JwtSettings>>();
             var jwtSettings = options.Get(JwtSettings.Position_Backend);
-            var effectiveExpireMinutes = NormalizeExpireMinutes(expiresMinutes ?? GetBackendJwtExpireMinutes(), SystemConfig.DefaultBackendJwtExpireMinutes);
+            var effectiveExpireMinutes = NormalizeExpireMinutes(expiresMinutes ?? GetBackendJwtExpireMinutes(), AdminAuthConfig.DefaultBackendJwtExpireMinutes);
             expiresUtc = DateTimeOffset.UtcNow.AddMinutes(effectiveExpireMinutes);
             byte[] keyBytes = System.Text.Encoding.ASCII.GetBytes(jwtSettings.SecretKey);
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();

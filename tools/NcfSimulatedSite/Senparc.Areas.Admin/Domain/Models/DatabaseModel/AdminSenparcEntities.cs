@@ -24,6 +24,11 @@ namespace Senparc.Areas.Admin.Domain.Models
         public DbSet<AdminUserInfo> SystemConfigs { get; set; }
 
         /// <summary>
+        /// 管理后台认证配置
+        /// </summary>
+        public DbSet<AdminAuthConfig> AdminAuthConfigs { get; set; }
+
+        /// <summary>
         /// 管理后台聊天会话
         /// </summary>
         public DbSet<AdminChatSession> AdminChatSessions { get; set; }

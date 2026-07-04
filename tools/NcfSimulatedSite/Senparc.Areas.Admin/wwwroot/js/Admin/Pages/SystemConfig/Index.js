@@ -19,23 +19,14 @@
                 data: {
                     id: 0,
                     systemName: '',
-                    adminWebLoginExpireMinutes: 120,
-                    backendJwtExpireMinutes: 9000
                 },
                 rules: {
                     systemName: [
                         { required: true, message: "系统名称为必填项", trigger: "blur" }
-                    ],
-                    adminWebLoginExpireMinutes: [
-                        { required: true, message: "网页登录持续时间为必填项", trigger: "change" }
-                    ],
-                    backendJwtExpireMinutes: [
-                        { required: true, message: "JWT 过期时间为必填项", trigger: "change" }
                     ]
-                }
-            },
-            updateLoading: false,
-            updateLoadingSet: false, // 确认loading按钮
+                },
+                updateLoading: false
+            }
         };
     },
     created: function () {
@@ -49,12 +40,12 @@
             if (!val) {
                 this.dialog.data = {
                     id: 0,
-                    systemName: '',
-                    adminWebLoginExpireMinutes: 120,
-                    backendJwtExpireMinutes: 9000
+                    systemName: ''
                 };
                 this.dialog.updateLoading = false;
-                this.$refs['dataForm'].resetFields();
+                if (this.$refs['dataForm']) {
+                    this.$refs['dataForm'].resetFields();
+                }
             }
         }
     },
@@ -62,7 +53,7 @@
         // 获取数据
         getList() {
             let { pageIndex, pageSize } = this.listQuery;
-            service.get(`/Admin/SystemConfig/index?handler=List&&pageIndex=${pageIndex}&pageSize=${pageSize}`).then(res => {
+            service.get(`/Admin/SystemConfig?handler=List&pageIndex=${pageIndex}&pageSize=${pageSize}`).then(res => {
                 this.tableData = res.data.data.list;
                 this.paginationQuery.total = res.data.data.totalCount;
             });
@@ -72,12 +63,9 @@
             this.dialog.visible = true;
             if (row) {
                 // 编辑
-                let { systemName, id, adminWebLoginExpireMinutes, backendJwtExpireMinutes } = row;
+                let { systemName, id } = row;
                 this.dialog.data = {
-                    systemName,
-                    id,
-                    adminWebLoginExpireMinutes,
-                    backendJwtExpireMinutes
+                    systemName, id
                 };
                 this.dialog = Object.assign({}, this.dialog);
             }
@@ -91,10 +79,8 @@
                     let data = {
                         Id: this.dialog.data.id,
                         SystemName: this.dialog.data.systemName,
-                        AdminWebLoginExpireMinutes: this.dialog.data.adminWebLoginExpireMinutes,
-                        BackendJwtExpireMinutes: this.dialog.data.backendJwtExpireMinutes
                     };
-                    service.post("/Admin/SystemConfig/Edit?handler=Save", data).then(res => {
+                    service.post("/Admin/SystemConfig?handler=Edit", data).then(res => {
                         if (res.data.success) {
                             this.getList();
                             this.$notify({
@@ -107,9 +93,9 @@
                             this.dialog.updateLoading = false;
                         } else {
                             this.$notify({
-                                title: "Faild",
+                                title: "Failed",
                                 message: "更新失败：" + res.data.msg,
-                                type: "success",
+                                type: "error",
                                 duration: 2000
                             });
                         }

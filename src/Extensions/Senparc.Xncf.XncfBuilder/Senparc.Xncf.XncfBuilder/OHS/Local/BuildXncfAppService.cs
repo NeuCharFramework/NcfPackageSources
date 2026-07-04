@@ -107,17 +107,6 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 p.Close();
             }
 
-            async Task<string> ReadOutputAsync(Process process)
-            {
-                var output = new StringBuilder();
-                while (!process.StandardOutput.EndOfStream)
-                {
-                    var line = await process.StandardOutput.ReadLineAsync();
-                    output.AppendLine(line);
-                }
-                return output.ToString();
-            }
-
             string output;
             try
             {

@@ -19,8 +19,7 @@
     <PackageReference Include="Senparc.Xncf.Swagger" Version="0.17.0-preview.1" />
     <!--<ProjectReference Include="..\..\..\..\NcfPackageSources\src\Extensions\Senparc.Xncf.AgentsManager\Senparc.Xncf.AgentsManager.ForNcf.csproj" />-->
     <ProjectReference Include="..\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
-    <!-- <ProjectReference Include="..\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" /> -->
     <!-- <ProjectReference Include="..\..\..\..\NcfPackageSources\src\Extensions\Senparc.Xncf.AgentsManager\Senparc.Xncf.AgentsManager.csproj" /> -->
-
+    <!-- <ProjectReference Include="..\..\..\..\NcfPackageSources\src\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" /> -->
   </ItemGroup>
 </Project>

@@ -12,6 +12,8 @@
 
 ----------------------------------------------------------------*/
 
+#nullable enable
+
 public partial class ResponseClass
 {
     public int StatusCode { get; set; }

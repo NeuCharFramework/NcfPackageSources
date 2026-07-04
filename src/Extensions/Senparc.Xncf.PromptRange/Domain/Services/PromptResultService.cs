@@ -39,9 +39,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -303,40 +303,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             try
             {
-                var aiSettings = _aiModelService.Value.BuildSenparcAiSetting(model);
-                var runnerName = $"PromptRange_{promptItem.Id}";
-                SenparcTrace.SendCustomLog(
-                    "PromptRange.AI.Attempt",
-                    $"{textToImageScene} 开始请求。Runner={runnerName}, Model={BuildModelDiagnosticInfo(model)}");
-
-                var iWantToRun = new AgentAiHandler(aiSettings)
-                    .IWantTo(aiSettings)
-                    .ConfigModel(ConfigModel.TextToImage, runnerName)
-                    .BuildKernel();
-
-                var kernel = iWantToRun?.Kernel
-                    ?? throw new NcfExceptionBase("TextToImage 调用失败：Kernel 未创建成功");
-
-                var imageResult = await kernel.ImageGenerationAsync(
+                payload = await GenerateTextToImagePayloadViaAgentKernelAsync(
+                    promptItem,
+                    model,
                     runPrompt,
-                    DefaultTextToImageWidth,
-                    DefaultTextToImageHeight,
-                    1,
-                    null,
-                    null,
-                    default);
-
-                var generatedImage = imageResult?.Value
-                    ?? throw BuildAiCallException(
-                        new Exception("ImageGenerationAsync 未返回有效结果（Value 为 null）"),
-                        model,
-                        textToImageScene);
-
-                payload = await BuildTextToImagePayloadAsync(
-                    runPrompt,
-                    generatedImage.RevisedPrompt,
-                    generatedImage.ImageBytes,
-                    generatedImage.ImageUri);
+                    textToImageScene);
             }
             catch (NcfExceptionBase)
             {
@@ -401,6 +372,45 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
 
             return this.Mapper.Map<PromptResultDto>(promptResult);
+        }
+
+        private async Task<PromptTextToImageResultPayload> GenerateTextToImagePayloadViaAgentKernelAsync(
+            PromptItemDto promptItem,
+            AIModelDto model,
+            string prompt,
+            string scene)
+        {
+            // TextToImage 使用当前模型类型对应的最小模型配置，避免混入 Chat/Completion 模型字段。
+            var aiSettings = _aiModelService.Value.BuildSenparcAiSetting(model, null);
+            var runnerName = $"PromptRange_{promptItem.Id}";
+            SenparcTrace.SendCustomLog(
+                "PromptRange.AI.Attempt",
+                $"{scene} 开始请求。Runner={runnerName}, Model={BuildModelDiagnosticInfo(model)}");
+
+            var iWantToRun = new AgentAiHandler(aiSettings)
+                .IWantTo(aiSettings)
+                .ConfigImageModel(runnerName)
+                .BuildKernel();
+
+            var kernel = iWantToRun?.Kernel
+                ?? throw new NcfExceptionBase("TextToImage 调用失败：Kernel 未创建成功");
+
+            var imageResult = await kernel.ImageGenerationAsync(
+                prompt,
+                DefaultTextToImageWidth,
+                DefaultTextToImageHeight);
+
+            var generatedImage = imageResult?.Value
+                ?? throw BuildAiCallException(
+                    new Exception("ImageGenerationAsync 未返回有效结果（Value 为 null）"),
+                    model,
+                    scene);
+
+            return await BuildTextToImagePayloadAsync(
+                prompt,
+                generatedImage.RevisedPrompt,
+                generatedImage.ImageBytes,
+                generatedImage.ImageUri);
         }
 
         /// <summary>

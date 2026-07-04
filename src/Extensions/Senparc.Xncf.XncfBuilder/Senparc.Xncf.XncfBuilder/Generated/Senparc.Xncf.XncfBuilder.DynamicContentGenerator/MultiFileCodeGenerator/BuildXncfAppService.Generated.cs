@@ -3,6 +3,8 @@
 // Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
 // </auto-generated>
 
+#nullable enable annotations
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -102,6 +104,8 @@ Code:
     修改描述：vNext 补充标准化文件头注释
 
 ----------------------------------------------------------------*/
+
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -1591,9 +1595,9 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         /// <summary>
         /// 根据名称获取模板内容
         /// </summary>
-        public static string? GetTemplateContent(string templateName)
+        public static string GetTemplateContent(string templateName)
         {
-            return AllTemplateFiles.FirstOrDefault(f => f.Name == templateName)?.Content;
+            return AllTemplateFiles.FirstOrDefault(f => f.Name == templateName)?.Content ?? string.Empty;
         }
 
         /// <summary>

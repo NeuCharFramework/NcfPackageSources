@@ -1,9 +1,19 @@
 ﻿@model Senparc.Ncf.AreaBase.Admin.IAdminPageModelBase
+@inject Senparc.Areas.Admin.Domain.AdminUserInfoService AdminUserInfoService
 @{
     var thisYear = DateTime.Now.Year;
     var currentCulture = System.Globalization.CultureInfo.CurrentUICulture.Name;
-    var webLoginExpireMinutes = Model?.FullSystemConfig?.AdminWebLoginExpireMinutes ?? Senparc.Ncf.Core.Models.SystemConfig.DefaultAdminWebLoginExpireMinutes;
-    var jwtExpireMinutes = Model?.FullSystemConfig?.BackendJwtExpireMinutes ?? Senparc.Ncf.Core.Models.SystemConfig.DefaultBackendJwtExpireMinutes;
+    var webLoginExpireMinutes = Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminAuthConfig.DefaultAdminWebLoginExpireMinutes;
+    var jwtExpireMinutes = Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminAuthConfig.DefaultBackendJwtExpireMinutes;
+    try
+    {
+        webLoginExpireMinutes = AdminUserInfoService.GetAdminWebLoginExpireMinutes();
+        jwtExpireMinutes = AdminUserInfoService.GetBackendJwtExpireMinutes();
+    }
+    catch
+    {
+        // 忽略异常并回退默认值，避免布局渲染被配置异常中断。
+    }
 }
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Senparc.Areas.Admin.AdminResource> AR
 
