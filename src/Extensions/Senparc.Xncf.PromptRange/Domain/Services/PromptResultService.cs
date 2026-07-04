@@ -12,10 +12,8 @@
 
 ----------------------------------------------------------------*/
 
-using log4net.Util;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
-using NetTopologySuite.IO;
 using Senparc.AI;
 using Senparc.AI.AgentKernel;
 using Senparc.AI.AgentKernel.Handlers;
@@ -42,6 +40,8 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -49,6 +49,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 {
     public class PromptResultService : ServiceBase<PromptResult>
     {
+        private const string TextToImageResultTypeTag = "TextToImage";
+        private const string TextToImageStorageTypeLocal = "LocalFile";
+        private const string TextToImageStorageTypeRemote = "RemoteUrl";
+        private const string TextToImageStorageTypeNone = "None";
+        private const int DefaultTextToImageWidth = 1024;
+        private const int DefaultTextToImageHeight = 1024;
+        private static readonly JsonSerializerOptions PromptResultJsonSerializerOptions = new(JsonSerializerDefaults.Web);
+
         // private readonly RepositoryBase<PromptItem> _promptItemRepository;
         private readonly PromptItemService _promptItemService;
         private readonly PromptRangeService _promptRangeService;
@@ -198,6 +206,21 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 throw new NcfExceptionBase("Prompt 内容不能为空");
             }
 
+            if (model.ConfigModelType == ConfigModelType.TextToImage)
+            {
+                return await ExecuteTextToImageAsync(
+                    promptItem,
+                    model,
+                    runPrompt,
+                    onStreamEvent);
+            }
+
+            if (model.ConfigModelType != ConfigModelType.Chat)
+            {
+                throw new NcfExceptionBase(
+                    $"PromptRange 当前暂不支持 {model.ConfigModelType} 类型模型打靶。已支持：Chat、TextToImage。");
+            }
+
             var generateScene = $"PromptRange.Generate#{CreateTraceToken()}";
             var (aiOutput, usageFromResponse) = await ExecuteChatWithDefaultFallbackAsync(
                 model,
@@ -262,6 +285,118 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     CompletionTokens = resultCostToken,
                     TotalTokens = usageInfo.TotalTokens,
                     ResponseMilliseconds = (int)Math.Round(promptResult.CostTime)
+                });
+            }
+
+            return this.Mapper.Map<PromptResultDto>(promptResult);
+        }
+
+        private async Task<PromptResultDto> ExecuteTextToImageAsync(
+            PromptItemDto promptItem,
+            AIModelDto model,
+            string runPrompt,
+            Action<PromptResultStreamEvent> onStreamEvent)
+        {
+            var textToImageScene = $"PromptRange.TextToImage#{CreateTraceToken()}";
+            var dt1 = SystemTime.Now;
+            PromptTextToImageResultPayload payload;
+
+            try
+            {
+                var aiSettings = _aiModelService.Value.BuildSenparcAiSetting(model);
+                var runnerName = $"PromptRange_{promptItem.Id}";
+                SenparcTrace.SendCustomLog(
+                    "PromptRange.AI.Attempt",
+                    $"{textToImageScene} 开始请求。Runner={runnerName}, Model={BuildModelDiagnosticInfo(model)}");
+
+                var iWantToRun = new AgentAiHandler(aiSettings)
+                    .IWantTo(aiSettings)
+                    .ConfigModel(ConfigModel.TextToImage, runnerName)
+                    .BuildKernel();
+
+                var kernel = iWantToRun?.Kernel
+                    ?? throw new NcfExceptionBase("TextToImage 调用失败：Kernel 未创建成功");
+
+                var imageResult = await kernel.ImageGenerationAsync(
+                    runPrompt,
+                    DefaultTextToImageWidth,
+                    DefaultTextToImageHeight,
+                    1,
+                    null,
+                    null,
+                    default);
+
+                var generatedImage = imageResult?.Value
+                    ?? throw BuildAiCallException(
+                        new Exception("ImageGenerationAsync 未返回有效结果（Value 为 null）"),
+                        model,
+                        textToImageScene);
+
+                payload = await BuildTextToImagePayloadAsync(
+                    runPrompt,
+                    generatedImage.RevisedPrompt,
+                    generatedImage.ImageBytes,
+                    generatedImage.ImageUri);
+            }
+            catch (NcfExceptionBase)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw BuildAiCallException(ex, model, textToImageScene);
+            }
+
+            if (string.IsNullOrWhiteSpace(payload.ImageUrl))
+            {
+                throw new NcfExceptionBase("图像生成成功，但未返回可访问的图片地址（ImageBytes / ImageUri 均为空）");
+            }
+
+            var promptCostToken = EstimateTokenCount(runPrompt);
+            var resultCostToken = EstimateTokenCount(payload.RevisedPrompt);
+            var totalCostToken = promptCostToken + resultCostToken;
+            var costTime = SystemTime.DiffTotalMS(dt1);
+            var resultString = JsonSerializer.Serialize(payload, PromptResultJsonSerializerOptions);
+
+            var promptResult = new PromptResult(
+                promptItem.ModelId,
+                resultString,
+                costTime,
+                -1,
+                -1,
+                -1,
+                TestType.Graph,
+                promptCostToken,
+                resultCostToken,
+                totalCostToken,
+                promptItem.FullVersion,
+                promptItem.Id,
+                ResultMode.Single,
+                null);
+
+            await base.SaveObjectAsync(promptResult);
+
+            SenparcTrace.SendCustomLog(
+                "PromptRange.AI.Attempt",
+                $"{textToImageScene} 请求成功。PromptTokens={promptCostToken}, CompletionTokens={resultCostToken}, TotalTokens={totalCostToken}, Storage={payload.StorageType}");
+
+            if (promptItem.isAIGrade && !string.IsNullOrWhiteSpace(promptItem.ExpectedResultsJson))
+            {
+                await this.RobotScoringAsync(promptResult.Id, false, promptItem.ExpectedResultsJson);
+            }
+
+            if (onStreamEvent != null)
+            {
+                onStreamEvent(new PromptResultStreamEvent
+                {
+                    EventType = "final",
+                    PromptResultId = promptResult.Id,
+                    Text = resultString,
+                    IsFinal = true,
+                    PromptTokens = promptCostToken,
+                    CompletionTokens = resultCostToken,
+                    TotalTokens = totalCostToken,
+                    ResponseMilliseconds = (int)Math.Round(costTime)
                 });
             }
 
@@ -492,9 +627,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 throw new NcfExceptionBase("该结果已经评分过了, 请选择强制刷新");
             }
 
+            var scoringActualResult = GetResultTextForScoring(promptResult);
+
             // check if matching expected results
             // if matched,score 10 by default save promptResult and return
-            var isMatch = expectedResultList.Any(r => r == promptResult.ResultString || (r.StartsWith("=") && r.Substring(1, r.Length - 1) == promptResult.ResultString));
+            var isMatch = expectedResultList.Any(r => r == scoringActualResult || (r.StartsWith("=") && r.Substring(1, r.Length - 1) == scoringActualResult));
             if (isMatch)
             {
                 promptResult.RobotScoring(MAX_SCORE);
@@ -576,7 +713,7 @@ Apple
 {expectedResult}
 
 [实际结果]
-{promptResult.ResultString}
+{scoringActualResult}
 
 [打分结果]";
 
@@ -607,13 +744,13 @@ Apple
             {
                 SenparcTrace.SendCustomLog("自动打分结束", $"原文为{resultOutput}，分数匹配失败");
 
-                throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为：{promptResult.ResultString}, 模型返回为{resultOutput}，");
+                throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为：{scoringActualResult}, 模型返回为{resultOutput}，");
             }
 
             bool success = Decimal.TryParse(match.Value, out var score);
             if (!success)
             {
-                throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为：{promptResult.ResultString}, 模型返回为{resultOutput}，");
+                throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为：{scoringActualResult}, 模型返回为{resultOutput}，");
             }
 
             #region error 打分结果不在 0-MAX_SCORE 之间
@@ -1284,6 +1421,222 @@ Apple
             return has403 && hasForbidden;
         }
 
+        private async Task<PromptTextToImageResultPayload> BuildTextToImagePayloadAsync(
+            string prompt,
+            string revisedPrompt,
+            BinaryData imageBytes,
+            Uri imageUri)
+        {
+            var payload = new PromptTextToImageResultPayload
+            {
+                Prompt = prompt,
+                RevisedPrompt = revisedPrompt,
+                RemoteImageUrl = imageUri?.ToString(),
+                Width = DefaultTextToImageWidth,
+                Height = DefaultTextToImageHeight,
+                StorageType = TextToImageStorageTypeNone
+            };
+
+            var imageBinary = imageBytes?.ToArray();
+            if (imageBinary != null && imageBinary.Length > 0)
+            {
+                var (extension, contentType) = DetectImageFormat(imageBinary, payload.RemoteImageUrl);
+                var localRelativePath = await SaveImageToAppDataAsync(imageBinary, extension);
+                payload.StorageType = TextToImageStorageTypeLocal;
+                payload.LocalRelativePath = localRelativePath;
+                payload.ContentType = contentType;
+                payload.ImageUrl = BuildPromptImageApiUrl(localRelativePath);
+                return payload;
+            }
+
+            if (!string.IsNullOrWhiteSpace(payload.RemoteImageUrl))
+            {
+                payload.StorageType = TextToImageStorageTypeRemote;
+                payload.ContentType = DetectImageContentTypeFromUrl(payload.RemoteImageUrl) ?? "image/png";
+                payload.ImageUrl = payload.RemoteImageUrl;
+            }
+
+            return payload;
+        }
+
+        private static async Task<string> SaveImageToAppDataAsync(byte[] imageBytes, string extension)
+        {
+            var normalizedExtension = NormalizeImageExtension(extension);
+            var now = SystemTime.Now;
+            var relativeDirectory = Path.Combine(
+                "PromptRange",
+                "TextToImage",
+                now.ToString("yyyy"),
+                now.ToString("MM"),
+                now.ToString("dd"));
+            var appDataRoot = Path.Combine(Directory.GetCurrentDirectory(), "App_Data");
+            var saveDirectory = Path.Combine(appDataRoot, relativeDirectory);
+            Directory.CreateDirectory(saveDirectory);
+
+            var fileName = $"img_{now:HHmmssfff}_{Guid.NewGuid():N}{normalizedExtension}";
+            var fullPath = Path.Combine(saveDirectory, fileName);
+            await File.WriteAllBytesAsync(fullPath, imageBytes);
+
+            var relativePath = Path.Combine(relativeDirectory, fileName);
+            return relativePath.Replace('\\', '/');
+        }
+
+        private static string BuildPromptImageApiUrl(string localRelativePath)
+        {
+            var normalizedPath = (localRelativePath ?? string.Empty)
+                .Replace('\\', '/')
+                .TrimStart('/');
+            var escapedPath = Uri.EscapeDataString(normalizedPath);
+            return $"/api/Senparc.Xncf.PromptRange/PromptImage/Get?path={escapedPath}";
+        }
+
+        private static string NormalizeImageExtension(string extension)
+        {
+            if (string.IsNullOrWhiteSpace(extension))
+            {
+                return ".png";
+            }
+
+            return extension.StartsWith(".", StringComparison.Ordinal)
+                ? extension.ToLowerInvariant()
+                : $".{extension.ToLowerInvariant()}";
+        }
+
+        private static (string Extension, string ContentType) DetectImageFormat(byte[] imageBytes, string remoteImageUrl)
+        {
+            if (imageBytes != null && imageBytes.Length >= 8)
+            {
+                if (imageBytes[0] == 0x89 && imageBytes[1] == 0x50 && imageBytes[2] == 0x4E && imageBytes[3] == 0x47)
+                {
+                    return (".png", "image/png");
+                }
+
+                if (imageBytes[0] == 0xFF && imageBytes[1] == 0xD8)
+                {
+                    return (".jpg", "image/jpeg");
+                }
+
+                if (imageBytes[0] == 0x47 && imageBytes[1] == 0x49 && imageBytes[2] == 0x46 && imageBytes[3] == 0x38)
+                {
+                    return (".gif", "image/gif");
+                }
+
+                if (imageBytes[0] == 0x52 && imageBytes[1] == 0x49 && imageBytes[2] == 0x46 && imageBytes[3] == 0x46
+                    && imageBytes[8] == 0x57 && imageBytes[9] == 0x45 && imageBytes[10] == 0x42 && imageBytes[11] == 0x50)
+                {
+                    return (".webp", "image/webp");
+                }
+            }
+
+            var contentTypeFromUrl = DetectImageContentTypeFromUrl(remoteImageUrl);
+            if (!string.IsNullOrWhiteSpace(contentTypeFromUrl))
+            {
+                return contentTypeFromUrl switch
+                {
+                    "image/jpeg" => (".jpg", "image/jpeg"),
+                    "image/gif" => (".gif", "image/gif"),
+                    "image/webp" => (".webp", "image/webp"),
+                    _ => (".png", "image/png")
+                };
+            }
+
+            return (".png", "image/png");
+        }
+
+        private static string DetectImageContentTypeFromUrl(string remoteImageUrl)
+        {
+            if (string.IsNullOrWhiteSpace(remoteImageUrl))
+            {
+                return null;
+            }
+
+            if (!Uri.TryCreate(remoteImageUrl, UriKind.Absolute, out var uri))
+            {
+                return null;
+            }
+
+            var extension = Path.GetExtension(uri.AbsolutePath)?.ToLowerInvariant();
+            return extension switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".gif" => "image/gif",
+                ".webp" => "image/webp",
+                ".png" => "image/png",
+                _ => null
+            };
+        }
+
+        private static int EstimateTokenCount(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return 0;
+            }
+
+            var effectiveLength = text.Trim().Length;
+            return Math.Max(1, (int)Math.Ceiling(effectiveLength / 4d));
+        }
+
+        private string GetResultTextForScoring(PromptResult promptResult)
+        {
+            var fallbackResult = promptResult?.ResultString ?? string.Empty;
+            if (promptResult == null || promptResult.TestType != TestType.Graph)
+            {
+                return fallbackResult;
+            }
+
+            if (!TryParseTextToImagePayload(promptResult.ResultString, out var payload))
+            {
+                return fallbackResult;
+            }
+
+            var details = new List<string>();
+            if (!string.IsNullOrWhiteSpace(payload.RevisedPrompt))
+            {
+                details.Add($"RevisedPrompt: {payload.RevisedPrompt}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(payload.Prompt))
+            {
+                details.Add($"Prompt: {payload.Prompt}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(payload.ImageUrl))
+            {
+                details.Add($"ImageUrl: {payload.ImageUrl}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(payload.RemoteImageUrl))
+            {
+                details.Add($"RemoteImageUrl: {payload.RemoteImageUrl}");
+            }
+
+            return details.Count > 0 ? string.Join(Environment.NewLine, details) : fallbackResult;
+        }
+
+        private static bool TryParseTextToImagePayload(string rawResult, out PromptTextToImageResultPayload payload)
+        {
+            payload = null;
+            if (string.IsNullOrWhiteSpace(rawResult))
+            {
+                return false;
+            }
+
+            try
+            {
+                payload = JsonSerializer.Deserialize<PromptTextToImageResultPayload>(
+                    rawResult,
+                    PromptResultJsonSerializerOptions);
+                return payload != null
+                       && string.Equals(payload.ResultType, TextToImageResultTypeTag, StringComparison.OrdinalIgnoreCase);
+            }
+            catch
+            {
+                payload = null;
+                return false;
+            }
+        }
+
         public async Task<Boolean> BatchDeleteWithItemId(List<int> ids)
         {
             foreach (var id in ids)
@@ -1367,6 +1720,32 @@ Apple
             await _promptItemService.SaveObjectAsync(promptItem);
 
             return true;
+        }
+
+        private sealed class PromptTextToImageResultPayload
+        {
+            [JsonPropertyName("__promptRangeResultType")]
+            public string ResultType { get; set; } = TextToImageResultTypeTag;
+
+            public string StorageType { get; set; } = TextToImageStorageTypeNone;
+
+            public string Prompt { get; set; }
+
+            public string RevisedPrompt { get; set; }
+
+            public string ImageUrl { get; set; }
+
+            public string RemoteImageUrl { get; set; }
+
+            public string LocalRelativePath { get; set; }
+
+            public string ContentType { get; set; }
+
+            public int Width { get; set; } = DefaultTextToImageWidth;
+
+            public int Height { get; set; } = DefaultTextToImageHeight;
+
+            public string TokenStatSource { get; set; } = "Estimated";
         }
     }
 }

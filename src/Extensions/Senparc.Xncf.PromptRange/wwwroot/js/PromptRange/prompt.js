@@ -25,6 +25,16 @@ var app = new Vue({
             promptFieldOpt: [], // 靶场列表
             promptOpt: [], // prompt列表
             modelOpt: [], // 模型列表
+            configModelTypeLabelMap: {
+                1: 'TextCompletion',
+                2: 'Chat',
+                3: 'TextEmbedding',
+                4: 'TextToImage',
+                5: 'ImageToText',
+                6: 'TextToSpeech',
+                7: 'SpeechToText',
+                8: 'SpeechRecognition'
+            },
             waitRefreshModel: false, // 是否等待刷新模型列表
             promptid: '',// 选择靶场
             modelid: '',// 选择模型
@@ -1076,7 +1086,7 @@ var app = new Vue({
             normalized.version = fullVersion || normalized.version
             normalized.addTime = normalized.addTime ? this.formatDate(normalized.addTime) : ''
             normalized.resultString = normalized.resultString || ''
-            normalized.resultStringHtml = marked.parse(normalized.resultString)
+            this.applyPromptResultView(normalized)
             normalized.scoreVal = normalized.humanScore > -1 ? normalized.humanScore : 0
 
             if (promptItem && promptItem.expectedResultsJson) {
@@ -1093,6 +1103,112 @@ var app = new Vue({
             }
 
             return normalized
+        },
+        applyPromptResultView(resultItem) {
+            if (!resultItem) {
+                return
+            }
+
+            const typedPayload = this.tryParseTypedPromptPayload(resultItem.resultString)
+            if (typedPayload && typedPayload.__promptRangeResultType === 'TextToImage') {
+                resultItem.resultViewType = 'TextToImage'
+                resultItem.textToImage = this.buildTextToImageViewModel(typedPayload)
+
+                const previewHtml = resultItem.textToImage.imageUrl
+                    ? `<p><img src="${this.escapeHtml(resultItem.textToImage.imageUrl)}" alt="generated image" /></p>`
+                    : '<p>图片已生成，但未获得可访问地址。</p>'
+                const promptHtml = resultItem.textToImage.revisedPrompt
+                    ? `<p>${this.escapeHtml(resultItem.textToImage.revisedPrompt)}</p>`
+                    : ''
+                resultItem.resultStringHtml = `${previewHtml}${promptHtml}`
+                return
+            }
+
+            resultItem.resultViewType = 'Markdown'
+            resultItem.textToImage = null
+            resultItem.resultStringHtml = marked.parse(resultItem.resultString || '')
+        },
+        tryParseTypedPromptPayload(rawResultString) {
+            if (!rawResultString || typeof rawResultString !== 'string') {
+                return null
+            }
+
+            const trimmed = rawResultString.trim()
+            if (!trimmed || trimmed[0] !== '{') {
+                return null
+            }
+
+            try {
+                const parsed = JSON.parse(trimmed)
+                if (!parsed || typeof parsed !== 'object') {
+                    return null
+                }
+
+                return parsed.__promptRangeResultType ? parsed : null
+            } catch (e) {
+                return null
+            }
+        },
+        buildTextToImageViewModel(payload) {
+            const localRelativePath = (payload.localRelativePath || '').toString().trim()
+            const remoteImageUrl = (payload.remoteImageUrl || '').toString().trim()
+            const directImageUrl = (payload.imageUrl || '').toString().trim()
+            const normalizedStorageType = (payload.storageType || '').toString().trim() || 'Unknown'
+
+            let imageUrl = directImageUrl
+            if (!imageUrl && localRelativePath) {
+                imageUrl = this.buildPromptImageUrlByPath(localRelativePath)
+            }
+            if (!imageUrl && remoteImageUrl) {
+                imageUrl = remoteImageUrl
+            }
+
+            return {
+                imageUrl,
+                storageType: normalizedStorageType,
+                localRelativePath,
+                remoteImageUrl,
+                prompt: payload.prompt || '',
+                revisedPrompt: payload.revisedPrompt || '',
+                contentType: payload.contentType || '',
+                width: payload.width || 0,
+                height: payload.height || 0
+            }
+        },
+        buildPromptImageUrlByPath(localRelativePath) {
+            const normalized = (localRelativePath || '')
+                .toString()
+                .replace(/\\/g, '/')
+                .replace(/^\/+/, '')
+            if (!normalized) {
+                return ''
+            }
+            return `/api/Senparc.Xncf.PromptRange/PromptImage/Get?path=${encodeURIComponent(normalized)}`
+        },
+        parseConfigModelTypeValue(typeValue) {
+            if (typeValue === undefined || typeValue === null) {
+                return 0
+            }
+
+            if (typeof typeValue === 'string') {
+                const trimmed = typeValue.trim()
+                if (!trimmed) {
+                    return 0
+                }
+                if (/^\d+$/.test(trimmed)) {
+                    return Number(trimmed)
+                }
+
+                const entry = Object.entries(this.configModelTypeLabelMap).find(([, name]) => name.toLowerCase() === trimmed.toLowerCase())
+                return entry ? Number(entry[0]) : 0
+            }
+
+            const code = Number(typeValue)
+            return Number.isFinite(code) ? code : 0
+        },
+        getConfigModelTypeLabel(typeValue) {
+            const code = this.parseConfigModelTypeValue(typeValue)
+            return this.configModelTypeLabelMap[code] || 'Unknown'
         },
         syncContinueChatUsageFromResult(promptResultId) {
             const resultItem = this.outputList.find(item => item.id === promptResultId)
@@ -1318,8 +1434,8 @@ var app = new Vue({
 
             if (payload.text !== undefined && payload.text !== null) {
                 item.resultString = payload.text
-                item.resultStringHtml = marked.parse(item.resultString || '')
             }
+            this.applyPromptResultView(item)
             if (payload.promptResultId && (String(item.id).indexOf('streaming_') === 0 || String(item.id) === String(this.promptStreamingTempResultId))) {
                 item.id = payload.promptResultId
             }
@@ -1994,7 +2110,8 @@ var app = new Vue({
                             fullVersion = '',
                             id,
                             evalAvgScore = -1,
-                            evalMaxScore = -1
+                            evalMaxScore = -1,
+                            promptItem = {}
                         } = res.data.data || {}
                         // 拷贝数据
                         let copyResultData = JSON.parse(JSON.stringify(res.data.data))
@@ -2009,37 +2126,7 @@ var app = new Vue({
                         // 最高分
                         this.outputMaxDeci = evalMaxScore > -1 ? evalMaxScore : -1;
                         // 输出列表
-                        this.outputList = promptResultList.map(item => {
-                            if (item) {
-                                item.promptId = id
-                                item.version = fullVersion
-                                item.scoreType = '1' // 1 ai、2手动 
-                                item.isScoreView = false // 是否显示评分视图
-                                //时间 格式化  addTime
-                                item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
-
-                                //使用 MarkDown 格式，对输出结果进行展示
-                                item.resultStringHtml = marked.parse(item.resultString);
-
-                                // 手动评分
-                                item.scoreVal = 0
-                                // ai评分预期结果
-                                item.alResultList = [{
-                                    id: 1,
-                                    label: '预期结果1',
-                                    value: ''
-                                }, {
-                                    id: 2,
-                                    label: '预期结果2',
-                                    value: ''
-                                }, {
-                                    id: 3,
-                                    label: '预期结果3',
-                                    value: ''
-                                }]
-                            }
-                            return item
-                        })
+                        this.outputList = promptResultList.map(item => this.normalizeOutputResultItem(item, id, fullVersion, promptItem))
                         
                         // 添加代码块复制按钮
                         this.$nextTick(() => {
@@ -7507,8 +7594,11 @@ var app = new Vue({
                 //console.log('getModelOptData:', res.data)
                 let _optList = res.data.data || []
                 this.modelOpt = _optList.map(item => {
-                    // 构建label：模型名称 + 版本号（如果有）+ 部署名称（如果有）
-                    let label = item.alias || '未命名模型';
+                    const configModelTypeCode = this.parseConfigModelTypeValue(item.configModelType)
+                    const configModelTypeName = this.getConfigModelTypeLabel(configModelTypeCode)
+
+                    // 构建label：模型名称 + 类型 + 版本号（如果有）+ 部署名称（如果有）
+                    let label = `${item.alias || '未命名模型'} [${configModelTypeName}]`
                     if (item.apiVersion && item.apiVersion.trim()) {
                         label += ` v${item.apiVersion}`;
                     }
@@ -7520,6 +7610,9 @@ var app = new Vue({
                         ...item,
                         label: label,
                         displayName: item.alias,  // 保留原始名称用于其他地方显示
+                        selectLabel: label,
+                        configModelTypeCode: configModelTypeCode,
+                        configModelTypeName: configModelTypeName,
                         deploymentDisplay: item.deploymentName, // 保留部署名称
                         apiVersion: item.apiVersion, // 保留版本号
                         value: item.id,

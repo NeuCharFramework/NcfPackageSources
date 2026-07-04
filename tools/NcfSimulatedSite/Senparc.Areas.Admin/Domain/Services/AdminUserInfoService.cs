@@ -21,6 +21,7 @@ using Microsoft.IdentityModel.Tokens;
 using Senparc.Areas.Admin.ACL;
 using Senparc.Areas.Admin.Domain.Models;
 using Senparc.Areas.Admin.Domain.Models.Dto;
+using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
@@ -37,6 +38,8 @@ namespace Senparc.Areas.Admin.Domain
 {
     public class AdminUserInfoService : BaseClientService<AdminUserInfo>
     {
+        private const int MinExpireMinutes = 5;
+        private const int MaxExpireMinutes = 60 * 24 * 365; // 1 year
 
         private readonly Lazy<IHttpContextAccessor> _contextAccessor;
 
@@ -44,6 +47,109 @@ namespace Senparc.Areas.Admin.Domain
             : base(repository, serviceProvider)
         {
             _contextAccessor = httpContextAccessor;
+        }
+
+        private int NormalizeExpireMinutes(int expireMinutes, int defaultValue)
+        {
+            var value = expireMinutes <= 0 ? defaultValue : expireMinutes;
+            if (value < MinExpireMinutes)
+            {
+                return MinExpireMinutes;
+            }
+
+            if (value > MaxExpireMinutes)
+            {
+                return MaxExpireMinutes;
+            }
+
+            return value;
+        }
+
+        private FullSystemConfig GetFullSystemConfigOrNull()
+        {
+            try
+            {
+                return _serviceProvider.GetService<FullSystemConfigCache>()?.Data;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public int GetAdminWebLoginExpireMinutes()
+        {
+            var fullSystemConfig = GetFullSystemConfigOrNull();
+            return NormalizeExpireMinutes(fullSystemConfig?.AdminWebLoginExpireMinutes ?? SystemConfig.DefaultAdminWebLoginExpireMinutes,
+                SystemConfig.DefaultAdminWebLoginExpireMinutes);
+        }
+
+        public int GetBackendJwtExpireMinutes()
+        {
+            var fullSystemConfig = GetFullSystemConfigOrNull();
+            if (fullSystemConfig?.BackendJwtExpireMinutes > 0)
+            {
+                return NormalizeExpireMinutes(fullSystemConfig.BackendJwtExpireMinutes, SystemConfig.DefaultBackendJwtExpireMinutes);
+            }
+
+            var jwtSettings = _serviceProvider.GetService<IOptionsSnapshot<JwtSettings>>()?.Get(JwtSettings.Position_Backend);
+            var fallbackMinutes = jwtSettings == null
+                ? SystemConfig.DefaultBackendJwtExpireMinutes
+                : (int)Math.Round(jwtSettings.Expires * 60d, MidpointRounding.AwayFromZero);
+
+            return NormalizeExpireMinutes(fallbackMinutes, SystemConfig.DefaultBackendJwtExpireMinutes);
+        }
+
+        public async Task<DateTimeOffset> KeepCookieLoginAliveAsync(ClaimsPrincipal principal)
+        {
+            if (principal?.Identity?.IsAuthenticated != true)
+            {
+                throw new NcfExceptionBase("当前用户未登录，无法续期。");
+            }
+
+            var identity = new ClaimsIdentity(principal.Claims, SiteConfig.NcfAdminAuthorizeScheme);
+            var expiresUtc = DateTimeOffset.UtcNow.AddMinutes(GetAdminWebLoginExpireMinutes());
+            var authProperties = new AuthenticationProperties
+            {
+                AllowRefresh = true,
+                ExpiresUtc = expiresUtc,
+                IssuedUtc = DateTimeOffset.UtcNow,
+                IsPersistent = false
+            };
+
+            await _contextAccessor.Value.HttpContext.SignInAsync(SiteConfig.NcfAdminAuthorizeScheme, new ClaimsPrincipal(identity), authProperties);
+            return expiresUtc;
+        }
+
+        public DateTimeOffset? TryGetJwtExpiresUtc(ClaimsPrincipal principal)
+        {
+            var expValue = principal?.Claims?
+                .FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Exp || c.Type == "exp" || c.Type == ClaimTypes.Expiration)
+                ?.Value;
+
+            if (string.IsNullOrWhiteSpace(expValue))
+            {
+                return null;
+            }
+
+            if (long.TryParse(expValue, out var expUnix))
+            {
+                try
+                {
+                    return DateTimeOffset.FromUnixTimeSeconds(expUnix);
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+
+            if (DateTimeOffset.TryParse(expValue, out var expDateTimeOffset))
+            {
+                return expDateTimeOffset.ToUniversalTime();
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -108,10 +214,12 @@ namespace Senparc.Areas.Admin.Domain
 
             var identity = new ClaimsIdentity(SiteConfig.NcfAdminAuthorizeScheme);
             identity.AddClaims(claims);
+            var expiresUtc = DateTimeOffset.UtcNow.AddMinutes(GetAdminWebLoginExpireMinutes());
             var authProperties = new AuthenticationProperties
             {
-                AllowRefresh = false,
-                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(120),
+                AllowRefresh = true,
+                ExpiresUtc = expiresUtc,
+                IssuedUtc = DateTimeOffset.UtcNow,
                 IsPersistent = false,
             };
 
@@ -333,11 +441,12 @@ namespace Senparc.Areas.Admin.Domain
                 {
                     throw new NcfExceptionBase("用户名不存在或密码不正确！");
                 }
-                token = GenerateToken(adminUserInfo.Id);
+                token = GenerateToken(adminUserInfo.Id, out var tokenExpiresUtc);
                 var roles = await _serviceProvider.GetService<SysRoleAdminUserInfoService>().GetFullListAsync(o => o.AccountId == adminUserInfo.Id);
                 var roleCodes = roles
                     .Select(o => o.RoleCode).Distinct().ToList();
                 result.Token = token;
+                result.TokenExpiresUtc = tokenExpiresUtc;
                 var permissions = await _serviceProvider.GetService<SysRolePermissionService>().GetFullListAsync(p => roles.Select(o => o.RoleId).Contains(p.RoleId));
                 result.MenuTree = await _serviceProvider.GetService<Domain.Services.SysMenuService>().GetAllMenusTreeAsync(false);
                 result.UserName = adminUserInfo.UserName;
@@ -379,10 +488,12 @@ namespace Senparc.Areas.Admin.Domain
         /// </summary>
         /// <param name="memberId"></param>
         /// <returns></returns>
-        private string GenerateToken(int memberId)
+        public string GenerateToken(int memberId, out DateTimeOffset expiresUtc, int? expiresMinutes = null)
         {
             var options = _serviceProvider.GetService<IOptionsSnapshot<JwtSettings>>();
             var jwtSettings = options.Get(JwtSettings.Position_Backend);
+            var effectiveExpireMinutes = NormalizeExpireMinutes(expiresMinutes ?? GetBackendJwtExpireMinutes(), SystemConfig.DefaultBackendJwtExpireMinutes);
+            expiresUtc = DateTimeOffset.UtcNow.AddMinutes(effectiveExpireMinutes);
             byte[] keyBytes = System.Text.Encoding.ASCII.GetBytes(jwtSettings.SecretKey);
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             SecurityTokenDescriptor securityToken = new SecurityTokenDescriptor()
@@ -394,12 +505,17 @@ namespace Senparc.Areas.Admin.Domain
                 }),
                 Audience = jwtSettings.Audience,
                 Issuer = jwtSettings.Issuer,
-                Expires = DateTime.UtcNow.AddHours(jwtSettings.Expires),
+                Expires = expiresUtc.UtcDateTime,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(keyBytes), SecurityAlgorithms.HmacSha256Signature)
             };
             SecurityToken token = tokenHandler.CreateToken(securityToken);
             string tokenStr = tokenHandler.WriteToken(token);
             return tokenStr;
+        }
+
+        private string GenerateToken(int memberId)
+        {
+            return GenerateToken(memberId, out _);
         }
     }
 }

@@ -1,38 +1,27 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
-using Senparc.Ncf.Core.Validator;
-using Senparc.Ncf.Service;
-using Senparc.Ncf.Utility;
 using Senparc.Xncf.SystemManager.Domain.Service;
 
 namespace Senparc.Areas.Admin.Areas.Admin.Pages
 {
-    public class SystemConfig_IndexModel(IServiceProvider serviceProvider, SystemConfigService systemConfigService, FullSystemConfigCache fullSystemConfigCache)
+    public class SystemConfig_IndexModel(IServiceProvider serviceProvider,
+        SystemConfigService systemConfigService)
         : BaseAdminPageModel(serviceProvider)
     {
-        private readonly SystemConfigService _systemConfigService = systemConfigService;
-        private readonly FullSystemConfigCache _fullSystemConfigCache = fullSystemConfigCache;
+        private const int MinExpireMinutes = 5;
+        private const int MaxExpireMinutes = 60 * 24 * 365; // 1 year
 
+        private readonly SystemConfigService _systemConfigService = systemConfigService;
         public async Task<IActionResult> OnGetAsync()
         {
+            await Task.CompletedTask;
             return Page();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="adminUserInfoName"></param>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <returns></returns>
         //[Ncf.AreaBase.Admin.Filters.CustomerResource("admin-get-systemconfig")]
         public async Task<IActionResult> OnGetListAsync(int pageIndex, int pageSize)
         {
@@ -40,26 +29,46 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             return Ok(new { List = systemConfig.AsEnumerable() });
         }
 
-        /// <summary>
-        /// �༭ SystemConfig ��Ϣ
-        /// </summary>
-        /// <returns></returns>
         public async Task<IActionResult> OnPostEditAsync([FromBody] FullSystemConfig fullSystemConfig)
         {
-            var val = this.Validator(fullSystemConfig.SystemName, "ϵͳ����", "SystemName", false);
-
-            if (!ModelState.IsValid)
+            if (fullSystemConfig == null)
             {
-                return Ok(false, string.Join(",", val.ModelState.Values));
+                return Ok(false, "请求参数不能为空");
+            }
+
+            if (string.IsNullOrWhiteSpace(fullSystemConfig.SystemName))
+            {
+                return Ok(false, "系统名称不能为空");
+            }
+
+            if (fullSystemConfig.AdminWebLoginExpireMinutes < MinExpireMinutes || fullSystemConfig.AdminWebLoginExpireMinutes > MaxExpireMinutes)
+            {
+                return Ok(false, $"网页登录持续时间必须在 {MinExpireMinutes}-{MaxExpireMinutes} 分钟范围内");
+            }
+
+            if (fullSystemConfig.BackendJwtExpireMinutes < MinExpireMinutes || fullSystemConfig.BackendJwtExpireMinutes > MaxExpireMinutes)
+            {
+                return Ok(false, $"JWT 过期时间必须在 {MinExpireMinutes}-{MaxExpireMinutes} 分钟范围内");
             }
 
             var systemConfig = await _systemConfigService.GetObjectAsync(z => true);
-            //��ʱֻ�����޸� SystemName
-            systemConfig.Update(fullSystemConfig.SystemName, systemConfig.MchId, systemConfig.MchKey, systemConfig.TenPayAppId, systemConfig.HideModuleManager);
+            systemConfig.Update(fullSystemConfig.SystemName,
+                systemConfig.MchId,
+                systemConfig.MchKey,
+                systemConfig.TenPayAppId,
+                systemConfig.HideModuleManager,
+                fullSystemConfig.AdminWebLoginExpireMinutes,
+                fullSystemConfig.BackendJwtExpireMinutes);
+
             await _systemConfigService.SaveObjectAsync(systemConfig);
 
-            base.SetMessager(MessageType.success, $"�޸ĳɹ���");
-            return Ok(new { systemName = systemConfig.SystemName });
+            base.SetMessager(MessageType.success, "修改成功");
+            return Ok(new
+            {
+                systemName = systemConfig.SystemName,
+                adminWebLoginExpireMinutes = systemConfig.AdminWebLoginExpireMinutes,
+                backendJwtExpireMinutes = systemConfig.BackendJwtExpireMinutes
+            });
         }
     }
 }

@@ -42,6 +42,7 @@ public sealed class ChatTaskStreamHub
 
     public async IAsyncEnumerable<ChatTaskStreamEvent> Subscribe(
         int chatTaskId,
+        bool replayBuffered = true,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         if (chatTaskId <= 0)
@@ -63,6 +64,11 @@ public sealed class ChatTaskStreamHub
         DateTimeOffset? previousBufferedTimestamp = null;
         foreach (var bufferedEvent in bufferedEvents)
         {
+            if (!replayBuffered)
+            {
+                break;
+            }
+
             cancellationToken.ThrowIfCancellationRequested();
 
             var replayDelayMs = GetBufferedReplayDelayMilliseconds(bufferedEvent, previousBufferedTimestamp);
@@ -108,6 +114,10 @@ public sealed class ChatTaskStreamHub
 
         if (group.Subscribers.IsEmpty)
         {
+            if (group.IsComplete)
+            {
+                CleanupStreamIfFinished(item.ChatTaskId, group);
+            }
             return;
         }
 

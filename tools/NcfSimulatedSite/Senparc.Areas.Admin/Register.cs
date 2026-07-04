@@ -79,7 +79,7 @@ namespace Senparc.Areas.Admin
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_AREAS_ADMIN_UID;// "00000000-0000-0001-0001-000000000001";
 
-        public override string Version => "0.5.6-beta4";
+        public override string Version => "0.5.8-beta5";
 
         public override string MenuName => T("Admin.Register.MenuName", "NCF 系统管理员后台");
 
@@ -258,6 +258,20 @@ namespace Senparc.Areas.Admin
                     options.AccessDeniedPath = "/Admin/Forbidden/";
                     options.LoginPath = "/Admin/Login/";
                     options.Cookie.HttpOnly = false;
+                    options.SlidingExpiration = true;
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(SystemConfig.DefaultAdminWebLoginExpireMinutes);
+                    options.Events = new CookieAuthenticationEvents
+                    {
+                        OnCheckSlidingExpiration = context =>
+                        {
+                            // Session 状态轮询仅用于前端倒计时，不应触发自动续期。
+                            if (context.Request.Path.StartsWithSegments("/Admin/Session"))
+                            {
+                                context.ShouldRenew = false;
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
 
             builder.Services
@@ -414,6 +428,7 @@ namespace Senparc.Areas.Admin
     }
 
 }
+
 
 
 

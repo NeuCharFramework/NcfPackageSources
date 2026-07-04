@@ -11,28 +11,36 @@ namespace Senparc.Areas.Admin.Domain.Dto
     public class SystemConfigDto
     {
         public int Id { get; set; }
-        public string SystemName { get; private set; }
+        public string SystemName { get; set; }
 
-        public string MchId { get; private set; }
+        public string MchId { get; set; }
 
-        public string MchKey { get; private set; }
+        public string MchKey { get; set; }
 
-        public string TenPayAppId { get; private set; }
+        public string TenPayAppId { get; set; }
 
-        public bool? HideModuleManager { get; private set; }
+        public bool? HideModuleManager { get; set; }
+
+        public int AdminWebLoginExpireMinutes { get; set; }
+
+        public int BackendJwtExpireMinutes { get; set; }
     }
 
     public class SystemConfig_CreateOrUpdateDto
     {
         public int Id { get; set; }
-        public string SystemName { get; private set; }
+        public string SystemName { get; set; }
 
-        public string MchId { get; private set; }
+        public string MchId { get; set; }
 
-        public string MchKey { get; private set; }
+        public string MchKey { get; set; }
 
-        public string TenPayAppId { get; private set; }
+        public string TenPayAppId { get; set; }
 
-        public bool? HideModuleManager { get; private set; }
+        public bool? HideModuleManager { get; set; }
+
+        public int AdminWebLoginExpireMinutes { get; set; }
+
+        public int BackendJwtExpireMinutes { get; set; }
     }
 }

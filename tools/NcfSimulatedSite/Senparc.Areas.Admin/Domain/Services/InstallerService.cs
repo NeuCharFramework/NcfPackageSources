@@ -135,7 +135,9 @@ namespace Senparc.Areas.Admin.Domain.Services
 
                 var _systemConfigService = serviceProvider.GetService<SystemConfigService>();
                 _systemConfigService.SetTenantInfo(tenantInfoService.GetRequestTenantInfo(tenantInfo));
-                _systemConfigService.Init(systemName);//初始化系统信息
+                _systemConfigService.Init(systemName,
+                    Senparc.Ncf.Core.Models.SystemConfig.DefaultAdminWebLoginExpireMinutes,
+                    Senparc.Ncf.Core.Models.SystemConfig.DefaultBackendJwtExpireMinutes);//初始化系统信息
             }
 
             {

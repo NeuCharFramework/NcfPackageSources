@@ -1,252 +1,401 @@
 var app = new Vue({
     el: "#app",
-    data() {
+    data: function () {
         return {
-            // 查询列表 参数
-            queryList: {
-                page: 1,
-                size: 10,
-                modelName: ''
+            loading: false,
+            recentDays: 14,
+            topN: 8,
+            dashboard: {
+                generatedAt: "",
+                recentDays: 14,
+                overview: {},
+                usageTrend: [],
+                topPrompts: [],
+                topRanges: [],
+                topModels: [],
+                riskPrompts: [],
+                insights: []
             },
-            pageSizes: [10, 20, 30, 50],
-            tableTotal: 0,
-            tableData: [], // 模型列表
-            multipleSelection: {}, // 选中的模型
-            dialogFormVisible: false,
-            dialogFormTitle: '新增模型',
-            formLabelWidth: '',
-            dateRange: [],
-            usageData: [
-                { date: '2024-08-01', usage: 100 },
-                { date: '2024-08-02', usage: 120 },
-                { date: '2024-08-03', usage: 90 },
-                { date: '2024-08-04', usage: 110 },
-                { date: '2024-08-05', usage: 150 },
-                { date: '2024-08-06', usage: 80 },
-                { date: '2024-08-07', usage: 130 },
-            ],
-            newModelForm: {
-                modelName: '',
-                modelAPI: '',
-                modelAPIkey: ''
-            },
-            topPrompts: [
-                { text: "生成风景图片", usageCount: 120 },
-                { text: "编写故事", usageCount: 110 },
-                { text: "自动生成摘要", usageCount: 90 },
-            ],
-            topModels: [
-                { name: "GPT-4", usageCount: 150 },
-                { name: "DALL-E", usageCount: 140 },
-                { name: "Stable Diffusion", usageCount: 130 },
-            ],
-            rules: {
-                modelName: [
-                    { required: true, message: '请输入模型名称', trigger: 'blur' }
-                ],
-                modelAPI: [
-                    { required: true, message: '请输入模型API', trigger: 'blur' }
-                ],
-                modelAPIkey: [
-                    { required: true, message: '请输入API key', trigger: 'blur' }
-                ]
-            }
+            usageTrendChart: null,
+            modelUsageChart: null,
+            promptPageUid: "C6175B8E-9F79-4053-9523-F8E4AC0C3E18",
+            aiKernelUid: "796D12D8-580B-40F3-A6E8-A5D9D2EABB69"
         };
     },
-    mounted() {
-        var chartDom = document.getElementById('main');
-        var myChart = echarts.init(chartDom);
-        
-        var option;
+    computed: {
+        overviewCards: function () {
+            var overview = this.dashboard && this.dashboard.overview ? this.dashboard.overview : {};
+            var totalPrompts = Number(overview.totalPrompts || 0);
+            var draftPrompts = Number(overview.draftPrompts || 0);
+            var draftRate = totalPrompts > 0 ? (draftPrompts * 100 / totalPrompts).toFixed(1) : "0.0";
 
-        option = {
-            tooltip: {
-                trigger: 'axis'
-            },
-            legend: {
-                show: true
-            },
-            xAxis: {
-                type: 'category',
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-            },
-            yAxis: {
-                type: 'value'
-            },
-            series: [
+            return [
                 {
-                    name: '使用次数',
-                    data: [150, 230, 224, 218, 135, 147, 260],
-                    type: 'line'
+                    key: "rangeTotal",
+                    label: "靶场总数",
+                    value: this.formatInteger(overview.totalRanges || 0),
+                    hint: "近7天活跃靶场 " + this.formatInteger(overview.activeRangesLast7Days || 0)
+                },
+                {
+                    key: "promptTotal",
+                    label: "靶道总数",
+                    value: this.formatInteger(totalPrompts),
+                    hint: "草稿 " + this.formatInteger(draftPrompts) + "（" + draftRate + "%）"
+                },
+                {
+                    key: "resultTotal",
+                    label: "累计打靶次数",
+                    value: this.formatInteger(overview.totalResults || 0),
+                    hint: "今日 " + this.formatInteger(overview.resultsToday || 0) + " / 近7天 " + this.formatInteger(overview.resultsLast7Days || 0)
+                },
+                {
+                    key: "score",
+                    label: "平均最终得分",
+                    value: this.formatScore(overview.avgFinalScore),
+                    hint: "评分覆盖率 " + this.formatPercent(overview.scoreCoverageRate || 0)
+                },
+                {
+                    key: "token",
+                    label: "累计 Token 消耗",
+                    value: this.formatInteger(overview.totalTokens || 0),
+                    hint: "近7天活跃靶道 " + this.formatInteger(overview.activePromptsLast7Days || 0)
+                },
+                {
+                    key: "latency",
+                    label: "平均响应耗时",
+                    value: this.formatMs(overview.avgLatencyMs || 0),
+                    hint: "全量打靶结果统计"
                 }
-            ]
-        };
-        myChart.setOption(option);
-        this.initChart();
-        return {
-            dateRange: [],
-            usageData: [
-                { date: '2024-08-01', usage: 100 },
-                { date: '2024-08-02', usage: 120 },
-                { date: '2024-08-03', usage: 90 },
-                { date: '2024-08-04', usage: 110 },
-                { date: '2024-08-05', usage: 150 },
-                { date: '2024-08-06', usage: 80 },
-                { date: '2024-08-07', usage: 130 },
-            ],
-            topPrompts: [
-                { text: "生成风景图片", usageCount: 120 },
-                { text: "编写故事", usageCount: 110 },
-                { text: "自动生成摘要", usageCount: 90 },
-            ],
-                topModels: [
-                    { name: "GPT-4", usageCount: 150 },
-                    { name: "DALL-E", usageCount: 140 },
-                    { name: "Stable Diffusion", usageCount: 130 },
-                ],
-        };
-        
-        
-        
-    },
-    watch: {
-        //'isExtend': {
-        //    handler: function (val, oldVal) {
-        //    },
-        //    immediate: true,
-        //    //deep:true
-        //}
+            ];
+        }
     },
     created: function () {
-        // 获取table列表数据
-        this.getList();
+        this.fetchDashboard(false);
+    },
+    mounted: function () {
+        window.addEventListener("resize", this.handleResize);
+    },
+    beforeDestroy: function () {
+        window.removeEventListener("resize", this.handleResize);
+        this.disposeCharts();
     },
     methods: {
-        initChart() {
-            this.chart = echarts.init(this.$refs.chart);
-            this.updateChart();
+        createEmptyDashboard: function () {
+            return {
+                generatedAt: "",
+                recentDays: 14,
+                overview: {},
+                usageTrend: [],
+                topPrompts: [],
+                topRanges: [],
+                topModels: [],
+                riskPrompts: [],
+                insights: []
+            };
         },
-        updateChart() {
-            var filteredData = this.filterDataByDateRange(this.dateRange);
-            var dates = filteredData.map(item => item.date);
-            var usageCounts = filteredData.map(item => item.usage);
-            this.chart.setOption({
+        formatInteger: function (value) {
+            var num = Number(value || 0);
+            if (isNaN(num)) {
+                return "0";
+            }
+            return num.toLocaleString();
+        },
+        formatScore: function (value) {
+            var num = Number(value);
+            if (isNaN(num) || num < 0) {
+                return "--";
+            }
+            return num.toFixed(2);
+        },
+        formatPercent: function (value) {
+            var num = Number(value);
+            if (isNaN(num)) {
+                return "0.00%";
+            }
+            return num.toFixed(2) + "%";
+        },
+        formatMs: function (value) {
+            var num = Number(value);
+            if (isNaN(num) || num <= 0) {
+                return "--";
+            }
+            return num.toFixed(0) + " ms";
+        },
+        formatDateTime: function (value) {
+            if (!value) {
+                return "--";
+            }
+            var date = new Date(value);
+            if (isNaN(date.getTime())) {
+                return "--";
+            }
+            var y = date.getFullYear();
+            var m = String(date.getMonth() + 1).padStart(2, "0");
+            var d = String(date.getDate()).padStart(2, "0");
+            var h = String(date.getHours()).padStart(2, "0");
+            var min = String(date.getMinutes()).padStart(2, "0");
+            return y + "-" + m + "-" + d + " " + h + ":" + min;
+        },
+        formatRangeName: function (alias, rangeName) {
+            var safeAlias = (alias || "").trim();
+            var safeRangeName = rangeName || "";
+            if (safeAlias && safeRangeName) {
+                return safeAlias + "（" + safeRangeName + "）";
+            }
+            return safeAlias || safeRangeName || "--";
+        },
+        formatModelName: function (model) {
+            if (!model) {
+                return "Unknown";
+            }
+            if (model.alias) {
+                return model.alias;
+            }
+            if (model.deploymentName) {
+                return model.deploymentName;
+            }
+            return "Model#" + model.modelId;
+        },
+        clampPercent: function (value) {
+            var num = Number(value);
+            if (isNaN(num)) {
+                return 0;
+            }
+            return Math.max(0, Math.min(100, num));
+        },
+        scoreClass: function (score) {
+            var num = Number(score);
+            if (isNaN(num) || num < 0) {
+                return "scoreMuted";
+            }
+            if (num >= 8) {
+                return "scoreGood";
+            }
+            if (num >= 6) {
+                return "scoreMedium";
+            }
+            return "scoreBad";
+        },
+        buildPromptUrl: function (rangeId, promptId) {
+            var params = new URLSearchParams((window.location.search || "").replace(/^\?/, ""));
+            if (!params.get("uid")) {
+                params.set("uid", this.promptPageUid);
+            }
+
+            var hashParts = [];
+            if (rangeId) {
+                hashParts.push("rangeId=" + encodeURIComponent(rangeId));
+            }
+            if (promptId) {
+                hashParts.push("promptId=" + encodeURIComponent(promptId));
+            }
+
+            var queryString = params.toString();
+            var hashString = hashParts.length > 0 ? ("#" + hashParts.join("&")) : "";
+            return "/Admin/PromptRange/Prompt" + (queryString ? ("?" + queryString) : "") + hashString;
+        },
+        goPromptWorkbench: function () {
+            window.location.href = this.buildPromptUrl(null, null);
+        },
+        toAIKernel: function () {
+            window.open("/Admin/AIKernel/Index?uid=" + this.aiKernelUid);
+        },
+        async fetchDashboard(showMessage) {
+            this.loading = true;
+            try {
+                var requester = typeof servicePR !== "undefined" ? servicePR : axios;
+                var response = await requester.get(
+                    "/api/Senparc.Xncf.PromptRange/StatisticAppService/Xncf.PromptRange_StatisticAppService.GetDashboardAsync",
+                    {
+                        params: {
+                            recentDays: this.recentDays,
+                            topN: this.topN
+                        }
+                    }
+                );
+
+                if (response && response.data && response.data.success) {
+                    this.dashboard = Object.assign(this.createEmptyDashboard(), response.data.data || {});
+                    this.$nextTick(() => {
+                        this.renderCharts();
+                    });
+                    if (showMessage) {
+                        this.$message({
+                            message: "看板已刷新",
+                            type: "success"
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error("fetchDashboard error:", error);
+            } finally {
+                this.loading = false;
+            }
+        },
+        renderCharts: function () {
+            this.renderUsageTrendChart();
+            this.renderModelUsageChart();
+        },
+        renderUsageTrendChart: function () {
+            var trendData = this.dashboard && this.dashboard.usageTrend ? this.dashboard.usageTrend : [];
+            var chartEl = document.getElementById("usageTrendChart");
+            if (!chartEl || typeof echarts === "undefined") {
+                return;
+            }
+
+            if (!this.usageTrendChart) {
+                this.usageTrendChart = echarts.init(chartEl);
+            }
+
+            var xAxis = trendData.map(function (item) {
+                return item.dateLabel || item.date || "";
+            });
+            var usageCount = trendData.map(function (item) {
+                return Number(item.resultCount || 0);
+            });
+            var avgScores = trendData.map(function (item) {
+                var score = Number(item.avgScore);
+                return score >= 0 ? score : null;
+            });
+
+            this.usageTrendChart.setOption({
+                color: ["#2f88ff", "#15b685"],
                 tooltip: {
-                    trigger: 'axis',
+                    trigger: "axis"
+                },
+                legend: {
+                    data: ["调用次数", "平均分"]
+                },
+                grid: {
+                    left: 50,
+                    right: 45,
+                    top: 50,
+                    bottom: 35
                 },
                 xAxis: {
-                    type: 'category',
-                    data: dates,
+                    type: "category",
+                    data: xAxis,
+                    boundaryGap: true
                 },
+                yAxis: [
+                    {
+                        type: "value",
+                        name: "调用次数",
+                        minInterval: 1
+                    },
+                    {
+                        type: "value",
+                        name: "平均分",
+                        min: 0,
+                        max: 10
+                    }
+                ],
+                series: [
+                    {
+                        name: "调用次数",
+                        type: "bar",
+                        barMaxWidth: 24,
+                        data: usageCount
+                    },
+                    {
+                        name: "平均分",
+                        type: "line",
+                        yAxisIndex: 1,
+                        smooth: true,
+                        connectNulls: true,
+                        data: avgScores
+                    }
+                ]
+            }, true);
+        },
+        renderModelUsageChart: function () {
+            var modelData = this.dashboard && this.dashboard.topModels ? this.dashboard.topModels : [];
+            var chartEl = document.getElementById("modelUsageChart");
+            if (!chartEl || typeof echarts === "undefined") {
+                return;
+            }
+
+            if (!this.modelUsageChart) {
+                this.modelUsageChart = echarts.init(chartEl);
+            }
+
+            var yAxis = modelData.map(this.formatModelName);
+            var usageSeries = modelData.map(function (item) {
+                return Number(item.usageCount || 0);
+            });
+            var tokenSeries = modelData.map(function (item) {
+                return Number(item.tokenCost || 0);
+            });
+
+            this.modelUsageChart.setOption({
+                color: ["#4361ee", "#ef476f"],
+                tooltip: {
+                    trigger: "axis",
+                    axisPointer: {
+                        type: "shadow"
+                    }
+                },
+                legend: {
+                    data: ["调用次数", "Token 消耗"]
+                },
+                grid: {
+                    left: 110,
+                    right: 25,
+                    top: 50,
+                    bottom: 30
+                },
+                xAxis: [
+                    {
+                        type: "value",
+                        name: "调用次数"
+                    },
+                    {
+                        type: "value",
+                        name: "Token",
+                        position: "top",
+                        splitLine: {
+                            show: false
+                        }
+                    }
+                ],
                 yAxis: {
-                    type: 'value',
+                    type: "category",
+                    data: yAxis
                 },
                 series: [
                     {
-                        data: usageCounts,
-                        type: 'line',
-                        smooth: true,
-                        areaStyle: {},
+                        name: "调用次数",
+                        type: "bar",
+                        data: usageSeries,
+                        barMaxWidth: 18
                     },
-                ],
-                color: ['#409EFF'],
-            });
+                    {
+                        name: "Token 消耗",
+                        type: "bar",
+                        xAxisIndex: 1,
+                        data: tokenSeries,
+                        barMaxWidth: 18
+                    }
+                ]
+            }, true);
         },
-        filterDataByDateRange(dateRange) {
-            if (dateRange.length === 0) {
-                return this.usageData;
+        handleResize: function () {
+            if (this.usageTrendChart) {
+                this.usageTrendChart.resize();
             }
-            const [start, end] = dateRange;
-            return this.usageData.filter(item => {
-                return new Date(item.date) >= new Date(start) && new Date(item.date) <= new Date(end);
-            });
-        },//echarts表格
-        closeDialog() {
-            this.$refs.newDialogModelForm.resetFields();
-        },
-        submitForm() {
-            this.$refs.newDialogModelForm.validate((valid) => {
-                if (valid) {
-                    alert('submit!');
-                    this.dialogFormVisible = false
-                } else {
-                    console.log('error submit!!');
-                    return false;
-                }
-            });
-        },
-        // 新增模型 btn
-        createBtnFrom() {
-            this.dialogFormTitle = '新增模型'
-            this.dialogFormVisible = true
-        },
-        // 编辑模型 btn
-        editBtnFrom(row) {
-            this.dialogFormTitle = '编辑模型'
-            this.newModelForm = {
-                ...row
+            if (this.modelUsageChart) {
+                this.modelUsageChart.resize();
             }
-            this.dialogFormVisible = true
         },
-        // 删除模型 
-        deleteHandle(row) {
-            console.log('删除', row)
-        },
-        // btn 批量删除
-        btnBatchdelete() {
-            console.log('批量删除', this.multipleSelection)
-            // 循环 this.multipleSelection
-            // this.$refs.multipleTable.toggleRowSelection(row);
-        },
-        // async  获取table列表数据
-        getList() {
-            this.tableData = [{
-                id: 1,
-                modelName: 'Prompt名称1',
-                developer: '王小虎',
-                isItPublic: false,
-                date: '2016-05-03'
-            }, {
-                id: 2,
-                modelName: 'Prompt名称2',
-                developer: '王小虎',
-                isItPublic: true,
-                date: '2016-05-04'
-            }, {
-                id: 3,
-                modelName: 'Prompt名称3',
-                developer: '王小虎',
-                isItPublic: false,
-                date: '2016-05-05'
-            }]
-            this.tableTotal = 3
-            // to do 对接接口 queryList
-            //const _tableData = await service.get(`/Admin/PromptRange/Index?handler=Mofules`);
-            //this.tableData = tableData.data.data.result;
-        },
-
-        // table 自定义行号
-        indexMethod(index) {
-            let { page, size } = this.queryList
-            return (page - 1) * size + index + 1;
-            //return  index + 1;
-        },
-        // table 选中列
-        handleSelectionChange(val) {
-            let { page } = this.queryList
-            this.multipleSelection[page] = val;
-            // 按照 页码 记录对应页选择的数量
-            console.log('tbale 选择', this.multipleSelection)
-        },
-        // 分页 页大小
-        handleSizeChange(val) {
-            this.queryList.size = val
-            this.getList()
-        },
-        // 分页 页码
-        handleCurrentChange(val) {
-            this.queryList.page = val
-            this.getList()
+        disposeCharts: function () {
+            if (this.usageTrendChart) {
+                this.usageTrendChart.dispose();
+                this.usageTrendChart = null;
+            }
+            if (this.modelUsageChart) {
+                this.modelUsageChart.dispose();
+                this.modelUsageChart = null;
+            }
         }
     }
 });

@@ -84,7 +84,8 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             //TODO:使用DTO操作
             var systemConfig = _systemConfigService.Value.GetObject(z => true);
             systemConfig.Update(systemConfig.SystemName, systemConfig.MchId, systemConfig.MchKey, systemConfig.TenPayAppId,
-                systemConfig.HideModuleManager.HasValue && systemConfig.HideModuleManager.Value == true ? false : true);
+                systemConfig.HideModuleManager.HasValue && systemConfig.HideModuleManager.Value == true ? false : true,
+                systemConfig.AdminWebLoginExpireMinutes, systemConfig.BackendJwtExpireMinutes);
             await _systemConfigService.Value.SaveObjectAsync(systemConfig);
             if (systemConfig.HideModuleManager == true)
             {
@@ -105,7 +106,8 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             //TODO:使用DTO操作
             var systemConfig = _systemConfigService.Value.GetObject(z => true);
             systemConfig.Update(systemConfig.SystemName, systemConfig.MchId, systemConfig.MchKey, systemConfig.TenPayAppId,
-                            systemConfig.HideModuleManager.HasValue && systemConfig.HideModuleManager.Value == true ? false : true); await _systemConfigService.Value.SaveObjectAsync(systemConfig);
+                            systemConfig.HideModuleManager.HasValue && systemConfig.HideModuleManager.Value == true ? false : true,
+                            systemConfig.AdminWebLoginExpireMinutes, systemConfig.BackendJwtExpireMinutes); await _systemConfigService.Value.SaveObjectAsync(systemConfig);
             //if (systemConfig.HideModuleManager == true)
             //{
             //    return RedirectToPage("../Index");

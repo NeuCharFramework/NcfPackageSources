@@ -43,6 +43,11 @@ namespace Senparc.Areas.Admin.Domain.Models.Dto
         public string Token { get; set; }
 
         /// <summary>
+        /// JWT 过期时间（UTC）
+        /// </summary>
+        public DateTimeOffset? TokenExpiresUtc { get; set; }
+
+        /// <summary>
         /// 角色列表
         /// </summary>
         public IEnumerable<string> RoleCodes { get; set; }

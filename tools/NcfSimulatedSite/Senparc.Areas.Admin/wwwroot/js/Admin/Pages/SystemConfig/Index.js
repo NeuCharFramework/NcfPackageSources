@@ -19,10 +19,18 @@
                 data: {
                     id: 0,
                     systemName: '',
+                    adminWebLoginExpireMinutes: 120,
+                    backendJwtExpireMinutes: 9000
                 },
                 rules: {
                     systemName: [
-                        { required: true, message: "用户名为必填项", trigger: "blur" }
+                        { required: true, message: "系统名称为必填项", trigger: "blur" }
+                    ],
+                    adminWebLoginExpireMinutes: [
+                        { required: true, message: "网页登录持续时间为必填项", trigger: "change" }
+                    ],
+                    backendJwtExpireMinutes: [
+                        { required: true, message: "JWT 过期时间为必填项", trigger: "change" }
                     ]
                 }
             },
@@ -41,7 +49,9 @@
             if (!val) {
                 this.dialog.data = {
                     id: 0,
-                    systemName: ''
+                    systemName: '',
+                    adminWebLoginExpireMinutes: 120,
+                    backendJwtExpireMinutes: 9000
                 };
                 this.dialog.updateLoading = false;
                 this.$refs['dataForm'].resetFields();
@@ -62,9 +72,12 @@
             this.dialog.visible = true;
             if (row) {
                 // 编辑
-                let { systemName, id } = row;
+                let { systemName, id, adminWebLoginExpireMinutes, backendJwtExpireMinutes } = row;
                 this.dialog.data = {
-                    systemName, id
+                    systemName,
+                    id,
+                    adminWebLoginExpireMinutes,
+                    backendJwtExpireMinutes
                 };
                 this.dialog = Object.assign({}, this.dialog);
             }
@@ -78,6 +91,8 @@
                     let data = {
                         Id: this.dialog.data.id,
                         SystemName: this.dialog.data.systemName,
+                        AdminWebLoginExpireMinutes: this.dialog.data.adminWebLoginExpireMinutes,
+                        BackendJwtExpireMinutes: this.dialog.data.backendJwtExpireMinutes
                     };
                     service.post("/Admin/SystemConfig/Edit?handler=Save", data).then(res => {
                         if (res.data.success) {

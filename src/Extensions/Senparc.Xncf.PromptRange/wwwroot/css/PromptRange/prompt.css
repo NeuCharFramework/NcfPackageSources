@@ -2029,6 +2029,66 @@
     color: #409EFF;
 }
 
+.contentRow_tti {
+    padding-top: 6px;
+}
+
+.tti-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tti-image-wrapper {
+    width: 100%;
+    max-width: 420px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e4e7ed;
+    background: #f8fafc;
+}
+
+.tti-image {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.tti-empty {
+    color: #909399;
+    font-size: 12px;
+}
+
+.tti-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: #606266;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.tti-meta-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.tti-meta-label {
+    color: #909399;
+    min-width: 52px;
+    flex-shrink: 0;
+}
+
+.tti-meta a {
+    color: #409eff;
+    text-decoration: none;
+}
+
+.tti-meta a:hover {
+    text-decoration: underline;
+}
+
 .copyButtonArea {
     text-align: right;
     font-size: 11px;
@@ -2710,6 +2770,53 @@ think::before {
     line-height: 1.3;
 }
 
+.model-type-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 6px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.2;
+    border: 1px solid transparent;
+    white-space: nowrap;
+}
+
+.model-type-chat {
+    color: #2074d4;
+    background: #e8f3ff;
+    border-color: #b9d9ff;
+}
+
+.model-type-texttoimage {
+    color: #0f766e;
+    background: #e7f9f3;
+    border-color: #a7ead8;
+}
+
+.model-type-textembedding {
+    color: #7a4b0a;
+    background: #fff3dd;
+    border-color: #ffd9a1;
+}
+
+.model-type-textcompletion,
+.model-type-imagetotext,
+.model-type-texttospeech,
+.model-type-speechtotext,
+.model-type-speechrecognition {
+    color: #5b6475;
+    background: #f2f4f8;
+    border-color: #d8deea;
+}
+
+.model-type-unknown {
+    color: #6b7280;
+    background: #f3f4f6;
+    border-color: #e5e7eb;
+}
+
 .model-version {
     display: inline-block;
     font-size: 11px;
@@ -2746,6 +2853,18 @@ think::before {
 
 .model-select .el-select-dropdown__item.selected .model-deployment {
     color: #66b1ff;
+}
+
+.model-select .el-select-dropdown__item.selected .model-type-chat {
+    background: #409eff;
+    color: #fff;
+    border-color: #409eff;
+}
+
+.model-select .el-select-dropdown__item.selected .model-type-texttoimage {
+    background: #13b38b;
+    color: #fff;
+    border-color: #13b38b;
 }
 
 /* 悬停状态 */

@@ -251,6 +251,8 @@ height:100%;
     gap: 8px;
     height: 45px;
     line-height: normal;
+    border-left: 3px solid transparent;
+    padding-left: 17px;
 }
 
 .sidebar-taskitem-name {

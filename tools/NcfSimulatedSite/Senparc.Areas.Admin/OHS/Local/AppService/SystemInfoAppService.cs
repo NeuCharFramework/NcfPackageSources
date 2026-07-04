@@ -23,13 +23,11 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     public class SystemInfoAppService : LocalAppServiceBase
     {
         private readonly SystemConfigService _systemConfigService;
-        private readonly FullSystemConfigCache _fullSystemConfigCache;
         private readonly IBaseObjectCacheStrategy _cacheStrategy;
 
-        public SystemInfoAppService(IServiceProvider serviceProvider, SystemConfigService systemConfigService, FullSystemConfigCache fullSystemConfigCache, IBaseObjectCacheStrategy cacheStrategy) : base(serviceProvider)
+        public SystemInfoAppService(IServiceProvider serviceProvider, SystemConfigService systemConfigService, IBaseObjectCacheStrategy cacheStrategy) : base(serviceProvider)
         {
             _systemConfigService = systemConfigService;
-            _fullSystemConfigCache = fullSystemConfigCache;
             this._cacheStrategy = cacheStrategy;
         }
 
@@ -71,7 +69,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     throw new NcfExceptionBase("系统配置信息不存在");
                 }
 
-                systemConfig.Update(request.SystemName, request.MchId, request.MchKey, request.TenPayAppId, systemConfig.HideModuleManager);
+                systemConfig.Update(request.SystemName, request.MchId, request.MchKey, request.TenPayAppId, systemConfig.HideModuleManager,
+                    request.AdminWebLoginExpireMinutes <= 0 ? systemConfig.AdminWebLoginExpireMinutes : request.AdminWebLoginExpireMinutes,
+                    request.BackendJwtExpireMinutes <= 0 ? systemConfig.BackendJwtExpireMinutes : request.BackendJwtExpireMinutes);
 
                 await _systemConfigService.SaveObjectAsync(systemConfig);
 
@@ -107,7 +107,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     throw new NcfExceptionBase("系统配置信息不存在");
                 }
 
-                systemConfig.Update(systemConfig.SystemName, systemConfig.MchId, systemConfig.MchKey, systemConfig.TenPayAppId, hide);
+                systemConfig.Update(systemConfig.SystemName, systemConfig.MchId, systemConfig.MchKey, systemConfig.TenPayAppId, hide,
+                    systemConfig.AdminWebLoginExpireMinutes, systemConfig.BackendJwtExpireMinutes);
 
                 await _systemConfigService.SaveObjectAsync(systemConfig);
 

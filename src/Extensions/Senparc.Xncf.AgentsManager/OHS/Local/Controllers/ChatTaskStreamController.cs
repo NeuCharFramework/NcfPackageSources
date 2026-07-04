@@ -43,7 +43,7 @@ public class ChatTaskStreamController : ControllerBase
     }
 
     [HttpGet]
-    public async Task Subscribe(int chatTaskId, CancellationToken cancellationToken)
+    public async Task Subscribe(int chatTaskId, bool replayBuffered = true, CancellationToken cancellationToken = default)
     {
         Response.Headers.CacheControl = "no-cache";
         Response.Headers.Connection = "keep-alive";
@@ -54,7 +54,7 @@ public class ChatTaskStreamController : ControllerBase
         await Response.WriteAsync(": connected\n\n", cancellationToken);
         await Response.Body.FlushAsync(cancellationToken);
 
-        await foreach (var streamEvent in _chatTaskStreamHub.Subscribe(chatTaskId, cancellationToken))
+        await foreach (var streamEvent in _chatTaskStreamHub.Subscribe(chatTaskId, replayBuffered, cancellationToken))
         {
             if (cancellationToken.IsCancellationRequested)
             {

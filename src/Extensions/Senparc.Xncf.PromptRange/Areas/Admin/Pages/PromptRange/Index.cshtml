@@ -5,7 +5,6 @@
     Layout = "_Layout_Vue";
 }
 @section Style{
-    <link href="https://unpkg.com/element-ui/lib/theme-chalk/index.css" rel="stylesheet">
     <link href="~/css/PromptRange/index.css" rel="stylesheet" />
 }
 @section breadcrumbs{
@@ -14,14 +13,14 @@
     <el-breadcrumb-item>首页</el-breadcrumb-item>
 }
 
-<div class="indexPage">
+<div class="indexPage" v-cloak>
     <div class="headRow">
         <div class="leftBox">
             <div class="title">
                 <div>PromptRange</div>
                 <div>提示词靶场</div>
             </div>
-            <div class="btn">
+            <div class="btn" @@click="toAIKernel">
                 新增模型
             </div>
         </div>
@@ -30,63 +29,148 @@
         <img src="~/image/PromptRange/index_headRight2.png" class="headRightIcon2" />
         <img src="~/image/PromptRange/index_headRight3.png" class="headRightIcon3" />
     </div>
-    <div class="mainBox">
-        <div class="leftBox cardBox"> 
-            <div id="rank">
-                <h1>热门 Prompt 和 模型 排行榜</h1>
-                <div class="ranking-container">
-                    <div class="ranking">
-                        <h2>热门 Prompt</h2>
-                        <ol id="ol">
-                            <li id="li" v-for="(prompt, index) in topPrompts" :key="index">
-                                <span class="rank">{{ index + 1 }}</span>
-                                <span class="content">{{ prompt.text }}</span>
-                                <span class="usage">使用次数: {{ prompt.usageCount }}</span>
-                            </li>
-                        </ol>
-                    </div>
-                    <div class="ranking">
-                        <h2>热门模型</h2>
-                        <ol id="ol">
-                            <li id="li" v-for="(model, index) in topModels" :key="index">
-                                <span class="rank">{{ index + 1 }}</span>
-                                <span class="content">{{ model.name }}</span>
-                                <span class="usage">调用次数: {{ model.usageCount }}</span>
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-            <div class="hotMainBox"></div>
+
+    <div class="toolRow">
+        <div class="toolLeft">
+            数据更新时间：{{ formatDateTime(dashboard.generatedAt) }}
         </div>
-        <div class="rightBox">
-            <div class="cardBox">
-                @* <div id="chart">
-                    <h1>模型使用次数</h1>
-                    <el-date-picker v-model="dateRange"
-                                    type="daterange"
-                                    range-separator="至"
-                                    start-placeholder="开始日期"
-                                    end-placeholder="结束日期"
-                                    v-on:change="updateChart"
-                                    style="margin-bottom: 20px;" >
-                    </el-date-picker>
-                    <div ref="chart" id="chart2" ></div>
-                </div> *@
-                <div class="usetimes">
-                    <h1 class="title">模型使用次数</h1>
-                    <div id="main"></div>
-                    <div class="hotMainBox"></div>
+        <div class="toolRight">
+            <el-button size="mini" type="primary" :loading="loading" @@click="fetchDashboard(true)">刷新看板</el-button>
+            <el-button size="mini" @@click="goPromptWorkbench">进入 Prompt 工作台</el-button>
+        </div>
+    </div>
+
+    <div class="overviewGrid">
+        <div class="overviewCard" v-for="item in overviewCards" :key="item.key">
+            <div class="label">{{ item.label }}</div>
+            <div class="value">{{ item.value }}</div>
+            <div class="hint">{{ item.hint }}</div>
+        </div>
+    </div>
+
+    <div class="boardGrid" v-loading="loading">
+        <div class="boardCard trendCard">
+            <div class="cardTitleRow">
+                <div class="cardTitle">打靶趋势（近 {{ dashboard.recentDays || 14 }} 天）</div>
+                <div class="cardSubTitle">调用次数 / 平均分</div>
+            </div>
+            <div id="usageTrendChart" class="chart chartTrend"></div>
+        </div>
+
+        <div class="boardCard modelCard">
+            <div class="cardTitleRow">
+                <div class="cardTitle">模型调用分布</div>
+                <div class="cardSubTitle">Top {{ dashboard.topModels ? dashboard.topModels.length : 0 }}</div>
+            </div>
+            <div id="modelUsageChart" class="chart chartModel"></div>
+        </div>
+
+        <div class="boardCard promptCard">
+            <div class="cardTitleRow">
+                <div class="cardTitle">高频 Prompt 排行</div>
+                <a class="cardLink" :href="buildPromptUrl(null, null)">前往 Prompt 页面</a>
+            </div>
+            <div class="tableWrap" v-if="dashboard.topPrompts && dashboard.topPrompts.length > 0">
+                <table class="insightTable">
+                    <thead>
+                        <tr>
+                            <th>Prompt</th>
+                            <th>靶场</th>
+                            <th>调用</th>
+                            <th>平均分</th>
+                            <th>最近打靶</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in dashboard.topPrompts" :key="'prompt-' + item.promptId">
+                            <td>
+                                <a class="linkText" :href="buildPromptUrl(item.rangeId, item.promptId)">
+                                    {{ item.promptName }}
+                                </a>
+                                <div class="subText">
+                                    {{ item.fullVersion }}
+                                    <span class="tagWarning" v-if="item.isDraft">草稿</span>
+                                </div>
+                            </td>
+                            <td>{{ formatRangeName(item.rangeAlias, item.rangeName) }}</td>
+                            <td>{{ item.usageCount }}</td>
+                            <td :class="scoreClass(item.avgScore)">{{ formatScore(item.avgScore) }}</td>
+                            <td>{{ formatDateTime(item.lastRunTime) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <el-empty v-else description="暂无 Prompt 数据"></el-empty>
+        </div>
+
+        <div class="boardCard rangeCard">
+            <div class="cardTitleRow">
+                <div class="cardTitle">靶场健康度</div>
+                <div class="cardSubTitle">综合评分 + 活跃率 + 草稿占比</div>
+            </div>
+            <div class="rangeList" v-if="dashboard.topRanges && dashboard.topRanges.length > 0">
+                <div class="rangeItem" v-for="item in dashboard.topRanges" :key="'range-' + item.rangeId">
+                    <div class="rangeTopRow">
+                        <a class="linkText" :href="buildPromptUrl(item.rangeId, null)">
+                            {{ formatRangeName(item.rangeAlias, item.rangeName) }}
+                        </a>
+                        <span class="healthText">{{ item.healthScore }} 分</span>
+                    </div>
+                    <div class="rangeMeta">
+                        Prompt {{ item.promptCount }} / 活跃 {{ item.activePromptCount }} / 调用 {{ item.usageCount }} / 草稿 {{ item.draftPromptCount }}
+                    </div>
+                    <div class="progressBar">
+                        <span :style="{ width: clampPercent(item.healthScore) + '%' }"></span>
+                    </div>
                 </div>
             </div>
+            <el-empty v-else description="暂无靶场数据"></el-empty>
+        </div>
+
+        <div class="boardCard riskCard">
+            <div class="cardTitleRow">
+                <div class="cardTitle">风险与待优化 Prompt</div>
+                <div class="cardSubTitle">优先处理低分和未打靶项</div>
+            </div>
+            <div class="riskList" v-if="dashboard.riskPrompts && dashboard.riskPrompts.length > 0">
+                <div class="riskItem" v-for="item in dashboard.riskPrompts" :key="'risk-' + item.promptId">
+                    <div class="riskTopRow">
+                        <span class="riskType">{{ item.riskType }}</span>
+                        <a class="linkText" :href="buildPromptUrl(item.rangeId, item.promptId)">
+                            {{ item.promptName }}
+                        </a>
+                    </div>
+                    <div class="riskMeta">
+                        {{ formatRangeName(item.rangeAlias, item.rangeName) }} · {{ item.fullVersion }} · 调用 {{ item.usageCount }} · 平均分 {{ formatScore(item.avgScore) }}
+                    </div>
+                    <div class="riskDesc">{{ item.riskMessage }}</div>
+                </div>
+            </div>
+            <el-empty v-else description="暂无风险项"></el-empty>
+        </div>
+
+        <div class="boardCard insightCard">
+            <div class="cardTitleRow">
+                <div class="cardTitle">智能洞察</div>
+                <div class="cardSubTitle">基于真实打靶与评分数据</div>
+            </div>
+            <div class="insightList" v-if="dashboard.insights && dashboard.insights.length > 0">
+                <div class="insightItem"
+                     v-for="(item, index) in dashboard.insights"
+                     :key="'insight-' + index"
+                     :class="'level-' + (item.level || 'info')">
+                    <div class="insightTitle">{{ item.title }}</div>
+                    <div class="insightDesc">{{ item.description }}</div>
+                </div>
+            </div>
+            <el-empty v-else description="暂无洞察数据"></el-empty>
         </div>
     </div>
 </div>
 
 @section scripts{
+    <script src="~/js/PromptRange/lib/axios.min.js"></script>
     <script src="~/js/PromptRange/echarts/echarts.min.js"></script>
-    <script src="~/js/PromptRange/echarts/echarts-gl.min.js"></script>
+    <script src="~/js/PromptRange/axios.js"></script>
     <script src="~/js/PromptRange/index.js"></script>
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    <script src="https://unpkg.com/vue@2"></script>
 }

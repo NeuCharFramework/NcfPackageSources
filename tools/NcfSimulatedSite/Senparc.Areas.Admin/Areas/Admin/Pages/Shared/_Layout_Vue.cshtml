@@ -2,6 +2,8 @@
 @{
     var thisYear = DateTime.Now.Year;
     var currentCulture = System.Globalization.CultureInfo.CurrentUICulture.Name;
+    var webLoginExpireMinutes = Model?.FullSystemConfig?.AdminWebLoginExpireMinutes ?? Senparc.Ncf.Core.Models.SystemConfig.DefaultAdminWebLoginExpireMinutes;
+    var jwtExpireMinutes = Model?.FullSystemConfig?.BackendJwtExpireMinutes ?? Senparc.Ncf.Core.Models.SystemConfig.DefaultBackendJwtExpireMinutes;
 }
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Senparc.Areas.Admin.AdminResource> AR
 
@@ -120,6 +122,23 @@
     <!--页面js-->
     @*<script src="~/js/Admin/Pages/Index/Index.js"></script>*@
     @RenderSection("scripts", false)
+    <script>
+        window.NCF_SESSION_CONFIG = {
+            webLoginExpireMinutes: @webLoginExpireMinutes,
+            jwtExpireMinutes: @jwtExpireMinutes,
+            remindBeforeMinutes: 5
+        };
+        window.NCF_SESSION_I18N = {
+            title: '登录即将过期',
+            message: '检测到当前登录会话即将过期，您可以保持登录或立即退出。',
+            keepLogin: '保持登录',
+            logoutNow: '立即退出登录',
+            keepLoginSuccess: '已保持登录，会话已续期。'
+        };
+        if (typeof window.ncfStartSessionMonitor === 'function') {
+            window.ncfStartSessionMonitor();
+        }
+    </script>
     @Html.AntiForgeryToken()
 </body>
 </html>

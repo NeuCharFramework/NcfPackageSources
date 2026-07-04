@@ -116,12 +116,13 @@
                     <el-select v-model="modelid" placeholder="请选择模型" :disabled="dodgersLoading" class="selectRow model-select" @@change="promptChangeHandel($event,'modelid',modelid)">
                         <el-option v-for="item in modelOpt"
                                    v-key="item.id"
-                                   :label="item.displayName || item.alias"
+                                   :label="item.selectLabel || item.displayName || item.alias"
                                    :value="item.value"
                                    :disabled="item.disabled">
                             <div class="model-option-content">
                                 <div class="model-name-row">
                                     <span class="model-name">{{ item.alias || '未命名模型' }}</span>
+                                    <span class="model-type-badge" :class="'model-type-' + (item.configModelTypeName || 'unknown').toLowerCase()">{{ item.configModelTypeName || 'Unknown' }}</span>
                                     <span class="model-version" v-if="item.apiVersion">v{{ item.apiVersion }}</span>
                                 </div>
                                 <div class="model-deployment" v-if="item.deploymentName">（{{ item.deploymentName }}）</div>
@@ -480,7 +481,21 @@
                             <a href="javascript:void(0);" @@click="copyPromptResult(item,true)" title="复制原始内容（例如将复制 markdown 标记）"><i class="fa fa-copy"></i> 原始</a>
                         </div>
                     </div>
-                    <div class="contentRow" v-html="item.resultStringHtml">
+                    <div class="contentRow contentRow_tti" v-if="item.resultViewType === 'TextToImage'">
+                        <div class="tti-card">
+                            <div class="tti-image-wrapper" v-if="item.textToImage && item.textToImage.imageUrl">
+                                <img :src="item.textToImage.imageUrl" alt="Generated Image" class="tti-image" />
+                            </div>
+                            <div class="tti-empty" v-else>图片已生成，但未获得可访问地址</div>
+                            <div class="tti-meta">
+                                <div class="tti-meta-row"><span class="tti-meta-label">存储：</span><span>{{ item.textToImage && item.textToImage.storageType ? item.textToImage.storageType : '--' }}</span></div>
+                                <div class="tti-meta-row" v-if="item.textToImage && item.textToImage.imageUrl"><a :href="item.textToImage.imageUrl" target="_blank" rel="noopener">查看原图</a></div>
+                                <div class="tti-meta-row" v-if="item.textToImage && item.textToImage.revisedPrompt"><span class="tti-meta-label">Revised：</span><span>{{ item.textToImage.revisedPrompt }}</span></div>
+                                <div class="tti-meta-row" v-if="item.textToImage && item.textToImage.prompt"><span class="tti-meta-label">Prompt：</span><span>{{ item.textToImage.prompt }}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contentRow" v-else v-html="item.resultStringHtml">
                     </div>
                     <div class="promptResultUsageRow" v-if="item.resultString.length>0">
                         <span class="promptResultUsageToken">Token: {{item.totalCostToken || 0}}（输入 {{item.promptCostToken || 0}} / 输出 {{item.resultCostToken || 0}}）</span>

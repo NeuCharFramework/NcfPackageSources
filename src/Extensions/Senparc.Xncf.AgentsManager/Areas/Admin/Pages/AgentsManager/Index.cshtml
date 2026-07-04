@@ -1067,7 +1067,9 @@
                         全部任务
                     </div>
                     <div v-for="(item,index) in taskList" :key="item.id || index" class="sidebar-agentitem sidebar-taskitem"
-                        :class="{'sidebar-agentitem_active':scrollbarTaskIndex === index}" :title="item.name"
+                        :class="{'sidebar-agentitem_active':scrollbarTaskIndex === index}"
+                        :style="{ borderLeftColor: getTaskStatusAccentColor(item.status) }"
+                        :title="item.name"
                         @@click="handleTaskView('task',item,index)">
                         <span class="text-ellipsis sidebar-taskitem-name">{{ item.name }}</span>
                         <el-tooltip :content="item.isArchived ? '取消归档' : '归档'" placement="top" :open-delay="180">
