@@ -163,15 +163,20 @@ namespace Senparc.Ncf.XncfBase.Functions
             {
                 //找到了 SLN 文件，开始展开地毯式搜索
 
-                //第一步：查找 XNCF
-
-                var projectFolders = Directory.GetDirectories(currentDir, "*.XNCF.*", SearchOption.AllDirectories).ToList();
+                //第一步：查找 XNCF（使用不区分大小写匹配，兼容 Linux 文件系统）
+                var enumerationOptions = new EnumerationOptions
+                {
+                    MatchCasing = MatchCasing.CaseInsensitive,
+                    RecurseSubdirectories = true,
+                    IgnoreInaccessible = true
+                };
+                var projectFolders = Directory.GetDirectories(currentDir, "*.XNCF.*", enumerationOptions).ToList();
 
                 if (additionalProjects != null && additionalProjects.Length > 0)
                 {
                     foreach (var proj in additionalProjects)
                     {
-                        var addProjectFolders = Directory.GetDirectories(currentDir, proj, SearchOption.AllDirectories);
+                        var addProjectFolders = Directory.GetDirectories(currentDir, proj, enumerationOptions);
                         if (addProjectFolders.Count() > 0)
                         {
                             projectFolders.AddRange(addProjectFolders);

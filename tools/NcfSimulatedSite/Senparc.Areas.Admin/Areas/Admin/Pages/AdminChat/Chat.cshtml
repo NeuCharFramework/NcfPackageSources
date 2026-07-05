@@ -232,6 +232,15 @@
                     <span class="input-tip">
                         <i class="fa fa-info-circle"></i> Ctrl + Enter 或 Cmd + Enter 发送
                     </span>
+                    <el-button
+                        size="small"
+                        :type="isAgentsTaskMode ? 'warning' : 'default'"
+                        @@click="toggleAgentsTaskMode"
+                        :title="isAgentsTaskMode ? '已启用 Agents 任务模式，点击关闭' : '启用 Agents 任务模式'"
+                        style="margin-right:4px;">
+                        <i class="fa fa-robot"></i>
+                        {{ isAgentsTaskMode ? 'Agents 模式 ✓' : 'Agents 任务' }}
+                    </el-button>
                     <el-button 
                         type="primary" 
                         icon="el-icon-s-promotion"
@@ -285,9 +294,22 @@
                             <div class="chat-module-picker-header">
                                 <span class="chat-module-picker-title">引用模块（可选）</span>
                                 <div class="chat-module-picker-actions">
+                                    <el-button
+                                        size="mini"
+                                        :type="isAgentsTaskMode ? 'warning' : 'default'"
+                                        :icon="isAgentsTaskMode ? 'el-icon-check' : 'el-icon-s-cooperation'"
+                                        @@click="toggleAgentsTaskMode"
+                                        :title="isAgentsTaskMode ? '已启用 Agents 任务模式，点击关闭' : '启用 Agents 任务模式，自动寻找 / 创建合适的 Agent 组执行任务'">
+                                        <i class="fa fa-robot"></i> Agents 任务
+                                    </el-button>
                                     <el-button size="mini" type="primary" icon="el-icon-plus" @@click="openModuleSelector">添加引用模块</el-button>
                                     <el-button size="mini" @@click="clearSelectedModules" v-if="selectedModules.length > 0">清空</el-button>
                                 </div>
+                            </div>
+
+                            <div v-if="isAgentsTaskMode" class="agents-task-mode-banner" style="background:#fdf6ec;border:1px solid #e6a23c;border-radius:4px;padding:8px 12px;margin-bottom:8px;font-size:12px;color:#7d6027;">
+                                <i class="fa fa-robot" style="color:#e6a23c;margin-right:4px;"></i>
+                                <strong>Agents 任务模式已开启</strong>：AI 将自动搜索合适的 Agent Group 执行您的任务，若无合适 Group 将提示您确认后自动创建。
                             </div>
 
                             <div v-if="selectedModules.length > 0" class="chat-module-selected-list">

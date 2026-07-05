@@ -61,6 +61,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.SqlServer
                     b.Property<bool>("IsPersonality")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsScheduled")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("datetime2");
 
@@ -79,6 +82,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.SqlServer
 
                     b.Property<string>("ResultComment")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ScheduleIntervalMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ScheduleType")
+                        .HasColumnType("int");
 
                     b.Property<bool>("Score")
                         .HasColumnType("bit");

@@ -61,6 +61,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.MySql
                     b.Property<bool>("IsPersonality")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("IsScheduled")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("datetime(6)");
 
@@ -79,6 +82,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.MySql
 
                     b.Property<string>("ResultComment")
                         .HasColumnType("longtext");
+
+                    b.Property<int?>("ScheduleIntervalMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ScheduleType")
+                        .HasColumnType("int");
 
                     b.Property<bool>("Score")
                         .HasColumnType("tinyint(1)");

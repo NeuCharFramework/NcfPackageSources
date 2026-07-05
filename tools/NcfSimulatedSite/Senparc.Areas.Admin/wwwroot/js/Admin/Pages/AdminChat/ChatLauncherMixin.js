@@ -10,7 +10,10 @@ window.ChatLauncherMixin = {
       availableModules: [],
       selectedModuleUids: [],
       loadingModuleOptions: false,
-      isCreatingSession: false
+      isCreatingSession: false,
+      isAgentsTaskMode: false,
+      // AgentsManager module UID, used to auto-add when Agents Task mode is toggled on
+      AGENTS_MANAGER_UID: 'D858D7FA-775A-4690-9023-CFB0B3B84994'
     };
   },
   computed: {
@@ -83,6 +86,35 @@ window.ChatLauncherMixin = {
     }
   },
   methods: {
+    /**
+     * Toggle "Agents 任务" mode.
+     * When enabled, AgentsManager module is auto-added to selectedModules so that
+     * AdminChatAiService loads AgentTaskPlugin kernel functions.
+     */
+    async toggleAgentsTaskMode() {
+      this.isAgentsTaskMode = !this.isAgentsTaskMode;
+
+      if (this.isAgentsTaskMode) {
+        // Ensure module list is loaded
+        await this.ensureModuleOptionsLoaded(false);
+
+        // Add AgentsManager module if not already selected
+        const alreadySelected = this.selectedModules.some((m) => m.uid === this.AGENTS_MANAGER_UID);
+        if (!alreadySelected) {
+          const agentsModule = this.availableModules.find((m) => m.uid === this.AGENTS_MANAGER_UID);
+          if (agentsModule) {
+            this.selectedModules = [...this.selectedModules, agentsModule];
+          } else {
+            // Module not found in list (not installed), still continue but warn
+            console.warn('AgentsManager module not found in available modules list. Plugin may not be active.');
+          }
+        }
+
+        this.$message && this.$message.success('Agents 任务模式已开启，AI 将自动帮您安排 Agent 任务');
+      } else {
+        this.$message && this.$message.info('Agents 任务模式已关闭');
+      }
+    },
     persistSelectedModuleUids(uids) {
       try {
         localStorage.setItem(this.moduleStorageKey, JSON.stringify(uids || []));
@@ -221,8 +253,14 @@ window.ChatLauncherMixin = {
 
       this.isCreatingSession = true;
       try {
+        // In Agents Task mode, prefix the message so AI knows to activate the workflow
+        let messageToSend = this.chatInputText.trim();
+        if (this.isAgentsTaskMode) {
+          messageToSend = `【Agents任务模式】请帮我通过 Agent Group 自动执行以下任务：\n\n${messageToSend}`;
+        }
+
         const requestData = {
-          initialMessage: this.chatInputText.trim(),
+          initialMessage: messageToSend,
           moduleUids: this.selectedModules.map((item) => item.uid)
         };
 
