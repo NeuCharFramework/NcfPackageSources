@@ -10,6 +10,11 @@
     修改标识：Senparc - 20260704
     修改描述：v0.11.0-preview2 新增 ChatTask 归档能力并完善多数据库迁移支持
 
+    修改标识：Senparc - 20260705
+    修改描述：v0.11.1-preview3 重构系统配置初始化与更新流程并统一模型处理
+
+    修改标识：Senparc - 20260705
+    修改描述：v0.11.2-preview4 重构系统配置初始化与更新流程并统一模型处理
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.CO2NET;
@@ -34,10 +39,15 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
     public class ChatTaskAppService : AppServiceBase
     {
         private readonly ChatTaskService _chatTaskService;
+        private readonly ChatGroupService _chatGroupService;
 
-        public ChatTaskAppService(IServiceProvider serviceProvider, ChatTaskService chatTaskService) : base(serviceProvider)
+        public ChatTaskAppService(
+            IServiceProvider serviceProvider,
+            ChatTaskService chatTaskService,
+            ChatGroupService chatGroupService) : base(serviceProvider)
         {
             _chatTaskService = chatTaskService;
+            _chatGroupService = chatGroupService;
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
@@ -144,6 +154,54 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             {
                 var result = await DeleteInternalAsync(ids);
                 return result;
+            });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<string>> StartBatch([FromBody] List<int> ids)
+        {
+            return await this.GetResponseAsync<string>(async (response, logger) =>
+            {
+                if (ids == null || ids.Count == 0)
+                {
+                    return "未提供任务 ID";
+                }
+
+                var idSet = ids.Distinct().ToList();
+                var taskList = await _chatTaskService.GetFullListAsync(z => idSet.Contains(z.Id));
+                if (taskList == null || taskList.Count == 0)
+                {
+                    return "未找到可启动的任务";
+                }
+
+                var started = 0;
+                var skipped = 0;
+
+                foreach (var task in taskList)
+                {
+                    if (task.ChatGroupId <= 0 || task.PromptCommand.IsNullOrEmpty())
+                    {
+                        skipped++;
+                        continue;
+                    }
+
+                    var runRequest = new ChatGroup_RunGroupRequest
+                    {
+                        Name = task.Name,
+                        ChatGroupId = task.ChatGroupId,
+                        AiModelId = task.AiModelId,
+                        PromptCommand = task.PromptCommand,
+                        Description = task.Description,
+                        Personality = task.IsPersonality,
+                        HookPlatform = task.HookPlatform,
+                        HookParameter = task.HookPlatformParameter
+                    };
+
+                    await _chatGroupService.RunChatGroupInThread(runRequest);
+                    started++;
+                }
+
+                return $"批量启动完成：成功 {started} 条，跳过 {skipped} 条";
             });
         }
 

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.16.2-preview1</Version>
+    <Version>0.16.4-preview3</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -81,6 +81,15 @@
       [2026-07-02] v0.16.2-preview1 优化 PromptRange 提示处理流程与会话模式控制，支持流式输出并优化交互体验
       1、优化 PromptRange 提示处理流程与会话模式控制
       2、支持流式输出并优化交互体验
+      [2026-07-05] v0.16.3-preview2 增强文生图重试机制并兼容 TLS1.2/TLS1.3，重构系统配置初始化与更新流程并统一模型处理
+      1、增强文生图重试机制并兼容 TLS1.2/TLS1.3
+      2、重构系统配置初始化与更新流程并统一模型处理
+      [2026-07-05] v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3，重构系统配置初始化与更新流程并统一模型处理
+      1、增强文生图重试机制并兼容 TLS1.2/TLS1.3
+      2、重构系统配置初始化与更新流程并统一模型处理
+      3、支持 Continue Chat 待确认消息的追加、确认与移除，提升对话状态管理能力
+      4、优化 PromptRange 页面间距与响应式布局，改善不同屏高下的展示一致性
+      5、新增 Prompt 执行选项模型并补齐文本向量检索请求/响应结构，统一接口参数约定
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>

@@ -10,6 +10,11 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260705
+    修改描述：v0.13.3-preview2 修复 AI 模型类型展示顺序
+
+    修改标识：Senparc - 20260705
+    修改描述：v0.13.4-preview3 修复 AI 模型类型展示顺序
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -153,6 +158,7 @@ namespace Senparc.Xncf.AIKernel.Models
         public AIModel Update(AIModel_CreateOrEditRequest request)
         {
             ModelId = request.ModelId;
+            ConfigModelType = request.ConfigModelType;
             DeploymentName = request.DeploymentName;
             Endpoint = request.Endpoint;
             AiPlatform = request.AiPlatform;

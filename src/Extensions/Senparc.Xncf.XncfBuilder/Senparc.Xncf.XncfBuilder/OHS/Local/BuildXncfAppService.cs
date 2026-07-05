@@ -10,6 +10,11 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260705
+    修改描述：v0.36.3-preview2 重构系统配置初始化与更新流程并统一模型处理
+
+    修改标识：Senparc - 20260705
+    修改描述：v0.36.4-preview3 重构系统配置初始化与更新流程并统一模型处理
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -105,17 +110,6 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             {
                 p.WaitForExit();
                 p.Close();
-            }
-
-            async Task<string> ReadOutputAsync(Process process)
-            {
-                var output = new StringBuilder();
-                while (!process.StandardOutput.EndOfStream)
-                {
-                    var line = await process.StandardOutput.ReadLineAsync();
-                    output.AppendLine(line);
-                }
-                return output.ToString();
             }
 
             string output;

@@ -34,6 +34,7 @@
 1. 需要根据 `changed_cs_files` 反向映射出对应项目集合（`changed_csprojs`）。
 2. `changed_csprojs` 中的每个项目都必须更新自身 `.csproj`（版本与发布说明）。
 3. 不允许只更新单一主项目并忽略其他已变更代码所在项目。
+4. 本次执行中只要编辑了 `.cs` 文件（包含仅头注释更新），其映射到的项目都必须同步合并更新当前窗口版本号下的 `<PackageReleaseNotes>`（禁止只改 `.cs` 不改 `.csproj`）。
 
 ## 预览版处理
 
@@ -69,6 +70,9 @@
 7. `<Version>` 标签必须位于 `<TargetFramework>` 或 `<TargetFrameworks>` 标签之后。
 8. `<Version>` 不要求紧邻 `<TargetFramework>`/`<TargetFrameworks>`；若当前已在其后（包括人为调整位置），无需改动位置。
 9. 若 `<Version>` 在 `<TargetFramework>`/`<TargetFrameworks>` 之前，必须调整到其后并保持内容与缩进。
+10. `<PackageReleaseNotes>` 内不允许空行（包括条目之间、条目与明细之间）。
+11. `<PackageReleaseNotes>` 新增行的缩进必须与上一条内容行保持相同空格数量。
+12. 同一未合并窗口内若版本号不变，也必须把本次新增的项目改动合并进当前版本对应的说明块，不允许跳过。
 
 对于被动升级项目，建议使用：
 

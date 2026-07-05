@@ -3,6 +3,8 @@
 // Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
 // </auto-generated>
 
+#nullable enable annotations
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,7 +103,14 @@ Code:
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260705
+    修改描述：v0.36.3-preview2 重构系统配置初始化与更新流程并统一模型处理
+
+    修改标识：Senparc - 20260705
+    修改描述：v0.36.4-preview3 重构系统配置初始化与更新流程并统一模型处理
 ----------------------------------------------------------------*/
+
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -1591,9 +1600,9 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         /// <summary>
         /// 根据名称获取模板内容
         /// </summary>
-        public static string? GetTemplateContent(string templateName)
+        public static string GetTemplateContent(string templateName)
         {
-            return AllTemplateFiles.FirstOrDefault(f => f.Name == templateName)?.Content;
+            return AllTemplateFiles.FirstOrDefault(f => f.Name == templateName)?.Content ?? string.Empty;
         }
 
         /// <summary>

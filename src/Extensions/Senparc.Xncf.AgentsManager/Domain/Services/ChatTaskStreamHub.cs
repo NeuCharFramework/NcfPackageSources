@@ -16,6 +16,11 @@
     修改标识：Senparc - 20260704
     修改描述：v0.11.0-preview2 新增 ChatTask 归档能力并完善多数据库迁移支持
 
+    修改标识：Senparc - 20260705
+    修改描述：v0.11.1-preview3 重构系统配置初始化与更新流程并统一模型处理
+
+    修改标识：Senparc - 20260705
+    修改描述：v0.11.2-preview4 重构系统配置初始化与更新流程并统一模型处理
 ----------------------------------------------------------------*/
 
 using System;
@@ -42,6 +47,7 @@ public sealed class ChatTaskStreamHub
 
     public async IAsyncEnumerable<ChatTaskStreamEvent> Subscribe(
         int chatTaskId,
+        bool replayBuffered = true,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         if (chatTaskId <= 0)
@@ -63,6 +69,11 @@ public sealed class ChatTaskStreamHub
         DateTimeOffset? previousBufferedTimestamp = null;
         foreach (var bufferedEvent in bufferedEvents)
         {
+            if (!replayBuffered)
+            {
+                break;
+            }
+
             cancellationToken.ThrowIfCancellationRequested();
 
             var replayDelayMs = GetBufferedReplayDelayMilliseconds(bufferedEvent, previousBufferedTimestamp);
@@ -108,6 +119,10 @@ public sealed class ChatTaskStreamHub
 
         if (group.Subscribers.IsEmpty)
         {
+            if (group.IsComplete)
+            {
+                CleanupStreamIfFinished(item.ChatTaskId, group);
+            }
             return;
         }
 

@@ -8,6 +8,19 @@ var app = new Vue({
             },
             tableLoading: true,
             tableData: [],
+            neuCharAiModelList: [
+                "text-davinci-003",
+                "gpt-4",
+                "text-embedding-ada-002",
+                "gpt-35-turbo",
+                "gpt-35-turbo-instruct",
+                "dall-e-3",
+                "DeepSeek-R1"
+            ],
+            deepSeekModelList: [
+                "deepseek-chat",
+                "deepseek-coder"
+            ],
             addFormDialogVisible: false,
             neuCharFormDialogVisible: false, // 新增的对话框可见性  
             addForm: {
@@ -112,6 +125,13 @@ var app = new Vue({
         }, 100)
     },
     methods: {
+        getSelectableModelList(defaultModelList, currentModelId) {
+            const modelList = [...defaultModelList];
+            if (currentModelId && !modelList.includes(currentModelId)) {
+                modelList.unshift(currentModelId);
+            }
+            return modelList;
+        },
         async init() {
             await this.getDataList();
         },

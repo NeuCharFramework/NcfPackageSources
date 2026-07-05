@@ -1089,6 +1089,17 @@ var app = new Vue({
         return statusColor
       }
     },
+    getTaskStatusAccentColor(status) {
+      const statusColorMap = {
+        0: '#3376cd',
+        1: '#409EFF',
+        2: '#409EFF',
+        3: '#67C23A',
+        4: '#666666',
+        5: '#F56C6C'
+      }
+      return statusColorMap[Number(status)] || '#C0C4CC'
+    },
     // 获取 智能体 数据
     async getAgentListData(listType, page = 0) {
       const queryList = {}
@@ -1533,6 +1544,36 @@ var app = new Vue({
       if (listType === 'agentGroupTask') return this.agentDetailsGroupDetailsTaskDetails || null
       if (listType === 'groupTask') return this.groupTaskDetails || null
       return null
+    },
+    setCurrentTaskDetailByType(listType, detail) {
+      if (listType === 'task') this.$set(this, 'taskDetails', detail)
+      if (listType === 'agentTask') this.$set(this, 'agentDetailsTaskDetails', detail)
+      if (listType === 'agentGroupTask') this.$set(this, 'agentDetailsGroupDetailsTaskDetails', detail)
+      if (listType === 'groupTask') this.$set(this, 'groupTaskDetails', detail)
+    },
+    setCurrentTaskStatusByType(listType, chatTaskId, status) {
+      const nextStatus = Number(status)
+      if (!Number.isFinite(nextStatus)) return
+
+      const currentDetail = this.getCurrentTaskDetailByType(listType)
+      const taskId = Number(chatTaskId || currentDetail?.id || 0)
+
+      if (currentDetail && taskId > 0 && Number(currentDetail.id || 0) === taskId) {
+        if (Number(currentDetail.status) !== nextStatus) {
+          this.setCurrentTaskDetailByType(listType, Object.assign({}, currentDetail, { status: nextStatus }))
+        }
+      }
+
+      const list = this.getTaskListByType(listType)
+      if (!Array.isArray(list) || taskId <= 0) return
+
+      const listIndex = list.findIndex(item => Number(item?.id || 0) === taskId)
+      if (listIndex < 0) return
+
+      const currentItem = list[listIndex] || {}
+      if (Number(currentItem.status) === nextStatus) return
+
+      this.$set(list, listIndex, Object.assign({}, currentItem, { status: nextStatus }))
     },
     getMaxTaskIdByType(listType) {
       const list = this.getTaskListByType(listType)
@@ -2222,6 +2263,9 @@ var app = new Vue({
     shouldShowTaskGenerating(status) {
       return [1, 2].includes(Number(status))
     },
+    shouldSubscribeTaskStream(status) {
+      return [0, 1, 2].includes(Number(status))
+    },
     buildTaskGeneratingItem(listType, chatTaskId) {
       const nowIso = new Date().toISOString()
       return {
@@ -2364,6 +2408,11 @@ var app = new Vue({
 
       this.closeTaskHistoryStream(listType)
 
+      this.setCurrentTaskStatusByType(listType, chatTaskId, taskStatus)
+      if (!this.shouldSubscribeTaskStream(taskStatus)) {
+        this.clearTaskGeneratingPlaceholder(listType)
+        return
+      }
       if (this.shouldShowTaskGenerating(taskStatus)) {
         this.ensureTaskGeneratingPlaceholder(listType, chatTaskId)
       }
@@ -2373,7 +2422,7 @@ var app = new Vue({
         return
       }
 
-      const streamUrl = `/api/Senparc.Xncf.AgentsManager/ChatTaskStream/Subscribe?chatTaskId=${chatTaskId}&_ts=${Date.now()}`
+      const streamUrl = `/api/Senparc.Xncf.AgentsManager/ChatTaskStream/Subscribe?chatTaskId=${chatTaskId}&replayBuffered=false&_ts=${Date.now()}`
       const source = new EventSource(streamUrl, { withCredentials: true })
       this.historyStream[listType] = source
       this.resetTaskHistoryStreamSilentTimer(listType, chatTaskId)
@@ -2406,21 +2455,34 @@ var app = new Vue({
           return
         }
 
-        const statusText = String(payload.text).toLowerCase()
-        const finishedStates = ['finished', 'cancelled']
-        if (finishedStates.includes(statusText)) {
+        const statusText = String(payload.text).toLowerCase().trim()
+        const statusCodeMap = {
+          chatting: 1,
+          paused: 2,
+          finished: 3,
+          completed: 3,
+          done: 3,
+          cancelled: 4,
+          canceled: 4,
+          failed: 5,
+          error: 5
+        }
+        const nextStatus = statusCodeMap[statusText]
+        if (Number.isFinite(nextStatus)) {
+          this.setCurrentTaskStatusByType(listType, chatTaskId, nextStatus)
+        }
+
+        if ([3, 4, 5].includes(Number(nextStatus))) {
           this.closeTaskHistoryStream(listType)
           this.clearTaskGeneratingPlaceholder(listType)
           this.pullTaskHistoryAfterStreamClosed(listType, chatTaskId)
           return
         }
 
-        const statusCodeMap = {
-          chatting: 1,
-          paused: 2
-        }
-        if (this.shouldShowTaskGenerating(statusCodeMap[statusText])) {
+        if (this.shouldShowTaskGenerating(nextStatus)) {
           this.ensureTaskGeneratingPlaceholder(listType, chatTaskId)
+        } else {
+          this.clearTaskGeneratingPlaceholder(listType)
         }
         rearmSilentTimer()
       }
@@ -2457,7 +2519,8 @@ var app = new Vue({
             { customAlert: true }
           )
           const taskStatus = Number(statusRes?.data?.data?.chatTaskDto?.status)
-          if ([3, 4].includes(taskStatus)) {
+          this.setCurrentTaskStatusByType(listType, chatTaskId, taskStatus)
+          if ([3, 4, 5].includes(taskStatus)) {
             this.closeTaskHistoryStream(listType)
             this.clearTaskGeneratingPlaceholder(listType)
             this.pullTaskHistoryAfterStreamClosed(listType, chatTaskId)
@@ -2466,6 +2529,8 @@ var app = new Vue({
 
           if (this.shouldShowTaskGenerating(taskStatus)) {
             this.ensureTaskGeneratingPlaceholder(listType, chatTaskId)
+          } else {
+            this.clearTaskGeneratingPlaceholder(listType)
           }
         } catch (e) {
           console.warn('stream silent fallback status check failed', listType, chatTaskId, e)
@@ -2540,6 +2605,33 @@ var app = new Vue({
       }
 
       const message = payload.text || ''
+      const historyId = Number(payload.historyId || 0)
+      const existedFinalIndex = historyId > 0
+        ? historyList.findIndex(item => Number(item?.id || 0) === historyId)
+        : -1
+      if (existedFinalIndex > -1) {
+        const existedFinal = historyList[existedFinalIndex] || {}
+        const mergedFinal = {
+          ...existedFinal,
+          fromAgentTemplateId: payload.fromAgentTemplateId || existedFinal.fromAgentTemplateId || 0,
+          addTime: payload.timestamp ? new Date(payload.timestamp).toISOString() : (existedFinal.addTime || new Date().toISOString()),
+          message: message || existedFinal.message || '',
+          messageHtml: marked.parse(message || existedFinal.message || ''),
+          promptTokens: payload.promptTokens || existedFinal.promptTokens || 0,
+          completionTokens: payload.completionTokens || existedFinal.completionTokens || 0,
+          totalTokens: payload.totalTokens || existedFinal.totalTokens || 0,
+          responseMilliseconds: payload.responseMilliseconds || existedFinal.responseMilliseconds || 0,
+          roundIndex: payload.roundIndex || existedFinal.roundIndex || 0
+        }
+        historyList.splice(existedFinalIndex, 1, mergedFinal)
+        this.setHistoryListByType(listType, historyList)
+        this.$nextTick(() => {
+          if (!shouldAutoFollow) return
+          this.scrollHistoryToItemBottom(listType, mergedFinal.id)
+        })
+        return
+      }
+
       const finalItem = {
         id: payload.historyId || `${draftKey || 'msg'}:${Date.now()}`,
         fromAgentTemplateId: payload.fromAgentTemplateId || 0,
@@ -3671,17 +3763,29 @@ var app = new Vue({
     },
     // 组-任务批量启动(任务) agentGroupTaskBatch groupTaskBatch
     handleTaskStartBatch(opType, item) {
-      let serviceURL = ''
+      let selectedRows = []
+      let refreshListType = 'task'
+      let refreshGroupId = 0
+
       if (opType === 'agentGroupTaskBatch') {
-        // item.chatGroupDto.id this.agentDetails.agentTemplateDto.id
-        console.log('agentGroupTaskBatch:', this.agentGroupTaskSelection);
+        selectedRows = this.agentGroupTaskSelection
+        refreshListType = 'agentGroupTask'
+        refreshGroupId = Number(this.agentDetailsGroupDetails?.chatGroupDto?.id || 0)
       } else if (opType === 'groupTaskBatch') {
-        // item.chatGroupDto.id
-        console.log('groupTaskBatch:', this.groupTaskSelection);
+        selectedRows = this.groupTaskSelection
+        refreshListType = 'groupTask'
+        refreshGroupId = Number(this.groupDetails?.chatGroupDto?.id || 0)
       } else if (opType === 'taskBatch') {
-        console.log('taskSelection:', this.taskSelection);
+        selectedRows = this.taskSelection
       }
-      if (!serviceURL) return
+
+      const selectedIds = (selectedRows || []).map(task => task.id).filter(Boolean)
+      if (!selectedIds.length) {
+        this.$message.warning('请先选择要启动的任务')
+        return
+      }
+
+      const serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.StartBatch'
       // 操作确认 提示
       this.$confirm('确认批量启动数据吗？', '操作确认', {
         dangerouslyUseHTMLString: true, // message 当作 HTML片段处理
@@ -3689,24 +3793,23 @@ var app = new Vue({
         cancelButtonText: '取消',
         // type: 'warning'
       }).then(() => {
-        serviceAM.post(serviceURL).then(res => {
+        serviceAM.post(serviceURL, selectedIds).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: '操作成功!'
+              message: res?.data?.data || '操作成功!'
             });
-            let groupDetail = {}, groupType = ''
-            if (opType === 'agentGroupTaskBatch') {
-              groupDetail = this.agentDetailsGroupDetails?.chatGroupDto ?? {}
-              groupType = 'agentGroupTask' //'agentGroup'
-            } else if (opType === 'groupTaskBatch') {
-              groupDetail = this.groupDetails?.chatGroupDto ?? {}
-              groupType = 'groupTask' //'group'
-            }
-            if (groupDetail.id) {
-              // 获取任务列表
-              this.gettaskListData(groupType, groupDetail.id)
-              // this.getGroupDetailData(groupType, groupDetail.id, groupDetail)
+            if (refreshListType === 'task') {
+              const refreshOptions = this.buildTaskRefreshOptions('task', {
+                preferLatest: true
+              }, 'drawerTaskStart')
+              this.gettaskListData('task', '', 0, refreshOptions)
+            } else if (refreshGroupId > 0) {
+              const refreshOptions = this.buildTaskRefreshOptions(refreshListType, {
+                preferLatest: true,
+                focusChatGroupId: refreshGroupId
+              }, 'drawerTaskStart')
+              this.gettaskListData(refreshListType, refreshGroupId, 0, refreshOptions)
             }
           } else {
             app.$message({

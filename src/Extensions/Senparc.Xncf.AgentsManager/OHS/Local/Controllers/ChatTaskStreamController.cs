@@ -16,6 +16,11 @@
     修改标识：Senparc - 20260704
     修改描述：v0.11.0-preview2 新增 ChatTask 归档能力并完善多数据库迁移支持
 
+    修改标识：Senparc - 20260705
+    修改描述：v0.11.1-preview3 重构系统配置初始化与更新流程并统一模型处理
+
+    修改标识：Senparc - 20260705
+    修改描述：v0.11.2-preview4 重构系统配置初始化与更新流程并统一模型处理
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +48,7 @@ public class ChatTaskStreamController : ControllerBase
     }
 
     [HttpGet]
-    public async Task Subscribe(int chatTaskId, CancellationToken cancellationToken)
+    public async Task Subscribe(int chatTaskId, bool replayBuffered = true, CancellationToken cancellationToken = default)
     {
         Response.Headers.CacheControl = "no-cache";
         Response.Headers.Connection = "keep-alive";
@@ -54,7 +59,7 @@ public class ChatTaskStreamController : ControllerBase
         await Response.WriteAsync(": connected\n\n", cancellationToken);
         await Response.Body.FlushAsync(cancellationToken);
 
-        await foreach (var streamEvent in _chatTaskStreamHub.Subscribe(chatTaskId, cancellationToken))
+        await foreach (var streamEvent in _chatTaskStreamHub.Subscribe(chatTaskId, replayBuffered, cancellationToken))
         {
             if (cancellationToken.IsCancellationRequested)
             {

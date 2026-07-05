@@ -109,7 +109,7 @@
                 <el-input v-model="addForm.name"></el-input>
             </el-form-item>
             <el-form-item label="连接字符串" prop="connectionString">
-                <el-input v-model="addForm.connectionString"></el-input>
+                <el-input v-model="addForm.connectionString" :placeholder="isInMemoryVectorType(addForm.vectorDBType) ? 'Memory 类型可留空' : '请输入连接字符串'"></el-input>
             </el-form-item>
             <el-form-item label="备注" prop="note">
                 <el-input v-model="addForm.note"></el-input>
@@ -154,7 +154,7 @@
                 <el-input v-model="editForm.name"></el-input>
             </el-form-item>
             <el-form-item label="连接字符串" prop="connectionString">
-                <el-input v-model="editForm.connectionString"></el-input>
+                <el-input v-model="editForm.connectionString" :placeholder="isInMemoryVectorType(editForm.vectorDBType) ? 'Memory 类型可留空' : '请输入连接字符串'"></el-input>
             </el-form-item>
             <el-form-item label="备注" prop="note">
                 <el-input v-model="editForm.note"></el-input>

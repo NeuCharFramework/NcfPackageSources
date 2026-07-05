@@ -14,7 +14,7 @@ var app = new Vue({
         "vectorId": "",
         "name": "",
         "connectionString": "",
-        "vectorDBType": '1',
+        "vectorDBType": '0',
         "note": "",
       },
       editFormDialogVisible: false,
@@ -23,7 +23,7 @@ var app = new Vue({
         "vectorId": "",
         "name": "",
         "connectionString": "",
-        "vectorDBType": '1',
+        "vectorDBType": '0',
         "note": "",
         "show": true
       },
@@ -41,9 +41,7 @@ var app = new Vue({
         name: [
           { required: true, message: '请输入向量数据库名称', trigger: 'blur' }
         ],
-        connectionString: [
-          { required: true, message: '请输入连接字符串', trigger: 'blur' }
-        ]
+        connectionString: []
       },
       editRules: {
         alias: [
@@ -58,9 +56,7 @@ var app = new Vue({
         name: [
           { required: true, message: '请输入向量数据库名称', trigger: 'blur' }
         ],
-        connectionString: [
-          { required: true, message: '请输入连接字符串', trigger: 'blur' }
-        ]
+        connectionString: []
       }
     }
   },
@@ -71,6 +67,28 @@ var app = new Vue({
     }, 100)
   },
   methods: {
+    isInMemoryVectorType(vectorTypeRaw) {
+      const code = Number(vectorTypeRaw);
+      return code === 0 || code === 17;
+    },
+    ensureConnectionStringRequirement(formData) {
+      if (!formData) {
+        return false;
+      }
+
+      const connectionString = (formData.connectionString || '').trim();
+      formData.connectionString = connectionString;
+
+      if (this.isInMemoryVectorType(formData.vectorDBType)) {
+        return true;
+      }
+
+      if (!connectionString) {
+        this.$message.warning('当前向量数据库类型需要连接字符串');
+        return false;
+      }
+      return true;
+    },
     async init() {
       await this.getDataList();
     },
@@ -119,6 +137,9 @@ var app = new Vue({
       this.$refs.addForm.validate(async (valid) => {
         if (valid) {
           this.addForm.vectorDBType = parseInt(this.addForm.vectorDBType)
+          if (!this.ensureConnectionStringRequirement(this.addForm)) {
+            return false;
+          }
           await service.post('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.CreateAsync', {
             ...this.addForm
           }
@@ -144,7 +165,7 @@ var app = new Vue({
         "vectorId": "",
         "name": "",
         "connectionString": "",
-        "vectorDBType": '1',
+        "vectorDBType": '0',
         "note": "",
       }
     },
@@ -154,7 +175,7 @@ var app = new Vue({
         "vectorId": "",
         "name": "",
         "connectionString": "",
-        "vectorDBType": '1',
+        "vectorDBType": '0',
         "note": "",
         "show": true
       }
@@ -163,6 +184,9 @@ var app = new Vue({
       this.$refs.editForm.validate(async (valid) => {
         if (valid) {
           this.editForm.vectorDBType = parseInt(this.editForm.vectorDBType)
+          if (!this.ensureConnectionStringRequirement(this.editForm)) {
+            return false;
+          }
           // clear empty value  
           for (const key in this.editForm) {
             if (this.editForm.hasOwnProperty(key)) {

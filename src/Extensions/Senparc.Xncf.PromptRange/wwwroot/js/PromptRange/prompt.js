@@ -25,11 +25,54 @@ var app = new Vue({
             promptFieldOpt: [], // 靶场列表
             promptOpt: [], // prompt列表
             modelOpt: [], // 模型列表
+            vectorOpt: [], // 向量库列表（TextEmbedding）
+            vectorLoading: false,
+            configModelTypeLabelMap: {
+                1: 'TextCompletion',
+                2: 'Chat',
+                3: 'TextEmbedding',
+                4: 'TextToImage',
+                5: 'ImageToText',
+                6: 'TextToSpeech',
+                7: 'SpeechToText',
+                8: 'SpeechRecognition'
+            },
+            vectorDbTypeLabelMap: {
+                0: 'Memory',
+                1: 'HardDisk',
+                2: 'Redis',
+                3: 'Milvus',
+                4: 'Chroma',
+                5: 'PostgreSQL',
+                6: 'Sqlite',
+                7: 'SqlServer',
+                8: 'Qdrant',
+                17: 'VolatileInMemory'
+            },
             waitRefreshModel: false, // 是否等待刷新模型列表
             promptid: '',// 选择靶场
             modelid: '',// 选择模型
             content: '',// prompt 输入内容
             remarks: '', // prompt 输入的备注
+            ttsForm: {
+                voice: 'alloy',
+                format: 'mp3',
+                speedRatio: 1.0
+            },
+            sttForm: {
+                audioFileName: '',
+                audioBase64: '',
+                audioLocalRelativePath: '',
+                language: '',
+                fileSize: 0
+            },
+            sttAcceptedExtensions: '.flac,.m4a,.mp3,.mp4,.mpeg,.mpga,.oga,.ogg,.wav,.webm',
+            embeddingForm: {
+                vectorDbId: null,
+                collectionName: '',
+                searchTopK: 3,
+                searchQuery: ''
+            },
             isComposing: false, // 是否正在使用输入法（IME composition）
             numsOfResults: 1, // prompt 的连发次数(发射次数) 1-10
             numsOfResultsOpt: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // prompt 的连发次数(发射次数) 1-10
@@ -160,6 +203,7 @@ var app = new Vue({
             continueChatMode: false, // 是否处于继续聊天模式
             continueChatPromptResultId: null, // 继续聊天的 PromptResult ID
             continueChatHistory: [], // 继续聊天的历史记录
+            continueChatPendingUserMessageId: null, // 继续聊天时本地临时用户消息 ID
             continueChatSystemMessage: '', // 继续聊天时使用的 SystemMessage（Prompt）
             continueChatUsageSummary: {
                 promptCostToken: 0,
@@ -386,6 +430,46 @@ var app = new Vue({
         },
         isPromptExecutionLoading() {
             return this.tacticalFormSubmitLoading || this.targetShootLoading || this.dodgersLoading || this.promptStreaming
+        },
+        selectedModelOption() {
+            const currentModelId = this.modelid
+            if (!currentModelId || !Array.isArray(this.modelOpt)) {
+                return null
+            }
+            return this.modelOpt.find(item => String(item.value) === String(currentModelId)) || null
+        },
+        currentModelTypeCode() {
+            if (!this.selectedModelOption) {
+                return 0
+            }
+            return this.parseConfigModelTypeValue(this.selectedModelOption.configModelTypeCode || this.selectedModelOption.configModelType)
+        },
+        isChatModelSelected() {
+            return this.currentModelTypeCode === 2
+        },
+        isTextEmbeddingModelSelected() {
+            return this.currentModelTypeCode === 3
+        },
+        isTextToImageModelSelected() {
+            return this.currentModelTypeCode === 4
+        },
+        isTextToSpeechModelSelected() {
+            return this.currentModelTypeCode === 6
+        },
+        isSpeechToTextModelSelected() {
+            return this.currentModelTypeCode === 7 || this.currentModelTypeCode === 8
+        },
+        supportsChatMode() {
+            return this.isChatModelSelected
+        },
+        promptInputTitle() {
+            if (this.isSpeechToTextModelSelected) {
+                return '语音识别输入'
+            }
+            return '输入Prompt'
+        },
+        shouldShowPromptEditor() {
+            return !this.isSpeechToTextModelSelected
         },
         
         // 计算创建智能体时使用的 PromptCode（根据范围选择）
@@ -905,8 +989,45 @@ var app = new Vue({
             })
             this.promptStreamingTempResultId = null
         },
+        cleanupOutputListAfterResultUpsert() {
+            if (!Array.isArray(this.outputList) || this.outputList.length === 0) {
+                return
+            }
+
+            const seenPersistentIds = new Set()
+            const normalizedList = []
+
+            for (let i = 0; i < this.outputList.length; i++) {
+                const item = this.outputList[i]
+                if (!item) {
+                    continue
+                }
+
+                const idStr = item.id === undefined || item.id === null ? '' : String(item.id)
+                const isStreamingTemp = idStr.indexOf('streaming_') === 0
+
+                // 流式临时项在结果落库后应被移除，避免前端出现重复“Result”卡片。
+                if (isStreamingTemp && item._generating !== true) {
+                    continue
+                }
+
+                if (!isStreamingTemp && idStr) {
+                    if (seenPersistentIds.has(idStr)) {
+                        continue
+                    }
+                    seenPersistentIds.add(idStr)
+                }
+
+                normalizedList.push(item)
+            }
+
+            if (normalizedList.length !== this.outputList.length) {
+                this.outputList = normalizedList
+            }
+        },
         ensureOutputGeneratingPlaceholder() {
             this.clearOutputGeneratingPlaceholder()
+            this.cleanupOutputListAfterResultUpsert()
             if (!this.promptStreamingTempResultId) {
                 this.promptStreamingTempResultId = `streaming_${Date.now()}`
             }
@@ -1075,7 +1196,7 @@ var app = new Vue({
             normalized.version = fullVersion || normalized.version
             normalized.addTime = normalized.addTime ? this.formatDate(normalized.addTime) : ''
             normalized.resultString = normalized.resultString || ''
-            normalized.resultStringHtml = marked.parse(normalized.resultString)
+            this.applyPromptResultView(normalized)
             normalized.scoreVal = normalized.humanScore > -1 ? normalized.humanScore : 0
 
             if (promptItem && promptItem.expectedResultsJson) {
@@ -1092,6 +1213,323 @@ var app = new Vue({
             }
 
             return normalized
+        },
+        applyPromptResultView(resultItem) {
+            if (!resultItem) {
+                return
+            }
+
+            const typedPayload = this.tryParseTypedPromptPayload(resultItem.resultString)
+            if (typedPayload) {
+                const resultType = (typedPayload.__promptRangeResultType || '').toString().trim()
+                if (resultType === 'TextToImage') {
+                    resultItem.resultViewType = 'TextToImage'
+                    resultItem.textToImage = this.buildTextToImageViewModel(typedPayload)
+                    resultItem.textToSpeech = null
+                    resultItem.speechToText = null
+                    resultItem.textEmbedding = null
+
+                    const previewHtml = resultItem.textToImage.imageUrl
+                        ? `<p><img src="${this.escapeHtml(resultItem.textToImage.imageUrl)}" alt="generated image" /></p>`
+                        : '<p>图片已生成，但未获得可访问地址。</p>'
+                    const promptHtml = resultItem.textToImage.revisedPrompt
+                        ? `<p>${this.escapeHtml(resultItem.textToImage.revisedPrompt)}</p>`
+                        : ''
+                    resultItem.resultStringHtml = `${previewHtml}${promptHtml}`
+                    return
+                }
+
+                if (resultType === 'TextToSpeech') {
+                    resultItem.resultViewType = 'TextToSpeech'
+                    resultItem.textToImage = null
+                    resultItem.speechToText = null
+                    resultItem.textEmbedding = null
+                    resultItem.textToSpeech = this.buildTextToSpeechViewModel(typedPayload)
+                    resultItem.resultStringHtml = marked.parse(this.escapeHtml(resultItem.textToSpeech.text || ''))
+                    return
+                }
+
+                if (resultType === 'SpeechToText') {
+                    resultItem.resultViewType = 'SpeechToText'
+                    resultItem.textToImage = null
+                    resultItem.textToSpeech = null
+                    resultItem.textEmbedding = null
+                    resultItem.speechToText = this.buildSpeechToTextViewModel(typedPayload)
+                    resultItem.resultStringHtml = marked.parse(resultItem.speechToText.transcript || '')
+                    if (resultItem.speechToText.sourceAudioLocalRelativePath) {
+                        this.sttForm.audioLocalRelativePath = resultItem.speechToText.sourceAudioLocalRelativePath
+                        this.sttForm.audioBase64 = ''
+                        if (!this.sttForm.audioFileName) {
+                            this.sttForm.audioFileName = resultItem.speechToText.sourceAudioFileName || ''
+                        }
+                    }
+                    return
+                }
+
+                if (resultType === 'TextEmbedding') {
+                    resultItem.resultViewType = 'TextEmbedding'
+                    resultItem.textToImage = null
+                    resultItem.textToSpeech = null
+                    resultItem.speechToText = null
+                    resultItem.textEmbedding = this.buildTextEmbeddingViewModel(typedPayload)
+                    this.ensureTextEmbeddingResultState(resultItem)
+                    resultItem.resultStringHtml = marked.parse(resultItem.textEmbedding.sourceText || '')
+                    return
+                }
+            }
+
+            resultItem.resultViewType = 'Markdown'
+            resultItem.textToImage = null
+            resultItem.textToSpeech = null
+            resultItem.speechToText = null
+            resultItem.textEmbedding = null
+            resultItem.resultStringHtml = marked.parse(resultItem.resultString || '')
+        },
+        tryParseTypedPromptPayload(rawResultString) {
+            if (!rawResultString || typeof rawResultString !== 'string') {
+                return null
+            }
+
+            const trimmed = rawResultString.trim()
+            if (!trimmed || trimmed[0] !== '{') {
+                return null
+            }
+
+            try {
+                const parsed = JSON.parse(trimmed)
+                if (!parsed || typeof parsed !== 'object') {
+                    return null
+                }
+
+                return parsed.__promptRangeResultType ? parsed : null
+            } catch (e) {
+                return null
+            }
+        },
+        buildTextToImageViewModel(payload) {
+            const localRelativePath = (payload.localRelativePath || '').toString().trim()
+            const remoteImageUrl = (payload.remoteImageUrl || '').toString().trim()
+            const directImageUrl = (payload.imageUrl || '').toString().trim()
+            const normalizedStorageType = (payload.storageType || '').toString().trim() || 'Unknown'
+
+            let imageUrl = directImageUrl
+            if (!imageUrl && localRelativePath) {
+                imageUrl = this.buildPromptImageUrlByPath(localRelativePath)
+            }
+            if (!imageUrl && remoteImageUrl) {
+                imageUrl = remoteImageUrl
+            }
+
+            return {
+                imageUrl,
+                storageType: normalizedStorageType,
+                localRelativePath,
+                remoteImageUrl,
+                prompt: payload.prompt || '',
+                revisedPrompt: payload.revisedPrompt || '',
+                contentType: payload.contentType || '',
+                width: payload.width || 0,
+                height: payload.height || 0
+            }
+        },
+        buildTextToSpeechViewModel(payload) {
+            const localRelativePath = (payload.localRelativePath || '').toString().trim()
+            const directAudioUrl = (payload.audioUrl || '').toString().trim()
+            let audioUrl = directAudioUrl
+            if (!audioUrl && localRelativePath) {
+                audioUrl = this.buildPromptAudioUrlByPath(localRelativePath)
+            }
+
+            return {
+                text: payload.text || '',
+                voice: payload.voice || '',
+                format: payload.format || '',
+                speedRatio: payload.speedRatio || 1.0,
+                contentType: payload.contentType || '',
+                storageType: payload.storageType || '',
+                localRelativePath,
+                audioUrl
+            }
+        },
+        buildSpeechToTextViewModel(payload) {
+            const sourceAudioLocalRelativePath = (payload.sourceAudioLocalRelativePath || '').toString().trim()
+            const sourceAudioUrl = (payload.sourceAudioUrl || '').toString().trim()
+            let audioUrl = sourceAudioUrl
+            if (!audioUrl && sourceAudioLocalRelativePath) {
+                audioUrl = this.buildPromptAudioUrlByPath(sourceAudioLocalRelativePath)
+            }
+
+            return {
+                transcript: payload.transcript || '',
+                language: payload.language || '',
+                duration: payload.duration || '',
+                sourceAudioFileName: payload.sourceAudioFileName || '',
+                sourceAudioContentType: payload.sourceAudioContentType || '',
+                sourceAudioLocalRelativePath,
+                sourceAudioUrl: audioUrl
+            }
+        },
+        buildTextEmbeddingViewModel(payload) {
+            const searchHits = Array.isArray(payload.searchHits) ? payload.searchHits : []
+            return {
+                vectorDbId: payload.vectorDbId || 0,
+                vectorDbAlias: payload.vectorDbAlias || '',
+                vectorDbType: payload.vectorDbType || '',
+                collectionName: payload.collectionName || '',
+                sourceText: payload.sourceText || '',
+                sourceTextLength: payload.sourceTextLength || 0,
+                embeddingDimension: payload.embeddingDimension || 0,
+                upsertSourceId: payload.upsertSourceId || '',
+                upsertSourceName: payload.upsertSourceName || '',
+                searchQuery: payload.searchQuery || '',
+                searchTopK: payload.searchTopK || 3,
+                searchHits: searchHits.map(hit => ({
+                    sourceId: hit.sourceId || '',
+                    sourceName: hit.sourceName || '',
+                    sourceLink: hit.sourceLink || '',
+                    text: hit.text || '',
+                    score: typeof hit.score === 'number' ? hit.score : Number(hit.score || 0)
+                }))
+            }
+        },
+        ensureTextEmbeddingResultState(resultItem) {
+            if (!resultItem || !resultItem.textEmbedding) {
+                return
+            }
+            if (resultItem.embeddingQueryText === undefined) {
+                resultItem.embeddingQueryText = resultItem.textEmbedding.searchQuery || ''
+            }
+            if (resultItem.embeddingQueryTopK === undefined) {
+                resultItem.embeddingQueryTopK = resultItem.textEmbedding.searchTopK || 3
+            }
+            if (!Array.isArray(resultItem.embeddingQueryResults)) {
+                resultItem.embeddingQueryResults = resultItem.textEmbedding.searchHits || []
+            }
+            if (resultItem.embeddingQueryLoading === undefined) {
+                resultItem.embeddingQueryLoading = false
+            }
+        },
+        async runTextEmbeddingQuery(resultItem) {
+            if (!resultItem || !resultItem.id) {
+                return
+            }
+            const query = (resultItem.embeddingQueryText || '').trim()
+            const topK = Number(resultItem.embeddingQueryTopK || 3)
+            if (!query) {
+                this.$message({
+                    message: '请输入要查询的文本',
+                    type: 'warning',
+                    duration: 3000
+                })
+                return
+            }
+
+            resultItem.embeddingQueryLoading = true
+            try {
+                const res = await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.TextEmbeddingSearch', {
+                    promptResultId: resultItem.id,
+                    query: query,
+                    topK: topK
+                })
+                if (!res.data.success) {
+                    this.$message({
+                        message: res.data.errorMessage || res.data.data || 'Embedding 查询失败',
+                        type: 'error',
+                        duration: 5 * 1000
+                    })
+                    return
+                }
+                const hits = Array.isArray(res.data.data && res.data.data.hits) ? res.data.data.hits : []
+                resultItem.embeddingQueryResults = hits.map(hit => ({
+                    sourceId: hit.sourceId || '',
+                    sourceName: hit.sourceName || '',
+                    sourceLink: hit.sourceLink || '',
+                    text: hit.text || '',
+                    score: typeof hit.score === 'number' ? hit.score : Number(hit.score || 0)
+                }))
+            } catch (e) {
+                this.$message({
+                    message: 'Embedding 查询失败：' + (e.message || '未知错误'),
+                    type: 'error',
+                    duration: 5 * 1000
+                })
+            } finally {
+                resultItem.embeddingQueryLoading = false
+            }
+        },
+        buildPromptImageUrlByPath(localRelativePath) {
+            const normalized = (localRelativePath || '')
+                .toString()
+                .replace(/\\/g, '/')
+                .replace(/^\/+/, '')
+            if (!normalized) {
+                return ''
+            }
+            return `/api/Senparc.Xncf.PromptRange/PromptImage/Get?path=${encodeURIComponent(normalized)}`
+        },
+        buildPromptAudioUrlByPath(localRelativePath) {
+            const normalized = (localRelativePath || '')
+                .toString()
+                .replace(/\\/g, '/')
+                .replace(/^\/+/, '')
+            if (!normalized) {
+                return ''
+            }
+            return `/api/Senparc.Xncf.PromptRange/PromptAudio/Get?path=${encodeURIComponent(normalized)}`
+        },
+        parseConfigModelTypeValue(typeValue) {
+            if (typeValue === undefined || typeValue === null) {
+                return 0
+            }
+
+            if (typeof typeValue === 'string') {
+                const trimmed = typeValue.trim()
+                if (!trimmed) {
+                    return 0
+                }
+                if (/^\d+$/.test(trimmed)) {
+                    return Number(trimmed)
+                }
+
+                const entry = Object.entries(this.configModelTypeLabelMap).find(([, name]) => name.toLowerCase() === trimmed.toLowerCase())
+                return entry ? Number(entry[0]) : 0
+            }
+
+            const code = Number(typeValue)
+            return Number.isFinite(code) ? code : 0
+        },
+        getConfigModelTypeLabel(typeValue) {
+            const code = this.parseConfigModelTypeValue(typeValue)
+            return this.configModelTypeLabelMap[code] || 'Unknown'
+        },
+        parseVectorDbTypeValue(typeValue) {
+            if (typeValue === undefined || typeValue === null) {
+                return -1
+            }
+
+            if (typeof typeValue === 'string') {
+                const trimmed = typeValue.trim()
+                if (!trimmed) {
+                    return -1
+                }
+                if (/^\d+$/.test(trimmed)) {
+                    return Number(trimmed)
+                }
+
+                const entry = Object.entries(this.vectorDbTypeLabelMap).find(([, name]) => name.toLowerCase() === trimmed.toLowerCase())
+                return entry ? Number(entry[0]) : -1
+            }
+
+            const code = Number(typeValue)
+            return Number.isFinite(code) ? code : -1
+        },
+        getVectorDbTypeLabel(typeValue) {
+            const code = this.parseVectorDbTypeValue(typeValue)
+            return this.vectorDbTypeLabelMap[code] || 'Unknown'
+        },
+        isInMemoryVectorDbType(typeValue) {
+            const code = this.parseVectorDbTypeValue(typeValue)
+            return code === 0 || code === 17
         },
         syncContinueChatUsageFromResult(promptResultId) {
             const resultItem = this.outputList.find(item => item.id === promptResultId)
@@ -1116,6 +1554,59 @@ var app = new Vue({
                 this.continueChatHistory.splice(tempIndex, 1)
                 this.continueChatHistory = [...this.continueChatHistory]
             }
+        },
+        appendContinueChatPendingUserMessage(userMessage) {
+            const content = typeof userMessage === 'string' ? userMessage.trim() : ''
+            if (!content) {
+                return null
+            }
+
+            this.removeContinueChatPendingUserMessage()
+            const tempId = `streaming_user_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
+            const sequence = (this.continueChatHistory[this.continueChatHistory.length - 1]?.sequence || 0) + 1
+            this.continueChatPendingUserMessageId = tempId
+            this.continueChatHistory.push({
+                id: tempId,
+                roleType: 1,
+                content,
+                sequence,
+                addTime: new Date().toISOString(),
+                _pending: true
+            })
+            this.continueChatHistory = [...this.continueChatHistory]
+            this.$nextTick(() => {
+                const container = document.getElementById('chatHistoryContainer')
+                if (container) {
+                    container.scrollTop = container.scrollHeight
+                }
+            })
+            return tempId
+        },
+        confirmContinueChatPendingUserMessage() {
+            const pendingId = this.continueChatPendingUserMessageId
+            if (!pendingId) {
+                return
+            }
+
+            const tempMessage = this.continueChatHistory.find(msg => String(msg?.id) === String(pendingId))
+            if (tempMessage) {
+                tempMessage._pending = false
+                this.continueChatHistory = [...this.continueChatHistory]
+            }
+            this.continueChatPendingUserMessageId = null
+        },
+        removeContinueChatPendingUserMessage() {
+            const pendingId = this.continueChatPendingUserMessageId
+            if (!pendingId) {
+                return
+            }
+
+            const tempIndex = this.continueChatHistory.findIndex(msg => String(msg?.id) === String(pendingId))
+            if (tempIndex > -1) {
+                this.continueChatHistory.splice(tempIndex, 1)
+                this.continueChatHistory = [...this.continueChatHistory]
+            }
+            this.continueChatPendingUserMessageId = null
         },
         removeGeneratingOutputPlaceholdersExcept(keepId) {
             if (!Array.isArray(this.outputList) || this.outputList.length === 0) {
@@ -1264,8 +1755,8 @@ var app = new Vue({
 
             if (payload.text !== undefined && payload.text !== null) {
                 item.resultString = payload.text
-                item.resultStringHtml = marked.parse(item.resultString || '')
             }
+            this.applyPromptResultView(item)
             if (payload.promptResultId && (String(item.id).indexOf('streaming_') === 0 || String(item.id) === String(this.promptStreamingTempResultId))) {
                 item.id = payload.promptResultId
             }
@@ -1640,6 +2131,10 @@ var app = new Vue({
                 this.continueChatSubmit(this.continueChatPromptResultId, this.tacticalChatInput.trim())
                 return
             }
+
+            if (!this.supportsChatMode) {
+                this.tacticalForm.chatMode = '直接测试'
+            }
             
             // 普通模式，需要验证表单
             // 注意：第一次打靶时（没有promptid），不需要验证"战术"字段，因为会自动创建T1-A1靶道
@@ -1664,7 +2159,7 @@ var app = new Vue({
             }
             
             // 如果选择对话模式，需要检查是否有输入内容
-            if (this.tacticalForm.chatMode === '对话模式') {
+            if (this.supportsChatMode && this.tacticalForm.chatMode === '对话模式') {
                 // 检查是否有输入内容
                 if (!this.tacticalChatInput || !this.tacticalChatInput.trim()) {
                     this.$message({
@@ -1688,15 +2183,25 @@ var app = new Vue({
         
         // 继续聊天提交
         async continueChatSubmit(promptResultId, userMessage) {
+            const normalizedUserMessage = typeof userMessage === 'string' ? userMessage.trim() : ''
+            if (!normalizedUserMessage) {
+                this.$message({
+                    message: '请输入对话内容',
+                    type: 'warning',
+                    duration: 3000
+                })
+                return
+            }
             this.tacticalFormSubmitLoading = true
             this.removeContinueChatStreamingMessage()
+            this.appendContinueChatPendingUserMessage(normalizedUserMessage)
             this.ensureContinueChatGeneratingMessage()
             const streamId = this.createPromptStreamId()
             const streamReady = await this.openPromptStream(streamId, 'continueChat')
             try {
                 const res = await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.ContinueChat`, {
                     promptResultId: promptResultId,
-                    userMessage: userMessage || '',
+                    userMessage: normalizedUserMessage,
                     streamId: streamReady ? streamId : null
                 })
                 
@@ -1704,6 +2209,9 @@ var app = new Vue({
                     const reloadRes = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistory?promptResultId=${promptResultId}`)
                     if (reloadRes.data.success) {
                         this.continueChatHistory = reloadRes.data.data || []
+                        this.continueChatPendingUserMessageId = null
+                    } else {
+                        this.confirmContinueChatPendingUserMessage()
                     }
                     this.removeContinueChatStreamingMessage()
                     
@@ -1719,7 +2227,7 @@ var app = new Vue({
                             // 追加到现有的 ResultString（格式化为对话形式）
                             const currentResult = resultItem.resultString || ''
                             const separator = currentResult ? '\n\n---\n\n' : ''
-                            const newContent = `**用户**: ${userMessage}\n\n**助手**: ${latestAssistantMessage.content}`
+                            const newContent = `**用户**: ${normalizedUserMessage}\n\n**助手**: ${latestAssistantMessage.content}`
                             resultItem.resultString = currentResult + separator + newContent
                             resultItem.resultStringHtml = marked.parse(resultItem.resultString)
                             resultItem.promptCostToken = this.continueChatUsageSummary.promptCostToken || resultItem.promptCostToken || 0
@@ -1754,6 +2262,7 @@ var app = new Vue({
                     })
                 } else {
                     this.removeContinueChatStreamingMessage()
+                    this.removeContinueChatPendingUserMessage()
                     this.closePromptStream()
                     this.$message({
                         message: res.data.errorMessage || '继续聊天失败',
@@ -1767,6 +2276,7 @@ var app = new Vue({
                     type: 'error'
                 })
                 this.removeContinueChatStreamingMessage()
+                this.removeContinueChatPendingUserMessage()
             } finally {
                 this.tacticalFormSubmitLoading = false
             }
@@ -1781,6 +2291,9 @@ var app = new Vue({
                     message: '请选择模型！',
                     type: 'warning'
                 })
+                return
+            }
+            if (!this.ensurePromptContentForCurrentModel()) {
                 return
             }
             if (!isDraft && !this.content) {
@@ -1827,6 +2340,10 @@ var app = new Vue({
                 suffix: this.promptParamForm.suffix,
                 prefix: this.promptParamForm.prefix,
 
+            }
+            const executionOptions = this.buildExecutionOptionsPayload()
+            if (executionOptions) {
+                _postData.executionOptions = executionOptions
             }
             // ai评分标准
             _postData.isAIGrade = this.isAIGrade
@@ -1925,7 +2442,8 @@ var app = new Vue({
                             fullVersion = '',
                             id,
                             evalAvgScore = -1,
-                            evalMaxScore = -1
+                            evalMaxScore = -1,
+                            promptItem = {}
                         } = res.data.data || {}
                         // 拷贝数据
                         let copyResultData = JSON.parse(JSON.stringify(res.data.data))
@@ -1940,37 +2458,7 @@ var app = new Vue({
                         // 最高分
                         this.outputMaxDeci = evalMaxScore > -1 ? evalMaxScore : -1;
                         // 输出列表
-                        this.outputList = promptResultList.map(item => {
-                            if (item) {
-                                item.promptId = id
-                                item.version = fullVersion
-                                item.scoreType = '1' // 1 ai、2手动 
-                                item.isScoreView = false // 是否显示评分视图
-                                //时间 格式化  addTime
-                                item.addTime = item.addTime ? this.formatDate(item.addTime) : ''
-
-                                //使用 MarkDown 格式，对输出结果进行展示
-                                item.resultStringHtml = marked.parse(item.resultString);
-
-                                // 手动评分
-                                item.scoreVal = 0
-                                // ai评分预期结果
-                                item.alResultList = [{
-                                    id: 1,
-                                    label: '预期结果1',
-                                    value: ''
-                                }, {
-                                    id: 2,
-                                    label: '预期结果2',
-                                    value: ''
-                                }, {
-                                    id: 3,
-                                    label: '预期结果3',
-                                    value: ''
-                                }]
-                            }
-                            return item
-                        })
+                        this.outputList = promptResultList.map(item => this.normalizeOutputResultItem(item, id, fullVersion, promptItem))
                         
                         // 添加代码块复制按钮
                         this.$nextTick(() => {
@@ -3266,7 +3754,9 @@ var app = new Vue({
             } else {
 
                 // 其他
-                //if (itemKey === 'modelid'){}
+                if (itemKey === 'modelid') {
+                    this.onModelSelectionChanged()
+                }
                 // 页面变化记录
                 this.pageChange = true
                 this.sendBtns = [
@@ -3300,6 +3790,24 @@ var app = new Vue({
                 prefix: '',
                 suffix: '',
                 variableList: []
+            }
+            this.ttsForm = {
+                voice: 'alloy',
+                format: 'mp3',
+                speedRatio: 1.0
+            }
+            this.sttForm = {
+                audioFileName: '',
+                audioBase64: '',
+                audioLocalRelativePath: '',
+                language: '',
+                fileSize: 0
+            }
+            this.embeddingForm = {
+                vectorDbId: null,
+                collectionName: '',
+                searchTopK: 3,
+                searchQuery: ''
             }
             // ai评分标准 重置
             this.aiScoreForm = {
@@ -3448,6 +3956,7 @@ var app = new Vue({
             this.continueChatMode = false
             this.continueChatPromptResultId = null
             this.continueChatHistory = []
+            this.continueChatPendingUserMessageId = null
             this.continueChatSystemMessage = ''
             this.continueChatUsageSummary = {
                 promptCostToken: 0,
@@ -6606,6 +7115,9 @@ var app = new Vue({
         
         // 执行打靶的核心逻辑（支持对话模式，userMessage 为 null 时表示直接测试模式）
         async executeTargetShootWithChatMessage(userMessage) {
+            if (!this.ensurePromptContentForCurrentModel()) {
+                return
+            }
             this.tacticalFormSubmitLoading = true
             const selectedTactics = this.tacticalForm.tactics
             if (this.tacticalFormVisible) {
@@ -6626,6 +7138,11 @@ var app = new Vue({
                 isDraft: this.sendBtnText === '保存草稿',
                 suffix: this.promptParamForm.suffix,
                 prefix: this.promptParamForm.prefix
+            }
+
+            const executionOptions = this.buildExecutionOptionsPayload()
+            if (executionOptions) {
+                _postData.executionOptions = executionOptions
             }
             
             // 如果提供了 userMessage，添加到请求数据中
@@ -6739,6 +7256,7 @@ var app = new Vue({
                     this.continueChatMode = false
                     this.continueChatPromptResultId = null
                     this.continueChatHistory = []
+                    this.continueChatPendingUserMessageId = null
                     this.continueChatUsageSummary = {
                         promptCostToken: 0,
                         resultCostToken: 0,
@@ -7072,19 +7590,23 @@ var app = new Vue({
         async rapidFireHandel(id, userMessage = null) {
             const promptItemId = id || this.promptid
             const numsOfResults = 1
-            const params = { promptItemId, numsOfResults }
+            const postData = { promptItemId, numsOfResults }
             this.ensureOutputGeneratingPlaceholder()
             const streamId = this.createPromptStreamId()
             const streamReady = await this.openPromptStream(streamId, 'shoot')
             if (streamReady) {
-                params.streamId = streamId
+                postData.streamId = streamId
             }
             // 如果提供了 userMessage，添加到参数中（用于保持 Chat 模式）
             if (userMessage) {
-                params.userMessage = userMessage
+                postData.userMessage = userMessage
             }
-            return await servicePR.get('/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GenerateWithItemId',
-                { params }).then(res => {
+            const executionOptions = this.buildExecutionOptionsPayload()
+            if (executionOptions) {
+                postData.executionOptions = executionOptions
+            }
+            return await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GenerateWithItemIdPost',
+                postData).then(res => {
                     //console.log('testHandel res ', res.data)
                     if (!res.data.success) {
                         this.clearOutputGeneratingPlaceholder()
@@ -7099,6 +7621,14 @@ var app = new Vue({
                     this.outputMaxDeci = res.data.data.promptItem.evalMaxScore > -1 ? res.data.data.promptItem.evalMaxScore : -1; // 保留整数
                     //输出列表 
                     let latestResultId = null
+                    const findExistingResultIndexById = (resultId) => {
+                        if (resultId === undefined || resultId === null || resultId === '') {
+                            return -1
+                        }
+                        return this.outputList.findIndex(outputItem =>
+                            String(outputItem?.id) === String(resultId)
+                        )
+                    }
                     const findStreamingPlaceholderIndex = () => {
                         if (this.promptStreamingTempResultId !== undefined && this.promptStreamingTempResultId !== null && this.promptStreamingTempResultId !== '') {
                             const exactMatchIndex = this.outputList.findIndex(outputItem =>
@@ -7128,6 +7658,15 @@ var app = new Vue({
                             this.promptDetail?.fullVersion,
                             res.data.data.promptItem || {}
                         )
+
+                        // 流式 final 与接口返回可能交错到达，优先按结果 ID 去重更新，避免连发出现重复项。
+                        const existingIndex = findExistingResultIndexById(normalized.id)
+                        if (existingIndex > -1) {
+                            this.$set(this.outputList, existingIndex, normalized)
+                            latestResultId = normalized.id
+                            return
+                        }
+
                         let replacedStreamingPlaceholder = false
                         const placeholderIndex = findStreamingPlaceholderIndex()
                         if (placeholderIndex > -1) {
@@ -7139,6 +7678,7 @@ var app = new Vue({
                         }
                         latestResultId = normalized.id
                     })
+                    this.cleanupOutputListAfterResultUpsert()
                     if (!latestResultId) {
                         this.clearOutputGeneratingPlaceholder()
                         this.closePromptStream()
@@ -7340,6 +7880,9 @@ var app = new Vue({
         resetInputPrompt() {
             //console.log('输入Prompt 重置:', this.content)
             this.content = ''// prompt 输入内容
+            if (this.isSpeechToTextModelSelected) {
+                this.clearSpeechInput()
+            }
             //this.remarks = '' // prompt 输入的备注
         },
         deleteModel(item) {
@@ -7436,8 +7979,11 @@ var app = new Vue({
                 //console.log('getModelOptData:', res.data)
                 let _optList = res.data.data || []
                 this.modelOpt = _optList.map(item => {
-                    // 构建label：模型名称 + 版本号（如果有）+ 部署名称（如果有）
-                    let label = item.alias || '未命名模型';
+                    const configModelTypeCode = this.parseConfigModelTypeValue(item.configModelType)
+                    const configModelTypeName = this.getConfigModelTypeLabel(configModelTypeCode)
+
+                    // 构建label：模型名称 + 类型 + 版本号（如果有）+ 部署名称（如果有）
+                    let label = `${item.alias || '未命名模型'} [${configModelTypeName}]`
                     if (item.apiVersion && item.apiVersion.trim()) {
                         label += ` v${item.apiVersion}`;
                     }
@@ -7449,11 +7995,18 @@ var app = new Vue({
                         ...item,
                         label: label,
                         displayName: item.alias,  // 保留原始名称用于其他地方显示
+                        selectLabel: label,
+                        configModelTypeCode: configModelTypeCode,
+                        configModelTypeName: configModelTypeName,
                         deploymentDisplay: item.deploymentName, // 保留部署名称
                         apiVersion: item.apiVersion, // 保留版本号
                         value: item.id,
                         disabled: false
                     }
+                })
+                // 保持模型选中状态变化后，自动切换模型特定 UI
+                this.$nextTick(() => {
+                    this.onModelSelectionChanged()
                 })
             } else {
                 app.$message({
@@ -7462,6 +8015,168 @@ var app = new Vue({
                     duration: 5 * 1000
                 })
             }
+        },
+        async getVectorOptData(forceRefresh = false) {
+            if (this.vectorLoading) {
+                return
+            }
+            if (!forceRefresh && Array.isArray(this.vectorOpt) && this.vectorOpt.length > 0) {
+                return
+            }
+
+            this.vectorLoading = true
+            try {
+                const res = await servicePR.post('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.GetListAsync', {})
+                if (!res.data.success) {
+                    this.$message({
+                        message: res.data.errorMessage || res.data.data || '向量库列表加载失败',
+                        type: 'error',
+                        duration: 5 * 1000
+                    })
+                    return
+                }
+
+                const list = Array.isArray(res.data.data) ? res.data.data : []
+                this.vectorOpt = list.map(item => ({
+                    ...item,
+                    value: item.id,
+                    vectorDbTypeCode: this.parseVectorDbTypeValue(item.vectorDBType),
+                    vectorDbTypeLabel: this.getVectorDbTypeLabel(item.vectorDBType),
+                    label: `${item.alias || item.name || '未命名向量库'} [${this.getVectorDbTypeLabel(item.vectorDBType)}]`
+                }))
+
+                if (this.isTextEmbeddingModelSelected && !this.embeddingForm.vectorDbId && this.vectorOpt.length > 0) {
+                    const preferredVector = this.vectorOpt.find(item => this.isInMemoryVectorDbType(item.vectorDbTypeCode)) || this.vectorOpt[0]
+                    this.embeddingForm.vectorDbId = preferredVector.value
+                }
+            } catch (e) {
+                this.$message({
+                    message: '向量库列表加载失败：' + (e.message || '未知错误'),
+                    type: 'error',
+                    duration: 5 * 1000
+                })
+            } finally {
+                this.vectorLoading = false
+            }
+        },
+        onModelSelectionChanged() {
+            if (this.isSpeechToTextModelSelected) {
+                this.tacticalForm.chatMode = '直接测试'
+            } else if (this.supportsChatMode && !this.tacticalForm.chatMode) {
+                this.tacticalForm.chatMode = '对话模式'
+            } else if (!this.supportsChatMode && this.tacticalForm.chatMode === '对话模式') {
+                this.tacticalForm.chatMode = '直接测试'
+            }
+
+            if (this.isTextEmbeddingModelSelected) {
+                this.getVectorOptData()
+            }
+        },
+        openSpeechFilePicker() {
+            if (this.$refs && this.$refs.sttFileInput) {
+                this.$refs.sttFileInput.click()
+            }
+        },
+        clearSpeechInput() {
+            this.sttForm.audioFileName = ''
+            this.sttForm.audioBase64 = ''
+            this.sttForm.audioLocalRelativePath = ''
+            this.sttForm.fileSize = 0
+            if (this.$refs && this.$refs.sttFileInput) {
+                this.$refs.sttFileInput.value = ''
+            }
+            this.pageChange = true
+        },
+        async handleSpeechFileChange(event) {
+            const file = event && event.target && event.target.files && event.target.files[0]
+            if (!file) {
+                return
+            }
+
+            try {
+                const base64 = await this.readFileAsBase64(file)
+                this.sttForm.audioFileName = file.name || ''
+                this.sttForm.audioBase64 = base64
+                this.sttForm.audioLocalRelativePath = ''
+                this.sttForm.fileSize = Number(file.size || 0)
+                if (!this.content || !this.content.trim()) {
+                    this.content = `请识别音频内容：${file.name || 'audio'}`
+                }
+                this.promptChangeHandel(file.name || 'audio', 'content')
+            } catch (e) {
+                this.$message({
+                    message: '读取音频失败：' + (e.message || '未知错误'),
+                    type: 'error',
+                    duration: 5 * 1000
+                })
+            }
+        },
+        readFileAsBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader()
+                reader.onload = () => {
+                    const raw = typeof reader.result === 'string' ? reader.result : ''
+                    resolve(raw)
+                }
+                reader.onerror = () => reject(reader.error || new Error('FileReader failed'))
+                reader.readAsDataURL(file)
+            })
+        },
+        ensurePromptContentForCurrentModel() {
+            if (this.isTextEmbeddingModelSelected && !this.embeddingForm.vectorDbId) {
+                this.$message({
+                    message: '请选择 VectorDB',
+                    type: 'warning',
+                    duration: 3000
+                })
+                return false
+            }
+            if (!this.isSpeechToTextModelSelected) {
+                return true
+            }
+            if (!this.sttForm.audioBase64 && !this.sttForm.audioLocalRelativePath) {
+                this.$message({
+                    message: '请先上传音频文件',
+                    type: 'warning',
+                    duration: 3000
+                })
+                return false
+            }
+            if (!this.content || !this.content.trim()) {
+                const fallbackName = this.sttForm.audioFileName || 'audio'
+                this.content = `请识别音频内容：${fallbackName}`
+            }
+            return true
+        },
+        buildExecutionOptionsPayload() {
+            const payload = {}
+            if (this.isTextToSpeechModelSelected) {
+                payload.textToSpeech = {
+                    voice: (this.ttsForm.voice || 'alloy').trim() || 'alloy',
+                    format: (this.ttsForm.format || 'mp3').trim() || 'mp3',
+                    speedRatio: Number(this.ttsForm.speedRatio || 1.0)
+                }
+            }
+
+            if (this.isSpeechToTextModelSelected) {
+                payload.speechToText = {
+                    audioFileName: this.sttForm.audioFileName || null,
+                    audioBase64: this.sttForm.audioBase64 || null,
+                    audioLocalRelativePath: this.sttForm.audioLocalRelativePath || null,
+                    language: this.sttForm.language || null
+                }
+            }
+
+            if (this.isTextEmbeddingModelSelected) {
+                payload.textEmbedding = {
+                    vectorDbId: this.embeddingForm.vectorDbId || null,
+                    collectionName: this.embeddingForm.collectionName || null,
+                    searchTopK: Number(this.embeddingForm.searchTopK || 3),
+                    searchQuery: this.embeddingForm.searchQuery || null
+                }
+            }
+
+            return Object.keys(payload).length > 0 ? payload : null
         },
         // 新增模型 dialog 关闭
         modelFormCloseDialog() {
@@ -7738,6 +8453,7 @@ var app = new Vue({
                     } else {
                         this.modelid = ''
                     }
+                    this.onModelSelectionChanged()
                     // prompt 输入内容
                     this.content = this.promptDetail.promptContent || ''
                     // prompt 输入的备注

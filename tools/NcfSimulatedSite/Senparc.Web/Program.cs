@@ -10,6 +10,11 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
+    修改标识：Senparc - 20260705
+    修改描述：v0.21.6 重构系统配置初始化与更新流程并统一模型处理
+
+    修改标识：Senparc - 20260705
+    修改描述：v0.21.7 重构系统配置初始化与更新流程并统一模型处理
 ----------------------------------------------------------------*/
 
 //以下数据库模块的命名空间根据需要添加或删除
@@ -36,8 +41,10 @@ builder.AddNcf();
 //添加 ServiceDefaults
 builder.AddServiceDefaults();
 
+#pragma warning disable SYSLIB0014
 System.Net.ServicePointManager.ServerCertificateValidationCallback =
     ((sender, certificate, chain, sslPolicyErrors) => true);
+#pragma warning restore SYSLIB0014
 
 //添加 Dapr
 builder.Services.AddDaprClient();

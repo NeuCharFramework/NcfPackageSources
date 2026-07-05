@@ -10,7 +10,8 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
-----------------------------------------------------------------*/
+    修改标识：Senparc - 20260705
+    修改描述：v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3----------------------------------------------------------------*/
 
 using System;
 using System.Collections.Generic;
@@ -104,6 +105,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         /// 流式输出会话 ID（可选）
         /// </summary>
         public string StreamId { get; set; }
+
+        /// <summary>
+        /// 各模型类型扩展执行参数（可选）
+        /// </summary>
+        public PromptExecutionOptions ExecutionOptions { get; set; }
     }
     
     /// <summary>

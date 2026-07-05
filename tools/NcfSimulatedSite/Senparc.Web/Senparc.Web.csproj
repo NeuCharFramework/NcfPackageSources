@@ -2,14 +2,19 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
-		<Version>0.21.5</Version>
+		<Version>0.21.7</Version>
 		<PackageReleaseNotes>
 			[2026-07-01] v0.21.5 Dependency update from Senparc.Xncf.AgentsManager to 0.11.0-preview2
-		
 			[2026-07-02] v0.21.5 支持流式输出并优化交互体验，升级 Senparc.AI.AgentKernel 并完成兼容性适配
 			1、支持流式输出并优化交互体验
 			2、升级 Senparc.AI.AgentKernel 并完成兼容性适配
 			3、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
+			[2026-07-05] v0.21.6 重构系统配置初始化与更新流程并统一模型处理，补充配置与工程实现细节
+			1、重构系统配置初始化与更新流程并统一模型处理
+			2、补充配置与工程实现细节
+			[2026-07-05] v0.21.7 重构系统配置初始化与更新流程并统一模型处理，补充配置与工程实现细节
+			1、重构系统配置初始化与更新流程并统一模型处理
+			2、补充配置与工程实现细节
 </PackageReleaseNotes>
 		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
 		<TypeScriptToolsVersion>4.1</TypeScriptToolsVersion>
