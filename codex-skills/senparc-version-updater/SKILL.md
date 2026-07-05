@@ -110,6 +110,7 @@ For all projects in `changed_csprojs` (including `primary_csproj`):
 1. Ensure project version metadata and release notes are updated for this window.
 2. For the same unmerged window (`comparison_base..HEAD`), version can only bump once per project.
 3. If new commits are added before merge, merge details into the same version's release-note block instead of creating a new version entry.
+4. If any `.cs` file is edited in this run (including header-only edits), its mapped project in `changed_csprojs` must receive a release-note merge/update in the current version block (no silent skip).
 
 ### 5) Append `<PackageReleaseNotes>` In Selected `.csproj`
 
@@ -160,7 +161,8 @@ Validate:
 7. In every edited `.csproj`, `<PackageReleaseNotes>` contains no blank line.
 8. In every edited `.csproj`, resulting `<Version>` is not lower than its pre-update `<Version>`.
 9. All commits in `comparison_base..HEAD` are reflected by updated files/projects in this workflow.
-10. Optional: run project build/tests before commit.
+10. For every edited `.cs` file in this run, its mapped `.csproj` has a release-note merge/update in current window version block.
+11. Optional: run project build/tests before commit.
 
 ## Suggested Command Sequence
 
@@ -179,6 +181,9 @@ jq -r '.changed_cs_files_in_primary_project[].path' /tmp/senparc-version-scan.js
 
 # 4) Inspect direct changed projects (.cs -> .csproj mapping)
 jq -r '.changed_csprojs[]' /tmp/senparc-version-scan.json
+
+# 4.1) Inspect mapping from changed .cs files to target .csproj
+jq -r '.changed_csproj_to_cs_files | to_entries[] | .key as $p | .value[] | "\($p)\t\(.path)"' /tmp/senparc-version-scan.json
 
 # 5) Inspect passive dependent projects
 jq -r '.dependent_csprojs[]' /tmp/senparc-version-scan.json

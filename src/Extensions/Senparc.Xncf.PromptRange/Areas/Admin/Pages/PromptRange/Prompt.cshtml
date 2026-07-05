@@ -259,7 +259,7 @@
                             </div>
                         </div>
                         <div class="promptContentBox">
-                        <div class="modelSpecialPanel stt-upload-panel" v-if="isSpeechToTextModelSelected">
+                        <div class="modelSpecialPanel stt-upload-panel" v-show="isSpeechToTextModelSelected">
                             <div class="special-row">
                                 <span class="special-label">音频文件</span>
                                 <div class="special-actions">
@@ -284,7 +284,7 @@
                             </div>
                         </div>
 
-                        <div class="modelSpecialPanel tts-option-panel" v-if="isTextToSpeechModelSelected">
+                        <div class="modelSpecialPanel tts-option-panel" v-show="isTextToSpeechModelSelected">
                             <div class="special-row compact">
                                 <span class="special-label">音色</span>
                                 <el-input v-model="ttsForm.voice" size="mini" placeholder="alloy / ash / onyx ..."></el-input>
@@ -306,7 +306,7 @@
                             </div>
                         </div>
 
-                        <div class="modelSpecialPanel embedding-option-panel" v-if="isTextEmbeddingModelSelected">
+                        <div class="modelSpecialPanel embedding-option-panel" v-show="isTextEmbeddingModelSelected">
                             <div class="special-row compact">
                                 <span class="special-label">VectorDB</span>
                                 <el-select v-model="embeddingForm.vectorDbId" size="mini" filterable placeholder="请选择向量库" :loading="vectorLoading" @@focus="getVectorOptData()">
@@ -329,7 +329,7 @@
 
                         @* contenteditable编辑器，支持内联高亮 *@
                         <div class="promptInput prompt-rich-editor"
-                             v-if="shouldShowPromptEditor"
+                             v-show="shouldShowPromptEditor"
                              contenteditable="true"
                              ref="promptEditor"
                              @@input="handleEditorInput"
@@ -342,7 +342,7 @@
                         </div>
                             
                             @* 变量提示卡片 *@
-                            <div class="prompt-variables-hint" v-if="shouldShowPromptEditor && detectedVariables.length > 0">
+                            <div class="prompt-variables-hint" v-show="shouldShowPromptEditor && detectedVariables.length > 0">
                                 <div class="hint-title">
                                     <i class="el-icon-info"></i>
                                     检测到 {{ detectedVariables.length }} 个变量
@@ -396,7 +396,7 @@
                             </div>
                         </div>
                         @* Prompt请求参数 - 移到leftItemBox内部，作为下方区域 *@
-                        <div class="promptParamSection" v-if="shouldShowPromptEditor" :class="{'paramSectionHide': !promptParamVisible}">
+                        <div class="promptParamSection" v-show="shouldShowPromptEditor" :class="{'paramSectionHide': !promptParamVisible}">
                         <div class="titleRow" style="height:28px;">
                             <div class="titleRow_leftBox">
                                 <div class="titleContent">Prompt请求参数</div>

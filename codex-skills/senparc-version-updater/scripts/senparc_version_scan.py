@@ -492,6 +492,7 @@ def main() -> int:
 
     changed_cs_files: list[dict[str, str]] = []
     changed_csproj_targets: set[Path] = set()
+    changed_csproj_to_cs_files: dict[Path, list[dict[str, str]]] = defaultdict(list)
     for rel in changed_files:
         if not rel.lower().endswith(".cs"):
             continue
@@ -500,15 +501,16 @@ def main() -> int:
         abs_file = (root / rel).resolve()
         if not abs_file.exists():
             continue
+        cs_file_item = {
+            "path": rel,
+            "creation_date_yyyymmdd": get_file_creation_date_yyyymmdd(root, abs_file),
+        }
         mapped_csproj = resolve_selected_csproj_for_file(abs_file, selected_by_dir, root)
         if mapped_csproj is not None:
-            changed_csproj_targets.add(mapped_csproj.resolve())
-        changed_cs_files.append(
-            {
-                "path": rel,
-                "creation_date_yyyymmdd": get_file_creation_date_yyyymmdd(root, abs_file),
-            }
-        )
+            mapped_csproj = mapped_csproj.resolve()
+            changed_csproj_targets.add(mapped_csproj)
+            changed_csproj_to_cs_files[mapped_csproj].append(cs_file_item)
+        changed_cs_files.append(cs_file_item)
 
     primary_project_rel = to_relative_path(root, primary.parent)
     changed_files_in_primary_project = [rel for rel in changed_files if path_is_under(rel, primary_project_rel)]
@@ -537,6 +539,10 @@ def main() -> int:
         "changed_files": changed_files,
         "changed_cs_files": changed_cs_files,
         "changed_csprojs": [to_relative_path(root, p) for p in sorted(changed_csproj_targets)],
+        "changed_csproj_to_cs_files": {
+            to_relative_path(root, project): sorted(items, key=lambda item: item["path"])
+            for project, items in sorted(changed_csproj_to_cs_files.items(), key=lambda kv: to_relative_path(root, kv[0]))
+        },
         "changed_files_in_primary_project": changed_files_in_primary_project,
         "changed_cs_files_in_primary_project": changed_cs_files_in_primary_project,
         "commit_summaries": commit_summaries,

@@ -5,6 +5,7 @@
     var currentCulture = System.Globalization.CultureInfo.CurrentUICulture.Name;
     var webLoginExpireMinutes = Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminAuthConfig.DefaultAdminWebLoginExpireMinutes;
     var jwtExpireMinutes = Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminAuthConfig.DefaultBackendJwtExpireMinutes;
+    var currentAccountName = string.IsNullOrWhiteSpace(Model?.UserName) ? "-" : Model.UserName;
     try
     {
         webLoginExpireMinutes = AdminUserInfoService.GetAdminWebLoginExpireMinutes();
@@ -83,18 +84,18 @@
                                 <option value="ru" selected="@(currentCulture.StartsWith("ru") ? "selected" : null)">Русский</option>
                             </select>
                         </div>
-                        @*退出*@
-                        <div class="header-logout">
-                            <el-tooltip class="item" effect="dark" content="@AR["Admin.Logout.Title"]" placement="left">
-                                <el-popconfirm confirmButtonText='@AR["Admin.Logout.Yes"]'
-                                               cancelButtonText='@AR["Admin.Logout.No"]'
-                                               icon="el-icon-info"
-                                               iconColor="red"
-                                               title="@AR["Admin.Logout.Confirm"]"
-                                               @@on-Confirm="loginout">
-                                    <i slot="reference" style="cursor:pointer;" class="fa fa-sign-out" aria-hidden="true"></i>
-                                </el-popconfirm>
-                            </el-tooltip>
+                        <div class="header-account">
+                            <el-dropdown trigger="click">
+                                <span class="el-dropdown-link">
+                                    我的账号<i class="el-icon-arrow-down el-icon--right"></i>
+                                </span>
+                                <el-dropdown-menu slot="dropdown" class="header-account-dropdown">
+                                    <el-dropdown-item disabled>当前账号：@currentAccountName</el-dropdown-item>
+                                    <el-dropdown-item divided>
+                                        <a class="header-account-action" asp-page="/Login" asp-page-handler="Logout">@AR["Admin.Logout.Title"]</a>
+                                    </el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
                         </div>
                     </el-header>
                     <el-main>

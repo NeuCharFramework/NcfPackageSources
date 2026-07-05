@@ -64,6 +64,7 @@
 		[2026-07-05] v0.13.4-preview3 修复 AI 模型类型展示顺序，重构系统配置初始化与更新流程并统一模型处理
 		1、修复 AI 模型类型展示顺序
 		2、重构系统配置初始化与更新流程并统一模型处理
+		3、统一后台模型配置与模型类型映射处理，增强模型初始化与异常处理一致性
 </PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>

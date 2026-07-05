@@ -118,3 +118,4 @@ tools/NcfSimulatedSite/ASPIRE_USAGE_GUIDE.md
 /NuGetPackages
 tools/NcfSimulatedSite/Senparc.Web/App_Data/PromptRange/TextToImage/*
 tools/NcfSimulatedSite/Senparc.Web/App_Data/PromptRange/SpeechToText/*
+tools/NcfSimulatedSite/Senparc.Web/App_Data/PromptRange/TextToSpeech/*
