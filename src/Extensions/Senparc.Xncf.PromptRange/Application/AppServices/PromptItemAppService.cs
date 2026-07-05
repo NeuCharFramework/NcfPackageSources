@@ -143,7 +143,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                             savedPromptItem,
                             currentUserMessage,
                             currentChatHistory,
-                            streamCallback);
+                            streamCallback,
+                            request.ExecutionOptions);
                         
                         // 记录第一个结果的模式
                         if (i == 0)

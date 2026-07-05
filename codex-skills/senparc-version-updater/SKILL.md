@@ -96,7 +96,7 @@ For every file in `changed_cs_files`:
 6. Append one new pair for current change:
    - `修改标识：<author> - YYYYMMDD`
    - `修改描述：v<new-version> <summary>`
-7. Keep one blank line between modification groups.
+7. Keep exactly one blank line between modification groups (no extra blank lines).
 8. Skip files matched by the special skip rules above (`*.Generated.cs`, unit test project files, and `MultipleDatabase/` directory files).
 
 If the file already has the block, keep historical entries and append only one new modification group.
@@ -117,20 +117,21 @@ In the selected primary `.csproj` (must also satisfy Step 4):
 
 1. Append new lines to existing `<PackageReleaseNotes>` content.
 2. Keep the same leading spaces as the previous line.
-3. Use this structure:
+3. Do not insert blank lines inside `<PackageReleaseNotes>` (including between entries and detail lines).
+4. Use this structure:
    - `[YYYY-MM-DD] vX.Y.Z <one-line summary>`
    - `1、<detail>`
    - `2、<detail>`
-4. Include all key updates found in Step 2.
-5. Within the same unmerged `comparison_base..HEAD` window, do not create another version bump entry; merge new details into the same `vX.Y.Z` release-note block.
-6. `summary/detail` must describe project functional changes (feature, behavior, compatibility, bug fix, UI/UX, dependency adaptation).
-7. Do not write process-tracking text in release notes, including but not limited to: `Repository baseline sync`, `sync window`, `comparison_base..HEAD`, or similar window/baseline markers.
-8. `<PackageReleaseNotes>` must be located after `<Version>` in the `.csproj` file.
-9. `<PackageReleaseNotes>` does not need to be immediately adjacent to `<Version>`. If it is already after `<Version>`, keep its current position (manual placement may exist).
-10. If `<PackageReleaseNotes>` appears before `<Version>`, move `<PackageReleaseNotes>` to any valid location after `<Version>` while preserving indentation/content.
-11. `<Version>` must be located after `<TargetFramework>` or `<TargetFrameworks>` in the `.csproj` file.
-12. `<Version>` does not need to be immediately adjacent to `<TargetFramework>`/`<TargetFrameworks>`. If it is already after framework tags, keep its current position.
-13. If `<Version>` appears before `<TargetFramework>`/`<TargetFrameworks>`, move `<Version>` to any valid location after framework tags while preserving indentation/content.
+5. Include all key updates found in Step 2.
+6. Within the same unmerged `comparison_base..HEAD` window, do not create another version bump entry; merge new details into the same `vX.Y.Z` release-note block.
+7. `summary/detail` must describe project functional changes (feature, behavior, compatibility, bug fix, UI/UX, dependency adaptation).
+8. Do not write process-tracking text in release notes, including but not limited to: `Repository baseline sync`, `sync window`, `comparison_base..HEAD`, or similar window/baseline markers.
+9. `<PackageReleaseNotes>` must be located after `<Version>` in the `.csproj` file.
+10. `<PackageReleaseNotes>` does not need to be immediately adjacent to `<Version>`. If it is already after `<Version>`, keep its current position (manual placement may exist).
+11. If `<PackageReleaseNotes>` appears before `<Version>`, move `<PackageReleaseNotes>` to any valid location after `<Version>` while preserving indentation/content.
+12. `<Version>` must be located after `<TargetFramework>` or `<TargetFrameworks>` in the `.csproj` file.
+13. `<Version>` does not need to be immediately adjacent to `<TargetFramework>`/`<TargetFrameworks>`. If it is already after framework tags, keep its current position.
+14. If `<Version>` appears before `<TargetFramework>`/`<TargetFrameworks>`, move `<Version>` to any valid location after framework tags while preserving indentation/content.
 
 If `<PackageReleaseNotes>` does not exist, create it under the first `<PropertyGroup>` and match surrounding indentation.
 
@@ -155,9 +156,11 @@ Validate:
 3. All recursive dependents from scanner output are covered.
 4. In every edited `.csproj`, `<Version>` is located after `<TargetFramework>` or `<TargetFrameworks>`.
 5. In every edited `.csproj`, `<PackageReleaseNotes>` is located after `<Version>`.
-6. In every edited `.csproj`, resulting `<Version>` is not lower than its pre-update `<Version>`.
-7. All commits in `comparison_base..HEAD` are reflected by updated files/projects in this workflow.
-8. Optional: run project build/tests before commit.
+6. In every edited `.csproj`, lines appended to `<PackageReleaseNotes>` use the same indentation as the previous note line.
+7. In every edited `.csproj`, `<PackageReleaseNotes>` contains no blank line.
+8. In every edited `.csproj`, resulting `<Version>` is not lower than its pre-update `<Version>`.
+9. All commits in `comparison_base..HEAD` are reflected by updated files/projects in this workflow.
+10. Optional: run project build/tests before commit.
 
 ## Suggested Command Sequence
 

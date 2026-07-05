@@ -104,6 +104,11 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
         /// 流式输出会话 ID（可选）
         /// </summary>
         public string StreamId { get; set; }
+
+        /// <summary>
+        /// 各模型类型扩展执行参数（可选）
+        /// </summary>
+        public PromptExecutionOptions ExecutionOptions { get; set; }
     }
     
     /// <summary>

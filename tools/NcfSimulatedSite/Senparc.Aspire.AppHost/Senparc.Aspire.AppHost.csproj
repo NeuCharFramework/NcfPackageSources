@@ -4,16 +4,15 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.2</Version>
+    <Version>0.0.3</Version>
     <PackageReleaseNotes>
         [2026-07-01] v0.0.1 Dependency update from Senparc.Xncf.AgentsManager to 0.11.0-preview2
-    
         [2026-07-02] v0.0.1 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
         1、支持流式输出并优化交互体验
         2、优化 AgentsManager 前端界面与历史消息展示效果
         3、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
-
         [2026-07-05] v0.0.2 Dependency update from Senparc.Xncf.AgentsManager to 0.11.1-preview3
+        [2026-07-05] v0.0.3 Dependency update from Senparc.Xncf.AgentsManager to 0.11.2-preview4
 </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

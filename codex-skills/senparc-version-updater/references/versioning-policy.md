@@ -69,6 +69,8 @@
 7. `<Version>` 标签必须位于 `<TargetFramework>` 或 `<TargetFrameworks>` 标签之后。
 8. `<Version>` 不要求紧邻 `<TargetFramework>`/`<TargetFrameworks>`；若当前已在其后（包括人为调整位置），无需改动位置。
 9. 若 `<Version>` 在 `<TargetFramework>`/`<TargetFrameworks>` 之前，必须调整到其后并保持内容与缩进。
+10. `<PackageReleaseNotes>` 内不允许空行（包括条目之间、条目与明细之间）。
+11. `<PackageReleaseNotes>` 新增行的缩进必须与上一条内容行保持相同空格数量。
 
 对于被动升级项目，建议使用：
 

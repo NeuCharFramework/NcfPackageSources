@@ -119,9 +119,15 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                         modelName.TextToImage = aiModel.ModelId;
                         break;
                     case Models.ConfigModelType.ImageToText:
+                        modelName.ImageToText = aiModel.ModelId;
+                        break;
                     case Models.ConfigModelType.TextToSpeech:
+                        modelName.TextToSpeech = aiModel.ModelId;
+                        break;
                     case Models.ConfigModelType.SpeechToText:
                     case Models.ConfigModelType.SpeechRecognition:
+                        modelName.SpeechToText = aiModel.ModelId;
+                        break;
                     default:
                         throw new Exception($"尚未支持：{aiModel.ConfigModelType} 模型在 BuildSenparcAiSetting 中的处理");
                 }

@@ -1,18 +1,12 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptImageController.cs
-    文件功能描述：PromptImageController 控制器逻辑
+    文件名：PromptAudioController.cs
+    文件功能描述：PromptAudioController 控制器逻辑
     
     
-    创建标识：Senparc - 20260704
+    创建标识：Senparc - 20260705
 
-
-    修改标识：Senparc - 20260705
-    修改描述：v0.16.3-preview2 增强文生图重试机制并兼容 TLS1.2/TLS1.3
-
-    修改标识：Senparc - 20260705
-    修改描述：v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -20,16 +14,21 @@ using Microsoft.AspNetCore.StaticFiles;
 using Senparc.Xncf.AreaBase.Admin.Filters;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.Controllers;
 
 [ApiController]
 [ApiAuthorize("AdminOnly")]
 [Route("api/Senparc.Xncf.PromptRange/[controller]/[action]")]
-public class PromptImageController : ControllerBase
+public class PromptAudioController : ControllerBase
 {
     private static readonly FileExtensionContentTypeProvider ContentTypeProvider = new();
-    private const string AllowedPrefix = "PromptRange/TextToImage";
+    private static readonly string[] AllowedPrefixes = new[]
+    {
+        "PromptRange/TextToSpeech",
+        "PromptRange/SpeechToText"
+    };
 
     [HttpGet]
     public IActionResult Get(string path)
@@ -45,7 +44,7 @@ public class PromptImageController : ControllerBase
             return BadRequest("path is invalid");
         }
 
-        if (!normalizedPath.StartsWith(AllowedPrefix, StringComparison.OrdinalIgnoreCase))
+        if (!AllowedPrefixes.Any(prefix => normalizedPath.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)))
         {
             return BadRequest("path prefix is invalid");
         }

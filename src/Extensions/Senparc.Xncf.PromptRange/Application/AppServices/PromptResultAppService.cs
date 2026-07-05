@@ -147,6 +147,31 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<PromptResult_ListResponse>> GenerateWithItemId(int promptItemId, int numsOfResults, string userMessage = null, string streamId = null)
         {
+            return await GenerateWithItemIdInternal(promptItemId, numsOfResults, userMessage, streamId, null);
+        }
+
+        /// <summary>
+        /// 生成结果（POST 版本，支持扩展执行参数）
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<PromptResult_ListResponse>> GenerateWithItemIdPost(PromptResult_GenerateRequest request)
+        {
+            request ??= new PromptResult_GenerateRequest();
+            return await GenerateWithItemIdInternal(
+                request.PromptItemId,
+                request.NumsOfResults <= 0 ? 1 : request.NumsOfResults,
+                request.UserMessage,
+                request.StreamId,
+                request.ExecutionOptions);
+        }
+
+        private async Task<AppResponseBase<PromptResult_ListResponse>> GenerateWithItemIdInternal(
+            int promptItemId,
+            int numsOfResults,
+            string userMessage,
+            string streamId,
+            PromptExecutionOptions executionOptions)
+        {
             return await this.GetResponseAsync<PromptResult_ListResponse>(
                 async (response, logger) =>
                 {
@@ -230,7 +255,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                             promptItem,
                             currentUserMessage,
                             currentChatHistory,
-                            streamCallback);
+                            streamCallback,
+                            executionOptions);
                         
                         // 记录第一个结果的模式
                         if (i == 0)
@@ -367,6 +393,23 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     }
 
                     return result;
+                });
+        }
+
+        /// <summary>
+        /// TextEmbedding 查询测试
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<PromptResult_TextEmbeddingSearchResponse>> TextEmbeddingSearch(PromptResult_TextEmbeddingSearchRequest request)
+        {
+            return await this.GetResponseAsync<PromptResult_TextEmbeddingSearchResponse>(
+                async (response, logger) =>
+                {
+                    request ??= new PromptResult_TextEmbeddingSearchRequest();
+                    return await _promptResultService.TextEmbeddingSearchAsync(
+                        request.PromptResultId,
+                        request.Query,
+                        request.TopK);
                 });
         }
 

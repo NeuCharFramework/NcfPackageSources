@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.36.3-preview2</Version>
+    <Version>0.36.4-preview3</Version>
     <LangVersion>latest</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -75,16 +75,18 @@
 			[2025-06-28] v0.35.3-preview.10 Add dynamic XNCF Template dynamic generator, support for dotnet CLI and Visual Studio together
 			[2025-11-01] update basic libraries, including Senparc.AI
 			[2026-01-07] v0.35.6-preview.1 Add NcfSourcePackage project path to DatabaseMigrationRequest loading method
-      [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
-      [2026-07-02] v0.36.2-preview1 升级 Senparc.AI.AgentKernel 并完成兼容性适配，增强 MCP 工具接入与调用链路兼容能力
-      1、升级 Senparc.AI.AgentKernel 并完成兼容性适配
-      2、增强 MCP 工具接入与调用链路兼容能力
+			[2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+			[2026-07-02] v0.36.2-preview1 升级 Senparc.AI.AgentKernel 并完成兼容性适配，增强 MCP 工具接入与调用链路兼容能力
+			1、升级 Senparc.AI.AgentKernel 并完成兼容性适配
+			2、增强 MCP 工具接入与调用链路兼容能力
 			3、优化 DatabaseMigrationsAppService，清洗命令输出中的 ANSI 转义字符
 			4、调整 DatabaseMigrationRequest 与迁移执行流程，提高数据库迁移调用稳定性
-
-        [2026-07-05] v0.36.3-preview2 重构系统配置初始化与更新流程并统一模型处理，补充配置与工程实现细节
-        1、重构系统配置初始化与更新流程并统一模型处理
-        2、补充配置与工程实现细节
+			[2026-07-05] v0.36.3-preview2 重构系统配置初始化与更新流程并统一模型处理，补充配置与工程实现细节
+			1、重构系统配置初始化与更新流程并统一模型处理
+			2、补充配置与工程实现细节
+			[2026-07-05] v0.36.4-preview3 重构系统配置初始化与更新流程并统一模型处理，补充配置与工程实现细节
+			1、重构系统配置初始化与更新流程并统一模型处理
+			2、补充配置与工程实现细节
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
