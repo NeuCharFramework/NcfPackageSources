@@ -17,7 +17,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Senparc.CO2NET.Cache;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.Config;
 using Senparc.Xncf.SystemManager.Domain.Service;
 using Senparc.Xncf.SystemManager.OHS.Local.PL;
 
@@ -46,6 +48,33 @@ namespace Senparc.Xncf.SystemManager.OHS.Local
                     logger.Append(ex.ToString());
                     return "更新 NeuChar 云账户信息失败：" + ex.Message;
                 }
+            });
+        }
+
+        [FunctionRender("查看 RequestTempId 暂存日志", "根据 AppService 返回的 RequestTempId 查询暂存日志（受 RequestTempLogCacheMinutes 时效配置影响）", typeof(Register))]
+        public async Task<StringAppResponse> GetRequestTempLog(SystemConfig_GetRequestTempLogRequest request)
+        {
+            return await this.GetStringResponseAsync(async (response, logger) =>
+            {
+                var requestTempId = request?.RequestTempId?.Trim();
+                if (string.IsNullOrWhiteSpace(requestTempId))
+                {
+                    response.Data = logger.Append("RequestTempId 不能为空。");
+                    return response.Data;
+                }
+
+                var cache = this.ServiceProvider.GetObjectCacheStrategyInstance();
+                var log = await cache.GetAsync<string>(requestTempId);
+
+                if (string.IsNullOrWhiteSpace(log))
+                {
+                    var cacheMinutes = SiteConfig.SenparcCoreSetting.RequestTempLogCacheMinutes;
+                    response.Data = logger.Append($"未找到对应的暂存日志：{requestTempId}。可能日志已过期，或 RequestTempLogCacheMinutes 当前配置为 {cacheMinutes}（<=0 表示不启用缓存）。");
+                    return response.Data;
+                }
+
+                response.Data = log.Replace("\r\n", "<br />").Replace("\n", "<br />");
+                return response.Data;
             });
         }
     }

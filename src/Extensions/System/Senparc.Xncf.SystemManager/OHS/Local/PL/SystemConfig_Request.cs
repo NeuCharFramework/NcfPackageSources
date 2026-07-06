@@ -37,4 +37,12 @@ namespace Senparc.Xncf.SystemManager.OHS.Local.PL
         [Description("NeuChar AppSecret||可在 https://www.neuchar.com/Developer/Developer 页面看到 Secret，请勿泄露 Secret！")]
         public string AppSecret { get; set; }
     }
+
+    public class SystemConfig_GetRequestTempLogRequest : FunctionAppRequestBase
+    {
+        [Required]
+        [MaxLength(200)]
+        [Description("RequestTempId||调用 AppService 返回的 requestTempId，例如：RequestTempId-639189862069965960-fc2ab5f5")]
+        public string RequestTempId { get; set; }
+    }
 }

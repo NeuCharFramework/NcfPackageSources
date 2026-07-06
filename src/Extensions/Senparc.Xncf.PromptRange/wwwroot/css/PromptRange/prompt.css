@@ -2151,6 +2151,10 @@
     background: #fafcff;
 }
 
+.contentRow_embedding .embedding-card {
+    margin-right: 160px; /* 避开右侧缩略滚动条浮层，保证查询按钮可点击 */
+}
+
 .audio-player {
     width: 100%;
     max-width: 520px;
