@@ -1,11 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.0.1</Version>
+		<TargetFramework>net10.0</TargetFramework>
+
+		<Version>0.0.2</Version>
 		<PackageReleaseNotes>
 		  [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 		  1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
+		  [2026-07-07] v0.0.2 Dependency updates from upstream modules
+		  1、Dependency update from Senparc.Xncf.AIKernel to 0.13.5-preview4
+		  2、Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
+		  3、Dependency update from Senparc.Xncf.SystemManager to 0.14.2-preview2
 </PackageReleaseNotes>
 		<Configurations>Debug;Release;TemplateRelease</Configurations>
 		<ImplicitUsings>enable</ImplicitUsings>

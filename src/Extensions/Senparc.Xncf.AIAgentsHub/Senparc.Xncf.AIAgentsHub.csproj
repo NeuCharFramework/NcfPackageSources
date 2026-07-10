@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.12.1-preview1</Version>
+    <Version>0.12.2-preview2</Version>
     <AssemblyName>Senparc.Xncf.AIAgentsHub</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIAgentsHub</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -19,7 +19,7 @@
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
 			v0.1.0 创世
-            [2024-08-06] v0.6.3.0-preview1 update Senparc.AI.Kernel
+			[2024-08-06] v0.6.3.0-preview1 update Senparc.AI.Kernel
 			[2024-08-31] v0.7.0-preview1 PromptRange 支持 Markdown 输出格式展示
 			[2024-09-03] v0.7.1-preview1 PromptRange 结果提供“复制”功能
 			[2024-09-04] v0.7.2-preview1 PromptRange 完善结果显示样式，添加“复制”功能
@@ -47,9 +47,12 @@
 			[2025-04-29] v0.11.7-preview1 Update CO2NET and AIKernel
 			[2025-05-18] v0.11.8-preview1 Update Installation
 			[2025-06-20] v0.11.9-preview1 Add MCP functions in XncfRegisterBase class
-
-				[2025-11-01] update basic libraries, including Senparc.AI
-      [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+			[2025-11-01] update basic libraries, including Senparc.AI
+			[2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+			[2026-07-07] v0.12.2-preview2 Dependency updates from upstream modules
+			1、Dependency update from Senparc.Xncf.AIKernel to 0.13.5-preview4
+			2、Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
+			3、Dependency update from Senparc.Xncf.SystemManager to 0.14.2-preview2
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

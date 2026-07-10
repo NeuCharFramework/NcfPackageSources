@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.36.4-preview3</Version>
+    <Version>0.36.5-preview4</Version>
     <LangVersion>latest</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -87,6 +87,9 @@
 			[2026-07-05] v0.36.4-preview3 重构系统配置初始化与更新流程并统一模型处理，补充配置与工程实现细节
 			1、重构系统配置初始化与更新流程并统一模型处理
 			2、补充配置与工程实现细节
+			[2026-07-07] v0.36.5-preview4 Dependency updates from upstream modules
+			1、Dependency update from Senparc.Xncf.AIKernel to 0.13.5-preview4
+			2、Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
