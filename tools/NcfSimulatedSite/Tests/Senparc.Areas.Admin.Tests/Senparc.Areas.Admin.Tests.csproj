@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
+    <Version>0.0.1</Version>
+    <PackageReleaseNotes>
+[2026-07-07] v0.0.1 Dependency updates from upstream modules
+1、Dependency update from Senparc.Areas.Admin to 0.0.5
+</PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 

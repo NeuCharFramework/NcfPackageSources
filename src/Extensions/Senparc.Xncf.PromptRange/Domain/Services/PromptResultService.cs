@@ -15,12 +15,20 @@
 
     修改标识：Senparc - 20260705
     修改描述：v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3
+
+    修改标识：Senparc - 20260707
+    修改描述：v0.16.5-preview4 增强 Embedding 请求兼容处理并优化向量检索稳定性
+
+    修改标识：Senparc - 20260715
+    修改描述：v0.16.5-preview4 升级 Senparc.AI 至 0.27.3 与 Senparc.AI.AgentKernel 至 0.1.10
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.VectorData;
 using OpenAI.Audio;
+using OpenAI.Embeddings;
 using Senparc.AI;
 using Senparc.AI.AgentKernel;
 using Senparc.AI.AgentKernel.Handlers;
@@ -56,6 +64,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services
@@ -75,6 +84,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         private const int DefaultTextToImageHeight = 1024;
         private const int DefaultEmbeddingSearchTopK = 3;
         private const int MaxEmbeddingSearchTopK = 20;
+        private static long _embeddingSourceCounter = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         private static readonly JsonSerializerOptions PromptResultJsonSerializerOptions = new(JsonSerializerDefaults.Web);
 
         // private readonly RepositoryBase<PromptItem> _promptItemRepository;
@@ -775,7 +785,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 ?? throw new NcfExceptionBase($"未找到 VectorDB（ID={vectorDbId}）");
             var vectorDto = _aiVectorService.Value.Mapper.Map<AIVectorDto>(vectorDb);
 
-            var collectionName = BuildEmbeddingCollectionName(embeddingOptions.CollectionName, promptItem);
+            var collectionName = BuildEmbeddingCollectionName(embeddingOptions.CollectionName, promptItem, model);
             var searchTopK = NormalizeEmbeddingSearchTopK(embeddingOptions.SearchTopK);
             var searchQuery = embeddingOptions.SearchQuery?.Trim();
 
@@ -792,10 +802,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     .IWantTo(aiSettings)
                     .ConfigTextEmbeddingModel(runnerName, collectionName)
                     .BuildKernel();
+                ApplyEmbeddingRequestCompatibility(iWantToRun, model, scene);
 
                 var store = iWantToRun.CreateTextSearchStore();
 
-                var sourceId = (ulong)Math.Abs(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
+                var sourceId = CreateEmbeddingSourceId();
                 var sourceName = $"{promptItem.FullVersion}-doc-{sourceId}";
                 await store.UpsertDocumentsAsync(new List<TextSearchDocument>
                 {
@@ -2036,6 +2047,7 @@ Apple
                 .IWantTo(aiSettings)
                 .ConfigTextEmbeddingModel(runnerName, collectionName)
                 .BuildKernel();
+            ApplyEmbeddingRequestCompatibility(iWantToRun, model, scene);
 
             var store = iWantToRun.CreateTextSearchStore();
             await store.UpsertDocumentsAsync(new List<TextSearchDocument>
@@ -2098,10 +2110,63 @@ Apple
                 .IWantTo(aiSettings)
                 .ConfigTextEmbeddingModel(runnerName, collectionName)
                 .BuildKernel();
+            ApplyEmbeddingRequestCompatibility(iWantToRun, model, scene);
 
             var store = iWantToRun.CreateTextSearchStore();
             var searchResults = await store.SearchAsync(query, topK);
             return MapTextEmbeddingSearchHits(searchResults);
+        }
+
+        private static void ApplyEmbeddingRequestCompatibility(IWantToRun iWantToRun, AIModelDto model, string scene)
+        {
+            if (iWantToRun?.Kernel?.EmbeddingClient is not EmbeddingClient embeddingClient)
+            {
+                return;
+            }
+
+            if (SupportsEmbeddingDimensionsParameter(model))
+            {
+                return;
+            }
+
+            // 某些模型（例如 text-embedding-ada-002）不支持请求中显式传入 dimensions。
+            // 仍保留 Kernel.EmbeddingDimensions 用于向量库定义，但请求时改为不传该参数。
+            iWantToRun.Kernel.EmbeddingGenerator = embeddingClient.AsIEmbeddingGenerator(null);
+            SenparcTrace.SendCustomLog(
+                "PromptRange.AI.Embedding",
+                $"{scene} 检测到模型不支持 dimensions 请求参数，已切换为无 dimensions 请求。Model={BuildModelDiagnosticInfo(model)}");
+        }
+
+        private static bool SupportsEmbeddingDimensionsParameter(AIModelDto model)
+        {
+            if (model == null)
+            {
+                return false;
+            }
+
+            var hints = new[]
+            {
+                model.ModelId,
+                model.DeploymentName,
+                model.Alias
+            };
+
+            foreach (var hint in hints)
+            {
+                if (string.IsNullOrWhiteSpace(hint))
+                {
+                    continue;
+                }
+
+                var normalized = hint.Trim().ToLowerInvariant();
+                if (normalized.Contains("text-embedding-3-small")
+                    || normalized.Contains("text-embedding-3-large"))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static List<PromptTextEmbeddingSearchHitPayload> MapTextEmbeddingSearchHits(IEnumerable<TextSearchDocument> hits)
@@ -2121,12 +2186,12 @@ Apple
             }).ToList();
         }
 
-        private static string BuildEmbeddingCollectionName(string rawCollectionName, PromptItemDto promptItem)
+        private static string BuildEmbeddingCollectionName(string rawCollectionName, PromptItemDto promptItem, AIModelDto model)
         {
             var source = rawCollectionName;
             if (string.IsNullOrWhiteSpace(source))
             {
-                source = $"PromptRange_{promptItem?.RangeName}_{promptItem?.Tactic}";
+                source = $"PromptRange_{promptItem?.RangeName}_{promptItem?.Tactic}_{BuildEmbeddingModelCollectionSuffix(model)}";
             }
 
             var normalized = Regex.Replace(source.Trim(), @"[^\w\-\.:]", "_");
@@ -2136,6 +2201,43 @@ Apple
             }
 
             return normalized.Length > 128 ? normalized.Substring(0, 128) : normalized;
+        }
+
+        private static string BuildEmbeddingModelCollectionSuffix(AIModelDto model)
+        {
+            var raw = model?.ModelId;
+            if (string.IsNullOrWhiteSpace(raw))
+            {
+                raw = model?.DeploymentName;
+            }
+            if (string.IsNullOrWhiteSpace(raw))
+            {
+                raw = model?.Alias;
+            }
+            if (string.IsNullOrWhiteSpace(raw))
+            {
+                return "default";
+            }
+
+            var normalized = Regex.Replace(raw.Trim(), @"[^\w\-\.:]", "_");
+            if (string.IsNullOrWhiteSpace(normalized))
+            {
+                normalized = "default";
+            }
+
+            return normalized.Length > 32 ? normalized.Substring(0, 32) : normalized;
+        }
+
+        private static ulong CreateEmbeddingSourceId()
+        {
+            var next = Interlocked.Increment(ref _embeddingSourceCounter);
+            if (next <= 0)
+            {
+                next = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                Interlocked.Exchange(ref _embeddingSourceCounter, next);
+            }
+
+            return (ulong)next;
         }
 
         private static int NormalizeEmbeddingSearchTopK(int? rawTopK)

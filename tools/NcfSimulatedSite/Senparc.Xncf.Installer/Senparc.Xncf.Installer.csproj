@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.3.1</Version>
+		<Version>0.3.2</Version>
 		<AssemblyName>Senparc.Xncf.Installer</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Installer</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -19,11 +19,14 @@
     <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>-->
 		<PackageReleaseNotes>
 			v0.3 创世
-		
 			[2026-07-02] v0.3.1 增强多智能体群聊流程、容错与任务调度能力，优化 AgentsManager 前端界面与历史消息展示效果
 			1、增强多智能体群聊流程、容错与任务调度能力
 			2、优化 AgentsManager 前端界面与历史消息展示效果
 			3、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
+			[2026-07-07] v0.3.2 Dependency updates from upstream modules
+			1、Dependency update from Senparc.Xncf.SystemManager to 0.14.2-preview2
+			2、Dependency update from Senparc.Areas.Admin to 0.0.5
+			3、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>

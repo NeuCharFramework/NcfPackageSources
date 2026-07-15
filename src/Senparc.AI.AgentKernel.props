@@ -1,9 +1,9 @@
 <Project>
   <PropertyGroup>
-    <SenparcAiVersion>0.27.2</SenparcAiVersion>
+    <SenparcAiVersion>0.27.3</SenparcAiVersion>
     <SenparcAiKernelVersion>0.29.0</SenparcAiKernelVersion>
     <SenparcAiAgentsVersion>0.7.2</SenparcAiAgentsVersion>
-    <SenparcAiAgentKernelVersion>0.1.9.1</SenparcAiAgentKernelVersion>
+    <SenparcAiAgentKernelVersion>0.1.10</SenparcAiAgentKernelVersion>
     <MicrosoftAgentsAiVersion>1.8.0</MicrosoftAgentsAiVersion>
   </PropertyGroup>
   <ItemGroup>

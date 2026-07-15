@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.2.2-preview1</Version>
+    <Version>0.2.3-preview2</Version>
     <AssemblyName>Senparc.Xncf.KnowledgeBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.KnowledgeBase</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -22,10 +22,13 @@
 		[2025-07-27] v0.1.5-preview1s update Knowledge Base
 		[2025-11-01] update basic libraries, including Senparc.AI
 		[2025-01-07] v0.1.8-preview.1 Reset all database migrations
-    [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
-    [2026-07-02] v0.2.2-preview1 新增 PromptRange 与 AgentsManager 使用记录能力，升级 Senparc.AI.AgentKernel 并完成兼容性适配
-    1、新增 PromptRange 与 AgentsManager 使用记录能力
-    2、升级 Senparc.AI.AgentKernel 并完成兼容性适配
+		[2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+		[2026-07-02] v0.2.2-preview1 新增 PromptRange 与 AgentsManager 使用记录能力，升级 Senparc.AI.AgentKernel 并完成兼容性适配
+		1、新增 PromptRange 与 AgentsManager 使用记录能力
+		2、升级 Senparc.AI.AgentKernel 并完成兼容性适配
+		[2026-07-07] v0.2.3-preview2 Dependency updates from upstream modules
+		1、Dependency update from Senparc.Xncf.AIKernel to 0.13.5-preview4
+		2、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

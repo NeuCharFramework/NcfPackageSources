@@ -1,6 +1,12 @@
 @model Senparc.Ncf.AreaBase.Admin.IAdminPageModelBase
 @{
-    var currentAccountName = string.IsNullOrWhiteSpace(Model?.UserName) ? "-" : Model.UserName;
+    var currentAccountName = !string.IsNullOrWhiteSpace(User?.Identity?.Name)
+        ? User.Identity.Name
+        : !string.IsNullOrWhiteSpace(Model?.AdminWorkContext?.UserName)
+            ? Model.AdminWorkContext.UserName
+            : !string.IsNullOrWhiteSpace(Model?.UserName)
+                ? Model.UserName
+                : "-";
 }
 <!-- top navigation -->
 <div class="top_nav">

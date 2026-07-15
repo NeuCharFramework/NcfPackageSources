@@ -5,7 +5,13 @@
     var currentCulture = System.Globalization.CultureInfo.CurrentUICulture.Name;
     var webLoginExpireMinutes = Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminAuthConfig.DefaultAdminWebLoginExpireMinutes;
     var jwtExpireMinutes = Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminAuthConfig.DefaultBackendJwtExpireMinutes;
-    var currentAccountName = string.IsNullOrWhiteSpace(Model?.UserName) ? "-" : Model.UserName;
+    var currentAccountName = !string.IsNullOrWhiteSpace(User?.Identity?.Name)
+        ? User.Identity.Name
+        : !string.IsNullOrWhiteSpace(Model?.AdminWorkContext?.UserName)
+            ? Model.AdminWorkContext.UserName
+            : !string.IsNullOrWhiteSpace(Model?.UserName)
+                ? Model.UserName
+                : "-";
     try
     {
         webLoginExpireMinutes = AdminUserInfoService.GetAdminWebLoginExpireMinutes();

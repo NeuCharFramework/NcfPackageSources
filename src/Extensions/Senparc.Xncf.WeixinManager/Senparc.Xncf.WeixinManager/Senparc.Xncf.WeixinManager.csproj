@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<RazorLangVersion>3.0</RazorLangVersion>-->
-    <Version>0.22.2-preview1</Version>
+    <Version>0.22.3-preview2</Version>
     <!--<GenerateProgramFile>false</GenerateProgramFile>-->
     <!--https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1511#issuecomment-696682962-->
     <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
@@ -62,11 +62,13 @@
 		[2025-08-18] v0.21.0-preview.1 feat: support for McpRouter of Weixin
 		[2025-08-19] v0.21.1-preview.1 fix: Set ApiBind DefaultRequestMethod to GET
 		[2026-03-24] v0.21.5-preview.1 update Senparc.AI.Kernel to v0.28.0 and Senparc.Weixin.MP to v16.24.2
-
-				[2025-11-01] update basic libraries, including Senparc.AI
-				[2026-07-02] v0.22.2-preview1 支持流式输出并优化交互体验，新增 PromptRange 与 AgentsManager 使用记录能力
-				1、支持流式输出并优化交互体验
-				2、新增 PromptRange 与 AgentsManager 使用记录能力
+		[2025-11-01] update basic libraries, including Senparc.AI
+		[2026-07-02] v0.22.2-preview1 支持流式输出并优化交互体验，新增 PromptRange 与 AgentsManager 使用记录能力
+		1、支持流式输出并优化交互体验
+		2、新增 PromptRange 与 AgentsManager 使用记录能力
+		[2026-07-07] v0.22.3-preview2 Dependency updates from upstream modules
+		1、Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
+		2、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
 </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

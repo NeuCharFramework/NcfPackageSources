@@ -11,7 +11,15 @@
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
     修改标识：Senparc - 20260705
-    修改描述：v0.13.4-preview3 修复 AI 模型类型展示顺序----------------------------------------------------------------*/
+    修改描述：v0.13.4-preview3 修复 AI 模型类型展示顺序
+
+    修改标识：Senparc - 20260707
+    修改描述：v0.13.5-preview4 统一模型名称构建并补齐 Embedding 维度兼容处理
+
+    修改标识：Senparc - 20260715
+    修改描述：v0.13.5-preview4 升级 Senparc.AI 至 0.27.3 与 Senparc.AI.AgentKernel 至 0.1.10
+
+----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +42,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.AIKernel.Domain.Services
@@ -132,6 +141,8 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     default:
                         throw new Exception($"尚未支持：{aiModel.ConfigModelType} 模型在 BuildSenparcAiSetting 中的处理");
                 }
+
+                ApplyEmbeddingModelMetadata(aiModel, modelName);
                 return modelName;
             };
 
@@ -339,6 +350,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 AiPlatform = llModel.AiPlatform
             };
             var normalizedEndpoint = NormalizeEndpoint(llModel.AiPlatform, llModel.Endpoint);
+            var modelName = BuildUnifiedModelName(llModel);
 
             switch (aiSettings.AiPlatform)
             {
@@ -348,14 +360,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                         ApiKey = llModel.ApiKey,
                         NeuCharAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
                         NeuCharEndpoint = normalizedEndpoint,
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
+                        ModelName = modelName
                     };
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
                     {
@@ -363,14 +368,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                         AzureOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
                         AzureEndpoint = normalizedEndpoint,
                         DeploymentName = llModel.DeploymentName,
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
+                        ModelName = modelName
                     };
                     break;
                 case AiPlatform.AzureOpenAI:
@@ -380,28 +378,14 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                         AzureOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
                         AzureEndpoint = normalizedEndpoint,
                         DeploymentName = llModel.DeploymentName,
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
+                        ModelName = modelName
                     };
                     break;
                 case AiPlatform.HuggingFace:
                     aiSettings.HuggingFaceKeys = new HuggingFaceKeys()
                     {
                         Endpoint = normalizedEndpoint,
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
+                        ModelName = modelName
                     };
                     break;
                 case AiPlatform.OpenAI:
@@ -409,14 +393,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     {
                         ApiKey = llModel.ApiKey,
                         OrganizationId = llModel.OrganizationId,
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
+                        ModelName = modelName
                     };
                     break;
                 case AiPlatform.FastAPI:
@@ -425,14 +402,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                         ApiKey = llModel.ApiKey,
                         Endpoint = normalizedEndpoint,
                         //OrganizationId = aiModel.OrganizationId
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
+                        ModelName = modelName
                     };
                     break;
                 case AiPlatform.Ollama:
@@ -440,14 +410,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     {
                         Endpoint = normalizedEndpoint,
                         //OrganizationId = aiModel.OrganizationId
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
+                        ModelName = modelName
                     };
                     break;
                 case AiPlatform.DeepSeek:
@@ -455,14 +418,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     {
                         ApiKey = llModel.ApiKey,
                         Endpoint = normalizedEndpoint,
-                        ModelName = new AI.Entities.Keys.ModelName()
-                        {
-                            Chat = llModel.ModelId,
-                            TextCompletion = llModel.ModelId,
-                            Embedding = llModel.ModelId,
-                            ImageToText = llModel.ModelId,
-                            TextToImage = llModel.ModelId
-                        }
+                        ModelName = modelName
                     };
                     break;
                 default:
@@ -471,6 +427,109 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
 
 
             return aiSettings;
+        }
+
+        private static ModelName BuildUnifiedModelName(AIModelDto aiModel)
+        {
+            var modelName = new ModelName()
+            {
+                Chat = aiModel.ModelId,
+                TextCompletion = aiModel.ModelId,
+                Embedding = aiModel.ModelId,
+                ImageToText = aiModel.ModelId,
+                TextToImage = aiModel.ModelId,
+                TextToSpeech = aiModel.ModelId,
+                SpeechToText = aiModel.ModelId
+            };
+
+            ApplyEmbeddingModelMetadata(aiModel, modelName);
+            return modelName;
+        }
+
+        private static void ApplyEmbeddingModelMetadata(AIModelDto aiModel, ModelName modelName)
+        {
+            if (aiModel == null || modelName == null || string.IsNullOrWhiteSpace(modelName.Embedding))
+            {
+                return;
+            }
+
+            var embeddingDimensions = ResolveEmbeddingDimensions(aiModel);
+            if (embeddingDimensions > 0)
+            {
+                modelName.EmbeddingDimensions = embeddingDimensions;
+            }
+        }
+
+        private static int ResolveEmbeddingDimensions(AIModelDto aiModel)
+        {
+            if (aiModel == null)
+            {
+                return 0;
+            }
+
+            if (TryParseEmbeddingDimensionsFromNote(aiModel.Note, out var noteDimensions))
+            {
+                return noteDimensions;
+            }
+
+            var hints = new[]
+            {
+                aiModel.ModelId,
+                aiModel.DeploymentName,
+                aiModel.Alias
+            };
+
+            foreach (var hint in hints)
+            {
+                if (string.IsNullOrWhiteSpace(hint))
+                {
+                    continue;
+                }
+
+                var normalized = hint.Trim().ToLowerInvariant();
+
+                if (normalized.Contains("text-embedding-3-large"))
+                {
+                    return 3072;
+                }
+
+                if (normalized.Contains("text-embedding-3-small") || normalized.Contains("text-embedding-ada-002"))
+                {
+                    return 1536;
+                }
+
+                if (normalized.Contains("nomic-embed-text"))
+                {
+                    return 768;
+                }
+
+                if (normalized.Contains("mxbai-embed-large"))
+                {
+                    return 1024;
+                }
+            }
+
+            // TextEmbedding 模型兜底，避免 AgentKernel 在创建 EmbeddingGenerator 时抛异常。
+            return aiModel.ConfigModelType == ConfigModelType.TextEmbedding ? 1536 : 0;
+        }
+
+        private static bool TryParseEmbeddingDimensionsFromNote(string note, out int dimensions)
+        {
+            dimensions = 0;
+            if (string.IsNullOrWhiteSpace(note))
+            {
+                return false;
+            }
+
+            var match = Regex.Match(note, @"(?i)\bembedding\s*dimensions?\s*[:=]\s*(\d{2,5})\b");
+            if (!match.Success)
+            {
+                match = Regex.Match(note, @"(?i)\bdimensions?\s*[:=]\s*(\d{2,5})\b");
+            }
+
+            return match.Success
+                   && int.TryParse(match.Groups[1].Value, out dimensions)
+                   && dimensions > 0;
         }
 
         private static string NormalizeEndpoint(AiPlatform platform, string endpoint)

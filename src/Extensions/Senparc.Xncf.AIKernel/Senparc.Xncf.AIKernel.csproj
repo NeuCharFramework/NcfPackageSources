@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.13.4-preview3</Version>
+    <Version>0.13.5-preview4</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -65,6 +65,10 @@
 		1、修复 AI 模型类型展示顺序
 		2、重构系统配置初始化与更新流程并统一模型处理
 		3、统一后台模型配置与模型类型映射处理，增强模型初始化与异常处理一致性
+		[2026-07-07] v0.13.5-preview4 统一模型名称构建并补齐 Embedding 维度兼容处理
+		1、重构 AIModelService 的统一 ModelName 组装逻辑，补齐 TextToSpeech 与 SpeechToText 模型字段
+		2、新增 EmbeddingDimensions 自动解析与兜底策略，提升 embedding 模型兼容性与稳定性
+		3、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
 </PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>

@@ -3,12 +3,15 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 
-		<Version>0.0.3</Version>
+		<Version>0.0.4</Version>
 		<PackageReleaseNotes>
 		  [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 		  1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 		  [2026-07-05] v0.0.2 Dependency update from Senparc.Xncf.AgentsManager to 0.11.1-preview3
 		  [2026-07-05] v0.0.3 Dependency update from Senparc.Xncf.AgentsManager to 0.11.2-preview4
+		  [2026-07-07] v0.0.4 Dependency updates from upstream modules
+		  1、Dependency update from Senparc.Xncf.AgentsManager to 0.11.3-preview5
+		  2、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
 </PackageReleaseNotes>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
