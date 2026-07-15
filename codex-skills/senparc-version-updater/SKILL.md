@@ -1,6 +1,6 @@
 ---
 name: senparc-version-updater
-description: Update version metadata for Senparc-prefixed .NET projects. Use when Codex needs to update a package version in .csproj files (preferring .net10+ variants), summarize project changes since the merge-base against master/main, add standardized Chinese changelog headers to changed .cs files, append PackageReleaseNotes entries, and recursively bump versions for projects that reference the updated project.
+description: Update version metadata for Senparc-prefixed .NET projects. Use when Codex needs to update package versions in .csproj files (preferring .net10+ variants), propagate changed shared .props imports to all importing projects, summarize project changes since the merge-base against master/main, add standardized Chinese changelog headers to changed .cs files, append PackageReleaseNotes entries, and recursively bump versions for referencing projects.
 ---
 
 # Senparc Version Updater
@@ -26,9 +26,10 @@ Use the output JSON as the source of truth for:
 1. The selected primary `.csproj` to edit.
 2. Changed files in the current update scope (`comparison_base..HEAD` plus uncommitted) across the entire repository, not just the primary project directory.
 3. Changed `.cs` files that must receive header updates (repository-wide).
-4. `.csproj` files mapped from changed `.cs` files (`changed_csprojs`) that must receive direct project updates.
-5. Recursive dependent `.csproj` files that need passive version bumps.
-6. Comparison baseline metadata (`master/main` branch ref and merge-base commit).
+4. Changed `.props` files and all projects that import them directly or through another `.props` file (`changed_props_importers`).
+5. `.csproj` files mapped from changed `.cs` files or changed `.props` imports (`changed_csprojs`) that must receive direct project updates.
+6. Direct update roots (`dependency_roots`) and recursive dependent `.csproj` files that need passive version bumps.
+7. Comparison baseline metadata (`master/main` branch ref and merge-base commit).
 
 Special skip rules for header updates:
 
@@ -103,18 +104,27 @@ If the file already has the block, keep historical entries and append only one n
 Always skip `*.Generated.cs` for header insertion.
 `changed_cs_files` is generated from the repository-wide comparison window, so this step must not filter to the primary project directory.
 
-### 4) Update `.csproj` For All Changed Projects
+### 4) Resolve Changed `.props` Imports And Update All Changed Projects
 
-For all projects in `changed_csprojs` (including `primary_csproj`):
+For every changed `.props` file:
+
+1. Resolve explicit `<Import Project="...props" />` paths, including `$(MSBuildThisFileDirectory)` and `$(MSBuildProjectDirectory)`.
+2. Follow `.props` -> `.props` imports transitively until all importing `.csproj` files are found.
+3. Treat every importing project as directly changed, even if none of its own `.cs` files changed.
+4. Add these projects to `changed_csprojs`, `dependency_roots`, and `changed_csproj_to_props_files`.
+5. A changed `.props` file does not receive a C# header block; its functional effect must be recorded in every importing project's `<PackageReleaseNotes>`.
+
+For all projects in `changed_csprojs` (from changed `.cs` files or changed `.props` imports):
 
 1. Ensure project version metadata and release notes are updated for this window.
 2. For the same unmerged window (`comparison_base..HEAD`), version can only bump once per project.
 3. If new commits are added before merge, merge details into the same version's release-note block instead of creating a new version entry.
 4. If any `.cs` file is edited in this run (including header-only edits), its mapped project in `changed_csprojs` must receive a release-note merge/update in the current version block (no silent skip).
+5. If a shared `.props` file changes package/version properties, describe the resulting dependency or compatibility change functionally in each importing project; do not use generic process text.
 
 ### 5) Append `<PackageReleaseNotes>` In Selected `.csproj`
 
-In the selected primary `.csproj` (must also satisfy Step 4):
+In every `.csproj` in `changed_csprojs` (the selected primary must also satisfy Step 4 when affected):
 
 1. Append new lines to existing `<PackageReleaseNotes>` content.
 2. Keep the same leading spaces as the previous line.
@@ -138,7 +148,7 @@ If `<PackageReleaseNotes>` does not exist, create it under the first `<PropertyG
 
 ### 6) Propagate Version Bumps To Referencing Projects
 
-For all projects in `dependent_csprojs`:
+For all projects in `dependent_csprojs`, starting from every project in `dependency_roots`:
 
 1. Update version with passive bump policy (`patch` unless explicit override).
 2. Append a passive release note item:
@@ -146,23 +156,24 @@ For all projects in `dependent_csprojs`:
 3. If a dependent project lacks `<Version>`, create it under the first `<PropertyGroup>` before writing release notes.
 4. Continue recursively for projects referencing those projects.
 
-Process in dependency layers from nearest dependents to farthest dependents, and avoid cycles with a visited set.
+Process the union of dependency layers from all direct roots, from nearest dependents to farthest dependents, and avoid cycles with a visited set. Do not calculate dependents from an unrelated `primary_csproj` when other projects are the actual changed roots.
 
 ### 7) Validate Before Finish
 
 Validate:
 
 1. Every eligible file in `changed_cs_files` (after applying special skip rules) contains a valid changelog block.
-2. Every `.csproj` in `changed_csprojs` has updated version/release notes for current window.
-3. All recursive dependents from scanner output are covered.
-4. In every edited `.csproj`, `<Version>` is located after `<TargetFramework>` or `<TargetFrameworks>`.
-5. In every edited `.csproj`, `<PackageReleaseNotes>` is located after `<Version>`.
-6. In every edited `.csproj`, lines appended to `<PackageReleaseNotes>` use the same indentation as the previous note line.
-7. In every edited `.csproj`, `<PackageReleaseNotes>` contains no blank line.
-8. In every edited `.csproj`, resulting `<Version>` is not lower than its pre-update `<Version>`.
-9. All commits in `comparison_base..HEAD` are reflected by updated files/projects in this workflow.
-10. For every edited `.cs` file in this run, its mapped `.csproj` has a release-note merge/update in current window version block.
-11. Optional: run project build/tests before commit.
+2. Every changed `.props` file is mapped to all direct and transitive importing projects in `changed_props_importers`.
+3. Every `.csproj` in `changed_csprojs` (including `.props` importers) has updated version/release notes for current window.
+4. All recursive dependents from every `dependency_roots` project are covered.
+5. In every edited `.csproj`, `<Version>` is located after `<TargetFramework>` or `<TargetFrameworks>`.
+6. In every edited `.csproj`, `<PackageReleaseNotes>` is located after `<Version>`.
+7. In every edited `.csproj`, lines appended to `<PackageReleaseNotes>` use the same indentation as the previous note line.
+8. In every edited `.csproj`, `<PackageReleaseNotes>` contains no blank line.
+9. In every edited `.csproj`, resulting `<Version>` is not lower than its pre-update `<Version>`.
+10. All commits in `comparison_base..HEAD` are reflected by updated files/projects in this workflow.
+11. For every edited `.cs` file in this run, its mapped `.csproj` has a release-note merge/update in current window version block.
+12. Optional: run project build/tests before commit.
 
 ## Suggested Command Sequence
 
@@ -184,6 +195,12 @@ jq -r '.changed_csprojs[]' /tmp/senparc-version-scan.json
 
 # 4.1) Inspect mapping from changed .cs files to target .csproj
 jq -r '.changed_csproj_to_cs_files | to_entries[] | .key as $p | .value[] | "\($p)\t\(.path)"' /tmp/senparc-version-scan.json
+
+# 4.2) Inspect changed .props files and all importing projects
+jq -r '.changed_props_importers | to_entries[] | .key as $props | .value[] | "\($props)\t\(.)"' /tmp/senparc-version-scan.json
+
+# 4.3) Inspect direct dependency roots (.cs changes + .props importers)
+jq -r '.dependency_roots[]' /tmp/senparc-version-scan.json
 
 # 5) Inspect passive dependent projects
 jq -r '.dependent_csprojs[]' /tmp/senparc-version-scan.json
