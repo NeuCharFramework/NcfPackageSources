@@ -32,9 +32,12 @@
 ## 受影响项目覆盖规则
 
 1. 需要根据 `changed_cs_files` 反向映射出对应项目集合（`changed_csprojs`）。
-2. `changed_csprojs` 中的每个项目都必须更新自身 `.csproj`（版本与发布说明）。
-3. 不允许只更新单一主项目并忽略其他已变更代码所在项目。
-4. 本次执行中只要编辑了 `.cs` 文件（包含仅头注释更新），其映射到的项目都必须同步合并更新当前窗口版本号下的 `<PackageReleaseNotes>`（禁止只改 `.cs` 不改 `.csproj`）。
+2. 对每个 changed `.props` 文件，必须解析显式 `<Import Project="..." />`，支持 `$(MSBuildThisFileDirectory)`、`$(MSBuildProjectDirectory)`，并递归跟踪 `.props` 引用链。
+3. 直接或间接导入 changed `.props` 的所有项目都必须加入 `changed_csprojs`，即使这些项目自身没有 `.cs` 文件变化。
+4. `changed_csprojs` 中的每个项目都必须更新自身 `.csproj`（版本与发布说明）。
+5. 不允许只更新单一主项目并忽略其他已变更代码所在项目或 `.props` 导入项目。
+6. 本次执行中只要编辑了 `.cs` 文件（包含仅头注释更新），其映射到的项目都必须同步合并更新当前窗口版本号下的 `<PackageReleaseNotes>`（禁止只改 `.cs` 不改 `.csproj`）。
+7. `.props` 文件不添加 C# 文件头；其依赖版本、兼容性或构建行为影响必须写入每个导入项目的功能性发布说明。
 
 ## 预览版处理
 
@@ -82,8 +85,9 @@
 
 ## 递归依赖升级规则
 
-1. 主项目按实际改动升级（major/minor/patch）。
+1. 所有直接变更项目（changed `.cs` 所属项目 + changed `.props` 导入项目）按实际改动升级（major/minor/patch）。
 2. 被动依赖项目默认执行 `patch` 升级。
 3. 被动依赖项目若缺失 `<Version>`，需先补齐 `<Version>` 后再追加发布说明。
 4. 若被动项目再次被其他项目引用，继续递归升级，直到链路结束。
 5. 使用 visited 集合避免循环引用导致死循环。
+6. 递归计算必须从全部直接变更项目的并集开始，不得只从命令行指定但实际未变更的 `primary_csproj` 开始。

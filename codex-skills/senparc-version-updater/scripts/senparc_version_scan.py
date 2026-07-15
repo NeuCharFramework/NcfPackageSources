@@ -16,6 +16,8 @@ from pathlib import Path
 IGNORED_DIRS = {".git", ".idea", ".vs", ".vscode", "bin", "obj"}
 NET_FILENAME_RE = re.compile(r"\.net(?P<major>\d+)\.csproj$", re.IGNORECASE)
 NET_TFM_RE = re.compile(r"^net(?P<major>\d+)(?:\.\d+)?(?:[-].*)?$", re.IGNORECASE)
+MSBUILD_THIS_FILE_DIRECTORY_RE = re.compile(r"\$\(MSBuildThisFileDirectory\)", re.IGNORECASE)
+MSBUILD_PROJECT_DIRECTORY_RE = re.compile(r"\$\(MSBuildProjectDirectory\)", re.IGNORECASE)
 TIMESTAMP_TOKEN_RE = re.compile(
     r"\b\d{4}[-/]\d{1,2}[-/]\d{1,2}(?:[T ]\d{1,2}:\d{2}(?::\d{2})?(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?)?\b"
     r"|\b\d{1,2}:\d{2}(?::\d{2})?\b"
@@ -33,6 +35,7 @@ class CsprojInfo:
     path: Path
     tfm_majors: list[int]
     project_references: list[Path]
+    imported_props: list[Path]
     current_version: str | None
 
 
@@ -47,7 +50,8 @@ def run_git(root: Path, args: list[str]) -> tuple[int, str]:
         text=True,
         check=False,
     )
-    return proc.returncode, proc.stdout.strip()
+    # Preserve porcelain status' leading XY column; only remove record-ending newlines.
+    return proc.returncode, proc.stdout.rstrip("\r\n")
 
 
 def local_name(tag: str) -> str:
@@ -70,6 +74,46 @@ def extract_tfm_majors(raw_frameworks: list[str]) -> list[int]:
     return sorted(majors)
 
 
+def resolve_props_import(importer_path: Path, raw_project: str) -> Path | None:
+    value = raw_project.strip()
+    if not value:
+        return None
+
+    importer_dir = importer_path.parent.resolve()
+    value = MSBUILD_THIS_FILE_DIRECTORY_RE.sub(f"{importer_dir.as_posix()}/", value)
+    value = MSBUILD_PROJECT_DIRECTORY_RE.sub(importer_dir.as_posix(), value)
+    value = value.replace("\\", "/")
+
+    # Other MSBuild properties and wildcard imports cannot be resolved statically.
+    if "$(" in value or "@(" in value or "%(" in value or any(token in value for token in ("*", "?")):
+        return None
+
+    candidate = Path(value)
+    if not candidate.is_absolute():
+        candidate = importer_dir / candidate
+    candidate = candidate.resolve()
+    if candidate.suffix.lower() != ".props":
+        return None
+    return candidate
+
+
+def parse_imported_props(importer_path: Path, xml_root: ET.Element | None = None) -> list[Path]:
+    if xml_root is None:
+        try:
+            xml_root = ET.parse(importer_path).getroot()
+        except (ET.ParseError, OSError):
+            return []
+
+    imports: set[Path] = set()
+    for elem in xml_root.iter():
+        if local_name(elem.tag) != "Import":
+            continue
+        resolved = resolve_props_import(importer_path, elem.attrib.get("Project", ""))
+        if resolved is not None:
+            imports.add(resolved)
+    return sorted(imports)
+
+
 def parse_csproj(csproj_path: Path) -> CsprojInfo:
     tfm_values: list[str] = []
     references: list[Path] = []
@@ -78,7 +122,13 @@ def parse_csproj(csproj_path: Path) -> CsprojInfo:
     try:
         tree = ET.parse(csproj_path)
     except ET.ParseError:
-        return CsprojInfo(path=csproj_path, tfm_majors=[], project_references=[], current_version=None)
+        return CsprojInfo(
+            path=csproj_path,
+            tfm_majors=[],
+            project_references=[],
+            imported_props=[],
+            current_version=None,
+        )
 
     root = tree.getroot()
     for elem in root.iter():
@@ -99,6 +149,7 @@ def parse_csproj(csproj_path: Path) -> CsprojInfo:
         path=csproj_path.resolve(),
         tfm_majors=extract_tfm_majors(tfm_values),
         project_references=references,
+        imported_props=parse_imported_props(csproj_path, root),
         current_version=version,
     )
 
@@ -111,6 +162,16 @@ def discover_csproj_files(root: Path) -> list[Path]:
         if not path.is_file():
             continue
         result.append(path.resolve())
+    return sorted(result)
+
+
+def discover_props_files(root: Path) -> list[Path]:
+    result: list[Path] = []
+    for path in root.rglob("*.props"):
+        if any(part in IGNORED_DIRS for part in path.parts):
+            continue
+        if path.is_file():
+            result.append(path.resolve())
     return sorted(result)
 
 
@@ -418,10 +479,60 @@ def build_reverse_dependency_map(selected_by_dir: dict[Path, Path], info_by_path
     return reverse_map
 
 
-def compute_dependency_layers(primary: Path, reverse_map: dict[Path, set[Path]]) -> tuple[list[list[Path]], list[Path]]:
+def build_reverse_props_import_map(
+    csproj_paths: list[Path],
+    props_paths: list[Path],
+    selected_by_dir: dict[Path, Path],
+    info_by_path: dict[Path, CsprojInfo],
+) -> dict[Path, set[Path]]:
+    reverse_map: dict[Path, set[Path]] = defaultdict(set)
+
+    for csproj in csproj_paths:
+        selected = selected_by_dir.get(csproj.parent, csproj).resolve()
+        for imported_props in info_by_path[csproj].imported_props:
+            reverse_map[imported_props.resolve()].add(selected)
+
+    for props in props_paths:
+        for imported_props in parse_imported_props(props):
+            reverse_map[imported_props.resolve()].add(props.resolve())
+
+    return reverse_map
+
+
+def resolve_changed_props_importers(
+    changed_props: list[Path],
+    reverse_import_map: dict[Path, set[Path]],
+) -> dict[Path, set[Path]]:
+    result: dict[Path, set[Path]] = {}
+
+    for changed_props_path in changed_props:
+        affected_projects: set[Path] = set()
+        visited_props: set[Path] = {changed_props_path.resolve()}
+        current_layer: set[Path] = {changed_props_path.resolve()}
+
+        while current_layer:
+            next_layer: set[Path] = set()
+            for imported_file in current_layer:
+                for importer in reverse_import_map.get(imported_file, set()):
+                    if importer.suffix.lower() == ".csproj":
+                        affected_projects.add(importer.resolve())
+                    elif importer.suffix.lower() == ".props" and importer not in visited_props:
+                        visited_props.add(importer)
+                        next_layer.add(importer)
+            current_layer = next_layer
+
+        result[changed_props_path.resolve()] = affected_projects
+
+    return result
+
+
+def compute_dependency_layers(
+    roots: set[Path],
+    reverse_map: dict[Path, set[Path]],
+) -> tuple[list[list[Path]], list[Path]]:
     layers: list[list[Path]] = []
-    visited: set[Path] = {primary}
-    current_layer: set[Path] = {primary}
+    visited: set[Path] = {root.resolve() for root in roots}
+    current_layer: set[Path] = set(visited)
 
     while True:
         next_layer: set[Path] = set()
@@ -462,9 +573,16 @@ def main() -> int:
     if not csproj_paths:
         _stderr(f"No .csproj files found under: {root}")
         return 1
+    props_paths = discover_props_files(root)
 
     info_by_path = {path: parse_csproj(path) for path in csproj_paths}
     selected_by_dir, warnings = build_selected_csproj_map(csproj_paths, info_by_path)
+    reverse_props_import_map = build_reverse_props_import_map(
+        csproj_paths,
+        props_paths,
+        selected_by_dir,
+        info_by_path,
+    )
 
     requested = normalize_user_path(root, args.project)
     try:
@@ -493,6 +611,18 @@ def main() -> int:
     changed_cs_files: list[dict[str, str]] = []
     changed_csproj_targets: set[Path] = set()
     changed_csproj_to_cs_files: dict[Path, list[dict[str, str]]] = defaultdict(list)
+    changed_props_files = [rel for rel in changed_files if rel.lower().endswith(".props")]
+    changed_props_paths = [(root / rel).resolve() for rel in changed_props_files]
+    changed_props_importers = resolve_changed_props_importers(changed_props_paths, reverse_props_import_map)
+    changed_csproj_to_props_files: dict[Path, list[str]] = defaultdict(list)
+
+    for changed_props_path, importers in changed_props_importers.items():
+        rel_props = to_relative_path(root, changed_props_path)
+        for importer in importers:
+            importer = importer.resolve()
+            changed_csproj_targets.add(importer)
+            changed_csproj_to_props_files[importer].append(rel_props)
+
     for rel in changed_files:
         if not rel.lower().endswith(".cs"):
             continue
@@ -517,7 +647,8 @@ def main() -> int:
     changed_cs_files_in_primary_project = [item for item in changed_cs_files if path_is_under(item["path"], primary_project_rel)]
 
     reverse_map = build_reverse_dependency_map(selected_by_dir, info_by_path)
-    dependency_layers, dependents = compute_dependency_layers(primary, reverse_map)
+    dependency_roots = set(changed_csproj_targets) if changed_csproj_targets else {primary}
+    dependency_layers, dependents = compute_dependency_layers(dependency_roots, reverse_map)
 
     payload = {
         "root": root.resolve().as_posix(),
@@ -538,15 +669,25 @@ def main() -> int:
         },
         "changed_files": changed_files,
         "changed_cs_files": changed_cs_files,
+        "changed_props_files": changed_props_files,
         "changed_csprojs": [to_relative_path(root, p) for p in sorted(changed_csproj_targets)],
         "changed_csproj_to_cs_files": {
             to_relative_path(root, project): sorted(items, key=lambda item: item["path"])
             for project, items in sorted(changed_csproj_to_cs_files.items(), key=lambda kv: to_relative_path(root, kv[0]))
         },
+        "changed_props_importers": {
+            to_relative_path(root, props): [to_relative_path(root, project) for project in sorted(projects)]
+            for props, projects in sorted(changed_props_importers.items(), key=lambda kv: to_relative_path(root, kv[0]))
+        },
+        "changed_csproj_to_props_files": {
+            to_relative_path(root, project): sorted(set(items))
+            for project, items in sorted(changed_csproj_to_props_files.items(), key=lambda kv: to_relative_path(root, kv[0]))
+        },
         "changed_files_in_primary_project": changed_files_in_primary_project,
         "changed_cs_files_in_primary_project": changed_cs_files_in_primary_project,
         "commit_summaries": commit_summaries,
         "ignored_generated_cs_files": ignored_generated_cs_files,
+        "dependency_roots": [to_relative_path(root, p) for p in sorted(dependency_roots)],
         "dependent_layers": [[to_relative_path(root, p) for p in layer] for layer in dependency_layers],
         "dependent_csprojs": [to_relative_path(root, p) for p in dependents],
         "warnings": warnings,
