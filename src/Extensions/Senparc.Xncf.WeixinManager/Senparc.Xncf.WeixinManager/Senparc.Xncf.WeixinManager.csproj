@@ -68,6 +68,7 @@
 		2、新增 PromptRange 与 AgentsManager 使用记录能力
 		[2026-07-07] v0.22.3-preview2 Dependency updates from upstream modules
 		1、Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
+		2、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
 </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

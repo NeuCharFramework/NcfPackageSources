@@ -68,6 +68,7 @@
 		[2026-07-07] v0.13.5-preview4 统一模型名称构建并补齐 Embedding 维度兼容处理
 		1、重构 AIModelService 的统一 ModelName 组装逻辑，补齐 TextToSpeech 与 SpeechToText 模型字段
 		2、新增 EmbeddingDimensions 自动解析与兜底策略，提升 embedding 模型兼容性与稳定性
+		3、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
 </PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>

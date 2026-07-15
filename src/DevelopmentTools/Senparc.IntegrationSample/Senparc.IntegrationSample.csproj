@@ -11,6 +11,7 @@
 		  1、Dependency update from Senparc.Xncf.AIKernel to 0.13.5-preview4
 		  2、Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
 		  3、Dependency update from Senparc.Xncf.SystemManager to 0.14.2-preview2
+		  4、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
 </PackageReleaseNotes>
 		<Configurations>Debug;Release;TemplateRelease</Configurations>
 		<ImplicitUsings>enable</ImplicitUsings>

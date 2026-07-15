@@ -20,6 +20,7 @@
 			2、Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
 			3、Dependency update from Senparc.Xncf.SystemManager to 0.14.2-preview2
 			4、Dependency update from Senparc.Areas.Admin to 0.0.5
+			5、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
 </PackageReleaseNotes>
 		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
 		<TypeScriptToolsVersion>4.1</TypeScriptToolsVersion>

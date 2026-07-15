@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260707
     修改描述：v0.13.5-preview4 统一模型名称构建并补齐 Embedding 维度兼容处理
 
+    修改标识：Senparc - 20260715
+    修改描述：v0.13.5-preview4 升级 Senparc.AI 至 0.27.3 与 Senparc.AI.AgentKernel 至 0.1.10
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;

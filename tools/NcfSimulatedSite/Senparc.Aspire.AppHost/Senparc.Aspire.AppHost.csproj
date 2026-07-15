@@ -16,6 +16,7 @@
         [2026-07-07] v0.0.4 Dependency updates from upstream modules
         1、Dependency update from Senparc.Web to 0.21.8
         2、Dependency update from Senparc.Xncf.Installer to 0.3.2
+        3、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
 </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

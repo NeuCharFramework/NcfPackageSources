@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260707
     修改描述：v0.14.2-preview2 新增 RequestTempId 暂存日志查询能力并补齐请求模型
 
+    修改标识：Senparc - 20260715
+    修改描述：v0.14.2-preview2 升级 Senparc.AI 至 0.27.3 与 Senparc.AI.AgentKernel 至 0.1.10
+
 ----------------------------------------------------------------*/
 
 using System;
