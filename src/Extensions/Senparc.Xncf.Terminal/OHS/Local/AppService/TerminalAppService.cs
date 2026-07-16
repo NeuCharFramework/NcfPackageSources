@@ -179,7 +179,7 @@ namespace Senparc.Xncf.Terminal.OHS.Local.AppService
             return strOutput;
         }
 
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.Terminal.Command.Name", "Function.Terminal.Command.Description", typeof(Register))]
+        [FunctionRender(typeof(TerminalResource), "Function.Terminal.Command.Name", "Function.Terminal.Command.Description", typeof(Register))]
         public async Task<StringAppResponse> Run(Terminal_RunRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

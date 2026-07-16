@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.Terminal.MenuName" xml:space="preserve">
+    <value>Terminal</value>
+  </data>
+  <data name="Module.Terminal.Description" xml:space="preserve">
+    <value>Permet de contrôler le système avec des commandes de terminal.</value>
+  </data>
+  <data name="Module.Terminal.AvailableCommands" xml:space="preserve">
+    <value>Commandes actuellement disponibles :</value>
+  </data>
+  <data name="Function.Terminal.Command.Name" xml:space="preserve">
+    <value>Invite de commandes</value>
+  </data>
+  <data name="Function.Terminal.Command.Description" xml:space="preserve">
+    <value>Exécute une commande de terminal sur le serveur et renvoie son résultat</value>
+  </data>
+  <data name="Parameter.Terminal.Command" xml:space="preserve">
+    <value>&gt; Commande||Ligne de commande, par exemple : dir /?</value>
+  </data>
+</root>

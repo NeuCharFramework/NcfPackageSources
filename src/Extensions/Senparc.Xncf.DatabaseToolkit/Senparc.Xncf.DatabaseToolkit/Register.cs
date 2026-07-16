@@ -40,9 +40,9 @@ namespace Senparc.Xncf.DatabaseToolkit
         public override string Uid => "3019CCBE-0739-43D5-9DED-027A0B26745E";//必须确保全局唯一，生成后必须固定
         public override string Version => "0.7.1";//必须填写版本号
 
-        public override string MenuName => NcfBuiltInResource.Get("Module.DatabaseToolkit.MenuName", "数据库工具包");
+        public override string MenuName => DatabaseToolkitResource.Get("Module.DatabaseToolkit.MenuName", "数据库工具包");
         public override string Icon => "fa fa-database";
-        public override string Description => NcfBuiltInResource.Get("Module.DatabaseToolkit.Description", "为方便数据库操作提供的工具包。请完全了解本工具各项功能特点后再使用，所有数据库操作都有损坏数据的可能，修改数据库前务必注意数据备份！");
+        public override string Description => DatabaseToolkitResource.Get("Module.DatabaseToolkit.Description", "为方便数据库操作提供的工具包。请完全了解本工具各项功能特点后再使用，所有数据库操作都有损坏数据的可能，修改数据库前务必注意数据备份！");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

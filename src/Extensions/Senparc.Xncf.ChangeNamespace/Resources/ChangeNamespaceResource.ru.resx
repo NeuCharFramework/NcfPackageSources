@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.ChangeNamespace.MenuName" xml:space="preserve">
+    <value>Изменение пространства имён</value>
+  </data>
+  <data name="Module.ChangeNamespace.Description" xml:space="preserve">
+    <value>Глобально меняет пространства имён после установки NCF и до публикации. Операция необратима: создайте резервную копию и не используйте её в рабочей среде.</value>
+  </data>
+  <data name="Function.ChangeNamespace.Change.Name" xml:space="preserve">
+    <value>Изменить пространство имён</value>
+  </data>
+  <data name="Function.ChangeNamespace.Change.Description" xml:space="preserve">
+    <value>Меняет пространства имён во всех файлах .cs и .cshtml</value>
+  </data>
+  <data name="Function.ChangeNamespace.Restore.Name" xml:space="preserve">
+    <value>Восстановить пространство имён</value>
+  </data>
+  <data name="Function.ChangeNamespace.Restore.Description" xml:space="preserve">
+    <value>Возвращает пространства имён .cs и .cshtml к значениям NCF</value>
+  </data>
+  <data name="Function.ChangeNamespace.Download.Name" xml:space="preserve">
+    <value>Скачать официальный исходный код NCF</value>
+  </data>
+  <data name="Function.ChangeNamespace.Download.Description" xml:space="preserve">
+    <value>Скачивает официальный код NCF для обработки пространств имён</value>
+  </data>
+  <data name="Parameter.ChangeNamespace.Path" xml:space="preserve">
+    <value>Путь||Локальный физический путь, например: E:\Senparc\Ncf\</value>
+  </data>
+  <data name="Parameter.ChangeNamespace.NewNamespace" xml:space="preserve">
+    <value>Новое пространство имён||Корень должен оканчиваться точкой и заменит [Senparc.Ncf.]</value>
+  </data>
+  <data name="Parameter.ChangeNamespace.Source" xml:space="preserve">
+    <value>Источник||GitHub обычно обновляется первым. Gitee быстрее в материковом Китае, но может отставать; перед загрузкой проверьте последнюю версию на GitHub.</value>
+  </data>
+  <data name="Parameter.ChangeNamespace.CurrentNamespace" xml:space="preserve">
+    <value>Текущее пользовательское пространство имён||Корень обычно оканчивается точкой, например [My.Namespace.], и будет заменён на [Senparc.Ncf.] или [Senparc.]</value>
+  </data>
+</root>

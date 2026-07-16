@@ -43,11 +43,11 @@ namespace Senparc.Xncf.AreasBase
 
         public override string Version => "0.1";//必须填写版本号
 
-        public override string MenuName => NcfBuiltInResource.Get("Module.AreasBase.MenuName", "Areas 基础模块");
+        public override string MenuName => AreasBaseResource.Get("Module.AreasBase.MenuName", "Areas 基础模块");
 
         public override string Icon => "fa fa-university";//fa fa-cog
 
-        public override string Description => NcfBuiltInResource.Get("Module.AreasBase.Description", "运行 Razor Pages 等页面的基础模块");
+        public override string Description => AreasBaseResource.Get("Module.AreasBase.Description", "运行 Razor Pages 等页面的基础模块");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

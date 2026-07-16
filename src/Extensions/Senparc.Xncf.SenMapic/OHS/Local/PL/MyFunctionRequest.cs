@@ -24,15 +24,15 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.PL
     public class MyFunction_SenMapicRequest : FunctionAppRequestBase
     {
         [Required]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.SenMapic.Url")]
+        [LocalizedDescription(typeof(SenMapicResource), "Parameter.SenMapic.Url")]
         public string Url { get; set; }
 
         [Required]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.SenMapic.Depth")]
+        [LocalizedDescription(typeof(SenMapicResource), "Parameter.SenMapic.Depth")]
         public int Deepth { get; set; }
 
         [Required]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.SenMapic.PageCount")]
+        [LocalizedDescription(typeof(SenMapicResource), "Parameter.SenMapic.PageCount")]
         public int PageNumber { get; set; }
 
     }
@@ -40,38 +40,38 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.PL
     {
         [Required]
         [MaxLength(50)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.Name")]
+        [LocalizedDescription(typeof(SenMapicResource), "Parameter.Sample.Name")]
         public string Name { get; set; }
 
         [Required]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.Number1")]
+        [LocalizedDescription(typeof(SenMapicResource), "Parameter.Sample.Number1")]
         public int Number1 { get; set; }
 
 
         [Required]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.Number2")]
+        [LocalizedDescription(typeof(SenMapicResource), "Parameter.Sample.Number2")]
         public int Number2 { get; set; }
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.OperatorRestricted")]//下拉列表
+        [LocalizedDescription(typeof(SenMapicResource), "Parameter.Sample.OperatorRestricted")]//下拉列表
         [FunctionParameterUi(ParameterType.DropDownList, nameof(OperatorOptions))]
         public string Operator { get; set; }
 
         [JsonIgnore]
         public SelectionList OperatorOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
-                 new SelectionItem("+", NcfBuiltInResource.Get("Parameter.Operator.Add"), NcfBuiltInResource.Get("Parameter.Operator.Add.Help"), true),
-                 new SelectionItem("-", NcfBuiltInResource.Get("Parameter.Operator.Subtract"), NcfBuiltInResource.Get("Parameter.Operator.Subtract.Help"), false),
-                 new SelectionItem("×", NcfBuiltInResource.Get("Parameter.Operator.Multiply"), NcfBuiltInResource.Get("Parameter.Operator.Multiply.Help"), false),
-                 new SelectionItem("÷", NcfBuiltInResource.Get("Parameter.Operator.Divide"), NcfBuiltInResource.Get("Parameter.Operator.Divide.Help"), false)
+                 new SelectionItem("+", SenMapicResource.Get("Parameter.Operator.Add"), SenMapicResource.Get("Parameter.Operator.Add.Help"), true),
+                 new SelectionItem("-", SenMapicResource.Get("Parameter.Operator.Subtract"), SenMapicResource.Get("Parameter.Operator.Subtract.Help"), false),
+                 new SelectionItem("×", SenMapicResource.Get("Parameter.Operator.Multiply"), SenMapicResource.Get("Parameter.Operator.Multiply.Help"), false),
+                 new SelectionItem("÷", SenMapicResource.Get("Parameter.Operator.Divide"), SenMapicResource.Get("Parameter.Operator.Divide.Help"), false)
             });
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.PowerRestricted")]//多选框
+        [LocalizedDescription(typeof(SenMapicResource), "Parameter.Sample.PowerRestricted")]//多选框
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(PowerOptions))]
         public string[] Power { get; set; }
 
         [JsonIgnore]
         public SelectionList PowerOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("2", NcfBuiltInResource.Get("Parameter.Power.Square"), NcfBuiltInResource.Get("Parameter.Power.Square.Help"), false),
-                 new SelectionItem("3", NcfBuiltInResource.Get("Parameter.Power.Cube"), NcfBuiltInResource.Get("Parameter.Power.Cube.Help"), false)
+                 new SelectionItem("2", SenMapicResource.Get("Parameter.Power.Square"), SenMapicResource.Get("Parameter.Power.Square.Help"), false),
+                 new SelectionItem("3", SenMapicResource.Get("Parameter.Power.Cube"), SenMapicResource.Get("Parameter.Power.Cube.Help"), false)
             });
     }
 }

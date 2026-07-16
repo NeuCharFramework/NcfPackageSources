@@ -26,21 +26,21 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
     public class GenerateAppServiceInterface_GenerateRequest : FunctionAppRequestBase
     {
         [Required]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Interface.TargetPath")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Interface.TargetPath")]
         public string TargetProjectPath { get; set; }
 
         [Required]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Interface.Namespace")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Interface.Namespace")]
         public string NamespacePrefix { get; set; }
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Interface.ClassPattern")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Interface.ClassPattern")]
         public string ClassNamePattern { get; set; }
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Interface.MethodPattern")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Interface.MethodPattern")]
         public string MethodNamePattern { get; set; }
 
         [Required]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Interface.DestinationPath")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Interface.DestinationPath")]
         public string DestinationProjectPath { get; set; }
 
      

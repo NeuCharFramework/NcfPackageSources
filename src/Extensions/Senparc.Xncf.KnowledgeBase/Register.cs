@@ -44,11 +44,11 @@ namespace Senparc.Xncf.KnowledgeBase
 
         public override string Version => "0.1.10";//必须填写版本号
 
-        public override string MenuName => NcfBuiltInResource.Get("Module.KnowledgeBase.MenuName", "AI 知识库");
+        public override string MenuName => KnowledgeBaseResource.Get("Module.KnowledgeBase.MenuName", "AI 知识库");
 
         public override string Icon => "fa fa-lightbulb-o";
 
-        public override string Description => NcfBuiltInResource.Get("Module.KnowledgeBase.Description", "AI 知识库");
+        public override string Description => KnowledgeBaseResource.Get("Module.KnowledgeBase.Description", "AI 知识库");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

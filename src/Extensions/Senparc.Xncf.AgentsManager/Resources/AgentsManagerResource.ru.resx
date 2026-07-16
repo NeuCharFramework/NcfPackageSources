@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.AgentsManager.MenuName" xml:space="preserve">
+    <value>Управление агентами</value>
+  </data>
+  <data name="Module.AgentsManager.Description" xml:space="preserve">
+    <value>Управляет ИИ-агентами и их конфигурацией</value>
+  </data>
+  <data name="Area.Home" xml:space="preserve">
+    <value>Главная</value>
+  </data>
+  <data name="Function.Agents.TemplateManagement.Name" xml:space="preserve">
+    <value>Управление шаблонами Agent</value>
+  </data>
+  <data name="Function.Agents.TemplateManagement.Description" xml:space="preserve">
+    <value>Управляет шаблонами Agent</value>
+  </data>
+  <data name="Function.Agents.CreateFromPromptCode.Name" xml:space="preserve">
+    <value>Создать агента из PromptCode</value>
+  </data>
+  <data name="Function.Agents.CreateFromPromptCode.Description" xml:space="preserve">
+    <value>Создаёт агента из PromptCode уровня диапазона, тактики или полного расположения</value>
+  </data>
+  <data name="Function.Agents.SearchTemplate.Name" xml:space="preserve">
+    <value>Найти шаблоны Agent и вернуть ID</value>
+  </data>
+  <data name="Function.Agents.SearchTemplate.Description" xml:space="preserve">
+    <value>Ищет лучший AgentTemplate по имени или PromptCode и возвращает доступные ID</value>
+  </data>
+  <data name="Function.Agents.ManageChatGroup.Name" xml:space="preserve">
+    <value>Управление ChatGroup</value>
+  </data>
+  <data name="Function.Agents.ManageChatGroup.Description" xml:space="preserve">
+    <value>Управляет ChatGroup</value>
+  </data>
+  <data name="Function.Agents.StartChatGroup.Name" xml:space="preserve">
+    <value>Запустить ChatGroup</value>
+  </data>
+  <data name="Function.Agents.StartChatGroup.Description" xml:space="preserve">
+    <value>Запускает ChatGroup</value>
+  </data>
+  <data name="Function.Agents.DeleteConversation.Name" xml:space="preserve">
+    <value>Удалить диалог</value>
+  </data>
+  <data name="Function.Agents.DeleteConversation.Description" xml:space="preserve">
+    <value>Удаляет весь диалог и связанные данные</value>
+  </data>
+  <data name="Parameter.Agents.Template.Name" xml:space="preserve">
+    <value>Имя||Имя шаблона Agent</value>
+  </data>
+  <data name="Parameter.Agents.Template.Id" xml:space="preserve">
+    <value>ID||0 создаёт новый шаблон</value>
+  </data>
+  <data name="Parameter.Agents.Template.SystemMessage" xml:space="preserve">
+    <value>SystemMessage||PromptRangeCode системного сообщения; поиск, выбор и ручной ввод</value>
+  </data>
+  <data name="Parameter.Agents.Template.Description" xml:space="preserve">
+    <value>Описание||Описание шаблона; не влияет на поведение модели</value>
+  </data>
+  <data name="Parameter.Agents.Template.Platform" xml:space="preserve">
+    <value>Внешняя платформа||Платформа для публикации сообщений</value>
+  </data>
+  <data name="Parameter.Agents.Template.PlatformParameter" xml:space="preserve">
+    <value>Параметр платформы||Параметр подключения, например ключ</value>
+  </data>
+  <data name="Parameter.Agents.Template.FunctionCalls" xml:space="preserve">
+    <value>Function Calls||Имена через запятую</value>
+  </data>
+  <data name="Parameter.Agents.Create.Name" xml:space="preserve">
+    <value>Имя Agent||Имя нового Agent</value>
+  </data>
+  <data name="Parameter.Agents.Create.ManualPromptCode" xml:space="preserve">
+    <value>PromptCode вручную||Имя полигона, префикс тактики или полная версия; обязателен при ручном SystemMessage</value>
+  </data>
+  <data name="Parameter.Agents.Create.Description" xml:space="preserve">
+    <value>Описание||Необязательное описание нового Agent</value>
+  </data>
+  <data name="Parameter.Agents.Create.FunctionCalls" xml:space="preserve">
+    <value>Function Calls||Необязательные имена через запятую</value>
+  </data>
+  <data name="Parameter.Agents.Search.Query" xml:space="preserve">
+    <value>Поисковые слова||Имена, PromptCode или ключевые слова; разделяйте запятыми, точками с запятой или строками</value>
+  </data>
+  <data name="Parameter.Agents.Search.TopN" xml:space="preserve">
+    <value>Максимум результатов||Кандидатов на слово; по умолчанию 5</value>
+  </data>
+  <data name="Parameter.Agents.Chat.SelectManage" xml:space="preserve">
+    <value>Выберите группу||Выберите группу или создайте новую</value>
+  </data>
+  <data name="Agents.Chat.NewGroup" xml:space="preserve">
+    <value>Новая группа</value>
+  </data>
+  <data name="Agents.Chat.NewGroup.Help" xml:space="preserve">
+    <value>Создать новую группу</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Name" xml:space="preserve">
+    <value>Имя группы||Название группы</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Members" xml:space="preserve">
+    <value>Участники||Необязательно; можно ввести вручную</value>
+  </data>
+  <data name="Parameter.Agents.Chat.MembersManual" xml:space="preserve">
+    <value>Участники (вручную)||Имена, ID или PromptCode через запятую, точку с запятой или строки</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Admin" xml:space="preserve">
+    <value>Владелец||Автоматически выбирается ведущий Agent с лучшей оценкой; ручной ввод сохранён для совместимости</value>
+  </data>
+  <data name="Parameter.Agents.Chat.AdminManual" xml:space="preserve">
+    <value>Владелец (вручную)||Необязательное имя, ID или PromptCode</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Contact" xml:space="preserve">
+    <value>Контактный Agent||Автоматически выбирается лучший ведущий; ручной ввод для совместимости</value>
+  </data>
+  <data name="Parameter.Agents.Chat.ContactManual" xml:space="preserve">
+    <value>Контакт (вручную)||Необязательное имя, ID или PromptCode</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Description" xml:space="preserve">
+    <value>Описание||Описание группы</value>
+  </data>
+  <data name="Parameter.Agents.Chat.SelectRun" xml:space="preserve">
+    <value>Выберите группы||Группы для запуска</value>
+  </data>
+  <data name="Parameter.Agents.Chat.AIModel" xml:space="preserve">
+    <value>Модель ИИ||Внешняя модель ИИ для задачи</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Individuation" xml:space="preserve">
+    <value>Персонализированные Agents||</value>
+  </data>
+  <data name="Common.Yes" xml:space="preserve">
+    <value>Да</value>
+  </data>
+  <data name="Agents.Chat.Individuation.Help" xml:space="preserve">
+    <value>Запускать Agents с персональными параметрами ИИ</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Command" xml:space="preserve">
+    <value>Чем помочь?||Опишите работу для Agents</value>
+  </data>
+  <data name="Parameter.Agents.Chat.SelectDelete" xml:space="preserve">
+    <value>Удаляемые беседы||Удалить беседы, все сообщения и задачи</value>
+  </data>
+  <data name="Parameter.Agents.Chat.ConfirmDelete" xml:space="preserve">
+    <value>Подтвердить удаление||Подтвердить удаление бесед и всех данных</value>
+  </data>
+  <data name="Agents.Chat.CreatedAt" xml:space="preserve">
+    <value>{0} (создано {1:g})</value>
+  </data>
+  <data name="Agents.Plugin.Crawl.Description" xml:space="preserve">
+    <value>Обойти веб-страницы и вернуть релевантное содержимое</value>
+  </data>
+  <data name="Agents.Plugin.Crawl.Url" xml:space="preserve">
+    <value>URL для обхода</value>
+  </data>
+  <data name="Agents.Plugin.Crawl.Depth" xml:space="preserve">
+    <value>Максимальная глубина</value>
+  </data>
+  <data name="Agents.Plugin.Crawl.PageCount" xml:space="preserve">
+    <value>Максимальное число страниц</value>
+  </data>
+  <data name="Agents.Plugin.Crawl.Question" xml:space="preserve">
+    <value>Вопрос</value>
+  </data>
+  <data name="Agents.Plugin.TextLength.Description" xml:space="preserve">
+    <value>Получить число символов текста</value>
+  </data>
+  <data name="Agents.Plugin.OriginalText" xml:space="preserve">
+    <value>Исходный текст</value>
+  </data>
+  <data name="Agents.Plugin.Translate.Description" xml:space="preserve">
+    <value>Перевести текст</value>
+  </data>
+  <data name="Agents.Plugin.TargetLanguage" xml:space="preserve">
+    <value>Целевой язык</value>
+  </data>
+  <data name="Agents.Plugin.Translate.Instructions" xml:space="preserve">
+    <value>Вы — профессиональный переводчик, владеющий языком {0}. Точно переведите текст и выведите только перевод.</value>
+  </data>
+</root>

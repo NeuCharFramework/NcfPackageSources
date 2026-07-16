@@ -36,11 +36,11 @@ public partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Version => "0.1.0";
 
-    public override string MenuName => NcfBuiltInResource.Get("Module.FirmwareUpdate.MenuName", "NCF 安装包镜像");
+    public override string MenuName => FirmwareUpdateResource.Get("Module.FirmwareUpdate.MenuName", "NCF 安装包镜像");
 
     public override string Icon => "fa fa-cloud-download";
 
-    public override string Description => NcfBuiltInResource.Get("Module.FirmwareUpdate.Description", "从 GitHub 同步 NCF 桌面端安装包到当前站点 wwwroot 下的 NcfPackages，保留最近 3 个版本，并生成 latest-release.json 供 ncf.pub 与桌面端备用下载使用。");
+    public override string Description => FirmwareUpdateResource.Get("Module.FirmwareUpdate.Description", "从 GitHub 同步 NCF 桌面端安装包到当前站点 wwwroot 下的 NcfPackages，保留最近 3 个版本，并生成 latest-release.json 供 ncf.pub 与桌面端备用下载使用。");
 
     public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
     {

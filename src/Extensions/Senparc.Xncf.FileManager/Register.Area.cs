@@ -33,9 +33,9 @@ namespace Senparc.Xncf.FileManager
         public string HomeUrl => "/Admin/FileManager/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-                         new AreaPageMenuItem(GetAreaHomeUrl(), NcfBuiltInResource.Get("Area.Home", "首页"),"fa fa-laptop"),
-                         new AreaPageMenuItem(GetAreaUrl($"/Admin/FileManager/Index"), NcfBuiltInResource.Get("Area.FileManager.Files", "文件管理"),"fa fa-file"),
-			 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/FileManager/DatabaseSample"), NcfBuiltInResource.Get("Area.DatabaseSample", "数据库操作示例"),"fa fa-bookmark-o")
+                         new AreaPageMenuItem(GetAreaHomeUrl(), FileManagerResource.Get("Area.Home", "首页"),"fa fa-laptop"),
+                         new AreaPageMenuItem(GetAreaUrl($"/Admin/FileManager/Index"), FileManagerResource.Get("Area.FileManager.Files", "文件管理"),"fa fa-file"),
+			 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/FileManager/DatabaseSample"), FileManagerResource.Get("Area.DatabaseSample", "数据库操作示例"),"fa fa-bookmark-o")
 			 		};
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)

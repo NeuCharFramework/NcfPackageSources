@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.AIKernel.MenuName" xml:space="preserve">
+    <value>AI カーネル</value>
+  </data>
+  <data name="Module.AIKernel.Description" xml:space="preserve">
+    <value>Senparc.AI を基盤として、すべての AI プロジェクトに基本機能を提供します</value>
+  </data>
+  <data name="Area.Home" xml:space="preserve">
+    <value>ホーム</value>
+  </data>
+  <data name="Area.AIKernel.VectorDatabase" xml:space="preserve">
+    <value>ベクトルデータベース</value>
+  </data>
+  <data name="Area.AIKernel.Dashboard" xml:space="preserve">
+    <value>ダッシュボード</value>
+  </data>
+  <data name="Parameter.Sample.Name" xml:space="preserve">
+    <value>名前||二重縦線の前はパラメーター名、後ろは説明です</value>
+  </data>
+  <data name="Parameter.Sample.Number1" xml:space="preserve">
+    <value>数値||数値 1</value>
+  </data>
+  <data name="Parameter.Sample.Number2" xml:space="preserve">
+    <value>数値||数値 2</value>
+  </data>
+  <data name="Parameter.Sample.Operator" xml:space="preserve">
+    <value>演算子||</value>
+  </data>
+  <data name="Parameter.Sample.Power" xml:space="preserve">
+    <value>べき乗||</value>
+  </data>
+  <data name="Parameter.Operator.Add" xml:space="preserve">
+    <value>加算</value>
+  </data>
+  <data name="Parameter.Operator.Add.Help" xml:space="preserve">
+    <value>数値 1 + 数値 2</value>
+  </data>
+  <data name="Parameter.Operator.Subtract" xml:space="preserve">
+    <value>減算</value>
+  </data>
+  <data name="Parameter.Operator.Subtract.Help" xml:space="preserve">
+    <value>数値 1 - 数値 2</value>
+  </data>
+  <data name="Parameter.Operator.Multiply" xml:space="preserve">
+    <value>乗算</value>
+  </data>
+  <data name="Parameter.Operator.Multiply.Help" xml:space="preserve">
+    <value>数値 1 × 数値 2</value>
+  </data>
+  <data name="Parameter.Operator.Divide" xml:space="preserve">
+    <value>除算</value>
+  </data>
+  <data name="Parameter.Operator.Divide.Help" xml:space="preserve">
+    <value>数値 1 ÷ 数値 2</value>
+  </data>
+  <data name="Parameter.Power.Square" xml:space="preserve">
+    <value>2 乗</value>
+  </data>
+  <data name="Parameter.Power.Square.Help" xml:space="preserve">
+    <value>上の結果を 2 乗します</value>
+  </data>
+  <data name="Parameter.Power.Cube" xml:space="preserve">
+    <value>3 乗</value>
+  </data>
+  <data name="Parameter.Power.Cube.Help" xml:space="preserve">
+    <value>上の結果を 3 乗します</value>
+  </data>
+  <data name="Parameter.AI.Model" xml:space="preserve">
+    <value>モデルを選択||</value>
+  </data>
+  <data name="Parameter.AI.Prompt" xml:space="preserve">
+    <value>プロンプト||</value>
+  </data>
+  <data name="Parameter.AI.Source.Database" xml:space="preserve">
+    <value>AIKernel モジュールデータベース</value>
+  </data>
+  <data name="Parameter.AI.Source" xml:space="preserve">
+    <value>ソース：{0}</value>
+  </data>
+</root>

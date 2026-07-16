@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.SenMapic.MenuName" xml:space="preserve">
+    <value>SenMapic</value>
+  </data>
+  <data name="Module.SenMapic.Description" xml:space="preserve">
+    <value>SenMapic Web クローラーモジュール</value>
+  </data>
+  <data name="Area.Home" xml:space="preserve">
+    <value>ホーム</value>
+  </data>
+  <data name="Area.DatabaseSample" xml:space="preserve">
+    <value>データベース操作サンプル</value>
+  </data>
+  <data name="Function.Sample.Name" xml:space="preserve">
+    <value>サンプル関数</value>
+  </data>
+  <data name="Function.Sample.Description" xml:space="preserve">
+    <value>FunctionRender のパラメーターと戻り値を示します</value>
+  </data>
+  <data name="Function.SenMapic.Crawl.Name" xml:space="preserve">
+    <value>Web クローラー</value>
+  </data>
+  <data name="Function.SenMapic.Crawl.Description" xml:space="preserve">
+    <value>Web ページの情報を取得します</value>
+  </data>
+  <data name="Parameter.Sample.Name" xml:space="preserve">
+    <value>名前||二重縦線の前はパラメーター名、後ろは説明です</value>
+  </data>
+  <data name="Parameter.Sample.Number1" xml:space="preserve">
+    <value>数値||数値 1</value>
+  </data>
+  <data name="Parameter.Sample.Number2" xml:space="preserve">
+    <value>数値||数値 2</value>
+  </data>
+  <data name="Parameter.Sample.Operator" xml:space="preserve">
+    <value>演算子||</value>
+  </data>
+  <data name="Parameter.Sample.OperatorRestricted" xml:space="preserve">
+    <value>演算子||次から選択してください：+、-、×、÷</value>
+  </data>
+  <data name="Parameter.Sample.Power" xml:space="preserve">
+    <value>べき乗||</value>
+  </data>
+  <data name="Parameter.Sample.PowerRestricted" xml:space="preserve">
+    <value>べき乗||指定する場合は 2 または 3 のみ選択できます</value>
+  </data>
+  <data name="Parameter.Operator.Add" xml:space="preserve">
+    <value>加算</value>
+  </data>
+  <data name="Parameter.Operator.Add.Help" xml:space="preserve">
+    <value>数値 1 + 数値 2</value>
+  </data>
+  <data name="Parameter.Operator.Subtract" xml:space="preserve">
+    <value>減算</value>
+  </data>
+  <data name="Parameter.Operator.Subtract.Help" xml:space="preserve">
+    <value>数値 1 - 数値 2</value>
+  </data>
+  <data name="Parameter.Operator.Multiply" xml:space="preserve">
+    <value>乗算</value>
+  </data>
+  <data name="Parameter.Operator.Multiply.Help" xml:space="preserve">
+    <value>数値 1 × 数値 2</value>
+  </data>
+  <data name="Parameter.Operator.Divide" xml:space="preserve">
+    <value>除算</value>
+  </data>
+  <data name="Parameter.Operator.Divide.Help" xml:space="preserve">
+    <value>数値 1 ÷ 数値 2</value>
+  </data>
+  <data name="Parameter.Power.Square" xml:space="preserve">
+    <value>2 乗</value>
+  </data>
+  <data name="Parameter.Power.Square.Help" xml:space="preserve">
+    <value>上の結果を 2 乗します</value>
+  </data>
+  <data name="Parameter.Power.Cube" xml:space="preserve">
+    <value>3 乗</value>
+  </data>
+  <data name="Parameter.Power.Cube.Help" xml:space="preserve">
+    <value>上の結果を 3 乗します</value>
+  </data>
+  <data name="Parameter.SenMapic.Url" xml:space="preserve">
+    <value>URL||クロールする URL を入力してください</value>
+  </data>
+  <data name="Parameter.SenMapic.Depth" xml:space="preserve">
+    <value>深さ||最大クロール深度を入力してください</value>
+  </data>
+  <data name="Parameter.SenMapic.PageCount" xml:space="preserve">
+    <value>ページ数||クロールする最大ページ数を入力してください</value>
+  </data>
+  <data name="Area.Extensions" xml:space="preserve">
+    <value>拡張モジュール</value>
+  </data>
+  <data name="Page.InstalledAt" xml:space="preserve">
+    <value>インストール日時：</value>
+  </data>
+  <data name="Page.CurrentDatabase" xml:space="preserve">
+    <value>現在のデータベース種別：</value>
+  </data>
+  <data name="Page.Brighten" xml:space="preserve">
+    <value>明るく</value>
+  </data>
+  <data name="Page.Darken" xml:space="preserve">
+    <value>暗く</value>
+  </data>
+  <data name="Page.Random" xml:space="preserve">
+    <value>ランダム</value>
+  </data>
+</root>

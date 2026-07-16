@@ -40,11 +40,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
             this._iWantToRun = iWantToRun;
         }
 
-        [KernelFunction, LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.Plugin.CreateEntity")]
+        [KernelFunction, LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.Plugin.CreateEntity")]
         public async Task<FileSaveResult> CreateFile(
-             [LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.Plugin.FilePath")]
+             [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.Plugin.FilePath")]
             string fileBasePath,
-             [LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.Plugin.GeneratedContent")]
+             [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.Plugin.GeneratedContent")]
             string fileGenerateResult
          )
         {
@@ -67,7 +67,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
                     }
                 }
 
-                var logMsg = NcfBuiltInResource.Format("XncfBuilder.Plugin.FileSaved", "已保存文件：{0}", fullPathFileName);
+                var logMsg = XncfBuilderResource.Format("XncfBuilder.Plugin.FileSaved", "已保存文件：{0}", fullPathFileName);
                 log.AppendLine(logMsg);
 
                 result.Log += logMsg + "\r\n";
@@ -79,13 +79,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
 
         //TODO：文件修改（从文件中抽取，然后给到 LLM 进行修改）
 
-        [KernelFunction, LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.Plugin.ReadDbContext")]
+        [KernelFunction, LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.Plugin.ReadDbContext")]
         public async Task<FileSaveResult> UpdateSenparcEntities(
-            [LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.Plugin.ProjectPath")]
+            [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.Plugin.ProjectPath")]
             string projectPath,
-            [LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.Plugin.EntityName")]
+            [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.Plugin.EntityName")]
             string entityName,
-            [LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.Plugin.PluralEntityName")]
+            [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.Plugin.PluralEntityName")]
             string pluralEntityName
             )
         {

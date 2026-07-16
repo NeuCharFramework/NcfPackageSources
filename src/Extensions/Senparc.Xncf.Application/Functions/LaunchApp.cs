@@ -52,14 +52,14 @@ namespace Senparc.Xncf.Application.Functions
 
             [Required]
             [MaxLength(300)]
-            [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Application.FilePath")]
+            [LocalizedDescription(typeof(ApplicationResource), "Parameter.Application.FilePath")]
             public string FilePath { get; set; }
         }
 
         //注意：Name 必须在单个 Xncf 模块中唯一！
-        public override string Name => NcfBuiltInResource.Get("Function.Application.Launch.Name");
+        public override string Name => ApplicationResource.Get("Function.Application.Launch.Name");
 
-        public override string Description => NcfBuiltInResource.Get("Function.Application.Launch.Description");
+        public override string Description => ApplicationResource.Get("Function.Application.Launch.Description");
 
         public override Type FunctionParameterType => typeof(LaunchApp_Parameters);
 
@@ -82,7 +82,7 @@ namespace Senparc.Xncf.Application.Functions
             };
 
             StringBuilder sb = new StringBuilder();
-            base.RecordLog(sb, NcfBuiltInResource.Get("Function.Application.Launch.StartLog"));
+            base.RecordLog(sb, ApplicationResource.Get("Function.Application.Launch.StartLog"));
 
             StartApp(typeParam.FilePath);
 
@@ -90,7 +90,7 @@ namespace Senparc.Xncf.Application.Functions
             sb.AppendLine($"FilePath{typeParam.FilePath}");
 
             result.Log = sb.ToString();
-            result.Message = NcfBuiltInResource.Get("Common.OperationSucceeded");
+            result.Message = ApplicationResource.Get("Common.OperationSucceeded");
             return result;
         }
 

@@ -44,7 +44,7 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
 
         
         //[McpServerTool]
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.SenMapic.Crawl.Name", "Function.SenMapic.Crawl.Description", typeof(Register))]
+        [FunctionRender(typeof(SenMapicResource), "Function.SenMapic.Crawl.Name", "Function.SenMapic.Crawl.Description", typeof(Register))]
         public async Task<StringAppResponse> WebSpider(MyFunction_SenMapicRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -81,7 +81,7 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
             });
         }
 
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.Sample.Name", "Function.Sample.Description", typeof(Register))]
+        [FunctionRender(typeof(SenMapicResource), "Function.Sample.Name", "Function.Sample.Description", typeof(Register))]
         public async Task<StringAppResponse> Calculate(MyFunction_CaculateRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

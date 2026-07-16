@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.SystemManager.MenuName" xml:space="preserve">
+    <value>System Management</value>
+  </data>
+  <data name="Module.SystemManager.Description" xml:space="preserve">
+    <value>Manages system configuration and core runtime data. Do not remove it; back up data before changes.</value>
+  </data>
+  <data name="Function.SystemManager.UpdateCloudAccount.Name" xml:space="preserve">
+    <value>Update NeuChar cloud account</value>
+  </data>
+  <data name="Function.SystemManager.UpdateCloudAccount.Description" xml:space="preserve">
+    <value>Bind a NeuChar cloud account with the AppKey and Secret from the developer page to activate advanced features</value>
+  </data>
+  <data name="Function.SystemManager.ViewTempLog.Name" xml:space="preserve">
+    <value>View RequestTempId temporary log</value>
+  </data>
+  <data name="Function.SystemManager.ViewTempLog.Description" xml:space="preserve">
+    <value>Query a temporary log by the RequestTempId returned from AppService while it remains valid</value>
+  </data>
+  <data name="Parameter.SystemManager.AppKey" xml:space="preserve">
+    <value>NeuChar AppKey||Find your AppKey at https://www.neuchar.com/Developer/Developer</value>
+  </data>
+  <data name="Parameter.SystemManager.AppSecret" xml:space="preserve">
+    <value>NeuChar AppSecret||Find your Secret at https://www.neuchar.com/Developer/Developer. Never disclose it.</value>
+  </data>
+  <data name="Parameter.SystemManager.RequestTempId" xml:space="preserve">
+    <value>RequestTempId||The requestTempId returned by AppService, for example: RequestTempId-639189862069965960-fc2ab5f5</value>
+  </data>
+</root>

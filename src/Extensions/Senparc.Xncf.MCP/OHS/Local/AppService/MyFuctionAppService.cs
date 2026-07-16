@@ -47,7 +47,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     public class DoFuncReq
     {
         [Required]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.MCP.Tool.Input")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Tool.Input")]
         public string Str { get; set; }
     }
 
@@ -55,14 +55,14 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     [McpServerToolType()]
     public static class NcfMcpTools
     {
-        [McpServerTool, LocalizedDescription(typeof(NcfBuiltInResource), "MCP.Tool.Echo.Description")]
+        [McpServerTool, LocalizedDescription(typeof(McpResource), "MCP.Tool.Echo.Description")]
         public static string Echo(string message)
         {
             Console.WriteLine("Echo 收到来自 MCP的 请求，Message:" + message);
-            return NcfBuiltInResource.Format("MCP.Tool.Echo.Result", "你好，{0}", message);
+            return McpResource.Format("MCP.Tool.Echo.Result", "你好，{0}", message);
         }
 
-        [McpServerTool, LocalizedDescription(typeof(NcfBuiltInResource), "MCP.Tool.Now.Description")]
+        [McpServerTool, LocalizedDescription(typeof(McpResource), "MCP.Tool.Now.Description")]
         public static string Now(string message)
         {
             Console.WriteLine("Now tool 收到请求(messag)：" + message);
@@ -77,7 +77,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         //}
 
         //自动增加小时数
-        [McpServerTool, LocalizedDescription(typeof(NcfBuiltInResource), "MCP.Tool.AddHours.Description")]
+        [McpServerTool, LocalizedDescription(typeof(McpResource), "MCP.Tool.AddHours.Description")]
         public static string AddHours(int hours)
         {
             return $"{DateTime.Now.AddHours(hours)}";
@@ -93,13 +93,13 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             .ConfigChatModel("Bob", new ChatClientAgentOptions(){
             ChatOptions = new ChatOptions()
             {
-                Instructions = NcfBuiltInResource.Get("MCP.BobLab.Instructions")
+                Instructions = McpResource.Get("MCP.BobLab.Instructions")
             }
         }).BuildKernelWithAgentSessionAsync();
 
         var startTime = DateTime.Now;
         var result = await iWantToRun.RunChatAsync(input);
-        return result.OutputString + NcfBuiltInResource.Format(
+        return result.OutputString + McpResource.Format(
             "MCP.BobLab.Footer",
             "[Bob's Lab] - {0} / {1}，耗时：{2} 毫秒",
             input,
@@ -120,7 +120,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             _colorService = colorService;
         }
 
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.MCP.Execute.Name", "Function.MCP.Execute.Description", typeof(Register))]
+        [FunctionRender(typeof(McpResource), "Function.MCP.Execute.Name", "Function.MCP.Execute.Description", typeof(Register))]
         public async Task<StringAppResponse> GetMcpResult(MyFunction_MCPCallRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -208,10 +208,10 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
 
                 var iWantToConfig = agentAiHandler.IWantTo();
                 var chatOptions = iWantToConfig.CreateChatClientAgentOptions(
-                    "Jeffrey", NcfBuiltInResource.Get("MCP.Agent.SystemPrompt"),
+                    "Jeffrey", McpResource.Get("MCP.Agent.SystemPrompt"),
                     new ChatOptions()
                     {
-                        Instructions = NcfBuiltInResource.Get("MCP.Agent.SystemPrompt"),
+                        Instructions = McpResource.Get("MCP.Agent.SystemPrompt"),
                         TopP = 0.7f,
                         Temperature = 0.7f,
                         MaxOutputTokens = 2000,
@@ -230,7 +230,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
 
 
 
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.Sample.Name", "Function.Sample.Description", typeof(Register))]
+        [FunctionRender(typeof(McpResource), "Function.Sample.Name", "Function.Sample.Description", typeof(Register))]
         public async Task<StringAppResponse> Calculate(MyFunction_CaculateRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -262,18 +262,18 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                         if (request.Number2 == 0)
                         {
                             response.Success = false;
-                            response.ErrorMessage = NcfBuiltInResource.Get("MCP.Calculate.DivideByZero");
+                            response.ErrorMessage = McpResource.Get("MCP.Calculate.DivideByZero");
                             return null;
                         }
                         calcResult = calcResult / request.Number2;
                         break;
                     default:
                         response.Success = false;
-                        response.ErrorMessage = NcfBuiltInResource.Format("MCP.Calculate.UnknownOperator", "未知的运算符：{0}", theOperator);
+                        response.ErrorMessage = McpResource.Format("MCP.Calculate.UnknownOperator", "未知的运算符：{0}", theOperator);
                         return null;
                 }
 
-                logger.Append(NcfBuiltInResource.Format("MCP.Calculate.OperationLog", "进行运算：{0} {1} {2} = {3}", request.Number1, theOperator, request.Number2, calcResult));
+                logger.Append(McpResource.Format("MCP.Calculate.OperationLog", "进行运算：{0} {1} {2} = {3}", request.Number1, theOperator, request.Number2, calcResult));
 
                 Action<int> raisePower = power =>
                 {
@@ -281,22 +281,22 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                     {
                         var oldValue = calcResult;
                         calcResult = Math.Pow(calcResult, power);
-                        logger.Append(NcfBuiltInResource.Format("MCP.Calculate.PowerLog", "进行 {0} 次方运算：{1}{2} = {3}", power, oldValue, power == 2 ? "²" : "³", calcResult));
+                        logger.Append(McpResource.Format("MCP.Calculate.PowerLog", "进行 {0} 次方运算：{1}{2} = {3}", power, oldValue, power == 2 ? "²" : "³", calcResult));
                     }
                 };
 
                 raisePower(2);
                 raisePower(3);
 
-                response.Data = NcfBuiltInResource.Format("MCP.Calculate.Result", "【{0}】计算结果：{1}。计算过程请查看日志", request.Name, calcResult);
+                response.Data = McpResource.Format("MCP.Calculate.Result", "【{0}】计算结果：{1}。计算过程请查看日志", request.Name, calcResult);
                 return null;
             });
         }
 
 
-        [McpServerTool, LocalizedDescription(typeof(NcfBuiltInResource), "MCP.Tool.Calculator.Description")]
+        [McpServerTool, LocalizedDescription(typeof(McpResource), "MCP.Tool.Calculator.Description")]
         public async Task<string> Calculator(
-            int number1, int number2, int power, [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.MCP.Tool.Operator")] string operatorMark
+            int number1, int number2, int power, [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Tool.Operator")] string operatorMark
             //RequestType request
             )
         {
@@ -336,14 +336,14 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                     {
                         //response.Success = false;
                         //response.ErrorMessage = "被除数不能为0！";
-                        return NcfBuiltInResource.Get("MCP.Calculate.DivideByZero");
+                        return McpResource.Get("MCP.Calculate.DivideByZero");
                     }
                     calcResult = calcResult / request.Number2;
                     break;
                 default:
                     //response.Success = false;
                     //response.ErrorMessage = $"未知的运算符：{theOperator}";
-                    return NcfBuiltInResource.Format("MCP.Calculate.UnknownOperator", "未知的运算符：{0}", request.TheOperator);
+                    return McpResource.Format("MCP.Calculate.UnknownOperator", "未知的运算符：{0}", request.TheOperator);
             }
 
             //logger.Append($"进行运算：{number1} {theOperator} {number2} = {calcResult}");
@@ -365,7 +365,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             raisePower(3);
 
             // response.Data = $"【{theOperator}】计算结果：{calcResult}。计算过程请看日志";
-            return NcfBuiltInResource.Format("MCP.Calculate.Result", "【{0}】计算结果：{1}。计算过程请查看日志", request.TheOperator, calcResult);
+            return McpResource.Format("MCP.Calculate.Result", "【{0}】计算结果：{1}。计算过程请查看日志", request.TheOperator, calcResult);
             // });
         }
     }
@@ -386,7 +386,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
 
         [Required]
         [DefaultValue("+")]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.MCP.Tool.Operator")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Tool.Operator")]
         public string TheOperator { get; set; }
 
     }

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.DatabaseToolkit.MenuName" xml:space="preserve">
+    <value>データベースツールキット</value>
+  </data>
+  <data name="Module.DatabaseToolkit.Description" xml:space="preserve">
+    <value>データベース操作ツールです。操作によりデータが破損する可能性があるため、機能を理解し、変更前に必ずバックアップしてください。</value>
+  </data>
+  <data name="Function.Database.AgentPrompt.Name" xml:space="preserve">
+    <value>AI Agent システムプロンプトを取得</value>
+  </data>
+  <data name="Function.Database.AgentPrompt.Description" xml:space="preserve">
+    <value>AI Agent に設定されたシステムプロンプトとロール定義を取得します</value>
+  </data>
+  <data name="Function.Database.Backup.Name" xml:space="preserve">
+    <value>データベースをバックアップ</value>
+  </data>
+  <data name="Function.Database.Backup.Description" xml:space="preserve">
+    <value>現在のデータベースを非公開の指定パスへバックアップします</value>
+  </data>
+  <data name="Function.Database.CheckBackup.Name" xml:space="preserve">
+    <value>自動バックアップ状態を確認</value>
+  </data>
+  <data name="Function.Database.CheckBackup.Description" xml:space="preserve">
+    <value>自動バックアップ間隔が設定され、0 より大きいか確認します</value>
+  </data>
+  <data name="Function.Database.CheckUpdate.Name" xml:space="preserve">
+    <value>データベース更新を確認</value>
+  </data>
+  <data name="Function.Database.CheckUpdate.Description" xml:space="preserve">
+    <value>EF Core Migration で未適用の更新を検出し、必要なら Merge EF Core を実行します</value>
+  </data>
+  <data name="Function.Database.ConfigTypes.Name" xml:space="preserve">
+    <value>データベース設定タイプを表示</value>
+  </data>
+  <data name="Function.Database.ConfigTypes.Description" xml:space="preserve">
+    <value>IDatabaseConfiguration を実装する設定タイプを表示します</value>
+  </data>
+  <data name="Function.Database.ExportSql.Name" xml:space="preserve">
+    <value>現在のデータベース SQL を出力</value>
+  </data>
+  <data name="Function.Database.ExportSql.Description" xml:space="preserve">
+    <value>現在のサイトが使用する全テーブルの SQL を出力します</value>
+  </data>
+  <data name="Function.Database.Merge.Name" xml:space="preserve">
+    <value>Merge EF Core</value>
+  </data>
+  <data name="Function.Database.Merge.Description" xml:space="preserve">
+    <value>EF Core Code First でデータベースを現在の実行バージョンに更新します</value>
+  </data>
+  <data name="Function.Database.QueryRecords.Name" xml:space="preserve">
+    <value>データベースレコードを検索</value>
+  </data>
+  <data name="Function.Database.QueryRecords.Description" xml:space="preserve">
+    <value>条件フィルターとフィールド選択を使用して指定テーブルを検索します</value>
+  </data>
+  <data name="Function.Database.QueryTemplates.Name" xml:space="preserve">
+    <value>一般的な検索テンプレートを取得</value>
+  </data>
+  <data name="Function.Database.QueryTemplates.Description" xml:space="preserve">
+    <value>定義済みのデータベース検索テンプレートと例を取得します</value>
+  </data>
+  <data name="Function.Database.Schema.Name" xml:space="preserve">
+    <value>データベース構造を検索</value>
+  </data>
+  <data name="Function.Database.Schema.Description" xml:space="preserve">
+    <value>利用可能なモジュール、テーブル、フィールドを取得します</value>
+  </data>
+  <data name="Function.Database.Settings.Name" xml:space="preserve">
+    <value>データベース設定</value>
+  </data>
+  <data name="Function.Database.Settings.Description" xml:space="preserve">
+    <value>バックアップ間隔、パスなどを設定します</value>
+  </data>
+  <data name="Function.Database.Statistics.Name" xml:space="preserve">
+    <value>データベース統計を取得</value>
+  </data>
+  <data name="Function.Database.Statistics.Description" xml:space="preserve">
+    <value>行数やデータサイズなどのテーブル統計を取得します</value>
+  </data>
+  <data name="Parameter.DatabaseBackup.Path" xml:space="preserve">
+    <value>パス||ファイル名を含むローカル物理パス（例：E:\Senparc\Database-Backup\NCF.bak）。Web プロセスのアクセス権を確認してください</value>
+  </data>
+  <data name="Parameter.DatabaseBackup.Options" xml:space="preserve">
+    <value>オプション||データベースのバックアップオプション</value>
+  </data>
+  <data name="Parameter.DatabaseBackup.NoOverwrite" xml:space="preserve">
+    <value>既存ファイルを上書きしない</value>
+  </data>
+  <data name="Parameter.DatabaseBackup.NoOverwrite.Help" xml:space="preserve">
+    <value>保存先ファイルが存在する場合はバックアップしません</value>
+  </data>
+  <data name="Parameter.DatabaseBackup.Verify" xml:space="preserve">
+    <value>バックアップ後に .bak ファイルの更新を確認</value>
+  </data>
+  <data name="Parameter.DatabaseBackup.Verify.Help" xml:space="preserve">
+    <value>ファイルの更新のみ確認し、内部内容は検証しません</value>
+  </data>
+  <data name="Common.Error" xml:space="preserve">
+    <value>エラー：{0}</value>
+  </data>
+  <data name="Database.Config.Current" xml:space="preserve">
+    <value>現在の DatabaseConfiguration：{0}、データベース種別：{1}</value>
+  </data>
+  <data name="Database.Config.SaveLogName" xml:space="preserve">
+    <value>データベース設定</value>
+  </data>
+  <data name="Database.Config.Saved" xml:space="preserve">
+    <value>設定を保存しました。</value>
+  </data>
+  <data name="Database.Config.SavedValues" xml:space="preserve">
+    <value>間隔（分）：{0}、パス：{1}</value>
+  </data>
+  <data name="Database.ModuleAndTableRequired" xml:space="preserve">
+    <value>モジュール名とテーブル名は必須です。</value>
+  </data>
+  <data name="Database.ModuleNotFound" xml:space="preserve">
+    <value>モジュール「{0}」が見つかりません。利用可能：{1}</value>
+  </data>
+  <data name="Database.TableNotFoundAvailable" xml:space="preserve">
+    <value>モジュール「{1}」にテーブル「{0}」がありません。利用可能なエンティティ：{2}</value>
+  </data>
+  <data name="Database.TableNotFound" xml:space="preserve">
+    <value>テーブルが見つかりません：{0}.{1}</value>
+  </data>
+  <data name="Database.Query.Log" xml:space="preserve">
+    <value>{0}.{1} を照会中（入力：{2}.{3}）</value>
+  </data>
+  <data name="Database.Query.Error" xml:space="preserve">
+    <value>レコード照会エラー：{0}</value>
+  </data>
+  <data name="Database.Statistics.Log" xml:space="preserve">
+    <value>{0}.{1} の統計を取得中（入力：{2}.{3}）</value>
+  </data>
+  <data name="Database.Statistics.Error" xml:space="preserve">
+    <value>統計取得エラー：{0}</value>
+  </data>
+  <data name="Database.Schema.TableDetailLog" xml:space="preserve">
+    <value>テーブル詳細を取得：{0}.{1}</value>
+  </data>
+  <data name="Database.Schema.SuggestedModules" xml:space="preserve">
+    <value>
+候補モジュール：{0}</value>
+  </data>
+  <data name="Database.Schema.AllModules" xml:space="preserve">
+    <value>
+利用可能な全モジュール：{0}</value>
+  </data>
+  <data name="Database.Schema.ModuleNotFoundWithHint" xml:space="preserve">
+    <value>モジュール「{0}」が見つかりません。{1}</value>
+  </data>
+  <data name="Database.Schema.NoAvailableTables" xml:space="preserve">
+    <value>（利用可能なテーブルなし）</value>
+  </data>
+  <data name="Database.Schema.EntityNotFound" xml:space="preserve">
+    <value>モジュール「{0}」にエンティティ「{1}」がありません。
+利用可能：{2}</value>
+  </data>
+  <data name="Database.Schema.ModuleTablesLog" xml:space="preserve">
+    <value>モジュール {0} の全テーブルを取得</value>
+  </data>
+  <data name="Database.Schema.ModuleHasNoTables" xml:space="preserve">
+    <value>モジュール「{0}」に照会可能なテーブルはありません。</value>
+  </data>
+  <data name="Database.Schema.OverviewLog" xml:space="preserve">
+    <value>照会可能な全モジュールとテーブルの概要を取得</value>
+  </data>
+  <data name="Database.Schema.NoModules" xml:space="preserve">
+    <value>照会可能なデータベースモジュールがありません。</value>
+  </data>
+  <data name="Database.Schema.Error" xml:space="preserve">
+    <value>データベーススキーマ照会エラー：{0}</value>
+  </data>
+  <data name="Validation.Database.ModuleRequired" xml:space="preserve">
+    <value>モジュール名は必須です。</value>
+  </data>
+  <data name="Validation.Database.TableRequired" xml:space="preserve">
+    <value>テーブル名は必須です。</value>
+  </data>
+  <data name="Parameter.Database.Module.Query" xml:space="preserve">
+    <value>モジュール名||必須。例：KnowledgeBase、AIKernel</value>
+  </data>
+  <data name="Parameter.Database.Table.Query" xml:space="preserve">
+    <value>テーブル名||必須。照会するテーブル名</value>
+  </data>
+  <data name="Parameter.Database.Filter" xml:space="preserve">
+    <value>フィルター||任意。SQL WHERE 条件（例：Name = "test"、Id &gt; 10）</value>
+  </data>
+  <data name="Parameter.Database.PageNumber" xml:space="preserve">
+    <value>ページ番号||任意。既定 1、最小 1</value>
+  </data>
+  <data name="Parameter.Database.PageSize" xml:space="preserve">
+    <value>ページサイズ||任意。既定 20、範囲 1～1000</value>
+  </data>
+  <data name="Parameter.Database.Module.Statistics" xml:space="preserve">
+    <value>モジュール名||必須。統計を照会するモジュール</value>
+  </data>
+  <data name="Parameter.Database.Table.Statistics" xml:space="preserve">
+    <value>テーブル名||必須。統計を照会するテーブル</value>
+  </data>
+  <data name="Parameter.Database.Schema.Module" xml:space="preserve">
+    <value>モジュール名||任意。指定モジュールのテーブルのみ返します</value>
+  </data>
+  <data name="Parameter.Database.Schema.Table" xml:space="preserve">
+    <value>テーブル名||任意。モジュール名と併用して詳細を取得します</value>
+  </data>
+  <data name="Parameter.Database.Config.Cycle" xml:space="preserve">
+    <value>自動バックアップ間隔（分）||0 で無効化</value>
+  </data>
+  <data name="Parameter.Database.Config.Path" xml:space="preserve">
+    <value>バックアップパス||ローカル物理パス（例：E:\Senparc\Ncf\NCF.bak）</value>
+  </data>
+</root>

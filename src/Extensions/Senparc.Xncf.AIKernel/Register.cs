@@ -50,11 +50,11 @@ namespace Senparc.Xncf.AIKernel
 
         public override string Version => "5.0.5";//必须填写版本号
 
-        public override string MenuName => NcfBuiltInResource.Get("Module.AIKernel.MenuName", "AI 核心模块");
+        public override string MenuName => AIKernelResource.Get("Module.AIKernel.MenuName", "AI 核心模块");
 
         public override string Icon => "fa  fa-magic";
 
-        public override string Description => NcfBuiltInResource.Get("Module.AIKernel.Description", "AI 核心模块，基于 Senparc.AI 为所有 AI 项目提供基础能力");
+        public override string Description => AIKernelResource.Get("Module.AIKernel.Description", "AI 核心模块，基于 Senparc.AI 为所有 AI 项目提供基础能力");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

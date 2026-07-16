@@ -37,32 +37,32 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
     {
         [Required]
         [MaxLength(250)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.SolutionPath")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.SolutionPath")]
         public string SlnFilePath { get; set; }
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.SolutionOptions")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.SolutionOptions")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(NewSlnFileOptions))]
         public string[] NewSlnFile { get; set; }
 
         [JsonIgnore]
         public SelectionList NewSlnFileOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("backup", NcfBuiltInResource.Get("XncfBuilder.Option.Solution.Backup"), NcfBuiltInResource.Get("XncfBuilder.Option.Solution.Backup.Help"), true),
-                 new SelectionItem("new", NcfBuiltInResource.Get("XncfBuilder.Option.Solution.New"), NcfBuiltInResource.Get("XncfBuilder.Option.Solution.New.Help"), false),
+                 new SelectionItem("backup", XncfBuilderResource.Get("XncfBuilder.Option.Solution.Backup"), XncfBuilderResource.Get("XncfBuilder.Option.Solution.Backup.Help"), true),
+                 new SelectionItem("new", XncfBuilderResource.Get("XncfBuilder.Option.Solution.New"), XncfBuilderResource.Get("XncfBuilder.Option.Solution.New.Help"), false),
             });
 
         [MaxLength(250)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.TemplatePackage")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.TemplatePackage")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(TemplatePackageOptions))]
         public string TemplatePackage { get; set; }
 
         [JsonIgnore]
         public SelectionList TemplatePackageOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
-                 new SelectionItem("online", NcfBuiltInResource.Get("XncfBuilder.Option.Template.Online"), NcfBuiltInResource.Get("XncfBuilder.Option.Template.Online.Help"), false),
-                 new SelectionItem("local", NcfBuiltInResource.Get("XncfBuilder.Option.Template.Local"), NcfBuiltInResource.Get("XncfBuilder.Option.Template.Local.Help"), false),
-                 new SelectionItem("no", NcfBuiltInResource.Get("XncfBuilder.Option.Template.Installed"), NcfBuiltInResource.Get("XncfBuilder.Option.Template.Installed.Help"), true),
+                 new SelectionItem("online", XncfBuilderResource.Get("XncfBuilder.Option.Template.Online"), XncfBuilderResource.Get("XncfBuilder.Option.Template.Online.Help"), false),
+                 new SelectionItem("local", XncfBuilderResource.Get("XncfBuilder.Option.Template.Local"), XncfBuilderResource.Get("XncfBuilder.Option.Template.Local.Help"), false),
+                 new SelectionItem("no", XncfBuilderResource.Get("XncfBuilder.Option.Template.Installed"), XncfBuilderResource.Get("XncfBuilder.Option.Template.Installed.Help"), true),
             });
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Framework")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Framework")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(FrameworkVersionOptions))]
         public string FrameworkVersion { get; set; }
 
@@ -72,20 +72,20 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                  //new SelectionItem("netcoreapp3.1","netcoreapp3.1","使用 .NET Core 3.1",false),
                  //new SelectionItem("net6.0","net6.0","使用 .NET 6.0",false),
                  //new SelectionItem("net7.0","net7.0","使用 .NET 7.0",false),
-                 new SelectionItem("net8.0", "net8.0", NcfBuiltInResource.Get("XncfBuilder.Option.Framework.Net8"), false),
+                 new SelectionItem("net8.0", "net8.0", XncfBuilderResource.Get("XncfBuilder.Option.Framework.Net8"), false),
             });
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.OtherFramework")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.OtherFramework")]
         public string OtherFrameworkVersion { get; set; }
 
         [Required]
         [MaxLength(50)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Organization")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Organization")]
         public string OrgName { get; set; }
 
         [Required]
         [MaxLength(50)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.ModuleName")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.ModuleName")]
         public string XncfName { get; set; }
 
         //[Required]
@@ -95,43 +95,43 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
         [Required]
         [MaxLength(50)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Version")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Version")]
         public string Version { get; set; }
 
         [Required]
         [MaxLength(50)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.MenuName")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.MenuName")]
         public string MenuName { get; set; }
 
         [Required]
         [MaxLength(50)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Icon")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Icon")]
         public string Icon { get; set; }
 
         [Required]
         [MaxLength(400)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Description")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Description")]
         public string Description { get; set; }
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Features")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Features")]
            [FunctionParameterUi(ParameterType.CheckBoxList, nameof(UseModuleOptions))]
            public string[] UseModule { get; set; }
 
            [JsonIgnore]
            public SelectionList UseModuleOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("function", NcfBuiltInResource.Get("XncfBuilder.Option.Feature.Function"), NcfBuiltInResource.Get("XncfBuilder.Option.Feature.Function.Help"), false),
-                 new SelectionItem("database", NcfBuiltInResource.Get("XncfBuilder.Option.Feature.Database"), NcfBuiltInResource.Get("XncfBuilder.Option.Feature.Database.Help"), false),
-                 new SelectionItem("webapi", NcfBuiltInResource.Get("XncfBuilder.Option.Feature.WebApi"), NcfBuiltInResource.Get("XncfBuilder.Option.Feature.WebApi.Help"), false),
-                 new SelectionItem("web", NcfBuiltInResource.Get("XncfBuilder.Option.Feature.Web"), NcfBuiltInResource.Get("XncfBuilder.Option.Feature.Web.Help"), false),
+                 new SelectionItem("function", XncfBuilderResource.Get("XncfBuilder.Option.Feature.Function"), XncfBuilderResource.Get("XncfBuilder.Option.Feature.Function.Help"), false),
+                 new SelectionItem("database", XncfBuilderResource.Get("XncfBuilder.Option.Feature.Database"), XncfBuilderResource.Get("XncfBuilder.Option.Feature.Database.Help"), false),
+                 new SelectionItem("webapi", XncfBuilderResource.Get("XncfBuilder.Option.Feature.WebApi"), XncfBuilderResource.Get("XncfBuilder.Option.Feature.WebApi.Help"), false),
+                 new SelectionItem("web", XncfBuilderResource.Get("XncfBuilder.Option.Feature.Web"), XncfBuilderResource.Get("XncfBuilder.Option.Feature.Web.Help"), false),
             });
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.InstallSample")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.InstallSample")]
            [FunctionParameterUi(ParameterType.CheckBoxList, nameof(UseSammpleOptions))]
            public bool UseSammple { get; set; }
 
            [JsonIgnore]
            public SelectionList UseSammpleOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("1", NcfBuiltInResource.Get("Common.Yes"), NcfBuiltInResource.Get("XncfBuilder.Option.InstallSample.Help"), false),
+                 new SelectionItem("1", XncfBuilderResource.Get("Common.Yes"), XncfBuilderResource.Get("XncfBuilder.Option.InstallSample.Help"), false),
             });
 
         /// <summary>

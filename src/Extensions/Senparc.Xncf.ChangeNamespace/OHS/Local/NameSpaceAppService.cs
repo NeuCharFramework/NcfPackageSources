@@ -39,7 +39,7 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
         }
 
 
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.ChangeNamespace.Change.Name", "Function.ChangeNamespace.Change.Description", typeof(Register))]
+        [FunctionRender(typeof(ChangeNamespaceResource), "Function.ChangeNamespace.Change.Name", "Function.ChangeNamespace.Change.Description", typeof(Register))]
         public async Task<StringAppResponse> Change(NameSpace_ChangeRequest request)
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
@@ -172,7 +172,7 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
 
         #endregion
 
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.ChangeNamespace.Restore.Name", "Function.ChangeNamespace.Restore.Description", typeof(Register))]
+        [FunctionRender(typeof(ChangeNamespaceResource), "Function.ChangeNamespace.Restore.Name", "Function.ChangeNamespace.Restore.Description", typeof(Register))]
         public async Task<StringAppResponse> Restore(NameSpace_RestoreRequest request)
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
@@ -194,7 +194,7 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
         }
 
 
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.ChangeNamespace.Download.Name", "Function.ChangeNamespace.Download.Description", typeof(Register))]
+        [FunctionRender(typeof(ChangeNamespaceResource), "Function.ChangeNamespace.Download.Name", "Function.ChangeNamespace.Download.Description", typeof(Register))]
         public async Task<StringAppResponse> DownloadSourceCode(NameSpace_DownloadSourceCodeRequest request)
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>

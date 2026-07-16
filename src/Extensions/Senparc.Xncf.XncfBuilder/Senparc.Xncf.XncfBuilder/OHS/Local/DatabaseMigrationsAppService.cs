@@ -162,7 +162,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         {
         }
 
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.XncfBuilder.AddMigration.Name", "Function.XncfBuilder.AddMigration.Description", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.AddMigration.Name", "Function.XncfBuilder.AddMigration.Description", typeof(Register))]
         public async Task<StringAppResponse> AddMigration(DatabaseMigrations_MigrationRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

@@ -36,10 +36,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
     {
         [Required]
         [MaxLength(250)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Migration.DatabasePlantPath")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Migration.DatabasePlantPath")]
         public string DatabasePlantPath { get; set; }
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Migration.ProjectPath")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Migration.ProjectPath")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(ProjectPathOptions))]
         public string ProjectPath { get; set; }
 
@@ -47,10 +47,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         public SelectionList ProjectPathOptions { get; set; } = new SelectionList(SelectionType.DropDownList);
 
         [MaxLength(250)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Migration.CustomProjectPath")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Migration.CustomProjectPath")]
         public string CustomProjectPath { get; set; }
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Migration.DatabaseTypes")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Migration.DatabaseTypes")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(DatabaseTypeOptions))]
         public string[] DatabaseTypes { get; set; }
 
@@ -66,35 +66,35 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
         [Required]
         [MaxLength(100)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Migration.DbContext")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Migration.DbContext")]
         public string DbContextName { get; set; } = "[Default]";
 
         [Required]
         [MaxLength(100)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Migration.Name")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Migration.Name")]
         public string MigrationName { get; set; }
 
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Migration.UpdateVersion")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Migration.UpdateVersion")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(UpdateVersionOptions))]
         public string UpdateVersion { get; set; }
 
         [JsonIgnore]
         public SelectionList UpdateVersionOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
-                 new SelectionItem("0", NcfBuiltInResource.Get("XncfBuilder.Option.Version.None"), "", true),
-                 new SelectionItem("1", NcfBuiltInResource.Get("XncfBuilder.Option.Version.Major"), "", false),
-                 new SelectionItem("2", NcfBuiltInResource.Get("XncfBuilder.Option.Version.Minor"), "", false),
-                 new SelectionItem("3", NcfBuiltInResource.Get("XncfBuilder.Option.Version.Patch"), "", false)
+                 new SelectionItem("0", XncfBuilderResource.Get("XncfBuilder.Option.Version.None"), "", true),
+                 new SelectionItem("1", XncfBuilderResource.Get("XncfBuilder.Option.Version.Major"), "", false),
+                 new SelectionItem("2", XncfBuilderResource.Get("XncfBuilder.Option.Version.Minor"), "", false),
+                 new SelectionItem("3", XncfBuilderResource.Get("XncfBuilder.Option.Version.Patch"), "", false)
             });
 
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Migration.Verbose")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Migration.Verbose")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(OutputVerboseOptions))]
         public bool OutputVerbose { get; set; }
 
         [JsonIgnore]
         public SelectionList OutputVerboseOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("true", NcfBuiltInResource.Get("Common.Use"), "", false)
+                 new SelectionItem("true", XncfBuilderResource.Get("Common.Use"), "", false)
             });
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             {
                 //TODO:单独生成一个表来记录
 
-                this.ProjectPathOptions.Items.Add(new SelectionItem("N/A", NcfBuiltInResource.Get("XncfBuilder.Option.CustomPath"), "", true));
+                this.ProjectPathOptions.Items.Add(new SelectionItem("N/A", XncfBuilderResource.Get("XncfBuilder.Option.CustomPath"), "", true));
 
                 //添加“停机坪”路径
                 var configService = serviceProvider.GetService<ConfigService>();
@@ -151,7 +151,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                 projectPath = request.CustomProjectPath;
                 if (projectPath.IsNullOrEmpty())
                 {
-                    throw new NcfExceptionBase(NcfBuiltInResource.Get("XncfBuilder.Validation.CustomProjectPathRequired"));
+                    throw new NcfExceptionBase(XncfBuilderResource.Get("XncfBuilder.Validation.CustomProjectPathRequired"));
                 }
             }
 

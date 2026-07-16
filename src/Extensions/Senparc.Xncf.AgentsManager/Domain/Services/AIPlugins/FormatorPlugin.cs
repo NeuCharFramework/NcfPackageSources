@@ -33,9 +33,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
     public class FormatorPlugin
     {
 
-        [KernelFunction, LocalizedDescription(typeof(NcfBuiltInResource), "Agents.Plugin.TextLength.Description")]
+        [KernelFunction, LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.TextLength.Description")]
         public async Task<int> Calc(
-            [LocalizedDescription(typeof(NcfBuiltInResource), "Agents.Plugin.OriginalText")]
+            [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.OriginalText")]
             string text
             )
         {
@@ -46,11 +46,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 
     public class TranslatorPlugin
     {
-        [KernelFunction, LocalizedDescription(typeof(NcfBuiltInResource), "Agents.Plugin.Translate.Description")]
+        [KernelFunction, LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Translate.Description")]
         public async Task<string> Translate(
-            [LocalizedDescription(typeof(NcfBuiltInResource), "Agents.Plugin.OriginalText")]
+            [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.OriginalText")]
             string text,
-            [LocalizedDescription(typeof(NcfBuiltInResource), "Agents.Plugin.TargetLanguage")]
+            [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.TargetLanguage")]
             string language
             )
         {
@@ -76,7 +76,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
                                 {
                                     ChatOptions = new ChatOptions()
                                     {
-                                        Instructions = NcfBuiltInResource.Format(
+                                        Instructions = AgentsManagerResource.Format(
                                             "Agents.Plugin.Translate.Instructions",
                                             "你是一位熟悉“{0}”的专业翻译，请准确翻译用户提供的文本，只输出译文。",
                                             language),

@@ -48,11 +48,11 @@ namespace Senparc.Xncf.FileManager
 
         public override string Version => "0.2.5";//必须填写版本号
 
-        public override string MenuName => NcfBuiltInResource.Get("Module.FileManager.MenuName", "文件管理");
+        public override string MenuName => FileManagerResource.Get("Module.FileManager.MenuName", "文件管理");
 
         public override string Icon => "fa fa-database";
 
-        public override string Description => NcfBuiltInResource.Get("Module.FileManager.Description", "文件管理");
+        public override string Description => FileManagerResource.Get("Module.FileManager.Description", "文件管理");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

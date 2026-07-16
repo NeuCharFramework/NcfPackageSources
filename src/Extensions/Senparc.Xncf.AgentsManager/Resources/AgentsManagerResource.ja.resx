@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.AgentsManager.MenuName" xml:space="preserve">
+    <value>Agents 管理</value>
+  </data>
+  <data name="Module.AgentsManager.Description" xml:space="preserve">
+    <value>AI エージェントと関連設定を管理します</value>
+  </data>
+  <data name="Area.Home" xml:space="preserve">
+    <value>ホーム</value>
+  </data>
+  <data name="Function.Agents.TemplateManagement.Name" xml:space="preserve">
+    <value>Agent テンプレート管理</value>
+  </data>
+  <data name="Function.Agents.TemplateManagement.Description" xml:space="preserve">
+    <value>Agent テンプレートを管理します</value>
+  </data>
+  <data name="Function.Agents.CreateFromPromptCode.Name" xml:space="preserve">
+    <value>PromptCode からエージェントを作成</value>
+  </data>
+  <data name="Function.Agents.CreateFromPromptCode.Description" xml:space="preserve">
+    <value>範囲、タクティクス、完全指定の PromptCode からエージェントを作成します</value>
+  </data>
+  <data name="Function.Agents.SearchTemplate.Name" xml:space="preserve">
+    <value>Agent テンプレートを検索して ID を返す</value>
+  </data>
+  <data name="Function.Agents.SearchTemplate.Description" xml:space="preserve">
+    <value>名前または PromptCode で最適な AgentTemplate を検索し、選択可能な ID を返します</value>
+  </data>
+  <data name="Function.Agents.ManageChatGroup.Name" xml:space="preserve">
+    <value>ChatGroup を管理</value>
+  </data>
+  <data name="Function.Agents.ManageChatGroup.Description" xml:space="preserve">
+    <value>ChatGroup を管理します</value>
+  </data>
+  <data name="Function.Agents.StartChatGroup.Name" xml:space="preserve">
+    <value>ChatGroup を開始</value>
+  </data>
+  <data name="Function.Agents.StartChatGroup.Description" xml:space="preserve">
+    <value>ChatGroup を開始します</value>
+  </data>
+  <data name="Function.Agents.DeleteConversation.Name" xml:space="preserve">
+    <value>会話を削除</value>
+  </data>
+  <data name="Function.Agents.DeleteConversation.Description" xml:space="preserve">
+    <value>会話と関連するすべてのデータを削除します</value>
+  </data>
+  <data name="Parameter.Agents.Template.Name" xml:space="preserve">
+    <value>名前||Agent テンプレート名</value>
+  </data>
+  <data name="Parameter.Agents.Template.Id" xml:space="preserve">
+    <value>ID||0 で新規作成</value>
+  </data>
+  <data name="Parameter.Agents.Template.SystemMessage" xml:space="preserve">
+    <value>SystemMessage||システムメッセージの PromptRangeCode。検索、選択、手動入力に対応</value>
+  </data>
+  <data name="Parameter.Agents.Template.Description" xml:space="preserve">
+    <value>説明||テンプレートの説明。モデルの動作には影響しません</value>
+  </data>
+  <data name="Parameter.Agents.Template.Platform" xml:space="preserve">
+    <value>外部プラットフォーム||メッセージの公開先</value>
+  </data>
+  <data name="Parameter.Agents.Template.PlatformParameter" xml:space="preserve">
+    <value>プラットフォーム引数||キーなどの接続引数</value>
+  </data>
+  <data name="Parameter.Agents.Template.FunctionCalls" xml:space="preserve">
+    <value>Function Calls||カンマ区切りの Function Call 名</value>
+  </data>
+  <data name="Parameter.Agents.Create.Name" xml:space="preserve">
+    <value>Agent 名||新しい Agent の名前</value>
+  </data>
+  <data name="Parameter.Agents.Create.ManualPromptCode" xml:space="preserve">
+    <value>PromptCode を手動入力||レンジ名、タクティック接頭辞、完全版に対応。SystemMessage の手動入力時は必須</value>
+  </data>
+  <data name="Parameter.Agents.Create.Description" xml:space="preserve">
+    <value>説明||新しい Agent の説明（任意）</value>
+  </data>
+  <data name="Parameter.Agents.Create.FunctionCalls" xml:space="preserve">
+    <value>Function Calls||カンマ区切りの Function Call 名（任意）</value>
+  </data>
+  <data name="Parameter.Agents.Search.Query" xml:space="preserve">
+    <value>検索語||名前、PromptCode、キーワード。複数はカンマ、セミコロン、改行で区切ります</value>
+  </data>
+  <data name="Parameter.Agents.Search.TopN" xml:space="preserve">
+    <value>最大件数||検索語ごとの候補数。既定 5</value>
+  </data>
+  <data name="Parameter.Agents.Chat.SelectManage" xml:space="preserve">
+    <value>グループを選択||管理するグループを選択または新規作成</value>
+  </data>
+  <data name="Agents.Chat.NewGroup" xml:space="preserve">
+    <value>新しいグループ</value>
+  </data>
+  <data name="Agents.Chat.NewGroup.Help" xml:space="preserve">
+    <value>グループを新規作成</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Name" xml:space="preserve">
+    <value>グループ名||グループの名前</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Members" xml:space="preserve">
+    <value>メンバー||任意。手動入力も使用できます</value>
+  </data>
+  <data name="Parameter.Agents.Chat.MembersManual" xml:space="preserve">
+    <value>メンバー（手動）||名前、ID、PromptCode。複数はカンマ、セミコロン、改行で区切ります</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Admin" xml:space="preserve">
+    <value>グループ所有者||最高評価のホスト Agent を自動使用。手動入力は互換用です</value>
+  </data>
+  <data name="Parameter.Agents.Chat.AdminManual" xml:space="preserve">
+    <value>所有者（手動）||名前、ID、PromptCode（任意）</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Contact" xml:space="preserve">
+    <value>連絡 Agent||最高評価のホスト Agent を自動使用。手動入力は互換用です</value>
+  </data>
+  <data name="Parameter.Agents.Chat.ContactManual" xml:space="preserve">
+    <value>連絡 Agent（手動）||名前、ID、PromptCode（任意）</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Description" xml:space="preserve">
+    <value>説明||グループの説明</value>
+  </data>
+  <data name="Parameter.Agents.Chat.SelectRun" xml:space="preserve">
+    <value>グループを選択||実行するグループを選択</value>
+  </data>
+  <data name="Parameter.Agents.Chat.AIModel" xml:space="preserve">
+    <value>AI モデル||このタスクに使う外部 AI モデル</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Individuation" xml:space="preserve">
+    <value>パーソナライズ Agent||</value>
+  </data>
+  <data name="Common.Yes" xml:space="preserve">
+    <value>はい</value>
+  </data>
+  <data name="Agents.Chat.Individuation.Help" xml:space="preserve">
+    <value>個別の AI パラメーターで Agent を実行</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Command" xml:space="preserve">
+    <value>何をお手伝いしますか||Agents に依頼する作業を説明してください</value>
+  </data>
+  <data name="Parameter.Agents.Chat.SelectDelete" xml:space="preserve">
+    <value>削除する会話||会話とすべてのメッセージ、タスクを削除</value>
+  </data>
+  <data name="Parameter.Agents.Chat.ConfirmDelete" xml:space="preserve">
+    <value>削除を確認||選択した会話と全データの削除を確認</value>
+  </data>
+  <data name="Agents.Chat.CreatedAt" xml:space="preserve">
+    <value>{0}（作成日時：{1:g}）</value>
+  </data>
+  <data name="Agents.Plugin.Crawl.Description" xml:space="preserve">
+    <value>Web ページをクロールして関連内容を返します</value>
+  </data>
+  <data name="Agents.Plugin.Crawl.Url" xml:space="preserve">
+    <value>クロール URL</value>
+  </data>
+  <data name="Agents.Plugin.Crawl.Depth" xml:space="preserve">
+    <value>最大クロール深度</value>
+  </data>
+  <data name="Agents.Plugin.Crawl.PageCount" xml:space="preserve">
+    <value>最大ページ数</value>
+  </data>
+  <data name="Agents.Plugin.Crawl.Question" xml:space="preserve">
+    <value>質問</value>
+  </data>
+  <data name="Agents.Plugin.TextLength.Description" xml:space="preserve">
+    <value>テキストの文字数を取得</value>
+  </data>
+  <data name="Agents.Plugin.OriginalText" xml:space="preserve">
+    <value>原文</value>
+  </data>
+  <data name="Agents.Plugin.Translate.Description" xml:space="preserve">
+    <value>テキストを翻訳</value>
+  </data>
+  <data name="Agents.Plugin.TargetLanguage" xml:space="preserve">
+    <value>対象言語</value>
+  </data>
+  <data name="Agents.Plugin.Translate.Instructions" xml:space="preserve">
+    <value>あなたは {0} に堪能なプロの翻訳者です。ユーザーの文章を正確に翻訳し、訳文のみ出力してください。</value>
+  </data>
+</root>

@@ -42,11 +42,11 @@ namespace Senparc.Xncf.AIAgentsHub
 
         public override string Version => "0.1.0";//必须填写版本号
 
-        public override string MenuName => NcfBuiltInResource.Get("Module.AIAgentsHub.MenuName", "AI Agent Hub");
+        public override string MenuName => AIAgentsHubResource.Get("Module.AIAgentsHub.MenuName", "AI Agent Hub");
 
         public override string Icon => "fa fa-robot";
 
-        public override string Description => NcfBuiltInResource.Get("Module.AIAgentsHub.Description", "人工智能代理枢纽模块");
+        public override string Description => AIAgentsHubResource.Get("Module.AIAgentsHub.Description", "人工智能代理枢纽模块");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

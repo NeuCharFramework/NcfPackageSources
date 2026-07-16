@@ -26,11 +26,11 @@ namespace Senparc.Xncf.FirmwareUpdate.OHS.Local.PL;
 
 public class FirmwareUpdate_ConfigureRequest : FunctionAppRequestBase
 {
-    [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.FirmwareUpdate.AutoMirror")]
+    [LocalizedDescription(typeof(FirmwareUpdateResource), "Parameter.FirmwareUpdate.AutoMirror")]
     public bool AutoMirrorEnabled { get; set; }
 
     [Required]
-    [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.FirmwareUpdate.Interval")]
+    [LocalizedDescription(typeof(FirmwareUpdateResource), "Parameter.FirmwareUpdate.Interval")]
     [FunctionParameterUi(ParameterType.DropDownList, nameof(UpdateIntervalHoursOptions))]
     public int UpdateIntervalHours { get; set; } = 24;
 
@@ -39,8 +39,8 @@ public class FirmwareUpdate_ConfigureRequest : FunctionAppRequestBase
         SelectionType.DropDownList,
         Enumerable.Range(1, 24).Select(h => new SelectionItem(
             h.ToString(),
-            NcfBuiltInResource.Format("Parameter.FirmwareUpdate.Interval.Option", "{0} 小时", h),
-            NcfBuiltInResource.Format("Parameter.FirmwareUpdate.Interval.Help", "每 {0} 小时检查一次", h),
+            FirmwareUpdateResource.Format("Parameter.FirmwareUpdate.Interval.Option", "{0} 小时", h),
+            FirmwareUpdateResource.Format("Parameter.FirmwareUpdate.Interval.Help", "每 {0} 小时检查一次", h),
             h == 24)).ToArray());
 
     public override async Task LoadData(IServiceProvider serviceProvider)

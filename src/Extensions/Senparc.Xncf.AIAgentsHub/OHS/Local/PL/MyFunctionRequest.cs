@@ -25,38 +25,38 @@ namespace Senparc.Xncf.AIAgentsHub.OHS.Local.PL
     {
         [Required]
         [MaxLength(50)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.Name")]
+        [LocalizedDescription(typeof(AIAgentsHubResource), "Parameter.Sample.Name")]
         public string Name { get; set; }
 
         [Required]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.Number1")]
+        [LocalizedDescription(typeof(AIAgentsHubResource), "Parameter.Sample.Number1")]
         public int Number1 { get; set; }
 
 
         [Required]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.Number2")]
+        [LocalizedDescription(typeof(AIAgentsHubResource), "Parameter.Sample.Number2")]
         public int Number2 { get; set; }
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.Operator")]//下拉列表
+        [LocalizedDescription(typeof(AIAgentsHubResource), "Parameter.Sample.Operator")]//下拉列表
            [FunctionParameterUi(ParameterType.DropDownList, nameof(OperatorOptions))]
            public string Operator { get; set; }
 
            [JsonIgnore]
            public SelectionList OperatorOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
-                 new SelectionItem("+", NcfBuiltInResource.Get("Parameter.Operator.Add"), NcfBuiltInResource.Get("Parameter.Operator.Add.Help"), false),
-                 new SelectionItem("-", NcfBuiltInResource.Get("Parameter.Operator.Subtract"), NcfBuiltInResource.Get("Parameter.Operator.Subtract.Help"), true),
-                 new SelectionItem("×", NcfBuiltInResource.Get("Parameter.Operator.Multiply"), NcfBuiltInResource.Get("Parameter.Operator.Multiply.Help"), false),
-                 new SelectionItem("÷", NcfBuiltInResource.Get("Parameter.Operator.Divide"), NcfBuiltInResource.Get("Parameter.Operator.Divide.Help"), false)
+                 new SelectionItem("+", AIAgentsHubResource.Get("Parameter.Operator.Add"), AIAgentsHubResource.Get("Parameter.Operator.Add.Help"), false),
+                 new SelectionItem("-", AIAgentsHubResource.Get("Parameter.Operator.Subtract"), AIAgentsHubResource.Get("Parameter.Operator.Subtract.Help"), true),
+                 new SelectionItem("×", AIAgentsHubResource.Get("Parameter.Operator.Multiply"), AIAgentsHubResource.Get("Parameter.Operator.Multiply.Help"), false),
+                 new SelectionItem("÷", AIAgentsHubResource.Get("Parameter.Operator.Divide"), AIAgentsHubResource.Get("Parameter.Operator.Divide.Help"), false)
             });
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.Power")]//多选框
+        [LocalizedDescription(typeof(AIAgentsHubResource), "Parameter.Sample.Power")]//多选框
            [FunctionParameterUi(ParameterType.CheckBoxList, nameof(PowerOptions))]
            public string[] Power { get; set; }
 
            [JsonIgnore]
            public SelectionList PowerOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("2", NcfBuiltInResource.Get("Parameter.Power.Square"), NcfBuiltInResource.Get("Parameter.Power.Square.Help"), false),
-                 new SelectionItem("3", NcfBuiltInResource.Get("Parameter.Power.Cube"), NcfBuiltInResource.Get("Parameter.Power.Cube.Help"), false)
+                 new SelectionItem("2", AIAgentsHubResource.Get("Parameter.Power.Square"), AIAgentsHubResource.Get("Parameter.Power.Square.Help"), false),
+                 new SelectionItem("3", AIAgentsHubResource.Get("Parameter.Power.Cube"), AIAgentsHubResource.Get("Parameter.Power.Cube.Help"), false)
             });
     }
 }

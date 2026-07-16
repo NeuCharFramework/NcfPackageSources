@@ -28,11 +28,11 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.PL
     {
         [Required]
         [MaxLength(300)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.ChangeNamespace.Path")]
+        [LocalizedDescription(typeof(ChangeNamespaceResource), "Parameter.ChangeNamespace.Path")]
         public string Path { get; set; }
         [Required]
         [MaxLength(100)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.ChangeNamespace.NewNamespace")]
+        [LocalizedDescription(typeof(ChangeNamespaceResource), "Parameter.ChangeNamespace.NewNamespace")]
         public string NewNamespace { get; set; }
 
         public string OldNamespaceKeyword = "Senparc.";//此参数不设置为属性，不需要在前端显示
@@ -45,7 +45,7 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.PL
         /// <para>注意：string[]类型的默认值为选项的备选值，如果没有提供备选值，此参数将别忽略</para>
         /// </summary>z
         [Required]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.ChangeNamespace.Source")]
+        [LocalizedDescription(typeof(ChangeNamespaceResource), "Parameter.ChangeNamespace.Source")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(SiteOptions))]
         public string Site { get; set; }
 
@@ -68,11 +68,11 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.PL
     {
         [Required]
         [MaxLength(300)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.ChangeNamespace.Path")]
+        [LocalizedDescription(typeof(ChangeNamespaceResource), "Parameter.ChangeNamespace.Path")]
         public string Path { get; set; }
         [Required]
         [MaxLength(100)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.ChangeNamespace.CurrentNamespace")]
+        [LocalizedDescription(typeof(ChangeNamespaceResource), "Parameter.ChangeNamespace.CurrentNamespace")]
         public string MyNamespace { get; set; }
     }
 }

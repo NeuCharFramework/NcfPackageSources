@@ -43,7 +43,7 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
         }
 
         //[ApiBind]
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.XncfManager.ViewFunctionStatus.Name", "Function.XncfManager.ViewFunctionStatus.Description", typeof(Register))]
+        [FunctionRender(typeof(XncfModuleManagerResource), "Function.XncfManager.ViewFunctionStatus.Name", "Function.XncfManager.ViewFunctionStatus.Description", typeof(Register))]
         public async Task<StringAppResponse> ShowFunctions(XncfState_ShowFunctionsRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -98,7 +98,7 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
             });
         }
 
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.XncfManager.InstallAndEnable.Name", "Function.XncfManager.InstallAndEnable.Description", typeof(Register))]
+        [FunctionRender(typeof(XncfModuleManagerResource), "Function.XncfManager.InstallAndEnable.Name", "Function.XncfManager.InstallAndEnable.Description", typeof(Register))]
         public async Task<StringAppResponse> InstallAndOpenModule(XncfState_InstallAndOpenModuleRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -122,7 +122,7 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
             });
         }
 
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.XncfManager.InstallAndEnableAi.Name", "Function.XncfManager.InstallAndEnableAi.Description", typeof(Register))]
+        [FunctionRender(typeof(XncfModuleManagerResource), "Function.XncfManager.InstallAndEnableAi.Name", "Function.XncfManager.InstallAndEnableAi.Description", typeof(Register))]
         public async Task<StringAppResponse> InstallAndOpenModuleForAi(string moduleUidOrName)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -210,7 +210,7 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
             return sb.ToString();
         }
 
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.XncfManager.GetAllModules.Name", "Function.XncfManager.GetAllModules.Description", typeof(Register))]
+        [FunctionRender(typeof(XncfModuleManagerResource), "Function.XncfManager.GetAllModules.Name", "Function.XncfManager.GetAllModules.Description", typeof(Register))]
         public async Task<StringAppResponse> GetAllXncfModules()
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.DatabaseToolkit.MenuName" xml:space="preserve">
+    <value>Herramientas de base de datos</value>
+  </data>
+  <data name="Module.DatabaseToolkit.Description" xml:space="preserve">
+    <value>Herramientas de operación de bases de datos. Los cambios pueden dañar los datos; comprenda cada función y haga una copia antes de modificar.</value>
+  </data>
+  <data name="Function.Database.AgentPrompt.Name" xml:space="preserve">
+    <value>Obtener prompt del sistema de AI Agent</value>
+  </data>
+  <data name="Function.Database.AgentPrompt.Description" xml:space="preserve">
+    <value>Obtiene el prompt del sistema y la definición de rol configurados para un AI Agent</value>
+  </data>
+  <data name="Function.Database.Backup.Name" xml:space="preserve">
+    <value>Hacer copia de la base de datos</value>
+  </data>
+  <data name="Function.Database.Backup.Description" xml:space="preserve">
+    <value>Copia la base actual a una ruta que no debe ser accesible públicamente</value>
+  </data>
+  <data name="Function.Database.CheckBackup.Name" xml:space="preserve">
+    <value>Comprobar copia automática</value>
+  </data>
+  <data name="Function.Database.CheckBackup.Description" xml:space="preserve">
+    <value>Comprueba que el intervalo de copia esté configurado y sea mayor que cero</value>
+  </data>
+  <data name="Function.Database.CheckUpdate.Name" xml:space="preserve">
+    <value>Comprobar actualizaciones de base</value>
+  </data>
+  <data name="Function.Database.CheckUpdate.Description" xml:space="preserve">
+    <value>Detecta migraciones EF Core pendientes; ejecute Merge EF Core si existen</value>
+  </data>
+  <data name="Function.Database.ConfigTypes.Name" xml:space="preserve">
+    <value>Ver tipos de configuración</value>
+  </data>
+  <data name="Function.Database.ConfigTypes.Description" xml:space="preserve">
+    <value>Muestra tipos que implementan IDatabaseConfiguration</value>
+  </data>
+  <data name="Function.Database.ExportSql.Name" xml:space="preserve">
+    <value>Exportar SQL de la base actual</value>
+  </data>
+  <data name="Function.Database.ExportSql.Description" xml:space="preserve">
+    <value>Exporta SQL de todas las tablas usadas por el sitio</value>
+  </data>
+  <data name="Function.Database.Merge.Name" xml:space="preserve">
+    <value>Merge EF Core</value>
+  </data>
+  <data name="Function.Database.Merge.Description" xml:space="preserve">
+    <value>Actualiza la base con EF Core Code First para igualar la versión en ejecución</value>
+  </data>
+  <data name="Function.Database.QueryRecords.Name" xml:space="preserve">
+    <value>Consultar registros</value>
+  </data>
+  <data name="Function.Database.QueryRecords.Description" xml:space="preserve">
+    <value>Consulta una tabla con filtros de condición y selección de campos</value>
+  </data>
+  <data name="Function.Database.QueryTemplates.Name" xml:space="preserve">
+    <value>Obtener plantillas de consulta</value>
+  </data>
+  <data name="Function.Database.QueryTemplates.Description" xml:space="preserve">
+    <value>Obtiene plantillas y ejemplos de consultas predefinidos</value>
+  </data>
+  <data name="Function.Database.Schema.Name" xml:space="preserve">
+    <value>Consultar esquema de base de datos</value>
+  </data>
+  <data name="Function.Database.Schema.Description" xml:space="preserve">
+    <value>Consulta módulos, tablas y campos disponibles</value>
+  </data>
+  <data name="Function.Database.Settings.Name" xml:space="preserve">
+    <value>Configurar parámetros de base</value>
+  </data>
+  <data name="Function.Database.Settings.Description" xml:space="preserve">
+    <value>Configura intervalos y rutas de copia de seguridad</value>
+  </data>
+  <data name="Function.Database.Statistics.Name" xml:space="preserve">
+    <value>Obtener estadísticas de base</value>
+  </data>
+  <data name="Function.Database.Statistics.Description" xml:space="preserve">
+    <value>Obtiene número de filas, tamaño de datos y otras estadísticas</value>
+  </data>
+  <data name="Parameter.DatabaseBackup.Path" xml:space="preserve">
+    <value>Ruta||Ruta física local con nombre de archivo, por ejemplo E:\Senparc\Database-Backup\NCF.bak; asegúrese de que el proceso web tenga acceso</value>
+  </data>
+  <data name="Parameter.DatabaseBackup.Options" xml:space="preserve">
+    <value>Opciones||Opciones de copia de seguridad de la base de datos</value>
+  </data>
+  <data name="Parameter.DatabaseBackup.NoOverwrite" xml:space="preserve">
+    <value>No sobrescribir un archivo existente</value>
+  </data>
+  <data name="Parameter.DatabaseBackup.NoOverwrite.Help" xml:space="preserve">
+    <value>Omitir la copia si el archivo de destino ya existe</value>
+  </data>
+  <data name="Parameter.DatabaseBackup.Verify" xml:space="preserve">
+    <value>Comprobar que el archivo .bak cambió tras la copia</value>
+  </data>
+  <data name="Parameter.DatabaseBackup.Verify.Help" xml:space="preserve">
+    <value>Solo comprueba si cambió el archivo; no valida su contenido</value>
+  </data>
+  <data name="Common.Error" xml:space="preserve">
+    <value>Error: {0}</value>
+  </data>
+  <data name="Database.Config.Current" xml:space="preserve">
+    <value>DatabaseConfiguration actual: {0}; tipo: {1}</value>
+  </data>
+  <data name="Database.Config.SaveLogName" xml:space="preserve">
+    <value>Configurar base de datos</value>
+  </data>
+  <data name="Database.Config.Saved" xml:space="preserve">
+    <value>Configuración guardada.</value>
+  </data>
+  <data name="Database.Config.SavedValues" xml:space="preserve">
+    <value>Intervalo en minutos: {0}; ruta: {1}</value>
+  </data>
+  <data name="Database.ModuleAndTableRequired" xml:space="preserve">
+    <value>El nombre del módulo y de la tabla son obligatorios.</value>
+  </data>
+  <data name="Database.ModuleNotFound" xml:space="preserve">
+    <value>No se encontró el módulo «{0}». Módulos disponibles: {1}</value>
+  </data>
+  <data name="Database.TableNotFoundAvailable" xml:space="preserve">
+    <value>No se encontró la tabla «{0}» en «{1}». Entidades disponibles: {2}</value>
+  </data>
+  <data name="Database.TableNotFound" xml:space="preserve">
+    <value>No se encontró la tabla: {0}.{1}</value>
+  </data>
+  <data name="Database.Query.Log" xml:space="preserve">
+    <value>Consultando {0}.{1} (entrada: {2}.{3})</value>
+  </data>
+  <data name="Database.Query.Error" xml:space="preserve">
+    <value>Error al consultar registros: {0}</value>
+  </data>
+  <data name="Database.Statistics.Log" xml:space="preserve">
+    <value>Obteniendo estadísticas de {0}.{1} (entrada: {2}.{3})</value>
+  </data>
+  <data name="Database.Statistics.Error" xml:space="preserve">
+    <value>Error al obtener estadísticas: {0}</value>
+  </data>
+  <data name="Database.Schema.TableDetailLog" xml:space="preserve">
+    <value>Obteniendo detalles de la tabla: {0}.{1}</value>
+  </data>
+  <data name="Database.Schema.SuggestedModules" xml:space="preserve">
+    <value>
+Posibles módulos coincidentes: {0}</value>
+  </data>
+  <data name="Database.Schema.AllModules" xml:space="preserve">
+    <value>
+Todos los módulos disponibles: {0}</value>
+  </data>
+  <data name="Database.Schema.ModuleNotFoundWithHint" xml:space="preserve">
+    <value>No se encontró el módulo «{0}».{1}</value>
+  </data>
+  <data name="Database.Schema.NoAvailableTables" xml:space="preserve">
+    <value>(no hay tablas disponibles)</value>
+  </data>
+  <data name="Database.Schema.EntityNotFound" xml:space="preserve">
+    <value>No se encontró la entidad «{1}» en «{0}».
+Entidades disponibles: {2}</value>
+  </data>
+  <data name="Database.Schema.ModuleTablesLog" xml:space="preserve">
+    <value>Obteniendo todas las tablas del módulo {0}</value>
+  </data>
+  <data name="Database.Schema.ModuleHasNoTables" xml:space="preserve">
+    <value>El módulo «{0}» no tiene tablas consultables.</value>
+  </data>
+  <data name="Database.Schema.OverviewLog" xml:space="preserve">
+    <value>Obteniendo un resumen de módulos y tablas consultables</value>
+  </data>
+  <data name="Database.Schema.NoModules" xml:space="preserve">
+    <value>No hay módulos de base de datos consultables.</value>
+  </data>
+  <data name="Database.Schema.Error" xml:space="preserve">
+    <value>Error al consultar el esquema: {0}</value>
+  </data>
+  <data name="Validation.Database.ModuleRequired" xml:space="preserve">
+    <value>El nombre del módulo es obligatorio.</value>
+  </data>
+  <data name="Validation.Database.TableRequired" xml:space="preserve">
+    <value>El nombre de la tabla es obligatorio.</value>
+  </data>
+  <data name="Parameter.Database.Module.Query" xml:space="preserve">
+    <value>Nombre del módulo||Obligatorio. Por ejemplo KnowledgeBase o AIKernel</value>
+  </data>
+  <data name="Parameter.Database.Table.Query" xml:space="preserve">
+    <value>Nombre de la tabla||Obligatorio. Tabla que se consultará</value>
+  </data>
+  <data name="Parameter.Database.Filter" xml:space="preserve">
+    <value>Filtro||Condición SQL WHERE opcional, como Name = "test" o Id &gt; 10</value>
+  </data>
+  <data name="Parameter.Database.PageNumber" xml:space="preserve">
+    <value>Número de página||Opcional. Predeterminado 1; mínimo 1</value>
+  </data>
+  <data name="Parameter.Database.PageSize" xml:space="preserve">
+    <value>Tamaño de página||Opcional. Predeterminado 20; rango 1–1000</value>
+  </data>
+  <data name="Parameter.Database.Module.Statistics" xml:space="preserve">
+    <value>Nombre del módulo||Obligatorio. Módulo cuyas estadísticas se consultarán</value>
+  </data>
+  <data name="Parameter.Database.Table.Statistics" xml:space="preserve">
+    <value>Nombre de la tabla||Obligatorio. Tabla cuyas estadísticas se consultarán</value>
+  </data>
+  <data name="Parameter.Database.Schema.Module" xml:space="preserve">
+    <value>Nombre del módulo||Opcional. Devuelve solo las tablas de este módulo</value>
+  </data>
+  <data name="Parameter.Database.Schema.Table" xml:space="preserve">
+    <value>Nombre de la tabla||Opcional. Úselo con el módulo para obtener detalles</value>
+  </data>
+  <data name="Parameter.Database.Config.Cycle" xml:space="preserve">
+    <value>Intervalo de copia automática (minutos)||0 desactiva la copia automática</value>
+  </data>
+  <data name="Parameter.Database.Config.Path" xml:space="preserve">
+    <value>Ruta de copia||Ruta física local, por ejemplo: E:\Senparc\Ncf\NCF.bak</value>
+  </data>
+</root>

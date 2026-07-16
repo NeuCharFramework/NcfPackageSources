@@ -56,11 +56,11 @@ namespace Senparc.Xncf.Tenant
 
         public override string Version => "0.1";//必须填写版本号
 
-        public override string MenuName => NcfBuiltInResource.Get("Module.Tenant.MenuName", "多租户");
+        public override string MenuName => TenantResource.Get("Module.Tenant.MenuName", "多租户");
 
         public override string Icon => "fa fa-university";//fa fa-cog
 
-        public override string Description => NcfBuiltInResource.Get("Module.Tenant.Description", "多租户模块，这是系统服务核心模块，请勿删除此模块。如果你实在忍不住，请务必做好数据备份。");
+        public override string Description => TenantResource.Get("Module.Tenant.Description", "多租户模块，这是系统服务核心模块，请勿删除此模块。如果你实在忍不住，请务必做好数据备份。");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

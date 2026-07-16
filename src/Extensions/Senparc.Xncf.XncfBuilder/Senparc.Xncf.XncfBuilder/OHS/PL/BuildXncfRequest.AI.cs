@@ -39,8 +39,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             {
                 aiModel.Items.Add(new SelectionItem(
                     "Default",
-                    NcfBuiltInResource.Format("XncfBuilder.AI.DefaultModel", "系统默认（AiPlatform：{0}，Endpoint：{1}）", defaultSetting.AiPlatform, defaultSetting.Endpoint),
-                    NcfBuiltInResource.Get("XncfBuilder.AI.DefaultModel.Help"),
+                    XncfBuilderResource.Format("XncfBuilder.AI.DefaultModel", "系统默认（AiPlatform：{0}，Endpoint：{1}）", defaultSetting.AiPlatform, defaultSetting.Endpoint),
+                    XncfBuilderResource.Get("XncfBuilder.AI.DefaultModel.Help"),
                     true));
             }
             catch (SenparcAiException)
@@ -49,8 +49,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
                 aiModel.Items.Add(new SelectionItem(
                     "Default",
-                    NcfBuiltInResource.Format("XncfBuilder.AI.DefaultModel.Unconfigured", "系统默认（AiPlatform：{0}，未检测到 Endpoint；请先在 appsettings.json 中配置模型）", defaultSetting.AiPlatform),
-                    NcfBuiltInResource.Get("XncfBuilder.AI.DefaultModel.Help"),
+                    XncfBuilderResource.Format("XncfBuilder.AI.DefaultModel.Unconfigured", "系统默认（AiPlatform：{0}，未检测到 Endpoint；请先在 appsettings.json 中配置模型）", defaultSetting.AiPlatform),
+                    XncfBuilderResource.Get("XncfBuilder.AI.DefaultModel.Help"),
                     true));
             }
 
@@ -72,39 +72,39 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
     {
         [Required]
         [MaxLength(250)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Entity.Requirement")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Entity.Requirement")]
         public string Requirement { get; set; }
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Entity.Domain")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Entity.Domain")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(InjectDomainOptions))]
         public string InjectDomain { get; set; }
 
         [JsonIgnore]
         public SelectionList InjectDomainOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Entity.Actions")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Entity.Actions")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(MoreActionsOptions))]
         public string[] MoreActions { get; set; }
 
         [JsonIgnore]
         public SelectionList MoreActionsOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("BuildDto", NcfBuiltInResource.Get("XncfBuilder.Option.Action.Dto"), NcfBuiltInResource.Get("XncfBuilder.Option.Action.Dto.Help"), true),
-                 new SelectionItem("BuildMigration", NcfBuiltInResource.Get("XncfBuilder.Option.Action.Migration"), NcfBuiltInResource.Get("XncfBuilder.Option.Action.Migration.Help"), true),
-                 new SelectionItem("CreateRepository", NcfBuiltInResource.Get("XncfBuilder.Option.Action.Repository"), NcfBuiltInResource.Get("XncfBuilder.Option.Action.Repository.Help"), false),
-                 new SelectionItem("CreateService", NcfBuiltInResource.Get("XncfBuilder.Option.Action.Service"), NcfBuiltInResource.Get("XncfBuilder.Option.Action.Service.Help"), false),
-                 new SelectionItem("CreateAppService", NcfBuiltInResource.Get("XncfBuilder.Option.Action.AppService"), NcfBuiltInResource.Get("XncfBuilder.Option.Action.AppService.Help"), false)
+                 new SelectionItem("BuildDto", XncfBuilderResource.Get("XncfBuilder.Option.Action.Dto"), XncfBuilderResource.Get("XncfBuilder.Option.Action.Dto.Help"), true),
+                 new SelectionItem("BuildMigration", XncfBuilderResource.Get("XncfBuilder.Option.Action.Migration"), XncfBuilderResource.Get("XncfBuilder.Option.Action.Migration.Help"), true),
+                 new SelectionItem("CreateRepository", XncfBuilderResource.Get("XncfBuilder.Option.Action.Repository"), XncfBuilderResource.Get("XncfBuilder.Option.Action.Repository.Help"), false),
+                 new SelectionItem("CreateService", XncfBuilderResource.Get("XncfBuilder.Option.Action.Service"), XncfBuilderResource.Get("XncfBuilder.Option.Action.Service.Help"), false),
+                 new SelectionItem("CreateAppService", XncfBuilderResource.Get("XncfBuilder.Option.Action.AppService"), XncfBuilderResource.Get("XncfBuilder.Option.Action.AppService.Help"), false)
             });
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Entity.UsePromptRange")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Entity.UsePromptRange")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(UseDatabasePromptOptions))]
         public bool UseDatabasePrompt { get; set; } = true;
 
         [JsonIgnore]
         public SelectionList UseDatabasePromptOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("1", NcfBuiltInResource.Get("Common.Yes"), "", true)
+                 new SelectionItem("1", XncfBuilderResource.Get("Common.Yes"), "", true)
         });
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Entity.AIModel")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Entity.AIModel")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(AIModelOptions))]
         public string AIModel { get; set; }
 
@@ -129,16 +129,16 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
     public class BuildXncf_InitPromptRequest : FunctionAppRequestBase
     {
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Prompt.Override")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Prompt.Override")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(OverrideOptions))]
         public bool Override { get; set; }
 
         [JsonIgnore]
         public SelectionList OverrideOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("1", NcfBuiltInResource.Get("Common.Yes"), "", false)
+                 new SelectionItem("1", XncfBuilderResource.Get("Common.Yes"), "", false)
                 });
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Prompt.AIModel")]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Prompt.AIModel")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(AIModelOptions))]
         public string AIModel { get; set; }
 

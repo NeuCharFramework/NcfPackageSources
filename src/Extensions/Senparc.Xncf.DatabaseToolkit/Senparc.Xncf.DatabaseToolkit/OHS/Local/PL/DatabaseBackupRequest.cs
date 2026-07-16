@@ -37,18 +37,18 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.PL
     {
         [Required]
         [MaxLength(300)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.DatabaseBackup.Path")]
+        [LocalizedDescription(typeof(DatabaseToolkitResource), "Parameter.DatabaseBackup.Path")]
         public string Path { get; set; }
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.DatabaseBackup.Options")]
+        [LocalizedDescription(typeof(DatabaseToolkitResource), "Parameter.DatabaseBackup.Options")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(OptionsList))]
         public string[] Options { get; set; }
 
         [JsonIgnore]
         public SelectionList OptionsList { get; set; } = new SelectionList(SelectionType.CheckBoxList,
             new[] {
-                    new SelectionItem($"{(int)BackupDatabaseOptions.如果文件存在则不覆盖}", NcfBuiltInResource.Get("Parameter.DatabaseBackup.NoOverwrite"), NcfBuiltInResource.Get("Parameter.DatabaseBackup.NoOverwrite.Help")),
-                    new SelectionItem($"{(int)BackupDatabaseOptions.校验备份成功}", NcfBuiltInResource.Get("Parameter.DatabaseBackup.Verify"), NcfBuiltInResource.Get("Parameter.DatabaseBackup.Verify.Help"), true),
+                    new SelectionItem($"{(int)BackupDatabaseOptions.如果文件存在则不覆盖}", DatabaseToolkitResource.Get("Parameter.DatabaseBackup.NoOverwrite"), DatabaseToolkitResource.Get("Parameter.DatabaseBackup.NoOverwrite.Help")),
+                    new SelectionItem($"{(int)BackupDatabaseOptions.校验备份成功}", DatabaseToolkitResource.Get("Parameter.DatabaseBackup.Verify"), DatabaseToolkitResource.Get("Parameter.DatabaseBackup.Verify.Help"), true),
             });
 
         public override async Task LoadData(IServiceProvider serviceProvider)

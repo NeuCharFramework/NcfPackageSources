@@ -28,18 +28,18 @@ namespace Senparc.Xncf.MCP.OHS.Local.PL
 {
     public class MyFunction_MCPCallRequest : FunctionAppRequestBase
     {
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.MCP.ServerSelection")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.ServerSelection")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(McpServerSelectionOptions))]
         public string McpServerSelection { get; set; }
 
         [JsonIgnore]
         public SelectionList McpServerSelectionOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.MCP.Endpoint")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint")]
         public string Endpoint { get; set; }
 
         [Required]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.MCP.Request")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Request")]
         public string RequestPrompt { get; set; }
 
         public override async Task LoadData(IServiceProvider serviceProvider)
@@ -47,8 +47,8 @@ namespace Senparc.Xncf.MCP.OHS.Local.PL
             // 添加手动输入选项
             McpServerSelectionOptions.Items.Add(new SelectionItem(
                 "Manual",
-                NcfBuiltInResource.Get("Parameter.MCP.Manual"),
-                NcfBuiltInResource.Get("Parameter.MCP.Manual.Help"),
+                McpResource.Get("Parameter.MCP.Manual"),
+                McpResource.Get("Parameter.MCP.Manual.Help"),
                 true));
 
             // 从 XncfRegisterManager 获取已注册的 MCP 服务器
@@ -56,12 +56,12 @@ namespace Senparc.Xncf.MCP.OHS.Local.PL
             
             foreach (var mcpServer in mcpServers)
             {
-                var displayText = NcfBuiltInResource.Format(
+                var displayText = McpResource.Format(
                     "Parameter.MCP.Server.Display",
                     "{0}（{1}）",
                     mcpServer.XncfName,
                     mcpServer.McpRoute);
-                var description = NcfBuiltInResource.Format(
+                var description = McpResource.Format(
                     "Parameter.MCP.Server.Help",
                     "服务器：{0}，路由：{1}",
                     mcpServer.ServerName,
@@ -79,38 +79,38 @@ namespace Senparc.Xncf.MCP.OHS.Local.PL
     {
         [Required]
         [MaxLength(50)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.Name")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.Sample.Name")]
         public string Name { get; set; }
 
         [Required]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.Number1")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.Sample.Number1")]
         public int Number1 { get; set; }
 
 
         [Required]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.Number2")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.Sample.Number2")]
         public int Number2 { get; set; }
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.Operator")]//下拉列表
+        [LocalizedDescription(typeof(McpResource), "Parameter.Sample.Operator")]//下拉列表
            [FunctionParameterUi(ParameterType.DropDownList, nameof(OperatorOptions))]
            public string Operator { get; set; }
 
            [JsonIgnore]
            public SelectionList OperatorOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
-                 new SelectionItem("+", NcfBuiltInResource.Get("Parameter.Operator.Add"), NcfBuiltInResource.Get("Parameter.Operator.Add.Help"), false),
-                 new SelectionItem("-", NcfBuiltInResource.Get("Parameter.Operator.Subtract"), NcfBuiltInResource.Get("Parameter.Operator.Subtract.Help"), true),
-                 new SelectionItem("×", NcfBuiltInResource.Get("Parameter.Operator.Multiply"), NcfBuiltInResource.Get("Parameter.Operator.Multiply.Help"), false),
-                 new SelectionItem("÷", NcfBuiltInResource.Get("Parameter.Operator.Divide"), NcfBuiltInResource.Get("Parameter.Operator.Divide.Help"), false)
+                 new SelectionItem("+", McpResource.Get("Parameter.Operator.Add"), McpResource.Get("Parameter.Operator.Add.Help"), false),
+                 new SelectionItem("-", McpResource.Get("Parameter.Operator.Subtract"), McpResource.Get("Parameter.Operator.Subtract.Help"), true),
+                 new SelectionItem("×", McpResource.Get("Parameter.Operator.Multiply"), McpResource.Get("Parameter.Operator.Multiply.Help"), false),
+                 new SelectionItem("÷", McpResource.Get("Parameter.Operator.Divide"), McpResource.Get("Parameter.Operator.Divide.Help"), false)
             });
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.Power")]//多选框
+        [LocalizedDescription(typeof(McpResource), "Parameter.Sample.Power")]//多选框
            [FunctionParameterUi(ParameterType.CheckBoxList, nameof(PowerOptions))]
            public string[] Power { get; set; }
 
            [JsonIgnore]
            public SelectionList PowerOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("2", NcfBuiltInResource.Get("Parameter.Power.Square"), NcfBuiltInResource.Get("Parameter.Power.Square.Help"), false),
-                 new SelectionItem("3", NcfBuiltInResource.Get("Parameter.Power.Cube"), NcfBuiltInResource.Get("Parameter.Power.Cube.Help"), false)
+                 new SelectionItem("2", McpResource.Get("Parameter.Power.Square"), McpResource.Get("Parameter.Power.Square.Help"), false),
+                 new SelectionItem("3", McpResource.Get("Parameter.Power.Cube"), McpResource.Get("Parameter.Power.Cube.Help"), false)
             });
     }
 }

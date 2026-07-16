@@ -40,11 +40,11 @@ namespace Senparc.Xncf.XncfModuleManager
 
         public override string Version => "0.1.2";//必须填写版本号
 
-        public override string MenuName => NcfBuiltInResource.Get("Module.XncfModuleManager.MenuName", "XNCF 模块管理核心");
+        public override string MenuName => XncfModuleManagerResource.Get("Module.XncfModuleManager.MenuName", "XNCF 模块管理核心");
 
         public override string Icon => "fa fa-user-secret";//fa fa-cog
 
-        public override string Description => NcfBuiltInResource.Get("Module.XncfModuleManager.Description", "XNCF 模块管理核心");
+        public override string Description => XncfModuleManagerResource.Get("Module.XncfModuleManager.Description", "XNCF 模块管理核心");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

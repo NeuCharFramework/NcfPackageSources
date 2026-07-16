@@ -38,11 +38,11 @@ namespace Senparc.Xncf.Menu
 
         public override string Version => "0.1";//必须填写版本号
 
-        public override string MenuName => NcfBuiltInResource.Get("Module.Menu.MenuName", "菜单管理");
+        public override string MenuName => MenuResource.Get("Module.Menu.MenuName", "菜单管理");
 
         public override string Icon => "fa fa-bars";
 
-        public override string Description => NcfBuiltInResource.Get("Module.Menu.Description", "系统菜单管理");
+        public override string Description => MenuResource.Get("Module.Menu.Description", "系统菜单管理");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

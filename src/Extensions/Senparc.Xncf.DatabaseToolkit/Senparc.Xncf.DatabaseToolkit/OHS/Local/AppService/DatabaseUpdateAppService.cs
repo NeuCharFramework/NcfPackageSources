@@ -33,7 +33,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         /// 显示当前的数据库配置类型
         /// </summary>
         /// <returns></returns>
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.Database.CheckUpdate.Name", "Function.Database.CheckUpdate.Description", typeof(Register))]
+        [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.CheckUpdate.Name", "Function.Database.CheckUpdate.Description", typeof(Register))]
         public async Task<StringAppResponse> ShowDatabaseConfiguration(/*BaseAppRequest request*/)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -66,7 +66,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
             });
         }
 
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.Database.Merge.Name", "Function.Database.Merge.Description", typeof(Register))]
+        [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.Merge.Name", "Function.Database.Merge.Description", typeof(Register))]
         public async Task<StringAppResponse> UpdateDatabase()
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

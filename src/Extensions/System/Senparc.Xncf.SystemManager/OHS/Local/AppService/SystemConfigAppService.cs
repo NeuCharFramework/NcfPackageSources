@@ -39,7 +39,7 @@ namespace Senparc.Xncf.SystemManager.OHS.Local
             _systemConfigService = systemConfigService;
         }
 
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.SystemManager.UpdateCloudAccount.Name", "Function.SystemManager.UpdateCloudAccount.Description", typeof(Register))]
+        [FunctionRender(typeof(SystemManagerResource), "Function.SystemManager.UpdateCloudAccount.Name", "Function.SystemManager.UpdateCloudAccount.Description", typeof(Register))]
         public async Task<StringAppResponse> UpdateNeuCharAccount(SystemConfig_UpdateNeuCharAccountRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -57,7 +57,7 @@ namespace Senparc.Xncf.SystemManager.OHS.Local
             });
         }
 
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.SystemManager.ViewTempLog.Name", "Function.SystemManager.ViewTempLog.Description", typeof(Register))]
+        [FunctionRender(typeof(SystemManagerResource), "Function.SystemManager.ViewTempLog.Name", "Function.SystemManager.ViewTempLog.Description", typeof(Register))]
         public async Task<StringAppResponse> GetRequestTempLog(SystemConfig_GetRequestTempLogRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

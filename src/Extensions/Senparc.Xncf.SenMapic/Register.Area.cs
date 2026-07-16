@@ -33,9 +33,9 @@ namespace Senparc.Xncf.SenMapic
         public string HomeUrl => "/Admin/SenMapic/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-                         new AreaPageMenuItem(GetAreaHomeUrl(), NcfBuiltInResource.Get("Area.Home", "首页"),"fa fa-laptop"),
+                         new AreaPageMenuItem(GetAreaHomeUrl(), SenMapicResource.Get("Area.Home", "首页"),"fa fa-laptop"),
                          new AreaPageMenuItem(GetAreaUrl($"/Admin/SenMapic/Index"),"SenMapic","fa fa-file"),
-			 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/SenMapic/DatabaseSample"), NcfBuiltInResource.Get("Area.DatabaseSample", "数据库操作示例"),"fa fa-bookmark-o")
+			 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/SenMapic/DatabaseSample"), SenMapicResource.Get("Area.DatabaseSample", "数据库操作示例"),"fa fa-bookmark-o")
 			 		};
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)

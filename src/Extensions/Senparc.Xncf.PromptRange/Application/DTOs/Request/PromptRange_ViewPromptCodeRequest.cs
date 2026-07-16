@@ -22,6 +22,6 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 /// </summary>
 public class PromptRange_ViewPromptCodeRequest : FunctionAppRequestBase
 {
-    [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.PromptRange.FilterRange")]
+    [LocalizedDescription(typeof(PromptRangeResource), "Parameter.PromptRange.FilterRange")]
     public string FilterRangeName { get; set; }
 }

@@ -48,11 +48,11 @@ namespace Senparc.Xncf.DynamicData
 
         public override string Version => "0.1.0";//必须填写版本号
 
-        public override string MenuName => NcfBuiltInResource.Get("Module.DynamicData.MenuName", "动态数据基础模块");
+        public override string MenuName => DynamicDataResource.Get("Module.DynamicData.MenuName", "动态数据基础模块");
 
         public override string Icon => "fa fa-database";
 
-        public override string Description => NcfBuiltInResource.Get("Module.DynamicData.Description", "动态数据基础模块，用于创建和管理动态数据（早期迭代，尚未正式发布）");
+        public override string Description => DynamicDataResource.Get("Module.DynamicData.Description", "动态数据基础模块，用于创建和管理动态数据（早期迭代，尚未正式发布）");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

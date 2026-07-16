@@ -41,7 +41,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
             if (string.IsNullOrEmpty(modulePath))
             {
-                throw new Exception(NcfBuiltInResource.Format("XncfBuilder.MCP.ModuleDirectoryNotFound", "未找到模块 {0} 的目录；模块名称必须完整匹配，例如 Senparc.Xncf.XncfBuilder。", moduleName));
+                throw new Exception(XncfBuilderResource.Format("XncfBuilder.MCP.ModuleDirectoryNotFound", "未找到模块 {0} 的目录；模块名称必须完整匹配，例如 Senparc.Xncf.XncfBuilder。", moduleName));
             }
 
             var fullFilePath = Path.Combine(modulePath, filePath);
@@ -56,17 +56,17 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         public async Task<StringAppResponse> Build(
             // [Required,Description("解决方案文件路径")]
             // string slnFilePath, 
-            [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Organization")]
+            [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Organization")]
             string orgName,
-            [Required, LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.ModuleName")]
+            [Required, LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.ModuleName")]
             string xncfName,
-            [Required, LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Version")]
+            [Required, LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Version")]
             string version,
-            [Required, LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.MenuName")]
+            [Required, LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.MenuName")]
             string menuName,
-            [Required, LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Icon")]
+            [Required, LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Icon")]
             string icon,
-            [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Description")]
+            [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Description")]
             string description)
         {
             Console.WriteLine("XNCF Builder: Receive MCP Call");
@@ -116,8 +116,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
         //[McpServerTool, Description("获取文件内容")]
         public async Task<BuildXncf_GetFileResponse> GetFile(
-            [LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.MCP.ModuleFullName")] string moduleName,
-            [LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.MCP.FilePath")] string filePath)
+            [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.MCP.ModuleFullName")] string moduleName,
+            [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.MCP.FilePath")] string filePath)
         {
             var response = new BuildXncf_GetFileResponse();
 
@@ -129,7 +129,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 if (!File.Exists(fullFilePath))
                 {
-                    throw new Exception(NcfBuiltInResource.Format("XncfBuilder.MCP.FileNotFound", "文件不存在：{0}", filePath));
+                    throw new Exception(XncfBuilderResource.Format("XncfBuilder.MCP.FileNotFound", "文件不存在：{0}", filePath));
                 }
 
                 fileContent = await File.ReadAllTextAsync(fullFilePath);
@@ -150,9 +150,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
         //[McpServerTool, Description("创建或更新文件内容，文件不存在时会自动创建")]
         public async Task<BuildXncf_CreateOrUpdateFileResponse> CreateOrUpdateFile(
-           [LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.MCP.ModuleFullName")] string moduleName,
-           [LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.MCP.FilePath")] string filePath,
-           [LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.MCP.FileContent")] string fullFileContent)
+           [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.MCP.ModuleFullName")] string moduleName,
+           [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.MCP.FilePath")] string filePath,
+           [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.MCP.FileContent")] string fullFileContent)
         {
             var response = new BuildXncf_CreateOrUpdateFileResponse();
 

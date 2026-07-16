@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.ChangeNamespace.MenuName" xml:space="preserve">
+    <value>修改命名空间</value>
+  </data>
+  <data name="Module.ChangeNamespace.Description" xml:space="preserve">
+    <value>在 NCF 安装后、产品发布前全局修改源码命名空间。此操作不可逆，请提前备份，且不要在已运行的生产环境中使用。</value>
+  </data>
+  <data name="Function.ChangeNamespace.Change.Name" xml:space="preserve">
+    <value>修改命名空间</value>
+  </data>
+  <data name="Function.ChangeNamespace.Change.Description" xml:space="preserve">
+    <value>修改所有 .cs 和 .cshtml 源码中的命名空间</value>
+  </data>
+  <data name="Function.ChangeNamespace.Restore.Name" xml:space="preserve">
+    <value>还原命名空间</value>
+  </data>
+  <data name="Function.ChangeNamespace.Restore.Description" xml:space="preserve">
+    <value>将所有 .cs 和 .cshtml 源码命名空间还原为 NCF 默认值</value>
+  </data>
+  <data name="Function.ChangeNamespace.Download.Name" xml:space="preserve">
+    <value>下载官方 NCF 源码</value>
+  </data>
+  <data name="Function.ChangeNamespace.Download.Description" xml:space="preserve">
+    <value>下载官方 NCF 源码以进行命名空间处理</value>
+  </data>
+  <data name="Parameter.ChangeNamespace.Path" xml:space="preserve">
+    <value>路径||本地物理路径，例如：E:\Senparc\Ncf\</value>
+  </data>
+  <data name="Parameter.ChangeNamespace.NewNamespace" xml:space="preserve">
+    <value>新命名空间||命名空间根必须以句点结尾，用于替换 [Senparc.Ncf.]</value>
+  </data>
+  <data name="Parameter.ChangeNamespace.Source" xml:space="preserve">
+    <value>源码来源||GitHub 通常更新最快；Gitee 在中国大陆下载更快，但可能不是最新版本。下载前请核对 GitHub 最新版本。</value>
+  </data>
+  <data name="Parameter.ChangeNamespace.CurrentNamespace" xml:space="preserve">
+    <value>当前自定义命名空间||命名空间根通常以句点结尾，例如 [My.Namespace.]；最终将替换为 [Senparc.Ncf.] 或 [Senparc.]</value>
+  </data>
+</root>

@@ -32,7 +32,7 @@ namespace Senparc.Xncf.Swagger
 
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-             new AreaPageMenuItem(GetAreaHomeUrl(), NcfBuiltInResource.Get("Area.Home", "首页"),"fa fa-laptop"),
+             new AreaPageMenuItem(GetAreaHomeUrl(), SwaggerResource.Get("Area.Home", "首页"),"fa fa-laptop"),
                      };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)

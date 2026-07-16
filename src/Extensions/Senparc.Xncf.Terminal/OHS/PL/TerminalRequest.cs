@@ -24,7 +24,7 @@ namespace Senparc.Xncf.Terminal.OHS.PL
     public class Terminal_RunRequest : FunctionAppRequestBase
     {
         [MaxLength(300)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Terminal.Command")]
+        [LocalizedDescription(typeof(TerminalResource), "Parameter.Terminal.Command")]
         public string CommandLine { get; set; }
     }
 }

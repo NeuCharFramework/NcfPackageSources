@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.MCP.MenuName" xml:space="preserve">
+    <value>MCP 管理器</value>
+  </data>
+  <data name="Module.MCP.Description" xml:space="preserve">
+    <value>Model Context Protocol（MCP）管理器</value>
+  </data>
+  <data name="Area.Home" xml:space="preserve">
+    <value>首页</value>
+  </data>
+  <data name="Area.DatabaseSample" xml:space="preserve">
+    <value>数据库操作示例</value>
+  </data>
+  <data name="Function.MCP.Execute.Name" xml:space="preserve">
+    <value>执行 MCP</value>
+  </data>
+  <data name="Function.MCP.Execute.Description" xml:space="preserve">
+    <value>执行 MCP；选择模块时，默认地址为 http://localhost:5000/{Module Name}/sse</value>
+  </data>
+  <data name="Function.Sample.Name" xml:space="preserve">
+    <value>示例函数</value>
+  </data>
+  <data name="Function.Sample.Description" xml:space="preserve">
+    <value>演示 FunctionRender 参数与返回值</value>
+  </data>
+  <data name="Parameter.Sample.Name" xml:space="preserve">
+    <value>名称||双竖线前为参数名称，双竖线后为参数说明</value>
+  </data>
+  <data name="Parameter.Sample.Number1" xml:space="preserve">
+    <value>数字||数字 1</value>
+  </data>
+  <data name="Parameter.Sample.Number2" xml:space="preserve">
+    <value>数字||数字 2</value>
+  </data>
+  <data name="Parameter.Sample.Operator" xml:space="preserve">
+    <value>运算符||</value>
+  </data>
+  <data name="Parameter.Sample.Power" xml:space="preserve">
+    <value>幂运算||</value>
+  </data>
+  <data name="Parameter.Operator.Add" xml:space="preserve">
+    <value>加法</value>
+  </data>
+  <data name="Parameter.Operator.Add.Help" xml:space="preserve">
+    <value>数字 1 + 数字 2</value>
+  </data>
+  <data name="Parameter.Operator.Subtract" xml:space="preserve">
+    <value>减法</value>
+  </data>
+  <data name="Parameter.Operator.Subtract.Help" xml:space="preserve">
+    <value>数字 1 - 数字 2</value>
+  </data>
+  <data name="Parameter.Operator.Multiply" xml:space="preserve">
+    <value>乘法</value>
+  </data>
+  <data name="Parameter.Operator.Multiply.Help" xml:space="preserve">
+    <value>数字 1 × 数字 2</value>
+  </data>
+  <data name="Parameter.Operator.Divide" xml:space="preserve">
+    <value>除法</value>
+  </data>
+  <data name="Parameter.Operator.Divide.Help" xml:space="preserve">
+    <value>数字 1 ÷ 数字 2</value>
+  </data>
+  <data name="Parameter.Power.Square" xml:space="preserve">
+    <value>平方</value>
+  </data>
+  <data name="Parameter.Power.Square.Help" xml:space="preserve">
+    <value>对上述结果计算平方</value>
+  </data>
+  <data name="Parameter.Power.Cube" xml:space="preserve">
+    <value>三次方</value>
+  </data>
+  <data name="Parameter.Power.Cube.Help" xml:space="preserve">
+    <value>对上述结果计算三次方</value>
+  </data>
+  <data name="Parameter.MCP.ServerSelection" xml:space="preserve">
+    <value>MCP 服务器||选择已注册的 MCP 服务器，或手动输入自定义服务器地址</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint" xml:space="preserve">
+    <value>MCP 服务器地址||选择手动输入时必须填写；默认 http://localhost:5000/mcp-senparc-xncf-mcp/sse</value>
+  </data>
+  <data name="Parameter.MCP.Request" xml:space="preserve">
+    <value>请求||向 MCP 服务器发送的请求</value>
+  </data>
+  <data name="Parameter.MCP.Manual" xml:space="preserve">
+    <value>手动输入</value>
+  </data>
+  <data name="Parameter.MCP.Manual.Help" xml:space="preserve">
+    <value>手动输入 MCP 服务器地址</value>
+  </data>
+  <data name="Parameter.MCP.Server.Display" xml:space="preserve">
+    <value>{0}（{1}）</value>
+  </data>
+  <data name="Parameter.MCP.Server.Help" xml:space="preserve">
+    <value>服务器：{0}，路由：{1}</value>
+  </data>
+  <data name="MCP.Endpoint.CountAll" xml:space="preserve">
+    <value>获取了 {0} 个 MCP 端点</value>
+  </data>
+  <data name="MCP.Endpoint.CountEnabled" xml:space="preserve">
+    <value>获取了 {0} 个已启用的 MCP 端点</value>
+  </data>
+  <data name="MCP.Endpoint.NameRequired" xml:space="preserve">
+    <value>端点名称不能为空</value>
+  </data>
+  <data name="MCP.Endpoint.AddressRequired" xml:space="preserve">
+    <value>端点地址不能为空</value>
+  </data>
+  <data name="MCP.Endpoint.NameExists" xml:space="preserve">
+    <value>端点名称“{0}”已存在</value>
+  </data>
+  <data name="MCP.Endpoint.IdNotFound" xml:space="preserve">
+    <value>端点 ID {0} 不存在</value>
+  </data>
+  <data name="MCP.Endpoint.Updated" xml:space="preserve">
+    <value>✓ MCP 端点“{0}”已更新</value>
+  </data>
+  <data name="MCP.Endpoint.Created" xml:space="preserve">
+    <value>✓ MCP 端点“{0}”已创建</value>
+  </data>
+  <data name="MCP.Endpoint.InvalidId" xml:space="preserve">
+    <value>无效的端点 ID</value>
+  </data>
+  <data name="MCP.Endpoint.Deleted" xml:space="preserve">
+    <value>✓ MCP 端点“{0}”已删除</value>
+  </data>
+  <data name="MCP.Endpoint.TestSucceeded" xml:space="preserve">
+    <value>✓ 端点连接测试成功</value>
+  </data>
+  <data name="MCP.Endpoint.TestFailed" xml:space="preserve">
+    <value>✗ 端点连接测试失败</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.IdCreate" xml:space="preserve">
+    <value>端点 ID||为 0 时创建新端点</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.Name" xml:space="preserve">
+    <value>端点名称||MCP 端点名称</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.Address" xml:space="preserve">
+    <value>端点地址||MCP 端点的 URI 地址</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.Type" xml:space="preserve">
+    <value>端点类型||例如 http、sse、stdio</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.ProtocolVersion" xml:space="preserve">
+    <value>协议版本||MCP 协议版本</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.Description" xml:space="preserve">
+    <value>描述||端点描述</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.Enabled" xml:space="preserve">
+    <value>是否启用||是否启用此端点</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.AuthConfig" xml:space="preserve">
+    <value>认证配置||认证相关的 JSON 配置</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.ExtraConfig" xml:space="preserve">
+    <value>额外配置||其他自定义 JSON 配置</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.IdDelete" xml:space="preserve">
+    <value>端点 ID||要删除的 MCP 端点 ID</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.IdTest" xml:space="preserve">
+    <value>端点 ID||要测试的 MCP 端点 ID</value>
+  </data>
+  <data name="Parameter.MCP.Tool.Input" xml:space="preserve">
+    <value>输入字符串</value>
+  </data>
+  <data name="MCP.Tool.Echo.Description" xml:space="preserve">
+    <value>处理并回显字符串</value>
+  </data>
+  <data name="MCP.Tool.Echo.Result" xml:space="preserve">
+    <value>你好，{0}</value>
+  </data>
+  <data name="MCP.Tool.Now.Description" xml:space="preserve">
+    <value>获取当前时间</value>
+  </data>
+  <data name="MCP.Tool.AddHours.Description" xml:space="preserve">
+    <value>在当前时间上增加指定小时数</value>
+  </data>
+  <data name="MCP.Tool.Calculator.Description" xml:space="preserve">
+    <value>执行加、减、乘、除计算</value>
+  </data>
+  <data name="Parameter.MCP.Tool.Operator" xml:space="preserve">
+    <value>Number1 和 Number2 之间的运算符，可选：+、-、×、÷</value>
+  </data>
+  <data name="MCP.Agent.SystemPrompt" xml:space="preserve">
+    <value>你是一位智能助手，负责帮助用户完成任务。</value>
+  </data>
+  <data name="MCP.BobLab.Instructions" xml:space="preserve">
+    <value>你是一个帮助用户回答问题的助手。回答前先完整复述问题，使用 Markdown 输出中文答案及英文译文，并以 #start 开头、#end 结尾。</value>
+  </data>
+  <data name="MCP.BobLab.Footer" xml:space="preserve">
+    <value>[Bob's Lab] - {0} / {1}，耗时：{2} 毫秒</value>
+  </data>
+  <data name="MCP.Calculate.DivideByZero" xml:space="preserve">
+    <value>除数不能为 0！</value>
+  </data>
+  <data name="MCP.Calculate.UnknownOperator" xml:space="preserve">
+    <value>未知的运算符：{0}</value>
+  </data>
+  <data name="MCP.Calculate.OperationLog" xml:space="preserve">
+    <value>进行运算：{0} {1} {2} = {3}</value>
+  </data>
+  <data name="MCP.Calculate.PowerLog" xml:space="preserve">
+    <value>进行 {0} 次方运算：{1}{2} = {3}</value>
+  </data>
+  <data name="MCP.Calculate.Result" xml:space="preserve">
+    <value>【{0}】计算结果：{1}。计算过程请查看日志</value>
+  </data>
+  <data name="Area.Extensions" xml:space="preserve">
+    <value>扩展模块</value>
+  </data>
+  <data name="Page.AutoGeneratedModule" xml:space="preserve">
+    <value>当前模块为自动生成模块</value>
+  </data>
+  <data name="Page.InstalledAt" xml:space="preserve">
+    <value>安装时间：</value>
+  </data>
+  <data name="Page.CurrentDatabase" xml:space="preserve">
+    <value>当前数据库类型：</value>
+  </data>
+  <data name="Page.Brighten" xml:space="preserve">
+    <value>变亮</value>
+  </data>
+  <data name="Page.Darken" xml:space="preserve">
+    <value>变暗</value>
+  </data>
+  <data name="Page.Random" xml:space="preserve">
+    <value>随机</value>
+  </data>
+</root>

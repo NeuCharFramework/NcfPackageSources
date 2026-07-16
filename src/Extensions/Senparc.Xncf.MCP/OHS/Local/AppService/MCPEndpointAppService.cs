@@ -51,7 +51,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 var endpoints = await _mcpEndpointService.GetFullListAsync(x => true);
                 var dtos = endpoints?.Select(e => MCPEndpointDto.FromEntity(e)).ToList() ?? new List<MCPEndpointDto>();
                 
-                logger.Append(NcfBuiltInResource.Format("MCP.Endpoint.CountAll", "获取了 {0} 个 MCP Endpoints", dtos.Count));
+                logger.Append(McpResource.Format("MCP.Endpoint.CountAll", "获取了 {0} 个 MCP Endpoints", dtos.Count));
                 return dtos;
             });
         }
@@ -66,7 +66,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 var endpoints = await _mcpEndpointService.GetEnabledEndpointsAsync();
                 var dtos = endpoints.Select(e => MCPEndpointDto.FromEntity(e)).ToList();
                 
-                logger.Append(NcfBuiltInResource.Format("MCP.Endpoint.CountEnabled", "获取了 {0} 个已启用的 MCP Endpoints", dtos.Count));
+                logger.Append(McpResource.Format("MCP.Endpoint.CountEnabled", "获取了 {0} 个已启用的 MCP Endpoints", dtos.Count));
                 return dtos;
             });
         }
@@ -81,12 +81,12 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 // 验证输入
                 if (string.IsNullOrWhiteSpace(request.Name))
                 {
-                    return NcfBuiltInResource.Get("MCP.Endpoint.NameRequired");
+                    return McpResource.Get("MCP.Endpoint.NameRequired");
                 }
 
                 if (string.IsNullOrWhiteSpace(request.Endpoint))
                 {
-                    return NcfBuiltInResource.Get("MCP.Endpoint.AddressRequired");
+                    return McpResource.Get("MCP.Endpoint.AddressRequired");
                 }
 
                 // 检查名称是否已存在（编辑时除外）
@@ -95,7 +95,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                     var existing = await _mcpEndpointService.GetEndpointByNameAsync(request.Name);
                     if (existing != null)
                     {
-                        return NcfBuiltInResource.Format("MCP.Endpoint.NameExists", "端点名称“{0}”已存在", request.Name);
+                        return McpResource.Format("MCP.Endpoint.NameExists", "端点名称“{0}”已存在", request.Name);
                     }
                 }
 
@@ -106,7 +106,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                     endpoint = await _mcpEndpointService.GetObjectAsync(x => x.Id == request.Id);
                     if (endpoint == null)
                     {
-                        return NcfBuiltInResource.Format("MCP.Endpoint.IdNotFound", "端点 ID {0} 不存在", request.Id);
+                        return McpResource.Format("MCP.Endpoint.IdNotFound", "端点 ID {0} 不存在", request.Id);
                     }
                 }
                 else
@@ -126,7 +126,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 endpoint.ExtraConfig = request.ExtraConfig;
 
                 await _mcpEndpointService.SaveObjectAsync(endpoint);
-                logger.Append(NcfBuiltInResource.Format(
+                logger.Append(McpResource.Format(
                     request.Id > 0 ? "MCP.Endpoint.Updated" : "MCP.Endpoint.Created",
                     request.Id > 0 ? "✓ MCP Endpoint“{0}”已更新" : "✓ MCP Endpoint“{0}”已创建",
                     endpoint.Name));
@@ -144,17 +144,17 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             {
                 if (request.Id <= 0)
                 {
-                    return NcfBuiltInResource.Get("MCP.Endpoint.InvalidId");
+                    return McpResource.Get("MCP.Endpoint.InvalidId");
                 }
 
                 var endpoint = await _mcpEndpointService.GetObjectAsync(x => x.Id == request.Id);
                 if (endpoint == null)
                 {
-                    return NcfBuiltInResource.Format("MCP.Endpoint.IdNotFound", "端点 ID {0} 不存在", request.Id);
+                    return McpResource.Format("MCP.Endpoint.IdNotFound", "端点 ID {0} 不存在", request.Id);
                 }
 
                 await _mcpEndpointService.DeleteObjectAsync(endpoint);
-                logger.Append(NcfBuiltInResource.Format("MCP.Endpoint.Deleted", "✓ MCP Endpoint“{0}”已删除", endpoint.Name));
+                logger.Append(McpResource.Format("MCP.Endpoint.Deleted", "✓ MCP Endpoint“{0}”已删除", endpoint.Name));
 
                 return logger.ToString();
             });
@@ -169,18 +169,18 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             {
                 if (request.Id <= 0)
                 {
-                    return NcfBuiltInResource.Get("MCP.Endpoint.InvalidId");
+                    return McpResource.Get("MCP.Endpoint.InvalidId");
                 }
 
                 var result = await _mcpEndpointService.TestEndpointAsync(request.Id);
                 
                 if (result)
                 {
-                    logger.Append(NcfBuiltInResource.Get("MCP.Endpoint.TestSucceeded"));
+                    logger.Append(McpResource.Get("MCP.Endpoint.TestSucceeded"));
                 }
                 else
                 {
-                    logger.Append(NcfBuiltInResource.Get("MCP.Endpoint.TestFailed"));
+                    logger.Append(McpResource.Get("MCP.Endpoint.TestFailed"));
                 }
 
                 return logger.ToString();
@@ -225,40 +225,40 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     /// </summary>
     public class MCPEndpointCreateOrEditRequest
     {
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.MCP.Endpoint.IdCreate")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.IdCreate")]
         public int Id { get; set; }
 
         [Required]
         [MaxLength(100)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.MCP.Endpoint.Name")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.Name")]
         public string Name { get; set; }
 
         [Required]
         [MaxLength(500)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.MCP.Endpoint.Address")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.Address")]
         public string Endpoint { get; set; }
 
         [MaxLength(50)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.MCP.Endpoint.Type")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.Type")]
         public string EndpointType { get; set; }
 
         [MaxLength(20)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.MCP.Endpoint.ProtocolVersion")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.ProtocolVersion")]
         public string ProtocolVersion { get; set; }
 
         [MaxLength(500)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.MCP.Endpoint.Description")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.Description")]
         public string Description { get; set; }
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.MCP.Endpoint.Enabled")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.Enabled")]
         public bool Enabled { get; set; } = true;
 
         [MaxLength(1000)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.MCP.Endpoint.AuthConfig")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.AuthConfig")]
         public string AuthConfig { get; set; }
 
         [MaxLength(2000)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.MCP.Endpoint.ExtraConfig")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.ExtraConfig")]
         public string ExtraConfig { get; set; }
     }
 
@@ -267,7 +267,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     /// </summary>
     public class MCPEndpointDeleteRequest
     {
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.MCP.Endpoint.IdDelete")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.IdDelete")]
         public int Id { get; set; }
     }
 
@@ -276,7 +276,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     /// </summary>
     public class MCPEndpointTestRequest
     {
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.MCP.Endpoint.IdTest")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.IdTest")]
         public int Id { get; set; }
     }
 }

@@ -46,7 +46,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         /// 查询可用的模块和表结构
         /// 返回所有可查询的模块及其表的结构信息
         /// </summary>
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.Database.Schema.Name", "Function.Database.Schema.Description", typeof(Register))]
+        [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.Schema.Name", "Function.Database.Schema.Description", typeof(Register))]
         public async Task<AppResponseBase<string>> QueryDatabaseSchema(QuerySchemaRequest request)
         {
             return await this.GetResponseAsync<string>(async (response, logger) =>
@@ -56,7 +56,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                     // 如果指定了模块名和表名，获取详细信息
                     if (!string.IsNullOrWhiteSpace(request.ModuleName) && !string.IsNullOrWhiteSpace(request.TableName))
                     {
-                        logger.Append(NcfBuiltInResource.Format("Database.Schema.TableDetailLog", "获取表详情：{0}.{1}", request.ModuleName, request.TableName));
+                        logger.Append(DatabaseToolkitResource.Format("Database.Schema.TableDetailLog", "获取表详情：{0}.{1}", request.ModuleName, request.TableName));
 
                         // 先尝试精确匹配，再尝试模糊匹配
                         var resolvedModule = _metadataProvider.ResolveModuleName(request.ModuleName);
@@ -66,9 +66,9 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                             var suggestions = allModules.Where(m =>
                                 m.Contains(request.ModuleName, StringComparison.OrdinalIgnoreCase)).ToList();
                             var hint = suggestions.Count > 0
-                                ? NcfBuiltInResource.Format("Database.Schema.SuggestedModules", "\n可能匹配的模块：{0}", string.Join(", ", suggestions))
-                                : NcfBuiltInResource.Format("Database.Schema.AllModules", "\n所有可用模块：{0}", string.Join(", ", allModules));
-                            return NcfBuiltInResource.Format("Database.Schema.ModuleNotFoundWithHint", "找不到模块：“{0}”{1}", request.ModuleName, hint);
+                                ? DatabaseToolkitResource.Format("Database.Schema.SuggestedModules", "\n可能匹配的模块：{0}", string.Join(", ", suggestions))
+                                : DatabaseToolkitResource.Format("Database.Schema.AllModules", "\n所有可用模块：{0}", string.Join(", ", allModules));
+                            return DatabaseToolkitResource.Format("Database.Schema.ModuleNotFoundWithHint", "找不到模块：“{0}”{1}", request.ModuleName, hint);
                         }
 
                         var schema = _metadataProvider.GetSchemaByTable(resolvedModule, request.TableName);
@@ -78,8 +78,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                                 .Select(s => s.TableName).OrderBy(t => t).ToList();
                             var tableList = availableTables.Count > 0
                                 ? string.Join(", ", availableTables)
-                                : NcfBuiltInResource.Get("Database.Schema.NoAvailableTables");
-                            return NcfBuiltInResource.Format("Database.Schema.EntityNotFound", "在模块“{0}”中找不到实体“{1}”。\n可用实体：{2}", resolvedModule, request.TableName, tableList);
+                                : DatabaseToolkitResource.Get("Database.Schema.NoAvailableTables");
+                            return DatabaseToolkitResource.Format("Database.Schema.EntityNotFound", "在模块“{0}”中找不到实体“{1}”。\n可用实体：{2}", resolvedModule, request.TableName, tableList);
                         }
 
                         var result = new
@@ -112,7 +112,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                     // 如果只指定了模块名，获取该模块的所有表
                     if (!string.IsNullOrWhiteSpace(request.ModuleName))
                     {
-                        logger.Append(NcfBuiltInResource.Format("Database.Schema.ModuleTablesLog", "获取模块 {0} 的所有表", request.ModuleName));
+                        logger.Append(DatabaseToolkitResource.Format("Database.Schema.ModuleTablesLog", "获取模块 {0} 的所有表", request.ModuleName));
 
                         var resolvedModule = _metadataProvider.ResolveModuleName(request.ModuleName);
                         if (resolvedModule == null)
@@ -121,15 +121,15 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                             var suggestions = allModules.Where(m =>
                                 m.Contains(request.ModuleName, StringComparison.OrdinalIgnoreCase)).ToList();
                             var hint = suggestions.Count > 0
-                                ? NcfBuiltInResource.Format("Database.Schema.SuggestedModules", "\n可能匹配的模块：{0}", string.Join(", ", suggestions))
-                                : NcfBuiltInResource.Format("Database.Schema.AllModules", "\n所有可用模块：{0}", string.Join(", ", allModules));
-                            return NcfBuiltInResource.Format("Database.Schema.ModuleNotFoundWithHint", "找不到模块：“{0}”{1}", request.ModuleName, hint);
+                                ? DatabaseToolkitResource.Format("Database.Schema.SuggestedModules", "\n可能匹配的模块：{0}", string.Join(", ", suggestions))
+                                : DatabaseToolkitResource.Format("Database.Schema.AllModules", "\n所有可用模块：{0}", string.Join(", ", allModules));
+                            return DatabaseToolkitResource.Format("Database.Schema.ModuleNotFoundWithHint", "找不到模块：“{0}”{1}", request.ModuleName, hint);
                         }
 
                         var schemas = _metadataProvider.GetSchemasByModule(resolvedModule);
                         if (schemas.Count == 0)
                         {
-                            return NcfBuiltInResource.Format("Database.Schema.ModuleHasNoTables", "模块“{0}”中没有可查询的表", resolvedModule);
+                            return DatabaseToolkitResource.Format("Database.Schema.ModuleHasNoTables", "模块“{0}”中没有可查询的表", resolvedModule);
                         }
 
                         var result = new
@@ -154,13 +154,13 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                     }
 
                     // 获取所有模块和表的概览
-                    logger.Append(NcfBuiltInResource.Get("Database.Schema.OverviewLog"));
+                    logger.Append(DatabaseToolkitResource.Get("Database.Schema.OverviewLog"));
                     
                     var allSchemas = _metadataProvider.GetAllSchemas();
                     
                     if (allSchemas.Count == 0)
                     {
-                        return NcfBuiltInResource.Get("Database.Schema.NoModules");
+                        return DatabaseToolkitResource.Get("Database.Schema.NoModules");
                     }
 
                     var overview = new
@@ -188,8 +188,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                 }
                 catch (Exception ex)
                 {
-                    logger.Append(NcfBuiltInResource.Format("Database.Schema.Error", "查询数据库结构时出错：{0}", ex.Message));
-                    return NcfBuiltInResource.Format("Common.Error", "错误：{0}", ex.Message);
+                    logger.Append(DatabaseToolkitResource.Format("Database.Schema.Error", "查询数据库结构时出错：{0}", ex.Message));
+                    return DatabaseToolkitResource.Format("Common.Error", "错误：{0}", ex.Message);
                 }
             });
         }
@@ -200,11 +200,11 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         public class QuerySchemaRequest : FunctionAppRequestBase
         {
             [MaxLength(200)]
-            [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Database.Schema.Module")]
+            [LocalizedDescription(typeof(DatabaseToolkitResource), "Parameter.Database.Schema.Module")]
             public string ModuleName { get; set; }
 
             [MaxLength(100)]
-            [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Database.Schema.Table")]
+            [LocalizedDescription(typeof(DatabaseToolkitResource), "Parameter.Database.Schema.Table")]
             public string TableName { get; set; }
 
             public override async Task LoadData(IServiceProvider serviceProvider)

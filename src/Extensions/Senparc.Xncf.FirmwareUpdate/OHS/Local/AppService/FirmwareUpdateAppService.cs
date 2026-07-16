@@ -28,7 +28,7 @@ public class FirmwareUpdateAppService : AppServiceBase
     {
     }
 
-    [FunctionRender(typeof(NcfBuiltInResource), "Function.FirmwareUpdate.Settings.Name", "Function.FirmwareUpdate.Settings.Description", typeof(Register))]
+    [FunctionRender(typeof(FirmwareUpdateResource), "Function.FirmwareUpdate.Settings.Name", "Function.FirmwareUpdate.Settings.Description", typeof(Register))]
     public async Task<StringAppResponse> ConfigureMirror(FirmwareUpdate_ConfigureRequest request)
     {
         return await this.GetStringResponseAsync(async (_, logger) =>
@@ -51,7 +51,7 @@ public class FirmwareUpdateAppService : AppServiceBase
         }, saveLogAfterFinished: true, saveLogName: "FirmwareUpdate 镜像设置");
     }
 
-    [FunctionRender(typeof(NcfBuiltInResource), "Function.FirmwareUpdate.Sync.Name", "Function.FirmwareUpdate.Sync.Description", typeof(Register))]
+    [FunctionRender(typeof(FirmwareUpdateResource), "Function.FirmwareUpdate.Sync.Name", "Function.FirmwareUpdate.Sync.Description", typeof(Register))]
     public async Task<StringAppResponse> SyncNow(FirmwareUpdate_SyncNowRequest _)
     {
         return await this.GetStringResponseAsync(async (_, logger) =>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.XncfModuleManager.MenuName" xml:space="preserve">
+    <value>XNCF 模块管理核心</value>
+  </data>
+  <data name="Module.XncfModuleManager.Description" xml:space="preserve">
+    <value>安装、更新和管理 XNCF 模块的核心组件</value>
+  </data>
+  <data name="Function.XncfManager.GetAllModules.Name" xml:space="preserve">
+    <value>获取全部 XNCF 模块信息</value>
+  </data>
+  <data name="Function.XncfManager.GetAllModules.Description" xml:space="preserve">
+    <value>获取系统中全部 XNCF 模块的名称、说明和状态</value>
+  </data>
+  <data name="Function.XncfManager.InstallAndEnable.Name" xml:space="preserve">
+    <value>安装并开放 XNCF 模块</value>
+  </data>
+  <data name="Function.XncfManager.InstallAndEnable.Description" xml:space="preserve">
+    <value>安装指定 XNCF 模块，并将状态切换为开放</value>
+  </data>
+  <data name="Function.XncfManager.InstallAndEnableAi.Name" xml:space="preserve">
+    <value>安装并开放 XNCF 模块（AI 兼容）</value>
+  </data>
+  <data name="Function.XncfManager.InstallAndEnableAi.Description" xml:space="preserve">
+    <value>通过模块 UID 或名称关键词直接安装并开放模块，无需 SelectionList</value>
+  </data>
+  <data name="Function.XncfManager.ViewFunctionStatus.Name" xml:space="preserve">
+    <value>查看 XNCF 模块的 Function 状态</value>
+  </data>
+  <data name="Function.XncfManager.ViewFunctionStatus.Description" xml:space="preserve">
+    <value>查看当前 XNCF 模块的 Function 加载情况</value>
+  </data>
+  <data name="Parameter.XncfManager.ShowFunctions.Module" xml:space="preserve">
+    <value>XNCF 模块||查看指定模块的 Function 状态</value>
+  </data>
+  <data name="Parameter.XncfManager.Install.Module" xml:space="preserve">
+    <value>XNCF 模块||选择要安装并开放的模块</value>
+  </data>
+</root>

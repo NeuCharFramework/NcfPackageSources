@@ -336,7 +336,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             return $"{request.OrgName}.Xncf.{request.XncfName}";
         }
 
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.XncfBuilder.Generate.Name", "Function.XncfBuilder.Generate.Description", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Generate.Name", "Function.XncfBuilder.Generate.Description", typeof(Register))]
         public async Task<StringAppResponse> Build(BuildXncf_BuildRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

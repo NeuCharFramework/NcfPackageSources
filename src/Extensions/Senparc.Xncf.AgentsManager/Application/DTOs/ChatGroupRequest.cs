@@ -35,53 +35,53 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
 {
     public class ChatGroup_ManageChatGroupRequest : FunctionAppRequestBase
     {
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.SelectManage")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.SelectManage")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(ChatGroupOptions))]
         public string ChatGroup { get; set; }
 
         [JsonIgnore]
         public SelectionList ChatGroupOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem> {
-             new SelectionItem("New", NcfBuiltInResource.Get("Agents.Chat.NewGroup"), NcfBuiltInResource.Get("Agents.Chat.NewGroup.Help"), true)
+             new SelectionItem("New", AgentsManagerResource.Get("Agents.Chat.NewGroup"), AgentsManagerResource.Get("Agents.Chat.NewGroup.Help"), true)
             });
 
         [Required]
         [MaxLength(30)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.Name")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Name")]
         public string Name { get; set; }
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.Members")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Members")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(MembersOptions))]
         public string[] Members { get; set; }
 
         [JsonIgnore]
         public SelectionList MembersOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>());
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.MembersManual")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.MembersManual")]
         public string MemberNamesOrIds { get; set; }
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.Admin")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Admin")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(AdminOptions))]
         public string Admin { get; set; }
 
         [JsonIgnore]
         public SelectionList AdminOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.AdminManual")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.AdminManual")]
         public string AdminNameOrId { get; set; }
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.Contact")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Contact")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(EnterAgentOptions))]
         public string EnterAgent { get; set; }
 
         [JsonIgnore]
         public SelectionList EnterAgentOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.ContactManual")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.ContactManual")]
         public string EnterAgentNameOrId { get; set; }
 
 
         [MaxLength(200)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.Description")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Description")]
         public string Description { get; set; }
 
         public override async Task LoadData(IServiceProvider serviceProvider)
@@ -113,14 +113,14 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
 
     public class ChatGroup_RunChatGroupRequest : FunctionAppRequestBase
     {
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.SelectRun")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.SelectRun")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(ChatGroupsOptions))]
         public string[] ChatGroups { get; set; }
 
         [JsonIgnore]
         public SelectionList ChatGroupsOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>());
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.AIModel")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.AIModel")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(AIModelOptions))]
         public string AIModel { get; set; }
 
@@ -130,19 +130,19 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
             //new SelectionItem("Default","系统默认","通过系统默认配置的固定 AI 模型信息",true)
         });
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.Individuation")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Individuation")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(IndividuationOptions))]
         public bool Individuation { get; set; } = true;
 
         [JsonIgnore]
         public SelectionList IndividuationOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>
         {
-            new SelectionItem("1", NcfBuiltInResource.Get("Common.Yes"), NcfBuiltInResource.Get("Agents.Chat.Individuation.Help"), true)
+            new SelectionItem("1", AgentsManagerResource.Get("Common.Yes"), AgentsManagerResource.Get("Agents.Chat.Individuation.Help"), true)
         });
 
         [Required]
         [MaxLength(500)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.Command")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Command")]
         public string Command { get; set; }
 
         public override async Task LoadData(IServiceProvider serviceProvider)
@@ -217,14 +217,14 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
     /// </summary>
     public class ChatGroup_DeleteChatGroupRequest : FunctionAppRequestBase
     {
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.SelectDelete")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.SelectDelete")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(ChatGroupsOptions))]
         public string[] ChatGroups { get; set; }
 
         [JsonIgnore]
         public SelectionList ChatGroupsOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>());
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.ConfirmDelete")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.ConfirmDelete")]
         public bool ConfirmDelete { get; set; }
 
         public override async Task LoadData(IServiceProvider serviceProvider)
@@ -236,7 +236,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
             ChatGroupsOptions.Items = chatGroups.Select(z => new SelectionItem(
                 z.Id.ToString(),
                 z.Name,
-                NcfBuiltInResource.Format("Agents.Chat.CreatedAt", "{0}（创建时间：{1:g}）", z.Description, z.AddTime)
+                AgentsManagerResource.Format("Agents.Chat.CreatedAt", "{0}（创建时间：{1:g}）", z.Description, z.AddTime)
             )).ToList();
 
             await base.LoadData(serviceProvider);

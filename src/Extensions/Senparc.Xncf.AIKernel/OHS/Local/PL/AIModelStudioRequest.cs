@@ -33,7 +33,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
     public class AIModelStudioRequest_RunModelAsync : FunctionAppRequestBase
     {
         [Required]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.AI.Model")]//下拉列表
+        [LocalizedDescription(typeof(AIKernelResource), "Parameter.AI.Model")]//下拉列表
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(ModelOptions))]
         public string[] Model { get; set; }
 
@@ -44,7 +44,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
 
         [Required]
         [MaxLength(1000)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.AI.Prompt")]
+        [LocalizedDescription(typeof(AIKernelResource), "Parameter.AI.Prompt")]
         public string Prompt { get; set; }
 
         public override async Task LoadData(IServiceProvider serviceProvider)
@@ -72,7 +72,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
             foreach (var aiModel in aiModels)
             {
                 var setting = aiModelService.BuildSenparcAiSetting(aiModelService.Mapper.Map<AIModelDto>(aiModel));
-                settings.Add(new(aiModel.Alias, setting, NcfBuiltInResource.Get("Parameter.AI.Source.Database")));
+                settings.Add(new(aiModel.Alias, setting, AIKernelResource.Get("Parameter.AI.Source.Database")));
             }
 
             //集成模型参数
@@ -83,7 +83,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
                 ModelOptions.Items.Add(new SelectionItem(
                     value,
                     text,
-                    NcfBuiltInResource.Format("Parameter.AI.Source", "来源：{0}", z.From),
+                    AIKernelResource.Format("Parameter.AI.Source", "来源：{0}", z.From),
                     false)
                 { BindData = z.SenparcAiSetting });
             });

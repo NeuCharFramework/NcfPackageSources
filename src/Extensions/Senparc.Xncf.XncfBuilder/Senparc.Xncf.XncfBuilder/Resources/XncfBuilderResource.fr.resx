@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.XncfBuilder.MenuName" xml:space="preserve">
+    <value>Générateur de modules XNCF</value>
+  </data>
+  <data name="Module.XncfBuilder.Description" xml:space="preserve">
+    <value>Génère rapidement la base et des exemples de modules XNCF à étendre dans vos applications</value>
+  </data>
+  <data name="Function.XncfBuilder.AddMigration.Name" xml:space="preserve">
+    <value>Commande Add-Migration</value>
+  </data>
+  <data name="Function.XncfBuilder.AddMigration.Description" xml:space="preserve">
+    <value>Exécute visuellement add-migration pour plusieurs bases ; le traitement peut durer 30 à 60 secondes</value>
+  </data>
+  <data name="Function.XncfBuilder.Generate.Name" xml:space="preserve">
+    <value>Générer XNCF</value>
+  </data>
+  <data name="Function.XncfBuilder.Generate.Description" xml:space="preserve">
+    <value>Génère un module XNCF depuis la configuration</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateEntity.Name" xml:space="preserve">
+    <value>[IA] Générer les entités de base</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateEntity.Description" xml:space="preserve">
+    <value>Génère des entités et méthodes conformes au DDD. À utiliser uniquement en développement après sauvegarde.</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateInterface.Name" xml:space="preserve">
+    <value>Générer les interfaces AppService</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateInterface.Description" xml:space="preserve">
+    <value>Génère le code d’interface AppService d’un module</value>
+  </data>
+  <data name="Function.XncfBuilder.InitPrompt.Name" xml:space="preserve">
+    <value>Initialiser les prompts</value>
+  </data>
+  <data name="Function.XncfBuilder.InitPrompt.Description" xml:space="preserve">
+    <value>Initialise tous les prompts requis pour la génération de code par IA</value>
+  </data>
+  <data name="Common.Yes" xml:space="preserve">
+    <value>Oui</value>
+  </data>
+  <data name="Common.Use" xml:space="preserve">
+    <value>Utiliser</value>
+  </data>
+  <data name="Parameter.XncfBuilder.SolutionPath" xml:space="preserve">
+    <value>Chemin de la solution (.sln)||Chemin physique complet de la solution NCF ; le module est créé à côté</value>
+  </data>
+  <data name="Parameter.XncfBuilder.SolutionOptions" xml:space="preserve">
+    <value>Options de la solution||</value>
+  </data>
+  <data name="Parameter.XncfBuilder.TemplatePackage" xml:space="preserve">
+    <value>Installer le modèle||La réinstallation prend 30–40 s ; choisissez Déjà installé si disponible</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Framework" xml:space="preserve">
+    <value>Framework cible||TFM du projet</value>
+  </data>
+  <data name="Parameter.XncfBuilder.OtherFramework" xml:space="preserve">
+    <value>Framework personnalisé||Remplace le framework sélectionné</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Organization" xml:space="preserve">
+    <value>Organisation||Préfixe du nom et de l’espace de noms</value>
+  </data>
+  <data name="Parameter.XncfBuilder.ModuleName" xml:space="preserve">
+    <value>Nom du module||Également nom de classe ; lettres et chiffres, sans commencer par un chiffre</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Version" xml:space="preserve">
+    <value>Version||Par exemple 1.0.0 ou 2.0.100-beta1</value>
+  </data>
+  <data name="Parameter.XncfBuilder.MenuName" xml:space="preserve">
+    <value>Nom du menu||Par exemple NCF Builder</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Icon" xml:space="preserve">
+    <value>Icône||Icône Font Awesome, par exemple fa fa-star</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Description" xml:space="preserve">
+    <value>Description||Description du module</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Features" xml:space="preserve">
+    <value>Fonctionnalités||</value>
+  </data>
+  <data name="Parameter.XncfBuilder.InstallSample" xml:space="preserve">
+    <value>Installer l’exemple||</value>
+  </data>
+  <data name="XncfBuilder.Option.Solution.Backup" xml:space="preserve">
+    <value>Sauvegarder le .sln (recommandé)</value>
+  </data>
+  <data name="XncfBuilder.Option.Solution.Backup.Help" xml:space="preserve">
+    <value>Créer une sauvegarde avant d’écraser le .sln</value>
+  </data>
+  <data name="XncfBuilder.Option.Solution.New" xml:space="preserve">
+    <value>Générer un nouveau .sln</value>
+  </data>
+  <data name="XncfBuilder.Option.Solution.New.Help" xml:space="preserve">
+    <value>Sinon le fichier est écrasé ; une solution active peut redémarrer le service</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Online" xml:space="preserve">
+    <value>Obtenir le dernier modèle en ligne</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Online.Help" xml:space="preserve">
+    <value>Télécharger depuis NuGet.org ; cette opération est plus longue</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Local" xml:space="preserve">
+    <value>Installer un paquet local</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Local.Help" xml:space="preserve">
+    <value>Installer Template.*.nupkg situé à côté du .sln</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Installed" xml:space="preserve">
+    <value>Déjà installé</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Installed.Help" xml:space="preserve">
+    <value>Sans modèle local, il sera téléchargé automatiquement</value>
+  </data>
+  <data name="XncfBuilder.Option.Framework.Net8" xml:space="preserve">
+    <value>Utiliser .NET 8.0</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Function" xml:space="preserve">
+    <value>Ajouter Function</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Function.Help" xml:space="preserve">
+    <value>Inclure le module Function</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Database" xml:space="preserve">
+    <value>Ajouter la base de données</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Database.Help" xml:space="preserve">
+    <value>Inclure le module et une base vide</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.WebApi" xml:space="preserve">
+    <value>Ajouter Web API</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.WebApi.Help" xml:space="preserve">
+    <value>Inclure le module Web API</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Web" xml:space="preserve">
+    <value>Ajouter les pages Web (Area)</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Web.Help" xml:space="preserve">
+    <value>Inclure le module de pages Web</value>
+  </data>
+  <data name="XncfBuilder.Option.InstallSample.Help" xml:space="preserve">
+    <value>Installer l’exemple et activer la base de données et les pages Web</value>
+  </data>
+  <data name="XncfBuilder.AI.DefaultModel" xml:space="preserve">
+    <value>Valeur système (AiPlatform : {0} ; Endpoint : {1})</value>
+  </data>
+  <data name="XncfBuilder.AI.DefaultModel.Help" xml:space="preserve">
+    <value>Utiliser le modèle IA configuré par défaut</value>
+  </data>
+  <data name="XncfBuilder.AI.DefaultModel.Unconfigured" xml:space="preserve">
+    <value>Valeur système (AiPlatform : {0} ; Endpoint absent, configurez appsettings.json)</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.Requirement" xml:space="preserve">
+    <value>Exigences de l’entité||Décrivez-les précisément avec les propriétés et types souhaités</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.Domain" xml:space="preserve">
+    <value>Domaine||Domaine de génération de l’entité</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.Actions" xml:space="preserve">
+    <value>Actions suivantes||Actions après la génération</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.UsePromptRange" xml:space="preserve">
+    <value>Utiliser PromptRange||Installation et initialisation automatiques ; sinon fournissez XncfBuilderPlugin</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.AIModel" xml:space="preserve">
+    <value>Modèle IA||Modèle de génération sans PromptRange</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Prompt.Override" xml:space="preserve">
+    <value>Écraser||Supprimer le champ existant et le recréer depuis la version officielle</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Prompt.AIModel" xml:space="preserve">
+    <value>Modèle IA||Modèle utilisé par toutes les tactiques du nouveau champ</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Dto" xml:space="preserve">
+    <value>Créer le DTO</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Dto.Help" xml:space="preserve">
+    <value>Créer les DTO (toujours générés)</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Migration" xml:space="preserve">
+    <value>Générer la migration</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Migration.Help" xml:space="preserve">
+    <value>Générer une migration EF Core à vérifier avant application</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Repository" xml:space="preserve">
+    <value>Créer le Repository</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Repository.Help" xml:space="preserve">
+    <value>Créer le Repository de l’entité</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Service" xml:space="preserve">
+    <value>Créer le Service</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Service.Help" xml:space="preserve">
+    <value>Créer le Service de l’entité</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.AppService" xml:space="preserve">
+    <value>Créer l’AppService</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.AppService.Help" xml:space="preserve">
+    <value>Créer l’AppService de l’entité</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.DatabasePlantPath" xml:space="preserve">
+    <value>Chemin de DatabasePlant||Chemin physique de l’hôte de migration qui doit référencer le projet XNCF</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.ProjectPath" xml:space="preserve">
+    <value>Chemin du projet XNCF||Chemin physique complet de la racine</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.CustomProjectPath" xml:space="preserve">
+    <value>Chemin XNCF personnalisé||Utilisé seulement avec Chemin personnalisé</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.DatabaseTypes" xml:space="preserve">
+    <value>Types de base||Types pour lesquels générer les migrations</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.DbContext" xml:space="preserve">
+    <value>Nom du DbContext||Sans suffixe de type ; [Default] pour la détection automatique</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.Name" xml:space="preserve">
+    <value>Nom de migration||Lettres, chiffres et traits de soulignement, par exemple Add_Config</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.UpdateVersion" xml:space="preserve">
+    <value>Mettre à jour la version||Mettre à jour Register.cs</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.Verbose" xml:space="preserve">
+    <value>Journal détaillé||Utiliser add-migration -v</value>
+  </data>
+  <data name="XncfBuilder.Option.Version.None" xml:space="preserve">
+    <value>Ne pas mettre à jour</value>
+  </data>
+  <data name="XncfBuilder.Option.Version.Major" xml:space="preserve">
+    <value>Version majeure + 1</value>
+  </data>
+  <data name="XncfBuilder.Option.Version.Minor" xml:space="preserve">
+    <value>Version mineure + 1</value>
+  </data>
+  <data name="XncfBuilder.Option.Version.Patch" xml:space="preserve">
+    <value>Correctif + 1</value>
+  </data>
+  <data name="XncfBuilder.Option.CustomPath" xml:space="preserve">
+    <value>Chemin personnalisé</value>
+  </data>
+  <data name="XncfBuilder.Validation.CustomProjectPathRequired" xml:space="preserve">
+    <value>Saisissez le chemin personnalisé du projet XNCF.</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.TargetPath" xml:space="preserve">
+    <value>Chemin du projet cible||Projet à analyser pour générer les interfaces</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.Namespace" xml:space="preserve">
+    <value>Préfixe d’espace de noms||Préfixe des classes générées</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.ClassPattern" xml:space="preserve">
+    <value>Regex de classe||Expression régulière des noms de classe</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.MethodPattern" xml:space="preserve">
+    <value>Regex de méthode||Expression régulière des noms de méthode</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.DestinationPath" xml:space="preserve">
+    <value>Projet de destination||Projet recevant le code d’interface</value>
+  </data>
+  <data name="XncfBuilder.MCP.ModuleDirectoryNotFound" xml:space="preserve">
+    <value>Répertoire du module {0} introuvable. Utilisez le nom complet, tel que Senparc.Xncf.XncfBuilder.</value>
+  </data>
+  <data name="XncfBuilder.MCP.ModuleFullName" xml:space="preserve">
+    <value>Nom complet du module, par exemple Senparc.Xncf.XncfBuilder</value>
+  </data>
+  <data name="XncfBuilder.MCP.FilePath" xml:space="preserve">
+    <value>Chemin et nom du fichier dans le module</value>
+  </data>
+  <data name="XncfBuilder.MCP.FileNotFound" xml:space="preserve">
+    <value>Fichier introuvable : {0}</value>
+  </data>
+  <data name="XncfBuilder.MCP.FileContent" xml:space="preserve">
+    <value>Contenu complet du fichier</value>
+  </data>
+  <data name="XncfBuilder.Plugin.CreateEntity" xml:space="preserve">
+    <value>Créer le fichier de classe d’entité</value>
+  </data>
+  <data name="XncfBuilder.Plugin.FilePath" xml:space="preserve">
+    <value>Chemin du fichier</value>
+  </data>
+  <data name="XncfBuilder.Plugin.GeneratedContent" xml:space="preserve">
+    <value>Contenu généré par l’IA</value>
+  </data>
+  <data name="XncfBuilder.Plugin.FileSaved" xml:space="preserve">
+    <value>Fichier enregistré : {0}</value>
+  </data>
+  <data name="XncfBuilder.Plugin.ReadDbContext" xml:space="preserve">
+    <value>Lire et mettre à jour le contexte de base de données</value>
+  </data>
+  <data name="XncfBuilder.Plugin.ProjectPath" xml:space="preserve">
+    <value>Chemin du projet</value>
+  </data>
+  <data name="XncfBuilder.Plugin.EntityName" xml:space="preserve">
+    <value>Nom de la nouvelle entité</value>
+  </data>
+  <data name="XncfBuilder.Plugin.PluralEntityName" xml:space="preserve">
+    <value>Pluriel du nom de la nouvelle entité</value>
+  </data>
+</root>

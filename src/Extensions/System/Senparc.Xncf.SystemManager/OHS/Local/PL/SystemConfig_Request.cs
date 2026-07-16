@@ -34,13 +34,13 @@ namespace Senparc.Xncf.SystemManager.OHS.Local.PL
     {
         [Required]
         [MaxLength(100)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.SystemManager.AppKey")]
+        [LocalizedDescription(typeof(SystemManagerResource), "Parameter.SystemManager.AppKey")]
         public string AppKey{ get; set; }
 
         [Required]
         [Password]
         [MaxLength(100)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.SystemManager.AppSecret")]
+        [LocalizedDescription(typeof(SystemManagerResource), "Parameter.SystemManager.AppSecret")]
         public string AppSecret { get; set; }
     }
 
@@ -48,7 +48,7 @@ namespace Senparc.Xncf.SystemManager.OHS.Local.PL
     {
         [Required]
         [MaxLength(200)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.SystemManager.RequestTempId")]
+        [LocalizedDescription(typeof(SystemManagerResource), "Parameter.SystemManager.RequestTempId")]
         public string RequestTempId { get; set; }
     }
 }

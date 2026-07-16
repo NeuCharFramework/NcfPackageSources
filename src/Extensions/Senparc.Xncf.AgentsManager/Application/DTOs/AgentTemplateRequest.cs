@@ -41,15 +41,15 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
     {
         [Required]
         [MaxLength(30)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Template.Name")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.Name")]
         public string Name { get; set; }
 
         [Required]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Template.Id")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.Id")]
         public int Id { get; set; }
 
         [Required]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Template.SystemMessage")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.SystemMessage")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(SystemMessagePromptCodeOptions), Filterable = true, AllowCreate = true)]
         public string SystemMessagePromptCode { get; set; }
 
@@ -58,11 +58,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
 
 
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Template.Description")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.Description")]
         public string Description { get; set; }
 
         [Required]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Template.Platform")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.Platform")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(HookRobotTypeOptions))]
         public string HookRobotType { get; set; }
 
@@ -71,10 +71,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         //TODO:可以选择多个通道
 
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Template.PlatformParameter")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.PlatformParameter")]
         public string HookRobotParameter { get; set; }
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Template.FunctionCalls")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.FunctionCalls")]
         public string FunctionCallNames { get; set; }
 
         public string GetSystemMessagePromptCode()
@@ -111,20 +111,20 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
     {
         [Required]
         [MaxLength(50)]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Create.Name")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Create.Name")]
         public string Name { get; set; }
 
         // [Required]
         // [Description("PromptCode 作用范围||选择覆盖范围：靶场名称（Range级别）：Range、靶道前缀（Tactic级别）：Tactic、或完整版本号（精确定位）：PromptCode，只能严格从 Range、Tactic、PromptCode 中选择")]
         // public string ScopeSelection { get; set; } 
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Create.ManualPromptCode")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Create.ManualPromptCode")]
         public string ManualPromptCode { get; set; }
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Create.Description")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Create.Description")]
         public string Description { get; set; }
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Create.FunctionCalls")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Create.FunctionCalls")]
         public string FunctionCallNames { get; set; }
 
         public string GetPromptCode()
@@ -150,10 +150,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
     public class AgentTemplate_FindByNameRequest : FunctionAppRequestBase
     {
         [Required]
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Search.Query")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Search.Query")]
         public string Query { get; set; }
 
-        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Search.TopN")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Search.TopN")]
         public int TopN { get; set; } = 5;
     }
 }

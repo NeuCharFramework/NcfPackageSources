@@ -48,11 +48,11 @@ namespace Senparc.Xncf.SenMapic
 
         public override string Version => "0.1.3";//必须填写版本号
 
-        public override string MenuName => NcfBuiltInResource.Get("Module.SenMapic.MenuName", "SenMapic");
+        public override string MenuName => SenMapicResource.Get("Module.SenMapic.MenuName", "SenMapic");
 
         public override string Icon => "fa fa-database";
 
-        public override string Description => NcfBuiltInResource.Get("Module.SenMapic.Description", "SenMapic 爬虫模块");
+        public override string Description => SenMapicResource.Get("Module.SenMapic.Description", "SenMapic 爬虫模块");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

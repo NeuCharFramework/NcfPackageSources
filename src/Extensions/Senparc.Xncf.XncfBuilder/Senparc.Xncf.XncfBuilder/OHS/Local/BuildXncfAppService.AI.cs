@@ -49,7 +49,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         /// <exception cref="NcfExceptionBase"></exception>
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.XncfBuilder.GenerateEntity.Name", "Function.XncfBuilder.GenerateEntity.Description", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.GenerateEntity.Name", "Function.XncfBuilder.GenerateEntity.Description", typeof(Register))]
         public async Task<StringAppResponse> CreateDatabaseEntity(BuildXncf_CreateDatabaseEntityRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -254,7 +254,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         //初始化 PromptRange 方法（需要先确保已经安装）
 
 
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.XncfBuilder.InitPrompt.Name", "Function.XncfBuilder.InitPrompt.Description", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.InitPrompt.Name", "Function.XncfBuilder.InitPrompt.Description", typeof(Register))]
         public async Task<StringAppResponse> InitPrompt(BuildXncf_InitPromptRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

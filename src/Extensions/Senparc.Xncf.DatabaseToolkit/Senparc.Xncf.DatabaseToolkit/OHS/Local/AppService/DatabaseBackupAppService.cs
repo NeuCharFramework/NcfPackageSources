@@ -36,7 +36,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         //[ApiBind("A","B",ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.Database.CheckBackup.Name", "Function.Database.CheckBackup.Description", typeof(Register))]
+        [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.CheckBackup.Name", "Function.Database.CheckBackup.Description", typeof(Register))]
         public async Task<DatabaseAutoBackup_IsAutoBackupResponse> IsAutoBackup()
         {
             return await this.GetResponseAsync<DatabaseAutoBackup_IsAutoBackupResponse, bool>(async (response, logger) =>
@@ -47,7 +47,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 
         #region 备份
 
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.Database.Backup.Name", "Function.Database.Backup.Description", typeof(Register))]
+        [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.Backup.Name", "Function.Database.Backup.Description", typeof(Register))]
         public async Task<StringAppResponse> Backup(DatabaseBackup_BackupRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -132,7 +132,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         #endregion
 
 
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.Database.ExportSql.Name", "Function.Database.ExportSql.Description", typeof(Register))]
+        [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.ExportSql.Name", "Function.Database.ExportSql.Description", typeof(Register))]
         public async Task<StringAppResponse> ExportSQL()
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

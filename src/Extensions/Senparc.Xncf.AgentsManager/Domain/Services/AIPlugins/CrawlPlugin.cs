@@ -54,15 +54,15 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
             this._serviceProvider = serviceProvider;
         }
 
-        [KernelFunction, LocalizedDescription(typeof(NcfBuiltInResource), "Agents.Plugin.Crawl.Description")]
+        [KernelFunction, LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Crawl.Description")]
         public async Task<string> Crawl(
-            [LocalizedDescription(typeof(NcfBuiltInResource), "Agents.Plugin.Crawl.Url")]
+            [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Crawl.Url")]
             string url,
-            [LocalizedDescription(typeof(NcfBuiltInResource), "Agents.Plugin.Crawl.Depth")]
+            [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Crawl.Depth")]
             int maxDeepth,
-            [LocalizedDescription(typeof(NcfBuiltInResource), "Agents.Plugin.Crawl.PageCount")]
+            [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Crawl.PageCount")]
             int maxPageCount,
-            [LocalizedDescription(typeof(NcfBuiltInResource), "Agents.Plugin.Crawl.Question")]
+            [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Crawl.Question")]
             string question
          )
         {

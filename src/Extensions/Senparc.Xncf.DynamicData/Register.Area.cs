@@ -40,8 +40,8 @@ namespace Senparc.Xncf.DynamicData
         public string HomeUrl => "/Admin/DynamicData/";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-                         new AreaPageMenuItem(GetAreaUrl(HomeUrl+"PageSet"), NcfBuiltInResource.Get("Area.DynamicData.PageSettings", "界面设置"),"fa fa-laptop"),
-                           new AreaPageMenuItem(GetAreaUrl(HomeUrl+"DataSheetSet"), NcfBuiltInResource.Get("Area.DynamicData.TableSettings", "数据库表设置"),"fa fa-laptop")
+                         new AreaPageMenuItem(GetAreaUrl(HomeUrl+"PageSet"), DynamicDataResource.Get("Area.DynamicData.PageSettings", "界面设置"),"fa fa-laptop"),
+                           new AreaPageMenuItem(GetAreaUrl(HomeUrl+"DataSheetSet"), DynamicDataResource.Get("Area.DynamicData.TableSettings", "数据库表设置"),"fa fa-laptop")
                      };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)

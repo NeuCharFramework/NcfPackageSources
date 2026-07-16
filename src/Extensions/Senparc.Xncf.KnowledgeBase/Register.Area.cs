@@ -39,9 +39,9 @@ namespace Senparc.Xncf.KnowledgeBase
         public string HomeUrl => "/Admin/KnowledgeBase/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-            new AreaPageMenuItem(GetAreaHomeUrl(), NcfBuiltInResource.Get("Area.Home", "首页"),"fa fa-laptop"),
-            new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/Index"), NcfBuiltInResource.Get("Area.KnowledgeBase.Management", "知识库管理"),"fa fa-bookmark-o"),
-            new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/RecallTest"), NcfBuiltInResource.Get("Area.KnowledgeBase.RecallTest", "召回测试"),"fa fa-bookmark-o"),
+            new AreaPageMenuItem(GetAreaHomeUrl(), KnowledgeBaseResource.Get("Area.Home", "首页"),"fa fa-laptop"),
+            new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/Index"), KnowledgeBaseResource.Get("Area.KnowledgeBase.Management", "知识库管理"),"fa fa-bookmark-o"),
+            new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/RecallTest"), KnowledgeBaseResource.Get("Area.KnowledgeBase.RecallTest", "召回测试"),"fa fa-bookmark-o"),
         };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)

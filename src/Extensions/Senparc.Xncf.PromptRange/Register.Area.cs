@@ -33,7 +33,7 @@ namespace Senparc.Xncf.PromptRange
         public string HomeUrl => "/Admin/PromptRange/";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-                         new AreaPageMenuItem(GetAreaUrl(HomeUrl+"Index"), NcfBuiltInResource.Get("Area.Home", "首页"),"fa fa-laptop"),
+                         new AreaPageMenuItem(GetAreaUrl(HomeUrl+"Index"), PromptRangeResource.Get("Area.Home", "首页"),"fa fa-laptop"),
                           //new AreaPageMenuItem(GetAreaUrl(HomeUrl+"Model"),"模型","fa fa-laptop"),
                            new AreaPageMenuItem(GetAreaUrl(HomeUrl+"Prompt"),"PromptRange","fa fa-laptop"),
                           //new AreaPageMenuItem(GetAreaUrl($"/Admin/PromptRange/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")

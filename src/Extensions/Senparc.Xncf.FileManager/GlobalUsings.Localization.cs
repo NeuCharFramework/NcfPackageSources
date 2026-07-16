@@ -1,2 +1,2 @@
-global using Senparc.Ncf.XncfBase;
+global using Senparc.Xncf.FileManager;
 global using Senparc.Ncf.Core.AppServices;

@@ -56,11 +56,11 @@ namespace Senparc.Xncf.AgentsManager
 
         public override string Version => "0.3.22";//必须填写版本号
 
-        public override string MenuName => NcfBuiltInResource.Get("Module.AgentsManager.MenuName", "Agents 管理模块");
+        public override string MenuName => AgentsManagerResource.Get("Module.AgentsManager.MenuName", "Agents 管理模块");
 
         public override string Icon => "fa fa-star";
 
-        public override string Description => NcfBuiltInResource.Get("Module.AgentsManager.Description", "Agents 管理模块");
+        public override string Description => AgentsManagerResource.Get("Module.AgentsManager.Description", "Agents 管理模块");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

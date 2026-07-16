@@ -69,7 +69,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             this._promptRangeService = promptRangeService;
         }
 
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.Agents.ManageChatGroup.Name", "Function.Agents.ManageChatGroup.Description", typeof(Register))]
+        [FunctionRender(typeof(AgentsManagerResource), "Function.Agents.ManageChatGroup.Name", "Function.Agents.ManageChatGroup.Description", typeof(Register))]
         public async Task<StringAppResponse> ManageChatGroupManage(ChatGroup_ManageChatGroupRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -328,7 +328,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             return (false, 0, $"未找到匹配的 Agent：{rawInput}");
         }
 
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.Agents.StartChatGroup.Name", "Function.Agents.StartChatGroup.Description", typeof(Register))]
+        [FunctionRender(typeof(AgentsManagerResource), "Function.Agents.StartChatGroup.Name", "Function.Agents.StartChatGroup.Description", typeof(Register))]
         public async Task<StringAppResponse> RunChatGroup(ChatGroup_RunChatGroupRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -733,7 +733,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         /// <summary>
         /// 删除整个对话（包括所有消息、任务等）
         /// </summary>
-        [FunctionRender(typeof(NcfBuiltInResource), "Function.Agents.DeleteConversation.Name", "Function.Agents.DeleteConversation.Description", typeof(Register))]
+        [FunctionRender(typeof(AgentsManagerResource), "Function.Agents.DeleteConversation.Name", "Function.Agents.DeleteConversation.Description", typeof(Register))]
         public async Task<StringAppResponse> DeleteChatGroup(ChatGroup_DeleteChatGroupRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
