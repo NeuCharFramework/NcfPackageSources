@@ -47,7 +47,7 @@
                             @IR["Install.MultiTenantStatus"] @(Model.MultiTenantEnable ? IR["Install.MultiTenantEnabled"] : IR["Install.MultiTenantDisabled"])
                             @if (Model.MultiTenantEnable)
                             {
-                                <text>，@IR["Install.MultiTenantRule"] @Model.TenantRule</text>
+                                <text>@IR["Install.Separator"]@IR["Install.MultiTenantRule"] @Model.TenantRule</text>
                             }
                         </p>
                         <form method="post" id="install_main_form">
@@ -99,8 +99,8 @@
                             @if (Model.MultiTenantEnable && Model.InstallingTenant)
                             {
                                 <p>
-                                    @IR["Install.Success.TenantCreated"] <strong>@Model.TenantInfoDto.Name</strong>，
-                                    @IR["Install.Success.TenantRule"] <strong>@Model.TenantRule</strong>，
+                                    @IR["Install.Success.TenantCreated"] <strong>@Model.TenantInfoDto.Name</strong>@IR["Install.Separator"]
+                                    @IR["Install.Success.TenantRule"] <strong>@Model.TenantRule</strong>@IR["Install.Separator"]
                                     @IR["Install.Success.TenantKey"] <strong>@Model.TenantInfoDto.TenantKey</strong>
                                 </p>
                             }
@@ -127,14 +127,15 @@
     <script src="~/lib/element-ui_2.13.2/element.js"></script>
     <script src="~/lib/axios/axios.min.js"></script>
     <script>
-        window.ncfInstallI18n = {
-            installing: '@IR["Install.StartButton"]',
-            started: '@IR["Install.Warning"]',
-            startConfirm: '@IR["Install.StartButton"]?',
-            startConfirmDetail: '@IR["Install.Warning"]',
-            startedWaiting: '@IR["Install.StartButton"]...',
-            failedPrefix: 'Install failed:'
-        };
+        window.ncfInstallI18n = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(new
+        {
+            started = IR["Install.AlreadyRunning"].Value,
+            startConfirm = IR["Install.Confirm"].Value,
+            startConfirmDetail = IR["Install.ConfirmDetail"].Value,
+            startedWaiting = IR["Install.StartedWaiting"].Value,
+            failedPrefix = IR["Install.FailedPrefix"].Value,
+            loadOptionsFailed = IR["Install.LoadOptionsFailed"].Value
+        }));
 
         function ncfSwitchLanguage(culture) {
             var returnUrl = window.location.pathname + window.location.search;

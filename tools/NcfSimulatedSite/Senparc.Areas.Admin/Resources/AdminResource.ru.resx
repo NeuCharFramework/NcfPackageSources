@@ -175,4 +175,383 @@
   <data name="AdminChat.SelectAtLeastOneMessage" xml:space="preserve"><value>Выберите хотя бы одно сообщение</value></data>
   <data name="AdminChat.DeleteMessagesSuccess" xml:space="preserve"><value>Успешно удалено. Удалено сообщений: {0}</value></data>
   <data name="AdminChat.AddModulesSuccess" xml:space="preserve"><value>Модули успешно добавлены</value></data>
+  <data name="Admin.Account.Menu" xml:space="preserve"><value>Моя учётная запись</value></data>
+  <data name="Admin.Account.Current" xml:space="preserve"><value>Текущая учётная запись: {0}</value></data>
+  <data name="Admin.Footer.PoweredBy" xml:space="preserve"><value>При поддержке:</value></data>
+  <data name="Admin.Footer.Company" xml:space="preserve"><value>Senparc</value></data>
+  <data name="Admin.Login.Support" xml:space="preserve"><value>Техническая поддержка: </value></data>
+  <data name="Admin.Login.OfficialWebsite" xml:space="preserve"><value>Перейти на официальный сайт</value></data>
+  <data name="Admin.Login.Company" xml:space="preserve"><value>Suzhou Senparc Network Technology Co., Ltd.</value></data>
+  <data name="Admin.Login.Error.LoginFailed" xml:space="preserve"><value>Не удалось войти</value></data>
+  <data name="Admin.Login.Error.LoginRetry" xml:space="preserve"><value>Не удалось войти. Повторите попытку.</value></data>
+  <data name="Admin.Session.ExpiringTitle" xml:space="preserve"><value>Сеанс скоро завершится</value></data>
+  <data name="Admin.Session.ExpiringMessage" xml:space="preserve"><value>Текущий сеанс скоро завершится. Продлите его или выйдите сейчас.</value></data>
+  <data name="Admin.Session.KeepLogin" xml:space="preserve"><value>Остаться в системе</value></data>
+  <data name="Admin.Session.LogoutNow" xml:space="preserve"><value>Выйти сейчас</value></data>
+  <data name="Admin.Session.KeepLoginSuccess" xml:space="preserve"><value>Сеанс продлён.</value></data>
+  <data name="Common.All" xml:space="preserve"><value>Все</value></data>
+  <data name="Common.CopySuccess" xml:space="preserve"><value>Скопировано. Нажмите Ctrl+V, чтобы вставить.</value></data>
+  <data name="Common.DeleteSuccess" xml:space="preserve"><value>Успешно удалено</value></data>
+  <data name="Common.Error" xml:space="preserve"><value>Ошибка</value></data>
+  <data name="Common.No" xml:space="preserve"><value>Нет</value></data>
+  <data name="Common.NoTime" xml:space="preserve"><value>Время отсутствует</value></data>
+  <data name="Common.SaveSuccess" xml:space="preserve"><value>Успешно сохранено</value></data>
+  <data name="Common.Success" xml:space="preserve"><value>Успешно</value></data>
+  <data name="Common.UpdateFailed" xml:space="preserve"><value>Не удалось обновить: {0}</value></data>
+  <data name="Common.UpdateSuccess" xml:space="preserve"><value>Успешно обновлено</value></data>
+  <data name="Common.Yes" xml:space="preserve"><value>Да</value></data>
+  <data name="Common.提交" xml:space="preserve"><value>Отправить</value></data>
+  <data name="AdminUser.AddTitle" xml:space="preserve"><value>Добавить администратора</value></data>
+  <data name="AdminUser.AssignRoleSuccess" xml:space="preserve"><value>Роли успешно назначены</value></data>
+  <data name="AdminUser.ConfirmPassword" xml:space="preserve"><value>Подтвердите пароль</value></data>
+  <data name="AdminUser.ConfirmPasswordPlaceholder" xml:space="preserve"><value>Введите пароль ещё раз</value></data>
+  <data name="AdminUser.DeleteConfirm" xml:space="preserve"><value>Удалить этого администратора?</value></data>
+  <data name="AdminUser.EditTitle" xml:space="preserve"><value>Изменить администратора</value></data>
+  <data name="AdminUser.EditUsernameWarning" xml:space="preserve"><value>Не рекомендуется изменять имя пользователя.</value></data>
+  <data name="AdminUser.List" xml:space="preserve"><value>Список администраторов</value></data>
+  <data name="AdminUser.Password" xml:space="preserve"><value>Пароль</value></data>
+  <data name="AdminUser.PasswordMismatch" xml:space="preserve"><value>Пароли не совпадают</value></data>
+  <data name="AdminUser.PasswordPlaceholder" xml:space="preserve"><value>Введите пароль</value></data>
+  <data name="AdminUser.Phone" xml:space="preserve"><value>Номер телефона</value></data>
+  <data name="AdminUser.PhonePlaceholder" xml:space="preserve"><value>Введите номер телефона</value></data>
+  <data name="AdminUser.RealName" xml:space="preserve"><value>Полное имя</value></data>
+  <data name="AdminUser.RealNamePlaceholder" xml:space="preserve"><value>Введите полное имя</value></data>
+  <data name="AdminUser.SetRole" xml:space="preserve"><value>Назначить роли</value></data>
+  <data name="AdminUser.SetRoleFor" xml:space="preserve"><value>Назначить роли для {0}</value></data>
+  <data name="AdminUser.Title" xml:space="preserve"><value>Управление администраторами</value></data>
+  <data name="AdminUser.Username" xml:space="preserve"><value>Имя пользователя</value></data>
+  <data name="AdminUser.UsernamePlaceholder" xml:space="preserve"><value>Введите имя пользователя</value></data>
+  <data name="AdminUser.UsernameRequired" xml:space="preserve"><value>Имя пользователя обязательно</value></data>
+  <data name="Menu.ActionCodeRequiredForButton" xml:space="preserve"><value>Для кнопки требуется код действия</value></data>
+  <data name="Menu.ActionMark" xml:space="preserve"><value>Идентификатор действия</value></data>
+  <data name="Menu.ActionUrl" xml:space="preserve"><value>URL действия</value></data>
+  <data name="Menu.AddButton" xml:space="preserve"><value>Добавить кнопку</value></data>
+  <data name="Menu.AddChild" xml:space="preserve"><value>Добавить подменю</value></data>
+  <data name="Menu.AddChildTitle" xml:space="preserve"><value>Добавить дочернее меню</value></data>
+  <data name="Menu.AddTitle" xml:space="preserve"><value>Добавить меню</value></data>
+  <data name="Menu.AddTopLevel" xml:space="preserve"><value>Добавить меню верхнего уровня</value></data>
+  <data name="Menu.ButtonName" xml:space="preserve"><value>Название кнопки</value></data>
+  <data name="Menu.EditTitle" xml:space="preserve"><value>Изменить меню</value></data>
+  <data name="Menu.IconPlaceholder" xml:space="preserve"><value>Введите значок меню</value></data>
+  <data name="Menu.NamePlaceholder" xml:space="preserve"><value>Введите название меню</value></data>
+  <data name="Menu.NameRequired" xml:space="preserve"><value>Название меню обязательно</value></data>
+  <data name="Menu.Sort" xml:space="preserve"><value>Порядок меню</value></data>
+  <data name="Menu.SortPlaceholder" xml:space="preserve"><value>Введите порядок меню</value></data>
+  <data name="Menu.TypeRequired" xml:space="preserve"><value>Тип обязателен</value></data>
+  <data name="Menu.Url" xml:space="preserve"><value>URL меню</value></data>
+  <data name="Menu.UrlPlaceholder" xml:space="preserve"><value>Введите URL меню</value></data>
+  <data name="Menu.Visible" xml:space="preserve"><value>Видимый</value></data>
+  <data name="Role.AddTitle" xml:space="preserve"><value>Добавить роль</value></data>
+  <data name="Role.CodeRequired" xml:space="preserve"><value>Код роли обязателен</value></data>
+  <data name="Role.EditTitle" xml:space="preserve"><value>Изменить роль</value></data>
+  <data name="Role.GrantSuccess" xml:space="preserve"><value>Разрешения успешно предоставлены</value></data>
+  <data name="Role.NameRequired" xml:space="preserve"><value>Название роли обязательно</value></data>
+  <data name="Role.PermissionManagement" xml:space="preserve"><value>Управление разрешениями роли</value></data>
+  <data name="Role.PermissionSettings" xml:space="preserve"><value>{0} — Настройки разрешений</value></data>
+  <data name="SystemConfig.BasicInfo" xml:space="preserve"><value>Основная информация</value></data>
+  <data name="SystemConfig.EditTitle" xml:space="preserve"><value>Изменить сведения о системе</value></data>
+  <data name="SystemConfig.PublishMode" xml:space="preserve"><value>Режим публикации модулей</value></data>
+  <data name="SystemConfig.SystemName" xml:space="preserve"><value>Название системы</value></data>
+  <data name="SystemConfig.SystemNamePlaceholder" xml:space="preserve"><value>Введите название системы</value></data>
+  <data name="SystemConfig.SystemNameRequired" xml:space="preserve"><value>Название системы обязательно</value></data>
+  <data name="SystemConfig.Title" xml:space="preserve"><value>Сведения о системе</value></data>
+  <data name="Tenant.Add" xml:space="preserve"><value>Добавить арендатора</value></data>
+  <data name="Tenant.AddTitle" xml:space="preserve"><value>Добавить сведения об арендаторе</value></data>
+  <data name="Tenant.AdminAccount" xml:space="preserve"><value>Учётная запись администратора</value></data>
+  <data name="Tenant.AdminRemark" xml:space="preserve"><value>Заметки администратора</value></data>
+  <data name="Tenant.AdminRemarkPlaceholder" xml:space="preserve"><value>Введите заметки администратора</value></data>
+  <data name="Tenant.CredentialWarning" xml:space="preserve"><value>Сохраните следующие данные. Пароль нельзя будет просмотреть повторно.</value></data>
+  <data name="Tenant.CredentialsRecorded" xml:space="preserve"><value>Данные сохранены. Закрыть</value></data>
+  <data name="Tenant.CurrentInfo" xml:space="preserve"><value>Сведения о текущем арендаторе</value></data>
+  <data name="Tenant.CurrentRule" xml:space="preserve"><value>Текущее правило сопоставления: </value></data>
+  <data name="Tenant.DefaultAdmin" xml:space="preserve"><value>Учётная запись администратора по умолчанию</value></data>
+  <data name="Tenant.DefaultAdminPlaceholder" xml:space="preserve"><value>Введите учётную запись администратора по умолчанию</value></data>
+  <data name="Tenant.DefaultAdminRequired" xml:space="preserve"><value>Учётная запись администратора по умолчанию обязательна</value></data>
+  <data name="Tenant.DeleteConfirm" xml:space="preserve"><value>Удалить этого арендатора? Его данные останутся без привязки. Действуйте осторожно.</value></data>
+  <data name="Tenant.Disabled" xml:space="preserve"><value>Мультитенантность отключена для текущей системы</value></data>
+  <data name="Tenant.EditTitle" xml:space="preserve"><value>Изменить сведения об арендаторе</value></data>
+  <data name="Tenant.Enabled" xml:space="preserve"><value>Включён</value></data>
+  <data name="Tenant.Info" xml:space="preserve"><value>Сведения об арендаторе</value></data>
+  <data name="Tenant.Initialize" xml:space="preserve"><value>Инициализировать</value></data>
+  <data name="Tenant.InitializeFailed" xml:space="preserve"><value>Не удалось инициализировать</value></data>
+  <data name="Tenant.InitializeResult" xml:space="preserve"><value>Результат инициализации</value></data>
+  <data name="Tenant.InitializeTitle" xml:space="preserve"><value>Инициализация арендатора</value></data>
+  <data name="Tenant.MatchKeyword" xml:space="preserve"><value>Ключевое слово сопоставления арендатора</value></data>
+  <data name="Tenant.MatchKeywordPlaceholder" xml:space="preserve"><value>Введите ключевое слово сопоставления арендатора</value></data>
+  <data name="Tenant.MatchRule" xml:space="preserve"><value>Правило сопоставления</value></data>
+  <data name="Tenant.MatchRuleRequired" xml:space="preserve"><value>Правило сопоставления арендатора обязательно</value></data>
+  <data name="Tenant.MatchTime" xml:space="preserve"><value>Время сопоставления</value></data>
+  <data name="Tenant.Name" xml:space="preserve"><value>Название арендатора</value></data>
+  <data name="Tenant.NamePlaceholder" xml:space="preserve"><value>Введите название арендатора</value></data>
+  <data name="Tenant.NameRequired" xml:space="preserve"><value>Название арендатора обязательно</value></data>
+  <data name="Tenant.Title" xml:space="preserve"><value>Сведения о мультитенантности</value></data>
+  <data name="Trace.Content" xml:space="preserve"><value>Содержимое</value></data>
+  <data name="Trace.EndTime" xml:space="preserve"><value>Время окончания</value></data>
+  <data name="Trace.ExceptionCount" xml:space="preserve"><value>Исключения</value></data>
+  <data name="Trace.ExceptionInfo" xml:space="preserve"><value>Сведения об исключении</value></data>
+  <data name="Trace.ExceptionStatus" xml:space="preserve"><value>Состояние исключения</value></data>
+  <data name="Trace.IsException" xml:space="preserve"><value>Исключение</value></data>
+  <data name="Trace.KeywordPlaceholder" xml:space="preserve"><value>Введите ключевое слово</value></data>
+  <data name="Trace.LastHour" xml:space="preserve"><value>Последний час</value></data>
+  <data name="Trace.NumberAndLine" xml:space="preserve"><value>№ / Строка</value></data>
+  <data name="Trace.PostData" xml:space="preserve"><value>Данные POST</value></data>
+  <data name="Trace.Result" xml:space="preserve"><value>Результат</value></data>
+  <data name="Trace.SelectThread" xml:space="preserve"><value>Выберите поток</value></data>
+  <data name="Trace.SelectType" xml:space="preserve"><value>Выберите тип</value></data>
+  <data name="Trace.ShowAll" xml:space="preserve"><value>Показать все полные результаты</value></data>
+  <data name="Trace.ShowExceptions" xml:space="preserve"><value>Показывать только исключения</value></data>
+  <data name="Trace.StartTime" xml:space="preserve"><value>Время начала</value></data>
+  <data name="Trace.Thread" xml:space="preserve"><value>Поток</value></data>
+  <data name="Trace.Time" xml:space="preserve"><value>Время</value></data>
+  <data name="Trace.Title" xml:space="preserve"><value>Заголовок</value></data>
+  <data name="Trace.To" xml:space="preserve"><value>—</value></data>
+  <data name="Trace.Today" xml:space="preserve"><value>Сегодня</value></data>
+  <data name="Trace.Type" xml:space="preserve"><value>Тип</value></data>
+  <data name="Common.Tip" xml:space="preserve"><value>Уведомление</value></data>
+  <data name="Common.Warning" xml:space="preserve"><value>Предупреждение</value></data>
+  <data name="Admin.AccessDenied" xml:space="preserve"><value>У вас нет разрешения на доступ к этому ресурсу.</value></data>
+  <data name="Admin.Login.Error.CheckTenantFailed" xml:space="preserve"><value>Не удалось проверить состояние мультитенантности</value></data>
+  <data name="Admin.Session.ExpiredRedirect" xml:space="preserve"><value>Сеанс истёк. Переход на страницу входа.</value></data>
+  <data name="Admin.Home.Title" xml:space="preserve"><value>Главная панели администратора</value></data>
+  <data name="Admin.Home.Header" xml:space="preserve"><value>Панель администратора NeuCharFramework</value></data>
+  <data name="Admin.Home.ChatSubtitle" xml:space="preserve"><value>Задайте вопрос, и я помогу эффективнее управлять системой.</value></data>
+  <data name="Admin.Home.MultiTurn" xml:space="preserve"><value>Поддержка многоэтапных диалогов</value></data>
+  <data name="Admin.Home.ModuleContext" xml:space="preserve"><value>Добавляйте модули в контекст диалога</value></data>
+  <data name="Admin.Home.AutoSaveHistory" xml:space="preserve"><value>История сохраняется автоматически</value></data>
+  <data name="Admin.Home.FunctionModules" xml:space="preserve"><value>Функциональные модули</value></data>
+  <data name="Admin.Home.LogStatistics" xml:space="preserve"><value>Статистика журналов</value></data>
+  <data name="Admin.Home.Last14Days" xml:space="preserve"><value>Последние 14 дней</value></data>
+  <data name="Admin.Home.LogCount" xml:space="preserve"><value>{0} записей</value></data>
+  <data name="Admin.Home.NormalLogs" xml:space="preserve"><value>Обычные журналы</value></data>
+  <data name="Admin.Home.ExceptionLogs" xml:space="preserve"><value>Журналы исключений</value></data>
+  <data name="Admin.Home.Total" xml:space="preserve"><value>Всего</value></data>
+  <data name="Admin.Home.TodayLogStatistics" xml:space="preserve"><value>Статистика журналов за сегодня</value></data>
+  <data name="Admin.Home.LiveData" xml:space="preserve"><value>Данные в реальном времени</value></data>
+  <data name="Admin.Home.LogType" xml:space="preserve"><value>Тип журнала</value></data>
+  <data name="AdminChat.Title" xml:space="preserve"><value>ИИ-помощник</value></data>
+  <data name="AdminChat.Assistant" xml:space="preserve"><value>ИИ-помощник</value></data>
+  <data name="AdminChat.Conversation" xml:space="preserve"><value>Диалог</value></data>
+  <data name="AdminChat.History" xml:space="preserve"><value>История диалогов</value></data>
+  <data name="AdminChat.NoHistory" xml:space="preserve"><value>История диалогов отсутствует</value></data>
+  <data name="AdminChat.SelectAiModel" xml:space="preserve"><value>Выберите модель ИИ</value></data>
+  <data name="AdminChat.Done" xml:space="preserve"><value>Готово</value></data>
+  <data name="AdminChat.Manage" xml:space="preserve"><value>Управление</value></data>
+  <data name="AdminChat.MenuHierarchy" xml:space="preserve"><value>Иерархия меню</value></data>
+  <data name="AdminChat.NoPreviewDetails" xml:space="preserve"><value>Для этого модуля нет данных для предварительного просмотра.</value></data>
+  <data name="AdminChat.SelectAll" xml:space="preserve"><value>Выбрать всё</value></data>
+  <data name="AdminChat.SelectedCountPrefix" xml:space="preserve"><value>Выбрано</value></data>
+  <data name="AdminChat.SelectedCountSuffix" xml:space="preserve"><value>сообщений</value></data>
+  <data name="AdminChat.Copy" xml:space="preserve"><value>Копировать</value></data>
+  <data name="AdminChat.ClearSelection" xml:space="preserve"><value>Очистить выбор</value></data>
+  <data name="AdminChat.StartConversationPrompt" xml:space="preserve"><value>Начните диалог</value></data>
+  <data name="AdminChat.Thinking" xml:space="preserve"><value>Обдумываю...</value></data>
+  <data name="AdminChat.InputPlaceholder" xml:space="preserve"><value>Введите вопрос...</value></data>
+  <data name="AdminChat.SendShortcut" xml:space="preserve"><value>Нажмите Ctrl+Enter или Cmd+Enter для отправки</value></data>
+  <data name="AdminChat.Send" xml:space="preserve"><value>Отправить</value></data>
+  <data name="AdminChat.LauncherSubtitle" xml:space="preserve"><value>Введите вопрос и выберите модули контекста, чтобы начать диалог.</value></data>
+  <data name="AdminChat.AiModel" xml:space="preserve"><value>Модель ИИ</value></data>
+  <data name="AdminChat.LauncherPlaceholder" xml:space="preserve"><value>Введите вопрос, например: Как настроить параметры системы? Нажмите Ctrl+Enter или Cmd+Enter для отправки.</value></data>
+  <data name="AdminChat.StartConversation" xml:space="preserve"><value>Начать диалог</value></data>
+  <data name="AdminChat.ReferenceModulesOptional" xml:space="preserve"><value>Модули контекста (необязательно)</value></data>
+  <data name="AdminChat.AddReferenceModules" xml:space="preserve"><value>Добавить модули контекста</value></data>
+  <data name="AdminChat.Clear" xml:space="preserve"><value>Очистить</value></data>
+  <data name="AdminChat.ReferenceModulesHint" xml:space="preserve"><value>Нажмите «Добавить модули контекста», чтобы выбрать контекст.</value></data>
+  <data name="AdminChat.SearchModules" xml:space="preserve"><value>Поиск по названию / описанию / UID</value></data>
+  <data name="AdminChat.SelectAllFiltered" xml:space="preserve"><value>Выбрать все результаты фильтра</value></data>
+  <data name="AdminChat.Selected" xml:space="preserve"><value>Выбрано</value></data>
+  <data name="AdminChat.QuickOpen" xml:space="preserve"><value>Открыть</value></data>
+  <data name="AdminChat.Menu" xml:space="preserve"><value>Меню</value></data>
+  <data name="AdminChat.NoMenu" xml:space="preserve"><value>Нет меню</value></data>
+  <data name="AdminChat.NoModuleDetails" xml:space="preserve"><value>Для этого модуля нет доступных меню или функций.</value></data>
+  <data name="AdminChat.NoMatchingModules" xml:space="preserve"><value>Подходящие модули не найдены</value></data>
+  <data name="AdminChat.ConfirmAdd" xml:space="preserve"><value>Добавить выбранное</value></data>
+  <data name="AdminChat.SystemAiModel" xml:space="preserve"><value>Системный SenparcAiSetting</value></data>
+  <data name="AdminChat.DefaultChatConfig" xml:space="preserve"><value>Использовать активную конфигурацию Chat по умолчанию из appsettings.json</value></data>
+  <data name="AdminChat.LoadAiModelsFailed" xml:space="preserve"><value>Не удалось загрузить модели ИИ</value></data>
+  <data name="AdminChat.LoadSessionListFailed" xml:space="preserve"><value>Не удалось загрузить список диалогов</value></data>
+  <data name="AdminChat.LoadSessionDetailFailed" xml:space="preserve"><value>Не удалось загрузить сведения о диалоге</value></data>
+  <data name="AdminChat.EnterMessage" xml:space="preserve"><value>Введите сообщение</value></data>
+  <data name="AdminChat.SelectOrCreateSession" xml:space="preserve"><value>Сначала выберите или создайте диалог</value></data>
+  <data name="AdminChat.SendFailed" xml:space="preserve"><value>Не удалось отправить сообщение</value></data>
+  <data name="AdminChat.SendRetry" xml:space="preserve"><value>Не удалось отправить сообщение. Повторите попытку позже.</value></data>
+  <data name="AdminChat.FeedbackSuccess" xml:space="preserve"><value>Отзыв отправлен</value></data>
+  <data name="AdminChat.FeedbackFailed" xml:space="preserve"><value>Не удалось отправить отзыв</value></data>
+  <data name="AdminChat.SelectMessagesToCopy" xml:space="preserve"><value>Выберите сообщения для копирования</value></data>
+  <data name="AdminChat.CopiedMessages" xml:space="preserve"><value>Скопировано сообщений: {0}</value></data>
+  <data name="AdminChat.CopyFailed" xml:space="preserve"><value>Не удалось скопировать. Скопируйте вручную.</value></data>
+  <data name="AdminChat.SelectMessagesToDelete" xml:space="preserve"><value>Выберите сообщения для удаления</value></data>
+  <data name="AdminChat.DeleteMessagesConfirm" xml:space="preserve"><value>Удалить выбранные сообщения ({0})? Это действие нельзя отменить.</value></data>
+  <data name="AdminChat.DeleteConfirmTitle" xml:space="preserve"><value>Подтверждение удаления</value></data>
+  <data name="AdminChat.DeleteFailed" xml:space="preserve"><value>Не удалось удалить</value></data>
+  <data name="AdminChat.DeleteRetry" xml:space="preserve"><value>Не удалось удалить. Повторите попытку позже.</value></data>
+  <data name="AdminChat.DeleteSessionConfirm" xml:space="preserve"><value>Удалить этот диалог?</value></data>
+  <data name="AdminChat.DeleteCancelled" xml:space="preserve"><value>Удаление отменено</value></data>
+  <data name="AdminChat.Role.User" xml:space="preserve"><value>Я</value></data>
+  <data name="AdminChat.Role.System" xml:space="preserve"><value>Система</value></data>
+  <data name="AdminChat.Role.Unknown" xml:space="preserve"><value>Неизвестно</value></data>
+  <data name="AdminChat.UnnamedModule" xml:space="preserve"><value>Безымянный модуль</value></data>
+  <data name="AdminChat.NoDescription" xml:space="preserve"><value>Нет описания</value></data>
+  <data name="AdminChat.TimeFormatFailed" xml:space="preserve"><value>Не удалось отформатировать время</value></data>
+  <data name="AdminChat.SaveSelectedModulesFailed" xml:space="preserve"><value>Не удалось сохранить выбранные модули</value></data>
+  <data name="AdminChat.ReadSelectedModulesFailed" xml:space="preserve"><value>Не удалось прочитать выбранные модули</value></data>
+  <data name="AdminChat.SaveSessionAiModelFailed" xml:space="preserve"><value>Не удалось сохранить модель ИИ диалога</value></data>
+  <data name="AdminChat.ReadSessionAiModelFailed" xml:space="preserve"><value>Не удалось прочитать модель ИИ диалога</value></data>
+  <data name="AdminChat.LoadModulesFailed" xml:space="preserve"><value>Не удалось загрузить список модулей</value></data>
+  <data name="AdminChat.LoadModulesRetry" xml:space="preserve"><value>Не удалось загрузить модули. Повторите попытку позже.</value></data>
+  <data name="AdminChat.EnterConversation" xml:space="preserve"><value>Введите текст диалога</value></data>
+  <data name="AdminChat.CreateSessionFailed" xml:space="preserve"><value>Не удалось создать диалог</value></data>
+  <data name="AdminChat.CreateSessionRetry" xml:space="preserve"><value>Не удалось создать диалог. Повторите попытку позже.</value></data>
+  <data name="Xncf.Extensions" xml:space="preserve"><value>Расширения</value></data>
+  <data name="Xncf.Management" xml:space="preserve"><value>Управление модулями</value></data>
+  <data name="Xncf.NewModules" xml:space="preserve"><value>Новые модули</value></data>
+  <data name="Xncf.NewModulesFound" xml:space="preserve"><value>Найдены новые модули</value></data>
+  <data name="Xncf.ModuleErrors" xml:space="preserve"><value>Ошибки модулей</value></data>
+  <data name="Xncf.ModuleName" xml:space="preserve"><value>Название модуля</value></data>
+  <data name="Xncf.DisplayName" xml:space="preserve"><value>Отображаемое имя</value></data>
+  <data name="Xncf.Version" xml:space="preserve"><value>Версия</value></data>
+  <data name="Xncf.Uid" xml:space="preserve"><value>UID (глобально уникальный)</value></data>
+  <data name="Xncf.SearchPlaceholder" xml:space="preserve"><value>Введите ключевое слово</value></data>
+  <data name="Xncf.Install" xml:space="preserve"><value>Установить</value></data>
+  <data name="Xncf.InstalledModules" xml:space="preserve"><value>Установленные модули</value></data>
+  <data name="Xncf.DisplayNameAndVersion" xml:space="preserve"><value>Отображаемое имя / Версия</value></data>
+  <data name="Xncf.ModuleNameAndUid" xml:space="preserve"><value>Название модуля / UID</value></data>
+  <data name="Xncf.Status" xml:space="preserve"><value>Состояние</value></data>
+  <data name="Xncf.Home" xml:space="preserve"><value>Главная</value></data>
+  <data name="Xncf.AssemblyMissing" xml:space="preserve"><value>Модуль не развёрнут или его сборка отсутствует.</value></data>
+  <data name="Xncf.PendingUpdates" xml:space="preserve"><value>Модули, ожидающие обновления</value></data>
+  <data name="Xncf.State.Closed" xml:space="preserve"><value>Закрыт</value></data>
+  <data name="Xncf.State.Open" xml:space="preserve"><value>Открыт</value></data>
+  <data name="Xncf.State.PendingAdd" xml:space="preserve"><value>Новый — ожидает проверки</value></data>
+  <data name="Xncf.State.PendingUpdate" xml:space="preserve"><value>Обновление — ожидает проверки</value></data>
+  <data name="Xncf.EnableManagerMode" xml:space="preserve"><value>Включить режим управления расширениями</value></data>
+  <data name="Xncf.EnablePublishMode" xml:space="preserve"><value>Перейти в режим публикации и скрыть управление расширениями</value></data>
+  <data name="Xncf.EnableManagerModeConfirm" xml:space="preserve"><value>Все расширения будут показаны в меню «Расширения». Включить этот режим?</value></data>
+  <data name="Xncf.EnablePublishModeConfirm" xml:space="preserve"><value>Расширения будут показаны на верхнем уровне. Управление можно открыть по /Admin/XncfModule. Скрыть сейчас?</value></data>
+  <data name="Xncf.Module" xml:space="preserve"><value>Модуль</value></data>
+  <data name="Xncf.DeleteConfirm" xml:space="preserve"><value>Удалить модуль и связанные данные? Сначала создайте резервную копию.</value></data>
+  <data name="Xncf.NewVersion" xml:space="preserve"><value>Доступна новая версия:</value></data>
+  <data name="Xncf.UpdateNow" xml:space="preserve"><value>Обновить сейчас</value></data>
+  <data name="Xncf.UniqueId" xml:space="preserve"><value>Уникальный ID</value></data>
+  <data name="Xncf.Features" xml:space="preserve"><value>Возможности</value></data>
+  <data name="Xncf.View" xml:space="preserve"><value>Просмотреть</value></data>
+  <data name="Xncf.ExecuteFunction" xml:space="preserve"><value>Исполняемые функции</value></data>
+  <data name="Xncf.Enable" xml:space="preserve"><value>Включить</value></data>
+  <data name="Xncf.Disable" xml:space="preserve"><value>Отключить</value></data>
+  <data name="Xncf.DisabledCannotExecute" xml:space="preserve"><value>Отключённые модули не могут выполнять функции.</value></data>
+  <data name="Xncf.Introduction" xml:space="preserve"><value>Описание</value></data>
+  <data name="Xncf.UpdateLog" xml:space="preserve"><value>Журнал обновлений</value></data>
+  <data name="Xncf.EnterModuleHomePrefix" xml:space="preserve"><value>Открыть главную модуля:</value></data>
+  <data name="Xncf.EnterHome" xml:space="preserve"><value>Открыть главную</value></data>
+  <data name="Xncf.Address" xml:space="preserve"><value>Адрес</value></data>
+  <data name="Xncf.PageOverview" xml:space="preserve"><value>Обзор страниц</value></data>
+  <data name="Xncf.UiEntryExplanation" xml:space="preserve"><value>Модуль предоставляет интерактивный интерфейс, поэтому эта точка входа доступна.</value></data>
+  <data name="Xncf.Execute" xml:space="preserve"><value>Выполнить</value></data>
+  <data name="Xncf.ParameterOverview" xml:space="preserve"><value>Обзор параметров</value></data>
+  <data name="Xncf.Name" xml:space="preserve"><value>Название</value></data>
+  <data name="Xncf.Type" xml:space="preserve"><value>Тип</value></data>
+  <data name="Xncf.Required" xml:space="preserve"><value>Обязательно</value></data>
+  <data name="Xncf.NoInputRequired" xml:space="preserve"><value>Ввод данных не требуется</value></data>
+  <data name="Xncf.Executing" xml:space="preserve"><value>Выполняется</value></data>
+  <data name="Xncf.DownloadLog" xml:space="preserve"><value>Скачать журнал (один раз в течение 5 минут)</value></data>
+  <data name="Xncf.Close" xml:space="preserve"><value>Закрыть</value></data>
+  <data name="Xncf.ViewThreads" xml:space="preserve"><value>Просмотреть потоки</value></data>
+  <data name="Xncf.ActiveAndBackground" xml:space="preserve"><value>Активен / Фоновый</value></data>
+  <data name="Xncf.ThreadStatus" xml:space="preserve"><value>Состояние потока</value></data>
+  <data name="Xncf.LatestStory" xml:space="preserve"><value>Последняя активность</value></data>
+  <data name="Xncf.Feature.Web" xml:space="preserve"><value>Веб-интерфейс</value></data>
+  <data name="Xncf.Feature.Database" xml:space="preserve"><value>База данных</value></data>
+  <data name="Xncf.Feature.Middleware" xml:space="preserve"><value>Промежуточное ПО</value></data>
+  <data name="Xncf.Feature.Thread" xml:space="preserve"><value>Поток</value></data>
+  <data name="Xncf.Type.Text" xml:space="preserve"><value>Текст</value></data>
+  <data name="Xncf.Type.Number" xml:space="preserve"><value>Число</value></data>
+  <data name="Xncf.Type.Date" xml:space="preserve"><value>Дата</value></data>
+  <data name="Xncf.Type.Options" xml:space="preserve"><value>Параметры</value></data>
+  <data name="Xncf.Type.Boolean" xml:space="preserve"><value>Логическое значение</value></data>
+  <data name="Xncf.EnableBeforeExecute" xml:space="preserve"><value>Включите модуль перед выполнением действия.</value></data>
+  <data name="Xncf.SourcePathRequired" xml:space="preserve"><value>Введите физический путь к исходному коду</value></data>
+  <data name="Xncf.RequiredSelection" xml:space="preserve"><value>Поле «{0}» обязательно</value></data>
+  <data name="Xncf.RequiredField" xml:space="preserve"><value>Поле «{0}» обязательно</value></data>
+  <data name="Xncf.RunError" xml:space="preserve"><value>Произошла ошибка</value></data>
+  <data name="Xncf.ErrorInfo" xml:space="preserve"><value>Сведения об ошибке</value></data>
+  <data name="Xncf.RunSuccess" xml:space="preserve"><value>Успешно выполнено</value></data>
+  <data name="Xncf.ExternalUrlNotice" xml:space="preserve"><value>Получен URL. Откройте его ниже.&lt;br /&gt;(Это сторонняя ссылка; соблюдайте осторожность):</value></data>
+  <data name="Xncf.ReturnInfo" xml:space="preserve"><value>Результат</value></data>
+  <data name="Xncf.ExecutionErrorLog" xml:space="preserve"><value>Ошибка выполнения</value></data>
+  <data name="Xncf.ExecutionFailed" xml:space="preserve"><value>Во время выполнения произошла ошибка.</value></data>
+  <data name="Xncf.UpdateAvailable" xml:space="preserve"><value>Текущая: v{0} → Доступна: v{1}</value></data>
+  <data name="Xncf.SettingsAndExecute" xml:space="preserve"><value>Настройки / Выполнить</value></data>
+  <data name="Session.InvalidIdentity" xml:space="preserve"><value>Идентификатор текущего пользователя недействителен; продлить JWT невозможно. Войдите снова.</value></data>
+  <data name="Validation.RequestRequired" xml:space="preserve"><value>Параметры запроса обязательны.</value></data>
+  <data name="Validation.SystemNameRequired" xml:space="preserve"><value>Название системы обязательно.</value></data>
+  <data name="Validation.SystemConfigMissing" xml:space="preserve"><value>Конфигурация системы не найдена.</value></data>
+  <data name="Xncf.ModuleReadFailed" xml:space="preserve"><value>Не удалось прочитать модуль. Обновите его и перезагрузите страницу. Модуль: {0} / {1} / {2}</value></data>
+  <data name="Session.LoginRequiredForRenewal" xml:space="preserve"><value>Для продления сеанса необходимо войти в систему.</value></data>
+  <data name="AdminUser.CannotDeleteSelf" xml:space="preserve"><value>Администратор не может удалить собственную учётную запись.</value></data>
+  <data name="AdminUser.NotFound" xml:space="preserve"><value>Администратор не найден.</value></data>
+  <data name="AdminUser.UserInfoNotFound" xml:space="preserve"><value>Информация о пользователе не найдена.</value></data>
+  <data name="AdminUser.InvalidCredentials" xml:space="preserve"><value>Неверное имя пользователя или пароль.</value></data>
+  <data name="AdminUser.PasswordRequired" xml:space="preserve"><value>Пароль обязателен.</value></data>
+  <data name="AdminUser.MinimumLength" xml:space="preserve"><value>Длина {0} должна превышать {1} символов.</value></data>
+  <data name="AdminChat.EmptyAiResponse" xml:space="preserve"><value>Не удалось сформировать корректный ответ. Повторите попытку позже.</value></data>
+  <data name="AdminChat.MissingAiSettings" xml:space="preserve"><value>Не удалось загрузить SenparcAiSetting. Проверьте конфигурацию appsettings.json.</value></data>
+  <data name="AdminChat.AiPlatformNotConfigured" xml:space="preserve"><value>SenparcAiSetting.AiPlatform по-прежнему имеет значение UnSet. Сначала настройте доступную платформу в appsettings.json.</value></data>
+  <data name="AdminChat.AiKernelUnavailable" xml:space="preserve"><value>Модуль AIKernel не установлен или не включён, поэтому выбранную модель ИИ использовать нельзя.</value></data>
+  <data name="AdminChat.AiModelServiceUnavailable" xml:space="preserve"><value>Не удалось разрешить AIModelService, поэтому выбранную модель ИИ загрузить нельзя.</value></data>
+  <data name="AdminChat.AiModelNotFound" xml:space="preserve"><value>Выбранная модель ИИ не существует: {0}</value></data>
+  <data name="AdminChat.AiModelNotChat" xml:space="preserve"><value>Выбранная модель ИИ не относится к типу Chat: {0}</value></data>
+  <data name="AdminChat.SystemPromptIntro" xml:space="preserve"><value>Вы — ИИ-помощник панели администрирования NeuCharFramework.</value></data>
+  <data name="AdminChat.SystemPromptInstruction" xml:space="preserve"><value>Отвечайте по-русски кратко, точно и с практическими рекомендациями. Если данных не хватает, явно укажите, каких именно.</value></data>
+  <data name="AdminChat.SystemPromptModules" xml:space="preserve"><value>К этому диалогу подключены следующие модули. Используйте их контекст, когда это уместно. ModuleAssistant предоставляет точные сведения, структуру базы данных и списки функций:</value></data>
+  <data name="AdminChat.ModuleDescriptionLine" xml:space="preserve"><value>  Описание: {0}</value></data>
+  <data name="AdminChat.PromptHistoryIntro" xml:space="preserve"><value>Ниже приведён недавний контекст диалога. Ответьте на последний вопрос пользователя, сохраняя смысловую связность.</value></data>
+  <data name="AdminChat.PromptCurrentQuestion" xml:space="preserve"><value>[Текущий вопрос пользователя] {0}</value></data>
+  <data name="AdminChat.PromptRole.User" xml:space="preserve"><value>Пользователь</value></data>
+  <data name="AdminChat.PromptRole.Assistant" xml:space="preserve"><value>Помощник</value></data>
+  <data name="AdminChat.PromptRole.System" xml:space="preserve"><value>Система</value></data>
+  <data name="AdminChat.PromptRole.Unknown" xml:space="preserve"><value>Неизвестно</value></data>
+  <data name="Function.Admin.ViewLoginExpiry.Name" xml:space="preserve"><value>Просмотр сроков входа</value></data>
+  <data name="Function.Admin.ViewLoginExpiry.Description" xml:space="preserve"><value>Показывает сроки веб-сеанса и JWT в модуле Admin</value></data>
+  <data name="Function.Admin.SetLoginExpiry.Name" xml:space="preserve"><value>Настройка сроков входа</value></data>
+  <data name="Function.Admin.SetLoginExpiry.Description" xml:space="preserve"><value>Задаёт длительность веб-сеанса и срок JWT в минутах</value></data>
+  <data name="Function.Admin.CacheTest.Name" xml:space="preserve"><value>Проверка кэша</value></data>
+  <data name="Function.Admin.CacheTest.Description" xml:space="preserve"><value>Проверяет текущий кэш и распределённые блокировки</value></data>
+  <data name="Function.Admin.Login.Name" xml:space="preserve"><value>Вход администратора</value></data>
+  <data name="Function.Admin.Login.Description" xml:space="preserve"><value>Проверяет аутентификацию администратора</value></data>
+  <data name="Common.NotAvailable" xml:space="preserve"><value>Недоступно</value></data>
+  <data name="Common.Unknown" xml:space="preserve"><value>Неизвестно</value></data>
+  <data name="Admin.ModuleAssistant.Tool.SessionModules" xml:space="preserve"><value>Показать модули XNCF, связанные с текущей беседой.</value></data>
+  <data name="Admin.ModuleAssistant.NoSessionModules" xml:space="preserve"><value>С этой беседой не связаны модули XNCF.</value></data>
+  <data name="Admin.ModuleAssistant.SessionModuleCount" xml:space="preserve"><value>С беседой связано модулей: {0}</value></data>
+  <data name="Admin.ModuleAssistant.Version" xml:space="preserve"><value>  Версия: {0}</value></data>
+  <data name="Admin.ModuleAssistant.Description" xml:space="preserve"><value>  Описание: {0}</value></data>
+  <data name="Admin.ModuleAssistant.MenuName" xml:space="preserve"><value>  Имя меню: {0}</value></data>
+  <data name="Admin.ModuleAssistant.Tool.ModuleDetail" xml:space="preserve"><value>Получить описание, версию и функции модуля по имени или UID.</value></data>
+  <data name="Admin.ModuleAssistant.Parameter.Module" xml:space="preserve"><value>Ключевое слово имени модуля или UID</value></data>
+  <data name="Admin.ModuleAssistant.ModuleNotFound" xml:space="preserve"><value>Модуль «{0}» не найден. Сначала вызовите GetSessionModuleList.</value></data>
+  <data name="Admin.ModuleAssistant.DetailTitle" xml:space="preserve"><value>## Сведения о модуле: {0}</value></data>
+  <data name="Admin.ModuleAssistant.DetailVersion" xml:space="preserve"><value>- **Версия**: {0}</value></data>
+  <data name="Admin.ModuleAssistant.DetailAssembly" xml:space="preserve"><value>- **Сборка**: {0}</value></data>
+  <data name="Admin.ModuleAssistant.DetailMenu" xml:space="preserve"><value>- **Меню**: {0}</value></data>
+  <data name="Admin.ModuleAssistant.DetailDescription" xml:space="preserve"><value>- **Описание**: {0}</value></data>
+  <data name="Admin.ModuleAssistant.DetailIcon" xml:space="preserve"><value>- **Значок**: {0}</value></data>
+  <data name="Admin.ModuleAssistant.DetailMcp" xml:space="preserve"><value>- **Поддержка MCP**: {0}</value></data>
+  <data name="Admin.ModuleAssistant.FunctionCount" xml:space="preserve"><value>&#10;### Доступные функции (FunctionRender: {0}):</value></data>
+  <data name="Admin.ModuleAssistant.NoFunctions" xml:space="preserve"><value>&#10;У модуля нет зарегистрированных функций FunctionRender.</value></data>
+  <data name="Admin.ModuleAssistant.RuntimeRegistrationMissing" xml:space="preserve"><value>(Модуль связан, но его регистрация времени выполнения отсутствует.)</value></data>
+  <data name="Admin.ModuleAssistant.Tool.DatabaseInfo" xml:space="preserve"><value>Получить префикс БД, DbContext, DbSet и сведения о хранилище.</value></data>
+  <data name="Admin.ModuleAssistant.DatabaseModuleNotFound" xml:space="preserve"><value>Модуль «{0}» не найден. Сначала вызовите GetSessionModuleList.</value></data>
+  <data name="Admin.ModuleAssistant.DatabaseRuntimeMissing" xml:space="preserve"><value>Регистрация модуля {0} не найдена; сведения о БД недоступны.</value></data>
+  <data name="Admin.ModuleAssistant.DatabaseTitle" xml:space="preserve"><value>## База данных {0}</value></data>
+  <data name="Admin.ModuleAssistant.DatabasePrefix" xml:space="preserve"><value>- **Префикс таблиц**: {0}</value></data>
+  <data name="Admin.ModuleAssistant.DatabaseContext" xml:space="preserve"><value>- **Тип DbContext**: {0}</value></data>
+  <data name="Admin.ModuleAssistant.DatabaseTableCount" xml:space="preserve"><value>- **Таблицы (DbSet: {0})**:</value></data>
+  <data name="Admin.ModuleAssistant.DatabaseEntity" xml:space="preserve"><value>  * **{0}** → тип сущности: {1}</value></data>
+  <data name="Admin.ModuleAssistant.DatabaseFields" xml:space="preserve"><value>    Поля: {0}</value></data>
+  <data name="Admin.ModuleAssistant.NoDbSets" xml:space="preserve"><value>  Свойства DbSet или открытые таблицы не обнаружены.</value></data>
+  <data name="Admin.ModuleAssistant.NoIndependentDatabase" xml:space="preserve"><value>У модуля нет отдельной БД (IXncfDatabase не реализован).</value></data>
+  <data name="Admin.ModuleAssistant.SharedOrNoStorage" xml:space="preserve"><value>Он может использовать общую БД или не иметь постоянного хранилища.</value></data>
+  <data name="Admin.ModuleAssistant.Tool.AllModules" xml:space="preserve"><value>Показать все зарегистрированные модули XNCF системы.</value></data>
+  <data name="Admin.ModuleAssistant.NoInstalledModules" xml:space="preserve"><value>Зарегистрированные модули отсутствуют.</value></data>
+  <data name="Admin.ModuleAssistant.InstalledModuleCount" xml:space="preserve"><value>В системе зарегистрировано модулей: {0}</value></data>
+  <data name="Admin.ModuleAssistant.InSessionTag" xml:space="preserve"><value>  ✓[связан с этой беседой]</value></data>
 </root>

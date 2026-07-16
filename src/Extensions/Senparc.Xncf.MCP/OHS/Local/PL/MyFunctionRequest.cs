@@ -28,32 +28,44 @@ namespace Senparc.Xncf.MCP.OHS.Local.PL
 {
     public class MyFunction_MCPCallRequest : FunctionAppRequestBase
     {
-        [Description("MCP 服务器选择||选择已注册的 MCP 服务器，或选择 手动输入 自定义服务器地址")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.MCP.ServerSelection")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(McpServerSelectionOptions))]
         public string McpServerSelection { get; set; }
 
         [JsonIgnore]
         public SelectionList McpServerSelectionOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
 
-        [Description("MCP 服务器地址||MCP 服务器地址，当选择 手动输入 时需要填写，默认为 http://localhost:5000/mcp-senparc-xncf-mcp/sse")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.MCP.Endpoint")]
         public string Endpoint { get; set; }
 
         [Required]
-        [Description("请求||提出对 MCP 服务器的请求")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.MCP.Request")]
         public string RequestPrompt { get; set; }
 
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
             // 添加手动输入选项
-            McpServerSelectionOptions.Items.Add(new SelectionItem("Manual", "手动输入", "手动输入 MCP 服务器地址", true));
+            McpServerSelectionOptions.Items.Add(new SelectionItem(
+                "Manual",
+                NcfBuiltInResource.Get("Parameter.MCP.Manual"),
+                NcfBuiltInResource.Get("Parameter.MCP.Manual.Help"),
+                true));
 
             // 从 XncfRegisterManager 获取已注册的 MCP 服务器
             var mcpServers = XncfRegisterManager.McpServerInfoCollection.Values.ToList();
             
             foreach (var mcpServer in mcpServers)
             {
-                var displayText = $"{mcpServer.XncfName}（{mcpServer.McpRoute}）";
-                var description = $"服务器：{mcpServer.ServerName}，路由：{mcpServer.McpRoute}";
+                var displayText = NcfBuiltInResource.Format(
+                    "Parameter.MCP.Server.Display",
+                    "{0}（{1}）",
+                    mcpServer.XncfName,
+                    mcpServer.McpRoute);
+                var description = NcfBuiltInResource.Format(
+                    "Parameter.MCP.Server.Help",
+                    "服务器：{0}，路由：{1}",
+                    mcpServer.ServerName,
+                    mcpServer.McpRoute);
                 // 使用服务器的唯一标识作为 Value，而不是路由
                 var serverKey = $"{mcpServer.XncfName}|{mcpServer.McpRoute}";
                 
@@ -67,38 +79,38 @@ namespace Senparc.Xncf.MCP.OHS.Local.PL
     {
         [Required]
         [MaxLength(50)]
-        [Description("名称||双竖线之前为参数名称，双竖线之后为参数注释")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.Name")]
         public string Name { get; set; }
 
         [Required]
-        [Description("数字||数字1")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.Number1")]
         public int Number1 { get; set; }
 
 
         [Required]
-        [Description("数字||数字2")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.Number2")]
         public int Number2 { get; set; }
 
-        [Description("运算符||")]//下拉列表
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.Operator")]//下拉列表
            [FunctionParameterUi(ParameterType.DropDownList, nameof(OperatorOptions))]
            public string Operator { get; set; }
 
            [JsonIgnore]
            public SelectionList OperatorOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
-                 new SelectionItem("+","加法","数字1 + 数字2",false),
-                 new SelectionItem("-","减法","数字1 - 数字2",true),
-                 new SelectionItem("×","乘法","数字1 × 数字2",false),
-                 new SelectionItem("÷","除法","数字1 ÷ 数字2",false)
+                 new SelectionItem("+", NcfBuiltInResource.Get("Parameter.Operator.Add"), NcfBuiltInResource.Get("Parameter.Operator.Add.Help"), false),
+                 new SelectionItem("-", NcfBuiltInResource.Get("Parameter.Operator.Subtract"), NcfBuiltInResource.Get("Parameter.Operator.Subtract.Help"), true),
+                 new SelectionItem("×", NcfBuiltInResource.Get("Parameter.Operator.Multiply"), NcfBuiltInResource.Get("Parameter.Operator.Multiply.Help"), false),
+                 new SelectionItem("÷", NcfBuiltInResource.Get("Parameter.Operator.Divide"), NcfBuiltInResource.Get("Parameter.Operator.Divide.Help"), false)
             });
 
-        [Description("计算平方||")]//多选框
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.Power")]//多选框
            [FunctionParameterUi(ParameterType.CheckBoxList, nameof(PowerOptions))]
            public string[] Power { get; set; }
 
            [JsonIgnore]
            public SelectionList PowerOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("2","平方","计算上述结果之后再计算平方",false),
-                 new SelectionItem("3","三次方","计算上述结果之后再计算三次方",false)
+                 new SelectionItem("2", NcfBuiltInResource.Get("Parameter.Power.Square"), NcfBuiltInResource.Get("Parameter.Power.Square.Help"), false),
+                 new SelectionItem("3", NcfBuiltInResource.Get("Parameter.Power.Cube"), NcfBuiltInResource.Get("Parameter.Power.Cube.Help"), false)
             });
     }
 }

@@ -35,53 +35,53 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
 {
     public class ChatGroup_ManageChatGroupRequest : FunctionAppRequestBase
     {
-        [Description("选择组||选择需要操作的组，或新增")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.SelectManage")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(ChatGroupOptions))]
         public string ChatGroup { get; set; }
 
         [JsonIgnore]
         public SelectionList ChatGroupOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem> {
-             new SelectionItem("New","新建组","新建",true)
+             new SelectionItem("New", NcfBuiltInResource.Get("Agents.Chat.NewGroup"), NcfBuiltInResource.Get("Agents.Chat.NewGroup.Help"), true)
             });
 
         [Required]
         [MaxLength(30)]
-        [Description("群名称||群名称")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.Name")]
         public string Name { get; set; }
 
-        [Description("群成员||群成员（可不选，改用“群成员（手动输入）”）")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.Members")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(MembersOptions))]
         public string[] Members { get; set; }
 
         [JsonIgnore]
         public SelectionList MembersOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>());
 
-        [Description("群成员（手动输入）||可选。支持名称、ID、PromptCode，多个值可用逗号、分号、换行分隔")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.MembersManual")]
         public string MemberNamesOrIds { get; set; }
 
-        [Description("群主||优先自动使用评分最高的“主持人”Agent；手动输入仅作兼容")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.Admin")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(AdminOptions))]
         public string Admin { get; set; }
 
         [JsonIgnore]
         public SelectionList AdminOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
 
-        [Description("群主（手动输入）||可选。支持名称、ID 或 PromptCode")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.AdminManual")]
         public string AdminNameOrId { get; set; }
 
-        [Description("对接人||优先自动使用评分最高的“主持人”Agent；手动输入仅作兼容")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.Contact")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(EnterAgentOptions))]
         public string EnterAgent { get; set; }
 
         [JsonIgnore]
         public SelectionList EnterAgentOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
 
-        [Description("对接人（手动输入）||可选。支持名称、ID 或 PromptCode")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.ContactManual")]
         public string EnterAgentNameOrId { get; set; }
 
 
         [MaxLength(200)]
-        [Description("说明||说明")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.Description")]
         public string Description { get; set; }
 
         public override async Task LoadData(IServiceProvider serviceProvider)
@@ -113,14 +113,14 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
 
     public class ChatGroup_RunChatGroupRequest : FunctionAppRequestBase
     {
-        [Description("选择组||选择需要运行的组")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.SelectRun")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(ChatGroupsOptions))]
         public string[] ChatGroups { get; set; }
 
         [JsonIgnore]
         public SelectionList ChatGroupsOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>());
 
-        [Description("AI 模型||请选择运行此程序的外围 AI 模型")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.AIModel")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(AIModelOptions))]
         public string AIModel { get; set; }
 
@@ -130,19 +130,19 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
             //new SelectionItem("Default","系统默认","通过系统默认配置的固定 AI 模型信息",true)
         });
 
-        [Description("个性化智能体||")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.Individuation")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(IndividuationOptions))]
         public bool Individuation { get; set; } = true;
 
         [JsonIgnore]
         public SelectionList IndividuationOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>
         {
-            new SelectionItem("1","是","采用个性化 AI 参数运行 Agent",true)
+            new SelectionItem("1", NcfBuiltInResource.Get("Common.Yes"), NcfBuiltInResource.Get("Agents.Chat.Individuation.Help"), true)
         });
 
         [Required]
         [MaxLength(500)]
-        [Description("我能帮你做什么||说明需要 Agents 协助你完成的工作内容")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.Command")]
         public string Command { get; set; }
 
         public override async Task LoadData(IServiceProvider serviceProvider)
@@ -217,14 +217,14 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
     /// </summary>
     public class ChatGroup_DeleteChatGroupRequest : FunctionAppRequestBase
     {
-        [Description("选择要删除的对话||选择需要删除的对话（包括所有消息和任务）")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.SelectDelete")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(ChatGroupsOptions))]
         public string[] ChatGroups { get; set; }
 
         [JsonIgnore]
         public SelectionList ChatGroupsOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>());
 
-        [Description("确认删除||勾选此项以确认删除此对话及其所有数据")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Agents.Chat.ConfirmDelete")]
         public bool ConfirmDelete { get; set; }
 
         public override async Task LoadData(IServiceProvider serviceProvider)
@@ -236,7 +236,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
             ChatGroupsOptions.Items = chatGroups.Select(z => new SelectionItem(
                 z.Id.ToString(),
                 z.Name,
-                $"{z.Description} (创建时间: {z.AddTime:yyyy-MM-dd HH:mm})"
+                NcfBuiltInResource.Format("Agents.Chat.CreatedAt", "{0}（创建时间：{1:g}）", z.Description, z.AddTime)
             )).ToList();
 
             await base.LoadData(serviceProvider);

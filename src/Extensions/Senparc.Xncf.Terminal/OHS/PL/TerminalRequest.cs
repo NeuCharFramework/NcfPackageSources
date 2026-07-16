@@ -24,7 +24,7 @@ namespace Senparc.Xncf.Terminal.OHS.PL
     public class Terminal_RunRequest : FunctionAppRequestBase
     {
         [MaxLength(300)]
-        [Description("> 命令||命令行，如：dir /?")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Terminal.Command")]
         public string CommandLine { get; set; }
     }
 }

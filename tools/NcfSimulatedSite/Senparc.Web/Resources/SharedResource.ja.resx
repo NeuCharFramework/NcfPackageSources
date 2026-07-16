@@ -117,4 +117,62 @@
   <data name="Footer.Copyright" xml:space="preserve">
     <value>蘇州盛派ネットワーク科技有限公司 版権所有</value>
   </data>
+  <data name="Site.TitleSuffix" xml:space="preserve"><value>DDD と高度なモジュール設計を採用した基盤アプリケーション向け .NET フレームワーク</value></data>
+  <data name="Site.Brand" xml:space="preserve"><value>NeuCharFramework サンプル</value></data>
+  <data name="Nav.Toggle" xml:space="preserve"><value>ナビゲーションを切り替え</value></data>
+  <data name="Nav.Documentation" xml:space="preserve"><value>ドキュメント</value></data>
+  <data name="Nav.Community" xml:space="preserve"><value>コミュニティ</value></data>
+  <data name="Nav.AdminLogin" xml:space="preserve"><value>管理者ログイン</value></data>
+  <data name="Footer.Community" xml:space="preserve"><value>コミュニティ</value></data>
+  <data name="Footer.Events" xml:space="preserve"><value>イベント</value></data>
+  <data name="Footer.Contribute" xml:space="preserve"><value>貢献</value></data>
+  <data name="Footer.Documentation" xml:space="preserve"><value>ドキュメント</value></data>
+  <data name="Footer.StartDeveloping" xml:space="preserve"><value>開発を始める</value></data>
+  <data name="Footer.Glossary" xml:space="preserve"><value>用語集</value></data>
+  <data name="Footer.Faq" xml:space="preserve"><value>よくある質問</value></data>
+  <data name="Footer.ReleaseNotes" xml:space="preserve"><value>更新履歴</value></data>
+  <data name="Footer.ContactUs" xml:space="preserve"><value>お問い合わせ</value></data>
+  <data name="Index.Tagline" xml:space="preserve"><value>シンプル · 柔軟 · 拡張可能</value></data>
+  <data name="Index.Intro.Line1" xml:space="preserve"><value>NCF（NeuCharFramework）は、基盤アプリケーションを構築するための企業向け汎用 .NET フレームワークです。</value></data>
+  <data name="Index.Intro.Line2" xml:space="preserve"><value>DDD 原則に準拠し、キャッシュ、データベース、モデル、検証、管理ダッシュボードを備えています。</value></data>
+  <data name="Index.Intro.Line3" xml:space="preserve"><value>高度なモジュール設計により、優れた拡張性と信頼性を提供します。</value></data>
+  <data name="Index.DotNetSupport" xml:space="preserve"><value>NCF は .NET 10.0 を完全にサポートしています。</value></data>
+  <data name="Index.DatabaseSupport" xml:space="preserve"><value>SQLite、SQL Server、MySQL、PostgreSQL、Oracle、DM などのデータベースに対応しています。</value></data>
+  <data name="Index.MoreDatabases" xml:space="preserve"><value>対応データベースは今後も追加予定です。ご要望をお寄せください。</value></data>
+  <data name="Index.CurrentTenant" xml:space="preserve"><value>現在のテナント：</value></data>
+  <data name="Index.TenantUnavailable" xml:space="preserve"><value>無効、または一致するテナントがありません</value></data>
+  <data name="Index.StartNow" xml:space="preserve"><value>今すぐ始める</value></data>
+  <data name="Index.Feature.QuickStart.Title" xml:space="preserve"><value>すばやいセットアップ</value></data>
+  <data name="Index.Feature.QuickStart.Text" xml:space="preserve"><value>すぐに使えるフレームワークテンプレートをワンクリックで導入できます。</value></data>
+  <data name="Index.Feature.AiNative.Title" xml:space="preserve"><value>AI ネイティブフレームワーク</value></data>
+  <data name="Index.Feature.AiNative.Text" xml:space="preserve"><value>AI 支援による開発体験と統合済みの AI 基盤で、AI アプリケーションを容易に構築できます。</value></data>
+  <data name="Index.Feature.Modular.Title" xml:space="preserve"><value>モジュール設計</value></data>
+  <data name="Index.Feature.Modular.Text" xml:space="preserve"><value>高度にモジュール化された機能を自由に組み合わせて拡張でき、各モジュールを個別に開発、テスト、統合、配置できます。</value></data>
+  <data name="Index.Feature.MultiDatabase.Title" xml:space="preserve"><value>複数データベース対応</value></data>
+  <data name="Index.Feature.MultiDatabase.Text" xml:space="preserve"><value>SQL Server、MySQL、SQLite、PostgreSQL、Oracle、DM に対応し、プロバイダーも容易に拡張できます。</value></data>
+  <data name="Index.Feature.HighPerformance.Title" xml:space="preserve"><value>高性能</value></data>
+  <data name="Index.Feature.HighPerformance.Text" xml:space="preserve"><value>10 年を超える企業システム最適化の経験により、高性能と高可用性を実現し、日間 500 万 PV 超の多数のシステムで利用されています。</value></data>
+  <data name="Index.Feature.Ddd.Title" xml:space="preserve"><value>DDD アーキテクチャ</value></data>
+  <data name="Index.Feature.Ddd.Text" xml:space="preserve"><value>厳格なドメイン駆動設計に基づき、変化へ柔軟に対応します。</value></data>
+  <data name="Index.Feature.Dapr.Title" xml:space="preserve"><value>Dapr 対応</value></data>
+  <data name="Index.Feature.Dapr.Text" xml:space="preserve"><value>Dapr を利用したマイクロサービス化を迅速に実現できます。</value></data>
+  <data name="Index.Feature.Compatibility.Title" xml:space="preserve"><value>下位互換性</value></data>
+  <data name="Index.Feature.Compatibility.Text" xml:space="preserve"><value>マイクロサービス、分散システム、従来型開発、単一サーバー配置に対応し、追加学習なしでモジュールをシームレスに更新できます。</value></data>
+  <data name="Index.Feature.Community.Title" xml:space="preserve"><value>コミュニティサポート</value></data>
+  <data name="Index.Feature.Community.Text" xml:space="preserve"><value>Senparc 開発者コミュニティのコアチームが継続的に保守、更新しています。</value></data>
+  <data name="Privacy.Title" xml:space="preserve"><value>プライバシーポリシー</value></data>
+  <data name="Privacy.Description" xml:space="preserve"><value>このページに Web サイトのプライバシーポリシーを詳しく記載してください。</value></data>
+  <data name="Error.Title" xml:space="preserve"><value>エラー</value></data>
+  <data name="Error.Heading" xml:space="preserve"><value>リクエストの処理中にエラーが発生しました。</value></data>
+  <data name="Error.RequestId" xml:space="preserve"><value>リクエスト ID：</value></data>
+  <data name="Error.DevelopmentMode" xml:space="preserve"><value>開発モード</value></data>
+  <data name="Error.DevelopmentInfo" xml:space="preserve"><value>Development 環境に切り替えると、このエラーの詳細情報が表示されます。</value></data>
+  <data name="Error.DevelopmentWarning" xml:space="preserve"><value>配置済みアプリケーションで Development 環境を有効にしないでください。</value></data>
+  <data name="Error.DevelopmentInstructions" xml:space="preserve"><value>例外内の機密情報が利用者に公開される可能性があります。ローカルデバッグでは ASPNETCORE_ENVIRONMENT を Development に設定し、アプリケーションを再起動してください。</value></data>
+  <data name="Cookie.Summary" xml:space="preserve"><value>必要な Web サイト機能を提供するため Cookie を使用します。詳しくはプライバシーポリシーをご覧ください。</value></data>
+  <data name="Cookie.LearnMore" xml:space="preserve"><value>詳細</value></data>
+  <data name="Cookie.Accept" xml:space="preserve"><value>同意する</value></data>
+  <data name="Message.SectionComingSoon" xml:space="preserve"><value>このセクションはまだ利用できません。公開までお待ちください。</value></data>
+  <data name="Message.InstallOfflineDocsConfirm" xml:space="preserve"><value>オフラインドキュメントモジュールが未インストールです。今すぐインストールしますか？</value></data>
+  <data name="Message.OpenOfflineDocsConfirm" xml:space="preserve"><value>{0}。このページを更新するとヘッダーにドキュメント入口が表示されます。今すぐ開きますか？</value></data>
 </root>

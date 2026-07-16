@@ -8,19 +8,15 @@ using Senparc.Ncf.XncfBase;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Hosting;
-using System.Globalization;
-using System.Resources;
 
 namespace Senparc.Xncf.Accounts
 {
 	public partial class Register : IAreaRegister, //注册 XNCF 页面接口（按需选用）
 									IXncfRazorRuntimeCompilation  //赋能 RazorPage 运行时编译
 	{
-		private static readonly ResourceManager AreaResourceManager = new("Senparc.Xncf.Accounts.AccountsResource", typeof(AccountsResource).Assembly);
-
 		private static string AreaT(string key, string fallback)
 		{
-			return AreaResourceManager.GetString(key, CultureInfo.CurrentUICulture) ?? fallback;
+			return AccountsResource.Get(key, fallback);
 		}
 
 		#region IAreaRegister 接口

@@ -121,7 +121,10 @@ namespace Senparc.Xncf.Installer.Domain.Services
                 var modifyItem = list.FirstOrDefault(z => z.Name == dbConfigName);
                 if (modifyItem == null)
                 {
-                    throw new NcfExceptionBase($"找不到数据库配置：{dbConfigName}");
+                    throw new NcfExceptionBase(InstallerResource.Format(
+                        "Install.DatabaseConfigNotFound",
+                        "找不到数据库配置：{0}",
+                        dbConfigName));
                 }
                 modifyItem.ConnectionStringFull = dbConnectionString;
 

@@ -37,18 +37,18 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.PL
     {
         [Required]
         [MaxLength(300)]
-        [Description("路径||本地物理路径，如：E:\\Senparc\\Database-Backup\\NCF.bak，必须包含文件名。请确保此路径有网站程序访问权限！")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.DatabaseBackup.Path")]
         public string Path { get; set; }
 
-        [Description("选项||备份数据库选项")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.DatabaseBackup.Options")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(OptionsList))]
         public string[] Options { get; set; }
 
         [JsonIgnore]
         public SelectionList OptionsList { get; set; } = new SelectionList(SelectionType.CheckBoxList,
             new[] {
-                    new SelectionItem($"{(int)BackupDatabaseOptions.如果文件存在则不覆盖}","如果文件存在，则不覆盖","文件已存在的情况下，不会执行备份操作"),
-                    new SelectionItem($"{(int)BackupDatabaseOptions.校验备份成功}","备份完成后校验.bak文件是否更新成功","此操作只能检查文件是否被更新，无法检测文件内部内容",true),
+                    new SelectionItem($"{(int)BackupDatabaseOptions.如果文件存在则不覆盖}", NcfBuiltInResource.Get("Parameter.DatabaseBackup.NoOverwrite"), NcfBuiltInResource.Get("Parameter.DatabaseBackup.NoOverwrite.Help")),
+                    new SelectionItem($"{(int)BackupDatabaseOptions.校验备份成功}", NcfBuiltInResource.Get("Parameter.DatabaseBackup.Verify"), NcfBuiltInResource.Get("Parameter.DatabaseBackup.Verify.Help"), true),
             });
 
         public override async Task LoadData(IServiceProvider serviceProvider)

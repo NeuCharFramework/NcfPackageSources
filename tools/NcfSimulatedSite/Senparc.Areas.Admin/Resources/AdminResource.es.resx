@@ -175,4 +175,383 @@
   <data name="AdminChat.SelectAtLeastOneMessage" xml:space="preserve"><value>Seleccione al menos un mensaje</value></data>
   <data name="AdminChat.DeleteMessagesSuccess" xml:space="preserve"><value>Eliminado correctamente. Se quitaron {0} mensajes</value></data>
   <data name="AdminChat.AddModulesSuccess" xml:space="preserve"><value>Módulos agregados correctamente</value></data>
+  <data name="Admin.Account.Menu" xml:space="preserve"><value>Mi cuenta</value></data>
+  <data name="Admin.Account.Current" xml:space="preserve"><value>Cuenta actual: {0}</value></data>
+  <data name="Admin.Footer.PoweredBy" xml:space="preserve"><value>Desarrollado por:</value></data>
+  <data name="Admin.Footer.Company" xml:space="preserve"><value>Senparc</value></data>
+  <data name="Admin.Login.Support" xml:space="preserve"><value>Soporte técnico: </value></data>
+  <data name="Admin.Login.OfficialWebsite" xml:space="preserve"><value>Visitar el sitio oficial</value></data>
+  <data name="Admin.Login.Company" xml:space="preserve"><value>Suzhou Senparc Network Technology Co., Ltd.</value></data>
+  <data name="Admin.Login.Error.LoginFailed" xml:space="preserve"><value>Error al iniciar sesión</value></data>
+  <data name="Admin.Login.Error.LoginRetry" xml:space="preserve"><value>Error al iniciar sesión. Inténtelo de nuevo.</value></data>
+  <data name="Admin.Session.ExpiringTitle" xml:space="preserve"><value>La sesión está por caducar</value></data>
+  <data name="Admin.Session.ExpiringMessage" xml:space="preserve"><value>Su sesión está a punto de caducar. Mantenga la sesión o cierre sesión ahora.</value></data>
+  <data name="Admin.Session.KeepLogin" xml:space="preserve"><value>Mantener la sesión</value></data>
+  <data name="Admin.Session.LogoutNow" xml:space="preserve"><value>Cerrar sesión ahora</value></data>
+  <data name="Admin.Session.KeepLoginSuccess" xml:space="preserve"><value>Su sesión se ha renovado.</value></data>
+  <data name="Common.All" xml:space="preserve"><value>Todos</value></data>
+  <data name="Common.CopySuccess" xml:space="preserve"><value>Copiado. Pulse Ctrl+V para pegar.</value></data>
+  <data name="Common.DeleteSuccess" xml:space="preserve"><value>Eliminado correctamente</value></data>
+  <data name="Common.Error" xml:space="preserve"><value>Error</value></data>
+  <data name="Common.No" xml:space="preserve"><value>No</value></data>
+  <data name="Common.NoTime" xml:space="preserve"><value>Sin hora disponible</value></data>
+  <data name="Common.SaveSuccess" xml:space="preserve"><value>Guardado correctamente</value></data>
+  <data name="Common.Success" xml:space="preserve"><value>Éxito</value></data>
+  <data name="Common.UpdateFailed" xml:space="preserve"><value>Error al actualizar: {0}</value></data>
+  <data name="Common.UpdateSuccess" xml:space="preserve"><value>Actualizado correctamente</value></data>
+  <data name="Common.Yes" xml:space="preserve"><value>Sí</value></data>
+  <data name="Common.提交" xml:space="preserve"><value>Enviar</value></data>
+  <data name="AdminUser.AddTitle" xml:space="preserve"><value>Agregar administrador</value></data>
+  <data name="AdminUser.AssignRoleSuccess" xml:space="preserve"><value>Roles asignados correctamente</value></data>
+  <data name="AdminUser.ConfirmPassword" xml:space="preserve"><value>Confirmar contraseña</value></data>
+  <data name="AdminUser.ConfirmPasswordPlaceholder" xml:space="preserve"><value>Vuelva a introducir la contraseña</value></data>
+  <data name="AdminUser.DeleteConfirm" xml:space="preserve"><value>¿Eliminar este administrador?</value></data>
+  <data name="AdminUser.EditTitle" xml:space="preserve"><value>Editar administrador</value></data>
+  <data name="AdminUser.EditUsernameWarning" xml:space="preserve"><value>No se recomienda cambiar el nombre de usuario.</value></data>
+  <data name="AdminUser.List" xml:space="preserve"><value>Lista de administradores</value></data>
+  <data name="AdminUser.Password" xml:space="preserve"><value>Contraseña</value></data>
+  <data name="AdminUser.PasswordMismatch" xml:space="preserve"><value>Las contraseñas no coinciden</value></data>
+  <data name="AdminUser.PasswordPlaceholder" xml:space="preserve"><value>Introduzca la contraseña</value></data>
+  <data name="AdminUser.Phone" xml:space="preserve"><value>Número de teléfono</value></data>
+  <data name="AdminUser.PhonePlaceholder" xml:space="preserve"><value>Introduzca el número de teléfono</value></data>
+  <data name="AdminUser.RealName" xml:space="preserve"><value>Nombre completo</value></data>
+  <data name="AdminUser.RealNamePlaceholder" xml:space="preserve"><value>Introduzca el nombre completo</value></data>
+  <data name="AdminUser.SetRole" xml:space="preserve"><value>Asignar roles</value></data>
+  <data name="AdminUser.SetRoleFor" xml:space="preserve"><value>Asignar roles a {0}</value></data>
+  <data name="AdminUser.Title" xml:space="preserve"><value>Gestión de administradores</value></data>
+  <data name="AdminUser.Username" xml:space="preserve"><value>Nombre de usuario</value></data>
+  <data name="AdminUser.UsernamePlaceholder" xml:space="preserve"><value>Introduzca el nombre de usuario</value></data>
+  <data name="AdminUser.UsernameRequired" xml:space="preserve"><value>El nombre de usuario es obligatorio</value></data>
+  <data name="Menu.ActionCodeRequiredForButton" xml:space="preserve"><value>El código de acción es obligatorio para los botones</value></data>
+  <data name="Menu.ActionMark" xml:space="preserve"><value>Identificador de acción</value></data>
+  <data name="Menu.ActionUrl" xml:space="preserve"><value>URL de la acción</value></data>
+  <data name="Menu.AddButton" xml:space="preserve"><value>Agregar botón</value></data>
+  <data name="Menu.AddChild" xml:space="preserve"><value>Agregar submenú</value></data>
+  <data name="Menu.AddChildTitle" xml:space="preserve"><value>Agregar submenú</value></data>
+  <data name="Menu.AddTitle" xml:space="preserve"><value>Agregar menú</value></data>
+  <data name="Menu.AddTopLevel" xml:space="preserve"><value>Agregar menú principal</value></data>
+  <data name="Menu.ButtonName" xml:space="preserve"><value>Nombre del botón</value></data>
+  <data name="Menu.EditTitle" xml:space="preserve"><value>Editar menú</value></data>
+  <data name="Menu.IconPlaceholder" xml:space="preserve"><value>Introduzca el icono del menú</value></data>
+  <data name="Menu.NamePlaceholder" xml:space="preserve"><value>Introduzca el nombre del menú</value></data>
+  <data name="Menu.NameRequired" xml:space="preserve"><value>El nombre del menú es obligatorio</value></data>
+  <data name="Menu.Sort" xml:space="preserve"><value>Orden del menú</value></data>
+  <data name="Menu.SortPlaceholder" xml:space="preserve"><value>Introduzca el orden del menú</value></data>
+  <data name="Menu.TypeRequired" xml:space="preserve"><value>El tipo es obligatorio</value></data>
+  <data name="Menu.Url" xml:space="preserve"><value>URL del menú</value></data>
+  <data name="Menu.UrlPlaceholder" xml:space="preserve"><value>Introduzca la URL del menú</value></data>
+  <data name="Menu.Visible" xml:space="preserve"><value>Visible</value></data>
+  <data name="Role.AddTitle" xml:space="preserve"><value>Agregar rol</value></data>
+  <data name="Role.CodeRequired" xml:space="preserve"><value>El código del rol es obligatorio</value></data>
+  <data name="Role.EditTitle" xml:space="preserve"><value>Editar rol</value></data>
+  <data name="Role.GrantSuccess" xml:space="preserve"><value>Permisos concedidos correctamente</value></data>
+  <data name="Role.NameRequired" xml:space="preserve"><value>El nombre del rol es obligatorio</value></data>
+  <data name="Role.PermissionManagement" xml:space="preserve"><value>Gestión de permisos del rol</value></data>
+  <data name="Role.PermissionSettings" xml:space="preserve"><value>{0} - Configuración de permisos</value></data>
+  <data name="SystemConfig.BasicInfo" xml:space="preserve"><value>Información básica</value></data>
+  <data name="SystemConfig.EditTitle" xml:space="preserve"><value>Editar información del sistema</value></data>
+  <data name="SystemConfig.PublishMode" xml:space="preserve"><value>Modo de publicación de módulos</value></data>
+  <data name="SystemConfig.SystemName" xml:space="preserve"><value>Nombre del sistema</value></data>
+  <data name="SystemConfig.SystemNamePlaceholder" xml:space="preserve"><value>Introduzca el nombre del sistema</value></data>
+  <data name="SystemConfig.SystemNameRequired" xml:space="preserve"><value>El nombre del sistema es obligatorio</value></data>
+  <data name="SystemConfig.Title" xml:space="preserve"><value>Información del sistema</value></data>
+  <data name="Tenant.Add" xml:space="preserve"><value>Agregar inquilino</value></data>
+  <data name="Tenant.AddTitle" xml:space="preserve"><value>Agregar información del inquilino</value></data>
+  <data name="Tenant.AdminAccount" xml:space="preserve"><value>Cuenta de administrador</value></data>
+  <data name="Tenant.AdminRemark" xml:space="preserve"><value>Notas del administrador</value></data>
+  <data name="Tenant.AdminRemarkPlaceholder" xml:space="preserve"><value>Introduzca las notas del administrador</value></data>
+  <data name="Tenant.CredentialWarning" xml:space="preserve"><value>Guarde la siguiente información. La contraseña no podrá volver a mostrarse.</value></data>
+  <data name="Tenant.CredentialsRecorded" xml:space="preserve"><value>Ya lo he guardado. Cerrar</value></data>
+  <data name="Tenant.CurrentInfo" xml:space="preserve"><value>Información del inquilino actual</value></data>
+  <data name="Tenant.CurrentRule" xml:space="preserve"><value>Regla de coincidencia actual: </value></data>
+  <data name="Tenant.DefaultAdmin" xml:space="preserve"><value>Cuenta de administrador predeterminada</value></data>
+  <data name="Tenant.DefaultAdminPlaceholder" xml:space="preserve"><value>Introduzca la cuenta de administrador predeterminada</value></data>
+  <data name="Tenant.DefaultAdminRequired" xml:space="preserve"><value>La cuenta de administrador predeterminada es obligatoria</value></data>
+  <data name="Tenant.DeleteConfirm" xml:space="preserve"><value>¿Eliminar este inquilino? Sus datos quedarán sin asignar. Proceda con precaución.</value></data>
+  <data name="Tenant.Disabled" xml:space="preserve"><value>La multitenencia está deshabilitada en el sistema actual</value></data>
+  <data name="Tenant.EditTitle" xml:space="preserve"><value>Editar información del inquilino</value></data>
+  <data name="Tenant.Enabled" xml:space="preserve"><value>Habilitado</value></data>
+  <data name="Tenant.Info" xml:space="preserve"><value>Información del inquilino</value></data>
+  <data name="Tenant.Initialize" xml:space="preserve"><value>Inicializar</value></data>
+  <data name="Tenant.InitializeFailed" xml:space="preserve"><value>Error de inicialización</value></data>
+  <data name="Tenant.InitializeResult" xml:space="preserve"><value>Resultado de la inicialización</value></data>
+  <data name="Tenant.InitializeTitle" xml:space="preserve"><value>Inicialización del inquilino</value></data>
+  <data name="Tenant.MatchKeyword" xml:space="preserve"><value>Palabra clave de coincidencia del inquilino</value></data>
+  <data name="Tenant.MatchKeywordPlaceholder" xml:space="preserve"><value>Introduzca la palabra clave de coincidencia del inquilino</value></data>
+  <data name="Tenant.MatchRule" xml:space="preserve"><value>Regla de coincidencia</value></data>
+  <data name="Tenant.MatchRuleRequired" xml:space="preserve"><value>La regla de coincidencia del inquilino es obligatoria</value></data>
+  <data name="Tenant.MatchTime" xml:space="preserve"><value>Hora de coincidencia</value></data>
+  <data name="Tenant.Name" xml:space="preserve"><value>Nombre del inquilino</value></data>
+  <data name="Tenant.NamePlaceholder" xml:space="preserve"><value>Introduzca el nombre del inquilino</value></data>
+  <data name="Tenant.NameRequired" xml:space="preserve"><value>El nombre del inquilino es obligatorio</value></data>
+  <data name="Tenant.Title" xml:space="preserve"><value>Información multiinquilino</value></data>
+  <data name="Trace.Content" xml:space="preserve"><value>Contenido</value></data>
+  <data name="Trace.EndTime" xml:space="preserve"><value>Hora de finalización</value></data>
+  <data name="Trace.ExceptionCount" xml:space="preserve"><value>Excepciones</value></data>
+  <data name="Trace.ExceptionInfo" xml:space="preserve"><value>Información de la excepción</value></data>
+  <data name="Trace.ExceptionStatus" xml:space="preserve"><value>Estado de la excepción</value></data>
+  <data name="Trace.IsException" xml:space="preserve"><value>Excepción</value></data>
+  <data name="Trace.KeywordPlaceholder" xml:space="preserve"><value>Introduzca una palabra clave</value></data>
+  <data name="Trace.LastHour" xml:space="preserve"><value>Última hora</value></data>
+  <data name="Trace.NumberAndLine" xml:space="preserve"><value>N.º / Línea</value></data>
+  <data name="Trace.PostData" xml:space="preserve"><value>Datos POST</value></data>
+  <data name="Trace.Result" xml:space="preserve"><value>Resultado</value></data>
+  <data name="Trace.SelectThread" xml:space="preserve"><value>Seleccionar hilo</value></data>
+  <data name="Trace.SelectType" xml:space="preserve"><value>Seleccionar tipo</value></data>
+  <data name="Trace.ShowAll" xml:space="preserve"><value>Mostrar todos los resultados completos</value></data>
+  <data name="Trace.ShowExceptions" xml:space="preserve"><value>Mostrar solo excepciones</value></data>
+  <data name="Trace.StartTime" xml:space="preserve"><value>Hora de inicio</value></data>
+  <data name="Trace.Thread" xml:space="preserve"><value>Hilo</value></data>
+  <data name="Trace.Time" xml:space="preserve"><value>Hora</value></data>
+  <data name="Trace.Title" xml:space="preserve"><value>Título</value></data>
+  <data name="Trace.To" xml:space="preserve"><value>a</value></data>
+  <data name="Trace.Today" xml:space="preserve"><value>Hoy</value></data>
+  <data name="Trace.Type" xml:space="preserve"><value>Tipo</value></data>
+  <data name="Common.Tip" xml:space="preserve"><value>Aviso</value></data>
+  <data name="Common.Warning" xml:space="preserve"><value>Advertencia</value></data>
+  <data name="Admin.AccessDenied" xml:space="preserve"><value>No tiene permiso para acceder a este recurso.</value></data>
+  <data name="Admin.Login.Error.CheckTenantFailed" xml:space="preserve"><value>Error al comprobar el estado multiinquilino</value></data>
+  <data name="Admin.Session.ExpiredRedirect" xml:space="preserve"><value>La sesión ha caducado. Redirigiendo a la página de inicio de sesión.</value></data>
+  <data name="Admin.Home.Title" xml:space="preserve"><value>Inicio de administración</value></data>
+  <data name="Admin.Home.Header" xml:space="preserve"><value>Panel de administración de NeuCharFramework</value></data>
+  <data name="Admin.Home.ChatSubtitle" xml:space="preserve"><value>Pregúnteme para administrar el sistema de forma más eficiente.</value></data>
+  <data name="Admin.Home.MultiTurn" xml:space="preserve"><value>Admite conversaciones de varios turnos</value></data>
+  <data name="Admin.Home.ModuleContext" xml:space="preserve"><value>Agregue módulos como contexto</value></data>
+  <data name="Admin.Home.AutoSaveHistory" xml:space="preserve"><value>Historial guardado automáticamente</value></data>
+  <data name="Admin.Home.FunctionModules" xml:space="preserve"><value>Módulos funcionales</value></data>
+  <data name="Admin.Home.LogStatistics" xml:space="preserve"><value>Estadísticas de registros</value></data>
+  <data name="Admin.Home.Last14Days" xml:space="preserve"><value>Últimos 14 días</value></data>
+  <data name="Admin.Home.LogCount" xml:space="preserve"><value>{0} entradas</value></data>
+  <data name="Admin.Home.NormalLogs" xml:space="preserve"><value>Registros normales</value></data>
+  <data name="Admin.Home.ExceptionLogs" xml:space="preserve"><value>Registros de excepciones</value></data>
+  <data name="Admin.Home.Total" xml:space="preserve"><value>Total</value></data>
+  <data name="Admin.Home.TodayLogStatistics" xml:space="preserve"><value>Estadísticas de registros de hoy</value></data>
+  <data name="Admin.Home.LiveData" xml:space="preserve"><value>Datos en vivo</value></data>
+  <data name="Admin.Home.LogType" xml:space="preserve"><value>Tipo de registro</value></data>
+  <data name="AdminChat.Title" xml:space="preserve"><value>Asistente de IA</value></data>
+  <data name="AdminChat.Assistant" xml:space="preserve"><value>Asistente de IA</value></data>
+  <data name="AdminChat.Conversation" xml:space="preserve"><value>Conversación</value></data>
+  <data name="AdminChat.History" xml:space="preserve"><value>Historial de conversaciones</value></data>
+  <data name="AdminChat.NoHistory" xml:space="preserve"><value>No hay historial de conversaciones</value></data>
+  <data name="AdminChat.SelectAiModel" xml:space="preserve"><value>Seleccionar modelo de IA</value></data>
+  <data name="AdminChat.Done" xml:space="preserve"><value>Listo</value></data>
+  <data name="AdminChat.Manage" xml:space="preserve"><value>Administrar</value></data>
+  <data name="AdminChat.MenuHierarchy" xml:space="preserve"><value>Jerarquía de menús</value></data>
+  <data name="AdminChat.NoPreviewDetails" xml:space="preserve"><value>No hay detalles de vista previa para este módulo.</value></data>
+  <data name="AdminChat.SelectAll" xml:space="preserve"><value>Seleccionar todo</value></data>
+  <data name="AdminChat.SelectedCountPrefix" xml:space="preserve"><value>Seleccionados</value></data>
+  <data name="AdminChat.SelectedCountSuffix" xml:space="preserve"><value>mensajes</value></data>
+  <data name="AdminChat.Copy" xml:space="preserve"><value>Copiar</value></data>
+  <data name="AdminChat.ClearSelection" xml:space="preserve"><value>Borrar selección</value></data>
+  <data name="AdminChat.StartConversationPrompt" xml:space="preserve"><value>Inicie su conversación</value></data>
+  <data name="AdminChat.Thinking" xml:space="preserve"><value>Pensando...</value></data>
+  <data name="AdminChat.InputPlaceholder" xml:space="preserve"><value>Introduzca su pregunta...</value></data>
+  <data name="AdminChat.SendShortcut" xml:space="preserve"><value>Pulse Ctrl+Enter o Cmd+Enter para enviar</value></data>
+  <data name="AdminChat.Send" xml:space="preserve"><value>Enviar</value></data>
+  <data name="AdminChat.LauncherSubtitle" xml:space="preserve"><value>Introduzca una pregunta y seleccione módulos de referencia para comenzar.</value></data>
+  <data name="AdminChat.AiModel" xml:space="preserve"><value>Modelo de IA</value></data>
+  <data name="AdminChat.LauncherPlaceholder" xml:space="preserve"><value>Introduzca su pregunta, por ejemplo: ¿Cómo configuro el sistema? Pulse Ctrl+Enter o Cmd+Enter para enviar.</value></data>
+  <data name="AdminChat.StartConversation" xml:space="preserve"><value>Iniciar conversación</value></data>
+  <data name="AdminChat.ReferenceModulesOptional" xml:space="preserve"><value>Módulos de referencia (opcional)</value></data>
+  <data name="AdminChat.AddReferenceModules" xml:space="preserve"><value>Agregar módulos de referencia</value></data>
+  <data name="AdminChat.Clear" xml:space="preserve"><value>Borrar</value></data>
+  <data name="AdminChat.ReferenceModulesHint" xml:space="preserve"><value>Haga clic en « Agregar módulos de referencia » para seleccionar el contexto.</value></data>
+  <data name="AdminChat.SearchModules" xml:space="preserve"><value>Buscar por nombre / descripción / UID</value></data>
+  <data name="AdminChat.SelectAllFiltered" xml:space="preserve"><value>Seleccionar todos los resultados filtrados</value></data>
+  <data name="AdminChat.Selected" xml:space="preserve"><value>Seleccionados</value></data>
+  <data name="AdminChat.QuickOpen" xml:space="preserve"><value>Abrir</value></data>
+  <data name="AdminChat.Menu" xml:space="preserve"><value>Menú</value></data>
+  <data name="AdminChat.NoMenu" xml:space="preserve"><value>Sin menú</value></data>
+  <data name="AdminChat.NoModuleDetails" xml:space="preserve"><value>Este módulo no tiene menús ni funciones disponibles.</value></data>
+  <data name="AdminChat.NoMatchingModules" xml:space="preserve"><value>No hay módulos coincidentes</value></data>
+  <data name="AdminChat.ConfirmAdd" xml:space="preserve"><value>Agregar selección</value></data>
+  <data name="AdminChat.SystemAiModel" xml:space="preserve"><value>SenparcAiSetting del sistema</value></data>
+  <data name="AdminChat.DefaultChatConfig" xml:space="preserve"><value>Usar la configuración de Chat predeterminada activa de appsettings.json</value></data>
+  <data name="AdminChat.LoadAiModelsFailed" xml:space="preserve"><value>Error al cargar los modelos de IA</value></data>
+  <data name="AdminChat.LoadSessionListFailed" xml:space="preserve"><value>Error al cargar la lista de conversaciones</value></data>
+  <data name="AdminChat.LoadSessionDetailFailed" xml:space="preserve"><value>Error al cargar los detalles de la conversación</value></data>
+  <data name="AdminChat.EnterMessage" xml:space="preserve"><value>Introduzca un mensaje</value></data>
+  <data name="AdminChat.SelectOrCreateSession" xml:space="preserve"><value>Seleccione o cree primero una conversación</value></data>
+  <data name="AdminChat.SendFailed" xml:space="preserve"><value>Error al enviar el mensaje</value></data>
+  <data name="AdminChat.SendRetry" xml:space="preserve"><value>Error al enviar. Inténtelo de nuevo más tarde.</value></data>
+  <data name="AdminChat.FeedbackSuccess" xml:space="preserve"><value>Comentarios enviados</value></data>
+  <data name="AdminChat.FeedbackFailed" xml:space="preserve"><value>Error al enviar los comentarios</value></data>
+  <data name="AdminChat.SelectMessagesToCopy" xml:space="preserve"><value>Seleccione los mensajes que desea copiar</value></data>
+  <data name="AdminChat.CopiedMessages" xml:space="preserve"><value>Se copiaron {0} mensajes</value></data>
+  <data name="AdminChat.CopyFailed" xml:space="preserve"><value>Error al copiar. Copie manualmente.</value></data>
+  <data name="AdminChat.SelectMessagesToDelete" xml:space="preserve"><value>Seleccione los mensajes que desea eliminar</value></data>
+  <data name="AdminChat.DeleteMessagesConfirm" xml:space="preserve"><value>¿Eliminar los {0} mensajes seleccionados? Esta acción no se puede deshacer.</value></data>
+  <data name="AdminChat.DeleteConfirmTitle" xml:space="preserve"><value>Confirmar eliminación</value></data>
+  <data name="AdminChat.DeleteFailed" xml:space="preserve"><value>Error al eliminar</value></data>
+  <data name="AdminChat.DeleteRetry" xml:space="preserve"><value>Error al eliminar. Inténtelo de nuevo más tarde.</value></data>
+  <data name="AdminChat.DeleteSessionConfirm" xml:space="preserve"><value>¿Eliminar esta conversación?</value></data>
+  <data name="AdminChat.DeleteCancelled" xml:space="preserve"><value>Eliminación cancelada</value></data>
+  <data name="AdminChat.Role.User" xml:space="preserve"><value>Yo</value></data>
+  <data name="AdminChat.Role.System" xml:space="preserve"><value>Sistema</value></data>
+  <data name="AdminChat.Role.Unknown" xml:space="preserve"><value>Desconocido</value></data>
+  <data name="AdminChat.UnnamedModule" xml:space="preserve"><value>Módulo sin nombre</value></data>
+  <data name="AdminChat.NoDescription" xml:space="preserve"><value>Sin descripción</value></data>
+  <data name="AdminChat.TimeFormatFailed" xml:space="preserve"><value>Error al formatear la hora</value></data>
+  <data name="AdminChat.SaveSelectedModulesFailed" xml:space="preserve"><value>Error al guardar los módulos seleccionados</value></data>
+  <data name="AdminChat.ReadSelectedModulesFailed" xml:space="preserve"><value>Error al leer los módulos seleccionados</value></data>
+  <data name="AdminChat.SaveSessionAiModelFailed" xml:space="preserve"><value>Error al guardar el modelo de IA de la conversación</value></data>
+  <data name="AdminChat.ReadSessionAiModelFailed" xml:space="preserve"><value>Error al leer el modelo de IA de la conversación</value></data>
+  <data name="AdminChat.LoadModulesFailed" xml:space="preserve"><value>Error al cargar la lista de módulos</value></data>
+  <data name="AdminChat.LoadModulesRetry" xml:space="preserve"><value>Error al cargar los módulos. Inténtelo de nuevo más tarde.</value></data>
+  <data name="AdminChat.EnterConversation" xml:space="preserve"><value>Introduzca el contenido de la conversación</value></data>
+  <data name="AdminChat.CreateSessionFailed" xml:space="preserve"><value>Error al crear la conversación</value></data>
+  <data name="AdminChat.CreateSessionRetry" xml:space="preserve"><value>Error al crear la conversación. Inténtelo de nuevo más tarde.</value></data>
+  <data name="Xncf.Extensions" xml:space="preserve"><value>Extensiones</value></data>
+  <data name="Xncf.Management" xml:space="preserve"><value>Gestión de módulos</value></data>
+  <data name="Xncf.NewModules" xml:space="preserve"><value>Módulos nuevos</value></data>
+  <data name="Xncf.NewModulesFound" xml:space="preserve"><value>Nuevos módulos encontrados</value></data>
+  <data name="Xncf.ModuleErrors" xml:space="preserve"><value>Errores de módulo</value></data>
+  <data name="Xncf.ModuleName" xml:space="preserve"><value>Nombre del módulo</value></data>
+  <data name="Xncf.DisplayName" xml:space="preserve"><value>Nombre para mostrar</value></data>
+  <data name="Xncf.Version" xml:space="preserve"><value>Versión</value></data>
+  <data name="Xncf.Uid" xml:space="preserve"><value>UID (único globalmente)</value></data>
+  <data name="Xncf.SearchPlaceholder" xml:space="preserve"><value>Introduzca una palabra clave</value></data>
+  <data name="Xncf.Install" xml:space="preserve"><value>Instalar</value></data>
+  <data name="Xncf.InstalledModules" xml:space="preserve"><value>Módulos instalados</value></data>
+  <data name="Xncf.DisplayNameAndVersion" xml:space="preserve"><value>Nombre para mostrar / Versión</value></data>
+  <data name="Xncf.ModuleNameAndUid" xml:space="preserve"><value>Nombre del módulo / UID</value></data>
+  <data name="Xncf.Status" xml:space="preserve"><value>Estado</value></data>
+  <data name="Xncf.Home" xml:space="preserve"><value>Inicio</value></data>
+  <data name="Xncf.AssemblyMissing" xml:space="preserve"><value>Este módulo no está implementado o falta su ensamblado.</value></data>
+  <data name="Xncf.PendingUpdates" xml:space="preserve"><value>Módulos pendientes de actualización</value></data>
+  <data name="Xncf.State.Closed" xml:space="preserve"><value>Cerrado</value></data>
+  <data name="Xncf.State.Open" xml:space="preserve"><value>Abierto</value></data>
+  <data name="Xncf.State.PendingAdd" xml:space="preserve"><value>Nuevo — pendiente de revisión</value></data>
+  <data name="Xncf.State.PendingUpdate" xml:space="preserve"><value>Actualización — pendiente de revisión</value></data>
+  <data name="Xncf.EnableManagerMode" xml:space="preserve"><value>Activar el modo de gestión de extensiones</value></data>
+  <data name="Xncf.EnablePublishMode" xml:space="preserve"><value>Cambiar al modo de publicación y ocultar la gestión de extensiones</value></data>
+  <data name="Xncf.EnableManagerModeConfirm" xml:space="preserve"><value>Todas las extensiones aparecerán en el menú Extensiones. ¿Activar este modo?</value></data>
+  <data name="Xncf.EnablePublishModeConfirm" xml:space="preserve"><value>Las extensiones aparecerán en el nivel superior. Puede reabrir la gestión en /Admin/XncfModule. ¿Ocultarla?</value></data>
+  <data name="Xncf.Module" xml:space="preserve"><value>Módulo</value></data>
+  <data name="Xncf.DeleteConfirm" xml:space="preserve"><value>¿Eliminar este módulo y sus datos relacionados? Haga una copia de seguridad primero.</value></data>
+  <data name="Xncf.NewVersion" xml:space="preserve"><value>Nueva versión disponible:</value></data>
+  <data name="Xncf.UpdateNow" xml:space="preserve"><value>Actualizar ahora</value></data>
+  <data name="Xncf.UniqueId" xml:space="preserve"><value>ID único</value></data>
+  <data name="Xncf.Features" xml:space="preserve"><value>Características</value></data>
+  <data name="Xncf.View" xml:space="preserve"><value>Ver</value></data>
+  <data name="Xncf.ExecuteFunction" xml:space="preserve"><value>Funciones ejecutables</value></data>
+  <data name="Xncf.Enable" xml:space="preserve"><value>Habilitar</value></data>
+  <data name="Xncf.Disable" xml:space="preserve"><value>Deshabilitar</value></data>
+  <data name="Xncf.DisabledCannotExecute" xml:space="preserve"><value>Los módulos deshabilitados no pueden ejecutar funciones.</value></data>
+  <data name="Xncf.Introduction" xml:space="preserve"><value>Introducción</value></data>
+  <data name="Xncf.UpdateLog" xml:space="preserve"><value>Registro de actualizaciones</value></data>
+  <data name="Xncf.EnterModuleHomePrefix" xml:space="preserve"><value>Abrir inicio del módulo:</value></data>
+  <data name="Xncf.EnterHome" xml:space="preserve"><value>Abrir inicio</value></data>
+  <data name="Xncf.Address" xml:space="preserve"><value>Dirección</value></data>
+  <data name="Xncf.PageOverview" xml:space="preserve"><value>Vista general de páginas</value></data>
+  <data name="Xncf.UiEntryExplanation" xml:space="preserve"><value>Este módulo proporciona una interfaz interactiva, por eso se muestra esta entrada.</value></data>
+  <data name="Xncf.Execute" xml:space="preserve"><value>Ejecutar</value></data>
+  <data name="Xncf.ParameterOverview" xml:space="preserve"><value>Vista general de parámetros</value></data>
+  <data name="Xncf.Name" xml:space="preserve"><value>Nombre</value></data>
+  <data name="Xncf.Type" xml:space="preserve"><value>Tipo</value></data>
+  <data name="Xncf.Required" xml:space="preserve"><value>Obligatorio</value></data>
+  <data name="Xncf.NoInputRequired" xml:space="preserve"><value>No se requieren datos</value></data>
+  <data name="Xncf.Executing" xml:space="preserve"><value>Ejecutando</value></data>
+  <data name="Xncf.DownloadLog" xml:space="preserve"><value>Descargar registro (una vez en 5 minutos)</value></data>
+  <data name="Xncf.Close" xml:space="preserve"><value>Cerrar</value></data>
+  <data name="Xncf.ViewThreads" xml:space="preserve"><value>Ver hilos</value></data>
+  <data name="Xncf.ActiveAndBackground" xml:space="preserve"><value>Activo / Segundo plano</value></data>
+  <data name="Xncf.ThreadStatus" xml:space="preserve"><value>Estado del hilo</value></data>
+  <data name="Xncf.LatestStory" xml:space="preserve"><value>Actividad reciente</value></data>
+  <data name="Xncf.Feature.Web" xml:space="preserve"><value>Interfaz web</value></data>
+  <data name="Xncf.Feature.Database" xml:space="preserve"><value>Base de datos</value></data>
+  <data name="Xncf.Feature.Middleware" xml:space="preserve"><value>Middleware</value></data>
+  <data name="Xncf.Feature.Thread" xml:space="preserve"><value>Hilo</value></data>
+  <data name="Xncf.Type.Text" xml:space="preserve"><value>Texto</value></data>
+  <data name="Xncf.Type.Number" xml:space="preserve"><value>Número</value></data>
+  <data name="Xncf.Type.Date" xml:space="preserve"><value>Fecha</value></data>
+  <data name="Xncf.Type.Options" xml:space="preserve"><value>Opciones</value></data>
+  <data name="Xncf.Type.Boolean" xml:space="preserve"><value>Booleano</value></data>
+  <data name="Xncf.EnableBeforeExecute" xml:space="preserve"><value>Habilite el módulo antes de ejecutar esta acción.</value></data>
+  <data name="Xncf.SourcePathRequired" xml:space="preserve"><value>Introduzca la ruta física del código fuente</value></data>
+  <data name="Xncf.RequiredSelection" xml:space="preserve"><value>{0} es obligatorio</value></data>
+  <data name="Xncf.RequiredField" xml:space="preserve"><value>{0} es obligatorio</value></data>
+  <data name="Xncf.RunError" xml:space="preserve"><value>Se produjo un error</value></data>
+  <data name="Xncf.ErrorInfo" xml:space="preserve"><value>Detalles del error</value></data>
+  <data name="Xncf.RunSuccess" xml:space="preserve"><value>Ejecutado correctamente</value></data>
+  <data name="Xncf.ExternalUrlNotice" xml:space="preserve"><value>Se devolvió una URL. Ábrala abajo.&lt;br /&gt;(Es un enlace de terceros; tenga cuidado):</value></data>
+  <data name="Xncf.ReturnInfo" xml:space="preserve"><value>Resultado</value></data>
+  <data name="Xncf.ExecutionErrorLog" xml:space="preserve"><value>Error de ejecución</value></data>
+  <data name="Xncf.ExecutionFailed" xml:space="preserve"><value>Se produjo un error durante la ejecución.</value></data>
+  <data name="Xncf.UpdateAvailable" xml:space="preserve"><value>Actual: v{0} → Disponible: v{1}</value></data>
+  <data name="Xncf.SettingsAndExecute" xml:space="preserve"><value>Configuración / Ejecutar</value></data>
+  <data name="Session.InvalidIdentity" xml:space="preserve"><value>La identidad del usuario actual no es válida; no se puede renovar el JWT. Vuelva a iniciar sesión.</value></data>
+  <data name="Validation.RequestRequired" xml:space="preserve"><value>Los parámetros de la solicitud son obligatorios.</value></data>
+  <data name="Validation.SystemNameRequired" xml:space="preserve"><value>El nombre del sistema es obligatorio.</value></data>
+  <data name="Validation.SystemConfigMissing" xml:space="preserve"><value>No se encontró la configuración del sistema.</value></data>
+  <data name="Xncf.ModuleReadFailed" xml:space="preserve"><value>No se pudo leer el módulo. Intente actualizarlo y recargue la página. Módulo: {0} / {1} / {2}</value></data>
+  <data name="Session.LoginRequiredForRenewal" xml:space="preserve"><value>Debe iniciar sesión para renovar la sesión.</value></data>
+  <data name="AdminUser.CannotDeleteSelf" xml:space="preserve"><value>Los administradores no pueden eliminar su propia cuenta.</value></data>
+  <data name="AdminUser.NotFound" xml:space="preserve"><value>No se encontró el administrador.</value></data>
+  <data name="AdminUser.UserInfoNotFound" xml:space="preserve"><value>No se encontró la información del usuario.</value></data>
+  <data name="AdminUser.InvalidCredentials" xml:space="preserve"><value>El nombre de usuario o la contraseña son incorrectos.</value></data>
+  <data name="AdminUser.PasswordRequired" xml:space="preserve"><value>La contraseña es obligatoria.</value></data>
+  <data name="AdminUser.MinimumLength" xml:space="preserve"><value>{0} debe tener más de {1} caracteres.</value></data>
+  <data name="AdminChat.EmptyAiResponse" xml:space="preserve"><value>Lo siento, no se pudo generar una respuesta válida. Inténtelo de nuevo más tarde.</value></data>
+  <data name="AdminChat.MissingAiSettings" xml:space="preserve"><value>No se pudo cargar SenparcAiSetting. Compruebe la configuración de appsettings.json.</value></data>
+  <data name="AdminChat.AiPlatformNotConfigured" xml:space="preserve"><value>SenparcAiSetting.AiPlatform sigue en UnSet. Configure primero una plataforma disponible en appsettings.json.</value></data>
+  <data name="AdminChat.AiKernelUnavailable" xml:space="preserve"><value>El módulo AIKernel no está instalado o habilitado, por lo que no se puede usar el modelo de IA seleccionado.</value></data>
+  <data name="AdminChat.AiModelServiceUnavailable" xml:space="preserve"><value>No se pudo resolver AIModelService, por lo que no se puede cargar el modelo de IA seleccionado.</value></data>
+  <data name="AdminChat.AiModelNotFound" xml:space="preserve"><value>El modelo de IA seleccionado no existe: {0}</value></data>
+  <data name="AdminChat.AiModelNotChat" xml:space="preserve"><value>El modelo de IA seleccionado no es de tipo Chat: {0}</value></data>
+  <data name="AdminChat.SystemPromptIntro" xml:space="preserve"><value>Eres el asistente de IA del panel de administración de NeuCharFramework.</value></data>
+  <data name="AdminChat.SystemPromptInstruction" xml:space="preserve"><value>Responde en español de forma concisa, precisa y práctica. Si falta información, indica exactamente cuál.</value></data>
+  <data name="AdminChat.SystemPromptModules" xml:space="preserve"><value>Los siguientes módulos están vinculados a esta conversación. Usa su contexto cuando corresponda. ModuleAssistant permite consultar detalles, estructuras de base de datos y listas de funciones:</value></data>
+  <data name="AdminChat.ModuleDescriptionLine" xml:space="preserve"><value>  Descripción: {0}</value></data>
+  <data name="AdminChat.PromptHistoryIntro" xml:space="preserve"><value>Este es el contexto reciente de la conversación. Responde a la última pregunta del usuario manteniendo la continuidad semántica.</value></data>
+  <data name="AdminChat.PromptCurrentQuestion" xml:space="preserve"><value>[Pregunta actual del usuario] {0}</value></data>
+  <data name="AdminChat.PromptRole.User" xml:space="preserve"><value>Usuario</value></data>
+  <data name="AdminChat.PromptRole.Assistant" xml:space="preserve"><value>Asistente</value></data>
+  <data name="AdminChat.PromptRole.System" xml:space="preserve"><value>Sistema</value></data>
+  <data name="AdminChat.PromptRole.Unknown" xml:space="preserve"><value>Desconocido</value></data>
+  <data name="Function.Admin.ViewLoginExpiry.Name" xml:space="preserve"><value>Ver caducidad de inicio de sesión</value></data>
+  <data name="Function.Admin.ViewLoginExpiry.Description" xml:space="preserve"><value>Muestra la caducidad del inicio de sesión web y de JWT en el módulo Admin</value></data>
+  <data name="Function.Admin.SetLoginExpiry.Name" xml:space="preserve"><value>Configurar caducidad de inicio de sesión</value></data>
+  <data name="Function.Admin.SetLoginExpiry.Description" xml:space="preserve"><value>Configura en minutos la duración del inicio de sesión web y la caducidad de JWT</value></data>
+  <data name="Function.Admin.CacheTest.Name" xml:space="preserve"><value>Prueba de caché</value></data>
+  <data name="Function.Admin.CacheTest.Description" xml:space="preserve"><value>Prueba el proveedor de caché actual y los bloqueos distribuidos</value></data>
+  <data name="Function.Admin.Login.Name" xml:space="preserve"><value>Inicio de sesión de administrador</value></data>
+  <data name="Function.Admin.Login.Description" xml:space="preserve"><value>Prueba la autenticación de administrador</value></data>
+  <data name="Common.NotAvailable" xml:space="preserve"><value>No disponible</value></data>
+  <data name="Common.Unknown" xml:space="preserve"><value>Desconocido</value></data>
+  <data name="Admin.ModuleAssistant.Tool.SessionModules" xml:space="preserve"><value>Listar los módulos XNCF vinculados a la conversación actual.</value></data>
+  <data name="Admin.ModuleAssistant.NoSessionModules" xml:space="preserve"><value>No hay módulos XNCF vinculados a esta conversación.</value></data>
+  <data name="Admin.ModuleAssistant.SessionModuleCount" xml:space="preserve"><value>Esta conversación tiene {0} módulos vinculados:</value></data>
+  <data name="Admin.ModuleAssistant.Version" xml:space="preserve"><value>  Versión: {0}</value></data>
+  <data name="Admin.ModuleAssistant.Description" xml:space="preserve"><value>  Descripción: {0}</value></data>
+  <data name="Admin.ModuleAssistant.MenuName" xml:space="preserve"><value>  Nombre del menú: {0}</value></data>
+  <data name="Admin.ModuleAssistant.Tool.ModuleDetail" xml:space="preserve"><value>Obtener descripción, versión y funciones de un módulo por nombre o UID.</value></data>
+  <data name="Admin.ModuleAssistant.Parameter.Module" xml:space="preserve"><value>Palabra clave del módulo o UID</value></data>
+  <data name="Admin.ModuleAssistant.ModuleNotFound" xml:space="preserve"><value>No se encontró un módulo para «{0}». Llame primero a GetSessionModuleList.</value></data>
+  <data name="Admin.ModuleAssistant.DetailTitle" xml:space="preserve"><value>## Detalles del módulo: {0}</value></data>
+  <data name="Admin.ModuleAssistant.DetailVersion" xml:space="preserve"><value>- **Versión**: {0}</value></data>
+  <data name="Admin.ModuleAssistant.DetailAssembly" xml:space="preserve"><value>- **Assembly**: {0}</value></data>
+  <data name="Admin.ModuleAssistant.DetailMenu" xml:space="preserve"><value>- **Menú**: {0}</value></data>
+  <data name="Admin.ModuleAssistant.DetailDescription" xml:space="preserve"><value>- **Descripción**: {0}</value></data>
+  <data name="Admin.ModuleAssistant.DetailIcon" xml:space="preserve"><value>- **Icono**: {0}</value></data>
+  <data name="Admin.ModuleAssistant.DetailMcp" xml:space="preserve"><value>- **Compatibilidad con MCP**: {0}</value></data>
+  <data name="Admin.ModuleAssistant.FunctionCount" xml:space="preserve"><value>&#10;### Funciones disponibles (FunctionRender: {0}):</value></data>
+  <data name="Admin.ModuleAssistant.NoFunctions" xml:space="preserve"><value>&#10;Este módulo no tiene funciones FunctionRender registradas.</value></data>
+  <data name="Admin.ModuleAssistant.RuntimeRegistrationMissing" xml:space="preserve"><value>(El módulo está vinculado, pero falta su registro en tiempo de ejecución.)</value></data>
+  <data name="Admin.ModuleAssistant.Tool.DatabaseInfo" xml:space="preserve"><value>Obtener el prefijo, DbContext, DbSets y almacenamiento de un módulo.</value></data>
+  <data name="Admin.ModuleAssistant.DatabaseModuleNotFound" xml:space="preserve"><value>No se encontró el módulo «{0}». Llame primero a GetSessionModuleList.</value></data>
+  <data name="Admin.ModuleAssistant.DatabaseRuntimeMissing" xml:space="preserve"><value>No se encontró el registro en tiempo de ejecución de {0}; no se puede leer la base.</value></data>
+  <data name="Admin.ModuleAssistant.DatabaseTitle" xml:space="preserve"><value>## Base de datos de {0}</value></data>
+  <data name="Admin.ModuleAssistant.DatabasePrefix" xml:space="preserve"><value>- **Prefijo de tablas**: {0}</value></data>
+  <data name="Admin.ModuleAssistant.DatabaseContext" xml:space="preserve"><value>- **Tipo de DbContext**: {0}</value></data>
+  <data name="Admin.ModuleAssistant.DatabaseTableCount" xml:space="preserve"><value>- **Tablas (DbSet: {0})**:</value></data>
+  <data name="Admin.ModuleAssistant.DatabaseEntity" xml:space="preserve"><value>  * **{0}** → tipo de entidad: {1}</value></data>
+  <data name="Admin.ModuleAssistant.DatabaseFields" xml:space="preserve"><value>    Campos: {0}</value></data>
+  <data name="Admin.ModuleAssistant.NoDbSets" xml:space="preserve"><value>  No se detectaron DbSet ni tablas públicas.</value></data>
+  <data name="Admin.ModuleAssistant.NoIndependentDatabase" xml:space="preserve"><value>Este módulo no tiene base independiente (no implementa IXncfDatabase).</value></data>
+  <data name="Admin.ModuleAssistant.SharedOrNoStorage" xml:space="preserve"><value>Puede usar una base compartida o no tener almacenamiento persistente.</value></data>
+  <data name="Admin.ModuleAssistant.Tool.AllModules" xml:space="preserve"><value>Listar todos los módulos XNCF registrados en el sistema.</value></data>
+  <data name="Admin.ModuleAssistant.NoInstalledModules" xml:space="preserve"><value>No hay módulos registrados.</value></data>
+  <data name="Admin.ModuleAssistant.InstalledModuleCount" xml:space="preserve"><value>El sistema tiene {0} módulos registrados:</value></data>
+  <data name="Admin.ModuleAssistant.InSessionTag" xml:space="preserve"><value>  ✓[vinculado a esta conversación]</value></data>
 </root>

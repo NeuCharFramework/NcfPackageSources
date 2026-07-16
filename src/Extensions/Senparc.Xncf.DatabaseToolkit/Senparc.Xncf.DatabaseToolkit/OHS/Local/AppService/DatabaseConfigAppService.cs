@@ -40,12 +40,12 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         {
             [Required]
             [MaxLength(300)]
-            [Description("自动备份周期（分钟）||0 则为不自动备份")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Database.Config.Cycle")]
             public int BackupCycleMinutes { get; set; }
 
             [Required]
             [MaxLength(300)]
-            [Description("备份路径||本地物理路径，如：E:\\Senparc\\Ncf\\NCF.bak")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Database.Config.Path")]
             public string BackupPath { get; set; }
 
             public override async Task LoadData(IServiceProvider serviceProvider)
@@ -60,7 +60,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
             }
         }
 
-        [FunctionRender("设置参数", "设置备份间隔时间、备份文件路径等参数", typeof(Register))]
+        [FunctionRender(typeof(NcfBuiltInResource), "Function.Database.Settings.Name", "Function.Database.Settings.Description", typeof(Register))]
         public async Task<StringAppResponse> SetConfig(SetConfigFunctionAppRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -78,15 +78,15 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                 }
                 configService.SaveObject(config);
 
-                var msg = $"设置间隔分钟：{request.BackupCycleMinutes}，路径：{request.BackupPath}";
+                var msg = NcfBuiltInResource.Format("Database.Config.SavedValues", "设置间隔分钟：{0}，路径：{1}", request.BackupCycleMinutes, request.BackupPath);
                 logger.Append(msg);
                 return msg;
             }, afterFunc: (response, logger) =>
             {
-                logger.Append($"设置已保存！");
+                logger.Append(NcfBuiltInResource.Get("Database.Config.Saved"));
             },
             saveLogAfterFinished: true,
-            saveLogName:"设置数据库信息", 
+            saveLogName: NcfBuiltInResource.Get("Database.Config.SaveLogName"), 
             exceptionHandler: async (ex,response, logger) => { 
             
             
@@ -98,14 +98,14 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 
 
         [ApiBind]
-        [FunctionRender("查看数据库配置类型", "查看实现 IDatabaseConfiguration 接口的数据库配置类型", typeof(Register))]
+        [FunctionRender(typeof(NcfBuiltInResource), "Function.Database.ConfigTypes.Name", "Function.Database.ConfigTypes.Description", typeof(Register))]
         public async Task<StringAppResponse> ShowDatabaseConfiguration()
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 var databaseConfigurationFactory = DatabaseConfigurationFactory.Instance;
                 var currentDatabaseConfiguration = databaseConfigurationFactory.Current;
-                return logger.Append($"当前 DatabaseConfiguration：{currentDatabaseConfiguration.GetType().Name}，数据库类型：{currentDatabaseConfiguration.MultipleDatabaseType}");
+                return logger.Append(NcfBuiltInResource.Format("Database.Config.Current", "当前 DatabaseConfiguration：{0}，数据库类型：{1}", currentDatabaseConfiguration.GetType().Name, currentDatabaseConfiguration.MultipleDatabaseType));
             });
         }
     }

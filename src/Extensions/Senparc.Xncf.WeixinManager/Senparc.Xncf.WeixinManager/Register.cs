@@ -67,15 +67,15 @@ namespace Senparc.Xncf.WeixinManager
         public override string Version => "0.21.1";
 
 
-        public override string MenuName => "微信管理";
+        public override string MenuName => NcfBuiltInResource.Get("Module.WeixinManager.MenuName", "微信管理");
 
 
         public override string Icon => "fa fa-weixin";
 
 
-        public override string Description => @"XNCF 模块：盛派官方发布的微信管理后台
-使用此插件可以在 NCF 中快速集成微信公众号、小程序的部分基础管理功能，欢迎大家一起扩展！
-微信 SDK 基于 Senparc.Weixin SDK 开发。开源地址：https://https://github.com/JeffreySu/WeiXinMPSDK";
+        public override string Description => NcfBuiltInResource.Get(
+            "Module.WeixinManager.Description",
+            "XNCF 模块：盛派官方发布的微信管理后台。使用此插件可在 NCF 中快速集成微信公众号、小程序的基础管理功能。微信 SDK 基于 Senparc.Weixin SDK 开发：https://github.com/JeffreySu/WeiXinMPSDK");
 
         //public override IList<Type> Functions => new Type[] { };
 

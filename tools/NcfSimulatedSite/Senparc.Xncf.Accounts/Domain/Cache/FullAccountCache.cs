@@ -121,7 +121,7 @@ namespace Senparc.Xncf.Accounts.Domain.Cache
 
         public override void RemoveCache()
         {
-            throw new Exception("不允许调用此方法！");
+            throw new Exception(AccountsResource.Get("Accounts.MethodNotAllowed", "不允许调用此方法！"));
         }
 
 

@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Module.AIAgentsHub.MenuName" xml:space="preserve"><value>AI Agent Hub</value></data>
+  <data name="Module.AIAgentsHub.Description" xml:space="preserve"><value>AI エージェントのハブモジュール</value></data>
+  <data name="Module.AIKernel.MenuName" xml:space="preserve"><value>AI カーネル</value></data>
+  <data name="Module.AIKernel.Description" xml:space="preserve"><value>Senparc.AI を基盤として、すべての AI プロジェクトに基本機能を提供します</value></data>
+  <data name="Module.AgentsManager.MenuName" xml:space="preserve"><value>Agents 管理</value></data>
+  <data name="Module.AgentsManager.Description" xml:space="preserve"><value>AI エージェントと関連設定を管理します</value></data>
+  <data name="Module.Application.MenuName" xml:space="preserve"><value>アプリケーション起動</value></data>
+  <data name="Module.Application.Description" xml:space="preserve"><value>外部アプリケーションを起動できます</value></data>
+  <data name="Module.AreasBase.MenuName" xml:space="preserve"><value>Areas 基盤</value></data>
+  <data name="Module.AreasBase.Description" xml:space="preserve"><value>Razor Pages などの UI 領域に実行基盤を提供します</value></data>
+  <data name="Module.ChangeNamespace.MenuName" xml:space="preserve"><value>名前空間の変更</value></data>
+  <data name="Module.ChangeNamespace.Description" xml:space="preserve"><value>NCF のインストール後、公開前にソースの名前空間を一括変更します。この操作は元に戻せません。事前にバックアップし、稼働中の本番環境では使用しないでください。</value></data>
+  <data name="Module.Dapr.MenuName" xml:space="preserve"><value>Dapr モジュール</value></data>
+  <data name="Module.Dapr.Description" xml:space="preserve"><value>他のモジュールに Dapr 機能を提供します</value></data>
+  <data name="Module.DatabaseToolkit.MenuName" xml:space="preserve"><value>データベースツールキット</value></data>
+  <data name="Module.DatabaseToolkit.Description" xml:space="preserve"><value>データベース操作ツールです。操作によりデータが破損する可能性があるため、機能を理解し、変更前に必ずバックアップしてください。</value></data>
+  <data name="Module.DynamicData.MenuName" xml:space="preserve"><value>動的データ基盤</value></data>
+  <data name="Module.DynamicData.Description" xml:space="preserve"><value>動的データを作成、管理します（初期プレビュー、未正式公開）</value></data>
+  <data name="Module.FileManager.MenuName" xml:space="preserve"><value>ファイル管理</value></data>
+  <data name="Module.FileManager.Description" xml:space="preserve"><value>システムファイルを管理します</value></data>
+  <data name="Module.FirmwareUpdate.MenuName" xml:space="preserve"><value>NCF パッケージミラー</value></data>
+  <data name="Module.FirmwareUpdate.Description" xml:space="preserve"><value>GitHub から NCF デスクトップパッケージを同期し、最新 3 バージョンと予備ダウンロード一覧を保持します。</value></data>
+  <data name="Module.KnowledgeBase.MenuName" xml:space="preserve"><value>AI ナレッジベース</value></data>
+  <data name="Module.KnowledgeBase.Description" xml:space="preserve"><value>AI ナレッジベースを作成、管理、検索します</value></data>
+  <data name="Module.MCP.MenuName" xml:space="preserve"><value>MCP 管理</value></data>
+  <data name="Module.MCP.Description" xml:space="preserve"><value>Model Context Protocol（MCP）を管理します</value></data>
+  <data name="Module.Menu.MenuName" xml:space="preserve"><value>メニュー管理</value></data>
+  <data name="Module.Menu.Description" xml:space="preserve"><value>システムメニューを管理します</value></data>
+  <data name="Module.PromptRange.MenuName" xml:space="preserve"><value>プロンプト演習場</value></data>
+  <data name="Module.PromptRange.Description" xml:space="preserve"><value>プロンプトを訓練、評価します</value></data>
+  <data name="Module.SenMapic.MenuName" xml:space="preserve"><value>SenMapic</value></data>
+  <data name="Module.SenMapic.Description" xml:space="preserve"><value>SenMapic Web クローラーモジュール</value></data>
+  <data name="Module.Swagger.MenuName" xml:space="preserve"><value>API ドキュメント</value></data>
+  <data name="Module.Swagger.Description" xml:space="preserve"><value>システム API の説明を表示します</value></data>
+  <data name="Module.SystemCore.MenuName" xml:space="preserve"><value>システムコア</value></data>
+  <data name="Module.SystemCore.Description" xml:space="preserve"><value>基盤構造と実行データを管理するコアモジュールです。削除せず、変更前にデータをバックアップしてください。</value></data>
+  <data name="Module.SystemManager.MenuName" xml:space="preserve"><value>システム管理</value></data>
+  <data name="Module.SystemManager.Description" xml:space="preserve"><value>システム設定と主要な実行データを管理します。削除せず、変更前にデータをバックアップしてください。</value></data>
+  <data name="Module.SystemPermission.MenuName" xml:space="preserve"><value>権限管理</value></data>
+  <data name="Module.SystemPermission.Description" xml:space="preserve"><value>システムのロールと権限を管理します</value></data>
+  <data name="Module.Tenant.MenuName" xml:space="preserve"><value>マルチテナント</value></data>
+  <data name="Module.Tenant.Description" xml:space="preserve"><value>マルチテナントのコアモジュールです。削除せず、変更前にデータをバックアップしてください。</value></data>
+  <data name="Module.Terminal.MenuName" xml:space="preserve"><value>ターミナル</value></data>
+  <data name="Module.Terminal.Description" xml:space="preserve"><value>ターミナルコマンドでシステムを操作できます。</value></data>
+  <data name="Module.Terminal.AvailableCommands" xml:space="preserve"><value>現在利用できるコマンド：</value></data>
+  <data name="Module.WeixinManager.MenuName" xml:space="preserve"><value>Weixin 管理</value></data>
+  <data name="Module.WeixinManager.Description" xml:space="preserve"><value>公式 Senparc Weixin 管理モジュールです。WeChat 公式アカウントとミニプログラムの基本管理機能を統合します。Senparc.Weixin SDK：https://github.com/JeffreySu/WeiXinMPSDK</value></data>
+  <data name="Module.XncfBuilder.MenuName" xml:space="preserve"><value>XNCF モジュール生成</value></data>
+  <data name="Module.XncfBuilder.Description" xml:space="preserve"><value>XNCF モジュールの基盤コードとサンプルをすばやく生成します</value></data>
+  <data name="Module.XncfModuleManager.MenuName" xml:space="preserve"><value>XNCF モジュール管理コア</value></data>
+  <data name="Module.XncfModuleManager.Description" xml:space="preserve"><value>XNCF モジュールのインストール、更新、管理を行うコアコンポーネント</value></data>
+  <data name="Area.Home" xml:space="preserve"><value>ホーム</value></data>
+  <data name="Area.DatabaseSample" xml:space="preserve"><value>データベース操作サンプル</value></data>
+  <data name="Area.ApiDocumentation" xml:space="preserve"><value>Web API ドキュメント</value></data>
+  <data name="Area.WeixinManager.OfficialAccounts" xml:space="preserve"><value>公式アカウント管理</value></data>
+  <data name="Area.WeixinManager.Users" xml:space="preserve"><value>ユーザー管理</value></data>
+  <data name="Area.AIKernel.VectorDatabase" xml:space="preserve"><value>ベクトルデータベース</value></data>
+  <data name="Area.AIKernel.Dashboard" xml:space="preserve"><value>ダッシュボード</value></data>
+  <data name="Area.FileManager.Files" xml:space="preserve"><value>ファイル管理</value></data>
+  <data name="Area.KnowledgeBase.Management" xml:space="preserve"><value>ナレッジベース管理</value></data>
+  <data name="Area.KnowledgeBase.RecallTest" xml:space="preserve"><value>検索テスト</value></data>
+  <data name="Area.DynamicData.PageSettings" xml:space="preserve"><value>画面設定</value></data>
+  <data name="Area.DynamicData.TableSettings" xml:space="preserve"><value>データベーステーブル設定</value></data>
+  <data name="Function.Agents.TemplateManagement.Name" xml:space="preserve"><value>Agent テンプレート管理</value></data>
+  <data name="Function.Agents.TemplateManagement.Description" xml:space="preserve"><value>Agent テンプレートを管理します</value></data>
+  <data name="Function.Agents.CreateFromPromptCode.Name" xml:space="preserve"><value>PromptCode からエージェントを作成</value></data>
+  <data name="Function.Agents.CreateFromPromptCode.Description" xml:space="preserve"><value>範囲、タクティクス、完全指定の PromptCode からエージェントを作成します</value></data>
+  <data name="Function.Agents.SearchTemplate.Name" xml:space="preserve"><value>Agent テンプレートを検索して ID を返す</value></data>
+  <data name="Function.Agents.SearchTemplate.Description" xml:space="preserve"><value>名前または PromptCode で最適な AgentTemplate を検索し、選択可能な ID を返します</value></data>
+  <data name="Function.Agents.ManageChatGroup.Name" xml:space="preserve"><value>ChatGroup を管理</value></data>
+  <data name="Function.Agents.ManageChatGroup.Description" xml:space="preserve"><value>ChatGroup を管理します</value></data>
+  <data name="Function.Agents.StartChatGroup.Name" xml:space="preserve"><value>ChatGroup を開始</value></data>
+  <data name="Function.Agents.StartChatGroup.Description" xml:space="preserve"><value>ChatGroup を開始します</value></data>
+  <data name="Function.Agents.DeleteConversation.Name" xml:space="preserve"><value>会話を削除</value></data>
+  <data name="Function.Agents.DeleteConversation.Description" xml:space="preserve"><value>会話と関連するすべてのデータを削除します</value></data>
+  <data name="Function.ChangeNamespace.Change.Name" xml:space="preserve"><value>名前空間を変更</value></data>
+  <data name="Function.ChangeNamespace.Change.Description" xml:space="preserve"><value>すべての .cs と .cshtml ソースの名前空間を変更します</value></data>
+  <data name="Function.ChangeNamespace.Restore.Name" xml:space="preserve"><value>名前空間を復元</value></data>
+  <data name="Function.ChangeNamespace.Restore.Description" xml:space="preserve"><value>すべての .cs と .cshtml の名前空間を NCF の既定値へ戻します</value></data>
+  <data name="Function.ChangeNamespace.Download.Name" xml:space="preserve"><value>公式 NCF ソースをダウンロード</value></data>
+  <data name="Function.ChangeNamespace.Download.Description" xml:space="preserve"><value>名前空間処理用の公式 NCF ソースを取得します</value></data>
+  <data name="Function.Database.AgentPrompt.Name" xml:space="preserve"><value>AI Agent システムプロンプトを取得</value></data>
+  <data name="Function.Database.AgentPrompt.Description" xml:space="preserve"><value>AI Agent に設定されたシステムプロンプトとロール定義を取得します</value></data>
+  <data name="Function.Database.Backup.Name" xml:space="preserve"><value>データベースをバックアップ</value></data>
+  <data name="Function.Database.Backup.Description" xml:space="preserve"><value>現在のデータベースを非公開の指定パスへバックアップします</value></data>
+  <data name="Function.Database.CheckBackup.Name" xml:space="preserve"><value>自動バックアップ状態を確認</value></data>
+  <data name="Function.Database.CheckBackup.Description" xml:space="preserve"><value>自動バックアップ間隔が設定され、0 より大きいか確認します</value></data>
+  <data name="Function.Database.CheckUpdate.Name" xml:space="preserve"><value>データベース更新を確認</value></data>
+  <data name="Function.Database.CheckUpdate.Description" xml:space="preserve"><value>EF Core Migration で未適用の更新を検出し、必要なら Merge EF Core を実行します</value></data>
+  <data name="Function.Database.ConfigTypes.Name" xml:space="preserve"><value>データベース設定タイプを表示</value></data>
+  <data name="Function.Database.ConfigTypes.Description" xml:space="preserve"><value>IDatabaseConfiguration を実装する設定タイプを表示します</value></data>
+  <data name="Function.Database.ExportSql.Name" xml:space="preserve"><value>現在のデータベース SQL を出力</value></data>
+  <data name="Function.Database.ExportSql.Description" xml:space="preserve"><value>現在のサイトが使用する全テーブルの SQL を出力します</value></data>
+  <data name="Function.Database.Merge.Name" xml:space="preserve"><value>Merge EF Core</value></data>
+  <data name="Function.Database.Merge.Description" xml:space="preserve"><value>EF Core Code First でデータベースを現在の実行バージョンに更新します</value></data>
+  <data name="Function.Database.QueryRecords.Name" xml:space="preserve"><value>データベースレコードを検索</value></data>
+  <data name="Function.Database.QueryRecords.Description" xml:space="preserve"><value>条件フィルターとフィールド選択を使用して指定テーブルを検索します</value></data>
+  <data name="Function.Database.QueryTemplates.Name" xml:space="preserve"><value>一般的な検索テンプレートを取得</value></data>
+  <data name="Function.Database.QueryTemplates.Description" xml:space="preserve"><value>定義済みのデータベース検索テンプレートと例を取得します</value></data>
+  <data name="Function.Database.Schema.Name" xml:space="preserve"><value>データベース構造を検索</value></data>
+  <data name="Function.Database.Schema.Description" xml:space="preserve"><value>利用可能なモジュール、テーブル、フィールドを取得します</value></data>
+  <data name="Function.Database.Settings.Name" xml:space="preserve"><value>データベース設定</value></data>
+  <data name="Function.Database.Settings.Description" xml:space="preserve"><value>バックアップ間隔、パスなどを設定します</value></data>
+  <data name="Function.Database.Statistics.Name" xml:space="preserve"><value>データベース統計を取得</value></data>
+  <data name="Function.Database.Statistics.Description" xml:space="preserve"><value>行数やデータサイズなどのテーブル統計を取得します</value></data>
+  <data name="Function.FirmwareUpdate.Settings.Name" xml:space="preserve"><value>ミラー設定</value></data>
+  <data name="Function.FirmwareUpdate.Settings.Description" xml:space="preserve"><value>GitHub からの自動同期を切り替え、1～24 時間の確認間隔を設定します</value></data>
+  <data name="Function.FirmwareUpdate.Sync.Name" xml:space="preserve"><value>今すぐ同期</value></data>
+  <data name="Function.FirmwareUpdate.Sync.Description" xml:space="preserve"><value>最新 Release を取得し、NcfPackages と latest-release.json を更新します</value></data>
+  <data name="Function.MCP.Execute.Name" xml:space="preserve"><value>MCP を実行</value></data>
+  <data name="Function.MCP.Execute.Description" xml:space="preserve"><value>MCP を実行します。モジュール選択時の既定アドレスは http://localhost:5000/{Module Name}/sse です</value></data>
+  <data name="Function.PromptRange.ViewCodes.Name" xml:space="preserve"><value>PromptCode 一覧を表示</value></data>
+  <data name="Function.PromptRange.ViewCodes.Description" xml:space="preserve"><value>全範囲とタクティクスの PromptCode を表示し、AgentsManager での作成に利用します</value></data>
+  <data name="Function.Sample.Name" xml:space="preserve"><value>サンプル関数</value></data>
+  <data name="Function.Sample.Description" xml:space="preserve"><value>FunctionRender のパラメーターと戻り値を示します</value></data>
+  <data name="Function.SenMapic.Crawl.Name" xml:space="preserve"><value>Web クローラー</value></data>
+  <data name="Function.SenMapic.Crawl.Description" xml:space="preserve"><value>Web ページの情報を取得します</value></data>
+  <data name="Function.SystemManager.UpdateCloudAccount.Name" xml:space="preserve"><value>NeuChar クラウドアカウントを更新</value></data>
+  <data name="Function.SystemManager.UpdateCloudAccount.Description" xml:space="preserve"><value>開発者ページの AppKey と Secret でクラウドアカウントを連携します</value></data>
+  <data name="Function.SystemManager.ViewTempLog.Name" xml:space="preserve"><value>RequestTempId 一時ログを表示</value></data>
+  <data name="Function.SystemManager.ViewTempLog.Description" xml:space="preserve"><value>AppService が返した RequestTempId で有効期間内のログを検索します</value></data>
+  <data name="Function.Terminal.Command.Name" xml:space="preserve"><value>コマンドプロンプト</value></data>
+  <data name="Function.Terminal.Command.Description" xml:space="preserve"><value>サーバー上でターミナルコマンドを実行し、結果を返します</value></data>
+  <data name="Function.XncfBuilder.AddMigration.Name" xml:space="preserve"><value>Add-Migration コマンド</value></data>
+  <data name="Function.XncfBuilder.AddMigration.Description" xml:space="preserve"><value>複数データベースへ add-migration を視覚的に実行します。30～60 秒かかる場合があります</value></data>
+  <data name="Function.XncfBuilder.Generate.Name" xml:space="preserve"><value>XNCF を生成</value></data>
+  <data name="Function.XncfBuilder.Generate.Description" xml:space="preserve"><value>設定から XNCF モジュールを生成します</value></data>
+  <data name="Function.XncfBuilder.GenerateEntity.Name" xml:space="preserve"><value>[AI] データベースエンティティを生成</value></data>
+  <data name="Function.XncfBuilder.GenerateEntity.Description" xml:space="preserve"><value>DDD 準拠のエンティティとメソッドを生成します。開発環境でのみ使用し、先にバックアップしてください</value></data>
+  <data name="Function.XncfBuilder.GenerateInterface.Name" xml:space="preserve"><value>AppService インターフェイスを生成</value></data>
+  <data name="Function.XncfBuilder.GenerateInterface.Description" xml:space="preserve"><value>指定モジュールの AppService インターフェイスコードを生成します</value></data>
+  <data name="Function.XncfBuilder.InitPrompt.Name" xml:space="preserve"><value>プロンプトを初期化</value></data>
+  <data name="Function.XncfBuilder.InitPrompt.Description" xml:space="preserve"><value>AI コード生成に必要な全プロンプトを初期化します</value></data>
+  <data name="Function.XncfManager.GetAllModules.Name" xml:space="preserve"><value>全 XNCF モジュール情報を取得</value></data>
+  <data name="Function.XncfManager.GetAllModules.Description" xml:space="preserve"><value>全 XNCF モジュールの名前、説明、状態を取得します</value></data>
+  <data name="Function.XncfManager.InstallAndEnable.Name" xml:space="preserve"><value>XNCF モジュールをインストールして有効化</value></data>
+  <data name="Function.XncfManager.InstallAndEnable.Description" xml:space="preserve"><value>指定モジュールをインストールし、有効状態へ切り替えます</value></data>
+  <data name="Function.XncfManager.InstallAndEnableAi.Name" xml:space="preserve"><value>XNCF をインストールして有効化（AI 対応）</value></data>
+  <data name="Function.XncfManager.InstallAndEnableAi.Description" xml:space="preserve"><value>SelectionList なしで UID または名前から直接インストールして有効化します</value></data>
+  <data name="Function.XncfManager.ViewFunctionStatus.Name" xml:space="preserve"><value>XNCF Function 状態を表示</value></data>
+  <data name="Function.XncfManager.ViewFunctionStatus.Description" xml:space="preserve"><value>現在の XNCF モジュールの Function 読み込み状態を表示します</value></data>
+  <data name="Parameter.Sample.Name" xml:space="preserve"><value>名前||二重縦線の前はパラメーター名、後ろは説明です</value></data>
+  <data name="Parameter.Sample.Number1" xml:space="preserve"><value>数値||数値 1</value></data>
+  <data name="Parameter.Sample.Number2" xml:space="preserve"><value>数値||数値 2</value></data>
+  <data name="Parameter.Sample.Operator" xml:space="preserve"><value>演算子||</value></data>
+  <data name="Parameter.Sample.OperatorRestricted" xml:space="preserve"><value>演算子||次から選択してください：+、-、×、÷</value></data>
+  <data name="Parameter.Sample.Power" xml:space="preserve"><value>べき乗||</value></data>
+  <data name="Parameter.Sample.PowerRestricted" xml:space="preserve"><value>べき乗||指定する場合は 2 または 3 のみ選択できます</value></data>
+  <data name="Parameter.Operator.Add" xml:space="preserve"><value>加算</value></data>
+  <data name="Parameter.Operator.Add.Help" xml:space="preserve"><value>数値 1 + 数値 2</value></data>
+  <data name="Parameter.Operator.Subtract" xml:space="preserve"><value>減算</value></data>
+  <data name="Parameter.Operator.Subtract.Help" xml:space="preserve"><value>数値 1 - 数値 2</value></data>
+  <data name="Parameter.Operator.Multiply" xml:space="preserve"><value>乗算</value></data>
+  <data name="Parameter.Operator.Multiply.Help" xml:space="preserve"><value>数値 1 × 数値 2</value></data>
+  <data name="Parameter.Operator.Divide" xml:space="preserve"><value>除算</value></data>
+  <data name="Parameter.Operator.Divide.Help" xml:space="preserve"><value>数値 1 ÷ 数値 2</value></data>
+  <data name="Parameter.Power.Square" xml:space="preserve"><value>2 乗</value></data>
+  <data name="Parameter.Power.Square.Help" xml:space="preserve"><value>上の結果を 2 乗します</value></data>
+  <data name="Parameter.Power.Cube" xml:space="preserve"><value>3 乗</value></data>
+  <data name="Parameter.Power.Cube.Help" xml:space="preserve"><value>上の結果を 3 乗します</value></data>
+  <data name="Parameter.MCP.ServerSelection" xml:space="preserve"><value>MCP サーバー||登録済みサーバーを選択するか、カスタムアドレスを入力します</value></data>
+  <data name="Parameter.MCP.Endpoint" xml:space="preserve"><value>MCP サーバーアドレス||手動入力時は必須です。既定値：http://localhost:5000/mcp-senparc-xncf-mcp/sse</value></data>
+  <data name="Parameter.MCP.Request" xml:space="preserve"><value>リクエスト||MCP サーバーへ送信するリクエスト</value></data>
+  <data name="Parameter.MCP.Manual" xml:space="preserve"><value>手動入力</value></data>
+  <data name="Parameter.MCP.Manual.Help" xml:space="preserve"><value>MCP サーバーアドレスを手動で入力します</value></data>
+  <data name="Parameter.MCP.Server.Display" xml:space="preserve"><value>{0}（{1}）</value></data>
+  <data name="Parameter.MCP.Server.Help" xml:space="preserve"><value>サーバー：{0}、ルート：{1}</value></data>
+  <data name="Parameter.SenMapic.Url" xml:space="preserve"><value>URL||クロールする URL を入力してください</value></data>
+  <data name="Parameter.SenMapic.Depth" xml:space="preserve"><value>深さ||最大クロール深度を入力してください</value></data>
+  <data name="Parameter.SenMapic.PageCount" xml:space="preserve"><value>ページ数||クロールする最大ページ数を入力してください</value></data>
+  <data name="Parameter.Terminal.Command" xml:space="preserve"><value>&gt; コマンド||コマンドライン（例：dir /?）</value></data>
+  <data name="Parameter.SystemManager.AppKey" xml:space="preserve"><value>NeuChar AppKey||https://www.neuchar.com/Developer/Developer で AppKey を確認できます</value></data>
+  <data name="Parameter.SystemManager.AppSecret" xml:space="preserve"><value>NeuChar AppSecret||https://www.neuchar.com/Developer/Developer で Secret を確認できます。外部に漏らさないでください。</value></data>
+  <data name="Parameter.SystemManager.RequestTempId" xml:space="preserve"><value>RequestTempId||AppService が返す requestTempId（例：RequestTempId-639189862069965960-fc2ab5f5）</value></data>
+  <data name="Parameter.XncfManager.ShowFunctions.Module" xml:space="preserve"><value>XNCF モジュール||指定モジュールの Function 状態を表示します</value></data>
+  <data name="Parameter.XncfManager.Install.Module" xml:space="preserve"><value>XNCF モジュール||インストールして有効化するモジュールを選択します</value></data>
+  <data name="Parameter.AI.Model" xml:space="preserve"><value>モデルを選択||</value></data>
+  <data name="Parameter.AI.Prompt" xml:space="preserve"><value>プロンプト||</value></data>
+  <data name="Parameter.AI.Source.Database" xml:space="preserve"><value>AIKernel モジュールデータベース</value></data>
+  <data name="Parameter.AI.Source" xml:space="preserve"><value>ソース：{0}</value></data>
+  <data name="Parameter.PromptRange.FilterRange" xml:space="preserve"><value>レンジ名を絞り込み||レンジ名のキーワードを入力します。空欄ではすべて表示します</value></data>
+  <data name="Parameter.ChangeNamespace.Path" xml:space="preserve"><value>パス||ローカル物理パス（例：E:\Senparc\Ncf\）</value></data>
+  <data name="Parameter.ChangeNamespace.NewNamespace" xml:space="preserve"><value>新しい名前空間||ルートはピリオドで終わる必要があり、[Senparc.Ncf.] を置換します</value></data>
+  <data name="Parameter.ChangeNamespace.Source" xml:space="preserve"><value>ソース||通常 GitHub が最も早く更新されます。Gitee は中国本土で高速ですが遅れる場合があるため、ダウンロード前に GitHub の最新版を確認してください。</value></data>
+  <data name="Parameter.ChangeNamespace.CurrentNamespace" xml:space="preserve"><value>現在のカスタム名前空間||通常は [My.Namespace.] のようにピリオドで終わり、[Senparc.Ncf.] または [Senparc.] に置換されます</value></data>
+  <data name="Parameter.FirmwareUpdate.AutoMirror" xml:space="preserve"><value>自動ミラーを有効化||GitHub から NCF パッケージを ~/wwwroot/NcfPackages に同期します</value></data>
+  <data name="Parameter.FirmwareUpdate.Interval" xml:space="preserve"><value>確認間隔（時間）||1～24 時間</value></data>
+  <data name="Parameter.FirmwareUpdate.Interval.Option" xml:space="preserve"><value>{0} 時間</value></data>
+  <data name="Parameter.FirmwareUpdate.Interval.Help" xml:space="preserve"><value>{0} 時間ごとに確認します</value></data>
+  <data name="Parameter.DatabaseBackup.Path" xml:space="preserve"><value>パス||ファイル名を含むローカル物理パス（例：E:\Senparc\Database-Backup\NCF.bak）。Web プロセスのアクセス権を確認してください</value></data>
+  <data name="Parameter.DatabaseBackup.Options" xml:space="preserve"><value>オプション||データベースのバックアップオプション</value></data>
+  <data name="Parameter.DatabaseBackup.NoOverwrite" xml:space="preserve"><value>既存ファイルを上書きしない</value></data>
+  <data name="Parameter.DatabaseBackup.NoOverwrite.Help" xml:space="preserve"><value>保存先ファイルが存在する場合はバックアップしません</value></data>
+  <data name="Parameter.DatabaseBackup.Verify" xml:space="preserve"><value>バックアップ後に .bak ファイルの更新を確認</value></data>
+  <data name="Parameter.DatabaseBackup.Verify.Help" xml:space="preserve"><value>ファイルの更新のみ確認し、内部内容は検証しません</value></data>
+  <data name="Parameter.Application.FilePath" xml:space="preserve"><value>カスタムパス||ファイル名</value></data>
+  <data name="Function.Application.Launch.Name" xml:space="preserve"><value>アプリケーション</value></data>
+  <data name="Function.Application.Launch.Description" xml:space="preserve"><value>外部アプリケーションを起動します</value></data>
+  <data name="Function.Application.Launch.StartLog" xml:space="preserve"><value>LaunchApp を開始します</value></data>
+  <data name="Common.OperationSucceeded" xml:space="preserve"><value>操作に成功しました。</value></data>
+  <data name="MCP.Endpoint.CountAll" xml:space="preserve"><value>MCP エンドポイントを {0} 件取得しました</value></data>
+  <data name="MCP.Endpoint.CountEnabled" xml:space="preserve"><value>有効な MCP エンドポイントを {0} 件取得しました</value></data>
+  <data name="MCP.Endpoint.NameRequired" xml:space="preserve"><value>エンドポイント名は必須です。</value></data>
+  <data name="MCP.Endpoint.AddressRequired" xml:space="preserve"><value>エンドポイントアドレスは必須です。</value></data>
+  <data name="MCP.Endpoint.NameExists" xml:space="preserve"><value>エンドポイント名「{0}」は既に存在します。</value></data>
+  <data name="MCP.Endpoint.IdNotFound" xml:space="preserve"><value>エンドポイント ID {0} が見つかりません。</value></data>
+  <data name="MCP.Endpoint.Updated" xml:space="preserve"><value>✓ MCP エンドポイント「{0}」を更新しました。</value></data>
+  <data name="MCP.Endpoint.Created" xml:space="preserve"><value>✓ MCP エンドポイント「{0}」を作成しました。</value></data>
+  <data name="MCP.Endpoint.InvalidId" xml:space="preserve"><value>エンドポイント ID が無効です。</value></data>
+  <data name="MCP.Endpoint.Deleted" xml:space="preserve"><value>✓ MCP エンドポイント「{0}」を削除しました。</value></data>
+  <data name="MCP.Endpoint.TestSucceeded" xml:space="preserve"><value>✓ エンドポイント接続テストに成功しました。</value></data>
+  <data name="MCP.Endpoint.TestFailed" xml:space="preserve"><value>✗ エンドポイント接続テストに失敗しました。</value></data>
+  <data name="Parameter.MCP.Endpoint.IdCreate" xml:space="preserve"><value>エンドポイント ID||0 の場合は新しいエンドポイントを作成します</value></data>
+  <data name="Parameter.MCP.Endpoint.Name" xml:space="preserve"><value>エンドポイント名||MCP エンドポイントの名前</value></data>
+  <data name="Parameter.MCP.Endpoint.Address" xml:space="preserve"><value>エンドポイントアドレス||MCP エンドポイントの URI</value></data>
+  <data name="Parameter.MCP.Endpoint.Type" xml:space="preserve"><value>エンドポイント種別||例：http、sse、stdio</value></data>
+  <data name="Parameter.MCP.Endpoint.ProtocolVersion" xml:space="preserve"><value>プロトコルバージョン||MCP プロトコルのバージョン</value></data>
+  <data name="Parameter.MCP.Endpoint.Description" xml:space="preserve"><value>説明||エンドポイントの説明</value></data>
+  <data name="Parameter.MCP.Endpoint.Enabled" xml:space="preserve"><value>有効||このエンドポイントを有効にするかどうか</value></data>
+  <data name="Parameter.MCP.Endpoint.AuthConfig" xml:space="preserve"><value>認証設定||認証に関する JSON 設定</value></data>
+  <data name="Parameter.MCP.Endpoint.ExtraConfig" xml:space="preserve"><value>追加設定||その他のカスタム JSON 設定</value></data>
+  <data name="Parameter.MCP.Endpoint.IdDelete" xml:space="preserve"><value>エンドポイント ID||削除する MCP エンドポイントの ID</value></data>
+  <data name="Parameter.MCP.Endpoint.IdTest" xml:space="preserve"><value>エンドポイント ID||テストする MCP エンドポイントの ID</value></data>
+  <data name="Common.Error" xml:space="preserve"><value>エラー：{0}</value></data>
+  <data name="Database.Config.Current" xml:space="preserve"><value>現在の DatabaseConfiguration：{0}、データベース種別：{1}</value></data>
+  <data name="Database.Config.SaveLogName" xml:space="preserve"><value>データベース設定</value></data>
+  <data name="Database.Config.Saved" xml:space="preserve"><value>設定を保存しました。</value></data>
+  <data name="Database.Config.SavedValues" xml:space="preserve"><value>間隔（分）：{0}、パス：{1}</value></data>
+  <data name="Database.ModuleAndTableRequired" xml:space="preserve"><value>モジュール名とテーブル名は必須です。</value></data>
+  <data name="Database.ModuleNotFound" xml:space="preserve"><value>モジュール「{0}」が見つかりません。利用可能：{1}</value></data>
+  <data name="Database.TableNotFoundAvailable" xml:space="preserve"><value>モジュール「{1}」にテーブル「{0}」がありません。利用可能なエンティティ：{2}</value></data>
+  <data name="Database.TableNotFound" xml:space="preserve"><value>テーブルが見つかりません：{0}.{1}</value></data>
+  <data name="Database.Query.Log" xml:space="preserve"><value>{0}.{1} を照会中（入力：{2}.{3}）</value></data>
+  <data name="Database.Query.Error" xml:space="preserve"><value>レコード照会エラー：{0}</value></data>
+  <data name="Database.Statistics.Log" xml:space="preserve"><value>{0}.{1} の統計を取得中（入力：{2}.{3}）</value></data>
+  <data name="Database.Statistics.Error" xml:space="preserve"><value>統計取得エラー：{0}</value></data>
+  <data name="Database.Schema.TableDetailLog" xml:space="preserve"><value>テーブル詳細を取得：{0}.{1}</value></data>
+  <data name="Database.Schema.SuggestedModules" xml:space="preserve"><value>&#10;候補モジュール：{0}</value></data>
+  <data name="Database.Schema.AllModules" xml:space="preserve"><value>&#10;利用可能な全モジュール：{0}</value></data>
+  <data name="Database.Schema.ModuleNotFoundWithHint" xml:space="preserve"><value>モジュール「{0}」が見つかりません。{1}</value></data>
+  <data name="Database.Schema.NoAvailableTables" xml:space="preserve"><value>（利用可能なテーブルなし）</value></data>
+  <data name="Database.Schema.EntityNotFound" xml:space="preserve"><value>モジュール「{0}」にエンティティ「{1}」がありません。&#10;利用可能：{2}</value></data>
+  <data name="Database.Schema.ModuleTablesLog" xml:space="preserve"><value>モジュール {0} の全テーブルを取得</value></data>
+  <data name="Database.Schema.ModuleHasNoTables" xml:space="preserve"><value>モジュール「{0}」に照会可能なテーブルはありません。</value></data>
+  <data name="Database.Schema.OverviewLog" xml:space="preserve"><value>照会可能な全モジュールとテーブルの概要を取得</value></data>
+  <data name="Database.Schema.NoModules" xml:space="preserve"><value>照会可能なデータベースモジュールがありません。</value></data>
+  <data name="Database.Schema.Error" xml:space="preserve"><value>データベーススキーマ照会エラー：{0}</value></data>
+  <data name="Validation.Database.ModuleRequired" xml:space="preserve"><value>モジュール名は必須です。</value></data>
+  <data name="Validation.Database.TableRequired" xml:space="preserve"><value>テーブル名は必須です。</value></data>
+  <data name="Parameter.Database.Module.Query" xml:space="preserve"><value>モジュール名||必須。例：KnowledgeBase、AIKernel</value></data>
+  <data name="Parameter.Database.Table.Query" xml:space="preserve"><value>テーブル名||必須。照会するテーブル名</value></data>
+  <data name="Parameter.Database.Filter" xml:space="preserve"><value>フィルター||任意。SQL WHERE 条件（例：Name = "test"、Id &gt; 10）</value></data>
+  <data name="Parameter.Database.PageNumber" xml:space="preserve"><value>ページ番号||任意。既定 1、最小 1</value></data>
+  <data name="Parameter.Database.PageSize" xml:space="preserve"><value>ページサイズ||任意。既定 20、範囲 1～1000</value></data>
+  <data name="Parameter.Database.Module.Statistics" xml:space="preserve"><value>モジュール名||必須。統計を照会するモジュール</value></data>
+  <data name="Parameter.Database.Table.Statistics" xml:space="preserve"><value>テーブル名||必須。統計を照会するテーブル</value></data>
+  <data name="Parameter.Database.Schema.Module" xml:space="preserve"><value>モジュール名||任意。指定モジュールのテーブルのみ返します</value></data>
+  <data name="Parameter.Database.Schema.Table" xml:space="preserve"><value>テーブル名||任意。モジュール名と併用して詳細を取得します</value></data>
+  <data name="Parameter.Database.Config.Cycle" xml:space="preserve"><value>自動バックアップ間隔（分）||0 で無効化</value></data>
+  <data name="Parameter.Database.Config.Path" xml:space="preserve"><value>バックアップパス||ローカル物理パス（例：E:\Senparc\Ncf\NCF.bak）</value></data>
+  <data name="Parameter.MCP.Tool.Input" xml:space="preserve"><value>入力文字列</value></data>
+  <data name="MCP.Tool.Echo.Description" xml:space="preserve"><value>文字列を処理して返します</value></data>
+  <data name="MCP.Tool.Echo.Result" xml:space="preserve"><value>こんにちは、{0}</value></data>
+  <data name="MCP.Tool.Now.Description" xml:space="preserve"><value>現在時刻を取得します</value></data>
+  <data name="MCP.Tool.AddHours.Description" xml:space="preserve"><value>現在時刻に指定時間を加算します</value></data>
+  <data name="MCP.Tool.Calculator.Description" xml:space="preserve"><value>加減乗除を実行します</value></data>
+  <data name="Parameter.MCP.Tool.Operator" xml:space="preserve"><value>Number1 と Number2 の演算子：+、-、×、÷</value></data>
+  <data name="MCP.Agent.SystemPrompt" xml:space="preserve"><value>あなたはユーザーの作業を支援する親切なアシスタントです。</value></data>
+  <data name="MCP.BobLab.Instructions" xml:space="preserve"><value>質問に答えるアシスタントです。回答前に質問全文を繰り返し、Markdown で日本語と英訳を出力し、#start と #end で囲んでください。</value></data>
+  <data name="MCP.BobLab.Footer" xml:space="preserve"><value>[Bob's Lab] - {0} / {1}、経過：{2} ミリ秒</value></data>
+  <data name="MCP.Calculate.DivideByZero" xml:space="preserve"><value>除数を 0 にできません。</value></data>
+  <data name="MCP.Calculate.UnknownOperator" xml:space="preserve"><value>不明な演算子：{0}</value></data>
+  <data name="MCP.Calculate.OperationLog" xml:space="preserve"><value>計算：{0} {1} {2} = {3}</value></data>
+  <data name="MCP.Calculate.PowerLog" xml:space="preserve"><value>{0} 乗：{1}{2} = {3}</value></data>
+  <data name="MCP.Calculate.Result" xml:space="preserve"><value>【{0}】計算結果：{1}。詳細はログを参照してください。</value></data>
+  <data name="Parameter.Agents.Template.Name" xml:space="preserve"><value>名前||Agent テンプレート名</value></data>
+  <data name="Parameter.Agents.Template.Id" xml:space="preserve"><value>ID||0 で新規作成</value></data>
+  <data name="Parameter.Agents.Template.SystemMessage" xml:space="preserve"><value>SystemMessage||システムメッセージの PromptRangeCode。検索、選択、手動入力に対応</value></data>
+  <data name="Parameter.Agents.Template.Description" xml:space="preserve"><value>説明||テンプレートの説明。モデルの動作には影響しません</value></data>
+  <data name="Parameter.Agents.Template.Platform" xml:space="preserve"><value>外部プラットフォーム||メッセージの公開先</value></data>
+  <data name="Parameter.Agents.Template.PlatformParameter" xml:space="preserve"><value>プラットフォーム引数||キーなどの接続引数</value></data>
+  <data name="Parameter.Agents.Template.FunctionCalls" xml:space="preserve"><value>Function Calls||カンマ区切りの Function Call 名</value></data>
+  <data name="Parameter.Agents.Create.Name" xml:space="preserve"><value>Agent 名||新しい Agent の名前</value></data>
+  <data name="Parameter.Agents.Create.ManualPromptCode" xml:space="preserve"><value>PromptCode を手動入力||レンジ名、タクティック接頭辞、完全版に対応。SystemMessage の手動入力時は必須</value></data>
+  <data name="Parameter.Agents.Create.Description" xml:space="preserve"><value>説明||新しい Agent の説明（任意）</value></data>
+  <data name="Parameter.Agents.Create.FunctionCalls" xml:space="preserve"><value>Function Calls||カンマ区切りの Function Call 名（任意）</value></data>
+  <data name="Parameter.Agents.Search.Query" xml:space="preserve"><value>検索語||名前、PromptCode、キーワード。複数はカンマ、セミコロン、改行で区切ります</value></data>
+  <data name="Parameter.Agents.Search.TopN" xml:space="preserve"><value>最大件数||検索語ごとの候補数。既定 5</value></data>
+  <data name="Parameter.Agents.Chat.SelectManage" xml:space="preserve"><value>グループを選択||管理するグループを選択または新規作成</value></data>
+  <data name="Agents.Chat.NewGroup" xml:space="preserve"><value>新しいグループ</value></data>
+  <data name="Agents.Chat.NewGroup.Help" xml:space="preserve"><value>グループを新規作成</value></data>
+  <data name="Parameter.Agents.Chat.Name" xml:space="preserve"><value>グループ名||グループの名前</value></data>
+  <data name="Parameter.Agents.Chat.Members" xml:space="preserve"><value>メンバー||任意。手動入力も使用できます</value></data>
+  <data name="Parameter.Agents.Chat.MembersManual" xml:space="preserve"><value>メンバー（手動）||名前、ID、PromptCode。複数はカンマ、セミコロン、改行で区切ります</value></data>
+  <data name="Parameter.Agents.Chat.Admin" xml:space="preserve"><value>グループ所有者||最高評価のホスト Agent を自動使用。手動入力は互換用です</value></data>
+  <data name="Parameter.Agents.Chat.AdminManual" xml:space="preserve"><value>所有者（手動）||名前、ID、PromptCode（任意）</value></data>
+  <data name="Parameter.Agents.Chat.Contact" xml:space="preserve"><value>連絡 Agent||最高評価のホスト Agent を自動使用。手動入力は互換用です</value></data>
+  <data name="Parameter.Agents.Chat.ContactManual" xml:space="preserve"><value>連絡 Agent（手動）||名前、ID、PromptCode（任意）</value></data>
+  <data name="Parameter.Agents.Chat.Description" xml:space="preserve"><value>説明||グループの説明</value></data>
+  <data name="Parameter.Agents.Chat.SelectRun" xml:space="preserve"><value>グループを選択||実行するグループを選択</value></data>
+  <data name="Parameter.Agents.Chat.AIModel" xml:space="preserve"><value>AI モデル||このタスクに使う外部 AI モデル</value></data>
+  <data name="Parameter.Agents.Chat.Individuation" xml:space="preserve"><value>パーソナライズ Agent||</value></data>
+  <data name="Common.Yes" xml:space="preserve"><value>はい</value></data>
+  <data name="Agents.Chat.Individuation.Help" xml:space="preserve"><value>個別の AI パラメーターで Agent を実行</value></data>
+  <data name="Parameter.Agents.Chat.Command" xml:space="preserve"><value>何をお手伝いしますか||Agents に依頼する作業を説明してください</value></data>
+  <data name="Parameter.Agents.Chat.SelectDelete" xml:space="preserve"><value>削除する会話||会話とすべてのメッセージ、タスクを削除</value></data>
+  <data name="Parameter.Agents.Chat.ConfirmDelete" xml:space="preserve"><value>削除を確認||選択した会話と全データの削除を確認</value></data>
+  <data name="Agents.Chat.CreatedAt" xml:space="preserve"><value>{0}（作成日時：{1:g}）</value></data>
+  <data name="Agents.Plugin.Crawl.Description" xml:space="preserve"><value>Web ページをクロールして関連内容を返します</value></data>
+  <data name="Agents.Plugin.Crawl.Url" xml:space="preserve"><value>クロール URL</value></data>
+  <data name="Agents.Plugin.Crawl.Depth" xml:space="preserve"><value>最大クロール深度</value></data>
+  <data name="Agents.Plugin.Crawl.PageCount" xml:space="preserve"><value>最大ページ数</value></data>
+  <data name="Agents.Plugin.Crawl.Question" xml:space="preserve"><value>質問</value></data>
+  <data name="Agents.Plugin.TextLength.Description" xml:space="preserve"><value>テキストの文字数を取得</value></data>
+  <data name="Agents.Plugin.OriginalText" xml:space="preserve"><value>原文</value></data>
+  <data name="Agents.Plugin.Translate.Description" xml:space="preserve"><value>テキストを翻訳</value></data>
+  <data name="Agents.Plugin.TargetLanguage" xml:space="preserve"><value>対象言語</value></data>
+  <data name="Agents.Plugin.Translate.Instructions" xml:space="preserve"><value>あなたは {0} に堪能なプロの翻訳者です。ユーザーの文章を正確に翻訳し、訳文のみ出力してください。</value></data>
+  <data name="Common.Use" xml:space="preserve"><value>使用</value></data>
+  <data name="Parameter.XncfBuilder.SolutionPath" xml:space="preserve"><value>ソリューション（.sln）パス||NCF ソリューションの完全な物理パス。モジュールは同じ階層に生成されます</value></data>
+  <data name="Parameter.XncfBuilder.SolutionOptions" xml:space="preserve"><value>ソリューション設定||</value></data>
+  <data name="Parameter.XncfBuilder.TemplatePackage" xml:space="preserve"><value>テンプレートをインストール||再インストールは約 30～40 秒。既存なら「インストール済み」を選択</value></data>
+  <data name="Parameter.XncfBuilder.Framework" xml:space="preserve"><value>ターゲットフレームワーク||プロジェクトの TFM</value></data>
+  <data name="Parameter.XncfBuilder.OtherFramework" xml:space="preserve"><value>カスタムフレームワーク||入力すると選択値を上書きします</value></data>
+  <data name="Parameter.XncfBuilder.Organization" xml:space="preserve"><value>組織名||モジュールの名前空間と名前の接頭辞</value></data>
+  <data name="Parameter.XncfBuilder.ModuleName" xml:space="preserve"><value>モジュール名||クラス名にも使用。英字と数字のみで数字から開始できません</value></data>
+  <data name="Parameter.XncfBuilder.Version" xml:space="preserve"><value>バージョン||例：1.0.0、2.0.100-beta1</value></data>
+  <data name="Parameter.XncfBuilder.MenuName" xml:space="preserve"><value>メニュー名||例：NCF Builder</value></data>
+  <data name="Parameter.XncfBuilder.Icon" xml:space="preserve"><value>アイコン||Font Awesome（例：fa fa-star）</value></data>
+  <data name="Parameter.XncfBuilder.Description" xml:space="preserve"><value>説明||モジュールの説明</value></data>
+  <data name="Parameter.XncfBuilder.Features" xml:space="preserve"><value>機能設定||</value></data>
+  <data name="Parameter.XncfBuilder.InstallSample" xml:space="preserve"><value>サンプルをインストール||</value></data>
+  <data name="XncfBuilder.Option.Solution.Backup" xml:space="preserve"><value>.sln をバックアップ（推奨）</value></data>
+  <data name="XncfBuilder.Option.Solution.Backup.Help" xml:space="preserve"><value>上書き前に現在の .sln を保存します</value></data>
+  <data name="XncfBuilder.Option.Solution.New" xml:space="preserve"><value>新しい .sln を生成</value></data>
+  <data name="XncfBuilder.Option.Solution.New.Help" xml:space="preserve"><value>未選択では上書き。実行中のサービスが再起動する場合があります</value></data>
+  <data name="XncfBuilder.Option.Template.Online" xml:space="preserve"><value>オンラインで最新版を取得</value></data>
+  <data name="XncfBuilder.Option.Template.Online.Help" xml:space="preserve"><value>NuGet.org 等から取得するため時間がかかります</value></data>
+  <data name="XncfBuilder.Option.Template.Local" xml:space="preserve"><value>ローカルパッケージからインストール</value></data>
+  <data name="XncfBuilder.Option.Template.Local.Help" xml:space="preserve"><value>.sln と同じ階層の Template.*.nupkg を使用します</value></data>
+  <data name="XncfBuilder.Option.Template.Installed" xml:space="preserve"><value>インストール済み</value></data>
+  <data name="XncfBuilder.Option.Template.Installed.Help" xml:space="preserve"><value>ローカルにない場合は自動的にオンライン取得します</value></data>
+  <data name="XncfBuilder.Option.Framework.Net8" xml:space="preserve"><value>.NET 8.0 を使用</value></data>
+  <data name="XncfBuilder.Option.Feature.Function" xml:space="preserve"><value>Function 機能</value></data>
+  <data name="XncfBuilder.Option.Feature.Function.Help" xml:space="preserve"><value>Function モジュールを含めます</value></data>
+  <data name="XncfBuilder.Option.Feature.Database" xml:space="preserve"><value>データベース機能</value></data>
+  <data name="XncfBuilder.Option.Feature.Database.Help" xml:space="preserve"><value>データベースモジュールと空の DB を含めます</value></data>
+  <data name="XncfBuilder.Option.Feature.WebApi" xml:space="preserve"><value>Web API 機能</value></data>
+  <data name="XncfBuilder.Option.Feature.WebApi.Help" xml:space="preserve"><value>Web API モジュールを含めます</value></data>
+  <data name="XncfBuilder.Option.Feature.Web" xml:space="preserve"><value>Web（Area）ページ</value></data>
+  <data name="XncfBuilder.Option.Feature.Web.Help" xml:space="preserve"><value>Web ページモジュールを含めます</value></data>
+  <data name="XncfBuilder.Option.InstallSample.Help" xml:space="preserve"><value>DB サンプルをインストールし、DB と Web 機能を有効化します</value></data>
+  <data name="XncfBuilder.AI.DefaultModel" xml:space="preserve"><value>システム既定（AiPlatform：{0}、Endpoint：{1}）</value></data>
+  <data name="XncfBuilder.AI.DefaultModel.Help" xml:space="preserve"><value>システム既定の AI モデルを使用</value></data>
+  <data name="XncfBuilder.AI.DefaultModel.Unconfigured" xml:space="preserve"><value>システム既定（AiPlatform：{0}、Endpoint 未設定。appsettings.json を設定してください）</value></data>
+  <data name="Parameter.XncfBuilder.Entity.Requirement" xml:space="preserve"><value>エンティティ要件||必要なプロパティと型を含めて詳しく記述してください</value></data>
+  <data name="Parameter.XncfBuilder.Entity.Domain" xml:space="preserve"><value>ドメイン||エンティティの生成先</value></data>
+  <data name="Parameter.XncfBuilder.Entity.Actions" xml:space="preserve"><value>後続処理||生成後に実行する処理</value></data>
+  <data name="Parameter.XncfBuilder.Entity.UsePromptRange" xml:space="preserve"><value>PromptRange を使用||自動インストールと初期化。使用しない場合は XncfBuilderPlugin が必要です</value></data>
+  <data name="Parameter.XncfBuilder.Entity.AIModel" xml:space="preserve"><value>AI モデル||PromptRange を使わない場合のコード生成モデル</value></data>
+  <data name="Parameter.XncfBuilder.Prompt.Override" xml:space="preserve"><value>上書き||既存レンジを削除して公式版から再構築</value></data>
+  <data name="Parameter.XncfBuilder.Prompt.AIModel" xml:space="preserve"><value>AI モデル||新しいレンジの全タクティックで使用するモデル</value></data>
+  <data name="XncfBuilder.Option.Action.Dto" xml:space="preserve"><value>DTO を作成</value></data>
+  <data name="XncfBuilder.Option.Action.Dto.Help" xml:space="preserve"><value>DTO を作成（常に生成）</value></data>
+  <data name="XncfBuilder.Option.Action.Migration" xml:space="preserve"><value>DB マイグレーションを生成</value></data>
+  <data name="XncfBuilder.Option.Action.Migration.Help" xml:space="preserve"><value>EF Core Migration を生成。適用前に確認してください</value></data>
+  <data name="XncfBuilder.Option.Action.Repository" xml:space="preserve"><value>Repository を作成</value></data>
+  <data name="XncfBuilder.Option.Action.Repository.Help" xml:space="preserve"><value>エンティティ用 Repository を作成</value></data>
+  <data name="XncfBuilder.Option.Action.Service" xml:space="preserve"><value>Service を作成</value></data>
+  <data name="XncfBuilder.Option.Action.Service.Help" xml:space="preserve"><value>エンティティ用 Service を作成</value></data>
+  <data name="XncfBuilder.Option.Action.AppService" xml:space="preserve"><value>AppService を作成</value></data>
+  <data name="XncfBuilder.Option.Action.AppService.Help" xml:space="preserve"><value>エンティティ用 AppService を作成</value></data>
+  <data name="Parameter.XncfBuilder.Migration.DatabasePlantPath" xml:space="preserve"><value>DatabasePlant プロジェクトパス||移行ホストの物理パス。対象 XNCF を参照している必要があります</value></data>
+  <data name="Parameter.XncfBuilder.Migration.ProjectPath" xml:space="preserve"><value>XNCF プロジェクトパス||プロジェクトルートの完全な物理パス</value></data>
+  <data name="Parameter.XncfBuilder.Migration.CustomProjectPath" xml:space="preserve"><value>カスタム XNCF パス||「カスタムパス」選択時のみ使用</value></data>
+  <data name="Parameter.XncfBuilder.Migration.DatabaseTypes" xml:space="preserve"><value>データベース種別||移行を生成する DB 種別</value></data>
+  <data name="Parameter.XncfBuilder.Migration.DbContext" xml:space="preserve"><value>カスタム DbContext 名||DB 種別接尾辞は不要。[Default] で自動検出</value></data>
+  <data name="Parameter.XncfBuilder.Migration.Name" xml:space="preserve"><value>移行名||英字、数字、下線のみ（例：Add_Config）</value></data>
+  <data name="Parameter.XncfBuilder.Migration.UpdateVersion" xml:space="preserve"><value>バージョンを自動更新||Register.cs のバージョンを更新</value></data>
+  <data name="Parameter.XncfBuilder.Migration.Verbose" xml:space="preserve"><value>詳細ログ||add-migration の -v を使用</value></data>
+  <data name="XncfBuilder.Option.Version.None" xml:space="preserve"><value>更新しない</value></data>
+  <data name="XncfBuilder.Option.Version.Major" xml:space="preserve"><value>メジャー + 1</value></data>
+  <data name="XncfBuilder.Option.Version.Minor" xml:space="preserve"><value>マイナー + 1</value></data>
+  <data name="XncfBuilder.Option.Version.Patch" xml:space="preserve"><value>パッチ + 1</value></data>
+  <data name="XncfBuilder.Option.CustomPath" xml:space="preserve"><value>カスタムパス</value></data>
+  <data name="XncfBuilder.Validation.CustomProjectPathRequired" xml:space="preserve"><value>カスタム XNCF プロジェクトパスを入力してください。</value></data>
+  <data name="Parameter.XncfBuilder.Interface.TargetPath" xml:space="preserve"><value>対象プロジェクトパス||走査してインターフェイスを生成するプロジェクト</value></data>
+  <data name="Parameter.XncfBuilder.Interface.Namespace" xml:space="preserve"><value>名前空間接頭辞||生成クラスの名前空間接頭辞</value></data>
+  <data name="Parameter.XncfBuilder.Interface.ClassPattern" xml:space="preserve"><value>クラス名正規表現||クラス名を照合する正規表現</value></data>
+  <data name="Parameter.XncfBuilder.Interface.MethodPattern" xml:space="preserve"><value>メソッド名正規表現||メソッド名を照合する正規表現</value></data>
+  <data name="Parameter.XncfBuilder.Interface.DestinationPath" xml:space="preserve"><value>出力先プロジェクトパス||生成したインターフェイスコードの出力先</value></data>
+  <data name="XncfBuilder.MCP.ModuleDirectoryNotFound" xml:space="preserve"><value>モジュール {0} のディレクトリが見つかりません。Senparc.Xncf.XncfBuilder のような完全名を指定してください。</value></data>
+  <data name="XncfBuilder.MCP.ModuleFullName" xml:space="preserve"><value>完全なモジュール名（例：Senparc.Xncf.XncfBuilder）</value></data>
+  <data name="XncfBuilder.MCP.FilePath" xml:space="preserve"><value>モジュール内のパスとファイル名</value></data>
+  <data name="XncfBuilder.MCP.FileNotFound" xml:space="preserve"><value>ファイルが見つかりません：{0}</value></data>
+  <data name="XncfBuilder.MCP.FileContent" xml:space="preserve"><value>ファイルの全内容</value></data>
+  <data name="XncfBuilder.Plugin.CreateEntity" xml:space="preserve"><value>エンティティクラスファイルを作成</value></data>
+  <data name="XncfBuilder.Plugin.FilePath" xml:space="preserve"><value>ファイルパス</value></data>
+  <data name="XncfBuilder.Plugin.GeneratedContent" xml:space="preserve"><value>AI が生成したファイル内容</value></data>
+  <data name="XncfBuilder.Plugin.FileSaved" xml:space="preserve"><value>ファイルを保存しました：{0}</value></data>
+  <data name="XncfBuilder.Plugin.ReadDbContext" xml:space="preserve"><value>データベースコンテキストを読み取り更新</value></data>
+  <data name="XncfBuilder.Plugin.ProjectPath" xml:space="preserve"><value>プロジェクトパス</value></data>
+  <data name="XncfBuilder.Plugin.EntityName" xml:space="preserve"><value>新しいエンティティ名</value></data>
+  <data name="XncfBuilder.Plugin.PluralEntityName" xml:space="preserve"><value>新しいエンティティ名の複数形</value></data>
+  <data name="Area.Extensions" xml:space="preserve"><value>拡張モジュール</value></data>
+  <data name="Page.AutoGeneratedModule" xml:space="preserve"><value>このモジュールは自動生成されました</value></data>
+  <data name="Page.InstalledAt" xml:space="preserve"><value>インストール日時：</value></data>
+  <data name="Page.CurrentDatabase" xml:space="preserve"><value>現在のデータベース種別：</value></data>
+  <data name="Page.Brighten" xml:space="preserve"><value>明るく</value></data>
+  <data name="Page.Darken" xml:space="preserve"><value>暗く</value></data>
+  <data name="Page.Random" xml:space="preserve"><value>ランダム</value></data>
+</root>

@@ -33,8 +33,8 @@ namespace Senparc.Xncf.AIAgentsHub
         public string HomeUrl => "/Admin/AIAgentsHub/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-                         new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
-			 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/AIAgentsHub/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
+                         new AreaPageMenuItem(GetAreaHomeUrl(), NcfBuiltInResource.Get("Area.Home", "首页"),"fa fa-laptop"),
+			 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/AIAgentsHub/DatabaseSample"), NcfBuiltInResource.Get("Area.DatabaseSample", "数据库操作示例"),"fa fa-bookmark-o")
 			 		};
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)

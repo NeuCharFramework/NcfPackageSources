@@ -41,7 +41,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
             if (string.IsNullOrEmpty(modulePath))
             {
-                throw new Exception($"未找到模块 {moduleName} 的目录，请检查模块名称是否完整，必须完全匹配，如：Senparc.Xncf.XncfBuilder。");
+                throw new Exception(NcfBuiltInResource.Format("XncfBuilder.MCP.ModuleDirectoryNotFound", "未找到模块 {0} 的目录；模块名称必须完整匹配，例如 Senparc.Xncf.XncfBuilder。", moduleName));
             }
 
             var fullFilePath = Path.Combine(modulePath, filePath);
@@ -56,17 +56,17 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         public async Task<StringAppResponse> Build(
             // [Required,Description("解决方案文件路径")]
             // string slnFilePath, 
-            [Description("组织名称，默认为 Senparc")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Organization")]
             string orgName,
-            [Required, Description("模块名称")]
+            [Required, LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.ModuleName")]
             string xncfName,
-            [Required, Description("版本号，默认为 1.0.0")]
+            [Required, LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Version")]
             string version,
-            [Required, Description("菜单显示名称")]
+            [Required, LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.MenuName")]
             string menuName,
-            [Required, Description("图标，支持 Font Awesome 图标集")]
+            [Required, LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Icon")]
             string icon,
-            [Description("模块说明")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Description")]
             string description)
         {
             Console.WriteLine("XNCF Builder: Receive MCP Call");
@@ -115,7 +115,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         }
 
         //[McpServerTool, Description("获取文件内容")]
-        public async Task<BuildXncf_GetFileResponse> GetFile([Description("完整模块名，如 Senparc.Xncf.XncfBuilder")] string moduleName, [Description("在模块内的路径+文件名")] string filePath)
+        public async Task<BuildXncf_GetFileResponse> GetFile(
+            [LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.MCP.ModuleFullName")] string moduleName,
+            [LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.MCP.FilePath")] string filePath)
         {
             var response = new BuildXncf_GetFileResponse();
 
@@ -127,7 +129,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 if (!File.Exists(fullFilePath))
                 {
-                    throw new Exception("文件不存在：" + filePath);
+                    throw new Exception(NcfBuiltInResource.Format("XncfBuilder.MCP.FileNotFound", "文件不存在：{0}", filePath));
                 }
 
                 fileContent = await File.ReadAllTextAsync(fullFilePath);
@@ -147,9 +149,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         }
 
         //[McpServerTool, Description("创建或更新文件内容，文件不存在时会自动创建")]
-        public async Task<BuildXncf_CreateOrUpdateFileResponse> CreateOrUpdateFile([Description("完整模块名，如 Senparc.Xncf.XncfBuilder")] string moduleName,
-           [Description("在模块内的路径+文件名")] string filePath,
-           [Description("完整文件内容")] string fullFileContent)
+        public async Task<BuildXncf_CreateOrUpdateFileResponse> CreateOrUpdateFile(
+           [LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.MCP.ModuleFullName")] string moduleName,
+           [LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.MCP.FilePath")] string filePath,
+           [LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.MCP.FileContent")] string fullFileContent)
         {
             var response = new BuildXncf_CreateOrUpdateFileResponse();
 

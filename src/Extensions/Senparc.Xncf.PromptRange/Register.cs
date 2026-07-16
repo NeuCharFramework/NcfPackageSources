@@ -48,11 +48,11 @@ namespace Senparc.Xncf.PromptRange
 
         public override string Version => "0.15.2"; //必须填写版本号
 
-        public override string MenuName => "提示词靶场";
+        public override string MenuName => NcfBuiltInResource.Get("Module.PromptRange.MenuName", "提示词靶场");
 
         public override string Icon => "fa fa-dot-circle-o";
 
-        public override string Description => "你的提示词（Prompt）训练场";
+        public override string Description => NcfBuiltInResource.Get("Module.PromptRange.Description", "你的提示词（Prompt）训练场");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider,
             InstallOrUpdate installOrUpdate)

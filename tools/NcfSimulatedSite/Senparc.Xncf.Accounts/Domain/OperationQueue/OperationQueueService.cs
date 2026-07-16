@@ -46,7 +46,10 @@ namespace Senparc.Xncf.Accounts.Domain.OperationQueue
         {
             if (headImgUrl.IsNullOrEmpty())
             {
-                throw new Exception("headImgUrl为null，accountId：" + accountId);
+                throw new Exception(AccountsResource.Format(
+                    "Accounts.HeadImageUrlMissing",
+                    "头像地址为空，账户 ID：{0}",
+                    accountId));
             }
 
             var accountService = serviceProvider.GetService<AccountService>();
@@ -55,7 +58,11 @@ namespace Senparc.Xncf.Accounts.Domain.OperationQueue
                 var account = accountService.GetObject(z => z.Id == accountId);
                 if (account == null)
                 {
-                    throw new Exception($"UserId不存在！ID：{accountId}，HeadImgUrl：{headImgUrl}");
+                    throw new Exception(AccountsResource.Format(
+                        "Accounts.UserIdMissing",
+                        "用户 ID 不存在！ID：{0}，头像地址：{1}",
+                        accountId,
+                        headImgUrl));
                 }
 
                 var fileName = $@"/Upload/User/headimgurl.{DateTime.Now.Ticks + Guid.NewGuid().ToString("n").Substring(0, 8)}.jpg";

@@ -46,18 +46,18 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         {
             if (fullSystemConfig == null)
             {
-                return Ok(false, "请求参数不能为空");
+                return Ok(false, AdminResource.Get("Validation.RequestRequired", "请求参数不能为空"));
             }
 
             if (string.IsNullOrWhiteSpace(fullSystemConfig.SystemName))
             {
-                return Ok(false, "系统名称不能为空");
+                return Ok(false, AdminResource.Get("Validation.SystemNameRequired", "系统名称不能为空"));
             }
 
             var systemConfig = await _systemConfigService.GetObjectAsync(z => true);
             if (systemConfig == null)
             {
-                return Ok(false, "系统配置信息不存在");
+                return Ok(false, AdminResource.Get("Validation.SystemConfigMissing", "系统配置信息不存在"));
             }
 
             systemConfig.Update(fullSystemConfig.SystemName,
@@ -68,7 +68,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 
             await _systemConfigService.SaveObjectAsync(systemConfig);
 
-            base.SetMessager(MessageType.success, "修改成功");
+            base.SetMessager(MessageType.success, AdminResource.Get("Common.UpdateSuccess", "修改成功"));
             return Ok(new
             {
                 systemName = systemConfig.SystemName

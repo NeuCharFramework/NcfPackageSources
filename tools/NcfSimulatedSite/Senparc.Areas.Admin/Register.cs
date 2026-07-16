@@ -56,10 +56,8 @@ using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Database;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Resources;
 using System.Threading.Tasks;
 
 namespace Senparc.Areas.Admin
@@ -72,11 +70,9 @@ namespace Senparc.Areas.Admin
         IXncfDatabase  //注册 XNCF 模块数据库（按需选用）
                        //IXncfRazorRuntimeCompilation  //需要使用 RazorRuntimeCompilation，在开发环境下实时更新 Razor Page
     {
-        private static readonly ResourceManager ResourceManager = new("Senparc.Areas.Admin.AdminResource", typeof(AdminResource).Assembly);
-
         private static string T(string key, string fallback)
         {
-            return ResourceManager.GetString(key, CultureInfo.CurrentUICulture) ?? fallback;
+            return AdminResource.Get(key, fallback);
         }
 
         #region IXncfRegister 接口
@@ -456,7 +452,6 @@ namespace Senparc.Areas.Admin
     }
 
 }
-
 
 
 

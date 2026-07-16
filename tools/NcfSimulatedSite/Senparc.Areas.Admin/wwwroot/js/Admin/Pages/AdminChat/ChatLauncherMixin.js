@@ -40,7 +40,7 @@ window.ChatLauncherMixin = {
           return aSelected - bSelected;
         }
 
-        return (a.name || '').localeCompare(b.name || '', 'zh-Hans-CN');
+        return (a.name || '').localeCompare(b.name || '', document.documentElement.lang || undefined);
       });
     },
     previewModule() {
@@ -91,7 +91,7 @@ window.ChatLauncherMixin = {
       try {
         localStorage.setItem(this.moduleStorageKey, JSON.stringify(uids || []));
       } catch (error) {
-        console.warn('保存已选模块失败:', error);
+        console.warn(ncfT('AdminChat.SaveSelectedModulesFailed'), error);
       }
     },
 
@@ -109,7 +109,7 @@ window.ChatLauncherMixin = {
 
         this.selectedModuleUids = uids.filter((uid) => typeof uid === 'string' && uid.length > 0);
       } catch (error) {
-        console.warn('读取已选模块失败:', error);
+        console.warn(ncfT('AdminChat.ReadSelectedModulesFailed'), error);
       }
     },
 
@@ -122,7 +122,7 @@ window.ChatLauncherMixin = {
       try {
         localStorage.setItem(this.aiModelStorageKey, JSON.stringify(this.sessionAiModelMap || {}));
       } catch (error) {
-        console.warn('保存会话 AI 模型失败:', error);
+        console.warn(ncfT('AdminChat.SaveSessionAiModelFailed'), error);
       }
     },
 
@@ -143,7 +143,7 @@ window.ChatLauncherMixin = {
           return result;
         }, {});
       } catch (error) {
-        console.warn('读取会话 AI 模型失败:', error);
+        console.warn(ncfT('AdminChat.ReadSessionAiModelFailed'), error);
       }
     },
 
@@ -195,9 +195,9 @@ window.ChatLauncherMixin = {
     normalizeModuleItem(item) {
       return {
         uid: item.uid,
-        name: item.menuName || item.name || '未命名模块',
+        name: item.menuName || item.name || ncfT('AdminChat.UnnamedModule'),
         icon: item.icon || 'fa fa-cube',
-        description: item.description || '暂无描述',
+        description: item.description || ncfT('AdminChat.NoDescription'),
         version: item.version || '',
         menus: item.menus || [],
         functions: item.functions || []
@@ -217,8 +217,8 @@ window.ChatLauncherMixin = {
         this.syncSelectedModulesFromUids();
         this.ensurePreviewModule();
       } catch (error) {
-        console.error('加载模块列表失败:', error);
-        this.$message.error('加载模块列表失败，请稍后重试');
+        console.error(ncfT('AdminChat.LoadModulesFailed'), error);
+        this.$message.error(ncfT('AdminChat.LoadModulesRetry'));
       } finally {
         this.loadingModuleOptions = false;
       }
@@ -270,7 +270,7 @@ window.ChatLauncherMixin = {
 
     async startChatSession() {
       if (!this.chatInputText || this.chatInputText.trim().length === 0) {
-        this.$message.warning('请输入对话内容');
+        this.$message.warning(ncfT('AdminChat.EnterConversation'));
         return;
       }
 
@@ -290,10 +290,10 @@ window.ChatLauncherMixin = {
           return;
         }
 
-        this.$message.error((response.data && response.data.errorMessage) || '创建会话失败');
+        this.$message.error((response.data && response.data.errorMessage) || ncfT('AdminChat.CreateSessionFailed'));
       } catch (error) {
-        console.error('创建会话失败:', error);
-        this.$message.error('创建会话失败，请稍后重试');
+        console.error(ncfT('AdminChat.CreateSessionFailed'), error);
+        this.$message.error(ncfT('AdminChat.CreateSessionRetry'));
       } finally {
         this.isCreatingSession = false;
       }

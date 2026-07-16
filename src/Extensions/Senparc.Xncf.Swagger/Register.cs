@@ -55,11 +55,11 @@ namespace Senparc.Xncf.Swagger
 
         public override string Version => "0.7.1";//必须填写版本号
 
-        public override string MenuName => "接口说明文档";
+        public override string MenuName => NcfBuiltInResource.Get("Module.Swagger.MenuName", "接口说明文档");
 
         public override string Icon => "fa fa-file-code-o";
 
-        public override string Description => "接口说明文档";
+        public override string Description => NcfBuiltInResource.Get("Module.Swagger.Description", "接口说明文档");
 
         //public override IList<Type> Functions => new Type[] {  /*typeof(BuildXncf)*/ };
 

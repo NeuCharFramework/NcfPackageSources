@@ -7,6 +7,7 @@ using Senparc.Ncf.Service;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Xncf.Accounts.Domain;
+using Senparc.Xncf.Accounts;
 
 namespace Senparc.Service
 {
@@ -34,7 +35,10 @@ namespace Senparc.Service
             if (throwIfNotEnoughPoints && points < 0 && accountPoints + points < 0)
             {
                 //TODO 抛出异常待定
-                throw new Exception($"积分不足,还需{Convert.ToInt32(accountPoints + points)}积分！");
+                throw new Exception(AccountsResource.Format(
+                    "Accounts.PointsInsufficient",
+                    "积分不足，还需 {0} 积分！",
+                    Convert.ToInt32(accountPoints + points)));
             }
 
             var beforePoints = accountPoints;

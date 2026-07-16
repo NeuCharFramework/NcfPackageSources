@@ -55,8 +55,8 @@ var app = new Vue({
       let chart1 = document.getElementById('firstChart');
       let chartOption1 = {
         title: {
-          text: '日志统计',
-          subtext: '近 14 天'
+          text: ncfT('Admin.Home.LogStatistics'),
+          subtext: ncfT('Admin.Home.Last14Days')
         },
         xAxis: {
           type: 'category',
@@ -65,7 +65,7 @@ var app = new Vue({
         yAxis: {
           type: 'value',
           axisLabel: {
-            formatter: '{value} 条'
+            formatter: value => ncfT('Admin.Home.LogCount', value)
           }
         },
         tooltip: {
@@ -75,21 +75,21 @@ var app = new Vue({
           }
         },
         legend: {
-          data: ['常规日志', '异常日志']
+          data: [ncfT('Admin.Home.NormalLogs'), ncfT('Admin.Home.ExceptionLogs')]
         },
         series: [
           {
-            name: '常规日志',
+            name: ncfT('Admin.Home.NormalLogs'),
             type: 'line',
-            stack: '总量',
+            stack: ncfT('Admin.Home.Total'),
             areaStyle: { color: '#91c7ae' }, // 添加区域填充颜色  
             data: this.chartData.map(item => item.normalLogCount),
             color: '#91c7ae'
           },
           {
-            name: '异常日志',
+            name: ncfT('Admin.Home.ExceptionLogs'),
             type: 'line',
-            stack: '总量',
+            stack: ncfT('Admin.Home.Total'),
             areaStyle: { color: '#d48265' }, // 添加区域填充颜色  
             data: this.chartData.map(item => item.exceptionLogCount),
             color: '#d48265'
@@ -116,8 +116,8 @@ var app = new Vue({
       let chart2 = document.getElementById('secondChart');
       let chartOption2 = {
         title: {
-          text: '今日日志统计',
-          subtext: '动态数据',
+          text: ncfT('Admin.Home.TodayLogStatistics'),
+          subtext: ncfT('Admin.Home.LiveData'),
           left: 'center'
         },
         tooltip: {
@@ -130,7 +130,7 @@ var app = new Vue({
           data: this.todayLogData.map(item => item.senparcTraceType) // 自动输出所有类别  
         },
         series: [{
-          name: '日志类型',
+          name: ncfT('Admin.Home.LogType'),
           type: 'pie',
           radius: '50%',
           data: todayLogData,

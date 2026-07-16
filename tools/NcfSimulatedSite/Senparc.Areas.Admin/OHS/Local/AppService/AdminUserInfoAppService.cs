@@ -91,7 +91,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         /// <param name="request"></param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
-        [FunctionRender("管理员登录", "测试当前管理员登录", typeof(Register))]
+        [FunctionRender(typeof(Senparc.Areas.Admin.AdminResource), "Function.Admin.Login.Name", "Function.Admin.Login.Description", typeof(Register))]
         [Microsoft.AspNetCore.Authorization.AllowAnonymous]
         public async Task<AppResponseBase<AccountLoginResultDto>> LoginAsync([FromBody] AdminUserInfo_LoginRequest request)
         {
@@ -184,20 +184,22 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 if (id == adminUserInfoId)
                 {
-                    throw new NcfExceptionBase("管理员不能删除自己！");
+                    throw new NcfExceptionBase(AdminResource.Get(
+                        "AdminUser.CannotDeleteSelf",
+                        "管理员不能删除自己！"));
                 }
 
                 var adminUserInfo = await _adminUserInfoService.GetObjectAsync(z => z.Id == id);
                 if (adminUserInfo == null)
                 {
-                    throw new NcfExceptionBase("管理员不存在！");
+                    throw new NcfExceptionBase(AdminResource.Get("AdminUser.NotFound", "管理员不存在！"));
                 }
 
                 //TODO：进行更多层级判断
 
                 await _adminUserInfoService.DeleteObjectAsync(adminUserInfo);
 
-                return "删除成功！";
+                return AdminResource.Get("Common.DeleteSuccess", "删除成功！");
             });
             return response;
         }

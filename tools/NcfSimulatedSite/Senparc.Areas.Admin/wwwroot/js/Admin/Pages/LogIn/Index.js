@@ -46,7 +46,7 @@ var app = new Vue({
                 this.ruleForm.tenant = '';
             }
         }).catch(error => {
-            console.error('检查多租户状态失败:', error);
+            console.error(ncfT('Admin.Login.Error.CheckTenantFailed'), error);
             this.enableMultiTenant = false;
             this.ruleForm.tenant = '';
         });

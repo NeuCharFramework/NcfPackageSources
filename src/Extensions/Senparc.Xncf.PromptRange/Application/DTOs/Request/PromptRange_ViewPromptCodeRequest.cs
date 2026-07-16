@@ -22,6 +22,6 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 /// </summary>
 public class PromptRange_ViewPromptCodeRequest : FunctionAppRequestBase
 {
-    [Description("筛选靶场名称||输入靶场名称关键字进行过滤（可为空，表示显示所有靶场）")]
+    [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.PromptRange.FilterRange")]
     public string FilterRangeName { get; set; }
 }

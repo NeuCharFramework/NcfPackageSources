@@ -50,7 +50,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         /// 查询数据库记录
         /// 根据指定条件和字段查询表中的数据
         /// </summary>
-        [FunctionRender("查询数据库记录", "查询指定表中的数据，支持条件过滤和字段选择", typeof(Register))]
+        [FunctionRender(typeof(NcfBuiltInResource), "Function.Database.QueryRecords.Name", "Function.Database.QueryRecords.Description", typeof(Register))]
         public async Task<AppResponseBase<string>> QueryRecords(QueryRecordsRequest request)
         {
             return await this.GetResponseAsync<string>(async (response, logger) =>
@@ -60,7 +60,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                     // 验证模块和表
                     if (string.IsNullOrWhiteSpace(request.ModuleName) || string.IsNullOrWhiteSpace(request.TableName))
                     {
-                        return "模块名称和表名称不能为空";
+                        return NcfBuiltInResource.Get("Database.ModuleAndTableRequired");
                     }
 
                     // 模糊解析模块名
@@ -68,7 +68,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                     if (resolvedModule == null)
                     {
                         var available = _metadataProvider.GetAllModuleNames();
-                        return $"找不到模块 '{request.ModuleName}'。可用模块：{string.Join(", ", available)}";
+                        return NcfBuiltInResource.Format("Database.ModuleNotFound", "找不到模块“{0}”。可用模块：{1}", request.ModuleName, string.Join(", ", available));
                     }
 
                     // 模糊解析实体名
@@ -76,16 +76,16 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                     if (resolvedTable == null)
                     {
                         var available = _metadataProvider.GetTableNames(resolvedModule);
-                        return $"找不到表 '{request.TableName}'（模块 '{resolvedModule}'）。可用实体：{string.Join(", ", available)}";
+                        return NcfBuiltInResource.Format("Database.TableNotFoundAvailable", "找不到表“{0}”（模块“{1}”）。可用实体：{2}", request.TableName, resolvedModule, string.Join(", ", available));
                     }
 
                     var schema = _metadataProvider.GetSchemaByTable(resolvedModule, resolvedTable);
                     if (schema == null)
                     {
-                        return $"找不到表: {resolvedModule}.{resolvedTable}";
+                        return NcfBuiltInResource.Format("Database.TableNotFound", "找不到表：{0}.{1}", resolvedModule, resolvedTable);
                     }
 
-                    logger.Append($"查询表 {resolvedModule}.{resolvedTable}（原始输入: {request.ModuleName}.{request.TableName}）");
+                    logger.Append(NcfBuiltInResource.Format("Database.Query.Log", "查询表 {0}.{1}（原始输入：{2}.{3}）", resolvedModule, resolvedTable, request.ModuleName, request.TableName));
 
                     // 执行查询
                     var result = await _databaseExecutor.QueryRecordsAsync(
@@ -103,8 +103,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                 }
                 catch (Exception ex)
                 {
-                    logger.Append($"查询记录时出错: {ex.Message}");
-                    return $"错误: {ex.Message}";
+                    logger.Append(NcfBuiltInResource.Format("Database.Query.Error", "查询记录时出错：{0}", ex.Message));
+                    return NcfBuiltInResource.Format("Common.Error", "错误：{0}", ex.Message);
                 }
             });
         }
@@ -113,7 +113,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         /// 获取数据库统计信息
         /// 获取指定表的行数、最小/最大值等统计信息
         /// </summary>
-        [FunctionRender("获取统计信息", "获取数据库表的统计信息，如行数、数据大小等", typeof(Register))]
+        [FunctionRender(typeof(NcfBuiltInResource), "Function.Database.Statistics.Name", "Function.Database.Statistics.Description", typeof(Register))]
         public async Task<AppResponseBase<string>> GetStatistics(GetStatisticsRequest request)
         {
             return await this.GetResponseAsync<string>(async (response, logger) =>
@@ -122,7 +122,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                 {
                     if (string.IsNullOrWhiteSpace(request.ModuleName) || string.IsNullOrWhiteSpace(request.TableName))
                     {
-                        return "模块名称和表名称不能为空";
+                        return NcfBuiltInResource.Get("Database.ModuleAndTableRequired");
                     }
 
                     // 模糊解析模块名
@@ -130,7 +130,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                     if (resolvedModule == null)
                     {
                         var available = _metadataProvider.GetAllModuleNames();
-                        return $"找不到模块 '{request.ModuleName}'。可用模块：{string.Join(", ", available)}";
+                        return NcfBuiltInResource.Format("Database.ModuleNotFound", "找不到模块“{0}”。可用模块：{1}", request.ModuleName, string.Join(", ", available));
                     }
 
                     // 模糊解析实体名
@@ -138,16 +138,16 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                     if (resolvedTable == null)
                     {
                         var available = _metadataProvider.GetTableNames(resolvedModule);
-                        return $"找不到表 '{request.TableName}'（模块 '{resolvedModule}'）。可用实体：{string.Join(", ", available)}";
+                        return NcfBuiltInResource.Format("Database.TableNotFoundAvailable", "找不到表“{0}”（模块“{1}”）。可用实体：{2}", request.TableName, resolvedModule, string.Join(", ", available));
                     }
 
                     var schema = _metadataProvider.GetSchemaByTable(resolvedModule, resolvedTable);
                     if (schema == null)
                     {
-                        return $"找不到表: {resolvedModule}.{resolvedTable}";
+                        return NcfBuiltInResource.Format("Database.TableNotFound", "找不到表：{0}.{1}", resolvedModule, resolvedTable);
                     }
 
-                    logger.Append($"获取 {resolvedModule}.{resolvedTable} 的统计信息（原始输入: {request.ModuleName}.{request.TableName}）");
+                    logger.Append(NcfBuiltInResource.Format("Database.Statistics.Log", "获取 {0}.{1} 的统计信息（原始输入：{2}.{3}）", resolvedModule, resolvedTable, request.ModuleName, request.TableName));
 
                     var stats = await _databaseExecutor.GetTableStatisticsAsync(resolvedModule, resolvedTable);
 
@@ -159,8 +159,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                 }
                 catch (Exception ex)
                 {
-                    logger.Append($"获取统计信息时出错: {ex.Message}");
-                    return $"错误: {ex.Message}";
+                    logger.Append(NcfBuiltInResource.Format("Database.Statistics.Error", "获取统计信息时出错：{0}", ex.Message));
+                    return NcfBuiltInResource.Format("Common.Error", "错误：{0}", ex.Message);
                 }
             });
         }
@@ -170,26 +170,26 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         /// </summary>
         public class QueryRecordsRequest : FunctionAppRequestBase
         {
-            [Required(ErrorMessage = "模块名称不能为空")]
+            [LocalizedRequired(typeof(NcfBuiltInResource), "Validation.Database.ModuleRequired")]
             [MaxLength(200)]
-            [Description("模块名称||必须。指定要查询的模块，如 'KnowledgeBase'、'AIKernel' 等")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Database.Module.Query")]
             public string ModuleName { get; set; }
 
-            [Required(ErrorMessage = "表名称不能为空")]
+            [LocalizedRequired(typeof(NcfBuiltInResource), "Validation.Database.TableRequired")]
             [MaxLength(100)]
-            [Description("表名称||必须。指定要查询的表名称")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Database.Table.Query")]
             public string TableName { get; set; }
 
             [MaxLength(1000)]
-            [Description("过滤条件||可选。SQL WHERE 子句条件，如 'Name = \"test\"' 或 'Id > 10'")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Database.Filter")]
             public string Filter { get; set; }
 
             [Range(1, int.MaxValue)]
-            [Description("页码||可选。分页查询的页码，默认为 1，最小值为 1")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Database.PageNumber")]
             public int PageNumber { get; set; } = 1;
 
             [Range(1, 1000)]
-            [Description("每页数量||可选。分页查询的每页数量，默认为 20，范围 1-1000")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Database.PageSize")]
             public int PageSize { get; set; } = 20;
 
             public override async Task LoadData(IServiceProvider serviceProvider)
@@ -203,14 +203,14 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         /// </summary>
         public class GetStatisticsRequest : FunctionAppRequestBase
         {
-            [Required(ErrorMessage = "模块名称不能为空")]
+            [LocalizedRequired(typeof(NcfBuiltInResource), "Validation.Database.ModuleRequired")]
             [MaxLength(200)]
-            [Description("模块名称||必须。指定要查询统计信息的模块")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Database.Module.Statistics")]
             public string ModuleName { get; set; }
 
-            [Required(ErrorMessage = "表名称不能为空")]
+            [LocalizedRequired(typeof(NcfBuiltInResource), "Validation.Database.TableRequired")]
             [MaxLength(100)]
-            [Description("表名称||必须。指定要查询统计信息的表名称")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Database.Table.Statistics")]
             public string TableName { get; set; }
 
             public override async Task LoadData(IServiceProvider serviceProvider)

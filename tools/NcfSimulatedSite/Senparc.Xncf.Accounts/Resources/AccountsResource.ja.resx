@@ -14,4 +14,25 @@
   <data name="Accounts.Title" xml:space="preserve"><value>Accounts ホーム</value></data>
   <data name="Accounts.Register.MenuName" xml:space="preserve"><value>ユーザー管理</value></data>
   <data name="Accounts.Register.Description" xml:space="preserve"><value>登録ユーザー管理</value></data>
+  <data name="Accounts.PointsInsufficient" xml:space="preserve"><value>ポイントが不足しています。あと {0} ポイント必要です。</value></data>
+  <data name="Accounts.MethodNotAllowed" xml:space="preserve"><value>このメソッドは呼び出せません。</value></data>
+  <data name="Accounts.HeadImageUrlMissing" xml:space="preserve"><value>アカウント ID {0} のプロフィール画像 URL が空です。</value></data>
+  <data name="Accounts.UserIdMissing" xml:space="preserve"><value>ユーザー ID が存在しません。ID：{0}、プロフィール画像 URL：{1}</value></data>
+  <data name="Accounts.Operator.Add" xml:space="preserve"><value>加算</value></data>
+  <data name="Accounts.Operator.Add.Help" xml:space="preserve"><value>数値 1 + 数値 2</value></data>
+  <data name="Accounts.Operator.Subtract" xml:space="preserve"><value>減算</value></data>
+  <data name="Accounts.Operator.Subtract.Help" xml:space="preserve"><value>数値 1 - 数値 2</value></data>
+  <data name="Accounts.Operator.Multiply" xml:space="preserve"><value>乗算</value></data>
+  <data name="Accounts.Operator.Multiply.Help" xml:space="preserve"><value>数値 1 × 数値 2</value></data>
+  <data name="Accounts.Operator.Divide" xml:space="preserve"><value>除算</value></data>
+  <data name="Accounts.Operator.Divide.Help" xml:space="preserve"><value>数値 1 ÷ 数値 2</value></data>
+  <data name="Accounts.Power.Square" xml:space="preserve"><value>2 乗</value></data>
+  <data name="Accounts.Power.Square.Help" xml:space="preserve"><value>上の結果を 2 乗します</value></data>
+  <data name="Accounts.Power.Cube" xml:space="preserve"><value>3 乗</value></data>
+  <data name="Accounts.Power.Cube.Help" xml:space="preserve"><value>上の結果を 3 乗します</value></data>
+  <data name="Accounts.Parameter.Name" xml:space="preserve"><value>名前||二重縦線の前は名前、後ろは説明です</value></data>
+  <data name="Accounts.Parameter.Number1" xml:space="preserve"><value>数値||数値 1</value></data>
+  <data name="Accounts.Parameter.Number2" xml:space="preserve"><value>数値||数値 2</value></data>
+  <data name="Accounts.Parameter.Operator" xml:space="preserve"><value>演算子||</value></data>
+  <data name="Accounts.Parameter.Power" xml:space="preserve"><value>べき乗||</value></data>
 </root>

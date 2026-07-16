@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Module.AIAgentsHub.MenuName" xml:space="preserve"><value>AI Agent Hub</value></data>
+  <data name="Module.AIAgentsHub.Description" xml:space="preserve"><value>Centro para agentes de IA</value></data>
+  <data name="Module.AIKernel.MenuName" xml:space="preserve"><value>Núcleo de IA</value></data>
+  <data name="Module.AIKernel.Description" xml:space="preserve"><value>Proporciona capacidades fundamentales de IA a todos los proyectos mediante Senparc.AI</value></data>
+  <data name="Module.AgentsManager.MenuName" xml:space="preserve"><value>Gestor de agentes</value></data>
+  <data name="Module.AgentsManager.Description" xml:space="preserve"><value>Administra agentes de IA y su configuración</value></data>
+  <data name="Module.Application.MenuName" xml:space="preserve"><value>Iniciador de aplicaciones</value></data>
+  <data name="Module.Application.Description" xml:space="preserve"><value>Permite iniciar aplicaciones externas</value></data>
+  <data name="Module.AreasBase.MenuName" xml:space="preserve"><value>Base de Areas</value></data>
+  <data name="Module.AreasBase.Description" xml:space="preserve"><value>Proporciona la base de ejecución para Razor Pages y áreas de interfaz relacionadas</value></data>
+  <data name="Module.ChangeNamespace.MenuName" xml:space="preserve"><value>Cambiar espacio de nombres</value></data>
+  <data name="Module.ChangeNamespace.Description" xml:space="preserve"><value>Cambia globalmente los espacios de nombres tras instalar NCF y antes de publicar. La operación es irreversible; haga una copia y no la use en producción.</value></data>
+  <data name="Module.Dapr.MenuName" xml:space="preserve"><value>Módulo Dapr</value></data>
+  <data name="Module.Dapr.Description" xml:space="preserve"><value>Proporciona capacidades Dapr a otros módulos</value></data>
+  <data name="Module.DatabaseToolkit.MenuName" xml:space="preserve"><value>Herramientas de base de datos</value></data>
+  <data name="Module.DatabaseToolkit.Description" xml:space="preserve"><value>Herramientas de operación de bases de datos. Los cambios pueden dañar los datos; comprenda cada función y haga una copia antes de modificar.</value></data>
+  <data name="Module.DynamicData.MenuName" xml:space="preserve"><value>Base de datos dinámicos</value></data>
+  <data name="Module.DynamicData.Description" xml:space="preserve"><value>Crea y administra datos dinámicos (versión preliminar, aún sin publicación oficial)</value></data>
+  <data name="Module.FileManager.MenuName" xml:space="preserve"><value>Gestor de archivos</value></data>
+  <data name="Module.FileManager.Description" xml:space="preserve"><value>Administra archivos del sistema</value></data>
+  <data name="Module.FirmwareUpdate.MenuName" xml:space="preserve"><value>Espejo de paquetes NCF</value></data>
+  <data name="Module.FirmwareUpdate.Description" xml:space="preserve"><value>Sincroniza paquetes de escritorio NCF desde GitHub, conserva las tres versiones más recientes y genera una lista de descarga alternativa.</value></data>
+  <data name="Module.KnowledgeBase.MenuName" xml:space="preserve"><value>Base de conocimientos de IA</value></data>
+  <data name="Module.KnowledgeBase.Description" xml:space="preserve"><value>Crea, administra y busca bases de conocimientos de IA</value></data>
+  <data name="Module.MCP.MenuName" xml:space="preserve"><value>Gestor MCP</value></data>
+  <data name="Module.MCP.Description" xml:space="preserve"><value>Gestor de Model Context Protocol (MCP)</value></data>
+  <data name="Module.Menu.MenuName" xml:space="preserve"><value>Gestión de menús</value></data>
+  <data name="Module.Menu.Description" xml:space="preserve"><value>Administra los menús del sistema</value></data>
+  <data name="Module.PromptRange.MenuName" xml:space="preserve"><value>Laboratorio de prompts</value></data>
+  <data name="Module.PromptRange.Description" xml:space="preserve"><value>Entrena y evalúa prompts</value></data>
+  <data name="Module.SenMapic.MenuName" xml:space="preserve"><value>SenMapic</value></data>
+  <data name="Module.SenMapic.Description" xml:space="preserve"><value>Módulo rastreador web SenMapic</value></data>
+  <data name="Module.Swagger.MenuName" xml:space="preserve"><value>Documentación de API</value></data>
+  <data name="Module.Swagger.Description" xml:space="preserve"><value>Consulta la documentación de las API del sistema</value></data>
+  <data name="Module.SystemCore.MenuName" xml:space="preserve"><value>Núcleo del sistema</value></data>
+  <data name="Module.SystemCore.Description" xml:space="preserve"><value>Módulo central para estructuras y datos de ejecución. No lo elimine y haga una copia antes de modificar.</value></data>
+  <data name="Module.SystemManager.MenuName" xml:space="preserve"><value>Gestión del sistema</value></data>
+  <data name="Module.SystemManager.Description" xml:space="preserve"><value>Administra la configuración y los datos de ejecución principales. No lo elimine y haga una copia antes de modificar.</value></data>
+  <data name="Module.SystemPermission.MenuName" xml:space="preserve"><value>Gestión de permisos</value></data>
+  <data name="Module.SystemPermission.Description" xml:space="preserve"><value>Administra roles y permisos del sistema</value></data>
+  <data name="Module.Tenant.MenuName" xml:space="preserve"><value>Multiinquilino</value></data>
+  <data name="Module.Tenant.Description" xml:space="preserve"><value>Módulo central multiinquilino. No lo elimine y haga una copia antes de modificar.</value></data>
+  <data name="Module.Terminal.MenuName" xml:space="preserve"><value>Terminal</value></data>
+  <data name="Module.Terminal.Description" xml:space="preserve"><value>Permite controlar el sistema mediante comandos de terminal.</value></data>
+  <data name="Module.Terminal.AvailableCommands" xml:space="preserve"><value>Comandos disponibles actualmente:</value></data>
+  <data name="Module.WeixinManager.MenuName" xml:space="preserve"><value>Gestión de Weixin</value></data>
+  <data name="Module.WeixinManager.Description" xml:space="preserve"><value>Módulo oficial de Senparc para la gestión básica de cuentas oficiales de WeChat y miniprogramas. Basado en Senparc.Weixin SDK: https://github.com/JeffreySu/WeiXinMPSDK</value></data>
+  <data name="Module.XncfBuilder.MenuName" xml:space="preserve"><value>Generador de módulos XNCF</value></data>
+  <data name="Module.XncfBuilder.Description" xml:space="preserve"><value>Genera rápidamente bases y ejemplos de módulos XNCF que pueden ampliarse en aplicaciones</value></data>
+  <data name="Module.XncfModuleManager.MenuName" xml:space="preserve"><value>Núcleo de gestión XNCF</value></data>
+  <data name="Module.XncfModuleManager.Description" xml:space="preserve"><value>Componente central para instalar, actualizar y administrar módulos XNCF</value></data>
+  <data name="Area.Home" xml:space="preserve"><value>Inicio</value></data>
+  <data name="Area.DatabaseSample" xml:space="preserve"><value>Ejemplo de operaciones de base de datos</value></data>
+  <data name="Area.ApiDocumentation" xml:space="preserve"><value>Documentación de Web API</value></data>
+  <data name="Area.WeixinManager.OfficialAccounts" xml:space="preserve"><value>Gestión de cuentas oficiales</value></data>
+  <data name="Area.WeixinManager.Users" xml:space="preserve"><value>Gestión de usuarios</value></data>
+  <data name="Area.AIKernel.VectorDatabase" xml:space="preserve"><value>Base de datos vectorial</value></data>
+  <data name="Area.AIKernel.Dashboard" xml:space="preserve"><value>Panel</value></data>
+  <data name="Area.FileManager.Files" xml:space="preserve"><value>Gestión de archivos</value></data>
+  <data name="Area.KnowledgeBase.Management" xml:space="preserve"><value>Gestión de bases de conocimientos</value></data>
+  <data name="Area.KnowledgeBase.RecallTest" xml:space="preserve"><value>Prueba de recuperación</value></data>
+  <data name="Area.DynamicData.PageSettings" xml:space="preserve"><value>Configuración de interfaz</value></data>
+  <data name="Area.DynamicData.TableSettings" xml:space="preserve"><value>Configuración de tablas</value></data>
+  <data name="Function.Agents.TemplateManagement.Name" xml:space="preserve"><value>Gestión de plantillas Agent</value></data>
+  <data name="Function.Agents.TemplateManagement.Description" xml:space="preserve"><value>Administra plantillas Agent</value></data>
+  <data name="Function.Agents.CreateFromPromptCode.Name" xml:space="preserve"><value>Crear un agente desde PromptCode</value></data>
+  <data name="Function.Agents.CreateFromPromptCode.Description" xml:space="preserve"><value>Crea un agente desde un PromptCode de nivel rango, táctica o ubicación completa</value></data>
+  <data name="Function.Agents.SearchTemplate.Name" xml:space="preserve"><value>Buscar plantillas Agent y devolver ID</value></data>
+  <data name="Function.Agents.SearchTemplate.Description" xml:space="preserve"><value>Busca el mejor AgentTemplate por nombre o PromptCode y devuelve ID seleccionables</value></data>
+  <data name="Function.Agents.ManageChatGroup.Name" xml:space="preserve"><value>Administrar ChatGroup</value></data>
+  <data name="Function.Agents.ManageChatGroup.Description" xml:space="preserve"><value>Administra ChatGroup</value></data>
+  <data name="Function.Agents.StartChatGroup.Name" xml:space="preserve"><value>Iniciar ChatGroup</value></data>
+  <data name="Function.Agents.StartChatGroup.Description" xml:space="preserve"><value>Inicia ChatGroup</value></data>
+  <data name="Function.Agents.DeleteConversation.Name" xml:space="preserve"><value>Eliminar conversación</value></data>
+  <data name="Function.Agents.DeleteConversation.Description" xml:space="preserve"><value>Elimina toda la conversación y sus datos asociados</value></data>
+  <data name="Function.ChangeNamespace.Change.Name" xml:space="preserve"><value>Cambiar espacio de nombres</value></data>
+  <data name="Function.ChangeNamespace.Change.Description" xml:space="preserve"><value>Cambia los espacios de nombres en todos los archivos .cs y .cshtml</value></data>
+  <data name="Function.ChangeNamespace.Restore.Name" xml:space="preserve"><value>Restaurar espacio de nombres</value></data>
+  <data name="Function.ChangeNamespace.Restore.Description" xml:space="preserve"><value>Restaura los espacios de nombres .cs y .cshtml a los valores de NCF</value></data>
+  <data name="Function.ChangeNamespace.Download.Name" xml:space="preserve"><value>Descargar el código oficial de NCF</value></data>
+  <data name="Function.ChangeNamespace.Download.Description" xml:space="preserve"><value>Descarga el código oficial de NCF para procesar espacios de nombres</value></data>
+  <data name="Function.Database.AgentPrompt.Name" xml:space="preserve"><value>Obtener prompt del sistema de AI Agent</value></data>
+  <data name="Function.Database.AgentPrompt.Description" xml:space="preserve"><value>Obtiene el prompt del sistema y la definición de rol configurados para un AI Agent</value></data>
+  <data name="Function.Database.Backup.Name" xml:space="preserve"><value>Hacer copia de la base de datos</value></data>
+  <data name="Function.Database.Backup.Description" xml:space="preserve"><value>Copia la base actual a una ruta que no debe ser accesible públicamente</value></data>
+  <data name="Function.Database.CheckBackup.Name" xml:space="preserve"><value>Comprobar copia automática</value></data>
+  <data name="Function.Database.CheckBackup.Description" xml:space="preserve"><value>Comprueba que el intervalo de copia esté configurado y sea mayor que cero</value></data>
+  <data name="Function.Database.CheckUpdate.Name" xml:space="preserve"><value>Comprobar actualizaciones de base</value></data>
+  <data name="Function.Database.CheckUpdate.Description" xml:space="preserve"><value>Detecta migraciones EF Core pendientes; ejecute Merge EF Core si existen</value></data>
+  <data name="Function.Database.ConfigTypes.Name" xml:space="preserve"><value>Ver tipos de configuración</value></data>
+  <data name="Function.Database.ConfigTypes.Description" xml:space="preserve"><value>Muestra tipos que implementan IDatabaseConfiguration</value></data>
+  <data name="Function.Database.ExportSql.Name" xml:space="preserve"><value>Exportar SQL de la base actual</value></data>
+  <data name="Function.Database.ExportSql.Description" xml:space="preserve"><value>Exporta SQL de todas las tablas usadas por el sitio</value></data>
+  <data name="Function.Database.Merge.Name" xml:space="preserve"><value>Merge EF Core</value></data>
+  <data name="Function.Database.Merge.Description" xml:space="preserve"><value>Actualiza la base con EF Core Code First para igualar la versión en ejecución</value></data>
+  <data name="Function.Database.QueryRecords.Name" xml:space="preserve"><value>Consultar registros</value></data>
+  <data name="Function.Database.QueryRecords.Description" xml:space="preserve"><value>Consulta una tabla con filtros de condición y selección de campos</value></data>
+  <data name="Function.Database.QueryTemplates.Name" xml:space="preserve"><value>Obtener plantillas de consulta</value></data>
+  <data name="Function.Database.QueryTemplates.Description" xml:space="preserve"><value>Obtiene plantillas y ejemplos de consultas predefinidos</value></data>
+  <data name="Function.Database.Schema.Name" xml:space="preserve"><value>Consultar esquema de base de datos</value></data>
+  <data name="Function.Database.Schema.Description" xml:space="preserve"><value>Consulta módulos, tablas y campos disponibles</value></data>
+  <data name="Function.Database.Settings.Name" xml:space="preserve"><value>Configurar parámetros de base</value></data>
+  <data name="Function.Database.Settings.Description" xml:space="preserve"><value>Configura intervalos y rutas de copia de seguridad</value></data>
+  <data name="Function.Database.Statistics.Name" xml:space="preserve"><value>Obtener estadísticas de base</value></data>
+  <data name="Function.Database.Statistics.Description" xml:space="preserve"><value>Obtiene número de filas, tamaño de datos y otras estadísticas</value></data>
+  <data name="Function.FirmwareUpdate.Settings.Name" xml:space="preserve"><value>Configuración del espejo</value></data>
+  <data name="Function.FirmwareUpdate.Settings.Description" xml:space="preserve"><value>Activa la sincronización desde GitHub y establece un intervalo de 1 a 24 horas</value></data>
+  <data name="Function.FirmwareUpdate.Sync.Name" xml:space="preserve"><value>Sincronizar ahora</value></data>
+  <data name="Function.FirmwareUpdate.Sync.Description" xml:space="preserve"><value>Obtiene la última Release y actualiza NcfPackages y latest-release.json</value></data>
+  <data name="Function.MCP.Execute.Name" xml:space="preserve"><value>Ejecutar MCP</value></data>
+  <data name="Function.MCP.Execute.Description" xml:space="preserve"><value>Ejecuta MCP; la dirección predeterminada del módulo es http://localhost:5000/{Module Name}/sse</value></data>
+  <data name="Function.PromptRange.ViewCodes.Name" xml:space="preserve"><value>Ver lista de PromptCode</value></data>
+  <data name="Function.PromptRange.ViewCodes.Description" xml:space="preserve"><value>Muestra PromptCodes de todos los rangos y tácticas para crear agentes rápidamente</value></data>
+  <data name="Function.Sample.Name" xml:space="preserve"><value>Función de ejemplo</value></data>
+  <data name="Function.Sample.Description" xml:space="preserve"><value>Demuestra parámetros y valores de retorno de FunctionRender</value></data>
+  <data name="Function.SenMapic.Crawl.Name" xml:space="preserve"><value>Rastreador web</value></data>
+  <data name="Function.SenMapic.Crawl.Description" xml:space="preserve"><value>Extrae información de páginas web</value></data>
+  <data name="Function.SystemManager.UpdateCloudAccount.Name" xml:space="preserve"><value>Actualizar cuenta en la nube de NeuChar</value></data>
+  <data name="Function.SystemManager.UpdateCloudAccount.Description" xml:space="preserve"><value>Vincula una cuenta con AppKey y Secret de la página de desarrollador</value></data>
+  <data name="Function.SystemManager.ViewTempLog.Name" xml:space="preserve"><value>Ver registro temporal RequestTempId</value></data>
+  <data name="Function.SystemManager.ViewTempLog.Description" xml:space="preserve"><value>Consulta un registro aún válido mediante el RequestTempId devuelto por AppService</value></data>
+  <data name="Function.Terminal.Command.Name" xml:space="preserve"><value>Símbolo del sistema</value></data>
+  <data name="Function.Terminal.Command.Description" xml:space="preserve"><value>Ejecuta un comando de terminal en el servidor y devuelve el resultado</value></data>
+  <data name="Function.XncfBuilder.AddMigration.Name" xml:space="preserve"><value>Comando Add-Migration</value></data>
+  <data name="Function.XncfBuilder.AddMigration.Description" xml:space="preserve"><value>Ejecuta add-migration visualmente para varias bases; puede tardar entre 30 y 60 segundos</value></data>
+  <data name="Function.XncfBuilder.Generate.Name" xml:space="preserve"><value>Generar XNCF</value></data>
+  <data name="Function.XncfBuilder.Generate.Description" xml:space="preserve"><value>Genera un módulo XNCF desde la configuración</value></data>
+  <data name="Function.XncfBuilder.GenerateEntity.Name" xml:space="preserve"><value>[IA] Generar entidades de base</value></data>
+  <data name="Function.XncfBuilder.GenerateEntity.Description" xml:space="preserve"><value>Genera entidades y métodos compatibles con DDD. Úselo solo en desarrollo tras hacer una copia.</value></data>
+  <data name="Function.XncfBuilder.GenerateInterface.Name" xml:space="preserve"><value>Generar interfaces de AppService</value></data>
+  <data name="Function.XncfBuilder.GenerateInterface.Description" xml:space="preserve"><value>Genera código de interfaz para el AppService de un módulo</value></data>
+  <data name="Function.XncfBuilder.InitPrompt.Name" xml:space="preserve"><value>Inicializar prompts</value></data>
+  <data name="Function.XncfBuilder.InitPrompt.Description" xml:space="preserve"><value>Inicializa todos los prompts necesarios para generar código con IA</value></data>
+  <data name="Function.XncfManager.GetAllModules.Name" xml:space="preserve"><value>Obtener todos los módulos XNCF</value></data>
+  <data name="Function.XncfManager.GetAllModules.Description" xml:space="preserve"><value>Obtiene nombre, descripción y estado de todos los módulos XNCF</value></data>
+  <data name="Function.XncfManager.InstallAndEnable.Name" xml:space="preserve"><value>Instalar y habilitar un módulo XNCF</value></data>
+  <data name="Function.XncfManager.InstallAndEnable.Description" xml:space="preserve"><value>Instala el módulo XNCF indicado y lo habilita</value></data>
+  <data name="Function.XncfManager.InstallAndEnableAi.Name" xml:space="preserve"><value>Instalar y habilitar XNCF (compatible con IA)</value></data>
+  <data name="Function.XncfManager.InstallAndEnableAi.Description" xml:space="preserve"><value>Instala y habilita directamente por UID o nombre, sin SelectionList</value></data>
+  <data name="Function.XncfManager.ViewFunctionStatus.Name" xml:space="preserve"><value>Ver estado de funciones XNCF</value></data>
+  <data name="Function.XncfManager.ViewFunctionStatus.Description" xml:space="preserve"><value>Muestra el estado de carga de funciones del módulo XNCF actual</value></data>
+  <data name="Parameter.Sample.Name" xml:space="preserve"><value>Nombre||El texto anterior a la doble barra es el nombre del parámetro; el posterior es la ayuda</value></data>
+  <data name="Parameter.Sample.Number1" xml:space="preserve"><value>Número||Número 1</value></data>
+  <data name="Parameter.Sample.Number2" xml:space="preserve"><value>Número||Número 2</value></data>
+  <data name="Parameter.Sample.Operator" xml:space="preserve"><value>Operador||</value></data>
+  <data name="Parameter.Sample.OperatorRestricted" xml:space="preserve"><value>Operador||Elija entre: +, -, ×, ÷</value></data>
+  <data name="Parameter.Sample.Power" xml:space="preserve"><value>Potencia||</value></data>
+  <data name="Parameter.Sample.PowerRestricted" xml:space="preserve"><value>Potencia||Si se proporciona, elija solo 2 o 3</value></data>
+  <data name="Parameter.Operator.Add" xml:space="preserve"><value>Sumar</value></data>
+  <data name="Parameter.Operator.Add.Help" xml:space="preserve"><value>Número 1 + Número 2</value></data>
+  <data name="Parameter.Operator.Subtract" xml:space="preserve"><value>Restar</value></data>
+  <data name="Parameter.Operator.Subtract.Help" xml:space="preserve"><value>Número 1 - Número 2</value></data>
+  <data name="Parameter.Operator.Multiply" xml:space="preserve"><value>Multiplicar</value></data>
+  <data name="Parameter.Operator.Multiply.Help" xml:space="preserve"><value>Número 1 × Número 2</value></data>
+  <data name="Parameter.Operator.Divide" xml:space="preserve"><value>Dividir</value></data>
+  <data name="Parameter.Operator.Divide.Help" xml:space="preserve"><value>Número 1 ÷ Número 2</value></data>
+  <data name="Parameter.Power.Square" xml:space="preserve"><value>Cuadrado</value></data>
+  <data name="Parameter.Power.Square.Help" xml:space="preserve"><value>Elevar al cuadrado el resultado anterior</value></data>
+  <data name="Parameter.Power.Cube" xml:space="preserve"><value>Cubo</value></data>
+  <data name="Parameter.Power.Cube.Help" xml:space="preserve"><value>Elevar al cubo el resultado anterior</value></data>
+  <data name="Parameter.MCP.ServerSelection" xml:space="preserve"><value>Servidor MCP||Elija un servidor registrado o introduzca una dirección personalizada</value></data>
+  <data name="Parameter.MCP.Endpoint" xml:space="preserve"><value>Dirección del servidor MCP||Obligatoria para entrada manual; predeterminada: http://localhost:5000/mcp-senparc-xncf-mcp/sse</value></data>
+  <data name="Parameter.MCP.Request" xml:space="preserve"><value>Solicitud||Solicitud que se enviará al servidor MCP</value></data>
+  <data name="Parameter.MCP.Manual" xml:space="preserve"><value>Entrada manual</value></data>
+  <data name="Parameter.MCP.Manual.Help" xml:space="preserve"><value>Introducir manualmente la dirección del servidor MCP</value></data>
+  <data name="Parameter.MCP.Server.Display" xml:space="preserve"><value>{0} ({1})</value></data>
+  <data name="Parameter.MCP.Server.Help" xml:space="preserve"><value>Servidor: {0}; ruta: {1}</value></data>
+  <data name="Parameter.SenMapic.Url" xml:space="preserve"><value>URL||Introduzca la URL que desea rastrear</value></data>
+  <data name="Parameter.SenMapic.Depth" xml:space="preserve"><value>Profundidad||Introduzca la profundidad máxima de rastreo</value></data>
+  <data name="Parameter.SenMapic.PageCount" xml:space="preserve"><value>Número de páginas||Introduzca el número máximo de páginas que desea rastrear</value></data>
+  <data name="Parameter.Terminal.Command" xml:space="preserve"><value>&gt; Comando||Línea de comandos, por ejemplo: dir /?</value></data>
+  <data name="Parameter.SystemManager.AppKey" xml:space="preserve"><value>NeuChar AppKey||Consulte su AppKey en https://www.neuchar.com/Developer/Developer</value></data>
+  <data name="Parameter.SystemManager.AppSecret" xml:space="preserve"><value>NeuChar AppSecret||Consulte su Secret en https://www.neuchar.com/Developer/Developer. No lo revele.</value></data>
+  <data name="Parameter.SystemManager.RequestTempId" xml:space="preserve"><value>RequestTempId||El requestTempId devuelto por AppService, por ejemplo: RequestTempId-639189862069965960-fc2ab5f5</value></data>
+  <data name="Parameter.XncfManager.ShowFunctions.Module" xml:space="preserve"><value>Módulo XNCF||Ver el estado de Function de un módulo específico</value></data>
+  <data name="Parameter.XncfManager.Install.Module" xml:space="preserve"><value>Módulo XNCF||Elija el módulo que desea instalar y habilitar</value></data>
+  <data name="Parameter.AI.Model" xml:space="preserve"><value>Seleccionar modelos||</value></data>
+  <data name="Parameter.AI.Prompt" xml:space="preserve"><value>Prompt||</value></data>
+  <data name="Parameter.AI.Source.Database" xml:space="preserve"><value>Base de datos del módulo AIKernel</value></data>
+  <data name="Parameter.AI.Source" xml:space="preserve"><value>Origen: {0}</value></data>
+  <data name="Parameter.PromptRange.FilterRange" xml:space="preserve"><value>Filtrar nombre del campo||Introduzca una palabra clave; déjelo vacío para mostrar todos los campos</value></data>
+  <data name="Parameter.ChangeNamespace.Path" xml:space="preserve"><value>Ruta||Ruta física local, por ejemplo: E:\Senparc\Ncf\</value></data>
+  <data name="Parameter.ChangeNamespace.NewNamespace" xml:space="preserve"><value>Nuevo espacio de nombres||La raíz debe terminar en punto y reemplazará [Senparc.Ncf.]</value></data>
+  <data name="Parameter.ChangeNamespace.Source" xml:space="preserve"><value>Origen||GitHub suele actualizarse primero. Gitee es más rápido en China continental, pero puede retrasarse; compruebe la última versión de GitHub.</value></data>
+  <data name="Parameter.ChangeNamespace.CurrentNamespace" xml:space="preserve"><value>Espacio de nombres personalizado actual||La raíz suele terminar en punto, como [My.Namespace.], y se reemplazará por [Senparc.Ncf.] o [Senparc.]</value></data>
+  <data name="Parameter.FirmwareUpdate.AutoMirror" xml:space="preserve"><value>Activar réplica automática||Sincronizar paquetes NCF desde GitHub a ~/wwwroot/NcfPackages</value></data>
+  <data name="Parameter.FirmwareUpdate.Interval" xml:space="preserve"><value>Intervalo de comprobación (horas)||De 1 a 24 horas</value></data>
+  <data name="Parameter.FirmwareUpdate.Interval.Option" xml:space="preserve"><value>{0} horas</value></data>
+  <data name="Parameter.FirmwareUpdate.Interval.Help" xml:space="preserve"><value>Comprobar cada {0} horas</value></data>
+  <data name="Parameter.DatabaseBackup.Path" xml:space="preserve"><value>Ruta||Ruta física local con nombre de archivo, por ejemplo E:\Senparc\Database-Backup\NCF.bak; asegúrese de que el proceso web tenga acceso</value></data>
+  <data name="Parameter.DatabaseBackup.Options" xml:space="preserve"><value>Opciones||Opciones de copia de seguridad de la base de datos</value></data>
+  <data name="Parameter.DatabaseBackup.NoOverwrite" xml:space="preserve"><value>No sobrescribir un archivo existente</value></data>
+  <data name="Parameter.DatabaseBackup.NoOverwrite.Help" xml:space="preserve"><value>Omitir la copia si el archivo de destino ya existe</value></data>
+  <data name="Parameter.DatabaseBackup.Verify" xml:space="preserve"><value>Comprobar que el archivo .bak cambió tras la copia</value></data>
+  <data name="Parameter.DatabaseBackup.Verify.Help" xml:space="preserve"><value>Solo comprueba si cambió el archivo; no valida su contenido</value></data>
+  <data name="Parameter.Application.FilePath" xml:space="preserve"><value>Ruta personalizada||Nombre del archivo</value></data>
+  <data name="Function.Application.Launch.Name" xml:space="preserve"><value>Aplicación</value></data>
+  <data name="Function.Application.Launch.Description" xml:space="preserve"><value>Iniciar una aplicación externa</value></data>
+  <data name="Function.Application.Launch.StartLog" xml:space="preserve"><value>Iniciando LaunchApp</value></data>
+  <data name="Common.OperationSucceeded" xml:space="preserve"><value>Operación completada correctamente.</value></data>
+  <data name="MCP.Endpoint.CountAll" xml:space="preserve"><value>Se recuperaron {0} endpoints MCP</value></data>
+  <data name="MCP.Endpoint.CountEnabled" xml:space="preserve"><value>Se recuperaron {0} endpoints MCP habilitados</value></data>
+  <data name="MCP.Endpoint.NameRequired" xml:space="preserve"><value>El nombre del endpoint es obligatorio.</value></data>
+  <data name="MCP.Endpoint.AddressRequired" xml:space="preserve"><value>La dirección del endpoint es obligatoria.</value></data>
+  <data name="MCP.Endpoint.NameExists" xml:space="preserve"><value>El nombre de endpoint «{0}» ya existe.</value></data>
+  <data name="MCP.Endpoint.IdNotFound" xml:space="preserve"><value>No se encontró el endpoint con ID {0}.</value></data>
+  <data name="MCP.Endpoint.Updated" xml:space="preserve"><value>✓ Se actualizó el endpoint MCP «{0}».</value></data>
+  <data name="MCP.Endpoint.Created" xml:space="preserve"><value>✓ Se creó el endpoint MCP «{0}».</value></data>
+  <data name="MCP.Endpoint.InvalidId" xml:space="preserve"><value>ID de endpoint no válido.</value></data>
+  <data name="MCP.Endpoint.Deleted" xml:space="preserve"><value>✓ Se eliminó el endpoint MCP «{0}».</value></data>
+  <data name="MCP.Endpoint.TestSucceeded" xml:space="preserve"><value>✓ La prueba de conexión se completó correctamente.</value></data>
+  <data name="MCP.Endpoint.TestFailed" xml:space="preserve"><value>✗ La prueba de conexión falló.</value></data>
+  <data name="Parameter.MCP.Endpoint.IdCreate" xml:space="preserve"><value>ID del endpoint||Use 0 para crear un endpoint nuevo</value></data>
+  <data name="Parameter.MCP.Endpoint.Name" xml:space="preserve"><value>Nombre del endpoint||Nombre del endpoint MCP</value></data>
+  <data name="Parameter.MCP.Endpoint.Address" xml:space="preserve"><value>Dirección del endpoint||URI del endpoint MCP</value></data>
+  <data name="Parameter.MCP.Endpoint.Type" xml:space="preserve"><value>Tipo de endpoint||Por ejemplo http, sse o stdio</value></data>
+  <data name="Parameter.MCP.Endpoint.ProtocolVersion" xml:space="preserve"><value>Versión del protocolo||Versión del protocolo MCP</value></data>
+  <data name="Parameter.MCP.Endpoint.Description" xml:space="preserve"><value>Descripción||Descripción del endpoint</value></data>
+  <data name="Parameter.MCP.Endpoint.Enabled" xml:space="preserve"><value>Habilitado||Indica si este endpoint está habilitado</value></data>
+  <data name="Parameter.MCP.Endpoint.AuthConfig" xml:space="preserve"><value>Configuración de autenticación||Configuración JSON de autenticación</value></data>
+  <data name="Parameter.MCP.Endpoint.ExtraConfig" xml:space="preserve"><value>Configuración adicional||Otra configuración JSON personalizada</value></data>
+  <data name="Parameter.MCP.Endpoint.IdDelete" xml:space="preserve"><value>ID del endpoint||ID del endpoint MCP que se eliminará</value></data>
+  <data name="Parameter.MCP.Endpoint.IdTest" xml:space="preserve"><value>ID del endpoint||ID del endpoint MCP que se probará</value></data>
+  <data name="Common.Error" xml:space="preserve"><value>Error: {0}</value></data>
+  <data name="Database.Config.Current" xml:space="preserve"><value>DatabaseConfiguration actual: {0}; tipo: {1}</value></data>
+  <data name="Database.Config.SaveLogName" xml:space="preserve"><value>Configurar base de datos</value></data>
+  <data name="Database.Config.Saved" xml:space="preserve"><value>Configuración guardada.</value></data>
+  <data name="Database.Config.SavedValues" xml:space="preserve"><value>Intervalo en minutos: {0}; ruta: {1}</value></data>
+  <data name="Database.ModuleAndTableRequired" xml:space="preserve"><value>El nombre del módulo y de la tabla son obligatorios.</value></data>
+  <data name="Database.ModuleNotFound" xml:space="preserve"><value>No se encontró el módulo «{0}». Módulos disponibles: {1}</value></data>
+  <data name="Database.TableNotFoundAvailable" xml:space="preserve"><value>No se encontró la tabla «{0}» en «{1}». Entidades disponibles: {2}</value></data>
+  <data name="Database.TableNotFound" xml:space="preserve"><value>No se encontró la tabla: {0}.{1}</value></data>
+  <data name="Database.Query.Log" xml:space="preserve"><value>Consultando {0}.{1} (entrada: {2}.{3})</value></data>
+  <data name="Database.Query.Error" xml:space="preserve"><value>Error al consultar registros: {0}</value></data>
+  <data name="Database.Statistics.Log" xml:space="preserve"><value>Obteniendo estadísticas de {0}.{1} (entrada: {2}.{3})</value></data>
+  <data name="Database.Statistics.Error" xml:space="preserve"><value>Error al obtener estadísticas: {0}</value></data>
+  <data name="Database.Schema.TableDetailLog" xml:space="preserve"><value>Obteniendo detalles de la tabla: {0}.{1}</value></data>
+  <data name="Database.Schema.SuggestedModules" xml:space="preserve"><value>&#10;Posibles módulos coincidentes: {0}</value></data>
+  <data name="Database.Schema.AllModules" xml:space="preserve"><value>&#10;Todos los módulos disponibles: {0}</value></data>
+  <data name="Database.Schema.ModuleNotFoundWithHint" xml:space="preserve"><value>No se encontró el módulo «{0}».{1}</value></data>
+  <data name="Database.Schema.NoAvailableTables" xml:space="preserve"><value>(no hay tablas disponibles)</value></data>
+  <data name="Database.Schema.EntityNotFound" xml:space="preserve"><value>No se encontró la entidad «{1}» en «{0}».&#10;Entidades disponibles: {2}</value></data>
+  <data name="Database.Schema.ModuleTablesLog" xml:space="preserve"><value>Obteniendo todas las tablas del módulo {0}</value></data>
+  <data name="Database.Schema.ModuleHasNoTables" xml:space="preserve"><value>El módulo «{0}» no tiene tablas consultables.</value></data>
+  <data name="Database.Schema.OverviewLog" xml:space="preserve"><value>Obteniendo un resumen de módulos y tablas consultables</value></data>
+  <data name="Database.Schema.NoModules" xml:space="preserve"><value>No hay módulos de base de datos consultables.</value></data>
+  <data name="Database.Schema.Error" xml:space="preserve"><value>Error al consultar el esquema: {0}</value></data>
+  <data name="Validation.Database.ModuleRequired" xml:space="preserve"><value>El nombre del módulo es obligatorio.</value></data>
+  <data name="Validation.Database.TableRequired" xml:space="preserve"><value>El nombre de la tabla es obligatorio.</value></data>
+  <data name="Parameter.Database.Module.Query" xml:space="preserve"><value>Nombre del módulo||Obligatorio. Por ejemplo KnowledgeBase o AIKernel</value></data>
+  <data name="Parameter.Database.Table.Query" xml:space="preserve"><value>Nombre de la tabla||Obligatorio. Tabla que se consultará</value></data>
+  <data name="Parameter.Database.Filter" xml:space="preserve"><value>Filtro||Condición SQL WHERE opcional, como Name = "test" o Id &gt; 10</value></data>
+  <data name="Parameter.Database.PageNumber" xml:space="preserve"><value>Número de página||Opcional. Predeterminado 1; mínimo 1</value></data>
+  <data name="Parameter.Database.PageSize" xml:space="preserve"><value>Tamaño de página||Opcional. Predeterminado 20; rango 1–1000</value></data>
+  <data name="Parameter.Database.Module.Statistics" xml:space="preserve"><value>Nombre del módulo||Obligatorio. Módulo cuyas estadísticas se consultarán</value></data>
+  <data name="Parameter.Database.Table.Statistics" xml:space="preserve"><value>Nombre de la tabla||Obligatorio. Tabla cuyas estadísticas se consultarán</value></data>
+  <data name="Parameter.Database.Schema.Module" xml:space="preserve"><value>Nombre del módulo||Opcional. Devuelve solo las tablas de este módulo</value></data>
+  <data name="Parameter.Database.Schema.Table" xml:space="preserve"><value>Nombre de la tabla||Opcional. Úselo con el módulo para obtener detalles</value></data>
+  <data name="Parameter.Database.Config.Cycle" xml:space="preserve"><value>Intervalo de copia automática (minutos)||0 desactiva la copia automática</value></data>
+  <data name="Parameter.Database.Config.Path" xml:space="preserve"><value>Ruta de copia||Ruta física local, por ejemplo: E:\Senparc\Ncf\NCF.bak</value></data>
+  <data name="Parameter.MCP.Tool.Input" xml:space="preserve"><value>Cadena de entrada</value></data>
+  <data name="MCP.Tool.Echo.Description" xml:space="preserve"><value>Procesar y repetir una cadena</value></data>
+  <data name="MCP.Tool.Echo.Result" xml:space="preserve"><value>Hola, {0}</value></data>
+  <data name="MCP.Tool.Now.Description" xml:space="preserve"><value>Obtener la hora actual</value></data>
+  <data name="MCP.Tool.AddHours.Description" xml:space="preserve"><value>Añadir horas a la hora actual</value></data>
+  <data name="MCP.Tool.Calculator.Description" xml:space="preserve"><value>Realizar suma, resta, multiplicación y división</value></data>
+  <data name="Parameter.MCP.Tool.Operator" xml:space="preserve"><value>Operador entre Number1 y Number2: +, -, × o ÷</value></data>
+  <data name="MCP.Agent.SystemPrompt" xml:space="preserve"><value>Eres un asistente útil que ayuda a los usuarios a completar tareas.</value></data>
+  <data name="MCP.BobLab.Instructions" xml:space="preserve"><value>Ayuda a responder preguntas. Repite la pregunta, responde en Markdown en español con traducción inglesa y usa #start y #end.</value></data>
+  <data name="MCP.BobLab.Footer" xml:space="preserve"><value>[Bob's Lab] - {0} / {1}; tiempo: {2} ms</value></data>
+  <data name="MCP.Calculate.DivideByZero" xml:space="preserve"><value>El divisor no puede ser cero.</value></data>
+  <data name="MCP.Calculate.UnknownOperator" xml:space="preserve"><value>Operador desconocido: {0}</value></data>
+  <data name="MCP.Calculate.OperationLog" xml:space="preserve"><value>Cálculo: {0} {1} {2} = {3}</value></data>
+  <data name="MCP.Calculate.PowerLog" xml:space="preserve"><value>Potencia {0}: {1}{2} = {3}</value></data>
+  <data name="MCP.Calculate.Result" xml:space="preserve"><value>[{0}] Resultado: {1}. Consulte el registro para ver los detalles.</value></data>
+  <data name="Parameter.Agents.Template.Name" xml:space="preserve"><value>Nombre||Nombre de la plantilla de Agent</value></data>
+  <data name="Parameter.Agents.Template.Id" xml:space="preserve"><value>ID||0 crea una plantilla nueva</value></data>
+  <data name="Parameter.Agents.Template.SystemMessage" xml:space="preserve"><value>SystemMessage||PromptRangeCode del mensaje del sistema; admite búsqueda, selección y entrada manual</value></data>
+  <data name="Parameter.Agents.Template.Description" xml:space="preserve"><value>Descripción||Descripción de la plantilla; no afecta al comportamiento del modelo</value></data>
+  <data name="Parameter.Agents.Template.Platform" xml:space="preserve"><value>Plataforma externa||Plataforma donde se publican los mensajes</value></data>
+  <data name="Parameter.Agents.Template.PlatformParameter" xml:space="preserve"><value>Parámetro de plataforma||Parámetro de conexión, como una clave</value></data>
+  <data name="Parameter.Agents.Template.FunctionCalls" xml:space="preserve"><value>Function Calls||Nombres separados por comas</value></data>
+  <data name="Parameter.Agents.Create.Name" xml:space="preserve"><value>Nombre del Agent||Nombre del nuevo Agent</value></data>
+  <data name="Parameter.Agents.Create.ManualPromptCode" xml:space="preserve"><value>PromptCode manual||Nombre de campo, prefijo de táctica o versión completa; obligatorio con SystemMessage manual</value></data>
+  <data name="Parameter.Agents.Create.Description" xml:space="preserve"><value>Descripción||Descripción opcional del nuevo Agent</value></data>
+  <data name="Parameter.Agents.Create.FunctionCalls" xml:space="preserve"><value>Function Calls||Nombres opcionales separados por comas</value></data>
+  <data name="Parameter.Agents.Search.Query" xml:space="preserve"><value>Términos de búsqueda||Nombres, PromptCodes o palabras clave; sepárelos con comas, punto y coma o líneas</value></data>
+  <data name="Parameter.Agents.Search.TopN" xml:space="preserve"><value>Resultados máximos||Candidatos por término; predeterminado 5</value></data>
+  <data name="Parameter.Agents.Chat.SelectManage" xml:space="preserve"><value>Seleccionar grupo||Elija un grupo o cree uno nuevo</value></data>
+  <data name="Agents.Chat.NewGroup" xml:space="preserve"><value>Grupo nuevo</value></data>
+  <data name="Agents.Chat.NewGroup.Help" xml:space="preserve"><value>Crear un grupo nuevo</value></data>
+  <data name="Parameter.Agents.Chat.Name" xml:space="preserve"><value>Nombre del grupo||Nombre del grupo</value></data>
+  <data name="Parameter.Agents.Chat.Members" xml:space="preserve"><value>Miembros||Opcional; también puede introducirlos manualmente</value></data>
+  <data name="Parameter.Agents.Chat.MembersManual" xml:space="preserve"><value>Miembros (manual)||Nombres, ID o PromptCodes separados por comas, punto y coma o líneas</value></data>
+  <data name="Parameter.Agents.Chat.Admin" xml:space="preserve"><value>Propietario||Usa automáticamente el Agent anfitrión mejor valorado; la entrada manual se conserva por compatibilidad</value></data>
+  <data name="Parameter.Agents.Chat.AdminManual" xml:space="preserve"><value>Propietario (manual)||Nombre, ID o PromptCode opcional</value></data>
+  <data name="Parameter.Agents.Chat.Contact" xml:space="preserve"><value>Agent de contacto||Usa automáticamente el anfitrión mejor valorado; entrada manual por compatibilidad</value></data>
+  <data name="Parameter.Agents.Chat.ContactManual" xml:space="preserve"><value>Contacto (manual)||Nombre, ID o PromptCode opcional</value></data>
+  <data name="Parameter.Agents.Chat.Description" xml:space="preserve"><value>Descripción||Descripción del grupo</value></data>
+  <data name="Parameter.Agents.Chat.SelectRun" xml:space="preserve"><value>Seleccionar grupos||Grupos que se ejecutarán</value></data>
+  <data name="Parameter.Agents.Chat.AIModel" xml:space="preserve"><value>Modelo de IA||Modelo externo para esta tarea</value></data>
+  <data name="Parameter.Agents.Chat.Individuation" xml:space="preserve"><value>Agents personalizados||</value></data>
+  <data name="Common.Yes" xml:space="preserve"><value>Sí</value></data>
+  <data name="Agents.Chat.Individuation.Help" xml:space="preserve"><value>Ejecutar Agents con parámetros de IA personalizados</value></data>
+  <data name="Parameter.Agents.Chat.Command" xml:space="preserve"><value>¿Cómo puedo ayudar?||Describa el trabajo que deben completar los Agents</value></data>
+  <data name="Parameter.Agents.Chat.SelectDelete" xml:space="preserve"><value>Conversaciones que se eliminarán||Elimina conversaciones, mensajes y tareas</value></data>
+  <data name="Parameter.Agents.Chat.ConfirmDelete" xml:space="preserve"><value>Confirmar eliminación||Confirma la eliminación de las conversaciones y sus datos</value></data>
+  <data name="Agents.Chat.CreatedAt" xml:space="preserve"><value>{0} (creado {1:g})</value></data>
+  <data name="Agents.Plugin.Crawl.Description" xml:space="preserve"><value>Rastrear páginas web y devolver contenido relevante</value></data>
+  <data name="Agents.Plugin.Crawl.Url" xml:space="preserve"><value>URL que se rastreará</value></data>
+  <data name="Agents.Plugin.Crawl.Depth" xml:space="preserve"><value>Profundidad máxima</value></data>
+  <data name="Agents.Plugin.Crawl.PageCount" xml:space="preserve"><value>Número máximo de páginas</value></data>
+  <data name="Agents.Plugin.Crawl.Question" xml:space="preserve"><value>Pregunta</value></data>
+  <data name="Agents.Plugin.TextLength.Description" xml:space="preserve"><value>Obtener el número de caracteres del texto</value></data>
+  <data name="Agents.Plugin.OriginalText" xml:space="preserve"><value>Texto original</value></data>
+  <data name="Agents.Plugin.Translate.Description" xml:space="preserve"><value>Traducir texto</value></data>
+  <data name="Agents.Plugin.TargetLanguage" xml:space="preserve"><value>Idioma de destino</value></data>
+  <data name="Agents.Plugin.Translate.Instructions" xml:space="preserve"><value>Eres un traductor profesional que domina {0}. Traduce el texto con precisión y devuelve solo la traducción.</value></data>
+  <data name="Common.Use" xml:space="preserve"><value>Usar</value></data>
+  <data name="Parameter.XncfBuilder.SolutionPath" xml:space="preserve"><value>Ruta de la solución (.sln)||Ruta física completa de la solución NCF; el módulo se crea junto a ella</value></data>
+  <data name="Parameter.XncfBuilder.SolutionOptions" xml:space="preserve"><value>Opciones de la solución||</value></data>
+  <data name="Parameter.XncfBuilder.TemplatePackage" xml:space="preserve"><value>Instalar plantilla||Reinstalar tarda 30–40 s; elija Ya instalada si está disponible</value></data>
+  <data name="Parameter.XncfBuilder.Framework" xml:space="preserve"><value>Framework de destino||TFM del proyecto</value></data>
+  <data name="Parameter.XncfBuilder.OtherFramework" xml:space="preserve"><value>Framework personalizado||Reemplaza el framework seleccionado</value></data>
+  <data name="Parameter.XncfBuilder.Organization" xml:space="preserve"><value>Organización||Prefijo del nombre y espacio de nombres</value></data>
+  <data name="Parameter.XncfBuilder.ModuleName" xml:space="preserve"><value>Nombre del módulo||También es nombre de clase; letras y números, sin empezar por número</value></data>
+  <data name="Parameter.XncfBuilder.Version" xml:space="preserve"><value>Versión||Por ejemplo 1.0.0 o 2.0.100-beta1</value></data>
+  <data name="Parameter.XncfBuilder.MenuName" xml:space="preserve"><value>Nombre del menú||Por ejemplo NCF Builder</value></data>
+  <data name="Parameter.XncfBuilder.Icon" xml:space="preserve"><value>Icono||Icono Font Awesome, por ejemplo fa fa-star</value></data>
+  <data name="Parameter.XncfBuilder.Description" xml:space="preserve"><value>Descripción||Descripción del módulo</value></data>
+  <data name="Parameter.XncfBuilder.Features" xml:space="preserve"><value>Funciones||</value></data>
+  <data name="Parameter.XncfBuilder.InstallSample" xml:space="preserve"><value>Instalar ejemplo||</value></data>
+  <data name="XncfBuilder.Option.Solution.Backup" xml:space="preserve"><value>Respaldar el .sln (recomendado)</value></data>
+  <data name="XncfBuilder.Option.Solution.Backup.Help" xml:space="preserve"><value>Crear copia antes de sobrescribir el .sln</value></data>
+  <data name="XncfBuilder.Option.Solution.New" xml:space="preserve"><value>Generar un .sln nuevo</value></data>
+  <data name="XncfBuilder.Option.Solution.New.Help" xml:space="preserve"><value>Si no, se sobrescribe; una solución activa puede reiniciar el servicio</value></data>
+  <data name="XncfBuilder.Option.Template.Online" xml:space="preserve"><value>Obtener la última plantilla en línea</value></data>
+  <data name="XncfBuilder.Option.Template.Online.Help" xml:space="preserve"><value>Descargar desde NuGet.org; tarda más</value></data>
+  <data name="XncfBuilder.Option.Template.Local" xml:space="preserve"><value>Instalar paquete local</value></data>
+  <data name="XncfBuilder.Option.Template.Local.Help" xml:space="preserve"><value>Instalar Template.*.nupkg situado junto al .sln</value></data>
+  <data name="XncfBuilder.Option.Template.Installed" xml:space="preserve"><value>Ya instalada</value></data>
+  <data name="XncfBuilder.Option.Template.Installed.Help" xml:space="preserve"><value>Si no existe localmente, se descargará automáticamente</value></data>
+  <data name="XncfBuilder.Option.Framework.Net8" xml:space="preserve"><value>Usar .NET 8.0</value></data>
+  <data name="XncfBuilder.Option.Feature.Function" xml:space="preserve"><value>Añadir Function</value></data>
+  <data name="XncfBuilder.Option.Feature.Function.Help" xml:space="preserve"><value>Incluir el módulo Function</value></data>
+  <data name="XncfBuilder.Option.Feature.Database" xml:space="preserve"><value>Añadir base de datos</value></data>
+  <data name="XncfBuilder.Option.Feature.Database.Help" xml:space="preserve"><value>Incluir el módulo y una base vacía</value></data>
+  <data name="XncfBuilder.Option.Feature.WebApi" xml:space="preserve"><value>Añadir Web API</value></data>
+  <data name="XncfBuilder.Option.Feature.WebApi.Help" xml:space="preserve"><value>Incluir el módulo Web API</value></data>
+  <data name="XncfBuilder.Option.Feature.Web" xml:space="preserve"><value>Añadir páginas Web (Area)</value></data>
+  <data name="XncfBuilder.Option.Feature.Web.Help" xml:space="preserve"><value>Incluir el módulo de páginas Web</value></data>
+  <data name="XncfBuilder.Option.InstallSample.Help" xml:space="preserve"><value>Instalar el ejemplo y activar base de datos y páginas Web</value></data>
+  <data name="XncfBuilder.AI.DefaultModel" xml:space="preserve"><value>Predeterminado (AiPlatform: {0}; Endpoint: {1})</value></data>
+  <data name="XncfBuilder.AI.DefaultModel.Help" xml:space="preserve"><value>Usar el modelo de IA predeterminado del sistema</value></data>
+  <data name="XncfBuilder.AI.DefaultModel.Unconfigured" xml:space="preserve"><value>Predeterminado (AiPlatform: {0}; no hay Endpoint, configure appsettings.json)</value></data>
+  <data name="Parameter.XncfBuilder.Entity.Requirement" xml:space="preserve"><value>Requisitos de entidad||Descríbalos por completo, con propiedades y tipos</value></data>
+  <data name="Parameter.XncfBuilder.Entity.Domain" xml:space="preserve"><value>Dominio||Dominio donde se generará la entidad</value></data>
+  <data name="Parameter.XncfBuilder.Entity.Actions" xml:space="preserve"><value>Acciones posteriores||Acciones tras generar la entidad</value></data>
+  <data name="Parameter.XncfBuilder.Entity.UsePromptRange" xml:space="preserve"><value>Usar PromptRange||Instalación e inicialización automáticas; si no, proporcione XncfBuilderPlugin</value></data>
+  <data name="Parameter.XncfBuilder.Entity.AIModel" xml:space="preserve"><value>Modelo de IA||Modelo de generación sin PromptRange</value></data>
+  <data name="Parameter.XncfBuilder.Prompt.Override" xml:space="preserve"><value>Sobrescribir||Eliminar el campo existente y reconstruirlo con la versión oficial</value></data>
+  <data name="Parameter.XncfBuilder.Prompt.AIModel" xml:space="preserve"><value>Modelo de IA||Modelo usado por todas las tácticas del nuevo campo</value></data>
+  <data name="XncfBuilder.Option.Action.Dto" xml:space="preserve"><value>Crear DTO</value></data>
+  <data name="XncfBuilder.Option.Action.Dto.Help" xml:space="preserve"><value>Crear DTO (siempre se generan)</value></data>
+  <data name="XncfBuilder.Option.Action.Migration" xml:space="preserve"><value>Generar migración</value></data>
+  <data name="XncfBuilder.Option.Action.Migration.Help" xml:space="preserve"><value>Generar migración EF Core; revísela antes de aplicarla</value></data>
+  <data name="XncfBuilder.Option.Action.Repository" xml:space="preserve"><value>Crear Repository</value></data>
+  <data name="XncfBuilder.Option.Action.Repository.Help" xml:space="preserve"><value>Crear Repository para la entidad</value></data>
+  <data name="XncfBuilder.Option.Action.Service" xml:space="preserve"><value>Crear Service</value></data>
+  <data name="XncfBuilder.Option.Action.Service.Help" xml:space="preserve"><value>Crear Service para la entidad</value></data>
+  <data name="XncfBuilder.Option.Action.AppService" xml:space="preserve"><value>Crear AppService</value></data>
+  <data name="XncfBuilder.Option.Action.AppService.Help" xml:space="preserve"><value>Crear AppService para la entidad</value></data>
+  <data name="Parameter.XncfBuilder.Migration.DatabasePlantPath" xml:space="preserve"><value>Ruta de DatabasePlant||Ruta física del host de migración; debe referenciar el proyecto XNCF</value></data>
+  <data name="Parameter.XncfBuilder.Migration.ProjectPath" xml:space="preserve"><value>Ruta del proyecto XNCF||Ruta física completa de la raíz</value></data>
+  <data name="Parameter.XncfBuilder.Migration.CustomProjectPath" xml:space="preserve"><value>Ruta XNCF personalizada||Solo se usa con Ruta personalizada</value></data>
+  <data name="Parameter.XncfBuilder.Migration.DatabaseTypes" xml:space="preserve"><value>Tipos de base de datos||Tipos para los que se generan migraciones</value></data>
+  <data name="Parameter.XncfBuilder.Migration.DbContext" xml:space="preserve"><value>Nombre de DbContext||Sin sufijo de tipo; [Default] para detección automática</value></data>
+  <data name="Parameter.XncfBuilder.Migration.Name" xml:space="preserve"><value>Nombre de migración||Letras, números y guiones bajos, por ejemplo Add_Config</value></data>
+  <data name="Parameter.XncfBuilder.Migration.UpdateVersion" xml:space="preserve"><value>Actualizar versión||Actualizar la versión en Register.cs</value></data>
+  <data name="Parameter.XncfBuilder.Migration.Verbose" xml:space="preserve"><value>Registro detallado||Usar add-migration -v</value></data>
+  <data name="XncfBuilder.Option.Version.None" xml:space="preserve"><value>No actualizar</value></data>
+  <data name="XncfBuilder.Option.Version.Major" xml:space="preserve"><value>Versión principal + 1</value></data>
+  <data name="XncfBuilder.Option.Version.Minor" xml:space="preserve"><value>Versión secundaria + 1</value></data>
+  <data name="XncfBuilder.Option.Version.Patch" xml:space="preserve"><value>Parche + 1</value></data>
+  <data name="XncfBuilder.Option.CustomPath" xml:space="preserve"><value>Ruta personalizada</value></data>
+  <data name="XncfBuilder.Validation.CustomProjectPathRequired" xml:space="preserve"><value>Introduzca la ruta personalizada del proyecto XNCF.</value></data>
+  <data name="Parameter.XncfBuilder.Interface.TargetPath" xml:space="preserve"><value>Ruta del proyecto objetivo||Proyecto que se analizará para generar interfaces</value></data>
+  <data name="Parameter.XncfBuilder.Interface.Namespace" xml:space="preserve"><value>Prefijo de espacio de nombres||Prefijo de las clases generadas</value></data>
+  <data name="Parameter.XncfBuilder.Interface.ClassPattern" xml:space="preserve"><value>Regex de clase||Expresión regular para nombres de clase</value></data>
+  <data name="Parameter.XncfBuilder.Interface.MethodPattern" xml:space="preserve"><value>Regex de método||Expresión regular para nombres de método</value></data>
+  <data name="Parameter.XncfBuilder.Interface.DestinationPath" xml:space="preserve"><value>Proyecto de destino||Proyecto que recibirá el código de interfaz</value></data>
+  <data name="XncfBuilder.MCP.ModuleDirectoryNotFound" xml:space="preserve"><value>No se encontró el directorio del módulo {0}. Use el nombre completo, como Senparc.Xncf.XncfBuilder.</value></data>
+  <data name="XncfBuilder.MCP.ModuleFullName" xml:space="preserve"><value>Nombre completo del módulo, como Senparc.Xncf.XncfBuilder</value></data>
+  <data name="XncfBuilder.MCP.FilePath" xml:space="preserve"><value>Ruta y nombre del archivo dentro del módulo</value></data>
+  <data name="XncfBuilder.MCP.FileNotFound" xml:space="preserve"><value>No se encontró el archivo: {0}</value></data>
+  <data name="XncfBuilder.MCP.FileContent" xml:space="preserve"><value>Contenido completo del archivo</value></data>
+  <data name="XncfBuilder.Plugin.CreateEntity" xml:space="preserve"><value>Crear archivo de clase de entidad</value></data>
+  <data name="XncfBuilder.Plugin.FilePath" xml:space="preserve"><value>Ruta del archivo</value></data>
+  <data name="XncfBuilder.Plugin.GeneratedContent" xml:space="preserve"><value>Contenido generado por IA</value></data>
+  <data name="XncfBuilder.Plugin.FileSaved" xml:space="preserve"><value>Archivo guardado: {0}</value></data>
+  <data name="XncfBuilder.Plugin.ReadDbContext" xml:space="preserve"><value>Leer y actualizar el contexto de base de datos</value></data>
+  <data name="XncfBuilder.Plugin.ProjectPath" xml:space="preserve"><value>Ruta del proyecto</value></data>
+  <data name="XncfBuilder.Plugin.EntityName" xml:space="preserve"><value>Nombre de la nueva entidad</value></data>
+  <data name="XncfBuilder.Plugin.PluralEntityName" xml:space="preserve"><value>Plural del nombre de la nueva entidad</value></data>
+  <data name="Area.Extensions" xml:space="preserve"><value>Extensiones</value></data>
+  <data name="Page.AutoGeneratedModule" xml:space="preserve"><value>Este módulo se generó automáticamente</value></data>
+  <data name="Page.InstalledAt" xml:space="preserve"><value>Instalado: </value></data>
+  <data name="Page.CurrentDatabase" xml:space="preserve"><value>Tipo de base actual: </value></data>
+  <data name="Page.Brighten" xml:space="preserve"><value>Aclarar</value></data>
+  <data name="Page.Darken" xml:space="preserve"><value>Oscurecer</value></data>
+  <data name="Page.Random" xml:space="preserve"><value>Aleatorio</value></data>
+</root>

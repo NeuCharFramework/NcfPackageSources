@@ -1,6 +1,7 @@
 using Microsoft.SemanticKernel;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.XncfBase;
 using System;
 using System.Collections.Generic;
@@ -31,24 +32,24 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
         /// <summary>
         /// 列出当前会话关联的所有 XNCF 模块
         /// </summary>
-        [KernelFunction, Description("获取当前对话会话已关联的所有 XNCF 模块列表。当用户询问当前会话有哪些模块、关联了哪些模块时调用。")]
+        [KernelFunction, LocalizedDescription(typeof(AdminResource), "Admin.ModuleAssistant.Tool.SessionModules")]
         public string GetSessionModuleList()
         {
             if (!_sessionModules.Any())
-                return "当前会话没有关联任何 XNCF 模块。";
+                return AdminResource.Get("Admin.ModuleAssistant.NoSessionModules");
 
             var sb = new StringBuilder();
-            sb.AppendLine($"当前会话已关联 {_sessionModules.Count} 个模块：");
+            sb.AppendLine(AdminResource.Format("Admin.ModuleAssistant.SessionModuleCount", "当前会话已关联 {0} 个模块：", _sessionModules.Count));
             foreach (var m in _sessionModules)
             {
                 var register = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == m.XncfModuleUid);
                 sb.AppendLine($"\n- **{m.ModuleName}**");
                 sb.AppendLine($"  UID: {m.XncfModuleUid}");
-                sb.AppendLine($"  版本: {m.ModuleVersion}");
+                sb.AppendLine(AdminResource.Format("Admin.ModuleAssistant.Version", "  版本：{0}", m.ModuleVersion));
                 if (register != null)
                 {
-                    sb.AppendLine($"  描述: {register.Description}");
-                    sb.AppendLine($"  菜单名: {register.MenuName}");
+                    sb.AppendLine(AdminResource.Format("Admin.ModuleAssistant.Description", "  描述：{0}", register.Description));
+                    sb.AppendLine(AdminResource.Format("Admin.ModuleAssistant.MenuName", "  菜单名：{0}", register.MenuName));
                 }
             }
             return sb.ToString();
@@ -57,32 +58,32 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
         /// <summary>
         /// 获取指定模块的详细信息（含 Functions 列表）
         /// </summary>
-        [KernelFunction, Description("获取指定模块的详细信息，包括描述、版本、可用功能（FunctionRender）列表等。支持通过模块名称关键字或 UID 查询。当用户询问某个模块有哪些功能、模块说明时调用。")]
+        [KernelFunction, LocalizedDescription(typeof(AdminResource), "Admin.ModuleAssistant.Tool.ModuleDetail")]
         public string GetModuleDetail(
-            [Description("模块名称关键字（支持模糊匹配）或模块 UID")] string moduleUidOrName)
+            [LocalizedDescription(typeof(AdminResource), "Admin.ModuleAssistant.Parameter.Module")] string moduleUidOrName)
         {
             var module = FindModule(moduleUidOrName);
             if (module == null)
-                return $"未找到匹配的模块：\"{moduleUidOrName}\"。请先调用 GetSessionModuleList 确认当前会话中的模块列表。";
+                return AdminResource.Format("Admin.ModuleAssistant.ModuleNotFound", "未找到匹配的模块：“{0}”。请先调用 GetSessionModuleList 确认模块列表。", moduleUidOrName);
 
             var register = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == module.XncfModuleUid);
             var sb = new StringBuilder();
-            sb.AppendLine($"## 模块详情：{module.ModuleName}");
+            sb.AppendLine(AdminResource.Format("Admin.ModuleAssistant.DetailTitle", "## 模块详情：{0}", module.ModuleName));
             sb.AppendLine($"- **UID**: {module.XncfModuleUid}");
-            sb.AppendLine($"- **版本**: {module.ModuleVersion}");
+            sb.AppendLine(AdminResource.Format("Admin.ModuleAssistant.DetailVersion", "- **版本**：{0}", module.ModuleVersion));
 
             if (register != null)
             {
-                sb.AppendLine($"- **程序集名称**: {register.Name}");
-                sb.AppendLine($"- **菜单名**: {register.MenuName}");
-                sb.AppendLine($"- **描述**: {register.Description}");
-                sb.AppendLine($"- **图标**: {register.Icon}");
-                sb.AppendLine($"- **支持 MCP**: {(register.EnableMcpServer ? "是" : "否")}");
+                sb.AppendLine(AdminResource.Format("Admin.ModuleAssistant.DetailAssembly", "- **程序集名称**：{0}", register.Name));
+                sb.AppendLine(AdminResource.Format("Admin.ModuleAssistant.DetailMenu", "- **菜单名**：{0}", register.MenuName));
+                sb.AppendLine(AdminResource.Format("Admin.ModuleAssistant.DetailDescription", "- **描述**：{0}", register.Description));
+                sb.AppendLine(AdminResource.Format("Admin.ModuleAssistant.DetailIcon", "- **图标**：{0}", register.Icon));
+                sb.AppendLine(AdminResource.Format("Admin.ModuleAssistant.DetailMcp", "- **支持 MCP**：{0}", register.EnableMcpServer ? AdminResource.Get("Common.Yes") : AdminResource.Get("Common.No")));
 
                 // 获取 FunctionRender 注册的功能列表
                 if (Ncf.XncfBase.Register.FunctionRenderCollection.TryGetValue(register.GetType(), out var functionGroup) && functionGroup.Any())
                 {
-                    sb.AppendLine($"\n### 可用功能（FunctionRender，共 {functionGroup.Count} 个）：");
+                    sb.AppendLine(AdminResource.Format("Admin.ModuleAssistant.FunctionCount", "\n### 可用功能（FunctionRender，共 {0} 个）：", functionGroup.Count));
                     foreach (var f in functionGroup.Values)
                     {
                         sb.AppendLine($"- **{f.FunctionRenderAttribute.Name}**：{f.FunctionRenderAttribute.Description}");
@@ -90,12 +91,12 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
                 }
                 else
                 {
-                    sb.AppendLine("\n此模块未注册 FunctionRender 功能。");
+                    sb.AppendLine(AdminResource.Get("Admin.ModuleAssistant.NoFunctions"));
                 }
             }
             else
             {
-                sb.AppendLine("（该模块已关联会话，但运行时 XncfRegisterManager 中未找到其注册，可能已卸载。）");
+                sb.AppendLine(AdminResource.Get("Admin.ModuleAssistant.RuntimeRegistrationMissing"));
             }
             return sb.ToString();
         }
@@ -103,26 +104,27 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
         /// <summary>
         /// 获取指定模块的数据库结构信息
         /// </summary>
-        [KernelFunction, Description("获取指定模块的数据库/存储结构信息，包括数据库前缀、DbContext 类型、数据表（DbSet）列表等。当用户询问模块的数据结构、数据库表、存储内容时调用。")]
+        [KernelFunction, LocalizedDescription(typeof(AdminResource), "Admin.ModuleAssistant.Tool.DatabaseInfo")]
         public string GetModuleDatabaseInfo(
-            [Description("模块名称关键字或模块 UID")] string moduleUidOrName)
+            [LocalizedDescription(typeof(AdminResource), "Admin.ModuleAssistant.Parameter.Module")]
+            string moduleUidOrName)
         {
             var module = FindModule(moduleUidOrName);
             if (module == null)
-                return $"未找到模块：\"{moduleUidOrName}\"。请先调用 GetSessionModuleList 确认可用模块。";
+                return AdminResource.Format("Admin.ModuleAssistant.DatabaseModuleNotFound", "未找到模块：“{0}”。请先调用 GetSessionModuleList 确认可用模块。", moduleUidOrName);
 
             var register = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == module.XncfModuleUid);
             if (register == null)
-                return $"模块 {module.ModuleName} 的运行时注册未找到，无法读取数据库信息。";
+                return AdminResource.Format("Admin.ModuleAssistant.DatabaseRuntimeMissing", "未找到模块 {0} 的运行时注册，无法读取数据库信息。", module.ModuleName);
 
             var sb = new StringBuilder();
-            sb.AppendLine($"## {module.ModuleName} 数据库信息");
+            sb.AppendLine(AdminResource.Format("Admin.ModuleAssistant.DatabaseTitle", "## {0} 数据库信息", module.ModuleName));
 
             if (register is IXncfDatabase dbRegister)
             {
-                sb.AppendLine($"- **数据库表前缀**: {dbRegister.DatabaseUniquePrefix}");
+                sb.AppendLine(AdminResource.Format("Admin.ModuleAssistant.DatabasePrefix", "- **数据库表前缀**：{0}", dbRegister.DatabaseUniquePrefix));
                 var ctxType = dbRegister.TryGetXncfDatabaseDbContextType;
-                sb.AppendLine($"- **DbContext 类型**: {ctxType?.FullName ?? "未获取到"}");
+                sb.AppendLine(AdminResource.Format("Admin.ModuleAssistant.DatabaseContext", "- **DbContext 类型**：{0}", ctxType?.FullName ?? AdminResource.Get("Common.NotAvailable")));
 
                 if (ctxType != null)
                 {
@@ -133,11 +135,11 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
 
                     if (dbSetProps.Any())
                     {
-                        sb.AppendLine($"- **数据表（DbSet，共 {dbSetProps.Count} 张）**：");
+                        sb.AppendLine(AdminResource.Format("Admin.ModuleAssistant.DatabaseTableCount", "- **数据表（DbSet，共 {0} 张）**：", dbSetProps.Count));
                         foreach (var prop in dbSetProps)
                         {
                             var entityType = prop.PropertyType.GetGenericArguments().FirstOrDefault();
-                            sb.AppendLine($"  * **{prop.Name}** → 实体类型：{entityType?.Name ?? "未知"}");
+                            sb.AppendLine(AdminResource.Format("Admin.ModuleAssistant.DatabaseEntity", "  * **{0}** → 实体类型：{1}", prop.Name, entityType?.Name ?? AdminResource.Get("Common.Unknown")));
 
                             // 列出实体的公开属性（简要字段清单）
                             if (entityType != null)
@@ -149,20 +151,20 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
                                     .Take(12)
                                     .ToList();
                                 if (fields.Any())
-                                    sb.AppendLine($"    字段：{string.Join(", ", fields)}");
+                                    sb.AppendLine(AdminResource.Format("Admin.ModuleAssistant.DatabaseFields", "    字段：{0}", string.Join(", ", fields)));
                             }
                         }
                     }
                     else
                     {
-                        sb.AppendLine("  未检测到 DbSet 属性（或无公开数据表）。");
+                        sb.AppendLine(AdminResource.Get("Admin.ModuleAssistant.NoDbSets"));
                     }
                 }
             }
             else
             {
-                sb.AppendLine("此模块没有独立数据库（未实现 IXncfDatabase 接口）。");
-                sb.AppendLine("该模块可能使用公共数据库，或不涉及持久化存储。");
+                sb.AppendLine(AdminResource.Get("Admin.ModuleAssistant.NoIndependentDatabase"));
+                sb.AppendLine(AdminResource.Get("Admin.ModuleAssistant.SharedOrNoStorage"));
             }
             return sb.ToString();
         }
@@ -170,7 +172,7 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
         /// <summary>
         /// 列出系统中所有已注册模块
         /// </summary>
-        [KernelFunction, Description("列出当前系统中所有已注册的 XNCF 模块（不局限于当前会话的关联模块）。当用户想了解系统整体有哪些模块、模块概览时调用。")]
+        [KernelFunction, LocalizedDescription(typeof(AdminResource), "Admin.ModuleAssistant.Tool.AllModules")]
         public string ListAllInstalledModules()
         {
             var allModules = XncfRegisterManager.RegisterList
@@ -179,14 +181,14 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
                 .ToList();
 
             if (!allModules.Any())
-                return "系统中没有已注册的模块。";
+                return AdminResource.Get("Admin.ModuleAssistant.NoInstalledModules");
 
             var sb = new StringBuilder();
-            sb.AppendLine($"系统共注册 {allModules.Count} 个模块：");
+            sb.AppendLine(AdminResource.Format("Admin.ModuleAssistant.InstalledModuleCount", "系统共注册 {0} 个模块：", allModules.Count));
             foreach (var r in allModules)
             {
                 var inSession = _sessionModules.Any(m => m.XncfModuleUid == r.Uid);
-                sb.AppendLine($"- **{r.MenuName}** ({r.Name}) v{r.Version}{(inSession ? "  ✓[当前会话已关联]" : "")}");
+                sb.AppendLine($"- **{r.MenuName}** ({r.Name}) v{r.Version}{(inSession ? AdminResource.Get("Admin.ModuleAssistant.InSessionTag") : "")}");
                 if (!string.IsNullOrWhiteSpace(r.Description))
                     sb.AppendLine($"  {r.Description}");
             }

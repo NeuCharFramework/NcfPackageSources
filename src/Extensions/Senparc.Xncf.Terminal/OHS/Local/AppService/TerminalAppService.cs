@@ -179,7 +179,7 @@ namespace Senparc.Xncf.Terminal.OHS.Local.AppService
             return strOutput;
         }
 
-        [FunctionRender("命令提示符", "输入Windows命令提示符中的命令,即可返回相应的结果。请注意：命令将在服务器系统中执行！", typeof(Register))]
+        [FunctionRender(typeof(NcfBuiltInResource), "Function.Terminal.Command.Name", "Function.Terminal.Command.Description", typeof(Register))]
         public async Task<StringAppResponse> Run(Terminal_RunRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

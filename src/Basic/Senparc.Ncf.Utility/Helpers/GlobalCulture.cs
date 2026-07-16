@@ -16,8 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace Senparc.Ncf.Utility.Helpers
 {
@@ -25,6 +24,10 @@ namespace Senparc.Ncf.Utility.Helpers
     {
         Chinese = 0,
         English = 1,
+        Japanese = 2,
+        French = 3,
+        Spanish = 4,
+        Russian = 5,
     }
 
     /// <summary>
@@ -32,7 +35,7 @@ namespace Senparc.Ncf.Utility.Helpers
     /// </summary>
     public class GlobalCulture
     {
-        private static SystemLanguage? _currentSystemLanguage = null;
+        private static readonly AsyncLocal<SystemLanguage?> _currentSystemLanguage = new();
 
         private SystemLanguage _defaultLanguage;
         private Dictionary<SystemLanguage, Action> _languageActionCollection = new Dictionary<SystemLanguage, Action>();
@@ -44,22 +47,18 @@ namespace Senparc.Ncf.Utility.Helpers
         {
             get
             {
-                if (_currentSystemLanguage == null)
-                {
-                    CultureInfo currentCulture = CultureInfo.CurrentCulture;
-                    CultureInfo currentUICulture = CultureInfo.CurrentUICulture;
-                    if (currentCulture.TwoLetterISOLanguageName.Equals("zh", StringComparison.OrdinalIgnoreCase))
-                    {
-                        _currentSystemLanguage = SystemLanguage.Chinese;
-                    }
-                    else //if (currentCulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase))
-                    {
-                        _currentSystemLanguage = SystemLanguage.English;
-                    }
-                }
-                return _currentSystemLanguage.Value;
+                return _currentSystemLanguage.Value
+                       ?? NcfLocalizationOptions.GetSystemLanguage(CultureInfo.CurrentUICulture);
             }
-            set { _currentSystemLanguage = value; }
+            set { _currentSystemLanguage.Value = value; }
+        }
+
+        /// <summary>
+        /// 清除当前异步上下文中的显式语言覆盖，恢复为跟随 CurrentUICulture。
+        /// </summary>
+        public static void ResetCurrentLanguage()
+        {
+            _currentSystemLanguage.Value = null;
         }
 
         private GlobalCulture(SystemLanguage defaultLanguage = SystemLanguage.English)
@@ -71,6 +70,10 @@ namespace Senparc.Ncf.Utility.Helpers
 
         private void CheckAndRun(SystemLanguage language, Action action)
         {
+            ArgumentNullException.ThrowIfNull(action);
+
+            _languageActionCollection[language] = action;
+
             if (_invoked)
             {
                 return;
@@ -80,10 +83,6 @@ namespace Senparc.Ncf.Utility.Helpers
             {
                 action.Invoke();
                 _invoked = true;
-            }
-            else
-            {
-                _languageActionCollection[language] = action;
             }
         }
 
@@ -104,6 +103,30 @@ namespace Senparc.Ncf.Utility.Helpers
             return this;
         }
 
+        public GlobalCulture SetJapanese(Action action)
+        {
+            CheckAndRun(SystemLanguage.Japanese, action);
+            return this;
+        }
+
+        public GlobalCulture SetFrench(Action action)
+        {
+            CheckAndRun(SystemLanguage.French, action);
+            return this;
+        }
+
+        public GlobalCulture SetSpanish(Action action)
+        {
+            CheckAndRun(SystemLanguage.Spanish, action);
+            return this;
+        }
+
+        public GlobalCulture SetRussian(Action action)
+        {
+            CheckAndRun(SystemLanguage.Russian, action);
+            return this;
+        }
+
         /// <summary>
         /// 如果之前的语言都不匹配，则执行默认语言设置
         /// </summary>
@@ -112,11 +135,6 @@ namespace Senparc.Ncf.Utility.Helpers
         /// <exception cref="Exception"></exception>
         public void InvokeDefault(bool throwIfNothingIsSet = false, bool throwIfNotAllIsSet = false)
         {
-            if (_invoked)
-            {
-                return;
-            }
-
             if (_languageActionCollection.Count == 0)
             {
                 if (throwIfNothingIsSet)
@@ -132,6 +150,11 @@ namespace Senparc.Ncf.Utility.Helpers
             if (throwIfNotAllIsSet && _languageActionCollection.Count != Enum.GetNames<SystemLanguage>().Length)
             {
                 throw new Exception("Please set all languages!");
+            }
+
+            if (_invoked)
+            {
+                return;
             }
 
 

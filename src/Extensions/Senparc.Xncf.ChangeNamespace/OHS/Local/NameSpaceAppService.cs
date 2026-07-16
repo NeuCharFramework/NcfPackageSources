@@ -39,7 +39,7 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
         }
 
 
-        [FunctionRender("修改命名空间", "修改所有源码在 .cs, .cshtml 中的命名空间", typeof(Register))]
+        [FunctionRender(typeof(NcfBuiltInResource), "Function.ChangeNamespace.Change.Name", "Function.ChangeNamespace.Change.Description", typeof(Register))]
         public async Task<StringAppResponse> Change(NameSpace_ChangeRequest request)
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
@@ -172,7 +172,7 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
 
         #endregion
 
-        [FunctionRender("还原命名空间", "还原所有源码在 .cs, .cshtml 中的命名空间为 NCF 默认（建议在断崖式更新之前进行此操作）。", typeof(Register))]
+        [FunctionRender(typeof(NcfBuiltInResource), "Function.ChangeNamespace.Restore.Name", "Function.ChangeNamespace.Restore.Description", typeof(Register))]
         public async Task<StringAppResponse> Restore(NameSpace_RestoreRequest request)
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
@@ -194,7 +194,7 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
         }
 
 
-        [FunctionRender("下载官方 NCF 源码", "修改所有源码在 .cs, .cshtml 中的命名空间。", typeof(Register))]
+        [FunctionRender(typeof(NcfBuiltInResource), "Function.ChangeNamespace.Download.Name", "Function.ChangeNamespace.Download.Description", typeof(Register))]
         public async Task<StringAppResponse> DownloadSourceCode(NameSpace_DownloadSourceCodeRequest request)
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>

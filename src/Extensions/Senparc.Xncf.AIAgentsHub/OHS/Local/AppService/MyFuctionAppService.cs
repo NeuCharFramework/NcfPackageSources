@@ -35,7 +35,7 @@ namespace Senparc.Xncf.AIAgentsHub.OHS.Local.AppService
             _colorService = colorService;
         }
 
-        [FunctionRender("我的函数", "我的函数的注释", typeof(Register))]
+        [FunctionRender(typeof(NcfBuiltInResource), "Function.Sample.Name", "Function.Sample.Description", typeof(Register))]
         public async Task<StringAppResponse> Calculate(MyFunction_CaculateRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

@@ -37,32 +37,32 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
     {
         [Required]
         [MaxLength(250)]
-        [Description("解决方案文件（.sln）路径||输入 NCF 项目的解决方案（.sln）文件完整物理路径，将在其并列位置生成模块目录，如：E:\\Senparc项目\\NeuCharFramework\\NCF\\src\\back-end\\NCF.sln")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.SolutionPath")]
         public string SlnFilePath { get; set; }
 
-        [Description("配置解决方案文件（.sln）||")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.SolutionOptions")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(NewSlnFileOptions))]
         public string[] NewSlnFile { get; set; }
 
         [JsonIgnore]
         public SelectionList NewSlnFileOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("backup","备份 .sln 文件（推荐）","如果使用覆盖现有 .sln 文件，对当前文件进行备份",true),
-                 new SelectionItem("new","生成新的 .sln 文件","如果不选择，将覆盖现有 .sln 文件（不会影响已有功能，但如果 sln 解决方案正在运行，可能会触发自动重启服务）,并推荐使用备份功能",false),
+                 new SelectionItem("backup", NcfBuiltInResource.Get("XncfBuilder.Option.Solution.Backup"), NcfBuiltInResource.Get("XncfBuilder.Option.Solution.Backup.Help"), true),
+                 new SelectionItem("new", NcfBuiltInResource.Get("XncfBuilder.Option.Solution.New"), NcfBuiltInResource.Get("XncfBuilder.Option.Solution.New.Help"), false),
             });
 
         [MaxLength(250)]
-        [Description("安装新模板||安装 XNCF 的模板，如果重新安装可能需要 30-40s，如果已安装过模板，可选择【已安装】，以节省模板获取时间。")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.TemplatePackage")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(TemplatePackageOptions))]
         public string TemplatePackage { get; set; }
 
         [JsonIgnore]
         public SelectionList TemplatePackageOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
-                 new SelectionItem("online","在线获取（从 Nuget.org 等在线环境获取最新版本，时间会略长）","从 Nuget.org 等在线环境获取最新版本，时间会略长",false),
-                 new SelectionItem("local","本地安装（从 .sln 同级目录下安装 Senparc.Xncf.XncfBuilder.Template.*.nupkg 包）","从 .sln 同级目录下安装 Senparc.Xncf.XncfBuilder.Template.*.nupkg 包",false),
-                 new SelectionItem("no","已安装，不需要安装新版本","请确保已经在本地安装过版本（无论新旧），否则将自动从在线获取",true),
+                 new SelectionItem("online", NcfBuiltInResource.Get("XncfBuilder.Option.Template.Online"), NcfBuiltInResource.Get("XncfBuilder.Option.Template.Online.Help"), false),
+                 new SelectionItem("local", NcfBuiltInResource.Get("XncfBuilder.Option.Template.Local"), NcfBuiltInResource.Get("XncfBuilder.Option.Template.Local.Help"), false),
+                 new SelectionItem("no", NcfBuiltInResource.Get("XncfBuilder.Option.Template.Installed"), NcfBuiltInResource.Get("XncfBuilder.Option.Template.Installed.Help"), true),
             });
 
-        [Description("目标框架版本||指定项目的 TFM(Target Framework Moniker)")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Framework")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(FrameworkVersionOptions))]
         public string FrameworkVersion { get; set; }
 
@@ -72,20 +72,20 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                  //new SelectionItem("netcoreapp3.1","netcoreapp3.1","使用 .NET Core 3.1",false),
                  //new SelectionItem("net6.0","net6.0","使用 .NET 6.0",false),
                  //new SelectionItem("net7.0","net7.0","使用 .NET 7.0",false),
-                 new SelectionItem("net8.0","net8.0","使用 .NET 8.0",false),
+                 new SelectionItem("net8.0", "net8.0", NcfBuiltInResource.Get("XncfBuilder.Option.Framework.Net8"), false),
             });
 
-        [Description("自定义目标框架版本||其他目标框架版本，如果填写，将覆盖【目标框架版本】的选择")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.OtherFramework")]
         public string OtherFrameworkVersion { get; set; }
 
         [Required]
         [MaxLength(50)]
-        [Description("组织名称||用于作为模块命名空间（及名称）的前缀")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Organization")]
         public string OrgName { get; set; }
 
         [Required]
         [MaxLength(50)]
-        [Description("模块名称||同时将作为类名（请注意类名规范），支持连续英文大小写和数字，不能以数字开头，不能带有空格和.,/*等特殊符号")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.ModuleName")]
         public string XncfName { get; set; }
 
         //[Required]
@@ -95,43 +95,43 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
         [Required]
         [MaxLength(50)]
-        [Description("版本号||如：1.0.0、2.0.100-beta1")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Version")]
         public string Version { get; set; }
 
         [Required]
         [MaxLength(50)]
-        [Description("菜单名称||如“NCF 生成器”")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.MenuName")]
         public string MenuName { get; set; }
 
         [Required]
         [MaxLength(50)]
-        [Description("图标||支持 Font Awesome 图标集，如：fa fa-star")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Icon")]
         public string Icon { get; set; }
 
         [Required]
         [MaxLength(400)]
-        [Description("说明||模块的说明")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Description")]
         public string Description { get; set; }
 
-        [Description("功能配置||")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Features")]
            [FunctionParameterUi(ParameterType.CheckBoxList, nameof(UseModuleOptions))]
            public string[] UseModule { get; set; }
 
            [JsonIgnore]
            public SelectionList UseModuleOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("function","配置“函数”功能","是否需要使用函数模块（Function）",false),
-                 new SelectionItem("database","配置“数据库”功能","是否需要使用数据库模块（Database），将配置空数据库",false),
-                 new SelectionItem("webapi","配置“WebApi”功能","是否需要使用WebApi模块（WebApi）",false),
-                 new SelectionItem("web","配置“Web（Area） 页面”功能","是否需要使用 Web 页面模块（Web）",false),
+                 new SelectionItem("function", NcfBuiltInResource.Get("XncfBuilder.Option.Feature.Function"), NcfBuiltInResource.Get("XncfBuilder.Option.Feature.Function.Help"), false),
+                 new SelectionItem("database", NcfBuiltInResource.Get("XncfBuilder.Option.Feature.Database"), NcfBuiltInResource.Get("XncfBuilder.Option.Feature.Database.Help"), false),
+                 new SelectionItem("webapi", NcfBuiltInResource.Get("XncfBuilder.Option.Feature.WebApi"), NcfBuiltInResource.Get("XncfBuilder.Option.Feature.WebApi.Help"), false),
+                 new SelectionItem("web", NcfBuiltInResource.Get("XncfBuilder.Option.Feature.Web"), NcfBuiltInResource.Get("XncfBuilder.Option.Feature.Web.Help"), false),
             });
 
-        [Description("安装 Sample||")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.InstallSample")]
            [FunctionParameterUi(ParameterType.CheckBoxList, nameof(UseSammpleOptions))]
            public bool UseSammple { get; set; }
 
            [JsonIgnore]
            public SelectionList UseSammpleOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("1","是","是否安装数据库示例，由于展示需要，将自动安装上述“数据库”、“Web（Area） 页面”功能",false),
+                 new SelectionItem("1", NcfBuiltInResource.Get("Common.Yes"), NcfBuiltInResource.Get("XncfBuilder.Option.InstallSample.Help"), false),
             });
 
         /// <summary>

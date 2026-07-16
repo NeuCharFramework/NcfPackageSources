@@ -24,15 +24,15 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.PL
     public class MyFunction_SenMapicRequest : FunctionAppRequestBase
     {
         [Required]
-        [Description("网址||请输入要爬取的网址")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.SenMapic.Url")]
         public string Url { get; set; }
 
         [Required]
-        [Description("深度||请输入最大要爬取的深度")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.SenMapic.Depth")]
         public int Deepth { get; set; }
 
         [Required]
-        [Description("网页数量||请输入要爬取的最大数量")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.SenMapic.PageCount")]
         public int PageNumber { get; set; }
 
     }
@@ -40,38 +40,38 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.PL
     {
         [Required]
         [MaxLength(50)]
-        [Description("名称||双竖线之前为参数名称，双竖线之后为参数注释")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.Name")]
         public string Name { get; set; }
 
         [Required]
-        [Description("数字||数字1")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.Number1")]
         public int Number1 { get; set; }
 
 
         [Required]
-        [Description("数字||数字2")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.Number2")]
         public int Number2 { get; set; }
 
-        [Description("运算符||只能在以下选项中选择：+ - × ")]//下拉列表
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.OperatorRestricted")]//下拉列表
         [FunctionParameterUi(ParameterType.DropDownList, nameof(OperatorOptions))]
         public string Operator { get; set; }
 
         [JsonIgnore]
         public SelectionList OperatorOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
-                 new SelectionItem("+","加法","数字1 + 数字2",true),
-                 new SelectionItem("-","减法","数字1 - 数字2",false),
-                 new SelectionItem("×","乘法","数字1 × 数字2",false),
-                 new SelectionItem("÷","除法","数字1 ÷ 数字2",false)
+                 new SelectionItem("+", NcfBuiltInResource.Get("Parameter.Operator.Add"), NcfBuiltInResource.Get("Parameter.Operator.Add.Help"), true),
+                 new SelectionItem("-", NcfBuiltInResource.Get("Parameter.Operator.Subtract"), NcfBuiltInResource.Get("Parameter.Operator.Subtract.Help"), false),
+                 new SelectionItem("×", NcfBuiltInResource.Get("Parameter.Operator.Multiply"), NcfBuiltInResource.Get("Parameter.Operator.Multiply.Help"), false),
+                 new SelectionItem("÷", NcfBuiltInResource.Get("Parameter.Operator.Divide"), NcfBuiltInResource.Get("Parameter.Operator.Divide.Help"), false)
             });
 
-        [Description("计算平方||如果传入，只能在以下选项中选择：2 3")]//多选框
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Sample.PowerRestricted")]//多选框
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(PowerOptions))]
         public string[] Power { get; set; }
 
         [JsonIgnore]
         public SelectionList PowerOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("2","平方","计算上述结果之后再计算平方",false),
-                 new SelectionItem("3","三次方","计算上述结果之后再计算三次方",false)
+                 new SelectionItem("2", NcfBuiltInResource.Get("Parameter.Power.Square"), NcfBuiltInResource.Get("Parameter.Power.Square.Help"), false),
+                 new SelectionItem("3", NcfBuiltInResource.Get("Parameter.Power.Cube"), NcfBuiltInResource.Get("Parameter.Power.Cube.Help"), false)
             });
     }
 }

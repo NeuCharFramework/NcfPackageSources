@@ -37,13 +37,21 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             var defaultSetting = Senparc.AI.Config.SenparcAiSetting;
             try
             {
-                aiModel.Items.Add(new SelectionItem("Default", $"系统默认（AiPlatform：{defaultSetting.AiPlatform}，Endpoint：{defaultSetting.Endpoint}）", "通过系统默认配置的固定 AI 模型信息", true));
+                aiModel.Items.Add(new SelectionItem(
+                    "Default",
+                    NcfBuiltInResource.Format("XncfBuilder.AI.DefaultModel", "系统默认（AiPlatform：{0}，Endpoint：{1}）", defaultSetting.AiPlatform, defaultSetting.Endpoint),
+                    NcfBuiltInResource.Get("XncfBuilder.AI.DefaultModel.Help"),
+                    true));
             }
             catch (SenparcAiException)
             {
                 //Endpoint 可能未配置
 
-                aiModel.Items.Add(new SelectionItem("Default", $"系统默认（AiPlatform：{defaultSetting.AiPlatform}，Endpoint：未检测到，如需选择此选项，请先在 appsettings.json 中完成模型配置", "通过系统默认配置的固定 AI 模型信息", true));
+                aiModel.Items.Add(new SelectionItem(
+                    "Default",
+                    NcfBuiltInResource.Format("XncfBuilder.AI.DefaultModel.Unconfigured", "系统默认（AiPlatform：{0}，未检测到 Endpoint；请先在 appsettings.json 中配置模型）", defaultSetting.AiPlatform),
+                    NcfBuiltInResource.Get("XncfBuilder.AI.DefaultModel.Help"),
+                    true));
             }
 
             var aiModelAppService = serviceProvider.GetService<AIModelAppService>();
@@ -64,39 +72,39 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
     {
         [Required]
         [MaxLength(250)]
-        [Description("生成数据库实体要求||请输入尽量完整的需求，也可以指定所需要的属性及类型")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Entity.Requirement")]
         public string Requirement { get; set; }
 
-        [Description("领域||指定需要生成到的领域")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Entity.Domain")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(InjectDomainOptions))]
         public string InjectDomain { get; set; }
 
         [JsonIgnore]
         public SelectionList InjectDomainOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
 
-        [Description("后续操作||指定生成数据库实体后的后续操作")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Entity.Actions")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(MoreActionsOptions))]
         public string[] MoreActions { get; set; }
 
         [JsonIgnore]
         public SelectionList MoreActionsOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("BuildDto","创建 DTO","创建 DTO 对象（已强制生成）",true),
-                 new SelectionItem("BuildMigration","直接生成数据库迁移信息","使用 EF Core Migration 生成迁移信息（建议查看后进行）",true),
-                 new SelectionItem("CreateRepository","创建 Repository","创建和实体匹配的 Repository",false),
-                 new SelectionItem("CreateService","创建 Service","创建和实体匹配的 Service",false),
-                 new SelectionItem("CreateAppService","创建 AppService","创建和实体匹配的 Service",false)
+                 new SelectionItem("BuildDto", NcfBuiltInResource.Get("XncfBuilder.Option.Action.Dto"), NcfBuiltInResource.Get("XncfBuilder.Option.Action.Dto.Help"), true),
+                 new SelectionItem("BuildMigration", NcfBuiltInResource.Get("XncfBuilder.Option.Action.Migration"), NcfBuiltInResource.Get("XncfBuilder.Option.Action.Migration.Help"), true),
+                 new SelectionItem("CreateRepository", NcfBuiltInResource.Get("XncfBuilder.Option.Action.Repository"), NcfBuiltInResource.Get("XncfBuilder.Option.Action.Repository.Help"), false),
+                 new SelectionItem("CreateService", NcfBuiltInResource.Get("XncfBuilder.Option.Action.Service"), NcfBuiltInResource.Get("XncfBuilder.Option.Action.Service.Help"), false),
+                 new SelectionItem("CreateAppService", NcfBuiltInResource.Get("XncfBuilder.Option.Action.AppService"), NcfBuiltInResource.Get("XncfBuilder.Option.Action.AppService.Help"), false)
             });
 
-        [Description("使用 PromptRange ||指定 Prompt 来源。如果选中，系统将自动安装 PromptRange 模块并初始化 Prompt（此时需要提前配置好系统默认 AI 模型），全程无需任何人为干预；如不选中此选项，请在运行项目下 Domain/PromptPlugins/ 文件夹下存放 XncfBuilderPlugin 文件夹及所有文件内容。")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Entity.UsePromptRange")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(UseDatabasePromptOptions))]
         public bool UseDatabasePrompt { get; set; } = true;
 
         [JsonIgnore]
         public SelectionList UseDatabasePromptOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("1","是","",true)
+                 new SelectionItem("1", NcfBuiltInResource.Get("Common.Yes"), "", true)
         });
 
-        [Description("AI 模型||当不使用 PromptRange 时，需要选择生成代码所使用的 AI 模型")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Entity.AIModel")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(AIModelOptions))]
         public string AIModel { get; set; }
 
@@ -121,16 +129,16 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
     public class BuildXncf_InitPromptRequest : FunctionAppRequestBase
     {
-        [Description("覆盖||如果记录已存在，则删除 XncfBuilderPlugin 靶场，使用官方版本重建")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Prompt.Override")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(OverrideOptions))]
         public bool Override { get; set; }
 
         [JsonIgnore]
         public SelectionList OverrideOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("1","是","",false)
+                 new SelectionItem("1", NcfBuiltInResource.Get("Common.Yes"), "", false)
                 });
 
-        [Description("AI 模型||请选择新建的靶场（Range）中所有靶道（Tactics）使用的 AI 模型")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfBuilder.Prompt.AIModel")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(AIModelOptions))]
         public string AIModel { get; set; }
 

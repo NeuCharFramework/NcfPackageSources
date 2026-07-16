@@ -117,4 +117,62 @@
   <data name="Footer.Copyright" xml:space="preserve">
     <value>Senparc Network Technology Co., Ltd. Todos los derechos reservados</value>
   </data>
+  <data name="Site.TitleSuffix" xml:space="preserve"><value>Un framework .NET para aplicaciones base, creado con DDD y un diseño altamente modular</value></data>
+  <data name="Site.Brand" xml:space="preserve"><value>Ejemplo de NeuCharFramework</value></data>
+  <data name="Nav.Toggle" xml:space="preserve"><value>Alternar navegación</value></data>
+  <data name="Nav.Documentation" xml:space="preserve"><value>Documentación</value></data>
+  <data name="Nav.Community" xml:space="preserve"><value>Comunidad</value></data>
+  <data name="Nav.AdminLogin" xml:space="preserve"><value>Inicio de sesión de administrador</value></data>
+  <data name="Footer.Community" xml:space="preserve"><value>Comunidad</value></data>
+  <data name="Footer.Events" xml:space="preserve"><value>Eventos</value></data>
+  <data name="Footer.Contribute" xml:space="preserve"><value>Contribuir</value></data>
+  <data name="Footer.Documentation" xml:space="preserve"><value>Documentación</value></data>
+  <data name="Footer.StartDeveloping" xml:space="preserve"><value>Empezar a desarrollar</value></data>
+  <data name="Footer.Glossary" xml:space="preserve"><value>Glosario</value></data>
+  <data name="Footer.Faq" xml:space="preserve"><value>Preguntas frecuentes</value></data>
+  <data name="Footer.ReleaseNotes" xml:space="preserve"><value>Notas de versión</value></data>
+  <data name="Footer.ContactUs" xml:space="preserve"><value>Contacto</value></data>
+  <data name="Index.Tagline" xml:space="preserve"><value>Simple · Flexible · Extensible</value></data>
+  <data name="Index.Intro.Line1" xml:space="preserve"><value>NCF (NeuCharFramework) es un framework .NET de propósito general y nivel empresarial para crear aplicaciones base.</value></data>
+  <data name="Index.Intro.Line2" xml:space="preserve"><value>Sigue los principios DDD e incluye caché, bases de datos, modelos, validación y un panel de administración.</value></data>
+  <data name="Index.Intro.Line3" xml:space="preserve"><value>Su diseño altamente modular ofrece una excelente extensibilidad y fiabilidad.</value></data>
+  <data name="Index.DotNetSupport" xml:space="preserve"><value>NCF es totalmente compatible con .NET 10.0.</value></data>
+  <data name="Index.DatabaseSupport" xml:space="preserve"><value>Admite SQLite, SQL Server, MySQL, PostgreSQL, Oracle, DM y otras bases de datos.</value></data>
+  <data name="Index.MoreDatabases" xml:space="preserve"><value>Se añadirán más bases de datos. Agradecemos sus comentarios y requisitos.</value></data>
+  <data name="Index.CurrentTenant" xml:space="preserve"><value>Inquilino actual:</value></data>
+  <data name="Index.TenantUnavailable" xml:space="preserve"><value>No está habilitado o no se encontró un inquilino coincidente</value></data>
+  <data name="Index.StartNow" xml:space="preserve"><value>Comenzar</value></data>
+  <data name="Index.Feature.QuickStart.Title" xml:space="preserve"><value>Configuración rápida</value></data>
+  <data name="Index.Feature.QuickStart.Text" xml:space="preserve"><value>Instale en un paso una plantilla de framework lista para usar.</value></data>
+  <data name="Index.Feature.AiNative.Title" xml:space="preserve"><value>Framework nativo de IA</value></data>
+  <data name="Index.Feature.AiNative.Text" xml:space="preserve"><value>Desarrolle con asistencia de IA y bases de IA integradas para crear aplicaciones inteligentes fácilmente.</value></data>
+  <data name="Index.Feature.Modular.Title" xml:space="preserve"><value>Diseño modular</value></data>
+  <data name="Index.Feature.Modular.Text" xml:space="preserve"><value>Combine y amplíe componentes altamente modulares; cada módulo puede desarrollarse, probarse, integrarse e implementarse de forma independiente.</value></data>
+  <data name="Index.Feature.MultiDatabase.Title" xml:space="preserve"><value>Varias bases de datos</value></data>
+  <data name="Index.Feature.MultiDatabase.Text" xml:space="preserve"><value>Admite SQL Server, MySQL, SQLite, PostgreSQL, Oracle, DM y la ampliación sencilla con nuevos proveedores.</value></data>
+  <data name="Index.Feature.HighPerformance.Title" xml:space="preserve"><value>Alto rendimiento</value></data>
+  <data name="Index.Feature.HighPerformance.Text" xml:space="preserve"><value>Más de diez años de optimización empresarial proporcionan rendimiento y disponibilidad a numerosos sistemas con más de cinco millones de visitas diarias.</value></data>
+  <data name="Index.Feature.Ddd.Title" xml:space="preserve"><value>Arquitectura DDD</value></data>
+  <data name="Index.Feature.Ddd.Text" xml:space="preserve"><value>Creado con principios rigurosos de diseño orientado al dominio para adaptarse a los cambios.</value></data>
+  <data name="Index.Feature.Dapr.Title" xml:space="preserve"><value>Compatibilidad con Dapr</value></data>
+  <data name="Index.Feature.Dapr.Text" xml:space="preserve"><value>Permite crear rápidamente arquitecturas de microservicios con Dapr.</value></data>
+  <data name="Index.Feature.Compatibility.Title" xml:space="preserve"><value>Compatibilidad retroactiva</value></data>
+  <data name="Index.Feature.Compatibility.Text" xml:space="preserve"><value>Admite microservicios, sistemas distribuidos, desarrollo tradicional e implementación en un solo servidor sin aprendizaje adicional; las actualizaciones modulares son transparentes.</value></data>
+  <data name="Index.Feature.Community.Title" xml:space="preserve"><value>Soporte de la comunidad</value></data>
+  <data name="Index.Feature.Community.Text" xml:space="preserve"><value>Mantenimiento y actualizaciones continuos por parte del equipo principal de la comunidad de desarrolladores de Senparc.</value></data>
+  <data name="Privacy.Title" xml:space="preserve"><value>Política de privacidad</value></data>
+  <data name="Privacy.Description" xml:space="preserve"><value>Use esta página para describir detalladamente la política de privacidad de su sitio web.</value></data>
+  <data name="Error.Title" xml:space="preserve"><value>Error</value></data>
+  <data name="Error.Heading" xml:space="preserve"><value>Se produjo un error al procesar la solicitud.</value></data>
+  <data name="Error.RequestId" xml:space="preserve"><value>ID de solicitud:</value></data>
+  <data name="Error.DevelopmentMode" xml:space="preserve"><value>Modo de desarrollo</value></data>
+  <data name="Error.DevelopmentInfo" xml:space="preserve"><value>El entorno Development muestra información detallada sobre este error.</value></data>
+  <data name="Error.DevelopmentWarning" xml:space="preserve"><value>El entorno Development no debe habilitarse en aplicaciones implementadas.</value></data>
+  <data name="Error.DevelopmentInstructions" xml:space="preserve"><value>Puede exponer información confidencial de las excepciones. Para depurar localmente, establezca ASPNETCORE_ENVIRONMENT en Development y reinicie la aplicación.</value></data>
+  <data name="Cookie.Summary" xml:space="preserve"><value>Usamos cookies para proporcionar funciones esenciales del sitio. Consulte la política de privacidad para obtener más información.</value></data>
+  <data name="Cookie.LearnMore" xml:space="preserve"><value>Más información</value></data>
+  <data name="Cookie.Accept" xml:space="preserve"><value>Aceptar</value></data>
+  <data name="Message.SectionComingSoon" xml:space="preserve"><value>Esta sección aún no está disponible.</value></data>
+  <data name="Message.InstallOfflineDocsConfirm" xml:space="preserve"><value>El módulo de documentación sin conexión no está instalado. ¿Desea instalarlo ahora?</value></data>
+  <data name="Message.OpenOfflineDocsConfirm" xml:space="preserve"><value>{0}. Actualice esta página para mostrar el acceso a la documentación en el encabezado. ¿Desea abrirla ahora?</value></data>
 </root>

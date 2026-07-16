@@ -11,10 +11,10 @@
       newData: {},
       oldData: {
         state: {
-          0: '关闭',
-          1: '开放',
-          2: '新增待审核',
-          3: '更新待审核'
+          0: ncfT('Xncf.State.Closed'),
+          1: ncfT('Xncf.State.Open'),
+          2: ncfT('Xncf.State.PendingAdd'),
+          3: ncfT('Xncf.State.PendingUpdate')
         }
       },
       newTableSearch: '',
@@ -24,8 +24,8 @@
   watch: {
     'isExtend': {
       handler: function (val, oldVal) {
-        this.handlerText = val ? '开启【扩展模块】管理模式' : '切换至发布状态，隐藏【扩展模块】管理单元';
-        this.handlerTips = val ? '打开【扩展模块】管理功能后，所有扩展模块将显示在【扩展模块】二级目录中。确定要打开吗？' : '隐藏【扩展模块】管理功能后，所有扩展模块将并列显示在一级目录中。如需重新打开，请直接浏览器内访问此页面【/Admin/XncfModule】。确定要隐藏吗？';
+        this.handlerText = val ? ncfT('Xncf.EnableManagerMode') : ncfT('Xncf.EnablePublishMode');
+        this.handlerTips = val ? ncfT('Xncf.EnableManagerModeConfirm') : ncfT('Xncf.EnablePublishModeConfirm');
       },
       immediate: true
     }

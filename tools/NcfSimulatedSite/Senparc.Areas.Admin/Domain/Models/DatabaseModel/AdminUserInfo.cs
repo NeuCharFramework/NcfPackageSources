@@ -126,7 +126,11 @@ namespace Senparc.Areas.Admin.Domain.Models
         {
             if (salt.Length < 16)
             {
-                throw new NcfExceptionBase($"{nameof(salt)} 必须大于 16 位！");
+                throw new NcfExceptionBase(AdminResource.Format(
+                    "AdminUser.MinimumLength",
+                    "{0} 必须大于 {1} 位！",
+                    nameof(salt),
+                    16));
             }
 
             if (usePasswordToken && Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.PasswordSaltToken.IsNullOrEmpty())

@@ -28,7 +28,7 @@ public class FirmwareUpdateAppService : AppServiceBase
     {
     }
 
-    [FunctionRender("镜像设置", "开关自动从 GitHub 同步 NCF 安装包，并设置检查周期（1–24 小时）", typeof(Register))]
+    [FunctionRender(typeof(NcfBuiltInResource), "Function.FirmwareUpdate.Settings.Name", "Function.FirmwareUpdate.Settings.Description", typeof(Register))]
     public async Task<StringAppResponse> ConfigureMirror(FirmwareUpdate_ConfigureRequest request)
     {
         return await this.GetStringResponseAsync(async (_, logger) =>
@@ -51,7 +51,7 @@ public class FirmwareUpdateAppService : AppServiceBase
         }, saveLogAfterFinished: true, saveLogName: "FirmwareUpdate 镜像设置");
     }
 
-    [FunctionRender("立即同步", "立即从 GitHub 拉取最新 Release 并更新本地 NcfPackages 与 latest-release.json", typeof(Register))]
+    [FunctionRender(typeof(NcfBuiltInResource), "Function.FirmwareUpdate.Sync.Name", "Function.FirmwareUpdate.Sync.Description", typeof(Register))]
     public async Task<StringAppResponse> SyncNow(FirmwareUpdate_SyncNowRequest _)
     {
         return await this.GetStringResponseAsync(async (_, logger) =>

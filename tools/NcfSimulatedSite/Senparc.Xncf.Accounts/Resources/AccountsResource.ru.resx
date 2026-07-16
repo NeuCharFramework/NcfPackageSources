@@ -14,4 +14,25 @@
   <data name="Accounts.Title" xml:space="preserve"><value>Главная Accounts</value></data>
   <data name="Accounts.Register.MenuName" xml:space="preserve"><value>Управление пользователями</value></data>
   <data name="Accounts.Register.Description" xml:space="preserve"><value>Управление зарегистрированными пользователями</value></data>
+  <data name="Accounts.PointsInsufficient" xml:space="preserve"><value>Недостаточно баллов. Требуется ещё {0}.</value></data>
+  <data name="Accounts.MethodNotAllowed" xml:space="preserve"><value>Этот метод нельзя вызывать.</value></data>
+  <data name="Accounts.HeadImageUrlMissing" xml:space="preserve"><value>URL изображения профиля пуст для учётной записи {0}.</value></data>
+  <data name="Accounts.UserIdMissing" xml:space="preserve"><value>Идентификатор пользователя не существует. ID: {0}; URL изображения: {1}</value></data>
+  <data name="Accounts.Operator.Add" xml:space="preserve"><value>Сложение</value></data>
+  <data name="Accounts.Operator.Add.Help" xml:space="preserve"><value>Число 1 + Число 2</value></data>
+  <data name="Accounts.Operator.Subtract" xml:space="preserve"><value>Вычитание</value></data>
+  <data name="Accounts.Operator.Subtract.Help" xml:space="preserve"><value>Число 1 - Число 2</value></data>
+  <data name="Accounts.Operator.Multiply" xml:space="preserve"><value>Умножение</value></data>
+  <data name="Accounts.Operator.Multiply.Help" xml:space="preserve"><value>Число 1 × Число 2</value></data>
+  <data name="Accounts.Operator.Divide" xml:space="preserve"><value>Деление</value></data>
+  <data name="Accounts.Operator.Divide.Help" xml:space="preserve"><value>Число 1 ÷ Число 2</value></data>
+  <data name="Accounts.Power.Square" xml:space="preserve"><value>Квадрат</value></data>
+  <data name="Accounts.Power.Square.Help" xml:space="preserve"><value>Возвести результат в квадрат</value></data>
+  <data name="Accounts.Power.Cube" xml:space="preserve"><value>Куб</value></data>
+  <data name="Accounts.Power.Cube.Help" xml:space="preserve"><value>Возвести результат в куб</value></data>
+  <data name="Accounts.Parameter.Name" xml:space="preserve"><value>Имя||До двойной черты — имя, после — пояснение</value></data>
+  <data name="Accounts.Parameter.Number1" xml:space="preserve"><value>Число||Число 1</value></data>
+  <data name="Accounts.Parameter.Number2" xml:space="preserve"><value>Число||Число 2</value></data>
+  <data name="Accounts.Parameter.Operator" xml:space="preserve"><value>Оператор||</value></data>
+  <data name="Accounts.Parameter.Power" xml:space="preserve"><value>Степень||</value></data>
 </root>

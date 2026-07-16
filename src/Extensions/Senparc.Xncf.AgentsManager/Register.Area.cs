@@ -33,7 +33,7 @@ namespace Senparc.Xncf.AgentsManager
         public string HomeUrl => "/Admin/AgentsManager/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-                    new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
+                    new AreaPageMenuItem(GetAreaHomeUrl(), NcfBuiltInResource.Get("Area.Home", "首页"),"fa fa-laptop"),
 			 		//new AreaPageMenuItem(GetAreaUrl($"/Admin/AgentsManager/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
 			};
 

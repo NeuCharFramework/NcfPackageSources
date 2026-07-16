@@ -64,7 +64,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         //[ApiBind]
-        [FunctionRender("Agent 模板管理", "Agent 模板管理", typeof(Register))]
+        [FunctionRender(typeof(NcfBuiltInResource), "Function.Agents.TemplateManagement.Name", "Function.Agents.TemplateManagement.Description", typeof(Register))]
         public async Task<StringAppResponse> AgentTemplateManage(AgentTemplate_ManageRequest request)
         {
             Console.Write(request.ToJson(true));
@@ -100,7 +100,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
 //[ApiBind]
-        [FunctionRender("从 PromptCode 快速创建智能体", "根据 PromptCode 快速创建智能体。支持靶场级别（如：RangeName）、靶道级别（如：RangeName-T1）、完整定位（如：RangeName-T1-A1）", typeof(Register))]
+        [FunctionRender(typeof(NcfBuiltInResource), "Function.Agents.CreateFromPromptCode.Name", "Function.Agents.CreateFromPromptCode.Description", typeof(Register))]
         public async Task<StringAppResponse> CreateAgentFromPromptCode(AgentTemplate_CreateFromPromptCodeRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -147,7 +147,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
             });
         }
 
-        [FunctionRender("搜索 Agent 模板并返回 ID", "根据名称或 PromptCode 搜索最匹配的 AgentTemplate，并返回可选 ID。支持多个关键词。", typeof(Register))]
+        [FunctionRender(typeof(NcfBuiltInResource), "Function.Agents.SearchTemplate.Name", "Function.Agents.SearchTemplate.Description", typeof(Register))]
         public async Task<StringAppResponse> FindAgentTemplate(AgentTemplate_FindByNameRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

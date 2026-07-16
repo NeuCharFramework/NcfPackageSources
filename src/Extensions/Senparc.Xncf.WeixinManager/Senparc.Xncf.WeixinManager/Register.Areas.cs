@@ -31,10 +31,10 @@ namespace Senparc.Xncf.WeixinManager
         public string HomeUrl => "/Admin/WeixinManager/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/Index"),"首页","fa fa-laptop"),
-             new AreaPageMenuItem(GetAreaUrl("/swagger"),"Web Api Swagger","fa fa-file-code-o"),
-             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/MpAccount"),"公众号管理","fa fa-comments"),
-             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/WeixinUser"),"用户管理","fa fa-users"),
+             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/Index"), NcfBuiltInResource.Get("Area.Home", "首页"),"fa fa-laptop"),
+             new AreaPageMenuItem(GetAreaUrl("/swagger"), NcfBuiltInResource.Get("Area.ApiDocumentation", "Web API Swagger"),"fa fa-file-code-o"),
+             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/MpAccount"), NcfBuiltInResource.Get("Area.WeixinManager.OfficialAccounts", "公众号管理"),"fa fa-comments"),
+             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/WeixinUser"), NcfBuiltInResource.Get("Area.WeixinManager.Users", "用户管理"),"fa fa-users"),
         };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)

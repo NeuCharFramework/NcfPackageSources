@@ -13,9 +13,7 @@ using Senparc.Xncf.Installer.Domain.Dto;
 using Senparc.Xncf.Installer.Domain.Services;
 using Senparc.Xncf.Installer.OHS.Local.AppService;
 using System;
-using System.Globalization;
 using System.Reflection;
-using System.Resources;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.Installer
@@ -23,11 +21,9 @@ namespace Senparc.Xncf.Installer
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister, IAreaRegister/*, IXncfDatabase*/
     {
-        private static readonly ResourceManager ResourceManager = new("Senparc.Xncf.Installer.InstallerResource", typeof(InstallerResource).Assembly);
-
         private static string T(string key, string fallback)
         {
-            return ResourceManager.GetString(key, CultureInfo.CurrentUICulture) ?? fallback;
+            return InstallerResource.Get(key, fallback);
         }
 
         #region IXncfRegister 接口

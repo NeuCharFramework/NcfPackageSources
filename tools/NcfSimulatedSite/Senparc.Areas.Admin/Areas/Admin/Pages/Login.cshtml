@@ -61,7 +61,7 @@
                 </div>
                 @*技术支持*@
                 <div class="login-ICP">
-                    技术支持：<a href="https://www.senparc.com/" target="_blank" title="点击进入官网">苏州盛派网络科技有限公司</a>
+                    @AR["Admin.Login.Support"]<a href="https://www.senparc.com/" target="_blank" title="@AR["Admin.Login.OfficialWebsite"]">@AR["Admin.Login.Company"]</a>
                 </div>
             </div>
         </div>
@@ -70,18 +70,14 @@
     <script src="~/lib/vue/vue.js"></script>
     <script src="~/lib/element-ui_2.13.2/element.js"></script>
     <script src="~/lib/axios/axios.min.js"></script>
+    <partial name="Shared/_LocalizationScripts" />
     <script>
         window.ncfLoginI18n = {
             usernameRequired: '@AR["Admin.Login.Error.UsernameRequired"]',
             passwordRequired: '@AR["Admin.Login.Error.PasswordRequired"]',
-            loginFailed: 'Login failed',
-            loginRetry: 'Login failed, please try again'
+            loginFailed: '@AR["Admin.Login.Error.LoginFailed"]',
+            loginRetry: '@AR["Admin.Login.Error.LoginRetry"]'
         };
-
-        function ncfSwitchLanguage(culture) {
-            var returnUrl = window.location.pathname + window.location.search;
-            window.location.href = '/api/Language/Set?culture=' + encodeURIComponent(culture) + '&returnUrl=' + encodeURIComponent(returnUrl);
-        }
     </script>
     <!--js-->
     <script src="~/js/Admin/axios.js"></script>

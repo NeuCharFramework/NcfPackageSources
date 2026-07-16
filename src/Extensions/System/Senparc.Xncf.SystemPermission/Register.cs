@@ -38,11 +38,11 @@ namespace Senparc.Xncf.SystemPermission
 
         public override string Version => "0.2.0";//必须填写版本号
 
-        public override string MenuName => "权限管理";
+        public override string MenuName => NcfBuiltInResource.Get("Module.SystemPermission.MenuName", "权限管理");
 
         public override string Icon => "fa fa-bars";
 
-        public override string Description => "系统权限管理";
+        public override string Description => NcfBuiltInResource.Get("Module.SystemPermission.Description", "系统权限管理");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

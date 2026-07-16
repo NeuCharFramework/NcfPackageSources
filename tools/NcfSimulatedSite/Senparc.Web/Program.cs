@@ -57,7 +57,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // Configure request localization (cookie first, then query/header providers)
-var supportedCultures = LanguageController.SupportedCultures;
+var supportedCultures = LanguageController.SupportedCultures.ToArray();
 var localizationOptions = new RequestLocalizationOptions()
     .SetDefaultCulture(supportedCultures[0])
     .AddSupportedCultures(supportedCultures)

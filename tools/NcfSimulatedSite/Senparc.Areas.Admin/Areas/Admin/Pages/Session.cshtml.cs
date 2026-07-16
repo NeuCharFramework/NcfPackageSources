@@ -94,7 +94,9 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             {
                 if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId) || userId <= 0)
                 {
-                    return Ok(false, "当前用户身份无效，无法续期 JWT。请重新登录。");
+                    return Ok(false, AdminResource.Get(
+                        "Session.InvalidIdentity",
+                        "当前用户身份无效，无法续期 JWT。请重新登录。"));
                 }
 
                 var token = _adminUserInfoService.GenerateToken(userId, out var expiresUtc, jwtExpireMinutes);

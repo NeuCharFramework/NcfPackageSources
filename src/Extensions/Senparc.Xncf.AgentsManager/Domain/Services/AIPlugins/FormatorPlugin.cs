@@ -33,9 +33,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
     public class FormatorPlugin
     {
 
-        [KernelFunction, Description("获取文本的字符数量")]
+        [KernelFunction, LocalizedDescription(typeof(NcfBuiltInResource), "Agents.Plugin.TextLength.Description")]
         public async Task<int> Calc(
-            [Description("原文")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "Agents.Plugin.OriginalText")]
             string text
             )
         {
@@ -46,11 +46,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 
     public class TranslatorPlugin
     {
-        [KernelFunction, Description("翻译文本")]
+        [KernelFunction, LocalizedDescription(typeof(NcfBuiltInResource), "Agents.Plugin.Translate.Description")]
         public async Task<string> Translate(
-            [Description("原文")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "Agents.Plugin.OriginalText")]
             string text,
-            [Description("目标语言")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "Agents.Plugin.TargetLanguage")]
             string language
             )
         {
@@ -76,12 +76,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
                                 {
                                     ChatOptions = new ChatOptions()
                                     {
-                                        Instructions = @$"你是一个翻译官，你熟悉“{language}”语言，你将帮我完成文本翻译。
-原文：
-这是一个数据库实体类，用于管理和存储AI模型配置信息。
-
-翻译：
-This is a database entity class used to manage and store AI model configuration information.",
+                                        Instructions = NcfBuiltInResource.Format(
+                                            "Agents.Plugin.Translate.Instructions",
+                                            "你是一位熟悉“{0}”的专业翻译，请准确翻译用户提供的文本，只输出译文。",
+                                            language),
                                         MaxOutputTokens = parameter.MaxTokens > 0 ? (int)parameter.MaxTokens : 3000,
                                         Temperature = (float)parameter.Temperature,
                                         TopP = (float)parameter.TopP

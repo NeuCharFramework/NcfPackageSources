@@ -1,3 +1,6 @@
+using System.Globalization;
+using System.Resources;
+
 namespace Senparc.Areas.Admin
 {
     /// <summary>
@@ -13,5 +16,25 @@ namespace Senparc.Areas.Admin
     /// </summary>
     public class AdminResource
     {
+        private static readonly ResourceManager ResourceManager =
+            new("Senparc.Areas.Admin.AdminResource", typeof(AdminResource).Assembly);
+
+        /// <summary>
+        /// Gets a localized Admin resource using the current request UI culture.
+        /// This helper is intended for domain code that cannot receive an
+        /// <c>IStringLocalizer&lt;AdminResource&gt;</c> through dependency injection.
+        /// </summary>
+        public static string Get(string key, string fallback = null)
+        {
+            return ResourceManager.GetString(key, CultureInfo.CurrentUICulture) ?? fallback ?? key;
+        }
+
+        /// <summary>
+        /// Gets and formats a localized Admin resource using the current request culture.
+        /// </summary>
+        public static string Format(string key, string fallback, params object[] arguments)
+        {
+            return string.Format(CultureInfo.CurrentCulture, Get(key, fallback), arguments ?? []);
+        }
     }
 }

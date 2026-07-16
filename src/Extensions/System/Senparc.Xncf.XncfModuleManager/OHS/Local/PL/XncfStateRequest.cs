@@ -29,7 +29,7 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.PL
 {
     public class XncfState_ShowFunctionsRequest : FunctionAppRequestBase
     {
-        [Description("XNCF 模块||查看具体 XNCF 模块的 Function 情况")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfManager.ShowFunctions.Module")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(XncfModuleOptions))]
         public string XncfModule { get; set; }
 
@@ -52,7 +52,7 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.PL
 
     public class XncfState_InstallAndOpenModuleRequest : FunctionAppRequestBase
     {
-        [Description("XNCF 模块||选择需要安装并开放的模块")]
+        [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.XncfManager.Install.Module")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(XncfModuleOptions))]
         public string XncfModule { get; set; }
 

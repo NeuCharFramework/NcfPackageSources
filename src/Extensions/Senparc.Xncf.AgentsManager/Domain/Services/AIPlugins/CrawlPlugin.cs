@@ -54,15 +54,15 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
             this._serviceProvider = serviceProvider;
         }
 
-        [KernelFunction, Description("爬取网页信息并返回提问信息")]
+        [KernelFunction, LocalizedDescription(typeof(NcfBuiltInResource), "Agents.Plugin.Crawl.Description")]
         public async Task<string> Crawl(
-            [Description("爬取网址")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "Agents.Plugin.Crawl.Url")]
             string url,
-            [Description("最大爬取深度")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "Agents.Plugin.Crawl.Depth")]
             int maxDeepth,
-            [Description("最大爬取页数")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "Agents.Plugin.Crawl.PageCount")]
             int maxPageCount,
-            [Description("提问")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "Agents.Plugin.Crawl.Question")]
             string question
          )
         {

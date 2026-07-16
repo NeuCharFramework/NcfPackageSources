@@ -49,7 +49,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         /// <exception cref="NcfExceptionBase"></exception>
-        [FunctionRender("[AI] 生成数据库实体", "生成符合 DDD 约束的数据库实体及其包含的方法。注意：1、请在开发环境中使用此方法，系统将自动检测。2、请做好代码备份，建议切换一个干净的分支。", typeof(Register))]
+        [FunctionRender(typeof(NcfBuiltInResource), "Function.XncfBuilder.GenerateEntity.Name", "Function.XncfBuilder.GenerateEntity.Description", typeof(Register))]
         public async Task<StringAppResponse> CreateDatabaseEntity(BuildXncf_CreateDatabaseEntityRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -254,7 +254,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         //初始化 PromptRange 方法（需要先确保已经安装）
 
 
-        [FunctionRender("初始化 Prompt", "初始化所有 AI 代码生成需要的 Prompt", typeof(Register))]
+        [FunctionRender(typeof(NcfBuiltInResource), "Function.XncfBuilder.InitPrompt.Name", "Function.XncfBuilder.InitPrompt.Description", typeof(Register))]
         public async Task<StringAppResponse> InitPrompt(BuildXncf_InitPromptRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

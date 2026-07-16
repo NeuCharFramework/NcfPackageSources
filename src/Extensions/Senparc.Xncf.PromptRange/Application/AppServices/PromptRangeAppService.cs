@@ -146,7 +146,7 @@ public class PromptRangeAppService : AppServiceBase
     /// <summary>
     /// FunctionRender：查看靶场 PromptCode 列表（用于创建智能体）
     /// </summary>
-    [FunctionRender("查看 PromptCode 列表", "查看所有靶场和靶道的 PromptCode，可用于在 AgentsManager 中快速创建智能体", typeof(Register))]
+    [FunctionRender(typeof(NcfBuiltInResource), "Function.PromptRange.ViewCodes.Name", "Function.PromptRange.ViewCodes.Description", typeof(Register))]
     public async Task<StringAppResponse> ViewPromptCodeList(PromptRange_ViewPromptCodeRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>

@@ -406,8 +406,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     new AiModelOptionDto
                     {
                         Id = 0,
-                        Name = "系统级 SenparcAiSetting",
-                        Description = "使用 appsettings.json 中当前生效的默认 Chat 配置",
+                        Name = _localizer["AdminChat.SystemAiModel"],
+                        Description = _localizer["AdminChat.DefaultChatConfig"],
                         IsDefault = true
                     }
                 };

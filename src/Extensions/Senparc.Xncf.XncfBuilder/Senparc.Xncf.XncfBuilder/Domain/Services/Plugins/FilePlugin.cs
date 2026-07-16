@@ -40,11 +40,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
             this._iWantToRun = iWantToRun;
         }
 
-        [KernelFunction, Description("创建实体类")]
+        [KernelFunction, LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.Plugin.CreateEntity")]
         public async Task<FileSaveResult> CreateFile(
-             [Description("文件路径")]
+             [LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.Plugin.FilePath")]
             string fileBasePath,
-             [Description("通过 AI 生成的文件内容")]
+             [LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.Plugin.GeneratedContent")]
             string fileGenerateResult
          )
         {
@@ -67,7 +67,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
                     }
                 }
 
-                var logMsg = $"已保存文件：{fullPathFileName}";
+                var logMsg = NcfBuiltInResource.Format("XncfBuilder.Plugin.FileSaved", "已保存文件：{0}", fullPathFileName);
                 log.AppendLine(logMsg);
 
                 result.Log += logMsg + "\r\n";
@@ -79,13 +79,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
 
         //TODO：文件修改（从文件中抽取，然后给到 LLM 进行修改）
 
-        [KernelFunction, Description("读取数据库上下文")]
+        [KernelFunction, LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.Plugin.ReadDbContext")]
         public async Task<FileSaveResult> UpdateSenparcEntities(
-            [Description("项目路径")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.Plugin.ProjectPath")]
             string projectPath,
-            [Description("新实体的名字")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.Plugin.EntityName")]
             string entityName,
-            [Description("新实体的名字的复数")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "XncfBuilder.Plugin.PluralEntityName")]
             string pluralEntityName
             )
         {

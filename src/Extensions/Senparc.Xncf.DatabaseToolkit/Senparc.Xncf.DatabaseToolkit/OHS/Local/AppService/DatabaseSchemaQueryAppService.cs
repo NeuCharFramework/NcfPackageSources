@@ -46,7 +46,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         /// 查询可用的模块和表结构
         /// 返回所有可查询的模块及其表的结构信息
         /// </summary>
-        [FunctionRender("查询数据库结构", "查询可用的模块、表和字段信息，用于了解数据库结构", typeof(Register))]
+        [FunctionRender(typeof(NcfBuiltInResource), "Function.Database.Schema.Name", "Function.Database.Schema.Description", typeof(Register))]
         public async Task<AppResponseBase<string>> QueryDatabaseSchema(QuerySchemaRequest request)
         {
             return await this.GetResponseAsync<string>(async (response, logger) =>
@@ -56,7 +56,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                     // 如果指定了模块名和表名，获取详细信息
                     if (!string.IsNullOrWhiteSpace(request.ModuleName) && !string.IsNullOrWhiteSpace(request.TableName))
                     {
-                        logger.Append($"获取表详情: {request.ModuleName}.{request.TableName}");
+                        logger.Append(NcfBuiltInResource.Format("Database.Schema.TableDetailLog", "获取表详情：{0}.{1}", request.ModuleName, request.TableName));
 
                         // 先尝试精确匹配，再尝试模糊匹配
                         var resolvedModule = _metadataProvider.ResolveModuleName(request.ModuleName);
@@ -66,9 +66,9 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                             var suggestions = allModules.Where(m =>
                                 m.Contains(request.ModuleName, StringComparison.OrdinalIgnoreCase)).ToList();
                             var hint = suggestions.Count > 0
-                                ? $"\n可能匹配的模块: {string.Join(", ", suggestions)}"
-                                : $"\n所有可用模块: {string.Join(", ", allModules)}";
-                            return $"找不到模块: '{request.ModuleName}'{hint}";
+                                ? NcfBuiltInResource.Format("Database.Schema.SuggestedModules", "\n可能匹配的模块：{0}", string.Join(", ", suggestions))
+                                : NcfBuiltInResource.Format("Database.Schema.AllModules", "\n所有可用模块：{0}", string.Join(", ", allModules));
+                            return NcfBuiltInResource.Format("Database.Schema.ModuleNotFoundWithHint", "找不到模块：“{0}”{1}", request.ModuleName, hint);
                         }
 
                         var schema = _metadataProvider.GetSchemaByTable(resolvedModule, request.TableName);
@@ -78,8 +78,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                                 .Select(s => s.TableName).OrderBy(t => t).ToList();
                             var tableList = availableTables.Count > 0
                                 ? string.Join(", ", availableTables)
-                                : "（无可用表）";
-                            return $"在模块 '{resolvedModule}' 中找不到实体 '{request.TableName}'。\n可用实体: {tableList}";
+                                : NcfBuiltInResource.Get("Database.Schema.NoAvailableTables");
+                            return NcfBuiltInResource.Format("Database.Schema.EntityNotFound", "在模块“{0}”中找不到实体“{1}”。\n可用实体：{2}", resolvedModule, request.TableName, tableList);
                         }
 
                         var result = new
@@ -112,7 +112,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                     // 如果只指定了模块名，获取该模块的所有表
                     if (!string.IsNullOrWhiteSpace(request.ModuleName))
                     {
-                        logger.Append($"获取模块 {request.ModuleName} 的所有表");
+                        logger.Append(NcfBuiltInResource.Format("Database.Schema.ModuleTablesLog", "获取模块 {0} 的所有表", request.ModuleName));
 
                         var resolvedModule = _metadataProvider.ResolveModuleName(request.ModuleName);
                         if (resolvedModule == null)
@@ -121,15 +121,15 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                             var suggestions = allModules.Where(m =>
                                 m.Contains(request.ModuleName, StringComparison.OrdinalIgnoreCase)).ToList();
                             var hint = suggestions.Count > 0
-                                ? $"\n可能匹配的模块: {string.Join(", ", suggestions)}"
-                                : $"\n所有可用模块: {string.Join(", ", allModules)}";
-                            return $"找不到模块: '{request.ModuleName}'{hint}";
+                                ? NcfBuiltInResource.Format("Database.Schema.SuggestedModules", "\n可能匹配的模块：{0}", string.Join(", ", suggestions))
+                                : NcfBuiltInResource.Format("Database.Schema.AllModules", "\n所有可用模块：{0}", string.Join(", ", allModules));
+                            return NcfBuiltInResource.Format("Database.Schema.ModuleNotFoundWithHint", "找不到模块：“{0}”{1}", request.ModuleName, hint);
                         }
 
                         var schemas = _metadataProvider.GetSchemasByModule(resolvedModule);
                         if (schemas.Count == 0)
                         {
-                            return $"模块 '{resolvedModule}' 中没有可查询的表";
+                            return NcfBuiltInResource.Format("Database.Schema.ModuleHasNoTables", "模块“{0}”中没有可查询的表", resolvedModule);
                         }
 
                         var result = new
@@ -154,13 +154,13 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                     }
 
                     // 获取所有模块和表的概览
-                    logger.Append("获取所有可查询的模块和表的概览");
+                    logger.Append(NcfBuiltInResource.Get("Database.Schema.OverviewLog"));
                     
                     var allSchemas = _metadataProvider.GetAllSchemas();
                     
                     if (allSchemas.Count == 0)
                     {
-                        return "没有可查询的数据库模块";
+                        return NcfBuiltInResource.Get("Database.Schema.NoModules");
                     }
 
                     var overview = new
@@ -188,8 +188,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                 }
                 catch (Exception ex)
                 {
-                    logger.Append($"查询数据库结构时出错: {ex.Message}");
-                    return $"错误: {ex.Message}";
+                    logger.Append(NcfBuiltInResource.Format("Database.Schema.Error", "查询数据库结构时出错：{0}", ex.Message));
+                    return NcfBuiltInResource.Format("Common.Error", "错误：{0}", ex.Message);
                 }
             });
         }
@@ -200,11 +200,11 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         public class QuerySchemaRequest : FunctionAppRequestBase
         {
             [MaxLength(200)]
-            [Description("模块名称||可选。指定模块后将只返回该模块的表信息")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Database.Schema.Module")]
             public string ModuleName { get; set; }
 
             [MaxLength(100)]
-            [Description("表名称||可选。与模块名称配合使用，获取特定表的详细信息")]
+            [LocalizedDescription(typeof(NcfBuiltInResource), "Parameter.Database.Schema.Table")]
             public string TableName { get; set; }
 
             public override async Task LoadData(IServiceProvider serviceProvider)
