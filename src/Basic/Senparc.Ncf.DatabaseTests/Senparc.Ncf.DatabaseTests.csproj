@@ -2,6 +2,18 @@
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
+		<Version>0.0.1</Version>
+		<PackageReleaseNotes>
+		  [2026-07-17] v0.0.1 同步上游项目版本并适配统一本地化能力
+		  1、Dependency update from Senparc.Ncf.Database.MySql.Backcup to 0.20.2-preview2
+		  2、Dependency update from Senparc.Ncf.Database.MySql to 0.20.2-preview2
+		  3、Dependency update from Senparc.Ncf.Database.Oracle to 0.10.2-preview2
+		  4、Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.2-preview2
+		  5、Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.2-preview2
+		  6、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.2-preview2
+		  7、Dependency update from Senparc.Ncf.Database to 0.21.2-preview2
+		  8、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.2-preview2
+		</PackageReleaseNotes>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>10.0</LangVersion>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.16.5-preview4</Version>
+    <Version>0.17.0-preview5</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -95,6 +95,11 @@
       2、优化向量集合命名与来源 ID 生成策略，降低并发检索场景下的数据冲突风险
       3、调整嵌入检索卡片样式，避免右侧浮层遮挡操作按钮
       4、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
+      [2026-07-17] v0.17.0-preview5 为 PromptRange 模块接入统一资源本地化并优化功能文案
+      1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+      2、更新 FunctionRender 与请求模型文案的资源化解析
+      3、统一模块注册信息、菜单名称与功能描述的本地化输出
+      4、同步管理页面与前端交互文案的多语言显示
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>

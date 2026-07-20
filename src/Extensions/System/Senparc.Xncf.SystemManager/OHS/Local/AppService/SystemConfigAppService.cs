@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260715
     修改描述：v0.14.2-preview2 升级 Senparc.AI 至 0.27.3 与 Senparc.AI.AgentKernel 至 0.1.10
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.15.0-preview3 为 SystemManager 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using System;

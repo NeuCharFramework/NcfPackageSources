@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.23.1-preview1</Version>
+    <Version>0.23.2-preview2</Version>
     <AssemblyName>Senparc.Ncf.Service</AssemblyName>
     <RootNamespace>Senparc.Ncf.Service</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -17,18 +17,22 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v0.1.0 创世
-			v0.11.7 优化 DeleteAllAsync() 方法，提供 deleteItemAction 参数
-			v0.14.0 解决模块安装后直接授权菜单问题
-      [2024-08-13] v0.20.0-preview1 优化 ServiceBase，提供 Mapping&lt;T&gt;(entity) 快捷方法；为 DynamicData 添加根据 Entity 类型自动创建表结构的功能
-      [2024-09-10] v0.20.3-preview1 升级缓存基础库
-      [2024-10-16] v0.21.0-preview1 为 ServiceBase 提供依赖注入快捷方法
-      [2025-01-12] v0.22.4-preview1 为 ServiceBase 提供 ToDto 扩展方法
-			[2025-01-25] v0.22.6-preview1 Update Agents functions, support for function calling
-			[2025-04-29] v0.22.8-preview1 Update CO2NET and AIKernel
-			[2025-05-18] v0.22.9-preview1 Update Installation
-
+				v0.1.0 创世
+				v0.11.7 优化 DeleteAllAsync() 方法，提供 deleteItemAction 参数
+				v0.14.0 解决模块安装后直接授权菜单问题
+				[2024-08-13] v0.20.0-preview1 优化 ServiceBase，提供 Mapping&lt;T&gt;(entity) 快捷方法；为 DynamicData 添加根据 Entity 类型自动创建表结构的功能
+				[2024-09-10] v0.20.3-preview1 升级缓存基础库
+				[2024-10-16] v0.21.0-preview1 为 ServiceBase 提供依赖注入快捷方法
+				[2025-01-12] v0.22.4-preview1 为 ServiceBase 提供 ToDto 扩展方法
+				[2025-01-25] v0.22.6-preview1 Update Agents functions, support for function calling
+				[2025-04-29] v0.22.8-preview1 Update CO2NET and AIKernel
+				[2025-05-18] v0.22.9-preview1 Update Installation
 				[2025-11-01] update basic libraries, including Senparc.AI
+				[2026-07-17] v0.23.2-preview2 同步上游项目版本并适配统一本地化能力
+				1、Dependency update from Senparc.Ncf.Core to 0.25.0-preview2
+				2、Dependency update from Senparc.Ncf.Repository to 0.20.2-preview2
+				3、Dependency update from Senparc.Ncf.SMS to 0.20.2-preview2
+				4、Dependency update from Senparc.Ncf.Utility to 0.21.0-preview2
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -1,3 +1,16 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：NcfLocalizationOptions.cs
+    文件功能描述：NcfLocalizationOptions 相关实现
+    
+    
+    创建标识：Senparc - 20260717
+    
+    修改标识：Senparc - 20260717
+    修改描述：v0.21.0-preview2 增强全局文化配置与本地化选项支持
+
+----------------------------------------------------------------*/
 using System;
 using System.Collections.Generic;
 using System.Globalization;

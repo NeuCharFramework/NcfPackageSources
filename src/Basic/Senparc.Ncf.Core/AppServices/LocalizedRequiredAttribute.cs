@@ -1,3 +1,16 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：LocalizedRequiredAttribute.cs
+    文件功能描述：LocalizedRequiredAttribute 相关实现
+    
+    
+    创建标识：Senparc - 20260717
+    
+    修改标识：Senparc - 20260717
+    修改描述：v0.25.0-preview2 新增统一资源本地化基础设施并支持 FunctionRender 动态文案
+
+----------------------------------------------------------------*/
 using Senparc.Ncf.Core.Localization;
 using System;
 using System.ComponentModel.DataAnnotations;

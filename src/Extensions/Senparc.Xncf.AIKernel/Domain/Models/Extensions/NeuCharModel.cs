@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260718
+    修改描述：同步 NeuChar 算力模型类型
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -32,6 +35,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.Extensions
         /// 模型名称
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// 模型类型
+        /// </summary>
+        public Senparc.AI.ConfigModel ModelType { get; set; }
 
         /// <summary>
         /// 模型权重参考（以text-davinci-003为基准）

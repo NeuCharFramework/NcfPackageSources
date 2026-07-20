@@ -19,6 +19,9 @@
     修改标识：Senparc - 20260715
     修改描述：v0.13.5-preview4 升级 Senparc.AI 至 0.27.3 与 Senparc.AI.AgentKernel 至 0.1.10
 
+    修改标识：Senparc - 20260718
+    修改描述：同步 NeuChar 算力模型类型
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
@@ -299,17 +302,21 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                                     ? "2024-05-13"
                                     : "",
                     Endpoint = $"https://www.neuchar.com/{developerId}/",
-                    ConfigModelType = Models.ConfigModelType.Chat,
+                    ConfigModelType = neucharModel.ModelType is ConfigModel.Unknown or ConfigModel.Other
+                                        ? Models.ConfigModelType.Chat
+                                        : (Models.ConfigModelType)neucharModel.ModelType,
                     Note = $"从 NeuChar AI 导入（DevId:{developerId}）",
                     Show = true
                 };
 
-                //TODO: 远程不提供，临时本地判断
-                if (neucharModel.Name.Contains("embedding"))
+                //兼容尚未返回 ModelType 的旧接口数据
+                if ((neucharModel.ModelType is ConfigModel.Unknown or ConfigModel.Other) &&
+                    neucharModel.Name.Contains("embedding", StringComparison.OrdinalIgnoreCase))
                 {
                     dto.ConfigModelType = Models.ConfigModelType.TextEmbedding;
                 }
-                else if (neucharModel.Name.Contains("text-davinci"))
+                else if ((neucharModel.ModelType is ConfigModel.Unknown or ConfigModel.Other) &&
+                         neucharModel.Name.Contains("text-davinci", StringComparison.OrdinalIgnoreCase))
                 {
                     dto.ConfigModelType = Models.ConfigModelType.TextCompletion;
                 }

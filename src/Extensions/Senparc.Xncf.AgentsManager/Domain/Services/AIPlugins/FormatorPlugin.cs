@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Microsoft.SemanticKernel;

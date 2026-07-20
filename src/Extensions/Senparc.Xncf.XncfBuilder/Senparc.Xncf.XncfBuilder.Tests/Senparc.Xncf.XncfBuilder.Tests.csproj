@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net10.0</TargetFrameworks>
-		<Version>0.0.3</Version>
+		<Version>0.0.4</Version>
 		<PackageReleaseNotes>
     [2026-07-02] v0.0.2 升级 Senparc.AI.AgentKernel 并完成兼容性适配，增强 MCP 工具接入与调用链路兼容能力
     1、升级 Senparc.AI.AgentKernel 并完成兼容性适配
@@ -11,6 +11,10 @@
     [2026-07-07] v0.0.3 Dependency updates from upstream modules
     1、Dependency update from Senparc.Xncf.PromptRange.Tests to 0.0.3
     2、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.5-preview4
+    [2026-07-17] v0.0.4 同步上游项目版本并适配统一本地化能力
+    1、Dependency update from Senparc.Ncf.Core.Tests to 0.0.1
+    2、Dependency update from Senparc.Xncf.PromptRange.Tests to 0.0.4
+    3、Dependency update from Senparc.Xncf.XncfBuilder to 0.37.0-preview5
 </PackageReleaseNotes>
 
 		<IsPackable>false</IsPackable>

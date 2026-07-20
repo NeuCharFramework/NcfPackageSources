@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 
-		<Version>0.0.4</Version>
+		<Version>0.0.5</Version>
 		<PackageReleaseNotes>
 		  [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 		  1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
@@ -12,6 +12,8 @@
 		  [2026-07-07] v0.0.4 Dependency updates from upstream modules
 		  1、Dependency update from Senparc.Xncf.AgentsManager to 0.11.3-preview5
 		  2、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
+		  [2026-07-17] v0.0.5 同步上游项目版本并适配统一本地化能力
+		  1、Dependency update from Senparc.Xncf.AgentsManager to 0.12.0-preview6
 </PackageReleaseNotes>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>

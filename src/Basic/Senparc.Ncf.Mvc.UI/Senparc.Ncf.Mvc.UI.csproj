@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.21.1-preview1</Version>
+    <Version>0.21.2-preview2</Version>
     <AssemblyName>Senparc.Ncf.Mvc.UI</AssemblyName>
     <RootNamespace>Senparc.Ncf.Mvc.UI</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -17,17 +17,18 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v0.1
-			创世
-			[2024-09-10] v0.18.4-preview1 升级缓存基础库
-			[2024-10-16] v0.18.6-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
-			[2024-11-15] v0.19.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
-			[2024-11-21] v0.20.2-preview1 更新 CO2NET 及缓存基础库
-			[2024-11-28] v0.20.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
-			[2025-01-25] v0.20.7-preview1 Update Agents functions, support for function calling
-			[2025-04-29] v0.20.9-preview1 Update CO2NET and AIKernel
-
+				v0.1
+				创世
+				[2024-09-10] v0.18.4-preview1 升级缓存基础库
+				[2024-10-16] v0.18.6-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
+				[2024-11-15] v0.19.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
+				[2024-11-21] v0.20.2-preview1 更新 CO2NET 及缓存基础库
+				[2024-11-28] v0.20.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
+				[2025-01-25] v0.20.7-preview1 Update Agents functions, support for function calling
+				[2025-04-29] v0.20.9-preview1 Update CO2NET and AIKernel
 				[2025-11-01] update basic libraries, including Senparc.AI
+				[2026-07-17] v0.21.2-preview2 同步上游项目版本并适配统一本地化能力
+				1、Dependency update from Senparc.Ncf.Core to 0.25.0-preview2
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

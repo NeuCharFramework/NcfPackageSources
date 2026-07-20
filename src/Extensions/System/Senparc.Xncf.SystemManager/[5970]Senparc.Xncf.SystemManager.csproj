@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.14.2-preview2</Version>
+    <Version>0.15.0-preview3</Version>
     <AssemblyName>Senparc.Xncf.SystemManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.SystemManager</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -43,6 +43,11 @@
 		1、SystemConfigAppService 新增 GetRequestTempLog 接口，支持按 RequestTempId 查询缓存日志
 		2、新增 SystemConfig_GetRequestTempLogRequest 请求模型并补齐参数校验约束
 		3、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
+		[2026-07-17] v0.15.0-preview3 为 SystemManager 模块接入统一资源本地化并优化功能文案
+		1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+		2、更新 FunctionRender 与请求模型文案的资源化解析
+		3、统一模块注册信息、菜单名称与功能描述的本地化输出
+		4、补充并统一多语言资源键及资源文件
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
