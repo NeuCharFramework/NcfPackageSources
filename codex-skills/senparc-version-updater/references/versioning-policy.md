@@ -31,7 +31,7 @@
 
 ## 受影响项目覆盖规则
 
-1. 需要根据 `changed_cs_files` 反向映射出对应项目集合（`changed_csprojs`）。
+1. 直接发生变化的 `.csproj` 必须加入 `changed_csprojs`；同时需要根据 `changed_cs_files` 反向映射出对应项目集合。
 2. 对每个 changed `.props` 文件，必须解析显式 `<Import Project="..." />`，支持 `$(MSBuildThisFileDirectory)`、`$(MSBuildProjectDirectory)`，并递归跟踪 `.props` 引用链。
 3. 直接或间接导入 changed `.props` 的所有项目都必须加入 `changed_csprojs`，即使这些项目自身没有 `.cs` 文件变化。
 4. `changed_csprojs` 中的每个项目都必须更新自身 `.csproj`（版本与发布说明）。

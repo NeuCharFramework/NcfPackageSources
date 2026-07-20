@@ -611,6 +611,7 @@ def main() -> int:
     changed_cs_files: list[dict[str, str]] = []
     changed_csproj_targets: set[Path] = set()
     changed_csproj_to_cs_files: dict[Path, list[dict[str, str]]] = defaultdict(list)
+    changed_csproj_files = [rel for rel in changed_files if rel.lower().endswith(".csproj")]
     changed_props_files = [rel for rel in changed_files if rel.lower().endswith(".props")]
     changed_props_paths = [(root / rel).resolve() for rel in changed_props_files]
     changed_props_importers = resolve_changed_props_importers(changed_props_paths, reverse_props_import_map)
@@ -622,6 +623,14 @@ def main() -> int:
             importer = importer.resolve()
             changed_csproj_targets.add(importer)
             changed_csproj_to_props_files[importer].append(rel_props)
+
+    for rel in changed_csproj_files:
+        changed_csproj_path = (root / rel).resolve()
+        selected = selected_by_dir.get(changed_csproj_path.parent)
+        if selected is not None:
+            changed_csproj_targets.add(selected.resolve())
+        elif changed_csproj_path.exists():
+            changed_csproj_targets.add(changed_csproj_path)
 
     for rel in changed_files:
         if not rel.lower().endswith(".cs"):
@@ -669,6 +678,7 @@ def main() -> int:
         },
         "changed_files": changed_files,
         "changed_cs_files": changed_cs_files,
+        "changed_csproj_files": changed_csproj_files,
         "changed_props_files": changed_props_files,
         "changed_csprojs": [to_relative_path(root, p) for p in sorted(changed_csproj_targets)],
         "changed_csproj_to_cs_files": {

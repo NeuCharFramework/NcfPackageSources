@@ -27,7 +27,7 @@ Use the output JSON as the source of truth for:
 2. Changed files in the current update scope (`comparison_base..HEAD` plus uncommitted) across the entire repository, not just the primary project directory.
 3. Changed `.cs` files that must receive header updates (repository-wide).
 4. Changed `.props` files and all projects that import them directly or through another `.props` file (`changed_props_importers`).
-5. `.csproj` files mapped from changed `.cs` files or changed `.props` imports (`changed_csprojs`) that must receive direct project updates.
+5. `.csproj` files changed directly, mapped from changed `.cs` files, or affected by changed `.props` imports (`changed_csprojs`) that must receive direct project updates.
 6. Direct update roots (`dependency_roots`) and recursive dependent `.csproj` files that need passive version bumps.
 7. Comparison baseline metadata (`master/main` branch ref and merge-base commit).
 
@@ -114,7 +114,7 @@ For every changed `.props` file:
 4. Add these projects to `changed_csprojs`, `dependency_roots`, and `changed_csproj_to_props_files`.
 5. A changed `.props` file does not receive a C# header block; its functional effect must be recorded in every importing project's `<PackageReleaseNotes>`.
 
-For all projects in `changed_csprojs` (from changed `.cs` files or changed `.props` imports):
+For all projects in `changed_csprojs` (directly changed `.csproj`, changed `.cs` files, or changed `.props` imports):
 
 1. Ensure project version metadata and release notes are updated for this window.
 2. For the same unmerged window (`comparison_base..HEAD`), version can only bump once per project.
