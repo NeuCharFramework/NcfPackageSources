@@ -419,6 +419,19 @@
   <data name="Xncf.Home" xml:space="preserve"><value>主页</value></data>
   <data name="Xncf.AssemblyMissing" xml:space="preserve"><value>此模块未被部署或程序集文件已丢失</value></data>
   <data name="Xncf.PendingUpdates" xml:space="preserve"><value>待更新模块</value></data>
+  <data name="Xncf.BatchUpdate" xml:space="preserve"><value>批量一键更新</value></data>
+  <data name="Xncf.BatchUpdateTitle" xml:space="preserve"><value>批量更新模块</value></data>
+  <data name="Xncf.BatchUpdateConfirm" xml:space="preserve"><value>将按顺序更新 {0} 个模块，请确认更新后是否开启模块。</value></data>
+  <data name="Xncf.EnableAfterUpdate" xml:space="preserve"><value>更新后开启</value></data>
+  <data name="Xncf.EnableAfterUpdateTip" xml:space="preserve"><value>开启此选项后，每个模块更新成功后将立即切换为开放状态。</value></data>
+  <data name="Xncf.BatchUpdating" xml:space="preserve"><value>正在逐一更新...</value></data>
+  <data name="Xncf.BatchUpdateResult" xml:space="preserve"><value>批量更新结果</value></data>
+  <data name="Xncf.BatchUpdateSummary" xml:space="preserve"><value>共处理 {0} 个模块：成功 {1} 个，失败 {2} 个。</value></data>
+  <data name="Xncf.NoPendingUpdates" xml:space="preserve"><value>当前没有待更新模块。</value></data>
+  <data name="Xncf.BatchUpdate.NoResult" xml:space="preserve"><value>未获取到批量更新结果。</value></data>
+  <data name="Xncf.BatchUpdateFailed" xml:space="preserve"><value>批量更新失败</value></data>
+  <data name="Xncf.BatchUpdate.UpdateAndEnableSuccess" xml:space="preserve"><value>更新并开启成功</value></data>
+  <data name="Xncf.BatchUpdate.EnableFailed" xml:space="preserve"><value>更新成功，但开启失败：{0}</value></data>
   <data name="Xncf.State.Closed" xml:space="preserve"><value>关闭</value></data>
   <data name="Xncf.State.Open" xml:space="preserve"><value>开放</value></data>
   <data name="Xncf.State.PendingAdd" xml:space="preserve"><value>新增待审核</value></data>

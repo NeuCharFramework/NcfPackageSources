@@ -18,7 +18,14 @@
         }
       },
       newTableSearch: '',
-      oldTableSearch: ''
+      oldTableSearch: '',
+      batchUpdate: {
+        visible: false,
+        enableAfterUpdate: true,
+        loading: false,
+        resultVisible: false,
+        result: null
+      }
     };
   },
   watch: {
@@ -61,6 +68,40 @@
       setTimeout(function () {
         window.location.href = `/Admin/XncfModule/Start/?uid=${row.uid}`;
       }, 100);
+    },
+    // 打开批量更新选项
+    openBatchUpdate() {
+      if (this.updatedTableData.length === 0) {
+        this.$message.info(ncfT('Xncf.NoPendingUpdates'));
+        return;
+      }
+      this.batchUpdate.visible = true;
+    },
+    // 后台逐一更新全部待更新模块
+    async handleBatchUpdate() {
+      this.batchUpdate.loading = true;
+      try {
+        const response = await service.post(
+          '/Admin/XncfModule/Index?handler=BatchUpdate',
+          { enableAfterUpdate: this.batchUpdate.enableAfterUpdate },
+          { customAlert: true }
+        );
+        const result = response && response.data ? response.data.data : null;
+        if (!result) {
+          throw new Error(ncfT('Xncf.BatchUpdate.NoResult'));
+        }
+
+        this.batchUpdate.visible = false;
+        this.batchUpdate.result = result;
+        this.batchUpdate.resultVisible = true;
+        await this.getList();
+        getNavMenu();
+      } catch (error) {
+        console.error(ncfT('Xncf.BatchUpdateFailed'), error);
+        this.$message.error(error.message || ncfT('Xncf.BatchUpdateFailed'));
+      } finally {
+        this.batchUpdate.loading = false;
+      }
     },
     // 操作
     handleHandle(index, row) {

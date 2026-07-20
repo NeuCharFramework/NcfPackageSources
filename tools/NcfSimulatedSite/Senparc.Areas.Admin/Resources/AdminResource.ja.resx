@@ -419,6 +419,19 @@
   <data name="Xncf.Home" xml:space="preserve"><value>ホーム</value></data>
   <data name="Xncf.AssemblyMissing" xml:space="preserve"><value>このモジュールは未配置、またはアセンブリがありません。</value></data>
   <data name="Xncf.PendingUpdates" xml:space="preserve"><value>更新待ちモジュール</value></data>
+  <data name="Xncf.BatchUpdate" xml:space="preserve"><value>一括更新</value></data>
+  <data name="Xncf.BatchUpdateTitle" xml:space="preserve"><value>モジュールの一括更新</value></data>
+  <data name="Xncf.BatchUpdateConfirm" xml:space="preserve"><value>{0} 個のモジュールを順番に更新します。更新後に有効化するか選択してください。</value></data>
+  <data name="Xncf.EnableAfterUpdate" xml:space="preserve"><value>更新後に有効化</value></data>
+  <data name="Xncf.EnableAfterUpdateTip" xml:space="preserve"><value>更新に成功した各モジュールを直ちに有効化します。</value></data>
+  <data name="Xncf.BatchUpdating" xml:space="preserve"><value>モジュールを更新しています...</value></data>
+  <data name="Xncf.BatchUpdateResult" xml:space="preserve"><value>一括更新の結果</value></data>
+  <data name="Xncf.BatchUpdateSummary" xml:space="preserve"><value>{0} 個を処理しました：成功 {1}、失敗 {2}。</value></data>
+  <data name="Xncf.NoPendingUpdates" xml:space="preserve"><value>更新待ちのモジュールはありません。</value></data>
+  <data name="Xncf.BatchUpdate.NoResult" xml:space="preserve"><value>一括更新の結果を取得できませんでした。</value></data>
+  <data name="Xncf.BatchUpdateFailed" xml:space="preserve"><value>一括更新に失敗しました</value></data>
+  <data name="Xncf.BatchUpdate.UpdateAndEnableSuccess" xml:space="preserve"><value>更新と有効化が完了しました</value></data>
+  <data name="Xncf.BatchUpdate.EnableFailed" xml:space="preserve"><value>更新は成功しましたが、有効化に失敗しました：{0}</value></data>
   <data name="Xncf.State.Closed" xml:space="preserve"><value>閉じる</value></data>
   <data name="Xncf.State.Open" xml:space="preserve"><value>公開</value></data>
   <data name="Xncf.State.PendingAdd" xml:space="preserve"><value>新規 — 審査待ち</value></data>

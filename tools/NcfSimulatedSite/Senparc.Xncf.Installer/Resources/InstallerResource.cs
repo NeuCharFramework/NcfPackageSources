@@ -1,3 +1,16 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：InstallerResource.cs
+    文件功能描述：InstallerResource 相关实现
+    
+    
+    创建标识：Senparc - 20260403
+    
+    修改标识：Senparc - 20260717
+    修改描述：v0.4.0 为安装流程接入多语言资源与界面文案本地化
+
+----------------------------------------------------------------*/
 using System.Globalization;
 using System.Resources;
 

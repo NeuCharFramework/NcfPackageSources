@@ -421,6 +421,19 @@
   <data name="Xncf.Home" xml:space="preserve"><value>Home</value></data>
   <data name="Xncf.AssemblyMissing" xml:space="preserve"><value>This module is not deployed or its assembly is missing.</value></data>
   <data name="Xncf.PendingUpdates" xml:space="preserve"><value>Modules pending update</value></data>
+  <data name="Xncf.BatchUpdate" xml:space="preserve"><value>Update all</value></data>
+  <data name="Xncf.BatchUpdateTitle" xml:space="preserve"><value>Batch update modules</value></data>
+  <data name="Xncf.BatchUpdateConfirm" xml:space="preserve"><value>{0} modules will be updated in sequence. Choose whether to enable each module after updating.</value></data>
+  <data name="Xncf.EnableAfterUpdate" xml:space="preserve"><value>Enable after update</value></data>
+  <data name="Xncf.EnableAfterUpdateTip" xml:space="preserve"><value>When enabled, each module switches to Open immediately after a successful update.</value></data>
+  <data name="Xncf.BatchUpdating" xml:space="preserve"><value>Updating modules...</value></data>
+  <data name="Xncf.BatchUpdateResult" xml:space="preserve"><value>Batch update results</value></data>
+  <data name="Xncf.BatchUpdateSummary" xml:space="preserve"><value>Processed {0} modules: {1} succeeded and {2} failed.</value></data>
+  <data name="Xncf.NoPendingUpdates" xml:space="preserve"><value>There are no modules pending update.</value></data>
+  <data name="Xncf.BatchUpdate.NoResult" xml:space="preserve"><value>No batch update result was returned.</value></data>
+  <data name="Xncf.BatchUpdateFailed" xml:space="preserve"><value>Batch update failed</value></data>
+  <data name="Xncf.BatchUpdate.UpdateAndEnableSuccess" xml:space="preserve"><value>Updated and enabled successfully</value></data>
+  <data name="Xncf.BatchUpdate.EnableFailed" xml:space="preserve"><value>The update succeeded, but enabling failed: {0}</value></data>
   <data name="Xncf.State.Closed" xml:space="preserve"><value>Closed</value></data>
   <data name="Xncf.State.Open" xml:space="preserve"><value>Open</value></data>
   <data name="Xncf.State.PendingAdd" xml:space="preserve"><value>New — pending review</value></data>

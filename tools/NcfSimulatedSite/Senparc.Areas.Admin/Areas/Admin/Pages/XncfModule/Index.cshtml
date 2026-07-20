@@ -152,6 +152,14 @@
                             <el-button size="mini" type="danger" slot="reference">{{handlerText}}</el-button>
                         </el-popconfirm>
                     </template>
+                    <div style="text-align: right; margin-bottom: 12px;">
+                        <el-button type="primary"
+                                   icon="el-icon-refresh"
+                                   :disabled="updatedTableData.length === 0"
+                                   @@click="openBatchUpdate">
+                            @AR["Xncf.BatchUpdate"] ({{updatedTableData.length}})
+                        </el-button>
+                    </div>
                     <el-table :data="updatedTableData.filter(data => !newTableSearch || data.name.includes(newTableSearch))"
                               style="width: 100%;margin-bottom: 20px;">
                         <el-table-column align="left" label="@AR["Xncf.ModuleName"]">
@@ -197,6 +205,62 @@
             </el-tabs>
         </el-main>
     </el-container>
+
+    <el-dialog title="@AR["Xncf.BatchUpdateTitle"]"
+               :visible.sync="batchUpdate.visible"
+               :close-on-click-modal="false"
+               width="480px">
+        <p>{{ncfT('Xncf.BatchUpdateConfirm', updatedTableData.length)}}</p>
+        <el-form label-width="150px">
+            <el-form-item label="@AR["Xncf.EnableAfterUpdate"]">
+                <el-switch v-model="batchUpdate.enableAfterUpdate"></el-switch>
+                <p style="margin: 4px 0 0; color: #909399; line-height: 1.5;">
+                    @AR["Xncf.EnableAfterUpdateTip"]
+                </p>
+            </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+            <el-button @@click="batchUpdate.visible = false" :disabled="batchUpdate.loading">@AR["Common.取消"]</el-button>
+            <el-button type="primary"
+                       @@click="handleBatchUpdate"
+                       :loading="batchUpdate.loading"
+                       :disabled="batchUpdate.loading">
+                {{batchUpdate.loading ? ncfT('Xncf.BatchUpdating') : ncfT('Common.确认')}}
+            </el-button>
+        </span>
+    </el-dialog>
+
+    <el-dialog title="@AR["Xncf.BatchUpdateResult"]"
+               :visible.sync="batchUpdate.resultVisible"
+               :close-on-click-modal="false"
+               width="720px">
+        <template v-if="batchUpdate.result">
+            <el-alert :title="ncfT('Xncf.BatchUpdateSummary', batchUpdate.result.totalCount, batchUpdate.result.successCount, batchUpdate.result.failureCount)"
+                      :type="batchUpdate.result.failureCount === 0 ? 'success' : 'warning'"
+                      :closable="false"
+                      show-icon>
+            </el-alert>
+            <el-table :data="batchUpdate.result.items" style="width: 100%; margin-top: 16px;" max-height="420">
+                <el-table-column prop="moduleName" label="@AR["Xncf.DisplayName"]" min-width="150"></el-table-column>
+                <el-table-column label="@AR["Xncf.Version"]" min-width="140">
+                    <template slot-scope="scope">
+                        {{scope.row.currentVersion}} → {{scope.row.targetVersion}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="@AR["Xncf.Status"]" width="100">
+                    <template slot-scope="scope">
+                        <el-tag :type="scope.row.success ? 'success' : 'danger'">
+                            {{scope.row.success ? ncfT('Common.Success') : ncfT('Common.Error')}}
+                        </el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="message" label="@AR["Common.说明"]" min-width="220"></el-table-column>
+            </el-table>
+        </template>
+        <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @@click="batchUpdate.resultVisible = false">@AR["Xncf.Close"]</el-button>
+        </span>
+    </el-dialog>
 </div>
 @section scripts {
     <script src="~/js/Admin/Pages/XncfModule/Index.js"></script>

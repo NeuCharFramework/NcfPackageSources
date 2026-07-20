@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.0.5</Version>
+		<Version>0.1.0</Version>
 		<PackageReleaseNotes>
     [2026-07-02] v0.0.2 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
     1、支持流式输出并优化交互体验
@@ -16,6 +16,11 @@
     1、Header 与 Vue Layout 优先读取 User.Identity.Name，并兼容 AdminWorkContext 与 Model.UserName 回退
     2、修复账号名称缺失场景下顶部显示异常问题，提升后台展示稳定性
     3、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
+    [2026-07-17] v0.1.0 完善后台管理界面、功能表单与多语言资源本地化
+    1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+    2、更新 FunctionRender 与请求模型文案的资源化解析
+    3、统一模块注册信息、菜单名称与功能描述的本地化输出
+    4、同步管理页面与前端交互文案的多语言显示
 </PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.3.2</Version>
+		<Version>0.4.0</Version>
 		<AssemblyName>Senparc.Xncf.Installer</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Installer</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -27,6 +27,11 @@
 			1、Dependency update from Senparc.Xncf.SystemManager to 0.14.2-preview2
 			2、Dependency update from Senparc.Areas.Admin to 0.0.5
 			3、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
+			[2026-07-17] v0.4.0 为安装流程接入多语言资源与界面文案本地化
+			1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+			2、统一模块注册信息、菜单名称与功能描述的本地化输出
+			3、同步管理页面与前端交互文案的多语言显示
+			4、补充并统一多语言资源键及资源文件
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>

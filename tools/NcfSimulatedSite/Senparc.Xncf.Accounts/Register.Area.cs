@@ -1,4 +1,17 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Register.Area.cs
+    文件功能描述：Register.Area 相关实现
+    
+    
+    创建标识：Senparc - 20241028
+    
+    修改标识：Senparc - 20260717
+    修改描述：v0.3.0 为账户模块接入多语言资源与功能文案本地化
+
+----------------------------------------------------------------*/
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Areas;

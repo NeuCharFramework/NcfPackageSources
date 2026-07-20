@@ -419,6 +419,19 @@
   <data name="Xncf.Home" xml:space="preserve"><value>Accueil</value></data>
   <data name="Xncf.AssemblyMissing" xml:space="preserve"><value>Ce module n’est pas déployé ou son assembly est manquant.</value></data>
   <data name="Xncf.PendingUpdates" xml:space="preserve"><value>Modules à mettre à jour</value></data>
+  <data name="Xncf.BatchUpdate" xml:space="preserve"><value>Tout mettre à jour</value></data>
+  <data name="Xncf.BatchUpdateTitle" xml:space="preserve"><value>Mise à jour groupée</value></data>
+  <data name="Xncf.BatchUpdateConfirm" xml:space="preserve"><value>{0} modules seront mis à jour dans l'ordre. Choisissez s'ils doivent être activés après la mise à jour.</value></data>
+  <data name="Xncf.EnableAfterUpdate" xml:space="preserve"><value>Activer après la mise à jour</value></data>
+  <data name="Xncf.EnableAfterUpdateTip" xml:space="preserve"><value>Chaque module sera activé immédiatement après une mise à jour réussie.</value></data>
+  <data name="Xncf.BatchUpdating" xml:space="preserve"><value>Mise à jour des modules...</value></data>
+  <data name="Xncf.BatchUpdateResult" xml:space="preserve"><value>Résultats de la mise à jour</value></data>
+  <data name="Xncf.BatchUpdateSummary" xml:space="preserve"><value>{0} modules traités : {1} réussis et {2} échoués.</value></data>
+  <data name="Xncf.NoPendingUpdates" xml:space="preserve"><value>Aucun module n'est en attente de mise à jour.</value></data>
+  <data name="Xncf.BatchUpdate.NoResult" xml:space="preserve"><value>Aucun résultat de mise à jour n'a été renvoyé.</value></data>
+  <data name="Xncf.BatchUpdateFailed" xml:space="preserve"><value>Échec de la mise à jour groupée</value></data>
+  <data name="Xncf.BatchUpdate.UpdateAndEnableSuccess" xml:space="preserve"><value>Mise à jour et activation réussies</value></data>
+  <data name="Xncf.BatchUpdate.EnableFailed" xml:space="preserve"><value>La mise à jour a réussi, mais l'activation a échoué : {0}</value></data>
   <data name="Xncf.State.Closed" xml:space="preserve"><value>Fermé</value></data>
   <data name="Xncf.State.Open" xml:space="preserve"><value>Ouvert</value></data>
   <data name="Xncf.State.PendingAdd" xml:space="preserve"><value>Nouveau — en attente de validation</value></data>

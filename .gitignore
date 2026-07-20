@@ -119,3 +119,5 @@ tools/NcfSimulatedSite/ASPIRE_USAGE_GUIDE.md
 tools/NcfSimulatedSite/Senparc.Web/App_Data/PromptRange/TextToImage/*
 tools/NcfSimulatedSite/Senparc.Web/App_Data/PromptRange/SpeechToText/*
 tools/NcfSimulatedSite/Senparc.Web/App_Data/PromptRange/TextToSpeech/*
+tools/NcfDesktopApp.GUI/macos-app.pre-package-*
+tools/NcfDesktopApp.GUI/publish-self-contained.pre-package-*

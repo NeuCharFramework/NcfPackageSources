@@ -419,6 +419,19 @@
   <data name="Xncf.Home" xml:space="preserve"><value>Inicio</value></data>
   <data name="Xncf.AssemblyMissing" xml:space="preserve"><value>Este módulo no está implementado o falta su ensamblado.</value></data>
   <data name="Xncf.PendingUpdates" xml:space="preserve"><value>Módulos pendientes de actualización</value></data>
+  <data name="Xncf.BatchUpdate" xml:space="preserve"><value>Actualizar todo</value></data>
+  <data name="Xncf.BatchUpdateTitle" xml:space="preserve"><value>Actualización por lotes</value></data>
+  <data name="Xncf.BatchUpdateConfirm" xml:space="preserve"><value>Se actualizarán {0} módulos en orden. Elija si desea habilitarlos después de la actualización.</value></data>
+  <data name="Xncf.EnableAfterUpdate" xml:space="preserve"><value>Habilitar después</value></data>
+  <data name="Xncf.EnableAfterUpdateTip" xml:space="preserve"><value>Cada módulo se habilitará inmediatamente después de actualizarse correctamente.</value></data>
+  <data name="Xncf.BatchUpdating" xml:space="preserve"><value>Actualizando módulos...</value></data>
+  <data name="Xncf.BatchUpdateResult" xml:space="preserve"><value>Resultados de la actualización</value></data>
+  <data name="Xncf.BatchUpdateSummary" xml:space="preserve"><value>Se procesaron {0} módulos: {1} correctos y {2} fallidos.</value></data>
+  <data name="Xncf.NoPendingUpdates" xml:space="preserve"><value>No hay módulos pendientes de actualización.</value></data>
+  <data name="Xncf.BatchUpdate.NoResult" xml:space="preserve"><value>No se recibió el resultado de la actualización.</value></data>
+  <data name="Xncf.BatchUpdateFailed" xml:space="preserve"><value>Error en la actualización por lotes</value></data>
+  <data name="Xncf.BatchUpdate.UpdateAndEnableSuccess" xml:space="preserve"><value>Actualizado y habilitado correctamente</value></data>
+  <data name="Xncf.BatchUpdate.EnableFailed" xml:space="preserve"><value>La actualización se completó, pero no se pudo habilitar: {0}</value></data>
   <data name="Xncf.State.Closed" xml:space="preserve"><value>Cerrado</value></data>
   <data name="Xncf.State.Open" xml:space="preserve"><value>Abierto</value></data>
   <data name="Xncf.State.PendingAdd" xml:space="preserve"><value>Nuevo — pendiente de revisión</value></data>

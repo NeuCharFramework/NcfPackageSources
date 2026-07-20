@@ -1,4 +1,17 @@
-﻿using Senparc.CO2NET.Extensions;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：AdminUserInfo.cs
+    文件功能描述：AdminUserInfo 相关实现
+    
+    
+    创建标识：Senparc - 20241028
+    
+    修改标识：Senparc - 20260717
+    修改描述：v0.1.0 完善后台管理界面、功能表单与多语言资源本地化
+
+----------------------------------------------------------------*/
+using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;

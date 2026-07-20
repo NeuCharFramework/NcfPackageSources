@@ -419,6 +419,19 @@
   <data name="Xncf.Home" xml:space="preserve"><value>Главная</value></data>
   <data name="Xncf.AssemblyMissing" xml:space="preserve"><value>Модуль не развёрнут или его сборка отсутствует.</value></data>
   <data name="Xncf.PendingUpdates" xml:space="preserve"><value>Модули, ожидающие обновления</value></data>
+  <data name="Xncf.BatchUpdate" xml:space="preserve"><value>Обновить все</value></data>
+  <data name="Xncf.BatchUpdateTitle" xml:space="preserve"><value>Пакетное обновление модулей</value></data>
+  <data name="Xncf.BatchUpdateConfirm" xml:space="preserve"><value>Будет последовательно обновлено модулей: {0}. Выберите, включать ли их после обновления.</value></data>
+  <data name="Xncf.EnableAfterUpdate" xml:space="preserve"><value>Включить после обновления</value></data>
+  <data name="Xncf.EnableAfterUpdateTip" xml:space="preserve"><value>Каждый модуль будет включён сразу после успешного обновления.</value></data>
+  <data name="Xncf.BatchUpdating" xml:space="preserve"><value>Обновление модулей...</value></data>
+  <data name="Xncf.BatchUpdateResult" xml:space="preserve"><value>Результаты пакетного обновления</value></data>
+  <data name="Xncf.BatchUpdateSummary" xml:space="preserve"><value>Обработано модулей: {0}; успешно: {1}; с ошибкой: {2}.</value></data>
+  <data name="Xncf.NoPendingUpdates" xml:space="preserve"><value>Нет модулей, ожидающих обновления.</value></data>
+  <data name="Xncf.BatchUpdate.NoResult" xml:space="preserve"><value>Результат пакетного обновления не получен.</value></data>
+  <data name="Xncf.BatchUpdateFailed" xml:space="preserve"><value>Ошибка пакетного обновления</value></data>
+  <data name="Xncf.BatchUpdate.UpdateAndEnableSuccess" xml:space="preserve"><value>Обновление и включение выполнены</value></data>
+  <data name="Xncf.BatchUpdate.EnableFailed" xml:space="preserve"><value>Обновление выполнено, но включить модуль не удалось: {0}</value></data>
   <data name="Xncf.State.Closed" xml:space="preserve"><value>Закрыт</value></data>
   <data name="Xncf.State.Open" xml:space="preserve"><value>Открыт</value></data>
   <data name="Xncf.State.PendingAdd" xml:space="preserve"><value>Новый — ожидает проверки</value></data>

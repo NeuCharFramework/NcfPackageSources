@@ -1,4 +1,17 @@
-﻿using Senparc.Ncf.XncfBase.FunctionRenders;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：MyFunctionRequest.cs
+    文件功能描述：MyFunctionRequest 相关实现
+    
+    
+    创建标识：Senparc - 20211031
+    
+    修改标识：Senparc - 20260717
+    修改描述：v1.1.0 更新示例 XNCF 模块的功能参数与页面本地化能力
+
+----------------------------------------------------------------*/
+using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Ncf.Core.AppServices;
