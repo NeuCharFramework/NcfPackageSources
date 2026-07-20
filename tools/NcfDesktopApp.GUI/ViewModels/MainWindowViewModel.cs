@@ -273,6 +273,10 @@ public partial class MainWindowViewModel : ViewModelBase
             if (isConnected)
             {
                 AddLog("✅ 网络连接正常");
+                if (!string.IsNullOrWhiteSpace(_ncfService.LastSourceSelectionSummary))
+                {
+                    AddLog($"🌐 {_ncfService.LastSourceSelectionSummary}");
+                }
             }
             else
             {
@@ -689,6 +693,10 @@ public partial class MainWindowViewModel : ViewModelBase
             {
                 LatestVersion = latestVersion;
                 AddLog($"📋 最新版本: {latestVersion}");
+                if (!string.IsNullOrWhiteSpace(_ncfService.LastSourceSelectionSummary))
+                {
+                    AddLog($"🌐 {_ncfService.LastSourceSelectionSummary}");
+                }
                 
                 if (!string.IsNullOrEmpty(installedVersion))
                 {
@@ -836,6 +844,11 @@ public partial class MainWindowViewModel : ViewModelBase
         });
 
         await _ncfService.DownloadLatestReleaseAsync(progress, ShowDetailedInfo, cancellationToken);
+        if (!string.IsNullOrWhiteSpace(_ncfService.LastSourceSelectionSummary))
+        {
+            await Dispatcher.UIThread.InvokeAsync(() =>
+                AddLog($"🌐 {_ncfService.LastSourceSelectionSummary}"));
+        }
     }
 
     private async Task ExtractNcfAsync(CancellationToken cancellationToken)
@@ -1594,4 +1607,3 @@ public partial class MainWindowViewModel : ViewModelBase
 
     #endregion
 }
-

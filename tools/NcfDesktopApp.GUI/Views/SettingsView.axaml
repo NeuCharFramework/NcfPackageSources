@@ -204,14 +204,14 @@
                             <Separator Margin="0,8"/>
 
                             <StackPanel Spacing="8">
-                                <TextBlock Text="备用服务器地址:" 
+                                <TextBlock Text="镜像服务器地址:"
                                           FontWeight="SemiBold"
                                           FontSize="12"/>
                                 <TextBox Text="{Binding MirrorServerBaseUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          Watermark="https://www.ncf.pub"
                                          FontSize="12"
                                          FontFamily="Consolas,Menlo,Monaco,Courier New"/>
-                                <TextBlock Text="从此地址拼接 /NcfPackages/latest-release.json。若地址不是默认 https://www.ncf.pub，将优先从此处获取版本并按 JSON 中的链接下载；失败时再尝试 GitHub。默认地址时则先 GitHub、失败后再用此处。修改后自动保存到 desktop-user-settings.json。"
+                                <TextBlock Text="APP 会并发获取 GitHub 与此镜像的最新版本，并测速当前平台安装包地址；版本一致时优先从延迟较低的来源下载，首选源失败会自动切换。若镜像版本落后，则优先使用 GitHub 最新版本。修改后自动保存到 desktop-user-settings.json。"
                                           FontSize="11"
                                           Foreground="{DynamicResource SecondaryTextBrush}"
                                           TextWrapping="Wrap"/>
@@ -308,4 +308,4 @@
             <Setter Property="AllowAutoHide" Value="True"/>
         </Style>
     </UserControl.Styles>
-</UserControl> 
+</UserControl>

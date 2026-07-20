@@ -22,8 +22,13 @@ public delegate void ProcessOutputHandler(string output, bool isError);
 
 public class NcfService
 {
+    private const string GitHubLatestReleaseUrl = "https://api.github.com/repos/NeuCharFramework/NCF/releases/latest";
+    private static readonly TimeSpan SourceProbeTimeout = TimeSpan.FromSeconds(10);
+
     private readonly HttpClient _httpClient;
     private readonly ILogger<NcfService>? _logger;
+    private ReleaseSourceCandidate? _lastSelectedSource;
+    private ReleaseSourceCandidate? _lastAlternateSource;
     
     // 路径配置
     public static string AppDataPath { get; private set; } = string.Empty;
@@ -31,13 +36,18 @@ public class NcfService
     public static string NcfRuntimePath { get; private set; } = string.Empty;
 
     /// <summary>
-    /// 备用更新源站点根地址（默认 https://www.ncf.pub）。元数据地址为 {此属性}/NcfPackages/latest-release.json。
+    /// 镜像更新源站点根地址（默认 https://www.ncf.pub）。元数据地址为 {此属性}/NcfPackages/latest-release.json。
     /// 可由用户在设置中修改，并通过 desktop-user-settings.json 持久化。
     /// </summary>
     public string MirrorServerBaseUrl { get; set; } = DesktopUserSettings.DefaultMirrorServerBaseUrl;
 
     /// <summary>
-    /// 备用元数据 latest-release.json 的完整 URL。
+    /// 最近一次更新源测速和选择结果，供界面展示。
+    /// </summary>
+    public string? LastSourceSelectionSummary { get; private set; }
+
+    /// <summary>
+    /// 镜像元数据 latest-release.json 的完整 URL。
     /// </summary>
     public string GetMirrorMetadataUrl()
     {
@@ -79,15 +89,6 @@ public class NcfService
         return resolved;
     }
 
-    /// <summary>
-    /// 用户将「备用更新源」设为非默认根地址（如本机 https://localhost:xxx）时，应优先从该地址拉取 latest-release.json 与其中给出的下载链接。
-    /// </summary>
-    private bool PreferMirrorMetadataFirst =>
-        !string.Equals(
-            DesktopSettingsStore.NormalizeMirrorServerBase(MirrorServerBaseUrl),
-            DesktopSettingsStore.NormalizeMirrorServerBase(DesktopUserSettings.DefaultMirrorServerBaseUrl),
-            StringComparison.OrdinalIgnoreCase);
-    
     // 🆕 配置文件冲突处理回调
     // 参数: fileName, oldContent, newContent
     // 返回: true=使用新文件（覆盖），false=保留旧文件
@@ -135,35 +136,224 @@ public class NcfService
         _httpClient.DefaultRequestHeaders.Clear();
         _httpClient.DefaultRequestHeaders.Add("User-Agent", "NCF-Desktop-App");
 
-        if (PreferMirrorMetadataFirst)
+        var githubTask = FetchReleaseCandidateAsync(
+            "GitHub",
+            TryGetLatestReleaseFromGitHubAsync,
+            cancellationToken);
+        var mirrorTask = FetchReleaseCandidateAsync(
+            GetMirrorSourceDisplayName(),
+            TryGetLatestReleaseFromMirrorAsync,
+            cancellationToken);
+
+        await Task.WhenAll(githubTask, mirrorTask).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var github = await githubTask.ConfigureAwait(false);
+        var mirror = await mirrorTask.ConfigureAwait(false);
+        var selected = await SelectPreferredSourceAsync(github, mirror, cancellationToken).ConfigureAwait(false);
+        return selected?.Release;
+    }
+
+    private async Task<ReleaseSourceCandidate?> FetchReleaseCandidateAsync(
+        string sourceName,
+        Func<CancellationToken, Task<GitHubRelease?>> fetchRelease,
+        CancellationToken cancellationToken)
+    {
+        using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeoutCts.CancelAfter(SourceProbeTimeout);
+
+        var stopwatch = Stopwatch.StartNew();
+        var release = await fetchRelease(timeoutCts.Token).ConfigureAwait(false);
+        stopwatch.Stop();
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var targetAsset = release == null ? null : GetTargetAsset(release);
+        if (release == null ||
+            string.IsNullOrWhiteSpace(release.TagName) ||
+            targetAsset?.Name == null ||
+            string.IsNullOrWhiteSpace(targetAsset.BrowserDownloadUrl))
         {
-            var mirrorUrl = GetMirrorMetadataUrl();
-            _logger?.LogInformation("已配置自定义镜像根地址，优先从元数据地址获取版本: {Url}", mirrorUrl);
-            var fromMirror = await TryGetLatestReleaseFromMirrorAsync(cancellationToken).ConfigureAwait(false);
-            if (fromMirror != null)
-            {
-                return fromMirror;
-            }
-
-            _logger?.LogWarning("自定义镜像元数据不可用，回退到 GitHub API");
-            var fromGitHub = await TryGetLatestReleaseFromGitHubAsync(cancellationToken).ConfigureAwait(false);
-            if (fromGitHub != null)
-            {
-                return fromGitHub;
-            }
-
+            _logger?.LogWarning("{Source} 未返回当前平台可用的安装包", sourceName);
             return null;
         }
 
-        var fromGitHubDefault = await TryGetLatestReleaseFromGitHubAsync(cancellationToken).ConfigureAwait(false);
-        if (fromGitHubDefault != null)
+        return new ReleaseSourceCandidate(sourceName, release, stopwatch.Elapsed);
+    }
+
+    private async Task<ReleaseSourceCandidate?> SelectPreferredSourceAsync(
+        ReleaseSourceCandidate? github,
+        ReleaseSourceCandidate? mirror,
+        CancellationToken cancellationToken)
+    {
+        _lastSelectedSource = null;
+        _lastAlternateSource = null;
+
+        if (github == null && mirror == null)
         {
-            return fromGitHubDefault;
+            LastSourceSelectionSummary = "更新源测速失败：GitHub 与镜像均不可用";
+            return null;
         }
 
-        var fallbackMirrorUrl = GetMirrorMetadataUrl();
-        _logger?.LogWarning("GitHub API 不可用，尝试备用元数据地址: {Mirror}", fallbackMirrorUrl);
-        return await TryGetLatestReleaseFromMirrorAsync(cancellationToken).ConfigureAwait(false);
+        if (github != null && mirror != null &&
+            !string.Equals(github.Release.TagName, mirror.Release.TagName, StringComparison.OrdinalIgnoreCase))
+        {
+            _lastSelectedSource = github;
+            LastSourceSelectionSummary =
+                $"镜像版本 {mirror.Release.TagName ?? "未知"} 与 GitHub 最新版本 {github.Release.TagName ?? "未知"} 不一致，优先使用 GitHub";
+            _logger?.LogWarning("{Summary}", LastSourceSelectionSummary);
+            return github;
+        }
+
+        var githubLatencyTask = MeasurePackageEndpointLatencyAsync(github, cancellationToken);
+        var mirrorLatencyTask = MeasurePackageEndpointLatencyAsync(mirror, cancellationToken);
+        await Task.WhenAll(githubLatencyTask, mirrorLatencyTask).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (github != null)
+        {
+            github.PackageLatency = await githubLatencyTask.ConfigureAwait(false);
+        }
+
+        if (mirror != null)
+        {
+            mirror.PackageLatency = await mirrorLatencyTask.ConfigureAwait(false);
+        }
+
+        ReleaseSourceCandidate selected;
+        ReleaseSourceCandidate? alternate;
+
+        if (github == null)
+        {
+            selected = mirror!;
+            alternate = null;
+        }
+        else if (mirror == null)
+        {
+            selected = github;
+            alternate = null;
+        }
+        else if (github.PackageLatency.HasValue && !mirror.PackageLatency.HasValue)
+        {
+            selected = github;
+            alternate = mirror;
+        }
+        else if (!github.PackageLatency.HasValue && mirror.PackageLatency.HasValue)
+        {
+            selected = mirror;
+            alternate = github;
+        }
+        else
+        {
+            var githubLatency = github.PackageLatency ?? github.MetadataLatency;
+            var mirrorLatency = mirror.PackageLatency ?? mirror.MetadataLatency;
+            selected = githubLatency <= mirrorLatency ? github : mirror;
+            alternate = ReferenceEquals(selected, github) ? mirror : github;
+        }
+
+        _lastSelectedSource = selected;
+        _lastAlternateSource = alternate;
+        LastSourceSelectionSummary = BuildSourceSelectionSummary(github, mirror, selected);
+        _logger?.LogInformation("{Summary}", LastSourceSelectionSummary);
+        return selected;
+    }
+
+    private async Task<TimeSpan?> MeasurePackageEndpointLatencyAsync(
+        ReleaseSourceCandidate? candidate,
+        CancellationToken cancellationToken)
+    {
+        if (candidate == null)
+        {
+            return null;
+        }
+
+        var asset = GetTargetAsset(candidate.Release);
+        var downloadUrl = ApplyMirrorBaseToPackageDownloadUrl(asset?.BrowserDownloadUrl);
+        if (string.IsNullOrWhiteSpace(downloadUrl))
+        {
+            return null;
+        }
+
+        using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeoutCts.CancelAfter(SourceProbeTimeout);
+
+        try
+        {
+            var headLatency = await MeasureResponseHeaderLatencyAsync(
+                HttpMethod.Head,
+                downloadUrl,
+                useRangeHeader: false,
+                timeoutCts.Token).ConfigureAwait(false);
+            if (headLatency.HasValue)
+            {
+                return headLatency;
+            }
+
+            return await MeasureResponseHeaderLatencyAsync(
+                HttpMethod.Get,
+                downloadUrl,
+                useRangeHeader: true,
+                timeoutCts.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        {
+            _logger?.LogWarning("{Source} 下载地址测速超时", candidate.Name);
+            return null;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogDebug(ex, "{Source} 下载地址测速失败", candidate.Name);
+            return null;
+        }
+    }
+
+    private async Task<TimeSpan?> MeasureResponseHeaderLatencyAsync(
+        HttpMethod method,
+        string downloadUrl,
+        bool useRangeHeader,
+        CancellationToken cancellationToken)
+    {
+        using var request = new HttpRequestMessage(method, downloadUrl);
+        if (useRangeHeader)
+        {
+            request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(0, 0);
+        }
+
+        var stopwatch = Stopwatch.StartNew();
+        using var response = await _httpClient.SendAsync(
+            request,
+            HttpCompletionOption.ResponseHeadersRead,
+            cancellationToken).ConfigureAwait(false);
+        stopwatch.Stop();
+
+        return response.IsSuccessStatusCode ? stopwatch.Elapsed : null;
+    }
+
+    private string GetMirrorSourceDisplayName()
+    {
+        var mirrorBase = DesktopSettingsStore.NormalizeMirrorServerBase(MirrorServerBaseUrl);
+        return Uri.TryCreate(mirrorBase, UriKind.Absolute, out var uri)
+            ? uri.Host
+            : "镜像";
+    }
+
+    private static string BuildSourceSelectionSummary(
+        ReleaseSourceCandidate? github,
+        ReleaseSourceCandidate? mirror,
+        ReleaseSourceCandidate selected)
+    {
+        static string FormatLatency(ReleaseSourceCandidate? candidate)
+        {
+            if (candidate == null)
+            {
+                return "不可用";
+            }
+
+            var latency = candidate.PackageLatency ?? candidate.MetadataLatency;
+            var suffix = candidate.PackageLatency.HasValue ? string.Empty : "（元数据）";
+            return $"{latency.TotalMilliseconds:F0} ms{suffix}";
+        }
+
+        return $"下载源测速：GitHub {FormatLatency(github)}，{mirror?.Name ?? "镜像"} {FormatLatency(mirror)}；优先使用 {selected.Name}";
     }
 
     private async Task<GitHubRelease?> TryGetLatestReleaseFromGitHubAsync(CancellationToken cancellationToken)
@@ -171,7 +361,7 @@ public class NcfService
         try
         {
             _logger?.LogInformation("从 GitHub 获取最新版本信息...");
-            var response = await _httpClient.GetStringAsync("https://api.github.com/repos/NeuCharFramework/NCF/releases/latest", cancellationToken).ConfigureAwait(false);
+            var response = await _httpClient.GetStringAsync(GitHubLatestReleaseUrl, cancellationToken).ConfigureAwait(false);
             var release = JsonSerializer.Deserialize<GitHubRelease>(response);
             _logger?.LogInformation("获取到最新版本(GitHub): {Tag}", release?.TagName);
             return release;
@@ -1078,49 +1268,9 @@ public class NcfService
 
     public async Task<bool> TestConnectionAsync()
     {
-        if (PreferMirrorMetadataFirst)
-        {
-            try
-            {
-                using var response = await _httpClient.GetAsync(GetMirrorMetadataUrl());
-                if (response.IsSuccessStatusCode)
-                {
-                    return true;
-                }
-            }
-            catch
-            {
-                // 继续尝试 GitHub
-            }
-
-            try
-            {
-                using var response = await _httpClient.GetAsync("https://api.github.com/repos/NeuCharFramework/NCF/releases/latest");
-                return response.IsSuccessStatusCode;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         try
         {
-            using var response = await _httpClient.GetAsync("https://api.github.com/repos/NeuCharFramework/NCF/releases/latest");
-            if (response.IsSuccessStatusCode)
-            {
-                return true;
-            }
-        }
-        catch
-        {
-            // 继续尝试备用源
-        }
-
-        try
-        {
-            using var response = await _httpClient.GetAsync(GetMirrorMetadataUrl());
-            return response.IsSuccessStatusCode;
+            return await GetLatestReleaseAsync().ConfigureAwait(false) != null;
         }
         catch
         {
@@ -1155,6 +1305,11 @@ public class NcfService
             throw new InvalidOperationException("未找到适合当前平台的下载包");
         }
 
+        if (!string.IsNullOrWhiteSpace(LastSourceSelectionSummary))
+        {
+            progress.Report((LastSourceSelectionSummary, -1));
+        }
+
         var needsDownload = await CheckIfDownloadNeededAsync(targetAsset.Name!, targetAsset.Size);
         
         if (needsDownload)
@@ -1167,7 +1322,34 @@ public class NcfService
             });
 
             var downloadUrl = ApplyMirrorBaseToPackageDownloadUrl(targetAsset.BrowserDownloadUrl);
-            await DownloadFileAsync(downloadUrl, targetAsset.Name!, downloadProgress, cancellationToken);
+            try
+            {
+                await DownloadFileAsync(downloadUrl, targetAsset.Name!, downloadProgress, cancellationToken);
+            }
+            catch (Exception ex) when (
+                !cancellationToken.IsCancellationRequested &&
+                (ex is HttpRequestException || ex is TaskCanceledException))
+            {
+                var alternateAsset = _lastAlternateSource == null
+                    ? null
+                    : GetTargetAsset(_lastAlternateSource.Release);
+                var alternateUrl = ApplyMirrorBaseToPackageDownloadUrl(alternateAsset?.BrowserDownloadUrl);
+                if (alternateAsset?.Name == null ||
+                    string.IsNullOrWhiteSpace(alternateUrl) ||
+                    string.Equals(downloadUrl, alternateUrl, StringComparison.OrdinalIgnoreCase))
+                {
+                    throw;
+                }
+
+                var failedSourceName = _lastSelectedSource?.Name ?? "首选源";
+                var alternateSourceName = _lastAlternateSource!.Name;
+                _logger?.LogWarning(ex, "{Source} 下载失败，切换到 {AlternateSource}", failedSourceName, alternateSourceName);
+                progress.Report(($"⚠️ {failedSourceName} 下载失败，正在切换到 {alternateSourceName}...", -1));
+                await DownloadFileAsync(alternateUrl, alternateAsset.Name, downloadProgress, cancellationToken);
+                _lastSelectedSource = _lastAlternateSource;
+                _lastAlternateSource = null;
+                LastSourceSelectionSummary = $"{failedSourceName} 下载失败，已自动切换到 {_lastSelectedSource.Name}";
+            }
             progress.Report(("✅ 下载完成", 60));
         }
         else
@@ -1994,6 +2176,21 @@ public class NcfService
     }
     
     #endregion
+
+    private sealed class ReleaseSourceCandidate
+    {
+        public ReleaseSourceCandidate(string name, GitHubRelease release, TimeSpan metadataLatency)
+        {
+            Name = name;
+            Release = release;
+            MetadataLatency = metadataLatency;
+        }
+
+        public string Name { get; }
+        public GitHubRelease Release { get; }
+        public TimeSpan MetadataLatency { get; }
+        public TimeSpan? PackageLatency { get; set; }
+    }
 }
 
 // GitHub API 响应模型
@@ -2019,4 +2216,4 @@ public class GitHubAsset
     
     [JsonPropertyName("size")]
     public long Size { get; set; }
-} 
+}
