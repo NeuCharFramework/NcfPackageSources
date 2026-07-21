@@ -16,12 +16,12 @@
                 Background="{DynamicResource ToolbarBackgroundBrush}" 
                 BorderBrush="{DynamicResource ToolbarBorderBrush}" 
                 BorderThickness="0,0,0,1" 
-                Padding="20,15">
+                Padding="16,10">
             <Grid ColumnDefinitions="Auto,*,Auto">
                 <!-- 标题 -->
                 <TextBlock Grid.Column="0" 
                            Text="⚙️ NCF 设置中心" 
-                           FontSize="18" 
+                           FontSize="17"
                            FontWeight="SemiBold" 
                            VerticalAlignment="Center"/>
                 
@@ -57,62 +57,62 @@
 
         <!-- 主要内容区域：占满剩余高度，左侧可纵向滚动，右侧日志区独立滚动 -->
         <Grid Grid.Row="1"
-              ColumnDefinitions="420,*"
+              ColumnDefinitions="400,*"
               VerticalAlignment="Stretch"
               MinHeight="0">
 
             <!-- 左侧：控制面板 -->
             <ScrollViewer Grid.Column="0"
-                         Padding="20,15,10,20"
+                         Padding="16,12,8,16"
                          VerticalAlignment="Stretch"
                          HorizontalAlignment="Stretch"
                          VerticalScrollBarVisibility="Auto"
                          HorizontalScrollBarVisibility="Disabled">
 
-                <StackPanel Spacing="15">
+                <StackPanel Spacing="10" Margin="0,0,0,2">
                     
                     <!-- 状态信息卡片 -->
                     <Border Classes="card-compact">
-                        <StackPanel Spacing="12">
+                        <StackPanel Spacing="8">
                             <TextBlock Text="📊 状态信息" 
                                        FontSize="16" 
                                        FontWeight="SemiBold"/>
                             
                             <Grid RowDefinitions="Auto,Auto,Auto,Auto" 
-                                  ColumnDefinitions="100,*">
+                                  ColumnDefinitions="92,*">
                                 
                                 <TextBlock Grid.Row="0" Grid.Column="0" 
                                           Text="运行平台:" 
                                           FontWeight="SemiBold" 
                                           FontSize="12"
                                           Foreground="{DynamicResource SecondaryTextBrush}"
-                                          Margin="0,0,0,8"/>
+                                          Margin="0,0,0,4"/>
                                 <TextBlock Grid.Row="0" Grid.Column="1" 
                                           Text="{Binding PlatformInfo}" 
                                           FontSize="12"
-                                          Margin="0,0,0,8"/>
+                                          Margin="0,0,0,4"/>
                                 
                                 <TextBlock Grid.Row="1" Grid.Column="0" 
                                           Text="最新版本:" 
                                           FontWeight="SemiBold" 
                                           FontSize="12"
                                           Foreground="{DynamicResource SecondaryTextBrush}"
-                                          Margin="0,0,0,8"/>
+                                          Margin="0,0,0,4"/>
                                 <TextBlock Grid.Row="1" Grid.Column="1" 
                                           Text="{Binding LatestVersion}" 
                                           FontSize="12"
-                                          Margin="0,0,0,8"/>
+                                          Margin="0,0,0,4"/>
                                 
                                 <TextBlock Grid.Row="2" Grid.Column="0" 
                                           Text="当前状态:" 
                                           FontWeight="SemiBold" 
                                           FontSize="12"
                                           Foreground="{DynamicResource SecondaryTextBrush}"
-                                          Margin="0,0,0,8"/>
+                                          Margin="0,0,0,4"/>
                                 <StackPanel Grid.Row="2" Grid.Column="1" 
                                            Orientation="Horizontal" 
                                            Spacing="8" 
-                                           Margin="0,0,0,8">
+                                           Margin="0,0,0,4">
                                     <Border Background="{Binding StatusColor}" 
                                            CornerRadius="8" 
                                            Width="12" 
@@ -139,7 +139,7 @@
 
                     <!-- 操作进度卡片 -->
                     <Border Classes="card-compact">
-                        <StackPanel Spacing="10">
+                        <StackPanel Spacing="8">
                             <TextBlock Text="⚡ 操作进度" 
                                        FontSize="16" 
                                        FontWeight="SemiBold"/>
@@ -156,39 +156,43 @@
 
                     <!-- 配置选项卡片 -->
                     <Border Classes="card-compact">
-                        <StackPanel Spacing="12">
+                        <StackPanel Spacing="8">
                             <TextBlock Text="⚙️ 配置选项" 
                                        FontSize="16" 
                                        FontWeight="SemiBold"/>
                             
-                            <StackPanel Spacing="8">
-                                <CheckBox Content="自动在内置浏览器中打开" 
-                                         IsChecked="{Binding AutoOpenBrowser}"
-                                         FontSize="12"/>
-                                <CheckBox Content="自动清理下载文件" 
-                                         IsChecked="{Binding AutoCleanDownloads}"
-                                         FontSize="12"/>
-                                <CheckBox Content="检查更新时显示详细信息" 
-                                         IsChecked="{Binding ShowDetailedInfo}"
-                                         FontSize="12"/>
-                                <CheckBox Content="最小化到系统托盘" 
-                                         IsChecked="{Binding MinimizeToTray}"
-                                         FontSize="12"/>
-                            </StackPanel>
-                            
-                            <Separator Margin="0,8"/>
-                            
-                            <StackPanel Spacing="8">
-                                <TextBlock Text="端口范围:" 
-                                          FontWeight="SemiBold"
+                            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,*">
+                                <CheckBox Grid.Row="0" Grid.Column="0"
+                                          Content="自动打开内置浏览器"
+                                          IsChecked="{Binding AutoOpenBrowser}"
                                           FontSize="12"/>
-                                <StackPanel Orientation="Horizontal" 
-                                           Spacing="8" 
-                                           VerticalAlignment="Center">
+                                <CheckBox Grid.Row="0" Grid.Column="1"
+                                          Content="自动清理下载文件"
+                                          IsChecked="{Binding AutoCleanDownloads}"
+                                          FontSize="12"/>
+                                <CheckBox Grid.Row="1" Grid.Column="0"
+                                          Content="显示更新详细信息"
+                                          IsChecked="{Binding ShowDetailedInfo}"
+                                          FontSize="12"/>
+                                <CheckBox Grid.Row="1" Grid.Column="1"
+                                          Content="最小化到系统托盘"
+                                          IsChecked="{Binding MinimizeToTray}"
+                                          FontSize="12"/>
+                            </Grid>
+                            
+                            <Separator Margin="0,4"/>
+                            
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="8"
+                                        VerticalAlignment="Center">
+                                <TextBlock Text="端口范围:" 
+                                           FontWeight="SemiBold"
+                                           FontSize="12"
+                                           VerticalAlignment="Center"/>
                                     <NumericUpDown Value="{Binding StartPort}" 
                                                   Minimum="1024" 
                                                   Maximum="65535" 
-                                                  Width="140"
+                                                  Width="105"
                                                   FontSize="12"/>
                                     <TextBlock Text="到" 
                                               VerticalAlignment="Center"
@@ -196,14 +200,13 @@
                                     <NumericUpDown Value="{Binding EndPort}" 
                                                   Minimum="1024" 
                                                   Maximum="65535" 
-                                                  Width="140"
+                                                  Width="105"
                                                   FontSize="12"/>
-                                </StackPanel>
                             </StackPanel>
 
-                            <Separator Margin="0,8"/>
+                            <Separator Margin="0,4"/>
 
-                            <StackPanel Spacing="8">
+                            <StackPanel Spacing="6">
                                 <TextBlock Text="镜像服务器地址:"
                                           FontWeight="SemiBold"
                                           FontSize="12"/>
@@ -211,7 +214,7 @@
                                          Watermark="https://www.ncf.pub"
                                          FontSize="12"
                                          FontFamily="Consolas,Menlo,Monaco,Courier New"/>
-                                <TextBlock Text="APP 会并发获取 GitHub 与此镜像的最新版本，并测速当前平台安装包地址；版本一致时优先从延迟较低的来源下载，首选源失败会自动切换。若镜像版本落后，则优先使用 GitHub 最新版本。修改后自动保存到 desktop-user-settings.json。"
+                                <TextBlock Text="默认优先使用此镜像；镜像不可用、版本落后或下载失败时自动切换 GitHub。修改后自动保存。"
                                           FontSize="11"
                                           Foreground="{DynamicResource SecondaryTextBrush}"
                                           TextWrapping="Wrap"/>
@@ -225,7 +228,7 @@
             <!-- 右侧：日志面板 -->
             <Border Grid.Column="1"
                     Classes="log-panel"
-                    Margin="10,15,20,20"
+                    Margin="8,12,16,16"
                     VerticalAlignment="Stretch"
                     MinHeight="0">
                 <Grid RowDefinitions="Auto,*">
@@ -275,7 +278,7 @@
             <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="6"/>
-            <Setter Property="Padding" Value="15"/>
+            <Setter Property="Padding" Value="12"/>
             <Setter Property="BoxShadow" Value="0 1 3 0 #0D000000"/>
         </Style>
         
@@ -299,7 +302,7 @@
         
         <!-- CheckBox 样式优化 -->
         <Style Selector="CheckBox">
-            <Setter Property="MinHeight" Value="28"/>
+            <Setter Property="MinHeight" Value="26"/>
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
         

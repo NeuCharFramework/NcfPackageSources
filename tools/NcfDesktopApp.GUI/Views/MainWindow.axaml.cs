@@ -13,8 +13,13 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        AdjustWindowSizeToScreen();
+        Opened += OnMainWindowOpened;
         Closing += OnMainWindowClosing;
+    }
+
+    private void OnMainWindowOpened(object? sender, EventArgs e)
+    {
+        AdjustWindowSizeToScreen();
     }
 
     private async void OnMainWindowClosing(object? sender, WindowClosingEventArgs e)
@@ -72,33 +77,44 @@ public partial class MainWindow : Window
             {
                 var workingArea = screen.WorkingArea;
                 
-                // 定义理想尺寸
+                // Screen.WorkingArea 使用物理像素，Window 尺寸使用 DIP；Retina/缩放屏必须先换算。
+                var scaling = screen.Scaling > 0 ? screen.Scaling : 1;
+                var workingWidth = workingArea.Width / scaling;
+                var workingHeight = workingArea.Height / scaling;
+
+                // 定义理想尺寸。高度略高于默认值，尽量让左侧紧凑布局无需滚动。
                 const double idealWidth = 920;
-                const double idealHeight = 860;
-                
-                // 定义最小尺寸（与 MainWindow.axaml 中 MinWidth/MinHeight 一致）
-                const double minWidth = 820;
-                const double minHeight = 720;
-                
-                // 计算安全边距（为任务栏、标题栏等预留空间）
-                const double safetyMarginWidth = 100;  // 左右各留50px
-                const double safetyMarginHeight = 100; // 上下各留50px（考虑标题栏和任务栏）
-                
-                // 计算可用空间
-                double availableWidth = workingArea.Width - safetyMarginWidth;
-                double availableHeight = workingArea.Height - safetyMarginHeight;
-                
-                // 确定窗口尺寸
-                double targetWidth = Math.Max(minWidth, Math.Min(idealWidth, availableWidth));
-                double targetHeight = Math.Max(minHeight, Math.Min(idealHeight, availableHeight));
-                
+                const double idealHeight = 900;
+                const double preferredMinWidth = 760;
+                const double preferredMinHeight = 560;
+                const double safetyMargin = 24;
+
+                var availableWidth = Math.Max(1, workingWidth - safetyMargin);
+                var availableHeight = Math.Max(1, workingHeight - safetyMargin);
+
+                // 小屏幕上动态降低最小尺寸，否则固定 MinHeight 会把窗口强行撑到屏幕之外。
+                MinWidth = Math.Min(preferredMinWidth, availableWidth);
+                MinHeight = Math.Min(preferredMinHeight, availableHeight);
+                MaxWidth = availableWidth;
+                MaxHeight = availableHeight;
+
+                var targetWidth = Math.Max(MinWidth, Math.Min(idealWidth, availableWidth));
+                var targetHeight = Math.Max(MinHeight, Math.Min(idealHeight, availableHeight));
+
                 // 应用调整后的尺寸
                 Width = targetWidth;
                 Height = targetHeight;
-                
+
+                // Opened 后重新居中，保证调整后的窗口完整位于当前屏幕工作区内。
+                var targetPixelWidth = (int)Math.Round(targetWidth * scaling);
+                var targetPixelHeight = (int)Math.Round(targetHeight * scaling);
+                Position = new Avalonia.PixelPoint(
+                    workingArea.X + Math.Max(0, (workingArea.Width - targetPixelWidth) / 2),
+                    workingArea.Y + Math.Max(0, (workingArea.Height - targetPixelHeight) / 2));
+
                 // 输出调试信息
-                Console.WriteLine($"[窗口自适应] 屏幕工作区: {workingArea.Width}x{workingArea.Height}");
-                Console.WriteLine($"[窗口自适应] 可用空间: {availableWidth}x{availableHeight}");
+                Console.WriteLine($"[窗口自适应] 屏幕工作区: {workingArea.Width}x{workingArea.Height} px，缩放: {scaling:F2}");
+                Console.WriteLine($"[窗口自适应] 可用空间: {availableWidth:F0}x{availableHeight:F0} DIP");
                 Console.WriteLine($"[窗口自适应] 窗口尺寸: {targetWidth}x{targetHeight}");
                 
                 // 如果窗口尺寸被调整，记录警告

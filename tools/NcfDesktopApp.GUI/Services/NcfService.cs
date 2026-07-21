@@ -98,6 +98,11 @@ public class NcfService
     /// CLI 进程输出回调（参数：输出内容, 是否为错误输出）
     /// </summary>
     public ProcessOutputHandler? OnProcessOutput { get; set; }
+
+    /// <summary>
+    /// 下载日志回调。用于将终端下载日志同步显示到桌面应用的操作日志区域。
+    /// </summary>
+    public Action<string>? OnDownloadLog { get; set; }
     
     static NcfService()
     {
@@ -219,36 +224,10 @@ public class NcfService
             mirror.PackageLatency = await mirrorLatencyTask.ConfigureAwait(false);
         }
 
-        ReleaseSourceCandidate selected;
-        ReleaseSourceCandidate? alternate;
-
-        if (github == null)
-        {
-            selected = mirror!;
-            alternate = null;
-        }
-        else if (mirror == null)
-        {
-            selected = github;
-            alternate = null;
-        }
-        else if (github.PackageLatency.HasValue && !mirror.PackageLatency.HasValue)
-        {
-            selected = github;
-            alternate = mirror;
-        }
-        else if (!github.PackageLatency.HasValue && mirror.PackageLatency.HasValue)
-        {
-            selected = mirror;
-            alternate = github;
-        }
-        else
-        {
-            var githubLatency = github.PackageLatency ?? github.MetadataLatency;
-            var mirrorLatency = mirror.PackageLatency ?? mirror.MetadataLatency;
-            selected = githubLatency <= mirrorLatency ? github : mirror;
-            alternate = ReferenceEquals(selected, github) ? mirror : github;
-        }
+        // 默认优先使用配置的镜像（全新安装为 www.ncf.pub），GitHub 作为下载失败时的备用源。
+        // 上面的版本一致性保护仍然有效：镜像版本落后或异常时会直接选择 GitHub。
+        var selected = mirror ?? github!;
+        var alternate = mirror != null ? github : null;
 
         _lastSelectedSource = selected;
         _lastAlternateSource = alternate;
@@ -353,7 +332,7 @@ public class NcfService
             return $"{latency.TotalMilliseconds:F0} ms{suffix}";
         }
 
-        return $"下载源测速：GitHub {FormatLatency(github)}，{mirror?.Name ?? "镜像"} {FormatLatency(mirror)}；优先使用 {selected.Name}";
+        return $"下载源：默认优先使用 {mirror?.Name ?? "镜像"} {FormatLatency(mirror)}，GitHub {FormatLatency(github)}；当前使用 {selected.Name}";
     }
 
     private async Task<GitHubRelease?> TryGetLatestReleaseFromGitHubAsync(CancellationToken cancellationToken)
@@ -486,6 +465,8 @@ public class NcfService
         {
             await File.WriteAllTextAsync(downloadInfoPath, downloadUrl, cancellationToken);
         }
+
+        WriteDownloadSourceLog(downloadUrl, existingFileSize, canResume);
         
         // 创建 HTTP 请求，支持断点续传
         var request = new HttpRequestMessage(HttpMethod.Get, downloadUrl);
@@ -573,6 +554,17 @@ public class NcfService
     {
         var totalBytes = (response.Content.Headers.ContentLength ?? 0) + existingFileSize;
         var downloadedBytes = existingFileSize;
+        var sessionStartBytes = existingFileSize;
+        var downloadStopwatch = Stopwatch.StartNew();
+        var lastConsolePercent = totalBytes > 0
+            ? (int)Math.Floor((double)downloadedBytes / totalBytes * 100 / 5) * 5
+            : -1;
+
+        if (existingFileSize == 0 && totalBytes > 0)
+        {
+            WriteDownloadProgressLog(0, downloadedBytes, totalBytes, null, null);
+            lastConsolePercent = 0;
+        }
         
         using var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken);
         
@@ -592,8 +584,96 @@ public class NcfService
             {
                 var progressPercent = (double)downloadedBytes / totalBytes * 100;
                 progress?.Report(progressPercent);
+
+                var reachedConsolePercent = Math.Min(
+                    100,
+                    (int)Math.Floor(progressPercent / 5) * 5);
+                while (lastConsolePercent < reachedConsolePercent)
+                {
+                    lastConsolePercent += 5;
+                    var sessionDownloadedBytes = downloadedBytes - sessionStartBytes;
+                    var bytesPerSecond = downloadStopwatch.Elapsed.TotalSeconds > 0
+                        ? sessionDownloadedBytes / downloadStopwatch.Elapsed.TotalSeconds
+                        : 0;
+                    var remainingBytes = Math.Max(0, totalBytes - downloadedBytes);
+                    var estimatedRemaining = bytesPerSecond > 0
+                        ? TimeSpan.FromSeconds(remainingBytes / bytesPerSecond)
+                        : (TimeSpan?)null;
+
+                    WriteDownloadProgressLog(
+                        lastConsolePercent,
+                        downloadedBytes,
+                        totalBytes,
+                        bytesPerSecond > 0 ? bytesPerSecond : null,
+                        estimatedRemaining);
+                }
             }
         }
+    }
+
+    private void WriteDownloadSourceLog(string downloadUrl, long existingFileSize, bool canResume)
+    {
+        var source = Uri.TryCreate(downloadUrl, UriKind.Absolute, out var uri)
+            ? uri.Host
+            : downloadUrl;
+        WriteDownloadLog($"🌐 实际下载源: {source}");
+        WriteDownloadLog($"🔗 下载地址: {downloadUrl}");
+
+        if (canResume && existingFileSize > 0)
+        {
+            WriteDownloadLog($"📥 断点续传: {FormatByteSize(existingFileSize)}");
+        }
+    }
+
+    private void WriteDownloadProgressLog(
+        int percentage,
+        long downloadedBytes,
+        long totalBytes,
+        double? bytesPerSecond,
+        TimeSpan? estimatedRemaining)
+    {
+        var speedText = bytesPerSecond.HasValue
+            ? FormatByteSize((long)bytesPerSecond.Value) + "/s"
+            : "计算中";
+        var remainingText = estimatedRemaining.HasValue
+            ? FormatRemainingTime(estimatedRemaining.Value)
+            : "计算中";
+
+        WriteDownloadLog(
+            $"📊 下载进度: {percentage,3}% " +
+            $"({FormatByteSize(downloadedBytes)} / {FormatByteSize(totalBytes)})，" +
+            $"速度: {speedText}，预计剩余: {remainingText}");
+    }
+
+    private void WriteDownloadLog(string message)
+    {
+        Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {message}");
+        OnDownloadLog?.Invoke(message);
+    }
+
+    private static string FormatByteSize(long bytes)
+    {
+        string[] units = ["B", "KB", "MB", "GB", "TB"];
+        var value = Math.Max(0, bytes);
+        var unitIndex = 0;
+        var displayValue = (double)value;
+        while (displayValue >= 1024 && unitIndex < units.Length - 1)
+        {
+            displayValue /= 1024;
+            unitIndex++;
+        }
+
+        return $"{displayValue:F1} {units[unitIndex]}";
+    }
+
+    private static string FormatRemainingTime(TimeSpan remaining)
+    {
+        if (remaining < TimeSpan.FromSeconds(1))
+        {
+            return "不足 1 秒";
+        }
+
+        return $"{(int)remaining.TotalHours:00}:{remaining.Minutes:00}:{remaining.Seconds:00}";
     }
     
     /// <summary>

@@ -208,6 +208,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _ncfService = new NcfService(httpClient);
         _webView2Service = new WebView2Service(httpClient);
         _logBuffer = new StringBuilder();
+        _ncfService.OnDownloadLog = AddLog;
         
         // 🚀 初始化日志批量更新定时器（性能优化）
         _logUpdateTimer = new System.Timers.Timer(LogUpdateIntervalMs);
