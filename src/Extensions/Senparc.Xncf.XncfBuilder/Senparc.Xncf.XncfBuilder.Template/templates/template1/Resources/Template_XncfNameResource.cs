@@ -8,7 +8,7 @@
     创建标识：Senparc - 20260717
     
     修改标识：Senparc - 20260717
-    修改描述：v1.1.0 更新 XNCF 项目模板的功能参数与页面本地化能力
+    修改描述：v1.1.0 更新示例 XNCF 模块的功能参数与页面本地化能力
 
 ----------------------------------------------------------------*/
 #nullable enable
@@ -18,7 +18,7 @@ using Senparc.Ncf.Core.Localization;
 namespace Template_OrgName.Xncf.Template_XncfName
 {
     /// <summary>
-    /// Localization catalog owned and packaged by the TemplatePackage module.
+    /// Localization catalog owned and packaged by the TemplateSimulated module.
     /// </summary>
     public sealed class Template_XncfNameResource
     {
