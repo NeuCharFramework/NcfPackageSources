@@ -11,28 +11,21 @@
       newData: {},
       oldData: {
         state: {
-          0: ncfT('Xncf.State.Closed'),
-          1: ncfT('Xncf.State.Open'),
-          2: ncfT('Xncf.State.PendingAdd'),
-          3: ncfT('Xncf.State.PendingUpdate')
+          0: '关闭',
+          1: '开放',
+          2: '新增待审核',
+          3: '更新待审核'
         }
       },
       newTableSearch: '',
-      oldTableSearch: '',
-      batchUpdate: {
-        visible: false,
-        enableAfterUpdate: true,
-        loading: false,
-        resultVisible: false,
-        result: null
-      }
+      oldTableSearch: ''
     };
   },
   watch: {
     'isExtend': {
       handler: function (val, oldVal) {
-        this.handlerText = val ? ncfT('Xncf.EnableManagerMode') : ncfT('Xncf.EnablePublishMode');
-        this.handlerTips = val ? ncfT('Xncf.EnableManagerModeConfirm') : ncfT('Xncf.EnablePublishModeConfirm');
+        this.handlerText = val ? '开启【扩展模块】管理模式' : '切换至发布状态，隐藏【扩展模块】管理单元';
+        this.handlerTips = val ? '打开【扩展模块】管理功能后，所有扩展模块将显示在【扩展模块】二级目录中。确定要打开吗？' : '隐藏【扩展模块】管理功能后，所有扩展模块将并列显示在一级目录中。如需重新打开，请直接浏览器内访问此页面【/Admin/XncfModule】。确定要隐藏吗？';
       },
       immediate: true
     }
@@ -68,40 +61,6 @@
       setTimeout(function () {
         window.location.href = `/Admin/XncfModule/Start/?uid=${row.uid}`;
       }, 100);
-    },
-    // 打开批量更新选项
-    openBatchUpdate() {
-      if (this.updatedTableData.length === 0) {
-        this.$message.info(ncfT('Xncf.NoPendingUpdates'));
-        return;
-      }
-      this.batchUpdate.visible = true;
-    },
-    // 后台逐一更新全部待更新模块
-    async handleBatchUpdate() {
-      this.batchUpdate.loading = true;
-      try {
-        const response = await service.post(
-          '/Admin/XncfModule/Index?handler=BatchUpdate',
-          { enableAfterUpdate: this.batchUpdate.enableAfterUpdate },
-          { customAlert: true }
-        );
-        const result = response && response.data ? response.data.data : null;
-        if (!result) {
-          throw new Error(ncfT('Xncf.BatchUpdate.NoResult'));
-        }
-
-        this.batchUpdate.visible = false;
-        this.batchUpdate.result = result;
-        this.batchUpdate.resultVisible = true;
-        await this.getList();
-        getNavMenu();
-      } catch (error) {
-        console.error(ncfT('Xncf.BatchUpdateFailed'), error);
-        this.$message.error(error.message || ncfT('Xncf.BatchUpdateFailed'));
-      } finally {
-        this.batchUpdate.loading = false;
-      }
     },
     // 操作
     handleHandle(index, row) {

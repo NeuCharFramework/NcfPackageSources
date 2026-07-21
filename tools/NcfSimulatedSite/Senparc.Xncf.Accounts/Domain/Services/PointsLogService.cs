@@ -1,17 +1,4 @@
-﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：PointsLogService.cs
-    文件功能描述：PointsLogService 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260717
-    修改描述：v0.3.0 为账户模块接入多语言资源与功能文案本地化
-
-----------------------------------------------------------------*/
-using Senparc.Service.ACL;
+﻿using Senparc.Service.ACL;
 using Senparc.Xncf.Accounts.Domain.Cache;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Xncf.Accounts.Domain.Models;
@@ -20,7 +7,6 @@ using Senparc.Ncf.Service;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Xncf.Accounts.Domain;
-using Senparc.Xncf.Accounts;
 
 namespace Senparc.Service
 {
@@ -48,10 +34,7 @@ namespace Senparc.Service
             if (throwIfNotEnoughPoints && points < 0 && accountPoints + points < 0)
             {
                 //TODO 抛出异常待定
-                throw new Exception(AccountsResource.Format(
-                    "Accounts.PointsInsufficient",
-                    "积分不足，还需 {0} 积分！",
-                    Convert.ToInt32(accountPoints + points)));
+                throw new Exception($"积分不足,还需{Convert.ToInt32(accountPoints + points)}积分！");
             }
 
             var beforePoints = accountPoints;

@@ -26,7 +26,7 @@ var app = new Vue({
                     this.optionsModelList = data.needModelList;
                 })
                 .catch(error => {
-                    console.error((window.ncfInstallI18n && window.ncfInstallI18n.loadOptionsFailed) || 'Failed to load installation options:', error);
+                    console.error("获取配置发生错误:", error);
                 });
         },
         submit() {

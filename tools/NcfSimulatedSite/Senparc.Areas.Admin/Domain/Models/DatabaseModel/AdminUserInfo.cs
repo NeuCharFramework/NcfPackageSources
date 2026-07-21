@@ -1,17 +1,4 @@
-﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：AdminUserInfo.cs
-    文件功能描述：AdminUserInfo 相关实现
-    
-    
-    创建标识：Senparc - 20241028
-    
-    修改标识：Senparc - 20260717
-    修改描述：v0.1.0 完善后台管理界面、功能表单与多语言资源本地化
-
-----------------------------------------------------------------*/
-using Senparc.CO2NET.Extensions;
+﻿using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
@@ -139,11 +126,7 @@ namespace Senparc.Areas.Admin.Domain.Models
         {
             if (salt.Length < 16)
             {
-                throw new NcfExceptionBase(AdminResource.Format(
-                    "AdminUser.MinimumLength",
-                    "{0} 必须大于 {1} 位！",
-                    nameof(salt),
-                    16));
+                throw new NcfExceptionBase($"{nameof(salt)} 必须大于 16 位！");
             }
 
             if (usePasswordToken && Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.PasswordSaltToken.IsNullOrEmpty())

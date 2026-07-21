@@ -1,17 +1,4 @@
-﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：OperationQueueService.cs
-    文件功能描述：OperationQueueService 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260717
-    修改描述：v0.3.0 为账户模块接入多语言资源与功能文案本地化
-
-----------------------------------------------------------------*/
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
 using Senparc.CO2NET;
@@ -59,10 +46,7 @@ namespace Senparc.Xncf.Accounts.Domain.OperationQueue
         {
             if (headImgUrl.IsNullOrEmpty())
             {
-                throw new Exception(AccountsResource.Format(
-                    "Accounts.HeadImageUrlMissing",
-                    "头像地址为空，账户 ID：{0}",
-                    accountId));
+                throw new Exception("headImgUrl为null，accountId：" + accountId);
             }
 
             var accountService = serviceProvider.GetService<AccountService>();
@@ -71,11 +55,7 @@ namespace Senparc.Xncf.Accounts.Domain.OperationQueue
                 var account = accountService.GetObject(z => z.Id == accountId);
                 if (account == null)
                 {
-                    throw new Exception(AccountsResource.Format(
-                        "Accounts.UserIdMissing",
-                        "用户 ID 不存在！ID：{0}，头像地址：{1}",
-                        accountId,
-                        headImgUrl));
+                    throw new Exception($"UserId不存在！ID：{accountId}，HeadImgUrl：{headImgUrl}");
                 }
 
                 var fileName = $@"/Upload/User/headimgurl.{DateTime.Now.Ticks + Guid.NewGuid().ToString("n").Substring(0, 8)}.jpg";

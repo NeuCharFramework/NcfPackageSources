@@ -14,25 +14,4 @@
   <data name="Accounts.Title" xml:space="preserve"><value>Inicio de Accounts</value></data>
   <data name="Accounts.Register.MenuName" xml:space="preserve"><value>Gestión de usuarios</value></data>
   <data name="Accounts.Register.Description" xml:space="preserve"><value>Gestión de usuarios registrados</value></data>
-  <data name="Accounts.PointsInsufficient" xml:space="preserve"><value>Puntos insuficientes. Se necesitan {0} puntos más.</value></data>
-  <data name="Accounts.MethodNotAllowed" xml:space="preserve"><value>No se puede llamar a este método.</value></data>
-  <data name="Accounts.HeadImageUrlMissing" xml:space="preserve"><value>La URL de la imagen de perfil está vacía para la cuenta {0}.</value></data>
-  <data name="Accounts.UserIdMissing" xml:space="preserve"><value>El ID de usuario no existe. ID: {0}; URL de imagen: {1}</value></data>
-  <data name="Accounts.Operator.Add" xml:space="preserve"><value>Suma</value></data>
-  <data name="Accounts.Operator.Add.Help" xml:space="preserve"><value>Número 1 + Número 2</value></data>
-  <data name="Accounts.Operator.Subtract" xml:space="preserve"><value>Resta</value></data>
-  <data name="Accounts.Operator.Subtract.Help" xml:space="preserve"><value>Número 1 - Número 2</value></data>
-  <data name="Accounts.Operator.Multiply" xml:space="preserve"><value>Multiplicación</value></data>
-  <data name="Accounts.Operator.Multiply.Help" xml:space="preserve"><value>Número 1 × Número 2</value></data>
-  <data name="Accounts.Operator.Divide" xml:space="preserve"><value>División</value></data>
-  <data name="Accounts.Operator.Divide.Help" xml:space="preserve"><value>Número 1 ÷ Número 2</value></data>
-  <data name="Accounts.Power.Square" xml:space="preserve"><value>Cuadrado</value></data>
-  <data name="Accounts.Power.Square.Help" xml:space="preserve"><value>Elevar al cuadrado el resultado anterior</value></data>
-  <data name="Accounts.Power.Cube" xml:space="preserve"><value>Cubo</value></data>
-  <data name="Accounts.Power.Cube.Help" xml:space="preserve"><value>Elevar al cubo el resultado anterior</value></data>
-  <data name="Accounts.Parameter.Name" xml:space="preserve"><value>Nombre||Antes de la doble barra: nombre; después: ayuda</value></data>
-  <data name="Accounts.Parameter.Number1" xml:space="preserve"><value>Número||Número 1</value></data>
-  <data name="Accounts.Parameter.Number2" xml:space="preserve"><value>Número||Número 2</value></data>
-  <data name="Accounts.Parameter.Operator" xml:space="preserve"><value>Operador||</value></data>
-  <data name="Accounts.Parameter.Power" xml:space="preserve"><value>Potencia||</value></data>
 </root>

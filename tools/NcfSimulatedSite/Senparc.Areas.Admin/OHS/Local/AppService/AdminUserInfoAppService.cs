@@ -1,17 +1,4 @@
-﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：AdminUserInfoAppService.cs
-    文件功能描述：AdminUserInfoAppService 相关实现
-    
-    
-    创建标识：Senparc - 20241028
-    
-    修改标识：Senparc - 20260717
-    修改描述：v0.1.0 完善后台管理界面、功能表单与多语言资源本地化
-
-----------------------------------------------------------------*/
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;
 using Senparc.Areas.Admin.Domain.Models.Dto;
 using Senparc.Areas.Admin.OHS.Local.PL;
@@ -104,7 +91,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         /// <param name="request"></param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
-        [FunctionRender(typeof(Senparc.Areas.Admin.AdminResource), "Function.Admin.Login.Name", "Function.Admin.Login.Description", typeof(Register))]
+        [FunctionRender("管理员登录", "测试当前管理员登录", typeof(Register))]
         [Microsoft.AspNetCore.Authorization.AllowAnonymous]
         public async Task<AppResponseBase<AccountLoginResultDto>> LoginAsync([FromBody] AdminUserInfo_LoginRequest request)
         {
@@ -197,22 +184,20 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 if (id == adminUserInfoId)
                 {
-                    throw new NcfExceptionBase(AdminResource.Get(
-                        "AdminUser.CannotDeleteSelf",
-                        "管理员不能删除自己！"));
+                    throw new NcfExceptionBase("管理员不能删除自己！");
                 }
 
                 var adminUserInfo = await _adminUserInfoService.GetObjectAsync(z => z.Id == id);
                 if (adminUserInfo == null)
                 {
-                    throw new NcfExceptionBase(AdminResource.Get("AdminUser.NotFound", "管理员不存在！"));
+                    throw new NcfExceptionBase("管理员不存在！");
                 }
 
                 //TODO：进行更多层级判断
 
                 await _adminUserInfoService.DeleteObjectAsync(adminUserInfo);
 
-                return AdminResource.Get("Common.DeleteSuccess", "删除成功！");
+                return "删除成功！";
             });
             return response;
         }

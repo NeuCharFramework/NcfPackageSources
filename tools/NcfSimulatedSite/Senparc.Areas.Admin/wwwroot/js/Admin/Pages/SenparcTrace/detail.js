@@ -30,14 +30,14 @@
         },
         pickerOptions: {
             shortcuts: [{
-                text: ncfT('Trace.Today'),
+                text: '今天',
                 onClick(picker) {
                     const end = new Date();
                     const start = new Date();
                     picker.$emit('pick', [start, end]);
                 }
             }, {
-                text: ncfT('Trace.LastHour'),
+                text: '最近一小时',
                 onClick(picker) {
                     const end = new Date();
                     const start = new Date();

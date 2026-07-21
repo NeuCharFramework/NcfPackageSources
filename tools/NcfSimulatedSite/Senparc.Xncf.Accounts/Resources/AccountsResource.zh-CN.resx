@@ -14,25 +14,4 @@
   <data name="Accounts.Title" xml:space="preserve"><value>Account 首页</value></data>
   <data name="Accounts.Register.MenuName" xml:space="preserve"><value>用户管理</value></data>
   <data name="Accounts.Register.Description" xml:space="preserve"><value>注册用户管理</value></data>
-  <data name="Accounts.PointsInsufficient" xml:space="preserve"><value>积分不足，还需 {0} 积分！</value></data>
-  <data name="Accounts.MethodNotAllowed" xml:space="preserve"><value>不允许调用此方法！</value></data>
-  <data name="Accounts.HeadImageUrlMissing" xml:space="preserve"><value>头像地址为空，账户 ID：{0}</value></data>
-  <data name="Accounts.UserIdMissing" xml:space="preserve"><value>用户 ID 不存在！ID：{0}，头像地址：{1}</value></data>
-  <data name="Accounts.Operator.Add" xml:space="preserve"><value>加法</value></data>
-  <data name="Accounts.Operator.Add.Help" xml:space="preserve"><value>数字 1 + 数字 2</value></data>
-  <data name="Accounts.Operator.Subtract" xml:space="preserve"><value>减法</value></data>
-  <data name="Accounts.Operator.Subtract.Help" xml:space="preserve"><value>数字 1 - 数字 2</value></data>
-  <data name="Accounts.Operator.Multiply" xml:space="preserve"><value>乘法</value></data>
-  <data name="Accounts.Operator.Multiply.Help" xml:space="preserve"><value>数字 1 × 数字 2</value></data>
-  <data name="Accounts.Operator.Divide" xml:space="preserve"><value>除法</value></data>
-  <data name="Accounts.Operator.Divide.Help" xml:space="preserve"><value>数字 1 ÷ 数字 2</value></data>
-  <data name="Accounts.Power.Square" xml:space="preserve"><value>平方</value></data>
-  <data name="Accounts.Power.Square.Help" xml:space="preserve"><value>对上述结果计算平方</value></data>
-  <data name="Accounts.Power.Cube" xml:space="preserve"><value>三次方</value></data>
-  <data name="Accounts.Power.Cube.Help" xml:space="preserve"><value>对上述结果计算三次方</value></data>
-  <data name="Accounts.Parameter.Name" xml:space="preserve"><value>名称||双竖线前为参数名称，后为说明</value></data>
-  <data name="Accounts.Parameter.Number1" xml:space="preserve"><value>数字||数字 1</value></data>
-  <data name="Accounts.Parameter.Number2" xml:space="preserve"><value>数字||数字 2</value></data>
-  <data name="Accounts.Parameter.Operator" xml:space="preserve"><value>运算符||</value></data>
-  <data name="Accounts.Parameter.Power" xml:space="preserve"><value>幂运算||</value></data>
 </root>

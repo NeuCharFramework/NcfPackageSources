@@ -17,7 +17,7 @@
             tenantRule: '',
             enableMultiTenant: true,
             dialog: {
-                title: ncfT('Tenant.AddTitle'),
+                title: '新增租户信息',
                 visible: false,
                 data: {
                     id: 0,
@@ -28,10 +28,10 @@
                 },
                 rules: {
                     name: [
-                        { required: true, message: ncfT('Tenant.NameRequired'), trigger: "blur" }
+                        { required: true, message: "租户名称为必填项", trigger: "blur" }
                     ],
                     tenantKey: [
-                        { required: true, message: ncfT('Tenant.MatchRuleRequired'), trigger: "blur" }
+                        { required: true, message: "租户匹配规则为必填项", trigger: "blur" }
                     ]
                 },
                 updateLoading: false,
@@ -49,10 +49,10 @@
                 },
                 rules: {
                     systemName: [
-                        { required: true, message: ncfT('SystemConfig.SystemNameRequired'), trigger: "blur" }
+                        { required: true, message: "系统名称为必填项", trigger: "blur" }
                     ],
                     adminAccount: [
-                        { required: true, message: ncfT('Tenant.DefaultAdminRequired'), trigger: "blur" }
+                        { required: true, message: "默认管理员账号为必填项", trigger: "blur" }
                     ]
                 }
             },
@@ -110,7 +110,7 @@
         },
         // 新增
         handleAdd() {
-            this.dialog.title = ncfT('Tenant.AddTitle');
+            this.dialog.title = '新增租户信息';
             this.dialog.visible = true;
             this.dialog.data = {
                 id: 0,
@@ -129,11 +129,11 @@
                 this.dialog.data = {
                     id, name, tenantKey, adminRemark, enable
                 };
-                this.dialog.title = ncfT('Tenant.EditTitle');
+                this.dialog.title = '编辑租户信息';
                 this.dialog = Object.assign({}, this.dialog);
             } else {
                 // 新增
-                this.dialog.title = ncfT('Tenant.AddTitle');
+                this.dialog.title = '新增租户信息';
             }
         },
         // 更新新增编辑
@@ -153,7 +153,7 @@
                         if (res.data.success) {
                             this.getList();
                             this.$notify({
-                                title: ncfT('Common.Success'),
+                                title: "Success",
                                 message: res.data.msg,
                                 type: "success",
                                 duration: 2000
@@ -174,8 +174,8 @@
                 if (res.data.success) {
                     this.getList();
                     this.$notify({
-                        title: ncfT('Common.Success'),
-                        message: ncfT('Common.DeleteSuccess'),
+                        title: "Success",
+                        message: "删除成功",
                         type: "success",
                         duration: 2000
                     });
@@ -214,8 +214,8 @@
                             this.resultDialog.visible = true;
                         } else {
                             this.$notify({
-                                title: ncfT('Common.Error'),
-                                message: res.data.msg || ncfT('Tenant.InitializeFailed'),
+                                title: "Error",
+                                message: res.data.msg || "初始化失败",
                                 type: "error",
                                 duration: 2000
                             });

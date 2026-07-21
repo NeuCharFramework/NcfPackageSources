@@ -15,10 +15,6 @@
 
     修改标识：Senparc - 20260705
     修改描述：v0.21.7 重构系统配置初始化与更新流程并统一模型处理
-
-    修改标识：Senparc - 20260717
-    修改描述：v0.22.0 完善站点页面、语言切换与共享脚本本地化
-
 ----------------------------------------------------------------*/
 
 //以下数据库模块的命名空间根据需要添加或删除
@@ -61,7 +57,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // Configure request localization (cookie first, then query/header providers)
-var supportedCultures = LanguageController.SupportedCultures.ToArray();
+var supportedCultures = LanguageController.SupportedCultures;
 var localizationOptions = new RequestLocalizationOptions()
     .SetDefaultCulture(supportedCultures[0])
     .AddSupportedCultures(supportedCultures)

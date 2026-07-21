@@ -4,7 +4,7 @@
         var validateCode = (rule, value, callback) => {
             if (this.dialog.data.menuType === 3) {
                 if (!value) {
-                    callback(new Error(ncfT('Menu.ActionCodeRequiredForButton')));
+                    callback(new Error('当类型是按钮类型时此项必填'));
                 } else {
                     callback();
                 }
@@ -16,7 +16,7 @@
             // 表格数据
             tableData: [],
             dialog: {
-                title: ncfT('Menu.AddTitle'),
+                title: '新增菜单',
                 visible: false,
                 data: {
                     id: '', menuName: '', parentId: [], url: '', icon: '', sort: '', visible: true,
@@ -24,9 +24,9 @@
                 },
                 rules: {
                     menuName: [
-                        { required: true, message: ncfT('Menu.NameRequired'), trigger: "blur" }
+                        { required: true, message: "菜单名称为必填项", trigger: "blur" }
                     ],
-                    menuType: [{ required: true, message: ncfT('Menu.TypeRequired'), trigger: "blur" }],
+                    menuType: [{ required: true, message: "类型为必选项", trigger: "blur" }],
                     resourceCode: [{ validator: validateCode, trigger: "blur" }]
                 },
                 updateLoading: false,
@@ -708,8 +708,8 @@
             if (respnseData.data.success) {
                 this.getList();
                 this.$notify({
-                    title: ncfT('Common.Success'),
-                    message: ncfT('Role.GrantSuccess'),
+                    title: "Success",
+                    message: "授权成功",
                     type: "success",
                     duration: 2000
                 });
@@ -745,7 +745,7 @@
             this.dialog.visible = true;
             if (flag === 'add') {
                 // 新增
-                this.dialog.title = ncfT('Menu.AddTitle');
+                this.dialog.title = '新增菜单';
                 return;
             }
             // 编辑
@@ -762,13 +762,13 @@
             //////////////////////////////
 
             if (flag === 'edit') {
-                this.dialog.title = ncfT('Menu.EditTitle');
+                this.dialog.title = '编辑菜单';
                 if (row.isLocked) {
                     this.dialog.disabled = true;
                 }
             } else if (flag === 'addNext') {
                 this.dialog.data.id = '';
-                this.dialog.title = ncfT('Menu.AddChildTitle');
+                this.dialog.title = '增加下一级菜单';
                 this.dialog.data.menuName = '';
                 this.dialog.data.parentId.push(row.id);
             }
@@ -810,8 +810,8 @@
                         if (res.data.success) {
                             this.getList();
                             this.$notify({
-                                title: ncfT('Common.Success'),
-                                message: ncfT('Common.SaveSuccess'),
+                                title: "Success",
+                                message: "成功",
                                 type: "success",
                                 duration: 2000
                             });
@@ -828,8 +828,8 @@
                 if (res.data.success) {
                     this.getList();
                     this.$notify({
-                        title: ncfT('Common.Success'),
-                        message: ncfT('Common.DeleteSuccess'),
+                        title: "Success",
+                        message: "删除成功",
                         type: "success",
                         duration: 2000
                     });

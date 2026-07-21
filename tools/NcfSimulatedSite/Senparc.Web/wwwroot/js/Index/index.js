@@ -14,7 +14,7 @@ $(function(){
 })
 
 function unopen() {
-    alert(window.ncfSiteT('Message.SectionComingSoon'));
+    alert('版块暂未开放，敬请期待~');
 }
 
 function start(docOpened, xncfName) {
@@ -22,7 +22,7 @@ function start(docOpened, xncfName) {
         return true;
     }
 
-    if (confirm(window.ncfSiteT('Message.InstallOfflineDocsConfirm'))) {
+    if (confirm('您尚未安装离线文档模块，要立即安装吗？')) {
         let openDocs = true;
         $.ajax({
             url: 'Admin/XncfModule/Index?handler=InstallModule&xncfName=' + xncfName,
@@ -33,7 +33,7 @@ function start(docOpened, xncfName) {
                 if (!installSuccess) {
                     alert(json.message);
                 } else {
-                    openDocs = confirm(window.ncfSiteT('Message.OpenOfflineDocsConfirm', json.message));
+                    openDocs = confirm(json.message + '，刷新此页面可看到顶部文档入口，需要立即查看文档吗？');
                     if (!openDocs) {
                         location.reload();
                     }

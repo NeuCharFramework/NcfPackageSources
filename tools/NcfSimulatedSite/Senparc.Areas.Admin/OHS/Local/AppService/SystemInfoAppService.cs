@@ -12,10 +12,6 @@
 
     修改标识：Senparc - 20260705
     修改描述：v0.0.4 新增登录超时配置并补齐多数据库迁移支持
-
-    修改标识：Senparc - 20260717
-    修改描述：v0.1.0 完善后台管理界面、功能表单与多语言资源本地化
-
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.Domain.Dto;
@@ -90,9 +86,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 if (systemConfig == null)
                 {
-                    throw new NcfExceptionBase(AdminResource.Get(
-                        "Validation.SystemConfigMissing",
-                        "系统配置信息不存在"));
+                    throw new NcfExceptionBase("系统配置信息不存在");
                 }
 
                 systemConfig.Update(request.SystemName, request.MchId, request.MchKey, request.TenPayAppId, systemConfig.HideModuleManager);
@@ -128,9 +122,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 if (systemConfig == null)
                 {
-                    throw new NcfExceptionBase(AdminResource.Get(
-                        "Validation.SystemConfigMissing",
-                        "系统配置信息不存在"));
+                    throw new NcfExceptionBase("系统配置信息不存在");
                 }
 
                 systemConfig.Update(systemConfig.SystemName, systemConfig.MchId, systemConfig.MchKey, systemConfig.TenPayAppId, hide);
@@ -144,7 +136,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             return response;
         }
 
-        [FunctionRender(typeof(Senparc.Areas.Admin.AdminResource), "Function.Admin.ViewLoginExpiry.Name", "Function.Admin.ViewLoginExpiry.Description", typeof(Register))]
+        [FunctionRender("查看登录过期配置", "查看 Admin 模块中的网页登录过期与 JWT 过期配置", typeof(Register))]
         public async Task<StringAppResponse> GetAuthExpireSettings()
         {
             var response = await this.GetStringResponseAsync(async (_, logger) =>
@@ -164,7 +156,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             return response;
         }
 
-        [FunctionRender(typeof(Senparc.Areas.Admin.AdminResource), "Function.Admin.SetLoginExpiry.Name", "Function.Admin.SetLoginExpiry.Description", typeof(Register))]
+        [FunctionRender("设置登录过期配置", "设置网页登录持续时间与 JWT 过期时间（分钟）", typeof(Register))]
         public async Task<StringAppResponse> SetAuthExpireSettings(AdminAuthConfig_SetExpireSettingsRequest request)
         {
             var response = await this.GetStringResponseAsync(async (_, logger) =>
@@ -185,7 +177,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             return response;
         }
 
-        [FunctionRender(typeof(Senparc.Areas.Admin.AdminResource), "Function.Admin.CacheTest.Name", "Function.Admin.CacheTest.Description", typeof(Register))]
+        [FunctionRender("缓存测试", "测试当前缓存类型及分布式锁", typeof(Register))]
         public async Task<StringAppResponse> CacheTest()
         {
             var response = await this.GetStringResponseAsync(async (response, logger) =>

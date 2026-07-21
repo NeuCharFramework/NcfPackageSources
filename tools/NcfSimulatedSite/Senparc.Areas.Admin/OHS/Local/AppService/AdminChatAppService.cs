@@ -1,16 +1,3 @@
-/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：AdminChatAppService.cs
-    文件功能描述：AdminChatAppService 相关实现
-    
-    
-    创建标识：Senparc - 20260325
-    
-    修改标识：Senparc - 20260717
-    修改描述：v0.1.0 完善后台管理界面、功能表单与多语言资源本地化
-
-----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto;
@@ -419,8 +406,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     new AiModelOptionDto
                     {
                         Id = 0,
-                        Name = _localizer["AdminChat.SystemAiModel"],
-                        Description = _localizer["AdminChat.DefaultChatConfig"],
+                        Name = "系统级 SenparcAiSetting",
+                        Description = "使用 appsettings.json 中当前生效的默认 Chat 配置",
                         IsDefault = true
                     }
                 };

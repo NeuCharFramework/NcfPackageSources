@@ -14,7 +14,7 @@
             tableData: [],
             tenantData: {},
             dialog: {
-                title: ncfT('SystemConfig.EditTitle'),
+                title: '编辑系统信息',
                 visible: false,
                 data: {
                     id: 0,
@@ -22,7 +22,7 @@
                 },
                 rules: {
                     systemName: [
-                        { required: true, message: ncfT('SystemConfig.SystemNameRequired'), trigger: "blur" }
+                        { required: true, message: "系统名称为必填项", trigger: "blur" }
                     ]
                 },
                 updateLoading: false
@@ -84,8 +84,8 @@
                         if (res.data.success) {
                             this.getList();
                             this.$notify({
-                                title: ncfT('Common.Success'),
-                                message: ncfT('Common.UpdateSuccess'),
+                                title: "Success",
+                                message: "更新成功！",
                                 type: "success",
                                 duration: 2000
                             });
@@ -93,8 +93,8 @@
                             this.dialog.updateLoading = false;
                         } else {
                             this.$notify({
-                                title: ncfT('Common.Error'),
-                                message: ncfT('Common.UpdateFailed', res.data.msg),
+                                title: "Failed",
+                                message: "更新失败：" + res.data.msg,
                                 type: "error",
                                 duration: 2000
                             });

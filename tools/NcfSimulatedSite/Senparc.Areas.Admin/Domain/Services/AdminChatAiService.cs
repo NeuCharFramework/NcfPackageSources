@@ -10,9 +10,6 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.1.0 完善后台管理界面、功能表单与多语言资源本地化
-
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;
@@ -178,6 +175,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
 
 
+#pragma warning disable MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
             var iWantToRun = await agentAiHandler.IWantTo(setting).ConfigChatModel($"AdminChat-{userId}-{sessionId}", new ChatClientAgentOptions()
             {
                 ChatOptions = new ChatOptions()
@@ -194,6 +192,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 })
             }
                 ).BuildKernelWithAgentSessionAsync();
+#pragma warning restore MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
 
 
             if (importedFunctionCount == 0)
@@ -238,9 +237,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             if (string.IsNullOrWhiteSpace(result))
             {
                 _logger.LogWarning("AI 返回空内容：SessionId={SessionId}, UserId={UserId}", sessionId, userId);
-                result = AdminResource.Get(
-                    "AdminChat.EmptyAiResponse",
-                    "抱歉，我暂时没有生成有效回复，请稍后再试。");
+                result = "抱歉，我暂时没有生成有效回复，请稍后再试。";
             }
 
             return (result, modelIdentifier);
@@ -251,16 +248,12 @@ namespace Senparc.Areas.Admin.Domain.Services
             var defaultSetting = Senparc.AI.Config.SenparcAiSetting as SenparcAiSetting;
             if (defaultSetting == null)
             {
-                throw new NcfExceptionBase(AdminResource.Get(
-                    "AdminChat.MissingAiSettings",
-                    "未读取到 SenparcAiSetting，请检查 appsettings.json 配置。"));
+                throw new NcfExceptionBase("未读取到 SenparcAiSetting，请检查 appsettings.json 配置。");
             }
 
             if (defaultSetting.AiPlatform == AiPlatform.UnSet)
             {
-                throw new NcfExceptionBase(AdminResource.Get(
-                    "AdminChat.AiPlatformNotConfigured",
-                    "SenparcAiSetting.AiPlatform 仍为 UnSet，请先在 appsettings.json 中设置可用平台。"));
+                throw new NcfExceptionBase("SenparcAiSetting.AiPlatform 仍为 UnSet，请先在 appsettings.json 中设置可用平台。");
             }
 
             if (aiModelId <= 0)
@@ -270,34 +263,24 @@ namespace Senparc.Areas.Admin.Domain.Services
 
             if (!await IsAiKernelAvailableAsync())
             {
-                throw new NcfExceptionBase(AdminResource.Get(
-                    "AdminChat.AiKernelUnavailable",
-                    "当前系统未安装或未启用 AIKernel 模块，无法切换到指定 AI 模型。"));
+                throw new NcfExceptionBase("当前系统未安装或未启用 AIKernel 模块，无法切换到指定 AI 模型。");
             }
 
             var aiModelService = _serviceProvider.GetService(typeof(AIModelService)) as AIModelService;
             if (aiModelService == null)
             {
-                throw new NcfExceptionBase(AdminResource.Get(
-                    "AdminChat.AiModelServiceUnavailable",
-                    "未能解析 AIModelService，无法加载指定 AI 模型。"));
+                throw new NcfExceptionBase("未能解析 AIModelService，无法加载指定 AI 模型。");
             }
 
             var aiModel = await aiModelService.GetObjectAsync(z => z.Id == aiModelId);
             if (aiModel == null)
             {
-                throw new NcfExceptionBase(AdminResource.Format(
-                    "AdminChat.AiModelNotFound",
-                    "当前选择的 AI 模型不存在：{0}",
-                    aiModelId));
+                throw new NcfExceptionBase($"当前选择的 AI 模型不存在：{aiModelId}");
             }
 
             if (aiModel.ConfigModelType != Senparc.Xncf.AIKernel.Domain.Models.ConfigModelType.Chat)
             {
-                throw new NcfExceptionBase(AdminResource.Format(
-                    "AdminChat.AiModelNotChat",
-                    "当前选择的 AI 模型不是 Chat 类型：{0}",
-                    aiModelId));
+                throw new NcfExceptionBase($"当前选择的 AI 模型不是 Chat 类型：{aiModelId}");
             }
 
             var aiModelDto = aiModelService.Mapper.Map<AIModelDto>(aiModel);
@@ -438,27 +421,18 @@ namespace Senparc.Areas.Admin.Domain.Services
         private static string BuildSystemMessage(List<AdminChatSessionModule> modules)
         {
             var sb = new StringBuilder();
-            sb.AppendLine(AdminResource.Get(
-                "AdminChat.SystemPromptIntro",
-                "你是 NeuCharFramework 管理后台首页中的 AI 智能助手。"));
-            sb.AppendLine(AdminResource.Get(
-                "AdminChat.SystemPromptInstruction",
-                "请使用简洁、准确、可执行的中文回答用户问题。若信息不足，请明确指出缺失信息。"));
+            sb.AppendLine("你是 NeuCharFramework 管理后台首页中的 AI 智能助手。");
+            sb.AppendLine("请使用简洁、准确、可执行的中文回答用户问题。若信息不足，请明确指出缺失信息。\n");
 
             if (modules != null && modules.Any())
             {
-                sb.AppendLine(AdminResource.Get(
-                    "AdminChat.SystemPromptModules",
-                    "当前会话关联模块如下，可优先结合这些模块语境回答。如需深入了解模块详情、数据库结构或功能列表，可使用 ModuleAssistant 函数获取准确信息："));
+                sb.AppendLine("当前会话关联模块如下，可优先结合这些模块语境回答。如需深入了解模块详情、数据库结构或功能列表，可使用 ModuleAssistant 函数获取准确信息：");
                 foreach (var module in modules)
                 {
                     sb.AppendLine($"- **{module.ModuleName}** (UID: {module.XncfModuleUid}, Version: {module.ModuleVersion})");
                     var register = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == module.XncfModuleUid);
                     if (register != null && !string.IsNullOrWhiteSpace(register.Description))
-                        sb.AppendLine(AdminResource.Format(
-                            "AdminChat.ModuleDescriptionLine",
-                            "  描述：{0}",
-                            register.Description));
+                        sb.AppendLine($"  描述：{register.Description}");
                 }
             }
 
@@ -472,26 +446,19 @@ namespace Senparc.Areas.Admin.Domain.Services
                 .TakeLast(12)
                 .Select(m => $"[{GetRoleName(m.RoleType)}] {m.Content}");
 
-            return AdminResource.Get(
-                       "AdminChat.PromptHistoryIntro",
-                       "以下是最近对话上下文，请在保持语义连贯的前提下回答最后一个用户问题。")
-                 + "\n\n"
+            return "以下是最近对话上下文，请在保持语义连贯的前提下回答最后一个用户问题。\n\n"
                  + string.Join("\n", history)
-                 + "\n\n"
-                 + AdminResource.Format(
-                     "AdminChat.PromptCurrentQuestion",
-                     "[用户当前问题] {0}",
-                     currentUserMessage);
+                 + $"\n\n[用户当前问题] {currentUserMessage}";
         }
 
         private static string GetRoleName(ChatMessageRoleType roleType)
         {
             return roleType switch
             {
-                ChatMessageRoleType.User => AdminResource.Get("AdminChat.PromptRole.User", "用户"),
-                ChatMessageRoleType.Assistant => AdminResource.Get("AdminChat.PromptRole.Assistant", "助手"),
-                ChatMessageRoleType.System => AdminResource.Get("AdminChat.PromptRole.System", "系统"),
-                _ => AdminResource.Get("AdminChat.PromptRole.Unknown", "未知")
+                ChatMessageRoleType.User => "用户",
+                ChatMessageRoleType.Assistant => "助手",
+                ChatMessageRoleType.System => "系统",
+                _ => "未知"
             };
         }
 

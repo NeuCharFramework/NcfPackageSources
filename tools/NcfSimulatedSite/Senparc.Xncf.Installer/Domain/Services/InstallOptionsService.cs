@@ -1,17 +1,4 @@
-﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：InstallOptionsService.cs
-    文件功能描述：InstallOptionsService 相关实现
-    
-    
-    创建标识：Senparc - 20240312
-    
-    修改标识：Senparc - 20260717
-    修改描述：v0.4.0 为安装流程接入多语言资源与界面文案本地化
-
-----------------------------------------------------------------*/
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Senparc.Areas.Admin.Domain;
@@ -134,10 +121,7 @@ namespace Senparc.Xncf.Installer.Domain.Services
                 var modifyItem = list.FirstOrDefault(z => z.Name == dbConfigName);
                 if (modifyItem == null)
                 {
-                    throw new NcfExceptionBase(InstallerResource.Format(
-                        "Install.DatabaseConfigNotFound",
-                        "找不到数据库配置：{0}",
-                        dbConfigName));
+                    throw new NcfExceptionBase($"找不到数据库配置：{dbConfigName}");
                 }
                 modifyItem.ConnectionStringFull = dbConnectionString;
 

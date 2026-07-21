@@ -1,24 +1,13 @@
-﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Register.cs
-    文件功能描述：Register 相关实现
-    
-    
-    创建标识：Senparc - 20200818
-    
-    修改标识：Senparc - 20260717
-    修改描述：v0.3.0 为账户模块接入多语言资源与功能文案本地化
-
-----------------------------------------------------------------*/
-using Senparc.Ncf.Core.Enums;
+﻿using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.XncfBase;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using System.Resources;
 
 using Senparc.Xncf.Accounts.Models;
 using Senparc.Xncf.Accounts.Domain.Models;
@@ -32,9 +21,11 @@ namespace Senparc.Xncf.Accounts
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly ResourceManager ResourceManager = new("Senparc.Xncf.Accounts.AccountsResource", typeof(AccountsResource).Assembly);
+
         private static string T(string key, string fallback)
         {
-            return AccountsResource.Get(key, fallback);
+            return ResourceManager.GetString(key, CultureInfo.CurrentUICulture) ?? fallback;
         }
 
         #region IXncfRegister 接口

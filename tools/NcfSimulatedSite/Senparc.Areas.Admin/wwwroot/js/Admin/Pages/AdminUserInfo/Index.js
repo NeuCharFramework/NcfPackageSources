@@ -31,8 +31,7 @@
             },
             tableData: [],
             dialog: {
-                title: ncfT('AdminUser.AddTitle'),
-                mode: 'add',
+                title: '新增管理员',
                 visible: false,
                 data: {
                     id: 0,
@@ -45,7 +44,7 @@
                 },
                 rules: {
                     userName: [
-                        { required: true, message: ncfT('AdminUser.UsernameRequired'), trigger: "blur" }
+                        { required: true, message: "用户名为必填项", trigger: "blur" }
                     ]
                     //password: [{ required: true, validator: validatePass, trigger: "blur" }],
                     //password2: [{ required: true, validator: validatePass2, trigger: "blur" }]
@@ -69,9 +68,9 @@
     computed: {
         // 密码需要校验
         isVerPass() {
-            if (this.dialog.mode === 'add') {
+            if (this.dialog.title === '新增管理员') {
                 return true;
-            } else if (this.dialog.mode === 'edit' && (this.dialog.data.password.length > 0 || this.dialog.data.password2.length > 0)) {
+            } else if (this.dialog.title === '编辑管理员' && this.dialog.data.password.length > 0 || this.dialog.title === '编辑管理员' && this.dialog.data.password2.length > 0) {
                 return true;
             } else {
                 return false;
@@ -111,18 +110,18 @@
                 if (this.dialog.data.password === '') {
                     if (this.dialog.visible) {
 
-                    this.dialog.passwordError = ncfT('AdminUser.PasswordPlaceholder');
+                    this.dialog.passwordError = '请输入密码';
                     this.dialog.isVerTrue = false;
                     return false;
                     }
                 } else {
                     this.dialog.passwordError = '';
                     if (this.dialog.data.password2 === '') {
-                        this.dialog.password2Error = ncfT('AdminUser.ConfirmPasswordPlaceholder');
+                        this.dialog.password2Error = '请再次输入密码';
                         this.dialog.isVerTrue = false;
                         return false;
                     } else if (this.dialog.data.password !== this.dialog.data.password2) {
-                        this.dialog.password2Error = ncfT('AdminUser.PasswordMismatch');
+                        this.dialog.password2Error = '请输入相同的密码';
                         this.dialog.isVerTrue = false;
                         return false;
                     } else {
@@ -151,13 +150,11 @@
                 this.dialog.data = {
                     userName, realName, phone, note, id, password: '', password2: ''
                 };
-                this.dialog.title = ncfT('AdminUser.EditTitle');
-                this.dialog.mode = 'edit';
+                this.dialog.title = '编辑管理员';
                 this.dialog = Object.assign({}, this.dialog);
             } else {
                 // 新增
-                this.dialog.title = ncfT('AdminUser.AddTitle');
-                this.dialog.mode = 'add';
+                this.dialog.title = '新增管理员';
             }
         },
         // 更新新增编辑
@@ -169,6 +166,7 @@
                     if (this.isVerPass) {
                         // 校验不通过
                         if (!this.dialog.isVerTrue) {
+                            console.log('不通过');
                             return false;
                         }
                     }
@@ -185,8 +183,8 @@
                         if (res.data.success) {
                             this.getList();
                             this.$notify({
-                                title: ncfT('Common.Success'),
-                                message: ncfT('Common.SaveSuccess'),
+                                title: "Success",
+                                message: "成功",
                                 type: "success",
                                 duration: 2000
                             });
@@ -207,8 +205,8 @@
                 if (res.data.success) {
                     this.getList();
                     this.$notify({
-                        title: ncfT('Common.Success'),
-                        message: ncfT('AdminUser.AssignRoleSuccess'),
+                        title: "Success",
+                        message: "成功",
                         type: "success",
                         duration: 2000
                     });
@@ -243,8 +241,8 @@
                 if (res.data.success) {
                     this.getList();
                     this.$notify({
-                        title: ncfT('Common.Success'),
-                        message: ncfT('Common.DeleteSuccess'),
+                        title: "Success",
+                        message: "删除成功",
                         type: "success",
                         duration: 2000
                     });

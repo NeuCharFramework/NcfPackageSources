@@ -4,24 +4,24 @@
         return {
             data: [], // 数据
             tooltip: {
-                "IAreaRegister": ncfT('Xncf.Feature.Web'),
-                "IXncfDatabase": ncfT('Xncf.Feature.Database'),
-                "IXncfMiddleware": ncfT('Xncf.Feature.Middleware'),
-                "IXncfRazorRuntimeCompilation": ncfT('Xncf.Feature.Thread')
+                "IAreaRegister": '网页',
+                "IXncfDatabase": '数据库',
+                "IXncfMiddleware": '中间件',
+                "IXncfRazorRuntimeCompilation": '线程'
             },
             state: {
-                'String': ncfT('Xncf.Type.Text'),
-                'Int32': ncfT('Xncf.Type.Number'),
-                'Int64': ncfT('Xncf.Type.Number'),
-                'DateTime': ncfT('Xncf.Type.Date'),
-                'String[]': ncfT('Xncf.Type.Options'),
-                'Boolean': ncfT('Xncf.Type.Boolean')
+                'String': '文本',
+                'Int32': '数字',
+                'Int64': '数字',
+                'DateTime': '日期',
+                'String[]': '选项',
+                'Boolean': '布尔'
             },
             xNcfModules_State: {
-                0: ncfT('Xncf.State.Closed'),
-                1: ncfT('Xncf.State.Open'),
-                2: ncfT('Xncf.State.PendingAdd'),
-                3: ncfT('Xncf.State.PendingUpdate')
+                0: '关闭',
+                1: '开放',
+                2: '新增待审核',
+                3: '更新待审核'
             },
             // 执行弹窗
             run: {
@@ -79,8 +79,8 @@
             flag = flag + '';
             if (flag !== '1') {
                 this.$notify({
-                    title: ncfT('Common.Tip'),
-                    message: ncfT('Xncf.EnableBeforeExecute'),
+                    title: '提示',
+                    message: '请开启后执行',
                     type: 'warning'
                 });
                 return;
@@ -93,8 +93,8 @@
             flag = flag + '';
             if (flag !== '1') {
                 this.$notify({
-                    title: ncfT('Common.Tip'),
-                    message: ncfT('Xncf.EnableBeforeExecute'),
+                    title: '提示',
+                    message: '请开启后执行',
                     type: 'warning'
                 });
                 return;
@@ -168,10 +168,10 @@
         // 执行
         async handleRun() {
             // 物理路径校验
-            if (this.runData.hasOwnProperty('SourcePath') && this.runData.SourcePath.value.length < 1) {
+            if (this.runData.hasOwnProperty('SourcePath') && this.runData.SourcePath.length < 1) {
                 this.$notify({
-                    title: ncfT('Common.Warning'),
-                    message: ncfT('Xncf.SourcePathRequired'),
+                    title: '警告',
+                    message: '请填写源码物理路径',
                     type: 'warning'
                 });
                 return;
@@ -187,8 +187,8 @@
                     if (this.runData[i].item.parameterType === 2) {
                         if (this.runData[i].item.isRequired && this.runData[i].value.length === 0) {
                             this.$notify({
-                                title: ncfT('Common.Tip'),
-                                message: ncfT('Xncf.RequiredSelection', this.runData[i].item.title),
+                                title: '提示',
+                                message: this.runData[i].item.title + '  为必选项',
                                 type: 'warning'
                             });
                             return;
@@ -200,8 +200,8 @@
                     if (this.runData[i].item.parameterType === 1) {
                         if (this.runData[i].item.isRequired && this.runData[i].value.length === 0) {
                             this.$notify({
-                                title: ncfT('Common.Tip'),
-                                message: ncfT('Xncf.RequiredField', this.runData[i].item.title),
+                                title: '提示',
+                                message: this.runData[i].item.title + '  为必填项',
                                 type: 'warning'
                             });
                             return;
@@ -213,8 +213,8 @@
                     if (this.runData[i].item.parameterType === 0 || this.runData[i].item.parameterType === 3) {
                         if (this.runData[i].item.isRequired && this.runData[i].value.length === 0) {
                             this.$notify({
-                                title: ncfT('Common.Tip'),
-                                message: ncfT('Xncf.RequiredField', this.runData[i].item.title),
+                                title: '提示',
+                                message: this.runData[i].item.title + '  为必填项',
                                 type: 'warning'
                             });
                             return;
@@ -243,30 +243,30 @@
                 const msg = DOMPurify.sanitize(res.data.msg);
 
                 if (!res.data.success) {
-                    this.runResult.tit = ncfT('Xncf.RunError');
-                    this.runResult.tip = ncfT('Xncf.ErrorInfo');
+                    this.runResult.tit = '遇到错误';
+                    this.runResult.tip = '错误信息';
                     this.runResult.msg = (msg || DOMPurify.sanitize(res.data.exception)).replace(/&lt;br \/&gt;/g, '<br />').replace('\r\n', '<br />').replace('\n', '<br />').replace('\r', '<br />');
                     this.runResult.visible = true;
                     return;
                 }
                 if (msg && (msg.indexOf('http://') === 0 || msg.indexOf('https://') === 0)) {
-                    this.runResult.tit = ncfT('Xncf.RunSuccess');
-                    this.runResult.tip = ncfT('Xncf.ExternalUrlNotice');
+                    this.runResult.tit = '执行成功';
+                    this.runResult.tip = '收到网址，点击下方打开<br />（此链接由第三方提供，请注意安全）：';
                     this.runResult.msg = '<i class="fa fa-external-link"></i> <a href="' + msg + '" target="_blank">' + msg + '</a>';
                 }
                 else {
-                    this.runResult.tit = ncfT('Xncf.RunSuccess');
-                    this.runResult.tip = ncfT('Xncf.ReturnInfo');
+                    this.runResult.tit = '执行成功';
+                    this.runResult.tip = '返回信息';
                     this.runResult.msg = msg.replace(/&lt;br \/&gt;/g, '<br />').replace('\r\n', '<br />').replace('\n', '<br />').replace('\r','<br />');
                 }
                 // 打开执行结果弹窗
                 this.runResult.visible = true;
                 this.getList();
             } catch (error) {
-                console.error(ncfT('Xncf.ExecutionErrorLog'), error);
+                console.error('执行出错:', error);
                 this.$notify({
-                    title: ncfT('Common.Error'),
-                    message: ncfT('Xncf.ExecutionFailed'),
+                    title: '错误',
+                    message: '执行过程中发生错误',
                     type: 'error'
                 });
             } finally {
@@ -290,7 +290,7 @@
         async handleDelete() {
             const id = this.data.xncfModule.id;
             const res = await service.post(`/Admin/XncfModule/Start?handler=Delete&id=${id}`);
-            window.sessionStorage.setItem('setNavMenuActive', ncfT('Xncf.Management'));
+            window.sessionStorage.setItem('setNavMenuActive', '模块管理');
             getNavMenu();
             setTimeout(function () {
                 window.location.href = '/Admin/XncfModule/Index';

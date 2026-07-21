@@ -1,17 +1,4 @@
-﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Register.cs
-    文件功能描述：Register 相关实现
-    
-    
-    创建标识：Senparc - 20241028
-    
-    修改标识：Senparc - 20260717
-    修改描述：v0.4.0 为安装流程接入多语言资源与界面文案本地化
-
-----------------------------------------------------------------*/
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +13,9 @@ using Senparc.Xncf.Installer.Domain.Dto;
 using Senparc.Xncf.Installer.Domain.Services;
 using Senparc.Xncf.Installer.OHS.Local.AppService;
 using System;
+using System.Globalization;
 using System.Reflection;
+using System.Resources;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.Installer
@@ -34,9 +23,11 @@ namespace Senparc.Xncf.Installer
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister, IAreaRegister/*, IXncfDatabase*/
     {
+        private static readonly ResourceManager ResourceManager = new("Senparc.Xncf.Installer.InstallerResource", typeof(InstallerResource).Assembly);
+
         private static string T(string key, string fallback)
         {
-            return InstallerResource.Get(key, fallback);
+            return ResourceManager.GetString(key, CultureInfo.CurrentUICulture) ?? fallback;
         }
 
         #region IXncfRegister 接口

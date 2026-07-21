@@ -15,10 +15,6 @@
 
     修改标识：Senparc - 20260705
     修改描述：v0.0.4 新增登录超时配置并补齐多数据库迁移支持
-
-    修改标识：Senparc - 20260717
-    修改描述：v0.1.0 完善后台管理界面、功能表单与多语言资源本地化
-
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authentication;
@@ -98,9 +94,7 @@ namespace Senparc.Areas.Admin.Domain
         {
             if (principal?.Identity?.IsAuthenticated != true)
             {
-                throw new NcfExceptionBase(AdminResource.Get(
-                    "Session.LoginRequiredForRenewal",
-                    "当前用户未登录，无法续期。"));
+                throw new NcfExceptionBase("当前用户未登录，无法续期。");
             }
 
             var identity = new ClaimsIdentity(principal.Claims, SiteConfig.NcfAdminAuthorizeScheme);
@@ -328,7 +322,7 @@ namespace Senparc.Areas.Admin.Domain
             var obj = this.GetObject(z => z.Id == objDto.Id);
             if (obj == null)
             {
-                throw new Exception(AdminResource.Get("AdminUser.UserInfoNotFound", "用户信息不存在！"));
+                throw new Exception("用户信息不存在！");
             }
             obj.UpdateObject(objDto);
             await SaveObjectAsync(obj);
@@ -344,7 +338,7 @@ namespace Senparc.Areas.Admin.Domain
             var obj = this.GetObject(z => z.Id == objDto.Id);
             if (obj == null)
             {
-                throw new Exception(AdminResource.Get("AdminUser.UserInfoNotFound", "用户信息不存在！"));
+                throw new Exception("用户信息不存在！");
             }
             obj.UpdateObject(objDto);
             SaveObject(obj);
@@ -397,7 +391,7 @@ namespace Senparc.Areas.Admin.Domain
             var obj = GetObject(z => z.Id == id);
             if (obj == null)
             {
-                throw new Exception(AdminResource.Get("AdminUser.UserInfoNotFound", "用户信息不存在！"));
+                throw new Exception("用户信息不存在！");
             }
             DeleteObject(obj);
         }
@@ -428,18 +422,14 @@ namespace Senparc.Areas.Admin.Domain
             var userInfo = await GetObjectAsync(z => z.UserName == loginDto.UserName);
             if (userInfo == null)
             {
-                throw new NcfExceptionBase(AdminResource.Get(
-                    "AdminUser.InvalidCredentials",
-                    "用户名不存在或密码不正确！"));
+                throw new NcfExceptionBase($"用户名不存在或密码不正确：{loginDto.UserName}！");
             }
             try
             {
                 var adminUserInfo = await TryLoginAsync(userInfo, loginDto.Password, false, loginDto.TenantKey);
                 if (adminUserInfo == null)
                 {
-                    throw new NcfExceptionBase(AdminResource.Get(
-                        "AdminUser.InvalidCredentials",
-                        "用户名不存在或密码不正确！"));
+                    throw new NcfExceptionBase("用户名不存在或密码不正确！");
                 }
                 token = GenerateToken(adminUserInfo.Id, out var tokenExpiresUtc);
                 var roles = await _serviceProvider.GetService<SysRoleAdminUserInfoService>().GetFullListAsync(o => o.AccountId == adminUserInfo.Id);

@@ -1,17 +1,4 @@
-﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：AdminUserInfo_Request.cs
-    文件功能描述：AdminUserInfo_Request 相关实现
-    
-    
-    创建标识：Senparc - 20241028
-    
-    修改标识：Senparc - 20260717
-    修改描述：v0.1.0 完善后台管理界面、功能表单与多语言资源本地化
-
-----------------------------------------------------------------*/
-using Senparc.Ncf.XncfBase.FunctionRenders;
+﻿using Senparc.Ncf.XncfBase.FunctionRenders;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -113,9 +100,7 @@ namespace Senparc.Areas.Admin.OHS.PL
         {
             if (string.IsNullOrEmpty(Password) && Id == 0)
             {
-                yield return new ValidationResult(
-                    AdminResource.Get("AdminUser.PasswordRequired", "密码为必填项！"),
-                    new[] { "Password" });
+                yield return new ValidationResult("密码为必填项！", new[] { "Password" });
             }
         }
     }

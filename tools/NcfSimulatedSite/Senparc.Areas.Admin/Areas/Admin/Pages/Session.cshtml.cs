@@ -12,10 +12,6 @@
 
     修改标识：Senparc - 20260705
     修改描述：v0.0.4 新增登录超时配置并补齐多数据库迁移支持
-
-    修改标识：Senparc - 20260717
-    修改描述：v0.1.0 完善后台管理界面、功能表单与多语言资源本地化
-
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authentication;
@@ -98,9 +94,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             {
                 if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId) || userId <= 0)
                 {
-                    return Ok(false, AdminResource.Get(
-                        "Session.InvalidIdentity",
-                        "当前用户身份无效，无法续期 JWT。请重新登录。"));
+                    return Ok(false, "当前用户身份无效，无法续期 JWT。请重新登录。");
                 }
 
                 var token = _adminUserInfoService.GenerateToken(userId, out var expiresUtc, jwtExpireMinutes);

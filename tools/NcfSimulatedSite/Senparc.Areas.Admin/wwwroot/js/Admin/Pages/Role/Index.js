@@ -15,16 +15,16 @@
             },
             tableData: [],
             dialog: {
-                title: ncfT('Role.AddTitle'),
+                title: '新增角色',
                 visible: false,
                 data: {
                     roleName: '', roleCode: '', adminRemark: '', remark: '', addTime: '', id: '', enabled: false
                 },
                 rules: {
                     roleName: [
-                        { required: true, message: ncfT('Role.NameRequired'), trigger: "blur" }
+                        { required: true, message: "角色名称为必填项", trigger: "blur" }
                     ],
-                    roleCode: [{ required: true, message: ncfT('Role.CodeRequired'), trigger: "blur" }]
+                    roleCode: [{ required: true, message: "角色代码为必填项", trigger: "blur" }]
                 },
                 updateLoading: false
             },
@@ -134,8 +134,8 @@
             if (respnseData.data.success) {
                 this.getList();
                 this.$notify({
-                    title: ncfT('Common.Success'),
-                    message: ncfT('Role.GrantSuccess'),
+                    title: "Success",
+                    message: "授权成功",
                     type: "success",
                     duration: 800,
                     onClose: function () {
@@ -163,10 +163,10 @@
                 this.dialog.data = {
                     roleName, roleCode, adminRemark, remark, addTime, id, enabled
                 };
-                this.dialog.title = ncfT('Role.EditTitle');
+                this.dialog.title = '编辑角色';
             } else {
                 // 新增
-                this.dialog.title = ncfT('Role.AddTitle');
+                this.dialog.title = '新增角色';
             }
         },
         // 更新新增、编辑
@@ -187,8 +187,8 @@
                         if (res.data.success) {
                             this.getList();
                             this.$notify({
-                                title: ncfT('Common.Success'),
-                                message: ncfT('Common.SaveSuccess'),
+                                title: "Success",
+                                message: "成功",
                                 type: "success",
                                 duration: 2000
                             });
@@ -208,8 +208,8 @@
                 if (res.data.success) {
                     this.getList();
                     this.$notify({
-                        title: ncfT('Common.Success'),
-                        message: ncfT('Common.DeleteSuccess'),
+                        title: "Success",
+                        message: "删除成功",
                         type: "success",
                         duration: 2000
                     });

@@ -1,17 +1,4 @@
-﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：ModuleAppService.cs
-    文件功能描述：ModuleAppService 相关实现
-    
-    
-    创建标识：Senparc - 20241028
-    
-    修改标识：Senparc - 20260717
-    修改描述：v0.1.0 完善后台管理界面、功能表单与多语言资源本地化
-
-----------------------------------------------------------------*/
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Areas.Admin.Areas.Admin.Pages;
 using Senparc.Areas.Admin.Domain.Dto;
@@ -173,7 +160,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 bool mustUpdate = false;
                 if (uid.IsNullOrEmpty())
                 {
-                    throw new Exception(AdminResource.Get("Xncf.ModuleIdNotProvided", "模块编号未提供！"));
+                    throw new Exception("模块编号未提供！");
                 }
 
 
@@ -181,7 +168,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 if (xncfModule == null)
                 {
-                    throw new Exception(AdminResource.Get("Xncf.ModuleNotAdded", "模块未添加！"));
+                    throw new Exception("模块未添加！");
                 }
 
                 IEnumerable<string> xncfModuleUpdateLog = new List<string>();
@@ -195,10 +182,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 IXncfRegister xncfRegister = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == uid);
                 if (xncfRegister == null)
                 {
-                    throw new Exception(AdminResource.Format(
-                        "Xncf.ModuleMissingOrNotLoaded",
-                        "模块丢失或未加载（{0}）！",
-                        XncfRegisterManager.RegisterList.Count));
+                    throw new Exception($"模块丢失或未加载（{XncfRegisterManager.RegisterList.Count}）！");
                 }
 
                 IDictionary<(string key, string name, string description), List<FunctionParameterInfo>> functionParameterInfoCollection = new Dictionary<(string key, string name, string description), List<FunctionParameterInfo>>();
@@ -220,10 +204,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                             catch (Exception ex)
                             {
                                 SenparcTrace.BaseExceptionLog(ex);
-                                throw new Exception(AdminResource.Format(
-                                    "Xncf.FunctionLoadError",
-                                    "载入 {0} 时出错，请查看日志！如果刚添加数据库迁移，请先完成模块升级！",
-                                    functionBag.Key));
+                                throw new Exception($"载入 {functionBag.Key} 时出错，请查看日志！如果刚添加数据库迁移，请先完成模块升级！");
                             }
                         }
                     }
@@ -234,12 +215,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 请尝试更新此模块后刷新页面！\r\n{ex.Message}\r\n{ex.StackTrace}");
                     mustUpdate = true;
 
-                    throw new Exception(AdminResource.Format(
-                        "Xncf.ModuleReadFailed",
-                        "模块读取失败，请尝试更新此模块后刷新页面！模块：{0} / {1} / {2}",
-                        xncfModule.Name,
-                        xncfModule.MenuName,
-                        xncfModule.Uid));
+                    throw new Exception($"模块读取失败，请尝试更新此模块后刷新页面！模块：{xncfModule.Name} / {xncfModule.MenuName} / {xncfModule.Uid}");
                 }
 
                 IEnumerable<KeyValuePair<ThreadInfo, Thread>> registeredThreadInfo = xncfRegister.RegisteredThreadInfo;
@@ -306,7 +282,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 if (module == null)
                 {
-                    throw new Exception(AdminResource.Get("Xncf.ModuleNotAdded", "模块未添加！"));
+                    throw new Exception("模块未添加！");
                 }
 
                 module.UpdateState(toState);
@@ -353,7 +329,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 if (module == null)
                 {
-                    throw new Exception(AdminResource.Get("Xncf.ModuleNotAdded", "模块未添加！"));
+                    throw new Exception("模块未添加！");
                 }
 
                 //删除菜单
@@ -409,7 +385,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 if (xncfRegister == null)
                 {
                     response.Success = false;
-                    response.ErrorMessage = AdminResource.Get("Xncf.ModuleNotRegistered", "模块未注册！");
+                    response.ErrorMessage = "模块未注册！";
                     return null;
                 }
 
@@ -417,17 +393,14 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 if (xncfModule == null)
                 {
                     response.Success = false;
-                    response.ErrorMessage = AdminResource.Get("Xncf.ModuleNotInstalled", "当前模块未安装！");
+                    response.ErrorMessage = "当前模块未安装！";
                     return null;
                 }
 
                 if (xncfModule.State != XncfModules_State.开放)
                 {
                     response.Success = false;
-                    response.ErrorMessage = AdminResource.Format(
-                        "Xncf.InvalidModuleState",
-                        "当前模块状态为【{0}】,必须为【开放】状态的模块才可执行！\r\n此外，如果您强制执行此方法，也将按照未通过验证的程序集执行，因为您之前安装的版本可能已经被新的程序所覆盖。",
-                        xncfModule.State);
+                    response.ErrorMessage = $"当前模块状态为【{xncfModule.State}】,必须为【开放】状态的模块才可执行！\r\n此外，如果您强制执行此方法，也将按照未通过验证的程序集执行，因为您之前安装的版本可能已经被新的程序所覆盖。";
                     return null;
                 }
 
@@ -450,7 +423,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 if (rightFunctionBag == null)
                 {
                     response.Success = false;
-                    response.ErrorMessage = AdminResource.Get("Xncf.FunctionNotMatched", "方法未匹配上！");
+                    response.ErrorMessage = "方法未匹配上！";
                     return null;
                 }
 
@@ -475,9 +448,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     default:
                         {
                             response.Success = false;
-                            response.ErrorMessage = AdminResource.Get(
-                                "Xncf.FunctionSingleParameterOnly",
-                                "FunctionRender 只允许方法具有一个传入参数！");
+                            response.ErrorMessage = "FunctionRender 只允许方法具有一个传入参数！";
                             return null;
                         }
                 }
