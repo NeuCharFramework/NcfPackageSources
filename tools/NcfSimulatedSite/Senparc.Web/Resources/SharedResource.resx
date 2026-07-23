@@ -126,4 +126,8 @@
     <value>苏州盛派网络科技有限公司 版权所有</value>
   </data>
 
+  <data name="Home.ComingSoon" xml:space="preserve"><value>版块暂未开放，敬请期待。</value></data>
+  <data name="Home.InstallDocsConfirm" xml:space="preserve"><value>尚未安装离线文档模块，要立即安装吗？</value></data>
+  <data name="Home.OpenDocsConfirm" xml:space="preserve"><value>{0} 刷新此页面后可看到顶部文档入口，需要立即查看文档吗？</value></data>
+  <data name="Home.RequestFailed" xml:space="preserve"><value>请求失败，请稍后重试。</value></data>
 </root>

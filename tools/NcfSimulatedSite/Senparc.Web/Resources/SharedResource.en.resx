@@ -117,4 +117,8 @@
   <data name="Footer.Copyright" xml:space="preserve">
     <value>Senparc Network Technology Co., Ltd. All Rights Reserved</value>
   </data>
+  <data name="Home.ComingSoon" xml:space="preserve"><value>This section is not yet available. Stay tuned.</value></data>
+  <data name="Home.InstallDocsConfirm" xml:space="preserve"><value>The offline documentation module is not installed. Install it now?</value></data>
+  <data name="Home.OpenDocsConfirm" xml:space="preserve"><value>{0} Refresh this page to see the documentation entry. Open the documentation now?</value></data>
+  <data name="Home.RequestFailed" xml:space="preserve"><value>The request failed. Please try again later.</value></data>
 </root>

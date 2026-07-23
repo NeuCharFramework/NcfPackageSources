@@ -117,4 +117,8 @@
   <data name="Footer.Copyright" xml:space="preserve">
     <value>Suzhou Senparc Network Technology Co., Ltd. Все права защищены</value>
   </data>
+  <data name="Home.ComingSoon" xml:space="preserve"><value>Этот раздел пока недоступен. Следите за обновлениями.</value></data>
+  <data name="Home.InstallDocsConfirm" xml:space="preserve"><value>Модуль автономной документации не установлен. Установить его сейчас?</value></data>
+  <data name="Home.OpenDocsConfirm" xml:space="preserve"><value>{0} Обновите страницу, чтобы увидеть ссылку на документацию. Открыть документацию сейчас?</value></data>
+  <data name="Home.RequestFailed" xml:space="preserve"><value>Не удалось выполнить запрос. Повторите попытку позже.</value></data>
 </root>

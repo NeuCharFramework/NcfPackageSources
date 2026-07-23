@@ -753,9 +753,11 @@ var app = new Vue({
     },
     created() {
         this.loadPromptStreamPreference();
-        // 浏览器关闭|浏览器刷新|页面关闭|打开新页面 提示有数据变动保存数据
-        // 添加 beforeunload 事件监听器
-        window.addEventListener('beforeunload', this.beforeunloadHandler);
+        // macOS WKWebView 的原生 JavaScript 对话框桥接不可用，避免 beforeunload
+        // 触发无法完成的原生确认框；普通浏览器仍保留离页提醒。
+        if (!this.isMacEmbeddedWebView()) {
+            window.addEventListener('beforeunload', this.beforeunloadHandler);
+        }
         
         // 页面创建时加载保存的宽度设置
         this.loadAreaWidthsFromStorage();
@@ -3048,6 +3050,12 @@ var app = new Vue({
             }
         },
         // beforeunload 事件处理函数
+        isMacEmbeddedWebView() {
+            const userAgent = navigator.userAgent || ''
+            return /Macintosh/i.test(userAgent) &&
+                /AppleWebKit/i.test(userAgent) &&
+                !/Safari\//i.test(userAgent)
+        },
         beforeunloadHandler(e) {
             //console.log('浏览器关闭|浏览器刷新|页面关闭|打开新页面')
             // 如果数据没有变动，则不需要提示用户保存
@@ -3076,7 +3084,7 @@ var app = new Vue({
             //    document.body.appendChild(modal);
             //}, 0);
         },
-        copyInfo(source) {
+        async copyInfo(source) {
             let fullVersion = '';
             let label = '';
             
@@ -3104,19 +3112,8 @@ var app = new Vue({
                 label = '';
             }
             
-            // 把结果复制到剪切板
-            const input = document.createElement('input')
-            input.setAttribute('readonly', 'readonly')
-            input.setAttribute('value', fullVersion)
-            document.body.appendChild(input)
-            input.select()
-            input.setSelectionRange(0, 9999)
-            if (document.execCommand('copy')) {
-                document.execCommand('copy')
-                const message = label ? `复制${label}【${fullVersion}】成功` : `复制【${fullVersion}】成功`;
-                this.$message.success(message)
-            }
-            document.body.removeChild(input);
+            const message = label ? `复制${label}【${fullVersion}】成功` : `复制【${fullVersion}】成功`;
+            await window.PromptRangeUtils.CopyHelper.copyToClipboardAsync(fullVersion, message, '复制失败', true)
         },
         // 格式化时间
         formatDate(d) {
@@ -7932,7 +7929,7 @@ var app = new Vue({
             })
         },
         toAIKernel() {
-            window.open('/Admin/AIKernel/Index?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69')
+            window.location.assign('/Admin/AIKernel/Index?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69')
         },
         // prompt请求参数 删除变量行btn
         deleteVariableBtn(index) {
@@ -8666,26 +8663,9 @@ var app = new Vue({
             });
         },
         // 复制 Prompt 测试结果
-        copyPromptResult(item, rawResult) {
-
-            // 把结果复制到剪切板
-            try {
-                const textarea = document.createElement('textarea');
-                textarea.setAttribute('readonly', 'readonly');
-                textarea.value = rawResult ? item.resultString : item.resultStringHtml;
-                document.body.appendChild(textarea);
-                textarea.select();
-                textarea.setSelectionRange(0, 9999);
-                if (document.execCommand('copy')) {
-                    document.execCommand('copy');
-                    this.$message.success('复制成功');
-                } else {
-                    this.$message.error('复制失败');
-                }
-                textarea.style.display = 'none';
-            } catch (err) {
-                console.error('Oops, unable to copy', err);
-            }  
+        async copyPromptResult(item, rawResult) {
+            const text = rawResult ? item.resultString : item.resultStringHtml;
+            await window.PromptRangeUtils.CopyHelper.copyToClipboardAsync(text, '复制成功', '复制失败', true)
         },
         
         /**
@@ -8748,7 +8728,7 @@ var app = new Vue({
                 copyBtn.title = '复制代码';
                 
                 // 绑定点击事件
-                copyBtn.addEventListener('click', function(e) {
+                copyBtn.addEventListener('click', async function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     
@@ -8758,7 +8738,7 @@ var app = new Vue({
                     
                     // 使用 CopyHelper 复制
                     if (window.PromptRangeUtils && window.PromptRangeUtils.CopyHelper) {
-                        const success = window.PromptRangeUtils.CopyHelper.copyToClipboard(
+                        const success = await window.PromptRangeUtils.CopyHelper.copyToClipboardAsync(
                             code, 
                             '代码复制成功', 
                             '代码复制失败',

@@ -558,7 +558,7 @@
                             <div class="tti-empty" v-else>图片已生成，但未获得可访问地址</div>
                             <div class="tti-meta">
                                 <div class="tti-meta-row"><span class="tti-meta-label">存储：</span><span>{{ item.textToImage && item.textToImage.storageType ? item.textToImage.storageType : '--' }}</span></div>
-                                <div class="tti-meta-row" v-if="item.textToImage && item.textToImage.imageUrl"><a :href="item.textToImage.imageUrl" target="_blank" rel="noopener">查看原图</a></div>
+                                <div class="tti-meta-row" v-if="item.textToImage && item.textToImage.imageUrl"><a :href="item.textToImage.imageUrl">查看原图</a></div>
                                 <div class="tti-meta-row" v-if="item.textToImage && item.textToImage.revisedPrompt"><span class="tti-meta-label">Revised：</span><span>{{ item.textToImage.revisedPrompt }}</span></div>
                                 <div class="tti-meta-row" v-if="item.textToImage && item.textToImage.prompt"><span class="tti-meta-label">Prompt：</span><span>{{ item.textToImage.prompt }}</span></div>
                             </div>

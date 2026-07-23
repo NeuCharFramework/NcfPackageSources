@@ -108,7 +108,7 @@
                              width="80"
                              label="消息URL">
                 <template slot-scope="scope">
-                    <a :href="'/WeixinMp/'+ scope.row.name + '?parameter=' + scope.row.id" target="_blank" :title="'[你的域名]/WeixinMp/' + scope.row.name + '?parameter=' + scope.row.id"><i class="fa fa-external-link"></i> 打开</a>
+                    <a :href="'/WeixinMp/'+ scope.row.name + '?parameter=' + scope.row.id" :title="'[你的域名]/WeixinMp/' + scope.row.name + '?parameter=' + scope.row.id"><i class="fa fa-external-link"></i> 打开</a>
                 </template>
             </el-table-column>
             <el-table-column label="操作" align="center" width="200" fixed="right">
@@ -155,7 +155,7 @@
             <el-form-item label="URL">
                 <template>
                     <p>微信后台配置的服务器地址(URL)</p>
-                    <p v-if="dialog.data.id > 0"><a :href="'/WeixinMp/'+ dialog.data.name + '?parameter=' + dialog.data.id" target="_blank"><i class="fa fa-external-link"></i> [您的域名]/WeixinMp/{{mpAccountForm.name}}?parameter={{dialog.data.id}}</a></p>
+                    <p v-if="dialog.data.id > 0"><a :href="'/WeixinMp/'+ dialog.data.name + '?parameter=' + dialog.data.id"><i class="fa fa-external-link"></i> [您的域名]/WeixinMp/{{mpAccountForm.name}}?parameter={{dialog.data.id}}</a></p>
                     <p>注意：“公众号名称”必须与所对应的 MessageHandler 所标记的 [MpMessageHandler(name)] 中的 name 对应</p>
                 </template>
             </el-form-item>

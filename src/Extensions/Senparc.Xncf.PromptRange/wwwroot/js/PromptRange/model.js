@@ -101,7 +101,9 @@ var app = new Vue({
             const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add', request)
             if (res.data.success) {
                 this.getList()
-                alert('success!');
+                this.$message.success('添加成功！');
+            } else {
+                this.$message.error(res.data.errorMessage || res.data.message || '添加失败');
             }
         },
         // 编辑模型 btn
@@ -127,7 +129,7 @@ var app = new Vue({
             if (res.data.success) {
                 this.getList()
             } else {
-                alert("error")
+                this.$message.error(res.data.errorMessage || res.data.message || '修改失败')
             }
         },
         // 删除模型 
@@ -148,7 +150,7 @@ var app = new Vue({
             if (res.data.success) {
                 this.getList()
             } else {
-                alert("error")
+                this.$message.error(res.data.errorMessage || res.data.message || '删除失败')
             }
         },
         // btn 批量删除

@@ -117,4 +117,8 @@
   <data name="Footer.Copyright" xml:space="preserve">
     <value>Senparc Network Technology Co., Ltd. Tous droits réservés</value>
   </data>
+  <data name="Home.ComingSoon" xml:space="preserve"><value>Cette section n’est pas encore disponible. Merci de patienter.</value></data>
+  <data name="Home.InstallDocsConfirm" xml:space="preserve"><value>Le module de documentation hors ligne n’est pas installé. L’installer maintenant ?</value></data>
+  <data name="Home.OpenDocsConfirm" xml:space="preserve"><value>{0} Actualisez cette page pour afficher l’accès à la documentation. L’ouvrir maintenant ?</value></data>
+  <data name="Home.RequestFailed" xml:space="preserve"><value>La requête a échoué. Veuillez réessayer plus tard.</value></data>
 </root>

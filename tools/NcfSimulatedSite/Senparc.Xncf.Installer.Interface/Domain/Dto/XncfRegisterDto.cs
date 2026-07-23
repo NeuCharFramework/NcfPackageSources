@@ -4,6 +4,7 @@
     public class XncfRegisterDto
     {
         public bool IgnoreInstall { get; set; }
+        public bool SelectedByDefault { get; set; }
         public string Name { get; set; }
         public string Uid { get; set; }
         public string Version { get; set; }

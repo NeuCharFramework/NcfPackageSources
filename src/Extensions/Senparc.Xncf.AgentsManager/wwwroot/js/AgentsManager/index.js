@@ -4176,42 +4176,21 @@ var app = new Vue({
       return resultText ?? ''
     },
     // 复制 task 任务描述
-    copyText(opType, item) {
-      // 把结果复制到剪切板
-      return new Promise(resolve => {
-        try {
-          const textarea = document.createElement('textarea');
-          textarea.setAttribute('readonly', 'readonly');
-          if (opType === '1') {
-            // task 对话 原始内容
-            textarea.value = item?.message ?? ''
-          } else if (opType === '2') {
-            // task 对话 HTML内容
-            textarea.value = item?.messageHtml ?? ''
-          } else if (opType === '3') {
-            // task 对话 promptCommand(任务描述)内容
-            textarea.value = item?.promptCommand ?? ''
-          } else if (opType === '4') {
-            // task 任务描述
-            textarea.value = item ?? ''
-          }
+    async copyText(opType, item) {
+      let text = ''
+      if (opType === '1') {
+        text = item?.message ?? ''
+      } else if (opType === '2') {
+        text = item?.messageHtml ?? ''
+      } else if (opType === '3') {
+        text = item?.promptCommand ?? ''
+      } else if (opType === '4') {
+        text = item ?? ''
+      }
 
-          document.body.appendChild(textarea);
-          textarea.select();
-          textarea.setSelectionRange(0, 9999);
-          if (document.execCommand('copy')) {
-            document.execCommand('copy');
-            this.$message.success('复制成功');
-            resolve()
-          } else {
-            this.$message.error('复制失败');
-          }
-          textarea.style.display = 'none';
-        } catch (err) {
-          console.error('Oops, unable to copy', err);
-        }
-      })
-
+      const copied = await copyTextForEmbeddedBrowser(text)
+      this.$message[copied ? 'success' : 'error'](copied ? '复制成功' : '复制失败')
+      return copied
     },
     // 组成员头像堆叠 数量处理
     displayedAvatars(list, limit = 5) {
@@ -4692,9 +4671,11 @@ function openWindow(url, title, w, h) {
   const top = ((height / 2) - (h / 2)) + dualScreenTop
   const newWindow = window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=yes, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left)
 
-  // Puts focus on the newWindow
-  if (window.focus) {
+  // WKWebView 可能不创建新窗口，此时回退为当前窗口导航。
+  if (newWindow && window.focus) {
     newWindow.focus()
+  } else if (!newWindow) {
+    window.location.assign(url)
   }
 }
 
@@ -4708,9 +4689,40 @@ function simulationAELOperation(url = '', name = '') {
   link.style.display = 'none'
   link.href = url
   if (name) link.download = name
-  link.target = '_blank'
+  // 不强制 _blank：macOS WKWebView 未实现新窗口委托，强制新窗口会导致点击无响应。
   link.click()
   link.remove()
+}
+
+async function copyTextForEmbeddedBrowser(text) {
+  if (!text) return false
+
+  if (window.isSecureContext && navigator.clipboard && navigator.clipboard.writeText) {
+    try {
+      await navigator.clipboard.writeText(text)
+      return true
+    } catch (error) {
+      console.warn('Clipboard API is unavailable, using the compatibility fallback.', error)
+    }
+  }
+
+  const textarea = document.createElement('textarea')
+  textarea.value = text
+  textarea.setAttribute('readonly', 'readonly')
+  textarea.style.position = 'fixed'
+  textarea.style.opacity = '0'
+  document.body.appendChild(textarea)
+  textarea.focus()
+  textarea.select()
+  textarea.setSelectionRange(0, text.length)
+  try {
+    return document.execCommand('copy')
+  } catch (error) {
+    console.error('Copy fallback failed:', error)
+    return false
+  } finally {
+    textarea.remove()
+  }
 }
 
 /**

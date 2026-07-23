@@ -117,4 +117,8 @@
   <data name="Footer.Copyright" xml:space="preserve">
     <value>蘇州盛派ネットワーク科技有限公司 版権所有</value>
   </data>
+  <data name="Home.ComingSoon" xml:space="preserve"><value>このセクションはまだ公開されていません。しばらくお待ちください。</value></data>
+  <data name="Home.InstallDocsConfirm" xml:space="preserve"><value>オフラインドキュメントモジュールがインストールされていません。今すぐインストールしますか？</value></data>
+  <data name="Home.OpenDocsConfirm" xml:space="preserve"><value>{0} ページを更新すると上部にドキュメント入口が表示されます。今すぐ開きますか？</value></data>
+  <data name="Home.RequestFailed" xml:space="preserve"><value>リクエストに失敗しました。後でもう一度お試しください。</value></data>
 </root>
