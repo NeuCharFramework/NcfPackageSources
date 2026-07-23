@@ -22,6 +22,9 @@
     修改标识：Senparc - 20260718
     修改描述：同步 NeuChar 算力模型类型
 
+    修改标识：Senparc - 20260722
+    修改描述：同步 NeuChar 算力模型 API 版本
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
@@ -298,9 +301,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     Alias = $"NeuChar-{neucharModel.Name}",
                     DeploymentName = neucharModel.Name,
                     ModelId = neucharModel.Name,
-                    ApiVersion = model?.AiPlatform == AiPlatform.AzureOpenAI || model?.AiPlatform == AiPlatform.OpenAI
-                                    ? "2024-05-13"
-                                    : "",
+                    ApiVersion = neucharModel.ApiVersion,
                     Endpoint = $"https://www.neuchar.com/{developerId}/",
                     ConfigModelType = neucharModel.ModelType is ConfigModel.Unknown or ConfigModel.Other
                                         ? Models.ConfigModelType.Chat

@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260718
     修改描述：同步 NeuChar 算力模型类型
 
+    修改标识：Senparc - 20260722
+    修改描述：同步 NeuChar 算力模型 API 版本
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -40,6 +43,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.Extensions
         /// 模型类型
         /// </summary>
         public Senparc.AI.ConfigModel ModelType { get; set; }
+
+        /// <summary>
+        /// 模型 API 版本
+        /// </summary>
+        public string ApiVersion { get; set; }
 
         /// <summary>
         /// 模型权重参考（以text-davinci-003为基准）

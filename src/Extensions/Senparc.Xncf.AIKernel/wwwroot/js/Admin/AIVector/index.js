@@ -119,18 +119,37 @@ var app = new Vue({
     addNeuCharModel() {
       this.neuCharFormDialogVisible = true; // 显示对话框  
     },
-    copyInfo(key) {
-      // 把结果复制到剪切板  
-      const input = document.createElement('input')
-      input.setAttribute('readonly', 'readonly')
-      input.setAttribute('value', key)
-      document.body.appendChild(input)
-      input.select()
-      input.setSelectionRange(0, 9999)
-      if (document.execCommand('copy')) {
-        document.execCommand('copy')
-        //提示时展示'******'+key的后4位  
+    async copyInfo(key) {
+      let copied = false
+      try {
+        if (window.isSecureContext && navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(key)
+          copied = true
+        }
+      } catch (error) {
+        console.warn('Clipboard API is unavailable, using the compatibility fallback.', error)
+      }
+
+      if (!copied) {
+        const input = document.createElement('textarea')
+        input.setAttribute('readonly', 'readonly')
+        input.value = key
+        input.style.position = 'fixed'
+        input.style.opacity = '0'
+        document.body.appendChild(input)
+        input.select()
+        input.setSelectionRange(0, key.length)
+        try {
+          copied = document.execCommand('copy')
+        } finally {
+          input.remove()
+        }
+      }
+
+      if (copied) {
         this.$message.success(`已复制【******${key.slice(-4)}】！`)
+      } else {
+        this.$message.error('复制失败，请手动复制。')
       }
     },
     async addModelSubmit() {
