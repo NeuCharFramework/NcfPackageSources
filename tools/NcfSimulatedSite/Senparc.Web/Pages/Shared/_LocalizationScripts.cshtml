@@ -13,4 +13,9 @@
             return args[index] === undefined || args[index] === null ? match : args[index];
         });
     };
+    window.ncfSwitchLanguage = window.ncfSwitchLanguage || function (culture) {
+        var returnUrl = window.location.pathname + window.location.search + window.location.hash;
+        window.location.href = '/api/Language/Set?culture=' + encodeURIComponent(culture)
+            + '&returnUrl=' + encodeURIComponent(returnUrl);
+    };
 </script>

@@ -74,7 +74,6 @@ obj/
 
 
 .idea/
-/src/Extensions/Senparc.Web/App_Data/ApiDocXML/
 *.zip
 .vs/
 /src/TestResults
@@ -82,6 +81,7 @@ Thumbs.db
 /src/ApiDocXML/Senparc.Xncf.AgentsManager.XML
 ncf_obj/
 /BuildOutPut
+/src/BuildOutPut
 *.Development.config
 *.Development.json
 /src/global.json.bak
