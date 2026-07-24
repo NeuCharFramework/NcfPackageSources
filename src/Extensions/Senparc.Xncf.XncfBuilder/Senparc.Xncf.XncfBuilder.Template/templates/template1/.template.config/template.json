@@ -165,8 +165,8 @@
         {
           "condition": "(!Function)", /* 不使用 Function 演示 */
           "exclude": [
-            "OHS/Local/AppService/MyFuctionAppService.cs",
-            "OHS/Local/PL/MyFunctionRequest.cs"
+            "Application/AppServices/MyFuctionAppService.cs",
+            "Application/DTOs/Request/MyFunctionRequest.cs"
           ]
         },
         {
@@ -183,15 +183,15 @@
             "Domain/Models/**",
             "Domain/Migrations/**",
             "Domain/Services/**",
-            "OHS/Local/AppService/ColorAppService.cs",
-            "OHS/Local/PL/ColorResponse.cs"
+            "Application/AppServices/ColorAppService.cs",
+            "Application/DTOs/Response/ColorResponse.cs"
           ]
         },
         {
           "condition": "(!UseWebApi)", /* 不使用 WebAPI */
           "exclude": [
-            "OHS/Local/AppService/ApiAppService.cs",
-            "OHS/Local/PL/ApiRequest.cs"
+            "Application/AppServices/ApiAppService.cs",
+            "Application/DTOs/Request/ApiRequest.cs"
           ]
         }
       ]
@@ -206,4 +206,4 @@
     "**/platforms",
     "**/SenparcTraceLog"
   ]
-}
+}

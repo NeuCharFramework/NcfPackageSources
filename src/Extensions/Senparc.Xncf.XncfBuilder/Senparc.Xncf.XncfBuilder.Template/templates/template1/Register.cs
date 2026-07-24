@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 using Template_OrgName.Xncf.Template_XncfName.Models;
-using Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService;
+using Template_OrgName.Xncf.Template_XncfName.Application.AppServices;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Services;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
