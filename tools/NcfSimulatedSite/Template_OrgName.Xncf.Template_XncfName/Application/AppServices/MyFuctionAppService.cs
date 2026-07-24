@@ -4,14 +4,14 @@ using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Models;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Services;
-using Template_OrgName.Xncf.Template_XncfName.OHS.Local.PL;
+using Template_OrgName.Xncf.Template_XncfName.Application.DTOs.Request;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService
+namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
 {
     public class MyFuctionAppService: AppServiceBase
     {

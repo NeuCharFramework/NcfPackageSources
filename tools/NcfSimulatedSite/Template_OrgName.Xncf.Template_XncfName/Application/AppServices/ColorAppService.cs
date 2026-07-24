@@ -2,13 +2,13 @@
 using Senparc.Ncf.Core.AppServices;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Services;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
-using Template_OrgName.Xncf.Template_XncfName.OHS.Local.PL;
+using Template_OrgName.Xncf.Template_XncfName.Application.DTOs.Response;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.AppService
+namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
 {
     public class ColorAppService : AppServiceBase
     {

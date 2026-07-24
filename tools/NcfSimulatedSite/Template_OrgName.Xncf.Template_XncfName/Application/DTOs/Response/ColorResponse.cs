@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Template_OrgName.Xncf.Template_XncfName.OHS.Local.PL
+namespace Template_OrgName.Xncf.Template_XncfName.Application.DTOs.Response
 {
     public class Color_GetOrInitColorResponse
     {
