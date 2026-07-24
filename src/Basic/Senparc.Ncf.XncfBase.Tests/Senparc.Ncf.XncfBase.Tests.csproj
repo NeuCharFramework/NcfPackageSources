@@ -16,6 +16,7 @@
     2、Dependency update from Senparc.Ncf.XncfBase to 0.23.3-preview2
     3、Dependency update from Senparc.Xncf.DatabaseToolkit to 0.26.0-preview2
     4、Dependency update from Senparc.Xncf.XncfBuilder to 0.37.0-preview5
+    5、同步 XncfBuilder 0.37.0-preview5 的模板多语言页面更新
 </PackageReleaseNotes>
 
 		<IsPackable>false</IsPackable>

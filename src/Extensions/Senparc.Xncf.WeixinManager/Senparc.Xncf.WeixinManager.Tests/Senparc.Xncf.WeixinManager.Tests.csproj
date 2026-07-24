@@ -8,6 +8,7 @@
 1、Dependency update from Senparc.Xncf.WeixinManager to 0.22.3-preview2
 [2026-07-17] v0.0.2 同步上游项目版本并适配统一本地化能力
 1、Dependency update from Senparc.Xncf.WeixinManager to 0.23.0-preview3
+2、同步 WeixinManager 0.23.0-preview3 的内嵌 WebView 导航兼容性改进
 </PackageReleaseNotes>
 
     <IsPackable>false</IsPackable>

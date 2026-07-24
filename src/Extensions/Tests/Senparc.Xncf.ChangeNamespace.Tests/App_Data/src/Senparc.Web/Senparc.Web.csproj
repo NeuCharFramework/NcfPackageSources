@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Version>0.0.1</Version>
+    <PackageReleaseNotes>
+      [2026-07-24] v0.0.1 改善安装页在内嵌 WebView 中的导航兼容性
+      1、调整安装页链接导航处理，兼容桌面内嵌 WebView
+    </PackageReleaseNotes>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <TypeScriptToolsVersion>3.7</TypeScriptToolsVersion>
   </PropertyGroup>

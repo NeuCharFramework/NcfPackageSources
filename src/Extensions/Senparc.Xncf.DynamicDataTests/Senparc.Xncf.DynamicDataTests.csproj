@@ -7,7 +7,8 @@
       [2026-07-17] v0.0.1 同步上游项目版本并适配统一本地化能力
       1、Dependency update from Senparc.Ncf.UnitTestExtension to 0.3.15-preview.2
       2、Dependency update from Senparc.Xncf.DynamicData to 0.6.0-preview2
-    </PackageReleaseNotes>
+      3、同步 DynamicData 0.6.0-preview2 的页面复制兼容性改进
+</PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 

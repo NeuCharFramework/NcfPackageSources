@@ -30,6 +30,7 @@
       2、更新 FunctionRender 与请求模型文案的资源化解析
       3、统一模块注册信息、菜单名称与功能描述的本地化输出
       4、同步管理页面与前端交互文案的多语言显示
+      5、调整文件管理页链接导航处理，兼容桌面内嵌 WebView
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

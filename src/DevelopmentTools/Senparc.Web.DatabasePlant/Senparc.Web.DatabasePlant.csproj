@@ -14,6 +14,7 @@
 		  2、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
 		  [2026-07-17] v0.0.5 同步上游项目版本并适配统一本地化能力
 		  1、Dependency update from Senparc.Xncf.AgentsManager to 0.12.0-preview6
+		  2、同步 AgentsManager 0.12.0-preview6 的剪贴板兼容性改进
 </PackageReleaseNotes>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>

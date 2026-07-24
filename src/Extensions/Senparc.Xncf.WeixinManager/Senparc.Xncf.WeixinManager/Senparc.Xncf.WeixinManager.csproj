@@ -74,6 +74,7 @@
 		2、统一模块注册信息、菜单名称与功能描述的本地化输出
 		3、同步管理页面与前端交互文案的多语言显示
 		4、补充并统一多语言资源键及资源文件
+		5、调整公众号账号页面链接导航处理，兼容桌面内嵌 WebView
 </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

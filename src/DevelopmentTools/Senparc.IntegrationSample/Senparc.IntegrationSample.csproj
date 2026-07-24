@@ -37,6 +37,7 @@
 		  22、Dependency update from Senparc.Xncf.Tenant.Interface to 0.10.2-preview2
 		  23、Dependency update from Senparc.Xncf.Tenant to 0.15.0-preview2
 		  24、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.0-preview2
+		  25、同步后台管理、安装器与站点的本地化、批量更新及内嵌 WebView 兼容性改进
 </PackageReleaseNotes>
 		<Configurations>Debug;Release;TemplateRelease</Configurations>
 		<ImplicitUsings>enable</ImplicitUsings>

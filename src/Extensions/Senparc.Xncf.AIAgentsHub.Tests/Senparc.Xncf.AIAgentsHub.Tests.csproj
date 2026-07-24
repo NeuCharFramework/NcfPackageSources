@@ -24,6 +24,7 @@
       12、Dependency update from Senparc.Xncf.SystemPermission to 0.15.0-preview2
       13、Dependency update from Senparc.Xncf.Tenant to 0.15.0-preview2
       14、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.0-preview2
+      15、同步 AIKernel、AgentsManager 与 PromptRange 当前版本的功能兼容性更新
 </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

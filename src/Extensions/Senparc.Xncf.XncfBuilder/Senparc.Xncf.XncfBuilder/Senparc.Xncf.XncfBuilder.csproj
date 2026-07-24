@@ -96,6 +96,7 @@
 			2、更新 FunctionRender 与请求模型文案的资源化解析
 			3、统一模块注册信息、菜单名称与功能描述的本地化输出
 			4、补充并统一多语言资源键及资源文件
+			5、同步 AIKernel 模型 API 版本适配，并完善生成模板的多语言页面
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

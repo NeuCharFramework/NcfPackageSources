@@ -10,6 +10,7 @@
 1、Dependency update from Senparc.Ncf.Service to 0.23.2-preview2
 2、Dependency update from Senparc.Ncf.UnitTestExtension to 0.3.15-preview.2
 3、Dependency update from Senparc.Xncf.PromptRange to 0.17.0-preview5
+4、同步 PromptRange 0.17.0-preview5 的剪贴板与内嵌 WebView 兼容性改进
 </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
