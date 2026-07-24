@@ -325,6 +325,24 @@ def list_changed_paths(root: Path, base_commit: str | None, path_scope: str | No
     changed: set[str] = set()
 
     if base_commit:
+        # A net diff drops files that were changed and later restored. The version
+        # window must include every path touched by every unmerged commit.
+        log_args = [
+            "-c",
+            "core.quotepath=false",
+            "log",
+            "--format=",
+            "--name-only",
+            f"{base_commit}..HEAD",
+        ]
+        if path_scope:
+            log_args.extend(["--", path_scope])
+        code, output = run_git(root, log_args)
+        if code == 0 and output:
+            changed.update(line.strip().replace("\\", "/") for line in output.splitlines() if line.strip())
+
+        # Keep the final tree diff too so unusual Git objects and path changes are
+        # not lost even if they are absent from the commit-path listing.
         diff_args = ["diff", "--name-only", f"{base_commit}..HEAD"]
         if path_scope:
             diff_args.extend(["--", path_scope])
@@ -609,7 +627,10 @@ def main() -> int:
     commit_summaries = list_commit_summaries(root, comparison_base_commit)
 
     changed_cs_files: list[dict[str, str]] = []
+    changed_generated_cs_files: list[str] = []
+    deleted_changed_cs_files: list[str] = []
     changed_csproj_targets: set[Path] = set()
+    changed_csproj_to_files: dict[Path, list[str]] = defaultdict(list)
     changed_csproj_to_cs_files: dict[Path, list[dict[str, str]]] = defaultdict(list)
     changed_csproj_files = [rel for rel in changed_files if rel.lower().endswith(".csproj")]
     changed_props_files = [rel for rel in changed_files if rel.lower().endswith(".props")]
@@ -632,22 +653,38 @@ def main() -> int:
         elif changed_csproj_path.exists():
             changed_csproj_targets.add(changed_csproj_path)
 
+    # Every file touched by the commit window contributes to its containing
+    # project, including Razor, JavaScript, resources, XAML, and deleted files.
+    for rel in changed_files:
+        abs_file = (root / rel).resolve()
+        mapped_csproj = resolve_selected_csproj_for_file(abs_file, selected_by_dir, root)
+        if mapped_csproj is None:
+            continue
+        mapped_csproj = mapped_csproj.resolve()
+        changed_csproj_targets.add(mapped_csproj)
+        changed_csproj_to_files[mapped_csproj].append(rel)
+
     for rel in changed_files:
         if not rel.lower().endswith(".cs"):
             continue
-        if is_generated_cs(rel):
-            continue
         abs_file = (root / rel).resolve()
-        if not abs_file.exists():
-            continue
-        cs_file_item = {
-            "path": rel,
-            "creation_date_yyyymmdd": get_file_creation_date_yyyymmdd(root, abs_file),
-        }
         mapped_csproj = resolve_selected_csproj_for_file(abs_file, selected_by_dir, root)
         if mapped_csproj is not None:
             mapped_csproj = mapped_csproj.resolve()
             changed_csproj_targets.add(mapped_csproj)
+
+        if is_generated_cs(rel):
+            changed_generated_cs_files.append(rel)
+            continue
+        if not abs_file.exists():
+            deleted_changed_cs_files.append(rel)
+            continue
+
+        cs_file_item = {
+            "path": rel,
+            "creation_date_yyyymmdd": get_file_creation_date_yyyymmdd(root, abs_file),
+        }
+        if mapped_csproj is not None:
             changed_csproj_to_cs_files[mapped_csproj].append(cs_file_item)
         changed_cs_files.append(cs_file_item)
 
@@ -678,9 +715,15 @@ def main() -> int:
         },
         "changed_files": changed_files,
         "changed_cs_files": changed_cs_files,
+        "changed_generated_cs_files": changed_generated_cs_files,
+        "deleted_changed_cs_files": deleted_changed_cs_files,
         "changed_csproj_files": changed_csproj_files,
         "changed_props_files": changed_props_files,
         "changed_csprojs": [to_relative_path(root, p) for p in sorted(changed_csproj_targets)],
+        "changed_csproj_to_files": {
+            to_relative_path(root, project): sorted(set(items))
+            for project, items in sorted(changed_csproj_to_files.items(), key=lambda kv: to_relative_path(root, kv[0]))
+        },
         "changed_csproj_to_cs_files": {
             to_relative_path(root, project): sorted(items, key=lambda item: item["path"])
             for project, items in sorted(changed_csproj_to_cs_files.items(), key=lambda kv: to_relative_path(root, kv[0]))
