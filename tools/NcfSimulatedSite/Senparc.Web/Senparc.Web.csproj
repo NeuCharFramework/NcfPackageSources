@@ -26,6 +26,8 @@
 			2、同步管理页面与前端交互文案的多语言显示
 			3、补充并统一多语言资源键及资源文件
 			[2026-07-21] v0.34.0 完善站点页面、语言切换与共享脚本本地化
+			1、增强语言切换、共享页面及前端资源的多语言显示
+			2、改进剪贴板与外部链接导航处理，兼容桌面内嵌 WebView
 </PackageReleaseNotes>
 		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
 		<TypeScriptToolsVersion>4.1</TypeScriptToolsVersion>

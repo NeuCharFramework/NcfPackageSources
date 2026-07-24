@@ -27,6 +27,7 @@
 			2、更新 FunctionRender 与请求模型文案的资源化解析
 			3、统一模块注册信息、菜单名称与功能描述的本地化输出
 			4、补充并统一多语言资源键及资源文件
+			5、统一账户缓存、积分、队列及功能参数的资源化文案
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>

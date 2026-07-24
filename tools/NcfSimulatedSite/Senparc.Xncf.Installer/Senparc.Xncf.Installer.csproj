@@ -32,6 +32,8 @@
 			2、统一模块注册信息、菜单名称与功能描述的本地化输出
 			3、同步管理页面与前端交互文案的多语言显示
 			4、补充并统一多语言资源键及资源文件
+			5、为核心模块提供默认勾选配置，简化首次安装选择
+			6、增加安装确认对话框并补齐多语言提示资源
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>

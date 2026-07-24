@@ -25,6 +25,7 @@
       2、更新 FunctionRender 与请求模型文案的资源化解析
       3、同步管理页面与前端交互文案的多语言显示
       4、补充并统一多语言资源键及资源文件
+      5、补齐示例模块侧边菜单、页面导入及功能参数的资源化文案
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

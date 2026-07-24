@@ -22,6 +22,7 @@
         2、Dependency update from Senparc.Xncf.Accounts to 0.3.0
         3、Dependency update from Senparc.Xncf.Installer.Interface to 0.1.1
         4、Dependency update from Senparc.Xncf.Installer to 0.4.0
+        5、恢复 Web、安装器与账户模块的 Aspire 启动及服务依赖配置
 </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

@@ -1,4 +1,17 @@
-﻿namespace Senparc.Xncf.Installer.Domain.Dto
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：XncfRegisterDto.cs
+    文件功能描述：安装模块注册信息传输模型
+    
+    
+    创建标识：Senparc - 20241028
+    
+    修改标识：Senparc - 20260724
+    修改描述：v0.1.1 扩展安装模块元数据以支持默认选择与导航兼容
+
+----------------------------------------------------------------*/
+namespace Senparc.Xncf.Installer.Domain.Dto
 {
     /* 模块信息数据传输对象*/
     public class XncfRegisterDto

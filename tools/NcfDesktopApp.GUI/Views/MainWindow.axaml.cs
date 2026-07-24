@@ -1,3 +1,16 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：MainWindow.axaml.cs
+    文件功能描述：桌面应用主窗口交互与尺寸适配逻辑
+    
+    
+    创建标识：Senparc - 20250718
+    
+    修改标识：Senparc - 20260724
+    修改描述：v0.1.0 增强更新源选择、下载反馈与桌面窗口兼容性
+
+----------------------------------------------------------------*/
 using Avalonia.Controls;
 using NcfDesktopApp.GUI.ViewModels;
 using System;

@@ -1,4 +1,17 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：InstallOptionsService.cs
+    文件功能描述：安装选项与模块选择服务
+    
+    
+    创建标识：Senparc - 20240312
+    
+    修改标识：Senparc - 20260724
+    修改描述：v0.4.0 增加默认模块选择与安装确认并完善多语言界面
+
+----------------------------------------------------------------*/
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Senparc.Areas.Admin.Domain;

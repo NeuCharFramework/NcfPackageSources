@@ -22,7 +22,8 @@
 			v0.1 创世
 			[2026-07-17] v0.1.1 同步上游项目版本并适配统一本地化能力
 			1、Dependency update from Senparc.Xncf.Tenant to 0.15.0-preview2
-		</PackageReleaseNotes>
+			2、增加模块默认选择元数据，并完善内嵌 WebView 导航所需信息
+</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
 	</PropertyGroup>
