@@ -795,7 +795,15 @@ public class NcfService
         throw new InvalidOperationException($"无法找到可用端口（范围: {startPort} - {endPort}）");
     }
     
-    public async Task<Process> StartNcfProcessAsync(int port, CancellationToken cancellationToken = default)
+    public Task<Process> StartNcfProcessAsync(int port, CancellationToken cancellationToken = default)
+    {
+        return StartNcfProcessAsync(port, null, cancellationToken);
+    }
+
+    public async Task<Process> StartNcfProcessAsync(
+        int port,
+        string? desktopBridgeToken,
+        CancellationToken cancellationToken = default)
     {
         // 确定 NCF 应用所在目录（兼容压缩包内嵌套目录）
         var ncfAppDir = FindNcfAppDirectory() ?? NcfRuntimePath;
@@ -861,6 +869,7 @@ public class NcfService
         // 通用环境变量
         startInfo.Environment["ASPNETCORE_URLS"] = $"http://localhost:{port}";
         startInfo.Environment["ASPNETCORE_ENVIRONMENT"] = "Production";
+        ApplyDesktopBridgeEnvironment(startInfo, desktopBridgeToken);
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
             startInfo.Environment["DOTNET_SYSTEM_GLOBALIZATION_INVARIANT"] = "1";
@@ -908,6 +917,7 @@ public class NcfService
             };
             fb.Environment["ASPNETCORE_URLS"] = $"http://localhost:{port}";
             fb.Environment["ASPNETCORE_ENVIRONMENT"] = "Production";
+            ApplyDesktopBridgeEnvironment(fb, desktopBridgeToken);
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 fb.Environment["DOTNET_SYSTEM_GLOBALIZATION_INVARIANT"] = "1";
@@ -948,6 +958,7 @@ public class NcfService
                     };
                     fb2.Environment["ASPNETCORE_URLS"] = $"http://localhost:{port}";
                     fb2.Environment["ASPNETCORE_ENVIRONMENT"] = "Production";
+                    ApplyDesktopBridgeEnvironment(fb2, desktopBridgeToken);
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     {
                         fb2.Environment["DOTNET_SYSTEM_GLOBALIZATION_INVARIANT"] = "1";
@@ -972,6 +983,14 @@ public class NcfService
             throw new InvalidOperationException("无法启动NCF进程");
         }
         return process;
+    }
+
+    private static void ApplyDesktopBridgeEnvironment(ProcessStartInfo startInfo, string? desktopBridgeToken)
+    {
+        if (!string.IsNullOrWhiteSpace(desktopBridgeToken))
+        {
+            startInfo.Environment["NCF_DESKTOP_BRIDGE_TOKEN"] = desktopBridgeToken;
+        }
     }
 
     private static string? FindNcfAppDirectory()

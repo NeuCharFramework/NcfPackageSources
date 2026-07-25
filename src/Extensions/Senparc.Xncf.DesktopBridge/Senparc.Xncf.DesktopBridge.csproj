@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <Version>0.1.0-preview1</Version>
+    <AssemblyName>Senparc.Xncf.DesktopBridge</AssemblyName>
+    <RootNamespace>Senparc.Xncf.DesktopBridge</RootNamespace>
+    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'TemplateRelease'">true</GeneratePackageOnBuild>
+    <Description>为 NCF 桌面应用提供安全的本机状态发现和事件流桥接。</Description>
+    <Title>NCF DesktopBridge 桌面状态桥接模块</Title>
+    <Authors>NeuCharFramework</Authors>
+    <Owners>NeuCharFramework</Owners>
+    <Copyright>NeuCharFramework</Copyright>
+    <PackageTags>NeuCharFramework,NCF,XNCF,DesktopBridge,SSE</PackageTags>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+    <PackageReleaseNotes>
+      [2026-07-25] v0.1.0-preview1 新增 NCF 桌面状态桥接能力
+      1、使用逆变事件处理器的闭合服务映射旁路观察 EventBus，不改变原事件消费行为
+      2、避免开放泛型实现被 NCF 扫描为无效 DI 描述符，确保站点容器可正常构建
+      3、提供带会话令牌保护的能力探测、活动快照和 SSE 实时事件接口
+      4、在未由桌面应用启动时默认关闭桥接接口，避免暴露进程内状态
+    </PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.Shared.Abstractions\Senparc.Ncf.Shared.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>

@@ -20,6 +20,7 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Security;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,6 +34,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using NcfDesktopApp.GUI.Models;
 using NcfDesktopApp.GUI.Services;
 using NcfDesktopApp.GUI.Views;
 using System.Linq;
@@ -97,6 +99,25 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _isOperationInProgress = false;
+
+    [ObservableProperty]
+    private string _desktopBridgeStatusText = "等待 NCF 启动";
+
+    [ObservableProperty]
+    private string _desktopBridgeStatusColor = "#6C757D";
+
+    [ObservableProperty]
+    private string _desktopBridgeNoticeMessage = "";
+
+    [ObservableProperty]
+    private bool _isDesktopBridgeNoticeVisible;
+
+    [ObservableProperty]
+    private bool _isDesktopBridgeInstallActionVisible;
+
+    public Action? ShowDesktopRobotRequested { get; set; }
+
+    public DesktopRobotViewModel Robot { get; } = new();
     
     // 新增浏览器相关属性
     [ObservableProperty]
@@ -192,11 +213,13 @@ public partial class MainWindowViewModel : ViewModelBase
     #region 私有字段
     
     private readonly NcfService _ncfService;
+    private readonly DesktopBridgeClient _desktopBridgeClient;
     private bool _suppressMirrorSettingsSave;
     private readonly WebView2Service _webView2Service;
     private readonly StringBuilder _logBuffer;
     private CancellationTokenSource? _cancellationTokenSource;
     private Process? _ncfProcess;
+    private string? _desktopBridgeSessionToken;
     private bool _isNcfRunning = false;
     
     // 🚀 性能优化：批量日志处理
@@ -220,6 +243,13 @@ public partial class MainWindowViewModel : ViewModelBase
         var httpClient = new HttpClient(CreateDesktopHttpHandler(), disposeHandler: true);
         _ncfService = new NcfService(httpClient);
         _webView2Service = new WebView2Service(httpClient);
+        var bridgeHttpClient = new HttpClient(CreateDesktopHttpHandler(), disposeHandler: true)
+        {
+            Timeout = Timeout.InfiniteTimeSpan
+        };
+        _desktopBridgeClient = new DesktopBridgeClient(bridgeHttpClient);
+        _desktopBridgeClient.AvailabilityChanged += OnDesktopBridgeAvailabilityChanged;
+        _desktopBridgeClient.ActivityReceived += OnDesktopActivityReceived;
         _logBuffer = new StringBuilder();
         _ncfService.OnDownloadLog = AddLog;
         
@@ -388,6 +418,27 @@ public partial class MainWindowViewModel : ViewModelBase
     }
     
     private bool CanOpenInExternalBrowser() => !string.IsNullOrEmpty(SiteUrl) && SiteUrl != "未启动";
+
+    [RelayCommand]
+    private async Task OpenDesktopBridgeInstallPage()
+    {
+        if (string.IsNullOrWhiteSpace(SiteUrl) || SiteUrl == "未启动")
+        {
+            AddLog("ℹ️ 请先启动 NCF，再打开 XNCF 模块管理页面安装 DesktopBridge。");
+            return;
+        }
+
+        var moduleManagerUrl = $"{SiteUrl.TrimEnd('/')}/Admin/XncfModule/Index";
+        IsBrowserTabVisible = true;
+        await NavigateToBrowserAsync(moduleManagerUrl);
+        AddLog("🧩 已打开 XNCF 模块管理，请安装或更新 Senparc.Xncf.DesktopBridge。");
+    }
+
+    [RelayCommand]
+    private void ShowDesktopRobot()
+    {
+        ShowDesktopRobotRequested?.Invoke();
+    }
     
     [RelayCommand(CanExecute = nameof(CanCloseBrowserTab))]
     private async Task CloseBrowserTab()
@@ -753,6 +804,7 @@ public partial class MainWindowViewModel : ViewModelBase
             IsOperationInProgress = true;
             _cancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = _cancellationTokenSource.Token;
+            Robot.SetProcessState("启动中", "正在准备 NCF 运行环境");
 
             CurrentStatus = "启动中";
             StatusColor = "#007ACC";
@@ -816,9 +868,11 @@ public partial class MainWindowViewModel : ViewModelBase
         catch (OperationCanceledException)
         {
             AddLog("🛑 操作已取消");
+            Robot.SetProcessState("已停止", "启动操作已取消");
         }
         catch (Exception ex)
         {
+            Robot.SetProcessState("错误", ex.Message, isError: true);
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 CurrentStatus = "错误";
@@ -907,6 +961,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         var availablePort = await _ncfService.FindAvailablePortAsync(StartPort, EndPort);
         var siteUrl = $"http://localhost:{availablePort}";
+        _desktopBridgeSessionToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
         
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
@@ -919,9 +974,13 @@ public partial class MainWindowViewModel : ViewModelBase
         _ncfService.OnProcessOutput = (output, isError) =>
         {
             AddCliLog(output, isError);
+            Robot.ApplyCompatibilityLog(output, isError);
         };
 
-        _ncfProcess = await _ncfService.StartNcfProcessAsync(availablePort, cancellationToken);
+        _ncfProcess = await _ncfService.StartNcfProcessAsync(
+            availablePort,
+            _desktopBridgeSessionToken,
+            cancellationToken);
         
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
@@ -941,12 +1000,94 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             AddLog($"✅ NCF 站点已启动: {siteUrl}");
         });
+
+        Robot.SetProcessState("运行中", "NCF 已启动，正在等待系统任务");
+        await ConnectDesktopBridgeAsync(siteUrl, _desktopBridgeSessionToken, cancellationToken);
+    }
+
+    private async Task ConnectDesktopBridgeAsync(
+        string siteUrl,
+        string sessionToken,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _desktopBridgeClient.ConnectAsync(siteUrl, sessionToken, cancellationToken)
+                .ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+        catch (Exception ex)
+        {
+            // Bridge 是可选能力，任何异常都只触发兼容模式，绝不阻断 NCF 启动。
+            ApplyDesktopBridgeAvailability(new DesktopBridgeProbeResult(
+                DesktopBridgeAvailability.Unavailable,
+                $"DesktopBridge 初始化失败（{ex.Message}），已安全切换到兼容模式。"));
+        }
+    }
+
+    private void OnDesktopBridgeAvailabilityChanged(DesktopBridgeProbeResult result)
+    {
+        ApplyDesktopBridgeAvailability(result);
+    }
+
+    private void ApplyDesktopBridgeAvailability(DesktopBridgeProbeResult result)
+    {
+        Robot.SetBridgeAvailability(result);
+        Dispatcher.UIThread.Post(() =>
+        {
+            DesktopBridgeStatusText = result.Message;
+            DesktopBridgeStatusColor = result.Availability switch
+            {
+                DesktopBridgeAvailability.Available => "#28A745",
+                DesktopBridgeAvailability.NotInstalled => "#FFC107",
+                DesktopBridgeAvailability.Incompatible => "#FD7E14",
+                DesktopBridgeAvailability.Unauthorized => "#DC3545",
+                DesktopBridgeAvailability.Inactive => "#FD7E14",
+                _ => "#6C757D"
+            };
+
+            IsDesktopBridgeNoticeVisible = result.Availability != DesktopBridgeAvailability.Available;
+            IsDesktopBridgeInstallActionVisible = result.Availability is
+                DesktopBridgeAvailability.NotInstalled or DesktopBridgeAvailability.Incompatible;
+            DesktopBridgeNoticeMessage = result.Availability switch
+            {
+                DesktopBridgeAvailability.NotInstalled =>
+                    "当前内部站点未安装 Senparc.Xncf.DesktopBridge。机器人仍会使用进程和日志兼容模式，不影响 NCF 运行。请进入 XNCF 模块管理安装；若列表中没有该模块，请先升级站点或补充模块包，然后重启站点。",
+                DesktopBridgeAvailability.Incompatible =>
+                    "DesktopBridge 版本与当前 GUI 不兼容。机器人已安全降级，请在 XNCF 模块管理中更新模块后重启站点。",
+                DesktopBridgeAvailability.Unauthorized =>
+                    "DesktopBridge 已检测到，但会话认证失败。NCF 会继续运行；请从桌面应用重新启动站点。",
+                DesktopBridgeAvailability.Inactive =>
+                    "DesktopBridge 已安装但未启用桌面会话。NCF 会继续运行；请从桌面应用重新启动站点。",
+                DesktopBridgeAvailability.Unavailable =>
+                    "暂时无法连接 DesktopBridge，机器人正在使用兼容模式并会在后台重连。NCF 运行不受影响。",
+                _ => string.Empty
+            };
+
+            AddLog(result.Availability == DesktopBridgeAvailability.Available
+                ? $"🤖 {result.Message}"
+                : $"ℹ️ {result.Message}");
+        });
+    }
+
+    private void OnDesktopActivityReceived(DesktopActivityMessage activity)
+    {
+        Robot.ApplyActivity(activity);
+        if (ShowDetailedInfo)
+        {
+            AddLog($"🤖 [{activity.Source}] {activity.Title}: {activity.State}");
+        }
     }
 
     private async Task StopNcfAsync()
     {
         try
         {
+            await _desktopBridgeClient.StopAsync().ConfigureAwait(false);
+
             // 清理 CLI 输出回调
             if (_ncfService != null)
             {
@@ -1034,7 +1175,9 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             _ncfProcess?.Dispose();
             _ncfProcess = null;
+            _desktopBridgeSessionToken = null;
             _isNcfRunning = false;
+            Robot.SetProcessState("已停止", "NCF 站点已停止");
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 MainButtonText = "启动 NCF";
@@ -1045,6 +1188,11 @@ public partial class MainWindowViewModel : ViewModelBase
                 ProgressValue = 0;
                 IsBrowserTabVisible = false; // 隐藏浏览器标签页
                 CurrentTabIndex = 0; // 切换回设置页面
+                DesktopBridgeStatusText = "等待 NCF 启动";
+                DesktopBridgeStatusColor = "#6C757D";
+                DesktopBridgeNoticeMessage = string.Empty;
+                IsDesktopBridgeNoticeVisible = false;
+                IsDesktopBridgeInstallActionVisible = false;
             });
         }
     }

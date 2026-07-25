@@ -32,10 +32,37 @@ public partial class App : Application
             // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
-            desktop.MainWindow = new MainWindow
+            var viewModel = new MainWindowViewModel();
+            var mainWindow = new MainWindow
             {
-                DataContext = new MainWindowViewModel(),
+                DataContext = viewModel,
             };
+            var robotWindow = new DesktopRobotWindow
+            {
+                DataContext = viewModel.Robot,
+                OpenMainWindowRequested = () =>
+                {
+                    if (!mainWindow.IsVisible)
+                    {
+                        mainWindow.Show();
+                    }
+                    mainWindow.WindowState = Avalonia.Controls.WindowState.Normal;
+                    mainWindow.Activate();
+                }
+            };
+
+            viewModel.ShowDesktopRobotRequested = () =>
+            {
+                if (!robotWindow.IsVisible)
+                {
+                    robotWindow.Show();
+                }
+                robotWindow.Activate();
+            };
+
+            mainWindow.Opened += (_, _) => robotWindow.Show();
+            mainWindow.Closed += (_, _) => robotWindow.Close();
+            desktop.MainWindow = mainWindow;
         }
 
         base.OnFrameworkInitializationCompleted();

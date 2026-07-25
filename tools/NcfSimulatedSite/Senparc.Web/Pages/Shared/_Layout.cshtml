@@ -61,7 +61,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Admin" asp-page="/Index">@SR["Nav.AdminLogin"]</a>
                         </li>
-                        <li class="nav-item d-flex align-items-center ml-sm-2">
+                        <li class="nav-item d-flex align-items-center ml-sm-auto mr-sm-3">
                             <label for="ncf-site-lang" class="sr-only">@SR["Language.SelectLanguage"]</label>
                             <select id="ncf-site-lang" class="form-control form-control-sm" onchange="ncfSwitchLanguage(this.value)" aria-label="@SR["Language.SelectLanguage"]">
                                 <option value="zh-CN" selected="@(currentCulture == "zh-CN" ? "selected" : null)">@SR["Language.zh-CN"]</option>

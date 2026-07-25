@@ -3,8 +3,12 @@
     <!-- 临时改为 Exe 以显示控制台输出用于调试 -->
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <PackageReleaseNotes>
+      [2026-07-25] v0.2.0 新增可选 DesktopBridge 与桌面机器人
+      1、增加透明置顶桌面机器人，实时提示 NCF 启动、运行、任务完成和失败状态
+      2、增加带随机会话令牌的 DesktopBridge 能力探测与 SSE 客户端
+      3、内部站点未安装、版本不兼容或连接失败时安全降级到进程日志模式并显示安装提示
       [2026-07-24] v0.1.0 增强桌面端更新、下载反馈与窗口兼容性
       1、动态测速选择 GitHub 与镜像更新源，并在下载失败时自动切换备用源
       2、增加下载过程日志和进度反馈，并按目标版本检测及安装 .NET 运行时

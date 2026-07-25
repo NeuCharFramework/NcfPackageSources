@@ -29,6 +29,12 @@
                 <StackPanel Grid.Column="2" 
                             Orientation="Horizontal" 
                             Spacing="10">
+                    <Button Content="显示助手"
+                            Command="{Binding ShowDesktopRobotCommand}"
+                            Padding="12,8"
+                            Background="#6F42C1"
+                            Foreground="White"
+                            CornerRadius="4"/>
                     <Button Content="测试连接" 
                             Command="{Binding TestConnectionCommand}" 
                             Padding="15,8"
@@ -78,7 +84,7 @@
                                        FontSize="16" 
                                        FontWeight="SemiBold"/>
                             
-                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" 
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
                                   ColumnDefinitions="92,*">
                                 
                                 <TextBlock Grid.Row="0" Grid.Column="0" 
@@ -133,7 +139,53 @@
                                           FontFamily="Consolas" 
                                           FontSize="11"
                                           TextWrapping="Wrap"/>
+
+                                <TextBlock Grid.Row="4" Grid.Column="0"
+                                          Text="桌面助手:"
+                                          FontWeight="SemiBold"
+                                          FontSize="12"
+                                          Foreground="{DynamicResource SecondaryTextBrush}"
+                                          Margin="0,5,0,0"/>
+                                <StackPanel Grid.Row="4" Grid.Column="1"
+                                            Orientation="Horizontal"
+                                            Spacing="6"
+                                            Margin="0,5,0,0">
+                                    <Border Background="{Binding DesktopBridgeStatusColor}"
+                                            CornerRadius="6"
+                                            Width="10"
+                                            Height="10"
+                                            VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding DesktopBridgeStatusText}"
+                                               FontSize="11"
+                                               TextWrapping="Wrap"/>
+                                </StackPanel>
                             </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- DesktopBridge 缺失、版本不兼容或暂时不可用时的安全降级提示 -->
+                    <Border IsVisible="{Binding IsDesktopBridgeNoticeVisible}"
+                            Background="#16FFC107"
+                            BorderBrush="#99FFC107"
+                            BorderThickness="1"
+                            CornerRadius="6"
+                            Padding="12">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="🤖 DesktopBridge 兼容提示"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding DesktopBridgeNoticeMessage}"
+                                       FontSize="11"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource SecondaryTextBrush}"/>
+                            <Button Content="打开 XNCF 模块管理"
+                                    Command="{Binding OpenDesktopBridgeInstallPageCommand}"
+                                    IsVisible="{Binding IsDesktopBridgeInstallActionVisible}"
+                                    HorizontalAlignment="Left"
+                                    Padding="12,6"
+                                    Background="#FD7E14"
+                                    Foreground="White"
+                                    CornerRadius="4"/>
                         </StackPanel>
                     </Border>
 
