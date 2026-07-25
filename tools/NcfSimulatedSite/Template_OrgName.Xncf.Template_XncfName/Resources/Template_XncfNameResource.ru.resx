@@ -90,4 +90,16 @@
   <data name="Page.Random" xml:space="preserve">
     <value>Случайно</value>
   </data>
+  <data name="Function.EventBusRoundTrip.Name" xml:space="preserve">
+    <value>Внутренняя проверка EventBus</value>
+  </data>
+  <data name="Function.EventBusRoundTrip.Description" xml:space="preserve">
+    <value>Проверяет запрос, обработку, производный ответ и корреляцию EventBus внутри процесса XNCF без чтения бизнес-данных или данных окружения.</value>
+  </data>
+  <data name="Function.EventBusRoundTrip.Success" xml:space="preserve">
+    <value>Проверка EventBus выполнена. RequestId: {0}; ParentEventId: {1}; глубина: {2}; время: {3:F2} мс.</value>
+  </data>
+  <data name="Function.EventBusRoundTrip.Timeout" xml:space="preserve">
+    <value>Истекло время ожидания EventBus. Убедитесь, что хост зарегистрировал EventBus и просканировал эту сборку XNCF.</value>
+  </data>
 </root>

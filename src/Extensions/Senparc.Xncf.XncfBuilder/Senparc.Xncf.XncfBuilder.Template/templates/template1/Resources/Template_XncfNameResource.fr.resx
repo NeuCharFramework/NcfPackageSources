@@ -90,4 +90,16 @@
   <data name="Page.Random" xml:space="preserve">
     <value>Aléatoire</value>
   </data>
+  <data name="Function.EventBusRoundTrip.Name" xml:space="preserve">
+    <value>Vérification interne aller-retour EventBus</value>
+  </data>
+  <data name="Function.EventBusRoundTrip.Description" xml:space="preserve">
+    <value>Vérifie la requête, le traitement, la réponse dérivée et la corrélation EventBus dans ce processus XNCF sans lire de données métier ou d’environnement.</value>
+  </data>
+  <data name="Function.EventBusRoundTrip.Success" xml:space="preserve">
+    <value>Aller-retour EventBus réussi. RequestId : {0} ; ParentEventId : {1} ; profondeur : {2} ; durée : {3:F2} ms.</value>
+  </data>
+  <data name="Function.EventBusRoundTrip.Timeout" xml:space="preserve">
+    <value>L’aller-retour EventBus a expiré. Vérifiez que l’hôte a enregistré EventBus et analysé cet assembly XNCF.</value>
+  </data>
 </root>

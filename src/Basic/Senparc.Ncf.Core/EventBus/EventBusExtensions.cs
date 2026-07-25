@@ -45,9 +45,11 @@ namespace Senparc.Ncf.Core.EventBus
                 services.AddSingleton<InMemoryEventBus>(sp =>
                 {
                     var logger = sp.GetService<ILogger<InMemoryEventBus>>();
-                    return new InMemoryEventBus(logger);
+                    var eventBusOptions = sp.GetRequiredService<EventBusOptions>();
+                    return new InMemoryEventBus(logger, eventBusOptions);
                 });
                 services.AddSingleton<IEventBus>(sp => sp.GetRequiredService<InMemoryEventBus>());
+                services.AddSingleton<IEventBusRequestClient>(sp => sp.GetRequiredService<InMemoryEventBus>());
 
                 // 3. 注册后台托管服务 (消费者用)
                 services.AddHostedService<EventBusHostedService>();
@@ -59,7 +61,7 @@ namespace Senparc.Ncf.Core.EventBus
                     {
                         // 查找实现了 IIntegrationEventHandler<T> 的具体类
                         var handlerTypes = assembly.GetTypes()
-                            .Where(t => t.IsClass && !t.IsAbstract &&
+                            .Where(t => t.IsClass && !t.IsAbstract && !t.ContainsGenericParameters &&
                                 t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IIntegrationEventHandler<>)));
 
                         foreach (var type in handlerTypes)

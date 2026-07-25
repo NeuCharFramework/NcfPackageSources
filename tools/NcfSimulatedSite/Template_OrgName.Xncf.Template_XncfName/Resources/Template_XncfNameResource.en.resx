@@ -90,4 +90,16 @@
   <data name="Page.Random" xml:space="preserve">
     <value>Random</value>
   </data>
+  <data name="Function.EventBusRoundTrip.Name" xml:space="preserve">
+    <value>EventBus Internal Round-Trip Check</value>
+  </data>
+  <data name="Function.EventBusRoundTrip.Description" xml:space="preserve">
+    <value>Verifies EventBus request handling, derived response, and correlation inside this XNCF process without reading business or environment data.</value>
+  </data>
+  <data name="Function.EventBusRoundTrip.Success" xml:space="preserve">
+    <value>EventBus round-trip succeeded. RequestId: {0}; ParentEventId: {1}; Depth: {2}; Elapsed: {3:F2} ms.</value>
+  </data>
+  <data name="Function.EventBusRoundTrip.Timeout" xml:space="preserve">
+    <value>EventBus round-trip timed out. Confirm that the host registered EventBus and scanned this XNCF assembly.</value>
+  </data>
 </root>

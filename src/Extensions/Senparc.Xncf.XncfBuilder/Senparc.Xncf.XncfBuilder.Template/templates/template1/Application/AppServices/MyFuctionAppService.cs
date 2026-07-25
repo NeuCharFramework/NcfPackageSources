@@ -1,12 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Senparc.CO2NET;
-using Senparc.CO2NET.Extensions;
+﻿using Senparc.CO2NET;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Models;
-using Template_OrgName.Xncf.Template_XncfName.Domain.Services;
+using Senparc.Ncf.Shared.Abstractions.Events;
 using Template_OrgName.Xncf.Template_XncfName.Application.DTOs.Request;
+using Template_OrgName.Xncf.Template_XncfName.Application.Events;
 using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,10 +13,13 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
 {
     public class MyFuctionAppService: AppServiceBase
     {
-        private ColorService _colorService;
-        public MyFuctionAppService(IServiceProvider serviceProvider, ColorService colorService) : base(serviceProvider)
+        private readonly IEventBusRequestClient _eventBusRequestClient;
+
+        public MyFuctionAppService(
+            IServiceProvider serviceProvider,
+            IEventBusRequestClient eventBusRequestClient) : base(serviceProvider)
         {
-            _colorService = colorService;
+            _eventBusRequestClient = eventBusRequestClient;
         }
 
         [FunctionRender("我的函数", "我的函数的注释", typeof(Register))]
@@ -80,6 +81,54 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
                 raisePower(3);
 
                 response.Data = $"【{request.Name}】计算结果：{calcResult}。计算过程请看日志";
+                return null;
+            });
+        }
+
+        /// <summary>
+        /// 验证当前 XNCF 内部 EventBus 的请求、处理、派生响应和关联等待链路。
+        /// 此方法不读取数据库、配置、文件、用户信息或其他模块数据。
+        /// </summary>
+        [FunctionRender(
+            typeof(Template_XncfNameResource),
+            "Function.EventBusRoundTrip.Name",
+            "Function.EventBusRoundTrip.Description",
+            typeof(Register))]
+        public async Task<StringAppResponse> EventBusRoundTrip(EventBusRoundTripRequest request)
+        {
+            return await this.GetStringResponseAsync(async (response, logger) =>
+            {
+                var requestEvent = new InternalEventBusRoundTripRequest(DateTime.UtcNow);
+                var startedAt = DateTime.UtcNow;
+
+                try
+                {
+                    var responseEvent = await _eventBusRequestClient.RequestAsync<InternalEventBusRoundTripResponse>(
+                        requestEvent,
+                        TimeSpan.FromSeconds(5),
+                        CancellationToken);
+
+                    var elapsedMilliseconds = (DateTime.UtcNow - startedAt).TotalMilliseconds;
+                    var result = Template_XncfNameResource.Format(
+                        "Function.EventBusRoundTrip.Success",
+                        "EventBus round-trip succeeded. RequestId: {0}; ParentEventId: {1}; Depth: {2}; Elapsed: {3:F2} ms.",
+                        responseEvent.RequestId.ToString("N"),
+                        responseEvent.ParentEventId?.ToString("N") ?? "-",
+                        responseEvent.Depth,
+                        elapsedMilliseconds);
+
+                    logger.Append(result);
+                    response.Data = result;
+                }
+                catch (TimeoutException)
+                {
+                    response.Success = false;
+                    response.ErrorMessage = Template_XncfNameResource.Get(
+                        "Function.EventBusRoundTrip.Timeout",
+                        "EventBus round-trip timed out. Confirm that the host registered EventBus and scanned this XNCF assembly.");
+                    logger.Append(response.ErrorMessage);
+                }
+
                 return null;
             });
         }

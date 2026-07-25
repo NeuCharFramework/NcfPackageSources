@@ -62,4 +62,11 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.DTOs.Request
                  new SelectionItem("3", Template_XncfNameResource.Get("Parameter.Power.Cube"), Template_XncfNameResource.Get("Parameter.Power.Cube.Help"), false)
             });
     }
+
+    /// <summary>
+    /// EventBus 内部回环健康检查不接收业务参数，避免把测试入口变成数据访问接口。
+    /// </summary>
+    public class EventBusRoundTripRequest : FunctionAppRequestBase
+    {
+    }
 }

@@ -90,4 +90,16 @@
   <data name="Page.Random" xml:space="preserve">
     <value>Aleatorio</value>
   </data>
+  <data name="Function.EventBusRoundTrip.Name" xml:space="preserve">
+    <value>Comprobación interna de ida y vuelta de EventBus</value>
+  </data>
+  <data name="Function.EventBusRoundTrip.Description" xml:space="preserve">
+    <value>Verifica la solicitud, el procesamiento, la respuesta derivada y la correlación de EventBus dentro de este proceso XNCF sin leer datos empresariales ni del entorno.</value>
+  </data>
+  <data name="Function.EventBusRoundTrip.Success" xml:space="preserve">
+    <value>La ida y vuelta de EventBus se completó. RequestId: {0}; ParentEventId: {1}; profundidad: {2}; tiempo: {3:F2} ms.</value>
+  </data>
+  <data name="Function.EventBusRoundTrip.Timeout" xml:space="preserve">
+    <value>La ida y vuelta de EventBus agotó el tiempo. Confirme que el host registró EventBus y examinó este ensamblado XNCF.</value>
+  </data>
 </root>

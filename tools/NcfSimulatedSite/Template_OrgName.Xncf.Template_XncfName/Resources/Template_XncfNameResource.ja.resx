@@ -90,4 +90,16 @@
   <data name="Page.Random" xml:space="preserve">
     <value>ランダム</value>
   </data>
+  <data name="Function.EventBusRoundTrip.Name" xml:space="preserve">
+    <value>EventBus 内部ラウンドトリップ確認</value>
+  </data>
+  <data name="Function.EventBusRoundTrip.Description" xml:space="preserve">
+    <value>業務データや環境データを読み取らず、この XNCF プロセス内で EventBus の要求、処理、派生応答、関連付けを確認します。</value>
+  </data>
+  <data name="Function.EventBusRoundTrip.Success" xml:space="preserve">
+    <value>EventBus ラウンドトリップに成功しました。RequestId: {0}; ParentEventId: {1}; 深さ: {2}; 経過時間: {3:F2} ms。</value>
+  </data>
+  <data name="Function.EventBusRoundTrip.Timeout" xml:space="preserve">
+    <value>EventBus ラウンドトリップがタイムアウトしました。ホストの EventBus 登録とこの XNCF アセンブリのスキャンを確認してください。</value>
+  </data>
 </root>

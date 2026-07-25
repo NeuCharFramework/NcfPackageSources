@@ -90,4 +90,16 @@
   <data name="Page.Random" xml:space="preserve">
     <value>随机</value>
   </data>
+  <data name="Function.EventBusRoundTrip.Name" xml:space="preserve">
+    <value>EventBus 内部回环检查</value>
+  </data>
+  <data name="Function.EventBusRoundTrip.Description" xml:space="preserve">
+    <value>在当前 XNCF 进程内验证 EventBus 请求、处理、派生响应和关联等待链路，不读取业务或环境数据。</value>
+  </data>
+  <data name="Function.EventBusRoundTrip.Success" xml:space="preserve">
+    <value>EventBus 回环成功。RequestId：{0}；ParentEventId：{1}；深度：{2}；耗时：{3:F2} 毫秒。</value>
+  </data>
+  <data name="Function.EventBusRoundTrip.Timeout" xml:space="preserve">
+    <value>EventBus 回环超时，请确认宿主已注册 EventBus 并扫描当前 XNCF 程序集。</value>
+  </data>
 </root>
