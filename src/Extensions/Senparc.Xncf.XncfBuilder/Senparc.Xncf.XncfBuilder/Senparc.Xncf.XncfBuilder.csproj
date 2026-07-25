@@ -145,6 +145,9 @@
     <ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="Senparc.Xncf.XncfBuilder.Tests" />
+  </ItemGroup>
+  <ItemGroup>
     <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.3.600.100-beta1" />-->
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.XncfBuilder.Abstractions\Senparc.Xncf.XncfBuilder.Abstractions.csproj" />
