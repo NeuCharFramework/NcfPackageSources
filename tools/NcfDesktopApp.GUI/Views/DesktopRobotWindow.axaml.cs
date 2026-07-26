@@ -12,15 +12,30 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
+using NcfDesktopApp.GUI.Services;
+using NcfDesktopApp.GUI.ViewModels;
 
 namespace NcfDesktopApp.GUI.Views;
 
 public partial class DesktopRobotWindow : Window
 {
+    private readonly DispatcherTimer _globalPointerTimer = new()
+    {
+        Interval = TimeSpan.FromMilliseconds(50)
+    };
+
     public DesktopRobotWindow()
     {
         InitializeComponent();
-        Opened += (_, _) => PositionNearWorkingAreaCorner();
+        _globalPointerTimer.Tick += (_, _) => UpdateGlobalGaze();
+        Opened += (_, _) =>
+        {
+            PositionNearWorkingAreaCorner();
+            Robot?.ResetGaze();
+            _globalPointerTimer.Start();
+        };
+        Closed += (_, _) => _globalPointerTimer.Stop();
     }
 
     public Action? OpenMainWindowRequested { get; set; }
@@ -47,8 +62,58 @@ public partial class DesktopRobotWindow : Window
     {
         if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
+            Robot?.ReactToPointer();
             BeginMoveDrag(e);
         }
+    }
+
+    private void RootBorder_OnPointerMoved(object? sender, PointerEventArgs e)
+    {
+        var point = e.GetPosition(this);
+        var mascotCenter = MascotView.TranslatePoint(
+            new Point(MascotView.Bounds.Width / 2, MascotView.Bounds.Height / 2), this);
+        if (!mascotCenter.HasValue)
+        {
+            return;
+        }
+
+        var horizontalRange = Math.Max(1, Bounds.Width * .65);
+        var verticalRange = Math.Max(1, Bounds.Height * .65);
+        Robot?.UpdateGaze(
+            (point.X - mascotCenter.Value.X) / horizontalRange,
+            (point.Y - mascotCenter.Value.Y) / verticalRange);
+    }
+
+    private void RootBorder_OnPointerExited(object? sender, PointerEventArgs e)
+    {
+        Robot?.ResetGaze();
+    }
+
+    private void UpdateGlobalGaze()
+    {
+        if (!IsVisible || !GlobalPointerTracker.TryGetScreenPosition(out var pointerPosition))
+        {
+            return;
+        }
+
+        var mascotCenter = MascotView.TranslatePoint(
+            new Point(MascotView.Bounds.Width / 2, MascotView.Bounds.Height / 2), this);
+        if (!mascotCenter.HasValue)
+        {
+            return;
+        }
+
+        var screen = Screens.ScreenFromWindow(this) ?? Screens.Primary;
+        var scaling = screen?.Scaling > 0 ? screen.Scaling : 1;
+        var mascotCenterOnScreen = new PixelPoint(
+            Position.X + (int)Math.Round(mascotCenter.Value.X * scaling),
+            Position.Y + (int)Math.Round(mascotCenter.Value.Y * scaling));
+        var horizontalRange = Math.Max(1, Bounds.Width * scaling * .65);
+        var verticalRange = Math.Max(1, Bounds.Height * scaling * .65);
+
+        Robot?.UpdateGaze(
+            (pointerPosition.X - mascotCenterOnScreen.X) / horizontalRange,
+            (pointerPosition.Y - mascotCenterOnScreen.Y) / verticalRange);
     }
 
     private void HideButton_OnClick(object? sender, RoutedEventArgs e)
@@ -60,4 +125,6 @@ public partial class DesktopRobotWindow : Window
     {
         OpenMainWindowRequested?.Invoke();
     }
+
+    private DesktopRobotViewModel? Robot => DataContext as DesktopRobotViewModel;
 }

@@ -153,25 +153,38 @@ public class NcfService
     
     public async Task<GitHubRelease?> GetLatestReleaseAsync(CancellationToken cancellationToken = default)
     {
-        _httpClient.DefaultRequestHeaders.Clear();
-        _httpClient.DefaultRequestHeaders.Add("User-Agent", "NCF-Desktop-App");
+        try
+        {
+            _httpClient.DefaultRequestHeaders.Clear();
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", "NCF-Desktop-App");
 
-        var githubTask = FetchReleaseCandidateAsync(
-            "GitHub",
-            TryGetLatestReleaseFromGitHubAsync,
-            cancellationToken);
-        var mirrorTask = FetchReleaseCandidateAsync(
-            GetMirrorSourceDisplayName(),
-            TryGetLatestReleaseFromMirrorAsync,
-            cancellationToken);
+            var githubTask = FetchReleaseCandidateAsync(
+                "GitHub",
+                TryGetLatestReleaseFromGitHubAsync,
+                cancellationToken);
+            var mirrorTask = FetchReleaseCandidateAsync(
+                GetMirrorSourceDisplayName(),
+                TryGetLatestReleaseFromMirrorAsync,
+                cancellationToken);
 
-        await Task.WhenAll(githubTask, mirrorTask).ConfigureAwait(false);
-        cancellationToken.ThrowIfCancellationRequested();
+            await Task.WhenAll(githubTask, mirrorTask).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
 
-        var github = await githubTask.ConfigureAwait(false);
-        var mirror = await mirrorTask.ConfigureAwait(false);
-        var selected = await SelectPreferredSourceAsync(github, mirror, cancellationToken).ConfigureAwait(false);
-        return selected?.Release;
+            var github = await githubTask.ConfigureAwait(false);
+            var mirror = await mirrorTask.ConfigureAwait(false);
+            var selected = await SelectPreferredSourceAsync(github, mirror, cancellationToken).ConfigureAwait(false);
+            return selected?.Release;
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            ReportUpdateSourceUnavailable("更新源", ex);
+            LastSourceSelectionSummary = "更新源暂不可用，将继续使用当前程序";
+            return null;
+        }
     }
 
     private async Task<ReleaseSourceCandidate?> FetchReleaseCandidateAsync(
@@ -295,7 +308,10 @@ public class NcfService
         }
         catch (Exception ex)
         {
-            _logger?.LogDebug(ex, "{Source} 下载地址测速失败", candidate.Name);
+            _logger?.LogDebug(
+                "{Source} 下载地址测速失败：{Reason}",
+                candidate.Name,
+                GetRoutineExceptionReason(ex));
             return null;
         }
     }
@@ -362,7 +378,8 @@ public class NcfService
         }
         catch (Exception ex)
         {
-            _logger?.LogDebug(ex, "从 GitHub 获取 latest 失败");
+            ReportUpdateSourceUnavailable("GitHub releases", ex);
+            _logger?.LogDebug("GitHub releases 请求未完成");
             return null;
         }
     }
@@ -381,9 +398,26 @@ public class NcfService
         }
         catch (Exception ex)
         {
-            _logger?.LogError(ex, "从镜像元数据获取最新版本失败");
+            ReportUpdateSourceUnavailable("镜像更新源", ex);
+            _logger?.LogDebug("镜像更新源请求未完成");
             return null;
         }
+    }
+
+    private void ReportUpdateSourceUnavailable(string source, Exception exception)
+    {
+        var reason = exception switch
+        {
+            TaskCanceledException => "请求超时",
+            HttpRequestException httpException when httpException.StatusCode.HasValue =>
+                $"HTTP {(int)httpException.StatusCode.Value}",
+            HttpRequestException => "网络不可达",
+            JsonException => "返回数据格式无效",
+            _ => "请求失败"
+        };
+        var message = $"[NCF 更新检查] {source} 暂不可用：{reason}；已跳过本次检查";
+        Console.WriteLine(message);
+        _logger?.LogWarning("{Message}", message);
     }
     
     public GitHubAsset? GetTargetAsset(GitHubRelease release)
@@ -1658,7 +1692,11 @@ public class NcfService
 
                 var failedSourceName = _lastSelectedSource?.Name ?? "首选源";
                 var alternateSourceName = _lastAlternateSource!.Name;
-                _logger?.LogWarning(ex, "{Source} 下载失败，切换到 {AlternateSource}", failedSourceName, alternateSourceName);
+                _logger?.LogWarning(
+                    "{Source} 下载失败，切换到 {AlternateSource}：{Reason}",
+                    failedSourceName,
+                    alternateSourceName,
+                    GetRoutineExceptionReason(ex));
                 progress.Report(($"⚠️ {failedSourceName} 下载失败，正在切换到 {alternateSourceName}...", -1));
                 await DownloadFileAsync(alternateUrl, alternateAsset.Name, downloadProgress, cancellationToken);
                 _lastSelectedSource = _lastAlternateSource;
@@ -1672,6 +1710,16 @@ public class NcfService
             progress.Report(("✅ 文件已存在，跳过下载", 60));
         }
     }
+
+    private static string GetRoutineExceptionReason(Exception exception) => exception switch
+    {
+        TaskCanceledException => "请求超时",
+        HttpRequestException httpException when httpException.StatusCode.HasValue =>
+            $"HTTP {(int)httpException.StatusCode.Value}",
+        HttpRequestException => "网络不可达",
+        JsonException => "返回数据格式无效",
+        _ => "请求失败"
+    };
 
     public async Task ExtractFilesAsync(IProgress<(string message, double percentage)> progress, CancellationToken cancellationToken = default)
     {

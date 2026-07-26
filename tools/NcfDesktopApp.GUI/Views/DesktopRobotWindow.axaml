@@ -25,7 +25,9 @@
             BorderBrush="#26007ACC"
             BorderThickness="1"
             BoxShadow="0 6 22 0 #42000000"
-            PointerPressed="RootBorder_OnPointerPressed">
+            PointerPressed="RootBorder_OnPointerPressed"
+            PointerMoved="RootBorder_OnPointerMoved"
+            PointerExited="RootBorder_OnPointerExited">
         <Grid ColumnDefinitions="76,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto">
             <Border Grid.RowSpan="4"
                     Width="64"
@@ -35,8 +37,13 @@
                     BorderBrush="{Binding StateColor}"
                     BorderThickness="2"
                     VerticalAlignment="Center">
-                <controls:NcfMascotView Mascot="{Binding Mascot}"
+                <controls:NcfMascotView x:Name="MascotView"
+                                        Mascot="{Binding Mascot}"
                                         Pose="{Binding Pose}"
+                                        ShowGlasses="True"
+                                        GazeX="{Binding GazeX}"
+                                        GazeY="{Binding GazeY}"
+                                        IsInteracting="{Binding IsInteracting}"
                                         Width="61"
                                         Height="61"
                                         ToolTip.Tip="{Binding MascotName}"/>

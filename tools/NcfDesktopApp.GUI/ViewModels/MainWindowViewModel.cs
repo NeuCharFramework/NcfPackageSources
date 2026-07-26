@@ -315,9 +315,14 @@ public partial class MainWindowViewModel : ViewModelBase
             return;
         }
 
-        ExternalNcfPath = value;
-        LaunchTargetKind = NcfLaunchTargetKind.ExternalPublished;
-        ValidateExternalTarget();
+        // macOS renders ComboBox entries in a native menu. Do not change the
+        // bound path or ItemsSource while that menu is still processing the
+        // selection event; Avalonia can otherwise re-enter native selection
+        // handling and terminate the process with an unhandled exception.
+        var selectedPath = value;
+        Dispatcher.UIThread.Post(
+            () => ApplyRecentNcfPath(selectedPath),
+            DispatcherPriority.Background);
     }
     
     #endregion
@@ -492,19 +497,40 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private void AddRecentNcfPath(string path)
     {
-        var existing = RecentNcfPaths.FirstOrDefault(item =>
-            string.Equals(item, path, StringComparison.OrdinalIgnoreCase));
-        if (existing != null)
+        var existingIndex = RecentNcfPaths
+            .Select((item, index) => new { item, index })
+            .FirstOrDefault(entry =>
+                string.Equals(entry.item, path, StringComparison.OrdinalIgnoreCase))?.index ?? -1;
+        if (existingIndex > 0)
         {
-            RecentNcfPaths.Remove(existing);
+            RecentNcfPaths.Move(existingIndex, 0);
+        }
+        else if (existingIndex < 0)
+        {
+            RecentNcfPaths.Insert(0, path);
         }
 
-        RecentNcfPaths.Insert(0, path);
         while (RecentNcfPaths.Count > 8)
         {
             RecentNcfPaths.RemoveAt(RecentNcfPaths.Count - 1);
         }
-        OnPropertyChanged(nameof(RecentNcfPaths));
+    }
+
+    private void ApplyRecentNcfPath(string path)
+    {
+        try
+        {
+            _suppressDesktopSettingsSave = true;
+            ExternalNcfPath = path;
+            LaunchTargetKind = NcfLaunchTargetKind.ExternalPublished;
+            _suppressDesktopSettingsSave = false;
+            ValidateExternalTargetCore(recordRecentPath: false);
+        }
+        catch (Exception ex)
+        {
+            _suppressDesktopSettingsSave = false;
+            AddLog($"❌ 选择最近工作区失败: {ex.Message}");
+        }
     }
 
     #endregion
@@ -618,6 +644,11 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(CanChangeLaunchTarget))]
     private void ValidateExternalTarget()
     {
+        ValidateExternalTargetCore(recordRecentPath: true);
+    }
+
+    private void ValidateExternalTargetCore(bool recordRecentPath)
+    {
         var resolution = NcfLaunchTargetResolver.ResolveExternal(ExternalNcfPath);
         if (!resolution.IsValid)
         {
@@ -635,11 +666,22 @@ public partial class MainWindowViewModel : ViewModelBase
 
         var target = resolution.Target!;
         ApplyResolvedLaunchTarget(target);
-        _suppressDesktopSettingsSave = true;
-        ExternalNcfPath = target.SelectedPath;
-        SelectedRecentNcfPath = target.SelectedPath;
-        _suppressDesktopSettingsSave = false;
-        AddRecentNcfPath(target.SelectedPath);
+        if (recordRecentPath)
+        {
+            var wasSuppressed = _suppressDesktopSettingsSave;
+            try
+            {
+                _suppressDesktopSettingsSave = true;
+                ExternalNcfPath = target.SelectedPath;
+                SelectedRecentNcfPath = target.SelectedPath;
+            }
+            finally
+            {
+                _suppressDesktopSettingsSave = wasSuppressed;
+            }
+
+            AddRecentNcfPath(target.SelectedPath);
+        }
         SaveDesktopSettings();
         AddLog($"✅ 已识别 {target.KindDisplayName}: {target.EntryPath}");
     }
@@ -962,8 +1004,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
             if (IsManagedTargetMode)
             {
-                // 只有托管模式参与线上版本比较和自动更新。
-                await CheckLatestVersionAsync();
+                // 只有托管模式参与线上版本比较和自动更新；网络检查放到后台，不能阻塞界面和浏览器初始化。
+                _ = Task.Run(CheckLatestVersionAsync);
             }
             else
             {
@@ -1108,6 +1150,16 @@ public partial class MainWindowViewModel : ViewModelBase
 
             var latestVersion = await _ncfService.GetLatestVersionAsync();
             var installedVersion = await _ncfService.GetInstalledVersionAsync();
+
+            if (IsVersionCheckUnavailable(latestVersion))
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    LatestVersion = "暂不可用";
+                    AddLog("⚠️ 在线版本检查暂不可用，已跳过本次检查，不影响程序继续运行");
+                });
+                return;
+            }
             
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
@@ -1143,7 +1195,7 @@ public partial class MainWindowViewModel : ViewModelBase
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 LatestVersion = "获取失败";
-                AddLog($"⚠️ 获取版本信息失败: {ex.Message}");
+                AddLog($"⚠️ 获取版本信息失败: {GetRoutineUpdateError(ex)}；不影响程序继续运行");
             });
         }
     }
@@ -1187,8 +1239,23 @@ public partial class MainWindowViewModel : ViewModelBase
 
                 if (shouldUpdate)
                 {
-                    await DownloadNcfAsync(cancellationToken);
-                    await ExtractNcfAsync(cancellationToken);
+                    try
+                    {
+                        await DownloadNcfAsync(cancellationToken);
+                        await ExtractNcfAsync(cancellationToken);
+                    }
+                    catch (Exception ex) when (
+                        !cancellationToken.IsCancellationRequested &&
+                        IsUpdateConnectivityError(ex))
+                    {
+                        var fallbackResolution = NcfLaunchTargetResolver.ResolveManagedRuntime(NcfService.NcfRuntimePath);
+                        if (!fallbackResolution.IsValid)
+                        {
+                            throw;
+                        }
+
+                        AddLog($"⚠️ 在线更新暂不可用（{GetRoutineUpdateError(ex)}），继续使用本地托管版本");
+                    }
                 }
                 else
                 {
@@ -1757,6 +1824,15 @@ public partial class MainWindowViewModel : ViewModelBase
             
             // 获取最新版本
             var latestVersion = await _ncfService.GetLatestVersionAsync();
+
+            if (IsVersionCheckUnavailable(latestVersion))
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    AddLog("⚠️ 在线版本检查暂不可用，继续使用当前托管版本");
+                });
+                return (true, false);
+            }
             
             // 如果版本相同，直接继续
             if (installedVersion == latestVersion)
@@ -1812,13 +1888,40 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                AddLog($"⚠️ 版本检查失败: {ex.Message}");
+                AddLog($"⚠️ 版本检查失败: {GetRoutineUpdateError(ex)}");
                 AddLog($"   将继续使用当前版本");
             });
             // 出错时继续，但不下载
             return (true, false);
         }
     }
+
+    private static bool IsVersionCheckUnavailable(string? version) =>
+        string.IsNullOrWhiteSpace(version) ||
+        string.Equals(version, "获取失败", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(version, "暂不可用", StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsUpdateConnectivityError(Exception exception)
+    {
+        if (exception is HttpRequestException or TaskCanceledException)
+        {
+            return true;
+        }
+
+        return exception is InvalidOperationException invalidOperation &&
+               (invalidOperation.Message.Contains("无法获取最新版本", StringComparison.OrdinalIgnoreCase) ||
+                invalidOperation.Message.Contains("未找到适合当前平台", StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static string GetRoutineUpdateError(Exception exception) => exception switch
+    {
+        TaskCanceledException => "请求超时",
+        HttpRequestException httpException when httpException.StatusCode.HasValue =>
+            $"HTTP {(int)httpException.StatusCode.Value}",
+        HttpRequestException => "网络不可达",
+        InvalidOperationException => "更新源没有可用安装包",
+        _ => "请求失败"
+    };
     
     /// <summary>
     /// 添加应用日志（高性能版本：批量处理）

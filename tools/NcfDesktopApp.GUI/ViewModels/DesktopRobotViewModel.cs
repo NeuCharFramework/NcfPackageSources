@@ -27,6 +27,15 @@ public partial class DesktopRobotViewModel : ViewModelBase
     private NcfMascotPose _pose = NcfMascotPose.Idle;
 
     [ObservableProperty]
+    private double _gazeX;
+
+    [ObservableProperty]
+    private double _gazeY;
+
+    [ObservableProperty]
+    private bool _isInteracting;
+
+    [ObservableProperty]
     private string _mascotName = "Nono";
 
     [ObservableProperty]
@@ -49,6 +58,32 @@ public partial class DesktopRobotViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _isProgressVisible;
+
+    private DispatcherTimer? _interactionTimer;
+
+    /// <summary>更新浮动角色的视线方向，供桌面窗口的鼠标移动事件调用。</summary>
+    public void UpdateGaze(double x, double y)
+    {
+        RunOnUi(() =>
+        {
+            GazeX = Math.Clamp(x, -1, 1);
+            GazeY = Math.Clamp(y, -1, 1);
+        });
+    }
+
+    public void ResetGaze() => UpdateGaze(0, 0);
+
+    /// <summary>点击角色时显示一个短暂的回应动画，不改变当前 NCF 工作状态。</summary>
+    public void ReactToPointer()
+    {
+        RunOnUi(() =>
+        {
+            IsInteracting = true;
+            _interactionTimer ??= CreateInteractionTimer();
+            _interactionTimer.Stop();
+            _interactionTimer.Start();
+        });
+    }
 
     public void SetProcessState(string state, string detail, bool isError = false)
     {
@@ -233,6 +268,17 @@ public partial class DesktopRobotViewModel : ViewModelBase
         Mascot = mascot;
         Pose = pose;
         MascotName = mascot.ToString();
+    }
+
+    private DispatcherTimer CreateInteractionTimer()
+    {
+        var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(850) };
+        timer.Tick += (_, _) =>
+        {
+            IsInteracting = false;
+            timer.Stop();
+        };
+        return timer;
     }
 
     private static bool ContainsAny(string value, params string[] candidates)

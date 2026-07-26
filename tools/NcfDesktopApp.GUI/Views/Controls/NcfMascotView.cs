@@ -15,11 +15,25 @@ public sealed class NcfMascotView : Control
         AvaloniaProperty.Register<NcfMascotView, NcfMascotKind>(nameof(Mascot), NcfMascotKind.Nono);
     public static readonly StyledProperty<NcfMascotPose> PoseProperty =
         AvaloniaProperty.Register<NcfMascotView, NcfMascotPose>(nameof(Pose), NcfMascotPose.Idle);
+    public static readonly StyledProperty<bool> ShowGlassesProperty =
+        AvaloniaProperty.Register<NcfMascotView, bool>(nameof(ShowGlasses));
+    public static readonly StyledProperty<double> GazeXProperty =
+        AvaloniaProperty.Register<NcfMascotView, double>(nameof(GazeX));
+    public static readonly StyledProperty<double> GazeYProperty =
+        AvaloniaProperty.Register<NcfMascotView, double>(nameof(GazeY));
+    public static readonly StyledProperty<bool> IsInteractingProperty =
+        AvaloniaProperty.Register<NcfMascotView, bool>(nameof(IsInteracting));
 
     private readonly DispatcherTimer _timer;
     private double _phase;
 
-    static NcfMascotView() => AffectsRender<NcfMascotView>(MascotProperty, PoseProperty);
+    static NcfMascotView() => AffectsRender<NcfMascotView>(
+        MascotProperty,
+        PoseProperty,
+        ShowGlassesProperty,
+        GazeXProperty,
+        GazeYProperty,
+        IsInteractingProperty);
 
     public NcfMascotView()
     {
@@ -43,6 +57,32 @@ public sealed class NcfMascotView : Control
     {
         get => GetValue(PoseProperty);
         set => SetValue(PoseProperty, value);
+    }
+
+    public bool ShowGlasses
+    {
+        get => GetValue(ShowGlassesProperty);
+        set => SetValue(ShowGlassesProperty, value);
+    }
+
+    /// <summary>水平方向视线，范围约为 -1 到 1。</summary>
+    public double GazeX
+    {
+        get => GetValue(GazeXProperty);
+        set => SetValue(GazeXProperty, value);
+    }
+
+    /// <summary>垂直方向视线，范围约为 -1 到 1。</summary>
+    public double GazeY
+    {
+        get => GetValue(GazeYProperty);
+        set => SetValue(GazeYProperty, value);
+    }
+
+    public bool IsInteracting
+    {
+        get => GetValue(IsInteractingProperty);
+        set => SetValue(IsInteractingProperty, value);
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -201,13 +241,72 @@ public sealed class NcfMascotView : Control
         }
         else
         {
+            var gazeX = Math.Clamp(GazeX, -1, 1) * 4.2 * scale;
+            var gazeY = Math.Clamp(GazeY, -1, 1) * 2.8 * scale;
             context.DrawEllipse(colors.Outline, null,
-                new Point(head.X - 14 * scale + glance, head.Y - scale), 3.7 * scale, 5.3 * scale);
+                new Point(head.X - 14 * scale + glance + gazeX, head.Y - scale + gazeY),
+                3.7 * scale, 5.3 * scale);
             context.DrawEllipse(colors.Outline, null,
-                new Point(head.X + 14 * scale + glance, head.Y - scale), 3.7 * scale, 5.3 * scale);
+                new Point(head.X + 14 * scale + glance + gazeX, head.Y - scale + gazeY),
+                3.7 * scale, 5.3 * scale);
+        }
+
+        if (ShowGlasses)
+        {
+            DrawGlasses(context, head, scale, colors);
         }
 
         DrawExpression(context, head, scale, colors, eyePen);
+    }
+
+    private void DrawGlasses(
+        DrawingContext context,
+        Point head,
+        double scale,
+        MascotColors colors)
+    {
+        var gazeX = Math.Clamp(GazeX, -1, 1);
+        var gazeY = Math.Clamp(GazeY, -1, 1);
+        var lensY = head.Y - scale + gazeY * .7 * scale;
+        var lensTilt = gazeX * 1.5 * scale;
+        var lensPen = new Pen(
+            IsInteracting ? colors.Highlight : colors.Primary,
+            Math.Max(1.25, 2.1 * scale));
+        var leftLens = new Point(head.X - 14 * scale, lensY + lensTilt);
+        var rightLens = new Point(head.X + 14 * scale, lensY - lensTilt);
+
+        context.DrawEllipse(null, lensPen, leftLens, 12 * scale, 9 * scale);
+        context.DrawEllipse(null, lensPen, rightLens, 12 * scale, 9 * scale);
+        context.DrawLine(lensPen,
+            new Point(leftLens.X + 11 * scale, leftLens.Y),
+            new Point(rightLens.X - 11 * scale, rightLens.Y));
+        context.DrawLine(lensPen,
+            new Point(leftLens.X - 11 * scale, leftLens.Y - 1 * scale),
+            new Point(head.X - 31 * scale, head.Y - 7 * scale));
+        context.DrawLine(lensPen,
+            new Point(rightLens.X + 11 * scale, rightLens.Y - 1 * scale),
+            new Point(head.X + 31 * scale, head.Y - 7 * scale));
+
+        if (IsInteracting)
+        {
+            DrawInteractionSpark(context, new Point(head.X - 29 * scale, head.Y - 20 * scale), scale, colors.Highlight);
+            DrawInteractionSpark(context, new Point(head.X + 29 * scale, head.Y - 17 * scale), scale, colors.Highlight);
+        }
+    }
+
+    private static void DrawInteractionSpark(
+        DrawingContext context,
+        Point center,
+        double scale,
+        IBrush brush)
+    {
+        var pen = new Pen(brush, Math.Max(1.2, 1.8 * scale));
+        context.DrawLine(pen,
+            new Point(center.X - 4 * scale, center.Y),
+            new Point(center.X + 4 * scale, center.Y));
+        context.DrawLine(pen,
+            new Point(center.X, center.Y - 4 * scale),
+            new Point(center.X, center.Y + 4 * scale));
     }
 
     private void DrawExpression(
@@ -225,6 +324,13 @@ public sealed class NcfMascotView : Control
             context.DrawLine(eyePen,
                 new Point(head.X + 10 * scale, head.Y - 8 * scale),
                 new Point(head.X + 20 * scale, head.Y - 11 * scale));
+        }
+
+        if (IsInteracting)
+        {
+            context.DrawEllipse(colors.Outline, null,
+                new Point(head.X, head.Y + 14 * scale), 5 * scale, 3.5 * scale);
+            return;
         }
 
         var mouth = Pose == NcfMascotPose.Success ? 9d : 6d;
