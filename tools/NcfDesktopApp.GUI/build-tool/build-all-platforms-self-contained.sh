@@ -16,8 +16,12 @@ NC='\033[0m' # No Color
 # 配置
 PROJECT_NAME="NcfDesktopApp.GUI"
 SOLUTION_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PROJECT_FILE="${SOLUTION_DIR}/${PROJECT_NAME}.csproj"
 OUTPUT_DIR="${SOLUTION_DIR}/publish-self-contained"
 BUILD_CONFIG="Release"
+TASK_NUGET_ROOT="${TMPDIR:-/tmp}/ncf-desktopapp-gui-nuget"
+TASK_NUGET_PACKAGES="${TASK_NUGET_ROOT}/packages"
+TASK_NUGET_HTTP_CACHE="${TASK_NUGET_ROOT}/http-cache"
 
 # 支持的平台
 PLATFORMS=(
@@ -114,7 +118,8 @@ restore_packages() {
     
     echo -e "${BLUE}📦 还原 NuGet 包...${NC}"
     cd "$SOLUTION_DIR"
-    if dotnet restore; then
+    mkdir -p "$TASK_NUGET_PACKAGES" "$TASK_NUGET_HTTP_CACHE"
+    if NUGET_PACKAGES="$TASK_NUGET_PACKAGES" NUGET_HTTP_CACHE_PATH="$TASK_NUGET_HTTP_CACHE" dotnet restore "$PROJECT_FILE"; then
         echo -e "${GREEN}✅ 包还原成功${NC}"
     else
         echo -e "${RED}❌ 包还原失败${NC}"
@@ -132,11 +137,13 @@ publish_platform() {
     echo -e "${BLUE}🚀 发布 $platform_name ($platform) - 自包含版本...${NC}"
     
     # 构建发布命令
-    local cmd="dotnet publish"
+    local cmd="env NUGET_PACKAGES=\"$TASK_NUGET_PACKAGES\" NUGET_HTTP_CACHE_PATH=\"$TASK_NUGET_HTTP_CACHE\" dotnet publish \"$PROJECT_FILE\""
     cmd="$cmd -c $BUILD_CONFIG"
     cmd="$cmd -r $platform"
     cmd="$cmd -o \"$platform_dir\""
     cmd="$cmd --self-contained true"
+    # restore_packages 已负责按全部 RID 还原；发布阶段始终避免隐式重复 restore。
+    cmd="$cmd --no-restore"
     
     if [ "$SINGLE_FILE" = true ]; then
         cmd="$cmd -p:PublishSingleFile=true"

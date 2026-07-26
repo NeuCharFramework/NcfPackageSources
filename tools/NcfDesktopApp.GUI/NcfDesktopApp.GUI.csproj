@@ -3,8 +3,13 @@
     <!-- 临时改为 Exe 以显示控制台输出用于调试 -->
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.2.0</Version>
+    <RuntimeIdentifiers>win-x64;win-arm64;osx-x64;osx-arm64;linux-x64;linux-arm64</RuntimeIdentifiers>
+    <Version>0.3.0</Version>
     <PackageReleaseNotes>
+      [2026-07-25] v0.3.0 新增多版本 NCF 启动目标与 Agent 工作台
+      1、支持内置托管版本、外部发布目录和 Senparc.Web 源码工作区
+      2、外部目标隔离自动更新和解压流程，源码模式使用 no-restore 安全启动
+      3、重构目标选择、运行状态和 Agent 活动流界面，并持久化最近使用目标
       [2026-07-25] v0.2.0 新增可选 DesktopBridge 与桌面机器人
       1、增加透明置顶桌面机器人，实时提示 NCF 启动、运行、任务完成和失败状态
       2、增加带随机会话令牌的 DesktopBridge 能力探测与 SSE 客户端

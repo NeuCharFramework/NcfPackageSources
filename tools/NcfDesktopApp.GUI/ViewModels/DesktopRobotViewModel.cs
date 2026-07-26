@@ -21,6 +21,15 @@ public partial class DesktopRobotViewModel : ViewModelBase
     private string _emoji = "🤖";
 
     [ObservableProperty]
+    private NcfMascotKind _mascot = NcfMascotKind.Nono;
+
+    [ObservableProperty]
+    private NcfMascotPose _pose = NcfMascotPose.Idle;
+
+    [ObservableProperty]
+    private string _mascotName = "Nono";
+
+    [ObservableProperty]
     private string _title = "NCF 桌面助手";
 
     [ObservableProperty]
@@ -45,6 +54,15 @@ public partial class DesktopRobotViewModel : ViewModelBase
     {
         RunOnUi(() =>
         {
+            SetMascot(
+                isError ? NcfMascotKind.Opsi : NcfMascotKind.Nono,
+                isError ? NcfMascotPose.Warning : state switch
+                {
+                    "启动中" => NcfMascotPose.Working,
+                    "已完成" => NcfMascotPose.Success,
+                    "已停止" => NcfMascotPose.Idle,
+                    _ => NcfMascotPose.Idle
+                });
             Title = "NCF 桌面助手";
             Detail = detail;
             StateText = state;
@@ -72,6 +90,18 @@ public partial class DesktopRobotViewModel : ViewModelBase
     {
         RunOnUi(() =>
         {
+            var pose = result.Availability switch
+            {
+                DesktopBridgeAvailability.Available => NcfMascotPose.Wave,
+                DesktopBridgeAvailability.Unavailable => NcfMascotPose.Working,
+                _ => NcfMascotPose.Warning
+            };
+            SetMascot(
+                result.Availability is DesktopBridgeAvailability.NotInstalled
+                    or DesktopBridgeAvailability.Incompatible
+                    ? NcfMascotKind.Opsi
+                    : NcfMascotKind.Qiao,
+                pose);
             ConnectionText = result.Availability switch
             {
                 DesktopBridgeAvailability.Available => "DesktopBridge 实时模式",
@@ -89,6 +119,8 @@ public partial class DesktopRobotViewModel : ViewModelBase
     {
         RunOnUi(() =>
         {
+            SetMascot(ResolveMascot(activity.Source, activity.Title, activity.State),
+                ResolvePose(activity.State));
             Title = string.IsNullOrWhiteSpace(activity.Source)
                 ? activity.Title
                 : $"{activity.Source} · {activity.Title}";
@@ -144,23 +176,63 @@ public partial class DesktopRobotViewModel : ViewModelBase
             IsProgressVisible = false;
             if (looksLikeError)
             {
+                SetMascot(NcfMascotKind.Opsi, NcfMascotPose.Warning);
                 Emoji = "🛠️";
                 StateText = "发生错误";
                 StateColor = "#DC3545";
             }
             else if (looksLikeCompleted)
             {
+                SetMascot(NcfMascotKind.Opsi, NcfMascotPose.Success);
                 Emoji = "✅";
                 StateText = "已完成";
                 StateColor = "#28A745";
             }
             else
             {
+                SetMascot(NcfMascotKind.Opsi, NcfMascotPose.Working);
                 Emoji = "⚙️";
                 StateText = "工作中";
                 StateColor = "#007ACC";
             }
         });
+    }
+
+    internal static NcfMascotKind ResolveMascot(params string?[] values)
+    {
+        var value = string.Join(' ', values.Where(item => !string.IsNullOrWhiteSpace(item)));
+        if (ContainsAny(value, "admin", "chat", "prompt", "agent"))
+        {
+            return NcfMascotKind.Cici;
+        }
+
+        if (ContainsAny(value, "bridge", "event", "sync", "总线", "同步"))
+        {
+            return NcfMascotKind.Qiao;
+        }
+
+        if (ContainsAny(value, "build", "publish", "deploy", "error", "failed", "构建", "发布", "错误", "失败"))
+        {
+            return NcfMascotKind.Opsi;
+        }
+
+        return NcfMascotKind.Nono;
+    }
+
+    internal static NcfMascotPose ResolvePose(string? state) => state switch
+    {
+        "Working" => NcfMascotPose.Working,
+        "Succeeded" => NcfMascotPose.Success,
+        "Failed" => NcfMascotPose.Warning,
+        "Cancelled" => NcfMascotPose.Idle,
+        _ => NcfMascotPose.Wave
+    };
+
+    private void SetMascot(NcfMascotKind mascot, NcfMascotPose pose)
+    {
+        Mascot = mascot;
+        Pose = pose;
+        MascotName = mascot.ToString();
     }
 
     private static bool ContainsAny(string value, params string[] candidates)

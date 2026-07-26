@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:NcfDesktopApp.GUI.ViewModels"
+        xmlns:controls="using:NcfDesktopApp.GUI.Views.Controls"
         x:Class="NcfDesktopApp.GUI.Views.DesktopRobotWindow"
         x:DataType="vm:DesktopRobotViewModel"
         Title="NCF 桌面助手"
@@ -30,14 +31,15 @@
                     Width="64"
                     Height="64"
                     CornerRadius="32"
-                    Background="#12007ACC"
+                    Background="#0B64748B"
                     BorderBrush="{Binding StateColor}"
                     BorderThickness="2"
                     VerticalAlignment="Center">
-                <TextBlock Text="{Binding Emoji}"
-                           FontSize="34"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"/>
+                <controls:NcfMascotView Mascot="{Binding Mascot}"
+                                        Pose="{Binding Pose}"
+                                        Width="61"
+                                        Height="61"
+                                        ToolTip.Tip="{Binding MascotName}"/>
             </Border>
 
             <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" Spacing="8">

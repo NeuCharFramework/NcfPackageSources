@@ -27,7 +27,9 @@ public sealed record DesktopBridgeCapabilities(
     bool SupportsSse,
     bool SupportsSnapshot,
     string EventEndpoint,
-    string SnapshotEndpoint);
+    string SnapshotEndpoint,
+    bool SupportsAuthorizedSync = false,
+    string? AuthorizedSyncEndpoint = null);
 
 public sealed record DesktopBridgeProbeResult(
     DesktopBridgeAvailability Availability,
@@ -48,3 +50,10 @@ public sealed record DesktopActivityMessage(
     DateTimeOffset Time,
     bool IsTerminal,
     string? ActionUrl);
+
+public sealed record DesktopAuthorizedSyncMessage(
+    long Sequence,
+    string Channel,
+    string ResourceId,
+    string Action,
+    DateTimeOffset Time);

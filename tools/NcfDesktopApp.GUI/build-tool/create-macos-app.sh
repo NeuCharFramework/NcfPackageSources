@@ -16,6 +16,7 @@ NC='\033[0m' # No Color
 # 配置
 PROJECT_NAME="NcfDesktopApp.GUI"
 SOLUTION_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PROJECT_FILE="${SOLUTION_DIR}/${PROJECT_NAME}.csproj"
 PUBLISH_DIR="${SOLUTION_DIR}/publish-self-contained"
 OUTPUT_DIR="${SOLUTION_DIR}/macos-app"
 BUILD_CONFIG="Release"
@@ -23,8 +24,9 @@ BUILD_CONFIG="Release"
 # 应用程序信息
 APP_NAME="NCF Desktop"
 APP_BUNDLE_ID="com.senparc.ncf.desktop"
-APP_VERSION="1.0.0"
-APP_COPYRIGHT="© 2025 Senparc NCF"
+APP_VERSION=$(sed -n 's:.*<Version>\([^<]*\)</Version>.*:\1:p' "$PROJECT_FILE" | head -1)
+APP_VERSION="${APP_VERSION:-0.3.0}"
+APP_COPYRIGHT="© 2026 Senparc NCF"
 APP_DESCRIPTION="NCF Desktop Application"
 
 # 函数：显示帮助信息
@@ -452,7 +454,8 @@ create_dmg() {
     # 创建 DMG（先创建可写 DMG，设置卷图标，再压缩）
     if command -v hdiutil &> /dev/null; then
         echo -e "${YELLOW}  🔄 生成 DMG 文件...${NC}"
-        local rw_dmg="$dmg_temp_dir/pack-temp.dmg"
+        # 临时镜像不能放在 -srcfolder 内，否则 hdiutil 会把正在生成的镜像递归纳入源目录。
+        local rw_dmg="$OUTPUT_DIR/._pack-temp.dmg"
         [ -f "$rw_dmg" ] && rm -f "$rw_dmg"
         [ -f "$dmg_file" ] && rm -f "$dmg_file"
 

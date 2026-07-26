@@ -27,6 +27,7 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
     public const string TokenHeaderName = "X-Ncf-Desktop-Token";
     private const string CapabilitiesPath = "/api/Senparc.Xncf.DesktopBridge/capabilities";
     private const string DefaultEventsPath = "/api/Senparc.Xncf.DesktopBridge/events";
+    private const string DefaultAuthorizedSyncPath = "/api/Senparc.Xncf.DesktopBridge/authorized-sync/events";
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
     {
         PropertyNameCaseInsensitive = true
@@ -34,9 +35,13 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
 
     private readonly HttpClient _httpClient;
     private readonly SemaphoreSlim _lifecycleLock = new(1, 1);
+    private readonly SemaphoreSlim _authorizedSyncLifecycleLock = new(1, 1);
     private CancellationTokenSource? _listenCancellation;
     private Task? _listenTask;
+    private CancellationTokenSource? _authorizedSyncCancellation;
+    private Task? _authorizedSyncTask;
     private long _lastSequence;
+    private long _lastAuthorizedSyncSequence;
 
     public DesktopBridgeClient(HttpClient httpClient)
     {
@@ -46,6 +51,10 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
     public event Action<DesktopBridgeProbeResult>? AvailabilityChanged;
 
     public event Action<DesktopActivityMessage>? ActivityReceived;
+
+    public event Action<DesktopAuthorizedSyncMessage>? AuthorizedSyncReceived;
+
+    public event Action<string>? AuthorizedSyncAuthorizationFailed;
 
     public async Task<DesktopBridgeProbeResult> ProbeAsync(
         string siteUrl,
@@ -211,6 +220,8 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
 
     public async Task StopAsync()
     {
+        await StopAuthorizedSyncAsync().ConfigureAwait(false);
+
         CancellationTokenSource? cancellation;
         Task? listenTask;
 
@@ -257,6 +268,82 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
     {
         await StopAsync().ConfigureAwait(false);
         _lifecycleLock.Dispose();
+        _authorizedSyncLifecycleLock.Dispose();
+    }
+
+    public async Task StartAuthorizedSyncAsync(
+        string siteUrl,
+        string sessionToken,
+        string accessToken,
+        string? eventPath = null,
+        CancellationToken cancellationToken = default)
+    {
+        await StopAuthorizedSyncAsync().ConfigureAwait(false);
+        if (string.IsNullOrWhiteSpace(accessToken))
+        {
+            throw new ArgumentException("Admin access token is required.", nameof(accessToken));
+        }
+
+        await _authorizedSyncLifecycleLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            _lastAuthorizedSyncSequence = 0;
+            _authorizedSyncCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            _authorizedSyncTask = ListenAuthorizedSyncLoopAsync(
+                siteUrl,
+                sessionToken,
+                eventPath ?? DefaultAuthorizedSyncPath,
+                accessToken,
+                _authorizedSyncCancellation.Token);
+        }
+        finally
+        {
+            _authorizedSyncLifecycleLock.Release();
+        }
+    }
+
+    public async Task StopAuthorizedSyncAsync()
+    {
+        CancellationTokenSource? cancellation;
+        Task? listenTask;
+
+        await _authorizedSyncLifecycleLock.WaitAsync().ConfigureAwait(false);
+        try
+        {
+            cancellation = _authorizedSyncCancellation;
+            listenTask = _authorizedSyncTask;
+            _authorizedSyncCancellation = null;
+            _authorizedSyncTask = null;
+        }
+        finally
+        {
+            _authorizedSyncLifecycleLock.Release();
+        }
+
+        if (cancellation == null)
+        {
+            return;
+        }
+
+        cancellation.Cancel();
+        try
+        {
+            if (listenTask != null)
+            {
+                await listenTask.ConfigureAwait(false);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch
+        {
+            // 注销和停止站点时不传播同步流的网络异常。
+        }
+        finally
+        {
+            cancellation.Dispose();
+        }
     }
 
     private async Task ListenLoopAsync(
@@ -377,10 +464,127 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
         }
     }
 
-    private static HttpRequestMessage CreateRequest(HttpMethod method, Uri endpoint, string sessionToken)
+    private async Task ListenAuthorizedSyncLoopAsync(
+        string siteUrl,
+        string sessionToken,
+        string eventPath,
+        string accessToken,
+        CancellationToken cancellationToken)
+    {
+        var retryDelay = TimeSpan.FromSeconds(1);
+
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            if (!TryCreateEndpoint(siteUrl, eventPath, out var endpoint))
+            {
+                NotifyAuthorizedSyncAuthorizationFailed("DesktopBridge 返回了无效的授权同步地址。");
+                return;
+            }
+
+            try
+            {
+                using var request = CreateRequest(HttpMethod.Get, endpoint, sessionToken, accessToken);
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/event-stream"));
+                using var response = await _httpClient.SendAsync(
+                        request,
+                        HttpCompletionOption.ResponseHeadersRead,
+                        cancellationToken)
+                    .ConfigureAwait(false);
+
+                if (response.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden)
+                {
+                    NotifyAuthorizedSyncAuthorizationFailed("管理员登录已过期或不具备 AdminOnly 权限。");
+                    return;
+                }
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    NotifyAuthorizedSyncAuthorizationFailed("当前 DesktopBridge 版本不支持 Admin Chat 同步，请更新模块。");
+                    return;
+                }
+
+                response.EnsureSuccessStatusCode();
+                retryDelay = TimeSpan.FromSeconds(1);
+                await ReadAuthorizedSyncStreamAsync(response, cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+            catch (Exception ex) when (ex is HttpRequestException or IOException or JsonException or InvalidOperationException)
+            {
+                // 短暂断线保留登录状态并重连；只有明确的 401/403 才注销。
+            }
+
+            try
+            {
+                await Task.Delay(retryDelay, cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
+
+            retryDelay = TimeSpan.FromSeconds(Math.Min(retryDelay.TotalSeconds * 2, 10));
+        }
+    }
+
+    private async Task ReadAuthorizedSyncStreamAsync(
+        HttpResponseMessage response,
+        CancellationToken cancellationToken)
+    {
+        await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+        using var reader = new StreamReader(stream, Encoding.UTF8);
+        var data = new StringBuilder();
+
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            var line = await reader.ReadLineAsync(cancellationToken).ConfigureAwait(false);
+            if (line == null)
+            {
+                throw new IOException("DesktopBridge 授权同步流已结束");
+            }
+
+            if (line.Length == 0)
+            {
+                if (data.Length > 0)
+                {
+                    var message = JsonSerializer.Deserialize<DesktopAuthorizedSyncMessage>(data.ToString(), JsonOptions);
+                    data.Clear();
+                    if (message != null && message.Sequence > Interlocked.Read(ref _lastAuthorizedSyncSequence))
+                    {
+                        Interlocked.Exchange(ref _lastAuthorizedSyncSequence, message.Sequence);
+                        NotifyAuthorizedSync(message);
+                    }
+                }
+
+                continue;
+            }
+
+            if (line.StartsWith("data:", StringComparison.Ordinal))
+            {
+                if (data.Length > 0)
+                {
+                    data.Append('\n');
+                }
+
+                data.Append(line.AsSpan("data:".Length).TrimStart());
+            }
+        }
+    }
+
+    private static HttpRequestMessage CreateRequest(
+        HttpMethod method,
+        Uri endpoint,
+        string sessionToken,
+        string? accessToken = null)
     {
         var request = new HttpRequestMessage(method, endpoint);
         request.Headers.TryAddWithoutValidation(TokenHeaderName, sessionToken);
+        if (!string.IsNullOrWhiteSpace(accessToken))
+        {
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        }
         return request;
     }
 
@@ -429,6 +633,36 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
             catch
             {
                 // UI 订阅者异常不能终止 SSE 读取。
+            }
+        }
+    }
+
+    private void NotifyAuthorizedSync(DesktopAuthorizedSyncMessage message)
+    {
+        foreach (var handler in AuthorizedSyncReceived?.GetInvocationList() ?? Array.Empty<Delegate>())
+        {
+            try
+            {
+                ((Action<DesktopAuthorizedSyncMessage>)handler)(message);
+            }
+            catch
+            {
+                // UI 订阅者异常不能终止 SSE 读取。
+            }
+        }
+    }
+
+    private void NotifyAuthorizedSyncAuthorizationFailed(string message)
+    {
+        foreach (var handler in AuthorizedSyncAuthorizationFailed?.GetInvocationList() ?? Array.Empty<Delegate>())
+        {
+            try
+            {
+                ((Action<string>)handler)(message);
+            }
+            catch
+            {
+                // UI 订阅者异常不能终止同步流。
             }
         }
     }

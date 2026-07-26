@@ -23,7 +23,10 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.Xncf.AIKernel.Domain.Services;
+using Senparc.Ncf.Shared.Abstractions.Events;
+using Senparc.Areas.Admin.OHS.Local.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +46,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         private readonly AdminChatSessionModuleService _sessionModuleService;
         private readonly AdminChatAiService _chatAiService;
         private readonly IStringLocalizer<AdminResource> _localizer;
+        private readonly IEventBus _eventBus;
 
         public AdminChatAppService(
             IServiceProvider serviceProvider,
@@ -57,6 +61,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             _sessionModuleService = sessionModuleService;
             _chatAiService = chatAiService;
             _localizer = localizer;
+            _eventBus = serviceProvider.GetService<IEventBus>();
         }
 
         #region 会话管理
@@ -117,6 +122,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 }
 
                 logger.Append($"创建会话: SessionId={session.Id}, UserId={userId}");
+                await PublishSyncEventAsync(userId, session.Id, "session-created");
 
                 return new CreateSessionResponse
                 {
@@ -205,6 +211,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 }
 
                 logger.Append($"删除会话: SessionId={sessionId}, UserId={userId}");
+                await PublishSyncEventAsync(userId, sessionId, "session-deleted");
                 return _localizer["AdminChat.DeleteSessionSuccess"];
             });
         }
@@ -249,6 +256,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     modelIdentifier);
 
                 logger.Append($"发送消息: SessionId={request.SessionId}, MessageId={userMessage.Id}");
+                await PublishSyncEventAsync(userId, request.SessionId, "messages-changed");
 
                 return new SendMessageResponse
                 {
@@ -341,6 +349,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 var deletedCount = await _messageService.DeleteMessagesAsync(sessionId, parsedMessageIds);
                 logger.Append($"批量删除消息: SessionId={sessionId}, DeletedCount={deletedCount}");
+                await PublishSyncEventAsync(userId, sessionId, "messages-changed");
                 return _localizer["AdminChat.DeleteMessagesSuccess", deletedCount];
             });
         }
@@ -498,6 +507,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         #region 私有辅助方法
 
         #endregion
+
+        private ValueTask PublishSyncEventAsync(int userId, int sessionId, string action)
+        {
+            return _eventBus?.PublishAsync(new AdminChatSyncEvent(userId, sessionId, action))
+                   ?? ValueTask.CompletedTask;
+        }
     }
 
     #region 请求和响应模型

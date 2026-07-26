@@ -36,6 +36,18 @@ NCF桌面应用程序的图形用户界面（GUI）版本，提供直观、易�
 - **配置目录访问**：快速打开应用程序配置目录
 - **操作取消**：支持取消正在进行的操作
 
+### 🧭 **多目标工作区**
+- **托管版本**：由桌面端下载、更新和保护配置
+- **外部发布目录**：只启动，不下载、不解压、不自动更新
+- **源码工作区**：自动识别 `Senparc.Web.csproj`，使用匹配的本机 SDK 和 `dotnet run --no-restore`
+- **完整平台矩阵**：`win-x64`、`win-arm64`、`osx-x64`、`osx-arm64`、`linux-x64`、`linux-arm64`
+
+### 🔐 **Admin Agent 快捷聊天**
+- 仅在 DesktopBridge 实时连接且管理员通过 `AdminOnly` JWT 验证时启用
+- 会话和消息始终通过 Admin Chat API 创建、保存和读取
+- EventBus/SSE 只同步资源 ID 与变更类型，不传输聊天正文、密码或 JWT
+- 密码不写入桌面设置；JWT 只保存在当前进程内存，退出或站点停止时清除
+
 ## 🚀 **使用方法**
 
 ### 启动应用程序
@@ -176,6 +188,7 @@ dotnet publish -c Release -r osx-arm64 --self-contained true
 
 # Linux
 dotnet publish -c Release -r linux-x64 --self-contained true
+dotnet publish -c Release -r linux-arm64 --self-contained true
 ```
 
 ## 🐛 **故障排除**
@@ -223,4 +236,4 @@ dotnet publish -c Release -r linux-x64 --self-contained true
 3. 在GitHub Issues中报告问题
 4. 提供完整的系统信息和错误日志
 
-**享受更便捷的NCF开发体验！** 🚀 
+**享受更便捷的NCF开发体验！** 🚀

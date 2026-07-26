@@ -1,5 +1,8 @@
 using System.IO;
+using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using NcfDesktopApp.GUI.Models;
 
 namespace NcfDesktopApp.GUI.Services;
 
@@ -13,7 +16,8 @@ public static class DesktopSettingsStore
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        WriteIndented = true
+        WriteIndented = true,
+        Converters = { new JsonStringEnumConverter() }
     };
 
     public static string SettingsFilePath => Path.Combine(NcfService.AppDataPath, FileName);
@@ -58,7 +62,23 @@ public static class DesktopSettingsStore
 
         Directory.CreateDirectory(NcfService.AppDataPath);
         var normalized = NormalizeMirrorServerBase(settings.MirrorServerBaseUrl);
-        var toWrite = new DesktopUserSettings { MirrorServerBaseUrl = normalized };
+        var environment = string.Equals(settings.AspNetCoreEnvironment, "Development", System.StringComparison.OrdinalIgnoreCase)
+            ? "Development"
+            : "Production";
+        var recentPaths = (settings.RecentNcfPaths ?? new())
+            .Where(path => !string.IsNullOrWhiteSpace(path))
+            .Select(path => path.Trim())
+            .Distinct(System.StringComparer.OrdinalIgnoreCase)
+            .Take(8)
+            .ToList();
+        var toWrite = new DesktopUserSettings
+        {
+            MirrorServerBaseUrl = normalized,
+            LaunchTargetKind = settings.LaunchTargetKind,
+            ExternalNcfPath = settings.ExternalNcfPath?.Trim() ?? string.Empty,
+            RecentNcfPaths = recentPaths,
+            AspNetCoreEnvironment = environment
+        };
         File.WriteAllText(SettingsFilePath, JsonSerializer.Serialize(toWrite, JsonOptions));
     }
 }

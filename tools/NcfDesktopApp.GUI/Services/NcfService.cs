@@ -23,6 +23,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using NcfDesktopApp.GUI.Models;
 
 namespace NcfDesktopApp.GUI.Services;
 
@@ -805,13 +806,54 @@ public class NcfService
         string? desktopBridgeToken,
         CancellationToken cancellationToken = default)
     {
-        // 确定 NCF 应用所在目录（兼容压缩包内嵌套目录）
-        var ncfAppDir = FindNcfAppDirectory() ?? NcfRuntimePath;
+        var resolution = NcfLaunchTargetResolver.ResolveManagedRuntime(NcfRuntimePath);
+        if (!resolution.IsValid)
+        {
+            throw new FileNotFoundException(resolution.ErrorMessage, NcfRuntimePath);
+        }
+
+        return await StartNcfProcessAsync(
+            resolution.Target!,
+            port,
+            desktopBridgeToken,
+            "Production",
+            cancellationToken);
+    }
+
+    /// <summary>
+    /// 启动显式解析后的 NCF 目标。外部目标不会被更新器清理、解压或修改文件属性。
+    /// </summary>
+    public async Task<Process> StartNcfProcessAsync(
+        NcfLaunchTarget target,
+        int port,
+        string? desktopBridgeToken,
+        string aspNetCoreEnvironment,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(target);
+
+        var environment = string.Equals(aspNetCoreEnvironment, "Development", StringComparison.OrdinalIgnoreCase)
+            ? "Development"
+            : "Production";
+
+        return target.IsSourceProject
+            ? await StartSourceProjectAsync(target, port, desktopBridgeToken, environment, cancellationToken)
+            : await StartPublishedTargetAsync(target, port, desktopBridgeToken, environment, cancellationToken);
+    }
+
+    private async Task<Process> StartPublishedTargetAsync(
+        NcfLaunchTarget target,
+        int port,
+        string? desktopBridgeToken,
+        string environment,
+        CancellationToken cancellationToken)
+    {
+        var ncfAppDir = target.WorkingDirectory;
 
         // 路径定义（基于实际 NCF 目录）
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (target.IsManaged && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            // 尝试去除隔离属性，避免 Gatekeeper 阻止启动
+            // 只对桌面端自己管理和下载的 Runtime 处理隔离属性。
             TryRemoveQuarantine(ncfAppDir);
         }
         var dllPath = Path.Combine(ncfAppDir, "Senparc.Web.dll");
@@ -835,8 +877,11 @@ public class NcfService
         }
         else if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && File.Exists(exePathUnix))
         {
-            // 确保可执行权限
-            TryMakeExecutable(exePathUnix);
+            // 外部目录保持原样；仅允许修改桌面端自己管理的 Runtime 文件权限。
+            if (target.IsManaged)
+            {
+                TryMakeExecutable(exePathUnix);
+            }
             startInfo = new ProcessStartInfo
             {
                 FileName = exePathUnix,
@@ -851,10 +896,13 @@ public class NcfService
             // 回退到框架依赖方式：dotnet Senparc.Web.dll
             if (!File.Exists(dllPath))
             {
-                throw new FileNotFoundException($"未找到 NCF 启动文件（既没有自包含可执行，也没有 dll）: {NcfRuntimePath}");
+                throw new FileNotFoundException($"未找到 NCF 启动文件（既没有自包含可执行，也没有 dll）: {ncfAppDir}");
             }
 
-            var dotnetPath = await ResolveCompatibleDotnetPathAsync(ncfAppDir, cancellationToken);
+            var dotnetPath = await ResolveCompatibleDotnetPathAsync(
+                ncfAppDir,
+                allowAutomaticInstall: target.IsManaged,
+                cancellationToken);
 
             startInfo = new ProcessStartInfo
             {
@@ -868,7 +916,7 @@ public class NcfService
 
         // 通用环境变量
         startInfo.Environment["ASPNETCORE_URLS"] = $"http://localhost:{port}";
-        startInfo.Environment["ASPNETCORE_ENVIRONMENT"] = "Production";
+        startInfo.Environment["ASPNETCORE_ENVIRONMENT"] = environment;
         ApplyDesktopBridgeEnvironment(startInfo, desktopBridgeToken);
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
@@ -876,16 +924,7 @@ public class NcfService
         }
 
         // 如果使用本地 dotnet ，补充 DOTNET_ROOT 和 PATH 以保证宿主可定位到运行时
-        var localDotnet = GetLocalDotnetPath();
-        if (File.Exists(localDotnet))
-        {
-            var localRoot = GetLocalDotnetInstallDir();
-            startInfo.Environment["DOTNET_ROOT"] = localRoot;
-            var existingPath = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
-            startInfo.Environment["PATH"] = string.IsNullOrEmpty(existingPath)
-                ? localRoot
-                : localRoot + Path.PathSeparator + existingPath;
-        }
+        ApplyDotnetEnvironment(startInfo, startInfo.FileName);
 
         // 捕获进程输出，便于诊断
         startInfo.RedirectStandardOutput = true;
@@ -893,7 +932,16 @@ public class NcfService
         startInfo.StandardOutputEncoding = System.Text.Encoding.UTF8;
         startInfo.StandardErrorEncoding = System.Text.Encoding.UTF8;
         
-        var process = Process.Start(startInfo);
+        Process? process;
+        try
+        {
+            process = Process.Start(startInfo);
+        }
+        catch (Exception ex) when (File.Exists(dllPath) && !IsDotnetHost(startInfo.FileName))
+        {
+            _logger?.LogWarning(ex, "自包含入口启动失败，回退到 dotnet DLL 方式");
+            process = null;
+        }
         
         // 附加输出捕获事件处理
         AttachProcessOutputHandlers(process);
@@ -901,7 +949,10 @@ public class NcfService
         if ((process == null || process.HasExited) && File.Exists(Path.Combine(ncfAppDir, "Senparc.Web.dll")))
         {
             _logger?.LogWarning("检测到自包含启动失败，回退到 dotnet 方式...");
-            var dotnetPath = await ResolveCompatibleDotnetPathAsync(ncfAppDir, cancellationToken);
+            var dotnetPath = await ResolveCompatibleDotnetPathAsync(
+                ncfAppDir,
+                allowAutomaticInstall: target.IsManaged,
+                cancellationToken);
 
             var fb = new ProcessStartInfo
             {
@@ -916,20 +967,13 @@ public class NcfService
                 StandardErrorEncoding = System.Text.Encoding.UTF8
             };
             fb.Environment["ASPNETCORE_URLS"] = $"http://localhost:{port}";
-            fb.Environment["ASPNETCORE_ENVIRONMENT"] = "Production";
+            fb.Environment["ASPNETCORE_ENVIRONMENT"] = environment;
             ApplyDesktopBridgeEnvironment(fb, desktopBridgeToken);
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 fb.Environment["DOTNET_SYSTEM_GLOBALIZATION_INVARIANT"] = "1";
             }
-            var local2 = GetLocalDotnetPath();
-            if (File.Exists(local2))
-            {
-                var root2 = GetLocalDotnetInstallDir();
-                fb.Environment["DOTNET_ROOT"] = root2;
-                var path2 = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
-                fb.Environment["PATH"] = string.IsNullOrEmpty(path2) ? root2 : root2 + Path.PathSeparator + path2;
-            }
+            ApplyDotnetEnvironment(fb, dotnetPath);
             process = Process.Start(fb);
             AttachProcessOutputHandlers(process);
         }
@@ -943,7 +987,10 @@ public class NcfService
                 if (process.HasExited && File.Exists(Path.Combine(ncfAppDir, "Senparc.Web.dll")))
                 {
                     _logger?.LogWarning("自包含进程瞬退，回退到 dotnet DLL 启动...");
-                    var dotnetPath2 = await ResolveCompatibleDotnetPathAsync(ncfAppDir, cancellationToken);
+                    var dotnetPath2 = await ResolveCompatibleDotnetPathAsync(
+                        ncfAppDir,
+                        allowAutomaticInstall: target.IsManaged,
+                        cancellationToken);
                     var fb2 = new ProcessStartInfo
                     {
                         FileName = dotnetPath2,
@@ -957,20 +1004,13 @@ public class NcfService
                         StandardErrorEncoding = System.Text.Encoding.UTF8
                     };
                     fb2.Environment["ASPNETCORE_URLS"] = $"http://localhost:{port}";
-                    fb2.Environment["ASPNETCORE_ENVIRONMENT"] = "Production";
+                    fb2.Environment["ASPNETCORE_ENVIRONMENT"] = environment;
                     ApplyDesktopBridgeEnvironment(fb2, desktopBridgeToken);
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     {
                         fb2.Environment["DOTNET_SYSTEM_GLOBALIZATION_INVARIANT"] = "1";
                     }
-                    var local3 = GetLocalDotnetPath();
-                    if (File.Exists(local3))
-                    {
-                        var root3 = GetLocalDotnetInstallDir();
-                        fb2.Environment["DOTNET_ROOT"] = root3;
-                        var path3 = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
-                        fb2.Environment["PATH"] = string.IsNullOrEmpty(path3) ? root3 : root3 + Path.PathSeparator + path3;
-                    }
+                    ApplyDotnetEnvironment(fb2, dotnetPath2);
                     process = Process.Start(fb2);
                     AttachProcessOutputHandlers(process);
                 }
@@ -985,6 +1025,93 @@ public class NcfService
         return process;
     }
 
+    private async Task<Process> StartSourceProjectAsync(
+        NcfLaunchTarget target,
+        int port,
+        string? desktopBridgeToken,
+        string environment,
+        CancellationToken cancellationToken)
+    {
+        if (!File.Exists(target.EntryPath))
+        {
+            throw new FileNotFoundException("NCF 源码项目不存在。", target.EntryPath);
+        }
+
+        var sdkResolution = DotnetSdkResolver.Resolve(target.TargetFramework, target.WorkingDirectory);
+        if (!sdkResolution.IsValid)
+        {
+            throw new InvalidOperationException(sdkResolution.ErrorMessage);
+        }
+
+        var startInfo = CreateSourceProjectStartInfo(
+            target,
+            sdkResolution.DotnetPath!,
+            port,
+            desktopBridgeToken,
+            environment);
+        ApplyDotnetEnvironment(startInfo, sdkResolution.DotnetPath!);
+
+        _logger?.LogInformation(
+            "从源码启动 NCF: {Project}，SDK: {SdkVersion}，dotnet: {DotnetPath}",
+            target.EntryPath,
+            sdkResolution.SelectedSdkVersion,
+            sdkResolution.DotnetPath);
+        var process = Process.Start(startInfo)
+                      ?? throw new InvalidOperationException("无法启动 dotnet run 进程");
+        AttachProcessOutputHandlers(process);
+
+        // 给 dotnet CLI 一个短暂的同步失败窗口，便于尽早反馈缺少构建产物或 SDK 错误。
+        try
+        {
+            await Task.Delay(500, cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            if (!process.HasExited)
+            {
+                process.Kill(entireProcessTree: true);
+            }
+            throw;
+        }
+
+        if (process.HasExited)
+        {
+            throw new InvalidOperationException(
+                $"dotnet run 启动后立即退出（ExitCode: {process.ExitCode}）。请查看上方 CLI 输出；源码模式未执行 restore。");
+        }
+
+        return process;
+    }
+
+    internal static ProcessStartInfo CreateSourceProjectStartInfo(
+        NcfLaunchTarget target,
+        string dotnetPath,
+        int port,
+        string? desktopBridgeToken,
+        string environment)
+    {
+        var startInfo = new ProcessStartInfo
+        {
+            FileName = dotnetPath,
+            WorkingDirectory = target.WorkingDirectory,
+            UseShellExecute = false,
+            CreateNoWindow = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            StandardOutputEncoding = System.Text.Encoding.UTF8,
+            StandardErrorEncoding = System.Text.Encoding.UTF8
+        };
+        startInfo.ArgumentList.Add("run");
+        startInfo.ArgumentList.Add("--project");
+        startInfo.ArgumentList.Add(target.EntryPath);
+        startInfo.ArgumentList.Add("--no-restore");
+        startInfo.ArgumentList.Add("--no-launch-profile");
+        startInfo.Environment["ASPNETCORE_URLS"] = $"http://localhost:{port}";
+        startInfo.Environment["ASPNETCORE_ENVIRONMENT"] = environment;
+        ApplyDesktopBridgeEnvironment(startInfo, desktopBridgeToken);
+        return startInfo;
+    }
+
     private static void ApplyDesktopBridgeEnvironment(ProcessStartInfo startInfo, string? desktopBridgeToken)
     {
         if (!string.IsNullOrWhiteSpace(desktopBridgeToken))
@@ -993,45 +1120,37 @@ public class NcfService
         }
     }
 
-    private static string? FindNcfAppDirectory()
+    private static bool IsDotnetHost(string path)
     {
-        try
-        {
-            // 优先检查根目录
-            var rootDll = Path.Combine(NcfRuntimePath, "Senparc.Web.dll");
-            var rootWinExe = Path.Combine(NcfRuntimePath, "Senparc.Web.exe");
-            var rootUnixExe = Path.Combine(NcfRuntimePath, "Senparc.Web");
-            if (File.Exists(rootDll) || File.Exists(rootWinExe) || File.Exists(rootUnixExe))
-            {
-                return NcfRuntimePath;
-            }
-
-            // 递归查找（只搜索两层以降低成本）
-            foreach (var dir in Directory.GetDirectories(NcfRuntimePath))
-            {
-                if (ContainsNcfApp(dir)) return dir;
-                foreach (var sub in Directory.GetDirectories(dir))
-                {
-                    if (ContainsNcfApp(sub)) return sub;
-                }
-            }
-        }
-        catch
-        {
-            // ignore scanning errors
-        }
-        return null;
+        var fileName = Path.GetFileName(path);
+        return string.Equals(fileName, "dotnet", StringComparison.OrdinalIgnoreCase)
+               || string.Equals(fileName, "dotnet.exe", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static bool ContainsNcfApp(string directory)
+    internal static void ApplyDotnetEnvironment(ProcessStartInfo startInfo, string dotnetPath)
     {
-        var dll = Path.Combine(directory, "Senparc.Web.dll");
-        var winExe = Path.Combine(directory, "Senparc.Web.exe");
-        var unixExe = Path.Combine(directory, "Senparc.Web");
-        return File.Exists(dll) || File.Exists(winExe) || File.Exists(unixExe);
+        if (!IsDotnetHost(dotnetPath))
+        {
+            return;
+        }
+
+        var dotnetRoot = DotnetSdkResolver.GetDotnetRoot(dotnetPath);
+        if (string.IsNullOrWhiteSpace(dotnetRoot))
+        {
+            return;
+        }
+
+        startInfo.Environment["DOTNET_ROOT"] = dotnetRoot;
+        var existingPath = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+        startInfo.Environment["PATH"] = string.IsNullOrEmpty(existingPath)
+            ? dotnetRoot
+            : dotnetRoot + Path.PathSeparator + existingPath;
     }
 
-    private async Task<string> ResolveCompatibleDotnetPathAsync(string ncfAppDir, CancellationToken cancellationToken)
+    private async Task<string> ResolveCompatibleDotnetPathAsync(
+        string ncfAppDir,
+        bool allowAutomaticInstall,
+        CancellationToken cancellationToken)
     {
         var requiredMajorVersion = GetRequiredDotnetMajorVersion(ncfAppDir);
         var localDotnet = GetLocalDotnetPath();
@@ -1042,10 +1161,22 @@ public class NcfService
             return localDotnet;
         }
 
-        if (HasCompatibleDotnetRuntime("dotnet", requiredMajorVersion))
+        foreach (var candidate in DotnetSdkResolver.GetCandidatePaths())
         {
-            _logger?.LogInformation($"使用系统 .NET {requiredMajorVersion} 运行时");
-            return "dotnet";
+            if (HasCompatibleDotnetRuntime(candidate, requiredMajorVersion))
+            {
+                _logger?.LogInformation(
+                    "使用系统 .NET {RequiredMajorVersion} 运行时: {DotnetPath}",
+                    requiredMajorVersion,
+                    candidate);
+                return candidate;
+            }
+        }
+
+        if (!allowAutomaticInstall)
+        {
+            throw new InvalidOperationException(
+                $"未找到兼容的 .NET {requiredMajorVersion} ASP.NET Core 运行时。外部目标模式不会下载运行时或修改目标目录，请先安装对应运行时。");
         }
 
         _logger?.LogWarning($"未找到兼容的 .NET {requiredMajorVersion} ASP.NET Core 运行时，将安装到用户目录");
@@ -1071,19 +1202,7 @@ public class NcfService
             if (runtimeOptions.TryGetProperty("tfm", out var tfmElement))
             {
                 var tfm = tfmElement.GetString();
-                if (!string.IsNullOrWhiteSpace(tfm) && tfm.StartsWith("net", StringComparison.OrdinalIgnoreCase))
-                {
-                    var versionText = tfm[3..];
-                    var dotIndex = versionText.IndexOf('.');
-                    if (dotIndex >= 0)
-                    {
-                        versionText = versionText[..dotIndex];
-                    }
-                    if (int.TryParse(versionText, out var majorVersion) && majorVersion > 0)
-                    {
-                        return majorVersion;
-                    }
-                }
+                return DotnetSdkResolver.GetTargetFrameworkMajorVersion(tfm ?? string.Empty);
             }
         }
         catch
@@ -1096,7 +1215,7 @@ public class NcfService
 
     private static bool HasCompatibleDotnetRuntime(string dotnetPath, int requiredMajorVersion)
     {
-        if (!string.Equals(dotnetPath, "dotnet", StringComparison.Ordinal) && !File.Exists(dotnetPath))
+        if (Path.IsPathRooted(dotnetPath) && !File.Exists(dotnetPath))
         {
             return false;
         }
@@ -1375,7 +1494,26 @@ public class NcfService
         return "powershell.exe";
     }
     
-    public async Task<bool> WaitForSiteReadyAsync(string siteUrl, Process? process, int timeoutSeconds, CancellationToken cancellationToken = default)
+    public Task<bool> WaitForSiteReadyAsync(
+        string siteUrl,
+        Process? process,
+        int timeoutSeconds,
+        CancellationToken cancellationToken = default)
+    {
+        return WaitForSiteReadyAsync(
+            siteUrl,
+            process,
+            timeoutSeconds,
+            requireNcfBranding: true,
+            cancellationToken: cancellationToken);
+    }
+
+    public async Task<bool> WaitForSiteReadyAsync(
+        string siteUrl,
+        Process? process,
+        int timeoutSeconds,
+        bool requireNcfBranding,
+        CancellationToken cancellationToken = default)
     {
         var timeout = TimeSpan.FromSeconds(timeoutSeconds);
         var startTime = DateTime.UtcNow;
@@ -1408,10 +1546,10 @@ public class NcfService
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync(cancellationToken);
-                    // 内容校验：尽量确认是 NCF 页而不是其它服务
+                    // 托管版本保持品牌校验；外部旧版本允许首页没有 NCF/Senparc 标识。
                     var looksLikeNcf = content.IndexOf("Senparc", StringComparison.OrdinalIgnoreCase) >= 0
                                         || content.IndexOf("NCF", StringComparison.OrdinalIgnoreCase) >= 0;
-                    if (looksLikeNcf)
+                    if (!requireNcfBranding || looksLikeNcf)
                     {
                         consecutiveOk++;
                     }

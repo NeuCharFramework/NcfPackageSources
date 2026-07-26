@@ -135,6 +135,44 @@ public sealed class DesktopBridgeClientTests
         Assert.IsTrue(attempt >= 2);
     }
 
+    [TestMethod]
+    public async Task StartAuthorizedSyncAsync_SendsDesktopAndBearerTokens_AndReadsNotification()
+    {
+        string? desktopToken = null;
+        string? authorization = null;
+        await using var client = CreateClient(request =>
+        {
+            desktopToken = request.Headers.GetValues(DesktopBridgeClient.TokenHeaderName).Single();
+            authorization = request.Headers.Authorization?.ToString();
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent("""
+                    event: authorized-sync
+                    id: 1
+                    data: {"sequence":1,"channel":"admin-chat","resourceId":"42","action":"messages-changed","time":"2026-07-26T00:00:00Z"}
+
+
+                    """, Encoding.UTF8, "text/event-stream")
+            };
+        });
+        var received = new TaskCompletionSource<DesktopAuthorizedSyncMessage>(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+        client.AuthorizedSyncReceived += message => received.TrySetResult(message);
+
+        await client.StartAuthorizedSyncAsync(
+            SiteUrl,
+            Token,
+            "admin-jwt",
+            "/api/Senparc.Xncf.DesktopBridge/authorized-sync/events");
+        var message = await received.Task.WaitAsync(TimeSpan.FromSeconds(2));
+        await client.StopAuthorizedSyncAsync();
+
+        Assert.AreEqual(Token, desktopToken);
+        Assert.AreEqual("Bearer admin-jwt", authorization);
+        Assert.AreEqual("admin-chat", message.Channel);
+        Assert.AreEqual("42", message.ResourceId);
+    }
+
     private static DesktopBridgeClient CreateClient(Func<HttpRequestMessage, HttpResponseMessage> responseFactory)
     {
         var httpClient = new HttpClient(new StubHttpMessageHandler(responseFactory))

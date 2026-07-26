@@ -96,10 +96,10 @@ public partial class MainWindow : Window
                 var workingHeight = workingArea.Height / scaling;
 
                 // 定义理想尺寸。高度略高于默认值，尽量让左侧紧凑布局无需滚动。
-                const double idealWidth = 920;
+                const double idealWidth = 1040;
                 const double idealHeight = 900;
-                const double preferredMinWidth = 760;
-                const double preferredMinHeight = 560;
+                const double preferredMinWidth = 820;
+                const double preferredMinHeight = 600;
                 const double safetyMargin = 24;
 
                 var availableWidth = Math.Max(1, workingWidth - safetyMargin);

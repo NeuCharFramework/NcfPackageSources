@@ -5,6 +5,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Threading;
+using NcfDesktopApp.GUI.Services;
 using System.Runtime.InteropServices;
 using WebView = AvaloniaWebView.WebView;
 
@@ -195,7 +196,7 @@ public partial class EmbeddedWebView : UserControl
                     // 🔧 方案1优化：如果有初始 URL，则导航到它
                     // 注意：这里直接调用 NavigateToUrlAsync，而不是 UpdateSource()，
                     // 因为 UpdateSource() 会检查 _currentUrl，但此时还没有设置
-                    if (!string.IsNullOrEmpty(Source))
+                    if (WebNavigationPolicy.TryGetNavigableUri(Source, out _))
                     {
                         Debug.WriteLine($"🎯 准备导航到初始 URL: {Source}");
                         _ = NavigateToUrlAsync(Source);
@@ -250,7 +251,7 @@ public partial class EmbeddedWebView : UserControl
     {
         // 🔧 方案1优化：避免在标签切换时重新导航
         // 如果 URL 没有变化，不执行导航（保持当前页面状态）
-        if (_isWebViewReady && !string.IsNullOrEmpty(Source))
+        if (_isWebViewReady && WebNavigationPolicy.TryGetNavigableUri(Source, out _))
         {
             // 比较新 URL 和当前 URL，如果相同则跳过导航
             if (string.Equals(_currentUrl, Source, StringComparison.OrdinalIgnoreCase))
@@ -266,7 +267,7 @@ public partial class EmbeddedWebView : UserControl
 
     private async Task NavigateToUrlAsync(string url)
     {
-        if (!_isWebViewReady || string.IsNullOrEmpty(url))
+        if (!_isWebViewReady || !WebNavigationPolicy.TryGetNavigableUri(url, out var targetUri))
         {
             Debug.WriteLine($"⚠️ 跳过导航: Ready={_isWebViewReady}, URL={url}");
             return;
@@ -284,7 +285,7 @@ public partial class EmbeddedWebView : UserControl
                     try
                     {
                         Debug.WriteLine($"🚀 WebView.Url 设置为: {url}");
-                        _webView.Url = new Uri(url);
+                        _webView.Url = targetUri;
                         _currentUrl = url;
                         Debug.WriteLine($"✅ WebView.Url 设置成功");
                         UpdateStatus("页面加载完成", Brushes.Green);
@@ -453,7 +454,7 @@ public partial class EmbeddedWebView : UserControl
         };
         openExternalButton.Click += (s, e) =>
         {
-            if (!string.IsNullOrEmpty(Source))
+            if (WebNavigationPolicy.TryGetNavigableUri(Source, out _))
             {
                 OpenInExternalBrowser(Source);
             }
@@ -640,4 +641,4 @@ public partial class EmbeddedWebView : UserControl
             Debug.WriteLine($"❌ WebView 清理失败: {ex.Message}");
         }
     }
-} 
+}
