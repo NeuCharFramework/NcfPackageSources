@@ -113,13 +113,25 @@ check_dotnet() {
 restore_packages() {
     if [ "$NO_RESTORE" = true ]; then
         echo -e "${YELLOW}⏭️  跳过包还原${NC}"
+        if [ "$READY_TO_RUN" = true ]; then
+            echo -e "${YELLOW}⚠️  已启用 --ready-to-run：若先前还原未带 PublishReadyToRun=true，发布可能出现 NETSDK1094${NC}"
+        fi
         return
     fi
     
     echo -e "${BLUE}📦 还原 NuGet 包...${NC}"
     cd "$SOLUTION_DIR"
     mkdir -p "$TASK_NUGET_PACKAGES" "$TASK_NUGET_HTTP_CACHE"
-    if NUGET_PACKAGES="$TASK_NUGET_PACKAGES" NUGET_HTTP_CACHE_PATH="$TASK_NUGET_HTTP_CACHE" dotnet restore "$PROJECT_FILE"; then
+
+    # ReadyToRun 需要在 restore 阶段拉取 Crossgen2 / 目标 RID 运行时包。
+    # 若 restore 未带 PublishReadyToRun=true，而 publish 又使用 --no-restore，会触发 NETSDK1094。
+    local restore_cmd="env NUGET_PACKAGES=\"$TASK_NUGET_PACKAGES\" NUGET_HTTP_CACHE_PATH=\"$TASK_NUGET_HTTP_CACHE\" dotnet restore \"$PROJECT_FILE\""
+    if [ "$READY_TO_RUN" = true ]; then
+        restore_cmd="$restore_cmd -p:PublishReadyToRun=true"
+        echo -e "${BLUE}   (ReadyToRun: 还原时包含运行时优化包)${NC}"
+    fi
+
+    if eval $restore_cmd; then
         echo -e "${GREEN}✅ 包还原成功${NC}"
     else
         echo -e "${RED}❌ 包还原失败${NC}"

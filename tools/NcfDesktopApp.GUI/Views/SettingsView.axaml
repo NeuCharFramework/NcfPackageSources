@@ -440,7 +440,7 @@
 
                     <Border Grid.Row="3" Background="{DynamicResource LogBackgroundBrush}">
                         <ScrollViewer Name="LogScrollViewer"
-                                      Padding="12,8"
+                                      Padding="12,8,12,24"
                                       VerticalScrollBarVisibility="Auto"
                                       HorizontalScrollBarVisibility="Auto"
                                       ScrollChanged="LogScrollViewer_OnScrollChanged">
@@ -450,6 +450,7 @@
                                                  TextWrapping="Wrap"
                                                  Foreground="{DynamicResource InputTextBrush}"
                                                  LineHeight="15"
+                                                 Margin="0,0,0,4"
                                                  Background="Transparent"
                                                  SelectionBrush="{DynamicResource SystemAccentColor}"/>
                         </ScrollViewer>
