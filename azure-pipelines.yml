@@ -112,7 +112,7 @@ steps:
   inputs:
     command: build
     projects: '**/NcfPackageSources.sln'
-    arguments: '--configuration Release --no-restore'
+    arguments: '--configuration $(buildConfiguration) --no-restore --disable-build-servers -m:1'
   
 # - task: VSTest@2  
 #   inputs:  
