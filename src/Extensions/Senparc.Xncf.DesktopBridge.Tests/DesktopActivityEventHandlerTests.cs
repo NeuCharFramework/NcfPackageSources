@@ -42,7 +42,7 @@ public sealed class DesktopActivityEventHandlerTests
     public async Task RequestAndResponseEvents_UpdateAndCompleteSameActivity()
     {
         var hub = new DesktopActivityHub();
-        var handler = new DesktopActivityEventHandler(hub);
+        var handler = new DesktopActivityEventHandler(hub, new DesktopAuthorizedSyncHub());
 
         await handler.Handle(new DemoRequestEvent("request-42"), CancellationToken.None);
         var active = hub.GetActiveSnapshot();
@@ -62,7 +62,7 @@ public sealed class DesktopActivityEventHandlerTests
     public async Task FailedResponse_IsTerminalAndDoesNotEscapeHandler()
     {
         var hub = new DesktopActivityHub();
-        var handler = new DesktopActivityEventHandler(hub);
+        var handler = new DesktopActivityEventHandler(hub, new DesktopAuthorizedSyncHub());
 
         await handler.Handle(new DemoRequestEvent("request-failed"), CancellationToken.None);
         await handler.Handle(
@@ -70,6 +70,40 @@ public sealed class DesktopActivityEventHandlerTests
             CancellationToken.None);
 
         Assert.AreEqual(0, hub.GetActiveSnapshot().Count);
+    }
+
+    [TestMethod]
+    public async Task AuthorizedSyncEvent_IsNotPublishedToGenericActivityStream()
+    {
+        var activityHub = new DesktopActivityHub();
+        var syncHub = new DesktopAuthorizedSyncHub();
+        var handler = new DesktopActivityEventHandler(activityHub, syncHub);
+
+        await handler.Handle(
+            new DemoAuthorizedSyncEvent("42", "session-7", "messages-changed"),
+            CancellationToken.None);
+
+        Assert.AreEqual(0, activityHub.GetActiveSnapshot().Count);
+        await using var subscription = syncHub
+            .Subscribe("42", "AdminOnly", replayBuffered: true)
+            .GetAsyncEnumerator();
+        Assert.IsTrue(await subscription.MoveNextAsync());
+        Assert.AreEqual("session-7", subscription.Current.ResourceId);
+    }
+
+    [TestMethod]
+    public async Task AuthorizedSyncHub_FiltersReplayByOwnerAndPolicy()
+    {
+        var hub = new DesktopAuthorizedSyncHub();
+        hub.Publish(new DemoAuthorizedSyncEvent("other", "session-secret", "messages-changed"));
+        hub.Publish(new DemoAuthorizedSyncEvent("42", "session-visible", "messages-changed"));
+
+        await using var subscription = hub
+            .Subscribe("42", "AdminOnly", replayBuffered: true)
+            .GetAsyncEnumerator();
+
+        Assert.IsTrue(await subscription.MoveNextAsync());
+        Assert.AreEqual("session-visible", subscription.Current.ResourceId);
     }
 
     private static void RegisterHandlersLikeNcfEventBus(IServiceCollection services, Assembly assembly)
@@ -94,6 +128,16 @@ public sealed class DesktopActivityEventHandlerTests
     private sealed record DemoRequestEvent(string RequestId) : IntegrationEvent;
 
     private sealed record DemoResponseEvent(string RequestId, bool Success, string? ErrorMessage) : IntegrationEvent;
+
+    private sealed record DemoAuthorizedSyncEvent(
+        string OwnerId,
+        string ResourceId,
+        string Action) : IntegrationEvent, IAuthorizedIntegrationSyncEvent
+    {
+        public string Channel => "admin-chat";
+
+        public string RequiredPolicy => "AdminOnly";
+    }
 
     private sealed class TestHostEnvironment : IHostEnvironment
     {
