@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.15.0-preview3 为 SystemManager 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -43,11 +46,11 @@ namespace Senparc.Xncf.SystemManager
 
         public override string Version => "1.1.2";//必须填写版本号
 
-        public override string MenuName => "系统管理";
+        public override string MenuName => SystemManagerResource.Get("Module.SystemManager.MenuName", "系统管理");
 
         public override string Icon => "fa fa-university";//fa fa-cog
 
-        public override string Description => "这是系统服务核心模块，主管基础数据结构和网站核心运行数据，请勿删除此模块。如果你实在忍不住，请务必做好数据备份。";
+        public override string Description => SystemManagerResource.Get("Module.SystemManager.Description", "这是系统服务核心模块，主管基础数据结构和网站核心运行数据，请勿删除此模块。如果你实在忍不住，请务必做好数据备份。");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

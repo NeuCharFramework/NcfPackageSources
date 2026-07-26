@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.37.0-preview5 增强 XNCF 构建、数据库迁移与 AI 生成流程的本地化支持
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.AppServices;
@@ -33,7 +36,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [FunctionRender("生成 AppService 接口代码", "将某个模块的 AppService ", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.GenerateInterface.Name", "Function.XncfBuilder.GenerateInterface.Description", typeof(Register))]
         public Task<StringAppResponse> Generate(GenerateAppServiceInterface_GenerateRequest request)
         {
             return this.GetStringResponseAsync((response, logger) => Task.FromResult(""));

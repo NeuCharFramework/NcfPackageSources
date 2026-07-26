@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.15.0-preview2 为 Tenant 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -56,11 +59,11 @@ namespace Senparc.Xncf.Tenant
 
         public override string Version => "0.1";//必须填写版本号
 
-        public override string MenuName => "多租户";
+        public override string MenuName => TenantResource.Get("Module.Tenant.MenuName", "多租户");
 
         public override string Icon => "fa fa-university";//fa fa-cog
 
-        public override string Description => "多租户模块，这是系统服务核心模块，请勿删除此模块。如果你实在忍不住，请务必做好数据备份。";
+        public override string Description => TenantResource.Get("Module.Tenant.Description", "多租户模块，这是系统服务核心模块，请勿删除此模块。如果你实在忍不住，请务必做好数据备份。");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

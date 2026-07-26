@@ -1,3 +1,19 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：DesktopUserSettings.cs
+    文件功能描述：桌面应用用户设置模型
+    
+    
+    创建标识：Senparc - 20260504
+    
+    修改标识：Senparc - 20260724
+    修改描述：v0.1.0 增强更新源选择、下载反馈与桌面窗口兼容性
+
+----------------------------------------------------------------*/
+using System.Collections.Generic;
+using NcfDesktopApp.GUI.Models;
+
 namespace NcfDesktopApp.GUI.Services;
 
 /// <summary>
@@ -8,7 +24,27 @@ public sealed class DesktopUserSettings
     public const string DefaultMirrorServerBaseUrl = "https://www.ncf.pub";
 
     /// <summary>
-    /// 备用更新源站点根地址（不含路径）。实际请求元数据为 {此地址}/NcfPackages/latest-release.json。
+    /// 镜像更新源站点根地址（不含路径）。实际请求元数据为 {此地址}/NcfPackages/latest-release.json。
     /// </summary>
     public string MirrorServerBaseUrl { get; set; } = DefaultMirrorServerBaseUrl;
+
+    /// <summary>
+    /// 当前工作模式。托管模式允许桌面端更新 Runtime，外部模式只校验和启动用户选择的目标。
+    /// </summary>
+    public NcfLaunchTargetKind LaunchTargetKind { get; set; } = NcfLaunchTargetKind.ManagedPublished;
+
+    /// <summary>
+    /// 最近选择的外部发布目录或源码工作区。
+    /// </summary>
+    public string ExternalNcfPath { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 外部目标最近使用记录。
+    /// </summary>
+    public List<string> RecentNcfPaths { get; set; } = new();
+
+    /// <summary>
+    /// 启动 NCF 时使用的 ASP.NET Core 环境。
+    /// </summary>
+    public string AspNetCoreEnvironment { get; set; } = "Production";
 }

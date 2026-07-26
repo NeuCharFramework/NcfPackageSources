@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.FirmwareUpdate.MenuName" xml:space="preserve">
+    <value>Miroir des paquets NCF</value>
+  </data>
+  <data name="Module.FirmwareUpdate.Description" xml:space="preserve">
+    <value>Synchronise depuis GitHub les paquets NCF pour bureau, conserve les trois dernières versions et génère une liste de téléchargement de secours.</value>
+  </data>
+  <data name="Function.FirmwareUpdate.Settings.Name" xml:space="preserve">
+    <value>Paramètres du miroir</value>
+  </data>
+  <data name="Function.FirmwareUpdate.Settings.Description" xml:space="preserve">
+    <value>Active la synchronisation depuis GitHub et définit un intervalle de 1 à 24 heures</value>
+  </data>
+  <data name="Function.FirmwareUpdate.Sync.Name" xml:space="preserve">
+    <value>Synchroniser maintenant</value>
+  </data>
+  <data name="Function.FirmwareUpdate.Sync.Description" xml:space="preserve">
+    <value>Récupère la dernière Release et met à jour NcfPackages et latest-release.json</value>
+  </data>
+  <data name="Parameter.FirmwareUpdate.AutoMirror" xml:space="preserve">
+    <value>Activer le miroir automatique||Synchroniser les paquets NCF depuis GitHub vers ~/wwwroot/NcfPackages</value>
+  </data>
+  <data name="Parameter.FirmwareUpdate.Interval" xml:space="preserve">
+    <value>Intervalle de vérification (heures)||De 1 à 24 heures</value>
+  </data>
+  <data name="Parameter.FirmwareUpdate.Interval.Option" xml:space="preserve">
+    <value>{0} heures</value>
+  </data>
+  <data name="Parameter.FirmwareUpdate.Interval.Help" xml:space="preserve">
+    <value>Vérifier toutes les {0} heures</value>
+  </data>
+</root>

@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.19.0-preview2 为 Swagger 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 //using Enyim.Caching.Configuration;
@@ -32,7 +35,7 @@ namespace Senparc.Xncf.Swagger
 
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-             new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
+             new AreaPageMenuItem(GetAreaHomeUrl(), SwaggerResource.Get("Area.Home", "首页"),"fa fa-laptop"),
                      };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)

@@ -142,21 +142,7 @@ namespace Senparc.Xncf.XncfBuilder
         /// Senparc实体类模板
         /// 类型: backend_template
         /// </summary>
-        public const string SenparcEntitiesTemplate = @"/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Template_XncfNameSenparcEntities.cs
-    文件功能描述：Template_XncfNameSenparcEntities 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
-
-----------------------------------------------------------------*/
-
-using Microsoft.EntityFrameworkCore;
+        public const string SenparcEntitiesTemplate = @"using Microsoft.EntityFrameworkCore;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.Database;
@@ -186,21 +172,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Models
         /// 颜色模型模板
         /// 类型: backend_template
         /// </summary>
-        public const string ColorModelTemplate = @"/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Color.cs
-    文件功能描述：Color 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
-
-----------------------------------------------------------------*/
-
-using Senparc.Ncf.Core.Models;
+        public const string ColorModelTemplate = @"using Senparc.Ncf.Core.Models;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -301,21 +273,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
         /// 颜色DTO模板
         /// 类型: backend_template
         /// </summary>
-        public const string ColorDtoTemplate = @"/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：ColorDto.cs
-    文件功能描述：ColorDto 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
-
-----------------------------------------------------------------*/
-
-using Senparc.Ncf.Core.Models;
+        public const string ColorDtoTemplate = @"using Senparc.Ncf.Core.Models;
 
 namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto
 {
@@ -348,21 +306,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dt
         /// 颜色服务模板
         /// 类型: backend_template
         /// </summary>
-        public const string ColorServiceTemplate = @"/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：ColorService.cs
-    文件功能描述：ColorService 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
-
-----------------------------------------------------------------*/
-
-using Senparc.Ncf.Core.Enums;
+        public const string ColorServiceTemplate = @"using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
@@ -620,21 +564,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
         /// 数据库示例索引页面代码后置模板
         /// 类型: frontend_template
         /// </summary>
-        public const string DatabaseSampleIndexCodeBehindTemplate = @"/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：DatabaseSampleIndex.cshtml.cs
-    文件功能描述：DatabaseSampleIndex.cshtml 相关实现
-    
-    
-    创建标识：Senparc - 20250606
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
-
-----------------------------------------------------------------*/
-
-using Microsoft.AspNetCore.Mvc;
+        public const string DatabaseSampleIndexCodeBehindTemplate = @"using Microsoft.AspNetCore.Mvc;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.Utility;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Services;

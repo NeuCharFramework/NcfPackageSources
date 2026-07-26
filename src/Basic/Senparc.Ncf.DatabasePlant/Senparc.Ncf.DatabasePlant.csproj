@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.21.1-preview1</Version>
+    <Version>0.21.2-preview2</Version>
     <AssemblyName>Senparc.Ncf.DatabasePlant</AssemblyName>
     <RootNamespace>Senparc.Ncf.DatabasePlant</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -21,18 +21,29 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v0.1.0 创世
-			v0.11.3 添加 Oracle 库引用：Senparc.Ncf.Database.Oracle
-			v0.13.5 完成 .NET 8.0 当前所有数据库 EF Core 的集成
-			v0.16.0 添加大梦（Dm）数据库支持
-			[2024-09-10] v0.19.4-preview1 升级缓存基础库
-			[2024-12-27] v0.20.2-preview1 Add exception log for UseXncfModules() auto progress
-			[2025-01-25] v0.20.6-preview1 Update Agents functions, support for function calling
-			[2025-04-29] v0.20.8-preview1 Update CO2NET and AIKernel
-			[2025-05-18] v0.20.9-preview1 Update Installation
-			[2025-06-20] v0.20.10-preview1 Add MCP functions in XncfRegisterBase class
-
+				v0.1.0 创世
+				v0.11.3 添加 Oracle 库引用：Senparc.Ncf.Database.Oracle
+				v0.13.5 完成 .NET 8.0 当前所有数据库 EF Core 的集成
+				v0.16.0 添加大梦（Dm）数据库支持
+				[2024-09-10] v0.19.4-preview1 升级缓存基础库
+				[2024-12-27] v0.20.2-preview1 Add exception log for UseXncfModules() auto progress
+				[2025-01-25] v0.20.6-preview1 Update Agents functions, support for function calling
+				[2025-04-29] v0.20.8-preview1 Update CO2NET and AIKernel
+				[2025-05-18] v0.20.9-preview1 Update Installation
+				[2025-06-20] v0.20.10-preview1 Add MCP functions in XncfRegisterBase class
 				[2025-11-01] update basic libraries, including Senparc.AI
+				[2026-07-17] v0.21.2-preview2 同步上游项目版本并适配统一本地化能力
+				1、Dependency update from Senparc.Ncf.Core to 0.25.0-preview2
+				2、Dependency update from Senparc.Ncf.Database.Dm to 0.7.2-preview2
+				3、Dependency update from Senparc.Ncf.Database.InMemory to 0.20.2-preview2
+				4、Dependency update from Senparc.Ncf.Database.MySql to 0.20.2-preview2
+				5、Dependency update from Senparc.Ncf.Database.Oracle to 0.10.2-preview2
+				6、Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.2-preview2
+				7、Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.2-preview2
+				8、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.2-preview2
+				9、Dependency update from Senparc.Ncf.Database to 0.21.2-preview2
+				10、Dependency update from Senparc.Ncf.Utility to 0.21.0-preview2
+				11、Dependency update from Senparc.Ncf.XncfBase to 0.23.3-preview2
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

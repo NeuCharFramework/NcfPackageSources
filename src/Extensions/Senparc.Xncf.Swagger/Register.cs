@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.19.0-preview2 为 Swagger 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -55,11 +58,11 @@ namespace Senparc.Xncf.Swagger
 
         public override string Version => "0.7.1";//必须填写版本号
 
-        public override string MenuName => "接口说明文档";
+        public override string MenuName => SwaggerResource.Get("Module.Swagger.MenuName", "接口说明文档");
 
         public override string Icon => "fa fa-file-code-o";
 
-        public override string Description => "接口说明文档";
+        public override string Description => SwaggerResource.Get("Module.Swagger.Description", "接口说明文档");
 
         //public override IList<Type> Functions => new Type[] {  /*typeof(BuildXncf)*/ };
 

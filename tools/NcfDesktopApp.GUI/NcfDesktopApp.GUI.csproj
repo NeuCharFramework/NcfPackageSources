@@ -3,6 +3,28 @@
     <!-- 临时改为 Exe 以显示控制台输出用于调试 -->
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
+    <RuntimeIdentifiers>win-x64;win-arm64;osx-x64;osx-arm64;linux-x64;linux-arm64</RuntimeIdentifiers>
+    <Version>0.3.2</Version>
+    <PackageReleaseNotes>
+      [2026-07-26] v0.3.2 修复停止目标后应用退出
+      1、停止 NCF 仅终止子进程，桌面主窗口保持打开并回到工作台
+      2、避免后台线程更新 UI 与 entireProcessTree 误杀导致进程崩溃
+      [2026-07-26] v0.3.1 修复 macOS 内嵌浏览器复制粘贴快捷键
+      1、增加 NativeMenu Edit（⌘C/⌘V/⌘X/⌘A）并桥接到 WKWebView
+      2、粘贴从系统剪贴板写入页面输入框，普通打字不受影响
+      [2026-07-25] v0.3.0 新增多版本 NCF 启动目标与 Agent 工作台
+      1、支持内置托管版本、外部发布目录和 Senparc.Web 源码工作区
+      2、外部目标隔离自动更新和解压流程，源码模式使用 no-restore 安全启动
+      3、重构目标选择、运行状态和 Agent 活动流界面，并持久化最近使用目标
+      [2026-07-25] v0.2.0 新增可选 DesktopBridge 与桌面机器人
+      1、增加透明置顶桌面机器人，实时提示 NCF 启动、运行、任务完成和失败状态
+      2、增加带随机会话令牌的 DesktopBridge 能力探测与 SSE 客户端
+      3、内部站点未安装、版本不兼容或连接失败时安全降级到进程日志模式并显示安装提示
+      [2026-07-24] v0.1.0 增强桌面端更新、下载反馈与窗口兼容性
+      1、动态测速选择 GitHub 与镜像更新源，并在下载失败时自动切换备用源
+      2、增加下载过程日志和进度反馈，并按目标版本检测及安装 .NET 运行时
+      3、修复高 DPI 屏幕窗口尺寸计算并改善内嵌 WebView 导航兼容性
+    </PackageReleaseNotes>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Nullable>enable</Nullable>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>

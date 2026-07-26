@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.3.0-preview3 为 KnowledgeBase 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -39,9 +42,9 @@ namespace Senparc.Xncf.KnowledgeBase
         public string HomeUrl => "/Admin/KnowledgeBase/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-            new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
-            new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/Index"),"知识库管理","fa fa-bookmark-o"),
-            new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/RecallTest"),"召回测试","fa fa-bookmark-o"),
+            new AreaPageMenuItem(GetAreaHomeUrl(), KnowledgeBaseResource.Get("Area.Home", "首页"),"fa fa-laptop"),
+            new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/Index"), KnowledgeBaseResource.Get("Area.KnowledgeBase.Management", "知识库管理"),"fa fa-bookmark-o"),
+            new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/RecallTest"), KnowledgeBaseResource.Get("Area.KnowledgeBase.RecallTest", "召回测试"),"fa fa-bookmark-o"),
         };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)

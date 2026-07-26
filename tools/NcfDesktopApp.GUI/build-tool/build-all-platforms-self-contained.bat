@@ -148,7 +148,13 @@ if "%NO_RESTORE%"=="true" (
 
 echo [94m📦 还原 NuGet 包...[0m
 cd /d "%SOLUTION_DIR%"
-dotnet restore
+REM ReadyToRun 需要在 restore 阶段拉取 Crossgen2 / 目标 RID 运行时包，否则可能触发 NETSDK1094。
+if "%READY_TO_RUN%"=="true" (
+    echo [94m   (ReadyToRun: 还原时包含运行时优化包)[0m
+    dotnet restore -p:PublishReadyToRun=true
+) else (
+    dotnet restore
+)
 if errorlevel 1 (
     echo [91m❌ 包还原失败[0m
     exit /b 1

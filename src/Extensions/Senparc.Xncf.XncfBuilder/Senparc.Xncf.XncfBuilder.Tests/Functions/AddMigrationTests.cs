@@ -38,10 +38,7 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Functions
                 var function = new DatabaseMigrationsAppService(service);
                 var result = function.AddMigration(new OHS.PL.DatabaseMigrations_MigrationRequest
                 {
-                    DatabaseTypes = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.CheckBoxList)
-                    {
-                        SelectedValues = new[] { MultipleDatabaseType.Sqlite.ToString(),/*, MultipleDatabaseType.SqlServer.ToString(), */MultipleDatabaseType.MySql.ToString() }
-                    },
+                    DatabaseTypes = new[] { MultipleDatabaseType.Sqlite.ToString(),/*, MultipleDatabaseType.SqlServer.ToString(), */MultipleDatabaseType.MySql.ToString() },
 
                     //DbContextName = "XncfBuilderEntities",
                     //MigrationName = "AddConfig",
@@ -49,13 +46,7 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Functions
 
                     DbContextName = "MyAppSenparcEntities",
                     MigrationName = "Add_Counter",
-                    ProjectPath = new SelectionList(SelectionType.DropDownList,
-                    new List<SelectionItem>() {
-                        new SelectionItem() {
-                         Text=@"E:\Senparc项目\NeuCharFramework\NCF\src\SenparcLive.Xncf.MyApp",
-                         Value=@"E:\Senparc项目\NeuCharFramework\NCF\src\SenparcLive.Xncf.MyApp",
-                         DefaultSelected=true
-                        }})
+                    ProjectPath = @"E:\Senparc项目\NeuCharFramework\NCF\src\SenparcLive.Xncf.MyApp"
                 });
 
                 Console.WriteLine(result.ToJson(true).Replace("\\r", "\r").Replace("\\n", "\n"));

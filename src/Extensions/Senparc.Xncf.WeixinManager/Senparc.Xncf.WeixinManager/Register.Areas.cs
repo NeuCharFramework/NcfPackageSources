@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.23.0-preview3 为 WeixinManager 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -31,10 +34,10 @@ namespace Senparc.Xncf.WeixinManager
         public string HomeUrl => "/Admin/WeixinManager/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/Index"),"首页","fa fa-laptop"),
-             new AreaPageMenuItem(GetAreaUrl("/swagger"),"Web Api Swagger","fa fa-file-code-o"),
-             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/MpAccount"),"公众号管理","fa fa-comments"),
-             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/WeixinUser"),"用户管理","fa fa-users"),
+             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/Index"), WeixinManagerResource.Get("Area.Home", "首页"),"fa fa-laptop"),
+             new AreaPageMenuItem(GetAreaUrl("/swagger"), WeixinManagerResource.Get("Area.ApiDocumentation", "Web API Swagger"),"fa fa-file-code-o"),
+             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/MpAccount"), WeixinManagerResource.Get("Area.WeixinManager.OfficialAccounts", "公众号管理"),"fa fa-comments"),
+             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/WeixinUser"), WeixinManagerResource.Get("Area.WeixinManager.Users", "用户管理"),"fa fa-users"),
         };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)

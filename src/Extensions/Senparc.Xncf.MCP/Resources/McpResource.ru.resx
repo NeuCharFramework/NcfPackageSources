@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.MCP.MenuName" xml:space="preserve">
+    <value>Управление MCP</value>
+  </data>
+  <data name="Module.MCP.Description" xml:space="preserve">
+    <value>Управление Model Context Protocol (MCP)</value>
+  </data>
+  <data name="Area.Home" xml:space="preserve">
+    <value>Главная</value>
+  </data>
+  <data name="Area.DatabaseSample" xml:space="preserve">
+    <value>Пример операций с базой данных</value>
+  </data>
+  <data name="Function.MCP.Execute.Name" xml:space="preserve">
+    <value>Выполнить MCP</value>
+  </data>
+  <data name="Function.MCP.Execute.Description" xml:space="preserve">
+    <value>Выполняет MCP; адрес модуля по умолчанию: http://localhost:5000/{Module Name}/sse</value>
+  </data>
+  <data name="Function.Sample.Name" xml:space="preserve">
+    <value>Пример функции</value>
+  </data>
+  <data name="Function.Sample.Description" xml:space="preserve">
+    <value>Демонстрирует параметры и возвращаемые значения FunctionRender</value>
+  </data>
+  <data name="Parameter.Sample.Name" xml:space="preserve">
+    <value>Имя||Текст до двойной черты — имя параметра, после неё — пояснение</value>
+  </data>
+  <data name="Parameter.Sample.Number1" xml:space="preserve">
+    <value>Число||Число 1</value>
+  </data>
+  <data name="Parameter.Sample.Number2" xml:space="preserve">
+    <value>Число||Число 2</value>
+  </data>
+  <data name="Parameter.Sample.Operator" xml:space="preserve">
+    <value>Оператор||</value>
+  </data>
+  <data name="Parameter.Sample.Power" xml:space="preserve">
+    <value>Степень||</value>
+  </data>
+  <data name="Parameter.Operator.Add" xml:space="preserve">
+    <value>Сложение</value>
+  </data>
+  <data name="Parameter.Operator.Add.Help" xml:space="preserve">
+    <value>Число 1 + Число 2</value>
+  </data>
+  <data name="Parameter.Operator.Subtract" xml:space="preserve">
+    <value>Вычитание</value>
+  </data>
+  <data name="Parameter.Operator.Subtract.Help" xml:space="preserve">
+    <value>Число 1 - Число 2</value>
+  </data>
+  <data name="Parameter.Operator.Multiply" xml:space="preserve">
+    <value>Умножение</value>
+  </data>
+  <data name="Parameter.Operator.Multiply.Help" xml:space="preserve">
+    <value>Число 1 × Число 2</value>
+  </data>
+  <data name="Parameter.Operator.Divide" xml:space="preserve">
+    <value>Деление</value>
+  </data>
+  <data name="Parameter.Operator.Divide.Help" xml:space="preserve">
+    <value>Число 1 ÷ Число 2</value>
+  </data>
+  <data name="Parameter.Power.Square" xml:space="preserve">
+    <value>Квадрат</value>
+  </data>
+  <data name="Parameter.Power.Square.Help" xml:space="preserve">
+    <value>Возвести результат выше в квадрат</value>
+  </data>
+  <data name="Parameter.Power.Cube" xml:space="preserve">
+    <value>Куб</value>
+  </data>
+  <data name="Parameter.Power.Cube.Help" xml:space="preserve">
+    <value>Возвести результат выше в куб</value>
+  </data>
+  <data name="Parameter.MCP.ServerSelection" xml:space="preserve">
+    <value>Сервер MCP||Выберите зарегистрированный сервер или введите пользовательский адрес</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint" xml:space="preserve">
+    <value>Адрес сервера MCP||Обязателен при ручном вводе; по умолчанию: http://localhost:5000/mcp-senparc-xncf-mcp/sse</value>
+  </data>
+  <data name="Parameter.MCP.Request" xml:space="preserve">
+    <value>Запрос||Запрос для отправки серверу MCP</value>
+  </data>
+  <data name="Parameter.MCP.Manual" xml:space="preserve">
+    <value>Ручной ввод</value>
+  </data>
+  <data name="Parameter.MCP.Manual.Help" xml:space="preserve">
+    <value>Введите адрес сервера MCP вручную</value>
+  </data>
+  <data name="Parameter.MCP.Server.Display" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="Parameter.MCP.Server.Help" xml:space="preserve">
+    <value>Сервер: {0}; маршрут: {1}</value>
+  </data>
+  <data name="MCP.Endpoint.CountAll" xml:space="preserve">
+    <value>Получено конечных точек MCP: {0}</value>
+  </data>
+  <data name="MCP.Endpoint.CountEnabled" xml:space="preserve">
+    <value>Получено включённых конечных точек MCP: {0}</value>
+  </data>
+  <data name="MCP.Endpoint.NameRequired" xml:space="preserve">
+    <value>Укажите имя конечной точки.</value>
+  </data>
+  <data name="MCP.Endpoint.AddressRequired" xml:space="preserve">
+    <value>Укажите адрес конечной точки.</value>
+  </data>
+  <data name="MCP.Endpoint.NameExists" xml:space="preserve">
+    <value>Конечная точка с именем «{0}» уже существует.</value>
+  </data>
+  <data name="MCP.Endpoint.IdNotFound" xml:space="preserve">
+    <value>Конечная точка с ID {0} не найдена.</value>
+  </data>
+  <data name="MCP.Endpoint.Updated" xml:space="preserve">
+    <value>✓ Конечная точка MCP «{0}» обновлена.</value>
+  </data>
+  <data name="MCP.Endpoint.Created" xml:space="preserve">
+    <value>✓ Конечная точка MCP «{0}» создана.</value>
+  </data>
+  <data name="MCP.Endpoint.InvalidId" xml:space="preserve">
+    <value>Недопустимый ID конечной точки.</value>
+  </data>
+  <data name="MCP.Endpoint.Deleted" xml:space="preserve">
+    <value>✓ Конечная точка MCP «{0}» удалена.</value>
+  </data>
+  <data name="MCP.Endpoint.TestSucceeded" xml:space="preserve">
+    <value>✓ Проверка подключения выполнена успешно.</value>
+  </data>
+  <data name="MCP.Endpoint.TestFailed" xml:space="preserve">
+    <value>✗ Проверка подключения завершилась с ошибкой.</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.IdCreate" xml:space="preserve">
+    <value>ID конечной точки||Значение 0 создаёт новую конечную точку</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.Name" xml:space="preserve">
+    <value>Имя конечной точки||Имя конечной точки MCP</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.Address" xml:space="preserve">
+    <value>Адрес конечной точки||URI конечной точки MCP</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.Type" xml:space="preserve">
+    <value>Тип конечной точки||Например http, sse или stdio</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.ProtocolVersion" xml:space="preserve">
+    <value>Версия протокола||Версия протокола MCP</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.Description" xml:space="preserve">
+    <value>Описание||Описание конечной точки</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.Enabled" xml:space="preserve">
+    <value>Включена||Включена ли эта конечная точка</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.AuthConfig" xml:space="preserve">
+    <value>Настройки аутентификации||JSON-настройки аутентификации</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.ExtraConfig" xml:space="preserve">
+    <value>Дополнительные настройки||Другие пользовательские JSON-настройки</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.IdDelete" xml:space="preserve">
+    <value>ID конечной точки||ID конечной точки MCP для удаления</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.IdTest" xml:space="preserve">
+    <value>ID конечной точки||ID конечной точки MCP для проверки</value>
+  </data>
+  <data name="Parameter.MCP.Tool.Input" xml:space="preserve">
+    <value>Входная строка</value>
+  </data>
+  <data name="MCP.Tool.Echo.Description" xml:space="preserve">
+    <value>Обработать и вернуть строку</value>
+  </data>
+  <data name="MCP.Tool.Echo.Result" xml:space="preserve">
+    <value>Здравствуйте, {0}</value>
+  </data>
+  <data name="MCP.Tool.Now.Description" xml:space="preserve">
+    <value>Получить текущее время</value>
+  </data>
+  <data name="MCP.Tool.AddHours.Description" xml:space="preserve">
+    <value>Добавить часы к текущему времени</value>
+  </data>
+  <data name="MCP.Tool.Calculator.Description" xml:space="preserve">
+    <value>Выполнить сложение, вычитание, умножение или деление</value>
+  </data>
+  <data name="Parameter.MCP.Tool.Operator" xml:space="preserve">
+    <value>Оператор между Number1 и Number2: +, -, × или ÷</value>
+  </data>
+  <data name="MCP.Agent.SystemPrompt" xml:space="preserve">
+    <value>Вы — полезный помощник, который помогает пользователям выполнять задачи.</value>
+  </data>
+  <data name="MCP.BobLab.Instructions" xml:space="preserve">
+    <value>Помогайте отвечать на вопросы. Повторите вопрос, ответьте в Markdown по-русски с переводом на английский и обрамите #start и #end.</value>
+  </data>
+  <data name="MCP.BobLab.Footer" xml:space="preserve">
+    <value>[Bob's Lab] - {0} / {1}; время: {2} мс</value>
+  </data>
+  <data name="MCP.Calculate.DivideByZero" xml:space="preserve">
+    <value>Делитель не может быть равен нулю.</value>
+  </data>
+  <data name="MCP.Calculate.UnknownOperator" xml:space="preserve">
+    <value>Неизвестный оператор: {0}</value>
+  </data>
+  <data name="MCP.Calculate.OperationLog" xml:space="preserve">
+    <value>Вычисление: {0} {1} {2} = {3}</value>
+  </data>
+  <data name="MCP.Calculate.PowerLog" xml:space="preserve">
+    <value>Степень {0}: {1}{2} = {3}</value>
+  </data>
+  <data name="MCP.Calculate.Result" xml:space="preserve">
+    <value>[{0}] Результат: {1}. Подробности см. в журнале.</value>
+  </data>
+  <data name="Area.Extensions" xml:space="preserve">
+    <value>Расширения</value>
+  </data>
+  <data name="Page.AutoGeneratedModule" xml:space="preserve">
+    <value>Этот модуль создан автоматически</value>
+  </data>
+  <data name="Page.InstalledAt" xml:space="preserve">
+    <value>Установлено: </value>
+  </data>
+  <data name="Page.CurrentDatabase" xml:space="preserve">
+    <value>Текущий тип БД: </value>
+  </data>
+  <data name="Page.Brighten" xml:space="preserve">
+    <value>Светлее</value>
+  </data>
+  <data name="Page.Darken" xml:space="preserve">
+    <value>Темнее</value>
+  </data>
+  <data name="Page.Random" xml:space="preserve">
+    <value>Случайно</value>
+  </data>
+</root>

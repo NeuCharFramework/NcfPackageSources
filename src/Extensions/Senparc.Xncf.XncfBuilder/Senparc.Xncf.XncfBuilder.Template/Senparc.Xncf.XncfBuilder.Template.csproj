@@ -1,8 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.1.0</Version>
     <PackageType>Template</PackageType>
-    <PackageVersion>0.12.12-preview.1</PackageVersion>
+    <PackageVersion>0.13.0</PackageVersion>
     <PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
     <Title>XNCF Template</Title>
     <Authors>JeffreySu</Authors>
@@ -21,42 +22,51 @@
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
     <PackageReleaseNotes>
-			v0.1.0 创世
-			v0.1.7 删除无用的日志文件
-			v0.2.3 添加 UseWebApi 选项
-			v0.2.18 添加 PostgreSQL 数据库
-			v0.2.18.2 完善注释
-			v0.3 进一步升级 DDD 架构
-			v0.4 修复模板生成后部分代码错误的问题
-			v0.4.0.8 修复命名空间问题
-			v0.4.3 优化模板，为 .NET 7.0 CLI 优化
-			v0.4.4 修复模板命名错误
-			v0.4.5 同步更新参数重命名：RootDictionaryPath -&gt; RootDirectoryPath
-			v0.4.6 更新项目文件
-			v0.4.7 更新基础库引用
-			v0.5.0 完善版本号，按照语义化版本规范（semver）进行命名
-			v0.6.0 更新项目引用，支持 .NET 8.0
-			v0.7.0 使用新的多数据库配置版本
-			v0.8.0 支持新版本多数据库模板
-			v0.9.0
-			1、支持新版本，聚焦支持 .NET 8.0，添加特殊文件夹的 readme.md 文件；
-			2、重新更新 SQLite 的 Migration 模板
-			v0.10.0 重新生成数据库 Migration
-			v0.10.1 添加 SenparcEntities 文件中的命名空间引用
-			v0.11.0 AppService 中使用新的 GetResponseAsync() 简化方法（可以只输入一个 data 数据的泛型），并新增 GetStringResponseAsync() 方法
-			v0.12.0 添加达梦（Dm）数据库支持
-			v0.12.1 修正模板代码
-			v0.12.2 更新基础库
-			v0.12.3 更新基础库
-			v0.12.4 更新基础库
-			v0.12.5 更新 Demo
-			v0.12.6 添加项目引用，确保 Areas 页面能被识别
-			v0.12.7 同步最新 Nuget 包版本
-			v0.12.8-beta1 添加达梦数据库迁移（测试）
-			v0.12.9-preview.7 更新 CO2NET.WebApi、DatabasePlant 等基础库
-			[2025-11-01] update basic libraries, including Senparc.AI
+      v0.1.0 创世
+      v0.1.7 删除无用的日志文件
+      v0.2.3 添加 UseWebApi 选项
+      v0.2.18 添加 PostgreSQL 数据库
+      v0.2.18.2 完善注释
+      v0.3 进一步升级 DDD 架构
+      v0.4 修复模板生成后部分代码错误的问题
+      v0.4.0.8 修复命名空间问题
+      v0.4.3 优化模板，为 .NET 7.0 CLI 优化
+      v0.4.4 修复模板命名错误
+      v0.4.5 同步更新参数重命名：RootDictionaryPath -&gt; RootDirectoryPath
+      v0.4.6 更新项目文件
+      v0.4.7 更新基础库引用
+      v0.5.0 完善版本号，按照语义化版本规范（semver）进行命名
+      v0.6.0 更新项目引用，支持 .NET 8.0
+      v0.7.0 使用新的多数据库配置版本
+      v0.8.0 支持新版本多数据库模板
+      v0.9.0
+      1、支持新版本，聚焦支持 .NET 8.0，添加特殊文件夹的 readme.md 文件；
+      2、重新更新 SQLite 的 Migration 模板
+      v0.10.0 重新生成数据库 Migration
+      v0.10.1 添加 SenparcEntities 文件中的命名空间引用
+      v0.11.0 AppService 中使用新的 GetResponseAsync() 简化方法（可以只输入一个 data 数据的泛型），并新增 GetStringResponseAsync() 方法
+      v0.12.0 添加达梦（Dm）数据库支持
+      v0.12.1 修正模板代码
+      v0.12.2 更新基础库
+      v0.12.3 更新基础库
+      v0.12.4 更新基础库
+      v0.12.5 更新 Demo
+      v0.12.6 添加项目引用，确保 Areas 页面能被识别
+      v0.12.7 同步最新 Nuget 包版本
+      v0.12.8-beta1 添加达梦数据库迁移（测试）
+      v0.12.9-preview.7 更新 CO2NET.WebApi、DatabasePlant 等基础库
+      [2025-11-01] update basic libraries, including Senparc.AI
       [2026-04-24] Update FunctionRender request templates for simplified values and SelectionList UI metadata compatibility
+      [2026-07-17] v0.12.13-preview.1 更新 XNCF 模板资源与本地化构建内容
+      1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+      2、统一模块内功能描述与用户提示的多语言显示
+      3、同步 XNCF 模板的 Application 与 OHS 新架构及命名空间
+      [2026-07-25] v0.13.0 新增进程内 EventBus 请求-响应演示
+      1、提供带有限超时、取消、类型检查及请求关联清理的公共请求-响应能力
+      2、模板新增不读取业务或敏感数据的 EventBus 回环自检功能
+      3、模板包改由模拟站点权威母版完整同步，并修正 Database 与 Sample 的文件排除关系
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>

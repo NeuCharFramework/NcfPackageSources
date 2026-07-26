@@ -23,6 +23,22 @@
          * @returns {boolean} 是否复制成功
          */
         copyToClipboard: function(text, successMessage, errorMessage, showMessage) {
+            if (!text) {
+                if (showMessage !== false) {
+                    this._showMessage('没有可复制的内容', 'warning');
+                }
+                return false;
+            }
+
+            this.copyToClipboardAsync(text, successMessage, errorMessage, showMessage);
+            return true;
+        },
+
+        /**
+         * 异步复制文本，并返回最终复制结果。
+         * @returns {Promise<boolean>} 是否复制成功
+         */
+        copyToClipboardAsync: async function(text, successMessage, errorMessage, showMessage) {
             successMessage = successMessage || '复制成功';
             errorMessage = errorMessage || '复制失败';
             showMessage = showMessage !== false;
@@ -31,39 +47,29 @@
                 if (showMessage) {
                     this._showMessage('没有可复制的内容', 'warning');
                 }
-                return false;
+                return Promise.resolve(false);
             }
 
-            var self = this;
             var success = false;
 
             // 方法1: 使用现代 Clipboard API (需要 HTTPS 或 localhost)
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(text).then(
-                    function() {
-                        success = true;
-                        if (showMessage) {
-                            self._showMessage(successMessage, 'success');
-                        }
-                    },
-                    function(err) {
-                        console.error('Clipboard API failed:', err);
-                        // 降级到传统方法
-                        success = self._fallbackCopy(text);
-                        if (showMessage) {
-                            self._showMessage(success ? successMessage : errorMessage, success ? 'success' : 'error');
-                        }
-                    }
-                );
-                return true;
-            } else {
-                // 方法2: 使用传统方法
-                success = this._fallbackCopy(text);
-                if (showMessage) {
-                    this._showMessage(success ? successMessage : errorMessage, success ? 'success' : 'error');
+            if (window.isSecureContext && navigator.clipboard && navigator.clipboard.writeText) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    success = true;
+                } catch (err) {
+                    console.warn('Clipboard API failed, using the compatibility fallback:', err);
                 }
-                return success;
             }
+
+            if (!success) {
+                success = this._fallbackCopy(text);
+            }
+
+            if (showMessage) {
+                this._showMessage(success ? successMessage : errorMessage, success ? 'success' : 'error');
+            }
+            return success;
         },
 
         /**

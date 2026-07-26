@@ -16,8 +16,12 @@ NC='\033[0m' # No Color
 # 配置
 PROJECT_NAME="NcfDesktopApp.GUI"
 SOLUTION_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PROJECT_FILE="${SOLUTION_DIR}/${PROJECT_NAME}.csproj"
 OUTPUT_DIR="${SOLUTION_DIR}/publish-self-contained"
 BUILD_CONFIG="Release"
+TASK_NUGET_ROOT="${TMPDIR:-/tmp}/ncf-desktopapp-gui-nuget"
+TASK_NUGET_PACKAGES="${TASK_NUGET_ROOT}/packages"
+TASK_NUGET_HTTP_CACHE="${TASK_NUGET_ROOT}/http-cache"
 
 # 支持的平台
 PLATFORMS=(
@@ -109,12 +113,25 @@ check_dotnet() {
 restore_packages() {
     if [ "$NO_RESTORE" = true ]; then
         echo -e "${YELLOW}⏭️  跳过包还原${NC}"
+        if [ "$READY_TO_RUN" = true ]; then
+            echo -e "${YELLOW}⚠️  已启用 --ready-to-run：若先前还原未带 PublishReadyToRun=true，发布可能出现 NETSDK1094${NC}"
+        fi
         return
     fi
     
     echo -e "${BLUE}📦 还原 NuGet 包...${NC}"
     cd "$SOLUTION_DIR"
-    if dotnet restore; then
+    mkdir -p "$TASK_NUGET_PACKAGES" "$TASK_NUGET_HTTP_CACHE"
+
+    # ReadyToRun 需要在 restore 阶段拉取 Crossgen2 / 目标 RID 运行时包。
+    # 若 restore 未带 PublishReadyToRun=true，而 publish 又使用 --no-restore，会触发 NETSDK1094。
+    local restore_cmd="env NUGET_PACKAGES=\"$TASK_NUGET_PACKAGES\" NUGET_HTTP_CACHE_PATH=\"$TASK_NUGET_HTTP_CACHE\" dotnet restore \"$PROJECT_FILE\""
+    if [ "$READY_TO_RUN" = true ]; then
+        restore_cmd="$restore_cmd -p:PublishReadyToRun=true"
+        echo -e "${BLUE}   (ReadyToRun: 还原时包含运行时优化包)${NC}"
+    fi
+
+    if eval $restore_cmd; then
         echo -e "${GREEN}✅ 包还原成功${NC}"
     else
         echo -e "${RED}❌ 包还原失败${NC}"
@@ -132,11 +149,13 @@ publish_platform() {
     echo -e "${BLUE}🚀 发布 $platform_name ($platform) - 自包含版本...${NC}"
     
     # 构建发布命令
-    local cmd="dotnet publish"
+    local cmd="env NUGET_PACKAGES=\"$TASK_NUGET_PACKAGES\" NUGET_HTTP_CACHE_PATH=\"$TASK_NUGET_HTTP_CACHE\" dotnet publish \"$PROJECT_FILE\""
     cmd="$cmd -c $BUILD_CONFIG"
     cmd="$cmd -r $platform"
     cmd="$cmd -o \"$platform_dir\""
     cmd="$cmd --self-contained true"
+    # restore_packages 已负责按全部 RID 还原；发布阶段始终避免隐式重复 restore。
+    cmd="$cmd --no-restore"
     
     if [ "$SINGLE_FILE" = true ]; then
         cmd="$cmd -p:PublishSingleFile=true"

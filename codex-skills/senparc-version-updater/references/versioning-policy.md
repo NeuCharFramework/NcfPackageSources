@@ -16,8 +16,10 @@
 
 1. 基线分支优先级：`origin/master` -> `origin/main` -> `master` -> `main`。
 2. 使用 `merge-base(HEAD, 基线分支)` 作为起点提交（`comparison_base`）。
-3. 本次更新内容 = `comparison_base..HEAD` 的全部提交 + 当前未提交改动。
+3. 本次更新内容 = `comparison_base..HEAD` 的全部提交 + 当前未提交改动；变更文件必须取每个提交所触及路径的并集，不能只使用最终净差异 `git diff comparison_base..HEAD`。
 3.1 变更文件统计范围必须为“全仓库”，不能只限制在单个目标项目目录。
+3.2 在窗口内先修改、后恢复的文件仍属于本次提交触及范围，必须映射到对应项目并覆盖功能性发布说明。
+3.3 已删除的 `.cs` 和非纯时间戳变化的 `*.Generated.cs` 不写文件头，但仍必须把所属项目加入 `changed_csprojs`。
 4. 如果无法解析 `master/main` 或无法计算 merge-base，流程必须报错终止，不允许降级到“最近一次修改 .csproj”的窗口。
 
 ## 未合并分支的版本升级规则
@@ -31,7 +33,7 @@
 
 ## 受影响项目覆盖规则
 
-1. 需要根据 `changed_cs_files` 反向映射出对应项目集合（`changed_csprojs`）。
+1. 提交路径并集中位于项目目录内的任意文件（包括 `.cs`、`.cshtml`、`.js`、`.resx`、`.axaml` 等）都必须反向映射到对应项目并加入 `changed_csprojs`；直接发生变化的 `.csproj` 同样必须加入。
 2. 对每个 changed `.props` 文件，必须解析显式 `<Import Project="..." />`，支持 `$(MSBuildThisFileDirectory)`、`$(MSBuildProjectDirectory)`，并递归跟踪 `.props` 引用链。
 3. 直接或间接导入 changed `.props` 的所有项目都必须加入 `changed_csprojs`，即使这些项目自身没有 `.cs` 文件变化。
 4. `changed_csprojs` 中的每个项目都必须更新自身 `.csproj`（版本与发布说明）。

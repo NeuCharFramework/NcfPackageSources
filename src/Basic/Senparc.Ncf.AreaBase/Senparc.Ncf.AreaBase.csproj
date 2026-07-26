@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.21.2-preview1</Version>
+    <Version>0.21.3-preview2</Version>
     <AssemblyName>Senparc.Ncf.AreaBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.AreaBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -17,21 +17,26 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v0.1.0 创世，从 NCF 模板项目提炼移植
-			[2024-09-10] v0.18.4-preview1 升级缓存基础库
-			[2024-10-16] v0.18.6-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
-			[2024-11-15] v0.19.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
-			[2024-11-21] v0.20.2-preview1 更新 CO2NET 及缓存基础库
-			[2024-11-28] v0.20.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
-			[2025-01-25] v0.20.7-preview1 Update Agents functions, support for function calling
-			[2025-04-29] v0.20.9-preview1 Update CO2NET and AIKernel
-			[2025-05-18] v0.20.10-preview1 Update Installation
-			[2025-06-20] v0.20.11-preview1 Add MCP functions in XncfRegisterBase class
-
+				v0.1.0 创世，从 NCF 模板项目提炼移植
+				[2024-09-10] v0.18.4-preview1 升级缓存基础库
+				[2024-10-16] v0.18.6-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
+				[2024-11-15] v0.19.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
+				[2024-11-21] v0.20.2-preview1 更新 CO2NET 及缓存基础库
+				[2024-11-28] v0.20.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
+				[2025-01-25] v0.20.7-preview1 Update Agents functions, support for function calling
+				[2025-04-29] v0.20.9-preview1 Update CO2NET and AIKernel
+				[2025-05-18] v0.20.10-preview1 Update Installation
+				[2025-06-20] v0.20.11-preview1 Add MCP functions in XncfRegisterBase class
 				[2025-11-01] update basic libraries, including Senparc.AI
 				[2026-07-02] v0.21.2-preview1 升级 Senparc.AI.AgentKernel 并完成兼容性适配，升级并适配 net10.0 框架
 				1、升级 Senparc.AI.AgentKernel 并完成兼容性适配
 				2、升级并适配 net10.0 框架
+				[2026-07-17] v0.21.3-preview2 同步上游项目版本并适配统一本地化能力
+				1、Dependency update from Senparc.Ncf.Mvc.UI to 0.21.2-preview2
+				2、Dependency update from Senparc.Ncf.SMS to 0.20.2-preview2
+				3、Dependency update from Senparc.Ncf.Service to 0.23.2-preview2
+				4、Dependency update from Senparc.Ncf.Utility to 0.21.0-preview2
+				5、Dependency update from Senparc.Ncf.XncfBase to 0.23.3-preview2
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

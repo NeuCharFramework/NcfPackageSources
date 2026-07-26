@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.DatabaseToolkit.MenuName" xml:space="preserve">
+    <value>数据库工具包</value>
+  </data>
+  <data name="Module.DatabaseToolkit.Description" xml:space="preserve">
+    <value>提供数据库操作工具。数据库操作可能损坏数据，请充分了解功能并在修改前完成备份。</value>
+  </data>
+  <data name="Function.Database.AgentPrompt.Name" xml:space="preserve">
+    <value>获取 AI Agent 系统提示</value>
+  </data>
+  <data name="Function.Database.AgentPrompt.Description" xml:space="preserve">
+    <value>获取为 AI Agent 配置的系统提示和角色定义</value>
+  </data>
+  <data name="Function.Database.Backup.Name" xml:space="preserve">
+    <value>备份数据库</value>
+  </data>
+  <data name="Function.Database.Backup.Description" xml:space="preserve">
+    <value>将当前数据库备份到指定路径；请确保该路径无法被公开访问</value>
+  </data>
+  <data name="Function.Database.CheckBackup.Name" xml:space="preserve">
+    <value>检查自动备份状态</value>
+  </data>
+  <data name="Function.Database.CheckBackup.Description" xml:space="preserve">
+    <value>检查自动备份周期是否已设置且大于 0</value>
+  </data>
+  <data name="Function.Database.CheckUpdate.Name" xml:space="preserve">
+    <value>检测数据库是否需要更新</value>
+  </data>
+  <data name="Function.Database.CheckUpdate.Description" xml:space="preserve">
+    <value>使用 EF Core Migration 检测未应用的数据库版本；如有更新，请执行 Merge EF Core</value>
+  </data>
+  <data name="Function.Database.ConfigTypes.Name" xml:space="preserve">
+    <value>查看数据库配置类型</value>
+  </data>
+  <data name="Function.Database.ConfigTypes.Description" xml:space="preserve">
+    <value>查看实现 IDatabaseConfiguration 接口的数据库配置类型</value>
+  </data>
+  <data name="Function.Database.ExportSql.Name" xml:space="preserve">
+    <value>导出当前数据库 SQL 脚本</value>
+  </data>
+  <data name="Function.Database.ExportSql.Description" xml:space="preserve">
+    <value>导出当前站点所用全部数据表的 SQL 脚本</value>
+  </data>
+  <data name="Function.Database.Merge.Name" xml:space="preserve">
+    <value>Merge EF Core</value>
+  </data>
+  <data name="Function.Database.Merge.Description" xml:space="preserve">
+    <value>使用 EF Core Code First 更新数据库，使其与当前运行版本匹配</value>
+  </data>
+  <data name="Function.Database.QueryRecords.Name" xml:space="preserve">
+    <value>查询数据库记录</value>
+  </data>
+  <data name="Function.Database.QueryRecords.Description" xml:space="preserve">
+    <value>查询指定表的数据，支持条件过滤和字段选择</value>
+  </data>
+  <data name="Function.Database.QueryTemplates.Name" xml:space="preserve">
+    <value>获取常见查询模板</value>
+  </data>
+  <data name="Function.Database.QueryTemplates.Description" xml:space="preserve">
+    <value>获取预定义的数据库查询模板和示例</value>
+  </data>
+  <data name="Function.Database.Schema.Name" xml:space="preserve">
+    <value>查询数据库结构</value>
+  </data>
+  <data name="Function.Database.Schema.Description" xml:space="preserve">
+    <value>查询可用模块、表和字段信息</value>
+  </data>
+  <data name="Function.Database.Settings.Name" xml:space="preserve">
+    <value>设置数据库参数</value>
+  </data>
+  <data name="Function.Database.Settings.Description" xml:space="preserve">
+    <value>设置备份间隔和备份文件路径等参数</value>
+  </data>
+  <data name="Function.Database.Statistics.Name" xml:space="preserve">
+    <value>获取数据库统计信息</value>
+  </data>
+  <data name="Function.Database.Statistics.Description" xml:space="preserve">
+    <value>获取数据表的行数、数据大小等统计信息</value>
+  </data>
+  <data name="Parameter.DatabaseBackup.Path" xml:space="preserve">
+    <value>路径||包含文件名的本地物理路径，例如 E:\Senparc\Database-Backup\NCF.bak；请确保网站程序有访问权限</value>
+  </data>
+  <data name="Parameter.DatabaseBackup.Options" xml:space="preserve">
+    <value>选项||数据库备份选项</value>
+  </data>
+  <data name="Parameter.DatabaseBackup.NoOverwrite" xml:space="preserve">
+    <value>文件存在时不覆盖</value>
+  </data>
+  <data name="Parameter.DatabaseBackup.NoOverwrite.Help" xml:space="preserve">
+    <value>目标文件已存在时不执行备份</value>
+  </data>
+  <data name="Parameter.DatabaseBackup.Verify" xml:space="preserve">
+    <value>备份后校验 .bak 文件是否更新</value>
+  </data>
+  <data name="Parameter.DatabaseBackup.Verify.Help" xml:space="preserve">
+    <value>只能检查文件是否更新，不能验证文件内部内容</value>
+  </data>
+  <data name="Common.Error" xml:space="preserve">
+    <value>错误：{0}</value>
+  </data>
+  <data name="Database.Config.Current" xml:space="preserve">
+    <value>当前 DatabaseConfiguration：{0}，数据库类型：{1}</value>
+  </data>
+  <data name="Database.Config.SaveLogName" xml:space="preserve">
+    <value>设置数据库信息</value>
+  </data>
+  <data name="Database.Config.Saved" xml:space="preserve">
+    <value>设置已保存！</value>
+  </data>
+  <data name="Database.Config.SavedValues" xml:space="preserve">
+    <value>设置间隔分钟：{0}，路径：{1}</value>
+  </data>
+  <data name="Database.ModuleAndTableRequired" xml:space="preserve">
+    <value>模块名称和表名称不能为空</value>
+  </data>
+  <data name="Database.ModuleNotFound" xml:space="preserve">
+    <value>找不到模块“{0}”。可用模块：{1}</value>
+  </data>
+  <data name="Database.TableNotFoundAvailable" xml:space="preserve">
+    <value>找不到表“{0}”（模块“{1}”）。可用实体：{2}</value>
+  </data>
+  <data name="Database.TableNotFound" xml:space="preserve">
+    <value>找不到表：{0}.{1}</value>
+  </data>
+  <data name="Database.Query.Log" xml:space="preserve">
+    <value>查询表 {0}.{1}（原始输入：{2}.{3}）</value>
+  </data>
+  <data name="Database.Query.Error" xml:space="preserve">
+    <value>查询记录时出错：{0}</value>
+  </data>
+  <data name="Database.Statistics.Log" xml:space="preserve">
+    <value>获取 {0}.{1} 的统计信息（原始输入：{2}.{3}）</value>
+  </data>
+  <data name="Database.Statistics.Error" xml:space="preserve">
+    <value>获取统计信息时出错：{0}</value>
+  </data>
+  <data name="Database.Schema.TableDetailLog" xml:space="preserve">
+    <value>获取表详情：{0}.{1}</value>
+  </data>
+  <data name="Database.Schema.SuggestedModules" xml:space="preserve">
+    <value>
+可能匹配的模块：{0}</value>
+  </data>
+  <data name="Database.Schema.AllModules" xml:space="preserve">
+    <value>
+所有可用模块：{0}</value>
+  </data>
+  <data name="Database.Schema.ModuleNotFoundWithHint" xml:space="preserve">
+    <value>找不到模块：“{0}”{1}</value>
+  </data>
+  <data name="Database.Schema.NoAvailableTables" xml:space="preserve">
+    <value>（无可用表）</value>
+  </data>
+  <data name="Database.Schema.EntityNotFound" xml:space="preserve">
+    <value>在模块“{0}”中找不到实体“{1}”。
+可用实体：{2}</value>
+  </data>
+  <data name="Database.Schema.ModuleTablesLog" xml:space="preserve">
+    <value>获取模块 {0} 的所有表</value>
+  </data>
+  <data name="Database.Schema.ModuleHasNoTables" xml:space="preserve">
+    <value>模块“{0}”中没有可查询的表</value>
+  </data>
+  <data name="Database.Schema.OverviewLog" xml:space="preserve">
+    <value>获取所有可查询模块和表的概览</value>
+  </data>
+  <data name="Database.Schema.NoModules" xml:space="preserve">
+    <value>没有可查询的数据库模块</value>
+  </data>
+  <data name="Database.Schema.Error" xml:space="preserve">
+    <value>查询数据库结构时出错：{0}</value>
+  </data>
+  <data name="Validation.Database.ModuleRequired" xml:space="preserve">
+    <value>模块名称不能为空</value>
+  </data>
+  <data name="Validation.Database.TableRequired" xml:space="preserve">
+    <value>表名称不能为空</value>
+  </data>
+  <data name="Parameter.Database.Module.Query" xml:space="preserve">
+    <value>模块名称||必填。要查询的模块，例如 KnowledgeBase 或 AIKernel</value>
+  </data>
+  <data name="Parameter.Database.Table.Query" xml:space="preserve">
+    <value>表名称||必填。要查询的表名称</value>
+  </data>
+  <data name="Parameter.Database.Filter" xml:space="preserve">
+    <value>过滤条件||可选。SQL WHERE 条件，例如 Name = "test" 或 Id &gt; 10</value>
+  </data>
+  <data name="Parameter.Database.PageNumber" xml:space="preserve">
+    <value>页码||可选。默认为 1，最小值为 1</value>
+  </data>
+  <data name="Parameter.Database.PageSize" xml:space="preserve">
+    <value>每页数量||可选。默认为 20，范围 1–1000</value>
+  </data>
+  <data name="Parameter.Database.Module.Statistics" xml:space="preserve">
+    <value>模块名称||必填。要查询统计信息的模块</value>
+  </data>
+  <data name="Parameter.Database.Table.Statistics" xml:space="preserve">
+    <value>表名称||必填。要查询统计信息的表</value>
+  </data>
+  <data name="Parameter.Database.Schema.Module" xml:space="preserve">
+    <value>模块名称||可选。指定后只返回该模块的表信息</value>
+  </data>
+  <data name="Parameter.Database.Schema.Table" xml:space="preserve">
+    <value>表名称||可选。与模块名称配合，获取指定表的详细信息</value>
+  </data>
+  <data name="Parameter.Database.Config.Cycle" xml:space="preserve">
+    <value>自动备份周期（分钟）||0 表示不自动备份</value>
+  </data>
+  <data name="Parameter.Database.Config.Path" xml:space="preserve">
+    <value>备份路径||本地物理路径，例如：E:\Senparc\Ncf\NCF.bak</value>
+  </data>
+</root>

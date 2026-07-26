@@ -1,3 +1,19 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：MainWindowViewModel.cs
+    文件功能描述：桌面应用主窗口状态与命令逻辑
+    
+    
+    创建标识：Senparc - 20250718
+    
+    修改标识：Senparc - 20260724
+    修改描述：v0.1.0 增强更新源选择、下载反馈与桌面窗口兼容性
+
+    修改标识：Senparc - 20260726
+    修改描述：修复「停止目标」后桌面应用意外退出，停止后保留主页面
+
+----------------------------------------------------------------*/
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,6 +23,7 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Security;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,10 +33,12 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using NcfDesktopApp.GUI.Models;
 using NcfDesktopApp.GUI.Services;
 using NcfDesktopApp.GUI.Views;
 using System.Linq;
@@ -80,10 +99,79 @@ public partial class MainWindowViewModel : ViewModelBase
     private string _mirrorServerBaseUrl = DesktopUserSettings.DefaultMirrorServerBaseUrl;
 
     [ObservableProperty]
-    private string _mainButtonText = "启动 NCF";
+    private NcfLaunchTargetKind _launchTargetKind = NcfLaunchTargetKind.ManagedPublished;
+
+    [ObservableProperty]
+    private string _externalNcfPath = string.Empty;
+
+    [ObservableProperty]
+    private string _aspNetCoreEnvironment = "Production";
+
+    [ObservableProperty]
+    private string? _selectedRecentNcfPath;
+
+    [ObservableProperty]
+    private string _targetKindText = "内置托管版本";
+
+    [ObservableProperty]
+    private string _targetVersionText = "等待检测";
+
+    [ObservableProperty]
+    private string _targetFrameworkText = "等待检测";
+
+    [ObservableProperty]
+    private string _targetEntryText = "等待检测";
+
+    [ObservableProperty]
+    private string _targetValidationMessage = "桌面端将管理此 Runtime 的安装与更新。";
+
+    [ObservableProperty]
+    private string _targetStatusColor = "#6C757D";
+
+    [ObservableProperty]
+    private string _mainButtonText = "启动目标";
 
     [ObservableProperty]
     private bool _isOperationInProgress = false;
+
+    [ObservableProperty]
+    private string _desktopBridgeStatusText = "等待 NCF 启动";
+
+    [ObservableProperty]
+    private string _desktopBridgeStatusColor = "#6C757D";
+
+    [ObservableProperty]
+    private string _desktopBridgeNoticeMessage = "";
+
+    [ObservableProperty]
+    private bool _isDesktopBridgeNoticeVisible;
+
+    [ObservableProperty]
+    private bool _isDesktopBridgeInstallActionVisible;
+
+    public Action? ShowDesktopRobotRequested { get; set; }
+
+    public DesktopRobotViewModel Robot { get; } = new();
+
+    public ObservableCollection<string> RecentNcfPaths { get; } = new();
+
+    public IReadOnlyList<string> EnvironmentOptions { get; } = new[] { "Production", "Development" };
+
+    public string ManagedRuntimePath => NcfService.NcfRuntimePath;
+
+    public bool IsManagedTargetMode => LaunchTargetKind == NcfLaunchTargetKind.ManagedPublished;
+
+    public bool IsExternalTargetMode => !IsManagedTargetMode;
+
+    public bool IsTargetSelectionEnabled => !IsOperationInProgress && !_isNcfRunning;
+
+    public string ManagedModeButtonBackground => IsManagedTargetMode ? "#2563EB" : "Transparent";
+
+    public string ManagedModeButtonForeground => IsManagedTargetMode ? "White" : "#6C757D";
+
+    public string ExternalModeButtonBackground => IsExternalTargetMode ? "#7C3AED" : "Transparent";
+
+    public string ExternalModeButtonForeground => IsExternalTargetMode ? "White" : "#6C757D";
     
     // 新增浏览器相关属性
     [ObservableProperty]
@@ -171,7 +259,73 @@ public partial class MainWindowViewModel : ViewModelBase
             _suppressMirrorSettingsSave = false;
         }
 
-        DesktopSettingsStore.Save(new DesktopUserSettings { MirrorServerBaseUrl = normalized });
+        SaveDesktopSettings();
+    }
+
+    partial void OnLaunchTargetKindChanged(NcfLaunchTargetKind value)
+    {
+        OnPropertyChanged(nameof(IsManagedTargetMode));
+        OnPropertyChanged(nameof(IsExternalTargetMode));
+        OnPropertyChanged(nameof(ManagedModeButtonBackground));
+        OnPropertyChanged(nameof(ManagedModeButtonForeground));
+        OnPropertyChanged(nameof(ExternalModeButtonBackground));
+        OnPropertyChanged(nameof(ExternalModeButtonForeground));
+
+        if (_suppressDesktopSettingsSave)
+        {
+            return;
+        }
+
+        RefreshSelectedLaunchTarget();
+        SaveDesktopSettings();
+    }
+
+    partial void OnExternalNcfPathChanged(string value)
+    {
+        if (_suppressDesktopSettingsSave)
+        {
+            return;
+        }
+
+        _resolvedLaunchTarget = null;
+        TargetKindText = "等待检测";
+        TargetVersionText = "—";
+        TargetFrameworkText = "—";
+        TargetEntryText = string.IsNullOrWhiteSpace(value) ? "尚未选择外部目标" : value;
+        TargetValidationMessage = "路径已变化，请点击“检测目标”确认入口和运行环境。";
+        TargetStatusColor = "#D97706";
+        SaveDesktopSettings();
+    }
+
+    partial void OnAspNetCoreEnvironmentChanged(string value)
+    {
+        if (!_suppressDesktopSettingsSave)
+        {
+            SaveDesktopSettings();
+        }
+    }
+
+    partial void OnIsOperationInProgressChanged(bool value)
+    {
+        OnPropertyChanged(nameof(IsTargetSelectionEnabled));
+        NotifyLaunchTargetCommandsCanExecuteChanged();
+    }
+
+    partial void OnSelectedRecentNcfPathChanged(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value) || _suppressDesktopSettingsSave)
+        {
+            return;
+        }
+
+        // macOS renders ComboBox entries in a native menu. Do not change the
+        // bound path or ItemsSource while that menu is still processing the
+        // selection event; Avalonia can otherwise re-enter native selection
+        // handling and terminate the process with an unhandled exception.
+        var selectedPath = value;
+        Dispatcher.UIThread.Post(
+            () => ApplyRecentNcfPath(selectedPath),
+            DispatcherPriority.Background);
     }
     
     #endregion
@@ -179,11 +333,17 @@ public partial class MainWindowViewModel : ViewModelBase
     #region 私有字段
     
     private readonly NcfService _ncfService;
+    private readonly DesktopBridgeClient _desktopBridgeClient;
+    private readonly AdminChatClient _adminChatClient;
     private bool _suppressMirrorSettingsSave;
+    private bool _suppressDesktopSettingsSave;
     private readonly WebView2Service _webView2Service;
     private readonly StringBuilder _logBuffer;
     private CancellationTokenSource? _cancellationTokenSource;
     private Process? _ncfProcess;
+    private string? _desktopBridgeSessionToken;
+    private NcfLaunchTarget? _resolvedLaunchTarget;
+    private NcfLaunchTarget? _activeLaunchTarget;
     private bool _isNcfRunning = false;
     
     // 🚀 性能优化：批量日志处理
@@ -207,7 +367,21 @@ public partial class MainWindowViewModel : ViewModelBase
         var httpClient = new HttpClient(CreateDesktopHttpHandler(), disposeHandler: true);
         _ncfService = new NcfService(httpClient);
         _webView2Service = new WebView2Service(httpClient);
+        var bridgeHttpClient = new HttpClient(CreateDesktopHttpHandler(), disposeHandler: true)
+        {
+            Timeout = Timeout.InfiniteTimeSpan
+        };
+        _desktopBridgeClient = new DesktopBridgeClient(bridgeHttpClient);
+        _desktopBridgeClient.AvailabilityChanged += OnDesktopBridgeAvailabilityChanged;
+        _desktopBridgeClient.ActivityReceived += OnDesktopActivityReceived;
+        _desktopBridgeClient.AuthorizedSyncReceived += OnDesktopAuthorizedSyncReceived;
+        _desktopBridgeClient.AuthorizedSyncAuthorizationFailed += OnDesktopAuthorizedSyncAuthorizationFailed;
+        _adminChatClient = new AdminChatClient(new HttpClient(CreateDesktopHttpHandler(), disposeHandler: true)
+        {
+            Timeout = Timeout.InfiniteTimeSpan
+        });
         _logBuffer = new StringBuilder();
+        _ncfService.OnDownloadLog = AddLog;
         
         // 🚀 初始化日志批量更新定时器（性能优化）
         _logUpdateTimer = new System.Timers.Timer(LogUpdateIntervalMs);
@@ -257,6 +431,111 @@ public partial class MainWindowViewModel : ViewModelBase
         await Dispatcher.UIThread.InvokeAsync(ApplyMirrorUrlFromViewModelToService);
     }
 
+    private void SaveDesktopSettings()
+    {
+        if (_suppressDesktopSettingsSave)
+        {
+            return;
+        }
+
+        DesktopSettingsStore.Save(new DesktopUserSettings
+        {
+            MirrorServerBaseUrl = MirrorServerBaseUrl,
+            LaunchTargetKind = LaunchTargetKind,
+            ExternalNcfPath = ExternalNcfPath,
+            RecentNcfPaths = RecentNcfPaths.ToList(),
+            AspNetCoreEnvironment = AspNetCoreEnvironment
+        });
+    }
+
+    private void RefreshSelectedLaunchTarget()
+    {
+        var resolution = IsManagedTargetMode
+            ? NcfLaunchTargetResolver.ResolveManagedRuntime(NcfService.NcfRuntimePath)
+            : NcfLaunchTargetResolver.ResolveExternal(ExternalNcfPath);
+
+        if (resolution.IsValid)
+        {
+            ApplyResolvedLaunchTarget(resolution.Target!);
+            return;
+        }
+
+        _resolvedLaunchTarget = null;
+        TargetKindText = IsManagedTargetMode ? "内置托管版本" : "外部工作区";
+        TargetVersionText = IsManagedTargetMode ? "待安装" : "—";
+        TargetFrameworkText = "—";
+        TargetEntryText = IsManagedTargetMode ? NcfService.NcfRuntimePath : ExternalNcfPath;
+        TargetValidationMessage = IsManagedTargetMode
+            ? "内置 Runtime 尚未安装；首次启动时将下载最新兼容版本。"
+            : resolution.ErrorMessage;
+        TargetStatusColor = IsManagedTargetMode ? "#D97706" : "#DC3545";
+    }
+
+    private void ApplyResolvedLaunchTarget(NcfLaunchTarget target)
+    {
+        _resolvedLaunchTarget = target;
+        TargetKindText = target.KindDisplayName;
+        TargetVersionText = target.Version;
+        TargetFrameworkText = target.TargetFramework;
+        TargetEntryText = target.EntryPath;
+        TargetValidationMessage = target.IsManaged
+            ? "目标有效。此目录由桌面端负责下载、更新和配置保护。"
+            : target.IsSourceProject
+                ? "目标有效。将忽略 launchSettings 并使用 dotnet run --no-restore；不会自动还原包，但构建可能更新 bin/obj。"
+                : "目标有效。外部发布目录只启动不更新；NCF 进程本身仍可能写入日志、数据库和配置。";
+        TargetStatusColor = "#16A34A";
+
+        if (!target.IsManaged)
+        {
+            LatestVersion = target.Version;
+        }
+
+        if (!target.IsManaged)
+        {
+            _suppressDesktopSettingsSave = true;
+            LaunchTargetKind = target.Kind;
+            _suppressDesktopSettingsSave = false;
+        }
+    }
+
+    private void AddRecentNcfPath(string path)
+    {
+        var existingIndex = RecentNcfPaths
+            .Select((item, index) => new { item, index })
+            .FirstOrDefault(entry =>
+                string.Equals(entry.item, path, StringComparison.OrdinalIgnoreCase))?.index ?? -1;
+        if (existingIndex > 0)
+        {
+            RecentNcfPaths.Move(existingIndex, 0);
+        }
+        else if (existingIndex < 0)
+        {
+            RecentNcfPaths.Insert(0, path);
+        }
+
+        while (RecentNcfPaths.Count > 8)
+        {
+            RecentNcfPaths.RemoveAt(RecentNcfPaths.Count - 1);
+        }
+    }
+
+    private void ApplyRecentNcfPath(string path)
+    {
+        try
+        {
+            _suppressDesktopSettingsSave = true;
+            ExternalNcfPath = path;
+            LaunchTargetKind = NcfLaunchTargetKind.ExternalPublished;
+            _suppressDesktopSettingsSave = false;
+            ValidateExternalTargetCore(recordRecentPath: false);
+        }
+        catch (Exception ex)
+        {
+            _suppressDesktopSettingsSave = false;
+            AddLog($"❌ 选择最近工作区失败: {ex.Message}");
+        }
+    }
+
     #endregion
 
     #region 命令
@@ -273,6 +552,10 @@ public partial class MainWindowViewModel : ViewModelBase
             if (isConnected)
             {
                 AddLog("✅ 网络连接正常");
+                if (!string.IsNullOrWhiteSpace(_ncfService.LastSourceSelectionSummary))
+                {
+                    AddLog($"🌐 {_ncfService.LastSourceSelectionSummary}");
+                }
             }
             else
             {
@@ -300,12 +583,146 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    [RelayCommand(CanExecute = nameof(CanChangeLaunchTarget))]
+    private void UseManagedRuntime()
+    {
+        LaunchTargetKind = NcfLaunchTargetKind.ManagedPublished;
+        RefreshSelectedLaunchTarget();
+        AddLog("🧭 已切换到内置托管版本");
+    }
+
+    [RelayCommand(CanExecute = nameof(CanChangeLaunchTarget))]
+    private async Task UseExternalTarget()
+    {
+        if (IsManagedTargetMode)
+        {
+            LaunchTargetKind = NcfLaunchTargetKind.ExternalPublished;
+        }
+
+        if (string.IsNullOrWhiteSpace(ExternalNcfPath))
+        {
+            await SelectExternalNcfTarget();
+            return;
+        }
+
+        RefreshSelectedLaunchTarget();
+        AddLog("🧭 已切换到外部 NCF 工作区");
+    }
+
+    [RelayCommand(CanExecute = nameof(CanChangeLaunchTarget))]
+    private async Task SelectExternalNcfTarget()
+    {
+        try
+        {
+            if (Avalonia.Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop
+                || desktop.MainWindow?.StorageProvider is not { CanPickFolder: true } storageProvider)
+            {
+                AddLog("❌ 当前平台无法打开目录选择器，请直接粘贴目标路径。");
+                return;
+            }
+
+            var folders = await storageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+            {
+                Title = "选择 NCF 发布目录或源码工作区",
+                AllowMultiple = false
+            });
+            var selectedPath = folders.FirstOrDefault()?.TryGetLocalPath();
+            if (string.IsNullOrWhiteSpace(selectedPath))
+            {
+                return;
+            }
+
+            _suppressDesktopSettingsSave = true;
+            ExternalNcfPath = selectedPath;
+            LaunchTargetKind = NcfLaunchTargetKind.ExternalPublished;
+            _suppressDesktopSettingsSave = false;
+            ValidateExternalTarget();
+        }
+        catch (Exception ex)
+        {
+            AddLog($"❌ 选择外部目标失败: {ex.Message}");
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(CanChangeLaunchTarget))]
+    private void ValidateExternalTarget()
+    {
+        ValidateExternalTargetCore(recordRecentPath: true);
+    }
+
+    private void ValidateExternalTargetCore(bool recordRecentPath)
+    {
+        var resolution = NcfLaunchTargetResolver.ResolveExternal(ExternalNcfPath);
+        if (!resolution.IsValid)
+        {
+            _resolvedLaunchTarget = null;
+            TargetKindText = "外部工作区";
+            TargetVersionText = "—";
+            TargetFrameworkText = "—";
+            TargetEntryText = ExternalNcfPath;
+            TargetValidationMessage = resolution.ErrorMessage;
+            TargetStatusColor = "#DC3545";
+            AddLog($"❌ 外部目标检测失败: {resolution.ErrorMessage}");
+            SaveDesktopSettings();
+            return;
+        }
+
+        var target = resolution.Target!;
+        ApplyResolvedLaunchTarget(target);
+        if (recordRecentPath)
+        {
+            var wasSuppressed = _suppressDesktopSettingsSave;
+            try
+            {
+                _suppressDesktopSettingsSave = true;
+                ExternalNcfPath = target.SelectedPath;
+                SelectedRecentNcfPath = target.SelectedPath;
+            }
+            finally
+            {
+                _suppressDesktopSettingsSave = wasSuppressed;
+            }
+
+            AddRecentNcfPath(target.SelectedPath);
+        }
+        SaveDesktopSettings();
+        AddLog($"✅ 已识别 {target.KindDisplayName}: {target.EntryPath}");
+    }
+
+    [RelayCommand]
+    private void OpenSelectedTargetDirectory()
+    {
+        var path = IsManagedTargetMode
+            ? NcfService.NcfRuntimePath
+            : _resolvedLaunchTarget?.WorkingDirectory ?? ExternalNcfPath;
+        if (string.IsNullOrWhiteSpace(path) || !Directory.Exists(path))
+        {
+            AddLog("ℹ️ 当前目标目录不存在。");
+            return;
+        }
+
+        OpenBrowser(path);
+        AddLog($"📁 已打开目标目录: {path}");
+    }
+
+    private bool CanChangeLaunchTarget() => !IsOperationInProgress && !_isNcfRunning;
+
+    private void NotifyLaunchTargetCommandsCanExecuteChanged()
+    {
+        OnPropertyChanged(nameof(IsTargetSelectionEnabled));
+        UseManagedRuntimeCommand.NotifyCanExecuteChanged();
+        UseExternalTargetCommand.NotifyCanExecuteChanged();
+        SelectExternalNcfTargetCommand.NotifyCanExecuteChanged();
+        ValidateExternalTargetCommand.NotifyCanExecuteChanged();
+    }
+
     [RelayCommand(CanExecute = nameof(CanExecuteMainOperation))]
     private async Task MainOperation()
     {
         if (_isNcfRunning)
         {
-            StopOperation();
+            // 必须 await：火忘式 Task.Run + 后台线程改 UI 会导致 Avalonia 崩溃退出
+            await StopNcfAsync();
         }
         else
         {
@@ -316,22 +733,28 @@ public partial class MainWindowViewModel : ViewModelBase
     private bool CanExecuteMainOperation() => !IsOperationInProgress;
 
     [RelayCommand]
-    private void StopOperation()
+    private async Task StopOperation()
     {
         try
         {
             _cancellationTokenSource?.Cancel();
-            
+
             if (_isNcfRunning)
             {
-                _ = Task.Run(StopNcfAsync);
+                await StopNcfAsync();
             }
-            
-            AddLog("🛑 操作已取消");
+            else
+            {
+                AddLog("🛑 操作已取消");
+                MainButtonText = "启动目标";
+                CurrentStatus = "就绪";
+                StatusColor = "#28A745";
+            }
         }
         catch (Exception ex)
         {
             AddLog($"❌ 停止操作失败: {ex.Message}");
+            Console.WriteLine($"[StopOperation] 失败: {ex}");
         }
     }
     
@@ -370,6 +793,27 @@ public partial class MainWindowViewModel : ViewModelBase
     }
     
     private bool CanOpenInExternalBrowser() => !string.IsNullOrEmpty(SiteUrl) && SiteUrl != "未启动";
+
+    [RelayCommand]
+    private async Task OpenDesktopBridgeInstallPage()
+    {
+        if (string.IsNullOrWhiteSpace(SiteUrl) || SiteUrl == "未启动")
+        {
+            AddLog("ℹ️ 请先启动 NCF，再打开 XNCF 模块管理页面安装 DesktopBridge。");
+            return;
+        }
+
+        var moduleManagerUrl = $"{SiteUrl.TrimEnd('/')}/Admin/XncfModule/Index";
+        IsBrowserTabVisible = true;
+        await NavigateToBrowserAsync(moduleManagerUrl);
+        AddLog("🧩 已打开 XNCF 模块管理，请安装或更新 Senparc.Xncf.DesktopBridge。");
+    }
+
+    [RelayCommand]
+    private void ShowDesktopRobot()
+    {
+        ShowDesktopRobotRequested?.Invoke();
+    }
     
     [RelayCommand(CanExecute = nameof(CanCloseBrowserTab))]
     private async Task CloseBrowserTab()
@@ -543,14 +987,46 @@ public partial class MainWindowViewModel : ViewModelBase
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 _suppressMirrorSettingsSave = true;
+                _suppressDesktopSettingsSave = true;
                 MirrorServerBaseUrl = _ncfService.MirrorServerBaseUrl;
+                ExternalNcfPath = desktopSettings.ExternalNcfPath ?? string.Empty;
+                AspNetCoreEnvironment = string.Equals(
+                    desktopSettings.AspNetCoreEnvironment,
+                    "Development",
+                    StringComparison.OrdinalIgnoreCase)
+                    ? "Development"
+                    : "Production";
+                LaunchTargetKind = desktopSettings.LaunchTargetKind;
+                RecentNcfPaths.Clear();
+                foreach (var path in desktopSettings.RecentNcfPaths ?? new List<string>())
+                {
+                    if (!string.IsNullOrWhiteSpace(path))
+                    {
+                        RecentNcfPaths.Add(path);
+                    }
+                }
                 _suppressMirrorSettingsSave = false;
+                _suppressDesktopSettingsSave = false;
+                RefreshSelectedLaunchTarget();
             });
 
-            DesktopSettingsStore.Save(new DesktopUserSettings { MirrorServerBaseUrl = _ncfService.MirrorServerBaseUrl });
+            SaveDesktopSettings();
 
-            // 检查最新版本
-            await CheckLatestVersionAsync();
+            if (IsManagedTargetMode)
+            {
+                // 只有托管模式参与线上版本比较和自动更新；网络检查放到后台，不能阻塞界面和浏览器初始化。
+                _ = Task.Run(CheckLatestVersionAsync);
+            }
+            else
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    LatestVersion = _resolvedLaunchTarget?.Version ?? "目标无效";
+                    AddLog(_resolvedLaunchTarget == null
+                        ? $"⚠️ 外部目标需要重新检测: {TargetValidationMessage}"
+                        : $"🧭 已恢复外部目标: {_resolvedLaunchTarget.EntryPath}");
+                });
+            }
             
             // 立即关闭初始化遮罩，让用户看到 WebView2 安装日志
             await Dispatcher.UIThread.InvokeAsync(() =>
@@ -684,11 +1160,25 @@ public partial class MainWindowViewModel : ViewModelBase
 
             var latestVersion = await _ncfService.GetLatestVersionAsync();
             var installedVersion = await _ncfService.GetInstalledVersionAsync();
+
+            if (IsVersionCheckUnavailable(latestVersion))
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    LatestVersion = "暂不可用";
+                    AddLog("⚠️ 在线版本检查暂不可用，已跳过本次检查，不影响程序继续运行");
+                });
+                return;
+            }
             
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 LatestVersion = latestVersion;
                 AddLog($"📋 最新版本: {latestVersion}");
+                if (!string.IsNullOrWhiteSpace(_ncfService.LastSourceSelectionSummary))
+                {
+                    AddLog($"🌐 {_ncfService.LastSourceSelectionSummary}");
+                }
                 
                 if (!string.IsNullOrEmpty(installedVersion))
                 {
@@ -715,7 +1205,7 @@ public partial class MainWindowViewModel : ViewModelBase
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 LatestVersion = "获取失败";
-                AddLog($"⚠️ 获取版本信息失败: {ex.Message}");
+                AddLog($"⚠️ 获取版本信息失败: {GetRoutineUpdateError(ex)}；不影响程序继续运行");
             });
         }
     }
@@ -731,47 +1221,89 @@ public partial class MainWindowViewModel : ViewModelBase
             IsOperationInProgress = true;
             _cancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = _cancellationTokenSource.Token;
+            Robot.SetProcessState("启动中", "正在准备 NCF 运行环境");
 
             CurrentStatus = "启动中";
             StatusColor = "#007ACC";
-            MainButtonText = "停止 NCF";
+            MainButtonText = "停止目标";
             
-            AddLog("🚀 开始启动 NCF...");
+            AddLog("🚀 开始启动 NCF 目标...");
 
-            // 检查版本更新
-            var (shouldContinue, shouldUpdate) = await CheckAndConfirmUpdateAsync();
-            if (!shouldContinue)
+            NcfLaunchTarget launchTarget;
+            if (IsManagedTargetMode)
             {
-                // 用户取消启动，恢复状态
-                await Dispatcher.UIThread.InvokeAsync(() =>
+                // 只有内置托管版本允许进入下载、更新和解压链路。
+                var (shouldContinue, shouldUpdate) = await CheckAndConfirmUpdateAsync();
+                if (!shouldContinue)
                 {
-                    IsOperationInProgress = false;
-                    CurrentStatus = "已取消";
-                    StatusColor = "#6C757D";
-                    MainButtonText = "启动 NCF";
-                    AddLog("ℹ️ 用户取消了启动操作");
-                });
-                return;
-            }
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        IsOperationInProgress = false;
+                        CurrentStatus = "已取消";
+                        StatusColor = "#6C757D";
+                        MainButtonText = "启动目标";
+                        AddLog("ℹ️ 用户取消了启动操作");
+                    });
+                    return;
+                }
 
-            // 1-2. 如果需要更新，则下载和提取文件
-            if (shouldUpdate)
-            {
-                // 1. 检查/下载文件
-                await DownloadNcfAsync(cancellationToken);
-                
-                // 2. 提取文件
-                await ExtractNcfAsync(cancellationToken);
+                if (shouldUpdate)
+                {
+                    try
+                    {
+                        await DownloadNcfAsync(cancellationToken);
+                        await ExtractNcfAsync(cancellationToken);
+                    }
+                    catch (Exception ex) when (
+                        !cancellationToken.IsCancellationRequested &&
+                        IsUpdateConnectivityError(ex))
+                    {
+                        var fallbackResolution = NcfLaunchTargetResolver.ResolveManagedRuntime(NcfService.NcfRuntimePath);
+                        if (!fallbackResolution.IsValid)
+                        {
+                            throw;
+                        }
+
+                        AddLog($"⚠️ 在线更新暂不可用（{GetRoutineUpdateError(ex)}），继续使用本地托管版本");
+                    }
+                }
+                else
+                {
+                    AddLog("⏭️ 跳过下载和提取，使用现有托管版本");
+                }
+
+                var managedResolution = NcfLaunchTargetResolver.ResolveManagedRuntime(NcfService.NcfRuntimePath);
+                if (!managedResolution.IsValid)
+                {
+                    throw new InvalidOperationException(managedResolution.ErrorMessage);
+                }
+                launchTarget = managedResolution.Target!;
+                await Dispatcher.UIThread.InvokeAsync(() => ApplyResolvedLaunchTarget(launchTarget));
             }
             else
             {
-                AddLog("⏭️ 跳过下载和提取，使用现有版本");
+                var externalResolution = NcfLaunchTargetResolver.ResolveExternal(ExternalNcfPath);
+                if (!externalResolution.IsValid)
+                {
+                    throw new InvalidOperationException(externalResolution.ErrorMessage);
+                }
+
+                launchTarget = externalResolution.Target!;
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    ApplyResolvedLaunchTarget(launchTarget);
+                    AddRecentNcfPath(launchTarget.SelectedPath);
+                    SaveDesktopSettings();
+                });
+                AddLog("🛡️ 外部工作区模式：已跳过下载、解压和自动更新");
             }
-            
-            // 3. 启动NCF进程
-            await StartNcfProcessAsync(cancellationToken);
+
+            _activeLaunchTarget = launchTarget;
+            AddLog($"🧭 启动目标: {launchTarget.KindDisplayName} / {launchTarget.Version} / {launchTarget.TargetFramework}");
+            await StartNcfProcessAsync(launchTarget, cancellationToken);
             
             _isNcfRunning = true;
+            NotifyLaunchTargetCommandsCanExecuteChanged();
             CurrentStatus = "运行中";
             StatusColor = "#28A745";
             ProgressText = "NCF 运行中";
@@ -794,9 +1326,11 @@ public partial class MainWindowViewModel : ViewModelBase
         catch (OperationCanceledException)
         {
             AddLog("🛑 操作已取消");
+            Robot.SetProcessState("已停止", "启动操作已取消");
         }
         catch (Exception ex)
         {
+            Robot.SetProcessState("错误", ex.Message, isError: true);
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 CurrentStatus = "错误";
@@ -809,9 +1343,10 @@ public partial class MainWindowViewModel : ViewModelBase
             IsOperationInProgress = false;
             if (!_isNcfRunning)
             {
-                MainButtonText = "启动 NCF";
+                MainButtonText = "启动目标";
                 CurrentStatus = "就绪";
                 StatusColor = "#28A745";
+                _activeLaunchTarget = null;
             }
         }
     }
@@ -836,6 +1371,11 @@ public partial class MainWindowViewModel : ViewModelBase
         });
 
         await _ncfService.DownloadLatestReleaseAsync(progress, ShowDetailedInfo, cancellationToken);
+        if (!string.IsNullOrWhiteSpace(_ncfService.LastSourceSelectionSummary))
+        {
+            await Dispatcher.UIThread.InvokeAsync(() =>
+                AddLog($"🌐 {_ncfService.LastSourceSelectionSummary}"));
+        }
     }
 
     private async Task ExtractNcfAsync(CancellationToken cancellationToken)
@@ -870,7 +1410,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
-    private async Task StartNcfProcessAsync(CancellationToken cancellationToken)
+    private async Task StartNcfProcessAsync(NcfLaunchTarget launchTarget, CancellationToken cancellationToken)
     {
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
@@ -880,10 +1420,10 @@ public partial class MainWindowViewModel : ViewModelBase
 
         var availablePort = await _ncfService.FindAvailablePortAsync(StartPort, EndPort);
         var siteUrl = $"http://localhost:{availablePort}";
+        _desktopBridgeSessionToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
         
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            SiteUrl = siteUrl;
             AddLog($"🌐 使用端口: {availablePort}");
             ProgressText = "启动进程...";
         });
@@ -892,9 +1432,15 @@ public partial class MainWindowViewModel : ViewModelBase
         _ncfService.OnProcessOutput = (output, isError) =>
         {
             AddCliLog(output, isError);
+            Robot.ApplyCompatibilityLog(output, isError);
         };
 
-        _ncfProcess = await _ncfService.StartNcfProcessAsync(availablePort, cancellationToken);
+        _ncfProcess = await _ncfService.StartNcfProcessAsync(
+            launchTarget,
+            availablePort,
+            _desktopBridgeSessionToken,
+            AspNetCoreEnvironment,
+            cancellationToken);
         
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
@@ -903,7 +1449,13 @@ public partial class MainWindowViewModel : ViewModelBase
         });
 
         // 等待站点就绪
-        var isReady = await _ncfService.WaitForSiteReadyAsync(siteUrl, _ncfProcess, 60, cancellationToken);
+        var timeoutSeconds = launchTarget.IsSourceProject ? 180 : 60;
+        var isReady = await _ncfService.WaitForSiteReadyAsync(
+            siteUrl,
+            _ncfProcess,
+            timeoutSeconds,
+            requireNcfBranding: launchTarget.IsManaged,
+            cancellationToken: cancellationToken);
         
         if (!isReady)
         {
@@ -912,113 +1464,384 @@ public partial class MainWindowViewModel : ViewModelBase
         
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
+            // 站点实际就绪后再更新绑定地址，避免 WebView 把导航完成误报为 NCF 已启动。
+            SiteUrl = siteUrl;
             AddLog($"✅ NCF 站点已启动: {siteUrl}");
         });
+
+        Robot.SetProcessState("运行中", $"{launchTarget.DisplayName} 已启动，正在等待 Agent 任务");
+        await ConnectDesktopBridgeAsync(siteUrl, _desktopBridgeSessionToken, cancellationToken);
+    }
+
+    private async Task ConnectDesktopBridgeAsync(
+        string siteUrl,
+        string sessionToken,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _desktopBridgeClient.ConnectAsync(siteUrl, sessionToken, cancellationToken)
+                .ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+        catch (Exception ex)
+        {
+            // Bridge 是可选能力，任何异常都只触发兼容模式，绝不阻断 NCF 启动。
+            ApplyDesktopBridgeAvailability(new DesktopBridgeProbeResult(
+                DesktopBridgeAvailability.Unavailable,
+                $"DesktopBridge 初始化失败（{ex.Message}），已安全切换到兼容模式。"));
+        }
+    }
+
+    private void OnDesktopBridgeAvailabilityChanged(DesktopBridgeProbeResult result)
+    {
+        ApplyDesktopBridgeAvailability(result);
+    }
+
+    private void ApplyDesktopBridgeAvailability(DesktopBridgeProbeResult result)
+    {
+        Robot.SetBridgeAvailability(result);
+        Dispatcher.UIThread.Post(() =>
+        {
+            DesktopBridgeStatusText = result.Message;
+            UpdateAdminChatBridgeState(result);
+            DesktopBridgeStatusColor = result.Availability switch
+            {
+                DesktopBridgeAvailability.Available => "#28A745",
+                DesktopBridgeAvailability.NotInstalled => "#FFC107",
+                DesktopBridgeAvailability.Incompatible => "#FD7E14",
+                DesktopBridgeAvailability.Unauthorized => "#DC3545",
+                DesktopBridgeAvailability.Inactive => "#FD7E14",
+                _ => "#6C757D"
+            };
+
+            IsDesktopBridgeNoticeVisible = result.Availability != DesktopBridgeAvailability.Available;
+            IsDesktopBridgeInstallActionVisible = result.Availability is
+                DesktopBridgeAvailability.NotInstalled or DesktopBridgeAvailability.Incompatible;
+            DesktopBridgeNoticeMessage = result.Availability switch
+            {
+                DesktopBridgeAvailability.NotInstalled =>
+                    "当前内部站点未安装 Senparc.Xncf.DesktopBridge。机器人仍会使用进程和日志兼容模式，不影响 NCF 运行。请进入 XNCF 模块管理安装；若列表中没有该模块，请先升级站点或补充模块包，然后重启站点。",
+                DesktopBridgeAvailability.Incompatible =>
+                    "DesktopBridge 版本与当前 GUI 不兼容。机器人已安全降级，请在 XNCF 模块管理中更新模块后重启站点。",
+                DesktopBridgeAvailability.Unauthorized =>
+                    "DesktopBridge 已检测到，但会话认证失败。NCF 会继续运行；请从桌面应用重新启动站点。",
+                DesktopBridgeAvailability.Inactive =>
+                    "DesktopBridge 已安装但未启用桌面会话。NCF 会继续运行；请从桌面应用重新启动站点。",
+                DesktopBridgeAvailability.Unavailable =>
+                    "暂时无法连接 DesktopBridge，机器人正在使用兼容模式并会在后台重连。NCF 运行不受影响。",
+                _ => string.Empty
+            };
+
+            AddLog(result.Availability == DesktopBridgeAvailability.Available
+                ? $"🤖 {result.Message}"
+                : $"ℹ️ {result.Message}");
+        });
+    }
+
+    private void OnDesktopActivityReceived(DesktopActivityMessage activity)
+    {
+        Robot.ApplyActivity(activity);
+        if (ShowDetailedInfo)
+        {
+            AddLog($"🤖 [{activity.Source}] {activity.Title}: {activity.State}");
+        }
     }
 
     private async Task StopNcfAsync()
     {
+        // 停止目标只应结束 NCF 子进程，绝不能关闭桌面主窗口或退出应用。
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            IsOperationInProgress = true;
+            ProgressText = "正在停止...";
+            IsProgressIndeterminate = true;
+            AddLog("🛑 正在停止目标，桌面应用将保持打开...");
+            Console.WriteLine($"[StopNcf] 开始停止，当前 PID={Environment.ProcessId}, NcfPid={_ncfProcess?.Id.ToString() ?? "null"}");
+        });
+
+        var processToStop = _ncfProcess;
+        var stoppedCleanly = false;
+
         try
         {
-            // 清理 CLI 输出回调
+            try
+            {
+                await _desktopBridgeClient.StopAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[StopNcf] DesktopBridge 停止警告: {ex.Message}");
+            }
+
             if (_ncfService != null)
             {
                 _ncfService.OnProcessOutput = null;
             }
-            
-            // 🚀 停止定时器前先处理剩余的日志
-            FlushPendingLogs();
-            
-            if (_ncfProcess != null && !_ncfProcess.HasExited)
-            {
-                await Dispatcher.UIThread.InvokeAsync(() =>
-                {
-                    AddLog("🛑 正在停止 NCF 进程...");
-                });
 
-                // 在 Windows 上，使用 taskkill 杀死整个进程树
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    try
-                    {
-                        var killProcess = Process.Start(new ProcessStartInfo
-                        {
-                            FileName = "taskkill",
-                            Arguments = $"/PID {_ncfProcess.Id} /T /F",
-                            UseShellExecute = false,
-                            CreateNoWindow = true,
-                            RedirectStandardOutput = true,
-                            RedirectStandardError = true
-                        });
-                        
-                        if (killProcess != null)
-                        {
-                            await killProcess.WaitForExitAsync();
-                            await Dispatcher.UIThread.InvokeAsync(() =>
-                            {
-                                AddLog($"🔪 已使用 taskkill 终止进程树 (PID: {_ncfProcess.Id})");
-                            });
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        await Dispatcher.UIThread.InvokeAsync(() =>
-                        {
-                            AddLog($"⚠️ taskkill 失败，尝试常规 Kill: {ex.Message}");
-                        });
-                        _ncfProcess.Kill();
-                    }
-                }
-                else
-                {
-                    // macOS/Linux 使用常规 Kill
-                    _ncfProcess.Kill(entireProcessTree: true);
-                }
-                
-                // 等待进程退出，最多等待 5 秒
-                var exitTask = _ncfProcess.WaitForExitAsync();
-                var timeoutTask = Task.Delay(5000);
-                var completedTask = await Task.WhenAny(exitTask, timeoutTask);
-                
-                if (completedTask == timeoutTask)
-                {
-                    await Dispatcher.UIThread.InvokeAsync(() =>
-                    {
-                        AddLog("⚠️ 进程未在 5 秒内退出，强制终止");
-                    });
-                }
-                else
-                {
-                    await Dispatcher.UIThread.InvokeAsync(() =>
-                    {
-                        AddLog("✅ NCF 进程已停止");
-                    });
-                }
-            }
+            FlushPendingLogs();
+
+            stoppedCleanly = await TerminateNcfProcessAsync(processToStop).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
+            Console.WriteLine($"[StopNcf] 停止过程异常（应用继续运行）: {ex}");
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                AddLog($"⚠️ 停止进程时出错: {ex.Message}");
+                AddLog($"⚠️ 停止进程时出错: {ex.Message}（桌面应用继续运行）");
             });
         }
         finally
         {
-            _ncfProcess?.Dispose();
+            // 先断开引用，避免后续误杀；Dispose 失败也不得影响 GUI 存活。
             _ncfProcess = null;
+            try
+            {
+                processToStop?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[StopNcf] Dispose 进程警告: {ex.Message}");
+            }
+
+            _desktopBridgeSessionToken = null;
+            _activeLaunchTarget = null;
             _isNcfRunning = false;
+            ResetAdminChatState();
+
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                MainButtonText = "启动 NCF";
-                CurrentStatus = "已停止";
-                StatusColor = "#6C757D";
-                SiteUrl = "未启动";
-                ProgressText = "已停止";
-                ProgressValue = 0;
-                IsBrowserTabVisible = false; // 隐藏浏览器标签页
-                CurrentTabIndex = 0; // 切换回设置页面
+                try
+                {
+                    NotifyLaunchTargetCommandsCanExecuteChanged();
+                    Robot.SetProcessState("已停止", "NCF 站点已停止，可重新启动");
+                    MainButtonText = "启动目标";
+                    CurrentStatus = "已停止";
+                    StatusColor = "#6C757D";
+                    SiteUrl = "未启动";
+                    ProgressText = "已停止 — 可继续操作";
+                    ProgressValue = 0;
+                    IsProgressIndeterminate = false;
+                    IsBrowserTabVisible = false;
+                    CurrentTabIndex = 0; // 回到 Agent 工作台主页面
+                    DesktopBridgeStatusText = "等待 NCF 启动";
+                    DesktopBridgeStatusColor = "#6C757D";
+                    DesktopBridgeNoticeMessage = string.Empty;
+                    IsDesktopBridgeNoticeVisible = false;
+                    IsDesktopBridgeInstallActionVisible = false;
+                    AddLog(stoppedCleanly
+                        ? "✅ 目标已停止，可选择下一步操作（重新启动或其他目标）"
+                        : "✅ 已结束停止流程，桌面应用保持打开，可继续操作");
+                    Console.WriteLine("[StopNcf] UI 已恢复到主页面等待状态");
+                }
+                finally
+                {
+                    IsOperationInProgress = false;
+                    MainOperationCommand.NotifyCanExecuteChanged();
+                }
             });
+        }
+    }
+
+    /// <summary>
+    /// 安全终止 NCF 子进程。任何 Kill 失败都只记日志，绝不向上抛到让 GUI 退出。
+    /// </summary>
+    private async Task<bool> TerminateNcfProcessAsync(Process? process)
+    {
+        if (process == null)
+        {
+            await Dispatcher.UIThread.InvokeAsync(() => AddLog("ℹ️ 没有正在运行的 NCF 进程"));
+            return true;
+        }
+
+        int pid;
+        try
+        {
+            if (process.HasExited)
+            {
+                await Dispatcher.UIThread.InvokeAsync(() => AddLog("ℹ️ NCF 进程已退出"));
+                return true;
+            }
+
+            pid = process.Id;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[StopNcf] 读取进程状态失败: {ex.Message}");
+            return false;
+        }
+
+        // 防御：绝不向当前桌面进程自身发 Kill。
+        if (pid == Environment.ProcessId)
+        {
+            await Dispatcher.UIThread.InvokeAsync(() =>
+                AddLog("⚠️ 检测到进程 PID 与桌面应用相同，已跳过 Kill 以防退出"));
+            Console.WriteLine("[StopNcf] 拒绝 Kill 自身进程");
+            return false;
+        }
+
+        await Dispatcher.UIThread.InvokeAsync(() => AddLog($"🛑 正在停止 NCF 进程 (PID: {pid})..."));
+
+        try
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                try
+                {
+                    using var killProcess = Process.Start(new ProcessStartInfo
+                    {
+                        FileName = "taskkill",
+                        Arguments = $"/PID {pid} /T /F",
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true
+                    });
+                    if (killProcess != null)
+                    {
+                        await killProcess.WaitForExitAsync().ConfigureAwait(false);
+                        await Dispatcher.UIThread.InvokeAsync(() =>
+                            AddLog($"🔪 已使用 taskkill 终止进程树 (PID: {pid})"));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[StopNcf] taskkill 失败，回退 Kill: {ex.Message}");
+                    TryKillProcess(process, entireProcessTree: false);
+                }
+            }
+            else
+            {
+                // macOS/Linux：先杀直接子进程，再杀根进程，避免 entireProcessTree 误伤宿主。
+                await TryKillUnixChildProcessesAsync(pid).ConfigureAwait(false);
+                TryKillProcess(process, entireProcessTree: false);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[StopNcf] 终止进程异常: {ex.Message}");
+            await Dispatcher.UIThread.InvokeAsync(() =>
+                AddLog($"⚠️ 终止进程时出错: {ex.Message}"));
+        }
+
+        try
+        {
+            var exitTask = process.WaitForExitAsync();
+            var completed = await Task.WhenAny(exitTask, Task.Delay(5000)).ConfigureAwait(false);
+            if (completed != exitTask)
+            {
+                Console.WriteLine($"[StopNcf] 等待 PID {pid} 超时，尝试最终 Kill");
+                TryKillProcess(process, entireProcessTree: false);
+                await Task.WhenAny(process.WaitForExitAsync(), Task.Delay(2000)).ConfigureAwait(false);
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                    AddLog("⚠️ 进程未在时限内退出，已发送强制终止"));
+                return process.HasExited;
+            }
+
+            await Dispatcher.UIThread.InvokeAsync(() => AddLog("✅ NCF 进程已停止"));
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[StopNcf] 等待退出异常: {ex.Message}");
+            return false;
+        }
+    }
+
+    private static void TryKillProcess(Process process, bool entireProcessTree)
+    {
+        try
+        {
+            if (process.HasExited)
+            {
+                return;
+            }
+
+            if (process.Id == Environment.ProcessId)
+            {
+                Console.WriteLine("[StopNcf] TryKillProcess 拒绝杀死自身");
+                return;
+            }
+
+            process.Kill(entireProcessTree);
+            Console.WriteLine($"[StopNcf] Kill(entireProcessTree={entireProcessTree}) 已发送, PID={process.Id}");
+        }
+        catch (InvalidOperationException ex)
+        {
+            // 进程已退出，或 entireProcessTree 检测到会误伤当前进程
+            Console.WriteLine($"[StopNcf] Kill 无效操作（可忽略）: {ex.Message}");
+        }
+        catch (PlatformNotSupportedException ex)
+        {
+            Console.WriteLine($"[StopNcf] entireProcessTree 不受支持，回退单进程 Kill: {ex.Message}");
+            try
+            {
+                if (!process.HasExited)
+                {
+                    process.Kill(entireProcessTree: false);
+                }
+            }
+            catch (Exception inner)
+            {
+                Console.WriteLine($"[StopNcf] 单进程 Kill 失败: {inner.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[StopNcf] Kill 失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 使用 pkill -P 仅终止指定父进程的子进程，不会波及桌面应用自身。
+    /// </summary>
+    private static async Task TryKillUnixChildProcessesAsync(int parentPid)
+    {
+        if (parentPid <= 0 || parentPid == Environment.ProcessId)
+        {
+            return;
+        }
+
+        try
+        {
+            using var pkill = Process.Start(new ProcessStartInfo
+            {
+                FileName = "/bin/pkill",
+                Arguments = $"-TERM -P {parentPid}",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            });
+            if (pkill != null)
+            {
+                await pkill.WaitForExitAsync().ConfigureAwait(false);
+                Console.WriteLine($"[StopNcf] pkill -TERM -P {parentPid} ExitCode={pkill.ExitCode}");
+            }
+
+            await Task.Delay(300).ConfigureAwait(false);
+
+            using var pkillForce = Process.Start(new ProcessStartInfo
+            {
+                FileName = "/bin/pkill",
+                Arguments = $"-KILL -P {parentPid}",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            });
+            if (pkillForce != null)
+            {
+                await pkillForce.WaitForExitAsync().ConfigureAwait(false);
+                Console.WriteLine($"[StopNcf] pkill -KILL -P {parentPid} ExitCode={pkillForce.ExitCode}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[StopNcf] pkill 子进程失败（可忽略）: {ex.Message}");
         }
     }
 
@@ -1187,6 +2010,15 @@ public partial class MainWindowViewModel : ViewModelBase
             
             // 获取最新版本
             var latestVersion = await _ncfService.GetLatestVersionAsync();
+
+            if (IsVersionCheckUnavailable(latestVersion))
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    AddLog("⚠️ 在线版本检查暂不可用，继续使用当前托管版本");
+                });
+                return (true, false);
+            }
             
             // 如果版本相同，直接继续
             if (installedVersion == latestVersion)
@@ -1242,13 +2074,40 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                AddLog($"⚠️ 版本检查失败: {ex.Message}");
+                AddLog($"⚠️ 版本检查失败: {GetRoutineUpdateError(ex)}");
                 AddLog($"   将继续使用当前版本");
             });
             // 出错时继续，但不下载
             return (true, false);
         }
     }
+
+    private static bool IsVersionCheckUnavailable(string? version) =>
+        string.IsNullOrWhiteSpace(version) ||
+        string.Equals(version, "获取失败", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(version, "暂不可用", StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsUpdateConnectivityError(Exception exception)
+    {
+        if (exception is HttpRequestException or TaskCanceledException)
+        {
+            return true;
+        }
+
+        return exception is InvalidOperationException invalidOperation &&
+               (invalidOperation.Message.Contains("无法获取最新版本", StringComparison.OrdinalIgnoreCase) ||
+                invalidOperation.Message.Contains("未找到适合当前平台", StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static string GetRoutineUpdateError(Exception exception) => exception switch
+    {
+        TaskCanceledException => "请求超时",
+        HttpRequestException httpException when httpException.StatusCode.HasValue =>
+            $"HTTP {(int)httpException.StatusCode.Value}",
+        HttpRequestException => "网络不可达",
+        InvalidOperationException => "更新源没有可用安装包",
+        _ => "请求失败"
+    };
     
     /// <summary>
     /// 添加应用日志（高性能版本：批量处理）
@@ -1594,4 +2453,3 @@ public partial class MainWindowViewModel : ViewModelBase
 
     #endregion
 }
-

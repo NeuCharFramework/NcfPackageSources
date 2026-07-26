@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.10.1-preview1</Version>
+    <Version>0.11.0-preview2</Version>
     <AssemblyName>Senparc.Xncf.Dapr</AssemblyName>
     <RootNamespace>Senparc.Xncf.Dapr</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -19,14 +19,17 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v0.1.0 创世
-			[2024-09-10] v0.8.4-preview1 升级缓存基础库
-			[2025-01-25] v0.9.5-preview1 Update Agents functions, support for function calling
-			[2025-04-29] v0.9.7-preview1 Update CO2NET and AIKernel
-			[2025-05-18] v0.9.8-preview1 Update Installation
-			[2025-06-20] v0.9.9-preview1 Add MCP functions in XncfRegisterBase class
-
+				v0.1.0 创世
+				[2024-09-10] v0.8.4-preview1 升级缓存基础库
+				[2025-01-25] v0.9.5-preview1 Update Agents functions, support for function calling
+				[2025-04-29] v0.9.7-preview1 Update CO2NET and AIKernel
+				[2025-05-18] v0.9.8-preview1 Update Installation
+				[2025-06-20] v0.9.9-preview1 Add MCP functions in XncfRegisterBase class
 				[2025-11-01] update basic libraries, including Senparc.AI
+				[2026-07-17] v0.11.0-preview2 为 Dapr 模块接入统一资源本地化并优化功能文案
+				1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+				2、统一模块注册信息、菜单名称与功能描述的本地化输出
+				3、补充并统一多语言资源键及资源文件
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

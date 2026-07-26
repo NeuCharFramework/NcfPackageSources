@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：v0.36.2-preview1 优化数据库迁移命令日志清洗与请求模型能力
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.37.0-preview5 增强 XNCF 构建、数据库迁移与 AI 生成流程的本地化支持
+
 ----------------------------------------------------------------*/
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
@@ -162,7 +165,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         {
         }
 
-        [FunctionRender("Add-Migration 命令", "可视化完成多数据库的 add-migration 命令，使用 Code First 更新数据库。注意：根据计算机配置和数据库情况，执行过程可能在30-60秒不等，请耐心等待。", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.AddMigration.Name", "Function.XncfBuilder.AddMigration.Description", typeof(Register))]
         public async Task<StringAppResponse> AddMigration(DatabaseMigrations_MigrationRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

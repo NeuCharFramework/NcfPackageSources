@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -54,15 +57,15 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
             this._serviceProvider = serviceProvider;
         }
 
-        [KernelFunction, Description("爬取网页信息并返回提问信息")]
+        [KernelFunction, LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Crawl.Description")]
         public async Task<string> Crawl(
-            [Description("爬取网址")]
+            [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Crawl.Url")]
             string url,
-            [Description("最大爬取深度")]
+            [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Crawl.Depth")]
             int maxDeepth,
-            [Description("最大爬取页数")]
+            [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Crawl.PageCount")]
             int maxPageCount,
-            [Description("提问")]
+            [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Crawl.Question")]
             string question
          )
         {

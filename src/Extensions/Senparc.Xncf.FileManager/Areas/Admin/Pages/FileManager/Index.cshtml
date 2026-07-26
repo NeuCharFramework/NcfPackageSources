@@ -305,7 +305,8 @@
                     }
                 },
                 downloadFile: function (row) {
-                    window.open('/Admin/FileManager/Index?handler=Download&id=' + row.id);
+                    // macOS WKWebView 未配置新窗口委托，使用当前窗口可避免点击后无响应。
+                    window.location.assign('/Admin/FileManager/Index?handler=Download&id=' + encodeURIComponent(row.id));
                 },
                 showUploadDialog: function () {
                     this.uploadDialog.visible = true;

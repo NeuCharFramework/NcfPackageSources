@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.13.1-preview1</Version>
+    <Version>0.14.0-preview2</Version>
     <AssemblyName>Senparc.Xncf.SystemCore</AssemblyName>
     <RootNamespace>Senparc.Xncf.SystemCore</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -17,23 +17,26 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v0.1.0 创世
-			v0.3.3.1 添加 Oracle 数据库迁移代码
-			v0.5.2 更新输出日志
-			[2024-09-10] v0.10.4-preview1 升级缓存基础库
-			[2024-10-09] v0.10.6-preview1 升级基础库
-			[2024-10-16] v0.10.7-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
-			[2024-11-08] v0.10.9-preview1 升级 Senparc.AI
-			[2024-11-15] v0.11.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
-			[2024-11-21] v0.12.2-preview1 更新 CO2NET 及缓存基础库
-			[2024-11-28] v0.12.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
-			[2024-12-27] v0.12.4-preview1 Add exception log for UseXncfModules() auto progress
-			[2025-01-25] v0.12.8-preview1 Update Agents functions, support for function calling
-			[2025-04-29] v0.12.10-preview1 Update CO2NET and AIKernel
-			[2025-05-18] v0.12.11-preview1 Update Installation
-			[2025-06-20] v0.12.12-preview1 Add MCP functions in XncfRegisterBase class
-
+				v0.1.0 创世
+				v0.3.3.1 添加 Oracle 数据库迁移代码
+				v0.5.2 更新输出日志
+				[2024-09-10] v0.10.4-preview1 升级缓存基础库
+				[2024-10-09] v0.10.6-preview1 升级基础库
+				[2024-10-16] v0.10.7-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
+				[2024-11-08] v0.10.9-preview1 升级 Senparc.AI
+				[2024-11-15] v0.11.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
+				[2024-11-21] v0.12.2-preview1 更新 CO2NET 及缓存基础库
+				[2024-11-28] v0.12.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
+				[2024-12-27] v0.12.4-preview1 Add exception log for UseXncfModules() auto progress
+				[2025-01-25] v0.12.8-preview1 Update Agents functions, support for function calling
+				[2025-04-29] v0.12.10-preview1 Update CO2NET and AIKernel
+				[2025-05-18] v0.12.11-preview1 Update Installation
+				[2025-06-20] v0.12.12-preview1 Add MCP functions in XncfRegisterBase class
 				[2025-11-01] update basic libraries, including Senparc.AI
+				[2026-07-17] v0.14.0-preview2 为 SystemCore 模块接入统一资源本地化并优化功能文案
+				1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+				2、统一模块注册信息、菜单名称与功能描述的本地化输出
+				3、补充并统一多语言资源键及资源文件
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -54,7 +57,7 @@
     <!--<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
     <!--<PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.2.0" />-->
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.8-preview.3" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup>

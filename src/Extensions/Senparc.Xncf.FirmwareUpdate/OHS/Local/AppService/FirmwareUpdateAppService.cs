@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.3.0-preview2 为 FirmwareUpdate 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -28,7 +31,7 @@ public class FirmwareUpdateAppService : AppServiceBase
     {
     }
 
-    [FunctionRender("镜像设置", "开关自动从 GitHub 同步 NCF 安装包，并设置检查周期（1–24 小时）", typeof(Register))]
+    [FunctionRender(typeof(FirmwareUpdateResource), "Function.FirmwareUpdate.Settings.Name", "Function.FirmwareUpdate.Settings.Description", typeof(Register))]
     public async Task<StringAppResponse> ConfigureMirror(FirmwareUpdate_ConfigureRequest request)
     {
         return await this.GetStringResponseAsync(async (_, logger) =>
@@ -51,7 +54,7 @@ public class FirmwareUpdateAppService : AppServiceBase
         }, saveLogAfterFinished: true, saveLogName: "FirmwareUpdate 镜像设置");
     }
 
-    [FunctionRender("立即同步", "立即从 GitHub 拉取最新 Release 并更新本地 NcfPackages 与 latest-release.json", typeof(Register))]
+    [FunctionRender(typeof(FirmwareUpdateResource), "Function.FirmwareUpdate.Sync.Name", "Function.FirmwareUpdate.Sync.Description", typeof(Register))]
     public async Task<StringAppResponse> SyncNow(FirmwareUpdate_SyncNowRequest _)
     {
         return await this.GetStringResponseAsync(async (_, logger) =>

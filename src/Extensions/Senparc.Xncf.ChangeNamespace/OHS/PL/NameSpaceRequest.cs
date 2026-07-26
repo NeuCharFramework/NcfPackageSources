@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.22.0-preview2 为 ChangeNamespace 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase.FunctionRenders;
@@ -28,11 +31,11 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.PL
     {
         [Required]
         [MaxLength(300)]
-        [Description("路径||本地物理路径，如：E:\\Senparc\\Ncf\\")]
+        [LocalizedDescription(typeof(ChangeNamespaceResource), "Parameter.ChangeNamespace.Path")]
         public string Path { get; set; }
         [Required]
         [MaxLength(100)]
-        [Description("新命名空间||命名空间根，必须以.结尾，用于替换[Senparc.Ncf.]")]
+        [LocalizedDescription(typeof(ChangeNamespaceResource), "Parameter.ChangeNamespace.NewNamespace")]
         public string NewNamespace { get; set; }
 
         public string OldNamespaceKeyword = "Senparc.";//此参数不设置为属性，不需要在前端显示
@@ -45,7 +48,7 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.PL
         /// <para>注意：string[]类型的默认值为选项的备选值，如果没有提供备选值，此参数将别忽略</para>
         /// </summary>z
         [Required]
-        [Description("源码来源||目前更新最快的是 GitHub，Gitee（码云）在国内下载速度更快，但是不能确定是最新代码，下载前请注意核对最新 GitHub 上的版本。")]
+        [LocalizedDescription(typeof(ChangeNamespaceResource), "Parameter.ChangeNamespace.Source")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(SiteOptions))]
         public string Site { get; set; }
 
@@ -68,11 +71,11 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.PL
     {
         [Required]
         [MaxLength(300)]
-        [Description("路径||本地物理路径，如：E:\\Senparc\\Ncf\\")]
+        [LocalizedDescription(typeof(ChangeNamespaceResource), "Parameter.ChangeNamespace.Path")]
         public string Path { get; set; }
         [Required]
         [MaxLength(100)]
-        [Description("当前自定义的命名空间||命名空间根，一般以.结尾，如：[My.Namespace.]，最终将替换为例如[Senparc.Ncf.]或[Senparc.]")]
+        [LocalizedDescription(typeof(ChangeNamespaceResource), "Parameter.ChangeNamespace.CurrentNamespace")]
         public string MyNamespace { get; set; }
     }
 }

@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260715
     修改描述：v0.14.2-preview2 升级 Senparc.AI 至 0.27.3 与 Senparc.AI.AgentKernel 至 0.1.10
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.15.0-preview3 为 SystemManager 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -34,13 +37,13 @@ namespace Senparc.Xncf.SystemManager.OHS.Local.PL
     {
         [Required]
         [MaxLength(100)]
-        [Description("NeuChar AppKey||可在 https://www.neuchar.com/Developer/Developer 页面看到 AppKey")]
+        [LocalizedDescription(typeof(SystemManagerResource), "Parameter.SystemManager.AppKey")]
         public string AppKey{ get; set; }
 
         [Required]
         [Password]
         [MaxLength(100)]
-        [Description("NeuChar AppSecret||可在 https://www.neuchar.com/Developer/Developer 页面看到 Secret，请勿泄露 Secret！")]
+        [LocalizedDescription(typeof(SystemManagerResource), "Parameter.SystemManager.AppSecret")]
         public string AppSecret { get; set; }
     }
 
@@ -48,7 +51,7 @@ namespace Senparc.Xncf.SystemManager.OHS.Local.PL
     {
         [Required]
         [MaxLength(200)]
-        [Description("RequestTempId||调用 AppService 返回的 requestTempId，例如：RequestTempId-639189862069965960-fc2ab5f5")]
+        [LocalizedDescription(typeof(SystemManagerResource), "Parameter.SystemManager.RequestTempId")]
         public string RequestTempId { get; set; }
     }
 }

@@ -4,14 +4,38 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="using:NcfDesktopApp.GUI.Views"
-        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="860"
+        mc:Ignorable="d" d:DesignWidth="1040" d:DesignHeight="860"
         x:Class="NcfDesktopApp.GUI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Title="NCF 桌面应用程序 - Hybrid版"
-        Width="920" Height="860"
-        MinWidth="820" MinHeight="720"
+        Title="NCF Agent Workspace"
+        Width="1040" Height="860"
+        MinWidth="820" MinHeight="600"
         WindowStartupLocation="CenterScreen"
-        Icon="/Assets/NCF-logo.png">
+        Icon="/Assets/NCF-logo.png"
+        KeyDown="OnMainWindowKeyDown">
+
+    <!-- macOS：Edit 菜单负责把 ⌘C/⌘V/⌘X/⌘A 接入应用；WKWebView 本身不会自动处理这些快捷键 -->
+    <NativeMenu.Menu>
+        <NativeMenu>
+            <NativeMenuItem Header="Edit">
+                <NativeMenu>
+                    <NativeMenuItem Header="Cut"
+                                    Gesture="Meta+X"
+                                    Click="OnEditCutClick"/>
+                    <NativeMenuItem Header="Copy"
+                                    Gesture="Meta+C"
+                                    Click="OnEditCopyClick"/>
+                    <NativeMenuItem Header="Paste"
+                                    Gesture="Meta+V"
+                                    Click="OnEditPasteClick"/>
+                    <NativeMenuItemSeparator/>
+                    <NativeMenuItem Header="Select All"
+                                    Gesture="Meta+A"
+                                    Click="OnEditSelectAllClick"/>
+                </NativeMenu>
+            </NativeMenuItem>
+        </NativeMenu>
+    </NativeMenu.Menu>
 
     <Window.Styles>
         <!-- 卡片样式 - 支持主题切换 -->
@@ -64,7 +88,7 @@
                        HorizontalAlignment="Stretch"
                        VerticalAlignment="Top"
                        ZIndex="100">
-                <Button Content="⚙️ 设置中心"
+                <Button Content="◈ Agent 工作台"
                        Command="{Binding SwitchToSettingsCommand}"
                        Background="{Binding SettingsTabButtonBackground}"
                        Foreground="{Binding SettingsTabButtonForeground}"
@@ -73,7 +97,7 @@
                        FontWeight="SemiBold"
                        Margin="0,0,1,0"
                        Classes="tab-button settings-tab"/>
-                <Button Content="🌐 NCF 应用"
+                <Button Content="↗ 运行站点"
                        Command="{Binding SwitchToBrowserCommand}"
                        Background="{Binding BrowserTabButtonBackground}"
                        Foreground="{Binding BrowserTabButtonForeground}"

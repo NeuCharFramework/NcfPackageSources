@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.PromptRange.MenuName" xml:space="preserve">
+    <value>Prompt Range</value>
+  </data>
+  <data name="Module.PromptRange.Description" xml:space="preserve">
+    <value>Trains and evaluates prompts</value>
+  </data>
+  <data name="Area.Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Function.PromptRange.ViewCodes.Name" xml:space="preserve">
+    <value>View PromptCode list</value>
+  </data>
+  <data name="Function.PromptRange.ViewCodes.Description" xml:space="preserve">
+    <value>View PromptCodes for all ranges and tactics for quickly creating agents in AgentsManager</value>
+  </data>
+  <data name="Parameter.PromptRange.FilterRange" xml:space="preserve">
+    <value>Filter range name||Enter a range-name keyword; leave blank to show all ranges</value>
+  </data>
+</root>

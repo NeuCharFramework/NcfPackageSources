@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
+    修改标识：Senparc - 20260724
+    修改描述：v0.0.5 恢复模拟站点的 Aspire 服务编排
+
 ----------------------------------------------------------------*/
 
 using Aspire.Hosting;
@@ -26,7 +29,7 @@ var installer = builder.AddProject<Senparc_Xncf_Installer>(
 
 var accounts = builder.AddProject<Senparc_Xncf_Accounts>(
         NcfWebApiHelper.GetXncfProjectName<Senparc_Xncf_Accounts>(),
-        launchProfileName: "Senparc.Xncf.Accounts")
+        launchProfileName: "https")
     .WithExternalHttpEndpoints();
 
 var ncfWeb = builder.AddProject<Senparc_Web>(

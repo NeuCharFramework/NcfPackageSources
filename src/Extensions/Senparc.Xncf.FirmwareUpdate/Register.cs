@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.3.0-preview2 为 FirmwareUpdate 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;
@@ -36,11 +39,11 @@ public partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Version => "0.1.0";
 
-    public override string MenuName => "NCF 安装包镜像";
+    public override string MenuName => FirmwareUpdateResource.Get("Module.FirmwareUpdate.MenuName", "NCF 安装包镜像");
 
     public override string Icon => "fa fa-cloud-download";
 
-    public override string Description => "从 GitHub 同步 NCF 桌面端安装包到当前站点 wwwroot 下的 NcfPackages，保留最近 3 个版本，并生成 latest-release.json 供 ncf.pub 与桌面端备用下载使用。";
+    public override string Description => FirmwareUpdateResource.Get("Module.FirmwareUpdate.Description", "从 GitHub 同步 NCF 桌面端安装包到当前站点 wwwroot 下的 NcfPackages，保留最近 3 个版本，并生成 latest-release.json 供 ncf.pub 与桌面端备用下载使用。");
 
     public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
     {

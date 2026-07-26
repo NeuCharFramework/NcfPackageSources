@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Microsoft.SemanticKernel;
@@ -33,9 +36,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
     public class FormatorPlugin
     {
 
-        [KernelFunction, Description("获取文本的字符数量")]
+        [KernelFunction, LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.TextLength.Description")]
         public async Task<int> Calc(
-            [Description("原文")]
+            [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.OriginalText")]
             string text
             )
         {
@@ -46,11 +49,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 
     public class TranslatorPlugin
     {
-        [KernelFunction, Description("翻译文本")]
+        [KernelFunction, LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Translate.Description")]
         public async Task<string> Translate(
-            [Description("原文")]
+            [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.OriginalText")]
             string text,
-            [Description("目标语言")]
+            [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.TargetLanguage")]
             string language
             )
         {
@@ -76,12 +79,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
                                 {
                                     ChatOptions = new ChatOptions()
                                     {
-                                        Instructions = @$"你是一个翻译官，你熟悉“{language}”语言，你将帮我完成文本翻译。
-原文：
-这是一个数据库实体类，用于管理和存储AI模型配置信息。
-
-翻译：
-This is a database entity class used to manage and store AI model configuration information.",
+                                        Instructions = AgentsManagerResource.Format(
+                                            "Agents.Plugin.Translate.Instructions",
+                                            "你是一位熟悉“{0}”的专业翻译，请准确翻译用户提供的文本，只输出译文。",
+                                            language),
                                         MaxOutputTokens = parameter.MaxTokens > 0 ? (int)parameter.MaxTokens : 3000,
                                         Temperature = (float)parameter.Temperature,
                                         TopP = (float)parameter.TopP

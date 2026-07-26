@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.26.0-preview2 为 DatabaseToolkit 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +39,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         //[ApiBind("A","B",ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
-        [FunctionRender("检查自动备份状态", "必须已经设置过自动配分时间，且大于 0 才能启用自动备份", typeof(Register))]
+        [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.CheckBackup.Name", "Function.Database.CheckBackup.Description", typeof(Register))]
         public async Task<DatabaseAutoBackup_IsAutoBackupResponse> IsAutoBackup()
         {
             return await this.GetResponseAsync<DatabaseAutoBackup_IsAutoBackupResponse, bool>(async (response, logger) =>
@@ -47,7 +50,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 
         #region 备份
 
-        [FunctionRender("备份数据库", "将当前使用的数据库备份到指定路径。友情提示：建议确保该路径不具备公开访问权限！", typeof(Register))]
+        [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.Backup.Name", "Function.Database.Backup.Description", typeof(Register))]
         public async Task<StringAppResponse> Backup(DatabaseBackup_BackupRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -132,7 +135,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         #endregion
 
 
-        [FunctionRender("导出当前数据库 SQL 脚本", "导出当前站点正在使用的所有表的 SQL 脚本", typeof(Register))]
+        [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.ExportSql.Name", "Function.Database.ExportSql.Description", typeof(Register))]
         public async Task<StringAppResponse> ExportSQL()
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

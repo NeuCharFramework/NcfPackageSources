@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.MCP.MenuName" xml:space="preserve">
+    <value>Gestor MCP</value>
+  </data>
+  <data name="Module.MCP.Description" xml:space="preserve">
+    <value>Gestor de Model Context Protocol (MCP)</value>
+  </data>
+  <data name="Area.Home" xml:space="preserve">
+    <value>Inicio</value>
+  </data>
+  <data name="Area.DatabaseSample" xml:space="preserve">
+    <value>Ejemplo de operaciones de base de datos</value>
+  </data>
+  <data name="Function.MCP.Execute.Name" xml:space="preserve">
+    <value>Ejecutar MCP</value>
+  </data>
+  <data name="Function.MCP.Execute.Description" xml:space="preserve">
+    <value>Ejecuta MCP; la dirección predeterminada del módulo es http://localhost:5000/{Module Name}/sse</value>
+  </data>
+  <data name="Function.Sample.Name" xml:space="preserve">
+    <value>Función de ejemplo</value>
+  </data>
+  <data name="Function.Sample.Description" xml:space="preserve">
+    <value>Demuestra parámetros y valores de retorno de FunctionRender</value>
+  </data>
+  <data name="Parameter.Sample.Name" xml:space="preserve">
+    <value>Nombre||El texto anterior a la doble barra es el nombre del parámetro; el posterior es la ayuda</value>
+  </data>
+  <data name="Parameter.Sample.Number1" xml:space="preserve">
+    <value>Número||Número 1</value>
+  </data>
+  <data name="Parameter.Sample.Number2" xml:space="preserve">
+    <value>Número||Número 2</value>
+  </data>
+  <data name="Parameter.Sample.Operator" xml:space="preserve">
+    <value>Operador||</value>
+  </data>
+  <data name="Parameter.Sample.Power" xml:space="preserve">
+    <value>Potencia||</value>
+  </data>
+  <data name="Parameter.Operator.Add" xml:space="preserve">
+    <value>Sumar</value>
+  </data>
+  <data name="Parameter.Operator.Add.Help" xml:space="preserve">
+    <value>Número 1 + Número 2</value>
+  </data>
+  <data name="Parameter.Operator.Subtract" xml:space="preserve">
+    <value>Restar</value>
+  </data>
+  <data name="Parameter.Operator.Subtract.Help" xml:space="preserve">
+    <value>Número 1 - Número 2</value>
+  </data>
+  <data name="Parameter.Operator.Multiply" xml:space="preserve">
+    <value>Multiplicar</value>
+  </data>
+  <data name="Parameter.Operator.Multiply.Help" xml:space="preserve">
+    <value>Número 1 × Número 2</value>
+  </data>
+  <data name="Parameter.Operator.Divide" xml:space="preserve">
+    <value>Dividir</value>
+  </data>
+  <data name="Parameter.Operator.Divide.Help" xml:space="preserve">
+    <value>Número 1 ÷ Número 2</value>
+  </data>
+  <data name="Parameter.Power.Square" xml:space="preserve">
+    <value>Cuadrado</value>
+  </data>
+  <data name="Parameter.Power.Square.Help" xml:space="preserve">
+    <value>Elevar al cuadrado el resultado anterior</value>
+  </data>
+  <data name="Parameter.Power.Cube" xml:space="preserve">
+    <value>Cubo</value>
+  </data>
+  <data name="Parameter.Power.Cube.Help" xml:space="preserve">
+    <value>Elevar al cubo el resultado anterior</value>
+  </data>
+  <data name="Parameter.MCP.ServerSelection" xml:space="preserve">
+    <value>Servidor MCP||Elija un servidor registrado o introduzca una dirección personalizada</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint" xml:space="preserve">
+    <value>Dirección del servidor MCP||Obligatoria para entrada manual; predeterminada: http://localhost:5000/mcp-senparc-xncf-mcp/sse</value>
+  </data>
+  <data name="Parameter.MCP.Request" xml:space="preserve">
+    <value>Solicitud||Solicitud que se enviará al servidor MCP</value>
+  </data>
+  <data name="Parameter.MCP.Manual" xml:space="preserve">
+    <value>Entrada manual</value>
+  </data>
+  <data name="Parameter.MCP.Manual.Help" xml:space="preserve">
+    <value>Introducir manualmente la dirección del servidor MCP</value>
+  </data>
+  <data name="Parameter.MCP.Server.Display" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="Parameter.MCP.Server.Help" xml:space="preserve">
+    <value>Servidor: {0}; ruta: {1}</value>
+  </data>
+  <data name="MCP.Endpoint.CountAll" xml:space="preserve">
+    <value>Se recuperaron {0} endpoints MCP</value>
+  </data>
+  <data name="MCP.Endpoint.CountEnabled" xml:space="preserve">
+    <value>Se recuperaron {0} endpoints MCP habilitados</value>
+  </data>
+  <data name="MCP.Endpoint.NameRequired" xml:space="preserve">
+    <value>El nombre del endpoint es obligatorio.</value>
+  </data>
+  <data name="MCP.Endpoint.AddressRequired" xml:space="preserve">
+    <value>La dirección del endpoint es obligatoria.</value>
+  </data>
+  <data name="MCP.Endpoint.NameExists" xml:space="preserve">
+    <value>El nombre de endpoint «{0}» ya existe.</value>
+  </data>
+  <data name="MCP.Endpoint.IdNotFound" xml:space="preserve">
+    <value>No se encontró el endpoint con ID {0}.</value>
+  </data>
+  <data name="MCP.Endpoint.Updated" xml:space="preserve">
+    <value>✓ Se actualizó el endpoint MCP «{0}».</value>
+  </data>
+  <data name="MCP.Endpoint.Created" xml:space="preserve">
+    <value>✓ Se creó el endpoint MCP «{0}».</value>
+  </data>
+  <data name="MCP.Endpoint.InvalidId" xml:space="preserve">
+    <value>ID de endpoint no válido.</value>
+  </data>
+  <data name="MCP.Endpoint.Deleted" xml:space="preserve">
+    <value>✓ Se eliminó el endpoint MCP «{0}».</value>
+  </data>
+  <data name="MCP.Endpoint.TestSucceeded" xml:space="preserve">
+    <value>✓ La prueba de conexión se completó correctamente.</value>
+  </data>
+  <data name="MCP.Endpoint.TestFailed" xml:space="preserve">
+    <value>✗ La prueba de conexión falló.</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.IdCreate" xml:space="preserve">
+    <value>ID del endpoint||Use 0 para crear un endpoint nuevo</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.Name" xml:space="preserve">
+    <value>Nombre del endpoint||Nombre del endpoint MCP</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.Address" xml:space="preserve">
+    <value>Dirección del endpoint||URI del endpoint MCP</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.Type" xml:space="preserve">
+    <value>Tipo de endpoint||Por ejemplo http, sse o stdio</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.ProtocolVersion" xml:space="preserve">
+    <value>Versión del protocolo||Versión del protocolo MCP</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.Description" xml:space="preserve">
+    <value>Descripción||Descripción del endpoint</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.Enabled" xml:space="preserve">
+    <value>Habilitado||Indica si este endpoint está habilitado</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.AuthConfig" xml:space="preserve">
+    <value>Configuración de autenticación||Configuración JSON de autenticación</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.ExtraConfig" xml:space="preserve">
+    <value>Configuración adicional||Otra configuración JSON personalizada</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.IdDelete" xml:space="preserve">
+    <value>ID del endpoint||ID del endpoint MCP que se eliminará</value>
+  </data>
+  <data name="Parameter.MCP.Endpoint.IdTest" xml:space="preserve">
+    <value>ID del endpoint||ID del endpoint MCP que se probará</value>
+  </data>
+  <data name="Parameter.MCP.Tool.Input" xml:space="preserve">
+    <value>Cadena de entrada</value>
+  </data>
+  <data name="MCP.Tool.Echo.Description" xml:space="preserve">
+    <value>Procesar y repetir una cadena</value>
+  </data>
+  <data name="MCP.Tool.Echo.Result" xml:space="preserve">
+    <value>Hola, {0}</value>
+  </data>
+  <data name="MCP.Tool.Now.Description" xml:space="preserve">
+    <value>Obtener la hora actual</value>
+  </data>
+  <data name="MCP.Tool.AddHours.Description" xml:space="preserve">
+    <value>Añadir horas a la hora actual</value>
+  </data>
+  <data name="MCP.Tool.Calculator.Description" xml:space="preserve">
+    <value>Realizar suma, resta, multiplicación y división</value>
+  </data>
+  <data name="Parameter.MCP.Tool.Operator" xml:space="preserve">
+    <value>Operador entre Number1 y Number2: +, -, × o ÷</value>
+  </data>
+  <data name="MCP.Agent.SystemPrompt" xml:space="preserve">
+    <value>Eres un asistente útil que ayuda a los usuarios a completar tareas.</value>
+  </data>
+  <data name="MCP.BobLab.Instructions" xml:space="preserve">
+    <value>Ayuda a responder preguntas. Repite la pregunta, responde en Markdown en español con traducción inglesa y usa #start y #end.</value>
+  </data>
+  <data name="MCP.BobLab.Footer" xml:space="preserve">
+    <value>[Bob's Lab] - {0} / {1}; tiempo: {2} ms</value>
+  </data>
+  <data name="MCP.Calculate.DivideByZero" xml:space="preserve">
+    <value>El divisor no puede ser cero.</value>
+  </data>
+  <data name="MCP.Calculate.UnknownOperator" xml:space="preserve">
+    <value>Operador desconocido: {0}</value>
+  </data>
+  <data name="MCP.Calculate.OperationLog" xml:space="preserve">
+    <value>Cálculo: {0} {1} {2} = {3}</value>
+  </data>
+  <data name="MCP.Calculate.PowerLog" xml:space="preserve">
+    <value>Potencia {0}: {1}{2} = {3}</value>
+  </data>
+  <data name="MCP.Calculate.Result" xml:space="preserve">
+    <value>[{0}] Resultado: {1}. Consulte el registro para ver los detalles.</value>
+  </data>
+  <data name="Area.Extensions" xml:space="preserve">
+    <value>Extensiones</value>
+  </data>
+  <data name="Page.AutoGeneratedModule" xml:space="preserve">
+    <value>Este módulo se generó automáticamente</value>
+  </data>
+  <data name="Page.InstalledAt" xml:space="preserve">
+    <value>Instalado: </value>
+  </data>
+  <data name="Page.CurrentDatabase" xml:space="preserve">
+    <value>Tipo de base actual: </value>
+  </data>
+  <data name="Page.Brighten" xml:space="preserve">
+    <value>Aclarar</value>
+  </data>
+  <data name="Page.Darken" xml:space="preserve">
+    <value>Oscurecer</value>
+  </data>
+  <data name="Page.Random" xml:space="preserve">
+    <value>Aleatorio</value>
+  </data>
+</root>

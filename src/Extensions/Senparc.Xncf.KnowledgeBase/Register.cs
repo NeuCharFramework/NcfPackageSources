@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.3.0-preview3 为 KnowledgeBase 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -44,11 +47,11 @@ namespace Senparc.Xncf.KnowledgeBase
 
         public override string Version => "0.1.10";//必须填写版本号
 
-        public override string MenuName => "AI 知识库";
+        public override string MenuName => KnowledgeBaseResource.Get("Module.KnowledgeBase.MenuName", "AI 知识库");
 
         public override string Icon => "fa fa-lightbulb-o";
 
-        public override string Description => "AI 知识库";
+        public override string Description => KnowledgeBaseResource.Get("Module.KnowledgeBase.Description", "AI 知识库");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

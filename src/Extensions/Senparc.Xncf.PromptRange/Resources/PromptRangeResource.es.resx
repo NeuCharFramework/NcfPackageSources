@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.PromptRange.MenuName" xml:space="preserve">
+    <value>Laboratorio de prompts</value>
+  </data>
+  <data name="Module.PromptRange.Description" xml:space="preserve">
+    <value>Entrena y evalúa prompts</value>
+  </data>
+  <data name="Area.Home" xml:space="preserve">
+    <value>Inicio</value>
+  </data>
+  <data name="Function.PromptRange.ViewCodes.Name" xml:space="preserve">
+    <value>Ver lista de PromptCode</value>
+  </data>
+  <data name="Function.PromptRange.ViewCodes.Description" xml:space="preserve">
+    <value>Muestra PromptCodes de todos los rangos y tácticas para crear agentes rápidamente</value>
+  </data>
+  <data name="Parameter.PromptRange.FilterRange" xml:space="preserve">
+    <value>Filtrar nombre del campo||Introduzca una palabra clave; déjelo vacío para mostrar todos los campos</value>
+  </data>
+</root>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.ChangeNamespace.MenuName" xml:space="preserve">
+    <value>Change Namespace</value>
+  </data>
+  <data name="Module.ChangeNamespace.Description" xml:space="preserve">
+    <value>Changes source namespaces globally after NCF installation and before release. This operation is irreversible; back up first and do not use it in a running production environment.</value>
+  </data>
+  <data name="Function.ChangeNamespace.Change.Name" xml:space="preserve">
+    <value>Change namespace</value>
+  </data>
+  <data name="Function.ChangeNamespace.Change.Description" xml:space="preserve">
+    <value>Change namespaces in all .cs and .cshtml source files</value>
+  </data>
+  <data name="Function.ChangeNamespace.Restore.Name" xml:space="preserve">
+    <value>Restore namespace</value>
+  </data>
+  <data name="Function.ChangeNamespace.Restore.Description" xml:space="preserve">
+    <value>Restore namespaces in all .cs and .cshtml files to the NCF defaults</value>
+  </data>
+  <data name="Function.ChangeNamespace.Download.Name" xml:space="preserve">
+    <value>Download official NCF source</value>
+  </data>
+  <data name="Function.ChangeNamespace.Download.Description" xml:space="preserve">
+    <value>Download the official NCF source for namespace processing</value>
+  </data>
+  <data name="Parameter.ChangeNamespace.Path" xml:space="preserve">
+    <value>Path||Local physical path, for example: E:\Senparc\Ncf\</value>
+  </data>
+  <data name="Parameter.ChangeNamespace.NewNamespace" xml:space="preserve">
+    <value>New namespace||The namespace root must end with a period and will replace [Senparc.Ncf.]</value>
+  </data>
+  <data name="Parameter.ChangeNamespace.Source" xml:space="preserve">
+    <value>Source||GitHub is normally updated first. Gitee is faster in mainland China but may lag; verify the latest GitHub version before downloading.</value>
+  </data>
+  <data name="Parameter.ChangeNamespace.CurrentNamespace" xml:space="preserve">
+    <value>Current custom namespace||The root usually ends with a period, such as [My.Namespace.], and will be replaced by [Senparc.Ncf.] or [Senparc.]</value>
+  </data>
+</root>

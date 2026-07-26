@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.1-preview1</Version>
+    <Version>0.20.2-preview2</Version>
     <AssemblyName>Senparc.Ncf.Database.InMemory</AssemblyName>
     <RootNamespace>Senparc.Ncf.Database.InMemory</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -17,13 +17,16 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v0.1.0 创世
-			[2024-09-10] v0.18.4-preview1 升级缓存基础库
-			[2025-01-25] v0.19.5-preview1 Update Agents functions, support for function calling
-			[2025-04-29] v0.19.7-preview1 Update CO2NET and AIKernel
-			[2025-04-29] v0.19.8-preview1 Update CO2NET and AIKernel
-
+				v0.1.0 创世
+				[2024-09-10] v0.18.4-preview1 升级缓存基础库
+				[2025-01-25] v0.19.5-preview1 Update Agents functions, support for function calling
+				[2025-04-29] v0.19.7-preview1 Update CO2NET and AIKernel
+				[2025-04-29] v0.19.8-preview1 Update CO2NET and AIKernel
 				[2025-11-01] update basic libraries, including Senparc.AI
+				[2026-07-17] v0.20.2-preview2 同步上游项目版本并适配统一本地化能力
+				1、Dependency update from Senparc.Ncf.Core to 0.25.0-preview2
+				2、Dependency update from Senparc.Ncf.Database to 0.21.2-preview2
+				3、Dependency update from Senparc.Ncf.Utility to 0.21.0-preview2
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -42,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.10" />
-    <PackageReference Include="Senparc.CO2NET" Version="3.1.5" />
+    <PackageReference Include="Senparc.CO2NET" Version="4.1.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />

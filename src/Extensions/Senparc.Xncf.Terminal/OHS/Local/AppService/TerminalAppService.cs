@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.22.0-preview2 为 Terminal 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.AppServices;
@@ -179,7 +182,7 @@ namespace Senparc.Xncf.Terminal.OHS.Local.AppService
             return strOutput;
         }
 
-        [FunctionRender("命令提示符", "输入Windows命令提示符中的命令,即可返回相应的结果。请注意：命令将在服务器系统中执行！", typeof(Register))]
+        [FunctionRender(typeof(TerminalResource), "Function.Terminal.Command.Name", "Function.Terminal.Command.Description", typeof(Register))]
         public async Task<StringAppResponse> Run(Terminal_RunRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

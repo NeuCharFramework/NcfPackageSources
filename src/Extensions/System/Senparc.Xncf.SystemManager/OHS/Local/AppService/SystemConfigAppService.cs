@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260715
     修改描述：v0.14.2-preview2 升级 Senparc.AI 至 0.27.3 与 Senparc.AI.AgentKernel 至 0.1.10
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.15.0-preview3 为 SystemManager 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -39,7 +42,7 @@ namespace Senparc.Xncf.SystemManager.OHS.Local
             _systemConfigService = systemConfigService;
         }
 
-        [FunctionRender("更新 NeuChar 云账户信息", "使用 https://www.neuchar.com/Developer/Developer 页面中提供的 AppKey、Secret 信息，绑定 NeuChar 云账号，激活更多高级功能", typeof(Register))]
+        [FunctionRender(typeof(SystemManagerResource), "Function.SystemManager.UpdateCloudAccount.Name", "Function.SystemManager.UpdateCloudAccount.Description", typeof(Register))]
         public async Task<StringAppResponse> UpdateNeuCharAccount(SystemConfig_UpdateNeuCharAccountRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -57,7 +60,7 @@ namespace Senparc.Xncf.SystemManager.OHS.Local
             });
         }
 
-        [FunctionRender("查看 RequestTempId 暂存日志", "根据 AppService 返回的 RequestTempId 查询暂存日志（受 RequestTempLogCacheMinutes 时效配置影响）", typeof(Register))]
+        [FunctionRender(typeof(SystemManagerResource), "Function.SystemManager.ViewTempLog.Name", "Function.SystemManager.ViewTempLog.Description", typeof(Register))]
         public async Task<StringAppResponse> GetRequestTempLog(SystemConfig_GetRequestTempLogRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

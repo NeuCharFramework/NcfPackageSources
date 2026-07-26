@@ -198,7 +198,7 @@ var app = new Vue({
             window.location.href = this.buildPromptUrl(null, null);
         },
         toAIKernel: function () {
-            window.open("/Admin/AIKernel/Index?uid=" + this.aiKernelUid);
+            window.location.assign("/Admin/AIKernel/Index?uid=" + encodeURIComponent(this.aiKernelUid));
         },
         async fetchDashboard(showMessage) {
             this.loading = true;

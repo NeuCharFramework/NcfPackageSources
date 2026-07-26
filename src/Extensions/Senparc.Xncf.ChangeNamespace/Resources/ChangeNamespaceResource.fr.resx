@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.ChangeNamespace.MenuName" xml:space="preserve">
+    <value>Modifier l’espace de noms</value>
+  </data>
+  <data name="Module.ChangeNamespace.Description" xml:space="preserve">
+    <value>Modifie globalement les espaces de noms après l’installation de NCF et avant publication. L’opération est irréversible : sauvegardez d’abord et ne l’utilisez pas en production.</value>
+  </data>
+  <data name="Function.ChangeNamespace.Change.Name" xml:space="preserve">
+    <value>Modifier l’espace de noms</value>
+  </data>
+  <data name="Function.ChangeNamespace.Change.Description" xml:space="preserve">
+    <value>Modifie les espaces de noms dans tous les fichiers .cs et .cshtml</value>
+  </data>
+  <data name="Function.ChangeNamespace.Restore.Name" xml:space="preserve">
+    <value>Restaurer l’espace de noms</value>
+  </data>
+  <data name="Function.ChangeNamespace.Restore.Description" xml:space="preserve">
+    <value>Restaure les espaces de noms .cs et .cshtml aux valeurs NCF par défaut</value>
+  </data>
+  <data name="Function.ChangeNamespace.Download.Name" xml:space="preserve">
+    <value>Télécharger le code source NCF officiel</value>
+  </data>
+  <data name="Function.ChangeNamespace.Download.Description" xml:space="preserve">
+    <value>Télécharge le code NCF officiel pour traiter les espaces de noms</value>
+  </data>
+  <data name="Parameter.ChangeNamespace.Path" xml:space="preserve">
+    <value>Chemin||Chemin physique local, par exemple : E:\Senparc\Ncf\</value>
+  </data>
+  <data name="Parameter.ChangeNamespace.NewNamespace" xml:space="preserve">
+    <value>Nouvel espace de noms||La racine doit finir par un point et remplacera [Senparc.Ncf.]</value>
+  </data>
+  <data name="Parameter.ChangeNamespace.Source" xml:space="preserve">
+    <value>Source||GitHub est généralement mis à jour en premier. Gitee est plus rapide en Chine continentale mais peut être en retard ; vérifiez la dernière version GitHub.</value>
+  </data>
+  <data name="Parameter.ChangeNamespace.CurrentNamespace" xml:space="preserve">
+    <value>Espace de noms personnalisé actuel||La racine finit généralement par un point, comme [My.Namespace.], et sera remplacée par [Senparc.Ncf.] ou [Senparc.]</value>
+  </data>
+</root>

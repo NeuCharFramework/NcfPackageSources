@@ -145,6 +145,9 @@ function Clear-OutputDirectory {
 function Restore-Packages {
     if ($NoRestore) {
         Write-ColorText "⏭️  跳过包还原" -Color "Yellow"
+        if ($ReadyToRun) {
+            Write-ColorText "⚠️  已启用 -ReadyToRun：若先前还原未带 PublishReadyToRun=true，发布可能出现 NETSDK1094" -Color "Yellow"
+        }
         return $true
     }
     
@@ -152,7 +155,14 @@ function Restore-Packages {
     
     Push-Location $SolutionDir
     try {
-        $output = & dotnet restore 2>&1
+        # ReadyToRun 需要在 restore 阶段拉取 Crossgen2 / 目标 RID 运行时包，否则可能触发 NETSDK1094。
+        $restoreArgs = @("restore")
+        if ($ReadyToRun) {
+            $restoreArgs += "-p:PublishReadyToRun=true"
+            Write-ColorText "   (ReadyToRun: 还原时包含运行时优化包)" -Color "Blue"
+        }
+
+        $output = & dotnet @restoreArgs 2>&1
         if ($LASTEXITCODE -eq 0) {
             Write-ColorText "✅ 包还原成功" -Color "Green"
             if ($Verbose) {

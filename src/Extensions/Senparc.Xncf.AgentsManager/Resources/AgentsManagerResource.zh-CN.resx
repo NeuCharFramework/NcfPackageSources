@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.AgentsManager.MenuName" xml:space="preserve">
+    <value>Agents 管理模块</value>
+  </data>
+  <data name="Module.AgentsManager.Description" xml:space="preserve">
+    <value>管理 AI 智能体及相关配置</value>
+  </data>
+  <data name="Area.Home" xml:space="preserve">
+    <value>首页</value>
+  </data>
+  <data name="Parameter.Agents.Template.Name" xml:space="preserve">
+    <value>名称||Agent 模板名称</value>
+  </data>
+  <data name="Parameter.Agents.Template.Id" xml:space="preserve">
+    <value>ID||为 0 时新增模板</value>
+  </data>
+  <data name="Parameter.Agents.Template.SystemMessage" xml:space="preserve">
+    <value>SystemMessage||SystemMessage 的 PromptRangeCode；支持搜索、下拉和手动输入</value>
+  </data>
+  <data name="Parameter.Agents.Template.Description" xml:space="preserve">
+    <value>说明||Agent 模板说明；不会影响模型效果</value>
+  </data>
+  <data name="Parameter.Agents.Template.Platform" xml:space="preserve">
+    <value>外接平台||向外发布消息的平台</value>
+  </data>
+  <data name="Parameter.Agents.Template.PlatformParameter" xml:space="preserve">
+    <value>外接平台参数||通常为 Key 等连接参数</value>
+  </data>
+  <data name="Parameter.Agents.Template.FunctionCalls" xml:space="preserve">
+    <value>Function Calls||Function Call 名称列表，多个名称用逗号分隔</value>
+  </data>
+  <data name="Parameter.Agents.Create.Name" xml:space="preserve">
+    <value>智能体名称||新智能体名称</value>
+  </data>
+  <data name="Parameter.Agents.Create.ManualPromptCode" xml:space="preserve">
+    <value>手动输入 PromptCode||支持靶场名称、靶道前缀或完整版本号；选择手动输入 SystemMessage 时必填</value>
+  </data>
+  <data name="Parameter.Agents.Create.Description" xml:space="preserve">
+    <value>说明||新智能体说明（可选）</value>
+  </data>
+  <data name="Parameter.Agents.Create.FunctionCalls" xml:space="preserve">
+    <value>Function Calls||以逗号分隔的 Function Call 名称（可选）</value>
+  </data>
+  <data name="Parameter.Agents.Search.Query" xml:space="preserve">
+    <value>搜索词||支持名称、PromptCode 或关键字；多个值用逗号、分号或换行分隔</value>
+  </data>
+  <data name="Parameter.Agents.Search.TopN" xml:space="preserve">
+    <value>最大返回数量||每个搜索词的最大候选数，默认 5</value>
+  </data>
+  <data name="Parameter.Agents.Chat.SelectManage" xml:space="preserve">
+    <value>选择组||选择要操作的组或新建组</value>
+  </data>
+  <data name="Agents.Chat.NewGroup" xml:space="preserve">
+    <value>新建组</value>
+  </data>
+  <data name="Agents.Chat.NewGroup.Help" xml:space="preserve">
+    <value>创建新组</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Name" xml:space="preserve">
+    <value>群名称||群组名称</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Members" xml:space="preserve">
+    <value>群成员||可不选，改用“群成员（手动输入）”</value>
+  </data>
+  <data name="Parameter.Agents.Chat.MembersManual" xml:space="preserve">
+    <value>群成员（手动输入）||可选。支持名称、ID、PromptCode；多个值用逗号、分号或换行分隔</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Admin" xml:space="preserve">
+    <value>群主||优先自动使用评分最高的“主持人”Agent；手动输入仅用于兼容</value>
+  </data>
+  <data name="Parameter.Agents.Chat.AdminManual" xml:space="preserve">
+    <value>群主（手动输入）||可选。支持名称、ID 或 PromptCode</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Contact" xml:space="preserve">
+    <value>对接人||优先自动使用评分最高的“主持人”Agent；手动输入仅用于兼容</value>
+  </data>
+  <data name="Parameter.Agents.Chat.ContactManual" xml:space="preserve">
+    <value>对接人（手动输入）||可选。支持名称、ID 或 PromptCode</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Description" xml:space="preserve">
+    <value>说明||群组说明</value>
+  </data>
+  <data name="Parameter.Agents.Chat.SelectRun" xml:space="preserve">
+    <value>选择组||选择要运行的组</value>
+  </data>
+  <data name="Parameter.Agents.Chat.AIModel" xml:space="preserve">
+    <value>AI 模型||选择运行此任务的外部 AI 模型</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Individuation" xml:space="preserve">
+    <value>个性化智能体||</value>
+  </data>
+  <data name="Common.Yes" xml:space="preserve">
+    <value>是</value>
+  </data>
+  <data name="Agents.Chat.Individuation.Help" xml:space="preserve">
+    <value>使用个性化 AI 参数运行 Agent</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Command" xml:space="preserve">
+    <value>我能帮你做什么||说明需要 Agents 协助完成的工作</value>
+  </data>
+  <data name="Parameter.Agents.Chat.SelectDelete" xml:space="preserve">
+    <value>选择要删除的对话||选择要删除的对话及其所有消息和任务</value>
+  </data>
+  <data name="Parameter.Agents.Chat.ConfirmDelete" xml:space="preserve">
+    <value>确认删除||确认删除所选对话及其全部数据</value>
+  </data>
+  <data name="Agents.Chat.CreatedAt" xml:space="preserve">
+    <value>{0}（创建时间：{1:g}）</value>
+  </data>
+  <data name="Agents.Plugin.Crawl.Description" xml:space="preserve">
+    <value>爬取网页并返回相关内容</value>
+  </data>
+  <data name="Agents.Plugin.Crawl.Url" xml:space="preserve">
+    <value>爬取网址</value>
+  </data>
+  <data name="Agents.Plugin.Crawl.Depth" xml:space="preserve">
+    <value>最大爬取深度</value>
+  </data>
+  <data name="Agents.Plugin.Crawl.PageCount" xml:space="preserve">
+    <value>最大爬取页数</value>
+  </data>
+  <data name="Agents.Plugin.Crawl.Question" xml:space="preserve">
+    <value>问题</value>
+  </data>
+  <data name="Agents.Plugin.TextLength.Description" xml:space="preserve">
+    <value>获取文本字符数</value>
+  </data>
+  <data name="Agents.Plugin.OriginalText" xml:space="preserve">
+    <value>原文</value>
+  </data>
+  <data name="Agents.Plugin.Translate.Description" xml:space="preserve">
+    <value>翻译文本</value>
+  </data>
+  <data name="Agents.Plugin.TargetLanguage" xml:space="preserve">
+    <value>目标语言</value>
+  </data>
+  <data name="Agents.Plugin.Translate.Instructions" xml:space="preserve">
+    <value>你是一位熟悉“{0}”的专业翻译，请准确翻译用户提供的文本，只输出译文。</value>
+  </data>
+</root>

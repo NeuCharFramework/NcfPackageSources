@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using log4net.Core;
@@ -41,15 +44,15 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
     {
         [Required]
         [MaxLength(30)]
-        [Description("名称||Agent 模板名称")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.Name")]
         public string Name { get; set; }
 
         [Required]
-        [Description("Id||如果为 0 则新增")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.Id")]
         public int Id { get; set; }
 
         [Required]
-        [Description("SystemMessage||SystemMessage 的 PromptRangeCode（支持搜索、下拉和手动输入）")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.SystemMessage")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(SystemMessagePromptCodeOptions), Filterable = true, AllowCreate = true)]
         public string SystemMessagePromptCode { get; set; }
 
@@ -58,11 +61,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
 
 
 
-        [Description("说明||对 Agent Template 进行说明，此信息不会对模型效果产生影响")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.Description")]
         public string Description { get; set; }
 
         [Required]
-        [Description("外接平台||需要对外发布消息的平台")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.Platform")]
         [FunctionParameterUi(ParameterType.DropDownList, nameof(HookRobotTypeOptions))]
         public string HookRobotType { get; set; }
 
@@ -71,10 +74,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         //TODO:可以选择多个通道
 
 
-        [Description("外界平台参数||通常为 Key 之类的参数")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.PlatformParameter")]
         public string HookRobotParameter { get; set; }
 
-        [Description("Function Calls||Function Calls 名称列表，多个用逗号分隔")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.FunctionCalls")]
         public string FunctionCallNames { get; set; }
 
         public string GetSystemMessagePromptCode()
@@ -111,20 +114,20 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
     {
         [Required]
         [MaxLength(50)]
-        [Description("智能体名称||新智能体的名称")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Create.Name")]
         public string Name { get; set; }
 
         // [Required]
         // [Description("PromptCode 作用范围||选择覆盖范围：靶场名称（Range级别）：Range、靶道前缀（Tactic级别）：Tactic、或完整版本号（精确定位）：PromptCode，只能严格从 Range、Tactic、PromptCode 中选择")]
         // public string ScopeSelection { get; set; } 
 
-        [Description("手动输入 PromptCode||手动输入 PromptCode（支持靶场名称、靶道前缀或完整版本号），当选择[手动输入 SystemMessage]时必须在此处输入")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Create.ManualPromptCode")]
         public string ManualPromptCode { get; set; }
 
-        [Description("说明||对新智能体的说明（可选）")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Create.Description")]
         public string Description { get; set; }
 
-        [Description("Function Calls||Function Calls 名称列表，多个用逗号分隔（可选）")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Create.FunctionCalls")]
         public string FunctionCallNames { get; set; }
 
         public string GetPromptCode()
@@ -150,10 +153,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
     public class AgentTemplate_FindByNameRequest : FunctionAppRequestBase
     {
         [Required]
-        [Description("搜索词||支持名称、PromptCode 或关键字，可输入多个，使用逗号、分号、换行分隔")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Search.Query")]
         public string Query { get; set; }
 
-        [Description("最大返回数量||每个搜索词的最大候选数，默认 5")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Search.TopN")]
         public int TopN { get; set; } = 5;
     }
 }

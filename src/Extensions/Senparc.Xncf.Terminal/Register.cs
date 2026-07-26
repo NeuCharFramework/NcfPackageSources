@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.22.0-preview2 为 Terminal 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -31,10 +34,10 @@ namespace Senparc.Xncf.Terminal
         public override string Uid => "600C608A-F99A-4B1B-A18E-8CE69BE8DA92";//必须确保全局唯一，生成后必须固定
         public override string Version => "0.1.6";//必须填写版本号
 
-        public override string MenuName => "终端模块";
+        public override string MenuName => TerminalResource.Get("Module.Terminal.MenuName", "终端模块");
         public override string Icon => "fa fa-terminal";
-        public override string Description => $"此模块提供给开发者一个可以直接使用终端命令控制系统的模块！" +
-                                      $"\r\n目前可以使用的命令如下:" +
+        public override string Description => TerminalResource.Get("Module.Terminal.Description", "此模块允许开发者直接使用终端命令控制系统！") +
+                                      $"\r\n{TerminalResource.Get("Module.Terminal.AvailableCommands", "目前可以使用的命令如下：")}" +
                                       $"\r\n'CD'," +
                                       $"\r\n'CHDIR'," +
                                       $"\r\n'CHKDSK'," +

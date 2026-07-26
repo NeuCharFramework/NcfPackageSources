@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.6.0-preview2 为 DynamicData 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Hosting;
@@ -40,8 +43,8 @@ namespace Senparc.Xncf.DynamicData
         public string HomeUrl => "/Admin/DynamicData/";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-                         new AreaPageMenuItem(GetAreaUrl(HomeUrl+"PageSet"),"界面设置","fa fa-laptop"),
-                           new AreaPageMenuItem(GetAreaUrl(HomeUrl+"DataSheetSet"),"数据库表设置","fa fa-laptop")
+                         new AreaPageMenuItem(GetAreaUrl(HomeUrl+"PageSet"), DynamicDataResource.Get("Area.DynamicData.PageSettings", "界面设置"),"fa fa-laptop"),
+                           new AreaPageMenuItem(GetAreaUrl(HomeUrl+"DataSheetSet"), DynamicDataResource.Get("Area.DynamicData.TableSettings", "数据库表设置"),"fa fa-laptop")
                      };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)

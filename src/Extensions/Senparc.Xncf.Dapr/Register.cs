@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.11.0-preview2 为 Dapr 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -31,9 +34,9 @@ public class Register : XncfRegisterBase, IXncfRegister
     public override string Uid => "E2D87F61-BCA9-4F3E-9E5C-2A14B3F0C6D7";//必须确保全局唯一，生成后必须固定
     public override string Version => "0.0.1";//必须填写版本号
 
-    public override string MenuName => "Dapr模块";
+    public override string MenuName => DaprResource.Get("Module.Dapr.MenuName", "Dapr 模块");
     public override string Icon => "fa fa-car";
-    public override string Description => $"此模块为其他模块提供Dapr相关功能";
+    public override string Description => DaprResource.Get("Module.Dapr.Description", "此模块为其他模块提供 Dapr 相关功能");
 
     public override Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
     {

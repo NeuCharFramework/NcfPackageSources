@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.3.0-preview2 为 FileManager 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +38,7 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
             _colorService = colorService;
         }
 
-        [FunctionRender("我的函数", "我的函数的注释", typeof(Register))]
+        [FunctionRender(typeof(FileManagerResource), "Function.Sample.Name", "Function.Sample.Description", typeof(Register))]
         public async Task<StringAppResponse> Calculate(MyFunction_CaculateRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

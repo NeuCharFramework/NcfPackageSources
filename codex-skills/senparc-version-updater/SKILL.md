@@ -24,10 +24,10 @@ python3 scripts/senparc_version_scan.py --root <repo-root> --project <project-pa
 Use the output JSON as the source of truth for:
 
 1. The selected primary `.csproj` to edit.
-2. Changed files in the current update scope (`comparison_base..HEAD` plus uncommitted) across the entire repository, not just the primary project directory.
+2. Changed files in the current update scope: the union of every path touched by every commit in `comparison_base..HEAD`, plus uncommitted changes, across the entire repository. Do not use only the final net diff because it omits files changed and later restored.
 3. Changed `.cs` files that must receive header updates (repository-wide).
 4. Changed `.props` files and all projects that import them directly or through another `.props` file (`changed_props_importers`).
-5. `.csproj` files mapped from changed `.cs` files or changed `.props` imports (`changed_csprojs`) that must receive direct project updates.
+5. Projects containing any changed file in the commit-path union, `.csproj` files changed directly, and projects affected by changed `.props` imports (`changed_csprojs`) that must receive direct project updates.
 6. Direct update roots (`dependency_roots`) and recursive dependent `.csproj` files that need passive version bumps.
 7. Comparison baseline metadata (`master/main` branch ref and merge-base commit).
 
@@ -37,6 +37,7 @@ Special skip rules for header updates:
 2. If a `*.Generated.cs` change only updates timestamp-like text after regeneration and has no real content change, do not treat it as a changed file.
 3. Never add header comments to files under unit test projects (directory names such as `Tests`, `*.Tests`, or `*Tests`).
 4. Never add header comments to files under `MultipleDatabase/` directory.
+5. A deleted `.cs` file or a non-ignorable `*.Generated.cs` file receives no header, but it must still map its containing project into `changed_csprojs`.
 
 ## Commit Baseline Rule (Strict)
 
@@ -50,9 +51,10 @@ Before any version decision, resolve comparison baseline in this priority:
 Then:
 
 1. Compute `merge-base(HEAD, baseline-branch)` as `comparison_base`.
-2. Treat all commits in `comparison_base..HEAD` as this update's commit set.
-3. Include uncommitted workspace changes in the same update scope.
-4. If no `master/main` branch can be resolved or merge-base fails, stop and report error (do not fallback to other windows).
+2. Treat all commits in `comparison_base..HEAD` as this update's commit set, and calculate changed files from the union of paths touched by each commit rather than only `git diff comparison_base..HEAD`.
+3. Files changed and later restored within the window still count as touched files and must map to their projects for functional release-note coverage.
+4. Include current staged, unstaged, and untracked workspace changes in that union.
+5. If no `master/main` branch can be resolved or merge-base fails, stop and report error (do not fallback to other windows).
 
 ## Apply Workflow
 
@@ -114,7 +116,7 @@ For every changed `.props` file:
 4. Add these projects to `changed_csprojs`, `dependency_roots`, and `changed_csproj_to_props_files`.
 5. A changed `.props` file does not receive a C# header block; its functional effect must be recorded in every importing project's `<PackageReleaseNotes>`.
 
-For all projects in `changed_csprojs` (from changed `.cs` files or changed `.props` imports):
+For all projects in `changed_csprojs` (any changed project-contained file, directly changed `.csproj`, or changed `.props` imports):
 
 1. Ensure project version metadata and release notes are updated for this window.
 2. For the same unmerged window (`comparison_base..HEAD`), version can only bump once per project.
@@ -190,16 +192,19 @@ jq -r '.changed_cs_files[].path' /tmp/senparc-version-scan.json
 # 3.1) Optional: inspect only files under selected primary project directory
 jq -r '.changed_cs_files_in_primary_project[].path' /tmp/senparc-version-scan.json
 
-# 4) Inspect direct changed projects (.cs -> .csproj mapping)
+# 4) Inspect direct changed projects (all changed project-contained files plus .props importers)
 jq -r '.changed_csprojs[]' /tmp/senparc-version-scan.json
 
-# 4.1) Inspect mapping from changed .cs files to target .csproj
+# 4.1) Inspect mapping from all changed files to target .csproj
+jq -r '.changed_csproj_to_files | to_entries[] | .key as $p | .value[] | "\($p)\t\(.)"' /tmp/senparc-version-scan.json
+
+# 4.2) Inspect changed .cs files that require headers
 jq -r '.changed_csproj_to_cs_files | to_entries[] | .key as $p | .value[] | "\($p)\t\(.path)"' /tmp/senparc-version-scan.json
 
-# 4.2) Inspect changed .props files and all importing projects
+# 4.3) Inspect changed .props files and all importing projects
 jq -r '.changed_props_importers | to_entries[] | .key as $props | .value[] | "\($props)\t\(.)"' /tmp/senparc-version-scan.json
 
-# 4.3) Inspect direct dependency roots (.cs changes + .props importers)
+# 4.4) Inspect direct dependency roots (all changed projects + .props importers)
 jq -r '.dependency_roots[]' /tmp/senparc-version-scan.json
 
 # 5) Inspect passive dependent projects

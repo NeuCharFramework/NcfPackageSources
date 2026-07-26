@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.13.0-preview2 为 AreasBase 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -43,11 +46,11 @@ namespace Senparc.Xncf.AreasBase
 
         public override string Version => "0.1";//必须填写版本号
 
-        public override string MenuName => "Areas 基础模块";
+        public override string MenuName => AreasBaseResource.Get("Module.AreasBase.MenuName", "Areas 基础模块");
 
         public override string Icon => "fa fa-university";//fa fa-cog
 
-        public override string Description => "运行 RazorPage 等页面的基础模块";
+        public override string Description => AreasBaseResource.Get("Module.AreasBase.Description", "运行 Razor Pages 等页面的基础模块");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

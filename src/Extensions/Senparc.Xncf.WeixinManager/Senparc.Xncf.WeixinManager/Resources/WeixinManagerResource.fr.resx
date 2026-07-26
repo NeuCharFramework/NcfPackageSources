@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.WeixinManager.MenuName" xml:space="preserve">
+    <value>Gestion Weixin</value>
+  </data>
+  <data name="Module.WeixinManager.Description" xml:space="preserve">
+    <value>Module officiel Senparc pour la gestion de base des comptes officiels WeChat et mini-programmes. Basé sur Senparc.Weixin SDK : https://github.com/JeffreySu/WeiXinMPSDK</value>
+  </data>
+  <data name="Area.Home" xml:space="preserve">
+    <value>Accueil</value>
+  </data>
+  <data name="Area.ApiDocumentation" xml:space="preserve">
+    <value>Documentation Web API</value>
+  </data>
+  <data name="Area.WeixinManager.OfficialAccounts" xml:space="preserve">
+    <value>Gestion des comptes officiels</value>
+  </data>
+  <data name="Area.WeixinManager.Users" xml:space="preserve">
+    <value>Gestion des utilisateurs</value>
+  </data>
+</root>

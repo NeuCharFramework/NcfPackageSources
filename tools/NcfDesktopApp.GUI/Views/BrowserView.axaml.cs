@@ -59,6 +59,21 @@ public partial class BrowserView : UserControl
         }
     }
 
+    /// <summary>内嵌浏览器是否已就绪（供主窗口 Edit 快捷键路由）。</summary>
+    public bool IsEmbeddedWebViewReady => WebView?.IsWebViewReady == true;
+
+    public Task<bool> WebViewSelectAllAsync() =>
+        WebView?.SelectAllAsync() ?? Task.FromResult(false);
+
+    public Task<bool> WebViewCopyAsync() =>
+        WebView?.CopyAsync() ?? Task.FromResult(false);
+
+    public Task<bool> WebViewCutAsync() =>
+        WebView?.CutAsync() ?? Task.FromResult(false);
+
+    public Task<bool> WebViewPasteAsync() =>
+        WebView?.PasteAsync() ?? Task.FromResult(false);
+
     private void BackButton_Click(object? sender, RoutedEventArgs e)
     {
         WebView?.GoBack();

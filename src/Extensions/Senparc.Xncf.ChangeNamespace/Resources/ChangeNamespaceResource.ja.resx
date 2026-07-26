@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.ChangeNamespace.MenuName" xml:space="preserve">
+    <value>名前空間の変更</value>
+  </data>
+  <data name="Module.ChangeNamespace.Description" xml:space="preserve">
+    <value>NCF のインストール後、公開前にソースの名前空間を一括変更します。この操作は元に戻せません。事前にバックアップし、稼働中の本番環境では使用しないでください。</value>
+  </data>
+  <data name="Function.ChangeNamespace.Change.Name" xml:space="preserve">
+    <value>名前空間を変更</value>
+  </data>
+  <data name="Function.ChangeNamespace.Change.Description" xml:space="preserve">
+    <value>すべての .cs と .cshtml ソースの名前空間を変更します</value>
+  </data>
+  <data name="Function.ChangeNamespace.Restore.Name" xml:space="preserve">
+    <value>名前空間を復元</value>
+  </data>
+  <data name="Function.ChangeNamespace.Restore.Description" xml:space="preserve">
+    <value>すべての .cs と .cshtml の名前空間を NCF の既定値へ戻します</value>
+  </data>
+  <data name="Function.ChangeNamespace.Download.Name" xml:space="preserve">
+    <value>公式 NCF ソースをダウンロード</value>
+  </data>
+  <data name="Function.ChangeNamespace.Download.Description" xml:space="preserve">
+    <value>名前空間処理用の公式 NCF ソースを取得します</value>
+  </data>
+  <data name="Parameter.ChangeNamespace.Path" xml:space="preserve">
+    <value>パス||ローカル物理パス（例：E:\Senparc\Ncf\）</value>
+  </data>
+  <data name="Parameter.ChangeNamespace.NewNamespace" xml:space="preserve">
+    <value>新しい名前空間||ルートはピリオドで終わる必要があり、[Senparc.Ncf.] を置換します</value>
+  </data>
+  <data name="Parameter.ChangeNamespace.Source" xml:space="preserve">
+    <value>ソース||通常 GitHub が最も早く更新されます。Gitee は中国本土で高速ですが遅れる場合があるため、ダウンロード前に GitHub の最新版を確認してください。</value>
+  </data>
+  <data name="Parameter.ChangeNamespace.CurrentNamespace" xml:space="preserve">
+    <value>現在のカスタム名前空間||通常は [My.Namespace.] のようにピリオドで終わり、[Senparc.Ncf.] または [Senparc.] に置換されます</value>
+  </data>
+</root>

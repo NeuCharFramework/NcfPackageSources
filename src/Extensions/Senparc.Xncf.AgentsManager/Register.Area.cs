@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Hosting;
@@ -33,7 +36,7 @@ namespace Senparc.Xncf.AgentsManager
         public string HomeUrl => "/Admin/AgentsManager/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-                    new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
+                    new AreaPageMenuItem(GetAreaHomeUrl(), AgentsManagerResource.Get("Area.Home", "首页"),"fa fa-laptop"),
 			 		//new AreaPageMenuItem(GetAreaUrl($"/Admin/AgentsManager/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
 			};
 

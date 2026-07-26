@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.Application.MenuName" xml:space="preserve">
+    <value>Lanceur d’applications</value>
+  </data>
+  <data name="Module.Application.Description" xml:space="preserve">
+    <value>Permet de lancer des applications externes</value>
+  </data>
+  <data name="Parameter.Application.FilePath" xml:space="preserve">
+    <value>Chemin personnalisé||Nom du fichier</value>
+  </data>
+  <data name="Function.Application.Launch.Name" xml:space="preserve">
+    <value>Application</value>
+  </data>
+  <data name="Function.Application.Launch.Description" xml:space="preserve">
+    <value>Lancer une application externe</value>
+  </data>
+  <data name="Function.Application.Launch.StartLog" xml:space="preserve">
+    <value>Démarrage de LaunchApp</value>
+  </data>
+  <data name="Common.OperationSucceeded" xml:space="preserve">
+    <value>Opération réussie.</value>
+  </data>
+</root>

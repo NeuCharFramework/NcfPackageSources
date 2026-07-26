@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.14.0-preview5 为 AIKernel 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Hosting;
@@ -38,9 +41,9 @@ namespace Senparc.Xncf.AIKernel
         public string HomeUrl => "/Admin/AIKernel/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
-new AreaPageMenuItem(GetAreaUrl($"/Admin/AIVector/Index"),"向量数据库","fa fa-bookmark-o"),
-new AreaPageMenuItem(GetAreaUrl($"/Admin/Dashboard/Index"),"仪表盘","fa fa-dashboard")
+new AreaPageMenuItem(GetAreaHomeUrl(), AIKernelResource.Get("Area.Home", "首页"),"fa fa-laptop"),
+new AreaPageMenuItem(GetAreaUrl($"/Admin/AIVector/Index"), AIKernelResource.Get("Area.AIKernel.VectorDatabase", "向量数据库"),"fa fa-bookmark-o"),
+new AreaPageMenuItem(GetAreaUrl($"/Admin/Dashboard/Index"), AIKernelResource.Get("Area.AIKernel.Dashboard", "仪表盘"),"fa fa-dashboard")
 //new AreaPageMenuItem(GetAreaUrl($"/Admin/AIKernel/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
 };
 

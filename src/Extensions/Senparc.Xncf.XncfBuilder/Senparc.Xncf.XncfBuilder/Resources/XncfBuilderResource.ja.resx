@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.XncfBuilder.MenuName" xml:space="preserve">
+    <value>XNCF モジュール生成</value>
+  </data>
+  <data name="Module.XncfBuilder.Description" xml:space="preserve">
+    <value>XNCF モジュールの基盤コードとサンプルをすばやく生成します</value>
+  </data>
+  <data name="Function.XncfBuilder.AddMigration.Name" xml:space="preserve">
+    <value>Add-Migration コマンド</value>
+  </data>
+  <data name="Function.XncfBuilder.AddMigration.Description" xml:space="preserve">
+    <value>複数データベースへ add-migration を視覚的に実行します。30～60 秒かかる場合があります</value>
+  </data>
+  <data name="Function.XncfBuilder.Generate.Name" xml:space="preserve">
+    <value>XNCF を生成</value>
+  </data>
+  <data name="Function.XncfBuilder.Generate.Description" xml:space="preserve">
+    <value>設定から XNCF モジュールを生成します</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateEntity.Name" xml:space="preserve">
+    <value>[AI] データベースエンティティを生成</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateEntity.Description" xml:space="preserve">
+    <value>DDD 準拠のエンティティとメソッドを生成します。開発環境でのみ使用し、先にバックアップしてください</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateInterface.Name" xml:space="preserve">
+    <value>AppService インターフェイスを生成</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateInterface.Description" xml:space="preserve">
+    <value>指定モジュールの AppService インターフェイスコードを生成します</value>
+  </data>
+  <data name="Function.XncfBuilder.InitPrompt.Name" xml:space="preserve">
+    <value>プロンプトを初期化</value>
+  </data>
+  <data name="Function.XncfBuilder.InitPrompt.Description" xml:space="preserve">
+    <value>AI コード生成に必要な全プロンプトを初期化します</value>
+  </data>
+  <data name="Common.Yes" xml:space="preserve">
+    <value>はい</value>
+  </data>
+  <data name="Common.Use" xml:space="preserve">
+    <value>使用</value>
+  </data>
+  <data name="Parameter.XncfBuilder.SolutionPath" xml:space="preserve">
+    <value>ソリューション（.sln）パス||NCF ソリューションの完全な物理パス。モジュールは同じ階層に生成されます</value>
+  </data>
+  <data name="Parameter.XncfBuilder.SolutionOptions" xml:space="preserve">
+    <value>ソリューション設定||</value>
+  </data>
+  <data name="Parameter.XncfBuilder.TemplatePackage" xml:space="preserve">
+    <value>テンプレートをインストール||再インストールは約 30～40 秒。既存なら「インストール済み」を選択</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Framework" xml:space="preserve">
+    <value>ターゲットフレームワーク||プロジェクトの TFM</value>
+  </data>
+  <data name="Parameter.XncfBuilder.OtherFramework" xml:space="preserve">
+    <value>カスタムフレームワーク||入力すると選択値を上書きします</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Organization" xml:space="preserve">
+    <value>組織名||モジュールの名前空間と名前の接頭辞</value>
+  </data>
+  <data name="Parameter.XncfBuilder.ModuleName" xml:space="preserve">
+    <value>モジュール名||クラス名にも使用。英字と数字のみで数字から開始できません</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Version" xml:space="preserve">
+    <value>バージョン||例：1.0.0、2.0.100-beta1</value>
+  </data>
+  <data name="Parameter.XncfBuilder.MenuName" xml:space="preserve">
+    <value>メニュー名||例：NCF Builder</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Icon" xml:space="preserve">
+    <value>アイコン||Font Awesome（例：fa fa-star）</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Description" xml:space="preserve">
+    <value>説明||モジュールの説明</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Features" xml:space="preserve">
+    <value>機能設定||</value>
+  </data>
+  <data name="Parameter.XncfBuilder.InstallSample" xml:space="preserve">
+    <value>サンプルをインストール||</value>
+  </data>
+  <data name="XncfBuilder.Option.Solution.Backup" xml:space="preserve">
+    <value>.sln をバックアップ（推奨）</value>
+  </data>
+  <data name="XncfBuilder.Option.Solution.Backup.Help" xml:space="preserve">
+    <value>上書き前に現在の .sln を保存します</value>
+  </data>
+  <data name="XncfBuilder.Option.Solution.New" xml:space="preserve">
+    <value>新しい .sln を生成</value>
+  </data>
+  <data name="XncfBuilder.Option.Solution.New.Help" xml:space="preserve">
+    <value>未選択では上書き。実行中のサービスが再起動する場合があります</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Online" xml:space="preserve">
+    <value>オンラインで最新版を取得</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Online.Help" xml:space="preserve">
+    <value>NuGet.org 等から取得するため時間がかかります</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Local" xml:space="preserve">
+    <value>ローカルパッケージからインストール</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Local.Help" xml:space="preserve">
+    <value>.sln と同じ階層の Template.*.nupkg を使用します</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Installed" xml:space="preserve">
+    <value>インストール済み</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Installed.Help" xml:space="preserve">
+    <value>ローカルにない場合は自動的にオンライン取得します</value>
+  </data>
+  <data name="XncfBuilder.Option.Framework.Net8" xml:space="preserve">
+    <value>.NET 8.0 を使用</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Function" xml:space="preserve">
+    <value>Function 機能</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Function.Help" xml:space="preserve">
+    <value>Function モジュールを含めます</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Database" xml:space="preserve">
+    <value>データベース機能</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Database.Help" xml:space="preserve">
+    <value>データベースモジュールと空の DB を含めます</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.WebApi" xml:space="preserve">
+    <value>Web API 機能</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.WebApi.Help" xml:space="preserve">
+    <value>Web API モジュールを含めます</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Web" xml:space="preserve">
+    <value>Web（Area）ページ</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Web.Help" xml:space="preserve">
+    <value>Web ページモジュールを含めます</value>
+  </data>
+  <data name="XncfBuilder.Option.InstallSample.Help" xml:space="preserve">
+    <value>DB サンプルをインストールし、DB と Web 機能を有効化します</value>
+  </data>
+  <data name="XncfBuilder.AI.DefaultModel" xml:space="preserve">
+    <value>システム既定（AiPlatform：{0}、Endpoint：{1}）</value>
+  </data>
+  <data name="XncfBuilder.AI.DefaultModel.Help" xml:space="preserve">
+    <value>システム既定の AI モデルを使用</value>
+  </data>
+  <data name="XncfBuilder.AI.DefaultModel.Unconfigured" xml:space="preserve">
+    <value>システム既定（AiPlatform：{0}、Endpoint 未設定。appsettings.json を設定してください）</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.Requirement" xml:space="preserve">
+    <value>エンティティ要件||必要なプロパティと型を含めて詳しく記述してください</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.Domain" xml:space="preserve">
+    <value>ドメイン||エンティティの生成先</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.Actions" xml:space="preserve">
+    <value>後続処理||生成後に実行する処理</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.UsePromptRange" xml:space="preserve">
+    <value>PromptRange を使用||自動インストールと初期化。使用しない場合は XncfBuilderPlugin が必要です</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.AIModel" xml:space="preserve">
+    <value>AI モデル||PromptRange を使わない場合のコード生成モデル</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Prompt.Override" xml:space="preserve">
+    <value>上書き||既存レンジを削除して公式版から再構築</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Prompt.AIModel" xml:space="preserve">
+    <value>AI モデル||新しいレンジの全タクティックで使用するモデル</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Dto" xml:space="preserve">
+    <value>DTO を作成</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Dto.Help" xml:space="preserve">
+    <value>DTO を作成（常に生成）</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Migration" xml:space="preserve">
+    <value>DB マイグレーションを生成</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Migration.Help" xml:space="preserve">
+    <value>EF Core Migration を生成。適用前に確認してください</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Repository" xml:space="preserve">
+    <value>Repository を作成</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Repository.Help" xml:space="preserve">
+    <value>エンティティ用 Repository を作成</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Service" xml:space="preserve">
+    <value>Service を作成</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Service.Help" xml:space="preserve">
+    <value>エンティティ用 Service を作成</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.AppService" xml:space="preserve">
+    <value>AppService を作成</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.AppService.Help" xml:space="preserve">
+    <value>エンティティ用 AppService を作成</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.DatabasePlantPath" xml:space="preserve">
+    <value>DatabasePlant プロジェクトパス||移行ホストの物理パス。対象 XNCF を参照している必要があります</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.ProjectPath" xml:space="preserve">
+    <value>XNCF プロジェクトパス||プロジェクトルートの完全な物理パス</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.CustomProjectPath" xml:space="preserve">
+    <value>カスタム XNCF パス||「カスタムパス」選択時のみ使用</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.DatabaseTypes" xml:space="preserve">
+    <value>データベース種別||移行を生成する DB 種別</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.DbContext" xml:space="preserve">
+    <value>カスタム DbContext 名||DB 種別接尾辞は不要。[Default] で自動検出</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.Name" xml:space="preserve">
+    <value>移行名||英字、数字、下線のみ（例：Add_Config）</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.UpdateVersion" xml:space="preserve">
+    <value>バージョンを自動更新||Register.cs のバージョンを更新</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.Verbose" xml:space="preserve">
+    <value>詳細ログ||add-migration の -v を使用</value>
+  </data>
+  <data name="XncfBuilder.Option.Version.None" xml:space="preserve">
+    <value>更新しない</value>
+  </data>
+  <data name="XncfBuilder.Option.Version.Major" xml:space="preserve">
+    <value>メジャー + 1</value>
+  </data>
+  <data name="XncfBuilder.Option.Version.Minor" xml:space="preserve">
+    <value>マイナー + 1</value>
+  </data>
+  <data name="XncfBuilder.Option.Version.Patch" xml:space="preserve">
+    <value>パッチ + 1</value>
+  </data>
+  <data name="XncfBuilder.Option.CustomPath" xml:space="preserve">
+    <value>カスタムパス</value>
+  </data>
+  <data name="XncfBuilder.Validation.CustomProjectPathRequired" xml:space="preserve">
+    <value>カスタム XNCF プロジェクトパスを入力してください。</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.TargetPath" xml:space="preserve">
+    <value>対象プロジェクトパス||走査してインターフェイスを生成するプロジェクト</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.Namespace" xml:space="preserve">
+    <value>名前空間接頭辞||生成クラスの名前空間接頭辞</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.ClassPattern" xml:space="preserve">
+    <value>クラス名正規表現||クラス名を照合する正規表現</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.MethodPattern" xml:space="preserve">
+    <value>メソッド名正規表現||メソッド名を照合する正規表現</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.DestinationPath" xml:space="preserve">
+    <value>出力先プロジェクトパス||生成したインターフェイスコードの出力先</value>
+  </data>
+  <data name="XncfBuilder.MCP.ModuleDirectoryNotFound" xml:space="preserve">
+    <value>モジュール {0} のディレクトリが見つかりません。Senparc.Xncf.XncfBuilder のような完全名を指定してください。</value>
+  </data>
+  <data name="XncfBuilder.MCP.ModuleFullName" xml:space="preserve">
+    <value>完全なモジュール名（例：Senparc.Xncf.XncfBuilder）</value>
+  </data>
+  <data name="XncfBuilder.MCP.FilePath" xml:space="preserve">
+    <value>モジュール内のパスとファイル名</value>
+  </data>
+  <data name="XncfBuilder.MCP.FileNotFound" xml:space="preserve">
+    <value>ファイルが見つかりません：{0}</value>
+  </data>
+  <data name="XncfBuilder.MCP.FileContent" xml:space="preserve">
+    <value>ファイルの全内容</value>
+  </data>
+  <data name="XncfBuilder.Plugin.CreateEntity" xml:space="preserve">
+    <value>エンティティクラスファイルを作成</value>
+  </data>
+  <data name="XncfBuilder.Plugin.FilePath" xml:space="preserve">
+    <value>ファイルパス</value>
+  </data>
+  <data name="XncfBuilder.Plugin.GeneratedContent" xml:space="preserve">
+    <value>AI が生成したファイル内容</value>
+  </data>
+  <data name="XncfBuilder.Plugin.FileSaved" xml:space="preserve">
+    <value>ファイルを保存しました：{0}</value>
+  </data>
+  <data name="XncfBuilder.Plugin.ReadDbContext" xml:space="preserve">
+    <value>データベースコンテキストを読み取り更新</value>
+  </data>
+  <data name="XncfBuilder.Plugin.ProjectPath" xml:space="preserve">
+    <value>プロジェクトパス</value>
+  </data>
+  <data name="XncfBuilder.Plugin.EntityName" xml:space="preserve">
+    <value>新しいエンティティ名</value>
+  </data>
+  <data name="XncfBuilder.Plugin.PluralEntityName" xml:space="preserve">
+    <value>新しいエンティティ名の複数形</value>
+  </data>
+</root>

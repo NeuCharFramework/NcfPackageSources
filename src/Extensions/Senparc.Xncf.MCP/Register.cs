@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.4.0-preview3 为 MCP 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using AutoMapper;
@@ -60,11 +63,11 @@ namespace Senparc.Xncf.MCP
 
         public override string Version => "0.1.0";//必须填写版本号
 
-        public override string MenuName => "MCP Manager";
+        public override string MenuName => McpResource.Get("Module.MCP.MenuName", "MCP Manager");
 
         public override string Icon => "fa fa-sliders-h";
 
-        public override string Description => "Model Context Protocol(MCP) Manager";
+        public override string Description => McpResource.Get("Module.MCP.Description", "Model Context Protocol (MCP) Manager");
 
         public override bool EnableMcpServer => true;
 

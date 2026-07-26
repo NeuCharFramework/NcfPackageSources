@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260726
+    修改描述：v0.3.0-preview2 改进固件更新镜像源选择与日志摘要
+
 ----------------------------------------------------------------*/
 
 using System.Net.Http.Json;
@@ -34,6 +37,7 @@ public class NcfPackageMirrorService
     public const string LatestReleaseFileName = "latest-release.json";
 
     private static readonly SemaphoreSlim SyncGate = new(1, 1);
+    private static readonly TimeSpan GitHubMetadataTimeout = TimeSpan.FromSeconds(15);
 
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<NcfPackageMirrorService> _logger;
@@ -96,7 +100,9 @@ public class NcfPackageMirrorService
             }
 
             var client = _httpClientFactory.CreateClient("Senparc.Xncf.FirmwareUpdate.GitHub");
-            var releases = await FetchReleasesAsync(client, cancellationToken).ConfigureAwait(false);
+            using var fetchTimeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            fetchTimeoutCts.CancelAfter(GitHubMetadataTimeout);
+            var releases = await FetchReleasesAsync(client, fetchTimeoutCts.Token).ConfigureAwait(false);
             if (releases.Count == 0)
             {
                 return "GitHub 未返回任何 Release。";
@@ -122,11 +128,39 @@ public class NcfPackageMirrorService
 
             return $"同步完成。已维护最近 {keepVersionCount} 个版本的包目录，并已更新 {LatestReleaseFileName}。";
         }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception ex) when (IsRemoteAccessException(ex))
+        {
+            return ReportRemoteAccessFailure(ex);
+        }
         finally
         {
             SyncGate.Release();
         }
     }
+
+    private string ReportRemoteAccessFailure(Exception exception)
+    {
+        var reason = exception switch
+        {
+            TaskCanceledException => "请求超时",
+            HttpRequestException httpException when httpException.StatusCode.HasValue =>
+                $"HTTP {(int)httpException.StatusCode.Value}",
+            HttpRequestException => "网络不可达",
+            JsonException => "返回数据格式无效",
+            _ => "请求失败"
+        };
+        var message = $"[FirmwareUpdate] GitHub releases 暂不可用：{reason}；本次镜像同步已跳过";
+        Console.WriteLine(message);
+        _logger.LogWarning("{Message}", message);
+        return message;
+    }
+
+    private static bool IsRemoteAccessException(Exception exception) =>
+        exception is HttpRequestException or TaskCanceledException or JsonException;
 
     private async Task<List<GitHubReleaseDto>> FetchReleasesAsync(HttpClient client, CancellationToken cancellationToken)
     {

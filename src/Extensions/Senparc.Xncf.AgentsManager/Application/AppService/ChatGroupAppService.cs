@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Microsoft.CodeAnalysis.CSharp;
@@ -69,7 +72,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             this._promptRangeService = promptRangeService;
         }
 
-        [FunctionRender("管理 ChatGroup", "管理 ChatGroup", typeof(Register))]
+        [FunctionRender(typeof(AgentsManagerResource), "Function.Agents.ManageChatGroup.Name", "Function.Agents.ManageChatGroup.Description", typeof(Register))]
         public async Task<StringAppResponse> ManageChatGroupManage(ChatGroup_ManageChatGroupRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -328,7 +331,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             return (false, 0, $"未找到匹配的 Agent：{rawInput}");
         }
 
-        [FunctionRender("启动 ChatGroup", "启动 ChatGroup", typeof(Register))]
+        [FunctionRender(typeof(AgentsManagerResource), "Function.Agents.StartChatGroup.Name", "Function.Agents.StartChatGroup.Description", typeof(Register))]
         public async Task<StringAppResponse> RunChatGroup(ChatGroup_RunChatGroupRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -733,7 +736,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         /// <summary>
         /// 删除整个对话（包括所有消息、任务等）
         /// </summary>
-        [FunctionRender("删除对话", "删除整个对话及其所有数据", typeof(Register))]
+        [FunctionRender(typeof(AgentsManagerResource), "Function.Agents.DeleteConversation.Name", "Function.Agents.DeleteConversation.Description", typeof(Register))]
         public async Task<StringAppResponse> DeleteChatGroup(ChatGroup_DeleteChatGroupRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

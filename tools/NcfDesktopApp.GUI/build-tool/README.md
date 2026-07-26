@@ -240,39 +240,44 @@ macos-app/
    - 检查目标平台是否受支持
    - 确保网络连接正常（用于下载包）
 
-3. **权限错误 (Linux/macOS)**
+3. **NETSDK1094（ReadyToRun 找不到有效运行时包）**
+   - 原因：启用 `--ready-to-run` 时，restore 必须带上 `PublishReadyToRun=true`，否则后续 `--no-restore` 发布会失败
+   - 处理：使用最新脚本重试；或先去掉 `--ready-to-run`（功能不受影响，仅少预编译优化）
+   - 临时绕过：`./build-tool/build-all-platforms-self-contained.sh --clean --single-file`
+
+4. **权限错误 (Linux/macOS)**
    ```bash
    chmod +x build-tool/build-all-platforms.sh
    chmod +x build-tool/create-macos-app.sh
    ```
 
-4. **PowerShell 执行策略错误**
+5. **PowerShell 执行策略错误**
    ```powershell
    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
    ```
 
 ### 🍎 macOS 专项问题解决
 
-5. **macOS 双击无法运行**
+6. **macOS 双击无法运行**
    ```bash
    # 使用应用程序包生成工具
    ./build-tool/create-macos-app.sh --create-dmg
    ```
 
-6. **"zsh: killed" 错误**
+7. **"zsh: killed" 错误**
    - 新版本已自动解决此问题
    - 如仍遇到，请更新到最新代码并重新构建
 
-7. **macOS 安全提示"无法打开，因为来自身份不明的开发者"**
+8. **macOS 安全提示"无法打开，因为来自身份不明的开发者"**
    - 右键点击应用程序，选择"打开"
    - 或到"系统偏好设置" > "安全性与隐私" > "通用"中允许
 
-8. **DMG 创建失败**
+9. **DMG 创建失败**
    - 确保有足够磁盘空间
    - 检查是否有其他程序正在使用相关文件
    - 清理临时文件后重试
 
-9. **应用程序包签名问题**
+10. **应用程序包签名问题**
    ```bash
    # 手动重新签名（ad-hoc 签名）
    codesign --force --deep --sign - "macos-app/NCF Desktop-Universal.app"

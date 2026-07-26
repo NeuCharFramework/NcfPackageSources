@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.XncfBuilder.MenuName" xml:space="preserve">
+    <value>XNCF 模块生成器</value>
+  </data>
+  <data name="Module.XncfBuilder.Description" xml:space="preserve">
+    <value>快速生成 XNCF 模块基础代码和示例，并据此扩展应用</value>
+  </data>
+  <data name="Function.XncfBuilder.AddMigration.Name" xml:space="preserve">
+    <value>Add-Migration 命令</value>
+  </data>
+  <data name="Function.XncfBuilder.AddMigration.Description" xml:space="preserve">
+    <value>以可视化方式为多个数据库执行 add-migration；过程可能需要 30–60 秒</value>
+  </data>
+  <data name="Function.XncfBuilder.Generate.Name" xml:space="preserve">
+    <value>生成 XNCF</value>
+  </data>
+  <data name="Function.XncfBuilder.Generate.Description" xml:space="preserve">
+    <value>根据配置生成 XNCF 模块</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateEntity.Name" xml:space="preserve">
+    <value>[AI] 生成数据库实体</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateEntity.Description" xml:space="preserve">
+    <value>生成符合 DDD 约束的数据库实体及其方法。仅在开发环境使用，并提前备份代码</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateInterface.Name" xml:space="preserve">
+    <value>生成 AppService 接口代码</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateInterface.Description" xml:space="preserve">
+    <value>为指定模块的 AppService 生成接口代码</value>
+  </data>
+  <data name="Function.XncfBuilder.InitPrompt.Name" xml:space="preserve">
+    <value>初始化 Prompt</value>
+  </data>
+  <data name="Function.XncfBuilder.InitPrompt.Description" xml:space="preserve">
+    <value>初始化 AI 代码生成所需的全部 Prompt</value>
+  </data>
+  <data name="Common.Yes" xml:space="preserve">
+    <value>是</value>
+  </data>
+  <data name="Common.Use" xml:space="preserve">
+    <value>使用</value>
+  </data>
+  <data name="Parameter.XncfBuilder.SolutionPath" xml:space="preserve">
+    <value>解决方案文件（.sln）路径||NCF 解决方案文件的完整物理路径；模块目录将在同级位置生成</value>
+  </data>
+  <data name="Parameter.XncfBuilder.SolutionOptions" xml:space="preserve">
+    <value>配置解决方案文件（.sln）||</value>
+  </data>
+  <data name="Parameter.XncfBuilder.TemplatePackage" xml:space="preserve">
+    <value>安装新模板||重新安装约需 30–40 秒；本地已有模板时可选择“已安装”</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Framework" xml:space="preserve">
+    <value>目标框架版本||项目的 TFM（Target Framework Moniker）</value>
+  </data>
+  <data name="Parameter.XncfBuilder.OtherFramework" xml:space="preserve">
+    <value>自定义目标框架版本||填写后覆盖目标框架版本选项</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Organization" xml:space="preserve">
+    <value>组织名称||模块命名空间和名称的前缀</value>
+  </data>
+  <data name="Parameter.XncfBuilder.ModuleName" xml:space="preserve">
+    <value>模块名称||同时作为类名；只能使用英文字母和数字，不能以数字开头</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Version" xml:space="preserve">
+    <value>版本号||例如 1.0.0 或 2.0.100-beta1</value>
+  </data>
+  <data name="Parameter.XncfBuilder.MenuName" xml:space="preserve">
+    <value>菜单名称||例如“NCF 生成器”</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Icon" xml:space="preserve">
+    <value>图标||Font Awesome 图标，例如 fa fa-star</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Description" xml:space="preserve">
+    <value>说明||模块说明</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Features" xml:space="preserve">
+    <value>功能配置||</value>
+  </data>
+  <data name="Parameter.XncfBuilder.InstallSample" xml:space="preserve">
+    <value>安装 Sample||</value>
+  </data>
+  <data name="XncfBuilder.Option.Solution.Backup" xml:space="preserve">
+    <value>备份 .sln 文件（推荐）</value>
+  </data>
+  <data name="XncfBuilder.Option.Solution.Backup.Help" xml:space="preserve">
+    <value>覆盖现有 .sln 文件前创建备份</value>
+  </data>
+  <data name="XncfBuilder.Option.Solution.New" xml:space="preserve">
+    <value>生成新的 .sln 文件</value>
+  </data>
+  <data name="XncfBuilder.Option.Solution.New.Help" xml:space="preserve">
+    <value>不选择时覆盖现有文件；运行中的解决方案可能触发服务重启</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Online" xml:space="preserve">
+    <value>在线获取最新模板</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Online.Help" xml:space="preserve">
+    <value>从 NuGet.org 等在线源获取，耗时较长</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Local" xml:space="preserve">
+    <value>从本地包安装</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Local.Help" xml:space="preserve">
+    <value>从 .sln 同级目录安装 Senparc.Xncf.XncfBuilder.Template.*.nupkg</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Installed" xml:space="preserve">
+    <value>已安装，无需更新</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Installed.Help" xml:space="preserve">
+    <value>请确保本地已安装模板，否则系统会自动在线获取</value>
+  </data>
+  <data name="XncfBuilder.Option.Framework.Net8" xml:space="preserve">
+    <value>使用 .NET 8.0</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Function" xml:space="preserve">
+    <value>配置 Function 功能</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Function.Help" xml:space="preserve">
+    <value>包含 Function 模块</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Database" xml:space="preserve">
+    <value>配置数据库功能</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Database.Help" xml:space="preserve">
+    <value>包含数据库模块并创建空数据库</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.WebApi" xml:space="preserve">
+    <value>配置 Web API 功能</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.WebApi.Help" xml:space="preserve">
+    <value>包含 Web API 模块</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Web" xml:space="preserve">
+    <value>配置 Web（Area）页面</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Web.Help" xml:space="preserve">
+    <value>包含 Web 页面模块</value>
+  </data>
+  <data name="XncfBuilder.Option.InstallSample.Help" xml:space="preserve">
+    <value>安装数据库示例，并自动启用数据库与 Web 页面功能</value>
+  </data>
+  <data name="XncfBuilder.AI.DefaultModel" xml:space="preserve">
+    <value>系统默认（AiPlatform：{0}，Endpoint：{1}）</value>
+  </data>
+  <data name="XncfBuilder.AI.DefaultModel.Help" xml:space="preserve">
+    <value>使用系统默认配置的固定 AI 模型</value>
+  </data>
+  <data name="XncfBuilder.AI.DefaultModel.Unconfigured" xml:space="preserve">
+    <value>系统默认（AiPlatform：{0}，未检测到 Endpoint；请先在 appsettings.json 中配置模型）</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.Requirement" xml:space="preserve">
+    <value>生成数据库实体要求||请尽量完整描述需求，可指定属性及类型</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.Domain" xml:space="preserve">
+    <value>领域||实体要生成到的领域</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.Actions" xml:space="preserve">
+    <value>后续操作||生成实体后执行的操作</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.UsePromptRange" xml:space="preserve">
+    <value>使用 PromptRange||自动安装 PromptRange 并初始化 Prompt；不使用时需自行提供 XncfBuilderPlugin 文件</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.AIModel" xml:space="preserve">
+    <value>AI 模型||不使用 PromptRange 时用于生成代码的 AI 模型</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Prompt.Override" xml:space="preserve">
+    <value>覆盖||删除已有 XncfBuilderPlugin 靶场并按官方版本重建</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Prompt.AIModel" xml:space="preserve">
+    <value>AI 模型||新靶场中全部靶道使用的 AI 模型</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Dto" xml:space="preserve">
+    <value>创建 DTO</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Dto.Help" xml:space="preserve">
+    <value>创建 DTO 对象（始终生成）</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Migration" xml:space="preserve">
+    <value>生成数据库迁移</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Migration.Help" xml:space="preserve">
+    <value>使用 EF Core Migration 生成迁移，建议先检查</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Repository" xml:space="preserve">
+    <value>创建 Repository</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Repository.Help" xml:space="preserve">
+    <value>创建与实体匹配的 Repository</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Service" xml:space="preserve">
+    <value>创建 Service</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Service.Help" xml:space="preserve">
+    <value>创建与实体匹配的 Service</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.AppService" xml:space="preserve">
+    <value>创建 AppService</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.AppService.Help" xml:space="preserve">
+    <value>创建与实体匹配的 AppService</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.DatabasePlantPath" xml:space="preserve">
+    <value>Senparc.Web.DatabasePlant 项目路径||用于启动迁移的项目物理路径；目标 XNCF 项目必须已被引用</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.ProjectPath" xml:space="preserve">
+    <value>XNCF 项目路径||XNCF 项目根目录的完整物理路径</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.CustomProjectPath" xml:space="preserve">
+    <value>自定义 XNCF 项目路径||仅在项目路径选择“自定义路径”时使用</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.DatabaseTypes" xml:space="preserve">
+    <value>生成数据库类型||选择要生成迁移的数据库类型</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.DbContext" xml:space="preserve">
+    <value>自定义 DbContext 名称||不含数据库类型后缀；输入 [Default] 自动识别</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.Name" xml:space="preserve">
+    <value>更新名称||只能使用英文字母、数字和下划线，例如 Add_Config</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.UpdateVersion" xml:space="preserve">
+    <value>自动更新版本号||更新 Register.cs 中的版本号</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.Verbose" xml:space="preserve">
+    <value>输出详细日志||使用 add-migration 的 -v 参数</value>
+  </data>
+  <data name="XncfBuilder.Option.Version.None" xml:space="preserve">
+    <value>不更新</value>
+  </data>
+  <data name="XncfBuilder.Option.Version.Major" xml:space="preserve">
+    <value>主版本号（Major）+ 1</value>
+  </data>
+  <data name="XncfBuilder.Option.Version.Minor" xml:space="preserve">
+    <value>次版本号（Minor）+ 1</value>
+  </data>
+  <data name="XncfBuilder.Option.Version.Patch" xml:space="preserve">
+    <value>修订版本号（Patch）+ 1</value>
+  </data>
+  <data name="XncfBuilder.Option.CustomPath" xml:space="preserve">
+    <value>自定义路径</value>
+  </data>
+  <data name="XncfBuilder.Validation.CustomProjectPathRequired" xml:space="preserve">
+    <value>请填写“自定义 XNCF 项目路径”！</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.TargetPath" xml:space="preserve">
+    <value>目标项目路径||需要扫描并生成接口的项目路径</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.Namespace" xml:space="preserve">
+    <value>命名空间前缀||待生成类的命名空间前缀</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.ClassPattern" xml:space="preserve">
+    <value>类名正则||匹配类名的正则表达式</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.MethodPattern" xml:space="preserve">
+    <value>方法名正则||匹配方法名的正则表达式</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.DestinationPath" xml:space="preserve">
+    <value>生成目的地项目路径||接口代码的目标项目路径</value>
+  </data>
+  <data name="XncfBuilder.MCP.ModuleDirectoryNotFound" xml:space="preserve">
+    <value>未找到模块 {0} 的目录；模块名称必须完整匹配，例如 Senparc.Xncf.XncfBuilder。</value>
+  </data>
+  <data name="XncfBuilder.MCP.ModuleFullName" xml:space="preserve">
+    <value>完整模块名，例如 Senparc.Xncf.XncfBuilder</value>
+  </data>
+  <data name="XncfBuilder.MCP.FilePath" xml:space="preserve">
+    <value>模块内的路径和文件名</value>
+  </data>
+  <data name="XncfBuilder.MCP.FileNotFound" xml:space="preserve">
+    <value>文件不存在：{0}</value>
+  </data>
+  <data name="XncfBuilder.MCP.FileContent" xml:space="preserve">
+    <value>完整文件内容</value>
+  </data>
+  <data name="XncfBuilder.Plugin.CreateEntity" xml:space="preserve">
+    <value>创建实体类文件</value>
+  </data>
+  <data name="XncfBuilder.Plugin.FilePath" xml:space="preserve">
+    <value>文件路径</value>
+  </data>
+  <data name="XncfBuilder.Plugin.GeneratedContent" xml:space="preserve">
+    <value>AI 生成的文件内容</value>
+  </data>
+  <data name="XncfBuilder.Plugin.FileSaved" xml:space="preserve">
+    <value>已保存文件：{0}</value>
+  </data>
+  <data name="XncfBuilder.Plugin.ReadDbContext" xml:space="preserve">
+    <value>读取并更新数据库上下文</value>
+  </data>
+  <data name="XncfBuilder.Plugin.ProjectPath" xml:space="preserve">
+    <value>项目路径</value>
+  </data>
+  <data name="XncfBuilder.Plugin.EntityName" xml:space="preserve">
+    <value>新实体名称</value>
+  </data>
+  <data name="XncfBuilder.Plugin.PluralEntityName" xml:space="preserve">
+    <value>新实体名称的复数形式</value>
+  </data>
+</root>

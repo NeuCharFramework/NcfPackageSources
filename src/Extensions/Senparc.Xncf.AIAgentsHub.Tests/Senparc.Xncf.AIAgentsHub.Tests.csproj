@@ -3,12 +3,28 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
 
-    <Version>0.0.2</Version>
+    <Version>0.0.3</Version>
     <PackageReleaseNotes>
       [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
       1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
       [2026-07-07] v0.0.2 Dependency updates from upstream modules
       1、Dependency update from Senparc.Xncf.SystemManager to 0.14.2-preview2
+      [2026-07-17] v0.0.3 同步上游项目版本并适配统一本地化能力
+      1、Dependency update from Senparc.Ncf.Core.Tests to 0.0.1
+      2、Dependency update from Senparc.Ncf.Core to 0.25.0-preview2
+      3、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.2-preview2
+      4、Dependency update from Senparc.Ncf.Database to 0.21.2-preview2
+      5、Dependency update from Senparc.Ncf.XncfBase to 0.23.3-preview2
+      6、Dependency update from Senparc.Xncf.AIAgentsHub to 0.13.0-preview3
+      7、Dependency update from Senparc.Xncf.XncfBuilder to 0.37.0-preview5
+      8、Dependency update from Senparc.Xncf.AreasBase to 0.13.0-preview2
+      9、Dependency update from Senparc.Xncf.Menu to 0.14.0-preview2
+      10、Dependency update from Senparc.Xncf.SystemCore to 0.14.0-preview2
+      11、Dependency update from Senparc.Xncf.SystemManager to 0.15.0-preview3
+      12、Dependency update from Senparc.Xncf.SystemPermission to 0.15.0-preview2
+      13、Dependency update from Senparc.Xncf.Tenant to 0.15.0-preview2
+      14、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.0-preview2
+      15、同步 AIKernel、AgentsManager 与 PromptRange 当前版本的功能兼容性更新
 </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.3.0-preview2 为 SenMapic 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -48,11 +51,11 @@ namespace Senparc.Xncf.SenMapic
 
         public override string Version => "0.1.3";//必须填写版本号
 
-        public override string MenuName => "SenMapic";
+        public override string MenuName => SenMapicResource.Get("Module.SenMapic.MenuName", "SenMapic");
 
         public override string Icon => "fa fa-database";
 
-        public override string Description => "SenMapic 爬虫模块";
+        public override string Description => SenMapicResource.Get("Module.SenMapic.Description", "SenMapic 爬虫模块");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

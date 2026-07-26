@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
+    修改标识：Senparc - 20260726
+    修改描述：v0.25.0-preview2 增加 EventBus 请求-响应能力，支持超时、取消与请求关联清理
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -45,9 +48,11 @@ namespace Senparc.Ncf.Core.EventBus
                 services.AddSingleton<InMemoryEventBus>(sp =>
                 {
                     var logger = sp.GetService<ILogger<InMemoryEventBus>>();
-                    return new InMemoryEventBus(logger);
+                    var eventBusOptions = sp.GetRequiredService<EventBusOptions>();
+                    return new InMemoryEventBus(logger, eventBusOptions);
                 });
                 services.AddSingleton<IEventBus>(sp => sp.GetRequiredService<InMemoryEventBus>());
+                services.AddSingleton<IEventBusRequestClient>(sp => sp.GetRequiredService<InMemoryEventBus>());
 
                 // 3. 注册后台托管服务 (消费者用)
                 services.AddHostedService<EventBusHostedService>();
@@ -59,7 +64,7 @@ namespace Senparc.Ncf.Core.EventBus
                     {
                         // 查找实现了 IIntegrationEventHandler<T> 的具体类
                         var handlerTypes = assembly.GetTypes()
-                            .Where(t => t.IsClass && !t.IsAbstract &&
+                            .Where(t => t.IsClass && !t.IsAbstract && !t.ContainsGenericParameters &&
                                 t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IIntegrationEventHandler<>)));
 
                         foreach (var type in handlerTypes)

@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260704
     修改描述：v0.11.0-preview2 新增 ChatTask 归档能力并完善多数据库迁移支持
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -56,11 +59,11 @@ namespace Senparc.Xncf.AgentsManager
 
         public override string Version => "0.3.22";//必须填写版本号
 
-        public override string MenuName => "Agents 管理模块";
+        public override string MenuName => AgentsManagerResource.Get("Module.AgentsManager.MenuName", "Agents 管理模块");
 
         public override string Icon => "fa fa-star";
 
-        public override string Description => "Agents 管理模块";
+        public override string Description => AgentsManagerResource.Get("Module.AgentsManager.Description", "Agents 管理模块");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
@@ -157,7 +160,6 @@ namespace Senparc.Xncf.AgentsManager
         }
     }
 }
-
 
 
 

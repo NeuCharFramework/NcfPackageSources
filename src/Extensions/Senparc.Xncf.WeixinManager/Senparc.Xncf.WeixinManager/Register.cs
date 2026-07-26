@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.23.0-preview3 为 WeixinManager 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using AutoMapper;
@@ -67,15 +70,15 @@ namespace Senparc.Xncf.WeixinManager
         public override string Version => "0.21.1";
 
 
-        public override string MenuName => "微信管理";
+        public override string MenuName => WeixinManagerResource.Get("Module.WeixinManager.MenuName", "微信管理");
 
 
         public override string Icon => "fa fa-weixin";
 
 
-        public override string Description => @"XNCF 模块：盛派官方发布的微信管理后台
-使用此插件可以在 NCF 中快速集成微信公众号、小程序的部分基础管理功能，欢迎大家一起扩展！
-微信 SDK 基于 Senparc.Weixin SDK 开发。开源地址：https://https://github.com/JeffreySu/WeiXinMPSDK";
+        public override string Description => WeixinManagerResource.Get(
+            "Module.WeixinManager.Description",
+            "XNCF 模块：盛派官方发布的微信管理后台。使用此插件可在 NCF 中快速集成微信公众号、小程序的基础管理功能。微信 SDK 基于 Senparc.Weixin SDK 开发：https://github.com/JeffreySu/WeiXinMPSDK");
 
         //public override IList<Type> Functions => new Type[] { };
 

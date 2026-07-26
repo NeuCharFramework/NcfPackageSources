@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.37.0-preview5 增强 XNCF 构建、数据库迁移与 AI 生成流程的本地化支持
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -51,11 +54,11 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override string Version => "0.10.1";//必须填写版本号
 
-        public override string MenuName => "XNCF 模块生成器";
+        public override string MenuName => XncfBuilderResource.Get("Module.XncfBuilder.MenuName", "XNCF 模块生成器");
 
         public override string Icon => "fa fa-plus";
 
-        public override string Description => "快速生成 XNCF 模块基础程序代码，或 Sample 演示，可基于基础代码扩展自己的应用";
+        public override string Description => XncfBuilderResource.Get("Module.XncfBuilder.Description", "快速生成 XNCF 模块基础程序代码或 Sample 演示，可基于基础代码扩展自己的应用");
 
         public override bool EnableMcpServer => true;
 

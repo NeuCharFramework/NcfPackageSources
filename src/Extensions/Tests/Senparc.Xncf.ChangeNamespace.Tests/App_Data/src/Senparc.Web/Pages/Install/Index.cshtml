@@ -73,15 +73,45 @@
             color: #808080;
             font-size: 80%;
         }
+
+        .install-confirm-mask {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, .45);
+            z-index: 1000;
+        }
+
+        .install-confirm-dialog {
+            width: min(420px, calc(100% - 40px));
+            padding: 24px;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, .25);
+        }
+
+        .install-confirm-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+        }
     </style>
     <script>
-        function submit() {
-            if (!confirm('确定要开始安装吗？安装完成后此页面将失效！')) {
-                return false;
-            }
+        function showInstallConfirmation() {
+            document.getElementById('install_confirm_mask').style.display = 'flex';
+            return false;
+        }
 
+        function hideInstallConfirmation() {
+            document.getElementById('install_confirm_mask').style.display = 'none';
+        }
+
+        function confirmInstall() {
+            hideInstallConfirmation();
             document.getElementById('install_form').submit();
-            return true;
         }
     </script>
 </head>
@@ -94,9 +124,19 @@
         {
             case 0:
                 <form method="post" id="install_form">
-                    <a href="javascript:void(0);" onclick="return submit()" class="option_block">立即安装</a>
+                    <a href="javascript:void(0);" onclick="return showInstallConfirmation()" class="option_block">立即安装</a>
                     <p class="install_notice">注意：安装完成后此页面将失效！</p>
                 </form>
+                <div id="install_confirm_mask" class="install-confirm-mask" role="dialog" aria-modal="true" aria-labelledby="install_confirm_title">
+                    <div class="install-confirm-dialog">
+                        <h3 id="install_confirm_title">确定开始安装吗？</h3>
+                        <p>安装完成后，本安装页面将不可继续使用。</p>
+                        <div class="install-confirm-actions">
+                            <button type="button" onclick="hideInstallConfirmation()">取消</button>
+                            <button type="button" onclick="confirmInstall()">立即安装</button>
+                        </div>
+                    </div>
+                </div>
                 break;
             case 1:
                 <h2>NeuCharFramework<br />初始化安装成功！</h2>

@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.4.0-preview3 为 MCP 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.WebApi;
@@ -51,7 +54,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 var endpoints = await _mcpEndpointService.GetFullListAsync(x => true);
                 var dtos = endpoints?.Select(e => MCPEndpointDto.FromEntity(e)).ToList() ?? new List<MCPEndpointDto>();
                 
-                logger.Append($"获取了 {dtos.Count} 个 MCP Endpoints");
+                logger.Append(McpResource.Format("MCP.Endpoint.CountAll", "获取了 {0} 个 MCP Endpoints", dtos.Count));
                 return dtos;
             });
         }
@@ -66,7 +69,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 var endpoints = await _mcpEndpointService.GetEnabledEndpointsAsync();
                 var dtos = endpoints.Select(e => MCPEndpointDto.FromEntity(e)).ToList();
                 
-                logger.Append($"获取了 {dtos.Count} 个已启用的 MCP Endpoints");
+                logger.Append(McpResource.Format("MCP.Endpoint.CountEnabled", "获取了 {0} 个已启用的 MCP Endpoints", dtos.Count));
                 return dtos;
             });
         }
@@ -81,12 +84,12 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 // 验证输入
                 if (string.IsNullOrWhiteSpace(request.Name))
                 {
-                    return "端点名称不能为空";
+                    return McpResource.Get("MCP.Endpoint.NameRequired");
                 }
 
                 if (string.IsNullOrWhiteSpace(request.Endpoint))
                 {
-                    return "端点地址不能为空";
+                    return McpResource.Get("MCP.Endpoint.AddressRequired");
                 }
 
                 // 检查名称是否已存在（编辑时除外）
@@ -95,7 +98,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                     var existing = await _mcpEndpointService.GetEndpointByNameAsync(request.Name);
                     if (existing != null)
                     {
-                        return $"端点名称 '{request.Name}' 已存在";
+                        return McpResource.Format("MCP.Endpoint.NameExists", "端点名称“{0}”已存在", request.Name);
                     }
                 }
 
@@ -106,7 +109,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                     endpoint = await _mcpEndpointService.GetObjectAsync(x => x.Id == request.Id);
                     if (endpoint == null)
                     {
-                        return $"端点 ID {request.Id} 不存在";
+                        return McpResource.Format("MCP.Endpoint.IdNotFound", "端点 ID {0} 不存在", request.Id);
                     }
                 }
                 else
@@ -126,7 +129,10 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 endpoint.ExtraConfig = request.ExtraConfig;
 
                 await _mcpEndpointService.SaveObjectAsync(endpoint);
-                logger.Append($"✓ MCP Endpoint '{endpoint.Name}' 已{(request.Id > 0 ? "更新" : "创建")}");
+                logger.Append(McpResource.Format(
+                    request.Id > 0 ? "MCP.Endpoint.Updated" : "MCP.Endpoint.Created",
+                    request.Id > 0 ? "✓ MCP Endpoint“{0}”已更新" : "✓ MCP Endpoint“{0}”已创建",
+                    endpoint.Name));
 
                 return logger.ToString();
             });
@@ -141,17 +147,17 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             {
                 if (request.Id <= 0)
                 {
-                    return "invalid endpoint id";
+                    return McpResource.Get("MCP.Endpoint.InvalidId");
                 }
 
                 var endpoint = await _mcpEndpointService.GetObjectAsync(x => x.Id == request.Id);
                 if (endpoint == null)
                 {
-                    return $"endpoint id {request.Id} not found";
+                    return McpResource.Format("MCP.Endpoint.IdNotFound", "端点 ID {0} 不存在", request.Id);
                 }
 
                 await _mcpEndpointService.DeleteObjectAsync(endpoint);
-                logger.Append($"✓ MCP Endpoint '{endpoint.Name}' 已删除");
+                logger.Append(McpResource.Format("MCP.Endpoint.Deleted", "✓ MCP Endpoint“{0}”已删除", endpoint.Name));
 
                 return logger.ToString();
             });
@@ -166,18 +172,18 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             {
                 if (request.Id <= 0)
                 {
-                    return "无效的端点 ID";
+                    return McpResource.Get("MCP.Endpoint.InvalidId");
                 }
 
                 var result = await _mcpEndpointService.TestEndpointAsync(request.Id);
                 
                 if (result)
                 {
-                    logger.Append("✓ 端点连接测试成功");
+                    logger.Append(McpResource.Get("MCP.Endpoint.TestSucceeded"));
                 }
                 else
                 {
-                    logger.Append("✗ 端点连接测试失败");
+                    logger.Append(McpResource.Get("MCP.Endpoint.TestFailed"));
                 }
 
                 return logger.ToString();
@@ -222,40 +228,40 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     /// </summary>
     public class MCPEndpointCreateOrEditRequest
     {
-        [Description("端点 ID||为 0 时表示创建新端点")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.IdCreate")]
         public int Id { get; set; }
 
         [Required]
         [MaxLength(100)]
-        [Description("端点名称||MCP 端点的名称")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.Name")]
         public string Name { get; set; }
 
         [Required]
         [MaxLength(500)]
-        [Description("端点地址||MCP 端点的 URI 地址")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.Address")]
         public string Endpoint { get; set; }
 
         [MaxLength(50)]
-        [Description("端点类型||如 http, sse, stdio 等")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.Type")]
         public string EndpointType { get; set; }
 
         [MaxLength(20)]
-        [Description("协议版本||MCP 协议版本")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.ProtocolVersion")]
         public string ProtocolVersion { get; set; }
 
         [MaxLength(500)]
-        [Description("描述||端点的描述信息")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.Description")]
         public string Description { get; set; }
 
-        [Description("是否启用||是否启用此端点")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.Enabled")]
         public bool Enabled { get; set; } = true;
 
         [MaxLength(1000)]
-        [Description("认证配置||认证相关的 JSON 配置")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.AuthConfig")]
         public string AuthConfig { get; set; }
 
         [MaxLength(2000)]
-        [Description("额外配置||其他自定义配置的 JSON")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.ExtraConfig")]
         public string ExtraConfig { get; set; }
     }
 
@@ -264,7 +270,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     /// </summary>
     public class MCPEndpointDeleteRequest
     {
-        [Description("端点 ID||要删除的 MCP 端点 ID")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.IdDelete")]
         public int Id { get; set; }
     }
 
@@ -273,7 +279,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     /// </summary>
     public class MCPEndpointTestRequest
     {
-        [Description("端点 ID||要测试的 MCP 端点 ID")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.IdTest")]
         public int Id { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.3.3.1-preview2</Version>
+    <Version>0.4.0-preview3</Version>
     <AssemblyName>Senparc.Xncf.MCP</AssemblyName>
     <RootNamespace>Senparc.Xncf.MCP</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -18,20 +18,26 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v0.1.0 创世
-			v0.2.0 Update new ModelContextProtocol library
-			[2025-06-20] v0.2.1-beta Add MCP functions in XncfRegisterBase class
-			[2025-06-20] v0.2.2-beta Add MCP functions in XncfRegisterBase class
-			[2025-06-28] v0.2.3-preview.1 Add MCP server selection in MyFunction_MCPCallRequest
-			[2025-11-01] update basic libraries, including Senparc.AI
-			[2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
-			[2026-07-02] v0.3.2-preview1 支持流式输出并优化交互体验，升级 Senparc.AI.AgentKernel 并完成兼容性适配
-			1、支持流式输出并优化交互体验
-			2、升级 Senparc.AI.AgentKernel 并完成兼容性适配
-			[2026-07-07] v0.3.3-preview2 Dependency updates from upstream modules
-			1、Dependency update from Senparc.Xncf.AIKernel to 0.13.5-preview4
-			2、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
+      v0.1.0 创世
+      v0.2.0 Update new ModelContextProtocol library
+      [2025-06-20] v0.2.1-beta Add MCP functions in XncfRegisterBase class
+      [2025-06-20] v0.2.2-beta Add MCP functions in XncfRegisterBase class
+      [2025-06-28] v0.2.3-preview.1 Add MCP server selection in MyFunction_MCPCallRequest
+      [2025-11-01] update basic libraries, including Senparc.AI
+      [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+      [2026-07-02] v0.3.2-preview1 支持流式输出并优化交互体验，升级 Senparc.AI.AgentKernel 并完成兼容性适配
+      1、支持流式输出并优化交互体验
+      2、升级 Senparc.AI.AgentKernel 并完成兼容性适配
+      [2026-07-07] v0.3.3-preview2 Dependency updates from upstream modules
+      1、Dependency update from Senparc.Xncf.AIKernel to 0.13.5-preview4
+      2、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
       [2026-07-16] v0.3.3.1-preview3 remove .placeholder file in wwwroot folder
+      [2026-07-17] v0.4.0-preview3 为 MCP 模块接入统一资源本地化并优化功能文案
+      1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+      2、更新 FunctionRender 与请求模型文案的资源化解析
+      3、统一模块注册信息、菜单名称与功能描述的本地化输出
+      4、同步管理页面与前端交互文案的多语言显示
+      5、同步 AIKernel 0.14.0-preview5 的 NeuChar 模型 API 版本适配
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -43,7 +49,7 @@
     <PackageReference Include="Microsoft.Extensions.AI" Version="10.5.1" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
     <EmbeddedResource Include="wwwroot\**\*" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.8-preview.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />

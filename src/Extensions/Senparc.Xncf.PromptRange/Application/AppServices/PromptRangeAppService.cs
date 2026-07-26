@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260717
+    修改描述：v0.17.0-preview5 为 PromptRange 模块接入统一资源本地化并优化功能文案
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -146,7 +149,7 @@ public class PromptRangeAppService : AppServiceBase
     /// <summary>
     /// FunctionRender：查看靶场 PromptCode 列表（用于创建智能体）
     /// </summary>
-    [FunctionRender("查看 PromptCode 列表", "查看所有靶场和靶道的 PromptCode，可用于在 AgentsManager 中快速创建智能体", typeof(Register))]
+    [FunctionRender(typeof(PromptRangeResource), "Function.PromptRange.ViewCodes.Name", "Function.PromptRange.ViewCodes.Description", typeof(Register))]
     public async Task<StringAppResponse> ViewPromptCodeList(PromptRange_ViewPromptCodeRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>

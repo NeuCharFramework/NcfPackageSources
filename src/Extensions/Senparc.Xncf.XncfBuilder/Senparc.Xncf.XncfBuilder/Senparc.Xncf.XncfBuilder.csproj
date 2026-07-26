@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.36.5-preview4</Version>
+    <Version>0.37.0-preview5</Version>
     <LangVersion>latest</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -91,6 +91,14 @@
 			1、Dependency update from Senparc.Xncf.AIKernel to 0.13.5-preview4
 			2、Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
 			3、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
+			[2026-07-17] v0.37.0-preview5 增强 XNCF 构建、数据库迁移与 AI 生成流程的本地化支持
+			1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+			2、更新 FunctionRender 与请求模型文案的资源化解析
+			3、统一模块注册信息、菜单名称与功能描述的本地化输出
+			4、补充并统一多语言资源键及资源文件
+			5、同步 AIKernel 模型 API 版本适配，并完善生成模板的多语言页面
+			6、构建命令改为直接调用进程 API，不再依赖 cmd.exe
+			7、改善构建输出捕获并开放测试所需的内部访问
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -137,6 +145,9 @@
   </ItemGroup>-->
   <ItemGroup>
     <ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Senparc.Xncf.XncfBuilder.Tests" />
   </ItemGroup>
   <ItemGroup>
     <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.3.600.100-beta1" />-->

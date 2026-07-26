@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.DynamicData.MenuName" xml:space="preserve">
+    <value>动态数据基础模块</value>
+  </data>
+  <data name="Module.DynamicData.Description" xml:space="preserve">
+    <value>用于创建和管理动态数据（早期迭代，尚未正式发布）</value>
+  </data>
+  <data name="Area.Home" xml:space="preserve">
+    <value>首页</value>
+  </data>
+  <data name="Area.DatabaseSample" xml:space="preserve">
+    <value>数据库操作示例</value>
+  </data>
+  <data name="Area.DynamicData.PageSettings" xml:space="preserve">
+    <value>界面设置</value>
+  </data>
+  <data name="Area.DynamicData.TableSettings" xml:space="preserve">
+    <value>数据库表设置</value>
+  </data>
+  <data name="Function.Sample.Name" xml:space="preserve">
+    <value>示例函数</value>
+  </data>
+  <data name="Function.Sample.Description" xml:space="preserve">
+    <value>演示 FunctionRender 参数与返回值</value>
+  </data>
+  <data name="Parameter.Sample.Name" xml:space="preserve">
+    <value>名称||双竖线前为参数名称，双竖线后为参数说明</value>
+  </data>
+  <data name="Parameter.Sample.Number1" xml:space="preserve">
+    <value>数字||数字 1</value>
+  </data>
+  <data name="Parameter.Sample.Number2" xml:space="preserve">
+    <value>数字||数字 2</value>
+  </data>
+  <data name="Parameter.Sample.Operator" xml:space="preserve">
+    <value>运算符||</value>
+  </data>
+  <data name="Parameter.Sample.Power" xml:space="preserve">
+    <value>幂运算||</value>
+  </data>
+  <data name="Parameter.Operator.Add" xml:space="preserve">
+    <value>加法</value>
+  </data>
+  <data name="Parameter.Operator.Add.Help" xml:space="preserve">
+    <value>数字 1 + 数字 2</value>
+  </data>
+  <data name="Parameter.Operator.Subtract" xml:space="preserve">
+    <value>减法</value>
+  </data>
+  <data name="Parameter.Operator.Subtract.Help" xml:space="preserve">
+    <value>数字 1 - 数字 2</value>
+  </data>
+  <data name="Parameter.Operator.Multiply" xml:space="preserve">
+    <value>乘法</value>
+  </data>
+  <data name="Parameter.Operator.Multiply.Help" xml:space="preserve">
+    <value>数字 1 × 数字 2</value>
+  </data>
+  <data name="Parameter.Operator.Divide" xml:space="preserve">
+    <value>除法</value>
+  </data>
+  <data name="Parameter.Operator.Divide.Help" xml:space="preserve">
+    <value>数字 1 ÷ 数字 2</value>
+  </data>
+  <data name="Parameter.Power.Square" xml:space="preserve">
+    <value>平方</value>
+  </data>
+  <data name="Parameter.Power.Square.Help" xml:space="preserve">
+    <value>对上述结果计算平方</value>
+  </data>
+  <data name="Parameter.Power.Cube" xml:space="preserve">
+    <value>三次方</value>
+  </data>
+  <data name="Parameter.Power.Cube.Help" xml:space="preserve">
+    <value>对上述结果计算三次方</value>
+  </data>
+  <data name="Area.Extensions" xml:space="preserve">
+    <value>扩展模块</value>
+  </data>
+  <data name="Page.InstalledAt" xml:space="preserve">
+    <value>安装时间：</value>
+  </data>
+  <data name="Page.CurrentDatabase" xml:space="preserve">
+    <value>当前数据库类型：</value>
+  </data>
+  <data name="Page.Brighten" xml:space="preserve">
+    <value>变亮</value>
+  </data>
+  <data name="Page.Darken" xml:space="preserve">
+    <value>变暗</value>
+  </data>
+  <data name="Page.Random" xml:space="preserve">
+    <value>随机</value>
+  </data>
+</root>
