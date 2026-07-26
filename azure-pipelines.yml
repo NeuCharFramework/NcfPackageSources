@@ -74,7 +74,14 @@ steps:
     projects: '**/NcfPackageSources.sln'
     arguments: '-p:Configuration=$(buildConfiguration)'
 
-- task: DotNetCoreCLI@2    
+- task: DotNetCoreCLI@2
+  displayName: 'Restore XNCF Builder template project'
+  inputs:
+    command: restore
+    projects: 'src/Extensions/Senparc.Xncf.XncfBuilder/Senparc.Xncf.XncfBuilder.Template/Senparc.Xncf.XncfBuilder.Template.csproj'
+    arguments: '-p:Configuration=$(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
   displayName: 'dotnet --list-sdks '    
   inputs:      
     command: custom      
