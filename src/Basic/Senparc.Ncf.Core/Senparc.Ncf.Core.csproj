@@ -56,6 +56,8 @@
 				1、扩展 FunctionRenderAttribute 与本地化特性，支持资源键动态解析
 				2、新增统一资源定位、文化回退与本地化服务基础能力
 				3、为模块功能描述和请求参数提供一致的多语言输出机制
+				4、增加请求客户端、请求事件和处理器回环机制
+				5、支持超时、取消、类型检查及请求关联清理
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

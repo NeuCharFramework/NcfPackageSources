@@ -184,7 +184,8 @@ public partial class EmbeddedWebView : UserControl
                     _webView = new WebView();
                     _webView.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;
                     _webView.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch;
-                    
+                    _webView.NavigationCompleted += OnWebViewNavigationCompleted;
+
                     _webViewContainer.Children.Clear();
                     _webViewContainer.Children.Add(_webView);
                     Grid.SetRow(_webView, 0);
@@ -289,6 +290,7 @@ public partial class EmbeddedWebView : UserControl
                         _currentUrl = url;
                         Debug.WriteLine($"✅ WebView.Url 设置成功");
                         UpdateStatus("页面加载完成", Brushes.Green);
+                        // 真正注入补丁以 NavigationCompleted 为准；此处先通知外层 UI。
                         OnNavigationCompleted(url);
                     }
                     catch (Exception navEx)
@@ -326,6 +328,29 @@ public partial class EmbeddedWebView : UserControl
             _webView?.Reload();
         }
         catch { }
+    }
+
+    /// <summary>供主窗口 Edit 菜单 / 快捷键调用：全选。</summary>
+    public Task<bool> SelectAllAsync() => WebViewEditBridge.TrySelectAllAsync(_webView);
+
+    /// <summary>供主窗口 Edit 菜单 / 快捷键调用：复制。</summary>
+    public Task<bool> CopyAsync() => WebViewEditBridge.TryCopyAsync(_webView, WebViewEditBridge.GetClipboard(this));
+
+    /// <summary>供主窗口 Edit 菜单 / 快捷键调用：剪切。</summary>
+    public Task<bool> CutAsync() => WebViewEditBridge.TryCutAsync(_webView, WebViewEditBridge.GetClipboard(this));
+
+    /// <summary>供主窗口 Edit 菜单 / 快捷键调用：粘贴。</summary>
+    public Task<bool> PasteAsync() => WebViewEditBridge.TryPasteAsync(_webView, WebViewEditBridge.GetClipboard(this));
+
+    private async void OnWebViewNavigationCompleted(object? sender, WebViewCore.Events.WebViewUrlLoadedEventArg e)
+    {
+        Debug.WriteLine($"[EmbeddedWebView] NavigationCompleted IsSuccess={e.IsSuccess}");
+        if (!e.IsSuccess)
+        {
+            return;
+        }
+
+        await WebViewEditBridge.EnsureKeyboardPatchAsync(_webView);
     }
 
     // 后退功能，供外部调用  

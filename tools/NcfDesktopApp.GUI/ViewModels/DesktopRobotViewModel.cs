@@ -60,6 +60,9 @@ public partial class DesktopRobotViewModel : ViewModelBase
     private bool _isProgressVisible;
 
     private DispatcherTimer? _interactionTimer;
+    private NcfMascotKind _resolvedMascot = NcfMascotKind.Nono;
+    private NcfMascotKind _mascotOverride = NcfMascotKind.Nono;
+    private bool _isMascotOverride;
 
     /// <summary>更新浮动角色的视线方向，供桌面窗口的鼠标移动事件调用。</summary>
     public void UpdateGaze(double x, double y)
@@ -82,6 +85,29 @@ public partial class DesktopRobotViewModel : ViewModelBase
             _interactionTimer ??= CreateInteractionTimer();
             _interactionTimer.Stop();
             _interactionTimer.Start();
+        });
+    }
+
+    /// <summary>固定使用用户选择的角色；工作状态和姿态仍会继续更新。</summary>
+    public void UseMascotOverride(NcfMascotKind mascot)
+    {
+        RunOnUi(() =>
+        {
+            _mascotOverride = mascot;
+            _isMascotOverride = true;
+            Mascot = mascot;
+            MascotName = string.Concat(mascot, "（手动）");
+        });
+    }
+
+    /// <summary>恢复根据来源、状态自动选择角色。</summary>
+    public void UseAutomaticMascot()
+    {
+        RunOnUi(() =>
+        {
+            _isMascotOverride = false;
+            Mascot = _resolvedMascot;
+            MascotName = _resolvedMascot.ToString();
         });
     }
 
@@ -265,9 +291,12 @@ public partial class DesktopRobotViewModel : ViewModelBase
 
     private void SetMascot(NcfMascotKind mascot, NcfMascotPose pose)
     {
-        Mascot = mascot;
+        _resolvedMascot = mascot;
+        Mascot = _isMascotOverride ? _mascotOverride : mascot;
         Pose = pose;
-        MascotName = mascot.ToString();
+        MascotName = _isMascotOverride
+            ? string.Concat(_mascotOverride, "（手动）")
+            : mascot.ToString();
     }
 
     private DispatcherTimer CreateInteractionTimer()

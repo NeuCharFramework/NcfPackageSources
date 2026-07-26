@@ -15,6 +15,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,6 +27,7 @@ public sealed class AdminChatClient
 {
     private const string AdminUserApi = "/api/Senparc.Areas.Admin/AdminUserInfoAppService/Areas.Admin_AdminUserInfoAppService";
     private const string AdminChatApi = "/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService";
+    private const string AdminChatStreamApi = "/api/Senparc.Areas.Admin/AdminChatStream/send";
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
     {
         PropertyNameCaseInsensitive = true
@@ -164,6 +166,194 @@ public sealed class AdminChatClient
         return new[] { data.UserMessage, data.AssistantMessage }
             .OfType<AdminChatMessage>()
             .ToArray();
+    }
+
+    public async Task<AdminChatStreamResult> SendMessageStreamingAsync(
+        string siteUrl,
+        int sessionId,
+        string content,
+        Action<AdminChatMessage>? onUserMessage = null,
+        Action<string>? onToken = null,
+        Action<AdminChatMessage>? onAssistantMessage = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(content))
+        {
+            throw new AdminChatApiException("请输入消息内容。");
+        }
+
+        if (!TryCreateEndpoint(siteUrl, AdminChatStreamApi, out var endpoint))
+        {
+            throw new AdminChatApiException("Admin Chat 只允许连接本机 NCF 站点。");
+        }
+
+        using var request = new HttpRequestMessage(HttpMethod.Post, endpoint);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", GetRequiredAccessToken());
+        request.Content = JsonContent.Create(
+            new { sessionId, aiModelId = 0, content = content.Trim() },
+            options: JsonOptions);
+
+        using var timeoutSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeoutSource.CancelAfter(TimeSpan.FromMinutes(3));
+
+        HttpResponseMessage response;
+        try
+        {
+            response = await _httpClient.SendAsync(
+                    request,
+                    HttpCompletionOption.ResponseHeadersRead,
+                    timeoutSource.Token)
+                .ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        {
+            throw new AdminChatApiException("Admin Chat 流式请求超时，请稍后重试。");
+        }
+        catch (Exception ex) when (ex is HttpRequestException or IOException)
+        {
+            throw new AdminChatApiException($"无法连接 Admin Chat：{ex.Message}");
+        }
+
+        using (response)
+        {
+            if (response.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden)
+            {
+                ClearAuthentication();
+                throw new AdminChatApiException("管理员身份无效、已过期或不具备 AdminOnly 权限。", true);
+            }
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new AdminChatApiException($"Admin Chat 流式接口返回 HTTP {(int)response.StatusCode}。");
+            }
+
+            AdminChatMessage? userMessage = null;
+            AdminChatMessage? assistantMessage = null;
+            var eventName = string.Empty;
+            var eventData = new StringBuilder();
+
+            await using var responseStream = await response.Content
+                .ReadAsStreamAsync(timeoutSource.Token)
+                .ConfigureAwait(false);
+            using var reader = new StreamReader(responseStream);
+
+            while (await reader.ReadLineAsync(timeoutSource.Token).ConfigureAwait(false) is { } line)
+            {
+                if (line.Length == 0)
+                {
+                    HandleStreamEvent(
+                        eventName,
+                        eventData.ToString(),
+                        ref userMessage,
+                        ref assistantMessage,
+                        onUserMessage,
+                        onToken,
+                        onAssistantMessage);
+                    eventName = string.Empty;
+                    eventData.Clear();
+                    continue;
+                }
+
+                if (line.StartsWith("event:", StringComparison.OrdinalIgnoreCase))
+                {
+                    eventName = line["event:".Length..].Trim();
+                }
+                else if (line.StartsWith("data:", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (eventData.Length > 0)
+                    {
+                        eventData.Append('\n');
+                    }
+
+                    eventData.Append(line["data:".Length..].TrimStart());
+                }
+            }
+
+            if (eventData.Length > 0)
+            {
+                HandleStreamEvent(
+                    eventName,
+                    eventData.ToString(),
+                    ref userMessage,
+                    ref assistantMessage,
+                    onUserMessage,
+                    onToken,
+                    onAssistantMessage);
+            }
+
+            if (userMessage == null || assistantMessage == null)
+            {
+                throw new AdminChatApiException("Admin Chat 流式连接提前结束，未收到完整回复。");
+            }
+
+            return new AdminChatStreamResult(userMessage, assistantMessage);
+        }
+    }
+
+    private static void HandleStreamEvent(
+        string eventName,
+        string eventData,
+        ref AdminChatMessage? userMessage,
+        ref AdminChatMessage? assistantMessage,
+        Action<AdminChatMessage>? onUserMessage,
+        Action<string>? onToken,
+        Action<AdminChatMessage>? onAssistantMessage)
+    {
+        if (string.IsNullOrWhiteSpace(eventName) || string.IsNullOrWhiteSpace(eventData))
+        {
+            return;
+        }
+
+        try
+        {
+            switch (eventName)
+            {
+                case "user-message":
+                    userMessage = JsonSerializer.Deserialize<AdminChatMessage>(eventData, JsonOptions);
+                    if (userMessage != null)
+                    {
+                        onUserMessage?.Invoke(userMessage);
+                    }
+                    break;
+                case "token":
+                    using (var tokenDocument = JsonDocument.Parse(eventData))
+                    {
+                        if (tokenDocument.RootElement.TryGetProperty("text", out var textElement))
+                        {
+                            var text = textElement.GetString();
+                            if (!string.IsNullOrEmpty(text))
+                            {
+                                onToken?.Invoke(text);
+                            }
+                        }
+                    }
+                    break;
+                case "assistant-message":
+                    assistantMessage = JsonSerializer.Deserialize<AdminChatMessage>(eventData, JsonOptions);
+                    if (assistantMessage != null)
+                    {
+                        onAssistantMessage?.Invoke(assistantMessage);
+                    }
+                    break;
+                case "error":
+                    using (var errorDocument = JsonDocument.Parse(eventData))
+                    {
+                        var message = errorDocument.RootElement.TryGetProperty("message", out var messageElement)
+                            ? messageElement.GetString()
+                            : null;
+                        throw new AdminChatApiException(
+                            string.IsNullOrWhiteSpace(message) ? "Agent 回复失败。" : message);
+                    }
+            }
+        }
+        catch (AdminChatApiException)
+        {
+            throw;
+        }
+        catch (JsonException)
+        {
+            throw new AdminChatApiException("Admin Chat 流式接口返回了无法识别的数据。");
+        }
     }
 
     private async Task<IReadOnlyList<AdminChatSessionSummary>> GetSessionsCoreAsync(

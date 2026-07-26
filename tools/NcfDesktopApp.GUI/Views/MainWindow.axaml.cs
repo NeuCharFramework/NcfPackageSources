@@ -10,11 +10,17 @@
     修改标识：Senparc - 20260724
     修改描述：v0.1.0 增强更新源选择、下载反馈与桌面窗口兼容性
 
+    修改标识：Senparc - 20260726
+    修改描述：修复 macOS 内嵌 WebView 复制粘贴快捷键无响应
+
 ----------------------------------------------------------------*/
 using Avalonia.Controls;
+using Avalonia.Input;
+using NcfDesktopApp.GUI.Services;
 using NcfDesktopApp.GUI.ViewModels;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace NcfDesktopApp.GUI.Views;
 
@@ -23,11 +29,118 @@ public partial class MainWindow : Window
     /// <summary>为 true 时跳过「NCF 运行中」关闭确认（避免二次 Close 再次弹框）。</summary>
     private bool _allowCloseWithoutNcfConfirm;
 
+    /// <summary>防止 NativeMenu 与 KeyDown 对同一次 ⌘V 各处理一次。</summary>
+    private DateTime _lastEditCommandUtc = DateTime.MinValue;
+    private WebViewEditBridge.EditCommand _lastEditCommand = WebViewEditBridge.EditCommand.None;
+
     public MainWindow()
     {
         InitializeComponent();
         Opened += OnMainWindowOpened;
         Closing += OnMainWindowClosing;
+    }
+
+    private async void OnEditCutClick(object? sender, EventArgs e) =>
+        await ExecuteEditCommandAsync(WebViewEditBridge.EditCommand.Cut);
+
+    private async void OnEditCopyClick(object? sender, EventArgs e) =>
+        await ExecuteEditCommandAsync(WebViewEditBridge.EditCommand.Copy);
+
+    private async void OnEditPasteClick(object? sender, EventArgs e) =>
+        await ExecuteEditCommandAsync(WebViewEditBridge.EditCommand.Paste);
+
+    private async void OnEditSelectAllClick(object? sender, EventArgs e) =>
+        await ExecuteEditCommandAsync(WebViewEditBridge.EditCommand.SelectAll);
+
+    /// <summary>
+    /// 非 macOS / NativeMenu 未接管时的键盘兜底。
+    /// 仅处理编辑快捷键，不拦截普通打字。
+    /// </summary>
+    private async void OnMainWindowKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (!WebViewEditBridge.MatchesEditGesture(e, out var command))
+        {
+            return;
+        }
+
+        // Avalonia 文本控件已有平台快捷键，交给其自身处理，避免双重粘贴。
+        var focused = TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement();
+        if (WebViewEditBridge.IsEditableAvaloniaFocus(focused))
+        {
+            return;
+        }
+
+        if (await ExecuteEditCommandAsync(command).ConfigureAwait(true))
+        {
+            e.Handled = true;
+            Console.WriteLine($"[EditShortcut] KeyDown 已处理: {command}, Key={e.Key}, Mods={e.KeyModifiers}");
+        }
+    }
+
+    private async Task<bool> ExecuteEditCommandAsync(WebViewEditBridge.EditCommand command)
+    {
+        try
+        {
+            var now = DateTime.UtcNow;
+            if (command == _lastEditCommand && (now - _lastEditCommandUtc).TotalMilliseconds < 120)
+            {
+                Console.WriteLine($"[EditShortcut] 忽略重复触发: {command}");
+                return true;
+            }
+
+            _lastEditCommand = command;
+            _lastEditCommandUtc = now;
+
+            var focused = TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement();
+
+            // 1) Avalonia 原生文本控件：直接调用控件 API（设置页、地址栏等）
+            // 仅当控件实际可见时处理，避免切到浏览器标签后焦点仍留在隐藏 TextBox。
+            if (focused is TextBox textBox && textBox.IsEffectivelyVisible)
+            {
+                switch (command)
+                {
+                    case WebViewEditBridge.EditCommand.Cut:
+                        textBox.Cut();
+                        return true;
+                    case WebViewEditBridge.EditCommand.Copy:
+                        textBox.Copy();
+                        return true;
+                    case WebViewEditBridge.EditCommand.Paste:
+                        textBox.Paste();
+                        return true;
+                    case WebViewEditBridge.EditCommand.SelectAll:
+                        textBox.SelectAll();
+                        return true;
+                }
+            }
+
+            // 2) 浏览器标签页内嵌 WebView（登录页等）
+            // 焦点在 WKWebView 时 Avalonia FocusManager 常为 null，只要浏览器标签激活就路由到 WebView。
+            if (DataContext is MainWindowViewModel vm
+                && vm.IsBrowserTabActive
+                && vm.BrowserViewReference is BrowserView browserView
+                && browserView.IsEmbeddedWebViewReady)
+            {
+                var ok = command switch
+                {
+                    WebViewEditBridge.EditCommand.Cut => await browserView.WebViewCutAsync().ConfigureAwait(true),
+                    WebViewEditBridge.EditCommand.Copy => await browserView.WebViewCopyAsync().ConfigureAwait(true),
+                    WebViewEditBridge.EditCommand.Paste => await browserView.WebViewPasteAsync().ConfigureAwait(true),
+                    WebViewEditBridge.EditCommand.SelectAll => await browserView.WebViewSelectAllAsync().ConfigureAwait(true),
+                    _ => false
+                };
+                Console.WriteLine($"[EditShortcut] WebView 路由: {command}, ok={ok}");
+                return ok;
+            }
+
+            Console.WriteLine($"[EditShortcut] 未找到可处理目标: {command}, focused={focused?.GetType().Name ?? "null"}");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[EditShortcut] 执行失败: {command}, {ex.Message}");
+            return false;
+        }
     }
 
     private void OnMainWindowOpened(object? sender, EventArgs e)

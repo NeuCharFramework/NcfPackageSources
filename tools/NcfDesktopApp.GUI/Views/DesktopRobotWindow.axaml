@@ -28,6 +28,25 @@
             PointerPressed="RootBorder_OnPointerPressed"
             PointerMoved="RootBorder_OnPointerMoved"
             PointerExited="RootBorder_OnPointerExited">
+        <Border.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="自动跟随工作状态"
+                          Click="MascotAutoMenuItem_OnClick"/>
+                <Separator/>
+                <MenuItem Header="Nono · 默认助手"
+                          Tag="Nono"
+                          Click="MascotMenuItem_OnClick"/>
+                <MenuItem Header="Cici · Agent / Chat"
+                          Tag="Cici"
+                          Click="MascotMenuItem_OnClick"/>
+                <MenuItem Header="Qiao · Bridge / EventBus"
+                          Tag="Qiao"
+                          Click="MascotMenuItem_OnClick"/>
+                <MenuItem Header="Opsi · 构建 / 错误"
+                          Tag="Opsi"
+                          Click="MascotMenuItem_OnClick"/>
+            </ContextMenu>
+        </Border.ContextMenu>
         <Grid ColumnDefinitions="76,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto">
             <Border Grid.RowSpan="4"
                     Width="64"

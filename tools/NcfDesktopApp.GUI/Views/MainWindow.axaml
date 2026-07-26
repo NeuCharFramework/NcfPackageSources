@@ -11,7 +11,31 @@
         Width="1040" Height="860"
         MinWidth="820" MinHeight="600"
         WindowStartupLocation="CenterScreen"
-        Icon="/Assets/NCF-logo.png">
+        Icon="/Assets/NCF-logo.png"
+        KeyDown="OnMainWindowKeyDown">
+
+    <!-- macOS：Edit 菜单负责把 ⌘C/⌘V/⌘X/⌘A 接入应用；WKWebView 本身不会自动处理这些快捷键 -->
+    <NativeMenu.Menu>
+        <NativeMenu>
+            <NativeMenuItem Header="Edit">
+                <NativeMenu>
+                    <NativeMenuItem Header="Cut"
+                                    Gesture="Meta+X"
+                                    Click="OnEditCutClick"/>
+                    <NativeMenuItem Header="Copy"
+                                    Gesture="Meta+C"
+                                    Click="OnEditCopyClick"/>
+                    <NativeMenuItem Header="Paste"
+                                    Gesture="Meta+V"
+                                    Click="OnEditPasteClick"/>
+                    <NativeMenuItemSeparator/>
+                    <NativeMenuItem Header="Select All"
+                                    Gesture="Meta+A"
+                                    Click="OnEditSelectAllClick"/>
+                </NativeMenu>
+            </NativeMenuItem>
+        </NativeMenu>
+    </NativeMenu.Menu>
 
     <Window.Styles>
         <!-- 卡片样式 - 支持主题切换 -->

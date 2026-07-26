@@ -1,4 +1,17 @@
-﻿using Senparc.CO2NET;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：MyFuctionAppService.cs
+    文件功能描述：MyFuctionAppService.cs 相关实现
+    
+    
+    创建标识：Senparc - 20211031
+    
+    修改标识：Senparc - 20260726
+    修改描述：v1.1.0 补充模板 EventBus 请求-响应回环示例
+
+----------------------------------------------------------------*/
+using Senparc.CO2NET;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Shared.Abstractions.Events;

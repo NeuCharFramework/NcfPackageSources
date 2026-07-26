@@ -22,6 +22,8 @@
     3、统一模块注册信息、菜单名称与功能描述的本地化输出
     4、同步管理页面与前端交互文案的多语言显示
     5、增加 XNCF 模块批量更新操作并完善后台管理资源本地化
+    6、增加 AdminChatAppService 与 AdminChatSyncEvent
+    7、为桌面端管理交互提供站点侧同步能力
 </PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->

@@ -4,8 +4,14 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <RuntimeIdentifiers>win-x64;win-arm64;osx-x64;osx-arm64;linux-x64;linux-arm64</RuntimeIdentifiers>
-    <Version>0.3.0</Version>
+    <Version>0.3.2</Version>
     <PackageReleaseNotes>
+      [2026-07-26] v0.3.2 修复停止目标后应用退出
+      1、停止 NCF 仅终止子进程，桌面主窗口保持打开并回到工作台
+      2、避免后台线程更新 UI 与 entireProcessTree 误杀导致进程崩溃
+      [2026-07-26] v0.3.1 修复 macOS 内嵌浏览器复制粘贴快捷键
+      1、增加 NativeMenu Edit（⌘C/⌘V/⌘X/⌘A）并桥接到 WKWebView
+      2、粘贴从系统剪贴板写入页面输入框，普通打字不受影响
       [2026-07-25] v0.3.0 新增多版本 NCF 启动目标与 Agent 工作台
       1、支持内置托管版本、外部发布目录和 Senparc.Web 源码工作区
       2、外部目标隔离自动更新和解压流程，源码模式使用 no-restore 安全启动

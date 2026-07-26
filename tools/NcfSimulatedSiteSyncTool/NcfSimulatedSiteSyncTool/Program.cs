@@ -1,4 +1,17 @@
-﻿using Microsoft.Extensions.Logging;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Program.cs
+    文件功能描述：模拟站点同步工具入口
+    
+    
+    创建标识：Senparc - 20250321
+    
+    修改标识：Senparc - 20260726
+    修改描述：v0.0.1 完善外部与托管 NCF 目标解析的同步工具能力
+
+----------------------------------------------------------------*/
+using Microsoft.Extensions.Logging;
 
 class Program
 {

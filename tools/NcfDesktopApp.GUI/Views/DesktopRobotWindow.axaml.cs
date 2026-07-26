@@ -13,6 +13,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using NcfDesktopApp.GUI.Models;
 using NcfDesktopApp.GUI.Services;
 using NcfDesktopApp.GUI.ViewModels;
 
@@ -124,6 +125,20 @@ public partial class DesktopRobotWindow : Window
     private void OpenMainButton_OnClick(object? sender, RoutedEventArgs e)
     {
         OpenMainWindowRequested?.Invoke();
+    }
+
+    private void MascotAutoMenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        Robot?.UseAutomaticMascot();
+    }
+
+    private void MascotMenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem { Tag: string tag } &&
+            Enum.TryParse<NcfMascotKind>(tag, ignoreCase: true, out var mascot))
+        {
+            Robot?.UseMascotOverride(mascot);
+        }
     }
 
     private DesktopRobotViewModel? Robot => DataContext as DesktopRobotViewModel;

@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260724
     修改描述：v0.1.0 增强更新源选择、下载反馈与桌面窗口兼容性
 
+    修改标识：Senparc - 20260726
+    修改描述：修复「停止目标」后桌面应用意外退出，停止后保留主页面
+
 ----------------------------------------------------------------*/
 using System;
 using System.Collections.Generic;
@@ -718,7 +721,8 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (_isNcfRunning)
         {
-            StopOperation();
+            // 必须 await：火忘式 Task.Run + 后台线程改 UI 会导致 Avalonia 崩溃退出
+            await StopNcfAsync();
         }
         else
         {
@@ -729,22 +733,28 @@ public partial class MainWindowViewModel : ViewModelBase
     private bool CanExecuteMainOperation() => !IsOperationInProgress;
 
     [RelayCommand]
-    private void StopOperation()
+    private async Task StopOperation()
     {
         try
         {
             _cancellationTokenSource?.Cancel();
-            
+
             if (_isNcfRunning)
             {
-                _ = Task.Run(StopNcfAsync);
+                await StopNcfAsync();
             }
-            
-            AddLog("🛑 操作已取消");
+            else
+            {
+                AddLog("🛑 操作已取消");
+                MainButtonText = "启动目标";
+                CurrentStatus = "就绪";
+                StatusColor = "#28A745";
+            }
         }
         catch (Exception ex)
         {
             AddLog($"❌ 停止操作失败: {ex.Message}");
+            Console.WriteLine($"[StopOperation] 失败: {ex}");
         }
     }
     
@@ -1543,119 +1553,295 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private async Task StopNcfAsync()
     {
+        // 停止目标只应结束 NCF 子进程，绝不能关闭桌面主窗口或退出应用。
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            IsOperationInProgress = true;
+            ProgressText = "正在停止...";
+            IsProgressIndeterminate = true;
+            AddLog("🛑 正在停止目标，桌面应用将保持打开...");
+            Console.WriteLine($"[StopNcf] 开始停止，当前 PID={Environment.ProcessId}, NcfPid={_ncfProcess?.Id.ToString() ?? "null"}");
+        });
+
+        var processToStop = _ncfProcess;
+        var stoppedCleanly = false;
+
         try
         {
-            await _desktopBridgeClient.StopAsync().ConfigureAwait(false);
+            try
+            {
+                await _desktopBridgeClient.StopAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[StopNcf] DesktopBridge 停止警告: {ex.Message}");
+            }
 
-            // 清理 CLI 输出回调
             if (_ncfService != null)
             {
                 _ncfService.OnProcessOutput = null;
             }
-            
-            // 🚀 停止定时器前先处理剩余的日志
-            FlushPendingLogs();
-            
-            if (_ncfProcess != null && !_ncfProcess.HasExited)
-            {
-                await Dispatcher.UIThread.InvokeAsync(() =>
-                {
-                    AddLog("🛑 正在停止 NCF 进程...");
-                });
 
-                // 在 Windows 上，使用 taskkill 杀死整个进程树
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    try
-                    {
-                        var killProcess = Process.Start(new ProcessStartInfo
-                        {
-                            FileName = "taskkill",
-                            Arguments = $"/PID {_ncfProcess.Id} /T /F",
-                            UseShellExecute = false,
-                            CreateNoWindow = true,
-                            RedirectStandardOutput = true,
-                            RedirectStandardError = true
-                        });
-                        
-                        if (killProcess != null)
-                        {
-                            await killProcess.WaitForExitAsync();
-                            await Dispatcher.UIThread.InvokeAsync(() =>
-                            {
-                                AddLog($"🔪 已使用 taskkill 终止进程树 (PID: {_ncfProcess.Id})");
-                            });
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        await Dispatcher.UIThread.InvokeAsync(() =>
-                        {
-                            AddLog($"⚠️ taskkill 失败，尝试常规 Kill: {ex.Message}");
-                        });
-                        _ncfProcess.Kill();
-                    }
-                }
-                else
-                {
-                    // macOS/Linux 使用常规 Kill
-                    _ncfProcess.Kill(entireProcessTree: true);
-                }
-                
-                // 等待进程退出，最多等待 5 秒
-                var exitTask = _ncfProcess.WaitForExitAsync();
-                var timeoutTask = Task.Delay(5000);
-                var completedTask = await Task.WhenAny(exitTask, timeoutTask);
-                
-                if (completedTask == timeoutTask)
-                {
-                    await Dispatcher.UIThread.InvokeAsync(() =>
-                    {
-                        AddLog("⚠️ 进程未在 5 秒内退出，强制终止");
-                    });
-                }
-                else
-                {
-                    await Dispatcher.UIThread.InvokeAsync(() =>
-                    {
-                        AddLog("✅ NCF 进程已停止");
-                    });
-                }
-            }
+            FlushPendingLogs();
+
+            stoppedCleanly = await TerminateNcfProcessAsync(processToStop).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
+            Console.WriteLine($"[StopNcf] 停止过程异常（应用继续运行）: {ex}");
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                AddLog($"⚠️ 停止进程时出错: {ex.Message}");
+                AddLog($"⚠️ 停止进程时出错: {ex.Message}（桌面应用继续运行）");
             });
         }
         finally
         {
-            _ncfProcess?.Dispose();
+            // 先断开引用，避免后续误杀；Dispose 失败也不得影响 GUI 存活。
             _ncfProcess = null;
+            try
+            {
+                processToStop?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[StopNcf] Dispose 进程警告: {ex.Message}");
+            }
+
             _desktopBridgeSessionToken = null;
-            ResetAdminChatState();
             _activeLaunchTarget = null;
             _isNcfRunning = false;
-            NotifyLaunchTargetCommandsCanExecuteChanged();
-            Robot.SetProcessState("已停止", "NCF 站点已停止");
+            ResetAdminChatState();
+
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                MainButtonText = "启动目标";
-                CurrentStatus = "已停止";
-                StatusColor = "#6C757D";
-                SiteUrl = "未启动";
-                ProgressText = "已停止";
-                ProgressValue = 0;
-                IsBrowserTabVisible = false; // 隐藏浏览器标签页
-                CurrentTabIndex = 0; // 切换回设置页面
-                DesktopBridgeStatusText = "等待 NCF 启动";
-                DesktopBridgeStatusColor = "#6C757D";
-                DesktopBridgeNoticeMessage = string.Empty;
-                IsDesktopBridgeNoticeVisible = false;
-                IsDesktopBridgeInstallActionVisible = false;
+                try
+                {
+                    NotifyLaunchTargetCommandsCanExecuteChanged();
+                    Robot.SetProcessState("已停止", "NCF 站点已停止，可重新启动");
+                    MainButtonText = "启动目标";
+                    CurrentStatus = "已停止";
+                    StatusColor = "#6C757D";
+                    SiteUrl = "未启动";
+                    ProgressText = "已停止 — 可继续操作";
+                    ProgressValue = 0;
+                    IsProgressIndeterminate = false;
+                    IsBrowserTabVisible = false;
+                    CurrentTabIndex = 0; // 回到 Agent 工作台主页面
+                    DesktopBridgeStatusText = "等待 NCF 启动";
+                    DesktopBridgeStatusColor = "#6C757D";
+                    DesktopBridgeNoticeMessage = string.Empty;
+                    IsDesktopBridgeNoticeVisible = false;
+                    IsDesktopBridgeInstallActionVisible = false;
+                    AddLog(stoppedCleanly
+                        ? "✅ 目标已停止，可选择下一步操作（重新启动或其他目标）"
+                        : "✅ 已结束停止流程，桌面应用保持打开，可继续操作");
+                    Console.WriteLine("[StopNcf] UI 已恢复到主页面等待状态");
+                }
+                finally
+                {
+                    IsOperationInProgress = false;
+                    MainOperationCommand.NotifyCanExecuteChanged();
+                }
             });
+        }
+    }
+
+    /// <summary>
+    /// 安全终止 NCF 子进程。任何 Kill 失败都只记日志，绝不向上抛到让 GUI 退出。
+    /// </summary>
+    private async Task<bool> TerminateNcfProcessAsync(Process? process)
+    {
+        if (process == null)
+        {
+            await Dispatcher.UIThread.InvokeAsync(() => AddLog("ℹ️ 没有正在运行的 NCF 进程"));
+            return true;
+        }
+
+        int pid;
+        try
+        {
+            if (process.HasExited)
+            {
+                await Dispatcher.UIThread.InvokeAsync(() => AddLog("ℹ️ NCF 进程已退出"));
+                return true;
+            }
+
+            pid = process.Id;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[StopNcf] 读取进程状态失败: {ex.Message}");
+            return false;
+        }
+
+        // 防御：绝不向当前桌面进程自身发 Kill。
+        if (pid == Environment.ProcessId)
+        {
+            await Dispatcher.UIThread.InvokeAsync(() =>
+                AddLog("⚠️ 检测到进程 PID 与桌面应用相同，已跳过 Kill 以防退出"));
+            Console.WriteLine("[StopNcf] 拒绝 Kill 自身进程");
+            return false;
+        }
+
+        await Dispatcher.UIThread.InvokeAsync(() => AddLog($"🛑 正在停止 NCF 进程 (PID: {pid})..."));
+
+        try
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                try
+                {
+                    using var killProcess = Process.Start(new ProcessStartInfo
+                    {
+                        FileName = "taskkill",
+                        Arguments = $"/PID {pid} /T /F",
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true
+                    });
+                    if (killProcess != null)
+                    {
+                        await killProcess.WaitForExitAsync().ConfigureAwait(false);
+                        await Dispatcher.UIThread.InvokeAsync(() =>
+                            AddLog($"🔪 已使用 taskkill 终止进程树 (PID: {pid})"));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[StopNcf] taskkill 失败，回退 Kill: {ex.Message}");
+                    TryKillProcess(process, entireProcessTree: false);
+                }
+            }
+            else
+            {
+                // macOS/Linux：先杀直接子进程，再杀根进程，避免 entireProcessTree 误伤宿主。
+                await TryKillUnixChildProcessesAsync(pid).ConfigureAwait(false);
+                TryKillProcess(process, entireProcessTree: false);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[StopNcf] 终止进程异常: {ex.Message}");
+            await Dispatcher.UIThread.InvokeAsync(() =>
+                AddLog($"⚠️ 终止进程时出错: {ex.Message}"));
+        }
+
+        try
+        {
+            var exitTask = process.WaitForExitAsync();
+            var completed = await Task.WhenAny(exitTask, Task.Delay(5000)).ConfigureAwait(false);
+            if (completed != exitTask)
+            {
+                Console.WriteLine($"[StopNcf] 等待 PID {pid} 超时，尝试最终 Kill");
+                TryKillProcess(process, entireProcessTree: false);
+                await Task.WhenAny(process.WaitForExitAsync(), Task.Delay(2000)).ConfigureAwait(false);
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                    AddLog("⚠️ 进程未在时限内退出，已发送强制终止"));
+                return process.HasExited;
+            }
+
+            await Dispatcher.UIThread.InvokeAsync(() => AddLog("✅ NCF 进程已停止"));
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[StopNcf] 等待退出异常: {ex.Message}");
+            return false;
+        }
+    }
+
+    private static void TryKillProcess(Process process, bool entireProcessTree)
+    {
+        try
+        {
+            if (process.HasExited)
+            {
+                return;
+            }
+
+            if (process.Id == Environment.ProcessId)
+            {
+                Console.WriteLine("[StopNcf] TryKillProcess 拒绝杀死自身");
+                return;
+            }
+
+            process.Kill(entireProcessTree);
+            Console.WriteLine($"[StopNcf] Kill(entireProcessTree={entireProcessTree}) 已发送, PID={process.Id}");
+        }
+        catch (InvalidOperationException ex)
+        {
+            // 进程已退出，或 entireProcessTree 检测到会误伤当前进程
+            Console.WriteLine($"[StopNcf] Kill 无效操作（可忽略）: {ex.Message}");
+        }
+        catch (PlatformNotSupportedException ex)
+        {
+            Console.WriteLine($"[StopNcf] entireProcessTree 不受支持，回退单进程 Kill: {ex.Message}");
+            try
+            {
+                if (!process.HasExited)
+                {
+                    process.Kill(entireProcessTree: false);
+                }
+            }
+            catch (Exception inner)
+            {
+                Console.WriteLine($"[StopNcf] 单进程 Kill 失败: {inner.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[StopNcf] Kill 失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 使用 pkill -P 仅终止指定父进程的子进程，不会波及桌面应用自身。
+    /// </summary>
+    private static async Task TryKillUnixChildProcessesAsync(int parentPid)
+    {
+        if (parentPid <= 0 || parentPid == Environment.ProcessId)
+        {
+            return;
+        }
+
+        try
+        {
+            using var pkill = Process.Start(new ProcessStartInfo
+            {
+                FileName = "/bin/pkill",
+                Arguments = $"-TERM -P {parentPid}",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            });
+            if (pkill != null)
+            {
+                await pkill.WaitForExitAsync().ConfigureAwait(false);
+                Console.WriteLine($"[StopNcf] pkill -TERM -P {parentPid} ExitCode={pkill.ExitCode}");
+            }
+
+            await Task.Delay(300).ConfigureAwait(false);
+
+            using var pkillForce = Process.Start(new ProcessStartInfo
+            {
+                FileName = "/bin/pkill",
+                Arguments = $"-KILL -P {parentPid}",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            });
+            if (pkillForce != null)
+            {
+                await pkillForce.WaitForExitAsync().ConfigureAwait(false);
+                Console.WriteLine($"[StopNcf] pkill -KILL -P {parentPid} ExitCode={pkillForce.ExitCode}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[StopNcf] pkill 子进程失败（可忽略）: {ex.Message}");
         }
     }
 

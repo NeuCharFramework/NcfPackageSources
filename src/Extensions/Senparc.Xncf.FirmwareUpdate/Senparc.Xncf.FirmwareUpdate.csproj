@@ -20,6 +20,8 @@
       2、更新 FunctionRender 与请求模型文案的资源化解析
       3、统一模块注册信息、菜单名称与功能描述的本地化输出
       4、补充并统一多语言资源键及资源文件
+      5、优化镜像源选择结果与来源摘要日志
+      6、提升更新源切换过程的可见性和兼容性
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

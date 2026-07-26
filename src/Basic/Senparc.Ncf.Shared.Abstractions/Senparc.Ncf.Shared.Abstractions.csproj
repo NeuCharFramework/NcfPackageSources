@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.2.1-preview1</Version>
+    <Version>0.3.0-preview2</Version>
     <AssemblyName>Senparc.Ncf.Shared.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Ncf.Shared.Abstractions</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -19,6 +19,9 @@
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
       v0.1.0 创世
+      [2026-07-26] v0.3.0-preview2 新增 EventBus 请求-响应与授权同步公共契约
+      1、新增 IEventBusRequestClient 与 IIntegrationRequest 公共请求契约
+      2、新增管理员隔离的授权集成同步事件契约
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

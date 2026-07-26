@@ -7,6 +7,9 @@
 
     创建标识：Senparc - 20260725
 
+    修改标识：Senparc - 20260726
+    修改描述：v1.1.0 补充示例模板 EventBus 请求-响应回环与多语言能力
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Shared.Abstractions.Events;

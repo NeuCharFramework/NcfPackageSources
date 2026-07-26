@@ -96,6 +96,10 @@ internal sealed class AdminChatSendMessageData
     public AdminChatMessage? AssistantMessage { get; set; }
 }
 
+public sealed record AdminChatStreamResult(
+    AdminChatMessage? UserMessage,
+    AdminChatMessage? AssistantMessage);
+
 public sealed class AdminChatApiException : Exception
 {
     public AdminChatApiException(string message, bool isAuthenticationFailure = false)

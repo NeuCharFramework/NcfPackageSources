@@ -16,6 +16,8 @@
     2、Dependency update from Senparc.Xncf.PromptRange.Tests to 0.0.4
     3、Dependency update from Senparc.Xncf.XncfBuilder to 0.37.0-preview5
     4、同步 XncfBuilder 0.37.0-preview5 的模板多语言页面更新
+    5、覆盖无 cmd.exe 依赖的构建命令执行
+    6、验证构建输出和异常结果处理
 </PackageReleaseNotes>
 
 		<IsPackable>false</IsPackable>

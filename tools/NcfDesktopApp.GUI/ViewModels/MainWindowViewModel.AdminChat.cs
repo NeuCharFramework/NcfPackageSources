@@ -47,6 +47,8 @@ public partial class MainWindowViewModel
 
     private DesktopBridgeCapabilities? _desktopBridgeCapabilities;
     private readonly SemaphoreSlim _adminChatRefreshLock = new(1, 1);
+    private int _optimisticMessageId;
+    private int _activeStreamingAssistantId;
 
     public ObservableCollection<AdminChatSessionSummary> AdminChatSessions { get; } = new();
 
@@ -254,33 +256,32 @@ public partial class MainWindowViewModel
             }
 
             ChatInput = string.Empty;
-            var messages = await _adminChatClient.SendMessageAsync(
+            var optimisticUserId = await Dispatcher.UIThread.InvokeAsync(() =>
+                AddOptimisticUserMessage(sessionId, content));
+            _activeStreamingAssistantId = 0;
+
+            await _adminChatClient.SendMessageStreamingAsync(
                 SiteUrl,
                 sessionId,
                 content,
-                _cancellationTokenSource?.Token ?? CancellationToken.None);
-
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                foreach (var message in messages)
-                {
-                    if (AdminChatMessages.All(item => item.Id != message.Id))
-                    {
-                        AdminChatMessages.Add(message);
-                    }
-                }
-            });
+                onUserMessage: message => ReconcileUserMessage(optimisticUserId, message),
+                onToken: chunk => AppendStreamingAssistantChunk(sessionId, chunk),
+                onAssistantMessage: message => CompleteStreamingAssistantMessage(message),
+                cancellationToken: _cancellationTokenSource?.Token ?? CancellationToken.None);
 
             await RefreshAdminChatSessionsAsync(loadSelectedMessages: true, preferredSessionId: sessionId);
             AdminChatStatusText = "消息已通过 Admin Chat API 完成，并由 EventBus 通知同步。";
+            _activeStreamingAssistantId = 0;
         }
         catch (AdminChatApiException ex)
         {
+            RemovePendingStreamingMessages();
             ChatInput = content;
             HandleAdminChatApiFailure(ex);
         }
         catch (OperationCanceledException)
         {
+            RemovePendingStreamingMessages();
             ChatInput = content;
             AdminChatStatusText = "发送已取消。";
         }
@@ -492,5 +493,139 @@ public partial class MainWindowViewModel
         AdminLoginCommand.NotifyCanExecuteChanged();
         NewAdminChatSessionCommand.NotifyCanExecuteChanged();
         SendAdminChatMessageCommand.NotifyCanExecuteChanged();
+    }
+
+    private int AddOptimisticUserMessage(int sessionId, string content)
+    {
+        var id = -Interlocked.Increment(ref _optimisticMessageId);
+        var sequence = AdminChatMessages.Count == 0
+            ? 1
+            : AdminChatMessages.Max(message => message.Sequence) + 1;
+        AdminChatMessages.Add(new AdminChatMessage(
+            id,
+            sessionId,
+            0,
+            content,
+            sequence,
+            DateTime.Now,
+            null));
+        return id;
+    }
+
+    private void ReconcileUserMessage(int optimisticId, AdminChatMessage message)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            var optimisticIndex = FindMessageIndex(optimisticId);
+            if (optimisticIndex >= 0 && optimisticIndex < AdminChatMessages.Count)
+            {
+                AdminChatMessages.RemoveAt(optimisticIndex);
+            }
+
+            AddOrReplaceAdminChatMessage(message);
+        });
+    }
+
+    private void AppendStreamingAssistantChunk(int sessionId, string chunk)
+    {
+        if (string.IsNullOrEmpty(chunk))
+        {
+            return;
+        }
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (_activeStreamingAssistantId == 0)
+            {
+                _activeStreamingAssistantId = -Interlocked.Increment(ref _optimisticMessageId);
+                var sequence = AdminChatMessages.Count == 0
+                    ? 1
+                    : AdminChatMessages.Max(message => message.Sequence) + 1;
+                AdminChatMessages.Add(new AdminChatMessage(
+                    _activeStreamingAssistantId,
+                    sessionId,
+                    1,
+                    chunk,
+                    sequence,
+                    DateTime.Now,
+                    null));
+                return;
+            }
+
+            var index = FindMessageIndex(_activeStreamingAssistantId);
+            if (index < 0 || index >= AdminChatMessages.Count)
+            {
+                return;
+            }
+
+            var existing = AdminChatMessages[index];
+            AdminChatMessages[index] = existing with { Content = existing.Content + chunk };
+        });
+    }
+
+    private void CompleteStreamingAssistantMessage(AdminChatMessage message)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            RemoveMessageById(_activeStreamingAssistantId);
+            AddOrReplaceAdminChatMessage(message);
+            _activeStreamingAssistantId = 0;
+        });
+    }
+
+    private void RemovePendingStreamingMessages()
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            RemoveMessageById(_activeStreamingAssistantId);
+            _activeStreamingAssistantId = 0;
+            for (var index = AdminChatMessages.Count - 1; index >= 0; index--)
+            {
+                if (AdminChatMessages[index].Id < 0 && AdminChatMessages[index].IsUser)
+                {
+                    AdminChatMessages.RemoveAt(index);
+                }
+            }
+        });
+    }
+
+    private void AddOrReplaceAdminChatMessage(AdminChatMessage message)
+    {
+        var index = FindMessageIndex(message.Id);
+        if (index >= 0 && index < AdminChatMessages.Count)
+        {
+            AdminChatMessages[index] = message;
+        }
+        else
+        {
+            AdminChatMessages.Add(message);
+        }
+    }
+
+    private void RemoveMessageById(int id)
+    {
+        if (id == 0)
+        {
+            return;
+        }
+
+        var index = FindMessageIndex(id);
+        if (index >= 0 && index < AdminChatMessages.Count)
+        {
+            AdminChatMessages.RemoveAt(index);
+        }
+    }
+
+    private int FindMessageIndex(int id)
+    {
+        for (var index = 0; index < AdminChatMessages.Count; index++)
+        {
+            if (AdminChatMessages[index].Id == id)
+            {
+                return index;
+            }
+        }
+
+        return -1;
     }
 }
