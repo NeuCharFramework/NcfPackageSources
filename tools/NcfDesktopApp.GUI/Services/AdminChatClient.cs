@@ -222,6 +222,26 @@ public sealed class AdminChatClient
                 throw new AdminChatApiException("管理员身份无效、已过期或不具备 AdminOnly 权限。", true);
             }
 
+            // 兼容尚未部署流式接口的旧站点：桌面端仍保留即时本地回显，但回复退回原有整包 API。
+            if (response.StatusCode is HttpStatusCode.NotFound or HttpStatusCode.MethodNotAllowed)
+            {
+                var fallbackMessages = await SendMessageAsync(siteUrl, sessionId, content, cancellationToken)
+                    .ConfigureAwait(false);
+                var fallbackUserMessage = fallbackMessages.FirstOrDefault(message => message.IsUser);
+                var fallbackAssistantMessage = fallbackMessages.FirstOrDefault(message => message.IsAgent);
+                if (fallbackUserMessage != null)
+                {
+                    onUserMessage?.Invoke(fallbackUserMessage);
+                }
+
+                if (fallbackAssistantMessage != null)
+                {
+                    onAssistantMessage?.Invoke(fallbackAssistantMessage);
+                }
+
+                return new AdminChatStreamResult(fallbackUserMessage, fallbackAssistantMessage);
+            }
+
             if (!response.IsSuccessStatusCode)
             {
                 throw new AdminChatApiException($"Admin Chat 流式接口返回 HTTP {(int)response.StatusCode}。");

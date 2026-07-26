@@ -28,7 +28,7 @@
       5、补齐模板侧边菜单、页面 ViewImports 与示例页面的多语言资源接入
       6、按 Application 新架构归置 AppServices 与 DTOs，同步命名空间并精简 OHS 的职责边界
       7、增加 EventBus 请求-响应回环处理器和示例事件
-      8、补充超时、取消及请求关联的模板演示
+      8、同步模板示例的多语言资源与 Application 目录结构
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -39,7 +39,7 @@
   <ItemGroup>
 	<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
     <EmbeddedResource Include="wwwroot\**\*" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.8-preview.3" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.21.1-preview1" />

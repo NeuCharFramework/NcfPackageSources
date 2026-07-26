@@ -2,13 +2,13 @@
     Copyright (C) 2026 Senparc
   
     文件名：ApiAppService.cs
-    文件功能描述：ApiAppService.cs 相关实现
+    文件功能描述：XNCF 模板示例实现
     
     
     创建标识：Senparc - 20211226
     
     修改标识：Senparc - 20260726
-    修改描述：v1.1.0 补充模板 EventBus 请求-响应回环示例
+    修改描述：v1.1.0 补充示例模板 EventBus 请求-响应回环与多语言能力
 
 ----------------------------------------------------------------*/
 using Senparc.CO2NET;

@@ -647,3 +647,13 @@ dotnet run
 3. **用户ID为 0**
    - **原因**: 未登录或 AdminWorkContext 未正确初始化
    - **解决**: 确保已登录管理后台，并检查认证配置
+
+---
+
+## 🎉 里程碑记录（补充）
+
+### ✅ 2026-07-26：升级 Senparc.CO2NET / Senparc.Weixin NuGet 包
+- 已更新 36 个活跃 csproj 的 PackageReference
+- 跳过：`ChangeNamespace.Tests/App_Data` 历史样例、`TobeRemoveProjects`
+- 关键版本：`Senparc.CO2NET` 4.1.0、`Senparc.CO2NET.WebApi` 2.1.8-preview.3、`Senparc.Weixin.MP` 16.25.1 等
+- 验证：`Senparc.Ncf.Core`、`WeixinManager`、`AgentsManager`、`Senparc.Web` 编译通过（0 错误）

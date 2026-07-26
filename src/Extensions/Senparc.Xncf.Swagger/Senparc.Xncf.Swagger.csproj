@@ -69,7 +69,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.6" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.8-preview.3" />
     <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.6.128-beta1" />-->
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="10.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.1.0" />

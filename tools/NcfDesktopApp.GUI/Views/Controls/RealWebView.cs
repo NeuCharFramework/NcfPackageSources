@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.Platform;
@@ -181,7 +182,9 @@ public partial class RealWebView : UserControl
                 BorderBrush = Brushes.LightGray,
                 BorderThickness = new Thickness(1),
                 CornerRadius = new CornerRadius(4),
-                Padding = new Thickness(10)
+                Padding = new Thickness(10, 10, 10, 24),
+                HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto
             };
 
             var contentArea = new StackPanel
@@ -675,4 +678,4 @@ public partial class RealWebView : UserControl
     {
         NavigationFailed?.Invoke(this, error);
     }
-} 
+}

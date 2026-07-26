@@ -3,7 +3,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Version>0.1.0</Version>
     <PackageType>Template</PackageType>
-    <PackageVersion>0.13.0-preview.1</PackageVersion>
+    <PackageVersion>0.13.0</PackageVersion>
     <PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
     <Title>XNCF Template</Title>
     <Authors>JeffreySu</Authors>
@@ -63,7 +63,7 @@
       1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
       2、统一模块内功能描述与用户提示的多语言显示
       3、同步 XNCF 模板的 Application 与 OHS 新架构及命名空间
-      [2026-07-25] v0.13.0-preview.1 新增进程内 EventBus 请求-响应演示
+      [2026-07-25] v0.13.0 新增进程内 EventBus 请求-响应演示
       1、提供带有限超时、取消、类型检查及请求关联清理的公共请求-响应能力
       2、模板新增不读取业务或敏感数据的 EventBus 回环自检功能
       3、模板包改由模拟站点权威母版完整同步，并修正 Database 与 Sample 的文件排除关系
