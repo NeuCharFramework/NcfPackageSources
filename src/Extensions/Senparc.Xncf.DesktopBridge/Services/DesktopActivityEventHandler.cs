@@ -20,13 +20,16 @@ public sealed class DesktopActivityEventHandler : IIntegrationEventHandler<IInte
 {
     private static readonly Regex WordBoundary = new("(?<=[a-z0-9])(?=[A-Z])", RegexOptions.Compiled);
     private readonly DesktopActivityHub _hub;
+    private readonly DesktopAuthorizedSyncHub _authorizedSyncHub;
     private readonly ILogger<DesktopActivityEventHandler>? _logger;
 
     public DesktopActivityEventHandler(
         DesktopActivityHub hub,
+        DesktopAuthorizedSyncHub authorizedSyncHub,
         ILogger<DesktopActivityEventHandler>? logger = null)
     {
         _hub = hub;
+        _authorizedSyncHub = authorizedSyncHub;
         _logger = logger;
     }
 
@@ -34,7 +37,14 @@ public sealed class DesktopActivityEventHandler : IIntegrationEventHandler<IInte
     {
         try
         {
-            _hub.Publish(CreateMessage(@event));
+            if (@event is IAuthorizedIntegrationSyncEvent authorizedSyncEvent)
+            {
+                _authorizedSyncHub.Publish(authorizedSyncEvent);
+            }
+            else
+            {
+                _hub.Publish(CreateMessage(@event));
+            }
         }
         catch (Exception ex)
         {

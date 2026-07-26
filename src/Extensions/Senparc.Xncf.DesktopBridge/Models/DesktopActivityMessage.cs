@@ -27,4 +27,16 @@ public sealed record DesktopBridgeCapabilities(
     bool SupportsSse,
     bool SupportsSnapshot,
     string EventEndpoint,
-    string SnapshotEndpoint);
+    string SnapshotEndpoint,
+    bool SupportsAuthorizedSync,
+    string? AuthorizedSyncEndpoint);
+
+/// <summary>
+/// 受身份隔离的资源变更通知。只提供重新读取数据所需的最小元数据。
+/// </summary>
+public sealed record DesktopAuthorizedSyncMessage(
+    long Sequence,
+    string Channel,
+    string ResourceId,
+    string Action,
+    DateTimeOffset Time);
