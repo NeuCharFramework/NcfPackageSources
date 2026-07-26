@@ -72,6 +72,7 @@ steps:
   inputs:
     command: restore
     projects: '**/NcfPackageSources.sln'
+    arguments: '-p:Configuration=$(buildConfiguration)'
 
 - task: DotNetCoreCLI@2    
   displayName: 'dotnet --list-sdks '    
