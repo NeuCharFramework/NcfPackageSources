@@ -1,21 +1,29 @@
 # Senparc.Xncf.DesktopBridge
 
-DesktopBridge 是 NCF 桌面助手的可选 XNCF 模块。它通过逆变事件处理器的闭合服务映射旁路观察 `EventBus` 中的集成事件，并通过仅限本机会话令牌访问的 HTTP/SSE 接口，把当前活动安全地发送给桌面 GUI。
+`Senparc.Xncf.DesktopBridge` is an optional XNCF module that exposes a secured local bridge between an NCF host and a desktop companion application.
 
-- 不读取或修改业务 `MemoryCache`。
-- 不替代原有 EventBus 消费者，也不改变事件处理顺序。
-- 仅当桌面应用通过 `NCF_DESKTOP_BRIDGE_TOKEN` 启动站点时启用接口。
-- 未安装或未启用本模块时，NCF 本身仍可正常运行，GUI 自动降级为进程/日志兼容模式。
+## Features
 
-## 受权同步
+- Observes integration events through closed, contravariant handler mappings without replacing existing EventBus consumers.
+- Provides capability discovery, activity snapshots, and Server-Sent Events (SSE) for a local desktop session.
+- Requires the `NCF_DESKTOP_BRIDGE_TOKEN` startup boundary before exposing bridge state.
+- Provides an administrator-scoped authorized-sync stream for resource IDs and change types.
+- Does not read or mutate business `MemoryCache`, and does not transmit passwords, JWTs, or chat message bodies through EventBus/SSE.
 
-`authorized-sync/events` 用于 Admin Chat 等需要登录身份的资源同步，并同时要求：
+## Installation
 
-- 桌面会话头 `X-Ncf-Desktop-Token`；
-- `Bearer_Backend` JWT；
-- `AdminOnly` 授权策略；
-- 事件的 `OwnerId` 与当前 JWT 的管理员 ID 一致。
+```xml
+<PackageReference Include="Senparc.Xncf.DesktopBridge" Version="0.1.1-preview3" />
+```
 
-EventBus 和 SSE 只传输频道、资源 ID 与变更类型，不传输密码、JWT 或聊天正文。桌面端收到通知后，使用同一管理员 JWT 从原业务 API 重新读取数据；未登录、非管理员、令牌过期或 Bridge 断开时，快捷聊天保持禁用。
+Restart the NCF host after installing or updating the module.
 
-模块安装或更新后需要重启 NCF 站点。
+## Key API and security contract
+
+- `DesktopBridgeController` serves capability and activity endpoints.
+- `DesktopActivityHub` and `DesktopAuthorizedSyncHub` publish lightweight activity/change messages.
+- `DesktopBridgeTokenValidator` validates the local session token.
+- `DesktopActivityEventHandler` observes NCF integration events.
+- `DesktopBridgeCapabilities`, `DesktopActivityMessage`, and `DesktopAuthorizedSyncMessage` are the public transport records.
+
+Authorized sync requires the desktop session token, the `Bearer_Backend` JWT, the standard `AdminOnly` policy, and matching event owner/admin IDs. The desktop client must re-read business data through the original authorized API; a missing login, expired token, or disconnected bridge must disable the dependent feature.

@@ -1,20 +1,14 @@
-# ASP.NET Core (.NET Framework)  
-# Build and test ASP.NET Core projects targeting the full .NET Framework.  
-# Add steps that publish symbols, save build artifacts, and more:  
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core  
-  
-trigger:   
-  - master  
-  
-# pool:   
-#   vmImage: 'windows-latest'  
+# ASP.NET Core (.NET Framework)
+# Build and test ASP.NET Core projects targeting the full .NET Framework.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
+trigger:
+  - master
 
-# 🎯 使用自托管代理池，加快 CI/CD 速度
-pool:
-  name: 'SenparcOpenSource'  # 这里填你的自托管 Agent Pool 名称
-  demands:
-    - Agent.OS -equals Windows_NT
+# pool:
+#   vmImage: 'windows-latest'
+
 
 variables:
   - group: Nuget_Key   # Library 变量组，内含变量 NUGET_API_KEY
@@ -29,278 +23,541 @@ variables:
   - name: NuGetPushSource
     value: 'https://api.nuget.org/v3/index.json'  # 与 NuGetCommand@2 external 推送目标一致
 
-steps:  
-- task: UseDotNet@2
-  displayName: 'Use .NET SDK 10.x'
-  inputs:
-    packageType: 'sdk'
-    version: '10.0.x'
-    performMultiLevelLookup: false
+jobs:
+- job: PackageSources
+  displayName: 'Build and publish NCF package sources'
+  # 🎯 使用自托管代理池，加快 CI/CD 速度
+  pool:
+    name: 'SenparcOpenSource'
+    demands:
+      - Agent.OS -equals Windows_NT
+  steps:
+  - task: UseDotNet@2
+    displayName: 'Use .NET SDK 10.x'
+    inputs:
+      packageType: 'sdk'
+      version: '10.0.x'
+      performMultiLevelLookup: false
 
-# 🟢 缓存 NuGet 及依赖项
-- task: Cache@2
-  inputs:
-    key: 'nuget | "$(Agent.OS)" | **/*.csproj'  # NuGet 缓存 Key
-    path: '$(NUGET_PACKAGES)'  # NuGet 包的存储路径
-    restoreKeys: 'nuget'
-  displayName: 'Cache NuGet Packages'
+  # 🟢 缓存 NuGet 及依赖项
+  - task: Cache@2
+    inputs:
+      key: 'nuget | "$(Agent.OS)" | **/*.csproj'  # NuGet 缓存 Key
+      path: '$(NUGET_PACKAGES)'  # NuGet 包的存储路径
+      restoreKeys: 'nuget'
+    displayName: 'Cache NuGet Packages'
 
-# 🟢 缓存 NuGet 工具（减少安装时间）
-- task: Cache@2
-  inputs:
-    key: 'nuget-tool | "$(Agent.OS)"'
-    path: 'C:\ProgramData\nuget'  # NuGetTool 的全局存储位置
-    restoreKeys: 'nuget-tool'
-  displayName: 'Cache NuGet Tool'
+  # 🟢 缓存 NuGet 工具（减少安装时间）
+  - task: Cache@2
+    inputs:
+      key: 'nuget-tool | "$(Agent.OS)"'
+      path: 'C:\ProgramData\nuget'  # NuGetTool 的全局存储位置
+      restoreKeys: 'nuget-tool'
+    displayName: 'Cache NuGet Tool'
 
-# ✅ 使用缓存的 NuGet 版本，避免重复安装
-- task: NuGetToolInstaller@1
-  displayName: 'Use Cached NuGet 6.3.0'
-  inputs:
-    versionSpec: '6.3.0'
+  # ✅ 使用缓存的 NuGet 版本，避免重复安装
+  - task: NuGetToolInstaller@1
+    displayName: 'Use Cached NuGet 6.3.0'
+    inputs:
+      versionSpec: '6.3.0'
 
-- script: |  
-    nuget sources remove -name nuget.org  
-  displayName: 'Remove Existing NuGet Source'  
-- script: |  
-    dotnet nuget add source https://api.nuget.org/v3/index.json -n nuget.org  
-  displayName: 'Add NuGet Source'  
-    
-# ✅ 恢复 NuGet 依赖（使用缓存）
-- task: DotNetCoreCLI@2
-  displayName: Restore
-  inputs:
-    command: restore
-    projects: '**/NcfPackageSources.sln'
-    arguments: '-p:Configuration=$(buildConfiguration)'
+  - script: |
+      nuget sources remove -name nuget.org
+    displayName: 'Remove Existing NuGet Source'
+  - script: |
+      dotnet nuget add source https://api.nuget.org/v3/index.json -n nuget.org
+    displayName: 'Add NuGet Source'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Restore XNCF Builder template project'
-  inputs:
-    command: restore
-    projects: 'src/Extensions/Senparc.Xncf.XncfBuilder/Senparc.Xncf.XncfBuilder.Template/Senparc.Xncf.XncfBuilder.Template.csproj'
-    arguments: '-p:Configuration=$(buildConfiguration)'
+  # ✅ 恢复 NuGet 依赖（使用缓存）
+  - task: DotNetCoreCLI@2
+    displayName: Restore
+    inputs:
+      command: restore
+      projects: '**/NcfPackageSources.sln'
+      arguments: '-p:Configuration=$(buildConfiguration)'
 
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet --list-sdks '    
-  inputs:      
-    command: custom      
-    custom: '--list-sdks '  
-  
-# - task: NuGetToolInstaller@1
-#   displayName: 'Use NuGet 6.3.0'
-#   inputs:      
-#     versionSpec: '6.3.0'      
-#     checkLatest: true  
-  
-# - task: NuGetCommand@2    
-#   inputs:      
-#     command: 'restore'      
-#     restoreSolution: '**/NcfPackageSources.sln'      
-#     feedsToUse: 'config'      
-#     externalFeedCredentials: 'nuget-jeffrey-full-key'      
-  
-# - task: VSBuild@1  
-#   inputs:  
-#     solution: '$(solution)'  
-#     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'  
-#     platform: '$(buildPlatform)'  
-#     configuration: '$(buildConfiguration)'  
-  
-- task: DotNetCoreCLI@2
-  displayName: Build
-  inputs:
-    command: build
-    projects: '**/NcfPackageSources.sln'
-    arguments: '--configuration $(buildConfiguration) --no-restore --disable-build-servers -m:1'
-  
-# - task: VSTest@2  
-#   inputs:  
-#     platform: '$(buildPlatform)'  
-#     configuration: '$(buildConfiguration)'  
-  
-# - task: NuGetToolInstaller@1  
-#   displayName: 'Use NuGet 5.2.0'  
-#   inputs:  
-#     versionSpec: 5.2.0  
-#     checkLatest: true  
+  - task: DotNetCoreCLI@2
+    displayName: 'Restore XNCF Builder template project'
+    inputs:
+      command: restore
+      projects: 'src/Extensions/Senparc.Xncf.XncfBuilder/Senparc.Xncf.XncfBuilder.Template/Senparc.Xncf.XncfBuilder.Template.csproj'
+      arguments: '-p:Configuration=$(buildConfiguration)'
 
-# 自动发现并推送 Senparc.Ncf.* / Senparc.Xncf.* 的 .nupkg（仅 .nupkg；符号包 .snupkg 未包含，可按需扩展）
-# 凭据：通过 Library 变量组 Nuget_Key 中的机密变量 NUGET_API_KEY 注入（见 variables → group: Nuget_Key)
-- powershell: |
-    $ErrorActionPreference = 'Continue'
-    $root = "$(Build.SourcesDirectory)"
-    $source = "$(NuGetPushSource)"
-    $apiKey = $env:NUGET_API_KEY
-    if ([string]::IsNullOrWhiteSpace($apiKey)) {
-      Write-Host "##[error]缺少机密变量 NUGET_API_KEY：请在 Library 变量组 Nuget _Key 中设置（变量名须为 NUGET_API_KEY，勾选 secret）。"
-      exit 2
-    }
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet --list-sdks '
+    inputs:
+      command: custom
+      custom: '--list-sdks '
 
-    Add-Type -AssemblyName System.IO.Compression.FileSystem
+  # - task: NuGetToolInstaller@1
+  #   displayName: 'Use NuGet 6.3.0'
+  #   inputs:
+  #     versionSpec: '6.3.0'
+  #     checkLatest: true
 
-    function Get-NupkgMetadataFromZip {
-      param([string]$PackagePath)
-      try {
-        $zip = [System.IO.Compression.ZipFile]::OpenRead($PackagePath)
+  # - task: NuGetCommand@2
+  #   inputs:
+  #     command: 'restore'
+  #     restoreSolution: '**/NcfPackageSources.sln'
+  #     feedsToUse: 'config'
+  #     externalFeedCredentials: 'nuget-jeffrey-full-key'
+
+  # - task: VSBuild@1
+  #   inputs:
+  #     solution: '$(solution)'
+  #     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+  #     platform: '$(buildPlatform)'
+  #     configuration: '$(buildConfiguration)'
+
+  - task: DotNetCoreCLI@2
+    displayName: Build
+    inputs:
+      command: build
+      projects: '**/NcfPackageSources.sln'
+      arguments: '--configuration $(buildConfiguration) --no-restore --disable-build-servers -m:1'
+
+  # - task: VSTest@2
+  #   inputs:
+  #     platform: '$(buildPlatform)'
+  #     configuration: '$(buildConfiguration)'
+
+  # - task: NuGetToolInstaller@1
+  #   displayName: 'Use NuGet 5.2.0'
+  #   inputs:
+  #     versionSpec: 5.2.0
+  #     checkLatest: true
+
+  # 自动发现并推送 Senparc.Ncf.* / Senparc.Xncf.* 的 .nupkg（仅 .nupkg；符号包 .snupkg 未包含，可按需扩展）
+  # 凭据：通过 Library 变量组 Nuget_Key 中的机密变量 NUGET_API_KEY 注入（见 variables → group: Nuget_Key)
+  - powershell: |
+      $ErrorActionPreference = 'Continue'
+      $root = "$(Build.SourcesDirectory)"
+      $source = "$(NuGetPushSource)"
+      $apiKey = $env:NUGET_API_KEY
+      if ([string]::IsNullOrWhiteSpace($apiKey)) {
+        Write-Host "##[error]缺少机密变量 NUGET_API_KEY：请在 Library 变量组 Nuget _Key 中设置（变量名须为 NUGET_API_KEY，勾选 secret）。"
+        exit 2
+      }
+
+      Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+      function Get-NupkgMetadataFromZip {
+        param([string]$PackagePath)
         try {
-          $entry = $zip.Entries | Where-Object { $_.FullName -match '(?i)\.nuspec$' } | Select-Object -First 1
-          if (-not $entry) {
-            return @{ Id = ''; Version = '' }
-          }
-          $r = New-Object System.IO.StreamReader($entry.Open())
+          $zip = [System.IO.Compression.ZipFile]::OpenRead($PackagePath)
           try {
-            $txt = $r.ReadToEnd()
-          } finally { $r.Close() }
-          $xml = New-Object System.Xml.XmlDocument
-          $xml.PreserveWhitespace = $true
-          $xml.LoadXml($txt)
-          $nsUri = $xml.DocumentElement.NamespaceURI
-          $id = $null
-          $ver = $null
-          if ([string]::IsNullOrEmpty($nsUri)) {
-            $id = $xml.package.metadata.id
-            $ver = $xml.package.metadata.version
+            $entry = $zip.Entries | Where-Object { $_.FullName -match '(?i)\.nuspec$' } | Select-Object -First 1
+            if (-not $entry) {
+              return @{ Id = ''; Version = '' }
+            }
+            $r = New-Object System.IO.StreamReader($entry.Open())
+            try {
+              $txt = $r.ReadToEnd()
+            } finally { $r.Close() }
+            $xml = New-Object System.Xml.XmlDocument
+            $xml.PreserveWhitespace = $true
+            $xml.LoadXml($txt)
+            $nsUri = $xml.DocumentElement.NamespaceURI
+            $id = $null
+            $ver = $null
+            if ([string]::IsNullOrEmpty($nsUri)) {
+              $id = $xml.package.metadata.id
+              $ver = $xml.package.metadata.version
+            } else {
+              $nsm = New-Object System.Xml.XmlNamespaceManager($xml.NameTable)
+              $nsm.AddNamespace('n', $nsUri)
+              $meta = $xml.SelectSingleNode('//n:metadata', $nsm)
+              if ($meta) {
+                $idN = $meta.SelectSingleNode('n:id', $nsm)
+                $verN = $meta.SelectSingleNode('n:version', $nsm)
+                if ($idN) { $id = $idN.InnerText }
+                if ($verN) { $ver = $verN.InnerText }
+              }
+            }
+            return @{ Id = [string]$id; Version = [string]$ver }
+          } finally { $zip.Dispose() }
+        } catch {
+          return @{ Id = ''; Version = '' }
+        }
+      }
+
+      function Test-SenparcPackageFileName {
+        param([string]$FileName)
+        return ($FileName.StartsWith('Senparc.Ncf.', [System.StringComparison]::Ordinal) -or
+          $FileName.StartsWith('Senparc.Xncf.', [System.StringComparison]::Ordinal))
+      }
+
+      $candidates = Get-ChildItem -Path $root -Recurse -File -Filter '*.nupkg' -ErrorAction SilentlyContinue |
+        Where-Object { Test-SenparcPackageFileName $_.Name } |
+        Sort-Object FullName -Unique
+      $rows = New-Object System.Collections.Generic.List[object]
+
+      Write-Host "== Senparc NuGet push: discovered $($candidates.Count) package file(s) under $root =="
+
+      $anyUnexpectedFailure = $false
+
+      foreach ($f in $candidates) {
+        $path = $f.FullName
+        $meta = Get-NupkgMetadataFromZip $path
+        $pkgId = if ([string]::IsNullOrWhiteSpace($meta.Id)) { $f.BaseName } else { $meta.Id }
+        $pkgVer = if ([string]::IsNullOrWhiteSpace($meta.Version)) { '' } else { $meta.Version }
+
+        Write-Host ("##[command] dotnet nuget push ""{0}"" --source ""{1}"" --api-key *** --skip-duplicate" -f $path, $source)
+
+        $stdoutPath = Join-Path $env:TEMP ("nuget-push-{0}.out.txt" -f [Guid]::NewGuid().ToString('N'))
+        $stderrPath = Join-Path $env:TEMP ("nuget-push-{0}.err.txt" -f [Guid]::NewGuid().ToString('N'))
+        try {
+          # 使用逗号分隔的 ArgumentList，避免 Windows PowerShell 5.1 对数组变量的已知问题
+          $p = Start-Process -FilePath 'dotnet' -ArgumentList 'nuget', 'push', $path, '--source', $source, '--api-key', $apiKey, '--skip-duplicate', '--timeout', '3600' -NoNewWindow -Wait -PassThru `
+            -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
+          $out = (Get-Content -LiteralPath $stdoutPath -Raw -ErrorAction SilentlyContinue)
+          $err = (Get-Content -LiteralPath $stderrPath -Raw -ErrorAction SilentlyContinue)
+          $code = $p.ExitCode
+        } finally {
+          Remove-Item -LiteralPath $stdoutPath -Force -ErrorAction SilentlyContinue
+          Remove-Item -LiteralPath $stderrPath -Force -ErrorAction SilentlyContinue
+        }
+
+        $combined = (@($out, $err) | Where-Object { $_ }) -join "`n"
+        $result = 'Failed'
+        $reason = ''
+
+        # --skip-duplicate: 成功退出码 0，重复包通常会有 skip / already exists 类提示
+        if ($code -eq 0) {
+          $lower = if ($combined) { $combined.ToLowerInvariant() } else { '' }
+          if ($lower -match 'skip|already exists|duplicate|409') {
+            $result = 'Skipped (exists)'
+            if ($combined) {
+              $one = ($combined.Trim() -replace '\s+', ' ')
+              if ($one.Length -gt 200) { $reason = $one.Substring(0, 200) + '...' } else { $reason = $one }
+            }
           } else {
-            $nsm = New-Object System.Xml.XmlNamespaceManager($xml.NameTable)
-            $nsm.AddNamespace('n', $nsUri)
-            $meta = $xml.SelectSingleNode('//n:metadata', $nsm)
-            if ($meta) {
-              $idN = $meta.SelectSingleNode('n:id', $nsm)
-              $verN = $meta.SelectSingleNode('n:version', $nsm)
-              if ($idN) { $id = $idN.InnerText }
-              if ($verN) { $ver = $verN.InnerText }
+            $result = 'Published'
+          }
+        } else {
+          # 非 0：409 Conflict / 已存在 仍视为跳过；其余为失败
+          $lower = if ($combined) { $combined.ToLowerInvariant() } else { '' }
+          if ($lower -match '409|conflict|already exists|duplicate|cannot publish.*exists') {
+            $result = 'Skipped (exists)'
+            if ($combined) {
+              $one = ($combined.Trim() -replace '\s+', ' ')
+              if ($one.Length -gt 200) { $reason = $one.Substring(0, 200) + '...' } else { $reason = $one }
+            }
+          } else {
+            $anyUnexpectedFailure = $true
+            $result = 'Failed'
+            $reason = if ($combined) { ($combined.Trim() -replace '\s+', ' ') } else { ("dotnet exit code {0}" -f $code) }
+            if ($reason.Length -gt 400) { $reason = $reason.Substring(0, 400) + '...' }
+          }
+        }
+
+        $rows.Add([pscustomobject]@{
+            PackageId = $pkgId
+            Version   = $pkgVer
+            Path      = $path
+            Result    = $result
+            Detail    = $reason
+          })
+      }
+
+      Write-Host ''
+      Write-Host 'Legend: ✅ Published  |  ❌ Failed  |  ⏭️ Skipped (exists)'
+      Write-Host '========== NuGet push summary (PackageId | Version | Path | Result) =========='
+      foreach ($r in $rows) {
+        $pathDisp = $r.Path
+        if ($pathDisp.Length -gt 120) { $pathDisp = '...' + $pathDisp.Substring([Math]::Max(0, $pathDisp.Length - 117)) }
+        $resultDisp = switch ($r.Result) {
+          'Published' { '✅ Published' }
+          'Failed' { '❌ Failed' }
+          'Skipped (exists)' { '⏭️ Skipped (exists)' }
+          default { $r.Result }
+        }
+        Write-Host ('| {0} | {1} | {2} | {3} |' -f $r.PackageId, $r.Version, $pathDisp, $resultDisp)
+        if ($r.Detail) {
+          Write-Host ('  Reason: {0}' -f $r.Detail)
+        }
+      }
+      Write-Host '==============================================================================='
+      Write-Host ('Total: {0}  (Published / Skipped / Failed 见上表 Result 列)' -f $rows.Count)
+      Write-Host 'Job exit: 发现与推送循环已执行完毕；若存在非重复性错误则失败。'
+
+      if ($anyUnexpectedFailure) {
+        Write-Host "##[error]One or more package pushes failed (see summary table)."
+        exit 1
+      }
+      exit 0
+    displayName: 'Push Senparc .nupkg (auto-discover, skip duplicates)'
+    condition: succeededOrFailed()
+    env:
+      NUGET_API_KEY: $(NUGET_API_KEY)
+
+  - task: DotNetCoreCLI@2
+    displayName: Publish
+    inputs:
+      command: publish
+      publishWebProjects: True
+      arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
+      zipAfterPublish: True
+    enabled: false
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact'
+    inputs:
+      PathtoPublish: '$(build.artifactstagingdirectory)'
+    enabled: false
+    condition: succeededOrFailed()
+
+- job: DesktopBuildAndRelease
+  displayName: 'Build and release NcfDesktopApp.GUI'
+  # Desktop packaging requires macOS for the .app and DMG steps.
+  pool:
+    vmImage: 'macOS-latest'
+  variables:
+    - group: NcfGitHubTokenVariableGroup
+  steps:
+  - checkout: self
+    fetchDepth: 0
+
+  - task: UseDotNet@2
+    displayName: 'Use .NET SDK 8.x for Desktop packaging'
+    inputs:
+      packageType: 'sdk'
+      version: '8.0.x'
+      performMultiLevelLookup: false
+
+  - task: PowerShell@2
+    name: DesktopGate
+    displayName: 'Check Desktop version change and Release-Desktop conditions'
+    inputs:
+      targetType: 'inline'
+      pwsh: true
+      script: |
+        $ErrorActionPreference = 'Stop'
+        $projectPath = 'tools/NcfDesktopApp.GUI/NcfDesktopApp.GUI.csproj'
+
+        function Get-VersionFromProjectText {
+          param([string]$Text)
+
+          $project = [xml]$Text
+          $versionNode = $project.Project.PropertyGroup.Version |
+            Where-Object { -not [string]::IsNullOrWhiteSpace($_.'#text') } |
+            Select-Object -First 1
+          if (-not $versionNode) {
+            return ''
+          }
+          return ([string]$versionNode.'#text').Trim()
+        }
+
+        if (-not (Test-Path -LiteralPath $projectPath)) {
+          throw "Desktop project was not found: $projectPath"
+        }
+
+        $currentVersion = Get-VersionFromProjectText (Get-Content -LiteralPath $projectPath -Raw)
+        if ([string]::IsNullOrWhiteSpace($currentVersion)) {
+          throw "The Desktop project does not define a non-empty <Version>."
+        }
+
+        $parentCommit = (git rev-parse 'HEAD^' 2>$null).Trim()
+        $previousVersion = ''
+        if (-not [string]::IsNullOrWhiteSpace($parentCommit)) {
+          $parentSpec = '{0}:{1}' -f $parentCommit, $projectPath
+          $parentText = git show $parentSpec 2>$null
+          if ($LASTEXITCODE -eq 0 -and -not [string]::IsNullOrWhiteSpace($parentText)) {
+            $previousVersion = Get-VersionFromProjectText ($parentText -join [Environment]::NewLine)
+          }
+        }
+
+        $versionChanged = $currentVersion -ne $previousVersion
+        Write-Host "Desktop version: $currentVersion"
+        $previousVersionDisplay = if ($previousVersion) { $previousVersion } else { '<none>' }
+        Write-Host "Previous Desktop version: $previousVersionDisplay"
+        Write-Host "Desktop version changed: $versionChanged"
+
+        $buildReason = $env:BUILD_REASON
+        $sourceBranch = $env:BUILD_SOURCEBRANCH
+        $buildTypeAllowed =
+          ($buildReason -eq 'PullRequest') -or
+          ($buildReason -eq 'IndividualCI' -and $sourceBranch -eq 'refs/heads/master')
+
+        $requestedFor = $env:BUILD_REQUESTEDFOR
+        $sourceVersionAuthor = $env:BUILD_SOURCEVERSIONAUTHOR
+        $authorized = ($requestedFor -eq 'JeffreySu') -or ($sourceVersionAuthor -eq 'JeffreySu')
+        $pullRequestMerged = $buildReason -ne 'PullRequest'
+
+        $releaseText = ''
+        $releaseTextSource = ''
+        if ($buildReason -eq 'PullRequest') {
+          $releaseText = $env:SYSTEM_PULLREQUEST_PULLREQUESTTITLE
+          if ($releaseText -and $releaseText -notmatch '^\$\(') {
+            $releaseTextSource = 'Pull request title'
+          } else {
+            $releaseText = ''
+          }
+        }
+
+        if ($buildReason -eq 'PullRequest' -and
+            -not [string]::IsNullOrWhiteSpace($env:SYSTEM_PULLREQUEST_PULLREQUESTNUMBER) -and
+            -not [string]::IsNullOrWhiteSpace($env:GH_TOKEN)) {
+          try {
+            $pullRequestNumber = $env:SYSTEM_PULLREQUEST_PULLREQUESTNUMBER
+            $repository = if ($env:BUILD_REPOSITORY_NAME) {
+              $env:BUILD_REPOSITORY_NAME
+            } else {
+              'NeuCharFramework/NcfPackageSources'
+            }
+            $headers = @{
+              Authorization = 'Bearer ' + $env:GH_TOKEN
+              Accept = 'application/vnd.github+json'
+              'User-Agent' = 'Azure-DevOps-Desktop-Release'
+            }
+            $pullRequest = Invoke-RestMethod -Uri "https://api.github.com/repos/$repository/pulls/$pullRequestNumber" -Headers $headers -Method Get
+            $pullRequestMerged = $pullRequest.state -eq 'closed' -and $pullRequest.merged -eq $true
+          } catch {
+            Write-Host "##[warning]Unable to verify the pull request merge state. $($_.Exception.Message)"
+          }
+        }
+
+        if ([string]::IsNullOrWhiteSpace($releaseText)) {
+          $commitMessage = (git log -1 --pretty=%s).Trim()
+          if ($commitMessage -match '^Merge pull request #(\d+) from' -and
+              -not [string]::IsNullOrWhiteSpace($env:GH_TOKEN)) {
+            try {
+              $repository = if ($env:BUILD_REPOSITORY_NAME) {
+                $env:BUILD_REPOSITORY_NAME
+              } else {
+                'NeuCharFramework/NcfPackageSources'
+              }
+              $prNumber = $matches[1]
+              $headers = @{
+                Authorization = 'Bearer ' + $env:GH_TOKEN
+                Accept = 'application/vnd.github+json'
+                'User-Agent' = 'Azure-DevOps-Desktop-Release'
+              }
+              $pullRequest = Invoke-RestMethod -Uri "https://api.github.com/repos/$repository/pulls/$prNumber" -Headers $headers -Method Get
+              $releaseText = [string]$pullRequest.title
+              $releaseTextSource = "Pull request #$prNumber title"
+            } catch {
+              Write-Host "##[warning]Unable to read the merged pull request title; falling back to the commit message. $($_.Exception.Message)"
             }
           }
-          return @{ Id = [string]$id; Version = [string]$ver }
-        } finally { $zip.Dispose() }
-      } catch {
-        return @{ Id = ''; Version = '' }
-      }
-    }
 
-    function Test-SenparcPackageFileName {
-      param([string]$FileName)
-      return ($FileName.StartsWith('Senparc.Ncf.', [System.StringComparison]::Ordinal) -or
-        $FileName.StartsWith('Senparc.Xncf.', [System.StringComparison]::Ordinal))
-    }
-
-    $candidates = Get-ChildItem -Path $root -Recurse -File -Filter '*.nupkg' -ErrorAction SilentlyContinue |
-      Where-Object { Test-SenparcPackageFileName $_.Name } |
-      Sort-Object FullName -Unique
-    $rows = New-Object System.Collections.Generic.List[object]
-
-    Write-Host "== Senparc NuGet push: discovered $($candidates.Count) package file(s) under $root =="
-
-    $anyUnexpectedFailure = $false
-
-    foreach ($f in $candidates) {
-      $path = $f.FullName
-      $meta = Get-NupkgMetadataFromZip $path
-      $pkgId = if ([string]::IsNullOrWhiteSpace($meta.Id)) { $f.BaseName } else { $meta.Id }
-      $pkgVer = if ([string]::IsNullOrWhiteSpace($meta.Version)) { '' } else { $meta.Version }
-
-      Write-Host ("##[command] dotnet nuget push ""{0}"" --source ""{1}"" --api-key *** --skip-duplicate" -f $path, $source)
-
-      $stdoutPath = Join-Path $env:TEMP ("nuget-push-{0}.out.txt" -f [Guid]::NewGuid().ToString('N'))
-      $stderrPath = Join-Path $env:TEMP ("nuget-push-{0}.err.txt" -f [Guid]::NewGuid().ToString('N'))
-      try {
-        # 使用逗号分隔的 ArgumentList，避免 Windows PowerShell 5.1 对数组变量的已知问题
-        $p = Start-Process -FilePath 'dotnet' -ArgumentList 'nuget', 'push', $path, '--source', $source, '--api-key', $apiKey, '--skip-duplicate', '--timeout', '3600' -NoNewWindow -Wait -PassThru `
-          -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
-        $out = (Get-Content -LiteralPath $stdoutPath -Raw -ErrorAction SilentlyContinue)
-        $err = (Get-Content -LiteralPath $stderrPath -Raw -ErrorAction SilentlyContinue)
-        $code = $p.ExitCode
-      } finally {
-        Remove-Item -LiteralPath $stdoutPath -Force -ErrorAction SilentlyContinue
-        Remove-Item -LiteralPath $stderrPath -Force -ErrorAction SilentlyContinue
-      }
-
-      $combined = (@($out, $err) | Where-Object { $_ }) -join "`n"
-      $result = 'Failed'
-      $reason = ''
-
-      # --skip-duplicate: 成功退出码 0，重复包通常会有 skip / already exists 类提示
-      if ($code -eq 0) {
-        $lower = if ($combined) { $combined.ToLowerInvariant() } else { '' }
-        if ($lower -match 'skip|already exists|duplicate|409') {
-          $result = 'Skipped (exists)'
-          if ($combined) {
-            $one = ($combined.Trim() -replace '\s+', ' ')
-            if ($one.Length -gt 200) { $reason = $one.Substring(0, 200) + '...' } else { $reason = $one }
+          if ([string]::IsNullOrWhiteSpace($releaseText)) {
+            $releaseText = $commitMessage
+            $releaseTextSource = 'Commit message'
           }
-        } else {
-          $result = 'Published'
         }
-      } else {
-        # 非 0：409 Conflict / 已存在 仍视为跳过；其余为失败
-        $lower = if ($combined) { $combined.ToLowerInvariant() } else { '' }
-        if ($lower -match '409|conflict|already exists|duplicate|cannot publish.*exists') {
-          $result = 'Skipped (exists)'
-          if ($combined) {
-            $one = ($combined.Trim() -replace '\s+', ' ')
-            if ($one.Length -gt 200) { $reason = $one.Substring(0, 200) + '...' } else { $reason = $one }
-          }
-        } else {
-          $anyUnexpectedFailure = $true
-          $result = 'Failed'
-          $reason = if ($combined) { ($combined.Trim() -replace '\s+', ' ') } else { ("dotnet exit code {0}" -f $code) }
-          if ($reason.Length -gt 400) { $reason = $reason.Substring(0, 400) + '...' }
-        }
-      }
 
-      $rows.Add([pscustomobject]@{
-          PackageId = $pkgId
-          Version   = $pkgVer
-          Path      = $path
-          Result    = $result
-          Detail    = $reason
-        })
-    }
+        $hasReleaseDesktopKeyword = $releaseText -match '(?i)\[release-desktop\]'
+        $releaseAllowed = $versionChanged -and $buildTypeAllowed -and $authorized -and $pullRequestMerged -and $hasReleaseDesktopKeyword
 
-    Write-Host ''
-    Write-Host 'Legend: ✅ Published  |  ❌ Failed  |  ⏭️ Skipped (exists)'
-    Write-Host '========== NuGet push summary (PackageId | Version | Path | Result) =========='
-    foreach ($r in $rows) {
-      $pathDisp = $r.Path
-      if ($pathDisp.Length -gt 120) { $pathDisp = '...' + $pathDisp.Substring([Math]::Max(0, $pathDisp.Length - 117)) }
-      $resultDisp = switch ($r.Result) {
-        'Published' { '✅ Published' }
-        'Failed' { '❌ Failed' }
-        'Skipped (exists)' { '⏭️ Skipped (exists)' }
-        default { $r.Result }
-      }
-      Write-Host ('| {0} | {1} | {2} | {3} |' -f $r.PackageId, $r.Version, $pathDisp, $resultDisp)
-      if ($r.Detail) {
-        Write-Host ('  Reason: {0}' -f $r.Detail)
-      }
-    }
-    Write-Host '==============================================================================='
-    Write-Host ('Total: {0}  (Published / Skipped / Failed 见上表 Result 列)' -f $rows.Count)
-    Write-Host 'Job exit: 发现与推送循环已执行完毕；若存在非重复性错误则失败。'
+        Write-Host "Build reason: $buildReason"
+        Write-Host "Source branch: $sourceBranch"
+        Write-Host "Build type allowed: $buildTypeAllowed"
+        Write-Host "Release requester: $requestedFor"
+        Write-Host "Source version author: $sourceVersionAuthor"
+        Write-Host "Authorized release user: $authorized"
+        Write-Host "Pull request merged: $pullRequestMerged"
+        Write-Host "Release text source: $releaseTextSource"
+        Write-Host "Release text: $releaseText"
+        Write-Host "Contains [Release-Desktop]: $hasReleaseDesktopKeyword"
+        Write-Host "Desktop release allowed: $releaseAllowed"
 
-    if ($anyUnexpectedFailure) {
-      Write-Host "##[error]One or more package pushes failed (see summary table)."
-      exit 1
-    }
-    exit 0
-  displayName: 'Push Senparc .nupkg (auto-discover, skip duplicates)'
-  condition: succeededOrFailed()
-  env:
-    NUGET_API_KEY: $(NUGET_API_KEY)
+        $releaseTag = 'desktop-v{0}-build{1}' -f $currentVersion, $env:BUILD_BUILDID
+        $versionChangedValue = $versionChanged.ToString().ToLowerInvariant()
+        $releaseAllowedValue = $releaseAllowed.ToString().ToLowerInvariant()
+        Write-Host "##vso[task.setvariable variable=desktopVersion]$currentVersion"
+        Write-Host "##vso[task.setvariable variable=desktopVersionChanged]$versionChangedValue"
+        Write-Host "##vso[task.setvariable variable=desktopReleaseAllowed]$releaseAllowedValue"
+        Write-Host "##vso[task.setvariable variable=desktopReleaseTag]$releaseTag"
+    env:
+      BUILD_REASON: $(Build.Reason)
+      BUILD_SOURCEBRANCH: $(Build.SourceBranch)
+      BUILD_BUILDID: $(Build.BuildId)
+      BUILD_REQUESTEDFOR: $(Build.RequestedFor)
+      BUILD_SOURCEVERSIONAUTHOR: $(Build.SourceVersionAuthor)
+      BUILD_REPOSITORY_NAME: $(Build.Repository.Name)
+      SYSTEM_PULLREQUEST_PULLREQUESTTITLE: $(System.PullRequest.PullRequestTitle)
+      SYSTEM_PULLREQUEST_PULLREQUESTNUMBER: $(System.PullRequest.PullRequestNumber)
+      GH_TOKEN: $(GH_TOKEN)
 
-- task: DotNetCoreCLI@2    
-  displayName: Publish    
-  inputs:      
-    command: publish      
-    publishWebProjects: True      
-    arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'      
-    zipAfterPublish: True    
-  enabled: false  
-  
-- task: PublishBuildArtifacts@1    
-  displayName: 'Publish Artifact'    
-  inputs:      
-    PathtoPublish: '$(build.artifactstagingdirectory)'    
-  enabled: false    
-  condition: succeededOrFailed()  
+  - bash: |
+      set -euo pipefail
+      cd "$(Build.SourcesDirectory)/tools/NcfDesktopApp.GUI"
+      chmod +x build-tool/build-all-platforms-self-contained.sh build-tool/create-macos-app.sh
+
+      # Keep these commands aligned with build-tool/README.md.
+      ./build-tool/build-all-platforms-self-contained.sh --clean --single-file --ready-to-run
+      ./build-tool/create-macos-app.sh --create-dmg --clean
+    displayName: 'Build all Desktop platforms and macOS app/DMG'
+    condition: and(succeeded(), eq(variables['desktopReleaseAllowed'], 'true'))
+
+  - bash: |
+      set -euo pipefail
+      project_root="$(Build.SourcesDirectory)/tools/NcfDesktopApp.GUI"
+      publish_root="$project_root/publish-self-contained"
+      release_dir="$(Build.ArtifactStagingDirectory)/ncf-desktop-release"
+      version="$(desktopVersion)"
+      build_id="$(Build.BuildId)"
+      mkdir -p "$release_dir"
+
+      platforms=(win-x64 win-arm64 osx-x64 osx-arm64 linux-x64 linux-arm64)
+      for platform in "${platforms[@]}"; do
+        source_dir="$publish_root/$platform"
+        if [ ! -d "$source_dir" ] || [ -z "$(find "$source_dir" -type f -print | head -1)" ]; then
+          echo "Missing Desktop output for $platform: $source_dir" >&2
+          exit 1
+        fi
+
+        asset="$release_dir/ncf-desktop-$platform-v$version-build$build_id.zip"
+        (cd "$source_dir" && zip -q -r "$asset" .)
+        test -s "$asset"
+        echo "Prepared $(basename "$asset")"
+      done
+
+      universal_app="$project_root/macos-app/NCF Desktop-Universal.app"
+      dmg_count=$(find "$project_root/macos-app" -type f -name '*.dmg' | wc -l | tr -d ' ')
+      test -d "$universal_app"
+      test "$dmg_count" -ge 1
+      assets=("$release_dir"/*.zip)
+      test "${#assets[@]}" -eq 6
+      echo "Verified six Desktop release assets and macOS Universal.app/DMG outputs."
+    displayName: 'Package and verify six Desktop Release assets'
+    condition: and(succeeded(), eq(variables['desktopReleaseAllowed'], 'true'))
+
+  - bash: |
+      set -euo pipefail
+      release_dir="$(Build.ArtifactStagingDirectory)/ncf-desktop-release"
+      repository="${BUILD_REPOSITORY_NAME:-NeuCharFramework/NcfPackageSources}"
+      tag="$(desktopReleaseTag)"
+      notes_file="$(Build.ArtifactStagingDirectory)/ncf-desktop-release-notes.md"
+
+      cat > "$notes_file" <<EOF
+      ## NCF Desktop Release $tag
+
+      - Desktop version: $(desktopVersion)
+      - Build ID: $(Build.BuildId)
+      - Commit: $(Build.SourceVersion)
+      - Assets: six self-contained single-file platform packages
+      - macOS .app and DMG were generated by the documented build commands.
+      EOF
+
+      assets=("$release_dir"/*.zip)
+      test "${#assets[@]}" -eq 6
+      gh release create "$tag" \
+        --repo "$repository" \
+        --target "$(Build.SourceVersion)" \
+        --title "NCF Desktop Release $tag" \
+        --notes-file "$notes_file" \
+        "${assets[@]}"
+    displayName: 'Create GitHub Release for NcfDesktopApp.GUI'
+    condition: and(succeeded(), eq(variables['desktopReleaseAllowed'], 'true'))
+    env:
+      GH_TOKEN: $(GH_TOKEN)
+      BUILD_REPOSITORY_NAME: $(Build.Repository.Name)
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Desktop release assets as pipeline artifact'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/ncf-desktop-release'
+      ArtifactName: 'ncf-desktop-release'
+    condition: and(succeeded(), eq(variables['desktopReleaseAllowed'], 'true'))

@@ -24,6 +24,16 @@
 		<MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);MSB5021</MSBuildWarningsAsMessages>
 	</PropertyGroup>
 
+	<!-- Publish the root README as the NuGet package landing page for NCF and XNCF libraries. -->
+	<PropertyGroup Condition="'$(PackageReadmeFile)' == '' And ( $([System.String]::Copy('$(MSBuildProjectName)').Contains('Senparc.Ncf.')) Or $([System.String]::Copy('$(MSBuildProjectName)').Contains('Senparc.Xncf.')) )">
+		<PackageReadmeFile Condition="Exists('$(MSBuildProjectDirectory)/README.md')">README.md</PackageReadmeFile>
+		<PackageReadmeFile Condition="'$(PackageReadmeFile)' == '' And Exists('$(MSBuildProjectDirectory)/readme.md')">readme.md</PackageReadmeFile>
+	</PropertyGroup>
+
+	<ItemGroup Condition="'$(PackageReadmeFile)' != ''">
+		<None Include="$(PackageReadmeFile)" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<!--<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-*" PrivateAssets="All"/>-->
 	</ItemGroup>
