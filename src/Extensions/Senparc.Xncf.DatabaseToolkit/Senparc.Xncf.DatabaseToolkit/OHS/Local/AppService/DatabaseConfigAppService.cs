@@ -13,14 +13,19 @@
     修改标识：Senparc - 20260717
     修改描述：v0.26.0-preview2 为 DatabaseToolkit 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20260729
+    修改描述：v0.27.0-preview3 增加数据库分页筛选执行能力并限制请求范围
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.Authorization;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase.FunctionRenders;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -30,6 +35,7 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 {
+    [ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class DatabaseConfigAppService : AppServiceBase
     {
         public DatabaseConfigAppService(IServiceProvider serviceProvider) : base(serviceProvider)

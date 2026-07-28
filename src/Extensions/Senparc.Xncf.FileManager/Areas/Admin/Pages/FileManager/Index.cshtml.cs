@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260729
+    修改描述：v0.3.1-preview3 加强文件上传校验和物理路径安全
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
@@ -29,7 +32,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
 {
-    [IgnoreAntiforgeryToken]
+    [AutoValidateAntiforgeryToken]
     public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
     {
         private readonly NcfFileService _fileService;
@@ -55,7 +58,7 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
 
         public async Task<IActionResult> OnGetListAsync(int page = 1, int pageSize = 10, int? folderId = null)
         {
-            var result = await _fileService.GetFilesAsync(page, pageSize, folderId);
+            var result = await _fileService.GetFilesAsync(Math.Max(page, 1), Math.Clamp(pageSize, 1, 100), folderId);
             return Ok(result);
         }
 
@@ -73,10 +76,21 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
         }
 
         [ApiBind("FileManager", ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
+        [RequestSizeLimit(NcfFileService.MaxTotalUploadBytes)]
         public async Task<IActionResult> OnPostUploadAsync([FromForm] FileUploadModel model)
         {
             if (model.files == null || !model.files.Any())
                 return BadRequest("No files uploaded");
+
+            if (model.files.Count > NcfFileService.MaxFilesPerUpload)
+            {
+                return BadRequest($"一次最多上传 {NcfFileService.MaxFilesPerUpload} 个文件。");
+            }
+
+            if (model.files.Sum(file => file?.Length ?? 0L) > NcfFileService.MaxTotalUploadBytes)
+            {
+                return BadRequest($"单次上传总大小不能超过 {NcfFileService.MaxTotalUploadBytes / 1024 / 1024} MB。");
+            }
 
             var results = new List<NcfFileDto>();
 
@@ -85,7 +99,7 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
                 var file = model.files[i];
                 var description = model.descriptions != null && model.descriptions.Count > i ? model.descriptions[i] : null;
 
-                if (file.Length > 0)
+                if (file?.Length > 0)
                 {
                     var entity = await _fileService.UploadFileAsync(file, model.folderId);
                     if (!string.IsNullOrEmpty(description))

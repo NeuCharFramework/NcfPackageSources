@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.21.2-preview2</Version>
+    <Version>0.21.3-preview3</Version>
     <AssemblyName>Senparc.Ncf.Mvc.UI</AssemblyName>
     <RootNamespace>Senparc.Ncf.Mvc.UI</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -29,6 +29,7 @@
 				[2025-11-01] update basic libraries, including Senparc.AI
 				[2026-07-17] v0.21.2-preview2 同步上游项目版本并适配统一本地化能力
 				1、Dependency update from Senparc.Ncf.Core to 0.25.0-preview2
+				[2026-07-29] v0.21.3-preview3 Dependency update from Senparc.Ncf.Core to 0.26.0-preview3
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

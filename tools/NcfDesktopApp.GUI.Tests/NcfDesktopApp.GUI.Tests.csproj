@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -10,6 +10,8 @@
       [2026-07-25] v0.1.0 验证 DesktopBridge 探测兼容性
       1、覆盖未安装、未启用、协议不兼容、网络异常和正常连接结果
       2、验证会话令牌通过专用请求头发送
+      [2026-07-29] v0.1.1 补充 macOS WebView 原生编辑桥接测试
+      1、验证 macOS 使用原生编辑命令并在其他平台保留脚本桥接路径
     </PackageReleaseNotes>
   </PropertyGroup>
 

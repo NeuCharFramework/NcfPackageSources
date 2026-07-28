@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260729
+    修改描述：v0.3.1-preview3 限制站点地图抓取目标并安全处理重定向
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -346,6 +349,12 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 webResponse = responseResult.response;
                 requestStartTime = responseResult.requestStartTime;
                 requestEndTime = responseResult.requestEndTime;
+
+                var finalRequestUri = webResponse?.RequestMessage?.RequestUri;
+                if (finalRequestUri == null || !this.IsAvailableUrl(finalRequestUri.AbsoluteUri))
+                {
+                    return null;
+                }
 
                 this._currentAvaliableUrlTemp[url].Status = AvailableUrlStatus.Finished;//标记完成
 
@@ -687,8 +696,92 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         /// <returns></returns>
         private bool IsAvailableUrl(string url)
         {
-            //上一版本正则：^HTTP(S)?://([\w-]+\.)+[\w-]+(:\d+)?(/[\w- ./?%&=]*)?
-            return Regex.IsMatch(url.ToUpper(), @"^HTTP(S)?://((([\w-]+\.)+[\w-]+)|(localhost))(:\d+)?(/[\w- ./?%&=]*)?", RegexOptions.IgnoreCase);//^表示必须以Http开始
+            if (!Uri.TryCreate(url, UriKind.Absolute, out var uri)
+                || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps)
+                || string.IsNullOrWhiteSpace(uri.Host)
+                || !string.IsNullOrEmpty(uri.UserInfo))
+            {
+                return false;
+            }
+
+            if (IPAddress.TryParse(uri.Host, out var address))
+            {
+                return !IsPrivateOrLocalAddress(address);
+            }
+
+            if (string.Equals(uri.Host, "localhost", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(uri.Host, "localhost.localdomain", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            try
+            {
+                // Fail closed if a hostname resolves to any private, loopback,
+                // link-local, multicast, or otherwise local address.
+                var addresses = Dns.GetHostAddresses(uri.Host);
+                return addresses.Length > 0 && addresses.All(IsPublicAddress);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static bool IsPublicAddress(IPAddress address)
+        {
+            return !IsPrivateOrLocalAddress(address);
+        }
+
+        private static bool IsPrivateOrLocalAddress(IPAddress address)
+        {
+            if (address == null)
+            {
+                return true;
+            }
+
+            if (address.IsIPv4MappedToIPv6)
+            {
+                address = address.MapToIPv4();
+            }
+
+            if (IPAddress.IsLoopback(address)
+                || IPAddress.Any.Equals(address)
+                || IPAddress.IPv6Any.Equals(address)
+                || address.IsIPv6LinkLocal
+                || address.IsIPv6SiteLocal
+                || address.IsIPv6Multicast)
+            {
+                return true;
+            }
+
+            var bytes = address.GetAddressBytes();
+            if (address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork && bytes.Length == 4)
+            {
+                return bytes[0] == 0
+                    || bytes[0] == 10
+                    || (bytes[0] == 100 && bytes[1] >= 64 && bytes[1] <= 127)
+                    || bytes[0] == 127
+                    || (bytes[0] == 169 && bytes[1] == 254)
+                    || (bytes[0] == 172 && bytes[1] >= 16 && bytes[1] <= 31)
+                    || (bytes[0] == 192 && bytes[1] == 168)
+                    || (bytes[0] == 192 && bytes[1] == 0 && bytes[2] == 0)
+                    || (bytes[0] == 192 && bytes[1] == 0 && bytes[2] == 2)
+                    || (bytes[0] == 198 && bytes[1] >= 18 && bytes[1] <= 19)
+                    || (bytes[0] == 198 && bytes[1] == 51 && bytes[2] == 100)
+                    || (bytes[0] == 203 && bytes[1] == 0 && bytes[2] == 113)
+                    || bytes[0] >= 224;
+            }
+
+            if (address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6 && bytes.Length == 16)
+            {
+                // IPv6 unique-local (fc00::/7) and documentation (2001:db8::/32)
+                // addresses are not valid public crawl targets.
+                return (bytes[0] & 0xfe) == 0xfc
+                    || bytes[0] == 0x20 && bytes[1] == 0x01 && bytes[2] == 0x0d && bytes[3] == 0xb8;
+            }
+
+            return false;
         }
 
 

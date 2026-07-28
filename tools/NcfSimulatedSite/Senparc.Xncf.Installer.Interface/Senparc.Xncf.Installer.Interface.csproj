@@ -4,7 +4,7 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>0.1.1</Version>
+		<Version>0.1.2</Version>
 		<AssemblyName>Senparc.Xncf.Installer.Interface</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Installer.Interface</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -23,6 +23,7 @@
 			[2026-07-17] v0.1.1 同步上游项目版本并适配统一本地化能力
 			1、Dependency update from Senparc.Xncf.Tenant to 0.15.0-preview2
 			2、增加模块默认选择元数据，并完善内嵌 WebView 导航所需信息
+			[2026-07-29] v0.1.2 Dependency update from [5990]Senparc.Xncf.Tenant to 0.15.1-preview3
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>

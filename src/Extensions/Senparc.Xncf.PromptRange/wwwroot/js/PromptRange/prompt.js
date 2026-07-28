@@ -1231,8 +1231,9 @@ var app = new Vue({
                     resultItem.speechToText = null
                     resultItem.textEmbedding = null
 
-                    const previewHtml = resultItem.textToImage.imageUrl
-                        ? `<p><img src="${this.escapeHtml(resultItem.textToImage.imageUrl)}" alt="generated image" /></p>`
+                    const safeImageUrl = this.safeHttpUrl(resultItem.textToImage.imageUrl)
+                    const previewHtml = safeImageUrl
+                        ? `<p><img src="${this.escapeHtml(safeImageUrl)}" alt="generated image" /></p>`
                         : '<p>图片已生成，但未获得可访问地址。</p>'
                     const promptHtml = resultItem.textToImage.revisedPrompt
                         ? `<p>${this.escapeHtml(resultItem.textToImage.revisedPrompt)}</p>`
@@ -1247,7 +1248,7 @@ var app = new Vue({
                     resultItem.speechToText = null
                     resultItem.textEmbedding = null
                     resultItem.textToSpeech = this.buildTextToSpeechViewModel(typedPayload)
-                    resultItem.resultStringHtml = marked.parse(this.escapeHtml(resultItem.textToSpeech.text || ''))
+                    resultItem.resultStringHtml = this.renderSafeMarkdown(resultItem.textToSpeech.text || '')
                     return
                 }
 
@@ -1257,7 +1258,7 @@ var app = new Vue({
                     resultItem.textToSpeech = null
                     resultItem.textEmbedding = null
                     resultItem.speechToText = this.buildSpeechToTextViewModel(typedPayload)
-                    resultItem.resultStringHtml = marked.parse(resultItem.speechToText.transcript || '')
+                    resultItem.resultStringHtml = this.renderSafeMarkdown(resultItem.speechToText.transcript || '')
                     if (resultItem.speechToText.sourceAudioLocalRelativePath) {
                         this.sttForm.audioLocalRelativePath = resultItem.speechToText.sourceAudioLocalRelativePath
                         this.sttForm.audioBase64 = ''
@@ -1275,7 +1276,7 @@ var app = new Vue({
                     resultItem.speechToText = null
                     resultItem.textEmbedding = this.buildTextEmbeddingViewModel(typedPayload)
                     this.ensureTextEmbeddingResultState(resultItem)
-                    resultItem.resultStringHtml = marked.parse(resultItem.textEmbedding.sourceText || '')
+                    resultItem.resultStringHtml = this.renderSafeMarkdown(resultItem.textEmbedding.sourceText || '')
                     return
                 }
             }
@@ -1285,7 +1286,7 @@ var app = new Vue({
             resultItem.textToSpeech = null
             resultItem.speechToText = null
             resultItem.textEmbedding = null
-            resultItem.resultStringHtml = marked.parse(resultItem.resultString || '')
+            resultItem.resultStringHtml = this.renderSafeMarkdown(resultItem.resultString || '')
         },
         tryParseTypedPromptPayload(rawResultString) {
             if (!rawResultString || typeof rawResultString !== 'string') {
@@ -2231,7 +2232,7 @@ var app = new Vue({
                             const separator = currentResult ? '\n\n---\n\n' : ''
                             const newContent = `**用户**: ${normalizedUserMessage}\n\n**助手**: ${latestAssistantMessage.content}`
                             resultItem.resultString = currentResult + separator + newContent
-                            resultItem.resultStringHtml = marked.parse(resultItem.resultString)
+                            resultItem.resultStringHtml = this.renderSafeMarkdown(resultItem.resultString)
                             resultItem.promptCostToken = this.continueChatUsageSummary.promptCostToken || resultItem.promptCostToken || 0
                             resultItem.resultCostToken = this.continueChatUsageSummary.resultCostToken || resultItem.resultCostToken || 0
                             resultItem.totalCostToken = this.continueChatUsageSummary.totalCostToken || resultItem.totalCostToken || 0
@@ -3158,8 +3159,43 @@ var app = new Vue({
         // 格式化聊天内容（支持markdown）
         formatChatContent(content) {
             if (!content) return ''
-            // 使用marked解析markdown
-            return marked.parse(content)
+            return this.renderSafeMarkdown(content)
+        },
+        renderSafeMarkdown(content) {
+            const escapedContent = this.escapeHtml(content || '')
+            if (typeof marked === 'undefined') {
+                return escapedContent.replace(/\n/g, '<br>')
+            }
+
+            const viewModel = this
+            const renderer = new marked.Renderer()
+            renderer.link = function ({ href, title, tokens }) {
+                const safeHref = viewModel.safeHttpUrl(href)
+                const label = this.parser.parseInline(tokens)
+                if (!safeHref) {
+                    return label
+                }
+                const safeTitle = title ? ` title="${viewModel.escapeHtml(title)}"` : ''
+                return `<a href="${viewModel.escapeHtml(safeHref)}"${safeTitle}>${label}</a>`
+            }
+            renderer.image = function ({ href, title, text }) {
+                const safeHref = viewModel.safeHttpUrl(href)
+                if (!safeHref) {
+                    return viewModel.escapeHtml(text)
+                }
+                const safeTitle = title ? ` title="${viewModel.escapeHtml(title)}"` : ''
+                return `<img src="${viewModel.escapeHtml(safeHref)}" alt="${viewModel.escapeHtml(text)}"${safeTitle}>`
+            }
+
+            return marked.parse(escapedContent, { renderer })
+        },
+        safeHttpUrl(value) {
+            try {
+                const url = new URL(String(value || ''), window.location.origin)
+                return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : ''
+            } catch (e) {
+                return ''
+            }
         },
         // 切换聊天反馈（Like/Unlike）
         async toggleChatFeedback(chatId, feedback) {

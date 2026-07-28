@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.13.0-preview3</Version>
+    <Version>0.13.1-preview4</Version>
     <AssemblyName>Senparc.Xncf.AIAgentsHub</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIAgentsHub</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -60,6 +60,7 @@
 			3、统一模块注册信息、菜单名称与功能描述的本地化输出
 			4、同步管理页面与前端交互文案的多语言显示
 			5、同步 AIKernel 模型 API 版本及 PromptRange 剪贴板兼容性改进
+			[2026-07-29] v0.13.1-preview4 Dependency update from Senparc.Ncf.AreaBase to 0.22.0-preview3
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

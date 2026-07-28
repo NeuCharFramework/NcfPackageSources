@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.22.0-preview2</Version>
+    <Version>0.22.1-preview3</Version>
     <AssemblyName>Senparc.Xncf.Terminal</AssemblyName>
     <RootNamespace>Senparc.Xncf.Terminal</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -29,6 +29,8 @@
 				2、更新 FunctionRender 与请求模型文案的资源化解析
 				3、统一模块注册信息、菜单名称与功能描述的本地化输出
 				4、补充并统一多语言资源键及资源文件
+				[2026-07-29] v0.22.1-preview3 收紧终端模块的命令执行说明和默认行为
+				1、终端模块描述明确标示命令执行功能当前已禁用，避免误导管理员
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

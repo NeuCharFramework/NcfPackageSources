@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
 
-    <Version>0.0.3</Version>
+    <Version>0.0.4</Version>
     <PackageReleaseNotes>
       [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
       1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
@@ -25,6 +25,7 @@
       13、Dependency update from Senparc.Xncf.Tenant to 0.15.0-preview2
       14、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.0-preview2
       15、同步 AIKernel、AgentsManager 与 PromptRange 当前版本的功能兼容性更新
+      [2026-07-29] v0.0.4 Dependency update from Senparc.Ncf.AreaBase to 0.22.0-preview3
 </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

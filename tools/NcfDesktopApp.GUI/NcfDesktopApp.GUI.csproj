@@ -4,8 +4,12 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <RuntimeIdentifiers>win-x64;win-arm64;osx-x64;osx-arm64;linux-x64;linux-arm64</RuntimeIdentifiers>
-    <Version>0.3.2</Version>
+    <Version>0.3.3</Version>
     <PackageReleaseNotes>
+      [2026-07-28] v0.3.3 修复 macOS WebView JavaScript 回调闪退
+      1、规避 WebView.Avalonia.MacCatalyst 11.0.0.1 空结果回调导致的主线程 SIGABRT
+      2、macOS 使用 WKWebView/AppKit 原生编辑命令，Windows 和 Linux 保持原有脚本桥
+      3、重建 macOS 应用包和 DMG 前清理残留并处理失败临时文件
       [2026-07-26] v0.3.2 修复停止目标后应用退出
       1、停止 NCF 仅终止子进程，桌面主窗口保持打开并回到工作台
       2、避免后台线程更新 UI 与 entireProcessTree 误杀导致进程崩溃

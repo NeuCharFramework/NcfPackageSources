@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>-->
-    <Version>0.23.3-preview2</Version>
+    <Version>0.23.4-preview3</Version>
     <LangVersion>10.0</LangVersion>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
@@ -64,6 +64,7 @@
 			1、Dependency update from Senparc.Ncf.Core to 0.25.0-preview2
 			2、Dependency update from Senparc.Ncf.Database to 0.21.2-preview2
 			3、Dependency update from Senparc.Ncf.Service to 0.23.2-preview2
+			[2026-07-29] v0.23.4-preview3 Dependency update from Senparc.Ncf.Core to 0.26.0-preview3
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

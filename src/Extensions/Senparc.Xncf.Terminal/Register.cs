@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260717
     修改描述：v0.22.0-preview2 为 Terminal 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20260729
+    修改描述：v0.22.1-preview3 收紧终端模块的命令执行说明和默认行为
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -36,53 +39,7 @@ namespace Senparc.Xncf.Terminal
 
         public override string MenuName => TerminalResource.Get("Module.Terminal.MenuName", "终端模块");
         public override string Icon => "fa fa-terminal";
-        public override string Description => TerminalResource.Get("Module.Terminal.Description", "此模块允许开发者直接使用终端命令控制系统！") +
-                                      $"\r\n{TerminalResource.Get("Module.Terminal.AvailableCommands", "目前可以使用的命令如下：")}" +
-                                      $"\r\n'CD'," +
-                                      $"\r\n'CHDIR'," +
-                                      $"\r\n'CHKDSK'," +
-                                      $"\r\n'CLS'," +
-                                      $"\r\n'CMD'," +
-                                      $"\r\n'COLOR'," +
-                                      $"\r\n'COMP'," +
-                                      $"\r\n'COPY'," +
-                                      $"\r\n'DATE'," +
-                                      $"\r\n'DIR'," +
-                                      $"\r\n'DISKPART'," +
-                                      $"\r\n'ECHO'," +
-                                      $"\r\n'EXIT'," +
-                                      $"\r\n'FC'," +
-                                      $"\r\n'FIND'," +
-                                      $"\r\n'FINDSTR'," +
-                                      $"\r\n'GPRESULT'," +
-                                      $"\r\n'GRAFTABL'," +
-                                      $"\r\n'HELP'," +
-                                      $"\r\n'ICACLS'," +
-                                      $"\r\n'MD'," +
-                                      $"\r\n'MKDIR'," +
-                                      $"\r\n'MKLINK'," +
-                                      $"\r\n'MORE'," +
-                                      $"\r\n'MOVE'," +
-                                      $"\r\n'PAUSE'," +
-                                      $"\r\n'PRINT'," +
-                                      $"\r\n'PROMPT'," +
-                                      $"\r\n'RECOVER'," +
-                                      $"\r\n'REM'," +
-                                      $"\r\n'REN'," +
-                                      $"\r\n'RENAME'," +
-                                      $"\r\n'REPLACE'," +
-                                      $"\r\n'ROBOCOPY'," +
-                                      $"\r\n'START'," +
-                                      $"\r\n'SYSTEMINFO'," +
-                                      $"\r\n'TASKLIST'," +
-                                      $"\r\n'TIME'," +
-                                      $"\r\n'TITLE'," +
-                                      $"\r\n'TREE'," +
-                                      $"\r\n'TYPE'," +
-                                      $"\r\n'VER'," +
-                                      $"\r\n'VOL'," +
-                                      $"\r\n'XCOPY'," +
-                                      $"\r\n'WMIC'";
+        public override string Description => TerminalResource.Get("Module.Terminal.Description", "终端命令执行功能当前已禁用。");
 
         ///// <summary>
         ///// 注册当前模块需要支持的功能模块

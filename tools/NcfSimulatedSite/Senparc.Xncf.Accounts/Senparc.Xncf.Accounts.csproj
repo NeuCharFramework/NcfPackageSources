@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.3.0</Version>
+		<Version>0.3.1</Version>
 		<AssemblyName>Senparc.Xncf.Accounts</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Accounts</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -28,6 +28,7 @@
 			3、统一模块注册信息、菜单名称与功能描述的本地化输出
 			4、补充并统一多语言资源键及资源文件
 			5、统一账户缓存、积分、队列及功能参数的资源化文案
+			[2026-07-29] v0.3.1 Dependency update from Senparc.Ncf.DatabasePlant to 0.21.3-preview3
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>

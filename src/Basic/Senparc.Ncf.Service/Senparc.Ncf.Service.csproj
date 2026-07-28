@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.23.2-preview2</Version>
+    <Version>0.23.3-preview3</Version>
     <AssemblyName>Senparc.Ncf.Service</AssemblyName>
     <RootNamespace>Senparc.Ncf.Service</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -33,6 +33,7 @@
 				2、Dependency update from Senparc.Ncf.Repository to 0.20.2-preview2
 				3、Dependency update from Senparc.Ncf.SMS to 0.20.2-preview2
 				4、Dependency update from Senparc.Ncf.Utility to 0.21.0-preview2
+				[2026-07-29] v0.23.3-preview3 Dependency update from Senparc.Ncf.Core to 0.26.0-preview3
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

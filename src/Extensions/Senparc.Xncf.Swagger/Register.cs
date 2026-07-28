@@ -13,9 +13,13 @@
     修改标识：Senparc - 20260717
     修改描述：v0.19.0-preview2 为 Swagger 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20260729
+    修改描述：v0.19.1-preview3 修正 Swagger 认证中间件的认证方案处理
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -29,6 +33,8 @@ using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.WebApi;
 using Senparc.CO2NET.WebApi.WebApiEngines;
 using Senparc.Ncf.XncfBase;
+using Senparc.Ncf.AreaBase.Admin.Filters;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 using Senparc.Xncf.Swagger.Builder;
 using Senparc.Xncf.Swagger.Models;
 using Senparc.Xncf.Swagger.Utils;
@@ -211,21 +217,20 @@ namespace Senparc.Xncf.Swagger
             {
                 appBuilder.Use(async (context, next) =>
                 {
-                    var isAuthenticated = context.User?.Identity?.IsAuthenticated ?? false;
-
-                    // 检查 Cookie 认证
-                    if (!isAuthenticated)
+                    var authResult = await context.AuthenticateAsync(AdminAuthorizeAttribute.AuthenticationScheme);
+                    if (!authResult.Succeeded)
                     {
-                        // 检查是否有有效的 JWT Token
-                        var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
-                        if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
-                        {
-                            // 既没有 Cookie 认证也没有有效的 JWT，重定向到登录页
-                            var returnUrl = Uri.EscapeDataString(context.Request.Path + context.Request.QueryString);
-                            context.Response.Redirect($"/Admin/Login?returnUrl={returnUrl}");
-                            return;
-                        }
+                        authResult = await context.AuthenticateAsync(ApiAuthorizeAttribute.JwtBearerScheme);
                     }
+
+                    if (!authResult.Succeeded || authResult.Principal?.Identity?.IsAuthenticated != true)
+                    {
+                        var returnUrl = Uri.EscapeDataString(context.Request.Path + context.Request.QueryString);
+                        context.Response.Redirect($"/Admin/Login?returnUrl={returnUrl}");
+                        return;
+                    }
+
+                    context.User = authResult.Principal;
 
                     await next();
                 });
