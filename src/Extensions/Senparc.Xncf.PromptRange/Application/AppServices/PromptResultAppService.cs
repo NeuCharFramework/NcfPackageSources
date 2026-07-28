@@ -11,6 +11,10 @@
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
     修改标识：Senparc - 20260705
+
+    修改标识：Senparc - 20260729
+    修改描述：v0.17.1-preview6 加强提示词接口授权并防护插件压缩包路径
+
     修改描述：v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3----------------------------------------------------------------*/
 
 using System;
@@ -24,6 +28,7 @@ using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Repository;
 using Senparc.Xncf.AreaBase.Admin.Filters;
+using Senparc.Ncf.Core.Authorization;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models;
@@ -37,7 +42,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
     /// PromptResult 管理 AppService
     /// TODO: 需要权限验证
     /// </summary>
-    [ApiAuthorize("AdminOnly")]
+    [ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class PromptResultAppService : AppServiceBase
     {
         // private readonly RepositoryBase<PromptResult> _promptResultRepository;

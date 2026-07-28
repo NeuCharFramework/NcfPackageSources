@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -12,6 +12,7 @@
       2、验证请求事件进入活动快照且终态事件正确移除
       3、验证授权同步只向对应管理员目标发布
       4、验证授权同步不会发布到通用活动流
+      [2026-07-29] v0.1.1 Dependency update from Senparc.Xncf.DesktopBridge to 0.1.1-preview3
     </PackageReleaseNotes>
   </PropertyGroup>
 

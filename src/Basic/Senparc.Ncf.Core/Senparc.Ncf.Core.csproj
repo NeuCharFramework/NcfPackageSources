@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.25.0-preview2</Version>
+    <Version>0.26.0-preview3</Version>
     <AssemblyName>Senparc.Ncf.Core</AssemblyName>
     <RootNamespace>Senparc.Ncf.Core</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -58,6 +58,9 @@
 				3、为模块功能描述和请求参数提供一致的多语言输出机制
 				4、增加请求客户端、请求事件和处理器回环机制
 				5、支持超时、取消、类型检查及请求关联清理
+				[2026-07-29] v0.26.0-preview3 修复安装状态写入并统一授权策略名称
+				1、修复 SiteConfig 安装状态属性未保存赋值的问题
+				2、新增跨模块共享的 NCF 授权策略名称定义
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

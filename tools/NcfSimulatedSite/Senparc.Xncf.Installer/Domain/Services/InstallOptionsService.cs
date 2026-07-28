@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260724
     修改描述：v0.4.0 增加默认模块选择与安装确认并完善多语言界面
 
+    修改标识：Senparc - 20260729
+    修改描述：v0.4.1 加强安装状态校验并收紧安装辅助路由
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,7 +45,8 @@ namespace Senparc.Xncf.Installer.Domain.Services
             "C2E1F87F-2DCE-4921-87CE-36923ED0D6EA", // Senparc.Xncf.XncfBuilder
             "149D8021-1783-4FC9-97A8-F1A1BA60245B", // Senparc.Xncf.MCP
             "796D12D8-580B-40F3-A6E8-A5D9D2EABB69", // Senparc.Xncf.AIKernel
-            "D858D7FA-775A-4690-9023-CFB0B3B84994"  // Senparc.Xncf.AgentsManager
+            "D858D7FA-775A-4690-9023-CFB0B3B84994", // Senparc.Xncf.AgentsManager
+            "E9A9D870-A285-4BCE-9D4D-26A219C41252"  // Senparc.Xncf.DesktopBridge
         };
 
         private readonly IServiceProvider _serviceProvider;

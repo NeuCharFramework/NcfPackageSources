@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260717
     修改描述：v0.17.0-preview5 为 PromptRange 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20260729
+    修改描述：v0.17.1-preview6 加强提示词接口授权并防护插件压缩包路径
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -30,6 +33,7 @@ using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.CO2NET.Extensions;
 using Senparc.Xncf.AreaBase.Admin.Filters;
+using Senparc.Ncf.Core.Authorization;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService;
 
@@ -37,7 +41,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService;
 /// PromptRange 管理 AppService
 /// TODO: 需要权限验证
 /// </summary>
-[ApiAuthorize("AdminOnly")]
+[ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
 public class PromptRangeAppService : AppServiceBase
 {
     private readonly PromptRangeService _promptRangeService;

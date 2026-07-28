@@ -4,7 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Version>0.1.0-preview2</Version>
+    <Version>0.1.1-preview3</Version>
     <AssemblyName>Senparc.Xncf.DesktopBridge</AssemblyName>
     <RootNamespace>Senparc.Xncf.DesktopBridge</RootNamespace>
     <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
@@ -29,6 +29,8 @@
       1、仅同步资源标识和变更类型，不通过 EventBus 或 SSE 传输聊天正文、密码或令牌
       2、同步流同时要求桌面会话令牌、Bearer_Backend JWT 和 AdminOnly 策略
       3、按管理员账号隔离通知，为桌面 Admin Chat 和后续受权模块提供通用扩展点
+      [2026-07-29] v0.1.1-preview3 复用 NCF 标准 AdminOnly 策略名称
+      1、桌面桥接控制器改用 Core 统一授权策略常量，避免策略字符串漂移
     </PackageReleaseNotes>
   </PropertyGroup>
 
@@ -37,6 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.Shared.Abstractions\Senparc.Ncf.Shared.Abstractions.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
   </ItemGroup>

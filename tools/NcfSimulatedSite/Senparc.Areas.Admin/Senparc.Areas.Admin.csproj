@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.1.0</Version>
+		<Version>0.2.0</Version>
 		<PackageReleaseNotes>
     [2026-07-02] v0.0.2 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
     1、支持流式输出并优化交互体验
@@ -24,6 +24,9 @@
     5、增加 XNCF 模块批量更新操作并完善后台管理资源本地化
     6、增加 AdminChatAppService 与 AdminChatSyncEvent
     7、为桌面端管理交互提供站点侧同步能力
+    [2026-07-29] v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
+    1、完善后台管理员信息、模块管理和聊天流式交互的状态处理
+    2、通过 AdminOnly JWT 保护桌面同步接口并限制同步内容
 </PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->

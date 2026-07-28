@@ -29,8 +29,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using System.Data.Common;
 using Senparc.Ncf.Core.Config;
+using Senparc.Ncf.Core.Utility;
 
 namespace Senparc.Ncf.Core.Models.VD
 {
@@ -104,9 +104,11 @@ namespace Senparc.Ncf.Core.Models.VD
                 }
 
             }
-            catch (/*SqlException*/ DbException)
+            catch (Exception exception) when (DatabaseInstallState.IsDatabaseUnavailableForInstallation(exception))
             {
-                //如数据库未创建
+                // The provider exception can be wrapped by EF Core's retry strategy.
+                // Redirect when the complete exception chain indicates that the
+                // database is not available yet.
                 context.Result = new RedirectResult("/Install");
 
                 return Task.CompletedTask;

@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260729
+    修改描述：v0.3.1-preview3 加强文件上传校验和物理路径安全
+
 ----------------------------------------------------------------*/
 
 using AutoMapper;
@@ -31,6 +34,17 @@ namespace Senparc.Xncf.FileManager.Domain.Services
 {
     public class NcfFileService : ServiceBase<NcfFile>
     {
+        public const long MaxFileSizeBytes = 50L * 1024 * 1024;
+        public const long MaxTotalUploadBytes = 100L * 1024 * 1024;
+        public const int MaxFilesPerUpload = 20;
+
+        private static readonly HashSet<string> AllowedExtensions = new(StringComparer.OrdinalIgnoreCase)
+        {
+            ".txt", ".log", ".md", ".csv", ".json", ".xml", ".pdf",
+            ".jpg", ".jpeg", ".png", ".gif", ".webp",
+            ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".zip"
+        };
+
         /// <summary>
         /// 文件存储的基础路径
         /// </summary>
@@ -60,12 +74,37 @@ namespace Senparc.Xncf.FileManager.Domain.Services
 
         public async Task<NcfFile> UploadFileAsync(IFormFile file, int? folderId = null)
         {
+            if (file == null || file.Length <= 0)
+            {
+                throw new ArgumentException("上传文件不能为空。", nameof(file));
+            }
+
+            if (file.Length > MaxFileSizeBytes)
+            {
+                throw new InvalidOperationException($"单个文件不能超过 {MaxFileSizeBytes / 1024 / 1024} MB。");
+            }
+
+            var fileExtension = Path.GetExtension(file.FileName)?.ToLowerInvariant();
+            if (string.IsNullOrWhiteSpace(fileExtension) || !AllowedExtensions.Contains(fileExtension))
+            {
+                throw new InvalidOperationException("不允许上传该文件类型。仅支持常见文档、图片、文本和压缩包格式。");
+            }
+
+            var originalFileName = Path.GetFileName((file.FileName ?? string.Empty).Replace('\\', '/'));
+            if (string.IsNullOrWhiteSpace(originalFileName))
+            {
+                originalFileName = $"upload{fileExtension}";
+            }
+            if (originalFileName.Length > 250)
+            {
+                originalFileName = originalFileName[..250];
+            }
+
             var datePath = Path.Combine(DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString("00"));
             var fullPath = Path.Combine(_baseFilePath, datePath);
             Directory.CreateDirectory(fullPath);
 
             var storageFileName = Guid.NewGuid().ToString("N");
-            var fileExtension = Path.GetExtension(file.FileName).ToLower();
 
             var physicalPath = Path.Combine(fullPath, storageFileName + fileExtension);
             using (var stream = new FileStream(physicalPath, FileMode.Create))
@@ -75,7 +114,7 @@ namespace Senparc.Xncf.FileManager.Domain.Services
 
             var ncfFile = new NcfFile
             {
-                FileName = file.FileName,
+                FileName = originalFileName,
                 StorageFileName = storageFileName,
                 FilePath = datePath,
                 FileSize = file.Length,
@@ -113,7 +152,7 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             var file = await GetObjectAsync(z => z.Id == id);
             if (file != null)
             {
-                var fullPath = Path.Combine(_baseFilePath, file.FilePath, file.StorageFileName + file.FileExtension);
+                var fullPath = ResolvePhysicalPath(file);
                 if (File.Exists(fullPath))
                 {
                     File.Delete(fullPath);
@@ -131,7 +170,7 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             }
 
             var fileName = file.StorageFileName + file.FileExtension;
-            var fullPath = Path.Combine(_baseFilePath, file.FilePath, fileName);
+            var fullPath = ResolvePhysicalPath(file);
             if (!System.IO.File.Exists(fullPath))
             {
                 return (new byte[0], "文件不存在！");
@@ -139,6 +178,31 @@ namespace Senparc.Xncf.FileManager.Domain.Services
 
             var bytes = await System.IO.File.ReadAllBytesAsync(fullPath);
             return (bytes, fileName);
+        }
+
+        private string ResolvePhysicalPath(NcfFile file)
+        {
+            if (file == null || string.IsNullOrWhiteSpace(file.FilePath) ||
+                string.IsNullOrWhiteSpace(file.StorageFileName) || string.IsNullOrWhiteSpace(file.FileExtension))
+            {
+                throw new InvalidOperationException("文件物理路径信息无效。");
+            }
+
+            var basePath = Path.GetFullPath(_baseFilePath);
+            var fullPath = Path.GetFullPath(Path.Combine(
+                basePath,
+                file.FilePath,
+                file.StorageFileName + file.FileExtension));
+            var expectedPrefix = basePath.EndsWith(Path.DirectorySeparatorChar)
+                ? basePath
+                : basePath + Path.DirectorySeparatorChar;
+
+            if (!fullPath.StartsWith(expectedPrefix, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException("文件物理路径越界。");
+            }
+
+            return fullPath;
         }
 
         private FileType GetFileType(string extension)

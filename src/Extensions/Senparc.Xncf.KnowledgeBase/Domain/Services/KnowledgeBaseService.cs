@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
+    修改标识：Senparc - 20260729
+    修改描述：v0.3.1-preview4 通过文件服务读取知识库文件并限制物理路径
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -149,24 +152,16 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                 throw new NcfExceptionBase($"File with ID {fileId} not found.");
             }
 
-            // 2. 读取文件内容
-            // 构造物理路径: App_Data/NcfFiles/{Year}/{Month}/{StorageName}{Ext}
-            var baseFilePath = Path.Combine(Senparc.CO2NET.Config.RootDirectoryPath, "App_Data", "NcfFiles");
-            var fullPath = Path.Combine(baseFilePath, file.FilePath, file.StorageFileName + file.FileExtension);
-
-            if (!File.Exists(fullPath))
+            // 2. 读取文件内容 through the file service so the physical path
+            // remains constrained to App_Data/NcfFiles even if database fields
+            // have been tampered with.
+            var fileBytesResult = await _ncfFileService.GetFileBytes(fileId);
+            if (fileBytesResult.FileBytes.Length == 0)
             {
-                throw new NcfExceptionBase($"Physical file not found at {fullPath}");
+                throw new NcfExceptionBase("Physical file not found");
             }
 
-            string content;
-            // 简单处理：目前只支持文本文件读取
-            // TODO: 后续支持 PDF, Word 等格式解析
-            using (var stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read))
-            using (var reader = new StreamReader(stream))
-            {
-                content = await reader.ReadToEndAsync();
-            }
+            string content = Encoding.UTF8.GetString(fileBytesResult.FileBytes);
 
             if (string.IsNullOrWhiteSpace(content))
             {

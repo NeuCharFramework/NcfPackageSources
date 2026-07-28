@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <AssemblyName>Template_OrgName.Xncf.Template_XncfName</AssemblyName>
     <RootNamespace>Template_OrgName.Xncf.Template_XncfName</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -29,7 +29,9 @@
       6、按 Application 新架构归置 AppServices 与 DTOs，同步命名空间并精简 OHS 的职责边界
       7、增加 EventBus 请求-响应回环处理器和示例事件
       8、同步模板示例的多语言资源与 Application 目录结构
-</PackageReleaseNotes>
+      [2026-07-26] v1.1.0 补充示例模板 EventBus 请求-响应回环与多语言能力
+      [2026-07-29] v1.1.1 Dependency update from Senparc.Ncf.AreaBase to 0.22.0-preview3
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.4.0</Version>
+		<Version>0.4.1</Version>
 		<AssemblyName>Senparc.Xncf.Installer</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Installer</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -34,6 +34,9 @@
 			4、补充并统一多语言资源键及资源文件
 			5、为核心模块提供默认勾选配置，简化首次安装选择
 			6、增加安装确认对话框并补齐多语言提示资源
+			[2026-07-29] v0.4.1 加强安装状态校验并收紧安装辅助路由
+			1、区分未初始化数据库与真实数据库故障，避免错误开放安装入口
+			2、安装请求增加防伪校验、重复安装保护，并仅在开发环境暴露测试路由
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>

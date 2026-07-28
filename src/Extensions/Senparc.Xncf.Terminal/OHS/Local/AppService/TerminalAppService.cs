@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260717
     修改描述：v0.22.0-preview2 为 Terminal 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20260729
+    修改描述：v0.22.1-preview3 收紧终端模块的命令执行说明和默认行为
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.AppServices;
@@ -31,6 +34,9 @@ namespace Senparc.Xncf.Terminal.OHS.Local.AppService
         {
         }
 
+        // Command execution is intentionally disabled. Keep the former implementation
+        // below for historical reference until a sandboxed, audited runner exists.
+#if false
         #region Run
         private bool CommandFilter(string commandText)
         {
@@ -231,6 +237,7 @@ namespace Senparc.Xncf.Terminal.OHS.Local.AppService
         }
 
         #endregion
+#endif
 
     }
 }

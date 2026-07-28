@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260729
+    修改描述：v0.26.0-preview3 修复安装状态写入并统一授权策略名称
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
@@ -156,7 +159,7 @@ namespace Senparc.Ncf.Core.Config
             }
             set
             {
-                _isInstalling = false;
+                _isInstalling = value;
             }
         }
 

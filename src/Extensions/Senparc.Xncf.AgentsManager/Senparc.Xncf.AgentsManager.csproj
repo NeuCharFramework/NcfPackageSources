@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.12.0-preview6</Version>
+    <Version>0.12.1-preview7</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -88,6 +88,9 @@
 		3、统一模块注册信息、菜单名称与功能描述的本地化输出
 		4、同步管理页面与前端交互文案的多语言显示
 		5、完善复制操作的兼容性回退与结果反馈，适配内嵌 WebView 场景
+		[2026-07-29] v0.12.1-preview7 加强 AgentsManager 接口授权与 Markdown/HTML 安全渲染
+		1、为 Prompt 初始化和优化接口增加 AdminOnly 授权保护
+		2、限制 Markdown 链接、图片和任务 HTML 的协议与危险标签，降低脚本注入风险
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

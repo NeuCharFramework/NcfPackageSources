@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：WebViewEditBridge.cs
+    文件功能描述：WebViewEditBridge.cs 相关实现
+    
+    
+    创建标识：Senparc - 20260726
+    
+    修改标识：Senparc - 20260729
+    修改描述：v0.3.3 修复 macOS WebView 编辑桥接并清理应用包构建残留
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Diagnostics;
 using System.Text.Json;
@@ -7,6 +21,9 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Input.Platform;
+using Avalonia.WebView.MacCatalyst.Core;
+using AppKit;
+using ObjCRuntime;
 using WebView = AvaloniaWebView.WebView;
 
 namespace NcfDesktopApp.GUI.Services;
@@ -17,6 +34,15 @@ namespace NcfDesktopApp.GUI.Services;
 /// </summary>
 internal static class WebViewEditBridge
 {
+    /// <summary>
+    /// WebView.Avalonia.MacCatalyst 11.0.0.1 的 ExecuteScriptAsync 会在原生完成回调中
+    /// 对空 result 调用 ToString；该异常无法由调用方捕获并会终止整个进程。
+    /// macOS 改用 WKWebView 原生 responder action，只禁用这条不安全的 JavaScript 路径。
+    /// </summary>
+    public static bool IsScriptBridgeSupported => IsScriptBridgeSupportedForPlatform(OperatingSystem.IsMacOS());
+
+    internal static bool IsScriptBridgeSupportedForPlatform(bool isMacOS) => !isMacOS;
+
     /// <summary>
     /// 注入到页面的键盘补丁：仅处理修饰键快捷键，不拦截普通打字。
     /// Paste 仍由原生侧完成（页面 JS 通常无权直接读系统剪贴板）。
@@ -56,6 +82,11 @@ internal static class WebViewEditBridge
             return false;
         }
 
+        if (OperatingSystem.IsMacOS())
+        {
+            return TryExecuteNativeMacEditCommand(webView, EditCommand.SelectAll);
+        }
+
         try
         {
             var result = await webView.ExecuteScriptAsync("""
@@ -79,6 +110,11 @@ internal static class WebViewEditBridge
         if (webView is null)
         {
             return false;
+        }
+
+        if (OperatingSystem.IsMacOS())
+        {
+            return TryExecuteNativeMacEditCommand(webView, EditCommand.Copy);
         }
 
         try
@@ -108,6 +144,11 @@ internal static class WebViewEditBridge
         if (webView is null)
         {
             return false;
+        }
+
+        if (OperatingSystem.IsMacOS())
+        {
+            return TryExecuteNativeMacEditCommand(webView, EditCommand.Cut);
         }
 
         try
@@ -159,7 +200,17 @@ internal static class WebViewEditBridge
 
     public static async Task<bool> TryPasteAsync(WebView? webView, IClipboard? clipboard)
     {
-        if (webView is null || clipboard is null)
+        if (webView is null)
+        {
+            return false;
+        }
+
+        if (OperatingSystem.IsMacOS())
+        {
+            return TryExecuteNativeMacEditCommand(webView, EditCommand.Paste);
+        }
+
+        if (clipboard is null)
         {
             return false;
         }
@@ -230,7 +281,7 @@ internal static class WebViewEditBridge
 
     public static async Task EnsureKeyboardPatchAsync(WebView? webView)
     {
-        if (webView is null)
+        if (webView is null || !IsScriptBridgeSupported)
         {
             return;
         }
@@ -338,6 +389,44 @@ internal static class WebViewEditBridge
 
         return false;
     }
+
+    /// <summary>
+    /// 让 AppKit 把标准编辑命令发送给当前 first responder。正文和剪贴板都留在
+    /// WKWebView/AppKit 边界内，无需执行页面 JavaScript，也不需要将剪贴板内容注入脚本。
+    /// </summary>
+    private static bool TryExecuteNativeMacEditCommand(WebView webView, EditCommand command)
+    {
+        try
+        {
+            if (webView.PlatformWebView?.PlatformViewContext is not MacCatalystWebViewCore nativeCore ||
+                nativeCore.WebView is null ||
+                GetNativeMacSelector(command) is not { } selectorName)
+            {
+                return false;
+            }
+
+            var application = NSApplication.SharedApplication;
+            var selector = new Selector(selectorName);
+            var target = application.TargetForAction(selector);
+            var handled = target is not null && application.SendAction(selector, target, nativeCore.WebView);
+            Debug.WriteLine($"[WebViewEditBridge] Native macOS {command} => {handled}");
+            return handled;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[WebViewEditBridge] Native macOS {command} 失败: {ex.Message}");
+            return false;
+        }
+    }
+
+    internal static string? GetNativeMacSelector(EditCommand command) => command switch
+    {
+        EditCommand.Cut => "cut:",
+        EditCommand.Copy => "copy:",
+        EditCommand.Paste => "paste:",
+        EditCommand.SelectAll => "selectAll:",
+        _ => null
+    };
 
     private static async Task<string> GetSelectedTextAsync(WebView webView)
     {

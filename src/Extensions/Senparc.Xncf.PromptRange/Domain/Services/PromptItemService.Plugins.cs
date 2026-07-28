@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260729
+    修改描述：v0.17.1-preview6 加强提示词接口授权并防护插件压缩包路径
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -26,6 +29,7 @@ using Newtonsoft.Json;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Helpers;
 using Senparc.CO2NET.Helpers.Serializers;
+using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
@@ -34,6 +38,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 {
     public partial class PromptItemService
     {
+        private const long MaxPluginArchiveUploadBytes = 50L * 1024 * 1024;
+        private const long MaxPluginArchiveExpandedBytes = 200L * 1024 * 1024;
+        private const int MaxPluginArchiveEntries = 1000;
+
         public async Task<string> ExportPluginsAsync(string fullVersion)
         {
             var item = await this.GetObjectAsync(p => p.FullVersion == fullVersion) ??
@@ -189,7 +197,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             #endregion
 
             //  当前 plugin 文件夹目录，靶道名/别名
-            var curPluginPath = Path.Combine(rangePath, promptItem.NickName ?? promptItem.FullVersion);
+            var curPluginPath = GetSafeChildPath(
+                rangePath,
+                SanitizePathComponent(
+                    string.IsNullOrWhiteSpace(promptItem.NickName) ? promptItem.FullVersion : promptItem.NickName,
+                    "plugin"));
             if (!Directory.Exists(curPluginPath))
             {
                 Directory.CreateDirectory(curPluginPath);
@@ -251,7 +263,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
 
             // 生成文件夹
-            var rangePath = Path.Combine(filePathPrefix, "ExportedPluginsTemp", $"{range.Alias ?? range.RangeName}_{range.RangeName}");
+            var exportRoot = Path.GetFullPath(Path.Combine(filePathPrefix, "ExportedPluginsTemp"));
+            Directory.CreateDirectory(exportRoot);
+            var rangePath = GetSafeChildPath(
+                exportRoot,
+                $"{SanitizePathComponent(string.IsNullOrWhiteSpace(range.Alias) ? range.RangeName : range.Alias, "range")}_{SanitizePathComponent(range.RangeName, "range")}");
 
             if (Directory.Exists(rangePath))
             {
@@ -315,12 +331,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             if (uploadedFile == null || uploadedFile.Length == 0)
                 throw new NcfExceptionBase("文件未找到");
             // 限制文件上传的大小为 50M
-            if (uploadedFile.Length > 1024 * 1024 * 50)
+            if (uploadedFile.Length > MaxPluginArchiveUploadBytes)
             {
                 throw new NcfExceptionBase("文件大小超过限制（50 M）");
             }
 
-            if (!uploadedFile.FileName.EndsWith(".zip"))
+            var uploadFileName = Path.GetFileName(uploadedFile.FileName);
+            if (string.IsNullOrWhiteSpace(uploadFileName) ||
+                !uploadFileName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
             {
                 throw new NcfExceptionBase("文件格式错误");
             }
@@ -335,24 +353,22 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 Directory.CreateDirectory(toSaveDir);
             }
 
-            // 文件保存路径
-            var zipFilePath = Path.Combine(toSaveDir, uploadedFile.FileName);
-
-            using (var stream = new FileStream(zipFilePath, FileMode.Create))
-            {
-                await uploadedFile.CopyToAsync(stream);
-            }
+            // Never use the client-supplied name as a server path. The original
+            // name is metadata only; the actual temporary file is random.
+            var zipFilePath = Path.Combine(toSaveDir, $"{Guid.NewGuid():N}.zip");
+            var extractDir = Path.Combine(toSaveDir, $"extract-{Guid.NewGuid():N}");
 
             #endregion
 
 
+            try
+            {
+                await using (var stream = new FileStream(zipFilePath, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+                {
+                    await uploadedFile.CopyToAsync(stream);
+                }
 
-            // 读取 zip 文件
-            using var zip = ZipFile.OpenRead(zipFilePath);
-
-            //解压
-            var extractDir = $"{zipFilePath}-{SystemTime.NowTicks}";
-            zip.ExtractToDirectory(extractDir);
+                await ExtractPluginArchiveAsync(zipFilePath, extractDir);
 
             //判断文件结构
             //假设为完整路径
@@ -553,6 +569,136 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             // 保存
             await this.SaveObjectListAsync(promptItems);
+            }
+            finally
+            {
+                try
+                {
+                    if (File.Exists(zipFilePath))
+                    {
+                        File.Delete(zipFilePath);
+                    }
+
+                    if (Directory.Exists(extractDir))
+                    {
+                        Directory.Delete(extractDir, true);
+                    }
+                }
+                catch (Exception cleanupException)
+                {
+                    SenparcTrace.BaseExceptionLog(cleanupException);
+                }
+            }
+        }
+
+        private static async Task ExtractPluginArchiveAsync(string zipFilePath, string extractDir)
+        {
+            using var zip = ZipFile.OpenRead(zipFilePath);
+            if (zip.Entries.Count > MaxPluginArchiveEntries)
+            {
+                throw new NcfExceptionBase("压缩包条目数量超过限制");
+            }
+
+            long expandedBytes = 0;
+            var extractedPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var entry in zip.Entries)
+            {
+                if (entry.Length < 0 || entry.Length > MaxPluginArchiveExpandedBytes - expandedBytes)
+                {
+                    throw new NcfExceptionBase("压缩包解压后大小超过限制");
+                }
+
+                expandedBytes += entry.Length;
+                var targetPath = GetSafeArchiveEntryPath(extractDir, entry.FullName);
+                if (!extractedPaths.Add(targetPath))
+                {
+                    throw new NcfExceptionBase("压缩包包含重复路径");
+                }
+
+                if (string.IsNullOrEmpty(entry.Name))
+                {
+                    Directory.CreateDirectory(targetPath);
+                    continue;
+                }
+
+                var targetDirectory = Path.GetDirectoryName(targetPath);
+                if (string.IsNullOrEmpty(targetDirectory))
+                {
+                    throw new NcfExceptionBase("压缩包路径格式错误");
+                }
+
+                Directory.CreateDirectory(targetDirectory);
+                await using var input = entry.Open();
+                await using var output = new FileStream(targetPath, FileMode.CreateNew, FileAccess.Write, FileShare.None);
+                await input.CopyToAsync(output);
+            }
+        }
+
+        private static string SanitizePathComponent(string value, string componentName)
+        {
+            var trimmed = (value ?? string.Empty).Trim();
+            if (string.IsNullOrWhiteSpace(trimmed) || trimmed is "." or "..")
+            {
+                throw new NcfExceptionBase($"{componentName}名称不合法");
+            }
+
+            var invalidChars = Path.GetInvalidFileNameChars();
+            var sanitized = new string(trimmed.Select(character =>
+                character == '/' || character == '\\' || char.IsControl(character) || invalidChars.Contains(character)
+                    ? '_'
+                    : character).ToArray());
+
+            if (string.IsNullOrWhiteSpace(sanitized) || sanitized is "." or "..")
+            {
+                throw new NcfExceptionBase($"{componentName}名称不合法");
+            }
+
+            return sanitized.Length <= 100 ? sanitized : sanitized[..100];
+        }
+
+        private static string GetSafeChildPath(string parentPath, string childName)
+        {
+            var parent = Path.GetFullPath(parentPath);
+            var fullPath = Path.GetFullPath(Path.Combine(parent, childName));
+            var expectedPrefix = parent.EndsWith(Path.DirectorySeparatorChar)
+                ? parent
+                : parent + Path.DirectorySeparatorChar;
+
+            if (!fullPath.StartsWith(expectedPrefix, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new NcfExceptionBase("文件路径越界");
+            }
+
+            return fullPath;
+        }
+
+        private static string GetSafeArchiveEntryPath(string extractDir, string entryName)
+        {
+            var normalized = (entryName ?? string.Empty).Replace('\\', '/');
+            if (string.IsNullOrWhiteSpace(normalized) || normalized.StartsWith("/", StringComparison.Ordinal) ||
+                normalized.IndexOf('\0') >= 0)
+            {
+                throw new NcfExceptionBase("压缩包包含不合法路径");
+            }
+
+            var segments = normalized.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            if (segments.Any(segment => segment is "." or ".."))
+            {
+                throw new NcfExceptionBase("压缩包包含路径穿越内容");
+            }
+
+            var root = Path.GetFullPath(extractDir);
+            var target = Path.GetFullPath(Path.Combine(root, normalized.Replace('/', Path.DirectorySeparatorChar)));
+            var expectedPrefix = root.EndsWith(Path.DirectorySeparatorChar)
+                ? root
+                : root + Path.DirectorySeparatorChar;
+
+            if (!target.StartsWith(expectedPrefix, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new NcfExceptionBase("压缩包包含越界路径");
+            }
+
+            return target;
         }
     }
 }

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.14.0-preview5</Version>
+    <Version>0.14.1-preview6</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -76,6 +76,7 @@
 		4、同步管理页面与前端交互文案的多语言显示
 		5、同步 NeuChar 模型的 ApiVersion 到本地模型配置，避免模型 API 版本硬编码
 		6、优化管理页模型信息复制交互，提升剪贴板操作兼容性
+		[2026-07-29] v0.14.1-preview6 Dependency update from Senparc.Ncf.AreaBase to 0.22.0-preview3
 </PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>

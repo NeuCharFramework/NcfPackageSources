@@ -13,18 +13,23 @@
 
     修改标识：Senparc - 20260705
     修改描述：v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3
+
+    修改标识：Senparc - 20260729
+    修改描述：v0.17.1-preview6 加强提示词接口授权并防护插件压缩包路径
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Senparc.Xncf.AreaBase.Admin.Filters;
+using Senparc.Ncf.Core.Authorization;
 using System;
 using System.IO;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.Controllers;
 
 [ApiController]
-[ApiAuthorize("AdminOnly")]
+[ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
 [Route("api/Senparc.Xncf.PromptRange/[controller]/[action]")]
 public class PromptImageController : ControllerBase
 {

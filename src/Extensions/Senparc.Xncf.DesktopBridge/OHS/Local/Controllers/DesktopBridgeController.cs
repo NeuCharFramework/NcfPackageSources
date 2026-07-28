@@ -9,6 +9,9 @@
     修改标识：Senparc - 20260726
     修改描述：v0.1.0-preview2 同步模块功能与兼容性改进
 
+    修改标识：Senparc - 20260729
+    修改描述：v0.1.1-preview3 复用 NCF 标准 AdminOnly 策略名称
+
 ----------------------------------------------------------------*/
 
 using System.Text.Json;
@@ -17,6 +20,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using Senparc.Ncf.Core.Authorization;
 using Senparc.Xncf.DesktopBridge.Models;
 using Senparc.Xncf.DesktopBridge.Services;
 
@@ -28,7 +32,7 @@ public sealed class DesktopBridgeController : ControllerBase
 {
     public const int CurrentProtocolVersion = 1;
     public const string BridgeVersion = "0.1.0-preview2";
-    private const string AdminOnlyPolicy = "AdminOnly";
+    private const string AdminOnlyPolicy = NcfAuthorizationPolicyNames.AdminOnly;
     private const string BackendJwtScheme = "Bearer_Backend";
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 

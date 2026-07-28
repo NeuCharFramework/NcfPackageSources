@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.37.0-preview5</Version>
+    <Version>0.37.1-preview6</Version>
     <LangVersion>latest</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -99,6 +99,8 @@
 			5、同步 AIKernel 模型 API 版本适配，并完善生成模板的多语言页面
 			6、构建命令改为直接调用进程 API，不再依赖 cmd.exe
 			7、改善构建输出捕获并开放测试所需的内部访问
+			[2026-07-29] v0.37.1-preview6 默认关闭未受保护的 Builder MCP 路由
+			1、保持 Builder MCP 工具关闭，避免在缺少管理员授权策略时发布未认证接口
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

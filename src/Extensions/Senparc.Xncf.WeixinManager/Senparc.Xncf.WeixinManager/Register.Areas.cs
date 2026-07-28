@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260717
     修改描述：v0.23.0-preview3 为 WeixinManager 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20260729
+    修改描述：v0.23.1-preview4 限制微信管理模块的敏感日志和外部接口暴露
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -53,9 +56,14 @@ namespace Senparc.Xncf.WeixinManager
                 options.BaseApiControllerType = null;
                 options.CopyCustomAttributes = true;
                 options.TaskCount = Environment.ProcessorCount * 4;
-                options.ShowDetailApiLog = true;
+                // Detailed API logging can capture request parameters such as
+                // app secrets and access tokens. Restrict it to development.
+                options.ShowDetailApiLog = env.IsDevelopment();
                 options.AdditionalAttributeFunc = null;
-                options.ForbiddenExternalAccess = false;
+                // The generated SDK endpoints are not a public, authenticated API
+                // surface. Keep them local-only unless a deployment explicitly
+                // introduces a separate authentication and allow-list boundary.
+                options.ForbiddenExternalAccess = true;
                 options.UseLowerCaseApiName = Senparc.CO2NET.Config.SenparcSetting.UseLowerCaseApiName ?? false;
             });
 

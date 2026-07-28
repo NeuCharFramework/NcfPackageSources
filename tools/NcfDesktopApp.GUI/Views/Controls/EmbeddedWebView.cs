@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：EmbeddedWebView.cs
+    文件功能描述：EmbeddedWebView.cs 相关实现
+    
+    
+    创建标识：Senparc - 20250720
+    
+    修改标识：Senparc - 20260729
+    修改描述：v0.3.3 修复 macOS WebView 编辑桥接并清理应用包构建残留
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -342,7 +356,7 @@ public partial class EmbeddedWebView : UserControl
     /// <summary>供主窗口 Edit 菜单 / 快捷键调用：粘贴。</summary>
     public Task<bool> PasteAsync() => WebViewEditBridge.TryPasteAsync(_webView, WebViewEditBridge.GetClipboard(this));
 
-    private async void OnWebViewNavigationCompleted(object? sender, WebViewCore.Events.WebViewUrlLoadedEventArg e)
+    private void OnWebViewNavigationCompleted(object? sender, WebViewCore.Events.WebViewUrlLoadedEventArg e)
     {
         Debug.WriteLine($"[EmbeddedWebView] NavigationCompleted IsSuccess={e.IsSuccess}");
         if (!e.IsSuccess)
@@ -350,7 +364,10 @@ public partial class EmbeddedWebView : UserControl
             return;
         }
 
-        await WebViewEditBridge.EnsureKeyboardPatchAsync(_webView);
+        if (WebViewEditBridge.IsScriptBridgeSupported)
+        {
+            _ = WebViewEditBridge.EnsureKeyboardPatchAsync(_webView);
+        }
     }
 
     // 后退功能，供外部调用  

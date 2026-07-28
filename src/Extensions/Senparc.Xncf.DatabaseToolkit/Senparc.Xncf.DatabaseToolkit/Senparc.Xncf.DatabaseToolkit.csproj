@@ -4,7 +4,7 @@
     <!--<TargetFrameworks>netstandard2.1;netcoreapp3.1;net8.0</TargetFrameworks>-->
     <!--<TargetFrameworks Condition=" '$(DatabasePlant)' != 'true' ">netstandard2.1</TargetFrameworks>
     <TargetFrameworks Condition=" '$(DatabasePlant)' == 'true'">netcoreapp3.1</TargetFrameworks>-->
-    <Version>0.26.0-preview2</Version>
+    <Version>0.27.0-preview3</Version>
     <AssemblyName>Senparc.Xncf.DatabaseToolkit</AssemblyName>
     <RootNamespace>Senparc.Xncf.DatabaseToolkit</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -48,6 +48,9 @@
       2、更新 FunctionRender 与请求模型文案的资源化解析
       3、统一模块注册信息、菜单名称与功能描述的本地化输出
       4、补充并统一多语言资源键及资源文件
+      [2026-07-29] v0.27.0-preview3 增加数据库分页筛选执行能力并限制请求范围
+      1、使用仓储分页查询返回数据库侧分页结果和总数，避免全量加载
+      2、规范页码页大小并支持按实体字符串属性进行筛选
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -86,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.8-preview.3" />
+    <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
   </ItemGroup>

@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260717
     修改描述：v0.37.0-preview5 增强 XNCF 构建、数据库迁移与 AI 生成流程的本地化支持
 
+    修改标识：Senparc - 20260729
+    修改描述：v0.37.1-preview6 默认关闭未受保护的 Builder MCP 路由
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -60,7 +63,10 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override string Description => XncfBuilderResource.Get("Module.XncfBuilder.Description", "快速生成 XNCF 模块基础程序代码或 Sample 演示，可基于基础代码扩展自己的应用");
 
-        public override bool EnableMcpServer => true;
+        // The builder's MCP tool attributes are intentionally disabled. Do not
+        // publish an unauthenticated MCP route until an administrator-only
+        // endpoint policy is applied to the re-enabled tools.
+        public override bool EnableMcpServer => false;
 
         //public override IList<Type> Functions => new Type[] {
         //    typeof(BuildXncf),

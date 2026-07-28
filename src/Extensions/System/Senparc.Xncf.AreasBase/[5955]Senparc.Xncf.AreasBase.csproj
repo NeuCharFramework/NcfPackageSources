@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.13.0-preview2</Version>
+    <Version>0.13.1-preview3</Version>
     <AssemblyName>Senparc.Xncf.AreasBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.AreasBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -35,6 +35,7 @@
 				1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
 				2、统一模块注册信息、菜单名称与功能描述的本地化输出
 				3、补充并统一多语言资源键及资源文件
+				[2026-07-29] v0.13.1-preview3 Dependency update from Senparc.Ncf.AreaBase to 0.22.0-preview3
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

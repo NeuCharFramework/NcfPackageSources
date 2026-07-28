@@ -584,6 +584,50 @@ var app = new Vue({
     },
     calculateDuration,
     scoreFormatter,
+    escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+    },
+    safeMarkdownUrl(value) {
+      try {
+        const url = new URL(String(value || ''), window.location.origin)
+        return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : ''
+      } catch (e) {
+        return ''
+      }
+    },
+    renderSafeMarkdown(content) {
+      const escapedContent = this.escapeHtml(content)
+      if (typeof marked === 'undefined') {
+        return escapedContent.replace(/\n/g, '<br>')
+      }
+
+      const viewModel = this
+      const renderer = new marked.Renderer()
+      renderer.link = function ({ href, title, tokens }) {
+        const safeHref = viewModel.safeMarkdownUrl(href)
+        const label = this.parser.parseInline(tokens)
+        if (!safeHref) {
+          return label
+        }
+        const safeTitle = title ? ` title="${viewModel.escapeHtml(title)}"` : ''
+        return `<a href="${viewModel.escapeHtml(safeHref)}"${safeTitle}>${label}</a>`
+      }
+      renderer.image = function ({ href, title, text }) {
+        const safeHref = viewModel.safeMarkdownUrl(href)
+        if (!safeHref) {
+          return viewModel.escapeHtml(text)
+        }
+        const safeTitle = title ? ` title="${viewModel.escapeHtml(title)}"` : ''
+        return `<img src="${viewModel.escapeHtml(safeHref)}" alt="${viewModel.escapeHtml(text)}"${safeTitle}>`
+      }
+
+      return marked.parse(escapedContent, { renderer })
+    },
     formatAgentGraphDebugTime(value) {
       if (!value) {
         return '--'
@@ -1714,7 +1758,7 @@ var app = new Vue({
             const chatGroupHistories = data?.data?.chatGroupHistories ?? []
             const historiesData = chatGroupHistories.map(item => {
               //使用 MarkDown 格式，对输出结果进行展示
-              item.messageHtml = marked.parse(item.message);
+              item.messageHtml = this.renderSafeMarkdown(item.message);
               return item
             })
             if (historiesData.length > 0) {
@@ -2273,7 +2317,7 @@ var app = new Vue({
         fromAgentTemplateId: 0,
         addTime: nowIso,
         message: 'Generating...',
-        messageHtml: marked.parse('Generating...'),
+        messageHtml: this.renderSafeMarkdown('Generating...'),
         promptTokens: 0,
         completionTokens: 0,
         totalTokens: 0,
@@ -2566,7 +2610,7 @@ var app = new Vue({
         fromAgentTemplateId: payload.fromAgentTemplateId || 0,
         addTime: payload.timestamp ? new Date(payload.timestamp).toISOString() : new Date().toISOString(),
         message: mergedMessage,
-        messageHtml: marked.parse(mergedMessage || ''),
+        messageHtml: this.renderSafeMarkdown(mergedMessage || ''),
         promptTokens: payload.promptTokens || 0,
         completionTokens: payload.completionTokens || 0,
         totalTokens: payload.totalTokens || 0,
@@ -2616,7 +2660,7 @@ var app = new Vue({
           fromAgentTemplateId: payload.fromAgentTemplateId || existedFinal.fromAgentTemplateId || 0,
           addTime: payload.timestamp ? new Date(payload.timestamp).toISOString() : (existedFinal.addTime || new Date().toISOString()),
           message: message || existedFinal.message || '',
-          messageHtml: marked.parse(message || existedFinal.message || ''),
+          messageHtml: this.renderSafeMarkdown(message || existedFinal.message || ''),
           promptTokens: payload.promptTokens || existedFinal.promptTokens || 0,
           completionTokens: payload.completionTokens || existedFinal.completionTokens || 0,
           totalTokens: payload.totalTokens || existedFinal.totalTokens || 0,
@@ -2637,7 +2681,7 @@ var app = new Vue({
         fromAgentTemplateId: payload.fromAgentTemplateId || 0,
         addTime: payload.timestamp ? new Date(payload.timestamp).toISOString() : new Date().toISOString(),
         message,
-        messageHtml: marked.parse(message),
+        messageHtml: this.renderSafeMarkdown(message),
         promptTokens: payload.promptTokens || 0,
         completionTokens: payload.completionTokens || 0,
         totalTokens: payload.totalTokens || 0,
@@ -3697,7 +3741,7 @@ var app = new Vue({
               const promptResults = data?.data?.promptResults ?? []
               enriched.outputList = promptResults.map(oitem => {
                 oitem.addTime = oitem.addTime ? formatDate(oitem.addTime) : ''
-                oitem.resultStringHtml = marked.parse(oitem.resultString || '')
+                oitem.resultStringHtml = this.renderSafeMarkdown(oitem.resultString || '')
                 return oitem
               })
             }
@@ -4848,6 +4892,38 @@ function scoreFormatter(score) {
 //         })
 // }
 
+function sanitizeTaskHtml(value) {
+  const html = String(value ?? '')
+  if (typeof DOMPurify !== 'undefined') {
+    return DOMPurify.sanitize(html)
+  }
+
+  const template = document.createElement('template')
+  template.innerHTML = html
+  template.content.querySelectorAll('script,style,iframe,object,embed,applet,base,form,meta,link').forEach(node => node.remove())
+  template.content.querySelectorAll('*').forEach(element => {
+    Array.from(element.attributes).forEach(attribute => {
+      const name = attribute.name.toLowerCase()
+      if (name.startsWith('on') || name === 'style' || name === 'srcdoc') {
+        element.removeAttribute(attribute.name)
+        return
+      }
+
+      if (['href', 'src', 'action', 'formaction', 'xlink:href'].includes(name)) {
+        try {
+          const url = new URL(attribute.value, document.baseURI)
+          if (url.protocol !== 'http:' && url.protocol !== 'https:' && !attribute.value.trim().startsWith('#')) {
+            element.removeAttribute(attribute.name)
+          }
+        } catch (error) {
+          element.removeAttribute(attribute.name)
+        }
+      }
+    })
+  })
+  return template.innerHTML
+}
+
 // task-html-renderer 渲染任务对话记录的内容
 Vue.component('task-html-renderer', {
   props: ['content'],
@@ -4855,7 +4931,7 @@ Vue.component('task-html-renderer', {
     return createElement('div', {
       class: 'taskrecord-listWrap-item-content', // 使用 CSS 类
       domProps: {
-        innerHTML: this.content // 直接插入 HTML
+        innerHTML: sanitizeTaskHtml(this.content)
       }
     });
   }

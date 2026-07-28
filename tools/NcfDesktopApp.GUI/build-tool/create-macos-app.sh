@@ -183,6 +183,9 @@ create_app_bundle() {
     local app_bundle="$OUTPUT_DIR/$APP_NAME-$arch.app"
     
     echo -e "${BLUE}📦 创建 $arch 应用程序包...${NC}"
+
+    # 每次重建精确的目标包，避免旧版本 DLL、plist 或签名残留。
+    rm -rf "$app_bundle"
     
     # 创建 .app 目录结构
     mkdir -p "$app_bundle/Contents/MacOS"
@@ -377,6 +380,7 @@ create_universal_app() {
         echo -e "${BLUE}🔄 创建通用二进制文件应用程序包...${NC}"
         
         # 复制 ARM64 版本作为基础
+        rm -rf "$universal_app"
         cp -R "$arm64_app" "$universal_app"
         
         # 使用 lipo 创建通用二进制文件
@@ -460,7 +464,12 @@ create_dmg() {
         [ -f "$dmg_file" ] && rm -f "$dmg_file"
 
         # 先创建可写 DMG
-        hdiutil create -srcfolder "$dmg_temp_dir" -volname "$APP_NAME" -fs HFS+ -format UDRW -ov "$rw_dmg" >/dev/null
+        if ! hdiutil create -srcfolder "$dmg_temp_dir" -volname "$APP_NAME" -fs HFS+ -format UDRW -ov "$rw_dmg" >/dev/null; then
+            echo -e "${RED}❌ DMG 可写镜像创建失败${NC}"
+            rm -f "$rw_dmg"
+            rm -rf "$dmg_temp_dir"
+            return 1
+        fi
 
         # 挂载设置卷图标
         local mount_point="$OUTPUT_DIR/_dmg_mount"
@@ -481,7 +490,12 @@ create_dmg() {
         fi
 
         # 转换为压缩 DMG
-        hdiutil convert "$rw_dmg" -format UDZO -imagekey zlib-level=9 -o "$dmg_file" >/dev/null
+        if ! hdiutil convert "$rw_dmg" -format UDZO -imagekey zlib-level=9 -o "$dmg_file" >/dev/null; then
+            echo -e "${RED}❌ DMG 压缩转换失败${NC}"
+            rm -f "$rw_dmg"
+            rm -rf "$dmg_temp_dir"
+            return 1
+        fi
         rm -f "$rw_dmg"
 
         # 清理临时目录

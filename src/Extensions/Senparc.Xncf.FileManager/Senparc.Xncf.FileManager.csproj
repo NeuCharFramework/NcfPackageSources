@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.3.0-preview2</Version>
+    <Version>0.3.1-preview3</Version>
     <AssemblyName>Senparc.Xncf.FileManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.FileManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -31,6 +31,9 @@
       3、统一模块注册信息、菜单名称与功能描述的本地化输出
       4、同步管理页面与前端交互文案的多语言显示
       5、调整文件管理页链接导航处理，兼容桌面内嵌 WebView
+      [2026-07-29] v0.3.1-preview3 加强文件上传校验和物理路径安全
+      1、增加防伪校验、文件数量/大小/扩展名限制并规范原始文件名
+      2、通过规范化路径阻止文件读取、删除和下载越界
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

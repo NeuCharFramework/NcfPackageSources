@@ -111,7 +111,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
         /// <summary>
         /// 完整流程验证（覆盖 Bug 1/2/3/4）：
         /// 注册了带有 Mock 数据的 ServiceBase 后，QueryRecordsAsync 能正确通过反射调用
-        /// GetFullListAsync 并返回数据。
+        /// GetObjectListAsync 并返回分页数据。
         /// </summary>
         [TestMethod]
         public async Task QueryRecordsAsync_WhenServiceRegistered_ReturnsDataFromGetFullListAsync()
@@ -133,7 +133,9 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
             var mockService = new Mock<ServiceBase<FakeTestEntity>>(
                 mockRepo.Object, mockInnerSp.Object);
             mockService
-                .Setup(s => s.GetFullListAsync(
+                .Setup(s => s.GetObjectListAsync(
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
                     It.IsAny<Expression<Func<FakeTestEntity, bool>>>(),
                     It.IsAny<string?>(),
                     It.IsAny<string[]>()))
@@ -158,12 +160,14 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
                 "应返回 mock 中的 2 条记录");
 
             mockService.Verify(
-                s => s.GetFullListAsync(
+                s => s.GetObjectListAsync(
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
                     It.IsAny<Expression<Func<FakeTestEntity, bool>>>(),
                     It.IsAny<string?>(),
                     It.IsAny<string[]>()),
                 Times.Once,
-                "GetFullListAsync 应在 QueryRecordsAsync 执行中被准确调用一次");
+                "GetObjectListAsync 应在 QueryRecordsAsync 执行中被准确调用一次");
         }
 
         /// <summary>
