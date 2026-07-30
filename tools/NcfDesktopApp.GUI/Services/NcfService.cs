@@ -12,6 +12,7 @@
 
 ----------------------------------------------------------------*/
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -39,6 +40,8 @@ public class NcfService
     private const string GitHubLatestReleaseUrl = "https://api.github.com/repos/NeuCharFramework/NCF/releases/latest";
     private const int DefaultRequiredDotnetMajorVersion = 10;
     private static readonly TimeSpan SourceProbeTimeout = TimeSpan.FromSeconds(10);
+    private static readonly object PortReservationSync = new();
+    private static readonly HashSet<int> ReservedPorts = new();
 
     private readonly HttpClient _httpClient;
     private readonly ILogger<NcfService>? _logger;
@@ -828,6 +831,58 @@ public class NcfService
         }
         
         throw new InvalidOperationException($"无法找到可用端口（范围: {startPort} - {endPort}）");
+    }
+
+    /// <summary>
+    /// 为当前桌面进程中的一个工作台预留端口，避免多个窗口并行启动时选中同一端口。
+    /// 调用方应在站点完成监听或启动失败后调用 <see cref="ReleasePortReservation"/>。
+    /// </summary>
+    public async Task<int> ReserveAvailablePortAsync(int startPort = 5001, int endPort = 5300)
+    {
+        for (var port = startPort; port <= endPort; port++)
+        {
+            lock (PortReservationSync)
+            {
+                if (ReservedPorts.Contains(port))
+                {
+                    continue;
+                }
+            }
+
+            if (await IsPortInUseAsync(port).ConfigureAwait(false))
+            {
+                continue;
+            }
+
+            try
+            {
+                using var listener = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, port);
+                listener.Start();
+                listener.Stop();
+            }
+            catch
+            {
+                continue;
+            }
+
+            lock (PortReservationSync)
+            {
+                if (ReservedPorts.Add(port))
+                {
+                    return port;
+                }
+            }
+        }
+
+        throw new InvalidOperationException($"无法找到可预留端口（范围: {startPort} - {endPort}）");
+    }
+
+    public void ReleasePortReservation(int port)
+    {
+        lock (PortReservationSync)
+        {
+            ReservedPorts.Remove(port);
+        }
     }
     
     public Task<Process> StartNcfProcessAsync(int port, CancellationToken cancellationToken = default)

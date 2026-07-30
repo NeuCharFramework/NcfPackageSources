@@ -8,11 +8,14 @@ using Avalonia.Markup.Xaml;
 using NcfDesktopApp.GUI.ViewModels;
 using NcfDesktopApp.GUI.Views;
 using AvaloniaWebView;
+using System.Collections.Generic;
 
 namespace NcfDesktopApp.GUI;
 
 public partial class App : Application
 {
+    private readonly List<MainWindow> _workspaceWindows = new();
+
     public override void RegisterServices()
     {
         base.RegisterServices();
@@ -30,53 +33,74 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            // 仅在主窗口关闭时退出；停止 NCF 目标或关闭助手窗口不得结束整个应用。
-            desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
+            // 每个窗口拥有独立的进程/端口/Bridge 会话；最后一个工作台关闭后才退出。
+            desktop.ShutdownMode = ShutdownMode.OnLastWindowClose;
 
             // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
-            var viewModel = new MainWindowViewModel();
-            var mainWindow = new MainWindow
-            {
-                DataContext = viewModel,
-            };
-            var robotWindow = new DesktopRobotWindow
-            {
-                DataContext = viewModel.Robot,
-                OpenMainWindowRequested = () =>
-                {
-                    if (!mainWindow.IsVisible)
-                    {
-                        mainWindow.Show();
-                    }
-                    mainWindow.WindowState = Avalonia.Controls.WindowState.Normal;
-                    mainWindow.Activate();
-                }
-            };
-
-            viewModel.ShowDesktopRobotRequested = () =>
-            {
-                if (!robotWindow.IsVisible)
-                {
-                    robotWindow.Show();
-                }
-                robotWindow.Activate();
-            };
-
-            mainWindow.Opened += (_, _) => robotWindow.Show();
-            mainWindow.Closed += (_, _) =>
-            {
-                // 主窗口关闭时一并收起助手；不要在停止 NCF 时走到这里。
-                if (robotWindow.IsVisible)
-                {
-                    robotWindow.Close();
-                }
-            };
-            desktop.MainWindow = mainWindow;
+            desktop.MainWindow = CreateWorkspaceWindow(desktop, showImmediately: false);
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private MainWindow CreateWorkspaceWindow(
+        IClassicDesktopStyleApplicationLifetime desktop,
+        bool showImmediately)
+    {
+        var viewModel = new MainWindowViewModel();
+        var workspaceNumber = _workspaceWindows.Count + 1;
+        var mainWindow = new MainWindow
+        {
+            DataContext = viewModel,
+            Title = $"NCF Agent Workspace #{workspaceNumber}"
+        };
+        var robotWindow = new DesktopRobotWindow
+        {
+            DataContext = viewModel.Robot,
+            OpenMainWindowRequested = () =>
+            {
+                if (!mainWindow.IsVisible)
+                {
+                    mainWindow.Show();
+                }
+                mainWindow.WindowState = WindowState.Normal;
+                mainWindow.Activate();
+            }
+        };
+
+        viewModel.CreateWorkspaceWindowRequested = () =>
+        {
+            var newWindow = CreateWorkspaceWindow(desktop, showImmediately: true);
+            newWindow.Activate();
+        };
+        viewModel.ShowDesktopRobotRequested = () =>
+        {
+            if (!robotWindow.IsVisible)
+            {
+                robotWindow.Show();
+            }
+            robotWindow.Activate();
+        };
+
+        mainWindow.Opened += (_, _) => robotWindow.Show();
+        mainWindow.Closed += (_, _) =>
+        {
+            if (robotWindow.IsVisible)
+            {
+                robotWindow.Close();
+            }
+            _workspaceWindows.Remove(mainWindow);
+        };
+        _workspaceWindows.Add(mainWindow);
+
+        if (showImmediately)
+        {
+            mainWindow.Show();
+        }
+
+        return mainWindow;
     }
 
     private void DisableAvaloniaDataAnnotationValidation()

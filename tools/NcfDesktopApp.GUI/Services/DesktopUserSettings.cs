@@ -39,6 +39,16 @@ public sealed class DesktopUserSettings
     public string ExternalNcfPath { get; set; } = string.Empty;
 
     /// <summary>
+    /// 最近连接的远程 NCF 站点。DesktopBridge 令牌不会持久化。
+    /// </summary>
+    public string RemoteSiteUrl { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 从 Senparc.NCF.Template 创建工作区时使用的父目录。
+    /// </summary>
+    public string TemplateWorkspaceParentPath { get; set; } = string.Empty;
+
+    /// <summary>
     /// 外部目标最近使用记录。
     /// </summary>
     public List<string> RecentNcfPaths { get; set; } = new();

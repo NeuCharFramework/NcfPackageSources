@@ -80,7 +80,30 @@ public sealed class DesktopBridgeClientTests
     }
 
     [TestMethod]
-    public async Task ProbeAsync_WhenAddressIsNotLoopback_ReturnsUnavailableWithoutSendingRequest()
+    public async Task ProbeAsync_WhenRemoteAddressUsesHttps_SendsProtectedRequest()
+    {
+        var requestSent = false;
+        await using var client = CreateClient(_ =>
+        {
+            requestSent = true;
+            return JsonResponse("""
+                {
+                  "protocolVersion": 1,
+                  "bridgeVersion": "0.1.1-preview3",
+                  "supportsSse": true,
+                  "supportsSnapshot": true
+                }
+                """);
+        });
+
+        var result = await client.ProbeAsync("https://example.com", Token);
+
+        Assert.AreEqual(DesktopBridgeAvailability.Available, result.Availability);
+        Assert.IsTrue(requestSent);
+    }
+
+    [TestMethod]
+    public async Task ProbeAsync_WhenRemoteAddressUsesHttp_BlocksRequest()
     {
         var requestSent = false;
         await using var client = CreateClient(_ =>
@@ -89,10 +112,24 @@ public sealed class DesktopBridgeClientTests
             return JsonResponse("{}");
         });
 
-        var result = await client.ProbeAsync("https://example.com", Token);
+        var result = await client.ProbeAsync("http://example.com", Token);
 
         Assert.AreEqual(DesktopBridgeAvailability.Unavailable, result.Availability);
         Assert.IsFalse(requestSent);
+        StringAssert.Contains(result.Message, "HTTPS");
+    }
+
+    [TestMethod]
+    public void TryCreateEndpoint_WhenBridgeReturnsCrossOriginAddress_BlocksTokenTarget()
+    {
+        var accepted = SiteEndpointPolicy.TryCreateEndpoint(
+            "https://ncf.example.com",
+            "https://attacker.example.net/events",
+            out _,
+            out var errorMessage);
+
+        Assert.IsFalse(accepted);
+        StringAssert.Contains(errorMessage, "跨站");
     }
 
     [TestMethod]

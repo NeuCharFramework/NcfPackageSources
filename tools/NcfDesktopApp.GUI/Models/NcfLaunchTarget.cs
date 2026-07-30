@@ -17,7 +17,8 @@ public enum NcfLaunchTargetKind
 {
     ManagedPublished,
     ExternalPublished,
-    SourceProject
+    SourceProject,
+    RemoteSite
 }
 
 /// <summary>
@@ -36,11 +37,14 @@ public sealed record NcfLaunchTarget(
 
     public bool IsSourceProject => Kind == NcfLaunchTargetKind.SourceProject;
 
+    public bool IsRemoteSite => Kind == NcfLaunchTargetKind.RemoteSite;
+
     public string KindDisplayName => Kind switch
     {
         NcfLaunchTargetKind.ManagedPublished => "内置托管版本",
         NcfLaunchTargetKind.ExternalPublished => "外部发布目录",
         NcfLaunchTargetKind.SourceProject => "源码工作区",
+        NcfLaunchTargetKind.RemoteSite => "远程 NCF 站点",
         _ => "NCF 目标"
     };
 }

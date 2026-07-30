@@ -30,12 +30,17 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <Button Content="新建工作台"
+                            Command="{Binding CreateWorkspaceWindowCommand}"
+                            Classes="toolbar-action"
+                            Background="#0F766E"
+                            Foreground="White"/>
                     <Button Content="显示助手"
                             Command="{Binding ShowDesktopRobotCommand}"
                             Classes="toolbar-action"
                             Background="#7C3AED"
                             Foreground="White"/>
-                    <Button Content="打开目标目录"
+                    <Button Content="打开目标"
                             Command="{Binding OpenSelectedTargetDirectoryCommand}"
                             Classes="toolbar-action"
                             Background="#475569"
@@ -85,7 +90,7 @@
                                     CornerRadius="7"
                                     Padding="3"
                                     IsEnabled="{Binding IsTargetSelectionEnabled}">
-                                <Grid ColumnDefinitions="*,*">
+                                <Grid ColumnDefinitions="*,*,*">
                                     <Button Grid.Column="0"
                                             Content="托管版本"
                                             Command="{Binding UseManagedRuntimeCommand}"
@@ -98,6 +103,12 @@
                                             Classes="mode-button"
                                             Background="{Binding ExternalModeButtonBackground}"
                                             Foreground="{Binding ExternalModeButtonForeground}"/>
+                                    <Button Grid.Column="2"
+                                            Content="远程站点"
+                                            Command="{Binding UseRemoteTargetCommand}"
+                                            Classes="mode-button"
+                                            Background="{Binding RemoteModeButtonBackground}"
+                                            Foreground="{Binding RemoteModeButtonForeground}"/>
                                 </Grid>
                             </Border>
 
@@ -105,6 +116,10 @@
                             <StackPanel IsVisible="{Binding IsManagedTargetMode}" Spacing="7">
                                 <TextBlock Text="桌面端自动安装和更新，适合日常使用。"
                                            FontSize="11"
+                                           Foreground="{DynamicResource SecondaryTextBrush}"
+                                           TextWrapping="Wrap"/>
+                                <TextBlock Text="多个工作台会共享此托管 Runtime；需要数据和文件隔离时请使用不同的模板/外部工作区。"
+                                           FontSize="10"
                                            Foreground="{DynamicResource SecondaryTextBrush}"
                                            TextWrapping="Wrap"/>
                                 <Border Classes="path-box">
@@ -146,6 +161,36 @@
                                           FontSize="11"/>
                             </StackPanel>
 
+                            <!-- 远程 NCF：HTTPS/SSE 复用站点内 EventBus -->
+                            <StackPanel IsVisible="{Binding IsRemoteTargetMode}"
+                                        IsEnabled="{Binding IsTargetSelectionEnabled}"
+                                        Spacing="8">
+                                <TextBlock Text="连接已部署的 NCF。远程地址强制 HTTPS；localhost 或本机 SSH 隧道可使用 HTTP。"
+                                           FontSize="11"
+                                           Foreground="{DynamicResource SecondaryTextBrush}"
+                                           TextWrapping="Wrap"/>
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBox Grid.Column="0"
+                                             Text="{Binding RemoteSiteUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             Watermark="https://ncf.example.com"
+                                             FontSize="11"
+                                             FontFamily="Consolas,Menlo,Monaco,Courier New"
+                                             Margin="0,0,6,0"/>
+                                    <Button Grid.Column="1"
+                                            Content="检测地址"
+                                            Command="{Binding ValidateRemoteTargetCommand}"
+                                            Classes="secondary-action"/>
+                                </Grid>
+                                <TextBox Text="{Binding RemoteBridgeToken, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         PasswordChar="●"
+                                         Watermark="DesktopBridge 令牌（仅保存在内存）"
+                                         FontSize="11"/>
+                                <TextBlock Text="服务端设置 NCF_DESKTOP_BRIDGE_TOKEN；可叠加 IP 白名单，mTLS 可由本机代理终止，或使用 SSH 隧道。"
+                                           FontSize="10"
+                                           Foreground="{DynamicResource SecondaryTextBrush}"
+                                           TextWrapping="Wrap"/>
+                            </StackPanel>
+
                             <!-- 目标元数据 -->
                             <Border Background="#0A2563EB"
                                     BorderBrush="#332563EB"
@@ -185,6 +230,46 @@
                                           FontSize="11"
                                           IsEnabled="{Binding IsTargetSelectionEnabled}"/>
                             </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 从线上模板新建独立源码工作区 -->
+                    <Border Classes="card">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="新建模板工作区" FontSize="14" FontWeight="SemiBold"/>
+                            <TextBlock Text="在线安装最新 Senparc.NCF.Template，再创建不触发 restore 的源码目录。现有非空目录不会覆盖。"
+                                       FontSize="10.5"
+                                       Foreground="{DynamicResource SecondaryTextBrush}"
+                                       TextWrapping="Wrap"/>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBox Grid.Column="0"
+                                         Text="{Binding TemplateWorkspaceParentPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Watermark="工作区父目录"
+                                         FontSize="10.5"
+                                         FontFamily="Consolas,Menlo,Monaco,Courier New"
+                                         Margin="0,0,6,0"/>
+                                <Button Grid.Column="1"
+                                        Content="选择"
+                                        Command="{Binding SelectTemplateWorkspaceParentCommand}"
+                                        Classes="secondary-action"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBox Grid.Column="0"
+                                         Text="{Binding TemplateWorkspaceName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Watermark="新工作区名称"
+                                         FontSize="11"
+                                         Margin="0,0,6,0"/>
+                                <Button Grid.Column="1"
+                                        Content="在线创建"
+                                        Command="{Binding CreateWorkspaceFromTemplateCommand}"
+                                        Classes="primary-action"
+                                        Background="#0F766E"
+                                        Foreground="White"/>
+                            </Grid>
+                            <TextBlock Text="{Binding TemplateCreationStatus}"
+                                       FontSize="10"
+                                       Foreground="{DynamicResource SecondaryTextBrush}"
+                                       TextWrapping="Wrap"/>
                         </StackPanel>
                     </Border>
 
