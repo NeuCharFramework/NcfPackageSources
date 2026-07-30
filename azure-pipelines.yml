@@ -47,17 +47,9 @@ jobs:
       restoreKeys: 'nuget'
     displayName: 'Cache NuGet Packages'
 
-  # 🟢 缓存 NuGet 工具（减少安装时间）
-  - task: Cache@2
-    inputs:
-      key: 'nuget-tool | "$(Agent.OS)"'
-      path: 'C:\ProgramData\nuget'  # NuGetTool 的全局存储位置
-      restoreKeys: 'nuget-tool'
-    displayName: 'Cache NuGet Tool'
-
-  # ✅ 使用缓存的 NuGet 版本，避免重复安装
+  # ✅ 使用 NuGet 6.3.0
   - task: NuGetToolInstaller@1
-    displayName: 'Use Cached NuGet 6.3.0'
+    displayName: 'Use NuGet 6.3.0'
     inputs:
       versionSpec: '6.3.0'
 
@@ -307,23 +299,19 @@ jobs:
     enabled: false
     condition: succeededOrFailed()
 
-- job: DesktopBuildAndRelease
-  displayName: 'Build and release NcfDesktopApp.GUI'
-  # Desktop packaging requires macOS for the .app and DMG steps.
+- job: DesktopReleaseGate
+  displayName: 'Check NcfDesktopApp.GUI Release conditions'
+  dependsOn: []
+  # Run the lightweight gate on the existing Windows self-hosted agent.
   pool:
-    vmImage: 'macOS-latest'
+    name: 'SenparcOpenSource'
+    demands:
+      - Agent.OS -equals Windows_NT
   variables:
     - group: NcfGitHubTokenVariableGroup
   steps:
   - checkout: self
     fetchDepth: 0
-
-  - task: UseDotNet@2
-    displayName: 'Use .NET SDK 8.x for Desktop packaging'
-    inputs:
-      packageType: 'sdk'
-      version: '8.0.x'
-      performMultiLevelLookup: false
 
   - task: PowerShell@2
     name: DesktopGate
@@ -465,10 +453,10 @@ jobs:
         $releaseTag = 'desktop-v{0}-build{1}' -f $currentVersion, $env:BUILD_BUILDID
         $versionChangedValue = $versionChanged.ToString().ToLowerInvariant()
         $releaseAllowedValue = $releaseAllowed.ToString().ToLowerInvariant()
-        Write-Host "##vso[task.setvariable variable=desktopVersion]$currentVersion"
-        Write-Host "##vso[task.setvariable variable=desktopVersionChanged]$versionChangedValue"
-        Write-Host "##vso[task.setvariable variable=desktopReleaseAllowed]$releaseAllowedValue"
-        Write-Host "##vso[task.setvariable variable=desktopReleaseTag]$releaseTag"
+        Write-Host "##vso[task.setvariable variable=desktopVersion;isOutput=true]$currentVersion"
+        Write-Host "##vso[task.setvariable variable=desktopVersionChanged;isOutput=true]$versionChangedValue"
+        Write-Host "##vso[task.setvariable variable=desktopReleaseAllowed;isOutput=true]$releaseAllowedValue"
+        Write-Host "##vso[task.setvariable variable=desktopReleaseTag;isOutput=true]$releaseTag"
     env:
       BUILD_REASON: $(Build.Reason)
       BUILD_SOURCEBRANCH: $(Build.SourceBranch)
@@ -480,6 +468,30 @@ jobs:
       SYSTEM_PULLREQUEST_PULLREQUESTNUMBER: $(System.PullRequest.PullRequestNumber)
       GH_TOKEN: $(GH_TOKEN)
 
+- job: DesktopBuildAndRelease
+  displayName: 'Build and release NcfDesktopApp.GUI'
+  dependsOn: DesktopReleaseGate
+  condition: and(succeeded(), eq(dependencies.DesktopReleaseGate.outputs['DesktopGate.desktopReleaseAllowed'], 'true'))
+  # This macOS job is created only after the lightweight gate allows release.
+  pool:
+    vmImage: 'macOS-latest'
+  variables:
+    - group: NcfGitHubTokenVariableGroup
+    - name: desktopVersion
+      value: $[ dependencies.DesktopReleaseGate.outputs['DesktopGate.desktopVersion'] ]
+    - name: desktopReleaseTag
+      value: $[ dependencies.DesktopReleaseGate.outputs['DesktopGate.desktopReleaseTag'] ]
+  steps:
+  - checkout: self
+    fetchDepth: 1
+
+  - task: UseDotNet@2
+    displayName: 'Use .NET SDK 8.x for Desktop packaging'
+    inputs:
+      packageType: 'sdk'
+      version: '8.0.x'
+      performMultiLevelLookup: false
+
   - bash: |
       set -euo pipefail
       cd "$(Build.SourcesDirectory)/tools/NcfDesktopApp.GUI"
@@ -489,7 +501,7 @@ jobs:
       ./build-tool/build-all-platforms-self-contained.sh --clean --single-file --ready-to-run
       ./build-tool/create-macos-app.sh --create-dmg --clean
     displayName: 'Build all Desktop platforms and macOS app/DMG'
-    condition: and(succeeded(), eq(variables['desktopReleaseAllowed'], 'true'))
+    condition: succeeded()
 
   - bash: |
       set -euo pipefail
@@ -522,7 +534,7 @@ jobs:
       test "${#assets[@]}" -eq 6
       echo "Verified six Desktop release assets and macOS Universal.app/DMG outputs."
     displayName: 'Package and verify six Desktop Release assets'
-    condition: and(succeeded(), eq(variables['desktopReleaseAllowed'], 'true'))
+    condition: succeeded()
 
   - bash: |
       set -euo pipefail
@@ -550,7 +562,7 @@ jobs:
         --notes-file "$notes_file" \
         "${assets[@]}"
     displayName: 'Create GitHub Release for NcfDesktopApp.GUI'
-    condition: and(succeeded(), eq(variables['desktopReleaseAllowed'], 'true'))
+    condition: succeeded()
     env:
       GH_TOKEN: $(GH_TOKEN)
       BUILD_REPOSITORY_NAME: $(Build.Repository.Name)
@@ -560,4 +572,4 @@ jobs:
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)/ncf-desktop-release'
       ArtifactName: 'ncf-desktop-release'
-    condition: and(succeeded(), eq(variables['desktopReleaseAllowed'], 'true'))
+    condition: succeeded()
