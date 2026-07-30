@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.1.1</Version>
+    <Version>0.2.0</Version>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -12,6 +12,9 @@
       2、验证会话令牌通过专用请求头发送
       [2026-07-29] v0.1.1 补充 macOS WebView 原生编辑桥接测试
       1、验证 macOS 使用原生编辑命令并在其他平台保留脚本桥接路径
+      [2026-07-30] v0.2.0 验证远程站点和模板工作区安全边界
+      1、覆盖远程 HTTPS、非回环 HTTP 拒绝和回环 SSH 隧道地址
+      2、覆盖模板目标目录防覆盖与路径逃逸保护
     </PackageReleaseNotes>
   </PropertyGroup>
 

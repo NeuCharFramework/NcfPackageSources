@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：AdminChatClient.cs
-    文件功能描述：仅限回环站点的 Admin JWT 登录与聊天 API 客户端
+    文件功能描述：受安全地址策略保护的 Admin JWT 登录与聊天 API 客户端
 
     创建标识：Senparc - 20260726
 ----------------------------------------------------------------*/
@@ -182,9 +182,9 @@ public sealed class AdminChatClient
             throw new AdminChatApiException("请输入消息内容。");
         }
 
-        if (!TryCreateEndpoint(siteUrl, AdminChatStreamApi, out var endpoint))
+        if (!SiteEndpointPolicy.TryCreateEndpoint(siteUrl, AdminChatStreamApi, out var endpoint, out var endpointError))
         {
-            throw new AdminChatApiException("Admin Chat 只允许连接本机 NCF 站点。");
+            throw new AdminChatApiException(endpointError);
         }
 
         using var request = new HttpRequestMessage(HttpMethod.Post, endpoint);
@@ -403,9 +403,9 @@ public sealed class AdminChatClient
         TimeSpan timeout,
         CancellationToken cancellationToken)
     {
-        if (!TryCreateEndpoint(siteUrl, relativePath, out var endpoint))
+        if (!SiteEndpointPolicy.TryCreateEndpoint(siteUrl, relativePath, out var endpoint, out var endpointError))
         {
-            throw new AdminChatApiException("Admin Chat 只允许连接本机 NCF 站点。");
+            throw new AdminChatApiException(endpointError);
         }
 
         using var request = new HttpRequestMessage(method, endpoint);
@@ -483,14 +483,6 @@ public sealed class AdminChatClient
 
     internal static bool TryCreateEndpoint(string siteUrl, string relativePath, out Uri endpoint)
     {
-        endpoint = null!;
-        if (!Uri.TryCreate(siteUrl, UriKind.Absolute, out var baseUri) ||
-            baseUri.Scheme is not ("http" or "https") ||
-            !baseUri.IsLoopback)
-        {
-            return false;
-        }
-
-        return Uri.TryCreate(baseUri, relativePath, out endpoint!);
+        return SiteEndpointPolicy.TryCreateEndpoint(siteUrl, relativePath, out endpoint, out _);
     }
 }

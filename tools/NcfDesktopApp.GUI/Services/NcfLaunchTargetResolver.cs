@@ -123,6 +123,24 @@ public static class NcfLaunchTargetResolver
             "未找到 NCF 入口。发布目录需包含 Senparc.Web.dll/可执行文件，源码目录需包含 Senparc.Web.csproj。");
     }
 
+    public static NcfLaunchTargetResolution ResolveRemote(string? siteUrl)
+    {
+        if (!SiteEndpointPolicy.TryNormalizeSiteUrl(siteUrl, out var siteUri, out var errorMessage))
+        {
+            return NcfLaunchTargetResolution.Failure(errorMessage);
+        }
+
+        var normalizedUrl = siteUri.GetLeftPart(UriPartial.Path).TrimEnd('/');
+        return NcfLaunchTargetResolution.Success(new NcfLaunchTarget(
+            NcfLaunchTargetKind.RemoteSite,
+            normalizedUrl,
+            string.Empty,
+            normalizedUrl,
+            siteUri.Host,
+            "由远程站点报告",
+            siteUri.Scheme == Uri.UriSchemeHttps ? "HTTPS" : "本机隧道/回环 HTTP"));
+    }
+
     private static NcfLaunchTarget CreatePublishedTarget(
         NcfLaunchTargetKind kind,
         string selectedPath,

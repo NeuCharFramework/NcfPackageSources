@@ -102,4 +102,52 @@ public sealed class NcfLaunchTargetResolverTests
         Assert.IsFalse(result.IsValid);
         StringAssert.Contains(result.ErrorMessage, "Senparc.Web");
     }
+
+    [TestMethod]
+    public void ResolveRemote_WhenHttpsAddressProvided_ReturnsRemoteTarget()
+    {
+        var result = NcfLaunchTargetResolver.ResolveRemote("https://ncf.example.com/root/");
+
+        Assert.IsTrue(result.IsValid, result.ErrorMessage);
+        Assert.AreEqual(NcfLaunchTargetKind.RemoteSite, result.Target!.Kind);
+        Assert.AreEqual("https://ncf.example.com/root", result.Target.EntryPath);
+        Assert.IsTrue(result.Target.IsRemoteSite);
+    }
+
+    [TestMethod]
+    public void ResolveRemote_WhenPlainHttpIsNotLoopback_ReturnsSecurityError()
+    {
+        var result = NcfLaunchTargetResolver.ResolveRemote("http://10.0.0.8:5000");
+
+        Assert.IsFalse(result.IsValid);
+        StringAssert.Contains(result.ErrorMessage, "HTTPS");
+    }
+
+    [TestMethod]
+    public void ResolveRemote_WhenHttpUsesSshTunnelLoopback_IsAllowed()
+    {
+        var result = NcfLaunchTargetResolver.ResolveRemote("http://127.0.0.1:5500");
+
+        Assert.IsTrue(result.IsValid, result.ErrorMessage);
+        Assert.AreEqual("本机隧道/回环 HTTP", result.Target!.TargetFramework);
+    }
+
+    [TestMethod]
+    public void TemplateWorkspaceValidation_WhenTargetIsNotEmpty_DoesNotAllowOverwrite()
+    {
+        var target = Path.Combine(_testRoot, "ExistingWorkspace");
+        Directory.CreateDirectory(target);
+        File.WriteAllText(Path.Combine(target, "keep.txt"), "user data");
+
+        Assert.ThrowsException<IOException>(() =>
+            TemplateWorkspaceService.ValidateAndGetTargetPath(_testRoot, "ExistingWorkspace"));
+        Assert.IsTrue(File.Exists(Path.Combine(target, "keep.txt")));
+    }
+
+    [TestMethod]
+    public void TemplateWorkspaceValidation_WhenNameEscapesParent_IsRejected()
+    {
+        Assert.ThrowsException<ArgumentException>(() =>
+            TemplateWorkspaceService.ValidateAndGetTargetPath(_testRoot, "../escaped"));
+    }
 }

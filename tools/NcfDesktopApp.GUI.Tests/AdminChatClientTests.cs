@@ -80,7 +80,7 @@ public sealed class AdminChatClientTests
     }
 
     [TestMethod]
-    public async Task AuthenticateAsync_WhenSiteIsNotLoopback_DoesNotSendCredentials()
+    public async Task AuthenticateAsync_WhenRemoteSiteUsesPlainHttp_DoesNotSendCredentials()
     {
         var requestSent = false;
         var client = CreateClient(_ =>
@@ -90,7 +90,7 @@ public sealed class AdminChatClientTests
         });
 
         await Assert.ThrowsExceptionAsync<AdminChatApiException>(
-            () => client.AuthenticateAsync("https://example.com", "admin", "secret"));
+            () => client.AuthenticateAsync("http://example.com", "admin", "secret"));
 
         Assert.IsFalse(requestSent);
     }

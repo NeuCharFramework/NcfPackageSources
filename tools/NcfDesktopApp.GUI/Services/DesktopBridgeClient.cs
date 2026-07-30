@@ -61,11 +61,11 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
         string sessionToken,
         CancellationToken cancellationToken = default)
     {
-        if (!TryCreateEndpoint(siteUrl, CapabilitiesPath, out var endpoint))
+        if (!SiteEndpointPolicy.TryCreateEndpoint(siteUrl, CapabilitiesPath, out var endpoint, out var endpointError))
         {
             return new DesktopBridgeProbeResult(
                 DesktopBridgeAvailability.Unavailable,
-                "NCF 站点地址无效，已使用兼容模式。");
+                $"{endpointError} 已使用兼容模式。");
         }
 
         try
@@ -356,7 +356,7 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            if (!TryCreateEndpoint(siteUrl, eventPath, out var endpoint))
+            if (!SiteEndpointPolicy.TryCreateEndpoint(siteUrl, eventPath, out var endpoint, out _))
             {
                 NotifyAvailability(new DesktopBridgeProbeResult(
                     DesktopBridgeAvailability.Incompatible,
@@ -475,7 +475,7 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            if (!TryCreateEndpoint(siteUrl, eventPath, out var endpoint))
+            if (!SiteEndpointPolicy.TryCreateEndpoint(siteUrl, eventPath, out var endpoint, out _))
             {
                 NotifyAuthorizedSyncAuthorizationFailed("DesktopBridge 返回了无效的授权同步地址。");
                 return;
@@ -586,25 +586,6 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
         }
         return request;
-    }
-
-    private static bool TryCreateEndpoint(string siteUrl, string relativePath, out Uri endpoint)
-    {
-        endpoint = null!;
-        if (!Uri.TryCreate(siteUrl, UriKind.Absolute, out var baseUri) ||
-            baseUri.Scheme is not ("http" or "https") ||
-            !baseUri.IsLoopback)
-        {
-            return false;
-        }
-
-        if (Uri.TryCreate(baseUri, relativePath, out var resolved) && resolved != null)
-        {
-            endpoint = resolved;
-            return true;
-        }
-
-        return false;
     }
 
     private void NotifyAvailability(DesktopBridgeProbeResult result)

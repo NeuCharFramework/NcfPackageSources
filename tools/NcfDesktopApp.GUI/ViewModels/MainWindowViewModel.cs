@@ -105,6 +105,21 @@ public partial class MainWindowViewModel : ViewModelBase
     private string _externalNcfPath = string.Empty;
 
     [ObservableProperty]
+    private string _remoteSiteUrl = string.Empty;
+
+    [ObservableProperty]
+    private string _remoteBridgeToken = string.Empty;
+
+    [ObservableProperty]
+    private string _templateWorkspaceParentPath = string.Empty;
+
+    [ObservableProperty]
+    private string _templateWorkspaceName = "MyNcfWorkspace";
+
+    [ObservableProperty]
+    private string _templateCreationStatus = "使用 NuGet.org 最新 Senparc.NCF.Template 创建，不自动 restore。";
+
+    [ObservableProperty]
     private string _aspNetCoreEnvironment = "Production";
 
     [ObservableProperty]
@@ -151,6 +166,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public Action? ShowDesktopRobotRequested { get; set; }
 
+    public Action? CreateWorkspaceWindowRequested { get; set; }
+
     public DesktopRobotViewModel Robot { get; } = new();
 
     public ObservableCollection<string> RecentNcfPaths { get; } = new();
@@ -161,7 +178,10 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public bool IsManagedTargetMode => LaunchTargetKind == NcfLaunchTargetKind.ManagedPublished;
 
-    public bool IsExternalTargetMode => !IsManagedTargetMode;
+    public bool IsExternalTargetMode => LaunchTargetKind is
+        NcfLaunchTargetKind.ExternalPublished or NcfLaunchTargetKind.SourceProject;
+
+    public bool IsRemoteTargetMode => LaunchTargetKind == NcfLaunchTargetKind.RemoteSite;
 
     public bool IsTargetSelectionEnabled => !IsOperationInProgress && !_isNcfRunning;
 
@@ -172,6 +192,10 @@ public partial class MainWindowViewModel : ViewModelBase
     public string ExternalModeButtonBackground => IsExternalTargetMode ? "#7C3AED" : "Transparent";
 
     public string ExternalModeButtonForeground => IsExternalTargetMode ? "White" : "#6C757D";
+
+    public string RemoteModeButtonBackground => IsRemoteTargetMode ? "#0F766E" : "Transparent";
+
+    public string RemoteModeButtonForeground => IsRemoteTargetMode ? "White" : "#6C757D";
     
     // 新增浏览器相关属性
     [ObservableProperty]
@@ -266,10 +290,13 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         OnPropertyChanged(nameof(IsManagedTargetMode));
         OnPropertyChanged(nameof(IsExternalTargetMode));
+        OnPropertyChanged(nameof(IsRemoteTargetMode));
         OnPropertyChanged(nameof(ManagedModeButtonBackground));
         OnPropertyChanged(nameof(ManagedModeButtonForeground));
         OnPropertyChanged(nameof(ExternalModeButtonBackground));
         OnPropertyChanged(nameof(ExternalModeButtonForeground));
+        OnPropertyChanged(nameof(RemoteModeButtonBackground));
+        OnPropertyChanged(nameof(RemoteModeButtonForeground));
 
         if (_suppressDesktopSettingsSave)
         {
@@ -295,6 +322,31 @@ public partial class MainWindowViewModel : ViewModelBase
         TargetValidationMessage = "路径已变化，请点击“检测目标”确认入口和运行环境。";
         TargetStatusColor = "#D97706";
         SaveDesktopSettings();
+    }
+
+    partial void OnRemoteSiteUrlChanged(string value)
+    {
+        if (_suppressDesktopSettingsSave)
+        {
+            return;
+        }
+
+        _resolvedLaunchTarget = null;
+        TargetKindText = "远程 NCF 站点";
+        TargetVersionText = "—";
+        TargetFrameworkText = "HTTPS/SSE";
+        TargetEntryText = value;
+        TargetValidationMessage = "地址已变化，请检测远程站点配置。令牌只保存在当前工作台内存中。";
+        TargetStatusColor = "#D97706";
+        SaveDesktopSettings();
+    }
+
+    partial void OnTemplateWorkspaceParentPathChanged(string value)
+    {
+        if (!_suppressDesktopSettingsSave)
+        {
+            SaveDesktopSettings();
+        }
     }
 
     partial void OnAspNetCoreEnvironmentChanged(string value)
@@ -335,6 +387,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly NcfService _ncfService;
     private readonly DesktopBridgeClient _desktopBridgeClient;
     private readonly AdminChatClient _adminChatClient;
+    private readonly TemplateWorkspaceService _templateWorkspaceService;
     private bool _suppressMirrorSettingsSave;
     private bool _suppressDesktopSettingsSave;
     private readonly WebView2Service _webView2Service;
@@ -367,7 +420,7 @@ public partial class MainWindowViewModel : ViewModelBase
         var httpClient = new HttpClient(CreateDesktopHttpHandler(), disposeHandler: true);
         _ncfService = new NcfService(httpClient);
         _webView2Service = new WebView2Service(httpClient);
-        var bridgeHttpClient = new HttpClient(CreateDesktopHttpHandler(), disposeHandler: true)
+        var bridgeHttpClient = new HttpClient(CreateDesktopHttpHandler(allowAutoRedirect: false), disposeHandler: true)
         {
             Timeout = Timeout.InfiniteTimeSpan
         };
@@ -376,10 +429,11 @@ public partial class MainWindowViewModel : ViewModelBase
         _desktopBridgeClient.ActivityReceived += OnDesktopActivityReceived;
         _desktopBridgeClient.AuthorizedSyncReceived += OnDesktopAuthorizedSyncReceived;
         _desktopBridgeClient.AuthorizedSyncAuthorizationFailed += OnDesktopAuthorizedSyncAuthorizationFailed;
-        _adminChatClient = new AdminChatClient(new HttpClient(CreateDesktopHttpHandler(), disposeHandler: true)
+        _adminChatClient = new AdminChatClient(new HttpClient(CreateDesktopHttpHandler(allowAutoRedirect: false), disposeHandler: true)
         {
             Timeout = Timeout.InfiniteTimeSpan
         });
+        _templateWorkspaceService = new TemplateWorkspaceService();
         _logBuffer = new StringBuilder();
         _ncfService.OnDownloadLog = AddLog;
         
@@ -399,9 +453,14 @@ public partial class MainWindowViewModel : ViewModelBase
     /// <summary>
     /// 本机 HTTPS（如 ASP.NET Core 开发证书）校验失败会导致镜像元数据拉取失败并误回退 GitHub；对回环地址放宽证书校验。
     /// </summary>
-    private static HttpMessageHandler CreateDesktopHttpHandler()
+    private static HttpMessageHandler CreateDesktopHttpHandler(bool allowAutoRedirect = true)
     {
-        var handler = new HttpClientHandler();
+        var handler = new HttpClientHandler
+        {
+            // DesktopBridge and Admin JWT headers must never follow a redirect
+            // to another origin. Download/update clients keep normal redirects.
+            AllowAutoRedirect = allowAutoRedirect
+        };
         handler.ServerCertificateCustomValidationCallback = static (request, _, _, sslPolicyErrors) =>
         {
             if (request.RequestUri?.IsLoopback == true)
@@ -443,6 +502,8 @@ public partial class MainWindowViewModel : ViewModelBase
             MirrorServerBaseUrl = MirrorServerBaseUrl,
             LaunchTargetKind = LaunchTargetKind,
             ExternalNcfPath = ExternalNcfPath,
+            RemoteSiteUrl = RemoteSiteUrl,
+            TemplateWorkspaceParentPath = TemplateWorkspaceParentPath,
             RecentNcfPaths = RecentNcfPaths.ToList(),
             AspNetCoreEnvironment = AspNetCoreEnvironment
         });
@@ -450,9 +511,14 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private void RefreshSelectedLaunchTarget()
     {
-        var resolution = IsManagedTargetMode
-            ? NcfLaunchTargetResolver.ResolveManagedRuntime(NcfService.NcfRuntimePath)
-            : NcfLaunchTargetResolver.ResolveExternal(ExternalNcfPath);
+        var resolution = LaunchTargetKind switch
+        {
+            NcfLaunchTargetKind.ManagedPublished =>
+                NcfLaunchTargetResolver.ResolveManagedRuntime(NcfService.NcfRuntimePath),
+            NcfLaunchTargetKind.RemoteSite =>
+                NcfLaunchTargetResolver.ResolveRemote(RemoteSiteUrl),
+            _ => NcfLaunchTargetResolver.ResolveExternal(ExternalNcfPath)
+        };
 
         if (resolution.IsValid)
         {
@@ -461,10 +527,14 @@ public partial class MainWindowViewModel : ViewModelBase
         }
 
         _resolvedLaunchTarget = null;
-        TargetKindText = IsManagedTargetMode ? "内置托管版本" : "外部工作区";
+        TargetKindText = IsManagedTargetMode
+            ? "内置托管版本"
+            : IsRemoteTargetMode ? "远程 NCF 站点" : "外部工作区";
         TargetVersionText = IsManagedTargetMode ? "待安装" : "—";
-        TargetFrameworkText = "—";
-        TargetEntryText = IsManagedTargetMode ? NcfService.NcfRuntimePath : ExternalNcfPath;
+        TargetFrameworkText = IsRemoteTargetMode ? "HTTPS/SSE" : "—";
+        TargetEntryText = IsManagedTargetMode
+            ? NcfService.NcfRuntimePath
+            : IsRemoteTargetMode ? RemoteSiteUrl : ExternalNcfPath;
         TargetValidationMessage = IsManagedTargetMode
             ? "内置 Runtime 尚未安装；首次启动时将下载最新兼容版本。"
             : resolution.ErrorMessage;
@@ -480,6 +550,8 @@ public partial class MainWindowViewModel : ViewModelBase
         TargetEntryText = target.EntryPath;
         TargetValidationMessage = target.IsManaged
             ? "目标有效。此目录由桌面端负责下载、更新和配置保护。"
+            : target.IsRemoteSite
+                ? "远程目标有效。HTTPS 使用系统服务端证书校验；Bridge 令牌不会写入设置。"
             : target.IsSourceProject
                 ? "目标有效。将忽略 launchSettings 并使用 dotnet run --no-restore；不会自动还原包，但构建可能更新 bin/obj。"
                 : "目标有效。外部发布目录只启动不更新；NCF 进程本身仍可能写入日志、数据库和配置。";
@@ -548,7 +620,7 @@ public partial class MainWindowViewModel : ViewModelBase
             await ApplyMirrorUrlFromViewModelToServiceOnUiAsync().ConfigureAwait(true);
             AddLog("🔍 测试网络连接...");
             var isConnected = await _ncfService.TestConnectionAsync();
-            
+
             if (isConnected)
             {
                 AddLog("✅ 网络连接正常");
@@ -594,7 +666,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(CanChangeLaunchTarget))]
     private async Task UseExternalTarget()
     {
-        if (IsManagedTargetMode)
+        if (!IsExternalTargetMode)
         {
             LaunchTargetKind = NcfLaunchTargetKind.ExternalPublished;
         }
@@ -607,6 +679,14 @@ public partial class MainWindowViewModel : ViewModelBase
 
         RefreshSelectedLaunchTarget();
         AddLog("🧭 已切换到外部 NCF 工作区");
+    }
+
+    [RelayCommand(CanExecute = nameof(CanChangeLaunchTarget))]
+    private void UseRemoteTarget()
+    {
+        LaunchTargetKind = NcfLaunchTargetKind.RemoteSite;
+        ValidateRemoteTargetCore(writeLog: false);
+        AddLog("🌍 已切换到远程 NCF 站点模式");
     }
 
     [RelayCommand(CanExecute = nameof(CanChangeLaunchTarget))]
@@ -689,9 +769,132 @@ public partial class MainWindowViewModel : ViewModelBase
         AddLog($"✅ 已识别 {target.KindDisplayName}: {target.EntryPath}");
     }
 
+    [RelayCommand(CanExecute = nameof(CanChangeLaunchTarget))]
+    private void ValidateRemoteTarget()
+    {
+        ValidateRemoteTargetCore(writeLog: true);
+    }
+
+    private void ValidateRemoteTargetCore(bool writeLog)
+    {
+        var resolution = NcfLaunchTargetResolver.ResolveRemote(RemoteSiteUrl);
+        if (!resolution.IsValid)
+        {
+            _resolvedLaunchTarget = null;
+            TargetKindText = "远程 NCF 站点";
+            TargetVersionText = "—";
+            TargetFrameworkText = "HTTPS/SSE";
+            TargetEntryText = RemoteSiteUrl;
+            TargetValidationMessage = resolution.ErrorMessage;
+            TargetStatusColor = "#DC3545";
+            if (writeLog)
+            {
+                AddLog($"❌ 远程目标检测失败: {resolution.ErrorMessage}");
+            }
+            SaveDesktopSettings();
+            return;
+        }
+
+        ApplyResolvedLaunchTarget(resolution.Target!);
+        _suppressDesktopSettingsSave = true;
+        RemoteSiteUrl = resolution.Target!.EntryPath;
+        LaunchTargetKind = NcfLaunchTargetKind.RemoteSite;
+        _suppressDesktopSettingsSave = false;
+        SaveDesktopSettings();
+        if (writeLog)
+        {
+            AddLog($"✅ 远程地址有效: {RemoteSiteUrl}。实际连接时将验证 DesktopBridge 令牌。");
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(CanChangeLaunchTarget))]
+    private async Task SelectTemplateWorkspaceParent()
+    {
+        try
+        {
+            if (Avalonia.Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop
+                || desktop.MainWindow?.StorageProvider is not { CanPickFolder: true } storageProvider)
+            {
+                AddLog("❌ 当前平台无法打开目录选择器，请直接粘贴工作区父目录。");
+                return;
+            }
+
+            var folders = await storageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+            {
+                Title = "选择新 NCF 工作区的父目录",
+                AllowMultiple = false
+            });
+            var selectedPath = folders.FirstOrDefault()?.TryGetLocalPath();
+            if (!string.IsNullOrWhiteSpace(selectedPath))
+            {
+                TemplateWorkspaceParentPath = selectedPath;
+                TemplateCreationStatus = "父目录已选择；创建时将在线安装最新官方模板。";
+            }
+        }
+        catch (Exception ex)
+        {
+            AddLog($"❌ 选择模板工作区目录失败: {ex.Message}");
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(CanChangeLaunchTarget))]
+    private async Task CreateWorkspaceFromTemplate()
+    {
+        IsOperationInProgress = true;
+        TemplateCreationStatus = "正在安装模板并创建工作区…";
+        try
+        {
+            _cancellationTokenSource = new CancellationTokenSource();
+            var result = await _templateWorkspaceService.CreateAsync(
+                TemplateWorkspaceParentPath,
+                TemplateWorkspaceName,
+                output => AddLog($"📦 {output}"),
+                _cancellationTokenSource.Token);
+
+            _suppressDesktopSettingsSave = true;
+            ExternalNcfPath = result.WorkspacePath;
+            LaunchTargetKind = NcfLaunchTargetKind.SourceProject;
+            _suppressDesktopSettingsSave = false;
+            ApplyResolvedLaunchTarget(result.LaunchTarget);
+            AddRecentNcfPath(result.WorkspacePath);
+            SaveDesktopSettings();
+            TemplateCreationStatus = $"已创建：{result.WorkspacePath}";
+            AddLog($"✅ 已使用 {TemplateWorkspaceService.TemplatePackageId} 创建源码工作区（未执行 restore）");
+        }
+        catch (OperationCanceledException)
+        {
+            TemplateCreationStatus = "模板创建已取消；已生成的文件保持原样。";
+        }
+        catch (Exception ex)
+        {
+            TemplateCreationStatus = ex.Message;
+            AddLog($"❌ 在线模板创建失败: {ex.Message}");
+        }
+        finally
+        {
+            IsOperationInProgress = false;
+        }
+    }
+
+    [RelayCommand]
+    private void CreateWorkspaceWindow()
+    {
+        CreateWorkspaceWindowRequested?.Invoke();
+    }
+
     [RelayCommand]
     private void OpenSelectedTargetDirectory()
     {
+        if (IsRemoteTargetMode)
+        {
+            if (!string.IsNullOrWhiteSpace(RemoteSiteUrl))
+            {
+                OpenBrowser(RemoteSiteUrl);
+                AddLog($"🌍 已打开远程站点: {RemoteSiteUrl}");
+            }
+            return;
+        }
+
         var path = IsManagedTargetMode
             ? NcfService.NcfRuntimePath
             : _resolvedLaunchTarget?.WorkingDirectory ?? ExternalNcfPath;
@@ -714,6 +917,10 @@ public partial class MainWindowViewModel : ViewModelBase
         UseExternalTargetCommand.NotifyCanExecuteChanged();
         SelectExternalNcfTargetCommand.NotifyCanExecuteChanged();
         ValidateExternalTargetCommand.NotifyCanExecuteChanged();
+        UseRemoteTargetCommand.NotifyCanExecuteChanged();
+        ValidateRemoteTargetCommand.NotifyCanExecuteChanged();
+        SelectTemplateWorkspaceParentCommand.NotifyCanExecuteChanged();
+        CreateWorkspaceFromTemplateCommand.NotifyCanExecuteChanged();
     }
 
     [RelayCommand(CanExecute = nameof(CanExecuteMainOperation))]
@@ -827,15 +1034,15 @@ public partial class MainWindowViewModel : ViewModelBase
                 "关闭",
                 "取消"
             );
-            
+
             if (!result)
             {
                 AddLog("ℹ️ 取消关闭标签页");
                 return;
             }
-            
+
             AddLog("🗙 关闭浏览器标签页...");
-            
+
             // 关闭浏览器标签页
             IsBrowserTabVisible = false;
             CurrentTabIndex = 0; // 切换回设置页面
@@ -990,6 +1197,10 @@ public partial class MainWindowViewModel : ViewModelBase
                 _suppressDesktopSettingsSave = true;
                 MirrorServerBaseUrl = _ncfService.MirrorServerBaseUrl;
                 ExternalNcfPath = desktopSettings.ExternalNcfPath ?? string.Empty;
+                RemoteSiteUrl = desktopSettings.RemoteSiteUrl ?? string.Empty;
+                TemplateWorkspaceParentPath = string.IsNullOrWhiteSpace(desktopSettings.TemplateWorkspaceParentPath)
+                    ? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                    : desktopSettings.TemplateWorkspaceParentPath;
                 AspNetCoreEnvironment = string.Equals(
                     desktopSettings.AspNetCoreEnvironment,
                     "Development",
@@ -1023,8 +1234,8 @@ public partial class MainWindowViewModel : ViewModelBase
                 {
                     LatestVersion = _resolvedLaunchTarget?.Version ?? "目标无效";
                     AddLog(_resolvedLaunchTarget == null
-                        ? $"⚠️ 外部目标需要重新检测: {TargetValidationMessage}"
-                        : $"🧭 已恢复外部目标: {_resolvedLaunchTarget.EntryPath}");
+                        ? $"⚠️ 目标需要重新检测: {TargetValidationMessage}"
+                        : $"🧭 已恢复目标: {_resolvedLaunchTarget.EntryPath}");
                 });
             }
             
@@ -1230,7 +1441,24 @@ public partial class MainWindowViewModel : ViewModelBase
             AddLog("🚀 开始启动 NCF 目标...");
 
             NcfLaunchTarget launchTarget;
-            if (IsManagedTargetMode)
+            if (IsRemoteTargetMode)
+            {
+                var remoteResolution = NcfLaunchTargetResolver.ResolveRemote(RemoteSiteUrl);
+                if (!remoteResolution.IsValid)
+                {
+                    throw new InvalidOperationException(remoteResolution.ErrorMessage);
+                }
+                if (string.IsNullOrWhiteSpace(RemoteBridgeToken))
+                {
+                    throw new InvalidOperationException(
+                        "请输入远程 DesktopBridge 令牌。该令牌应与远程站点的 NCF_DESKTOP_BRIDGE_TOKEN 一致。");
+                }
+
+                launchTarget = remoteResolution.Target!;
+                await Dispatcher.UIThread.InvokeAsync(() => ApplyResolvedLaunchTarget(launchTarget));
+                AddLog("🛡️ 远程模式：不启动或修改本地进程，仅建立受保护的 HTTPS/SSE 会话");
+            }
+            else if (IsManagedTargetMode)
             {
                 // 只有内置托管版本允许进入下载、更新和解压链路。
                 var (shouldContinue, shouldUpdate) = await CheckAndConfirmUpdateAsync();
@@ -1300,7 +1528,14 @@ public partial class MainWindowViewModel : ViewModelBase
 
             _activeLaunchTarget = launchTarget;
             AddLog($"🧭 启动目标: {launchTarget.KindDisplayName} / {launchTarget.Version} / {launchTarget.TargetFramework}");
-            await StartNcfProcessAsync(launchTarget, cancellationToken);
+            if (launchTarget.IsRemoteSite)
+            {
+                await ConnectRemoteSiteAsync(launchTarget, cancellationToken);
+            }
+            else
+            {
+                await StartNcfProcessAsync(launchTarget, cancellationToken);
+            }
             
             _isNcfRunning = true;
             NotifyLaunchTargetCommandsCanExecuteChanged();
@@ -1330,6 +1565,12 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
+            if (_activeLaunchTarget?.IsRemoteSite == true)
+            {
+                await _desktopBridgeClient.StopAsync();
+                _desktopBridgeSessionToken = null;
+                await Dispatcher.UIThread.InvokeAsync(() => SiteUrl = "未启动");
+            }
             Robot.SetProcessState("错误", ex.Message, isError: true);
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
@@ -1418,59 +1659,97 @@ public partial class MainWindowViewModel : ViewModelBase
             IsProgressIndeterminate = true;
         });
 
-        var availablePort = await _ncfService.FindAvailablePortAsync(StartPort, EndPort);
-        var siteUrl = $"http://localhost:{availablePort}";
-        _desktopBridgeSessionToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
-        
-        await Dispatcher.UIThread.InvokeAsync(() =>
+        var availablePort = await _ncfService.ReserveAvailablePortAsync(StartPort, EndPort);
+        try
         {
-            AddLog($"🌐 使用端口: {availablePort}");
-            ProgressText = "启动进程...";
-        });
+            var siteUrl = $"http://localhost:{availablePort}";
+            _desktopBridgeSessionToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
 
-        // 注册 CLI 输出回调
-        _ncfService.OnProcessOutput = (output, isError) =>
-        {
-            AddCliLog(output, isError);
-            Robot.ApplyCompatibilityLog(output, isError);
-        };
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                AddLog($"🌐 使用端口: {availablePort}");
+                ProgressText = "启动进程...";
+            });
 
-        _ncfProcess = await _ncfService.StartNcfProcessAsync(
-            launchTarget,
-            availablePort,
-            _desktopBridgeSessionToken,
-            AspNetCoreEnvironment,
-            cancellationToken);
-        
-        await Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            AddLog($"🚀 NCF 进程已启动 (PID: {_ncfProcess.Id})");
-            ProgressText = "等待站点就绪...";
-        });
+            // 注册 CLI 输出回调
+            _ncfService.OnProcessOutput = (output, isError) =>
+            {
+                AddCliLog(output, isError);
+                Robot.ApplyCompatibilityLog(output, isError);
+            };
 
-        // 等待站点就绪
-        var timeoutSeconds = launchTarget.IsSourceProject ? 180 : 60;
-        var isReady = await _ncfService.WaitForSiteReadyAsync(
-            siteUrl,
-            _ncfProcess,
-            timeoutSeconds,
-            requireNcfBranding: launchTarget.IsManaged,
-            cancellationToken: cancellationToken);
-        
-        if (!isReady)
-        {
-            throw new InvalidOperationException("NCF站点启动超时或失败");
+            _ncfProcess = await _ncfService.StartNcfProcessAsync(
+                launchTarget,
+                availablePort,
+                _desktopBridgeSessionToken,
+                AspNetCoreEnvironment,
+                cancellationToken);
+
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                AddLog($"🚀 NCF 进程已启动 (PID: {_ncfProcess.Id})");
+                ProgressText = "等待站点就绪...";
+            });
+
+            // 等待站点就绪
+            var timeoutSeconds = launchTarget.IsSourceProject ? 180 : 60;
+            var isReady = await _ncfService.WaitForSiteReadyAsync(
+                siteUrl,
+                _ncfProcess,
+                timeoutSeconds,
+                requireNcfBranding: launchTarget.IsManaged,
+                cancellationToken: cancellationToken);
+
+            if (!isReady)
+            {
+                throw new InvalidOperationException("NCF站点启动超时或失败");
+            }
+
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                // 站点实际就绪后再更新绑定地址，避免 WebView 把导航完成误报为 NCF 已启动。
+                SiteUrl = siteUrl;
+                AddLog($"✅ NCF 站点已启动: {siteUrl}");
+            });
+
+            Robot.SetProcessState("运行中", $"{launchTarget.DisplayName} 已启动，正在等待 Agent 任务");
+            await ConnectDesktopBridgeAsync(siteUrl, _desktopBridgeSessionToken, cancellationToken);
         }
-        
+        finally
+        {
+            _ncfService.ReleasePortReservation(availablePort);
+        }
+    }
+
+    private async Task ConnectRemoteSiteAsync(
+        NcfLaunchTarget launchTarget,
+        CancellationToken cancellationToken)
+    {
+        _desktopBridgeSessionToken = RemoteBridgeToken.Trim();
+        var siteUrl = launchTarget.EntryPath;
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            // 站点实际就绪后再更新绑定地址，避免 WebView 把导航完成误报为 NCF 已启动。
             SiteUrl = siteUrl;
-            AddLog($"✅ NCF 站点已启动: {siteUrl}");
+            ProgressText = "正在验证远程 DesktopBridge…";
+            IsProgressIndeterminate = true;
         });
 
-        Robot.SetProcessState("运行中", $"{launchTarget.DisplayName} 已启动，正在等待 Agent 任务");
-        await ConnectDesktopBridgeAsync(siteUrl, _desktopBridgeSessionToken, cancellationToken);
+        var result = await _desktopBridgeClient.ConnectAsync(
+            siteUrl,
+            _desktopBridgeSessionToken,
+            cancellationToken).ConfigureAwait(false);
+        if (!result.IsAvailable)
+        {
+            throw new InvalidOperationException(result.Message);
+        }
+
+        Robot.SetProcessState("运行中", $"已连接 {launchTarget.DisplayName}，正在等待远程 Agent 任务");
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            AddLog($"✅ 已连接远程 NCF 站点: {siteUrl}");
+            ProgressText = "远程 NCF 已连接";
+            IsProgressIndeterminate = false;
+        });
     }
 
     private async Task ConnectDesktopBridgeAsync(
@@ -1528,9 +1807,13 @@ public partial class MainWindowViewModel : ViewModelBase
                 DesktopBridgeAvailability.Incompatible =>
                     "DesktopBridge 版本与当前 GUI 不兼容。机器人已安全降级，请在 XNCF 模块管理中更新模块后重启站点。",
                 DesktopBridgeAvailability.Unauthorized =>
-                    "DesktopBridge 已检测到，但会话认证失败。NCF 会继续运行；请从桌面应用重新启动站点。",
+                    _activeLaunchTarget?.IsRemoteSite == true
+                        ? "远程 DesktopBridge 认证失败。请确认站点的 NCF_DESKTOP_BRIDGE_TOKEN、HTTPS 入口和访问白名单。"
+                        : "DesktopBridge 已检测到，但会话认证失败。NCF 会继续运行；请从桌面应用重新启动站点。",
                 DesktopBridgeAvailability.Inactive =>
-                    "DesktopBridge 已安装但未启用桌面会话。NCF 会继续运行；请从桌面应用重新启动站点。",
+                    _activeLaunchTarget?.IsRemoteSite == true
+                        ? "远程 DesktopBridge 未配置会话令牌。请在站点进程设置 NCF_DESKTOP_BRIDGE_TOKEN 后重启站点。"
+                        : "DesktopBridge 已安装但未启用桌面会话。NCF 会继续运行；请从桌面应用重新启动站点。",
                 DesktopBridgeAvailability.Unavailable =>
                     "暂时无法连接 DesktopBridge，机器人正在使用兼容模式并会在后台重连。NCF 运行不受影响。",
                 _ => string.Empty
@@ -1584,7 +1867,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
             FlushPendingLogs();
 
-            stoppedCleanly = await TerminateNcfProcessAsync(processToStop).ConfigureAwait(false);
+            stoppedCleanly = _activeLaunchTarget?.IsRemoteSite == true && processToStop == null
+                ? true
+                : await TerminateNcfProcessAsync(processToStop).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -1608,6 +1893,7 @@ public partial class MainWindowViewModel : ViewModelBase
             }
 
             _desktopBridgeSessionToken = null;
+            RemoteBridgeToken = string.Empty;
             _activeLaunchTarget = null;
             _isNcfRunning = false;
             ResetAdminChatState();

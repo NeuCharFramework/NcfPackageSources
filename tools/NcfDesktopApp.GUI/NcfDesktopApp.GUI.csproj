@@ -4,8 +4,13 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <RuntimeIdentifiers>win-x64;win-arm64;osx-x64;osx-arm64;linux-x64;linux-arm64</RuntimeIdentifiers>
-    <Version>0.3.3</Version>
+    <Version>0.4.0</Version>
     <PackageReleaseNotes>
+      [2026-07-30] v0.4.0 新增远程、多工作台与在线模板能力
+      1、复用 DesktopBridge HTTP/SSE 适配层连接 HTTPS 远程 NCF，站点内部继续使用 EventBus
+      2、支持同一桌面进程创建多个独立工作台窗口，隔离进程、端口、Bridge、浏览器和 Admin Chat 会话
+      3、从 NuGet.org 安装最新 Senparc.NCF.Template 并创建不会覆盖现有目录的源码工作区
+      4、远程令牌只保存在内存，非回环 HTTP 被拒绝，HTTPS 使用系统服务端证书校验
       [2026-07-28] v0.3.3 修复 macOS WebView JavaScript 回调闪退
       1、规避 WebView.Avalonia.MacCatalyst 11.0.0.1 空结果回调导致的主线程 SIGABRT
       2、macOS 使用 WKWebView/AppKit 原生编辑命令，Windows 和 Linux 保持原有脚本桥

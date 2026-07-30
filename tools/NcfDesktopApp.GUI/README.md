@@ -40,6 +40,9 @@ NCF桌面应用程序的图形用户界面（GUI）版本，提供直观、易�
 - **托管版本**：由桌面端下载、更新和保护配置
 - **外部发布目录**：只启动，不下载、不解压、不自动更新
 - **源码工作区**：自动识别 `Senparc.Web.csproj`，使用匹配的本机 SDK 和 `dotnet run --no-restore`
+- **远程站点**：通过 HTTPS/SSE 连接安装了 DesktopBridge 的 `Senparc.Web`，站点内部仍使用 EventBus；回环地址可用于 SSH 隧道
+- **并行工作台**：可打开任意多个独立窗口，每个窗口隔离进程、端口、Bridge、浏览器和 Admin Chat 会话
+- **在线模板**：从 NuGet.org 更新 `Senparc.NCF.Template`，以 `dotnet new NCF` 创建不覆盖现有目录的源码工作区
 - **完整平台矩阵**：`win-x64`、`win-arm64`、`osx-x64`、`osx-arm64`、`linux-x64`、`linux-arm64`
 
 ### 🔐 **Admin Agent 快捷聊天**
