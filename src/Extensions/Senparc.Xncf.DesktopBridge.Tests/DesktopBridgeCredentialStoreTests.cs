@@ -20,12 +20,15 @@ public sealed class DesktopBridgeCredentialStoreTests
         Assert.IsFalse(string.IsNullOrWhiteSpace(poll.SessionToken));
         Assert.IsTrue(store.IsConfigured);
         Assert.IsTrue(store.IsAuthorized(poll.SessionToken));
+        Assert.IsTrue(store.TryAuthorize(poll.SessionToken, out var sessionRevoked));
+        Assert.IsFalse(sessionRevoked.IsCancellationRequested);
 
         var session = store.GetSessions().Single();
         Assert.AreEqual("测试工作台", session.ClientName);
         Assert.AreEqual("admin", session.ApprovedBy);
         Assert.IsNotNull(session.LastUsedAt);
         Assert.IsTrue(store.Revoke(session.SessionId));
+        Assert.IsTrue(sessionRevoked.IsCancellationRequested);
         Assert.IsFalse(store.IsAuthorized(poll.SessionToken));
     }
 
@@ -65,4 +68,3 @@ public sealed class DesktopBridgeCredentialStoreTests
         Assert.IsFalse(store.Approve(Guid.NewGuid(), "admin"));
     }
 }
-

@@ -109,7 +109,10 @@ public static class DesktopSettingsStore
                 RemoteSiteUrl = settings.RemoteSiteUrl?.Trim() ?? string.Empty,
                 TemplateWorkspaceParentPath = settings.TemplateWorkspaceParentPath?.Trim() ?? string.Empty,
                 RecentNcfPaths = recentPaths,
-                AspNetCoreEnvironment = environment
+                AspNetCoreEnvironment = environment,
+                VoiceModelId = settings.VoiceModelId?.Trim() ?? string.Empty,
+                VoiceCustomModelPath = settings.VoiceCustomModelPath?.Trim() ?? string.Empty,
+                VoiceLanguage = NormalizeVoiceLanguage(settings.VoiceLanguage)
             };
             var temporaryPath = $"{SettingsFilePath}.tmp.{Environment.ProcessId}";
             try
@@ -125,5 +128,15 @@ public static class DesktopSettingsStore
                 }
             }
         }
+    }
+
+    private static string NormalizeVoiceLanguage(string? language)
+    {
+        return language?.Trim().ToLowerInvariant() switch
+        {
+            "zh" => "zh",
+            "en" => "en",
+            _ => "auto"
+        };
     }
 }

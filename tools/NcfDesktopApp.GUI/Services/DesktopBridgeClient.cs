@@ -58,6 +58,8 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
 
     public event Action<string>? AuthorizedSyncAuthorizationFailed;
 
+    public event Action<string>? SessionRevoked;
+
     public async Task<DesktopBridgePairingCreateResponse> CreatePairingRequestAsync(
         string siteUrl,
         string clientName,
@@ -488,9 +490,11 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
 
                 if (response.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden)
                 {
-                    NotifyAvailability(new DesktopBridgeProbeResult(
+                    var revoked = new DesktopBridgeProbeResult(
                         DesktopBridgeAvailability.Unauthorized,
-                        "DesktopBridge 会话已失效，桌面机器人已切换到兼容模式。"));
+                        "DesktopBridge 会话已被撤销，正在关闭当前工作台。");
+                    NotifyAvailability(revoked);
+                    NotifySessionRevoked(revoked.Message);
                     return;
                 }
 
@@ -506,8 +510,14 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
             {
                 return;
             }
-            catch (Exception ex) when (ex is HttpRequestException or IOException or JsonException or InvalidOperationException)
+            catch (Exception ex) when (ex is
+                       OperationCanceledException or HttpRequestException or IOException or JsonException or InvalidOperationException)
             {
+                if (await CheckSessionRevokedAsync(siteUrl, sessionToken, cancellationToken).ConfigureAwait(false))
+                {
+                    return;
+                }
+
                 NotifyAvailability(new DesktopBridgeProbeResult(
                     DesktopBridgeAvailability.Unavailable,
                     $"DesktopBridge 连接中断（{ex.Message}），正在后台重连。"));
@@ -524,6 +534,23 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
 
             retryDelay = TimeSpan.FromSeconds(Math.Min(retryDelay.TotalSeconds * 2, 10));
         }
+    }
+
+    private async Task<bool> CheckSessionRevokedAsync(
+        string siteUrl,
+        string sessionToken,
+        CancellationToken cancellationToken)
+    {
+        var probe = await ProbeAsync(siteUrl, sessionToken, cancellationToken).ConfigureAwait(false);
+        if (probe.Availability != DesktopBridgeAvailability.Unauthorized)
+        {
+            return false;
+        }
+
+        var revoked = probe with { Message = "DesktopBridge 会话已被管理员撤销，正在关闭当前工作台。" };
+        NotifyAvailability(revoked);
+        NotifySessionRevoked(revoked.Message);
+        return true;
     }
 
     private async Task ReadEventStreamAsync(HttpResponseMessage response, CancellationToken cancellationToken)
@@ -768,6 +795,21 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
             catch
             {
                 // UI 订阅者异常不能终止同步流。
+            }
+        }
+    }
+
+    private void NotifySessionRevoked(string message)
+    {
+        foreach (var handler in SessionRevoked?.GetInvocationList() ?? Array.Empty<Delegate>())
+        {
+            try
+            {
+                ((Action<string>)handler)(message);
+            }
+            catch
+            {
+                // 会话撤销必须继续结束监听，不能被单个 UI 订阅者阻断。
             }
         }
     }

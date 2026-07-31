@@ -30,6 +30,24 @@
   <data name="Function.XncfBuilder.Generate.Description" xml:space="preserve">
     <value>Generate an XNCF module from the configuration</value>
   </data>
+  <data name="Function.XncfBuilder.Preview.Name" xml:space="preserve">
+    <value>Start or update an isolated XNCF preview</value>
+  </data>
+  <data name="Function.XncfBuilder.Preview.Description" xml:space="preserve">
+    <value>Rebuild an XNCF and start an isolated preview without restarting the current site</value>
+  </data>
+  <data name="Function.XncfBuilder.PreviewStatus.Name" xml:space="preserve">
+    <value>View XNCF preview status</value>
+  </data>
+  <data name="Function.XncfBuilder.PreviewStatus.Description" xml:space="preserve">
+    <value>View isolated XNCF preview processes managed by this site</value>
+  </data>
+  <data name="Function.XncfBuilder.StopPreview.Name" xml:space="preserve">
+    <value>Stop an isolated XNCF preview</value>
+  </data>
+  <data name="Function.XncfBuilder.StopPreview.Description" xml:space="preserve">
+    <value>Stop the selected preview process and clean its temporary publish directory</value>
+  </data>
   <data name="Function.XncfBuilder.GenerateEntity.Name" xml:space="preserve">
     <value>[AI] Generate database entities</value>
   </data>
@@ -92,6 +110,63 @@
   </data>
   <data name="Parameter.XncfBuilder.InstallSample" xml:space="preserve">
     <value>Install sample||</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.StartAfterBuild" xml:space="preserve">
+    <value>Start isolated preview after generation||The main site stays running; the preview uses a separate process and publish directory</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.ModuleProjectName" xml:space="preserve">
+    <value>Full XNCF project name||For example Senparc.Xncf.Sample</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.Port" xml:space="preserve">
+    <value>Preview port||Use 0 to allocate a loopback port automatically; custom ports must be between 1024 and 65535</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.Timeout" xml:space="preserve">
+    <value>Startup timeout in seconds||Maximum wait for the preview site's HTTP health check</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.Environment" xml:space="preserve">
+    <value>Preview environment||The default XncfPreview environment forces local SQLite and local cache inside the preview directory</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.IncludeOutput" xml:space="preserve">
+    <value>Show preview logs||Include recent process output in the status result</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.SessionId" xml:space="preserve">
+    <value>Preview session||Select the XNCF preview instance to stop</value>
+  </data>
+  <data name="XncfBuilder.Option.Preview.StartAfterBuild" xml:space="preserve">
+    <value>Start immediately after generation</value>
+  </data>
+  <data name="XncfBuilder.Option.Preview.StartAfterBuild.Help" xml:space="preserve">
+    <value>Publish and start a separate Senparc.Web preview process while the current site keeps running</value>
+  </data>
+  <data name="XncfBuilder.Option.Preview.IncludeOutput" xml:space="preserve">
+    <value>Include recent logs</value>
+  </data>
+  <data name="XncfBuilder.Option.Preview.IncludeOutput.Help" xml:space="preserve">
+    <value>Show up to the latest 300 output lines for each preview process</value>
+  </data>
+  <data name="XncfBuilder.Preview.Running" xml:space="preserve">
+    <value>Running</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stopped" xml:space="preserve">
+    <value>Stopped</value>
+  </data>
+  <data name="XncfBuilder.Preview.RequestMissing" xml:space="preserve">
+    <value>Preview startup failed: no preview options were supplied.</value>
+  </data>
+  <data name="XncfBuilder.Preview.NoSessions" xml:space="preserve">
+    <value>There are no isolated XNCF preview sessions.</value>
+  </data>
+  <data name="XncfBuilder.Preview.SessionRequired" xml:space="preserve">
+    <value>Select a preview session to stop.</value>
+  </data>
+  <data name="XncfBuilder.Preview.StartSucceeded" xml:space="preserve">
+    <value>The isolated XNCF preview is running; the current Senparc.Web process was not restarted.</value>
+  </data>
+  <data name="XncfBuilder.Preview.StopSucceeded" xml:space="preserve">
+    <value>The isolated XNCF preview was stopped and its temporary publish directory was cleaned.</value>
+  </data>
+  <data name="XncfBuilder.Preview.SessionNotFound" xml:space="preserve">
+    <value>The preview session was not found; it may already have stopped.</value>
   </data>
   <data name="XncfBuilder.Option.Solution.Backup" xml:space="preserve">
     <value>Back up the .sln file (recommended)</value>

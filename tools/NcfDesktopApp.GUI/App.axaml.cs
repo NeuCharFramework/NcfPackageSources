@@ -9,6 +9,7 @@ using NcfDesktopApp.GUI.ViewModels;
 using NcfDesktopApp.GUI.Views;
 using AvaloniaWebView;
 using System.Collections.Generic;
+using NcfDesktopApp.GUI.Services;
 
 namespace NcfDesktopApp.GUI;
 
@@ -35,6 +36,7 @@ public partial class App : Application
         {
             // 每个窗口拥有独立的进程/端口/Bridge 会话；最后一个工作台关闭后才退出。
             desktop.ShutdownMode = ShutdownMode.OnLastWindowClose;
+            desktop.Exit += (_, _) => LocalVoiceInputService.DisposeShared();
 
             // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
@@ -67,6 +69,16 @@ public partial class App : Application
                 }
                 mainWindow.WindowState = WindowState.Normal;
                 mainWindow.Activate();
+            },
+            VoiceInputRequested = () =>
+            {
+                if (!mainWindow.IsVisible)
+                {
+                    mainWindow.Show();
+                }
+                mainWindow.WindowState = WindowState.Normal;
+                mainWindow.Activate();
+                _ = viewModel.ToggleVoiceInputCommand.ExecuteAsync(null);
             }
         };
         WorkspaceSettingsWindow? settingsWindow = null;
@@ -115,10 +127,18 @@ public partial class App : Application
             templateWorkspaceWindow.Closed += (_, _) => templateWorkspaceWindow = null;
             templateWorkspaceWindow.Show(mainWindow);
         };
+        viewModel.DesktopBridgeSessionRevokedRequested = () =>
+        {
+            if (_workspaceWindows.Contains(mainWindow))
+            {
+                mainWindow.Close();
+            }
+        };
 
         mainWindow.Opened += (_, _) => robotWindow.Show();
-        mainWindow.Closed += (_, _) =>
+        mainWindow.Closed += async (_, _) =>
         {
+            await viewModel.CancelVoiceInputForShutdownAsync();
             if (robotWindow.IsVisible)
             {
                 robotWindow.Close();

@@ -450,19 +450,39 @@
 
                             <Border Grid.Row="2" BorderBrush="{DynamicResource CardBorderBrush}"
                                     BorderThickness="0,1,0,0" Padding="12,9">
-                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                                    <TextBox Grid.Column="0"
+                                <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="5">
+                                    <Button Grid.Row="0" Grid.Column="0"
+                                            Content="{Binding VoiceInputButtonIcon}"
+                                            Command="{Binding ToggleVoiceInputCommand}"
+                                            FontSize="16"
+                                            MinWidth="46"
+                                            Classes="secondary-action"
+                                            ToolTip.Tip="{Binding VoiceInputStatusText}"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1"
                                              Text="{Binding ChatInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                              Watermark="输入消息；Ctrl/⌘+Enter 发送，Enter 换行"
                                              AcceptsReturn="True" TextWrapping="Wrap"
                                              MinHeight="42" MaxHeight="90"
                                              KeyDown="ChatInput_OnKeyDown"
                                              ToolTip.Tip="Ctrl+Enter 或 ⌘+Enter 发送；Enter 换行"/>
-                                    <Button Grid.Column="1" Content="发送"
+                                    <Button Grid.Row="0" Grid.Column="2" Content="发送"
                                             Command="{Binding SendAdminChatMessageCommand}"
                                             Classes="primary-action"
                                             Background="#2563EB" Foreground="White"
                                             VerticalAlignment="Stretch"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                               Text="{Binding VoiceInputStatusText}"
+                                               FontSize="9.5"
+                                               Foreground="{DynamicResource SecondaryTextBrush}"
+                                               TextWrapping="Wrap"
+                                               VerticalAlignment="Center"/>
+                                    <Button Grid.Row="1" Grid.Column="2"
+                                            Content="取消语音"
+                                            Command="{Binding CancelVoiceInputCommand}"
+                                            IsVisible="{Binding IsVoiceCancelVisible}"
+                                            Classes="secondary-action"
+                                            FontSize="9.5"
+                                            Padding="8,3"/>
                                 </Grid>
                             </Border>
                         </Grid>

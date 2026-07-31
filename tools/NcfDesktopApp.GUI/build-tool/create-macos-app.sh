@@ -264,6 +264,8 @@ create_info_plist() {
     <true/>
     <key>NSHumanReadableCopyright</key>
     <string>$APP_COPYRIGHT</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>用于将本机麦克风语音离线转换为 AdminChat 输入文字；录音不会自动发送。</string>
     <key>CFBundleIconFile</key>
     <string>AppIcon</string>
     <key>LSApplicationCategoryType</key>

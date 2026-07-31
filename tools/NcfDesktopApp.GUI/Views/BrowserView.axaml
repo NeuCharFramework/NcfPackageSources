@@ -13,113 +13,58 @@
     <Grid RowDefinitions="Auto,*" VerticalAlignment="Stretch" MinHeight="0">
         
         <!-- 顶部工具栏 -->
-        <Border Grid.Row="0" Background="{DynamicResource ToolbarBackgroundBrush}" BorderBrush="{DynamicResource ToolbarBorderBrush}" BorderThickness="0,0,0,1" Padding="10">
+        <Border Grid.Row="0" Background="{DynamicResource ToolbarBackgroundBrush}" BorderBrush="{DynamicResource ToolbarBorderBrush}" BorderThickness="0,0,0,1" Padding="8">
             <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
                 
-                <!-- 导航按钮 -->
-                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="5">
-                    <Button Name="BackButton" 
-                            Content="←" 
-                            Width="30" Height="30" 
-                            FontSize="16" FontWeight="Bold"
-                            ToolTip.Tip="后退"
-                            Click="BackButton_Click"/>
-                    <Button Name="ForwardButton" 
-                            Content="→" 
-                            Width="30" Height="30" 
-                            FontSize="16" FontWeight="Bold"
-                            ToolTip.Tip="前进"
-                            Click="ForwardButton_Click"/>
-                    <Button Name="RefreshButton" 
-                            Content="↻" 
-                            Width="30" Height="30" 
-                            FontSize="16" FontWeight="Bold"
-                            ToolTip.Tip="刷新"
-                            Click="RefreshButton_Click"/>
-                </StackPanel>
+                <Button Grid.Column="0"
+                        Name="RefreshButton"
+                        Content="↻"
+                        Width="30" Height="30"
+                        FontSize="16" FontWeight="Bold"
+                        ToolTip.Tip="刷新当前页面"
+                        Click="RefreshButton_Click"/>
                 
-                <!-- URL输入框和打开按钮 -->
+                <!-- 运行站点地址仅用于识别当前页面，站内导航由 WebView 自身处理。 -->
                 <Border Grid.Column="1" 
                         Background="{DynamicResource InputBackgroundBrush}" 
                         BorderBrush="{DynamicResource InputBorderBrush}" 
                         BorderThickness="1" 
                         CornerRadius="4" 
                         Margin="10,0">
-                    <Grid ColumnDefinitions="*,Auto,Auto">
-                        <TextBox Name="UrlTextBox" 
-                                 Grid.Column="0"
-                                 Text="{Binding SiteUrl, Mode=OneWay}" 
-                                 FontFamily="Consolas" 
-                                 FontSize="12"
-                                 Foreground="{DynamicResource InputTextBrush}"
-                                 VerticalAlignment="Center"
-                                 BorderThickness="0"
-                                 Background="Transparent"
-                                 Padding="8,5"
-                                 Watermark="输入 URL 地址..."
-                                 KeyDown="UrlTextBox_KeyDown"
-                                 ToolTip.Tip="输入 URL 并按 Enter 导航"/>
-                        <Button Name="GoButton"
-                                Grid.Column="1"
-                                Content="→"
-                                Width="30"
-                                Height="26"
-                                Margin="0,2,2,2"
-                                FontSize="14"
-                                FontWeight="Bold"
-                                Background="#007BFF"
-                                Foreground="White"
-                                CornerRadius="3"
-                                ToolTip.Tip="打开"
-                                Click="GoButton_Click"/>
-                        <Button Name="OpenExternalButton"
-                                Grid.Column="2"
-                                Content="🌐"
-                                Width="30"
-                                Height="26"
-                                Margin="0,2,2,2"
-                                FontSize="14"
-                                Background="#28A745"
-                                Foreground="White"
-                                CornerRadius="3"
-                                ToolTip.Tip="在外部浏览器中打开"
-                                Command="{Binding OpenInExternalBrowserCommand}"/>
-                    </Grid>
+                    <TextBox Name="UrlTextBox"
+                             Text="{Binding SiteUrl, Mode=OneWay}"
+                             FontFamily="Consolas"
+                             FontSize="12"
+                             Foreground="{DynamicResource InputTextBrush}"
+                             VerticalAlignment="Center"
+                             BorderThickness="0"
+                             Background="Transparent"
+                             Padding="8,5"
+                             IsReadOnly="True"
+                             ToolTip.Tip="当前页面地址"/>
                 </Border>
                 
-                <!-- 状态指示器 -->
-                <Border Grid.Column="2" 
-                        Background="{Binding StatusColor}" 
-                        CornerRadius="10" 
-                        Width="20" Height="20" 
-                        Margin="0,0,10,0"
-                        ToolTip.Tip="{Binding CurrentStatus}">
-                    <TextBlock Text="●" 
-                               Foreground="White" 
-                               HorizontalAlignment="Center" 
-                               VerticalAlignment="Center" 
-                               FontSize="12"/>
-                </Border>
+                <TextBlock Grid.Column="2"
+                           Text="{Binding BrowserNavigationStatus}"
+                           FontSize="11"
+                           Foreground="{DynamicResource SecondaryTextBrush}"
+                           VerticalAlignment="Center"
+                           Margin="0,0,10,0"/>
                 
-                <!-- 关闭标签按钮 -->
-                <Button Grid.Column="3" 
-                        Content="✕" 
-                        Width="30" Height="30" 
-                        FontSize="14"
-                        FontWeight="Bold"
-                        ToolTip.Tip="关闭标签页"
-                        Background="#DC3545"
-                        Foreground="White"
-                        CornerRadius="4"
+                <Button Grid.Column="3"
+                        Name="OpenExternalButton"
+                        Content="↗"
+                        Width="30" Height="30"
+                        FontSize="15"
+                        ToolTip.Tip="在外部浏览器中打开"
                         Margin="0,0,5,0"
-                        Command="{Binding CloseBrowserTabCommand}"/>
+                        Command="{Binding OpenInExternalBrowserCommand}"/>
                 
-                <!-- 设置按钮 -->
                 <Button Grid.Column="4" 
                         Content="⚙" 
                         Width="30" Height="30" 
                         FontSize="16"
-                        ToolTip.Tip="打开设置"
+                        ToolTip.Tip="返回工作台"
                         Command="{Binding SwitchToSettingsCommand}"/>
             </Grid>
         </Border>
@@ -183,4 +128,4 @@
             </Grid>
         </Border>
     </Grid>
-</UserControl> 
+</UserControl>

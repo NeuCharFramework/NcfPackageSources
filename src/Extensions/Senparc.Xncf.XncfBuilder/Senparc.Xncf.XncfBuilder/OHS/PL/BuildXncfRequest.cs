@@ -33,6 +33,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
+using Senparc.Xncf.XncfBuilder.Domain.Services.Preview;
 
 namespace Senparc.Xncf.XncfBuilder.OHS.PL
 {
@@ -136,6 +137,27 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
            public SelectionList UseSammpleOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
                  new SelectionItem("1", XncfBuilderResource.Get("Common.Yes"), XncfBuilderResource.Get("XncfBuilder.Option.InstallSample.Help"), false),
             });
+
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Preview.StartAfterBuild")]
+        [FunctionParameterUi(ParameterType.CheckBoxList, nameof(StartPreviewOptions))]
+        public bool StartPreview { get; set; }
+
+        [JsonIgnore]
+        public SelectionList StartPreviewOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
+                 new SelectionItem("1", XncfBuilderResource.Get("XncfBuilder.Option.Preview.StartAfterBuild"), XncfBuilderResource.Get("XncfBuilder.Option.Preview.StartAfterBuild.Help"), false),
+            });
+
+        [Range(0, 65535)]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Preview.Port")]
+        public int PreviewPort { get; set; }
+
+        [Range(10, 600)]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Preview.Timeout")]
+        public int PreviewStartupTimeoutSeconds { get; set; } = 120;
+
+        [MaxLength(50)]
+        [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Preview.Environment")]
+        public string PreviewEnvironmentName { get; set; } = XncfPreviewService.DefaultEnvironmentName;
 
         /// <summary>
         /// 预载入数据

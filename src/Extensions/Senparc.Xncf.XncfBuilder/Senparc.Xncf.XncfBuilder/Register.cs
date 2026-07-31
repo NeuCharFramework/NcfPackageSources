@@ -42,6 +42,7 @@ using Microsoft.AspNetCore.Builder;
 using Senparc.CO2NET.RegisterServices;
 using Microsoft.AspNetCore.Routing;
 using Senparc.Xncf.XncfBuilder.OHS.Local;
+using Senparc.Xncf.XncfBuilder.Domain.Services.Preview;
 
 namespace Senparc.Xncf.XncfBuilder
 {
@@ -105,6 +106,15 @@ namespace Senparc.Xncf.XncfBuilder
 
             services.AddScoped<ConfigService>();
             services.AddScoped<PromptBuilderService>();
+
+            if (!services.Any(d => d.ServiceType == typeof(XncfPreviewService)))
+            {
+                services.AddSingleton<XncfPreviewService>();
+                services.AddSingleton<IXncfPreviewService>(serviceProvider =>
+                    serviceProvider.GetRequiredService<XncfPreviewService>());
+                services.AddSingleton<IHostedService>(serviceProvider =>
+                    serviceProvider.GetRequiredService<XncfPreviewService>());
+            }
 
             // Senparc.Xncf.AIKernel 模块
             services.AddScoped<AIModelService>();

@@ -31,7 +31,7 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Uid => ModuleUid;
 
-    public override string Version => "0.2.0-preview1";
+    public override string Version => "0.2.1-preview2";
 
     public override string MenuName => "DesktopBridge 桌面桥接";
 

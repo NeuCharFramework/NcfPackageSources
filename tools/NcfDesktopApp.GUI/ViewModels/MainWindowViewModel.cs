@@ -184,6 +184,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public Action? ShowTemplateWorkspaceRequested { get; set; }
 
+    public Action? DesktopBridgeSessionRevokedRequested { get; set; }
+
     public DesktopRobotViewModel Robot { get; } = new();
 
     public ObservableCollection<string> RecentNcfPaths { get; } = new();
@@ -226,6 +228,9 @@ public partial class MainWindowViewModel : ViewModelBase
     
     [ObservableProperty]
     private string _browserErrorMessage = "";
+
+    [ObservableProperty]
+    private string _browserNavigationStatus = "准备中";
     
     [ObservableProperty]
     private bool _isInitializing = true;
@@ -449,6 +454,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private NcfLaunchTarget? _resolvedLaunchTarget;
     private NcfLaunchTarget? _activeLaunchTarget;
     private bool _isNcfRunning = false;
+    private int _isHandlingDesktopBridgeRevocation;
     
     // 🚀 性能优化：批量日志处理
     private readonly Queue<string> _pendingCliLogs = new Queue<string>();
@@ -480,6 +486,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _desktopBridgeClient.ActivityReceived += OnDesktopActivityReceived;
         _desktopBridgeClient.AuthorizedSyncReceived += OnDesktopAuthorizedSyncReceived;
         _desktopBridgeClient.AuthorizedSyncAuthorizationFailed += OnDesktopAuthorizedSyncAuthorizationFailed;
+        _desktopBridgeClient.SessionRevoked += OnDesktopBridgeSessionRevoked;
         _adminChatClient = new AdminChatClient(new HttpClient(CreateDesktopHttpHandler(allowAutoRedirect: false), disposeHandler: true)
         {
             Timeout = Timeout.InfiniteTimeSpan
@@ -561,7 +568,10 @@ public partial class MainWindowViewModel : ViewModelBase
             RemoteSiteUrl = RemoteSiteUrl,
             TemplateWorkspaceParentPath = TemplateWorkspaceParentPath,
             RecentNcfPaths = RecentNcfPaths.ToList(),
-            AspNetCoreEnvironment = AspNetCoreEnvironment
+            AspNetCoreEnvironment = AspNetCoreEnvironment,
+            VoiceModelId = SelectedVoiceModel?.Id ?? string.Empty,
+            VoiceCustomModelPath = VoiceCustomModelPath,
+            VoiceLanguage = VoiceLanguage
         });
     }
 
@@ -1099,45 +1109,6 @@ public partial class MainWindowViewModel : ViewModelBase
         ShowDesktopRobotRequested?.Invoke();
     }
     
-    [RelayCommand(CanExecute = nameof(CanCloseBrowserTab))]
-    private async Task CloseBrowserTab()
-    {
-        try
-        {
-            // 显示确认对话框
-            var result = await ShowConfirmDialogAsync(
-                "确认关闭",
-                "关闭标签页将停止 NCF 应用程序，\n是否继续？",
-                "关闭",
-                "取消"
-            );
-
-            if (!result)
-            {
-                AddLog("ℹ️ 取消关闭标签页");
-                return;
-            }
-
-            AddLog("🗙 关闭浏览器标签页...");
-
-            // 关闭浏览器标签页
-            IsBrowserTabVisible = false;
-            CurrentTabIndex = 0; // 切换回设置页面
-            
-            // 停止NCF进程
-            if (_isNcfRunning)
-            {
-                await StopNcfAsync();
-            }
-            
-            AddLog("✅ 浏览器标签页已关闭");
-        }
-        catch (Exception ex)
-        {
-            AddLog($"❌ 关闭浏览器标签页失败: {ex.Message}");
-        }
-    }
-    
     /// <summary>
     /// 显示确认对话框
     /// </summary>
@@ -1221,8 +1192,6 @@ public partial class MainWindowViewModel : ViewModelBase
         return false;
     }
     
-    private bool CanCloseBrowserTab() => IsBrowserTabVisible;
-
     /// <summary>NCF 站点进程是否处于运行中（主窗口关闭前判断）。</summary>
     public bool IsNcfRunning => _isNcfRunning;
 
@@ -1289,6 +1258,9 @@ public partial class MainWindowViewModel : ViewModelBase
                     StringComparison.OrdinalIgnoreCase)
                     ? "Development"
                     : "Production";
+                VoiceCustomModelPath = desktopSettings.VoiceCustomModelPath ?? string.Empty;
+                VoiceLanguage = NormalizeVoiceLanguage(desktopSettings.VoiceLanguage);
+                SelectedVoiceModel = VoiceModelCatalog.FindById(desktopSettings.VoiceModelId);
                 LaunchTargetKind = desktopSettings.LaunchTargetKind;
                 RecentNcfPaths.Clear();
                 foreach (var path in desktopSettings.RecentNcfPaths ?? new List<string>())
@@ -1300,6 +1272,7 @@ public partial class MainWindowViewModel : ViewModelBase
                 }
                 _suppressMirrorSettingsSave = false;
                 _suppressDesktopSettingsSave = false;
+                RefreshVoiceModelReadiness();
                 RefreshSelectedLaunchTarget();
             });
 
@@ -1951,6 +1924,40 @@ public partial class MainWindowViewModel : ViewModelBase
         ApplyDesktopBridgeAvailability(result);
     }
 
+    private void OnDesktopBridgeSessionRevoked(string message)
+    {
+        if (Interlocked.CompareExchange(ref _isHandlingDesktopBridgeRevocation, 1, 0) != 0)
+        {
+            return;
+        }
+
+        Dispatcher.UIThread.Post(async () =>
+        {
+            try
+            {
+                AddLog($"🔒 {message}");
+                Robot.SetProcessState("授权已撤销", "远程工作台正在安全退出", isError: true);
+                ResetAdminChatState();
+                IsBrowserTabVisible = false;
+                CurrentTabIndex = 0;
+                await StopNcfAsync().ConfigureAwait(true);
+                DesktopBridgeSessionRevokedRequested?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                AddLog($"⚠️ 撤销会话后的工作台清理失败: {ex.Message}");
+                ResetAdminChatState();
+                IsBrowserTabVisible = false;
+                CurrentTabIndex = 0;
+                DesktopBridgeSessionRevokedRequested?.Invoke();
+            }
+            finally
+            {
+                Interlocked.Exchange(ref _isHandlingDesktopBridgeRevocation, 0);
+            }
+        });
+    }
+
     private void ApplyDesktopBridgeAvailability(DesktopBridgeProbeResult result)
     {
         Robot.SetBridgeAvailability(result);
@@ -2311,6 +2318,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         IsBrowserReady = true;
         HasBrowserError = false;
+        BrowserNavigationStatus = "就绪";
         AddLog("✅ 内置浏览器已准备就绪");
     }
 
@@ -2319,16 +2327,19 @@ public partial class MainWindowViewModel : ViewModelBase
         HasBrowserError = true;
         BrowserErrorMessage = errorMessage;
         IsBrowserReady = false;
+        BrowserNavigationStatus = "加载失败";
         AddLog($"❌ 浏览器错误: {errorMessage}");
     }
 
     public void OnNavigationStarted(string url)
     {
+        BrowserNavigationStatus = "加载中…";
         AddLog($"🌐 开始加载: {url}");
     }
 
     public void OnNavigationCompleted(string url)
     {
+        BrowserNavigationStatus = "已加载";
         AddLog($"✅ 加载完成: {url}");
     }
 

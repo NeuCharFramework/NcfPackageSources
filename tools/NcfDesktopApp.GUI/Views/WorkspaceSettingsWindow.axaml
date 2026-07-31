@@ -76,6 +76,75 @@
                     </StackPanel>
                 </Border>
 
+                <Border Classes="settings-section">
+                    <StackPanel Spacing="10">
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="本地语音输入" Classes="section-title"/>
+                            <TextBlock Text="模型只在本机加载；录音转写完成后先写入 AdminChat 输入框，不会自动发送。"
+                                       Classes="section-description"/>
+                        </StackPanel>
+
+                        <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto" RowSpacing="10">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="离线模型"
+                                       Classes="field-label"/>
+                            <ComboBox Grid.Row="0" Grid.Column="1"
+                                      ItemsSource="{Binding VoiceModelOptions}"
+                                      SelectedItem="{Binding SelectedVoiceModel, Mode=TwoWay}"
+                                      DisplayMemberBinding="{Binding DisplayName}"
+                                      PlaceholderText="请先选择模型"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="识别语言"
+                                       Classes="field-label"/>
+                            <ComboBox Grid.Row="1" Grid.Column="1"
+                                      ItemsSource="{Binding VoiceLanguageOptions}"
+                                      SelectedItem="{Binding VoiceLanguage, Mode=TwoWay}"/>
+                        </Grid>
+
+                        <TextBlock Text="{Binding SelectedVoiceModel.Description}"
+                                   FontSize="10.5"
+                                   TextWrapping="Wrap"
+                                   Foreground="{DynamicResource SecondaryTextBrush}"/>
+                        <Border Background="#0D64748B" CornerRadius="6" Padding="10">
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="{Binding VoiceModelStatusText}"
+                                           Foreground="{Binding VoiceModelStatusColor}"
+                                           FontWeight="SemiBold"
+                                           TextWrapping="Wrap"/>
+                                <SelectableTextBlock Text="{Binding VoiceModelPathText}"
+                                                     FontFamily="Consolas,Menlo,Monaco,Courier New"
+                                                     FontSize="9.5"
+                                                     TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding VoiceModelDownloadProgressText}"
+                                           IsVisible="{Binding IsVoiceModelBusy}"
+                                           FontSize="10.5"
+                                           Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                <ProgressBar IsVisible="{Binding IsVoiceModelBusy}"
+                                             IsIndeterminate="True" Height="4"/>
+                            </StackPanel>
+                        </Border>
+
+                        <WrapPanel Orientation="Horizontal">
+                            <Button Content="下载所选模型"
+                                    Command="{Binding DownloadVoiceModelCommand}"
+                                    Classes="primary-action"
+                                    Margin="0,0,8,8"/>
+                            <Button Content="选择本地模型"
+                                    Command="{Binding SelectCustomVoiceModelCommand}"
+                                    Classes="secondary-action"
+                                    Margin="0,0,8,8"/>
+                            <Button Content="打开模型目录"
+                                    Command="{Binding OpenVoiceModelDirectoryCommand}"
+                                    Classes="secondary-action"
+                                    Margin="0,0,8,8"/>
+                            <Button Content="取消"
+                                    Command="{Binding CancelVoiceInputCommand}"
+                                    IsVisible="{Binding IsVoiceCancelVisible}"
+                                    Classes="secondary-action"
+                                    Margin="0,0,0,8"/>
+                        </WrapPanel>
+                    </StackPanel>
+                </Border>
+
                 <Border Classes="settings-section" IsVisible="{Binding IsManagedTargetMode}">
                     <StackPanel Spacing="10">
                         <StackPanel Spacing="2">

@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Interactivity;
 using NcfDesktopApp.GUI.Views.Controls;
 
@@ -36,8 +35,6 @@ public partial class BrowserView : UserControl
             WebView.NavigationFailed += OnNavigationFailed;
         }
         
-        // 初始化按钮状态
-        UpdateNavigationButtons();
     }
 
     public async Task NavigateToUrl(string url)
@@ -74,58 +71,11 @@ public partial class BrowserView : UserControl
     public Task<bool> WebViewPasteAsync() =>
         WebView?.PasteAsync() ?? Task.FromResult(false);
 
-    private void BackButton_Click(object? sender, RoutedEventArgs e)
-    {
-        WebView?.GoBack();
-    }
-
-    private void ForwardButton_Click(object? sender, RoutedEventArgs e)
-    {
-        WebView?.GoForward();
-    }
-
     private void RefreshButton_Click(object? sender, RoutedEventArgs e)
     {
         if (WebView != null)
         {
             WebView.Refresh();
-        }
-    }
-
-    private async void UrlTextBox_KeyDown(object? sender, KeyEventArgs e)
-    {
-        if (e.Key == Key.Enter)
-        {
-            await NavigateToUrlFromTextBox();
-        }
-    }
-
-    private async void GoButton_Click(object? sender, RoutedEventArgs e)
-    {
-        await NavigateToUrlFromTextBox();
-    }
-
-    private async Task NavigateToUrlFromTextBox()
-    {
-        var textBox = this.FindControl<TextBox>("UrlTextBox");
-        if (textBox != null && !string.IsNullOrWhiteSpace(textBox.Text))
-        {
-            var url = textBox.Text.Trim();
-            
-            // 如果 URL 不包含协议，自动添加 http://
-            if (!url.StartsWith("http://") && !url.StartsWith("https://"))
-            {
-                url = "http://" + url;
-            }
-            
-            // 更新 ViewModel 中的 URL
-            if (DataContext is ViewModels.MainWindowViewModel viewModel)
-            {
-                viewModel.SiteUrl = url;
-            }
-            
-            // 导航到新 URL
-            await NavigateToUrl(url);
         }
     }
 
@@ -153,7 +103,6 @@ public partial class BrowserView : UserControl
             textBox.Text = url;
         }
         
-        UpdateNavigationButtons();
     }
 
     private void OnNavigationFailed(object? sender, string error)
@@ -162,22 +111,5 @@ public partial class BrowserView : UserControl
         {
             viewModel.OnBrowserError(error);
         }
-        UpdateNavigationButtons();
     }
-
-    private void UpdateNavigationButtons()
-    {
-        var backButton = this.FindControl<Button>("BackButton");
-        var forwardButton = this.FindControl<Button>("ForwardButton");
-        
-        if (backButton != null && WebView != null)
-        {
-            backButton.IsEnabled = WebView.CanGoBack;
-        }
-        
-        if (forwardButton != null && WebView != null)
-        {
-            forwardButton.IsEnabled = WebView.CanGoForward;
-        }
-    }
-} 
+}

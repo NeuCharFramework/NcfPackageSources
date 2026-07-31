@@ -4,7 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Version>0.2.0-preview1</Version>
+    <Version>0.2.1-preview2</Version>
     <AssemblyName>Senparc.Xncf.DesktopBridge</AssemblyName>
     <RootNamespace>Senparc.Xncf.DesktopBridge</RootNamespace>
     <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
@@ -37,6 +37,9 @@
       1、桌面端可使用短期配对码申请独立的 24 小时会话令牌，无需重启站点
       2、管理后台可批准、拒绝和撤销会话，且不显示令牌原文
       3、保留 NCF_DESKTOP_BRIDGE_TOKEN 兼容现有自动化，并要求远程配对使用 HTTPS
+      [2026-08-01] v0.2.1-preview2 优化后台样式和撤销响应
+      1、管理页面改用后台现有 Element UI 组件，不再维护模块私有样式
+      2、会话撤销直接取消现有 SSE，使桌面端无需轮询即可立即感知
     </PackageReleaseNotes>
   </PropertyGroup>
 

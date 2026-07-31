@@ -196,10 +196,12 @@ public sealed class DesktopBridgeCredentialStore
     {
         lock (_gate)
         {
-            if (!_sessions.Remove(sessionId))
+            if (!_sessions.Remove(sessionId, out var session))
             {
                 return false;
             }
+
+            session.RevocationSource.Cancel(throwOnFirstException: false);
 
             foreach (var pairing in _pendingPairings.Values.Where(x => x.SessionId == sessionId))
             {
@@ -252,6 +254,12 @@ public sealed class DesktopBridgeCredentialStore
 
     public bool IsAuthorized(string? suppliedToken)
     {
+        return TryAuthorize(suppliedToken, out _);
+    }
+
+    public bool TryAuthorize(string? suppliedToken, out CancellationToken sessionRevoked)
+    {
+        sessionRevoked = CancellationToken.None;
         if (string.IsNullOrWhiteSpace(suppliedToken))
         {
             return false;
@@ -276,6 +284,7 @@ public sealed class DesktopBridgeCredentialStore
                 }
 
                 session.LastUsedAt = now;
+                sessionRevoked = session.RevocationSource.Token;
                 return true;
             }
 
@@ -298,7 +307,10 @@ public sealed class DesktopBridgeCredentialStore
                      .Select(x => x.Key)
                      .ToArray())
         {
-            _sessions.Remove(sessionId);
+            if (_sessions.Remove(sessionId, out var session))
+            {
+                session.RevocationSource.Cancel(throwOnFirstException: false);
+            }
         }
     }
 
@@ -398,6 +410,7 @@ public sealed class DesktopBridgeCredentialStore
         public DateTimeOffset ApprovedAt { get; }
         public DateTimeOffset ExpiresAt { get; }
         public DateTimeOffset? LastUsedAt { get; set; }
+        public CancellationTokenSource RevocationSource { get; } = new();
     }
 }
 

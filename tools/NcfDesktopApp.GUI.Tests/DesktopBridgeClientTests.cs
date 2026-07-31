@@ -68,6 +68,42 @@ public sealed class DesktopBridgeClientTests
     }
 
     [TestMethod]
+    public async Task ConnectAsync_WhenEstablishedSessionIsRevoked_NotifiesClientImmediately()
+    {
+        var requestCount = 0;
+        await using var client = CreateClient(_ =>
+        {
+            return Interlocked.Increment(ref requestCount) switch
+            {
+                1 => JsonResponse("""
+                    {
+                      "protocolVersion": 1,
+                      "bridgeVersion": "0.2.1-preview2",
+                      "supportsSse": true,
+                      "supportsSnapshot": true,
+                      "eventEndpoint": "/api/Senparc.Xncf.DesktopBridge/events",
+                      "snapshotEndpoint": "/api/Senparc.Xncf.DesktopBridge/activities"
+                    }
+                    """),
+                2 => new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(string.Empty, Encoding.UTF8, "text/event-stream")
+                },
+                _ => new HttpResponseMessage(HttpStatusCode.Unauthorized)
+            };
+        });
+        var revoked = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+        client.SessionRevoked += message => revoked.TrySetResult(message);
+
+        var connected = await client.ConnectAsync(SiteUrl, Token);
+        var message = await revoked.Task.WaitAsync(TimeSpan.FromSeconds(2));
+
+        Assert.IsTrue(connected.IsAvailable);
+        StringAssert.Contains(message, "撤销");
+        Assert.IsTrue(requestCount >= 3);
+    }
+
+    [TestMethod]
     public async Task ProbeAsync_WhenEndpointIsMissing_ReturnsNotInstalledWithoutThrowing()
     {
         await using var client = CreateClient(_ => new HttpResponseMessage(HttpStatusCode.NotFound));

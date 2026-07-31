@@ -67,4 +67,19 @@ public sealed class DesktopUserSettings
     /// 启动 NCF 时使用的 ASP.NET Core 环境。
     /// </summary>
     public string AspNetCoreEnvironment { get; set; } = "Production";
+
+    /// <summary>
+    /// 已选择的桌面端离线语音模型标识。空值表示用户尚未选择。
+    /// </summary>
+    public string VoiceModelId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 手动加载的 Whisper GGML 模型路径；内置可下载模型不使用此字段。
+    /// </summary>
+    public string VoiceCustomModelPath { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 语音识别语言：auto、zh 或 en。
+    /// </summary>
+    public string VoiceLanguage { get; set; } = "auto";
 }

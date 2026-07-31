@@ -33,4 +33,7 @@ public sealed class DesktopBridgeTokenValidator
     public bool IsConfigured => _credentialStore.IsConfigured;
 
     public bool IsAuthorized(string? suppliedToken) => _credentialStore.IsAuthorized(suppliedToken);
+
+    public bool TryAuthorize(string? suppliedToken, out CancellationToken sessionRevoked) =>
+        _credentialStore.TryAuthorize(suppliedToken, out sessionRevoked);
 }
