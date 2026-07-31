@@ -364,6 +364,36 @@ jobs:
         Write-Host "Previous Desktop version: $previousVersionDisplay"
         Write-Host "Desktop version changed: $versionChanged"
 
+        $repository = if ($env:BUILD_REPOSITORY_NAME) {
+          $env:BUILD_REPOSITORY_NAME
+        } else {
+          'NeuCharFramework/NcfPackageSources'
+        }
+        $githubHeaders = @{
+          Accept = 'application/vnd.github+json'
+          'User-Agent' = 'Azure-DevOps-Desktop-Release'
+        }
+        if (-not [string]::IsNullOrWhiteSpace($env:GH_TOKEN)) {
+          $githubHeaders['Authorization'] = 'Bearer ' + $env:GH_TOKEN
+        }
+
+        # A failed gate may be fixed in a later commit after the version bump has
+        # already reached master. Check published Desktop tags instead of requiring
+        # the current commit itself to contain the version change.
+        $releaseTagPrefix = 'desktop-v{0}-build' -f $currentVersion
+        $escapedReleaseTagPrefix = [Uri]::EscapeDataString($releaseTagPrefix)
+        $matchingRefsUri = "https://api.github.com/repos/$repository/git/matching-refs/tags/$escapedReleaseTagPrefix"
+        try {
+          $matchingReleaseRefs = @(Invoke-RestMethod -Uri $matchingRefsUri -Headers $githubHeaders -Method Get)
+        } catch {
+          throw "Unable to check whether Desktop version $currentVersion is already released. $($_.Exception.Message)"
+        }
+        $versionAlreadyReleased = $matchingReleaseRefs.Count -gt 0
+        $versionReleaseEligible = -not $versionAlreadyReleased
+        Write-Host "Desktop release tag prefix: $releaseTagPrefix"
+        Write-Host "Desktop version already released: $versionAlreadyReleased"
+        Write-Host "Desktop version eligible for release: $versionReleaseEligible"
+
         $buildReason = $env:BUILD_REASON
         $sourceBranch = $env:BUILD_SOURCEBRANCH
         $buildTypeAllowed =
@@ -372,7 +402,11 @@ jobs:
 
         $requestedFor = $env:BUILD_REQUESTEDFOR
         $sourceVersionAuthor = $env:BUILD_SOURCEVERSIONAUTHOR
-        $authorized = ($requestedFor -eq 'JeffreySu') -or ($sourceVersionAuthor -eq 'JeffreySu')
+        $normalizedRequestedFor = $requestedFor -replace '\s', ''
+        $normalizedSourceVersionAuthor = $sourceVersionAuthor -replace '\s', ''
+        $authorized =
+          ($normalizedRequestedFor -ieq 'JeffreySu') -or
+          ($normalizedSourceVersionAuthor -ieq 'JeffreySu')
         $pullRequestMerged = $buildReason -ne 'PullRequest'
 
         $releaseText = ''
@@ -391,17 +425,7 @@ jobs:
             -not [string]::IsNullOrWhiteSpace($env:GH_TOKEN)) {
           try {
             $pullRequestNumber = $env:SYSTEM_PULLREQUEST_PULLREQUESTNUMBER
-            $repository = if ($env:BUILD_REPOSITORY_NAME) {
-              $env:BUILD_REPOSITORY_NAME
-            } else {
-              'NeuCharFramework/NcfPackageSources'
-            }
-            $headers = @{
-              Authorization = 'Bearer ' + $env:GH_TOKEN
-              Accept = 'application/vnd.github+json'
-              'User-Agent' = 'Azure-DevOps-Desktop-Release'
-            }
-            $pullRequest = Invoke-RestMethod -Uri "https://api.github.com/repos/$repository/pulls/$pullRequestNumber" -Headers $headers -Method Get
+            $pullRequest = Invoke-RestMethod -Uri "https://api.github.com/repos/$repository/pulls/$pullRequestNumber" -Headers $githubHeaders -Method Get
             $pullRequestMerged = $pullRequest.state -eq 'closed' -and $pullRequest.merged -eq $true
           } catch {
             Write-Host "##[warning]Unable to verify the pull request merge state. $($_.Exception.Message)"
@@ -413,18 +437,8 @@ jobs:
           if ($commitMessage -match '^Merge pull request #(\d+) from' -and
               -not [string]::IsNullOrWhiteSpace($env:GH_TOKEN)) {
             try {
-              $repository = if ($env:BUILD_REPOSITORY_NAME) {
-                $env:BUILD_REPOSITORY_NAME
-              } else {
-                'NeuCharFramework/NcfPackageSources'
-              }
               $prNumber = $matches[1]
-              $headers = @{
-                Authorization = 'Bearer ' + $env:GH_TOKEN
-                Accept = 'application/vnd.github+json'
-                'User-Agent' = 'Azure-DevOps-Desktop-Release'
-              }
-              $pullRequest = Invoke-RestMethod -Uri "https://api.github.com/repos/$repository/pulls/$prNumber" -Headers $headers -Method Get
+              $pullRequest = Invoke-RestMethod -Uri "https://api.github.com/repos/$repository/pulls/$prNumber" -Headers $githubHeaders -Method Get
               $releaseText = [string]$pullRequest.title
               $releaseTextSource = "Pull request #$prNumber title"
             } catch {
@@ -438,8 +452,21 @@ jobs:
           }
         }
 
-        $hasReleaseDesktopKeyword = $releaseText -match '(?i)\[release-desktop\]'
-        $releaseAllowed = $versionChanged -and $buildTypeAllowed -and $authorized -and $pullRequestMerged -and $hasReleaseDesktopKeyword
+        # For a merge build, HEAD^ is the previous master commit. This range
+        # includes every commit brought in by the merged pull request.
+        $releaseCommitRange = if ($parentCommit) { "$parentCommit..HEAD" } else { 'HEAD' }
+        $releaseCommitSubjects = @(git log '--format=%h %s' $releaseCommitRange)
+        if ($LASTEXITCODE -ne 0) {
+          throw "Unable to inspect commit messages in release range $releaseCommitRange."
+        }
+        $releaseKeywordCommits = @(
+          $releaseCommitSubjects |
+            Where-Object { $_ -match '(?i)\[release-desktop\]' }
+        )
+        $hasReleaseDesktopKeyword =
+          ($releaseText -match '(?i)\[release-desktop\]') -or
+          ($releaseKeywordCommits.Count -gt 0)
+        $releaseAllowed = $versionReleaseEligible -and $buildTypeAllowed -and $authorized -and $pullRequestMerged -and $hasReleaseDesktopKeyword
 
         Write-Host "Build reason: $buildReason"
         Write-Host "Source branch: $sourceBranch"
@@ -450,14 +477,18 @@ jobs:
         Write-Host "Pull request merged: $pullRequestMerged"
         Write-Host "Release text source: $releaseTextSource"
         Write-Host "Release text: $releaseText"
+        Write-Host "Release commit range: $releaseCommitRange"
+        Write-Host "Release keyword commits: $($releaseKeywordCommits -join '; ')"
         Write-Host "Contains [Release-Desktop]: $hasReleaseDesktopKeyword"
         Write-Host "Desktop release allowed: $releaseAllowed"
 
         $releaseTag = 'desktop-v{0}-build{1}' -f $currentVersion, $env:BUILD_BUILDID
         $versionChangedValue = $versionChanged.ToString().ToLowerInvariant()
+        $versionAlreadyReleasedValue = $versionAlreadyReleased.ToString().ToLowerInvariant()
         $releaseAllowedValue = $releaseAllowed.ToString().ToLowerInvariant()
         Write-Host "##vso[task.setvariable variable=desktopVersion;isOutput=true]$currentVersion"
         Write-Host "##vso[task.setvariable variable=desktopVersionChanged;isOutput=true]$versionChangedValue"
+        Write-Host "##vso[task.setvariable variable=desktopVersionAlreadyReleased;isOutput=true]$versionAlreadyReleasedValue"
         Write-Host "##vso[task.setvariable variable=desktopReleaseAllowed;isOutput=true]$releaseAllowedValue"
         Write-Host "##vso[task.setvariable variable=desktopReleaseTag;isOutput=true]$releaseTag"
     env:
