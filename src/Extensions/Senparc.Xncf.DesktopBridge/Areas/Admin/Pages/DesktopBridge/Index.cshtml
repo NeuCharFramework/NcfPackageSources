@@ -1,0 +1,131 @@
+@page
+@model Senparc.Xncf.DesktopBridge.Areas.DesktopBridge.Pages.Index
+@{
+    ViewData["Title"] = "DesktopBridge 设备配对与会话";
+    Layout = "_Layout_Vue";
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>DesktopBridge</el-breadcrumb-item>
+    <el-breadcrumb-item>设备配对与会话</el-breadcrumb-item>
+}
+
+<style>
+    .bridge-panel { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 18px; padding: 18px; }
+    .bridge-panel h3 { margin-top: 0; }
+    .bridge-note { background: #eff6ff; border-left: 4px solid #2563eb; color: #1e3a8a; margin-bottom: 18px; padding: 12px 14px; }
+    .bridge-message { background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 6px; color: #065f46; margin-bottom: 16px; padding: 10px 12px; }
+    .bridge-empty { color: #6b7280; margin: 8px 0 0; }
+    .bridge-table { border-collapse: collapse; width: 100%; }
+    .bridge-table th, .bridge-table td { border-bottom: 1px solid #e5e7eb; padding: 10px 8px; text-align: left; vertical-align: middle; }
+    .bridge-code { font-family: Consolas, Menlo, monospace; font-size: 16px; font-weight: 700; letter-spacing: 1px; }
+    .bridge-actions { display: flex; gap: 8px; }
+    .bridge-button { border: 0; border-radius: 5px; cursor: pointer; padding: 7px 12px; }
+    .bridge-approve { background: #2563eb; color: #fff; }
+    .bridge-deny, .bridge-revoke { background: #fee2e2; color: #991b1b; }
+    .bridge-meta { color: #6b7280; font-size: 12px; }
+</style>
+
+<div class="bridge-note">
+    桌面端留空令牌并发起连接后，会在这里出现 5 分钟有效的配对请求。请核对配对码后再批准。
+    系统不会在后台显示会话令牌原文；批准后的令牌有效 24 小时，也可随时撤销。
+</div>
+
+@if (TempData["DesktopBridgeMessage"] is string message)
+{
+    <div class="bridge-message">@message</div>
+}
+
+<section class="bridge-panel">
+    <h3>待审批请求（@Model.PendingPairings.Count）</h3>
+    @if (Model.PendingPairings.Count == 0)
+    {
+        <p class="bridge-empty">当前没有待审批的配对请求。可让桌面端重新点击“启动目标”。</p>
+    }
+    else
+    {
+        <table class="bridge-table">
+            <thead>
+            <tr>
+                <th>配对码</th>
+                <th>桌面端</th>
+                <th>来源</th>
+                <th>过期时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var pairing in Model.PendingPairings)
+            {
+                <tr>
+                    <td class="bridge-code">@pairing.DeviceCode</td>
+                    <td>@pairing.ClientName<div class="bridge-meta">发起于 @pairing.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</div></td>
+                    <td>@pairing.RemoteAddress</td>
+                    <td>@pairing.ExpiresAt.ToLocalTime().ToString("HH:mm:ss")</td>
+                    <td>
+                        <div class="bridge-actions">
+                            <form method="post" asp-page-handler="Approve">
+                                <input type="hidden" asp-for="Uid" />
+                                <input type="hidden" name="requestId" value="@pairing.RequestId" />
+                                <button class="bridge-button bridge-approve" type="submit">批准</button>
+                            </form>
+                            <form method="post" asp-page-handler="Deny">
+                                <input type="hidden" asp-for="Uid" />
+                                <input type="hidden" name="requestId" value="@pairing.RequestId" />
+                                <button class="bridge-button bridge-deny" type="submit">拒绝</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</section>
+
+<section class="bridge-panel">
+    <h3>活动会话（@Model.Sessions.Count）</h3>
+    @if (Model.Sessions.Count == 0)
+    {
+        <p class="bridge-empty">当前没有通过配对签发的活动会话。环境变量令牌不会在此处显示。</p>
+    }
+    else
+    {
+        <table class="bridge-table">
+            <thead>
+            <tr>
+                <th>桌面端</th>
+                <th>来源</th>
+                <th>批准人 / 时间</th>
+                <th>最近使用</th>
+                <th>到期时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var session in Model.Sessions)
+            {
+                <tr>
+                    <td>@session.ClientName</td>
+                    <td>@session.RemoteAddress</td>
+                    <td>@session.ApprovedBy<div class="bridge-meta">@session.ApprovedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</div></td>
+                    <td>@(session.LastUsedAt?.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss") ?? "尚未使用")</td>
+                    <td>@session.ExpiresAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td>
+                        <form method="post" asp-page-handler="Revoke">
+                            <input type="hidden" asp-for="Uid" />
+                            <input type="hidden" name="sessionId" value="@session.SessionId" />
+                            <button class="bridge-button bridge-revoke" type="submit">撤销</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</section>
+
+@section scripts {
+    <script>new Vue({ el: "#app" });</script>
+}

@@ -13,6 +13,61 @@ public sealed class DesktopBridgeClientTests
     private const string Token = "test-session-token";
 
     [TestMethod]
+    public async Task CreatePairingRequestAsync_DoesNotSendDesktopToken()
+    {
+        Uri? requestUri = null;
+        var desktopTokenSent = false;
+        await using var client = CreateClient(request =>
+        {
+            requestUri = request.RequestUri;
+            desktopTokenSent = request.Headers.Contains(DesktopBridgeClient.TokenHeaderName);
+            return JsonResponse("""
+                {
+                  "requestId": "06f6d1d5-0b52-4a4a-a414-ab4d52fcf122",
+                  "deviceCode": "ABCD-EFGH-JK23",
+                  "pollSecret": "poll-secret",
+                  "expiresAt": "2026-08-01T10:05:00Z",
+                  "verificationPath": "/Admin/DesktopBridge/Index?uid=test",
+                  "pollIntervalSeconds": 2
+                }
+                """);
+        });
+
+        var result = await client.CreatePairingRequestAsync(SiteUrl, "测试工作台");
+
+        Assert.IsFalse(desktopTokenSent);
+        Assert.AreEqual("/api/Senparc.Xncf.DesktopBridge/pairing/requests", requestUri?.AbsolutePath);
+        Assert.AreEqual("ABCD-EFGH-JK23", result.DeviceCode);
+        Assert.AreEqual("poll-secret", result.PollSecret);
+    }
+
+    [TestMethod]
+    public async Task PollPairingAsync_WhenApproved_ReturnsSessionWithoutSendingDesktopToken()
+    {
+        var desktopTokenSent = false;
+        await using var client = CreateClient(request =>
+        {
+            desktopTokenSent = request.Headers.Contains(DesktopBridgeClient.TokenHeaderName);
+            return JsonResponse("""
+                {
+                  "status": "approved",
+                  "sessionToken": "issued-session-token",
+                  "sessionExpiresAt": "2026-08-02T10:00:00Z"
+                }
+                """);
+        });
+
+        var result = await client.PollPairingAsync(
+            SiteUrl,
+            Guid.Parse("06f6d1d5-0b52-4a4a-a414-ab4d52fcf122"),
+            "poll-secret");
+
+        Assert.IsFalse(desktopTokenSent);
+        Assert.AreEqual("approved", result.Status);
+        Assert.AreEqual("issued-session-token", result.SessionToken);
+    }
+
+    [TestMethod]
     public async Task ProbeAsync_WhenEndpointIsMissing_ReturnsNotInstalledWithoutThrowing()
     {
         await using var client = CreateClient(_ => new HttpResponseMessage(HttpStatusCode.NotFound));

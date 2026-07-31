@@ -111,6 +111,18 @@ public partial class MainWindowViewModel : ViewModelBase
     private string _remoteBridgeToken = string.Empty;
 
     [ObservableProperty]
+    private bool _isRemotePairingVisible;
+
+    [ObservableProperty]
+    private string _remotePairingCode = string.Empty;
+
+    [ObservableProperty]
+    private string _remotePairingStatus = string.Empty;
+
+    [ObservableProperty]
+    private string _remotePairingApprovalUrl = string.Empty;
+
+    [ObservableProperty]
     private string _templateWorkspaceParentPath = string.Empty;
 
     [ObservableProperty]
@@ -347,6 +359,7 @@ public partial class MainWindowViewModel : ViewModelBase
         TargetEntryText = value;
         TargetValidationMessage = "地址已变化，请检测远程站点配置。令牌只保存在当前工作台内存中。";
         TargetStatusColor = "#D97706";
+        ResetRemotePairingState();
         SaveDesktopSettings();
     }
 
@@ -963,6 +976,15 @@ public partial class MainWindowViewModel : ViewModelBase
         AddLog($"📁 已打开目标目录: {path}");
     }
 
+    [RelayCommand]
+    private void OpenRemotePairingApproval()
+    {
+        if (!string.IsNullOrWhiteSpace(RemotePairingApprovalUrl))
+        {
+            OpenBrowser(RemotePairingApprovalUrl);
+        }
+    }
+
     private bool CanChangeLaunchTarget() => !IsOperationInProgress && !_isNcfRunning;
 
     private void NotifyLaunchTargetCommandsCanExecuteChanged()
@@ -1508,15 +1530,11 @@ public partial class MainWindowViewModel : ViewModelBase
                 {
                     throw new InvalidOperationException(remoteResolution.ErrorMessage);
                 }
-                if (string.IsNullOrWhiteSpace(RemoteBridgeToken))
-                {
-                    throw new InvalidOperationException(
-                        "请输入远程 DesktopBridge 令牌。该令牌应与远程站点的 NCF_DESKTOP_BRIDGE_TOKEN 一致。");
-                }
-
                 launchTarget = remoteResolution.Target!;
                 await Dispatcher.UIThread.InvokeAsync(() => ApplyResolvedLaunchTarget(launchTarget));
-                AddLog("🛡️ 远程模式：不启动或修改本地进程，仅建立受保护的 HTTPS/SSE 会话");
+                AddLog(string.IsNullOrWhiteSpace(RemoteBridgeToken)
+                    ? "🔐 远程模式：未填写令牌，将通过管理员审批申请临时会话"
+                    : "🛡️ 远程模式：使用手工令牌建立受保护的 HTTPS/SSE 会话");
             }
             else if (IsManagedTargetMode)
             {
@@ -1785,8 +1803,18 @@ public partial class MainWindowViewModel : ViewModelBase
         NcfLaunchTarget launchTarget,
         CancellationToken cancellationToken)
     {
-        _desktopBridgeSessionToken = RemoteBridgeToken.Trim();
         var siteUrl = launchTarget.EntryPath;
+        if (string.IsNullOrWhiteSpace(RemoteBridgeToken))
+        {
+            _desktopBridgeSessionToken = await AcquireRemotePairingTokenAsync(siteUrl, cancellationToken);
+            await Dispatcher.UIThread.InvokeAsync(() => RemoteBridgeToken = _desktopBridgeSessionToken);
+        }
+        else
+        {
+            _desktopBridgeSessionToken = RemoteBridgeToken.Trim();
+            await Dispatcher.UIThread.InvokeAsync(ResetRemotePairingState);
+        }
+
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
             SiteUrl = siteUrl;
@@ -1810,6 +1838,89 @@ public partial class MainWindowViewModel : ViewModelBase
             ProgressText = "远程 NCF 已连接";
             IsProgressIndeterminate = false;
         });
+    }
+
+    private async Task<string> AcquireRemotePairingTokenAsync(
+        string siteUrl,
+        CancellationToken cancellationToken)
+    {
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            IsRemotePairingVisible = true;
+            RemotePairingCode = "正在申请…";
+            RemotePairingStatus = "正在向 DesktopBridge 申请配对码。";
+            RemotePairingApprovalUrl = string.Empty;
+            ProgressText = "正在申请管理员配对…";
+            IsProgressIndeterminate = true;
+        });
+
+        var pairing = await _desktopBridgeClient.CreatePairingRequestAsync(
+            siteUrl,
+            $"NcfDesktopApp GUI · {Environment.MachineName}",
+            cancellationToken).ConfigureAwait(false);
+
+        if (!SiteEndpointPolicy.TryCreateEndpoint(
+                siteUrl,
+                pairing.VerificationPath,
+                out var approvalEndpoint,
+                out var endpointError))
+        {
+            throw new InvalidOperationException(endpointError);
+        }
+
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            RemotePairingCode = pairing.DeviceCode;
+            RemotePairingApprovalUrl = approvalEndpoint.AbsoluteUri;
+            RemotePairingStatus = $"请在管理后台核对并批准。配对请求将在 {pairing.ExpiresAt.ToLocalTime():HH:mm:ss} 过期。";
+            ProgressText = "等待管理员批准配对…";
+            AddLog($"🔑 DesktopBridge 配对码: {pairing.DeviceCode}");
+            if (AutoOpenBrowser)
+            {
+                OpenBrowser(approvalEndpoint.AbsoluteUri);
+            }
+        });
+
+        var pollDelay = TimeSpan.FromSeconds(Math.Clamp(pairing.PollIntervalSeconds, 1, 10));
+        while (true)
+        {
+            await Task.Delay(pollDelay, cancellationToken).ConfigureAwait(false);
+            var status = await _desktopBridgeClient.PollPairingAsync(
+                siteUrl,
+                pairing.RequestId,
+                pairing.PollSecret,
+                cancellationToken).ConfigureAwait(false);
+
+            switch (status.Status.Trim().ToLowerInvariant())
+            {
+                case "pending":
+                    continue;
+                case "approved" when !string.IsNullOrWhiteSpace(status.SessionToken):
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        RemotePairingStatus = status.SessionExpiresAt is { } expiresAt
+                            ? $"配对已批准，会话有效至 {expiresAt.ToLocalTime():yyyy-MM-dd HH:mm:ss}。"
+                            : "配对已批准，正在建立连接。";
+                        AddLog("✅ 管理员已批准 DesktopBridge 配对，已取得独立会话令牌");
+                    });
+                    return status.SessionToken;
+                case "denied":
+                case "expired":
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                        RemotePairingStatus = status.Message ?? "配对未获批准，请重新发起。");
+                    throw new InvalidOperationException(status.Message ?? "DesktopBridge 配对未获批准，请重新发起。");
+                default:
+                    throw new InvalidOperationException("DesktopBridge 返回了未知的配对状态，请重新发起。");
+            }
+        }
+    }
+
+    private void ResetRemotePairingState()
+    {
+        IsRemotePairingVisible = false;
+        RemotePairingCode = string.Empty;
+        RemotePairingStatus = string.Empty;
+        RemotePairingApprovalUrl = string.Empty;
     }
 
     private async Task ConnectDesktopBridgeAsync(
@@ -1978,6 +2089,7 @@ public partial class MainWindowViewModel : ViewModelBase
                     DesktopBridgeNoticeMessage = string.Empty;
                     IsDesktopBridgeNoticeVisible = false;
                     IsDesktopBridgeInstallActionVisible = false;
+                    ResetRemotePairingState();
                     AddLog(stoppedCleanly
                         ? "✅ 目标已停止，可选择下一步操作（重新启动或其他目标）"
                         : "✅ 已结束停止流程，桌面应用保持打开，可继续操作");

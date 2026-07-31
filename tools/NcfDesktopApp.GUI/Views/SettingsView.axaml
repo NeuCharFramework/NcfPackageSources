@@ -169,13 +169,13 @@
 
                             <!-- 远程 NCF：HTTPS/SSE 复用站点内 EventBus -->
                             <StackPanel IsVisible="{Binding IsRemoteTargetMode}"
-                                        IsEnabled="{Binding IsTargetSelectionEnabled}"
                                         Spacing="8">
                                 <TextBlock Text="连接已部署的 NCF。远程地址强制 HTTPS；localhost 或本机 SSH 隧道可使用 HTTP。"
                                            FontSize="11"
                                            Foreground="{DynamicResource SecondaryTextBrush}"
                                            TextWrapping="Wrap"/>
-                                <Grid ColumnDefinitions="*,Auto">
+                                <Grid ColumnDefinitions="*,Auto"
+                                      IsEnabled="{Binding IsTargetSelectionEnabled}">
                                     <TextBox Grid.Column="0"
                                              Text="{Binding RemoteSiteUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                              Watermark="https://ncf.example.com"
@@ -189,12 +189,38 @@
                                 </Grid>
                                 <TextBox Text="{Binding RemoteBridgeToken, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          PasswordChar="●"
-                                         Watermark="DesktopBridge 令牌（仅保存在内存）"
+                                         Watermark="已有令牌（可选；留空则申请管理员配对）"
+                                         IsEnabled="{Binding IsTargetSelectionEnabled}"
                                          FontSize="11"/>
-                                <TextBlock Text="服务端设置 NCF_DESKTOP_BRIDGE_TOKEN；可叠加 IP 白名单，mTLS 可由本机代理终止，或使用 SSH 隧道。"
+                                <TextBlock Text="推荐留空：桌面端会显示配对码，由 AdminOnly 管理员批准后取得独立的 24 小时会话。NCF_DESKTOP_BRIDGE_TOKEN 仍可用于自动化。"
                                            FontSize="10"
                                            Foreground="{DynamicResource SecondaryTextBrush}"
                                            TextWrapping="Wrap"/>
+                                <Border IsVisible="{Binding IsRemotePairingVisible}"
+                                        Background="#0D0F766E"
+                                        BorderBrush="#400F766E"
+                                        BorderThickness="1"
+                                        CornerRadius="7"
+                                        Padding="10">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="等待管理员配对"
+                                                   FontSize="11"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="#0F766E"/>
+                                        <SelectableTextBlock Text="{Binding RemotePairingCode}"
+                                                             FontFamily="Consolas,Menlo,Monaco,Courier New"
+                                                             FontSize="19"
+                                                             FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding RemotePairingStatus}"
+                                                   FontSize="10.5"
+                                                   TextWrapping="Wrap"
+                                                   Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                        <Button Content="打开管理后台审批"
+                                                Command="{Binding OpenRemotePairingApprovalCommand}"
+                                                Classes="secondary-action"
+                                                HorizontalAlignment="Left"/>
+                                    </StackPanel>
+                                </Border>
                             </StackPanel>
 
                             <!-- 目标元数据 -->

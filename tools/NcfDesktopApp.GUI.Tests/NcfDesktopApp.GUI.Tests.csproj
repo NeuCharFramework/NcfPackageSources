@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -15,6 +15,9 @@
       [2026-07-30] v0.2.0 验证远程站点和模板工作区安全边界
       1、覆盖远程 HTTPS、非回环 HTTP 拒绝和回环 SSH 隧道地址
       2、覆盖模板目标目录防覆盖与路径逃逸保护
+      [2026-08-01] v0.2.1 验证 DesktopBridge 管理员配对客户端
+      1、验证创建和轮询配对请求时不会误发已有 DesktopBridge 令牌
+      2、验证批准响应中的独立会话令牌可被桌面端读取
     </PackageReleaseNotes>
   </PropertyGroup>
 

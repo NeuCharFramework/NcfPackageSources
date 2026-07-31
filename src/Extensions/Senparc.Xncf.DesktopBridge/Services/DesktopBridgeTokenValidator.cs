@@ -11,9 +11,6 @@
 
 ----------------------------------------------------------------*/
 
-using System.Security.Cryptography;
-using System.Text;
-
 namespace Senparc.Xncf.DesktopBridge.Services;
 
 public sealed class DesktopBridgeTokenValidator
@@ -21,28 +18,19 @@ public sealed class DesktopBridgeTokenValidator
     public const string TokenEnvironmentVariable = "NCF_DESKTOP_BRIDGE_TOKEN";
     public const string TokenHeaderName = "X-Ncf-Desktop-Token";
 
-    private readonly byte[]? _expectedToken;
+    private readonly DesktopBridgeCredentialStore _credentialStore;
 
     public DesktopBridgeTokenValidator()
+        : this(new DesktopBridgeCredentialStore())
     {
-        var configuredToken = Environment.GetEnvironmentVariable(TokenEnvironmentVariable);
-        if (!string.IsNullOrWhiteSpace(configuredToken))
-        {
-            _expectedToken = Encoding.UTF8.GetBytes(configuredToken);
-        }
     }
 
-    public bool IsConfigured => _expectedToken is { Length: > 0 };
-
-    public bool IsAuthorized(string? suppliedToken)
+    public DesktopBridgeTokenValidator(DesktopBridgeCredentialStore credentialStore)
     {
-        if (!IsConfigured || string.IsNullOrEmpty(suppliedToken))
-        {
-            return false;
-        }
-
-        var suppliedBytes = Encoding.UTF8.GetBytes(suppliedToken);
-        return suppliedBytes.Length == _expectedToken!.Length &&
-               CryptographicOperations.FixedTimeEquals(suppliedBytes, _expectedToken);
+        _credentialStore = credentialStore;
     }
+
+    public bool IsConfigured => _credentialStore.IsConfigured;
+
+    public bool IsAuthorized(string? suppliedToken) => _credentialStore.IsAuthorized(suppliedToken);
 }

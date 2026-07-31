@@ -31,7 +31,7 @@ namespace Senparc.Xncf.DesktopBridge.OHS.Local.Controllers;
 public sealed class DesktopBridgeController : ControllerBase
 {
     public const int CurrentProtocolVersion = 1;
-    public const string BridgeVersion = "0.1.0-preview2";
+    public const string BridgeVersion = "0.2.0-preview1";
     private const string AdminOnlyPolicy = NcfAuthorizationPolicyNames.AdminOnly;
     private const string BackendJwtScheme = "Bearer_Backend";
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
@@ -102,6 +102,11 @@ public sealed class DesktopBridgeController : ControllerBase
 
         await foreach (var activity in _activityHub.Subscribe(replayBuffered, cancellationToken).ConfigureAwait(false))
         {
+            if (!HasAuthorizedDesktopSession())
+            {
+                return;
+            }
+
             var payload = JsonSerializer.Serialize(activity, JsonOptions);
             await Response.WriteAsync($"id: {activity.Sequence}\n", cancellationToken).ConfigureAwait(false);
             await Response.WriteAsync($"event: activity\n", cancellationToken).ConfigureAwait(false);
@@ -145,6 +150,11 @@ public sealed class DesktopBridgeController : ControllerBase
                            .Subscribe(ownerId, AdminOnlyPolicy, replayBuffered, cancellationToken)
                            .ConfigureAwait(false))
         {
+            if (!HasAuthorizedDesktopSession())
+            {
+                return;
+            }
+
             var payload = JsonSerializer.Serialize(message, JsonOptions);
             await Response.WriteAsync($"id: {message.Sequence}\n", cancellationToken).ConfigureAwait(false);
             await Response.WriteAsync("event: authorized-sync\n", cancellationToken).ConfigureAwait(false);
@@ -162,12 +172,17 @@ public sealed class DesktopBridgeController : ControllerBase
                 new ProblemDetails
                 {
                     Title = "DesktopBridge is inactive",
-                    Detail = "Start NCF from NcfDesktopApp to enable a protected desktop session.",
+                    Detail = "Provide NCF_DESKTOP_BRIDGE_TOKEN or approve a DesktopBridge pairing request in Admin.",
                     Status = StatusCodes.Status503ServiceUnavailable
                 });
         }
 
+        return HasAuthorizedDesktopSession() ? null : Unauthorized();
+    }
+
+    private bool HasAuthorizedDesktopSession()
+    {
         var suppliedToken = Request.Headers[DesktopBridgeTokenValidator.TokenHeaderName].FirstOrDefault();
-        return _tokenValidator.IsAuthorized(suppliedToken) ? null : Unauthorized();
+        return _tokenValidator.IsAuthorized(suppliedToken);
     }
 }
