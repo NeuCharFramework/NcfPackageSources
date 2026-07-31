@@ -168,6 +168,10 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public Action? CreateWorkspaceWindowRequested { get; set; }
 
+    public Action? ShowWorkspaceSettingsRequested { get; set; }
+
+    public Action? ShowTemplateWorkspaceRequested { get; set; }
+
     public DesktopRobotViewModel Robot { get; } = new();
 
     public ObservableCollection<string> RecentNcfPaths { get; } = new();
@@ -184,6 +188,10 @@ public partial class MainWindowViewModel : ViewModelBase
     public bool IsRemoteTargetMode => LaunchTargetKind == NcfLaunchTargetKind.RemoteSite;
 
     public bool IsTargetSelectionEnabled => !IsOperationInProgress && !_isNcfRunning;
+
+    public string LaunchConfigurationSummary => IsRemoteTargetMode
+        ? "远程连接配置"
+        : $"{AspNetCoreEnvironment} · 端口 {StartPort}–{EndPort}";
 
     public string ManagedModeButtonBackground => IsManagedTargetMode ? "#2563EB" : "Transparent";
 
@@ -297,6 +305,7 @@ public partial class MainWindowViewModel : ViewModelBase
         OnPropertyChanged(nameof(ExternalModeButtonForeground));
         OnPropertyChanged(nameof(RemoteModeButtonBackground));
         OnPropertyChanged(nameof(RemoteModeButtonForeground));
+        OnPropertyChanged(nameof(LaunchConfigurationSummary));
 
         if (_suppressDesktopSettingsSave)
         {
@@ -351,10 +360,39 @@ public partial class MainWindowViewModel : ViewModelBase
 
     partial void OnAspNetCoreEnvironmentChanged(string value)
     {
+        OnPropertyChanged(nameof(LaunchConfigurationSummary));
         if (!_suppressDesktopSettingsSave)
         {
             SaveDesktopSettings();
         }
+    }
+
+    partial void OnAutoOpenBrowserChanged(bool value) => SaveDesktopSettings();
+
+    partial void OnAutoCleanDownloadsChanged(bool value) => SaveDesktopSettings();
+
+    partial void OnShowDetailedInfoChanged(bool value) => SaveDesktopSettings();
+
+    partial void OnStartPortChanged(int value)
+    {
+        if (value > EndPort)
+        {
+            EndPort = value;
+        }
+
+        OnPropertyChanged(nameof(LaunchConfigurationSummary));
+        SaveDesktopSettings();
+    }
+
+    partial void OnEndPortChanged(int value)
+    {
+        if (value < StartPort)
+        {
+            StartPort = value;
+        }
+
+        OnPropertyChanged(nameof(LaunchConfigurationSummary));
+        SaveDesktopSettings();
     }
 
     partial void OnIsOperationInProgressChanged(bool value)
@@ -500,6 +538,11 @@ public partial class MainWindowViewModel : ViewModelBase
         DesktopSettingsStore.Save(new DesktopUserSettings
         {
             MirrorServerBaseUrl = MirrorServerBaseUrl,
+            AutoOpenBrowser = AutoOpenBrowser,
+            AutoCleanDownloads = AutoCleanDownloads,
+            ShowDetailedInfo = ShowDetailedInfo,
+            StartPort = StartPort,
+            EndPort = EndPort,
             LaunchTargetKind = LaunchTargetKind,
             ExternalNcfPath = ExternalNcfPath,
             RemoteSiteUrl = RemoteSiteUrl,
@@ -883,6 +926,18 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private void ShowWorkspaceSettings()
+    {
+        ShowWorkspaceSettingsRequested?.Invoke();
+    }
+
+    [RelayCommand]
+    private void ShowTemplateWorkspace()
+    {
+        ShowTemplateWorkspaceRequested?.Invoke();
+    }
+
+    [RelayCommand]
     private void OpenSelectedTargetDirectory()
     {
         if (IsRemoteTargetMode)
@@ -1196,6 +1251,11 @@ public partial class MainWindowViewModel : ViewModelBase
                 _suppressMirrorSettingsSave = true;
                 _suppressDesktopSettingsSave = true;
                 MirrorServerBaseUrl = _ncfService.MirrorServerBaseUrl;
+                AutoOpenBrowser = desktopSettings.AutoOpenBrowser;
+                AutoCleanDownloads = desktopSettings.AutoCleanDownloads;
+                ShowDetailedInfo = desktopSettings.ShowDetailedInfo;
+                StartPort = Math.Clamp(desktopSettings.StartPort, 1024, 65535);
+                EndPort = Math.Clamp(desktopSettings.EndPort, StartPort, 65535);
                 ExternalNcfPath = desktopSettings.ExternalNcfPath ?? string.Empty;
                 RemoteSiteUrl = desktopSettings.RemoteSiteUrl ?? string.Empty;
                 TemplateWorkspaceParentPath = string.IsNullOrWhiteSpace(desktopSettings.TemplateWorkspaceParentPath)

@@ -1,0 +1,118 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NcfDesktopApp.GUI.ViewModels"
+        x:Class="NcfDesktopApp.GUI.Views.TemplateWorkspaceWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="从模板新建 NCF 工作区"
+        Width="640" Height="480"
+        MinWidth="520" MinHeight="420"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        Icon="/Assets/NCF-logo.png">
+
+    <Grid RowDefinitions="Auto,*,Auto" Background="{DynamicResource ContentBackgroundBrush}">
+        <Border Grid.Row="0"
+                Background="{DynamicResource ToolbarBackgroundBrush}"
+                BorderBrush="{DynamicResource ToolbarBorderBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="22,16">
+            <StackPanel Spacing="3">
+                <TextBlock Text="从官方模板新建工作区" FontSize="20" FontWeight="SemiBold"/>
+                <TextBlock Text="创建完成后自动切换到新的外部源码目标。"
+                           FontSize="11" Foreground="{DynamicResource SecondaryTextBrush}"/>
+            </StackPanel>
+        </Border>
+
+        <ScrollViewer Grid.Row="1" Padding="22,18"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Spacing="16">
+                <Border Background="#102563EB"
+                        BorderBrush="#402563EB"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="14">
+                    <TextBlock Text="桌面端会在线安装最新 Senparc.NCF.Template，再创建不触发 dotnet restore 的源码目录。现有非空目录不会被覆盖。"
+                               FontSize="11" TextWrapping="Wrap" LineHeight="17"/>
+                </Border>
+
+                <StackPanel Spacing="7">
+                    <TextBlock Text="父目录" Classes="field-label"/>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBox Grid.Column="0"
+                                 Text="{Binding TemplateWorkspaceParentPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Watermark="工作区父目录"
+                                 FontFamily="Consolas,Menlo,Monaco,Courier New"
+                                 Margin="0,0,8,0"
+                                 IsEnabled="{Binding IsTargetSelectionEnabled}"/>
+                        <Button Grid.Column="1" Content="选择目录"
+                                Command="{Binding SelectTemplateWorkspaceParentCommand}"
+                                Classes="secondary-action"/>
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Spacing="7">
+                    <TextBlock Text="工作区名称" Classes="field-label"/>
+                    <TextBox Text="{Binding TemplateWorkspaceName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Watermark="例如 MyNcfWorkspace"
+                             IsEnabled="{Binding IsTargetSelectionEnabled}"/>
+                </StackPanel>
+
+                <Border Background="{DynamicResource ToolbarBackgroundBrush}"
+                        BorderBrush="{DynamicResource CardBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="7"
+                        Padding="12">
+                    <TextBlock Text="{Binding TemplateCreationStatus}"
+                               FontSize="10.5"
+                               Foreground="{DynamicResource SecondaryTextBrush}"
+                               TextWrapping="Wrap"/>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Row="2"
+                Background="{DynamicResource ToolbarBackgroundBrush}"
+                BorderBrush="{DynamicResource ToolbarBorderBrush}"
+                BorderThickness="0,1,0,0"
+                Padding="20,12">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                <TextBlock Grid.Column="0"
+                           Text="需要联网访问 NuGet.org"
+                           FontSize="10.5"
+                           Foreground="{DynamicResource SecondaryTextBrush}"
+                           VerticalAlignment="Center"/>
+                <Button Grid.Column="1" Content="关闭" Click="CloseButton_OnClick"
+                        Classes="secondary-action"/>
+                <Button Grid.Column="2" Content="创建工作区"
+                        Command="{Binding CreateWorkspaceFromTemplateCommand}"
+                        Classes="primary-action"/>
+            </Grid>
+        </Border>
+    </Grid>
+
+    <Window.Styles>
+        <Style Selector="TextBlock.field-label">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style Selector="Button">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button.primary-action">
+            <Setter Property="Padding" Value="18,9"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Background" Value="#0F766E"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style Selector="Button.secondary-action">
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Background" Value="{DynamicResource ToolbarBackgroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+    </Window.Styles>
+</Window>

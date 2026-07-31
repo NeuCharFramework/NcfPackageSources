@@ -69,6 +69,8 @@ public partial class App : Application
                 mainWindow.Activate();
             }
         };
+        WorkspaceSettingsWindow? settingsWindow = null;
+        TemplateWorkspaceWindow? templateWorkspaceWindow = null;
 
         viewModel.CreateWorkspaceWindowRequested = () =>
         {
@@ -82,6 +84,36 @@ public partial class App : Application
                 robotWindow.Show();
             }
             robotWindow.Activate();
+        };
+        viewModel.ShowWorkspaceSettingsRequested = () =>
+        {
+            if (settingsWindow?.IsVisible == true)
+            {
+                settingsWindow.Activate();
+                return;
+            }
+
+            settingsWindow = new WorkspaceSettingsWindow
+            {
+                DataContext = viewModel
+            };
+            settingsWindow.Closed += (_, _) => settingsWindow = null;
+            settingsWindow.Show(mainWindow);
+        };
+        viewModel.ShowTemplateWorkspaceRequested = () =>
+        {
+            if (templateWorkspaceWindow?.IsVisible == true)
+            {
+                templateWorkspaceWindow.Activate();
+                return;
+            }
+
+            templateWorkspaceWindow = new TemplateWorkspaceWindow
+            {
+                DataContext = viewModel
+            };
+            templateWorkspaceWindow.Closed += (_, _) => templateWorkspaceWindow = null;
+            templateWorkspaceWindow.Show(mainWindow);
         };
 
         mainWindow.Opened += (_, _) => robotWindow.Show();

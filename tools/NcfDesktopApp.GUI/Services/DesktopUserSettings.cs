@@ -23,6 +23,16 @@ public sealed class DesktopUserSettings
 {
     public const string DefaultMirrorServerBaseUrl = "https://www.ncf.pub";
 
+    public bool AutoOpenBrowser { get; set; } = true;
+
+    public bool AutoCleanDownloads { get; set; }
+
+    public bool ShowDetailedInfo { get; set; } = true;
+
+    public int StartPort { get; set; } = 5000;
+
+    public int EndPort { get; set; } = 5300;
+
     /// <summary>
     /// 镜像更新源站点根地址（不含路径）。实际请求元数据为 {此地址}/NcfPackages/latest-release.json。
     /// </summary>

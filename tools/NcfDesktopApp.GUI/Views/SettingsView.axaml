@@ -35,8 +35,8 @@
                             Classes="toolbar-action"
                             Background="#0F766E"
                             Foreground="White"/>
-                    <Button Content="显示助手"
-                            Command="{Binding ShowDesktopRobotCommand}"
+                    <Button Content="模板新建"
+                            Command="{Binding ShowTemplateWorkspaceCommand}"
                             Classes="toolbar-action"
                             Background="#7C3AED"
                             Foreground="White"/>
@@ -45,6 +45,12 @@
                             Classes="toolbar-action"
                             Background="#475569"
                             Foreground="White"/>
+                    <Button Content="设置"
+                            Command="{Binding ShowWorkspaceSettingsCommand}"
+                            Classes="toolbar-action"
+                            Background="{DynamicResource ToolbarBackgroundBrush}"
+                            BorderBrush="{DynamicResource CardBorderBrush}"
+                            BorderThickness="1"/>
                     <Button Content="{Binding MainButtonText}"
                             Command="{Binding MainOperationCommand}"
                             Classes="primary-action"
@@ -217,59 +223,17 @@
                                        Foreground="{DynamicResource SecondaryTextBrush}"
                                        TextWrapping="Wrap"/>
 
-                            <Grid ColumnDefinitions="Auto,*">
-                                <TextBlock Grid.Column="0"
-                                           Text="运行环境"
-                                           FontSize="11"
-                                           FontWeight="SemiBold"
-                                           VerticalAlignment="Center"
-                                           Margin="0,0,10,0"/>
-                                <ComboBox Grid.Column="1"
-                                          ItemsSource="{Binding EnvironmentOptions}"
-                                          SelectedItem="{Binding AspNetCoreEnvironment, Mode=TwoWay}"
-                                          FontSize="11"
-                                          IsEnabled="{Binding IsTargetSelectionEnabled}"/>
-                            </Grid>
-                        </StackPanel>
-                    </Border>
-
-                    <!-- 从线上模板新建独立源码工作区 -->
-                    <Border Classes="card">
-                        <StackPanel Spacing="8">
-                            <TextBlock Text="新建模板工作区" FontSize="14" FontWeight="SemiBold"/>
-                            <TextBlock Text="在线安装最新 Senparc.NCF.Template，再创建不触发 restore 的源码目录。现有非空目录不会覆盖。"
-                                       FontSize="10.5"
-                                       Foreground="{DynamicResource SecondaryTextBrush}"
-                                       TextWrapping="Wrap"/>
-                            <Grid ColumnDefinitions="*,Auto">
-                                <TextBox Grid.Column="0"
-                                         Text="{Binding TemplateWorkspaceParentPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                         Watermark="工作区父目录"
-                                         FontSize="10.5"
-                                         FontFamily="Consolas,Menlo,Monaco,Courier New"
-                                         Margin="0,0,6,0"/>
-                                <Button Grid.Column="1"
-                                        Content="选择"
-                                        Command="{Binding SelectTemplateWorkspaceParentCommand}"
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <TextBlock Grid.Column="0" Text="启动配置" Classes="meta-label"
+                                           VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding LaunchConfigurationSummary}"
+                                           FontSize="10.5" FontWeight="SemiBold"
+                                           VerticalAlignment="Center"/>
+                                <Button Grid.Column="2" Content="修改"
+                                        Command="{Binding ShowWorkspaceSettingsCommand}"
                                         Classes="secondary-action"/>
                             </Grid>
-                            <Grid ColumnDefinitions="*,Auto">
-                                <TextBox Grid.Column="0"
-                                         Text="{Binding TemplateWorkspaceName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                         Watermark="新工作区名称"
-                                         FontSize="11"
-                                         Margin="0,0,6,0"/>
-                                <Button Grid.Column="1"
-                                        Content="在线创建"
-                                        Command="{Binding CreateWorkspaceFromTemplateCommand}"
-                                        Classes="primary-action"
-                                        Background="#0F766E"
-                                        Foreground="White"/>
-                            </Grid>
-                            <TextBlock Text="{Binding TemplateCreationStatus}"
-                                       FontSize="10"
-                                       Foreground="{DynamicResource SecondaryTextBrush}"
-                                       TextWrapping="Wrap"/>
                         </StackPanel>
                     </Border>
 
@@ -297,6 +261,17 @@
                                     <TextBlock Text="{Binding DesktopBridgeStatusText}" FontSize="10.5" TextWrapping="Wrap"/>
                                 </StackPanel>
                             </Grid>
+                            <Border Height="1" Background="{DynamicResource CardBorderBrush}" Margin="0,2"/>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock Grid.Column="0" Text="{Binding ProgressText}"
+                                           FontSize="10.5" FontWeight="SemiBold"
+                                           TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Grid.Column="1" Text="{Binding LatestVersion, StringFormat='目标 {0}'}"
+                                           FontSize="10" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                            </Grid>
+                            <ProgressBar Value="{Binding ProgressValue}"
+                                         IsIndeterminate="{Binding IsProgressIndeterminate}"
+                                         Height="5" CornerRadius="3"/>
                         </StackPanel>
                     </Border>
 
@@ -321,53 +296,6 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- 进度 -->
-                    <Border Classes="card">
-                        <StackPanel Spacing="7">
-                            <Grid ColumnDefinitions="*,Auto">
-                                <TextBlock Grid.Column="0" Text="{Binding ProgressText}" FontSize="11" FontWeight="SemiBold"/>
-                                <TextBlock Grid.Column="1" Text="{Binding LatestVersion, StringFormat='目标 {0}'}"
-                                           FontSize="10" Foreground="{DynamicResource SecondaryTextBrush}"/>
-                            </Grid>
-                            <ProgressBar Value="{Binding ProgressValue}"
-                                         IsIndeterminate="{Binding IsProgressIndeterminate}"
-                                         Height="5" CornerRadius="3"/>
-                        </StackPanel>
-                    </Border>
-
-                    <!-- 次要配置 -->
-                    <Border Classes="card">
-                        <StackPanel Spacing="8">
-                            <TextBlock Text="工作台选项" FontSize="14" FontWeight="SemiBold"/>
-                            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,*">
-                                <CheckBox Grid.Row="0" Grid.Column="0" Content="自动打开站点"
-                                          IsChecked="{Binding AutoOpenBrowser}" FontSize="11"/>
-                                <CheckBox Grid.Row="0" Grid.Column="1" Content="显示详细日志"
-                                          IsChecked="{Binding ShowDetailedInfo}" FontSize="11"/>
-                                <CheckBox Grid.Row="1" Grid.Column="0" Content="清理下载文件"
-                                          IsChecked="{Binding AutoCleanDownloads}" FontSize="11"/>
-                                <CheckBox Grid.Row="1" Grid.Column="1" Content="最小化到托盘"
-                                          IsChecked="{Binding MinimizeToTray}" FontSize="11"/>
-                            </Grid>
-                            <Grid ColumnDefinitions="Auto,*,Auto,*">
-                                <TextBlock Grid.Column="0" Text="端口" FontSize="11" FontWeight="SemiBold"
-                                           VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                <NumericUpDown Grid.Column="1" Value="{Binding StartPort}" Minimum="1024" Maximum="65535"
-                                               FontSize="11" Margin="0,0,6,0"/>
-                                <TextBlock Grid.Column="2" Text="—" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                                <NumericUpDown Grid.Column="3" Value="{Binding EndPort}" Minimum="1024" Maximum="65535" FontSize="11"/>
-                            </Grid>
-                            <TextBox Text="{Binding MirrorServerBaseUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                     Watermark="托管版本镜像服务器"
-                                     FontSize="10.5"
-                                     FontFamily="Consolas,Menlo,Monaco,Courier New"
-                                     IsVisible="{Binding IsManagedTargetMode}"/>
-                            <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding IsManagedTargetMode}">
-                                <Button Content="测试更新源" Command="{Binding TestConnectionCommand}" Classes="secondary-action"/>
-                                <Button Content="打开配置目录" Command="{Binding OpenConfigDirectoryCommand}" Classes="secondary-action"/>
-                            </StackPanel>
-                        </StackPanel>
-                    </Border>
                 </StackPanel>
             </ScrollViewer>
 

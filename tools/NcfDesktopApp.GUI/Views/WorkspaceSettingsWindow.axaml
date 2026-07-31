@@ -1,0 +1,176 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NcfDesktopApp.GUI.ViewModels"
+        x:Class="NcfDesktopApp.GUI.Views.WorkspaceSettingsWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="工作台设置"
+        Width="640" Height="650"
+        MinWidth="520" MinHeight="520"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        Icon="/Assets/NCF-logo.png">
+
+    <Grid RowDefinitions="Auto,*,Auto" Background="{DynamicResource ContentBackgroundBrush}">
+        <Border Grid.Row="0"
+                Background="{DynamicResource ToolbarBackgroundBrush}"
+                BorderBrush="{DynamicResource ToolbarBorderBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="22,16">
+            <StackPanel Spacing="3">
+                <TextBlock Text="工作台设置" FontSize="20" FontWeight="SemiBold"/>
+                <TextBlock Text="配置启动行为与托管 Runtime；更改会立即应用。"
+                           FontSize="11" Foreground="{DynamicResource SecondaryTextBrush}"/>
+            </StackPanel>
+        </Border>
+
+        <ScrollViewer Grid.Row="1"
+                      Padding="20,16"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Spacing="12">
+                <Border Classes="settings-section">
+                    <StackPanel Spacing="12">
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="启动配置" Classes="section-title"/>
+                            <TextBlock Text="目标运行期间锁定；新的配置在下次启动时生效。"
+                                       Classes="section-description"/>
+                        </StackPanel>
+
+                        <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto" RowSpacing="10">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="ASP.NET Core 环境"
+                                       Classes="field-label"/>
+                            <ComboBox Grid.Row="0" Grid.Column="1"
+                                      ItemsSource="{Binding EnvironmentOptions}"
+                                      SelectedItem="{Binding AspNetCoreEnvironment, Mode=TwoWay}"
+                                      IsEnabled="{Binding IsTargetSelectionEnabled}"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="本地端口范围"
+                                       Classes="field-label"/>
+                            <Grid Grid.Row="1" Grid.Column="1" ColumnDefinitions="*,Auto,*">
+                                <NumericUpDown Grid.Column="0"
+                                               Value="{Binding StartPort}"
+                                               Minimum="1024" Maximum="65535"
+                                               IsEnabled="{Binding IsTargetSelectionEnabled}"/>
+                                <TextBlock Grid.Column="1" Text="—" Margin="10,0"
+                                           VerticalAlignment="Center"/>
+                                <NumericUpDown Grid.Column="2"
+                                               Value="{Binding EndPort}"
+                                               Minimum="1024" Maximum="65535"
+                                               IsEnabled="{Binding IsTargetSelectionEnabled}"/>
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="settings-section">
+                    <StackPanel Spacing="10">
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="使用偏好" Classes="section-title"/>
+                            <TextBlock Text="减少重复操作，并控制运行日志的详细程度。"
+                                       Classes="section-description"/>
+                        </StackPanel>
+                        <CheckBox Content="目标就绪后自动打开内嵌站点"
+                                  IsChecked="{Binding AutoOpenBrowser}"/>
+                        <CheckBox Content="显示详细下载和启动日志"
+                                  IsChecked="{Binding ShowDetailedInfo}"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="settings-section" IsVisible="{Binding IsManagedTargetMode}">
+                    <StackPanel Spacing="10">
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="托管 Runtime" Classes="section-title"/>
+                            <TextBlock Text="仅影响由桌面端下载和维护的托管版本。"
+                                       Classes="section-description"/>
+                        </StackPanel>
+                        <CheckBox Content="安装完成后清理下载文件"
+                                  IsChecked="{Binding AutoCleanDownloads}"/>
+                        <TextBox Text="{Binding MirrorServerBaseUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Watermark="镜像服务器地址"
+                                 FontFamily="Consolas,Menlo,Monaco,Courier New"/>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Button Content="测试更新源"
+                                    Command="{Binding TestConnectionCommand}"
+                                    Classes="secondary-action"/>
+                            <Button Content="打开配置目录"
+                                    Command="{Binding OpenConfigDirectoryCommand}"
+                                    Classes="secondary-action"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="settings-section">
+                    <StackPanel Spacing="10">
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="界面工具" Classes="section-title"/>
+                            <TextBlock Text="桌面助手关闭后，可在这里重新显示。"
+                                       Classes="section-description"/>
+                        </StackPanel>
+                        <Button Content="显示桌面助手"
+                                Command="{Binding ShowDesktopRobotCommand}"
+                                HorizontalAlignment="Left"
+                                Classes="secondary-action"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Row="2"
+                Background="{DynamicResource ToolbarBackgroundBrush}"
+                BorderBrush="{DynamicResource ToolbarBorderBrush}"
+                BorderThickness="0,1,0,0"
+                Padding="20,12">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Grid.Column="0"
+                           Text="设置保存在桌面端配置目录中。"
+                           FontSize="10.5"
+                           Foreground="{DynamicResource SecondaryTextBrush}"
+                           VerticalAlignment="Center"/>
+                <Button Grid.Column="1" Content="完成" Click="CloseButton_OnClick"
+                        Classes="primary-action"/>
+            </Grid>
+        </Border>
+    </Grid>
+
+    <Window.Styles>
+        <Style Selector="Border.settings-section">
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="16"/>
+        </Style>
+        <Style Selector="TextBlock.section-title">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style Selector="TextBlock.section-description">
+            <Setter Property="FontSize" Value="10.5"/>
+            <Setter Property="Foreground" Value="{DynamicResource SecondaryTextBrush}"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+        <Style Selector="TextBlock.field-label">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Button">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button.primary-action">
+            <Setter Property="Padding" Value="20,9"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Background" Value="#2563EB"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style Selector="Button.secondary-action">
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Background" Value="{DynamicResource ToolbarBackgroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+    </Window.Styles>
+</Window>
