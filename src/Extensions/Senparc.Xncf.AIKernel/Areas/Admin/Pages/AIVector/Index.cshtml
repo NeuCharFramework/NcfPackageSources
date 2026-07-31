@@ -1,7 +1,7 @@
 ﻿@page
 @model Senparc.Xncf.AIKernel.Areas.AIVector.Pages.Index
 @{
-    ViewData["Title"] = "AIVector 首页";
+    ViewData["Title"] = XR["Title.Vector"];
     Layout = "_Layout_Vue";
 }
 
@@ -10,22 +10,22 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>AI 核心模块</el-breadcrumb-item>
-    <el-breadcrumb-item>首页</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Module.AIKernel.MenuName"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.Home"]</el-breadcrumb-item>
 }
 
 <div>
     <div class="filter-container">
-        <el-button type="primary" icon="el-icon-plus" size="small" @@click="addVector">添加</el-button>
+        <el-button type="primary" icon="el-icon-plus" size="small" @@click="addVector">@XR["Vector.Add"]</el-button>
     </div>
 
     <el-table :data="tableData" v-loading="tableLoading" border>
         @* alias *@
-        <el-table-column prop="alias" label="别名" width="auto"></el-table-column>
-        <el-table-column prop="name" label="部署名称" width="auto"></el-table-column>
-        <el-table-column prop="connectionString" label="Endpoint" width="auto"></el-table-column>
-        <el-table-column prop="vectorDBType" label="向量数据库类型" width="auto">
+        <el-table-column prop="alias" label="@XR["Vector.Alias"]" width="auto"></el-table-column>
+        <el-table-column prop="name" label="@XR["Vector.DeploymentName"]" width="auto"></el-table-column>
+        <el-table-column prop="connectionString" label="@XR["Vector.Endpoint"]" width="auto"></el-table-column>
+        <el-table-column prop="vectorDBType" label="@XR["Vector.DatabaseType"]" width="auto">
             <template slot-scope="scope">
                 <span v-if="scope.row.vectorDBType===0">Memory</span>
                 <span v-else-if="scope.row.vectorDBType===1">HardDisk</span>
@@ -48,17 +48,17 @@
                 <span v-else-if="scope.row.vectorDBType===18">Weaviate</span> *@
             </template>
         </el-table-column>
-        <el-table-column prop="note" label="备注" width="auto"></el-table-column>
-        <el-table-column prop="addTime" label="添加时间" width="auto">
+        <el-table-column prop="note" label="@XR["Vector.Note"]" width="auto"></el-table-column>
+        <el-table-column prop="addTime" label="@XR["Vector.AddTime"]" width="auto">
             <template slot-scope="scope">
                 {{ dateformatter(scope.row.addTime) }}
             </template>
         </el-table-column>
         @* 操作 *@
-        <el-table-column label="操作" width="auto">
+        <el-table-column label="@XR["Vector.Actions"]" width="auto">
             <template slot-scope="scope">
-                <el-button type="primary" size="mini" @@click="editModel(scope.row)">编辑</el-button>
-                <el-button type="danger" size="mini" @@click="deleteModel(scope.row)">删除</el-button>
+                <el-button type="primary" size="mini" @@click="editModel(scope.row)">@XR["Vector.Edit"]</el-button>
+                <el-button type="danger" size="mini" @@click="deleteModel(scope.row)">@XR["Vector.Delete"]</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -77,13 +77,13 @@
 
 
     @* dialog for 添加向量数据库 *@
-    <el-dialog title="添加向量数据库" :visible.sync="addFormDialogVisible" width="50%" :close-on-click-modal="false">
+    <el-dialog title="@XR["Vector.AddTitle"]" :visible.sync="addFormDialogVisible" width="50%" :close-on-click-modal="false">
         <el-form :model="addForm" label-width="120px" :rules="addRules" ref="addForm">
-            <el-form-item label="别名" prop="alias">
+            <el-form-item label="@XR["Vector.Alias"]" prop="alias">
                 <el-input v-model="addForm.alias"></el-input>
             </el-form-item>
-            <el-form-item label="向量数据库类型" prop="vectorDBType">
-                <el-select v-model="addForm.vectorDBType" placeholder="请选择">
+            <el-form-item label="@XR["Vector.DatabaseType"]" prop="vectorDBType">
+                <el-select v-model="addForm.vectorDBType" placeholder="@XR["Vector.SelectPlaceholder"]">
                     <el-option label="Memory" value="0"></el-option>
                     <el-option label="HardDisk" value="1"></el-option>
                     <el-option label="Redis" value="2"></el-option>
@@ -105,29 +105,29 @@
                     <el-option label="Weaviate" value="18"></el-option> *@
                 </el-select>
             </el-form-item>
-            <el-form-item label="名称" prop="name">
+            <el-form-item label="@XR["Vector.Name"]" prop="name">
                 <el-input v-model="addForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="连接字符串" prop="connectionString">
-                <el-input v-model="addForm.connectionString" :placeholder="isInMemoryVectorType(addForm.vectorDBType) ? 'Memory 类型可留空' : '请输入连接字符串'"></el-input>
+            <el-form-item label="@XR["Vector.ConnectionString"]" prop="connectionString">
+                <el-input v-model="addForm.connectionString" :placeholder="isInMemoryVectorType(addForm.vectorDBType) ? ncfT('AIKernel.Vector.MemoryLeaveEmpty') : ncfT('AIKernel.Vector.ConnectionPlaceholder')"></el-input>
             </el-form-item>
-            <el-form-item label="备注" prop="note">
+            <el-form-item label="@XR["Vector.Note"]" prop="note">
                 <el-input v-model="addForm.note"></el-input>
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="addFormDialogVisible = false">取 消</el-button>
-            <el-button type="primary" @@click="addModelSubmit">确 定</el-button>
+            <el-button @@click="addFormDialogVisible = false">@XR["Vector.Cancel"]</el-button>
+            <el-button type="primary" @@click="addModelSubmit">@XR["Vector.Confirm"]</el-button>
         </span>
     </el-dialog>
     @* dialog for 编辑向量数据库 *@
-    <el-dialog title="编辑向量数据库" :visible.sync="editFormDialogVisible" width="50%" :close-on-click-modal="false">
+    <el-dialog title="@XR["Vector.EditTitle"]" :visible.sync="editFormDialogVisible" width="50%" :close-on-click-modal="false">
         <el-form :model="editForm" label-width="120px" :rules="editRules" ref="editForm">
-            <el-form-item label="别名" prop="alias">
+            <el-form-item label="@XR["Vector.Alias"]" prop="alias">
                 <el-input v-model="editForm.alias"></el-input>
             </el-form-item>
-            <el-form-item label="向量数据库类型" prop="vectorDBType">
-                <el-select v-model="editForm.vectorDBType" placeholder="请选择">
+            <el-form-item label="@XR["Vector.DatabaseType"]" prop="vectorDBType">
+                <el-select v-model="editForm.vectorDBType" placeholder="@XR["Vector.SelectPlaceholder"]">
                     <el-option label="Memory" value="0"></el-option>
                     <el-option label="HardDisk" value="1"></el-option>
                     <el-option label="Redis" value="2"></el-option>
@@ -150,28 +150,29 @@
                 </el-select>
             </el-form-item>
 
-            <el-form-item label="名称" prop="name">
+            <el-form-item label="@XR["Vector.Name"]" prop="name">
                 <el-input v-model="editForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="连接字符串" prop="connectionString">
-                <el-input v-model="editForm.connectionString" :placeholder="isInMemoryVectorType(editForm.vectorDBType) ? 'Memory 类型可留空' : '请输入连接字符串'"></el-input>
+            <el-form-item label="@XR["Vector.ConnectionString"]" prop="connectionString">
+                <el-input v-model="editForm.connectionString" :placeholder="isInMemoryVectorType(editForm.vectorDBType) ? ncfT('AIKernel.Vector.MemoryLeaveEmpty') : ncfT('AIKernel.Vector.ConnectionPlaceholder')"></el-input>
             </el-form-item>
-            <el-form-item label="备注" prop="note">
+            <el-form-item label="@XR["Vector.Note"]" prop="note">
                 <el-input v-model="editForm.note"></el-input>
             </el-form-item>
-            <el-form-item label="显示" prop="show">
+            <el-form-item label="@XR["Vector.Display"]" prop="show">
                 @* use switch *@
                 <el-switch v-model="editForm.show"></el-switch>
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="editFormDialogVisible = false">取 消</el-button>
-            <el-button type="primary" @@click="editModelSubmit">确 定</el-button>
+            <el-button @@click="editFormDialogVisible = false">@XR["Vector.Cancel"]</el-button>
+            <el-button type="primary" @@click="editModelSubmit">@XR["Vector.Confirm"]</el-button>
         </span>
     </el-dialog>
 
 </div>
 
 @section scripts {
+    @await Html.PartialAsync("_LocalizationScripts")
     <script src="~/js/Admin/AIVector/index.js"></script>
 }

@@ -78,7 +78,10 @@ namespace Senparc.Xncf.WeixinManager
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"{mpMessageHandlerType.FullName} 必须具有以下结构和参数顺序的构造函数：(MpAccountDto mpAccountDto, Stream inputStream, PostModel postModel, int maxRecordCount, IServiceProvider serviceProvider)", ex);
+                    throw new Exception(WeixinManagerResource.Format(
+                        "Error.MessageHandlerConstructor",
+                        "{0} must provide a constructor with the following parameter order: (MpAccountDto mpAccountDto, Stream inputStream, PostModel postModel, int maxRecordCount, IServiceProvider serviceProvider)",
+                        mpMessageHandlerType.FullName), ex);
                 }
             };
             return messageHandlerFunc;
@@ -133,7 +136,7 @@ namespace Senparc.Xncf.WeixinManager
 
                     if (!int.TryParse(param, out int mpAccountId))
                     {
-                        throw new WeixinException("ID 错误！");
+                        throw new WeixinException(WeixinManagerResource.Get("Error.InvalidId", "Invalid ID."));
                     }
 
                     var mpAccountService = serviceProvider.GetRequiredService<MpAccountService>();

@@ -108,4 +108,175 @@
   <data name="Page.Random" xml:space="preserve">
     <value>随机</value>
   </data>
+  <data name="Task.Management" xml:space="preserve">
+    <value>爬虫任务管理</value>
+  </data>
+  <data name="Task.Create" xml:space="preserve">
+    <value>新建任务</value>
+  </data>
+  <data name="Task.Name" xml:space="preserve">
+    <value>任务名称</value>
+  </data>
+  <data name="Task.StartUrl" xml:space="preserve">
+    <value>起始URL</value>
+  </data>
+  <data name="Task.MaxThreads" xml:space="preserve">
+    <value>最大线程数</value>
+  </data>
+  <data name="Task.MaxCrawlMinutes" xml:space="preserve">
+    <value>最大爬取时间（分钟）</value>
+  </data>
+  <data name="Task.MaxDepth" xml:space="preserve">
+    <value>最大深度</value>
+  </data>
+  <data name="Task.MaxPages" xml:space="preserve">
+    <value>最大页面数</value>
+  </data>
+  <data name="Task.MaxCrawlTime" xml:space="preserve">
+    <value>最大爬取时间</value>
+  </data>
+  <data name="Task.RunImmediately" xml:space="preserve">
+    <value>立即执行</value>
+  </data>
+  <data name="Task.Detail" xml:space="preserve">
+    <value>爬虫任务详情</value>
+  </data>
+  <data name="Task.Information" xml:space="preserve">
+    <value>任务信息</value>
+  </data>
+  <data name="Task.StartTime" xml:space="preserve">
+    <value>开始时间</value>
+  </data>
+  <data name="Task.EndTime" xml:space="preserve">
+    <value>结束时间</value>
+  </data>
+  <data name="Task.CrawledPages" xml:space="preserve">
+    <value>已爬取页面数</value>
+  </data>
+  <data name="Task.ErrorMessage" xml:space="preserve">
+    <value>错误信息</value>
+  </data>
+  <data name="Task.UrlStatistics" xml:space="preserve">
+    <value>URL统计</value>
+  </data>
+  <data name="Task.TotalUrls" xml:space="preserve">
+    <value>总URL数</value>
+  </data>
+  <data name="Task.SuccessCount" xml:space="preserve">
+    <value>成功数</value>
+  </data>
+  <data name="Task.FailureCount" xml:space="preserve">
+    <value>失败数</value>
+  </data>
+  <data name="Task.ParentUrl" xml:space="preserve">
+    <value>父URL</value>
+  </data>
+  <data name="Task.Depth" xml:space="preserve">
+    <value>深度</value>
+  </data>
+  <data name="Task.CrawlTime" xml:space="preserve">
+    <value>爬取时间</value>
+  </data>
+  <data name="Task.PageSize" xml:space="preserve">
+    <value>页面大小</value>
+  </data>
+  <data name="Task.StatusCode" xml:space="preserve">
+    <value>状态码</value>
+  </data>
+  <data name="Common.Status" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="Common.Actions" xml:space="preserve">
+    <value>操作</value>
+  </data>
+  <data name="Common.Start" xml:space="preserve">
+    <value>开始</value>
+  </data>
+  <data name="Common.Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="Common.Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Common.Confirm" xml:space="preserve">
+    <value>确定</value>
+  </data>
+  <data name="Common.Title" xml:space="preserve">
+    <value>标题</value>
+  </data>
+  <data name="Common.Prompt" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="Validation.EnterTaskName" xml:space="preserve">
+    <value>请输入任务名称</value>
+  </data>
+  <data name="Validation.EnterStartUrl" xml:space="preserve">
+    <value>请输入起始URL</value>
+  </data>
+  <data name="Status.Error" xml:space="preserve">
+    <value>出错</value>
+  </data>
+  <data name="Status.Waiting" xml:space="preserve">
+    <value>等待开始</value>
+  </data>
+  <data name="Status.Running" xml:space="preserve">
+    <value>进行中</value>
+  </data>
+  <data name="Status.Completed" xml:space="preserve">
+    <value>已完成</value>
+  </data>
+  <data name="Status.Unknown" xml:space="preserve">
+    <value>未知</value>
+  </data>
+  <data name="Message.LoadTasksFailed" xml:space="preserve">
+    <value>获取任务列表失败</value>
+  </data>
+  <data name="Message.CreateSucceeded" xml:space="preserve">
+    <value>创建成功</value>
+  </data>
+  <data name="Message.CreateFailed" xml:space="preserve">
+    <value>创建失败</value>
+  </data>
+  <data name="Message.TaskStarted" xml:space="preserve">
+    <value>任务已启动</value>
+  </data>
+  <data name="Message.StartFailed" xml:space="preserve">
+    <value>启动失败</value>
+  </data>
+  <data name="Message.ConfirmDeleteTask" xml:space="preserve">
+    <value>确认删除该任务？</value>
+  </data>
+  <data name="Message.DeleteSucceeded" xml:space="preserve">
+    <value>删除成功</value>
+  </data>
+  <data name="Message.DeleteFailed" xml:space="preserve">
+    <value>删除失败</value>
+  </data>
+  <data name="Frontend.001" xml:space="preserve">
+    <value>抛出异常测试，传输参数：{0} {1}||抛出异常测试，传输参数：{0} {1}</value>
+  </data>
+  <data name="Frontend.002" xml:space="preserve">
+    <value>被除数不能为0！||被除数不能为0！</value>
+  </data>
+  <data name="Frontend.003" xml:space="preserve">
+    <value>未知的运算符：{0}||未知的运算符：{0}</value>
+  </data>
+  <data name="Frontend.004" xml:space="preserve">
+    <value>未知操作符||未知操作符</value>
+  </data>
+  <data name="Frontend.005" xml:space="preserve">
+    <value>请提供正确的网址！||请提供正确的网址！</value>
+  </data>
+  <data name="Frontend.006" xml:space="preserve">
+    <value>目标主机解析为非公网地址，已拒绝连接。||目标主机解析为非公网地址，已拒绝连接。</value>
+  </data>
+  <data name="Frontend.007" xml:space="preserve">
+    <value>无法连接到已通过公网地址校验的目标主机。||无法连接到已通过公网地址校验的目标主机。</value>
+  </data>
+  <data name="Frontend.008" xml:space="preserve">
+    <value>目标 URL 不允许访问。||目标 URL 不允许访问。</value>
+  </data>
+  <data name="Frontend.009" xml:space="preserve">
+    <value>重定向目标 URL 不允许访问。||重定向目标 URL 不允许访问。</value>
+  </data>
 </root>

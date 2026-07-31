@@ -46,7 +46,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
     <EmbeddedResource Include="wwwroot\**\*" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.8-preview.3" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />

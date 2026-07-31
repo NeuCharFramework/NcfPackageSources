@@ -30,4 +30,82 @@
   <data name="Parameter.PromptRange.FilterRange" xml:space="preserve">
     <value>Filter range name||Enter a range-name keyword; leave blank to show all ranges</value>
   </data>
-</root>
+  <data name="Area.ExtensionModules" xml:space="preserve"><value>Extension Modules</value></data>
+  <data name="Area.PromptRange" xml:space="preserve"><value>Prompt Range</value></data>
+  <data name="Area.Model" xml:space="preserve"><value>Models</value></data>
+  <data name="Title.Home" xml:space="preserve"><value>Prompt Range Home</value></data>
+  <data name="Title.Model" xml:space="preserve"><value>Prompt Range Models</value></data>
+  <data name="Title.Prompt" xml:space="preserve"><value>Prompt Range Prompt</value></data>
+  <data name="Dashboard.AddModel" xml:space="preserve"><value>Add model</value></data>
+  <data name="Dashboard.DataUpdated" xml:space="preserve"><value>Data updated:</value></data>
+  <data name="Dashboard.Refresh" xml:space="preserve"><value>Refresh dashboard</value></data>
+  <data name="Dashboard.Workbench" xml:space="preserve"><value>Open Prompt workbench</value></data>
+  <data name="Dashboard.Trend" xml:space="preserve"><value>Run trend (last {0} days)</value></data>
+  <data name="Dashboard.TrendSubtitle" xml:space="preserve"><value>Calls / Average score</value></data>
+  <data name="Dashboard.ModelDistribution" xml:space="preserve"><value>Model usage distribution</value></data>
+  <data name="Dashboard.TopModels" xml:space="preserve"><value>Top {0}</value></data>
+  <data name="Dashboard.TopPrompts" xml:space="preserve"><value>Top Prompts</value></data>
+  <data name="Dashboard.PromptPage" xml:space="preserve"><value>Open Prompt page</value></data>
+  <data name="Dashboard.Range" xml:space="preserve"><value>Range</value></data>
+  <data name="Dashboard.Calls" xml:space="preserve"><value>Calls</value></data>
+  <data name="Dashboard.AverageScore" xml:space="preserve"><value>Average score</value></data>
+  <data name="Dashboard.LastRun" xml:space="preserve"><value>Last run</value></data>
+  <data name="Dashboard.Draft" xml:space="preserve"><value>Draft</value></data>
+  <data name="Dashboard.Health" xml:space="preserve"><value>Range health</value></data>
+  <data name="Dashboard.HealthSubtitle" xml:space="preserve"><value>Score + activity + draft ratio</value></data>
+  <data name="Dashboard.Active" xml:space="preserve"><value>Active</value></data>
+  <data name="Dashboard.Risk" xml:space="preserve"><value>Risk and prompts to improve</value></data>
+  <data name="Dashboard.RiskSubtitle" xml:space="preserve"><value>Prioritize low scores and untested items</value></data>
+  <data name="Dashboard.Priority" xml:space="preserve"><value>Prioritize</value></data>
+  <data name="Dashboard.Insight" xml:space="preserve"><value>Insights</value></data>
+  <data name="Dashboard.InsightSubtitle" xml:space="preserve"><value>Based on real runs and scores</value></data>
+  <data name="Dashboard.EmptyPrompt" xml:space="preserve"><value>No Prompt data</value></data>
+  <data name="Dashboard.EmptyRange" xml:space="preserve"><value>No range data</value></data>
+  <data name="Dashboard.EmptyRisk" xml:space="preserve"><value>No risk items</value></data>
+  <data name="Dashboard.EmptyInsight" xml:space="preserve"><value>No insight data</value></data>
+  <data name="Dashboard.ScoreUnit" xml:space="preserve"><value>points</value></data>
+  <data name="Dashboard.RangeTotal" xml:space="preserve"><value>Total ranges</value></data>
+  <data name="Dashboard.ActiveRange" xml:space="preserve"><value>Active ranges in the last 7 days: {0}</value></data>
+  <data name="Dashboard.PromptTotal" xml:space="preserve"><value>Total prompts</value></data>
+  <data name="Dashboard.DraftCount" xml:space="preserve"><value>Drafts {0} ({1}%)</value></data>
+  <data name="Dashboard.ResultTotal" xml:space="preserve"><value>Total runs</value></data>
+  <data name="Dashboard.TodayLast7" xml:space="preserve"><value>Today {0} / last 7 days {1}</value></data>
+  <data name="Dashboard.AverageFinalScore" xml:space="preserve"><value>Average final score</value></data>
+  <data name="Dashboard.Coverage" xml:space="preserve"><value>Score coverage {0}</value></data>
+  <data name="Dashboard.TokenCost" xml:space="preserve"><value>Total token cost</value></data>
+  <data name="Dashboard.ActivePrompt" xml:space="preserve"><value>Active prompts in the last 7 days: {0}</value></data>
+  <data name="Dashboard.AverageLatency" xml:space="preserve"><value>Average response time</value></data>
+  <data name="Dashboard.AllResults" xml:space="preserve"><value>All-run result statistics</value></data>
+  <data name="Dashboard.UnknownModel" xml:space="preserve"><value>Unknown</value></data>
+  <data name="Dashboard.ModelPrefix" xml:space="preserve"><value>Model #{0}</value></data>
+  <data name="Dashboard.Refreshed" xml:space="preserve"><value>Dashboard refreshed</value></data>
+  <data name="Model.SearchPlaceholder" xml:space="preserve"><value>Enter text</value></data>
+  <data name="Model.Add" xml:space="preserve"><value>Add</value></data>
+  <data name="Model.BatchDelete" xml:space="preserve"><value>Delete selected</value></data>
+  <data name="Model.Index" xml:space="preserve"><value>No.</value></data>
+  <data name="Model.Name" xml:space="preserve"><value>Model name</value></data>
+  <data name="Model.Developer" xml:space="preserve"><value>Developer</value></data>
+  <data name="Model.Public" xml:space="preserve"><value>Public</value></data>
+  <data name="Model.Actions" xml:space="preserve"><value>Actions</value></data>
+  <data name="Model.Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="Model.Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Model.Type" xml:space="preserve"><value>Model type</value></data>
+  <data name="Model.TypePlaceholder" xml:space="preserve"><value>Select a model type</value></data>
+  <data name="Model.NamePlaceholder" xml:space="preserve"><value>Enter model name</value></data>
+  <data name="Model.Endpoint" xml:space="preserve"><value>Model endpoint</value></data>
+  <data name="Model.EndpointPlaceholder" xml:space="preserve"><value>Enter model endpoint</value></data>
+  <data name="Model.ApiKeyPlaceholder" xml:space="preserve"><value>Enter API key</value></data>
+  <data name="Model.Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Model.Confirm" xml:space="preserve"><value>Confirm</value></data>
+  <data name="Model.NewTitle" xml:space="preserve"><value>Add Model</value></data>
+  <data name="Model.EditTitle" xml:space="preserve"><value>Edit Model</value></data>
+  <data name="Model.AddSuccess" xml:space="preserve"><value>Added successfully!</value></data>
+  <data name="Model.AddFailed" xml:space="preserve"><value>Add failed</value></data>
+  <data name="Model.ModifyFailed" xml:space="preserve"><value>Update failed</value></data>
+  <data name="Model.DeleteFailed" xml:space="preserve"><value>Delete failed</value></data>
+  <data name="Model.SelectType" xml:space="preserve"><value>Please select a model type</value></data>
+  <data name="Model.EnterName" xml:space="preserve"><value>Please enter a model name</value></data>
+  <data name="Model.EnterApi" xml:space="preserve"><value>Please enter a model API</value></data>
+  <data name="Model.EnterApiKey" xml:space="preserve"><value>Please enter a model API key</value></data>
+  <data name="Area.DatabaseSample" xml:space="preserve"><value>Database sample</value></data>
+ </root>

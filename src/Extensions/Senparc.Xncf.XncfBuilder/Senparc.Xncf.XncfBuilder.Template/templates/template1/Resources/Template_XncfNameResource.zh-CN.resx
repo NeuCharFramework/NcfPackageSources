@@ -102,4 +102,202 @@
   <data name="Function.EventBusRoundTrip.Timeout" xml:space="preserve">
     <value>EventBus 回环超时，请确认宿主已注册 EventBus 并扫描当前 XNCF 程序集。</value>
   </data>
+  <data name="Frontend.001" xml:space="preserve">
+    <value>Color 数据库管理||Color 数据库管理</value>
+  </data>
+  <data name="Frontend.002" xml:space="preserve">
+    <value>扩展模块||扩展模块</value>
+  </data>
+  <data name="Frontend.003" xml:space="preserve">
+    <value>添加颜色||添加颜色</value>
+  </data>
+  <data name="Frontend.004" xml:space="preserve">
+    <value>刷新||刷新</value>
+  </data>
+  <data name="Frontend.005" xml:space="preserve">
+    <value>调试信息||调试信息</value>
+  </data>
+  <data name="Frontend.006" xml:space="preserve">
+    <value>调试信息：||调试信息：</value>
+  </data>
+  <data name="Frontend.007" xml:space="preserve">
+    <value>tableData长度:||tableData长度:</value>
+  </data>
+  <data name="Frontend.008" xml:space="preserve">
+    <value>Vue实例是否正常:||Vue实例是否正常:</value>
+  </data>
+  <data name="Frontend.009" xml:space="preserve">
+    <value>是||是</value>
+  </data>
+  <data name="Frontend.010" xml:space="preserve">
+    <value>否||否</value>
+  </data>
+  <data name="Frontend.011" xml:space="preserve">
+    <value>第一条数据:||第一条数据:</value>
+  </data>
+  <data name="Frontend.012" xml:space="preserve">
+    <value>简化数据显示测试:||简化数据显示测试:</value>
+  </data>
+  <data name="Frontend.013" xml:space="preserve">
+    <value>时间:||时间:</value>
+  </data>
+  <data name="Frontend.014" xml:space="preserve">
+    <value>没有数据显示！||没有数据显示！</value>
+  </data>
+  <data name="Frontend.015" xml:space="preserve">
+    <value>红色值 (R)||红色值 (R)</value>
+  </data>
+  <data name="Frontend.016" xml:space="preserve">
+    <value>绿色值 (G)||绿色值 (G)</value>
+  </data>
+  <data name="Frontend.017" xml:space="preserve">
+    <value>蓝色值 (B)||蓝色值 (B)</value>
+  </data>
+  <data name="Frontend.018" xml:space="preserve">
+    <value>颜色预览||颜色预览</value>
+  </data>
+  <data name="Frontend.019" xml:space="preserve">
+    <value>创建时间||创建时间</value>
+  </data>
+  <data name="Frontend.020" xml:space="preserve">
+    <value>更新时间||更新时间</value>
+  </data>
+  <data name="Frontend.021" xml:space="preserve">
+    <value>操作||操作</value>
+  </data>
+  <data name="Frontend.022" xml:space="preserve">
+    <value>编辑||编辑</value>
+  </data>
+  <data name="Frontend.023" xml:space="preserve">
+    <value>随机||随机</value>
+  </data>
+  <data name="Frontend.024" xml:space="preserve">
+    <value>删除||删除</value>
+  </data>
+  <data name="Frontend.025" xml:space="preserve">
+    <value>附加备注||附加备注</value>
+  </data>
+  <data name="Frontend.026" xml:space="preserve">
+    <value>请输入颜色的附加备注信息...||请输入颜色的附加备注信息...</value>
+  </data>
+  <data name="Frontend.027" xml:space="preserve">
+    <value>随机颜色||随机颜色</value>
+  </data>
+  <data name="Frontend.028" xml:space="preserve">
+    <value>取 消||取 消</value>
+  </data>
+  <data name="Frontend.029" xml:space="preserve">
+    <value>确 定||确 定</value>
+  </data>
+  <data name="Frontend.030" xml:space="preserve">
+    <value>编辑颜色||编辑颜色</value>
+  </data>
+  <data name="Frontend.031" xml:space="preserve">
+    <value>请设置红色值||请设置红色值</value>
+  </data>
+  <data name="Frontend.032" xml:space="preserve">
+    <value>红色值范围为0-255||红色值范围为0-255</value>
+  </data>
+  <data name="Frontend.033" xml:space="preserve">
+    <value>请设置绿色值||请设置绿色值</value>
+  </data>
+  <data name="Frontend.034" xml:space="preserve">
+    <value>绿色值范围为0-255||绿色值范围为0-255</value>
+  </data>
+  <data name="Frontend.035" xml:space="preserve">
+    <value>请设置蓝色值||请设置蓝色值</value>
+  </data>
+  <data name="Frontend.036" xml:space="preserve">
+    <value>蓝色值范围为0-255||蓝色值范围为0-255</value>
+  </data>
+  <data name="Frontend.037" xml:space="preserve">
+    <value>获取数据失败: {0}||获取数据失败: {0}</value>
+  </data>
+  <data name="Frontend.038" xml:space="preserve">
+    <value>操作完成||操作完成</value>
+  </data>
+  <data name="Frontend.039" xml:space="preserve">
+    <value>创建失败||创建失败</value>
+  </data>
+  <data name="Frontend.040" xml:space="preserve">
+    <value>更新失败||更新失败</value>
+  </data>
+  <data name="Frontend.041" xml:space="preserve">
+    <value>此操作将永久删除该颜色, 是否继续?||此操作将永久删除该颜色, 是否继续?</value>
+  </data>
+  <data name="Frontend.042" xml:space="preserve">
+    <value>提示||提示</value>
+  </data>
+  <data name="Frontend.043" xml:space="preserve">
+    <value>确定||确定</value>
+  </data>
+  <data name="Frontend.044" xml:space="preserve">
+    <value>取消||取消</value>
+  </data>
+  <data name="Frontend.045" xml:space="preserve">
+    <value>删除失败||删除失败</value>
+  </data>
+  <data name="Frontend.046" xml:space="preserve">
+    <value>已取消删除||已取消删除</value>
+  </data>
+  <data name="Frontend.047" xml:space="preserve">
+    <value>随机化失败||随机化失败</value>
+  </data>
+  <data name="Frontend.048" xml:space="preserve">
+    <value>数据获取成功||数据获取成功</value>
+  </data>
+  <data name="Frontend.049" xml:space="preserve">
+    <value>获取数据失败: {0}||获取数据失败: {0}</value>
+  </data>
+  <data name="Frontend.050" xml:space="preserve">
+    <value>请求参数不能为空||请求参数不能为空</value>
+  </data>
+  <data name="Frontend.051" xml:space="preserve">
+    <value>颜色创建成功||颜色创建成功</value>
+  </data>
+  <data name="Frontend.052" xml:space="preserve">
+    <value>创建失败：{0}||创建失败：{0}</value>
+  </data>
+  <data name="Frontend.053" xml:space="preserve">
+    <value>颜色不存在||颜色不存在</value>
+  </data>
+  <data name="Frontend.054" xml:space="preserve">
+    <value>颜色更新成功||颜色更新成功</value>
+  </data>
+  <data name="Frontend.055" xml:space="preserve">
+    <value>更新失败：{0}||更新失败：{0}</value>
+  </data>
+  <data name="Frontend.056" xml:space="preserve">
+    <value>颜色删除成功||颜色删除成功</value>
+  </data>
+  <data name="Frontend.057" xml:space="preserve">
+    <value>删除失败：{0}||删除失败：{0}</value>
+  </data>
+  <data name="Frontend.058" xml:space="preserve">
+    <value>颜色随机化成功||颜色随机化成功</value>
+  </data>
+  <data name="Frontend.059" xml:space="preserve">
+    <value>随机化失败：{0}||随机化失败：{0}</value>
+  </data>
+  <data name="Frontend.060" xml:space="preserve">
+    <value>获取失败：{0}||获取失败：{0}</value>
+  </data>
+  <data name="Frontend.061" xml:space="preserve">
+    <value>被除数不能为0！||被除数不能为0！</value>
+  </data>
+  <data name="Frontend.062" xml:space="preserve">
+    <value>未知的运算符：{0}||未知的运算符：{0}</value>
+  </data>
+  <data name="Frontend.063" xml:space="preserve">
+    <value>抛出异常测试，传输参数：{0} {1}||抛出异常测试，传输参数：{0} {1}</value>
+  </data>
+  <data name="Frontend.064" xml:space="preserve">
+    <value>红色值必须在0-255之间||红色值必须在0-255之间</value>
+  </data>
+  <data name="Frontend.065" xml:space="preserve">
+    <value>绿色值必须在0-255之间||绿色值必须在0-255之间</value>
+  </data>
+  <data name="Frontend.066" xml:space="preserve">
+    <value>蓝色值必须在0-255之间||蓝色值必须在0-255之间</value>
+  </data>
 </root>

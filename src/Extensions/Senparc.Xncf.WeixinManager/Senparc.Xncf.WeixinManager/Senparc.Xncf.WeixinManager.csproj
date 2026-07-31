@@ -112,14 +112,14 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>-->
     <PackageReference Include="Senparc.AI.Kernel" Version="$(SenparcAiKernelVersion)" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.8-preview.3" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
     <!--<PackageReference Include="Senparc.Weixin.All" Version="2025.10.24" />-->
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.1" />-->
     <PackageReference Include="Senparc.Weixin.AspNet" Version="1.6.6" />
     <PackageReference Include="Senparc.Weixin.MP" Version="16.25.1" />
     <PackageReference Include="Senparc.Weixin.MP.Middleware" Version="1.5.5" />
     <PackageReference Include="Senparc.Weixin.Open" Version="4.24.4" />
-    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.19.0" />
+    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.20.0" />
     <PackageReference Include="Senparc.Weixin.Work" Version="3.32.1" />
     <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.28.1" />
     <!-- 由于 Npgsql 生成代码有依赖，因此此处暂时引用 -->

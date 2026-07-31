@@ -3,10 +3,16 @@
 /// 中文转换
 ///    </summary>
 var SwaggerTranslator = (function () {
+    var cultureCookie = document.cookie.match(/(?:^|;\\s*)\\.AspNetCore\\.Culture=([^;]+)/);
+    var cultureValue = cultureCookie ? decodeURIComponent(cultureCookie[1]) : '';
+    var cultureMatch = cultureValue.match(/(?:^|\\|)(?:uic|c)=([^|]+)/);
+    var culture = cultureMatch ? cultureMatch[1] : (navigator.language || 'en');
+    var useChinese = culture.toLowerCase().indexOf('zh') === 0;
+
     //定时执行检测是否转换成中文,最多执行500次  即500*50/1000=25s
     var iexcute = 0,
         //中文语言包
-        _words = {
+        _words = useChinese ? {
             "Warning: Deprecated": "警告：已过时",
             "Implementation Notes": "实现备注",
             "Response Class": "响应类",
@@ -56,7 +62,7 @@ var SwaggerTranslator = (function () {
             "from path": "从路径",
             "Click to set as parameter value": "点击设置参数",
             "server returned": "服务器返回"
-        },
+        } : {},
 
         //定时执行转换
         _translator2Cn = function () {
@@ -108,12 +114,12 @@ var SwaggerTranslator = (function () {
 
     return {
         Translator: function () {
-            document.title = "API描述文档";
+            document.title = useChinese ? "API描述文档" : "API Documentation";
             $('body').append('<style type="text/css">.controller-summary{color:#10a54a !important;word-break:keep-all;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:250px;text-align:right;cursor:default;} </style>');
-            $("#logo").html("接口描述").attr("href", "/Home/Index");
+            $("#logo").html(useChinese ? "接口描述" : "API Description").attr("href", "/Home/Index");
             //设置控制器描述
             _setControllerSummary();
-            _translator2Cn();
+            if (useChinese) _translator2Cn();
         }
     }
 })();

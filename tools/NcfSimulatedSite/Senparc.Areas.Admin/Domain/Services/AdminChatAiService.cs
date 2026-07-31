@@ -29,7 +29,6 @@ using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
-using Senparc.Xncf.AIKernel.Extensions;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using System;
 using System.Collections.Generic;
@@ -244,7 +243,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             var streamedOutput = new StringBuilder();
             var hasStreamedChunk = false;
             var skResult = onChunk == null
-                ? await iWantToRun.RunChatWithCo2NetCompatibilityAsync(prompt)
+                ? await iWantToRun.RunChatAsync(prompt)
                 : await ExecuteRunnerWithSessionRetryAsync(
                     iWantToRun,
                     prompt,
@@ -288,11 +287,11 @@ namespace Senparc.Areas.Admin.Domain.Services
             var session = runner?.Kernel?.AgentSession;
             try
             {
-                return await runner.RunChatWithCo2NetCompatibilityAsync(prompt, session, onUpdate);
+                return await runner.RunChatAsync(prompt, session, onUpdate);
             }
             catch when (session != null)
             {
-                return await runner.RunChatWithCo2NetCompatibilityAsync(prompt, null, onUpdate);
+                return await runner.RunChatAsync(prompt, null, onUpdate);
             }
         }
 

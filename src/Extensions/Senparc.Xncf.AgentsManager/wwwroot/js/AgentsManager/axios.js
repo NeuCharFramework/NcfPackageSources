@@ -58,7 +58,7 @@ serviceAM.interceptors.response.use(
         console.log('err' + error);
         if (error.message.includes('401')) {
             app.$message({
-                message: '登陆过期，即将跳转到登录页面',
+                message: ncfT('Auth.SessionExpired'),
                 type: 'error',
                 duration: 3 * 1000,
                 onClose: function () {
@@ -68,7 +68,7 @@ serviceAM.interceptors.response.use(
             return Promise.reject(error);
         } if (error.message.includes('403')) {
             app.$message({
-                message: '您没有访问权限~',
+                message: ncfT('Auth.AccessDenied'),
                 type: 'error',
                 duration: 3 * 1000
             });

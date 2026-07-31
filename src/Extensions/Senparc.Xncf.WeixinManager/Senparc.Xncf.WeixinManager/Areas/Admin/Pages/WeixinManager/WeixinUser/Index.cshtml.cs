@@ -95,7 +95,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
                     var mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == mpId);
                     if (mpAccount == null)
                     {
-                        return RenderError("公众号配置不存在：" + mpId);
+                        return RenderError(WeixinManagerResource.Format("Account.ConfigurationNotFound", "Official account configuration was not found: {0}", mpId));
                     }
                     mpAccountDto = _mpAccountService.Mapper.Map<MpAccountDto>(mpAccount);
                 }
@@ -168,7 +168,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
             var mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == mpId);
             if (mpAccount == null)
             {
-                return RenderError("公众号配置不存在：" + mpId);
+                return RenderError(WeixinManagerResource.Format("Account.ConfigurationNotFound", "Official account configuration was not found: {0}", mpId));
             }
 
             SenparcTrace.SendCustomLog("开始公众号用户同步", mpAccount.Name);

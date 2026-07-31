@@ -146,6 +146,7 @@
 </div>
 
 @section scripts {
+    @await Html.PartialAsync("_LocalizationScripts")
     @*<script src="~/js/Admin/mpaccount.js"></script>*@
     <script>
         var app = new Vue({
@@ -183,7 +184,9 @@
                         this.tableData = responseData.weixinUserDtos.list;
                         this.mpAccountDto = responseData.mpAccountDto;
                         this.searchData.total = responseData.weixinUserDtos.count;
-                        this.docTitle = this.mpAccountDto !== null ? this.mpAccountDto.name + '的用户' : '所有用户';
+                        this.docTitle = this.mpAccountDto !== null
+                            ? ncfT('WeixinManager.User.AccountUsers', this.mpAccountDto.name)
+                            : ncfT('WeixinManager.User.AllUsers');
                         document.title = this.docTitle;
                     });
                 },

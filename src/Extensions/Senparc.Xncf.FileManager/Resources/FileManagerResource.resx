@@ -102,4 +102,105 @@
   <data name="Page.Random" xml:space="preserve">
     <value>随机</value>
   </data>
+  <data name="Frontend.001" xml:space="preserve"><value>上传到：||Upload to:</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>上传文件||Upload files</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>上传时间||Upload time</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>下载||Download</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>代码||Code</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>其他||Other</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>删除||Delete</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>刷新文件夹||Refresh folders</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>取 消||Cancel</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>可以选择多个文件同时上传||Multiple files can be uploaded at once</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>名称||Name</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>备注||Notes</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>备注（可选）||Notes (optional)</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>大小||Size</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>扩展模块||Extension modules</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>操作||Actions</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>文件名||File name</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>文件夹||Folder</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>文件管理||File management</value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>文本||Text</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>新建||New</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>新建文件夹||New folder</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>根目录||Root</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>确 定||Confirm</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>类型||Type</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>表Id||Table ID</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>请输入文件夹名称||Enter a folder name</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>选择文件||Select files</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>首页||Home</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>获取列表失败||Failed to load the list</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>上传成功||Uploaded successfully</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>上传失败||Upload failed</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>修改成功||Updated successfully</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>修改失败||Update failed</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>确认删除该文件吗?||Delete this file?</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>提示||Prompt</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>确定||Confirm</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>取消||Cancel</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>删除成功||Deleted successfully</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>删除失败||Delete failed</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>创建成功||Created successfully</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>创建失败||Creation failed</value></data>
+  <data name="Frontend.043" xml:space="preserve"><value>上传失败：{0}||Upload failed: {0}</value></data>
+  <data name="Frontend.044" xml:space="preserve"><value>请输入{0}的备注||Enter notes for {0}</value></data>
+  <data name="Frontend.045" xml:space="preserve">
+    <value>FileManager 首页||FileManager Home</value>
+  </data>
+  <data name="Frontend.046" xml:space="preserve">
+    <value>文件夹 #{0}||Folder #{0}</value>
+  </data>
+  <data name="Frontend.047" xml:space="preserve">
+    <value>请输入{0}的备注||Enter a note for {0}</value>
+  </data>
+  <data name="Frontend.048" xml:space="preserve">
+    <value>更新成功||Updated successfully</value>
+  </data>
+  <data name="Frontend.049" xml:space="preserve">
+    <value>更新失败||Update failed</value>
+  </data>
+  <data name="Frontend.050" xml:space="preserve">
+    <value>确认删除该文件?||Delete this file?</value>
+  </data>
+  <data name="Frontend.051" xml:space="preserve">
+    <value>请选择要上传的文件||Select a file to upload</value>
+  </data>
+  <data name="Frontend.052" xml:space="preserve">
+    <value>上传失败：||Upload failed:</value>
+  </data>
+  <data name="Frontend.053" xml:space="preserve">
+    <value>抛出异常测试，传输参数：{0} {1}||Exception test. Parameters: {0} {1}</value>
+  </data>
+  <data name="Frontend.054" xml:space="preserve">
+    <value>被除数不能为0！||The divisor cannot be 0.</value>
+  </data>
+  <data name="Frontend.055" xml:space="preserve">
+    <value>未知的运算符：{0}||Unknown operator: {0}</value>
+  </data>
+  <data name="Frontend.056" xml:space="preserve">
+    <value>一次最多上传 {0} 个文件。||A maximum of {0} files can be uploaded at once.</value>
+  </data>
+  <data name="Frontend.057" xml:space="preserve">
+    <value>单次上传总大小不能超过 {0} MB。||The total upload size cannot exceed {0} MB.</value>
+  </data>
+  <data name="Frontend.058" xml:space="preserve">
+    <value>上传文件不能为空。||The uploaded file cannot be empty.</value>
+  </data>
+  <data name="Frontend.059" xml:space="preserve">
+    <value>单个文件不能超过 {0} MB。||A single file cannot exceed {0} MB.</value>
+  </data>
+  <data name="Frontend.060" xml:space="preserve">
+    <value>不允许上传该文件类型。仅支持常见文档、图片、文本和压缩包格式。||This file type is not allowed. Only common document, image, text, and archive formats are supported.</value>
+  </data>
+  <data name="Frontend.061" xml:space="preserve">
+    <value>文件不存在！||The file does not exist.</value>
+  </data>
+  <data name="Frontend.062" xml:space="preserve">
+    <value>文件物理路径信息无效。||The physical file path is invalid.</value>
+  </data>
+  <data name="Frontend.063" xml:space="preserve">
+    <value>文件物理路径越界。||The physical file path is outside the allowed directory.</value>
+  </data>
 </root>

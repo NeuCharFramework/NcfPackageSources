@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Validator.Required" xml:space="preserve"><value>提示： {0}!</value></data>
+  <data name="Validator.InvalidCharacters" xml:space="preserve"><value>{0}中存在非法字符！</value></data>
+  <data name="Validator.FullWidthSpace" xml:space="preserve"><value>用户名中不允许包含全角空格符</value></data>
+  <data name="Validator.Space" xml:space="preserve"><value>用户名中不允许包含空格</value></data>
+  <data name="Validator.Colon" xml:space="preserve"><value>用户名中不允许包含冒号</value></data>
+  <data name="Validator.UsernameSpecial" xml:space="preserve"><value>用户名中可以使用中文、英文或数字及下划线_，但不允许包含特殊符号：{0}</value></data>
+  <data name="Validator.Email" xml:space="preserve"><value>请在{0}中填写正确的Email地址！</value></data>
+  <data name="Validator.Phone" xml:space="preserve"><value>请填写正确的电话号码！</value></data>
+  <data name="Validator.Ip" xml:space="preserve"><value>请在{0}中填写正确的IP地址！</value></data>
+  <data name="Validator.Url" xml:space="preserve"><value>请在{0}中填写正确的Url地址！</value></data>
+  <data name="Validator.MaxBytes" xml:space="preserve"><value>{0}中最多只能输入{1}字节的内容（对应{2}汉字）</value></data>
+  <data name="Validator.MaxLength" xml:space="preserve"><value>{0}中最多只能输入{1}个字符</value></data>
+  <data name="Pager.Current" xml:space="preserve"><value>当前显示第{0}条</value></data>
+  <data name="Pager.Total" xml:space="preserve"><value>总共 &lt;b&gt;{0}&lt;/b&gt; 条</value></data>
+  <data name="Pager.Previous" xml:space="preserve"><value>上一页</value></data>
+  <data name="Pager.Next" xml:space="preserve"><value>下一页</value></data>
+  <data name="Pager.MoveUp" xml:space="preserve"><value>上移</value></data>
+  <data name="Pager.MoveDown" xml:space="preserve"><value>下移</value></data>
+  <data name="Auth.HandlerNotFound" xml:space="preserve"><value>404，未找到对应的Handler。请检查请求方法请求地址是否有误！请求方法：{0}</value></data>
+  <data name="Auth.Forbidden" xml:space="preserve"><value>您没有权限访问</value></data>
+</root>

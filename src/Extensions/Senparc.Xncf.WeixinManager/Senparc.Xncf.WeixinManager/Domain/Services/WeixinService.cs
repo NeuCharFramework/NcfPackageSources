@@ -98,7 +98,7 @@ namespace Senparc.Xncf.WeixinManager.Domain.Services
 
                 if (!downloadTemplateImage)
                 {
-                    throw new Exception("图片上传错误（01）！");
+                    throw new Exception(WeixinManagerResource.Get("Error.ImageUpload01", "Image upload failed (01)."));
                 }
                 return true;
             }

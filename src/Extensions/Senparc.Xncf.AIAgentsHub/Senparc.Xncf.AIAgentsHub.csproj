@@ -69,7 +69,7 @@
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.8-preview.3" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup>

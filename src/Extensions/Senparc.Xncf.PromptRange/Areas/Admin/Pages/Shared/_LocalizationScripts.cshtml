@@ -1,0 +1,39 @@
+@using System.Text.Json
+@using Microsoft.Extensions.Localization
+@using Senparc.Xncf.PromptRange
+@inject IStringLocalizer<PromptRangeResource> XR
+@{
+    var resourceKeys = new[]
+    {
+        "Area.ExtensionModules", "Area.PromptRange", "Area.Home", "Area.Model", "Area.DatabaseSample",
+        "Title.Home", "Title.Model", "Title.Prompt",
+        "Dashboard.AddModel", "Dashboard.DataUpdated", "Dashboard.Refresh", "Dashboard.Workbench",
+        "Dashboard.Trend", "Dashboard.TrendSubtitle", "Dashboard.ModelDistribution", "Dashboard.TopModels",
+        "Dashboard.TopPrompts", "Dashboard.PromptPage", "Dashboard.Range", "Dashboard.Calls",
+        "Dashboard.AverageScore", "Dashboard.LastRun", "Dashboard.Draft", "Dashboard.Health",
+        "Dashboard.HealthSubtitle", "Dashboard.Active", "Dashboard.Risk", "Dashboard.RiskSubtitle",
+        "Dashboard.Priority", "Dashboard.Insight", "Dashboard.InsightSubtitle", "Dashboard.EmptyPrompt",
+        "Dashboard.EmptyRange", "Dashboard.EmptyRisk", "Dashboard.EmptyInsight", "Dashboard.ScoreUnit",
+        "Dashboard.RangeTotal", "Dashboard.ActiveRange", "Dashboard.PromptTotal", "Dashboard.DraftCount",
+        "Dashboard.ResultTotal", "Dashboard.TodayLast7", "Dashboard.AverageFinalScore", "Dashboard.Coverage",
+        "Dashboard.TokenCost", "Dashboard.ActivePrompt", "Dashboard.AverageLatency", "Dashboard.AllResults",
+        "Dashboard.UnknownModel", "Dashboard.ModelPrefix", "Dashboard.Refreshed",
+        "Model.SearchPlaceholder", "Model.Add", "Model.BatchDelete", "Model.Index", "Model.Name",
+        "Model.Developer", "Model.Public", "Model.Actions", "Model.Edit", "Model.Delete", "Model.Type",
+        "Model.TypePlaceholder", "Model.NamePlaceholder", "Model.Endpoint", "Model.EndpointPlaceholder",
+        "Model.ApiKeyPlaceholder", "Model.Cancel", "Model.Confirm", "Model.NewTitle", "Model.EditTitle",
+        "Model.AddSuccess", "Model.AddFailed", "Model.ModifyFailed", "Model.DeleteFailed", "Model.SelectType",
+        "Model.EnterName", "Model.EnterApi", "Model.EnterApiKey"
+    };
+    var translations = resourceKeys.ToDictionary(key => $"PromptRange.{key}", key => XR[key].Value);
+    var sourceTranslations = XR.GetAllStrings(includeParentCultures: true)
+        .Where(item => item.Name.StartsWith("Frontend.", StringComparison.Ordinal))
+        .Select(item => item.Value.Split(new[] { "||" }, 2, StringSplitOptions.None))
+        .Where(parts => parts.Length == 2)
+        .GroupBy(parts => parts[0])
+        .ToDictionary(group => group.Key, group => group.First()[1]);
+}
+<script>
+    window.ncfI18n = Object.assign(window.ncfI18n || {}, @Html.Raw(JsonSerializer.Serialize(translations)));
+    window.ncfRegisterSourceTranslations(@Html.Raw(JsonSerializer.Serialize(sourceTranslations)));
+</script>

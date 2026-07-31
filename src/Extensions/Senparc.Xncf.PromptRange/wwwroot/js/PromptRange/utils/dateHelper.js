@@ -72,15 +72,15 @@
             var day = 24 * hour;
 
             if (diff < minute) {
-                return '刚刚';
+                return ncfST('刚刚');
             } else if (diff < hour) {
-                return Math.floor(diff / minute) + '分钟前';
+                return ncfST('{0}分钟前', Math.floor(diff / minute));
             } else if (diff < day) {
-                return Math.floor(diff / hour) + '小时前';
+                return ncfST('{0}小时前', Math.floor(diff / hour));
             } else if (diff < 2 * day) {
-                return '昨天 ' + this.formatDate(d, 'HH:mm');
+                return ncfST('昨天 {0}', this.formatDate(d, 'HH:mm'));
             } else if (diff < 7 * day) {
-                return Math.floor(diff / day) + '天前';
+                return ncfST('{0}天前', Math.floor(diff / day));
             } else {
                 return this.formatDate(d, 'YYYY-MM-DD HH:mm');
             }
@@ -182,12 +182,12 @@
             hours = hours % 24;
 
             var parts = [];
-            if (days > 0) parts.push(days + '天');
-            if (hours > 0) parts.push(hours + '小时');
-            if (minutes > 0) parts.push(minutes + '分钟');
-            if (seconds > 0 && days === 0) parts.push(seconds + '秒');
+            if (days > 0) parts.push(ncfST('{0}天', days));
+            if (hours > 0) parts.push(ncfST('{0}小时', hours));
+            if (minutes > 0) parts.push(ncfST('{0}分钟', minutes));
+            if (seconds > 0 && days === 0) parts.push(ncfST('{0}秒', seconds));
 
-            return parts.length > 0 ? parts.join('') : '0秒';
+            return parts.length > 0 ? parts.join('') : ncfST('0秒');
         }
     };
 

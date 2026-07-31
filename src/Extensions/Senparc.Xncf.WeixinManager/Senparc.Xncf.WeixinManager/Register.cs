@@ -251,7 +251,7 @@ namespace Senparc.Xncf.WeixinManager
                 //}
                 else
                 {
-                    throw new NotImplementedException($"未提供的 PlatformType 类型，Title：{title}");
+                    throw new NotImplementedException(WeixinManagerResource.Format("Error.UnsupportedPlatformType", "Unsupported PlatformType. Title: {0}", title));
                 }
 
                 var pathList = swaggerDoc.Paths.Keys.ToList();

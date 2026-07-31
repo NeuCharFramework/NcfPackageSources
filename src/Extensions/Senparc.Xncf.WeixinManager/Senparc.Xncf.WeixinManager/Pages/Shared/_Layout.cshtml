@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.Name">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,16 +13,16 @@
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-page="/Index">Senparc.Xncf.WeixinManager</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                        aria-expanded="false" aria-label="@XR["Public.ToggleNavigation"]">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">@XR["Public.Home"]</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">@XR["Public.Privacy"]</a>
                         </li>
                     </ul>
                 </div>
@@ -37,7 +37,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2020 - Senparc.Xncf.WeixinManager - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            &copy; 2020 - Senparc.Xncf.WeixinManager - <a asp-area="" asp-page="/Privacy">@XR["Public.Privacy"]</a>
         </div>
     </footer>
 

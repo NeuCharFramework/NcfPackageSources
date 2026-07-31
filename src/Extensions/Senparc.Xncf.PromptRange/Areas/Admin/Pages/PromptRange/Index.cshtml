@@ -1,16 +1,16 @@
 ﻿@page
 @model Senparc.Xncf.PromptRange.Areas.PromptRange.Pages.Index
 @{
-    ViewData["Title"] = "PromptRange 首页";
+    ViewData["Title"] = XR["Title.Home"];
     Layout = "_Layout_Vue";
 }
 @section Style{
     <link href="~/css/PromptRange/index.css" rel="stylesheet" />
 }
 @section breadcrumbs{
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>提示词靶场</el-breadcrumb-item>
-    <el-breadcrumb-item>首页</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.PromptRange"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.Home"]</el-breadcrumb-item>
 }
 
 <div class="indexPage" v-cloak>
@@ -18,10 +18,10 @@
         <div class="leftBox">
             <div class="title">
                 <div>PromptRange</div>
-                <div>提示词靶场</div>
+                <div>@XR["Area.PromptRange"]</div>
             </div>
             <div class="btn" @@click="toAIKernel">
-                新增模型
+                @XR["Dashboard.AddModel"]
             </div>
         </div>
         <img src="~/image/PromptRange/index_headBg.png" class="headBg" />
@@ -32,11 +32,11 @@
 
     <div class="toolRow">
         <div class="toolLeft">
-            数据更新时间：{{ formatDateTime(dashboard.generatedAt) }}
+            @XR["Dashboard.DataUpdated"]{{ formatDateTime(dashboard.generatedAt) }}
         </div>
         <div class="toolRight">
-            <el-button size="mini" type="primary" :loading="loading" @@click="fetchDashboard(true)">刷新看板</el-button>
-            <el-button size="mini" @@click="goPromptWorkbench">进入 Prompt 工作台</el-button>
+            <el-button size="mini" type="primary" :loading="loading" @@click="fetchDashboard(true)">@XR["Dashboard.Refresh"]</el-button>
+            <el-button size="mini" @@click="goPromptWorkbench">@XR["Dashboard.Workbench"]</el-button>
         </div>
     </div>
 
@@ -51,34 +51,34 @@
     <div class="boardGrid" v-loading="loading">
         <div class="boardCard trendCard">
             <div class="cardTitleRow">
-                <div class="cardTitle">打靶趋势（近 {{ dashboard.recentDays || 14 }} 天）</div>
-                <div class="cardSubTitle">调用次数 / 平均分</div>
+                <div class="cardTitle">{{ ncfT('PromptRange.Dashboard.Trend', dashboard.recentDays || 14) }}</div>
+                <div class="cardSubTitle">@XR["Dashboard.TrendSubtitle"]</div>
             </div>
             <div id="usageTrendChart" class="chart chartTrend"></div>
         </div>
 
         <div class="boardCard modelCard">
             <div class="cardTitleRow">
-                <div class="cardTitle">模型调用分布</div>
-                <div class="cardSubTitle">Top {{ dashboard.topModels ? dashboard.topModels.length : 0 }}</div>
+                <div class="cardTitle">@XR["Dashboard.ModelDistribution"]</div>
+                <div class="cardSubTitle">{{ ncfT('PromptRange.Dashboard.TopModels', dashboard.topModels ? dashboard.topModels.length : 0) }}</div>
             </div>
             <div id="modelUsageChart" class="chart chartModel"></div>
         </div>
 
         <div class="boardCard promptCard">
             <div class="cardTitleRow">
-                <div class="cardTitle">高频 Prompt 排行</div>
-                <a class="cardLink" :href="buildPromptUrl(null, null)">前往 Prompt 页面</a>
+                <div class="cardTitle">@XR["Dashboard.TopPrompts"]</div>
+                <a class="cardLink" :href="buildPromptUrl(null, null)">@XR["Dashboard.PromptPage"]</a>
             </div>
             <div class="tableWrap" v-if="dashboard.topPrompts && dashboard.topPrompts.length > 0">
                 <table class="insightTable">
                     <thead>
                         <tr>
                             <th>Prompt</th>
-                            <th>靶场</th>
-                            <th>调用</th>
-                            <th>平均分</th>
-                            <th>最近打靶</th>
+                            <th>@XR["Dashboard.Range"]</th>
+                            <th>@XR["Dashboard.Calls"]</th>
+                            <th>@XR["Dashboard.AverageScore"]</th>
+                            <th>@XR["Dashboard.LastRun"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -89,7 +89,7 @@
                                 </a>
                                 <div class="subText">
                                     {{ item.fullVersion }}
-                                    <span class="tagWarning" v-if="item.isDraft">草稿</span>
+                                    <span class="tagWarning" v-if="item.isDraft">@XR["Dashboard.Draft"]</span>
                                 </div>
                             </td>
                             <td>{{ formatRangeName(item.rangeAlias, item.rangeName) }}</td>
@@ -100,13 +100,13 @@
                     </tbody>
                 </table>
             </div>
-            <el-empty v-else description="暂无 Prompt 数据"></el-empty>
+            <el-empty v-else description="@XR["Dashboard.EmptyPrompt"]"></el-empty>
         </div>
 
         <div class="boardCard rangeCard">
             <div class="cardTitleRow">
-                <div class="cardTitle">靶场健康度</div>
-                <div class="cardSubTitle">综合评分 + 活跃率 + 草稿占比</div>
+                <div class="cardTitle">@XR["Dashboard.Health"]</div>
+                <div class="cardSubTitle">@XR["Dashboard.HealthSubtitle"]</div>
             </div>
             <div class="rangeList" v-if="dashboard.topRanges && dashboard.topRanges.length > 0">
                 <div class="rangeItem" v-for="item in dashboard.topRanges" :key="'range-' + item.rangeId">
@@ -114,23 +114,23 @@
                         <a class="linkText" :href="buildPromptUrl(item.rangeId, null)">
                             {{ formatRangeName(item.rangeAlias, item.rangeName) }}
                         </a>
-                        <span class="healthText">{{ item.healthScore }} 分</span>
+                        <span class="healthText">{{ item.healthScore }} @XR["Dashboard.ScoreUnit"]</span>
                     </div>
                     <div class="rangeMeta">
-                        Prompt {{ item.promptCount }} / 活跃 {{ item.activePromptCount }} / 调用 {{ item.usageCount }} / 草稿 {{ item.draftPromptCount }}
+                        Prompt {{ item.promptCount }} / @XR["Dashboard.Active"] {{ item.activePromptCount }} / @XR["Dashboard.Calls"] {{ item.usageCount }} / @XR["Dashboard.Draft"] {{ item.draftPromptCount }}
                     </div>
                     <div class="progressBar">
                         <span :style="{ width: clampPercent(item.healthScore) + '%' }"></span>
                     </div>
                 </div>
             </div>
-            <el-empty v-else description="暂无靶场数据"></el-empty>
+            <el-empty v-else description="@XR["Dashboard.EmptyRange"]"></el-empty>
         </div>
 
         <div class="boardCard riskCard">
             <div class="cardTitleRow">
-                <div class="cardTitle">风险与待优化 Prompt</div>
-                <div class="cardSubTitle">优先处理低分和未打靶项</div>
+                <div class="cardTitle">@XR["Dashboard.Risk"]</div>
+                <div class="cardSubTitle">@XR["Dashboard.RiskSubtitle"]</div>
             </div>
             <div class="riskList" v-if="dashboard.riskPrompts && dashboard.riskPrompts.length > 0">
                 <div class="riskItem" v-for="item in dashboard.riskPrompts" :key="'risk-' + item.promptId">
@@ -141,18 +141,18 @@
                         </a>
                     </div>
                     <div class="riskMeta">
-                        {{ formatRangeName(item.rangeAlias, item.rangeName) }} · {{ item.fullVersion }} · 调用 {{ item.usageCount }} · 平均分 {{ formatScore(item.avgScore) }}
+                        {{ formatRangeName(item.rangeAlias, item.rangeName) }} · {{ item.fullVersion }} · @XR["Dashboard.Calls"] {{ item.usageCount }} · @XR["Dashboard.AverageScore"] {{ formatScore(item.avgScore) }}
                     </div>
                     <div class="riskDesc">{{ item.riskMessage }}</div>
                 </div>
             </div>
-            <el-empty v-else description="暂无风险项"></el-empty>
+            <el-empty v-else description="@XR["Dashboard.EmptyRisk"]"></el-empty>
         </div>
 
         <div class="boardCard insightCard">
             <div class="cardTitleRow">
-                <div class="cardTitle">智能洞察</div>
-                <div class="cardSubTitle">基于真实打靶与评分数据</div>
+                <div class="cardTitle">@XR["Dashboard.Insight"]</div>
+                <div class="cardSubTitle">@XR["Dashboard.InsightSubtitle"]</div>
             </div>
             <div class="insightList" v-if="dashboard.insights && dashboard.insights.length > 0">
                 <div class="insightItem"
@@ -163,12 +163,13 @@
                     <div class="insightDesc">{{ item.description }}</div>
                 </div>
             </div>
-            <el-empty v-else description="暂无洞察数据"></el-empty>
+            <el-empty v-else description="@XR["Dashboard.EmptyInsight"]"></el-empty>
         </div>
     </div>
 </div>
 
 @section scripts{
+    @await Html.PartialAsync("_LocalizationScripts")
     <script src="~/js/PromptRange/lib/axios.min.js"></script>
     <script src="~/js/PromptRange/echarts/echarts.min.js"></script>
     <script src="~/js/PromptRange/axios.js"></script>

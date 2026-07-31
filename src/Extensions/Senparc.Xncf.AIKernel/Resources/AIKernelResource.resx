@@ -90,4 +90,117 @@
   <data name="Parameter.AI.Source" xml:space="preserve">
     <value>来源：{0}</value>
   </data>
+  <data name="Area.ExtensionModules" xml:space="preserve"><value>扩展模块</value></data>
+  <data name="Area.AIKernel" xml:space="preserve"><value>AI 核心模块</value></data>
+  <data name="Title.Vector" xml:space="preserve"><value>AIVector 首页</value></data>
+  <data name="Vector.Add" xml:space="preserve"><value>添加</value></data>
+  <data name="Vector.Alias" xml:space="preserve"><value>别名</value></data>
+  <data name="Vector.DeploymentName" xml:space="preserve"><value>部署名称</value></data>
+  <data name="Vector.Endpoint" xml:space="preserve"><value>Endpoint</value></data>
+  <data name="Vector.DatabaseType" xml:space="preserve"><value>向量数据库类型</value></data>
+  <data name="Vector.Note" xml:space="preserve"><value>备注</value></data>
+  <data name="Vector.AddTime" xml:space="preserve"><value>添加时间</value></data>
+  <data name="Vector.Actions" xml:space="preserve"><value>操作</value></data>
+  <data name="Vector.Edit" xml:space="preserve"><value>编辑</value></data>
+  <data name="Vector.Delete" xml:space="preserve"><value>删除</value></data>
+  <data name="Vector.AddTitle" xml:space="preserve"><value>添加向量数据库</value></data>
+  <data name="Vector.EditTitle" xml:space="preserve"><value>编辑向量数据库</value></data>
+  <data name="Vector.Name" xml:space="preserve"><value>名称</value></data>
+  <data name="Vector.ConnectionString" xml:space="preserve"><value>连接字符串</value></data>
+  <data name="Vector.Display" xml:space="preserve"><value>显示</value></data>
+  <data name="Vector.SelectPlaceholder" xml:space="preserve"><value>请选择</value></data>
+  <data name="Vector.MemoryLeaveEmpty" xml:space="preserve"><value>Memory 类型可留空</value></data>
+  <data name="Vector.ConnectionPlaceholder" xml:space="preserve"><value>请输入连接字符串</value></data>
+  <data name="Vector.Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="Vector.Confirm" xml:space="preserve"><value>确定</value></data>
+  <data name="Vector.AliasRequired" xml:space="preserve"><value>请输入别名</value></data>
+  <data name="Vector.TypeRequired" xml:space="preserve"><value>请选择向量数据库的类型</value></data>
+  <data name="Vector.ModelNameRequired" xml:space="preserve"><value>请输入模型名称</value></data>
+  <data name="Vector.NameRequired" xml:space="preserve"><value>请输入向量数据库名称</value></data>
+  <data name="Vector.ConnectionRequired" xml:space="preserve"><value>当前向量数据库类型需要连接字符串</value></data>
+  <data name="Vector.CopySuccess" xml:space="preserve"><value>已复制【******{0}】！</value></data>
+  <data name="Vector.CopyFailed" xml:space="preserve"><value>复制失败，请手动复制。</value></data>
+  <data name="Vector.AddSuccess" xml:space="preserve"><value>添加成功!</value></data>
+  <data name="Vector.AddFailed" xml:space="preserve"><value>添加失败</value></data>
+  <data name="Vector.EditSuccess" xml:space="preserve"><value>编辑成功!</value></data>
+  <data name="Vector.EditFailed" xml:space="preserve"><value>编辑失败</value></data>
+  <data name="Vector.DeleteConfirm" xml:space="preserve"><value>此操作将永久删除【{0}】模型，是否继续?</value></data>
+  <data name="Vector.DeleteConfirmTitle" xml:space="preserve"><value>提示</value></data>
+  <data name="Vector.DeleteSuccess" xml:space="preserve"><value>删除成功!</value></data>
+  <data name="Vector.DeleteFailed" xml:space="preserve"><value>删除失败</value></data>
+  <data name="Vector.CancelDelete" xml:space="preserve"><value>已取消删除</value></data>
+  <data name="Area.DatabaseSample" xml:space="preserve"><value>数据库操作示例</value></data>
+  <data name="Title.Home" xml:space="preserve"><value>AIKernel 首页</value></data>
+  <data name="Model.AddTitle" xml:space="preserve"><value>添加模型</value></data>
+  <data name="Model.EditTitle" xml:space="preserve"><value>编辑模型</value></data>
+  <data name="Model.ImportNeuChar" xml:space="preserve"><value>导入 NeuCharAI 云端模型算力</value></data>
+  <data name="Model.Name" xml:space="preserve"><value>模型名称</value></data>
+  <data name="Model.Platform" xml:space="preserve"><value>平台</value></data>
+  <data name="Model.Type" xml:space="preserve"><value>模型类型</value></data>
+  <data name="Model.Unknown" xml:space="preserve"><value>未知</value></data>
+  <data name="Model.OrganizationId" xml:space="preserve"><value>组织 ID</value></data>
+  <data name="Model.NeuCharImportHelp" xml:space="preserve"><value>请在以下页面点击“显示 ApiKey”查看 DeveloperId 和 ApiKey；如有多项，可分批导入：</value></data>
+  <data name="Model.PlatformRequired" xml:space="preserve"><value>请选择平台类型</value></data>
+  <data name="Model.TypeRequired" xml:space="preserve"><value>请选择模型类型</value></data>
+  <data name="Model.DeploymentRequired" xml:space="preserve"><value>请输入模型部署名称</value></data>
+  <data name="Model.ApiVersionRequired" xml:space="preserve"><value>请输入 API Version</value></data>
+  <data name="Model.ApiKeyRequired" xml:space="preserve"><value>请输入 API Key</value></data>
+  <data name="Model.EndpointRequired" xml:space="preserve"><value>请输入 Endpoint</value></data>
+  <data name="Model.OrganizationRequired" xml:space="preserve"><value>请输入 Organization ID</value></data>
+  <data name="Model.DeveloperIdRequired" xml:space="preserve"><value>请输入 DeveloperId</value></data>
+  <data name="Dashboard.Name" xml:space="preserve"><value>仪表盘</value></data>
+  <data name="Dashboard.Title" xml:space="preserve"><value>AIKernel 仪表盘</value></data>
+  <data name="Dashboard.AvailableModels" xml:space="preserve"><value>可调用模型数量</value></data>
+  <data name="Dashboard.VectorDatabases" xml:space="preserve"><value>向量数据库数量</value></data>
+  <data name="Dashboard.Agents" xml:space="preserve"><value>智能体数量</value></data>
+  <data name="Dashboard.UserFeedback" xml:space="preserve"><value>用户反馈数</value></data>
+  <data name="Dashboard.TotalSessions" xml:space="preserve"><value>全部会话数</value></data>
+  <data name="Dashboard.LastSevenDays" xml:space="preserve"><value>近 7 天</value></data>
+  <data name="Dashboard.TimesUnit" xml:space="preserve"><value>次</value></data>
+  <data name="Dashboard.ActiveUsers" xml:space="preserve"><value>活跃用户数</value></data>
+  <data name="Dashboard.PeopleUnit" xml:space="preserve"><value>人</value></data>
+  <data name="Dashboard.AverageInteractions" xml:space="preserve"><value>平均会话互动数</value></data>
+  <data name="Dashboard.TokenSpeedWithUnit" xml:space="preserve"><value>Token 输出速度（Token/秒）</value></data>
+  <data name="Dashboard.TokenSpeed" xml:space="preserve"><value>Token 输出速度</value></data>
+  <data name="Dashboard.UserSatisfaction" xml:space="preserve"><value>用户满意度</value></data>
+  <data name="Dashboard.TotalMessages" xml:space="preserve"><value>全部消息数</value></data>
+  <data name="Frontend.001" xml:space="preserve">
+    <value>当前实体已删除或不存在!||The current entity was deleted or does not exist.</value>
+  </data>
+  <data name="Frontend.002" xml:space="preserve">
+    <value>错误：当前系统未配置 NeuChar 开发者账号，请到【系统管理】模块，设置页面，使用【更新 NeuChar 云账户信息】绑定 NeuChar 开发者账号！||Error: No NeuChar developer account is configured. Open System Management &gt; Settings and use Update NeuChar Cloud Account Information.</value>
+  </data>
+  <data name="Frontend.003" xml:space="preserve">
+    <value>AppKey 或 AppSecret 错误！请重新设置！||The AppKey or AppSecret is incorrect. Configure it again.</value>
+  </data>
+  <data name="Frontend.004" xml:space="preserve">
+    <value>所提供和 DeveloperId 和系统配置的 AppKey 不一致，请检查或更新后重试！||The provided DeveloperId does not match the configured AppKey. Check or update it and try again.</value>
+  </data>
+  <data name="Frontend.005" xml:space="preserve">
+    <value>更新成功！||Updated successfully!</value>
+  </data>
+  <data name="Frontend.006" xml:space="preserve">
+    <value>未查询到实体!||No entity was found.</value>
+  </data>
+  <data name="Frontend.007" xml:space="preserve">
+    <value>尚未支持：{0} 模型在 BuildSenparcAiSetting 中的处理||Model type {0} is not yet supported by BuildSenparcAiSetting.</value>
+  </data>
+  <data name="Frontend.008" xml:space="preserve">
+    <value>Senparc.Xncf.AIKernel 暂时不支持 {0} 类型||Senparc.Xncf.AIKernel does not currently support type {0}.</value>
+  </data>
+  <data name="Frontend.009" xml:space="preserve">
+    <value>SenparcAiSetting 不能为空||SenparcAiSetting cannot be empty.</value>
+  </data>
+  <data name="Frontend.010" xml:space="preserve">
+    <value>模型数据不存在，请检查是否已部署，或是否具备权限！||Model data does not exist. Check deployment and permissions.</value>
+  </data>
+  <data name="Frontend.011" xml:space="preserve">
+    <value>已成功添加 {0} 个模型，更新 {1} 个模型信息。||Added {0} models and updated {1} models.</value>
+  </data>
+  <data name="Frontend.012" xml:space="preserve">
+    <value>PromptRange 暂时不支持 {0} 类型||PromptRange does not currently support type {0}.</value>
+  </data>
+  <data name="Frontend.013" xml:space="preserve">
+    <value>必须至少设置一个 Chat 类型的模型才能自动打分（在 AIKernel 模块中）||At least one chat model must be configured in AIKernel for automatic scoring.</value>
+  </data>
 </root>

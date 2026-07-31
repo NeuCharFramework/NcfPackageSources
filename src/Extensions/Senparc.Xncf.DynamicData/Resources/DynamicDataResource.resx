@@ -105,4 +105,444 @@
   <data name="Page.Random" xml:space="preserve">
     <value>随机</value>
   </data>
+  <data name="Frontend.001" xml:space="preserve"><value>0个字段||0 fields</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>个条件||conditions</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>中间对齐1||Center</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>事件||Events</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>事件设置||Event settings</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>代码查看||View code</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>位置||Position</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>允许删除||Allow delete</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>允许导出||Allow export</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>允许排序||Allow sorting</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>允许编辑||Allow edit</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>入参||Input</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>全部字段||All fields</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>关闭页面||Close page</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>出参||Output</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>分页设置||Pagination settings</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>列名||Column name</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>列宽||Column width</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>列属性||Column properties</value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>列属性设置||Column property settings</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>列标题||Column title</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>列管理||Column management</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>列选择||Column selection</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>创建单条||Create one</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>创建布局||Create layout</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>删除||Delete</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>删除单条||Delete one</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>删除单条数据||Delete one record</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>删除布局||Delete layout</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>动态数据基础模块||Dynamic Data module</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>升序||Ascending</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>双击||Double-click</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>发布||Publish</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>取消||Cancel</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>取消按钮文字||Cancel button text</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>取消操作设置||Cancel action settings</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>只有一页时隐藏||Hide when only one page</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>右侧||Right</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>右对齐||Align right</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>启用分页||Enable pagination</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>固定列||Fixed column</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>固定方向||Fixed direction</value></data>
+  <data name="Frontend.043" xml:space="preserve"><value>填充||Filled</value></data>
+  <data name="Frontend.044" xml:space="preserve"><value>复制布局||Copy layout</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>大于||Greater than</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>姓名||Name</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>子组件||Child component</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>子组件启用&amp;布局||Child component enablement and layout</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>字段||Fields</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>字段名称||Field name</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>字段描述||Field description</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>字段查询范围||Field query scope</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>对齐方式||Alignment</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>导入||Import</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>导出||Export</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>小于||Less than</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>展示内容||Display content</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>展示内容文本||Display content text</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>展示内容文本1||Display content text 1</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>展示类型||Display type</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>属性||Properties</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>左侧||Left</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>左对齐||Align left</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>带入id||Include ID</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>年龄||Age</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>弹框设置||Dialog settings</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>弹窗||Dialog</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>弹窗设置||Dialog settings</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>当前模块为自动生成模块||This module is generated automatically</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>打开弹框||Open dialog</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>打开弹窗||Open dialog</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>打开页面||Open page</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>执行方法||Execution method</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>扩展模块||Extension modules</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>按钮||Button</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>按钮事件||Button event</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>按钮名称||Button name</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>按钮属性||Button properties</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>按钮类型||Button type</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>按钮设置||Button settings</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>排序||Sort</value></data>
+  <data name="Frontend.082" xml:space="preserve"><value>排序字段||Sort field</value></data>
+  <data name="Frontend.083" xml:space="preserve"><value>排序方式||Sort order</value></data>
+  <data name="Frontend.084" xml:space="preserve"><value>排序设置||Sort settings</value></data>
+  <data name="Frontend.085" xml:space="preserve"><value>描边||Outlined</value></data>
+  <data name="Frontend.086" xml:space="preserve"><value>描述||Description</value></data>
+  <data name="Frontend.087" xml:space="preserve"><value>提交||Submit</value></data>
+  <data name="Frontend.088" xml:space="preserve"><value>提交失败状态设置||Submit failure settings</value></data>
+  <data name="Frontend.089" xml:space="preserve"><value>提交成功状态设置||Submit success settings</value></data>
+  <data name="Frontend.090" xml:space="preserve"><value>提示内容||Message content</value></data>
+  <data name="Frontend.091" xml:space="preserve"><value>提示文字||Hint text</value></data>
+  <data name="Frontend.092" xml:space="preserve"><value>提示时常||Message duration</value></data>
+  <data name="Frontend.093" xml:space="preserve"><value>提示时长||Message duration</value></data>
+  <data name="Frontend.094" xml:space="preserve"><value>提示：新增数据表之后才能新增字段||Tip: add a data table before adding fields</value></data>
+  <data name="Frontend.095" xml:space="preserve"><value>操作||Actions</value></data>
+  <data name="Frontend.096" xml:space="preserve"><value>操作列||Action column</value></data>
+  <data name="Frontend.097" xml:space="preserve"><value>数据格式||Data format</value></data>
+  <data name="Frontend.098" xml:space="preserve"><value>数据格式文本||Data format text</value></data>
+  <data name="Frontend.099" xml:space="preserve"><value>数据格式文本1||Data format text 1</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>数据模型英文标识，作为数据模型唯一标识不可重复||Unique English identifier for the data model</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>数据筛选||Data filtering</value></data>
+  <data name="Frontend.102" xml:space="preserve"><value>数据类型||Data type</value></data>
+  <data name="Frontend.103" xml:space="preserve"><value>数据表||Data table</value></data>
+  <data name="Frontend.104" xml:space="preserve"><value>数据表文本||Data table text</value></data>
+  <data name="Frontend.105" xml:space="preserve"><value>数据表文本1||Data table text 1</value></data>
+  <data name="Frontend.106" xml:space="preserve"><value>数据表格||Data grid</value></data>
+  <data name="Frontend.107" xml:space="preserve"><value>数据表设置||Data table settings</value></data>
+  <data name="Frontend.108" xml:space="preserve"><value>数据表选择||Select data table</value></data>
+  <data name="Frontend.109" xml:space="preserve"><value>数据设置||Data settings</value></data>
+  <data name="Frontend.110" xml:space="preserve"><value>数据详情||Data details</value></data>
+  <data name="Frontend.111" xml:space="preserve"><value>数据集||Dataset</value></data>
+  <data name="Frontend.112" xml:space="preserve"><value>文字||Text</value></data>
+  <data name="Frontend.113" xml:space="preserve"><value>新增||Add</value></data>
+  <data name="Frontend.114" xml:space="preserve"><value>新增字段||Add field</value></data>
+  <data name="Frontend.115" xml:space="preserve"><value>新增数据表||Add data table</value></data>
+  <data name="Frontend.116" xml:space="preserve"><value>新增界面||Add interface</value></data>
+  <data name="Frontend.117" xml:space="preserve"><value>新增菜单||Add menu</value></data>
+  <data name="Frontend.118" xml:space="preserve"><value>新增页面||Add page</value></data>
+  <data name="Frontend.119" xml:space="preserve"><value>是否为分页按钮添加背景色||Add background to pagination buttons</value></data>
+  <data name="Frontend.120" xml:space="preserve"><value>是否使用小型分页||Use compact pagination</value></data>
+  <data name="Frontend.121" xml:space="preserve"><value>是否唯一||Unique</value></data>
+  <data name="Frontend.122" xml:space="preserve"><value>是否必填||Required</value></data>
+  <data name="Frontend.123" xml:space="preserve"><value>显示斑马纹||Show zebra stripes</value></data>
+  <data name="Frontend.124" xml:space="preserve"><value>显示消息提示||Show message</value></data>
+  <data name="Frontend.125" xml:space="preserve"><value>显示表头||Show header</value></data>
+  <data name="Frontend.126" xml:space="preserve"><value>显示边框||Show border</value></data>
+  <data name="Frontend.127" xml:space="preserve"><value>普通列||Standard column</value></data>
+  <data name="Frontend.128" xml:space="preserve"><value>最大长度||Maximum length</value></data>
+  <data name="Frontend.129" xml:space="preserve"><value>最大页码按钮数||Maximum page buttons</value></data>
+  <data name="Frontend.130" xml:space="preserve"><value>最小长度||Minimum length</value></data>
+  <data name="Frontend.131" xml:space="preserve"><value>查看布局||View layout</value></data>
+  <data name="Frontend.132" xml:space="preserve"><value>标识id||Identifier ID</value></data>
+  <data name="Frontend.133" xml:space="preserve"><value>标题内容||Title content</value></data>
+  <data name="Frontend.134" xml:space="preserve"><value>标题文字||Title text</value></data>
+  <data name="Frontend.135" xml:space="preserve"><value>样式||Style</value></data>
+  <data name="Frontend.136" xml:space="preserve"><value>样式设置||Style settings</value></data>
+  <data name="Frontend.137" xml:space="preserve"><value>格式||Format</value></data>
+  <data name="Frontend.138" xml:space="preserve"><value>格式文本||Format text</value></data>
+  <data name="Frontend.139" xml:space="preserve"><value>格式文本2||Format text 2</value></data>
+  <data name="Frontend.140" xml:space="preserve"><value>每页显示个数||Items per page</value></data>
+  <data name="Frontend.141" xml:space="preserve"><value>添加||Add</value></data>
+  <data name="Frontend.142" xml:space="preserve"><value>添加列||Add column</value></data>
+  <data name="Frontend.143" xml:space="preserve"><value>添加按钮||Add button</value></data>
+  <data name="Frontend.144" xml:space="preserve"><value>添加排序规则||Add sort rule</value></data>
+  <data name="Frontend.145" xml:space="preserve"><value>添加筛选条件||Add filter condition</value></data>
+  <data name="Frontend.146" xml:space="preserve"><value>添加选项||Add option</value></data>
+  <data name="Frontend.147" xml:space="preserve"><value>渲染布局页面||Render layout page</value></data>
+  <data name="Frontend.148" xml:space="preserve"><value>点击||Click</value></data>
+  <data name="Frontend.149" xml:space="preserve"><value>点击右侧添加属性||Click the right side to add properties</value></data>
+  <data name="Frontend.150" xml:space="preserve"><value>点击右侧添加组件||Click the right side to add a component</value></data>
+  <data name="Frontend.151" xml:space="preserve"><value>界面设置||Interface settings</value></data>
+  <data name="Frontend.152" xml:space="preserve"><value>确定||OK</value></data>
+  <data name="Frontend.153" xml:space="preserve"><value>确认||Confirm</value></data>
+  <data name="Frontend.154" xml:space="preserve"><value>确认按钮文字||Confirm button text</value></data>
+  <data name="Frontend.155" xml:space="preserve"><value>确认操作设置||Confirm action settings</value></data>
+  <data name="Frontend.156" xml:space="preserve"><value>禁用||Disabled</value></data>
+  <data name="Frontend.157" xml:space="preserve"><value>等于||Equals</value></data>
+  <data name="Frontend.158" xml:space="preserve"><value>筛选器||Filter</value></data>
+  <data name="Frontend.159" xml:space="preserve"><value>筛选器设置||Filter settings</value></data>
+  <data name="Frontend.160" xml:space="preserve"><value>筛选条件设置||Filter condition settings</value></data>
+  <data name="Frontend.161" xml:space="preserve"><value>类型文本||Type text</value></data>
+  <data name="Frontend.162" xml:space="preserve"><value>类型文本1||Type text 1</value></data>
+  <data name="Frontend.163" xml:space="preserve"><value>组件||Component</value></data>
+  <data name="Frontend.164" xml:space="preserve"><value>组件名称||Component name</value></data>
+  <data name="Frontend.165" xml:space="preserve"><value>组件类型||Component type</value></data>
+  <data name="Frontend.166" xml:space="preserve"><value>绑定字段||Bound field</value></data>
+  <data name="Frontend.167" xml:space="preserve"><value>绑定字段文本||Bound field text</value></data>
+  <data name="Frontend.168" xml:space="preserve"><value>绑定字段文本1||Bound field text 1</value></data>
+  <data name="Frontend.169" xml:space="preserve"><value>编辑||Edit</value></data>
+  <data name="Frontend.170" xml:space="preserve"><value>编辑页面||Edit page</value></data>
+  <data name="Frontend.171" xml:space="preserve"><value>自动生成||Generated automatically</value></data>
+  <data name="Frontend.172" xml:space="preserve"><value>自定义||Custom</value></data>
+  <data name="Frontend.173" xml:space="preserve"><value>自定义ID名称||Custom ID name</value></data>
+  <data name="Frontend.174" xml:space="preserve"><value>自定义列设置||Custom column settings</value></data>
+  <data name="Frontend.175" xml:space="preserve"><value>自定义按钮||Custom button</value></data>
+  <data name="Frontend.176" xml:space="preserve"><value>表单||Form</value></data>
+  <data name="Frontend.177" xml:space="preserve"><value>表单属性设置||Form property settings</value></data>
+  <data name="Frontend.178" xml:space="preserve"><value>表单执行方法||Form execution method</value></data>
+  <data name="Frontend.179" xml:space="preserve"><value>表格||Table</value></data>
+  <data name="Frontend.180" xml:space="preserve"><value>表格列字段||Table columns</value></data>
+  <data name="Frontend.181" xml:space="preserve"><value>表格尺寸||Table size</value></data>
+  <data name="Frontend.182" xml:space="preserve"><value>表格样式设置||Table style settings</value></data>
+  <data name="Frontend.183" xml:space="preserve"><value>设置||Settings</value></data>
+  <data name="Frontend.184" xml:space="preserve"><value>访客编辑页面||Visitor edit page</value></data>
+  <data name="Frontend.185" xml:space="preserve"><value>详情||Details</value></data>
+  <data name="Frontend.186" xml:space="preserve"><value>请先选择数据表才能对表字段进行设置||Select a data table before configuring its fields</value></data>
+  <data name="Frontend.187" xml:space="preserve"><value>请填写名称||Enter a name</value></data>
+  <data name="Frontend.188" xml:space="preserve"><value>请填写标识id||Enter an identifier ID</value></data>
+  <data name="Frontend.189" xml:space="preserve"><value>请输入||Enter a value</value></data>
+  <data name="Frontend.190" xml:space="preserve"><value>请输入关闭页面||Enter the page to close</value></data>
+  <data name="Frontend.191" xml:space="preserve"><value>请输入内容||Enter content</value></data>
+  <data name="Frontend.192" xml:space="preserve"><value>请输入列宽||Enter column width</value></data>
+  <data name="Frontend.193" xml:space="preserve"><value>请输入列标题||Enter a column title</value></data>
+  <data name="Frontend.194" xml:space="preserve"><value>请输入取消按钮文字||Enter cancel button text</value></data>
+  <data name="Frontend.195" xml:space="preserve"><value>请输入名称||Enter a name</value></data>
+  <data name="Frontend.196" xml:space="preserve"><value>请输入字段名称||Enter a field name</value></data>
+  <data name="Frontend.197" xml:space="preserve"><value>请输入布局名称||Enter a layout name</value></data>
+  <data name="Frontend.198" xml:space="preserve"><value>请输入按钮名称||Enter a button name</value></data>
+  <data name="Frontend.199" xml:space="preserve"><value>请输入描述||Enter a description</value></data>
+  <data name="Frontend.200" xml:space="preserve"><value>请输入提示内容||Enter message content</value></data>
+  <data name="Frontend.201" xml:space="preserve"><value>请输入提示文字||Enter hint text</value></data>
+  <data name="Frontend.202" xml:space="preserve"><value>请输入提示时常||Enter message duration</value></data>
+  <data name="Frontend.203" xml:space="preserve"><value>请输入标题文字||Enter title text</value></data>
+  <data name="Frontend.204" xml:space="preserve"><value>请输入确认按钮文字||Enter confirm button text</value></data>
+  <data name="Frontend.205" xml:space="preserve"><value>请输入菜单名称||Enter a menu name</value></data>
+  <data name="Frontend.206" xml:space="preserve"><value>请选择||Select</value></data>
+  <data name="Frontend.207" xml:space="preserve"><value>请选择事件||Select an event</value></data>
+  <data name="Frontend.208" xml:space="preserve"><value>请选择交互||Select an interaction</value></data>
+  <data name="Frontend.209" xml:space="preserve"><value>请选择位置||Select a position</value></data>
+  <data name="Frontend.210" xml:space="preserve"><value>请选择对齐方式||Select alignment</value></data>
+  <data name="Frontend.211" xml:space="preserve"><value>请选择展示内容||Select display content</value></data>
+  <data name="Frontend.212" xml:space="preserve"><value>请选择按钮事件||Select a button event</value></data>
+  <data name="Frontend.213" xml:space="preserve"><value>请选择按钮属性||Select button properties</value></data>
+  <data name="Frontend.214" xml:space="preserve"><value>请选择按钮类型||Select a button type</value></data>
+  <data name="Frontend.215" xml:space="preserve"><value>请选择数据格式||Select a data format</value></data>
+  <data name="Frontend.216" xml:space="preserve"><value>请选择数据类型||Select a data type</value></data>
+  <data name="Frontend.217" xml:space="preserve"><value>请选择数据表||Select a data table</value></data>
+  <data name="Frontend.218" xml:space="preserve"><value>请选择格式||Select a format</value></data>
+  <data name="Frontend.219" xml:space="preserve"><value>请选择每页显示个数||Select items per page</value></data>
+  <data name="Frontend.220" xml:space="preserve"><value>请选择组件||Select a component</value></data>
+  <data name="Frontend.221" xml:space="preserve"><value>请选择组件名称||Select a component name</value></data>
+  <data name="Frontend.222" xml:space="preserve"><value>请选择组件类型||Select a component type</value></data>
+  <data name="Frontend.223" xml:space="preserve"><value>请选择绑定字段||Select a bound field</value></data>
+  <data name="Frontend.224" xml:space="preserve"><value>请选择页面||Select a page</value></data>
+  <data name="Frontend.225" xml:space="preserve"><value>调用数据源方法||Call data-source method</value></data>
+  <data name="Frontend.226" xml:space="preserve"><value>跳转链接||Open link</value></data>
+  <data name="Frontend.227" xml:space="preserve"><value>选择交互||Select interaction</value></data>
+  <data name="Frontend.228" xml:space="preserve"><value>选择组件||Select component</value></data>
+  <data name="Frontend.229" xml:space="preserve"><value>选择页面||Select page</value></data>
+  <data name="Frontend.230" xml:space="preserve"><value>选项||Options</value></data>
+  <data name="Frontend.231" xml:space="preserve"><value>选项 label||Option label</value></data>
+  <data name="Frontend.232" xml:space="preserve"><value>选项 value||Option value</value></data>
+  <data name="Frontend.233" xml:space="preserve"><value>选项设置||Option settings</value></data>
+  <data name="Frontend.234" xml:space="preserve"><value>链接||Link</value></data>
+  <data name="Frontend.235" xml:space="preserve"><value>长度||Length</value></data>
+  <data name="Frontend.236" xml:space="preserve"><value>降序||Descending</value></data>
+  <data name="Frontend.237" xml:space="preserve"><value>顶部对齐||Align top</value></data>
+  <data name="Frontend.238" xml:space="preserve"><value>颜色||Color</value></data>
+  <data name="Frontend.239" xml:space="preserve"><value>首页||Home</value></data>
+  <data name="Frontend.240" xml:space="preserve"><value>lable字体颜色||Label font color</value></data>
+  <data name="Frontend.241" xml:space="preserve"><value>最小长度: 最大长度:||Minimum length / Maximum length</value></data>
+  <data name="Frontend.242" xml:space="preserve"><value>右侧添加||Add on the right</value></data>
+  <data name="Frontend.243" xml:space="preserve">
+    <value>DynamicData 数据表设置||DynamicData Table Settings</value>
+  </data>
+  <data name="Frontend.244" xml:space="preserve">
+    <value>名称||Name</value>
+  </data>
+  <data name="Frontend.245" xml:space="preserve">
+    <value>是||Yes</value>
+  </data>
+  <data name="Frontend.246" xml:space="preserve">
+    <value>否||No</value>
+  </data>
+  <data name="Frontend.247" xml:space="preserve">
+    <value>事件文本||Event Text</value>
+  </data>
+  <data name="Frontend.248" xml:space="preserve">
+    <value>事件文本2||Event Text 2</value>
+  </data>
+  <data name="Frontend.249" xml:space="preserve">
+    <value>DynamicData 布局创建||DynamicData Layout Builder</value>
+  </data>
+  <data name="Frontend.250" xml:space="preserve">
+    <value>请添加选项||Add an option</value>
+  </data>
+  <data name="Frontend.251" xml:space="preserve">
+    <value>请选择排序字段||Select a sort field</value>
+  </data>
+  <data name="Frontend.252" xml:space="preserve">
+    <value>请命名||Enter a name</value>
+  </data>
+  <data name="Frontend.253" xml:space="preserve">
+    <value>入参||Input Parameters</value>
+  </data>
+  <data name="Frontend.254" xml:space="preserve">
+    <value>出参||Output Parameters</value>
+  </data>
+  <data name="Frontend.255" xml:space="preserve">
+    <value>取消按钮文字||Cancel Button Text</value>
+  </data>
+  <data name="Frontend.256" xml:space="preserve">
+    <value>确认按钮文字||Confirm Button Text</value>
+  </data>
+  <data name="Frontend.257" xml:space="preserve">
+    <value>提示时长||Message Duration</value>
+  </data>
+  <data name="Frontend.258" xml:space="preserve">
+    <value>表单执行方法||Form Handler</value>
+  </data>
+  <data name="Frontend.259" xml:space="preserve">
+    <value>DynamicData 首页||DynamicData Home</value>
+  </data>
+  <data name="Frontend.260" xml:space="preserve">
+    <value>DynamicData 界面设置||DynamicData Page Settings</value>
+  </data>
+  <data name="Frontend.261" xml:space="preserve">
+    <value>缩略图||Thumbnail</value>
+  </data>
+  <data name="Frontend.262" xml:space="preserve">
+    <value>DynamicData 渲染布局页面||DynamicData Layout Rendering</value>
+  </data>
+  <data name="Frontend.263" xml:space="preserve">
+    <value>请填写标识Id||Enter the identifier ID</value>
+  </data>
+  <data name="Frontend.264" xml:space="preserve">
+    <value>请选择是否必填||Specify whether this field is required</value>
+  </data>
+  <data name="Frontend.265" xml:space="preserve">
+    <value>请选择是否唯一||Specify whether this field is unique</value>
+  </data>
+  <data name="Frontend.266" xml:space="preserve">
+    <value>设备管理证书（spot_checkasd）||Device Management Certificate (spot_checkasd)</value>
+  </data>
+  <data name="Frontend.267" xml:space="preserve">
+    <value>绑定数据表1，绑定数据表2，绑定数据表3绑定数据表1，绑定数据表2，绑定数据表3绑定数据表1，绑定数据表2，绑定数据表3||Bind Table 1, Bind Table 2, Bind Table 3; Bind Table 1, Bind Table 2, Bind Table 3; Bind Table 1, Bind Table 2, Bind Table 3</value>
+  </data>
+  <data name="Frontend.268" xml:space="preserve">
+    <value>测试名称1||Test Name 1</value>
+  </data>
+  <data name="Frontend.269" xml:space="preserve">
+    <value>描述文本||Description Text</value>
+  </data>
+  <data name="Frontend.270" xml:space="preserve">
+    <value>请输入名称和描述||Enter a name and description</value>
+  </data>
+  <data name="Frontend.271" xml:space="preserve">
+    <value>确认关闭？||Close now?</value>
+  </data>
+  <data name="Frontend.272" xml:space="preserve">
+    <value>此操作将永久删除该文件, 是否继续?||This will permanently delete the file. Continue?</value>
+  </data>
+  <data name="Frontend.273" xml:space="preserve">
+    <value>提示||Confirmation</value>
+  </data>
+  <data name="Frontend.274" xml:space="preserve">
+    <value>删除成功!||Deleted successfully!</value>
+  </data>
+  <data name="Frontend.275" xml:space="preserve">
+    <value>已取消删除||Deletion canceled</value>
+  </data>
+  <data name="Frontend.276" xml:space="preserve">
+    <value>菜单1||Menu 1</value>
+  </data>
+  <data name="Frontend.277" xml:space="preserve">
+    <value>菜单{0}||Menu {0}</value>
+  </data>
+  <data name="Frontend.278" xml:space="preserve">
+    <value>是否确认删除此条数据||Delete this record?</value>
+  </data>
+  <data name="Frontend.279" xml:space="preserve">
+    <value>删除成功||Deleted successfully</value>
+  </data>
+  <data name="Frontend.280" xml:space="preserve">
+    <value>关闭当前页面||Close Current Page</value>
+  </data>
+  <data name="Frontend.281" xml:space="preserve">
+    <value>输入框||Input</value>
+  </data>
+  <data name="Frontend.282" xml:space="preserve">
+    <value>文本输入框||Text Input</value>
+  </data>
+  <data name="Frontend.283" xml:space="preserve">
+    <value>文本域输入框||Text Area</value>
+  </data>
+  <data name="Frontend.284" xml:space="preserve">
+    <value>数字输入框||Number Input</value>
+  </data>
+  <data name="Frontend.285" xml:space="preserve">
+    <value>开关||Switch</value>
+  </data>
+  <data name="Frontend.286" xml:space="preserve">
+    <value>选择器||Selector</value>
+  </data>
+  <data name="Frontend.287" xml:space="preserve">
+    <value>任意时间点选择器||Time Picker</value>
+  </data>
+  <data name="Frontend.288" xml:space="preserve">
+    <value>日期选择器||Date Picker</value>
+  </data>
+  <data name="Frontend.289" xml:space="preserve">
+    <value>年份选择器||Year Picker</value>
+  </data>
+  <data name="Frontend.290" xml:space="preserve">
+    <value>年份选择器-多选||Year Picker - Multiple</value>
+  </data>
+  <data name="Frontend.291" xml:space="preserve">
+    <value>月份选择器||Month Picker</value>
+  </data>
+  <data name="Frontend.292" xml:space="preserve">
+    <value>月份选择器-多选||Month Picker - Multiple</value>
+  </data>
+  <data name="Frontend.293" xml:space="preserve">
+    <value>日期选择器-多选||Date Picker - Multiple</value>
+  </data>
+  <data name="Frontend.294" xml:space="preserve">
+    <value>周选择器||Week Picker</value>
+  </data>
+  <data name="Frontend.295" xml:space="preserve">
+    <value>yyyy 第 WW 周||yyyy Week WW</value>
+  </data>
+  <data name="Frontend.296" xml:space="preserve">
+    <value>日期时间选择器||Date/Time Picker</value>
+  </data>
+  <data name="Frontend.297" xml:space="preserve">
+    <value>复选框||Checkbox</value>
+  </data>
+  <data name="Frontend.298" xml:space="preserve">
+    <value>单选框||Radio Button</value>
+  </data>
+  <data name="Frontend.299" xml:space="preserve">
+    <value>模拟数据||Mock Data</value>
+  </data>
+  <data name="Frontend.300" xml:space="preserve">
+    <value>这是布局名称||This is the layout name</value>
+  </data>
+  <data name="Frontend.301" xml:space="preserve">
+    <value>已启用||Enabled</value>
+  </data>
+  <data name="Frontend.302" xml:space="preserve">
+    <value>未启用||Disabled</value>
+  </data>
+  <data name="Frontend.303" xml:space="preserve">
+    <value>布局名称||Layout Name</value>
+  </data>
+  <data name="Frontend.304" xml:space="preserve">
+    <value>布局名称不正确||The layout name is invalid</value>
+  </data>
+  <data name="Frontend.305" xml:space="preserve">
+    <value>你的布局名称是:||Your layout name is:</value>
+  </data>
+  <data name="Frontend.306" xml:space="preserve">
+    <value>抛出异常测试，传输参数：{0} {1}||Exception test. Parameters: {0} {1}</value>
+  </data>
+  <data name="Frontend.307" xml:space="preserve">
+    <value>被除数不能为0！||The divisor cannot be 0.</value>
+  </data>
+  <data name="Frontend.308" xml:space="preserve">
+    <value>未知的运算符：{0}||Unknown operator: {0}</value>
+  </data>
 </root>

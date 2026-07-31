@@ -557,8 +557,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
 </div>
 
 @section scripts{
+    @await Html.PartialAsync(""_LocalizationScripts"")
     <script src=""~/js/Admin/Template_XncfName/databaseSampleIndex.js""></script>
-} ";
+}
+";
 
         /// <summary>
         /// 数据库示例索引页面代码后置模板

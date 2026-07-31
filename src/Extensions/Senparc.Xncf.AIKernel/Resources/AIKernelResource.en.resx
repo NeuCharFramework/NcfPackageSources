@@ -90,4 +90,78 @@
   <data name="Parameter.AI.Source" xml:space="preserve">
     <value>Source: {0}</value>
   </data>
+  <data name="Area.ExtensionModules" xml:space="preserve"><value>Extension Modules</value></data>
+  <data name="Area.AIKernel" xml:space="preserve"><value>AI Core Module</value></data>
+  <data name="Title.Vector" xml:space="preserve"><value>AIVector Home</value></data>
+  <data name="Vector.Add" xml:space="preserve"><value>Add</value></data>
+  <data name="Vector.Alias" xml:space="preserve"><value>Alias</value></data>
+  <data name="Vector.DeploymentName" xml:space="preserve"><value>Deployment name</value></data>
+  <data name="Vector.Endpoint" xml:space="preserve"><value>Endpoint</value></data>
+  <data name="Vector.DatabaseType" xml:space="preserve"><value>Vector database type</value></data>
+  <data name="Vector.Note" xml:space="preserve"><value>Notes</value></data>
+  <data name="Vector.AddTime" xml:space="preserve"><value>Added time</value></data>
+  <data name="Vector.Actions" xml:space="preserve"><value>Actions</value></data>
+  <data name="Vector.Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="Vector.Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Vector.AddTitle" xml:space="preserve"><value>Add vector database</value></data>
+  <data name="Vector.EditTitle" xml:space="preserve"><value>Edit vector database</value></data>
+  <data name="Vector.Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Vector.ConnectionString" xml:space="preserve"><value>Connection string</value></data>
+  <data name="Vector.Display" xml:space="preserve"><value>Visible</value></data>
+  <data name="Vector.SelectPlaceholder" xml:space="preserve"><value>Select</value></data>
+  <data name="Vector.MemoryLeaveEmpty" xml:space="preserve"><value>Memory type may be empty</value></data>
+  <data name="Vector.ConnectionPlaceholder" xml:space="preserve"><value>Enter connection string</value></data>
+  <data name="Vector.Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Vector.Confirm" xml:space="preserve"><value>Confirm</value></data>
+  <data name="Vector.AliasRequired" xml:space="preserve"><value>Enter an alias</value></data>
+  <data name="Vector.TypeRequired" xml:space="preserve"><value>Select a vector database type</value></data>
+  <data name="Vector.ModelNameRequired" xml:space="preserve"><value>Enter model name</value></data>
+  <data name="Vector.NameRequired" xml:space="preserve"><value>Enter vector database name</value></data>
+  <data name="Vector.ConnectionRequired" xml:space="preserve"><value>This vector database type requires a connection string</value></data>
+  <data name="Vector.CopySuccess" xml:space="preserve"><value>Copied [******{0}]!</value></data>
+  <data name="Vector.CopyFailed" xml:space="preserve"><value>Copy failed. Please copy manually.</value></data>
+  <data name="Vector.AddSuccess" xml:space="preserve"><value>Added successfully!</value></data>
+  <data name="Vector.AddFailed" xml:space="preserve"><value>Add failed</value></data>
+  <data name="Vector.EditSuccess" xml:space="preserve"><value>Updated successfully!</value></data>
+  <data name="Vector.EditFailed" xml:space="preserve"><value>Update failed</value></data>
+  <data name="Vector.DeleteConfirm" xml:space="preserve"><value>This will permanently delete model [{0}]. Continue?</value></data>
+  <data name="Vector.DeleteConfirmTitle" xml:space="preserve"><value>Notice</value></data>
+  <data name="Vector.DeleteSuccess" xml:space="preserve"><value>Deleted successfully!</value></data>
+  <data name="Vector.DeleteFailed" xml:space="preserve"><value>Delete failed</value></data>
+  <data name="Vector.CancelDelete" xml:space="preserve"><value>Deletion cancelled</value></data>
+  <data name="Area.DatabaseSample" xml:space="preserve"><value>Database sample</value></data>
+  <data name="Title.Home" xml:space="preserve"><value>AIKernel Home</value></data>
+  <data name="Model.AddTitle" xml:space="preserve"><value>Add model</value></data>
+  <data name="Model.EditTitle" xml:space="preserve"><value>Edit model</value></data>
+  <data name="Model.ImportNeuChar" xml:space="preserve"><value>Import NeuCharAI cloud model capacity</value></data>
+  <data name="Model.Name" xml:space="preserve"><value>Model name</value></data>
+  <data name="Model.Platform" xml:space="preserve"><value>Platform</value></data>
+  <data name="Model.Type" xml:space="preserve"><value>Model type</value></data>
+  <data name="Model.Unknown" xml:space="preserve"><value>Unknown</value></data>
+  <data name="Model.OrganizationId" xml:space="preserve"><value>Organization ID</value></data>
+  <data name="Model.NeuCharImportHelp" xml:space="preserve"><value>Open the page below and click “Show ApiKey” to view the DeveloperId and ApiKey. Import multiple entries in batches:</value></data>
+  <data name="Model.PlatformRequired" xml:space="preserve"><value>Select a platform type</value></data>
+  <data name="Model.TypeRequired" xml:space="preserve"><value>Select a model type</value></data>
+  <data name="Model.DeploymentRequired" xml:space="preserve"><value>Enter the model deployment name</value></data>
+  <data name="Model.ApiVersionRequired" xml:space="preserve"><value>Enter the API version</value></data>
+  <data name="Model.ApiKeyRequired" xml:space="preserve"><value>Enter the API key</value></data>
+  <data name="Model.EndpointRequired" xml:space="preserve"><value>Enter the endpoint</value></data>
+  <data name="Model.OrganizationRequired" xml:space="preserve"><value>Enter the organization ID</value></data>
+  <data name="Model.DeveloperIdRequired" xml:space="preserve"><value>Enter the DeveloperId</value></data>
+  <data name="Dashboard.Name" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="Dashboard.Title" xml:space="preserve"><value>AIKernel Dashboard</value></data>
+  <data name="Dashboard.AvailableModels" xml:space="preserve"><value>Available models</value></data>
+  <data name="Dashboard.VectorDatabases" xml:space="preserve"><value>Vector databases</value></data>
+  <data name="Dashboard.Agents" xml:space="preserve"><value>Agents</value></data>
+  <data name="Dashboard.UserFeedback" xml:space="preserve"><value>User feedback</value></data>
+  <data name="Dashboard.TotalSessions" xml:space="preserve"><value>Total sessions</value></data>
+  <data name="Dashboard.LastSevenDays" xml:space="preserve"><value>Last 7 days</value></data>
+  <data name="Dashboard.TimesUnit" xml:space="preserve"><value>times</value></data>
+  <data name="Dashboard.ActiveUsers" xml:space="preserve"><value>Active users</value></data>
+  <data name="Dashboard.PeopleUnit" xml:space="preserve"><value>users</value></data>
+  <data name="Dashboard.AverageInteractions" xml:space="preserve"><value>Average session interactions</value></data>
+  <data name="Dashboard.TokenSpeedWithUnit" xml:space="preserve"><value>Token output speed (tokens/sec)</value></data>
+  <data name="Dashboard.TokenSpeed" xml:space="preserve"><value>Token output speed</value></data>
+  <data name="Dashboard.UserSatisfaction" xml:space="preserve"><value>User satisfaction</value></data>
+  <data name="Dashboard.TotalMessages" xml:space="preserve"><value>Total messages</value></data>
 </root>

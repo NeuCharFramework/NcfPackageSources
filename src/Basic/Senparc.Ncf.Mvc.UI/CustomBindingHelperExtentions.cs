@@ -15,6 +15,7 @@
 using System.Text;
 using System.Collections.Specialized;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Senparc.Ncf.Core;
 
 namespace System.Web.Mvc
 {
@@ -76,7 +77,7 @@ namespace System.Web.Mvc
                 result.AppendFormat("{0}\" onclick=\"{1}\" >", upClassEnable, upFunction);
                 result.AppendFormat("<img src=\"/Images/up_en.gif\" />");
             }
-            result.Append("上移</span>");
+            result.Append(NcfCoreResource.Get("Pager.MoveUp", "上移")).Append("</span>");
 
             result.Append(" <span class=\"");
             if (currentIndex >= listCount)
@@ -90,7 +91,7 @@ namespace System.Web.Mvc
                 result.AppendFormat("{0}\" onclick=\"{1}\" >", downClassEnable, downFunction);
                 result.AppendFormat("<img src=\"/Images/down_en.gif\" />");
             }
-            result.Append("下移</span>");
+            result.Append(NcfCoreResource.Get("Pager.MoveDown", "下移")).Append("</span>");
 
             return result.ToString();
         }

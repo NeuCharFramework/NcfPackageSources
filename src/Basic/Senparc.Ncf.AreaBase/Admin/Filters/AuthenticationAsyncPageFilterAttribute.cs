@@ -75,7 +75,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
                     {
                         if (strings.Contains("XMLHttpRequest"))
                         {
-                            actionResult = new JsonResult(new AjaxReturnModel() { Success = false, Msg = "您没有权限访问" }) { StatusCode = 401 };
+                            actionResult = new JsonResult(new AjaxReturnModel() { Success = false, Msg = NcfCoreResource.Get("Auth.Forbidden", "您没有权限访问") }) { StatusCode = 401 };
                         }
                     }
                     context.Result = actionResult;

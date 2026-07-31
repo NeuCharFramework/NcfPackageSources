@@ -151,6 +151,7 @@
 </div>
 
 @section scripts{
+    @await Html.PartialAsync("_LocalizationScripts")
     <script src="~/lib/Chart.js/dist/Chart.min.js"></script>
     <script src="~/lib/echarts/dist/echarts.min.js"></script>
     <script src="~/lib/echarts/map/js/world.js"></script>

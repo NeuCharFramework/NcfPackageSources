@@ -84,4 +84,10 @@
   <data name="Parameter.Power.Cube.Help" xml:space="preserve">
     <value>Возвести результат выше в куб</value>
   </data>
+  <data name="Page.EditKnowledgeBase" xml:space="preserve">
+    <value>Изменить базу знаний</value>
+  </data>
+  <data name="Page.CreateKnowledgeBase" xml:space="preserve">
+    <value>Создать базу знаний</value>
+  </data>
 </root>
