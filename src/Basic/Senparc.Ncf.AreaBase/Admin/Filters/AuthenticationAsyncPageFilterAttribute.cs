@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260731
+    修改描述：v0.23.0-preview4 将 Ajax 无权限提示接入核心多语言资源
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authentication;
@@ -75,7 +78,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
                     {
                         if (strings.Contains("XMLHttpRequest"))
                         {
-                            actionResult = new JsonResult(new AjaxReturnModel() { Success = false, Msg = "您没有权限访问" }) { StatusCode = 401 };
+                            actionResult = new JsonResult(new AjaxReturnModel() { Success = false, Msg = NcfCoreResource.Get("Auth.Forbidden", "您没有权限访问") }) { StatusCode = 401 };
                         }
                     }
                     context.Result = actionResult;

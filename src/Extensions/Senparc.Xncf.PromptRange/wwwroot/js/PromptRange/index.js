@@ -32,39 +32,39 @@ var app = new Vue({
             return [
                 {
                     key: "rangeTotal",
-                    label: "靶场总数",
+                    label: ncfT("PromptRange.Dashboard.RangeTotal"),
                     value: this.formatInteger(overview.totalRanges || 0),
-                    hint: "近7天活跃靶场 " + this.formatInteger(overview.activeRangesLast7Days || 0)
+                    hint: ncfT("PromptRange.Dashboard.ActiveRange", this.formatInteger(overview.activeRangesLast7Days || 0))
                 },
                 {
                     key: "promptTotal",
-                    label: "靶道总数",
+                    label: ncfT("PromptRange.Dashboard.PromptTotal"),
                     value: this.formatInteger(totalPrompts),
-                    hint: "草稿 " + this.formatInteger(draftPrompts) + "（" + draftRate + "%）"
+                    hint: ncfT("PromptRange.Dashboard.DraftCount", this.formatInteger(draftPrompts), draftRate)
                 },
                 {
                     key: "resultTotal",
-                    label: "累计打靶次数",
+                    label: ncfT("PromptRange.Dashboard.ResultTotal"),
                     value: this.formatInteger(overview.totalResults || 0),
-                    hint: "今日 " + this.formatInteger(overview.resultsToday || 0) + " / 近7天 " + this.formatInteger(overview.resultsLast7Days || 0)
+                    hint: ncfT("PromptRange.Dashboard.TodayLast7", this.formatInteger(overview.resultsToday || 0), this.formatInteger(overview.resultsLast7Days || 0))
                 },
                 {
                     key: "score",
-                    label: "平均最终得分",
+                    label: ncfT("PromptRange.Dashboard.AverageFinalScore"),
                     value: this.formatScore(overview.avgFinalScore),
-                    hint: "评分覆盖率 " + this.formatPercent(overview.scoreCoverageRate || 0)
+                    hint: ncfT("PromptRange.Dashboard.Coverage", this.formatPercent(overview.scoreCoverageRate || 0))
                 },
                 {
                     key: "token",
-                    label: "累计 Token 消耗",
+                    label: ncfT("PromptRange.Dashboard.TokenCost"),
                     value: this.formatInteger(overview.totalTokens || 0),
-                    hint: "近7天活跃靶道 " + this.formatInteger(overview.activePromptsLast7Days || 0)
+                    hint: ncfT("PromptRange.Dashboard.ActivePrompt", this.formatInteger(overview.activePromptsLast7Days || 0))
                 },
                 {
                     key: "latency",
-                    label: "平均响应耗时",
+                    label: ncfT("PromptRange.Dashboard.AverageLatency"),
                     value: this.formatMs(overview.avgLatencyMs || 0),
-                    hint: "全量打靶结果统计"
+                    hint: ncfT("PromptRange.Dashboard.AllResults")
                 }
             ];
         }
@@ -146,7 +146,7 @@ var app = new Vue({
         },
         formatModelName: function (model) {
             if (!model) {
-                return "Unknown";
+                return ncfT("PromptRange.Dashboard.UnknownModel");
             }
             if (model.alias) {
                 return model.alias;
@@ -154,7 +154,7 @@ var app = new Vue({
             if (model.deploymentName) {
                 return model.deploymentName;
             }
-            return "Model#" + model.modelId;
+            return ncfT("PromptRange.Dashboard.ModelPrefix", model.modelId);
         },
         clampPercent: function (value) {
             var num = Number(value);
@@ -221,7 +221,7 @@ var app = new Vue({
                     });
                     if (showMessage) {
                         this.$message({
-                            message: "看板已刷新",
+                            message: ncfT("PromptRange.Dashboard.Refreshed"),
                             type: "success"
                         });
                     }
@@ -264,7 +264,7 @@ var app = new Vue({
                     trigger: "axis"
                 },
                 legend: {
-                    data: ["调用次数", "平均分"]
+                    data: [ncfT("PromptRange.Dashboard.Calls"), ncfT("PromptRange.Dashboard.AverageScore")]
                 },
                 grid: {
                     left: 50,
@@ -280,25 +280,25 @@ var app = new Vue({
                 yAxis: [
                     {
                         type: "value",
-                        name: "调用次数",
+                        name: ncfT("PromptRange.Dashboard.Calls"),
                         minInterval: 1
                     },
                     {
                         type: "value",
-                        name: "平均分",
+                        name: ncfT("PromptRange.Dashboard.AverageScore"),
                         min: 0,
                         max: 10
                     }
                 ],
                 series: [
                     {
-                        name: "调用次数",
+                        name: ncfT("PromptRange.Dashboard.Calls"),
                         type: "bar",
                         barMaxWidth: 24,
                         data: usageCount
                     },
                     {
-                        name: "平均分",
+                        name: ncfT("PromptRange.Dashboard.AverageScore"),
                         type: "line",
                         yAxisIndex: 1,
                         smooth: true,
@@ -336,7 +336,7 @@ var app = new Vue({
                     }
                 },
                 legend: {
-                    data: ["调用次数", "Token 消耗"]
+                    data: [ncfT("PromptRange.Dashboard.Calls"), ncfT("PromptRange.Dashboard.TokenCost")]
                 },
                 grid: {
                     left: 110,
@@ -347,7 +347,7 @@ var app = new Vue({
                 xAxis: [
                     {
                         type: "value",
-                        name: "调用次数"
+                        name: ncfT("PromptRange.Dashboard.Calls")
                     },
                     {
                         type: "value",
@@ -364,13 +364,13 @@ var app = new Vue({
                 },
                 series: [
                     {
-                        name: "调用次数",
+                        name: ncfT("PromptRange.Dashboard.Calls"),
                         type: "bar",
                         data: usageSeries,
                         barMaxWidth: 18
                     },
                     {
-                        name: "Token 消耗",
+                        name: ncfT("PromptRange.Dashboard.TokenCost"),
                         type: "bar",
                         xAxisIndex: 1,
                         data: tokenSeries,

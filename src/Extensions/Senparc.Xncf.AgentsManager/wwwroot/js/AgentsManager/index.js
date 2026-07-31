@@ -2070,7 +2070,7 @@ var app = new Vue({
     async handleTaskArchiveToggle(item) {
       if (!item || !item.id) return
       const nextArchived = !item.isArchived
-      const actionText = nextArchived ? '归档' : '取消归档'
+      const actionText = nextArchived ? ncfST('归档') : ncfST('取消归档')
       this.taskArchiveSavingId = item.id
       try {
         const response = await serviceAM.post(
@@ -2078,11 +2078,11 @@ var app = new Vue({
         )
         const data = response?.data ?? {}
         if (!data.success) {
-          this.$message.error(data.errorMessage || data.data || `${actionText}失败`)
+          this.$message.error(data.errorMessage || data.data || ncfST('{0}失败', actionText))
           return
         }
 
-        this.$message.success(`${actionText}成功`)
+        this.$message.success(ncfST('{0}成功', actionText))
         const currentTaskId = Number(this.taskDetails?.id || 0)
         if (currentTaskId === Number(item.id) && this.taskArchiveScope !== 'all' && this.taskArchiveScope !== (nextArchived ? 'archived' : 'active')) {
           this.scrollbarTaskIndex = ''
@@ -2094,7 +2094,7 @@ var app = new Vue({
         }
         this.gettaskListData('task')
       } catch (error) {
-        this.$message.error(`${actionText}失败：${error?.message || '未知错误'}`)
+        this.$message.error(ncfST('{0}失败：{1}', actionText, error?.message || ncfST('未知错误')))
       } finally {
         this.taskArchiveSavingId = 0
       }
@@ -4863,11 +4863,11 @@ function calculateDuration(startTime, endTime) {
 
   // 动态构建输出字符串
   let durationParts = [];
-  if (years > 0) durationParts.push(`${years} 年`);
-  if (days > 0) durationParts.push(`${days} 天`);
-  if (hours > 0) durationParts.push(`${hours} 小时`);
-  if (minutes > 0) durationParts.push(`${minutes} 分钟`);
-  if (seconds > 0 || durationParts.length === 0) durationParts.push(`${seconds} 秒`);
+  if (years > 0) durationParts.push(ncfST('{0} 年', years));
+  if (days > 0) durationParts.push(ncfST('{0} 天', days));
+  if (hours > 0) durationParts.push(ncfST('{0} 小时', hours));
+  if (minutes > 0) durationParts.push(ncfST('{0} 分钟', minutes));
+  if (seconds > 0 || durationParts.length === 0) durationParts.push(ncfST('{0} 秒', seconds));
 
   return durationParts.join(' ');
 }

@@ -1234,7 +1234,7 @@ var app = new Vue({
                     const safeImageUrl = this.safeHttpUrl(resultItem.textToImage.imageUrl)
                     const previewHtml = safeImageUrl
                         ? `<p><img src="${this.escapeHtml(safeImageUrl)}" alt="generated image" /></p>`
-                        : '<p>图片已生成，但未获得可访问地址。</p>'
+                        : '<p>' + ncfST('图片已生成，但未获得可访问地址。') + '</p>'
                     const promptHtml = resultItem.textToImage.revisedPrompt
                         ? `<p>${this.escapeHtml(resultItem.textToImage.revisedPrompt)}</p>`
                         : ''
@@ -2230,7 +2230,7 @@ var app = new Vue({
                             // 追加到现有的 ResultString（格式化为对话形式）
                             const currentResult = resultItem.resultString || ''
                             const separator = currentResult ? '\n\n---\n\n' : ''
-                            const newContent = `**用户**: ${normalizedUserMessage}\n\n**助手**: ${latestAssistantMessage.content}`
+                            const newContent = `**${ncfST('用户')}**: ${normalizedUserMessage}\n\n**${ncfST('助手')}**: ${latestAssistantMessage.content}`
                             resultItem.resultString = currentResult + separator + newContent
                             resultItem.resultStringHtml = this.renderSafeMarkdown(resultItem.resultString)
                             resultItem.promptCostToken = this.continueChatUsageSummary.promptCostToken || resultItem.promptCostToken || 0
@@ -5358,7 +5358,7 @@ var app = new Vue({
                         context.font = `bold ${hasCurrent ? 110 : 96}px Arial`  // 从 55/48 加大到 110/96
                         context.fillStyle = 'rgba(255, 255, 255, 0.85)'
                         context.shadowBlur = 12
-                        const promptText = `${node.prompts.length} 个结果`
+                        const promptText = ncfST('{0} 个结果', node.prompts.length)
                         context.fillText(promptText, canvas.width / 2, mainTextY + 120)  // 从 +70 改为 +120
                     }
                     
@@ -6340,7 +6340,7 @@ var app = new Vue({
                                                 fullPromptData.evalAvgScore !== null && 
                                                 fullPromptData.evalAvgScore !== -1 && 
                                                 fullPromptData.evalAvgScore !== '-1') {
-                                                tooltipContent += `<div style="font-size: 12px; color: #ccc; margin-top: 4px;">📊 平均分: <span style="color: #95e1d3;">${fullPromptData.evalAvgScore.toFixed(1)}</span></div>`
+                                                tooltipContent += `<div style="font-size: 12px; color: #ccc; margin-top: 4px;">${ncfST('📊 平均分:')} <span style="color: #95e1d3;">${fullPromptData.evalAvgScore.toFixed(1)}</span></div>`
                                             }
                                             
                                             // 显示最高分（如果不是用作主评分）
@@ -6349,7 +6349,7 @@ var app = new Vue({
                                                 fullPromptData.evalMaxScore !== -1 && 
                                                 fullPromptData.evalMaxScore !== '-1' &&
                                                 finalScore !== fullPromptData.evalMaxScore) {
-                                                tooltipContent += `<div style="font-size: 12px; color: #ccc; margin-top: 4px;">⭐ 最高分: <span style="color: #ffd93d;">${fullPromptData.evalMaxScore.toFixed(1)}</span></div>`
+                                                tooltipContent += `<div style="font-size: 12px; color: #ccc; margin-top: 4px;">${ncfST('⭐ 最高分:')} <span style="color: #ffd93d;">${fullPromptData.evalMaxScore.toFixed(1)}</span></div>`
                                             }
                                             
                                             tooltipContent += `</div>`
@@ -8133,7 +8133,7 @@ var app = new Vue({
                 this.sttForm.audioLocalRelativePath = ''
                 this.sttForm.fileSize = Number(file.size || 0)
                 if (!this.content || !this.content.trim()) {
-                    this.content = `请识别音频内容：${file.name || 'audio'}`
+                    this.content = ncfST('请识别音频内容：{0}', file.name || 'audio')
                 }
                 this.promptChangeHandel(file.name || 'audio', 'content')
             } catch (e) {
@@ -8177,7 +8177,7 @@ var app = new Vue({
             }
             if (!this.content || !this.content.trim()) {
                 const fallbackName = this.sttForm.audioFileName || 'audio'
-                this.content = `请识别音频内容：${fallbackName}`
+                this.content = ncfST('请识别音频内容：{0}', fallbackName)
             }
             return true
         },
@@ -8383,7 +8383,7 @@ var app = new Vue({
                     //_promptIdList.push(item.id)
                     return {
                         ...item,
-                        label: `名称：${item.nickName || '未设置'} | 版本号：${item.fullVersion} | 平均分：${avg} | 最高分：${max} ${item.isDraft ? '(草稿)' : ''}`,
+                        label: ncfST('名称：{0} | 版本号：{1} | 平均分：{2} | 最高分：{3} {4}', item.nickName || ncfST('未设置'), item.fullVersion, avg, max, item.isDraft ? ncfST('(草稿)') : ''),
                         value: item.id,
                         disabled: false,
                     }
@@ -8977,13 +8977,13 @@ var app = new Vue({
                 // 判断finalScore等于哪个评分，那个就是最终评分类型
                 let scoreType = '';
                 if (item.finalScore === item.humanScore) {
-                    scoreType = '手动评分';
+                    scoreType = ncfST('手动评分');
                 } else if (item.finalScore === item.robotScore) {
-                    scoreType = 'AI评分';
+                    scoreType = ncfST('AI评分');
                 } else {
-                    scoreType = '最终评分';
+                    scoreType = ncfST('最终评分');
                 }
-                tooltip += `\n${scoreType}: ${score.toFixed(1)}分`;
+                tooltip += `\n${ncfST('{0}: {1}分', scoreType, score.toFixed(1))}`;
             }
             
             return tooltip;

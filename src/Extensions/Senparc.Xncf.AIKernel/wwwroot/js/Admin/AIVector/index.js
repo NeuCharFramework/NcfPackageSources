@@ -30,31 +30,31 @@ var app = new Vue({
       total: 0,
       addRules: {
         alias: [
-          { required: true, message: '请输入别名', trigger: 'change' }
+          { required: true, message: ncfT('AIKernel.Vector.AliasRequired'), trigger: 'change' }
         ],
         vectorDBType: [
-          { required: true, message: '请选择向量数据库的类型', trigger: 'change' }
+          { required: true, message: ncfT('AIKernel.Vector.TypeRequired'), trigger: 'change' }
         ],
         vectorId: [
-          { required: true, message: '请输入模型名称', trigger: 'blur' }
+          { required: true, message: ncfT('AIKernel.Vector.ModelNameRequired'), trigger: 'blur' }
         ],
         name: [
-          { required: true, message: '请输入向量数据库名称', trigger: 'blur' }
+          { required: true, message: ncfT('AIKernel.Vector.NameRequired'), trigger: 'blur' }
         ],
         connectionString: []
       },
       editRules: {
         alias: [
-          { required: true, message: '请输入别名', trigger: 'change' }
+          { required: true, message: ncfT('AIKernel.Vector.AliasRequired'), trigger: 'change' }
         ],
         vectorDBType: [
-          { required: true, message: '请选择向量数据库的类型', trigger: 'change' }
+          { required: true, message: ncfT('AIKernel.Vector.TypeRequired'), trigger: 'change' }
         ],
         vectorId: [
-          { required: true, message: '请输入模型名称', trigger: 'blur' }
+          { required: true, message: ncfT('AIKernel.Vector.ModelNameRequired'), trigger: 'blur' }
         ],
         name: [
-          { required: true, message: '请输入向量数据库名称', trigger: 'blur' }
+          { required: true, message: ncfT('AIKernel.Vector.NameRequired'), trigger: 'blur' }
         ],
         connectionString: []
       }
@@ -84,7 +84,7 @@ var app = new Vue({
       }
 
       if (!connectionString) {
-        this.$message.warning('当前向量数据库类型需要连接字符串');
+        this.$message.warning(ncfT('AIKernel.Vector.ConnectionRequired'));
         return false;
       }
       return true;
@@ -147,9 +147,9 @@ var app = new Vue({
       }
 
       if (copied) {
-        this.$message.success(`已复制【******${key.slice(-4)}】！`)
+        this.$message.success(ncfT('AIKernel.Vector.CopySuccess', key.slice(-4)))
       } else {
-        this.$message.error('复制失败，请手动复制。')
+        this.$message.error(ncfT('AIKernel.Vector.CopyFailed'))
       }
     },
     async addModelSubmit() {
@@ -165,7 +165,7 @@ var app = new Vue({
           ).then(res => {
             this.$message({
               type: res.data.success ? 'success' : 'error',
-              message: res.data.success ? '添加成功!' : '添加失败'
+              message: res.data.success ? ncfT('AIKernel.Vector.AddSuccess') : ncfT('AIKernel.Vector.AddFailed')
             });
             if (res.data.success) {
               this.getDataList()
@@ -221,7 +221,7 @@ var app = new Vue({
           }).then(res => {
             this.$message({
               type: res.data.success ? 'success' : 'error',
-              message: res.data.success ? '编辑成功!' : '编辑失败'
+              message: res.data.success ? ncfT('AIKernel.Vector.EditSuccess') : ncfT('AIKernel.Vector.EditFailed')
             });
             if (res.data.success) {
               this.clearEditForm()
@@ -245,9 +245,9 @@ var app = new Vue({
       };
     },
     deleteModel(row) {
-      this.$confirm(`此操作将永久删除【${row.alias}】模型, 是否继续?`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(ncfT('AIKernel.Vector.DeleteConfirm', row.alias), ncfT('AIKernel.Vector.DeleteConfirmTitle'), {
+        confirmButtonText: ncfT('AIKernel.Vector.Confirm'),
+        cancelButtonText: ncfT('AIKernel.Vector.Cancel'),
         type: 'warning'
       }).then(async () => {
         await service.delete('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.DeleteAsync', {
@@ -257,7 +257,7 @@ var app = new Vue({
         }).then(async res => {
           this.$message({
             type: res.data.success ? 'success' : 'error',
-            message: res.data.success ? '删除成功!' : '删除失败'
+            message: res.data.success ? ncfT('AIKernel.Vector.DeleteSuccess') : ncfT('AIKernel.Vector.DeleteFailed')
           });
           await this.getDataList().then(() => {
             if (this.tableData.length === 0 && this.page.page > 1) {
@@ -269,7 +269,7 @@ var app = new Vue({
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消删除'
+          message: ncfT('AIKernel.Vector.CancelDelete')
         });
       });
     },

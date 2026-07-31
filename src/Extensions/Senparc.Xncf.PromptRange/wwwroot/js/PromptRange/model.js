@@ -13,7 +13,7 @@ var app = new Vue({
             tableData: [], // 模型列表
             multipleSelection: {}, // 选中的模型
             dialogFormVisible: false,
-            dialogFormTitle: '新增模型',
+            dialogFormTitle: ncfT('PromptRange.Model.NewTitle'),
             formLabelWidth: '',
             editModelName: true,
             modifyId: "",
@@ -40,16 +40,16 @@ var app = new Vue({
             }],
             rules: {
                 modelType: [
-                    { required: true, message: 'Please select a model type', trigger: 'change' }
+                    { required: true, message: ncfT('PromptRange.Model.SelectType'), trigger: 'change' }
                 ],
                 modelName: [
-                    { required: true, message: 'Please enter a model name', trigger: 'blur' }
+                    { required: true, message: ncfT('PromptRange.Model.EnterName'), trigger: 'blur' }
                 ],
                 modelAPI: [
-                    { required: true, message: 'Please enter a model API', trigger: 'blur' }
+                    { required: true, message: ncfT('PromptRange.Model.EnterApi'), trigger: 'blur' }
                 ],
                 modelAPIkey: [
-                    { required: true, message: 'Please enter a model API key', trigger: 'blur' }
+                    { required: true, message: ncfT('PromptRange.Model.EnterApiKey'), trigger: 'blur' }
                 ]
             }
         };
@@ -88,7 +88,7 @@ var app = new Vue({
         },
         // 新增模型 btn
         async createBtnFrom() {
-            this.dialogFormTitle = '新增模型'
+            this.dialogFormTitle = ncfT('PromptRange.Model.NewTitle')
             this.editModelName = true
             this.dialogFormVisible = true
         },
@@ -101,14 +101,14 @@ var app = new Vue({
             const res = await service.post('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.Add', request)
             if (res.data.success) {
                 this.getList()
-                this.$message.success('添加成功！');
+                this.$message.success(ncfT('PromptRange.Model.AddSuccess'));
             } else {
-                this.$message.error(res.data.errorMessage || res.data.message || '添加失败');
+                this.$message.error(res.data.errorMessage || res.data.message || ncfT('PromptRange.Model.AddFailed'));
             }
         },
         // 编辑模型 btn
         editBtnFrom(row) {
-            this.dialogFormTitle = '编辑模型'
+            this.dialogFormTitle = ncfT('PromptRange.Model.EditTitle')
             this.newModelForm = {
                 ...row
             }
@@ -129,7 +129,7 @@ var app = new Vue({
             if (res.data.success) {
                 this.getList()
             } else {
-                this.$message.error(res.data.errorMessage || res.data.message || '修改失败')
+                this.$message.error(res.data.errorMessage || res.data.message || ncfT('PromptRange.Model.ModifyFailed'))
             }
         },
         // 删除模型 
@@ -150,7 +150,7 @@ var app = new Vue({
             if (res.data.success) {
                 this.getList()
             } else {
-                this.$message.error(res.data.errorMessage || res.data.message || '删除失败')
+                this.$message.error(res.data.errorMessage || res.data.message || ncfT('PromptRange.Model.DeleteFailed'))
             }
         },
         // btn 批量删除

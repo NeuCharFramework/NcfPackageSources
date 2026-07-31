@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.14.1-preview6</Version>
+    <Version>0.15.0-preview7</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -77,6 +77,10 @@
 		5、同步 NeuChar 模型的 ApiVersion 到本地模型配置，避免模型 API 版本硬编码
 		6、优化管理页模型信息复制交互，提升剪贴板操作兼容性
 		[2026-07-29] v0.14.1-preview6 Dependency update from Senparc.Ncf.AreaBase to 0.22.0-preview3
+		[2026-07-31] v0.15.0-preview7 完善 AIKernel 管理页面多语言并升级 AI 基础依赖
+		1、补齐 AIKernel、AIVector 与 Dashboard 页面和脚本的多语言资源
+		2、升级 Senparc.AI 0.27.4、Kernel 0.29.1、Agents 0.7.3 与 AgentKernel 0.1.11
+		3、升级 Senparc.CO2NET.WebApi 2.1.9-preview 以适配 CO2NET 4.2.0
 </PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
@@ -88,7 +92,7 @@
   <Import Project="$(MSBuildThisFileDirectory)..\..\Senparc.AI.AgentKernel.props" />
   <ItemGroup>
     <PackageReference Include="Senparc.AI.Kernel" Version="$(SenparcAiKernelVersion)" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.8-preview.3" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup>

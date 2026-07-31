@@ -25,7 +25,7 @@
         copyToClipboard: function(text, successMessage, errorMessage, showMessage) {
             if (!text) {
                 if (showMessage !== false) {
-                    this._showMessage('没有可复制的内容', 'warning');
+                    this._showMessage(ncfST('没有可复制的内容'), 'warning');
                 }
                 return false;
             }
@@ -39,13 +39,13 @@
          * @returns {Promise<boolean>} 是否复制成功
          */
         copyToClipboardAsync: async function(text, successMessage, errorMessage, showMessage) {
-            successMessage = successMessage || '复制成功';
-            errorMessage = errorMessage || '复制失败';
+            successMessage = successMessage || ncfST('复制成功');
+            errorMessage = errorMessage || ncfST('复制失败');
             showMessage = showMessage !== false;
 
             if (!text) {
                 if (showMessage) {
-                    this._showMessage('没有可复制的内容', 'warning');
+                    this._showMessage(ncfST('没有可复制的内容'), 'warning');
                 }
                 return Promise.resolve(false);
             }
@@ -118,17 +118,17 @@
          */
         copyPromptResult: function(item, rawResult) {
             if (!item) {
-                this._showMessage('没有可复制的结果', 'warning');
+                this._showMessage(ncfST('没有可复制的结果'), 'warning');
                 return false;
             }
 
             var text = rawResult ? item.rawResult : item.result;
             if (!text) {
-                this._showMessage('结果为空', 'warning');
+                this._showMessage(ncfST('结果为空'), 'warning');
                 return false;
             }
 
-            return this.copyToClipboard(text, '复制成功');
+            return this.copyToClipboard(text, ncfST('复制成功'));
         },
 
         /**
@@ -142,16 +142,16 @@
             indent = indent !== undefined ? indent : 2;
             
             if (obj === null || obj === undefined) {
-                this._showMessage('没有可复制的对象', 'warning');
+                this._showMessage(ncfST('没有可复制的对象'), 'warning');
                 return false;
             }
 
             try {
                 var text = JSON.stringify(obj, null, indent);
-                return this.copyToClipboard(text, 'JSON 复制成功');
+                return this.copyToClipboard(text, ncfST('JSON 复制成功'));
             } catch (error) {
                 console.error('JSON stringify failed:', error);
-                this._showMessage('对象序列化失败', 'error');
+                this._showMessage(ncfST('对象序列化失败'), 'error');
                 return false;
             }
         },
@@ -167,17 +167,17 @@
             separator = separator || '\n';
             
             if (!Array.isArray(arr)) {
-                this._showMessage('不是有效的数组', 'warning');
+                this._showMessage(ncfST('不是有效的数组'), 'warning');
                 return false;
             }
 
             if (arr.length === 0) {
-                this._showMessage('数组为空', 'warning');
+                this._showMessage(ncfST('数组为空'), 'warning');
                 return false;
             }
 
             var text = arr.join(separator);
-            return this.copyToClipboard(text, '数组内容复制成功');
+            return this.copyToClipboard(text, ncfST('数组内容复制成功'));
         },
 
         /**
@@ -187,7 +187,7 @@
          */
         copyHtml: function(html) {
             if (!html) {
-                this._showMessage('没有可复制的 HTML 内容', 'warning');
+                this._showMessage(ncfST('没有可复制的 HTML 内容'), 'warning');
                 return false;
             }
 
@@ -216,9 +216,9 @@
             document.body.removeChild(container);
 
             if (success) {
-                this._showMessage('HTML 内容复制成功', 'success');
+                this._showMessage(ncfST('HTML 内容复制成功'), 'success');
             } else {
-                this._showMessage('HTML 内容复制失败', 'error');
+                this._showMessage(ncfST('HTML 内容复制失败'), 'error');
             }
 
             return success;
@@ -257,4 +257,3 @@
     window.PromptRangeUtils.CopyHelper = CopyHelper;
 
 })(window);
-

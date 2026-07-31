@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260731
+    修改描述：v0.24.0-preview5 将公众号配置不存在提示接入模块多语言资源
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -95,7 +98,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
                     var mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == mpId);
                     if (mpAccount == null)
                     {
-                        return RenderError("公众号配置不存在：" + mpId);
+                        return RenderError(WeixinManagerResource.Format("Account.ConfigurationNotFound", "Official account configuration was not found: {0}", mpId));
                     }
                     mpAccountDto = _mpAccountService.Mapper.Map<MpAccountDto>(mpAccount);
                 }
@@ -168,7 +171,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager
             var mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == mpId);
             if (mpAccount == null)
             {
-                return RenderError("公众号配置不存在：" + mpId);
+                return RenderError(WeixinManagerResource.Format("Account.ConfigurationNotFound", "Official account configuration was not found: {0}", mpId));
             }
 
             SenparcTrace.SendCustomLog("开始公众号用户同步", mpAccount.Name);

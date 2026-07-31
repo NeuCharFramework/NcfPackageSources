@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.1.1</Version>
+    <Version>0.1.2</Version>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -13,6 +13,7 @@
       3、验证授权同步只向对应管理员目标发布
       4、验证授权同步不会发布到通用活动流
       [2026-07-29] v0.1.1 Dependency update from Senparc.Xncf.DesktopBridge to 0.1.1-preview3
+      [2026-07-31] v0.1.2 Dependency update from Senparc.Xncf.DesktopBridge to 0.1.2-preview4
     </PackageReleaseNotes>
   </PropertyGroup>
 

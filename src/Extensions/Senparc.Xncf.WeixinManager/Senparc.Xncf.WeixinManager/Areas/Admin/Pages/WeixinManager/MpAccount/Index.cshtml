@@ -167,6 +167,7 @@
     </el-dialog>
 </div>
 @section scripts {
+    @await Html.PartialAsync("_LocalizationScripts")
     <script>
         var app = new Vue({
             el: '#app',

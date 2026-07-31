@@ -90,4 +90,78 @@
   <data name="Parameter.AI.Source" xml:space="preserve">
     <value>Источник: {0}</value>
   </data>
+  <data name="Area.ExtensionModules" xml:space="preserve"><value>Модули расширения</value></data>
+  <data name="Area.AIKernel" xml:space="preserve"><value>Ядро AI</value></data>
+  <data name="Title.Vector" xml:space="preserve"><value>Главная AIVector</value></data>
+  <data name="Vector.Add" xml:space="preserve"><value>Добавить</value></data>
+  <data name="Vector.Alias" xml:space="preserve"><value>Псевдоним</value></data>
+  <data name="Vector.DeploymentName" xml:space="preserve"><value>Имя развертывания</value></data>
+  <data name="Vector.Endpoint" xml:space="preserve"><value>Endpoint</value></data>
+  <data name="Vector.DatabaseType" xml:space="preserve"><value>Тип векторной базы данных</value></data>
+  <data name="Vector.Note" xml:space="preserve"><value>Примечания</value></data>
+  <data name="Vector.AddTime" xml:space="preserve"><value>Время добавления</value></data>
+  <data name="Vector.Actions" xml:space="preserve"><value>Действия</value></data>
+  <data name="Vector.Edit" xml:space="preserve"><value>Изменить</value></data>
+  <data name="Vector.Delete" xml:space="preserve"><value>Удалить</value></data>
+  <data name="Vector.AddTitle" xml:space="preserve"><value>Добавить векторную базу данных</value></data>
+  <data name="Vector.EditTitle" xml:space="preserve"><value>Изменить векторную базу данных</value></data>
+  <data name="Vector.Name" xml:space="preserve"><value>Имя</value></data>
+  <data name="Vector.ConnectionString" xml:space="preserve"><value>Строка подключения</value></data>
+  <data name="Vector.Display" xml:space="preserve"><value>Видимый</value></data>
+  <data name="Vector.SelectPlaceholder" xml:space="preserve"><value>Выберите</value></data>
+  <data name="Vector.MemoryLeaveEmpty" xml:space="preserve"><value>Для типа Memory можно оставить пустым</value></data>
+  <data name="Vector.ConnectionPlaceholder" xml:space="preserve"><value>Введите строку подключения</value></data>
+  <data name="Vector.Cancel" xml:space="preserve"><value>Отмена</value></data>
+  <data name="Vector.Confirm" xml:space="preserve"><value>Подтвердить</value></data>
+  <data name="Vector.AliasRequired" xml:space="preserve"><value>Введите псевдоним</value></data>
+  <data name="Vector.TypeRequired" xml:space="preserve"><value>Выберите тип векторной базы данных</value></data>
+  <data name="Vector.ModelNameRequired" xml:space="preserve"><value>Введите имя модели</value></data>
+  <data name="Vector.NameRequired" xml:space="preserve"><value>Введите имя векторной базы данных</value></data>
+  <data name="Vector.ConnectionRequired" xml:space="preserve"><value>Для этого типа векторной базы требуется строка подключения</value></data>
+  <data name="Vector.CopySuccess" xml:space="preserve"><value>Скопировано [******{0}]!</value></data>
+  <data name="Vector.CopyFailed" xml:space="preserve"><value>Не удалось скопировать. Скопируйте вручную.</value></data>
+  <data name="Vector.AddSuccess" xml:space="preserve"><value>Успешно добавлено!</value></data>
+  <data name="Vector.AddFailed" xml:space="preserve"><value>Ошибка добавления</value></data>
+  <data name="Vector.EditSuccess" xml:space="preserve"><value>Успешно изменено!</value></data>
+  <data name="Vector.EditFailed" xml:space="preserve"><value>Ошибка изменения</value></data>
+  <data name="Vector.DeleteConfirm" xml:space="preserve"><value>Модель [{0}] будет удалена навсегда. Продолжить?</value></data>
+  <data name="Vector.DeleteConfirmTitle" xml:space="preserve"><value>Уведомление</value></data>
+  <data name="Vector.DeleteSuccess" xml:space="preserve"><value>Успешно удалено!</value></data>
+  <data name="Vector.DeleteFailed" xml:space="preserve"><value>Ошибка удаления</value></data>
+  <data name="Vector.CancelDelete" xml:space="preserve"><value>Удаление отменено</value></data>
+  <data name="Area.DatabaseSample" xml:space="preserve"><value>Пример работы с базой данных</value></data>
+  <data name="Title.Home" xml:space="preserve"><value>Главная AIKernel</value></data>
+  <data name="Model.AddTitle" xml:space="preserve"><value>Добавить модель</value></data>
+  <data name="Model.EditTitle" xml:space="preserve"><value>Изменить модель</value></data>
+  <data name="Model.ImportNeuChar" xml:space="preserve"><value>Импорт облачных моделей NeuCharAI</value></data>
+  <data name="Model.Name" xml:space="preserve"><value>Название модели</value></data>
+  <data name="Model.Platform" xml:space="preserve"><value>Платформа</value></data>
+  <data name="Model.Type" xml:space="preserve"><value>Тип модели</value></data>
+  <data name="Model.Unknown" xml:space="preserve"><value>Неизвестно</value></data>
+  <data name="Model.OrganizationId" xml:space="preserve"><value>ID организации</value></data>
+  <data name="Model.NeuCharImportHelp" xml:space="preserve"><value>На следующей странице нажмите «Показать ApiKey», чтобы увидеть DeveloperId и ApiKey. Несколько записей можно импортировать пакетами:</value></data>
+  <data name="Model.PlatformRequired" xml:space="preserve"><value>Выберите тип платформы</value></data>
+  <data name="Model.TypeRequired" xml:space="preserve"><value>Выберите тип модели</value></data>
+  <data name="Model.DeploymentRequired" xml:space="preserve"><value>Введите имя развёртывания модели</value></data>
+  <data name="Model.ApiVersionRequired" xml:space="preserve"><value>Введите версию API</value></data>
+  <data name="Model.ApiKeyRequired" xml:space="preserve"><value>Введите ключ API</value></data>
+  <data name="Model.EndpointRequired" xml:space="preserve"><value>Введите конечную точку</value></data>
+  <data name="Model.OrganizationRequired" xml:space="preserve"><value>Введите ID организации</value></data>
+  <data name="Model.DeveloperIdRequired" xml:space="preserve"><value>Введите DeveloperId</value></data>
+  <data name="Dashboard.Name" xml:space="preserve"><value>Панель</value></data>
+  <data name="Dashboard.Title" xml:space="preserve"><value>Панель AIKernel</value></data>
+  <data name="Dashboard.AvailableModels" xml:space="preserve"><value>Доступные модели</value></data>
+  <data name="Dashboard.VectorDatabases" xml:space="preserve"><value>Векторные базы данных</value></data>
+  <data name="Dashboard.Agents" xml:space="preserve"><value>Агенты</value></data>
+  <data name="Dashboard.UserFeedback" xml:space="preserve"><value>Отзывы пользователей</value></data>
+  <data name="Dashboard.TotalSessions" xml:space="preserve"><value>Всего сеансов</value></data>
+  <data name="Dashboard.LastSevenDays" xml:space="preserve"><value>Последние 7 дней</value></data>
+  <data name="Dashboard.TimesUnit" xml:space="preserve"><value>раз</value></data>
+  <data name="Dashboard.ActiveUsers" xml:space="preserve"><value>Активные пользователи</value></data>
+  <data name="Dashboard.PeopleUnit" xml:space="preserve"><value>польз.</value></data>
+  <data name="Dashboard.AverageInteractions" xml:space="preserve"><value>Среднее число взаимодействий за сеанс</value></data>
+  <data name="Dashboard.TokenSpeedWithUnit" xml:space="preserve"><value>Скорость вывода токенов (токенов/с)</value></data>
+  <data name="Dashboard.TokenSpeed" xml:space="preserve"><value>Скорость вывода токенов</value></data>
+  <data name="Dashboard.UserSatisfaction" xml:space="preserve"><value>Удовлетворённость пользователей</value></data>
+  <data name="Dashboard.TotalMessages" xml:space="preserve"><value>Всего сообщений</value></data>
 </root>

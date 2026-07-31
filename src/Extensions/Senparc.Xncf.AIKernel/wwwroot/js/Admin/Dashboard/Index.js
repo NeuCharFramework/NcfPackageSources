@@ -41,8 +41,8 @@
       let chart1 = document.getElementById('firstChart');
       let chartOption1 = {
         title: {
-              text: '全部会话数',
-          subtext: '近 7 天'
+              text: ncfT('AIKernel.Dashboard.TotalSessions'),
+          subtext: ncfT('AIKernel.Dashboard.LastSevenDays')
         },
         xAxis: {
           type: 'category',
@@ -51,7 +51,7 @@
         yAxis: {
           type: 'value',
           axisLabel: {
-            formatter: '{value} 次'
+            formatter: '{value} ' + ncfT('AIKernel.Dashboard.TimesUnit')
           }
         },
         tooltip: {
@@ -63,7 +63,7 @@
         
         series: [
           {
-                name: '全部会话数',
+                name: ncfT('AIKernel.Dashboard.TotalSessions'),
             type: 'line',
             stack: '总量',
             areaStyle: { color: '#91c7ae' }, // 添加区域填充颜色  
@@ -82,8 +82,8 @@
           let chart2 = document.getElementById('secondChart');
           let chartOption2 = {
               title: {
-                  text: '活跃用户数',
-                  subtext: '近 7 天'
+                  text: ncfT('AIKernel.Dashboard.ActiveUsers'),
+                  subtext: ncfT('AIKernel.Dashboard.LastSevenDays')
               },
               xAxis: {
                   type: 'category',
@@ -92,7 +92,7 @@
               yAxis: {
                   type: 'value',
                   axisLabel: {
-                      formatter: '{value} 人'
+                      formatter: '{value} ' + ncfT('AIKernel.Dashboard.PeopleUnit')
                   }
               },
               tooltip: {
@@ -104,7 +104,7 @@
 
               series: [
                   {
-                      name: '活跃用户数',
+                      name: ncfT('AIKernel.Dashboard.ActiveUsers'),
                       type: 'line',
                       stack: '总量',
                       areaStyle: { color: '#91c7ae' }, // 添加区域填充颜色  
@@ -123,8 +123,8 @@
         let chart3 = document.getElementById('Chart3');
         let chartOption3 = {
             title: {
-                text: '平均会话互动数',
-                subtext: '近 7 天'
+                text: ncfT('AIKernel.Dashboard.AverageInteractions'),
+                subtext: ncfT('AIKernel.Dashboard.LastSevenDays')
             },
             xAxis: {
                 type: 'category',
@@ -133,7 +133,7 @@
             yAxis: {
                 type: 'value',
                 axisLabel: {
-                    formatter: '{value} 次'
+                    formatter: '{value} ' + ncfT('AIKernel.Dashboard.TimesUnit')
                 }
             },
             tooltip: {
@@ -145,7 +145,7 @@
 
             series: [
                 {
-                    name: '平均会话互动数',
+                    name: ncfT('AIKernel.Dashboard.AverageInteractions'),
                     type: 'line',
                     stack: '总量',
                     areaStyle: { color: '#91c7ae' }, // 添加区域填充颜色  
@@ -163,8 +163,8 @@
           let chart4 = document.getElementById('Chart4');
           let chartOption4 = {
               title: {
-                  text: 'Token 输出速度（Token/秒）',
-                  subtext: '近 7 天'
+                  text: ncfT('AIKernel.Dashboard.TokenSpeedWithUnit'),
+                  subtext: ncfT('AIKernel.Dashboard.LastSevenDays')
               },
               xAxis: {
                   type: 'category',
@@ -185,7 +185,7 @@
 
               series: [
                   {
-                      name: 'Token 输出速度',
+                      name: ncfT('AIKernel.Dashboard.TokenSpeed'),
                       type: 'line',
                       stack: '总量',
                       areaStyle: { color: '#91c7ae' }, // 添加区域填充颜色  
@@ -202,8 +202,8 @@
           let chart5 = document.getElementById('Chart5');
           let chartOption5 = {
               title: {
-                  text: '用户满意度',
-                  subtext: '近 7 天'
+                  text: ncfT('AIKernel.Dashboard.UserSatisfaction'),
+                  subtext: ncfT('AIKernel.Dashboard.LastSevenDays')
               },
               xAxis: {
                   type: 'category',
@@ -212,7 +212,7 @@
               yAxis: {
                   type: 'value',
                   axisLabel: {
-                      formatter: '{value} 次'
+                      formatter: '{value} ' + ncfT('AIKernel.Dashboard.TimesUnit')
                   }
               },
               tooltip: {
@@ -224,7 +224,7 @@
 
               series: [
                   {
-                      name: '用户满意度',
+                      name: ncfT('AIKernel.Dashboard.UserSatisfaction'),
                       type: 'line',
                       stack: '总量',
                       areaStyle: { color: '#91c7ae' }, // 添加区域填充颜色  
@@ -242,8 +242,8 @@
           let chart6 = document.getElementById('Chart6');
           let chartOption6 = {
               title: {
-                  text: '全部消息数',
-                  subtext: '近 7 天'
+                  text: ncfT('AIKernel.Dashboard.TotalMessages'),
+                  subtext: ncfT('AIKernel.Dashboard.LastSevenDays')
               },
               xAxis: {
                   type: 'category',
@@ -252,7 +252,7 @@
               yAxis: {
                   type: 'value',
                   axisLabel: {
-                      formatter: '{value} 次'
+                      formatter: '{value} ' + ncfT('AIKernel.Dashboard.TimesUnit')
                   }
               },
               tooltip: {
@@ -264,7 +264,7 @@
 
               series: [
                   {
-                      name: '全部消息数',
+                      name: ncfT('AIKernel.Dashboard.TotalMessages'),
                       type: 'line',
                       stack: '总量',
                       areaStyle: { color: '#91c7ae' }, // 添加区域填充颜色  

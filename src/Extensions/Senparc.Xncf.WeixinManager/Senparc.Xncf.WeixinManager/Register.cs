@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260717
     修改描述：v0.23.0-preview3 为 WeixinManager 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20260731
+    修改描述：v0.24.0-preview5 将不支持的平台类型提示接入模块多语言资源
+
 ----------------------------------------------------------------*/
 
 using AutoMapper;
@@ -251,7 +254,7 @@ namespace Senparc.Xncf.WeixinManager
                 //}
                 else
                 {
-                    throw new NotImplementedException($"未提供的 PlatformType 类型，Title：{title}");
+                    throw new NotImplementedException(WeixinManagerResource.Format("Error.UnsupportedPlatformType", "Unsupported PlatformType. Title: {0}", title));
                 }
 
                 var pathList = swaggerDoc.Paths.Keys.ToList();

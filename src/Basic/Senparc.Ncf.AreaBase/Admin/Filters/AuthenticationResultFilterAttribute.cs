@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260731
+    修改描述：v0.23.0-preview4 将 Handler 缺失与无权限提示接入核心多语言资源
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authentication;
@@ -48,7 +51,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
         {
             if (context.HandlerMethod == null)
             {
-                context.Result = new OkObjectResult(new AjaxReturnModel() { Success = false, Msg = $"404，未找到对应的Handler。请检查请求方法请求地址是否有误！请求方法：{context.HttpContext.Request.Method}" }) { StatusCode = 404 };
+                context.Result = new OkObjectResult(new AjaxReturnModel() { Success = false, Msg = string.Format(NcfCoreResource.Get("Auth.HandlerNotFound", "404，未找到对应的Handler。请检查请求方法请求地址是否有误！请求方法：{0}"), context.HttpContext.Request.Method) }) { StatusCode = 404 };
                 return;
             }
             await ValidatePermissionAsync(_serviceProvider, context, next);
@@ -97,7 +100,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
                     IActionResult actionResult = null;
                     if (isAjax)
                     {
-                        actionResult = new OkObjectResult(new AjaxReturnModel<string>(path) { Msg = "您没有权限访问", Success = false }) { StatusCode = (int)System.Net.HttpStatusCode.Forbidden };
+                        actionResult = new OkObjectResult(new AjaxReturnModel<string>(path) { Msg = NcfCoreResource.Get("Auth.Forbidden", "您没有权限访问"), Success = false }) { StatusCode = (int)System.Net.HttpStatusCode.Forbidden };
                     }
 
                     context.Result = actionResult ?? new RedirectResult("/Admin/Forbidden?url=" + System.Web.HttpUtility.UrlEncode(path));

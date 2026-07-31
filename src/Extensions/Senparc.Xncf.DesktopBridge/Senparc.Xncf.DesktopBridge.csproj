@@ -4,7 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Version>0.1.1-preview3</Version>
+    <Version>0.1.2-preview4</Version>
     <AssemblyName>Senparc.Xncf.DesktopBridge</AssemblyName>
     <RootNamespace>Senparc.Xncf.DesktopBridge</RootNamespace>
     <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
@@ -30,6 +30,9 @@
       3、按管理员账号隔离通知，为桌面 Admin Chat 和后续受权模块提供通用扩展点
       [2026-07-29] v0.1.1-preview3 复用 NCF 标准 AdminOnly 策略名称
       1、桌面桥接控制器改用 Core 统一授权策略常量，避免策略字符串漂移
+      [2026-07-31] v0.1.2-preview4 补充 DesktopBridge 远程部署安全说明
+      1、明确 HTTP/SSE 桥接边界、HTTPS 与网络访问控制要求
+      2、补充独立工作区连接、JWT 与 EventBus 进程边界说明
     </PackageReleaseNotes>
   </PropertyGroup>
 

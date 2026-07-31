@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.14.1-preview3</Version>
+    <Version>0.14.2-preview4</Version>
     <AssemblyName>Senparc.Xncf.SystemCore</AssemblyName>
     <RootNamespace>Senparc.Xncf.SystemCore</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -38,6 +38,8 @@
 				2、统一模块注册信息、菜单名称与功能描述的本地化输出
 				3、补充并统一多语言资源键及资源文件
 				[2026-07-29] v0.14.1-preview3 Dependency update from Senparc.Ncf.AreaBase to 0.22.0-preview3
+				[2026-07-31] v0.14.2-preview4 升级 CO2NET WebApi 兼容依赖
+				1、升级 Senparc.CO2NET.WebApi 至 2.1.9-preview 以适配 CO2NET 4.2.0
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -58,7 +60,7 @@
     <!--<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
     <!--<PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.2.0" />-->
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.8-preview.3" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup>

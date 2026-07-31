@@ -84,4 +84,10 @@
   <data name="Parameter.Power.Cube.Help" xml:space="preserve">
     <value>上の結果を 3 乗します</value>
   </data>
+  <data name="Page.EditKnowledgeBase" xml:space="preserve">
+    <value>ナレッジベースを編集</value>
+  </data>
+  <data name="Page.CreateKnowledgeBase" xml:space="preserve">
+    <value>ナレッジベースを作成</value>
+  </data>
 </root>

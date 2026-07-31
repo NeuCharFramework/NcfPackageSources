@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.2.0</Version>
+		<Version>0.2.1</Version>
 		<PackageReleaseNotes>
     [2026-07-02] v0.0.2 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
     1、支持流式输出并优化交互体验
@@ -27,6 +27,9 @@
     [2026-07-29] v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
     1、完善后台管理员信息、模块管理和聊天流式交互的状态处理
     2、通过 AdminOnly JWT 保护桌面同步接口并限制同步内容
+    [2026-07-31] v0.2.1 适配 AgentKernel 原生聊天接口与 CO2NET 4.2.0
+    1、将后台聊天调用切换到新版 RunChatAsync 接口并保留会话重试行为
+    2、升级 Senparc.AI 组件版本以消除旧 CO2NET 扩展方法签名依赖
 </PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->

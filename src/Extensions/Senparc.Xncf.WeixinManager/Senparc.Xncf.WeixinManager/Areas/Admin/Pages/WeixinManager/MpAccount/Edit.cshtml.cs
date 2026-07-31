@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260731
+    修改描述：v0.24.0-preview5 修复公众号账户提示乱码并接入模块多语言资源
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -47,7 +50,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
                 var mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == id);
                 if (mpAccount == null)
                 {
-                    return RenderError("ںϢڣ");
+                    return RenderError(WeixinManagerResource.Get("Account.NotFound", "Account information was not found."));
                 }
 
                 MpAccountDto = _mpAccountService.Mapper.Map<MpAccountDto>(mpAccount);
@@ -67,7 +70,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
                 var mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == id);
                 if (mpAccount == null)
                 {
-                    return RenderError("ںϢڣ");
+                    return RenderError(WeixinManagerResource.Get("Account.NotFound", "Account information was not found."));
                 }
 
                 mpAccountDto = _mpAccountService.Mapper.Map<MpAccountDto>(mpAccount);
@@ -84,7 +87,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
                 mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == id);
                 if (mpAccount == null)
                 {
-                    return RenderError("ںϢڣ");
+                    return RenderError(WeixinManagerResource.Get("Account.NotFound", "Account information was not found."));
                 }
                 _mpAccountService.Mapper.Map(MpAccountDto, mpAccount);
             }
@@ -104,7 +107,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
             }
             catch (Exception ex)
             {
-                return Ok(new { id = mpAccount.Id, uid = Uid, msg = "˺Ѿӣ AppId  Secret ޷飡" });
+                return Ok(new { id = mpAccount.Id, uid = Uid, msg = WeixinManagerResource.Get("Account.CredentialsUnverified", "Saved, but AppId and AppSecret could not be verified.") });
             }
 
 
@@ -120,7 +123,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
                 mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == mpAccountDto.Id);
                 if (mpAccount == null)
                 {
-                    return RenderError("ںϢڣ");
+                    return RenderError(WeixinManagerResource.Get("Account.NotFound", "Account information was not found."));
                 }
 
                 mpAccountDto.AddTime = mpAccount.AddTime;
@@ -143,7 +146,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
             }
             catch (Exception ex)
             {
-                return Ok(new { id = mpAccount.Id, uid = Uid, msg = "˺Ѿӣ AppId  Secret ޷飡" });
+                return Ok(new { id = mpAccount.Id, uid = Uid, msg = WeixinManagerResource.Get("Account.CredentialsUnverified", "Saved, but AppId and AppSecret could not be verified.") });
             }
 
 

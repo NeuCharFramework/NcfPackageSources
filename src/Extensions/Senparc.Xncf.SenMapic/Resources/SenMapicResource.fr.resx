@@ -120,4 +120,148 @@
   <data name="Page.Random" xml:space="preserve">
     <value>Aléatoire</value>
   </data>
+  <data name="Task.Management" xml:space="preserve">
+    <value>Gestion des tâches d’exploration</value>
+  </data>
+  <data name="Task.Create" xml:space="preserve">
+    <value>Créer une tâche</value>
+  </data>
+  <data name="Task.Name" xml:space="preserve">
+    <value>Nom de la tâche</value>
+  </data>
+  <data name="Task.StartUrl" xml:space="preserve">
+    <value>URL de départ</value>
+  </data>
+  <data name="Task.MaxThreads" xml:space="preserve">
+    <value>Nombre maximal de threads</value>
+  </data>
+  <data name="Task.MaxCrawlMinutes" xml:space="preserve">
+    <value>Durée maximale d’exploration (minutes)</value>
+  </data>
+  <data name="Task.MaxDepth" xml:space="preserve">
+    <value>Profondeur maximale</value>
+  </data>
+  <data name="Task.MaxPages" xml:space="preserve">
+    <value>Nombre maximal de pages</value>
+  </data>
+  <data name="Task.MaxCrawlTime" xml:space="preserve">
+    <value>Durée maximale d’exploration</value>
+  </data>
+  <data name="Task.RunImmediately" xml:space="preserve">
+    <value>Exécuter immédiatement</value>
+  </data>
+  <data name="Task.Detail" xml:space="preserve">
+    <value>Détails de la tâche d’exploration</value>
+  </data>
+  <data name="Task.Information" xml:space="preserve">
+    <value>Informations sur la tâche</value>
+  </data>
+  <data name="Task.StartTime" xml:space="preserve">
+    <value>Heure de début</value>
+  </data>
+  <data name="Task.EndTime" xml:space="preserve">
+    <value>Heure de fin</value>
+  </data>
+  <data name="Task.CrawledPages" xml:space="preserve">
+    <value>Pages explorées</value>
+  </data>
+  <data name="Task.ErrorMessage" xml:space="preserve">
+    <value>Message d’erreur</value>
+  </data>
+  <data name="Task.UrlStatistics" xml:space="preserve">
+    <value>Statistiques des URL</value>
+  </data>
+  <data name="Task.TotalUrls" xml:space="preserve">
+    <value>Nombre total d’URL</value>
+  </data>
+  <data name="Task.SuccessCount" xml:space="preserve">
+    <value>Réussites</value>
+  </data>
+  <data name="Task.FailureCount" xml:space="preserve">
+    <value>Échecs</value>
+  </data>
+  <data name="Task.ParentUrl" xml:space="preserve">
+    <value>URL parente</value>
+  </data>
+  <data name="Task.Depth" xml:space="preserve">
+    <value>Profondeur</value>
+  </data>
+  <data name="Task.CrawlTime" xml:space="preserve">
+    <value>Heure d’exploration</value>
+  </data>
+  <data name="Task.PageSize" xml:space="preserve">
+    <value>Taille de la page</value>
+  </data>
+  <data name="Task.StatusCode" xml:space="preserve">
+    <value>Code d’état</value>
+  </data>
+  <data name="Common.Status" xml:space="preserve">
+    <value>État</value>
+  </data>
+  <data name="Common.Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Common.Start" xml:space="preserve">
+    <value>Démarrer</value>
+  </data>
+  <data name="Common.Delete" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="Common.Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Common.Confirm" xml:space="preserve">
+    <value>Confirmer</value>
+  </data>
+  <data name="Common.Title" xml:space="preserve">
+    <value>Titre</value>
+  </data>
+  <data name="Common.Prompt" xml:space="preserve">
+    <value>Confirmation</value>
+  </data>
+  <data name="Validation.EnterTaskName" xml:space="preserve">
+    <value>Saisissez un nom de tâche</value>
+  </data>
+  <data name="Validation.EnterStartUrl" xml:space="preserve">
+    <value>Saisissez une URL de départ</value>
+  </data>
+  <data name="Status.Error" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="Status.Waiting" xml:space="preserve">
+    <value>En attente de démarrage</value>
+  </data>
+  <data name="Status.Running" xml:space="preserve">
+    <value>En cours</value>
+  </data>
+  <data name="Status.Completed" xml:space="preserve">
+    <value>Terminée</value>
+  </data>
+  <data name="Status.Unknown" xml:space="preserve">
+    <value>Inconnu</value>
+  </data>
+  <data name="Message.LoadTasksFailed" xml:space="preserve">
+    <value>Échec du chargement de la liste des tâches</value>
+  </data>
+  <data name="Message.CreateSucceeded" xml:space="preserve">
+    <value>Création réussie</value>
+  </data>
+  <data name="Message.CreateFailed" xml:space="preserve">
+    <value>Échec de la création</value>
+  </data>
+  <data name="Message.TaskStarted" xml:space="preserve">
+    <value>Tâche démarrée</value>
+  </data>
+  <data name="Message.StartFailed" xml:space="preserve">
+    <value>Échec du démarrage</value>
+  </data>
+  <data name="Message.ConfirmDeleteTask" xml:space="preserve">
+    <value>Supprimer cette tâche ?</value>
+  </data>
+  <data name="Message.DeleteSucceeded" xml:space="preserve">
+    <value>Suppression réussie</value>
+  </data>
+  <data name="Message.DeleteFailed" xml:space="preserve">
+    <value>Échec de la suppression</value>
+  </data>
 </root>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.13.3-preview3</Version>
+    <Version>0.13.4-preview4</Version>
     <Nullable>enable</Nullable>
     <AssemblyName>Senparc.Ncf.Database.PostgreSQL</AssemblyName>
     <RootNamespace>Senparc.Ncf.Database.PostgreSQL</RootNamespace>
@@ -29,6 +29,8 @@
 				2、Dependency update from Senparc.Ncf.Database to 0.21.2-preview2
 				3、Dependency update from Senparc.Ncf.Utility to 0.21.0-preview2
 				[2026-07-29] v0.13.3-preview3 Dependency update from Senparc.Ncf.Core to 0.26.0-preview3
+				[2026-07-31] v0.13.4-preview4 升级 CO2NET 4.2.0 基础依赖
+				1、升级 Senparc.CO2NET 至 4.2.0 并保持现有项目行为兼容
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -37,7 +39,7 @@
     <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.CO2NET" Version="4.1.0" />
+    <PackageReference Include="Senparc.CO2NET" Version="4.2.0" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' OR '$(Configuration)'=='TemplateRelease'">
     <OutputPath>..\..\BuildOutPut</OutputPath>

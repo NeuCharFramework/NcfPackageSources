@@ -120,4 +120,148 @@
   <data name="Page.Random" xml:space="preserve">
     <value>ランダム</value>
   </data>
+  <data name="Task.Management" xml:space="preserve">
+    <value>クローラータスク管理</value>
+  </data>
+  <data name="Task.Create" xml:space="preserve">
+    <value>タスクを作成</value>
+  </data>
+  <data name="Task.Name" xml:space="preserve">
+    <value>タスク名</value>
+  </data>
+  <data name="Task.StartUrl" xml:space="preserve">
+    <value>開始 URL</value>
+  </data>
+  <data name="Task.MaxThreads" xml:space="preserve">
+    <value>最大スレッド数</value>
+  </data>
+  <data name="Task.MaxCrawlMinutes" xml:space="preserve">
+    <value>最大クロール時間（分）</value>
+  </data>
+  <data name="Task.MaxDepth" xml:space="preserve">
+    <value>最大深度</value>
+  </data>
+  <data name="Task.MaxPages" xml:space="preserve">
+    <value>最大ページ数</value>
+  </data>
+  <data name="Task.MaxCrawlTime" xml:space="preserve">
+    <value>最大クロール時間</value>
+  </data>
+  <data name="Task.RunImmediately" xml:space="preserve">
+    <value>すぐに実行</value>
+  </data>
+  <data name="Task.Detail" xml:space="preserve">
+    <value>クローラータスク詳細</value>
+  </data>
+  <data name="Task.Information" xml:space="preserve">
+    <value>タスク情報</value>
+  </data>
+  <data name="Task.StartTime" xml:space="preserve">
+    <value>開始時刻</value>
+  </data>
+  <data name="Task.EndTime" xml:space="preserve">
+    <value>終了時刻</value>
+  </data>
+  <data name="Task.CrawledPages" xml:space="preserve">
+    <value>クロール済みページ数</value>
+  </data>
+  <data name="Task.ErrorMessage" xml:space="preserve">
+    <value>エラーメッセージ</value>
+  </data>
+  <data name="Task.UrlStatistics" xml:space="preserve">
+    <value>URL 統計</value>
+  </data>
+  <data name="Task.TotalUrls" xml:space="preserve">
+    <value>URL 総数</value>
+  </data>
+  <data name="Task.SuccessCount" xml:space="preserve">
+    <value>成功数</value>
+  </data>
+  <data name="Task.FailureCount" xml:space="preserve">
+    <value>失敗数</value>
+  </data>
+  <data name="Task.ParentUrl" xml:space="preserve">
+    <value>親 URL</value>
+  </data>
+  <data name="Task.Depth" xml:space="preserve">
+    <value>深度</value>
+  </data>
+  <data name="Task.CrawlTime" xml:space="preserve">
+    <value>クロール時刻</value>
+  </data>
+  <data name="Task.PageSize" xml:space="preserve">
+    <value>ページサイズ</value>
+  </data>
+  <data name="Task.StatusCode" xml:space="preserve">
+    <value>ステータスコード</value>
+  </data>
+  <data name="Common.Status" xml:space="preserve">
+    <value>ステータス</value>
+  </data>
+  <data name="Common.Actions" xml:space="preserve">
+    <value>操作</value>
+  </data>
+  <data name="Common.Start" xml:space="preserve">
+    <value>開始</value>
+  </data>
+  <data name="Common.Delete" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="Common.Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="Common.Confirm" xml:space="preserve">
+    <value>確認</value>
+  </data>
+  <data name="Common.Title" xml:space="preserve">
+    <value>タイトル</value>
+  </data>
+  <data name="Common.Prompt" xml:space="preserve">
+    <value>確認</value>
+  </data>
+  <data name="Validation.EnterTaskName" xml:space="preserve">
+    <value>タスク名を入力してください</value>
+  </data>
+  <data name="Validation.EnterStartUrl" xml:space="preserve">
+    <value>開始 URL を入力してください</value>
+  </data>
+  <data name="Status.Error" xml:space="preserve">
+    <value>エラー</value>
+  </data>
+  <data name="Status.Waiting" xml:space="preserve">
+    <value>開始待ち</value>
+  </data>
+  <data name="Status.Running" xml:space="preserve">
+    <value>実行中</value>
+  </data>
+  <data name="Status.Completed" xml:space="preserve">
+    <value>完了</value>
+  </data>
+  <data name="Status.Unknown" xml:space="preserve">
+    <value>不明</value>
+  </data>
+  <data name="Message.LoadTasksFailed" xml:space="preserve">
+    <value>タスクリストの取得に失敗しました</value>
+  </data>
+  <data name="Message.CreateSucceeded" xml:space="preserve">
+    <value>作成しました</value>
+  </data>
+  <data name="Message.CreateFailed" xml:space="preserve">
+    <value>作成に失敗しました</value>
+  </data>
+  <data name="Message.TaskStarted" xml:space="preserve">
+    <value>タスクを開始しました</value>
+  </data>
+  <data name="Message.StartFailed" xml:space="preserve">
+    <value>開始に失敗しました</value>
+  </data>
+  <data name="Message.ConfirmDeleteTask" xml:space="preserve">
+    <value>このタスクを削除しますか？</value>
+  </data>
+  <data name="Message.DeleteSucceeded" xml:space="preserve">
+    <value>削除しました</value>
+  </data>
+  <data name="Message.DeleteFailed" xml:space="preserve">
+    <value>削除に失敗しました</value>
+  </data>
 </root>

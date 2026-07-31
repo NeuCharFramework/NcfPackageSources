@@ -1,7 +1,7 @@
 ﻿@page
 @model Senparc.Xncf.AIKernel.Areas.AIKernel.Pages.Index
 @{
-    ViewData["Title"] = "AIKernel 首页";
+    ViewData["Title"] = XR["Title.Home"];
     Layout = "_Layout_Vue";
 }
 
@@ -10,21 +10,21 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>AI 核心模块</el-breadcrumb-item>
-    <el-breadcrumb-item>首页</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.AIKernel"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.Home"]</el-breadcrumb-item>
 }
 
 <div>
     <div class="filter-container">
-        <el-button type="primary" icon="el-icon-plus" size="small" @@click="addModel">添加</el-button>
-        <el-button type="primary" icon="el-icon-plus" size="small" @@click="addNeuCharModel">导入 NeuCharAI 云端模型算力</el-button>
+        <el-button type="primary" icon="el-icon-plus" size="small" @@click="addModel">@XR["Vector.Add"]</el-button>
+        <el-button type="primary" icon="el-icon-plus" size="small" @@click="addNeuCharModel">@XR["Model.ImportNeuChar"]</el-button>
     </div>
 
     <el-table :data="tableData" v-loading="tableLoading" border>
         @* alias *@
-        <el-table-column prop="alias" label="别名" width="auto"></el-table-column>
-        <el-table-column prop="modelId" label="模型名称" width="auto"></el-table-column>
+        <el-table-column prop="alias" label="@XR["Vector.Alias"]" width="auto"></el-table-column>
+        <el-table-column prop="modelId" label="@XR["Model.Name"]" width="auto"></el-table-column>
             @* <template slot-scope="scope">
                 <span v-if="scope.row.modelId==='text-davinci-003'">text-davinci-003</span>
                 <span v-else-if="scope.row.modelId==='gpt-4'">gpt-4</span>
@@ -34,9 +34,9 @@
                 <span v-else-if="scope.row.modelId==='gpt-35-turbo-instruct'">gpt-35-turbo-instruct</span>
                 <span v-else-if="scope.row.modelId==='dall-e-3'">dall-e-3</span>
             </template> *@
-        <el-table-column prop="deploymentName" label="部署名称" width="auto"></el-table-column>
+        <el-table-column prop="deploymentName" label="@XR["Vector.DeploymentName"]" width="auto"></el-table-column>
         <el-table-column prop="endpoint" label="Endpoint" width="auto"></el-table-column>
-        <el-table-column prop="aiPlatform" label="平台" width="auto">
+        <el-table-column prop="aiPlatform" label="@XR["Model.Platform"]" width="auto">
             <template slot-scope="scope">
                 <span v-if="scope.row.aiPlatform===4">NeuCharAI</span>
                 <span v-else-if="scope.row.aiPlatform===8">OpenAI</span>
@@ -45,10 +45,10 @@
                 <span v-else-if="scope.row.aiPlatform===128">FastAPI</span>
                 <span v-else-if="scope.row.aiPlatform===256">Ollama</span>
                 <span v-else-if="scope.row.aiPlatform===512">DeepSeek</span>
-                <span v-else type="danger">未知</span>
+                <span v-else type="danger">@XR["Model.Unknown"]</span>
             </template>
         </el-table-column>
-        <el-table-column prop="configModelType" label="模型类型" width="auto">
+        <el-table-column prop="configModelType" label="@XR["Model.Type"]" width="auto">
             <template slot-scope="scope">
                 <span v-if="scope.row.configModelType===1">TextCompletion</span>
                 <span v-else-if="scope.row.configModelType===2">Chat</span>
@@ -69,17 +69,17 @@
                 </div>
             </template>
         </el-table-column>
-        <el-table-column prop="note" label="备注" width="auto"></el-table-column>
-        <el-table-column prop="addTime" label="添加时间" width="auto">
+        <el-table-column prop="note" label="@XR["Vector.Note"]" width="auto"></el-table-column>
+        <el-table-column prop="addTime" label="@XR["Vector.AddTime"]" width="auto">
             <template slot-scope="scope">
                 {{ dateformatter(scope.row.addTime) }}
             </template>
         </el-table-column>
         @* 操作 *@
-        <el-table-column label="操作" width="auto">
+        <el-table-column label="@XR["Vector.Actions"]" width="auto">
             <template slot-scope="scope">
-                <el-button type="primary" size="mini" @@click="editModel(scope.row)">编辑</el-button>
-                <el-button type="danger" size="mini" @@click="deleteModel(scope.row)">删除</el-button>
+                <el-button type="primary" size="mini" @@click="editModel(scope.row)">@XR["Vector.Edit"]</el-button>
+                <el-button type="danger" size="mini" @@click="deleteModel(scope.row)">@XR["Vector.Delete"]</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -98,13 +98,13 @@
 
 
     @* dialog for 添加模型 *@
-    <el-dialog title="添加模型" :visible.sync="addFormDialogVisible" width="50%" :close-on-click-modal="false">
+    <el-dialog title="@XR["Model.AddTitle"]" :visible.sync="addFormDialogVisible" width="50%" :close-on-click-modal="false">
         <el-form :model="addForm" label-width="120px" :rules="addRules" ref="addForm">
-            <el-form-item label="别名" prop="alias">
+            <el-form-item label="@XR["Vector.Alias"]" prop="alias">
                 <el-input v-model="addForm.alias"></el-input>
             </el-form-item>
-            <el-form-item label="平台" prop="aiPlatform">
-                <el-select v-model="addForm.aiPlatform" placeholder="请选择">
+            <el-form-item label="@XR["Model.Platform"]" prop="aiPlatform">
+                <el-select v-model="addForm.aiPlatform" placeholder="@XR["Vector.SelectPlaceholder"]">
                     <el-option label="NeuCharAI" value="4"></el-option>
                     <el-option label="OpenAI" value="8"></el-option>
                     <el-option label="AzureOpenAI" value="16"></el-option>
@@ -114,8 +114,8 @@
                     <el-option label="DeepSeek" value="512"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="模型类型" prop="configModelType">
-                <el-select v-model="addForm.configModelType" placeholder="请选择">
+            <el-form-item label="@XR["Model.Type"]" prop="configModelType">
+                <el-select v-model="addForm.configModelType" placeholder="@XR["Vector.SelectPlaceholder"]">
                     <el-option label="TextCompletion" value="1"></el-option>
                     <el-option label="Chat" value="2"></el-option>
                     <el-option label="TextEmbedding" value="3"></el-option>
@@ -126,26 +126,26 @@
                     <el-option label="SpeechRecognition" value="8"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="模型名称" v-if="addForm.aiPlatform==='4'" prop="modelId">
-                <el-select  v-model="addForm.modelId" filterable allow-create default-first-option placeholder="请选择">
+            <el-form-item label="@XR["Model.Name"]" v-if="addForm.aiPlatform==='4'" prop="modelId">
+                <el-select  v-model="addForm.modelId" filterable allow-create default-first-option placeholder="@XR["Vector.SelectPlaceholder"]">
                     <el-option v-for="item in getSelectableModelList(neuCharAiModelList, addForm.modelId)"
                                :key="'add-neuchar-' + item"
                                :label="item"
                                :value="item"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="模型名称" v-else-if="addForm.aiPlatform==='512'" prop="modelId">
-                <el-select v-model="addForm.modelId" filterable allow-create default-first-option placeholder="请选择">
+            <el-form-item label="@XR["Model.Name"]" v-else-if="addForm.aiPlatform==='512'" prop="modelId">
+                <el-select v-model="addForm.modelId" filterable allow-create default-first-option placeholder="@XR["Vector.SelectPlaceholder"]">
                     <el-option v-for="item in getSelectableModelList(deepSeekModelList, addForm.modelId)"
                                :key="'add-deepseek-' + item"
                                :label="item"
                                :value="item"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="模型名称" v-else="addForm.aiPlatform!=='4'&&addForm.aiPlatform!=='512'" prop="modelId">
+            <el-form-item label="@XR["Model.Name"]" v-else="addForm.aiPlatform!=='4'&&addForm.aiPlatform!=='512'" prop="modelId">
                 <el-input v-model="addForm.modelId"></el-input>
             </el-form-item>
-            <el-form-item label="部署名称" prop="deploymentName" v-if="addForm.aiPlatform!=='512'">
+            <el-form-item label="@XR["Vector.DeploymentName"]" prop="deploymentName" v-if="addForm.aiPlatform!=='512'">
                 <el-input v-model="addForm.deploymentName"></el-input>
             </el-form-item>
             @* ,[ApiVersion] *@
@@ -159,10 +159,10 @@
             <el-form-item label="Endpoint" v-if="addForm.aiPlatform==='16'||addForm.aiPlatform==='4'||addForm.aiPlatform==='32'||addForm.aiPlatform==='128'||addForm.aiPlatform==='256'||addForm.aiPlatform==='512'" prop="endpoint">
                 <el-input v-model="addForm.endpoint = addForm.aiPlatform==='512' ? 'https://api.deepseek.com' : addForm.endpoint"></el-input>
             </el-form-item>
-           <el-form-item label="组织ID"  v-if="addForm.aiPlatform==='8'" prop="organizationId">
+           <el-form-item label="@XR["Model.OrganizationId"]"  v-if="addForm.aiPlatform==='8'" prop="organizationId">
                 <el-input v-model="addForm.organizationId" type="password"></el-input>
             </el-form-item>
-            <el-form-item label="备注" prop="note">
+            <el-form-item label="@XR["Vector.Note"]" prop="note">
                 <el-input v-model="addForm.note"></el-input>
             </el-form-item>
             @* <el-form-item label="显示"> *@
@@ -174,17 +174,17 @@
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="addFormDialogVisible = false">取 消</el-button>
-            <el-button type="primary" @@click="addModelSubmit">确 定</el-button>
+            <el-button @@click="addFormDialogVisible = false">@XR["Vector.Cancel"]</el-button>
+            <el-button type="primary" @@click="addModelSubmit">@XR["Vector.Confirm"]</el-button>
         </span>
     </el-dialog>
     @* dialog for 编辑模型 *@
-    <el-dialog title="编辑模型" :visible.sync="editFormDialogVisible" width="50%" :close-on-click-modal="false">
+    <el-dialog title="@XR["Model.EditTitle"]" :visible.sync="editFormDialogVisible" width="50%" :close-on-click-modal="false">
         <el-form :model="editForm" label-width="120px" :rules="editRules" ref="editForm">
-            <el-form-item label="别名" prop="alias">
+            <el-form-item label="@XR["Vector.Alias"]" prop="alias">
                 <el-input v-model="editForm.alias"></el-input>
             </el-form-item>
-            <el-form-item label="平台" prop="aiPlatform">
+            <el-form-item label="@XR["Model.Platform"]" prop="aiPlatform">
                 @* NeuCharAI = 4, *@
                 @*  OpenAI = 8, *@
                 @*  AzureOpenAI = 16, *@
@@ -194,7 +194,7 @@
                 @*  DeepSeek = 512 *@
                 @* <el-input type="number" v-model="editForm.aiPlatform"></el-input> *@
                 @* use el-select *@
-                <el-select v-model="editForm.aiPlatform" placeholder="请选择">
+                <el-select v-model="editForm.aiPlatform" placeholder="@XR["Vector.SelectPlaceholder"]">
                     <el-option label="NeuCharAI" value="4"></el-option>
                     <el-option label="OpenAI" value="8"></el-option>
                     <el-option label="AzureOpenAI" value="16"></el-option>
@@ -205,8 +205,8 @@
                  </el-select>
             </el-form-item>
 
-            <el-form-item label="模型类型" prop="configModelType">
-                <el-select v-model="editForm.configModelType" placeholder="请选择">
+            <el-form-item label="@XR["Model.Type"]" prop="configModelType">
+                <el-select v-model="editForm.configModelType" placeholder="@XR["Vector.SelectPlaceholder"]">
                     <el-option label="TextCompletion" value="1"></el-option>
                     <el-option label="Chat" value="2"></el-option>
                     <el-option label="TextEmbedding" value="3"></el-option>
@@ -218,14 +218,14 @@
                 </el-select>
             </el-form-item>
 
-            <el-form-item label="模型名称" prop="modelId">
-                <el-select v-if="editForm.aiPlatform==='4'" v-model="editForm.modelId" filterable allow-create default-first-option placeholder="请选择">
+            <el-form-item label="@XR["Model.Name"]" prop="modelId">
+                <el-select v-if="editForm.aiPlatform==='4'" v-model="editForm.modelId" filterable allow-create default-first-option placeholder="@XR["Vector.SelectPlaceholder"]">
                     <el-option v-for="item in getSelectableModelList(neuCharAiModelList, editForm.modelId)"
                                :key="'edit-neuchar-' + item"
                                :label="item"
                                :value="item"></el-option>
                 </el-select>
-                <el-select v-if="editForm.aiPlatform==='512'" v-model="editForm.modelId" filterable allow-create default-first-option placeholder="请选择">
+                <el-select v-if="editForm.aiPlatform==='512'" v-model="editForm.modelId" filterable allow-create default-first-option placeholder="@XR["Vector.SelectPlaceholder"]">
                     <el-option v-for="item in getSelectableModelList(deepSeekModelList, editForm.modelId)"
                                :key="'edit-deepseek-' + item"
                                :label="item"
@@ -233,7 +233,7 @@
                 </el-select>
                 <el-input v-if="editForm.aiPlatform!=='4'&&editForm.aiPlatform!=='512'" v-model="editForm.modelId"></el-input>
             </el-form-item>
-            <el-form-item label="部署名称" prop="deploymentName" v-if="editForm.aiPlatform!=='512'">
+            <el-form-item label="@XR["Vector.DeploymentName"]" prop="deploymentName" v-if="editForm.aiPlatform!=='512'">
                     <el-input v-model="editForm.deploymentName"></el-input>
                 </el-form-item>
                 @* ,[ApiVersion] *@
@@ -247,13 +247,13 @@
                 <el-form-item label="Endpoint" v-if="editForm.aiPlatform==='16'||editForm.aiPlatform==='4'||editForm.aiPlatform==='32'||editForm.aiPlatform==='128'||editForm.aiPlatform==='256'||editForm.aiPlatform==='512'" prop="endpoint">
                     <el-input v-model="editForm.endpoint = editForm.aiPlatform==='512' ? 'https://api.deepseek.com' : editForm.endpoint"></el-input>
                 </el-form-item>
-             <el-form-item label="组织ID"  v-if="editForm.aiPlatform==='8'" prop="organizationId">
+             <el-form-item label="@XR["Model.OrganizationId"]"  v-if="editForm.aiPlatform==='8'" prop="organizationId">
                     <el-input v-model="editForm.organizationId" type="password" placeholder="********"></el-input>
                 </el-form-item>
-            <el-form-item label="备注" prop="note">
+            <el-form-item label="@XR["Vector.Note"]" prop="note">
                     <el-input v-model="editForm.note"></el-input>
                 </el-form-item>
-               <el-form-item label="显示" prop="show">
+               <el-form-item label="@XR["Vector.Display"]" prop="show">
                     @* use switch *@
                     <el-switch v-model="editForm.show"></el-switch>
                 </el-form-item>
@@ -265,13 +265,13 @@
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="editFormDialogVisible = false">取 消</el-button>
-            <el-button type="primary" @@click="editModelSubmit">确 定</el-button>
+            <el-button @@click="editFormDialogVisible = false">@XR["Vector.Cancel"]</el-button>
+            <el-button type="primary" @@click="editModelSubmit">@XR["Vector.Confirm"]</el-button>
         </span>
     </el-dialog>
 
     <!-- dialog for 导入 NeuCharAI 云端模型算力 -->  
-    <el-dialog title="导入 NeuCharAI 云端模型算力" :visible.sync="neuCharFormDialogVisible" width="50%" :close-on-click-modal="false">  
+    <el-dialog title="@XR["Model.ImportNeuChar"]" :visible.sync="neuCharFormDialogVisible" width="50%" :close-on-click-modal="false">
         <el-form :model="neuCharForm" label-width="120px" :rules="neuCharRules" ref="neuCharForm">  
             <el-form-item label="DeveloperId" prop="developerId">  
                 <el-input v-model="neuCharForm.developerId"></el-input>
@@ -279,16 +279,17 @@
             <el-form-item label="ApiKey" prop="apiKey">  
                 <el-input v-model="neuCharForm.apiKey" type="password"></el-input>  
             </el-form-item>  
-            <p><i class="fa fa-info-circle"></i>&nbsp; &nbsp;可从 <a href="https://www.neuchar.com/Developer/AiApp">https://www.neuchar.com/Developer/AiApp</a> <i class="fa fa-external-link" aria-hidden="true"></i> 页面中，点击【显示 ApiKey】按钮查看到 DeveloperId 及 ApiKey，如果您有多项，可分批次导入。</p>
+            <p><i class="fa fa-info-circle"></i>&nbsp; &nbsp;@XR["Model.NeuCharImportHelp"] <a href="https://www.neuchar.com/Developer/AiApp">https://www.neuchar.com/Developer/AiApp</a></p>
         </el-form>  
         <span slot="footer" class="dialog-footer">  
-            <el-button @@click="neuCharFormDialogVisible = false">取消</el-button>  
-            <el-button type="primary" @@click="addNeuCharModelSubmit">确定</el-button>  
+            <el-button @@click="neuCharFormDialogVisible = false">@XR["Vector.Cancel"]</el-button>
+            <el-button type="primary" @@click="addNeuCharModelSubmit">@XR["Vector.Confirm"]</el-button>
         </span>  
     </el-dialog>  
 
 </div>
 
 @section scripts{
+    <partial name="~/Areas/Admin/Pages/Shared/_LocalizationScripts.cshtml" />
     <script src="~/js/Admin/AIKernel/index.js"></script>
 }

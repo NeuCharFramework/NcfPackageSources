@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.37.1-preview6</Version>
+    <Version>0.38.0-preview7</Version>
     <LangVersion>latest</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -101,6 +101,9 @@
 			7、改善构建输出捕获并开放测试所需的内部访问
 			[2026-07-29] v0.37.1-preview6 默认关闭未受保护的 Builder MCP 路由
 			1、保持 Builder MCP 工具关闭，避免在缺少管理员授权策略时发布未认证接口
+			[2026-07-31] v0.38.0-preview7 扩展 XNCF 生成模板的多语言能力
+			1、生成的数据库示例页自动加载模块本地化脚本
+			2、升级 Senparc.AI 组件版本以适配 CO2NET 4.2.0
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

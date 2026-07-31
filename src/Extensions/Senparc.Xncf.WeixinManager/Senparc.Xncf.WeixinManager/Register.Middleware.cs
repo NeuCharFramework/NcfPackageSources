@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260731
+    修改描述：v0.24.0-preview5 将消息处理器构造与参数错误提示接入模块多语言资源
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -78,7 +81,10 @@ namespace Senparc.Xncf.WeixinManager
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"{mpMessageHandlerType.FullName} 必须具有以下结构和参数顺序的构造函数：(MpAccountDto mpAccountDto, Stream inputStream, PostModel postModel, int maxRecordCount, IServiceProvider serviceProvider)", ex);
+                    throw new Exception(WeixinManagerResource.Format(
+                        "Error.MessageHandlerConstructor",
+                        "{0} must provide a constructor with the following parameter order: (MpAccountDto mpAccountDto, Stream inputStream, PostModel postModel, int maxRecordCount, IServiceProvider serviceProvider)",
+                        mpMessageHandlerType.FullName), ex);
                 }
             };
             return messageHandlerFunc;
@@ -133,7 +139,7 @@ namespace Senparc.Xncf.WeixinManager
 
                     if (!int.TryParse(param, out int mpAccountId))
                     {
-                        throw new WeixinException("ID 错误！");
+                        throw new WeixinException(WeixinManagerResource.Get("Error.InvalidId", "Invalid ID."));
                     }
 
                     var mpAccountService = serviceProvider.GetRequiredService<MpAccountService>();

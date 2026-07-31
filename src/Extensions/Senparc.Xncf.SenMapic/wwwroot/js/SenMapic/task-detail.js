@@ -74,12 +74,12 @@ new Vue({
         },
         getStatusText(status) {
             const map = {
-                '-1': '出错',
-                '0': '等待开始',
-                '1': '进行中',
-                '2': '已完成'
+                '-1': ncfT('SenMapic.Status.Error'),
+                '0': ncfT('SenMapic.Status.Waiting'),
+                '1': ncfT('SenMapic.Status.Running'),
+                '2': ncfT('SenMapic.Status.Completed')
             };
-            return map[status] || '未知';
+            return map[status] || ncfT('SenMapic.Status.Unknown');
         },
         getHttpStatusType(code) {
             if (code >= 200 && code < 300) return 'success';
@@ -88,4 +88,4 @@ new Vue({
             return 'info';
         }
     }
-}); 
+});

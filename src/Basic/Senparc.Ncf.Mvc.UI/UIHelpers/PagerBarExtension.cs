@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260731
+    修改描述：v0.22.0-preview4 将分页范围、总数及翻页文案接入核心多语言资源
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
@@ -17,6 +20,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Core;
 using Senparc.Ncf.Utility;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
@@ -278,7 +282,10 @@ namespace System.Web.Mvc
                 {
                     recordEnd = settings.TotalCount;//如果超出最大值，则修正为最大值
                 }
-                sb.Append("<span class=\"total\" title=\"当前显示第" + (recordStart == recordEnd ? recordStart.ToString() : (recordStart + "-" + recordEnd)) + "条\">总共 <b>" + settings.TotalCount.ToString() + "</b> 条</span>");
+                var displayedRange = recordStart == recordEnd ? recordStart.ToString() : (recordStart + "-" + recordEnd);
+                var currentText = string.Format(NcfCoreResource.Get("Pager.Current", "当前显示第{0}条"), displayedRange);
+                var totalText = string.Format(NcfCoreResource.Get("Pager.Total", "总共 <b>{0}</b> 条"), settings.TotalCount);
+                sb.Append("<span class=\"total\" title=\"").Append(currentText).Append("\">").Append(totalText).Append("</span>");
             }
 
             sb.Append("</div>");
@@ -305,12 +312,12 @@ namespace System.Web.Mvc
 
             if (string.IsNullOrEmpty(settings.PreWord))
             {
-                settings.PreWord = "上一页";
+                settings.PreWord = NcfCoreResource.Get("Pager.Previous", "上一页");
             }
 
             if (string.IsNullOrEmpty(settings.NextWord))
             {
-                settings.NextWord = "下一页";
+                settings.NextWord = NcfCoreResource.Get("Pager.Next", "下一页");
             }
 
             if (settings.PageCount == 0)

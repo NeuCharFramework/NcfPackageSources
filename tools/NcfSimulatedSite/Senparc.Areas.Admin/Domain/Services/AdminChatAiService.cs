@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260724
     修改描述：v0.1.0 增强后台模块批量更新并完善多语言管理界面
 
+    修改标识：Senparc - 20260731
+    修改描述：v0.2.1 切换到新版 AgentKernel 原生 RunChatAsync 接口以适配 CO2NET 4.2.0
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;
@@ -29,7 +32,6 @@ using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
-using Senparc.Xncf.AIKernel.Extensions;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using System;
 using System.Collections.Generic;
@@ -244,7 +246,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             var streamedOutput = new StringBuilder();
             var hasStreamedChunk = false;
             var skResult = onChunk == null
-                ? await iWantToRun.RunChatWithCo2NetCompatibilityAsync(prompt)
+                ? await iWantToRun.RunChatAsync(prompt)
                 : await ExecuteRunnerWithSessionRetryAsync(
                     iWantToRun,
                     prompt,
@@ -288,11 +290,11 @@ namespace Senparc.Areas.Admin.Domain.Services
             var session = runner?.Kernel?.AgentSession;
             try
             {
-                return await runner.RunChatWithCo2NetCompatibilityAsync(prompt, session, onUpdate);
+                return await runner.RunChatAsync(prompt, session, onUpdate);
             }
             catch when (session != null)
             {
-                return await runner.RunChatWithCo2NetCompatibilityAsync(prompt, null, onUpdate);
+                return await runner.RunChatAsync(prompt, null, onUpdate);
             }
         }
 
