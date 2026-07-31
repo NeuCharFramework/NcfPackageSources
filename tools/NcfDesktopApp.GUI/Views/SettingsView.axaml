@@ -35,8 +35,8 @@
                             Classes="toolbar-action"
                             Background="#0F766E"
                             Foreground="White"/>
-                    <Button Content="显示助手"
-                            Command="{Binding ShowDesktopRobotCommand}"
+                    <Button Content="模板新建"
+                            Command="{Binding ShowTemplateWorkspaceCommand}"
                             Classes="toolbar-action"
                             Background="#7C3AED"
                             Foreground="White"/>
@@ -45,6 +45,12 @@
                             Classes="toolbar-action"
                             Background="#475569"
                             Foreground="White"/>
+                    <Button Content="设置"
+                            Command="{Binding ShowWorkspaceSettingsCommand}"
+                            Classes="toolbar-action"
+                            Background="{DynamicResource ToolbarBackgroundBrush}"
+                            BorderBrush="{DynamicResource CardBorderBrush}"
+                            BorderThickness="1"/>
                     <Button Content="{Binding MainButtonText}"
                             Command="{Binding MainOperationCommand}"
                             Classes="primary-action"
@@ -163,13 +169,13 @@
 
                             <!-- 远程 NCF：HTTPS/SSE 复用站点内 EventBus -->
                             <StackPanel IsVisible="{Binding IsRemoteTargetMode}"
-                                        IsEnabled="{Binding IsTargetSelectionEnabled}"
                                         Spacing="8">
                                 <TextBlock Text="连接已部署的 NCF。远程地址强制 HTTPS；localhost 或本机 SSH 隧道可使用 HTTP。"
                                            FontSize="11"
                                            Foreground="{DynamicResource SecondaryTextBrush}"
                                            TextWrapping="Wrap"/>
-                                <Grid ColumnDefinitions="*,Auto">
+                                <Grid ColumnDefinitions="*,Auto"
+                                      IsEnabled="{Binding IsTargetSelectionEnabled}">
                                     <TextBox Grid.Column="0"
                                              Text="{Binding RemoteSiteUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                              Watermark="https://ncf.example.com"
@@ -183,12 +189,38 @@
                                 </Grid>
                                 <TextBox Text="{Binding RemoteBridgeToken, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          PasswordChar="●"
-                                         Watermark="DesktopBridge 令牌（仅保存在内存）"
+                                         Watermark="已有令牌（可选；留空则申请管理员配对）"
+                                         IsEnabled="{Binding IsTargetSelectionEnabled}"
                                          FontSize="11"/>
-                                <TextBlock Text="服务端设置 NCF_DESKTOP_BRIDGE_TOKEN；可叠加 IP 白名单，mTLS 可由本机代理终止，或使用 SSH 隧道。"
+                                <TextBlock Text="推荐留空：桌面端会显示配对码，由 AdminOnly 管理员批准后取得独立的 24 小时会话。NCF_DESKTOP_BRIDGE_TOKEN 仍可用于自动化。"
                                            FontSize="10"
                                            Foreground="{DynamicResource SecondaryTextBrush}"
                                            TextWrapping="Wrap"/>
+                                <Border IsVisible="{Binding IsRemotePairingVisible}"
+                                        Background="#0D0F766E"
+                                        BorderBrush="#400F766E"
+                                        BorderThickness="1"
+                                        CornerRadius="7"
+                                        Padding="10">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="等待管理员配对"
+                                                   FontSize="11"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="#0F766E"/>
+                                        <SelectableTextBlock Text="{Binding RemotePairingCode}"
+                                                             FontFamily="Consolas,Menlo,Monaco,Courier New"
+                                                             FontSize="19"
+                                                             FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding RemotePairingStatus}"
+                                                   FontSize="10.5"
+                                                   TextWrapping="Wrap"
+                                                   Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                        <Button Content="打开管理后台审批"
+                                                Command="{Binding OpenRemotePairingApprovalCommand}"
+                                                Classes="secondary-action"
+                                                HorizontalAlignment="Left"/>
+                                    </StackPanel>
+                                </Border>
                             </StackPanel>
 
                             <!-- 目标元数据 -->
@@ -217,59 +249,17 @@
                                        Foreground="{DynamicResource SecondaryTextBrush}"
                                        TextWrapping="Wrap"/>
 
-                            <Grid ColumnDefinitions="Auto,*">
-                                <TextBlock Grid.Column="0"
-                                           Text="运行环境"
-                                           FontSize="11"
-                                           FontWeight="SemiBold"
-                                           VerticalAlignment="Center"
-                                           Margin="0,0,10,0"/>
-                                <ComboBox Grid.Column="1"
-                                          ItemsSource="{Binding EnvironmentOptions}"
-                                          SelectedItem="{Binding AspNetCoreEnvironment, Mode=TwoWay}"
-                                          FontSize="11"
-                                          IsEnabled="{Binding IsTargetSelectionEnabled}"/>
-                            </Grid>
-                        </StackPanel>
-                    </Border>
-
-                    <!-- 从线上模板新建独立源码工作区 -->
-                    <Border Classes="card">
-                        <StackPanel Spacing="8">
-                            <TextBlock Text="新建模板工作区" FontSize="14" FontWeight="SemiBold"/>
-                            <TextBlock Text="在线安装最新 Senparc.NCF.Template，再创建不触发 restore 的源码目录。现有非空目录不会覆盖。"
-                                       FontSize="10.5"
-                                       Foreground="{DynamicResource SecondaryTextBrush}"
-                                       TextWrapping="Wrap"/>
-                            <Grid ColumnDefinitions="*,Auto">
-                                <TextBox Grid.Column="0"
-                                         Text="{Binding TemplateWorkspaceParentPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                         Watermark="工作区父目录"
-                                         FontSize="10.5"
-                                         FontFamily="Consolas,Menlo,Monaco,Courier New"
-                                         Margin="0,0,6,0"/>
-                                <Button Grid.Column="1"
-                                        Content="选择"
-                                        Command="{Binding SelectTemplateWorkspaceParentCommand}"
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <TextBlock Grid.Column="0" Text="启动配置" Classes="meta-label"
+                                           VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding LaunchConfigurationSummary}"
+                                           FontSize="10.5" FontWeight="SemiBold"
+                                           VerticalAlignment="Center"/>
+                                <Button Grid.Column="2" Content="修改"
+                                        Command="{Binding ShowWorkspaceSettingsCommand}"
                                         Classes="secondary-action"/>
                             </Grid>
-                            <Grid ColumnDefinitions="*,Auto">
-                                <TextBox Grid.Column="0"
-                                         Text="{Binding TemplateWorkspaceName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                         Watermark="新工作区名称"
-                                         FontSize="11"
-                                         Margin="0,0,6,0"/>
-                                <Button Grid.Column="1"
-                                        Content="在线创建"
-                                        Command="{Binding CreateWorkspaceFromTemplateCommand}"
-                                        Classes="primary-action"
-                                        Background="#0F766E"
-                                        Foreground="White"/>
-                            </Grid>
-                            <TextBlock Text="{Binding TemplateCreationStatus}"
-                                       FontSize="10"
-                                       Foreground="{DynamicResource SecondaryTextBrush}"
-                                       TextWrapping="Wrap"/>
                         </StackPanel>
                     </Border>
 
@@ -297,6 +287,17 @@
                                     <TextBlock Text="{Binding DesktopBridgeStatusText}" FontSize="10.5" TextWrapping="Wrap"/>
                                 </StackPanel>
                             </Grid>
+                            <Border Height="1" Background="{DynamicResource CardBorderBrush}" Margin="0,2"/>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock Grid.Column="0" Text="{Binding ProgressText}"
+                                           FontSize="10.5" FontWeight="SemiBold"
+                                           TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Grid.Column="1" Text="{Binding LatestVersion, StringFormat='目标 {0}'}"
+                                           FontSize="10" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                            </Grid>
+                            <ProgressBar Value="{Binding ProgressValue}"
+                                         IsIndeterminate="{Binding IsProgressIndeterminate}"
+                                         Height="5" CornerRadius="3"/>
                         </StackPanel>
                     </Border>
 
@@ -321,53 +322,6 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- 进度 -->
-                    <Border Classes="card">
-                        <StackPanel Spacing="7">
-                            <Grid ColumnDefinitions="*,Auto">
-                                <TextBlock Grid.Column="0" Text="{Binding ProgressText}" FontSize="11" FontWeight="SemiBold"/>
-                                <TextBlock Grid.Column="1" Text="{Binding LatestVersion, StringFormat='目标 {0}'}"
-                                           FontSize="10" Foreground="{DynamicResource SecondaryTextBrush}"/>
-                            </Grid>
-                            <ProgressBar Value="{Binding ProgressValue}"
-                                         IsIndeterminate="{Binding IsProgressIndeterminate}"
-                                         Height="5" CornerRadius="3"/>
-                        </StackPanel>
-                    </Border>
-
-                    <!-- 次要配置 -->
-                    <Border Classes="card">
-                        <StackPanel Spacing="8">
-                            <TextBlock Text="工作台选项" FontSize="14" FontWeight="SemiBold"/>
-                            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,*">
-                                <CheckBox Grid.Row="0" Grid.Column="0" Content="自动打开站点"
-                                          IsChecked="{Binding AutoOpenBrowser}" FontSize="11"/>
-                                <CheckBox Grid.Row="0" Grid.Column="1" Content="显示详细日志"
-                                          IsChecked="{Binding ShowDetailedInfo}" FontSize="11"/>
-                                <CheckBox Grid.Row="1" Grid.Column="0" Content="清理下载文件"
-                                          IsChecked="{Binding AutoCleanDownloads}" FontSize="11"/>
-                                <CheckBox Grid.Row="1" Grid.Column="1" Content="最小化到托盘"
-                                          IsChecked="{Binding MinimizeToTray}" FontSize="11"/>
-                            </Grid>
-                            <Grid ColumnDefinitions="Auto,*,Auto,*">
-                                <TextBlock Grid.Column="0" Text="端口" FontSize="11" FontWeight="SemiBold"
-                                           VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                <NumericUpDown Grid.Column="1" Value="{Binding StartPort}" Minimum="1024" Maximum="65535"
-                                               FontSize="11" Margin="0,0,6,0"/>
-                                <TextBlock Grid.Column="2" Text="—" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                                <NumericUpDown Grid.Column="3" Value="{Binding EndPort}" Minimum="1024" Maximum="65535" FontSize="11"/>
-                            </Grid>
-                            <TextBox Text="{Binding MirrorServerBaseUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                     Watermark="托管版本镜像服务器"
-                                     FontSize="10.5"
-                                     FontFamily="Consolas,Menlo,Monaco,Courier New"
-                                     IsVisible="{Binding IsManagedTargetMode}"/>
-                            <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding IsManagedTargetMode}">
-                                <Button Content="测试更新源" Command="{Binding TestConnectionCommand}" Classes="secondary-action"/>
-                                <Button Content="打开配置目录" Command="{Binding OpenConfigDirectoryCommand}" Classes="secondary-action"/>
-                            </StackPanel>
-                        </StackPanel>
-                    </Border>
                 </StackPanel>
             </ScrollViewer>
 
@@ -496,19 +450,39 @@
 
                             <Border Grid.Row="2" BorderBrush="{DynamicResource CardBorderBrush}"
                                     BorderThickness="0,1,0,0" Padding="12,9">
-                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                                    <TextBox Grid.Column="0"
+                                <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="5">
+                                    <Button Grid.Row="0" Grid.Column="0"
+                                            Content="{Binding VoiceInputButtonIcon}"
+                                            Command="{Binding ToggleVoiceInputCommand}"
+                                            FontSize="16"
+                                            MinWidth="46"
+                                            Classes="secondary-action"
+                                            ToolTip.Tip="{Binding VoiceInputStatusText}"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1"
                                              Text="{Binding ChatInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                              Watermark="输入消息；Ctrl/⌘+Enter 发送，Enter 换行"
                                              AcceptsReturn="True" TextWrapping="Wrap"
                                              MinHeight="42" MaxHeight="90"
                                              KeyDown="ChatInput_OnKeyDown"
                                              ToolTip.Tip="Ctrl+Enter 或 ⌘+Enter 发送；Enter 换行"/>
-                                    <Button Grid.Column="1" Content="发送"
+                                    <Button Grid.Row="0" Grid.Column="2" Content="发送"
                                             Command="{Binding SendAdminChatMessageCommand}"
                                             Classes="primary-action"
                                             Background="#2563EB" Foreground="White"
                                             VerticalAlignment="Stretch"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                               Text="{Binding VoiceInputStatusText}"
+                                               FontSize="9.5"
+                                               Foreground="{DynamicResource SecondaryTextBrush}"
+                                               TextWrapping="Wrap"
+                                               VerticalAlignment="Center"/>
+                                    <Button Grid.Row="1" Grid.Column="2"
+                                            Content="取消语音"
+                                            Command="{Binding CancelVoiceInputCommand}"
+                                            IsVisible="{Binding IsVoiceCancelVisible}"
+                                            Classes="secondary-action"
+                                            FontSize="9.5"
+                                            Padding="8,3"/>
                                 </Grid>
                             </Border>
                         </Grid>

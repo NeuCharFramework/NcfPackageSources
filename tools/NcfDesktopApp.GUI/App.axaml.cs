@@ -9,6 +9,7 @@ using NcfDesktopApp.GUI.ViewModels;
 using NcfDesktopApp.GUI.Views;
 using AvaloniaWebView;
 using System.Collections.Generic;
+using NcfDesktopApp.GUI.Services;
 
 namespace NcfDesktopApp.GUI;
 
@@ -35,6 +36,7 @@ public partial class App : Application
         {
             // 每个窗口拥有独立的进程/端口/Bridge 会话；最后一个工作台关闭后才退出。
             desktop.ShutdownMode = ShutdownMode.OnLastWindowClose;
+            desktop.Exit += (_, _) => LocalVoiceInputService.DisposeShared();
 
             // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
@@ -67,8 +69,20 @@ public partial class App : Application
                 }
                 mainWindow.WindowState = WindowState.Normal;
                 mainWindow.Activate();
+            },
+            VoiceInputRequested = () =>
+            {
+                if (!mainWindow.IsVisible)
+                {
+                    mainWindow.Show();
+                }
+                mainWindow.WindowState = WindowState.Normal;
+                mainWindow.Activate();
+                _ = viewModel.ToggleVoiceInputCommand.ExecuteAsync(null);
             }
         };
+        WorkspaceSettingsWindow? settingsWindow = null;
+        TemplateWorkspaceWindow? templateWorkspaceWindow = null;
 
         viewModel.CreateWorkspaceWindowRequested = () =>
         {
@@ -83,10 +97,40 @@ public partial class App : Application
             }
             robotWindow.Activate();
         };
-
-        mainWindow.Opened += (_, _) => robotWindow.Show();
-        mainWindow.Closed += (_, _) =>
+        viewModel.ShowWorkspaceSettingsRequested = () =>
         {
+            if (settingsWindow?.IsVisible == true)
+            {
+                settingsWindow.Activate();
+                return;
+            }
+
+            settingsWindow = new WorkspaceSettingsWindow
+            {
+                DataContext = viewModel
+            };
+            settingsWindow.Closed += (_, _) => settingsWindow = null;
+            settingsWindow.Show(mainWindow);
+        };
+        viewModel.ShowTemplateWorkspaceRequested = () =>
+        {
+            if (templateWorkspaceWindow?.IsVisible == true)
+            {
+                templateWorkspaceWindow.Activate();
+                return;
+            }
+
+            templateWorkspaceWindow = new TemplateWorkspaceWindow
+            {
+                DataContext = viewModel
+            };
+            templateWorkspaceWindow.Closed += (_, _) => templateWorkspaceWindow = null;
+            templateWorkspaceWindow.Show(mainWindow);
+        };
+        mainWindow.Opened += (_, _) => robotWindow.Show();
+        mainWindow.Closed += async (_, _) =>
+        {
+            await viewModel.CancelVoiceInputForShutdownAsync();
             if (robotWindow.IsVisible)
             {
                 robotWindow.Close();

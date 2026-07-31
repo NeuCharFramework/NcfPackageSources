@@ -4,13 +4,25 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <RuntimeIdentifiers>win-x64;win-arm64;osx-x64;osx-arm64;linux-x64;linux-arm64</RuntimeIdentifiers>
-    <Version>0.4.0</Version>
+    <Version>0.5.1</Version>
     <PackageReleaseNotes>
+      [2026-08-01] v0.5.1 优化远程授权退出和内置浏览器
+      1、管理员撤销 DesktopBridge 会话后立即停止当前网站并清理 Admin Chat 和内置网页，桌面应用保持打开
+      2、删除无实现的前进后退、重复打开和危险的停止站点按钮，保留必要浏览器操作
+      3、移除常驻的页面加载完成横条，在工具栏中显示紧凑加载状态
+      [2026-08-01] v0.5.0 新增 AdminChat 本地语音输入
+      1、使用 SoundFlow 录制麦克风并通过 Whisper.net 在本机离线转写，结果仅写入输入框且不会自动发送
+      2、工作台设置支持选择并下载 Tiny、Base、Small 多语言模型，或手动加载本地 GGML 模型
+      3、AdminChat 输入区和桌面机器人均可触发语音输入，开始录音前强制检查模型是否已选择且完整
       [2026-07-30] v0.4.0 新增远程、多工作台与在线模板能力
       1、复用 DesktopBridge HTTP/SSE 适配层连接 HTTPS 远程 NCF，站点内部继续使用 EventBus
       2、支持同一桌面进程创建多个独立工作台窗口，隔离进程、端口、Bridge、浏览器和 Admin Chat 会话
       3、从 NuGet.org 安装最新 Senparc.NCF.Template 并创建不会覆盖现有目录的源码工作区
       4、远程令牌只保存在内存，非回环 HTTP 被拒绝，HTTPS 使用系统服务端证书校验
+      [2026-08-01] v0.4.1 新增远程 DesktopBridge 管理员配对
+      1、远程令牌留空时自动申请短期配对码，并轮询管理员审批结果
+      2、批准后直接使用独立会话令牌连接，无需重启 Senparc.Web
+      3、保留手工令牌模式，配对信息和令牌均不写入桌面设置
       [2026-07-28] v0.3.3 修复 macOS WebView JavaScript 回调闪退
       1、规避 WebView.Avalonia.MacCatalyst 11.0.0.1 空结果回调导致的主线程 SIGABRT
       2、macOS 使用 WKWebView/AppKit 原生编辑命令，Windows 和 Linux 保持原有脚本桥
@@ -66,6 +78,9 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+    <PackageReference Include="SoundFlow" Version="1.4.1" />
+    <PackageReference Include="Whisper.net" Version="1.8.1" />
+    <PackageReference Include="Whisper.net.Runtime" Version="1.8.1" />
     <!-- WebView.Avalonia cross-platform packages (在 Windows 上自动使用 WebView2) -->
     <PackageReference Include="WebView.Avalonia" Version="11.0.0.1" />
     <PackageReference Include="WebView.Avalonia.Desktop" Version="11.0.0.1" />

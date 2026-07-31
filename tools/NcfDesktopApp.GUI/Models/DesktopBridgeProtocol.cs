@@ -39,6 +39,20 @@ public sealed record DesktopBridgeProbeResult(
     public bool IsAvailable => Availability == DesktopBridgeAvailability.Available;
 }
 
+public sealed record DesktopBridgePairingCreateResponse(
+    Guid RequestId,
+    string DeviceCode,
+    string PollSecret,
+    DateTimeOffset ExpiresAt,
+    string VerificationPath,
+    int PollIntervalSeconds);
+
+public sealed record DesktopBridgePairingPollResponse(
+    string Status,
+    string? SessionToken,
+    DateTimeOffset? SessionExpiresAt,
+    string? Message);
+
 public sealed record DesktopActivityMessage(
     long Sequence,
     string ActivityId,

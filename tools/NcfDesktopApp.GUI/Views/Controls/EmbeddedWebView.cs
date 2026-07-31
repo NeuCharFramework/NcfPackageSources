@@ -40,7 +40,6 @@ public partial class EmbeddedWebView : UserControl
     private string _currentUrl = "";
     private bool _isWebViewReady = false;
     
-    private TextBlock _statusText = null!;
     private Grid _webViewContainer = null!;
     private Border _webViewArea = null!;
     private WebView? _webView = null;
@@ -58,30 +57,6 @@ public partial class EmbeddedWebView : UserControl
 
     private void InitializeComponent()
     {
-        // 状态显示（仅在需要时显示）
-        var statusArea = new Border
-        {
-            Background = Brushes.LightBlue,
-            BorderBrush = Brushes.SteelBlue,
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            Padding = new Thickness(10),
-            MinHeight = 40,
-            IsVisible = false,
-            Margin = new Thickness(10, 10, 10, 0)
-        };
-
-        _statusText = new TextBlock
-        {
-            Text = "正在初始化嵌入式浏览器...",
-            FontSize = 12,
-            FontWeight = Avalonia.Media.FontWeight.SemiBold,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-            Foreground = Brushes.DarkSlateBlue
-        };
-
-        statusArea.Child = _statusText;
-
         // WebView 区域
         _webViewContainer = new Grid
         {
@@ -91,11 +66,9 @@ public partial class EmbeddedWebView : UserControl
         _webViewArea = new Border
         {
             Background = Brushes.White,
-            BorderBrush = Brushes.LightGray,
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
+            BorderThickness = new Thickness(0),
             MinHeight = 400,
-            Margin = new Thickness(10),
+            Margin = new Thickness(0),
             Child = _webViewContainer
         };
 
@@ -138,14 +111,11 @@ public partial class EmbeddedWebView : UserControl
         // 主容器
         var mainContainer = new Grid
         {
-            RowDefinitions = new RowDefinitions("Auto,*")
+            RowDefinitions = new RowDefinitions("*")
         };
-
-        mainContainer.Children.Add(statusArea);
-        Grid.SetRow(statusArea, 0);
         
         mainContainer.Children.Add(_webViewArea);
-        Grid.SetRow(_webViewArea, 1);
+        Grid.SetRow(_webViewArea, 0);
 
         _contentBorder = new Border
         {
@@ -241,15 +211,7 @@ public partial class EmbeddedWebView : UserControl
 
     private void UpdateStatus(string message, IBrush color)
     {
-        _statusText.Text = message;
-        _statusText.Foreground = color;
-        
-        // 显示状态区域
-        var statusArea = _statusText.Parent as Border;
-        if (statusArea != null)
-        {
-            statusArea.IsVisible = true;
-        }
+        Debug.WriteLine($"[EmbeddedWebView] {message} ({color})");
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -303,9 +265,6 @@ public partial class EmbeddedWebView : UserControl
                         _webView.Url = targetUri;
                         _currentUrl = url;
                         Debug.WriteLine($"✅ WebView.Url 设置成功");
-                        UpdateStatus("页面加载完成", Brushes.Green);
-                        // 真正注入补丁以 NavigationCompleted 为准；此处先通知外层 UI。
-                        OnNavigationCompleted(url);
                     }
                     catch (Exception navEx)
                     {
@@ -339,6 +298,10 @@ public partial class EmbeddedWebView : UserControl
         if (!_isWebViewReady) return;
         try
         {
+            if (!string.IsNullOrWhiteSpace(_currentUrl))
+            {
+                OnNavigationStarted(_currentUrl);
+            }
             _webView?.Reload();
         }
         catch { }
@@ -361,34 +324,19 @@ public partial class EmbeddedWebView : UserControl
         Debug.WriteLine($"[EmbeddedWebView] NavigationCompleted IsSuccess={e.IsSuccess}");
         if (!e.IsSuccess)
         {
+            OnNavigationFailed("页面加载失败");
             return;
         }
+
+        _currentUrl = _webView?.Url?.ToString() ?? _currentUrl;
+        UpdateStatus("页面加载完成", Brushes.Green);
+        OnNavigationCompleted(_currentUrl);
 
         if (WebViewEditBridge.IsScriptBridgeSupported)
         {
             _ = WebViewEditBridge.EnsureKeyboardPatchAsync(_webView);
         }
     }
-
-    // 后退功能，供外部调用  
-    public void GoBack()
-    {
-        // WebView.Avalonia 的 WebView 类可能不支持导航历史
-        Debug.WriteLine("⚠️ GoBack 功能在 WebView.Avalonia 中可能不可用");
-    }
-
-    // 前进功能，供外部调用
-    public void GoForward()
-    {
-        // WebView.Avalonia 的 WebView 类可能不支持导航历史
-        Debug.WriteLine("⚠️ GoForward 功能在 WebView.Avalonia 中可能不可用");
-    }
-
-    // 检查是否可以后退
-    public bool CanGoBack => false;
-
-    // 检查是否可以前进
-    public bool CanGoForward => false;
 
     private void OpenInExternalBrowser(string url)
     {

@@ -23,6 +23,16 @@ public sealed class DesktopUserSettings
 {
     public const string DefaultMirrorServerBaseUrl = "https://www.ncf.pub";
 
+    public bool AutoOpenBrowser { get; set; } = true;
+
+    public bool AutoCleanDownloads { get; set; }
+
+    public bool ShowDetailedInfo { get; set; } = true;
+
+    public int StartPort { get; set; } = 5000;
+
+    public int EndPort { get; set; } = 5300;
+
     /// <summary>
     /// 镜像更新源站点根地址（不含路径）。实际请求元数据为 {此地址}/NcfPackages/latest-release.json。
     /// </summary>
@@ -57,4 +67,19 @@ public sealed class DesktopUserSettings
     /// 启动 NCF 时使用的 ASP.NET Core 环境。
     /// </summary>
     public string AspNetCoreEnvironment { get; set; } = "Production";
+
+    /// <summary>
+    /// 已选择的桌面端离线语音模型标识。空值表示用户尚未选择。
+    /// </summary>
+    public string VoiceModelId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 手动加载的 Whisper GGML 模型路径；内置可下载模型不使用此字段。
+    /// </summary>
+    public string VoiceCustomModelPath { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 语音识别语言：auto、zh 或 en。
+    /// </summary>
+    public string VoiceLanguage { get; set; } = "auto";
 }

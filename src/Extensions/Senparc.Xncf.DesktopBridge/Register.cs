@@ -23,19 +23,21 @@ using Senparc.Xncf.DesktopBridge.Services;
 namespace Senparc.Xncf.DesktopBridge;
 
 [XncfRegister]
-public sealed class Register : XncfRegisterBase, IXncfRegister
+public sealed partial class Register : XncfRegisterBase, IXncfRegister
 {
+    public const string ModuleUid = "E9A9D870-A285-4BCE-9D4D-26A219C41252";
+
     public override string Name => "Senparc.Xncf.DesktopBridge";
 
-    public override string Uid => "E9A9D870-A285-4BCE-9D4D-26A219C41252";
+    public override string Uid => ModuleUid;
 
-    public override string Version => "0.1.0-preview2";
+    public override string Version => "0.2.1-preview2";
 
     public override string MenuName => "DesktopBridge 桌面桥接";
 
     public override string Icon => "fa fa-desktop";
 
-    public override string Description => "为 NCF 桌面机器人提供受保护的本机状态和 EventBus 活动流。";
+    public override string Description => "为 NCF 桌面机器人提供受保护的本机或远程状态、设备配对和 EventBus 活动流。";
 
     public override Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
     {
@@ -54,6 +56,7 @@ public sealed class Register : XncfRegisterBase, IXncfRegister
     {
         services.AddSingleton<DesktopActivityHub>();
         services.AddSingleton<DesktopAuthorizedSyncHub>();
+        services.AddSingleton<DesktopBridgeCredentialStore>();
         services.AddSingleton<DesktopBridgeTokenValidator>();
 
         // 不注册开放泛型实现：NCF EventBus 的程序集扫描会把开放泛型再次登记为

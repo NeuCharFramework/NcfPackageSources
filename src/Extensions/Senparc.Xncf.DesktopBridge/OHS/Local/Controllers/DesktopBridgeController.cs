@@ -31,7 +31,7 @@ namespace Senparc.Xncf.DesktopBridge.OHS.Local.Controllers;
 public sealed class DesktopBridgeController : ControllerBase
 {
     public const int CurrentProtocolVersion = 1;
-    public const string BridgeVersion = "0.1.0-preview2";
+    public const string BridgeVersion = "0.2.1-preview2";
     private const string AdminOnlyPolicy = NcfAuthorizationPolicyNames.AdminOnly;
     private const string BackendJwtScheme = "Bearer_Backend";
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
@@ -85,7 +85,7 @@ public sealed class DesktopBridgeController : ControllerBase
     [HttpGet("events")]
     public async Task GetEvents(bool replayBuffered = true, CancellationToken cancellationToken = default)
     {
-        var authorizationFailure = AuthorizeDesktopSession();
+        var authorizationFailure = AuthorizeDesktopSession(out var sessionRevoked);
         if (authorizationFailure != null)
         {
             await authorizationFailure.ExecuteResultAsync(ControllerContext).ConfigureAwait(false);
@@ -97,16 +97,33 @@ public sealed class DesktopBridgeController : ControllerBase
         Response.ContentType = "text/event-stream";
         HttpContext.Features.Get<IHttpResponseBodyFeature>()?.DisableBuffering();
 
-        await Response.WriteAsync(": connected\n\n", cancellationToken).ConfigureAwait(false);
-        await Response.Body.FlushAsync(cancellationToken).ConfigureAwait(false);
-
-        await foreach (var activity in _activityHub.Subscribe(replayBuffered, cancellationToken).ConfigureAwait(false))
+        using var streamCancellation = CancellationTokenSource.CreateLinkedTokenSource(
+            cancellationToken,
+            sessionRevoked);
+        try
         {
-            var payload = JsonSerializer.Serialize(activity, JsonOptions);
-            await Response.WriteAsync($"id: {activity.Sequence}\n", cancellationToken).ConfigureAwait(false);
-            await Response.WriteAsync($"event: activity\n", cancellationToken).ConfigureAwait(false);
-            await Response.WriteAsync($"data: {payload}\n\n", cancellationToken).ConfigureAwait(false);
-            await Response.Body.FlushAsync(cancellationToken).ConfigureAwait(false);
+            await Response.WriteAsync(": connected\n\n", streamCancellation.Token).ConfigureAwait(false);
+            await Response.Body.FlushAsync(streamCancellation.Token).ConfigureAwait(false);
+
+            await foreach (var activity in _activityHub
+                               .Subscribe(replayBuffered, streamCancellation.Token)
+                               .ConfigureAwait(false))
+            {
+                if (!HasAuthorizedDesktopSession())
+                {
+                    return;
+                }
+
+                var payload = JsonSerializer.Serialize(activity, JsonOptions);
+                await Response.WriteAsync($"id: {activity.Sequence}\n", streamCancellation.Token).ConfigureAwait(false);
+                await Response.WriteAsync("event: activity\n", streamCancellation.Token).ConfigureAwait(false);
+                await Response.WriteAsync($"data: {payload}\n\n", streamCancellation.Token).ConfigureAwait(false);
+                await Response.Body.FlushAsync(streamCancellation.Token).ConfigureAwait(false);
+            }
+        }
+        catch (OperationCanceledException) when (streamCancellation.IsCancellationRequested)
+        {
+            // 浏览器断开或管理员撤销会话时立即结束现有 SSE，不记录为服务端错误。
         }
     }
 
@@ -119,7 +136,7 @@ public sealed class DesktopBridgeController : ControllerBase
         bool replayBuffered = true,
         CancellationToken cancellationToken = default)
     {
-        var authorizationFailure = AuthorizeDesktopSession();
+        var authorizationFailure = AuthorizeDesktopSession(out var sessionRevoked);
         if (authorizationFailure != null)
         {
             await authorizationFailure.ExecuteResultAsync(ControllerContext).ConfigureAwait(false);
@@ -138,36 +155,63 @@ public sealed class DesktopBridgeController : ControllerBase
         Response.ContentType = "text/event-stream";
         HttpContext.Features.Get<IHttpResponseBodyFeature>()?.DisableBuffering();
 
-        await Response.WriteAsync(": connected\n\n", cancellationToken).ConfigureAwait(false);
-        await Response.Body.FlushAsync(cancellationToken).ConfigureAwait(false);
-
-        await foreach (var message in _authorizedSyncHub
-                           .Subscribe(ownerId, AdminOnlyPolicy, replayBuffered, cancellationToken)
-                           .ConfigureAwait(false))
+        using var streamCancellation = CancellationTokenSource.CreateLinkedTokenSource(
+            cancellationToken,
+            sessionRevoked);
+        try
         {
-            var payload = JsonSerializer.Serialize(message, JsonOptions);
-            await Response.WriteAsync($"id: {message.Sequence}\n", cancellationToken).ConfigureAwait(false);
-            await Response.WriteAsync("event: authorized-sync\n", cancellationToken).ConfigureAwait(false);
-            await Response.WriteAsync($"data: {payload}\n\n", cancellationToken).ConfigureAwait(false);
-            await Response.Body.FlushAsync(cancellationToken).ConfigureAwait(false);
+            await Response.WriteAsync(": connected\n\n", streamCancellation.Token).ConfigureAwait(false);
+            await Response.Body.FlushAsync(streamCancellation.Token).ConfigureAwait(false);
+
+            await foreach (var message in _authorizedSyncHub
+                               .Subscribe(ownerId, AdminOnlyPolicy, replayBuffered, streamCancellation.Token)
+                               .ConfigureAwait(false))
+            {
+                if (!HasAuthorizedDesktopSession())
+                {
+                    return;
+                }
+
+                var payload = JsonSerializer.Serialize(message, JsonOptions);
+                await Response.WriteAsync($"id: {message.Sequence}\n", streamCancellation.Token).ConfigureAwait(false);
+                await Response.WriteAsync("event: authorized-sync\n", streamCancellation.Token).ConfigureAwait(false);
+                await Response.WriteAsync($"data: {payload}\n\n", streamCancellation.Token).ConfigureAwait(false);
+                await Response.Body.FlushAsync(streamCancellation.Token).ConfigureAwait(false);
+            }
+        }
+        catch (OperationCanceledException) when (streamCancellation.IsCancellationRequested)
+        {
+            // 会话撤销同时终止 Admin Chat 同步流，不需要额外控制连接。
         }
     }
 
     private ActionResult? AuthorizeDesktopSession()
     {
-        if (!_tokenValidator.IsConfigured)
+        return AuthorizeDesktopSession(out _);
+    }
+
+    private ActionResult? AuthorizeDesktopSession(out CancellationToken sessionRevoked)
+    {
+        sessionRevoked = CancellationToken.None;
+        var suppliedToken = Request.Headers[DesktopBridgeTokenValidator.TokenHeaderName].FirstOrDefault();
+        if (string.IsNullOrWhiteSpace(suppliedToken) && !_tokenValidator.IsConfigured)
         {
             return StatusCode(
                 StatusCodes.Status503ServiceUnavailable,
                 new ProblemDetails
                 {
                     Title = "DesktopBridge is inactive",
-                    Detail = "Start NCF from NcfDesktopApp to enable a protected desktop session.",
+                    Detail = "Provide NCF_DESKTOP_BRIDGE_TOKEN or approve a DesktopBridge pairing request in Admin.",
                     Status = StatusCodes.Status503ServiceUnavailable
                 });
         }
 
+        return _tokenValidator.TryAuthorize(suppliedToken, out sessionRevoked) ? null : Unauthorized();
+    }
+
+    private bool HasAuthorizedDesktopSession()
+    {
         var suppliedToken = Request.Headers[DesktopBridgeTokenValidator.TokenHeaderName].FirstOrDefault();
-        return _tokenValidator.IsAuthorized(suppliedToken) ? null : Unauthorized();
+        return _tokenValidator.IsAuthorized(suppliedToken);
     }
 }

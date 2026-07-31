@@ -328,13 +328,15 @@ jobs:
           param([string]$Text)
 
           $project = [xml]$Text
-          $versionNode = $project.Project.PropertyGroup.Version |
-            Where-Object { -not [string]::IsNullOrWhiteSpace($_.'#text') } |
+          # SelectNodes returns XmlElement instances on Windows PowerShell 5.1;
+          # property navigation can unwrap a text-only element into a string.
+          $versionNode = $project.SelectNodes('/Project/PropertyGroup/Version') |
+            Where-Object { -not [string]::IsNullOrWhiteSpace($_.InnerText) } |
             Select-Object -First 1
           if (-not $versionNode) {
             return ''
           }
-          return ([string]$versionNode.'#text').Trim()
+          return ([string]$versionNode.InnerText).Trim()
         }
 
         if (-not (Test-Path -LiteralPath $projectPath)) {

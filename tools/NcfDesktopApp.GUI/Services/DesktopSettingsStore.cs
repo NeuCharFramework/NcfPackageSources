@@ -72,6 +72,8 @@ public static class DesktopSettingsStore
             var environment = string.Equals(settings.AspNetCoreEnvironment, "Development", System.StringComparison.OrdinalIgnoreCase)
                 ? "Development"
                 : "Production";
+            var startPort = Math.Clamp(settings.StartPort, 1024, 65535);
+            var endPort = Math.Clamp(settings.EndPort, startPort, 65535);
             var existingRecentPaths = new System.Collections.Generic.List<string>();
             try
             {
@@ -97,12 +99,20 @@ public static class DesktopSettingsStore
             var toWrite = new DesktopUserSettings
             {
                 MirrorServerBaseUrl = normalized,
+                AutoOpenBrowser = settings.AutoOpenBrowser,
+                AutoCleanDownloads = settings.AutoCleanDownloads,
+                ShowDetailedInfo = settings.ShowDetailedInfo,
+                StartPort = startPort,
+                EndPort = endPort,
                 LaunchTargetKind = settings.LaunchTargetKind,
                 ExternalNcfPath = settings.ExternalNcfPath?.Trim() ?? string.Empty,
                 RemoteSiteUrl = settings.RemoteSiteUrl?.Trim() ?? string.Empty,
                 TemplateWorkspaceParentPath = settings.TemplateWorkspaceParentPath?.Trim() ?? string.Empty,
                 RecentNcfPaths = recentPaths,
-                AspNetCoreEnvironment = environment
+                AspNetCoreEnvironment = environment,
+                VoiceModelId = settings.VoiceModelId?.Trim() ?? string.Empty,
+                VoiceCustomModelPath = settings.VoiceCustomModelPath?.Trim() ?? string.Empty,
+                VoiceLanguage = NormalizeVoiceLanguage(settings.VoiceLanguage)
             };
             var temporaryPath = $"{SettingsFilePath}.tmp.{Environment.ProcessId}";
             try
@@ -118,5 +128,15 @@ public static class DesktopSettingsStore
                 }
             }
         }
+    }
+
+    private static string NormalizeVoiceLanguage(string? language)
+    {
+        return language?.Trim().ToLowerInvariant() switch
+        {
+            "zh" => "zh",
+            "en" => "en",
+            _ => "auto"
+        };
     }
 }

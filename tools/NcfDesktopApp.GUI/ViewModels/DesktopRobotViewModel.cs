@@ -176,6 +176,34 @@ public partial class DesktopRobotViewModel : ViewModelBase
         });
     }
 
+    /// <summary>显示语音输入、转写或配置状态。</summary>
+    public void SetVoiceInputState(string state, string detail, bool isError = false)
+    {
+        RunOnUi(() =>
+        {
+            SetMascot(NcfMascotKind.Cici, isError ? NcfMascotPose.Warning : state switch
+            {
+                "正在录音" => NcfMascotPose.Working,
+                "正在识别" => NcfMascotPose.Thinking,
+                "识别完成" => NcfMascotPose.Success,
+                _ => NcfMascotPose.Idle
+            });
+            Title = "AdminChat 语音输入";
+            Detail = detail;
+            StateText = state;
+            StateColor = isError ? "#DC3545" : state switch
+            {
+                "正在录音" => "#DC2626",
+                "正在识别" => "#7C3AED",
+                "识别完成" => "#16A34A",
+                _ => "#64748B"
+            };
+            Emoji = state == "正在录音" ? "🎙️" : isError ? "🛠️" : "💬";
+            IsProgressVisible = state == "正在识别";
+            Progress = 0;
+        });
+    }
+
     public void ApplyActivity(DesktopActivityMessage activity)
     {
         RunOnUi(() =>

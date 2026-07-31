@@ -111,6 +111,18 @@ public partial class MainWindowViewModel : ViewModelBase
     private string _remoteBridgeToken = string.Empty;
 
     [ObservableProperty]
+    private bool _isRemotePairingVisible;
+
+    [ObservableProperty]
+    private string _remotePairingCode = string.Empty;
+
+    [ObservableProperty]
+    private string _remotePairingStatus = string.Empty;
+
+    [ObservableProperty]
+    private string _remotePairingApprovalUrl = string.Empty;
+
+    [ObservableProperty]
     private string _templateWorkspaceParentPath = string.Empty;
 
     [ObservableProperty]
@@ -168,6 +180,10 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public Action? CreateWorkspaceWindowRequested { get; set; }
 
+    public Action? ShowWorkspaceSettingsRequested { get; set; }
+
+    public Action? ShowTemplateWorkspaceRequested { get; set; }
+
     public DesktopRobotViewModel Robot { get; } = new();
 
     public ObservableCollection<string> RecentNcfPaths { get; } = new();
@@ -184,6 +200,10 @@ public partial class MainWindowViewModel : ViewModelBase
     public bool IsRemoteTargetMode => LaunchTargetKind == NcfLaunchTargetKind.RemoteSite;
 
     public bool IsTargetSelectionEnabled => !IsOperationInProgress && !_isNcfRunning;
+
+    public string LaunchConfigurationSummary => IsRemoteTargetMode
+        ? "远程连接配置"
+        : $"{AspNetCoreEnvironment} · 端口 {StartPort}–{EndPort}";
 
     public string ManagedModeButtonBackground => IsManagedTargetMode ? "#2563EB" : "Transparent";
 
@@ -206,6 +226,9 @@ public partial class MainWindowViewModel : ViewModelBase
     
     [ObservableProperty]
     private string _browserErrorMessage = "";
+
+    [ObservableProperty]
+    private string _browserNavigationStatus = "准备中";
     
     [ObservableProperty]
     private bool _isInitializing = true;
@@ -297,6 +320,7 @@ public partial class MainWindowViewModel : ViewModelBase
         OnPropertyChanged(nameof(ExternalModeButtonForeground));
         OnPropertyChanged(nameof(RemoteModeButtonBackground));
         OnPropertyChanged(nameof(RemoteModeButtonForeground));
+        OnPropertyChanged(nameof(LaunchConfigurationSummary));
 
         if (_suppressDesktopSettingsSave)
         {
@@ -338,6 +362,7 @@ public partial class MainWindowViewModel : ViewModelBase
         TargetEntryText = value;
         TargetValidationMessage = "地址已变化，请检测远程站点配置。令牌只保存在当前工作台内存中。";
         TargetStatusColor = "#D97706";
+        ResetRemotePairingState();
         SaveDesktopSettings();
     }
 
@@ -351,10 +376,39 @@ public partial class MainWindowViewModel : ViewModelBase
 
     partial void OnAspNetCoreEnvironmentChanged(string value)
     {
+        OnPropertyChanged(nameof(LaunchConfigurationSummary));
         if (!_suppressDesktopSettingsSave)
         {
             SaveDesktopSettings();
         }
+    }
+
+    partial void OnAutoOpenBrowserChanged(bool value) => SaveDesktopSettings();
+
+    partial void OnAutoCleanDownloadsChanged(bool value) => SaveDesktopSettings();
+
+    partial void OnShowDetailedInfoChanged(bool value) => SaveDesktopSettings();
+
+    partial void OnStartPortChanged(int value)
+    {
+        if (value > EndPort)
+        {
+            EndPort = value;
+        }
+
+        OnPropertyChanged(nameof(LaunchConfigurationSummary));
+        SaveDesktopSettings();
+    }
+
+    partial void OnEndPortChanged(int value)
+    {
+        if (value < StartPort)
+        {
+            StartPort = value;
+        }
+
+        OnPropertyChanged(nameof(LaunchConfigurationSummary));
+        SaveDesktopSettings();
     }
 
     partial void OnIsOperationInProgressChanged(bool value)
@@ -398,6 +452,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private NcfLaunchTarget? _resolvedLaunchTarget;
     private NcfLaunchTarget? _activeLaunchTarget;
     private bool _isNcfRunning = false;
+    private int _isHandlingDesktopBridgeRevocation;
     
     // 🚀 性能优化：批量日志处理
     private readonly Queue<string> _pendingCliLogs = new Queue<string>();
@@ -429,6 +484,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _desktopBridgeClient.ActivityReceived += OnDesktopActivityReceived;
         _desktopBridgeClient.AuthorizedSyncReceived += OnDesktopAuthorizedSyncReceived;
         _desktopBridgeClient.AuthorizedSyncAuthorizationFailed += OnDesktopAuthorizedSyncAuthorizationFailed;
+        _desktopBridgeClient.SessionRevoked += OnDesktopBridgeSessionRevoked;
         _adminChatClient = new AdminChatClient(new HttpClient(CreateDesktopHttpHandler(allowAutoRedirect: false), disposeHandler: true)
         {
             Timeout = Timeout.InfiniteTimeSpan
@@ -500,12 +556,20 @@ public partial class MainWindowViewModel : ViewModelBase
         DesktopSettingsStore.Save(new DesktopUserSettings
         {
             MirrorServerBaseUrl = MirrorServerBaseUrl,
+            AutoOpenBrowser = AutoOpenBrowser,
+            AutoCleanDownloads = AutoCleanDownloads,
+            ShowDetailedInfo = ShowDetailedInfo,
+            StartPort = StartPort,
+            EndPort = EndPort,
             LaunchTargetKind = LaunchTargetKind,
             ExternalNcfPath = ExternalNcfPath,
             RemoteSiteUrl = RemoteSiteUrl,
             TemplateWorkspaceParentPath = TemplateWorkspaceParentPath,
             RecentNcfPaths = RecentNcfPaths.ToList(),
-            AspNetCoreEnvironment = AspNetCoreEnvironment
+            AspNetCoreEnvironment = AspNetCoreEnvironment,
+            VoiceModelId = SelectedVoiceModel?.Id ?? string.Empty,
+            VoiceCustomModelPath = VoiceCustomModelPath,
+            VoiceLanguage = VoiceLanguage
         });
     }
 
@@ -883,6 +947,18 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private void ShowWorkspaceSettings()
+    {
+        ShowWorkspaceSettingsRequested?.Invoke();
+    }
+
+    [RelayCommand]
+    private void ShowTemplateWorkspace()
+    {
+        ShowTemplateWorkspaceRequested?.Invoke();
+    }
+
+    [RelayCommand]
     private void OpenSelectedTargetDirectory()
     {
         if (IsRemoteTargetMode)
@@ -906,6 +982,15 @@ public partial class MainWindowViewModel : ViewModelBase
 
         OpenBrowser(path);
         AddLog($"📁 已打开目标目录: {path}");
+    }
+
+    [RelayCommand]
+    private void OpenRemotePairingApproval()
+    {
+        if (!string.IsNullOrWhiteSpace(RemotePairingApprovalUrl))
+        {
+            OpenBrowser(RemotePairingApprovalUrl);
+        }
     }
 
     private bool CanChangeLaunchTarget() => !IsOperationInProgress && !_isNcfRunning;
@@ -1022,45 +1107,6 @@ public partial class MainWindowViewModel : ViewModelBase
         ShowDesktopRobotRequested?.Invoke();
     }
     
-    [RelayCommand(CanExecute = nameof(CanCloseBrowserTab))]
-    private async Task CloseBrowserTab()
-    {
-        try
-        {
-            // 显示确认对话框
-            var result = await ShowConfirmDialogAsync(
-                "确认关闭",
-                "关闭标签页将停止 NCF 应用程序，\n是否继续？",
-                "关闭",
-                "取消"
-            );
-
-            if (!result)
-            {
-                AddLog("ℹ️ 取消关闭标签页");
-                return;
-            }
-
-            AddLog("🗙 关闭浏览器标签页...");
-
-            // 关闭浏览器标签页
-            IsBrowserTabVisible = false;
-            CurrentTabIndex = 0; // 切换回设置页面
-            
-            // 停止NCF进程
-            if (_isNcfRunning)
-            {
-                await StopNcfAsync();
-            }
-            
-            AddLog("✅ 浏览器标签页已关闭");
-        }
-        catch (Exception ex)
-        {
-            AddLog($"❌ 关闭浏览器标签页失败: {ex.Message}");
-        }
-    }
-    
     /// <summary>
     /// 显示确认对话框
     /// </summary>
@@ -1144,8 +1190,6 @@ public partial class MainWindowViewModel : ViewModelBase
         return false;
     }
     
-    private bool CanCloseBrowserTab() => IsBrowserTabVisible;
-
     /// <summary>NCF 站点进程是否处于运行中（主窗口关闭前判断）。</summary>
     public bool IsNcfRunning => _isNcfRunning;
 
@@ -1196,6 +1240,11 @@ public partial class MainWindowViewModel : ViewModelBase
                 _suppressMirrorSettingsSave = true;
                 _suppressDesktopSettingsSave = true;
                 MirrorServerBaseUrl = _ncfService.MirrorServerBaseUrl;
+                AutoOpenBrowser = desktopSettings.AutoOpenBrowser;
+                AutoCleanDownloads = desktopSettings.AutoCleanDownloads;
+                ShowDetailedInfo = desktopSettings.ShowDetailedInfo;
+                StartPort = Math.Clamp(desktopSettings.StartPort, 1024, 65535);
+                EndPort = Math.Clamp(desktopSettings.EndPort, StartPort, 65535);
                 ExternalNcfPath = desktopSettings.ExternalNcfPath ?? string.Empty;
                 RemoteSiteUrl = desktopSettings.RemoteSiteUrl ?? string.Empty;
                 TemplateWorkspaceParentPath = string.IsNullOrWhiteSpace(desktopSettings.TemplateWorkspaceParentPath)
@@ -1207,6 +1256,9 @@ public partial class MainWindowViewModel : ViewModelBase
                     StringComparison.OrdinalIgnoreCase)
                     ? "Development"
                     : "Production";
+                VoiceCustomModelPath = desktopSettings.VoiceCustomModelPath ?? string.Empty;
+                VoiceLanguage = NormalizeVoiceLanguage(desktopSettings.VoiceLanguage);
+                SelectedVoiceModel = VoiceModelCatalog.FindById(desktopSettings.VoiceModelId);
                 LaunchTargetKind = desktopSettings.LaunchTargetKind;
                 RecentNcfPaths.Clear();
                 foreach (var path in desktopSettings.RecentNcfPaths ?? new List<string>())
@@ -1218,6 +1270,7 @@ public partial class MainWindowViewModel : ViewModelBase
                 }
                 _suppressMirrorSettingsSave = false;
                 _suppressDesktopSettingsSave = false;
+                RefreshVoiceModelReadiness();
                 RefreshSelectedLaunchTarget();
             });
 
@@ -1448,15 +1501,11 @@ public partial class MainWindowViewModel : ViewModelBase
                 {
                     throw new InvalidOperationException(remoteResolution.ErrorMessage);
                 }
-                if (string.IsNullOrWhiteSpace(RemoteBridgeToken))
-                {
-                    throw new InvalidOperationException(
-                        "请输入远程 DesktopBridge 令牌。该令牌应与远程站点的 NCF_DESKTOP_BRIDGE_TOKEN 一致。");
-                }
-
                 launchTarget = remoteResolution.Target!;
                 await Dispatcher.UIThread.InvokeAsync(() => ApplyResolvedLaunchTarget(launchTarget));
-                AddLog("🛡️ 远程模式：不启动或修改本地进程，仅建立受保护的 HTTPS/SSE 会话");
+                AddLog(string.IsNullOrWhiteSpace(RemoteBridgeToken)
+                    ? "🔐 远程模式：未填写令牌，将通过管理员审批申请临时会话"
+                    : "🛡️ 远程模式：使用手工令牌建立受保护的 HTTPS/SSE 会话");
             }
             else if (IsManagedTargetMode)
             {
@@ -1725,8 +1774,18 @@ public partial class MainWindowViewModel : ViewModelBase
         NcfLaunchTarget launchTarget,
         CancellationToken cancellationToken)
     {
-        _desktopBridgeSessionToken = RemoteBridgeToken.Trim();
         var siteUrl = launchTarget.EntryPath;
+        if (string.IsNullOrWhiteSpace(RemoteBridgeToken))
+        {
+            _desktopBridgeSessionToken = await AcquireRemotePairingTokenAsync(siteUrl, cancellationToken);
+            await Dispatcher.UIThread.InvokeAsync(() => RemoteBridgeToken = _desktopBridgeSessionToken);
+        }
+        else
+        {
+            _desktopBridgeSessionToken = RemoteBridgeToken.Trim();
+            await Dispatcher.UIThread.InvokeAsync(ResetRemotePairingState);
+        }
+
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
             SiteUrl = siteUrl;
@@ -1750,6 +1809,89 @@ public partial class MainWindowViewModel : ViewModelBase
             ProgressText = "远程 NCF 已连接";
             IsProgressIndeterminate = false;
         });
+    }
+
+    private async Task<string> AcquireRemotePairingTokenAsync(
+        string siteUrl,
+        CancellationToken cancellationToken)
+    {
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            IsRemotePairingVisible = true;
+            RemotePairingCode = "正在申请…";
+            RemotePairingStatus = "正在向 DesktopBridge 申请配对码。";
+            RemotePairingApprovalUrl = string.Empty;
+            ProgressText = "正在申请管理员配对…";
+            IsProgressIndeterminate = true;
+        });
+
+        var pairing = await _desktopBridgeClient.CreatePairingRequestAsync(
+            siteUrl,
+            $"NcfDesktopApp GUI · {Environment.MachineName}",
+            cancellationToken).ConfigureAwait(false);
+
+        if (!SiteEndpointPolicy.TryCreateEndpoint(
+                siteUrl,
+                pairing.VerificationPath,
+                out var approvalEndpoint,
+                out var endpointError))
+        {
+            throw new InvalidOperationException(endpointError);
+        }
+
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            RemotePairingCode = pairing.DeviceCode;
+            RemotePairingApprovalUrl = approvalEndpoint.AbsoluteUri;
+            RemotePairingStatus = $"请在管理后台核对并批准。配对请求将在 {pairing.ExpiresAt.ToLocalTime():HH:mm:ss} 过期。";
+            ProgressText = "等待管理员批准配对…";
+            AddLog($"🔑 DesktopBridge 配对码: {pairing.DeviceCode}");
+            if (AutoOpenBrowser)
+            {
+                OpenBrowser(approvalEndpoint.AbsoluteUri);
+            }
+        });
+
+        var pollDelay = TimeSpan.FromSeconds(Math.Clamp(pairing.PollIntervalSeconds, 1, 10));
+        while (true)
+        {
+            await Task.Delay(pollDelay, cancellationToken).ConfigureAwait(false);
+            var status = await _desktopBridgeClient.PollPairingAsync(
+                siteUrl,
+                pairing.RequestId,
+                pairing.PollSecret,
+                cancellationToken).ConfigureAwait(false);
+
+            switch (status.Status.Trim().ToLowerInvariant())
+            {
+                case "pending":
+                    continue;
+                case "approved" when !string.IsNullOrWhiteSpace(status.SessionToken):
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        RemotePairingStatus = status.SessionExpiresAt is { } expiresAt
+                            ? $"配对已批准，会话有效至 {expiresAt.ToLocalTime():yyyy-MM-dd HH:mm:ss}。"
+                            : "配对已批准，正在建立连接。";
+                        AddLog("✅ 管理员已批准 DesktopBridge 配对，已取得独立会话令牌");
+                    });
+                    return status.SessionToken;
+                case "denied":
+                case "expired":
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                        RemotePairingStatus = status.Message ?? "配对未获批准，请重新发起。");
+                    throw new InvalidOperationException(status.Message ?? "DesktopBridge 配对未获批准，请重新发起。");
+                default:
+                    throw new InvalidOperationException("DesktopBridge 返回了未知的配对状态，请重新发起。");
+            }
+        }
+    }
+
+    private void ResetRemotePairingState()
+    {
+        IsRemotePairingVisible = false;
+        RemotePairingCode = string.Empty;
+        RemotePairingStatus = string.Empty;
+        RemotePairingApprovalUrl = string.Empty;
     }
 
     private async Task ConnectDesktopBridgeAsync(
@@ -1778,6 +1920,39 @@ public partial class MainWindowViewModel : ViewModelBase
     private void OnDesktopBridgeAvailabilityChanged(DesktopBridgeProbeResult result)
     {
         ApplyDesktopBridgeAvailability(result);
+    }
+
+    private void OnDesktopBridgeSessionRevoked(string message)
+    {
+        if (Interlocked.CompareExchange(ref _isHandlingDesktopBridgeRevocation, 1, 0) != 0)
+        {
+            return;
+        }
+
+        Dispatcher.UIThread.Post(async () =>
+        {
+            try
+            {
+                AddLog($"🔒 {message}");
+                Robot.SetProcessState("授权已撤销", "正在退出当前网站状态", isError: true);
+                ResetAdminChatState();
+                IsBrowserTabVisible = false;
+                CurrentTabIndex = 0;
+                await StopNcfAsync().ConfigureAwait(true);
+            }
+            catch (Exception ex)
+            {
+                AddLog($"⚠️ 撤销会话后退出网站状态失败: {ex.Message}");
+                ResetAdminChatState();
+                IsBrowserTabVisible = false;
+                CurrentTabIndex = 0;
+                Robot.SetProcessState("授权已撤销", "网站已断开，桌面应用保持打开", isError: true);
+            }
+            finally
+            {
+                Interlocked.Exchange(ref _isHandlingDesktopBridgeRevocation, 0);
+            }
+        });
     }
 
     private void ApplyDesktopBridgeAvailability(DesktopBridgeProbeResult result)
@@ -1918,6 +2093,7 @@ public partial class MainWindowViewModel : ViewModelBase
                     DesktopBridgeNoticeMessage = string.Empty;
                     IsDesktopBridgeNoticeVisible = false;
                     IsDesktopBridgeInstallActionVisible = false;
+                    ResetRemotePairingState();
                     AddLog(stoppedCleanly
                         ? "✅ 目标已停止，可选择下一步操作（重新启动或其他目标）"
                         : "✅ 已结束停止流程，桌面应用保持打开，可继续操作");
@@ -2139,6 +2315,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         IsBrowserReady = true;
         HasBrowserError = false;
+        BrowserNavigationStatus = "就绪";
         AddLog("✅ 内置浏览器已准备就绪");
     }
 
@@ -2147,16 +2324,19 @@ public partial class MainWindowViewModel : ViewModelBase
         HasBrowserError = true;
         BrowserErrorMessage = errorMessage;
         IsBrowserReady = false;
+        BrowserNavigationStatus = "加载失败";
         AddLog($"❌ 浏览器错误: {errorMessage}");
     }
 
     public void OnNavigationStarted(string url)
     {
+        BrowserNavigationStatus = "加载中…";
         AddLog($"🌐 开始加载: {url}");
     }
 
     public void OnNavigationCompleted(string url)
     {
+        BrowserNavigationStatus = "已加载";
         AddLog($"✅ 加载完成: {url}");
     }
 

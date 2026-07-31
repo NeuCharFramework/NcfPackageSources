@@ -49,6 +49,7 @@ using Senparc.Xncf.XncfModuleManager.Domain.Services;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using ModelContextProtocol.Server;
+using Senparc.Xncf.XncfBuilder.Domain.Services.Preview;
 
 namespace Senparc.Xncf.XncfBuilder.OHS.Local
 {
@@ -223,7 +224,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         /// 执行模板生成
         /// </summary>
         /// <returns></returns>
-        private async Task<string> BuildSampleAsync(BuildXncf_BuildRequest request, AppServiceLogger logger)
+        private async Task<XncfBuildResult> BuildSampleAsync(BuildXncf_BuildRequest request, AppServiceLogger logger)
         {
             string getLibVersionParam(string dllName, string paramName)
             {
@@ -389,7 +390,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
             #endregion
 
-            return solutionFilePath;
+            return new XncfBuildResult(solutionFilePath, projectName);
         }
 
 
@@ -426,13 +427,46 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 try
                 {
-                    var solutionFilePath = await BuildSampleAsync(request, logger).ConfigureAwait(false);
-
-                    response.Data = $"项目生成成功！请打开 {solutionFilePath} 解决方案文件查看已附加的项目！<br />注意：如果您操作的项目此刻正在运行中，可能会引发重新编译，导致您看到的这个页面可能已失效。";
-                    response.Success = true;
+                    var buildResult = await BuildSampleAsync(request, logger).ConfigureAwait(false);
 
                     var configService = base.ServiceProvider.GetService<ConfigService>();
                     configService?.UpdateConfig(request);
+
+                    if (request.StartPreview)
+                    {
+                        try
+                        {
+                            var previewService = base.ServiceProvider.GetRequiredService<IXncfPreviewService>();
+                            var previewSession = await previewService.StartAsync(
+                                new XncfPreviewStartOptions
+                                {
+                                    SolutionFilePath = buildResult.SolutionFilePath,
+                                    ModuleProjectName = buildResult.ProjectName,
+                                    Port = request.PreviewPort,
+                                    StartupTimeoutSeconds = request.PreviewStartupTimeoutSeconds,
+                                    EnvironmentName = request.PreviewEnvironmentName
+                                },
+                                message => logger.Append(message),
+                                base.CancellationToken).ConfigureAwait(false);
+
+                            response.Data = $"项目生成成功！请打开 {buildResult.SolutionFilePath} 解决方案文件查看已附加的项目！<br />" +
+                                BuildPreviewStartedHtml(previewSession);
+                            response.Success = true;
+                        }
+                        catch (Exception previewException)
+                        {
+                            response.Success = false;
+                            response.StateCode = 101;
+                            response.ErrorMessage = previewException.Message;
+                            response.Data = $"项目已经生成并添加到 {buildResult.SolutionFilePath}，但独立预览启动失败：{previewException.Message}";
+                            logger.Append($"Preview Exception: {previewException.Message}");
+                        }
+                    }
+                    else
+                    {
+                        response.Data = $"项目生成成功！请打开 {buildResult.SolutionFilePath} 解决方案文件查看已附加的项目！<br />当前运行中的 Senparc.Web 不会自动加载新模块；可使用“启动 / 更新 XNCF 独立预览”进行无重启测试。";
+                        response.Success = true;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -451,6 +485,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
 
         #endregion
+
+        private sealed record XncfBuildResult(string SolutionFilePath, string ProjectName);
 
     }
 }

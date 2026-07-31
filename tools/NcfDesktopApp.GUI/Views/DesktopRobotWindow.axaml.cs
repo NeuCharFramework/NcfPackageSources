@@ -41,6 +41,8 @@ public partial class DesktopRobotWindow : Window
 
     public Action? OpenMainWindowRequested { get; set; }
 
+    public Action? VoiceInputRequested { get; set; }
+
     private void PositionNearWorkingAreaCorner()
     {
         var screen = Screens.ScreenFromWindow(this) ?? Screens.Primary;
@@ -130,6 +132,18 @@ public partial class DesktopRobotWindow : Window
     private void MascotAutoMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
         Robot?.UseAutomaticMascot();
+    }
+
+    private void VoiceInputButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        Robot?.ReactToPointer();
+        VoiceInputRequested?.Invoke();
+    }
+
+    private void VoiceInputMenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        Robot?.ReactToPointer();
+        VoiceInputRequested?.Invoke();
     }
 
     private void MascotMenuItem_OnClick(object? sender, RoutedEventArgs e)

@@ -30,6 +30,24 @@
   <data name="Function.XncfBuilder.Generate.Description" xml:space="preserve">
     <value>根据配置生成 XNCF 模块</value>
   </data>
+  <data name="Function.XncfBuilder.Preview.Name" xml:space="preserve">
+    <value>启动 / 更新 XNCF 独立预览</value>
+  </data>
+  <data name="Function.XncfBuilder.Preview.Description" xml:space="preserve">
+    <value>重新编译指定 XNCF，并在不重启当前站点的情况下启动独立预览实例</value>
+  </data>
+  <data name="Function.XncfBuilder.PreviewStatus.Name" xml:space="preserve">
+    <value>查看 XNCF 预览状态</value>
+  </data>
+  <data name="Function.XncfBuilder.PreviewStatus.Description" xml:space="preserve">
+    <value>查看当前站点管理的独立 XNCF 预览进程</value>
+  </data>
+  <data name="Function.XncfBuilder.StopPreview.Name" xml:space="preserve">
+    <value>停止 XNCF 独立预览</value>
+  </data>
+  <data name="Function.XncfBuilder.StopPreview.Description" xml:space="preserve">
+    <value>停止选中的预览进程并清理其临时发布目录</value>
+  </data>
   <data name="Function.XncfBuilder.GenerateEntity.Name" xml:space="preserve">
     <value>[AI] 生成数据库实体</value>
   </data>
@@ -92,6 +110,63 @@
   </data>
   <data name="Parameter.XncfBuilder.InstallSample" xml:space="preserve">
     <value>安装 Sample||</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.StartAfterBuild" xml:space="preserve">
+    <value>生成后启动独立预览||主站不会重启；预览使用独立进程和临时发布目录</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.ModuleProjectName" xml:space="preserve">
+    <value>XNCF 完整项目名称||例如 Senparc.Xncf.Sample</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.Port" xml:space="preserve">
+    <value>预览端口||填写 0 自动分配回环端口；自定义端口必须位于 1024–65535</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.Timeout" xml:space="preserve">
+    <value>启动超时（秒）||等待预览站点通过 HTTP 健康检查的最长时间</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.Environment" xml:space="preserve">
+    <value>预览环境||默认 XncfPreview 会强制使用预览目录中的本地 SQLite 和本地缓存</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.IncludeOutput" xml:space="preserve">
+    <value>显示预览日志||在状态结果中包含最近的进程输出</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.SessionId" xml:space="preserve">
+    <value>预览会话||选择需要停止的 XNCF 预览实例</value>
+  </data>
+  <data name="XncfBuilder.Option.Preview.StartAfterBuild" xml:space="preserve">
+    <value>生成成功后立即启动</value>
+  </data>
+  <data name="XncfBuilder.Option.Preview.StartAfterBuild.Help" xml:space="preserve">
+    <value>发布并启动独立 Senparc.Web 预览进程，当前主站保持运行</value>
+  </data>
+  <data name="XncfBuilder.Option.Preview.IncludeOutput" xml:space="preserve">
+    <value>包含最近日志</value>
+  </data>
+  <data name="XncfBuilder.Option.Preview.IncludeOutput.Help" xml:space="preserve">
+    <value>最多显示每个预览进程最近 300 行输出</value>
+  </data>
+  <data name="XncfBuilder.Preview.Running" xml:space="preserve">
+    <value>运行中</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stopped" xml:space="preserve">
+    <value>已停止</value>
+  </data>
+  <data name="XncfBuilder.Preview.RequestMissing" xml:space="preserve">
+    <value>预览启动失败：未提供预览参数。</value>
+  </data>
+  <data name="XncfBuilder.Preview.NoSessions" xml:space="preserve">
+    <value>当前没有 XNCF 独立预览会话。</value>
+  </data>
+  <data name="XncfBuilder.Preview.SessionRequired" xml:space="preserve">
+    <value>请选择需要停止的预览会话。</value>
+  </data>
+  <data name="XncfBuilder.Preview.StartSucceeded" xml:space="preserve">
+    <value>XNCF 独立预览已启动，当前 Senparc.Web 未重启。</value>
+  </data>
+  <data name="XncfBuilder.Preview.StopSucceeded" xml:space="preserve">
+    <value>XNCF 独立预览已停止，临时发布目录已清理。</value>
+  </data>
+  <data name="XncfBuilder.Preview.SessionNotFound" xml:space="preserve">
+    <value>没有找到指定预览会话；它可能已经停止。</value>
   </data>
   <data name="XncfBuilder.Option.Solution.Backup" xml:space="preserve">
     <value>备份 .sln 文件（推荐）</value>

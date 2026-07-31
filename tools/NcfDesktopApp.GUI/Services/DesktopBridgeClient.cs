@@ -26,6 +26,8 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
     public const int SupportedProtocolVersion = 1;
     public const string TokenHeaderName = "X-Ncf-Desktop-Token";
     private const string CapabilitiesPath = "/api/Senparc.Xncf.DesktopBridge/capabilities";
+    private const string PairingRequestsPath = "/api/Senparc.Xncf.DesktopBridge/pairing/requests";
+    private const string PairingPollPath = "/api/Senparc.Xncf.DesktopBridge/pairing/poll";
     private const string DefaultEventsPath = "/api/Senparc.Xncf.DesktopBridge/events";
     private const string DefaultAuthorizedSyncPath = "/api/Senparc.Xncf.DesktopBridge/authorized-sync/events";
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
@@ -55,6 +57,110 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
     public event Action<DesktopAuthorizedSyncMessage>? AuthorizedSyncReceived;
 
     public event Action<string>? AuthorizedSyncAuthorizationFailed;
+
+    public event Action<string>? SessionRevoked;
+
+    public async Task<DesktopBridgePairingCreateResponse> CreatePairingRequestAsync(
+        string siteUrl,
+        string clientName,
+        CancellationToken cancellationToken = default)
+    {
+        if (!SiteEndpointPolicy.TryCreateEndpoint(
+                siteUrl,
+                PairingRequestsPath,
+                out var endpoint,
+                out var endpointError))
+        {
+            throw new InvalidOperationException(endpointError);
+        }
+
+        using var request = new HttpRequestMessage(HttpMethod.Post, endpoint)
+        {
+            Content = CreateJsonContent(new { clientName })
+        };
+        using var response = await _httpClient.SendAsync(
+                request,
+                HttpCompletionOption.ResponseContentRead,
+                cancellationToken)
+            .ConfigureAwait(false);
+
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            throw new InvalidOperationException("当前站点的 DesktopBridge 版本不支持管理员配对，请先更新模块或手动填写令牌。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.TooManyRequests)
+        {
+            throw new InvalidOperationException("配对请求过于频繁，请等待 30 秒后重试。");
+        }
+
+        if (response.StatusCode == HttpStatusCode.Forbidden)
+        {
+            throw new InvalidOperationException("远程配对被拒绝：请使用 HTTPS，或通过 localhost/SSH 隧道连接。");
+        }
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new InvalidOperationException($"DesktopBridge 创建配对请求失败（HTTP {(int)response.StatusCode}）。");
+        }
+
+        var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+        var result = DeserializePairingResponse<DesktopBridgePairingCreateResponse>(json);
+        if (result == null || result.RequestId == Guid.Empty ||
+            string.IsNullOrWhiteSpace(result.DeviceCode) ||
+            string.IsNullOrWhiteSpace(result.PollSecret) ||
+            string.IsNullOrWhiteSpace(result.VerificationPath))
+        {
+            throw new InvalidOperationException("DesktopBridge 返回了无效的配对信息，请更新服务端模块。");
+        }
+
+        return result;
+    }
+
+    public async Task<DesktopBridgePairingPollResponse> PollPairingAsync(
+        string siteUrl,
+        Guid requestId,
+        string pollSecret,
+        CancellationToken cancellationToken = default)
+    {
+        if (!SiteEndpointPolicy.TryCreateEndpoint(
+                siteUrl,
+                PairingPollPath,
+                out var endpoint,
+                out var endpointError))
+        {
+            throw new InvalidOperationException(endpointError);
+        }
+
+        using var request = new HttpRequestMessage(HttpMethod.Post, endpoint)
+        {
+            Content = CreateJsonContent(new { requestId, pollSecret })
+        };
+        using var response = await _httpClient.SendAsync(
+                request,
+                HttpCompletionOption.ResponseContentRead,
+                cancellationToken)
+            .ConfigureAwait(false);
+
+        if (response.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden)
+        {
+            throw new InvalidOperationException("DesktopBridge 配对凭据无效或安全传输要求未满足，请重新发起配对。");
+        }
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new InvalidOperationException($"DesktopBridge 查询配对状态失败（HTTP {(int)response.StatusCode}）。");
+        }
+
+        var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+        var result = DeserializePairingResponse<DesktopBridgePairingPollResponse>(json);
+        if (result == null || string.IsNullOrWhiteSpace(result.Status))
+        {
+            throw new InvalidOperationException("DesktopBridge 返回了无效的配对状态。");
+        }
+
+        return result;
+    }
 
     public async Task<DesktopBridgeProbeResult> ProbeAsync(
         string siteUrl,
@@ -384,9 +490,11 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
 
                 if (response.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden)
                 {
-                    NotifyAvailability(new DesktopBridgeProbeResult(
+                    var revoked = new DesktopBridgeProbeResult(
                         DesktopBridgeAvailability.Unauthorized,
-                        "DesktopBridge 会话已失效，桌面机器人已切换到兼容模式。"));
+                        "DesktopBridge 会话已被撤销，正在退出当前网站状态。");
+                    NotifyAvailability(revoked);
+                    NotifySessionRevoked(revoked.Message);
                     return;
                 }
 
@@ -402,8 +510,14 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
             {
                 return;
             }
-            catch (Exception ex) when (ex is HttpRequestException or IOException or JsonException or InvalidOperationException)
+            catch (Exception ex) when (ex is
+                       OperationCanceledException or HttpRequestException or IOException or JsonException or InvalidOperationException)
             {
+                if (await CheckSessionRevokedAsync(siteUrl, sessionToken, cancellationToken).ConfigureAwait(false))
+                {
+                    return;
+                }
+
                 NotifyAvailability(new DesktopBridgeProbeResult(
                     DesktopBridgeAvailability.Unavailable,
                     $"DesktopBridge 连接中断（{ex.Message}），正在后台重连。"));
@@ -420,6 +534,23 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
 
             retryDelay = TimeSpan.FromSeconds(Math.Min(retryDelay.TotalSeconds * 2, 10));
         }
+    }
+
+    private async Task<bool> CheckSessionRevokedAsync(
+        string siteUrl,
+        string sessionToken,
+        CancellationToken cancellationToken)
+    {
+        var probe = await ProbeAsync(siteUrl, sessionToken, cancellationToken).ConfigureAwait(false);
+        if (probe.Availability != DesktopBridgeAvailability.Unauthorized)
+        {
+            return false;
+        }
+
+        var revoked = probe with { Message = "DesktopBridge 会话已被管理员撤销，正在退出当前网站状态。" };
+        NotifyAvailability(revoked);
+        NotifySessionRevoked(revoked.Message);
+        return true;
     }
 
     private async Task ReadEventStreamAsync(HttpResponseMessage response, CancellationToken cancellationToken)
@@ -588,6 +719,26 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
         return request;
     }
 
+    private static StringContent CreateJsonContent<T>(T value)
+    {
+        return new StringContent(
+            JsonSerializer.Serialize(value, JsonOptions),
+            Encoding.UTF8,
+            "application/json");
+    }
+
+    private static T? DeserializePairingResponse<T>(string json)
+    {
+        try
+        {
+            return JsonSerializer.Deserialize<T>(json, JsonOptions);
+        }
+        catch (JsonException)
+        {
+            return default;
+        }
+    }
+
     private void NotifyAvailability(DesktopBridgeProbeResult result)
     {
         foreach (var handler in AvailabilityChanged?.GetInvocationList() ?? Array.Empty<Delegate>())
@@ -644,6 +795,21 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
             catch
             {
                 // UI 订阅者异常不能终止同步流。
+            }
+        }
+    }
+
+    private void NotifySessionRevoked(string message)
+    {
+        foreach (var handler in SessionRevoked?.GetInvocationList() ?? Array.Empty<Delegate>())
+        {
+            try
+            {
+                ((Action<string>)handler)(message);
+            }
+            catch
+            {
+                // 会话撤销必须继续结束监听，不能被单个 UI 订阅者阻断。
             }
         }
     }
