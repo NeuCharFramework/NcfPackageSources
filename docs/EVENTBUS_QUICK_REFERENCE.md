@@ -162,7 +162,7 @@ Event 11 (Depth=10)
 
 - **技术详细文档**: [EVENTBUS_CIRCULAR_REFERENCE_PROTECTION.md](./EVENTBUS_CIRCULAR_REFERENCE_PROTECTION.md)
 - **流程图和架构**: [EVENTBUS_FLOW_DIAGRAMS.md](./EVENTBUS_FLOW_DIAGRAMS.md)
-- **完整检查报告**: [EVENTBUS_COMPLETE_SUMMARY.md](./EVENTBUS_COMPLETE_SUMMARY.md)
+- **源码说明**: [src/Basic/Senparc.Ncf.Core/EventBus/README.md](../src/Basic/Senparc.Ncf.Core/EventBus/README.md)
 
 ---
 
