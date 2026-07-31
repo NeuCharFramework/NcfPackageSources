@@ -184,8 +184,6 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public Action? ShowTemplateWorkspaceRequested { get; set; }
 
-    public Action? DesktopBridgeSessionRevokedRequested { get; set; }
-
     public DesktopRobotViewModel Robot { get; } = new();
 
     public ObservableCollection<string> RecentNcfPaths { get; } = new();
@@ -1936,20 +1934,19 @@ public partial class MainWindowViewModel : ViewModelBase
             try
             {
                 AddLog($"🔒 {message}");
-                Robot.SetProcessState("授权已撤销", "远程工作台正在安全退出", isError: true);
+                Robot.SetProcessState("授权已撤销", "正在退出当前网站状态", isError: true);
                 ResetAdminChatState();
                 IsBrowserTabVisible = false;
                 CurrentTabIndex = 0;
                 await StopNcfAsync().ConfigureAwait(true);
-                DesktopBridgeSessionRevokedRequested?.Invoke();
             }
             catch (Exception ex)
             {
-                AddLog($"⚠️ 撤销会话后的工作台清理失败: {ex.Message}");
+                AddLog($"⚠️ 撤销会话后退出网站状态失败: {ex.Message}");
                 ResetAdminChatState();
                 IsBrowserTabVisible = false;
                 CurrentTabIndex = 0;
-                DesktopBridgeSessionRevokedRequested?.Invoke();
+                Robot.SetProcessState("授权已撤销", "网站已断开，桌面应用保持打开", isError: true);
             }
             finally
             {

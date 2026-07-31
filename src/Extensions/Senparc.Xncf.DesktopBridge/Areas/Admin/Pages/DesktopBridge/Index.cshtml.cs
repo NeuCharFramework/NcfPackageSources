@@ -55,7 +55,7 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
     public IActionResult OnPostRevoke(Guid sessionId)
     {
         TempData["DesktopBridgeMessage"] = _credentialStore.Revoke(sessionId)
-            ? "会话已撤销，桌面端已收到断开信号并将关闭对应工作台。"
+            ? "会话已撤销，桌面端已收到断开信号并将退出当前网站状态，应用保持打开。"
             : "会话不存在或已经失效。";
         return RedirectToPage("./Index", new { uid = Uid });
     }

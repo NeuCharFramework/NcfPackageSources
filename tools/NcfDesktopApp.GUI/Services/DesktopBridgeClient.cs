@@ -492,7 +492,7 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
                 {
                     var revoked = new DesktopBridgeProbeResult(
                         DesktopBridgeAvailability.Unauthorized,
-                        "DesktopBridge 会话已被撤销，正在关闭当前工作台。");
+                        "DesktopBridge 会话已被撤销，正在退出当前网站状态。");
                     NotifyAvailability(revoked);
                     NotifySessionRevoked(revoked.Message);
                     return;
@@ -547,7 +547,7 @@ public sealed class DesktopBridgeClient : IAsyncDisposable
             return false;
         }
 
-        var revoked = probe with { Message = "DesktopBridge 会话已被管理员撤销，正在关闭当前工作台。" };
+        var revoked = probe with { Message = "DesktopBridge 会话已被管理员撤销，正在退出当前网站状态。" };
         NotifyAvailability(revoked);
         NotifySessionRevoked(revoked.Message);
         return true;

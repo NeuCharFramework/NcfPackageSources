@@ -127,14 +127,6 @@ public partial class App : Application
             templateWorkspaceWindow.Closed += (_, _) => templateWorkspaceWindow = null;
             templateWorkspaceWindow.Show(mainWindow);
         };
-        viewModel.DesktopBridgeSessionRevokedRequested = () =>
-        {
-            if (_workspaceWindows.Contains(mainWindow))
-            {
-                mainWindow.Close();
-            }
-        };
-
         mainWindow.Opened += (_, _) => robotWindow.Show();
         mainWindow.Closed += async (_, _) =>
         {
