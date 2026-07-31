@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.26.0-preview3</Version>
+    <Version>0.27.0-preview4</Version>
     <AssemblyName>Senparc.Ncf.Core</AssemblyName>
     <RootNamespace>Senparc.Ncf.Core</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -61,6 +61,10 @@
 				[2026-07-29] v0.26.0-preview3 修复安装状态写入并统一授权策略名称
 				1、修复 SiteConfig 安装状态属性未保存赋值的问题
 				2、新增跨模块共享的 NCF 授权策略名称定义
+				[2026-07-31] v0.27.0-preview4 新增核心验证与授权消息的共享本地化资源
+				1、新增 NcfCoreResource 及多语言资源，统一核心验证和授权提示
+				2、将通用验证错误接入文化回退机制
+				3、升级 Senparc.CO2NET 4.2.0 与 Senparc.CO2NET.WebApi 2.1.9-preview
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

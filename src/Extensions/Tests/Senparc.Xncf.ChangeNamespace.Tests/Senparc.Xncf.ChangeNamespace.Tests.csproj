@@ -2,11 +2,12 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net8.0</TargetFrameworks>
-		<Version>0.0.2</Version>
+		<Version>0.0.3</Version>
 		<PackageReleaseNotes>
 		  [2026-07-17] v0.0.1 同步上游项目版本并适配统一本地化能力
 		  1、Dependency update from Senparc.Xncf.ChangeNamespace to 0.22.0-preview2
 		  [2026-07-29] v0.0.2 Dependency update from Senparc.Xncf.ChangeNamespace to 0.22.1-preview3
+		  [2026-07-31] v0.0.3 Dependency update from Senparc.Xncf.ChangeNamespace to 0.22.2-preview4
 		</PackageReleaseNotes>
 
 		<IsPackable>false</IsPackable>

@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 
-		<Version>0.0.4</Version>
+		<Version>0.0.5</Version>
 		<PackageReleaseNotes>
 		  [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 		  1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
@@ -39,6 +39,7 @@
 		  24、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.0-preview2
 		  25、同步后台管理、安装器与站点的本地化、批量更新及内嵌 WebView 兼容性改进
 		  [2026-07-29] v0.0.4 Dependency update from Senparc.Ncf.Core to 0.26.0-preview3
+		  [2026-07-31] v0.0.5 Dependency update from Senparc.Ncf.Core to 0.27.0-preview4
 </PackageReleaseNotes>
 		<Configurations>Debug;Release;TemplateRelease</Configurations>
 		<ImplicitUsings>enable</ImplicitUsings>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.6.1-preview3</Version>
+    <Version>0.7.0-preview4</Version>
     <AssemblyName>Senparc.Xncf.DynamicData</AssemblyName>
     <RootNamespace>Senparc.Xncf.DynamicData</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -45,6 +45,9 @@
       4、同步管理页面与前端交互文案的多语言显示
       5、完善数据表及接口配置页复制操作的兼容性与反馈
       [2026-07-29] v0.6.1-preview3 Dependency update from Senparc.Ncf.AreaBase to 0.22.0-preview3
+      [2026-07-31] v0.7.0-preview4 扩展 DynamicData 管理界面的多语言能力
+      1、新增数据表、布局与页面配置资源及前端本地化脚本
+      2、升级 CO2NET MagicObject 1.2.0 与 WebApi 2.1.9-preview
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

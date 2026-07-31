@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.3.1-preview4</Version>
+    <Version>0.4.0-preview5</Version>
     <AssemblyName>Senparc.Xncf.KnowledgeBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.KnowledgeBase</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -38,6 +38,9 @@
 		[2026-07-29] v0.3.1-preview4 通过文件服务读取知识库文件并限制物理路径
 		1、复用 NcfFileService 读取文件内容，统一文件存储边界校验
 		2、避免篡改数据库路径字段后直接访问站点外部文件
+		[2026-07-31] v0.4.0-preview5 扩展 KnowledgeBase 管理界面的多语言能力
+		1、补齐知识库编辑、检索测试、菜单与交互文案的多语言资源
+		2、升级 Senparc.AI 组件与 CO2NET WebApi 兼容依赖
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

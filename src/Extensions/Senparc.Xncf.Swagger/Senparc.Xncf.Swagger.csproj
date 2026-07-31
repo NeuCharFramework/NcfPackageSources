@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.19.1-preview3</Version>
+    <Version>0.20.0-preview4</Version>
     <!--<LangVersion>lastest</LangVersion>-->
     <LangVersion>preview</LangVersion>
     <AssemblyName>Senparc.Xncf.Swagger</AssemblyName>
@@ -44,6 +44,9 @@
 				[2026-07-29] v0.19.1-preview3 修正 Swagger 认证中间件的认证方案处理
 				1、按 Admin 和 JWT 认证方案执行认证并将成功主体写回请求上下文
 				2、未通过认证时继续跳转登录页，避免仅依赖请求头字符串判断
+				[2026-07-31] v0.20.0-preview4 扩展 Swagger 管理交互的多语言能力
+				1、将 Swagger 前端交互提示接入本地化资源
+				2、升级 Senparc.CO2NET.WebApi 至 2.1.9-preview
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test</Configurations>

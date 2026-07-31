@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.22.0-preview3</Version>
+    <Version>0.23.0-preview4</Version>
     <AssemblyName>Senparc.Ncf.AreaBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.AreaBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -40,6 +40,9 @@
 				[2026-07-29] v0.22.0-preview3 统一 AdminOnly 授权策略命名并提供宿主注册扩展
 				1、在 Core 统一 AdminOnly、AdminMember 策略名称，避免跨模块硬编码
 				2、提供 NCF Admin 授权策略注册扩展并保留宿主自定义策略兼容
+				[2026-07-31] v0.23.0-preview4 扩展后台授权错误的多语言输出
+				1、将 Ajax 无权限与 Handler 缺失提示接入 NcfCoreResource
+				2、保留原有回退文案与 HTTP 状态行为
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

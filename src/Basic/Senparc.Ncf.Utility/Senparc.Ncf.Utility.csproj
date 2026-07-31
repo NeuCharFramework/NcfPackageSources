@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.21.0-preview2</Version>
+    <Version>0.21.1-preview3</Version>
     <AssemblyName>Senparc.Ncf.Utility</AssemblyName>
     <RootNamespace>Senparc.Ncf.Utility</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -25,6 +25,8 @@
 				[2026-07-17] v0.21.0-preview2 增强全局文化配置与本地化选项支持
 				1、新增本地化选项并统一全局文化信息管理
 				2、增强文化切换、默认语言与回退语言配置能力
+				[2026-07-31] v0.21.1-preview3 升级 CO2NET 4.2.0 基础依赖
+				1、升级 Senparc.CO2NET 至 4.2.0 并保持现有项目行为兼容
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.17.1-preview6</Version>
+    <Version>0.18.0-preview7</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -104,6 +104,9 @@
       [2026-07-29] v0.17.1-preview6 加强提示词接口授权并防护插件压缩包路径
       1、为提示词、音频、图片和流式接口统一增加 AdminOnly 授权保护
       2、限制插件压缩包大小、条目数、解压体积和路径穿越，并安全渲染结果内容
+      [2026-07-31] v0.18.0-preview7 扩展 PromptRange 管理界面的多语言能力
+      1、补齐提示词、模型、菜单、复制与日期显示的多语言资源
+      2、升级 Senparc.AI 组件版本以适配 CO2NET 4.2.0
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>

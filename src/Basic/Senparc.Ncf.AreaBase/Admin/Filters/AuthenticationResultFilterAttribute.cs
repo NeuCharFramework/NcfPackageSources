@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260731
+    修改描述：v0.23.0-preview4 将 Handler 缺失与无权限提示接入核心多语言资源
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authentication;

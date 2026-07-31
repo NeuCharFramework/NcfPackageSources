@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.3-preview3</Version>
+    <Version>0.20.4-preview4</Version>
     <AssemblyName>Senparc.Ncf.Database.InMemory</AssemblyName>
     <RootNamespace>Senparc.Ncf.Database.InMemory</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -28,6 +28,8 @@
 				2、Dependency update from Senparc.Ncf.Database to 0.21.2-preview2
 				3、Dependency update from Senparc.Ncf.Utility to 0.21.0-preview2
 				[2026-07-29] v0.20.3-preview3 Dependency update from Senparc.Ncf.Core to 0.26.0-preview3
+				[2026-07-31] v0.20.4-preview4 升级 CO2NET 4.2.0 基础依赖
+				1、升级 Senparc.CO2NET 至 4.2.0 并保持现有项目行为兼容
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

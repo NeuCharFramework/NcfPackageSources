@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.0.2</Version>
+    <Version>0.0.3</Version>
     <PackageReleaseNotes>
       [2026-07-17] v0.0.1 同步上游项目版本并适配统一本地化能力
       1、Dependency update from Senparc.Xncf.DatabaseToolkit to 0.26.0-preview2
       [2026-07-29] v0.0.2 补充数据库执行分页筛选行为测试
       1、覆盖分页查询、总数返回和筛选条件的执行结果
       2、验证分页参数边界处理与数据库执行器行为
+      [2026-07-31] v0.0.3 Dependency update from Senparc.Xncf.DatabaseToolkit to 0.27.1-preview4
     </PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>

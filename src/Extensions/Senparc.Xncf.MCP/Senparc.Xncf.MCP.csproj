@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.1-preview4</Version>
+    <Version>0.4.2-preview5</Version>
     <AssemblyName>Senparc.Xncf.MCP</AssemblyName>
     <RootNamespace>Senparc.Xncf.MCP</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -39,6 +39,9 @@
       4、同步管理页面与前端交互文案的多语言显示
       5、同步 AIKernel 0.14.0-preview5 的 NeuChar 模型 API 版本适配
       [2026-07-29] v0.4.1-preview4 Dependency update from Senparc.Ncf.AreaBase to 0.22.0-preview3
+      [2026-07-31] v0.4.2-preview5 升级 MCP 模块的 AI 与 CO2NET 兼容依赖
+      1、升级 Senparc.AI 组件版本以适配 CO2NET 4.2.0 二进制接口
+      2、升级 Senparc.CO2NET.WebApi 至 2.1.9-preview
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

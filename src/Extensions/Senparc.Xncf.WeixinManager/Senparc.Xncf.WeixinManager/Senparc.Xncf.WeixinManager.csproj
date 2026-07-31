@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<RazorLangVersion>3.0</RazorLangVersion>-->
-    <Version>0.23.1-preview4</Version>
+    <Version>0.24.0-preview5</Version>
     <!--<GenerateProgramFile>false</GenerateProgramFile>-->
     <!--https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1511#issuecomment-696682962-->
     <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
@@ -78,6 +78,10 @@
 		[2026-07-29] v0.23.1-preview4 限制微信管理模块的敏感日志和外部接口暴露
 		1、详细 API 日志仅在开发环境启用，降低密钥和令牌泄露风险
 		2、生成 SDK 接口默认禁止外部访问，避免未经授权的公网暴露
+		[2026-07-31] v0.24.0-preview5 完善 WeixinManager 管理功能多语言并升级兼容依赖
+		1、补齐公众号账户、用户、异常与 Swagger 交互文案的多语言资源
+		2、修复账户保存提示乱码并保留英文回退文案
+		3、升级 Senparc.AI 组件、CO2NET WebApi 2.1.9-preview 与 TenPay 1.20.0
 </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

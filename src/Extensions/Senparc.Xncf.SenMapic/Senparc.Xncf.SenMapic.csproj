@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.3.1-preview3</Version>
+    <Version>0.4.0-preview4</Version>
     <AssemblyName>Senparc.Xncf.SenMapic</AssemblyName>
     <RootNamespace>Senparc.Xncf.SenMapic</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -36,6 +36,9 @@
       [2026-07-29] v0.3.1-preview3 限制站点地图抓取目标并安全处理重定向
       1、拒绝本机、内网、链路本地和非公网地址作为抓取目标
       2、限制重定向次数并使用无 Cookie、禁用自动重定向的安全 HTTP 客户端
+      [2026-07-31] v0.4.0-preview4 扩展 SenMapic 任务界面的多语言能力
+      1、新增任务列表、详情与前端交互的多语言资源
+      2、升级 Senparc.CO2NET.WebApi 至 2.1.9-preview
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
