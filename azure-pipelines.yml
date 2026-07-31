@@ -318,7 +318,8 @@ jobs:
     displayName: 'Check Desktop version change and Release-Desktop conditions'
     inputs:
       targetType: 'inline'
-      pwsh: true
+      # The self-hosted Windows agent provides Windows PowerShell, not pwsh.exe.
+      pwsh: false
       script: |
         $ErrorActionPreference = 'Stop'
         $projectPath = 'tools/NcfDesktopApp.GUI/NcfDesktopApp.GUI.csproj'
