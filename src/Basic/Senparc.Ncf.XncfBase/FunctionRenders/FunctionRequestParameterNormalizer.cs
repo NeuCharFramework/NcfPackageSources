@@ -94,6 +94,11 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
 
         private static JsonNode NormalizeSimpleNode(Type targetType, JsonNode currentNode, FunctionParameterUiAttribute uiAttr)
         {
+            if (currentNode == null)
+            {
+                return CreateDefaultValueNode(targetType);
+            }
+
             if (IsBooleanTargetType(targetType) && TryNormalizeBooleanJsonNode(currentNode, out var boolJson))
             {
                 return boolJson;
@@ -139,6 +144,16 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
             }
 
             return JsonValue.Create(firstValue);
+        }
+
+        private static JsonNode CreateDefaultValueNode(Type targetType)
+        {
+            if (!targetType.IsValueType || Nullable.GetUnderlyingType(targetType) != null)
+            {
+                return null;
+            }
+
+            return JsonSerializer.SerializeToNode(Activator.CreateInstance(targetType), targetType);
         }
 
         private static List<string> ExtractValues(JsonNode currentNode, bool forMultiple)

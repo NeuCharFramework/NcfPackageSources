@@ -79,6 +79,8 @@
   <data name="Dashboard.UnknownModel" xml:space="preserve"><value>Неизвестно</value></data>
   <data name="Dashboard.ModelPrefix" xml:space="preserve"><value>Модель №{0}</value></data>
   <data name="Dashboard.Refreshed" xml:space="preserve"><value>Панель обновлена</value></data>
+  <data name="Auth.SessionExpired" xml:space="preserve"><value>Срок действия сеанса истёк. Войдите снова.</value></data>
+  <data name="Auth.AccessDenied" xml:space="preserve"><value>У вас нет разрешения на доступ к этой функции.</value></data>
   <data name="Model.SearchPlaceholder" xml:space="preserve"><value>Введите текст</value></data>
   <data name="Model.Add" xml:space="preserve"><value>Добавить</value></data>
   <data name="Model.BatchDelete" xml:space="preserve"><value>Удалить выбранные</value></data>

@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260726
     修改描述：v0.3.0-preview2 改进固件更新镜像源选择与日志摘要
 
+    修改标识：Senparc - 20260802
+    修改描述：同步 NcfDesktop 最新发布，为官网桌面应用下载提供本地优先镜像
+
 ----------------------------------------------------------------*/
 
 using System.Net.Http.Json;
@@ -27,14 +30,17 @@ using Senparc.Ncf.Service;
 namespace Senparc.Xncf.FirmwareUpdate.Domain.Services;
 
 /// <summary>
-/// 从 GitHub 拉取 NeuCharFramework/NCF 的 Release 资源，写入当前站点 wwwroot 下的 NcfPackages 目录，并生成 latest-release.json（供 ncf.pub 镜像与桌面端 Plan B）。
+/// 从 GitHub 拉取 NCF 运行包与 NcfDesktop 桌面应用的 Release 资源，写入当前站点 wwwroot 下的 NcfPackages 目录，
+/// 并分别生成运行包与桌面应用的最新版本元数据。
 /// </summary>
 public class NcfPackageMirrorService
 {
     public const string GitHubReleasesApi = "https://api.github.com/repos/NeuCharFramework/NCF/releases";
+    public const string NcfDesktopGitHubReleasesApi = "https://api.github.com/repos/NeuCharFramework/NcfDesktop/releases";
     /// <summary>与 NcfDesktopApp 备用地址一致</summary>
     public const string PublicPackageBaseUrl = "https://www.ncf.pub/NcfPackages";
     public const string LatestReleaseFileName = "latest-release.json";
+    public const string LatestDesktopReleaseFileName = "latest-desktop-release.json";
 
     private static readonly SemaphoreSlim SyncGate = new(1, 1);
     private static readonly TimeSpan GitHubMetadataTimeout = TimeSpan.FromSeconds(15);
@@ -102,10 +108,16 @@ public class NcfPackageMirrorService
             var client = _httpClientFactory.CreateClient("Senparc.Xncf.FirmwareUpdate.GitHub");
             using var fetchTimeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             fetchTimeoutCts.CancelAfter(GitHubMetadataTimeout);
-            var releases = await FetchReleasesAsync(client, fetchTimeoutCts.Token).ConfigureAwait(false);
+            var releases = await FetchReleasesAsync(client, GitHubReleasesApi, 5, fetchTimeoutCts.Token).ConfigureAwait(false);
             if (releases.Count == 0)
             {
-                return "GitHub 未返回任何 Release。";
+                return "GitHub 未返回任何 NCF Release。";
+            }
+
+            var desktopReleases = await FetchReleasesAsync(client, NcfDesktopGitHubReleasesApi, 1, fetchTimeoutCts.Token).ConfigureAwait(false);
+            if (desktopReleases.Count == 0)
+            {
+                return "GitHub 未返回任何 NcfDesktop Release。";
             }
 
             var root = GetLocalPackageRoot();
@@ -113,20 +125,32 @@ public class NcfPackageMirrorService
 
             const int keepVersionCount = 3;
             var topReleases = releases.Take(keepVersionCount).ToList();
-            var orderedTags = topReleases.Select(r => r.TagName!).ToList();
+            const int keepDesktopVersionCount = 1;
+            var topDesktopReleases = desktopReleases.Take(keepDesktopVersionCount).ToList();
+            var orderedTags = topReleases
+                .Concat(topDesktopReleases)
+                .Select(r => r.TagName!)
+                .ToList();
 
             foreach (var rel in topReleases)
             {
                 await MirrorReleaseAssetsAsync(client, root, rel, cancellationToken).ConfigureAwait(false);
             }
 
-            await WriteLatestReleaseJsonAsync(root, releases[0], cancellationToken).ConfigureAwait(false);
+            foreach (var rel in topDesktopReleases)
+            {
+                await MirrorReleaseAssetsAsync(client, root, rel, cancellationToken).ConfigureAwait(false);
+            }
+
+            await WriteLatestReleaseJsonAsync(root, LatestReleaseFileName, releases[0], cancellationToken).ConfigureAwait(false);
+            await WriteLatestReleaseJsonAsync(root, LatestDesktopReleaseFileName, desktopReleases[0], cancellationToken).ConfigureAwait(false);
             PruneOldVersionFolders(root, orderedTags);
 
             config.LastPeriodicSyncUtc = DateTime.UtcNow;
             await configService.SaveObjectAsync(config).ConfigureAwait(false);
 
-            return $"同步完成。已维护最近 {keepVersionCount} 个版本的包目录，并已更新 {LatestReleaseFileName}。";
+            return $"同步完成。已维护最近 {keepVersionCount} 个 NCF 运行包版本与最新 NcfDesktop 版本，" +
+                   $"并已更新 {LatestReleaseFileName}、{LatestDesktopReleaseFileName}。";
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
@@ -162,13 +186,17 @@ public class NcfPackageMirrorService
     private static bool IsRemoteAccessException(Exception exception) =>
         exception is HttpRequestException or TaskCanceledException or JsonException;
 
-    private async Task<List<GitHubReleaseDto>> FetchReleasesAsync(HttpClient client, CancellationToken cancellationToken)
+    private async Task<List<GitHubReleaseDto>> FetchReleasesAsync(
+        HttpClient client,
+        string releasesApi,
+        int maxPages,
+        CancellationToken cancellationToken)
     {
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var list = new List<GitHubReleaseDto>();
-        for (var page = 1; page <= 5; page++)
+        for (var page = 1; page <= maxPages; page++)
         {
-            var url = $"{GitHubReleasesApi}?per_page=30&page={page}";
+            var url = $"{releasesApi}?per_page=30&page={page}";
             _logger.LogInformation("FirmwareUpdate: GET {Url}", url);
             var batch = await client.GetFromJsonAsync<List<GitHubReleaseDto>>(url, options, cancellationToken).ConfigureAwait(false);
             if (batch == null || batch.Count == 0)
@@ -230,7 +258,11 @@ public class NcfPackageMirrorService
         }
     }
 
-    private static async Task WriteLatestReleaseJsonAsync(string root, GitHubReleaseDto latest, CancellationToken cancellationToken)
+    private static async Task WriteLatestReleaseJsonAsync(
+        string root,
+        string fileName,
+        GitHubReleaseDto latest,
+        CancellationToken cancellationToken)
     {
         var tagSeg = MakeSafeDirectorySegment(latest.TagName!);
         var mirror = new GitHubReleaseMirrorDto
@@ -248,9 +280,11 @@ public class NcfPackageMirrorService
                 .ToArray()
         };
 
-        var path = Path.Combine(root, LatestReleaseFileName);
+        var path = Path.Combine(root, fileName);
+        var tempPath = path + ".tmp";
         var json = JsonSerializer.Serialize(mirror, new JsonSerializerOptions { WriteIndented = true });
-        await File.WriteAllTextAsync(path, json, cancellationToken).ConfigureAwait(false);
+        await File.WriteAllTextAsync(tempPath, json, cancellationToken).ConfigureAwait(false);
+        File.Move(tempPath, path, overwrite: true);
     }
 
     private static void PruneOldVersionFolders(string root, IReadOnlyCollection<string> keepTags)

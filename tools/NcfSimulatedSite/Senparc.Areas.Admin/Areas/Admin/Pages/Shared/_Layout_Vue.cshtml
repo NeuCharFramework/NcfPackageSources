@@ -54,6 +54,7 @@
                     </div>
                     <el-scrollbar wrap-class="scrollbar-wrapper" style="height:calc(100vh - 80px);">
                         <el-menu :default-active="Store.state.navMenu.activeMenu"
+                                 :default-openeds="Store.state.navMenu.openedMenus"
                                  :collapse="Store.state.navMenu.isCollapse"
                                  :background-color="Store.state.navMenu.variables.menuBg"
                                  :text-color="Store.state.navMenu.variables.menuText"
@@ -61,6 +62,8 @@
                                  :unique-opened="false"
                                  :collapse-transition="false"
                                  @@select="menuSelect"
+                                 @@open="menuOpen"
+                                 @@close="menuClose"
                                  mode="vertical">
                             <sidebar-item v-for="(items,index) in Store.state.navMenu.navMenuList" :key="index" :item="items"></sidebar-item>
                         </el-menu>

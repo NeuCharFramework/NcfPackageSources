@@ -79,6 +79,8 @@
   <data name="Dashboard.UnknownModel" xml:space="preserve"><value>Desconocido</value></data>
   <data name="Dashboard.ModelPrefix" xml:space="preserve"><value>Modelo n.º {0}</value></data>
   <data name="Dashboard.Refreshed" xml:space="preserve"><value>Panel actualizado</value></data>
+  <data name="Auth.SessionExpired" xml:space="preserve"><value>La sesión ha caducado. Inicie sesión de nuevo.</value></data>
+  <data name="Auth.AccessDenied" xml:space="preserve"><value>No tiene permiso para acceder a esta función.</value></data>
   <data name="Model.SearchPlaceholder" xml:space="preserve"><value>Introduzca texto</value></data>
   <data name="Model.Add" xml:space="preserve"><value>Agregar</value></data>
   <data name="Model.BatchDelete" xml:space="preserve"><value>Eliminar seleccionados</value></data>

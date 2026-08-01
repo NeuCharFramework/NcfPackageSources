@@ -1,12 +1,13 @@
 # Senparc.Xncf.FirmwareUpdate
 
-`Senparc.Xncf.FirmwareUpdate` mirrors desktop application packages from GitHub Releases into an NCF site's `wwwroot/NcfPackages` area and exposes controlled fallback metadata.
+`Senparc.Xncf.FirmwareUpdate` mirrors NCF runtime packages and NcfDesktop application packages from GitHub Releases into an NCF site's `wwwroot/NcfPackages` area and exposes controlled fallback metadata.
 
 ## Features
 
 - Stores mirror configuration and synchronization status in an XNCF database context.
 - Supports scheduled or explicitly requested package synchronization.
 - Provides a package mirror service for release metadata and downloaded assets.
+- Maintains `latest-release.json` for NCF runtime packages and `latest-desktop-release.json` for the public NcfDesktop download page.
 - Supports the NCF multi-database context model and localized module resources.
 
 ## Installation

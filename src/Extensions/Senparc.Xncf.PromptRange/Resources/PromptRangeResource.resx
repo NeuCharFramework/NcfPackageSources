@@ -79,6 +79,8 @@
   <data name="Dashboard.UnknownModel" xml:space="preserve"><value>Unknown</value></data>
   <data name="Dashboard.ModelPrefix" xml:space="preserve"><value>Model#{0}</value></data>
   <data name="Dashboard.Refreshed" xml:space="preserve"><value>看板已刷新</value></data>
+  <data name="Auth.SessionExpired" xml:space="preserve"><value>登录已过期，请重新登录</value></data>
+  <data name="Auth.AccessDenied" xml:space="preserve"><value>无权访问当前功能</value></data>
   <data name="Model.SearchPlaceholder" xml:space="preserve"><value>请输入内容</value></data>
   <data name="Model.Add" xml:space="preserve"><value>新增</value></data>
   <data name="Model.BatchDelete" xml:space="preserve"><value>批量删除</value></data>
