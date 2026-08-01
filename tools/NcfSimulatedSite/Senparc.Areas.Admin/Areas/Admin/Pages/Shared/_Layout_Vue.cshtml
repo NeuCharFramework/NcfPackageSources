@@ -44,7 +44,7 @@
 <body>
     <div id="app" v-cloak>
         <div class="app-wrapper">
-            <el-container>
+            <el-container class="admin-shell">
                 @*菜单栏*@
                 <el-aside :style="{'width':Store.state.navMenu.isCollapse?'64px':''}" class="el-aside-index">
                     <div :class="[Store.state.navMenu.isCollapse?'head-log2':'head-log']">
@@ -66,7 +66,7 @@
                         </el-menu>
                     </el-scrollbar>
                 </el-aside>
-                <el-container>
+                <el-container class="admin-workspace">
                     <el-header>
                         <div class="header-menu">
                             @*切换菜单栏*@
@@ -104,7 +104,7 @@
                             </el-dropdown>
                         </div>
                     </el-header>
-                    <el-main>
+                    <el-main class="admin-content">
                         <div class="ifram-wrapper">
                             @*<iframe :src="pageSrc"></iframe>*@
                             @RenderBody()
