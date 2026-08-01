@@ -382,16 +382,19 @@ jobs:
         # already reached master. Check published Desktop tags instead of requiring
         # the current commit itself to contain the version change.
         $releaseTagPrefix = 'desktop-v{0}-build' -f $currentVersion
-        $escapedReleaseTagPrefix = [Uri]::EscapeDataString($releaseTagPrefix)
-        $matchingRefsUri = "https://api.github.com/repos/$repository/git/matching-refs/tags/$escapedReleaseTagPrefix"
-        try {
-          $matchingReleaseRefs = @(Invoke-RestMethod -Uri $matchingRefsUri -Headers $githubHeaders -Method Get)
-        } catch {
-          throw "Unable to check whether Desktop version $currentVersion is already released. $($_.Exception.Message)"
+        $currentVersionReleaseTags = @(git tag --list "$releaseTagPrefix*")
+        if ($LASTEXITCODE -ne 0) {
+          throw "Unable to check whether Desktop version $currentVersion is already released."
         }
-        $versionAlreadyReleased = $matchingReleaseRefs.Count -gt 0
+        $versionAlreadyReleased = $currentVersionReleaseTags.Count -gt 0
         $versionReleaseEligible = -not $versionAlreadyReleased
+        $currentVersionReleaseTagsDisplay = if ($versionAlreadyReleased) {
+          $currentVersionReleaseTags -join '; '
+        } else {
+          '<none>'
+        }
         Write-Host "Desktop release tag prefix: $releaseTagPrefix"
+        Write-Host "Matching Desktop release tags: $currentVersionReleaseTagsDisplay"
         Write-Host "Desktop version already released: $versionAlreadyReleased"
         Write-Host "Desktop version eligible for release: $versionReleaseEligible"
 
