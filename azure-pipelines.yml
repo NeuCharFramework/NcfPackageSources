@@ -312,6 +312,7 @@ jobs:
   steps:
   - checkout: self
     fetchDepth: 0
+    fetchTags: true
 
   - task: PowerShell@2
     name: DesktopGate
@@ -396,9 +397,10 @@ jobs:
 
         $buildReason = $env:BUILD_REASON
         $sourceBranch = $env:BUILD_SOURCEBRANCH
+        $masterBuildReasonAllowed = @('IndividualCI', 'BatchedCI', 'Manual') -contains $buildReason
         $buildTypeAllowed =
           ($buildReason -eq 'PullRequest') -or
-          ($buildReason -eq 'IndividualCI' -and $sourceBranch -eq 'refs/heads/master')
+          ($masterBuildReasonAllowed -and $sourceBranch -eq 'refs/heads/master')
 
         $requestedFor = $env:BUILD_REQUESTEDFOR
         $sourceVersionAuthor = $env:BUILD_SOURCEVERSIONAUTHOR
@@ -452,9 +454,22 @@ jobs:
           }
         }
 
-        # For a merge build, HEAD^ is the previous master commit. This range
-        # includes every commit brought in by the merged pull request.
-        $releaseCommitRange = if ($parentCommit) { "$parentCommit..HEAD" } else { 'HEAD' }
+        # Keep a release request active until a Desktop release tag is created.
+        # This allows a later pipeline-fix commit to recover a failed release
+        # without requiring another version bump or another marker commit.
+        $latestDesktopReleaseTag = @(
+          git tag --merged HEAD --list 'desktop-v*-build*' '--sort=-creatordate' |
+            Select-Object -First 1
+        )
+        if ($LASTEXITCODE -ne 0) {
+          throw 'Unable to inspect existing Desktop release tags.'
+        }
+        $latestDesktopReleaseTag = ([string]$latestDesktopReleaseTag).Trim()
+        $releaseCommitRange = if ($latestDesktopReleaseTag) {
+          "$latestDesktopReleaseTag..HEAD"
+        } else {
+          'HEAD'
+        }
         $releaseCommitSubjects = @(git log '--format=%h %s' $releaseCommitRange)
         if ($LASTEXITCODE -ne 0) {
           throw "Unable to inspect commit messages in release range $releaseCommitRange."
@@ -467,6 +482,12 @@ jobs:
           ($releaseText -match '(?i)\[release-desktop\]') -or
           ($releaseKeywordCommits.Count -gt 0)
         $releaseAllowed = $versionReleaseEligible -and $buildTypeAllowed -and $authorized -and $pullRequestMerged -and $hasReleaseDesktopKeyword
+        $releaseBlockers = @()
+        if (-not $versionReleaseEligible) { $releaseBlockers += 'current Desktop version already has a release tag' }
+        if (-not $buildTypeAllowed) { $releaseBlockers += "unsupported build reason or branch: $buildReason / $sourceBranch" }
+        if (-not $authorized) { $releaseBlockers += "unauthorized requester or author: $requestedFor / $sourceVersionAuthor" }
+        if (-not $pullRequestMerged) { $releaseBlockers += 'pull request is not merged' }
+        if (-not $hasReleaseDesktopKeyword) { $releaseBlockers += 'no [Release-Desktop] marker since the latest Desktop release tag' }
 
         Write-Host "Build reason: $buildReason"
         Write-Host "Source branch: $sourceBranch"
@@ -477,10 +498,15 @@ jobs:
         Write-Host "Pull request merged: $pullRequestMerged"
         Write-Host "Release text source: $releaseTextSource"
         Write-Host "Release text: $releaseText"
+        $latestDesktopReleaseTagDisplay = if ($latestDesktopReleaseTag) { $latestDesktopReleaseTag } else { '<none>' }
+        Write-Host "Latest Desktop release tag: $latestDesktopReleaseTagDisplay"
         Write-Host "Release commit range: $releaseCommitRange"
         Write-Host "Release keyword commits: $($releaseKeywordCommits -join '; ')"
         Write-Host "Contains [Release-Desktop]: $hasReleaseDesktopKeyword"
         Write-Host "Desktop release allowed: $releaseAllowed"
+        if ($releaseBlockers.Count -gt 0) {
+          Write-Host "##[warning]Desktop release blocked: $($releaseBlockers -join '; ')"
+        }
 
         $releaseTag = 'desktop-v{0}-build{1}' -f $currentVersion, $env:BUILD_BUILDID
         $versionChangedValue = $versionChanged.ToString().ToLowerInvariant()
