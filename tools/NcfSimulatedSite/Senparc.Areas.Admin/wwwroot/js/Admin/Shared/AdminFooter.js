@@ -56,6 +56,7 @@
 
     const initialState = window.NCF_ADMIN_FOOTER_INITIAL_STATE || {};
 
+    // 每个 Admin 页面都会加载此 mixin，因此必须严格控制请求数和长连接生命周期。
     const footerMixin = {
         data() {
             const parsedServerTime = Date.parse(initialState.serverTime || '');
@@ -66,6 +67,8 @@
                 consoleEntries: [],
                 synchroDrawerVisible: false,
                 synchroProviders: [],
+                synchroAvailable: false,
+                footerAvailabilityKnown: false,
                 synchroLoading: false,
                 serverTimeBaseMs: Number.isFinite(parsedServerTime) ? parsedServerTime : Date.now(),
                 serverTimeMeasuredAtMs: Date.now(),
@@ -73,7 +76,14 @@
                 footerConsoleUnsubscribe: null,
                 footerClockTimer: null,
                 footerPollTimer: null,
-                footerEventSource: null
+                footerEventSource: null,
+                footerStateRequest: null,
+                footerStateCancelSource: null,
+                footerPaused: false,
+                footerDisposed: false,
+                footerPageHideHandler: null,
+                footerPageShowHandler: null,
+                footerVisibilityHandler: null
             };
         },
         computed: {
@@ -106,27 +116,31 @@
             });
 
             if (initialState.embedded) {
+                // AdminChat iframe 不再启动一套 Footer 后台通讯，避免嵌套页面重复连接。
                 return;
             }
 
-            this.footerClockTimer = window.setInterval(() => { this.footerClockTick += 1; }, 1000);
+            this.startFooterClock();
+            // pagehide/pageshow 需要兼容 bfcache：隐藏时暂停，恢复时重用同一 Vue 实例。
+            this.footerPageHideHandler = () => this.pauseFooter();
+            this.footerPageShowHandler = () => this.resumeFooter();
+            this.footerVisibilityHandler = () => {
+                if (document.hidden) {
+                    this.pauseFooter();
+                } else {
+                    this.resumeFooter();
+                }
+            };
+            window.addEventListener('pagehide', this.footerPageHideHandler);
+            window.addEventListener('pageshow', this.footerPageShowHandler);
+            document.addEventListener('visibilitychange', this.footerVisibilityHandler);
             this.refreshFooterState();
-            this.startSynchroEventStream();
-            this.footerPollTimer = window.setInterval(() => this.refreshFooterState(), 30000);
         },
         beforeDestroy() {
             if (this.$root !== this) {
                 return;
             }
-
-            if (this.footerConsoleUnsubscribe) {
-                this.footerConsoleUnsubscribe();
-            }
-            window.clearInterval(this.footerClockTimer);
-            window.clearInterval(this.footerPollTimer);
-            if (this.footerEventSource) {
-                this.footerEventSource.close();
-            }
+            this.disposeFooter();
         },
         methods: {
             openFooterAi() {
@@ -164,11 +178,33 @@
                         ? preferences[provider.providerId]
                         : provider.defaultVisible !== false
                 }));
+                // 服务端只返回已安装且开放的 Provider；空集合即代表应隐藏功能并停止通讯。
+                this.footerAvailabilityKnown = true;
+                this.synchroAvailable = this.synchroProviders.length > 0;
+                if (this.synchroAvailable && !document.hidden) {
+                    this.ensureSynchroRealtime();
+                } else {
+                    this.synchroDrawerVisible = false;
+                    this.stopSynchroRealtime();
+                }
             },
-            async refreshFooterState() {
+            refreshFooterState() {
+                if (this.footerDisposed || this.footerPaused) {
+                    return Promise.resolve();
+                }
+                if (this.footerStateRequest) {
+                    // 多个变更通知同时到达时共用已在进行的请求，不叠加 state 请求。
+                    return this.footerStateRequest;
+                }
+
                 this.synchroLoading = true;
-                try {
-                    const response = await service.get('/api/Senparc.Areas.Admin/synchro/state');
+                const requestSource = axios.CancelToken.source();
+                this.footerStateCancelSource = requestSource;
+                const request = axios.get('/api/Senparc.Areas.Admin/synchro/state', {
+                    timeout: 10000,
+                    cancelToken: requestSource.token,
+                    headers: { 'Cache-Control': 'no-cache', 'x-requested-with': 'XMLHttpRequest' }
+                }).then(response => {
                     const responseBody = response && response.data ? response.data : {};
                     const state = responseBody.data && responseBody.data.serverTime ? responseBody.data : responseBody;
                     const serverTime = Date.parse(state.serverTime || '');
@@ -177,18 +213,125 @@
                         this.serverTimeMeasuredAtMs = Date.now();
                     }
                     this.applySynchroProviders(state.providers || []);
-                } catch (error) {
-                    console.warn('Synchro 状态刷新失败:', error);
-                } finally {
+                }).catch(error => {
+                    if (!axios.isCancel(error)) {
+                        console.warn('Synchro 状态刷新失败:', error);
+                    }
+                }).finally(() => {
+                    if (this.footerStateRequest === request) {
+                        this.footerStateRequest = null;
+                    }
+                    if (this.footerStateCancelSource === requestSource) {
+                        this.footerStateCancelSource = null;
+                    }
                     this.synchroLoading = false;
+                    if (this.synchroAvailable) {
+                        this.ensureSynchroRealtime();
+                    } else if (!this.footerAvailabilityKnown && !document.hidden) {
+                        // 初始化失败时做低频恢复；已确认无 Provider 后不再轮询。
+                        this.scheduleFooterPoll(30000, true);
+                    }
+                });
+                this.footerStateRequest = request;
+                return request;
+            },
+            scheduleFooterPoll(delay, allowWhenUnknown) {
+                if (this.footerPollTimer) {
+                    window.clearTimeout(this.footerPollTimer);
+                    this.footerPollTimer = null;
+                }
+                if (this.footerDisposed || this.footerPaused || document.hidden || (!this.synchroAvailable && !allowWhenUnknown)) {
+                    return;
+                }
+                this.footerPollTimer = window.setTimeout(() => {
+                    this.footerPollTimer = null;
+                    this.refreshFooterState();
+                }, delay);
+            },
+            ensureSynchroRealtime() {
+                if (this.footerDisposed || this.footerPaused || document.hidden || !this.synchroAvailable) {
+                    return;
+                }
+                // SSE 负责及时通知，30 秒单次定时器用于断线和不支持 EventSource 时的兼容兜底。
+                this.startSynchroEventStream();
+                this.scheduleFooterPoll(30000, false);
+            },
+            stopSynchroRealtime() {
+                if (this.footerPollTimer) {
+                    window.clearTimeout(this.footerPollTimer);
+                    this.footerPollTimer = null;
+                }
+                if (this.footerEventSource) {
+                    this.footerEventSource.close();
+                    this.footerEventSource = null;
                 }
             },
             startSynchroEventStream() {
-                if (typeof window.EventSource === 'undefined') {
+                if (typeof window.EventSource === 'undefined'
+                    || this.footerEventSource
+                    || this.footerDisposed
+                    || this.footerPaused
+                    || document.hidden
+                    || !this.synchroAvailable) {
                     return;
                 }
                 this.footerEventSource = new EventSource('/api/Senparc.Areas.Admin/synchro/events');
                 this.footerEventSource.addEventListener('synchro-changed', () => this.refreshFooterState());
+            },
+            startFooterClock() {
+                if (!this.footerClockTimer) {
+                    this.footerClockTimer = window.setInterval(() => { this.footerClockTick += 1; }, 1000);
+                }
+            },
+            pauseFooter() {
+                // 后台页签不应保留 SSE、轮询或挂起的 HTTP 请求。
+                this.footerPaused = true;
+                if (this.footerClockTimer) {
+                    window.clearInterval(this.footerClockTimer);
+                    this.footerClockTimer = null;
+                }
+                this.stopSynchroRealtime();
+                if (this.footerStateCancelSource) {
+                    this.footerStateCancelSource.cancel('page paused');
+                }
+            },
+            resumeFooter() {
+                if (this.footerDisposed || document.hidden) {
+                    return;
+                }
+                this.footerPaused = false;
+                this.startFooterClock();
+                const pendingRequest = this.footerStateRequest;
+                if (pendingRequest) {
+                    pendingRequest.then(() => {
+                        if (!this.footerDisposed && !this.footerPaused && !this.footerStateRequest) {
+                            this.refreshFooterState();
+                        }
+                    });
+                } else {
+                    this.refreshFooterState();
+                }
+            },
+            disposeFooter() {
+                if (this.footerDisposed) {
+                    return;
+                }
+                this.pauseFooter();
+                this.footerDisposed = true;
+                if (this.footerConsoleUnsubscribe) {
+                    this.footerConsoleUnsubscribe();
+                    this.footerConsoleUnsubscribe = null;
+                }
+                this.footerStateCancelSource = null;
+                if (this.footerPageHideHandler) {
+                    window.removeEventListener('pagehide', this.footerPageHideHandler);
+                }
+                if (this.footerPageShowHandler) {
+                    window.removeEventListener('pageshow', this.footerPageShowHandler);
+                }
+                if (this.footerVisibilityHandler) {
+                    document.removeEventListener('visibilitychange', this.footerVisibilityHandler);
+                }
             }
         }
     };

@@ -23,6 +23,7 @@ public class DesktopBridgeSynchroProviderTests
         var provider = new DesktopBridgeSynchroProvider(store);
 
         var emptySnapshot = await provider.GetSnapshotAsync(new SynchroRequestContext("admin"));
+        Assert.AreEqual(Register.ModuleUid, provider.ModuleUid);
         Assert.AreEqual(0, emptySnapshot.Items.Single().Count);
 
         store.CreatePairingRequest("Desktop Test", "127.0.0.1");

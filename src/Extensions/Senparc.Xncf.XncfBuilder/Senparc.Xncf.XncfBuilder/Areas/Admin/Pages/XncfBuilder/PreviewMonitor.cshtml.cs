@@ -30,12 +30,13 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
 
         public void OnGet()
         {
+            // 仅初次打开页面时触发基类的 XNCF 可用性校验。高频状态接口
+            // 不重复触发该校验，避免轮询放大缓存/数据库访问。
             _ = XncfRegister;
         }
 
         public IActionResult OnGetState()
         {
-            _ = XncfRegister;
             return new JsonResult(new
             {
                 ServerTime = DateTimeOffset.Now,
@@ -49,7 +50,6 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
 
         public IActionResult OnGetSessionOutput(string sessionId)
         {
-            _ = XncfRegister;
             var session = _previewService.GetSession(sessionId, includeOutput: true);
             return session == null
                 ? NotFound(new { Message = "预览会话不存在或历史记录已过期。" })
@@ -63,7 +63,6 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
 
         public async Task<IActionResult> OnPostStopAsync(string sessionId)
         {
-            _ = XncfRegister;
             if (string.IsNullOrWhiteSpace(sessionId))
             {
                 return BadRequest(new { Message = "必须提供预览会话 ID。" });

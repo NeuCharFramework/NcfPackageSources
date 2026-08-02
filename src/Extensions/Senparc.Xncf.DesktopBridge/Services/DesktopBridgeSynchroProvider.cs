@@ -23,6 +23,9 @@ public sealed class DesktopBridgeSynchroProvider : ISynchroProvider
 
     public string ProviderId => ProviderIdValue;
 
+    // Admin Footer 使用此 UID 校验 DesktopBridge 是否已安装且处于开放状态。
+    public string ModuleUid => Register.ModuleUid;
+
     public ValueTask<SynchroSnapshot> GetSnapshotAsync(
         SynchroRequestContext context,
         CancellationToken cancellationToken = default)

@@ -49,6 +49,12 @@ namespace Senparc.Ncf.Shared.Abstractions.Synchro
     {
         string ProviderId { get; }
 
+        /// <summary>
+        /// 提供此状态的 XNCF 模块 UID。使用默认接口实现，避免新增成员破坏
+        /// 已编译的旧 Provider；未声明 UID 的 Provider 会被 Admin 聚合器安全忽略。
+        /// </summary>
+        string ModuleUid => null;
+
         ValueTask<SynchroSnapshot> GetSnapshotAsync(
             SynchroRequestContext context,
             CancellationToken cancellationToken = default);

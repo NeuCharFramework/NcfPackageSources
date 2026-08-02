@@ -54,6 +54,13 @@ public sealed class SynchroController : ControllerBase
     [HttpGet("events")]
     public async Task GetEvents(CancellationToken cancellationToken)
     {
+        // EventSource 对 204 不会自动重连；无 Provider 时不保留长连接占用浏览器连接池。
+        if (!await _snapshotService.HasAvailableProvidersAsync(cancellationToken).ConfigureAwait(false))
+        {
+            Response.StatusCode = StatusCodes.Status204NoContent;
+            return;
+        }
+
         Response.Headers.CacheControl = "no-cache";
         Response.Headers.Connection = "keep-alive";
         Response.ContentType = "text/event-stream";

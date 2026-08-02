@@ -213,6 +213,14 @@
                     updatedAt: null,
                     loading: false,
                     refreshTimer: null,
+                    stateRequestInFlight: false,
+                    stateRequestSource: null,
+                    outputRequestSources: {},
+                    pagePaused: false,
+                    pageDisposed: false,
+                    pageHideHandler: null,
+                    pageShowHandler: null,
+                    visibilityHandler: null,
                     stateUrl: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(stateUrl)),
                     outputUrl: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(outputUrl)),
                     stopUrl: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(stopUrl))
@@ -233,25 +241,78 @@
                 }
             },
             mounted: function () {
-                this.loadState(false);
-                this.refreshTimer = window.setInterval(() => {
-                    if (!document.hidden) {
-                        this.loadState(false);
+                // pagehide/pageshow 同时兼容普通离页和浏览器 bfcache：离页暂停，返回后恢复。
+                this.pageHideHandler = () => this.pauseMonitor();
+                this.pageShowHandler = () => this.resumeMonitor();
+                this.visibilityHandler = () => {
+                    if (document.hidden) {
+                        this.pauseMonitor();
+                    } else {
+                        this.resumeMonitor();
                     }
-                }, 2000);
+                };
+                window.addEventListener("pagehide", this.pageHideHandler);
+                window.addEventListener("pageshow", this.pageShowHandler);
+                document.addEventListener("visibilitychange", this.visibilityHandler);
+                this.loadState(false);
             },
             beforeDestroy: function () {
-                if (this.refreshTimer) {
-                    window.clearInterval(this.refreshTimer);
-                }
+                this.disposeMonitor();
             },
             methods: {
+                scheduleNextRefresh: function (delay) {
+                    // 上一次请求结束后才安排下一次，保证状态轮询始终是单飞请求。
+                    if (this.pageDisposed || this.pagePaused) return;
+                    if (this.refreshTimer) window.clearTimeout(this.refreshTimer);
+                    this.refreshTimer = window.setTimeout(() => this.loadState(false), delay);
+                },
+                pauseMonitor: function () {
+                    // 及时释放浏览器同源连接，防止挂起请求阻塞其他 Admin 页面。
+                    this.pagePaused = true;
+                    if (this.refreshTimer) {
+                        window.clearTimeout(this.refreshTimer);
+                        this.refreshTimer = null;
+                    }
+                    if (this.stateRequestSource) this.stateRequestSource.cancel("page paused");
+                    Object.keys(this.outputRequestSources).forEach(id => {
+                        const source = this.outputRequestSources[id];
+                        if (source) source.cancel("page paused");
+                    });
+                    this.outputRequestSources = {};
+                },
+                resumeMonitor: function () {
+                    if (this.pageDisposed || document.hidden) return;
+                    this.pagePaused = false;
+                    this.scheduleNextRefresh(0);
+                },
+                disposeMonitor: function () {
+                    if (this.pageDisposed) return;
+                    this.pauseMonitor();
+                    this.pageDisposed = true;
+                    if (this.pageHideHandler) window.removeEventListener("pagehide", this.pageHideHandler);
+                    if (this.pageShowHandler) window.removeEventListener("pageshow", this.pageShowHandler);
+                    if (this.visibilityHandler) document.removeEventListener("visibilitychange", this.visibilityHandler);
+                },
                 loadState: async function (showLoading) {
+                    // 超时和 in-flight 标记双重限制，即使服务端异常也不会无限堆积请求。
+                    if (this.pageDisposed || this.pagePaused || this.stateRequestInFlight) return;
+                    if (document.hidden && !showLoading) {
+                        this.scheduleNextRefresh(2000);
+                        return;
+                    }
+
+                    if (this.refreshTimer) window.clearTimeout(this.refreshTimer);
+                    this.stateRequestInFlight = true;
+                    this.stateRequestSource = axios.CancelToken.source();
                     if (showLoading) {
                         this.loading = true;
                     }
                     try {
-                        const response = await axios.get(this.stateUrl, { headers: { "Cache-Control": "no-cache" } });
+                        const response = await axios.get(this.stateUrl, {
+                            headers: { "Cache-Control": "no-cache" },
+                            timeout: 10000,
+                            cancelToken: this.stateRequestSource.token
+                        });
                         this.sessions = response.data.sessions || [];
                         this.stageDefinitions = response.data.stageDefinitions || [];
                         this.hostStatusMap = (response.data.hostStatusDefinitions || []).reduce((map, item) => {
@@ -267,20 +328,35 @@
                         this.updatedAt = response.data.serverTime;
                         await Promise.all(this.expandedSessionIds.map(id => this.loadOutput(id)));
                     } catch (error) {
-                        if (showLoading) {
+                        if (showLoading && !axios.isCancel(error)) {
                             this.$message.error(this.errorMessage(error, "状态读取失败。"));
                         }
                     } finally {
+                        this.stateRequestSource = null;
+                        this.stateRequestInFlight = false;
                         this.loading = false;
+                        this.scheduleNextRefresh(2000);
                     }
                 },
                 loadOutput: async function (sessionId) {
+                    // 每个展开的会话最多保留一个日志请求。
+                    if (this.pageDisposed || this.pagePaused || this.outputRequestSources[sessionId]) return;
+                    const requestSource = axios.CancelToken.source();
+                    this.$set(this.outputRequestSources, sessionId, requestSource);
                     try {
                         const separator = this.outputUrl.indexOf("?") >= 0 ? "&" : "?";
-                        const response = await axios.get(this.outputUrl + separator + "sessionId=" + encodeURIComponent(sessionId));
+                        const response = await axios.get(
+                            this.outputUrl + separator + "sessionId=" + encodeURIComponent(sessionId),
+                            { timeout: 10000, cancelToken: requestSource.token });
                         this.$set(this.outputBySession, sessionId, response.data.recentOutput || "暂无输出。");
                     } catch (error) {
-                        this.$set(this.outputBySession, sessionId, this.errorMessage(error, "日志读取失败。"));
+                        if (!axios.isCancel(error)) {
+                            this.$set(this.outputBySession, sessionId, this.errorMessage(error, "日志读取失败。"));
+                        }
+                    } finally {
+                        if (this.outputRequestSources[sessionId] === requestSource) {
+                            this.$delete(this.outputRequestSources, sessionId);
+                        }
                     }
                 },
                 handleExpandChange: function (row, expandedRows) {

@@ -204,10 +204,13 @@ namespace Senparc.Areas.Admin
             services.AddScoped<AdminChatSessionModuleService>();
             services.AddScoped<AdminChatAiService>();
 
-            // Synchro（灵犀）Footer 聚合、全局缓存与实时变更流。
+            // Synchro（灵犀）Footer 聚合、全局缓存与实时变更流。Provider 虽随 DLL 注册，
+            // 但是否执行仍由 SynchroProviderCatalog 按 XNCF 安装/开放状态决定。
             services.AddSingleton<SynchroChangeNotifier>();
             services.AddSingleton<Senparc.Ncf.Shared.Abstractions.Synchro.ISynchroPublisher>(
                 serviceProvider => serviceProvider.GetRequiredService<SynchroChangeNotifier>());
+            services.AddScoped<ISynchroModuleAvailabilityService, SynchroModuleAvailabilityService>();
+            services.AddScoped<SynchroProviderCatalog>();
             services.AddScoped<SynchroSnapshotService>();
 
             return base.AddXncfModule(services, configuration, env);
