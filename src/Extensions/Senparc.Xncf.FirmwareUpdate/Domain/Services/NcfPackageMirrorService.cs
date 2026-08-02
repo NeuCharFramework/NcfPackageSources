@@ -14,14 +14,15 @@
     修改描述：v0.3.0-preview2 改进固件更新镜像源选择与日志摘要
 
     修改标识：Senparc - 20260802
-    修改描述：同步 NcfDesktop 最新发布，为官网桌面应用下载提供本地优先镜像
+    修改描述：将 NCF Host 与 NcfDesktop 发布包分通道同步、校验并原子发布清单
 
 ----------------------------------------------------------------*/
 
 using System.Net.Http.Json;
-using Microsoft.Extensions.DependencyInjection;
+using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Config;
@@ -30,20 +31,49 @@ using Senparc.Ncf.Service;
 namespace Senparc.Xncf.FirmwareUpdate.Domain.Services;
 
 /// <summary>
-/// 从 GitHub 拉取 NCF 运行包与 NcfDesktop 桌面应用的 Release 资源，写入当前站点 wwwroot 下的 NcfPackages 目录，
-/// 并分别生成运行包与桌面应用的最新版本元数据。
+/// 从 GitHub 拉取 NCF Host 运行包与 NcfDesktop 桌面应用的 Release 资源，分别写入
+/// wwwroot/NcfPackages/host 与 wwwroot/NcfPackages/desktop，并原子发布各自的最新版本元数据。
 /// </summary>
 public class NcfPackageMirrorService
 {
     public const string GitHubReleasesApi = "https://api.github.com/repos/NeuCharFramework/NCF/releases";
     public const string NcfDesktopGitHubReleasesApi = "https://api.github.com/repos/NeuCharFramework/NcfDesktop/releases";
-    /// <summary>与 NcfDesktopApp 备用地址一致</summary>
+    /// <summary>与 NcfDesktopApp 备用地址一致。</summary>
     public const string PublicPackageBaseUrl = "https://www.ncf.pub/NcfPackages";
     public const string LatestReleaseFileName = "latest-release.json";
     public const string LatestDesktopReleaseFileName = "latest-desktop-release.json";
+    public const string HostPackageFolderName = "host";
+    public const string DesktopPackageFolderName = "desktop";
 
     private static readonly SemaphoreSlim SyncGate = new(1, 1);
-    private static readonly TimeSpan GitHubMetadataTimeout = TimeSpan.FromSeconds(15);
+    private static readonly TimeSpan GitHubMetadataTimeout = TimeSpan.FromSeconds(30);
+    private static readonly string[] SupportedRuntimeIdentifiers =
+    [
+        "linux-arm64",
+        "linux-x64",
+        "osx-arm64",
+        "osx-x64",
+        "win-arm64",
+        "win-x64"
+    ];
+
+    internal static MirrorFeedDefinition HostFeedDefinition { get; } = new(
+        "NCF Host",
+        GitHubReleasesApi,
+        HostPackageFolderName,
+        LatestReleaseFileName,
+        "ncf-",
+        KeepVersionCount: 3,
+        MaxPages: 5);
+
+    internal static MirrorFeedDefinition DesktopFeedDefinition { get; } = new(
+        "NcfDesktop",
+        NcfDesktopGitHubReleasesApi,
+        DesktopPackageFolderName,
+        LatestDesktopReleaseFileName,
+        "ncf-desktop-",
+        KeepVersionCount: 1,
+        MaxPages: 1);
 
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<NcfPackageMirrorService> _logger;
@@ -77,7 +107,7 @@ public class NcfPackageMirrorService
         return fallback;
     }
 
-    /// <param name="manualTrigger">为 true 时忽略「是否启用」与「距上次同步间隔」。</param>
+    /// <param name="manualTrigger">为 true 时忽略「是否启用」与「距上次完整同步间隔」。</param>
     public async Task<string> RunAsync(IServiceProvider serviceProvider, bool manualTrigger, CancellationToken cancellationToken = default)
     {
         await SyncGate.WaitAsync(cancellationToken).ConfigureAwait(false);
@@ -101,64 +131,52 @@ public class NcfPackageMirrorService
                 if (config.LastPeriodicSyncUtc is { } last &&
                     DateTime.UtcNow - last < TimeSpan.FromHours(hours))
                 {
-                    return $"距上次同步不足 {hours} 小时，已跳过。";
+                    return $"距上次完整同步不足 {hours} 小时，已跳过。";
                 }
-            }
-
-            var client = _httpClientFactory.CreateClient("Senparc.Xncf.FirmwareUpdate.GitHub");
-            using var fetchTimeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            fetchTimeoutCts.CancelAfter(GitHubMetadataTimeout);
-            var releases = await FetchReleasesAsync(client, GitHubReleasesApi, 5, fetchTimeoutCts.Token).ConfigureAwait(false);
-            if (releases.Count == 0)
-            {
-                return "GitHub 未返回任何 NCF Release。";
-            }
-
-            var desktopReleases = await FetchReleasesAsync(client, NcfDesktopGitHubReleasesApi, 1, fetchTimeoutCts.Token).ConfigureAwait(false);
-            if (desktopReleases.Count == 0)
-            {
-                return "GitHub 未返回任何 NcfDesktop Release。";
             }
 
             var root = GetLocalPackageRoot();
             Directory.CreateDirectory(root);
+            var client = _httpClientFactory.CreateClient("Senparc.Xncf.FirmwareUpdate.GitHub");
+            var results = new List<MirrorFeedSyncResult>();
 
-            const int keepVersionCount = 3;
-            var topReleases = releases.Take(keepVersionCount).ToList();
-            const int keepDesktopVersionCount = 1;
-            var topDesktopReleases = desktopReleases.Take(keepDesktopVersionCount).ToList();
-            var orderedTags = topReleases
-                .Concat(topDesktopReleases)
-                .Select(r => r.TagName!)
-                .ToList();
-
-            foreach (var rel in topReleases)
+            foreach (var feed in new[] { HostFeedDefinition, DesktopFeedDefinition })
             {
-                await MirrorReleaseAssetsAsync(client, root, rel, cancellationToken).ConfigureAwait(false);
+                try
+                {
+                    results.Add(await SyncFeedAsync(client, root, feed, cancellationToken).ConfigureAwait(false));
+                }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    var reason = GetSyncFailureReason(ex);
+                    var message = $"{feed.DisplayName} 同步失败：{reason}；已保留原有清单";
+                    _logger.LogWarning(ex, "FirmwareUpdate: {Message}", message);
+                    Console.WriteLine($"[FirmwareUpdate] {message}");
+                    results.Add(new MirrorFeedSyncResult(feed.DisplayName, false, false, message));
+                }
             }
 
-            foreach (var rel in topDesktopReleases)
+            var fullySynchronized = results.All(result => result.IsComplete);
+            if (fullySynchronized)
             {
-                await MirrorReleaseAssetsAsync(client, root, rel, cancellationToken).ConfigureAwait(false);
+                config.LastPeriodicSyncUtc = DateTime.UtcNow;
+                await configService.SaveObjectAsync(config).ConfigureAwait(false);
             }
 
-            await WriteLatestReleaseJsonAsync(root, LatestReleaseFileName, releases[0], cancellationToken).ConfigureAwait(false);
-            await WriteLatestReleaseJsonAsync(root, LatestDesktopReleaseFileName, desktopReleases[0], cancellationToken).ConfigureAwait(false);
-            PruneOldVersionFolders(root, orderedTags);
+            var summary = string.Join("；", results.Select(result => result.Message));
+            if (fullySynchronized)
+            {
+                return $"同步完成。{summary}";
+            }
 
-            config.LastPeriodicSyncUtc = DateTime.UtcNow;
-            await configService.SaveObjectAsync(config).ConfigureAwait(false);
-
-            return $"同步完成。已维护最近 {keepVersionCount} 个 NCF 运行包版本与最新 NcfDesktop 版本，" +
-                   $"并已更新 {LatestReleaseFileName}、{LatestDesktopReleaseFileName}。";
-        }
-        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-        {
-            throw;
-        }
-        catch (Exception ex) when (IsRemoteAccessException(ex))
-        {
-            return ReportRemoteAccessFailure(ex);
+            var publishedAny = results.Any(result => result.LatestPublished);
+            return publishedAny
+                ? $"同步部分完成。{summary}；未更新完整同步时间，将在下次继续重试。"
+                : $"同步未完成。{summary}";
         }
         finally
         {
@@ -166,25 +184,94 @@ public class NcfPackageMirrorService
         }
     }
 
-    private string ReportRemoteAccessFailure(Exception exception)
+    internal async Task<MirrorFeedSyncResult> SyncFeedAsync(
+        HttpClient client,
+        string root,
+        MirrorFeedDefinition feed,
+        CancellationToken cancellationToken)
     {
-        var reason = exception switch
+        using var metadataTimeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        metadataTimeoutCts.CancelAfter(GitHubMetadataTimeout);
+
+        var latestTask = FetchLatestReleaseAsync(client, feed.ReleasesApi, metadataTimeoutCts.Token);
+        var historyTask = FetchReleasesAsync(client, feed.ReleasesApi, feed.MaxPages, metadataTimeoutCts.Token);
+        await Task.WhenAll(latestTask, historyTask).ConfigureAwait(false);
+
+        var latest = await latestTask.ConfigureAwait(false);
+        var history = await historyTask.ConfigureAwait(false);
+        var selectedReleases = new[] { latest }
+            .Concat(history.Where(release => !string.Equals(release.TagName, latest.TagName, StringComparison.OrdinalIgnoreCase)))
+            .Take(feed.KeepVersionCount)
+            .ToList();
+
+        var feedRoot = Path.Combine(root, feed.FolderName);
+        Directory.CreateDirectory(feedRoot);
+
+        var latestAssets = SelectExpectedAssets(latest, feed);
+        await MirrorReleaseAssetsAsync(client, feedRoot, latest, latestAssets, cancellationToken).ConfigureAwait(false);
+        await WriteLatestReleaseJsonAsync(root, feed, latest, latestAssets, cancellationToken).ConfigureAwait(false);
+
+        var retentionFailures = new List<string>();
+        foreach (var release in selectedReleases.Skip(1))
         {
-            TaskCanceledException => "请求超时",
-            HttpRequestException httpException when httpException.StatusCode.HasValue =>
-                $"HTTP {(int)httpException.StatusCode.Value}",
-            HttpRequestException => "网络不可达",
-            JsonException => "返回数据格式无效",
-            _ => "请求失败"
-        };
-        var message = $"[FirmwareUpdate] GitHub releases 暂不可用：{reason}；本次镜像同步已跳过";
-        Console.WriteLine(message);
-        _logger.LogWarning("{Message}", message);
-        return message;
+            try
+            {
+                var assets = SelectExpectedAssets(release, feed);
+                await MirrorReleaseAssetsAsync(client, feedRoot, release, assets, cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                retentionFailures.Add($"{release.TagName}: {GetSyncFailureReason(ex)}");
+                _logger.LogWarning(
+                    ex,
+                    "FirmwareUpdate: {Feed} 历史版本 {Tag} 同步失败，保留现有历史目录",
+                    feed.DisplayName,
+                    release.TagName);
+            }
+        }
+
+        if (retentionFailures.Count == 0)
+        {
+            PruneOldVersionFolders(feedRoot, selectedReleases.Select(release => release.TagName!).ToArray());
+        }
+
+        var latestMessage = $"{feed.DisplayName} 已发布 {latest.TagName}（{latestAssets.Count} 个 ZIP）";
+        if (retentionFailures.Count == 0)
+        {
+            return new MirrorFeedSyncResult(feed.DisplayName, true, true, latestMessage);
+        }
+
+        return new MirrorFeedSyncResult(
+            feed.DisplayName,
+            true,
+            false,
+            $"{latestMessage}，但历史保留版本同步失败：{string.Join("、", retentionFailures)}");
     }
 
-    private static bool IsRemoteAccessException(Exception exception) =>
-        exception is HttpRequestException or TaskCanceledException or JsonException;
+    private async Task<GitHubReleaseDto> FetchLatestReleaseAsync(
+        HttpClient client,
+        string releasesApi,
+        CancellationToken cancellationToken)
+    {
+        var url = $"{releasesApi}/latest";
+        _logger.LogInformation("FirmwareUpdate: GET {Url}", url);
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        var release = await client.GetFromJsonAsync<GitHubReleaseDto>(url, options, cancellationToken).ConfigureAwait(false);
+        if (release == null ||
+            release.Draft ||
+            release.Prerelease ||
+            string.IsNullOrWhiteSpace(release.TagName) ||
+            release.Assets is not { Length: > 0 })
+        {
+            throw new InvalidDataException($"{releasesApi} 未返回有效的正式 Release。");
+        }
+
+        return release;
+    }
 
     private async Task<List<GitHubReleaseDto>> FetchReleasesAsync(
         HttpClient client,
@@ -212,92 +299,177 @@ public class NcfPackageMirrorService
         }
 
         return list
-            .Where(r => !string.IsNullOrWhiteSpace(r.TagName) && r.Assets is { Length: > 0 })
-            .OrderByDescending(r => r.PublishedAt ?? DateTime.MinValue)
+            .Where(release =>
+                !release.Draft &&
+                !release.Prerelease &&
+                !string.IsNullOrWhiteSpace(release.TagName) &&
+                release.Assets is { Length: > 0 })
+            .OrderByDescending(release => release.PublishedAt ?? DateTime.MinValue)
             .ToList();
     }
 
-    private static async Task MirrorReleaseAssetsAsync(HttpClient client, string root, GitHubReleaseDto release, CancellationToken cancellationToken)
+    internal static IReadOnlyList<GitHubAssetDto> SelectExpectedAssets(
+        GitHubReleaseDto release,
+        MirrorFeedDefinition feed)
+    {
+        var assets = release.Assets ?? [];
+        var selected = new List<GitHubAssetDto>(SupportedRuntimeIdentifiers.Length);
+
+        foreach (var runtimeIdentifier in SupportedRuntimeIdentifiers)
+        {
+            var expectedPrefix = $"{feed.AssetNamePrefix}{runtimeIdentifier}-";
+            var matches = assets
+                .Where(asset =>
+                    asset.Name?.StartsWith(expectedPrefix, StringComparison.OrdinalIgnoreCase) == true &&
+                    asset.Name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+                .ToArray();
+
+            if (matches.Length != 1)
+            {
+                throw new InvalidDataException(
+                    $"Release {release.TagName} 应包含且仅包含一个 {expectedPrefix}*.zip，实际为 {matches.Length} 个。");
+            }
+
+            ValidateAsset(matches[0], release.TagName);
+            selected.Add(matches[0]);
+        }
+
+        return selected;
+    }
+
+    private static void ValidateAsset(GitHubAssetDto asset, string? tagName)
+    {
+        if (string.IsNullOrWhiteSpace(asset.Name) ||
+            !string.Equals(Path.GetFileName(asset.Name), asset.Name, StringComparison.Ordinal) ||
+            asset.Size <= 0)
+        {
+            throw new InvalidDataException($"Release {tagName} 包含无效的资源名称或大小。");
+        }
+
+        if (!Uri.TryCreate(asset.BrowserDownloadUrl, UriKind.Absolute, out var uri) ||
+            uri.Scheme != Uri.UriSchemeHttps ||
+            !string.Equals(uri.Host, "github.com", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidDataException($"Release {tagName} 的资源 {asset.Name} 不是受信任的 GitHub HTTPS 下载地址。");
+        }
+
+        _ = GetExpectedSha256(asset, tagName);
+    }
+
+    private static async Task MirrorReleaseAssetsAsync(
+        HttpClient client,
+        string feedRoot,
+        GitHubReleaseDto release,
+        IReadOnlyList<GitHubAssetDto> assets,
+        CancellationToken cancellationToken)
     {
         var tag = release.TagName!;
-        var dir = Path.Combine(root, MakeSafeDirectorySegment(tag));
-        Directory.CreateDirectory(dir);
+        var directory = Path.Combine(feedRoot, MakeSafeDirectorySegment(tag));
+        Directory.CreateDirectory(directory);
 
-        foreach (var asset in release.Assets ?? Array.Empty<GitHubAssetDto>())
+        foreach (var asset in assets)
         {
-            if (string.IsNullOrWhiteSpace(asset.Name) || string.IsNullOrWhiteSpace(asset.BrowserDownloadUrl))
+            var targetPath = Path.Combine(directory, asset.Name!);
+            var expectedSha256 = GetExpectedSha256(asset, tag);
+            if (File.Exists(targetPath) &&
+                new FileInfo(targetPath).Length == asset.Size &&
+                string.Equals(
+                    await ComputeSha256Async(targetPath, cancellationToken).ConfigureAwait(false),
+                    expectedSha256,
+                    StringComparison.OrdinalIgnoreCase))
             {
                 continue;
             }
 
-            var targetPath = Path.Combine(dir, asset.Name);
-            if (File.Exists(targetPath))
+            var tempPath = $"{targetPath}.tmp-{Guid.NewGuid():N}";
+            try
             {
-                var fi = new FileInfo(targetPath);
-                if (fi.Length == asset.Size && asset.Size > 0)
+                using var response = await client.GetAsync(
+                    asset.BrowserDownloadUrl,
+                    HttpCompletionOption.ResponseHeadersRead,
+                    cancellationToken).ConfigureAwait(false);
+                response.EnsureSuccessStatusCode();
+                await using var source = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+                await using (var target = new FileStream(tempPath, FileMode.CreateNew, FileAccess.Write, FileShare.None))
                 {
-                    continue;
+                    await source.CopyToAsync(target, cancellationToken).ConfigureAwait(false);
+                }
+
+                var actualSize = new FileInfo(tempPath).Length;
+                if (actualSize != asset.Size)
+                {
+                    throw new InvalidDataException(
+                        $"资源 {asset.Name} 大小校验失败：期望 {asset.Size}，实际 {actualSize}。");
+                }
+
+                var actualSha256 = await ComputeSha256Async(tempPath, cancellationToken).ConfigureAwait(false);
+                if (!string.Equals(actualSha256, expectedSha256, StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new InvalidDataException($"资源 {asset.Name} SHA-256 校验失败。");
+                }
+
+                File.Move(tempPath, targetPath, overwrite: true);
+            }
+            finally
+            {
+                if (File.Exists(tempPath))
+                {
+                    File.Delete(tempPath);
                 }
             }
-
-            using var resp = await client.GetAsync(asset.BrowserDownloadUrl, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-            resp.EnsureSuccessStatusCode();
-            await using var stream = await resp.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-            var temp = targetPath + ".tmp";
-            await using (var fs = new FileStream(temp, FileMode.Create, FileAccess.Write, FileShare.None))
-            {
-                await stream.CopyToAsync(fs, cancellationToken).ConfigureAwait(false);
-            }
-
-            if (File.Exists(targetPath))
-            {
-                File.Delete(targetPath);
-            }
-
-            File.Move(temp, targetPath);
         }
     }
 
     private static async Task WriteLatestReleaseJsonAsync(
         string root,
-        string fileName,
+        MirrorFeedDefinition feed,
         GitHubReleaseDto latest,
+        IReadOnlyList<GitHubAssetDto> assets,
         CancellationToken cancellationToken)
     {
-        var tagSeg = MakeSafeDirectorySegment(latest.TagName!);
+        var tagSegment = MakeSafeDirectorySegment(latest.TagName!);
         var mirror = new GitHubReleaseMirrorDto
         {
             TagName = latest.TagName,
             Name = latest.Name,
-            Assets = (latest.Assets ?? Array.Empty<GitHubAssetDto>())
-                .Where(a => !string.IsNullOrWhiteSpace(a.Name))
-                .Select(a => new GitHubAssetMirrorDto
+            Assets = assets
+                .Select(asset => new GitHubAssetMirrorDto
                 {
-                    Name = a.Name,
-                    Size = a.Size,
-                    BrowserDownloadUrl = $"{PublicPackageBaseUrl.TrimEnd('/')}/{Uri.EscapeDataString(tagSeg)}/{Uri.EscapeDataString(a.Name ?? string.Empty)}"
+                    Name = asset.Name,
+                    Size = asset.Size,
+                    BrowserDownloadUrl = $"{PublicPackageBaseUrl.TrimEnd('/')}/{Uri.EscapeDataString(feed.FolderName)}/{Uri.EscapeDataString(tagSegment)}/{Uri.EscapeDataString(asset.Name!)}"
                 })
                 .ToArray()
         };
 
-        var path = Path.Combine(root, fileName);
-        var tempPath = path + ".tmp";
-        var json = JsonSerializer.Serialize(mirror, new JsonSerializerOptions { WriteIndented = true });
-        await File.WriteAllTextAsync(tempPath, json, cancellationToken).ConfigureAwait(false);
-        File.Move(tempPath, path, overwrite: true);
+        var path = Path.Combine(root, feed.LatestFileName);
+        var tempPath = $"{path}.tmp-{Guid.NewGuid():N}";
+        try
+        {
+            var json = JsonSerializer.Serialize(mirror, new JsonSerializerOptions { WriteIndented = true });
+            await File.WriteAllTextAsync(tempPath, json, cancellationToken).ConfigureAwait(false);
+            File.Move(tempPath, path, overwrite: true);
+        }
+        finally
+        {
+            if (File.Exists(tempPath))
+            {
+                File.Delete(tempPath);
+            }
+        }
     }
 
-    private static void PruneOldVersionFolders(string root, IReadOnlyCollection<string> keepTags)
+    private static void PruneOldVersionFolders(string feedRoot, IReadOnlyCollection<string> keepTags)
     {
         var keepSafe = new HashSet<string>(keepTags.Select(MakeSafeDirectorySegment), StringComparer.OrdinalIgnoreCase);
-        if (!Directory.Exists(root))
+        if (!Directory.Exists(feedRoot))
         {
             return;
         }
 
-        foreach (var sub in Directory.GetDirectories(root))
+        foreach (var subdirectory in Directory.GetDirectories(feedRoot))
         {
-            var name = Path.GetFileName(sub);
+            var name = Path.GetFileName(subdirectory);
             if (keepSafe.Contains(name))
             {
                 continue;
@@ -305,30 +477,95 @@ public class NcfPackageMirrorService
 
             try
             {
-                Directory.Delete(sub, recursive: true);
+                Directory.Delete(subdirectory, recursive: true);
             }
             catch
             {
-                // 忽略删除失败（可能被占用）
+                // 删除失败不会影响已发布清单；下次同步继续尝试。
             }
         }
     }
 
+    private static string GetExpectedSha256(GitHubAssetDto asset, string? tagName)
+    {
+        const string prefix = "sha256:";
+        if (asset.Digest?.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) != true)
+        {
+            throw new InvalidDataException($"Release {tagName} 的资源 {asset.Name} 缺少 SHA-256 摘要。");
+        }
+
+        var value = asset.Digest[prefix.Length..];
+        if (value.Length != 64 || !value.All(Uri.IsHexDigit))
+        {
+            throw new InvalidDataException($"Release {tagName} 的资源 {asset.Name} SHA-256 摘要格式无效。");
+        }
+
+        return value;
+    }
+
+    private static async Task<string> ComputeSha256Async(string path, CancellationToken cancellationToken)
+    {
+        await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+        var hash = await SHA256.HashDataAsync(stream, cancellationToken).ConfigureAwait(false);
+        return Convert.ToHexStringLower(hash);
+    }
+
+    private static string GetSyncFailureReason(Exception exception) => exception switch
+    {
+        TaskCanceledException => "请求超时",
+        HttpRequestException httpException when httpException.StatusCode.HasValue =>
+            $"HTTP {(int)httpException.StatusCode.Value}",
+        HttpRequestException => "网络不可达",
+        JsonException => "返回数据格式无效",
+        InvalidDataException invalidDataException => invalidDataException.Message,
+        IOException ioException => $"文件写入失败：{ioException.Message}",
+        _ => $"请求失败：{exception.Message}"
+    };
+
     /// <summary>用于目录名与 URL 段，避免非法路径字符。</summary>
     public static string MakeSafeDirectorySegment(string tag)
     {
-        var invalid = Path.GetInvalidFileNameChars();
-        var chars = tag.Select(ch => invalid.Contains(ch) ? '_' : ch).ToArray();
-        return new string(chars);
+        var invalid = new HashSet<char>(Path.GetInvalidFileNameChars())
+        {
+            Path.DirectorySeparatorChar,
+            Path.AltDirectorySeparatorChar
+        };
+        var chars = tag.Select(character => invalid.Contains(character) ? '_' : character).ToArray();
+        var safe = new string(chars);
+        return string.IsNullOrWhiteSpace(safe) || safe is "." or ".." ? "_" : safe;
     }
 
-    private sealed class GitHubReleaseDto
+    internal sealed record MirrorFeedDefinition(
+        string DisplayName,
+        string ReleasesApi,
+        string FolderName,
+        string LatestFileName,
+        string AssetNamePrefix,
+        int KeepVersionCount,
+        int MaxPages);
+
+    internal sealed record MirrorFeedSyncResult(
+        string DisplayName,
+        bool LatestPublished,
+        bool RetentionComplete,
+        string Message)
+    {
+        public bool IsComplete => LatestPublished && RetentionComplete;
+    }
+
+    internal sealed class GitHubReleaseDto
     {
         [JsonPropertyName("tag_name")]
         public string? TagName { get; set; }
 
         [JsonPropertyName("name")]
         public string? Name { get; set; }
+
+        [JsonPropertyName("draft")]
+        public bool Draft { get; set; }
+
+        [JsonPropertyName("prerelease")]
+        public bool Prerelease { get; set; }
 
         [JsonPropertyName("published_at")]
         public DateTime? PublishedAt { get; set; }
@@ -337,7 +574,7 @@ public class NcfPackageMirrorService
         public GitHubAssetDto[]? Assets { get; set; }
     }
 
-    private sealed class GitHubAssetDto
+    internal sealed class GitHubAssetDto
     {
         [JsonPropertyName("name")]
         public string? Name { get; set; }
@@ -347,6 +584,9 @@ public class NcfPackageMirrorService
 
         [JsonPropertyName("size")]
         public long Size { get; set; }
+
+        [JsonPropertyName("digest")]
+        public string? Digest { get; set; }
     }
 
     private sealed class GitHubReleaseMirrorDto

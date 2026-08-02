@@ -36,6 +36,8 @@ namespace Senparc.Areas.Admin.Domain.Dto
         public string TenPayAppId { get; set; }
 
         public bool? HideModuleManager { get; set; }
+
+        public string FooterContent { get; set; }
     }
 
     public class SystemConfig_CreateOrUpdateDto
@@ -50,5 +52,7 @@ namespace Senparc.Areas.Admin.Domain.Dto
         public string TenPayAppId { get; set; }
 
         public bool? HideModuleManager { get; set; }
+
+        public string FooterContent { get; set; }
     }
 }

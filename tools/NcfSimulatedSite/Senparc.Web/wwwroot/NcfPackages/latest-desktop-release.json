@@ -1,0 +1,36 @@
+{
+  "tag_name": "desktop-v0.5.1-build10025",
+  "name": "NCF Desktop Release desktop-v0.5.1-build10025",
+  "assets": [
+    {
+      "name": "ncf-desktop-linux-arm64-v0.5.1-build10025.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/desktop/desktop-v0.5.1-build10025/ncf-desktop-linux-arm64-v0.5.1-build10025.zip",
+      "size": 64915744
+    },
+    {
+      "name": "ncf-desktop-linux-x64-v0.5.1-build10025.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/desktop/desktop-v0.5.1-build10025/ncf-desktop-linux-x64-v0.5.1-build10025.zip",
+      "size": 68446649
+    },
+    {
+      "name": "ncf-desktop-osx-arm64-v0.5.1-build10025.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/desktop/desktop-v0.5.1-build10025/ncf-desktop-osx-arm64-v0.5.1-build10025.zip",
+      "size": 69666125
+    },
+    {
+      "name": "ncf-desktop-osx-x64-v0.5.1-build10025.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/desktop/desktop-v0.5.1-build10025/ncf-desktop-osx-x64-v0.5.1-build10025.zip",
+      "size": 72722200
+    },
+    {
+      "name": "ncf-desktop-win-arm64-v0.5.1-build10025.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/desktop/desktop-v0.5.1-build10025/ncf-desktop-win-arm64-v0.5.1-build10025.zip",
+      "size": 67144695
+    },
+    {
+      "name": "ncf-desktop-win-x64-v0.5.1-build10025.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/desktop/desktop-v0.5.1-build10025/ncf-desktop-win-x64-v0.5.1-build10025.zip",
+      "size": 70267782
+    }
+  ]
+}

@@ -100,7 +100,16 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
             string appSecret = null;
             systemName ??= "NCF - Template Project";
 
-            systemConfig = new SystemConfig(systemName, null, null, null, false, developerId, appKey, appSecret);
+            systemConfig = new SystemConfig(
+                systemName,
+                null,
+                null,
+                null,
+                false,
+                developerId,
+                appKey,
+                appSecret,
+                SystemConfig.CreateDefaultFooterContent());
             SaveObject(systemConfig);
 
             return systemConfig;

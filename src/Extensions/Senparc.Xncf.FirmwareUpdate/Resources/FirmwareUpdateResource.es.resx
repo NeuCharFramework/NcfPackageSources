@@ -16,22 +16,22 @@
     <value>Espejo de paquetes NCF</value>
   </data>
   <data name="Module.FirmwareUpdate.Description" xml:space="preserve">
-    <value>Sincroniza paquetes de escritorio NCF desde GitHub, conserva las tres versiones más recientes y genera una lista de descarga alternativa.</value>
+    <value>Sincroniza los paquetes de NCF Host y NcfDesktop desde GitHub en carpetas y manifiestos host/desktop separados.</value>
   </data>
   <data name="Function.FirmwareUpdate.Settings.Name" xml:space="preserve">
     <value>Configuración del espejo</value>
   </data>
   <data name="Function.FirmwareUpdate.Settings.Description" xml:space="preserve">
-    <value>Activa la sincronización desde GitHub y establece un intervalo de 1 a 24 horas</value>
+    <value>Activa la sincronización de NCF Host y NcfDesktop desde GitHub y establece un intervalo de 1 a 24 horas</value>
   </data>
   <data name="Function.FirmwareUpdate.Sync.Name" xml:space="preserve">
     <value>Sincronizar ahora</value>
   </data>
   <data name="Function.FirmwareUpdate.Sync.Description" xml:space="preserve">
-    <value>Obtiene la última Release y actualiza NcfPackages y latest-release.json</value>
+    <value>Obtiene las últimas Releases de NCF Host y NcfDesktop y actualiza sus paquetes y manifiestos locales</value>
   </data>
   <data name="Parameter.FirmwareUpdate.AutoMirror" xml:space="preserve">
-    <value>Activar réplica automática||Sincronizar paquetes NCF desde GitHub a ~/wwwroot/NcfPackages</value>
+    <value>Activar réplica automática||Sincronizar NCF Host y NcfDesktop en ~/wwwroot/NcfPackages/host y desktop</value>
   </data>
   <data name="Parameter.FirmwareUpdate.Interval" xml:space="preserve">
     <value>Intervalo de comprobación (horas)||De 1 a 24 horas</value>

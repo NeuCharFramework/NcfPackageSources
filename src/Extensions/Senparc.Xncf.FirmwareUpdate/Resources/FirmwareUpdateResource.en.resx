@@ -16,22 +16,22 @@
     <value>NCF Package Mirror</value>
   </data>
   <data name="Module.FirmwareUpdate.Description" xml:space="preserve">
-    <value>Synchronizes NCF desktop packages from GitHub, retains the latest three versions, and generates a fallback download manifest.</value>
+    <value>Synchronizes NCF Host runtime and NcfDesktop application packages from GitHub into separate host/desktop folders and manifests.</value>
   </data>
   <data name="Function.FirmwareUpdate.Settings.Name" xml:space="preserve">
     <value>Mirror settings</value>
   </data>
   <data name="Function.FirmwareUpdate.Settings.Description" xml:space="preserve">
-    <value>Enable or disable automatic NCF package synchronization from GitHub and set a 1–24 hour check interval</value>
+    <value>Enable or disable automatic NCF Host and NcfDesktop package synchronization from GitHub and set a 1–24 hour check interval</value>
   </data>
   <data name="Function.FirmwareUpdate.Sync.Name" xml:space="preserve">
     <value>Synchronize now</value>
   </data>
   <data name="Function.FirmwareUpdate.Sync.Description" xml:space="preserve">
-    <value>Pull the latest GitHub release now and update local NcfPackages and latest-release.json</value>
+    <value>Pull the latest NCF Host and NcfDesktop releases and update their local packages and manifests</value>
   </data>
   <data name="Parameter.FirmwareUpdate.AutoMirror" xml:space="preserve">
-    <value>Enable automatic mirroring||Sync NCF packages from GitHub to ~/wwwroot/NcfPackages</value>
+    <value>Enable automatic mirroring||Sync NCF Host and NcfDesktop packages to ~/wwwroot/NcfPackages/host and desktop</value>
   </data>
   <data name="Parameter.FirmwareUpdate.Interval" xml:space="preserve">
     <value>Check interval (hours)||From 1 to 24 hours</value>

@@ -16,22 +16,22 @@
     <value>NCF パッケージミラー</value>
   </data>
   <data name="Module.FirmwareUpdate.Description" xml:space="preserve">
-    <value>GitHub から NCF デスクトップパッケージを同期し、最新 3 バージョンと予備ダウンロード一覧を保持します。</value>
+    <value>GitHub から NCF Host と NcfDesktop のパッケージを別々の host/desktop フォルダーとマニフェストへ同期します。</value>
   </data>
   <data name="Function.FirmwareUpdate.Settings.Name" xml:space="preserve">
     <value>ミラー設定</value>
   </data>
   <data name="Function.FirmwareUpdate.Settings.Description" xml:space="preserve">
-    <value>GitHub からの自動同期を切り替え、1～24 時間の確認間隔を設定します</value>
+    <value>GitHub からの NCF Host と NcfDesktop の自動同期を切り替え、1～24 時間の確認間隔を設定します</value>
   </data>
   <data name="Function.FirmwareUpdate.Sync.Name" xml:space="preserve">
     <value>今すぐ同期</value>
   </data>
   <data name="Function.FirmwareUpdate.Sync.Description" xml:space="preserve">
-    <value>最新 Release を取得し、NcfPackages と latest-release.json を更新します</value>
+    <value>最新の NCF Host と NcfDesktop Release を取得し、ローカルパッケージとマニフェストを更新します</value>
   </data>
   <data name="Parameter.FirmwareUpdate.AutoMirror" xml:space="preserve">
-    <value>自動ミラーを有効化||GitHub から NCF パッケージを ~/wwwroot/NcfPackages に同期します</value>
+    <value>自動ミラーを有効化||NCF Host と NcfDesktop を ~/wwwroot/NcfPackages/host と desktop に同期します</value>
   </data>
   <data name="Parameter.FirmwareUpdate.Interval" xml:space="preserve">
     <value>確認間隔（時間）||1～24 時間</value>

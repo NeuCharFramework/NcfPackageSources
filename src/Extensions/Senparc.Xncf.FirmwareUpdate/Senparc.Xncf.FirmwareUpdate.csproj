@@ -6,7 +6,7 @@
     <RootNamespace>Senparc.Xncf.FirmwareUpdate</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
-    <Description>NCF 桌面端安装包镜像：从 GitHub Release 同步至当前站点 wwwroot 下的 NcfPackages，并提供备用下载元数据</Description>
+    <Description>NCF Host 与 NcfDesktop 安装包镜像：从各自的 GitHub Release 同步至 NcfPackages/host 和 desktop，并提供独立下载清单</Description>
     <Copyright>NeuCharFramework</Copyright>
     <PackageTags>NeuCharFramework,NCF,Senparc.Xncf.FirmwareUpdate</PackageTags>
     <Authors>NeuCharFramework</Authors>
@@ -66,6 +66,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Remove="App_Data\Database\SenparcConfig.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Senparc.Xncf.FirmwareUpdate.Tests" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App_Data\Database\SenparcConfig.config" />

@@ -52,6 +52,18 @@ namespace Senparc.Xncf.XncfBuilder
 
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<XncfPreviewTask>()
+                .HasIndex(task => task.SessionId)
+                .IsUnique();
+            modelBuilder.Entity<XncfPreviewTask>()
+                .HasIndex(task => new { task.ModuleProjectName, task.StartedAtUtc });
+
+            modelBuilder.Entity<XncfPreviewHost>()
+                .HasIndex(host => host.SessionId)
+                .IsUnique();
+            modelBuilder.Entity<XncfPreviewHost>()
+                .HasIndex(host => new { host.Status, host.UpdatedAtUtc });
+
             //实现 [XncfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
             //modelBuilder.ApplyConfiguration(new DbConfig_WeixinUserConfigurationMapping());
         }

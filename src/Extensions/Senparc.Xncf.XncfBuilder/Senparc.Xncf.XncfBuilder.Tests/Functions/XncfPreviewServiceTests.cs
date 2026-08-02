@@ -10,10 +10,15 @@
 ----------------------------------------------------------------*/
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.Hosting;
 using Senparc.Xncf.XncfBuilder.Domain.Services.Preview;
+using Senparc.Xncf.XncfBuilder.OHS.PL;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Senparc.Xncf.XncfBuilder.Tests.Functions
 {
@@ -53,6 +58,31 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Functions
                     XncfPreviewService.ResolveProjectPaths(
                         Path.Combine(testDirectory, "Demo.sln"),
                         "../Demo.Xncf.Sample"));
+            }
+            finally
+            {
+                Directory.Delete(testDirectory, recursive: true);
+            }
+        }
+
+        [TestMethod]
+        public void ValidateHostProjectReference_ShouldRequireCurrentSourceProject()
+        {
+            var testDirectory = CreateProjectLayout("Demo.Xncf.Sample");
+            try
+            {
+                var paths = XncfPreviewService.ResolveProjectPaths(
+                    Path.Combine(testDirectory, "Demo.sln"),
+                    "Demo.Xncf.Sample");
+
+                Assert.ThrowsException<InvalidOperationException>(() =>
+                    XncfPreviewService.ValidateHostProjectReference(paths));
+
+                File.WriteAllText(
+                    paths.WebProjectFilePath,
+                    "<Project><ItemGroup><ProjectReference Include=\"..\\Demo.Xncf.Sample\\Demo.Xncf.Sample.csproj\" /></ItemGroup></Project>");
+
+                XncfPreviewService.ValidateHostProjectReference(paths);
             }
             finally
             {
@@ -146,6 +176,167 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Functions
             Assert.IsFalse(startInfo.Environment.ContainsKey("SenparcCoreSetting__DatabaseType"));
         }
 
+        [TestMethod]
+        public void SanitizePreviewEnvironment_ShouldRemoveApplicationSecrets()
+        {
+            IDictionary<string, string> environment = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["PATH"] = "/usr/bin",
+                ["HOME"] = "/tmp/home",
+                ["ConnectionStrings__Default"] = "secret-database",
+                ["OPENAI_API_KEY"] = "secret-ai-key"
+            };
+
+            XncfPreviewService.SanitizePreviewEnvironment(environment);
+
+            Assert.AreEqual("/usr/bin", environment["PATH"]);
+            Assert.AreEqual("/tmp/home", environment["HOME"]);
+            Assert.IsFalse(environment.ContainsKey("ConnectionStrings__Default"));
+            Assert.IsFalse(environment.ContainsKey("OPENAI_API_KEY"));
+        }
+
+        [TestMethod]
+        public void ComputeSourceFingerprint_ShouldTrackSourceButIgnoreBuildArtifacts()
+        {
+            var testDirectory = Path.Combine(
+                Path.GetTempPath(),
+                "NcfXncfPreviewFingerprintTests",
+                Guid.NewGuid().ToString("N"));
+            try
+            {
+                Directory.CreateDirectory(testDirectory);
+                File.WriteAllText(Path.Combine(testDirectory, "Register.cs"), "version-1");
+
+                var original = XncfPreviewService.ComputeSourceFingerprint(testDirectory);
+                Directory.CreateDirectory(Path.Combine(testDirectory, "obj"));
+                File.WriteAllText(Path.Combine(testDirectory, "obj", "generated.tmp"), "ignored");
+                Assert.AreEqual(original, XncfPreviewService.ComputeSourceFingerprint(testDirectory));
+
+                File.WriteAllText(Path.Combine(testDirectory, "Register.cs"), "version-2");
+                Assert.AreNotEqual(original, XncfPreviewService.ComputeSourceFingerprint(testDirectory));
+            }
+            finally
+            {
+                if (Directory.Exists(testDirectory))
+                {
+                    Directory.Delete(testDirectory, recursive: true);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void PreviewPipelineDefinitions_ShouldBeOrderedAndReuseStageProgress()
+        {
+            var stages = XncfPreviewPresentation.GetPipelineStageDefinitions();
+
+            Assert.AreEqual(XncfPreviewStage.PreparingSource.ToString(), stages[0].Name);
+            Assert.AreEqual(XncfPreviewStage.Running.ToString(), stages[^1].Name);
+            Assert.IsTrue(stages.All(stage => !string.IsNullOrWhiteSpace(stage.Label)));
+            Assert.IsTrue(stages.Zip(stages.Skip(1), (left, right) =>
+                left.ProgressPercent < right.ProgressPercent).All(result => result));
+            Assert.IsTrue(stages.All(stage =>
+                stage.ProgressPercent == ((XncfPreviewStage)stage.Value).GetProgressPercent()));
+        }
+
+        [TestMethod]
+        public void PreviewTerminalStages_ShouldNotBeStoppable()
+        {
+            var terminalStages = new[]
+            {
+                XncfPreviewStage.Stopped,
+                XncfPreviewStage.Replaced,
+                XncfPreviewStage.Failed,
+                XncfPreviewStage.Cancelled,
+                XncfPreviewStage.Interrupted
+            };
+
+            Assert.IsTrue(terminalStages.All(stage => stage.IsTerminal()));
+            Assert.IsTrue(terminalStages.All(stage => !stage.CanStop()));
+            Assert.IsTrue(XncfPreviewStage.Building.CanStop());
+            Assert.IsTrue(XncfPreviewStage.Running.CanStop());
+        }
+
+        [TestMethod]
+        public async Task HostedStart_ShouldHydratePersistedInterruptedHistory()
+        {
+            var startedAt = DateTimeOffset.UtcNow.AddMinutes(-5);
+            var interruptedAt = DateTimeOffset.UtcNow.AddMinutes(-1);
+            var store = new FakePreviewStateStore(new XncfPreviewPersistenceSnapshot
+            {
+                SessionId = "persisted-session",
+                ModuleProjectName = "Demo.Xncf.Persisted",
+                SolutionFilePath = "/workspace/Demo.sln",
+                Stage = XncfPreviewStage.Interrupted,
+                ProgressPercent = 70,
+                StatusMessage = "主站重新启动，之前未完成的预览任务已中断。",
+                ErrorMessage = "主站重新启动，之前未完成的预览任务已中断。",
+                RecentOutput = "persisted output",
+                StartedAt = startedAt,
+                UpdatedAt = interruptedAt,
+                CompletedAt = interruptedAt,
+                HasHost = true,
+                Url = "http://127.0.0.1:50994",
+                ProcessId = 12345,
+                EnvironmentName = XncfPreviewService.DefaultEnvironmentName,
+                HostStatus = XncfPreviewHostStatus.Interrupted,
+                HostStatusMessage = "主站重新启动，无法安全重新绑定之前的预览进程。",
+                ProcessStartedAt = startedAt.AddMinutes(1),
+                StoppedAt = interruptedAt
+            });
+            var service = new XncfPreviewService(stateStore: store);
+
+            await ((IHostedService)service).StartAsync(CancellationToken.None);
+            var session = service.GetSession("persisted-session", includeOutput: true);
+
+            Assert.IsNotNull(session);
+            Assert.AreEqual(XncfPreviewStage.Interrupted, session.Stage);
+            Assert.AreEqual(XncfPreviewHostStatus.Interrupted, session.HostStatus);
+            Assert.AreEqual(70, session.ProgressPercent);
+            Assert.IsFalse(session.IsRunning);
+            Assert.IsFalse(session.CanStop);
+            StringAssert.Contains(session.RecentOutput, "persisted output");
+        }
+
+        [TestMethod]
+        public void PersistenceEntities_ShouldStoreTaskAndHostSeparately()
+        {
+            var snapshot = new XncfPreviewPersistenceSnapshot
+            {
+                SessionId = "entity-session",
+                ModuleProjectName = "Demo.Xncf.Entity",
+                SolutionFilePath = "/workspace/Demo.sln",
+                Stage = XncfPreviewStage.Running,
+                ProgressPercent = 100,
+                StatusMessage = "running",
+                StartedAt = DateTimeOffset.UtcNow.AddMinutes(-1),
+                UpdatedAt = DateTimeOffset.UtcNow,
+                HasHost = true,
+                Url = "http://127.0.0.1:50995",
+                ProcessId = 100,
+                EnvironmentName = XncfPreviewService.DefaultEnvironmentName,
+                PublishDirectory = "/tmp/preview/app",
+                HostStatus = XncfPreviewHostStatus.Healthy,
+                HostStatusMessage = "healthy",
+                HealthyAt = DateTimeOffset.UtcNow
+            };
+
+            var task = new XncfPreviewTask(snapshot);
+            var host = new XncfPreviewHost(snapshot);
+
+            Assert.AreEqual(XncfPreviewStage.Running, task.Stage);
+            Assert.AreEqual(snapshot.SolutionFilePath, task.SolutionFilePath);
+            Assert.AreEqual(XncfPreviewHostStatus.Healthy, host.Status);
+            Assert.AreEqual(snapshot.PublishDirectory, host.PublishDirectory);
+
+            var interruptedAt = DateTimeOffset.UtcNow.AddSeconds(1);
+            task.MarkInterrupted(interruptedAt, "interrupted task");
+            host.MarkInterrupted(interruptedAt, "interrupted host");
+            Assert.AreEqual(XncfPreviewStage.Interrupted, task.Stage);
+            Assert.AreEqual(XncfPreviewHostStatus.Interrupted, host.Status);
+            Assert.IsNotNull(task.CompletedAtUtc);
+            Assert.IsNotNull(host.StoppedAtUtc);
+        }
+
         private static string CreateProjectLayout(string moduleProjectName)
         {
             var testDirectory = Path.Combine(
@@ -172,6 +363,31 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Functions
             File.WriteAllText(assetsFilePath, "{}");
             File.SetLastWriteTimeUtc(projectFilePath, DateTime.UtcNow.AddMinutes(-1));
             File.SetLastWriteTimeUtc(assetsFilePath, DateTime.UtcNow);
+        }
+
+        private sealed class FakePreviewStateStore : IXncfPreviewStateStore
+        {
+            private readonly IReadOnlyList<XncfPreviewPersistenceSnapshot> _snapshots;
+
+            public FakePreviewStateStore(params XncfPreviewPersistenceSnapshot[] snapshots)
+            {
+                _snapshots = snapshots;
+            }
+
+            public Task<IReadOnlyList<XncfPreviewPersistenceSnapshot>> LoadRecentAndInterruptAsync(
+                int maxCount,
+                DateTimeOffset interruptedAt,
+                CancellationToken cancellationToken = default)
+            {
+                return Task.FromResult(_snapshots);
+            }
+
+            public Task SaveAsync(
+                XncfPreviewPersistenceSnapshot snapshot,
+                CancellationToken cancellationToken = default)
+            {
+                return Task.CompletedTask;
+            }
         }
     }
 }

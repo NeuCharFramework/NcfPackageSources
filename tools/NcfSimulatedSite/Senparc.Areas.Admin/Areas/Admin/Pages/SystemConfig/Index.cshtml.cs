@@ -25,6 +25,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Senparc.Areas.Admin;
 using Senparc.Ncf.Core.Enums;
+using Senparc.Ncf.Core.Utility;
 using Senparc.Xncf.SystemManager.Domain.Service;
 
 namespace Senparc.Areas.Admin.Areas.Admin.Pages
@@ -62,6 +63,16 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 return Ok(false, _localizer["SystemConfig.NameEmpty"].Value);
             }
 
+            if (string.IsNullOrWhiteSpace(fullSystemConfig.FooterContent))
+            {
+                return Ok(false, "Footer 内容不能为空。");
+            }
+
+            if (fullSystemConfig.FooterContent.Length > 2000)
+            {
+                return Ok(false, "Footer 内容不能超过 2000 个字符。");
+            }
+
             var systemConfig = await _systemConfigService.GetObjectAsync(z => true);
             if (systemConfig == null)
             {
@@ -73,13 +84,15 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 systemConfig.MchKey,
                 systemConfig.TenPayAppId,
                 systemConfig.HideModuleManager);
+            systemConfig.UpdateFooterContent(FooterContentSanitizer.Sanitize(fullSystemConfig.FooterContent));
 
             await _systemConfigService.SaveObjectAsync(systemConfig);
 
             base.SetMessager(MessageType.success, _localizer["SystemConfig.Updated"].Value);
             return Ok(new
             {
-                systemName = systemConfig.SystemName
+                systemName = systemConfig.SystemName,
+                footerContent = systemConfig.FooterContent
             });
         }
     }

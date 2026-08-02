@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 using Senparc.CO2NET.Extensions;
 using System.IO;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.Xncf.XncfBuilder.Domain.Services.Workspace;
 namespace Senparc.Xncf.XncfBuilder.OHS.Local
 {
     /// <summary>
@@ -35,20 +36,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
     /// </summary>
     public partial class BuildXncfAppService
     {
-        private string GetFilePath(string moduleName, string filePath)
+        private string GetModuleDirectory(string moduleName)
         {
             BuildXncf_BuildRequest request = new BuildXncf_BuildRequest();
             var slnPath = request.GetSlnFilePath();
-            var modulePath = Directory.GetDirectories(Path.GetDirectoryName(slnPath), moduleName, SearchOption.AllDirectories)
-                                    .FirstOrDefault();
-
-            if (string.IsNullOrEmpty(modulePath))
-            {
-                throw new Exception(XncfBuilderResource.Format("XncfBuilder.MCP.ModuleDirectoryNotFound", "未找到模块 {0} 的目录；模块名称必须完整匹配，例如 Senparc.Xncf.XncfBuilder。", moduleName));
-            }
-
-            var fullFilePath = Path.Combine(modulePath, filePath);
-            return fullFilePath;
+            return XncfWorkspaceFileService.ResolveModuleDirectory(slnPath, moduleName);
         }
 
 
@@ -124,18 +116,19 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         {
             var response = new BuildXncf_GetFileResponse();
 
-            string fullFilePath = null;
-            string fileContent = null;
             try
             {
-                fullFilePath = this.GetFilePath(moduleName, filePath);
+                var moduleDirectory = GetModuleDirectory(moduleName);
+                var result = await XncfWorkspaceFileService.ReadTextAsync(
+                    moduleDirectory,
+                    filePath,
+                    this.CancellationToken).ConfigureAwait(false);
 
-                if (!File.Exists(fullFilePath))
-                {
-                    throw new Exception(XncfBuilderResource.Format("XncfBuilder.MCP.FileNotFound", "文件不存在：{0}", filePath));
-                }
-
-                fileContent = await File.ReadAllTextAsync(fullFilePath);
+                response.Success = true;
+                response.FileName = Path.GetFileName(result.FullFilePath);
+                response.FilePath = filePath;
+                response.FileContent = result.Content;
+                response.Sha256 = result.Sha256;
             }
             catch (Exception ex)
             {
@@ -143,11 +136,6 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 response.Message = ex.Message;
                 return response;
             }
-
-            response.Success = true;
-            response.FileName = Path.GetFileName(fullFilePath);
-            response.FilePath = filePath;
-            response.FileContent = fileContent;
             return response;
         }
 
@@ -155,27 +143,27 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         public async Task<BuildXncf_CreateOrUpdateFileResponse> CreateOrUpdateFile(
            [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.MCP.ModuleFullName")] string moduleName,
            [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.MCP.FilePath")] string filePath,
-           [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.MCP.FileContent")] string fullFileContent)
+           [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.MCP.FileContent")] string fullFileContent,
+           string expectedSha256 = null)
         {
             var response = new BuildXncf_CreateOrUpdateFileResponse();
 
-            string fullFilePath = null;
-            string fileContent = fullFileContent;
             try
             {
-                fullFilePath = this.GetFilePath(moduleName, filePath);
+                var moduleDirectory = GetModuleDirectory(moduleName);
+                var result = await XncfWorkspaceFileService.WriteTextAtomicAsync(
+                    moduleDirectory,
+                    filePath,
+                    fullFileContent,
+                    expectedSha256,
+                    this.CancellationToken).ConfigureAwait(false);
 
-                if (!File.Exists(fullFilePath))
-                {
-                    string directoryPath = Path.GetDirectoryName(fullFilePath);
-                    Senparc.CO2NET.Helpers.FileHelper.TryCreateDirectory(directoryPath);
-                    response.IsNewFile = true;
-                }
-
-                //TODO: 使用 SHA1 验证指纹，把旧文件内容进行缓存或差量备份
-                await File.WriteAllTextAsync(fullFilePath, fileContent);
                 response.Success = true;
-                response.FileName = Path.GetFileName(fullFilePath);
+                response.FileName = Path.GetFileName(result.FullFilePath);
+                response.FilePath = filePath;
+                response.IsNewFile = result.IsNewFile;
+                response.PreviousSha256 = result.PreviousSha256;
+                response.Sha256 = result.Sha256;
             }
             catch (Exception ex)
             {

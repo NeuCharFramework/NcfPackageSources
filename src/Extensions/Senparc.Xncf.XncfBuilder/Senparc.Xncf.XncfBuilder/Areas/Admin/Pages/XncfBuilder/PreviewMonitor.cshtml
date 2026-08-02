@@ -1,0 +1,365 @@
+@page
+@model Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages.PreviewMonitor
+@{
+    ViewData["Title"] = XncfBuilderResource.Get("XncfBuilder.Preview.Monitor", "XNCF 预览监控");
+    Layout = "_Layout_Vue";
+    var stateUrl = Url.Page("./PreviewMonitor", "State", new { uid = Model.Uid });
+    var outputUrl = Url.Page("./PreviewMonitor", "SessionOutput", new { uid = Model.Uid });
+    var stopUrl = Url.Page("./PreviewMonitor", "Stop", new { uid = Model.Uid });
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>XncfBuilder</el-breadcrumb-item>
+    <el-breadcrumb-item>预览监控</el-breadcrumb-item>
+}
+
+<div>
+    @Html.AntiForgeryToken()
+    <el-container>
+        <el-header class="module-header">
+            <span class="start-title">
+                <i class="fa fa-dashboard"></i>&nbsp;
+                <span class="module-header-v">XNCF 预览监控</span>
+            </span>
+        </el-header>
+
+        <el-main>
+            <el-alert
+                title="隔离预览流水线"
+                type="info"
+                show-icon
+                :closable="false"
+                description="每个任务依次执行宿主引用校验、隔离构建、启动新预览、健康检查和原子替换。新预览通过检查前，当前可用的旧预览不会停止。">
+            </el-alert>
+
+            <el-row :gutter="16" style="margin: 18px 0;">
+                <el-col :xs="12" :sm="6">
+                    <el-card shadow="never">
+                        <div style="color:#909399;font-size:13px;">运行中</div>
+                        <div style="font-size:28px;color:#67c23a;">{{ runningCount }}</div>
+                    </el-card>
+                </el-col>
+                <el-col :xs="12" :sm="6">
+                    <el-card shadow="never">
+                        <div style="color:#909399;font-size:13px;">处理中 / 排队</div>
+                        <div style="font-size:28px;color:#e6a23c;">{{ workingCount }}</div>
+                    </el-card>
+                </el-col>
+                <el-col :xs="12" :sm="6">
+                    <el-card shadow="never">
+                        <div style="color:#909399;font-size:13px;">失败 / 中断</div>
+                        <div style="font-size:28px;color:#f56c6c;">{{ failedCount }}</div>
+                    </el-card>
+                </el-col>
+                <el-col :xs="12" :sm="6">
+                    <el-card shadow="never">
+                        <div style="color:#909399;font-size:13px;">会话总数</div>
+                        <div style="font-size:28px;color:#409eff;">{{ sessions.length }}</div>
+                    </el-card>
+                </el-col>
+            </el-row>
+
+            <div class="filter-container">
+                <el-button type="primary" size="small" icon="el-icon-refresh" :loading="loading" @@click="loadState(true)">
+                    刷新状态
+                </el-button>
+                <el-tag type="info" size="small">自动刷新：2 秒</el-tag>
+                <span style="margin-left:10px;color:#909399;font-size:12px;">最近更新：{{ formatDate(updatedAt) }}</span>
+            </div>
+
+            <el-card shadow="never">
+                <div slot="header" class="clearfix">
+                    <span><i class="fa fa-tasks"></i>&nbsp;模块预览会话</span>
+                </div>
+
+                <el-table
+                    :data="sessions"
+                    row-key="sessionId"
+                    border
+                    stripe
+                    empty-text="当前没有预览会话"
+                    @@expand-change="handleExpandChange">
+                    <el-table-column type="expand">
+                        <template slot-scope="scope">
+                            <el-steps
+                                :active="pipelineActive(scope.row)"
+                                finish-status="success"
+                                :process-status="pipelineProcessStatus(scope.row)"
+                                align-center
+                                style="margin:8px 0 20px;">
+                                <el-step
+                                    v-for="stage in pipelineStages"
+                                    :key="stage.value"
+                                    :title="stage.label">
+                                </el-step>
+                            </el-steps>
+                            <el-card shadow="never">
+                                <el-row :gutter="16">
+                                    <el-col :xs="24" :sm="12">
+                                        <strong>会话 ID：</strong><span style="word-break:break-all;">{{ scope.row.sessionId }}</span>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="12">
+                                        <strong>环境：</strong>{{ scope.row.environmentName || '—' }}
+                                    </el-col>
+                                    <el-col :xs="24" :sm="12" style="margin-top:8px;">
+                                        <strong>Host 启动 / 健康：</strong>{{ formatDate(scope.row.processStartedAt) }} / {{ formatDate(scope.row.healthyAt) }}
+                                    </el-col>
+                                    <el-col :xs="24" :sm="12" style="margin-top:8px;">
+                                        <strong>Host 停止 / ExitCode：</strong>{{ formatDate(scope.row.stoppedAt) }} / {{ scope.row.exitCode === null || scope.row.exitCode === undefined ? '—' : scope.row.exitCode }}
+                                    </el-col>
+                                    <el-col :xs="24" :sm="12" style="margin-top:8px;">
+                                        <strong>源码 SHA-256：</strong><span style="word-break:break-all;">{{ scope.row.sourceFingerprint || '尚未计算' }}</span>
+                                    </el-col>
+                                    <el-col :xs="24" :sm="12" style="margin-top:8px;">
+                                        <strong>模块 DLL SHA-256：</strong><span style="word-break:break-all;">{{ scope.row.moduleAssemblySha256 || '尚未生成' }}</span>
+                                    </el-col>
+                                </el-row>
+                            </el-card>
+                            <div style="margin-top:12px;font-weight:600;">最近输出（最多 300 行）</div>
+                            <pre style="max-height:360px;overflow:auto;background:#1f2933;color:#e5e7eb;padding:12px;border-radius:4px;white-space:pre-wrap;word-break:break-word;" v-text="sessionOutput(scope.row)"></pre>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column prop="moduleProjectName" label="模块" min-width="230"></el-table-column>
+                    <el-table-column label="当前阶段" min-width="150">
+                        <template slot-scope="scope">
+                            <el-tag :type="tagType(scope.row)" size="small">{{ stageLabel(scope.row.stage) }}</el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="流水线进度" min-width="250">
+                        <template slot-scope="scope">
+                            <el-progress
+                                :percentage="scope.row.progressPercent"
+                                :status="progressStatus(scope.row)"
+                                :stroke-width="12">
+                            </el-progress>
+                            <div style="color:#606266;font-size:12px;line-height:18px;">{{ scope.row.statusMessage }}</div>
+                            <div v-if="scope.row.errorMessage" style="color:#f56c6c;font-size:12px;line-height:18px;">{{ scope.row.errorMessage }}</div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="进程" width="100">
+                        <template slot-scope="scope">{{ scope.row.processId > 0 ? scope.row.processId : '—' }}</template>
+                    </el-table-column>
+                    <el-table-column label="Host" min-width="135">
+                        <template slot-scope="scope">
+                            <el-tag :type="hostTagType(scope.row.hostStatus)" size="small">{{ hostStatusLabel(scope.row.hostStatus) }}</el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="开始 / 更新" min-width="185">
+                        <template slot-scope="scope">
+                            <div>{{ formatDate(scope.row.startedAt) }}</div>
+                            <div style="color:#909399;font-size:12px;">{{ formatDate(scope.row.updatedAt) }}</div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作" width="155" fixed="right">
+                        <template slot-scope="scope">
+                            <el-button
+                                v-if="scope.row.url && scope.row.isRunning"
+                                type="primary"
+                                size="mini"
+                                icon="el-icon-position"
+                                @@click="openPreview(scope.row.url)">
+                                打开
+                            </el-button>
+                            <el-button
+                                v-if="scope.row.canStop"
+                                type="danger"
+                                size="mini"
+                                icon="el-icon-switch-button"
+                                @@click="stopSession(scope.row)">
+                                停止
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-card>
+
+            <el-alert
+                style="margin-top:16px;"
+                title="源码生成或修改完成后，调用“启动 XNCF 隔离预览”才会进入此监控队列；源码指纹用于证明本次构建对应的确切源码快照。"
+                type="warning"
+                show-icon
+                :closable="false">
+            </el-alert>
+        </el-main>
+    </el-container>
+</div>
+
+@section scripts {
+    <script>
+        new Vue({
+            el: "#app",
+            data: function () {
+                return {
+                    sessions: [],
+                    stageDefinitions: [],
+                    pipelineStages: [],
+                    stageMap: {},
+                    hostStatusMap: {},
+                    outputBySession: {},
+                    expandedSessionIds: [],
+                    updatedAt: null,
+                    loading: false,
+                    refreshTimer: null,
+                    stateUrl: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(stateUrl)),
+                    outputUrl: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(outputUrl)),
+                    stopUrl: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(stopUrl))
+                };
+            },
+            computed: {
+                runningCount: function () {
+                    return this.sessions.filter(row => this.stageName(row.stage) === "Running").length;
+                },
+                workingCount: function () {
+                    return this.sessions.filter(row => !row.isTerminal && this.stageName(row.stage) !== "Running").length;
+                },
+                failedCount: function () {
+                    return this.sessions.filter(row => {
+                        const name = this.stageName(row.stage);
+                        return name === "Failed" || name === "Interrupted";
+                    }).length;
+                }
+            },
+            mounted: function () {
+                this.loadState(false);
+                this.refreshTimer = window.setInterval(() => {
+                    if (!document.hidden) {
+                        this.loadState(false);
+                    }
+                }, 2000);
+            },
+            beforeDestroy: function () {
+                if (this.refreshTimer) {
+                    window.clearInterval(this.refreshTimer);
+                }
+            },
+            methods: {
+                loadState: async function (showLoading) {
+                    if (showLoading) {
+                        this.loading = true;
+                    }
+                    try {
+                        const response = await axios.get(this.stateUrl, { headers: { "Cache-Control": "no-cache" } });
+                        this.sessions = response.data.sessions || [];
+                        this.stageDefinitions = response.data.stageDefinitions || [];
+                        this.hostStatusMap = (response.data.hostStatusDefinitions || []).reduce((map, item) => {
+                            map[item.value] = item;
+                            return map;
+                        }, {});
+                        this.pipelineStages = response.data.pipelineStages || [];
+                        this.stageMap = this.stageDefinitions.reduce((map, item) => {
+                            map[item.value] = item;
+                            return map;
+                        }, {});
+                        this.updatedAt = response.data.serverTime;
+                        await Promise.all(this.expandedSessionIds.map(id => this.loadOutput(id)));
+                    } catch (error) {
+                        if (showLoading) {
+                            this.$message.error(this.errorMessage(error, "状态读取失败。"));
+                        }
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                loadOutput: async function (sessionId) {
+                    try {
+                        const separator = this.outputUrl.indexOf("?") >= 0 ? "&" : "?";
+                        const response = await axios.get(this.outputUrl + separator + "sessionId=" + encodeURIComponent(sessionId));
+                        this.$set(this.outputBySession, sessionId, response.data.recentOutput || "暂无输出。");
+                    } catch (error) {
+                        this.$set(this.outputBySession, sessionId, this.errorMessage(error, "日志读取失败。"));
+                    }
+                },
+                handleExpandChange: function (row, expandedRows) {
+                    this.expandedSessionIds = expandedRows.map(item => item.sessionId);
+                    if (this.expandedSessionIds.indexOf(row.sessionId) >= 0) {
+                        this.loadOutput(row.sessionId);
+                    }
+                },
+                stopSession: async function (row) {
+                    try {
+                        await this.$confirm("确定停止 " + row.moduleProjectName + " 的此预览任务吗？", "停止预览", {
+                            confirmButtonText: "停止",
+                            cancelButtonText: "取消",
+                            type: "warning"
+                        });
+                        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                        const separator = this.stopUrl.indexOf("?") >= 0 ? "&" : "?";
+                        const response = await axios.post(
+                            this.stopUrl + separator + "sessionId=" + encodeURIComponent(row.sessionId),
+                            null,
+                            { headers: { "RequestVerificationToken": token } });
+                        this.$message({
+                            type: response.data.success ? "success" : "warning",
+                            message: response.data.message
+                        });
+                        await this.loadState(false);
+                    } catch (error) {
+                        if (error !== "cancel" && error !== "close") {
+                            this.$message.error(this.errorMessage(error, "停止预览失败。"));
+                        }
+                    }
+                },
+                stageName: function (stage) {
+                    return this.stageMap[stage] ? this.stageMap[stage].name : "Unknown";
+                },
+                stageLabel: function (stage) {
+                    return this.stageMap[stage] ? this.stageMap[stage].label : "未知";
+                },
+                hostStatusLabel: function (status) {
+                    return this.hostStatusMap[status] ? this.hostStatusMap[status].label : "未创建";
+                },
+                hostTagType: function (status) {
+                    const name = this.hostStatusMap[status] ? this.hostStatusMap[status].name : "NotCreated";
+                    if (name === "Healthy") return "success";
+                    if (name === "Failed" || name === "Interrupted") return "danger";
+                    if (name === "Stopped" || name === "Replaced" || name === "NotCreated") return "info";
+                    return "warning";
+                },
+                tagType: function (row) {
+                    const name = this.stageName(row.stage);
+                    if (name === "Running") return "success";
+                    if (name === "Failed" || name === "Interrupted") return "danger";
+                    if (name === "Cancelled" || name === "Stopped" || name === "Replaced") return "info";
+                    return "warning";
+                },
+                progressStatus: function (row) {
+                    const name = this.stageName(row.stage);
+                    if (name === "Failed" || name === "Interrupted") return "exception";
+                    if (name === "Running") return "success";
+                    if (row.isTerminal) return "warning";
+                    return undefined;
+                },
+                pipelineActive: function (row) {
+                    const name = this.stageName(row.stage);
+                    if (name === "Running" || name === "Stopped" || name === "Replaced") {
+                        return this.pipelineStages.length;
+                    }
+                    const completedOrCurrent = this.pipelineStages
+                        .filter(stage => stage.progressPercent <= row.progressPercent)
+                        .length;
+                    return Math.max(0, completedOrCurrent - 1);
+                },
+                pipelineProcessStatus: function (row) {
+                    const name = this.stageName(row.stage);
+                    return name === "Failed" || name === "Interrupted" ? "error" : "process";
+                },
+                sessionOutput: function (row) {
+                    return this.outputBySession[row.sessionId] || "正在读取最近输出…";
+                },
+                openPreview: function (url) {
+                    window.open(url, "_blank", "noopener,noreferrer");
+                },
+                formatDate: function (value) {
+                    return value ? new Date(value).toLocaleString() : "—";
+                },
+                errorMessage: function (error, fallback) {
+                    return error && error.response && error.response.data && error.response.data.message
+                        ? error.response.data.message
+                        : fallback;
+                }
+            }
+        });
+    </script>
+}

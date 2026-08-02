@@ -46,7 +46,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<!-- FirmwareUpdate writes downloads atomically as *.tmp; never fingerprint or publish an incomplete package. -->
-		<Content Remove="wwwroot\NcfPackages\**\*.tmp" />
+		<Content Remove="wwwroot\NcfPackages\**\*.tmp*" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />

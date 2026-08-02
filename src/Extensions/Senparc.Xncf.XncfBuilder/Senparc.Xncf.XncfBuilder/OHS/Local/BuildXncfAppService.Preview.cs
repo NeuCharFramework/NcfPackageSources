@@ -88,17 +88,66 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         .Append(WebUtility.HtmlEncode(session.ModuleProjectName))
                         .Append("</strong><br />")
                         .Append(WebUtility.HtmlEncode(session.SessionId))
-                        .Append("<br /><a href=\"")
-                        .Append(WebUtility.HtmlEncode(session.Url))
-                        .Append("\" target=\"_blank\" rel=\"noopener noreferrer\">")
-                        .Append(WebUtility.HtmlEncode(session.Url))
-                        .Append("</a><br />")
-                        .Append(session.IsRunning
-                            ? XncfBuilderResource.Get("XncfBuilder.Preview.Running")
-                            : XncfBuilderResource.Get("XncfBuilder.Preview.Stopped"))
-                        .Append(" · PID ")
-                        .Append(session.ProcessId)
-                        .Append("</p>");
+                        .Append("<br />")
+                        .Append(WebUtility.HtmlEncode(XncfPreviewPresentation.GetStageLabel(session.Stage)))
+                        .Append(" · ")
+                        .Append(session.ProgressPercent)
+                        .Append("%<br />")
+                        .Append(WebUtility.HtmlEncode(session.StatusMessage))
+                        .Append("<br />Host: ")
+                        .Append(WebUtility.HtmlEncode(XncfPreviewPresentation.GetHostStatusLabel(session.HostStatus)));
+
+                    if (!string.IsNullOrWhiteSpace(session.ErrorMessage))
+                    {
+                        html.Append("<br /><span style=\"color:#c00\">")
+                            .Append(WebUtility.HtmlEncode(session.ErrorMessage))
+                            .Append("</span>");
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(session.Url))
+                    {
+                        html.Append("<br /><a href=\"")
+                            .Append(WebUtility.HtmlEncode(session.Url))
+                            .Append("\" target=\"_blank\" rel=\"noopener noreferrer\">")
+                            .Append(WebUtility.HtmlEncode(session.Url))
+                            .Append("</a>");
+                    }
+
+                    if (session.ProcessId > 0)
+                    {
+                        html.Append("<br />PID ").Append(session.ProcessId);
+                    }
+
+                    if (session.ProcessStartedAt.HasValue)
+                    {
+                        html.Append("<br />Host started: ")
+                            .Append(WebUtility.HtmlEncode(session.ProcessStartedAt.Value.ToString("O")));
+                    }
+
+                    if (session.HealthyAt.HasValue)
+                    {
+                        html.Append("<br />Host healthy: ")
+                            .Append(WebUtility.HtmlEncode(session.HealthyAt.Value.ToString("O")));
+                    }
+
+                    if (session.ExitCode.HasValue)
+                    {
+                        html.Append("<br />ExitCode: ").Append(session.ExitCode.Value);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(session.SourceFingerprint))
+                    {
+                        html.Append("<br />Source SHA-256: ")
+                            .Append(WebUtility.HtmlEncode(session.SourceFingerprint));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(session.ModuleAssemblySha256))
+                    {
+                        html.Append("<br />Module DLL SHA-256: ")
+                            .Append(WebUtility.HtmlEncode(session.ModuleAssemblySha256));
+                    }
+
+                    html.Append("</p>");
 
                     if (!string.IsNullOrWhiteSpace(session.RecentOutput))
                     {
@@ -143,7 +192,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             var url = WebUtility.HtmlEncode(session.Url);
             return $"{XncfBuilderResource.Get("XncfBuilder.Preview.StartSucceeded")}<br />" +
                    $"Session: {WebUtility.HtmlEncode(session.SessionId)}<br />" +
+                   $"{WebUtility.HtmlEncode(XncfPreviewPresentation.GetStageLabel(session.Stage))} · {session.ProgressPercent}%<br />" +
+                   $"Host: {WebUtility.HtmlEncode(XncfPreviewPresentation.GetHostStatusLabel(session.HostStatus))}<br />" +
                    $"PID: {session.ProcessId}<br />" +
+                   $"Source SHA-256: {WebUtility.HtmlEncode(session.SourceFingerprint)}<br />" +
+                   $"Module DLL SHA-256: {WebUtility.HtmlEncode(session.ModuleAssemblySha256)}<br />" +
                    $"<a href=\"{url}\" target=\"_blank\" rel=\"noopener noreferrer\">{url}</a>";
         }
     }

@@ -32,6 +32,10 @@ namespace Senparc.Xncf.XncfBuilder
 
         public DbSet<Config> Configs { get; set; }
 
+        public DbSet<XncfPreviewTask> XncfPreviewTasks { get; set; }
+
+        public DbSet<XncfPreviewHost> XncfPreviewHosts { get; set; }
+
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
 
     }

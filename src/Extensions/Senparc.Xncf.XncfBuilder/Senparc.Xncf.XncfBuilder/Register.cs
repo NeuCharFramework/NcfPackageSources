@@ -107,6 +107,11 @@ namespace Senparc.Xncf.XncfBuilder
             services.AddScoped<ConfigService>();
             services.AddScoped<PromptBuilderService>();
 
+            if (!services.Any(d => d.ServiceType == typeof(IXncfPreviewStateStore)))
+            {
+                services.AddSingleton<IXncfPreviewStateStore, XncfPreviewStateStore>();
+            }
+
             if (!services.Any(d => d.ServiceType == typeof(XncfPreviewService)))
             {
                 services.AddSingleton<XncfPreviewService>();

@@ -257,6 +257,9 @@ namespace Senparc.Ncf.Core.Models
         [AutoSetCache]
         public string NeuCharAppSecret { get; set; }
 
+        [AutoSetCache]
+        public string FooterContent { get; set; }
+
         public override void CreateEntity(SystemConfig entity)
         {
             base.CreateEntity(entity);

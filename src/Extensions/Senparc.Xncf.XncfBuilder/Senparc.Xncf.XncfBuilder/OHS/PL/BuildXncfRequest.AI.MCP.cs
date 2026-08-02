@@ -35,6 +35,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         public string FileName{get; set;}
         public string FileContent{get; set;}
         public string FilePath{get; set;}
+        public string Sha256 { get; set; }
     }
 
     public class BuildXncf_CreateOrUpdateFileResponse
@@ -42,9 +43,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         public bool Success { get; set; }
         public string Message { get; set; }
         public string FileName { get; set; }
+        public string FilePath { get; set; }
 
         public bool IsNewFile { get; set; }
-        //public string OldFileContent { get; set; }
+        public string PreviousSha256 { get; set; }
+        public string Sha256 { get; set; }
     }
 
 }
