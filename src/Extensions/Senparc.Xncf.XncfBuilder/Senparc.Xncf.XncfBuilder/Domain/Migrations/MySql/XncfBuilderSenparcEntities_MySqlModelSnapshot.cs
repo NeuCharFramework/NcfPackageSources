@@ -8,7 +8,7 @@ using Senparc.Xncf.XncfBuilder.Models.MultipleDatabase;
 
 #nullable disable
 
-namespace Senparc.Xncf.XncfBuilder.Migrations.Deomain.Migrations.MySql
+namespace Senparc.Xncf.XncfBuilder.Domain.Migrations.MySql
 {
     [DbContext(typeof(XncfBuilderSenparcEntities_MySql))]
     partial class XncfBuilderSenparcEntities_MySqlModelSnapshot : ModelSnapshot

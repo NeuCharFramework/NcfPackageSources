@@ -8,7 +8,7 @@ using Senparc.Xncf.XncfBuilder.Models.MultipleDatabase;
 
 #nullable disable
 
-namespace Senparc.Xncf.XncfBuilder.Migrations.Deomain.Migrations.SqlServer
+namespace Senparc.Xncf.XncfBuilder.Domain.Migrations.SqlServer
 {
     [DbContext(typeof(XncfBuilderSenparcEntities_SqlServer))]
     partial class XncfBuilderSenparcEntities_SqlServerModelSnapshot : ModelSnapshot

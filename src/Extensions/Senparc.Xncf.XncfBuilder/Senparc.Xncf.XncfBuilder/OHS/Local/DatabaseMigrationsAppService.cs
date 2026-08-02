@@ -152,13 +152,36 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         /// <param name="request"></param>
         /// <param name="dbType"></param>
         /// <returns></returns>
-        private string GetMigrationDir(DatabaseMigrations_MigrationRequest request, string dbType)
+        private static string GetMigrationDir(string projectPath, string dbType)
         {
-            string projectPath = request.GetProjectPath(request);
+            return MigrationFileLayoutHelper.GetMigrationDirectory(projectPath, dbType);
+        }
 
-            var migrationPath = Path.Combine(projectPath, "Domain", "Migrations", $"{dbType}");
-            //Console.WriteLine("1220== migrationPath: " + migrationPath);
-            return migrationPath;
+        private static void AppendSnapshotAlignment(
+            Senparc.Ncf.Core.AppServices.AppServiceLogger logger,
+            MigrationSnapshotAlignmentResult alignment,
+            string dbContextName)
+        {
+            if (!alignment.SnapshotFound)
+            {
+                logger.Append($"未发现 {dbContextName} 的已有 snapshot，将由 EF Core 首次创建。");
+                return;
+            }
+
+            if (alignment.Moved)
+            {
+                logger.Append($"已将 snapshot 归位：{alignment.OriginalPath} -> {alignment.SnapshotPath}");
+            }
+
+            if (alignment.NamespaceChanged)
+            {
+                logger.Append($"已统一 snapshot 命名空间：{alignment.SnapshotPath}");
+            }
+
+            foreach (var duplicateFile in alignment.RemovedDuplicateFiles)
+            {
+                logger.Append($"已移除重复 snapshot：{duplicateFile}");
+            }
         }
 
         public DatabaseMigrationsAppService(IServiceProvider serviceProvider) : base(serviceProvider)
@@ -184,7 +207,25 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 //commandTexts.Add($"dotnet add {request.DatabasePlantPath} reference {request.ProjectPath}");
 
                 //进入项目目录
-                var projectPath = request.GetProjectPath(request);
+                string projectPath;
+                string databasePlantPath;
+                try
+                {
+                    projectPath = MigrationFileLayoutHelper.GetProjectDirectory(
+                        request.GetProjectPath(request),
+                        "目标项目路径");
+                    databasePlantPath = MigrationFileLayoutHelper.GetProjectDirectory(
+                        request.DatabasePlantPath,
+                        "数据库停机坪路径");
+                }
+                catch (Exception ex)
+                {
+                    response.Success = false;
+                    response.Data = $"迁移路径无效：{ex.Message}";
+                    logger.Append(response.Data);
+                    return null;
+                }
+
                 logger.Append($"工作目录：{projectPath}");
 
                 var allMigrationsSucceeded = true;
@@ -192,7 +233,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 //执行迁移
                 foreach (var dbType in databaseTypes)
                 {
-                    string migrationDir = GetMigrationDir(request, dbType);
+                    string migrationDir = GetMigrationDir(projectPath, dbType);
 
                     //数据库上下文实体名称
                     var dbContextName = request.DbContextName;
@@ -207,20 +248,30 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         dbContextName += dbTypeSuffix;
                     }
 
-                    Func<string, string> removeFileName = path =>
+                    string migrationOutputDirectory;
+                    string expectedNamespace;
+                    IReadOnlyCollection<string> migrationFilesBefore;
+                    try
                     {
-                        if (path.EndsWith(".csproj"))
-                        {
-                            return Path.GetDirectoryName(path);
-                        }
-                        else
-                        {
-                            return path;
-                        }
-                    };
+                        expectedNamespace = MigrationFileLayoutHelper.GetExpectedNamespace(projectPath, dbType);
+                        migrationOutputDirectory = MigrationFileLayoutHelper.GetOutputDirectoryArgument(projectPath, migrationDir);
 
-                    var databasePlantPath = removeFileName(request.DatabasePlantPath);
-                    var migrationDirFinal = removeFileName(migrationDir);
+                        var alignment = MigrationFileLayoutHelper.AlignSnapshot(
+                            projectPath,
+                            migrationDir,
+                            dbContextName,
+                            expectedNamespace);
+                        AppendSnapshotAlignment(logger, alignment, dbContextName);
+                        migrationFilesBefore = MigrationFileLayoutHelper.CaptureMigrationFiles(migrationDir);
+                    }
+                    catch (Exception ex)
+                    {
+                        allMigrationsSucceeded = false;
+                        response.Success = false;
+                        response.Data = $"迁移文件布局检查失败（{dbType}）：{ex.Message}";
+                        logger.Append(response.Data);
+                        break;
+                    }
 
                     var commandArgs = new List<string>
                     {
@@ -230,10 +281,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         request.MigrationName,
                         "-c",
                         dbContextName,
+                        "-p",
+                        projectPath,
                         "-s",
                         databasePlantPath,
                         "-o",
-                        migrationDirFinal
+                        migrationOutputDirectory
                     };
 
                     if (request.OutputVerbose)
@@ -253,6 +306,35 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         allMigrationsSucceeded = false;
                         response.Success = false;
                         response.Data = $"迁移命令执行失败（{dbType}），请查看日志。";
+                        break;
+                    }
+
+                    try
+                    {
+                        var generatedFiles = MigrationFileLayoutHelper.VerifyGeneratedMigrationFiles(
+                            migrationDir,
+                            migrationFilesBefore);
+                        var alignment = MigrationFileLayoutHelper.AlignSnapshot(
+                            projectPath,
+                            migrationDir,
+                            dbContextName,
+                            expectedNamespace);
+                        if (!alignment.SnapshotFound)
+                        {
+                            throw new InvalidOperationException($"EF Core 未生成 {dbContextName} 的 snapshot。");
+                        }
+
+                        AppendSnapshotAlignment(logger, alignment, dbContextName);
+                        logger.Append($"已生成 migration：{generatedFiles.MigrationFile}");
+                        logger.Append($"已生成 Designer：{generatedFiles.DesignerFile}");
+                        logger.Append($"迁移文件目录验证通过：{migrationDir}");
+                    }
+                    catch (Exception ex)
+                    {
+                        allMigrationsSucceeded = false;
+                        response.Success = false;
+                        response.Data = $"snapshot 归位失败（{dbType}）：{ex.Message}";
+                        logger.Append(response.Data);
                         break;
                     }
 
