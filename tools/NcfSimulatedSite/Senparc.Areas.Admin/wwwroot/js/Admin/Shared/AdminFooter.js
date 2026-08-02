@@ -1,58 +1,92 @@
 (function (window) {
     'use strict';
 
-    const maximumConsoleEntries = 200;
-    const consoleEntries = [];
-    const consoleListeners = new Set();
-    let consoleSequence = 0;
+    function createAdminConsole() {
+        const maximumConsoleEntries = 200;
+        const consoleEntries = [];
+        const consoleListeners = new Set();
+        let consoleSequence = 0;
 
-    function formatConsoleValue(value) {
-        if (value instanceof Error) {
-            return value.stack || value.message;
+        function formatConsoleValue(value) {
+            if (value instanceof Error) {
+                return value.stack || value.message;
+            }
+            if (typeof value === 'string') {
+                return value;
+            }
+            try {
+                return JSON.stringify(value);
+            } catch (_) {
+                return String(value);
+            }
         }
-        if (typeof value === 'string') {
-            return value;
+
+        function publishConsoleEntry(level, values) {
+            const entry = {
+                id: ++consoleSequence,
+                level: level,
+                time: new Date().toLocaleTimeString(),
+                message: Array.from(values).map(formatConsoleValue).join(' ')
+            };
+            consoleEntries.push(entry);
+            if (consoleEntries.length > maximumConsoleEntries) {
+                consoleEntries.splice(0, consoleEntries.length - maximumConsoleEntries);
+            }
+            consoleListeners.forEach(listener => listener(consoleEntries.slice()));
         }
-        try {
-            return JSON.stringify(value);
-        } catch (_) {
-            return String(value);
-        }
+
+        ['log', 'info', 'warn', 'error'].forEach(level => {
+            const original = window.console[level].bind(window.console);
+            window.console[level] = function () {
+                original.apply(window.console, arguments);
+                publishConsoleEntry(level, arguments);
+            };
+        });
+
+        return {
+            subscribe(listener) {
+                consoleListeners.add(listener);
+                listener(consoleEntries.slice());
+                return function () { consoleListeners.delete(listener); };
+            },
+            clear() {
+                consoleEntries.splice(0, consoleEntries.length);
+                consoleListeners.forEach(listener => listener([]));
+            }
+        };
     }
 
-    function publishConsoleEntry(level, values) {
-        const entry = {
-            id: ++consoleSequence,
-            level: level,
-            time: new Date().toLocaleTimeString(),
-            message: Array.from(values).map(formatConsoleValue).join(' ')
-        };
-        consoleEntries.push(entry);
-        if (consoleEntries.length > maximumConsoleEntries) {
-            consoleEntries.splice(0, consoleEntries.length - maximumConsoleEntries);
-        }
-        consoleListeners.forEach(listener => listener(consoleEntries.slice()));
+    // 防止开发期脚本重复加载时再次包装 console，造成一条日志被重复采集。
+    window.NcfAdminConsole = window.NcfAdminConsole || createAdminConsole();
+
+    const footerRuntime = window.NcfAdminFooterRuntime || { owner: null };
+    window.NcfAdminFooterRuntime = footerRuntime;
+
+    function isAdminLayoutRoot(viewModel) {
+        const element = viewModel && viewModel.$el;
+        return !!element
+            && element.id === 'app'
+            && window.document.getElementById('app') === element;
     }
 
-    ['log', 'info', 'warn', 'error'].forEach(level => {
-        const original = window.console[level].bind(window.console);
-        window.console[level] = function () {
-            original.apply(window.console, arguments);
-            publishConsoleEntry(level, arguments);
-        };
-    });
-
-    window.NcfAdminConsole = {
-        subscribe(listener) {
-            consoleListeners.add(listener);
-            listener(consoleEntries.slice());
-            return function () { consoleListeners.delete(listener); };
-        },
-        clear() {
-            consoleEntries.splice(0, consoleEntries.length);
-            consoleListeners.forEach(listener => listener([]));
+    function claimFooterOwnership(viewModel) {
+        if (!isAdminLayoutRoot(viewModel)) {
+            return false;
         }
-    };
+        if (footerRuntime.owner
+            && footerRuntime.owner !== viewModel
+            && !footerRuntime.owner.footerDisposed) {
+            return false;
+        }
+        footerRuntime.owner = viewModel;
+        return true;
+    }
+
+    function releaseFooterOwnership(viewModel) {
+        if (footerRuntime.owner === viewModel) {
+            footerRuntime.owner = null;
+        }
+    }
 
     const initialState = window.NCF_ADMIN_FOOTER_INITIAL_STATE || {};
 
@@ -79,6 +113,7 @@
                 footerEventSource: null,
                 footerStateRequest: null,
                 footerStateCancelSource: null,
+                footerCommunicationOwner: false,
                 footerPaused: false,
                 footerDisposed: false,
                 footerPageHideHandler: null,
@@ -107,9 +142,12 @@
             }
         },
         mounted() {
-            if (this.$root !== this) {
+            // Element UI 会动态创建额外的 Vue 根实例。只有真正挂载到布局 #app 的实例
+            // 可以成为 Owner，否则每个临时根实例都会各自创建 state 请求和 SSE。
+            if (!claimFooterOwnership(this)) {
                 return;
             }
+            this.footerCommunicationOwner = true;
 
             this.footerConsoleUnsubscribe = window.NcfAdminConsole.subscribe(entries => {
                 this.consoleEntries = entries;
@@ -137,7 +175,7 @@
             this.refreshFooterState();
         },
         beforeDestroy() {
-            if (this.$root !== this) {
+            if (!this.footerCommunicationOwner) {
                 return;
             }
             this.disposeFooter();
@@ -189,7 +227,7 @@
                 }
             },
             refreshFooterState() {
-                if (this.footerDisposed || this.footerPaused) {
+                if (!this.footerCommunicationOwner || this.footerDisposed || this.footerPaused) {
                     return Promise.resolve();
                 }
                 if (this.footerStateRequest) {
@@ -240,7 +278,11 @@
                     window.clearTimeout(this.footerPollTimer);
                     this.footerPollTimer = null;
                 }
-                if (this.footerDisposed || this.footerPaused || document.hidden || (!this.synchroAvailable && !allowWhenUnknown)) {
+                if (!this.footerCommunicationOwner
+                    || this.footerDisposed
+                    || this.footerPaused
+                    || document.hidden
+                    || (!this.synchroAvailable && !allowWhenUnknown)) {
                     return;
                 }
                 this.footerPollTimer = window.setTimeout(() => {
@@ -249,7 +291,11 @@
                 }, delay);
             },
             ensureSynchroRealtime() {
-                if (this.footerDisposed || this.footerPaused || document.hidden || !this.synchroAvailable) {
+                if (!this.footerCommunicationOwner
+                    || this.footerDisposed
+                    || this.footerPaused
+                    || document.hidden
+                    || !this.synchroAvailable) {
                     return;
                 }
                 // SSE 负责及时通知，30 秒单次定时器用于断线和不支持 EventSource 时的兼容兜底。
@@ -267,7 +313,8 @@
                 }
             },
             startSynchroEventStream() {
-                if (typeof window.EventSource === 'undefined'
+                if (!this.footerCommunicationOwner
+                    || typeof window.EventSource === 'undefined'
                     || this.footerEventSource
                     || this.footerDisposed
                     || this.footerPaused
@@ -332,12 +379,15 @@
                 if (this.footerVisibilityHandler) {
                     document.removeEventListener('visibilitychange', this.footerVisibilityHandler);
                 }
+                this.footerCommunicationOwner = false;
+                releaseFooterOwnership(this);
             }
         }
     };
 
     window.NcfAdminFooterMixin = footerMixin;
-    if (window.Vue) {
+    if (window.Vue && !footerRuntime.mixinRegistered) {
         window.Vue.mixin(footerMixin);
+        footerRuntime.mixinRegistered = true;
     }
 })(window);
