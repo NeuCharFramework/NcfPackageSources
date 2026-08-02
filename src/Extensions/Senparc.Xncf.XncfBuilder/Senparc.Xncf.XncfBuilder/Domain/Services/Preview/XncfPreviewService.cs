@@ -70,7 +70,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
         private readonly ConcurrentDictionary<string, PreviewProcessState> _sessions = new(StringComparer.OrdinalIgnoreCase);
         private readonly ConcurrentDictionary<string, string> _activeSessionIds = new(StringComparer.OrdinalIgnoreCase);
         private readonly SemaphoreSlim _operationLock = new(1, 1);
+        private readonly object _persistenceStatusLock = new();
         private readonly string _previewRoot;
+        private bool _persistenceAvailable;
+        private string _persistenceStatusMessage;
+        private string _persistenceErrorMessage;
+        private DateTimeOffset _persistenceStatusUpdatedAt;
 
         public XncfPreviewService(
             ILogger<XncfPreviewService> logger = null,
@@ -79,6 +84,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             _logger = logger;
             _stateStore = stateStore;
             _previewRoot = Path.Combine(Path.GetTempPath(), "Senparc.Ncf", "XncfPreview");
+            _persistenceAvailable = stateStore != null;
+            _persistenceStatusMessage = stateStore == null
+                ? "未配置预览状态数据库存储，当前仅使用内存状态。"
+                : "正在初始化预览状态数据库存储。";
+            _persistenceStatusUpdatedAt = DateTimeOffset.Now;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -100,11 +110,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                 {
                     _sessions[snapshot.SessionId] = RestoreState(snapshot);
                 }
+
+                SetPersistenceAvailable();
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
-                throw new InvalidOperationException(
-                    "无法初始化 XNCF 预览持久化状态。请确认已经为 XncfPreviewTask 和 XncfPreviewHost 创建并应用数据库迁移。",
+                DisablePersistence(
+                    "预览状态表尚未就绪，主站将继续运行，当前预览状态仅保存在内存中。应用 migration 后请重启主站。",
                     ex);
             }
         }
@@ -483,6 +495,20 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                    && _sessions.TryGetValue(sessionId.Trim(), out var state)
                 ? ToInfo(state, includeOutput)
                 : null;
+        }
+
+        public XncfPreviewPersistenceInfo GetPersistenceStatus()
+        {
+            lock (_persistenceStatusLock)
+            {
+                return new XncfPreviewPersistenceInfo
+                {
+                    IsAvailable = _persistenceAvailable,
+                    StatusMessage = _persistenceStatusMessage,
+                    ErrorMessage = _persistenceErrorMessage,
+                    UpdatedAt = _persistenceStatusUpdatedAt
+                };
+            }
         }
 
         internal static XncfPreviewProjectPaths ResolveProjectPaths(string solutionFilePath, string moduleProjectName)
@@ -1139,13 +1165,56 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             PreviewProcessState state,
             CancellationToken cancellationToken)
         {
-            if (_stateStore == null)
+            if (_stateStore == null || !IsPersistenceAvailable())
             {
                 return;
             }
 
-            await _stateStore.SaveAsync(CreatePersistenceSnapshot(state), cancellationToken)
-                .ConfigureAwait(false);
+            try
+            {
+                await _stateStore.SaveAsync(CreatePersistenceSnapshot(state), cancellationToken)
+                    .ConfigureAwait(false);
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                DisablePersistence(
+                    "预览状态数据库写入失败，主站和预览任务将继续运行，后续状态暂存于内存。恢复数据库后请重启主站。",
+                    ex);
+            }
+        }
+
+        private bool IsPersistenceAvailable()
+        {
+            lock (_persistenceStatusLock)
+            {
+                return _persistenceAvailable;
+            }
+        }
+
+        private void SetPersistenceAvailable()
+        {
+            lock (_persistenceStatusLock)
+            {
+                _persistenceAvailable = true;
+                _persistenceStatusMessage = "预览任务与 Host 状态数据库持久化已就绪。";
+                _persistenceErrorMessage = null;
+                _persistenceStatusUpdatedAt = DateTimeOffset.Now;
+            }
+        }
+
+        private void DisablePersistence(string statusMessage, Exception exception)
+        {
+            lock (_persistenceStatusLock)
+            {
+                _persistenceAvailable = false;
+                _persistenceStatusMessage = statusMessage;
+                _persistenceErrorMessage = exception?.GetBaseException().Message;
+                _persistenceStatusUpdatedAt = DateTimeOffset.Now;
+            }
+
+            _logger?.LogWarning(
+                exception,
+                "XNCF preview persistence is unavailable. The host will continue with in-memory state.");
         }
 
         private async Task TryPersistStateAsync(PreviewProcessState state)

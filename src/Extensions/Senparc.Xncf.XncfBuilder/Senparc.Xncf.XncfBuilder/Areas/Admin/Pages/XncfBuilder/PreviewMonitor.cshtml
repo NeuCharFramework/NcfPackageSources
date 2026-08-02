@@ -26,6 +26,16 @@
 
         <el-main>
             <el-alert
+                v-if="persistenceStatus && !persistenceStatus.isAvailable"
+                style="margin-bottom:16px;"
+                title="预览状态数据库持久化尚未就绪"
+                type="warning"
+                show-icon
+                :closable="false"
+                :description="persistenceStatus.statusMessage + (persistenceStatus.errorMessage ? ' 原因：' + persistenceStatus.errorMessage : '')">
+            </el-alert>
+
+            <el-alert
                 title="隔离预览流水线"
                 type="info"
                 show-icon
@@ -197,6 +207,7 @@
                     pipelineStages: [],
                     stageMap: {},
                     hostStatusMap: {},
+                    persistenceStatus: null,
                     outputBySession: {},
                     expandedSessionIds: [],
                     updatedAt: null,
@@ -248,6 +259,7 @@
                             return map;
                         }, {});
                         this.pipelineStages = response.data.pipelineStages || [];
+                        this.persistenceStatus = response.data.persistenceStatus || null;
                         this.stageMap = this.stageDefinitions.reduce((map, item) => {
                             map[item.value] = item;
                             return map;

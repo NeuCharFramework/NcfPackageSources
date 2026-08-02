@@ -298,6 +298,21 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Functions
         }
 
         [TestMethod]
+        public async Task HostedStart_MissingPersistenceTables_ShouldContinueWithMemoryState()
+        {
+            var service = new XncfPreviewService(
+                stateStore: new FailingPreviewStateStore(
+                    new InvalidOperationException("Invalid object name 'XncfBuilderXncfPreviewTask'.")));
+
+            await ((IHostedService)service).StartAsync(CancellationToken.None);
+            var persistenceStatus = service.GetPersistenceStatus();
+
+            Assert.IsFalse(persistenceStatus.IsAvailable);
+            StringAssert.Contains(persistenceStatus.StatusMessage, "主站将继续运行");
+            StringAssert.Contains(persistenceStatus.ErrorMessage, "XncfBuilderXncfPreviewTask");
+        }
+
+        [TestMethod]
         public void PersistenceEntities_ShouldStoreTaskAndHostSeparately()
         {
             var snapshot = new XncfPreviewPersistenceSnapshot
@@ -387,6 +402,31 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Functions
                 CancellationToken cancellationToken = default)
             {
                 return Task.CompletedTask;
+            }
+        }
+
+        private sealed class FailingPreviewStateStore : IXncfPreviewStateStore
+        {
+            private readonly Exception _exception;
+
+            public FailingPreviewStateStore(Exception exception)
+            {
+                _exception = exception;
+            }
+
+            public Task<IReadOnlyList<XncfPreviewPersistenceSnapshot>> LoadRecentAndInterruptAsync(
+                int maxCount,
+                DateTimeOffset interruptedAt,
+                CancellationToken cancellationToken = default)
+            {
+                return Task.FromException<IReadOnlyList<XncfPreviewPersistenceSnapshot>>(_exception);
+            }
+
+            public Task SaveAsync(
+                XncfPreviewPersistenceSnapshot snapshot,
+                CancellationToken cancellationToken = default)
+            {
+                return Task.FromException(_exception);
             }
         }
     }

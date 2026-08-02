@@ -51,7 +51,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         this.CancellationToken).ConfigureAwait(false);
 
                     response.Success = true;
-                    response.Data = BuildPreviewStartedHtml(session);
+                    response.Data = BuildPreviewStartedHtml(
+                        session,
+                        previewService.GetPersistenceStatus());
                 }
                 catch (Exception ex)
                 {
@@ -73,15 +75,19 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             {
                 var previewService = ServiceProvider.GetRequiredService<IXncfPreviewService>();
                 var sessions = previewService.GetSessions(request?.IncludeOutput == true);
+                var persistenceStatus = previewService.GetPersistenceStatus();
                 response.Success = true;
+                var html = new StringBuilder();
+                AppendPersistenceWarning(html, persistenceStatus);
 
                 if (sessions.Count == 0)
                 {
-                    response.Data = XncfBuilderResource.Get("XncfBuilder.Preview.NoSessions");
+                    html.Append(WebUtility.HtmlEncode(
+                        XncfBuilderResource.Get("XncfBuilder.Preview.NoSessions")));
+                    response.Data = html.ToString();
                     return Task.FromResult<string>(null);
                 }
 
-                var html = new StringBuilder();
                 foreach (var session in sessions)
                 {
                     html.Append("<p><strong>")
@@ -187,17 +193,37 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             }).ConfigureAwait(false);
         }
 
-        private static string BuildPreviewStartedHtml(XncfPreviewSessionInfo session)
+        private static string BuildPreviewStartedHtml(
+            XncfPreviewSessionInfo session,
+            XncfPreviewPersistenceInfo persistenceStatus)
         {
             var url = WebUtility.HtmlEncode(session.Url);
-            return $"{XncfBuilderResource.Get("XncfBuilder.Preview.StartSucceeded")}<br />" +
-                   $"Session: {WebUtility.HtmlEncode(session.SessionId)}<br />" +
-                   $"{WebUtility.HtmlEncode(XncfPreviewPresentation.GetStageLabel(session.Stage))} · {session.ProgressPercent}%<br />" +
-                   $"Host: {WebUtility.HtmlEncode(XncfPreviewPresentation.GetHostStatusLabel(session.HostStatus))}<br />" +
-                   $"PID: {session.ProcessId}<br />" +
-                   $"Source SHA-256: {WebUtility.HtmlEncode(session.SourceFingerprint)}<br />" +
-                   $"Module DLL SHA-256: {WebUtility.HtmlEncode(session.ModuleAssemblySha256)}<br />" +
-                   $"<a href=\"{url}\" target=\"_blank\" rel=\"noopener noreferrer\">{url}</a>";
+            var html = new StringBuilder();
+            AppendPersistenceWarning(html, persistenceStatus);
+            html.Append(XncfBuilderResource.Get("XncfBuilder.Preview.StartSucceeded"))
+                .Append("<br />")
+                .Append($"Session: {WebUtility.HtmlEncode(session.SessionId)}<br />")
+                .Append($"{WebUtility.HtmlEncode(XncfPreviewPresentation.GetStageLabel(session.Stage))} · {session.ProgressPercent}%<br />")
+                .Append($"Host: {WebUtility.HtmlEncode(XncfPreviewPresentation.GetHostStatusLabel(session.HostStatus))}<br />")
+                .Append($"PID: {session.ProcessId}<br />")
+                .Append($"Source SHA-256: {WebUtility.HtmlEncode(session.SourceFingerprint)}<br />")
+                .Append($"Module DLL SHA-256: {WebUtility.HtmlEncode(session.ModuleAssemblySha256)}<br />")
+                .Append($"<a href=\"{url}\" target=\"_blank\" rel=\"noopener noreferrer\">{url}</a>");
+            return html.ToString();
+        }
+
+        private static void AppendPersistenceWarning(
+            StringBuilder html,
+            XncfPreviewPersistenceInfo persistenceStatus)
+        {
+            if (persistenceStatus?.IsAvailable != false)
+            {
+                return;
+            }
+
+            html.Append("<p style=\"color:#b26a00\"><strong>持久化未就绪：</strong>")
+                .Append(WebUtility.HtmlEncode(persistenceStatus.StatusMessage))
+                .Append("</p>");
         }
     }
 }

@@ -42,6 +42,7 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
                 StageDefinitions = XncfPreviewPresentation.GetStageDefinitions(),
                 HostStatusDefinitions = XncfPreviewPresentation.GetHostStatusDefinitions(),
                 PipelineStages = XncfPreviewPresentation.GetPipelineStageDefinitions(),
+                PersistenceStatus = _previewService.GetPersistenceStatus(),
                 Sessions = _previewService.GetSessions()
             });
         }

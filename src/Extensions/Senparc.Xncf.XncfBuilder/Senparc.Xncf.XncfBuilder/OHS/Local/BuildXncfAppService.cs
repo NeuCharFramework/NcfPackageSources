@@ -450,7 +450,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                                 base.CancellationToken).ConfigureAwait(false);
 
                             response.Data = $"项目生成成功！请打开 {buildResult.SolutionFilePath} 解决方案文件查看已附加的项目！<br />" +
-                                BuildPreviewStartedHtml(previewSession);
+                                BuildPreviewStartedHtml(
+                                    previewSession,
+                                    previewService.GetPersistenceStatus());
                             response.Success = true;
                         }
                         catch (Exception previewException)

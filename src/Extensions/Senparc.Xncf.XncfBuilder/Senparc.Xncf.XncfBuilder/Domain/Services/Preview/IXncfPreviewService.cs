@@ -147,6 +147,17 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
         public int? ExitCode { get; init; }
     }
 
+    public sealed class XncfPreviewPersistenceInfo
+    {
+        public bool IsAvailable { get; init; }
+
+        public string StatusMessage { get; init; }
+
+        public string ErrorMessage { get; init; }
+
+        public DateTimeOffset UpdatedAt { get; init; }
+    }
+
     public interface IXncfPreviewService
     {
         Task<XncfPreviewSessionInfo> StartAsync(
@@ -162,5 +173,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
         XncfPreviewSessionInfo GetSession(string sessionId, bool includeOutput = false);
 
         IReadOnlyList<XncfPreviewSessionInfo> GetSessions(bool includeOutput = false);
+
+        XncfPreviewPersistenceInfo GetPersistenceStatus();
     }
 }

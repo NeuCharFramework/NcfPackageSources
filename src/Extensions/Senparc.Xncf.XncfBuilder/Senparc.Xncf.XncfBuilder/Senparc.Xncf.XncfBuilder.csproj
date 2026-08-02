@@ -135,6 +135,10 @@
   <ItemGroup>
     <Compile Remove="ACL\**" />
     <Compile Remove="Generated\**" Condition="'$(UseCheckedInXncfBuilderGeneratedCode)' != 'true'" />
+    <!-- Razor source generators also emit physical copies under Generated. They must
+         never be compiled as regular source files, otherwise the Razor-generated
+         syntax trees are included twice when checked-in XncfBuilder code is enabled. -->
+    <Compile Remove="Generated\Microsoft.CodeAnalysis.Razor.Compiler\**" />
     <EmbeddedResource Remove="ACL\**" />
     <EmbeddedResource Remove="Generated\**" />
     <None Remove="ACL\**" />
