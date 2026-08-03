@@ -22,8 +22,9 @@
       [2026-07-26] v0.3.0-preview2 新增 EventBus 请求-响应与授权同步公共契约
       1、新增 IEventBusRequestClient 与 IIntegrationRequest 公共请求契约
       2、新增管理员隔离的授权集成同步事件契约
-      [2026-08-04] v0.4.0-preview3 新增运行时同步提供程序抽象
-      1、新增 ISynchroProvider，统一同步提供程序标识、可用性与执行契约
+      [2026-08-04] v0.4.0-preview3 新增运行时纽铃提供程序抽象并统一品牌命名
+      1、新增 INeuBellProvider，统一同步提供程序标识、可用性与执行契约
+      2、将公共契约迁移到 NeuBell/纽铃命名，调用方需同步更新命名空间、接口与类型名
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

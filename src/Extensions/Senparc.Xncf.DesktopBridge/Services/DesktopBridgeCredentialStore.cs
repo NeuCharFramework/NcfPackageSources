@@ -9,12 +9,15 @@
     修改标识：Senparc - 20260804
     修改描述：v0.3.0-preview3 新增桌面端同步提供程序
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.3.0-preview3 将同步提供程序统一更名为 NeuBell/纽铃
+
 ----------------------------------------------------------------*/
 
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.WebUtilities;
-using Senparc.Ncf.Shared.Abstractions.Synchro;
+using Senparc.Ncf.Shared.Abstractions.NeuBell;
 using Senparc.Xncf.DesktopBridge.Models;
 
 namespace Senparc.Xncf.DesktopBridge.Services;
@@ -32,18 +35,18 @@ public sealed class DesktopBridgeCredentialStore
 
     private readonly object _gate = new();
     private readonly byte[]? _legacyTokenHash;
-    private readonly ISynchroPublisher? _synchroPublisher;
+    private readonly INeuBellPublisher? _neuBellPublisher;
     private readonly Dictionary<Guid, PendingPairing> _pendingPairings = new();
     private readonly Dictionary<Guid, SessionCredential> _sessions = new();
 
-    public DesktopBridgeCredentialStore(ISynchroPublisher? synchroPublisher = null)
-        : this(Environment.GetEnvironmentVariable(DesktopBridgeTokenValidator.TokenEnvironmentVariable), synchroPublisher)
+    public DesktopBridgeCredentialStore(INeuBellPublisher? neuBellPublisher = null)
+        : this(Environment.GetEnvironmentVariable(DesktopBridgeTokenValidator.TokenEnvironmentVariable), neuBellPublisher)
     {
     }
 
-    internal DesktopBridgeCredentialStore(string? legacyToken, ISynchroPublisher? synchroPublisher = null)
+    internal DesktopBridgeCredentialStore(string? legacyToken, INeuBellPublisher? neuBellPublisher = null)
     {
-        _synchroPublisher = synchroPublisher;
+        _neuBellPublisher = neuBellPublisher;
         if (!string.IsNullOrWhiteSpace(legacyToken))
         {
             _legacyTokenHash = HashToken(legacyToken);
@@ -93,7 +96,7 @@ public sealed class DesktopBridgeCredentialStore
                 HashToken(pollSecret),
                 now,
                 expiresAt);
-            NotifySynchroChanged();
+            NotifyNeuBellChanged();
 
             return new DesktopBridgePairingCreateResponse(
                 requestId,
@@ -179,7 +182,7 @@ public sealed class DesktopBridgeCredentialStore
             pairing.SessionId = sessionId;
             pairing.SessionTokenDelivery = sessionToken;
             pairing.SessionExpiresAt = sessionExpiresAt;
-            NotifySynchroChanged();
+            NotifyNeuBellChanged();
             return true;
         }
     }
@@ -197,7 +200,7 @@ public sealed class DesktopBridgeCredentialStore
             }
 
             pairing.Status = PairingStatus.Denied;
-            NotifySynchroChanged();
+            NotifyNeuBellChanged();
             return true;
         }
     }
@@ -224,14 +227,14 @@ public sealed class DesktopBridgeCredentialStore
         }
     }
 
-    private void NotifySynchroChanged()
+    private void NotifyNeuBellChanged()
     {
-        if (_synchroPublisher == null)
+        if (_neuBellPublisher == null)
         {
             return;
         }
 
-        var notification = _synchroPublisher.NotifyChangedAsync(DesktopBridgeSynchroProvider.ProviderIdValue);
+        var notification = _neuBellPublisher.NotifyChangedAsync(DesktopBridgeNeuBellProvider.ProviderIdValue);
         if (!notification.IsCompletedSuccessfully)
         {
             _ = notification.AsTask();

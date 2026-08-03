@@ -30,10 +30,11 @@
     [2026-07-31] v0.2.1 适配 AgentKernel 原生聊天接口与 CO2NET 4.2.0
     1、将后台聊天调用切换到新版 RunChatAsync 接口并保留会话重试行为
     2、升级 Senparc.AI 组件版本以消除旧 CO2NET 扩展方法签名依赖
-    [2026-08-04] v0.3.0 新增后台同步管理与可配置多语言页脚
-    1、新增同步提供程序目录、模块可用性判断、快照服务与控制器
+    [2026-08-04] v0.3.0 新增后台纽铃管理与可配置多语言页脚
+    1、新增纽铃提供程序目录、模块可用性判断、快照服务与控制器
     2、支持后台配置 FooterContent 并完善页脚所有权和生命周期处理
-    3、补充同步入口与页脚按钮的多语言资源
+    3、统一中文“纽铃”与其他语言“NeuBell”，并迁移资源键、前端标识、API 路由和 SSE 事件名
+    4、增加纽铃 Provider 内部触发测试及对应日志
 </PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->

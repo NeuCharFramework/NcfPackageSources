@@ -10,9 +10,10 @@
 1、Dependency update from Senparc.Areas.Admin to 0.1.0
 [2026-07-29] v0.0.3 Dependency update from Senparc.Areas.Admin to 0.2.0
 [2026-07-31] v0.0.4 Dependency update from Senparc.Areas.Admin to 0.2.1
-[2026-08-04] v0.0.5 补充后台同步与页脚生命周期测试
-1、覆盖同步提供程序目录的模块可用性过滤
+[2026-08-04] v0.0.5 补充后台纽铃与页脚生命周期测试
+1、覆盖纽铃提供程序目录的模块可用性过滤
 2、覆盖 AdminFooter 所有权、状态通信与销毁行为
+3、同步验证 NeuBell 公共契约和聚合服务命名
 </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

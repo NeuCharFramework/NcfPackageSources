@@ -12,6 +12,9 @@
     修改标识：Senparc - 20260804
     修改描述：v0.3.0-preview3 新增桌面端同步提供程序
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.3.0-preview3 将同步提供程序统一更名为 NeuBell/纽铃
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;
@@ -20,7 +23,7 @@ using Microsoft.Extensions.Hosting;
 using System.Reflection;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Shared.Abstractions.Events;
-using Senparc.Ncf.Shared.Abstractions.Synchro;
+using Senparc.Ncf.Shared.Abstractions.NeuBell;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.DesktopBridge.Services;
 
@@ -62,7 +65,7 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
         services.AddSingleton<DesktopAuthorizedSyncHub>();
         services.AddSingleton<DesktopBridgeCredentialStore>();
         services.AddSingleton<DesktopBridgeTokenValidator>();
-        services.AddSingleton<ISynchroProvider, DesktopBridgeSynchroProvider>();
+        services.AddSingleton<INeuBellProvider, DesktopBridgeNeuBellProvider>();
 
         // 不注册开放泛型实现：NCF EventBus 的程序集扫描会把开放泛型再次登记为
         // 含泛型参数的服务描述符，导致 WebApplicationBuilder.Build() 无法创建容器。

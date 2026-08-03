@@ -1,13 +1,16 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：SynchroSnapshotService.cs
-    文件功能描述：聚合 XNCF Synchro Provider 并使用 NCF 全局缓存策略缓存快照
+    文件名：NeuBellSnapshotService.cs
+    文件功能描述：聚合 XNCF 纽铃 Provider 并使用 NCF 全局缓存策略缓存快照
 
-    创建标识：Senparc - 20260802
+    创建标识：Senparc - 20260803
 
     修改标识：Senparc - 20260804
     修改描述：v0.3.0 新增后台同步管理与可配置多语言页脚
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.3.0 将后台同步功能统一更名为 NeuBell/纽铃
 
 ----------------------------------------------------------------*/
 
@@ -18,22 +21,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Senparc.CO2NET.Cache;
-using Senparc.Ncf.Shared.Abstractions.Synchro;
+using Senparc.Ncf.Shared.Abstractions.NeuBell;
 
 namespace Senparc.Areas.Admin.Domain.Services;
 
-public sealed class SynchroSnapshotService
+public sealed class NeuBellSnapshotService
 {
     private static readonly TimeSpan CacheDuration = TimeSpan.FromSeconds(15);
     private static readonly TimeSpan ProviderTimeout = TimeSpan.FromSeconds(5);
-    private readonly SynchroProviderCatalog _providerCatalog;
-    private readonly SynchroChangeNotifier _changeNotifier;
-    private readonly ILogger<SynchroSnapshotService> _logger;
+    private readonly NeuBellProviderCatalog _providerCatalog;
+    private readonly NeuBellChangeNotifier _changeNotifier;
+    private readonly ILogger<NeuBellSnapshotService> _logger;
 
-    public SynchroSnapshotService(
-        SynchroProviderCatalog providerCatalog,
-        SynchroChangeNotifier changeNotifier,
-        ILogger<SynchroSnapshotService> logger)
+    public NeuBellSnapshotService(
+        NeuBellProviderCatalog providerCatalog,
+        NeuBellChangeNotifier changeNotifier,
+        ILogger<NeuBellSnapshotService> logger)
     {
         _providerCatalog = providerCatalog;
         _changeNotifier = changeNotifier;
@@ -48,15 +51,15 @@ public sealed class SynchroSnapshotService
         return providers.Count > 0;
     }
 
-    public async Task<IReadOnlyList<SynchroSnapshot>> GetSnapshotsAsync(
-        SynchroRequestContext context,
+    public async Task<IReadOnlyList<NeuBellSnapshot>> GetSnapshotsAsync(
+        NeuBellRequestContext context,
         CancellationToken cancellationToken = default)
     {
         var providers = await _providerCatalog.GetAvailableProvidersAsync(cancellationToken)
             .ConfigureAwait(false);
         if (providers.Count == 0)
         {
-            return Array.Empty<SynchroSnapshot>();
+            return Array.Empty<NeuBellSnapshot>();
         }
 
         var cache = CacheStrategyFactory.GetObjectCacheStrategyInstance();
@@ -68,18 +71,18 @@ public sealed class SynchroSnapshotService
         return snapshots.Where(snapshot => snapshot != null).ToArray();
     }
 
-    private async Task<SynchroSnapshot> GetSnapshotAsync(
-        ISynchroProvider provider,
-        SynchroRequestContext context,
+    private async Task<NeuBellSnapshot> GetSnapshotAsync(
+        INeuBellProvider provider,
+        NeuBellRequestContext context,
         IBaseObjectCacheStrategy cache,
         CancellationToken cancellationToken)
     {
         var revision = _changeNotifier.GetRevision(provider.ProviderId);
-        var cacheKey = $"NCF:Synchro:{context.TenantId ?? "default"}:{context.UserId}:{provider.ProviderId}:{revision}";
+        var cacheKey = $"NCF:NeuBell:{context.TenantId ?? "default"}:{context.UserId}:{provider.ProviderId}:{revision}";
 
         try
         {
-            var snapshot = cache.Get<SynchroSnapshot>(cacheKey);
+            var snapshot = cache.Get<NeuBellSnapshot>(cacheKey);
             if (snapshot == null)
             {
                 // 单个可选模块不得长时间占用 Footer 状态请求。
@@ -97,7 +100,7 @@ public sealed class SynchroSnapshotService
             {
                 // 拒绝身份不一致的快照，防止 Provider 绕过模块开放状态筛选。
                 _logger.LogWarning(
-                    "Synchro Provider {ProviderId} 返回了不匹配的 ModuleUid {SnapshotModuleUid}，已忽略。",
+                    "纽铃 Provider {ProviderId} 返回了不匹配的 ModuleUid {SnapshotModuleUid}，已忽略。",
                     provider.ProviderId,
                     snapshot.ModuleUid);
                 return null;
@@ -111,7 +114,7 @@ public sealed class SynchroSnapshotService
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Synchro Provider {ProviderId} 快照获取失败。", provider.ProviderId);
+            _logger.LogWarning(ex, "纽铃 Provider {ProviderId} 快照获取失败。", provider.ProviderId);
             return null;
         }
     }

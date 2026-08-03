@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：SynchroProviderCatalogTests.cs
-    文件功能描述：Admin Footer Synchro Provider 启用状态筛选测试
+    文件名：NeuBellProviderCatalogTests.cs
+    文件功能描述：Admin Footer 纽铃 Provider 启用状态筛选测试
 
     创建标识：Senparc - 20260802
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging.Abstractions;
 using Senparc.Areas.Admin.Domain.Services;
-using Senparc.Ncf.Shared.Abstractions.Synchro;
+using Senparc.Ncf.Shared.Abstractions.NeuBell;
 
 namespace Senparc.Areas.Admin.Tests.Domain.Services;
 
 [TestClass]
-public class SynchroProviderCatalogTests
+public class NeuBellProviderCatalogTests
 {
     [TestMethod]
     public async Task GetAvailableProvidersAsync_ShouldReturnOnlyOpenModules()
@@ -23,7 +23,7 @@ public class SynchroProviderCatalogTests
         var closedProvider = new TestProvider("closed", "module-closed");
         var legacyProvider = new LegacyProvider();
         var catalog = CreateCatalog(
-            new ISynchroProvider[] { closedProvider, legacyProvider, openProvider },
+            new INeuBellProvider[] { closedProvider, legacyProvider, openProvider },
             new TestAvailabilityService("module-open"));
 
         var result = await catalog.GetAvailableProvidersAsync();
@@ -51,28 +51,28 @@ public class SynchroProviderCatalogTests
         var catalog = CreateCatalog(
             new[] { provider },
             new TestAvailabilityService());
-        var snapshotService = new SynchroSnapshotService(
+        var snapshotService = new NeuBellSnapshotService(
             catalog,
-            new SynchroChangeNotifier(),
-            NullLogger<SynchroSnapshotService>.Instance);
+            new NeuBellChangeNotifier(),
+            NullLogger<NeuBellSnapshotService>.Instance);
 
-        var snapshots = await snapshotService.GetSnapshotsAsync(new SynchroRequestContext("admin"));
+        var snapshots = await snapshotService.GetSnapshotsAsync(new NeuBellRequestContext("admin"));
 
         Assert.AreEqual(0, snapshots.Count);
         Assert.AreEqual(0, provider.InvocationCount);
     }
 
-    private static SynchroProviderCatalog CreateCatalog(
-        IEnumerable<ISynchroProvider> providers,
-        ISynchroModuleAvailabilityService availabilityService)
+    private static NeuBellProviderCatalog CreateCatalog(
+        IEnumerable<INeuBellProvider> providers,
+        INeuBellModuleAvailabilityService availabilityService)
     {
-        return new SynchroProviderCatalog(
+        return new NeuBellProviderCatalog(
             providers,
             availabilityService,
-            NullLogger<SynchroProviderCatalog>.Instance);
+            NullLogger<NeuBellProviderCatalog>.Instance);
     }
 
-    private sealed class TestAvailabilityService : ISynchroModuleAvailabilityService
+    private sealed class TestAvailabilityService : INeuBellModuleAvailabilityService
     {
         private readonly IReadOnlySet<string> _openModuleUids;
 
@@ -89,7 +89,7 @@ public class SynchroProviderCatalogTests
         }
     }
 
-    private sealed class FailingAvailabilityService : ISynchroModuleAvailabilityService
+    private sealed class FailingAvailabilityService : INeuBellModuleAvailabilityService
     {
         public Task<IReadOnlySet<string>> GetOpenModuleUidsAsync(
             IEnumerable<string> moduleUids,
@@ -99,7 +99,7 @@ public class SynchroProviderCatalogTests
         }
     }
 
-    private sealed class TestProvider : ISynchroProvider
+    private sealed class TestProvider : INeuBellProvider
     {
         public TestProvider(string providerId, string moduleUid)
         {
@@ -113,27 +113,27 @@ public class SynchroProviderCatalogTests
 
         public int InvocationCount { get; private set; }
 
-        public ValueTask<SynchroSnapshot> GetSnapshotAsync(
-            SynchroRequestContext context,
+        public ValueTask<NeuBellSnapshot> GetSnapshotAsync(
+            NeuBellRequestContext context,
             CancellationToken cancellationToken = default)
         {
             InvocationCount++;
-            return ValueTask.FromResult(new SynchroSnapshot(
+            return ValueTask.FromResult(new NeuBellSnapshot(
                 ProviderId,
                 ModuleUid,
                 ProviderId,
                 "fa fa-test",
                 true,
-                Array.Empty<SynchroItem>()));
+                Array.Empty<NeuBellItem>()));
         }
     }
 
-    private sealed class LegacyProvider : ISynchroProvider
+    private sealed class LegacyProvider : INeuBellProvider
     {
         public string ProviderId => "legacy";
 
-        public ValueTask<SynchroSnapshot> GetSnapshotAsync(
-            SynchroRequestContext context,
+        public ValueTask<NeuBellSnapshot> GetSnapshotAsync(
+            NeuBellRequestContext context,
             CancellationToken cancellationToken = default)
         {
             throw new InvalidOperationException("Legacy provider must not be invoked without ModuleUid.");
