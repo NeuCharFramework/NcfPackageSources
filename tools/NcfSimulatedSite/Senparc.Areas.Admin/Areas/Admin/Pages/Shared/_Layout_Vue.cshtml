@@ -123,8 +123,8 @@
                                 <i class="fa fa-terminal"></i><span>Console</span>
                                 <span class="admin-footer-badge" v-if="consoleEntries.length">{{ consoleEntries.length }}</span>
                             </button>
-                            <button v-if="synchroAvailable" type="button" class="admin-footer-action" @@click="synchroDrawerVisible = true" title="Synchro 灵犀">
-                                <i class="fa fa-bell-o"></i><span>灵犀</span>
+                            <button v-if="synchroAvailable" type="button" class="admin-footer-action" @@click="synchroDrawerVisible = true" title="@AR["Admin.Footer.SynchroLabel"]">
+                                <i class="fa fa-bell-o"></i><span>@AR["Admin.Footer.SynchroLabel"]</span>
                                 <span class="admin-footer-badge" v-if="synchroTotalCount">{{ synchroTotalCount }}</span>
                             </button>
                             <span class="admin-footer-time" title="服务器时间">
