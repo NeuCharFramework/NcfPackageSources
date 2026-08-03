@@ -3,7 +3,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Version>0.1.0</Version>
     <PackageType>Template</PackageType>
-    <PackageVersion>0.13.0</PackageVersion>
+    <PackageVersion>0.14.0</PackageVersion>
     <PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
     <Title>XNCF Template</Title>
     <Authors>JeffreySu</Authors>
@@ -66,6 +66,7 @@
       1、提供带有限超时、取消、类型检查及请求关联清理的公共请求-响应能力
       2、模板新增不读取业务或敏感数据的 EventBus 回环自检功能
       3、模板包改由模拟站点权威母版完整同步，并修正 Database 与 Sample 的文件排除关系
+      [2026-08-04] v0.14.0 新增 EventBus 请求-响应演示
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
