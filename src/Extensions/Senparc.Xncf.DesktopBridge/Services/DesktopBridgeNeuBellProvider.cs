@@ -1,26 +1,29 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：DesktopBridgeSynchroProvider.cs
-    文件功能描述：DesktopBridge 待审批配对的 Synchro（灵犀）Provider
+    文件名：DesktopBridgeNeuBellProvider.cs
+    文件功能描述：DesktopBridge 待审批配对的纽铃 Provider
 
-    创建标识：Senparc - 20260802
+    创建标识：Senparc - 20260803
 
     修改标识：Senparc - 20260804
     修改描述：v0.3.0-preview3 新增桌面端同步提供程序
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.3.0-preview3 将同步提供程序统一更名为 NeuBell/纽铃
+
 ----------------------------------------------------------------*/
 
-using Senparc.Ncf.Shared.Abstractions.Synchro;
+using Senparc.Ncf.Shared.Abstractions.NeuBell;
 
 namespace Senparc.Xncf.DesktopBridge.Services;
 
-public sealed class DesktopBridgeSynchroProvider : ISynchroProvider
+public sealed class DesktopBridgeNeuBellProvider : INeuBellProvider
 {
     public const string ProviderIdValue = "desktop-bridge-pairing";
     private readonly DesktopBridgeCredentialStore _credentialStore;
 
-    public DesktopBridgeSynchroProvider(DesktopBridgeCredentialStore credentialStore)
+    public DesktopBridgeNeuBellProvider(DesktopBridgeCredentialStore credentialStore)
     {
         _credentialStore = credentialStore;
     }
@@ -30,15 +33,15 @@ public sealed class DesktopBridgeSynchroProvider : ISynchroProvider
     // Admin Footer 使用此 UID 校验 DesktopBridge 是否已安装且处于开放状态。
     public string ModuleUid => Register.ModuleUid;
 
-    public ValueTask<SynchroSnapshot> GetSnapshotAsync(
-        SynchroRequestContext context,
+    public ValueTask<NeuBellSnapshot> GetSnapshotAsync(
+        NeuBellRequestContext context,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
         var pendingCount = _credentialStore.GetPendingPairings().Count;
-        IReadOnlyList<SynchroItem> items =
+        IReadOnlyList<NeuBellItem> items =
         [
-            new SynchroItem(
+            new NeuBellItem(
                 "pending-pairings",
                 "DesktopBridge 远程连接审核",
                 pendingCount > 0 ? $"有 {pendingCount} 个设备配对请求等待处理。" : "当前没有待处理的设备配对请求。",
@@ -48,7 +51,7 @@ public sealed class DesktopBridgeSynchroProvider : ISynchroProvider
                 DateTimeOffset.Now)
         ];
 
-        return ValueTask.FromResult(new SynchroSnapshot(
+        return ValueTask.FromResult(new NeuBellSnapshot(
             ProviderId,
             Register.ModuleUid,
             "DesktopBridge",

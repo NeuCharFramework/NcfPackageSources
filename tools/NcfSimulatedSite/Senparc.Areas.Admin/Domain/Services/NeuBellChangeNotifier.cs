@@ -1,13 +1,16 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：SynchroChangeNotifier.cs
-    文件功能描述：Synchro（灵犀）模块变更通知与订阅
+    文件名：NeuBellChangeNotifier.cs
+    文件功能描述：纽铃模块变更通知与订阅
 
-    创建标识：Senparc - 20260802
+    创建标识：Senparc - 20260803
 
     修改标识：Senparc - 20260804
     修改描述：v0.3.0 新增后台同步管理与可配置多语言页脚
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.3.0 将后台同步功能统一更名为 NeuBell/纽铃
 
 ----------------------------------------------------------------*/
 
@@ -19,11 +22,11 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using Senparc.Ncf.Shared.Abstractions.Synchro;
+using Senparc.Ncf.Shared.Abstractions.NeuBell;
 
 namespace Senparc.Areas.Admin.Domain.Services;
 
-public sealed class SynchroChangeNotifier : ISynchroPublisher
+public sealed class NeuBellChangeNotifier : INeuBellPublisher
 {
     private const int SubscriberCapacity = 64;
     private readonly object _syncRoot = new();

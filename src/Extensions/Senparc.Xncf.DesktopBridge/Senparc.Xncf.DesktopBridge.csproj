@@ -40,9 +40,10 @@
       [2026-08-01] v0.2.1-preview2 优化后台样式和撤销响应
       1、管理页面改用后台现有 Element UI 组件，不再维护模块私有样式
       2、会话撤销直接取消现有 SSE，使桌面端无需轮询即可立即感知
-      [2026-08-04] v0.3.0-preview3 新增桌面端同步提供程序
-      1、新增 DesktopBridgeSynchroProvider 以接入统一同步目录
+      [2026-08-04] v0.3.0-preview3 新增桌面端纽铃提供程序并统一品牌命名
+      1、新增 DesktopBridgeNeuBellProvider 以接入统一纽铃目录
       2、完善桌面凭据存储与模块注册逻辑
+      3、将通知发布器、DI 注册和技术标识迁移到 NeuBell/纽铃命名
     </PackageReleaseNotes>
   </PropertyGroup>
 

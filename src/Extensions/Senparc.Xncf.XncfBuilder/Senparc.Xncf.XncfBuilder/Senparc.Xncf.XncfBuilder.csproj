@@ -110,6 +110,7 @@
 			3、规范迁移文件和快照布局并修复跨平台命名空间定位
 			4、增强工作区文件服务及预览生成应用服务
 			5、移除废弃的 ReplacePlaceholders 与 CreateNewSenparcEntitiesFile 工具，统一模板生成和数据库迁移流程
+			6、仅在未使用已检入生成代码时加载模板 AdditionalFiles，避免 Release/CI 重复处理 Razor 模板
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -192,8 +193,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
   </ItemGroup>
-  <!-- 代码模板自动生成 -->
-  <ItemGroup>
+  <!-- 代码模板自动生成：仅在启用自定义 Source Generator 时提供模板输入。
+       Release/CI 使用已检入的 Generated 代码，不应让 Razor Source Generator 处理模板 .cshtml。 -->
+  <ItemGroup Condition="'$(UseCheckedInXncfBuilderGeneratedCode)' != 'true'">
     <AdditionalFiles Include="Request.cs" />
     <AdditionalFiles Include="generation-config.json" />
     <!--后端模板（优先使用仓库内 template1，NcfSimulatedSite 为兼容回退）-->

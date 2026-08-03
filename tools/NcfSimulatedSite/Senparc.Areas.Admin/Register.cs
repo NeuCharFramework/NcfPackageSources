@@ -25,6 +25,9 @@
     修改标识：Senparc - 20260804
     修改描述：v0.3.0 新增后台同步管理与可配置多语言页脚
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.3.0 将后台同步功能统一更名为 NeuBell/纽铃
+
 ----------------------------------------------------------------*/
 
 /* 
@@ -207,14 +210,14 @@ namespace Senparc.Areas.Admin
             services.AddScoped<AdminChatSessionModuleService>();
             services.AddScoped<AdminChatAiService>();
 
-            // Synchro（灵犀）Footer 聚合、全局缓存与实时变更流。Provider 虽随 DLL 注册，
-            // 但是否执行仍由 SynchroProviderCatalog 按 XNCF 安装/开放状态决定。
-            services.AddSingleton<SynchroChangeNotifier>();
-            services.AddSingleton<Senparc.Ncf.Shared.Abstractions.Synchro.ISynchroPublisher>(
-                serviceProvider => serviceProvider.GetRequiredService<SynchroChangeNotifier>());
-            services.AddScoped<ISynchroModuleAvailabilityService, SynchroModuleAvailabilityService>();
-            services.AddScoped<SynchroProviderCatalog>();
-            services.AddScoped<SynchroSnapshotService>();
+            // 纽铃 Footer 聚合、全局缓存与实时变更流。Provider 虽随 DLL 注册，
+            // 但是否执行仍由 NeuBellProviderCatalog 按 XNCF 安装/开放状态决定。
+            services.AddSingleton<NeuBellChangeNotifier>();
+            services.AddSingleton<Senparc.Ncf.Shared.Abstractions.NeuBell.INeuBellPublisher>(
+                serviceProvider => serviceProvider.GetRequiredService<NeuBellChangeNotifier>());
+            services.AddScoped<INeuBellModuleAvailabilityService, NeuBellModuleAvailabilityService>();
+            services.AddScoped<NeuBellProviderCatalog>();
+            services.AddScoped<NeuBellSnapshotService>();
 
             return base.AddXncfModule(services, configuration, env);
         }

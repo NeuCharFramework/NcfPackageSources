@@ -1,13 +1,16 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：SynchroModuleAvailabilityService.cs
-    文件功能描述：解析允许向 Admin Footer 提供 Synchro 状态的已开放 XNCF 模块
+    文件名：NeuBellModuleAvailabilityService.cs
+    文件功能描述：解析允许向 Admin Footer 提供纽铃状态的已开放 XNCF 模块
 
-    创建标识：Senparc - 20260802
+    创建标识：Senparc - 20260803
 
     修改标识：Senparc - 20260804
     修改描述：v0.3.0 新增后台同步管理与可配置多语言页脚
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.3.0 将后台同步功能统一更名为 NeuBell/纽铃
 
 ----------------------------------------------------------------*/
 
@@ -20,7 +23,7 @@ using Senparc.Ncf.XncfBase;
 
 namespace Senparc.Areas.Admin.Domain.Services;
 
-public interface ISynchroModuleAvailabilityService
+public interface INeuBellModuleAvailabilityService
 {
     Task<IReadOnlySet<string>> GetOpenModuleUidsAsync(
         IEnumerable<string> moduleUids,
@@ -28,14 +31,14 @@ public interface ISynchroModuleAvailabilityService
 }
 
 /// <summary>
-/// 统一判断 Synchro Provider 所属模块是否可用。复用 NCF 现有注册表和
+/// 统一判断纽铃 Provider 所属模块是否可用。复用 NCF 现有注册表和
 /// <see cref="XncfRegisterManager.CheckXncfAvailable(IXncfRegister)"/> 缓存链路，不在 Footer 请求中重复查询模块表。
 /// </summary>
-public sealed class SynchroModuleAvailabilityService : ISynchroModuleAvailabilityService
+public sealed class NeuBellModuleAvailabilityService : INeuBellModuleAvailabilityService
 {
     private readonly XncfRegisterManager _xncfRegisterManager;
 
-    public SynchroModuleAvailabilityService(IServiceProvider serviceProvider)
+    public NeuBellModuleAvailabilityService(IServiceProvider serviceProvider)
     {
         _xncfRegisterManager = new XncfRegisterManager(serviceProvider);
     }

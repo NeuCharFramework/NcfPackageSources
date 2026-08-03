@@ -1,13 +1,16 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：ISynchroProvider.cs
-    文件功能描述：Synchro（灵犀）模块监控公共契约
+    文件名：INeuBellProvider.cs
+    文件功能描述：纽铃模块监控公共契约
 
-    创建标识：Senparc - 20260802
+    创建标识：Senparc - 20260803
 
     修改标识：Senparc - 20260804
     修改描述：v0.4.0-preview3 新增运行时同步提供程序抽象
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.4.0-preview3 将公共契约统一更名为 NeuBell/纽铃
 
 ----------------------------------------------------------------*/
 
@@ -16,17 +19,17 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Senparc.Ncf.Shared.Abstractions.Synchro
+namespace Senparc.Ncf.Shared.Abstractions.NeuBell
 {
     /// <summary>
     /// 当前请求的最小上下文。模块不应依赖 Admin 的实体、DbContext 或页面类型。
     /// </summary>
-    public sealed record SynchroRequestContext(string UserId, string TenantId = null);
+    public sealed record NeuBellRequestContext(string UserId, string TenantId = null);
 
     /// <summary>
     /// Footer 中可显示的一项模块状态。
     /// </summary>
-    public sealed record SynchroItem(
+    public sealed record NeuBellItem(
         string Id,
         string Title,
         string Summary,
@@ -36,20 +39,20 @@ namespace Senparc.Ncf.Shared.Abstractions.Synchro
         DateTimeOffset UpdatedAt);
 
     /// <summary>
-    /// 一个 XNCF 模块提供的灵犀快照。
+    /// 一个 XNCF 模块提供的纽铃快照。
     /// </summary>
-    public sealed record SynchroSnapshot(
+    public sealed record NeuBellSnapshot(
         string ProviderId,
         string ModuleUid,
         string DisplayName,
         string Icon,
         bool DefaultVisible,
-        IReadOnlyList<SynchroItem> Items);
+        IReadOnlyList<NeuBellItem> Items);
 
     /// <summary>
     /// XNCF 通过实现并注册此接口向 Admin Footer 提供监控信息。
     /// </summary>
-    public interface ISynchroProvider
+    public interface INeuBellProvider
     {
         string ProviderId { get; }
 
@@ -59,15 +62,15 @@ namespace Senparc.Ncf.Shared.Abstractions.Synchro
         /// </summary>
         string ModuleUid => null;
 
-        ValueTask<SynchroSnapshot> GetSnapshotAsync(
-            SynchroRequestContext context,
+        ValueTask<NeuBellSnapshot> GetSnapshotAsync(
+            NeuBellRequestContext context,
             CancellationToken cancellationToken = default);
     }
 
     /// <summary>
     /// 模块在状态变化后通知 Admin Host 刷新对应 Provider；通知不得携带敏感业务正文。
     /// </summary>
-    public interface ISynchroPublisher
+    public interface INeuBellPublisher
     {
         ValueTask NotifyChangedAsync(string providerId, CancellationToken cancellationToken = default);
     }

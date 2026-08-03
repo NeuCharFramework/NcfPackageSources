@@ -1,13 +1,16 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：SynchroController.cs
-    文件功能描述：Admin Footer 服务器时间、Synchro 快照与实时变更流
+    文件名：NeuBellController.cs
+    文件功能描述：Admin Footer 服务器时间、纽铃快照与实时变更流
 
-    创建标识：Senparc - 20260802
+    创建标识：Senparc - 20260803
 
     修改标识：Senparc - 20260804
     修改描述：v0.3.0 新增后台同步管理与可配置多语言页脚
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.3.0 将后台同步功能统一更名为 NeuBell/纽铃
 
 ----------------------------------------------------------------*/
 
@@ -22,22 +25,22 @@ using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain.Services;
 using Senparc.Ncf.AreaBase.Admin.Filters;
 using Senparc.Ncf.Core.Authorization;
-using Senparc.Ncf.Shared.Abstractions.Synchro;
+using Senparc.Ncf.Shared.Abstractions.NeuBell;
 
 namespace Senparc.Areas.Admin.OHS.Local.Controllers;
 
 [ApiController]
-[Route("api/Senparc.Areas.Admin/synchro")]
+[Route("api/Senparc.Areas.Admin/neubell")]
 [AdminAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
-public sealed class SynchroController : ControllerBase
+public sealed class NeuBellController : ControllerBase
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
-    private readonly SynchroSnapshotService _snapshotService;
-    private readonly SynchroChangeNotifier _changeNotifier;
+    private readonly NeuBellSnapshotService _snapshotService;
+    private readonly NeuBellChangeNotifier _changeNotifier;
 
-    public SynchroController(
-        SynchroSnapshotService snapshotService,
-        SynchroChangeNotifier changeNotifier)
+    public NeuBellController(
+        NeuBellSnapshotService snapshotService,
+        NeuBellChangeNotifier changeNotifier)
     {
         _snapshotService = snapshotService;
         _changeNotifier = changeNotifier;
@@ -78,7 +81,7 @@ public sealed class SynchroController : ControllerBase
             await foreach (var providerId in _changeNotifier.SubscribeAsync(cancellationToken).ConfigureAwait(false))
             {
                 var payload = JsonSerializer.Serialize(new { providerId }, JsonOptions);
-                await Response.WriteAsync("event: synchro-changed\n", cancellationToken).ConfigureAwait(false);
+                await Response.WriteAsync("event: neubell-changed\n", cancellationToken).ConfigureAwait(false);
                 await Response.WriteAsync($"data: {payload}\n\n", cancellationToken).ConfigureAwait(false);
                 await Response.Body.FlushAsync(cancellationToken).ConfigureAwait(false);
             }
@@ -89,11 +92,11 @@ public sealed class SynchroController : ControllerBase
         }
     }
 
-    private SynchroRequestContext CreateContext()
+    private NeuBellRequestContext CreateContext()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
                      ?? User.Identity?.Name
                      ?? "anonymous-admin";
-        return new SynchroRequestContext(userId);
+        return new NeuBellRequestContext(userId);
     }
 }
