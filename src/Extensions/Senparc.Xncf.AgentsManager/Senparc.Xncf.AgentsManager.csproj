@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.13.0-preview8</Version>
+    <Version>0.14.0-preview9</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -94,6 +94,10 @@
 		[2026-07-31] v0.13.0-preview8 扩展 AgentsManager 管理界面的多语言能力
 		1、新增管理页与前端交互资源，支持界面文案按当前文化显示
 		2、升级 Senparc.AI 组件与 CO2NET WebApi 兼容依赖
+		[2026-08-04] v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+		1、为 AgentTemplate 增加 KnowledgeBaseId 并补齐六类数据库迁移与快照
+		2、扩展应用服务、DTO 与管理页面的知识库选择和统计展示
+		3、优化群聊服务的知识库集成与状态处理
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -1,6 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
+    <Version>0.0.1</Version>
+    <PackageReleaseNotes>
+      [2026-08-04] v0.0.1 新增发布包镜像服务测试
+      1、覆盖 NCF 与 NcfDesktop 包元数据同步及镜像行为
+    </PackageReleaseNotes>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <ImplicitUsings>enable</ImplicitUsings>

@@ -22,6 +22,9 @@
     修改标识：Senparc - 20260725
     修改描述：移除 cmd.exe 依赖并按 dotnet 命令退出码返回真实生成结果
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260802
     修改描述：将 NCF Host 与 NcfDesktop 发布包分通道同步、校验并原子发布清单
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.4.0-preview5 扩展 NCF 与 NcfDesktop 发布包同步能力
+
 ----------------------------------------------------------------*/
 
 using System.Net.Http.Json;

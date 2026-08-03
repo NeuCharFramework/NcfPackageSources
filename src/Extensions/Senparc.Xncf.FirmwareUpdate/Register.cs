@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260717
     修改描述：v0.3.0-preview2 为 FirmwareUpdate 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.4.0-preview5 扩展 NCF 与 NcfDesktop 发布包同步能力
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;

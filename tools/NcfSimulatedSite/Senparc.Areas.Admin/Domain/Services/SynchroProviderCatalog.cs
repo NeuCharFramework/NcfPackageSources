@@ -5,6 +5,10 @@
     文件功能描述：按 XNCF 安装和开放状态筛选 Admin Footer Synchro Provider
 
     创建标识：Senparc - 20260802
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.3.0 新增后台同步管理与可配置多语言页脚
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;

@@ -1,4 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：20260803133026_Add_AgentTemplate_KnowledgeBaseId.cs
+    文件功能描述：实现 Entity Framework 数据库迁移。
+
+
+    创建标识：Senparc - 20260803
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+
+----------------------------------------------------------------*/
+
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 

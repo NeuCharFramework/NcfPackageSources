@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.0.3</Version>
+		<Version>0.0.4</Version>
 		<PackageReleaseNotes>
 		  [2026-07-17] v0.0.1 补充本地化属性、资源查找与文化回退测试
 		  1、新增本地化描述、必填校验与资源解析测试覆盖
@@ -11,6 +11,9 @@
 		  4、验证授权同步事件不会进入通用活动流
 		  [2026-07-29] v0.0.2 Dependency update from Senparc.Ncf.Core to 0.26.0-preview3
 		  [2026-07-31] v0.0.3 Dependency update from Senparc.Ncf.Core to 0.27.0-preview4
+		  [2026-08-04] v0.0.4 补充数据库状态与页脚内容回归测试
+		  1、覆盖数据库安装及升级状态检测行为
+		  2、覆盖页脚内容安全清理与边界输入
 		</PackageReleaseNotes>
 
 		<IsPackable>false</IsPackable>

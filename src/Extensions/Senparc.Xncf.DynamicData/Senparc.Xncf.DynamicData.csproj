@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.7.0-preview4</Version>
+    <Version>0.7.1-preview5</Version>
     <AssemblyName>Senparc.Xncf.DynamicData</AssemblyName>
     <RootNamespace>Senparc.Xncf.DynamicData</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -48,6 +48,9 @@
       [2026-07-31] v0.7.0-preview4 扩展 DynamicData 管理界面的多语言能力
       1、新增数据表、布局与页面配置资源及前端本地化脚本
       2、升级 CO2NET MagicObject 1.2.0 与 WebApi 2.1.9-preview
+      [2026-08-04] v0.7.1-preview5 Dependency updates from upstream projects
+      1、Dependency update from Senparc.Ncf.AreaBase to 0.23.1-preview5
+      2、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.5-preview5
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

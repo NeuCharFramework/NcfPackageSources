@@ -1,4 +1,18 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：20260802183821_Add_XncfPreview.cs
+    文件功能描述：实现 Entity Framework 数据库迁移。
+
+
+    创建标识：Senparc - 20260803
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+
+----------------------------------------------------------------*/
+
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable

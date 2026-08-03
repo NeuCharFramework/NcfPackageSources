@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.0-preview4</Version>
+    <Version>0.5.0-preview5</Version>
     <AssemblyName>Senparc.Xncf.FileManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.FileManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -37,6 +37,9 @@
       [2026-07-31] v0.4.0-preview4 扩展 FileManager 管理界面的多语言能力
       1、新增文件管理资源与前端本地化脚本
       2、升级 Senparc.CO2NET.WebApi 至 2.1.9-preview
+      [2026-08-04] v0.5.0-preview5 新增文件文本提取与文件管理服务
+      1、新增 NcfFileTextExtractor 以支持文件内容提取
+      2、优化文件、目录及模板应用服务的处理流程
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

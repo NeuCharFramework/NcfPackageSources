@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
-		<Version>0.34.2</Version>
+		<Version>0.35.0</Version>
 		<PackageReleaseNotes>
 			[2026-07-01] v0.21.5 Dependency update from Senparc.Xncf.AgentsManager to 0.11.0-preview2
 			[2026-07-02] v0.21.5 支持流式输出并优化交互体验，升级 Senparc.AI.AgentKernel 并完成兼容性适配
@@ -33,6 +33,9 @@
 			2、优化桌面内嵌 WebView 的剪贴板、外部链接和不完整安装状态处理
 			[2026-07-31] v0.34.2 升级宿主的 Senparc.AI 兼容依赖
 			1、升级 Senparc.AI 组件版本以适配 CO2NET 4.2.0 二进制接口
+			[2026-08-04] v0.35.0 新增数据库升级维护流程与多平台下载入口
+			1、新增数据库升级命令行选项、协调器、运行状态、中间件与维护页面
+			2、新增 NCF Runtime 与 NcfDesktop 下载页及发布元数据
 </PackageReleaseNotes>
 		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
 		<TypeScriptToolsVersion>4.1</TypeScriptToolsVersion>

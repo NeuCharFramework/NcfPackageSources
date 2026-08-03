@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.18.0-preview7</Version>
+    <Version>0.19.0-preview8</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -107,6 +107,9 @@
       [2026-07-31] v0.18.0-preview7 扩展 PromptRange 管理界面的多语言能力
       1、补齐提示词、模型、菜单、复制与日期显示的多语言资源
       2、升级 Senparc.AI 组件版本以适配 CO2NET 4.2.0
+      [2026-08-04] v0.19.0-preview8 完善 PromptRange 管理页多语言体验
+      1、为 Prompt、Model 与 Index 页面接入统一本地化脚本
+      2、补充中文、英文、日文、法文、西班牙文与俄文资源
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>

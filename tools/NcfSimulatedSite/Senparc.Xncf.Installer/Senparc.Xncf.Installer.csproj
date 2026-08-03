@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.4.2</Version>
+		<Version>0.5.0</Version>
 		<AssemblyName>Senparc.Xncf.Installer</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Installer</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -39,6 +39,8 @@
 			2、安装请求增加防伪校验、重复安装保护，并仅在开发环境暴露测试路由
 			[2026-07-31] v0.4.2 升级安装模块的 Senparc.AI 兼容依赖
 			1、升级 Senparc.AI 组件版本以适配 CO2NET 4.2.0 二进制接口
+			[2026-08-04] v0.5.0 适配数据库升级维护流程
+			1、安装页面接入数据库升级状态判断并引导进入维护流程
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>

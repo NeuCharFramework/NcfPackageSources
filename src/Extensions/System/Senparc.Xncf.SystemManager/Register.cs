@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260803
     修改描述：v1.1.3 增加 FooterContent 数据库迁移
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.15.3-preview6 补齐 SystemConfig.FooterContent 数据库迁移
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;

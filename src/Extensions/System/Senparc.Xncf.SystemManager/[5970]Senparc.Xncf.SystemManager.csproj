@@ -54,6 +54,7 @@
 		[2026-08-03] v0.15.3-preview6 补齐 SystemConfig.FooterContent 数据库迁移
 		1、为 SqlServer、Sqlite、PostgreSQL、Oracle、Dm、MySql 生成迁移、Designer 与快照
 		2、修复跨平台设计时数据库配置目录定位
+		3、同步 SystemConfig 服务与模块注册中的页脚配置处理
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

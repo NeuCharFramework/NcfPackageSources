@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net10.0</TargetFrameworks>
-		<Version>0.0.6</Version>
+		<Version>0.0.7</Version>
 		<PackageReleaseNotes>
     [2026-07-02] v0.0.2 升级 Senparc.AI.AgentKernel 并完成兼容性适配，增强 MCP 工具接入与调用链路兼容能力
     1、升级 Senparc.AI.AgentKernel 并完成兼容性适配
@@ -20,6 +20,10 @@
     6、验证构建输出和异常结果处理
     [2026-07-29] v0.0.5 Dependency update from Senparc.Xncf.XncfBuilder to 0.37.1-preview6
     [2026-07-31] v0.0.6 Dependency update from Senparc.Xncf.XncfBuilder to 0.38.0-preview7
+    [2026-08-04] v0.0.7 补充 XNCF 预览与迁移布局测试
+    1、覆盖预览会话、持久化状态与工作区文件服务
+    2、覆盖多数据库迁移快照布局和 DbSet 键生成
+    3、清理过期 SenparcTrace 测试日志数据
 </PackageReleaseNotes>
 
 		<IsPackable>false</IsPackable>

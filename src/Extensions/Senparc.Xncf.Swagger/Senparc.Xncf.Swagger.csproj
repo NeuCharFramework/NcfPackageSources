@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.0-preview4</Version>
+    <Version>0.20.1-preview5</Version>
     <!--<LangVersion>lastest</LangVersion>-->
     <LangVersion>preview</LangVersion>
     <AssemblyName>Senparc.Xncf.Swagger</AssemblyName>
@@ -47,6 +47,9 @@
 				[2026-07-31] v0.20.0-preview4 扩展 Swagger 管理交互的多语言能力
 				1、将 Swagger 前端交互提示接入本地化资源
 				2、升级 Senparc.CO2NET.WebApi 至 2.1.9-preview
+				[2026-08-04] v0.20.1-preview5 Dependency updates from upstream projects
+				1、Dependency update from Senparc.Ncf.AreaBase to 0.23.1-preview5
+				2、Dependency update from Senparc.Xncf.AreasBase to 0.13.3-preview5
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test</Configurations>

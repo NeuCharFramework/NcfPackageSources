@@ -5,6 +5,10 @@
     文件功能描述：XncfBuilder 管理页面注册
 
     创建标识：Senparc - 20260802
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

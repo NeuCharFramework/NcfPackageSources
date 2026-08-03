@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.7</Version>
+    <Version>0.0.8</Version>
     <PackageReleaseNotes>
         [2026-07-01] v0.0.1 Dependency update from Senparc.Xncf.AgentsManager to 0.11.0-preview2
         [2026-07-02] v0.0.1 新增 PromptRange 与 AgentsManager 使用记录能力，升级并适配 net10.0 框架
@@ -20,6 +20,8 @@
         4、同步 AgentsManager 0.12.0-preview6 的剪贴板兼容性改进
         [2026-07-29] v0.0.6 Dependency update from Senparc.Xncf.AgentsManager to 0.12.1-preview7
         [2026-07-31] v0.0.7 Dependency update from Senparc.Xncf.AgentsManager to 0.13.0-preview8
+        [2026-08-04] v0.0.8 补充 Agent 模板知识库集成测试
+        1、验证 AgentTemplate 与 KnowledgeBase 的关联和服务调用行为
 </PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>

@@ -1,4 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：20260802175647_Add_FooterContent.cs
+    文件功能描述：实现 Entity Framework 数据库迁移。
+
+
+    创建标识：Senparc - 20250120
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.15.3-preview6 补齐 SystemConfig.FooterContent 数据库迁移
+
+----------------------------------------------------------------*/
+
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 

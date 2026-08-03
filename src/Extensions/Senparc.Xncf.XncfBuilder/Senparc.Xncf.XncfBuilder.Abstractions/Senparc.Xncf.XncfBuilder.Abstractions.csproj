@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.1.1-preview2</Version>
+    <Version>0.1.2-preview3</Version>
     <AssemblyName>Senparc.Xncf.XncfBuilder.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder.Abstractions</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -22,6 +22,7 @@
       v0.1.0 创世
       [2026-07-26] v0.1.1-preview2 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.3.0-preview2
       1、Dependency update from Senparc.Ncf.Shared.Abstractions to 0.3.0-preview2
+      [2026-08-04] v0.1.2-preview3 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.4.0-preview3
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

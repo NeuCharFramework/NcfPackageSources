@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260729
     修改描述：v0.37.1-preview6 默认关闭未受保护的 Builder MCP 路由
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -140,5 +143,4 @@ namespace Senparc.Xncf.XncfBuilder
         }
     }
 }
-
 

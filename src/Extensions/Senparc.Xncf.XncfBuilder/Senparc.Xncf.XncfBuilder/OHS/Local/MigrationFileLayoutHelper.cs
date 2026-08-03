@@ -1,4 +1,18 @@
-﻿using Microsoft.CodeAnalysis;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：MigrationFileLayoutHelper.cs
+    文件功能描述：实现 MigrationFileLayoutHelper 相关功能。
+
+
+    创建标识：Senparc - 20260803
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+
+----------------------------------------------------------------*/
+
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;

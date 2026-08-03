@@ -5,6 +5,10 @@
     文件功能描述：DesktopBridge 待审批配对的 Synchro（灵犀）Provider
 
     创建标识：Senparc - 20260802
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.3.0-preview3 新增桌面端同步提供程序
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Shared.Abstractions.Synchro;
