@@ -70,7 +70,10 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBase
         public async Task<IActionResult> OnPostDeleteAsync([FromBody] int[] ids)
         {
             var entity = await _knowledgeBaseService.GetFullListAsync(_ => ids.Contains(_.Id));
-            await _knowledgeBaseService.DeleteAllAsync(entity);
+            foreach (var knowledgeBase in entity)
+            {
+                await _knowledgeBaseService.DeleteKnowledgeBaseAsync(knowledgeBase.Id);
+            }
             IEnumerable<int> unDeleteIds = ids.Except(entity.Select(_ => _.Id));
             return Ok(unDeleteIds);
         }

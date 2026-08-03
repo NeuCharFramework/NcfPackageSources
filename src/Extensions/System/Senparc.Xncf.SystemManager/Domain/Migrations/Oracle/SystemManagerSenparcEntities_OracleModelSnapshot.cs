@@ -17,7 +17,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.Oracle
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -39,6 +39,11 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.Oracle
 
                     b.Property<bool>("Flag")
                         .HasColumnType("NUMBER(1)");
+
+                    b.Property<string>("FooterContent")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<bool?>("HideModuleManager")
                         .HasColumnType("NUMBER(1)");

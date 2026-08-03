@@ -17,7 +17,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.SqlServer
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -39,6 +39,11 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.SqlServer
 
                     b.Property<bool>("Flag")
                         .HasColumnType("bit");
+
+                    b.Property<string>("FooterContent")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<bool?>("HideModuleManager")
                         .HasColumnType("bit");

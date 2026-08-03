@@ -38,6 +38,11 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.Dm
                     b.Property<bool>("Flag")
                         .HasColumnType("BIT");
 
+                    b.Property<string>("FooterContent")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("NVARCHAR2(2000)");
+
                     b.Property<bool?>("HideModuleManager")
                         .HasColumnType("BIT");
 

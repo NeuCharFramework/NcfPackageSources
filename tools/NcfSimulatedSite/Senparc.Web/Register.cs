@@ -24,6 +24,7 @@ using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.AreasBase;
 using Senparc.Ncf.Core.EventBus;
 using Senparc.Web.Controllers;
+using Senparc.Web.Infrastructure.Database;
 
 namespace Senparc.Web
 {
@@ -41,6 +42,8 @@ namespace Senparc.Web
             // Localization baseline for all modules (Web/Admin/Installer/XNCF).
             // Use type-based lookup without ResourcesPath override to match embedded resource names.
             builder.Services.AddLocalization();
+            builder.Services.AddSingleton<DatabaseRuntimeStateStore>();
+            builder.Services.AddSingleton<DatabaseUpgradeCoordinator>();
 
             //激活 Xncf 扩展引擎（必须）
             var logMsg = builder.StartWebEngine(new[] { "Senparc.Areas.Admin"});
@@ -123,7 +126,7 @@ namespace Senparc.Web
             //});
         }
 
-        public static void UseNcf<TDatabaseConfiguration>(this WebApplication app)
+        public static void UseNcf<TDatabaseConfiguration>(this WebApplication app, bool startBackgroundThreads = true)
             where TDatabaseConfiguration : IDatabaseConfiguration, new()
         {
             //注入DI对象
@@ -150,7 +153,7 @@ namespace Senparc.Web
                 });
 
             //XncfModules（必须）
-            app.UseXncfModules(registerService)
+            app.UseXncfModules(registerService, startBackgroundThreads: startBackgroundThreads)
                .UseNcfDatabase<TDatabaseConfiguration>();
 
             /*  UseNcfDatabase<TDatabaseConfiguration>() 泛型类型说明

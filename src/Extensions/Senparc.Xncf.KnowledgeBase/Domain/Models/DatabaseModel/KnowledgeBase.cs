@@ -49,6 +49,7 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
             ChatModelId = knowledgeBasesDto.ChatModelId;
             Name = knowledgeBasesDto.Name;
             Content = knowledgeBasesDto.Content;
+            InvalidateEmbedding();
         }
         /// <summary>
         /// 训练模型Id
@@ -70,5 +71,39 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
         /// 内容
         /// </summary>
         public string Content { get; set; }
+
+        /// <summary>
+        /// 当前已发布的向量集合名称。仅在整批向量化成功后更新。
+        /// </summary>
+        [MaxLength(200)]
+        public string VectorCollectionName { get; private set; }
+
+        /// <summary>
+        /// 最近一次完整向量化成功时间。
+        /// </summary>
+        public DateTime? EmbeddedTime { get; private set; }
+
+        public void MarkEmbeddingCompleted(string vectorCollectionName)
+        {
+            if (string.IsNullOrWhiteSpace(vectorCollectionName))
+            {
+                throw new ArgumentException("向量集合名称不能为空。", nameof(vectorCollectionName));
+            }
+
+            VectorCollectionName = vectorCollectionName;
+            EmbeddedTime = DateTime.Now;
+        }
+
+        public void InvalidateEmbedding()
+        {
+            VectorCollectionName = null;
+            EmbeddedTime = null;
+        }
+
+        public void SetContent(string content)
+        {
+            Content = content;
+            InvalidateEmbedding();
+        }
     }
 }

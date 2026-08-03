@@ -26,10 +26,13 @@ using Senparc.Xncf.FileManager.Domain;
 using Senparc.Xncf.FileManager.Domain.Services;
 using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.Dto;
 using System.Linq;
+using Senparc.Ncf.Core.Authorization;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 
 
 namespace Senparc.Xncf.FileManager.OHS.Local.AppService
 {
+    [ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class FileTemplateAppService : AppServiceBase
     {
         private readonly NcfFileService fileService;

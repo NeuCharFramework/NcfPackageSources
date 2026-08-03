@@ -60,10 +60,17 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
         /// </summary>
         public string Content { get; set; }
 
+        public string VectorCollectionName { get; set; }
+
+        public DateTime? EmbeddedTime { get; set; }
+
     }
 
     public class KnowledgeBase_InsertDto : KnowledgeBaseDto
     {
-        public List<int> NcfFileIds { get; set; } = new List<int>();
+        /// <summary>
+        /// 要同步的 FileManager 文件 ID。null 表示不修改文件关联，空集合表示清空。
+        /// </summary>
+        public List<int> NcfFileIds { get; set; }
     }
 }

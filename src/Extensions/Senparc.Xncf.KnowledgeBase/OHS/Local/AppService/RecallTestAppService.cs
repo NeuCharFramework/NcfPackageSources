@@ -32,9 +32,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using plRequest = Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Request;
+using Senparc.Ncf.Core.Authorization;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 
 namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
 {
+    [ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class RecallTestAppService : AppServiceBase
     {
         private readonly KnowledgeBaseService knowledgeBaseService;

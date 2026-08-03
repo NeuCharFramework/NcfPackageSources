@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.KnowledgeBase.Models;
 
 namespace Senparc.Xncf.KnowledgeBase
 {
@@ -41,8 +42,9 @@ namespace Senparc.Xncf.KnowledgeBase
 
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //实现 [XncfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
-            //modelBuilder.ApplyConfiguration(new AreaTemplate_ColorConfigurationMapping());
+            // 设计期迁移也必须稳定包含关键索引，不依赖全局扫描状态。
+            modelBuilder.ApplyConfiguration(new Admin_KnowledgeBaseConfigurationMapping());
+            modelBuilder.ApplyConfiguration(new Admin_KnowledgeBaseItemConfigurationMapping());
         }
 
         public void AddXncfDatabaseModule(IServiceCollection services)

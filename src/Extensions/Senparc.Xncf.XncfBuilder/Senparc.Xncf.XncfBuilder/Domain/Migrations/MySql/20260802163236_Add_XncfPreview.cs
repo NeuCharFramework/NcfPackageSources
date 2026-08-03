@@ -12,15 +12,6 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Migrations.MySql
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "XncfBuilderConfig",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
-
             migrationBuilder.CreateTable(
                 name: "XncfBuilderXncfPreviewHost",
                 columns: table => new
@@ -134,15 +125,6 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Migrations.MySql
 
             migrationBuilder.DropTable(
                 name: "XncfBuilderXncfPreviewTask");
-
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "XncfBuilderConfig",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
         }
     }
 }

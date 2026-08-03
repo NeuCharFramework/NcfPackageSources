@@ -2,12 +2,13 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.SystemManager.Domain.DatabaseModel;
 
 #nullable disable
 
-namespace Senparc.Xncf.SystemManager.Domain.Migrations.Mysql
+namespace Senparc.Xncf.SystemManager.Domain.Migrations.MySql
 {
     [DbContext(typeof(SystemManagerSenparcEntities_MySql))]
     partial class SystemManagerSenparcEntities_MySqlModelSnapshot : ModelSnapshot
@@ -16,14 +17,18 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.Mysql
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
             modelBuilder.Entity("Senparc.Ncf.Core.Models.SystemConfig", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("datetime(6)");
@@ -34,6 +39,11 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.Mysql
 
                     b.Property<bool>("Flag")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("FooterContent")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
 
                     b.Property<bool?>("HideModuleManager")
                         .HasColumnType("tinyint(1)");
@@ -48,6 +58,17 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.Mysql
                     b.Property<string>("MchKey")
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
+
+                    b.Property<string>("NeuCharAppKey")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("NeuCharAppSecret")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("NeuCharDeveloperId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
@@ -75,6 +96,8 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.Mysql
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccountId")
                         .HasColumnType("int");

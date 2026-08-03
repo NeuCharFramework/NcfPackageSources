@@ -176,6 +176,11 @@
   </ItemGroup>-->
   <!-- 由于 Npgsql 生成代码有依赖，因此此处暂时引用 -->
   <ItemGroup>
+    <!-- 仅供 dotnet ef 生成和校验多数据库迁移，不传递给引用 XncfBuilder 的项目。 -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Oracle.EntityFrameworkCore" Version="8.23.60" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />

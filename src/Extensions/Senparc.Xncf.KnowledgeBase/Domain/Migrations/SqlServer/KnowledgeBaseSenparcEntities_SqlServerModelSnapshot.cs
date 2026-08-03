@@ -88,6 +88,9 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.SqlServer
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("EmbeddedTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("EmbeddingModelId")
                         .HasColumnType("int");
 
@@ -106,6 +109,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.SqlServer
 
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
+
+                    b.Property<string>("VectorCollectionName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("VectorDBId")
                         .HasColumnType("int");
@@ -158,6 +165,9 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.SqlServer
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("NcfFileId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
@@ -166,6 +176,8 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.SqlServer
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("KnowledgeBasesId", "NcfFileId", "ChunkIndex");
 
                     b.ToTable("Senparc_KnowledgeBase_KnowledgeBaseItem");
                 });

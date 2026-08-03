@@ -88,6 +88,9 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.MySql
                     b.Property<string>("Content")
                         .HasColumnType("longtext");
 
+                    b.Property<DateTime?>("EmbeddedTime")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<int>("EmbeddingModelId")
                         .HasColumnType("int");
 
@@ -106,6 +109,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.MySql
 
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
+
+                    b.Property<string>("VectorCollectionName")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<int>("VectorDBId")
                         .HasColumnType("int");
@@ -158,6 +165,9 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.MySql
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<int?>("NcfFileId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
@@ -166,6 +176,8 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.MySql
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("KnowledgeBasesId", "NcfFileId", "ChunkIndex");
 
                     b.ToTable("Senparc_KnowledgeBase_KnowledgeBaseItem");
                 });

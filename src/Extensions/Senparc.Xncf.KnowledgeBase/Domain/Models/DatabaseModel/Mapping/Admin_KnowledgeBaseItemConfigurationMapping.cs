@@ -24,7 +24,8 @@ namespace Senparc.Xncf.KnowledgeBase.Models
     {
         public override void Configure(EntityTypeBuilder<KnowledgeBaseItem> builder)
         {
-            
+            base.Configure(builder);
+            builder.HasIndex(z => new { z.KnowledgeBasesId, z.NcfFileId, z.ChunkIndex });
         }
     }
 }

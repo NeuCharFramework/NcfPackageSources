@@ -88,6 +88,9 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.PostgreSQL
                     b.Property<string>("Content")
                         .HasColumnType("text");
 
+                    b.Property<DateTime?>("EmbeddedTime")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<int>("EmbeddingModelId")
                         .HasColumnType("integer");
 
@@ -106,6 +109,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.PostgreSQL
 
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("VectorCollectionName")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<int>("VectorDBId")
                         .HasColumnType("integer");
@@ -158,6 +165,9 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.PostgreSQL
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<int?>("NcfFileId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
@@ -166,6 +176,8 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.PostgreSQL
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("KnowledgeBasesId", "NcfFileId", "ChunkIndex");
 
                     b.ToTable("Senparc_KnowledgeBase_KnowledgeBaseItem");
                 });

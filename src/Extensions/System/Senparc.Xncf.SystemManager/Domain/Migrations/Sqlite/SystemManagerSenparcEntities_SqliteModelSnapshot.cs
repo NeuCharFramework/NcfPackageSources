@@ -15,7 +15,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.Sqlite
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
 
             modelBuilder.Entity("Senparc.Ncf.Core.Models.SystemConfig", b =>
                 {
@@ -32,6 +32,11 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.Sqlite
 
                     b.Property<bool>("Flag")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("FooterContent")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
 
                     b.Property<bool?>("HideModuleManager")
                         .HasColumnType("INTEGER");

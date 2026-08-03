@@ -17,7 +17,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.PostgreSQL
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -39,6 +39,11 @@ namespace Senparc.Xncf.SystemManager.Domain.Migrations.PostgreSQL
 
                     b.Property<bool>("Flag")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("FooterContent")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
 
                     b.Property<bool?>("HideModuleManager")
                         .HasColumnType("boolean");

@@ -35,9 +35,12 @@ using Microsoft.Extensions.Options;
 using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Config;
 using Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Config;
 using Senparc.Xncf.FileManager.Domain.Services;
+using Senparc.Ncf.Core.Authorization;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 
 namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
 {
+    [ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class CommonService : AppServiceBase
     {
         private readonly NcfFileService ncfFileService;

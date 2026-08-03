@@ -32,8 +32,18 @@ public static class Program
             promptUsageTests.ResolveUsage_ShouldFallbackToPromptPlusCompletion();
             promptUsageTests.ResolveUsage_ShouldClampLargeValues();
 
+            var knowledgeBaseIntegrationTests = new KnowledgeBaseIntegrationTests();
+            knowledgeBaseIntegrationTests.ExtractPlainText_ShouldDecodeUtf8AndNormalizeLineEndings();
+            knowledgeBaseIntegrationTests.ExtractPlainText_ShouldRejectInvalidUtf8();
+            knowledgeBaseIntegrationTests.ExtractDocx_ShouldReadParagraphTextWithoutOfficeRuntime();
+            knowledgeBaseIntegrationTests.ExtractPptx_ShouldReadSlidesInNumericOrder();
+            knowledgeBaseIntegrationTests.ExtractXlsx_ShouldResolveSharedAndInlineStrings();
+            knowledgeBaseIntegrationTests.Extract_ShouldRejectFormatsThatNeedPdfOrOcrRuntime();
+            knowledgeBaseIntegrationTests.AgentTemplate_ShouldKeepKnowledgeBaseBindingWhenUpdated();
+
             Console.WriteLine("UsageAnalyticsTests passed.");
             Console.WriteLine("PromptUsageHelperTests passed.");
+            Console.WriteLine("KnowledgeBaseIntegrationTests passed.");
             return 0;
         }
         catch (Exception ex)

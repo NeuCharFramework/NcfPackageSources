@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260717
     修改描述：v0.15.0-preview3 为 SystemManager 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20260803
+    修改描述：v1.1.3 增加 FooterContent 数据库迁移
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -44,7 +47,7 @@ namespace Senparc.Xncf.SystemManager
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_SERVICE_MANAGER_UID;// "00000000-0000-0000-0000-000000000002";
 
-        public override string Version => "1.1.2";//必须填写版本号
+        public override string Version => "1.1.3";//必须填写版本号
 
         public override string MenuName => SystemManagerResource.Get("Module.SystemManager.MenuName", "系统管理");
 

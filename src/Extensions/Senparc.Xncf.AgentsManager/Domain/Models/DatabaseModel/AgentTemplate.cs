@@ -81,6 +81,11 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
         public string McpEndpoints { get; private set; }
 
         /// <summary>
+        /// 绑定的 KnowledgeBase ID。跨 XNCF 数据库上下文，不建立数据库外键。
+        /// </summary>
+        public int? KnowledgeBaseId { get; private set; }
+
+        /// <summary>
         /// 获取McpEndpoints的JSON对象
         /// </summary>
         /// <returns>包含所有Endpoints的Dictionary对象</returns>
@@ -174,7 +179,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
 
         private AgentTemplate() { }
 
-        public AgentTemplate(string name, string systemMessage, bool enable, string description, string promptCode, HookRobotType hookRobotType, string hookRobotParameter, string avastar = null, string functionCallNames = null, string mcpEndpoints = null)
+        public AgentTemplate(string name, string systemMessage, bool enable, string description, string promptCode, HookRobotType hookRobotType, string hookRobotParameter, string avastar = null, string functionCallNames = null, string mcpEndpoints = null, int? knowledgeBaseId = null)
         {
             Name = name;
             SystemMessage = systemMessage;
@@ -186,6 +191,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
             Avastar = avastar;
             FunctionCallNames = functionCallNames;
             McpEndpoints = mcpEndpoints;
+            KnowledgeBaseId = knowledgeBaseId;
         }
 
         public bool EnableAgent()
@@ -212,6 +218,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
             FunctionCallNames = agentTemplateDto.FunctionCallNames;
             Avastar = agentTemplateDto.Avastar;
             McpEndpoints = agentTemplateDto.McpEndpoints;
+            KnowledgeBaseId = agentTemplateDto.KnowledgeBaseId;
         }
     }
 

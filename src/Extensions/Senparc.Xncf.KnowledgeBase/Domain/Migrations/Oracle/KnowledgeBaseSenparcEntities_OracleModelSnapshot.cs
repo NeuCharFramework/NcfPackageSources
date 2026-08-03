@@ -88,6 +88,9 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Oracle
                     b.Property<string>("Content")
                         .HasColumnType("NVARCHAR2(2000)");
 
+                    b.Property<DateTime?>("EmbeddedTime")
+                        .HasColumnType("TIMESTAMP(7)");
+
                     b.Property<int>("EmbeddingModelId")
                         .HasColumnType("NUMBER(10)");
 
@@ -106,6 +109,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Oracle
 
                     b.Property<int>("TenantId")
                         .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("VectorCollectionName")
+                        .HasMaxLength(200)
+                        .HasColumnType("NVARCHAR2(200)");
 
                     b.Property<int>("VectorDBId")
                         .HasColumnType("NUMBER(10)");
@@ -158,6 +165,9 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Oracle
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TIMESTAMP(7)");
 
+                    b.Property<int?>("NcfFileId")
+                        .HasColumnType("NUMBER(10)");
+
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
@@ -166,6 +176,8 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Oracle
                         .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("KnowledgeBasesId", "NcfFileId", "ChunkIndex");
 
                     b.ToTable("Senparc_KnowledgeBase_KnowledgeBaseItem");
                 });

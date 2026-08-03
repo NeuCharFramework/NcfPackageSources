@@ -46,6 +46,7 @@ namespace Senparc.Xncf.AgentsManager
             //modelBuilder.ApplyConfiguration(new AreaTemplate_ColorConfigurationMapping());
 
             modelBuilder.ApplyConfiguration(new ChatGroupConfigurationMapping());
+            modelBuilder.ApplyConfiguration(new AgentTemplateConfigurationMapping());
         }
 
         public void AddXncfDatabaseModule(IServiceCollection services)

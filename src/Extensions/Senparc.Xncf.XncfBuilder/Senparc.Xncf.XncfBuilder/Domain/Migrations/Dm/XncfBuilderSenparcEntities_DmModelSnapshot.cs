@@ -80,6 +80,174 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Migrations.Dm
 
                     b.ToTable("XncfBuilderConfig");
                 });
+
+            modelBuilder.Entity("Senparc.Xncf.XncfBuilder.XncfPreviewHost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<string>("EnvironmentName")
+                        .HasMaxLength(100)
+                        .HasColumnType("NVARCHAR2(100)");
+
+                    b.Property<int?>("ExitCode")
+                        .HasColumnType("INT");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("BIT");
+
+                    b.Property<DateTime?>("HealthyAtUtc")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("ModuleProjectName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("NVARCHAR2(256)");
+
+                    b.Property<int>("ProcessId")
+                        .HasColumnType("INT");
+
+                    b.Property<DateTime?>("ProcessStartedAtUtc")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("PublishDirectory")
+                        .HasMaxLength(1200)
+                        .HasColumnType("NVARCHAR2(1200)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<string>("SessionId")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("NVARCHAR2(128)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INT");
+
+                    b.Property<string>("StatusMessage")
+                        .HasMaxLength(1000)
+                        .HasColumnType("NVARCHAR2(1000)");
+
+                    b.Property<DateTime?>("StoppedAtUtc")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INT");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("Url")
+                        .HasMaxLength(500)
+                        .HasColumnType("NVARCHAR2(500)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SessionId")
+                        .IsUnique();
+
+                    b.HasIndex("Status", "UpdatedAtUtc");
+
+                    b.ToTable("XncfBuilderXncfPreviewHost");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.XncfBuilder.XncfPreviewTask", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<DateTime?>("CompletedAtUtc")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasColumnType("CLOB");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("BIT");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("ModuleAssemblySha256")
+                        .HasMaxLength(64)
+                        .HasColumnType("NVARCHAR2(64)");
+
+                    b.Property<string>("ModuleProjectName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("NVARCHAR2(256)");
+
+                    b.Property<int>("ProgressPercent")
+                        .HasColumnType("INT");
+
+                    b.Property<string>("RecentOutput")
+                        .HasColumnType("CLOB");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<string>("SessionId")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("NVARCHAR2(128)");
+
+                    b.Property<string>("SolutionFilePath")
+                        .HasMaxLength(1200)
+                        .HasColumnType("NVARCHAR2(1200)");
+
+                    b.Property<string>("SourceFingerprint")
+                        .HasMaxLength(64)
+                        .HasColumnType("NVARCHAR2(64)");
+
+                    b.Property<int>("Stage")
+                        .HasColumnType("INT");
+
+                    b.Property<DateTime>("StartedAtUtc")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("StatusMessage")
+                        .HasMaxLength(1000)
+                        .HasColumnType("NVARCHAR2(1000)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INT");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SessionId")
+                        .IsUnique();
+
+                    b.HasIndex("ModuleProjectName", "StartedAtUtc");
+
+                    b.ToTable("XncfBuilderXncfPreviewTask");
+                });
 #pragma warning restore 612, 618
         }
     }

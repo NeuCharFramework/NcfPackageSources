@@ -36,4 +36,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
     {
         public AgentTemplateStatusDto AgentTemplateStatus { get; set; }
     }
+
+    public class KnowledgeBaseOptionResponse
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool IsEmbedded { get; set; }
+    }
 }

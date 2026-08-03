@@ -75,9 +75,27 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         /// </summary>
         public string McpEndpoints { get; set; }
 
+        public int? KnowledgeBaseId { get; set; }
+
+        public string KnowledgeBaseName { get; set; }
+
+        public int CompletedConversationRounds { get; set; }
+
+        public int CompletedTaskCount { get; set; }
+
+        public long PromptTokens { get; set; }
+
+        public long CompletionTokens { get; set; }
+
+        public long TotalTokens { get; set; }
+
+        public double AverageResponseMilliseconds { get; set; }
+
+        public DateTime? LastActiveTime { get; set; }
+
         public AgentTemplateDto() { }
 
-        public AgentTemplateDto(string name, string systemMessage, bool enable, string description, string promptCode = null, HookRobotType hookRobotType = default, string hookRobotParameter = null, string avastar = null, string functionCallNames = null, string mcpEndpoints = null)
+        public AgentTemplateDto(string name, string systemMessage, bool enable, string description, string promptCode = null, HookRobotType hookRobotType = default, string hookRobotParameter = null, string avastar = null, string functionCallNames = null, string mcpEndpoints = null, int? knowledgeBaseId = null)
         {
             Name = name;
             SystemMessage = systemMessage;
@@ -89,6 +107,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             Avastar = avastar;
             FunctionCallNames = functionCallNames;
             McpEndpoints = mcpEndpoints;
+            KnowledgeBaseId = knowledgeBaseId;
         }
     }
 

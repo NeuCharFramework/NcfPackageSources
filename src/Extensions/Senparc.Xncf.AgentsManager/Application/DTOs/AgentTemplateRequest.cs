@@ -80,6 +80,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.FunctionCalls")]
         public string FunctionCallNames { get; set; }
 
+        public int? KnowledgeBaseId { get; set; }
+
         public string GetSystemMessagePromptCode()
         {
             return SystemMessagePromptCode?.Trim();

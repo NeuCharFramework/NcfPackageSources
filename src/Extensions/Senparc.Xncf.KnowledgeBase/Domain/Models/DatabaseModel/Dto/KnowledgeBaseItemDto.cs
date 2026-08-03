@@ -27,7 +27,7 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
         {
         }
 
-        public KnowledgeBaseItemDto(int id, int knowledgeBasesId, ContentType contentType, string content, string fileName = "", int chunkIndex = 0)
+        public KnowledgeBaseItemDto(int id, int knowledgeBasesId, ContentType contentType, string content, string fileName = "", int chunkIndex = 0, int? ncfFileId = null)
         {
             Id = id;
             KnowledgeBasesId = knowledgeBasesId;
@@ -35,6 +35,7 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
             Content = content;
             FileName = fileName;
             ChunkIndex = chunkIndex;
+            NcfFileId = ncfFileId;
         }
 
         /// <summary>

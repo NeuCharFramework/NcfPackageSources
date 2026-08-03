@@ -23,6 +23,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Request
 {
     public class KnowledgeBaseRequest
     {
+        public int Id { get; set; }
         /// <summary>
         /// 训练模型Id
         /// </summary>
@@ -39,5 +40,12 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Request
         /// 名称
         /// </summary>
         public string Name { get; set; }
+
+        public string Content { get; set; }
+
+        /// <summary>
+        /// null 表示不修改文件关联，空集合表示清空。
+        /// </summary>
+        public List<int> NcfFileIds { get; set; }
     }
 }

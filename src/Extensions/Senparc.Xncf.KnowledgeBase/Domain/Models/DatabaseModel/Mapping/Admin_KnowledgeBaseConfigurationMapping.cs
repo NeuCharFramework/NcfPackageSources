@@ -24,7 +24,7 @@ namespace Senparc.Xncf.KnowledgeBase.Models
     {
         public override void Configure(EntityTypeBuilder<DatabaseModel.KnowledgeBase> builder)
         {
-            
+            base.Configure(builder);
         }
     }
 }

@@ -11,15 +11,6 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Migrations.SqlServer
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "XncfBuilderConfig",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .Annotation("SqlServer:Identity", "1, 1");
-
             migrationBuilder.CreateTable(
                 name: "XncfBuilderXncfPreviewHost",
                 columns: table => new
@@ -113,15 +104,6 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Migrations.SqlServer
 
             migrationBuilder.DropTable(
                 name: "XncfBuilderXncfPreviewTask");
-
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "XncfBuilderConfig",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .OldAnnotation("SqlServer:Identity", "1, 1");
         }
     }
 }

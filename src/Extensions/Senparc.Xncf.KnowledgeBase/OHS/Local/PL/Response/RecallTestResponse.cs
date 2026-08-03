@@ -25,5 +25,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Response
         public double? Score { get; set; }
         public string Content { get; set; }
         public string RecallTime { get; set; }
+        public string SourceName { get; set; }
+        public string SourceLink { get; set; }
     }
 }
