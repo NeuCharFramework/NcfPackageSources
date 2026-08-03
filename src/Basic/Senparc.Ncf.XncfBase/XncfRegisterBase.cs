@@ -328,9 +328,10 @@ namespace Senparc.Ncf.XncfBase
                                     //    errorNumbersToAdd: new int[] { 2 });
                                 });
 
-                            //创建 SenparcEntities 实例
-                            var xncfSenparcEntities = Activator.CreateInstance(dbContextType, dbOptionBuilder.Options);
-                            return xncfSenparcEntities as DbContext;
+                            // 使用当前作用域创建 DbContext。部分系统模块除 DbContextOptions 外还需要
+                            // IServiceProvider；ActivatorUtilities 可同时兼容这类构造函数和传统的
+                            // 单参数构造函数，并确保注入的是当前请求/升级作用域。
+                            return CreateXncfDbContext(s, dbContextType, dbOptionBuilder.Options);
                         };
                         //添加 XncfSenparcEntities 依赖注入配置
                         services.AddScoped(dbContextType, implementationFactory);
@@ -364,6 +365,21 @@ namespace Senparc.Ncf.XncfBase
             }
 
             return services;
+        }
+
+        /// <summary>
+        /// 使用当前依赖注入作用域创建 XNCF 数据库上下文。
+        /// </summary>
+        /// <remarks>
+        /// 将 Options 作为显式参数传入，其余构造参数由依赖注入容器解析。
+        /// </remarks>
+        protected virtual DbContext CreateXncfDbContext(
+            IServiceProvider serviceProvider,
+            Type dbContextType,
+            DbContextOptions dbContextOptions)
+        {
+            return ActivatorUtilities.CreateInstance(serviceProvider, dbContextType, dbContextOptions) as DbContext
+                ?? throw new InvalidOperationException($"无法创建 XNCF 数据库上下文：{dbContextType.FullName}");
         }
 
         /// <summary>

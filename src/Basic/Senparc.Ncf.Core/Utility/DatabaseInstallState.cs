@@ -25,6 +25,13 @@ namespace Senparc.Ncf.Core.Utility
         /// </summary>
         public static bool IsDatabaseUnavailableForInstallation(Exception exception)
         {
+            // “column ... does not exist” 也包含 does not exist，必须先排除架构升级状态，
+            // 防止 PostgreSQL 等提供程序把缺字段误判成首次安装。
+            if (IsSchemaUpgradeRequired(exception))
+            {
+                return false;
+            }
+
             for (var current = exception; current != null; current = current.InnerException)
             {
                 if (current is not DbException)
@@ -53,6 +60,35 @@ namespace Senparc.Ncf.Core.Utility
                 // cannot be opened by the configured login, with this message pair.
                 if (message.Contains("cannot open database", StringComparison.OrdinalIgnoreCase)
                     && message.Contains("requested by the login", StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 判断数据库是否已经存在，但代码模型引用了尚未创建的字段。
+        /// 该状态应进入升级维护页，而不是重新进入首次安装。
+        /// </summary>
+        public static bool IsSchemaUpgradeRequired(Exception exception)
+        {
+            for (var current = exception; current != null; current = current.InnerException)
+            {
+                if (current is not DbException)
+                {
+                    continue;
+                }
+
+                var message = current.Message ?? string.Empty;
+                if (message.Contains("invalid column name", StringComparison.OrdinalIgnoreCase)
+                    || message.Contains("unknown column", StringComparison.OrdinalIgnoreCase)
+                    || message.Contains("no such column", StringComparison.OrdinalIgnoreCase)
+                    || (message.Contains("column", StringComparison.OrdinalIgnoreCase)
+                        && message.Contains("does not exist", StringComparison.OrdinalIgnoreCase))
+                    || message.Contains("ora-00904", StringComparison.OrdinalIgnoreCase)
+                    || message.Contains("invalid identifier", StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }

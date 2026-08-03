@@ -526,7 +526,12 @@ namespace Senparc.Ncf.XncfBase
         /// <param name="registerService">CO2NET 注册对象</param>
         /// <param name="senparcCoreSetting">SenparcCoreSetting</param>
         /// <returns></returns>
-        public static IApplicationBuilder UseXncfModules(this IApplicationBuilder app, IRegisterService registerService, SenparcCoreSetting senparcCoreSetting = null, bool autoRunInstall = false)
+        public static IApplicationBuilder UseXncfModules(
+            this IApplicationBuilder app,
+            IRegisterService registerService,
+            SenparcCoreSetting senparcCoreSetting = null,
+            bool autoRunInstall = false,
+            bool startBackgroundThreads = true)
         {
             if (senparcCoreSetting == null)
             {
@@ -576,22 +581,10 @@ namespace Senparc.Ncf.XncfBase
                     }
                 }
 
-                //执行线程
-                if (register is IXncfThread threadRegister)
+                // 数据库升级模式和维护模式必须先完成架构检查，不能提前启动依赖业务表的后台线程。
+                if (startBackgroundThreads)
                 {
-                    try
-                    {
-                        XncfThreadBuilder xncfThreadBuilder = new XncfThreadBuilder();
-                        threadRegister.ThreadConfig(xncfThreadBuilder);
-                        xncfThreadBuilder.Build(app, register);
-                    }
-                    catch (Exception ex)
-                    {
-                        SenparcTrace.BaseExceptionLog(ex);
-                    }
-
-                    //任意一个 ThreadXncf 已经载入
-                    Ncf.Core.Config.SiteConfig.NcfCoreState.AnyThreadXncfLoaded = true;
+                    StartXncfThread(app, register);
                 }
 
 
@@ -602,8 +595,8 @@ namespace Senparc.Ncf.XncfBase
                 }
             }
 
-            //所有 ThreadXncf 已经载入
-            Ncf.Core.Config.SiteConfig.NcfCoreState.AllThreadXncfLoaded = true;
+            // 延迟模式会在数据库确认 Ready 后显式调用 StartXncfThreads()。
+            Ncf.Core.Config.SiteConfig.NcfCoreState.AllThreadXncfLoaded = startBackgroundThreads;
             //所有 UseXncfModule 已经执行完成
             Ncf.Core.Config.SiteConfig.NcfCoreState.AllUseXncfModuleApplied = true;
 
@@ -624,6 +617,51 @@ namespace Senparc.Ncf.XncfBase
             }
 
             return app;
+        }
+
+        private static readonly object XncfThreadStartLock = new object();
+
+        /// <summary>
+        /// 在数据库架构确认可用后启动所有 XNCF 后台线程。重复调用不会重复创建线程。
+        /// </summary>
+        public static IApplicationBuilder StartXncfThreads(this IApplicationBuilder app)
+        {
+            lock (XncfThreadStartLock)
+            {
+                if (Ncf.Core.Config.SiteConfig.NcfCoreState.AllThreadXncfLoaded)
+                {
+                    return app;
+                }
+
+                foreach (var register in XncfRegisterManager.RegisterList)
+                {
+                    StartXncfThread(app, register);
+                }
+
+                Ncf.Core.Config.SiteConfig.NcfCoreState.AllThreadXncfLoaded = true;
+            }
+
+            return app;
+        }
+
+        private static void StartXncfThread(IApplicationBuilder app, IXncfRegister register)
+        {
+            if (register is not IXncfThread threadRegister)
+            {
+                return;
+            }
+
+            try
+            {
+                var xncfThreadBuilder = new XncfThreadBuilder();
+                threadRegister.ThreadConfig(xncfThreadBuilder);
+                xncfThreadBuilder.Build(app, register);
+                Ncf.Core.Config.SiteConfig.NcfCoreState.AnyThreadXncfLoaded = true;
+            }
+            catch (Exception ex)
+            {
+                SenparcTrace.BaseExceptionLog(ex);
+            }
         }
 
         /// <summary>

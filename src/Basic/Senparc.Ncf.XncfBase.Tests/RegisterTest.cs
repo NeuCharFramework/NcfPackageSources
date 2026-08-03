@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Tests;
 using Senparc.Ncf.Database.Sqlite;
+using Senparc.Xncf.SystemCore.Domain.Database;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 using System;
@@ -39,6 +41,14 @@ namespace Senparc.Ncf.XncfBase.Tests
         {
             Console.WriteLine("Uninstall");
             await unsinstallFunc().ConfigureAwait(false);
+        }
+
+        public DbContext CreateDbContextForTest(
+            IServiceProvider serviceProvider,
+            Type dbContextType,
+            DbContextOptions dbContextOptions)
+        {
+            return CreateXncfDbContext(serviceProvider, dbContextType, dbContextOptions);
         }
     }
 
@@ -107,6 +117,76 @@ namespace Senparc.Ncf.XncfBase.Tests
             }
 
             Assert.IsTrue(Senparc.Ncf.XncfBase.XncfRegisterManager.RegisterList.Count > 0);
+        }
+    }
+
+    [TestClass]
+    public class XncfDbContextCreationTests
+    {
+        private sealed class ScopeMarker
+        {
+        }
+
+        private sealed class OptionsOnlyDbContext : DbContext
+        {
+            public OptionsOnlyDbContext(DbContextOptions<OptionsOnlyDbContext> options)
+                : base(options)
+            {
+            }
+        }
+
+        private sealed class ServiceProviderDbContext : DbContext
+        {
+            public IServiceProvider ConstructorServiceProvider { get; }
+
+            public ServiceProviderDbContext(
+                DbContextOptions<ServiceProviderDbContext> options,
+                IServiceProvider serviceProvider)
+                : base(options)
+            {
+                ConstructorServiceProvider = serviceProvider;
+            }
+        }
+
+        [TestMethod]
+        public void CreateXncfDbContext_ShouldSupportOptionsOnlyConstructor()
+        {
+            using var serviceProvider = new ServiceCollection().BuildServiceProvider();
+            using var dbContext = new TestModuleRegister().CreateDbContextForTest(
+                serviceProvider,
+                typeof(OptionsOnlyDbContext),
+                new DbContextOptionsBuilder<OptionsOnlyDbContext>().Options);
+
+            Assert.IsInstanceOfType<OptionsOnlyDbContext>(dbContext);
+        }
+
+        [TestMethod]
+        public void CreateXncfDbContext_ShouldResolveAdditionalConstructorDependencies()
+        {
+            var scopeMarker = new ScopeMarker();
+            using var serviceProvider = new ServiceCollection()
+                .AddSingleton(scopeMarker)
+                .BuildServiceProvider();
+            using var dbContext = (ServiceProviderDbContext)new TestModuleRegister().CreateDbContextForTest(
+                serviceProvider,
+                typeof(ServiceProviderDbContext),
+                new DbContextOptionsBuilder<ServiceProviderDbContext>().Options);
+
+            Assert.AreSame(
+                scopeMarker,
+                dbContext.ConstructorServiceProvider.GetRequiredService<ScopeMarker>());
+        }
+
+        [TestMethod]
+        public void CreateXncfDbContext_ShouldCreateSystemCoreSqlServerContext()
+        {
+            using var serviceProvider = new ServiceCollection().BuildServiceProvider();
+            using var dbContext = new TestModuleRegister().CreateDbContextForTest(
+                serviceProvider,
+                typeof(BasePoolEntities_SqlServer),
+                new DbContextOptionsBuilder<BasePoolEntities_SqlServer>().Options);
+
+            Assert.IsInstanceOfType<BasePoolEntities_SqlServer>(dbContext);
         }
     }
 }

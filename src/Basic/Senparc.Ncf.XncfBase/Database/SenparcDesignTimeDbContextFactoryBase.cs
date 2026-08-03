@@ -219,7 +219,8 @@ namespace Senparc.Ncf.XncfBase.Database
             Console.WriteLine(Senparc.Ncf.Core.VersionManager.GetVersionNote(_ncfVersion, _note));
 
             Console.WriteLine("=======  Connection String  =======");
-            Console.WriteLine(sqlConnection);
+            // 连接字符串通常包含数据库账号和密码，设计时日志只确认配置已加载，禁止输出明文。
+            Console.WriteLine("Connection string loaded (sensitive value hidden).");
             Console.WriteLine("===================================");
             Console.WriteLine("");
             Console.WriteLine("=======  Start XNCF Engine  =======");

@@ -22,6 +22,7 @@ using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.Ncf.Core.Utility;
 
 namespace Senparc.Ncf.Core.Cache
 {
@@ -46,12 +47,22 @@ namespace Senparc.Ncf.Core.Cache
             }
             catch (Exception ex)
             {
-                var msg = @$"FullSystemConfigCache 访问数据库异常，推测系统未安装或未正确配置数据库。
+                var msg = @$"FullSystemConfigCache 访问数据库异常，可能是首次安装、架构待升级或数据库连接不可用。
 提示信息：
 {ex.Message}
 {ex.StackTrace}
 ";
-                new NcfUninstallException(msg, null);
+                if (DatabaseInstallState.IsSchemaUpgradeRequired(ex))
+                {
+                    throw new NcfDatabaseUpgradeRequiredException(msg, ex);
+                }
+
+                if (DatabaseInstallState.IsDatabaseUnavailableForInstallation(ex))
+                {
+                    throw new NcfUninstallException(msg, ex);
+                }
+
+                throw new NcfDatabaseException(msg, null, _dataContext.BaseDataContext?.GetType(), ex);
             }
 
             FullSystemConfig fullSystemConfig;
