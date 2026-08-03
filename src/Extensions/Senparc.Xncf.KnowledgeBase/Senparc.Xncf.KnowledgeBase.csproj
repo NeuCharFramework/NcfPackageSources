@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.0-preview5</Version>
+    <Version>0.5.0-preview6</Version>
     <AssemblyName>Senparc.Xncf.KnowledgeBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.KnowledgeBase</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -41,6 +41,10 @@
 		[2026-07-31] v0.4.0-preview5 扩展 KnowledgeBase 管理界面的多语言能力
 		1、补齐知识库编辑、检索测试、菜单与交互文案的多语言资源
 		2、升级 Senparc.AI 组件与 CO2NET WebApi 兼容依赖
+		[2026-08-04] v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+		1、扩展知识库及条目生命周期字段并补齐六类数据库迁移与快照
+		2、完善知识库管理页、应用服务、召回测试与请求响应模型
+		3、支持 AgentsManager 按知识库状态完成关联和调用
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -50,6 +54,10 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <EmbeddedResource Include="wwwroot\**\*" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
   </ItemGroup>

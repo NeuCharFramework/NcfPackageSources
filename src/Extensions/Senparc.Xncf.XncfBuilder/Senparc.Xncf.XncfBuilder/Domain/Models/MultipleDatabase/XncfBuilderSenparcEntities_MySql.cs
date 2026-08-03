@@ -6,7 +6,6 @@ using Senparc.Ncf.Database;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using Senparc.Ncf.XncfBase.Database;
 using System;
-using System.IO;
 
 namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
 {
@@ -30,15 +29,12 @@ namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
     {
         protected override Action<IApplicationBuilder> AppAction => app =>
         {
-            //指定其他数据库
-            app.UseNcfDatabase("Senparc.Ncf.Database.MySql", "Senparc.Ncf.Database.MySql", "MySqlDatabaseConfiguration");
+            // 迁移生成/模型校验不应依赖真实 MySQL 在线；正常运行时仍使用自动检测配置。
+            app.UseNcfDatabase("Senparc.Ncf.Database.MySql", "Senparc.Ncf.Database.MySql", "MySqlDesignTimeDatabaseConfiguration");
         };
 
         public SenparcDbContextFactory_MySql()
-            : base(
-                 /* Debug模式下项目根目录
-                 /* 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息 */
-                 Path.Combine(AppContext.BaseDirectory, $"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}"))
+            : base(SenparcDbContextFactoryConfig.RootDictionaryPath)
         {
 
         }

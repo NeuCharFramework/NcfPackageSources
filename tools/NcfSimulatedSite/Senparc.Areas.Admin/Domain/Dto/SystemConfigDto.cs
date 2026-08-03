@@ -12,6 +12,10 @@
 
     修改标识：Senparc - 20260705
     修改描述：v0.0.4 新增登录超时配置并补齐多数据库迁移支持
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.3.0 新增后台同步管理与可配置多语言页脚
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -36,6 +40,8 @@ namespace Senparc.Areas.Admin.Domain.Dto
         public string TenPayAppId { get; set; }
 
         public bool? HideModuleManager { get; set; }
+
+        public string FooterContent { get; set; }
     }
 
     public class SystemConfig_CreateOrUpdateDto
@@ -50,5 +56,7 @@ namespace Senparc.Areas.Admin.Domain.Dto
         public string TenPayAppId { get; set; }
 
         public bool? HideModuleManager { get; set; }
+
+        public string FooterContent { get; set; }
     }
 }

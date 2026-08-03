@@ -19,6 +19,9 @@
     修改标识：Senparc - 20260717
     修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http.Timeouts;
@@ -32,6 +35,7 @@ using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Utility;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
+using Senparc.Xncf.AgentsManager.Domain.Models.Usage;
 using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
@@ -44,6 +48,7 @@ using Senparc.Xncf.PromptRange.Domain.Models.Entities;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
+using Senparc.Xncf.KnowledgeBase.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,9 +94,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 var promptTemplate = promptResult.PromptItem.Content;// Prompt
 
+                await ValidateKnowledgeBaseBindingAsync(request.KnowledgeBaseId);
                 var agentTemplateDto = new AgentTemplateDto(request.Name, promptCode, true,
                     request.Description, promptCode,
-                    Enum.Parse<HookRobotType>(request.HookRobotType), request.HookRobotParameter, request.FunctionCallNames);
+                    Enum.Parse<HookRobotType>(request.HookRobotType), request.HookRobotParameter,
+                    null, request.FunctionCallNames, null, request.KnowledgeBaseId);
 
                 await this._agentsTemplateService.UpdateAgentTemplateAsync(request.Id, agentTemplateDto);
 
@@ -299,6 +306,8 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                     dtoList.Add(dto);
                 }
 
+                await PopulateAgentMetadataAsync(dtoList);
+
                 var listDto = new PagedList<AgentTemplateSimpleStatusDto>(dtoList,
                     list.PageIndex, list.PageCount, list.TotalCount, list.SkipCount);
 
@@ -370,7 +379,9 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
 
             return await this.GetResponseAsync<AgentTemplateDto>(async (response, logger) =>
             {
+                await ValidateKnowledgeBaseBindingAsync(agentTemplateDto.KnowledgeBaseId);
                 var newDto = await this._agentsTemplateService.UpdateAgentTemplateAsync(agentTemplateDto.Id, agentTemplateDto);
+                await PopulateAgentMetadataAsync(new[] { newDto });
                 return newDto;
             });
         }
@@ -388,6 +399,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 var agentTemplate = await this._agentsTemplateService.GetObjectAsync(z => z.Id == id, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
 
                 var dto = this._agentsTemplateService.Mapping<AgentTemplateDto>(agentTemplate);
+                await PopulateAgentMetadataAsync(new[] { dto });
                 var result = new AgentTemplate_GetItemResponse()
                 {
                     AgentTemplate = dto,
@@ -410,6 +422,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 var agentTemplate = await this._agentsTemplateService.GetObjectAsync(z => z.Id == id, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
 
                 var agentTemplateDto = this._agentsTemplateService.Mapping<AgentTemplateDto>(agentTemplate);
+                await PopulateAgentMetadataAsync(new[] { agentTemplateDto });
 
                 var promptCode = agentTemplateDto.PromptCode;
                 var promptItem = await this._promptItemService.GetBestPromptAsync(promptCode, true);
@@ -505,8 +518,125 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 var result = list.Select(z =>
                     _agentsTemplateService.Mapping<AgentTemplateSimpleStatusDto>(z)).ToList();
 
+                await PopulateAgentMetadataAsync(result);
+
                 return result;
             });
+        }
+
+        [ApiBind]
+        public async Task<AppResponseBase<List<KnowledgeBaseOptionResponse>>> GetKnowledgeBaseOptions()
+        {
+            return await this.GetResponseAsync<List<KnowledgeBaseOptionResponse>>(async (response, logger) =>
+            {
+                var knowledgeBaseService = base.GetService<KnowledgeBaseService>();
+                if (knowledgeBaseService == null)
+                {
+                    return new List<KnowledgeBaseOptionResponse>();
+                }
+
+                var list = await knowledgeBaseService.GetFullListAsync(z => true, z => z.Name, Ncf.Core.Enums.OrderingType.Ascending);
+                return list.Select(z => new KnowledgeBaseOptionResponse
+                {
+                    Id = z.Id,
+                    Name = z.Name,
+                    IsEmbedded = z.EmbeddedTime.HasValue && !string.IsNullOrWhiteSpace(z.VectorCollectionName)
+                }).ToList();
+            });
+        }
+
+        private async Task ValidateKnowledgeBaseBindingAsync(int? knowledgeBaseId)
+        {
+            if (!knowledgeBaseId.HasValue)
+            {
+                return;
+            }
+
+            var knowledgeBaseService = base.GetService<KnowledgeBaseService>()
+                ?? throw new InvalidOperationException("KnowledgeBase 模块服务未启用，无法绑定知识库。");
+            var knowledgeBase = await knowledgeBaseService.GetObjectAsync(z => z.Id == knowledgeBaseId.Value)
+                ?? throw new InvalidOperationException($"绑定的知识库不存在：{knowledgeBaseId.Value}");
+            if (!knowledgeBase.EmbeddedTime.HasValue || string.IsNullOrWhiteSpace(knowledgeBase.VectorCollectionName))
+            {
+                throw new InvalidOperationException($"知识库“{knowledgeBase.Name}”尚未完成向量化，暂不能绑定到 Agent。");
+            }
+        }
+
+        private async Task PopulateAgentMetadataAsync<TAgentDto>(IEnumerable<TAgentDto> agentDtos)
+            where TAgentDto : AgentTemplateDto
+        {
+            var dtoList = agentDtos?.Where(z => z != null).ToList() ?? new List<TAgentDto>();
+            if (dtoList.Count == 0)
+            {
+                return;
+            }
+
+            var agentIds = dtoList.Select(z => z.Id).Where(z => z > 0).Distinct().ToList();
+            var historyService = base.GetRequiredService<ChatGroupHistoryService>();
+            var histories = agentIds.Count == 0
+                ? new List<Models.DatabaseModel.Models.ChatGroupHistory>()
+                : await historyService.GetFullListAsync(z => z.FromAgentTemplateId.HasValue && agentIds.Contains(z.FromAgentTemplateId.Value));
+
+            var historyGroups = histories.GroupBy(z => z.FromAgentTemplateId.Value)
+                .ToDictionary(z => z.Key, z => z.ToList());
+            foreach (var dto in dtoList)
+            {
+                if (!historyGroups.TryGetValue(dto.Id, out var agentHistories))
+                {
+                    continue;
+                }
+
+                var completedHistories = agentHistories
+                    .Where(z => z.Status == Models.DatabaseModel.Models.Status.Finished)
+                    .ToList();
+                dto.CompletedConversationRounds = completedHistories.Count;
+                dto.CompletedTaskCount = completedHistories.Select(z => z.ChatTaskId).Distinct().Count();
+                dto.LastActiveTime = agentHistories.Max(z => z.LastUpdateTime);
+
+                long totalResponseMilliseconds = 0;
+                var responseCount = 0;
+                foreach (var history in agentHistories)
+                {
+                    if (!ChatUsageRemarkCodec.TryDecodeMessage(history.AdminRemark, out var usage))
+                    {
+                        continue;
+                    }
+
+                    dto.PromptTokens += usage.PromptTokens;
+                    dto.CompletionTokens += usage.CompletionTokens;
+                    dto.TotalTokens += usage.TotalTokens;
+                    totalResponseMilliseconds += usage.ResponseMilliseconds;
+                    responseCount++;
+                }
+
+                dto.AverageResponseMilliseconds = responseCount == 0
+                    ? 0
+                    : Math.Round((double)totalResponseMilliseconds / responseCount, 2);
+            }
+
+            var knowledgeBaseIds = dtoList.Where(z => z.KnowledgeBaseId.HasValue)
+                .Select(z => z.KnowledgeBaseId.Value)
+                .Distinct()
+                .ToList();
+            var knowledgeBaseService = base.GetService<KnowledgeBaseService>();
+            if (knowledgeBaseService == null || knowledgeBaseIds.Count == 0)
+            {
+                return;
+            }
+
+            var knowledgeBases = await knowledgeBaseService.GetFullListAsync(z => knowledgeBaseIds.Contains(z.Id));
+            var knowledgeBaseNames = knowledgeBases.ToDictionary(z => z.Id, z => z.Name);
+            foreach (var dto in dtoList.Where(z => z.KnowledgeBaseId.HasValue))
+            {
+                if (knowledgeBaseNames.TryGetValue(dto.KnowledgeBaseId.Value, out var name))
+                {
+                    dto.KnowledgeBaseName = name;
+                }
+                else
+                {
+                    dto.KnowledgeBaseName = $"知识库不可用（ID: {dto.KnowledgeBaseId.Value}）";
+                }
+            }
         }
 
         /// <summary>

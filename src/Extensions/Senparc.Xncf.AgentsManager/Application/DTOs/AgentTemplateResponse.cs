@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -35,5 +38,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
     public class AgentTemplate_GetItemStatusResponse
     {
         public AgentTemplateStatusDto AgentTemplateStatus { get; set; }
+    }
+
+    public class KnowledgeBaseOptionResponse
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool IsEmbedded { get; set; }
     }
 }

@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -25,5 +28,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Response
         public double? Score { get; set; }
         public string Content { get; set; }
         public string RecallTime { get; set; }
+        public string SourceName { get; set; }
+        public string SourceLink { get; set; }
     }
 }

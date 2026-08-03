@@ -100,6 +100,7 @@ var app = new Vue({
         }
       ],
       agentList: [],
+      knowledgeBaseOptions: [],
       fillCardNum: 0, // 为了保持最后一行的样式 填充的card数量
       agentListElResizeObserver: null,
       scrollbarAgentIndex: '', // 侧边智能体index 默认全部
@@ -292,6 +293,7 @@ var app = new Vue({
         avastar: '/images/AgentsManager/avatar/avatar1.png', // 头像
         functionCallNames: '', // Function Call 名称，逗号分隔
         mcpEndpoints: '', // MCP Endpoints
+        knowledgeBaseId: null, // 绑定的知识库
       },
       agentFormRules: {
         name: [
@@ -525,6 +527,7 @@ var app = new Vue({
   created() {
     // 在组件创建时获取插件类型列表
     this.getPluginTypes();
+    this.getKnowledgeBaseOptions();
   },
   mounted() {
     this.tabsActiveName = "first";
@@ -2022,6 +2025,9 @@ var app = new Vue({
       const numeric = Number(value || 0)
       if (!Number.isFinite(numeric)) return '0'
       return numeric.toLocaleString('en-US')
+    },
+    formatActivityTime(value) {
+      return value ? formatDate(value) : '暂无'
     },
     formatResponseMilliseconds(milliseconds, emptyText = '--') {
       const numeric = Number(milliseconds || 0)
@@ -4419,6 +4425,18 @@ var app = new Vue({
       } catch (error) {
         console.error('获取插件类型失败:', error);
         this.$message.error('获取插件类型失败');
+      }
+    },
+
+    async getKnowledgeBaseOptions() {
+      try {
+        const res = await serviceAM.get('/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetKnowledgeBaseOptions')
+        if (res?.data?.success) {
+          this.knowledgeBaseOptions = Array.isArray(res.data.data) ? res.data.data : []
+        }
+      } catch (error) {
+        console.error('获取知识库列表失败:', error)
+        this.knowledgeBaseOptions = []
       }
     },
 

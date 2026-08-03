@@ -5,11 +5,16 @@
     文件功能描述：DesktopBridge 配对请求和短期会话凭据存储
 
     创建标识：Senparc - 20260801
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.3.0-preview3 新增桌面端同步提供程序
+
 ----------------------------------------------------------------*/
 
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.WebUtilities;
+using Senparc.Ncf.Shared.Abstractions.Synchro;
 using Senparc.Xncf.DesktopBridge.Models;
 
 namespace Senparc.Xncf.DesktopBridge.Services;
@@ -27,16 +32,18 @@ public sealed class DesktopBridgeCredentialStore
 
     private readonly object _gate = new();
     private readonly byte[]? _legacyTokenHash;
+    private readonly ISynchroPublisher? _synchroPublisher;
     private readonly Dictionary<Guid, PendingPairing> _pendingPairings = new();
     private readonly Dictionary<Guid, SessionCredential> _sessions = new();
 
-    public DesktopBridgeCredentialStore()
-        : this(Environment.GetEnvironmentVariable(DesktopBridgeTokenValidator.TokenEnvironmentVariable))
+    public DesktopBridgeCredentialStore(ISynchroPublisher? synchroPublisher = null)
+        : this(Environment.GetEnvironmentVariable(DesktopBridgeTokenValidator.TokenEnvironmentVariable), synchroPublisher)
     {
     }
 
-    internal DesktopBridgeCredentialStore(string? legacyToken)
+    internal DesktopBridgeCredentialStore(string? legacyToken, ISynchroPublisher? synchroPublisher = null)
     {
+        _synchroPublisher = synchroPublisher;
         if (!string.IsNullOrWhiteSpace(legacyToken))
         {
             _legacyTokenHash = HashToken(legacyToken);
@@ -86,6 +93,7 @@ public sealed class DesktopBridgeCredentialStore
                 HashToken(pollSecret),
                 now,
                 expiresAt);
+            NotifySynchroChanged();
 
             return new DesktopBridgePairingCreateResponse(
                 requestId,
@@ -171,6 +179,7 @@ public sealed class DesktopBridgeCredentialStore
             pairing.SessionId = sessionId;
             pairing.SessionTokenDelivery = sessionToken;
             pairing.SessionExpiresAt = sessionExpiresAt;
+            NotifySynchroChanged();
             return true;
         }
     }
@@ -188,6 +197,7 @@ public sealed class DesktopBridgeCredentialStore
             }
 
             pairing.Status = PairingStatus.Denied;
+            NotifySynchroChanged();
             return true;
         }
     }
@@ -211,6 +221,20 @@ public sealed class DesktopBridgeCredentialStore
             }
 
             return true;
+        }
+    }
+
+    private void NotifySynchroChanged()
+    {
+        if (_synchroPublisher == null)
+        {
+            return;
+        }
+
+        var notification = _synchroPublisher.NotifyChangedAsync(DesktopBridgeSynchroProvider.ProviderIdValue);
+        if (!notification.IsCompletedSuccessfully)
+        {
+            _ = notification.AsTask();
         }
     }
 

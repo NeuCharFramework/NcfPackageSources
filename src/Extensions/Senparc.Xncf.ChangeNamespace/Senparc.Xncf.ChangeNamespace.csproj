@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1</TargetFrameworks>
-    <Version>0.22.2-preview4</Version>
+    <Version>0.22.3-preview5</Version>
     <AssemblyName>Senparc.Xncf.ChangeNamespace</AssemblyName>
     <RootNamespace>Senparc.Xncf.ChangeNamespace</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -35,6 +35,7 @@
       4、补充并统一多语言资源键及资源文件
       [2026-07-29] v0.22.1-preview3 Dependency update from Senparc.Ncf.XncfBase to 0.23.4-preview3
       [2026-07-31] v0.22.2-preview4 Dependency update from Senparc.Ncf.XncfBase to 0.23.5-preview4
+      [2026-08-04] v0.22.3-preview5 Dependency update from Senparc.Ncf.XncfBase to 0.24.0-preview5
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

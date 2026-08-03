@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.4</Version>
+    <Version>0.0.5</Version>
     <PackageReleaseNotes>
 [2026-07-07] v0.0.1 Dependency updates from upstream modules
 1、Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
@@ -13,6 +13,10 @@
 4、同步 PromptRange 0.17.0-preview5 的剪贴板与内嵌 WebView 兼容性改进
 [2026-07-29] v0.0.3 Dependency update from Senparc.Xncf.PromptRange to 0.17.1-preview6
 [2026-07-31] v0.0.4 Dependency update from Senparc.Xncf.PromptRange to 0.18.0-preview7
+[2026-08-04] v0.0.5 Dependency updates from upstream projects
+1、Dependency update from Senparc.Ncf.Service to 0.23.5-preview5
+2、Dependency update from Senparc.Ncf.UnitTestExtension to 0.3.18-preview.5
+3、Dependency update from Senparc.Xncf.PromptRange to 0.19.0-preview8
 </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

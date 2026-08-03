@@ -79,6 +79,8 @@
   <data name="Dashboard.UnknownModel" xml:space="preserve"><value>不明</value></data>
   <data name="Dashboard.ModelPrefix" xml:space="preserve"><value>Model#{0}</value></data>
   <data name="Dashboard.Refreshed" xml:space="preserve"><value>ダッシュボードを更新しました</value></data>
+  <data name="Auth.SessionExpired" xml:space="preserve"><value>セッションの有効期限が切れました。再度ログインしてください。</value></data>
+  <data name="Auth.AccessDenied" xml:space="preserve"><value>この機能にアクセスする権限がありません。</value></data>
   <data name="Model.SearchPlaceholder" xml:space="preserve"><value>内容を入力</value></data>
   <data name="Model.Add" xml:space="preserve"><value>追加</value></data>
   <data name="Model.BatchDelete" xml:space="preserve"><value>一括削除</value></data>

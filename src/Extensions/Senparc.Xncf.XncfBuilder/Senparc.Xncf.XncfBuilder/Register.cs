@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：Register.cs
@@ -15,6 +15,9 @@
 
     修改标识：Senparc - 20260729
     修改描述：v0.37.1-preview6 默认关闭未受保护的 Builder MCP 路由
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
 
 ----------------------------------------------------------------*/
 
@@ -56,7 +59,7 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override string Uid => "C2E1F87F-2DCE-4921-87CE-36923ED0D6EA";//必须确保全局唯一，生成后必须固定
 
-        public override string Version => "0.10.1";//必须填写版本号
+        public override string Version => "0.10.3";//必须填写版本号
 
         public override string MenuName => XncfBuilderResource.Get("Module.XncfBuilder.MenuName", "XNCF 模块生成器");
 
@@ -107,6 +110,11 @@ namespace Senparc.Xncf.XncfBuilder
             services.AddScoped<ConfigService>();
             services.AddScoped<PromptBuilderService>();
 
+            if (!services.Any(d => d.ServiceType == typeof(IXncfPreviewStateStore)))
+            {
+                services.AddSingleton<IXncfPreviewStateStore, XncfPreviewStateStore>();
+            }
+
             if (!services.Any(d => d.ServiceType == typeof(XncfPreviewService)))
             {
                 services.AddSingleton<XncfPreviewService>();
@@ -135,3 +143,4 @@ namespace Senparc.Xncf.XncfBuilder
         }
     }
 }
+

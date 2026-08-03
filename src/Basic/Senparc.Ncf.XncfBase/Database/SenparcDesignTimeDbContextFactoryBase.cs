@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.24.0-preview5 统一数据库设计时工厂与函数参数处理
+
 ----------------------------------------------------------------*/
 
 using log4net;
@@ -219,7 +222,8 @@ namespace Senparc.Ncf.XncfBase.Database
             Console.WriteLine(Senparc.Ncf.Core.VersionManager.GetVersionNote(_ncfVersion, _note));
 
             Console.WriteLine("=======  Connection String  =======");
-            Console.WriteLine(sqlConnection);
+            // 连接字符串通常包含数据库账号和密码，设计时日志只确认配置已加载，禁止输出明文。
+            Console.WriteLine("Connection string loaded (sensitive value hidden).");
             Console.WriteLine("===================================");
             Console.WriteLine("");
             Console.WriteLine("=======  Start XNCF Engine  =======");

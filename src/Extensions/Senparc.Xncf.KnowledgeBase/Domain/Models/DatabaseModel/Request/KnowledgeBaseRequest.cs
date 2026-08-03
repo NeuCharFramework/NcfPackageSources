@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -23,6 +26,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Request
 {
     public class KnowledgeBaseRequest
     {
+        public int Id { get; set; }
         /// <summary>
         /// 训练模型Id
         /// </summary>
@@ -39,5 +43,12 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Request
         /// 名称
         /// </summary>
         public string Name { get; set; }
+
+        public string Content { get; set; }
+
+        /// <summary>
+        /// null 表示不修改文件关联，空集合表示清空。
+        /// </summary>
+        public List<int> NcfFileIds { get; set; }
     }
 }

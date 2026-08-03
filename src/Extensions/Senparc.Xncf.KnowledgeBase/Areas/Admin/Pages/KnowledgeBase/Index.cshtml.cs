@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -56,8 +59,11 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBase
 
         public async Task<IActionResult> OnGetKnowledgeBasesAsync(string keyword, string orderField, int pageIndex, int pageSize)
         {
+            keyword = keyword?.Trim();
+            pageIndex = Math.Max(1, pageIndex);
+            pageSize = Math.Clamp(pageSize, 1, 200);
             var seh = new SenparcExpressionHelper<Models.DatabaseModel.KnowledgeBase>();
-            //seh.ValueCompare.AndAlso(!string.IsNullOrEmpty(keyword), _ => _.Name.Contains(keyword));
+            seh.ValueCompare.AndAlso(!string.IsNullOrEmpty(keyword), _ => _.Name.Contains(keyword));
             var where = seh.BuildWhereExpression();
             var response = await _knowledgeBaseService.GetObjectListAsync(pageIndex, pageSize, where, orderField);
             return Ok(new
@@ -73,6 +79,8 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBase
                             _.ChatModelId,
                             _.Name,
                             _.Content,
+                            _.EmbeddedTime,
+                            _.VectorCollectionName,
                             _.AddTime
                         })
                     });

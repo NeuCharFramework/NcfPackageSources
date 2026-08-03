@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.28.0-preview5 新增数据库升级维护状态与可配置页脚安全处理
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -49,7 +52,15 @@ namespace Senparc.Ncf.Core.Models
         [MaxLength(100)]
         public string NeuCharAppSecret { get; private set; }
 
-        public SystemConfig(string systemName, string mchId, string mchKey, string tenPayAppId, bool? hideModuleManager, int neuCharDeveloperId, string neuCharAppKey, string neuCharAppSecret)
+        /// <summary>
+        /// 站点与管理后台共用的底部版权内容。允许的 HTML 会在渲染时由
+        /// <see cref="Utility.FooterContentSanitizer"/> 限制为安全链接。
+        /// </summary>
+        [Required]
+        [MaxLength(2000)]
+        public string FooterContent { get; private set; }
+
+        public SystemConfig(string systemName, string mchId, string mchKey, string tenPayAppId, bool? hideModuleManager, int neuCharDeveloperId, string neuCharAppKey, string neuCharAppSecret, string footerContent = null)
         {
             SystemName = systemName;
             MchId = mchId;
@@ -59,6 +70,7 @@ namespace Senparc.Ncf.Core.Models
             NeuCharDeveloperId = neuCharDeveloperId;
             NeuCharAppKey = neuCharAppKey;
             NeuCharAppSecret = neuCharAppSecret;
+            FooterContent = NormalizeFooterContent(footerContent);
         }
 
         /// <summary>
@@ -86,6 +98,26 @@ namespace Senparc.Ncf.Core.Models
             this.NeuCharDeveloperId = developerId;
             this.NeuCharAppKey = appKey;
             this.NeuCharAppSecret = appSecret;
+        }
+
+        /// <summary>
+        /// 更新站点与管理后台共用的底部版权内容。
+        /// </summary>
+        public void UpdateFooterContent(string footerContent)
+        {
+            FooterContent = NormalizeFooterContent(footerContent);
+        }
+
+        public static string CreateDefaultFooterContent(DateTime? now = null)
+        {
+            return $"© {(now ?? DateTime.Now).Year} Senparc";
+        }
+
+        private static string NormalizeFooterContent(string footerContent)
+        {
+            return string.IsNullOrWhiteSpace(footerContent)
+                ? CreateDefaultFooterContent()
+                : footerContent.Trim();
         }
     }
 }

@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +49,7 @@ namespace Senparc.Xncf.AgentsManager
             //modelBuilder.ApplyConfiguration(new AreaTemplate_ColorConfigurationMapping());
 
             modelBuilder.ApplyConfiguration(new ChatGroupConfigurationMapping());
+            modelBuilder.ApplyConfiguration(new AgentTemplateConfigurationMapping());
         }
 
         public void AddXncfDatabaseModule(IServiceCollection services)

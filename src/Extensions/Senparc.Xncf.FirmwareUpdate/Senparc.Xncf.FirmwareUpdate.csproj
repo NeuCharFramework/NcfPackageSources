@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.3.2-preview4</Version>
+    <Version>0.4.0-preview5</Version>
     <AssemblyName>Senparc.Xncf.FirmwareUpdate</AssemblyName>
     <RootNamespace>Senparc.Xncf.FirmwareUpdate</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
-    <Description>NCF 桌面端安装包镜像：从 GitHub Release 同步至当前站点 wwwroot 下的 NcfPackages，并提供备用下载元数据</Description>
+    <Description>NCF Host 与 NcfDesktop 安装包镜像：从各自的 GitHub Release 同步至 NcfPackages/host 和 desktop，并提供独立下载清单</Description>
     <Copyright>NeuCharFramework</Copyright>
     <PackageTags>NeuCharFramework,NCF,Senparc.Xncf.FirmwareUpdate</PackageTags>
     <Authors>NeuCharFramework</Authors>
@@ -25,6 +25,10 @@
       [2026-07-29] v0.3.1-preview3 Dependency update from Senparc.Ncf.Core to 0.26.0-preview3
       [2026-07-31] v0.3.2-preview4 升级 CO2NET WebApi 兼容依赖
       1、升级 Senparc.CO2NET.WebApi 至 2.1.9-preview 以适配 CO2NET 4.2.0
+      [2026-08-04] v0.4.0-preview5 扩展 NCF 与 NcfDesktop 发布包同步能力
+      1、增强包镜像服务对 NCF Runtime 与 NcfDesktop 发布元数据的处理
+      2、接入统一同步提供程序并补充多语言资源
+      3、移除仓库内旧 NcfDesktopApp.GUI 工程，桌面端发布与同步切换到独立 NcfDesktop 项目
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -66,6 +70,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Remove="App_Data\Database\SenparcConfig.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Senparc.Xncf.FirmwareUpdate.Tests" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App_Data\Database\SenparcConfig.config" />

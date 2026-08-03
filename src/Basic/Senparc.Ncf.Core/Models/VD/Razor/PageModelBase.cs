@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.28.0-preview5 新增数据库升级维护状态与可配置页脚安全处理
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authentication;
@@ -30,6 +33,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Core.Config;
+using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Utility;
 
 namespace Senparc.Ncf.Core.Models.VD
@@ -104,15 +108,18 @@ namespace Senparc.Ncf.Core.Models.VD
                 }
 
             }
+            catch (NcfDatabaseUpgradeRequiredException)
+            {
+                context.Result = new RedirectResult("/Maintenance/DatabaseUpgrade");
+                return Task.CompletedTask;
+            }
             catch (Exception exception) when (DatabaseInstallState.IsDatabaseUnavailableForInstallation(exception))
             {
                 // The provider exception can be wrapped by EF Core's retry strategy.
-                // Redirect when the complete exception chain indicates that the
-                // database is not available yet.
+                // Redirect only when the complete exception chain indicates that the
+                // database has not been created; schema mismatches use the maintenance page.
                 context.Result = new RedirectResult("/Install");
-
                 return Task.CompletedTask;
-
             }
             catch (NcfUninstallException)
             {

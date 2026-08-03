@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.27.0-preview4</Version>
+    <Version>0.28.0-preview5</Version>
     <AssemblyName>Senparc.Ncf.Core</AssemblyName>
     <RootNamespace>Senparc.Ncf.Core</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -65,6 +65,9 @@
 				1、新增 NcfCoreResource 及多语言资源，统一核心验证和授权提示
 				2、将通用验证错误接入文化回退机制
 				3、升级 Senparc.CO2NET 4.2.0 与 Senparc.CO2NET.WebApi 2.1.9-preview
+				[2026-08-04] v0.28.0-preview5 新增数据库升级维护状态与可配置页脚安全处理
+				1、新增数据库安装与升级状态检测、升级异常及 Razor 维护流程支持
+				2、扩展 SystemConfig.FooterContent、缓存与页脚内容安全清理能力
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

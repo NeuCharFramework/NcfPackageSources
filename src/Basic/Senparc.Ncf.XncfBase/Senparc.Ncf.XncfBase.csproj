@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>-->
-    <Version>0.23.5-preview4</Version>
+    <Version>0.24.0-preview5</Version>
     <LangVersion>10.0</LangVersion>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
@@ -67,6 +67,9 @@
 			[2026-07-29] v0.23.4-preview3 Dependency update from Senparc.Ncf.Core to 0.26.0-preview3
 			[2026-07-31] v0.23.5-preview4 升级 CO2NET 4.2.0 基础依赖
 			1、升级 Senparc.CO2NET 至 4.2.0 并保持现有项目行为兼容
+			[2026-08-04] v0.24.0-preview5 统一数据库设计时工厂与函数参数处理
+			1、扩展设计时 DbContext 工厂配置和 XNCF 数据库注册流程
+			2、优化 FunctionRender 请求参数归一化与兼容处理
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

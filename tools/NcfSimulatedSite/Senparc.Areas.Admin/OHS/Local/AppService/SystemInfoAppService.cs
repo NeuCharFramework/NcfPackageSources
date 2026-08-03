@@ -19,6 +19,9 @@
     修改标识：Senparc - 20260729
     修改描述：v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.3.0 新增灵犀内部触发测试 Function
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.Domain.Dto;
@@ -36,6 +39,7 @@ using Senparc.Areas.Admin.OHS.PL;
 using Senparc.Areas.Admin;
 using Microsoft.Extensions.Localization;
 using Senparc.Xncf.SystemManager.Domain.Service;
+using Senparc.Ncf.Shared.Abstractions.Synchro;
 using System;
 using System.Collections.Generic;
 using System.DirectoryServices.Protocols;
@@ -53,13 +57,24 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         private readonly AdminAuthConfigService _adminAuthConfigService;
         private readonly IBaseObjectCacheStrategy _cacheStrategy;
         private readonly IStringLocalizer<AdminResource> _localizer;
+        private readonly SynchroProviderCatalog _synchroProviderCatalog;
+        private readonly ISynchroPublisher _synchroPublisher;
 
-        public SystemInfoAppService(IServiceProvider serviceProvider, SystemConfigService systemConfigService, AdminAuthConfigService adminAuthConfigService, IBaseObjectCacheStrategy cacheStrategy, IStringLocalizer<AdminResource> localizer) : base(serviceProvider)
+        public SystemInfoAppService(
+            IServiceProvider serviceProvider,
+            SystemConfigService systemConfigService,
+            AdminAuthConfigService adminAuthConfigService,
+            IBaseObjectCacheStrategy cacheStrategy,
+            IStringLocalizer<AdminResource> localizer,
+            SynchroProviderCatalog synchroProviderCatalog,
+            ISynchroPublisher synchroPublisher) : base(serviceProvider)
         {
             _systemConfigService = systemConfigService;
             _adminAuthConfigService = adminAuthConfigService;
             this._cacheStrategy = cacheStrategy;
             _localizer = localizer;
+            _synchroProviderCatalog = synchroProviderCatalog;
+            _synchroPublisher = synchroPublisher;
         }
 
 
@@ -186,6 +201,29 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             }, saveLogAfterFinished: true, saveLogName: "设置登录过期配置");
 
             return response;
+        }
+
+        [FunctionRender("灵犀内部触发测试", "触发当前已安装并开放的灵犀 Provider 刷新，仅用于内部测试", typeof(Register))]
+        public async Task<StringAppResponse> TriggerSynchroTest()
+        {
+            return await this.GetStringResponseAsync(async (_, logger) =>
+            {
+                var providers = await _synchroProviderCatalog.GetAvailableProvidersAsync().ConfigureAwait(false);
+                if (providers.Count == 0)
+                {
+                    logger.Append("当前没有已安装并开放的灵犀 Provider，未发送测试通知。");
+                    return logger.GetLogs();
+                }
+
+                foreach (var provider in providers)
+                {
+                    await _synchroPublisher.NotifyChangedAsync(provider.ProviderId).ConfigureAwait(false);
+                    logger.Append($"已触发 Provider：{provider.ProviderId}（模块：{provider.ModuleUid}）");
+                }
+
+                logger.Append($"灵犀内部测试完成，共触发 {providers.Count} 个 Provider。请观察 Admin Footer 的灵犀状态是否自动刷新。");
+                return logger.GetLogs();
+            }, saveLogAfterFinished: true, saveLogName: "灵犀内部触发测试");
         }
 
         [FunctionRender("缓存测试", "测试当前缓存类型及分布式锁", typeof(Register))]

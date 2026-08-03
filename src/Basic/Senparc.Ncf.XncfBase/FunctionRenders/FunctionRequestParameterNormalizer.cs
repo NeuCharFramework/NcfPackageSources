@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：v0.23.2-preview1 增强函数请求参数归一化与占位符处理能力
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.24.0-preview5 统一数据库设计时工厂与函数参数处理
+
 ----------------------------------------------------------------*/
 using Senparc.Ncf.XncfBase.Functions;
 using System;
@@ -94,6 +97,11 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
 
         private static JsonNode NormalizeSimpleNode(Type targetType, JsonNode currentNode, FunctionParameterUiAttribute uiAttr)
         {
+            if (currentNode == null)
+            {
+                return CreateDefaultValueNode(targetType);
+            }
+
             if (IsBooleanTargetType(targetType) && TryNormalizeBooleanJsonNode(currentNode, out var boolJson))
             {
                 return boolJson;
@@ -139,6 +147,16 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
             }
 
             return JsonValue.Create(firstValue);
+        }
+
+        private static JsonNode CreateDefaultValueNode(Type targetType)
+        {
+            if (!targetType.IsValueType || Nullable.GetUnderlyingType(targetType) != null)
+            {
+                return null;
+            }
+
+            return JsonSerializer.SerializeToNode(Activator.CreateInstance(targetType), targetType);
         }
 
         private static List<string> ExtractValues(JsonNode currentNode, bool forMultiple)

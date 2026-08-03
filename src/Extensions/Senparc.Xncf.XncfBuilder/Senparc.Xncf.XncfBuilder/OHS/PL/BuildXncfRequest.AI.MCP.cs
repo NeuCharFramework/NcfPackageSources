@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -35,6 +38,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         public string FileName{get; set;}
         public string FileContent{get; set;}
         public string FilePath{get; set;}
+        public string Sha256 { get; set; }
     }
 
     public class BuildXncf_CreateOrUpdateFileResponse
@@ -42,9 +46,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         public bool Success { get; set; }
         public string Message { get; set; }
         public string FileName { get; set; }
+        public string FilePath { get; set; }
 
         public bool IsNewFile { get; set; }
-        //public string OldFileContent { get; set; }
+        public string PreviousSha256 { get; set; }
+        public string Sha256 { get; set; }
     }
 
 }

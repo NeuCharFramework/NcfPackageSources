@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260717
     修改描述：v0.3.0-preview2 为 FirmwareUpdate 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.4.0-preview5 扩展 NCF 与 NcfDesktop 发布包同步能力
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;
@@ -43,7 +46,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Icon => "fa fa-cloud-download";
 
-    public override string Description => FirmwareUpdateResource.Get("Module.FirmwareUpdate.Description", "从 GitHub 同步 NCF 桌面端安装包到当前站点 wwwroot 下的 NcfPackages，保留最近 3 个版本，并生成 latest-release.json 供 ncf.pub 与桌面端备用下载使用。");
+    public override string Description => FirmwareUpdateResource.Get("Module.FirmwareUpdate.Description", "从 GitHub 同步 NCF 运行包与 NcfDesktop 桌面应用到当前站点 wwwroot 下的 NcfPackages，并生成各自的最新版本清单供本地优先下载。");
 
     public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
     {
@@ -78,7 +81,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
     {
         services.AddHttpClient("Senparc.Xncf.FirmwareUpdate.GitHub", client =>
         {
-            client.DefaultRequestHeaders.UserAgent.ParseAdd("Senparc.Xncf.FirmwareUpdate/0.1 (+https://github.com/NeuCharFramework/NCF)");
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("Senparc.Xncf.FirmwareUpdate/0.1 (+https://github.com/NeuCharFramework)");
             client.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github+json");
         });
         services.AddScoped<NcfPackageMirrorService>();

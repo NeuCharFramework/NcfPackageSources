@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.38.0-preview7</Version>
+    <Version>0.39.0-preview8</Version>
     <LangVersion>latest</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -104,6 +104,12 @@
 			[2026-07-31] v0.38.0-preview7 扩展 XNCF 生成模板的多语言能力
 			1、生成的数据库示例页自动加载模块本地化脚本
 			2、升级 Senparc.AI 组件版本以适配 CO2NET 4.2.0
+			[2026-08-04] v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+			1、新增预览 Host、任务、状态存储与监控页面，完善会话生命周期处理
+			2、为预览实体补齐六类数据库迁移、模型快照与设计时配置
+			3、规范迁移文件和快照布局并修复跨平台命名空间定位
+			4、增强工作区文件服务及预览生成应用服务
+			5、移除废弃的 ReplacePlaceholders 与 CreateNewSenparcEntitiesFile 工具，统一模板生成和数据库迁移流程
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -117,6 +123,9 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <!-- Template .cshtml files are custom source-generator inputs, not Razor pages. -->
+    <NoWarn>$(NoWarn);RSG002</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' OR '$(Configuration)'=='TemplateRelease'">
     <OutputPath>..\..\..\BuildOutPut</OutputPath>
@@ -132,6 +141,10 @@
   <ItemGroup>
     <Compile Remove="ACL\**" />
     <Compile Remove="Generated\**" Condition="'$(UseCheckedInXncfBuilderGeneratedCode)' != 'true'" />
+    <!-- Razor source generators also emit physical copies under Generated. They must
+         never be compiled as regular source files, otherwise the Razor-generated
+         syntax trees are included twice when checked-in XncfBuilder code is enabled. -->
+    <Compile Remove="Generated\Microsoft.CodeAnalysis.Razor.Compiler\**" />
     <EmbeddedResource Remove="ACL\**" />
     <EmbeddedResource Remove="Generated\**" />
     <None Remove="ACL\**" />
@@ -169,6 +182,11 @@
   </ItemGroup>-->
   <!-- 由于 Npgsql 生成代码有依赖，因此此处暂时引用 -->
   <ItemGroup>
+    <!-- 仅供 dotnet ef 生成和校验多数据库迁移，不传递给引用 XncfBuilder 的项目。 -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Oracle.EntityFrameworkCore" Version="8.23.60" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />

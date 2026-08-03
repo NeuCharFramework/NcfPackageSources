@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.KnowledgeBase.Models;
 
 namespace Senparc.Xncf.KnowledgeBase
 {
@@ -41,8 +45,9 @@ namespace Senparc.Xncf.KnowledgeBase
 
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //实现 [XncfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
-            //modelBuilder.ApplyConfiguration(new AreaTemplate_ColorConfigurationMapping());
+            // 设计期迁移也必须稳定包含关键索引，不依赖全局扫描状态。
+            modelBuilder.ApplyConfiguration(new Admin_KnowledgeBaseConfigurationMapping());
+            modelBuilder.ApplyConfiguration(new Admin_KnowledgeBaseItemConfigurationMapping());
         }
 
         public void AddXncfDatabaseModule(IServiceCollection services)

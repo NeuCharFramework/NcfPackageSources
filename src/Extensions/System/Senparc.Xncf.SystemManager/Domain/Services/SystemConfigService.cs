@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.15.3-preview6 补齐 SystemConfig.FooterContent 数据库迁移
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.DataProtection;
@@ -100,7 +103,16 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
             string appSecret = null;
             systemName ??= "NCF - Template Project";
 
-            systemConfig = new SystemConfig(systemName, null, null, null, false, developerId, appKey, appSecret);
+            systemConfig = new SystemConfig(
+                systemName,
+                null,
+                null,
+                null,
+                false,
+                developerId,
+                appKey,
+                appSecret,
+                SystemConfig.CreateDefaultFooterContent());
             SaveObject(systemConfig);
 
             return systemConfig;

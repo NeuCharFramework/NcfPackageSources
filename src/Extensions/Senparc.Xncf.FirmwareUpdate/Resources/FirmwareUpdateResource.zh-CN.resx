@@ -16,10 +16,10 @@
     <value>NCF 安装包镜像</value>
   </data>
   <data name="Module.FirmwareUpdate.Description" xml:space="preserve">
-    <value>从 GitHub 同步 NCF 桌面端安装包到站点，保留最近 3 个版本并生成备用下载清单。</value>
+    <value>从 GitHub 分别同步 NCF Host 运行包与 NcfDesktop 桌面应用到 host/desktop 目录，并生成各自的下载清单。</value>
   </data>
   <data name="Parameter.FirmwareUpdate.AutoMirror" xml:space="preserve">
-    <value>启用自动镜像||从 GitHub 同步 NCF 安装包到 ~/wwwroot/NcfPackages</value>
+    <value>启用自动镜像||从 GitHub 同步 NCF Host 与 NcfDesktop 安装包到 ~/wwwroot/NcfPackages/host 和 desktop</value>
   </data>
   <data name="Parameter.FirmwareUpdate.Interval" xml:space="preserve">
     <value>检查周期（小时）||1 至 24 小时</value>

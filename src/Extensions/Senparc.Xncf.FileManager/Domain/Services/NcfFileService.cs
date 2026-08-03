@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260729
     修改描述：v0.3.1-preview3 加强文件上传校验和物理路径安全
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.5.0-preview5 新增文件文本提取与文件管理服务
+
 ----------------------------------------------------------------*/
 
 using AutoMapper;
@@ -29,6 +32,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Senparc.Ncf.Core.Models;
 using Senparc.CO2NET.Trace;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Senparc.Xncf.FileManager.Domain.Services
 {
@@ -42,7 +46,9 @@ namespace Senparc.Xncf.FileManager.Domain.Services
         {
             ".txt", ".log", ".md", ".csv", ".json", ".xml", ".pdf",
             ".jpg", ".jpeg", ".png", ".gif", ".webp",
-            ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".zip"
+            ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".zip",
+            ".markdown", ".tsv", ".yaml", ".yml", ".html", ".htm", ".css",
+            ".js", ".ts", ".cs", ".sql"
         };
 
         /// <summary>
@@ -84,13 +90,23 @@ namespace Senparc.Xncf.FileManager.Domain.Services
                 throw new InvalidOperationException($"单个文件不能超过 {MaxFileSizeBytes / 1024 / 1024} MB。");
             }
 
-            var fileExtension = Path.GetExtension(file.FileName)?.ToLowerInvariant();
+            if (folderId.HasValue)
+            {
+                var folderService = base.ServiceProvider.GetRequiredService<NcfFolderService>();
+                var folder = await folderService.GetObjectAsync(z => z.Id == folderId.Value);
+                if (folder == null)
+                {
+                    throw new InvalidOperationException($"目标文件夹不存在：{folderId.Value}");
+                }
+            }
+
+            var originalFileName = Path.GetFileName((file.FileName ?? string.Empty).Replace('\\', '/'));
+            var fileExtension = Path.GetExtension(originalFileName)?.ToLowerInvariant();
             if (string.IsNullOrWhiteSpace(fileExtension) || !AllowedExtensions.Contains(fileExtension))
             {
                 throw new InvalidOperationException("不允许上传该文件类型。仅支持常见文档、图片、文本和压缩包格式。");
             }
 
-            var originalFileName = Path.GetFileName((file.FileName ?? string.Empty).Replace('\\', '/'));
             if (string.IsNullOrWhiteSpace(originalFileName))
             {
                 originalFileName = $"upload{fileExtension}";
@@ -131,6 +147,10 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             }
             catch (Exception ex)
             {
+                if (File.Exists(physicalPath))
+                {
+                    File.Delete(physicalPath);
+                }
                 SenparcTrace.BaseExceptionLog(ex);
                 throw;
             }
@@ -140,24 +160,52 @@ namespace Senparc.Xncf.FileManager.Domain.Services
         public async Task UpdateFileNoteAsync(int id, string note)
         {
             var file = await GetObjectAsync(z => z.Id == id);
-            if (file != null)
+            if (file == null)
             {
-                file.Description = note;
-                await SaveObjectAsync(file);
+                throw new InvalidOperationException($"文件不存在：{id}");
             }
+
+            note = note?.Trim();
+            if (note?.Length > 300)
+            {
+                throw new ArgumentException("文件备注不能超过 300 个字符。", nameof(note));
+            }
+
+            file.Description = note;
+            await SaveObjectAsync(file);
         }
 
         public async Task DeleteFileAsync(int id)
         {
             var file = await GetObjectAsync(z => z.Id == id);
-            if (file != null)
+            if (file == null)
             {
-                var fullPath = ResolvePhysicalPath(file);
-                if (File.Exists(fullPath))
-                {
-                    File.Delete(fullPath);
-                }
+                return;
+            }
+
+            var fullPath = ResolvePhysicalPath(file);
+            string stagedPath = null;
+            if (File.Exists(fullPath))
+            {
+                stagedPath = fullPath + $".deleting-{Guid.NewGuid():N}";
+                File.Move(fullPath, stagedPath);
+            }
+
+            try
+            {
                 await DeleteObjectAsync(file);
+                if (stagedPath != null && File.Exists(stagedPath))
+                {
+                    File.Delete(stagedPath);
+                }
+            }
+            catch
+            {
+                if (stagedPath != null && File.Exists(stagedPath) && !File.Exists(fullPath))
+                {
+                    File.Move(stagedPath, fullPath);
+                }
+                throw;
             }
         }
 
@@ -169,7 +217,6 @@ namespace Senparc.Xncf.FileManager.Domain.Services
                 return (new byte[0], "文件不存在！");
             }
 
-            var fileName = file.StorageFileName + file.FileExtension;
             var fullPath = ResolvePhysicalPath(file);
             if (!System.IO.File.Exists(fullPath))
             {
@@ -177,7 +224,27 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             }
 
             var bytes = await System.IO.File.ReadAllBytesAsync(fullPath);
-            return (bytes, fileName);
+            return (bytes, file.FileName);
+        }
+
+        /// <summary>
+        /// 读取并提取可供知识库使用的纯文本内容。
+        /// </summary>
+        public async Task<NcfFileTextExtractionResult> GetExtractedTextAsync(int id)
+        {
+            var file = await GetObjectAsync(z => z.Id == id);
+            if (file == null)
+            {
+                throw new FileNotFoundException($"文件记录不存在：{id}");
+            }
+
+            var fileInfo = await GetFileBytes(id);
+            if (fileInfo.FileBytes.Length == 0)
+            {
+                throw new FileNotFoundException($"文件物理内容不存在：{file.FileName}");
+            }
+
+            return NcfFileTextExtractor.Extract(fileInfo.FileBytes, file.FileExtension, file.FileName);
         }
 
         private string ResolvePhysicalPath(NcfFile file)
@@ -186,6 +253,20 @@ namespace Senparc.Xncf.FileManager.Domain.Services
                 string.IsNullOrWhiteSpace(file.StorageFileName) || string.IsNullOrWhiteSpace(file.FileExtension))
             {
                 throw new InvalidOperationException("文件物理路径信息无效。");
+            }
+
+            var pathParts = file.FilePath.Split(
+                new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar },
+                StringSplitOptions.RemoveEmptyEntries);
+            if (pathParts.Length != 2
+                || pathParts[0].Length != 4
+                || !int.TryParse(pathParts[0], out _)
+                || !int.TryParse(pathParts[1], out var month)
+                || month is < 1 or > 12
+                || !Guid.TryParseExact(file.StorageFileName, "N", out _)
+                || !AllowedExtensions.Contains(file.FileExtension))
+            {
+                throw new InvalidOperationException("文件物理路径元数据非法。");
             }
 
             var basePath = Path.GetFullPath(_baseFilePath);
@@ -197,7 +278,10 @@ namespace Senparc.Xncf.FileManager.Domain.Services
                 ? basePath
                 : basePath + Path.DirectorySeparatorChar;
 
-            if (!fullPath.StartsWith(expectedPrefix, StringComparison.OrdinalIgnoreCase))
+            var pathComparison = OperatingSystem.IsWindows()
+                ? StringComparison.OrdinalIgnoreCase
+                : StringComparison.Ordinal;
+            if (!fullPath.StartsWith(expectedPrefix, pathComparison))
             {
                 throw new InvalidOperationException("文件物理路径越界。");
             }
@@ -209,7 +293,7 @@ namespace Senparc.Xncf.FileManager.Domain.Services
         {
             return extension.ToLower() switch
             {
-                ".txt" or ".log" => FileType.Text,
+                ".txt" or ".log" or ".md" or ".markdown" or ".csv" or ".tsv" or ".yaml" or ".yml" => FileType.Text,
                 ".doc" or ".docx" => FileType.Word,
                 ".ppt" or ".pptx" => FileType.PowerPoint,
                 ".xls" or ".xlsx" => FileType.Excel,

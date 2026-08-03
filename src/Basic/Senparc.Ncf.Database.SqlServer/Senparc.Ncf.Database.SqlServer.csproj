@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.4-preview4</Version>
+    <Version>0.20.5-preview5</Version>
     <AssemblyName>Senparc.Ncf.Database.SqlServer</AssemblyName>
     <RootNamespace>Senparc.Ncf.Database.SqlServer</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -30,6 +30,9 @@
 				[2026-07-29] v0.20.3-preview3 Dependency update from Senparc.Ncf.Core to 0.26.0-preview3
 				[2026-07-31] v0.20.4-preview4 升级 CO2NET 4.2.0 基础依赖
 				1、升级 Senparc.CO2NET 至 4.2.0 并保持现有项目行为兼容
+				[2026-08-04] v0.20.5-preview5 Dependency updates from upstream projects
+				1、Dependency update from Senparc.Ncf.Core to 0.28.0-preview5
+				2、Dependency update from Senparc.Ncf.Database to 0.21.5-preview5
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

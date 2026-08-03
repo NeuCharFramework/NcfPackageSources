@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.5.0-preview5 新增文件文本提取与文件管理服务
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET;
@@ -26,10 +29,13 @@ using Senparc.Xncf.FileManager.Domain;
 using Senparc.Xncf.FileManager.Domain.Services;
 using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.Dto;
 using System.Linq;
+using Senparc.Ncf.Core.Authorization;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 
 
 namespace Senparc.Xncf.FileManager.OHS.Local.AppService
 {
+    [ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class FileTemplateAppService : AppServiceBase
     {
         private readonly NcfFileService fileService;

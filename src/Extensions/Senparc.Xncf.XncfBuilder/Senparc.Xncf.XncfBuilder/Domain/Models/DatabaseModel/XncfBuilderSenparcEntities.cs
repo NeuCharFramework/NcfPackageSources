@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +34,10 @@ namespace Senparc.Xncf.XncfBuilder
         }
 
         public DbSet<Config> Configs { get; set; }
+
+        public DbSet<XncfPreviewTask> XncfPreviewTasks { get; set; }
+
+        public DbSet<XncfPreviewHost> XncfPreviewHosts { get; set; }
 
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
 

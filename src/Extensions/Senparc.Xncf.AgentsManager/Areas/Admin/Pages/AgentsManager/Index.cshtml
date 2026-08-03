@@ -101,6 +101,11 @@
                                 <div class="agentCard-middleHalfbox text-ellipsis-2line" :title="aitem.description">{{
                                     aitem.description }}
                                 </div>
+                                <div class="agentCard-statistics">
+                                    <span>完成轮次 {{ formatUsageCount(aitem.completedConversationRounds) }}</span>
+                                    <span>Token {{ formatUsageCount(aitem.totalTokens) }}</span>
+                                    <span class="text-ellipsis" :title="aitem.knowledgeBaseName || '未绑定知识库'">{{ aitem.knowledgeBaseName || '未绑定知识库' }}</span>
+                                </div>
                                 <div class="agentCard-lowerHalfbox">
                                     <div class="lowerHalfbox_label">参加中</div>
                                     <div class="lowerHalfbox_quantity">{{ aitem.chattingCount }}</div>
@@ -229,6 +234,16 @@
                                     @@click="handleAgentDelete(agentDetails)">删除</span>
                             </div>
                         </div>
+                    </div>
+                    <div class="agentDetails-statistics">
+                        <span>绑定知识库：{{ agentDetails.agentTemplateDto.knowledgeBaseName || '未绑定' }}</span>
+                        <span>完成对话轮数：{{ formatUsageCount(agentDetails.agentTemplateDto.completedConversationRounds) }}</span>
+                        <span>完成任务：{{ formatUsageCount(agentDetails.agentTemplateDto.completedTaskCount) }}</span>
+                        <span>输入 Token：{{ formatUsageCount(agentDetails.agentTemplateDto.promptTokens) }}</span>
+                        <span>输出 Token：{{ formatUsageCount(agentDetails.agentTemplateDto.completionTokens) }}</span>
+                        <span>总 Token：{{ formatUsageCount(agentDetails.agentTemplateDto.totalTokens) }}</span>
+                        <span>平均响应：{{ formatResponseMilliseconds(agentDetails.agentTemplateDto.averageResponseMilliseconds) }}</span>
+                        <span>最后活动：{{ formatActivityTime(agentDetails.agentTemplateDto.lastActiveTime) }}</span>
                     </div>
                     <div class="df-wn agentDetails-main">
                         <div class="agentDetails-main-left">
@@ -1401,6 +1416,14 @@
                 <el-form-item label="是否启用" prop="enable">
                     <el-checkbox v-model="agentForm.enable">启用智能体</el-checkbox>
                 </el-form-item>
+                <el-form-item label="绑定知识库" prop="knowledgeBaseId">
+                    <el-select v-model="agentForm.knowledgeBaseId" clearable filterable style="width:100%" placeholder="不绑定知识库">
+                        <el-option v-for="item in knowledgeBaseOptions" :key="item.id"
+                            :label="item.isEmbedded ? item.name : `${item.name}（未向量化）`"
+                            :value="item.id" :disabled="!item.isEmbedded"></el-option>
+                    </el-select>
+                    <div class="form-help-text">绑定后会在模型调用前优先执行 RAG 召回；召回失败时保留模型回退能力。</div>
+                </el-form-item>
                 <el-form-item label="外接平台" prop="hookRobotType">
                     <el-select v-model="agentForm.hookRobotType" style="width:100%" placeholder="请选择">
                         <el-option label="None" :value="0"></el-option>
@@ -1720,6 +1743,13 @@
         </el-form-item>
         <el-form-item label="是否启用" prop="enable">
             <el-checkbox v-model="agentForm.enable">启用智能体</el-checkbox>
+        </el-form-item>
+        <el-form-item label="绑定知识库" prop="knowledgeBaseId">
+            <el-select v-model="agentForm.knowledgeBaseId" clearable filterable style="width:100%" placeholder="不绑定知识库">
+                <el-option v-for="item in knowledgeBaseOptions" :key="item.id"
+                    :label="item.isEmbedded ? item.name : `${item.name}（未向量化）`"
+                    :value="item.id" :disabled="!item.isEmbedded"></el-option>
+            </el-select>
         </el-form-item>
         <el-form-item label="说明" prop="description">
             <el-input type="textarea" v-model="agentForm.description" :rows="4" placeholder="请填写"></el-input>

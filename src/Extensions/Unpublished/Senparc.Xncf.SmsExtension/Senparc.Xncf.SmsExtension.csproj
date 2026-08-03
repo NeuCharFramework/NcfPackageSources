@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>0.12.4-preview4</Version>
+    <Version>0.12.5-preview5</Version>
     <AssemblyName>Senparc.Xncf.SmsExtension</AssemblyName>
     <RootNamespace>Senparc.Xncf.SmsExtension</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -27,6 +27,7 @@
 				1、Dependency update from Senparc.Ncf.XncfBase to 0.23.3-preview2
 				[2026-07-29] v0.12.3-preview3 Dependency update from Senparc.Ncf.XncfBase to 0.23.4-preview3
 				[2026-07-31] v0.12.4-preview4 Dependency update from Senparc.Ncf.XncfBase to 0.23.5-preview4
+				[2026-08-04] v0.12.5-preview5 Dependency update from Senparc.Ncf.XncfBase to 0.24.0-preview5
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

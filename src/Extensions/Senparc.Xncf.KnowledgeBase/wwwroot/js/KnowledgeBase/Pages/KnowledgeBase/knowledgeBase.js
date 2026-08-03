@@ -379,37 +379,41 @@ new Vue({
                 that.getFileListData('file')
                 return
             }
-            const url = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseItemAppService/Xncf.KnowledgeBase_KnowledgeBaseItemAppService.GetListByKnowledgeBaseId'
+            const url = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseItemAppService/Xncf.KnowledgeBase_KnowledgeBaseItemAppService.GetConfigurationByKnowledgeBaseId'
             try {
                 const res = await axios.get(`${url}?knowledgeBaseId=${knowledgeBaseId}`)
                 const data = res?.data ?? {}
                 const list = (data.success && data.data) ? (Array.isArray(data.data) ? data.data : []) : []
+                const inlineContent = list
+                    .filter(i => i.contentType === 0)
+                    .map(i => i.content)
+                    .filter(Boolean)
+                    .join('\n\n')
+                that.groupForm.content = inlineContent || ''
                 if (list.length === 0) {
+                    that.groupForm.contentType = 2
+                    that.groupForm.files = []
                     that.getFileListData('file')
                     return
                 }
                 const hasFileType = list.some(i => i.contentType === 100 || i.contentType === 200 || i.contentType === 300 || i.contentType === 400)
                 if (hasFileType) {
-                    const fileNames = [...new Set(list.filter(i => i.fileName).map(i => i.fileName))]
+                    const fileIds = [...new Set(list.filter(i => i.ncfFileId).map(i => Number(i.ncfFileId)))]
+                    const fileNameById = new Map()
+                    list.filter(i => i.ncfFileId).forEach(i => {
+                        const id = Number(i.ncfFileId)
+                        if (!fileNameById.has(id)) fileNameById.set(id, i.fileName || `File #${id}`)
+                    })
                     that.groupForm.contentType = 2
-                    that.groupForm.files = []
-                    that.fileNamesToSelect = fileNames
-                    that.fileQueryList.pageSize = 9999
-                    that.fileQueryList.pageIndex = 1
+                    that.groupForm.files = fileIds.map(id => ({ id: id, name: fileNameById.get(id) || `File #${id}` }))
                     await that.getFileListData('file')
                     that.$nextTick(() => {
-                        if (that.fileNamesToSelect.length && that.fileList.length) {
-                            const matched = that.fileList.filter(f => that.fileNamesToSelect.includes(f.fileName))
-                            that.groupForm.files = matched.map(f => ({ id: f.id, name: f.fileName }))
-                            that.toggleSelection(matched)
-                        }
+                        const matched = that.fileList.filter(f => fileIds.includes(Number(f.id)))
+                        that.toggleSelection(matched)
                         that.fileNamesToSelect = []
-                        that.fileQueryList.pageSize = 10
-                        that.getFileListData('file')
                     })
                 } else {
-                    that.groupForm.contentType = (list.length && list[0].contentType === 0) ? 1 : 1
-                    that.groupForm.content = list.map(i => i.content).filter(Boolean).join('\n\n') || ''
+                    that.groupForm.contentType = 1
                     that.groupForm.files = []
                     that.getFileListData('file')
                 }
@@ -540,14 +544,9 @@ new Vue({
                 const isFileType = contentType === 2; // 2=文件
 
                 if (isFileType) {
-                    const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.ImportFilesToKnowledgeBase';
+                    const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.SyncFilesToKnowledgeBase';
                     const selectedFiles = serviceForm.files || [];
                     const fileIds = selectedFiles.map(f => (typeof f.id === 'number' ? f.id : parseInt(f.id, 10))).filter(id => !isNaN(id));
-
-                    if (fileIds.length === 0) {
-                        that.$notify({ title: '提示', message: '请至少选择一个文件后再保存', type: 'warning', duration: 2000 });
-                        return;
-                    }
 
                     const requestData = {
                         knowledgeBaseId: parseInt(serviceForm.knowledgeBasesId, 10),
@@ -558,7 +557,7 @@ new Vue({
                         const res = await service.post(serviceURL, requestData);
                         const success = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)));
                         if (success) {
-                            that.$notify({ title: '成功', message: '文件已关联到知识库并写入条目', type: 'success', duration: 2000 });
+                            that.$notify({ title: '成功', message: `知识库文件关联已同步（${fileIds.length} 个）`, type: 'success', duration: 2000 });
                             that.visible.drawerGroup = false;
                             that.getList();
                         } else {
@@ -568,10 +567,30 @@ new Vue({
                         console.error('Request Error:', err);
                         that.$notify({ title: '错误', message: '文件导入失败: ' + (err.message || err), type: 'error', duration: 3000 });
                     }
+                } else if (contentType === 1) {
+                    const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.SetKnowledgeBaseDetail';
+                    const requestData = {
+                        knowledgeBasesId: parseInt(serviceForm.knowledgeBasesId, 10),
+                        contentType: 0,
+                        content: serviceForm.content || ''
+                    };
+                    try {
+                        const res = await service.post(serviceURL, requestData);
+                        const success = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)));
+                        if (!success) throw new Error((res && res.message) || '内容保存失败');
+                        that.$notify({ title: '成功', message: '知识库文本内容已同步', type: 'success', duration: 2000 });
+                        that.visible.drawerGroup = false;
+                        that.getList();
+                    } catch (err) {
+                        that.$notify({ title: '错误', message: '内容保存失败: ' + (err.message || err), type: 'error', duration: 3000 });
+                    }
                 } else {
-                    // 内容类型为「输入」或「采集外部数据」时，不校验文件，直接关闭
-                    that.$notify({ title: '成功', message: '已保存', type: 'success', duration: 2000 });
-                    that.visible.drawerGroup = false;
+                    that.$notify({
+                        title: '尚未支持',
+                        message: '外部数据采集需要单独配置抓取、权限与清洗策略，本版本不会伪造保存成功。',
+                        type: 'warning',
+                        duration: 4000
+                    });
                 }
             }
         },
@@ -615,7 +634,7 @@ new Vue({
                         chatModelId: parseInt(that.dialog.data.chatModelId) || 0,
                         name: that.dialog.data.name,
                         content: that.dialog.data.content || '',
-                        NcfFileIds: []
+                        NcfFileIds: null
                     };
                     console.log('保存知识库数据：' + JSON.stringify(data));
                     service.post("/Admin/KnowledgeBase/Edit?handler=Save", data).then(res => {
@@ -682,10 +701,14 @@ new Vue({
         },
         // 配置抽屉内「文件列表」表格勾选变化：同步到 groupForm.files，保存时用于关联知识库
         handleConfigFileSelectionChange(val) {
-            this.groupForm.files = (val || []).map(r => ({
+            const currentPageIds = new Set((this.fileList || []).map(r => Number(r.id)))
+            const preserved = (this.groupForm.files || []).filter(f => !currentPageIds.has(Number(f.id)))
+            const current = (val || []).map(r => ({
                 id: r.id,
                 name: r.fileName != null ? r.fileName : (r.name || '')
-            }));
+            }))
+            const merged = [...preserved, ...current]
+            this.groupForm.files = [...new Map(merged.map(f => [Number(f.id), f])).values()]
         },
         handleDbClick(row, column, event) {
             let that = this
@@ -907,10 +930,16 @@ new Vue({
             let visibleKey = btnType
             if (btnType === 'drawerGroup') {
                 visibleKey = 'drawerGroup'
-                that.groupForm.knowledgeBasesId = item?.id ?? ''
+                that.groupForm = {
+                    contentType: 2,
+                    files: [],
+                    content: '',
+                    knowledgeBasesId: item?.id ?? ''
+                }
                 that.fileQueryList.pageIndex = 1
                 that.fileNamesToSelect = []
                 that.visible[visibleKey] = true
+                that.$nextTick(() => that.$refs.groupAgentTable?.clearSelection())
                 that.loadConfigKnowledgeBaseItems(item?.id)
                 return
             }
@@ -1058,7 +1087,7 @@ new Vue({
         toggleSelection(rows) {
             if (rows) {
                 rows.forEach(row => {
-                    this.$refs?.groupAgentTable?.toggleRowSelection(row);
+                    this.$refs?.groupAgentTable?.toggleRowSelection(row, true);
                 });
             } else {
                 this.$refs?.groupAgentTable?.clearSelection();

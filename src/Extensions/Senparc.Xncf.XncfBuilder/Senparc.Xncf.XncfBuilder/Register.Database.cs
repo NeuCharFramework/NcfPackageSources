@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260804
+    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -52,6 +55,18 @@ namespace Senparc.Xncf.XncfBuilder
 
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<XncfPreviewTask>()
+                .HasIndex(task => task.SessionId)
+                .IsUnique();
+            modelBuilder.Entity<XncfPreviewTask>()
+                .HasIndex(task => new { task.ModuleProjectName, task.StartedAtUtc });
+
+            modelBuilder.Entity<XncfPreviewHost>()
+                .HasIndex(host => host.SessionId)
+                .IsUnique();
+            modelBuilder.Entity<XncfPreviewHost>()
+                .HasIndex(host => new { host.Status, host.UpdatedAtUtc });
+
             //实现 [XncfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
             //modelBuilder.ApplyConfiguration(new DbConfig_WeixinUserConfigurationMapping());
         }
