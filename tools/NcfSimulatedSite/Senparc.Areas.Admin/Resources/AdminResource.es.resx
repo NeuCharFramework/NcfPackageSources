@@ -179,6 +179,7 @@
   <data name="AdminChat.MessageNotFound" xml:space="preserve"><value>Mensaje no encontrado</value></data>
   <data name="AdminChat.SetFeedbackSuccess" xml:space="preserve"><value>Comentarios enviados correctamente</value></data>
   <data name="AdminChat.SelectAtLeastOneMessage" xml:space="preserve"><value>Seleccione al menos un mensaje</value></data>
+  <data name="AdminChat.SelectAtLeastOneModule" xml:space="preserve"><value>Seleccione al menos un módulo XNCF</value></data>
   <data name="AdminChat.DeleteMessagesSuccess" xml:space="preserve"><value>Eliminado correctamente. Se quitaron {0} mensajes</value></data>
   <data name="AdminChat.AddModulesSuccess" xml:space="preserve"><value>Módulos agregados correctamente</value></data>
   <data name="Admin.Layout.Account" xml:space="preserve"><value>Mi cuenta</value></data>

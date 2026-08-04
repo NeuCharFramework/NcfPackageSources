@@ -66,6 +66,7 @@ using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Models.DataBaseModel;
+using Senparc.Ncf.Shared.Abstractions.Security;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase;
@@ -200,6 +201,7 @@ namespace Senparc.Areas.Admin
             services.AddScoped<IAdminAuthConfigRepository, AdminAuthConfigRepository>();
             services.AddScoped<InstallerService>();
             services.AddScoped<AdminAuthConfigService>();
+            services.AddScoped<IDesktopAdminAuthTokenIssuer, DesktopAdminAuthTokenIssuer>();
 
             // 聊天功能相关服务注册
             services.AddScoped<IAdminChatSessionRepository, AdminChatSessionRepository>();

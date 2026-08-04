@@ -16,11 +16,13 @@
 
 using System.Text.Json;
 using System.Security.Claims;
+using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Ncf.Core.Authorization;
+using Senparc.Ncf.Shared.Abstractions.Security;
 using Senparc.Xncf.DesktopBridge.Models;
 using Senparc.Xncf.DesktopBridge.Services;
 
@@ -39,15 +41,22 @@ public sealed class DesktopBridgeController : ControllerBase
     private readonly DesktopActivityHub _activityHub;
     private readonly DesktopAuthorizedSyncHub _authorizedSyncHub;
     private readonly DesktopBridgeTokenValidator _tokenValidator;
+    private readonly DesktopAdminAuthHandoffStore _adminAuthHandoffStore;
+    private readonly IDesktopAdminAuthTokenIssuer? _adminAuthTokenIssuer;
 
     public DesktopBridgeController(
         DesktopActivityHub activityHub,
         DesktopAuthorizedSyncHub authorizedSyncHub,
-        DesktopBridgeTokenValidator tokenValidator)
+        DesktopBridgeTokenValidator tokenValidator,
+        DesktopAdminAuthHandoffStore? adminAuthHandoffStore = null,
+        IEnumerable<IDesktopAdminAuthTokenIssuer>? adminAuthTokenIssuers = null)
     {
         _activityHub = activityHub;
         _authorizedSyncHub = authorizedSyncHub;
         _tokenValidator = tokenValidator;
+        _adminAuthHandoffStore = adminAuthHandoffStore ?? new DesktopAdminAuthHandoffStore();
+        var issuers = adminAuthTokenIssuers?.Take(2).ToArray() ?? [];
+        _adminAuthTokenIssuer = issuers.Length == 1 ? issuers[0] : null;
     }
 
     [HttpGet("capabilities")]
@@ -67,7 +76,148 @@ public sealed class DesktopBridgeController : ControllerBase
             EventEndpoint: "/api/Senparc.Xncf.DesktopBridge/events",
             SnapshotEndpoint: "/api/Senparc.Xncf.DesktopBridge/activities",
             SupportsAuthorizedSync: true,
-            AuthorizedSyncEndpoint: "/api/Senparc.Xncf.DesktopBridge/authorized-sync/events");
+            AuthorizedSyncEndpoint: "/api/Senparc.Xncf.DesktopBridge/authorized-sync/events",
+            SupportsAdminAuthHandoff: _adminAuthTokenIssuer != null,
+            AdminAuthHandoffRequestEndpoint: _adminAuthTokenIssuer == null
+                ? null
+                : "/api/Senparc.Xncf.DesktopBridge/admin-auth-handoff/requests",
+            AdminAuthHandoffRedeemEndpoint: _adminAuthTokenIssuer == null
+                ? null
+                : "/api/Senparc.Xncf.DesktopBridge/admin-auth-handoff/redeem");
+    }
+
+    /// <summary>
+    /// 创建绑定当前 DesktopBridge 会话的 PKCE 挑战。此接口不接受、读取或返回浏览器 Cookie。
+    /// </summary>
+    [HttpPost("admin-auth-handoff/requests")]
+    [AllowAnonymous]
+    [RequestSizeLimit(4096)]
+    public ActionResult<DesktopAdminAuthHandoffCreateResponse> CreateAdminAuthHandoff(
+        [FromBody] DesktopAdminAuthHandoffCreateRequest request)
+    {
+        SetNoStoreHeaders();
+        if (_adminAuthTokenIssuer == null)
+        {
+            return NotFound();
+        }
+
+        var transportFailure = ValidateSecureTransport();
+        if (transportFailure != null)
+        {
+            return transportFailure;
+        }
+
+        var authorizationFailure = AuthorizeDesktopSession();
+        if (authorizationFailure != null)
+        {
+            return authorizationFailure;
+        }
+
+        var desktopSessionToken = Request.Headers[DesktopBridgeTokenValidator.TokenHeaderName].FirstOrDefault();
+        try
+        {
+            return Ok(_adminAuthHandoffStore.Create(
+                desktopSessionToken!,
+                request.CodeChallenge,
+                request.ReturnPath));
+        }
+        catch (DesktopAdminAuthHandoffRateLimitException ex)
+        {
+            Response.Headers.RetryAfter = "30";
+            return StatusCode(
+                StatusCodes.Status429TooManyRequests,
+                new ProblemDetails
+                {
+                    Title = "桌面登录授权请求过于频繁",
+                    Detail = ex.Message,
+                    Status = StatusCodes.Status429TooManyRequests
+                });
+        }
+        catch (DesktopAdminAuthHandoffException)
+        {
+            return BadRequest(new ProblemDetails
+            {
+                Title = "桌面登录授权请求无效",
+                Detail = "请重新发起 WebView 管理员授权。",
+                Status = StatusCodes.Status400BadRequest
+            });
+        }
+    }
+
+    /// <summary>
+    /// 使用仅存在于 GUI 内存中的 PKCE verifier 领取 JWT。批准后的挑战无论成功失败都只可消费一次。
+    /// </summary>
+    [HttpPost("admin-auth-handoff/redeem")]
+    [AllowAnonymous]
+    [RequestSizeLimit(4096)]
+    public async Task<ActionResult<DesktopAdminAuthHandoffRedeemResponse>> RedeemAdminAuthHandoff(
+        [FromBody] DesktopAdminAuthHandoffRedeemRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        SetNoStoreHeaders();
+        if (_adminAuthTokenIssuer == null)
+        {
+            return NotFound();
+        }
+
+        var transportFailure = ValidateSecureTransport();
+        if (transportFailure != null)
+        {
+            return transportFailure;
+        }
+
+        var authorizationFailure = AuthorizeDesktopSession();
+        if (authorizationFailure != null)
+        {
+            return authorizationFailure;
+        }
+
+        var desktopSessionToken = Request.Headers[DesktopBridgeTokenValidator.TokenHeaderName].FirstOrDefault();
+        var handoff = _adminAuthHandoffStore.Redeem(
+            request.RequestId,
+            desktopSessionToken!,
+            request.CodeVerifier);
+        if (string.Equals(handoff.Status, "pending", StringComparison.Ordinal))
+        {
+            return Accepted(new DesktopAdminAuthHandoffRedeemResponse("pending"));
+        }
+
+        if (string.Equals(handoff.Status, "denied", StringComparison.Ordinal))
+        {
+            return StatusCode(
+                StatusCodes.Status403Forbidden,
+                new DesktopAdminAuthHandoffRedeemResponse(
+                    "denied",
+                    Message: handoff.Message ?? "WebView 登录不能用于桌面授权。"));
+        }
+
+        if (!string.Equals(handoff.Status, "approved", StringComparison.Ordinal) ||
+            handoff.AdminUserId is not { } adminUserId ||
+            handoff.SourceAuthenticationExpiresUtc is not { } sourceExpiresUtc)
+        {
+            return BadRequest(new DesktopAdminAuthHandoffRedeemResponse(
+                "invalid",
+                Message: "一次性授权无效或已过期。"));
+        }
+
+        var token = await _adminAuthTokenIssuer
+            .IssueAsync(adminUserId, sourceExpiresUtc, cancellationToken)
+            .ConfigureAwait(false);
+        if (!token.Succeeded || string.IsNullOrWhiteSpace(token.UserName) ||
+            string.IsNullOrWhiteSpace(token.AccessToken) || token.ExpiresUtc == null)
+        {
+            return StatusCode(
+                StatusCodes.Status403Forbidden,
+                new DesktopAdminAuthHandoffRedeemResponse(
+                    "denied",
+                    Message: token.ErrorMessage ?? "管理员身份不能用于桌面授权。"));
+        }
+
+        return Ok(new DesktopAdminAuthHandoffRedeemResponse(
+            "approved",
+            token.UserName,
+            token.AccessToken,
+            token.ExpiresUtc));
     }
 
     [HttpGet("activities")]
@@ -213,5 +363,29 @@ public sealed class DesktopBridgeController : ControllerBase
     {
         var suppliedToken = Request.Headers[DesktopBridgeTokenValidator.TokenHeaderName].FirstOrDefault();
         return _tokenValidator.IsAuthorized(suppliedToken);
+    }
+
+    private ActionResult? ValidateSecureTransport()
+    {
+        var remoteAddress = HttpContext.Connection.RemoteIpAddress;
+        if (Request.IsHttps || remoteAddress != null && IPAddress.IsLoopback(remoteAddress))
+        {
+            return null;
+        }
+
+        return StatusCode(
+            StatusCodes.Status403Forbidden,
+            new ProblemDetails
+            {
+                Title = "桌面登录授权要求安全传输",
+                Detail = "远程换票必须使用 HTTPS；HTTP 仅允许 localhost 或本机 SSH 隧道。",
+                Status = StatusCodes.Status403Forbidden
+            });
+    }
+
+    private void SetNoStoreHeaders()
+    {
+        Response.Headers.CacheControl = "no-store, no-cache";
+        Response.Headers.Pragma = "no-cache";
     }
 }

@@ -33,7 +33,10 @@ public sealed record DesktopBridgeCapabilities(
     string EventEndpoint,
     string SnapshotEndpoint,
     bool SupportsAuthorizedSync,
-    string? AuthorizedSyncEndpoint);
+    string? AuthorizedSyncEndpoint,
+    bool SupportsAdminAuthHandoff = false,
+    string? AdminAuthHandoffRequestEndpoint = null,
+    string? AdminAuthHandoffRedeemEndpoint = null);
 
 /// <summary>
 /// 受身份隔离的资源变更通知。只提供重新读取数据所需的最小元数据。

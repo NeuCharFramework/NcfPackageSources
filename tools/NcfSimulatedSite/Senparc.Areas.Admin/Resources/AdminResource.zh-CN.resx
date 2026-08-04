@@ -179,6 +179,7 @@
   <data name="AdminChat.MessageNotFound" xml:space="preserve"><value>消息不存在</value></data>
   <data name="AdminChat.SetFeedbackSuccess" xml:space="preserve"><value>反馈成功</value></data>
   <data name="AdminChat.SelectAtLeastOneMessage" xml:space="preserve"><value>请至少选择一条消息</value></data>
+  <data name="AdminChat.SelectAtLeastOneModule" xml:space="preserve"><value>请至少选择一个 XNCF 模块</value></data>
   <data name="AdminChat.DeleteMessagesSuccess" xml:space="preserve"><value>删除成功，共删除 {0} 条消息</value></data>
   <data name="AdminChat.AddModulesSuccess" xml:space="preserve"><value>添加成功</value></data>
   <data name="Admin.Layout.Account" xml:space="preserve"><value>我的账号</value></data>

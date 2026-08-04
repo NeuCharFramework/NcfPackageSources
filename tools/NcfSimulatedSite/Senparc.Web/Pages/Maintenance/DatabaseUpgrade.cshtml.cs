@@ -12,24 +12,16 @@
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Senparc.Web.Infrastructure.Database;
 
 namespace Senparc.Web.Pages.Maintenance;
 
 public sealed class DatabaseUpgradeModel : PageModel
 {
-    private readonly DatabaseRuntimeStateStore _stateStore;
-
-    public DatabaseUpgradeModel(DatabaseRuntimeStateStore stateStore)
-    {
-        _stateStore = stateStore;
-    }
-
-    public DatabaseRuntimeState State { get; private set; }
-
     public void OnGet()
     {
-        State = _stateStore.Current;
         Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
+        Response.Headers.CacheControl = "no-store, no-cache";
+        Response.Headers.Pragma = "no-cache";
+        Response.Headers.Append("X-Robots-Tag", "noindex, nofollow");
     }
 }

@@ -179,6 +179,7 @@
   <data name="AdminChat.MessageNotFound" xml:space="preserve"><value>Сообщение не найдено</value></data>
   <data name="AdminChat.SetFeedbackSuccess" xml:space="preserve"><value>Отзыв успешно отправлен</value></data>
   <data name="AdminChat.SelectAtLeastOneMessage" xml:space="preserve"><value>Выберите хотя бы одно сообщение</value></data>
+  <data name="AdminChat.SelectAtLeastOneModule" xml:space="preserve"><value>Выберите хотя бы один модуль XNCF</value></data>
   <data name="AdminChat.DeleteMessagesSuccess" xml:space="preserve"><value>Успешно удалено. Удалено сообщений: {0}</value></data>
   <data name="AdminChat.AddModulesSuccess" xml:space="preserve"><value>Модули успешно добавлены</value></data>
   <data name="Admin.Layout.Account" xml:space="preserve"><value>Моя учетная запись</value></data>

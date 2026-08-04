@@ -179,6 +179,7 @@
   <data name="AdminChat.MessageNotFound" xml:space="preserve"><value>メッセージが存在しません</value></data>
   <data name="AdminChat.SetFeedbackSuccess" xml:space="preserve"><value>フィードバックの送信に成功しました</value></data>
   <data name="AdminChat.SelectAtLeastOneMessage" xml:space="preserve"><value>少なくとも 1 件のメッセージを選択してください</value></data>
+  <data name="AdminChat.SelectAtLeastOneModule" xml:space="preserve"><value>少なくとも 1 つの XNCF モジュールを選択してください</value></data>
   <data name="AdminChat.DeleteMessagesSuccess" xml:space="preserve"><value>削除に成功しました。{0} 件のメッセージを削除しました</value></data>
   <data name="AdminChat.AddModulesSuccess" xml:space="preserve"><value>追加に成功しました</value></data>
   <data name="Admin.Layout.Account" xml:space="preserve"><value>マイアカウント</value></data>
