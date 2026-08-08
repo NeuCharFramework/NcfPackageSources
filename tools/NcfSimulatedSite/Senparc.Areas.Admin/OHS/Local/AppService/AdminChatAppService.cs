@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260729
     修改描述：v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
 
+    修改标识：Senparc - 20260808
+    修改描述：v0.4.0 适配桌面管理员换票相关的后台对话安全上下文
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;

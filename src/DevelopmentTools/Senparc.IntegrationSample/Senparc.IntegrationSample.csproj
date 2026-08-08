@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 
-		<Version>0.0.6</Version>
+		<Version>0.0.7</Version>
 		<PackageReleaseNotes>
 		  [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 		  1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
@@ -65,6 +65,31 @@
 		  22、Dependency update from Senparc.Xncf.Tenant.Interface to 0.10.5-preview5
 		  23、Dependency update from Senparc.Xncf.Tenant to 0.15.3-preview5
 		  24、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.3-preview5
+		  [2026-08-08] v0.0.7 Dependency updates from upstream projects
+		  1、Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
+		  2、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.6-preview6
+		  3、Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.6-preview6
+		  4、Dependency update from Senparc.Ncf.Database to 0.21.6-preview6
+		  5、Dependency update from Senparc.Ncf.SMS to 0.20.6-preview6
+		  6、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+		  7、Dependency update from Senparc.Xncf.AIAgentsHub to 0.13.4-preview7
+		  8、Dependency update from Senparc.Xncf.AIKernel to 0.15.2-preview9
+		  9、Dependency update from Senparc.Xncf.Dapr to 0.11.4-preview6
+		  10、Dependency update from Senparc.Xncf.DatabaseToolkit to 0.27.3-preview6
+		  11、Dependency update from Senparc.Xncf.PromptRange to 0.19.1-preview9
+		  12、Dependency update from Senparc.Xncf.Swagger to 0.20.2-preview6
+		  13、Dependency update from Senparc.Xncf.Terminal to 0.22.4-preview6
+		  14、Dependency update from Senparc.Xncf.WeixinManager to 0.24.2-preview7
+		  15、Dependency update from Senparc.Xncf.XncfBuilder to 0.39.1-preview9
+		  16、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+		  17、Dependency update from Senparc.Xncf.Menu to 0.14.4-preview6
+		  18、Dependency update from Senparc.Xncf.SystemCore to 0.14.4-preview6
+		  19、Dependency update from Senparc.Xncf.SystemManager to 0.15.4-preview7
+		  20、Dependency update from Senparc.Xncf.SystemPermission to 0.15.4-preview6
+		  21、Dependency update from Senparc.Xncf.Tenant.Interface to 0.10.6-preview6
+		  22、Dependency update from Senparc.Xncf.Tenant to 0.15.4-preview6
+		  23、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.4-preview6
+		  24、Dependency update from Senparc.IntegrationSample.AreaTests to 0.0.5
 </PackageReleaseNotes>
 		<Configurations>Debug;Release;TemplateRelease</Configurations>
 		<ImplicitUsings>enable</ImplicitUsings>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.4.0-preview3</Version>
+    <Version>0.5.0-preview4</Version>
     <AssemblyName>Senparc.Ncf.Shared.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Ncf.Shared.Abstractions</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -25,6 +25,9 @@
       [2026-08-04] v0.4.0-preview3 新增运行时纽铃提供程序抽象并统一品牌命名
       1、新增 INeuBellProvider，统一同步提供程序标识、可用性与执行契约
       2、将公共契约迁移到 NeuBell/纽铃命名，调用方需同步更新命名空间、接口与类型名
+      [2026-08-08] v0.5.0-preview4 新增桌面管理员一次性换票签发契约
+      1、新增 IDesktopAdminAuthTokenIssuer 与 DesktopAdminAuthTokenIssueResult 公共契约
+      2、支持桌面桥接在完成会话与 PKCE 校验后申请受源会话寿命约束的短期管理员令牌
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

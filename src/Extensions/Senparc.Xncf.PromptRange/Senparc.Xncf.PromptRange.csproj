@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.19.0-preview8</Version>
+    <Version>0.19.1-preview9</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -110,6 +110,15 @@
       [2026-08-04] v0.19.0-preview8 完善 PromptRange 管理页多语言体验
       1、为 Prompt、Model 与 Index 页面接入统一本地化脚本
       2、补充中文、英文、日文、法文、西班牙文与俄文资源
+      [2026-08-08] v0.19.1-preview9 Dependency updates from upstream projects
+      1、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+      2、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+      3、Dependency update from Senparc.Xncf.AIKernel to 0.15.2-preview9
+      4、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+      5、Dependency update from Senparc.Xncf.SystemCore to 0.14.4-preview6
+      6、Dependency update from Senparc.Xncf.SystemManager to 0.15.4-preview7
+      7、Dependency update from Senparc.Xncf.Tenant to 0.15.4-preview6
+      8、Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.2.4-preview4
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>

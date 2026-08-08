@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.2.2</Version>
+    <Version>0.2.3</Version>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -22,7 +22,9 @@
       [2026-08-04] v0.2.2 补充桌面纽铃提供程序测试
       1、覆盖 DesktopBridge 纽铃提供程序的可用性与执行行为
       2、同步验证 NeuBell 公共契约与通知发布器命名
-    </PackageReleaseNotes>
+      [2026-08-08] v0.2.3 补充桌面管理员换票交接测试
+      1、覆盖 Auth Handoff 发起、确认、兑换与失败路径校验
+</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

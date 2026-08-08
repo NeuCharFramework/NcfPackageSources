@@ -5,6 +5,10 @@
     文件功能描述：用当前 WebView 管理员 Cookie 确认一次性桌面授权
 
     创建标识：Senparc - 20260804
+
+    修改标识：Senparc - 20260808
+    修改描述：v0.4.0-preview4 新增 WebView 管理员 Cookie 一次性授权确认页
+
 ----------------------------------------------------------------*/
 
 using System.Security.Claims;

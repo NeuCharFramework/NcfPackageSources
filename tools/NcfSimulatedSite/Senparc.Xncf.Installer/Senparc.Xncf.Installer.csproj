@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.5.0</Version>
+		<Version>0.5.1</Version>
 		<AssemblyName>Senparc.Xncf.Installer</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Installer</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -41,6 +41,22 @@
 			1、升级 Senparc.AI 组件版本以适配 CO2NET 4.2.0 二进制接口
 			[2026-08-04] v0.5.0 适配数据库升级维护流程
 			1、安装页面接入数据库升级状态判断并引导进入维护流程
+			[2026-08-08] v0.5.1 Dependency updates from upstream projects
+			1、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+			2、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+			3、Dependency update from Senparc.Xncf.Swagger to 0.20.2-preview6
+			4、Dependency update from Senparc.Xncf.Terminal to 0.22.4-preview6
+			5、Dependency update from Senparc.Xncf.XncfBuilder to 0.39.1-preview9
+			6、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+			7、Dependency update from Senparc.Xncf.Menu to 0.14.4-preview6
+			8、Dependency update from Senparc.Xncf.SystemCore to 0.14.4-preview6
+			9、Dependency update from Senparc.Xncf.SystemManager to 0.15.4-preview7
+			10、Dependency update from Senparc.Xncf.SystemPermission to 0.15.4-preview6
+			11、Dependency update from Senparc.Xncf.Tenant.Interface to 0.10.6-preview6
+			12、Dependency update from Senparc.Xncf.Tenant to 0.15.4-preview6
+			13、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.4-preview6
+			14、Dependency update from Senparc.Areas.Admin to 0.4.0
+			15、Dependency update from Senparc.Xncf.Installer.Interface to 0.1.5
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>

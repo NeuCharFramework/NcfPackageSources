@@ -15,6 +15,9 @@
     修改标识：Senparc - 20260804
     修改描述：v0.3.0-preview3 将同步提供程序统一更名为 NeuBell/纽铃
 
+    修改标识：Senparc - 20260808
+    修改描述：v0.4.0-preview4 注册桌面管理员换票交接相关服务
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;

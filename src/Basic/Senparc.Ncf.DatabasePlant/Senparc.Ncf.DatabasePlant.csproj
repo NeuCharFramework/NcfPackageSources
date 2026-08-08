@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.21.5-preview5</Version>
+    <Version>0.21.6-preview6</Version>
     <AssemblyName>Senparc.Ncf.DatabasePlant</AssemblyName>
     <RootNamespace>Senparc.Ncf.DatabasePlant</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -57,6 +57,17 @@
 				8、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.5-preview5
 				9、Dependency update from Senparc.Ncf.Database to 0.21.5-preview5
 				10、Dependency update from Senparc.Ncf.XncfBase to 0.24.0-preview5
+				[2026-08-08] v0.21.6-preview6 Dependency updates from upstream projects
+				1、Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
+				2、Dependency update from Senparc.Ncf.Database.Dm to 0.7.6-preview6
+				3、Dependency update from Senparc.Ncf.Database.InMemory to 0.20.6-preview6
+				4、Dependency update from Senparc.Ncf.Database to 0.21.6-preview6
+				5、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+				6、Dependency update from Senparc.Ncf.Database.MySql to 0.20.6-preview6
+				7、Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.6-preview6
+				8、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.6-preview6
+				9、Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.6-preview6
+				10、Dependency update from Senparc.Ncf.Database.Oracle to 0.10.6-preview6
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

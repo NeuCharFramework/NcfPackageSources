@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>-->
-    <Version>0.24.0-preview5</Version>
+    <Version>0.24.1-preview6</Version>
     <LangVersion>10.0</LangVersion>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
@@ -70,6 +70,10 @@
 			[2026-08-04] v0.24.0-preview5 统一数据库设计时工厂与函数参数处理
 			1、扩展设计时 DbContext 工厂配置和 XNCF 数据库注册流程
 			2、优化 FunctionRender 请求参数归一化与兼容处理
+			[2026-08-08] v0.24.1-preview6 Dependency updates from upstream projects
+			1、Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
+			2、Dependency update from Senparc.Ncf.Database to 0.21.6-preview6
+			3、Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

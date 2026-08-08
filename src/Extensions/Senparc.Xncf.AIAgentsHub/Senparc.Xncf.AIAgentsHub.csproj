@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.13.3-preview6</Version>
+    <Version>0.13.4-preview7</Version>
     <AssemblyName>Senparc.Xncf.AIAgentsHub</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIAgentsHub</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -80,6 +80,23 @@
 			14、Dependency update from Senparc.Xncf.Tenant.Interface to 0.10.5-preview5
 			15、Dependency update from Senparc.Xncf.Tenant to 0.15.3-preview5
 			16、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.3-preview5
+			[2026-08-08] v0.13.4-preview7 Dependency updates from upstream projects
+			1、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+			2、Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
+			3、Dependency update from Senparc.Ncf.Database to 0.21.6-preview6
+			4、Dependency update from Senparc.Ncf.Repository to 0.20.6-preview6
+			5、Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
+			6、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+			7、Dependency update from Senparc.Xncf.AIKernel to 0.15.2-preview9
+			8、Dependency update from Senparc.Xncf.PromptRange to 0.19.1-preview9
+			9、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+			10、Dependency update from Senparc.Xncf.Menu to 0.14.4-preview6
+			11、Dependency update from Senparc.Xncf.SystemCore to 0.14.4-preview6
+			12、Dependency update from Senparc.Xncf.SystemManager to 0.15.4-preview7
+			13、Dependency update from Senparc.Xncf.SystemPermission to 0.15.4-preview6
+			14、Dependency update from Senparc.Xncf.Tenant.Interface to 0.10.6-preview6
+			15、Dependency update from Senparc.Xncf.Tenant to 0.15.4-preview6
+			16、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.4-preview6
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

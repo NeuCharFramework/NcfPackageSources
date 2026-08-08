@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.1.3</Version>
+    <Version>0.1.4</Version>
     <PackageReleaseNotes>
       [2026-07-17] v0.1.0 为 Application 模块接入统一资源本地化并优化功能文案
       1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
@@ -11,7 +11,8 @@
       [2026-07-29] v0.1.1 Dependency update from Senparc.Ncf.XncfBase to 0.23.4-preview3
       [2026-07-31] v0.1.2 Dependency update from Senparc.Ncf.XncfBase to 0.23.5-preview4
       [2026-08-04] v0.1.3 Dependency update from Senparc.Ncf.XncfBase to 0.24.0-preview5
-    </PackageReleaseNotes>
+      [2026-08-08] v0.1.4 Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

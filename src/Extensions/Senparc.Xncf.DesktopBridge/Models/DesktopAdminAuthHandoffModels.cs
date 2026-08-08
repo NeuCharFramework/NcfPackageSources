@@ -5,6 +5,10 @@
     文件功能描述：WebView Cookie 到桌面 Admin JWT 的一次性换票协议
 
     创建标识：Senparc - 20260804
+
+    修改标识：Senparc - 20260808
+    修改描述：v0.4.0-preview4 新增桌面管理员一次性换票协议模型
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.DesktopBridge.Models;
