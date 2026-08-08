@@ -64,6 +64,8 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         var image = _imageResolver.Resolve(request.Template.Key, request.Template.Image);
         _logger.LogInformation("Sandbox interactive image resolved: template={Template} image={Image}", request.Template.Key, image);
 
+        // base_url 与站点反向代理路径一致；token 仅存库并在服务端注入，不出现在对外 AccessUrl。
+        var baseUrl = SandboxJupyterPaths.GetBaseUrl(request.SessionId);
         var args = new List<string>
         {
             "run", "-d",
@@ -78,8 +80,12 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
             "-e", $"JUPYTER_TOKEN={token}",
             image,
             "start-notebook.py",
-            $"--NotebookApp.token={token}",
-            "--NotebookApp.allow_origin=*"
+            $"--ServerApp.token={token}",
+            $"--ServerApp.base_url={baseUrl}",
+            "--ServerApp.allow_origin=*",
+            "--ServerApp.allow_remote_access=True",
+            "--ServerApp.disable_check_xsrf=True",
+            "--ServerApp.root_dir=/home/jovyan/work"
         };
 
         var run = await RunDockerAsync(args, null, TimeSpan.FromMinutes(3), cancellationToken).ConfigureAwait(false);
@@ -89,14 +95,20 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         }
 
         var containerId = run.StdOut.Trim();
-        var accessUrl = $"http://127.0.0.1:{hostPort}/lab?token={token}";
+        _logger.LogInformation(
+            "Sandbox Jupyter started: session={SessionId} container={ContainerId} hostPort={HostPort} baseUrl={BaseUrl}",
+            request.SessionId,
+            containerId,
+            hostPort,
+            baseUrl);
+
         return new SandboxCreateRuntimeResult
         {
             RuntimeHandle = containerId,
             HostPort = hostPort,
-            AccessUrl = accessUrl,
+            AccessUrl = SandboxJupyterPaths.GetLabEntryUrl(request.SessionId),
             AccessToken = token,
-            Message = "JupyterLab container started."
+            Message = "JupyterLab 已启动；请通过站点反向代理访问（需管理员登录）。"
         };
     }
 

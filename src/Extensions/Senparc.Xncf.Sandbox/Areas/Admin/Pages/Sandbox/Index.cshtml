@@ -36,10 +36,10 @@
                 <el-table-column prop="templateKey" label="模板" width="140"></el-table-column>
                 <el-table-column prop="runtimeKind" label="运行时" width="100"></el-table-column>
                 <el-table-column prop="status" label="状态" width="100"></el-table-column>
-                <el-table-column prop="hostPort" label="端口" width="80"></el-table-column>
-                <el-table-column label="访问" min-width="180">
+                <el-table-column prop="hostPort" label="本机端口" width="90"></el-table-column>
+                <el-table-column label="访问" min-width="220">
                     <template slot-scope="scope">
-                        <a v-if="scope.row.accessUrl" :href="scope.row.accessUrl" target="_blank">打开</a>
+                        <a v-if="scope.row.accessUrl" :href="scope.row.accessUrl" target="_blank" rel="noopener">打开 Notebook</a>
                         <span v-else>-</span>
                     </template>
                 </el-table-column>
@@ -50,6 +50,7 @@
                 </el-table-column>
             </el-table>
             <p style="margin-top:16px;color:#888;">
+                Jupyter 通过站点反向代理 <code>/sandbox-jupyter/&#123;sessionId&#125;/</code> 访问（需管理员登录；token 不出现在链接中）。
                 也可通过模块 Function「创建沙箱 / 执行代码 / 销毁沙箱」操作。完整环境步骤：
                 <a href="@Model.DocsUrl" target="_blank" rel="noopener">@Model.DocsUrl</a>
             </p>

@@ -8,6 +8,7 @@
 
 ----------------------------------------------------------------*/
 
+using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +23,7 @@ using Senparc.Xncf.Sandbox.Application.AppServices;
 using Senparc.Xncf.Sandbox.Domain.Services;
 using Senparc.Xncf.Sandbox.Domain.Services.Runtime;
 using Senparc.Xncf.Sandbox.Models;
+using Senparc.Xncf.Sandbox.OHS.Local.Middleware;
 using System.Reflection;
 
 namespace Senparc.Xncf.Sandbox;
@@ -71,6 +73,12 @@ public partial class Register : XncfRegisterBase, IXncfRegister
 
         services.AddScoped<SandboxSessionService>();
         services.AddScoped<SandboxAppService>();
+        services.AddHttpClient(SandboxJupyterProxyMiddleware.HttpClientName)
+            .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+            {
+                AllowAutoRedirect = false,
+                UseCookies = false
+            });
         return base.AddXncfModule(services, configuration, env);
     }
 
@@ -80,6 +88,10 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         {
             FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
         });
+
+        // JupyterLab 交互需要 WebSocket；鉴权与 token 注入在中间件内完成。
+        app.UseWebSockets();
+        app.UseMiddleware<SandboxJupyterProxyMiddleware>();
 
         return base.UseXncfModule(app, registerService);
     }

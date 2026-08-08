@@ -25,7 +25,7 @@ NCF 独立沙箱编排模块：为用户快速创建/销毁隔离实验环境（
 | NcfDocs 环境准备文档 | ✅ [线上文档](https://doc.ncf.pub/zh/NcfPackageSources/xncf/sandbox-environment.html) |
 | 镜像仓库映射配置 | ✅ `SenparcXncfSandbox:Images`（RegistryPrefix / Overrides） |
 | 单元测试（ImageResolver） | ✅ 4 通过 |
-| Jupyter 反向代理 / 鉴权 | ⏳ |
+| Jupyter 反向代理 / 鉴权 | ✅ `/sandbox-jupyter/{sessionId}/`（Admin Cookie + 服务端注入 token） |
 | Wasmtime 实装 | ⏳ |
 
 ## 架构
@@ -57,12 +57,20 @@ ISandboxRuntime
 - TTL 强制回收
 - **无 Docker 时不降级裸进程**
 - JupyterLab：BSD-3-Clause（勿用商标背书）
+- Jupyter 访问：站点反向代理 `/sandbox-jupyter/{sessionId}/lab`（需管理员登录）；容器只绑 `127.0.0.1`；token 不下发到浏览器链接
 
 ## 后台入口
 
 1. **环境准备** `/Admin/Sandbox/Setup`：Docker 检测 + 文档链接  
-2. **沙箱面板** `/Admin/Sandbox/Index`：会话列表 / 销毁  
+2. **沙箱面板** `/Admin/Sandbox/Index`：会话列表 / 打开 Notebook（代理）/ 销毁  
 3. Function：创建沙箱 / 列表 / Exec / 销毁  
+
+### Jupyter 代理调试
+
+- 中间件：`SandboxJupyterProxyMiddleware`（HTTP + WebSocket）
+- 容器启动参数：`ServerApp.base_url=/sandbox-jupyter/{sessionId}/`
+- 未登录访问代理路径会跳转 `/Admin/Login?returnUrl=...`  
+
 
 ## 调试信息
 
@@ -113,8 +121,9 @@ dotnet run -- --database-upgrade
 1. 若尚未处理：清理半成品表并 `--database-upgrade`（见上一节）  
 2. **重启站点**（已改 appsettings / 模块代码）  
 3. 打开 **环境准备**：确认 Docker 检测通过，文档链接可打开  
-4. Function 创建 `python-exec` 并 Exec 冒烟  
+4. ~~Function 创建 `python-exec` 并 Exec 冒烟~~ ✅（ExitCode 0）  
 5. 下一步可选：A) Wasmtime  B) Jupyter 代理/鉴权  
+
 
 
 ## 版本

@@ -145,8 +145,15 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
                         cancellationToken)
                     .ConfigureAwait(false);
 
-                entity.MarkRunning(created.RuntimeHandle, created.HostPort, created.AccessUrl, created.AccessToken, created.Message);
+                // 对外只暴露代理路径；HostPort/Token 仅服务端代理使用。
+                var accessUrl = SandboxJupyterPaths.GetLabEntryUrl(sessionId);
+                entity.MarkRunning(created.RuntimeHandle, created.HostPort, accessUrl, created.AccessToken, created.Message);
                 await sessionService.SaveObjectAsync(entity).ConfigureAwait(false);
+                _logger.LogInformation(
+                    "Sandbox interactive session ready: SessionId={SessionId} AccessUrl={AccessUrl} HostPort={HostPort}",
+                    sessionId,
+                    accessUrl,
+                    created.HostPort);
                 return entity.ToInfo();
             }
             catch (Exception ex)
@@ -215,6 +222,45 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
         var entity = await sessionService.GetBySessionIdAsync(sessionId).ConfigureAwait(false);
         return entity?.ToInfo();
+    }
+
+    /// <summary>
+    /// 供反向代理解析上游；勿下发给浏览器。
+    /// </summary>
+    public async Task<SandboxJupyterProxyTarget?> TryGetJupyterProxyTargetAsync(
+        string sessionId,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(sessionId))
+        {
+            return null;
+        }
+
+        using var scope = _scopeFactory.CreateScope();
+        var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
+        var normalizedId = sessionId.Trim().ToLowerInvariant();
+        var entity = await sessionService.GetBySessionIdAsync(normalizedId).ConfigureAwait(false);
+        if (entity == null
+            || entity.Status != SandboxSessionStatus.Running
+            || !entity.HostPort.HasValue
+            || entity.HostPort.Value <= 0
+            || string.IsNullOrWhiteSpace(entity.AccessToken))
+        {
+            return null;
+        }
+
+        if (!SandboxTemplateCatalog.TryGet(entity.TemplateKey, out var template) || !template.Interactive)
+        {
+            return null;
+        }
+
+        // 代理高频请求不 Touch/写库，避免 Lab 静态资源打爆 DB；TTL 仍按创建时 ExpiresAtUtc。
+        return new SandboxJupyterProxyTarget
+        {
+            SessionId = entity.SessionId,
+            HostPort = entity.HostPort.Value,
+            AccessToken = entity.AccessToken
+        };
     }
 
     public async Task DestroyAsync(string sessionId, CancellationToken cancellationToken = default)

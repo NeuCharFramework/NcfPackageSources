@@ -15,9 +15,12 @@ public class Sandbox_CreateRequest : FunctionAppRequestBase
     [FunctionParameterUi(ParameterType.DropDownList, nameof(TemplateOptions))]
     public string TemplateKey { get; set; } = SandboxTemplateKeys.PythonExec;
 
-    /// <summary>下拉数据源；必须 JsonIgnore，否则会被当成第 2 个参数画到界面上。</summary>
+    /// <summary>
+    /// 下拉数据源：只读 + JsonIgnore，避免前端 JSON 反序列化 SelectionList 失败。
+    /// </summary>
     [JsonIgnore]
-    public SelectionList TemplateOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new[]
+    [Newtonsoft.Json.JsonIgnore]
+    public SelectionList TemplateOptions { get; } = new SelectionList(SelectionType.DropDownList, new[]
     {
         new SelectionItem(SandboxTemplateKeys.PythonExec, "Python Exec", "短任务执行 Python（Docker）", true),
         new SelectionItem(SandboxTemplateKeys.CsharpExec, "C# Exec", "短任务执行 C#（Docker SDK 镜像）"),
@@ -29,7 +32,8 @@ public class Sandbox_CreateRequest : FunctionAppRequestBase
     public string RuntimeKind { get; set; } = nameof(SandboxRuntimeKind.Docker);
 
     [JsonIgnore]
-    public SelectionList RuntimeOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new[]
+    [Newtonsoft.Json.JsonIgnore]
+    public SelectionList RuntimeOptions { get; } = new SelectionList(SelectionType.DropDownList, new[]
     {
         new SelectionItem(nameof(SandboxRuntimeKind.Docker), "Docker", "需要本机 Docker", true),
         new SelectionItem(nameof(SandboxRuntimeKind.Wasm), "Wasm (Stub)", "一期占位，尚未可用")

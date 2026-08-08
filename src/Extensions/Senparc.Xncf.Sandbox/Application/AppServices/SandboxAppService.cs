@@ -117,8 +117,8 @@ public class SandboxAppService : AppServiceBase
             $"Template: {WebUtility.HtmlEncode(info.TemplateKey)}<br/>" +
             $"Runtime: {info.RuntimeKind}<br/>" +
             $"Status: {info.Status}<br/>" +
-            $"Port: {info.HostPort}<br/>" +
-            $"Url: {WebUtility.HtmlEncode(info.AccessUrl ?? "-")}<br/>" +
+            $"HostPort(loopback): {info.HostPort?.ToString() ?? "-"}<br/>" +
+            $"Url(proxy): {WebUtility.HtmlEncode(info.AccessUrl ?? "-")}<br/>" +
             $"Expires(UTC): {info.ExpiresAtUtc:u}<br/>" +
             $"Message: {WebUtility.HtmlEncode(info.StatusMessage ?? "-")}";
     }
