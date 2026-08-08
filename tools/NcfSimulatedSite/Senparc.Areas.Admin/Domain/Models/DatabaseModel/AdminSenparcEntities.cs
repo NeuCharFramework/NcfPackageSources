@@ -12,6 +12,9 @@
 
     修改标识：Senparc - 20260705
     修改描述：v0.0.4 新增登录超时配置并补齐多数据库迁移支持
+
+    修改标识：Senparc - 20260808
+    修改描述：新增 NeuCharPivot、Loop Task、执行日志及 Workflow 系统表
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -59,8 +62,102 @@ namespace Senparc.Areas.Admin.Domain.Models
         /// </summary>
         public DbSet<AdminChatSessionModule> AdminChatSessionModules { get; set; }
 
+        /// <summary>
+        /// 系统级 NeuCharPivot 配置
+        /// </summary>
+        public DbSet<NeuCharPivotConfiguration> NeuCharPivotConfigurations { get; set; }
+
+        /// <summary>
+        /// 可复用的单 Function UI 块
+        /// </summary>
+        public DbSet<NeuCharPivotFunction> NeuCharPivotFunctions { get; set; }
+
+        /// <summary>
+        /// Function 定时任务
+        /// </summary>
+        public DbSet<NeuCharPivotLoopTask> NeuCharPivotLoopTasks { get; set; }
+
+        /// <summary>
+        /// NeuChar 工作流
+        /// </summary>
+        public DbSet<NeuCharWorkflow> NeuCharWorkflows { get; set; }
+
+        /// <summary>
+        /// Pivot、Loop Task 与 Workflow 的统一执行记录
+        /// </summary>
+        public DbSet<NeuCharExecutionLog> NeuCharExecutionLogs { get; set; }
+
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
 
         #endregion
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<NeuCharPivotConfiguration>()
+                .HasIndex(z => z.ModuleUid)
+                .IsUnique();
+            modelBuilder.Entity<NeuCharPivotFunction>()
+                .HasIndex(z => new { z.PivotId, z.FunctionKey })
+                .IsUnique();
+            modelBuilder.Entity<NeuCharPivotFunction>()
+                .HasIndex(z => z.ModuleUid);
+            modelBuilder.Entity<NeuCharPivotLoopTask>()
+                .HasIndex(z => z.FunctionId)
+                .IsUnique();
+            modelBuilder.Entity<NeuCharPivotLoopTask>()
+                .HasIndex(z => new { z.Enabled, z.NextRunAt });
+            modelBuilder.Entity<NeuCharWorkflow>()
+                .HasIndex(z => new { z.Enabled, z.NextRunAt });
+            modelBuilder.Entity<NeuCharExecutionLog>()
+                .HasIndex(z => z.CorrelationId);
+            modelBuilder.Entity<NeuCharExecutionLog>()
+                .HasIndex(z => new { z.SourceType, z.SourceId });
+
+            var providerName = Database.ProviderName ?? string.Empty;
+            var largeTextType = providerName.Contains("Oracle", StringComparison.OrdinalIgnoreCase)
+                ? "NCLOB"
+                : providerName.Contains("Dm", StringComparison.OrdinalIgnoreCase)
+                    ? "NVARCHAR2(32767)"
+                    : providerName.Contains("MySql", StringComparison.OrdinalIgnoreCase)
+                        ? "longtext"
+                        : providerName.Contains("SqlServer", StringComparison.OrdinalIgnoreCase)
+                            ? "nvarchar(max)"
+                            : "TEXT";
+
+            SetLargeText<NeuCharPivotConfiguration>(modelBuilder, largeTextType,
+                nameof(NeuCharPivotConfiguration.UserRequirement),
+                nameof(NeuCharPivotConfiguration.LayoutSchemaJson),
+                nameof(NeuCharPivotConfiguration.LastError));
+            SetLargeText<NeuCharPivotFunction>(modelBuilder, largeTextType,
+                nameof(NeuCharPivotFunction.Description),
+                nameof(NeuCharPivotFunction.UiSchemaJson),
+                nameof(NeuCharPivotFunction.DefaultParametersJson));
+            SetLargeText<NeuCharPivotLoopTask>(modelBuilder, largeTextType,
+                nameof(NeuCharPivotLoopTask.ParametersJson),
+                nameof(NeuCharPivotLoopTask.LastError));
+            SetLargeText<NeuCharWorkflow>(modelBuilder, largeTextType,
+                nameof(NeuCharWorkflow.Description),
+                nameof(NeuCharWorkflow.GraphJson),
+                nameof(NeuCharWorkflow.TriggerConfigJson),
+                nameof(NeuCharWorkflow.LastError));
+            SetLargeText<NeuCharExecutionLog>(modelBuilder, largeTextType,
+                nameof(NeuCharExecutionLog.ResultSummary),
+                nameof(NeuCharExecutionLog.Error));
+        }
+
+        private static void SetLargeText<TEntity>(
+            ModelBuilder modelBuilder,
+            string columnType,
+            params string[] propertyNames)
+            where TEntity : class
+        {
+            var entity = modelBuilder.Entity<TEntity>();
+            foreach (var propertyName in propertyNames)
+            {
+                entity.Property<string>(propertyName).HasColumnType(columnType);
+            }
+        }
     }
 }

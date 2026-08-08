@@ -1,0 +1,141 @@
+@page
+@model Senparc.Areas.Admin.Areas.Admin.Pages.NeuCharPivot.WorkflowModel
+@{
+    ViewData["Title"] = "NeuCharPivot · Workflow";
+    Layout = "_Layout_Vue";
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>NeuCharPivot</el-breadcrumb-item>
+    <el-breadcrumb-item>Workflow</el-breadcrumb-item>
+}
+
+@section Style {
+    <link rel="stylesheet" href="~/css/Admin/Pages/NeuCharPivot/common.css" />
+    <link rel="stylesheet" href="~/css/Admin/Pages/NeuCharPivot/Workflow.css" />
+}
+
+<div class="neuchar-page workflow-page" v-loading="loading">
+    <header class="neuchar-page-header">
+        <div><h2>Workflow</h2><p>从 NeuCharPivot Function、触发器和 Agent 组合自动化流程；所有节点执行时都会重新校验模块状态。</p></div>
+        <div><el-button icon="el-icon-refresh" @@click="loadAll">刷新</el-button><el-button type="primary" icon="el-icon-plus" @@click="createWorkflow">新建工作流</el-button></div>
+    </header>
+
+    <div class="workflow-shell">
+        <aside class="workflow-list-pane">
+            <el-input v-model="keyword" size="small" clearable prefix-icon="el-icon-search" placeholder="搜索工作流"></el-input>
+            <div v-if="filteredWorkflows.length" class="workflow-list">
+                <button v-for="item in filteredWorkflows" :key="item.id" :class="['workflow-list-item',{active: form.id===item.id}]" @@click="editWorkflow(item.id)">
+                    <span class="workflow-list-name">{{item.name}}</span>
+                    <span><el-tag size="mini" :type="item.enabled?'success':'info'">{{item.enabled?'运行中':'草稿'}}</el-tag></span>
+                    <small>{{item.triggerType==='interval'?'间隔触发':'手动触发'}} · Revision {{item.revision}}</small>
+                </button>
+            </div>
+            <div v-else class="workflow-list-empty">暂无工作流</div>
+        </aside>
+
+        <main class="workflow-editor">
+            <template v-if="editing">
+                <div class="workflow-meta">
+                    <el-input v-model="form.name" maxlength="200" placeholder="工作流名称"></el-input>
+                    <el-input v-model="form.description" placeholder="用一句话说明这个工作流"></el-input>
+                    <el-select v-model="form.triggerType" @@change="syncTriggerNode"><el-option label="手动触发" value="manual"></el-option><el-option label="间隔触发" value="interval"></el-option></el-select>
+                    <el-input-number v-if="form.triggerType==='interval'" v-model="form.intervalSeconds" :min="60" :max="31536000" :step="60"></el-input-number>
+                    <el-switch v-model="form.enabled" active-text="启用"></el-switch>
+                    <el-button type="primary" @@click="saveWorkflow">保存</el-button>
+                    <el-button :disabled="!form.id" @@click="openRun">运行</el-button>
+                    <el-popconfirm v-if="form.id" title="确认删除这个工作流？" @@on-confirm="deleteWorkflow"><el-button slot="reference" type="danger" plain>删除</el-button></el-popconfirm>
+                </div>
+
+                <div class="workflow-designer">
+                    <aside class="workflow-palette">
+                        <h4>添加节点</h4>
+                        <el-button plain icon="el-icon-s-operation" @@click="addSimpleNode('condition','条件判断')">条件</el-button>
+                        <el-button plain icon="el-icon-time" @@click="addSimpleNode('delay','等待')">等待</el-button>
+                        <el-button plain icon="el-icon-circle-check" @@click="addSimpleNode('end','结束')">结束</el-button>
+                        <el-divider>NeuCharPivot</el-divider>
+                        <el-select v-model="paletteModule" size="small" clearable placeholder="筛选模块"><el-option v-for="name in moduleNames" :key="name" :label="name" :value="name"></el-option></el-select>
+                        <button v-for="fn in filteredFunctions" :key="fn.id" class="palette-item" :disabled="!fn.moduleAvailable" @@click="addFunctionNode(fn)">
+                            <strong>{{fn.functionName}}</strong><small>{{fn.moduleName}} · {{fn.moduleAvailable?'可用':'模块未开启'}}</small>
+                        </button>
+                        <template v-if="workflowObjects.length"><el-divider>AgentsManager</el-divider><button v-for="object in workflowObjects" :key="object.providerId+object.objectId" class="palette-item" :disabled="!object.enabled" @@click="addObjectNode(object)"><strong>{{object.name}}</strong><small>{{object.kind==='agent-group'?'Agent 组':'独立 Agent'}}</small></button></template>
+                    </aside>
+
+                    <section ref="canvas" class="workflow-canvas" @@click="cancelConnection">
+                        <div class="canvas-toolbar" @@click.stop>
+                            <span><i class="el-icon-rank"></i> 拖动节点调整位置；点击输出端口，再点击目标输入端口即可连线。</span>
+                            <el-button size="mini" icon="el-icon-magic-stick" @@click="autoLayout">自动排版</el-button>
+                        </div>
+                        <div class="workflow-stage" :style="{width:canvasSize.width+'px',height:canvasSize.height+'px'}">
+                            <svg class="workflow-wires" :width="canvasSize.width" :height="canvasSize.height" aria-hidden="true">
+                                <defs><marker id="workflow-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z"></path></marker></defs>
+                                <g v-for="edge in form.graph.edges" :key="edge.id">
+                                    <path :d="edgePath(edge)" marker-end="url(#workflow-arrow)"></path>
+                                    <text v-if="edge.sourceHandle==='true' || edge.sourceHandle==='false'" :x="edgeLabelX(edge)" :y="edgeLabelY(edge)">{{edge.sourceHandle==='true'?'真':'假'}}</text>
+                                </g>
+                            </svg>
+                            <article v-for="(node,index) in form.graph.nodes"
+                                     :key="node.id"
+                                     :class="['workflow-node','node-'+node.type,{selected:selectedNodeId===node.id}]"
+                                     :style="{left:node.x+'px',top:node.y+'px'}"
+                                     @@mousedown="startDrag($event,node)"
+                                     @@click.stop="selectNode(node)">
+                                <button v-if="!node.type.endsWith('trigger')" type="button" class="node-port node-input" :class="{ready:!!connectionDraft.sourceId}" title="连接到此节点" @@click.stop="connectTo(node)"></button>
+                                <div class="workflow-node-body">
+                                    <span class="node-index">{{index+1}}</span>
+                                    <div><strong>{{node.name}}</strong><small>{{nodeSummary(node)}}</small></div>
+                                    <el-button v-if="!node.type.endsWith('trigger')" type="text" icon="el-icon-delete" @@click.stop="removeNode(node)"></el-button>
+                                </div>
+                                <template v-if="node.type==='condition'">
+                                    <button type="button" class="node-port node-output node-output-true" title="真分支" @@click.stop="beginConnection(node,'true')">真</button>
+                                    <button type="button" class="node-port node-output node-output-false" title="假分支" @@click.stop="beginConnection(node,'false')">假</button>
+                                </template>
+                                <button v-else-if="node.type!=='end'" type="button" class="node-port node-output node-output-default" title="连接后续节点" @@click.stop="beginConnection(node,'default')"></button>
+                            </article>
+                            <div v-if="connectionDraft.sourceId" class="connection-hint">正在从“{{connectionSourceName}}”连接：请选择目标节点顶部端口，或点击空白处取消。</div>
+                        </div>
+                    </section>
+
+                    <aside class="workflow-inspector">
+                        <template v-if="selectedNode">
+                            <h4>节点设置</h4>
+                            <el-form label-position="top" size="small">
+                                <el-form-item label="名称"><el-input v-model="selectedNode.name"></el-input></el-form-item>
+                                <template v-if="selectedNode.type==='condition'">
+                                    <el-form-item label="条件为真时"><el-select clearable :value="targetFor(selectedNode,'true')" placeholder="选择后续节点" @@change="setTarget(selectedNode,'true',$event)"><el-option v-for="target in availableTargets(selectedNode)" :key="target.id" :label="target.name" :value="target.id"></el-option></el-select></el-form-item>
+                                    <el-form-item label="条件为假时"><el-select clearable :value="targetFor(selectedNode,'false')" placeholder="选择后续节点" @@change="setTarget(selectedNode,'false',$event)"><el-option v-for="target in availableTargets(selectedNode)" :key="target.id" :label="target.name" :value="target.id"></el-option></el-select></el-form-item>
+                                </template>
+                                <el-form-item v-else-if="selectedNode.type!=='end'" label="后续节点"><el-select clearable :value="targetFor(selectedNode,'default')" placeholder="选择后续节点" @@change="setTarget(selectedNode,'default',$event)"><el-option v-for="target in availableTargets(selectedNode)" :key="target.id" :label="target.name" :value="target.id"></el-option></el-select></el-form-item>
+                                <template v-if="selectedNode.type==='function' && selectedFunction">
+                                    <el-alert v-if="!selectedFunction.moduleAvailable" title="模块未开启，节点不可执行" type="warning" :closable="false"></el-alert>
+                                    <el-form-item v-for="parameter in functionParameters(selectedFunction)" :key="parameter.name" :label="parameter.title || parameter.name" :required="parameter.required">
+                                        <el-input v-if="parameter.parameterType===0 || parameter.parameterType===3" :type="parameter.parameterType===3?'password':'text'" v-model="selectedNode.config.parameters[parameter.name]" placeholder="可使用输入占位符引用上一步输出"></el-input>
+                                        <el-select v-else-if="parameter.parameterType===1" v-model="selectedNode.config.parameters[parameter.name]" :filterable="parameter.filterable" :allow-create="parameter.allowCreate"><el-option v-for="option in parameter.options" :key="option.value" :label="option.text" :value="option.value"></el-option></el-select>
+                                        <el-checkbox-group v-else-if="parameter.parameterType===2" v-model="selectedNode.config.parameters[parameter.name]"><el-checkbox v-for="option in parameter.options" :key="option.value" :label="option.value">{{option.text}}</el-checkbox></el-checkbox-group>
+                                        <el-switch v-else-if="parameter.parameterType===4" v-model="selectedNode.config.parameters[parameter.name]"></el-switch>
+                                    </el-form-item>
+                                </template>
+                                <template v-if="selectedNode.type==='condition'">
+                                    <el-form-item label="左值"><el-input v-model="selectedNode.config.left" placeholder="输入占位符"></el-input></el-form-item>
+                                    <el-form-item label="判断"><el-select v-model="selectedNode.config.operator"><el-option label="等于" value="equals"></el-option><el-option label="包含" value="contains"></el-option><el-option label="不等于" value="not-equals"></el-option><el-option label="开头是" value="starts-with"></el-option><el-option label="结尾是" value="ends-with"></el-option></el-select></el-form-item>
+                                    <el-form-item label="右值"><el-input v-model="selectedNode.config.right"></el-input></el-form-item>
+                                </template>
+                                <el-form-item v-if="selectedNode.type==='delay'" label="等待秒数（单节点最多 30 秒）"><el-input-number v-model="selectedNode.config.seconds" :min="0" :max="30"></el-input-number></el-form-item>
+                                <el-form-item v-if="selectedNode.type==='agent' || selectedNode.type==='agent-group'" label="Prompt"><el-input type="textarea" :rows="6" v-model="selectedNode.config.prompt" placeholder="可在 Prompt 中使用输入占位符"></el-input></el-form-item>
+                            </el-form>
+                        </template>
+                        <div v-else class="inspector-empty">选择画布中的节点进行设置</div>
+                    </aside>
+                </div>
+            </template>
+            <div v-else class="neuchar-empty"><i class="fa fa-random fa-3x"></i><h3>选择或创建一个工作流</h3><p>从触发器开始添加节点，系统会自动建议连接，也可以在画布中拖动和调整分支。</p></div>
+        </main>
+    </div>
+
+    <el-dialog title="运行工作流" :visible.sync="run.visible" width="540px" :close-on-click-modal="false"><el-input type="textarea" :rows="5" v-model="run.input" placeholder="输入会传递给后续节点"></el-input><pre v-if="run.result" class="workflow-run-result">{{run.result}}</pre><span slot="footer"><el-button @@click="run.visible=false">关闭</el-button><el-button type="primary" :loading="run.loading" @@click="runWorkflow">运行</el-button></span></el-dialog>
+</div>
+
+@section scripts {
+    <script src="~/js/Admin/Pages/NeuCharPivot/common.js"></script>
+    <script src="~/js/Admin/Pages/NeuCharPivot/Workflow.js"></script>
+}

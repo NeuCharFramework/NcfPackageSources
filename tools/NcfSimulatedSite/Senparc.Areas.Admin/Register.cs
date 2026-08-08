@@ -43,6 +43,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
@@ -70,6 +71,7 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Shared.Abstractions.Security;
+using Senparc.Ncf.Shared.Abstractions.ChatAgent;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase;
@@ -217,6 +219,26 @@ namespace Senparc.Areas.Admin
             services.AddScoped<AdminChatSessionModuleService>();
             services.AddScoped<AdminChatAiService>();
 
+            // ChatAgent / NeuCharPivot：系统表、声明式 UI、Function 安全执行和 EventBus 协调。
+            services.AddScoped<INeuCharPivotConfigurationRepository, NeuCharPivotConfigurationRepository>();
+            services.AddScoped<INeuCharPivotFunctionRepository, NeuCharPivotFunctionRepository>();
+            services.AddScoped<INeuCharPivotLoopTaskRepository, NeuCharPivotLoopTaskRepository>();
+            services.AddScoped<INeuCharWorkflowRepository, NeuCharWorkflowRepository>();
+            services.AddScoped<INeuCharExecutionLogRepository, NeuCharExecutionLogRepository>();
+            services.AddScoped<NeuCharPivotConfigurationService>();
+            services.AddScoped<NeuCharPivotFunctionService>();
+            services.AddScoped<NeuCharPivotLoopTaskService>();
+            services.AddScoped<NeuCharWorkflowService>();
+            services.AddScoped<NeuCharExecutionLogService>();
+            services.AddScoped<NeuCharFunctionService>();
+            services.AddScoped<NeuCharPivotService>();
+            services.AddDataProtection();
+            services.AddScoped<NeuCharParameterProtector>();
+            services.AddScoped<ChatAgentNeuCharPivotComposer>();
+            services.AddScoped<NeuCharWorkflowEngine>();
+            services.AddHostedService<NeuCharPivotLoopTaskHostedService>();
+            services.AddHostedService<NeuCharWorkflowHostedService>();
+
             // Admin 首页 Host 实时指标采样器。Singleton 仅保存计算速率所需的上一帧计数器，
             // 不保存历史记录，也不写入任何缓存。
             services.AddSingleton<HostMetricsCollector>();
@@ -232,6 +254,9 @@ namespace Senparc.Areas.Admin
             services.AddScoped<INeuBellModuleAvailabilityService, NeuBellModuleAvailabilityService>();
             services.AddScoped<NeuBellProviderCatalog>();
             services.AddScoped<NeuBellSnapshotService>();
+            services.AddSingleton<NeuCharPivotNeuBellProvider>();
+            services.AddSingleton<Senparc.Ncf.Shared.Abstractions.NeuBell.INeuBellProvider>(
+                serviceProvider => serviceProvider.GetRequiredService<NeuCharPivotNeuBellProvider>());
 
             return base.AddXncfModule(services, configuration, env);
         }
@@ -392,6 +417,8 @@ namespace Senparc.Areas.Admin
 
                 options.Conventions.AuthorizePage("/", NcfAuthorizationPolicyNames.AdminOnly);//必须登录
                 options.Conventions.AuthorizePage("/AdminChat/Chat", NcfAuthorizationPolicyNames.AdminOnly);//聊天页面必须登录
+                options.Conventions.AuthorizePage("/NeuCharPivot/Aggregate", NcfAuthorizationPolicyNames.AdminOnly);
+                options.Conventions.AuthorizePage("/NeuCharPivot/Workflow", NcfAuthorizationPolicyNames.AdminOnly);
                 options.Conventions.AllowAnonymousToPage("/Login");//允许匿名
 
                 //更多：https://learn.microsoft.com/en-us/aspnet/core/security/authorization/razor-pages-authorization?view=aspnetcore-8.0

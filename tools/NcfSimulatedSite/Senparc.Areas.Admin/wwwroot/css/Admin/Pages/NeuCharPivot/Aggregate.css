@@ -1,0 +1,5 @@
+.pivot-aggregate > .neuchar-page-header .el-input { width: 300px; }
+.aggregate-module-title { display: flex; align-items: center; gap: 10px; width: 100%; }
+.aggregate-module-title > span:last-child { margin-left: auto; color: #909399; font-size: 12px; }
+.aggregate-functions { padding-top: 16px; }
+.aggregate-result { max-height: 55vh; margin: 0; padding: 14px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; background: #f5f7fa; border-radius: 6px; }

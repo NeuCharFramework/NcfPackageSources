@@ -289,6 +289,48 @@ namespace Senparc.Areas.Admin.Pages
                 });
             }
 
+            // NeuCharPivot 是系统级 AI 能力入口，与 AdminChat 同属系统管理；
+            // 聚合页负责跨模块快捷调用，Workflow 负责声明式编排。
+            var pivotMenu = dest.FirstOrDefault(z =>
+                string.Equals(z.MenuName, "NeuCharPivot", StringComparison.OrdinalIgnoreCase));
+            if (pivotMenu == null)
+            {
+                pivotMenu = new SysMenuDto
+                {
+                    MenuName = "NeuCharPivot",
+                    Url = string.Empty,
+                    Icon = "fa fa-th-large",
+                    Id = (index++).ToString(),
+                    ParentId = adminChatParentId
+                };
+                var adminChatIndex = dest.FindIndex(z =>
+                    string.Equals(z.Url, "/Admin/AdminChat/Chat", StringComparison.OrdinalIgnoreCase));
+                dest.Insert(adminChatIndex >= 0 ? adminChatIndex + 1 : 0, pivotMenu);
+            }
+
+            if (!dest.Any(z => string.Equals(z.Url, "/Admin/NeuCharPivot/Aggregate", StringComparison.OrdinalIgnoreCase)))
+            {
+                dest.Add(new SysMenuDto
+                {
+                    MenuName = "聚合",
+                    Url = "/Admin/NeuCharPivot/Aggregate",
+                    Icon = "fa fa-cubes",
+                    Id = (index++).ToString(),
+                    ParentId = pivotMenu.Id
+                });
+            }
+            if (!dest.Any(z => string.Equals(z.Url, "/Admin/NeuCharPivot/Workflow", StringComparison.OrdinalIgnoreCase)))
+            {
+                dest.Add(new SysMenuDto
+                {
+                    MenuName = "Workflow",
+                    Url = "/Admin/NeuCharPivot/Workflow",
+                    Icon = "fa fa-random",
+                    Id = (index++).ToString(),
+                    ParentId = pivotMenu.Id
+                });
+            }
+
             GetSysMenuTreesRecursive(dest, sysMenuTrees, null);
             return sysMenuTrees;
         }

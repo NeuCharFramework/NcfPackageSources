@@ -49,6 +49,18 @@ using Senparc.AI.AgentKernel.Extensions;
 namespace Senparc.Areas.Admin.Domain.Services
 {
     /// <summary>
+    /// 系统级 ChatAgent 调用选项。普通 AdminChat 保持既有体验，只能加载模块显式声明的
+    /// FunctionRender 白名单；系统生成场景可显式关闭全部 Function 工具。
+    /// </summary>
+    public sealed class AdminChatGenerationOptions
+    {
+        public string SystemInstructions { get; init; }
+        public bool? AllowFunctionInvocation { get; init; }
+        public int MaxOutputTokens { get; init; } = 2000;
+        public float Temperature { get; init; } = 0.6f;
+    }
+
+    /// <summary>
     /// AdminChatAiService：管理后台聊天 AI 调用服务。
     /// 默认使用 appsettings 中的 SenparcAiSetting，也支持按请求切换到 AIKernel 中配置的 Chat 模型。
     /// </summary>
@@ -91,7 +103,8 @@ namespace Senparc.Areas.Admin.Domain.Services
             int userId,
             string userMessage,
             int aiModelId = 0,
-            Action<string> onChunk = null)
+            Action<string> onChunk = null,
+            AdminChatGenerationOptions generationOptions = null)
         {
             var showLoadedFunctionsInConsole = true;//是否输出 function 的 schema 信息到控制台，便于调试和验证 Function Calling 功能是否正确加载了函数
 
@@ -110,10 +123,12 @@ namespace Senparc.Areas.Admin.Domain.Services
 
             // 自动加载会话关联模块中的 FunctionRender（[#sym:FunctionRender]）插件对象
             var moduleUids = modules.Where(z => !z.XncfModuleUid.IsNullOrEmpty()).Select(z => z.XncfModuleUid).ToList();
-            var functionRenderBags = moduleUids
-                .SelectMany(uid => Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.GetByModuleUid(uid))
-                .Where(z => z.MethodInfo != null && z.MethodInfo.DeclaringType != null)
-                .ToList();
+            var functionRenderBags = generationOptions?.AllowFunctionInvocation != false
+                ? moduleUids
+                    .SelectMany(uid => Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.GetByModuleUid(uid))
+                    .Where(z => z.MethodInfo != null && z.MethodInfo.DeclaringType != null)
+                    .ToList()
+                : new List<FunctionRenderBag>();
 
             var functionPluginGroups = functionRenderBags
                 .GroupBy(z => z.MethodInfo.DeclaringType)
@@ -191,10 +206,10 @@ namespace Senparc.Areas.Admin.Domain.Services
             {
                 ChatOptions = new ChatOptions()
                 {
-                    Instructions = BuildSystemMessage(modules),
-                    MaxOutputTokens = 2000,
+                    Instructions = generationOptions?.SystemInstructions ?? BuildSystemMessage(modules),
+                    MaxOutputTokens = Math.Clamp(generationOptions?.MaxOutputTokens ?? 2000, 256, 8000),
                     TopP = 0.9f,
-                    Temperature = 0.6f,
+                    Temperature = Math.Clamp(generationOptions?.Temperature ?? 0.6f, 0f, 1.5f),
                     Tools = aiFunctions.Select(z => z as AITool).ToList()
                 },
                 ChatHistoryProvider = new InMemoryChatHistoryProvider(new InMemoryChatHistoryProviderOptions
