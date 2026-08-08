@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：StatAppService.cs
@@ -10,9 +10,13 @@
     修改标识：Senparc - 20260729
     修改描述：v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
 
+    修改标识：Senparc - 20260808
+    修改描述：v0.4.0 接入 Host 实时指标统计输出
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.OHS.Local.PL;
+using Senparc.Areas.Admin.Domain.Services;
 using Senparc.Areas.Admin.SenparcTraceManager;
 using Senparc.CO2NET;
 using Senparc.Ncf.AreaBase.Admin.Filters;
@@ -28,8 +32,13 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     [AdminAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class StatAppService : LocalAppServiceBase
     {
-        public StatAppService(IServiceProvider serviceProvider) : base(serviceProvider)
+        private readonly HostMetricsCollector _hostMetricsCollector;
+
+        public StatAppService(
+            IServiceProvider serviceProvider,
+            HostMetricsCollector hostMetricsCollector) : base(serviceProvider)
         {
+            _hostMetricsCollector = hostMetricsCollector;
         }
 
         [ApiBind]
@@ -81,6 +90,18 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 }
 
                 return result;
+            });
+        }
+
+        /// <summary>
+        /// 获取当前 Host 的实时 CPU、内存、网络及 Web 进程指标。
+        /// </summary>
+        [ApiBind]
+        public async Task<AppResponseBase<HostMetricsSnapshot>> GetHostMetrics()
+        {
+            return await this.GetResponseAsync<HostMetricsSnapshot>((response, logger) =>
+            {
+                return Task.FromResult(_hostMetricsCollector.Collect());
             });
         }
     }

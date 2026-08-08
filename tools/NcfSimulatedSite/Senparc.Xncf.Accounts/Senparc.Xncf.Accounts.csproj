@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.3.3</Version>
+		<Version>0.3.4</Version>
 		<AssemblyName>Senparc.Xncf.Accounts</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Accounts</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -34,6 +34,10 @@
 			1、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.5-preview5
 			2、Dependency update from Senparc.Xncf.AreasBase to 0.13.3-preview5
 			3、Dependency update from Senparc.Xncf.SystemCore to 0.14.3-preview5
+			[2026-08-08] v0.3.4 Dependency updates from upstream projects
+			1、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
+			2、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+			3、Dependency update from Senparc.Xncf.SystemCore to 0.14.4-preview6
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>

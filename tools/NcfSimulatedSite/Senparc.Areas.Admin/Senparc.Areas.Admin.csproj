@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.3.0</Version>
+		<Version>0.4.0</Version>
 		<PackageReleaseNotes>
     [2026-07-02] v0.0.2 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
     1、支持流式输出并优化交互体验
@@ -35,6 +35,11 @@
     2、支持后台配置 FooterContent 并完善页脚所有权和生命周期处理
     3、统一中文“纽铃”与其他语言“NeuBell”，并迁移资源键、前端标识、API 路由和 SSE 事件名
     4、增加纽铃 Provider 内部触发测试及对应日志
+    [2026-08-08] v0.4.0 新增桌面管理员换票签发与 Host 实时指标展示
+    1、实现 DesktopAdminAuthTokenIssuer，将已验证 WebView 管理员身份换成受源会话寿命约束的 JWT
+    2、新增 HostMetricsCollector，采集并展示 CPU、内存、网络与进程实时指标
+    3、补充纽铃可见提醒示例 Provider 与请求参数，完善首页与页脚相关交互
+    4、同步多语言资源以支持指标面板与换票相关文案
 </PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.4</Version>
+    <Version>0.0.5</Version>
     <PackageReleaseNotes>
       [2026-07-17] v0.0.1 同步上游项目版本并适配统一本地化能力
       1、Dependency update from Senparc.Ncf.UnitTestExtension to 0.3.15-preview.2
@@ -12,7 +12,10 @@
       [2026-08-04] v0.0.4 Dependency updates from upstream projects
       1、Dependency update from Senparc.Ncf.UnitTestExtension to 0.3.18-preview.5
       2、Dependency update from Senparc.Xncf.SenMapic to 0.4.1-preview5
-    </PackageReleaseNotes>
+      [2026-08-08] v0.0.5 Dependency updates from upstream projects
+      1、Dependency update from Senparc.Ncf.UnitTestExtension to 0.3.19-preview.6
+      2、Dependency update from Senparc.Xncf.SenMapic to 0.4.2-preview6
+</PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.15.3-preview6</Version>
+    <Version>0.15.4-preview7</Version>
     <AssemblyName>Senparc.Xncf.SystemManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.SystemManager</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -55,6 +55,11 @@
 		1、为 SqlServer、Sqlite、PostgreSQL、Oracle、Dm、MySql 生成迁移、Designer 与快照
 		2、修复跨平台设计时数据库配置目录定位
 		3、同步 SystemConfig 服务与模块注册中的页脚配置处理
+		[2026-08-08] v0.15.4-preview7 Dependency updates from upstream projects
+		1、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
+		2、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+		3、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+		4、Dependency update from Senparc.Xncf.SystemCore to 0.14.4-preview6
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

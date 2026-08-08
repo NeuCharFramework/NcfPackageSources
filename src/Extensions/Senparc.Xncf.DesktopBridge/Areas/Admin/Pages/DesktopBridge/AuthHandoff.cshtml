@@ -1,0 +1,39 @@
+@page
+@model Senparc.Xncf.DesktopBridge.Areas.DesktopBridge.Pages.AuthHandoff
+@{
+    Layout = null;
+}
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>正在授权桌面 AdminChat</title>
+    <style>
+        body { margin: 0; min-height: 100vh; display: grid; place-items: center; font-family: sans-serif; background: #f5f7fa; color: #303133; }
+        main { max-width: 34rem; padding: 2rem; text-align: center; background: white; border: 1px solid #ebeef5; border-radius: 8px; }
+        button { padding: .65rem 1rem; border: 0; border-radius: 4px; background: #409eff; color: white; cursor: pointer; }
+        .error { color: #c45656; }
+    </style>
+</head>
+<body>
+<main>
+    @if (Model.CanSubmit)
+    {
+        <h1>授权桌面 AdminChat</h1>
+        <p>确认后，当前 GUI 将以此管理员身份使用 AdminChat。只传递一次性授权结果，不会读取或复制浏览器 Cookie。</p>
+        <p>仅当此页面由你正在使用的 NCF GUI 自动打开时继续。</p>
+        <form method="post" id="handoff-form">
+            <input type="hidden" asp-for="RequestId" />
+            <input type="hidden" asp-for="ReturnUrl" />
+            <button type="submit">授权此 GUI</button>
+        </form>
+    }
+    else
+    {
+        <h1>未能授权桌面 AdminChat</h1>
+        <p class="error">@Model.ErrorMessage</p>
+    }
+</main>
+</body>
+</html>

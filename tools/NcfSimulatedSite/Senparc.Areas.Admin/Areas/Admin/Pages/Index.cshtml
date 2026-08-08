@@ -6,11 +6,253 @@
     Layout = "_Layout_Vue";
 }
 @section style {
-    <link rel="stylesheet" href="~/css/Admin/Pages/AdminChat/ChatLauncher.css" />
+    <link rel="stylesheet" href="~/css/Admin/Pages/AdminChat/ChatLauncher.css" asp-append-version="true" />
     <style>
         #home-header .el-main {
             padding: 20px 10px 0px 10px;
             height: auto;
+        }
+
+        .host-metrics-section {
+            margin: 20px 10px 0;
+        }
+
+        .host-metrics-card {
+            border-radius: 10px;
+        }
+
+        .host-metrics-header,
+        .host-metrics-title,
+        .host-metrics-status {
+            display: flex;
+            align-items: center;
+        }
+
+        .host-metrics-header {
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .host-metrics-title {
+            gap: 9px;
+            font-size: 17px;
+            font-weight: 600;
+            color: #303133;
+        }
+
+        .host-metrics-title .fa {
+            color: #8c52ff;
+        }
+
+        .host-metrics-status {
+            gap: 10px;
+            color: #909399;
+            font-size: 12px;
+        }
+
+        .host-live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #67c23a;
+        }
+
+        .host-live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #67c23a;
+            box-shadow: 0 0 0 rgba(103, 194, 58, 0.4);
+            animation: host-live-pulse 1.8s infinite;
+        }
+
+        @@keyframes host-live-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(103, 194, 58, 0.45); }
+            70% { box-shadow: 0 0 0 7px rgba(103, 194, 58, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(103, 194, 58, 0); }
+        }
+
+        .host-metrics-meta {
+            margin-bottom: 12px;
+            color: #909399;
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .host-metric-item {
+            min-height: 148px;
+            margin-bottom: 14px;
+            padding: 17px;
+            border: 1px solid #ebeef5;
+            border-radius: 9px;
+            background: linear-gradient(145deg, #ffffff 0%, #fafbff 100%);
+            box-sizing: border-box;
+        }
+
+        .host-metric-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #606266;
+            font-size: 14px;
+        }
+
+        .host-metric-label .fa {
+            color: #8c52ff;
+            font-size: 18px;
+        }
+
+        .host-metric-value {
+            min-height: 39px;
+            color: #303133;
+            font-size: 27px;
+            font-weight: 600;
+            line-height: 1.35;
+        }
+
+        .host-metric-value.host-network-value {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 17px;
+            line-height: 2.1;
+        }
+
+        .host-metric-readings {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            align-items: baseline;
+            gap: 14px;
+            min-height: 38px;
+        }
+
+        .host-metric-reading {
+            display: flex;
+            align-items: baseline;
+            min-width: 0;
+            gap: 7px;
+            white-space: nowrap;
+        }
+
+        .host-metric-reading + .host-metric-reading {
+            justify-content: flex-end;
+        }
+
+        .host-metric-scope {
+            display: inline-flex;
+            align-items: center;
+            flex: 0 0 auto;
+            gap: 5px;
+            color: #909399;
+            font-size: 12px;
+        }
+
+        .host-metric-scope-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
+        .host-metric-scope-dot.cpu-host {
+            background: #8c52ff;
+        }
+
+        .host-metric-scope-dot.memory-host {
+            background: #67c23a;
+        }
+
+        .host-metric-scope-dot.web-process {
+            background: #00a6a6;
+        }
+
+        .host-metric-reading-value {
+            overflow: hidden;
+            color: #303133;
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 1.35;
+            text-overflow: ellipsis;
+        }
+
+        .host-metric-reading.web-process .host-metric-reading-value {
+            color: #008f8f;
+            font-size: 18px;
+        }
+
+        .host-comparison-bar {
+            position: relative;
+            height: 9px;
+            margin-top: 11px;
+            overflow: hidden;
+            border-radius: 5px;
+            background: #ebeef5;
+        }
+
+        .host-comparison-bar-fill {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            transition: width 0.35s ease;
+        }
+
+        .host-comparison-bar-fill.cpu-host {
+            background: linear-gradient(90deg, #a172ff 0%, #8c52ff 100%);
+        }
+
+        .host-comparison-bar-fill.memory-host {
+            background: linear-gradient(90deg, #85ce61 0%, #67c23a 100%);
+        }
+
+        .host-comparison-bar-fill.web-process {
+            z-index: 1;
+            background: #00a6a6;
+            box-shadow: 1px 0 0 rgba(255, 255, 255, 0.75);
+        }
+
+        .host-comparison-bar-fill.web-process.has-value {
+            min-width: 3px;
+        }
+
+        .host-network-down {
+            color: #409eff;
+        }
+
+        .host-network-up {
+            color: #e6a23c;
+        }
+
+        .host-metric-detail {
+            margin-top: 8px;
+            color: #909399;
+            font-size: 12px;
+            line-height: 1.55;
+        }
+
+        .host-metrics-chart {
+            height: 285px;
+            margin-top: 4px;
+        }
+
+        .host-metrics-error {
+            color: #f56c6c;
+        }
+
+        @@media screen and (max-width: 768px) {
+            .host-metrics-section {
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            .host-metric-value.host-network-value {
+                flex-direction: column;
+                gap: 0;
+                line-height: 1.6;
+            }
         }
 
         .xncf-stat-item {
@@ -425,17 +667,6 @@
             width: 100%;
         }
 
-        .module-tag {
-            font-size: 14px;
-            padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.95);
-            color: #333;
-        }
-
-            .module-tag .fa {
-                margin-right: 5px;
-            }
-
         #xncf-modules-area .xncf-item.dragging {
             opacity: 0.5;
         }
@@ -475,7 +706,7 @@
                     <el-row :gutter="10">
                         <!-- 第一行 -->
                         <el-col :span="12">
-                            <a href="~/Admin/XncfModule/Index">
+                            <a href="~/Admin/XncfModule/Index?tab=installed">
                                 <div class="grid-content xncf-stat-item">
                                     <span class="count">{{xncfStat.installedXncfCount || 0}}</span>
                                     <div class="icon">
@@ -486,7 +717,7 @@
                             </a>
                         </el-col>
                         <el-col :span="12">
-                            <a href="~/Admin/XncfModule/Index">
+                            <a href="~/Admin/XncfModule/Index?tab=updates">
                                 <div class="grid-content xncf-stat-item">
                                     <span class="count">{{xncfStat.updateVersionXncfCount || 0}}</span>
                                     <div class="icon">
@@ -498,7 +729,7 @@
                         </el-col>
                         <!-- 第二行 -->
                         <el-col :span="12">
-                            <a href="~/Admin/XncfModule/Index">
+                            <a href="~/Admin/XncfModule/Index?tab=new">
                                 <div class="grid-content xncf-stat-item">
                                     <span class="count">{{xncfStat.newXncfCount || 0}}</span>
                                     <div class="icon">
@@ -509,7 +740,7 @@
                             </a>
                         </el-col>
                         <el-col :span="12">
-                            <a href="~/Admin/XncfModule/Index">
+                            <a href="~/Admin/XncfModule/Index?tab=installed">
                                 <div class="grid-content xncf-stat-item">
                                     <span class="count">{{xncfStat.missingXncfCount || 0}}</span>
                                     <div class="icon">
@@ -540,6 +771,119 @@
             </el-row>
         </el-main>
     </el-container>
+</div>
+
+<!-- 当前 Host 实时指标：只在浏览器内保留最近 30 个采样点，不写入服务端缓存 -->
+<div class="host-metrics-section">
+    <el-card class="host-metrics-card" v-loading="hostMetricsLoading && !hostMetrics.sampledAt">
+        <div slot="header" class="host-metrics-header">
+            <div class="host-metrics-title">
+                <i class="fa fa-tachometer"></i>
+                <span>@AR["Admin.Home.HostMetrics"]</span>
+            </div>
+            <div class="host-metrics-status">
+                <span v-if="hostMetricsError" class="host-metrics-error">
+                    <i class="fa fa-exclamation-circle"></i> {{hostMetricsError}}
+                </span>
+                <span v-else class="host-live-indicator">
+                    <i class="host-live-dot"></i>
+                    @AR["Admin.Home.HostMetricsRealtime"]
+                </span>
+                <span v-if="hostMetrics.sampledAt">{{formatSampleTime(hostMetrics.sampledAt)}}</span>
+            </div>
+        </div>
+
+        <div class="host-metrics-meta" v-if="hostMetrics.hostName">
+            <i class="fa fa-server"></i>
+            {{hostMetrics.hostName}} · {{hostMetrics.operatingSystem}}
+        </div>
+
+        <el-row :gutter="14">
+            <el-col :xs="24" :sm="12" :lg="8">
+                <div class="host-metric-item">
+                    <div class="host-metric-label">
+                        <span>CPU</span>
+                        <i class="fa fa-microchip"></i>
+                    </div>
+                    <div class="host-metric-readings">
+                        <div class="host-metric-reading">
+                            <span class="host-metric-scope">
+                                <i class="host-metric-scope-dot cpu-host"></i>@AR["Admin.Home.HostScope"]
+                            </span>
+                            <span class="host-metric-reading-value">{{formatPercent(hostMetrics.cpuUsagePercent)}}</span>
+                        </div>
+                        <div class="host-metric-reading web-process">
+                            <span class="host-metric-scope">
+                                <i class="host-metric-scope-dot web-process"></i>@AR["Admin.Home.WebScope"]
+                            </span>
+                            <span class="host-metric-reading-value">{{formatPercent(hostMetrics.processCpuUsagePercent)}}</span>
+                        </div>
+                    </div>
+                    <div class="host-comparison-bar">
+                        <span class="host-comparison-bar-fill cpu-host"
+                              :style="{ width: barWidth(hostMetrics.cpuUsagePercent) }"></span>
+                        <span class="host-comparison-bar-fill web-process"
+                              :class="{ 'has-value': boundedSubsetPercent(hostMetrics.processCpuUsagePercent, hostMetrics.cpuUsagePercent) > 0 }"
+                              :style="{ width: boundedSubsetWidth(hostMetrics.processCpuUsagePercent, hostMetrics.cpuUsagePercent) }"></span>
+                    </div>
+                </div>
+            </el-col>
+
+            <el-col :xs="24" :sm="12" :lg="8">
+                <div class="host-metric-item">
+                    <div class="host-metric-label">
+                        <span>@AR["Admin.Home.HostMemory"]</span>
+                        <i class="fa fa-hdd-o"></i>
+                    </div>
+                    <div class="host-metric-readings">
+                        <div class="host-metric-reading">
+                            <span class="host-metric-scope">
+                                <i class="host-metric-scope-dot memory-host"></i>@AR["Admin.Home.HostScope"]
+                            </span>
+                            <span class="host-metric-reading-value">{{formatPercent(hostMetrics.memoryUsagePercent)}}</span>
+                        </div>
+                        <div class="host-metric-reading web-process">
+                            <span class="host-metric-scope">
+                                <i class="host-metric-scope-dot web-process"></i>@AR["Admin.Home.WebScope"]
+                            </span>
+                            <span class="host-metric-reading-value">{{formatBytes(hostMetrics.processWorkingSetBytes)}}</span>
+                        </div>
+                    </div>
+                    <div class="host-comparison-bar">
+                        <span class="host-comparison-bar-fill memory-host"
+                              :style="{ width: barWidth(hostMetrics.memoryUsagePercent) }"></span>
+                        <span class="host-comparison-bar-fill web-process"
+                              :class="{ 'has-value': processMemoryPercent() > 0 }"
+                              :style="{ width: boundedSubsetWidth(processMemoryPercent(), hostMetrics.memoryUsagePercent) }"></span>
+                    </div>
+                    <div class="host-metric-detail">
+                        {{formatBytes(hostMetrics.memoryUsedBytes)}} / {{formatBytes(hostMetrics.memoryTotalBytes)}}
+                        · @AR["Admin.Home.HostMemoryAvailable"] {{formatBytes(hostMetrics.memoryAvailableBytes)}}
+                    </div>
+                </div>
+            </el-col>
+
+            <el-col :xs="24" :sm="24" :lg="8">
+                <div class="host-metric-item">
+                    <div class="host-metric-label">
+                        <span>@AR["Admin.Home.HostNetwork"]</span>
+                        <i class="fa fa-exchange"></i>
+                    </div>
+                    <div class="host-metric-value host-network-value">
+                        <span class="host-network-down">↓ {{formatRate(hostMetrics.networkReceiveBytesPerSecond)}}</span>
+                        <span class="host-network-up">↑ {{formatRate(hostMetrics.networkSendBytesPerSecond)}}</span>
+                    </div>
+                    <div class="host-metric-detail">
+                        @AR["Admin.Home.HostNetworkTotal"] ↓ {{formatBytes(hostMetrics.networkReceiveTotalBytes)}}
+                        / ↑ {{formatBytes(hostMetrics.networkSendTotalBytes)}}
+                        · {{hostMetrics.networkInterfaceCount || 0}} @AR["Admin.Home.HostInterfaces"]
+                    </div>
+                </div>
+            </el-col>
+        </el-row>
+
+        <div id="hostMetricsChart" class="host-metrics-chart"></div>
+    </el-card>
 </div>
 
 <!-- AI 对话入口 -->
@@ -604,7 +948,8 @@
                         @@close="removeModule(module.uid)"
                         type="info"
                         class="module-tag">
-                        <i :class="module.icon"></i> {{module.name}}
+                        <i :class="module.icon" aria-hidden="true"></i>
+                        <span class="module-tag-name">{{module.name}}</span>
                     </el-tag>
                 </div>
                 <div v-else class="chat-module-selected-empty">@AR["Admin.Home.EmptyReference"]</div>
@@ -678,5 +1023,5 @@
 @section scripts {
     <script src="~/lib/echarts/dist/echarts.js"></script>
     <script src="~/js/Admin/Pages/AdminChat/ChatLauncherMixin.js"></script>
-    <script src="~/js/Admin/Pages/Index/Index.js"></script>
+    <script src="~/js/Admin/Pages/Index/Index.js" asp-append-version="true"></script>
 }

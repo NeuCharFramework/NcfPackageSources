@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.14.0-preview9</Version>
+    <Version>0.14.1-preview10</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -98,6 +98,15 @@
 		1、为 AgentTemplate 增加 KnowledgeBaseId 并补齐六类数据库迁移与快照
 		2、扩展应用服务、DTO 与管理页面的知识库选择和统计展示
 		3、优化群聊服务的知识库集成与状态处理
+		[2026-08-08] v0.14.1-preview10 Dependency updates from upstream projects
+		1、Dependency update from Senparc.Xncf.PromptRange to 0.19.1-preview9
+		2、Dependency update from Senparc.Xncf.SenMapic to 0.4.2-preview6
+		3、Dependency update from Senparc.Xncf.XncfBuilder to 0.39.1-preview9
+		4、Dependency update from Senparc.Xncf.MCP to 0.4.4-preview7
+		5、Dependency update from Senparc.Xncf.KnowledgeBase to 0.5.1-preview7
+		6、Dependency update from Senparc.Xncf.AgentsManager.Abstractions to 0.2.4-preview4
+		7、Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.2.4-preview4
+		8、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.0-preview5</Version>
+    <Version>0.4.1-preview6</Version>
     <AssemblyName>Senparc.Xncf.FirmwareUpdate</AssemblyName>
     <RootNamespace>Senparc.Xncf.FirmwareUpdate</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -29,6 +29,10 @@
       1、增强包镜像服务对 NCF Runtime 与 NcfDesktop 发布元数据的处理
       2、接入统一同步提供程序并补充多语言资源
       3、移除仓库内旧 NcfDesktopApp.GUI 工程，桌面端发布与同步切换到独立 NcfDesktop 项目
+      [2026-08-08] v0.4.1-preview6 Dependency updates from upstream projects
+      1、Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
+      2、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+      3、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

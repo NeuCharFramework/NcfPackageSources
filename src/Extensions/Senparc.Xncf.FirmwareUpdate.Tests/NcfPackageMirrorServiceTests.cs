@@ -171,6 +171,29 @@ public sealed class NcfPackageMirrorServiceTests
         Assert.IsFalse(Directory.EnumerateFiles(_testRoot, "*.tmp-*", SearchOption.AllDirectories).Any());
     }
 
+    [TestMethod]
+    public void GetSyncFailureReason_WhenTimeoutIsWrapped_ReturnsFriendlyChineseMessage()
+    {
+        var exception = new InvalidOperationException(
+            "The operation did not complete.",
+            new TaskCanceledException("A task was canceled."));
+
+        var reason = NcfPackageMirrorService.GetSyncFailureReason(exception);
+
+        Assert.AreEqual(
+            "请求超时（30 秒，可能是网络、代理或 GitHub 暂时不可用）",
+            reason);
+    }
+
+    [TestMethod]
+    public void GetSyncFailureReason_WhenExceptionIsUnexpected_DoesNotExposeRawExceptionMessage()
+    {
+        var reason = NcfPackageMirrorService.GetSyncFailureReason(
+            new InvalidOperationException("Internal implementation detail"));
+
+        Assert.AreEqual("发生未预期错误，请查看 SenparcTrace 日志", reason);
+    }
+
     private static NcfPackageMirrorService CreateService(HttpClient client) => new(
         new StubHttpClientFactory(client),
         NullLogger<NcfPackageMirrorService>.Instance);

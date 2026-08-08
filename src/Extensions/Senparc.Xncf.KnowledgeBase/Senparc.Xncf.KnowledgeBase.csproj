@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.5.0-preview6</Version>
+    <Version>0.5.1-preview7</Version>
     <AssemblyName>Senparc.Xncf.KnowledgeBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.KnowledgeBase</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -45,6 +45,13 @@
 		1、扩展知识库及条目生命周期字段并补齐六类数据库迁移与快照
 		2、完善知识库管理页、应用服务、召回测试与请求响应模型
 		3、支持 AgentsManager 按知识库状态完成关联和调用
+		[2026-08-08] v0.5.1-preview7 Dependency updates from upstream projects
+		1、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+		2、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
+		3、Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
+		4、Dependency update from Senparc.Xncf.AIKernel to 0.15.2-preview9
+		5、Dependency update from Senparc.Xncf.FileManager to 0.5.1-preview6
+		6、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

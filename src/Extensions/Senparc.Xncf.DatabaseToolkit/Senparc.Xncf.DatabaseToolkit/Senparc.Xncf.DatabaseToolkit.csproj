@@ -4,7 +4,7 @@
     <!--<TargetFrameworks>netstandard2.1;netcoreapp3.1;net8.0</TargetFrameworks>-->
     <!--<TargetFrameworks Condition=" '$(DatabasePlant)' != 'true' ">netstandard2.1</TargetFrameworks>
     <TargetFrameworks Condition=" '$(DatabasePlant)' == 'true'">netcoreapp3.1</TargetFrameworks>-->
-    <Version>0.27.2-preview5</Version>
+    <Version>0.27.3-preview6</Version>
     <AssemblyName>Senparc.Xncf.DatabaseToolkit</AssemblyName>
     <RootNamespace>Senparc.Xncf.DatabaseToolkit</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -55,6 +55,11 @@
       1、升级 Senparc.CO2NET.WebApi 至 2.1.9-preview 以适配 CO2NET 4.2.0
       [2026-08-04] v0.27.2-preview5 统一 DatabaseToolkit 多数据库设计时配置
       1、为 Dm、MySql、Oracle、PostgreSQL、SqlServer 与 Sqlite 统一设计时 DbContext 配置
+      [2026-08-08] v0.27.3-preview6 Dependency updates from upstream projects
+      1、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+      2、Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
+      3、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+      4、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

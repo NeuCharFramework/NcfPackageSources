@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.5-preview5</Version>
+    <Version>0.20.6-preview6</Version>
     <AssemblyName>Senparc.Ncf.Database.SqlServer</AssemblyName>
     <RootNamespace>Senparc.Ncf.Database.SqlServer</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -33,6 +33,9 @@
 				[2026-08-04] v0.20.5-preview5 Dependency updates from upstream projects
 				1、Dependency update from Senparc.Ncf.Core to 0.28.0-preview5
 				2、Dependency update from Senparc.Ncf.Database to 0.21.5-preview5
+				[2026-08-08] v0.20.6-preview6 Dependency updates from upstream projects
+				1、Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
+				2、Dependency update from Senparc.Ncf.Database to 0.21.6-preview6
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

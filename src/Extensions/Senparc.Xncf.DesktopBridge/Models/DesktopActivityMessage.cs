@@ -9,6 +9,9 @@
     修改标识：Senparc - 20260726
     修改描述：v0.1.0-preview2 同步模块功能与兼容性改进
 
+    修改标识：Senparc - 20260808
+    修改描述：v0.4.0-preview4 扩展活动消息以支持管理员换票交接状态
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.DesktopBridge.Models;
@@ -33,7 +36,10 @@ public sealed record DesktopBridgeCapabilities(
     string EventEndpoint,
     string SnapshotEndpoint,
     bool SupportsAuthorizedSync,
-    string? AuthorizedSyncEndpoint);
+    string? AuthorizedSyncEndpoint,
+    bool SupportsAdminAuthHandoff = false,
+    string? AdminAuthHandoffRequestEndpoint = null,
+    string? AdminAuthHandoffRedeemEndpoint = null);
 
 /// <summary>
 /// 受身份隔离的资源变更通知。只提供重新读取数据所需的最小元数据。

@@ -15,6 +15,9 @@
     修改标识：Senparc - 20260804
     修改描述：v0.3.0-preview3 将同步提供程序统一更名为 NeuBell/纽铃
 
+    修改标识：Senparc - 20260808
+    修改描述：v0.4.0-preview4 注册桌面管理员换票交接相关服务
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;
@@ -65,6 +68,7 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
         services.AddSingleton<DesktopAuthorizedSyncHub>();
         services.AddSingleton<DesktopBridgeCredentialStore>();
         services.AddSingleton<DesktopBridgeTokenValidator>();
+        services.AddSingleton<DesktopAdminAuthHandoffStore>();
         services.AddSingleton<INeuBellProvider, DesktopBridgeNeuBellProvider>();
 
         // 不注册开放泛型实现：NCF EventBus 的程序集扫描会把开放泛型再次登记为

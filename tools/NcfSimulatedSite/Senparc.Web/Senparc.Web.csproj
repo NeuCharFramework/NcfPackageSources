@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
-		<Version>0.35.0</Version>
+		<Version>0.35.1</Version>
 		<PackageReleaseNotes>
 			[2026-07-01] v0.21.5 Dependency update from Senparc.Xncf.AgentsManager to 0.11.0-preview2
 			[2026-07-02] v0.21.5 支持流式输出并优化交互体验，升级 Senparc.AI.AgentKernel 并完成兼容性适配
@@ -36,6 +36,9 @@
 			[2026-08-04] v0.35.0 新增数据库升级维护流程与多平台下载入口
 			1、新增数据库升级命令行选项、协调器、运行状态、中间件与维护页面
 			2、新增 NCF Runtime 与 NcfDesktop 下载页及发布元数据
+			[2026-08-08] v0.35.1 优化数据库升级维护页响应头并同步桌面发布元数据
+			1、数据库升级维护页改为返回无缓存与 noindex 响应头，避免维护态被缓存或收录
+			2、同步 latest-desktop-release 发布元数据
 </PackageReleaseNotes>
 		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
 		<TypeScriptToolsVersion>4.1</TypeScriptToolsVersion>
@@ -90,6 +93,7 @@
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.MCP\Senparc.Xncf.MCP.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.FirmwareUpdate\Senparc.Xncf.FirmwareUpdate.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Sandbox\Senparc.Xncf.Sandbox.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Swagger\Senparc.Xncf.Swagger.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Terminal\Senparc.Xncf.Terminal.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager.csproj" />

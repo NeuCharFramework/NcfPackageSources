@@ -8,6 +8,7 @@
 - Provides capability discovery, activity snapshots, and Server-Sent Events (SSE) for local or explicitly configured remote desktop sessions.
 - Requires the `NCF_DESKTOP_BRIDGE_TOKEN` startup boundary before exposing bridge state.
 - Provides an administrator-scoped authorized-sync stream for resource IDs and change types.
+- Supports an optional, one-time PKCE handoff from an authenticated WebView Cookie session to an in-memory desktop JWT without copying the Cookie.
 - Does not read or mutate business `MemoryCache`, and does not transmit passwords, JWTs, or chat message bodies through EventBus/SSE.
 
 ## Installation
@@ -23,10 +24,13 @@ Restart the NCF host after installing or updating the module.
 - `DesktopBridgeController` serves capability and activity endpoints.
 - `DesktopActivityHub` and `DesktopAuthorizedSyncHub` publish lightweight activity/change messages.
 - `DesktopBridgeTokenValidator` validates the local session token.
+- `DesktopAdminAuthHandoffStore` keeps bounded, 60-second, single-use challenges in memory and binds them to one desktop session.
 - `DesktopActivityEventHandler` observes NCF integration events.
 - `DesktopBridgeCapabilities`, `DesktopActivityMessage`, and `DesktopAuthorizedSyncMessage` are the public transport records.
 
 Authorized sync requires the desktop session token, the `Bearer_Backend` JWT, the standard `AdminOnly` policy, and matching event owner/admin IDs. The desktop client must re-read business data through the original authorized API; a missing login, expired token, or disconnected bridge must disable the dependent feature.
+
+Admin auth handoff additionally requires the current WebView Cookie, `AdminOnly`, explicit confirmation in the WebView, Razor antiforgery validation, a desktop session token, and a PKCE verifier that never enters the WebView. The issued JWT cannot outlive the source Cookie or the configured backend JWT lifetime. The capability is absent when the Admin token issuer is not registered; multi-tenant Cookie sessions currently fall back to explicit desktop login.
 
 ## Remote deployment
 

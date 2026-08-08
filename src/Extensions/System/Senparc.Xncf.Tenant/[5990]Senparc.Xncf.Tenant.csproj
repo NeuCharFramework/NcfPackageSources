@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.15.3-preview5</Version>
+    <Version>0.15.4-preview6</Version>
     <AssemblyName>Senparc.Xncf.Tenant</AssemblyName>
     <RootNamespace>Senparc.Xncf.Tenant</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -47,6 +47,12 @@
 				3、Dependency update from Senparc.Ncf.Repository to 0.20.5-preview5
 				4、Dependency update from Senparc.Ncf.XncfBase to 0.24.0-preview5
 				5、Dependency update from Senparc.Xncf.Tenant.Interface to 0.10.5-preview5
+				[2026-08-08] v0.15.4-preview6 Dependency updates from upstream projects
+				1、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
+				2、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+				3、Dependency update from Senparc.Ncf.Repository to 0.20.6-preview6
+				4、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+				5、Dependency update from Senparc.Xncf.Tenant.Interface to 0.10.6-preview6
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -19,6 +19,9 @@
     修改标识：Senparc - 20260804
     修改描述：v0.4.0-preview5 扩展 NCF 与 NcfDesktop 发布包同步能力
 
+    修改标识：Senparc - 20260808
+    修改描述：友好显示镜像同步异常，并将完整诊断写入 SenparcTrace
+
 ----------------------------------------------------------------*/
 
 using System.Net.Http.Json;
@@ -156,9 +159,9 @@ public class NcfPackageMirrorService
                 catch (Exception ex)
                 {
                     var reason = GetSyncFailureReason(ex);
-                    var message = $"{feed.DisplayName} 同步失败：{reason}；已保留原有清单";
-                    _logger.LogWarning(ex, "FirmwareUpdate: {Message}", message);
-                    Console.WriteLine($"[FirmwareUpdate] {message}");
+                    var retryHint = manualTrigger ? "可稍后重试" : "将在下次计划任务中重试";
+                    var message = $"{feed.DisplayName} 同步失败：{reason}；已保留原有清单，{retryHint}";
+                    LogSyncFailure(feed.DisplayName, message, ex);
                     results.Add(new MirrorFeedSyncResult(feed.DisplayName, false, false, message));
                 }
             }
@@ -228,12 +231,12 @@ public class NcfPackageMirrorService
             }
             catch (Exception ex)
             {
-                retentionFailures.Add($"{release.TagName}: {GetSyncFailureReason(ex)}");
-                _logger.LogWarning(
-                    ex,
-                    "FirmwareUpdate: {Feed} 历史版本 {Tag} 同步失败，保留现有历史目录",
+                var reason = GetSyncFailureReason(ex);
+                retentionFailures.Add($"{release.TagName}: {reason}");
+                LogSyncFailure(
                     feed.DisplayName,
-                    release.TagName);
+                    $"{feed.DisplayName} 历史版本 {release.TagName} 同步失败：{reason}；已保留现有历史目录",
+                    ex);
             }
         }
 
@@ -513,17 +516,65 @@ public class NcfPackageMirrorService
         return Convert.ToHexStringLower(hash);
     }
 
-    private static string GetSyncFailureReason(Exception exception) => exception switch
+    private void LogSyncFailure(string feedName, string message, Exception exception)
     {
-        TaskCanceledException => "请求超时",
-        HttpRequestException httpException when httpException.StatusCode.HasValue =>
-            $"HTTP {(int)httpException.StatusCode.Value}",
-        HttpRequestException => "网络不可达",
-        JsonException => "返回数据格式无效",
-        InvalidDataException invalidDataException => invalidDataException.Message,
-        IOException ioException => $"文件写入失败：{ioException.Message}",
-        _ => $"请求失败：{exception.Message}"
-    };
+        // 控制台只呈现可操作的摘要，完整异常留在 SenparcTrace 中供诊断。
+        _logger.LogWarning("FirmwareUpdate: {Message}", message);
+        SenparcTrace.SendCustomLog(
+            $"FirmwareUpdate.{feedName}.SyncFailure",
+            $"{message}{Environment.NewLine}{exception}");
+    }
+
+    internal static string GetSyncFailureReason(Exception exception)
+    {
+        var exceptions = EnumerateExceptionChain(exception).ToArray();
+
+        if (exceptions.Any(ex =>
+                ex is TaskCanceledException or TimeoutException ||
+                string.Equals(
+                    ex.GetType().FullName,
+                    "Polly.Timeout.TimeoutRejectedException",
+                    StringComparison.Ordinal)))
+        {
+            return $"请求超时（{GitHubMetadataTimeout.TotalSeconds:0} 秒，可能是网络、代理或 GitHub 暂时不可用）";
+        }
+
+        var httpException = exceptions.OfType<HttpRequestException>().FirstOrDefault();
+        if (httpException?.StatusCode is { } statusCode)
+        {
+            return $"GitHub 返回 HTTP {(int)statusCode}";
+        }
+
+        if (httpException != null)
+        {
+            return "无法连接 GitHub（请检查网络或代理）";
+        }
+
+        if (exceptions.Any(ex => ex is JsonException))
+        {
+            return "GitHub 返回的数据格式无效";
+        }
+
+        if (exceptions.OfType<InvalidDataException>().FirstOrDefault() is { } invalidDataException)
+        {
+            return invalidDataException.Message;
+        }
+
+        if (exceptions.OfType<IOException>().FirstOrDefault() is { } ioException)
+        {
+            return $"文件读写失败：{ioException.Message}";
+        }
+
+        return "发生未预期错误，请查看 SenparcTrace 日志";
+    }
+
+    private static IEnumerable<Exception> EnumerateExceptionChain(Exception exception)
+    {
+        for (var current = exception; current != null; current = current.InnerException)
+        {
+            yield return current;
+        }
+    }
 
     /// <summary>用于目录名与 URL 段，避免非法路径字符。</summary>
     public static string MakeSafeDirectorySegment(string tag)

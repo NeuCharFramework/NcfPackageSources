@@ -4,7 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Version>0.3.0-preview3</Version>
+    <Version>0.4.0-preview4</Version>
     <AssemblyName>Senparc.Xncf.DesktopBridge</AssemblyName>
     <RootNamespace>Senparc.Xncf.DesktopBridge</RootNamespace>
     <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
@@ -44,7 +44,11 @@
       1、新增 DesktopBridgeNeuBellProvider 以接入统一纽铃目录
       2、完善桌面凭据存储与模块注册逻辑
       3、将通知发布器、DI 注册和技术标识迁移到 NeuBell/纽铃命名
-    </PackageReleaseNotes>
+      [2026-08-08] v0.4.0-preview4 新增桌面管理员 PKCE 一次性换票交接
+      1、新增 AuthHandoff 页面与换票状态存储，支持 WebView Cookie 到桌面 Admin JWT 的安全交接
+      2、扩展 DesktopBridge API 与活动消息，覆盖换票发起、确认与兑换流程
+      3、完善模块注册以接入管理员令牌签发协作
+</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
