@@ -50,7 +50,8 @@ ISandboxRuntime
 | `jupyter-python` | JupyterLab 交互（更耗内存） |
 
 默认镜像（与 Docs 对齐）：`mcr.microsoft.com/dotnet/sdk:10.0`。更新 tag 时优先改 Docs，再同步代码模板。  
-C# 代码可用顶层语句，例如：`Console.WriteLine("hello");`（无需手写完整 Program/csproj）。
+C# 代码可用顶层语句，例如：`Console.WriteLine("hello");`（无需手写完整 Program/csproj）。  
+Exec 容器无外网：自动注入离线 `nuget.config` + `PublishAot=false`（避免默认 AOT 去拉 NuGet）。
 
 ### 安全与资源默认
 

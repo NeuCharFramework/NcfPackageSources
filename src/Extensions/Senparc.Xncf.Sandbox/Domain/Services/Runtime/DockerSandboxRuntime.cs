@@ -122,6 +122,9 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
 
         string fileName;
         string[] command;
+        var mountReadOnly = true;
+        var extraDockerArgs = new List<string>();
+
         if (string.Equals(request.Template.Key, SandboxTemplateKeys.PythonExec, StringComparison.OrdinalIgnoreCase))
         {
             fileName = "main.py";
@@ -130,12 +133,27 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         }
         else if (string.Equals(request.Template.Key, SandboxTemplateKeys.CsharpExec, StringComparison.OrdinalIgnoreCase))
         {
-            // .NET 10 file-based apps：单文件直接运行，无需 .csproj / dotnet new。
+            // .NET 10 file-based apps：单文件运行。Exec 容器无外网，需关闭默认 AOT，并清空 NuGet 在线源。
             fileName = "main.cs";
             await File.WriteAllTextAsync(Path.Combine(workDir, fileName), request.Code, cancellationToken).ConfigureAwait(false);
+            await File.WriteAllTextAsync(Path.Combine(workDir, "nuget.config"), OfflineNuGetConfig, cancellationToken)
+                .ConfigureAwait(false);
+            await File.WriteAllTextAsync(Path.Combine(workDir, "Directory.Build.props"), OfflineDirectoryBuildProps, cancellationToken)
+                .ConfigureAwait(false);
+
+            mountReadOnly = false; // 编译需要写 obj/bin
+            extraDockerArgs.AddRange(new[]
+            {
+                "-e", "HOME=/tmp",
+                "-e", "DOTNET_CLI_HOME=/tmp/dotnet-home",
+                "-e", "DOTNET_CLI_TELEMETRY_OPTOUT=1",
+                "-w", "/work"
+            });
             command = new[]
             {
-                "dotnet", "run", "--file", $"/work/{fileName}", "-v", "q"
+                "dotnet", "run", "--file", $"/work/{fileName}", "-v", "q",
+                "-p:PublishAot=false",
+                "-p:NuGetAudit=false"
             };
         }
         else
@@ -144,7 +162,11 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         }
 
         var image = _imageResolver.Resolve(request.Template.Key, request.Template.Image);
-        _logger.LogInformation("Sandbox exec image resolved: template={Template} image={Image}", request.Template.Key, image);
+        _logger.LogInformation(
+            "Sandbox exec image resolved: template={Template} image={Image} network=none mountRo={MountRo}",
+            request.Template.Key,
+            image,
+            mountReadOnly);
 
         var args = new List<string>
         {
@@ -155,9 +177,10 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
             "--memory", $"{request.MemoryMb}m",
             "--pids-limit", "128",
             "--network", "none",
-            "-v", $"{workDir}:/work:ro",
-            image
+            "-v", mountReadOnly ? $"{workDir}:/work:ro" : $"{workDir}:/work"
         };
+        args.AddRange(extraDockerArgs);
+        args.Add(image);
         args.AddRange(command);
 
         var run = await RunDockerAsync(args, null, request.Timeout, cancellationToken).ConfigureAwait(false);
@@ -208,6 +231,32 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
             .Where(z => z.Length > 0)
             .ToArray();
     }
+
+    /// <summary>
+    /// 清空在线源，避免 --network none 时 NU1301；BCL 由 SDK 镜像自带，无需 nuget.org。
+    /// </summary>
+    private const string OfflineNuGetConfig =
+        """
+        <?xml version="1.0" encoding="utf-8"?>
+        <configuration>
+          <packageSources>
+            <clear />
+          </packageSources>
+        </configuration>
+        """;
+
+    /// <summary>
+    /// file-based apps 默认 PublishAot=true，离线无法还原 ILCompiler；沙箱 Exec 关闭 AOT/审计。
+    /// </summary>
+    private const string OfflineDirectoryBuildProps =
+        """
+        <Project>
+          <PropertyGroup>
+            <PublishAot>false</PublishAot>
+            <NuGetAudit>false</NuGetAudit>
+          </PropertyGroup>
+        </Project>
+        """;
 
     private static int GetFreeTcpPort()
     {
