@@ -37,6 +37,7 @@
                 tit: '',
                 tip: '',
                 msg: '',
+                url: '',
                 tempId: '',
                 hasLog: false
             },
@@ -52,6 +53,36 @@
     methods: {
         safeHtml(value) {
             return typeof DOMPurify === 'undefined' ? '' : DOMPurify.sanitize(String(value || ''));
+        },
+        decodeFunctionResult(value) {
+            if (typeof document === 'undefined') {
+                return '';
+            }
+
+            // Function 返回值在服务端会先进行 HTML 编码。使用 textarea 仅解码文本，
+            // 实际输出仍必须经过 safeFunctionResultHtml() 的严格净化。
+            const decoder = document.createElement('textarea');
+            decoder.innerHTML = String(value || '');
+            return decoder.value.replace(/\\r\\n|\\n|\\r/g, '\n');
+        },
+        safeFunctionResultHtml(value) {
+            if (typeof DOMPurify === 'undefined') {
+                return '';
+            }
+
+            return DOMPurify.sanitize(this.decodeFunctionResult(value), {
+                ALLOWED_TAGS: [
+                    'a', 'b', 'blockquote', 'br', 'code', 'div', 'em',
+                    'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i',
+                    'li', 'mark', 'ol', 'p', 'pre', 'small', 'span',
+                    'strong', 'sub', 'sup', 'table', 'tbody', 'td',
+                    'th', 'thead', 'tr', 'u', 'ul'
+                ],
+                ALLOWED_ATTR: ['href', 'title'],
+                ALLOW_ARIA_ATTR: false,
+                ALLOW_DATA_ATTR: false,
+                ALLOWED_URI_REGEXP: /^https?:\/\/[^\s<>"']+$/i
+            });
         },
         normalizeMultiValue(value) {
             if (Array.isArray(value)) {
@@ -237,43 +268,42 @@
                 };
 
                 const res = await service.post(`/Admin/XncfModule/Start?handler=RunFunction`, data, { customAlert: true });
-                
+
+                this.runResult.url = '';
+                this.runResult.hasLog = false;
                 this.runResult.tempId = res.data.tempId;
                 if ((res.data.log || '').length > 0 && (res.data.tempId || '').length > 0) {
                     this.runResult.hasLog = true;
                 }
 
-                const msg = DOMPurify.sanitize(res.data.msg);
+                const rawMsg = res.data.msg || '';
+                const decodedMsg = this.decodeFunctionResult(rawMsg);
 
                 if (!res.data.success) {
                     this.runResult.tit = ncfT('Xncf.RunError');
                     this.runResult.tip = ncfT('Xncf.ErrorInfo');
-                    this.runResult.msg = (msg || DOMPurify.sanitize(res.data.exception)).replace(/&lt;br \/&gt;/g, '<br />').replace('\r\n', '<br />').replace('\n', '<br />').replace('\r', '<br />');
+                    this.runResult.msg = rawMsg || res.data.exception || '';
                     this.runResult.visible = true;
                     return;
                 }
-                if (msg && (msg.indexOf('http://') === 0 || msg.indexOf('https://') === 0)) {
+                if (decodedMsg && (decodedMsg.indexOf('http://') === 0 || decodedMsg.indexOf('https://') === 0)) {
                     this.runResult.tit = ncfT('Xncf.RunSuccess');
                     this.runResult.tip = ncfT('Xncf.UrlResultTip');
                     try {
-                        const safeUrl = new URL(msg, window.location.origin);
+                        const safeUrl = new URL(decodedMsg, window.location.origin);
                         if (safeUrl.protocol !== 'http:' && safeUrl.protocol !== 'https:') {
                             throw new Error('unsupported URL scheme');
                         }
-                        const anchor = document.createElement('a');
-                        anchor.href = safeUrl.href;
-                        anchor.target = '_blank';
-                        anchor.rel = 'noopener noreferrer';
-                        anchor.textContent = msg;
-                        this.runResult.msg = this.safeHtml('<i class="fa fa-external-link"></i> ') + anchor.outerHTML;
+                        this.runResult.url = safeUrl.href;
+                        this.runResult.msg = '';
                     } catch {
-                        this.runResult.msg = this.safeHtml(msg);
+                        this.runResult.msg = rawMsg;
                     }
                 }
                 else {
                     this.runResult.tit = ncfT('Xncf.RunSuccess');
                     this.runResult.tip = ncfT('Xncf.ReturnInfo');
-                    this.runResult.msg = msg.replace(/&lt;br \/&gt;/g, '<br />').replace('\r\n', '<br />').replace('\n', '<br />').replace('\r','<br />');
+                    this.runResult.msg = rawMsg;
                 }
                 // 打开执行结果弹窗
                 this.runResult.visible = true;
