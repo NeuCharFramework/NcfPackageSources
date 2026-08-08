@@ -41,6 +41,7 @@ using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.XncfBuilder.OHS.Local;
+using Senparc.Ncf.Shared.Abstractions.ChatAgent;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -51,11 +52,13 @@ namespace Senparc.Xncf.AgentsManager
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        public const string ModuleUid = "D858D7FA-775A-4690-9023-CFB0B3B84994";
+
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.AgentsManager";
 
-        public override string Uid => "D858D7FA-775A-4690-9023-CFB0B3B84994";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => ModuleUid;//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
         public override string Version => "0.3.22";//必须填写版本号
 
@@ -129,6 +132,9 @@ namespace Senparc.Xncf.AgentsManager
             services.AddScoped<ChatGroupHistoryService>();
             services.AddScoped<ChatTaskService>();
             services.AddScoped<ChatGroupMemberService>();
+            services.AddScoped<AgentsWorkflowObjectProvider>();
+            services.AddScoped<IWorkflowObjectProvider>(serviceProvider =>
+                serviceProvider.GetRequiredService<AgentsWorkflowObjectProvider>());
 
             //AI Plugins DI
             services.AddScoped<PromptCatalyzerPlugin>();
