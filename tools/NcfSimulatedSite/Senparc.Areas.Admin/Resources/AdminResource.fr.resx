@@ -194,6 +194,23 @@
   <data name="Admin.Common.NoTime" xml:space="preserve"><value>Aucune heure</value></data>
   <data name="Admin.Common.CopySuccess" xml:space="preserve"><value>Copie réussie. Utilisez Ctrl+V pour coller.</value></data>
   <data name="Admin.Home.Header" xml:space="preserve"><value>Administration NeuCharFramework</value></data>
+  <data name="Admin.Home.HostMetrics" xml:space="preserve"><value>État actuel de l’hôte</value></data>
+  <data name="Admin.Home.HostMetricsRealtime" xml:space="preserve"><value>En direct · actualisation toutes les 2 secondes</value></data>
+  <data name="Admin.Home.HostCpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="Admin.Home.HostCpuDetail" xml:space="preserve"><value>Utilisation globale de l’hôte</value></data>
+  <data name="Admin.Home.HostMemory" xml:space="preserve"><value>Mémoire physique</value></data>
+  <data name="Admin.Home.HostMemoryAvailable" xml:space="preserve"><value>Disponible</value></data>
+  <data name="Admin.Home.HostNetwork" xml:space="preserve"><value>Débit réseau en direct</value></data>
+  <data name="Admin.Home.HostNetworkTotal" xml:space="preserve"><value>Total</value></data>
+  <data name="Admin.Home.HostInterfaces" xml:space="preserve"><value>interfaces actives</value></data>
+  <data name="Admin.Home.HostProcess" xml:space="preserve"><value>Processus web actuel</value></data>
+  <data name="Admin.Home.HostProcessWorkingSet" xml:space="preserve"><value>Mémoire de travail</value></data>
+  <data name="Admin.Home.HostProcessUptime" xml:space="preserve"><value>Durée d’exécution</value></data>
+  <data name="Admin.Home.HostMetricsChart" xml:space="preserve"><value>30 derniers échantillons (cette page uniquement)</value></data>
+  <data name="Admin.Home.HostNetworkReceive" xml:space="preserve"><value>Réception</value></data>
+  <data name="Admin.Home.HostNetworkSend" xml:space="preserve"><value>Envoi</value></data>
+  <data name="Admin.Home.HostMetricsInvalidResponse" xml:space="preserve"><value>L’API des métriques de l’hôte a renvoyé des données invalides</value></data>
+  <data name="Admin.Home.HostMetricsUnavailable" xml:space="preserve"><value>Les métriques de l’hôte sont temporairement indisponibles</value></data>
   <data name="Admin.Home.InstalledModules" xml:space="preserve"><value>Modules installés</value></data>
   <data name="Admin.Home.PendingUpdates" xml:space="preserve"><value>Modules à mettre à jour</value></data>
   <data name="Admin.Home.NewModules" xml:space="preserve"><value>Nouveaux modules</value></data>

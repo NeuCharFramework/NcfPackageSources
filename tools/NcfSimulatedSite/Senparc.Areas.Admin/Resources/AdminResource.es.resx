@@ -194,6 +194,23 @@
   <data name="Admin.Common.NoTime" xml:space="preserve"><value>Sin hora</value></data>
   <data name="Admin.Common.CopySuccess" xml:space="preserve"><value>Copiado correctamente. Use Ctrl+V para pegar.</value></data>
   <data name="Admin.Home.Header" xml:space="preserve"><value>Panel de administración de NeuCharFramework</value></data>
+  <data name="Admin.Home.HostMetrics" xml:space="preserve"><value>Estado actual del host</value></data>
+  <data name="Admin.Home.HostMetricsRealtime" xml:space="preserve"><value>En vivo · se actualiza cada 2 segundos</value></data>
+  <data name="Admin.Home.HostCpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="Admin.Home.HostCpuDetail" xml:space="preserve"><value>Uso total del host</value></data>
+  <data name="Admin.Home.HostMemory" xml:space="preserve"><value>Memoria física</value></data>
+  <data name="Admin.Home.HostMemoryAvailable" xml:space="preserve"><value>Disponible</value></data>
+  <data name="Admin.Home.HostNetwork" xml:space="preserve"><value>Tráfico de red en vivo</value></data>
+  <data name="Admin.Home.HostNetworkTotal" xml:space="preserve"><value>Total</value></data>
+  <data name="Admin.Home.HostInterfaces" xml:space="preserve"><value>interfaces activas</value></data>
+  <data name="Admin.Home.HostProcess" xml:space="preserve"><value>Proceso web actual</value></data>
+  <data name="Admin.Home.HostProcessWorkingSet" xml:space="preserve"><value>Memoria del conjunto de trabajo</value></data>
+  <data name="Admin.Home.HostProcessUptime" xml:space="preserve"><value>Tiempo activo</value></data>
+  <data name="Admin.Home.HostMetricsChart" xml:space="preserve"><value>Últimas 30 muestras (solo esta página)</value></data>
+  <data name="Admin.Home.HostNetworkReceive" xml:space="preserve"><value>Recepción</value></data>
+  <data name="Admin.Home.HostNetworkSend" xml:space="preserve"><value>Envío</value></data>
+  <data name="Admin.Home.HostMetricsInvalidResponse" xml:space="preserve"><value>La API de métricas del host devolvió datos no válidos</value></data>
+  <data name="Admin.Home.HostMetricsUnavailable" xml:space="preserve"><value>Las métricas del host no están disponibles temporalmente</value></data>
   <data name="Admin.Home.InstalledModules" xml:space="preserve"><value>Módulos instalados</value></data>
   <data name="Admin.Home.PendingUpdates" xml:space="preserve"><value>Módulos pendientes de actualización</value></data>
   <data name="Admin.Home.NewModules" xml:space="preserve"><value>Nuevos módulos encontrados</value></data>

@@ -113,6 +113,9 @@
                 footerEventSource: null,
                 footerStateRequest: null,
                 footerStateCancelSource: null,
+                neuBellNotificationHandles: {},
+                neuBellNotifyOnRefresh: false,
+                neuBellRefreshQueued: false,
                 footerCommunicationOwner: false,
                 footerPaused: false,
                 footerDisposed: false,
@@ -208,14 +211,92 @@
                     preferences[provider.providerId] = provider.enabled !== false;
                 });
                 window.localStorage.setItem(this.neuBellPreferenceKey(), JSON.stringify(preferences));
+                this.syncNeuBellNotifications(this.neuBellProviders, this.neuBellProviders, false);
             },
-            applyNeuBellProviders(providers) {
+            neuBellItemKey(providerId, itemId) {
+                return String(providerId || '') + ':' + String(itemId || '');
+            },
+            getNeuBellItemCounts(providers) {
+                const counts = {};
+                (providers || []).forEach(provider => {
+                    (provider.items || []).forEach(item => {
+                        counts[this.neuBellItemKey(provider.providerId, item.id)] = Math.max(0, Number(item.count) || 0);
+                    });
+                });
+                return counts;
+            },
+            closeNeuBellNotification(key) {
+                const notification = this.neuBellNotificationHandles[key];
+                if (notification && typeof notification.close === 'function') {
+                    notification.close();
+                }
+                delete this.neuBellNotificationHandles[key];
+            },
+            closeAllNeuBellNotifications() {
+                Object.keys(this.neuBellNotificationHandles).forEach(key => this.closeNeuBellNotification(key));
+            },
+            syncNeuBellNotifications(previousProviders, nextProviders, showNewNotifications) {
+                const previousCounts = this.getNeuBellItemCounts(previousProviders);
+                const visibleItemKeys = {};
+
+                (nextProviders || []).forEach(provider => {
+                    if (provider.enabled === false) {
+                        return;
+                    }
+                    (provider.items || []).forEach(item => {
+                        const count = Math.max(0, Number(item.count) || 0);
+                        if (count <= 0) {
+                            return;
+                        }
+
+                        const key = this.neuBellItemKey(provider.providerId, item.id);
+                        visibleItemKeys[key] = true;
+                        if (!showNewNotifications || count <= (previousCounts[key] || 0)) {
+                            return;
+                        }
+
+                        this.closeNeuBellNotification(key);
+                        if (typeof this.$notify !== 'function') {
+                            return;
+                        }
+
+                        const supportedTypes = ['success', 'warning', 'info', 'error'];
+                        const notificationType = supportedTypes.indexOf(item.severity) >= 0 ? item.severity : 'info';
+                        let notification = null;
+                        notification = this.$notify({
+                            title: item.title || provider.displayName || 'NeuBell',
+                            message: item.summary || '',
+                            type: notificationType,
+                            duration: 0,
+                            position: 'bottom-right',
+                            onClose: () => {
+                                if (this.neuBellNotificationHandles[key] === notification) {
+                                    delete this.neuBellNotificationHandles[key];
+                                }
+                            }
+                        });
+                        if (notification) {
+                            this.neuBellNotificationHandles[key] = notification;
+                        }
+                    });
+                });
+
+                Object.keys(this.neuBellNotificationHandles).forEach(key => {
+                    if (!visibleItemKeys[key]) {
+                        this.closeNeuBellNotification(key);
+                    }
+                });
+            },
+            applyNeuBellProviders(providers, showNewNotifications) {
+                const previousProviders = this.neuBellProviders;
                 const preferences = this.readNeuBellPreferences();
-                this.neuBellProviders = (providers || []).map(provider => Object.assign({}, provider, {
+                const nextProviders = (providers || []).map(provider => Object.assign({}, provider, {
                     enabled: Object.prototype.hasOwnProperty.call(preferences, provider.providerId)
                         ? preferences[provider.providerId]
                         : provider.defaultVisible !== false
                 }));
+                this.neuBellProviders = nextProviders;
+                this.syncNeuBellNotifications(previousProviders, nextProviders, showNewNotifications === true);
                 // 服务端只返回已安装且开放的 Provider；空集合即代表应隐藏功能并停止通讯。
                 this.footerAvailabilityKnown = true;
                 this.neuBellAvailable = this.neuBellProviders.length > 0;
@@ -235,6 +316,8 @@
                     return this.footerStateRequest;
                 }
 
+                const showNewNotifications = this.neuBellNotifyOnRefresh;
+                this.neuBellNotifyOnRefresh = false;
                 this.neuBellLoading = true;
                 const requestSource = axios.CancelToken.source();
                 this.footerStateCancelSource = requestSource;
@@ -250,8 +333,11 @@
                         this.serverTimeBaseMs = serverTime;
                         this.serverTimeMeasuredAtMs = Date.now();
                     }
-                    this.applyNeuBellProviders(state.providers || []);
+                    this.applyNeuBellProviders(state.providers || [], showNewNotifications);
                 }).catch(error => {
+                    if (showNewNotifications) {
+                        this.neuBellNotifyOnRefresh = true;
+                    }
                     if (!axios.isCancel(error)) {
                         console.warn('纽铃状态刷新失败:', error);
                     }
@@ -263,6 +349,12 @@
                         this.footerStateCancelSource = null;
                     }
                     this.neuBellLoading = false;
+                    const refreshQueued = this.neuBellRefreshQueued;
+                    this.neuBellRefreshQueued = false;
+                    if (refreshQueued && !this.footerDisposed && !this.footerPaused && !document.hidden) {
+                        this.refreshFooterState();
+                        return;
+                    }
                     if (this.neuBellAvailable) {
                         this.ensureNeuBellRealtime();
                     } else if (!this.footerAvailabilityKnown && !document.hidden) {
@@ -323,7 +415,15 @@
                     return;
                 }
                 this.footerEventSource = new EventSource('/api/Senparc.Areas.Admin/neubell/events');
-                this.footerEventSource.addEventListener('neubell-changed', () => this.refreshFooterState());
+                this.footerEventSource.addEventListener('neubell-changed', () => this.handleNeuBellChanged());
+            },
+            handleNeuBellChanged() {
+                this.neuBellNotifyOnRefresh = true;
+                if (this.footerStateRequest) {
+                    this.neuBellRefreshQueued = true;
+                    return this.footerStateRequest;
+                }
+                return this.refreshFooterState();
             },
             startFooterClock() {
                 if (!this.footerClockTimer) {
@@ -365,6 +465,7 @@
                 }
                 this.pauseFooter();
                 this.footerDisposed = true;
+                this.closeAllNeuBellNotifications();
                 if (this.footerConsoleUnsubscribe) {
                     this.footerConsoleUnsubscribe();
                     this.footerConsoleUnsubscribe = null;

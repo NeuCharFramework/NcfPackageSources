@@ -90,6 +90,8 @@ namespace Senparc.Areas.Admin
         IXncfDatabase  //注册 XNCF 模块数据库（按需选用）
                        //IXncfRazorRuntimeCompilation  //需要使用 RazorRuntimeCompilation，在开发环境下实时更新 Razor Page
     {
+        public const string ModuleUid = SiteConfig.SYSTEM_XNCF_MODULE_AREAS_ADMIN_UID;
+
         private static readonly ResourceManager ResourceManager = new("Senparc.Areas.Admin.AdminResource", typeof(AdminResource).Assembly);
 
         private static string T(string key, string fallback)
@@ -101,7 +103,7 @@ namespace Senparc.Areas.Admin
 
         public override string Name => "NeuCharFramework.Admin";
 
-        public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_AREAS_ADMIN_UID;// "00000000-0000-0001-0001-000000000001";
+        public override string Uid => ModuleUid;// "00000000-0000-0001-0001-000000000001";
 
         public override string Version => "0.5.10-beta5";
 
@@ -212,11 +214,18 @@ namespace Senparc.Areas.Admin
             services.AddScoped<AdminChatSessionModuleService>();
             services.AddScoped<AdminChatAiService>();
 
+            // Admin 首页 Host 实时指标采样器。Singleton 仅保存计算速率所需的上一帧计数器，
+            // 不保存历史记录，也不写入任何缓存。
+            services.AddSingleton<HostMetricsCollector>();
+
             // 纽铃 Footer 聚合、全局缓存与实时变更流。Provider 虽随 DLL 注册，
             // 但是否执行仍由 NeuBellProviderCatalog 按 XNCF 安装/开放状态决定。
             services.AddSingleton<NeuBellChangeNotifier>();
             services.AddSingleton<Senparc.Ncf.Shared.Abstractions.NeuBell.INeuBellPublisher>(
                 serviceProvider => serviceProvider.GetRequiredService<NeuBellChangeNotifier>());
+            services.AddSingleton<NeuBellTestProvider>();
+            services.AddSingleton<Senparc.Ncf.Shared.Abstractions.NeuBell.INeuBellProvider>(
+                serviceProvider => serviceProvider.GetRequiredService<NeuBellTestProvider>());
             services.AddScoped<INeuBellModuleAvailabilityService, NeuBellModuleAvailabilityService>();
             services.AddScoped<NeuBellProviderCatalog>();
             services.AddScoped<NeuBellSnapshotService>();

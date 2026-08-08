@@ -60,7 +60,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         private readonly AdminAuthConfigService _adminAuthConfigService;
         private readonly IBaseObjectCacheStrategy _cacheStrategy;
         private readonly IStringLocalizer<AdminResource> _localizer;
-        private readonly NeuBellProviderCatalog _neuBellProviderCatalog;
+        private readonly NeuBellTestProvider _neuBellTestProvider;
         private readonly INeuBellPublisher _neuBellPublisher;
 
         public SystemInfoAppService(
@@ -69,14 +69,14 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             AdminAuthConfigService adminAuthConfigService,
             IBaseObjectCacheStrategy cacheStrategy,
             IStringLocalizer<AdminResource> localizer,
-            NeuBellProviderCatalog neuBellProviderCatalog,
+            NeuBellTestProvider neuBellTestProvider,
             INeuBellPublisher neuBellPublisher) : base(serviceProvider)
         {
             _systemConfigService = systemConfigService;
             _adminAuthConfigService = adminAuthConfigService;
             this._cacheStrategy = cacheStrategy;
             _localizer = localizer;
-            _neuBellProviderCatalog = neuBellProviderCatalog;
+            _neuBellTestProvider = neuBellTestProvider;
             _neuBellPublisher = neuBellPublisher;
         }
 
@@ -206,27 +206,30 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             return response;
         }
 
-        [FunctionRender("纽铃内部触发测试", "触发当前已安装并开放的纽铃 Provider 刷新，仅用于内部测试", typeof(Register))]
-        public async Task<StringAppResponse> TriggerNeuBellTest()
+        [FunctionRender("纽铃可见提醒测试", "发送或消费可在 Admin Footer 弹窗与徽标中看到的纽铃测试提醒", typeof(Register))]
+        public async Task<StringAppResponse> TriggerNeuBellTest(NeuBellTest_Request request)
         {
             return await this.GetStringResponseAsync(async (_, logger) =>
             {
-                var providers = await _neuBellProviderCatalog.GetAvailableProvidersAsync().ConfigureAwait(false);
-                if (providers.Count == 0)
+                if (string.Equals(request?.Action, NeuBellTest_Request.SendAction, StringComparison.OrdinalIgnoreCase))
                 {
-                    logger.Append("当前没有已安装并开放的纽铃 Provider，未发送测试通知。");
-                    return logger.GetLogs();
+                    var pendingCount = _neuBellTestProvider.Send();
+                    await _neuBellPublisher.NotifyChangedAsync(NeuBellTestProvider.ProviderIdValue).ConfigureAwait(false);
+                    logger.Append($"已发送 NeuBell 测试提醒，当前待消费数量：{pendingCount}。请观察 Admin Footer 的弹窗和徽标。");
+                }
+                else if (string.Equals(request?.Action, NeuBellTest_Request.ConsumeAction, StringComparison.OrdinalIgnoreCase))
+                {
+                    var consumedCount = _neuBellTestProvider.ConsumeAll();
+                    await _neuBellPublisher.NotifyChangedAsync(NeuBellTestProvider.ProviderIdValue).ConfigureAwait(false);
+                    logger.Append($"已消费 {consumedCount} 条 NeuBell 测试提醒，Footer 弹窗和徽标将被清除。");
+                }
+                else
+                {
+                    logger.Append("不支持的操作，请选择“发送提醒”或“消费提醒”。");
                 }
 
-                foreach (var provider in providers)
-                {
-                    await _neuBellPublisher.NotifyChangedAsync(provider.ProviderId).ConfigureAwait(false);
-                    logger.Append($"已触发 Provider：{provider.ProviderId}（模块：{provider.ModuleUid}）");
-                }
-
-                logger.Append($"纽铃内部测试完成，共触发 {providers.Count} 个 Provider。请观察 Admin Footer 的纽铃状态是否自动刷新。");
                 return logger.GetLogs();
-            }, saveLogAfterFinished: true, saveLogName: "纽铃内部触发测试");
+            }, saveLogAfterFinished: true, saveLogName: "纽铃可见提醒测试");
         }
 
         [FunctionRender("缓存测试", "测试当前缓存类型及分布式锁", typeof(Register))]
