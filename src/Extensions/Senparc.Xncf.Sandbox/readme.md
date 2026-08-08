@@ -24,8 +24,9 @@ NCF 独立沙箱编排模块：为用户快速创建/销毁隔离实验环境（
 | **环境准备引导页** | ✅ `/Admin/Sandbox/Setup`（检测 Docker + 链到 Docs） |
 | NcfDocs 环境准备文档 | ✅ [线上文档](https://doc.ncf.pub/zh/NcfPackageSources/xncf/sandbox-environment.html) |
 | 镜像仓库映射配置 | ✅ `SenparcXncfSandbox:Images`（RegistryPrefix / Overrides） |
-| 单元测试（ImageResolver） | ✅ 4 通过 |
+| 单元测试（ImageResolver） | ✅ |
 | Jupyter 反向代理 / 鉴权 | ✅ `/sandbox-jupyter/{sessionId}/`（Admin Cookie + 服务端注入 token） |
+| csharp-exec .NET 10 file-based | ✅ `sdk:10.0` + `dotnet run --file main.cs` |
 | Wasmtime 实装 | ⏳ |
 
 ## 架构
@@ -45,10 +46,11 @@ ISandboxRuntime
 | Key | 说明 |
 |---|---|
 | `python-exec` | 短任务 Python |
-| `csharp-exec` | 短任务 C# |
+| `csharp-exec` | 短任务 C#（**.NET 10** file-based：`dotnet run --file main.cs`） |
 | `jupyter-python` | JupyterLab 交互（更耗内存） |
 
-具体默认镜像名以运行时模板与 **Docs 推荐清单** 对齐；更新 tag 时优先改 Docs，再同步代码模板。
+默认镜像（与 Docs 对齐）：`mcr.microsoft.com/dotnet/sdk:10.0`。更新 tag 时优先改 Docs，再同步代码模板。  
+C# 代码可用顶层语句，例如：`Console.WriteLine("hello");`（无需手写完整 Program/csproj）。
 
 ### 安全与资源默认
 

@@ -34,11 +34,11 @@ public class SandboxImageResolverTests
             RegistryPrefix = "registry.example.com/ncf-sandbox",
             Overrides = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
-                [SandboxTemplateKeys.CsharpExec] = "registry.example.com/custom/dotnet-sdk:8.0"
+                [SandboxTemplateKeys.CsharpExec] = "registry.example.com/custom/dotnet-sdk:10.0"
             }
         });
-        var image = resolver.Resolve(SandboxTemplateKeys.CsharpExec, "mcr.microsoft.com/dotnet/sdk:8.0");
-        Assert.AreEqual("registry.example.com/custom/dotnet-sdk:8.0", image);
+        var image = resolver.Resolve(SandboxTemplateKeys.CsharpExec, "mcr.microsoft.com/dotnet/sdk:10.0");
+        Assert.AreEqual("registry.example.com/custom/dotnet-sdk:10.0", image);
     }
 
     [TestMethod]
@@ -48,7 +48,7 @@ public class SandboxImageResolverTests
         {
             RegistryPrefix = "registry.example.com/ncf-sandbox"
         });
-        var image = resolver.Resolve(SandboxTemplateKeys.CsharpExec, "mcr.microsoft.com/dotnet/sdk:8.0");
-        Assert.AreEqual("registry.example.com/ncf-sandbox/sdk:8.0", image);
+        var image = resolver.Resolve(SandboxTemplateKeys.CsharpExec, "mcr.microsoft.com/dotnet/sdk:10.0");
+        Assert.AreEqual("registry.example.com/ncf-sandbox/sdk:10.0", image);
     }
 }

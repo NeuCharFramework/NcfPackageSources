@@ -71,7 +71,7 @@ public sealed class SandboxImageResolver : ISandboxImageResolver
         }
 
         // python:3.12-alpine -> {prefix}/python:3.12-alpine
-        // mcr.microsoft.com/dotnet/sdk:8.0 -> {prefix}/sdk:8.0（更推荐用 Overrides 写全名）
+        // mcr.microsoft.com/dotnet/sdk:10.0 -> {prefix}/sdk:10.0（更推荐用 Overrides 写全名）
         var leaf = image.Contains('/')
             ? image[(image.LastIndexOf('/') + 1)..]
             : image;

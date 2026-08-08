@@ -21,10 +21,10 @@ public static class SandboxTemplateCatalog
             [SandboxTemplateKeys.CsharpExec] = new SandboxTemplateDefinition
             {
                 Key = SandboxTemplateKeys.CsharpExec,
-                DisplayName = "C# Exec",
+                DisplayName = "C# Exec (.NET 10)",
                 PreferredRuntime = SandboxRuntimeKind.Docker,
                 Interactive = false,
-                Image = "mcr.microsoft.com/dotnet/sdk:8.0",
+                Image = "mcr.microsoft.com/dotnet/sdk:10.0",
                 DefaultCpuLimit = 0.75,
                 DefaultMemoryMb = 512,
                 DefaultTtl = TimeSpan.FromMinutes(15)

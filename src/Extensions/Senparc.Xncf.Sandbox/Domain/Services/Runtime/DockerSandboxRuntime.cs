@@ -130,13 +130,12 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         }
         else if (string.Equals(request.Template.Key, SandboxTemplateKeys.CsharpExec, StringComparison.OrdinalIgnoreCase))
         {
-            fileName = "Program.cs";
+            // .NET 10 file-based apps：单文件直接运行，无需 .csproj / dotnet new。
+            fileName = "main.cs";
             await File.WriteAllTextAsync(Path.Combine(workDir, fileName), request.Code, cancellationToken).ConfigureAwait(false);
-            // SDK 镜像内现场生成临时控制台项目（偏慢，后续可换预置镜像或 Wasm）。
             command = new[]
             {
-                "bash", "-lc",
-                "dotnet new console -n App -o /tmp/App -f net8.0 --force >/dev/null && cp /work/Program.cs /tmp/App/Program.cs && dotnet run --project /tmp/App -v q"
+                "dotnet", "run", "--file", $"/work/{fileName}", "-v", "q"
             };
         }
         else
