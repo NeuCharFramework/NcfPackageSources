@@ -42,9 +42,9 @@
                 <div slot="header">手动配置清单（摘要）</div>
                 <ol style="line-height:1.8;padding-left:20px;">
                     <li>在运行 NCF 的同一台机器上安装并启动 Docker（或兼容 CLI）。模块<strong>不会</strong>自动安装 Docker。</li>
-                    <li>按官方文档预拉所需镜像；镜像名称与版本以文档为准。</li>
-                    <li>内网仓库可在 <code>appsettings.json</code> 配置 <code>SenparcXncfSandbox:Images</code>（RegistryPrefix / Overrides），勿在页面写死 tag。</li>
-                    <li>检测通过后，再到「沙箱面板」创建会话。</li>
+                    <li>按官方文档预拉所需镜像；具体镜像名称与版本以文档为准。</li>
+                    <li>如需内网仓库，可在宿主 <code>appsettings.json</code> 的 <code>SenparcXncfSandbox:Images</code> 中配置前缀或覆盖项（说明见文档）。</li>
+                    <li>检测通过后，打开模块 Function「创建沙箱」，在模板下拉中选择 Python Exec，执行即可；无需在命令行输入模板名。</li>
                 </ol>
                 <p style="margin-top:12px;">
                     <el-button type="primary" icon="el-icon-document" @@click="openDocs">打开完整文档（doc.ncf.pub）</el-button>
