@@ -43,11 +43,13 @@ ISandboxRuntime
 
 ### 模板键（协议值，勿本地化）
 
-| Key | 说明 |
-|---|---|
-| `python-exec` | 短任务 Python |
-| `csharp-exec` | 短任务 C#（**.NET 10** file-based：`dotnet run --file main.cs`） |
-| `jupyter-python` | JupyterLab 交互（更耗内存） |
+| Key | 说明 | Create 后是否常驻容器 |
+|---|---|---|
+| `python-exec` | 短任务 Python | 否（登记会话；Exec 时 `docker run --rm`） |
+| `csharp-exec` | 短任务 C#（**.NET 10** file-based：`dotnet run --file main.cs`） | 否（同上） |
+| `jupyter-python` | JupyterLab 交互（更耗内存） | **是**（Destroy / TTL 停容器） |
+
+「销毁」始终清理会话登记与配额；若存在真实容器（Jupyter 或将来的常驻 Exec worker）则一并删除。
 
 默认镜像（与 Docs 对齐）：`mcr.microsoft.com/dotnet/sdk:10.0`。更新 tag 时优先改 Docs，再同步代码模板。  
 C# 代码可用顶层语句，例如：`Console.WriteLine("hello");`（无需手写完整 Program/csproj）。  

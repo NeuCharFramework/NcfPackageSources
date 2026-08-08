@@ -184,13 +184,21 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
             throw new InvalidOperationException("当前会话模板不支持 Exec。");
         }
 
+        var normalizedCode = SandboxExecCodeDefaults.Normalize(entity.TemplateKey, code);
+        if (!string.Equals(normalizedCode, code, StringComparison.Ordinal))
+        {
+            _logger.LogInformation(
+                "Sandbox Exec code normalized for template {Template}: using language default sample (was Python-style placeholder).",
+                entity.TemplateKey);
+        }
+
         var runtime = await ResolveRuntimeAsync(entity.RuntimeKind, cancellationToken).ConfigureAwait(false);
         var result = await runtime.ExecAsync(
                 new SandboxExecRequest
                 {
                     SessionId = sessionId,
                     Template = template,
-                    Code = code,
+                    Code = normalizedCode,
                     CpuLimit = entity.CpuLimit,
                     MemoryMb = entity.MemoryMb
                 },

@@ -5,6 +5,7 @@ using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.Sandbox.Abstractions;
+using Senparc.Xncf.Sandbox.Domain.Services;
 
 namespace Senparc.Xncf.Sandbox.Application.DTOs.Request;
 
@@ -54,8 +55,8 @@ public class Sandbox_ExecRequest : FunctionAppRequestBase
     public string SessionId { get; set; } = string.Empty;
 
     [Required]
-    [Description("代码||短任务执行的源代码")]
-    public string Code { get; set; } = "print('hello from NCF Sandbox')";
+    [Description("代码||短任务源码。Python 示例：print('hello from NCF Sandbox')；C# 示例：Console.WriteLine(\"hello from NCF Sandbox\");（C# 字符串须用双引号）")]
+    public string Code { get; set; } = SandboxExecCodeDefaults.PythonHello;
 }
 
 public class Sandbox_ListRequest : FunctionAppRequestBase

@@ -329,7 +329,9 @@ namespace Senparc.Areas.Admin
                     // value. Keep it out of document.cookie to limit XSS impact.
                     options.Cookie.HttpOnly = true;
                     options.Cookie.SameSite = SameSiteMode.Strict;
-                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                    // Keep Secure cookies on HTTPS while allowing local HTTP hosts
+                    // (for example Safari/WebKit on http://localhost) to persist login.
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
                     options.SlidingExpiration = true;
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(AdminAuthConfig.DefaultAdminWebLoginExpireMinutes);
                     options.Events = new CookieAuthenticationEvents

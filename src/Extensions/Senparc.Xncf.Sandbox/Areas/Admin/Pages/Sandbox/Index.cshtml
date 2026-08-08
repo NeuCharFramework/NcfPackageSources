@@ -24,6 +24,13 @@
                 :closable="false"
                 show-icon>
             </el-alert>
+            <el-alert
+                style="margin-top:8px;"
+                title="会话说明：python-exec / csharp-exec 创建后只是登记（占配额与 TTL），执行代码时才临时起容器；jupyter-python 才会常驻容器。「销毁」释放登记，并在有容器时停止/删除容器。"
+                type="warning"
+                :closable="false"
+                show-icon>
+            </el-alert>
             <div style="margin:12px 0;">
                 <a class="el-button el-button--primary el-button--small" href="/Admin/Sandbox/Setup?uid=@Model.XncfModuleUid">
                     <i class="fa fa-wrench"></i> 环境准备
@@ -59,6 +66,12 @@
 </div>
 
 @section scripts{
+    @{
+        var jsonCamel = new System.Text.Json.JsonSerializerOptions
+        {
+            PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
+        };
+    }
     <script>
         new Vue({
             el: "#app",
@@ -66,7 +79,8 @@
                 return {
                     loading: false,
                     docsUrl: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DocsUrl)),
-                    sessions: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Sessions))
+                    // 须 camelCase：与 axios/?handler=State 及 el-table prop 一致（首屏默认 PascalCase 会导致列空白）
+                    sessions: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Sessions, jsonCamel))
                 };
             },
             methods: {
