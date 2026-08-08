@@ -32,7 +32,8 @@ var app = new Vue({
     this.fetchHostMetrics();
     this.startHostMetricsPolling();
     this.hostMetricsResizeHandler = () => {
-      if (this.hostMetricsChart) {
+      if (this.hostMetricsChart &&
+        (typeof this.hostMetricsChart.isDisposed !== 'function' || !this.hostMetricsChart.isDisposed())) {
         this.hostMetricsChart.resize();
       }
     };
@@ -49,10 +50,11 @@ var app = new Vue({
       window.removeEventListener('resize', this.hostMetricsResizeHandler);
       this.hostMetricsResizeHandler = null;
     }
-    if (this.hostMetricsChart) {
+    if (this.hostMetricsChart &&
+      (typeof this.hostMetricsChart.isDisposed !== 'function' || !this.hostMetricsChart.isDisposed())) {
       this.hostMetricsChart.dispose();
-      this.hostMetricsChart = null;
     }
+    this.hostMetricsChart = null;
   },
   methods: {
     startHostMetricsPolling() {
@@ -91,6 +93,7 @@ var app = new Vue({
       this.hostMetricsHistory.push({
         sampledAt: metrics.sampledAt,
         cpu: this.toNullableNumber(metrics.cpuUsagePercent),
+        processCpu: this.toNullableNumber(metrics.processCpuUsagePercent),
         memory: this.toNullableNumber(metrics.memoryUsagePercent),
         receiveMbps: this.bytesPerSecondToMbps(metrics.networkReceiveBytesPerSecond),
         sendMbps: this.bytesPerSecondToMbps(metrics.networkSendBytesPerSecond)
@@ -104,10 +107,32 @@ var app = new Vue({
       if (!chartElement) {
         return;
       }
+      if (this.hostMetricsChart &&
+        typeof this.hostMetricsChart.isDisposed === 'function' &&
+        this.hostMetricsChart.isDisposed()) {
+        this.hostMetricsChart = null;
+      }
       if (!this.hostMetricsChart) {
-        this.hostMetricsChart = echarts.init(chartElement);
+        const existingChart = typeof echarts.getInstanceByDom === 'function'
+          ? echarts.getInstanceByDom(chartElement)
+          : null;
+        this.hostMetricsChart = existingChart &&
+          (typeof existingChart.isDisposed !== 'function' || !existingChart.isDisposed())
+          ? existingChart
+          : echarts.init(chartElement);
       }
 
+      // 旧版 ECharts 在第一次 setOption() 前没有内部 model，此时调用 getOption() 会抛错。
+      // 仅在已有 model 时读取图例状态，保证首屏能完成第一次绘制。
+      const chartModel = typeof this.hostMetricsChart.getModel === 'function'
+        ? this.hostMetricsChart.getModel()
+        : true;
+      const currentOption = chartModel && typeof this.hostMetricsChart.getOption === 'function'
+        ? this.hostMetricsChart.getOption()
+        : null;
+      const selectedSeries = currentOption && currentOption.legend && currentOption.legend[0]
+        ? Object.assign({}, currentOption.legend[0].selected || {})
+        : {};
       const labels = this.hostMetricsHistory.map(item => this.formatSampleTime(item.sampledAt));
       this.hostMetricsChart.setOption({
         animationDurationUpdate: 300,
@@ -119,8 +144,10 @@ var app = new Vue({
         legend: {
           top: 2,
           right: 8,
+          selected: selectedSeries,
           data: [
             ncfT('Admin.Home.HostCpu'),
+            ncfT('Admin.Home.HostProcessCpu'),
             ncfT('Admin.Home.HostMemory'),
             ncfT('Admin.Home.HostNetworkReceive'),
             ncfT('Admin.Home.HostNetworkSend')
@@ -151,6 +178,14 @@ var app = new Vue({
           data: this.hostMetricsHistory.map(item => item.cpu),
           lineStyle: { color: '#8c52ff' },
           itemStyle: { color: '#8c52ff' }
+        }, {
+          name: ncfT('Admin.Home.HostProcessCpu'),
+          type: 'line',
+          smooth: true,
+          showSymbol: false,
+          data: this.hostMetricsHistory.map(item => item.processCpu),
+          lineStyle: { color: '#00a6a6', type: 'dashed' },
+          itemStyle: { color: '#00a6a6' }
         }, {
           name: ncfT('Admin.Home.HostMemory'),
           type: 'line',
@@ -190,6 +225,28 @@ var app = new Vue({
     normalizePercent(value) {
       const number = this.toNullableNumber(value);
       return number === null ? 0 : Math.max(0, Math.min(100, number));
+    },
+    barWidth(value) {
+      return this.normalizePercent(value).toFixed(3) + '%';
+    },
+    boundedSubsetPercent(value, maximum) {
+      const subset = this.normalizePercent(value);
+      const maximumNumber = this.toNullableNumber(maximum);
+      if (maximumNumber === null || maximumNumber <= 0) {
+        return subset;
+      }
+      return Math.min(subset, this.normalizePercent(maximumNumber));
+    },
+    boundedSubsetWidth(value, maximum) {
+      return this.boundedSubsetPercent(value, maximum).toFixed(3) + '%';
+    },
+    processMemoryPercent() {
+      const processBytes = this.toNullableNumber(this.hostMetrics.processWorkingSetBytes);
+      const totalBytes = this.toNullableNumber(this.hostMetrics.memoryTotalBytes);
+      if (processBytes === null || totalBytes === null || totalBytes <= 0) {
+        return 0;
+      }
+      return this.normalizePercent(processBytes / totalBytes * 100);
     },
     formatPercent(value) {
       const number = this.toNullableNumber(value);

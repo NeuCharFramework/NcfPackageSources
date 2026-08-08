@@ -40,6 +40,10 @@ namespace Senparc.Areas.Admin.Domain.Services
         public long NetworkReceiveTotalBytes { get; set; }
         public long NetworkSendTotalBytes { get; set; }
         public int NetworkInterfaceCount { get; set; }
+        /// <summary>
+        /// 当前 Web 进程占运行时可见总 CPU 算力的百分比，归一化为 0-100。
+        /// </summary>
+        public double? ProcessCpuUsagePercent { get; set; }
         public long ProcessWorkingSetBytes { get; set; }
         public long ApplicationUptimeSeconds { get; set; }
         public List<string> Warnings { get; set; } = new();
@@ -53,6 +57,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         private readonly object _syncRoot = new();
         private CpuCounterSnapshot? _previousCpu;
         private NetworkCounterSnapshot? _previousNetwork;
+        private ProcessCounterSnapshot? _previousProcess;
 
         public HostMetricsSnapshot Collect()
         {
@@ -161,11 +166,30 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
         }
 
-        private static void CollectProcess(HostMetricsSnapshot snapshot)
+        private void CollectProcess(HostMetricsSnapshot snapshot)
         {
             try
             {
                 using var process = Process.GetCurrentProcess();
+                var current = new ProcessCounterSnapshot(
+                    Stopwatch.GetTimestamp(),
+                    process.TotalProcessorTime.Ticks);
+
+                if (_previousProcess.HasValue)
+                {
+                    var previous = _previousProcess.Value;
+                    var elapsedSeconds = (current.Timestamp - previous.Timestamp) / (double)Stopwatch.Frequency;
+                    var processorTimeTicks = current.ProcessorTimeTicks - previous.ProcessorTimeTicks;
+                    if (elapsedSeconds > 0 && processorTimeTicks >= 0)
+                    {
+                        var processorSeconds = TimeSpan.FromTicks(processorTimeTicks).TotalSeconds;
+                        snapshot.ProcessCpuUsagePercent = ClampPercentage(
+                            processorSeconds * 100d /
+                            (elapsedSeconds * Math.Max(1, Environment.ProcessorCount)));
+                    }
+                }
+
+                _previousProcess = current;
                 snapshot.ProcessWorkingSetBytes = Math.Max(0, process.WorkingSet64);
                 snapshot.ApplicationUptimeSeconds = Math.Max(
                     0,
@@ -424,6 +448,10 @@ namespace Senparc.Areas.Admin.Domain.Services
             long ReceivedBytes,
             long SentBytes,
             int InterfaceCount);
+
+        private readonly record struct ProcessCounterSnapshot(
+            long Timestamp,
+            long ProcessorTimeTicks);
 
         [StructLayout(LayoutKind.Sequential)]
         private struct NativeFileTime

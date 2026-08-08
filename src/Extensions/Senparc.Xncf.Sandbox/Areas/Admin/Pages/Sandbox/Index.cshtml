@@ -1,0 +1,99 @@
+﻿@page
+@model Senparc.Xncf.Sandbox.Areas.Sandbox.Pages.Index
+@{
+    ViewData["Title"] = $"{Model.XncfRegister.MenuName}";
+    Layout = "_Layout_Vue";
+}
+
+@section breadcrumbs{
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>@Model.XncfRegister.MenuName</el-breadcrumb-item>
+    <el-breadcrumb-item>面板</el-breadcrumb-item>
+}
+
+<div>
+    <el-container>
+        <el-header class="module-header">
+            <span class="start-title"><i class="fa fa-cube"></i>&nbsp;<span class="module-header-v">沙箱面板</span></span>
+        </el-header>
+        <el-main>
+            @Html.AntiForgeryToken()
+            <el-alert
+                title="首次使用请先完成「环境准备」。镜像版本与内部仓库说明以官方文档为准，模块内不固化 tag。"
+                type="info"
+                :closable="false"
+                show-icon>
+            </el-alert>
+            <div style="margin:12px 0;">
+                <a class="el-button el-button--primary el-button--small" href="/Admin/Sandbox/Setup?uid=@Model.XncfModuleUid">
+                    <i class="fa fa-wrench"></i> 环境准备
+                </a>
+                <el-button type="text" size="small" @@click="openDocs">打开文档 doc.ncf.pub</el-button>
+                <el-button type="default" size="small" icon="el-icon-refresh" @@click="reload">刷新列表</el-button>
+            </div>
+            <el-table :data="sessions" border stripe v-loading="loading">
+                <el-table-column prop="sessionId" label="SessionId" min-width="220"></el-table-column>
+                <el-table-column prop="templateKey" label="模板" width="140"></el-table-column>
+                <el-table-column prop="runtimeKind" label="运行时" width="100"></el-table-column>
+                <el-table-column prop="status" label="状态" width="100"></el-table-column>
+                <el-table-column prop="hostPort" label="端口" width="80"></el-table-column>
+                <el-table-column label="访问" min-width="180">
+                    <template slot-scope="scope">
+                        <a v-if="scope.row.accessUrl" :href="scope.row.accessUrl" target="_blank">打开</a>
+                        <span v-else>-</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="120">
+                    <template slot-scope="scope">
+                        <el-button type="danger" size="mini" @@click="destroySession(scope.row.sessionId)">销毁</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <p style="margin-top:16px;color:#888;">
+                也可通过模块 Function「创建沙箱 / 执行代码 / 销毁沙箱」操作。完整环境步骤：
+                <a href="@Model.DocsUrl" target="_blank" rel="noopener">@Model.DocsUrl</a>
+            </p>
+        </el-main>
+    </el-container>
+</div>
+
+@section scripts{
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    loading: false,
+                    docsUrl: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DocsUrl)),
+                    sessions: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Sessions))
+                };
+            },
+            methods: {
+                openDocs() {
+                    window.open(this.docsUrl, '_blank', 'noopener');
+                },
+                async reload() {
+                    this.loading = true;
+                    try {
+                        const res = await axios.get('?handler=State');
+                        this.sessions = (res.data && res.data.sessions) || [];
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                async destroySession(sessionId) {
+                    const form = new FormData();
+                    form.append('sessionId', sessionId);
+                    form.append('__RequestVerificationToken', document.querySelector('input[name="__RequestVerificationToken"]')?.value || '');
+                    this.loading = true;
+                    try {
+                        await axios.post('?handler=Destroy', form);
+                        await this.reload();
+                    } finally {
+                        this.loading = false;
+                    }
+                }
+            }
+        });
+    </script>
+}

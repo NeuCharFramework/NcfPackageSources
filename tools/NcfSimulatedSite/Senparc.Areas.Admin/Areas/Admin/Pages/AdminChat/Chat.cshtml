@@ -6,7 +6,7 @@
 }
 
 @section Style {
-    <link rel="stylesheet" href="~/css/Admin/Pages/AdminChat/ChatLauncher.css" />
+    <link rel="stylesheet" href="~/css/Admin/Pages/AdminChat/ChatLauncher.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Admin/Pages/AdminChat/Chat.css" />
 }
 
@@ -339,7 +339,8 @@
                                     @@close="removeModule(module.uid)"
                                     type="info"
                                     class="module-tag">
-                                    <i :class="module.icon"></i> {{module.name}}
+                                    <i :class="module.icon" aria-hidden="true"></i>
+                                    <span class="module-tag-name">{{module.name}}</span>
                                 </el-tag>
                             </div>
                             <div v-else class="chat-module-selected-empty">@AR["Admin.Home.EmptyReference"]</div>

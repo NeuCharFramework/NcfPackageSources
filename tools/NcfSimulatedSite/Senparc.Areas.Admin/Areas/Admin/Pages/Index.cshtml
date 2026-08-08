@@ -6,7 +6,7 @@
     Layout = "_Layout_Vue";
 }
 @section style {
-    <link rel="stylesheet" href="~/css/Admin/Pages/AdminChat/ChatLauncher.css" />
+    <link rel="stylesheet" href="~/css/Admin/Pages/AdminChat/ChatLauncher.css" asp-append-version="true" />
     <style>
         #home-header .el-main {
             padding: 20px 10px 0px 10px;
@@ -122,6 +122,102 @@
             line-height: 2.1;
         }
 
+        .host-metric-readings {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            align-items: baseline;
+            gap: 14px;
+            min-height: 38px;
+        }
+
+        .host-metric-reading {
+            display: flex;
+            align-items: baseline;
+            min-width: 0;
+            gap: 7px;
+            white-space: nowrap;
+        }
+
+        .host-metric-reading + .host-metric-reading {
+            justify-content: flex-end;
+        }
+
+        .host-metric-scope {
+            display: inline-flex;
+            align-items: center;
+            flex: 0 0 auto;
+            gap: 5px;
+            color: #909399;
+            font-size: 12px;
+        }
+
+        .host-metric-scope-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
+        .host-metric-scope-dot.cpu-host {
+            background: #8c52ff;
+        }
+
+        .host-metric-scope-dot.memory-host {
+            background: #67c23a;
+        }
+
+        .host-metric-scope-dot.web-process {
+            background: #00a6a6;
+        }
+
+        .host-metric-reading-value {
+            overflow: hidden;
+            color: #303133;
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 1.35;
+            text-overflow: ellipsis;
+        }
+
+        .host-metric-reading.web-process .host-metric-reading-value {
+            color: #008f8f;
+            font-size: 18px;
+        }
+
+        .host-comparison-bar {
+            position: relative;
+            height: 9px;
+            margin-top: 11px;
+            overflow: hidden;
+            border-radius: 5px;
+            background: #ebeef5;
+        }
+
+        .host-comparison-bar-fill {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            transition: width 0.35s ease;
+        }
+
+        .host-comparison-bar-fill.cpu-host {
+            background: linear-gradient(90deg, #a172ff 0%, #8c52ff 100%);
+        }
+
+        .host-comparison-bar-fill.memory-host {
+            background: linear-gradient(90deg, #85ce61 0%, #67c23a 100%);
+        }
+
+        .host-comparison-bar-fill.web-process {
+            z-index: 1;
+            background: #00a6a6;
+            box-shadow: 1px 0 0 rgba(255, 255, 255, 0.75);
+        }
+
+        .host-comparison-bar-fill.web-process.has-value {
+            min-width: 3px;
+        }
+
         .host-network-down {
             color: #409eff;
         }
@@ -135,10 +231,6 @@
             color: #909399;
             font-size: 12px;
             line-height: 1.55;
-        }
-
-        .host-metric-item .el-progress {
-            margin-top: 10px;
         }
 
         .host-metrics-chart {
@@ -575,17 +667,6 @@
             width: 100%;
         }
 
-        .module-tag {
-            font-size: 14px;
-            padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.95);
-            color: #333;
-        }
-
-            .module-tag .fa {
-                margin-right: 5px;
-            }
-
         #xncf-modules-area .xncf-item.dragging {
             opacity: 0.5;
         }
@@ -625,7 +706,7 @@
                     <el-row :gutter="10">
                         <!-- 第一行 -->
                         <el-col :span="12">
-                            <a href="~/Admin/XncfModule/Index">
+                            <a href="~/Admin/XncfModule/Index?tab=installed">
                                 <div class="grid-content xncf-stat-item">
                                     <span class="count">{{xncfStat.installedXncfCount || 0}}</span>
                                     <div class="icon">
@@ -636,7 +717,7 @@
                             </a>
                         </el-col>
                         <el-col :span="12">
-                            <a href="~/Admin/XncfModule/Index">
+                            <a href="~/Admin/XncfModule/Index?tab=updates">
                                 <div class="grid-content xncf-stat-item">
                                     <span class="count">{{xncfStat.updateVersionXncfCount || 0}}</span>
                                     <div class="icon">
@@ -648,7 +729,7 @@
                         </el-col>
                         <!-- 第二行 -->
                         <el-col :span="12">
-                            <a href="~/Admin/XncfModule/Index">
+                            <a href="~/Admin/XncfModule/Index?tab=new">
                                 <div class="grid-content xncf-stat-item">
                                     <span class="count">{{xncfStat.newXncfCount || 0}}</span>
                                     <div class="icon">
@@ -659,7 +740,7 @@
                             </a>
                         </el-col>
                         <el-col :span="12">
-                            <a href="~/Admin/XncfModule/Index">
+                            <a href="~/Admin/XncfModule/Index?tab=installed">
                                 <div class="grid-content xncf-stat-item">
                                     <span class="count">{{xncfStat.missingXncfCount || 0}}</span>
                                     <div class="icon">
@@ -718,32 +799,63 @@
         </div>
 
         <el-row :gutter="14">
-            <el-col :xs="24" :sm="12" :lg="6">
+            <el-col :xs="24" :sm="12" :lg="8">
                 <div class="host-metric-item">
                     <div class="host-metric-label">
-                        <span>@AR["Admin.Home.HostCpu"]</span>
+                        <span>CPU</span>
                         <i class="fa fa-microchip"></i>
                     </div>
-                    <div class="host-metric-value">{{formatPercent(hostMetrics.cpuUsagePercent)}}</div>
-                    <el-progress :percentage="normalizePercent(hostMetrics.cpuUsagePercent)"
-                                 :show-text="false"
-                                 :stroke-width="7"
-                                 color="#8c52ff"></el-progress>
-                    <div class="host-metric-detail">@AR["Admin.Home.HostCpuDetail"]</div>
+                    <div class="host-metric-readings">
+                        <div class="host-metric-reading">
+                            <span class="host-metric-scope">
+                                <i class="host-metric-scope-dot cpu-host"></i>@AR["Admin.Home.HostScope"]
+                            </span>
+                            <span class="host-metric-reading-value">{{formatPercent(hostMetrics.cpuUsagePercent)}}</span>
+                        </div>
+                        <div class="host-metric-reading web-process">
+                            <span class="host-metric-scope">
+                                <i class="host-metric-scope-dot web-process"></i>@AR["Admin.Home.WebScope"]
+                            </span>
+                            <span class="host-metric-reading-value">{{formatPercent(hostMetrics.processCpuUsagePercent)}}</span>
+                        </div>
+                    </div>
+                    <div class="host-comparison-bar">
+                        <span class="host-comparison-bar-fill cpu-host"
+                              :style="{ width: barWidth(hostMetrics.cpuUsagePercent) }"></span>
+                        <span class="host-comparison-bar-fill web-process"
+                              :class="{ 'has-value': boundedSubsetPercent(hostMetrics.processCpuUsagePercent, hostMetrics.cpuUsagePercent) > 0 }"
+                              :style="{ width: boundedSubsetWidth(hostMetrics.processCpuUsagePercent, hostMetrics.cpuUsagePercent) }"></span>
+                    </div>
                 </div>
             </el-col>
 
-            <el-col :xs="24" :sm="12" :lg="6">
+            <el-col :xs="24" :sm="12" :lg="8">
                 <div class="host-metric-item">
                     <div class="host-metric-label">
                         <span>@AR["Admin.Home.HostMemory"]</span>
                         <i class="fa fa-hdd-o"></i>
                     </div>
-                    <div class="host-metric-value">{{formatPercent(hostMetrics.memoryUsagePercent)}}</div>
-                    <el-progress :percentage="normalizePercent(hostMetrics.memoryUsagePercent)"
-                                 :show-text="false"
-                                 :stroke-width="7"
-                                 color="#67c23a"></el-progress>
+                    <div class="host-metric-readings">
+                        <div class="host-metric-reading">
+                            <span class="host-metric-scope">
+                                <i class="host-metric-scope-dot memory-host"></i>@AR["Admin.Home.HostScope"]
+                            </span>
+                            <span class="host-metric-reading-value">{{formatPercent(hostMetrics.memoryUsagePercent)}}</span>
+                        </div>
+                        <div class="host-metric-reading web-process">
+                            <span class="host-metric-scope">
+                                <i class="host-metric-scope-dot web-process"></i>@AR["Admin.Home.WebScope"]
+                            </span>
+                            <span class="host-metric-reading-value">{{formatBytes(hostMetrics.processWorkingSetBytes)}}</span>
+                        </div>
+                    </div>
+                    <div class="host-comparison-bar">
+                        <span class="host-comparison-bar-fill memory-host"
+                              :style="{ width: barWidth(hostMetrics.memoryUsagePercent) }"></span>
+                        <span class="host-comparison-bar-fill web-process"
+                              :class="{ 'has-value': processMemoryPercent() > 0 }"
+                              :style="{ width: boundedSubsetWidth(processMemoryPercent(), hostMetrics.memoryUsagePercent) }"></span>
+                    </div>
                     <div class="host-metric-detail">
                         {{formatBytes(hostMetrics.memoryUsedBytes)}} / {{formatBytes(hostMetrics.memoryTotalBytes)}}
                         · @AR["Admin.Home.HostMemoryAvailable"] {{formatBytes(hostMetrics.memoryAvailableBytes)}}
@@ -751,7 +863,7 @@
                 </div>
             </el-col>
 
-            <el-col :xs="24" :sm="12" :lg="6">
+            <el-col :xs="24" :sm="24" :lg="8">
                 <div class="host-metric-item">
                     <div class="host-metric-label">
                         <span>@AR["Admin.Home.HostNetwork"]</span>
@@ -765,20 +877,6 @@
                         @AR["Admin.Home.HostNetworkTotal"] ↓ {{formatBytes(hostMetrics.networkReceiveTotalBytes)}}
                         / ↑ {{formatBytes(hostMetrics.networkSendTotalBytes)}}
                         · {{hostMetrics.networkInterfaceCount || 0}} @AR["Admin.Home.HostInterfaces"]
-                    </div>
-                </div>
-            </el-col>
-
-            <el-col :xs="24" :sm="12" :lg="6">
-                <div class="host-metric-item">
-                    <div class="host-metric-label">
-                        <span>@AR["Admin.Home.HostProcess"]</span>
-                        <i class="fa fa-cogs"></i>
-                    </div>
-                    <div class="host-metric-value">{{formatBytes(hostMetrics.processWorkingSetBytes)}}</div>
-                    <div class="host-metric-detail">
-                        @AR["Admin.Home.HostProcessWorkingSet"]<br />
-                        @AR["Admin.Home.HostProcessUptime"] {{formatDuration(hostMetrics.applicationUptimeSeconds)}}
                     </div>
                 </div>
             </el-col>
@@ -850,7 +948,8 @@
                         @@close="removeModule(module.uid)"
                         type="info"
                         class="module-tag">
-                        <i :class="module.icon"></i> {{module.name}}
+                        <i :class="module.icon" aria-hidden="true"></i>
+                        <span class="module-tag-name">{{module.name}}</span>
                     </el-tag>
                 </div>
                 <div v-else class="chat-module-selected-empty">@AR["Admin.Home.EmptyReference"]</div>
@@ -924,5 +1023,5 @@
 @section scripts {
     <script src="~/lib/echarts/dist/echarts.js"></script>
     <script src="~/js/Admin/Pages/AdminChat/ChatLauncherMixin.js"></script>
-    <script src="~/js/Admin/Pages/Index/Index.js"></script>
+    <script src="~/js/Admin/Pages/Index/Index.js" asp-append-version="true"></script>
 }
