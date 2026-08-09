@@ -64,7 +64,7 @@ public sealed class NeuCharWorkflowEngine
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private static readonly HashSet<string> AllowedNodeTypes = new(StringComparer.OrdinalIgnoreCase)
     {
-        "manual-trigger", "interval-trigger", "function", "delay", "condition", "agent", "agent-group",
+        "manual-trigger", "interval-trigger", "webhook-trigger", "function", "delay", "condition", "agent", "agent-group",
         "aggregate", "console", "end"
     };
 
@@ -523,6 +523,7 @@ public sealed class NeuCharWorkflowEngine
         {
             case "manual-trigger":
             case "interval-trigger":
+            case "webhook-trigger":
                 return (true, input, null, null);
             case "delay":
                 var delaySeconds = Math.Clamp(GetInt(node.Config, "seconds", 1), 0, 30);
@@ -1029,7 +1030,7 @@ public sealed class NeuCharWorkflowEngine
                     visited).ConfigureAwait(false);
             }
         }
-        var typeName = node.Type is "manual-trigger" or "interval-trigger" or "agent" or "agent-group"
+        var typeName = node.Type is "manual-trigger" or "interval-trigger" or "webhook-trigger" or "agent" or "agent-group"
             ? "string"
             : "any";
         return new NeuCharFunctionOutputDescriptor(

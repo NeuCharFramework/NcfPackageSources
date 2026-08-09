@@ -126,6 +126,9 @@ assert.ok(page.includes("addSimpleNode('end','结束')"), 'Workflow palette shou
 assert.ok(page.includes('class="edge-delete"'), 'Every edge should expose a midpoint delete control.');
 assert.ok(page.includes('workflow-run-dock'), 'Workflow execution should use a persistent status dock instead of a modal.');
 assert.ok(page.includes('关联上游 Output'), 'Node parameters should expose upstream output binding controls.');
+assert.ok(page.includes('class="parameter-field-name"'), 'Function parameter field names should be visible in the node settings.');
+assert.ok(page.includes('parameter-description-icon'), 'Function parameter descriptions should have an info icon.');
+assert.ok(page.includes(':content="parameter.description"'), 'Function parameter descriptions should be shown through a tooltip.');
 assert.ok(page.includes('自动保存'), 'Workflow settings should expose the auto-save interval.');
 assert.ok(page.includes('Command/Ctrl + S'), 'Workflow save should advertise the system save shortcut.');
 assert.ok(!page.includes('<el-dialog'), 'Workflow execution should not keep a modal dialog open.');

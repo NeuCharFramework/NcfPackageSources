@@ -46,7 +46,7 @@
                             @@click="editWorkflow(item.id)">
                         <span class="workflow-list-name">{{item.name}}</span>
                         <span><el-tag size="mini" :type="item.enabled?'success':'info'">{{item.enabled?'运行中':'草稿'}}</el-tag></span>
-                        <small>{{item.triggerType==='interval'?'间隔触发':'手动触发'}} · Revision {{item.revision}}</small>
+                        <small>{{item.triggerType==='interval'?'间隔触发':(item.triggerType==='webhook'?'Webhook':'手动触发')}} · Revision {{item.revision}}</small>
                     </button>
                 </div>
                 <div v-else class="workflow-list-empty">暂无工作流</div>
@@ -61,6 +61,7 @@
                     <el-select v-model="form.triggerType" :disabled="editingLocked" @@change="syncTriggerNode">
                         <el-option label="手动触发" value="manual"></el-option>
                         <el-option label="间隔触发" value="interval"></el-option>
+                        <el-option label="Webhook" value="webhook"></el-option>
                     </el-select>
                     <el-input-number v-if="form.triggerType==='interval'" v-model="form.intervalSeconds" :disabled="editingLocked" :min="60" :max="31536000" :step="60"></el-input-number>
                     <el-switch v-model="form.enabled" :disabled="editingLocked" active-text="启用"></el-switch>
@@ -89,6 +90,42 @@
                     <el-popconfirm v-if="form.id" title="确认删除这个工作流？" @@on-confirm="deleteWorkflow">
                         <el-button slot="reference" type="danger" plain :disabled="editingLocked">删除</el-button>
                     </el-popconfirm>
+                </div>
+
+                <div v-if="form.triggerType==='webhook'" class="workflow-webhook-config">
+                    <div class="webhook-config-heading">
+                        <strong>Webhook 触发配置</strong>
+                        <span>请求必须携带访问密钥；参数可从 Query、Form 或 JSON 请求体读取。</span>
+                    </div>
+                    <div class="webhook-config-row">
+                        <label>请求方法</label>
+                        <el-select v-model="form.webhookMethod" :disabled="editingLocked" size="small">
+                            <el-option label="不限定（GET/POST及其他）" value="any"></el-option>
+                            <el-option label="GET" value="get"></el-option>
+                            <el-option label="POST" value="post"></el-option>
+                        </el-select>
+                        <label>访问密钥</label>
+                        <el-input v-model="form.webhookToken" size="small" readonly>
+                            <el-button slot="append" icon="el-icon-document-copy" title="复制访问密钥" @@click="copyText(form.webhookToken)"></el-button>
+                        </el-input>
+                        <el-button size="small" icon="el-icon-document-copy" :disabled="!form.id" @@click="copyText(webhookUrl)">复制 URL</el-button>
+                    </div>
+                    <div class="webhook-url-hint" v-if="form.id">
+                        URL：<code>{{webhookUrl}}</code>；建议使用请求头 <code>X-NeuChar-Webhook-Token</code> 传递密钥，也支持 query 参数 <code>token</code>。
+                    </div>
+                    <div class="webhook-parameters-heading">
+                        <span>参数（{{form.webhookParameters.length}}/50）</span>
+                        <el-button type="text" size="small" :disabled="editingLocked || form.webhookParameters.length>=50" @@click="addWebhookParameter">添加参数</el-button>
+                    </div>
+                    <div v-if="form.webhookParameters.length" class="webhook-parameters">
+                        <div v-for="(parameter,index) in form.webhookParameters" :key="parameter._id" class="webhook-parameter-row">
+                            <el-input v-model="parameter.name" size="small" placeholder="参数名，例如 userId" :disabled="editingLocked"></el-input>
+                            <el-checkbox v-model="parameter.required" :disabled="editingLocked">必填</el-checkbox>
+                            <el-input v-model="parameter.description" size="small" placeholder="说明（可选）" :disabled="editingLocked"></el-input>
+                            <el-button type="text" class="webhook-parameter-remove" :disabled="editingLocked" @@click="removeWebhookParameter(index)">删除</el-button>
+                        </div>
+                    </div>
+                    <div v-else class="webhook-parameters-empty">未限定参数时，所有 Query/Form/JSON 字段都会作为工作流输入。</div>
                 </div>
 
                 <div class="workflow-designer">
@@ -259,7 +296,14 @@
                                         <el-alert v-if="incomingEdges(selectedNode.id).length>1" title="此 Function 有多个上游；任一有效来源到达都可以触发，单次工作流运行中该节点最多执行一次。" type="info" :closable="false"></el-alert>
                                         <div v-for="parameter in functionParameters(selectedFunction)" :key="parameter.name" class="parameter-editor">
                                             <label class="parameter-label">
-                                                {{parameter.title || parameter.name}}
+                                                <span>{{parameter.title || parameter.name}}</span>
+                                                <code v-if="parameter.title && parameter.title !== parameter.name" class="parameter-field-name">{{parameter.name}}</code>
+                                                <el-tooltip v-if="parameter.description"
+                                                            effect="dark"
+                                                            placement="top-start"
+                                                            :content="parameter.description">
+                                                    <i class="el-icon-info parameter-description-icon" aria-label="参数说明"></i>
+                                                </el-tooltip>
                                                 <em v-if="parameter.required">必填</em>
                                             </label>
 

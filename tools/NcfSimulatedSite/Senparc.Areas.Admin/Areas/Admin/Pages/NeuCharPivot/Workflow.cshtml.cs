@@ -157,9 +157,17 @@ public class WorkflowModel(
             }
         }
 
-        var triggerType = string.Equals(request.TriggerType, "interval", StringComparison.OrdinalIgnoreCase)
-            ? "interval"
-            : "manual";
+        var triggerType = request.TriggerType?.Trim().ToLowerInvariant() switch
+        {
+            "interval" => "interval",
+            "webhook" => "webhook",
+            "manual" or null or "" => "manual",
+            _ => null
+        };
+        if (triggerType == null)
+        {
+            return BadRequest("工作流触发方式无效。");
+        }
         var expectedTriggerNodeType = $"{triggerType}-trigger";
         if (!graph.Nodes.Any(z => string.Equals(
                 z.Type,
@@ -184,10 +192,22 @@ public class WorkflowModel(
         workflow ??= new NeuCharWorkflow(
             request.Name.Trim(),
             adminWorkContextProvider.GetAdminWorkContext().AdminUserId);
+        string triggerConfigJson;
+        try
+        {
+            triggerConfigJson = string.Equals(triggerType, "webhook", StringComparison.Ordinal)
+                ? NeuCharWorkflowWebhookConfig.Normalize(
+                    request.TriggerConfigJson,
+                    workflow?.TriggerConfigJson).ToJson()
+                : "{}";
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
         var nextRun = request.Enabled
-            ? NeuCharWorkflowEngine.CalculateNextRun(triggerType, request.TriggerConfigJson, DateTime.UtcNow)
+            ? NeuCharWorkflowEngine.CalculateNextRun(triggerType, triggerConfigJson, DateTime.UtcNow)
             : null;
-        var triggerConfigJson = request.TriggerConfigJson ?? "{}";
         var autoSaveMinutes = request.AutoSaveMinutes <= 0
             ? 0
             : Math.Clamp(request.AutoSaveMinutes, 1, 1440);

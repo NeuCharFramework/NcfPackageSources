@@ -18,7 +18,7 @@ new Vue({
             connectionDraft: { sourceId: '', sourceHandle: '', x: 0, y: 0 },
             dragState: null,
             canvasSize: { width: 1200, height: 760 },
-            form: { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, autoSaveMinutes: 3, revision: 0, graph: { nodes: [], edges: [] } },
+            form: { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], autoSaveMinutes: 3, revision: 0, graph: { nodes: [], edges: [] } },
             saveState: {
                 saving: false,
                 lastSavedSignature: '',
@@ -80,6 +80,9 @@ new Vue({
                 enabled: !!this.form.enabled,
                 triggerType: this.form.triggerType,
                 intervalSeconds: Number(this.form.intervalSeconds || 300),
+                webhookMethod: this.form.webhookMethod,
+                webhookToken: this.form.webhookToken,
+                webhookParameters: this.form.webhookParameters,
                 autoSaveMinutes: Number(this.form.autoSaveMinutes || 0),
                 graph: this.form.graph
             });
@@ -108,6 +111,11 @@ new Vue({
             if (this.run.status === 'success') return '最近一次测试运行成功';
             if (this.run.status === 'failed') return '最近一次测试运行失败';
             return '测试运行就绪';
+        },
+        webhookUrl() {
+            return this.form.id
+                ? `${window.location.origin}/api/Senparc.Areas.Admin/neuchar-workflow/webhook/${this.form.id}`
+                : '';
         }
     },
     watch: {
@@ -131,7 +139,7 @@ new Vue({
     },
     methods: {
         emptyForm() {
-            return { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, autoSaveMinutes: 3, revision: 0, graph: { nodes: [], edges: [] } };
+            return { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], autoSaveMinutes: 3, revision: 0, graph: { nodes: [], edges: [] } };
         },
         async loadAll() {
             this.loading = true;
@@ -183,6 +191,14 @@ new Vue({
                     ...item,
                     graph,
                     intervalSeconds: Number(trigger.intervalSeconds || 300),
+                    webhookMethod: String(trigger.method || 'any').toLowerCase(),
+                    webhookToken: String(trigger.token || ''),
+                    webhookParameters: (trigger.parameters || []).map(parameter => ({
+                        _id: this.makeId('webhook-parameter'),
+                        name: parameter.name || '',
+                        required: !!parameter.required,
+                        description: parameter.description || ''
+                    })),
                     autoSaveMinutes: Number(item.autoSaveMinutes ?? 3),
                     revision: Number(item.revision || 0)
                 };
@@ -201,13 +217,15 @@ new Vue({
         makeId(prefix) { return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 100000)}`; },
         syncTriggerNode() {
             if (this.editingLocked) return;
-            const type = this.form.triggerType === 'interval' ? 'interval-trigger' : 'manual-trigger';
+            const type = this.form.triggerType === 'interval'
+                ? 'interval-trigger'
+                : this.form.triggerType === 'webhook' ? 'webhook-trigger' : 'manual-trigger';
             const existing = this.form.graph.nodes.find(node => String(node.type).endsWith('trigger'));
             if (existing) {
                 existing.type = type;
-                existing.name = type === 'interval-trigger' ? '间隔触发' : '手动触发';
+                existing.name = type === 'interval-trigger' ? '间隔触发' : type === 'webhook-trigger' ? 'Webhook 触发' : '手动触发';
             } else {
-                const trigger = { id: this.makeId('trigger'), type, name: type === 'interval-trigger' ? '间隔触发' : '手动触发', x: 430, y: 60, config: {} };
+                const trigger = { id: this.makeId('trigger'), type, name: type === 'interval-trigger' ? '间隔触发' : type === 'webhook-trigger' ? 'Webhook 触发' : '手动触发', x: 430, y: 60, config: {} };
                 this.form.graph.nodes.unshift(trigger);
                 this.selectedNodeId = trigger.id;
             }
@@ -437,6 +455,7 @@ new Vue({
         nodeSummary(node) {
             if (node.type === 'function') { const fn = this.findFunction(node.config); return fn ? fn.moduleName : 'Function 已失效'; }
             if (node.type === 'interval-trigger') return `每 ${this.form.intervalSeconds} 秒`;
+            if (node.type === 'webhook-trigger') return '等待外部 Webhook 请求';
             if (node.type === 'manual-trigger') return '由用户手动运行';
             if (node.type === 'delay') return `${node.config.seconds || 0} 秒`;
             if (node.type === 'condition') return `${node.config.operator || 'equals'} ${this.configValueLabel(node.config.right)}`;
@@ -485,7 +504,7 @@ new Vue({
                 return (fn && fn.output && fn.output.fields) || [{ path: '$', label: '完整输出', typeName: 'any', isArray: false, requiresIndex: false }];
             }
             if (node.type === 'aggregate') return [{ path: '$', label: '聚合结果', typeName: 'any', isArray: true, requiresIndex: false }];
-            if (['manual-trigger', 'interval-trigger', 'agent', 'agent-group'].includes(node.type)) return [{ path: '$', label: '文本输出', typeName: 'string', isArray: false, requiresIndex: false }];
+            if (['manual-trigger', 'interval-trigger', 'webhook-trigger', 'agent', 'agent-group'].includes(node.type)) return [{ path: '$', label: '文本输出', typeName: 'string', isArray: false, requiresIndex: false }];
             const incoming = this.form.graph.edges.find(edge => edge.target === node.id);
             const source = incoming && this.form.graph.nodes.find(item => item.id === incoming.source);
             return source ? this.nodeOutputFields(source, visited) : [{ path: '$', label: '节点输出', typeName: 'any', isArray: false, requiresIndex: false }];
@@ -576,6 +595,19 @@ new Vue({
             const triggers = this.form.graph.nodes.filter(node => String(node.type).endsWith('trigger'));
             if (triggers.length !== 1) return '工作流必须且只能包含一个触发器。';
             const trigger = triggers[0];
+            if (!['manual-trigger', 'interval-trigger', 'webhook-trigger'].includes(trigger.type)) return '触发器节点类型无效。';
+            if (this.form.triggerType === 'webhook') {
+                if (!['any', 'get', 'post'].includes(String(this.form.webhookMethod || '').toLowerCase())) return 'Webhook 请求方法无效。';
+                const names = new Set();
+                for (const parameter of this.form.webhookParameters || []) {
+                    const name = String(parameter.name || '').trim();
+                    if (!/^[A-Za-z_][A-Za-z0-9_.-]{0,63}$/.test(name)) return 'Webhook 参数名格式无效。';
+                    const key = name.toLowerCase();
+                    if (names.has(key)) return `Webhook 参数“${name}”重复。`;
+                    names.add(key);
+                    if (String(parameter.description || '').length > 500) return `Webhook 参数“${name}”的说明不能超过 500 个字符。`;
+                }
+            }
             const visited = new Set(); const queue = [trigger.id];
             while (queue.length) {
                 const current = queue.shift(); if (visited.has(current)) continue; visited.add(current);
@@ -601,6 +633,38 @@ new Vue({
                 if (!object || !object.enabled) return `节点“${node.name}”引用的 Agent 不可用。`;
             }
             return '';
+        },
+        addWebhookParameter() {
+            if (this.editingLocked || this.form.webhookParameters.length >= 50) return;
+            this.form.webhookParameters.push({ _id: this.makeId('webhook-parameter'), name: '', required: false, description: '' });
+        },
+        removeWebhookParameter(index) {
+            if (this.editingLocked) return;
+            this.form.webhookParameters.splice(index, 1);
+        },
+        buildTriggerConfig() {
+            if (this.form.triggerType === 'interval') return { intervalSeconds: Number(this.form.intervalSeconds || 300) };
+            if (this.form.triggerType === 'webhook') {
+                return {
+                    method: String(this.form.webhookMethod || 'any').toLowerCase(),
+                    token: String(this.form.webhookToken || ''),
+                    parameters: (this.form.webhookParameters || []).map(parameter => ({
+                        name: String(parameter.name || '').trim(),
+                        required: !!parameter.required,
+                        description: String(parameter.description || '').trim()
+                    }))
+                };
+            }
+            return {};
+        },
+        async copyText(value) {
+            if (!value) return;
+            try {
+                await navigator.clipboard.writeText(value);
+                this.$notify({ title: 'Webhook', message: '已复制到剪贴板。', type: 'success' });
+            } catch {
+                this.$notify({ title: 'Webhook', message: '复制失败，请手动复制。', type: 'warning' });
+            }
         },
         setAutoSaveEnabled(enabled) {
             this.form.autoSaveMinutes = enabled
