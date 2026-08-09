@@ -14,8 +14,6 @@ namespace Senparc.Areas.Admin.ACL;
 public interface INeuCharPivotConfigurationRepository : IClientRepositoryBase<NeuCharPivotConfiguration> { }
 public interface INeuCharPivotFunctionRepository : IClientRepositoryBase<NeuCharPivotFunction> { }
 public interface INeuCharPivotLoopTaskRepository : IClientRepositoryBase<NeuCharPivotLoopTask> { }
-public interface INeuCharWorkflowRepository : IClientRepositoryBase<NeuCharWorkflow> { }
-public interface INeuCharWorkflowVersionRepository : IClientRepositoryBase<NeuCharWorkflowVersion> { }
 public interface INeuCharExecutionLogRepository : IClientRepositoryBase<NeuCharExecutionLog> { }
 
 public sealed class NeuCharPivotConfigurationRepository : ClientRepositoryBase<NeuCharPivotConfiguration>, INeuCharPivotConfigurationRepository
@@ -34,18 +32,6 @@ public sealed class NeuCharPivotLoopTaskRepository : ClientRepositoryBase<NeuCha
 {
     private NeuCharPivotLoopTaskRepository() : base(null) { }
     public NeuCharPivotLoopTaskRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
-}
-
-public sealed class NeuCharWorkflowRepository : ClientRepositoryBase<NeuCharWorkflow>, INeuCharWorkflowRepository
-{
-    private NeuCharWorkflowRepository() : base(null) { }
-    public NeuCharWorkflowRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
-}
-
-public sealed class NeuCharWorkflowVersionRepository : ClientRepositoryBase<NeuCharWorkflowVersion>, INeuCharWorkflowVersionRepository
-{
-    private NeuCharWorkflowVersionRepository() : base(null) { }
-    public NeuCharWorkflowVersionRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
 }
 
 public sealed class NeuCharExecutionLogRepository : ClientRepositoryBase<NeuCharExecutionLog>, INeuCharExecutionLogRepository

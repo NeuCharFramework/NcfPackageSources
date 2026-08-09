@@ -14,7 +14,7 @@ using Senparc.AI.AgentKernel.Handlers;
 using Senparc.AI.AgentKernel.IWantToExtensions;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Service;
-using Senparc.Ncf.Shared.Abstractions.ChatAgent;
+using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.OHS.Local.PL;
@@ -95,7 +95,7 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
                 "agent-group",
                 z.Name,
                 z.Description,
-                true,
+                z.Enable,
                 "fa fa-users",
                 $"/Admin/AgentsManager/Index#tab=second&view=edit&groupId={z.Id}",
                 new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
@@ -123,9 +123,9 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
             int.TryParse(request.ObjectId[6..], out var groupId))
         {
             var group = await _groupService.GetObjectAsync(z => z.Id == groupId).ConfigureAwait(false);
-            if (group == null)
+            if (group == null || !group.Enable)
             {
-                return new WorkflowObjectExecutionResult(false, null, "Agent 组不存在。");
+                return new WorkflowObjectExecutionResult(false, null, "Agent 组不存在或未启用。");
             }
 
             await _groupService.RunChatGroupAwaitAsync(new ChatGroup_RunGroupRequest

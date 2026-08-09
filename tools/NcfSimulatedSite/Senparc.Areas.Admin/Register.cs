@@ -223,24 +223,17 @@ namespace Senparc.Areas.Admin
             services.AddScoped<INeuCharPivotConfigurationRepository, NeuCharPivotConfigurationRepository>();
             services.AddScoped<INeuCharPivotFunctionRepository, NeuCharPivotFunctionRepository>();
             services.AddScoped<INeuCharPivotLoopTaskRepository, NeuCharPivotLoopTaskRepository>();
-            services.AddScoped<INeuCharWorkflowRepository, NeuCharWorkflowRepository>();
-            services.AddScoped<INeuCharWorkflowVersionRepository, NeuCharWorkflowVersionRepository>();
             services.AddScoped<INeuCharExecutionLogRepository, NeuCharExecutionLogRepository>();
             services.AddScoped<NeuCharPivotConfigurationService>();
             services.AddScoped<NeuCharPivotFunctionService>();
             services.AddScoped<NeuCharPivotLoopTaskService>();
-            services.AddScoped<NeuCharWorkflowService>();
-            services.AddScoped<NeuCharWorkflowVersionService>();
             services.AddScoped<NeuCharExecutionLogService>();
             services.AddScoped<NeuCharFunctionService>();
             services.AddScoped<NeuCharPivotService>();
             services.AddDataProtection();
             services.AddScoped<NeuCharParameterProtector>();
             services.AddScoped<ChatAgentNeuCharPivotComposer>();
-            services.AddScoped<NeuCharWorkflowEngine>();
-            services.AddSingleton<NeuCharWorkflowRunCoordinator>();
             services.AddHostedService<NeuCharPivotLoopTaskHostedService>();
-            services.AddHostedService<NeuCharWorkflowHostedService>();
 
             // Admin 首页 Host 实时指标采样器。Singleton 仅保存计算速率所需的上一帧计数器，
             // 不保存历史记录，也不写入任何缓存。
@@ -421,7 +414,6 @@ namespace Senparc.Areas.Admin
                 options.Conventions.AuthorizePage("/", NcfAuthorizationPolicyNames.AdminOnly);//必须登录
                 options.Conventions.AuthorizePage("/AdminChat/Chat", NcfAuthorizationPolicyNames.AdminOnly);//聊天页面必须登录
                 options.Conventions.AuthorizePage("/NeuCharPivot/Aggregate", NcfAuthorizationPolicyNames.AdminOnly);
-                options.Conventions.AuthorizePage("/NeuCharPivot/Workflow", NcfAuthorizationPolicyNames.AdminOnly);
                 options.Conventions.AllowAnonymousToPage("/Login");//允许匿名
 
                 //更多：https://learn.microsoft.com/en-us/aspnet/core/security/authorization/razor-pages-authorization?view=aspnetcore-8.0

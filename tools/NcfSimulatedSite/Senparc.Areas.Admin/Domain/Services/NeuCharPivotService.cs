@@ -37,18 +37,6 @@ public sealed class NeuCharPivotLoopTaskService : BaseClientService<NeuCharPivot
         : base(repository, serviceProvider) { }
 }
 
-public sealed class NeuCharWorkflowService : BaseClientService<NeuCharWorkflow>
-{
-    public NeuCharWorkflowService(INeuCharWorkflowRepository repository, IServiceProvider serviceProvider)
-        : base(repository, serviceProvider) { }
-}
-
-public sealed class NeuCharWorkflowVersionService : BaseClientService<NeuCharWorkflowVersion>
-{
-    public NeuCharWorkflowVersionService(INeuCharWorkflowVersionRepository repository, IServiceProvider serviceProvider)
-        : base(repository, serviceProvider) { }
-}
-
 public sealed class NeuCharExecutionLogService : BaseClientService<NeuCharExecutionLog>
 {
     public NeuCharExecutionLogService(INeuCharExecutionLogRepository repository, IServiceProvider serviceProvider)

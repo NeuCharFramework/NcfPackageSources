@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Module.MenuName" xml:space="preserve"><value>NeuChar 工作流</value></data>
+  <data name="Module.Description" xml:space="preserve"><value>以 Function、系统节点与受控 Agent 组合的安全服务端工作流。</value></data>
+  <data name="Area.Workflow" xml:space="preserve"><value>工作流</value></data>
+  <data name="Title.Designer" xml:space="preserve"><value>NeuChar 工作流</value></data>
+  <data name="Designer.Introduction" xml:space="preserve"><value>用 Function、系统节点和 Agent 组合流程；保存与运行前会校验参数、类型、连线及模块状态。</value></data>
+  <data name="Action.Refresh" xml:space="preserve"><value>刷新</value></data>
+  <data name="Action.NewWorkflow" xml:space="preserve"><value>新建工作流</value></data>
+</root>

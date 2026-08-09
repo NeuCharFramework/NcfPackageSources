@@ -6,11 +6,11 @@ const path = require('path');
 const vm = require('vm');
 
 const scriptPath = path.resolve(__dirname,
-    '../../../Senparc.Areas.Admin/wwwroot/js/Admin/Pages/NeuCharPivot/Workflow.js');
+    '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/wwwroot/js/NeuCharWorkflow/Workflow.js');
 const pagePath = path.resolve(__dirname,
-    '../../../Senparc.Areas.Admin/Areas/Admin/Pages/NeuCharPivot/Workflow.cshtml');
+    '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/Areas/Admin/Pages/NeuCharWorkflow/Index.cshtml');
 const stylePath = path.resolve(__dirname,
-    '../../../Senparc.Areas.Admin/wwwroot/css/Admin/Pages/NeuCharPivot/Workflow.css');
+    '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/wwwroot/css/NeuCharWorkflow/Workflow.css');
 
 let vueOptions = null;
 function Vue(options) { vueOptions = options; }
@@ -20,7 +20,7 @@ const sandbox = {
     window: { addEventListener() {}, removeEventListener() {}, setTimeout(callback) { callback(); }, clearTimeout() {} },
     localStorage: { getItem() { return null; }, setItem() {} },
     service: {},
-    NeuCharPivotUi: {},
+    NeuCharWorkflowUi: {},
     Set,
     Math,
     Number,
@@ -145,6 +145,38 @@ assert.strictEqual(panPrevented, true, 'Canvas panning should suppress the brows
 vueOptions.methods.onPointerUp.call(panContext);
 assert.strictEqual(panContext.canvasPan.active, false, 'Canvas panning should stop on mouse release.');
 
+assert.strictEqual(vueOptions.methods.clampCanvasZoom.call({}, 3), 2,
+    'Canvas zoom should not exceed the supported maximum.');
+assert.strictEqual(vueOptions.methods.clampCanvasZoom.call({}, .1), .5,
+    'Canvas zoom should not go below the supported minimum.');
+
+const pointCanvas = { getBoundingClientRect() { return { left: 10, top: 20 }; } };
+const pointStage = { getBoundingClientRect() { return { left: -90, top: -180 }; } };
+const pointContext = { $refs: { canvas: pointCanvas, stage: pointStage }, canvasZoom: 2 };
+const scaledPoint = vueOptions.methods.canvasPoint.call(pointContext, { clientX: 110, clientY: 20 });
+assert.strictEqual(scaledPoint.x, 100, 'Scaled pointer X should convert back to world coordinates.');
+assert.strictEqual(scaledPoint.y, 100, 'Scaled pointer Y should convert back to world coordinates.');
+
+const zoomCanvas = {
+    clientWidth: 400,
+    clientHeight: 260,
+    scrollLeft: 100,
+    scrollTop: 120,
+    getBoundingClientRect() { return { left: 10, top: 20 }; }
+};
+const zoomContext = {
+    canvasZoom: 1,
+    $refs: { canvas: zoomCanvas, stage: { offsetTop: 36 } },
+    clampCanvasZoom: vueOptions.methods.clampCanvasZoom,
+    updateCanvasViewport() { this.viewportUpdated = true; },
+    $nextTick(callback) { callback(); }
+};
+vueOptions.methods.setCanvasZoom.call(zoomContext, 1.5, 210, 180);
+assert.strictEqual(zoomContext.canvasZoom, 1.5, 'Wheel and button zoom should update the scale.');
+assert.strictEqual(zoomCanvas.scrollLeft, 250, 'Zooming should preserve the world point under the cursor horizontally.');
+assert.strictEqual(zoomCanvas.scrollTop, 242, 'Zooming should preserve the world point under the cursor vertically.');
+assert.strictEqual(zoomContext.viewportUpdated, true, 'Zooming should refresh minimap viewport data.');
+
 let shortcutSource = null;
 let shortcutPrevented = false;
 vueOptions.methods.onSaveShortcut.call({
@@ -185,11 +217,26 @@ assert.strictEqual(vueOptions.methods.workflowObjectEditUrl.call({}, { editUrl: 
 assert.strictEqual(vueOptions.methods.workflowObjectEditUrl.call({}, { providerId: 'agents-manager', objectId: 'agent:42' }),
     '/Admin/AgentsManager/Index#tab=first&view=edit&agentId=42',
     'AgentsManager objects should resolve to the in-app agent editor anchor.');
+assert.strictEqual(vueOptions.methods.parameterDisplayName({ title: '网址', name: 'Url' }), '网址',
+    'A parameter title should be preferred when supplied by a module.');
+assert.strictEqual(vueOptions.methods.parameterDisplayName({ title: '   ', name: 'Url' }), 'Url',
+    'A blank parameter title must fall back to the field name.');
+assert.strictEqual(vueOptions.methods.parameterDisplayName({}), '未命名参数',
+    'Incomplete legacy metadata should never leave a parameter visually unnamed.');
+assert.strictEqual(vueOptions.methods.hasParameterFieldName({ title: '网址', name: 'Url' }), true,
+    'A localized parameter title should retain the underlying field name as a visual aid.');
+assert.strictEqual(vueOptions.methods.parameterDescription({ description: '  请输入要爬取的网址  ' }), '请输入要爬取的网址',
+    'Parameter descriptions should be trimmed before they are rendered in the tooltip.');
 assert.ok(page.includes('workflow-run-dock'), 'Workflow execution should use a persistent status dock instead of a modal.');
 assert.ok(page.includes('关联上游 Output'), 'Node parameters should expose upstream output binding controls.');
+assert.ok(page.includes('@@wheel.prevent="zoomCanvas"'), 'The workflow canvas should use mouse-wheel zooming.');
+assert.ok(page.includes('class="canvas-zoom-controls"'), 'The workflow canvas should render zoom controls.');
+assert.ok(page.includes('type="range"'), 'The zoom controls should include a slider.');
+assert.ok(page.includes('class="canvas-minimap"'), 'Zoomed canvases should render a minimap.');
 assert.ok(page.includes('class="parameter-field-name"'), 'Function parameter field names should be visible in the node settings.');
 assert.ok(page.includes('parameter-description-icon'), 'Function parameter descriptions should have an info icon.');
-assert.ok(page.includes(':content="parameter.description"'), 'Function parameter descriptions should be shown through a tooltip.');
+assert.ok(page.includes('parameterDisplayName(parameter)'), 'Function parameters should always resolve to a visible name.');
+assert.ok(page.includes('parameterDescription(parameter)'), 'Function parameter descriptions should be shown through a tooltip.');
 assert.ok(page.includes('自动保存'), 'Workflow settings should expose the auto-save interval.');
 assert.ok(page.includes('Command/Ctrl + S'), 'Workflow save should advertise the system save shortcut.');
 assert.ok(!page.includes('<el-dialog'), 'Workflow execution should not keep a modal dialog open.');
@@ -199,6 +246,10 @@ assert.match(styles, /\.palette-content,\s*\.inspector-content\s*\{[^}]*overflow
     'The node palette and inspector should each own their vertical scroll area.');
 assert.match(styles, /\.workflow-canvas\s*\{[^}]*height:\s*100%;[^}]*overflow:\s*auto;[^}]*overscroll-behavior:\s*contain;/s,
     'The canvas should stay inside its own scroll container.');
+assert.match(styles, /\.canvas-zoom-controls,[\s\S]*?\.canvas-minimap\s*\{[^}]*position:\s*fixed;[^}]*opacity:\s*\.48;/s,
+    'Canvas navigation controls should stay in the viewport and be translucent by default.');
+assert.match(styles, /\.canvas-zoom-controls:hover,[\s\S]*?\.canvas-minimap:focus-within\s*\{[^}]*opacity:\s*1;/s,
+    'Canvas navigation controls should become opaque on hover or focus.');
 assert.match(styles, /\.workflow-context-menu\s*\{[^}]*position:\s*fixed;/s,
     'The node context menu should stay anchored to the viewport instead of scrolling with the canvas.');
 assert.match(styles, /\.workflow-meta\s*\{[^}]*flex:\s*0 0 auto;/s,

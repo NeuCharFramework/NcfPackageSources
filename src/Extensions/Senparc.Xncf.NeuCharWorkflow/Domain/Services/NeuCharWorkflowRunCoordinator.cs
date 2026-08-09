@@ -15,7 +15,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Senparc.Areas.Admin.Domain.Services;
+namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
 public sealed record NeuCharWorkflowRunEvent(
     long Sequence,

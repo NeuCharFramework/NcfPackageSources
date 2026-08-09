@@ -5,8 +5,9 @@
     文件功能描述：NeuChar Workflow 声明式图安全校验测试
 ----------------------------------------------------------------*/
 
-using Senparc.Areas.Admin.Domain.Services;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
+using Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 using System.Reflection;
 
 namespace Senparc.Areas.Admin.Tests.Domain.Services;
@@ -255,7 +256,7 @@ public class NeuCharWorkflowEngineTests
             nameof(ListOutputFunction),
             BindingFlags.NonPublic | BindingFlags.Static)!;
 
-        var output = NeuCharFunctionService.BuildOutputDescriptor(method);
+        var output = NeuCharWorkflowFunctionService.BuildOutputDescriptor(method);
 
         Assert.IsTrue(output.IsArray);
         Assert.AreEqual("object", output.TypeName);
@@ -276,5 +277,5 @@ public class NeuCharWorkflowEngineTests
     }
 
     private static NeuCharWorkflowEngine CreateEngine() =>
-        new(null!, null!, null!, null!, null!, Array.Empty<Senparc.Ncf.Shared.Abstractions.ChatAgent.IWorkflowObjectProvider>());
+        new(null!, null!, null!, null!, Array.Empty<IWorkflowObjectProvider>());
 }

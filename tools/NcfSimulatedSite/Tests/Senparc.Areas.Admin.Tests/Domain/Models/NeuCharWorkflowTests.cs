@@ -5,7 +5,7 @@
     文件功能描述：Workflow 自动保存设置与版本快照测试
 ----------------------------------------------------------------*/
 
-using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
+using Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel;
 
 namespace Senparc.Areas.Admin.Tests.Domain.Models;
 

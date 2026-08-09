@@ -22,8 +22,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using Senparc.Areas.Admin;
 using Senparc.Areas.Admin.Domain.Services;
-using Senparc.Ncf.AreaBase.Admin.Filters;
 using Senparc.Ncf.Core.Authorization;
 using Senparc.Ncf.Shared.Abstractions.NeuBell;
 
@@ -31,7 +31,7 @@ namespace Senparc.Areas.Admin.OHS.Local.Controllers;
 
 [ApiController]
 [Route("api/Senparc.Areas.Admin/neubell")]
-[AdminAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
+[AdminOrJwtAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
 public sealed class NeuBellController : ControllerBase
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);

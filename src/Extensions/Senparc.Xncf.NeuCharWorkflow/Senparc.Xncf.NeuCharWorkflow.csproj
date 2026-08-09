@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.1.0-preview1</Version>
+    <AssemblyName>Senparc.Xncf.NeuCharWorkflow</AssemblyName>
+    <RootNamespace>Senparc.Xncf.NeuCharWorkflow</RootNamespace>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <Description>NeuChar Workflow - secure, server-side XNCF workflow orchestration.</Description>
+    <PackageTags>Senparc,NeuCharFramework,NCF,NeuCharWorkflow,Workflow</PackageTags>
+    <Authors>Senparc</Authors>
+    <Owners>Senparc</Owners>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Title>NeuChar Workflow</Title>
+    <PackageIcon>icon.jpg</PackageIcon>
+    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <EmbeddedResource Include="wwwroot\**\*" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.Shared.Abstractions\Senparc.Ncf.Shared.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+    <ProjectReference Include="..\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
+    <ProjectReference Include="..\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
+    <ProjectReference Include="..\System\Senparc.Xncf.SystemManager\[5970]Senparc.Xncf.SystemManager.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.NeuCharWorkflow.Abstractions\Senparc.Xncf.NeuCharWorkflow.Abstractions.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Include="Oracle.EntityFrameworkCore" Version="8.23.60" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
+    <PackageReference Include="DM.Microsoft.EntityFrameworkCore" Version="8.0.0.28188" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+</Project>

@@ -1,5 +1,5 @@
 using System.Text.Json;
-using Senparc.Areas.Admin.Domain.Services;
+using Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
 namespace Senparc.Areas.Admin.Tests.Domain.Services;
 

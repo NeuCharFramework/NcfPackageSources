@@ -1,29 +1,32 @@
 @page
-@model Senparc.Areas.Admin.Areas.Admin.Pages.NeuCharPivot.WorkflowModel
+@model Senparc.Xncf.NeuCharWorkflow.Areas.NeuCharWorkflow.Pages.IndexModel
+@using Microsoft.Extensions.Localization
+@using Senparc.Xncf.NeuCharWorkflow
+@inject IStringLocalizer<NeuCharWorkflowResource> XR
 @{
-    ViewData["Title"] = "NeuCharPivot · Workflow";
+    ViewData["Title"] = XR["Title.Designer"];
     Layout = "_Layout_Vue";
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>NeuCharPivot</el-breadcrumb-item>
-    <el-breadcrumb-item>Workflow</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Module.MenuName"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.Workflow"]</el-breadcrumb-item>
 }
 
 @section Style {
-    <link rel="stylesheet" href="~/css/Admin/Pages/NeuCharPivot/common.css" />
-    <link rel="stylesheet" href="~/css/Admin/Pages/NeuCharPivot/Workflow.css" />
+    <link rel="stylesheet" href="~/css/NeuCharWorkflow/common.css" />
+    <link rel="stylesheet" href="~/css/NeuCharWorkflow/Workflow.css" />
 }
 
 <div class="neuchar-page workflow-page" v-loading="loading">
     <header class="neuchar-page-header">
         <div>
-            <h2>Workflow</h2>
-            <p>用 Function、系统节点和 Agent 组合流程；保存与运行前会校验参数、类型、连线及模块状态。</p>
+            <h2>@XR["Area.Workflow"]</h2>
+            <p>@XR["Designer.Introduction"]</p>
         </div>
         <div>
-            <el-button icon="el-icon-refresh" :disabled="editingLocked" @@click="loadAll">刷新</el-button>
-            <el-button type="primary" icon="el-icon-plus" :disabled="editingLocked" @@click="createWorkflow">新建工作流</el-button>
+            <el-button icon="el-icon-refresh" :disabled="editingLocked" @@click="loadAll">@XR["Action.Refresh"]</el-button>
+            <el-button type="primary" icon="el-icon-plus" :disabled="editingLocked" @@click="createWorkflow">@XR["Action.NewWorkflow"]</el-button>
         </div>
     </header>
 
@@ -193,74 +196,107 @@
                              class="workflow-canvas"
                              :class="{'is-panning':canvasPan.active}"
                              @@mousedown="startCanvasPan"
+                             @@wheel.prevent="zoomCanvas"
+                             @@scroll="updateCanvasViewport"
                              @@contextmenu.prevent="closeContextMenu">
-                        <div class="canvas-toolbar" @@mousedown.stop>
+                        <div class="canvas-toolbar" @@mousedown.stop @@wheel.stop>
                             <span><i class="el-icon-rank"></i> 拖动节点移动；右键拖动画布平移；节点右键可复制或删除。</span>
                             <span class="canvas-toolbar-actions">
                                 <el-tag v-if="run.running" size="mini" type="warning" effect="dark">运行中 · 编辑锁定</el-tag>
                                 <el-button size="mini" icon="el-icon-magic-stick" :disabled="editingLocked" @@click="autoLayout">自动排版</el-button>
                             </span>
                         </div>
-                        <div class="workflow-stage" :style="{width:canvasSize.width+'px',height:canvasSize.height+'px'}" @@mousedown.self="cancelConnection">
-                            <svg class="workflow-wires" :width="canvasSize.width" :height="canvasSize.height" aria-hidden="true">
-                                <defs>
-                                    <marker id="workflow-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z"></path></marker>
-                                </defs>
-                                <g v-for="edge in form.graph.edges" :key="edge.id">
-                                    <path :d="edgePath(edge)" marker-end="url(#workflow-arrow)"></path>
-                                    <text v-if="edge.sourceHandle==='true' || edge.sourceHandle==='false'" :x="edgeLabelX(edge)" :y="edgeLabelY(edge)">{{edge.sourceHandle==='true'?'真':'假'}}</text>
-                                </g>
-                                <path v-if="connectionDraft.sourceId" class="draft-wire" :d="draftEdgePath()"></path>
-                            </svg>
+                        <div class="workflow-scale-surface" :style="{width:scaledCanvasSize.width+'px',height:scaledCanvasSize.height+'px'}">
+                            <div ref="stage"
+                                 class="workflow-stage"
+                                 :style="{width:canvasSize.width+'px',height:canvasSize.height+'px',transform:'scale('+canvasZoom+')'}"
+                                 @@mousedown.self="cancelConnection">
+                                <svg class="workflow-wires" :width="canvasSize.width" :height="canvasSize.height" aria-hidden="true">
+                                    <defs>
+                                        <marker id="workflow-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z"></path></marker>
+                                    </defs>
+                                    <g v-for="edge in form.graph.edges" :key="edge.id">
+                                        <path :d="edgePath(edge)" marker-end="url(#workflow-arrow)"></path>
+                                        <text v-if="edge.sourceHandle==='true' || edge.sourceHandle==='false'" :x="edgeLabelX(edge)" :y="edgeLabelY(edge)">{{edge.sourceHandle==='true'?'真':'假'}}</text>
+                                    </g>
+                                    <path v-if="connectionDraft.sourceId" class="draft-wire" :d="draftEdgePath()"></path>
+                                </svg>
 
-                            <button v-for="edge in form.graph.edges"
-                                    :key="'delete-'+edge.id"
-                                    type="button"
-                                    class="edge-delete"
-                                    :style="edgeDeletePosition(edge)"
-                                    :disabled="editingLocked"
-                                    title="删除连线"
-                                    @@mousedown.stop
-                                    @@click.stop="removeEdge(edge)">×</button>
-
-                            <article v-for="(node,index) in form.graph.nodes"
-                                     :key="node.id"
-                                     :class="['workflow-node','node-'+node.type,'state-'+nodeState(node),{selected:selectedNodeId===node.id}]"
-                                     :style="{left:node.x+'px',top:node.y+'px'}"
-                                     @@mousedown.stop="startDrag($event,node)"
-                                     @@contextmenu.stop.prevent="openNodeContextMenu($event,node)"
-                                     @@click.stop="selectNode(node)">
-                                <button v-if="!node.type.endsWith('trigger')"
+                                <button v-for="edge in form.graph.edges"
+                                        :key="'delete-'+edge.id"
                                         type="button"
-                                        class="node-port node-input"
-                                        :class="{ready:!!connectionDraft.sourceId}"
-                                        title="拖到此处完成连接"
+                                        class="edge-delete"
+                                        :style="edgeDeletePosition(edge)"
+                                        :disabled="editingLocked"
+                                        title="删除连线"
                                         @@mousedown.stop
-                                        @@mouseup.stop="completeConnection(node)"></button>
-                                <div class="workflow-node-body">
-                                    <span class="node-index">{{index+1}}</span>
-                                    <div>
-                                        <strong>{{node.name}}</strong>
-                                        <small>{{nodeSummary(node)}}</small>
+                                        @@click.stop="removeEdge(edge)">×</button>
+
+                                <article v-for="(node,index) in form.graph.nodes"
+                                         :key="node.id"
+                                         :class="['workflow-node','node-'+node.type,'state-'+nodeState(node),{selected:selectedNodeId===node.id}]"
+                                         :style="{left:node.x+'px',top:node.y+'px'}"
+                                         @@mousedown.stop="startDrag($event,node)"
+                                         @@contextmenu.stop.prevent="openNodeContextMenu($event,node)"
+                                         @@click.stop="selectNode(node)">
+                                    <button v-if="!node.type.endsWith('trigger')"
+                                            type="button"
+                                            class="node-port node-input"
+                                            :class="{ready:!!connectionDraft.sourceId}"
+                                            title="拖到此处完成连接"
+                                            @@mousedown.stop
+                                            @@mouseup.stop="completeConnection(node)"></button>
+                                    <div class="workflow-node-body">
+                                        <span class="node-index">{{index+1}}</span>
+                                        <div>
+                                            <strong>{{node.name}}</strong>
+                                            <small>{{nodeSummary(node)}}</small>
+                                        </div>
+                                        <span v-if="nodeState(node)" class="node-run-state">
+                                            <i v-if="nodeState(node)==='running'" class="el-icon-loading"></i>
+                                            <i v-else-if="nodeState(node)==='success'" class="el-icon-success"></i>
+                                            <i v-else class="el-icon-error"></i>
+                                        </span>
+                                        <el-button v-else-if="!node.type.endsWith('trigger')" type="text" icon="el-icon-delete" :disabled="editingLocked" @@click.stop="removeNode(node)"></el-button>
                                     </div>
-                                    <span v-if="nodeState(node)" class="node-run-state">
-                                        <i v-if="nodeState(node)==='running'" class="el-icon-loading"></i>
-                                        <i v-else-if="nodeState(node)==='success'" class="el-icon-success"></i>
-                                        <i v-else class="el-icon-error"></i>
-                                    </span>
-                                    <el-button v-else-if="!node.type.endsWith('trigger')" type="text" icon="el-icon-delete" :disabled="editingLocked" @@click.stop="removeNode(node)"></el-button>
-                                </div>
-                                <template v-if="node.type==='condition'">
-                                    <button type="button" class="node-port node-output node-output-true" title="拖动真分支" @@mousedown.stop="beginConnection($event,node,'true')">真</button>
-                                    <button type="button" class="node-port node-output node-output-false" title="拖动假分支" @@mousedown.stop="beginConnection($event,node,'false')">假</button>
-                                </template>
-                                <button v-else-if="node.type!=='end'"
-                                        type="button"
-                                        class="node-port node-output node-output-default"
-                                        title="拖动连接后续节点"
-                                        @@mousedown.stop="beginConnection($event,node,'default')"></button>
-                            </article>
-                            <div v-if="connectionDraft.sourceId" class="connection-hint">从“{{connectionSourceName}}”拖到目标节点顶部端口；松开到空白处可取消。</div>
+                                    <template v-if="node.type==='condition'">
+                                        <button type="button" class="node-port node-output node-output-true" title="拖动真分支" @@mousedown.stop="beginConnection($event,node,'true')">真</button>
+                                        <button type="button" class="node-port node-output node-output-false" title="拖动假分支" @@mousedown.stop="beginConnection($event,node,'false')">假</button>
+                                    </template>
+                                    <button v-else-if="node.type!=='end'"
+                                            type="button"
+                                            class="node-port node-output node-output-default"
+                                            title="拖动连接后续节点"
+                                            @@mousedown.stop="beginConnection($event,node,'default')"></button>
+                                </article>
+                                <div v-if="connectionDraft.sourceId" class="connection-hint">从“{{connectionSourceName}}”拖到目标节点顶部端口；松开到空白处可取消。</div>
+                            </div>
+                        </div>
+                        <div class="canvas-zoom-controls" :style="canvasZoomControlsStyle" @@mousedown.stop @@wheel.stop>
+                            <button type="button" title="缩小" aria-label="缩小画布" :disabled="canvasZoom<=0.5" @@click.stop="changeCanvasZoom(-.1)"><i class="el-icon-minus"></i></button>
+                            <input type="range" min="0.5" max="2" step="0.1" :value="canvasZoom" :aria-valuetext="canvasZoomPercent+'%'" @@input="onCanvasZoomInput" @@click.stop>
+                            <button type="button" title="放大" aria-label="放大画布" :disabled="canvasZoom>=2" @@click.stop="changeCanvasZoom(.1)"><i class="el-icon-plus"></i></button>
+                            <button type="button" class="canvas-zoom-reset" title="恢复 100%" @@click.stop="resetCanvasZoom">{{canvasZoomPercent}}%</button>
+                        </div>
+                        <div v-if="showMinimap" class="canvas-minimap" :style="minimapStyle" @@mousedown.stop @@wheel.stop>
+                            <div class="canvas-minimap-surface"
+                                 :style="{width:minimapMetrics.width+'px',height:minimapMetrics.height+'px'}"
+                                 title="点击定位画布"
+                                 @@click.stop="moveCanvasFromMinimap">
+                                <svg class="canvas-minimap-wires" :width="minimapMetrics.width" :height="minimapMetrics.height" aria-hidden="true">
+                                    <line v-for="edge in form.graph.edges"
+                                          :key="'minimap-'+edge.id"
+                                          :x1="minimapEdgeStart(edge).x"
+                                          :y1="minimapEdgeStart(edge).y"
+                                          :x2="minimapEdgeEnd(edge).x"
+                                          :y2="minimapEdgeEnd(edge).y"></line>
+                                </svg>
+                                <span v-for="node in form.graph.nodes"
+                                      :key="'minimap-node-'+node.id"
+                                      :class="['canvas-minimap-node','node-'+node.type,{selected:selectedNodeId===node.id}]"
+                                      :style="minimapNodeStyle(node)"></span>
+                                <span class="canvas-minimap-viewport" :style="minimapViewportStyle"></span>
+                            </div>
                         </div>
                         <div v-if="contextMenu.visible"
                              class="workflow-context-menu"
@@ -313,12 +349,12 @@
                                         <el-alert v-if="incomingEdges(selectedNode.id).length>1" title="此 Function 有多个上游；任一有效来源到达都可以触发，单次工作流运行中该节点最多执行一次。" type="info" :closable="false"></el-alert>
                                         <div v-for="parameter in functionParameters(selectedFunction)" :key="parameter.name" class="parameter-editor">
                                             <label class="parameter-label">
-                                                <span>{{parameter.title || parameter.name}}</span>
-                                                <code v-if="parameter.title && parameter.title !== parameter.name" class="parameter-field-name">{{parameter.name}}</code>
-                                                <el-tooltip v-if="parameter.description"
+                                                <span>{{parameterDisplayName(parameter)}}</span>
+                                                <code v-if="hasParameterFieldName(parameter)" class="parameter-field-name">{{parameter.name}}</code>
+                                                <el-tooltip v-if="parameterDescription(parameter)"
                                                             effect="dark"
                                                             placement="top-start"
-                                                            :content="parameter.description">
+                                                            :content="parameterDescription(parameter)">
                                                     <i class="el-icon-info parameter-description-icon" aria-label="参数说明"></i>
                                                 </el-tooltip>
                                                 <em v-if="parameter.required">必填</em>
@@ -475,6 +511,6 @@
 </div>
 
 @section scripts {
-    <script src="~/js/Admin/Pages/NeuCharPivot/common.js"></script>
-    <script src="~/js/Admin/Pages/NeuCharPivot/Workflow.js"></script>
+    <script src="~/js/NeuCharWorkflow/common.js"></script>
+    <script src="~/js/NeuCharWorkflow/Workflow.js"></script>
 }

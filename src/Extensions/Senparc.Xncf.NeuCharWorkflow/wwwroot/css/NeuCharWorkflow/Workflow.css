@@ -240,6 +240,12 @@
 .workflow-canvas.is-panning,
 .workflow-canvas.is-panning .workflow-stage { cursor: grabbing; }
 
+.workflow-scale-surface {
+    position: relative;
+    min-width: 100%;
+    min-height: 100%;
+}
+
 .workflow-context-menu {
     position: fixed;
     z-index: 100;
@@ -289,11 +295,105 @@
 .canvas-toolbar-actions { display: flex; align-items: center; gap: 8px; }
 .workflow-stage {
     position: relative;
-    min-width: 100%;
-    min-height: 100%;
+    transform-origin: top left;
     background-color: #f5f8fb;
     background-image: radial-gradient(#cfd8e3 1px, transparent 1px);
     background-size: 18px 18px;
+}
+
+.canvas-zoom-controls,
+.canvas-minimap {
+    position: fixed;
+    z-index: 75;
+    opacity: .48;
+    transition: opacity .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+
+.canvas-zoom-controls:hover,
+.canvas-zoom-controls:focus-within,
+.canvas-minimap:hover,
+.canvas-minimap:focus-within {
+    opacity: 1;
+}
+
+.canvas-zoom-controls {
+    display: flex;
+    min-height: 34px;
+    padding: 4px;
+    align-items: center;
+    gap: 4px;
+    background: rgba(48, 59, 73, .86);
+    border: 1px solid rgba(255, 255, 255, .26);
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(31, 45, 61, .2);
+    backdrop-filter: blur(6px);
+}
+
+.canvas-zoom-controls button {
+    display: grid;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    color: #fff;
+    background: rgba(255, 255, 255, .12);
+    border: 0;
+    border-radius: 5px;
+    cursor: pointer;
+    place-items: center;
+}
+
+.canvas-zoom-controls button:hover:not(:disabled) { background: rgba(64, 158, 255, .92); }
+.canvas-zoom-controls button:disabled { color: rgba(255, 255, 255, .42); cursor: not-allowed; }
+.canvas-zoom-controls input[type="range"] { width: 78px; accent-color: #409eff; cursor: pointer; }
+.canvas-zoom-controls .canvas-zoom-reset { width: 42px; font-size: 11px; }
+
+.canvas-minimap {
+    padding: 6px;
+    background: rgba(255, 255, 255, .92);
+    border: 1px solid rgba(137, 152, 170, .62);
+    border-radius: 8px;
+    box-shadow: 0 5px 18px rgba(31, 45, 61, .22);
+    backdrop-filter: blur(6px);
+}
+
+.canvas-minimap:hover { transform: translateY(-1px); }
+.canvas-minimap-surface {
+    position: relative;
+    overflow: hidden;
+    background-color: #edf3f8;
+    background-image: radial-gradient(#c5d0dc .8px, transparent .8px);
+    background-size: 5px 5px;
+    cursor: pointer;
+}
+
+.canvas-minimap-wires { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.canvas-minimap-wires line { stroke: #8ea4bd; stroke-width: 1.2; }
+.canvas-minimap-node {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    min-width: 3px;
+    min-height: 3px;
+    background: #409eff;
+    border-radius: 2px;
+    box-shadow: inset 3px 0 0 #409eff;
+    pointer-events: none;
+}
+.canvas-minimap-node.node-manual-trigger, .canvas-minimap-node.node-interval-trigger, .canvas-minimap-node.node-webhook-trigger { background: #67c23a; box-shadow: inset 3px 0 0 #67c23a; }
+.canvas-minimap-node.node-condition { background: #e6a23c; box-shadow: inset 3px 0 0 #e6a23c; }
+.canvas-minimap-node.node-agent, .canvas-minimap-node.node-agent-group { background: #8e5ad7; box-shadow: inset 3px 0 0 #8e5ad7; }
+.canvas-minimap-node.node-aggregate { background: #00a6a6; box-shadow: inset 3px 0 0 #00a6a6; }
+.canvas-minimap-node.node-console { background: #34495e; box-shadow: inset 3px 0 0 #34495e; }
+.canvas-minimap-node.node-end { background: #909399; box-shadow: inset 3px 0 0 #909399; }
+.canvas-minimap-node.selected { outline: 1px solid #1677d2; outline-offset: 1px; }
+.canvas-minimap-viewport {
+    position: absolute;
+    z-index: 3;
+    box-sizing: border-box;
+    background: rgba(64, 158, 255, .12);
+    border: 1.5px solid #1677d2;
+    border-radius: 2px;
+    pointer-events: none;
 }
 
 .workflow-wires { position: absolute; inset: 0; z-index: 1; overflow: visible; pointer-events: none; }

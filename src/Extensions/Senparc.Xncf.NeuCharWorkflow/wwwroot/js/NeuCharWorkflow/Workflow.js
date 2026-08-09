@@ -20,6 +20,8 @@ new Vue({
             canvasPan: { active: false, startX: 0, startY: 0, startScrollLeft: 0, startScrollTop: 0 },
             contextMenu: { visible: false, x: 0, y: 0, node: null },
             canvasSize: { width: 1200, height: 760 },
+            canvasZoom: 1,
+            canvasViewport: { width: 0, height: 0, scrollLeft: 0, scrollTop: 0, left: 0, right: 0, bottom: 0, windowWidth: 0, windowHeight: 0 },
             form: { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], autoSaveMinutes: 3, revision: 0, graph: { nodes: [], edges: [] } },
             saveState: {
                 saving: false,
@@ -123,12 +125,66 @@ new Vue({
         },
         webhookUrl() {
             return this.form.id
-                ? `${window.location.origin}/api/Senparc.Areas.Admin/neuchar-workflow/webhook/${this.form.id}`
+                ? `${window.location.origin}/api/Senparc.Xncf.NeuCharWorkflow/neuchar-workflow/webhook/${this.form.id}`
                 : '';
+        },
+        canvasZoomPercent() { return Math.round(this.canvasZoom * 100); },
+        scaledCanvasSize() {
+            return {
+                width: Math.max(1, Math.round(this.canvasSize.width * this.canvasZoom)),
+                height: Math.max(1, Math.round(this.canvasSize.height * this.canvasZoom))
+            };
+        },
+        showMinimap() {
+            const viewport = this.canvasViewport;
+            const scaled = this.scaledCanvasSize;
+            return this.canvasZoom > 1 && !!viewport.width &&
+                (scaled.width > viewport.width + 1 || scaled.height > viewport.height + 1);
+        },
+        minimapMetrics() {
+            const worldWidth = Math.max(1, Number(this.canvasSize.width) || 1);
+            const worldHeight = Math.max(1, Number(this.canvasSize.height) || 1);
+            const scale = Math.min(180 / worldWidth, 124 / worldHeight);
+            return { scale, width: worldWidth * scale, height: worldHeight * scale };
+        },
+        minimapViewportStyle() {
+            const metrics = this.minimapMetrics;
+            const viewport = this.canvasViewport;
+            const stage = this.$refs && this.$refs.stage;
+            const stageTop = stage ? Number(stage.offsetTop || 0) : 0;
+            const worldLeft = Math.max(0, Number(viewport.scrollLeft || 0) / this.canvasZoom);
+            const worldTop = Math.max(0, (Number(viewport.scrollTop || 0) - stageTop) / this.canvasZoom);
+            const width = Math.min(metrics.width, Number(viewport.width || 0) / this.canvasZoom * metrics.scale);
+            const height = Math.min(metrics.height, Number(viewport.height || 0) / this.canvasZoom * metrics.scale);
+            return {
+                left: `${Math.max(0, Math.min(metrics.width - width, worldLeft * metrics.scale))}px`,
+                top: `${Math.max(0, Math.min(metrics.height - height, worldTop * metrics.scale))}px`,
+                width: `${Math.max(0, width)}px`,
+                height: `${Math.max(0, height)}px`
+            };
+        },
+        canvasZoomControlsStyle() {
+            const viewport = this.canvasViewport;
+            if (!viewport.width || !viewport.height) return { display: 'none' };
+            return {
+                left: `${Math.round(viewport.left + 14)}px`,
+                bottom: `${Math.max(14, Math.round(viewport.windowHeight - viewport.bottom + 14))}px`
+            };
+        },
+        minimapStyle() {
+            const viewport = this.canvasViewport;
+            if (!viewport.width || !viewport.height) return { display: 'none' };
+            return {
+                right: `${Math.max(14, Math.round(viewport.windowWidth - viewport.right + 14))}px`,
+                bottom: `${Math.max(14, Math.round(viewport.windowHeight - viewport.bottom + 14))}px`
+            };
         }
     },
     watch: {
-        'form.autoSaveMinutes'() { this.scheduleAutoSave(); }
+        'form.autoSaveMinutes'() { this.scheduleAutoSave(); },
+        listCollapsed() { this.refreshCanvasViewport(); },
+        paletteCollapsed() { this.refreshCanvasViewport(); },
+        inspectorCollapsed() { this.refreshCanvasViewport(); }
     },
     created() {
         this.loadPinnedFunctions();
@@ -138,11 +194,23 @@ new Vue({
         window.addEventListener('mousemove', this.onPointerMove);
         window.addEventListener('mouseup', this.onPointerUp);
         window.addEventListener('keydown', this.onSaveShortcut);
+        window.addEventListener('resize', this.updateCanvasViewport);
+        window.addEventListener('scroll', this.updateCanvasViewport, true);
+        this.$nextTick(() => {
+            this.updateCanvasViewport();
+            if (typeof ResizeObserver !== 'undefined' && this.$refs.canvas) {
+                this.canvasResizeObserver = new ResizeObserver(() => this.updateCanvasViewport());
+                this.canvasResizeObserver.observe(this.$refs.canvas);
+            }
+        });
     },
     beforeDestroy() {
         window.removeEventListener('mousemove', this.onPointerMove);
         window.removeEventListener('mouseup', this.onPointerUp);
         window.removeEventListener('keydown', this.onSaveShortcut);
+        window.removeEventListener('resize', this.updateCanvasViewport);
+        window.removeEventListener('scroll', this.updateCanvasViewport, true);
+        if (this.canvasResizeObserver) this.canvasResizeObserver.disconnect();
         this.clearAutoSaveTimer();
         this.clearRunPoll();
     },
@@ -154,11 +222,11 @@ new Vue({
             this.loading = true;
             try {
                 const [listResponse, dataResponse] = await Promise.all([
-                    service.get('/Admin/NeuCharPivot/Workflow?handler=List'),
-                    service.get('/Admin/NeuCharPivot/Workflow?handler=DesignerData')
+                    service.get('/Admin/NeuCharWorkflow/Index?handler=List'),
+                    service.get('/Admin/NeuCharWorkflow/Index?handler=DesignerData')
                 ]);
-                this.workflows = NeuCharPivotUi.unwrap(listResponse) || [];
-                const data = NeuCharPivotUi.unwrap(dataResponse) || {};
+                this.workflows = NeuCharWorkflowUi.unwrap(listResponse) || [];
+                const data = NeuCharWorkflowUi.unwrap(dataResponse) || {};
                 this.functions = data.functions || [];
                 this.workflowObjects = data.objects || [];
             } finally { this.loading = false; }
@@ -178,9 +246,9 @@ new Vue({
             if (this.editingLocked) return;
             this.loading = true;
             try {
-                const response = await service.get(`/Admin/NeuCharPivot/Workflow?handler=Detail&id=${id}`);
-                const item = NeuCharPivotUi.unwrap(response);
-                const graph = NeuCharPivotUi.parseJson(item.graphJson, { nodes: [], edges: [] });
+                const response = await service.get(`/Admin/NeuCharWorkflow/Index?handler=Detail&id=${id}`);
+                const item = NeuCharWorkflowUi.unwrap(response);
+                const graph = NeuCharWorkflowUi.parseJson(item.graphJson, { nodes: [], edges: [] });
                 graph.nodes = graph.nodes || [];
                 graph.edges = graph.edges || [];
                 graph.nodes.forEach(node => {
@@ -195,7 +263,7 @@ new Vue({
                         ? (edge.sourceHandle === 'false' ? 'false' : 'true')
                         : 'default';
                 });
-                const trigger = NeuCharPivotUi.parseJson(item.triggerConfigJson, {});
+                const trigger = NeuCharWorkflowUi.parseJson(item.triggerConfigJson, {});
                 this.form = {
                     ...item,
                     graph,
@@ -265,7 +333,7 @@ new Vue({
                     functionId: Number(fn.id || 0),
                     moduleUid: fn.moduleUid,
                     functionKey: fn.functionKey,
-                    parameters: NeuCharPivotUi.createParameterValues(fn)
+                    parameters: NeuCharWorkflowUi.createParameterValues(fn)
                 }
             });
         },
@@ -422,13 +490,72 @@ new Vue({
             if (this.editingLocked) return;
             this.form.graph.edges = this.form.graph.edges.filter(item => item.id !== edge.id);
         },
+        refreshCanvasViewport() {
+            if (typeof this.$nextTick === 'function') this.$nextTick(() => this.updateCanvasViewport());
+            else this.updateCanvasViewport();
+        },
+        updateCanvasViewport() {
+            const canvas = this.$refs && this.$refs.canvas;
+            if (!canvas) return;
+            const rect = canvas.getBoundingClientRect();
+            this.canvasViewport = {
+                width: Number(canvas.clientWidth || 0),
+                height: Number(canvas.clientHeight || 0),
+                scrollLeft: Number(canvas.scrollLeft || 0),
+                scrollTop: Number(canvas.scrollTop || 0),
+                left: Number(rect.left || 0),
+                right: Number(rect.right || 0),
+                bottom: Number(rect.bottom || 0),
+                windowWidth: typeof window === 'undefined' ? 0 : Number(window.innerWidth || 0),
+                windowHeight: typeof window === 'undefined' ? 0 : Number(window.innerHeight || 0)
+            };
+        },
+        clampCanvasZoom(value) {
+            return Math.round(Math.min(2, Math.max(.5, Number(value) || 1)) * 100) / 100;
+        },
+        setCanvasZoom(value, clientX, clientY) {
+            const nextZoom = this.clampCanvasZoom(value);
+            const currentZoom = this.canvasZoom || 1;
+            const canvas = this.$refs && this.$refs.canvas;
+            if (!canvas || nextZoom === currentZoom) {
+                this.canvasZoom = nextZoom;
+                return;
+            }
+
+            const rect = canvas.getBoundingClientRect();
+            const localX = Number.isFinite(clientX) ? Math.max(0, Math.min(canvas.clientWidth, clientX - rect.left)) : canvas.clientWidth / 2;
+            const localY = Number.isFinite(clientY) ? Math.max(0, Math.min(canvas.clientHeight, clientY - rect.top)) : canvas.clientHeight / 2;
+            const stage = this.$refs.stage;
+            const stageTop = stage ? Number(stage.offsetTop || 0) : 0;
+            const worldX = (canvas.scrollLeft + localX) / currentZoom;
+            const worldY = (canvas.scrollTop - stageTop + localY) / currentZoom;
+            const nextScrollLeft = Math.max(0, worldX * nextZoom - localX);
+            const nextScrollTop = Math.max(0, stageTop + worldY * nextZoom - localY);
+            this.canvasZoom = nextZoom;
+
+            const applyScrollPosition = () => {
+                canvas.scrollLeft = nextScrollLeft;
+                canvas.scrollTop = nextScrollTop;
+                this.updateCanvasViewport();
+            };
+            if (typeof this.$nextTick === 'function') this.$nextTick(applyScrollPosition);
+            else applyScrollPosition();
+        },
+        changeCanvasZoom(delta) { this.setCanvasZoom((this.canvasZoom || 1) + delta); },
+        resetCanvasZoom() { this.setCanvasZoom(1); },
+        onCanvasZoomInput(event) { this.setCanvasZoom(event?.target?.value); },
+        zoomCanvas(event) {
+            if (!event || !Number.isFinite(event.deltaY) || event.deltaY === 0) return;
+            this.setCanvasZoom((this.canvasZoom || 1) + (event.deltaY < 0 ? .1 : -.1), event.clientX, event.clientY);
+        },
         canvasPoint(event) {
             const canvas = this.$refs.canvas;
             if (!canvas) return { x: 0, y: 0 };
-            const rect = canvas.getBoundingClientRect();
+            const stage = this.$refs.stage;
+            const rect = stage ? stage.getBoundingClientRect() : canvas.getBoundingClientRect();
             return {
-                x: event.clientX - rect.left + canvas.scrollLeft,
-                y: event.clientY - rect.top + canvas.scrollTop
+                x: (event.clientX - rect.left) / this.canvasZoom,
+                y: (event.clientY - rect.top) / this.canvasZoom
             };
         },
         startCanvasPan(event) {
@@ -540,6 +667,40 @@ new Vue({
             const maxX = Math.max(1100, ...this.form.graph.nodes.map(node => Number(node.x) + 320));
             const maxY = Math.max(680, ...this.form.graph.nodes.map(node => Number(node.y) + 210));
             this.canvasSize = { width: maxX, height: maxY };
+            if (typeof this.refreshCanvasViewport === 'function') this.refreshCanvasViewport();
+        },
+        minimapNodeStyle(node) {
+            const metrics = this.minimapMetrics;
+            return {
+                left: `${Math.max(0, Number(node.x || 0) * metrics.scale)}px`,
+                top: `${Math.max(0, Number(node.y || 0) * metrics.scale)}px`,
+                width: `${Math.max(3, 220 * metrics.scale)}px`,
+                height: `${Math.max(3, 92 * metrics.scale)}px`
+            };
+        },
+        minimapEdgeStart(edge) {
+            const node = this.form.graph.nodes.find(item => item.id === edge.source);
+            const metrics = this.minimapMetrics;
+            return { x: (Number(node?.x || 0) + 110) * metrics.scale, y: (Number(node?.y || 0) + 92) * metrics.scale };
+        },
+        minimapEdgeEnd(edge) {
+            const node = this.form.graph.nodes.find(item => item.id === edge.target);
+            const metrics = this.minimapMetrics;
+            return { x: (Number(node?.x || 0) + 110) * metrics.scale, y: Number(node?.y || 0) * metrics.scale };
+        },
+        moveCanvasFromMinimap(event) {
+            const canvas = this.$refs && this.$refs.canvas;
+            const surface = event && event.currentTarget;
+            if (!canvas || !surface) return;
+            const metrics = this.minimapMetrics;
+            const rect = surface.getBoundingClientRect();
+            const worldX = Math.max(0, Math.min(metrics.width, event.clientX - rect.left)) / metrics.scale;
+            const worldY = Math.max(0, Math.min(metrics.height, event.clientY - rect.top)) / metrics.scale;
+            const stage = this.$refs.stage;
+            const stageTop = stage ? Number(stage.offsetTop || 0) : 0;
+            canvas.scrollLeft = Math.max(0, worldX * this.canvasZoom - canvas.clientWidth / 2);
+            canvas.scrollTop = Math.max(0, stageTop + worldY * this.canvasZoom - canvas.clientHeight / 2);
+            this.updateCanvasViewport();
         },
         nodeSummary(node) {
             if (node.type === 'function') { const fn = this.findFunction(node.config); return fn ? fn.moduleName : 'Function 已失效'; }
@@ -554,7 +715,18 @@ new Vue({
             return node.type === 'agent-group' ? 'Agent 组' : node.type === 'agent' ? '独立 Agent' : node.type;
         },
         nodeState(node) { return this.run.nodeStates[node.id] || ''; },
-        functionParameters(fn) { return NeuCharPivotUi.parseJson(fn.parameterSchemaJson, []); },
+        functionParameters(fn) { return NeuCharWorkflowUi.parseJson(fn.parameterSchemaJson, []); },
+        parameterDisplayName(parameter) {
+            const title = String(parameter?.title || '').trim();
+            const name = String(parameter?.name || '').trim();
+            return title || name || '未命名参数';
+        },
+        hasParameterFieldName(parameter) {
+            const title = String(parameter?.title || '').trim();
+            const name = String(parameter?.name || '').trim();
+            return !!title && !!name && title !== name;
+        },
+        parameterDescription(parameter) { return String(parameter?.description || '').trim(); },
         findFunction(config) {
             return this.functions.find(fn => (Number(config.functionId || 0) > 0 && Number(fn.id) === Number(config.functionId)) ||
                 (String(fn.moduleUid).toLowerCase() === String(config.moduleUid || '').toLowerCase() &&
@@ -593,7 +765,7 @@ new Vue({
         },
         functionIdentity(fn) { return `${String(fn.moduleUid).toLowerCase()}|${String(fn.functionKey).toLowerCase()}`; },
         loadPinnedFunctions() {
-            try { this.pinnedFunctions = JSON.parse(localStorage.getItem('ncf.neucharpivot.workflow.pins') || '[]'); }
+            try { this.pinnedFunctions = JSON.parse(localStorage.getItem('ncf.neucharworkflow.pins') || '[]'); }
             catch { this.pinnedFunctions = []; }
         },
         isPinned(fn) { return this.pinnedFunctions.includes(this.functionIdentity(fn)); },
@@ -602,7 +774,7 @@ new Vue({
             this.pinnedFunctions = this.isPinned(fn)
                 ? this.pinnedFunctions.filter(item => item !== key)
                 : [...this.pinnedFunctions, key];
-            localStorage.setItem('ncf.neucharpivot.workflow.pins', JSON.stringify(this.pinnedFunctions));
+            localStorage.setItem('ncf.neucharworkflow.pins', JSON.stringify(this.pinnedFunctions));
         },
         upstreamNodes(targetNode) {
             if (!targetNode) return [];
@@ -747,7 +919,7 @@ new Vue({
             for (const node of this.form.graph.nodes.filter(item => item.type === 'function')) {
                 const fn = this.findFunction(node.config);
                 if (!fn || !fn.moduleAvailable) return `节点“${node.name}”引用的模块未开启或 Function 已移除。`;
-                const missing = NeuCharPivotUi.firstMissingRequired(fn, node.config.parameters || {});
+                const missing = NeuCharWorkflowUi.firstMissingRequired(fn, node.config.parameters || {});
                 if (missing) return `节点“${node.name}”缺少必填参数“${missing.title || missing.name}”。`;
                 for (const parameter of this.functionParameters(fn)) {
                     const compatibility = this.bindingCompatibility(node, parameter);
@@ -839,7 +1011,7 @@ new Vue({
             this.form.revision = Number(saved.revision || this.form.revision || 0);
             this.form.autoSaveMinutes = Number(saved.autoSaveMinutes ?? this.form.autoSaveMinutes ?? 3);
             if (saved.triggerType) this.form.triggerType = saved.triggerType;
-            const trigger = NeuCharPivotUi.parseJson(saved.triggerConfigJson, {});
+            const trigger = NeuCharWorkflowUi.parseJson(saved.triggerConfigJson, {});
             this.form.intervalSeconds = Number(trigger.intervalSeconds || this.form.intervalSeconds || 300);
             this.form.webhookMethod = String(trigger.method || this.form.webhookMethod || 'any').toLowerCase();
             this.form.webhookToken = String(trigger.token || this.form.webhookToken || '');
@@ -850,7 +1022,7 @@ new Vue({
                 description: parameter.description || ''
             }));
             if (saved.graphJson) {
-                const graph = NeuCharPivotUi.parseJson(saved.graphJson, this.form.graph);
+                const graph = NeuCharWorkflowUi.parseJson(saved.graphJson, this.form.graph);
                 graph.nodes = graph.nodes || [];
                 graph.edges = graph.edges || [];
                 this.form.graph = graph;
@@ -877,7 +1049,7 @@ new Vue({
             this.saveState.error = '';
             try {
                 this.syncTriggerNode();
-                const response = await service.post('/Admin/NeuCharPivot/Workflow?handler=Save', {
+                const response = await service.post('/Admin/NeuCharWorkflow/Index?handler=Save', {
                     id: this.form.id || 0,
                     name: this.form.name,
                     description: this.form.description,
@@ -889,7 +1061,7 @@ new Vue({
                     expectedRevision: this.form.id ? Number(this.form.revision || 0) : null,
                     saveSource: options.source || 'manual'
                 }, { customAlert: true });
-                const saved = NeuCharPivotUi.unwrap(response);
+                const saved = NeuCharWorkflowUi.unwrap(response);
                 this.applySavedWorkflow(saved);
                 if (!options.silent) this.$notify({ title: 'Workflow', message: options.source === 'shortcut' ? '已使用快捷键保存。' : '工作流已保存。', type: 'success' });
                 await this.loadAll();
@@ -915,10 +1087,10 @@ new Vue({
             try {
                 const saved = await this.saveWorkflow({ silent: true });
                 if (!saved) return;
-                await service.post('/Admin/NeuCharPivot/Workflow?handler=ValidateRun', { id: this.form.id, input: this.run.input }, { customAlert: true });
+                await service.post('/Admin/NeuCharWorkflow/Index?handler=ValidateRun', { id: this.form.id, input: this.run.input }, { customAlert: true });
                 this.appendConsole('validation', '参数、引用和类型校验通过。', 'success');
-                const response = await service.post('/Admin/NeuCharPivot/Workflow?handler=StartRun', { id: this.form.id, input: this.run.input }, { customAlert: true });
-                const data = NeuCharPivotUi.unwrap(response) || {};
+                const response = await service.post('/Admin/NeuCharWorkflow/Index?handler=StartRun', { id: this.form.id, input: this.run.input }, { customAlert: true });
+                const data = NeuCharWorkflowUi.unwrap(response) || {};
                 this.run.runId = data.runId;
                 this.run.running = true;
                 this.run.status = 'running';
@@ -934,8 +1106,8 @@ new Vue({
         async pollRun() {
             if (!this.run.runId) return;
             try {
-                const response = await service.get(`/Admin/NeuCharPivot/Workflow?handler=RunStatus&runId=${encodeURIComponent(this.run.runId)}&afterSequence=${this.run.lastSequence}`);
-                const snapshot = NeuCharPivotUi.unwrap(response) || {};
+                const response = await service.get(`/Admin/NeuCharWorkflow/Index?handler=RunStatus&runId=${encodeURIComponent(this.run.runId)}&afterSequence=${this.run.lastSequence}`);
+                const snapshot = NeuCharWorkflowUi.unwrap(response) || {};
                 (snapshot.events || []).forEach(event => {
                     this.run.lastSequence = Math.max(this.run.lastSequence, Number(event.sequence || 0));
                     this.applyRunEvent(event);
@@ -977,7 +1149,7 @@ new Vue({
         },
         async deleteWorkflow() {
             if (this.editingLocked) return;
-            await service.post('/Admin/NeuCharPivot/Workflow?handler=Delete', { id: this.form.id }, { customAlert: true });
+            await service.post('/Admin/NeuCharWorkflow/Index?handler=Delete', { id: this.form.id }, { customAlert: true });
             this.form = this.emptyForm(); this.editing = false; this.resetSaveState(); this.resetRunState(); await this.loadAll();
         }
     }

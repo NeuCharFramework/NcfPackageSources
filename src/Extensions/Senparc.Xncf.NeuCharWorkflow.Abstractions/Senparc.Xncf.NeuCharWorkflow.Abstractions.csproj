@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.1.0-preview1</Version>
+    <AssemblyName>Senparc.Xncf.NeuCharWorkflow.Abstractions</AssemblyName>
+    <RootNamespace>Senparc.Xncf.NeuCharWorkflow.Abstractions</RootNamespace>
+    <LangVersion>10.0</LangVersion>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <Description>NeuChar Workflow module contracts for external workflow objects and notifications.</Description>
+    <PackageTags>Senparc,NeuCharFramework,NCF,Workflow</PackageTags>
+    <Authors>Senparc</Authors>
+    <Owners>Senparc</Owners>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.Shared.Abstractions\Senparc.Ncf.Shared.Abstractions.csproj" />
+  </ItemGroup>
+</Project>

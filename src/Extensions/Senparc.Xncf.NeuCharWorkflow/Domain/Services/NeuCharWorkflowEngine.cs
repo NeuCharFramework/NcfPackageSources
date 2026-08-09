@@ -8,9 +8,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
+using Senparc.Ncf.Service;
+using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
+using Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel;
+using WorkflowEntity = Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel.NeuCharWorkflow;
 using Senparc.Ncf.Core.Enums;
-using Senparc.Ncf.Shared.Abstractions.ChatAgent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +21,7 @@ using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Senparc.Areas.Admin.Domain.Services;
+namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
 public sealed class NeuCharWorkflowGraph
 {
@@ -69,27 +71,23 @@ public sealed class NeuCharWorkflowEngine
     };
 
     private sealed record ResolvedFunctionReference(
-        NeuCharPivotFunction Entity,
         NeuCharFunctionDescriptor Descriptor,
         string DefaultParametersJson);
 
     private readonly NeuCharWorkflowService _workflowService;
-    private readonly NeuCharPivotFunctionService _functionEntityService;
-    private readonly NeuCharFunctionService _functionService;
-    private readonly NeuCharExecutionLogService _logService;
-    private readonly NeuCharParameterProtector _parameterProtector;
+    private readonly NeuCharWorkflowFunctionService _functionService;
+    private readonly NeuCharWorkflowExecutionLogService _logService;
+    private readonly NeuCharWorkflowParameterProtector _parameterProtector;
     private readonly IReadOnlyDictionary<string, IWorkflowObjectProvider> _objectProviders;
 
     public NeuCharWorkflowEngine(
         NeuCharWorkflowService workflowService,
-        NeuCharPivotFunctionService functionEntityService,
-        NeuCharFunctionService functionService,
-        NeuCharExecutionLogService logService,
-        NeuCharParameterProtector parameterProtector,
+        NeuCharWorkflowFunctionService functionService,
+        NeuCharWorkflowExecutionLogService logService,
+        NeuCharWorkflowParameterProtector parameterProtector,
         IEnumerable<IWorkflowObjectProvider> objectProviders)
     {
         _workflowService = workflowService;
-        _functionEntityService = functionEntityService;
         _functionService = functionService;
         _logService = logService;
         _parameterProtector = parameterProtector;
@@ -241,7 +239,7 @@ public sealed class NeuCharWorkflowEngine
                 }
 
                 var parameterJson = node.Config?["parameters"]?.ToJsonString() ?? reference.DefaultParametersJson;
-                var validationError = NeuCharFunctionService.ValidateRequiredParameters(
+                var validationError = NeuCharWorkflowFunctionService.ValidateRequiredParameters(
                     reference.Descriptor.Parameters,
                     parameterJson);
                 if (validationError != null)
@@ -382,7 +380,7 @@ public sealed class NeuCharWorkflowEngine
     }
 
     public async Task<NeuCharWorkflowRunResult> RunAsync(
-        NeuCharWorkflow workflow,
+        WorkflowEntity workflow,
         string input,
         CancellationToken cancellationToken = default,
         Action<NeuCharWorkflowProgress> progress = null)
@@ -390,11 +388,8 @@ public sealed class NeuCharWorkflowEngine
         var graph = ParseAndValidateGraph(workflow.GraphJson);
         var trace = new List<string>();
         var correlationId = $"workflow-{workflow.Id}-{Guid.NewGuid():N}";
-        var workflowLog = new NeuCharExecutionLog(
-            "workflow",
+        var workflowLog = new NeuCharWorkflowExecutionLog(
             workflow.Id,
-            null,
-            null,
             workflow.Name,
             correlationId);
         await _logService.SaveObjectAsync(workflowLog).ConfigureAwait(false);
@@ -820,20 +815,8 @@ public sealed class NeuCharWorkflowEngine
         NeuCharWorkflowNode node,
         CancellationToken cancellationToken)
     {
-        NeuCharPivotFunction entity = null;
-        var functionId = GetInt(node.Config, "functionId", 0);
-        if (functionId > 0)
-        {
-            entity = await _functionEntityService.GetObjectAsync(z => z.Id == functionId)
-                .ConfigureAwait(false);
-            if (entity is { Visible: false })
-            {
-                entity = null;
-            }
-        }
-
-        var moduleUid = entity?.ModuleUid ?? GetString(node.Config, "moduleUid");
-        var functionKey = entity?.FunctionKey ?? GetString(node.Config, "functionKey");
+        var moduleUid = GetString(node.Config, "moduleUid");
+        var functionKey = GetString(node.Config, "functionKey");
         if (string.IsNullOrWhiteSpace(moduleUid) || string.IsNullOrWhiteSpace(functionKey))
         {
             return null;
@@ -844,17 +827,11 @@ public sealed class NeuCharWorkflowEngine
             string.Equals(z.FunctionKey, functionKey, StringComparison.OrdinalIgnoreCase));
         return descriptor == null
             ? null
-            : new ResolvedFunctionReference(entity, descriptor, entity?.DefaultParametersJson ?? "{}");
+            : new ResolvedFunctionReference(descriptor, "{}");
     }
 
     private static bool IsSameFunctionReference(NeuCharWorkflowNode left, NeuCharWorkflowNode right)
     {
-        var leftId = GetInt(left.Config, "functionId", 0);
-        var rightId = GetInt(right.Config, "functionId", 0);
-        if (leftId > 0 && rightId > 0)
-        {
-            return leftId == rightId;
-        }
         return string.Equals(GetString(left.Config, "moduleUid"), GetString(right.Config, "moduleUid"), StringComparison.OrdinalIgnoreCase) &&
                string.Equals(GetString(left.Config, "functionKey"), GetString(right.Config, "functionKey"), StringComparison.OrdinalIgnoreCase);
     }
@@ -1213,6 +1190,12 @@ public sealed class NeuCharWorkflowHostedService : BackgroundService
             try
             {
                 using var scope = _scopeFactory.CreateScope();
+                var moduleService = scope.ServiceProvider.GetRequiredService<XncfModuleService>();
+                var module = await moduleService.GetObjectAsync(z => z.Uid == new Register().Uid).ConfigureAwait(false);
+                if (module?.State != XncfModules_State.开放)
+                {
+                    continue;
+                }
                 var workflowService = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowService>();
                 var engine = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowEngine>();
                 var now = DateTime.UtcNow;

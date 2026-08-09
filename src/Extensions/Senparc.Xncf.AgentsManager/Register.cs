@@ -40,6 +40,7 @@ using Senparc.Xncf.AgentsManager.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
+using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Xncf.XncfBuilder.OHS.Local;
 using Senparc.Ncf.Shared.Abstractions.ChatAgent;
 using System;
@@ -166,7 +167,6 @@ namespace Senparc.Xncf.AgentsManager
         }
     }
 }
-
 
 
 

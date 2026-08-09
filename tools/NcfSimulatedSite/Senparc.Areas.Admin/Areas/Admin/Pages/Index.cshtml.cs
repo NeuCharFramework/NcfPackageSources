@@ -290,7 +290,7 @@ namespace Senparc.Areas.Admin.Pages
             }
 
             // NeuCharPivot 是系统级 AI 能力入口，与 AdminChat 同属系统管理；
-            // 聚合页负责跨模块快捷调用，Workflow 负责声明式编排。
+            // 聚合页负责跨模块快捷调用。Workflow 由独立 XNCF 自行注册菜单和授权。
             var pivotMenu = dest.FirstOrDefault(z =>
                 string.Equals(z.MenuName, "NeuCharPivot", StringComparison.OrdinalIgnoreCase));
             if (pivotMenu == null)
@@ -319,18 +319,6 @@ namespace Senparc.Areas.Admin.Pages
                     ParentId = pivotMenu.Id
                 });
             }
-            if (!dest.Any(z => string.Equals(z.Url, "/Admin/NeuCharPivot/Workflow", StringComparison.OrdinalIgnoreCase)))
-            {
-                dest.Add(new SysMenuDto
-                {
-                    MenuName = "Workflow",
-                    Url = "/Admin/NeuCharPivot/Workflow",
-                    Icon = "fa fa-random",
-                    Id = (index++).ToString(),
-                    ParentId = pivotMenu.Id
-                });
-            }
-
             GetSysMenuTreesRecursive(dest, sysMenuTrees, null);
             return sysMenuTrees;
         }

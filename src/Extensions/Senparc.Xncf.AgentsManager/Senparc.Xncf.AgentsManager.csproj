@@ -167,6 +167,7 @@
     <ProjectReference Include="..\Senparc.Xncf.MCP\Senparc.Xncf.MCP.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.KnowledgeBase\Senparc.Xncf.KnowledgeBase.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.AgentsManager.Abstractions\Senparc.Xncf.AgentsManager.Abstractions.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.NeuCharWorkflow.Abstractions\Senparc.Xncf.NeuCharWorkflow.Abstractions.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.PromptRange.Abstractions\Senparc.Xncf.PromptRange.Abstractions.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
   </ItemGroup>

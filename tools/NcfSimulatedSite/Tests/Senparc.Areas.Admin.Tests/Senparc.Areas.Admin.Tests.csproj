@@ -52,6 +52,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
     <ProjectReference Include="..\..\..\..\src\Basic\Senparc.Ncf.UnitTestExtension\Senparc.Ncf.UnitTestExtension.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Extensions\Senparc.Xncf.NeuCharWorkflow\Senparc.Xncf.NeuCharWorkflow.csproj" />
   </ItemGroup>
 
 </Project>

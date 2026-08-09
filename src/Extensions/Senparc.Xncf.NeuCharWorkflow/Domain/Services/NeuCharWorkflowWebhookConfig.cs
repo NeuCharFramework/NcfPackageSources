@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace Senparc.Areas.Admin.Domain.Services;
+namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
 /// <summary>
 /// Webhook 触发器的持久化配置。配置由服务端规范化，避免前端可以写入任意 HTTP 方法、重复参数或过大的内容。

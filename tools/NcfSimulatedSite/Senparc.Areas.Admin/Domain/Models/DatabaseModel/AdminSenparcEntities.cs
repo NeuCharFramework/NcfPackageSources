@@ -13,8 +13,8 @@
     修改标识：Senparc - 20260705
     修改描述：v0.0.4 新增登录超时配置并补齐多数据库迁移支持
 
-    修改标识：Senparc - 20260808
-    修改描述：新增 NeuCharPivot、Loop Task、执行日志及 Workflow 系统表
+    修改标识：Senparc - 20260809
+    修改描述：Workflow 已迁出至 Senparc.Xncf.NeuCharWorkflow，本上下文仅保留 NeuCharPivot 与执行日志
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -78,17 +78,7 @@ namespace Senparc.Areas.Admin.Domain.Models
         public DbSet<NeuCharPivotLoopTask> NeuCharPivotLoopTasks { get; set; }
 
         /// <summary>
-        /// NeuChar 工作流
-        /// </summary>
-        public DbSet<NeuCharWorkflow> NeuCharWorkflows { get; set; }
-
-        /// <summary>
-        /// NeuChar 工作流最近版本
-        /// </summary>
-        public DbSet<NeuCharWorkflowVersion> NeuCharWorkflowVersions { get; set; }
-
-        /// <summary>
-        /// Pivot、Loop Task 与 Workflow 的统一执行记录
+        /// Pivot 与 Loop Task 的统一执行记录
         /// </summary>
         public DbSet<NeuCharExecutionLog> NeuCharExecutionLogs { get; set; }
 
@@ -113,14 +103,6 @@ namespace Senparc.Areas.Admin.Domain.Models
                 .IsUnique();
             modelBuilder.Entity<NeuCharPivotLoopTask>()
                 .HasIndex(z => new { z.Enabled, z.NextRunAt });
-            modelBuilder.Entity<NeuCharWorkflow>()
-                .HasIndex(z => new { z.Enabled, z.NextRunAt });
-            modelBuilder.Entity<NeuCharWorkflow>()
-                .Property(z => z.AutoSaveMinutes)
-                .HasDefaultValue(3);
-            modelBuilder.Entity<NeuCharWorkflowVersion>()
-                .HasIndex(z => new { z.WorkflowId, z.Revision })
-                .IsUnique();
             modelBuilder.Entity<NeuCharExecutionLog>()
                 .HasIndex(z => z.CorrelationId);
             modelBuilder.Entity<NeuCharExecutionLog>()
@@ -148,15 +130,6 @@ namespace Senparc.Areas.Admin.Domain.Models
             SetLargeText<NeuCharPivotLoopTask>(modelBuilder, largeTextType,
                 nameof(NeuCharPivotLoopTask.ParametersJson),
                 nameof(NeuCharPivotLoopTask.LastError));
-            SetLargeText<NeuCharWorkflow>(modelBuilder, largeTextType,
-                nameof(NeuCharWorkflow.Description),
-                nameof(NeuCharWorkflow.GraphJson),
-                nameof(NeuCharWorkflow.TriggerConfigJson),
-                nameof(NeuCharWorkflow.LastError));
-            SetLargeText<NeuCharWorkflowVersion>(modelBuilder, largeTextType,
-                nameof(NeuCharWorkflowVersion.Description),
-                nameof(NeuCharWorkflowVersion.GraphJson),
-                nameof(NeuCharWorkflowVersion.TriggerConfigJson));
             SetLargeText<NeuCharExecutionLog>(modelBuilder, largeTextType,
                 nameof(NeuCharExecutionLog.ResultSummary),
                 nameof(NeuCharExecutionLog.Error));
