@@ -31,7 +31,23 @@ public sealed record NeuCharFunctionDescriptor(
     string FunctionKey,
     string Name,
     string Description,
-    IReadOnlyList<FunctionParameterInfo> Parameters);
+    IReadOnlyList<FunctionParameterInfo> Parameters,
+    NeuCharFunctionOutputDescriptor Output = null,
+    string CatalogError = null);
+
+public sealed record NeuCharFunctionOutputFieldDescriptor(
+    string Path,
+    string Label,
+    string TypeName,
+    bool IsArray,
+    bool RequiresIndex);
+
+public sealed record NeuCharFunctionOutputDescriptor(
+    string TypeName,
+    string DisplayName,
+    bool IsArray,
+    string ElementTypeName,
+    IReadOnlyList<NeuCharFunctionOutputFieldDescriptor> Fields);
 
 public sealed record NeuCharFunctionExecutionResult(
     bool Success,
@@ -79,6 +95,7 @@ public sealed class NeuCharFunctionService
             foreach (var bag in group.Values.GroupBy(z => z.Key).Select(z => z.First()))
             {
                 IReadOnlyList<FunctionParameterInfo> parameters;
+                string catalogError = null;
                 try
                 {
                     parameters = await FunctionHelper.GetFunctionParameterInfoAsync(
@@ -86,9 +103,20 @@ public sealed class NeuCharFunctionService
                         bag,
                         loadParameterOptions).ConfigureAwait(false);
                 }
-                catch when (!loadParameterOptions)
+                catch (Exception ex)
                 {
-                    parameters = Array.Empty<FunctionParameterInfo>();
+                    catalogError = ex.Message;
+                    try
+                    {
+                        parameters = await FunctionHelper.GetFunctionParameterInfoAsync(
+                            _serviceProvider,
+                            bag,
+                            false).ConfigureAwait(false);
+                    }
+                    catch
+                    {
+                        parameters = Array.Empty<FunctionParameterInfo>();
+                    }
                 }
 
                 result.Add(new NeuCharFunctionDescriptor(
@@ -99,7 +127,9 @@ public sealed class NeuCharFunctionService
                     bag.Key,
                     bag.FunctionRenderAttribute.Name,
                     bag.FunctionRenderAttribute.Description,
-                    parameters));
+                    parameters,
+                    BuildOutputDescriptor(bag.MethodInfo),
+                    catalogError));
             }
         }
 
@@ -271,6 +301,154 @@ public sealed class NeuCharFunctionService
         JsonValueKind.Array => value.GetArrayLength() == 0,
         _ => false
     };
+
+    public static NeuCharFunctionOutputDescriptor BuildOutputDescriptor(MethodInfo methodInfo)
+    {
+        var dataType = GetResponseDataType(methodInfo?.ReturnType) ?? typeof(object);
+        var isArray = TryGetCollectionElementType(dataType, out var elementType);
+        var valueType = isArray ? elementType : dataType;
+        var fields = new List<NeuCharFunctionOutputFieldDescriptor>
+        {
+            new(
+                "$",
+                isArray ? "完整列表" : "完整输出",
+                NormalizeValueType(valueType),
+                isArray,
+                false)
+        };
+        AddOutputFields(fields, valueType, "$", string.Empty, isArray, 0, new HashSet<Type>());
+        return new NeuCharFunctionOutputDescriptor(
+            NormalizeValueType(valueType),
+            GetFriendlyTypeName(dataType),
+            isArray,
+            isArray ? NormalizeValueType(elementType) : null,
+            fields);
+    }
+
+    public static string NormalizeValueType(Type type)
+    {
+        type ??= typeof(object);
+        type = Nullable.GetUnderlyingType(type) ?? type;
+        if (type == typeof(string) || type == typeof(char) || type == typeof(Guid) || type == typeof(Uri))
+        {
+            return "string";
+        }
+        if (type == typeof(bool))
+        {
+            return "boolean";
+        }
+        if (type == typeof(DateTime) || type == typeof(DateTimeOffset) || type == typeof(TimeSpan))
+        {
+            return "datetime";
+        }
+        if (type.IsEnum)
+        {
+            return "string";
+        }
+        if (type == typeof(byte) || type == typeof(sbyte) || type == typeof(short) ||
+            type == typeof(ushort) || type == typeof(int) || type == typeof(uint) ||
+            type == typeof(long) || type == typeof(ulong) || type == typeof(float) ||
+            type == typeof(double) || type == typeof(decimal))
+        {
+            return "number";
+        }
+        return type == typeof(object) ? "any" : "object";
+    }
+
+    private static Type GetResponseDataType(Type returnType)
+    {
+        if (returnType == null)
+        {
+            return null;
+        }
+        if (returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>))
+        {
+            returnType = returnType.GetGenericArguments()[0];
+        }
+        for (var current = returnType; current != null; current = current.BaseType)
+        {
+            if (current.IsGenericType && current.GetGenericTypeDefinition() == typeof(AppResponseBase<>))
+            {
+                return current.GetGenericArguments()[0];
+            }
+        }
+        return typeof(IAppResponse).IsAssignableFrom(returnType) ? typeof(object) : null;
+    }
+
+    private static void AddOutputFields(
+        ICollection<NeuCharFunctionOutputFieldDescriptor> fields,
+        Type type,
+        string path,
+        string labelPrefix,
+        bool parentRequiresIndex,
+        int depth,
+        ISet<Type> ancestors)
+    {
+        type = Nullable.GetUnderlyingType(type) ?? type;
+        if (depth >= 3 || IsSimpleType(type) || !ancestors.Add(type))
+        {
+            return;
+        }
+        foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                     .Where(z => z.CanRead && z.GetIndexParameters().Length == 0)
+                     .Take(80))
+        {
+            var propertyIsArray = TryGetCollectionElementType(property.PropertyType, out var elementType);
+            var propertyValueType = propertyIsArray ? elementType : property.PropertyType;
+            var propertyPath = $"{path}.{property.Name}";
+            var label = string.IsNullOrWhiteSpace(labelPrefix)
+                ? property.Name
+                : $"{labelPrefix}.{property.Name}";
+            fields.Add(new NeuCharFunctionOutputFieldDescriptor(
+                propertyPath,
+                label,
+                NormalizeValueType(propertyValueType),
+                propertyIsArray,
+                parentRequiresIndex));
+            AddOutputFields(
+                fields,
+                propertyValueType,
+                propertyPath,
+                label,
+                parentRequiresIndex || propertyIsArray,
+                depth + 1,
+                new HashSet<Type>(ancestors));
+        }
+    }
+
+    private static bool TryGetCollectionElementType(Type type, out Type elementType)
+    {
+        type = Nullable.GetUnderlyingType(type) ?? type;
+        if (type != typeof(string) && type.IsArray)
+        {
+            elementType = type.GetElementType() ?? typeof(object);
+            return true;
+        }
+        var enumerable = type == typeof(string)
+            ? null
+            : type.GetInterfaces()
+                .Concat(new[] { type })
+                .FirstOrDefault(z => z.IsGenericType && z.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+        if (enumerable != null)
+        {
+            elementType = enumerable.GetGenericArguments()[0];
+            return true;
+        }
+        elementType = type;
+        return false;
+    }
+
+    private static bool IsSimpleType(Type type) =>
+        NormalizeValueType(type) is not ("object" or "any");
+
+    private static string GetFriendlyTypeName(Type type)
+    {
+        if (TryGetCollectionElementType(type, out var elementType))
+        {
+            return $"{elementType.Name}[]";
+        }
+        return (Nullable.GetUnderlyingType(type) ?? type).Name;
+    }
 
     private static NeuCharFunctionExecutionResult Failure(string message) =>
         new(false, null, message, null);

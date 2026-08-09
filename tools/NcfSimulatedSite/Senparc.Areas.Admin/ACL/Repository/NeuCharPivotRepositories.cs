@@ -15,6 +15,7 @@ public interface INeuCharPivotConfigurationRepository : IClientRepositoryBase<Ne
 public interface INeuCharPivotFunctionRepository : IClientRepositoryBase<NeuCharPivotFunction> { }
 public interface INeuCharPivotLoopTaskRepository : IClientRepositoryBase<NeuCharPivotLoopTask> { }
 public interface INeuCharWorkflowRepository : IClientRepositoryBase<NeuCharWorkflow> { }
+public interface INeuCharWorkflowVersionRepository : IClientRepositoryBase<NeuCharWorkflowVersion> { }
 public interface INeuCharExecutionLogRepository : IClientRepositoryBase<NeuCharExecutionLog> { }
 
 public sealed class NeuCharPivotConfigurationRepository : ClientRepositoryBase<NeuCharPivotConfiguration>, INeuCharPivotConfigurationRepository
@@ -39,6 +40,12 @@ public sealed class NeuCharWorkflowRepository : ClientRepositoryBase<NeuCharWork
 {
     private NeuCharWorkflowRepository() : base(null) { }
     public NeuCharWorkflowRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
+}
+
+public sealed class NeuCharWorkflowVersionRepository : ClientRepositoryBase<NeuCharWorkflowVersion>, INeuCharWorkflowVersionRepository
+{
+    private NeuCharWorkflowVersionRepository() : base(null) { }
+    public NeuCharWorkflowVersionRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
 }
 
 public sealed class NeuCharExecutionLogRepository : ClientRepositoryBase<NeuCharExecutionLog>, INeuCharExecutionLogRepository

@@ -71,9 +71,14 @@ public sealed class NeuCharParameterProtector
         {
             var submittedKey = FindKey(submitted, name);
             var existingKey = FindKey(existing, name);
-            var hasSubmittedValue = submitted[submittedKey] is JsonValue submittedValue &&
-                                    submittedValue.TryGetValue<string>(out var text) &&
-                                    !string.IsNullOrEmpty(text);
+            var hasSubmittedValue = submitted[submittedKey] switch
+            {
+                JsonObject or JsonArray => true,
+                JsonValue submittedValue when submittedValue.TryGetValue<string>(out var text) =>
+                    !string.IsNullOrEmpty(text),
+                JsonValue => true,
+                _ => false
+            };
             if (!hasSubmittedValue && existing[existingKey] is JsonValue existingValue &&
                 existingValue.TryGetValue<string>(out var storedValue) &&
                 storedValue.StartsWith(ProtectedPrefix, StringComparison.Ordinal))
@@ -90,7 +95,8 @@ public sealed class NeuCharParameterProtector
         foreach (var name in NormalizeNames(secretNames))
         {
             var key = FindKey(parameters, name);
-            if (parameters.ContainsKey(key))
+            if (parameters[key] is JsonValue value &&
+                value.TryGetValue<string>(out _))
             {
                 parameters[key] = string.Empty;
             }

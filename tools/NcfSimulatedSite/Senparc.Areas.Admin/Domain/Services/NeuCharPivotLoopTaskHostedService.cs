@@ -42,6 +42,16 @@ public sealed class NeuCharPivotNeuBellProvider : INeuBellProvider
         while (_items.Count > Capacity && _items.TryDequeue(out _)) { }
     }
 
+    public int ConsumeAll()
+    {
+        var count = 0;
+        while (_items.TryDequeue(out _))
+        {
+            count++;
+        }
+        return count;
+    }
+
     public ValueTask<NeuBellSnapshot> GetSnapshotAsync(
         NeuBellRequestContext context,
         CancellationToken cancellationToken = default)

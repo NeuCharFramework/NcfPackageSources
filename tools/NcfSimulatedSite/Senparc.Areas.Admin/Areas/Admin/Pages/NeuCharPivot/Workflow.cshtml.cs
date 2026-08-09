@@ -5,7 +5,9 @@ using Senparc.Ncf.AreaBase.Admin.Filters;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.WorkContext.Provider;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Senparc.Areas.Admin.Areas.Admin.Pages.NeuCharPivot;
@@ -15,8 +17,11 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages.NeuCharPivot;
 public class WorkflowModel(
     IServiceProvider serviceProvider,
     NeuCharWorkflowService workflowService,
+    NeuCharWorkflowVersionService workflowVersionService,
     NeuCharWorkflowEngine workflowEngine,
     NeuCharPivotService pivotService,
+    NeuCharFunctionService functionService,
+    NeuCharWorkflowRunCoordinator runCoordinator,
     IAdminWorkContextProvider adminWorkContextProvider) : BaseAdminPageModel(serviceProvider)
 {
     public Task OnGetAsync() => Task.CompletedTask;
@@ -46,23 +51,44 @@ public class WorkflowModel(
     public async Task<IActionResult> OnGetDesignerDataAsync()
     {
         var snapshots = await pivotService.GetAllSnapshotsAsync(HttpContext.RequestAborted).ConfigureAwait(false);
+        var catalog = await functionService.GetCatalogAsync(
+            null,
+            true,
+            HttpContext.RequestAborted).ConfigureAwait(false);
         var objects = await workflowEngine.GetWorkflowObjectsAsync(HttpContext.RequestAborted).ConfigureAwait(false);
+        var storedFunctions = snapshots
+            .SelectMany(snapshot => snapshot.Functions.Where(z => z.Visible))
+            .GroupBy(z => $"{z.ModuleUid}|{z.FunctionKey}", StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(z => z.Key, z => z.First(), StringComparer.OrdinalIgnoreCase);
+        var functions = catalog.Select(descriptor =>
+        {
+            storedFunctions.TryGetValue(
+                $"{descriptor.ModuleUid}|{descriptor.FunctionKey}",
+                out var storedFunction);
+            var parameterSchema = NeuCharPivotService.BuildParameterSchema(
+                descriptor,
+                descriptor.Parameters.Select(z => z.Name).ToArray());
+            var defaults = NeuCharPivotService.BuildDefaultParameters(parameterSchema);
+            return new
+            {
+                id = storedFunction?.Id ?? 0,
+                descriptor.FunctionKey,
+                functionName = descriptor.Name,
+                descriptor.Description,
+                descriptor.ModuleUid,
+                descriptor.ModuleName,
+                descriptor.ModuleVersion,
+                descriptor.ModuleAvailable,
+                moduleState = descriptor.ModuleAvailable ? "open" : "disabled",
+                parameterSchemaJson = JsonSerializer.Serialize(parameterSchema),
+                defaultParametersJson = storedFunction?.DefaultParametersJson ?? JsonSerializer.Serialize(defaults),
+                descriptor.Output,
+                descriptor.CatalogError
+            };
+        }).ToList();
         return Ok(new
         {
-            functions = snapshots.SelectMany(snapshot => snapshot.Functions
-                .Where(function => function.Visible)
-                .Select(function => new
-                {
-                    function.Id,
-                    function.FunctionName,
-                    function.Description,
-                    function.ModuleUid,
-                    moduleName = snapshot.Configuration.Name,
-                    moduleAvailable = snapshot.FunctionAvailability.TryGetValue(function.Id, out var available) && available,
-                    snapshot.ModuleState,
-                    parameterSchemaJson = function.UiSchemaJson,
-                    function.DefaultParametersJson
-                })),
+            functions,
             objects
         });
     }
@@ -81,6 +107,10 @@ public class WorkflowModel(
         {
             return BadRequest("工作流描述或触发器配置超过允许长度。");
         }
+        if (request.AutoSaveMinutes is < 0 or > 1440)
+        {
+            return BadRequest("自动保存间隔必须为 0 到 1440 分钟，0 表示关闭。");
+        }
 
         NeuCharWorkflowGraph graph;
         try
@@ -98,6 +128,11 @@ public class WorkflowModel(
         if (request.Id > 0 && workflow == null)
         {
             return NotFound();
+        }
+        if (workflow != null && request.ExpectedRevision.HasValue &&
+            request.ExpectedRevision.Value != workflow.Revision)
+        {
+            return StatusCode(409, "工作流已被其他页面更新，请刷新后再保存。");
         }
         try
         {
@@ -152,21 +187,46 @@ public class WorkflowModel(
         var nextRun = request.Enabled
             ? NeuCharWorkflowEngine.CalculateNextRun(triggerType, request.TriggerConfigJson, DateTime.UtcNow)
             : null;
+        var triggerConfigJson = request.TriggerConfigJson ?? "{}";
+        var autoSaveMinutes = request.AutoSaveMinutes <= 0
+            ? 0
+            : Math.Clamp(request.AutoSaveMinutes, 1, 1440);
+        if (workflow.Id > 0 && IsUnchanged(
+                workflow,
+                request.Name,
+                request.Description,
+                normalizedGraphJson,
+                request.Enabled,
+                triggerType,
+                triggerConfigJson,
+                autoSaveMinutes))
+        {
+            var editableUnchangedGraph = await workflowEngine.BuildEditableGraphJsonAsync(
+                workflow.GraphJson,
+                HttpContext.RequestAborted).ConfigureAwait(false);
+            return Ok(ToResponse(workflow, editableUnchangedGraph, unchanged: true));
+        }
         workflow.Update(
             request.Name,
             request.Description,
             normalizedGraphJson,
             request.Enabled,
             triggerType,
-            request.TriggerConfigJson,
-            nextRun);
+            triggerConfigJson,
+            nextRun,
+            autoSaveMinutes);
         await workflowService.SaveObjectAsync(workflow).ConfigureAwait(false);
-        return Ok(ToResponse(workflow));
+        var adminUserId = adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
+        await SaveVersionAsync(workflow, adminUserId, request.SaveSource).ConfigureAwait(false);
+        var editableGraphJson = await workflowEngine.BuildEditableGraphJsonAsync(
+            workflow.GraphJson,
+            HttpContext.RequestAborted).ConfigureAwait(false);
+        return Ok(ToResponse(workflow, editableGraphJson));
     }
 
     public async Task<IActionResult> OnPostRunAsync([FromBody] RunWorkflowRequest request)
     {
-        if (request == null || request.Input?.Length > 100_000)
+        if (request == null || request.Id <= 0 || request.Input?.Length > 100_000)
         {
             return BadRequest("工作流输入不能超过 100000 个字符。");
         }
@@ -174,6 +234,21 @@ public class WorkflowModel(
         if (workflow == null)
         {
             return NotFound();
+        }
+        try
+        {
+            var graph = workflowEngine.ParseAndValidateGraph(workflow.GraphJson);
+            var validationError = await workflowEngine.ValidateReferencesAsync(
+                graph,
+                HttpContext.RequestAborted).ConfigureAwait(false);
+            if (validationError != null)
+            {
+                return BadRequest(validationError);
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
         }
 
         workflow.MarkStarted(workflow.NextRunAt);
@@ -187,6 +262,84 @@ public class WorkflowModel(
         return Ok(result);
     }
 
+    public async Task<IActionResult> OnPostValidateRunAsync([FromBody] RunWorkflowRequest request)
+    {
+        if (request == null || request.Id <= 0 || request.Input?.Length > 100_000)
+        {
+            return BadRequest("工作流测试请求无效，输入不能超过 100000 个字符。");
+        }
+        var workflow = await workflowService.GetObjectAsync(z => z.Id == request.Id).ConfigureAwait(false);
+        if (workflow == null)
+        {
+            return NotFound();
+        }
+        try
+        {
+            var graph = workflowEngine.ParseAndValidateGraph(workflow.GraphJson);
+            var validationError = await workflowEngine.ValidateReferencesAsync(
+                graph,
+                HttpContext.RequestAborted).ConfigureAwait(false);
+            return validationError == null
+                ? Ok(new { success = true })
+                : BadRequest(validationError);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    public async Task<IActionResult> OnPostStartRunAsync([FromBody] RunWorkflowRequest request)
+    {
+        if (request == null || request.Id <= 0 || request.Input?.Length > 100_000)
+        {
+            return BadRequest("工作流测试请求无效，输入不能超过 100000 个字符。");
+        }
+        var workflow = await workflowService.GetObjectAsync(z => z.Id == request.Id).ConfigureAwait(false);
+        if (workflow == null)
+        {
+            return NotFound();
+        }
+        try
+        {
+            var graph = workflowEngine.ParseAndValidateGraph(workflow.GraphJson);
+            var validationError = await workflowEngine.ValidateReferencesAsync(
+                graph,
+                HttpContext.RequestAborted).ConfigureAwait(false);
+            if (validationError != null)
+            {
+                return BadRequest(validationError);
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+
+        var adminUserId = adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
+        if (!runCoordinator.TryStart(
+                workflow.Id,
+                adminUserId,
+                request.Input,
+                out var runId,
+                out var error))
+        {
+            return StatusCode(409, error);
+        }
+        return Ok(new { runId });
+    }
+
+    public IActionResult OnGetRunStatus(Guid runId, long afterSequence = 0)
+    {
+        if (runId == Guid.Empty)
+        {
+            return BadRequest("运行标识无效。");
+        }
+        var adminUserId = adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
+        var snapshot = runCoordinator.GetSnapshot(runId, adminUserId, afterSequence);
+        return snapshot == null ? NotFound() : Ok(snapshot);
+    }
+
     public async Task<IActionResult> OnPostDeleteAsync([FromBody] DeleteWorkflowRequest request)
     {
         if (request == null || request.Id <= 0)
@@ -198,11 +351,51 @@ public class WorkflowModel(
         {
             return NotFound();
         }
+        var versions = await workflowVersionService.GetFullListAsync(
+            z => z.WorkflowId == workflow.Id).ConfigureAwait(false);
+        foreach (var version in versions)
+        {
+            await workflowVersionService.DeleteObjectAsync(version).ConfigureAwait(false);
+        }
         await workflowService.DeleteObjectAsync(workflow).ConfigureAwait(false);
         return Ok(new { success = true });
     }
 
-    private static object ToResponse(NeuCharWorkflow workflow, string graphJson = null) => new
+    private async Task SaveVersionAsync(NeuCharWorkflow workflow, int adminUserId, string saveSource)
+    {
+        await workflowVersionService.SaveObjectAsync(
+            new NeuCharWorkflowVersion(workflow, adminUserId, saveSource)).ConfigureAwait(false);
+        var versions = await workflowVersionService.GetFullListAsync(
+            z => z.WorkflowId == workflow.Id,
+            z => z.Revision,
+            OrderingType.Descending).ConfigureAwait(false);
+        foreach (var obsolete in versions.Skip(5))
+        {
+            await workflowVersionService.DeleteObjectAsync(obsolete).ConfigureAwait(false);
+        }
+    }
+
+    private static bool IsUnchanged(
+        NeuCharWorkflow workflow,
+        string name,
+        string description,
+        string graphJson,
+        bool enabled,
+        string triggerType,
+        string triggerConfigJson,
+        int autoSaveMinutes) =>
+        string.Equals(workflow.Name, name?.Trim(), StringComparison.Ordinal) &&
+        string.Equals(workflow.Description, description?.Trim(), StringComparison.Ordinal) &&
+        string.Equals(workflow.GraphJson, graphJson, StringComparison.Ordinal) &&
+        workflow.Enabled == enabled &&
+        string.Equals(workflow.TriggerType, triggerType, StringComparison.Ordinal) &&
+        string.Equals(workflow.TriggerConfigJson, triggerConfigJson, StringComparison.Ordinal) &&
+        workflow.AutoSaveMinutes == autoSaveMinutes;
+
+    private static object ToResponse(
+        NeuCharWorkflow workflow,
+        string graphJson = null,
+        bool unchanged = false) => new
     {
         workflow.Id,
         workflow.Name,
@@ -216,6 +409,8 @@ public class WorkflowModel(
         workflow.LastSucceeded,
         workflow.LastError,
         workflow.Revision,
+        workflow.AutoSaveMinutes,
+        unchanged,
         workflow.LastUpdateTime
     };
 
@@ -231,6 +426,7 @@ public class WorkflowModel(
         workflow.LastSucceeded,
         workflow.LastError,
         workflow.Revision,
+        workflow.AutoSaveMinutes,
         workflow.LastUpdateTime
     };
 
@@ -243,6 +439,9 @@ public class WorkflowModel(
         public bool Enabled { get; set; }
         public string TriggerType { get; set; }
         public string TriggerConfigJson { get; set; }
+        public int AutoSaveMinutes { get; set; } = 3;
+        public int? ExpectedRevision { get; set; }
+        public string SaveSource { get; set; }
     }
 
     public sealed class RunWorkflowRequest

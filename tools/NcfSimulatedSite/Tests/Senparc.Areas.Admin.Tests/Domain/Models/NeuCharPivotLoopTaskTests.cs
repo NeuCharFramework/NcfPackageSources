@@ -6,6 +6,7 @@
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
+using Senparc.Areas.Admin.Domain.Services;
 
 namespace Senparc.Areas.Admin.Tests.Domain.Models;
 
@@ -44,5 +45,16 @@ public class NeuCharPivotLoopTaskTests
         Assert.AreEqual(false, task.LastSucceeded);
         Assert.AreEqual(1, task.ConsecutiveFailures);
         Assert.AreEqual(4000, task.LastError.Length);
+    }
+
+    [TestMethod]
+    public void NeuBellProvider_ConsumeAll_ShouldAcknowledgeVisibleLoopResultsOnce()
+    {
+        var provider = new NeuCharPivotNeuBellProvider();
+        provider.AddResult(1, "示例 Function", true, DateTimeOffset.UtcNow);
+        provider.AddResult(2, "失败 Function", false, DateTimeOffset.UtcNow);
+
+        Assert.AreEqual(2, provider.ConsumeAll());
+        Assert.AreEqual(0, provider.ConsumeAll());
     }
 }

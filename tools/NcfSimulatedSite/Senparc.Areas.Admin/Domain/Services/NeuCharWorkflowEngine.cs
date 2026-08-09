@@ -51,13 +51,27 @@ public sealed record NeuCharWorkflowRunResult(
     IReadOnlyList<string> Trace,
     string ErrorMessage = null);
 
+public sealed record NeuCharWorkflowProgress(
+    string NodeId,
+    string NodeName,
+    string Status,
+    string Message,
+    string Output,
+    DateTimeOffset Timestamp);
+
 public sealed class NeuCharWorkflowEngine
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private static readonly HashSet<string> AllowedNodeTypes = new(StringComparer.OrdinalIgnoreCase)
     {
-        "manual-trigger", "interval-trigger", "function", "delay", "condition", "agent", "agent-group", "end"
+        "manual-trigger", "interval-trigger", "function", "delay", "condition", "agent", "agent-group",
+        "aggregate", "console", "end"
     };
+
+    private sealed record ResolvedFunctionReference(
+        NeuCharPivotFunction Entity,
+        NeuCharFunctionDescriptor Descriptor,
+        string DefaultParametersJson);
 
     private readonly NeuCharWorkflowService _workflowService;
     private readonly NeuCharPivotFunctionService _functionEntityService;
@@ -163,9 +177,17 @@ public sealed class NeuCharWorkflowEngine
             throw new InvalidOperationException("触发器节点不能有输入连接。");
         }
 
+        EnsureAcyclic(graph);
         foreach (var node in graph.Nodes)
         {
             var outgoing = graph.Edges.Where(z => z.Source == node.Id).ToList();
+            var incoming = graph.Edges.Where(z => z.Target == node.Id).ToList();
+            if (!node.Type.Equals("aggregate", StringComparison.OrdinalIgnoreCase) &&
+                !node.Type.Equals("function", StringComparison.OrdinalIgnoreCase) &&
+                incoming.Count > 1)
+            {
+                throw new InvalidOperationException($"节点“{node.Name ?? node.Id}”只允许一个上游连接；多对一目标请使用 Function 或聚合节点。");
+            }
             if (node.Type.Equals("condition", StringComparison.OrdinalIgnoreCase))
             {
                 if (outgoing.Any(z => z.SourceHandle is not ("true" or "false")) ||
@@ -187,7 +209,6 @@ public sealed class NeuCharWorkflowEngine
             }
         }
 
-        EnsureAcyclic(graph);
         EnsureAllNodesReachable(graph, triggerNodes[0].Id);
         return graph;
     }
@@ -199,34 +220,42 @@ public sealed class NeuCharWorkflowEngine
         foreach (var node in graph.Nodes)
         {
             cancellationToken.ThrowIfCancellationRequested();
+            var nodeBindingError = await ValidateNodeBindingsAsync(
+                graph,
+                node,
+                cancellationToken).ConfigureAwait(false);
+            if (nodeBindingError != null)
+            {
+                return nodeBindingError;
+            }
             if (node.Type.Equals("function", StringComparison.OrdinalIgnoreCase))
             {
-                var functionId = GetInt(node.Config, "functionId", 0);
-                var function = await _functionEntityService.GetObjectAsync(z => z.Id == functionId)
-                    .ConfigureAwait(false);
-                if (function == null || !function.Visible)
+                var reference = await ResolveFunctionReferenceAsync(node, cancellationToken).ConfigureAwait(false);
+                if (reference == null)
                 {
                     return $"节点“{node.Name ?? node.Id}”引用的 Function 不存在或已失效。";
                 }
-
-                var catalog = await _functionService.GetCatalogAsync(
-                    function.ModuleUid,
-                    true,
-                    cancellationToken).ConfigureAwait(false);
-                var descriptor = catalog.FirstOrDefault(z =>
-                    string.Equals(z.FunctionKey, function.FunctionKey, StringComparison.OrdinalIgnoreCase));
-                if (descriptor == null || !descriptor.ModuleAvailable)
+                if (!reference.Descriptor.ModuleAvailable)
                 {
-                    return $"节点“{node.Name ?? function.FunctionName}”所属模块未安装、未加载或未开启。";
+                    return $"节点“{node.Name ?? reference.Descriptor.Name}”所属模块未安装、未加载或未开启。";
                 }
 
-                var parameterJson = node.Config?["parameters"]?.ToJsonString() ?? function.DefaultParametersJson;
+                var parameterJson = node.Config?["parameters"]?.ToJsonString() ?? reference.DefaultParametersJson;
                 var validationError = NeuCharFunctionService.ValidateRequiredParameters(
-                    descriptor.Parameters,
+                    reference.Descriptor.Parameters,
                     parameterJson);
                 if (validationError != null)
                 {
-                    return $"节点“{node.Name ?? function.FunctionName}”：{validationError}";
+                    return $"节点“{node.Name ?? reference.Descriptor.Name}”：{validationError}";
+                }
+                var bindingError = await ValidateFunctionBindingsAsync(
+                    graph,
+                    node,
+                    reference.Descriptor,
+                    cancellationToken).ConfigureAwait(false);
+                if (bindingError != null)
+                {
+                    return bindingError;
                 }
             }
             else if (node.Type.Equals("agent", StringComparison.OrdinalIgnoreCase) ||
@@ -275,12 +304,13 @@ public sealed class NeuCharWorkflowEngine
                      z.Type.Equals("function", StringComparison.OrdinalIgnoreCase)))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var functionId = GetInt(node.Config, "functionId", 0);
-            var function = await _functionEntityService.GetObjectAsync(z => z.Id == functionId)
-                .ConfigureAwait(false)
+            var reference = await ResolveFunctionReferenceAsync(node, cancellationToken).ConfigureAwait(false)
                 ?? throw new InvalidOperationException($"节点“{node.Name ?? node.Id}”引用的 Function 不存在或已失效。");
-            var secretNames = GetSecretParameterNames(function.UiSchemaJson);
-            if (secretNames.Count == 0)
+            var secretNames = reference.Descriptor.Parameters
+                .Where(z => z.ParameterType == Senparc.Ncf.XncfBase.ParameterType.Password)
+                .Select(z => z.Name)
+                .ToArray();
+            if (secretNames.Length == 0)
             {
                 continue;
             }
@@ -288,7 +318,7 @@ public sealed class NeuCharWorkflowEngine
             var existingNode = existingGraph?.Nodes.FirstOrDefault(z =>
                 string.Equals(z.Id, node.Id, StringComparison.Ordinal) &&
                 z.Type.Equals("function", StringComparison.OrdinalIgnoreCase) &&
-                GetInt(z.Config, "functionId", 0) == functionId);
+                IsSameFunctionReference(z, node));
             var submittedJson = node.Config?["parameters"]?.ToJsonString() ?? "{}";
             var existingJson = existingNode?.Config?["parameters"]?.ToJsonString();
             var mergedJson = _parameterProtector.MergeWithExisting(
@@ -307,12 +337,13 @@ public sealed class NeuCharWorkflowEngine
                      z.Type.Equals("function", StringComparison.OrdinalIgnoreCase)))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var functionId = GetInt(node.Config, "functionId", 0);
-            var function = await _functionEntityService.GetObjectAsync(z => z.Id == functionId)
-                .ConfigureAwait(false)
+            var reference = await ResolveFunctionReferenceAsync(node, cancellationToken).ConfigureAwait(false)
                 ?? throw new InvalidOperationException($"节点“{node.Name ?? node.Id}”引用的 Function 不存在或已失效。");
-            var secretNames = GetSecretParameterNames(function.UiSchemaJson);
-            if (secretNames.Count == 0)
+            var secretNames = reference.Descriptor.Parameters
+                .Where(z => z.ParameterType == Senparc.Ncf.XncfBase.ParameterType.Password)
+                .Select(z => z.Name)
+                .ToArray();
+            if (secretNames.Length == 0)
             {
                 continue;
             }
@@ -333,10 +364,8 @@ public sealed class NeuCharWorkflowEngine
                      z.Type.Equals("function", StringComparison.OrdinalIgnoreCase)))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var functionId = GetInt(node.Config, "functionId", 0);
-            var function = await _functionEntityService.GetObjectAsync(z => z.Id == functionId)
-                .ConfigureAwait(false);
-            if (function == null)
+            var reference = await ResolveFunctionReferenceAsync(node, cancellationToken).ConfigureAwait(false);
+            if (reference == null)
             {
                 node.Config["parameters"] = new JsonObject();
                 continue;
@@ -344,7 +373,9 @@ public sealed class NeuCharWorkflowEngine
 
             var maskedJson = _parameterProtector.MaskForClient(
                 node.Config?["parameters"]?.ToJsonString() ?? "{}",
-                GetSecretParameterNames(function.UiSchemaJson));
+                reference.Descriptor.Parameters
+                    .Where(z => z.ParameterType == Senparc.Ncf.XncfBase.ParameterType.Password)
+                    .Select(z => z.Name));
             node.Config["parameters"] = JsonNode.Parse(maskedJson);
         }
         return JsonSerializer.Serialize(graph, JsonOptions);
@@ -353,7 +384,8 @@ public sealed class NeuCharWorkflowEngine
     public async Task<NeuCharWorkflowRunResult> RunAsync(
         NeuCharWorkflow workflow,
         string input,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        Action<NeuCharWorkflowProgress> progress = null)
     {
         var graph = ParseAndValidateGraph(workflow.GraphJson);
         var trace = new List<string>();
@@ -372,10 +404,11 @@ public sealed class NeuCharWorkflowEngine
             var nodes = graph.Nodes.ToDictionary(z => z.Id, StringComparer.Ordinal);
             var trigger = graph.Nodes.Single(z =>
                 z.Type.EndsWith("trigger", StringComparison.OrdinalIgnoreCase));
-            var queue = new Queue<(NeuCharWorkflowNode node, string value)>();
-            queue.Enqueue((trigger, input ?? string.Empty));
+            var queue = new Queue<(NeuCharWorkflowNode node, JsonNode value)>();
+            queue.Enqueue((trigger, JsonValue.Create(input ?? string.Empty)));
             var visited = new HashSet<string>(StringComparer.Ordinal);
-            var finalOutput = input ?? string.Empty;
+            var outputs = new Dictionary<string, JsonNode>(StringComparer.Ordinal);
+            JsonNode finalOutput = JsonValue.Create(input ?? string.Empty);
             while (queue.Count > 0)
             {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -385,20 +418,48 @@ public sealed class NeuCharWorkflowEngine
                     continue;
                 }
 
-                var execution = await ExecuteNodeAsync(node, currentValue, correlationId, cancellationToken)
+                if (node.Type.Equals("aggregate", StringComparison.OrdinalIgnoreCase))
+                {
+                    var aggregate = new JsonArray();
+                    foreach (var sourceId in graph.Edges.Where(z => z.Target == node.Id).Select(z => z.Source))
+                    {
+                        if (outputs.TryGetValue(sourceId, out var sourceOutput))
+                        {
+                            aggregate.Add(sourceOutput?.DeepClone());
+                        }
+                    }
+                    currentValue = aggregate;
+                }
+
+                Report(progress, node, "running", "开始执行节点。", null);
+                var execution = await ExecuteNodeAsync(
+                        node,
+                        currentValue,
+                        outputs,
+                        correlationId,
+                        cancellationToken)
                     .ConfigureAwait(false);
                 trace.Add($"{node.Name ?? node.Type}: {(execution.success ? "OK" : "FAILED")}");
                 if (!execution.success)
                 {
+                    Report(progress, node, "failed", execution.error, null);
                     throw new InvalidOperationException(execution.error);
                 }
-                finalOutput = execution.output ?? string.Empty;
+                finalOutput = execution.output ?? JsonNode.Parse("null");
+                outputs[node.Id] = finalOutput?.DeepClone();
+                var outputText = NodeToText(finalOutput);
+                Report(progress, node, "success", "节点执行完成。", outputText);
+                if (node.Type.Equals("console", StringComparison.OrdinalIgnoreCase))
+                {
+                    Report(progress, node, "console", "Console 输出", outputText);
+                }
 
                 var outgoing = graph.Edges.Where(z => z.Source == node.Id);
                 if (node.Type.Equals("condition", StringComparison.OrdinalIgnoreCase))
                 {
                     var branch = execution.condition == true ? "true" : "false";
                     trace.Add($"{node.Name ?? node.Type}: branch={branch}");
+                    Report(progress, node, "branch", $"选择{(branch == "true" ? "真" : "假")}分支。", branch);
                     outgoing = outgoing.Where(z =>
                         string.Equals(z.SourceHandle, branch, StringComparison.OrdinalIgnoreCase));
                 }
@@ -408,9 +469,10 @@ public sealed class NeuCharWorkflowEngine
                 }
             }
 
-            workflowLog.Complete(true, finalOutput, null);
+            var finalOutputText = NodeToText(finalOutput);
+            workflowLog.Complete(true, finalOutputText, null);
             await _logService.SaveObjectAsync(workflowLog).ConfigureAwait(false);
-            return new NeuCharWorkflowRunResult(true, finalOutput, trace);
+            return new NeuCharWorkflowRunResult(true, finalOutputText, trace);
         }
         catch (Exception ex)
         {
@@ -450,9 +512,10 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
-    private async Task<(bool success, string output, bool? condition, string error)> ExecuteNodeAsync(
+    private async Task<(bool success, JsonNode output, bool? condition, string error)> ExecuteNodeAsync(
         NeuCharWorkflowNode node,
-        string input,
+        JsonNode input,
+        IReadOnlyDictionary<string, JsonNode> outputs,
         string correlationId,
         CancellationToken cancellationToken)
     {
@@ -466,14 +529,16 @@ public sealed class NeuCharWorkflowEngine
                 await Task.Delay(TimeSpan.FromSeconds(delaySeconds), cancellationToken).ConfigureAwait(false);
                 return (true, input, null, null);
             case "condition":
-                var condition = EvaluateCondition(node.Config, input);
+                var condition = EvaluateCondition(node.Config, input, outputs);
                 return (true, input, condition, null);
             case "function":
-                return await ExecuteFunctionNodeAsync(node, input, cancellationToken).ConfigureAwait(false);
+                return await ExecuteFunctionNodeAsync(node, input, outputs, cancellationToken).ConfigureAwait(false);
             case "agent":
             case "agent-group":
-                return await ExecuteWorkflowObjectNodeAsync(node, input, correlationId, cancellationToken)
+                return await ExecuteWorkflowObjectNodeAsync(node, input, outputs, correlationId, cancellationToken)
                     .ConfigureAwait(false);
+            case "aggregate":
+            case "console":
             case "end":
                 return (true, input, null, null);
             default:
@@ -481,14 +546,14 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
-    private async Task<(bool success, string output, bool? condition, string error)> ExecuteFunctionNodeAsync(
+    private async Task<(bool success, JsonNode output, bool? condition, string error)> ExecuteFunctionNodeAsync(
         NeuCharWorkflowNode node,
-        string input,
+        JsonNode input,
+        IReadOnlyDictionary<string, JsonNode> outputs,
         CancellationToken cancellationToken)
     {
-        var functionId = GetInt(node.Config, "functionId", 0);
-        var function = await _functionEntityService.GetObjectAsync(z => z.Id == functionId).ConfigureAwait(false);
-        if (function == null || !function.Visible)
+        var reference = await ResolveFunctionReferenceAsync(node, cancellationToken).ConfigureAwait(false);
+        if (reference == null)
         {
             return (false, null, null, "工作流引用的 NeuCharPivot Function 不存在或已失效。");
         }
@@ -498,28 +563,29 @@ public sealed class NeuCharWorkflowEngine
         {
             try
             {
-                parameterNode = JsonNode.Parse(function.DefaultParametersJson ?? "{}");
+                parameterNode = JsonNode.Parse(reference.DefaultParametersJson ?? "{}");
             }
             catch (JsonException)
             {
                 parameterNode = new JsonObject();
             }
         }
-        var parameterJson = ReplaceInputPlaceholders(parameterNode, input)?.ToJsonString() ?? "{}";
-        parameterJson = _parameterProtector.Unprotect(parameterJson);
+        parameterNode = JsonNode.Parse(_parameterProtector.Unprotect(parameterNode.ToJsonString())) ?? new JsonObject();
+        var parameterJson = ResolveRuntimeValue(parameterNode, input, outputs)?.ToJsonString() ?? "{}";
         var result = await _functionService.ExecuteAsync(
-            function.ModuleUid,
-            function.FunctionKey,
+            reference.Descriptor.ModuleUid,
+            reference.Descriptor.FunctionKey,
             parameterJson,
             cancellationToken).ConfigureAwait(false);
         return result.Success
-            ? (true, result.Data?.ToString() ?? string.Empty, null, null)
+            ? (true, ToJsonNode(result.Data), null, null)
             : (false, null, null, result.ErrorMessage);
     }
 
-    private async Task<(bool success, string output, bool? condition, string error)> ExecuteWorkflowObjectNodeAsync(
+    private async Task<(bool success, JsonNode output, bool? condition, string error)> ExecuteWorkflowObjectNodeAsync(
         NeuCharWorkflowNode node,
-        string input,
+        JsonNode input,
+        IReadOnlyDictionary<string, JsonNode> outputs,
         string correlationId,
         CancellationToken cancellationToken)
     {
@@ -538,7 +604,11 @@ public sealed class NeuCharWorkflowEngine
             return (false, null, null, "Agent 或组不存在、未启用，或所属模块已关闭。");
         }
 
-        var prompt = ReplaceInputPlaceholder(GetString(node.Config, "prompt") ?? "{{input}}", input);
+        var promptValue = ResolveRuntimeValue(
+            node.Config?["prompt"]?.DeepClone() ?? JsonValue.Create("{{input}}"),
+            input,
+            outputs);
+        var prompt = NodeToText(promptValue);
         var result = await provider.ExecuteAsync(
             new WorkflowObjectExecutionRequest(
                 objectId,
@@ -547,14 +617,23 @@ public sealed class NeuCharWorkflowEngine
                 correlationId),
             cancellationToken).ConfigureAwait(false);
         return result.Success
-            ? (true, result.Output ?? input, null, null)
+            ? (true, JsonValue.Create(result.Output ?? NodeToText(input)), null, null)
             : (false, null, null, result.ErrorMessage);
     }
 
-    private static bool EvaluateCondition(JsonObject config, string input)
+    private static bool EvaluateCondition(
+        JsonObject config,
+        JsonNode input,
+        IReadOnlyDictionary<string, JsonNode> outputs)
     {
-        var left = ReplaceInputPlaceholder(GetString(config, "left") ?? "{{input}}", input);
-        var right = ReplaceInputPlaceholder(GetString(config, "right") ?? string.Empty, input);
+        var left = NodeToText(ResolveRuntimeValue(
+            config?["left"]?.DeepClone() ?? JsonValue.Create("{{input}}"),
+            input,
+            outputs));
+        var right = NodeToText(ResolveRuntimeValue(
+            config?["right"]?.DeepClone() ?? JsonValue.Create(string.Empty),
+            input,
+            outputs));
         return (GetString(config, "operator") ?? "equals").ToLowerInvariant() switch
         {
             "contains" => left.Contains(right, StringComparison.OrdinalIgnoreCase),
@@ -565,17 +644,21 @@ public sealed class NeuCharWorkflowEngine
         };
     }
 
-    private static string ReplaceInputPlaceholder(string value, string input) =>
-        (value ?? string.Empty).Replace("{{input}}", input ?? string.Empty, StringComparison.Ordinal);
-
-    private static JsonNode ReplaceInputPlaceholders(JsonNode node, string input)
+    private static JsonNode ResolveRuntimeValue(
+        JsonNode node,
+        JsonNode input,
+        IReadOnlyDictionary<string, JsonNode> outputs)
     {
         if (node is JsonObject jsonObject)
         {
+            if (jsonObject["$source"] is JsonObject binding)
+            {
+                return ResolveBinding(binding, outputs)?.DeepClone();
+            }
             var result = new JsonObject();
             foreach (var property in jsonObject)
             {
-                result[property.Key] = ReplaceInputPlaceholders(property.Value, input);
+                result[property.Key] = ResolveRuntimeValue(property.Value, input, outputs);
             }
             return result;
         }
@@ -584,15 +667,121 @@ public sealed class NeuCharWorkflowEngine
             var result = new JsonArray();
             foreach (var item in jsonArray)
             {
-                result.Add(ReplaceInputPlaceholders(item, input));
+                result.Add(ResolveRuntimeValue(item, input, outputs));
             }
             return result;
         }
         if (node is JsonValue jsonValue && jsonValue.TryGetValue<string>(out var text))
         {
-            return JsonValue.Create(ReplaceInputPlaceholder(text, input));
+            return JsonValue.Create((text ?? string.Empty).Replace(
+                "{{input}}",
+                NodeToText(input),
+                StringComparison.Ordinal));
         }
         return node?.DeepClone();
+    }
+
+    private static JsonNode ResolveBinding(
+        JsonObject binding,
+        IReadOnlyDictionary<string, JsonNode> outputs)
+    {
+        var nodeId = GetString(binding, "nodeId");
+        var path = GetString(binding, "path") ?? "$";
+        if (string.IsNullOrWhiteSpace(nodeId) || !outputs.TryGetValue(nodeId, out var value))
+        {
+            throw new InvalidOperationException($"上游节点“{nodeId}”尚未产生输出。");
+        }
+
+        value = value?.DeepClone();
+        var collectionIndex = GetNullableInt(binding, "collectionIndex");
+        var collectionIndexApplied = false;
+        if (!string.Equals(path, "$", StringComparison.Ordinal))
+        {
+            foreach (var segment in path.TrimStart('$', '.').Split('.', StringSplitOptions.RemoveEmptyEntries))
+            {
+                if (collectionIndex.HasValue && !collectionIndexApplied && value is JsonArray)
+                {
+                    value = SelectArrayIndex(value, collectionIndex.Value, "上游列表");
+                    collectionIndexApplied = true;
+                }
+                if (value is not JsonObject obj)
+                {
+                    throw new InvalidOperationException($"输出路径“{path}”无法从当前值读取。");
+                }
+                var key = obj.Select(z => z.Key).FirstOrDefault(z =>
+                    string.Equals(z, segment, StringComparison.OrdinalIgnoreCase));
+                if (key == null)
+                {
+                    throw new InvalidOperationException($"输出路径“{path}”不存在。");
+                }
+                value = obj[key]?.DeepClone();
+            }
+        }
+        if (collectionIndex.HasValue && !collectionIndexApplied && value is JsonArray)
+        {
+            value = SelectArrayIndex(value, collectionIndex.Value, "上游列表");
+        }
+        var itemIndex = GetNullableInt(binding, "itemIndex");
+        if (itemIndex.HasValue)
+        {
+            value = SelectArrayIndex(value, itemIndex.Value, "输出数组");
+        }
+        return value;
+    }
+
+    private static JsonNode SelectArrayIndex(JsonNode value, int index, string label)
+    {
+        if (value is not JsonArray array || index < 0 || index >= array.Count)
+        {
+            throw new InvalidOperationException($"{label}索引 {index} 超出范围。");
+        }
+        return array[index]?.DeepClone();
+    }
+
+    private static JsonNode ToJsonNode(object value)
+    {
+        if (value == null)
+        {
+            return JsonNode.Parse("null");
+        }
+        try
+        {
+            return JsonSerializer.SerializeToNode(value, value.GetType(), JsonOptions)
+                   ?? JsonNode.Parse("null");
+        }
+        catch
+        {
+            return JsonValue.Create(value.ToString());
+        }
+    }
+
+    private static string NodeToText(JsonNode value)
+    {
+        if (value == null)
+        {
+            return string.Empty;
+        }
+        if (value is JsonValue jsonValue && jsonValue.TryGetValue<string>(out var text))
+        {
+            return text ?? string.Empty;
+        }
+        return value.ToJsonString(JsonOptions);
+    }
+
+    private static void Report(
+        Action<NeuCharWorkflowProgress> progress,
+        NeuCharWorkflowNode node,
+        string status,
+        string message,
+        string output)
+    {
+        progress?.Invoke(new NeuCharWorkflowProgress(
+            node.Id,
+            node.Name ?? node.Type,
+            status,
+            message,
+            output?.Length > 8_000 ? output[..8_000] : output,
+            DateTimeOffset.UtcNow));
     }
 
     private static int GetInt(JsonObject config, string name, int fallback)
@@ -607,23 +796,290 @@ public sealed class NeuCharWorkflowEngine
         catch { return null; }
     }
 
-    private static IReadOnlyList<string> GetSecretParameterNames(string uiSchemaJson)
+    private static int? GetNullableInt(JsonObject config, string name)
     {
-        try
+        try { return config?[name]?.GetValue<int>(); }
+        catch { return null; }
+    }
+
+    private async Task<ResolvedFunctionReference> ResolveFunctionReferenceAsync(
+        NeuCharWorkflowNode node,
+        CancellationToken cancellationToken)
+    {
+        NeuCharPivotFunction entity = null;
+        var functionId = GetInt(node.Config, "functionId", 0);
+        if (functionId > 0)
         {
-            return (JsonSerializer.Deserialize<List<NeuCharPivotParameterSchema>>(
-                        uiSchemaJson ?? "[]",
-                        JsonOptions)
-                    ?? new List<NeuCharPivotParameterSchema>())
-                .Where(z => z.ParameterType == (int)Senparc.Ncf.XncfBase.ParameterType.Password)
-                .Select(z => z.Name)
-                .Where(z => !string.IsNullOrWhiteSpace(z))
-                .ToArray();
+            entity = await _functionEntityService.GetObjectAsync(z => z.Id == functionId)
+                .ConfigureAwait(false);
+            if (entity is { Visible: false })
+            {
+                entity = null;
+            }
         }
-        catch (JsonException)
+
+        var moduleUid = entity?.ModuleUid ?? GetString(node.Config, "moduleUid");
+        var functionKey = entity?.FunctionKey ?? GetString(node.Config, "functionKey");
+        if (string.IsNullOrWhiteSpace(moduleUid) || string.IsNullOrWhiteSpace(functionKey))
         {
-            return Array.Empty<string>();
+            return null;
         }
+        var catalog = await _functionService.GetCatalogAsync(moduleUid, true, cancellationToken)
+            .ConfigureAwait(false);
+        var descriptor = catalog.FirstOrDefault(z =>
+            string.Equals(z.FunctionKey, functionKey, StringComparison.OrdinalIgnoreCase));
+        return descriptor == null
+            ? null
+            : new ResolvedFunctionReference(entity, descriptor, entity?.DefaultParametersJson ?? "{}");
+    }
+
+    private static bool IsSameFunctionReference(NeuCharWorkflowNode left, NeuCharWorkflowNode right)
+    {
+        var leftId = GetInt(left.Config, "functionId", 0);
+        var rightId = GetInt(right.Config, "functionId", 0);
+        if (leftId > 0 && rightId > 0)
+        {
+            return leftId == rightId;
+        }
+        return string.Equals(GetString(left.Config, "moduleUid"), GetString(right.Config, "moduleUid"), StringComparison.OrdinalIgnoreCase) &&
+               string.Equals(GetString(left.Config, "functionKey"), GetString(right.Config, "functionKey"), StringComparison.OrdinalIgnoreCase);
+    }
+
+    private async Task<string> ValidateFunctionBindingsAsync(
+        NeuCharWorkflowGraph graph,
+        NeuCharWorkflowNode targetNode,
+        NeuCharFunctionDescriptor targetFunction,
+        CancellationToken cancellationToken)
+    {
+        var parameters = targetNode.Config?["parameters"] as JsonObject;
+        if (parameters == null)
+        {
+            return null;
+        }
+        foreach (var parameter in targetFunction.Parameters)
+        {
+            var parameterKey = parameters.Select(z => z.Key).FirstOrDefault(z =>
+                string.Equals(z, parameter.Name, StringComparison.OrdinalIgnoreCase));
+            if (parameterKey == null || parameters[parameterKey] is not JsonObject value ||
+                value["$source"] is not JsonObject binding)
+            {
+                continue;
+            }
+
+            var sourceNodeId = GetString(binding, "nodeId");
+            var sourceNode = graph.Nodes.FirstOrDefault(z => string.Equals(z.Id, sourceNodeId, StringComparison.Ordinal));
+            if (sourceNode == null || !IsUpstream(graph, sourceNode.Id, targetNode.Id))
+            {
+                return $"节点“{targetNode.Name}”参数“{parameter.Title ?? parameter.Name}”引用的节点不是有效上游节点。";
+            }
+
+            var output = await GetNodeOutputDescriptorAsync(graph, sourceNode, cancellationToken).ConfigureAwait(false);
+            var path = GetString(binding, "path") ?? "$";
+            var field = output?.Fields?.FirstOrDefault(z => string.Equals(z.Path, path, StringComparison.Ordinal));
+            if (field == null)
+            {
+                return $"节点“{targetNode.Name}”参数“{parameter.Title ?? parameter.Name}”引用的输出字段“{path}”已不存在。";
+            }
+
+            var collectionIndex = GetNullableInt(binding, "collectionIndex");
+            var itemIndex = GetNullableInt(binding, "itemIndex");
+            if (collectionIndex < 0 || itemIndex < 0)
+            {
+                return $"节点“{targetNode.Name}”参数“{parameter.Title ?? parameter.Name}”的数组索引不能小于 0。";
+            }
+            if (field.RequiresIndex && !collectionIndex.HasValue)
+            {
+                return $"节点“{targetNode.Name}”参数“{parameter.Title ?? parameter.Name}”需要先选择上游列表索引。";
+            }
+            if (itemIndex.HasValue && !field.IsArray)
+            {
+                return $"节点“{targetNode.Name}”参数“{parameter.Title ?? parameter.Name}”引用的输出不是数组，不能设置数组索引。";
+            }
+
+            var expected = GetParameterValueShape(parameter);
+            var actualIsArray = field.IsArray && !itemIndex.HasValue;
+            if (expected.isArray != actualIsArray)
+            {
+                return actualIsArray
+                    ? $"节点“{targetNode.Name}”参数“{parameter.Title ?? parameter.Name}”需要单值，但上游输出是数组；请选择数组索引。"
+                    : $"节点“{targetNode.Name}”参数“{parameter.Title ?? parameter.Name}”需要数组，但上游输出是单值。";
+            }
+            if (expected.typeName is not ("any" or "object") &&
+                field.TypeName is not ("any" or "object") &&
+                !string.Equals(expected.typeName, field.TypeName, StringComparison.OrdinalIgnoreCase))
+            {
+                return $"节点“{targetNode.Name}”参数“{parameter.Title ?? parameter.Name}”需要 {expected.typeName}，但上游输出为 {field.TypeName}。";
+            }
+        }
+        return null;
+    }
+
+    private async Task<string> ValidateNodeBindingsAsync(
+        NeuCharWorkflowGraph graph,
+        NeuCharWorkflowNode targetNode,
+        CancellationToken cancellationToken)
+    {
+        foreach (var (configPath, binding) in EnumerateBindings(targetNode.Config, "config"))
+        {
+            var sourceNodeId = GetString(binding, "nodeId");
+            var sourceNode = graph.Nodes.FirstOrDefault(z =>
+                string.Equals(z.Id, sourceNodeId, StringComparison.Ordinal));
+            if (sourceNode == null || !IsUpstream(graph, sourceNode.Id, targetNode.Id))
+            {
+                return $"节点“{targetNode.Name ?? targetNode.Id}”的 {configPath} 引用了无效或非上游节点。";
+            }
+
+            var output = await GetNodeOutputDescriptorAsync(graph, sourceNode, cancellationToken)
+                .ConfigureAwait(false);
+            var path = GetString(binding, "path") ?? "$";
+            var field = output?.Fields?.FirstOrDefault(z =>
+                string.Equals(z.Path, path, StringComparison.Ordinal));
+            if (field == null)
+            {
+                return $"节点“{targetNode.Name ?? targetNode.Id}”的 {configPath} 引用的输出字段“{path}”已不存在。";
+            }
+
+            var collectionIndex = GetNullableInt(binding, "collectionIndex");
+            var itemIndex = GetNullableInt(binding, "itemIndex");
+            if (collectionIndex < 0 || itemIndex < 0)
+            {
+                return $"节点“{targetNode.Name ?? targetNode.Id}”的 {configPath} 数组索引不能小于 0。";
+            }
+            if (field.RequiresIndex && !collectionIndex.HasValue)
+            {
+                return $"节点“{targetNode.Name ?? targetNode.Id}”的 {configPath} 需要先选择上游列表索引。";
+            }
+            if (itemIndex.HasValue && !field.IsArray)
+            {
+                return $"节点“{targetNode.Name ?? targetNode.Id}”的 {configPath} 引用的输出不是数组，不能设置数组索引。";
+            }
+        }
+        return null;
+    }
+
+    private static IEnumerable<(string Path, JsonObject Binding)> EnumerateBindings(
+        JsonNode value,
+        string path)
+    {
+        if (value is JsonObject obj)
+        {
+            if (obj["$source"] is JsonObject binding)
+            {
+                yield return (path, binding);
+                yield break;
+            }
+            foreach (var property in obj)
+            {
+                foreach (var item in EnumerateBindings(property.Value, $"{path}.{property.Key}"))
+                {
+                    yield return item;
+                }
+            }
+        }
+        else if (value is JsonArray array)
+        {
+            for (var index = 0; index < array.Count; index++)
+            {
+                foreach (var item in EnumerateBindings(array[index], $"{path}[{index}]"))
+                {
+                    yield return item;
+                }
+            }
+        }
+    }
+
+    private async Task<NeuCharFunctionOutputDescriptor> GetNodeOutputDescriptorAsync(
+        NeuCharWorkflowGraph graph,
+        NeuCharWorkflowNode node,
+        CancellationToken cancellationToken,
+        ISet<string> visited = null)
+    {
+        visited ??= new HashSet<string>(StringComparer.Ordinal);
+        if (!visited.Add(node.Id))
+        {
+            return null;
+        }
+        if (node.Type.Equals("function", StringComparison.OrdinalIgnoreCase))
+        {
+            return (await ResolveFunctionReferenceAsync(node, cancellationToken).ConfigureAwait(false))?.Descriptor.Output;
+        }
+        if (node.Type.Equals("aggregate", StringComparison.OrdinalIgnoreCase))
+        {
+            return new NeuCharFunctionOutputDescriptor(
+                "any",
+                "Object[]",
+                true,
+                "any",
+                new[] { new NeuCharFunctionOutputFieldDescriptor("$", "聚合结果", "any", true, false) });
+        }
+        if (node.Type is "delay" or "condition" or "console" or "end")
+        {
+            var incoming = graph.Edges.FirstOrDefault(z =>
+                string.Equals(z.Target, node.Id, StringComparison.Ordinal));
+            var source = incoming == null
+                ? null
+                : graph.Nodes.FirstOrDefault(z =>
+                    string.Equals(z.Id, incoming.Source, StringComparison.Ordinal));
+            if (source != null)
+            {
+                return await GetNodeOutputDescriptorAsync(
+                    graph,
+                    source,
+                    cancellationToken,
+                    visited).ConfigureAwait(false);
+            }
+        }
+        var typeName = node.Type is "manual-trigger" or "interval-trigger" or "agent" or "agent-group"
+            ? "string"
+            : "any";
+        return new NeuCharFunctionOutputDescriptor(
+            typeName,
+            typeName,
+            false,
+            null,
+            new[] { new NeuCharFunctionOutputFieldDescriptor("$", "节点输出", typeName, false, false) });
+    }
+
+    private static (string typeName, bool isArray) GetParameterValueShape(
+        Senparc.Ncf.XncfBase.FunctionParameterInfo parameter)
+    {
+        var systemType = parameter.SystemType ?? string.Empty;
+        var isArray = parameter.ParameterType == Senparc.Ncf.XncfBase.ParameterType.CheckBoxList ||
+                      systemType.Contains("[]", StringComparison.Ordinal) ||
+                      systemType.Contains("List", StringComparison.OrdinalIgnoreCase) ||
+                      systemType.Contains("Collection", StringComparison.OrdinalIgnoreCase);
+        var normalized = systemType.ToLowerInvariant();
+        var typeName = normalized.Contains("bool") ? "boolean"
+            : normalized.Contains("date") || normalized.Contains("time") ? "datetime"
+            : normalized.Contains("int") || normalized.Contains("decimal") || normalized.Contains("double") ||
+              normalized.Contains("single") || normalized.Contains("float") || normalized.Contains("number") ? "number"
+            : normalized.Contains("string") || normalized.Contains("char") || normalized.Contains("guid") ? "string"
+            : "any";
+        return (typeName, isArray);
+    }
+
+    private static bool IsUpstream(NeuCharWorkflowGraph graph, string sourceId, string targetId)
+    {
+        var queue = new Queue<string>();
+        var visited = new HashSet<string>(StringComparer.Ordinal);
+        queue.Enqueue(sourceId);
+        while (queue.Count > 0)
+        {
+            var current = queue.Dequeue();
+            if (!visited.Add(current))
+            {
+                continue;
+            }
+            foreach (var next in graph.Edges.Where(z => z.Source == current).Select(z => z.Target))
+            {
+                if (string.Equals(next, targetId, StringComparison.Ordinal))
+                {
+                    return true;
+                }
+                queue.Enqueue(next);
+            }
+        }
+        return false;
     }
 
     private static void EnsureAcyclic(NeuCharWorkflowGraph graph)

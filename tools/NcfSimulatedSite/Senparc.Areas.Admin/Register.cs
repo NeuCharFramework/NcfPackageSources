@@ -224,11 +224,13 @@ namespace Senparc.Areas.Admin
             services.AddScoped<INeuCharPivotFunctionRepository, NeuCharPivotFunctionRepository>();
             services.AddScoped<INeuCharPivotLoopTaskRepository, NeuCharPivotLoopTaskRepository>();
             services.AddScoped<INeuCharWorkflowRepository, NeuCharWorkflowRepository>();
+            services.AddScoped<INeuCharWorkflowVersionRepository, NeuCharWorkflowVersionRepository>();
             services.AddScoped<INeuCharExecutionLogRepository, NeuCharExecutionLogRepository>();
             services.AddScoped<NeuCharPivotConfigurationService>();
             services.AddScoped<NeuCharPivotFunctionService>();
             services.AddScoped<NeuCharPivotLoopTaskService>();
             services.AddScoped<NeuCharWorkflowService>();
+            services.AddScoped<NeuCharWorkflowVersionService>();
             services.AddScoped<NeuCharExecutionLogService>();
             services.AddScoped<NeuCharFunctionService>();
             services.AddScoped<NeuCharPivotService>();
@@ -236,6 +238,7 @@ namespace Senparc.Areas.Admin
             services.AddScoped<NeuCharParameterProtector>();
             services.AddScoped<ChatAgentNeuCharPivotComposer>();
             services.AddScoped<NeuCharWorkflowEngine>();
+            services.AddSingleton<NeuCharWorkflowRunCoordinator>();
             services.AddHostedService<NeuCharPivotLoopTaskHostedService>();
             services.AddHostedService<NeuCharWorkflowHostedService>();
 

@@ -62,12 +62,14 @@
     <div v-else-if="!loading" class="neuchar-empty"><i class="fa fa-th-large fa-3x"></i><h3>还没有 NeuCharPivot</h3><p>请先进入任意模块的“设置/执行 → NeuCharPivot”生成操作面板。</p></div>
 
     <el-dialog :title="result.title" :visible.sync="result.visible" width="50%" :close-on-click-modal="false">
-        <pre class="aggregate-result">{{result.content}}</pre>
+        <div v-if="result.htmlMode" class="aggregate-result aggregate-result-html" v-html="result.html"></div>
+        <pre v-else class="aggregate-result aggregate-result-text">{{result.content}}</pre>
         <span slot="footer"><el-button type="primary" @@click="result.visible=false">关闭</el-button></span>
     </el-dialog>
 </div>
 
 @section scripts {
+    <script src="~/js/Admin/dompurify.min.js"></script>
     <script src="~/js/Admin/Pages/NeuCharPivot/common.js"></script>
     <script src="~/js/Admin/Pages/NeuCharPivot/Aggregate.js"></script>
 }

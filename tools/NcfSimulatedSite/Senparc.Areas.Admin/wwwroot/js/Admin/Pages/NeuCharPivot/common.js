@@ -52,10 +52,31 @@
         });
     }
 
+    function sanitizeHtml(value) {
+        if (!global.DOMPurify || typeof global.DOMPurify.sanitize !== 'function') {
+            return '';
+        }
+
+        return global.DOMPurify.sanitize(String(value == null ? '' : value), {
+            ALLOWED_TAGS: [
+                'a', 'b', 'blockquote', 'br', 'code', 'div', 'em',
+                'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i',
+                'li', 'mark', 'ol', 'p', 'pre', 'small', 'span',
+                'strong', 'sub', 'sup', 'table', 'tbody', 'td',
+                'th', 'thead', 'tr', 'u', 'ul'
+            ],
+            ALLOWED_ATTR: ['href', 'title'],
+            ALLOW_ARIA_ATTR: false,
+            ALLOW_DATA_ATTR: false,
+            ALLOWED_URI_REGEXP: /^https?:\/\/[^\s<>"']+$/i
+        });
+    }
+
     global.NeuCharPivotUi = Object.freeze({
         parseJson,
         unwrap,
         createParameterValues,
-        firstMissingRequired
+        firstMissingRequired,
+        sanitizeHtml
     });
 })(window);

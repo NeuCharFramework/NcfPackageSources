@@ -83,6 +83,11 @@ namespace Senparc.Areas.Admin.Domain.Models
         public DbSet<NeuCharWorkflow> NeuCharWorkflows { get; set; }
 
         /// <summary>
+        /// NeuChar 工作流最近版本
+        /// </summary>
+        public DbSet<NeuCharWorkflowVersion> NeuCharWorkflowVersions { get; set; }
+
+        /// <summary>
         /// Pivot、Loop Task 与 Workflow 的统一执行记录
         /// </summary>
         public DbSet<NeuCharExecutionLog> NeuCharExecutionLogs { get; set; }
@@ -110,6 +115,12 @@ namespace Senparc.Areas.Admin.Domain.Models
                 .HasIndex(z => new { z.Enabled, z.NextRunAt });
             modelBuilder.Entity<NeuCharWorkflow>()
                 .HasIndex(z => new { z.Enabled, z.NextRunAt });
+            modelBuilder.Entity<NeuCharWorkflow>()
+                .Property(z => z.AutoSaveMinutes)
+                .HasDefaultValue(3);
+            modelBuilder.Entity<NeuCharWorkflowVersion>()
+                .HasIndex(z => new { z.WorkflowId, z.Revision })
+                .IsUnique();
             modelBuilder.Entity<NeuCharExecutionLog>()
                 .HasIndex(z => z.CorrelationId);
             modelBuilder.Entity<NeuCharExecutionLog>()
@@ -142,6 +153,10 @@ namespace Senparc.Areas.Admin.Domain.Models
                 nameof(NeuCharWorkflow.GraphJson),
                 nameof(NeuCharWorkflow.TriggerConfigJson),
                 nameof(NeuCharWorkflow.LastError));
+            SetLargeText<NeuCharWorkflowVersion>(modelBuilder, largeTextType,
+                nameof(NeuCharWorkflowVersion.Description),
+                nameof(NeuCharWorkflowVersion.GraphJson),
+                nameof(NeuCharWorkflowVersion.TriggerConfigJson));
             SetLargeText<NeuCharExecutionLog>(modelBuilder, largeTextType,
                 nameof(NeuCharExecutionLog.ResultSummary),
                 nameof(NeuCharExecutionLog.Error));

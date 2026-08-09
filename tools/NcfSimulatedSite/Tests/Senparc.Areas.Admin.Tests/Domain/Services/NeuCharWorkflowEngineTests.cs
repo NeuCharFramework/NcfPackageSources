@@ -6,6 +6,8 @@
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.Domain.Services;
+using Senparc.Ncf.Core.AppServices;
+using System.Reflection;
 
 namespace Senparc.Areas.Admin.Tests.Domain.Services;
 
@@ -165,6 +167,112 @@ public class NeuCharWorkflowEngineTests
             () => engine.ParseAndValidateGraph(graphJson));
 
         StringAssert.Contains(exception.Message, "只能连接一个后续节点");
+    }
+
+    [TestMethod]
+    public void ParseAndValidateGraph_OrdinaryNodeWithTwoInputs_ShouldBeRejected()
+    {
+        var engine = CreateEngine();
+        const string graphJson =
+            """
+            {
+              "nodes": [
+                { "id": "trigger", "type": "manual-trigger" },
+                { "id": "condition", "type": "condition" },
+                { "id": "delay", "type": "delay", "name": "普通节点" }
+              ],
+              "edges": [
+                { "id": "edge-1", "source": "trigger", "target": "condition" },
+                { "id": "edge-2", "source": "condition", "target": "delay", "sourceHandle": "true" },
+                { "id": "edge-3", "source": "condition", "target": "delay", "sourceHandle": "false" }
+              ]
+            }
+            """;
+
+        var exception = Assert.ThrowsException<InvalidOperationException>(
+            () => engine.ParseAndValidateGraph(graphJson));
+
+        StringAssert.Contains(exception.Message, "只允许一个上游连接");
+    }
+
+    [TestMethod]
+    public void ParseAndValidateGraph_AggregateWithTwoInputs_ShouldBeAllowed()
+    {
+        var engine = CreateEngine();
+        const string graphJson =
+            """
+            {
+              "nodes": [
+                { "id": "trigger", "type": "manual-trigger" },
+                { "id": "condition", "type": "condition" },
+                { "id": "aggregate", "type": "aggregate", "name": "聚合" },
+                { "id": "console", "type": "console", "name": "Console 打印" }
+              ],
+              "edges": [
+                { "id": "edge-1", "source": "trigger", "target": "condition" },
+                { "id": "edge-2", "source": "condition", "target": "aggregate", "sourceHandle": "true" },
+                { "id": "edge-3", "source": "condition", "target": "aggregate", "sourceHandle": "false" },
+                { "id": "edge-4", "source": "aggregate", "target": "console" }
+              ]
+            }
+            """;
+
+        var graph = engine.ParseAndValidateGraph(graphJson);
+
+        Assert.AreEqual(2, graph.Edges.Count(z => z.Target == "aggregate"));
+        Assert.IsTrue(graph.Nodes.Any(z => z.Type == "console"));
+    }
+
+    [TestMethod]
+    public void ParseAndValidateGraph_FunctionWithTwoInputs_ShouldBeAllowed()
+    {
+        var engine = CreateEngine();
+        const string graphJson =
+            """
+            {
+              "nodes": [
+                { "id": "trigger", "type": "manual-trigger" },
+                { "id": "condition", "type": "condition" },
+                { "id": "function", "type": "function", "name": "共享 Function" }
+              ],
+              "edges": [
+                { "id": "edge-1", "source": "trigger", "target": "condition" },
+                { "id": "edge-2", "source": "condition", "target": "function", "sourceHandle": "true" },
+                { "id": "edge-3", "source": "condition", "target": "function", "sourceHandle": "false" }
+              ]
+            }
+            """;
+
+        var graph = engine.ParseAndValidateGraph(graphJson);
+
+        Assert.AreEqual(2, graph.Edges.Count(z => z.Target == "function"));
+    }
+
+    [TestMethod]
+    public void BuildOutputDescriptor_AppResponseList_ShouldExposeElementFieldsAndArrayShape()
+    {
+        var method = typeof(NeuCharWorkflowEngineTests).GetMethod(
+            nameof(ListOutputFunction),
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+
+        var output = NeuCharFunctionService.BuildOutputDescriptor(method);
+
+        Assert.IsTrue(output.IsArray);
+        Assert.AreEqual("object", output.TypeName);
+        var name = output.Fields.Single(z => z.Path == "$.Name");
+        Assert.AreEqual("string", name.TypeName);
+        Assert.IsTrue(name.RequiresIndex);
+        var tags = output.Fields.Single(z => z.Path == "$.Tags");
+        Assert.IsTrue(tags.IsArray);
+        Assert.IsTrue(tags.RequiresIndex);
+    }
+
+    private static Task<AppResponseBase<List<SampleOutput>>> ListOutputFunction() => null!;
+
+    private sealed class SampleOutput
+    {
+        public string Name { get; set; } = string.Empty;
+        public List<string> Tags { get; set; } = new();
     }
 
     private static NeuCharWorkflowEngine CreateEngine() =>

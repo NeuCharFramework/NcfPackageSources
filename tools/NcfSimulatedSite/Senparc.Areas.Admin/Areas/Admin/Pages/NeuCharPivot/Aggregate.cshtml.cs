@@ -3,6 +3,7 @@ using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Areas.Admin.Domain.Services;
 using Senparc.Ncf.AreaBase.Admin.Filters;
 using Senparc.Ncf.Core.WorkContext.Provider;
+using Senparc.Ncf.Shared.Abstractions.NeuBell;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,9 +18,19 @@ public class AggregateModel(
     NeuCharPivotFunctionService functionEntityService,
     NeuCharFunctionService functionService,
     NeuCharExecutionLogService logService,
+    NeuCharPivotNeuBellProvider neuBellProvider,
+    INeuBellPublisher neuBellPublisher,
     IAdminWorkContextProvider adminWorkContextProvider) : BaseAdminPageModel(serviceProvider)
 {
-    public Task OnGetAsync() => Task.CompletedTask;
+    public async Task OnGetAsync()
+    {
+        if (neuBellProvider.ConsumeAll() > 0)
+        {
+            await neuBellPublisher.NotifyChangedAsync(
+                NeuCharPivotNeuBellProvider.ProviderName,
+                HttpContext.RequestAborted).ConfigureAwait(false);
+        }
+    }
 
     public async Task<IActionResult> OnGetListAsync()
     {

@@ -7,7 +7,7 @@ new Vue({
             inputs: {},
             keyword: '',
             openedModules: [],
-            result: { visible: false, title: '', content: '' }
+            result: { visible: false, title: '', content: '', html: '', htmlMode: false }
         };
     },
     computed: {
@@ -59,9 +59,15 @@ new Vue({
                 }, { customAlert: true });
                 const data = NeuCharPivotUi.unwrap(response) || {};
                 this.result.title = `${fn.functionName} · ${data.success ? '执行成功' : '执行失败'}`;
-                this.result.content = data.success
-                    ? (typeof data.data === 'string' ? data.data : JSON.stringify(data.data, null, 2))
-                    : (data.errorMessage || '执行失败');
+                this.result.htmlMode = data.success === true && typeof data.data === 'string';
+                this.result.html = this.result.htmlMode
+                    ? NeuCharPivotUi.sanitizeHtml(data.data)
+                    : '';
+                this.result.content = this.result.htmlMode
+                    ? ''
+                    : (data.success
+                        ? JSON.stringify(data.data, null, 2)
+                        : (data.errorMessage || '执行失败'));
                 this.result.visible = true;
             } catch (error) {
                 this.$notify({ title: '执行失败', message: '请求失败或模块已不可用。', type: 'error' });

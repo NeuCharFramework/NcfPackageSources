@@ -256,6 +256,11 @@ public class NeuCharWorkflow : EntityBase<int>
 
     public int Revision { get; private set; }
 
+    /// <summary>
+    /// 编辑器自动保存间隔（分钟），0 表示关闭。
+    /// </summary>
+    public int AutoSaveMinutes { get; private set; }
+
     private NeuCharWorkflow() { }
 
     public NeuCharWorkflow(string name, int adminUserId)
@@ -265,6 +270,7 @@ public class NeuCharWorkflow : EntityBase<int>
         GraphJson = "{\"nodes\":[],\"edges\":[]}";
         TriggerType = "manual";
         TriggerConfigJson = "{}";
+        AutoSaveMinutes = 3;
     }
 
     public void Update(
@@ -274,7 +280,8 @@ public class NeuCharWorkflow : EntityBase<int>
         bool enabled,
         string triggerType,
         string triggerConfigJson,
-        DateTime? nextRunAt)
+        DateTime? nextRunAt,
+        int autoSaveMinutes)
     {
         Name = name.Trim();
         Description = description?.Trim();
@@ -283,6 +290,7 @@ public class NeuCharWorkflow : EntityBase<int>
         TriggerType = string.IsNullOrWhiteSpace(triggerType) ? "manual" : triggerType;
         TriggerConfigJson = triggerConfigJson ?? "{}";
         NextRunAt = enabled ? nextRunAt : null;
+        AutoSaveMinutes = autoSaveMinutes <= 0 ? 0 : Math.Clamp(autoSaveMinutes, 1, 1440);
         Revision++;
         SetUpdateTime();
     }
@@ -303,6 +311,65 @@ public class NeuCharWorkflow : EntityBase<int>
 
     private static string Truncate(string value, int length) =>
         string.IsNullOrEmpty(value) || value.Length <= length ? value : value[..length];
+}
+
+[Table(Register.DATABASE_PREFIX + nameof(NeuCharWorkflowVersion))]
+[Serializable]
+public class NeuCharWorkflowVersion : EntityBase<int>
+{
+    public int WorkflowId { get; private set; }
+
+    public int Revision { get; private set; }
+
+    [Required, MaxLength(200)]
+    public string Name { get; private set; }
+
+    public string Description { get; private set; }
+
+    public string GraphJson { get; private set; }
+
+    public bool Enabled { get; private set; }
+
+    [MaxLength(40)]
+    public string TriggerType { get; private set; }
+
+    public string TriggerConfigJson { get; private set; }
+
+    public int AutoSaveMinutes { get; private set; }
+
+    public int AdminUserId { get; private set; }
+
+    [Required, MaxLength(20)]
+    public string SaveSource { get; private set; }
+
+    private NeuCharWorkflowVersion() { }
+
+    public NeuCharWorkflowVersion(
+        NeuCharWorkflow workflow,
+        int adminUserId,
+        string saveSource)
+    {
+        ArgumentNullException.ThrowIfNull(workflow);
+        WorkflowId = workflow.Id;
+        Revision = workflow.Revision;
+        Name = workflow.Name;
+        Description = workflow.Description;
+        GraphJson = workflow.GraphJson;
+        Enabled = workflow.Enabled;
+        TriggerType = workflow.TriggerType;
+        TriggerConfigJson = workflow.TriggerConfigJson;
+        AutoSaveMinutes = workflow.AutoSaveMinutes;
+        AdminUserId = adminUserId;
+        SaveSource = NormalizeSaveSource(saveSource);
+    }
+
+    private static string NormalizeSaveSource(string value) =>
+        value?.Trim().ToLowerInvariant() switch
+        {
+            "auto" => "auto",
+            "shortcut" => "shortcut",
+            _ => "manual"
+        };
 }
 
 [Table(Register.DATABASE_PREFIX + nameof(NeuCharExecutionLog))]

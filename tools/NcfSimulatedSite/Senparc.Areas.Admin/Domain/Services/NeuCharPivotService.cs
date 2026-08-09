@@ -43,6 +43,12 @@ public sealed class NeuCharWorkflowService : BaseClientService<NeuCharWorkflow>
         : base(repository, serviceProvider) { }
 }
 
+public sealed class NeuCharWorkflowVersionService : BaseClientService<NeuCharWorkflowVersion>
+{
+    public NeuCharWorkflowVersionService(INeuCharWorkflowVersionRepository repository, IServiceProvider serviceProvider)
+        : base(repository, serviceProvider) { }
+}
+
 public sealed class NeuCharExecutionLogService : BaseClientService<NeuCharExecutionLog>
 {
     public NeuCharExecutionLogService(INeuCharExecutionLogRepository repository, IServiceProvider serviceProvider)
@@ -399,7 +405,7 @@ public sealed class NeuCharPivotService
         };
     }
 
-    private static List<NeuCharPivotParameterSchema> BuildParameterSchema(
+    public static List<NeuCharPivotParameterSchema> BuildParameterSchema(
         NeuCharFunctionDescriptor descriptor,
         IReadOnlyCollection<string> exposedParameters)
     {
@@ -427,7 +433,7 @@ public sealed class NeuCharPivotService
             }).ToList();
     }
 
-    private static Dictionary<string, object> BuildDefaultParameters(
+    public static Dictionary<string, object> BuildDefaultParameters(
         IEnumerable<NeuCharPivotParameterSchema> parameters)
     {
         var result = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);

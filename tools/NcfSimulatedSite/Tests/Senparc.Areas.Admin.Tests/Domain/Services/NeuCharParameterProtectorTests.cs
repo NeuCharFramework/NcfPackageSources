@@ -53,6 +53,25 @@ public class NeuCharParameterProtectorTests
         Assert.IsFalse(masked.Contains("ncp:v1:", StringComparison.Ordinal));
     }
 
+    [TestMethod]
+    public void MergeAndMask_SecretOutputBinding_ShouldPreserveBindingInsteadOfOldCiphertext()
+    {
+        var protector = CreateProtector();
+        var stored = protector.Protect(
+            "{\"password\":\"top-secret\"}",
+            new[] { "password" });
+        const string binding =
+            "{\"password\":{\"$source\":{\"nodeId\":\"upstream\",\"path\":\"$.Token\"}}}";
+
+        var merged = protector.MergeWithExisting(binding, stored, new[] { "password" });
+        var masked = protector.MaskForClient(merged, new[] { "password" });
+        var value = JsonNode.Parse(masked)!.AsObject()["password"]!.AsObject();
+
+        Assert.AreEqual("upstream", value["$source"]!["nodeId"]!.GetValue<string>());
+        Assert.IsFalse(masked.Contains("top-secret", StringComparison.Ordinal));
+        Assert.IsFalse(masked.Contains("ncp:v1:", StringComparison.Ordinal));
+    }
+
     private static NeuCharParameterProtector CreateProtector() =>
         new(new EphemeralDataProtectionProvider());
 }
