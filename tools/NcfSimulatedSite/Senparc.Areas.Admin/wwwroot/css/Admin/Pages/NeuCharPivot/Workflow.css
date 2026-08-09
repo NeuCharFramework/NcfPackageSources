@@ -1,12 +1,39 @@
+.workflow-page {
+    display: flex;
+    min-height: 0;
+    height: 100%;
+    box-sizing: border-box;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.workflow-page .neuchar-page-header {
+    flex: 0 0 auto;
+}
+
+.workflow-page .workflow-shell {
+    height: auto;
+    min-height: 0;
+    flex: 1 1 auto;
+}
+
+/* Workflow 的列表、画布和设置区各自滚动，页面外层不再因视口高度重复计算而出现滚动条。 */
+.admin-content:has(.workflow-page) {
+    overflow: hidden;
+}
+
+.admin-content:has(.workflow-page) .ifram-wrapper {
+    height: 100%;
+}
+
 .workflow-shell {
     --list-width: 238px;
     --palette-width: 230px;
     --inspector-width: 310px;
     display: grid;
     grid-template-columns: var(--list-width) minmax(0, 1fr);
-    height: calc(100vh - 168px);
-    height: calc(100dvh - 168px);
-    min-height: calc(100vh - 168px);
+    height: auto;
+    min-height: 0;
     overflow: hidden;
     background: #fff;
     border: 1px solid #e8edf3;

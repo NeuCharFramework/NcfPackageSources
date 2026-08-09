@@ -137,5 +137,11 @@ assert.match(styles, /\.workflow-canvas\s*\{[^}]*height:\s*100%;[^}]*overflow:\s
     'The canvas should stay inside its own scroll container.');
 assert.match(styles, /\.workflow-meta\s*\{[^}]*flex:\s*0 0 auto;/s,
     'The save toolbar should remain outside all scrolling panels.');
+assert.match(styles, /\.workflow-page\s*\{[^}]*height:\s*100%;[^}]*overflow:\s*hidden;/s,
+    'The Workflow page should fit the available Admin content area without outer scrolling.');
+assert.match(styles, /\.admin-content:has\(\.workflow-page\)\s*\{[^}]*overflow:\s*hidden;/s,
+    'The Admin content scroller should be disabled for the fixed Workflow editor.');
+assert.match(styles, /\.admin-content:has\(\.workflow-page\) \.ifram-wrapper\s*\{[^}]*height:\s*100%;/s,
+    'The Workflow host should provide a definite height to the fixed editor.');
 
 console.log('NeuChar Workflow designer tests passed.');
