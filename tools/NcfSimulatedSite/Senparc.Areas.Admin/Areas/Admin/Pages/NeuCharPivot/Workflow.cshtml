@@ -105,7 +105,7 @@
                             <el-option label="POST" value="post"></el-option>
                         </el-select>
                         <label>访问密钥</label>
-                        <el-input v-model="form.webhookToken" size="small" readonly>
+                        <el-input v-model="form.webhookToken" size="small" readonly placeholder="保存后自动生成">
                             <el-button slot="append" icon="el-icon-document-copy" title="复制访问密钥" @@click="copyText(form.webhookToken)"></el-button>
                         </el-input>
                         <el-button size="small" icon="el-icon-document-copy" :disabled="!form.id" @@click="copyText(webhookUrl)">复制 URL</el-button>
@@ -189,9 +189,13 @@
                         </div>
                     </aside>
 
-                    <section ref="canvas" class="workflow-canvas" @@mousedown.self="cancelConnection">
+                    <section ref="canvas"
+                             class="workflow-canvas"
+                             :class="{'is-panning':canvasPan.active}"
+                             @@mousedown="startCanvasPan"
+                             @@contextmenu.prevent="closeContextMenu">
                         <div class="canvas-toolbar" @@mousedown.stop>
-                            <span><i class="el-icon-rank"></i> 拖动节点移动；从输出端口按住鼠标拖到目标输入端口即可连线。</span>
+                            <span><i class="el-icon-rank"></i> 拖动节点移动；右键拖动画布平移；节点右键可复制或删除。</span>
                             <span class="canvas-toolbar-actions">
                                 <el-tag v-if="run.running" size="mini" type="warning" effect="dark">运行中 · 编辑锁定</el-tag>
                                 <el-button size="mini" icon="el-icon-magic-stick" :disabled="editingLocked" @@click="autoLayout">自动排版</el-button>
@@ -223,7 +227,8 @@
                                      :key="node.id"
                                      :class="['workflow-node','node-'+node.type,'state-'+nodeState(node),{selected:selectedNodeId===node.id}]"
                                      :style="{left:node.x+'px',top:node.y+'px'}"
-                                     @@mousedown="startDrag($event,node)"
+                                     @@mousedown.stop="startDrag($event,node)"
+                                     @@contextmenu.stop.prevent="openNodeContextMenu($event,node)"
                                      @@click.stop="selectNode(node)">
                                 <button v-if="!node.type.endsWith('trigger')"
                                         type="button"
@@ -256,6 +261,18 @@
                                         @@mousedown.stop="beginConnection($event,node,'default')"></button>
                             </article>
                             <div v-if="connectionDraft.sourceId" class="connection-hint">从“{{connectionSourceName}}”拖到目标节点顶部端口；松开到空白处可取消。</div>
+                        </div>
+                        <div v-if="contextMenu.visible"
+                             class="workflow-context-menu"
+                             :style="{left:contextMenu.x+'px',top:contextMenu.y+'px'}"
+                             @@mousedown.stop
+                             @@click.stop>
+                            <button type="button"
+                                    :disabled="editingLocked || !canDuplicateNode(contextMenu.node)"
+                                    @@click="duplicateContextNode">复制</button>
+                            <button type="button"
+                                    :disabled="editingLocked || !canDeleteNode(contextMenu.node)"
+                                    @@click="removeContextNode">删除</button>
                         </div>
                     </section>
 
@@ -382,6 +399,33 @@
                                     <el-form-item v-if="selectedNode.type==='delay'" label="等待秒数（单节点最多 30 秒）">
                                         <el-input-number v-model="selectedNode.config.seconds" :disabled="editingLocked" :min="0" :max="30"></el-input-number>
                                     </el-form-item>
+                                    <template v-if="selectedNode.type==='agent' || selectedNode.type==='agent-group'">
+                                        <div class="workflow-object-card">
+                                            <div class="workflow-object-card-header">
+                                                <div>
+                                                    <strong>{{selectedWorkflowObject ? selectedWorkflowObject.name : selectedNode.name}}</strong>
+                                                    <small>{{selectedWorkflowObject ? (selectedWorkflowObject.kind==='agent-group'?'Agent 组':'独立 Agent') : '对象不可用'}}</small>
+                                                </div>
+                                                <el-button v-if="selectedWorkflowObject && workflowObjectEditUrl(selectedWorkflowObject)"
+                                                           type="primary"
+                                                           plain
+                                                           size="mini"
+                                                           icon="el-icon-edit"
+                                                           :disabled="editingLocked"
+                                                           @@click="openWorkflowObjectEditor(selectedWorkflowObject)">编辑</el-button>
+                                            </div>
+                                            <el-alert v-if="!selectedWorkflowObject"
+                                                      title="Agent 不存在、所属模块未开启或已被移除"
+                                                      type="warning"
+                                                      :closable="false"></el-alert>
+                                            <dl v-else class="workflow-object-details">
+                                                <template v-for="item in workflowObjectInfo(selectedWorkflowObject)">
+                                                    <dt :key="item.label+'-label'">{{item.label}}</dt>
+                                                    <dd :key="item.label+'-value'">{{item.value || '—'}}</dd>
+                                                </template>
+                                            </dl>
+                                        </div>
+                                    </template>
                                     <el-form-item v-if="selectedNode.type==='agent' || selectedNode.type==='agent-group'" label="Prompt">
                                         <el-input v-if="!isBinding(selectedNode.config.prompt)" type="textarea" :rows="6" v-model="selectedNode.config.prompt" :disabled="editingLocked" placeholder="可使用输入占位符"></el-input>
                                         <el-cascader :value="configBindingSelection(selectedNode,'prompt')" :options="upstreamOutputOptions(null)" :disabled="editingLocked || !upstreamOutputOptions(null).length" clearable filterable placeholder="关联上游 Output" @@change="setConfigBinding(selectedNode,'prompt',$event)"></el-cascader>

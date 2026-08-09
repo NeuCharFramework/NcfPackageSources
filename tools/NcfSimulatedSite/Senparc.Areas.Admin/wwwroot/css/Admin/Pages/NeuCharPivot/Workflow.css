@@ -139,6 +139,28 @@
 .workflow-save-status.is-dirty { color: #e6a23c; }
 .workflow-save-status.is-error { color: #f56c6c; }
 
+.workflow-webhook-config {
+    z-index: 40;
+    flex: 0 0 auto;
+    padding: 9px 12px 10px;
+    color: #687586;
+    background: #fbfcfe;
+    border-bottom: 1px solid #e8edf3;
+}
+.webhook-config-heading { display: flex; align-items: baseline; gap: 10px; margin-bottom: 7px; }
+.webhook-config-heading strong { color: #303640; font-size: 13px; }
+.webhook-config-heading span, .webhook-url-hint, .webhook-parameters-empty { color: #8993a1; font-size: 11px; }
+.webhook-config-row { display: flex; min-width: 0; align-items: center; gap: 7px; }
+.webhook-config-row > label { color: #606978; font-size: 12px; white-space: nowrap; }
+.webhook-config-row > .el-select { width: 180px; flex: 0 0 auto; }
+.webhook-config-row > .el-input { width: 270px; flex: 0 1 270px; }
+.webhook-url-hint { margin: 6px 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.webhook-url-hint code { padding: 1px 4px; color: #536579; background: #eef3f8; border-radius: 3px; }
+.webhook-parameters-heading { display: flex; margin-top: 7px; align-items: center; justify-content: space-between; color: #606978; font-size: 12px; }
+.webhook-parameters { display: grid; max-height: 130px; margin-top: 4px; gap: 5px; overflow-y: auto; }
+.webhook-parameter-row { display: grid; grid-template-columns: minmax(120px, 1fr) auto minmax(160px, 1.3fr) auto; align-items: center; gap: 7px; }
+.webhook-parameter-remove { color: #f56c6c; }
+
 .workflow-designer {
     display: grid;
     grid-template-columns: var(--palette-width) minmax(480px, 1fr) var(--inspector-width);
@@ -212,7 +234,39 @@
     overscroll-behavior: contain;
     scrollbar-gutter: stable;
     background: #f5f8fb;
+    cursor: default;
 }
+
+.workflow-canvas.is-panning,
+.workflow-canvas.is-panning .workflow-stage { cursor: grabbing; }
+
+.workflow-context-menu {
+    position: fixed;
+    z-index: 100;
+    display: flex;
+    width: 156px;
+    padding: 5px;
+    flex-direction: column;
+    gap: 2px;
+    background: #fff;
+    border: 1px solid #d9e1eb;
+    border-radius: 7px;
+    box-shadow: 0 8px 24px rgba(31, 45, 61, .18);
+}
+
+.workflow-context-menu button {
+    padding: 8px 10px;
+    color: #344255;
+    font-size: 13px;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.workflow-context-menu button:hover:not(:disabled) { color: #1677d2; background: #f0f7ff; }
+.workflow-context-menu button:disabled { color: #b8c1cc; cursor: not-allowed; }
 
 .canvas-toolbar {
     position: sticky;
@@ -287,7 +341,7 @@
 .workflow-node:active { cursor: grabbing; }
 .workflow-node-body { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; height: 100%; padding: 13px; align-items: center; gap: 10px; }
 .workflow-node.selected { border-color: #409eff; box-shadow: 0 0 0 2px rgba(64, 158, 255, .18), 0 5px 16px rgba(31, 45, 61, .09); }
-.workflow-node.node-manual-trigger, .workflow-node.node-interval-trigger { border-left-color: #67c23a; }
+.workflow-node.node-manual-trigger, .workflow-node.node-interval-trigger, .workflow-node.node-webhook-trigger { border-left-color: #67c23a; }
 .workflow-node.node-condition { border-left-color: #e6a23c; }
 .workflow-node.node-agent, .workflow-node.node-agent-group { border-left-color: #8e5ad7; }
 .workflow-node.node-aggregate { border-left-color: #00a6a6; }
@@ -356,6 +410,16 @@
 .binding-warning { color: #b88230; background: #fdf6ec; border-color: #f3d19e; }
 .binding-danger { color: #d24c4c; background: #fef0f0; border-color: #fab6b6; }
 .form-locked { opacity: .78; }
+.workflow-object-card { margin: 2px 0 16px; padding: 10px; background: #f5f8fb; border: 1px solid #dfe6ee; border-radius: 7px; }
+.workflow-object-card-header { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: 8px; }
+.workflow-object-card-header > div { min-width: 0; }
+.workflow-object-card-header strong, .workflow-object-card-header small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.workflow-object-card-header strong { color: #303640; font-size: 13px; }
+.workflow-object-card-header small { margin-top: 3px; color: #8993a1; font-size: 11px; }
+.workflow-object-card .el-alert { margin-top: 9px; padding: 7px 10px; }
+.workflow-object-details { display: grid; grid-template-columns: 74px minmax(0, 1fr); margin: 10px 0 0; gap: 5px 8px; font-size: 11px; }
+.workflow-object-details dt { color: #8993a1; }
+.workflow-object-details dd { min-width: 0; margin: 0; overflow: hidden; color: #536579; text-overflow: ellipsis; white-space: nowrap; }
 
 .workflow-run-dock {
     position: sticky;

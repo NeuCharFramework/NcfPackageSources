@@ -405,7 +405,20 @@ public sealed class NeuCharWorkflowEngine
             var trigger = graph.Nodes.Single(z =>
                 z.Type.EndsWith("trigger", StringComparison.OrdinalIgnoreCase));
             var queue = new Queue<(NeuCharWorkflowNode node, JsonNode value)>();
-            queue.Enqueue((trigger, JsonValue.Create(input ?? string.Empty)));
+            var triggerInput = JsonValue.Create(input ?? string.Empty) as JsonNode;
+            if (trigger.Type.Equals("webhook-trigger", StringComparison.OrdinalIgnoreCase) &&
+                !string.IsNullOrWhiteSpace(input))
+            {
+                try
+                {
+                    triggerInput = JsonNode.Parse(input) ?? triggerInput;
+                }
+                catch (JsonException)
+                {
+                    // Webhook 输入始终由入口序列化为 JSON；对历史调用或非 JSON 请求保留原始文本。
+                }
+            }
+            queue.Enqueue((trigger, triggerInput));
             var visited = new HashSet<string>(StringComparer.Ordinal);
             var outputs = new Dictionary<string, JsonNode>(StringComparer.Ordinal);
             JsonNode finalOutput = JsonValue.Create(input ?? string.Empty);
@@ -1013,6 +1026,34 @@ public sealed class NeuCharWorkflowEngine
                 "any",
                 new[] { new NeuCharFunctionOutputFieldDescriptor("$", "聚合结果", "any", true, false) });
         }
+        if (node.Type.Equals("webhook-trigger", StringComparison.OrdinalIgnoreCase))
+        {
+            var parameters = node.Config?["webhookParameters"] as JsonArray;
+            var fields = parameters?
+                .OfType<JsonObject>()
+                .Select(parameter =>
+                {
+                    var name = GetString(parameter, "name");
+                    return string.IsNullOrWhiteSpace(name)
+                        ? null
+                        : new NeuCharFunctionOutputFieldDescriptor(
+                            $"$.{name}",
+                            name,
+                            "any",
+                            false,
+                            false);
+                })
+                .Where(field => field != null)
+                .ToArray();
+            return new NeuCharFunctionOutputDescriptor(
+                "object",
+                "Webhook 输入",
+                false,
+                null,
+                fields is { Length: > 0 }
+                    ? fields
+                    : new[] { new NeuCharFunctionOutputFieldDescriptor("$", "Webhook 输入", "object", false, false) });
+        }
         if (node.Type is "delay" or "condition" or "console" or "end")
         {
             var incoming = graph.Edges.FirstOrDefault(z =>
@@ -1030,7 +1071,7 @@ public sealed class NeuCharWorkflowEngine
                     visited).ConfigureAwait(false);
             }
         }
-        var typeName = node.Type is "manual-trigger" or "interval-trigger" or "webhook-trigger" or "agent" or "agent-group"
+        var typeName = node.Type is "manual-trigger" or "interval-trigger" or "agent" or "agent-group"
             ? "string"
             : "any";
         return new NeuCharFunctionOutputDescriptor(

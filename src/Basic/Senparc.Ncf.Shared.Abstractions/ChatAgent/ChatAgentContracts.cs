@@ -65,7 +65,9 @@ public sealed record WorkflowObjectDescriptor(
     string Name,
     string Description,
     bool Enabled,
-    string Icon = null);
+    string Icon = null,
+    string EditUrl = null,
+    IReadOnlyDictionary<string, string> Metadata = null);
 
 public sealed record WorkflowObjectExecutionRequest(
     string ObjectId,

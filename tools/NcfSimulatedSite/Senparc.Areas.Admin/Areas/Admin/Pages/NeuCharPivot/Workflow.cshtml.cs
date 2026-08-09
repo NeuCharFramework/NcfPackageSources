@@ -199,7 +199,9 @@ public class WorkflowModel(
                 ? NeuCharWorkflowWebhookConfig.Normalize(
                     request.TriggerConfigJson,
                     workflow?.TriggerConfigJson).ToJson()
-                : "{}";
+                : string.Equals(triggerType, "interval", StringComparison.Ordinal)
+                    ? request.TriggerConfigJson ?? "{}"
+                    : "{}";
         }
         catch (InvalidOperationException ex)
         {

@@ -743,6 +743,14 @@ var app = new Vue({
         }
 
         if (tab === 'first') {
+          if (route.view === 'edit' && route.agentId) {
+            await this.getAgentListData('agent')
+            const editAgent = (this.agentList || []).find(item => item.id === route.agentId)
+            if (editAgent) {
+              await this.handleEditDrawerOpenBtn('drawerAgent', editAgent)
+            }
+            return
+          }
           if (route.view === 'three') {
             this.handleAgentListViewModeChange('three', true)
           }
@@ -758,6 +766,13 @@ var app = new Vue({
 
         if (tab === 'second') {
           await this.getGroupListData('group')
+          if (route.view === 'edit' && route.groupId) {
+            const editGroup = (this.groupList || []).find(item => item.id === route.groupId)
+            if (editGroup) {
+              await this.handleEditDrawerOpenBtn('drawerGroup', editGroup)
+            }
+            return
+          }
           if (route.groupId) {
             const groupItem = (this.groupList || []).find(item => item.id === route.groupId)
             if (groupItem) {

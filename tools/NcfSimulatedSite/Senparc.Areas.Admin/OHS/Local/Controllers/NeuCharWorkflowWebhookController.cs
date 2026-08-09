@@ -37,7 +37,7 @@ public sealed class NeuCharWorkflowWebhookController : ControllerBase
         _runCoordinator = runCoordinator;
     }
 
-    [AcceptVerbs("GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS")]
+    // 这里不声明 HTTP 动词约束；当配置为 any 时，路由可以接收任意动词，配置为 GET/POST 时由下方校验返回 405。
     [Route("{workflowId:int}")]
     [RequestSizeLimit(MaxRequestBytes)]
     public async Task<IActionResult> TriggerAsync(int workflowId, CancellationToken cancellationToken)

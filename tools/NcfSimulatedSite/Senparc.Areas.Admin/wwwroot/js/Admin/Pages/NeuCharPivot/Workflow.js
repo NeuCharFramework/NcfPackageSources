@@ -17,6 +17,8 @@ new Vue({
             selectedNodeId: '',
             connectionDraft: { sourceId: '', sourceHandle: '', x: 0, y: 0 },
             dragState: null,
+            canvasPan: { active: false, startX: 0, startY: 0, startScrollLeft: 0, startScrollTop: 0 },
+            contextMenu: { visible: false, x: 0, y: 0, node: null },
             canvasSize: { width: 1200, height: 760 },
             form: { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], autoSaveMinutes: 3, revision: 0, graph: { nodes: [], edges: [] } },
             saveState: {
@@ -67,6 +69,13 @@ new Vue({
             return this.selectedNode && this.selectedNode.type === 'function'
                 ? this.findFunction(this.selectedNode.config)
                 : null;
+        },
+        selectedWorkflowObject() {
+            if (!this.selectedNode || !['agent', 'agent-group'].includes(this.selectedNode.type)) return null;
+            const config = this.selectedNode.config || {};
+            return this.workflowObjects.find(item =>
+                String(item.providerId || '').toLowerCase() === String(config.providerId || '').toLowerCase() &&
+                String(item.objectId || '') === String(config.objectId || '')) || null;
         },
         connectionSourceName() {
             const node = this.form.graph.nodes.find(item => item.id === this.connectionDraft.sourceId);
@@ -224,8 +233,14 @@ new Vue({
             if (existing) {
                 existing.type = type;
                 existing.name = type === 'interval-trigger' ? '间隔触发' : type === 'webhook-trigger' ? 'Webhook 触发' : '手动触发';
+                existing.config = existing.config || {};
+                if (type === 'webhook-trigger') {
+                    existing.config.webhookParameters = (this.form.webhookParameters || []).map(parameter => ({ name: parameter.name, required: !!parameter.required, description: parameter.description || '' }));
+                } else {
+                    delete existing.config.webhookParameters;
+                }
             } else {
-                const trigger = { id: this.makeId('trigger'), type, name: type === 'interval-trigger' ? '间隔触发' : type === 'webhook-trigger' ? 'Webhook 触发' : '手动触发', x: 430, y: 60, config: {} };
+                const trigger = { id: this.makeId('trigger'), type, name: type === 'interval-trigger' ? '间隔触发' : type === 'webhook-trigger' ? 'Webhook 触发' : '手动触发', x: 430, y: 60, config: type === 'webhook-trigger' ? { webhookParameters: [] } : {} };
                 this.form.graph.nodes.unshift(trigger);
                 this.selectedNodeId = trigger.id;
             }
@@ -275,6 +290,26 @@ new Vue({
             this.selectedNodeId = node.id;
             this.autoLayout();
         },
+        canDeleteNode(node) {
+            return !!node && !String(node.type || '').endsWith('trigger');
+        },
+        canDuplicateNode(node) {
+            return !!node && !String(node.type || '').endsWith('trigger');
+        },
+        duplicateNode(node) {
+            if (this.editingLocked || !this.canDuplicateNode(node)) return false;
+            const copy = JSON.parse(JSON.stringify(node));
+            copy.id = this.makeId(node.type || 'node');
+            copy.name = `${node.name || '节点'}（副本）`;
+            copy.x = Number(node.x || 0) + 40;
+            copy.y = Number(node.y || 0) + 40;
+            this.form.graph.nodes.push(copy);
+            this.selectedNodeId = copy.id;
+            this.cancelConnection();
+            this.updateCanvasSize();
+            this.scheduleAutoSave();
+            return copy;
+        },
         removeNode(node) {
             if (this.editingLocked || String(node.type).endsWith('trigger')) return;
             this.form.graph.nodes = this.form.graph.nodes.filter(item => item.id !== node.id);
@@ -282,8 +317,38 @@ new Vue({
             this.selectedNodeId = '';
             this.cancelConnection();
             this.updateCanvasSize();
+            this.scheduleAutoSave();
+        },
+        openNodeContextMenu(event, node) {
+            const documentElement = typeof document !== 'undefined' ? document.documentElement : null;
+            const viewportWidth = Number(window.innerWidth || (documentElement && documentElement.clientWidth) || 0);
+            const viewportHeight = Number(window.innerHeight || (documentElement && documentElement.clientHeight) || 0);
+            const menuWidth = 156;
+            const menuHeight = 92;
+            this.contextMenu = {
+                visible: true,
+                x: Math.max(0, viewportWidth ? Math.min(event.clientX, viewportWidth - menuWidth) : event.clientX),
+                y: Math.max(0, viewportHeight ? Math.min(event.clientY, viewportHeight - menuHeight) : event.clientY),
+                node
+            };
+            this.selectedNodeId = node.id;
+        },
+        duplicateContextNode() {
+            const node = this.contextMenu.node;
+            this.closeContextMenu();
+            this.duplicateNode(node);
+        },
+        removeContextNode() {
+            const node = this.contextMenu.node;
+            this.closeContextMenu();
+            if (node && this.canDeleteNode(node)) this.removeNode(node);
+        },
+        closeContextMenu() {
+            this.contextMenu.visible = false;
+            this.contextMenu.node = null;
         },
         selectNode(node) {
+            this.closeContextMenu();
             this.selectedNodeId = node.id;
             if (!this.inspectorCollapsed) return;
             this.inspectorCollapsed = false;
@@ -366,6 +431,22 @@ new Vue({
                 y: event.clientY - rect.top + canvas.scrollTop
             };
         },
+        startCanvasPan(event) {
+            if (event.button !== 2) return;
+            const canvas = this.$refs.canvas;
+            if (!canvas) return;
+            this.closeContextMenu();
+            this.dragState = null;
+            this.cancelConnection();
+            this.canvasPan = {
+                active: true,
+                startX: event.clientX,
+                startY: event.clientY,
+                startScrollLeft: canvas.scrollLeft,
+                startScrollTop: canvas.scrollTop
+            };
+            event.preventDefault();
+        },
         startDrag(event, node) {
             if (this.editingLocked || event.button !== 0 || event.target.closest('button,.node-port')) return;
             const canvas = this.$refs.canvas;
@@ -376,6 +457,13 @@ new Vue({
             event.preventDefault();
         },
         onPointerMove(event) {
+            if (this.canvasPan.active) {
+                const canvas = this.$refs.canvas;
+                if (canvas) {
+                    canvas.scrollLeft = Math.max(0, this.canvasPan.startScrollLeft - (event.clientX - this.canvasPan.startX));
+                    canvas.scrollTop = Math.max(0, this.canvasPan.startScrollTop - (event.clientY - this.canvasPan.startY));
+                }
+            }
             if (this.dragState) {
                 const point = this.canvasPoint(event);
                 this.dragState.node.x = Math.max(20, point.x - this.dragState.offsetX);
@@ -389,6 +477,7 @@ new Vue({
             }
         },
         onPointerUp() {
+            this.canvasPan.active = false;
             this.dragState = null;
             if (this.connectionDraft.sourceId) window.setTimeout(() => this.cancelConnection(), 0);
         },
@@ -471,6 +560,37 @@ new Vue({
                 (String(fn.moduleUid).toLowerCase() === String(config.moduleUid || '').toLowerCase() &&
                  String(fn.functionKey).toLowerCase() === String(config.functionKey || '').toLowerCase()));
         },
+        workflowObjectEditUrl(object) {
+            if (!object) return '';
+            const declaredUrl = String(object.editUrl || '');
+            if (declaredUrl.startsWith('/') && !declaredUrl.startsWith('//')) return declaredUrl;
+            if (String(object.providerId || '').toLowerCase() === 'agents-manager') {
+                const objectId = String(object.objectId || '');
+                if (objectId.startsWith('agent:')) return `/Admin/AgentsManager/Index#tab=first&view=edit&agentId=${encodeURIComponent(objectId.substring(6))}`;
+                if (objectId.startsWith('group:')) return `/Admin/AgentsManager/Index#tab=second&view=edit&groupId=${encodeURIComponent(objectId.substring(6))}`;
+            }
+            return '';
+        },
+        workflowObjectInfo(object) {
+            if (!object) return [];
+            const metadata = object.metadata || {};
+            const rows = [
+                { label: '类型', value: metadata.type || (object.kind === 'agent-group' ? 'Agent 组' : '独立 Agent') },
+                { label: '状态', value: object.enabled ? '可用 / 已启用' : '不可用 / 已停用' },
+                { label: '说明', value: object.description || '' }
+            ];
+            if (metadata.promptCode) rows.push({ label: 'Prompt Code', value: metadata.promptCode });
+            if (metadata.functionCallNames) rows.push({ label: 'Function Calls', value: metadata.functionCallNames });
+            if (metadata.knowledgeBaseId) rows.push({ label: '知识库 ID', value: metadata.knowledgeBaseId });
+            if (metadata.state) rows.push({ label: '组状态', value: metadata.state });
+            return rows;
+        },
+        openWorkflowObjectEditor(object) {
+            const url = this.workflowObjectEditUrl(object);
+            if (!url) return;
+            const editor = window.open(url, '_blank', 'noopener,noreferrer');
+            if (editor) editor.opener = null;
+        },
         functionIdentity(fn) { return `${String(fn.moduleUid).toLowerCase()}|${String(fn.functionKey).toLowerCase()}`; },
         loadPinnedFunctions() {
             try { this.pinnedFunctions = JSON.parse(localStorage.getItem('ncf.neucharpivot.workflow.pins') || '[]'); }
@@ -504,6 +624,12 @@ new Vue({
                 return (fn && fn.output && fn.output.fields) || [{ path: '$', label: '完整输出', typeName: 'any', isArray: false, requiresIndex: false }];
             }
             if (node.type === 'aggregate') return [{ path: '$', label: '聚合结果', typeName: 'any', isArray: true, requiresIndex: false }];
+            if (node.type === 'webhook-trigger') {
+                const parameters = this.form.webhookParameters || [];
+                return parameters.length
+                    ? parameters.filter(parameter => String(parameter.name || '').trim()).map(parameter => ({ path: `$.${String(parameter.name).trim()}`, label: parameter.name, typeName: 'any', isArray: false, requiresIndex: false }))
+                    : [{ path: '$', label: 'Webhook 输入', typeName: 'object', isArray: false, requiresIndex: false }];
+            }
             if (['manual-trigger', 'interval-trigger', 'webhook-trigger', 'agent', 'agent-group'].includes(node.type)) return [{ path: '$', label: '文本输出', typeName: 'string', isArray: false, requiresIndex: false }];
             const incoming = this.form.graph.edges.find(edge => edge.target === node.id);
             const source = incoming && this.form.graph.nodes.find(item => item.id === incoming.source);
@@ -712,6 +838,17 @@ new Vue({
             this.form.id = Number(saved.id || this.form.id || 0);
             this.form.revision = Number(saved.revision || this.form.revision || 0);
             this.form.autoSaveMinutes = Number(saved.autoSaveMinutes ?? this.form.autoSaveMinutes ?? 3);
+            if (saved.triggerType) this.form.triggerType = saved.triggerType;
+            const trigger = NeuCharPivotUi.parseJson(saved.triggerConfigJson, {});
+            this.form.intervalSeconds = Number(trigger.intervalSeconds || this.form.intervalSeconds || 300);
+            this.form.webhookMethod = String(trigger.method || this.form.webhookMethod || 'any').toLowerCase();
+            this.form.webhookToken = String(trigger.token || this.form.webhookToken || '');
+            this.form.webhookParameters = (trigger.parameters || this.form.webhookParameters || []).map(parameter => ({
+                _id: parameter._id || this.makeId('webhook-parameter'),
+                name: parameter.name || '',
+                required: !!parameter.required,
+                description: parameter.description || ''
+            }));
             if (saved.graphJson) {
                 const graph = NeuCharPivotUi.parseJson(saved.graphJson, this.form.graph);
                 graph.nodes = graph.nodes || [];
@@ -739,6 +876,7 @@ new Vue({
             this.saveState.status = 'saving';
             this.saveState.error = '';
             try {
+                this.syncTriggerNode();
                 const response = await service.post('/Admin/NeuCharPivot/Workflow?handler=Save', {
                     id: this.form.id || 0,
                     name: this.form.name,
@@ -746,7 +884,7 @@ new Vue({
                     graphJson: JSON.stringify(this.form.graph),
                     enabled: !!this.form.enabled,
                     triggerType: this.form.triggerType,
-                    triggerConfigJson: JSON.stringify({ intervalSeconds: Number(this.form.intervalSeconds || 300) }),
+                    triggerConfigJson: JSON.stringify(this.buildTriggerConfig()),
                     autoSaveMinutes: Number(this.form.autoSaveMinutes || 0),
                     expectedRevision: this.form.id ? Number(this.form.revision || 0) : null,
                     saveSource: options.source || 'manual'

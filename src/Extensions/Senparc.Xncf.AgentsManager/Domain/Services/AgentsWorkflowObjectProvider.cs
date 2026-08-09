@@ -78,7 +78,17 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
                 z.Name,
                 z.Description,
                 z.Enable,
-                "fa fa-user-circle"))
+                "fa fa-user-circle",
+                $"/Admin/AgentsManager/Index#tab=first&view=edit&agentId={z.Id}",
+                new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    ["id"] = z.Id.ToString(),
+                    ["type"] = "独立 Agent",
+                    ["enabled"] = z.Enable ? "true" : "false",
+                    ["promptCode"] = z.PromptCode ?? string.Empty,
+                    ["functionCallNames"] = z.FunctionCallNames ?? string.Empty,
+                    ["knowledgeBaseId"] = z.KnowledgeBaseId?.ToString() ?? string.Empty
+                }))
             .Concat(groups.Select(z => new WorkflowObjectDescriptor(
                 ProviderId,
                 $"group:{z.Id}",
@@ -86,7 +96,17 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
                 z.Name,
                 z.Description,
                 true,
-                "fa fa-users")))
+                "fa fa-users",
+                $"/Admin/AgentsManager/Index#tab=second&view=edit&groupId={z.Id}",
+                new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    ["id"] = z.Id.ToString(),
+                    ["type"] = "Agent 组",
+                    ["enabled"] = z.Enable ? "true" : "false",
+                    ["state"] = z.State.ToString(),
+                    ["adminAgentTemplateId"] = z.AdminAgentTemplateId.ToString(),
+                    ["enterAgentTemplateId"] = z.EnterAgentTemplateId.ToString()
+                })))
             .ToList();
     }
 

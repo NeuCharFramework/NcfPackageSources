@@ -101,6 +101,50 @@ const functionBranchContext = {
 assert.strictEqual(vueOptions.methods.canConnect.call(functionBranchContext, branchSource, functionTarget, 'false'), true,
     'A Function node should accept multiple upstream branches.');
 
+const duplicateNode = { id: 'node-1', type: 'delay', name: '等待', x: 80, y: 120, config: { seconds: 3 } };
+const duplicateContext = {
+    editingLocked: false,
+    form: { graph: { nodes: [duplicateNode], edges: [] } },
+    selectedNodeId: '',
+    makeId() { return 'delay-copy'; },
+    canDuplicateNode: vueOptions.methods.canDuplicateNode,
+    cancelConnection: vueOptions.methods.cancelConnection,
+    updateCanvasSize() {},
+    scheduleAutoSave() {}
+};
+const duplicate = vueOptions.methods.duplicateNode.call(duplicateContext, duplicateNode);
+assert.strictEqual(duplicate.id, 'delay-copy', 'Copying a node should assign a new node id.');
+assert.strictEqual(duplicate.name, '等待（副本）', 'Copying a node should make the duplicate recognizable.');
+assert.deepStrictEqual([duplicate.x, duplicate.y], [120, 160], 'Copying a node should offset the duplicate on the canvas.');
+assert.strictEqual(vueOptions.methods.canDuplicateNode.call({}, { type: 'manual-trigger' }), false,
+    'The workflow trigger must not be duplicated into an invalid second trigger.');
+
+const panCanvas = { scrollLeft: 100, scrollTop: 80 };
+let panPrevented = false;
+const panContext = {
+    $refs: { canvas: panCanvas },
+    contextMenu: { visible: true, node: { id: 'node-1' } },
+    dragState: { node: duplicateNode },
+    connectionDraft: { sourceId: '', sourceHandle: '', x: 0, y: 0 },
+    closeContextMenu: vueOptions.methods.closeContextMenu,
+    cancelConnection: vueOptions.methods.cancelConnection,
+    startCanvasPan: vueOptions.methods.startCanvasPan,
+    onPointerMove: vueOptions.methods.onPointerMove,
+    onPointerUp: vueOptions.methods.onPointerUp
+};
+vueOptions.methods.startCanvasPan.call(panContext, {
+    button: 2,
+    clientX: 240,
+    clientY: 160,
+    preventDefault() { panPrevented = true; }
+});
+vueOptions.methods.onPointerMove.call(panContext, { clientX: 210, clientY: 120 });
+assert.deepStrictEqual([panCanvas.scrollLeft, panCanvas.scrollTop], [130, 120],
+    'Right-button dragging should move the canvas scroll position.');
+assert.strictEqual(panPrevented, true, 'Canvas panning should suppress the browser context menu gesture.');
+vueOptions.methods.onPointerUp.call(panContext);
+assert.strictEqual(panContext.canvasPan.active, false, 'Canvas panning should stop on mouse release.');
+
 let shortcutSource = null;
 let shortcutPrevented = false;
 vueOptions.methods.onSaveShortcut.call({
@@ -124,6 +168,23 @@ assert.ok(page.includes("addSimpleNode('aggregate','聚合')"), 'Workflow palett
 assert.ok(page.includes("addSimpleNode('console','Console 打印')"), 'Workflow palette should expose console output nodes.');
 assert.ok(page.includes("addSimpleNode('end','结束')"), 'Workflow palette should expose end nodes.');
 assert.ok(page.includes('class="edge-delete"'), 'Every edge should expose a midpoint delete control.');
+assert.ok(page.includes('startCanvasPan'), 'The canvas should support right-button panning.');
+assert.ok(page.includes('openNodeContextMenu'), 'Nodes should expose a context menu on right click.');
+assert.ok(page.includes('class="workflow-context-menu"'), 'The node context menu should be rendered in the workflow page.');
+assert.ok(page.includes('>复制</button>') && page.includes('>删除</button>'), 'The node context menu should expose copy and delete actions.');
+assert.ok(page.includes('value="webhook"'), 'Workflow trigger settings should expose a Webhook mode.');
+assert.ok(page.includes('webhookMethod'), 'Webhook settings should allow choosing the HTTP method.');
+assert.ok(page.includes('addWebhookParameter'), 'Webhook settings should allow defining request parameters.');
+assert.ok(page.includes('X-NeuChar-Webhook-Token'), 'Webhook settings should document the secure request header.');
+assert.ok(page.includes('selectedWorkflowObject'), 'Agent nodes should show the selected workflow object details.');
+assert.ok(page.includes('openWorkflowObjectEditor'), 'Agent nodes should expose an edit action.');
+assert.ok(page.includes('workflow-object-card'), 'Agent nodes should render a compact basic information card.');
+assert.ok(vueOptions.methods.workflowObjectEditUrl, 'Workflow objects should expose a safe editor URL resolver.');
+assert.strictEqual(vueOptions.methods.workflowObjectEditUrl.call({}, { editUrl: 'https://example.invalid' }), '',
+    'Workflow object edit links must not open arbitrary external URLs.');
+assert.strictEqual(vueOptions.methods.workflowObjectEditUrl.call({}, { providerId: 'agents-manager', objectId: 'agent:42' }),
+    '/Admin/AgentsManager/Index#tab=first&view=edit&agentId=42',
+    'AgentsManager objects should resolve to the in-app agent editor anchor.');
 assert.ok(page.includes('workflow-run-dock'), 'Workflow execution should use a persistent status dock instead of a modal.');
 assert.ok(page.includes('关联上游 Output'), 'Node parameters should expose upstream output binding controls.');
 assert.ok(page.includes('class="parameter-field-name"'), 'Function parameter field names should be visible in the node settings.');
@@ -138,6 +199,8 @@ assert.match(styles, /\.palette-content,\s*\.inspector-content\s*\{[^}]*overflow
     'The node palette and inspector should each own their vertical scroll area.');
 assert.match(styles, /\.workflow-canvas\s*\{[^}]*height:\s*100%;[^}]*overflow:\s*auto;[^}]*overscroll-behavior:\s*contain;/s,
     'The canvas should stay inside its own scroll container.');
+assert.match(styles, /\.workflow-context-menu\s*\{[^}]*position:\s*fixed;/s,
+    'The node context menu should stay anchored to the viewport instead of scrolling with the canvas.');
 assert.match(styles, /\.workflow-meta\s*\{[^}]*flex:\s*0 0 auto;/s,
     'The save toolbar should remain outside all scrolling panels.');
 assert.match(styles, /\.workflow-page\s*\{[^}]*height:\s*100%;[^}]*overflow:\s*hidden;/s,
