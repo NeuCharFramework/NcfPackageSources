@@ -215,7 +215,7 @@
                               type="textarea"
                               :rows="12"
                               :disabled="editingLocked"
-                              placeholder="例如：请根据 &#123;&#123;value_1&#125;&#125; 生成一段摘要"></el-input>
+                              :placeholder="templateEditorPlaceholder"></el-input>
                     <div class="template-editor-picker">
                         <span>插入上游值</span>
                         <el-cascader :value="templateEditor.pendingSelection"
@@ -233,7 +233,7 @@
                                     :title="templateBindingLabel(item.source)"
                                     :closable="!editingLocked"
                                     @@close="removeTemplateBinding(item.token)">
-                                {{'{{'+item.token+'}}'}} · {{templateBindingLabel(item.source)}}
+                                {{templatePlaceholder(item.token)}} · {{templateBindingLabel(item.source)}}
                             </el-tag>
                             <el-input-number v-if="item.source.requiresIndex"
                                              v-model="item.source.collectionIndex"
@@ -245,7 +245,7 @@
                                              placeholder="列表索引"></el-input-number>
                         </div>
                     </div>
-                    <el-alert title="删除一个变量标签时，它在文本中的对应占位符也会一并删除。文本参数可以继续使用 &#123;&#123;input&#125;&#125; 引用触发器输入。"
+                    <el-alert :title="templateEditorBindingHelp"
                               type="info"
                               :closable="false"
                               show-icon></el-alert>
@@ -515,7 +515,7 @@
                                                                 :key="item.token"
                                                                 size="mini"
                                                                 :title="templateBindingLabel(item.source)">
-                                                            {{'{{'+item.token+'}}'}}
+                                                            {{templatePlaceholder(item.token)}}
                                                         </el-tag>
                                                     </div>
                                                     <div class="parameter-template-actions">

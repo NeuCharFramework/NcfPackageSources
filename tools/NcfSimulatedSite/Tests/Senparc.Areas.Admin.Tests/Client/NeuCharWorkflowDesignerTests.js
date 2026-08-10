@@ -397,6 +397,12 @@ assert.ok(page.includes('parameter-template-card') && page.includes('templateEdi
     'Mixed text bindings should remain visible and editable after the dialog is closed.');
 assert.ok(fs.readFileSync(scriptPath, 'utf8').includes('$template'),
     'The designer should persist mixed text binding values with an explicit template contract.');
+assert.ok(!page.includes("{{'{{'+item.token+'}}'}}"),
+    'Vue templates must not embed a literal closing interpolation delimiter inside another interpolation.');
+assert.ok(fs.readFileSync(scriptPath, 'utf8').includes('templatePlaceholder(token)'),
+    'Mixed-text variable tags should render their placeholder through a method, avoiding Vue 2 interpolation parsing errors.');
+assert.ok(page.includes(':placeholder="templateEditorPlaceholder"') && page.includes(':title="templateEditorBindingHelp"'),
+    'Literal variable examples must come from view-model strings rather than nested Vue interpolations in Razor markup.');
 assert.ok(page.includes("openFunctionPage(selectedFunction,'settings')") && page.includes("openFunctionPage(selectedFunction,'run')"),
     'Function nodes should offer separate settings and execution links.');
 assert.ok(page.includes('@@wheel.prevent="zoomCanvas"'), 'The workflow canvas should use mouse-wheel zooming.');

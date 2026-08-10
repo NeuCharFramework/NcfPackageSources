@@ -17,6 +17,8 @@ new Vue({
             discardConfirming: false,
             webhookHelpVisible: false,
             workflowSettingsVisible: false,
+            templateEditorPlaceholder: '例如：请根据 {{value_1}} 生成一段摘要',
+            templateEditorBindingHelp: '删除一个变量标签时，它在文本中的对应占位符也会一并删除。文本参数可以继续使用 {{input}} 引用触发器输入。',
             templateEditor: {
                 visible: false,
                 nodeId: '',
@@ -967,6 +969,7 @@ new Vue({
             const field = source && this.nodeOutputFields(source).find(item => item.path === (binding.path || '$'));
             return source && field ? `${source.name} · ${field.label}` : '已失效的上游来源';
         },
+        templatePlaceholder(token) { return `{{${String(token || '')}}}`; },
         openParameterTemplateEditor(node, parameter) {
             if (this.editingLocked || !node || !parameter || !this.canUseTemplate(parameter)) return;
             const currentValue = node.config.parameters?.[parameter.name];
