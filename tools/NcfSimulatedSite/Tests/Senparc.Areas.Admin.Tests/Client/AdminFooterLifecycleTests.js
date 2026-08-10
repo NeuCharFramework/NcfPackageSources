@@ -19,10 +19,12 @@ let timerSequence = 0;
 let notificationCount = 0;
 let notificationCloseCount = 0;
 let lastNotificationOptions = null;
+let consumeRequest = null;
 let stateProviders = [{
     providerId: 'test-provider',
     displayName: 'Test Provider',
     defaultVisible: true,
+    canConsume: true,
     items: []
 }];
 const eventSources = [];
@@ -58,6 +60,17 @@ const axios = {
                 providers: stateProviders
             }
         });
+    },
+    post(url, data) {
+        consumeRequest = { url, data };
+        stateProviders = [{
+            providerId: 'test-provider',
+            displayName: 'Test Provider',
+            defaultVisible: true,
+            canConsume: true,
+            items: []
+        }];
+        return Promise.resolve({ data: { consumedCount: 1 } });
     },
     isCancel() {
         return false;
@@ -197,6 +210,7 @@ async function run() {
         providerId: 'test-provider',
         displayName: 'Test Provider',
         defaultVisible: true,
+        canConsume: true,
         items: [{
             id: 'function-reminder',
             title: 'NeuBell test reminder',
@@ -213,16 +227,14 @@ async function run() {
     assert.strictEqual(lastNotificationOptions.duration, 0);
     assert.strictEqual(capturedMixin.computed.neuBellTotalCount.call(layoutRoot), 1);
 
-    // 消费提醒后，SSE 刷新应主动关闭弹窗并清空徽标。
-    stateProviders = [{
-        providerId: 'test-provider',
-        displayName: 'Test Provider',
-        defaultVisible: true,
-        items: []
-    }];
-    eventSources[0].emit('neubell-changed');
+    // 支持消费的 Provider 可从抽屉消费本条提醒，并刷新状态、关闭持久弹窗。
+    await layoutRoot.consumeNeuBell(layoutRoot.neuBellProviders[0], layoutRoot.neuBellProviders[0].items[0], false);
     await flushPromises();
     assert.strictEqual(stateRequestCount, 3);
+    assert.strictEqual(consumeRequest.url, '/api/Senparc.Areas.Admin/neubell/consume');
+    assert.strictEqual(consumeRequest.data.providerId, 'test-provider');
+    assert.strictEqual(consumeRequest.data.itemId, 'function-reminder');
+    assert.strictEqual(consumeRequest.data.consumeAll, false);
     assert.strictEqual(notificationCloseCount, 1);
     assert.strictEqual(capturedMixin.computed.neuBellTotalCount.call(layoutRoot), 0);
 

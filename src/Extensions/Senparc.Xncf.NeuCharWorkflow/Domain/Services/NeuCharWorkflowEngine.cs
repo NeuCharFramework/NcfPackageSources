@@ -17,6 +17,8 @@ using Senparc.Ncf.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
@@ -427,13 +429,43 @@ public sealed class NeuCharWorkflowEngine
     {
         var graph = ParseAndValidateGraph(workflow.GraphJson);
         var trace = new List<string>();
+        var replayEvents = new List<NeuCharWorkflowProgress>();
+        var callerProgress = progress;
+        progress = item =>
+        {
+            if (replayEvents.Count < 500)
+            {
+                replayEvents.Add(item with
+                {
+                    Message = LimitReplayText(item.Message, 2_000),
+                    Output = LimitReplayText(item.Output, 2_000)
+                });
+            }
+            callerProgress?.Invoke(item);
+        };
         var correlationId = Guid.TryParse(runId, out var parsedRunId)
             ? $"workflow-{workflow.Id}-run-{parsedRunId:N}"
             : $"workflow-{workflow.Id}-legacy-{Guid.NewGuid():N}";
+        var replayDefinitionJson = JsonSerializer.Serialize(new NeuCharWorkflowReplayDefinition(
+            workflow.Name,
+            workflow.Description,
+            workflow.GraphJson,
+            workflow.Enabled,
+            workflow.TriggerType,
+            workflow.TriggerConfigJson,
+            workflow.AutoSaveMinutes,
+            workflow.Revision), JsonOptions);
+        var replaySnapshotHash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(replayDefinitionJson)));
+        var previousSnapshot = await _logService.GetLatestReplaySnapshotAsync(workflow.Id).ConfigureAwait(false);
         var workflowLog = new NeuCharWorkflowExecutionLog(
             workflow.Id,
             workflow.Name,
             correlationId);
+        workflowLog.SetReplaySnapshot(
+            replaySnapshotHash,
+            string.Equals(previousSnapshot?.ReplaySnapshotHash, replaySnapshotHash, StringComparison.Ordinal)
+                ? null
+                : replayDefinitionJson);
         await _logService.SaveObjectAsync(workflowLog).ConfigureAwait(false);
 
         try
@@ -525,13 +557,13 @@ public sealed class NeuCharWorkflowEngine
             }
 
             var finalOutputText = NodeToText(finalOutput);
-            workflowLog.Complete(true, finalOutputText, null);
+            workflowLog.Complete(true, finalOutputText, null, JsonSerializer.Serialize(replayEvents, JsonOptions));
             await _logService.SaveObjectAsync(workflowLog).ConfigureAwait(false);
             return new NeuCharWorkflowRunResult(true, finalOutputText, trace);
         }
         catch (Exception ex)
         {
-            workflowLog.Complete(false, null, ex.ToString());
+            workflowLog.Complete(false, null, ex.ToString(), JsonSerializer.Serialize(replayEvents, JsonOptions));
             await _logService.SaveObjectAsync(workflowLog).ConfigureAwait(false);
             return new NeuCharWorkflowRunResult(false, null, trace, ex.Message);
         }
@@ -1004,6 +1036,11 @@ public sealed class NeuCharWorkflowEngine
             output?.Length > 8_000 ? output[..8_000] : output,
             DateTimeOffset.UtcNow));
     }
+
+    private static string? LimitReplayText(string? value, int maxLength) =>
+        string.IsNullOrEmpty(value) || value.Length <= maxLength
+            ? value
+            : value[..maxLength] + "\n…（回看输出已截断）";
 
     private static int GetInt(JsonObject config, string name, int fallback)
     {

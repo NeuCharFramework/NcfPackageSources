@@ -121,6 +121,16 @@ namespace Senparc.Xncf.NeuCharWorkflow.Domain.Migrations.Sqlite
                     b.Property<string>("Error")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("ReplayEventsJson")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReplaySnapshotHash")
+                        .HasMaxLength(64)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReplaySnapshotJson")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime?>("FinishedAt")
                         .HasColumnType("TEXT");
 

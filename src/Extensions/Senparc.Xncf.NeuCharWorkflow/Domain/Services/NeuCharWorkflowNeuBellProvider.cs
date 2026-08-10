@@ -54,7 +54,7 @@ public sealed class NeuCharWorkflowNeuBellProvider : INeuBellProvider, INeuBellC
 
     public string ProviderId => ProviderIdValue;
 
-    public string ModuleUid => Register.ModuleUid;
+    public string ModuleUid => new Register().Uid;
 
     public string Send(
         int adminUserId,

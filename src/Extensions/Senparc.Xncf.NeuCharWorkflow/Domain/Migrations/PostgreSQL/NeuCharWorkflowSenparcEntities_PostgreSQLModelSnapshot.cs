@@ -130,6 +130,16 @@ namespace Senparc.Xncf.NeuCharWorkflow.Domain.Migrations.PostgreSQL
                     b.Property<string>("Error")
                         .HasColumnType("text");
 
+                    b.Property<string>("ReplayEventsJson")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ReplaySnapshotHash")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("ReplaySnapshotJson")
+                        .HasColumnType("text");
+
                     b.Property<DateTime?>("FinishedAt")
                         .HasColumnType("timestamp without time zone");
 

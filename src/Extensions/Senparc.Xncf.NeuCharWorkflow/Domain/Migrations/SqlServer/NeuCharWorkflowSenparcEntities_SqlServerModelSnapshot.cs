@@ -131,6 +131,16 @@ namespace Senparc.Xncf.NeuCharWorkflow.Domain.Migrations.SqlServer
                     b.Property<string>("Error")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ReplayEventsJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReplaySnapshotHash")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("ReplaySnapshotJson")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("FinishedAt")
                         .HasColumnType("datetime2");
 

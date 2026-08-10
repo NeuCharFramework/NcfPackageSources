@@ -29,6 +29,11 @@
             <el-button size="small" icon="el-icon-refresh" :loading="loading" @@click="loadTasks">刷新</el-button>
         </div>
     </div>
+    <el-alert v-if="neuBellConsumeMessage"
+              :title="neuBellConsumeMessage"
+              :type="neuBellConsumeError ? 'warning' : 'success'"
+              :closable="false"
+              class="workflow-task-consume-status"></el-alert>
 
     <section class="workflow-task-summary" aria-label="任务统计">
         <button type="button" :class="['workflow-task-summary-card',{active:statusFilter===''}]" @@click="statusFilter=''">
@@ -46,7 +51,7 @@
     </section>
 
     <section class="workflow-task-table-wrap">
-        <el-table v-if="filteredTasks.length" :data="filteredTasks" size="small" class="workflow-task-table" @@row-click="openTask">
+        <el-table v-if="filteredTasks.length" :data="filteredTasks" size="small" class="workflow-task-table" :row-class-name="taskRowClass" @@row-click="openTask">
             <el-table-column label="工作流" min-width="180">
                 <template slot-scope="scope">
                     <div class="workflow-task-workflow">
@@ -71,10 +76,12 @@
                     <span :class="['workflow-task-message',{error:scope.row.status==='failed'}]">{{summaryText(scope.row)}}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="140" align="right">
+            <el-table-column label="操作" width="150" align="right">
                 <template slot-scope="scope">
-                    <el-button type="primary" size="mini" plain icon="el-icon-view" @@click.stop="openTask(scope.row)">
-                        {{scope.row.runId ? '实时查看' : '查看工作流'}}
+                    <el-button type="primary" size="mini" plain icon="el-icon-video-play"
+                               :disabled="scope.row.status==='running' || !scope.row.replayAvailable"
+                               @@click.stop="openTask(scope.row)">
+                        {{scope.row.status==='running' ? '运行中' : (scope.row.replayAvailable ? '回看运行' : '暂无快照')}}
                     </el-button>
                 </template>
             </el-table-column>
@@ -82,7 +89,7 @@
         <div v-else class="neuchar-empty workflow-task-empty">
             <i class="el-icon-document"></i>
             <h3>{{tasks.length ? '没有匹配的任务' : '还没有运行记录'}}</h3>
-            <p>{{tasks.length ? '调整搜索关键词或状态筛选后再试。' : '从工作流画布运行、Webhook 或定时触发后，任务会显示在这里。'}}</p>
+            <p>{{tasks.length ? '调整搜索关键词或状态筛选后再试。' : '从工作流画布运行、Webhook 或定时触发后，任务会显示在这里。运行结束后可进入只读回看。'}}</p>
         </div>
     </section>
 </div>

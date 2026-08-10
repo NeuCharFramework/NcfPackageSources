@@ -1,0 +1,103 @@
+@page
+@model Senparc.Xncf.NeuCharWorkflow.Areas.NeuCharWorkflow.Pages.ReplayModel
+@using Microsoft.Extensions.Localization
+@using Senparc.Xncf.NeuCharWorkflow
+@inject IStringLocalizer<NeuCharWorkflowResource> XR
+@{
+    ViewData["Title"] = XR["Title.Replay"];
+    Layout = "_Layout_Vue";
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>@XR["Module.MenuName"]</el-breadcrumb-item>
+    <el-breadcrumb-item><a href="/Admin/NeuCharWorkflow/Tasks">@XR["Area.Tasks"]</a></el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.Replay"]</el-breadcrumb-item>
+}
+
+@section Style {
+    <link rel="stylesheet" href="~/css/NeuCharWorkflow/common.css" />
+    <link rel="stylesheet" href="~/css/NeuCharWorkflow/Replay.css" />
+}
+
+<div class="workflow-replay-page" v-loading="loading">
+    <el-alert v-if="loadError" :title="loadError" type="warning" :closable="false" class="workflow-replay-alert"></el-alert>
+    <template v-else-if="replay">
+        <header class="workflow-replay-header">
+            <div>
+                <div class="workflow-replay-eyebrow">只读运行回看 · #{{ replay.executionLogId }}</div>
+                <h2>{{ replay.workflowName }}</h2>
+                <p>运行于 {{ formatDate(replay.startedAt) }}，{{ statusText(replay.status) }}。画布为当时的运行快照，不会影响最新工作流。</p>
+            </div>
+            <div class="workflow-replay-actions">
+                <el-button icon="el-icon-back" @@click="backToTasks">返回任务列表</el-button>
+                <el-button type="primary" plain icon="el-icon-copy-document" :loading="copying" @@click="copyReplay">复制当前工作流并编辑</el-button>
+                <el-button type="primary" icon="el-icon-edit-outline" @@click="openLatestWorkflow">查看最新工作流</el-button>
+            </div>
+        </header>
+
+        <section class="workflow-replay-controls" aria-label="运行回放控制">
+            <div class="workflow-replay-step-summary">
+                <strong>{{ stepLabel }}</strong>
+                <span>{{ replay.events.length ? `共 ${replay.events.length} 个节点事件` : '该运行没有节点事件' }}</span>
+            </div>
+            <div class="workflow-replay-buttons">
+                <el-button size="small" icon="el-icon-d-arrow-left" :disabled="stepIndex < 0" @@click="resetPlayback">开头</el-button>
+                <el-button size="small" icon="el-icon-arrow-left" :disabled="stepIndex <= 0" @@click="previousStep">上一步</el-button>
+                <el-button size="small" type="primary" :icon="playing ? 'el-icon-video-pause' : 'el-icon-video-play'" :disabled="!replay.events.length" @@click="togglePlayback">{{ playing ? '暂停' : '播放' }}</el-button>
+                <el-button size="small" icon="el-icon-arrow-right" :disabled="stepIndex >= replay.events.length - 1" @@click="nextStep">下一步</el-button>
+                <el-button size="small" icon="el-icon-d-arrow-right" :disabled="stepIndex >= replay.events.length - 1" @@click="finishPlayback">结尾</el-button>
+            </div>
+        </section>
+
+        <div class="workflow-replay-layout">
+            <aside class="workflow-replay-timeline">
+                <h3>执行步骤</h3>
+                <button type="button" :class="['workflow-replay-timeline-item',{active:stepIndex===-1}]" @@click="resetPlayback">
+                    <span class="workflow-replay-timeline-dot"></span><span><strong>开始</strong><small>加载运行快照</small></span>
+                </button>
+                <button v-for="(item,index) in replay.events" :key="item.sequence"
+                        type="button" :class="['workflow-replay-timeline-item',{active:stepIndex===index,passed:index<=stepIndex,failed:item.status==='failed'}]"
+                        @@click="goToStep(index)">
+                    <span class="workflow-replay-timeline-dot"></span>
+                    <span><strong>{{ item.nodeName }}</strong><small>{{ eventSummary(item) }}</small></span>
+                </button>
+            </aside>
+
+            <main class="workflow-replay-canvas-wrap">
+                <div class="workflow-replay-canvas" :style="canvasStyle">
+                    <svg class="workflow-replay-edges" :viewBox="`0 0 ${canvasSize.width} ${canvasSize.height}`" :width="canvasSize.width" :height="canvasSize.height" aria-hidden="true">
+                        <line v-for="edge in graph.edges" :key="edge.id || `${edge.source}-${edge.target}`"
+                              :x1="edgeStartX(edge)" :y1="edgeStartY(edge)" :x2="edgeEndX(edge)" :y2="edgeEndY(edge)" />
+                    </svg>
+                    <article v-for="node in graph.nodes" :key="node.id" :class="['workflow-replay-node',`state-${nodeState(node.id)}`, {selected:currentEvent && currentEvent.nodeId===node.id}]"
+                             :style="nodeStyle(node)">
+                        <span class="workflow-replay-node-status"></span>
+                        <strong>{{ node.name || node.type }}</strong>
+                        <small>{{ nodeTypeText(node.type) }}</small>
+                    </article>
+                </div>
+            </main>
+
+            <aside class="workflow-replay-detail">
+                <h3>{{ currentEvent ? '当前步骤' : '运行概览' }}</h3>
+                <template v-if="currentEvent">
+                    <el-tag size="mini" :type="eventType(currentEvent.status)">{{ eventStatusText(currentEvent.status) }}</el-tag>
+                    <h4>{{ currentEvent.nodeName }}</h4>
+                    <p>{{ currentEvent.message || '节点状态已更新。' }}</p>
+                    <time>{{ formatDate(currentEvent.timestamp) }}</time>
+                    <pre v-if="currentEvent.output" class="workflow-replay-output">{{ currentEvent.output }}</pre>
+                </template>
+                <template v-else>
+                    <el-tag size="mini" :type="replay.succeeded ? 'success' : 'danger'">{{ statusText(replay.status) }}</el-tag>
+                    <p>{{ replay.succeeded ? (replay.resultSummary || '运行完成。') : (replay.errorMessage || '运行失败。') }}</p>
+                    <p class="workflow-replay-detail-note">点击左侧步骤，或使用播放控件逐步还原节点执行状态。</p>
+                </template>
+            </aside>
+        </div>
+    </template>
+</div>
+
+@section scripts {
+    <script src="~/js/NeuCharWorkflow/common.js"></script>
+    <script src="~/js/NeuCharWorkflow/Replay.js"></script>
+}

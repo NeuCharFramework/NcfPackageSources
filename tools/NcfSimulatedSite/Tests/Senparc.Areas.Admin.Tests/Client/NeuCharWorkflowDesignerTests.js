@@ -19,6 +19,12 @@ const tasksPagePath = path.resolve(__dirname,
     '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/Areas/Admin/Pages/NeuCharWorkflow/Tasks.cshtml');
 const tasksStylePath = path.resolve(__dirname,
     '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/wwwroot/css/NeuCharWorkflow/Tasks.css');
+const replayScriptPath = path.resolve(__dirname,
+    '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/wwwroot/js/NeuCharWorkflow/Replay.js');
+const replayPagePath = path.resolve(__dirname,
+    '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/Areas/Admin/Pages/NeuCharWorkflow/Replay.cshtml');
+const replayStylePath = path.resolve(__dirname,
+    '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/wwwroot/css/NeuCharWorkflow/Replay.css');
 const workflowAppServicePath = path.resolve(__dirname,
     '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/Application/AppServices/NeuCharWorkflowAppService.cs');
 const runCoordinatorPath = path.resolve(__dirname,
@@ -318,6 +324,7 @@ assert.ok(page.includes('class="workflow-stage"'), 'Workflow page should render 
 assert.ok(page.includes("addSimpleNode('condition','条件判断')"), 'Workflow palette should expose condition nodes.');
 assert.ok(page.includes("addSimpleNode('aggregate','聚合')"), 'Workflow palette should expose multi-input aggregate nodes.');
 assert.ok(page.includes("addSimpleNode('console','Console 打印')"), 'Workflow palette should expose console output nodes.');
+assert.ok(page.includes("addSimpleNode('neubell','发送纽铃')"), 'Workflow palette should expose a NeuBell notification node.');
 assert.ok(page.includes("addSimpleNode('end','结束')"), 'Workflow palette should expose end nodes.');
 assert.ok(page.includes('class="edge-delete"'), 'Every edge should expose a midpoint delete control.');
 assert.ok(page.includes('startCanvasPan'), 'The canvas should support right-button panning.');
@@ -425,6 +432,13 @@ assert.ok(page.includes('class="parameter-field-name"'), 'Function parameter fie
 assert.ok(page.includes('parameter-description-icon'), 'Function parameter descriptions should have an info icon.');
 assert.ok(page.includes('parameterDisplayName(parameter)'), 'Function parameters should always resolve to a visible name.');
 assert.ok(page.includes('parameterDescription(parameter)'), 'Function parameter descriptions should be shown through a tooltip.');
+assert.ok(page.includes('consumeMode') && page.includes('消费当前这一条提醒') && page.includes('消费这个订阅下全部提醒'),
+    'NeuBell nodes should allow choosing no consumption, item consumption, or provider-wide consumption after task navigation.');
+assert.ok(fs.readFileSync(scriptPath, 'utf8').includes("consumeMode: 'item'"),
+    'New NeuBell nodes should default to consuming only their own reminder after the task is opened.');
+const tasksScript = fs.readFileSync(tasksScriptPath, 'utf8');
+assert.ok(tasksScript.includes("neuBellProvider") && tasksScript.includes("service.post('/api/Senparc.Areas.Admin/neubell/consume'"),
+    'Workflow task links should consume their matching NeuBell notification through the protected API.');
 assert.ok(sourceIncludesFitOnLoad(), 'Editing an existing workflow should fit all nodes after its canvas has rendered.');
 assert.ok(page.includes('自动保存'), 'Workflow settings should expose the auto-save interval.');
 assert.ok(page.includes('Command/Ctrl + S'), 'Workflow save should advertise the system save shortcut.');
@@ -493,7 +507,7 @@ assert.ok(tasksVueOptions && tasksVueOptions.methods,
 
 const taskRows = [
     { workflowId: 21, workflowName: '正在运行的任务', status: 'running', source: 'interval', runId: 'f6d7e0a2-4f33-46f8-a9e3-116a272bab58', summary: '节点正在执行' },
-    { workflowId: 22, workflowName: '已完成任务', status: 'success', source: 'history', summary: '完成' },
+    { workflowId: 22, workflowName: '已完成任务', status: 'success', source: 'history', summary: '完成', executionLogId: 88, replayAvailable: true },
     { workflowId: 23, workflowName: '失败任务', status: 'failed', source: 'history', errorMessage: 'Function 调用失败' }
 ];
 assert.strictEqual(tasksVueOptions.methods.statusCount.call({ tasks: taskRows }, 'running'), 1,
@@ -503,24 +517,39 @@ assert.strictEqual(tasksVueOptions.computed.hasRunningTasks.call({ tasks: taskRo
 const filteredTaskRows = tasksVueOptions.computed.filteredTasks.call({ tasks: taskRows, keyword: '失败', statusFilter: 'failed' });
 assert.strictEqual(filteredTaskRows.length, 1,
     'Task search and status filtering should compose without hiding matching failed tasks.');
-tasksVueOptions.methods.openTask.call({}, taskRows[0]);
-assert.match(navigatedTaskUrl, /workflowId=21/,
-    'Opening a task should navigate to its workflow board.');
-assert.match(navigatedTaskUrl, /runId=f6d7e0a2-4f33-46f8-a9e3-116a272bab58/,
-    'Opening an active task should preserve the runtime id for real-time Console tracking.');
+let liveReplayMessage = '';
+tasksVueOptions.methods.openTask.call({ $message: { info(message) { liveReplayMessage = message; } } }, taskRows[0]);
+assert.match(liveReplayMessage, /运行结束后/,
+    'An active task must wait for completion rather than opening an incomplete replay.');
+tasksVueOptions.methods.openTask.call({}, taskRows[1]);
+assert.match(navigatedTaskUrl, /NeuCharWorkflow\/Replay\?executionLogId=88/,
+    'Opening a completed task should navigate to its immutable run replay instead of the live editor.');
 
 const tasksPage = fs.readFileSync(tasksPagePath, 'utf8');
 const tasksStyles = fs.readFileSync(tasksStylePath, 'utf8');
 const workflowAppService = fs.readFileSync(workflowAppServicePath, 'utf8');
 const runCoordinator = fs.readFileSync(runCoordinatorPath, 'utf8');
-assert.ok(fs.readFileSync(tasksScriptPath, 'utf8').includes('handler=List') && tasksPage.includes('实时查看'),
-    'The task page should expose a task-list endpoint and an explicit live-view action.');
+assert.ok(fs.readFileSync(tasksScriptPath, 'utf8').includes('handler=List') && tasksPage.includes('回看运行'),
+    'The task page should expose a task-list endpoint and an explicit replay action.');
 assert.match(tasksStyles, /\.workflow-task-table \.el-table__row\s*\{[^}]*cursor:\s*pointer;/s,
     'Task rows should make their workflow-board navigation discoverable.');
 assert.ok(workflowAppService.includes('GetTaskListAsync') && workflowAppService.includes('WorkflowTaskListItem'),
     'The application service should combine execution task data behind a dedicated contract.');
+assert.ok(workflowAppService.includes('GetReplayAsync') && workflowAppService.includes('CopyReplayAsDraftAsync'),
+    'The application service should retrieve immutable task replays and create a disabled editable draft from them.');
 assert.ok(runCoordinator.includes('GetActiveRuns') && runCoordinator.includes('NeuCharWorkflowActiveRun'),
     'The task list should use the coordinator for currently running node-level task state.');
+const replayPage = fs.readFileSync(replayPagePath, 'utf8');
+const replayScript = fs.readFileSync(replayScriptPath, 'utf8');
+const replayStyles = fs.readFileSync(replayStylePath, 'utf8');
+assert.ok(replayPage.includes('只读运行回看') && replayPage.includes('复制当前工作流并编辑') && replayPage.includes('查看最新工作流'),
+    'The separate replay page should clearly be read-only and expose both requested exit actions.');
+assert.ok(replayPage.includes('workflow-replay-canvas') && replayPage.includes('执行步骤'),
+    'The replay page should render the frozen workflow canvas and a step timeline.');
+assert.ok(replayScript.includes('togglePlayback') && replayScript.includes('nextStep') && replayScript.includes('rebuildNodeStates'),
+    'The replay client should play node events one step at a time and project their states onto the frozen canvas.');
+assert.ok(replayStyles.includes('.workflow-replay-node.state-running') && replayStyles.includes('.workflow-replay-timeline-item.active'),
+    'Replay styling should visually distinguish active nodes and the selected timeline step.');
 
 async function verifyUnsavedChangeGuards() {
     let modalArguments = null;

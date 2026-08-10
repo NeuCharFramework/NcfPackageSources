@@ -280,7 +280,9 @@ public sealed class NeuCharWorkflowAppService
             null,
             BuildLiveSummary(run),
             null,
-            run.RunId)).ToList();
+            run.RunId,
+            null,
+            false)).ToList();
 
         if (workflowIds.Count == 0)
         {
@@ -308,12 +310,114 @@ public sealed class NeuCharWorkflowAppService
                 log.FinishedAt,
                 log.Succeeded == true ? log.ResultSummary : null,
                 log.Succeeded == false ? log.Error : null,
-                null)));
+                GetTaskRunId(log.WorkflowId, log.CorrelationId),
+                log.Id,
+                CanReplay(log))));
 
         return tasks
             .OrderByDescending(z => z.StartedAt)
             .Take(200)
             .ToList();
+    }
+
+    /// <summary>
+    /// 返回已经完成任务的只读运行回看数据。运行中的任务仍由实时协调器展示，避免用不完整事件启动回放。
+    /// </summary>
+    public async Task<WorkflowRunReplay?> GetReplayAsync(
+        int executionLogId,
+        int adminUserId,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var executionLog = await _executionLogService.GetObjectAsync(log => log.Id == executionLogId).ConfigureAwait(false);
+        if (executionLog == null || await GetOwnedWorkflowAsync(executionLog.WorkflowId, adminUserId).ConfigureAwait(false) == null)
+        {
+            return null;
+        }
+        if (executionLog.FinishedAt == null)
+        {
+            throw new WorkflowConflictException("该工作流仍在运行，请在运行结束后再启动回看。");
+        }
+        if (!CanReplay(executionLog))
+        {
+            throw new WorkflowInputException("该任务产生于回看功能启用前，未保存可回放的节点事件或快照。");
+        }
+
+        var snapshotLog = !string.IsNullOrWhiteSpace(executionLog.ReplaySnapshotJson)
+            ? executionLog
+            : await _executionLogService.GetReplaySnapshotAsync(
+                executionLog.WorkflowId,
+                executionLog.ReplaySnapshotHash!).ConfigureAwait(false);
+        if (string.IsNullOrWhiteSpace(snapshotLog?.ReplaySnapshotJson))
+        {
+            throw new WorkflowInputException("该任务引用的工作流快照已不可用，无法开始回看。");
+        }
+
+        NeuCharWorkflowReplayDefinition definition;
+        IReadOnlyList<WorkflowReplayEvent> events;
+        try
+        {
+            definition = JsonSerializer.Deserialize<NeuCharWorkflowReplayDefinition>(
+                snapshotLog.ReplaySnapshotJson,
+                DesignerJsonOptions) ?? throw new JsonException("快照为空。");
+            var progress = JsonSerializer.Deserialize<List<NeuCharWorkflowProgress>>(
+                executionLog.ReplayEventsJson!,
+                DesignerJsonOptions) ?? new List<NeuCharWorkflowProgress>();
+            events = progress.Select((item, index) => new WorkflowReplayEvent(
+                index + 1,
+                item.NodeId,
+                item.NodeName,
+                item.Status,
+                item.Message,
+                item.Output,
+                item.Timestamp)).ToList();
+        }
+        catch (JsonException ex)
+        {
+            throw new WorkflowInputException("该任务的回看数据已损坏，无法解析。", ex);
+        }
+
+        return new WorkflowRunReplay(
+            executionLog.Id,
+            executionLog.WorkflowId,
+            executionLog.WorkflowName,
+            ToTaskStatus(executionLog),
+            executionLog.StartedAt,
+            executionLog.FinishedAt,
+            executionLog.Succeeded,
+            executionLog.ResultSummary,
+            executionLog.Error,
+            definition,
+            events);
+    }
+
+    /// <summary>从当时的运行快照创建一个禁用的草稿，避免在回看页直接修改历史或意外触发。</summary>
+    public async Task<WorkflowDetail> CopyReplayAsDraftAsync(
+        int executionLogId,
+        int adminUserId,
+        CancellationToken cancellationToken = default)
+    {
+        var replay = await GetReplayAsync(executionLogId, adminUserId, cancellationToken).ConfigureAwait(false)
+            ?? throw new WorkflowNotFoundException();
+        var snapshot = replay.Definition;
+        var graph = _workflowEngine.ParseAndValidateGraph(snapshot.GraphJson, requireAllNodesReachable: false);
+        var graphJson = JsonSerializer.Serialize(graph, DesignerJsonOptions);
+        var copy = new WorkflowEntity(CreateReplayCopyName(snapshot.Name), adminUserId);
+        copy.Update(
+            copy.Name,
+            snapshot.Description,
+            graphJson,
+            enabled: false,
+            triggerType: snapshot.TriggerType,
+            triggerConfigJson: snapshot.TriggerConfigJson,
+            nextRunAt: null,
+            autoSaveMinutes: snapshot.AutoSaveMinutes);
+        await _workflowService.SaveObjectAsync(copy).ConfigureAwait(false);
+        await SaveVersionAsync(copy, adminUserId, "replay-copy").ConfigureAwait(false);
+        await _eventPublisher.PublishAsync(copy.Id, "created-from-replay", adminUserId, cancellationToken).ConfigureAwait(false);
+        var editableGraphJson = await _workflowEngine.BuildEditableGraphJsonAsync(copy.GraphJson, cancellationToken)
+            .ConfigureAwait(false);
+        return ToDetail(copy, editableGraphJson);
     }
 
     public async Task DeleteAsync(int workflowId, int adminUserId, CancellationToken cancellationToken = default)
@@ -497,6 +601,11 @@ public sealed class NeuCharWorkflowAppService
         ? "running"
         : log.Succeeded == true ? "success" : "failed";
 
+    private static bool CanReplay(NeuCharWorkflowExecutionLog log) =>
+        log.FinishedAt != null &&
+        !string.IsNullOrWhiteSpace(log.ReplaySnapshotHash) &&
+        !string.IsNullOrWhiteSpace(log.ReplayEventsJson);
+
     private static string? BuildLiveSummary(NeuCharWorkflowActiveRun run)
     {
         if (string.IsNullOrWhiteSpace(run.LastNodeName) && string.IsNullOrWhiteSpace(run.LastMessage))
@@ -507,6 +616,26 @@ public sealed class NeuCharWorkflowAppService
         var node = string.IsNullOrWhiteSpace(run.LastNodeName) ? "工作流" : run.LastNodeName;
         var message = string.IsNullOrWhiteSpace(run.LastMessage) ? "正在执行" : run.LastMessage;
         return $"{node}：{message}";
+    }
+
+    private static Guid? GetTaskRunId(int workflowId, string? correlationId)
+    {
+        var prefix = $"workflow-{workflowId}-run-";
+        if (string.IsNullOrWhiteSpace(correlationId) ||
+            !correlationId.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+        return Guid.TryParse(correlationId[prefix.Length..], out var runId) ? runId : null;
+    }
+
+    private static string CreateReplayCopyName(string? sourceName)
+    {
+        const string suffix = "（任务副本）";
+        var prefix = string.IsNullOrWhiteSpace(sourceName) ? "Workflow" : sourceName.Trim();
+        return prefix.Length + suffix.Length <= 200
+            ? prefix + suffix
+            : prefix[..(200 - suffix.Length)] + suffix;
     }
 
     private static bool TokensEqual(string? expected, string? actual)
@@ -562,7 +691,31 @@ public sealed record WorkflowTaskListItem(
     DateTime? FinishedAt,
     string? Summary,
     string? ErrorMessage,
-    Guid? RunId);
+    Guid? RunId,
+    int? ExecutionLogId,
+    bool ReplayAvailable);
+
+public sealed record WorkflowReplayEvent(
+    int Sequence,
+    string NodeId,
+    string NodeName,
+    string Status,
+    string Message,
+    string? Output,
+    DateTimeOffset Timestamp);
+
+public sealed record WorkflowRunReplay(
+    int ExecutionLogId,
+    int WorkflowId,
+    string WorkflowName,
+    string Status,
+    DateTime StartedAt,
+    DateTime? FinishedAt,
+    bool? Succeeded,
+    string? ResultSummary,
+    string? ErrorMessage,
+    NeuCharWorkflowReplayDefinition Definition,
+    IReadOnlyList<WorkflowReplayEvent> Events);
 
 public sealed record WorkflowDesignerFunction(
     string FunctionKey, string Name, string? Description, string ModuleUid, string ModuleName, string ModuleVersion,

@@ -273,6 +273,48 @@ public class NeuCharWorkflowEngineTests
     }
 
     [TestMethod]
+    public void ExecutionLog_ReplaySnapshotAndEvents_ShouldBeStoredSeparately()
+    {
+        var executionLog = new Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel.NeuCharWorkflowExecutionLog(
+            12,
+            "回看测试",
+            "workflow-12-run-0123456789abcdef0123456789abcdef");
+
+        executionLog.SetReplaySnapshot("a".PadLeft(64, 'a'), "{\"graphJson\":\"{}\"}");
+        executionLog.Complete(true, "完成", null, "[{\"nodeId\":\"trigger\"}]");
+
+        Assert.AreEqual(64, executionLog.ReplaySnapshotHash!.Length);
+        Assert.AreEqual("{\"graphJson\":\"{}\"}", executionLog.ReplaySnapshotJson);
+        Assert.AreEqual("[{\"nodeId\":\"trigger\"}]", executionLog.ReplayEventsJson);
+        Assert.IsTrue(executionLog.Succeeded == true && executionLog.FinishedAt != null);
+    }
+
+    [TestMethod]
+    public async Task ValidateReferencesAsync_NeuBellNode_ShouldAcceptSupportedConsumptionModes()
+    {
+        var engine = CreateEngine();
+        const string graphJson =
+            """
+            {
+              "nodes": [
+                { "id": "trigger", "type": "manual-trigger" },
+                { "id": "notify", "type": "neubell", "name": "发送纽铃", "config": { "title": "任务完成", "summary": "请查看 {{input}}", "consumeMode": "item" } }
+              ],
+              "edges": [
+                { "id": "edge-1", "source": "trigger", "target": "notify" }
+              ]
+            }
+            """;
+
+        var graph = engine.ParseAndValidateGraph(graphJson);
+        Assert.IsNull(await engine.ValidateReferencesAsync(graph));
+
+        graph.Nodes.Single(node => node.Id == "notify").Config["consumeMode"] = "unsupported";
+        var error = await engine.ValidateReferencesAsync(graph);
+        StringAssert.Contains(error, "消费方式无效");
+    }
+
+    [TestMethod]
     public void BuildOutputDescriptor_AppResponseList_ShouldExposeElementFieldsAndArrayShape()
     {
         var method = typeof(NeuCharWorkflowEngineTests).GetMethod(

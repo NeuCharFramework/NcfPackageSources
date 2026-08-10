@@ -187,19 +187,25 @@
                 <section v-for="provider in neuBellProviders" :key="provider.providerId" class="admin-neubell-provider">
                     <header>
                         <span><i :class="provider.icon"></i> {{ provider.displayName }}</span>
-                        <el-switch v-model="provider.enabled" @@change="saveNeuBellPreferences"></el-switch>
-                    </header>
-                    <a
-                        v-for="item in provider.items"
-                        :key="item.id"
-                        :href="item.detailUrl"
-                        class="admin-neubell-item">
-                        <span class="admin-neubell-item-content">
-                            <strong>{{ item.title }}</strong>
-                            <small>{{ item.summary }}</small>
+                        <span class="admin-neubell-provider-actions">
+                            <el-button v-if="provider.canConsume"
+                                       type="text"
+                                       size="mini"
+                                       :disabled="!provider.items || provider.items.length === 0"
+                                       @@click="consumeNeuBell(provider, null, true)">消费全部</el-button>
+                            <el-switch v-model="provider.enabled" @@change="saveNeuBellPreferences"></el-switch>
                         </span>
-                        <el-badge :value="item.count" :hidden="!item.count" :type="item.severity === 'warning' ? 'warning' : 'primary'"></el-badge>
-                    </a>
+                    </header>
+                    <div v-for="item in provider.items" :key="item.id" class="admin-neubell-item">
+                        <a :href="item.detailUrl" class="admin-neubell-item-link">
+                            <span class="admin-neubell-item-content">
+                                <strong>{{ item.title }}</strong>
+                                <small>{{ item.summary }}</small>
+                            </span>
+                            <el-badge :value="item.count" :hidden="!item.count" :type="item.severity === 'warning' ? 'warning' : 'primary'"></el-badge>
+                        </a>
+                        <el-button v-if="provider.canConsume" type="text" size="mini" @@click="consumeNeuBell(provider, item, false)">消费</el-button>
+                    </div>
                 </section>
             </div>
         </el-drawer>

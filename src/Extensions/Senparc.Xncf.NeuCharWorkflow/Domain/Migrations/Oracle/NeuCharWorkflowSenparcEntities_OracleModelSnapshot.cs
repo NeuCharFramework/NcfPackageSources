@@ -131,6 +131,16 @@ namespace Senparc.Xncf.NeuCharWorkflow.Domain.Migrations.Oracle
                     b.Property<string>("Error")
                         .HasColumnType("NVARCHAR2(2000)");
 
+                    b.Property<string>("ReplayEventsJson")
+                        .HasColumnType("CLOB");
+
+                    b.Property<string>("ReplaySnapshotHash")
+                        .HasMaxLength(64)
+                        .HasColumnType("NVARCHAR2(64)");
+
+                    b.Property<string>("ReplaySnapshotJson")
+                        .HasColumnType("CLOB");
+
                     b.Property<DateTime?>("FinishedAt")
                         .HasColumnType("TIMESTAMP(7)");
 

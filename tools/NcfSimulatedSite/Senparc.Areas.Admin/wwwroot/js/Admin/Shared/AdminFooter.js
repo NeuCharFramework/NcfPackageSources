@@ -425,6 +425,34 @@
                 }
                 return this.refreshFooterState();
             },
+            consumeNeuBell(provider, item, consumeAll) {
+                const providerId = String(provider && provider.providerId || '').trim();
+                const itemId = String(item && item.id || '').trim();
+                if (!provider || provider.canConsume !== true || !providerId || (!consumeAll && !itemId)) {
+                    return Promise.resolve(0);
+                }
+
+                return axios.post('/api/Senparc.Areas.Admin/neubell/consume', {
+                    providerId: providerId,
+                    itemId: itemId,
+                    consumeAll: consumeAll === true
+                }, {
+                    headers: { 'x-requested-with': 'XMLHttpRequest' }
+                }).then(response => {
+                    const responseBody = response && response.data ? response.data : {};
+                    const body = responseBody.data && typeof responseBody.data === 'object'
+                        ? responseBody.data
+                        : responseBody;
+                    const consumedCount = Math.max(0, Number(body.consumedCount) || 0);
+                    return this.handleNeuBellChanged().then(() => consumedCount);
+                }).catch(error => {
+                    console.warn('纽铃消费失败:', error);
+                    if (typeof this.$message === 'function') {
+                        this.$message.error('纽铃提醒未能消费，请在业务页面中处理。');
+                    }
+                    return 0;
+                });
+            },
             startFooterClock() {
                 if (!this.footerClockTimer) {
                     this.footerClockTimer = window.setInterval(() => { this.footerClockTick += 1; }, 1000);

@@ -55,10 +55,23 @@ public sealed class NeuBellController : ControllerBase
     {
         var context = CreateContext();
         var snapshots = await _snapshotService.GetSnapshotsAsync(context, cancellationToken).ConfigureAwait(false);
+        var consumableProviderIds = (await _providerCatalog.GetAvailableProvidersAsync(cancellationToken).ConfigureAwait(false))
+            .Where(provider => provider is INeuBellConsumableProvider)
+            .Select(provider => provider.ProviderId)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
         return Ok(new
         {
             serverTime = DateTimeOffset.Now,
-            providers = snapshots
+            providers = snapshots.Select(snapshot => new
+            {
+                snapshot.ProviderId,
+                snapshot.ModuleUid,
+                snapshot.DisplayName,
+                snapshot.Icon,
+                snapshot.DefaultVisible,
+                snapshot.Items,
+                canConsume = consumableProviderIds.Contains(snapshot.ProviderId)
+            })
         });
     }
 
@@ -74,7 +87,7 @@ public sealed class NeuBellController : ControllerBase
         if (request == null || string.IsNullOrWhiteSpace(request.ProviderId) ||
             (!request.ConsumeAll && string.IsNullOrWhiteSpace(request.ItemId)))
         {
-            return BadRequest("纽铃消费请求缺少 Provider 或条目。" );
+            return BadRequest("纽铃消费请求缺少 Provider 或条目。");
         }
 
         var provider = (await _providerCatalog.GetAvailableProvidersAsync(cancellationToken).ConfigureAwait(false))

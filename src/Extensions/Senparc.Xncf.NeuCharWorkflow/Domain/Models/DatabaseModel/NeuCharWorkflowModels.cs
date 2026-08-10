@@ -182,6 +182,12 @@ public class NeuCharWorkflowExecutionLog : EntityBase<int>
     public bool? Succeeded { get; private set; }
     public string? ResultSummary { get; private set; }
     public string? Error { get; private set; }
+    /// <summary>运行时工作流定义的内容哈希；相同哈希会复用上一份快照，避免重复保存大图数据。</summary>
+    [MaxLength(64)] public string? ReplaySnapshotHash { get; private set; }
+    /// <summary>仅在与上一份快照不同的运行中保存完整定义。</summary>
+    public string? ReplaySnapshotJson { get; private set; }
+    /// <summary>按执行顺序保存的节点事件，用于完成后的只读回看。</summary>
+    public string? ReplayEventsJson { get; private set; }
 
     private NeuCharWorkflowExecutionLog() { }
 
@@ -193,15 +199,33 @@ public class NeuCharWorkflowExecutionLog : EntityBase<int>
         StartedAt = DateTime.UtcNow;
     }
 
-    public void Complete(bool succeeded, string? resultSummary, string? error)
+    public void SetReplaySnapshot(string snapshotHash, string? snapshotJson)
+    {
+        ReplaySnapshotHash = Truncate(snapshotHash, 64);
+        ReplaySnapshotJson = snapshotJson;
+    }
+
+    public void Complete(bool succeeded, string? resultSummary, string? error, string? replayEventsJson = null)
     {
         FinishedAt = DateTime.UtcNow;
         Succeeded = succeeded;
         ResultSummary = Truncate(resultSummary, 8000);
         Error = Truncate(error, 8000);
+        ReplayEventsJson = replayEventsJson;
         SetUpdateTime();
     }
 
     private static string? Truncate(string? value, int length) =>
         string.IsNullOrEmpty(value) || value.Length <= length ? value : value[..length];
 }
+
+/// <summary>运行时冻结的工作流定义。该定义与实时编辑器相互独立，只用于任务回看和从回看复制草稿。</summary>
+public sealed record NeuCharWorkflowReplayDefinition(
+    string Name,
+    string? Description,
+    string GraphJson,
+    bool Enabled,
+    string TriggerType,
+    string TriggerConfigJson,
+    int AutoSaveMinutes,
+    int Revision);

@@ -130,6 +130,16 @@ namespace Senparc.Xncf.NeuCharWorkflow.Domain.Migrations.MySql
                     b.Property<string>("Error")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("ReplayEventsJson")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ReplaySnapshotHash")
+                        .HasMaxLength(64)
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<string>("ReplaySnapshotJson")
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime?>("FinishedAt")
                         .HasColumnType("datetime(6)");
 

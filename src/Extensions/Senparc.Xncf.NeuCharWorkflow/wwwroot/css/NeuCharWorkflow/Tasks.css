@@ -10,6 +10,7 @@
 }
 
 .workflow-tasks-header-actions .el-input { width: min(300px, 48vw); }
+.workflow-task-consume-status { margin-bottom: 16px; }
 
 .workflow-task-summary {
     display: grid;
@@ -55,6 +56,7 @@
 
 .workflow-task-table .el-table__row { cursor: pointer; }
 .workflow-task-table .el-table__row:hover > td { background: #f5faff; }
+.workflow-task-table .workflow-task-current > td { background: #ecf7ff; }
 .workflow-task-workflow { display: grid; min-width: 0; gap: 4px; }
 .workflow-task-workflow strong { overflow: hidden; color: #303640; text-overflow: ellipsis; white-space: nowrap; }
 .workflow-task-workflow small { color: #8a95a4; font-size: 12px; }
