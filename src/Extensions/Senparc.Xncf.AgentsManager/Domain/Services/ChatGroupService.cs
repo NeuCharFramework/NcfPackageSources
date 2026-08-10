@@ -195,6 +195,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 throw new NcfExceptionBase($"聊天组不存在：{groupId}");
             }
 
+            if (!chatGroup.Enable)
+            {
+                throw new NcfExceptionBase($"聊天组“{chatGroup.Name}”已停用，不能创建新的执行任务。");
+            }
+
             // 默认模型继承规则：未显式指定模型时，优先继承当前群主使用的 Prompt 模型。
             if (aiModelId <= 0)
             {

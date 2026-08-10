@@ -12,23 +12,34 @@ namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 public static class WorkflowFunctionSchemaBuilder
 {
     public static List<WorkflowFunctionParameterSchema> Build(NeuCharFunctionDescriptor descriptor) =>
-        descriptor.Parameters.Select(z => new WorkflowFunctionParameterSchema
+        descriptor.Parameters.Select((z, index) =>
         {
-            Name = z.Name,
-            Title = z.Title,
-            Description = z.Description,
-            Required = z.IsRequired,
-            ParameterType = (int)z.ParameterType,
-            SystemType = z.SystemType,
-            MaxLength = z.MaxLength,
-            Filterable = z.Filterable,
-            AllowCreate = z.AllowCreate,
-            DefaultValue = z.ParameterType == ParameterType.Password ? null : z.Value,
-            Options = z.SelectionList?.Items?.Select(item => new WorkflowFunctionParameterOption(
-                item.Value,
-                item.Text,
-                item.Note,
-                item.DefaultSelected)).ToList() ?? new List<WorkflowFunctionParameterOption>()
+            var hasSyntheticName = string.IsNullOrWhiteSpace(z.Name);
+            return new WorkflowFunctionParameterSchema
+            {
+                // Name is the persisted configuration key. A bad third-party Function descriptor
+                // must still be editable as a draft, but it cannot be executed until the module
+                // restores its real field name.
+                Name = hasSyntheticName ? $"parameter_{index + 1}" : z.Name.Trim(),
+                Title = z.Title,
+                Description = z.Description,
+                Required = z.IsRequired,
+                ParameterType = (int)z.ParameterType,
+                SystemType = z.SystemType,
+                MaxLength = z.MaxLength,
+                Filterable = z.Filterable,
+                AllowCreate = z.AllowCreate,
+                HasSyntheticName = hasSyntheticName,
+                MetadataError = hasSyntheticName
+                    ? "Function 参数元数据缺少字段名；当前仅可保存草稿，修复或更新模块后才能运行。"
+                    : null,
+                DefaultValue = z.ParameterType == ParameterType.Password ? null : z.Value,
+                Options = z.SelectionList?.Items?.Select(item => new WorkflowFunctionParameterOption(
+                    item.Value,
+                    item.Text,
+                    item.Note,
+                    item.DefaultSelected)).ToList() ?? new List<WorkflowFunctionParameterOption>()
+            };
         }).ToList();
 
     public static Dictionary<string, object> BuildDefaults(IEnumerable<WorkflowFunctionParameterSchema> parameters)
@@ -67,6 +78,8 @@ public sealed class WorkflowFunctionParameterSchema
     public int MaxLength { get; set; }
     public bool Filterable { get; set; }
     public bool AllowCreate { get; set; }
+    public bool HasSyntheticName { get; set; }
+    public string MetadataError { get; set; }
     public object DefaultValue { get; set; }
     public List<WorkflowFunctionParameterOption> Options { get; set; } = new();
 }

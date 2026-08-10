@@ -46,6 +46,10 @@
                 visible: false
             },
             activeModuleTab: 'function',
+            requestedFunctionKey: '',
+            requestedFunctionAction: '',
+            highlightedFunctionKey: '',
+            functionNavigationApplied: false,
             updateLogVisible: false,
             pivot: {
                 loading: false,
@@ -74,6 +78,7 @@
         };
     },
     created() {
+        this.readFunctionNavigation();
         this.getList();
     },
     methods: {
@@ -131,6 +136,58 @@
             this.data.xncfRegister.interfaces = this.data.xncfRegister.interfaces.splice(1);
             window.document.title = this.data.xncfModule.menuName;
             await Promise.all([this.loadPivot(), this.loadAiModels()]);
+            this.applyFunctionNavigation();
+        },
+
+        readFunctionNavigation() {
+            if (typeof window === 'undefined' || typeof URLSearchParams === 'undefined') {
+                return;
+            }
+            const params = new URLSearchParams(window.location.search || '');
+            this.requestedFunctionKey = String(params.get('functionKey') || '').trim();
+            this.requestedFunctionAction = String(params.get('action') || 'settings').trim().toLowerCase();
+        },
+        functionKey(item) {
+            return String(item && item.key && (item.key.functionKey || item.key.name) || '').trim();
+        },
+        functionAnchorId(item) {
+            const key = this.functionKey(item);
+            return key ? `function-${encodeURIComponent(key)}` : '';
+        },
+        isFocusedFunction(item) {
+            return !!this.highlightedFunctionKey &&
+                this.functionKey(item).toLowerCase() === this.highlightedFunctionKey.toLowerCase();
+        },
+        applyFunctionNavigation() {
+            if (this.functionNavigationApplied || !this.requestedFunctionKey) {
+                return;
+            }
+            this.functionNavigationApplied = true;
+            const items = (this.data && this.data.functionParameterInfoCollection) || [];
+            const item = items.find(candidate =>
+                this.functionKey(candidate).toLowerCase() === this.requestedFunctionKey.toLowerCase());
+            if (!item) {
+                if (this.$notify) {
+                    this.$notify({
+                        title: ncfT('Xncf.Prompt'),
+                        message: '目标 Function 已被移除或在模块更新后发生变化。',
+                        type: 'warning'
+                    });
+                }
+                return;
+            }
+
+            this.highlightedFunctionKey = this.functionKey(item);
+            this.$nextTick(() => {
+                const target = document.getElementById(this.functionAnchorId(item));
+                if (target && typeof target.scrollIntoView === 'function') {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                if (this.requestedFunctionAction === 'run') {
+                    this.openRun(item, this.data.xncfModule.state);
+                }
+                window.setTimeout(() => { this.highlightedFunctionKey = ''; }, 2600);
+            });
         },
 
         unwrapResponse(response) {

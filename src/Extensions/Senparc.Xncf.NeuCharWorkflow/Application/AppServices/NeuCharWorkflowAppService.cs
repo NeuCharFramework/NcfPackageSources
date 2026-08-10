@@ -107,7 +107,7 @@ public sealed class NeuCharWorkflowAppService
         NeuCharWorkflowGraph graph;
         try
         {
-            graph = _workflowEngine.ParseAndValidateGraph(request.GraphJson);
+            graph = _workflowEngine.ParseAndValidateGraph(request.GraphJson, requireAllNodesReachable: false);
         }
         catch (Exception ex) when (ex is InvalidOperationException or JsonException)
         {
@@ -137,7 +137,10 @@ public sealed class NeuCharWorkflowAppService
             throw new WorkflowInputException(ex.Message, ex);
         }
 
-        if (request.Enabled)
+        var hasDisconnectedNodes = _workflowEngine.GetDisconnectedNodes(graph).Count > 0;
+        // 未连接节点属于草稿；保留它们以便继续编辑，但不要让定时或 Webhook 触发半成品。
+        var enabled = request.Enabled && !hasDisconnectedNodes;
+        if (enabled)
         {
             var referenceError = await _workflowEngine.ValidateReferencesAsync(graph, cancellationToken).ConfigureAwait(false);
             if (referenceError != null)
@@ -190,18 +193,18 @@ public sealed class NeuCharWorkflowAppService
             throw new WorkflowInputException(ex.Message, ex);
         }
 
-        var nextRun = request.Enabled
+        var nextRun = enabled
             ? NeuCharWorkflowEngine.CalculateNextRun(triggerType, triggerConfigJson, DateTime.UtcNow)
             : null;
         var autoSaveMinutes = request.AutoSaveMinutes <= 0 ? 0 : Math.Clamp(request.AutoSaveMinutes, 1, 1440);
-        if (workflow.Id > 0 && IsUnchanged(workflow, request, normalizedGraphJson, triggerType, triggerConfigJson, autoSaveMinutes))
+        if (workflow.Id > 0 && IsUnchanged(workflow, request, normalizedGraphJson, enabled, triggerType, triggerConfigJson, autoSaveMinutes))
         {
             var editableUnchanged = await _workflowEngine.BuildEditableGraphJsonAsync(workflow.GraphJson, cancellationToken)
                 .ConfigureAwait(false);
             return ToDetail(workflow, editableUnchanged, unchanged: true);
         }
 
-        workflow.Update(request.Name, request.Description, normalizedGraphJson, request.Enabled, triggerType,
+        workflow.Update(request.Name, request.Description, normalizedGraphJson, enabled, triggerType,
             triggerConfigJson, nextRun, autoSaveMinutes);
         await _workflowService.SaveObjectAsync(workflow).ConfigureAwait(false);
         await SaveVersionAsync(workflow, adminUserId, request.SaveSource).ConfigureAwait(false);
@@ -406,12 +409,12 @@ public sealed class NeuCharWorkflowAppService
         }
     }
 
-    private static bool IsUnchanged(WorkflowEntity workflow, SaveWorkflowCommand request, string graphJson,
+    private static bool IsUnchanged(WorkflowEntity workflow, SaveWorkflowCommand request, string graphJson, bool enabled,
         string triggerType, string triggerConfigJson, int autoSaveMinutes) =>
         string.Equals(workflow.Name, request.Name?.Trim(), StringComparison.Ordinal) &&
         string.Equals(workflow.Description, request.Description?.Trim(), StringComparison.Ordinal) &&
         string.Equals(workflow.GraphJson, graphJson, StringComparison.Ordinal) &&
-        workflow.Enabled == request.Enabled &&
+        workflow.Enabled == enabled &&
         string.Equals(workflow.TriggerType, triggerType, StringComparison.Ordinal) &&
         string.Equals(workflow.TriggerConfigJson, triggerConfigJson, StringComparison.Ordinal) &&
         workflow.AutoSaveMinutes == autoSaveMinutes;

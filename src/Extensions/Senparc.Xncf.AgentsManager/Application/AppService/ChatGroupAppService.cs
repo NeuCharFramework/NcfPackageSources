@@ -103,6 +103,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         return $"未找到需要编辑的 ChatGroup，ID：{chatGroupId}";
                     }
 
+                    // 此 Function 没有 Enable 入参；编辑既有组时应保留管理员设置的启用状态。
+                    chatGroupDto.Enable = chatGroup.Enable;
                     chatGroup.Update(chatGroupDto);
                 }
 
@@ -399,7 +401,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 {
                     //新建
                     chatGroup = new ChatGroup(chatGroupDto);
-                    isNew = false;
+                    isNew = true;
                 }
                 else
                 {
@@ -455,6 +457,34 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     Logs = logger.ToString(),
                     ChatGroupDto = this._chatGroupService.Mapping<ChatGroupDto>(chatGroup)
                 };
+            });
+        }
+
+        /// <summary>
+        /// 启用或停用 ChatGroup。停用后不再接收新的群组执行任务。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<string>> Enable(int id, bool enable)
+        {
+            return await this.GetResponseAsync<string>(async (response, logger) =>
+            {
+                var chatGroup = await _chatGroupService.GetObjectAsync(z => z.Id == id);
+                if (chatGroup == null)
+                {
+                    throw new NcfExceptionBase($"未找到 ChatGroup，ID：{id}");
+                }
+
+                if (enable)
+                {
+                    chatGroup.EnableGroup();
+                }
+                else
+                {
+                    chatGroup.DisableGroup();
+                }
+
+                await _chatGroupService.SaveObjectAsync(chatGroup);
+                return $"已完成{(enable ? "启用" : "停用")}群组“{chatGroup.Name}”";
             });
         }
 

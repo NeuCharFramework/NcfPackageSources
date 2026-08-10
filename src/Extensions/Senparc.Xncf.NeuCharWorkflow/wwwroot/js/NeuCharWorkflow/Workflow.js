@@ -14,6 +14,8 @@ new Vue({
             paletteSearch: '',
             pinnedFunctions: [],
             editing: false,
+            discardConfirming: false,
+            webhookHelpVisible: false,
             selectedNodeId: '',
             connectionDraft: { sourceId: '', sourceHandle: '', x: 0, y: 0 },
             dragState: null,
@@ -79,6 +81,7 @@ new Vue({
                 String(item.providerId || '').toLowerCase() === String(config.providerId || '').toLowerCase() &&
                 String(item.objectId || '') === String(config.objectId || '')) || null;
         },
+        disconnectedNodes() { return this.getDisconnectedNodes(); },
         connectionSourceName() {
             const node = this.form.graph.nodes.find(item => item.id === this.connectionDraft.sourceId);
             return node ? node.name : '';
@@ -105,6 +108,7 @@ new Vue({
             if (this.saveState.saving) return '正在保存…';
             if (this.saveState.status === 'error') return this.saveState.error || '保存失败';
             if (this.saveDirty) return '有尚未保存的更改';
+            if (this.disconnectedNodes.length) return `草稿：${this.disconnectedNodes.length} 个未连接节点`;
             if (this.saveState.lastSavedLabel) return `已保存 ${this.saveState.lastSavedLabel}`;
             return this.form.id ? '已保存' : '尚未保存';
         },
@@ -150,12 +154,12 @@ new Vue({
         minimapViewportStyle() {
             const metrics = this.minimapMetrics;
             const viewport = this.canvasViewport;
-            const stage = this.$refs && this.$refs.stage;
-            const stageTop = stage ? Number(stage.offsetTop || 0) : 0;
+            const canvas = this.$refs && this.$refs.canvas;
+            const stageContentTop = this.stageContentTop ? this.stageContentTop(canvas) : 0;
             const worldLeft = Math.max(0, Number(viewport.scrollLeft || 0) / this.canvasZoom);
-            const worldTop = Math.max(0, (Number(viewport.scrollTop || 0) - stageTop) / this.canvasZoom);
+            const worldTop = Math.max(0, Number(viewport.scrollTop || 0) / this.canvasZoom);
             const width = Math.min(metrics.width, Number(viewport.width || 0) / this.canvasZoom * metrics.scale);
-            const height = Math.min(metrics.height, Number(viewport.height || 0) / this.canvasZoom * metrics.scale);
+            const height = Math.min(metrics.height, Math.max(0, Number(viewport.height || 0) - stageContentTop) / this.canvasZoom * metrics.scale);
             return {
                 left: `${Math.max(0, Math.min(metrics.width - width, worldLeft * metrics.scale))}px`,
                 top: `${Math.max(0, Math.min(metrics.height - height, worldTop * metrics.scale))}px`,
@@ -194,6 +198,7 @@ new Vue({
         window.addEventListener('mousemove', this.onPointerMove);
         window.addEventListener('mouseup', this.onPointerUp);
         window.addEventListener('keydown', this.onSaveShortcut);
+        window.addEventListener('beforeunload', this.onBeforeUnload);
         window.addEventListener('resize', this.updateCanvasViewport);
         window.addEventListener('scroll', this.updateCanvasViewport, true);
         this.$nextTick(() => {
@@ -208,6 +213,7 @@ new Vue({
         window.removeEventListener('mousemove', this.onPointerMove);
         window.removeEventListener('mouseup', this.onPointerUp);
         window.removeEventListener('keydown', this.onSaveShortcut);
+        window.removeEventListener('beforeunload', this.onBeforeUnload);
         window.removeEventListener('resize', this.updateCanvasViewport);
         window.removeEventListener('scroll', this.updateCanvasViewport, true);
         if (this.canvasResizeObserver) this.canvasResizeObserver.disconnect();
@@ -231,8 +237,8 @@ new Vue({
                 this.workflowObjects = data.objects || [];
             } finally { this.loading = false; }
         },
-        createWorkflow() {
-            if (this.editingLocked) return;
+        async createWorkflow() {
+            if (this.editingLocked || this.saveState.saving || !await this.confirmDiscardChanges('新建工作流')) return;
             this.form = this.emptyForm();
             this.editing = true;
             this.selectedNodeId = '';
@@ -243,7 +249,8 @@ new Vue({
             this.$nextTick(this.autoLayout);
         },
         async editWorkflow(id) {
-            if (this.editingLocked) return;
+            if (this.editingLocked || this.saveState.saving || Number(id) === Number(this.form.id)) return;
+            if (!await this.confirmDiscardChanges('切换工作流')) return;
             this.loading = true;
             try {
                 const response = await service.get(`/Admin/NeuCharWorkflow/Index?handler=Detail&id=${id}`);
@@ -284,11 +291,14 @@ new Vue({
                 this.cancelConnection();
                 this.resetRunState();
                 this.markSaved();
-                if (graph.nodes.length > 1 && graph.nodes.every(node => Number(node.x) === 0)) {
-                    this.$nextTick(this.autoLayout);
-                } else {
-                    this.updateCanvasSize();
-                }
+                this.$nextTick(() => {
+                    if (graph.nodes.length > 1 && graph.nodes.every(node => Number(node.x) === 0)) {
+                        this.autoLayout();
+                    } else {
+                        this.updateCanvasSize();
+                    }
+                    this.$nextTick(() => this.fitCanvasToNodes());
+                });
             } finally { this.loading = false; }
         },
         makeId(prefix) { return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 100000)}`; },
@@ -511,7 +521,14 @@ new Vue({
             };
         },
         clampCanvasZoom(value) {
-            return Math.round(Math.min(2, Math.max(.5, Number(value) || 1)) * 100) / 100;
+            return Math.round(Math.min(2, Math.max(.02, Number(value) || 1)) * 100) / 100;
+        },
+        stageContentTop(canvas, canvasRect) {
+            const stage = this.$refs && this.$refs.stage;
+            if (!canvas || !stage || typeof stage.getBoundingClientRect !== 'function') return 0;
+            const stageRect = stage.getBoundingClientRect();
+            const rect = canvasRect || canvas.getBoundingClientRect();
+            return Math.max(0, Number(stageRect.top || 0) - Number(rect.top || 0) + Number(canvas.scrollTop || 0));
         },
         setCanvasZoom(value, clientX, clientY) {
             const nextZoom = this.clampCanvasZoom(value);
@@ -523,14 +540,15 @@ new Vue({
             }
 
             const rect = canvas.getBoundingClientRect();
+            const stageContentTop = this.stageContentTop(canvas, rect);
             const localX = Number.isFinite(clientX) ? Math.max(0, Math.min(canvas.clientWidth, clientX - rect.left)) : canvas.clientWidth / 2;
-            const localY = Number.isFinite(clientY) ? Math.max(0, Math.min(canvas.clientHeight, clientY - rect.top)) : canvas.clientHeight / 2;
-            const stage = this.$refs.stage;
-            const stageTop = stage ? Number(stage.offsetTop || 0) : 0;
+            const localY = Number.isFinite(clientY)
+                ? Math.max(0, Math.min(canvas.clientHeight, clientY - rect.top))
+                : (canvas.clientHeight + Math.min(canvas.clientHeight, stageContentTop)) / 2;
             const worldX = (canvas.scrollLeft + localX) / currentZoom;
-            const worldY = (canvas.scrollTop - stageTop + localY) / currentZoom;
+            const worldY = (canvas.scrollTop - stageContentTop + localY) / currentZoom;
             const nextScrollLeft = Math.max(0, worldX * nextZoom - localX);
-            const nextScrollTop = Math.max(0, stageTop + worldY * nextZoom - localY);
+            const nextScrollTop = Math.max(0, stageContentTop + worldY * nextZoom - localY);
             this.canvasZoom = nextZoom;
 
             const applyScrollPosition = () => {
@@ -669,6 +687,45 @@ new Vue({
             this.canvasSize = { width: maxX, height: maxY };
             if (typeof this.refreshCanvasViewport === 'function') this.refreshCanvasViewport();
         },
+        fitCanvasToNodes() {
+            const canvas = this.$refs && this.$refs.canvas;
+            const nodes = this.form.graph.nodes || [];
+            if (!canvas || !nodes.length) return false;
+
+            const nodeWidth = 220;
+            const nodeHeight = 92;
+            const padding = 54;
+            const positions = nodes.map(node => ({
+                x: Number.isFinite(Number(node.x)) ? Number(node.x) : 0,
+                y: Number.isFinite(Number(node.y)) ? Number(node.y) : 0
+            }));
+            const left = Math.min(...positions.map(position => position.x)) - padding;
+            const top = Math.min(...positions.map(position => position.y)) - padding;
+            const right = Math.max(...positions.map(position => position.x + nodeWidth)) + padding;
+            const bottom = Math.max(...positions.map(position => position.y + nodeHeight)) + padding;
+            const stageContentTop = this.stageContentTop ? this.stageContentTop(canvas) : 0;
+            const viewportWidth = Number(canvas.clientWidth || 0);
+            const viewportHeight = Math.max(0, Number(canvas.clientHeight || 0) - stageContentTop);
+            if (viewportWidth <= 0 || viewportHeight <= 0) return false;
+
+            const requestedZoom = Math.min(
+                viewportWidth / Math.max(1, right - left),
+                viewportHeight / Math.max(1, bottom - top));
+            // Never round a fit value up: doing so can clip an edge node by a few pixels.
+            const nextZoom = this.clampCanvasZoom(Math.floor(requestedZoom * 100) / 100);
+            this.canvasZoom = nextZoom;
+            const centerX = (left + right) / 2;
+            const centerY = (top + bottom) / 2;
+            const applyScrollPosition = () => {
+                canvas.scrollLeft = Math.max(0, centerX * nextZoom - viewportWidth / 2);
+                canvas.scrollTop = Math.max(0,
+                    stageContentTop + centerY * nextZoom - (Number(canvas.clientHeight || 0) + stageContentTop) / 2);
+                this.updateCanvasViewport();
+            };
+            if (typeof this.$nextTick === 'function') this.$nextTick(applyScrollPosition);
+            else applyScrollPosition();
+            return true;
+        },
         minimapNodeStyle(node) {
             const metrics = this.minimapMetrics;
             return {
@@ -696,10 +753,9 @@ new Vue({
             const rect = surface.getBoundingClientRect();
             const worldX = Math.max(0, Math.min(metrics.width, event.clientX - rect.left)) / metrics.scale;
             const worldY = Math.max(0, Math.min(metrics.height, event.clientY - rect.top)) / metrics.scale;
-            const stage = this.$refs.stage;
-            const stageTop = stage ? Number(stage.offsetTop || 0) : 0;
+            const stageContentTop = this.stageContentTop(canvas);
             canvas.scrollLeft = Math.max(0, worldX * this.canvasZoom - canvas.clientWidth / 2);
-            canvas.scrollTop = Math.max(0, stageTop + worldY * this.canvasZoom - canvas.clientHeight / 2);
+            canvas.scrollTop = Math.max(0, stageContentTop + worldY * this.canvasZoom - (canvas.clientHeight + stageContentTop) / 2);
             this.updateCanvasViewport();
         },
         nodeSummary(node) {
@@ -715,11 +771,11 @@ new Vue({
             return node.type === 'agent-group' ? 'Agent 组' : node.type === 'agent' ? '独立 Agent' : node.type;
         },
         nodeState(node) { return this.run.nodeStates[node.id] || ''; },
-        functionParameters(fn) { return NeuCharWorkflowUi.parseJson(fn.parameterSchemaJson, []); },
-        parameterDisplayName(parameter) {
+        functionParameters(fn) { return NeuCharWorkflowUi.normalizeParameterSchema(NeuCharWorkflowUi.parseJson(fn.parameterSchemaJson, [])); },
+        parameterDisplayName(parameter, index) {
             const title = String(parameter?.title || '').trim();
             const name = String(parameter?.name || '').trim();
-            return title || name || '未命名参数';
+            return title || name || `参数 ${Number(index || 0) + 1}`;
         },
         hasParameterFieldName(parameter) {
             const title = String(parameter?.title || '').trim();
@@ -763,6 +819,24 @@ new Vue({
             const editor = window.open(url, '_blank', 'noopener,noreferrer');
             if (editor) editor.opener = null;
         },
+        functionAnchorId(fn) {
+            const functionKey = String(fn?.functionKey || fn?.name || '').trim();
+            return functionKey ? `function-${encodeURIComponent(functionKey)}` : '';
+        },
+        functionPageUrl(fn, action) {
+            const moduleUid = String(fn?.moduleUid || '').trim();
+            const functionKey = String(fn?.functionKey || '').trim();
+            if (!moduleUid || !functionKey) return '';
+            const pageAction = action === 'run' ? 'run' : 'settings';
+            const anchor = `function-${encodeURIComponent(functionKey)}`;
+            return `/Admin/XncfModule/Start/?uid=${encodeURIComponent(moduleUid)}&functionKey=${encodeURIComponent(functionKey)}&action=${pageAction}#${anchor}`;
+        },
+        openFunctionPage(fn, action) {
+            const url = this.functionPageUrl(fn, action);
+            if (!url) return;
+            const page = window.open(url, '_blank', 'noopener,noreferrer');
+            if (page) page.opener = null;
+        },
         functionIdentity(fn) { return `${String(fn.moduleUid).toLowerCase()}|${String(fn.functionKey).toLowerCase()}`; },
         loadPinnedFunctions() {
             try { this.pinnedFunctions = JSON.parse(localStorage.getItem('ncf.neucharworkflow.pins') || '[]'); }
@@ -793,7 +867,10 @@ new Vue({
             visited.add(node.id);
             if (node.type === 'function') {
                 const fn = this.findFunction(node.config);
-                return (fn && fn.output && fn.output.fields) || [{ path: '$', label: '完整输出', typeName: 'any', isArray: false, requiresIndex: false }];
+                const outputFields = (fn && fn.output && Array.isArray(fn.output.fields))
+                    ? fn.output.fields
+                    : [{ path: '$', label: '完整输出', typeName: 'any', isArray: false, requiresIndex: false }];
+                return [...outputFields, ...this.functionSelectionInputFields(fn)];
             }
             if (node.type === 'aggregate') return [{ path: '$', label: '聚合结果', typeName: 'any', isArray: true, requiresIndex: false }];
             if (node.type === 'webhook-trigger') {
@@ -806,6 +883,33 @@ new Vue({
             const incoming = this.form.graph.edges.find(edge => edge.target === node.id);
             const source = incoming && this.form.graph.nodes.find(item => item.id === incoming.source);
             return source ? this.nodeOutputFields(source, visited) : [{ path: '$', label: '节点输出', typeName: 'any', isArray: false, requiresIndex: false }];
+        },
+        functionSelectionInputFields(fn) {
+            if (!fn) return [];
+            return this.functionParameters(fn)
+                .filter(parameter => [1, 2].includes(Number(parameter.parameterType)) &&
+                    String(parameter.name || '').trim() && !parameter.hasSyntheticName)
+                .map(parameter => {
+                    const isMultiple = Number(parameter.parameterType) === 2;
+                    const options = Array.isArray(parameter.options) ? parameter.options : [];
+                    const optionNames = options
+                        .map(option => String(option.text || option.value || '').trim())
+                        .filter(Boolean)
+                        .slice(0, 3);
+                    const optionSuffix = optionNames.length
+                        ? `：${optionNames.join('、')}${options.length > optionNames.length ? '…' : ''}`
+                        : '；选项元数据暂不可用';
+                    const shape = this.expectedShape(parameter);
+                    return {
+                        path: `$.__functionInput.${parameter.name}`,
+                        label: `输入选择 · ${this.parameterDisplayName(parameter)}（${isMultiple ? '多选' : '单选'}${optionSuffix}）`,
+                        typeName: shape.typeName,
+                        isArray: shape.isArray,
+                        requiresIndex: false,
+                        sourceKind: 'function-selection',
+                        sourceParameterName: parameter.name
+                    };
+                });
         },
         upstreamOutputOptions(parameter) {
             return this.upstreamNodes(this.selectedNode).map(node => ({
@@ -841,6 +945,8 @@ new Vue({
                     sourceType: field.typeName,
                     isArray: !!field.isArray,
                     requiresIndex: !!field.requiresIndex,
+                    sourceKind: field.sourceKind || 'output',
+                    sourceParameterName: field.sourceParameterName || null,
                     collectionIndex: null,
                     itemIndex: null
                 }
@@ -865,7 +971,12 @@ new Vue({
             const source = this.form.graph.nodes.find(item => item.id === rawBinding.nodeId);
             const field = source && this.nodeOutputFields(source).find(item => item.path === (rawBinding.path || '$'));
             if (!source || !this.upstreamNodes(node).some(item => item.id === source.id)) return { level: 'danger', text: '关联节点已不是有效上游节点' };
-            if (!field) return { level: 'danger', text: '关联的输出字段已不存在' };
+            if (!field) return rawBinding.sourceKind === 'function-selection'
+                ? { level: 'danger', text: '关联的 Function 选择参数已在模块更新后删除或不可用' }
+                : { level: 'danger', text: '关联的输出字段已不存在' };
+            if (String(rawBinding.sourceKind || 'output') !== String(field.sourceKind || 'output')) {
+                return { level: 'danger', text: '关联字段类型已在模块更新后发生变化，请重新选择来源' };
+            }
             const binding = this.resolvedBindingFor(node, parameter);
             if (!binding) return { level: 'manual', text: '手动输入' };
             const expected = this.expectedShape(parameter);
@@ -885,10 +996,39 @@ new Vue({
             if (!selection || selection.length < 2) { this.$set(node.config, key, ''); return; }
             const source = this.form.graph.nodes.find(item => item.id === selection[0]);
             const field = this.nodeOutputFields(source).find(item => item.path === selection[1]);
-            this.$set(node.config, key, { $source: { nodeId: source.id, path: field.path, sourceType: field.typeName, isArray: !!field.isArray, requiresIndex: !!field.requiresIndex, collectionIndex: null, itemIndex: null } });
+            this.$set(node.config, key, {
+                $source: {
+                    nodeId: source.id,
+                    path: field.path,
+                    sourceType: field.typeName,
+                    isArray: !!field.isArray,
+                    requiresIndex: !!field.requiresIndex,
+                    sourceKind: field.sourceKind || 'output',
+                    sourceParameterName: field.sourceParameterName || null,
+                    collectionIndex: null,
+                    itemIndex: null
+                }
+            });
         },
         configValueLabel(value) { return this.isBinding(value) ? `关联：${value.$source.nodeId}` : String(value || ''); },
-        validate() {
+        getDisconnectedNodes() {
+            const nodes = this.form.graph.nodes || [];
+            const nodeIds = new Set(nodes.map(node => node.id));
+            const trigger = nodes.find(node => String(node.type).endsWith('trigger'));
+            if (!trigger) return [];
+            const visited = new Set(); const queue = [trigger.id];
+            while (queue.length) {
+                const current = queue.shift();
+                if (visited.has(current)) continue;
+                visited.add(current);
+                this.form.graph.edges
+                    .filter(edge => edge.source === current && nodeIds.has(edge.target))
+                    .forEach(edge => queue.push(edge.target));
+            }
+            return nodes.filter(node => !visited.has(node.id));
+        },
+        validate(options) {
+            const requireRunnable = !options || options.requireRunnable !== false;
             if (!this.form.name.trim()) return '请输入工作流名称。';
             const triggers = this.form.graph.nodes.filter(node => String(node.type).endsWith('trigger'));
             if (triggers.length !== 1) return '工作流必须且只能包含一个触发器。';
@@ -906,22 +1046,22 @@ new Vue({
                     if (String(parameter.description || '').length > 500) return `Webhook 参数“${name}”的说明不能超过 500 个字符。`;
                 }
             }
-            const visited = new Set(); const queue = [trigger.id];
-            while (queue.length) {
-                const current = queue.shift(); if (visited.has(current)) continue; visited.add(current);
-                this.form.graph.edges.filter(edge => edge.source === current).forEach(edge => queue.push(edge.target));
-            }
-            if (visited.size !== this.form.graph.nodes.length) return '画布中仍有未连接到触发器的节点。';
+            const disconnected = this.getDisconnectedNodes();
+            if (requireRunnable && disconnected.length) return '画布中仍有未连接到触发器的节点。';
             for (const node of this.form.graph.nodes) {
                 const incoming = this.incomingEdges(node.id);
                 if (!this.supportsMultipleInputs(node) && incoming.length > 1) return `节点“${node.name}”只允许一个上游；多对一目标请使用 Function 或聚合节点。`;
             }
+            if (!requireRunnable) return '';
             for (const node of this.form.graph.nodes.filter(item => item.type === 'function')) {
                 const fn = this.findFunction(node.config);
                 if (!fn || !fn.moduleAvailable) return `节点“${node.name}”引用的模块未开启或 Function 已移除。`;
                 const missing = NeuCharWorkflowUi.firstMissingRequired(fn, node.config.parameters || {});
                 if (missing) return `节点“${node.name}”缺少必填参数“${missing.title || missing.name}”。`;
                 for (const parameter of this.functionParameters(fn)) {
+                    if (parameter.hasSyntheticName || parameter.metadataError) {
+                        return `节点“${node.name}”参数“${this.parameterDisplayName(parameter)}”缺少原始字段名，当前仅可保存草稿；请修复或更新对应 XNCF 模块。`;
+                    }
                     const compatibility = this.bindingCompatibility(node, parameter);
                     if (compatibility.level === 'danger' || compatibility.level === 'warning') return `节点“${node.name}”参数“${parameter.title || parameter.name}”：${compatibility.text}`;
                 }
@@ -1006,10 +1146,38 @@ new Vue({
             event.preventDefault();
             if (!this.editingLocked) this.saveWorkflow({ source: 'shortcut' });
         },
+        async confirmDiscardChanges(action) {
+            if (!this.saveDirty) return true;
+            if (this.discardConfirming) return false;
+            this.discardConfirming = true;
+            try {
+                await this.$confirm(
+                    '当前工作流有未保存的更改。离开后这些更改将丢失。',
+                    action || '确认离开当前工作流？',
+                    {
+                        confirmButtonText: '放弃更改',
+                        cancelButtonText: '继续编辑',
+                        type: 'warning',
+                        distinguishCancelAndClose: true
+                    });
+                return true;
+            } catch {
+                return false;
+            } finally {
+                this.discardConfirming = false;
+            }
+        },
+        onBeforeUnload(event) {
+            if (!this.saveDirty) return undefined;
+            event.preventDefault();
+            event.returnValue = '';
+            return '';
+        },
         applySavedWorkflow(saved) {
             this.form.id = Number(saved.id || this.form.id || 0);
             this.form.revision = Number(saved.revision || this.form.revision || 0);
             this.form.autoSaveMinutes = Number(saved.autoSaveMinutes ?? this.form.autoSaveMinutes ?? 3);
+            if (typeof saved.enabled === 'boolean') this.form.enabled = saved.enabled;
             if (saved.triggerType) this.form.triggerType = saved.triggerType;
             const trigger = NeuCharWorkflowUi.parseJson(saved.triggerConfigJson, {});
             this.form.intervalSeconds = Number(trigger.intervalSeconds || this.form.intervalSeconds || 300);
@@ -1037,7 +1205,7 @@ new Vue({
                 this.scheduleAutoSave();
                 return { id: this.form.id, revision: this.form.revision, unchanged: true };
             }
-            const error = this.validate();
+            const error = this.validate({ requireRunnable: false });
             if (error) {
                 this.saveState.status = 'error';
                 this.saveState.error = error;
@@ -1063,7 +1231,13 @@ new Vue({
                 }, { customAlert: true });
                 const saved = NeuCharWorkflowUi.unwrap(response);
                 this.applySavedWorkflow(saved);
-                if (!options.silent) this.$notify({ title: 'Workflow', message: options.source === 'shortcut' ? '已使用快捷键保存。' : '工作流已保存。', type: 'success' });
+                if (!options.silent) {
+                    const draftCount = this.disconnectedNodes.length;
+                    const message = draftCount
+                        ? `草稿已保存。${draftCount} 个未连接节点会阻止运行；已自动停用工作流，请连接完成后重新启用。`
+                        : (options.source === 'shortcut' ? '已使用快捷键保存。' : '工作流已保存。');
+                    this.$notify({ title: 'Workflow', message, type: draftCount ? 'warning' : 'success' });
+                }
                 await this.loadAll();
                 return saved;
             } catch (error) {
@@ -1076,7 +1250,7 @@ new Vue({
         },
         async startWorkflow() {
             if (this.run.running || this.run.validating) return;
-            const localError = this.validate();
+            const localError = this.validate({ requireRunnable: true });
             if (localError) { this.appendConsole('validation', localError, 'failed'); this.$notify({ title: '运行前校验失败', message: localError, type: 'warning' }); return; }
             this.run.validating = true;
             this.run.error = '';
@@ -1147,8 +1321,24 @@ new Vue({
             const data = error && error.response && error.response.data;
             return String((data && (data.title || data.detail || data)) || fallback);
         },
+        async handleWorkflowAction(action) {
+            if (action !== 'delete' || !this.form.id || this.editingLocked || this.saveState.saving) return;
+            try {
+                await this.$confirm(
+                    `确认删除工作流“${this.form.name || this.form.id}”？此操作无法恢复。`,
+                    '删除工作流',
+                    {
+                        confirmButtonText: '删除',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    });
+            } catch {
+                return;
+            }
+            await this.deleteWorkflow();
+        },
         async deleteWorkflow() {
-            if (this.editingLocked) return;
+            if (!this.form.id || this.editingLocked || this.saveState.saving) return;
             await service.post('/Admin/NeuCharWorkflow/Index?handler=Delete', { id: this.form.id }, { customAlert: true });
             this.form = this.emptyForm(); this.editing = false; this.resetSaveState(); this.resetRunState(); await this.loadAll();
         }

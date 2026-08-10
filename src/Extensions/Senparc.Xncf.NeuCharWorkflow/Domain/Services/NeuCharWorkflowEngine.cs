@@ -96,7 +96,10 @@ public sealed class NeuCharWorkflowEngine
             .ToDictionary(z => z.Key, z => z.First(), StringComparer.OrdinalIgnoreCase);
     }
 
-    public NeuCharWorkflowGraph ParseAndValidateGraph(string graphJson)
+    /// <summary>
+    /// 解析并校验工作流图。保存草稿时可保留未连接节点，但执行前必须要求所有节点均可从触发器到达。
+    /// </summary>
+    public NeuCharWorkflowGraph ParseAndValidateGraph(string graphJson, bool requireAllNodesReachable = true)
     {
         if (graphJson?.Length > 1_000_000)
         {
@@ -207,8 +210,22 @@ public sealed class NeuCharWorkflowEngine
             }
         }
 
-        EnsureAllNodesReachable(graph, triggerNodes[0].Id);
+        if (requireAllNodesReachable)
+        {
+            EnsureAllNodesReachable(graph, triggerNodes[0].Id);
+        }
         return graph;
+    }
+
+    /// <summary>
+    /// 返回无法从唯一触发器到达的草稿节点。调用方应先确保图结构已经通过校验。
+    /// </summary>
+    public IReadOnlyList<NeuCharWorkflowNode> GetDisconnectedNodes(NeuCharWorkflowGraph graph)
+    {
+        ArgumentNullException.ThrowIfNull(graph);
+        var trigger = graph.Nodes.SingleOrDefault(z =>
+            z.Type.EndsWith("trigger", StringComparison.OrdinalIgnoreCase));
+        return trigger == null ? graph.Nodes : FindDisconnectedNodes(graph, trigger.Id);
     }
 
     public async Task<string> ValidateReferencesAsync(
@@ -290,7 +307,7 @@ public sealed class NeuCharWorkflowEngine
         {
             try
             {
-                existingGraph = ParseAndValidateGraph(existingGraphJson);
+                existingGraph = ParseAndValidateGraph(existingGraphJson, requireAllNodesReachable: false);
             }
             catch (InvalidOperationException)
             {
@@ -357,7 +374,7 @@ public sealed class NeuCharWorkflowEngine
         string storedGraphJson,
         CancellationToken cancellationToken = default)
     {
-        var graph = ParseAndValidateGraph(storedGraphJson);
+        var graph = ParseAndValidateGraph(storedGraphJson, requireAllNodesReachable: false);
         foreach (var node in graph.Nodes.Where(z =>
                      z.Type.Equals("function", StringComparison.OrdinalIgnoreCase)))
         {
@@ -416,6 +433,9 @@ public sealed class NeuCharWorkflowEngine
             queue.Enqueue((trigger, triggerInput));
             var visited = new HashSet<string>(StringComparer.Ordinal);
             var outputs = new Dictionary<string, JsonNode>(StringComparer.Ordinal);
+            // Only Selection values are retained for bindings; do not retain unrelated input
+            // parameters such as passwords in the runtime source cache.
+            var functionSelectionInputs = new Dictionary<string, JsonNode>(StringComparer.Ordinal);
             JsonNode finalOutput = JsonValue.Create(input ?? string.Empty);
             while (queue.Count > 0)
             {
@@ -444,6 +464,7 @@ public sealed class NeuCharWorkflowEngine
                         node,
                         currentValue,
                         outputs,
+                        functionSelectionInputs,
                         correlationId,
                         cancellationToken)
                     .ConfigureAwait(false);
@@ -524,6 +545,7 @@ public sealed class NeuCharWorkflowEngine
         NeuCharWorkflowNode node,
         JsonNode input,
         IReadOnlyDictionary<string, JsonNode> outputs,
+        Dictionary<string, JsonNode> functionSelectionInputs,
         string correlationId,
         CancellationToken cancellationToken)
     {
@@ -538,13 +560,13 @@ public sealed class NeuCharWorkflowEngine
                 await Task.Delay(TimeSpan.FromSeconds(delaySeconds), cancellationToken).ConfigureAwait(false);
                 return (true, input, null, null);
             case "condition":
-                var condition = EvaluateCondition(node.Config, input, outputs);
+                var condition = EvaluateCondition(node.Config, input, outputs, functionSelectionInputs);
                 return (true, input, condition, null);
             case "function":
-                return await ExecuteFunctionNodeAsync(node, input, outputs, cancellationToken).ConfigureAwait(false);
+                return await ExecuteFunctionNodeAsync(node, input, outputs, functionSelectionInputs, cancellationToken).ConfigureAwait(false);
             case "agent":
             case "agent-group":
-                return await ExecuteWorkflowObjectNodeAsync(node, input, outputs, correlationId, cancellationToken)
+                return await ExecuteWorkflowObjectNodeAsync(node, input, outputs, functionSelectionInputs, correlationId, cancellationToken)
                     .ConfigureAwait(false);
             case "aggregate":
             case "console":
@@ -559,6 +581,7 @@ public sealed class NeuCharWorkflowEngine
         NeuCharWorkflowNode node,
         JsonNode input,
         IReadOnlyDictionary<string, JsonNode> outputs,
+        Dictionary<string, JsonNode> functionSelectionInputs,
         CancellationToken cancellationToken)
     {
         var reference = await ResolveFunctionReferenceAsync(node, cancellationToken).ConfigureAwait(false);
@@ -580,7 +603,11 @@ public sealed class NeuCharWorkflowEngine
             }
         }
         parameterNode = JsonNode.Parse(_parameterProtector.Unprotect(parameterNode.ToJsonString())) ?? new JsonObject();
-        var parameterJson = ResolveRuntimeValue(parameterNode, input, outputs)?.ToJsonString() ?? "{}";
+        var resolvedParameters = ResolveRuntimeValue(parameterNode, input, outputs, functionSelectionInputs) ?? new JsonObject();
+        functionSelectionInputs[node.Id] = ExtractFunctionSelectionValues(
+            resolvedParameters,
+            reference.Descriptor.Parameters);
+        var parameterJson = resolvedParameters.ToJsonString();
         var result = await _functionService.ExecuteAsync(
             reference.Descriptor.ModuleUid,
             reference.Descriptor.FunctionKey,
@@ -595,6 +622,7 @@ public sealed class NeuCharWorkflowEngine
         NeuCharWorkflowNode node,
         JsonNode input,
         IReadOnlyDictionary<string, JsonNode> outputs,
+        IReadOnlyDictionary<string, JsonNode> functionSelectionInputs,
         string correlationId,
         CancellationToken cancellationToken)
     {
@@ -616,7 +644,8 @@ public sealed class NeuCharWorkflowEngine
         var promptValue = ResolveRuntimeValue(
             node.Config?["prompt"]?.DeepClone() ?? JsonValue.Create("{{input}}"),
             input,
-            outputs);
+            outputs,
+            functionSelectionInputs);
         var prompt = NodeToText(promptValue);
         var result = await provider.ExecuteAsync(
             new WorkflowObjectExecutionRequest(
@@ -633,16 +662,19 @@ public sealed class NeuCharWorkflowEngine
     private static bool EvaluateCondition(
         JsonObject config,
         JsonNode input,
-        IReadOnlyDictionary<string, JsonNode> outputs)
+        IReadOnlyDictionary<string, JsonNode> outputs,
+        IReadOnlyDictionary<string, JsonNode> functionSelectionInputs)
     {
         var left = NodeToText(ResolveRuntimeValue(
             config?["left"]?.DeepClone() ?? JsonValue.Create("{{input}}"),
             input,
-            outputs));
+            outputs,
+            functionSelectionInputs));
         var right = NodeToText(ResolveRuntimeValue(
             config?["right"]?.DeepClone() ?? JsonValue.Create(string.Empty),
             input,
-            outputs));
+            outputs,
+            functionSelectionInputs));
         return (GetString(config, "operator") ?? "equals").ToLowerInvariant() switch
         {
             "contains" => left.Contains(right, StringComparison.OrdinalIgnoreCase),
@@ -656,18 +688,19 @@ public sealed class NeuCharWorkflowEngine
     private static JsonNode ResolveRuntimeValue(
         JsonNode node,
         JsonNode input,
-        IReadOnlyDictionary<string, JsonNode> outputs)
+        IReadOnlyDictionary<string, JsonNode> outputs,
+        IReadOnlyDictionary<string, JsonNode> functionSelectionInputs)
     {
         if (node is JsonObject jsonObject)
         {
             if (jsonObject["$source"] is JsonObject binding)
             {
-                return ResolveBinding(binding, outputs)?.DeepClone();
+                return ResolveBinding(binding, outputs, functionSelectionInputs)?.DeepClone();
             }
             var result = new JsonObject();
             foreach (var property in jsonObject)
             {
-                result[property.Key] = ResolveRuntimeValue(property.Value, input, outputs);
+                result[property.Key] = ResolveRuntimeValue(property.Value, input, outputs, functionSelectionInputs);
             }
             return result;
         }
@@ -676,7 +709,7 @@ public sealed class NeuCharWorkflowEngine
             var result = new JsonArray();
             foreach (var item in jsonArray)
             {
-                result.Add(ResolveRuntimeValue(item, input, outputs));
+                result.Add(ResolveRuntimeValue(item, input, outputs, functionSelectionInputs));
             }
             return result;
         }
@@ -692,11 +725,36 @@ public sealed class NeuCharWorkflowEngine
 
     private static JsonNode ResolveBinding(
         JsonObject binding,
-        IReadOnlyDictionary<string, JsonNode> outputs)
+        IReadOnlyDictionary<string, JsonNode> outputs,
+        IReadOnlyDictionary<string, JsonNode> functionSelectionInputs)
     {
         var nodeId = GetString(binding, "nodeId");
         var path = GetString(binding, "path") ?? "$";
-        if (string.IsNullOrWhiteSpace(nodeId) || !outputs.TryGetValue(nodeId, out var value))
+        var sourceKind = GetString(binding, "sourceKind") ?? "output";
+        JsonNode value;
+        if (string.Equals(sourceKind, "function-selection", StringComparison.OrdinalIgnoreCase))
+        {
+            var parameterName = GetString(binding, "sourceParameterName");
+            const string inputPathPrefix = "$.__functionInput.";
+            if (string.IsNullOrWhiteSpace(parameterName) && path.StartsWith(inputPathPrefix, StringComparison.Ordinal))
+            {
+                parameterName = path[inputPathPrefix.Length..];
+            }
+            if (string.IsNullOrWhiteSpace(nodeId) || string.IsNullOrWhiteSpace(parameterName) ||
+                !functionSelectionInputs.TryGetValue(nodeId, out var inputValues) || inputValues is not JsonObject inputs)
+            {
+                throw new InvalidOperationException($"上游 Function 节点“{nodeId}”尚未产生可绑定的 Selection 参数。");
+            }
+            var parameterKey = inputs.Select(pair => pair.Key).FirstOrDefault(key =>
+                string.Equals(key, parameterName, StringComparison.OrdinalIgnoreCase));
+            if (parameterKey == null)
+            {
+                throw new InvalidOperationException($"上游 Function 的 Selection 参数“{parameterName}”已不存在或当前未提供值。");
+            }
+            value = inputs[parameterKey]?.DeepClone();
+            path = "$";
+        }
+        else if (string.IsNullOrWhiteSpace(nodeId) || !outputs.TryGetValue(nodeId, out value))
         {
             throw new InvalidOperationException($"上游节点“{nodeId}”尚未产生输出。");
         }
@@ -736,6 +794,31 @@ public sealed class NeuCharWorkflowEngine
             value = SelectArrayIndex(value, itemIndex.Value, "输出数组");
         }
         return value;
+    }
+
+    private static JsonObject ExtractFunctionSelectionValues(
+        JsonNode resolvedParameters,
+        IReadOnlyList<Senparc.Ncf.XncfBase.FunctionParameterInfo> parameterInfos)
+    {
+        var selections = new JsonObject();
+        if (resolvedParameters is not JsonObject parameters)
+        {
+            return selections;
+        }
+        foreach (var parameter in (parameterInfos ?? Array.Empty<Senparc.Ncf.XncfBase.FunctionParameterInfo>())
+                     .Where(parameter =>
+                         (parameter.ParameterType is Senparc.Ncf.XncfBase.ParameterType.DropDownList or
+                             Senparc.Ncf.XncfBase.ParameterType.CheckBoxList) &&
+                         !string.IsNullOrWhiteSpace(parameter.Name)))
+        {
+            var key = parameters.Select(pair => pair.Key).FirstOrDefault(candidate =>
+                string.Equals(candidate, parameter.Name, StringComparison.OrdinalIgnoreCase));
+            if (key != null)
+            {
+                selections[parameter.Name] = parameters[key]?.DeepClone();
+            }
+        }
+        return selections;
     }
 
     private static JsonNode SelectArrayIndex(JsonNode value, int index, string label)
@@ -869,7 +952,15 @@ public sealed class NeuCharWorkflowEngine
             var field = output?.Fields?.FirstOrDefault(z => string.Equals(z.Path, path, StringComparison.Ordinal));
             if (field == null)
             {
+                if (string.Equals(GetString(binding, "sourceKind"), "function-selection", StringComparison.OrdinalIgnoreCase))
+                {
+                    return $"节点“{targetNode.Name}”参数“{parameter.Title ?? parameter.Name}”关联的 Function Selection 参数已在模块更新后删除或不可用。";
+                }
                 return $"节点“{targetNode.Name}”参数“{parameter.Title ?? parameter.Name}”引用的输出字段“{path}”已不存在。";
+            }
+            if (!string.Equals(GetString(binding, "sourceKind") ?? "output", field.SourceKind ?? "output", StringComparison.OrdinalIgnoreCase))
+            {
+                return $"节点“{targetNode.Name}”参数“{parameter.Title ?? parameter.Name}”关联字段的类型已在模块更新后发生变化，请重新选择来源。";
             }
 
             var collectionIndex = GetNullableInt(binding, "collectionIndex");
@@ -927,7 +1018,15 @@ public sealed class NeuCharWorkflowEngine
                 string.Equals(z.Path, path, StringComparison.Ordinal));
             if (field == null)
             {
+                if (string.Equals(GetString(binding, "sourceKind"), "function-selection", StringComparison.OrdinalIgnoreCase))
+                {
+                    return $"节点“{targetNode.Name ?? targetNode.Id}”的 {configPath} 关联的 Function Selection 参数已在模块更新后删除或不可用。";
+                }
                 return $"节点“{targetNode.Name ?? targetNode.Id}”的 {configPath} 引用的输出字段“{path}”已不存在。";
+            }
+            if (!string.Equals(GetString(binding, "sourceKind") ?? "output", field.SourceKind ?? "output", StringComparison.OrdinalIgnoreCase))
+            {
+                return $"节点“{targetNode.Name ?? targetNode.Id}”的 {configPath} 关联字段的类型已在模块更新后发生变化，请重新选择来源。";
             }
 
             var collectionIndex = GetNullableInt(binding, "collectionIndex");
@@ -992,7 +1091,10 @@ public sealed class NeuCharWorkflowEngine
         }
         if (node.Type.Equals("function", StringComparison.OrdinalIgnoreCase))
         {
-            return (await ResolveFunctionReferenceAsync(node, cancellationToken).ConfigureAwait(false))?.Descriptor.Output;
+            var reference = await ResolveFunctionReferenceAsync(node, cancellationToken).ConfigureAwait(false);
+            return reference == null
+                ? null
+                : AddFunctionSelectionInputFields(reference.Descriptor.Output, reference.Descriptor.Parameters);
         }
         if (node.Type.Equals("aggregate", StringComparison.OrdinalIgnoreCase))
         {
@@ -1057,6 +1159,42 @@ public sealed class NeuCharWorkflowEngine
             false,
             null,
             new[] { new NeuCharFunctionOutputFieldDescriptor("$", "节点输出", typeName, false, false) });
+    }
+
+    private static NeuCharFunctionOutputDescriptor AddFunctionSelectionInputFields(
+        NeuCharFunctionOutputDescriptor output,
+        IReadOnlyList<Senparc.Ncf.XncfBase.FunctionParameterInfo> parameterInfos)
+    {
+        var selectionFields = (parameterInfos ?? Array.Empty<Senparc.Ncf.XncfBase.FunctionParameterInfo>())
+            .Where(parameter =>
+                (parameter.ParameterType is Senparc.Ncf.XncfBase.ParameterType.DropDownList or
+                    Senparc.Ncf.XncfBase.ParameterType.CheckBoxList) &&
+                !string.IsNullOrWhiteSpace(parameter.Name))
+            .Select(parameter =>
+            {
+                var shape = GetParameterValueShape(parameter);
+                return new NeuCharFunctionOutputFieldDescriptor(
+                    $"$.__functionInput.{parameter.Name}",
+                    $"输入选择 · {parameter.Title ?? parameter.Name}",
+                    shape.typeName,
+                    shape.isArray,
+                    false,
+                    "function-selection",
+                    parameter.Name);
+            })
+            .ToArray();
+        if (selectionFields.Length == 0)
+        {
+            return output;
+        }
+
+        var outputFields = output?.Fields ?? Array.Empty<NeuCharFunctionOutputFieldDescriptor>();
+        return new NeuCharFunctionOutputDescriptor(
+            output?.TypeName ?? "any",
+            output?.DisplayName ?? "Function 输出",
+            output?.IsArray ?? false,
+            output?.ElementTypeName,
+            outputFields.Concat(selectionFields).ToArray());
     }
 
     private static (string typeName, bool isArray) GetParameterValueShape(
@@ -1142,6 +1280,20 @@ public sealed class NeuCharWorkflowEngine
 
     private static void EnsureAllNodesReachable(NeuCharWorkflowGraph graph, string triggerId)
     {
+        var unreachable = FindDisconnectedNodes(graph, triggerId);
+        if (unreachable.Count == 0)
+        {
+            return;
+        }
+
+        var names = unreachable
+            .Select(z => z.Name ?? z.Id)
+            .Take(5);
+        throw new InvalidOperationException($"工作流包含未连接到触发器的节点：{string.Join("、", names)}。");
+    }
+
+    private static IReadOnlyList<NeuCharWorkflowNode> FindDisconnectedNodes(NeuCharWorkflowGraph graph, string triggerId)
+    {
         var visited = new HashSet<string>(StringComparer.Ordinal);
         var queue = new Queue<string>();
         queue.Enqueue(triggerId);
@@ -1158,14 +1310,7 @@ public sealed class NeuCharWorkflowEngine
             }
         }
 
-        if (visited.Count != graph.Nodes.Count)
-        {
-            var unreachable = graph.Nodes
-                .Where(z => !visited.Contains(z.Id))
-                .Select(z => z.Name ?? z.Id)
-                .Take(5);
-            throw new InvalidOperationException($"工作流包含未连接到触发器的节点：{string.Join("、", unreachable)}。");
-        }
+        return graph.Nodes.Where(z => !visited.Contains(z.Id)).ToList();
     }
 }
 

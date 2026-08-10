@@ -397,6 +397,14 @@ height:100%;
     background: #909399;
 }
 
+.agent-3d-legend .legend-dot.group-enabled {
+    background: #7f91a6;
+}
+
+.agent-3d-legend .legend-dot.group-disabled {
+    background: #d57585;
+}
+
 .agent-3d-debug {
     position: absolute;
     right: 12px;

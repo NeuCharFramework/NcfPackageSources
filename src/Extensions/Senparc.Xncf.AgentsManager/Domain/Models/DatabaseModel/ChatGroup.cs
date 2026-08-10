@@ -100,6 +100,22 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
             EnterAgentTemplateId = chatGroupDto.EnterAgentTemplateId;
         }
 
+        /// <summary>
+        /// 启用群组，使其可以接收新的执行任务。
+        /// </summary>
+        public void EnableGroup()
+        {
+            Enable = true;
+        }
+
+        /// <summary>
+        /// 停用群组。不会中断已经创建的任务，但会阻止新的执行请求。
+        /// </summary>
+        public void DisableGroup()
+        {
+            Enable = false;
+        }
+
         public void Start()
         {
             State = ChatGroupState.Running;

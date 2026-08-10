@@ -40,7 +40,9 @@ public sealed record NeuCharFunctionOutputFieldDescriptor(
     string Label,
     string TypeName,
     bool IsArray,
-    bool RequiresIndex);
+    bool RequiresIndex,
+    string SourceKind = "output",
+    string SourceParameterName = null);
 
 public sealed record NeuCharFunctionOutputDescriptor(
     string TypeName,
@@ -250,6 +252,14 @@ public sealed class NeuCharWorkflowFunctionService
         IReadOnlyList<FunctionParameterInfo> parameterInfos,
         string parametersJson)
     {
+        var unnamedParameterIndex = (parameterInfos ?? Array.Empty<FunctionParameterInfo>())
+            .Select((parameter, index) => new { parameter, index })
+            .FirstOrDefault(item => string.IsNullOrWhiteSpace(item.parameter?.Name));
+        if (unnamedParameterIndex != null)
+        {
+            return $"Function 参数元数据第 {unnamedParameterIndex.index + 1} 项缺少字段名，无法安全执行；请修复或更新对应 XNCF 模块。";
+        }
+
         JsonDocument document;
         try
         {
@@ -267,7 +277,7 @@ public sealed class NeuCharWorkflowFunctionService
                 return "参数必须是 JSON 对象。";
             }
 
-            foreach (var parameter in parameterInfos.Where(z => z.IsRequired))
+            foreach (var parameter in (parameterInfos ?? Array.Empty<FunctionParameterInfo>()).Where(z => z.IsRequired))
             {
                 if (!TryGetPropertyIgnoreCase(document.RootElement, parameter.Name, out var value) || IsEmpty(value))
                 {

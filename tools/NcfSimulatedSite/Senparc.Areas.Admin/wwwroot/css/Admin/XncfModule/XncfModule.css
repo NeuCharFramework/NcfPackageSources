@@ -86,6 +86,20 @@
     text-align: center;
 }
 
+.function-card-highlight {
+    border-color: #409EFF;
+    animation: function-card-highlight 1.3s ease-in-out 2;
+}
+
+@keyframes function-card-highlight {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(64, 158, 255, 0);
+    }
+    50% {
+        box-shadow: 0 0 0 7px rgba(64, 158, 255, .28);
+    }
+}
+
 .start-green {
     color: #67C23A;
 }

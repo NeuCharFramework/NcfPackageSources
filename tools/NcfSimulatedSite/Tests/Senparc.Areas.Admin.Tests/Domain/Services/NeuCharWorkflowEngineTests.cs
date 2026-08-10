@@ -9,6 +9,7 @@ using Senparc.Ncf.Core.AppServices;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 using System.Reflection;
+using System.Text.Json.Nodes;
 
 namespace Senparc.Areas.Admin.Tests.Domain.Services;
 
@@ -118,6 +119,28 @@ public class NeuCharWorkflowEngineTests
             () => engine.ParseAndValidateGraph(graphJson));
 
         StringAssert.Contains(exception.Message, "未连接到触发器");
+    }
+
+    [TestMethod]
+    public async Task ParseAndValidateGraph_DraftWithDisconnectedNode_ShouldRemainEditable()
+    {
+        var engine = CreateEngine();
+        const string graphJson =
+            """
+            {
+              "nodes": [
+                { "id": "trigger", "type": "manual-trigger" },
+                { "id": "orphan", "type": "delay", "name": "草稿等待" }
+              ],
+              "edges": []
+            }
+            """;
+
+        var graph = engine.ParseAndValidateGraph(graphJson, requireAllNodesReachable: false);
+
+        Assert.AreEqual(1, engine.GetDisconnectedNodes(graph).Count);
+        var editableJson = await engine.BuildEditableGraphJsonAsync(graphJson);
+        StringAssert.Contains(editableJson, "orphan");
     }
 
     [TestMethod]
@@ -266,6 +289,66 @@ public class NeuCharWorkflowEngineTests
         var tags = output.Fields.Single(z => z.Path == "$.Tags");
         Assert.IsTrue(tags.IsArray);
         Assert.IsTrue(tags.RequiresIndex);
+    }
+
+    [TestMethod]
+    public void WorkflowFunctionSchemaBuilder_UnnamedParameter_ShouldUseStableDraftKey()
+    {
+        var descriptor = new NeuCharFunctionDescriptor(
+            "module",
+            "测试模块",
+            "1.0.0",
+            true,
+            "test-function",
+            "测试 Function",
+            null,
+            new[] { new Senparc.Ncf.XncfBase.FunctionParameterInfo { Name = null, Title = null } });
+
+        var parameter = WorkflowFunctionSchemaBuilder.Build(descriptor).Single();
+
+        Assert.AreEqual("parameter_1", parameter.Name);
+        Assert.AreEqual("Function 参数元数据缺少字段名；当前仅可保存草稿，修复或更新模块后才能运行。", parameter.MetadataError);
+        Assert.IsTrue(parameter.HasSyntheticName);
+    }
+
+    [TestMethod]
+    public void ValidateRequiredParameters_UnnamedMetadata_ShouldRejectExecution()
+    {
+        var error = NeuCharWorkflowFunctionService.ValidateRequiredParameters(
+            new[] { new Senparc.Ncf.XncfBase.FunctionParameterInfo { Name = null, Title = "未知参数" } },
+            "{}");
+
+        StringAssert.Contains(error, "缺少字段名");
+    }
+
+    [TestMethod]
+    public void ResolveBinding_FunctionSelection_ShouldUseResolvedSelectionValue()
+    {
+        var method = typeof(NeuCharWorkflowEngine).GetMethod(
+            "ResolveBinding",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+        var binding = JsonNode.Parse(
+            """
+            {
+              "nodeId": "source",
+              "path": "$.__functionInput.crawlMode",
+              "sourceKind": "function-selection",
+              "sourceParameterName": "crawlMode"
+            }
+            """)!.AsObject();
+        var selectionInputs = new Dictionary<string, JsonNode>
+        {
+            ["source"] = JsonNode.Parse("""{ "crawlMode": "full" }""")!
+        };
+
+        var value = (JsonNode?)method.Invoke(null, new object[]
+        {
+            binding,
+            new Dictionary<string, JsonNode>(),
+            selectionInputs
+        });
+
+        Assert.AreEqual("full", value!.GetValue<string>());
     }
 
     private static Task<AppResponseBase<List<SampleOutput>>> ListOutputFunction() => null!;

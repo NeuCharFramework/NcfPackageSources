@@ -320,6 +320,7 @@ var app = new Vue({
       },
       // 组 新增|编辑
       groupForm: {
+        enable: true, // 新建组默认启用
         name: '', // 名称
         members: [], // 成员列表
         description: '', // 说明
@@ -847,7 +848,7 @@ var app = new Vue({
       }
       return JSON.stringify({
         agents: (snapshot.agents || []).map(item => [item.id, item.chattingCount, item.score, item.enable]),
-        groups: (snapshot.groups || []).map(item => [item.id, item.runningTaskCount, item.state, item.taskStatusCounts]),
+        groups: (snapshot.groups || []).map(item => [item.id, item.enable, item.runningTaskCount, item.state, item.taskStatusCounts]),
         links: (snapshot.links || []).map(item => [item.groupId, item.agentId]),
         collaborations: (snapshot.collaborations || []).map(item => [item.taskId, item.groupId, item.status, item.agentIds])
       })
@@ -3238,6 +3239,50 @@ var app = new Vue({
           message: '已取消操作'
         });
       });
+    },
+    // 组启用 / 停用
+    async setGroupState(item) {
+      const group = item?.chatGroupDto || item
+      if (!group || !group.id) return
+
+      const willEnable = !group.enable
+      const actionText = willEnable ? '启用' : '停用'
+      const messageText = willEnable
+        ? `<div>是否确认启用组“${group.name}”？</div><div>启用后可再次创建新任务，并可作为 Workflow 节点使用。</div>`
+        : `<div>是否确认停用组“${group.name}”？</div><div>停用后不会创建新任务或作为 Workflow 节点使用；已经启动的任务不会被中断。</div>`
+
+      try {
+        await this.$confirm(messageText, '操作确认', {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+
+        const serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.Enable?id=${group.id}&enable=${willEnable}`
+        const res = await serviceAM.post(serviceURL)
+        if (!res?.data?.success) {
+          throw new Error(res?.data?.errorMessage || res?.data?.data || '操作失败')
+        }
+
+        this.$message({ type: 'success', message: `组已${actionText}` })
+        if (this.tabsActiveName === 'second') {
+          await this.getGroupListData('group')
+        } else if (this.agentDetails?.agentTemplateDto?.id) {
+          await this.getGroupListData('agentGroup', this.agentDetails.agentTemplateDto.id)
+        }
+        await this.refreshAgentGraphSnapshot(this.agentListViewMode === 'three')
+      } catch (error) {
+        if (error === 'cancel' || error === 'close') {
+          this.$message({ type: 'info', message: '已取消操作' })
+          return
+        }
+        this.$message({
+          message: error?.message || '操作失败',
+          type: 'error',
+          duration: 5 * 1000
+        })
+      }
     },
 
     handleAgentDelete(item) {

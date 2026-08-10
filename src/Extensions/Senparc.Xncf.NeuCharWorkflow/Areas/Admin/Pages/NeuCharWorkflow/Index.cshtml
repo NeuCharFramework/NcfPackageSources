@@ -24,8 +24,13 @@
             <h2>@XR["Area.Workflow"]</h2>
             <p>@XR["Designer.Introduction"]</p>
         </div>
-        <div>
-            <el-button icon="el-icon-refresh" :disabled="editingLocked" @@click="loadAll">@XR["Action.Refresh"]</el-button>
+        <div class="workflow-page-actions">
+            <el-button circle
+                       icon="el-icon-refresh"
+                       title="@XR["Action.Refresh"]"
+                       aria-label="@XR["Action.Refresh"]"
+                       :disabled="editingLocked"
+                       @@click="loadAll"></el-button>
             <el-button type="primary" icon="el-icon-plus" :disabled="editingLocked" @@click="createWorkflow">@XR["Action.NewWorkflow"]</el-button>
         </div>
     </header>
@@ -59,46 +64,70 @@
         <main class="workflow-editor">
             <template v-if="editing">
                 <div class="workflow-meta">
-                    <el-input v-model="form.name" :disabled="editingLocked" maxlength="200" placeholder="工作流名称"></el-input>
-                    <el-input v-model="form.description" :disabled="editingLocked" placeholder="用一句话说明这个工作流"></el-input>
-                    <el-select v-model="form.triggerType" :disabled="editingLocked" @@change="syncTriggerNode">
-                        <el-option label="手动触发" value="manual"></el-option>
-                        <el-option label="间隔触发" value="interval"></el-option>
-                        <el-option label="Webhook" value="webhook"></el-option>
-                    </el-select>
-                    <el-input-number v-if="form.triggerType==='interval'" v-model="form.intervalSeconds" :disabled="editingLocked" :min="60" :max="31536000" :step="60"></el-input-number>
-                    <el-switch v-model="form.enabled" :disabled="editingLocked" active-text="启用"></el-switch>
-                    <div class="workflow-auto-save" title="自动保存只在当前页面打开且内容有变化时执行">
-                        <el-switch :value="form.autoSaveMinutes>0"
-                                   :disabled="editingLocked || saveState.saving"
-                                   active-text="自动保存"
-                                   @@change="setAutoSaveEnabled"></el-switch>
-                        <el-input-number v-if="form.autoSaveMinutes>0"
-                                         v-model="form.autoSaveMinutes"
-                                         :disabled="editingLocked || saveState.saving"
-                                         :min="1"
-                                         :max="1440"
-                                         :step="1"
-                                         size="small"
-                                         controls-position="right"></el-input-number>
-                        <span v-if="form.autoSaveMinutes>0">分钟</span>
+                    <div class="workflow-meta-primary">
+                        <div class="workflow-meta-fields">
+                            <el-input v-model="form.name" :disabled="editingLocked" maxlength="200" placeholder="工作流名称"></el-input>
+                            <el-input v-model="form.description" :disabled="editingLocked" placeholder="用一句话说明这个工作流"></el-input>
+                        </div>
+                        <div class="workflow-meta-actions" aria-label="工作流快捷操作">
+                            <el-button type="primary"
+                                       icon="el-icon-check"
+                                       :loading="saveState.saving"
+                                       :disabled="editingLocked || (form.id && !saveDirty)"
+                                       title="保存（Command/Ctrl + S）"
+                                       @@click="saveWorkflow({source:'manual'})">保存</el-button>
+                            <el-button icon="el-icon-video-play"
+                                       :disabled="!form.id || editingLocked || disconnectedNodes.length>0"
+                                       :title="disconnectedNodes.length?'请先连接所有草稿节点后再测试运行':'保存并测试运行'"
+                                       @@click="startWorkflow">测试运行</el-button>
+                            <el-dropdown v-if="form.id" trigger="click" @@command="handleWorkflowAction">
+                                <el-button plain icon="el-icon-more" title="更多工作流操作">更多<i class="el-icon-arrow-down el-icon--right"></i></el-button>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item command="delete" :disabled="editingLocked">
+                                        <i class="el-icon-delete"></i> 删除工作流
+                                    </el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </div>
                     </div>
-                    <span :class="['workflow-save-status',{'is-dirty':saveDirty,'is-error':saveState.status==='error'}]">{{saveStatusText}}</span>
-                    <el-button type="primary"
-                               :loading="saveState.saving"
-                               :disabled="editingLocked || (form.id && !saveDirty)"
-                               title="Command/Ctrl + S"
-                               @@click="saveWorkflow({source:'manual'})">保存</el-button>
-                    <el-button :disabled="!form.id || editingLocked" icon="el-icon-video-play" @@click="startWorkflow">测试运行</el-button>
-                    <el-popconfirm v-if="form.id" title="确认删除这个工作流？" @@on-confirm="deleteWorkflow">
-                        <el-button slot="reference" type="danger" plain :disabled="editingLocked">删除</el-button>
-                    </el-popconfirm>
+                    <div class="workflow-meta-secondary">
+                        <div class="workflow-meta-settings">
+                            <el-select v-model="form.triggerType" :disabled="editingLocked" @@change="syncTriggerNode">
+                                <el-option label="手动触发" value="manual"></el-option>
+                                <el-option label="间隔触发" value="interval"></el-option>
+                                <el-option label="Webhook" value="webhook"></el-option>
+                            </el-select>
+                            <el-input-number v-if="form.triggerType==='interval'" v-model="form.intervalSeconds" :disabled="editingLocked" :min="60" :max="31536000" :step="60"></el-input-number>
+                            <el-switch v-model="form.enabled" :disabled="editingLocked" active-text="启用"></el-switch>
+                            <div class="workflow-auto-save" title="自动保存只在当前页面打开且内容有变化时执行">
+                                <el-switch :value="form.autoSaveMinutes>0"
+                                           :disabled="editingLocked || saveState.saving"
+                                           active-text="自动保存"
+                                           @@change="setAutoSaveEnabled"></el-switch>
+                                <el-input-number v-if="form.autoSaveMinutes>0"
+                                                 v-model="form.autoSaveMinutes"
+                                                 :disabled="editingLocked || saveState.saving"
+                                                 :min="1"
+                                                 :max="1440"
+                                                 :step="1"
+                                                 size="small"
+                                                 controls-position="right"></el-input-number>
+                                <span v-if="form.autoSaveMinutes>0">分钟</span>
+                            </div>
+                        </div>
+                        <div class="workflow-meta-feedback">
+                            <span :class="['workflow-save-status',{'is-dirty':saveDirty,'is-error':saveState.status==='error'}]">{{saveStatusText}}</span>
+                            <span v-if="disconnectedNodes.length" class="workflow-draft-warning" :title="'未连接节点：'+disconnectedNodes.map(node => node.name || node.id).join('、')">
+                                <i class="el-icon-warning-outline"></i> 草稿节点未连接，保存后不可运行
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <div v-if="form.triggerType==='webhook'" class="workflow-webhook-config">
                     <div class="webhook-config-heading">
                         <strong>Webhook 触发配置</strong>
-                        <span>请求必须携带访问密钥；参数可从 Query、Form 或 JSON 请求体读取。</span>
+                        <el-button type="text" size="mini" icon="el-icon-question" @@click="webhookHelpVisible=true">使用说明</el-button>
                     </div>
                     <div class="webhook-config-row">
                         <label>请求方法</label>
@@ -113,9 +142,6 @@
                         </el-input>
                         <el-button size="small" icon="el-icon-document-copy" :disabled="!form.id" @@click="copyText(webhookUrl)">复制 URL</el-button>
                     </div>
-                    <div class="webhook-url-hint" v-if="form.id">
-                        URL：<code>{{webhookUrl}}</code>；建议使用请求头 <code>X-NeuChar-Webhook-Token</code> 传递密钥，也支持 query 参数 <code>token</code>。
-                    </div>
                     <div class="webhook-parameters-heading">
                         <span>参数（{{form.webhookParameters.length}}/50）</span>
                         <el-button type="text" size="small" :disabled="editingLocked || form.webhookParameters.length>=50" @@click="addWebhookParameter">添加参数</el-button>
@@ -128,8 +154,25 @@
                             <el-button type="text" class="webhook-parameter-remove" :disabled="editingLocked" @@click="removeWebhookParameter(index)">删除</el-button>
                         </div>
                     </div>
-                    <div v-else class="webhook-parameters-empty">未限定参数时，所有 Query/Form/JSON 字段都会作为工作流输入。</div>
+                    <div v-else class="webhook-parameters-empty">未配置参数：接收全部 Query、Form 与 JSON 字段。</div>
                 </div>
+
+                <el-dialog title="Webhook 使用说明"
+                           :visible.sync="webhookHelpVisible"
+                           width="min(620px, calc(100vw - 32px))"
+                           append-to-body>
+                    <div class="workflow-webhook-help">
+                        <p>先保存工作流以生成调用地址和访问密钥。外部请求必须携带该密钥。</p>
+                        <template v-if="form.id">
+                            <p>调用地址：<code>{{webhookUrl}}</code></p>
+                            <p>推荐使用请求头 <code>X-NeuChar-Webhook-Token</code> 传递访问密钥；也兼容 query 参数 <code>token</code>。</p>
+                        </template>
+                        <p>已定义的参数可从 Query、Form 或 JSON 请求体读取；未定义参数时，整个请求数据都会作为工作流输入。</p>
+                    </div>
+                    <span slot="footer" class="dialog-footer">
+                        <el-button @@click="webhookHelpVisible=false">关闭</el-button>
+                    </span>
+                </el-dialog>
 
                 <div class="workflow-designer">
                     <aside class="workflow-palette">
@@ -273,8 +316,8 @@
                             </div>
                         </div>
                         <div class="canvas-zoom-controls" :style="canvasZoomControlsStyle" @@mousedown.stop @@wheel.stop>
-                            <button type="button" title="缩小" aria-label="缩小画布" :disabled="canvasZoom<=0.5" @@click.stop="changeCanvasZoom(-.1)"><i class="el-icon-minus"></i></button>
-                            <input type="range" min="0.5" max="2" step="0.1" :value="canvasZoom" :aria-valuetext="canvasZoomPercent+'%'" @@input="onCanvasZoomInput" @@click.stop>
+                            <button type="button" title="缩小" aria-label="缩小画布" :disabled="canvasZoom<=0.02" @@click.stop="changeCanvasZoom(-.1)"><i class="el-icon-minus"></i></button>
+                            <input type="range" min="0.02" max="2" step="0.01" :value="canvasZoom" :aria-valuetext="canvasZoomPercent+'%'" @@input="onCanvasZoomInput" @@click.stop>
                             <button type="button" title="放大" aria-label="放大画布" :disabled="canvasZoom>=2" @@click.stop="changeCanvasZoom(.1)"><i class="el-icon-plus"></i></button>
                             <button type="button" class="canvas-zoom-reset" title="恢复 100%" @@click.stop="resetCanvasZoom">{{canvasZoomPercent}}%</button>
                         </div>
@@ -347,6 +390,30 @@
                                         <el-alert v-if="!selectedFunction.moduleAvailable" title="模块未安装或未开启，节点不可执行" type="warning" :closable="false"></el-alert>
                                         <el-alert v-if="selectedFunction.catalogError" title="Function 参数元数据读取异常，请检查模块日志" type="warning" :closable="false"></el-alert>
                                         <el-alert v-if="incomingEdges(selectedNode.id).length>1" title="此 Function 有多个上游；任一有效来源到达都可以触发，单次工作流运行中该节点最多执行一次。" type="info" :closable="false"></el-alert>
+                                        <div class="workflow-object-card workflow-function-card">
+                                            <div class="workflow-object-card-header">
+                                                <div>
+                                                    <strong>{{selectedFunction.functionName}}</strong>
+                                                    <small>{{selectedFunction.moduleName}} · {{selectedFunction.functionKey}}</small>
+                                                </div>
+                                                <div class="workflow-function-actions">
+                                                    <el-button v-if="functionPageUrl(selectedFunction,'settings')"
+                                                               type="primary"
+                                                               plain
+                                                               size="mini"
+                                                               icon="el-icon-setting"
+                                                               :disabled="editingLocked"
+                                                               @@click="openFunctionPage(selectedFunction,'settings')">设置</el-button>
+                                                    <el-button v-if="functionPageUrl(selectedFunction,'run')"
+                                                               type="success"
+                                                               plain
+                                                               size="mini"
+                                                               icon="el-icon-video-play"
+                                                               :disabled="editingLocked"
+                                                               @@click="openFunctionPage(selectedFunction,'run')">执行</el-button>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div v-for="parameter in functionParameters(selectedFunction)" :key="parameter.name" class="parameter-editor">
                                             <label class="parameter-label">
                                                 <span>{{parameterDisplayName(parameter)}}</span>
@@ -356,6 +423,12 @@
                                                             placement="top-start"
                                                             :content="parameterDescription(parameter)">
                                                     <i class="el-icon-info parameter-description-icon" aria-label="参数说明"></i>
+                                                </el-tooltip>
+                                                <el-tooltip v-if="parameter.metadataError"
+                                                            effect="dark"
+                                                            placement="top-start"
+                                                            :content="parameter.metadataError">
+                                                    <i class="el-icon-warning-outline parameter-metadata-warning" aria-label="参数元数据异常"></i>
                                                 </el-tooltip>
                                                 <em v-if="parameter.required">必填</em>
                                             </label>
@@ -404,14 +477,14 @@
                                             </div>
 
                                             <div class="upstream-picker">
-                                                <span>或关联上游 Output</span>
+                                                <span>或关联上游输出 / Function 输入选择</span>
                                                 <el-cascader :value="bindingSelection(selectedNode,parameter)"
                                                              :options="upstreamOutputOptions(parameter)"
                                                              :disabled="editingLocked || !upstreamOutputOptions(parameter).length"
                                                              :props="{expandTrigger:'hover'}"
                                                              clearable
                                                              filterable
-                                                             placeholder="选择节点与输出字段"
+                                                             placeholder="选择节点、输出或输入选择"
                                                              @@change="setParameterBinding(selectedNode,parameter,$event)"></el-cascader>
                                             </div>
                                         </div>

@@ -19,8 +19,28 @@
             : response.data;
     }
 
+    function normalizeParameterSchema(parameters) {
+        return Array.isArray(parameters) ? parameters.map((parameter, index) => {
+            const normalized = parameter && typeof parameter === 'object' ? { ...parameter } : {};
+            const name = String(normalized.name || '').trim();
+            if (name) {
+                normalized.name = name;
+                return normalized;
+            }
+
+            // Older or faulty XNCF metadata can omit Name. Keep the parameter operable in a
+            // draft with a deterministic key, but mark it so the runtime can refuse execution.
+            normalized.name = `parameter_${index + 1}`;
+            normalized.title = String(normalized.title || '').trim() || `参数 ${index + 1}`;
+            normalized.hasSyntheticName = true;
+            normalized.metadataError = normalized.metadataError ||
+                'Function 参数元数据缺少字段名；当前仅可保存草稿，修复或更新模块后才能运行。';
+            return normalized;
+        }) : [];
+    }
+
     function createParameterValues(fn) {
-        const schema = parseJson(fn.parameterSchemaJson, []);
+        const schema = normalizeParameterSchema(parseJson(fn.parameterSchemaJson, []));
         const defaults = parseJson(fn.defaultParametersJson, {});
         const values = {};
         schema.forEach(parameter => {
@@ -42,7 +62,7 @@
     }
 
     function firstMissingRequired(fn, values) {
-        return parseJson(fn.parameterSchemaJson, []).find(parameter => {
+        return normalizeParameterSchema(parseJson(fn.parameterSchemaJson, [])).find(parameter => {
             if (!parameter.required) {
                 return false;
             }
@@ -75,6 +95,7 @@
     global.NeuCharWorkflowUi = Object.freeze({
         parseJson,
         unwrap,
+        normalizeParameterSchema,
         createParameterValues,
         firstMissingRequired,
         sanitizeHtml

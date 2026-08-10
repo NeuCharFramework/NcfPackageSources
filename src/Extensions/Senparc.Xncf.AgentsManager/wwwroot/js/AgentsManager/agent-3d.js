@@ -394,10 +394,14 @@
 
     const groupGeom = new THREE.CylinderGeometry(0.9, 0.9, 16, 16);
     groups.forEach(function (group) {
+      const isEnabled = group.enable !== false;
+      const hasRunningTask = group.runningTaskCount > 0;
       const mat = new THREE.MeshStandardMaterial({
-        color: group.runningTaskCount > 0 ? 0x48c5ff : 0x7f91a6,
+        color: !isEnabled ? 0x6c5561 : (hasRunningTask ? 0x48c5ff : 0x7f91a6),
+        emissive: !isEnabled ? 0x331821 : 0x000000,
+        emissiveIntensity: !isEnabled ? 0.34 : 0,
         transparent: true,
-        opacity: 0.86,
+        opacity: isEnabled ? 0.86 : 0.48,
         metalness: 0.15,
         roughness: 0.55
       });
@@ -415,16 +419,18 @@
       const cancelled = statusMap[4] || statusMap['4'] || 0;
       const failed = statusMap[5] || statusMap['5'] || 0;
       const totalTasks = waiting + chatting + paused + finished + cancelled + failed;
+      const enableText = isEnabled ? '已启用' : '已停用';
       const text = group.name
+        + '\n状态:' + enableText
         + '\nTasks:' + totalTasks + ' Running:' + group.runningTaskCount
         + '\nW:' + waiting + ' C:' + chatting + ' P:' + paused + ' F:' + finished;
       const label = textSprite(text, {
         fontSize: 24,
         padding: 16,
         scaleDivisor: 18,
-        background: 'rgba(5,14,26,0.90)',
-        border: 'rgba(72,197,255,0.65)',
-        color: '#DDEFFF'
+        background: isEnabled ? 'rgba(5,14,26,0.90)' : 'rgba(40,17,24,0.92)',
+        border: isEnabled ? 'rgba(72,197,255,0.65)' : 'rgba(239,119,139,0.82)',
+        color: isEnabled ? '#DDEFFF' : '#FFE2E8'
       });
       label.position.set(group._pos.x, 19, group._pos.z);
       this.scene.add(label);
@@ -591,10 +597,12 @@
       });
       const line = new THREE.Line(geometry, material);
       const activeKey = link.groupId + '-' + link.agentId;
+      const isGroupEnabled = groupNode.group.enable !== false;
       line.userData = {
         groupId: link.groupId,
         agentId: link.agentId,
-        isActive: activeLinkKeySet.has(activeKey),
+        isActive: isGroupEnabled && activeLinkKeySet.has(activeKey),
+        isGroupEnabled: isGroupEnabled,
         phase: (hashNumber(activeKey) % 100) / 10,
         flowDot: null
       };
@@ -616,6 +624,10 @@
       }
 
       this.scene.add(line);
+      if (!isGroupEnabled) {
+        line.material.color.setHex(0x735764);
+        line.material.opacity = 0.24;
+      }
       this.linkObjects.push(line);
     }.bind(this));
 
@@ -780,7 +792,7 @@
     this.linkObjects.forEach(function (line) {
       if (!activeGroup) {
         if (!line.userData.isActive) {
-          line.material.opacity = 0.5;
+          line.material.opacity = line.userData.isGroupEnabled ? 0.5 : 0.24;
         }
       } else {
         line.material.opacity = line.userData.groupId === activeGroup ? 0.85 : 0.08;

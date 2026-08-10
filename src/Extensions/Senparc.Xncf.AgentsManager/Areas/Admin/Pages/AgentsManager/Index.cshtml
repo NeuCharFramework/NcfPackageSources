@@ -147,13 +147,15 @@
                             </el-select>
                             <el-button size="mini" type="success" plain @@click="handleQuickJumpTask">进入任务</el-button>
                         </div>
-                        <div class="agent-3d-tip">悬停 Group 柱体可高亮组成员；点击 Group 可锁定/取消锁定；顶部数字展示该组运行任务状态统计。</div>
+                        <div class="agent-3d-tip">悬停 Group 柱体可高亮组成员；点击 Group 可锁定/取消锁定；灰红柱体和“已停用”标签表示该组不会接收新任务或作为 Workflow 节点使用。</div>
                         <div class="agent-3d-legend">
                             <span class="legend-item"><i class="legend-dot waiting"></i>等待</span>
                             <span class="legend-item"><i class="legend-dot chatting"></i>聊天中</span>
                             <span class="legend-item"><i class="legend-dot paused"></i>暂停</span>
                             <span class="legend-item"><i class="legend-dot finished"></i>完成</span>
                             <span class="legend-item"><i class="legend-dot cancelled"></i>取消</span>
+                            <span class="legend-item"><i class="legend-dot group-enabled"></i>组已启用</span>
+                            <span class="legend-item"><i class="legend-dot group-disabled"></i>组已停用</span>
                         </div>
                         <pre class="agent-3d-debug">{{ agentGraphDebugText }}</pre>
                         <div ref="agent3dContainer" class="agent-3d-canvas"></div>
@@ -312,10 +314,12 @@
                                             <div class="df-wn groupInfoRow-operation">
                                                 <el-button type="danger" size="mini"
                                                     @@click="setAgentState('delete',agentDetailsGroupDetails)">退出组</el-button>
-                                                <el-button type="primary" size="mini"
-                                                    @@click="handleElVisibleOpenBtn('drawerGroupStart',agentDetailsGroupDetails)">启动</el-button>
-                                                <el-button type="primary" size="mini"
-                                                    @@click="handleEditDrawerOpenBtn('drawerGroup',agentDetailsGroupDetails)">编辑</el-button>
+                                <el-button type="primary" size="mini" :disabled="!agentDetailsGroupDetails.chatGroupDto.enable"
+                                    @@click="handleElVisibleOpenBtn('drawerGroupStart',agentDetailsGroupDetails)">启动</el-button>
+                                <el-button :type="agentDetailsGroupDetails.chatGroupDto.enable ? 'warning' : 'success'" size="mini"
+                                    @@click="setGroupState(agentDetailsGroupDetails)">{{ agentDetailsGroupDetails.chatGroupDto.enable ? '停用组' : '启用组' }}</el-button>
+                                <el-button type="primary" size="mini"
+                                    @@click="handleEditDrawerOpenBtn('drawerGroup',agentDetailsGroupDetails)">编辑</el-button>
                                                 <el-button type="primary" size="mini"
                                                     @@click="handleTaskStartBatch('agentGroupTaskBatch',agentDetailsGroupDetails)">批量启动</el-button>
                                                 <el-button type="warning" size="mini"
@@ -776,6 +780,11 @@
                                 <span>{{ row.name }}</span>
                             </template>
                         </el-table-column>
+                        <el-table-column label="状态" width="90">
+                            <template slot-scope="{ row }">
+                                <el-tag :type="row.enable ? 'success' : 'info'" size="mini">{{ row.enable ? '已启用' : '已停用' }}</el-tag>
+                            </template>
+                        </el-table-column>
                         <el-table-column prop="numberTasks" label="任务数" width="100">
                         </el-table-column>
                         <el-table-column prop="lastUpdateTime" label="最近运行时间" min-width="110">
@@ -793,10 +802,12 @@
                                 {{ row.enterAgentTemplateName }}
                             </template>
                         </el-table-column>
-                        <el-table-column fixed="right" label="操作" width="290">
+                        <el-table-column fixed="right" label="操作" width="360">
                             <template slot-scope="{ row,$index }">
-                                <el-button type="primary" size="mini"
+                                <el-button type="primary" size="mini" :disabled="!row.enable"
                                     @@click="handleElVisibleOpenBtn('drawerGroupStart',row)">启动</el-button>
+                                <el-button :type="row.enable ? 'warning' : 'success'" size="mini"
+                                    @@click="setGroupState(row)">{{ row.enable ? '停用' : '启用' }}</el-button>
                                 <el-button type="primary" size="mini"
                                     @@click="handleEditDrawerOpenBtn('drawerGroup',row)">编辑</el-button>
                                 <el-button type="primary" size="mini"
@@ -815,8 +826,10 @@
                                 groupDetails.chatGroupDto.name }}
                             </div>
                             <div class="df-wn  groupInfoRow-operation">
-                                <el-button type="primary" size="mini"
+                                <el-button type="primary" size="mini" :disabled="!groupDetails.chatGroupDto.enable"
                                     @@click="handleElVisibleOpenBtn('drawerGroupStart',groupDetails)">启动</el-button>
+                                <el-button :type="groupDetails.chatGroupDto.enable ? 'warning' : 'success'" size="mini"
+                                    @@click="setGroupState(groupDetails)">{{ groupDetails.chatGroupDto.enable ? '停用组' : '启用组' }}</el-button>
                                 <el-button type="primary" size="mini"
                                     @@click="handleEditDrawerOpenBtn('drawerGroup',groupDetails)">编辑</el-button>
                                 <el-button type="primary" size="mini"
@@ -1604,6 +1617,10 @@
                 :size="elSize" label-position="left" label-width="130px" class="drawerForm-container">
                 <el-form-item label="组名称" prop="name">
                     <el-input v-model="groupForm.name" placeholder="请填写"></el-input>
+                </el-form-item>
+                <el-form-item label="是否启用" prop="enable">
+                    <el-checkbox v-model="groupForm.enable">启用该组</el-checkbox>
+                    <div class="form-help-text">新建组默认启用。停用后不会创建新任务，也不会作为 Workflow 节点使用。</div>
                 </el-form-item>
                 <el-form-item label="组成员" prop="members">
                     <div class="groupFMB">
