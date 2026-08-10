@@ -21,6 +21,7 @@ namespace Senparc.Xncf.NeuCharWorkflow.Application.AppServices;
 /// </summary>
 public sealed class NeuCharWorkflowAppService
 {
+    private static readonly JsonSerializerOptions DesignerJsonOptions = new(JsonSerializerDefaults.Web);
     private readonly NeuCharWorkflowService _workflowService;
     private readonly NeuCharWorkflowVersionService _workflowVersionService;
     private readonly NeuCharWorkflowExecutionLogService _executionLogService;
@@ -89,8 +90,8 @@ public sealed class NeuCharWorkflowAppService
                 descriptor.ModuleVersion,
                 descriptor.ModuleAvailable,
                 descriptor.ModuleAvailable ? "open" : "disabled",
-                JsonSerializer.Serialize(parameterSchema),
-                JsonSerializer.Serialize(WorkflowFunctionSchemaBuilder.BuildDefaults(parameterSchema)),
+                JsonSerializer.Serialize(parameterSchema, DesignerJsonOptions),
+                JsonSerializer.Serialize(WorkflowFunctionSchemaBuilder.BuildDefaults(parameterSchema), DesignerJsonOptions),
                 descriptor.Output,
                 descriptor.CatalogError);
         }).ToList();

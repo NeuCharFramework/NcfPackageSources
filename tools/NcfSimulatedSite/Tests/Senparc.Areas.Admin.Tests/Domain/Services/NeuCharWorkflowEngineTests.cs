@@ -312,6 +312,41 @@ public class NeuCharWorkflowEngineTests
     }
 
     [TestMethod]
+    public void WorkflowFunctionSchemaBuilder_SelectionParameter_ShouldRetainSandboxStyleMetadata()
+    {
+        var descriptor = new NeuCharFunctionDescriptor(
+            "sandbox",
+            "Sandbox",
+            "1.0.0",
+            true,
+            "create",
+            "创建沙箱",
+            null,
+            new[]
+            {
+                new Senparc.Ncf.XncfBase.FunctionParameterInfo
+                {
+                    Name = "TemplateKey",
+                    Title = "模板",
+                    Description = "选择沙箱模板",
+                    ParameterType = Senparc.Ncf.XncfBase.ParameterType.DropDownList,
+                    SystemType = "String",
+                    SelectionList = new Senparc.Ncf.XncfBase.Functions.SelectionList(
+                        Senparc.Ncf.XncfBase.Functions.SelectionType.DropDownList,
+                        new[] { new Senparc.Ncf.XncfBase.Functions.SelectionItem("python", "Python Exec", "Python 模板", true) })
+                }
+            });
+
+        var parameter = WorkflowFunctionSchemaBuilder.Build(descriptor).Single();
+
+        Assert.AreEqual("TemplateKey", parameter.Name);
+        Assert.AreEqual("模板", parameter.Title);
+        Assert.AreEqual("选择沙箱模板", parameter.Description);
+        Assert.AreEqual(1, parameter.ParameterType);
+        Assert.AreEqual("Python Exec", parameter.Options.Single().Text);
+    }
+
+    [TestMethod]
     public void ValidateRequiredParameters_UnnamedMetadata_ShouldRejectExecution()
     {
         var error = NeuCharWorkflowFunctionService.ValidateRequiredParameters(
@@ -349,6 +384,40 @@ public class NeuCharWorkflowEngineTests
         });
 
         Assert.AreEqual("full", value!.GetValue<string>());
+    }
+
+    [TestMethod]
+    public void ResolveRuntimeValue_Template_ShouldInterpolateMultipleBindings()
+    {
+        var method = typeof(NeuCharWorkflowEngine).GetMethod(
+            "ResolveRuntimeValue",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+        var template = JsonNode.Parse(
+            """
+            {
+              "$template": {
+                "text": "模板={{template}}；运行时={{runtime}}；输入={{input}}",
+                "bindings": [
+                  { "token": "template", "source": { "nodeId": "source", "path": "$.template" } },
+                  { "token": "runtime", "source": { "nodeId": "source", "path": "$.runtime" } }
+                ]
+              }
+            }
+            """)!;
+        var outputs = new Dictionary<string, JsonNode>
+        {
+            ["source"] = JsonNode.Parse("""{ "template": "Python Exec", "runtime": "Docker" }""")!
+        };
+
+        var value = (JsonNode?)method.Invoke(null, new object[]
+        {
+            template,
+            JsonValue.Create("来自触发器"),
+            outputs,
+            new Dictionary<string, JsonNode>()
+        });
+
+        Assert.AreEqual("模板=Python Exec；运行时=Docker；输入=来自触发器", value!.GetValue<string>());
     }
 
     private static Task<AppResponseBase<List<SampleOutput>>> ListOutputFunction() => null!;

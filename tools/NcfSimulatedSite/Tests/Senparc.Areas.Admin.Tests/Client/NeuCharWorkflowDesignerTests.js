@@ -56,6 +56,35 @@ assert.strictEqual(legacyParameter.name, 'parameter_1',
     'Legacy Function metadata without a field name should receive a deterministic draft key.');
 assert.strictEqual(legacyParameter.title, '参数 1',
     'Legacy Function metadata without a field name should receive a visible parameter label.');
+const sandboxParameter = commonSandbox.window.NeuCharWorkflowUi.normalizeParameterSchema([{
+    Name: 'TemplateKey',
+    Title: '模板',
+    Description: '选择沙箱模板',
+    ParameterType: 1,
+    Options: [{ Value: 'python', Text: 'Python Exec', DefaultSelected: true }]
+}])[0];
+assert.strictEqual(
+    JSON.stringify({
+        name: sandboxParameter.name,
+        title: sandboxParameter.title,
+        description: sandboxParameter.description,
+        parameterType: sandboxParameter.parameterType,
+        option: sandboxParameter.options[0]
+    }),
+    JSON.stringify({
+        name: 'TemplateKey',
+        title: '模板',
+        description: '选择沙箱模板',
+        parameterType: 1,
+        option: { Value: 'python', Text: 'Python Exec', DefaultSelected: true, value: 'python', text: 'Python Exec', defaultSelected: true }
+    }),
+    'PascalCase schemas embedded by older Designer responses must retain real field names, descriptions and selection options.');
+const sandboxDefaults = commonSandbox.window.NeuCharWorkflowUi.createParameterValues({
+    parameterSchemaJson: JSON.stringify([{ Name: 'TemplateKey', ParameterType: 1, DefaultValue: 'python' }]),
+    defaultParametersJson: JSON.stringify({ templateKey: 'csharp' })
+});
+assert.strictEqual(sandboxDefaults.TemplateKey, 'csharp',
+    'Default values should still match a Function field name when an older response changed only the key casing.');
 
 const cyclicContext = {
     form: {
@@ -293,10 +322,16 @@ assert.ok(page.includes('webhookHelpVisible=true') && page.includes('Webhook 使
     'Webhook guidance should be available on demand in a help dialog instead of permanently consuming editor height.');
 assert.ok(!page.includes('class="webhook-url-hint"'),
     'The lengthy inline Webhook URL guidance should be moved out of the always-visible configuration area.');
-assert.ok(page.includes('class="workflow-meta-primary"') && page.includes('class="workflow-meta-secondary"'),
-    'The workflow toolbar should separate identity, settings and feedback into readable groups.');
-assert.ok(page.includes('class="workflow-meta-actions"') && page.includes('>保存</el-button>') && page.includes('>测试运行</el-button>'),
-    'Primary save and run actions should remain visible with textual labels.');
+assert.ok(!page.includes('<header class="neuchar-page-header">'),
+    'The redundant workflow page header should be removed to return vertical space to the canvas.');
+assert.ok(page.includes('class="workflow-list-actions"') && page.includes('@@click="createWorkflow"'),
+    'Workflow creation and refresh should move into the workflow list instead of using a page-wide header.');
+assert.ok(page.includes('class="workflow-command-bar"') && page.includes('class="workflow-command-actions"'),
+    'The editor should retain a compact one-row command bar for the current workflow.');
+assert.ok(page.includes('>保存</el-button>') && page.includes('>运行</el-button>') && page.includes('>添加节点</el-button>'),
+    'Primary save, run and node-creation actions should remain visible with textual labels.');
+assert.ok(page.includes(':visible.sync="workflowSettingsVisible"') && page.includes('工作流设置'),
+    'Low-frequency workflow settings should move into an on-demand dialog.');
 assert.ok(page.includes('@@command="handleWorkflowAction"') && page.includes('删除工作流'),
     'Destructive workflow actions should live in a compact overflow menu.');
 assert.ok(page.includes('selectedWorkflowObject'), 'Agent nodes should show the selected workflow object details.');
@@ -353,7 +388,15 @@ assert.strictEqual(selectionFields[1].isArray, true,
     'A multi-select Function input should remain an array when bound downstream.');
 assert.ok(page.includes('workflow-run-dock'), 'Workflow execution should use a persistent status dock instead of a modal.');
 assert.ok(page.includes('关联上游 Output'), 'Node parameters should expose upstream output binding controls.');
-assert.ok(page.includes('Function 输入选择'), 'Function parameters should explain that upstream Selection values can be bound.');
+assert.ok(page.includes('Function 预载输入选择'), 'Function parameters should explain that upstream Selection values can be bound.');
+assert.ok(page.includes('预载输入选择'),
+    'Function Selection values loaded with the Function should be specially identified as preloaded binding sources.');
+assert.ok(page.includes('编辑文本与插入变量') && page.includes('saveParameterTemplate') && page.includes('appendTemplateBinding'),
+    'Text parameters should offer a beginner-friendly dialog for inserting multiple upstream bindings into manual text.');
+assert.ok(page.includes('parameter-template-card') && page.includes('templateEditor.bindings'),
+    'Mixed text bindings should remain visible and editable after the dialog is closed.');
+assert.ok(fs.readFileSync(scriptPath, 'utf8').includes('$template'),
+    'The designer should persist mixed text binding values with an explicit template contract.');
 assert.ok(page.includes("openFunctionPage(selectedFunction,'settings')") && page.includes("openFunctionPage(selectedFunction,'run')"),
     'Function nodes should offer separate settings and execution links.');
 assert.ok(page.includes('@@wheel.prevent="zoomCanvas"'), 'The workflow canvas should use mouse-wheel zooming.');
@@ -361,7 +404,6 @@ assert.ok(page.includes('class="canvas-zoom-controls"'), 'The workflow canvas sh
 assert.ok(page.includes('type="range"'), 'The zoom controls should include a slider.');
 assert.ok(page.includes('min="0.02"'), 'The zoom slider should expose the low zoom range used to fit large loaded workflows.');
 assert.ok(page.includes('class="canvas-minimap"'), 'Zoomed canvases should render a minimap.');
-assert.ok(page.includes('workflow-draft-warning'), 'Disconnected draft nodes should be explicitly warned about before saving.');
 assert.ok(page.includes('disconnectedNodes.length>0'), 'Disconnected draft nodes should disable test execution in the page.');
 assert.ok(page.includes('class="parameter-field-name"'), 'Function parameter field names should be visible in the node settings.');
 assert.ok(page.includes('parameter-description-icon'), 'Function parameter descriptions should have an info icon.');
@@ -382,16 +424,14 @@ assert.match(styles, /\.canvas-zoom-controls,[\s\S]*?\.canvas-minimap\s*\{[^}]*p
     'Canvas navigation controls should stay in the viewport and be translucent by default.');
 assert.match(styles, /\.canvas-zoom-controls:hover,[\s\S]*?\.canvas-minimap:focus-within\s*\{[^}]*opacity:\s*1;/s,
     'Canvas navigation controls should become opaque on hover or focus.');
-assert.match(styles, /\.workflow-draft-warning\s*\{[^}]*color:\s*#e6a23c;/s,
-    'Draft warnings should remain visually distinct in the workflow toolbar.');
 assert.match(styles, /\.workflow-context-menu\s*\{[^}]*position:\s*fixed;/s,
     'The node context menu should stay anchored to the viewport instead of scrolling with the canvas.');
-assert.match(styles, /\.workflow-meta\s*\{[^}]*flex:\s*0 0 auto;/s,
-    'The save toolbar should remain outside all scrolling panels.');
-assert.match(styles, /\.workflow-meta-primary,[\s\S]*?\.workflow-meta-actions,[\s\S]*?display:\s*flex;/s,
-    'The grouped workflow toolbar should use flexible action and field containers.');
-assert.match(styles, /@media \(max-width:\s*980px\)\s*\{[\s\S]*?\.workflow-meta-primary\s*\{\s*flex-wrap:\s*wrap;/s,
-    'The workflow toolbar should wrap its groups before labels can be clipped on narrower screens.');
+assert.match(styles, /\.workflow-command-bar\s*\{[^}]*min-height:\s*42px;[^}]*flex:\s*0 0 auto;/s,
+    'The command bar should remain a compact, non-scrolling top-level surface.');
+assert.match(styles, /\.workflow-palette, \.workflow-inspector\s*\{[^}]*position:\s*absolute;[^}]*z-index:\s*60;/s,
+    'The node palette and inspector should overlay the canvas instead of permanently reserving canvas width.');
+assert.match(styles, /\.workflow-designer\s*\{[^}]*position:\s*relative;[^}]*display:\s*block;/s,
+    'The canvas container should no longer use a three-column grid that constrains its width.');
 assert.match(styles, /\.workflow-page\s*\{[^}]*height:\s*100%;[^}]*overflow:\s*hidden;/s,
     'The Workflow page should fit the available Admin content area without outer scrolling.');
 assert.match(styles, /\.admin-content:has\(\.workflow-page\)\s*\{[^}]*overflow:\s*hidden;/s,
@@ -483,6 +523,39 @@ async function verifyUnsavedChangeGuards() {
     const viewModel = vueOptions.data();
     assert.strictEqual(viewModel.webhookHelpVisible, false,
         'Webhook help should stay collapsed until the user explicitly requests it.');
+    assert.strictEqual(viewModel.workflowSettingsVisible, false,
+        'Workflow settings should stay out of the canvas area until the user opens them.');
+    assert.strictEqual(viewModel.paletteCollapsed, true,
+        'The node palette should start collapsed so it does not permanently consume canvas width.');
+    assert.strictEqual(viewModel.inspectorCollapsed, true,
+        'The node inspector should start collapsed so it does not permanently consume canvas width.');
+    assert.strictEqual(viewModel.run.consoleOpen, false,
+        'The execution console should start collapsed so the canvas receives the available vertical space.');
+
+    const settingsActionContext = { editingLocked: false, workflowSettingsVisible: false };
+    await vueOptions.methods.handleWorkflowAction.call(settingsActionContext, 'settings');
+    assert.strictEqual(settingsActionContext.workflowSettingsVisible, true,
+        'The overflow menu should open the workflow settings dialog without changing the canvas layout.');
+
+    let newWorkflowRequested = false;
+    await vueOptions.methods.handleWorkflowAction.call({
+        createWorkflow() { newWorkflowRequested = true; return Promise.resolve(); }
+    }, 'new');
+    assert.strictEqual(newWorkflowRequested, true,
+        'The overflow menu should retain a new-workflow fallback when the list is unavailable on a narrow screen.');
+
+    let autoLayoutCalled = false;
+    let fitCanvasCalled = false;
+    const canvasActionContext = {
+        autoLayout() { autoLayoutCalled = true; },
+        fitCanvasToNodes() { fitCanvasCalled = true; }
+    };
+    await vueOptions.methods.handleWorkflowAction.call(canvasActionContext, 'auto-layout');
+    await vueOptions.methods.handleWorkflowAction.call(canvasActionContext, 'fit-canvas');
+    assert.strictEqual(autoLayoutCalled, true,
+        'The compact overflow menu should retain the automatic layout action.');
+    assert.strictEqual(fitCanvasCalled, true,
+        'The compact overflow menu should retain the fit-canvas action.');
 }
 
 verifyUnsavedChangeGuards()

@@ -19,26 +19,26 @@
 }
 
 <div class="neuchar-page workflow-page" v-loading="loading">
-    <header class="neuchar-page-header">
-        <div>
-            <h2>@XR["Area.Workflow"]</h2>
-            <p>@XR["Designer.Introduction"]</p>
-        </div>
-        <div class="workflow-page-actions">
-            <el-button circle
-                       icon="el-icon-refresh"
-                       title="@XR["Action.Refresh"]"
-                       aria-label="@XR["Action.Refresh"]"
-                       :disabled="editingLocked"
-                       @@click="loadAll"></el-button>
-            <el-button type="primary" icon="el-icon-plus" :disabled="editingLocked" @@click="createWorkflow">@XR["Action.NewWorkflow"]</el-button>
-        </div>
-    </header>
-
     <div :class="['workflow-shell',shellClasses]">
         <aside class="workflow-list-pane">
-            <div class="pane-heading">
+            <div class="workflow-list-heading">
                 <strong v-show="!listCollapsed">工作流</strong>
+                <span v-show="!listCollapsed" class="workflow-list-actions">
+                    <el-button type="text"
+                               icon="el-icon-refresh"
+                               title="刷新工作流列表"
+                               aria-label="刷新工作流列表"
+                               :disabled="editingLocked"
+                               @@click="loadAll"></el-button>
+                    <el-button type="primary"
+                               plain
+                               size="mini"
+                               icon="el-icon-plus"
+                               title="新建工作流"
+                               aria-label="新建工作流"
+                               :disabled="editingLocked"
+                               @@click="createWorkflow"></el-button>
+                </span>
                 <el-button type="text"
                            :icon="listCollapsed?'el-icon-s-unfold':'el-icon-s-fold'"
                            :title="listCollapsed?'展开工作流列表':'折叠工作流列表'"
@@ -63,99 +63,131 @@
 
         <main class="workflow-editor">
             <template v-if="editing">
-                <div class="workflow-meta">
-                    <div class="workflow-meta-primary">
-                        <div class="workflow-meta-fields">
-                            <el-input v-model="form.name" :disabled="editingLocked" maxlength="200" placeholder="工作流名称"></el-input>
-                            <el-input v-model="form.description" :disabled="editingLocked" placeholder="用一句话说明这个工作流"></el-input>
-                        </div>
-                        <div class="workflow-meta-actions" aria-label="工作流快捷操作">
-                            <el-button type="primary"
-                                       icon="el-icon-check"
-                                       :loading="saveState.saving"
-                                       :disabled="editingLocked || (form.id && !saveDirty)"
-                                       title="保存（Command/Ctrl + S）"
-                                       @@click="saveWorkflow({source:'manual'})">保存</el-button>
-                            <el-button icon="el-icon-video-play"
-                                       :disabled="!form.id || editingLocked || disconnectedNodes.length>0"
-                                       :title="disconnectedNodes.length?'请先连接所有草稿节点后再测试运行':'保存并测试运行'"
-                                       @@click="startWorkflow">测试运行</el-button>
-                            <el-dropdown v-if="form.id" trigger="click" @@command="handleWorkflowAction">
-                                <el-button plain icon="el-icon-more" title="更多工作流操作">更多<i class="el-icon-arrow-down el-icon--right"></i></el-button>
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="delete" :disabled="editingLocked">
-                                        <i class="el-icon-delete"></i> 删除工作流
-                                    </el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
-                        </div>
+                <div class="workflow-command-bar">
+                    <div class="workflow-command-identity">
+                        <el-input v-model="form.name" size="small" :disabled="editingLocked" maxlength="200" placeholder="工作流名称"></el-input>
+                        <el-tag size="mini" effect="plain">{{form.triggerType==='webhook'?'Webhook':(form.triggerType==='interval'?'间隔触发':'手动触发')}}</el-tag>
+                        <span :class="['workflow-save-status',{'is-dirty':saveDirty,'is-error':saveState.status==='error'}]" :title="saveStatusText">{{saveStatusText}}</span>
                     </div>
-                    <div class="workflow-meta-secondary">
-                        <div class="workflow-meta-settings">
-                            <el-select v-model="form.triggerType" :disabled="editingLocked" @@change="syncTriggerNode">
-                                <el-option label="手动触发" value="manual"></el-option>
-                                <el-option label="间隔触发" value="interval"></el-option>
-                                <el-option label="Webhook" value="webhook"></el-option>
-                            </el-select>
-                            <el-input-number v-if="form.triggerType==='interval'" v-model="form.intervalSeconds" :disabled="editingLocked" :min="60" :max="31536000" :step="60"></el-input-number>
-                            <el-switch v-model="form.enabled" :disabled="editingLocked" active-text="启用"></el-switch>
-                            <div class="workflow-auto-save" title="自动保存只在当前页面打开且内容有变化时执行">
-                                <el-switch :value="form.autoSaveMinutes>0"
-                                           :disabled="editingLocked || saveState.saving"
-                                           active-text="自动保存"
-                                           @@change="setAutoSaveEnabled"></el-switch>
-                                <el-input-number v-if="form.autoSaveMinutes>0"
-                                                 v-model="form.autoSaveMinutes"
-                                                 :disabled="editingLocked || saveState.saving"
-                                                 :min="1"
-                                                 :max="1440"
-                                                 :step="1"
-                                                 size="small"
-                                                 controls-position="right"></el-input-number>
-                                <span v-if="form.autoSaveMinutes>0">分钟</span>
-                            </div>
-                        </div>
-                        <div class="workflow-meta-feedback">
-                            <span :class="['workflow-save-status',{'is-dirty':saveDirty,'is-error':saveState.status==='error'}]">{{saveStatusText}}</span>
-                            <span v-if="disconnectedNodes.length" class="workflow-draft-warning" :title="'未连接节点：'+disconnectedNodes.map(node => node.name || node.id).join('、')">
-                                <i class="el-icon-warning-outline"></i> 草稿节点未连接，保存后不可运行
-                            </span>
-                        </div>
+                    <div class="workflow-command-actions" aria-label="工作流快捷操作">
+                        <el-button type="primary"
+                                   size="small"
+                                   icon="el-icon-check"
+                                   :loading="saveState.saving"
+                                   :disabled="editingLocked || (form.id && !saveDirty)"
+                                   title="保存（Command/Ctrl + S）"
+                                   @@click="saveWorkflow({source:'manual'})">保存</el-button>
+                        <el-button size="small"
+                                   icon="el-icon-video-play"
+                                   :disabled="!form.id || editingLocked || disconnectedNodes.length>0"
+                                   :title="disconnectedNodes.length?'请先连接所有草稿节点后再测试运行':'保存并测试运行'"
+                                   @@click="startWorkflow">运行</el-button>
+                        <el-button size="small"
+                                   plain
+                                   icon="el-icon-plus"
+                                   :disabled="editingLocked"
+                                   title="打开添加节点面板"
+                                   @@click="paletteCollapsed=false">添加节点</el-button>
+                        <el-dropdown trigger="click" @@command="handleWorkflowAction">
+                            <el-button size="small" plain icon="el-icon-more" title="更多工作流操作" aria-label="更多工作流操作"></el-button>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="new" :disabled="editingLocked || saveState.saving">
+                                    <i class="el-icon-plus"></i> 新建工作流
+                                </el-dropdown-item>
+                                <el-dropdown-item command="settings" :disabled="editingLocked">
+                                    <i class="el-icon-setting"></i> 工作流设置
+                                </el-dropdown-item>
+                                <el-dropdown-item command="auto-layout" :disabled="editingLocked">
+                                    <i class="el-icon-magic-stick"></i> 自动排版
+                                </el-dropdown-item>
+                                <el-dropdown-item command="fit-canvas">
+                                    <i class="el-icon-full-screen"></i> 适应画布
+                                </el-dropdown-item>
+                                <el-dropdown-item v-if="form.id" command="delete" divided :disabled="editingLocked">
+                                    <i class="el-icon-delete"></i> 删除工作流
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
                     </div>
                 </div>
 
-                <div v-if="form.triggerType==='webhook'" class="workflow-webhook-config">
-                    <div class="webhook-config-heading">
-                        <strong>Webhook 触发配置</strong>
-                        <el-button type="text" size="mini" icon="el-icon-question" @@click="webhookHelpVisible=true">使用说明</el-button>
-                    </div>
-                    <div class="webhook-config-row">
-                        <label>请求方法</label>
-                        <el-select v-model="form.webhookMethod" :disabled="editingLocked" size="small">
-                            <el-option label="不限定（GET/POST及其他）" value="any"></el-option>
-                            <el-option label="GET" value="get"></el-option>
-                            <el-option label="POST" value="post"></el-option>
-                        </el-select>
-                        <label>访问密钥</label>
-                        <el-input v-model="form.webhookToken" size="small" readonly placeholder="保存后自动生成">
-                            <el-button slot="append" icon="el-icon-document-copy" title="复制访问密钥" @@click="copyText(form.webhookToken)"></el-button>
-                        </el-input>
-                        <el-button size="small" icon="el-icon-document-copy" :disabled="!form.id" @@click="copyText(webhookUrl)">复制 URL</el-button>
-                    </div>
-                    <div class="webhook-parameters-heading">
-                        <span>参数（{{form.webhookParameters.length}}/50）</span>
-                        <el-button type="text" size="small" :disabled="editingLocked || form.webhookParameters.length>=50" @@click="addWebhookParameter">添加参数</el-button>
-                    </div>
-                    <div v-if="form.webhookParameters.length" class="webhook-parameters">
-                        <div v-for="(parameter,index) in form.webhookParameters" :key="parameter._id" class="webhook-parameter-row">
-                            <el-input v-model="parameter.name" size="small" placeholder="参数名，例如 userId" :disabled="editingLocked"></el-input>
-                            <el-checkbox v-model="parameter.required" :disabled="editingLocked">必填</el-checkbox>
-                            <el-input v-model="parameter.description" size="small" placeholder="说明（可选）" :disabled="editingLocked"></el-input>
-                            <el-button type="text" class="webhook-parameter-remove" :disabled="editingLocked" @@click="removeWebhookParameter(index)">删除</el-button>
+                <el-dialog title="工作流设置"
+                           :visible.sync="workflowSettingsVisible"
+                           width="min(720px, calc(100vw - 32px))"
+                           append-to-body>
+                    <el-form label-position="top" size="small" :class="{'form-locked':editingLocked}">
+                        <el-form-item label="说明">
+                            <el-input v-model="form.description" :disabled="editingLocked" placeholder="用一句话说明这个工作流"></el-input>
+                        </el-form-item>
+                        <div class="workflow-settings-grid">
+                            <el-form-item label="触发方式">
+                                <el-select v-model="form.triggerType" :disabled="editingLocked" @@change="syncTriggerNode">
+                                    <el-option label="手动触发" value="manual"></el-option>
+                                    <el-option label="间隔触发" value="interval"></el-option>
+                                    <el-option label="Webhook" value="webhook"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item v-if="form.triggerType==='interval'" label="间隔秒数">
+                                <el-input-number v-model="form.intervalSeconds" :disabled="editingLocked" :min="60" :max="31536000" :step="60"></el-input-number>
+                            </el-form-item>
+                            <el-form-item label="运行状态">
+                                <el-switch v-model="form.enabled" :disabled="editingLocked" active-text="启用"></el-switch>
+                            </el-form-item>
+                            <el-form-item label="自动保存" title="只在当前页面打开且内容有变化时执行">
+                                <div class="workflow-auto-save">
+                                    <el-switch :value="form.autoSaveMinutes>0"
+                                               :disabled="editingLocked || saveState.saving"
+                                               active-text="自动保存"
+                                               @@change="setAutoSaveEnabled"></el-switch>
+                                    <el-input-number v-if="form.autoSaveMinutes>0"
+                                                     v-model="form.autoSaveMinutes"
+                                                     :disabled="editingLocked || saveState.saving"
+                                                     :min="1"
+                                                     :max="1440"
+                                                     :step="1"
+                                                     controls-position="right"></el-input-number>
+                                    <span v-if="form.autoSaveMinutes>0">分钟</span>
+                                </div>
+                            </el-form-item>
                         </div>
-                    </div>
-                    <div v-else class="webhook-parameters-empty">未配置参数：接收全部 Query、Form 与 JSON 字段。</div>
-                </div>
+
+                        <div v-if="form.triggerType==='webhook'" class="workflow-webhook-config">
+                            <div class="webhook-config-heading">
+                                <strong>Webhook 触发配置</strong>
+                                <el-button type="text" size="mini" icon="el-icon-question" @@click="webhookHelpVisible=true">使用说明</el-button>
+                            </div>
+                            <div class="webhook-config-row">
+                                <label>请求方法</label>
+                                <el-select v-model="form.webhookMethod" :disabled="editingLocked" size="small">
+                                    <el-option label="不限定（GET/POST及其他）" value="any"></el-option>
+                                    <el-option label="GET" value="get"></el-option>
+                                    <el-option label="POST" value="post"></el-option>
+                                </el-select>
+                                <label>访问密钥</label>
+                                <el-input v-model="form.webhookToken" size="small" readonly placeholder="保存后自动生成">
+                                    <el-button slot="append" icon="el-icon-document-copy" title="复制访问密钥" @@click="copyText(form.webhookToken)"></el-button>
+                                </el-input>
+                                <el-button size="small" icon="el-icon-document-copy" :disabled="!form.id" @@click="copyText(webhookUrl)">复制 URL</el-button>
+                            </div>
+                            <div class="webhook-parameters-heading">
+                                <span>参数（{{form.webhookParameters.length}}/50）</span>
+                                <el-button type="text" size="small" :disabled="editingLocked || form.webhookParameters.length>=50" @@click="addWebhookParameter">添加参数</el-button>
+                            </div>
+                            <div v-if="form.webhookParameters.length" class="webhook-parameters">
+                                <div v-for="(parameter,index) in form.webhookParameters" :key="parameter._id" class="webhook-parameter-row">
+                                    <el-input v-model="parameter.name" size="small" placeholder="参数名，例如 userId" :disabled="editingLocked"></el-input>
+                                    <el-checkbox v-model="parameter.required" :disabled="editingLocked">必填</el-checkbox>
+                                    <el-input v-model="parameter.description" size="small" placeholder="说明（可选）" :disabled="editingLocked"></el-input>
+                                    <el-button type="text" class="webhook-parameter-remove" :disabled="editingLocked" @@click="removeWebhookParameter(index)">删除</el-button>
+                                </div>
+                            </div>
+                            <div v-else class="webhook-parameters-empty">未配置参数：接收全部 Query、Form 与 JSON 字段。</div>
+                        </div>
+                    </el-form>
+                    <span slot="footer" class="dialog-footer">
+                        <el-button @@click="workflowSettingsVisible=false">关闭</el-button>
+                    </span>
+                </el-dialog>
 
                 <el-dialog title="Webhook 使用说明"
                            :visible.sync="webhookHelpVisible"
@@ -171,6 +203,55 @@
                     </div>
                     <span slot="footer" class="dialog-footer">
                         <el-button @@click="webhookHelpVisible=false">关闭</el-button>
+                    </span>
+                </el-dialog>
+
+                <el-dialog title="编辑文本与插入变量"
+                           :visible.sync="templateEditor.visible"
+                           width="min(760px, calc(100vw - 32px))"
+                           append-to-body>
+                    <p class="template-editor-help">先输入固定文字，再从下方选择上游输出或“预载输入选择”。系统会插入一个可见的占位符；同一文本可插入多个变量。</p>
+                    <el-input v-model="templateEditor.text"
+                              type="textarea"
+                              :rows="12"
+                              :disabled="editingLocked"
+                              placeholder="例如：请根据 &#123;&#123;value_1&#125;&#125; 生成一段摘要"></el-input>
+                    <div class="template-editor-picker">
+                        <span>插入上游值</span>
+                        <el-cascader :value="templateEditor.pendingSelection"
+                                     :options="upstreamOutputOptions(null)"
+                                     :disabled="editingLocked || !upstreamOutputOptions(null).length"
+                                     :props="{expandTrigger:'hover'}"
+                                     clearable
+                                     filterable
+                                     placeholder="选择节点、输出或预载输入选择"
+                                     @@change="appendTemplateBinding"></el-cascader>
+                    </div>
+                    <div v-if="templateEditor.bindings.length" class="template-binding-tags">
+                        <div v-for="item in templateEditor.bindings" :key="item.token" class="template-binding-item">
+                            <el-tag :disable-transitions="true"
+                                    :title="templateBindingLabel(item.source)"
+                                    :closable="!editingLocked"
+                                    @@close="removeTemplateBinding(item.token)">
+                                {{'{{'+item.token+'}}'}} · {{templateBindingLabel(item.source)}}
+                            </el-tag>
+                            <el-input-number v-if="item.source.requiresIndex"
+                                             v-model="item.source.collectionIndex"
+                                             :disabled="editingLocked"
+                                             :min="0"
+                                             :step="1"
+                                             size="mini"
+                                             controls-position="right"
+                                             placeholder="列表索引"></el-input-number>
+                        </div>
+                    </div>
+                    <el-alert title="删除一个变量标签时，它在文本中的对应占位符也会一并删除。文本参数可以继续使用 &#123;&#123;input&#125;&#125; 引用触发器输入。"
+                              type="info"
+                              :closable="false"
+                              show-icon></el-alert>
+                    <span slot="footer" class="dialog-footer">
+                        <el-button @@click="templateEditor.visible=false">取消</el-button>
+                        <el-button type="primary" :disabled="editingLocked" @@click="saveParameterTemplate">应用到参数</el-button>
                     </span>
                 </el-dialog>
 
@@ -242,13 +323,6 @@
                              @@wheel.prevent="zoomCanvas"
                              @@scroll="updateCanvasViewport"
                              @@contextmenu.prevent="closeContextMenu">
-                        <div class="canvas-toolbar" @@mousedown.stop @@wheel.stop>
-                            <span><i class="el-icon-rank"></i> 拖动节点移动；右键拖动画布平移；节点右键可复制或删除。</span>
-                            <span class="canvas-toolbar-actions">
-                                <el-tag v-if="run.running" size="mini" type="warning" effect="dark">运行中 · 编辑锁定</el-tag>
-                                <el-button size="mini" icon="el-icon-magic-stick" :disabled="editingLocked" @@click="autoLayout">自动排版</el-button>
-                            </span>
-                        </div>
                         <div class="workflow-scale-surface" :style="{width:scaledCanvasSize.width+'px',height:scaledCanvasSize.height+'px'}">
                             <div ref="stage"
                                  class="workflow-stage"
@@ -433,9 +507,37 @@
                                                 <em v-if="parameter.required">必填</em>
                                             </label>
 
-                                            <template v-if="!isBinding(selectedNode.config.parameters[parameter.name])">
-                                                <el-input v-if="parameter.parameterType===0 || parameter.parameterType===3"
-                                                          :type="parameter.parameterType===3?'password':'text'"
+                                            <template v-if="isTemplateValue(selectedNode.config.parameters[parameter.name])">
+                                                <div class="parameter-template-card">
+                                                    <div class="parameter-template-summary">{{parameterTemplateSummary(selectedNode.config.parameters[parameter.name])}}</div>
+                                                    <div class="parameter-template-tags">
+                                                        <el-tag v-for="item in parameterTemplateBindings(selectedNode.config.parameters[parameter.name])"
+                                                                :key="item.token"
+                                                                size="mini"
+                                                                :title="templateBindingLabel(item.source)">
+                                                            {{'{{'+item.token+'}}'}}
+                                                        </el-tag>
+                                                    </div>
+                                                    <div class="parameter-template-actions">
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="openParameterTemplateEditor(selectedNode,parameter)">编辑文本与变量</el-button>
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetParameterManual(selectedNode,parameter)">改为手动输入</el-button>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                            <template v-else-if="!isBinding(selectedNode.config.parameters[parameter.name])">
+                                                <div v-if="parameter.parameterType===0" class="parameter-text-input">
+                                                    <el-input :disabled="editingLocked"
+                                                              v-model="selectedNode.config.parameters[parameter.name]"
+                                                              placeholder="手动输入"></el-input>
+                                                    <el-button type="default"
+                                                               icon="el-icon-connection"
+                                                               title="编辑文本并插入上游变量"
+                                                               aria-label="编辑文本并插入上游变量"
+                                                               :disabled="editingLocked || !canUseTemplate(parameter)"
+                                                               @@click="openParameterTemplateEditor(selectedNode,parameter)">变量</el-button>
+                                                </div>
+                                                <el-input v-else-if="parameter.parameterType===3"
+                                                          type="password"
                                                           :disabled="editingLocked"
                                                           v-model="selectedNode.config.parameters[parameter.name]"
                                                           placeholder="手动输入"></el-input>
@@ -477,14 +579,14 @@
                                             </div>
 
                                             <div class="upstream-picker">
-                                                <span>或关联上游输出 / Function 输入选择</span>
+                                                <span>或完整关联上游输出 / Function 预载输入选择</span>
                                                 <el-cascader :value="bindingSelection(selectedNode,parameter)"
                                                              :options="upstreamOutputOptions(parameter)"
                                                              :disabled="editingLocked || !upstreamOutputOptions(parameter).length"
                                                              :props="{expandTrigger:'hover'}"
                                                              clearable
                                                              filterable
-                                                             placeholder="选择节点、输出或输入选择"
+                                                             placeholder="选择节点、输出或预载输入选择"
                                                              @@change="setParameterBinding(selectedNode,parameter,$event)"></el-cascader>
                                             </div>
                                         </div>

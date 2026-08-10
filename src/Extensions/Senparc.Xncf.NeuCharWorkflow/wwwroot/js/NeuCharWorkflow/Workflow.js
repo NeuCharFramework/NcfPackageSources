@@ -8,14 +8,23 @@ new Vue({
             workflowObjects: [],
             keyword: '',
             listCollapsed: false,
-            paletteCollapsed: false,
-            inspectorCollapsed: false,
+            paletteCollapsed: true,
+            inspectorCollapsed: true,
             paletteModule: '',
             paletteSearch: '',
             pinnedFunctions: [],
             editing: false,
             discardConfirming: false,
             webhookHelpVisible: false,
+            workflowSettingsVisible: false,
+            templateEditor: {
+                visible: false,
+                nodeId: '',
+                parameterName: '',
+                text: '',
+                bindings: [],
+                pendingSelection: []
+            },
             selectedNodeId: '',
             connectionDraft: { sourceId: '', sourceHandle: '', x: 0, y: 0 },
             dragState: null,
@@ -45,7 +54,7 @@ new Vue({
                 finalOutput: '',
                 error: '',
                 pollTimer: null,
-                consoleOpen: true
+                consoleOpen: false
             }
         };
     },
@@ -241,6 +250,8 @@ new Vue({
             if (this.editingLocked || this.saveState.saving || !await this.confirmDiscardChanges('新建工作流')) return;
             this.form = this.emptyForm();
             this.editing = true;
+            this.workflowSettingsVisible = false;
+            this.webhookHelpVisible = false;
             this.selectedNodeId = '';
             this.resetSaveState();
             this.cancelConnection();
@@ -251,6 +262,8 @@ new Vue({
         async editWorkflow(id) {
             if (this.editingLocked || this.saveState.saving || Number(id) === Number(this.form.id)) return;
             if (!await this.confirmDiscardChanges('切换工作流')) return;
+            this.workflowSettingsVisible = false;
+            this.webhookHelpVisible = false;
             this.loading = true;
             try {
                 const response = await service.get(`/Admin/NeuCharWorkflow/Index?handler=Detail&id=${id}`);
@@ -902,7 +915,7 @@ new Vue({
                     const shape = this.expectedShape(parameter);
                     return {
                         path: `$.__functionInput.${parameter.name}`,
-                        label: `输入选择 · ${this.parameterDisplayName(parameter)}（${isMultiple ? '多选' : '单选'}${optionSuffix}）`,
+                        label: `预载输入选择 · ${this.parameterDisplayName(parameter)}（${isMultiple ? '多选' : '单选'}${optionSuffix}）`,
                         typeName: shape.typeName,
                         isArray: shape.isArray,
                         requiresIndex: false,
@@ -922,6 +935,98 @@ new Vue({
             })).filter(option => option.children.length);
         },
         isBinding(value) { return !!(value && typeof value === 'object' && !Array.isArray(value) && value.$source); },
+        isTemplateValue(value) {
+            return !!(value && typeof value === 'object' && !Array.isArray(value) &&
+                value.$template && typeof value.$template === 'object');
+        },
+        templateFor(value) {
+            return this.isTemplateValue(value) ? value.$template : null;
+        },
+        canUseTemplate(parameter) {
+            return Number(parameter?.parameterType) === 0 && !this.expectedShape(parameter).isArray;
+        },
+        createSourceBinding(selection) {
+            if (!selection || selection.length < 2) return null;
+            const source = this.form.graph.nodes.find(item => item.id === selection[0]);
+            const field = source && this.nodeOutputFields(source).find(item => item.path === selection[1]);
+            if (!source || !field) return null;
+            return {
+                nodeId: source.id,
+                path: field.path,
+                sourceType: field.typeName,
+                isArray: !!field.isArray,
+                requiresIndex: !!field.requiresIndex,
+                sourceKind: field.sourceKind || 'output',
+                sourceParameterName: field.sourceParameterName || null,
+                collectionIndex: null,
+                itemIndex: null
+            };
+        },
+        templateBindingLabel(binding) {
+            const source = this.form.graph.nodes.find(node => node.id === binding?.nodeId);
+            const field = source && this.nodeOutputFields(source).find(item => item.path === (binding.path || '$'));
+            return source && field ? `${source.name} · ${field.label}` : '已失效的上游来源';
+        },
+        openParameterTemplateEditor(node, parameter) {
+            if (this.editingLocked || !node || !parameter || !this.canUseTemplate(parameter)) return;
+            const currentValue = node.config.parameters?.[parameter.name];
+            const template = this.templateFor(currentValue);
+            this.templateEditor = {
+                visible: true,
+                nodeId: node.id,
+                parameterName: parameter.name,
+                text: template ? String(template.text || '') : (typeof currentValue === 'string' ? currentValue : ''),
+                bindings: template && Array.isArray(template.bindings)
+                    ? template.bindings.filter(item => item && item.source).map(item => ({
+                        token: String(item.token || ''),
+                        source: { ...item.source }
+                    }))
+                    : [],
+                pendingSelection: []
+            };
+        },
+        appendTemplateBinding(selection) {
+            const source = this.createSourceBinding(selection);
+            this.templateEditor.pendingSelection = [];
+            if (!source) return;
+            let index = this.templateEditor.bindings.length + 1;
+            let token = `value_${index}`;
+            while (this.templateEditor.bindings.some(item => item.token === token)) {
+                index += 1;
+                token = `value_${index}`;
+            }
+            const placeholder = `{{${token}}}`;
+            const separator = this.templateEditor.text && !/\s$/.test(this.templateEditor.text) ? ' ' : '';
+            this.templateEditor.text += `${separator}${placeholder}`;
+            this.templateEditor.bindings.push({ token, source });
+        },
+        removeTemplateBinding(token) {
+            const placeholder = `{{${token}}}`;
+            this.templateEditor.text = String(this.templateEditor.text || '').split(placeholder).join('');
+            this.templateEditor.bindings = this.templateEditor.bindings.filter(item => item.token !== token);
+        },
+        saveParameterTemplate() {
+            const editor = this.templateEditor;
+            const node = this.form.graph.nodes.find(item => item.id === editor.nodeId);
+            if (!node || !editor.parameterName || !node.config.parameters) {
+                editor.visible = false;
+                return;
+            }
+            const text = String(editor.text || '');
+            const bindings = editor.bindings.map(item => ({ token: item.token, source: { ...item.source } }));
+            this.$set(node.config.parameters, editor.parameterName,
+                bindings.length ? { $template: { text, bindings } } : text);
+            editor.visible = false;
+        },
+        parameterTemplateSummary(value) {
+            const template = this.templateFor(value);
+            const text = String(template?.text || '');
+            return text.length > 96 ? `${text.substring(0, 96)}…` : (text || '（空文本）');
+        },
+        parameterTemplateBindings(value) {
+            const template = this.templateFor(value);
+            return template && Array.isArray(template.bindings) ? template.bindings : [];
+        },
         bindingFor(node, parameter) { return node && node.config.parameters && this.isBinding(node.config.parameters[parameter.name]) ? node.config.parameters[parameter.name].$source : null; },
         resolvedBindingFor(node, parameter) {
             const binding = this.bindingFor(node, parameter);
@@ -936,20 +1041,10 @@ new Vue({
         },
         setParameterBinding(node, parameter, selection) {
             if (!selection || selection.length < 2) { this.resetParameterManual(node, parameter); return; }
-            const source = this.form.graph.nodes.find(item => item.id === selection[0]);
-            const field = this.nodeOutputFields(source).find(item => item.path === selection[1]);
+            const source = this.createSourceBinding(selection);
+            if (!source) return;
             this.$set(node.config.parameters, parameter.name, {
-                $source: {
-                    nodeId: source.id,
-                    path: field.path,
-                    sourceType: field.typeName,
-                    isArray: !!field.isArray,
-                    requiresIndex: !!field.requiresIndex,
-                    sourceKind: field.sourceKind || 'output',
-                    sourceParameterName: field.sourceParameterName || null,
-                    collectionIndex: null,
-                    itemIndex: null
-                }
+                $source: source
             });
         },
         resetParameterManual(node, parameter) {
@@ -966,6 +1061,25 @@ new Vue({
             return { typeName, isArray };
         },
         bindingCompatibility(node, parameter) {
+            const value = node && node.config?.parameters?.[parameter.name];
+            if (this.isTemplateValue(value)) {
+                if (!this.canUseTemplate(parameter)) return { level: 'danger', text: '此参数不支持在文本中嵌入变量' };
+                const bindings = this.parameterTemplateBindings(value);
+                if (!bindings.length) return { level: 'manual', text: '手动输入' };
+                const invalid = bindings.find(item => {
+                    const source = this.form.graph.nodes.find(node => node.id === item?.source?.nodeId);
+                    const field = source && this.nodeOutputFields(source).find(candidate =>
+                        candidate.path === (item?.source?.path || '$'));
+                    return !source || !this.upstreamNodes(node).some(upstream => upstream.id === source.id) ||
+                        !field ||
+                        String(item?.source?.sourceKind || 'output') !== String(field.sourceKind || 'output') ||
+                        (field.requiresIndex && (item?.source?.collectionIndex === null ||
+                            typeof item?.source?.collectionIndex === 'undefined'));
+                });
+                return invalid
+                    ? { level: 'danger', text: '文本中的变量来源已失效，或缺少上游列表索引' }
+                    : { level: 'success', text: `文本中嵌入 ${bindings.length} 个上游值` };
+            }
             const rawBinding = this.bindingFor(node, parameter);
             if (!rawBinding) return { level: 'manual', text: '手动输入' };
             const source = this.form.graph.nodes.find(item => item.id === rawBinding.nodeId);
@@ -1322,6 +1436,22 @@ new Vue({
             return String((data && (data.title || data.detail || data)) || fallback);
         },
         async handleWorkflowAction(action) {
+            if (action === 'new') {
+                await this.createWorkflow();
+                return;
+            }
+            if (action === 'settings') {
+                if (!this.editingLocked) this.workflowSettingsVisible = true;
+                return;
+            }
+            if (action === 'auto-layout') {
+                this.autoLayout();
+                return;
+            }
+            if (action === 'fit-canvas') {
+                this.fitCanvasToNodes();
+                return;
+            }
             if (action !== 'delete' || !this.form.id || this.editingLocked || this.saveState.saving) return;
             try {
                 await this.$confirm(

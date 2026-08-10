@@ -697,6 +697,10 @@ public sealed class NeuCharWorkflowEngine
             {
                 return ResolveBinding(binding, outputs, functionSelectionInputs)?.DeepClone();
             }
+            if (jsonObject["$template"] is JsonObject template)
+            {
+                return ResolveTemplate(template, input, outputs, functionSelectionInputs);
+            }
             var result = new JsonObject();
             foreach (var property in jsonObject)
             {
@@ -722,6 +726,45 @@ public sealed class NeuCharWorkflowEngine
         }
         return node?.DeepClone();
     }
+
+    /// <summary>
+    /// Renders a textual Function parameter containing one or more explicit binding tokens.
+    /// The persisted contract deliberately separates the editable text from its source records:
+    /// { "$template": { "text": "prefix {{value_1}}", "bindings": [{ "token": "value_1", "source": { ... } }] } }.
+    /// It keeps user text literal and makes Function/module upgrades validate every referenced source.
+    /// </summary>
+    private static JsonNode ResolveTemplate(
+        JsonObject template,
+        JsonNode input,
+        IReadOnlyDictionary<string, JsonNode> outputs,
+        IReadOnlyDictionary<string, JsonNode> functionSelectionInputs)
+    {
+        var text = GetString(template, "text") ?? string.Empty;
+        if (template["bindings"] is JsonArray bindings)
+        {
+            foreach (var (index, item) in bindings.Select((item, index) => (index, item)))
+            {
+                if (item is not JsonObject entry)
+                {
+                    throw new InvalidOperationException($"文本模板第 {index + 1} 个变量格式无效。");
+                }
+                var token = GetString(entry, "token");
+                if (!IsTemplateToken(token) || entry["source"] is not JsonObject source)
+                {
+                    throw new InvalidOperationException($"文本模板第 {index + 1} 个变量缺少有效名称或绑定来源。");
+                }
+                var value = ResolveBinding(source, outputs, functionSelectionInputs);
+                text = text.Replace($"{{{{{token}}}}}", NodeToText(value), StringComparison.Ordinal);
+            }
+        }
+        return JsonValue.Create(text.Replace("{{input}}", NodeToText(input), StringComparison.Ordinal));
+    }
+
+    private static bool IsTemplateToken(string token) =>
+        !string.IsNullOrWhiteSpace(token) &&
+        token.Length <= 64 &&
+        char.IsLetter(token[0]) &&
+        token.All(character => char.IsLetterOrDigit(character) || character is '_' or '-');
 
     private static JsonNode ResolveBinding(
         JsonObject binding,
@@ -934,8 +977,23 @@ public sealed class NeuCharWorkflowEngine
         {
             var parameterKey = parameters.Select(z => z.Key).FirstOrDefault(z =>
                 string.Equals(z, parameter.Name, StringComparison.OrdinalIgnoreCase));
-            if (parameterKey == null || parameters[parameterKey] is not JsonObject value ||
-                value["$source"] is not JsonObject binding)
+            if (parameterKey == null || parameters[parameterKey] is not JsonObject value)
+            {
+                continue;
+            }
+
+            if (value["$template"] is JsonObject template)
+            {
+                var templateError = ValidateTemplate(parameter, template);
+                if (templateError != null)
+                {
+                    return $"节点“{targetNode.Name}”参数“{parameter.Title ?? parameter.Name}”：{templateError}";
+                }
+                // Individual template sources are checked by ValidateNodeBindingsAsync. Unlike a
+                // whole-value binding, an interpolated value is intentionally converted to text.
+                continue;
+            }
+            if (value["$source"] is not JsonObject binding)
             {
                 continue;
             }
@@ -991,6 +1049,51 @@ public sealed class NeuCharWorkflowEngine
                 !string.Equals(expected.typeName, field.TypeName, StringComparison.OrdinalIgnoreCase))
             {
                 return $"节点“{targetNode.Name}”参数“{parameter.Title ?? parameter.Name}”需要 {expected.typeName}，但上游输出为 {field.TypeName}。";
+            }
+        }
+        return null;
+    }
+
+    private static string ValidateTemplate(
+        Senparc.Ncf.XncfBase.FunctionParameterInfo parameter,
+        JsonObject template)
+    {
+        if (parameter.ParameterType != Senparc.Ncf.XncfBase.ParameterType.Text ||
+            GetParameterValueShape(parameter).isArray)
+        {
+            return "文本中嵌入变量仅支持单值文本参数；请使用“关联上游输出”传入完整值。";
+        }
+        if (template["text"] is not JsonValue textValue || !textValue.TryGetValue<string>(out var text))
+        {
+            return "文本模板缺少可编辑的文本内容。";
+        }
+        if (template["bindings"] == null)
+        {
+            return null;
+        }
+        if (template["bindings"] is not JsonArray bindings)
+        {
+            return "文本模板的变量列表格式无效。";
+        }
+        var tokens = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var (index, item) in bindings.Select((item, index) => (index, item)))
+        {
+            if (item is not JsonObject entry)
+            {
+                return $"第 {index + 1} 个变量格式无效。";
+            }
+            var token = GetString(entry, "token");
+            if (!IsTemplateToken(token) || !tokens.Add(token))
+            {
+                return $"第 {index + 1} 个变量名称无效或重复。";
+            }
+            if (entry["source"] is not JsonObject)
+            {
+                return $"第 {index + 1} 个变量缺少绑定来源。";
+            }
+            if (!text.Contains($"{{{{{token}}}}}", StringComparison.Ordinal))
+            {
+                return $"变量“{token}”没有出现在文本中。";
             }
         }
         return null;
@@ -1056,6 +1159,20 @@ public sealed class NeuCharWorkflowEngine
             if (obj["$source"] is JsonObject binding)
             {
                 yield return (path, binding);
+                yield break;
+            }
+            if (obj["$template"] is JsonObject template)
+            {
+                if (template["bindings"] is JsonArray bindings)
+                {
+                    for (var index = 0; index < bindings.Count; index++)
+                    {
+                        if (bindings[index] is JsonObject entry && entry["source"] is JsonObject source)
+                        {
+                            yield return ($"{path}.$template.bindings[{index}]", source);
+                        }
+                    }
+                }
                 yield break;
             }
             foreach (var property in obj)
@@ -1175,7 +1292,7 @@ public sealed class NeuCharWorkflowEngine
                 var shape = GetParameterValueShape(parameter);
                 return new NeuCharFunctionOutputFieldDescriptor(
                     $"$.__functionInput.{parameter.Name}",
-                    $"输入选择 · {parameter.Title ?? parameter.Name}",
+                    $"预载输入选择 · {parameter.Title ?? parameter.Name}",
                     shape.typeName,
                     shape.isArray,
                     false,

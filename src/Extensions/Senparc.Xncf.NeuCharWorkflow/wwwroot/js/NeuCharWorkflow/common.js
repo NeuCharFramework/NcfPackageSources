@@ -22,6 +22,45 @@
     function normalizeParameterSchema(parameters) {
         return Array.isArray(parameters) ? parameters.map((parameter, index) => {
             const normalized = parameter && typeof parameter === 'object' ? { ...parameter } : {};
+
+            // parameterSchemaJson is a JSON string nested in the Designer API response.
+            // Older servers serialized that string with .NET's PascalCase defaults, while the
+            // Vue UI consumes camelCase. Normalize both contracts before deciding metadata is
+            // missing: a real `Name` must never turn into the draft-only `parameter_1` fallback.
+            const aliases = {
+                name: ['Name'],
+                title: ['Title'],
+                description: ['Description'],
+                required: ['Required'],
+                parameterType: ['ParameterType'],
+                systemType: ['SystemType'],
+                maxLength: ['MaxLength'],
+                filterable: ['Filterable'],
+                allowCreate: ['AllowCreate'],
+                hasSyntheticName: ['HasSyntheticName'],
+                metadataError: ['MetadataError'],
+                defaultValue: ['DefaultValue'],
+                options: ['Options']
+            };
+            Object.keys(aliases).forEach(key => {
+                if (Object.prototype.hasOwnProperty.call(normalized, key)) return;
+                const legacyKey = aliases[key].find(candidate =>
+                    Object.prototype.hasOwnProperty.call(normalized, candidate));
+                if (legacyKey) normalized[key] = normalized[legacyKey];
+            });
+            if (Array.isArray(normalized.options)) {
+                normalized.options = normalized.options.map(option => {
+                    const result = option && typeof option === 'object' ? { ...option } : {};
+                    [['value', 'Value'], ['text', 'Text'], ['note', 'Note'], ['defaultSelected', 'DefaultSelected']]
+                        .forEach(([key, legacyKey]) => {
+                            if (!Object.prototype.hasOwnProperty.call(result, key) &&
+                                Object.prototype.hasOwnProperty.call(result, legacyKey)) {
+                                result[key] = result[legacyKey];
+                            }
+                        });
+                    return result;
+                });
+            }
             const name = String(normalized.name || '').trim();
             if (name) {
                 normalized.name = name;
@@ -44,8 +83,10 @@
         const defaults = parseJson(fn.defaultParametersJson, {});
         const values = {};
         schema.forEach(parameter => {
-            let value = Object.prototype.hasOwnProperty.call(defaults, parameter.name)
-                ? defaults[parameter.name]
+            const defaultKey = Object.keys(defaults).find(key =>
+                String(key).toLowerCase() === String(parameter.name).toLowerCase());
+            let value = defaultKey
+                ? defaults[defaultKey]
                 : parameter.defaultValue;
             if (parameter.parameterType === 2 && !Array.isArray(value)) {
                 value = typeof value === 'string'
