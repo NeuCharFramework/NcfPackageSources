@@ -17,7 +17,8 @@ public partial class Register : IAreaRegister, IXncfRazorRuntimeCompilation
 
     public List<AreaPageMenuItem> AreaPageMenuItems => new()
     {
-        new AreaPageMenuItem(GetAreaHomeUrl(), NeuCharWorkflowResource.Get("Area.Workflow", "Workflow"), "fa fa-random")
+        new AreaPageMenuItem(GetAreaHomeUrl(), NeuCharWorkflowResource.Get("Area.Workflow", "Workflow"), "fa fa-random"),
+        new AreaPageMenuItem(GetAreaUrl("/Admin/NeuCharWorkflow/Tasks"), NeuCharWorkflowResource.Get("Area.Tasks", "任务列表"), "fa fa-list-alt")
     };
 
     public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)

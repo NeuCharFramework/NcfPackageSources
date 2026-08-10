@@ -15,6 +15,7 @@
 ----------------------------------------------------------------*/
 
 using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading;
@@ -36,13 +37,16 @@ public sealed class NeuBellController : ControllerBase
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private readonly NeuBellSnapshotService _snapshotService;
+    private readonly NeuBellProviderCatalog _providerCatalog;
     private readonly NeuBellChangeNotifier _changeNotifier;
 
     public NeuBellController(
         NeuBellSnapshotService snapshotService,
+        NeuBellProviderCatalog providerCatalog,
         NeuBellChangeNotifier changeNotifier)
     {
         _snapshotService = snapshotService;
+        _providerCatalog = providerCatalog;
         _changeNotifier = changeNotifier;
     }
 
@@ -56,6 +60,43 @@ public sealed class NeuBellController : ControllerBase
             serverTime = DateTimeOffset.Now,
             providers = snapshots
         });
+    }
+
+    /// <summary>
+    /// 消费当前管理员可见的纽铃。Provider 未声明消费能力时返回冲突，调用方应仅导航到业务详情，
+    /// 不能把“查看”当成“已处理”。
+    /// </summary>
+    [HttpPost("consume")]
+    public async Task<IActionResult> Consume(
+        [FromBody] NeuBellConsumeRequest request,
+        CancellationToken cancellationToken)
+    {
+        if (request == null || string.IsNullOrWhiteSpace(request.ProviderId) ||
+            (!request.ConsumeAll && string.IsNullOrWhiteSpace(request.ItemId)))
+        {
+            return BadRequest("纽铃消费请求缺少 Provider 或条目。" );
+        }
+
+        var provider = (await _providerCatalog.GetAvailableProvidersAsync(cancellationToken).ConfigureAwait(false))
+            .FirstOrDefault(item => string.Equals(item.ProviderId, request.ProviderId, StringComparison.OrdinalIgnoreCase));
+        if (provider == null)
+        {
+            return NotFound("纽铃 Provider 不存在、未安装或未开启。");
+        }
+        if (provider is not INeuBellConsumableProvider consumableProvider)
+        {
+            return Conflict("该纽铃需要在其业务页面中处理，不能通过点击任务自动消费。");
+        }
+
+        var context = CreateContext();
+        var consumedCount = request.ConsumeAll
+            ? await consumableProvider.ConsumeAllAsync(context, cancellationToken).ConfigureAwait(false)
+            : await consumableProvider.ConsumeItemAsync(context, request.ItemId, cancellationToken).ConfigureAwait(false);
+        if (consumedCount > 0)
+        {
+            await _changeNotifier.NotifyChangedAsync(provider.ProviderId, cancellationToken).ConfigureAwait(false);
+        }
+        return Ok(new { consumedCount });
     }
 
     [HttpGet("events")]
@@ -98,5 +139,12 @@ public sealed class NeuBellController : ControllerBase
                      ?? User.Identity?.Name
                      ?? "anonymous-admin";
         return new NeuBellRequestContext(userId);
+    }
+
+    public sealed class NeuBellConsumeRequest
+    {
+        public string? ProviderId { get; set; }
+        public string? ItemId { get; set; }
+        public bool ConsumeAll { get; set; }
     }
 }

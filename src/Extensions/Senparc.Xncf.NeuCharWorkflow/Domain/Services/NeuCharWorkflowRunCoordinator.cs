@@ -35,6 +35,19 @@ public sealed record NeuCharWorkflowRunSnapshot(
     string FinalOutput,
     IReadOnlyList<NeuCharWorkflowRunEvent> Events);
 
+/// <summary>
+/// 供任务列表使用的轻量实时运行状态。不返回原始输入和完整输出，避免在列表页意外暴露敏感数据。
+/// </summary>
+public sealed record NeuCharWorkflowActiveRun(
+    Guid RunId,
+    int WorkflowId,
+    string Source,
+    DateTimeOffset StartedAt,
+    string? LastNodeName,
+    string? LastStatus,
+    string? LastMessage,
+    DateTimeOffset? LastUpdatedAt);
+
 public sealed class NeuCharWorkflowRunCoordinator
 {
     private sealed class RunState
@@ -43,12 +56,13 @@ public sealed class NeuCharWorkflowRunCoordinator
         private readonly List<NeuCharWorkflowRunEvent> _events = new();
         private long _sequence;
 
-        public RunState(Guid runId, int workflowId, int adminUserId, string input)
+        public RunState(Guid runId, int workflowId, int adminUserId, string input, string source)
         {
             RunId = runId;
             WorkflowId = workflowId;
             AdminUserId = adminUserId;
             Input = input;
+            Source = source;
             StartedAt = DateTimeOffset.UtcNow;
         }
 
@@ -56,6 +70,7 @@ public sealed class NeuCharWorkflowRunCoordinator
         public int WorkflowId { get; }
         public int AdminUserId { get; }
         public string Input { get; }
+        public string Source { get; }
         public DateTimeOffset StartedAt { get; }
         public bool Running { get; private set; } = true;
         public bool? Succeeded { get; private set; }
@@ -107,6 +122,23 @@ public sealed class NeuCharWorkflowRunCoordinator
             }
         }
 
+        public NeuCharWorkflowActiveRun ToActiveRun()
+        {
+            lock (_gate)
+            {
+                var latest = _events.LastOrDefault();
+                return new NeuCharWorkflowActiveRun(
+                    RunId,
+                    WorkflowId,
+                    Source,
+                    StartedAt,
+                    latest?.NodeName,
+                    latest?.Status,
+                    latest?.Message,
+                    latest?.Timestamp);
+            }
+        }
+
         private static string Limit(string value, int maxLength) =>
             string.IsNullOrEmpty(value) || value.Length <= maxLength
                 ? value
@@ -134,7 +166,8 @@ public sealed class NeuCharWorkflowRunCoordinator
         int adminUserId,
         string input,
         out Guid runId,
-        out string error)
+        out string error,
+        string source = "manual")
     {
         lock (_startGate)
         {
@@ -142,12 +175,12 @@ public sealed class NeuCharWorkflowRunCoordinator
             if (_runs.Values.Any(z => z.WorkflowId == workflowId && z.Running))
             {
                 runId = Guid.Empty;
-                error = "当前工作流已有测试运行正在执行。";
+                error = "当前工作流已有运行正在执行。";
                 return false;
             }
 
             runId = Guid.NewGuid();
-            var state = new RunState(runId, workflowId, adminUserId, input ?? string.Empty);
+            var state = new RunState(runId, workflowId, adminUserId, input ?? string.Empty, NormalizeSource(source));
             _runs[runId] = state;
             _ = ExecuteAsync(state);
             error = null;
@@ -160,6 +193,16 @@ public sealed class NeuCharWorkflowRunCoordinator
         return _runs.TryGetValue(runId, out var state) && state.AdminUserId == adminUserId
             ? state.Snapshot(Math.Max(0, afterSequence))
             : null;
+    }
+
+    public IReadOnlyList<NeuCharWorkflowActiveRun> GetActiveRuns(int adminUserId)
+    {
+        Cleanup();
+        return _runs.Values
+            .Where(z => z.AdminUserId == adminUserId && z.Running)
+            .Select(z => z.ToActiveRun())
+            .OrderByDescending(z => z.StartedAt)
+            .ToList();
     }
 
     private async Task ExecuteAsync(RunState state)
@@ -188,13 +231,17 @@ public sealed class NeuCharWorkflowRunCoordinator
                 return;
             }
 
-            workflow.MarkStarted(workflow.NextRunAt);
+            var nextRun = string.Equals(state.Source, "interval", StringComparison.Ordinal)
+                ? NeuCharWorkflowEngine.CalculateNextRun(workflow.TriggerType, workflow.TriggerConfigJson, DateTime.UtcNow)
+                : workflow.NextRunAt;
+            workflow.MarkStarted(nextRun);
             await workflowService.SaveObjectAsync(workflow).ConfigureAwait(false);
             var result = await engine.RunAsync(
                 workflow,
                 state.Input,
                 timeout.Token,
-                state.Add).ConfigureAwait(false);
+                state.Add,
+                state.RunId.ToString("N")).ConfigureAwait(false);
             workflow.MarkCompleted(result.Success, result.ErrorMessage);
             await workflowService.SaveObjectAsync(workflow).ConfigureAwait(false);
             state.Complete(result.Success, result.Output, result.ErrorMessage);
@@ -229,4 +276,11 @@ public sealed class NeuCharWorkflowRunCoordinator
             _runs.TryRemove(item.RunId, out _);
         }
     }
+
+    private static string NormalizeSource(string source) => source?.Trim().ToLowerInvariant() switch
+    {
+        "webhook" => "webhook",
+        "interval" => "interval",
+        _ => "manual"
+    };
 }

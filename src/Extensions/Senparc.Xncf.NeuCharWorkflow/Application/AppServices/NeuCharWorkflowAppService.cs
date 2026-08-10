@@ -243,7 +243,7 @@ public sealed class NeuCharWorkflowAppService
     public async Task<Guid> StartRunAsync(int workflowId, int adminUserId, string input, CancellationToken cancellationToken = default)
     {
         await ValidateRunAsync(workflowId, adminUserId, input, cancellationToken).ConfigureAwait(false);
-        if (!_runCoordinator.TryStart(workflowId, adminUserId, input, out var runId, out var error))
+        if (!_runCoordinator.TryStart(workflowId, adminUserId, input, out var runId, out var error, "manual"))
         {
             throw new WorkflowConflictException(error);
         }
@@ -252,6 +252,69 @@ public sealed class NeuCharWorkflowAppService
 
     public NeuCharWorkflowRunSnapshot? GetRunStatus(Guid runId, int adminUserId, long afterSequence) =>
         runId == Guid.Empty ? null : _runCoordinator.GetSnapshot(runId, adminUserId, afterSequence);
+
+    /// <summary>
+    /// 汇总属于当前管理员的历史执行日志与进程内实时运行。实时运行由协调器提供节点级进度，
+    /// 已完成任务则使用持久化日志，以便应用重启后仍然可查。
+    /// </summary>
+    public async Task<IReadOnlyList<WorkflowTaskListItem>> GetTaskListAsync(
+        int adminUserId,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var workflows = await _workflowService.GetFullListAsync(
+            z => z.AdminUserId == adminUserId,
+            z => z.LastUpdateTime,
+            OrderingType.Descending).ConfigureAwait(false);
+        var workflowNames = workflows.ToDictionary(z => z.Id, z => z.Name);
+        var workflowIds = workflowNames.Keys.ToList();
+        var activeRuns = _runCoordinator.GetActiveRuns(adminUserId);
+
+        var tasks = activeRuns.Select(run => new WorkflowTaskListItem(
+            $"live:{run.RunId:N}",
+            run.WorkflowId,
+            workflowNames.TryGetValue(run.WorkflowId, out var workflowName) ? workflowName : $"工作流 #{run.WorkflowId}",
+            run.Source,
+            "running",
+            run.StartedAt.UtcDateTime,
+            null,
+            BuildLiveSummary(run),
+            null,
+            run.RunId)).ToList();
+
+        if (workflowIds.Count == 0)
+        {
+            return tasks;
+        }
+
+        var logs = await _executionLogService.GetFullListAsync(
+            z => workflowIds.Contains(z.WorkflowId),
+            z => z.StartedAt,
+            OrderingType.Descending).ConfigureAwait(false);
+        var activeWorkflowIds = activeRuns.Select(z => z.WorkflowId).ToHashSet();
+        tasks.AddRange(logs
+            // 由协调器托管的运行有节点级实时流；隐藏其尚未完成的数据库镜像，避免同一任务显示两次。
+            .Where(log => log.FinishedAt != null || !activeWorkflowIds.Contains(log.WorkflowId))
+            .Take(200)
+            .Select(log => new WorkflowTaskListItem(
+                $"log:{log.Id}",
+                log.WorkflowId,
+                string.IsNullOrWhiteSpace(log.WorkflowName)
+                    ? (workflowNames.TryGetValue(log.WorkflowId, out var workflowName) ? workflowName : $"工作流 #{log.WorkflowId}")
+                    : log.WorkflowName,
+                "history",
+                ToTaskStatus(log),
+                log.StartedAt,
+                log.FinishedAt,
+                log.Succeeded == true ? log.ResultSummary : null,
+                log.Succeeded == false ? log.Error : null,
+                null)));
+
+        return tasks
+            .OrderByDescending(z => z.StartedAt)
+            .Take(200)
+            .ToList();
+    }
 
     public async Task DeleteAsync(int workflowId, int adminUserId, CancellationToken cancellationToken = default)
     {
@@ -326,7 +389,7 @@ public sealed class NeuCharWorkflowAppService
         }
 
         var input = JsonSerializer.Serialize(selectedValues, new JsonSerializerOptions(JsonSerializerDefaults.Web));
-        if (!_runCoordinator.TryStart(workflow.Id, workflow.AdminUserId, input, out var runId, out var error))
+        if (!_runCoordinator.TryStart(workflow.Id, workflow.AdminUserId, input, out var runId, out var error, "webhook"))
         {
             return WorkflowWebhookTriggerResult.Conflict(error);
         }
@@ -430,6 +493,22 @@ public sealed class NeuCharWorkflowAppService
         workflow.LastRunAt, workflow.LastSucceeded, workflow.LastError, workflow.Revision, workflow.AutoSaveMinutes,
         workflow.LastUpdateTime);
 
+    private static string ToTaskStatus(NeuCharWorkflowExecutionLog log) => log.FinishedAt == null
+        ? "running"
+        : log.Succeeded == true ? "success" : "failed";
+
+    private static string? BuildLiveSummary(NeuCharWorkflowActiveRun run)
+    {
+        if (string.IsNullOrWhiteSpace(run.LastNodeName) && string.IsNullOrWhiteSpace(run.LastMessage))
+        {
+            return "等待工作流引擎开始执行。";
+        }
+
+        var node = string.IsNullOrWhiteSpace(run.LastNodeName) ? "工作流" : run.LastNodeName;
+        var message = string.IsNullOrWhiteSpace(run.LastMessage) ? "正在执行" : run.LastMessage;
+        return $"{node}：{message}";
+    }
+
     private static bool TokensEqual(string? expected, string? actual)
     {
         if (string.IsNullOrEmpty(expected) || string.IsNullOrEmpty(actual))
@@ -472,6 +551,18 @@ public sealed record WorkflowDetail(
     int Id, string Name, string? Description, string GraphJson, bool Enabled, string TriggerType, string TriggerConfigJson,
     DateTime? NextRunAt, DateTime? LastRunAt, bool? LastSucceeded, string? LastError, int Revision, int AutoSaveMinutes,
     bool Unchanged, DateTime LastUpdateTime);
+
+public sealed record WorkflowTaskListItem(
+    string TaskId,
+    int WorkflowId,
+    string WorkflowName,
+    string Source,
+    string Status,
+    DateTime StartedAt,
+    DateTime? FinishedAt,
+    string? Summary,
+    string? ErrorMessage,
+    Guid? RunId);
 
 public sealed record WorkflowDesignerFunction(
     string FunctionKey, string Name, string? Description, string ModuleUid, string ModuleName, string ModuleVersion,

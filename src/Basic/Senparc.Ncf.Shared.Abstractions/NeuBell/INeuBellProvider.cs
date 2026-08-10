@@ -68,6 +68,24 @@ namespace Senparc.Ncf.Shared.Abstractions.NeuBell
     }
 
     /// <summary>
+    /// 可选的纽铃消费能力。Provider 不实现此接口时，调用方只能导航至其 DetailUrl，
+    /// 不会把“点击查看”错误地当成业务已处理（例如 DesktopBridge 的设备审核）。
+    /// </summary>
+    public interface INeuBellConsumableProvider
+    {
+        /// <summary>只消费当前订阅下指定的一条提醒；返回实际消费数量。</summary>
+        ValueTask<int> ConsumeItemAsync(
+            NeuBellRequestContext context,
+            string itemId,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>消费当前订阅下当前用户可见的全部提醒；返回实际消费数量。</summary>
+        ValueTask<int> ConsumeAllAsync(
+            NeuBellRequestContext context,
+            CancellationToken cancellationToken = default);
+    }
+
+    /// <summary>
     /// 模块在状态变化后通知 Admin Host 刷新对应 Provider；通知不得携带敏感业务正文。
     /// </summary>
     public interface INeuBellPublisher

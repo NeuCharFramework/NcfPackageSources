@@ -103,6 +103,9 @@
                                 <el-dropdown-item command="fit-canvas">
                                     <i class="el-icon-full-screen"></i> 适应画布
                                 </el-dropdown-item>
+                                <el-dropdown-item command="tasks">
+                                    <i class="el-icon-document"></i> 任务列表
+                                </el-dropdown-item>
                                 <el-dropdown-item v-if="form.id" command="delete" divided :disabled="editingLocked">
                                     <i class="el-icon-delete"></i> 删除工作流
                                 </el-dropdown-item>
@@ -275,6 +278,7 @@
                                 <el-button plain icon="el-icon-time" :disabled="editingLocked" @@click="addSimpleNode('delay','等待')">等待</el-button>
                                 <el-button plain icon="el-icon-collection" :disabled="editingLocked" @@click="addSimpleNode('aggregate','聚合')">聚合</el-button>
                                 <el-button plain icon="el-icon-monitor" :disabled="editingLocked" @@click="addSimpleNode('console','Console 打印')">Console</el-button>
+                                <el-button plain icon="el-icon-bell" :disabled="editingLocked" @@click="addSimpleNode('neubell','发送纽铃')">发送纽铃</el-button>
                                 <el-button plain icon="el-icon-circle-check" :disabled="editingLocked" @@click="addSimpleNode('end','结束')">结束</el-button>
                             </div>
 
@@ -610,6 +614,22 @@
                                     <el-form-item v-if="selectedNode.type==='delay'" label="等待秒数（单节点最多 30 秒）">
                                         <el-input-number v-model="selectedNode.config.seconds" :disabled="editingLocked" :min="0" :max="30"></el-input-number>
                                     </el-form-item>
+                                    <template v-if="selectedNode.type==='neubell'">
+                                        <el-form-item label="提醒标题">
+                                            <el-input v-model="selectedNode.config.title" :disabled="editingLocked" maxlength="200" show-word-limit placeholder="例如：工作流需要处理"></el-input>
+                                        </el-form-item>
+                                        <el-form-item label="提醒内容">
+                                            <el-input v-model="selectedNode.config.summary" type="textarea" :rows="4" :disabled="editingLocked" maxlength="4000" show-word-limit placeholder="可使用 {{input}} 插入当前节点输入"></el-input>
+                                        </el-form-item>
+                                        <el-form-item label="打开任务后的消费方式">
+                                            <el-select v-model="selectedNode.config.consumeMode" :disabled="editingLocked">
+                                                <el-option label="只查看任务，不自动消费" value="none"></el-option>
+                                                <el-option label="消费当前这一条提醒" value="item"></el-option>
+                                                <el-option label="消费这个订阅下全部提醒" value="provider"></el-option>
+                                            </el-select>
+                                            <p class="node-config-help">用于有明确查看即已读场景；例如 DesktopBridge 等需要业务审核的提醒应选择“只查看”。</p>
+                                        </el-form-item>
+                                    </template>
                                     <template v-if="selectedNode.type==='agent' || selectedNode.type==='agent-group'">
                                         <div class="workflow-object-card">
                                             <div class="workflow-object-card-header">
@@ -643,6 +663,7 @@
                                     </el-form-item>
                                     <el-alert v-if="selectedNode.type==='aggregate'" title="聚合节点允许多个上游，并按连线顺序输出数组。" type="info" :closable="false"></el-alert>
                                     <el-alert v-if="selectedNode.type==='console'" title="运行到此节点时，会在页面底部 Console 打印其输入并继续向下传递。" type="info" :closable="false"></el-alert>
+                                    <el-alert v-if="selectedNode.type==='neubell'" title="运行时会创建一条 Workflow 纽铃提醒；从 Footer 点击提醒会进入任务列表并按上方设置进行消费。" type="info" :closable="false"></el-alert>
                                 </el-form>
                             </template>
                             <div v-else class="inspector-empty">选择画布中的节点进行设置</div>

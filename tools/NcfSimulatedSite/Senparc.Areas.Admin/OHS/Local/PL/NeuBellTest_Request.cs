@@ -23,7 +23,8 @@ namespace Senparc.Areas.Admin.OHS.PL;
 public sealed class NeuBellTest_Request : FunctionAppRequestBase
 {
     public const string SendAction = "send";
-    public const string ConsumeAction = "consume";
+    public const string ConsumeOneAction = "consume-one";
+    public const string ConsumeAllAction = "consume-all";
 
     [Required]
     [Description("操作")]
@@ -35,6 +36,7 @@ public sealed class NeuBellTest_Request : FunctionAppRequestBase
         SelectionType.DropDownList,
         [
             new SelectionItem(SendAction, "发送提醒", "新增一条可在 Footer 弹窗和徽标中看到的测试提醒。", true),
-            new SelectionItem(ConsumeAction, "消费提醒", "清除所有由此 Function 发送的测试提醒。")
+            new SelectionItem(ConsumeOneAction, "消费最新一条", "只消费最近由此 Function 发送的一条测试提醒。"),
+            new SelectionItem(ConsumeAllAction, "消费全部提醒", "清除当前订阅下所有由此 Function 发送的测试提醒。")
         ]);
 }

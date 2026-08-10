@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Senparc.Ncf.Service;
+using Senparc.Ncf.Shared.Abstractions.NeuBell;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel;
 using WorkflowEntity = Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel.NeuCharWorkflow;
@@ -67,7 +68,7 @@ public sealed class NeuCharWorkflowEngine
     private static readonly HashSet<string> AllowedNodeTypes = new(StringComparer.OrdinalIgnoreCase)
     {
         "manual-trigger", "interval-trigger", "webhook-trigger", "function", "delay", "condition", "agent", "agent-group",
-        "aggregate", "console", "end"
+        "aggregate", "console", "neubell", "end"
     };
 
     private sealed record ResolvedFunctionReference(
@@ -79,13 +80,17 @@ public sealed class NeuCharWorkflowEngine
     private readonly NeuCharWorkflowExecutionLogService _logService;
     private readonly NeuCharWorkflowParameterProtector _parameterProtector;
     private readonly IReadOnlyDictionary<string, IWorkflowObjectProvider> _objectProviders;
+    private readonly NeuCharWorkflowNeuBellProvider? _neuBellProvider;
+    private readonly INeuBellPublisher? _neuBellPublisher;
 
     public NeuCharWorkflowEngine(
         NeuCharWorkflowService workflowService,
         NeuCharWorkflowFunctionService functionService,
         NeuCharWorkflowExecutionLogService logService,
         NeuCharWorkflowParameterProtector parameterProtector,
-        IEnumerable<IWorkflowObjectProvider> objectProviders)
+        IEnumerable<IWorkflowObjectProvider> objectProviders,
+        NeuCharWorkflowNeuBellProvider? neuBellProvider = null,
+        INeuBellPublisher? neuBellPublisher = null)
     {
         _workflowService = workflowService;
         _functionService = functionService;
@@ -94,6 +99,8 @@ public sealed class NeuCharWorkflowEngine
         _objectProviders = objectProviders
             .GroupBy(z => z.ProviderId, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(z => z.Key, z => z.First(), StringComparer.OrdinalIgnoreCase);
+        _neuBellProvider = neuBellProvider;
+        _neuBellPublisher = neuBellPublisher;
     }
 
     /// <summary>
@@ -273,6 +280,21 @@ public sealed class NeuCharWorkflowEngine
                     return bindingError;
                 }
             }
+            else if (node.Type.Equals("neubell", StringComparison.OrdinalIgnoreCase))
+            {
+                var consumeMode = GetString(node.Config, "consumeMode");
+                if (!string.IsNullOrWhiteSpace(consumeMode) &&
+                    !string.Equals(consumeMode, NeuCharWorkflowNeuBellConsumption.None, StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(consumeMode, NeuCharWorkflowNeuBellConsumption.Item, StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(consumeMode, NeuCharWorkflowNeuBellConsumption.Provider, StringComparison.OrdinalIgnoreCase))
+                {
+                    return $"节点“{node.Name ?? node.Id}”的纽铃消费方式无效。";
+                }
+                if (GetString(node.Config, "title")?.Length > 200 || GetString(node.Config, "summary")?.Length > 4_000)
+                {
+                    return $"节点“{node.Name ?? node.Id}”的纽铃标题或内容超过允许长度。";
+                }
+            }
             else if (node.Type.Equals("agent", StringComparison.OrdinalIgnoreCase) ||
                      node.Type.Equals("agent-group", StringComparison.OrdinalIgnoreCase))
             {
@@ -400,11 +422,14 @@ public sealed class NeuCharWorkflowEngine
         WorkflowEntity workflow,
         string input,
         CancellationToken cancellationToken = default,
-        Action<NeuCharWorkflowProgress> progress = null)
+        Action<NeuCharWorkflowProgress> progress = null,
+        string? runId = null)
     {
         var graph = ParseAndValidateGraph(workflow.GraphJson);
         var trace = new List<string>();
-        var correlationId = $"workflow-{workflow.Id}-{Guid.NewGuid():N}";
+        var correlationId = Guid.TryParse(runId, out var parsedRunId)
+            ? $"workflow-{workflow.Id}-run-{parsedRunId:N}"
+            : $"workflow-{workflow.Id}-legacy-{Guid.NewGuid():N}";
         var workflowLog = new NeuCharWorkflowExecutionLog(
             workflow.Id,
             workflow.Name,
@@ -461,6 +486,7 @@ public sealed class NeuCharWorkflowEngine
 
                 Report(progress, node, "running", "开始执行节点。", null);
                 var execution = await ExecuteNodeAsync(
+                        workflow,
                         node,
                         currentValue,
                         outputs,
@@ -542,6 +568,7 @@ public sealed class NeuCharWorkflowEngine
     }
 
     private async Task<(bool success, JsonNode output, bool? condition, string error)> ExecuteNodeAsync(
+        WorkflowEntity workflow,
         NeuCharWorkflowNode node,
         JsonNode input,
         IReadOnlyDictionary<string, JsonNode> outputs,
@@ -567,6 +594,16 @@ public sealed class NeuCharWorkflowEngine
             case "agent":
             case "agent-group":
                 return await ExecuteWorkflowObjectNodeAsync(node, input, outputs, functionSelectionInputs, correlationId, cancellationToken)
+                    .ConfigureAwait(false);
+            case "neubell":
+                return await ExecuteNeuBellNodeAsync(
+                        workflow,
+                        node,
+                        input,
+                        outputs,
+                        functionSelectionInputs,
+                        correlationId,
+                        cancellationToken)
                     .ConfigureAwait(false);
             case "aggregate":
             case "console":
@@ -616,6 +653,55 @@ public sealed class NeuCharWorkflowEngine
         return result.Success
             ? (true, ToJsonNode(result.Data), null, null)
             : (false, null, null, result.ErrorMessage);
+    }
+
+    private async Task<(bool success, JsonNode output, bool? condition, string error)> ExecuteNeuBellNodeAsync(
+        WorkflowEntity workflow,
+        NeuCharWorkflowNode node,
+        JsonNode input,
+        IReadOnlyDictionary<string, JsonNode> outputs,
+        IReadOnlyDictionary<string, JsonNode> functionSelectionInputs,
+        string correlationId,
+        CancellationToken cancellationToken)
+    {
+        if (_neuBellProvider == null)
+        {
+            return (false, null, null, "NeuBell 提醒服务当前不可用，请确认 NeuChar Workflow 模块已正确加载。");
+        }
+
+        var title = NodeToText(ResolveRuntimeValue(
+            node.Config?["title"]?.DeepClone() ?? JsonValue.Create("Workflow 提醒"),
+            input,
+            outputs,
+            functionSelectionInputs));
+        var summary = NodeToText(ResolveRuntimeValue(
+            node.Config?["summary"]?.DeepClone() ?? JsonValue.Create("{{input}}"),
+            input,
+            outputs,
+            functionSelectionInputs));
+        var consumeMode = NeuCharWorkflowNeuBellConsumption.Normalize(GetString(node.Config, "consumeMode"));
+        var runId = TryGetWorkflowRunId(correlationId);
+        var notificationId = _neuBellProvider.Send(
+            workflow.AdminUserId,
+            workflow.Id,
+            workflow.Name,
+            runId,
+            node.Id,
+            title,
+            summary,
+            consumeMode);
+        if (_neuBellPublisher != null)
+        {
+            await _neuBellPublisher.NotifyChangedAsync(NeuCharWorkflowNeuBellProvider.ProviderIdValue, cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        return (true, new JsonObject
+        {
+            ["notificationId"] = notificationId,
+            ["consumeMode"] = consumeMode,
+            ["workflowId"] = workflow.Id
+        }, null, null);
     }
 
     private async Task<(bool success, JsonNode output, bool? condition, string error)> ExecuteWorkflowObjectNodeAsync(
@@ -929,6 +1015,18 @@ public sealed class NeuCharWorkflowEngine
     {
         try { return config?[name]?.GetValue<string>(); }
         catch { return null; }
+    }
+
+    private static string? TryGetWorkflowRunId(string correlationId)
+    {
+        const string marker = "-run-";
+        var index = correlationId?.LastIndexOf(marker, StringComparison.Ordinal) ?? -1;
+        if (index < 0)
+        {
+            return null;
+        }
+        var candidate = correlationId[(index + marker.Length)..];
+        return Guid.TryParse(candidate, out var parsed) ? parsed.ToString("N") : null;
     }
 
     private static int? GetNullableInt(JsonObject config, string name)
@@ -1459,7 +1557,7 @@ public sealed class NeuCharWorkflowHostedService : BackgroundService
                     continue;
                 }
                 var workflowService = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowService>();
-                var engine = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowEngine>();
+                var runCoordinator = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowRunCoordinator>();
                 var now = DateTime.UtcNow;
                 var workflows = await workflowService.GetFullListAsync(
                     z => z.Enabled && z.TriggerType == "interval" && z.NextRunAt != null && z.NextRunAt <= now,
@@ -1467,15 +1565,10 @@ public sealed class NeuCharWorkflowHostedService : BackgroundService
                     OrderingType.Ascending).ConfigureAwait(false);
                 foreach (var workflow in workflows.Take(10))
                 {
-                    var nextRun = NeuCharWorkflowEngine.CalculateNextRun(
-                        workflow.TriggerType,
-                        workflow.TriggerConfigJson,
-                        now);
-                    workflow.MarkStarted(nextRun);
-                    await workflowService.SaveObjectAsync(workflow).ConfigureAwait(false);
-                    var result = await engine.RunAsync(workflow, string.Empty, stoppingToken).ConfigureAwait(false);
-                    workflow.MarkCompleted(result.Success, result.ErrorMessage);
-                    await workflowService.SaveObjectAsync(workflow).ConfigureAwait(false);
+                    if (!runCoordinator.TryStart(workflow.Id, workflow.AdminUserId, string.Empty, out _, out var error, "interval"))
+                    {
+                        _logger.LogDebug("跳过已在运行的定时 Workflow：WorkflowId={WorkflowId}，原因：{Error}", workflow.Id, error);
+                    }
                 }
             }
             catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)

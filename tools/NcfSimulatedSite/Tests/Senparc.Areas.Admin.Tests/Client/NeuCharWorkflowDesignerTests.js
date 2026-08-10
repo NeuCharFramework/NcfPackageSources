@@ -13,6 +13,16 @@ const pagePath = path.resolve(__dirname,
     '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/Areas/Admin/Pages/NeuCharWorkflow/Index.cshtml');
 const stylePath = path.resolve(__dirname,
     '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/wwwroot/css/NeuCharWorkflow/Workflow.css');
+const tasksScriptPath = path.resolve(__dirname,
+    '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/wwwroot/js/NeuCharWorkflow/Tasks.js');
+const tasksPagePath = path.resolve(__dirname,
+    '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/Areas/Admin/Pages/NeuCharWorkflow/Tasks.cshtml');
+const tasksStylePath = path.resolve(__dirname,
+    '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/wwwroot/css/NeuCharWorkflow/Tasks.css');
+const workflowAppServicePath = path.resolve(__dirname,
+    '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/Application/AppServices/NeuCharWorkflowAppService.cs');
+const runCoordinatorPath = path.resolve(__dirname,
+    '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/Domain/Services/NeuCharWorkflowRunCoordinator.cs');
 const moduleFunctionPagePath = path.resolve(__dirname,
     '../../../Senparc.Areas.Admin/Areas/Admin/Pages/XncfModule/Start.cshtml');
 const moduleFunctionScriptPath = path.resolve(__dirname,
@@ -456,6 +466,61 @@ assert.ok(moduleFunctionScript.includes("requestedFunctionAction === 'run'") && 
     'A Function execution link should open the corresponding run panel after navigation.');
 assert.match(moduleFunctionStyles, /\.function-card-highlight\s*\{[^}]*animation:\s*function-card-highlight/s,
     'The anchored Function card should visibly flash after navigation.');
+
+let tasksVueOptions = null;
+function TasksVue(options) { tasksVueOptions = options; }
+let navigatedTaskUrl = '';
+const tasksSandbox = {
+    Vue: TasksVue,
+    window: {
+        setTimeout() { return 1; },
+        clearTimeout() {},
+        location: { assign(url) { navigatedTaskUrl = url; } }
+    },
+    service: {},
+    NeuCharWorkflowUi: { unwrap(response) { return response; } },
+    URLSearchParams,
+    String,
+    Number,
+    Object,
+    Array,
+    console
+};
+vm.createContext(tasksSandbox);
+vm.runInContext(fs.readFileSync(tasksScriptPath, 'utf8'), tasksSandbox, { filename: tasksScriptPath });
+assert.ok(tasksVueOptions && tasksVueOptions.methods,
+    'Workflow tasks should register an independent Vue task-list view model.');
+
+const taskRows = [
+    { workflowId: 21, workflowName: '正在运行的任务', status: 'running', source: 'interval', runId: 'f6d7e0a2-4f33-46f8-a9e3-116a272bab58', summary: '节点正在执行' },
+    { workflowId: 22, workflowName: '已完成任务', status: 'success', source: 'history', summary: '完成' },
+    { workflowId: 23, workflowName: '失败任务', status: 'failed', source: 'history', errorMessage: 'Function 调用失败' }
+];
+assert.strictEqual(tasksVueOptions.methods.statusCount.call({ tasks: taskRows }, 'running'), 1,
+    'The task overview must count currently running tasks separately.');
+assert.strictEqual(tasksVueOptions.computed.hasRunningTasks.call({ tasks: taskRows }), true,
+    'The task list should continue polling only while a task remains active.');
+const filteredTaskRows = tasksVueOptions.computed.filteredTasks.call({ tasks: taskRows, keyword: '失败', statusFilter: 'failed' });
+assert.strictEqual(filteredTaskRows.length, 1,
+    'Task search and status filtering should compose without hiding matching failed tasks.');
+tasksVueOptions.methods.openTask.call({}, taskRows[0]);
+assert.match(navigatedTaskUrl, /workflowId=21/,
+    'Opening a task should navigate to its workflow board.');
+assert.match(navigatedTaskUrl, /runId=f6d7e0a2-4f33-46f8-a9e3-116a272bab58/,
+    'Opening an active task should preserve the runtime id for real-time Console tracking.');
+
+const tasksPage = fs.readFileSync(tasksPagePath, 'utf8');
+const tasksStyles = fs.readFileSync(tasksStylePath, 'utf8');
+const workflowAppService = fs.readFileSync(workflowAppServicePath, 'utf8');
+const runCoordinator = fs.readFileSync(runCoordinatorPath, 'utf8');
+assert.ok(fs.readFileSync(tasksScriptPath, 'utf8').includes('handler=List') && tasksPage.includes('实时查看'),
+    'The task page should expose a task-list endpoint and an explicit live-view action.');
+assert.match(tasksStyles, /\.workflow-task-table \.el-table__row\s*\{[^}]*cursor:\s*pointer;/s,
+    'Task rows should make their workflow-board navigation discoverable.');
+assert.ok(workflowAppService.includes('GetTaskListAsync') && workflowAppService.includes('WorkflowTaskListItem'),
+    'The application service should combine execution task data behind a dedicated contract.');
+assert.ok(runCoordinator.includes('GetActiveRuns') && runCoordinator.includes('NeuCharWorkflowActiveRun'),
+    'The task list should use the coordinator for currently running node-level task state.');
 
 async function verifyUnsavedChangeGuards() {
     let modalArguments = null;

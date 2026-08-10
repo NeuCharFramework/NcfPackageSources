@@ -515,6 +515,7 @@
 .parameter-description-icon { color: #9aa8b6; font-size: 14px; cursor: help; }
 .parameter-description-icon:hover { color: #409eff; }
 .parameter-metadata-warning { color: #e6a23c; font-size: 14px; cursor: help; }
+.node-config-help { margin: 7px 0 0; color: #8a95a4; font-size: 12px; line-height: 1.55; }
 .parameter-label em { padding: 1px 5px; color: #f56c6c; font-size: 10px; font-style: normal; background: #fef0f0; border-radius: 3px; }
 .upstream-picker { margin-top: 8px; }
 .upstream-picker > span { display: block; margin-bottom: 5px; color: #8993a1; font-size: 11px; }

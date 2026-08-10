@@ -201,9 +201,10 @@ new Vue({
         paletteCollapsed() { this.refreshCanvasViewport(); },
         inspectorCollapsed() { this.refreshCanvasViewport(); }
     },
-    created() {
+    async created() {
         this.loadPinnedFunctions();
-        this.loadAll();
+        await this.loadAll();
+        await this.openTaskRoute();
     },
     mounted() {
         window.addEventListener('mousemove', this.onPointerMove);
@@ -247,6 +248,27 @@ new Vue({
                 this.functions = data.functions || [];
                 this.workflowObjects = data.objects || [];
             } finally { this.loading = false; }
+        },
+        async openTaskRoute() {
+            const search = window.location && window.location.search;
+            if (!search) return;
+            const query = new URLSearchParams(search);
+            const workflowId = Number(query.get('workflowId'));
+            const runId = String(query.get('runId') || '').trim();
+            if (!Number.isInteger(workflowId) || workflowId <= 0) return;
+
+            try {
+                await this.editWorkflow(workflowId);
+                if (Number(this.form.id) !== workflowId || !runId) return;
+                this.run.consoleOpen = true;
+                this.run.runId = runId;
+                this.run.running = true;
+                this.run.status = 'running';
+                this.run.lastSequence = 0;
+                this.pollRun();
+            } catch (error) {
+                this.$notify({ title: '无法打开任务', message: this.errorMessage(error, '任务或工作流已不存在。'), type: 'warning' });
+            }
         },
         async createWorkflow() {
             if (this.editingLocked || this.saveState.saving || !await this.confirmDiscardChanges('新建工作流')) return;
@@ -343,7 +365,10 @@ new Vue({
             if (this.editingLocked) return;
             const config = type === 'condition'
                 ? { left: '{{input}}', operator: 'equals', right: '' }
-                : type === 'delay' ? { seconds: 1 } : {};
+                : type === 'delay' ? { seconds: 1 }
+                    : type === 'neubell'
+                        ? { title: 'Workflow 提醒', summary: '{{input}}', consumeMode: 'item' }
+                        : {};
             this.appendNode({ id: this.makeId(type), type, name, x: 80, y: 80, config });
         },
         addFunctionNode(fn) {
@@ -782,6 +807,11 @@ new Vue({
             if (node.type === 'condition') return `${node.config.operator || 'equals'} ${this.configValueLabel(node.config.right)}`;
             if (node.type === 'aggregate') return '合并多个上游输出为数组';
             if (node.type === 'console') return '输出到下方 Console';
+            if (node.type === 'neubell') {
+                const mode = String(node.config?.consumeMode || 'none');
+                return mode === 'provider' ? '点击后消费本订阅全部提醒'
+                    : mode === 'item' ? '点击后消费当前提醒' : '点击后仅查看任务';
+            }
             if (node.type === 'end') return '流程在此结束';
             return node.type === 'agent-group' ? 'Agent 组' : node.type === 'agent' ? '独立 Agent' : node.type;
         },
@@ -1453,6 +1483,10 @@ new Vue({
             }
             if (action === 'fit-canvas') {
                 this.fitCanvasToNodes();
+                return;
+            }
+            if (action === 'tasks') {
+                if (await this.confirmDiscardChanges('进入任务列表')) window.location.assign('/Admin/NeuCharWorkflow/Tasks');
                 return;
             }
             if (action !== 'delete' || !this.form.id || this.editingLocked || this.saveState.saving) return;

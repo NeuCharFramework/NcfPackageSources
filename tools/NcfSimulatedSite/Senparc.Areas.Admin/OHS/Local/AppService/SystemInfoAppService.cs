@@ -220,7 +220,15 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     await _neuBellPublisher.NotifyChangedAsync(NeuBellTestProvider.ProviderIdValue).ConfigureAwait(false);
                     logger.Append($"已发送 NeuBell 测试提醒，当前待消费数量：{pendingCount}。请观察 Admin Footer 的弹窗和徽标。");
                 }
-                else if (string.Equals(request?.Action, NeuBellTest_Request.ConsumeAction, StringComparison.OrdinalIgnoreCase))
+                else if (string.Equals(request?.Action, NeuBellTest_Request.ConsumeOneAction, StringComparison.OrdinalIgnoreCase))
+                {
+                    var consumedCount = _neuBellTestProvider.ConsumeLatest();
+                    await _neuBellPublisher.NotifyChangedAsync(NeuBellTestProvider.ProviderIdValue).ConfigureAwait(false);
+                    logger.Append(consumedCount > 0
+                        ? "已消费最新 1 条 NeuBell 测试提醒，Footer 徽标将减少。"
+                        : "当前没有可消费的 NeuBell 测试提醒。" );
+                }
+                else if (string.Equals(request?.Action, NeuBellTest_Request.ConsumeAllAction, StringComparison.OrdinalIgnoreCase))
                 {
                     var consumedCount = _neuBellTestProvider.ConsumeAll();
                     await _neuBellPublisher.NotifyChangedAsync(NeuBellTestProvider.ProviderIdValue).ConfigureAwait(false);
@@ -228,7 +236,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 }
                 else
                 {
-                    logger.Append("不支持的操作，请选择“发送提醒”或“消费提醒”。");
+                    logger.Append("不支持的操作，请选择“发送提醒”、“消费最新一条”或“消费全部提醒”。");
                 }
 
                 return logger.GetLogs();

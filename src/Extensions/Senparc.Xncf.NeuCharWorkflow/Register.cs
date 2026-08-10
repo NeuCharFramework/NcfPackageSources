@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Shared.Abstractions.NeuBell;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.NeuCharWorkflow.ACL;
@@ -69,6 +70,9 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         services.AddScoped<NeuCharWorkflowFunctionService>();
         services.AddDataProtection();
         services.AddScoped<NeuCharWorkflowParameterProtector>();
+        services.AddSingleton<NeuCharWorkflowNeuBellProvider>();
+        services.AddSingleton<INeuBellProvider>(serviceProvider =>
+            serviceProvider.GetRequiredService<NeuCharWorkflowNeuBellProvider>());
         services.AddScoped<NeuCharWorkflowEngine>();
         services.AddSingleton<NeuCharWorkflowRunCoordinator>();
         services.AddScoped<WorkflowEventPublisher>();
