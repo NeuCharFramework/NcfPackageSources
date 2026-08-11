@@ -372,7 +372,8 @@ public sealed class NeuCharWorkflowAppService
                 item.Message,
                 item.Output,
                 item.Timestamp,
-                item.OutputSchema)).ToList();
+                item.OutputSchema,
+                item.Input)).ToList();
         }
         catch (JsonException ex)
         {
@@ -760,7 +761,8 @@ public sealed record WorkflowReplayEvent(
     string Message,
     string? Output,
     DateTimeOffset Timestamp,
-    string? OutputSchema = null);
+    string? OutputSchema = null,
+    string? Input = null);
 
 public sealed record WorkflowRunReplay(
     int ExecutionLogId,

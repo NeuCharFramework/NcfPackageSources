@@ -246,6 +246,7 @@
 .workflow-node-picker .node-picker-neubell,
 .workflow-node-picker .node-picker-function { border-left-color: #409eff; }
 .workflow-node-picker .node-picker-aggregate { border-left-color: #00a6a6; }
+.workflow-node-picker .node-picker-parallel { border-left-color: #7957d5; }
 .workflow-node-picker .node-picker-console { border-left-color: #34495e; }
 .workflow-node-picker .node-picker-end { border-left-color: #909399; }
 .workflow-node-picker .node-picker-agent,
@@ -467,6 +468,7 @@
 .canvas-minimap-node.node-condition { background: #e6a23c; box-shadow: inset 3px 0 0 #e6a23c; }
 .canvas-minimap-node.node-agent, .canvas-minimap-node.node-agent-group { background: #8e5ad7; box-shadow: inset 3px 0 0 #8e5ad7; }
 .canvas-minimap-node.node-aggregate { background: #00a6a6; box-shadow: inset 3px 0 0 #00a6a6; }
+.canvas-minimap-node.node-parallel { background: #7957d5; box-shadow: inset 3px 0 0 #7957d5; }
 .canvas-minimap-node.node-console { background: #34495e; box-shadow: inset 3px 0 0 #34495e; }
 .canvas-minimap-node.node-end { background: #909399; box-shadow: inset 3px 0 0 #909399; }
 .canvas-minimap-node.selected { outline: 1px solid #1677d2; outline-offset: 1px; }
@@ -560,6 +562,7 @@
 .workflow-node.node-condition { border-left-color: #e6a23c; }
 .workflow-node.node-agent, .workflow-node.node-agent-group { border-left-color: #8e5ad7; }
 .workflow-node.node-aggregate { border-left-color: #00a6a6; }
+.workflow-node.node-parallel { border-left-color: #7957d5; }
 .workflow-node.node-console { border-left-color: #34495e; }
 .workflow-node.node-end { border-left-color: #909399; }
 .workflow-node.state-running { border-color: #e6a23c; box-shadow: 0 0 0 4px rgba(230, 162, 60, .2), 0 8px 24px rgba(230, 162, 60, .24); animation: workflow-running 1.15s ease-in-out infinite alternate; }
@@ -615,6 +618,8 @@
 .workflow-inspector .el-select, .workflow-inspector .el-cascader, .workflow-inspector .el-input-number { width: 100%; }
 .inspector-content { padding-bottom: 30px; }
 .inspector-empty { padding: 80px 10px; color: #9aa4b2; text-align: center; }
+.workflow-parallel-branches { display: grid; gap: 4px; padding: 8px 10px; color: #64748b; line-height: 1.45; background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 6px; }
+.workflow-parallel-branches strong { color: #5b3cb8; }
 .parameter-editor { margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px solid #e4e9ef; }
 .parameter-label { display: flex; margin-bottom: 7px; color: #606978; font-size: 13px; align-items: center; gap: 7px; }
 .parameter-label > span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

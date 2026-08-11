@@ -22,11 +22,12 @@ new Vue({
             if (this.stepIndex < 0) return '运行开始前';
             return `步骤 ${this.stepIndex + 1} / ${this.replay.events.length}`;
         },
+        canvasInset() { return 240; },
         canvasSize() {
             const nodes = this.graph.nodes || [];
             const right = Math.max(760, ...nodes.map(node => Number(node.x || 0) + 240));
             const bottom = Math.max(520, ...nodes.map(node => Number(node.y || 0) + 130));
-            return { width: right, height: bottom };
+            return { width: right + this.canvasInset * 2, height: bottom + this.canvasInset * 2 };
         },
         canvasStyle() {
             return { width: `${this.canvasSize.width}px`, minHeight: `${this.canvasSize.height}px` };
@@ -65,32 +66,57 @@ new Vue({
             }
         },
         nodeStyle(node) {
-            return { left: `${Math.max(24, Number(node.x || 0))}px`, top: `${Math.max(24, Number(node.y || 0))}px` };
+            return {
+                left: `${this.canvasInset + Math.max(24, Number(node.x || 0))}px`,
+                top: `${this.canvasInset + Math.max(24, Number(node.y || 0))}px`
+            };
         },
         findNode(id) {
             return this.graph.nodes.find(node => node.id === id);
         },
+        centerCurrentNode() {
+            const event = this.currentEvent;
+            if (!event || !event.nodeId) return;
+            const node = this.findNode(event.nodeId);
+            if (!node) return;
+            const center = () => {
+                const viewport = this.$refs && this.$refs.canvasViewport;
+                if (!viewport) return;
+                const nodeLeft = this.canvasInset + Math.max(24, Number(node.x || 0));
+                const nodeTop = this.canvasInset + Math.max(24, Number(node.y || 0));
+                const left = Math.max(0, nodeLeft + 114 - viewport.clientWidth / 2);
+                const top = Math.max(0, nodeTop + 46 - viewport.clientHeight / 2);
+                const maxLeft = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+                const maxTop = Math.max(0, viewport.scrollHeight - viewport.clientHeight);
+                const target = { left: Math.min(left, maxLeft), top: Math.min(top, maxTop), behavior: 'smooth' };
+                if (typeof viewport.scrollTo === 'function') viewport.scrollTo(target);
+                else { viewport.scrollLeft = target.left; viewport.scrollTop = target.top; }
+            };
+            if (typeof this.$nextTick === 'function') this.$nextTick(center);
+            else center();
+        },
         edgeStartX(edge) {
             const source = this.findNode(edge.source);
-            return Number(source && source.x || 0) + 208;
+            return this.canvasInset + Number(source && source.x || 0) + 208;
         },
         edgeStartY(edge) {
             const source = this.findNode(edge.source);
-            return Number(source && source.y || 0) + 43;
+            return this.canvasInset + Number(source && source.y || 0) + 43;
         },
         edgeEndX(edge) {
             const target = this.findNode(edge.target);
-            return Number(target && target.x || 0) + 12;
+            return this.canvasInset + Number(target && target.x || 0) + 12;
         },
         edgeEndY(edge) {
             const target = this.findNode(edge.target);
-            return Number(target && target.y || 0) + 43;
+            return this.canvasInset + Number(target && target.y || 0) + 43;
         },
         nodeState(id) { return this.nodeStates[id] || 'pending'; },
         goToStep(index) {
             this.stopPlayback();
             this.stepIndex = Math.max(-1, Math.min(index, this.replay.events.length - 1));
             this.rebuildNodeStates();
+            this.centerCurrentNode();
         },
         previousStep() { this.goToStep(this.stepIndex - 1); },
         nextStep() {
@@ -100,6 +126,7 @@ new Vue({
             }
             this.stepIndex += 1;
             this.rebuildNodeStates();
+            this.centerCurrentNode();
         },
         resetPlayback() { this.goToStep(-1); },
         finishPlayback() { this.goToStep(this.replay.events.length - 1); },

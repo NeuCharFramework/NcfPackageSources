@@ -30,7 +30,7 @@
 .workflow-replay-timeline-item.passed .workflow-replay-timeline-dot,
 .workflow-replay-timeline-item.active .workflow-replay-timeline-dot { border-color: #409eff; background: #409eff; }
 .workflow-replay-timeline-item.failed .workflow-replay-timeline-dot { border-color: #f56c6c; background: #f56c6c; }
-.workflow-replay-canvas-wrap { position: relative; overflow: auto; min-width: 0; background-color: #fcfdff; background-image: radial-gradient(#d9e5f2 1px, transparent 1px); background-size: 18px 18px; }
+.workflow-replay-canvas-wrap { position: relative; overflow: auto; min-width: 0; scroll-behavior: smooth; background-color: #fcfdff; background-image: radial-gradient(#d9e5f2 1px, transparent 1px); background-size: 18px 18px; }
 .workflow-replay-canvas { position: relative; min-width: 100%; }
 .workflow-replay-edges { position: absolute; top: 0; left: 0; overflow: visible; pointer-events: none; }
 .workflow-replay-edges line { stroke: #a9bbd0; stroke-width: 2.2; stroke-linecap: round; }
@@ -46,10 +46,16 @@
 .workflow-replay-node.state-failed .workflow-replay-node-status { background: #f56c6c; }
 .workflow-replay-node.selected { box-shadow: 0 0 0 4px rgba(64,158,255,.2); }
 .workflow-replay-detail h4 { margin: 10px 0 6px; color: #354052; }
+.workflow-replay-value { margin-top: 14px; }
+.workflow-replay-value h5 { margin: 0 0 6px; color: #536174; font-size: 12px; }
 .workflow-replay-detail p { color: #66758a; font-size: 13px; line-height: 1.6; }
 .workflow-replay-detail time { color: #9aa6b6; font-size: 12px; }
 .workflow-replay-detail-note { margin-top: 18px; }
-.workflow-replay-output { max-height: 245px; margin: 12px 0 0; padding: 10px; overflow: auto; color: #d9e6f2; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; background: #1e2937; border-radius: 6px; }
+.workflow-replay-input,
+.workflow-replay-output { max-height: 280px; margin: 0; padding: 10px; overflow: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; border-radius: 6px; }
+.workflow-replay-input { color: #25364a; background: #eef5fb; border: 1px solid #d8e6f3; }
+.workflow-replay-output { color: #d9e6f2; background: #1e2937; }
+.workflow-replay-missing-input { margin: 0; color: #8b97a7; font-size: 12px; }
 @keyframes workflow-replay-pulse { 50% { opacity: .35; } }
 @media (max-width: 1180px) { .workflow-replay-layout { grid-template-columns: 210px minmax(400px, 1fr); } .workflow-replay-detail { grid-column: 1 / -1; border-top: 1px solid #e8edf4; border-left: 0; } }
 @media (max-width: 760px) { .workflow-replay-header,.workflow-replay-controls { align-items: flex-start; flex-direction: column; } .workflow-replay-actions,.workflow-replay-buttons { justify-content: flex-start; } .workflow-replay-layout { display: block; } .workflow-replay-timeline { max-height: 250px; border-right: 0; border-bottom: 1px solid #e8edf4; } .workflow-replay-canvas-wrap { min-height: 500px; } }

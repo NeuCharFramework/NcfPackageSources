@@ -224,6 +224,33 @@ public class NeuCharWorkflowEngineTests
     }
 
     [TestMethod]
+    public void ParseAndValidateGraph_ParallelWithMultipleOutputs_ShouldBeAllowed()
+    {
+        var engine = CreateEngine();
+        const string graphJson =
+            """
+            {
+              "nodes": [
+                { "id": "trigger", "type": "manual-trigger" },
+                { "id": "parallel", "type": "parallel", "name": "并行" },
+                { "id": "end-a", "type": "end", "name": "分支 A" },
+                { "id": "end-b", "type": "end", "name": "分支 B" }
+              ],
+              "edges": [
+                { "id": "edge-1", "source": "trigger", "target": "parallel" },
+                { "id": "edge-2", "source": "parallel", "target": "end-a" },
+                { "id": "edge-3", "source": "parallel", "target": "end-b" }
+              ]
+            }
+            """;
+
+        var graph = engine.ParseAndValidateGraph(graphJson);
+
+        Assert.AreEqual(2, graph.Edges.Count(edge => edge.Source == "parallel"));
+        Assert.IsTrue(graph.Nodes.Any(node => node.Type == "parallel"));
+    }
+
+    [TestMethod]
     public void ParseAndValidateGraph_OrdinaryNodeWithTwoInputs_ShouldBeRejected()
     {
         var engine = CreateEngine();
@@ -278,6 +305,39 @@ public class NeuCharWorkflowEngineTests
     }
 
     [TestMethod]
+    public void AggregateInput_ShouldContainOnlyActiveIncomingEdgesInGraphOrder()
+    {
+        var method = typeof(NeuCharWorkflowEngine).GetMethod(
+            "BuildAggregateInput",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+        var aggregate = new NeuCharWorkflowNode { Id = "aggregate", Type = "aggregate" };
+        var graph = new NeuCharWorkflowGraph
+        {
+            Nodes = { aggregate },
+            Edges =
+            {
+                new NeuCharWorkflowEdge { Id = "true-edge", Source = "condition", Target = "aggregate", SourceHandle = "true" },
+                new NeuCharWorkflowEdge { Id = "false-edge", Source = "condition", Target = "aggregate", SourceHandle = "false" }
+            }
+        };
+        var outputs = new Dictionary<string, JsonNode>
+        {
+            ["condition"] = JsonValue.Create("selected")!
+        };
+
+        var value = (JsonArray)method.Invoke(null, new object[]
+        {
+            graph,
+            aggregate,
+            new HashSet<string> { "true-edge" },
+            outputs
+        })!;
+
+        Assert.AreEqual(1, value.Count);
+        Assert.AreEqual("selected", value[0]!.GetValue<string>());
+    }
+
+    [TestMethod]
     public void ParseAndValidateGraph_FunctionWithTwoInputs_ShouldBeAllowed()
     {
         var engine = CreateEngine();
@@ -317,6 +377,23 @@ public class NeuCharWorkflowEngineTests
         Assert.AreEqual("{\"graphJson\":\"{}\"}", executionLog.ReplaySnapshotJson);
         Assert.AreEqual("[{\"nodeId\":\"trigger\"}]", executionLog.ReplayEventsJson);
         Assert.IsTrue(executionLog.Succeeded == true && executionLog.FinishedAt != null);
+    }
+
+    [TestMethod]
+    public void ReplayProgress_ShouldRetainNodeInputAlongsideOutput()
+    {
+        var progress = new NeuCharWorkflowProgress(
+            "function-1",
+            "查询",
+            "success",
+            "节点执行完成。",
+            "{\"result\":\"ok\"}",
+            DateTimeOffset.UtcNow,
+            null,
+            "{\"keyword\":\"workflow\"}");
+
+        Assert.AreEqual("{\"keyword\":\"workflow\"}", progress.Input);
+        Assert.AreEqual("{\"result\":\"ok\"}", progress.Output);
     }
 
     [TestMethod]

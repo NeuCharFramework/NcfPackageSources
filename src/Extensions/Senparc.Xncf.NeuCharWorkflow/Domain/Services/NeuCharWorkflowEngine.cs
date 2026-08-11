@@ -15,6 +15,7 @@ using Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel;
 using WorkflowEntity = Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel.NeuCharWorkflow;
 using Senparc.Ncf.Core.Enums;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -71,7 +72,8 @@ public sealed record NeuCharWorkflowProgress(
     string Message,
     string Output,
     DateTimeOffset Timestamp,
-    string? OutputSchema = null);
+    string? OutputSchema = null,
+    string? Input = null);
 
 public sealed class NeuCharWorkflowEngine
 {
@@ -79,7 +81,7 @@ public sealed class NeuCharWorkflowEngine
     private static readonly HashSet<string> AllowedNodeTypes = new(StringComparer.OrdinalIgnoreCase)
     {
         "manual-trigger", "interval-trigger", "webhook-trigger", "function", "delay", "condition", "agent", "agent-group",
-        "aggregate", "console", "neubell", "end"
+        "aggregate", "parallel", "console", "neubell", "end"
     };
 
     private sealed record ResolvedFunctionReference(
@@ -226,7 +228,8 @@ public sealed class NeuCharWorkflowEngine
                     throw new InvalidOperationException($"结束节点“{node.Name ?? node.Id}”不能有输出连接。");
                 }
             }
-            else if (outgoing.Count > 1)
+            else if (!node.Type.Equals("parallel", StringComparison.OrdinalIgnoreCase) &&
+                     outgoing.Count > 1)
             {
                 throw new InvalidOperationException($"节点“{node.Name ?? node.Id}”只能连接一个后续节点。");
             }
@@ -444,18 +447,23 @@ public sealed class NeuCharWorkflowEngine
         var trace = new List<string>();
         var replayEvents = new List<NeuCharWorkflowProgress>();
         var callerProgress = progress;
+        var progressLock = new object();
         progress = item =>
         {
-            if (replayEvents.Count < 500)
+            lock (progressLock)
             {
-                replayEvents.Add(item with
+                if (replayEvents.Count < 500)
                 {
-                    Message = LimitReplayText(item.Message, 2_000),
-                    Output = LimitReplayText(item.Output, 2_000),
-                    OutputSchema = LimitReplayText(item.OutputSchema, 20_000)
-                });
+                    replayEvents.Add(item with
+                    {
+                        Message = LimitReplayText(item.Message, 2_000),
+                        Output = LimitReplayText(item.Output, 2_000),
+                        OutputSchema = LimitReplayText(item.OutputSchema, 20_000),
+                        Input = LimitReplayText(item.Input, 20_000)
+                    });
+                }
+                callerProgress?.Invoke(item);
             }
-            callerProgress?.Invoke(item);
         };
         var correlationId = Guid.TryParse(runId, out var parsedRunId)
             ? $"workflow-{workflow.Id}-run-{parsedRunId:N}"
@@ -487,7 +495,6 @@ public sealed class NeuCharWorkflowEngine
             var nodes = graph.Nodes.ToDictionary(z => z.Id, StringComparer.Ordinal);
             var trigger = graph.Nodes.Single(z =>
                 z.Type.EndsWith("trigger", StringComparison.OrdinalIgnoreCase));
-            var queue = new Queue<(NeuCharWorkflowNode node, JsonNode value)>();
             var triggerInput = JsonValue.Create(input ?? string.Empty) as JsonNode;
             if (trigger.Type.Equals("webhook-trigger", StringComparison.OrdinalIgnoreCase) &&
                 !string.IsNullOrWhiteSpace(input))
@@ -501,74 +508,111 @@ public sealed class NeuCharWorkflowEngine
                     // Webhook 输入始终由入口序列化为 JSON；对历史调用或非 JSON 请求保留原始文本。
                 }
             }
-            queue.Enqueue((trigger, triggerInput));
-            var visited = new HashSet<string>(StringComparer.Ordinal);
+
+            // Nodes run in dependency waves. A parallel node contributes all of its direct
+            // successors to the following wave, so independent branches are truly awaited
+            // together. Aggregate nodes are deliberately held until every active branch has
+            // settled. Tracking the active edges (rather than only source nodes) also makes a
+            // skipped condition branch harmless instead of causing a duplicate input or wait.
+            var ready = new List<(NeuCharWorkflowNode node, JsonNode value)>
+            {
+                (trigger, triggerInput)
+            };
+            var scheduled = new HashSet<string>(StringComparer.Ordinal) { trigger.Id };
+            var waitingAggregateEdges = new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
             var outputs = new Dictionary<string, JsonNode>(StringComparer.Ordinal);
             // Only Selection values are retained for bindings; do not retain unrelated input
             // parameters such as passwords in the runtime source cache.
-            var functionSelectionInputs = new Dictionary<string, JsonNode>(StringComparer.Ordinal);
+            var functionSelectionInputs = new ConcurrentDictionary<string, JsonNode>(StringComparer.Ordinal);
             JsonNode finalOutput = JsonValue.Create(input ?? string.Empty);
-            while (queue.Count > 0)
+            while (ready.Count > 0 || waitingAggregateEdges.Count > 0)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                var (node, currentValue) = queue.Dequeue();
-                if (!visited.Add(node.Id))
+
+                if (ready.Count == 0)
                 {
-                    continue;
+                    // All non-aggregate work that can feed these joins has completed. The
+                    // graph is acyclic, so only now is every selected upstream input known.
+                    ready = waitingAggregateEdges
+                        .Select(pair => (node: nodes[pair.Key], activeEdgeIds: pair.Value))
+                        .OrderBy(item => graph.Nodes.FindIndex(node => node.Id == item.node.Id))
+                        .Select(item => (item.node, value: (JsonNode)BuildAggregateInput(
+                            graph, item.node, item.activeEdgeIds, outputs)))
+                        .ToList();
+                    waitingAggregateEdges.Clear();
                 }
 
-                if (node.Type.Equals("aggregate", StringComparison.OrdinalIgnoreCase))
+                var wave = ready;
+                ready = new List<(NeuCharWorkflowNode node, JsonNode value)>();
+                var executions = await Task.WhenAll(wave.Select(async item =>
                 {
-                    var aggregate = new JsonArray();
-                    foreach (var sourceId in graph.Edges.Where(z => z.Target == node.Id).Select(z => z.Source))
+                    var replayInputText = await BuildReplayInputTextAsync(
+                            item.node,
+                            item.value,
+                            outputs,
+                            functionSelectionInputs,
+                            cancellationToken)
+                        .ConfigureAwait(false);
+                    Report(progress, item.node, "running", "开始执行节点。", null, input: replayInputText);
+                    var execution = await ExecuteNodeAsync(
+                            workflow,
+                            item.node,
+                            item.value,
+                            outputs,
+                            functionSelectionInputs,
+                            correlationId,
+                            cancellationToken)
+                        .ConfigureAwait(false);
+                    return (item.node, replayInputText, execution);
+                })).ConfigureAwait(false);
+
+                foreach (var (node, replayInputText, execution) in executions)
+                {
+                    trace.Add($"{node.Name ?? node.Type}: {(execution.success ? "OK" : "FAILED")}");
+                    if (!execution.success)
                     {
-                        if (outputs.TryGetValue(sourceId, out var sourceOutput))
+                        Report(progress, node, "failed", execution.error, null, input: replayInputText);
+                        throw new InvalidOperationException(execution.error);
+                    }
+
+                    finalOutput = execution.output ?? JsonNode.Parse("null");
+                    outputs[node.Id] = finalOutput.DeepClone();
+                    var outputText = NodeToText(finalOutput);
+                    var outputSchema = NeuCharWorkflowObservedOutputSchemaBuilder.Build(node, finalOutput);
+                    Report(progress, node, "success", "节点执行完成。", outputText,
+                        JsonSerializer.Serialize(outputSchema, JsonOptions),
+                        replayInputText);
+                    if (node.Type.Equals("console", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Report(progress, node, "console", "Console 输出", outputText);
+                    }
+
+                    var outgoing = graph.Edges.Where(z => z.Source == node.Id);
+                    if (node.Type.Equals("condition", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var branch = execution.condition == true ? "true" : "false";
+                        trace.Add($"{node.Name ?? node.Type}: branch={branch}");
+                        Report(progress, node, "branch", $"选择{(branch == "true" ? "真" : "假")}分支。", branch);
+                        outgoing = outgoing.Where(z =>
+                            string.Equals(z.SourceHandle, branch, StringComparison.OrdinalIgnoreCase));
+                    }
+                    foreach (var edge in outgoing)
+                    {
+                        var target = nodes[edge.Target];
+                        if (target.Type.Equals("aggregate", StringComparison.OrdinalIgnoreCase))
                         {
-                            aggregate.Add(sourceOutput?.DeepClone());
+                            if (!waitingAggregateEdges.TryGetValue(target.Id, out var activeEdgeIds))
+                            {
+                                activeEdgeIds = new HashSet<string>(StringComparer.Ordinal);
+                                waitingAggregateEdges[target.Id] = activeEdgeIds;
+                            }
+                            activeEdgeIds.Add(edge.Id);
+                        }
+                        else if (scheduled.Add(target.Id))
+                        {
+                            ready.Add((target, finalOutput.DeepClone()));
                         }
                     }
-                    currentValue = aggregate;
-                }
-
-                Report(progress, node, "running", "开始执行节点。", null);
-                var execution = await ExecuteNodeAsync(
-                        workflow,
-                        node,
-                        currentValue,
-                        outputs,
-                        functionSelectionInputs,
-                        correlationId,
-                        cancellationToken)
-                    .ConfigureAwait(false);
-                trace.Add($"{node.Name ?? node.Type}: {(execution.success ? "OK" : "FAILED")}");
-                if (!execution.success)
-                {
-                    Report(progress, node, "failed", execution.error, null);
-                    throw new InvalidOperationException(execution.error);
-                }
-                finalOutput = execution.output ?? JsonNode.Parse("null");
-                outputs[node.Id] = finalOutput?.DeepClone();
-                var outputText = NodeToText(finalOutput);
-                var outputSchema = NeuCharWorkflowObservedOutputSchemaBuilder.Build(node, finalOutput);
-                Report(progress, node, "success", "节点执行完成。", outputText,
-                    JsonSerializer.Serialize(outputSchema, JsonOptions));
-                if (node.Type.Equals("console", StringComparison.OrdinalIgnoreCase))
-                {
-                    Report(progress, node, "console", "Console 输出", outputText);
-                }
-
-                var outgoing = graph.Edges.Where(z => z.Source == node.Id);
-                if (node.Type.Equals("condition", StringComparison.OrdinalIgnoreCase))
-                {
-                    var branch = execution.condition == true ? "true" : "false";
-                    trace.Add($"{node.Name ?? node.Type}: branch={branch}");
-                    Report(progress, node, "branch", $"选择{(branch == "true" ? "真" : "假")}分支。", branch);
-                    outgoing = outgoing.Where(z =>
-                        string.Equals(z.SourceHandle, branch, StringComparison.OrdinalIgnoreCase));
-                }
-                foreach (var edge in outgoing)
-                {
-                    queue.Enqueue((nodes[edge.Target], finalOutput));
                 }
             }
 
@@ -615,12 +659,75 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
+    private async Task<string> BuildReplayInputTextAsync(
+        NeuCharWorkflowNode node,
+        JsonNode input,
+        IReadOnlyDictionary<string, JsonNode> outputs,
+        IReadOnlyDictionary<string, JsonNode> functionSelectionInputs,
+        CancellationToken cancellationToken)
+    {
+        var fallback = NodeToText(input);
+        if (!node.Type.Equals("function", StringComparison.OrdinalIgnoreCase))
+        {
+            return fallback;
+        }
+        try
+        {
+            var reference = await ResolveFunctionReferenceAsync(node, cancellationToken).ConfigureAwait(false);
+            if (reference == null)
+            {
+                return fallback;
+            }
+            var parameterNode = node.Config?["parameters"]?.DeepClone();
+            if (parameterNode == null)
+            {
+                parameterNode = JsonNode.Parse(reference.DefaultParametersJson ?? "{}");
+            }
+            parameterNode = JsonNode.Parse(_parameterProtector.Unprotect(parameterNode.ToJsonString()))
+                ?? new JsonObject();
+            var resolvedParameters = ResolveRuntimeValue(
+                parameterNode,
+                input,
+                outputs,
+                functionSelectionInputs) ?? new JsonObject();
+            var maskedJson = _parameterProtector.MaskForClient(
+                resolvedParameters.ToJsonString(),
+                reference.Descriptor.Parameters
+                    .Where(parameter => parameter.ParameterType == Senparc.Ncf.XncfBase.ParameterType.Password)
+                    .Select(parameter => parameter.Name));
+            return NodeToText(JsonNode.Parse(maskedJson));
+        }
+        catch
+        {
+            // Capturing replay detail must not turn a successful run into a failed one.
+            return fallback;
+        }
+    }
+
+    private static JsonArray BuildAggregateInput(
+        NeuCharWorkflowGraph graph,
+        NeuCharWorkflowNode aggregateNode,
+        ISet<string> activeEdgeIds,
+        IReadOnlyDictionary<string, JsonNode> outputs)
+    {
+        var aggregate = new JsonArray();
+        foreach (var edge in graph.Edges.Where(edge =>
+                     edge.Target == aggregateNode.Id && activeEdgeIds.Contains(edge.Id)))
+        {
+            if (outputs.TryGetValue(edge.Source, out var sourceOutput))
+            {
+                aggregate.Add(sourceOutput?.DeepClone());
+            }
+        }
+        return aggregate;
+    }
+
     private async Task<(bool success, JsonNode output, bool? condition, string error)> ExecuteNodeAsync(
         WorkflowEntity workflow,
         NeuCharWorkflowNode node,
         JsonNode input,
         IReadOnlyDictionary<string, JsonNode> outputs,
-        Dictionary<string, JsonNode> functionSelectionInputs,
+        ConcurrentDictionary<string, JsonNode> functionSelectionInputs,
         string correlationId,
         CancellationToken cancellationToken)
     {
@@ -654,6 +761,7 @@ public sealed class NeuCharWorkflowEngine
                         cancellationToken)
                     .ConfigureAwait(false);
             case "aggregate":
+            case "parallel":
             case "console":
             case "end":
                 return (true, input, null, null);
@@ -666,7 +774,7 @@ public sealed class NeuCharWorkflowEngine
         NeuCharWorkflowNode node,
         JsonNode input,
         IReadOnlyDictionary<string, JsonNode> outputs,
-        Dictionary<string, JsonNode> functionSelectionInputs,
+        ConcurrentDictionary<string, JsonNode> functionSelectionInputs,
         CancellationToken cancellationToken)
     {
         var reference = await ResolveFunctionReferenceAsync(node, cancellationToken).ConfigureAwait(false);
@@ -1122,7 +1230,8 @@ public sealed class NeuCharWorkflowEngine
         string status,
         string message,
         string output,
-        string? outputSchema = null)
+        string? outputSchema = null,
+        string? input = null)
     {
         progress?.Invoke(new NeuCharWorkflowProgress(
             node.Id,
@@ -1131,13 +1240,14 @@ public sealed class NeuCharWorkflowEngine
             message,
             output?.Length > 8_000 ? output[..8_000] : output,
             DateTimeOffset.UtcNow,
-            outputSchema));
+            outputSchema,
+            LimitReplayText(input, 20_000)));
     }
 
     private static string? LimitReplayText(string? value, int maxLength) =>
         string.IsNullOrEmpty(value) || value.Length <= maxLength
             ? value
-            : value[..maxLength] + "\n…（回看输出已截断）";
+            : value[..maxLength] + "\n…（回看内容已截断）";
 
     private static int GetInt(JsonObject config, string name, int fallback)
     {

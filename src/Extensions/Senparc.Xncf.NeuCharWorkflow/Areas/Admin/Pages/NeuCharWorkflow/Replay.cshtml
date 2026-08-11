@@ -63,7 +63,7 @@
                 </button>
             </aside>
 
-            <main class="workflow-replay-canvas-wrap">
+            <main ref="canvasViewport" class="workflow-replay-canvas-wrap">
                 <div class="workflow-replay-canvas" :style="canvasStyle">
                     <svg class="workflow-replay-edges" :viewBox="`0 0 ${canvasSize.width} ${canvasSize.height}`" :width="canvasSize.width" :height="canvasSize.height" aria-hidden="true">
                         <line v-for="edge in graph.edges" :key="edge.id || `${edge.source}-${edge.target}`"
@@ -85,7 +85,15 @@
                     <h4>{{ currentEvent.nodeName }}</h4>
                     <p>{{ currentEvent.message || '节点状态已更新。' }}</p>
                     <time>{{ formatDate(currentEvent.timestamp) }}</time>
-                    <pre v-if="currentEvent.output" class="workflow-replay-output">{{ currentEvent.output }}</pre>
+                    <section class="workflow-replay-value">
+                        <h5>输入参数</h5>
+                        <pre v-if="currentEvent.input" class="workflow-replay-input">{{ currentEvent.input }}</pre>
+                        <p v-else class="workflow-replay-missing-input">该历史步骤未保存输入记录。</p>
+                    </section>
+                    <section v-if="currentEvent.output" class="workflow-replay-value">
+                        <h5>输出结果</h5>
+                        <pre class="workflow-replay-output">{{ currentEvent.output }}</pre>
+                    </section>
                 </template>
                 <template v-else>
                     <el-tag size="mini" :type="replay.succeeded ? 'success' : 'danger'">{{ statusText(replay.status) }}</el-tag>

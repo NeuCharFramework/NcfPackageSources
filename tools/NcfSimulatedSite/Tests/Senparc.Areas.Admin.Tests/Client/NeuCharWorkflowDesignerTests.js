@@ -266,6 +266,27 @@ assert.strictEqual(vueOptions.methods.setTarget.call(connectionContext, source, 
     'Dragging a normal output to a new target should replace its previous edge.');
 assert.deepStrictEqual(connectionContext.form.graph.edges.map(edge => edge.target), ['new']);
 
+const parallelSource = { id: 'parallel', type: 'parallel' };
+const parallelTargetA = { id: 'parallel-a', type: 'end' };
+const parallelTargetB = { id: 'parallel-b', type: 'end' };
+const parallelContext = {
+    editingLocked: false,
+    form: { graph: { nodes: [parallelSource, parallelTargetA, parallelTargetB], edges: [] } },
+    makeId(prefix) { return `${prefix}-${this.form.graph.edges.length + 1}`; },
+    incomingEdges: vueOptions.methods.incomingEdges,
+    supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
+    wouldCreateCycle: vueOptions.methods.wouldCreateCycle
+};
+parallelContext.canConnect = (...args) => vueOptions.methods.canConnect.call(parallelContext, ...args);
+assert.strictEqual(vueOptions.methods.setTarget.call(parallelContext, parallelSource, 'default', 'parallel-a', true), true,
+    'A parallel node should accept its first downstream branch.');
+assert.strictEqual(vueOptions.methods.setTarget.call(parallelContext, parallelSource, 'default', 'parallel-b', true), true,
+    'A parallel node should retain existing branches when another downstream branch is connected.');
+assert.strictEqual(parallelContext.form.graph.edges.length, 2,
+    'A parallel node should preserve every independently connected downstream branch.');
+assert.strictEqual(vueOptions.methods.supportsMultipleOutputs(parallelSource), true,
+    'The designer should identify parallel nodes as multi-output nodes.');
+
 const branchSource = { id: 'condition', type: 'condition' };
 const branchTarget = { id: 'target', type: 'delay' };
 const branchContext = {
@@ -749,6 +770,7 @@ assert.ok(page.includes('@@preview-node="showNodePreview"') && page.includes('@@
     'Node picker blocks should preview on the first interaction and reserve double-click for adding a node.');
 assert.ok(page.includes("selectSystem('condition','条件判断')"), 'The shared picker should expose condition nodes.');
 assert.ok(page.includes("selectSystem('aggregate','聚合')"), 'The shared picker should expose multi-input aggregate nodes.');
+assert.ok(page.includes("selectSystem('parallel','并行')"), 'The shared picker should expose a parallel fan-out node.');
 assert.ok(page.includes("selectSystem('console','Console 打印')"), 'The shared picker should expose console output nodes.');
 assert.ok(page.includes("selectSystem('neubell','发送纽铃')"), 'The shared picker should expose a NeuBell notification node.');
 assert.ok(page.includes("selectSystem('end','结束')"), 'The shared picker should expose end nodes.');
@@ -856,6 +878,62 @@ assert.deepStrictEqual(
     'Selection bindings should preserve the source parameter identity for runtime resolution.');
 assert.strictEqual(selectionFields[1].isArray, true,
     'A multi-select Function input should remain an array when bound downstream.');
+const templateNormalizationContext = {
+    templatePlaceholder: vueOptions.methods.templatePlaceholder
+};
+const normalizedTemplateBindings = vueOptions.methods.normalizeTemplateBindings.call(templateNormalizationContext,
+    '保留 {{value_1}}，第二个变量已删除', [
+        { token: 'value_1', source: { nodeId: 'source-a', path: '$' } },
+        { token: 'value_2', source: { nodeId: 'source-b', path: '$' } }
+    ]);
+assert.strictEqual(JSON.stringify(normalizedTemplateBindings), JSON.stringify([
+    { token: 'value_1', source: { nodeId: 'source-a', path: '$' } }
+]), 'Applying the variable editor must discard bindings whose placeholders were manually removed from the text.');
+const templateSaveNode = { id: 'target', config: { parameters: {} } };
+const templateSaveContext = {
+    templateEditor: {
+        visible: true,
+        nodeId: 'target',
+        parameterName: 'message',
+        text: '固定文本',
+        bindings: [{ token: 'value_1', source: { nodeId: 'source-a', path: '$' } }]
+    },
+    form: { graph: { nodes: [templateSaveNode] } },
+    normalizeTemplateBindings: vueOptions.methods.normalizeTemplateBindings,
+    templatePlaceholder: vueOptions.methods.templatePlaceholder,
+    $set(target, key, value) { target[key] = value; }
+};
+vueOptions.methods.saveParameterTemplate.call(templateSaveContext);
+assert.strictEqual(templateSaveNode.config.parameters.message, '固定文本',
+    'A removed placeholder must be saved as ordinary text rather than an invalid template that the server rejects.');
+assert.strictEqual(templateSaveContext.templateEditor.visible, false,
+    'Applying a normalized template should still close the explicit variable editor.');
+assert.doesNotThrow(() => vueOptions.methods.setConfigBinding.call({
+    form: { graph: { nodes: [] } },
+    nodeOutputFields() { return []; },
+    $set() { throw new Error('A stale cascader value must not be persisted.'); }
+}, { config: {} }, 'left', ['removed-node', '$']),
+    'A stale upstream-node cascader value must be ignored instead of causing a client error.');
+const originalAutoSaveSetTimeout = sandbox.window.setTimeout;
+let autoSaveDelay = null;
+sandbox.window.setTimeout = (callback, delay) => { autoSaveDelay = delay; return 7; };
+const autoSaveContext = {
+    editing: true,
+    form: { id: 42, autoSaveMinutes: 1 },
+    saveState: { timer: null, autoSaveBlockedSignature: 'invalid-save' },
+    currentSaveSignature: 'invalid-save',
+    clearAutoSaveTimer: vueOptions.methods.clearAutoSaveTimer,
+    normalizedAutoSaveMinutes: vueOptions.methods.normalizedAutoSaveMinutes,
+    runAutoSave() {}
+};
+vueOptions.methods.scheduleAutoSave.call(autoSaveContext);
+assert.strictEqual(autoSaveDelay, null,
+    'A failed automatic save must stop retries while the invalid workflow content remains unchanged.');
+autoSaveContext.currentSaveSignature = 'changed-content';
+vueOptions.methods.scheduleAutoSave.call(autoSaveContext);
+assert.strictEqual(autoSaveDelay, 60000,
+    'Editing after an automatic-save failure should allow one fresh autosave attempt using the minimum whole-minute interval.');
+sandbox.window.setTimeout = originalAutoSaveSetTimeout;
 assert.ok(page.includes('workflow-run-dock'), 'Workflow execution should use a persistent status dock instead of a modal.');
 assert.ok(page.includes('关联上游 Output'), 'Node parameters should expose upstream output binding controls.');
 assert.ok(page.includes('Function 预载输入选择'), 'Function parameters should explain that upstream Selection values can be bound.');
@@ -863,6 +941,8 @@ assert.ok(page.includes('预载输入选择'),
     'Function Selection values loaded with the Function should be specially identified as preloaded binding sources.');
 assert.ok(page.includes('编辑文本与插入变量') && page.includes('saveParameterTemplate') && page.includes('appendTemplateBinding'),
     'Text parameters should offer a beginner-friendly dialog for inserting multiple upstream bindings into manual text.');
+assert.ok(page.includes(':close-on-click-modal="false"') && page.includes(':close-on-press-escape="false"'),
+    'The variable editor must only close through an explicit close, cancel, or apply action so edits are not lost accidentally.');
 assert.ok(page.includes('parameter-template-card') && page.includes('templateEditor.bindings'),
     'Mixed text bindings should remain visible and editable after the dialog is closed.');
 assert.ok(fs.readFileSync(scriptPath, 'utf8').includes('$template'),
@@ -894,6 +974,7 @@ assert.ok(tasksScript.includes("neuBellProvider") && tasksScript.includes("servi
     'Workflow task links should consume their matching NeuBell notification through the protected API.');
 assert.ok(sourceIncludesFitOnLoad(), 'Editing an existing workflow should fit all nodes after its canvas has rendered.');
 assert.ok(page.includes('自动保存'), 'Workflow settings should expose the auto-save interval.');
+assert.ok(page.includes(':precision="0"'), 'The auto-save editor must only accept whole minutes so a fractional interval cannot create a rapid save loop.');
 assert.ok(page.includes('Command/Ctrl + S'), 'Workflow save should advertise the system save shortcut.');
 assert.ok(!page.includes(':visible.sync="runDialogVisible"'),
     'Workflow execution should remain in the persistent dock instead of using a modal dialog.');
@@ -1003,6 +1084,50 @@ assert.ok(replayScript.includes('togglePlayback') && replayScript.includes('next
     'The replay client should play node events one step at a time and project their states onto the frozen canvas.');
 assert.ok(replayStyles.includes('.workflow-replay-node.state-running') && replayStyles.includes('.workflow-replay-timeline-item.active'),
     'Replay styling should visually distinguish active nodes and the selected timeline step.');
+assert.ok(replayPage.includes('输入参数') && replayPage.includes('currentEvent.input'),
+    'The replay detail panel should show the recorded input parameters alongside output.');
+assert.ok(replayScript.includes('centerCurrentNode') && replayScript.includes("behavior: 'smooth'"),
+    'Selecting or playing a replay step should smoothly center its node in the canvas viewport.');
+assert.match(replayStyles, /\.workflow-replay-canvas-wrap\s*\{[^}]*scroll-behavior:\s*smooth;/s,
+    'The replay canvas should retain smooth scrolling when the browser handles the scroll transition.');
+let replayVueOptions = null;
+function ReplayVue(options) { replayVueOptions = options; }
+const replaySandbox = {
+    Vue: ReplayVue,
+    window: { location: { search: '' }, clearInterval() {}, setInterval() {} },
+    service: {},
+    NeuCharWorkflowUi: { unwrap(value) { return value; }, parseJson(value, fallback) { return fallback; } },
+    URLSearchParams,
+    Math,
+    Number,
+    String,
+    Array,
+    Object,
+    console
+};
+vm.createContext(replaySandbox);
+vm.runInContext(replayScript, replaySandbox, { filename: replayScriptPath });
+let replayScrollTarget = null;
+const replayCenterContext = {
+    currentEvent: { nodeId: 'first' },
+    graph: { nodes: [{ id: 'first', x: 0, y: 0 }] },
+    canvasInset: 240,
+    findNode: replayVueOptions.methods.findNode,
+    $nextTick(callback) { callback(); },
+    $refs: {
+        canvasViewport: {
+            clientWidth: 400, clientHeight: 300, scrollWidth: 1200, scrollHeight: 900,
+            scrollTo(target) { replayScrollTarget = target; }
+        }
+    }
+};
+replayVueOptions.methods.centerCurrentNode.call(replayCenterContext);
+assert.strictEqual(replayScrollTarget.left, 178,
+    'Replay step navigation should center the selected node horizontally.');
+assert.strictEqual(replayScrollTarget.top, 160,
+    'Replay step navigation should center the selected node vertically.');
+assert.strictEqual(replayScrollTarget.behavior, 'smooth',
+    'Replay step navigation should use a smooth scroll request.');
 
 async function verifyUnsavedChangeGuards() {
     let modalArguments = null;

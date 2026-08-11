@@ -142,6 +142,7 @@ new Vue({
                 lastSavedLabel: '',
                 status: 'idle',
                 error: '',
+                autoSaveBlockedSignature: '',
                 timer: null
             },
             run: {
@@ -456,8 +457,13 @@ new Vue({
                 },
                 aggregate: {
                     title: '聚合',
-                    description: '把多个上游输出合并为一个数组，供后续节点统一使用。',
+                    description: '等待全部已激活的上游分支完成，再把输出按连线顺序合并为数组。',
                     rows: [{ label: '可配置项', value: '多个上游输入绑定' }, { label: '输出', value: '聚合数组' }]
+                },
+                parallel: {
+                    title: '并行',
+                    description: '把同一输入同时发送到任意多个下游节点，让这些独立分支并发执行。',
+                    rows: [{ label: '可配置项', value: '从输出端连接任意多个分支' }, { label: '输出', value: '原始输入分发至每个分支' }]
                 },
                 console: {
                     title: 'Console 打印',
@@ -1106,20 +1112,24 @@ new Vue({
             this.setSelectedNodes(nodes);
         },
         supportsMultipleInputs(node) { return node && ['aggregate', 'function'].includes(node.type); },
-        supportsMultipleOutputs(node) { return node && node.type === 'condition'; },
+        supportsMultipleOutputs(node) { return node && ['condition', 'parallel'].includes(node.type); },
         targetFor(node, sourceHandle) {
             const edge = this.form.graph.edges.find(item => item.source === node.id && item.sourceHandle === sourceHandle);
             return edge ? edge.target : '';
         },
         incomingEdges(nodeId) { return this.form.graph.edges.filter(edge => edge.target === nodeId); },
+        outgoingEdges(nodeId) { return this.form.graph.edges.filter(edge => edge.source === nodeId); },
         availableTargets(node, sourceHandle) {
             const handle = node.type === 'condition' ? sourceHandle : 'default';
-            return this.form.graph.nodes.filter(target => this.canConnect(node, target, handle));
+            return this.form.graph.nodes.filter(target =>
+                this.form.graph.edges.some(edge => edge.source === node.id && edge.target === target.id && edge.sourceHandle === handle) ||
+                this.canConnect(node, target, handle));
         },
         canConnect(source, target, sourceHandle) {
             if (!source || !target || source.id === target.id || source.type === 'end' || String(target.type).endsWith('trigger')) return false;
             if (this.wouldCreateCycle(source.id, target.id)) return false;
             const handle = source.type === 'condition' ? sourceHandle : 'default';
+            if (this.form.graph.edges.some(edge => edge.source === source.id && edge.target === target.id && edge.sourceHandle === handle)) return false;
             const incoming = this.incomingEdges(target.id).filter(edge =>
                 !(edge.source === source.id && edge.sourceHandle === handle));
             if (incoming.length && !this.supportsMultipleInputs(target)) return false;
@@ -1141,12 +1151,16 @@ new Vue({
             if (this.editingLocked) return false;
             const handle = node.type === 'condition' ? sourceHandle : 'default';
             const target = this.form.graph.nodes.find(item => item.id === targetId);
+            if (targetId && this.form.graph.edges.some(edge =>
+                edge.source === node.id && edge.target === targetId && edge.sourceHandle === handle)) return true;
             if (targetId && !this.canConnect(node, target, handle)) {
                 if (!silent) this.$notify({ title: '无法连接', message: '目标已有上游、连接会形成循环，或节点不支持该连接方式。多对一目标可使用 Function 或聚合节点。', type: 'warning' });
                 return false;
             }
-            this.form.graph.edges = this.form.graph.edges.filter(edge =>
-                !(edge.source === node.id && edge.sourceHandle === handle));
+            if (node.type !== 'parallel') {
+                this.form.graph.edges = this.form.graph.edges.filter(edge =>
+                    !(edge.source === node.id && edge.sourceHandle === handle));
+            }
             if (targetId) {
                 this.form.graph.edges.push({ id: this.makeId('edge'), source: node.id, target: targetId, sourceHandle: handle });
             }
@@ -1763,6 +1777,7 @@ new Vue({
             if (node.type === 'delay') return `${node.config.seconds || 0} 秒`;
             if (node.type === 'condition') return `${node.config.operator || 'equals'} ${this.configValueLabel(node.config.right)}`;
             if (node.type === 'aggregate') return '合并多个上游输出为数组';
+            if (node.type === 'parallel') return '同时分发到所有下游分支';
             if (node.type === 'console') return '输出到下方 Console';
             if (node.type === 'neubell') {
                 const mode = String(node.config?.consumeMode || 'none');
@@ -1998,6 +2013,19 @@ new Vue({
                 pendingSelection: []
             };
         },
+        normalizeTemplateBindings(text, bindings) {
+            const kept = [];
+            const tokens = new Set();
+            const value = String(text || '');
+            (Array.isArray(bindings) ? bindings : []).forEach(item => {
+                const token = String(item?.token || '').trim();
+                if (!item?.source || !/^[A-Za-z][A-Za-z0-9_-]{0,63}$/.test(token) || tokens.has(token.toLowerCase())) return;
+                if (!value.includes(this.templatePlaceholder(token))) return;
+                tokens.add(token.toLowerCase());
+                kept.push({ token, source: { ...item.source } });
+            });
+            return kept;
+        },
         appendTemplateBinding(selection) {
             const source = this.createSourceBinding(selection);
             this.templateEditor.pendingSelection = [];
@@ -2026,7 +2054,7 @@ new Vue({
                 return;
             }
             const text = String(editor.text || '');
-            const bindings = editor.bindings.map(item => ({ token: item.token, source: { ...item.source } }));
+            const bindings = this.normalizeTemplateBindings(text, editor.bindings);
             const hasTemplate = bindings.length > 0 ? true : text.includes('{{=');
             this.$set(node.config.parameters, editor.parameterName,
                 hasTemplate ? { $template: { text, bindings } } : text);
@@ -2123,7 +2151,8 @@ new Vue({
         setConfigBinding(node, key, selection) {
             if (!selection || selection.length < 2) { this.$set(node.config, key, ''); return; }
             const source = this.form.graph.nodes.find(item => item.id === selection[0]);
-            const field = this.nodeOutputFields(source).find(item => item.path === selection[1]);
+            const field = source && this.nodeOutputFields(source).find(item => item.path === selection[1]);
+            if (!source || !field) return;
             this.$set(node.config, key, {
                 $source: {
                     nodeId: source.id,
@@ -2234,8 +2263,13 @@ new Vue({
         },
         setAutoSaveEnabled(enabled) {
             this.form.autoSaveMinutes = enabled
-                ? Math.max(1, Number(this.form.autoSaveMinutes || 3))
+                ? Math.max(1, Math.round(Number(this.form.autoSaveMinutes || 3)))
                 : 0;
+        },
+        normalizedAutoSaveMinutes() {
+            const value = Number(this.form.autoSaveMinutes);
+            if (!Number.isFinite(value) || value <= 0) return 0;
+            return Math.min(1440, Math.max(1, Math.round(value)));
         },
         resetSaveState() {
             this.clearAutoSaveTimer();
@@ -2244,12 +2278,14 @@ new Vue({
             this.saveState.lastSavedLabel = '';
             this.saveState.status = 'idle';
             this.saveState.error = '';
+            this.saveState.autoSaveBlockedSignature = '';
         },
         markSaved() {
             this.saveState.lastSavedSignature = this.currentSaveSignature;
             this.saveState.lastSavedLabel = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             this.saveState.status = 'saved';
             this.saveState.error = '';
+            this.saveState.autoSaveBlockedSignature = '';
             this.scheduleAutoSave();
         },
         clearAutoSaveTimer() {
@@ -2258,7 +2294,12 @@ new Vue({
         },
         scheduleAutoSave() {
             this.clearAutoSaveTimer();
-            const minutes = Number(this.form.autoSaveMinutes || 0);
+            const minutes = this.normalizedAutoSaveMinutes();
+            const signature = this.currentSaveSignature;
+            if (this.saveState.autoSaveBlockedSignature && this.saveState.autoSaveBlockedSignature !== signature) {
+                this.saveState.autoSaveBlockedSignature = '';
+            }
+            if (this.saveState.autoSaveBlockedSignature === signature) return;
             if (!this.editing || !this.form.id || minutes <= 0) return;
             this.saveState.timer = window.setTimeout(this.runAutoSave, minutes * 60 * 1000);
         },
@@ -2329,6 +2370,7 @@ new Vue({
         async saveWorkflow(options) {
             options = options || {};
             if (this.editingLocked || this.saveState.saving) return null;
+            const saveSignature = this.currentSaveSignature;
             if (this.form.id && !this.saveDirty) {
                 if (!options.silent) this.$notify({ title: 'Workflow', message: '当前没有需要保存的更改。', type: 'info' });
                 this.scheduleAutoSave();
@@ -2354,7 +2396,7 @@ new Vue({
                     enabled: !!this.form.enabled,
                     triggerType: this.form.triggerType,
                     triggerConfigJson: JSON.stringify(this.buildTriggerConfig()),
-                    autoSaveMinutes: Number(this.form.autoSaveMinutes || 0),
+                    autoSaveMinutes: this.normalizedAutoSaveMinutes(),
                     expectedRevision: this.form.id ? Number(this.form.revision || 0) : null,
                     saveSource: options.source || 'manual'
                 }, { customAlert: true });
@@ -2373,6 +2415,10 @@ new Vue({
                 const message = this.errorMessage(error, '请检查节点配置。');
                 this.saveState.status = 'error';
                 this.saveState.error = message;
+                if (options.automatic && this.currentSaveSignature === saveSignature) {
+                    this.saveState.autoSaveBlockedSignature = saveSignature;
+                    this.$notify({ title: '自动保存已暂停', message: `${message}。请修正后手动保存。`, type: 'warning' });
+                }
                 if (!options.automatic) this.$notify({ title: '保存失败', message, type: 'error' });
                 return null;
             } finally { this.saveState.saving = false; }
