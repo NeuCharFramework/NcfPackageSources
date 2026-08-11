@@ -35,12 +35,28 @@ const moduleFunctionScriptPath = path.resolve(__dirname,
     '../../../Senparc.Areas.Admin/wwwroot/js/Admin/Pages/XncfModule/start.js');
 const moduleFunctionStylePath = path.resolve(__dirname,
     '../../../Senparc.Areas.Admin/wwwroot/css/Admin/XncfModule/XncfModule.css');
+const workflowPageMarkup = fs.readFileSync(pagePath, 'utf8');
+const nodePickerTemplateOffset = workflowPageMarkup.indexOf('id="workflow-node-picker-template"');
+const workflowRootEndOffset = workflowPageMarkup.lastIndexOf('</div>\n\n@section scripts');
+
+assert.ok(nodePickerTemplateOffset > workflowRootEndOffset,
+    'The node-picker template must be emitted outside the shared #app root so its v-for aliases are not evaluated by the page Vue instance.');
 
 let vueOptions = null;
 function Vue(options) { vueOptions = options; }
+const nodePickerTemplateMarkup = '<div class="workflow-node-picker">picker template</div>';
+const registeredVueComponents = {};
+Vue.component = (name, options) => { registeredVueComponents[name] = options; };
 
 const sandbox = {
     Vue,
+    document: {
+        getElementById(id) {
+            return id === 'workflow-node-picker-template'
+                ? { innerHTML: nodePickerTemplateMarkup }
+                : null;
+        }
+    },
     window: { addEventListener() {}, removeEventListener() {}, setTimeout(callback) { callback(); }, clearTimeout() {} },
     localStorage: { getItem() { return null; }, setItem() {} },
     service: {},
@@ -63,6 +79,25 @@ vm.createContext(sandbox);
 vm.runInContext(fs.readFileSync(scriptPath, 'utf8'), sandbox, { filename: scriptPath });
 
 assert.ok(vueOptions && vueOptions.methods, 'Workflow designer should register a Vue view model.');
+assert.strictEqual(registeredVueComponents['workflow-node-picker'].template, nodePickerTemplateMarkup,
+    'The node picker must cache its template before Vue renders the shared #app root and removes script template nodes.');
+
+const scheduledWorkflow = { triggerType: 'interval', enabled: true, nextRunAt: '2026-08-12T12:15:00Z' };
+const workflowScheduleContext = {
+    workflowClock: Date.parse('2026-08-12T12:00:00Z'),
+    isIntervalWorkflow: vueOptions.methods.isIntervalWorkflow,
+    workflowNextRunDate: vueOptions.methods.workflowNextRunDate
+};
+assert.strictEqual(vueOptions.methods.workflowTriggerLabel.call({}, scheduledWorkflow), '定时',
+    'The workflow list should expose a distinct type label for interval workflows.');
+assert.strictEqual(vueOptions.methods.workflowTriggerLabel.call({}, { triggerType: 'webhook' }), 'Webhook',
+    'The workflow list should expose a distinct type label for Webhook workflows.');
+assert.strictEqual(vueOptions.methods.workflowScheduleText.call(workflowScheduleContext, scheduledWorkflow), '15 分钟后运行',
+    'An enabled interval workflow should show its next run as a relative time.');
+assert.match(vueOptions.methods.workflowScheduleTitle.call(workflowScheduleContext, scheduledWorkflow), /^下次执行：2026-08-12 /,
+    'The relative next-run label should retain the exact planned local time in its tooltip.');
+assert.strictEqual(vueOptions.methods.workflowScheduleText.call(workflowScheduleContext, { triggerType: 'interval', enabled: false }), '定时已暂停',
+    'Disabled interval workflows should not imply that a future run is scheduled.');
 
 const commonSandbox = { window: {}, console };
 vm.createContext(commonSandbox);
@@ -628,6 +663,61 @@ assert.strictEqual(fitContext.canvasZoom, .54,
 assert.ok(fitCanvas.scrollLeft > 0 && fitContext.viewportUpdated,
     'Fit-to-content should centre the loaded graph and refresh the visible viewport.');
 
+const overlayCanvas = {
+    clientWidth: 1000,
+    clientHeight: 640,
+    scrollLeft: 0,
+    scrollTop: 0,
+    getBoundingClientRect() { return { left: 80, right: 1080, bottom: 700, width: 1000 }; }
+};
+const overlayViewportContext = {
+    $refs: {
+        canvas: overlayCanvas,
+        palette: { getBoundingClientRect() { return { left: 80, right: 360 }; } },
+        inspector: { getBoundingClientRect() { return { left: 750, right: 1080 }; } }
+    },
+    canvasSafeInsets: { left: 0, right: 0 },
+    canvasViewport: {}
+};
+vueOptions.methods.updateCanvasViewport.call(overlayViewportContext);
+assert.strictEqual(JSON.stringify(overlayViewportContext.canvasSafeInsets), JSON.stringify({ left: 298, right: 348 }),
+    'The canvas should reserve the actual overlay widths plus a readable gap on both sides.');
+const canvasSurfaceStyle = vueOptions.computed.canvasSurfaceStyle.call({
+    scaledCanvasSize: { width: 1200, height: 700 },
+    canvasSafeInsets: overlayViewportContext.canvasSafeInsets
+});
+assert.strictEqual(canvasSurfaceStyle.width, '1846px',
+    'The scroll surface should include both safety gutters in addition to the scaled world width.');
+const canvasStageStyle = vueOptions.computed.canvasStageStyle.call({
+    canvasSize: { width: 1200, height: 700 },
+    canvasZoom: 1,
+    canvasSafeInsets: overlayViewportContext.canvasSafeInsets
+});
+assert.strictEqual(canvasStageStyle.left, '298px',
+    'The world origin should begin after the left overlay-safe gutter.');
+
+const safeFitCanvas = {
+    clientWidth: 1000,
+    clientHeight: 700,
+    scrollLeft: 0,
+    scrollTop: 0
+};
+const safeFitContext = {
+    form: { graph: { nodes: [{ id: 'first', x: 100, y: 100 }, { id: 'last', x: 1600, y: 700 }] } },
+    canvasZoom: 1,
+    canvasSafeInsets: { left: 298, right: 348 },
+    $refs: { canvas: safeFitCanvas },
+    clampCanvasZoom: vueOptions.methods.clampCanvasZoom,
+    stageContentTop() { return 40; },
+    updateCanvasViewport() { this.viewportUpdated = true; },
+    $nextTick(callback) { callback(); }
+};
+vueOptions.methods.fitCanvasToNodes.call(safeFitContext);
+assert.ok(safeFitContext.canvasZoom < fitContext.canvasZoom,
+    'Fit-to-content should use only the visible centre area when side panes cover the canvas.');
+assert.strictEqual(safeFitContext.viewportUpdated, true,
+    'Fitting with side safe areas should still refresh the viewport and minimap state.');
+
 let shortcutSource = null;
 let shortcutPrevented = false;
 vueOptions.methods.onSaveShortcut.call({
@@ -647,6 +737,10 @@ const page = fs.readFileSync(pagePath, 'utf8');
 const styles = fs.readFileSync(stylePath, 'utf8');
 assert.ok(page.includes("['workflow-stage', {'is-horizontal-layout':layoutDirection==='horizontal'}]"),
     'Workflow page should render the visual graph stage and expose the horizontal layout state.');
+assert.ok(page.includes('ref="palette"') && page.includes('ref="inspector"') && page.includes(':style="canvasSurfaceStyle"'),
+    'The designer should measure its two overlay panes and render a separate scroll surface for the protected canvas area.');
+assert.ok(styles.includes('.workflow-stage {\n    position: absolute;') && styles.includes('.workflow-scale-surface'),
+    'The graph stage should be positioned inside the scroll surface so left and right safe gutters remain unscaled screen space.');
 assert.ok(page.includes('id="workflow-node-picker-template"') && page.includes('<workflow-node-picker'),
     'The sidebar and inline picker should share one node-picker template.');
 assert.ok(page.includes('@@drag-node="beginPaletteNodeDrag"') && page.includes('@@drop.prevent="onCanvasDrop"'),
@@ -694,6 +788,10 @@ assert.ok(!page.includes('<header class="neuchar-page-header">'),
     'The redundant workflow page header should be removed to return vertical space to the canvas.');
 assert.ok(page.includes('class="workflow-list-actions"') && page.includes('@@click="createWorkflow"'),
     'Workflow creation and refresh should move into the workflow list instead of using a page-wide header.');
+assert.ok(page.includes('workflowTriggerLabel(item)') && page.includes('workflowScheduleText(item)') && page.includes('workflowScheduleTitle(item)'),
+    'The workflow list should render a trigger type and an accessible next-run label for interval workflows.');
+assert.ok(styles.includes('.workflow-list-badges') && styles.includes('.workflow-next-run'),
+    'Workflow type badges and the next-run hint should have compact list-specific styling.');
 assert.ok(page.includes('class="workflow-command-bar"') && page.includes('class="workflow-command-actions"'),
     'The editor should retain a compact one-row command bar for the current workflow.');
 assert.ok(page.includes('>保存</el-button>') && page.includes('>运行</el-button>') && page.includes('>添加节点</el-button>'),

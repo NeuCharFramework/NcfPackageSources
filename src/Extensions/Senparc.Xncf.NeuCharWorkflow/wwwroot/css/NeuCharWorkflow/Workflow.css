@@ -115,7 +115,11 @@
 
 .workflow-list-item:disabled { cursor: not-allowed; opacity: .65; }
 .workflow-list-name { overflow: hidden; color: #303640; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.workflow-list-badges { display: flex; align-items: center; gap: 4px; }
+.workflow-list-badges .el-tag { margin: 0; }
 .workflow-list-item small { grid-column: 1 / -1; color: #8b95a3; }
+.workflow-list-item .workflow-next-run { overflow: hidden; color: #4f7da9; font-variant-numeric: tabular-nums; text-overflow: ellipsis; white-space: nowrap; }
+.workflow-next-run > i { margin-right: 3px; color: #5a9bda; }
 .workflow-list-empty, .palette-empty { padding: 36px 0; color: #9aa4b2; text-align: center; }
 
 .workflow-editor {
@@ -363,7 +367,8 @@
 .workflow-context-menu-divider { height: 1px; margin: 3px 5px; background: #edf1f5; }
 
 .workflow-stage {
-    position: relative;
+    position: absolute;
+    top: 0;
     transform-origin: top left;
     background-color: #f5f8fb;
     background-image: radial-gradient(#cfd8e3 1px, transparent 1px);

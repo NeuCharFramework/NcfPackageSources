@@ -1,6 +1,16 @@
+// The page body is rendered inside the shared #app Vue root. Vue deliberately
+// removes <script> tags while compiling that root, so resolve this template
+// before mounting the root instead of using the deferred "#id" form.
+const workflowNodePickerTemplateElement = typeof document !== 'undefined'
+    ? document.getElementById('workflow-node-picker-template')
+    : null;
+const workflowNodePickerTemplate = workflowNodePickerTemplateElement
+    ? workflowNodePickerTemplateElement.innerHTML
+    : '<div class="workflow-node-picker"></div>';
+
 if (typeof Vue !== 'undefined' && typeof Vue.component === 'function') {
     Vue.component('workflow-node-picker', {
-        template: '#workflow-node-picker-template',
+        template: workflowNodePickerTemplate,
         props: {
             functions: { type: Array, default: () => [] },
             objects: { type: Array, default: () => [] },
@@ -85,6 +95,8 @@ new Vue({
             functions: [],
             workflowObjects: [],
             keyword: '',
+            workflowClock: Date.now(),
+            workflowClockTimer: null,
             listCollapsed: false,
             paletteCollapsed: true,
             inspectorCollapsed: true,
@@ -118,6 +130,7 @@ new Vue({
             nodePreview: { visible: false, kind: '', payload: null, key: '', mode: 'hover' },
             nodePreviewTimer: null,
             canvasSize: { width: 1200, height: 760 },
+            canvasSafeInsets: { left: 0, right: 0 },
             canvasZoom: 1,
             canvasViewport: { width: 0, height: 0, scrollLeft: 0, scrollTop: 0, left: 0, right: 0, bottom: 0, windowWidth: 0, windowHeight: 0 },
             form: { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], autoSaveMinutes: 3, revision: 0, graph: { nodes: [], edges: [], layout: { direction: 'vertical' } } },
@@ -249,6 +262,24 @@ new Vue({
                 height: Math.max(1, Math.round(this.canvasSize.height * this.canvasZoom))
             };
         },
+        canvasSurfaceStyle() {
+            const insets = this.canvasSafeInsets || {};
+            const left = Math.max(0, Number(insets.left) || 0);
+            const right = Math.max(0, Number(insets.right) || 0);
+            return {
+                width: `${this.scaledCanvasSize.width + left + right}px`,
+                height: `${this.scaledCanvasSize.height}px`
+            };
+        },
+        canvasStageStyle() {
+            const insets = this.canvasSafeInsets || {};
+            return {
+                width: `${this.canvasSize.width}px`,
+                height: `${this.canvasSize.height}px`,
+                left: `${Math.max(0, Number(insets.left) || 0)}px`,
+                transform: `scale(${this.canvasZoom})`
+            };
+        },
         showMinimap() {
             const viewport = this.canvasViewport;
             const scaled = this.scaledCanvasSize;
@@ -266,9 +297,14 @@ new Vue({
             const viewport = this.canvasViewport;
             const canvas = this.$refs && this.$refs.canvas;
             const stageContentTop = this.stageContentTop ? this.stageContentTop(canvas) : 0;
-            const worldLeft = Math.max(0, Number(viewport.scrollLeft || 0) / this.canvasZoom);
+            const insets = this.canvasSafeInsets || {};
+            const leftInset = Math.max(0, Number(insets.left) || 0);
+            const worldWidth = Math.max(1, Number(this.canvasSize.width) || 1);
+            const worldLeft = Math.max(0, (Number(viewport.scrollLeft || 0) - leftInset) / this.canvasZoom);
+            const worldRight = Math.min(worldWidth,
+                (Number(viewport.scrollLeft || 0) + Number(viewport.width || 0) - leftInset) / this.canvasZoom);
             const worldTop = Math.max(0, Number(viewport.scrollTop || 0) / this.canvasZoom);
-            const width = Math.min(metrics.width, Number(viewport.width || 0) / this.canvasZoom * metrics.scale);
+            const width = Math.max(0, worldRight - worldLeft) * metrics.scale;
             const height = Math.min(metrics.height, Math.max(0, Number(viewport.height || 0) - stageContentTop) / this.canvasZoom * metrics.scale);
             return {
                 left: `${Math.max(0, Math.min(metrics.width - width, worldLeft * metrics.scale))}px`,
@@ -309,8 +345,8 @@ new Vue({
     watch: {
         'form.autoSaveMinutes'() { this.scheduleAutoSave(); },
         listCollapsed() { this.refreshCanvasViewport(); },
-        paletteCollapsed() { this.refreshCanvasViewport(); },
-        inspectorCollapsed() { this.refreshCanvasViewport(); }
+        paletteCollapsed() { this.refreshCanvasViewportAfterPaneTransition(); },
+        inspectorCollapsed() { this.refreshCanvasViewportAfterPaneTransition(); }
     },
     async created() {
         this.loadPinnedFunctions();
@@ -325,6 +361,9 @@ new Vue({
         window.addEventListener('resize', this.updateCanvasViewport);
         window.addEventListener('scroll', this.updateCanvasViewport, true);
         if (typeof document !== 'undefined') document.addEventListener('click', this.onDocumentClick, true);
+        if (typeof window !== 'undefined' && typeof window.setInterval === 'function') {
+            this.workflowClockTimer = window.setInterval(() => { this.workflowClock = Date.now(); }, 30000);
+        }
         this.$nextTick(() => {
             this.updateCanvasViewport();
             if (typeof ResizeObserver !== 'undefined' && this.$refs.canvas) {
@@ -342,11 +381,56 @@ new Vue({
         window.removeEventListener('scroll', this.updateCanvasViewport, true);
         if (typeof document !== 'undefined') document.removeEventListener('click', this.onDocumentClick, true);
         if (this.canvasResizeObserver) this.canvasResizeObserver.disconnect();
+        if (this.workflowClockTimer !== null && this.workflowClockTimer !== undefined && typeof window !== 'undefined') {
+            window.clearInterval(this.workflowClockTimer);
+        }
         this.dismissNodePreview();
         this.clearAutoSaveTimer();
         this.clearRunPoll();
     },
     methods: {
+        isIntervalWorkflow(item) {
+            return String(item && item.triggerType || '').toLowerCase() === 'interval';
+        },
+        workflowTriggerLabel(item) {
+            const triggerType = String(item && item.triggerType || '').toLowerCase();
+            if (triggerType === 'interval') return '定时';
+            if (triggerType === 'webhook') return 'Webhook';
+            return '手动';
+        },
+        workflowTriggerTagType(item) {
+            const triggerType = String(item && item.triggerType || '').toLowerCase();
+            return triggerType === 'interval' ? 'warning' : triggerType === 'webhook' ? 'primary' : 'info';
+        },
+        workflowNextRunDate(item) {
+            if (!item || !item.nextRunAt) return null;
+            const parsed = new Date(item.nextRunAt);
+            return Number.isNaN(parsed.getTime()) ? null : parsed;
+        },
+        workflowScheduleText(item) {
+            // Reference the reactive clock so relative text updates even when the list is not reloaded.
+            const now = Number(this.workflowClock || Date.now());
+            if (!item || !item.enabled) return '定时已暂停';
+            const nextRun = this.workflowNextRunDate(item);
+            if (!nextRun) return '等待下次排程';
+            const seconds = Math.ceil((nextRun.getTime() - now) / 1000);
+            if (seconds <= 0) return '即将运行';
+            if (seconds < 60) return '不足 1 分钟后运行';
+            const minutes = Math.ceil(seconds / 60);
+            if (minutes < 60) return `${minutes} 分钟后运行`;
+            const hours = Math.ceil(minutes / 60);
+            if (hours < 24) return `${hours} 小时后运行`;
+            const days = Math.ceil(hours / 24);
+            return `${days} 天后运行`;
+        },
+        workflowScheduleTitle(item) {
+            if (!this.isIntervalWorkflow(item)) return '';
+            if (!item || !item.enabled) return '定时工作流当前未启用';
+            const nextRun = this.workflowNextRunDate(item);
+            if (!nextRun) return '已启用，正在等待调度器写入下次执行时间';
+            const pad = value => String(value).padStart(2, '0');
+            return `下次执行：${nextRun.getFullYear()}-${pad(nextRun.getMonth() + 1)}-${pad(nextRun.getDate())} ${pad(nextRun.getHours())}:${pad(nextRun.getMinutes())}`;
+        },
         emptyForm() {
             return { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], autoSaveMinutes: 3, revision: 0, graph: { nodes: [], edges: [], layout: { direction: 'vertical' } } };
         },
@@ -1172,10 +1256,36 @@ new Vue({
             if (typeof this.$nextTick === 'function') this.$nextTick(() => this.updateCanvasViewport());
             else this.updateCanvasViewport();
         },
+        refreshCanvasViewportAfterPaneTransition() {
+            this.refreshCanvasViewport();
+            if (typeof window !== 'undefined') {
+                window.setTimeout(() => this.refreshCanvasViewport(), 240);
+            }
+        },
         updateCanvasViewport() {
             const canvas = this.$refs && this.$refs.canvas;
             if (!canvas) return;
             const rect = canvas.getBoundingClientRect();
+            const palette = this.$refs && this.$refs.palette;
+            const inspector = this.$refs && this.$refs.inspector;
+            const paletteRect = palette && typeof palette.getBoundingClientRect === 'function'
+                ? palette.getBoundingClientRect()
+                : null;
+            const inspectorRect = inspector && typeof inspector.getBoundingClientRect === 'function'
+                ? inspector.getBoundingClientRect()
+                : null;
+            const canvasWidth = Math.max(0, Number(canvas.clientWidth || rect.width || 0));
+            const overlayGap = 18;
+            const leftOverlayWidth = paletteRect && Number(paletteRect.left || 0) <= Number(rect.left || 0) + 1
+                ? Math.max(0, Math.min(canvasWidth, Number(paletteRect.right || 0) - Number(rect.left || 0)))
+                : 0;
+            const rightOverlayWidth = inspectorRect && Number(inspectorRect.right || 0) >= Number(rect.right || 0) - 1
+                ? Math.max(0, Math.min(canvasWidth, Number(rect.right || 0) - Number(inspectorRect.left || 0)))
+                : 0;
+            this.canvasSafeInsets = {
+                left: leftOverlayWidth ? leftOverlayWidth + overlayGap : 0,
+                right: rightOverlayWidth ? rightOverlayWidth + overlayGap : 0
+            };
             this.canvasViewport = {
                 width: Number(canvas.clientWidth || 0),
                 height: Number(canvas.clientHeight || 0),
@@ -1209,13 +1319,19 @@ new Vue({
 
             const rect = canvas.getBoundingClientRect();
             const stageContentTop = this.stageContentTop(canvas, rect);
-            const localX = Number.isFinite(clientX) ? Math.max(0, Math.min(canvas.clientWidth, clientX - rect.left)) : canvas.clientWidth / 2;
+            const insets = this.canvasSafeInsets || {};
+            const safeLeft = Math.max(0, Number(insets.left) || 0);
+            const safeRight = Math.max(0, Number(insets.right) || 0);
+            const usableViewportWidth = Math.max(1, Number(canvas.clientWidth || 0) - safeLeft - safeRight);
+            const localX = Number.isFinite(clientX)
+                ? Math.max(0, Math.min(canvas.clientWidth, clientX - rect.left))
+                : safeLeft + usableViewportWidth / 2;
             const localY = Number.isFinite(clientY)
                 ? Math.max(0, Math.min(canvas.clientHeight, clientY - rect.top))
                 : (canvas.clientHeight + Math.min(canvas.clientHeight, stageContentTop)) / 2;
-            const worldX = (canvas.scrollLeft + localX) / currentZoom;
+            const worldX = (canvas.scrollLeft + localX - safeLeft) / currentZoom;
             const worldY = (canvas.scrollTop - stageContentTop + localY) / currentZoom;
-            const nextScrollLeft = Math.max(0, worldX * nextZoom - localX);
+            const nextScrollLeft = Math.max(0, safeLeft + worldX * nextZoom - localX);
             const nextScrollTop = Math.max(0, stageContentTop + worldY * nextZoom - localY);
             this.canvasZoom = nextZoom;
 
@@ -1572,7 +1688,10 @@ new Vue({
             const right = Math.max(...positions.map(position => position.x + nodeWidth)) + padding;
             const bottom = Math.max(...positions.map(position => position.y + nodeHeight)) + padding;
             const stageContentTop = this.stageContentTop ? this.stageContentTop(canvas) : 0;
-            const viewportWidth = Number(canvas.clientWidth || 0);
+            const insets = this.canvasSafeInsets || {};
+            const safeLeft = Math.max(0, Number(insets.left) || 0);
+            const safeRight = Math.max(0, Number(insets.right) || 0);
+            const viewportWidth = Math.max(1, Number(canvas.clientWidth || 0) - safeLeft - safeRight);
             const viewportHeight = Math.max(0, Number(canvas.clientHeight || 0) - stageContentTop);
             if (viewportWidth <= 0 || viewportHeight <= 0) return false;
 
@@ -1622,7 +1741,11 @@ new Vue({
             const worldX = Math.max(0, Math.min(metrics.width, event.clientX - rect.left)) / metrics.scale;
             const worldY = Math.max(0, Math.min(metrics.height, event.clientY - rect.top)) / metrics.scale;
             const stageContentTop = this.stageContentTop(canvas);
-            canvas.scrollLeft = Math.max(0, worldX * this.canvasZoom - canvas.clientWidth / 2);
+            const insets = this.canvasSafeInsets || {};
+            const safeLeft = Math.max(0, Number(insets.left) || 0);
+            const safeRight = Math.max(0, Number(insets.right) || 0);
+            const usableViewportWidth = Math.max(1, Number(canvas.clientWidth || 0) - safeLeft - safeRight);
+            canvas.scrollLeft = Math.max(0, worldX * this.canvasZoom - usableViewportWidth / 2);
             canvas.scrollTop = Math.max(0, stageContentTop + worldY * this.canvasZoom - (canvas.clientHeight + stageContentTop) / 2);
             this.updateCanvasViewport();
         },
