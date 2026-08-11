@@ -468,7 +468,7 @@ public class NeuCharWorkflowEngineTests
             """
             {
               "$template": {
-                "text": "模板={{template}}；运行时={{runtime}}；输入={{input}}",
+                "text": "模板={{template}}；运行时={{runtime}}；表达式={{=upper(template)}}；输入={{input}}",
                 "bindings": [
                   { "token": "template", "source": { "nodeId": "source", "path": "$.template" } },
                   { "token": "runtime", "source": { "nodeId": "source", "path": "$.runtime" } }
@@ -489,7 +489,35 @@ public class NeuCharWorkflowEngineTests
             new Dictionary<string, JsonNode>()
         });
 
-        Assert.AreEqual("模板=Python Exec；运行时=Docker；输入=来自触发器", value!.GetValue<string>());
+        Assert.AreEqual("模板=Python Exec；运行时=Docker；表达式=PYTHON EXEC；输入=来自触发器", value!.GetValue<string>());
+    }
+
+    [TestMethod]
+    public void TemplateExpression_ShouldUseBuiltInFunctions()
+    {
+        var variables = new Dictionary<string, JsonNode>
+        {
+            ["value_1"] = JsonValue.Create("VIP-user")
+        };
+        var valid = NeuCharWorkflowExpressionEngine.TryEvaluate(
+            "if(contains(value_1, 'VIP'), substring(value_1, 0, 3), 'normal')",
+            variables, out var result, out var error);
+        Assert.IsTrue(valid, error);
+        Assert.AreEqual("VIP", result!.GetValue<string>());
+        Assert.IsFalse(NeuCharWorkflowExpressionEngine.TryValidate(
+            "system.exit()", new[] { "value_1" }, out _));
+    }
+
+    [TestMethod]
+    public void ObservedOutputSchema_ShouldExcludeSensitiveValuesAndMarkArrays()
+    {
+        var node = new NeuCharWorkflowNode { Id = "function-1", Name = "查询", Type = "function" };
+        var schema = NeuCharWorkflowObservedOutputSchemaBuilder.Build(
+            node,
+            JsonNode.Parse("""{ "items": [{ "name": "first", "token": "hidden" }] }""")!);
+
+        Assert.IsTrue(schema.Fields.Any(field => field.Path == "$.items.name" && field.RequiresIndex));
+        Assert.IsFalse(schema.Fields.Any(field => field.Path.Contains("token")));
     }
 
     private static Task<AppResponseBase<List<SampleOutput>>> ListOutputFunction() => null!;

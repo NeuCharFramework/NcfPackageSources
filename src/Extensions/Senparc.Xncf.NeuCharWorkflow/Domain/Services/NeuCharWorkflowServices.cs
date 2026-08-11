@@ -34,6 +34,13 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
         return logs.FirstOrDefault(log => !string.IsNullOrWhiteSpace(log.ReplaySnapshotJson));
     }
 
+    public async Task<IReadOnlyList<NeuCharWorkflowExecutionLog>> GetRecentCompletedAsync(int workflowId)
+    {
+        var logs = await GetFullListAsync(log => log.WorkflowId == workflowId,
+            log => log.StartedAt, OrderingType.Descending).ConfigureAwait(false);
+        return logs.Where(log => log.Succeeded == true).Take(20).ToList();
+    }
+
     public async Task<NeuCharWorkflowExecutionLog?> GetReplaySnapshotAsync(int workflowId, string snapshotHash)
     {
         if (string.IsNullOrWhiteSpace(snapshotHash))

@@ -71,7 +71,8 @@ public sealed class NeuCharWorkflowAppService
         var editableGraphJson = await _workflowEngine.BuildEditableGraphJsonAsync(
             workflow.GraphJson,
             cancellationToken).ConfigureAwait(false);
-        return ToDetail(workflow, editableGraphJson);
+        var observedSchemas = await GetObservedOutputSchemasAsync(workflow.Id).ConfigureAwait(false);
+        return ToDetail(workflow, editableGraphJson, observedOutputSchemas: observedSchemas);
     }
 
     public async Task<WorkflowDesignerData> GetDesignerDataAsync(CancellationToken cancellationToken = default)
@@ -370,7 +371,8 @@ public sealed class NeuCharWorkflowAppService
                 item.Status,
                 item.Message,
                 item.Output,
-                item.Timestamp)).ToList();
+                item.Timestamp,
+                item.OutputSchema)).ToList();
         }
         catch (JsonException ex)
         {
@@ -587,10 +589,64 @@ public sealed class NeuCharWorkflowAppService
         string.Equals(workflow.TriggerConfigJson, triggerConfigJson, StringComparison.Ordinal) &&
         workflow.AutoSaveMinutes == autoSaveMinutes;
 
-    private static WorkflowDetail ToDetail(WorkflowEntity workflow, string? graphJson = null, bool unchanged = false) => new(
+    private async Task<IReadOnlyList<NeuCharWorkflowObservedOutputSchema>> GetObservedOutputSchemasAsync(int workflowId)
+    {
+        var result = new Dictionary<string, NeuCharWorkflowObservedOutputSchema>(StringComparer.Ordinal);
+        var logs = await _executionLogService.GetRecentCompletedAsync(workflowId).ConfigureAwait(false);
+        foreach (var log in logs)
+        {
+            AddObservedSchemas(result, log.ReplayEventsJson);
+        }
+        return result.Values.ToList();
+    }
+
+    private static void AddObservedSchemas(
+        IDictionary<string, NeuCharWorkflowObservedOutputSchema> result,
+        string? replayEventsJson)
+    {
+        if (string.IsNullOrWhiteSpace(replayEventsJson))
+        {
+            return;
+        }
+        try
+        {
+            var events = JsonSerializer.Deserialize<List<NeuCharWorkflowProgress>>(
+                replayEventsJson,
+                DesignerJsonOptions) ?? new List<NeuCharWorkflowProgress>();
+            foreach (var item in events)
+            {
+                if (!string.Equals(item.Status, "success", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+                if (string.IsNullOrWhiteSpace(item.OutputSchema))
+                {
+                    continue;
+                }
+                var schema = JsonSerializer.Deserialize<NeuCharWorkflowObservedOutputSchema>(
+                    item.OutputSchema,
+                    DesignerJsonOptions);
+                if (schema != null && !result.ContainsKey(schema.NodeId))
+                {
+                    result[schema.NodeId] = schema;
+                }
+            }
+        }
+        catch (JsonException)
+        {
+            // A historical log must not prevent the workflow editor from opening.
+        }
+    }
+
+    private static WorkflowDetail ToDetail(
+        WorkflowEntity workflow,
+        string? graphJson = null,
+        bool unchanged = false,
+        IReadOnlyList<NeuCharWorkflowObservedOutputSchema>? observedOutputSchemas = null) => new(
         workflow.Id, workflow.Name, workflow.Description, graphJson ?? workflow.GraphJson, workflow.Enabled,
         workflow.TriggerType, workflow.TriggerConfigJson, workflow.NextRunAt, workflow.LastRunAt, workflow.LastSucceeded,
-        workflow.LastError, workflow.Revision, workflow.AutoSaveMinutes, unchanged, workflow.LastUpdateTime);
+        workflow.LastError, workflow.Revision, workflow.AutoSaveMinutes, unchanged, workflow.LastUpdateTime,
+        observedOutputSchemas);
 
     private static WorkflowListItem ToListItem(WorkflowEntity workflow) => new(
         workflow.Id, workflow.Name, workflow.Description, workflow.Enabled, workflow.TriggerType, workflow.NextRunAt,
@@ -679,7 +735,8 @@ public sealed record WorkflowListItem(
 public sealed record WorkflowDetail(
     int Id, string Name, string? Description, string GraphJson, bool Enabled, string TriggerType, string TriggerConfigJson,
     DateTime? NextRunAt, DateTime? LastRunAt, bool? LastSucceeded, string? LastError, int Revision, int AutoSaveMinutes,
-    bool Unchanged, DateTime LastUpdateTime);
+    bool Unchanged, DateTime LastUpdateTime,
+    IReadOnlyList<NeuCharWorkflowObservedOutputSchema>? ObservedOutputSchemas = null);
 
 public sealed record WorkflowTaskListItem(
     string TaskId,
@@ -702,7 +759,8 @@ public sealed record WorkflowReplayEvent(
     string Status,
     string Message,
     string? Output,
-    DateTimeOffset Timestamp);
+    DateTimeOffset Timestamp,
+    string? OutputSchema = null);
 
 public sealed record WorkflowRunReplay(
     int ExecutionLogId,

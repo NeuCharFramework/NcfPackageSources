@@ -94,6 +94,7 @@ new Vue({
             workflows: [],
             functions: [],
             workflowObjects: [],
+            observedOutputSchemas: [],
             keyword: '',
             workflowClock: Date.now(),
             workflowClockTimer: null,
@@ -107,6 +108,7 @@ new Vue({
             workflowSettingsVisible: false,
             templateEditorPlaceholder: '例如：请根据 {{value_1}} 生成一段摘要',
             templateEditorBindingHelp: '删除一个变量标签时，它在文本中的对应占位符也会一并删除。文本参数可以继续使用 {{input}} 引用触发器输入。',
+            templateExpressionHelp: '表达式写法：{{= if(contains(value_1, \"VIP\"), upper(value_1), \"普通\") }}。支持 if、contains、substring、length、trim、lower、upper、first、last、at、join、比较和判断；不执行 JavaScript。',
             templateEditor: {
                 visible: false,
                 nodeId: '',
@@ -599,6 +601,7 @@ new Vue({
         async createWorkflow() {
             if (this.editingLocked || this.saveState.saving || !await this.confirmDiscardChanges('新建工作流')) return;
             this.form = this.emptyForm();
+            this.observedOutputSchemas = [];
             this.editing = true;
             this.workflowSettingsVisible = false;
             this.webhookHelpVisible = false;
@@ -652,6 +655,9 @@ new Vue({
                     autoSaveMinutes: Number(item.autoSaveMinutes ?? 3),
                     revision: Number(item.revision || 0)
                 };
+                this.observedOutputSchemas = Array.isArray(item.observedOutputSchemas)
+                    ? item.observedOutputSchemas
+                    : [];
                 this.editing = true;
                 this.setSelectedNodes(graph.nodes.length ? [graph.nodes[0]] : [], { openInspector: false });
                 this.selectionBox = this.emptySelectionBox();
@@ -1857,6 +1863,26 @@ new Vue({
             }
             return this.form.graph.nodes.filter(node => ids.has(node.id));
         },
+        observedOutputIdentity(node) {
+            const config = node?.config || {};
+            return [node?.type || '', config.moduleUid || '', config.functionKey || '',
+                config.providerId || '', config.objectId || ''].join('|');
+        },
+        observedOutputFields(node) {
+            const identity = this.observedOutputIdentity(node);
+            const schema = (this.observedOutputSchemas || []).find(item =>
+                item && item.nodeId === node?.id && item.identity === identity);
+            if (!schema || !Array.isArray(schema.fields)) return [];
+            return schema.fields.map(field => ({
+                ...field,
+                sourceKind: 'observed-output',
+                observed: true
+            }));
+        },
+        withObservedOutputFields(node, fields) {
+            const knownPaths = new Set(fields.map(field => field.path));
+            return [...fields, ...this.observedOutputFields(node).filter(field => !knownPaths.has(field.path))];
+        },
         nodeOutputFields(node, visited) {
             visited = visited || new Set();
             if (!node || visited.has(node.id)) return [{ path: '$', label: '节点输出', typeName: 'any', isArray: false, requiresIndex: false }];
@@ -1866,9 +1892,12 @@ new Vue({
                 const outputFields = (fn && fn.output && Array.isArray(fn.output.fields))
                     ? fn.output.fields
                     : [{ path: '$', label: '完整输出', typeName: 'any', isArray: false, requiresIndex: false }];
-                return [...outputFields, ...this.functionSelectionInputFields(fn)];
+                return this.withObservedOutputFields(node, [...outputFields, ...this.functionSelectionInputFields(fn)]);
             }
-            if (node.type === 'aggregate') return [{ path: '$', label: '聚合结果', typeName: 'any', isArray: true, requiresIndex: false }];
+            if (node.type === 'aggregate') return this.withObservedOutputFields(node,
+                [{ path: '$', label: '聚合结果', typeName: 'any', isArray: true, requiresIndex: false }]);
+            const observed = this.observedOutputFields(node);
+            if (observed.length) return observed;
             if (node.type === 'webhook-trigger') {
                 const parameters = this.form.webhookParameters || [];
                 return parameters.length
@@ -1913,7 +1942,7 @@ new Vue({
                 label: node.name,
                 children: this.nodeOutputFields(node).map(field => ({
                     value: field.path,
-                    label: `${field.label} · ${field.typeName}${field.isArray ? '[]' : ''}`
+                    label: `${field.label} · ${field.typeName}${field.isArray ? '[]' : ''}${field.observed ? ' · 运行观察' : ''}`
                 }))
             })).filter(option => option.children.length);
         },
@@ -1998,8 +2027,9 @@ new Vue({
             }
             const text = String(editor.text || '');
             const bindings = editor.bindings.map(item => ({ token: item.token, source: { ...item.source } }));
+            const hasTemplate = bindings.length > 0 ? true : text.includes('{{=');
             this.$set(node.config.parameters, editor.parameterName,
-                bindings.length ? { $template: { text, bindings } } : text);
+                hasTemplate ? { $template: { text, bindings } } : text);
             editor.visible = false;
         },
         parameterTemplateSummary(value) {
@@ -2401,6 +2431,14 @@ new Vue({
             }
         },
         applyRunEvent(event) {
+            if (event && event.outputSchema) {
+                const schema = NeuCharWorkflowUi.parseJson(event.outputSchema, null);
+                if (schema && schema.nodeId && Array.isArray(schema.fields)) {
+                    const index = this.observedOutputSchemas.findIndex(item => item.nodeId === schema.nodeId);
+                    if (index >= 0) this.$set(this.observedOutputSchemas, index, schema);
+                    else this.observedOutputSchemas.push(schema);
+                }
+            }
             if (event.nodeId && ['running', 'success', 'failed'].includes(event.status)) this.$set(this.run.nodeStates, event.nodeId, event.status);
             this.run.events.push(event);
             if (this.run.events.length > 500) this.run.events.splice(0, this.run.events.length - 500);
@@ -2463,7 +2501,7 @@ new Vue({
         async deleteWorkflow() {
             if (!this.form.id || this.editingLocked || this.saveState.saving) return;
             await service.post('/Admin/NeuCharWorkflow/Index?handler=Delete', { id: this.form.id }, { customAlert: true });
-            this.form = this.emptyForm(); this.editing = false; this.resetSaveState(); this.resetRunState(); await this.loadAll();
+            this.form = this.emptyForm(); this.observedOutputSchemas = []; this.editing = false; this.resetSaveState(); this.resetRunState(); await this.loadAll();
         }
     }
 });

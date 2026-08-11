@@ -70,7 +70,8 @@ public sealed record NeuCharWorkflowProgress(
     string Status,
     string Message,
     string Output,
-    DateTimeOffset Timestamp);
+    DateTimeOffset Timestamp,
+    string? OutputSchema = null);
 
 public sealed class NeuCharWorkflowEngine
 {
@@ -450,7 +451,8 @@ public sealed class NeuCharWorkflowEngine
                 replayEvents.Add(item with
                 {
                     Message = LimitReplayText(item.Message, 2_000),
-                    Output = LimitReplayText(item.Output, 2_000)
+                    Output = LimitReplayText(item.Output, 2_000),
+                    OutputSchema = LimitReplayText(item.OutputSchema, 20_000)
                 });
             }
             callerProgress?.Invoke(item);
@@ -547,7 +549,9 @@ public sealed class NeuCharWorkflowEngine
                 finalOutput = execution.output ?? JsonNode.Parse("null");
                 outputs[node.Id] = finalOutput?.DeepClone();
                 var outputText = NodeToText(finalOutput);
-                Report(progress, node, "success", "节点执行完成。", outputText);
+                var outputSchema = NeuCharWorkflowObservedOutputSchemaBuilder.Build(node, finalOutput);
+                Report(progress, node, "success", "节点执行完成。", outputText,
+                    JsonSerializer.Serialize(outputSchema, JsonOptions));
                 if (node.Type.Equals("console", StringComparison.OrdinalIgnoreCase))
                 {
                     Report(progress, node, "console", "Console 输出", outputText);
@@ -870,6 +874,10 @@ public sealed class NeuCharWorkflowEngine
         IReadOnlyDictionary<string, JsonNode> functionSelectionInputs)
     {
         var text = GetString(template, "text") ?? string.Empty;
+        var variables = new Dictionary<string, JsonNode>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["input"] = input
+        };
         if (template["bindings"] is JsonArray bindings)
         {
             foreach (var (index, item) in bindings.Select((item, index) => (index, item)))
@@ -883,11 +891,81 @@ public sealed class NeuCharWorkflowEngine
                 {
                     throw new InvalidOperationException($"文本模板第 {index + 1} 个变量缺少有效名称或绑定来源。");
                 }
-                var value = ResolveBinding(source, outputs, functionSelectionInputs);
-                text = text.Replace($"{{{{{token}}}}}", NodeToText(value), StringComparison.Ordinal);
+                variables[token] = ResolveBinding(source, outputs, functionSelectionInputs);
             }
         }
-        return JsonValue.Create(text.Replace("{{input}}", NodeToText(input), StringComparison.Ordinal));
+        text = RenderTemplateExpressions(text, variables);
+        foreach (var (token, value) in variables)
+        {
+            text = text.Replace($"{{{{{token}}}}}", NodeToText(value), StringComparison.Ordinal);
+        }
+        return JsonValue.Create(text);
+    }
+
+    private static string RenderTemplateExpressions(string text, IReadOnlyDictionary<string, JsonNode> variables)
+    {
+        var position = 0;
+        var count = 0;
+        var rendered = new StringBuilder();
+        while (true)
+        {
+            var start = text.IndexOf("{{=", position, StringComparison.Ordinal);
+            if (start < 0)
+            {
+                return rendered.Append(text, position, text.Length - position).ToString();
+            }
+            rendered.Append(text, position, start - position);
+            var end = FindTemplateExpressionEnd(text, start + 3);
+            if (end < 0)
+            {
+                throw new InvalidOperationException("文本表达式缺少“}}”。");
+            }
+            var expression = text[(start + 3)..end].Trim();
+            if (++count > 32)
+            {
+                throw new InvalidOperationException("每个参数最多包含 32 个文本表达式。");
+            }
+            if (!NeuCharWorkflowExpressionEngine.TryEvaluate(expression, variables, out var value, out var error))
+            {
+                throw new InvalidOperationException($"文本表达式无效：{error}");
+            }
+            var renderedValue = NodeToText(value);
+            if (renderedValue.Length > 8_000)
+            {
+                throw new InvalidOperationException("文本表达式的结果超过 8000 个字符。");
+            }
+            rendered.Append(renderedValue);
+            position = end + 2;
+        }
+    }
+
+    private static int FindTemplateExpressionEnd(string text, int start)
+    {
+        var quote = '\0';
+        var escaped = false;
+        for (var index = start; index < text.Length - 1; index++)
+        {
+            var character = text[index];
+            if (quote != '\0')
+            {
+                if (!escaped && character == quote)
+                {
+                    quote = '\0';
+                }
+                escaped = !escaped && character == '\\';
+                continue;
+            }
+            if (character is '\'' or '"')
+            {
+                quote = character;
+                continue;
+            }
+            if (character == '}' && text[index + 1] == '}')
+            {
+                return index;
+            }
+        }
+        return -1;
     }
 
     private static bool IsTemplateToken(string token) =>
@@ -895,6 +973,11 @@ public sealed class NeuCharWorkflowEngine
         token.Length <= 64 &&
         char.IsLetter(token[0]) &&
         token.All(character => char.IsLetterOrDigit(character) || character is '_' or '-');
+
+    private static bool IsObservedOutputBinding(JsonObject binding, string path) =>
+        string.Equals(GetString(binding, "sourceKind"), "observed-output", StringComparison.OrdinalIgnoreCase) &&
+        path.StartsWith("$", StringComparison.Ordinal) &&
+        path.Length <= 256;
 
     private static JsonNode ResolveBinding(
         JsonObject binding,
@@ -1038,7 +1121,8 @@ public sealed class NeuCharWorkflowEngine
         NeuCharWorkflowNode node,
         string status,
         string message,
-        string output)
+        string output,
+        string? outputSchema = null)
     {
         progress?.Invoke(new NeuCharWorkflowProgress(
             node.Id,
@@ -1046,7 +1130,8 @@ public sealed class NeuCharWorkflowEngine
             status,
             message,
             output?.Length > 8_000 ? output[..8_000] : output,
-            DateTimeOffset.UtcNow));
+            DateTimeOffset.UtcNow,
+            outputSchema));
     }
 
     private static string? LimitReplayText(string? value, int maxLength) =>
@@ -1161,6 +1246,10 @@ public sealed class NeuCharWorkflowEngine
                 {
                     return $"节点“{targetNode.Name}”参数“{parameter.Title ?? parameter.Name}”关联的 Function Selection 参数已在模块更新后删除或不可用。";
                 }
+                if (IsObservedOutputBinding(binding, path))
+                {
+                    continue;
+                }
                 return $"节点“{targetNode.Name}”参数“{parameter.Title ?? parameter.Name}”引用的输出字段“{path}”已不存在。";
             }
             if (!string.Equals(GetString(binding, "sourceKind") ?? "output", field.SourceKind ?? "output", StringComparison.OrdinalIgnoreCase))
@@ -1214,16 +1303,13 @@ public sealed class NeuCharWorkflowEngine
         {
             return "文本模板缺少可编辑的文本内容。";
         }
-        if (template["bindings"] == null)
-        {
-            return null;
-        }
-        if (template["bindings"] is not JsonArray bindings)
+        var bindings = template["bindings"] as JsonArray;
+        if (template["bindings"] != null && bindings == null)
         {
             return "文本模板的变量列表格式无效。";
         }
-        var tokens = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var (index, item) in bindings.Select((item, index) => (index, item)))
+        var tokens = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "input" };
+        foreach (var (index, item) in (bindings ?? new JsonArray()).Select((item, index) => (index, item)))
         {
             if (item is not JsonObject entry)
             {
@@ -1242,6 +1328,27 @@ public sealed class NeuCharWorkflowEngine
             {
                 return $"变量“{token}”没有出现在文本中。";
             }
+        }
+        var expressionPosition = 0;
+        var expressionCount = 0;
+        while (true)
+        {
+            var start = text.IndexOf("{{=", expressionPosition, StringComparison.Ordinal);
+            if (start < 0)
+            {
+                break;
+            }
+            var end = FindTemplateExpressionEnd(text, start + 3);
+            if (end < 0 || ++expressionCount > 32)
+            {
+                return "文本表达式缺少结束标记，或数量超过 32 个。";
+            }
+            var expression = text[(start + 3)..end].Trim();
+            if (!NeuCharWorkflowExpressionEngine.TryValidate(expression, tokens, out var error))
+            {
+                return $"文本表达式无效：{error}";
+            }
+            expressionPosition = end + 2;
         }
         return null;
     }
@@ -1271,6 +1378,10 @@ public sealed class NeuCharWorkflowEngine
                 if (string.Equals(GetString(binding, "sourceKind"), "function-selection", StringComparison.OrdinalIgnoreCase))
                 {
                     return $"节点“{targetNode.Name ?? targetNode.Id}”的 {configPath} 关联的 Function Selection 参数已在模块更新后删除或不可用。";
+                }
+                if (IsObservedOutputBinding(binding, path))
+                {
+                    continue;
                 }
                 return $"节点“{targetNode.Name ?? targetNode.Id}”的 {configPath} 引用的输出字段“{path}”已不存在。";
             }

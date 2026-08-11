@@ -24,7 +24,8 @@ public sealed record NeuCharWorkflowRunEvent(
     string Status,
     string Message,
     string Output,
-    DateTimeOffset Timestamp);
+    DateTimeOffset Timestamp,
+    string? OutputSchema = null);
 
 public sealed record NeuCharWorkflowRunSnapshot(
     Guid RunId,
@@ -88,7 +89,8 @@ public sealed class NeuCharWorkflowRunCoordinator
                     progress.Status,
                     Limit(progress.Message, 4_000),
                     Limit(progress.Output, 20_000),
-                    progress.Timestamp));
+                    progress.Timestamp,
+                    Limit(progress.OutputSchema, 20_000)));
                 if (_events.Count > 500)
                 {
                     _events.RemoveRange(0, _events.Count - 500);

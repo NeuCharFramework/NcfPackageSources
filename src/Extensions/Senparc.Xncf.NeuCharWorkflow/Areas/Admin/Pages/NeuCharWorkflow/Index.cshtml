@@ -263,6 +263,10 @@
                            width="min(760px, calc(100vw - 32px))"
                            append-to-body>
                     <p class="template-editor-help">先输入固定文字，再从下方选择上游输出或“预载输入选择”。系统会插入一个可见的占位符；同一文本可插入多个变量。</p>
+                    <el-alert :title="templateExpressionHelp"
+                              type="warning"
+                              :closable="false"
+                              show-icon></el-alert>
                     <el-input v-model="templateEditor.text"
                               type="textarea"
                               :rows="12"
